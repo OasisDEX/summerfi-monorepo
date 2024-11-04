@@ -4,6 +4,7 @@ import type {
   GetUserPositionsQuery,
   GetVaultQuery,
   GetVaultsQuery,
+  GetGlobalRebalancesQuery,
 } from '../generated/client'
 
 /**
@@ -37,6 +38,16 @@ export interface IArmadaSubgraphManager {
    *
    */
   getVault(params: { chainId: ChainId; vaultId: string }): Promise<GetVaultQuery>
+
+  /**
+   * @name getGlobalRebalances
+   * @description Get all rebalances per given chain
+   *
+   * @param chainInfo Chain information
+   *
+   * @returns GetGlobalRebalancesQuery
+   */
+  getGlobalRebalances(params: { chainId: ChainId }): Promise<GetGlobalRebalancesQuery>
 
   /**
    * @name getUserPositions

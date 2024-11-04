@@ -7,7 +7,7 @@ import { million, oneThousandth, ten, zero } from '@/numbers'
 /**
  * Formats a cryptocurrency balance as a human-readable string.
  *
- * This function converts a `BigNumber` or `string` or `number` representing a cryptocurrency balance into a string with appropriate precision, based on the balance's value:
+ * This function converts a `BigNumber` or `string` or `number` or `bigint` representing a cryptocurrency balance into a string with appropriate precision, based on the balance's value:
  * - For balances less than 0.001, returns "<0.001" or "0.000" if the amount is negative.
  * - For balances less than 10, returns the amount with up to 4 decimal places.
  * - For balances less than a million, returns the amount with 2 decimal places.
@@ -16,8 +16,8 @@ import { million, oneThousandth, ten, zero } from '@/numbers'
  * @param amount - The `BigNumber` representing the cryptocurrency balance.
  * @returns The formatted balance string.
  */
-export const formatCryptoBalance = (amount: BigNumber | string | number): string => {
-  const resolvedAmount = formatToBigNumber(amount)
+export const formatCryptoBalance = (amount: BigNumber | string | number | bigint): string => {
+  const resolvedAmount = formatToBigNumber(amount.toString())
 
   const absAmount = resolvedAmount.absoluteValue()
 

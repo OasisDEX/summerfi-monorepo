@@ -83,6 +83,7 @@ export default defineConfig(({ mode }) => {
         external: [
           '@loadable/component',
           '@summerfi/app-icons',
+          '@summerfi/armada-protocol-common',
           '@tabler/icons-react',
           'bignumber.js',
           'clsx',
@@ -97,6 +98,7 @@ export default defineConfig(({ mode }) => {
           '@summerfi/serverless-shared',
           '@summerfi/app-token-config',
           '@summerfi/app-types',
+          '@summerfi/app-utils',
           'embla-carousel-react',
           'embla-carousel',
         ],

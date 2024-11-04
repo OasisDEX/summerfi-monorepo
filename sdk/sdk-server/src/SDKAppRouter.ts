@@ -36,6 +36,7 @@ import { getSwapQuoteExactInput } from './handlers/getSwapQuote'
 import { getTokenByAddress } from './handlers/getTokenByAddress'
 import { getTokenByName } from './handlers/getTokenByName'
 import { getTokenBySymbol } from './handlers/getTokenBySymbol'
+import { getGlobalRebalancesRaw } from './armada-protocol-handlers/users/getGlobalRebalancesRaw'
 
 /**
  * Server
@@ -67,6 +68,7 @@ export const sdkAppRouter = router({
     users: {
       getVaultsRaw: getVaultsRaw,
       getVaultRaw: getVaultRaw,
+      getGlobalRebalancesRaw: getGlobalRebalancesRaw,
       getPoolInfo: getPoolInfo,
       getPosition: getArmadaPosition,
       getUserPositions: getUserPositions,

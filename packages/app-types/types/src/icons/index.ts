@@ -224,6 +224,7 @@ export type IconNamesList =
   | 'network_optimism'
   | 'network_base'
   | 'withdraw'
+  | 'deposit'
   | 'summer_illustration_check'
   | 'summer_illustration_email'
   | 'summer_illustration_failed'
@@ -237,6 +238,7 @@ export type IconNamesList =
   | 'summer_illustration_verification'
   | 'social_link'
   | 'social_x'
+  | 'pendle'
 
 export type TokenSymbolsList =
   | 'USDP'

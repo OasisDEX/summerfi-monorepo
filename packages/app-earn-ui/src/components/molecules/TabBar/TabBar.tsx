@@ -44,6 +44,7 @@ export const TabBar: FC<TabBarProps> = ({ tabs, textVariant = 'p2semi' }) => {
           {tabs.map((tab, index) => (
             <button
               key={index}
+              // @ts-ignore
               ref={(el) => (tabRefs.current[index] = el)}
               className={`${styles.tabButton} ${activeIndex === index ? styles.active : ''}`}
               onClick={() => setActiveIndex(index)}

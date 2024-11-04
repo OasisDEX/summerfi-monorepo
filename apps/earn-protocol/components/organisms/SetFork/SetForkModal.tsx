@@ -1,9 +1,10 @@
 'use client'
 
 import { type Dispatch, type FormEvent, type SetStateAction, useState } from 'react'
-import { useUser } from '@account-kit/react'
 import { Button, Input, SkeletonLine, Text } from '@summerfi/app-earn-ui'
+import { sdkSupportedNetworks } from '@summerfi/app-types'
 import { isValidUrl } from '@summerfi/app-utils'
+import { type ChainId } from '@summerfi/sdk-common'
 import {
   IconDeviceFloppy,
   IconToolsKitchen2,
@@ -14,15 +15,15 @@ import {
 import { ModalButton, type ModalButtonProps } from '@/components/molecules/Modal/ModalButton'
 import { forksCookieName } from '@/constants/forks-cookie-name'
 import { getCookies } from '@/constants/get-cookies'
-import { networksByName } from '@/constants/networks-list'
+import { networksById } from '@/constants/networks-list'
 import { safeParseJson } from '@/constants/safe-parse-json'
 
 const setFork =
   ({
-    networkKey,
+    chainId,
     setUpdating,
   }: {
-    networkKey: keyof typeof networksByName
+    chainId: ChainId
     setUpdating: Dispatch<SetStateAction<number[]>>
   }) =>
   (ev: FormEvent<HTMLFormElement>) => {
@@ -35,16 +36,12 @@ const setFork =
 
       return
     }
-    const hasCookieSetForNetwork = safeParseJson(getCookies(forksCookieName))[
-      networksByName[networkKey].id
-    ]
+    const hasCookieSetForNetwork = safeParseJson(getCookies(forksCookieName))[chainId]
 
     if (!forkUrl && !hasCookieSetForNetwork) {
       return
     }
-    setUpdating((prev) => [...prev, networksByName[networkKey].id])
-
-    const networkId = networksByName[networkKey].id
+    setUpdating((prev) => [...prev, chainId])
 
     fetch('/api/set-fork', {
       method: 'POST',
@@ -52,7 +49,7 @@ const setFork =
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        [networkId]: forkUrl,
+        [chainId]: forkUrl,
       }),
     })
       .then((response) => {
@@ -64,7 +61,7 @@ const setFork =
       })
       .then((_data) => {
         setUpdating((prev) => {
-          prev.splice(prev.indexOf(networksByName[networkKey].id), 1)
+          prev.splice(prev.indexOf(chainId), 1)
 
           return [...prev]
         })
@@ -73,7 +70,7 @@ const setFork =
         // eslint-disable-next-line no-console
         console.log('error', error)
         setUpdating((prev) => {
-          prev.splice(prev.indexOf(networksByName[networkKey].id), 1)
+          prev.splice(prev.indexOf(chainId), 1)
 
           return [...prev]
         })
@@ -83,18 +80,17 @@ const setFork =
 // resets all if no networkKey is provided
 const resetFork =
   ({
-    networkKey,
+    chainId,
     setResetting,
   }: {
-    networkKey: keyof typeof networksByName | ''
+    chainId: ChainId | ''
     setResetting: Dispatch<SetStateAction<boolean>>
   }) =>
   () => {
-    const network = networksByName[networkKey]
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    const hasCookieSetForNetwork = safeParseJson(getCookies(forksCookieName))[network?.id]
+    const hasCookieSetForNetwork = safeParseJson(getCookies(forksCookieName))[chainId]
 
-    if (networkKey && !hasCookieSetForNetwork) {
+    if (chainId && !hasCookieSetForNetwork) {
       return
     }
 
@@ -106,7 +102,7 @@ const resetFork =
       },
       body: JSON.stringify({
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        clear: network?.id ? network?.id.toString() : 'yes :)',
+        clear: chainId ? chainId.toString() : 'yes :)',
       }),
     })
       .then((response) => {
@@ -135,44 +131,6 @@ const SetForkModalButton = (props: ModalButtonProps) => {
 const SetForkModalContent = () => {
   const [updating, setUpdating] = useState<number[]>([])
   const [resetting, setResetting] = useState(false)
-  // const { wagmiConfig }: { wagmiConfig: Config } = useAppState()
-  // const [mainWallet] = useWallets()
-  const user = useUser()
-
-  const networksListKeys = Object.keys(networksByName).filter(
-    (networkKey) => !networksByName[networkKey].testnet,
-  )
-
-  // Hard to tell right now whether it will be supported in AA
-
-  // const addForkToWallet = (forkId: number) => async () => {
-  //   const forksList = safeParseJson(getCookies(forksCookieName))
-  //   const changedChain = wagmiConfig.chains.find((chain) => chain.id === Number(forkId))
-  //   const forkUrlId = forksList[forkId].split('-')[forksList[forkId].split('-').length - 1]
-  //
-  //   if (changedChain) {
-  //     await mainWallet.provider
-  //       .request({
-  //         method: 'wallet_addEthereumChain',
-  //         params: [
-  //           {
-  //             chainId: formatToHex(changedChain.id),
-  //             chainName: `${changedChain.name} (fork: ${forkUrlId})`,
-  //             nativeCurrency: changedChain.nativeCurrency,
-  //             rpcUrls: [forksList[forkId]],
-  //           },
-  //         ],
-  //       })
-  //       .then((resp) => {
-  //         // eslint-disable-next-line no-console
-  //         console.log(`Added fork for ${changedChain.name}`, resp)
-  //       })
-  //       .catch((error) => {
-  //         // eslint-disable-next-line no-console
-  //         console.error('Error adding fork to wallet', error)
-  //       })
-  //   }
-  // }
 
   if (resetting) {
     return (
@@ -181,8 +139,8 @@ const SetForkModalContent = () => {
           🍴 Setup forks
         </Text>
         <div style={{ marginTop: '20px' }}>
-          {networksListKeys.map((networkKey) => (
-            <div key={networkKey} style={{ marginTop: '10px' }}>
+          {sdkSupportedNetworks.map((chainId) => (
+            <div key={`Skeleton_${chainId}`} style={{ marginTop: '10px' }}>
               <SkeletonLine height={35} width="100%" />
             </div>
           ))}
@@ -201,12 +159,12 @@ const SetForkModalContent = () => {
         🍴 Setup forks
       </Text>
       <div style={{ overflow: 'auto', marginTop: '20px' }}>
-        {networksListKeys.map((networkKey) => {
-          const network = networksByName[networkKey]
+        {sdkSupportedNetworks.map((chainId) => {
+          const network = networksById[chainId]
 
           return (
             <div
-              key={networkKey}
+              key={`Network_${chainId}`}
               style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -218,7 +176,7 @@ const SetForkModalContent = () => {
             >
               <form
                 style={{ marginTop: '10px', width: '100%' }}
-                onSubmit={setFork({ networkKey, setUpdating })}
+                onSubmit={setFork({ chainId, setUpdating })}
               >
                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                   <Input
@@ -227,9 +185,11 @@ const SetForkModalContent = () => {
                     wrapperStyles={{ width: '100%', height: '36px' }}
                     style={{
                       width: '100%',
-                      paddingLeft: '50px',
+                      padding: '10px 10px 10px 50px',
                       height: '36px',
                       fontSize: '14px',
+                      lineHeight: '20px',
+                      color: 'gray',
                     }}
                     CustomIcon={forkCookies[network.id] ? IconToolsKitchen2 : IconToolsKitchen2Off}
                   />
@@ -243,21 +203,8 @@ const SetForkModalContent = () => {
                     }}
                     type="submit"
                   >
-                    {network.label} <IconDeviceFloppy size={18} />
+                    {network.label} <IconDeviceFloppy color="gray" size={18} />
                   </Button>
-                  {/* <Button*/}
-                  {/*  disabled={!forkCookies[network.id] || !mainWallet}*/}
-                  {/*  variant={forkCookies[network.id] ? 'primarySmall' : 'neutralSmall'}*/}
-                  {/*  style={{*/}
-                  {/*    minWidth: '30px',*/}
-                  {/*    width: '50px',*/}
-                  {/*    padding: '5px',*/}
-                  {/*    marginLeft: '10px',*/}
-                  {/*  }}*/}
-                  {/*  onClick={addForkToWallet(network.id)}*/}
-                  {/* >*/}
-                  {/*  <IconWallet size={18} />*/}
-                  {/* </Button>*/}
                   <Button
                     disabled={!forkCookies[network.id]}
                     variant={forkCookies[network.id] ? 'primarySmall' : 'neutralSmall'}
@@ -267,9 +214,9 @@ const SetForkModalContent = () => {
                       padding: '5px',
                       marginLeft: '10px',
                     }}
-                    onClick={resetFork({ networkKey, setResetting })}
+                    onClick={resetFork({ chainId, setResetting })}
                   >
-                    <IconX size={18} />
+                    <IconX color={forkCookies[network.id] ? 'black' : 'gray'} size={18} />
                   </Button>
                 </div>
               </form>
@@ -277,19 +224,13 @@ const SetForkModalContent = () => {
           )
         })}
       </div>
-      {!user && (
-        <Text
-          as="p"
-          variant="p3semi"
-          style={{ marginTop: '20px', textAlign: 'center', color: 'red' }}
-        >
-          Connect your wallet to add forks to it.
-        </Text>
-      )}
+      <Text as="p" variant="p3semi" style={{ marginTop: '20px', textAlign: 'center' }}>
+        Add fork to your wallet on tenderly (not available here)
+      </Text>
       <Button
         variant="secondaryLarge"
         style={{ marginTop: '30px' }}
-        onClick={resetFork({ networkKey: '', setResetting })}
+        onClick={resetFork({ chainId: '', setResetting })}
       >
         Reset all forks
       </Button>

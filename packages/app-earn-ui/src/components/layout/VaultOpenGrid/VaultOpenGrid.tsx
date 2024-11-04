@@ -17,9 +17,9 @@ import { VaultTitleDropdownContent } from '@/components/molecules/VaultTitleDrop
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
 import { getVaultUrl } from '@/helpers/get-vault-url.ts'
 
-import vaultGridPreviewStyles from './VaultGridPreview.module.scss'
+import vaultOpenGridStyles from './VaultOpenGrid.module.scss'
 
-interface VaultGridPreviewProps {
+interface VaultOpenGridProps {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
   displayGraph?: boolean
@@ -28,7 +28,7 @@ interface VaultGridPreviewProps {
   sidebarContent: ReactNode
 }
 
-export const VaultGridPreview: FC<VaultGridPreviewProps> = ({
+export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   vault,
   vaults,
   displayGraph,
@@ -57,7 +57,7 @@ export const VaultGridPreview: FC<VaultGridPreviewProps> = ({
 
   return (
     <>
-      <div className={vaultGridPreviewStyles.vaultGridPreviewBreadcrumbsWrapper}>
+      <div className={vaultOpenGridStyles.vaultOpenGridBreadcrumbsWrapper}>
         <div style={{ display: 'inline-block' }}>
           <Link href="/earn">
             <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
@@ -69,13 +69,13 @@ export const VaultGridPreview: FC<VaultGridPreviewProps> = ({
           </Text>
         </div>
       </div>
-      <div className={vaultGridPreviewStyles.vaultGridPreviewPositionWrapper}>
+      <div className={vaultOpenGridStyles.vaultOpenGridPositionWrapper}>
         <div>
-          <div className={vaultGridPreviewStyles.vaultGridPreviewTopLeftWrapper}>
+          <div className={vaultOpenGridStyles.vaultOpenGridTopLeftWrapper}>
             <Dropdown
               options={vaults.map((item) => ({
                 value: item.id,
-                content: <VaultTitleDropdownContent vault={item} link={getVaultUrl(vault)} />,
+                content: <VaultTitleDropdownContent vault={item} link={getVaultUrl(item)} />,
               }))}
               dropdownValue={{
                 value: vault.id,
@@ -110,7 +110,7 @@ export const VaultGridPreview: FC<VaultGridPreviewProps> = ({
                 value={parsedApr}
                 subValue="+2.1% Median DeFi Yield"
                 subValueType="positive"
-                subValueSize="small"
+                subValueSize="medium"
               />
             </Box>
             <Box>
@@ -121,7 +121,7 @@ export const VaultGridPreview: FC<VaultGridPreviewProps> = ({
                 value="value"
                 subValue="+1.7% Median DeFi Yield"
                 subValueType="positive"
-                subValueSize="small"
+                subValueSize="medium"
               />
             </Box>
             <Box
@@ -136,14 +136,14 @@ export const VaultGridPreview: FC<VaultGridPreviewProps> = ({
                 value={parsedTotalValueLockedUSD}
                 // TODO: fill data
                 subValue={`231,232,321.01 ${vault.inputToken.symbol}`}
-                subValueSize="small"
+                subValueSize="medium"
               />
             </Box>
           </SimpleGrid>
-          <Box className={vaultGridPreviewStyles.leftBlock}>{detailsContent}</Box>
+          <Box className={vaultOpenGridStyles.leftBlock}>{detailsContent}</Box>
         </div>
-        <div className={vaultGridPreviewStyles.rightBlockWrapper}>
-          <div className={vaultGridPreviewStyles.rightBlock}>{sidebarContent}</div>
+        <div className={vaultOpenGridStyles.rightBlockWrapper}>
+          <div className={vaultOpenGridStyles.rightBlock}>{sidebarContent}</div>
         </div>
       </div>
     </>

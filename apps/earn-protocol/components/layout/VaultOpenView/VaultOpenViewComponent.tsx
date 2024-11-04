@@ -1,16 +1,13 @@
-'use client'
-
-import { type ChangeEvent, useMemo, useState } from 'react'
 import {
+  Button,
   Expander,
-  getVaultUrl,
   InputWithDropdown,
   ProjectedEarnings,
   Sidebar,
   SidebarFootnote,
   sidebarFootnote,
   Text,
-  VaultGridPreview,
+  VaultOpenGrid,
 } from '@summerfi/app-earn-ui'
 import {
   type DropdownOption,
@@ -18,8 +15,7 @@ import {
   type SDKVaultsListType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
-import { formatCryptoBalance, mapNumericInput } from '@summerfi/app-utils'
-import { SDKContextProvider } from '@summerfi/sdk-client-react'
+import { formatCryptoBalance } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 
@@ -30,19 +26,17 @@ import {
 } from '@/components/layout/VaultOpenView/mocks'
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
+import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { MockedLineChart } from '@/components/organisms/Charts/MockedLineChart'
 import { RebalancingActivity } from '@/components/organisms/RebalancingActivity/RebalancingActivity'
 import { UserActivity } from '@/components/organisms/UserActivity/UserActivity'
 import { VaultExposure } from '@/components/organisms/VaultExposure/VaultExposure'
-import { sdkApiUrl } from '@/constants/sdk'
-import { rebalancingActivityRawData } from '@/features/rebalance-activity/table/dummyData'
+import { TransactionAction } from '@/constants/transaction-actions'
+import { usePosition } from '@/hooks/use-position'
+import { useRedirectToPosition } from '@/hooks/use-redirect-to-position'
+import { useTransaction } from '@/hooks/use-transaction'
 
 import vaultOpenViewStyles from './VaultOpenView.module.scss'
-
-enum Action {
-  DEPOSIT = 'deposit',
-  WITHDRAW = 'withdraw',
-}
 
 export const VaultOpenViewComponent = ({
   vault,
@@ -51,12 +45,23 @@ export const VaultOpenViewComponent = ({
   vault: SDKVaultishType
   vaults: SDKVaultsListType
 }) => {
-  const [action, setAction] = useState(Action.DEPOSIT)
-  const [amount, setAmount] = useState<BigNumber>()
+  const {
+    amountDisplayValue,
+    handleAmountChange,
+    sidebar,
+    amount,
+    txHashes,
+    removeTxHash,
+    vaultChainId,
+    reset,
+  } = useTransaction({ vault })
 
-  const _unused = {
-    setAction,
-  }
+  const position = usePosition({
+    chainId: vaultChainId,
+    vaultId: vault.id,
+  })
+
+  useRedirectToPosition({ vault, position })
 
   const options: DropdownOption[] = [
     ...[...new Set(vaults.map(({ inputToken }) => inputToken.symbol))].map((symbol) => ({
@@ -66,30 +71,14 @@ export const VaultOpenViewComponent = ({
     })),
   ]
 
-  const handleAmountChange = (ev: ChangeEvent<HTMLInputElement>) => {
-    if (!ev.target.value) {
-      setAmount(undefined)
-
-      return
-    }
-    setAmount(new BigNumber(ev.target.value.replaceAll(',', '').trim()))
-  }
-
-  const amountDisplayValue = useMemo(() => {
-    if (!amount) {
-      return ''
-    }
-
-    return mapNumericInput(amount.toString())
-  }, [amount])
-
   const dropdownValue =
     options.find((option) => option.value === vault.inputToken.symbol) ?? options[0]
 
   const balance = new BigNumber(123123)
+  const displayGraph = !!amount && amount.gt(0)
 
   const sidebarProps = {
-    title: capitalize(action),
+    title: capitalize(TransactionAction.DEPOSIT),
     content: (
       <>
         <InputWithDropdown
@@ -109,24 +98,41 @@ export const VaultOpenViewComponent = ({
       </>
     ),
 
-    primaryButton: {
-      label: 'Get Started',
-      url: getVaultUrl(vault),
-      disabled: !amount,
-    },
+    primaryButton: sidebar.primaryButton,
     footnote: (
-      <SidebarFootnote
-        title={sidebarFootnote.title}
-        list={sidebarFootnote.list}
-        tooltip={sidebarFootnote.tooltip}
-      />
+      <>
+        {sidebar.error ?? amount?.gt(0) ? (
+          <Button
+            variant="secondarySmall"
+            style={{ width: '100%', marginBottom: 'var(--general-space-12)' }}
+            onClick={reset}
+          >
+            reset
+          </Button>
+        ) : null}
+        {txHashes.map((transactionData) => (
+          <TransactionHashPill
+            key={transactionData.hash}
+            transactionData={transactionData}
+            removeTxHash={removeTxHash}
+            chainId={vaultChainId}
+          />
+        ))}
+        <SidebarFootnote
+          title={sidebarFootnote.title}
+          list={sidebarFootnote.list}
+          tooltip={sidebarFootnote.tooltip}
+        />
+      </>
     ),
+    error: sidebar.error,
   }
 
-  const displayGraph = !!amount && amount.gt(0)
+  // needed due to type duality
+  const rebalancesList = `rebalances` in vault ? vault.rebalances : []
 
   return (
-    <VaultGridPreview
+    <VaultOpenGrid
       vault={vault}
       vaults={vaults}
       displayGraph={displayGraph}
@@ -162,7 +168,7 @@ export const VaultOpenViewComponent = ({
             }
             defaultExpanded
           >
-            <RebalancingActivity rawData={rebalancingActivityRawData} />
+            <RebalancingActivity rebalancesList={rebalancesList} vaultId={vault.id} />
           </Expander>
           <Expander
             title={
@@ -178,19 +184,5 @@ export const VaultOpenViewComponent = ({
       }
       sidebarContent={<Sidebar {...sidebarProps} />}
     />
-  )
-}
-
-export const VaultOpenViewWrapper = ({
-  vault,
-  vaults,
-}: {
-  vault: SDKVaultishType
-  vaults: SDKVaultsListType
-}) => {
-  return (
-    <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
-      <VaultOpenViewComponent vault={vault} vaults={vaults} />
-    </SDKContextProvider>
   )
 }

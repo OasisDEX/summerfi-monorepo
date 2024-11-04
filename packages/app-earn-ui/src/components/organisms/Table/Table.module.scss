@@ -21,6 +21,12 @@
     font-weight: 600;
 
     tr {
+      th {
+        transition: color 0.2s ease-in-out;
+        &:hover {
+          color: var(--earn-protocol-secondary-60);
+        }
+      }
       th > * {
         text-align: right;
         justify-content: flex-end;
@@ -42,8 +48,13 @@
     }
 
     td > * {
+      display: flex;
       text-align: right;
       justify-content: flex-end;
+
+      span {
+        text-align: right;
+      }
     }
 
     td:first-child > * {

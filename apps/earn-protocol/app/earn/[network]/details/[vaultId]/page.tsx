@@ -1,8 +1,8 @@
-import { subgraphNetworkToId, VaultGridDetails } from '@summerfi/app-earn-ui'
+import { Text, VaultGridDetails } from '@summerfi/app-earn-ui'
 import { type SDKNetwork } from '@summerfi/app-types'
 
-import { getVaultDetails } from '@/app/server-handlers/sdk/getVaultDetails'
-import { getVaultsList } from '@/app/server-handlers/sdk/getVaultsList'
+import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
+import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { VaultDetailsView } from '@/components/layout/VaultDetailsView/VaultDetailsView'
 
 type EarnVaultDetailsPageProps = {
@@ -15,18 +15,24 @@ type EarnVaultDetailsPageProps = {
 export const revalidate = 60
 
 const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
-  const networkId = subgraphNetworkToId(params.network)
-
-  const [selectedVault, { vaults }] = await Promise.all([
+  const [vault, { vaults }] = await Promise.all([
     getVaultDetails({
       vaultAddress: params.vaultId,
-      chainId: networkId,
+      network: params.network,
     }),
     getVaultsList(),
   ])
 
+  if (!vault) {
+    return (
+      <Text>
+        No vault found with the id {params.vaultId} on the network {params.network}
+      </Text>
+    )
+  }
+
   return (
-    <VaultGridDetails vault={selectedVault} vaults={vaults}>
+    <VaultGridDetails vault={vault} vaults={vaults}>
       <VaultDetailsView />
     </VaultGridDetails>
   )

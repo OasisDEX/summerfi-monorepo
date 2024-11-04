@@ -1,18 +1,11 @@
 'use client'
 import { type CSSProperties, type FC, useState } from 'react'
-import {
-  AnimateHeight,
-  Card,
-  DataBlock,
-  Icon,
-  networkNameToSDKNetwork,
-  Text,
-  VaultTitle,
-} from '@summerfi/app-earn-ui'
+import { AnimateHeight, Card, DataBlock, Icon, Text, VaultTitle } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
 import { type PortfolioWalletAsset } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
+import { networkNameToSDKNetwork } from '@/helpers/network-helpers'
 import { valueColorResolver } from '@/helpers/value-color-resolver'
 
 import classNames from './PortfolioAssetsList.module.scss'

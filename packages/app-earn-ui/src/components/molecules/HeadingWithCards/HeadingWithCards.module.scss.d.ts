@@ -1,8 +1,6 @@
 export type Styles = {
   card: string
-  cardDescription: string
   cardsWrapper: string
-  cardTitle: string
   description: string
   heading: string
   headingIcons: string

@@ -27,7 +27,7 @@ export default function WalletLabel() {
         variant="secondarySmall"
         onClick={handleLogout}
         style={{
-          padding: '0 var(--general-space-12) 0 var(--general-space-4)',
+          padding: '0 var(--general-space-12) 0 6px',
         }}
       >
         <LoadableAvatar

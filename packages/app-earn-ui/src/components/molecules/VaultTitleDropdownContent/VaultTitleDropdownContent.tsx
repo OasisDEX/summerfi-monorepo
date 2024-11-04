@@ -32,6 +32,7 @@ export const VaultTitleDropdownContent: FC<VaultDropdownContentProps> = ({ vault
         </Text>
       </div>
       <Text as="p" variant="p4semi" style={{ color: riskColors.low }}>
+        {/** TODO: fill data */}
         {capitalize('low')} risk
       </Text>
     </div>

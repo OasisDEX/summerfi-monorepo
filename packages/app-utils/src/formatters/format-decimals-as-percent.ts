@@ -9,7 +9,7 @@ import { formatToBigNumber } from '@/formatters/format-to-big-number'
  * This function multiplies the provided `BigNumber` by 100 to convert it into a percentage and then formats it as a string using the `formatPercent` function.
  * It supports customizing the precision, adding a plus sign for positive percentages, specifying a rounding mode, and optionally omitting the percent sign.
  *
- * @param amount - The `BigNumber` representing the decimal value to convert.
+ * @param amount - The `BigNumber` or `string` or `number` or `bigint` representing the decimal value to convert.
  * @param precision - The number of decimal places to include in the percentage (default is 2).
  * @param plus - Whether to include a plus sign for positive percentages (default is `false`).
  * @param roundMode - The rounding mode to use (default is `BigNumber.ROUND_DOWN`).
@@ -17,7 +17,7 @@ import { formatToBigNumber } from '@/formatters/format-to-big-number'
  * @returns The formatted percentage string.
  */
 export const formatDecimalAsPercent = (
-  amount: BigNumber | string | number,
+  amount: BigNumber | string | number | bigint,
   {
     precision = 2,
     plus = false,

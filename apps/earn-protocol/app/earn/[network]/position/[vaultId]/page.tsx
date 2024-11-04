@@ -1,11 +1,11 @@
-import { subgraphNetworkToId, Text } from '@summerfi/app-earn-ui'
+import { Text } from '@summerfi/app-earn-ui'
 import { type SDKNetwork } from '@summerfi/app-types'
 
-import { getVaultDetails } from '@/app/server-handlers/sdk/getVaultDetails'
-import { getVaultsList } from '@/app/server-handlers/sdk/getVaultsList'
+import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
+import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { VaultOpenView } from '@/components/layout/VaultOpenView/VaultOpenView'
 
-type EarnVaultOpenManagePageProps = {
+type EarnVaultOpenPageProps = {
   params: {
     vaultId: string
     network: SDKNetwork
@@ -14,13 +14,11 @@ type EarnVaultOpenManagePageProps = {
 
 export const revalidate = 60
 
-const EarnVaultOpenManagePage = async ({ params }: EarnVaultOpenManagePageProps) => {
-  const networkId = subgraphNetworkToId(params.network)
-
+const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
   const [vault, { vaults }] = await Promise.all([
     getVaultDetails({
       vaultAddress: params.vaultId,
-      chainId: networkId,
+      network: params.network,
     }),
     getVaultsList(),
   ])
@@ -36,4 +34,4 @@ const EarnVaultOpenManagePage = async ({ params }: EarnVaultOpenManagePageProps)
   return <VaultOpenView vault={vault} vaults={vaults} />
 }
 
-export default EarnVaultOpenManagePage
+export default EarnVaultOpenPage

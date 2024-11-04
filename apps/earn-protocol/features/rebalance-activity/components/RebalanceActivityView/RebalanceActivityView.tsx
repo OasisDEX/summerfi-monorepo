@@ -1,85 +1,151 @@
 'use client'
+import { type FC, useMemo, useState } from 'react'
+import InfiniteScroll from 'react-infinite-scroller'
+import {
+  GenericMultiselect,
+  getTwitterShareUrl,
+  HeadingWithCards,
+  TableCarousel,
+  useCurrentUrl,
+  useQueryParams,
+} from '@summerfi/app-earn-ui'
+import { type SDKGlobalRebalancesType, type SDKVaultsListType } from '@summerfi/app-types'
 
-import { type FC, useMemo } from 'react'
-import { HeadingWithCards, Table, TableCarousel } from '@summerfi/app-earn-ui'
-
-import { rebalancingActivityColumns } from '@/features/rebalance-activity/table/columns'
-import { rebalancingActivityMapper } from '@/features/rebalance-activity/table/mapper'
-import { type RebalancingActivityRawData } from '@/features/rebalance-activity/table/types'
+import { RebalanceActivityTable } from '@/features/rebalance-activity/components/RebalanceActivityTable/RebalanceActivityTable'
+import {
+  getRebalanceActivityHeadingCards,
+  rebalanceActivityHeading,
+} from '@/features/rebalance-activity/components/RebalanceActivityView/cards'
+import { rebalanceActivityTableCarouselData } from '@/features/rebalance-activity/components/RebalanceActivityView/carousel'
+import { getRebalanceSavedGasCost } from '@/features/rebalance-activity/helpers/get-saved-gas-cost'
+import { getRebalanceSavedTimeInHours } from '@/features/rebalance-activity/helpers/get-saved-time-in-hours'
+import { rebalanceActivityFilter } from '@/features/rebalance-activity/table/filters/filters'
+import { mapMultiselectOptions } from '@/features/rebalance-activity/table/filters/mappers'
 
 import classNames from './RebalanceActivityView.module.scss'
 
-const carouselData = [
-  {
-    title: 'Reduced costs',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus luctus massa ac sapien eleifend.',
-    link: {
-      label: 'Add to position',
-      href: '/',
-    },
-  },
-  {
-    title: 'Optimized Yield',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus luctus massa ac sapien eleifend.',
-    link: {
-      label: 'Add to position',
-      href: '/',
-    },
-  },
-  {
-    title: 'Saved Time',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus luctus massa ac sapien eleifend.',
-    link: {
-      label: 'Add to position',
-      href: '/',
-    },
-  },
-]
-
 interface RebalanceActivityViewProps {
-  rawData: RebalancingActivityRawData[]
+  vaultsList: SDKVaultsListType
+  rebalancesList: SDKGlobalRebalancesType
+  searchParams?: { [key: string]: string[] }
 }
 
-export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({ rawData }) => {
-  const rows = useMemo(() => rebalancingActivityMapper(rawData), [rawData])
+const initialRows = 10
+
+export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
+  vaultsList,
+  rebalancesList,
+  searchParams,
+}) => {
+  const { setQueryParams } = useQueryParams()
+  const [strategyFilter, setStrategyFilter] = useState<string[]>(searchParams?.strategies ?? [])
+  const [tokenFilter, setTokenFilter] = useState<string[]>(searchParams?.tokens ?? [])
+  const [protocolFilter, setProtocolFilter] = useState<string[]>(searchParams?.protocols ?? [])
+  const currentUrl = useCurrentUrl()
+
+  const [current, setCurrent] = useState(initialRows)
+
+  const [currentlyLoadedList, setCurrentlyLoadedList] = useState(
+    rebalancesList.slice(0, initialRows),
+  )
+
+  const { strategiesOptions, tokensOptions, protocolsOptions } = useMemo(
+    () => mapMultiselectOptions(vaultsList),
+    [vaultsList],
+  )
+
+  const handleMoreItems = () => {
+    setCurrentlyLoadedList((prev) => [
+      ...prev,
+      ...rebalancesList.slice(current, current + initialRows),
+    ])
+    setCurrent(current + initialRows)
+  }
+
+  const filteredList = useMemo(
+    () =>
+      rebalanceActivityFilter({
+        rebalancesList: currentlyLoadedList,
+        strategyFilter,
+        tokenFilter,
+        protocolFilter,
+      }),
+    [currentlyLoadedList, strategyFilter, tokenFilter, protocolFilter],
+  )
+
+  const genericMultiSelectFilters = [
+    {
+      options: strategiesOptions,
+      label: 'Strategies',
+      onChange: (strategies: string[]) => {
+        setQueryParams({ strategies })
+        setStrategyFilter(strategies)
+      },
+      initialValues: strategyFilter,
+    },
+    {
+      options: tokensOptions,
+      label: 'Tokens',
+      onChange: (tokens: string[]) => {
+        setQueryParams({ tokens })
+        setTokenFilter(tokens)
+      },
+      initialValues: tokenFilter,
+    },
+    {
+      options: protocolsOptions,
+      label: 'Protocols',
+      onChange: (protocols: string[]) => {
+        setQueryParams({ protocols })
+        setProtocolFilter(protocols)
+      },
+      initialValues: protocolFilter,
+    },
+  ]
+
+  const totalItems = rebalancesList.length
+  const savedTimeInHours = useMemo(() => getRebalanceSavedTimeInHours(totalItems), [totalItems])
+  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(totalItems), [totalItems])
+
+  const cards = useMemo(
+    () => getRebalanceActivityHeadingCards({ totalItems, savedGasCost, savedTimeInHours }),
+    [totalItems, savedGasCost, savedTimeInHours],
+  )
 
   return (
     <div className={classNames.wrapper}>
       <HeadingWithCards
-        title="Lazy Summer Global Rebalance Activity"
-        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lacinia bibendum nulla sed consectetur. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Nullam quis risus eget."
-        cards={[
-          {
-            title: 'Rebalance actions',
-            value: '3,213',
-            description:
-              'Justo enim sollicitudin suspendisse lectus tellus tortor magna. Velit id nulla tempor arcu quis condimentum parturient.',
-          },
-          {
-            title: 'User saved time',
-            value: '2,184 hours',
-            description:
-              'Justo enim sollicitudin suspendisse lectus tellus tortor magna. Velit id nulla tempor arcu quis condimentum parturient.',
-          },
-          {
-            title: 'Gas cost savings',
-            value: '1.23m',
-            description:
-              'Justo enim sollicitudin suspendisse lectus tellus tortor magna. Velit id nulla tempor arcu quis condimentum parturient.',
-          },
-        ]}
-      />
-      <Table
-        rows={rows}
-        columns={rebalancingActivityColumns}
-        customRow={{
-          idx: 1,
-          content: <TableCarousel carouselData={carouselData} />,
+        title={rebalanceActivityHeading.title}
+        description={rebalanceActivityHeading.description}
+        cards={cards}
+        social={{
+          linkToCopy: currentUrl,
+          linkToShare: getTwitterShareUrl({
+            url: currentUrl,
+            text: 'Check out Lazy Summer Global Rebalance Activity!',
+          }),
         }}
       />
+      <div className={classNames.filtersWrapper}>
+        {genericMultiSelectFilters.map((filter) => (
+          <GenericMultiselect
+            key={filter.label}
+            options={filter.options}
+            label={filter.label}
+            onChange={filter.onChange}
+            initialValues={filter.initialValues}
+          />
+        ))}
+      </div>
+      <InfiniteScroll loadMore={handleMoreItems} hasMore={totalItems > currentlyLoadedList.length}>
+        <RebalanceActivityTable
+          rebalancesList={filteredList}
+          customRow={{
+            idx: 3,
+            content: <TableCarousel carouselData={rebalanceActivityTableCarouselData} />,
+          }}
+        />
+      </InfiniteScroll>
     </div>
   )
 }

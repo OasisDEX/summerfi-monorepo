@@ -10,10 +10,10 @@ type DataBlockProps = {
   title: string
   titleTooltip?: string
   size?: 'small' | 'large'
-  titleSize?: 'small' | 'large'
+  titleSize?: 'small' | 'medium' | 'large'
   titleStyle?: CSSProperties
-  subValueSize?: 'small' | 'large'
-  valueSize?: 'small' | 'large'
+  subValueSize?: 'small' | 'medium' | 'large'
+  valueSize?: 'small' | 'large' | 'largeColorful'
   valueStyle?: CSSProperties
   value: string
   subValue?: ReactNode
@@ -39,16 +39,19 @@ export const DataBlock = ({
 }: DataBlockProps) => {
   const titleVariant = {
     small: 'p3semi' as const,
+    medium: 'p2semi' as const,
     large: 'p1semi' as const,
   }[titleSize ?? size]
 
   const valueVariant = {
     small: 'p1semi' as const,
     large: 'h4' as const,
+    largeColorful: 'h4colorful' as const,
   }[valueSize ?? size]
 
   const subValueVariant = {
-    small: 'p2semi' as const,
+    small: 'p4semi' as const,
+    medium: 'p2semi' as const,
     large: 'h5' as const,
   }[subValueSize ?? size]
 

@@ -242,6 +242,7 @@ export const icons = {
   network_optimism: customLazy(() => import('./icons/network_optimism.svg?react')),
   network_base: customLazy(() => import('./icons/network_base.svg?react')),
   withdraw: customLazy(() => import('./icons/withdraw.svg?react')),
+  deposit: customLazy(() => import('./icons/deposit.svg?react')),
   summer_illustration_check: customLazy(
     () => import('./icons/summer_illustration_check.svg?react'),
   ),
@@ -275,4 +276,5 @@ export const icons = {
   ),
   social_link: customLazy(() => import('./icons/social_link.svg?react')),
   social_x: customLazy(() => import('./icons/social_x.svg?react')),
+  pendle: customLazy(() => import('./icons/pendle.svg?react')),
 }

@@ -23,8 +23,9 @@
     "dev": "concurrently \"pnpm:vite-dev\" \"pnpm:generate-module-types-watch\" \"pnpm:generate-component-types-watch\" \"pnpm:resolve-tspaths-watch\""
   },
   "devDependencies": {
-    "@summerfi/app-types": "workspace:*",
     "@summerfi/app-token-config": "workspace:*",
+    "@summerfi/app-types": "workspace:*",
+    "@summerfi/app-utils": "workspace:*",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
     "@types/loadable__component": "^5.13.9",
@@ -47,6 +48,7 @@
   "peerDependencies": {
     "@loadable/component": "^5.16.4",
     "@summerfi/app-icons": "workspace:*",
+    "@summerfi/armada-protocol-common": "workspace:*",
     "@tabler/icons-react": "^3.19.0",
     "bignumber.js": "^9.1.2",
     "boring-avatars": "1.10.2",

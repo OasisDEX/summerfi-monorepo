@@ -285,6 +285,9 @@ importers:
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
+      react-infinite-scroller:
+        specifier: ^1.2.6
+        version: 1.2.6(react@18.3.1)
       recharts:
         specifier: ^2.13.0
         version: 2.13.0(react-dom@18.3.1)(react@18.3.1)
@@ -331,6 +334,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.0
+      '@types/react-infinite-scroller':
+        specifier: ^1.2.5
+        version: 1.2.5
       json-to-ts:
         specifier: ^1.7.0
         version: 1.7.0
@@ -797,6 +803,9 @@ importers:
       '@summerfi/app-utils':
         specifier: workspace:*
         version: link:../app-utils
+      '@summerfi/armada-protocol-common':
+        specifier: workspace:*
+        version: link:../../sdk/armada-protocol-common
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../serverless-shared
@@ -1110,6 +1119,9 @@ importers:
       '@summerfi/rays-db':
         specifier: workspace:*
         version: link:../rays-db
+      '@summerfi/sdk-common':
+        specifier: workspace:*
+        version: link:../../sdk/sdk-common
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../serverless-shared
@@ -1259,6 +1271,9 @@ importers:
       lodash-es:
         specifier: ^4.17.1
         version: 4.17.21
+      next:
+        specifier: ^14.2.15
+        version: 14.2.15(@babel/core@7.26.0)(react-dom@18.3.1)(react@18.3.1)(sass@1.77.8)
       rollup-preserve-directives:
         specifier: ^1.1.1
         version: 1.1.1(rollup@4.22.4)
@@ -18288,6 +18303,12 @@ packages:
       '@types/react': 18.3.1
     dev: true
 
+  /@types/react-infinite-scroller@1.2.5:
+    resolution: {integrity: sha512-fJU1jhMgoL6NJFrqTM0Ob7tnd2sQWGxe2ESwiU6FZWbJK/VO/Er5+AOhc+e2zbT0dk5pLygqctsulOLJ8xnSzw==}
+    dependencies:
+      '@types/react': 18.3.1
+    dev: true
+
   /@types/react-transition-group@4.4.10:
     resolution: {integrity: sha512-hT/+s0VQs2ojCX823m60m5f0sL5idt9SO6Tj6Dg+rdphGPIeJbJ6CxvBYkgkGKrYeDjvIpKTR38UzmtHJOGW3Q==}
     dependencies:
@@ -32531,6 +32552,15 @@ packages:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       react-native: 0.74.3(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(react@18.3.1)
+    dev: false
+
+  /react-infinite-scroller@1.2.6(react@18.3.1):
+    resolution: {integrity: sha512-mGdMyOD00YArJ1S1F3TVU9y4fGSfVVl6p5gh/Vt4u99CJOptfVu/q5V/Wlle72TMgYlBwIhbxK5wF0C/R33PXQ==}
+    peerDependencies:
+      react: ^0.14.9 || ^15.3.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      prop-types: 15.8.1
+      react: 18.3.1
     dev: false
 
   /react-intersection-observer@9.10.3(react-dom@18.3.1)(react@18.3.1):

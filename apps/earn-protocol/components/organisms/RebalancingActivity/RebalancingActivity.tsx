@@ -1,17 +1,24 @@
 import { type FC, useMemo } from 'react'
-import { Card, DataBlock, Table, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { Card, DataBlock, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { type SDKGlobalRebalancesType } from '@summerfi/app-types'
+import { formatFiatBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
 
-import { rebalancingActivityColumns } from '@/features/rebalance-activity/table/columns'
-import { rebalancingActivityMapper } from '@/features/rebalance-activity/table/mapper'
-import { type RebalancingActivityRawData } from '@/features/rebalance-activity/table/types'
+import { RebalanceActivityTable } from '@/features/rebalance-activity/components/RebalanceActivityTable/RebalanceActivityTable'
+import { getRebalanceSavedGasCost } from '@/features/rebalance-activity/helpers/get-saved-gas-cost'
+import { getRebalanceSavedTimeInHours } from '@/features/rebalance-activity/helpers/get-saved-time-in-hours'
 
 interface RebalancingActivityProps {
-  rawData: RebalancingActivityRawData[]
+  rebalancesList: SDKGlobalRebalancesType
+  vaultId: string
 }
 
-export const RebalancingActivity: FC<RebalancingActivityProps> = ({ rawData }) => {
-  const rows = useMemo(() => rebalancingActivityMapper(rawData), [rawData])
+const rowsToDisplay = 4
+
+export const RebalancingActivity: FC<RebalancingActivityProps> = ({ rebalancesList, vaultId }) => {
+  const totalItems = rebalancesList.length
+  const savedTimeInHours = useMemo(() => getRebalanceSavedTimeInHours(totalItems), [totalItems])
+  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(totalItems), [totalItems])
 
   return (
     <Card variant="cardSecondary" style={{ marginTop: 'var(--spacing-space-medium)' }}>
@@ -27,9 +34,13 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({ rawData }) =
             flexWrap: 'wrap',
           }}
         >
-          <DataBlock title="Rebalance actions" size="small" value="313" />
-          <DataBlock title="User saved time" size="small" value="73.3 Hours" />
-          <DataBlock title="Gas cost savings" size="small" value="$24" />
+          <DataBlock title="Rebalance actions" size="small" value={`${rebalancesList.length}`} />
+          <DataBlock title="User saved time" size="small" value={`${savedTimeInHours} Hours`} />
+          <DataBlock
+            title="Gas cost savings"
+            size="small"
+            value={`$${formatFiatBalance(savedGasCost)}`}
+          />
         </div>
         <Text
           as="p"
@@ -43,8 +54,15 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({ rawData }) =
           for reallocating assets from lower performing strategies to higher performing ones, within
           a threshold of risk.
         </Text>
-        <Table rows={rows} columns={rebalancingActivityColumns} hiddenColumns={['strategy']} />
-        <Link href="/" style={{ marginTop: 'var(--spacing-space-large)', width: 'fit-content' }}>
+        <RebalanceActivityTable
+          rebalancesList={rebalancesList}
+          hiddenColumns={['strategy', 'provider']}
+          rowsToDisplay={rowsToDisplay}
+        />
+        <Link
+          href={`/earn/rebalance-activity?strategies=${vaultId}`}
+          style={{ marginTop: 'var(--spacing-space-large)', width: 'fit-content' }}
+        >
           <WithArrow as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
             View all rebalances
           </WithArrow>

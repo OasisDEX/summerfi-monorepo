@@ -31,7 +31,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const chainId: number | undefined = accountKitState.state?.chainId
   const forkRpcUrl: string | undefined = chainId ? forks[chainId] : undefined
 
-  const accountKitInitialState = cookieToInitialState(
+  const accountKitInitializedState = cookieToInitialState(
     getAccountKitConfig({ forkRpcUrl, chainId }),
     cookie ?? undefined,
   )
@@ -42,7 +42,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <GlobalStyles />
       </head>
       <body className={` ${fontInter.variable}`} style={{ backgroundColor: '#1B1B1B' }}>
-        <AlchemyAccountsProvider initialState={accountKitInitialState}>
+        <AlchemyAccountsProvider initialState={accountKitInitializedState}>
           <NextIntlClientProvider messages={messages}>
             <MasterPage>{children}</MasterPage>
           </NextIntlClientProvider>

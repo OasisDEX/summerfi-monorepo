@@ -1,5 +1,6 @@
 'use client'
 
+'use client'
 import {
   type FC,
   type HTMLAttributes,
@@ -28,8 +29,6 @@ export function useTooltip() {
 
   useEffect(() => {
     if (tooltipOpen) {
-      // capture parameter is added to overcome event phases race condition while rendering portal
-      // (opening modal causes tooltip to stop working) - https://github.com/facebook/react/issues/20074#issuecomment-714158332
       document.addEventListener('click', closeHandler, { capture: true })
 
       return () => document.removeEventListener('click', closeHandler)
@@ -82,6 +81,7 @@ interface StatefulTooltipProps {
   tooltipCardVariant?: CardVariants
   style?: HTMLAttributes<HTMLDivElement>['style']
   showAbove?: boolean
+  triggerOnClick?: boolean
 }
 
 const childrenTypeGuard = (children: ReactNode | ChildrenCallback): children is ReactNode =>
@@ -94,10 +94,12 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
   tooltipWrapperStyles,
   tooltipCardVariant,
   showAbove = false,
+  triggerOnClick = false,
 }) => {
   const { tooltipOpen, setTooltipOpen } = useTooltip()
   const [portalElement, setPortalElement] = useState<HTMLElement | null>()
   const tooltipRef = useRef<HTMLDivElement | null>(null)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const tooltipRefRect = tooltipRef.current?.getBoundingClientRect()
 
@@ -117,16 +119,38 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
   }, [tooltipRefRect, portalElement, tooltipOpen])
 
   const handleMouseEnter = useMemo(
-    () => (!isTouchDevice ? () => setTooltipOpen(true) : undefined),
-    [isTouchDevice],
+    () => (!isTouchDevice && !triggerOnClick ? () => setTooltipOpen(true) : undefined),
+    [isTouchDevice, triggerOnClick],
   )
 
   const handleMouseLeave = useMemo(
-    () => (!isTouchDevice ? () => setTooltipOpen(false) : undefined),
-    [isTouchDevice],
+    () => (!isTouchDevice && !triggerOnClick ? () => setTooltipOpen(false) : undefined),
+    [isTouchDevice, triggerOnClick],
   )
 
-  const handleClick = useCallback(() => tooltip && setTooltipOpen(true), [])
+  const handleClick = useCallback(() => {
+    if (triggerOnClick) {
+      setTooltipOpen(true)
+
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+
+      timeoutRef.current = setTimeout(() => {
+        setTooltipOpen(false)
+      }, 1000)
+    } else {
+      setTooltipOpen(true)
+    }
+  }, [triggerOnClick])
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [])
 
   if (!portalElement) {
     return childrenTypeGuard(children) ? children : children(tooltipOpen)

@@ -1,5 +1,5 @@
 'use client'
-import { type FC, type ReactNode } from 'react'
+import { type FC, type ReactNode, useEffect, useState } from 'react'
 import { type EmblaOptionsType } from 'embla-carousel'
 import useEmblaCarousel from 'embla-carousel-react'
 
@@ -19,6 +19,7 @@ type PropType = {
   buttonPosition?: SlideCarouselButtonPosition
   slidesPerPage?: number
   withDots?: boolean
+  withAutoPlay?: boolean
 }
 
 export const SlideCarousel: FC<PropType> = ({
@@ -28,8 +29,10 @@ export const SlideCarousel: FC<PropType> = ({
   buttonPosition = SlideCarouselButtonPosition.TOP,
   slidesPerPage = 2,
   withDots = false,
+  withAutoPlay = false,
 }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel(options)
+  const [autoSlideDirection, setAutoSlideDirection] = useState<'prev' | 'next'>('next')
 
   const { prevBtnDisabled, nextBtnDisabled, onPrevButtonClick, onNextButtonClick, currentSnap } =
     usePrevNextButtons(emblaApi)
@@ -39,6 +42,44 @@ export const SlideCarousel: FC<PropType> = ({
     2: classNames.emblaTwoSlides,
     3: classNames.emblaThreeSlides,
   }
+
+  useEffect(() => {
+    if (withAutoPlay) {
+      const directionFn = {
+        prev: () => onPrevButtonClick(),
+        next: () => onNextButtonClick(),
+      }
+
+      const selfSlideInterval = setInterval(() => {
+        if (nextBtnDisabled && !prevBtnDisabled) {
+          setAutoSlideDirection('prev')
+          directionFn.prev()
+
+          return
+        }
+
+        if (prevBtnDisabled && !nextBtnDisabled) {
+          setAutoSlideDirection('next')
+          directionFn.next()
+
+          return
+        }
+
+        directionFn[autoSlideDirection]()
+      }, 7000)
+
+      return () => clearInterval(selfSlideInterval)
+    }
+
+    return () => null
+  }, [
+    onNextButtonClick,
+    onPrevButtonClick,
+    nextBtnDisabled,
+    prevBtnDisabled,
+    autoSlideDirection,
+    withAutoPlay,
+  ])
 
   return (
     <section className={`${classNames.embla} ${sectionClassName[slidesPerPage]}`}>

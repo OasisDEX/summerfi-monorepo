@@ -32,7 +32,7 @@ export const NavigationWrapper: FC = () => {
               iconSize: 18,
             },
             {
-              url: '/rebalancing-activity',
+              url: '/earn/rebalance-activity',
               id: 'rebalancing-activity',
               title: 'Rebalancing Activity',
               description: 'Text for rebalancing activity',

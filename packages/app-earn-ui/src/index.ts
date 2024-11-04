@@ -25,7 +25,8 @@ export { Footer } from './components/layout/Footer/Footer'
 
 export { Navigation } from './components/layout/Navigation/Navigation'
 export { VaultGrid } from './components/layout/VaultGrid/VaultGrid'
-export { VaultGridPreview } from './components/layout/VaultGridPreview/VaultGridPreview'
+export { VaultOpenGrid } from './components/layout/VaultOpenGrid/VaultOpenGrid'
+export { VaultManageGrid } from './components/layout/VaultManageGrid/VaultManageGrid'
 export { VaultGridDetails } from './components/layout/VaultGridDetails/VaultGridDetails'
 export { MainBackground } from './components/layout/BackgroundComponents/MainBackground'
 export { NavigationItems } from './components/layout/Navigation/NavigationItems'
@@ -61,15 +62,24 @@ export { BonusLabel } from './components/molecules/BonusLabel/BonusLabel'
 export { ProjectedEarnings } from './components/molecules/ProjectedEarnings/ProjectedEarnings'
 export { HeadingWithCards } from './components/molecules/HeadingWithCards/HeadingWithCards'
 export { TableCarousel } from './components/molecules/TableCarousel/TableCarousel'
+export {
+  GenericMultiselect,
+  type GenericMultiselectOption,
+} from './components/molecules/GenericMultiselect/GenericMultiselect'
+export { CopyToClipboard } from './components/molecules/CopyToClipboard/CopyToClipboard'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
-export { Sidebar } from './components/organisms/Sidebar/Sidebar'
-export { Table } from './components/organisms/Table/Table'
+export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'
+export { Table, type TableSortedColumn } from './components/organisms/Table/Table'
 export { VaultSimulationForm } from './components/organisms/VaultSimulationForm/VaultSimulationForm'
 
 export { useToggle } from './hooks/use-toggle'
 export { useHash } from './hooks/use-hash'
+export { useOutsideElementClickHandler } from './hooks/use-outside-element-click-handler'
+export { useCurrentUrl } from './hooks/use-current-url'
+export { useQueryParams } from './hooks/use-query-params'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
-export { getVaultUrl, getVaultDetailsUrl } from './helpers/get-vault-url'
-export { networkNameToSDKNetwork, subgraphNetworkToId } from './helpers/network-helpers'
+export { getVaultUrl, getVaultDetailsUrl, getVaultPositionUrl } from './helpers/get-vault-url'
+export { getTwitterShareUrl } from './helpers/get-twitter-share-url'
+export { getScannerUrl } from './helpers/get-scanner-url'

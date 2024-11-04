@@ -7,3 +7,11 @@
     padding: unset;
   }
 }
+
+.filtersWrapper {
+  display: flex;
+  justify-content: flex-start;
+  gap: var(--general-space-16);
+  flex-wrap: wrap;
+  margin-bottom: var(--general-space-24);
+}

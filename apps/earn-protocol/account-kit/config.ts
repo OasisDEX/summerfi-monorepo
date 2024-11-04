@@ -1,9 +1,12 @@
-import { alchemy, base } from '@account-kit/infra'
+import { alchemy, arbitrum, base } from '@account-kit/infra'
 import { type AlchemyAccountsUIConfig, cookieStorage, createConfig } from '@account-kit/react'
+import { SDKChainId, SDKSupportedNetworkIdsEnum } from '@summerfi/app-types'
+import { type Chain } from 'viem'
 
-import { NetworkIds } from '@/constants/networks-list'
-
-type SupportedNetworkIds = NetworkIds.MAINNET | NetworkIds.BASEMAINNET
+export const SDKChainIdToAAChainMap = {
+  [SDKChainId.ARBITRUM]: arbitrum,
+  [SDKChainId.BASE]: base,
+}
 
 const uiConfig: AlchemyAccountsUIConfig = {
   illustrationStyle: 'outline',
@@ -33,7 +36,7 @@ export const getAccountKitConfig = ({
   chainId,
 }: {
   forkRpcUrl?: string
-  chainId?: SupportedNetworkIds
+  chainId?: SDKSupportedNetworkIdsEnum
 }) => {
   return createConfig(
     {
@@ -43,10 +46,13 @@ export const getAccountKitConfig = ({
         rpcUrl: '/api/rpc',
       },
       chain: {
-        [NetworkIds.MAINNET]: defaultChain,
-        [NetworkIds.BASEMAINNET]: base,
-      }[chainId ?? (defaultChain.id as SupportedNetworkIds)],
-      ssr: true,
+        [SDKSupportedNetworkIdsEnum.ARBITRUM]: arbitrum,
+        [SDKSupportedNetworkIdsEnum.BASE]: base,
+      }[chainId ?? defaultChain.id] as Chain,
+      chains: Object.values(SDKChainIdToAAChainMap).map((chain) => ({
+        chain,
+      })),
+      ssr: false,
       storage: cookieStorage,
     },
     uiConfig,
@@ -61,6 +67,9 @@ export const staticConfig = createConfig(
       rpcUrl: '/api/rpc',
     },
     chain: defaultChain,
+    chains: Object.values(SDKChainIdToAAChainMap).map((chain) => ({
+      chain,
+    })),
     ssr: true,
     storage: cookieStorage,
   },
