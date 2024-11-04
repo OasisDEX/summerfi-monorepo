@@ -143,19 +143,6 @@
   },
   {
     "type": "function",
-    "name": "guardian",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "harborCommand",
     "inputs": [],
     "outputs": [
@@ -456,13 +443,6 @@
   },
   {
     "type": "function",
-    "name": "test_UpdateTipStreamWithGlobalShake",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "tipJar",
     "inputs": [],
     "outputs": [
@@ -502,19 +482,6 @@
   },
   {
     "type": "event",
-    "name": "TipJarPaused",
-    "inputs": [
-      {
-        "name": "account",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
     "name": "TipJarShaken",
     "inputs": [
       {
@@ -528,19 +495,6 @@
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "TipJarUnpaused",
-    "inputs": [
-      {
-        "name": "account",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
       }
     ],
     "anonymous": false

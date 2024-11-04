@@ -84,13 +84,8 @@ export class FleetCommanderContract<
 
   /** @see IFleetCommanderContract.config */
   async config(): Promise<IFleetConfig> {
-    const [
-      bufferArkAddress,
-      minimumBufferBalance,
-      depositCap,
-      maxRebalanceOperations,
-      stakingRewardsManagerAddress,
-    ] = await this.contract.read.config()
+    const [bufferArkAddress, minimumBufferBalance, depositCap, maxRebalanceOperations] =
+      await this.contract.read.config()
     const token = await this._erc4626Contract.asset()
     return {
       bufferArk: Address.createFromEthereum({ value: bufferArkAddress }),
@@ -100,9 +95,6 @@ export class FleetCommanderContract<
       }),
       depositCap: TokenAmount.createFromBaseUnit({ token, amount: String(depositCap) }),
       maxRebalanceOperations: String(maxRebalanceOperations),
-      stakingRewardsManager: Address.createFromEthereum({
-        value: stakingRewardsManagerAddress,
-      }),
     }
   }
 

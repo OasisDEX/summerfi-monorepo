@@ -15,7 +15,7 @@
     "name": "activeFleetCommanders",
     "inputs": [
       {
-        "name": "_fleetCommander",
+        "name": "",
         "type": "address",
         "internalType": "address"
       }
@@ -60,7 +60,7 @@
     "name": "fleetCommandersList",
     "inputs": [
       {
-        "name": "index",
+        "name": "",
         "type": "uint256",
         "internalType": "uint256"
       }
