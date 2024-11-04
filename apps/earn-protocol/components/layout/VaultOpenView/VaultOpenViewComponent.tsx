@@ -27,7 +27,7 @@ import {
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
-import { MockedLineChart } from '@/components/organisms/Charts/MockedLineChart'
+import { HistoricalYieldChart } from '@/components/organisms/Charts/HistoricalYieldChart'
 import { RebalancingActivity } from '@/components/organisms/RebalancingActivity/RebalancingActivity'
 import { UserActivity } from '@/components/organisms/UserActivity/UserActivity'
 import { VaultExposure } from '@/components/organisms/VaultExposure/VaultExposure'
@@ -148,7 +148,7 @@ export const VaultOpenViewComponent = ({
             }
             defaultExpanded
           >
-            <MockedLineChart />
+            <HistoricalYieldChart aprHourlyList={vault.aprValues} />
           </Expander>
           <Expander
             title={

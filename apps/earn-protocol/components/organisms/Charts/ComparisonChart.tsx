@@ -38,7 +38,7 @@ export const ComparisonChart = ({ data, dataNames, colors, compare }: Comparison
             </linearGradient>
           </defs>
 
-          <XAxis dataKey="name" fontSize={12} interval={0} />
+          <XAxis dataKey="name" fontSize={12} interval={5} tickMargin={10} />
           <YAxis strokeWidth={0} width={45} tickFormatter={(label: string) => `${label}%`} />
           <Tooltip
             formatter={(val) => `${Number(val).toFixed(2)}`}
@@ -52,7 +52,7 @@ export const ComparisonChart = ({ data, dataNames, colors, compare }: Comparison
             }}
           />
           {dataNames.map((dataName, dataIndex) =>
-            dataName === 'Summer USDS Strategy' ? (
+            dataName === 'Summer Strategy' ? (
               <Area
                 key={dataName}
                 type="natural"
@@ -67,8 +67,8 @@ export const ComparisonChart = ({ data, dataNames, colors, compare }: Comparison
               />
             ) : (
               <Line
-                animationId={dataIndex}
                 key={dataName}
+                animationId={dataIndex}
                 animationDuration={300}
                 animationBegin={dataIndex * 50}
                 animationEasing="ease-out"

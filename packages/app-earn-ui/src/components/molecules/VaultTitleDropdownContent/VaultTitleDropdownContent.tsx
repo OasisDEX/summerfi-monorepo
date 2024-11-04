@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import { SDKNetwork, type SDKVaultsListType, type TokenSymbolsList } from '@summerfi/app-types'
+import { SDKNetwork, type SDKVaultishType, type TokenSymbolsList } from '@summerfi/app-types'
 import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
@@ -10,7 +10,7 @@ import { riskColors } from '@/helpers/risk-colors.ts'
 import classNames from './VaultTitleDropdownContent.module.scss'
 
 interface VaultDropdownContentProps {
-  vault: SDKVaultsListType[number]
+  vault: SDKVaultishType
   link: string
 }
 

@@ -77,9 +77,7 @@ export const VaultCard = ({
             <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
               Best for
             </Text>
-            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-              {/** TODO: fill data */} bestFor
-            </Text>
+            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>some kind</Text>
           </div>
         </div>
       </Card>
