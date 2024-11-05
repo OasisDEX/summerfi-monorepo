@@ -16,6 +16,7 @@ query GetUsersActivity {
       id
       name
       inputToken {
+        id
         symbol
         decimals
       }
