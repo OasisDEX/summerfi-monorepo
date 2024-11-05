@@ -81,6 +81,7 @@ query GetVault($id: ID!) {
       amount
       amountUSD
       asset {
+        id
         symbol
         decimals
       }
