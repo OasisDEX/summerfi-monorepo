@@ -13,12 +13,12 @@ import { Address, ChainInfo, type TransactionInfo } from '@summerfi/sdk-client-r
 import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 import { useRouter } from 'next/navigation'
-import { createPublicClient, createWalletClient, custom } from 'viem'
 
 import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { TransactionAction } from '@/constants/transaction-actions'
 import { subgraphNetworkToSDKId } from '@/helpers/network-helpers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
+import { useClient } from '@/hooks/use-client'
 
 const labelTransactions = (transactions: TransactionInfo[]) => {
   return transactions.map((tx) => ({
@@ -42,7 +42,9 @@ export const useTransaction = ({ vault }: { vault: SDKVaultishType }) => {
   const { getDepositTX, getWithdrawTX } = useAppSDK()
   const user = useUser()
   const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
-  const { chain: connectedChain, setChain, isSettingChain } = useChain()
+  const { setChain, isSettingChain } = useChain()
+
+  const { publicClient, transactionClient } = useClient()
 
   const reset = () => {
     setAmount(undefined)
@@ -72,44 +74,6 @@ export const useTransaction = ({ vault }: { vault: SDKVaultishType }) => {
 
     return mapNumericInput(amount.toString())
   }, [amount])
-
-  const transactionClient = useMemo(() => {
-    // used for the tx itself
-    if (user) {
-      // todo: handle other wallets, this is just working with metamask
-      if (user.type === 'eoa') {
-        const externalProvider = window.ethereum
-
-        return createWalletClient({
-          chain: connectedChain,
-          transport: custom(externalProvider),
-          account: user.address,
-        })
-      }
-    }
-
-    return null
-  }, [user, connectedChain])
-
-  const publicClient = useMemo(
-    // used for the tx receipt
-    () => {
-      if (user) {
-        // todo: handle other wallets, this is just working with metamask
-        if (user.type === 'eoa') {
-          const externalProvider = window.ethereum
-
-          return createPublicClient({
-            chain: connectedChain,
-            transport: custom(externalProvider),
-          })
-        }
-      }
-
-      return null
-    },
-    [connectedChain, user],
-  )
 
   const userChainId = transactionClient?.chain.id
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
