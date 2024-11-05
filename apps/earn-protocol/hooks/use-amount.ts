@@ -44,6 +44,9 @@ export const useAmount = ({ vault }: UseAmountProps) => {
     const [integer, decimal] = value.split('.')
 
     if (integer.startsWith('0')) {
+      ev.stopPropagation()
+      ev.preventDefault()
+
       return
     }
 
@@ -55,6 +58,9 @@ export const useAmount = ({ vault }: UseAmountProps) => {
       // leading numbers max is vaultTokenDecimals
       (decimal || '').length >= vaultTokenDecimals
     ) {
+      ev.stopPropagation()
+      ev.preventDefault()
+
       return
     }
     setAmountRaw(value.trim())

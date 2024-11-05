@@ -1,3 +1,4 @@
+import { useUser } from '@account-kit/react'
 import {
   Button,
   Expander,
@@ -7,6 +8,7 @@ import {
   SidebarFootnote,
   sidebarFootnote,
   type SidebarProps,
+  SkeletonLine,
   Text,
   VaultManageGrid,
 } from '@summerfi/app-earn-ui'
@@ -20,7 +22,6 @@ import {
 } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client-react'
-import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 
 import { vaultExposureRawData } from '@/components/layout/VaultOpenView/mocks'
@@ -30,6 +31,8 @@ import { RebalancingActivity } from '@/components/organisms/RebalancingActivity/
 import { UserActivity } from '@/components/organisms/UserActivity/UserActivity'
 import { VaultExposure } from '@/components/organisms/VaultExposure/VaultExposure'
 import { TransactionAction } from '@/constants/transaction-actions'
+import { useAmount } from '@/hooks/use-amount'
+import { useClient } from '@/hooks/use-client'
 import { useTransaction } from '@/hooks/use-transaction'
 
 import vaultManageViewStyles from './VaultManageView.module.scss'
@@ -49,19 +52,34 @@ export const VaultManageViewComponent = ({
   topDepositors: SDKUsersActivityType
   viewWalletAddress: string
 }) => {
+  const user = useUser()
+  const { publicClient, transactionClient, tokenBalance, tokenBalanceLoading } = useClient({
+    vault,
+  })
   const {
-    amountDisplayValue,
+    amountParsed,
+    amountDisplay,
+    amountRaw,
+    manualSetAmount,
     handleAmountChange,
+    onFocus,
+    onBlur,
+  } = useAmount({ vault })
+  const {
     sidebar,
-    amount,
     txHashes,
     removeTxHash,
     vaultChainId,
     reset,
-    user,
-    setTransactionType,
     transactionType,
-  } = useTransaction({ vault })
+    setTransactionType,
+  } = useTransaction({
+    vault,
+    publicClient,
+    transactionClient,
+    amountParsed,
+    manualSetAmount,
+  })
 
   const options: DropdownOption[] = [
     ...[...new Set(vaults.map(({ inputToken }) => inputToken.symbol))].map((symbol) => ({
@@ -74,7 +92,13 @@ export const VaultManageViewComponent = ({
   const dropdownValue =
     options.find((option) => option.value === vault.inputToken.symbol) ?? options[0]
 
-  const balance = new BigNumber(123123)
+  const balanceValue = tokenBalanceLoading ? (
+    <SkeletonLine width={70} height={10} style={{ marginTop: '7px' }} />
+  ) : tokenBalance ? (
+    `${formatCryptoBalance(tokenBalance)} ${vault.inputToken.symbol}`
+  ) : (
+    '-'
+  )
 
   const sidebarProps: SidebarProps = {
     title: capitalize(transactionType),
@@ -85,16 +109,19 @@ export const VaultManageViewComponent = ({
     content: (
       <>
         <InputWithDropdown
-          value={amountDisplayValue}
-          secondaryValue={amountDisplayValue ? `$${amountDisplayValue}` : undefined}
+          value={amountDisplay}
+          secondaryValue={amountDisplay ? `$${amountDisplay}` : undefined}
           handleChange={handleAmountChange}
           options={options}
           dropdownValue={dropdownValue}
+          onFocus={onFocus}
+          onBlur={onBlur}
           heading={{
             label: 'Balance',
-            value: `${formatCryptoBalance(balance)} ${vault.inputToken.symbol}`,
-            // eslint-disable-next-line no-console
-            action: () => console.log('clicked'),
+            value: balanceValue,
+            action: () => {
+              manualSetAmount(tokenBalance?.toString())
+            },
           }}
         />
         <ProjectedEarnings earnings="1353" symbol={vault.inputToken.symbol as TokenSymbolsList} />
@@ -104,7 +131,7 @@ export const VaultManageViewComponent = ({
     primaryButton: sidebar.primaryButton,
     footnote: (
       <>
-        {sidebar.error ?? amount?.gt(0) ? (
+        {sidebar.error ?? amountParsed.gt(0) ? (
           <Button
             variant="secondarySmall"
             style={{ width: '100%', marginBottom: 'var(--general-space-12)' }}

@@ -1,15 +1,17 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useChain, useUser } from '@account-kit/react'
+import { type SDKVaultishType } from '@summerfi/app-types'
 import { ten } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import { createPublicClient, createWalletClient, custom, erc20Abi } from 'viem'
 
-export const useClient = (params?: { tokenAddress: `0x${string}`; tokenDecimals: number }) => {
+import { subgraphNetworkToSDKId } from '@/helpers/network-helpers'
+
+export const useClient = ({ vault }: { vault?: SDKVaultishType }) => {
   const user = useUser()
   const { chain: connectedChain } = useChain()
   const [tokenBalance, setTokenBalance] = useState<BigNumber>()
-
-  console.log('tokenBalance', tokenBalance)
+  const [tokenBalanceLoading, setTokenBalanceLoading] = useState(true)
 
   const transactionClient = useMemo(() => {
     // used for the tx itself
@@ -49,27 +51,57 @@ export const useClient = (params?: { tokenAddress: `0x${string}`; tokenDecimals:
     [connectedChain, user],
   )
 
+  const userChainId = transactionClient?.chain.id
+  const vaultChainId = vault ? subgraphNetworkToSDKId(vault.protocol.network) : null
+
+  const isProperChainSelected = userChainId === vaultChainId
+
   useEffect(() => {
-    if (params && publicClient && user) {
-      console.log('Calling: balanceOf', params.tokenAddress, user.address)
-      publicClient
-        .readContract({
-          abi: erc20Abi,
-          address: params.tokenAddress,
-          functionName: 'balanceOf',
-          args: [user.address],
-        })
-        .then((val) => {
-          setTokenBalance(
-            new BigNumber(val.toString()).div(new BigNumber(ten).pow(params.tokenDecimals)),
-          )
-        })
+    const inputTokenAddress = vault?.inputToken.id
+    const inputTokenDecimals = vault?.inputToken.decimals
+
+    if (!user && tokenBalance) {
+      setTokenBalance(undefined)
     }
-  }, [publicClient, params, user])
+
+    if (user?.address && publicClient) {
+      if (inputTokenAddress && inputTokenDecimals && !tokenBalance && isProperChainSelected) {
+        setTokenBalanceLoading(true)
+        publicClient
+          .readContract({
+            abi: erc20Abi,
+            address: inputTokenAddress as `0x${string}`,
+            functionName: 'balanceOf',
+            args: [user.address],
+          })
+          .then((val) => {
+            setTokenBalanceLoading(false)
+            setTokenBalance(
+              new BigNumber(val.toString()).div(new BigNumber(ten).pow(inputTokenDecimals)),
+            )
+          })
+          .catch((err) => {
+            setTokenBalanceLoading(false)
+            // eslint-disable-next-line no-console
+            console.error('Error reading token balance', err)
+          })
+      }
+      setTokenBalanceLoading(false)
+    }
+  }, [
+    publicClient,
+    tokenBalance,
+    user,
+    tokenBalanceLoading,
+    vault?.inputToken.id,
+    vault?.inputToken.decimals,
+    isProperChainSelected,
+  ])
 
   return {
     publicClient,
     transactionClient,
     tokenBalance,
+    tokenBalanceLoading,
   }
 }

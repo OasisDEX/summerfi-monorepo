@@ -31,6 +31,8 @@ interface InputWithDropdownProps {
     value: ReactNode
     action: () => void
   }
+  onFocus?: () => void
+  onBlur?: () => void
 }
 
 export const InputWithDropdown: FC<InputWithDropdownProps> = ({
@@ -40,6 +42,8 @@ export const InputWithDropdown: FC<InputWithDropdownProps> = ({
   secondaryValue,
   handleChange,
   heading,
+  onFocus,
+  onBlur,
 }) => {
   return (
     <div className={classNames.wrapper}>
@@ -48,7 +52,12 @@ export const InputWithDropdown: FC<InputWithDropdownProps> = ({
           <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
             {heading.label}
           </Text>
-          <Text as="p" variant="p3semi" className={classNames.headingWrapperAction}>
+          <Text
+            as="p"
+            variant="p3semi"
+            className={classNames.headingWrapperAction}
+            onClick={heading.action}
+          >
             {heading.value}
           </Text>
         </div>
@@ -72,6 +81,8 @@ export const InputWithDropdown: FC<InputWithDropdownProps> = ({
           value={value}
           onChange={handleChange}
           secondaryValue={secondaryValue}
+          onFocus={onFocus}
+          onBlur={onBlur}
         />
       </div>
     </div>
