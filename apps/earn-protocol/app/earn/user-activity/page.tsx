@@ -13,7 +13,7 @@ interface UserActivityPageProps {
 }
 
 const UserActivityPage: FC<UserActivityPageProps> = async ({ searchParams }) => {
-  const [{ vaults }, { usersActivity, totalUsers }] = await Promise.all([
+  const [{ vaults }, { usersActivity, totalUsers, topDepositors }] = await Promise.all([
     getVaultsList(),
     getUsersActivity(),
   ])
@@ -22,6 +22,7 @@ const UserActivityPage: FC<UserActivityPageProps> = async ({ searchParams }) => 
     <UserActivityView
       vaultsList={vaults}
       usersActivity={usersActivity}
+      topDepositors={topDepositors}
       totalUsers={totalUsers}
       searchParams={parseQueryStringServerSide({ searchParams })}
     />

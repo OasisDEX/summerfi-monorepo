@@ -11,7 +11,7 @@ import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
 import { type UsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
-import { userActivitySorter } from '@/features/user-activity/table/sorter'
+import { userActivitySorter } from '@/features/user-activity/table/user-activity-sorter'
 
 const activityLabelMap = {
   [UserActivityType.DEPOSIT]: 'Deposit',

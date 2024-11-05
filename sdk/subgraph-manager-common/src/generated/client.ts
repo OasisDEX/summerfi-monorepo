@@ -6949,7 +6949,7 @@ export type GetUserPositionQuery = { __typename?: 'Query', positions: Array<{ __
 export type GetUsersActivityQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetUsersActivityQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', inputTokenBalance: bigint, account: { __typename?: 'Account', id: string }, deposits: Array<{ __typename?: 'Deposit', timestamp: bigint, amount: bigint }>, withdrawals: Array<{ __typename?: 'Withdraw', timestamp: bigint, amount: bigint }>, vault: { __typename?: 'Vault', id: string, name?: string | null, inputToken: { __typename?: 'Token', symbol: string, decimals: number }, protocol: { __typename?: 'YieldAggregator', network: Network } } }> };
+export type GetUsersActivityQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', inputTokenBalance: bigint, account: { __typename?: 'Account', id: string }, deposits: Array<{ __typename?: 'Deposit', timestamp: bigint, amount: bigint }>, withdrawals: Array<{ __typename?: 'Withdraw', timestamp: bigint, amount: bigint }>, vault: { __typename?: 'Vault', id: string, name?: string | null, apr365d: string, inputToken: { __typename?: 'Token', symbol: string, decimals: number }, protocol: { __typename?: 'YieldAggregator', network: Network } } }> };
 
 export type GetVaultsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -7094,6 +7094,7 @@ export const GetUsersActivityDocument = gql`
       protocol {
         network
       }
+      apr365d
     }
   }
 }

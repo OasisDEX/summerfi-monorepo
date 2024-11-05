@@ -1,8 +1,10 @@
 import {
   sdkSupportedNetworks,
   type SDKUserActivityType,
+  type SDKUsersActivityType,
   UserActivityType,
 } from '@summerfi/app-types'
+import { simpleSort, SortDirection } from '@summerfi/app-utils'
 import { getChainInfoByChainId } from '@summerfi/sdk-common'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
@@ -20,6 +22,7 @@ export type UsersActivity = UserActivity[]
 
 export async function getUsersActivity(): Promise<{
   usersActivity: UsersActivity
+  topDepositors: SDKUsersActivityType
   totalUsers: number
   callDataTimestamp: number
 }> {
@@ -57,8 +60,15 @@ export async function getUsersActivity(): Promise<{
     })),
   ])
 
+  const topDepositors = usersActivityListRaw
+    .sort((a, b) =>
+      simpleSort({ a: a.inputTokenBalance, b: b.inputTokenBalance, direction: SortDirection.DESC }),
+    )
+    .filter((item) => item.deposits.length > 0)
+
   return {
     usersActivity: usersActivityList,
+    topDepositors,
     totalUsers,
     callDataTimestamp: Date.now(),
   }
