@@ -41,7 +41,13 @@ export async function getUsersActivity(): Promise<{
     (typeof usersActivityByNetwork)[number]['positions']
   >((acc, { positions }) => [...acc, ...positions], [])
 
-  const totalUsers = usersActivityListRaw.filter((position) => position.deposits.length > 0).length
+  const totalUsers = [
+    ...new Set(
+      usersActivityListRaw
+        .filter((position) => position.deposits.length > 0)
+        .map((position) => position.account.id),
+    ),
+  ].length
 
   const usersActivityList = usersActivityListRaw.flatMap((position) => [
     ...position.deposits.map((deposit) => ({
