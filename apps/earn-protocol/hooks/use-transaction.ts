@@ -209,7 +209,7 @@ export const useTransaction = ({
     }
     if (!amountParsed || amountParsed.isZero()) {
       return {
-        label: 'Deposit',
+        label: capitalize(transactionType),
         action: () => null,
         disabled: true,
       }
