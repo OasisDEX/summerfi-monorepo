@@ -179,6 +179,7 @@ export type IconNamesList =
   | 'swbtc'
   | 'syrupusdc'
   | 'woeth'
+  | 'eurc'
   // automation icons
   | 'autoBuy'
   | 'autoSell'
@@ -360,6 +361,7 @@ export type TokenSymbolsList =
   | 'UNIV2WBTCDAI'
   | 'UNIV2AAVEETH'
   | 'CRVV1ETHSTETH'
+  | 'EURC'
 
 export interface TokenConfig {
   symbol: TokenSymbolsList

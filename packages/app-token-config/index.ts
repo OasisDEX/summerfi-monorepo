@@ -581,6 +581,11 @@ export const tokenConfigs: TokenConfig[] = [
     name: 'Wrapped OETH',
     iconName: 'woeth',
   },
+  {
+    symbol: 'EURC',
+    name: 'EURC',
+    iconName: 'eurc',
+  },
   // NOT SUPPORTED ICONS
   {
     symbol: 'UNIV2WBTCETH',
