@@ -26,7 +26,7 @@ import { capitalize } from 'lodash-es'
 
 import { vaultExposureRawData } from '@/components/layout/VaultOpenView/mocks'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
-import { MockedLineChart } from '@/components/organisms/Charts/MockedLineChart'
+import { HistoricalYieldChart } from '@/components/organisms/Charts/HistoricalYieldChart'
 import { RebalancingActivity } from '@/components/organisms/RebalancingActivity/RebalancingActivity'
 import { UserActivity } from '@/components/organisms/UserActivity/UserActivity'
 import { VaultExposure } from '@/components/organisms/VaultExposure/VaultExposure'
@@ -56,15 +56,8 @@ export const VaultManageViewComponent = ({
   const { publicClient, transactionClient, tokenBalance, tokenBalanceLoading } = useClient({
     vault,
   })
-  const {
-    amountParsed,
-    amountDisplay,
-    amountRaw,
-    manualSetAmount,
-    handleAmountChange,
-    onFocus,
-    onBlur,
-  } = useAmount({ vault })
+  const { amountParsed, amountDisplay, manualSetAmount, handleAmountChange, onFocus, onBlur } =
+    useAmount({ vault })
   const {
     sidebar,
     txHashes,
@@ -178,7 +171,7 @@ export const VaultManageViewComponent = ({
             }
             defaultExpanded
           >
-            <MockedLineChart />
+            <HistoricalYieldChart aprHourlyList={vault.aprValues} />
           </Expander>
           <Expander
             title={

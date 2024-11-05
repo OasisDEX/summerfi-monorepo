@@ -1,4 +1,4 @@
-import { type ChangeEvent, useMemo, useState } from 'react'
+import { type ChangeEvent, useEffect, useMemo, useState } from 'react'
 import { type SDKVaultishType } from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
 
@@ -13,17 +13,27 @@ export const useAmount = ({ vault }: UseAmountProps) => {
   const [amountRaw, setAmountRaw] = useState<string>()
 
   const amountDisplay = useMemo(() => {
-    if (!amountRaw) {
-      return ''
+    if (!amountRaw && amountRaw !== '0') {
+      return '0.00'
     }
 
     if (new BigNumber(amountRaw).isNaN() || editMode) {
       return amountRaw
     }
 
-    return new BigNumber(amountRaw).toFixed(vaultTokenDecimals).replace(/(\.\d*?[1-9])0+$/gu, '$1')
-    // remove trailing dot
+    const amountWithNoFollowingZeroes = new BigNumber(
+      // double parsing removes zeroes at the end
+      new BigNumber(amountRaw).toFixed(vaultTokenDecimals), // and this gives it a "max" decimals
+    ).toString()
+
+    return amountWithNoFollowingZeroes
   }, [amountRaw, editMode, vaultTokenDecimals])
+
+  useEffect(() => {
+    if (!editMode) {
+      setAmountRaw(amountDisplay)
+    }
+  }, [editMode, amountDisplay])
 
   const amountParsed = useMemo(() => {
     if (!amountRaw || new BigNumber(amountRaw).isNaN()) {
@@ -56,7 +66,7 @@ export const useAmount = ({ vault }: UseAmountProps) => {
       // only numbers and dots
       /[^0-9.]/gu.test(value) ||
       // leading numbers max is vaultTokenDecimals
-      (decimal || '').length >= vaultTokenDecimals
+      (decimal || '').length > vaultTokenDecimals
     ) {
       ev.stopPropagation()
       ev.preventDefault()

@@ -30,10 +30,13 @@ export const HistoricalYieldChart = ({
   const parsedData = useMemo(() => {
     const now = dayjs().startOf('hour')
 
-    return [...aprHourlyList].reverse().map((item, itemIndex) => ({
-      name: now.subtract(itemIndex, 'hour').format('MMM DD, HH:mm'),
-      'Summer Strategy': new BigNumber(item).toFixed(2),
-    }))
+    return [...aprHourlyList]
+      .reverse()
+      .map((item, itemIndex) => ({
+        name: now.subtract(itemIndex, 'hour').format('MMM DD, HH:mm'),
+        'Summer Strategy': new BigNumber(item).toFixed(2),
+      }))
+      .reverse()
   }, [aprHourlyList])
 
   return (
