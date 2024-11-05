@@ -4,6 +4,7 @@ query GetGlobalRebalances {
     amount
     amountUSD
     asset {
+      id
       symbol
       decimals
     }
@@ -36,6 +37,7 @@ query GetGlobalRebalances {
       id
       name
       inputToken {
+        id
         symbol
       }
     }
