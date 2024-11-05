@@ -3,6 +3,7 @@ import { type SDKNetwork } from '@summerfi/app-types'
 import { parseServerResponseToClient } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client-react'
 
+import { getUserActivity } from '@/app/server-handlers/sdk/get-user-activity'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
@@ -19,13 +20,18 @@ type EarnVaultManagePageProps = {
 export const revalidate = 60
 
 const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
-  const [vault, { vaults }, position] = await Promise.all([
+  const [vault, { vaults }, position, { userActivity, topDepositors }] = await Promise.all([
     getVaultDetails({
       vaultAddress: params.vaultId,
       network: params.network,
     }),
     getVaultsList(),
     getUserPosition({
+      vaultAddress: params.vaultId,
+      network: params.network,
+      walletAddress: params.walletAddress,
+    }),
+    getUserActivity({
       vaultAddress: params.vaultId,
       network: params.network,
       walletAddress: params.walletAddress,
@@ -56,6 +62,8 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       vaults={vaults}
       position={positionJsonSafe}
       viewWalletAddress={params.walletAddress}
+      userActivity={userActivity}
+      topDepositors={topDepositors}
     />
   )
 }

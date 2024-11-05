@@ -1,6 +1,11 @@
 'use client'
 
-import { type SDKVaultishType, type SDKVaultsListType } from '@summerfi/app-types'
+import {
+  type SDKUsersActivityType,
+  type SDKVaultishType,
+  type SDKVaultsListType,
+  type UsersActivity,
+} from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
 import { VaultOpenViewComponent } from '@/components/layout/VaultOpenView/VaultOpenViewComponent'
@@ -9,13 +14,22 @@ import { sdkApiUrl } from '@/constants/sdk'
 export const VaultOpenView = ({
   vault,
   vaults,
+  userActivity,
+  topDepositors,
 }: {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
+  userActivity: UsersActivity
+  topDepositors: SDKUsersActivityType
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
-      <VaultOpenViewComponent vault={vault} vaults={vaults} />
+      <VaultOpenViewComponent
+        vault={vault}
+        vaults={vaults}
+        userActivity={userActivity}
+        topDepositors={topDepositors}
+      />
     </SDKContextProvider>
   )
 }

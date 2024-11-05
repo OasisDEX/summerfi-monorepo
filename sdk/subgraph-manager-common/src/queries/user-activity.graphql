@@ -1,0 +1,28 @@
+query GetUserActivity($id: ID!) {
+  positions(where: { vault_: { id: $id } }) {
+    account {
+      id
+    }
+    inputTokenBalance
+    deposits {
+      timestamp
+      amount
+    }
+    withdrawals {
+      timestamp
+      amount
+    }
+    vault {
+      id
+      name
+      inputToken {
+        symbol
+        decimals
+      }
+      protocol {
+        network
+      }
+      apr365d
+    }
+  }
+}

@@ -6,6 +6,7 @@ import type {
   GetVaultsQuery,
   GetGlobalRebalancesQuery,
   GetUsersActivityQuery,
+  GetUserActivityQuery,
 } from '../generated/client'
 
 /**
@@ -85,4 +86,14 @@ export interface IArmadaSubgraphManager {
    * @returns GetUsersActivityQuery
    */
   getUsersActivity(params: { chainId: ChainId }): Promise<GetUsersActivityQuery>
+
+  /**
+   * @name getUserActivity
+   * @description Get all rebalances per given chain
+   *
+   * @param chainInfo Chain information
+   *
+   * @returns GetUserActivityQuery
+   */
+  getUserActivity(params: { chainId: ChainId; vaultId: string }): Promise<GetUserActivityQuery>
 }

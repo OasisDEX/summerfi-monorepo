@@ -1,24 +1,13 @@
 import {
   sdkSupportedNetworks,
-  type SDKUserActivityType,
   type SDKUsersActivityType,
   UserActivityType,
+  type UsersActivity,
 } from '@summerfi/app-types'
 import { simpleSort, SortDirection } from '@summerfi/app-utils'
 import { getChainInfoByChainId } from '@summerfi/sdk-common'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
-
-export interface UserActivity {
-  timestamp: SDKUserActivityType['deposits'][0]['timestamp']
-  amount: SDKUserActivityType['deposits'][0]['amount']
-  balance: SDKUserActivityType['inputTokenBalance']
-  vault: SDKUserActivityType['vault']
-  account: SDKUserActivityType['account']['id']
-  activity: UserActivityType
-}
-
-export type UsersActivity = UserActivity[]
 
 export async function getUsersActivity(): Promise<{
   usersActivity: UsersActivity

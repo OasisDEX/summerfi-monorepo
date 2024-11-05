@@ -6946,6 +6946,13 @@ export type GetUserPositionQueryVariables = Exact<{
 
 export type GetUserPositionQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, inputTokenBalance: bigint, outputTokenBalance: bigint, vault: { __typename?: 'Vault', id: string, inputToken: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number } | null, protocol: { __typename?: 'YieldAggregator', id: string } }, account: { __typename?: 'Account', id: string } }> };
 
+export type GetUserActivityQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetUserActivityQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', inputTokenBalance: bigint, account: { __typename?: 'Account', id: string }, deposits: Array<{ __typename?: 'Deposit', timestamp: bigint, amount: bigint }>, withdrawals: Array<{ __typename?: 'Withdraw', timestamp: bigint, amount: bigint }>, vault: { __typename?: 'Vault', id: string, name?: string | null, apr365d: string, inputToken: { __typename?: 'Token', symbol: string, decimals: number }, protocol: { __typename?: 'YieldAggregator', network: Network } } }> };
+
 export type GetUsersActivityQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -7067,6 +7074,36 @@ export const GetUserPositionDocument = gql`
     }
     account {
       id
+    }
+  }
+}
+    `;
+export const GetUserActivityDocument = gql`
+    query GetUserActivity($id: ID!) {
+  positions(where: {vault_: {id: $id}}) {
+    account {
+      id
+    }
+    inputTokenBalance
+    deposits {
+      timestamp
+      amount
+    }
+    withdrawals {
+      timestamp
+      amount
+    }
+    vault {
+      id
+      name
+      inputToken {
+        symbol
+        decimals
+      }
+      protocol {
+        network
+      }
+      apr365d
     }
   }
 }
@@ -7304,6 +7341,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetUserPosition(variables: GetUserPositionQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetUserPositionQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetUserPositionQuery>(GetUserPositionDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetUserPosition', 'query', variables);
+    },
+    GetUserActivity(variables: GetUserActivityQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetUserActivityQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetUserActivityQuery>(GetUserActivityDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetUserActivity', 'query', variables);
     },
     GetUsersActivity(variables?: GetUsersActivityQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetUsersActivityQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetUsersActivityQuery>(GetUsersActivityDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetUsersActivity', 'query', variables);

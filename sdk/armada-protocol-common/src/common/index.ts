@@ -4,4 +4,5 @@ export type {
   GetVaultQuery,
   GetGlobalRebalancesQuery,
   GetUsersActivityQuery,
+  GetUserActivityQuery,
 } from '@summerfi/subgraph-manager-common'

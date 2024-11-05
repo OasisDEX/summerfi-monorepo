@@ -14,9 +14,9 @@ import {
   type SDKUsersActivityType,
   type SDKVaultsListType,
   UserActivityType,
+  type UsersActivity,
 } from '@summerfi/app-types'
 
-import { type UsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
 import { TopDepositorsTable } from '@/features/user-activity/components/TopDepositorsTable/TopDepositorsTable'
 import { UserActivityTable } from '@/features/user-activity/components/UserActivityTable/UserActivityTable'
 import {
@@ -28,6 +28,7 @@ import { getUsersActivityMedianDeposit } from '@/features/user-activity/helpers/
 import { mapMultiselectOptions } from '@/features/user-activity/table/filters/mappers'
 import { topDepositorsFilter } from '@/features/user-activity/table/filters/top-depositors-filter'
 import { userActivityFilter } from '@/features/user-activity/table/filters/user-activity-filters'
+import { UserActivityTab } from '@/features/user-activity/types/tabs'
 
 import classNames from './UserActivityView.module.scss'
 
@@ -40,11 +41,6 @@ interface UserActivityViewProps {
 }
 
 const initialRows = 10
-
-enum UserActivityTab {
-  TOP_DEPOSITORS = 'TOP_DEPOSITORS',
-  LATEST_ACTIVITY = 'LATEST_ACTIVITY',
-}
 
 export const UserActivityView: FC<UserActivityViewProps> = ({
   vaultsList,

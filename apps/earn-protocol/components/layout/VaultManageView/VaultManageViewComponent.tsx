@@ -12,16 +12,18 @@ import {
 } from '@summerfi/app-earn-ui'
 import {
   type DropdownOption,
+  type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
   type TokenSymbolsList,
+  type UsersActivity,
 } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client-react'
 import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 
-import { userActivityRawData, vaultExposureRawData } from '@/components/layout/VaultOpenView/mocks'
+import { vaultExposureRawData } from '@/components/layout/VaultOpenView/mocks'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { MockedLineChart } from '@/components/organisms/Charts/MockedLineChart'
 import { RebalancingActivity } from '@/components/organisms/RebalancingActivity/RebalancingActivity'
@@ -36,11 +38,15 @@ export const VaultManageViewComponent = ({
   vault,
   vaults,
   position,
+  userActivity,
+  topDepositors,
   viewWalletAddress,
 }: {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
   position: IArmadaPosition
+  userActivity: UsersActivity
+  topDepositors: SDKUsersActivityType
   viewWalletAddress: string
 }) => {
   const {
@@ -175,7 +181,12 @@ export const VaultManageViewComponent = ({
             }
             defaultExpanded
           >
-            <UserActivity rawData={userActivityRawData} />
+            <UserActivity
+              userActivity={userActivity}
+              topDepositors={topDepositors}
+              vaultId={vault.id}
+              page="manage"
+            />
           </Expander>
         </div>
       }
