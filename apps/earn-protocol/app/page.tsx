@@ -15,7 +15,7 @@ export default function HomePage() {
       }}
     >
       <Text as="p" variant="p2">
-        I love you ❤️❤️
+        I love you ❤️
         <br /> <br />
         BTW you are probably looking for the{' '}
         <Link href="/earn" style={{ display: 'inline', color: 'var(--color-text-link)' }}>
