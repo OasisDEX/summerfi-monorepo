@@ -2,7 +2,7 @@
 
 import { type FC, type ReactNode, useEffect, useState } from 'react'
 import { type SDKVaultishType, type SDKVaultsListType } from '@summerfi/app-types'
-import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatDecimalAsPercent, ten } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
@@ -40,6 +40,9 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   const apr30d = formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
   const aprCurrent = formatDecimalAsPercent(new BigNumber(vault.calculatedApr).div(100))
   const totalValueLockedUSDParsed = formatCryptoBalance(new BigNumber(vault.totalValueLockedUSD))
+  const totalValueLockedTokenParsed = formatCryptoBalance(
+    new BigNumber(vault.inputTokenBalance.toString()).div(ten.pow(vault.inputToken.decimals)),
+  )
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -134,9 +137,8 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 size="large"
                 titleSize="small"
                 title="Assets in vault"
-                value={totalValueLockedUSDParsed}
-                // TODO: fill data
-                subValue={`231,232,321.01 ${vault.inputToken.symbol}`}
+                value={`$${totalValueLockedUSDParsed}`}
+                subValue={`${totalValueLockedTokenParsed} ${vault.inputToken.symbol}`}
                 subValueSize="medium"
               />
             </Box>
