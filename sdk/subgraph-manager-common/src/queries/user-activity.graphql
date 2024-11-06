@@ -16,6 +16,7 @@ query GetUserActivity($id: ID!) {
       id
       name
       inputToken {
+        id
         symbol
         decimals
       }
