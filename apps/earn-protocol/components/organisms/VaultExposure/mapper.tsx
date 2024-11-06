@@ -1,11 +1,39 @@
-import { TableCellText, TableRowAccent, Text, TokensGroup, WithArrow } from '@summerfi/app-earn-ui'
+import {
+  Icon,
+  TableCellText,
+  TableRowAccent,
+  type TableSortedColumn,
+  Text,
+  WithArrow,
+} from '@summerfi/app-earn-ui'
+import { type SDKVaultType, type TokenSymbolsList } from '@summerfi/app-types'
 import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
+import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
-import { type VaultExposureRawData } from '@/components/organisms/VaultExposure/VaultExposure'
+import { rebalanceActivitySorter } from '@/components/organisms/VaultExposure/sorter'
 
-export const vaultExposureMapper = (rawData: VaultExposureRawData[]) => {
-  return rawData.map((item) => {
+export const vaultExposureMapper = (
+  vault: SDKVaultType,
+  sortConfig?: TableSortedColumn<string>,
+) => {
+  const vaultInputToken = vault.inputTokenBalance
+
+  const sortedArks = rebalanceActivitySorter({ vault, sortConfig })
+
+  return sortedArks.map((item) => {
+    const allocationRaw = new BigNumber(item.inputTokenBalance.toString()).shiftedBy(
+      -vault.inputToken.decimals,
+    )
+    const allocation = new BigNumber(item.inputTokenBalance.toString()).div(
+      vaultInputToken.toString(),
+    )
+
+    const apr = new BigNumber(item.calculatedApr.toString()).div(100)
+
+    // temporary mapping, we need something more robust from subgraph
+    const protocol = item.name?.split('-')[0] ?? 'n/a'
+
     return {
       content: {
         vault: (
@@ -13,17 +41,14 @@ export const vaultExposureMapper = (rawData: VaultExposureRawData[]) => {
             style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-x-small)' }}
           >
             <TableRowAccent backgroundColor="var(--earn-protocol-accent-1-100)" />
-            <TokensGroup
-              tokens={[item.vault.primaryToken, item.vault.secondaryToken]}
-              variant="s"
-            />
-            <TableCellText>{item.vault.label}</TableCellText>
+            <Icon tokenName={item.inputToken.symbol as TokenSymbolsList} variant="s" />
+            <TableCellText>{protocol}</TableCellText>
           </div>
         ),
-        allocation: <TableCellText>{formatDecimalAsPercent(item.allocation)}</TableCellText>,
-        currentApy: <TableCellText>{formatDecimalAsPercent(item.currentApy)}</TableCellText>,
-        liquidity: <TableCellText>{formatCryptoBalance(item.liquidity)}</TableCellText>,
-        type: <TableCellText>{item.type}</TableCellText>,
+        allocation: <TableCellText>{formatDecimalAsPercent(allocation)}</TableCellText>,
+        currentApy: <TableCellText>{formatDecimalAsPercent(apr)}</TableCellText>,
+        liquidity: <TableCellText>{formatCryptoBalance(allocationRaw)}</TableCellText>,
+        type: <TableCellText>TBD</TableCellText>,
       },
       details: (
         <div

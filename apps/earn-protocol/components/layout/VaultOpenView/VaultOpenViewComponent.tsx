@@ -13,15 +13,15 @@ import {
 import {
   type DropdownOption,
   type SDKUsersActivityType,
-  type SDKVaultishType,
   type SDKVaultsListType,
+  type SDKVaultType,
   type TokenSymbolsList,
   type UsersActivity,
 } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
 
-import { detailsLinks, vaultExposureRawData } from '@/components/layout/VaultOpenView/mocks'
+import { detailsLinks } from '@/components/layout/VaultOpenView/mocks'
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
@@ -44,7 +44,7 @@ export const VaultOpenViewComponent = ({
   userActivity,
   topDepositors,
 }: {
-  vault: SDKVaultishType
+  vault: SDKVaultType
   vaults: SDKVaultsListType
   userActivity: UsersActivity
   topDepositors: SDKUsersActivityType
@@ -172,7 +172,7 @@ export const VaultOpenViewComponent = ({
             }
             defaultExpanded
           >
-            <VaultExposure rawData={vaultExposureRawData} />
+            <VaultExposure vault={vault} />
           </Expander>
           <Expander
             title={

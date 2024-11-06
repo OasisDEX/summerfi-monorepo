@@ -2,8 +2,8 @@
 
 import {
   type SDKUsersActivityType,
-  type SDKVaultishType,
   type SDKVaultsListType,
+  type SDKVaultType,
   type UsersActivity,
 } from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
@@ -17,7 +17,7 @@ export const VaultOpenView = ({
   userActivity,
   topDepositors,
 }: {
-  vault: SDKVaultishType
+  vault: SDKVaultType
   vaults: SDKVaultsListType
   userActivity: UsersActivity
   topDepositors: SDKUsersActivityType
