@@ -10,7 +10,7 @@ import {
   type SDKUsersActivityType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
-import { formatCryptoBalance, getPastTimestamp } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatDateDifference, getPastTimestamp } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
@@ -51,6 +51,18 @@ export const topDepositorsMapper = (
         ? 'var(--earn-protocol-success-100)'
         : 'var(--earn-protocol-warning-100)'
 
+    const earnStreakWithdrawResetTimestamp = item.withdrawals.find(
+      (withdraw) => Number(withdraw.inputTokenBalance) === 0,
+    )?.timestamp
+    const firstDepositTimestamp = item.deposits[0]?.timestamp
+
+    const earningStreakResetTimestamp = earnStreakWithdrawResetTimestamp ?? firstDepositTimestamp
+
+    const earningStreak = formatDateDifference({
+      from: new Date(Number(earningStreakResetTimestamp) * 1000),
+      to: new Date(),
+    })
+
     return {
       content: {
         user: <TableCellText>{item.account.id.slice(0, 8)}</TableCellText>,
@@ -88,7 +100,7 @@ export const topDepositorsMapper = (
           </div>
         ),
         numberOfDeposits: <TableCellText>{item.deposits.length}</TableCellText>,
-        earningsStreak: <TableCellText>TBD</TableCellText>,
+        earningsStreak: <TableCellText>{earningStreak}</TableCellText>,
         link: (
           <Link
             href={getVaultPositionUrl({
