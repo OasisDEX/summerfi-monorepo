@@ -1,4 +1,3 @@
-import { type UserActivityRawData } from '@/components/organisms/UserActivity/UserActivity'
 import { type VaultExposureRawData } from '@/components/organisms/VaultExposure/VaultExposure'
 
 export const vaultExposureRawData: VaultExposureRawData[] = [
@@ -45,29 +44,6 @@ export const vaultExposureRawData: VaultExposureRawData[] = [
     currentApy: '0.103',
     liquidity: '43000000',
     type: 'Basic Trading',
-  },
-]
-
-export const userActivityRawData: UserActivityRawData[] = [
-  {
-    balance: '120000',
-    amount: '123123',
-    numberOfDeposits: '13',
-    time: '1727385013506',
-    earningStreak: {
-      link: '/',
-      label: 'View',
-    },
-  },
-  {
-    balance: '1420000',
-    amount: '321321',
-    numberOfDeposits: '9',
-    time: '1727585013506',
-    earningStreak: {
-      link: '/',
-      label: 'View',
-    },
   },
 ]
 

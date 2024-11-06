@@ -47,3 +47,14 @@ export enum UserActivityType {
   DEPOSIT = 'DEPOSIT',
   WITHDRAW = 'WITHDRAW',
 }
+
+export interface UserActivity {
+  timestamp: SDKUserActivityType['deposits'][0]['timestamp']
+  amount: SDKUserActivityType['deposits'][0]['amount']
+  balance: SDKUserActivityType['inputTokenBalance']
+  vault: SDKUserActivityType['vault']
+  account: SDKUserActivityType['account']['id']
+  activity: UserActivityType
+}
+
+export type UsersActivity = UserActivity[]

@@ -60,8 +60,16 @@ export class ArmadaManager implements IArmadaManager {
   }
 
   /** @see IArmadaManager.getUsersActivityRaw */
-  async getUsersActivityRaw(params: Parameters<IArmadaManager['getGlobalRebalancesRaw']>[0]) {
+  async getUsersActivityRaw(params: Parameters<IArmadaManager['getUsersActivityRaw']>[0]) {
     return this._subgraphManager.getUsersActivity({ chainId: params.chainInfo.chainId })
+  }
+
+  /** @see IArmadaManager.getUserActivityRaw */
+  async getUserActivityRaw(params: Parameters<IArmadaManager['getUserActivityRaw']>[0]) {
+    return this._subgraphManager.getUserActivity({
+      chainId: params.poolId.chainInfo.chainId,
+      vaultId: params.poolId.fleetAddress.value,
+    })
   }
 
   /** @see IArmadaManager.getPoolInfo */

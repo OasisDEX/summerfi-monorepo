@@ -10,6 +10,7 @@ import type {
   GetVaultQuery,
   GetVaultsQuery,
   GetUsersActivityQuery,
+  GetUserActivityQuery,
 } from '@summerfi/subgraph-manager-common'
 import type { IRebalanceData } from '@summerfi/contracts-provider-common'
 
@@ -59,6 +60,16 @@ export interface IArmadaManager {
    * @returns GerUsersActivityQuery
    */
   getUsersActivityRaw(params: { chainInfo: ChainInfo }): Promise<GetUsersActivityQuery>
+
+  /**
+   * @name getUserActivityRaw
+   * @description Get all user activity per given chain
+   *
+   * @param chainInfo Chain information
+   *
+   * @returns GerUsersActivityQuery
+   */
+  getUserActivityRaw(params: { poolId: IArmadaVaultId }): Promise<GetUserActivityQuery>
 
   /**
    * @name getPoolInfo

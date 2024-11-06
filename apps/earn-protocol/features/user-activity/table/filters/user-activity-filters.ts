@@ -16,7 +16,7 @@ const userActivityFilterTokens = ({
   userActivity: UserActivity
 }) => !tokenFilter.length || tokenFilter.includes(userActivity.vault.inputToken.symbol)
 
-export const userActivityActivityFilter = ({
+export const userActivityFilter = ({
   userActivityList,
   strategyFilter,
   tokenFilter,

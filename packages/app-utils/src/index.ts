@@ -47,3 +47,4 @@ export {
 } from './helpers/config/access-config-context'
 export { toggleArrayItem } from './helpers/toggle-array-item'
 export { simpleSort, SortDirection } from './helpers/simple-sort'
+export { getPastTimestamp } from './helpers/get-past-timestamp'

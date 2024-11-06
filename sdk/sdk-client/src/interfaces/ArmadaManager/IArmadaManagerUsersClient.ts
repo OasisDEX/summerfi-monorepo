@@ -7,6 +7,7 @@ import {
   type GetVaultsQuery,
   type GetGlobalRebalancesQuery,
   type GetUsersActivityQuery,
+  type GetUserActivityQuery,
 } from '@summerfi/armada-protocol-common'
 import {
   ITokenAmount,
@@ -61,6 +62,16 @@ export interface IArmadaManagerUsersClient {
    * @returns GerUsersActivityQuery
    */
   getUsersActivityRaw(params: { chainInfo: ChainInfo }): Promise<GetUsersActivityQuery>
+
+  /**
+   * @name getUserActivityRaw
+   * @description Get all users activity per given chain
+   *
+   * @param chainInfo Chain information
+   *
+   * @returns GerUserActivityQuery
+   */
+  getUserActivityRaw(params: { poolId: IArmadaVaultId }): Promise<GetUserActivityQuery>
 
   /**
    * @method getPoolInfo

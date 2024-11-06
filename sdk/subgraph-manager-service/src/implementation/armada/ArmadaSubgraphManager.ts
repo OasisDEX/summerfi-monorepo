@@ -40,6 +40,10 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     return this._getClient(chainId).GetUsersActivity()
   }
 
+  getUserActivity({ chainId, vaultId }: Parameters<IArmadaSubgraphManager['getUserActivity']>[0]) {
+    return this._getClient(chainId).GetUserActivity({ id: vaultId })
+  }
+
   getUserPositions({ user }: Parameters<IArmadaSubgraphManager['getUserPositions']>[0]) {
     return this._getClient(user.chainInfo.chainId).GetUserPositions({
       accountAddress: user.wallet.address.value,

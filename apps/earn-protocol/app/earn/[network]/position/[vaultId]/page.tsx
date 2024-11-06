@@ -1,6 +1,7 @@
 import { Text } from '@summerfi/app-earn-ui'
 import { type SDKNetwork } from '@summerfi/app-types'
 
+import { getUserActivity } from '@/app/server-handlers/sdk/get-user-activity'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { VaultOpenView } from '@/components/layout/VaultOpenView/VaultOpenView'
@@ -15,12 +16,13 @@ type EarnVaultOpenPageProps = {
 export const revalidate = 60
 
 const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
-  const [vault, { vaults }] = await Promise.all([
+  const [vault, { vaults }, { userActivity, topDepositors }] = await Promise.all([
     getVaultDetails({
       vaultAddress: params.vaultId,
       network: params.network,
     }),
     getVaultsList(),
+    getUserActivity({ vaultAddress: params.vaultId, network: params.network }),
   ])
 
   if (!vault) {
@@ -31,7 +33,14 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     )
   }
 
-  return <VaultOpenView vault={vault} vaults={vaults} />
+  return (
+    <VaultOpenView
+      vault={vault}
+      vaults={vaults}
+      userActivity={userActivity}
+      topDepositors={topDepositors}
+    />
+  )
 }
 
 export default EarnVaultOpenPage

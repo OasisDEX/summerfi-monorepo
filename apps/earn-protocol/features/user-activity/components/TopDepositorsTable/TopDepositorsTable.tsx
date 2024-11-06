@@ -1,12 +1,12 @@
 import { type FC, type ReactNode, useMemo, useState } from 'react'
 import { Table, type TableSortedColumn } from '@summerfi/app-earn-ui'
+import { type SDKUsersActivityType } from '@summerfi/app-types'
 
-import { type UsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
-import { userActivityColumns } from '@/features/user-activity/table/user-activity-columns'
-import { userActivityMapper } from '@/features/user-activity/table/user-activity-mapper'
+import { topDepositorsColumns } from '@/features/user-activity/table/top-depositors-columns'
+import { topDepositorsMapper } from '@/features/user-activity/table/top-depositors-mapper'
 
-interface UserActivityTableProps {
-  userActivityList: UsersActivity
+interface TopDepositorsTableProps {
+  topDepositorsList: SDKUsersActivityType
   customRow?: {
     idx: number
     content: ReactNode
@@ -15,8 +15,8 @@ interface UserActivityTableProps {
   rowsToDisplay?: number
 }
 
-export const UserActivityTable: FC<UserActivityTableProps> = ({
-  userActivityList,
+export const TopDepositorsTable: FC<TopDepositorsTableProps> = ({
+  topDepositorsList,
   customRow,
   hiddenColumns,
   rowsToDisplay,
@@ -24,14 +24,14 @@ export const UserActivityTable: FC<UserActivityTableProps> = ({
   const [sortConfig, setSortConfig] = useState<TableSortedColumn<string>>()
 
   const rows = useMemo(
-    () => userActivityMapper(userActivityList, sortConfig),
-    [userActivityList, sortConfig],
+    () => topDepositorsMapper(topDepositorsList, sortConfig),
+    [topDepositorsList, sortConfig],
   )
 
   return (
     <Table
       rows={rows.slice(0, rowsToDisplay)}
-      columns={userActivityColumns}
+      columns={topDepositorsColumns}
       customRow={customRow}
       handleSort={(_sortConfig) => setSortConfig(_sortConfig)}
       hiddenColumns={hiddenColumns}

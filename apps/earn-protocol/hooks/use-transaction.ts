@@ -1,6 +1,6 @@
 'use client'
 
-import { type ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAuthModal, useChain, useUser } from '@account-kit/react'
 import {
   type EarnTransactionTypes,
@@ -8,17 +8,24 @@ import {
   type SDKVaultishType,
   type TransactionInfoLabeled,
 } from '@summerfi/app-types'
-import { mapNumericInput } from '@summerfi/app-utils'
 import { Address, ChainInfo, type TransactionInfo } from '@summerfi/sdk-client-react'
-import BigNumber from 'bignumber.js'
+import type BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 import { useRouter } from 'next/navigation'
-import { createPublicClient, createWalletClient, custom } from 'viem'
 
 import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { TransactionAction } from '@/constants/transaction-actions'
 import { subgraphNetworkToSDKId } from '@/helpers/network-helpers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
+import { type useClient } from '@/hooks/use-client'
+
+type UseTransactionParams = {
+  vault: SDKVaultishType
+  amountParsed: BigNumber | undefined
+  manualSetAmount: (amountParsed: string | undefined) => void
+  transactionClient: ReturnType<typeof useClient>['transactionClient']
+  publicClient: ReturnType<typeof useClient>['publicClient']
+}
 
 const labelTransactions = (transactions: TransactionInfo[]) => {
   return transactions.map((tx) => ({
@@ -28,7 +35,13 @@ const labelTransactions = (transactions: TransactionInfo[]) => {
   }))
 }
 
-export const useTransaction = ({ vault }: { vault: SDKVaultishType }) => {
+export const useTransaction = ({
+  vault,
+  manualSetAmount,
+  transactionClient,
+  publicClient,
+  amountParsed,
+}: UseTransactionParams) => {
   const [transactionType, setTransactionType] = useState<TransactionAction>(
     TransactionAction.DEPOSIT,
   )
@@ -37,79 +50,23 @@ export const useTransaction = ({ vault }: { vault: SDKVaultishType }) => {
   const [txSteps, setTxSteps] = useState<number>()
   const [txStatus, setTxStatus] = useState<EarnTransactionViewStates>('idle')
   const [transactions, setTransactions] = useState<TransactionInfoLabeled[]>()
-  const [amount, setAmount] = useState<BigNumber>()
   const [error, setError] = useState<string>()
   const { getDepositTX, getWithdrawTX } = useAppSDK()
   const user = useUser()
   const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
-  const { chain: connectedChain, setChain, isSettingChain } = useChain()
+  const { setChain, isSettingChain } = useChain()
 
-  const reset = () => {
-    setAmount(undefined)
+  const reset = useCallback(() => {
+    manualSetAmount(undefined)
     setTransactions(undefined)
     setTxStatus('idle')
     setError(undefined)
     setTxHashes([])
-  }
-
-  const handleAmountChange = (ev: ChangeEvent<HTMLInputElement>) => {
-    if (!ev.target.value) {
-      setAmount(undefined)
-
-      return
-    }
-    setAmount(new BigNumber(ev.target.value.replaceAll(',', '').trim()))
-  }
+  }, [manualSetAmount])
 
   const removeTxHash = useCallback((txHash: string) => {
     setTxHashes((prev) => prev.filter((tx) => tx.hash !== txHash))
   }, [])
-
-  const amountDisplayValue = useMemo(() => {
-    if (!amount) {
-      return ''
-    }
-
-    return mapNumericInput(amount.toString())
-  }, [amount])
-
-  const transactionClient = useMemo(() => {
-    // used for the tx itself
-    if (user) {
-      // todo: handle other wallets, this is just working with metamask
-      if (user.type === 'eoa') {
-        const externalProvider = window.ethereum
-
-        return createWalletClient({
-          chain: connectedChain,
-          transport: custom(externalProvider),
-          account: user.address,
-        })
-      }
-    }
-
-    return null
-  }, [user, connectedChain])
-
-  const publicClient = useMemo(
-    // used for the tx receipt
-    () => {
-      if (user) {
-        // todo: handle other wallets, this is just working with metamask
-        if (user.type === 'eoa') {
-          const externalProvider = window.ethereum
-
-          return createPublicClient({
-            chain: connectedChain,
-            transport: custom(externalProvider),
-          })
-        }
-      }
-
-      return null
-    },
-    [connectedChain, user],
-  )
 
   const userChainId = transactionClient?.chain.id
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
@@ -164,7 +121,7 @@ export const useTransaction = ({ vault }: { vault: SDKVaultishType }) => {
   }, [nextTransaction, transactionClient, publicClient, transactions])
 
   const getTransactionsList = useCallback(async () => {
-    if (amount && user) {
+    if (amountParsed && user) {
       setTxStatus('loadingTx')
       try {
         let transactionsList: TransactionInfo[] = []
@@ -175,7 +132,7 @@ export const useTransaction = ({ vault }: { vault: SDKVaultishType }) => {
               walletAddress: Address.createFromEthereum({
                 value: user.address,
               }),
-              amount: amount.toString(),
+              amount: amountParsed.toString(),
               fleetAddress: vault.id,
               chainInfo: ChainInfo.createFrom({
                 name: vault.protocol.network,
@@ -189,7 +146,7 @@ export const useTransaction = ({ vault }: { vault: SDKVaultishType }) => {
               walletAddress: Address.createFromEthereum({
                 value: user.address,
               }),
-              amount: amount.toString(),
+              amount: amountParsed.toString(),
               fleetAddress: vault.id,
               chainInfo: ChainInfo.createFrom({
                 name: vault.protocol.network,
@@ -218,7 +175,7 @@ export const useTransaction = ({ vault }: { vault: SDKVaultishType }) => {
       }
     }
   }, [
-    amount,
+    amountParsed,
     user,
     transactionType,
     getDepositTX,
@@ -250,9 +207,9 @@ export const useTransaction = ({ vault }: { vault: SDKVaultishType }) => {
         loading: isSettingChain,
       }
     }
-    if (!amount || amount.isZero()) {
+    if (!amountParsed || amountParsed.isZero()) {
       return {
-        label: 'Deposit',
+        label: capitalize(transactionType),
         action: () => null,
         disabled: true,
       }
@@ -294,7 +251,7 @@ export const useTransaction = ({ vault }: { vault: SDKVaultishType }) => {
     user,
     isProperChainSelected,
     isSettingChain,
-    amount,
+    amountParsed,
     transactionType,
     txStatus,
     nextTransaction?.label,
@@ -314,12 +271,11 @@ export const useTransaction = ({ vault }: { vault: SDKVaultishType }) => {
       refreshView()
       reset()
     }
-  }, [refreshView, transactions?.length, txStatus])
+  }, [refreshView, reset, transactions?.length, txStatus])
 
   return {
-    amountDisplayValue,
-    handleAmountChange,
-    amount,
+    manualSetAmount,
+    amountParsed,
     sidebar: {
       primaryButton,
       error,

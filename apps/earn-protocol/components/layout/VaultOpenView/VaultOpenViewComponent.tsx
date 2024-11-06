@@ -6,24 +6,22 @@ import {
   Sidebar,
   SidebarFootnote,
   sidebarFootnote,
+  SkeletonLine,
   Text,
   VaultOpenGrid,
 } from '@summerfi/app-earn-ui'
 import {
   type DropdownOption,
+  type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
   type TokenSymbolsList,
+  type UsersActivity,
 } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
-import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 
-import {
-  detailsLinks,
-  userActivityRawData,
-  vaultExposureRawData,
-} from '@/components/layout/VaultOpenView/mocks'
+import { detailsLinks, vaultExposureRawData } from '@/components/layout/VaultOpenView/mocks'
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
@@ -32,6 +30,8 @@ import { RebalancingActivity } from '@/components/organisms/RebalancingActivity/
 import { UserActivity } from '@/components/organisms/UserActivity/UserActivity'
 import { VaultExposure } from '@/components/organisms/VaultExposure/VaultExposure'
 import { TransactionAction } from '@/constants/transaction-actions'
+import { useAmount } from '@/hooks/use-amount'
+import { useClient } from '@/hooks/use-client'
 import { usePosition } from '@/hooks/use-position'
 import { useRedirectToPosition } from '@/hooks/use-redirect-to-position'
 import { useTransaction } from '@/hooks/use-transaction'
@@ -41,20 +41,26 @@ import vaultOpenViewStyles from './VaultOpenView.module.scss'
 export const VaultOpenViewComponent = ({
   vault,
   vaults,
+  userActivity,
+  topDepositors,
 }: {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
+  userActivity: UsersActivity
+  topDepositors: SDKUsersActivityType
 }) => {
-  const {
-    amountDisplayValue,
-    handleAmountChange,
-    sidebar,
-    amount,
-    txHashes,
-    removeTxHash,
-    vaultChainId,
-    reset,
-  } = useTransaction({ vault })
+  const { publicClient, transactionClient, tokenBalance, tokenBalanceLoading } = useClient({
+    vault,
+  })
+  const { amountParsed, manualSetAmount, amountDisplay, handleAmountChange, onBlur, onFocus } =
+    useAmount({ vault })
+  const { sidebar, txHashes, removeTxHash, vaultChainId, reset } = useTransaction({
+    vault,
+    publicClient,
+    transactionClient,
+    amountParsed,
+    manualSetAmount,
+  })
 
   const position = usePosition({
     chainId: vaultChainId,
@@ -74,24 +80,32 @@ export const VaultOpenViewComponent = ({
   const dropdownValue =
     options.find((option) => option.value === vault.inputToken.symbol) ?? options[0]
 
-  const balance = new BigNumber(123123)
-  const displayGraph = !!amount && amount.gt(0)
+  const displayGraph = amountParsed.gt(0)
 
   const sidebarProps = {
     title: capitalize(TransactionAction.DEPOSIT),
     content: (
       <>
         <InputWithDropdown
-          value={amountDisplayValue}
-          secondaryValue={amountDisplayValue ? `$${amountDisplayValue}` : undefined}
+          value={amountDisplay}
+          secondaryValue={amountDisplay ? `$${amountDisplay}` : undefined}
           handleChange={handleAmountChange}
           options={options}
           dropdownValue={dropdownValue}
+          onFocus={onFocus}
+          onBlur={onBlur}
           heading={{
             label: 'Balance',
-            value: `${formatCryptoBalance(balance)} ${vault.inputToken.symbol}`,
-            // eslint-disable-next-line no-console
-            action: () => console.log('clicked'),
+            value: tokenBalanceLoading ? (
+              <SkeletonLine />
+            ) : tokenBalance ? (
+              `${formatCryptoBalance(tokenBalance)} ${vault.inputToken.symbol}`
+            ) : (
+              '-'
+            ),
+            action: () => {
+              manualSetAmount(tokenBalance?.toString())
+            },
           }}
         />
         <ProjectedEarnings earnings="1353" symbol={vault.inputToken.symbol as TokenSymbolsList} />
@@ -101,7 +115,7 @@ export const VaultOpenViewComponent = ({
     primaryButton: sidebar.primaryButton,
     footnote: (
       <>
-        {sidebar.error ?? amount?.gt(0) ? (
+        {sidebar.error ?? amountParsed.gt(0) ? (
           <Button
             variant="secondarySmall"
             style={{ width: '100%', marginBottom: 'var(--general-space-12)' }}
@@ -136,7 +150,7 @@ export const VaultOpenViewComponent = ({
       vault={vault}
       vaults={vaults}
       displayGraph={displayGraph}
-      simulationGraph={<VaultSimulationGraph vault={vault} amount={amount} />}
+      simulationGraph={<VaultSimulationGraph vault={vault} amount={amountParsed} />}
       detailsContent={
         <div className={vaultOpenViewStyles.leftContentWrapper}>
           <VaultOpenHeaderBlock detailsLinks={detailsLinks} vault={vault} />
@@ -173,12 +187,17 @@ export const VaultOpenViewComponent = ({
           <Expander
             title={
               <Text as="p" variant="p1semi">
-                User activity
+                Users activity
               </Text>
             }
             defaultExpanded
           >
-            <UserActivity rawData={userActivityRawData} />
+            <UserActivity
+              userActivity={userActivity}
+              topDepositors={topDepositors}
+              vaultId={vault.id}
+              page="open"
+            />
           </Expander>
         </div>
       }
