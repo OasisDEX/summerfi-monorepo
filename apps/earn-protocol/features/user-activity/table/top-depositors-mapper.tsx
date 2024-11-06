@@ -14,6 +14,7 @@ import { formatCryptoBalance, formatDateDifference, getPastTimestamp } from '@su
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
+import { getEarningStreakResetTimestamp } from '@/features/user-activity/helpers/get-earning-streak-reset-timestamp'
 import { topDepositorsSorter } from '@/features/user-activity/table/top-depositors-sorter'
 
 export const calculateTopDepositors7daysChange = (item: SDKUserActivityType) => {
@@ -51,15 +52,10 @@ export const topDepositorsMapper = (
         ? 'var(--earn-protocol-success-100)'
         : 'var(--earn-protocol-warning-100)'
 
-    const earnStreakWithdrawResetTimestamp = item.withdrawals.find(
-      (withdraw) => Number(withdraw.inputTokenBalance) === 0,
-    )?.timestamp
-    const firstDepositTimestamp = item.deposits[0]?.timestamp
-
-    const earningStreakResetTimestamp = earnStreakWithdrawResetTimestamp ?? firstDepositTimestamp
+    const earningStreakResetTimestamp = getEarningStreakResetTimestamp(item)
 
     const earningStreak = formatDateDifference({
-      from: new Date(Number(earningStreakResetTimestamp) * 1000),
+      from: new Date(earningStreakResetTimestamp),
       to: new Date(),
     })
 
