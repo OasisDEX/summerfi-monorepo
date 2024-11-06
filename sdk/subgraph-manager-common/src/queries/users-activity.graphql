@@ -7,10 +7,12 @@ query GetUsersActivity {
     deposits {
       timestamp
       amount
+      hash
     }
     withdrawals {
       timestamp
       amount
+      hash
     }
     vault {
       id

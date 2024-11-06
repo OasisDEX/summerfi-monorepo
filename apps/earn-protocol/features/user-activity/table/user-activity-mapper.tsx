@@ -1,5 +1,5 @@
 import {
-  getVaultPositionUrl,
+  getScannerUrl,
   Icon,
   TableCellText,
   type TableSortedColumn,
@@ -11,6 +11,7 @@ import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
 import { userActivitySorter } from '@/features/user-activity/table/user-activity-sorter'
+import { subgraphNetworkToSDKId } from '@/helpers/network-helpers'
 
 const activityLabelMap = {
   [UserActivityType.DEPOSIT]: 'Deposit',
@@ -74,11 +75,7 @@ export const userActivityMapper = (
         ),
         link: (
           <Link
-            href={getVaultPositionUrl({
-              network: item.vault.protocol.network,
-              vaultId: item.vault.id,
-              walletAddress: item.account,
-            })}
+            href={getScannerUrl(subgraphNetworkToSDKId(item.vault.protocol.network), item.hash)}
           >
             <WithArrow
               as="p"

@@ -44,7 +44,7 @@ export const topDepositorsMapper = (
     const balance = new BigNumber(item.inputTokenBalance.toString()).shiftedBy(-decimals)
 
     const change7days = calculateTopDepositors7daysChange(item)
-    const changeSign = change7days.isZero() ? '' : change7days.gt(0) ? '+' : '-'
+    const changeSign = change7days.gt(0) ? '+' : ''
     const changeColor = change7days.isZero()
       ? 'var(--earn-protocol-secondary-100)'
       : change7days.gt(0)
