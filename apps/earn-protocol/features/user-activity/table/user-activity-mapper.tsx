@@ -5,12 +5,11 @@ import {
   type TableSortedColumn,
   WithArrow,
 } from '@summerfi/app-earn-ui'
-import { type TokenSymbolsList, UserActivityType } from '@summerfi/app-types'
+import { type TokenSymbolsList, UserActivityType, type UsersActivity } from '@summerfi/app-types'
 import { formatCryptoBalance, timeAgo } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
-import { type UsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
 import { userActivitySorter } from '@/features/user-activity/table/user-activity-sorter'
 
 const activityLabelMap = {

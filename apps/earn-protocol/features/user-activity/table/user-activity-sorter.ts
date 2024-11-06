@@ -1,7 +1,6 @@
 import { type TableSortedColumn } from '@summerfi/app-earn-ui'
+import { type UsersActivity } from '@summerfi/app-types'
 import { simpleSort, SortDirection } from '@summerfi/app-utils'
-
-import { type UsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
 
 export const userActivitySorter = ({
   data,

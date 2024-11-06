@@ -1,8 +1,6 @@
 import { getMedian } from '@summerfi/app-earn-ui'
-import { UserActivityType } from '@summerfi/app-types'
+import { UserActivityType, type UsersActivity } from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
-
-import { type UsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
 
 export const getUsersActivityMedianDeposit = (usersActivity: UsersActivity) =>
   getMedian(

@@ -1,7 +1,7 @@
 import { type FC, type ReactNode, useMemo, useState } from 'react'
 import { Table, type TableSortedColumn } from '@summerfi/app-earn-ui'
+import { type UsersActivity } from '@summerfi/app-types'
 
-import { type UsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
 import { userActivityColumns } from '@/features/user-activity/table/user-activity-columns'
 import { userActivityMapper } from '@/features/user-activity/table/user-activity-mapper'
 

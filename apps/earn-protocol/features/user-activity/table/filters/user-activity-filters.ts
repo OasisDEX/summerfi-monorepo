@@ -1,4 +1,4 @@
-import { type UserActivity, type UsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
+import { type UserActivity, type UsersActivity } from '@summerfi/app-types'
 
 const userActivityFilterStrategies = ({
   strategyFilter,
