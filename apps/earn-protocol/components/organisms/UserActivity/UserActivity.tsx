@@ -55,7 +55,7 @@ export const UserActivity: FC<UserActivityProps> = ({
     <Card variant="cardSecondary" style={{ marginTop: 'var(--spacing-space-medium)' }}>
       <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
         <TabBar tabs={tabs} textVariant="p3semi" />
-        <Link href={`/earn/users-activity?strategies=${vaultId}`} style={{ width: 'fit-content' }}>
+        <Link href={`/earn/user-activity?strategies=${vaultId}`} style={{ width: 'fit-content' }}>
           <WithArrow as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
             View all depositors
           </WithArrow>
