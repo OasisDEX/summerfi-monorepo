@@ -1,6 +1,6 @@
 import type { SDKVaultType } from '@summerfi/app-types'
 
-import { VaultExposureFilterType } from '@/components/organisms/VaultExposure/VaultExposure'
+import { VaultExposureFilterType } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 
 export const vaultExposureFilter = ({
   vault,

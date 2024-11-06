@@ -2,8 +2,8 @@ import { type FC, type ReactNode, useMemo, useState } from 'react'
 import { Table, type TableSortedColumn } from '@summerfi/app-earn-ui'
 import { type SDKVaultType } from '@summerfi/app-types'
 
-import { vaultExposureColumns } from '@/components/organisms/VaultExposure/columns'
-import { vaultExposureMapper } from '@/components/organisms/VaultExposure/mapper'
+import { vaultExposureColumns } from '@/features/vault-exposure/table/columns'
+import { vaultExposureMapper } from '@/features/vault-exposure/table/mapper'
 
 interface VaultExposureTableProps {
   vault: SDKVaultType

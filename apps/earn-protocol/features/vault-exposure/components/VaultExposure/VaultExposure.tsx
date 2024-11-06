@@ -4,7 +4,7 @@ import { type Dispatch, type FC, type SetStateAction, useMemo, useState } from '
 import { Button, Card, Icon, InlineButtons, Text } from '@summerfi/app-earn-ui'
 import { type SDKVaultType } from '@summerfi/app-types'
 
-import { VaultExposureTable } from '@/features/vault-exposure/components/VaultExposureTable'
+import { VaultExposureTable } from '@/features/vault-exposure/components/VaultExposureTable/VaultExposureTable'
 import { vaultExposureFilter } from '@/features/vault-exposure/table/filters/filters'
 
 export enum VaultExposureFilterType {

@@ -11,7 +11,7 @@ import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
-import { rebalanceActivitySorter } from '@/components/organisms/VaultExposure/sorter'
+import { rebalanceActivitySorter } from '@/features/vault-exposure/table/sorter'
 
 export const vaultExposureMapper = (
   vault: SDKVaultType,
@@ -65,7 +65,7 @@ export const vaultExposureMapper = (
             MetaMorpho Gauntlet MKR Blended was chosen for it’s performance track record, risk
             approach and asset exposure.
           </Text>
-          <Link href="/">
+          <Link href="/apps/earn-protocol/public">
             <WithArrow
               as="p"
               variant="p4semi"
