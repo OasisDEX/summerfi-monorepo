@@ -1,4 +1,11 @@
-import { Icon, TableCellText, type TableSortedColumn, Text, WithArrow } from '@summerfi/app-earn-ui'
+import {
+  Icon,
+  TableCellNodes,
+  TableCellText,
+  type TableSortedColumn,
+  Text,
+  WithArrow,
+} from '@summerfi/app-earn-ui'
 import {
   type IconNamesList,
   type SDKGlobalRebalancesType,
@@ -84,9 +91,7 @@ export const rebalancingActivityMapper = (
     return {
       content: {
         purpose: (
-          <div
-            style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-x-small)' }}
-          >
+          <TableCellNodes gap="medium">
             {purpose.icon && (
               <Icon
                 iconName={purpose.icon}
@@ -95,32 +100,20 @@ export const rebalancingActivityMapper = (
               />
             )}
             <TableCellText>{purpose.label}</TableCellText>
-          </div>
+          </TableCellNodes>
         ),
         action: (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 'var(--spacing-space-2x-small)',
-            }}
-          >
+          <TableCellNodes gap="small">
             <TableCellText>{actionFromLabel}</TableCellText>
             <Text style={{ color: 'var(--earn-protocol-secondary-40)', fontSize: '14px' }}>→</Text>
             <TableCellText>{actionToLabel}</TableCellText>
-          </div>
+          </TableCellNodes>
         ),
         amount: (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 'var(--spacing-space-2x-small)',
-            }}
-          >
+          <TableCellNodes gap="small">
             <Icon tokenName={asset} variant="s" />
             <TableCellText>{formatCryptoBalance(amount)}</TableCellText>
-          </div>
+          </TableCellNodes>
         ),
         strategy: <TableCellText>{item.vault.name}</TableCellText>,
         timestamp: (

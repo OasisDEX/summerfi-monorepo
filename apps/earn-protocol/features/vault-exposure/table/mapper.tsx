@@ -1,5 +1,6 @@
 import {
   Icon,
+  TableCellNodes,
   TableCellText,
   TableRowAccent,
   type TableSortedColumn,
@@ -37,13 +38,11 @@ export const vaultExposureMapper = (
     return {
       content: {
         vault: (
-          <div
-            style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-x-small)' }}
-          >
+          <TableCellNodes>
             <TableRowAccent backgroundColor="var(--earn-protocol-accent-1-100)" />
             <Icon tokenName={item.inputToken.symbol as TokenSymbolsList} variant="s" />
             <TableCellText>{protocol}</TableCellText>
-          </div>
+          </TableCellNodes>
         ),
         allocation: <TableCellText>{formatDecimalAsPercent(allocation)}</TableCellText>,
         currentApy: <TableCellText>{formatDecimalAsPercent(apr)}</TableCellText>,

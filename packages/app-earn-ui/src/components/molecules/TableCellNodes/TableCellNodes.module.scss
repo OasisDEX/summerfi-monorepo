@@ -1,0 +1,12 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.small {
+  gap: var(--spacing-space-2x-small);
+}
+
+.medium {
+  gap: var(--spacing-space-x-small);
+}
