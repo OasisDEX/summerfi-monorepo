@@ -1116,6 +1116,9 @@ importers:
       '@summerfi/app-db':
         specifier: workspace:*
         version: link:../app-db
+      '@summerfi/armada-protocol-common':
+        specifier: workspace:*
+        version: link:../../sdk/armada-protocol-common
       '@summerfi/armada-protocol-service':
         specifier: workspace:*
         version: link:../../sdk/armada-protocol-service
