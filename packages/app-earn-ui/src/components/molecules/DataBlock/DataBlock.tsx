@@ -20,6 +20,7 @@ type DataBlockProps = {
   subValueType?: 'positive' | 'negative' | 'neutral'
   centered?: boolean
   subValueStyle?: CSSProperties
+  accent?: string
 }
 
 export const DataBlock = ({
@@ -36,6 +37,7 @@ export const DataBlock = ({
   subValueType,
   subValueSize,
   subValueStyle,
+  accent,
 }: DataBlockProps) => {
   const titleVariant = {
     small: 'p3semi' as const,
@@ -59,16 +61,20 @@ export const DataBlock = ({
     <div
       className={clsx(dataBlockStyles.dataBlockWrapper, {
         [dataBlockStyles.centered]: centered,
+        [dataBlockStyles.hasAccent]: accent,
       })}
     >
-      <TitleWithIcon
-        titleVariant={titleVariant}
-        title={title}
-        iconName={titleTooltip ? 'question_o' : undefined}
-        tooltip={titleTooltip}
-        color="rgb(119, 117, 118)"
-        titleStyle={titleStyle}
-      />
+      <div className={dataBlockStyles.titleWrapper}>
+        {accent && <div className={dataBlockStyles.accent} style={{ backgroundColor: accent }} />}
+        <TitleWithIcon
+          titleVariant={titleVariant}
+          title={title}
+          iconName={titleTooltip ? 'question_o' : undefined}
+          tooltip={titleTooltip}
+          color="rgb(119, 117, 118)"
+          titleStyle={titleStyle}
+        />
+      </div>
       <Text variant={valueVariant} style={valueStyle}>
         {value}
       </Text>

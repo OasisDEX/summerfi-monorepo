@@ -1,9 +1,9 @@
 export type Styles = {
-  accent: string
-  centered: string
-  dataBlockWrapper: string
-  hasAccent: string
-  titleWrapper: string
+  basicInfoWrapper: string
+  header: string
+  strategyInfoTopWrapper: string
+  subValue: string
+  value: string
 }
 
 export type ClassNames = keyof Styles

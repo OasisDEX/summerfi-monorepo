@@ -73,6 +73,7 @@ export { TermsOfService } from './components/organisms/TermsOfService/TermsOfSer
 export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'
 export { Table, type TableSortedColumn } from './components/organisms/Table/Table'
 export { VaultSimulationForm } from './components/organisms/VaultSimulationForm/VaultSimulationForm'
+export { PortfolioPosition } from './components/organisms/PortfolioPosition/PortfolioPosition'
 
 export { useToggle } from './hooks/use-toggle'
 export { useHash } from './hooks/use-hash'

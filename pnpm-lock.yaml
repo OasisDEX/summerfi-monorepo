@@ -1116,9 +1116,15 @@ importers:
       '@summerfi/app-db':
         specifier: workspace:*
         version: link:../app-db
+      '@summerfi/armada-protocol-service':
+        specifier: workspace:*
+        version: link:../../sdk/armada-protocol-service
       '@summerfi/rays-db':
         specifier: workspace:*
         version: link:../rays-db
+      '@summerfi/sdk-client-react':
+        specifier: workspace:*
+        version: link:../../sdk/sdk-client-react
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../../sdk/sdk-common

@@ -1,0 +1,24 @@
+.basicInfoWrapper {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.strategyInfoTopWrapper {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+
+  .header {
+    color: var(--color-text-secondary);
+  }
+
+  .value {
+    color: var(--color-text-primary);
+  }
+
+  .subValue {
+    color: var(--color-text-secondary);
+  }
+
+}
