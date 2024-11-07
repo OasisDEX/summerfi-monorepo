@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useLayoutEffect, useState } from 'react'
 
 interface ScreenInfo {
   isMobile: boolean
@@ -33,7 +33,7 @@ export const useMobileCheck = (): ScreenInfo => {
     height: 0,
   })
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // Check if window is defined (important for SSR)
     if (typeof window === 'undefined') return
 
