@@ -1116,9 +1116,18 @@ importers:
       '@summerfi/app-db':
         specifier: workspace:*
         version: link:../app-db
+      '@summerfi/armada-protocol-common':
+        specifier: workspace:*
+        version: link:../../sdk/armada-protocol-common
+      '@summerfi/armada-protocol-service':
+        specifier: workspace:*
+        version: link:../../sdk/armada-protocol-service
       '@summerfi/rays-db':
         specifier: workspace:*
         version: link:../rays-db
+      '@summerfi/sdk-client-react':
+        specifier: workspace:*
+        version: link:../../sdk/sdk-client-react
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../../sdk/sdk-common
@@ -2653,6 +2662,9 @@ importers:
       '@summerfi/armada-protocol-common':
         specifier: workspace:*
         version: link:../armada-protocol-common
+      '@summerfi/armada-protocol-service':
+        specifier: workspace:*
+        version: link:../armada-protocol-service
       '@summerfi/protocol-plugins':
         specifier: workspace:*
         version: link:../protocol-plugins

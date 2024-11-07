@@ -7,6 +7,7 @@ import {
   HeadingWithCards,
   TableCarousel,
   useCurrentUrl,
+  useMobileCheck,
   useQueryParams,
 } from '@summerfi/app-earn-ui'
 import { type SDKGlobalRebalancesType, type SDKVaultsListType } from '@summerfi/app-types'
@@ -42,6 +43,7 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
   const [tokenFilter, setTokenFilter] = useState<string[]>(searchParams?.tokens ?? [])
   const [protocolFilter, setProtocolFilter] = useState<string[]>(searchParams?.protocols ?? [])
   const currentUrl = useCurrentUrl()
+  const { isMobile } = useMobileCheck()
 
   const [current, setCurrent] = useState(initialRows)
 
@@ -134,6 +136,7 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
             label={filter.label}
             onChange={filter.onChange}
             initialValues={filter.initialValues}
+            style={{ width: isMobile ? '100%' : 'fit-content' }}
           />
         ))}
       </div>

@@ -1,14 +1,11 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { Card } from '@summerfi/app-earn-ui'
-import { type CardVariant } from '@summerfi/app-earn-ui/dist/types/src/components/atoms/Card/Card'
 import { type TimeframesType } from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
 
-import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
-import { ComparisonChart } from '@/components/organisms/Charts/ComparisonChart'
+import { YieldsChart } from '@/components/organisms/Charts/DumbCharts/YieldsChart'
 
 const dataNames = ['Summer Strategy']
 
@@ -16,14 +13,7 @@ const colors = {
   'Summer Strategy-color': '#FF49A4',
 }
 
-export const HistoricalYieldChart = ({
-  aprHourlyList,
-  cardVariant = 'cardSecondary',
-}: {
-  cardVariant?: CardVariant
-  aprHourlyList: string[]
-}) => {
-  const [compare, setCompare] = useState(true)
+export const HistoricalYieldChart = ({ aprHourlyList }: { aprHourlyList: string[] }) => {
   const [timeframe, setTimeframe] = useState<TimeframesType>('90d')
   const _unused = setTimeframe
 
@@ -40,23 +30,6 @@ export const HistoricalYieldChart = ({
   }, [aprHourlyList])
 
   return (
-    <Card
-      variant={cardVariant}
-      style={{ marginTop: 'var(--spacing-space-medium)', flexDirection: 'column' }}
-    >
-      <ChartHeader
-        compare={compare}
-        setCompare={setCompare}
-        timeframe={timeframe}
-        setTimeframe={(_nextTimeFrame) => null}
-      />
-      <ComparisonChart
-        timeframe={timeframe}
-        colors={colors}
-        data={parsedData}
-        compare={compare}
-        dataNames={dataNames}
-      />
-    </Card>
+    <YieldsChart timeframe={timeframe} colors={colors} data={parsedData} dataNames={dataNames} />
   )
 }

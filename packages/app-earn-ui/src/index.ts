@@ -73,12 +73,14 @@ export { TermsOfService } from './components/organisms/TermsOfService/TermsOfSer
 export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'
 export { Table, type TableSortedColumn } from './components/organisms/Table/Table'
 export { VaultSimulationForm } from './components/organisms/VaultSimulationForm/VaultSimulationForm'
+export { PortfolioPosition } from './components/organisms/PortfolioPosition/PortfolioPosition'
 
 export { useToggle } from './hooks/use-toggle'
 export { useHash } from './hooks/use-hash'
 export { useOutsideElementClickHandler } from './hooks/use-outside-element-click-handler'
 export { useCurrentUrl } from './hooks/use-current-url'
 export { useQueryParams } from './hooks/use-query-params'
+export { useMobileCheck } from './hooks/use-mobile-check'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
 export { getVaultUrl, getVaultDetailsUrl, getVaultPositionUrl } from './helpers/get-vault-url'

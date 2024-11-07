@@ -8,6 +8,7 @@ import {
   TabBar,
   TableCarousel,
   useCurrentUrl,
+  useMobileCheck,
   useQueryParams,
 } from '@summerfi/app-earn-ui'
 import {
@@ -53,6 +54,7 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
   const [strategyFilter, setStrategyFilter] = useState<string[]>(searchParams?.strategies ?? [])
   const [tokenFilter, setTokenFilter] = useState<string[]>(searchParams?.tokens ?? [])
   const currentUrl = useCurrentUrl()
+  const { isMobile } = useMobileCheck()
 
   const [currentUserActivityIdx, setCurrentUserActivityIdx] = useState(initialRows)
   const [currentTopDepositorsIdx, setCurrentTopDepositorsIdx] = useState(initialRows)
@@ -152,6 +154,7 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
           label={filter.label}
           onChange={filter.onChange}
           initialValues={filter.initialValues}
+          style={{ width: isMobile ? '100%' : 'fit-content' }}
         />
       ))}
     </div>

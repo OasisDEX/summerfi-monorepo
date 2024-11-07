@@ -1,8 +1,11 @@
 import { type FC, type ReactNode, useMemo, useState } from 'react'
-import { Table, type TableSortedColumn } from '@summerfi/app-earn-ui'
+import { Table, type TableSortedColumn, useMobileCheck } from '@summerfi/app-earn-ui'
 import { type SDKUsersActivityType } from '@summerfi/app-types'
 
-import { topDepositorsColumns } from '@/features/user-activity/table/top-depositors-columns'
+import {
+  topDepositorsColumns,
+  topDepositorsColumnsHiddenOnMobile,
+} from '@/features/user-activity/table/top-depositors-columns'
 import { topDepositorsMapper } from '@/features/user-activity/table/top-depositors-mapper'
 
 interface TopDepositorsTableProps {
@@ -22,11 +25,14 @@ export const TopDepositorsTable: FC<TopDepositorsTableProps> = ({
   rowsToDisplay,
 }) => {
   const [sortConfig, setSortConfig] = useState<TableSortedColumn<string>>()
+  const { isMobile } = useMobileCheck()
 
   const rows = useMemo(
     () => topDepositorsMapper(topDepositorsList, sortConfig),
     [topDepositorsList, sortConfig],
   )
+
+  const resolvedHiddenColumns = isMobile ? topDepositorsColumnsHiddenOnMobile : hiddenColumns
 
   return (
     <Table
@@ -34,7 +40,7 @@ export const TopDepositorsTable: FC<TopDepositorsTableProps> = ({
       columns={topDepositorsColumns}
       customRow={customRow}
       handleSort={(_sortConfig) => setSortConfig(_sortConfig)}
-      hiddenColumns={hiddenColumns}
+      hiddenColumns={resolvedHiddenColumns}
     />
   )
 }

@@ -71,3 +71,5 @@ export const vaultExposureColumns = [
     sortable: false,
   },
 ]
+
+export const vaultExposureColumnsHiddenOnMobile = ['liquidity', 'type']

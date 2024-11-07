@@ -9,6 +9,7 @@
   align-items: center;
   margin-bottom: var(--general-space-16);
   gap: var(--general-space-16);
+  flex-wrap: wrap;
 
   .headingIcons {
     display: flex;
@@ -38,8 +39,7 @@
 
 .cardsWrapper {
   display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: var(--general-space-16);
   margin-bottom: var(--general-space-40);
 
@@ -48,5 +48,10 @@
     flex-direction: column;
     align-items: flex-start;
     flex: 1;
+  }
+
+  @media screen and (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
   }
 }

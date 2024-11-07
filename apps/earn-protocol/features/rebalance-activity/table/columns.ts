@@ -30,3 +30,10 @@ export const rebalancingActivityColumns = [
     sortable: false,
   },
 ]
+
+export const rebalancingActivityColumnsHiddenOnMobile = [
+  'amount',
+  'strategy',
+  'timestamp',
+  'provider',
+]

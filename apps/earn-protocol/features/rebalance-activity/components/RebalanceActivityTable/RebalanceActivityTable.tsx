@@ -1,8 +1,11 @@
 import { type FC, type ReactNode, useMemo, useState } from 'react'
-import { Table, type TableSortedColumn } from '@summerfi/app-earn-ui'
+import { Table, type TableSortedColumn, useMobileCheck } from '@summerfi/app-earn-ui'
 import { type SDKGlobalRebalancesType } from '@summerfi/app-types'
 
-import { rebalancingActivityColumns } from '@/features/rebalance-activity/table/columns'
+import {
+  rebalancingActivityColumns,
+  rebalancingActivityColumnsHiddenOnMobile,
+} from '@/features/rebalance-activity/table/columns'
 import { rebalancingActivityMapper } from '@/features/rebalance-activity/table/mapper'
 
 interface RebalanceActivityTableProps {
@@ -22,11 +25,14 @@ export const RebalanceActivityTable: FC<RebalanceActivityTableProps> = ({
   rowsToDisplay,
 }) => {
   const [sortConfig, setSortConfig] = useState<TableSortedColumn<string>>()
+  const { isMobile } = useMobileCheck()
 
   const rows = useMemo(
     () => rebalancingActivityMapper(rebalancesList, sortConfig),
     [rebalancesList, sortConfig],
   )
+
+  const resolvedHiddenColumns = isMobile ? rebalancingActivityColumnsHiddenOnMobile : hiddenColumns
 
   return (
     <Table
@@ -34,7 +40,7 @@ export const RebalanceActivityTable: FC<RebalanceActivityTableProps> = ({
       columns={rebalancingActivityColumns}
       customRow={customRow}
       handleSort={(_sortConfig) => setSortConfig(_sortConfig)}
-      hiddenColumns={hiddenColumns}
+      hiddenColumns={resolvedHiddenColumns}
     />
   )
 }

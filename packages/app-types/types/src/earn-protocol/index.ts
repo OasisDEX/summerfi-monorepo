@@ -7,9 +7,11 @@ import {
 } from '@summerfi/subgraph-manager-common'
 import { ChainId } from '@summerfi/serverless-shared'
 import { type TransactionInfo } from '@summerfi/sdk-common'
+import { type IArmadaPosition } from '@summerfi/armada-protocol-common'
 
 export { Network as SDKNetwork }
 export { ChainId as SDKChainId }
+export { IArmadaPosition }
 
 export type SDKVaultsListType = GetVaultsQuery['vaults']
 export type SDKVaultType = Exclude<GetVaultQuery['vault'], null | undefined>

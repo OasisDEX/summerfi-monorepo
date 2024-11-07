@@ -1,8 +1,11 @@
 import { type FC, type ReactNode, useMemo, useState } from 'react'
-import { Table, type TableSortedColumn } from '@summerfi/app-earn-ui'
+import { Table, type TableSortedColumn, useMobileCheck } from '@summerfi/app-earn-ui'
 import { type SDKVaultType } from '@summerfi/app-types'
 
-import { vaultExposureColumns } from '@/features/vault-exposure/table/columns'
+import {
+  vaultExposureColumns,
+  vaultExposureColumnsHiddenOnMobile,
+} from '@/features/vault-exposure/table/columns'
 import { vaultExposureMapper } from '@/features/vault-exposure/table/mapper'
 
 interface VaultExposureTableProps {
@@ -22,8 +25,11 @@ export const VaultExposureTable: FC<VaultExposureTableProps> = ({
   rowsToDisplay,
 }) => {
   const [sortConfig, setSortConfig] = useState<TableSortedColumn<string>>()
+  const { isMobile } = useMobileCheck()
 
   const rows = useMemo(() => vaultExposureMapper(vault, sortConfig), [vault, sortConfig])
+
+  const resolvedHiddenColumns = isMobile ? vaultExposureColumnsHiddenOnMobile : hiddenColumns
 
   return (
     <Table
@@ -31,7 +37,7 @@ export const VaultExposureTable: FC<VaultExposureTableProps> = ({
       columns={vaultExposureColumns}
       customRow={customRow}
       handleSort={(_sortConfig) => setSortConfig(_sortConfig)}
-      hiddenColumns={hiddenColumns}
+      hiddenColumns={resolvedHiddenColumns}
     />
   )
 }

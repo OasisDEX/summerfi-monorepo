@@ -40,3 +40,11 @@ export const topDepositorsColumns = [
     sortable: false,
   },
 ]
+
+export const topDepositorsColumnsHiddenOnMobile = [
+  'strategy',
+  'change7d',
+  'projected1yrEarnings',
+  'numberOfDeposits',
+  'earningsStreak',
+]
