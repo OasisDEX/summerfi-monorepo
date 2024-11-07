@@ -3,7 +3,7 @@ query UserPositions($userAddress: String!) {
     id
     inputTokenBalance
     outputTokenBalance
-    outputTokenBalanceNormalized
-    outputTokenBalanceNormalizedInUSD
+    inputTokenBalanceNormalized
+    inputTokenBalanceNormalizedInUSD
   }
 }
