@@ -64,6 +64,8 @@ export default defineConfig(({ mode }) => {
           'kysely',
           'viem',
           'viem/chains',
+          'graphql',
+          'graphql-tag',
           '@safe-global/safe-apps-sdk',
           'jsonwebtoken',
           '@summerfi/serverless-shared',
