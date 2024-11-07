@@ -1,3 +1,6 @@
+import { parseServerResponseToClient } from '@summerfi/app-utils'
+import { type IArmadaPosition } from '@summerfi/sdk-client-react'
+
 import { portfolioRewardsHandler } from '@/app/server-handlers/portfolio/portfolio-rewards-handler'
 import { portfolioWalletAssetsHandler } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { getUserPositions } from '@/app/server-handlers/sdk/get-user-positions'
@@ -19,10 +22,13 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     await getUserPositions({ walletAddress }),
   ])
   const rewardsData = portfolioRewardsHandler(walletAddress)
+  const positionsJsonSafe = positions
+    ? parseServerResponseToClient<IArmadaPosition[]>(positions)
+    : []
 
   return (
     <PortfolioPageView
-      positions={positions ?? []}
+      positions={positionsJsonSafe}
       walletAddress={walletAddress}
       walletData={walletData}
       rewardsData={rewardsData}

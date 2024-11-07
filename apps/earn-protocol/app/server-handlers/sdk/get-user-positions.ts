@@ -30,6 +30,8 @@ export async function getUserPositions({ walletAddress }: { walletAddress: strin
       .filter(Boolean)
       .reduce((acc, position) => [...acc, ...position], [])
 
+    console.log('positionsList', JSON.stringify(positionsList, null, 2))
+
     return positionsList as IArmadaPosition[] | undefined
   } catch (error) {
     throw new Error(`Failed to get users positions: ${error}`)

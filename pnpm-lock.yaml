@@ -2653,6 +2653,9 @@ importers:
       '@summerfi/armada-protocol-common':
         specifier: workspace:*
         version: link:../armada-protocol-common
+      '@summerfi/armada-protocol-service':
+        specifier: workspace:*
+        version: link:../armada-protocol-service
       '@summerfi/protocol-plugins':
         specifier: workspace:*
         version: link:../protocol-plugins

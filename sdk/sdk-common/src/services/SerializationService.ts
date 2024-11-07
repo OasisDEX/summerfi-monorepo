@@ -8,6 +8,7 @@ export type Class = object
 
 export class SerializationService {
   static registerClass(v: Class, options?: string | RegisterOptions | undefined): void {
+    console.log('SerializationService registerClass', v, options)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     superjson.registerClass(v as any, options)
   }
