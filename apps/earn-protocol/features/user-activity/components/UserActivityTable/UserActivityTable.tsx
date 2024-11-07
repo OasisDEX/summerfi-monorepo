@@ -1,8 +1,11 @@
 import { type FC, type ReactNode, useMemo, useState } from 'react'
-import { Table, type TableSortedColumn } from '@summerfi/app-earn-ui'
+import { Table, type TableSortedColumn, useMobileCheck } from '@summerfi/app-earn-ui'
 import { type UsersActivity } from '@summerfi/app-types'
 
-import { userActivityColumns } from '@/features/user-activity/table/user-activity-columns'
+import {
+  userActivityColumns,
+  userActivityColumnsHiddenOnMobile,
+} from '@/features/user-activity/table/user-activity-columns'
 import { userActivityMapper } from '@/features/user-activity/table/user-activity-mapper'
 
 interface UserActivityTableProps {
@@ -22,11 +25,14 @@ export const UserActivityTable: FC<UserActivityTableProps> = ({
   rowsToDisplay,
 }) => {
   const [sortConfig, setSortConfig] = useState<TableSortedColumn<string>>()
+  const { isMobile } = useMobileCheck()
 
   const rows = useMemo(
     () => userActivityMapper(userActivityList, sortConfig),
     [userActivityList, sortConfig],
   )
+
+  const resolvedHiddenColumns = isMobile ? userActivityColumnsHiddenOnMobile : hiddenColumns
 
   return (
     <Table
@@ -34,7 +40,7 @@ export const UserActivityTable: FC<UserActivityTableProps> = ({
       columns={userActivityColumns}
       customRow={customRow}
       handleSort={(_sortConfig) => setSortConfig(_sortConfig)}
-      hiddenColumns={hiddenColumns}
+      hiddenColumns={resolvedHiddenColumns}
     />
   )
 }
