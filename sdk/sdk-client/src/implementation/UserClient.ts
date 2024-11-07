@@ -12,6 +12,7 @@ import { ISimulation } from '@summerfi/sdk-common/simulation'
 import { IUserClient } from '../interfaces/IUserClient'
 import { RPCMainClientType } from '../rpc/SDKMainClient'
 import { IRPCClient } from '../interfaces/IRPCClient'
+import { SerializationService } from '@summerfi/sdk-common/services'
 
 /**
  * @class UserClient
@@ -62,3 +63,5 @@ export class UserClient extends IRPCClient implements IUserClient {
     })
   }
 }
+
+SerializationService.registerClass(UserClient, { identifier: 'UserClient' })

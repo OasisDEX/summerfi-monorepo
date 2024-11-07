@@ -1,4 +1,4 @@
-import { TableCellText, TableRowAccent } from '@summerfi/app-earn-ui'
+import { TableCellNodes, TableCellText, TableRowAccent } from '@summerfi/app-earn-ui'
 import { formatDecimalAsPercent } from '@summerfi/app-utils'
 
 export interface IndividualYieldsRawData {
@@ -18,12 +18,10 @@ export const individualYieldsMapper = (rawData: IndividualYieldsRawData[]) => {
     return {
       content: {
         vault: (
-          <div
-            style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-x-small)' }}
-          >
+          <TableCellNodes>
             <TableRowAccent backgroundColor="var(--earn-protocol-accent-1-100)" />
             <TableCellText>{item.vault}</TableCellText>
-          </div>
+          </TableCellNodes>
         ),
         currentApy: <TableCellText>{formatDecimalAsPercent(item.currentApy)}</TableCellText>,
         avgApyPer30d: <TableCellText>{formatDecimalAsPercent(item.avgApyPer30d)}</TableCellText>,

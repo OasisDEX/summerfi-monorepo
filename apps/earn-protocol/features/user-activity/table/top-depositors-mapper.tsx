@@ -10,10 +10,11 @@ import {
   type SDKUsersActivityType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
-import { formatCryptoBalance, getPastTimestamp } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatDateDifference, getPastTimestamp } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
+import { getEarningStreakResetTimestamp } from '@/features/user-activity/helpers/get-earning-streak-reset-timestamp'
 import { topDepositorsSorter } from '@/features/user-activity/table/top-depositors-sorter'
 
 export const calculateTopDepositors7daysChange = (item: SDKUserActivityType) => {
@@ -44,12 +45,19 @@ export const topDepositorsMapper = (
     const balance = new BigNumber(item.inputTokenBalance.toString()).shiftedBy(-decimals)
 
     const change7days = calculateTopDepositors7daysChange(item)
-    const changeSign = change7days.isZero() ? '' : change7days.gt(0) ? '+' : '-'
+    const changeSign = change7days.gt(0) ? '+' : ''
     const changeColor = change7days.isZero()
       ? 'var(--earn-protocol-secondary-100)'
       : change7days.gt(0)
         ? 'var(--earn-protocol-success-100)'
         : 'var(--earn-protocol-warning-100)'
+
+    const earningStreakResetTimestamp = getEarningStreakResetTimestamp(item)
+
+    const earningStreak = formatDateDifference({
+      from: new Date(earningStreakResetTimestamp),
+      to: new Date(),
+    })
 
     return {
       content: {
@@ -88,7 +96,7 @@ export const topDepositorsMapper = (
           </div>
         ),
         numberOfDeposits: <TableCellText>{item.deposits.length}</TableCellText>,
-        earningsStreak: <TableCellText>TBD</TableCellText>,
+        earningsStreak: <TableCellText>{earningStreak}</TableCellText>,
         link: (
           <Link
             href={getVaultPositionUrl({

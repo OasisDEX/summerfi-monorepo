@@ -31,6 +31,7 @@ export { formatToHex } from './formatters/format-to-hex'
 export { formatFiatBalance } from './formatters/format-fiat-balance'
 export { timeAgo } from './formatters/time-ago'
 export { formatToBigNumber } from './formatters/format-to-big-number'
+export { formatDateDifference } from './formatters/format-time-difference'
 
 export { timeUntil } from './helpers/time-until'
 export { isValidUrl } from './helpers/is-valid-url'

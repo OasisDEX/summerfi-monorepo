@@ -23,7 +23,7 @@ export const UserActivity: FC<UserActivityProps> = ({
 }) => {
   const userActivityHiddenColumns = {
     open: ['strategy'],
-    manage: ['strategy', 'link', 'balance'],
+    manage: ['strategy', 'balance'],
   }[page]
 
   const tabs = [

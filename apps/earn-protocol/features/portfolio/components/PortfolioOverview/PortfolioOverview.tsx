@@ -1,5 +1,6 @@
 import { Card, DataBlock, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
+import { type IArmadaPosition } from '@summerfi/sdk-client-react'
 import Link from 'next/link'
 
 import { MockedLineChart } from '@/components/organisms/Charts/MockedLineChart'
@@ -54,7 +55,12 @@ const dataBlocks = [
   },
 ]
 
-export const PortfolioOverview = ({ vaultsList }: { vaultsList: SDKVaultsListType }) => {
+type PortfolioOverviewProps = {
+  vaultsList: SDKVaultsListType
+  positions: IArmadaPosition[]
+}
+
+export const PortfolioOverview = ({ vaultsList, positions }: PortfolioOverviewProps) => {
   return (
     <div>
       <div
@@ -88,6 +94,7 @@ export const PortfolioOverview = ({ vaultsList }: { vaultsList: SDKVaultsListTyp
         </Card>
         <NewsAndUpdates items={dummyNewsAndUpdatesItems} />
         <CryptoUtilities />
+        <pre>{JSON.stringify(positions, null, 2)}</pre>
       </div>
     </div>
   )

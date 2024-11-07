@@ -18,6 +18,10 @@ export const userActivitySorter = ({
       return data.sort((a, b) =>
         simpleSort({ a: a.timestamp, b: b.timestamp, direction: sortConfig.direction }),
       )
+    case 'balance':
+      return data.sort((a, b) =>
+        simpleSort({ a: a.balance, b: b.balance, direction: sortConfig.direction }),
+      )
     default:
       return data.sort((a, b) =>
         simpleSort({ a: a.timestamp, b: b.timestamp, direction: SortDirection.DESC }),

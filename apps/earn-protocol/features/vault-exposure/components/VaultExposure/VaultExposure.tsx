@@ -1,13 +1,13 @@
 'use client'
 
 import { type Dispatch, type FC, type SetStateAction, useMemo, useState } from 'react'
-import { Card, InlineButtons, Table, Text } from '@summerfi/app-earn-ui'
-import { type TokenSymbolsList } from '@summerfi/app-types'
+import { Button, Card, Icon, InlineButtons, Text } from '@summerfi/app-earn-ui'
+import { type SDKVaultType } from '@summerfi/app-types'
 
-import { vaultExposureColumns } from '@/components/organisms/VaultExposure/columns'
-import { vaultExposureMapper } from '@/components/organisms/VaultExposure/mapper'
+import { VaultExposureTable } from '@/features/vault-exposure/components/VaultExposureTable/VaultExposureTable'
+import { vaultExposureFilter } from '@/features/vault-exposure/table/filters/filters'
 
-enum VaultExposureFilterType {
+export enum VaultExposureFilterType {
   ALL = 'ALL',
   ALLOCATED = 'ALLOCATED',
   UNALLOCATED = 'UNALLOCATED',
@@ -48,28 +48,26 @@ const VaultExposureTypePicker: FC<VaultExposureTypePickerProps> = ({
   )
 }
 
-export interface VaultExposureRawData {
-  vault: {
-    label: string
-    primaryToken: TokenSymbolsList
-    secondaryToken: TokenSymbolsList
-  }
-  allocation: string
-  currentApy: string
-  liquidity: string
-  type: string
-}
+const rowsToDisplay = 5
 
 interface VaultExposureProps {
-  rawData: VaultExposureRawData[]
+  vault: SDKVaultType
 }
 
-export const VaultExposure: FC<VaultExposureProps> = ({ rawData }) => {
-  const rows = useMemo(() => vaultExposureMapper(rawData), [rawData])
-
+export const VaultExposure: FC<VaultExposureProps> = ({ vault }) => {
   const [exposureType, setExposureType] = useState<VaultExposureFilterType>(
     VaultExposureFilterType.ALL,
   )
+
+  const [seeAll, setSeeAll] = useState(false)
+
+  const filteredVault = useMemo(
+    () => vaultExposureFilter({ vault, allocationType: exposureType }),
+    [vault, exposureType],
+  )
+
+  // hard to tell how many arks will be per vault therefore limiting it for now to 10
+  const resolvedRowsToDisplay = seeAll ? 10 : rowsToDisplay
 
   return (
     <Card variant="cardSecondary" style={{ marginTop: 'var(--spacing-space-medium)' }}>
@@ -87,12 +85,28 @@ export const VaultExposure: FC<VaultExposureProps> = ({ rawData }) => {
         </Text>
 
         <VaultExposureTypePicker currentType={exposureType} setExposureType={setExposureType} />
-        <Table
-          rows={rows}
-          columns={vaultExposureColumns}
-          // eslint-disable-next-line no-console
-          handleSort={(item) => console.log(item)}
-        />
+        <VaultExposureTable vault={filteredVault} rowsToDisplay={resolvedRowsToDisplay} />
+        {filteredVault.arks.length > 5 && (
+          <Button
+            variant="unstyled"
+            onClick={() => setSeeAll((prev) => !prev)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--general-space-4)',
+              marginTop: 'var(--general-space-16)',
+            }}
+          >
+            <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
+              View {seeAll ? 'less' : 'more'}
+            </Text>
+            <Icon
+              iconName={seeAll ? 'chevron_up' : 'chevron_down'}
+              variant="xxs"
+              color="var(--earn-protocol-primary-100)"
+            />
+          </Button>
+        )}
       </div>
     </Card>
   )

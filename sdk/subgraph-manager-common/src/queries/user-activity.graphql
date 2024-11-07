@@ -7,10 +7,14 @@ query GetUserActivity($id: ID!) {
     deposits {
       timestamp
       amount
+      hash
+      inputTokenBalance
     }
     withdrawals {
       timestamp
       amount
+      hash
+      inputTokenBalance
     }
     vault {
       id

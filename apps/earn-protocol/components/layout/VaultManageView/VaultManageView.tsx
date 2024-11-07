@@ -2,8 +2,8 @@
 
 import {
   type SDKUsersActivityType,
-  type SDKVaultishType,
   type SDKVaultsListType,
+  type SDKVaultType,
   type UsersActivity,
 } from '@summerfi/app-types'
 import { type IArmadaPosition, SDKContextProvider } from '@summerfi/sdk-client-react'
@@ -19,7 +19,7 @@ export const VaultManageView = ({
   topDepositors,
   viewWalletAddress,
 }: {
-  vault: SDKVaultishType
+  vault: SDKVaultType
   vaults: SDKVaultsListType
   position: IArmadaPosition
   userActivity: UsersActivity

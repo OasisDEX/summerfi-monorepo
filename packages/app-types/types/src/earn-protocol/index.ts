@@ -55,6 +55,7 @@ export interface UserActivity {
   vault: SDKUserActivityType['vault']
   account: SDKUserActivityType['account']['id']
   activity: UserActivityType
+  hash: SDKUserActivityType['deposits'][0]['hash']
 }
 
 export type UsersActivity = UserActivity[]

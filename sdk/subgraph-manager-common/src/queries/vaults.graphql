@@ -1,5 +1,6 @@
 query GetVaults {
   vaults {
+    inputTokenBalance
     protocol {
       network
     }
@@ -62,6 +63,7 @@ query GetVaults {
 }
 query GetVault($id: ID!) {
   vault(id: $id) {
+    inputTokenBalance
     protocol {
       network
     }
@@ -126,6 +128,7 @@ query GetVault($id: ID!) {
       cumulativeDeposits
       cumulativeEarnings
       cumulativeWithdrawals
+      inputTokenBalance
       inputToken {
         id
         name
@@ -149,6 +152,7 @@ query GetVault($id: ID!) {
         feePercentage
         feeType
       }
+      calculatedApr
       createdTimestamp
       lastUpdateTimestamp
     }

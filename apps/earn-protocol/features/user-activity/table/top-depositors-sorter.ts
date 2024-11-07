@@ -3,6 +3,7 @@ import { type SDKUsersActivityType } from '@summerfi/app-types'
 import { simpleSort, SortDirection } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
+import { getEarningStreakResetTimestamp } from '@/features/user-activity/helpers/get-earning-streak-reset-timestamp'
 import { calculateTopDepositors7daysChange } from '@/features/user-activity/table/top-depositors-mapper'
 
 export const topDepositorsSorter = ({
@@ -52,8 +53,8 @@ export const topDepositorsSorter = ({
     case 'earningsStreak':
       return data.sort((a, b) =>
         simpleSort({
-          a: a.inputTokenBalance,
-          b: b.inputTokenBalance,
+          a: new Date().getTime() - getEarningStreakResetTimestamp(a),
+          b: new Date().getTime() - getEarningStreakResetTimestamp(b),
           direction: sortConfig.direction,
         }),
       )

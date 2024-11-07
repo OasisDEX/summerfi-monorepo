@@ -24,7 +24,7 @@ export const NavigationWrapper: FC = () => {
           id: 'explore',
           itemsList: [
             {
-              url: '/user-activity',
+              url: '/earn/user-activity',
               id: 'user-activity',
               title: 'User activity',
               description: 'Text for user activity',

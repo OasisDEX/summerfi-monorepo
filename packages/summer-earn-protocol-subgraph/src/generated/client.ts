@@ -1244,6 +1244,10 @@ export type Deposit = Event & {
   hash: Scalars['String']['output'];
   /**  { Transaction hash }-{ Log index }  */
   id: Scalars['ID']['output'];
+  /**  Amount of input token in the position  */
+  inputTokenBalance: Scalars['BigInt']['output'];
+  /**  Amount of input token in the position in USD  */
+  inputTokenBalanceNormalizedUSD: Scalars['BigDecimal']['output'];
   /**  Event log index. For transactions that don't emit event, create arbitrary index starting from 0  */
   logIndex: Scalars['Int']['output'];
   /**  Position that this deposit belongs to  */
@@ -1355,6 +1359,22 @@ export type Deposit_Filter = {
   id_lte?: InputMaybe<Scalars['ID']['input']>;
   id_not?: InputMaybe<Scalars['ID']['input']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  inputTokenBalance?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalanceNormalizedUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalanceNormalizedUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenBalance_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   logIndex?: InputMaybe<Scalars['Int']['input']>;
   logIndex_gt?: InputMaybe<Scalars['Int']['input']>;
   logIndex_gte?: InputMaybe<Scalars['Int']['input']>;
@@ -1471,15 +1491,17 @@ export enum Deposit_OrderBy {
   From = 'from',
   Hash = 'hash',
   Id = 'id',
+  InputTokenBalance = 'inputTokenBalance',
+  InputTokenBalanceNormalizedUsd = 'inputTokenBalanceNormalizedUSD',
   LogIndex = 'logIndex',
   Position = 'position',
   PositionCreatedBlockNumber = 'position__createdBlockNumber',
   PositionCreatedTimestamp = 'position__createdTimestamp',
   PositionId = 'position__id',
   PositionInputTokenBalance = 'position__inputTokenBalance',
+  PositionInputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
+  PositionInputTokenBalanceNormalizedInUsd = 'position__inputTokenBalanceNormalizedInUSD',
   PositionOutputTokenBalance = 'position__outputTokenBalance',
-  PositionOutputTokenBalanceNormalized = 'position__outputTokenBalanceNormalized',
-  PositionOutputTokenBalanceNormalizedInUsd = 'position__outputTokenBalanceNormalizedInUSD',
   Protocol = 'protocol',
   ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
   ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
@@ -2225,12 +2247,12 @@ export type Position = {
   id: Scalars['ID']['output'];
   /**  Balance of the input token for the position  */
   inputTokenBalance: Scalars['BigInt']['output'];
+  /**  Normalized supply of the input token  */
+  inputTokenBalanceNormalized: Scalars['BigDecimal']['output'];
+  /**  Normalized supply of the input token in USD  */
+  inputTokenBalanceNormalizedInUSD: Scalars['BigDecimal']['output'];
   /**  Supply of the output token for the position  */
   outputTokenBalance: Scalars['BigInt']['output'];
-  /**  Normalized supply of the output token  */
-  outputTokenBalanceNormalized: Scalars['BigDecimal']['output'];
-  /**  Normalized supply of the output token in USD  */
-  outputTokenBalanceNormalizedInUSD: Scalars['BigDecimal']['output'];
   /**  Vault where the position is held  */
   vault: Vault;
   withdrawals: Array<Withdraw>;
@@ -2305,6 +2327,22 @@ export type Position_Filter = {
   id_not?: InputMaybe<Scalars['ID']['input']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
   inputTokenBalance?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalanceNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedInUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalanceNormalizedInUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalanceNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalanceNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   inputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
@@ -2314,22 +2352,6 @@ export type Position_Filter = {
   inputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   or?: InputMaybe<Array<InputMaybe<Position_Filter>>>;
   outputTokenBalance?: InputMaybe<Scalars['BigInt']['input']>;
-  outputTokenBalanceNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
-  outputTokenBalanceNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
-  outputTokenBalanceNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  outputTokenBalanceNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  outputTokenBalanceNormalizedInUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  outputTokenBalanceNormalizedInUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  outputTokenBalanceNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  outputTokenBalanceNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
-  outputTokenBalanceNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  outputTokenBalanceNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  outputTokenBalanceNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  outputTokenBalanceNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  outputTokenBalanceNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  outputTokenBalanceNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  outputTokenBalanceNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
-  outputTokenBalanceNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   outputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
   outputTokenBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
   outputTokenBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
@@ -2369,9 +2391,9 @@ export enum Position_OrderBy {
   Deposits = 'deposits',
   Id = 'id',
   InputTokenBalance = 'inputTokenBalance',
+  InputTokenBalanceNormalized = 'inputTokenBalanceNormalized',
+  InputTokenBalanceNormalizedInUsd = 'inputTokenBalanceNormalizedInUSD',
   OutputTokenBalance = 'outputTokenBalance',
-  OutputTokenBalanceNormalized = 'outputTokenBalanceNormalized',
-  OutputTokenBalanceNormalizedInUsd = 'outputTokenBalanceNormalizedInUSD',
   Vault = 'vault',
   VaultApr7d = 'vault__apr7d',
   VaultApr30d = 'vault__apr30d',
@@ -6286,6 +6308,10 @@ export type Withdraw = Event & {
   hash: Scalars['String']['output'];
   /**  { Transaction hash }-{ Log index } */
   id: Scalars['ID']['output'];
+  /**  Amount of input token in the position  */
+  inputTokenBalance: Scalars['BigInt']['output'];
+  /**  Amount of input token in the position in USD  */
+  inputTokenBalanceNormalizedUSD: Scalars['BigDecimal']['output'];
   /**  Event log index. For transactions that don't emit event, create arbitrary index starting from 0  */
   logIndex: Scalars['Int']['output'];
   /**  Position that this withdraw belongs to  */
@@ -6397,6 +6423,22 @@ export type Withdraw_Filter = {
   id_lte?: InputMaybe<Scalars['ID']['input']>;
   id_not?: InputMaybe<Scalars['ID']['input']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  inputTokenBalance?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalanceNormalizedUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalanceNormalizedUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenBalance_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   logIndex?: InputMaybe<Scalars['Int']['input']>;
   logIndex_gt?: InputMaybe<Scalars['Int']['input']>;
   logIndex_gte?: InputMaybe<Scalars['Int']['input']>;
@@ -6513,15 +6555,17 @@ export enum Withdraw_OrderBy {
   From = 'from',
   Hash = 'hash',
   Id = 'id',
+  InputTokenBalance = 'inputTokenBalance',
+  InputTokenBalanceNormalizedUsd = 'inputTokenBalanceNormalizedUSD',
   LogIndex = 'logIndex',
   Position = 'position',
   PositionCreatedBlockNumber = 'position__createdBlockNumber',
   PositionCreatedTimestamp = 'position__createdTimestamp',
   PositionId = 'position__id',
   PositionInputTokenBalance = 'position__inputTokenBalance',
+  PositionInputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
+  PositionInputTokenBalanceNormalizedInUsd = 'position__inputTokenBalanceNormalizedInUSD',
   PositionOutputTokenBalance = 'position__outputTokenBalance',
-  PositionOutputTokenBalanceNormalized = 'position__outputTokenBalanceNormalized',
-  PositionOutputTokenBalanceNormalizedInUsd = 'position__outputTokenBalanceNormalizedInUSD',
   Protocol = 'protocol',
   ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
   ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
@@ -6929,7 +6973,7 @@ export type UserPositionsQueryVariables = Exact<{
 }>;
 
 
-export type UserPositionsQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, inputTokenBalance: number, outputTokenBalance: number, outputTokenBalanceNormalized: number, outputTokenBalanceNormalizedInUSD: number }> };
+export type UserPositionsQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, inputTokenBalance: number, outputTokenBalance: number, inputTokenBalanceNormalized: number, inputTokenBalanceNormalizedInUSD: number }> };
 
 
 export const UserPositionsDocument = gql`
@@ -6938,8 +6982,8 @@ export const UserPositionsDocument = gql`
     id
     inputTokenBalance
     outputTokenBalance
-    outputTokenBalanceNormalized
-    outputTokenBalanceNormalizedInUSD
+    inputTokenBalanceNormalized
+    inputTokenBalanceNormalizedInUSD
   }
 }
     `;
