@@ -90,7 +90,6 @@ export default defineConfig(({ mode }) => {
           'lodash-es',
           'next',
           'next/image',
-          'boring-avatars',
           'next/link',
           'react',
           'react-dom',
