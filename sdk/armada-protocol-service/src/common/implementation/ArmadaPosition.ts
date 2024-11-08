@@ -28,6 +28,8 @@ export class ArmadaPosition extends Position implements IArmadaPosition {
   readonly pool: IArmadaPool
   readonly amount: ITokenAmount
   readonly shares: ITokenAmount
+  readonly deposits: ITokenAmount[]
+  readonly withdrawals: ITokenAmount[]
 
   /** FACTORY */
   static createFrom(params: ArmadaPositionParameters): ArmadaPosition {
@@ -42,6 +44,8 @@ export class ArmadaPosition extends Position implements IArmadaPosition {
     this.pool = params.pool
     this.amount = params.amount
     this.shares = params.shares
+    this.deposits = params.deposits
+    this.withdrawals = params.withdrawals
   }
 }
 

@@ -43,6 +43,8 @@ export const ArmadaPositionDataSchema = z.object({
   pool: z.custom<IArmadaPool>((val) => isArmadaPool(val)),
   amount: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
   shares: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  deposits: z.array(z.custom<ITokenAmount>((val) => isTokenAmount(val))),
+  withdrawals: z.array(z.custom<ITokenAmount>((val) => isTokenAmount(val))),
   type: z.literal(PositionType.Armada),
 })
 

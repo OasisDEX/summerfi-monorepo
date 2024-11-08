@@ -1,6 +1,5 @@
 query GetVaults {
   vaults {
-    inputTokenBalance
     protocol {
       network
     }
@@ -44,6 +43,8 @@ query GetVaults {
       symbol
       decimals
     }
+    inputTokenBalance
+    inputTokenPriceUSD
     outputTokenPriceUSD
     depositLimit
     createdTimestamp
@@ -63,7 +64,6 @@ query GetVaults {
 }
 query GetVault($id: ID!) {
   vault(id: $id) {
-    inputTokenBalance
     protocol {
       network
     }
@@ -168,6 +168,8 @@ query GetVault($id: ID!) {
       symbol
       decimals
     }
+    inputTokenBalance
+    inputTokenPriceUSD
     outputTokenPriceUSD
     depositLimit
     createdTimestamp

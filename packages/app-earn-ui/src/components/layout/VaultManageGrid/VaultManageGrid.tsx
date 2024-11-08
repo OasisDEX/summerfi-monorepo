@@ -40,6 +40,22 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
 }) => {
   const apr30d = formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
   const aprCurrent = formatDecimalAsPercent(new BigNumber(vault.calculatedApr).div(100))
+  const noOfDeposits = position.deposits.length.toString()
+
+  const netContribution = new BigNumber(position.amount.amount)
+
+  const totalDepositedInToken = position.deposits.reduce(
+    (acc, deposit) => acc.plus(deposit.amount),
+    new BigNumber(0),
+  )
+
+  const totalWithdrawnInToken = position.withdrawals.reduce(
+    (acc, withdrawal) => acc.plus(withdrawal.amount),
+    new BigNumber(0),
+  )
+
+  const earnedInToken = netContribution.minus(totalDepositedInToken.minus(totalWithdrawnInToken))
+  const earnedInUSD = earnedInToken.times(vault.inputTokenPriceUSD || 0)
 
   return (
     <>
@@ -104,10 +120,12 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 size="large"
                 titleSize="small"
                 title="Earned"
-                // TODO: fill data
-                value="value"
-                // TODO: fill data
-                subValue="subvalue"
+                value={
+                  <>
+                    {formatCryptoBalance(earnedInToken)}&nbsp;{vault.inputToken.symbol}
+                  </>
+                }
+                subValue={`$${formatCryptoBalance(earnedInUSD)}`}
                 subValueType="neutral"
                 subValueSize="medium"
               />
@@ -117,10 +135,11 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 size="large"
                 titleSize="small"
                 title="Net Contribution"
-                value={`$${formatCryptoBalance(position.amount.amount)}`}
+                value={`$${formatCryptoBalance(netContribution)}`}
                 // TODO: fill data
-                subValue="deposits number"
+                subValue={`# of Deposits: ${noOfDeposits}`}
                 subValueSize="medium"
+                subValueStyle={{ color: 'var(--earn-protocol-success-100)' }}
               />
             </Box>
             <Box>

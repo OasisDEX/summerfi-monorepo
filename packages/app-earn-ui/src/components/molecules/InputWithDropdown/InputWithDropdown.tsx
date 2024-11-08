@@ -26,6 +26,7 @@ interface InputWithDropdownProps {
   value: string
   secondaryValue?: string
   handleChange: ChangeEventHandler<HTMLInputElement>
+  selectAllOnFocus?: boolean
   heading?: {
     label: ReactNode
     value: ReactNode
@@ -44,7 +45,16 @@ export const InputWithDropdown: FC<InputWithDropdownProps> = ({
   heading,
   onFocus,
   onBlur,
+  selectAllOnFocus,
 }) => {
+  const handleFocus = (ev: React.FocusEvent<HTMLInputElement>) => {
+    if (selectAllOnFocus) {
+      ev.target.select()
+    }
+
+    onFocus?.()
+  }
+
   return (
     <div className={classNames.wrapper}>
       {heading && (
@@ -81,7 +91,7 @@ export const InputWithDropdown: FC<InputWithDropdownProps> = ({
           value={value}
           onChange={handleChange}
           secondaryValue={secondaryValue}
-          onFocus={onFocus}
+          onFocus={handleFocus}
           onBlur={onBlur}
         />
       </div>

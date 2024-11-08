@@ -25,6 +25,8 @@ export const mapGraphDataToArmadaPosition =
       })
     }
 
+    console.log('position', position)
+
     return ArmadaPosition.createFrom({
       id: ArmadaPositionId.createFrom({ id: position.id, user: user }),
 
@@ -38,7 +40,7 @@ export const mapGraphDataToArmadaPosition =
       }),
       amount: TokenAmount.createFrom({
         amount: BigNumber(position.inputTokenBalance.toString())
-          .div(10 ** position.vault.outputToken.decimals)
+          .div(10 ** position.vault.inputToken.decimals)
           .toString(),
         token: Token.createFrom({
           chainInfo,
@@ -50,6 +52,38 @@ export const mapGraphDataToArmadaPosition =
           decimals: position.vault.inputToken.decimals,
         }),
       }),
+      deposits: position.deposits.map((deposit) =>
+        TokenAmount.createFrom({
+          amount: BigNumber(deposit.amount.toString())
+            .div(10 ** position.vault.inputToken.decimals)
+            .toString(),
+          token: Token.createFrom({
+            chainInfo,
+            address: Address.createFromEthereum({
+              value: position.vault.inputToken.id,
+            }),
+            name: position.vault.inputToken.name,
+            symbol: position.vault.inputToken.symbol,
+            decimals: position.vault.inputToken.decimals,
+          }),
+        }),
+      ),
+      withdrawals: position.withdrawals.map((withdrawal) =>
+        TokenAmount.createFrom({
+          amount: BigNumber(withdrawal.amount.toString())
+            .div(10 ** position.vault.inputToken.decimals)
+            .toString(),
+          token: Token.createFrom({
+            chainInfo,
+            address: Address.createFromEthereum({
+              value: position.vault.inputToken.id,
+            }),
+            name: position.vault.inputToken.name,
+            symbol: position.vault.inputToken.symbol,
+            decimals: position.vault.inputToken.decimals,
+          }),
+        }),
+      ),
       shares: TokenAmount.createFrom({
         amount: position.outputTokenBalance.toString(),
         token: Token.createFrom({

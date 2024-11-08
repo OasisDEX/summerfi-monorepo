@@ -144,6 +144,8 @@ export class ArmadaManager implements IArmadaManager {
       pool: pool,
       amount: userAssets,
       shares: userShares,
+      deposits: [],
+      withdrawals: [],
     })
   }
 

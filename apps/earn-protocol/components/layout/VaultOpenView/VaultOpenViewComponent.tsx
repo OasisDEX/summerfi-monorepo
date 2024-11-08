@@ -94,6 +94,7 @@ export const VaultOpenViewComponent = ({
           dropdownValue={dropdownValue}
           onFocus={onFocus}
           onBlur={onBlur}
+          selectAllOnFocus
           heading={{
             label: 'Balance',
             value: tokenBalanceLoading ? (

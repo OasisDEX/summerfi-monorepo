@@ -129,7 +129,9 @@ export const VaultManageViewComponent = ({
     titleTabs: [TransactionAction.DEPOSIT, TransactionAction.WITHDRAW],
     onTitleTabChange: (action) => {
       setTransactionType(action as TransactionAction)
-      reset()
+      if (amountParsed.gt(0)) {
+        reset()
+      }
     },
     content: (
       <>
@@ -140,6 +142,7 @@ export const VaultManageViewComponent = ({
           options={options}
           dropdownValue={dropdownValue}
           onFocus={onFocus}
+          selectAllOnFocus
           onBlur={onBlur}
           heading={{
             label: 'Balance',

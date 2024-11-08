@@ -427,6 +427,7 @@ export enum ArkDailySnapshot_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
@@ -633,6 +634,7 @@ export enum ArkHourlySnapshot_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
@@ -906,6 +908,7 @@ export enum Ark_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
@@ -1220,6 +1223,7 @@ export enum Board_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
@@ -1539,6 +1543,7 @@ export enum Deposit_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
@@ -1843,6 +1848,7 @@ export enum Disembark_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
@@ -2411,6 +2417,7 @@ export enum Position_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
@@ -2629,6 +2636,7 @@ export enum PostActionArkSnapshot_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
@@ -2649,6 +2657,8 @@ export type PostActionVaultSnapshot = {
   id: Scalars['ID']['output'];
   /**  Amount of input token in the pool  */
   inputTokenBalance: Scalars['BigInt']['output'];
+  /**  Price of input token in USD  */
+  inputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   /**  Price per share of output token in USD  */
   outputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   /**  Total supply of output token  */
@@ -2701,6 +2711,14 @@ export type PostActionVaultSnapshot_Filter = {
   inputTokenBalance_lte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenPriceUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenPriceUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   or?: InputMaybe<Array<InputMaybe<PostActionVaultSnapshot_Filter>>>;
   outputTokenPriceUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
   outputTokenPriceUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -2791,6 +2809,7 @@ export enum PostActionVaultSnapshot_OrderBy {
   BlockNumber = 'blockNumber',
   Id = 'id',
   InputTokenBalance = 'inputTokenBalance',
+  InputTokenPriceUsd = 'inputTokenPriceUSD',
   OutputTokenPriceUsd = 'outputTokenPriceUSD',
   OutputTokenSupply = 'outputTokenSupply',
   PricePerShare = 'pricePerShare',
@@ -2829,6 +2848,7 @@ export enum PostActionVaultSnapshot_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
@@ -3997,6 +4017,7 @@ export enum Rebalance_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
@@ -5144,6 +5165,8 @@ export type Vault = {
   inputToken: Token;
   /**  Amount of input token in the pool  */
   inputTokenBalance: Scalars['BigInt']['output'];
+  /**  Price of input token in USD  */
+  inputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   lastUpdateTimestamp: Scalars['BigInt']['output'];
   /**  Name of liquidity pool (e.g. Curve.fi DAI/USDC/USDT)  */
   name?: Maybe<Scalars['String']['output']>;
@@ -5286,6 +5309,8 @@ export type VaultDailySnapshot = {
   id: Scalars['ID']['output'];
   /**  Amount of input token in the pool  */
   inputTokenBalance: Scalars['BigInt']['output'];
+  /**  Price of input token in USD  */
+  inputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   /**  Price per share of output token in USD  */
   outputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   /**  Total supply of output token  */
@@ -5392,6 +5417,14 @@ export type VaultDailySnapshot_Filter = {
   inputTokenBalance_lte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenPriceUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenPriceUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   or?: InputMaybe<Array<InputMaybe<VaultDailySnapshot_Filter>>>;
   outputTokenPriceUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
   outputTokenPriceUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -5508,6 +5541,7 @@ export enum VaultDailySnapshot_OrderBy {
   DailyTotalRevenueUsd = 'dailyTotalRevenueUSD',
   Id = 'id',
   InputTokenBalance = 'inputTokenBalance',
+  InputTokenPriceUsd = 'inputTokenPriceUSD',
   OutputTokenPriceUsd = 'outputTokenPriceUSD',
   OutputTokenSupply = 'outputTokenSupply',
   PricePerShare = 'pricePerShare',
@@ -5549,6 +5583,7 @@ export enum VaultDailySnapshot_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
@@ -5635,6 +5670,8 @@ export type VaultHourlySnapshot = {
   id: Scalars['ID']['output'];
   /**  Amount of input token in the pool  */
   inputTokenBalance: Scalars['BigInt']['output'];
+  /**  Price of input token in USD  */
+  inputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   /**  Price per share of output token in USD  */
   outputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   /**  Total supply of output token  */
@@ -5741,6 +5778,14 @@ export type VaultHourlySnapshot_Filter = {
   inputTokenBalance_lte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenPriceUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenPriceUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   or?: InputMaybe<Array<InputMaybe<VaultHourlySnapshot_Filter>>>;
   outputTokenPriceUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
   outputTokenPriceUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -5857,6 +5902,7 @@ export enum VaultHourlySnapshot_OrderBy {
   HourlyTotalRevenueUsd = 'hourlyTotalRevenueUSD',
   Id = 'id',
   InputTokenBalance = 'inputTokenBalance',
+  InputTokenPriceUsd = 'inputTokenPriceUSD',
   OutputTokenPriceUsd = 'outputTokenPriceUSD',
   OutputTokenSupply = 'outputTokenSupply',
   PricePerShare = 'pricePerShare',
@@ -5898,6 +5944,7 @@ export enum VaultHourlySnapshot_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
@@ -6050,6 +6097,14 @@ export type Vault_Filter = {
   inputTokenBalance_lte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenPriceUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenPriceUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   inputToken_?: InputMaybe<Token_Filter>;
   inputToken_contains?: InputMaybe<Scalars['String']['input']>;
   inputToken_contains_nocase?: InputMaybe<Scalars['String']['input']>;
@@ -6248,6 +6303,7 @@ export enum Vault_OrderBy {
   Id = 'id',
   InputToken = 'inputToken',
   InputTokenBalance = 'inputTokenBalance',
+  InputTokenPriceUsd = 'inputTokenPriceUSD',
   InputTokenDecimals = 'inputToken__decimals',
   InputTokenId = 'inputToken__id',
   InputTokenLastPriceBlockNumber = 'inputToken__lastPriceBlockNumber',
@@ -6603,6 +6659,7 @@ export enum Withdraw_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
@@ -6973,14 +7030,14 @@ export enum _SubgraphErrorPolicy_ {
 export type GetGlobalRebalancesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetGlobalRebalancesQuery = { __typename?: 'Query', rebalances: Array<{ __typename?: 'Rebalance', id: string, amount: bigint, amountUSD: string, timestamp: bigint, asset: { __typename?: 'Token', id: string, symbol: string, decimals: number }, from: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, to: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, toPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, fromPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, protocol: { __typename?: 'YieldAggregator', name: string, network: Network }, vault: { __typename?: 'Vault', id: string, name?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string } } }> };
+export type GetGlobalRebalancesQuery = { __typename?: 'Query', rebalances: Array<{ __typename?: 'Rebalance', id: string, amount: bigint, amountUSD: string, timestamp: bigint, asset: { __typename?: 'Token', id: string, symbol: string, decimals: number }, from: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, to: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, toPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, fromPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, protocol: { __typename?: 'YieldAggregator', name: string, network: Network }, vault: { __typename?: 'Vault', outputTokenPriceUSD?: string | null, inputTokenPriceUSD?: string | null, id: string, name?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string } } }> };
 
 export type GetUserPositionsQueryVariables = Exact<{
   accountAddress: Scalars['String']['input'];
 }>;
 
 
-export type GetUserPositionsQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, inputTokenBalance: bigint, outputTokenBalance: bigint, deposits: Array<{ __typename?: 'Deposit', amount: bigint, amountUSD: string, inputTokenBalance: bigint }>, vault: { __typename?: 'Vault', id: string, inputToken: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number } | null, protocol: { __typename?: 'YieldAggregator', id: string } }, account: { __typename?: 'Account', id: string } }> };
+export type GetUserPositionsQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, inputTokenBalance: bigint, outputTokenBalance: bigint, deposits: Array<{ __typename?: 'Deposit', amount: bigint, amountUSD: string, inputTokenBalance: bigint }>, withdrawals: Array<{ __typename?: 'Withdraw', amount: bigint, amountUSD: string, inputTokenBalance: bigint }>, vault: { __typename?: 'Vault', id: string, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number } | null, protocol: { __typename?: 'YieldAggregator', id: string } }, account: { __typename?: 'Account', id: string } }> };
 
 export type GetUserPositionQueryVariables = Exact<{
   accountAddress: Scalars['String']['input'];
@@ -6988,31 +7045,31 @@ export type GetUserPositionQueryVariables = Exact<{
 }>;
 
 
-export type GetUserPositionQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, inputTokenBalance: bigint, outputTokenBalance: bigint, deposits: Array<{ __typename?: 'Deposit', amount: bigint, amountUSD: string, inputTokenBalance: bigint }>, vault: { __typename?: 'Vault', id: string, inputToken: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number } | null, protocol: { __typename?: 'YieldAggregator', id: string } }, account: { __typename?: 'Account', id: string } }> };
+export type GetUserPositionQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, inputTokenBalance: bigint, outputTokenBalance: bigint, deposits: Array<{ __typename?: 'Deposit', amount: bigint, amountUSD: string, inputTokenBalance: bigint }>, withdrawals: Array<{ __typename?: 'Withdraw', amount: bigint, amountUSD: string, inputTokenBalance: bigint }>, vault: { __typename?: 'Vault', id: string, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number } | null, protocol: { __typename?: 'YieldAggregator', id: string } }, account: { __typename?: 'Account', id: string } }> };
 
 export type GetUserActivityQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type GetUserActivityQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', inputTokenBalance: bigint, account: { __typename?: 'Account', id: string }, deposits: Array<{ __typename?: 'Deposit', timestamp: bigint, amount: bigint, hash: string, inputTokenBalance: bigint }>, withdrawals: Array<{ __typename?: 'Withdraw', timestamp: bigint, amount: bigint, hash: string, inputTokenBalance: bigint }>, vault: { __typename?: 'Vault', id: string, name?: string | null, apr365d: string, inputToken: { __typename?: 'Token', id: string, symbol: string, decimals: number }, protocol: { __typename?: 'YieldAggregator', network: Network } } }> };
+export type GetUserActivityQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', inputTokenBalance: bigint, outputTokenBalance: bigint, account: { __typename?: 'Account', id: string }, deposits: Array<{ __typename?: 'Deposit', timestamp: bigint, amount: bigint, hash: string, inputTokenBalance: bigint }>, withdrawals: Array<{ __typename?: 'Withdraw', timestamp: bigint, amount: bigint, hash: string, inputTokenBalance: bigint }>, vault: { __typename?: 'Vault', id: string, name?: string | null, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, apr365d: string, inputToken: { __typename?: 'Token', id: string, symbol: string, decimals: number }, protocol: { __typename?: 'YieldAggregator', network: Network } } }> };
 
 export type GetUsersActivityQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetUsersActivityQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', inputTokenBalance: bigint, account: { __typename?: 'Account', id: string }, deposits: Array<{ __typename?: 'Deposit', timestamp: bigint, amount: bigint, hash: string, inputTokenBalance: bigint }>, withdrawals: Array<{ __typename?: 'Withdraw', timestamp: bigint, amount: bigint, hash: string, inputTokenBalance: bigint }>, vault: { __typename?: 'Vault', id: string, name?: string | null, apr365d: string, inputToken: { __typename?: 'Token', id: string, symbol: string, decimals: number }, protocol: { __typename?: 'YieldAggregator', network: Network } } }> };
+export type GetUsersActivityQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', inputTokenBalance: bigint, account: { __typename?: 'Account', id: string }, deposits: Array<{ __typename?: 'Deposit', timestamp: bigint, amount: bigint, hash: string, inputTokenBalance: bigint }>, withdrawals: Array<{ __typename?: 'Withdraw', timestamp: bigint, amount: bigint, hash: string, inputTokenBalance: bigint }>, vault: { __typename?: 'Vault', id: string, name?: string | null, outputTokenPriceUSD?: string | null, inputTokenPriceUSD?: string | null, apr365d: string, inputToken: { __typename?: 'Token', id: string, symbol: string, decimals: number }, protocol: { __typename?: 'YieldAggregator', network: Network } } }> };
 
 export type GetVaultsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', inputTokenBalance: bigint, id: string, name?: string | null, rewardTokenEmissionsUSD?: Array<string> | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, apr7d: string, apr30d: string, apr90d: string, apr180d: string, apr365d: string, calculatedApr: string, aprValues: Array<string>, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens?: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }> | null, arks: Array<{ __typename?: 'Ark', id: string, name?: string | null, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, fees: Array<{ __typename?: 'VaultFee', id: string, feePercentage?: string | null, feeType: VaultFeeType }> }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null }> };
+export type GetVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsUSD?: Array<string> | null, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, apr7d: string, apr30d: string, apr90d: string, apr180d: string, apr365d: string, calculatedApr: string, aprValues: Array<string>, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens?: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }> | null, arks: Array<{ __typename?: 'Ark', id: string, name?: string | null, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, fees: Array<{ __typename?: 'VaultFee', id: string, feePercentage?: string | null, feeType: VaultFeeType }> }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null }> };
 
 export type GetVaultQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type GetVaultQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', inputTokenBalance: bigint, id: string, name?: string | null, rewardTokenEmissionsUSD?: Array<string> | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, apr7d: string, apr30d: string, apr90d: string, apr180d: string, apr365d: string, calculatedApr: string, aprValues: Array<string>, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens?: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }> | null, rebalances: Array<{ __typename?: 'Rebalance', id: string, amount: bigint, amountUSD: string, timestamp: bigint, asset: { __typename?: 'Token', id: string, symbol: string, decimals: number }, from: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, to: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, toPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, fromPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, protocol: { __typename?: 'YieldAggregator', name: string, network: Network }, vault: { __typename?: 'Vault', id: string, name?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string } } }>, arks: Array<{ __typename?: 'Ark', id: string, name?: string | null, depositLimit: bigint, cumulativeDeposits: bigint, cumulativeEarnings: bigint, cumulativeWithdrawals: bigint, inputTokenBalance: bigint, calculatedApr: string, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, dailySnapshots: Array<{ __typename?: 'ArkDailySnapshot', id: string, apr: string, totalValueLockedUSD: string, inputTokenBalance: bigint }>, hourlySnapshots: Array<{ __typename?: 'ArkHourlySnapshot', id: string, calculatedApr: string, totalValueLockedUSD: string, inputTokenBalance: bigint }>, fees: Array<{ __typename?: 'VaultFee', id: string, feePercentage?: string | null, feeType: VaultFeeType }> }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null } | null };
+export type GetVaultQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsUSD?: Array<string> | null, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, apr7d: string, apr30d: string, apr90d: string, apr180d: string, apr365d: string, calculatedApr: string, aprValues: Array<string>, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens?: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }> | null, rebalances: Array<{ __typename?: 'Rebalance', id: string, amount: bigint, amountUSD: string, timestamp: bigint, asset: { __typename?: 'Token', id: string, symbol: string, decimals: number }, from: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, to: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, toPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, fromPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, protocol: { __typename?: 'YieldAggregator', name: string, network: Network }, vault: { __typename?: 'Vault', id: string, name?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string } } }>, arks: Array<{ __typename?: 'Ark', id: string, name?: string | null, depositLimit: bigint, cumulativeDeposits: bigint, cumulativeEarnings: bigint, cumulativeWithdrawals: bigint, inputTokenBalance: bigint, calculatedApr: string, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, dailySnapshots: Array<{ __typename?: 'ArkDailySnapshot', id: string, apr: string, totalValueLockedUSD: string, inputTokenBalance: bigint }>, hourlySnapshots: Array<{ __typename?: 'ArkHourlySnapshot', id: string, calculatedApr: string, totalValueLockedUSD: string, inputTokenBalance: bigint }>, fees: Array<{ __typename?: 'VaultFee', id: string, feePercentage?: string | null, feeType: VaultFeeType }> }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null } | null };
 
 
 export const GetGlobalRebalancesDocument = gql`
@@ -7052,6 +7109,8 @@ export const GetGlobalRebalancesDocument = gql`
     }
     timestamp
     vault {
+      outputTokenPriceUSD
+      inputTokenPriceUSD
       id
       name
       inputToken {
@@ -7073,8 +7132,16 @@ export const GetUserPositionsDocument = gql`
       amountUSD
       inputTokenBalance
     }
+    withdrawals {
+      amount
+      amountUSD
+      inputTokenBalance
+    }
     vault {
       id
+      inputTokenBalance
+      inputTokenPriceUSD
+      outputTokenPriceUSD
       inputToken {
         id
         symbol
@@ -7108,8 +7175,16 @@ export const GetUserPositionDocument = gql`
       amountUSD
       inputTokenBalance
     }
+    withdrawals {
+      amount
+      amountUSD
+      inputTokenBalance
+    }
     vault {
       id
+      inputTokenBalance
+      inputTokenPriceUSD
+      outputTokenPriceUSD
       inputToken {
         id
         symbol
@@ -7139,6 +7214,7 @@ export const GetUserActivityDocument = gql`
       id
     }
     inputTokenBalance
+    outputTokenBalance
     deposits {
       timestamp
       amount
@@ -7154,6 +7230,9 @@ export const GetUserActivityDocument = gql`
     vault {
       id
       name
+      inputTokenBalance
+      inputTokenPriceUSD
+      outputTokenPriceUSD
       inputToken {
         id
         symbol
@@ -7189,6 +7268,8 @@ export const GetUsersActivityDocument = gql`
     vault {
       id
       name
+      outputTokenPriceUSD
+      inputTokenPriceUSD
       inputToken {
         id
         symbol
@@ -7205,7 +7286,6 @@ export const GetUsersActivityDocument = gql`
 export const GetVaultsDocument = gql`
     query GetVaults {
   vaults {
-    inputTokenBalance
     protocol {
       network
     }
@@ -7249,6 +7329,8 @@ export const GetVaultsDocument = gql`
       symbol
       decimals
     }
+    inputTokenBalance
+    inputTokenPriceUSD
     outputTokenPriceUSD
     depositLimit
     createdTimestamp
@@ -7270,7 +7352,6 @@ export const GetVaultsDocument = gql`
 export const GetVaultDocument = gql`
     query GetVault($id: ID!) {
   vault(id: $id) {
-    inputTokenBalance
     protocol {
       network
     }
@@ -7375,6 +7456,8 @@ export const GetVaultDocument = gql`
       symbol
       decimals
     }
+    inputTokenBalance
+    inputTokenPriceUSD
     outputTokenPriceUSD
     depositLimit
     createdTimestamp
