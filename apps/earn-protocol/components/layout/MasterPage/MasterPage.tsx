@@ -43,9 +43,10 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({ children })
               display: 'flex',
               flexDirection: 'row',
               marginBottom: '32px',
+              flexWrap: 'wrap',
             }}
           >
-            {Array(6)
+            {Array(5)
               .fill('')
               .map((_, index) => (
                 <Image

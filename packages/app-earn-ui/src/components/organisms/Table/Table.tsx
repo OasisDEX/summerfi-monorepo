@@ -45,12 +45,17 @@ export function Table<K extends string>({
   const [sortConfig, setSortConfig] = useState<TableSortedColumn<K> | null>(null)
   const [expandedRow, setExpandedRow] = useState<number | null>(null)
 
-  // remove columns from row data
-  if (hiddenColumns?.length) {
-    hiddenColumns.forEach((column) => {
-      rows.forEach((row) => delete row.content[column])
-    })
-  }
+  // removing rows without mutating rows itself
+  const resolvedRows = rows.map((row) => ({
+    ...row,
+    content: Object.keys(row.content).reduce((acc, key) => {
+      if (!hiddenColumns?.includes(key as K)) {
+        acc[key] = row.content[key]
+      }
+
+      return acc
+    }, {}),
+  }))
 
   // Handle sorting by column
   const handleColumnSorting = (column: K, isSortable?: boolean) => {
@@ -120,7 +125,7 @@ export function Table<K extends string>({
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, rowIndex) => (
+          {resolvedRows.map((row, rowIndex) => (
             <Fragment key={rowIndex}>
               <tr
                 onClick={() => setExpandedRow(expandedRow === rowIndex ? null : rowIndex)}
