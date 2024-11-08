@@ -1,4 +1,4 @@
-import { type CSSProperties } from 'react'
+import { type CSSProperties, type ReactNode } from 'react'
 import { type IconNamesList } from '@summerfi/app-types'
 import clsx from 'clsx'
 import { identity, pickBy } from 'lodash-es'
@@ -11,7 +11,7 @@ import titleWithIconStyles from './TitleWithIcon.module.scss'
 import { type ClassNames as TextVariants } from '@/components/atoms/Text/Text.module.scss'
 
 export type TitleWithIconProps = {
-  title: string
+  title: ReactNode
   titleVariant?: TextVariants
   tooltip?: string
   iconName?: IconNamesList

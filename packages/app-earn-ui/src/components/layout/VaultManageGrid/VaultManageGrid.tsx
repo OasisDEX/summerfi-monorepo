@@ -40,6 +40,25 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
 }) => {
   const apr30d = formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
   const aprCurrent = formatDecimalAsPercent(new BigNumber(vault.calculatedApr).div(100))
+  const noOfDeposits = position.deposits.length.toString()
+
+  const inputTokenPriceUSD = vault.inputTokenPriceUSD || 0
+
+  const netContribution = new BigNumber(position.amount.amount)
+  const netContributionUSD = netContribution.times(inputTokenPriceUSD)
+
+  const totalDepositedInToken = position.deposits.reduce(
+    (acc, deposit) => acc.plus(deposit.amount),
+    new BigNumber(0),
+  )
+
+  const totalWithdrawnInToken = position.withdrawals.reduce(
+    (acc, withdrawal) => acc.plus(withdrawal.amount),
+    new BigNumber(0),
+  )
+
+  const earnedInToken = netContribution.minus(totalDepositedInToken.minus(totalWithdrawnInToken))
+  const earnedInUSD = earnedInToken.times(inputTokenPriceUSD)
 
   return (
     <>
@@ -62,7 +81,10 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
             &nbsp;/&nbsp;
           </Text>
           <Text as="span" variant="p3" color="white">
-            {viewWalletAddress === connectedWalletAddress ? 'Your' : viewWalletAddress} Position
+            {viewWalletAddress.toLowerCase() === connectedWalletAddress?.toLowerCase()
+              ? 'Your'
+              : viewWalletAddress}{' '}
+            Position
           </Text>
         </div>
       </div>
@@ -101,10 +123,12 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 size="large"
                 titleSize="small"
                 title="Earned"
-                // TODO: fill data
-                value="value"
-                // TODO: fill data
-                subValue="subvalue"
+                value={
+                  <>
+                    {formatCryptoBalance(earnedInToken)}&nbsp;{vault.inputToken.symbol}
+                  </>
+                }
+                subValue={`$${formatCryptoBalance(earnedInUSD)}`}
                 subValueType="neutral"
                 subValueSize="medium"
               />
@@ -114,10 +138,11 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 size="large"
                 titleSize="small"
                 title="Net Contribution"
-                value={`$${formatCryptoBalance(position.amount.amount)}`}
+                value={`$${formatCryptoBalance(netContributionUSD)}`}
                 // TODO: fill data
-                subValue="deposits number"
+                subValue={`# of Deposits: ${noOfDeposits}`}
                 subValueSize="medium"
+                subValueStyle={{ color: 'var(--earn-protocol-success-100)' }}
               />
             </Box>
             <Box>
@@ -138,6 +163,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
           <div className={vaultManageGridStyles.rightBlock}>{sidebarContent}</div>
         </div>
       </div>
+      <div className={vaultManageGridStyles.rightBlockMobile}>{sidebarContent}</div>
     </>
   )
 }

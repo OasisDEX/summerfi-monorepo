@@ -91,6 +91,7 @@ export default defineConfig(({ mode }) => {
         external: [
           '@loadable/component',
           '@summerfi/app-icons',
+          '@summerfi/app-types',
           '@tabler/icons-react',
           'bignumber.js',
           'boring-avatars',

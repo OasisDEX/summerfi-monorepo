@@ -19,6 +19,8 @@ query GetUsersActivity {
     vault {
       id
       name
+      outputTokenPriceUSD
+      inputTokenPriceUSD
       inputToken {
         id
         symbol

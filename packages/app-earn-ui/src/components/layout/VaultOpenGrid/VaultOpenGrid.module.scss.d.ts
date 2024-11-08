@@ -1,6 +1,7 @@
 export type Styles = {
   leftBlock: string
   rightBlock: string
+  rightBlockMobile: string
   rightBlockWrapper: string
   vaultOpenGridBreadcrumbsWrapper: string
   vaultOpenGridPositionWrapper: string

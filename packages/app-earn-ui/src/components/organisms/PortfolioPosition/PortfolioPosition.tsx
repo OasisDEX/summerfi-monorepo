@@ -32,6 +32,7 @@ export const PortfolioPosition = ({ position, positionGraph }: PortfolioPosition
     apr365d,
     totalValueLockedUSD,
     id: vaultId,
+    inputTokenPriceUSD,
   } = position.vaultData
   const {
     amount,
@@ -42,12 +43,27 @@ export const PortfolioPosition = ({ position, positionGraph }: PortfolioPosition
         },
       },
     },
+    deposits,
+    withdrawals,
   } = position.positionData
   const apr30dParsed = formatDecimalAsPercent(new BigNumber(apr30d).div(100))
   // TODO: fill data
   const aprAllTime = formatDecimalAsPercent(new BigNumber(apr365d).div(100))
   const marketValue = formatCryptoBalance(totalValueLockedUSD)
-  const netContribution = formatCryptoBalance(amount.amount)
+  const netContribution = new BigNumber(amount.amount)
+
+  const totalDepositedInToken = deposits.reduce(
+    (acc, deposit) => acc.plus(deposit.amount),
+    new BigNumber(0),
+  )
+
+  const totalWithdrawnInToken = withdrawals.reduce(
+    (acc, withdrawal) => acc.plus(withdrawal.amount),
+    new BigNumber(0),
+  )
+
+  const earnedInToken = netContribution.minus(totalDepositedInToken.minus(totalWithdrawnInToken))
+  const earnedInUSD = earnedInToken.times(inputTokenPriceUSD || 0)
 
   return (
     <Card variant="cardSecondary" style={{ marginTop: 'var(--general-space-20)' }}>
@@ -88,10 +104,10 @@ export const PortfolioPosition = ({ position, positionGraph }: PortfolioPosition
               Earnings
             </Text>
             <Text variant="h4" className={portfolioPositionStyles.value}>
-              Earnings
+              {formatCryptoBalance(earnedInToken)}&nbsp;{inputToken.symbol}
             </Text>
             <Text variant="p3semi" className={portfolioPositionStyles.subValue}>
-              Earnings
+              {`$${formatCryptoBalance(earnedInUSD)}`}
             </Text>
           </div>
         </SimpleGrid>

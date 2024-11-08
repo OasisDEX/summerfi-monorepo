@@ -68,6 +68,7 @@ export {
   type GenericMultiselectOption,
 } from './components/molecules/GenericMultiselect/GenericMultiselect'
 export { CopyToClipboard } from './components/molecules/CopyToClipboard/CopyToClipboard'
+export { MobileDrawer } from './components/molecules/MobileDrawer/MobileDrawer'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'

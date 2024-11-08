@@ -7,7 +7,7 @@ import { TitleWithIcon } from '@/components/molecules/TitleWithIcon/TitleWithIco
 import dataBlockStyles from './DataBlock.module.scss'
 
 type DataBlockProps = {
-  title: string
+  title: ReactNode
   titleTooltip?: string
   size?: 'small' | 'large'
   titleSize?: 'small' | 'medium' | 'large'
@@ -15,7 +15,7 @@ type DataBlockProps = {
   subValueSize?: 'small' | 'medium' | 'large'
   valueSize?: 'small' | 'large' | 'largeColorful'
   valueStyle?: CSSProperties
-  value: string
+  value: ReactNode
   subValue?: ReactNode
   subValueType?: 'positive' | 'negative' | 'neutral'
   centered?: boolean

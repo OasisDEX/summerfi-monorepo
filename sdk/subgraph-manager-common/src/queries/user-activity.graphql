@@ -4,6 +4,7 @@ query GetUserActivity($id: ID!) {
       id
     }
     inputTokenBalance
+    outputTokenBalance
     deposits {
       timestamp
       amount
@@ -19,6 +20,9 @@ query GetUserActivity($id: ID!) {
     vault {
       id
       name
+      inputTokenBalance
+      inputTokenPriceUSD
+      outputTokenPriceUSD
       inputToken {
         id
         symbol

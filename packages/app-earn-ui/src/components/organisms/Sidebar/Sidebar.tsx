@@ -1,4 +1,5 @@
-import { type FC, type ReactNode } from 'react'
+'use client'
+import { type FC, type ReactNode, useState } from 'react'
 import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
@@ -6,8 +7,10 @@ import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
 import { Box } from '@/components/atoms/Box/Box'
 import { Button } from '@/components/atoms/Button/Button'
 import { Card } from '@/components/atoms/Card/Card'
+import { Icon } from '@/components/atoms/Icon/Icon.tsx'
 import { Text } from '@/components/atoms/Text/Text'
 import { LoadingSpinner } from '@/components/molecules/Loader/Loader'
+import { MobileDrawer } from '@/components/molecules/MobileDrawer/MobileDrawer.tsx'
 
 import sidebarClassNames from '@/components/organisms/Sidebar/Sidebar.module.scss'
 
@@ -25,6 +28,7 @@ export interface SidebarProps {
   } & ({ action: () => void; url?: never } | { action?: never; url: string })
   footnote?: ReactNode
   error?: string | ReactNode
+  asDesktopOnly?: boolean
 }
 
 export const Sidebar: FC<SidebarProps> = ({
@@ -35,36 +39,48 @@ export const Sidebar: FC<SidebarProps> = ({
   footnote,
   error,
   onTitleTabChange,
+  asDesktopOnly = false,
 }) => {
+  const [isOpen, setIsOpen] = useState(false)
+
   const labelElement = primaryButton.loading ? <LoadingSpinner size={28} /> : primaryButton.label
 
-  return (
+  const sidebarWrapped = (
     <Card className={sidebarClassNames.sidebarWrapper} variant="cardPrimary">
       <div className={sidebarClassNames.sidebarHeaderWrapper}>
-        {titleTabs && titleTabs.length > 0 ? (
-          titleTabs.map((tab) => (
-            <Text
-              onClick={() => onTitleTabChange?.(tab)}
-              key={`TitleTab_${tab}`}
-              as="h5"
-              variant="h5"
-              style={{
-                marginRight: 'var(--general-space-20)',
-                cursor: onTitleTabChange ? 'pointer' : 'default',
-                color:
-                  title === capitalize(tab)
-                    ? 'var(--earn-protocol-secondary-100)'
-                    : 'var(--color-text-primary-disabled)',
-              }}
-            >
-              {capitalize(tab)}
+        <div className={sidebarClassNames.sidebarHeaderActionButtonsWrapper}>
+          {titleTabs && titleTabs.length > 0 ? (
+            titleTabs.map((tab) => (
+              <Text
+                onClick={() => onTitleTabChange?.(tab)}
+                key={`TitleTab_${tab}`}
+                as="h5"
+                variant="h5"
+                style={{
+                  marginRight: 'var(--general-space-20)',
+                  cursor: onTitleTabChange ? 'pointer' : 'default',
+                  color:
+                    title === capitalize(tab)
+                      ? 'var(--earn-protocol-secondary-100)'
+                      : 'var(--color-text-primary-disabled)',
+                }}
+              >
+                {capitalize(tab)}
+              </Text>
+            ))
+          ) : (
+            <Text as="h5" variant="h5" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+              {title}
             </Text>
-          ))
-        ) : (
-          <Text as="h5" variant="h5" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-            {title}
-          </Text>
-        )}
+          )}
+        </div>
+        <Button
+          variant="unstyled"
+          onClick={() => setIsOpen((prev) => !prev)}
+          className={sidebarClassNames.sidebarHeaderChevron}
+        >
+          <Icon iconName={isOpen ? 'chevron_down' : 'chevron_up'} variant="xs" />
+        </Button>
       </div>
 
       <div className={sidebarClassNames.sidebarHeaderSpacer} />
@@ -104,5 +120,22 @@ export const Sidebar: FC<SidebarProps> = ({
       </div>
       {footnote && <div className={sidebarClassNames.sidebarFootnoteWrapper}>{footnote}</div>}
     </Card>
+  )
+
+  return asDesktopOnly ? (
+    content
+  ) : (
+    <>
+      <div className={sidebarClassNames.sidebarWrapperDesktop}>{sidebarWrapped}</div>
+      <MobileDrawer
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        slideFrom="bottom"
+        height="89vh"
+        variant="sidebar"
+      >
+        {sidebarWrapped}
+      </MobileDrawer>
+    </>
   )
 }
