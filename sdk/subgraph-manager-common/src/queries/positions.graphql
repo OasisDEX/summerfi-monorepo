@@ -3,6 +3,11 @@ query GetUserPositions($accountAddress: String!) {
     id
     inputTokenBalance
     outputTokenBalance
+    deposits {
+      amount
+      amountUSD
+      inputTokenBalance
+    }
     vault {
       id
       inputToken {
@@ -32,6 +37,11 @@ query GetUserPosition($accountAddress: String!, $vaultId: String!) {
     id
     inputTokenBalance
     outputTokenBalance
+    deposits {
+      amount
+      amountUSD
+      inputTokenBalance
+    }
     vault {
       id
       inputToken {
