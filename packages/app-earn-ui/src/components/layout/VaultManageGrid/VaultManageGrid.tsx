@@ -62,7 +62,10 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
             &nbsp;/&nbsp;
           </Text>
           <Text as="span" variant="p3" color="white">
-            {viewWalletAddress === connectedWalletAddress ? 'Your' : viewWalletAddress} Position
+            {viewWalletAddress.toLowerCase() === connectedWalletAddress?.toLowerCase()
+              ? 'Your'
+              : viewWalletAddress}{' '}
+            Position
           </Text>
         </div>
       </div>

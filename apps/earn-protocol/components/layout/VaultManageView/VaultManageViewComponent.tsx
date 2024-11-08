@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from 'react'
 import { useUser } from '@account-kit/react'
 import {
   Button,
@@ -73,6 +74,8 @@ export const VaultManageViewComponent = ({
     manualSetAmount,
   })
 
+  const ownerView = viewWalletAddress.toLowerCase() === user?.address.toLowerCase()
+
   const options: DropdownOption[] = [
     ...[...new Set(vaults.map(({ inputToken }) => inputToken.symbol))].map((symbol) => ({
       tokenSymbol: symbol as TokenSymbolsList,
@@ -84,19 +87,49 @@ export const VaultManageViewComponent = ({
   const dropdownValue =
     options.find((option) => option.value === vault.inputToken.symbol) ?? options[0]
 
-  const balanceValue = tokenBalanceLoading ? (
-    <SkeletonLine width={70} height={10} style={{ marginTop: '7px' }} />
-  ) : tokenBalance ? (
-    `${formatCryptoBalance(tokenBalance)} ${vault.inputToken.symbol}`
-  ) : (
-    '-'
-  )
+  const balanceValue = useMemo(() => {
+    if (ownerView) {
+      if (tokenBalanceLoading) {
+        return <SkeletonLine width={70} height={10} style={{ marginTop: '7px' }} />
+      }
+
+      if (tokenBalance && transactionType === TransactionAction.DEPOSIT) {
+        return `${formatCryptoBalance(tokenBalance)} ${vault.inputToken.symbol}`
+      }
+      if (transactionType === TransactionAction.WITHDRAW) {
+        return `${formatCryptoBalance(position.amount.amount)} ${vault.inputToken.symbol}`
+      }
+    }
+
+    return '-'
+  }, [
+    ownerView,
+    position.amount.amount,
+    tokenBalance,
+    tokenBalanceLoading,
+    transactionType,
+    vault.inputToken.symbol,
+  ])
+
+  const balanceOnClickAction = useCallback(() => {
+    if (ownerView) {
+      if (tokenBalance && transactionType === TransactionAction.DEPOSIT) {
+        return manualSetAmount(tokenBalance.toString())
+      }
+      if (transactionType === TransactionAction.WITHDRAW) {
+        return manualSetAmount(position.amount.amount.toString())
+      }
+    }
+
+    return undefined
+  }, [manualSetAmount, ownerView, position.amount.amount, tokenBalance, transactionType])
 
   const sidebarProps: SidebarProps = {
     title: capitalize(transactionType),
     titleTabs: [TransactionAction.DEPOSIT, TransactionAction.WITHDRAW],
     onTitleTabChange: (action) => {
       setTransactionType(action as TransactionAction)
+      reset()
     },
     content: (
       <>
@@ -111,9 +144,7 @@ export const VaultManageViewComponent = ({
           heading={{
             label: 'Balance',
             value: balanceValue,
-            action: () => {
-              manualSetAmount(tokenBalance?.toString())
-            },
+            action: balanceOnClickAction,
           }}
         />
         <ProjectedEarnings earnings="1353" symbol={vault.inputToken.symbol as TokenSymbolsList} />
