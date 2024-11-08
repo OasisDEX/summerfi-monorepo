@@ -73,6 +73,8 @@ describe('SDK Common | Armada | ArmadaPosition', () => {
         amount: tokenAmount,
         shares: sharesAmount,
         pool,
+        deposits: [],
+        withdrawals: [],
       })
 
       expect(position).toBeDefined()
