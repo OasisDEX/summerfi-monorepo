@@ -149,6 +149,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
           <div className={vaultOpenGridStyles.rightBlock}>{sidebarContent}</div>
         </div>
       </div>
+      <div className={vaultOpenGridStyles.rightBlockMobile}>{sidebarContent}</div>
     </>
   )
 }

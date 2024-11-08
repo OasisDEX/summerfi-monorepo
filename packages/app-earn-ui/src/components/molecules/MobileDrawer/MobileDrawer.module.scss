@@ -1,0 +1,74 @@
+.drawer {
+  position: fixed;
+  overflow: hidden;
+  background-color: var(--earn-protocol-neutral-90);
+  z-index: 1000;
+  transition: transform 0.3s ease-out;
+  visibility: visible;
+
+  /* Slide from bottom with initial position only showing heading */
+  &.bottomDefault,
+  &.bottomSidebar {
+    bottom: 0;
+    left: 0;
+  }
+
+  &.bottomDefault {
+    transform: translateY(100%);
+  }
+
+  &.bottomSidebar {
+    transform: translateY(calc(100% - 76px)); // Show heading at bottom (3rem is heading height)
+  }
+
+  &.open.bottomDefault,
+  &.open.bottomSidebar {
+    transform: translateY(0);
+  }
+
+  @media screen and (min-width: 900px) {
+    visibility: hidden;
+  }
+}
+
+.drawerContentDefault,
+.drawerContentSidebar {
+  position: relative;
+  overflow-y: auto;
+}
+
+.drawerContentDefault {
+  height: 100%;
+}
+
+.drawerContentSidebar {
+  height: calc(100% - 76px); // Reserve space for heading
+}
+
+.closeButton {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+}
+
+.content {
+  height: 100%;
+  overflow-y: auto;
+  border-top-right-radius: var(--general-radius-16);
+  border-top-left-radius: var(--general-radius-16);
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); // Semi-transparent dark overlay
+  z-index: 999; // Below drawer but above other content
+}

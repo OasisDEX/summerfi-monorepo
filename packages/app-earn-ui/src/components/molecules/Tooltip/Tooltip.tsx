@@ -1,6 +1,5 @@
 'use client'
 
-'use client'
 import {
   type FC,
   type HTMLAttributes,
@@ -15,7 +14,9 @@ import {
 import { createPortal } from 'react-dom'
 
 import { Card } from '@/components/atoms/Card/Card'
+import { MobileDrawer } from '@/components/molecules/MobileDrawer/MobileDrawer.tsx'
 import { isTouchDevice } from '@/helpers/is-touch-device'
+import { useMobileCheck } from '@/hooks/use-mobile-check.ts'
 
 import { type ClassNames as CardVariants } from '@/components/atoms/Card/Card.module.scss'
 import tooltipStyles from '@/components/molecules/Tooltip/Tooltip.module.scss'
@@ -72,6 +73,28 @@ const TooltipWrapper: FC<TooltipWrapperProps> = ({
   )
 }
 
+interface MobileTooltipWrapperProps extends HTMLAttributes<HTMLDivElement> {
+  children: ReactNode
+  cardVariant?: CardVariants
+}
+
+const MobileTooltipWrapper: FC<MobileTooltipWrapperProps> = ({ children, cardVariant }) => {
+  return (
+    <Card
+      variant={cardVariant}
+      style={{
+        backgroundColor: 'var(--earn-protocol-neutral-70)',
+        borderTopLeftRadius: 'var(--radius-large)',
+        borderTopRightRadius: 'var(--radius-large)',
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0,
+      }}
+    >
+      {children}
+    </Card>
+  )
+}
+
 type ChildrenCallback = (tooltipOpen: boolean) => ReactNode
 
 interface StatefulTooltipProps {
@@ -100,6 +123,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
   const [portalElement, setPortalElement] = useState<HTMLElement | null>()
   const tooltipRef = useRef<HTMLDivElement | null>(null)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const { isMobile } = useMobileCheck()
 
   const tooltipRefRect = tooltipRef.current?.getBoundingClientRect()
 
@@ -177,8 +201,24 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
       className={tooltipStyles.tooltipWrapper}
       style={style}
     >
+      {isMobile ? (
+        <MobileDrawer
+          isOpen={tooltipOpen}
+          slideFrom="bottom"
+          height="auto"
+          variant="default"
+          zIndex={1001}
+          style={{ backgroundColor: 'unset' }}
+        >
+          <MobileTooltipWrapper>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>{tooltip}</div>
+          </MobileTooltipWrapper>
+        </MobileDrawer>
+      ) : (
+        portal
+      )}
+
       {childrenTypeGuard(children) ? children : children(tooltipOpen)}
-      {portal}
     </div>
   )
 }
