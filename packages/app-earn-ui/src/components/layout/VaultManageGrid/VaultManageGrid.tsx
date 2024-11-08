@@ -42,7 +42,10 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   const aprCurrent = formatDecimalAsPercent(new BigNumber(vault.calculatedApr).div(100))
   const noOfDeposits = position.deposits.length.toString()
 
+  const inputTokenPriceUSD = vault.inputTokenPriceUSD || 0
+
   const netContribution = new BigNumber(position.amount.amount)
+  const netContributionUSD = netContribution.times(inputTokenPriceUSD)
 
   const totalDepositedInToken = position.deposits.reduce(
     (acc, deposit) => acc.plus(deposit.amount),
@@ -55,7 +58,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   )
 
   const earnedInToken = netContribution.minus(totalDepositedInToken.minus(totalWithdrawnInToken))
-  const earnedInUSD = earnedInToken.times(vault.inputTokenPriceUSD || 0)
+  const earnedInUSD = earnedInToken.times(inputTokenPriceUSD)
 
   return (
     <>
@@ -135,7 +138,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 size="large"
                 titleSize="small"
                 title="Net Contribution"
-                value={`$${formatCryptoBalance(netContribution)}`}
+                value={`$${formatCryptoBalance(netContributionUSD)}`}
                 // TODO: fill data
                 subValue={`# of Deposits: ${noOfDeposits}`}
                 subValueSize="medium"
