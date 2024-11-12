@@ -125,6 +125,7 @@ export const VaultSimulationGraph = ({
         timeframe={timeframe}
         setTimeframe={setTimeframe}
         parsedData={parsedData}
+        isLoadingForecast={isLoadingForecast}
       />
     </Card>
   )

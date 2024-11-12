@@ -83,10 +83,6 @@ export async function GET(req: Request, { params }: { params: { forecastParams: 
     return NextResponse.json({ error: 'Failed to fetch and parse forecast data' }, { status: 500 })
   }
 
-  const daily: ForecastDataPoint = []
-  const weekly: ForecastDataPoint = []
-  const monthly: ForecastDataPoint = []
-
   const seriesKeyed = forecastData.forecast.series.reduce(
     (acc, series) => {
       acc[series.name] = series.data
@@ -96,6 +92,29 @@ export async function GET(req: Request, { params }: { params: { forecastParams: 
     {} as { [key in PositionForecastAPIResponse['forecast']['series'][number]['name']]: number[] },
   )
 
+  const daily: ForecastDataPoint = [
+    // we need to add the first point manually
+    {
+      timestamp: forecastData.forecast.timestamps[0],
+      forecast: Number(seriesKeyed.forecast[0]),
+      bounds: [Number(seriesKeyed.lower_bound[0]), Number(seriesKeyed.upper_bound[0])],
+    },
+  ]
+  const weekly: ForecastDataPoint = [
+    {
+      timestamp: forecastData.forecast.timestamps[0],
+      forecast: Number(seriesKeyed.forecast[0]),
+      bounds: [Number(seriesKeyed.lower_bound[0]), Number(seriesKeyed.upper_bound[0])],
+    },
+  ]
+  const monthly: ForecastDataPoint = [
+    {
+      timestamp: forecastData.forecast.timestamps[0],
+      forecast: Number(seriesKeyed.forecast[0]),
+      bounds: [Number(seriesKeyed.lower_bound[0]), Number(seriesKeyed.upper_bound[0])],
+    },
+  ]
+
   // originally that was reduced separately for each series, but it was pretty slow (300ms+ for 3y worth of points)
   // this runs the same data through at once, and is much faster (10-50ms for 3y worth of points) + its cached
 
@@ -103,8 +122,12 @@ export async function GET(req: Request, { params }: { params: { forecastParams: 
   const addedMonthlyPointsMap = new Map<string, boolean>()
 
   forecastData.forecast.timestamps.forEach((timestamp, timestampIndex) => {
-    const weekDate = dayjs(timestamp).startOf('week').format(timestampFormat)
-    const monthDate = dayjs(timestamp).startOf('month').format(timestampFormat)
+    if (timestampIndex === 0) {
+      // first result is handled above
+      return
+    }
+    const weekDate = dayjs(timestamp).endOf('week').format(timestampFormat)
+    const monthDate = dayjs(timestamp).endOf('month').format(timestampFormat)
 
     const pointData = {
       // for BandedChart (used in forecast) we need to have a main value
