@@ -14,7 +14,10 @@ import {
 import { createPortal } from 'react-dom'
 
 import { Card } from '@/components/atoms/Card/Card'
-import { MobileDrawer } from '@/components/molecules/MobileDrawer/MobileDrawer.tsx'
+import {
+  MobileDrawer,
+  MobileDrawerDefaultWrapper,
+} from '@/components/molecules/MobileDrawer/MobileDrawer'
 import { isTouchDevice } from '@/helpers/is-touch-device'
 import { useMobileCheck } from '@/hooks/use-mobile-check.ts'
 
@@ -70,28 +73,6 @@ const TooltipWrapper: FC<TooltipWrapperProps> = ({
         {children}
       </Card>
     </div>
-  )
-}
-
-interface MobileTooltipWrapperProps extends HTMLAttributes<HTMLDivElement> {
-  children: ReactNode
-  cardVariant?: CardVariants
-}
-
-const MobileTooltipWrapper: FC<MobileTooltipWrapperProps> = ({ children, cardVariant }) => {
-  return (
-    <Card
-      variant={cardVariant}
-      style={{
-        backgroundColor: 'var(--earn-protocol-neutral-70)',
-        borderTopLeftRadius: 'var(--radius-large)',
-        borderTopRightRadius: 'var(--radius-large)',
-        borderBottomLeftRadius: 0,
-        borderBottomRightRadius: 0,
-      }}
-    >
-      {children}
-    </Card>
   )
 }
 
@@ -210,9 +191,9 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
           zIndex={1001}
           style={{ backgroundColor: 'unset' }}
         >
-          <MobileTooltipWrapper>
+          <MobileDrawerDefaultWrapper>
             <div style={{ display: 'flex', flexDirection: 'column' }}>{tooltip}</div>
-          </MobileTooltipWrapper>
+          </MobileDrawerDefaultWrapper>
         </MobileDrawer>
       ) : (
         portal

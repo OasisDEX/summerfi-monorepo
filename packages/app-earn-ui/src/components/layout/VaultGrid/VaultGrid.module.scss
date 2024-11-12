@@ -18,7 +18,7 @@
 
 .vaultGridPositionWrapper {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 100%;
   margin-top: 20px;
   align-items: start;
   grid-gap: var(--general-space-16);

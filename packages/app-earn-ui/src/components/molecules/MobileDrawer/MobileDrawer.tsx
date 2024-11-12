@@ -1,7 +1,30 @@
 'use client'
-import { type CSSProperties, type ReactNode, useEffect, useRef } from 'react'
+import { type CSSProperties, type FC, type ReactNode, useEffect, useRef } from 'react'
+
+import { Card } from '@/components/atoms/Card/Card'
 
 import styles from './MobileDrawer.module.scss'
+
+interface MobileDrawerDefaultWrapperProps {
+  children: ReactNode
+}
+
+export const MobileDrawerDefaultWrapper: FC<MobileDrawerDefaultWrapperProps> = ({ children }) => {
+  return (
+    <Card
+      style={{
+        backgroundColor: 'var(--earn-protocol-neutral-90)',
+        borderTopLeftRadius: 'var(--radius-large)',
+        borderTopRightRadius: 'var(--radius-large)',
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0,
+        flexDirection: 'column',
+      }}
+    >
+      {children}
+    </Card>
+  )
+}
 
 interface MobileDrawerProps {
   isOpen: boolean
@@ -72,11 +95,12 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
         ref={drawerRef}
       >
         <div className={drawerContentMap[variant]}>
-          {onClose && (
-            <button className={styles.closeButton} onClick={onClose}>
-              &times;
-            </button>
-          )}
+          {/* LETS TRY FOR NOW WITHOUT X BUTTON */}
+          {/* {onClose && (*/}
+          {/*  <button className={styles.closeButton} onClick={onClose}>*/}
+          {/*    &times;*/}
+          {/*  </button>*/}
+          {/* )}*/}
           <div className={styles.content}>{children}</div>
         </div>
       </div>
