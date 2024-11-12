@@ -6,7 +6,7 @@ import {
   type TokenSymbolsList,
 } from '@summerfi/app-types'
 
-import { GenericTokenIcon } from '@/components/atoms/GenericTokenIcon/GenericTokenIcon.tsx'
+import { GenericTokenIcon } from '@/components/atoms/GenericTokenIcon/GenericTokenIcon'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { getTokenGuarded } from '@/tokens/helpers'

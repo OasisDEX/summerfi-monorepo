@@ -1,12 +1,12 @@
 import { type FC } from 'react'
 import Link from 'next/link'
 
-import { Text } from '@/components/atoms/Text/Text.tsx'
-import { WithArrow } from '@/components/atoms/WithArrow/WithArrow.tsx'
+import { Text } from '@/components/atoms/Text/Text'
+import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
 import {
   SlideCarousel,
   SlideCarouselButtonPosition,
-} from '@/components/molecules/SlideCarousel/SlideCarousel.tsx'
+} from '@/components/molecules/SlideCarousel/SlideCarousel'
 
 import classNames from './TableCarousel.module.scss'
 

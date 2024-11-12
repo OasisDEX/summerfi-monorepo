@@ -1,6 +1,6 @@
 'use client'
 import { createContext, type FC, type ReactNode, useContext } from 'react'
-import { type DeviceType } from '@summerfi/app-earn-ui'
+import { type DeviceType } from '@summerfi/app-types'
 
 const DeviceContext = createContext<DeviceType | null>(null)
 

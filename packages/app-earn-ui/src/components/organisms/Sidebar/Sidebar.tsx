@@ -7,10 +7,10 @@ import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
 import { Box } from '@/components/atoms/Box/Box'
 import { Button } from '@/components/atoms/Button/Button'
 import { Card } from '@/components/atoms/Card/Card'
-import { Icon } from '@/components/atoms/Icon/Icon.tsx'
+import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { LoadingSpinner } from '@/components/molecules/Loader/Loader'
-import { MobileDrawer } from '@/components/molecules/MobileDrawer/MobileDrawer.tsx'
+import { MobileDrawer } from '@/components/molecules/MobileDrawer/MobileDrawer'
 
 import sidebarClassNames from '@/components/organisms/Sidebar/Sidebar.module.scss'
 

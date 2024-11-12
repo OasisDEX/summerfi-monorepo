@@ -3,7 +3,7 @@
 import type { FC } from 'react'
 import { type DropdownOption, type DropdownRawOption } from '@summerfi/app-types'
 
-import { Icon } from '@/components/atoms/Icon/Icon.tsx'
+import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { Dropdown } from '@/components/molecules/Dropdown/Dropdown'
 

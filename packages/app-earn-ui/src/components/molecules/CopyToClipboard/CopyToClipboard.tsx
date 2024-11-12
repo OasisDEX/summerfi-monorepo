@@ -1,8 +1,8 @@
 'use client'
 import { type FC, type ReactNode } from 'react'
 
-import { Button } from '@/components/atoms/Button/Button.tsx'
-import { Tooltip } from '@/components/molecules/Tooltip/Tooltip.tsx'
+import { Button } from '@/components/atoms/Button/Button'
+import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 
 interface CopyToClipboardProps {
   textToCopy: string // The text to be copied

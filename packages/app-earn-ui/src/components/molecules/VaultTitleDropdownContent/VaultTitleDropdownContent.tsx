@@ -3,9 +3,9 @@ import { SDKNetwork, type SDKVaultishType, type TokenSymbolsList } from '@summer
 import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
-import { Icon } from '@/components/atoms/Icon/Icon.tsx'
-import { Text } from '@/components/atoms/Text/Text.tsx'
-import { riskColors } from '@/helpers/risk-colors.ts'
+import { Icon } from '@/components/atoms/Icon/Icon'
+import { Text } from '@/components/atoms/Text/Text'
+import { riskColors } from '@/helpers/risk-colors'
 
 import classNames from './VaultTitleDropdownContent.module.scss'
 

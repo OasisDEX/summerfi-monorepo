@@ -3,8 +3,8 @@ import { type TokenSymbolsList } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import type BigNumber from 'bignumber.js'
 
-import { Card } from '@/components/atoms/Card/Card.tsx'
-import { Text } from '@/components/atoms/Text/Text.tsx'
+import { Card } from '@/components/atoms/Card/Card'
+import { Text } from '@/components/atoms/Text/Text'
 
 import classNames from './ProjectedEarnings.module.scss'
 

@@ -6,7 +6,7 @@ import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { VaultTitle } from '@/components/molecules/VaultTitle/VaultTitle'
-import { riskColors } from '@/helpers/risk-colors.ts'
+import { riskColors } from '@/helpers/risk-colors'
 
 interface VaultTitleWithRiskProps {
   symbol: SDKVaultType['inputToken']['symbol']

@@ -2,11 +2,11 @@
 import { type FC } from 'react'
 import Link from 'next/link'
 
-import { Card } from '@/components/atoms/Card/Card.tsx'
-import { Icon } from '@/components/atoms/Icon/Icon.tsx'
-import { Text } from '@/components/atoms/Text/Text.tsx'
-import { CopyToClipboard } from '@/components/molecules/CopyToClipboard/CopyToClipboard.tsx'
-import { DataBlock } from '@/components/molecules/DataBlock/DataBlock.tsx'
+import { Card } from '@/components/atoms/Card/Card'
+import { Icon } from '@/components/atoms/Icon/Icon'
+import { Text } from '@/components/atoms/Text/Text'
+import { CopyToClipboard } from '@/components/molecules/CopyToClipboard/CopyToClipboard'
+import { DataBlock } from '@/components/molecules/DataBlock/DataBlock'
 
 import classNames from './HeadingWithCards.module.scss'
 

@@ -19,7 +19,7 @@ import {
   MobileDrawerDefaultWrapper,
 } from '@/components/molecules/MobileDrawer/MobileDrawer'
 import { isTouchDevice } from '@/helpers/is-touch-device'
-import { useMobileCheck } from '@/hooks/use-mobile-check.ts'
+import { useMobileCheck } from '@/hooks/use-mobile-check'
 
 import { type ClassNames as CardVariants } from '@/components/atoms/Card/Card.module.scss'
 import tooltipStyles from '@/components/molecules/Tooltip/Tooltip.module.scss'

@@ -3,7 +3,7 @@ import { Fragment } from 'react/jsx-runtime'
 import clsx from 'clsx'
 import Link from 'next/link'
 
-import { Expander } from '@/components/atoms/Expander/Expander.tsx'
+import { Expander } from '@/components/atoms/Expander/Expander'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { type EarnNavigationProps } from '@/components/layout/Navigation/Navigation'

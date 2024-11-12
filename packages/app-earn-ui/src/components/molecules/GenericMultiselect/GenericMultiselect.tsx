@@ -14,8 +14,8 @@ import {
   MobileDrawerDefaultWrapper,
 } from '@/components/molecules/MobileDrawer/MobileDrawer'
 import { TokensGroup } from '@/components/molecules/TokensGroup/TokensGroup'
-import { useMobileCheck } from '@/hooks/use-mobile-check.ts'
-import { useOutsideElementClickHandler } from '@/hooks/use-outside-element-click-handler.ts'
+import { useMobileCheck } from '@/hooks/use-mobile-check'
+import { useOutsideElementClickHandler } from '@/hooks/use-outside-element-click-handler'
 
 import classNames from './GenericMultiselect.module.scss'
 

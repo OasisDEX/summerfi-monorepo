@@ -3,7 +3,7 @@ import { type ReactNode } from 'react'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Pill } from '@/components/atoms/Pill/Pill'
 import { Text } from '@/components/atoms/Text/Text'
-import { Tooltip } from '@/components/molecules/Tooltip/Tooltip.tsx'
+import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 
 export const BonusLabel = ({
   tokenBonus,
