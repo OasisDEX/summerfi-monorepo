@@ -9,7 +9,12 @@ import { Button } from '@/components/atoms/Button/Button'
 import { Icon, type IconNamesList } from '@/components/atoms/Icon/Icon'
 import { Input } from '@/components/atoms/Input/Input'
 import { Text } from '@/components/atoms/Text/Text'
+import {
+  MobileDrawer,
+  MobileDrawerDefaultWrapper,
+} from '@/components/molecules/MobileDrawer/MobileDrawer'
 import { TokensGroup } from '@/components/molecules/TokensGroup/TokensGroup'
+import { useMobileCheck } from '@/hooks/use-mobile-check.ts'
 import { useOutsideElementClickHandler } from '@/hooks/use-outside-element-click-handler.ts'
 
 import classNames from './GenericMultiselect.module.scss'
@@ -215,6 +220,7 @@ export function GenericMultiselect({
   const outsideRef = useOutsideElementClickHandler(() => setIsOpen(false))
   const scrollRef = useRef<HTMLUListElement>(null)
   const searchRef = useRef<HTMLInputElement>(null)
+  const { isMobile } = useMobileCheck()
 
   const matchingOptionsGroup = useMemo(() => {
     return optionGroups?.filter(({ options: _options }) => isEqual(_options, values))[0]?.id
@@ -277,6 +283,104 @@ export function GenericMultiselect({
     else didMountRef.current = true
   }, [values])
 
+  const optionsMapped = (
+    <ul
+      ref={scrollRef}
+      className={classNames.list}
+      style={{
+        maxHeight: fitContents ? 'auto' : '342px',
+      }}
+    >
+      <GenericMultiselectItem
+        hasCheckbox={false}
+        isClearing
+        isDisabled={values.length === 0}
+        label="Clear selection"
+        onClick={() => {
+          setValues([])
+          setIsOpen(false)
+        }}
+        style={{
+          fontSize: '14px',
+          fontWeight: 600,
+        }}
+        value=""
+      />
+      {withSearch && (
+        <li style={{ position: 'relative', color: 'neutral80' }}>
+          <Icon
+            iconName="search_icon"
+            variant="s"
+            style={{
+              position: 'absolute',
+              top: 'var(--general-space-4)',
+              left: 'var(--general-space-4)',
+              pointerEvents: 'none',
+            }}
+          />
+          <Input
+            ref={searchRef}
+            type="text"
+            autoComplete="off"
+            placeholder={`Search ${label.toLowerCase()}`}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className={classNames.searchInput}
+          />
+        </li>
+      )}
+      {optionGroups && optionGroups.length > 0 && (
+        <li style={{ display: 'flex', gap: 'var(--general-space-4)' }}>
+          {optionGroups.map(({ id, key, options: _options }) => (
+            <Button
+              key={id}
+              variant="unstyled"
+              style={{
+                flexShrink: 0,
+                padding: '0 var(--general-space-16)',
+                whiteSpace: 'nowrap',
+                ...(matchingOptionsGroup === id && {
+                  '&, &:hover': {
+                    color: 'neutral10',
+                    backgroundColor: 'interactive100',
+                    borderColor: 'interactive100',
+                  },
+                }),
+              }}
+              onClick={() => {
+                if (matchingOptionsGroup === id) setValues([])
+                else {
+                  setValues(_options)
+                  onSingleChange?.(`Group: ${id}`)
+                }
+              }}
+            >
+              {key} ({_options.length})
+            </Button>
+          ))}
+        </li>
+      )}
+      {filteredOptions.map((option) => (
+        <GenericMultiselectItem
+          key={option.value}
+          isSelected={values.includes(option.value)}
+          onClick={(value) => {
+            setValues(toggleArrayItem<string>(values, value))
+            onSingleChange?.(value)
+          }}
+          {...option}
+        />
+      ))}
+      {filteredOptions.length === 0 && (
+        <li>
+          <Text as="p" variant="p3" style={{ margin: 'var(--general-space-4)' }}>
+            No items matching your search were found
+          </Text>
+        </li>
+      )}
+    </ul>
+  )
+
   return (
     <div
       style={{ position: 'relative', userSelect: 'none', width: 'fit-content', ...style }}
@@ -324,110 +428,30 @@ export function GenericMultiselect({
           />
         </Text>
       </div>
-      <div
-        className={classNames.optionsWrapper}
-        style={{
-          opacity: isOpen ? 1 : 0,
-          transform: isOpen ? 'translateY(0)' : 'translateY(-5px)',
-          pointerEvents: isOpen ? 'auto' : 'none',
-        }}
-      >
-        <ul
-          ref={scrollRef}
-          className={classNames.list}
+      {isMobile ? (
+        <MobileDrawer
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          slideFrom="bottom"
+          height="auto"
+          variant="default"
+          zIndex={1001}
+          style={{ backgroundColor: 'unset' }}
+        >
+          <MobileDrawerDefaultWrapper>{optionsMapped}</MobileDrawerDefaultWrapper>
+        </MobileDrawer>
+      ) : (
+        <div
+          className={classNames.optionsWrapper}
           style={{
-            maxHeight: fitContents ? 'auto' : '342px',
+            opacity: isOpen ? 1 : 0,
+            transform: isOpen ? 'translateY(0)' : 'translateY(-5px)',
+            pointerEvents: isOpen ? 'auto' : 'none',
           }}
         >
-          <GenericMultiselectItem
-            hasCheckbox={false}
-            isClearing
-            isDisabled={values.length === 0}
-            label="Clear selection"
-            onClick={() => {
-              setValues([])
-              setIsOpen(false)
-            }}
-            style={{
-              fontSize: '14px',
-              fontWeight: 600,
-            }}
-            value=""
-          />
-          {withSearch && (
-            <li style={{ position: 'relative', color: 'neutral80' }}>
-              <Icon
-                iconName="search_icon"
-                variant="s"
-                style={{
-                  position: 'absolute',
-                  top: 'var(--general-space-4)',
-                  left: 'var(--general-space-4)',
-                  pointerEvents: 'none',
-                }}
-              />
-              <Input
-                ref={searchRef}
-                type="text"
-                autoComplete="off"
-                placeholder={`Search ${label.toLowerCase()}`}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className={classNames.searchInput}
-              />
-            </li>
-          )}
-          {optionGroups && optionGroups.length > 0 && (
-            <li style={{ display: 'flex', gap: 'var(--general-space-4)' }}>
-              {optionGroups.map(({ id, key, options: _options }) => (
-                <Button
-                  key={id}
-                  variant="unstyled"
-                  style={{
-                    flexShrink: 0,
-                    padding: '0 var(--general-space-16)',
-                    whiteSpace: 'nowrap',
-                    ...(matchingOptionsGroup === id && {
-                      '&, &:hover': {
-                        color: 'neutral10',
-                        backgroundColor: 'interactive100',
-                        borderColor: 'interactive100',
-                      },
-                    }),
-                  }}
-                  onClick={() => {
-                    if (matchingOptionsGroup === id) setValues([])
-                    else {
-                      setValues(_options)
-                      onSingleChange?.(`Group: ${id}`)
-                    }
-                  }}
-                >
-                  {key} ({_options.length})
-                </Button>
-              ))}
-            </li>
-          )}
-          {filteredOptions.map((option) => (
-            <GenericMultiselectItem
-              key={option.value}
-              isSelected={values.includes(option.value)}
-              onClick={(value) => {
-                setValues(toggleArrayItem<string>(values, value))
-                onSingleChange?.(value)
-              }}
-              {...option}
-            />
-          ))}
-          {filteredOptions.length === 0 && (
-            <li>
-              <Text as="p" variant="p3" style={{ margin: 'var(--general-space-4)' }}>
-                No items matching your search were found
-              </Text>
-            </li>
-          )}
-        </ul>
-      </div>
+          {optionsMapped}
+        </div>
+      )}
     </div>
   )
 }
