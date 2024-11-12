@@ -5,19 +5,50 @@ import { Card } from '@/components/atoms/Card/Card'
 
 import styles from './MobileDrawer.module.scss'
 
+type SlideFrom = 'bottom' | 'top' | 'left' | 'right'
+
 interface MobileDrawerDefaultWrapperProps {
   children: ReactNode
+  slideFrom?: SlideFrom
 }
 
-export const MobileDrawerDefaultWrapper: FC<MobileDrawerDefaultWrapperProps> = ({ children }) => {
+export const MobileDrawerDefaultWrapper: FC<MobileDrawerDefaultWrapperProps> = ({
+  children,
+  slideFrom = 'bottom',
+}) => {
+  const wrapperStyleMap = {
+    bottom: {
+      backgroundColor: 'var(--earn-protocol-neutral-85)',
+      borderTopLeftRadius: 'var(--radius-large)',
+      borderTopRightRadius: 'var(--radius-large)',
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
+    },
+    top: {
+      backgroundColor: 'var(--earn-protocol-neutral-85)',
+      borderRadius: 0,
+      height: '100%',
+    },
+    left: {
+      backgroundColor: 'var(--earn-protocol-neutral-85)',
+      borderRightLeftRadius: 'var(--radius-large)',
+      borderRightRightRadius: 'var(--radius-large)',
+      borderLeftLeftRadius: 0,
+      borderLeftRightRadius: 0,
+    },
+    right: {
+      backgroundColor: 'var(--earn-protocol-neutral-85)',
+      borderLeftLeftRadius: 'var(--radius-large)',
+      borderLeftRightRadius: 'var(--radius-large)',
+      borderRightLeftRadius: 0,
+      borderRightRightRadius: 0,
+    },
+  }[slideFrom]
+
   return (
     <Card
       style={{
-        backgroundColor: 'var(--earn-protocol-neutral-85)',
-        borderTopLeftRadius: 'var(--radius-large)',
-        borderTopRightRadius: 'var(--radius-large)',
-        borderBottomLeftRadius: 0,
-        borderBottomRightRadius: 0,
+        ...wrapperStyleMap,
         flexDirection: 'column',
       }}
     >
@@ -32,7 +63,7 @@ interface MobileDrawerProps {
   children: ReactNode
   height?: string
   width?: number
-  slideFrom?: 'bottom' | 'left' | 'right'
+  slideFrom?: SlideFrom
   heading?: ReactNode
   variant?: 'default' | 'sidebar'
   zIndex?: number
@@ -47,9 +78,15 @@ const drawerContentMap = {
 const slideFromMap = {
   default: {
     bottom: styles.bottomDefault,
+    top: styles.topDefault,
+    left: styles.leftDefault,
+    right: styles.rightDefault,
   },
   sidebar: {
     bottom: styles.bottomSidebar,
+    top: styles.topSidebar,
+    left: styles.leftSidebar,
+    right: styles.rightSidebar,
   },
 }
 
@@ -67,7 +104,6 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
   const drawerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // Prevent background scroll when drawer is open
     if (isOpen) {
       document.body.style.overflow = 'hidden'
     } else {
@@ -81,12 +117,11 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
 
   return (
     <>
-      {/* Overlay */}
       {isOpen && <div className={styles.overlay} onClick={onClose} />}
       <div
         className={`${styles.drawer} ${isOpen ? styles.open : ''} ${slideFromMap[variant][slideFrom]}`}
         style={{
-          height: slideFrom === 'bottom' ? `${height}` : '100vh',
+          height: slideFrom === 'bottom' || slideFrom === 'top' ? `${height}` : '100vh',
           width: slideFrom === 'left' || slideFrom === 'right' ? `${width}vw` : '100vw',
           ...(zIndex && { zIndex }),
           ...(variant === 'sidebar' && { borderTop: '1px solid var(--earn-protocol-neutral-70)' }),

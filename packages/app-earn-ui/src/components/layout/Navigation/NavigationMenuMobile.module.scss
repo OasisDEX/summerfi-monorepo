@@ -1,57 +1,23 @@
-.menuMobileOverflow {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 100vw;
-  height: 100%;
-  overflow: hidden;
-  pointer-events: none;
-
-  &.overflowActive {
-    pointer-events: all;
-  }
-}
-
-.menuMobileWrapper {
-  position: absolute;
-  top: 0;
-  right: -100%;
-  width: 100vw;
-  height: 100%;
-  background-color: var(--color-surface-light);
-  z-index: 100;
+.topBar {
   display: flex;
-  flex-direction: column;
+  position: sticky;
+  top: 0;
+  justify-content: space-between;
   align-items: center;
-  transition: right 0.2s ease-out;
-  overflow-y: auto;
+  width: 100%;
+  border-bottom: 1px solid var(--color-surface-lighter);
 
-  .topBar {
-    display: flex;
-    position: sticky;
-    top: 0;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: var(--general-space-16) var(--general-space-20) var(--general-space-20);
-    background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, var(--color-surface-light) 50%);
-
-    >* {
-      padding-top: var(--general-space-16);
-      padding-bottom: var(--general-space-24);
-    }
+  > * {
+    padding-top: var(--general-space-16);
+    padding-bottom: var(--general-space-24);
   }
 
-  &.active {
-    right: 0;
-
-    .closeIcon {
-      display: block;
-    }
+  .logoSmall {
+    width: 25px;
+    display: inline;
   }
 
   .closeIcon {
-    display: none;
     cursor: pointer;
     opacity: 0.3;
 
@@ -60,39 +26,32 @@
       opacity: 0.6;
     }
   }
+}
 
-  .linksList {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    row-gap: var(--general-space-8);
-    padding: var(--general-space-16) var(--general-space-20) var(--general-space-64);
+.linksList {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  row-gap: var(--general-space-24);
+  padding: var(--general-space-16) 0;
 
-    >a>p {
-      padding-bottom: 0;
-    }
-
-    >p,
-    >a {
-      cursor: pointer;
-      text-align: center;
-      width: 100%;
-      border-bottom: 1px solid var(--color-surface-lighter);
-      padding-bottom: var(--general-space-8);
-
-      &:last-child {
-        border-bottom: none;
-      }
-    }
-
-    .activeLink {
-      color: var(--earn-protocol-primary-100);
-    }
-
+  > a > p {
+    padding-bottom: 0;
   }
 
-  @include media(">l") {
-    display: none;
+  > p,
+  > a {
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .activeLink {
+    color: var(--earn-protocol-primary-100);
   }
 }

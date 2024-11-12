@@ -1,11 +1,8 @@
 export type Styles = {
-  active: string
   activeLink: string
   closeIcon: string
   linksList: string
-  menuMobileOverflow: string
-  menuMobileWrapper: string
-  overflowActive: string
+  logoSmall: string
   topBar: string
 }
 

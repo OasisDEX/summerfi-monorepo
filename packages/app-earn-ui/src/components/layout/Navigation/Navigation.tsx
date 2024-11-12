@@ -8,6 +8,11 @@ import { NavigationBranding } from '@/components/layout/Navigation/NavigationBra
 import { type NavigationItemsProps } from '@/components/layout/Navigation/NavigationItems'
 import { NavigationMenu } from '@/components/layout/Navigation/NavigationMenu'
 import { NavigationMenuMobile } from '@/components/layout/Navigation/NavigationMenuMobile'
+import {
+  MobileDrawer,
+  MobileDrawerDefaultWrapper,
+} from '@/components/molecules/MobileDrawer/MobileDrawer'
+import { useMobileCheck } from '@/hooks/use-mobile-check'
 
 import navigationStyles from '@/components/layout/Navigation/Navigation.module.scss'
 
@@ -38,6 +43,7 @@ export const Navigation: FC<EarnNavigationProps> = ({
 }) => {
   const [tempCurrentPath, setTempCurrentPath] = useState(currentPath)
   const [mobileMenuOpened, setMobileMenuOpened] = useState(false)
+  const { isMobile } = useMobileCheck()
 
   const toggleMobileMenu = () => {
     const nextValue = !mobileMenuOpened
@@ -66,17 +72,32 @@ export const Navigation: FC<EarnNavigationProps> = ({
         <NavigationMenu links={links} currentPath={currentPath} />
         <NavigationActions
           walletConnectionComponent={walletConnectionComponent}
-          toggleMobileMenu={toggleMobileMenu}
           signUpComponent={signupComponent}
+          toggleMobileMenu={toggleMobileMenu}
         />
       </header>
-      <NavigationMenuMobile
-        logo={logo}
-        links={links}
-        currentPath={currentPath}
-        mobileMenuOpened={mobileMenuOpened}
-        toggleMobileMenu={toggleMobileMenu}
-      />
+      {isMobile && (
+        <MobileDrawer
+          isOpen={mobileMenuOpened}
+          onClose={() => setMobileMenuOpened(false)}
+          slideFrom="top"
+          height="auto"
+          variant="default"
+          zIndex={1001}
+          style={{ backgroundColor: 'unset' }}
+        >
+          <MobileDrawerDefaultWrapper slideFrom="top">
+            <NavigationMenuMobile
+              logo={logoSmall}
+              links={links}
+              currentPath={currentPath}
+              toggleMobileMenu={toggleMobileMenu}
+              walletConnectionComponent={walletConnectionComponent}
+              signUpComponent={signupComponent}
+            />
+          </MobileDrawerDefaultWrapper>
+        </MobileDrawer>
+      )}
     </div>
   )
 }

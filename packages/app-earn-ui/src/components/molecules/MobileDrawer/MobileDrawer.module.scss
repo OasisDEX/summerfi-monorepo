@@ -6,7 +6,7 @@
   transition: transform 0.3s ease-out;
   visibility: visible;
 
-  /* Slide from bottom with initial position only showing heading */
+  /* Bottom sliding */
   &.bottomDefault,
   &.bottomSidebar {
     bottom: 0;
@@ -18,12 +18,64 @@
   }
 
   &.bottomSidebar {
-    transform: translateY(calc(100% - 76px)); // Show heading at bottom (3rem is heading height)
+    transform: translateY(calc(100% - 76px));
   }
 
+  /* Top sliding */
+  &.topDefault,
+  &.topSidebar {
+    top: 0;
+    left: 0;
+  }
+
+  &.topDefault {
+    transform: translateY(-100%);
+  }
+
+  &.topSidebar {
+    transform: translateY(calc(-100% + 76px));
+  }
+
+  /* Left sliding */
+  &.leftDefault,
+  &.leftSidebar {
+    top: 0;
+    left: 0;
+  }
+
+  &.leftDefault {
+    transform: translateX(-100%);
+  }
+
+  &.leftSidebar {
+    transform: translateX(calc(-100% + 76px));
+  }
+
+  /* Right sliding */
+  &.rightDefault,
+  &.rightSidebar {
+    top: 0;
+    right: 0;
+  }
+
+  &.rightDefault {
+    transform: translateX(100%);
+  }
+
+  &.rightSidebar {
+    transform: translateX(calc(100% - 76px));
+  }
+
+  /* Open states */
   &.open.bottomDefault,
-  &.open.bottomSidebar {
-    transform: translateY(0);
+  &.open.bottomSidebar,
+  &.open.topDefault,
+  &.open.topSidebar,
+  &.open.leftDefault,
+  &.open.leftSidebar,
+  &.open.rightDefault,
+  &.open.rightSidebar {
+    transform: translate(0, 0);
   }
 
   @media screen and (min-width: 900px) {
@@ -42,7 +94,7 @@
 }
 
 .drawerContentSidebar {
-  height: calc(100% - 76px); // Reserve space for heading
+  height: calc(100% - 76px);
 }
 
 .closeButton {
@@ -59,8 +111,6 @@
 .content {
   height: 100%;
   overflow-y: auto;
-  border-top-right-radius: var(--general-radius-16);
-  border-top-left-radius: var(--general-radius-16);
 }
 
 .overlay {
@@ -69,6 +119,6 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5); // Semi-transparent dark overlay
-  z-index: 999; // Below drawer but above other content
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
 }
