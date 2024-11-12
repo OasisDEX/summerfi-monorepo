@@ -82,9 +82,11 @@ export { useOutsideElementClickHandler } from './hooks/use-outside-element-click
 export { useCurrentUrl } from './hooks/use-current-url'
 export { useQueryParams } from './hooks/use-query-params'
 export { useMobileCheck } from './hooks/use-mobile-check'
+export { useClientSideMount } from './hooks/use-client-side-mount'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
 export { getVaultUrl, getVaultDetailsUrl, getVaultPositionUrl } from './helpers/get-vault-url'
 export { getTwitterShareUrl } from './helpers/get-twitter-share-url'
 export { getScannerUrl } from './helpers/get-scanner-url'
 export { getMedian } from './helpers/get-median'
+export { getDeviceType, type DeviceType } from './helpers/get-device-type'

@@ -1,7 +1,5 @@
 'use client'
-import React, { type CSSProperties, type ReactNode, useEffect, useRef } from 'react'
-
-import { useMobileCheck } from '@/hooks/use-mobile-check.ts'
+import { type CSSProperties, type ReactNode, useEffect, useRef } from 'react'
 
 import styles from './MobileDrawer.module.scss'
 
@@ -44,24 +42,19 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
   style,
 }) => {
   const drawerRef = useRef<HTMLDivElement>(null)
-  const { isMobile } = useMobileCheck()
 
   useEffect(() => {
-    if (isMobile) {
-      // Prevent background scroll when drawer is open
-      if (isOpen) {
-        document.body.style.overflow = 'hidden'
-      } else {
-        document.body.style.overflow = 'auto'
-      }
-
-      return () => {
-        document.body.style.overflow = 'auto'
-      }
+    // Prevent background scroll when drawer is open
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'auto'
     }
 
-    return () => null
-  }, [isOpen, isMobile])
+    return () => {
+      document.body.style.overflow = 'auto'
+    }
+  }, [isOpen])
 
   return (
     <>
