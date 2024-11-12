@@ -131,7 +131,7 @@ export const Sidebar: FC<SidebarProps> = ({
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         slideFrom="bottom"
-        height="89vh"
+        height="100%"
         variant="sidebar"
       >
         {sidebarWrapped}

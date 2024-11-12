@@ -11,6 +11,7 @@ import {
   type SidebarProps,
   SkeletonLine,
   Text,
+  useMobileCheck,
   VaultManageGrid,
 } from '@summerfi/app-earn-ui'
 import {
@@ -28,6 +29,7 @@ import { capitalize } from 'lodash-es'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { HistoricalYieldChart } from '@/components/organisms/Charts/HistoricalYieldChart'
 import { TransactionAction } from '@/constants/transaction-actions'
+import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
@@ -73,6 +75,8 @@ export const VaultManageViewComponent = ({
     amountParsed,
     manualSetAmount,
   })
+  const { deviceType } = useDeviceType()
+  const { isMobile } = useMobileCheck(deviceType)
 
   const ownerView = viewWalletAddress.toLowerCase() === user?.address.toLowerCase()
 
@@ -244,6 +248,7 @@ export const VaultManageViewComponent = ({
         </div>
       }
       sidebarContent={<Sidebar {...sidebarProps} />}
+      isMobile={isMobile}
     />
   )
 }

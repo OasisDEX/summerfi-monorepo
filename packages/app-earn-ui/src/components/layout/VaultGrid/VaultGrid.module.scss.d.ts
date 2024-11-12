@@ -2,9 +2,11 @@ export type Styles = {
   fullWidthBlock: string
   leftBlock: string
   rightBlock: string
+  rightBlockMobile: string
   rightBlockWrapper: string
   vaultGridHeaderWrapper: string
   vaultGridPositionWrapper: string
+  vaultGridWrapper: string
 }
 
 export type ClassNames = keyof Styles

@@ -47,7 +47,6 @@
       border-radius: var(--radius-roundish);
       background: var(--color-border-hover);
       box-shadow: var(--shadow-depth-3);
-
     }
 
     &:hover::before {
@@ -68,6 +67,8 @@
   align-items: center;
   width: 100%;
   margin-bottom: var(--general-space-24);
+  flex-wrap: wrap;
+  gap: var(--general-space-8);
 }
 
 .vaultCardAssetsWrapper {

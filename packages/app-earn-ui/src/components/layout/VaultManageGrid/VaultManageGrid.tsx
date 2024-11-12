@@ -27,6 +27,7 @@ interface VaultManageGridProps {
   sidebarContent: ReactNode
   connectedWalletAddress?: string
   viewWalletAddress: string
+  isMobile?: boolean
 }
 
 export const VaultManageGrid: FC<VaultManageGridProps> = ({
@@ -37,12 +38,13 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   position,
   connectedWalletAddress,
   viewWalletAddress,
+  isMobile,
 }) => {
   const apr30d = formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
   const aprCurrent = formatDecimalAsPercent(new BigNumber(vault.calculatedApr).div(100))
   const noOfDeposits = position.deposits.length.toString()
 
-  const inputTokenPriceUSD = vault.inputTokenPriceUSD || 0
+  const inputTokenPriceUSD = vault.inputTokenPriceUSD ?? 0
 
   const netContribution = new BigNumber(position.amount.amount)
   const netContributionUSD = netContribution.times(inputTokenPriceUSD)
@@ -113,8 +115,8 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
             </Text>
           </div>
           <SimpleGrid
-            columns={3}
-            rows={1}
+            columns={isMobile ? 1 : 3}
+            rows={isMobile ? 3 : 1}
             gap="var(--general-space-16)"
             style={{ marginBottom: 'var(--general-space-16)' }}
           >

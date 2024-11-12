@@ -12,6 +12,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import { type SDKGlobalRebalancesType, type SDKVaultsListType } from '@summerfi/app-types'
 
+import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { RebalanceActivityTable } from '@/features/rebalance-activity/components/RebalanceActivityTable/RebalanceActivityTable'
 import {
   getRebalanceActivityHeadingCards,
@@ -43,7 +44,8 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
   const [tokenFilter, setTokenFilter] = useState<string[]>(searchParams?.tokens ?? [])
   const [protocolFilter, setProtocolFilter] = useState<string[]>(searchParams?.protocols ?? [])
   const currentUrl = useCurrentUrl()
-  const { isMobile } = useMobileCheck()
+  const { deviceType } = useDeviceType()
+  const { isMobile } = useMobileCheck(deviceType)
 
   const [current, setCurrent] = useState(initialRows)
 

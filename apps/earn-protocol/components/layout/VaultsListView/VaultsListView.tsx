@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import {
   DataBlock,
   SimpleGrid,
+  useMobileCheck,
   VaultCard,
   VaultGrid,
   VaultSimulationForm,
@@ -18,6 +19,7 @@ import { formatCryptoBalance, zero } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
 
 import { networkIconByNetworkName } from '@/constants/networkIcons'
+import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 
 type VaultsListViewProps = {
   vaultsList: SDKVaultsListType
@@ -35,6 +37,8 @@ const softRouterPush = (url: string) => {
 }
 
 export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewProps) => {
+  const { deviceType } = useDeviceType()
+  const { isMobile } = useMobileCheck(deviceType)
   const [localVaultNetwork, setLocalVaultNetwork] =
     useState<VaultsListViewProps['selectedNetwork']>(selectedNetwork)
 
@@ -113,7 +117,12 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
       selectedNetwork={selectedNetworkOption}
       onChangeNetwork={handleChangeNetwork}
       topContent={
-        <SimpleGrid columns={3} style={{ justifyItems: 'stretch' }} gap={170}>
+        <SimpleGrid
+          columns={isMobile ? 1 : 3}
+          rows={isMobile ? 3 : 1}
+          style={{ justifyItems: 'stretch' }}
+          gap={isMobile ? 16 : 170}
+        >
           <DataBlock
             title="Total Assets"
             // TODO: fill data
@@ -121,6 +130,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
             size="large"
             value={`$${formattedTotalAssets}`}
           />
+
           <DataBlock
             title="Total Liquidity"
             // TODO: fill data

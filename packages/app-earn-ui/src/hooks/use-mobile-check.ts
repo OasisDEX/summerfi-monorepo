@@ -1,6 +1,8 @@
 'use client'
 import { useLayoutEffect, useState } from 'react'
 
+import { DeviceType } from '@/helpers/get-device-type'
+
 interface ScreenInfo {
   isMobile: boolean
   width: number
@@ -10,6 +12,9 @@ interface ScreenInfo {
 /**
  * Custom hook to check if the screen size is mobile and to track screen width and height.
  * This hook includes support for SSR by initializing with default values.
+ *
+ * @param deviceType - deviceType derived from User-Agent on server side, it's rough estimation (some client plugins / ad-blocks etc.
+ * may limit or override amount of data exposed in User-Agent). In the best case scenario this allows to avoid flickering on UI.
  *
  * @returns An object containing:
  * - `isMobile`: A boolean indicating if the screen width is 768px or less.
@@ -25,10 +30,10 @@ interface ScreenInfo {
  * - Automatically removes the event listener when the component using this hook unmounts.
  * - Checks if `window` is defined before accessing properties, making it safe for SSR.
  */
-export const useMobileCheck = (): ScreenInfo => {
+export const useMobileCheck = (deviceType?: DeviceType): ScreenInfo => {
   // Initialize with default values that assume a non-mobile, zero-width/height screen
   const [screenInfo, setScreenInfo] = useState<ScreenInfo>({
-    isMobile: false,
+    isMobile: deviceType === DeviceType.MOBILE,
     width: 0,
     height: 0,
   })

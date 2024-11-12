@@ -18,6 +18,7 @@ import {
   type UsersActivity,
 } from '@summerfi/app-types'
 
+import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { TopDepositorsTable } from '@/features/user-activity/components/TopDepositorsTable/TopDepositorsTable'
 import { UserActivityTable } from '@/features/user-activity/components/UserActivityTable/UserActivityTable'
 import {
@@ -54,7 +55,8 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
   const [strategyFilter, setStrategyFilter] = useState<string[]>(searchParams?.strategies ?? [])
   const [tokenFilter, setTokenFilter] = useState<string[]>(searchParams?.tokens ?? [])
   const currentUrl = useCurrentUrl()
-  const { isMobile } = useMobileCheck()
+  const { deviceType } = useDeviceType()
+  const { isMobile } = useMobileCheck(deviceType)
 
   const [currentUserActivityIdx, setCurrentUserActivityIdx] = useState(initialRows)
   const [currentTopDepositorsIdx, setCurrentTopDepositorsIdx] = useState(initialRows)

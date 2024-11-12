@@ -3,6 +3,7 @@ import { type FC, type ReactNode, useMemo, useState } from 'react'
 import { Table, type TableSortedColumn, useMobileCheck } from '@summerfi/app-earn-ui'
 import { type SDKUsersActivityType } from '@summerfi/app-types'
 
+import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import {
   topDepositorsColumns,
   topDepositorsColumnsHiddenOnMobile,
@@ -26,7 +27,8 @@ export const TopDepositorsTable: FC<TopDepositorsTableProps> = ({
   rowsToDisplay,
 }) => {
   const [sortConfig, setSortConfig] = useState<TableSortedColumn<string>>()
-  const { isMobile } = useMobileCheck()
+  const { deviceType } = useDeviceType()
+  const { isMobile } = useMobileCheck(deviceType)
 
   const rows = useMemo(
     () => topDepositorsMapper(topDepositorsList, sortConfig),

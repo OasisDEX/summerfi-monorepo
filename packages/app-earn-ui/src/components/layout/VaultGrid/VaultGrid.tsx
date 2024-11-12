@@ -10,6 +10,7 @@ import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
 import { TitleWithSelect } from '@/components/molecules/TitleWithSelect/TitleWithSelect'
 
 import vaultGridStyles from './VaultGrid.module.scss'
+import vaultManageGridStyles from '@/components/layout/VaultManageGrid/VaultManageGrid.module.scss'
 
 type VaultGridProps = {
   topContent: ReactNode
@@ -29,7 +30,7 @@ export const VaultGrid = ({
   onChangeNetwork,
 }: VaultGridProps) => {
   return (
-    <>
+    <div className={vaultGridStyles.vaultGridWrapper}>
       <div className={vaultGridStyles.vaultGridHeaderWrapper}>
         <TitleWithSelect
           title="Earn"
@@ -50,6 +51,7 @@ export const VaultGrid = ({
           <div className={vaultGridStyles.rightBlock}>{rightContent}</div>
         </div>
       </div>
-    </>
+      <div className={vaultManageGridStyles.rightBlockMobile}>{rightContent}</div>
+    </div>
   )
 }

@@ -6,8 +6,14 @@ export type Styles = {
   drawer: string
   drawerContentDefault: string
   drawerContentSidebar: string
+  leftDefault: string
+  leftSidebar: string
   open: string
   overlay: string
+  rightDefault: string
+  rightSidebar: string
+  topDefault: string
+  topSidebar: string
 }
 
 export type ClassNames = keyof Styles

@@ -72,4 +72,4 @@ export const vaultExposureColumns = [
   },
 ]
 
-export const vaultExposureColumnsHiddenOnMobile = ['liquidity', 'type']
+export const vaultExposureColumnsHiddenOnMobile = ['liquidity', 'type', 'currentApy']
