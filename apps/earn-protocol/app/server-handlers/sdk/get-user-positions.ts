@@ -1,4 +1,4 @@
-import { sdkSupportedNetworks } from '@summerfi/app-types'
+import { sdkSupportedChains } from '@summerfi/app-types'
 import { type IArmadaPosition } from '@summerfi/sdk-client-react'
 import { Address, getChainInfoByChainId, User, Wallet } from '@summerfi/sdk-common'
 
@@ -7,7 +7,7 @@ import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 export async function getUserPositions({ walletAddress }: { walletAddress: string }) {
   try {
     const userPositionsAllNetworksCalls = await Promise.all(
-      sdkSupportedNetworks.map(async (chainId) => {
+      sdkSupportedChains.map(async (chainId) => {
         const chainInfo = getChainInfoByChainId(chainId)
 
         const wallet = Wallet.createFrom({

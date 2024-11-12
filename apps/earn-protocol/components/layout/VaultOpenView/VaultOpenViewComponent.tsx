@@ -32,6 +32,7 @@ import { UserActivity } from '@/features/user-activity/components/UserActivity/U
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 import { useAmount } from '@/hooks/use-amount'
 import { useClient } from '@/hooks/use-client'
+import { useForecast } from '@/hooks/use-forecast'
 import { usePosition } from '@/hooks/use-position'
 import { useRedirectToPosition } from '@/hooks/use-redirect-to-position'
 import { useTransaction } from '@/hooks/use-transaction'
@@ -65,6 +66,12 @@ export const VaultOpenViewComponent = ({
   const position = usePosition({
     chainId: vaultChainId,
     vaultId: vault.id,
+  })
+
+  const { forecast, isLoadingForecast } = useForecast({
+    fleetAddress: vault.id,
+    chainId: vaultChainId,
+    amount: amountParsed.toString(),
   })
 
   useRedirectToPosition({ vault, position })
@@ -151,7 +158,14 @@ export const VaultOpenViewComponent = ({
       vault={vault}
       vaults={vaults}
       displayGraph={displayGraph}
-      simulationGraph={<VaultSimulationGraph vault={vault} amount={amountParsed} />}
+      simulationGraph={
+        <VaultSimulationGraph
+          vault={vault}
+          forecast={forecast}
+          isLoadingForecast={isLoadingForecast}
+          amount={amountParsed}
+        />
+      }
       detailsContent={
         <div className={vaultOpenViewStyles.leftContentWrapper}>
           <VaultOpenHeaderBlock detailsLinks={detailsLinks} vault={vault} />
