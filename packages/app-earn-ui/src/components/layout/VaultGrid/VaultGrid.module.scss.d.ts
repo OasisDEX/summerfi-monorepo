@@ -5,6 +5,7 @@ export type Styles = {
   rightBlockWrapper: string
   vaultGridHeaderWrapper: string
   vaultGridPositionWrapper: string
+  vaultGridWrapper: string
 }
 
 export type ClassNames = keyof Styles

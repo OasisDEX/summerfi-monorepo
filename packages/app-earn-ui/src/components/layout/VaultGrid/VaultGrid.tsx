@@ -29,7 +29,7 @@ export const VaultGrid = ({
   onChangeNetwork,
 }: VaultGridProps) => {
   return (
-    <>
+    <div className={vaultGridStyles.vaultGridWrapper}>
       <div className={vaultGridStyles.vaultGridHeaderWrapper}>
         <TitleWithSelect
           title="Earn"
@@ -50,6 +50,6 @@ export const VaultGrid = ({
           <div className={vaultGridStyles.rightBlock}>{rightContent}</div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
