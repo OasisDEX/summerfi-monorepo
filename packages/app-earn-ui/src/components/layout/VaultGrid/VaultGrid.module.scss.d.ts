@@ -2,6 +2,7 @@ export type Styles = {
   fullWidthBlock: string
   leftBlock: string
   rightBlock: string
+  rightBlockMobile: string
   rightBlockWrapper: string
   vaultGridHeaderWrapper: string
   vaultGridPositionWrapper: string

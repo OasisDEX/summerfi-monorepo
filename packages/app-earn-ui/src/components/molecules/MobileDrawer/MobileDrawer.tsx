@@ -13,7 +13,7 @@ export const MobileDrawerDefaultWrapper: FC<MobileDrawerDefaultWrapperProps> = (
   return (
     <Card
       style={{
-        backgroundColor: 'var(--earn-protocol-neutral-90)',
+        backgroundColor: 'var(--earn-protocol-neutral-85)',
         borderTopLeftRadius: 'var(--radius-large)',
         borderTopRightRadius: 'var(--radius-large)',
         borderBottomLeftRadius: 0,

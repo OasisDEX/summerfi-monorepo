@@ -42,10 +42,23 @@
 
   .rightBlockWrapper {
     height: 100%;
+    display: none;
 
     .rightBlock {
       position: sticky;
       top: var(--general-space-16);
     }
+
+    @media screen and (min-width: 900px) {
+      display: block;
+    }
+  }
+}
+
+.rightBlockMobile {
+  position: absolute;
+  display: block;
+  @media screen and (min-width: 900px) {
+    display: none;
   }
 }
