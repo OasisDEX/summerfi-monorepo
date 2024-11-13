@@ -8,7 +8,7 @@ import {
   MobileDrawer,
   MobileDrawerDefaultWrapper,
 } from '@/components/molecules/MobileDrawer/MobileDrawer'
-import { useMobileCheck } from '@/hooks/use-mobile-check.ts'
+import { useMobileCheck } from '@/hooks/use-mobile-check'
 
 import dropdownStyles from '@/components/molecules/Dropdown/Dropdown.module.scss'
 

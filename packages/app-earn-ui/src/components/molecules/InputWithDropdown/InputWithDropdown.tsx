@@ -1,9 +1,9 @@
 import { type ChangeEventHandler, type FC, type ReactNode } from 'react'
 import { type DropdownOption } from '@summerfi/app-types'
 
-import { Icon } from '@/components/atoms/Icon/Icon.tsx'
+import { Icon } from '@/components/atoms/Icon/Icon'
 import { Input } from '@/components/atoms/Input/Input'
-import { Text } from '@/components/atoms/Text/Text.tsx'
+import { Text } from '@/components/atoms/Text/Text'
 import { Dropdown } from '@/components/molecules/Dropdown/Dropdown'
 
 import classNames from '@/components/molecules/InputWithDropdown/InputWithDropdown.module.scss'

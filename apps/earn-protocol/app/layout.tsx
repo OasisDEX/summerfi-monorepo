@@ -1,5 +1,6 @@
 import { cookieToInitialState } from '@account-kit/core'
-import { type DeviceType, GlobalStyles } from '@summerfi/app-earn-ui'
+import { GlobalStyles } from '@summerfi/app-earn-ui'
+import { type DeviceType } from '@summerfi/app-types'
 import type { Metadata } from 'next'
 import { headers } from 'next/headers'
 import { NextIntlClientProvider } from 'next-intl'

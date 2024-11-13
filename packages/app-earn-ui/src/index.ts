@@ -90,4 +90,3 @@ export { getVaultUrl, getVaultDetailsUrl, getVaultPositionUrl } from './helpers/
 export { getTwitterShareUrl } from './helpers/get-twitter-share-url'
 export { getScannerUrl } from './helpers/get-scanner-url'
 export { getMedian } from './helpers/get-median'
-export { getDeviceType, type DeviceType } from './helpers/get-device-type'

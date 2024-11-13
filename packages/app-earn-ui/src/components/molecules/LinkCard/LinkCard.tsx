@@ -2,10 +2,10 @@ import { type CSSProperties, type FC, type ReactNode } from 'react'
 import { type IconNamesList } from '@summerfi/app-types'
 import Link from 'next/link'
 
-import { Card, type CardVariant } from '@/components/atoms/Card/Card.tsx'
-import { Icon } from '@/components/atoms/Icon/Icon.tsx'
-import { Text } from '@/components/atoms/Text/Text.tsx'
-import { WithArrow } from '@/components/atoms/WithArrow/WithArrow.tsx'
+import { Card, type CardVariant } from '@/components/atoms/Card/Card'
+import { Icon } from '@/components/atoms/Icon/Icon'
+import { Text } from '@/components/atoms/Text/Text'
+import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
 
 import classNames from './LinkCard.module.scss'
 

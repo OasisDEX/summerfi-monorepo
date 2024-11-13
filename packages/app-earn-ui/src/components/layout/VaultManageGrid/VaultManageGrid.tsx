@@ -13,9 +13,9 @@ import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
 import { DataBlock } from '@/components/molecules/DataBlock/DataBlock'
 import { Dropdown } from '@/components/molecules/Dropdown/Dropdown'
 import { SimpleGrid } from '@/components/molecules/Grid/SimpleGrid'
-import { VaultTitleDropdownContent } from '@/components/molecules/VaultTitleDropdownContent/VaultTitleDropdownContent.tsx'
+import { VaultTitleDropdownContent } from '@/components/molecules/VaultTitleDropdownContent/VaultTitleDropdownContent'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
-import { getVaultUrl } from '@/helpers/get-vault-url.ts'
+import { getVaultUrl } from '@/helpers/get-vault-url'
 
 import vaultManageGridStyles from './VaultManageGrid.module.scss'
 

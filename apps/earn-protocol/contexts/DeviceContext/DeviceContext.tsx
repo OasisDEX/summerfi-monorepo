@@ -1,6 +1,6 @@
 'use client'
 import { createContext, type FC, type ReactNode, useContext } from 'react'
-import { type DeviceType } from '@summerfi/app-earn-ui'
+import { DeviceType } from '@summerfi/app-types'
 
 const DeviceContext = createContext<DeviceType | null>(null)
 
@@ -14,7 +14,7 @@ export const DeviceProvider: FC<{ value: DeviceType; children: ReactNode }> = ({
 export const useDeviceType = () => {
   const deviceType = useContext(DeviceContext)
 
-  if (!deviceType) throw new Error('useDeviceType must be used within a DeviceProvider')
-
-  return { deviceType }
+  // A default initial value needed for SSR render, since rendering
+  // doesn't wait for all async calls to resolve
+  return { deviceType: deviceType ?? DeviceType.DESKTOP }
 }

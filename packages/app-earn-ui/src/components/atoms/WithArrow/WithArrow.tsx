@@ -1,7 +1,7 @@
 import { type CSSProperties, type PropsWithChildren } from 'react'
 import clsx from 'clsx'
 
-import { Icon } from '@/components/atoms/Icon/Icon.tsx'
+import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text, type TextAllowedHtmlTags } from '@/components/atoms/Text/Text'
 
 import { type ClassNames as TextClassNames } from '@/components/atoms/Text/Text.module.scss'
