@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { fetchLeaderboard } from '@/server-handlers/leaderboard'
 
 // this route is always dynamic, but the underlying
-// fetchLeaderboard call is cached, so we're good
+// fetchLeaderboard call is cached, so we're good.
 export const revalidate = 0
 
 export async function GET(req: NextRequest) {
