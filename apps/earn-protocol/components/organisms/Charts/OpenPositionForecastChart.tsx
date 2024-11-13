@@ -3,7 +3,7 @@ import { type CardVariant } from '@summerfi/app-earn-ui/dist/types/src/component
 import { type ForecastDataPoint, type TimeframesType } from '@summerfi/app-types'
 
 import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
-import { ForecastChart } from '@/components/organisms/Charts/DumbCharts/Forecast'
+import { ForecastChart } from '@/components/organisms/Charts/components/Forecast'
 
 export const OpenPositionForecastChart = ({
   timeframe,

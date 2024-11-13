@@ -1,75 +1,25 @@
-import { Fragment } from 'react'
-import { Box, LoadingSpinner, Text } from '@summerfi/app-earn-ui'
+import { LoadingSpinner } from '@summerfi/app-earn-ui'
 import { type ForecastDataPoint } from '@summerfi/app-types'
-import { formatCryptoBalance } from '@summerfi/app-utils'
 import {
   Area,
   ComposedChart,
   Customized,
-  DefaultLegendContent,
   Legend,
-  type LegendProps,
   Line,
   ResponsiveContainer,
   Tooltip,
-  type TooltipProps,
   XAxis,
   YAxis,
 } from 'recharts'
-import {
-  type NameType as TooltipNameType,
-  type ValueType as TooltipValueType,
-} from 'recharts/types/component/DefaultTooltipContent'
 
-import { ChartCross } from '@/components/organisms/Charts/DumbCharts/ChartCross'
+import { ChartCross } from '@/components/organisms/Charts/components/ChartCross'
+import { ForecastLegend } from '@/components/organisms/Charts/components/ForecastLegend'
+import { ForecastTooltip } from '@/components/organisms/Charts/components/ForecastTooltip'
 import { formatChartCryptoValue, formatChartDate } from '@/features/forecast/chart-formatters'
 
 type ForecastChartProps = {
   data: ForecastDataPoint
   isLoading?: boolean
-}
-
-const ForecastTooltip = ({
-  active,
-  payload,
-  label,
-}: TooltipProps<TooltipValueType, TooltipNameType>) => {
-  return active ? (
-    <Box style={{ display: 'flex', flexDirection: 'column' }}>
-      <Text variant="p3">{label}</Text>
-      {payload?.map((entry, index) => (
-        <Fragment key={`item-${index}`}>
-          {Array.isArray(entry.value) ? (
-            <>
-              <Text as="p" variant="p3">
-                Lower Bound: {formatCryptoBalance(entry.value[0])}
-              </Text>
-              <Text as="p" variant="p3">
-                Upper Bound: {formatCryptoBalance(entry.value[1])}
-              </Text>
-            </>
-          ) : (
-            <Text as="p" variant="p3">
-              Forecast: {formatCryptoBalance(entry.value as string | number)}
-            </Text>
-          )}
-        </Fragment>
-      ))}
-    </Box>
-  ) : null
-}
-
-const ForecastLegend = ({ payload, ref: _ref, ...rest }: LegendProps) => {
-  const nextPayload = payload
-    ?.filter((entry) => entry.dataKey !== 'bounds')
-    .map((entry) => ({
-      ...entry,
-      color: 'white',
-      legendIcon: <circle cx="10" cy="10" r="10" fill="#FF80BF" />,
-      value: entry.value === 'forecast' ? 'Forecast Market Value' : entry.value,
-    }))
-
-  return <DefaultLegendContent payload={nextPayload} {...rest} />
 }
 
 export const ForecastChart = ({ data, isLoading }: ForecastChartProps) => {
@@ -100,15 +50,10 @@ export const ForecastChart = ({ data, isLoading }: ForecastChartProps) => {
           />
           <Tooltip
             content={<ForecastTooltip />}
-            useTranslate3d
             cursor={false}
-            contentStyle={{
-              zIndex: 1000,
-              backgroundColor: 'var(--color-surface-subtler)',
-              borderRadius: '5px',
-              padding: '20px 30px',
-              border: 'none',
-            }}
+            offset={20}
+            allowEscapeViewBox={{ y: true }}
+            wrapperStyle={{ top: '-80%', opacity: isLoading ? 0 : 1 }}
           />
           <Area
             type="monotone"
@@ -139,6 +84,7 @@ export const ForecastChart = ({ data, isLoading }: ForecastChartProps) => {
             iconSize={14}
             align="center"
             layout="horizontal"
+            wrapperStyle={{ bottom: '-10px' }}
           />
           <Customized component={<ChartCross />} />
         </ComposedChart>
