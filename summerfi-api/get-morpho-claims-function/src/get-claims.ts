@@ -91,6 +91,7 @@ export const getClaims = async ({
     const claimsAggregated: MorphoAggregatedClaims[] = aggregateClaimsByToken(
       userRewardsResponse.data
         .map((item) => {
+          // old weird morpho token that we don't support
           if (item.asset.address.toLowerCase() === '0x039b598c6b99e70058e1e9021e000bdacd33d026') {
             return null
           }
