@@ -90,7 +90,7 @@ export const VaultSimulationGraph = ({
         variant="p1semi"
         style={{
           marginTop: 'var(--general-space-8)',
-          marginBottom: 'var(--general-space-8)',
+          marginBottom: 'var(--general-space-4)',
           color: 'var(--color-text-primary-disabled)',
         }}
       >
@@ -100,7 +100,7 @@ export const VaultSimulationGraph = ({
         variant="h2"
         style={{
           color: 'var(--color-text-primary)',
-          marginBottom: 'var(--general-space-8)',
+          marginBottom: 'var(--general-space-4)',
         }}
       >
         {maxEarnInTimeframeUSD ? (
@@ -113,6 +113,7 @@ export const VaultSimulationGraph = ({
         variant="p2semi"
         style={{
           color: 'var(--color-text-secondary)',
+          marginBottom: 'var(--general-space-8)',
         }}
       >
         {maxEarnInTimeframeToken ? (
