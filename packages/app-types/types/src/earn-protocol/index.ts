@@ -23,7 +23,10 @@ export type SDKUserActivityType = SDKUsersActivityType[0]
 // -ish because it can be a detailed vault or a vault from list (less details), use with that in mind
 export type SDKVaultishType = SDKVaultType | SDKVaultsListType[number]
 
-export const sdkSupportedNetworks = [ChainId.ARBITRUM, ChainId.BASE] as const
+export const sdkSupportedChains = [ChainId.ARBITRUM, ChainId.BASE] as const
+
+export const isSupportedSDKChain = (chainId: unknown): chainId is ChainId.ARBITRUM | ChainId.BASE =>
+  typeof chainId === 'number' && sdkSupportedChains.includes(chainId)
 
 export type SDKSupportedNetworkType = ChainId.ARBITRUM | ChainId.BASE
 export enum SDKSupportedNetworkIdsEnum {
@@ -61,3 +64,37 @@ export interface UserActivity {
 }
 
 export type UsersActivity = UserActivity[]
+
+export type PositionForecastAPIResponse = {
+  metadata: {
+    fleet_commander_address: string
+    initial_position_size: number
+    chain_id: ChainId
+    chain_name: string
+    forecast_generated_at: string
+    forecast_period: string
+  }
+  forecast: {
+    timestamps: string[]
+    series: {
+      name: 'forecast' | 'upper_bound' | 'lower_bound'
+      data: number[]
+    }[]
+  }
+}
+
+export type ForecastDataPoints = {
+  timestamp: string
+  forecast: number
+  bounds: [number, number]
+}[]
+
+export type ForecastData = {
+  generatedAt: string
+  amount: number
+  dataPoints: {
+    daily: ForecastDataPoints
+    weekly: ForecastDataPoints
+    monthly: ForecastDataPoints
+  }
+}

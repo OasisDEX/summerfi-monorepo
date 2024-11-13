@@ -61,6 +61,7 @@ export const Icon: FC<IconPropsWithIconName | IconPropsWithTokenName> = ({
     <div style={{ color: colorSet, display: 'inline-block', ...style }}>
       <SvgIcon
         className={className}
+        title={iconName}
         style={{
           display: 'block',
           ...style,

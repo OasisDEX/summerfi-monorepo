@@ -1,4 +1,4 @@
-import { sdkSupportedNetworks } from '@summerfi/app-types'
+import { sdkSupportedChains } from '@summerfi/app-types'
 import { simpleSort, SortDirection } from '@summerfi/app-utils'
 import { getChainInfoByChainId } from '@summerfi/sdk-common'
 
@@ -6,7 +6,7 @@ import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 
 export async function getGlobalRebalances() {
   const rebalancesByNetwork = await Promise.all(
-    sdkSupportedNetworks.map((networkId) => {
+    sdkSupportedChains.map((networkId) => {
       const chainInfo = getChainInfoByChainId(networkId)
 
       return backendSDK.armada.users.getGlobalRebalancesRaw({

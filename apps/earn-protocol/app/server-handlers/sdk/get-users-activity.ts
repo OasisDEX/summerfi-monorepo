@@ -1,5 +1,5 @@
 import {
-  sdkSupportedNetworks,
+  sdkSupportedChains,
   type SDKUsersActivityType,
   UserActivityType,
   type UsersActivity,
@@ -16,7 +16,7 @@ export async function getUsersActivity(): Promise<{
   callDataTimestamp: number
 }> {
   const usersActivityByNetwork = await Promise.all(
-    sdkSupportedNetworks.map((networkId) => {
+    sdkSupportedChains.map((networkId) => {
       const chainInfo = getChainInfoByChainId(networkId)
 
       return backendSDK.armada.users.getUsersActivityRaw({

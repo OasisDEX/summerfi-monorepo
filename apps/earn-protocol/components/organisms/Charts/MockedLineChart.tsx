@@ -7,7 +7,7 @@ import { type TimeframesType } from '@summerfi/app-types'
 import { memoize, random } from 'lodash-es'
 
 import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
-import { ComparisonChart } from '@/components/organisms/Charts/DumbCharts/ComparisonChart'
+import { ComparisonChart } from '@/components/organisms/Charts/components/Comparison'
 
 const dataNames = [
   'Median Defi Yield',

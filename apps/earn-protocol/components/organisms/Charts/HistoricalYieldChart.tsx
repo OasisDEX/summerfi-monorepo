@@ -5,7 +5,7 @@ import { type TimeframesType } from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
 
-import { YieldsChart } from '@/components/organisms/Charts/DumbCharts/YieldsChart'
+import { YieldsChart } from '@/components/organisms/Charts/components/Yields'
 
 const dataNames = ['Summer Strategy']
 

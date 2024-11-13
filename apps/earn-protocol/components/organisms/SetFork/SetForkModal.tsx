@@ -2,7 +2,7 @@
 
 import { type Dispatch, type FormEvent, type SetStateAction, useState } from 'react'
 import { Button, Input, SkeletonLine, Text } from '@summerfi/app-earn-ui'
-import { sdkSupportedNetworks } from '@summerfi/app-types'
+import { sdkSupportedChains } from '@summerfi/app-types'
 import { isValidUrl } from '@summerfi/app-utils'
 import { type ChainId } from '@summerfi/sdk-common'
 import {
@@ -139,7 +139,7 @@ const SetForkModalContent = () => {
           🍴 Setup forks
         </Text>
         <div style={{ marginTop: '20px' }}>
-          {sdkSupportedNetworks.map((chainId) => (
+          {sdkSupportedChains.map((chainId) => (
             <div key={`Skeleton_${chainId}`} style={{ marginTop: '10px' }}>
               <SkeletonLine height={35} width="100%" />
             </div>
@@ -159,7 +159,7 @@ const SetForkModalContent = () => {
         🍴 Setup forks
       </Text>
       <div style={{ overflow: 'auto', marginTop: '20px' }}>
-        {sdkSupportedNetworks.map((chainId) => {
+        {sdkSupportedChains.map((chainId) => {
           const network = networksById[chainId]
 
           return (
