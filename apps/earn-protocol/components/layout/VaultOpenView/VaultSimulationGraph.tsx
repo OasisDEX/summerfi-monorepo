@@ -123,6 +123,7 @@ export const VaultSimulationGraph = ({
         )}
       </Text>
       <OpenPositionForecastChart
+        tokenPrice={tokenPrice}
         timeframe={timeframe}
         setTimeframe={setTimeframe}
         parsedData={parsedData}

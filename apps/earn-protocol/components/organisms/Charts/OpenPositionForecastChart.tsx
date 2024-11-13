@@ -11,12 +11,14 @@ export const OpenPositionForecastChart = ({
   cardVariant = 'cardSecondary',
   parsedData,
   isLoadingForecast,
+  tokenPrice,
 }: {
   timeframe: TimeframesType
   setTimeframe: (timeframe: TimeframesType) => void
   cardVariant?: CardVariant
   parsedData: ForecastDataPoints
   isLoadingForecast?: boolean
+  tokenPrice?: string | null
 }) => {
   return (
     <Card
@@ -32,7 +34,7 @@ export const OpenPositionForecastChart = ({
         timeframe={timeframe}
         setTimeframe={(nextTimeFrame) => setTimeframe(nextTimeFrame as TimeframesType)}
       />
-      <ForecastChart isLoading={isLoadingForecast} data={parsedData} />
+      <ForecastChart tokenPrice={tokenPrice} isLoading={isLoadingForecast} data={parsedData} />
     </Card>
   )
 }

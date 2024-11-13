@@ -16,12 +16,19 @@ export const ForecastTooltip = ({
   active,
   payload,
   label,
-}: TooltipProps<number | [number, number], 'bounds' | 'forecast'>) => {
+  tokenPrice,
+}: TooltipProps<number | [number, number], 'bounds' | 'forecast'> & {
+  tokenPrice?: string | null
+}) => {
   const parsedPayload = payload?.reduce(
     (acc, { name: valueName, value }) => {
       return {
         ...acc,
-        [valueName as string]: value,
+        [valueName as string]: Array.isArray(value)
+          ? value.map((val) => val * Number(tokenPrice ?? 0))
+          : value
+            ? value * Number(tokenPrice ?? 0)
+            : 0,
       }
     },
     {} as { bounds?: [number, number]; forecast?: number },

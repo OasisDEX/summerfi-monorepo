@@ -20,9 +20,10 @@ import { formatChartCryptoValue, formatChartDate } from '@/features/forecast/cha
 type ForecastChartProps = {
   data: ForecastDataPoints
   isLoading?: boolean
+  tokenPrice?: string | null
 }
 
-export const ForecastChart = ({ data, isLoading }: ForecastChartProps) => {
+export const ForecastChart = ({ data, isLoading, tokenPrice }: ForecastChartProps) => {
   return (
     <div style={{ width: '100%', height: '400px', position: 'relative' }}>
       <ResponsiveContainer width="100%" height="90%">
@@ -49,7 +50,7 @@ export const ForecastChart = ({ data, isLoading }: ForecastChartProps) => {
             }}
           />
           <Tooltip
-            content={<ForecastTooltip />}
+            content={<ForecastTooltip tokenPrice={tokenPrice} />}
             cursor={false}
             offset={20}
             allowEscapeViewBox={{ y: true }}
