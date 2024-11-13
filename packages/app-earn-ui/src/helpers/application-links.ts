@@ -1,4 +1,8 @@
 export const INTERNAL_LINKS = {
+  // earn protocol dedicated links
+  summerPro: 'https://summer.fi',
+
+  // old links from borrow
   appUrl: 'https://summer.fi',
   homepage: '/',
   /**

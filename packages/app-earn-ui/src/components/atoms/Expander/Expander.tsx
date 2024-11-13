@@ -1,5 +1,5 @@
 'use client'
-import { type FC, type ReactNode, useCallback, useState } from 'react'
+import { type CSSProperties, type FC, type ReactNode, useCallback, useState } from 'react'
 
 import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
 import { Icon } from '@/components/atoms/Icon/Icon'
@@ -10,9 +10,15 @@ interface ExpanderProps {
   title: ReactNode
   defaultExpanded?: boolean
   children: ReactNode
+  expanderButtonStyles?: CSSProperties
 }
 
-export const Expander: FC<ExpanderProps> = ({ title, defaultExpanded = false, children }) => {
+export const Expander: FC<ExpanderProps> = ({
+  title,
+  defaultExpanded = false,
+  children,
+  expanderButtonStyles = {},
+}) => {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded)
 
   const toggleExpand = useCallback(() => {
@@ -21,15 +27,15 @@ export const Expander: FC<ExpanderProps> = ({ title, defaultExpanded = false, ch
 
   return (
     <div className={styles.expander}>
-      <button className={styles.expanderButton} onClick={toggleExpand}>
+      <button className={styles.expanderButton} onClick={toggleExpand} style={expanderButtonStyles}>
         {title}
-        <span className={styles.chevron}>
+        <div className={styles.chevron}>
           <Icon
             iconName={isExpanded ? 'chevron_up' : 'chevron_down'}
             variant="xs"
             color="rgba(119, 117, 118, 1)"
           />
-        </span>
+        </div>
       </button>
       <AnimateHeight id={`Expander_${typeof title === 'string' ? title : ''}`} show={isExpanded}>
         {children}

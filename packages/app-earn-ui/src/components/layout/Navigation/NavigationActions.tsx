@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Button } from '@/components/atoms/Button/Button'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
+import { INTERNAL_LINKS } from '@/helpers/application-links.ts'
 
 import navigationActionsStyles from '@/components/layout/Navigation/NavigationActions.module.scss'
 
@@ -21,7 +22,7 @@ export const NavigationActions = ({
   return (
     <div>
       <div className={navigationActionsStyles.navigationActionsWrapper}>
-        <Link href="/">
+        <Link href={INTERNAL_LINKS.summerPro}>
           <Text as="p" variant="p3semi" className={clsx(navigationActionsStyles.summerProButton)}>
             Summer.fi Pro
           </Text>
@@ -33,9 +34,10 @@ export const NavigationActions = ({
         <Button
           variant="secondarySmall"
           onClick={toggleMobileMenu}
-          style={{ padding: '10px', width: '45px', height: '45px' }}
+          className={navigationActionsStyles.gradientOuterCircle}
         >
-          <Icon iconName="menu" size={24} color="rgb(255 73 164)" />
+          <div className={navigationActionsStyles.gradientInnerCircle} />
+          <Icon iconName="menu" size={24} color="var(--earn-protocol-secondary-70)" />
         </Button>
       </div>
     </div>

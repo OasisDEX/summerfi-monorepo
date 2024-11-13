@@ -1,7 +1,9 @@
 export type Styles = {
   activeLink: string
-  closeIcon: string
+  gradientInnerCircle: string
+  gradientOuterCircle: string
   linksList: string
+  linksListWrapper: string
   logoSmall: string
   topBar: string
 }
