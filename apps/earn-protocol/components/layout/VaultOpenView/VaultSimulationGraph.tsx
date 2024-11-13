@@ -30,13 +30,13 @@ export const VaultSimulationGraph = ({
       return
     }
     setAmountCached(amount)
-  }, [amount, amountCached])
+  }, [amount])
 
   const parsedData = useMemo(() => {
-    if (!forecast) {
+    if (!forecast && isLoadingForecast) {
       return []
     }
-    if (!forecast && isLoadingForecast) {
+    if (!forecast) {
       return []
     }
     if (['1y', '3y'].includes(timeframe)) {
@@ -61,7 +61,7 @@ export const VaultSimulationGraph = ({
   }, [forecast, timeframe, isLoadingForecast])
 
   const maxEarnInTimeframeToken = useMemo(() => {
-    if (!parsedData || !amountCached || isLoadingForecast) {
+    if (!parsedData.length || !amountCached || isLoadingForecast) {
       return undefined
     }
 

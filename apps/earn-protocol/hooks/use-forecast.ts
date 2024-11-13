@@ -18,17 +18,29 @@ export const useForecast = ({ fleetAddress, chainId, amount }: UseForecastProps)
     setIsLoadingForecast(true)
 
     const fetchForecast = debounce(() => {
-      fetch(`/api/forecast/${fleetAddress}/${chainId}/${amount}`)
+      const controller = new AbortController()
+
+      fetch(`/api/forecast/${fleetAddress}/${chainId}/${amount}`, {
+        signal: controller.signal,
+      })
         .then((res) => res.json())
         .then((data: ForecastData) => {
           setForecast(data)
           setIsLoadingForecast(false)
         })
         .catch((error) => {
+          if (error.name === 'AbortError') {
+            return // Ignore abort errors
+          }
           // eslint-disable-next-line no-console
-          console.error('Failed to fetch forecast', error)
+          console.error(
+            'Failed to fetch forecast:',
+            error instanceof Error ? error.message : 'Unknown error',
+          )
           setIsLoadingForecast(false)
         })
+
+      return () => controller.abort()
     }, 300)
 
     fetchForecast()
