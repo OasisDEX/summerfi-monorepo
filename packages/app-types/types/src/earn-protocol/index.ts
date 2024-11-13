@@ -91,6 +91,7 @@ export type ForecastDataPoint = {
 
 export type ForecastData = {
   generatedAt: string
+  amount: number
   dataPoints: {
     daily: ForecastDataPoint
     weekly: ForecastDataPoint

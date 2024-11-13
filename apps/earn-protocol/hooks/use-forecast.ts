@@ -7,17 +7,27 @@ type UseForecastProps = {
   fleetAddress: string
   chainId: SDKChainId
   amount: string
+  preloadedForecast?: ForecastData
 }
 
-export const useForecast = ({ fleetAddress, chainId, amount }: UseForecastProps) => {
-  const [isLoadingForecast, setIsLoadingForecast] = useState(true)
-  const [forecast, setForecast] = useState<ForecastData>()
+export const useForecast = ({
+  fleetAddress,
+  chainId,
+  amount,
+  preloadedForecast,
+}: UseForecastProps) => {
+  const [isLoadingForecast, setIsLoadingForecast] = useState(false)
+  const [forecast, setForecast] = useState<ForecastData | undefined>(preloadedForecast)
 
   useEffect(() => {
-    if (new BigNumber(amount).isZero()) return () => {}
-    setIsLoadingForecast(true)
-
     const fetchForecast = debounce(() => {
+      if (
+        new BigNumber(amount).isZero() || // Don't fetch forecast for zero amounts
+        (forecast && new BigNumber(amount).eq(forecast.amount)) // Don't refetch if the amount hasn't changed (including preloaded)
+      ) {
+        return () => {}
+      }
+      setIsLoadingForecast(true)
       const controller = new AbortController()
 
       fetch(`/api/forecast/${fleetAddress}/${chainId}/${amount}`, {
@@ -48,7 +58,7 @@ export const useForecast = ({ fleetAddress, chainId, amount }: UseForecastProps)
     return () => {
       fetchForecast.cancel()
     }
-  }, [fleetAddress, chainId, amount])
+  }, [fleetAddress, chainId, amount, forecast])
 
   return { forecast, isLoadingForecast }
 }

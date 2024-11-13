@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 
-import loaderStyles from '@/components/molecules/Loader/Loader.module.scss'
+import loadingSpinnerStyles from '@/components/molecules/LoadingSpinner/LoadingSpinner.module.scss'
 
 const DEFAULT_SIZE = 24
 
@@ -10,6 +10,7 @@ export const LoadingSpinner = ({
   fast = false,
   color = 'var(--color-text-primary)',
   style,
+  appear,
 }: {
   className?: string
   size?: number
@@ -17,6 +18,7 @@ export const LoadingSpinner = ({
   /** @default var(--color-text-primary) */
   color?: string
   style?: React.CSSProperties
+  appear?: boolean
 }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -30,8 +32,11 @@ export const LoadingSpinner = ({
     strokeLinecap="round"
     strokeLinejoin="round"
     style={style}
-    className={clsx(loaderStyles.animateSpin, className, {
-      [loaderStyles.animateSpinFast]: fast,
+    className={clsx(className, {
+      [loadingSpinnerStyles.animateSpinFastAppear]: fast && appear,
+      [loadingSpinnerStyles.animateSpinAppear]: !fast && appear,
+      [loadingSpinnerStyles.animateSpinFast]: fast,
+      [loadingSpinnerStyles.animateSpin]: !fast,
     })}
   >
     <path d="M21 12a9 9 0 1 1-6.219-8.56" />

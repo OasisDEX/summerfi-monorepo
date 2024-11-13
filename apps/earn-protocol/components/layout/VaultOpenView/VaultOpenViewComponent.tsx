@@ -12,6 +12,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import {
   type DropdownOption,
+  type ForecastData,
   type SDKUsersActivityType,
   type SDKVaultsListType,
   type SDKVaultType,
@@ -39,17 +40,21 @@ import { useTransaction } from '@/hooks/use-transaction'
 
 import vaultOpenViewStyles from './VaultOpenView.module.scss'
 
+type VaultOpenViewComponentProps = {
+  vault: SDKVaultType
+  vaults: SDKVaultsListType
+  userActivity: UsersActivity
+  topDepositors: SDKUsersActivityType
+  preloadedForecast?: ForecastData
+}
+
 export const VaultOpenViewComponent = ({
   vault,
   vaults,
   userActivity,
   topDepositors,
-}: {
-  vault: SDKVaultType
-  vaults: SDKVaultsListType
-  userActivity: UsersActivity
-  topDepositors: SDKUsersActivityType
-}) => {
+  preloadedForecast,
+}: VaultOpenViewComponentProps) => {
   const { publicClient, transactionClient, tokenBalance, tokenBalanceLoading } = useClient({
     vault,
   })
@@ -72,6 +77,7 @@ export const VaultOpenViewComponent = ({
     fleetAddress: vault.id,
     chainId: vaultChainId,
     amount: amountParsed.toString(),
+    preloadedForecast,
   })
 
   useRedirectToPosition({ vault, position })

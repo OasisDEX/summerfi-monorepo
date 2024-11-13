@@ -9,7 +9,7 @@ import { Button } from '@/components/atoms/Button/Button'
 import { Card } from '@/components/atoms/Card/Card'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
-import { LoadingSpinner } from '@/components/molecules/Loader/Loader'
+import { LoadingSpinner } from '@/components/molecules/LoadingSpinner/LoadingSpinner'
 import { MobileDrawer } from '@/components/molecules/MobileDrawer/MobileDrawer'
 
 import sidebarClassNames from '@/components/organisms/Sidebar/Sidebar.module.scss'

@@ -5,6 +5,7 @@ import { formatCryptoBalance } from '@summerfi/app-utils'
 import {
   Area,
   ComposedChart,
+  Customized,
   DefaultLegendContent,
   Legend,
   type LegendProps,
@@ -19,6 +20,9 @@ import {
   type NameType as TooltipNameType,
   type ValueType as TooltipValueType,
 } from 'recharts/types/component/DefaultTooltipContent'
+
+import { ChartCross } from '@/components/organisms/Charts/DumbCharts/ChartCross'
+import { formatChartCryptoValue, formatChartDate } from '@/features/forecast/chart-formatters'
 
 type ForecastChartProps = {
   data: ForecastDataPoint
@@ -72,26 +76,23 @@ export const ForecastChart = ({ data, isLoading }: ForecastChartProps) => {
   return (
     <div style={{ width: '100%', height: '400px', position: 'relative' }}>
       <ResponsiveContainer width="100%" height="90%">
-        <ComposedChart
-          data={data}
-          style={{ opacity: isLoading ? 0.5 : 1 }}
-          margin={{
-            top: 50,
-            right: 0,
-            left: 0,
-            bottom: -30,
-          }}
-        >
+        <ComposedChart data={data} style={{ opacity: isLoading ? 0.5 : 1 }}>
           <XAxis
             dataKey="timestamp"
             fontSize={12}
-            interval={Math.floor(data.length / 5)}
-            tickMargin={20}
+            tickFormatter={formatChartDate}
+            interval={Math.ceil(data.length / 6)}
+            tickLine={false}
+            axisLine={false}
           />
           <YAxis
             strokeWidth={0}
             width={70}
-            tickFormatter={formatCryptoBalance}
+            interval="preserveStartEnd"
+            scale="linear"
+            tickFormatter={formatChartCryptoValue}
+            startOffset={20}
+            domain={['dataMin', 'dataMax']}
             padding={{
               top: 20,
               bottom: 20,
@@ -100,6 +101,7 @@ export const ForecastChart = ({ data, isLoading }: ForecastChartProps) => {
           <Tooltip
             content={<ForecastTooltip />}
             useTranslate3d
+            cursor={false}
             contentStyle={{
               zIndex: 1000,
               backgroundColor: 'var(--color-surface-subtler)',
@@ -126,6 +128,7 @@ export const ForecastChart = ({ data, isLoading }: ForecastChartProps) => {
             type="natural"
             dataKey="forecast"
             stroke="#FF80BF"
+            activeDot={false}
             connectNulls
             animationDuration={400}
             animateNewValues
@@ -136,22 +139,20 @@ export const ForecastChart = ({ data, isLoading }: ForecastChartProps) => {
             iconSize={14}
             align="center"
             layout="horizontal"
-            wrapperStyle={{
-              paddingTop: 40,
-            }}
           />
+          <Customized component={<ChartCross />} />
         </ComposedChart>
       </ResponsiveContainer>
       {isLoading && (
         <LoadingSpinner
           size={100}
+          appear
           color="#ff49a4"
           fast={!!data.length}
           style={{
             position: 'absolute',
             top: 'calc(50% - 50px)',
             left: 'calc(50% - 50px)',
-            transform: 'translate(-50%, -50%)',
           }}
         />
       )}
