@@ -1,4 +1,4 @@
-@keyframes spinAmination {
+@keyframes spinAnimation {
   0% {
     transform: rotate(0deg);
   }
@@ -21,18 +21,18 @@
 }
 
 .animateSpin {
-  animation: spinAmination 1s linear infinite;
+  animation: spinAnimation 1s linear infinite;
 }
 
 .animateSpinFast {
-  animation: spinAmination 0.4s linear infinite;
+  animation: spinAnimation 0.4s linear infinite;
 
 }
 
 .animateSpinAppear {
-  animation: appearAnimation 2s cubic-bezier(0, 1.53, .23, 1), spinAmination 1s linear infinite;
+  animation: appearAnimation 2s cubic-bezier(0, 1.53, .23, 1), spinAnimation 1s linear infinite;
 }
 
 .animateSpinFastAppear {
-  animation: appearAnimation 2s cubic-bezier(0, 1.53, .23, 1), spinAmination 0.4s linear infinite;
+  animation: appearAnimation 2s cubic-bezier(0, 1.53, .23, 1), spinAnimation 0.4s linear infinite;
 }

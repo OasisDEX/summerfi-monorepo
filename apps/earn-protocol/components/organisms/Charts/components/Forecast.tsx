@@ -1,5 +1,5 @@
 import { LoadingSpinner } from '@summerfi/app-earn-ui'
-import { type ForecastDataPoint } from '@summerfi/app-types'
+import { type ForecastDataPoints } from '@summerfi/app-types'
 import {
   Area,
   ComposedChart,
@@ -18,7 +18,7 @@ import { ForecastTooltip } from '@/components/organisms/Charts/components/Foreca
 import { formatChartCryptoValue, formatChartDate } from '@/features/forecast/chart-formatters'
 
 type ForecastChartProps = {
-  data: ForecastDataPoint
+  data: ForecastDataPoints
   isLoading?: boolean
 }
 

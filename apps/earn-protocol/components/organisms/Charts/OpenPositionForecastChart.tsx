@@ -1,6 +1,6 @@
 import { Card } from '@summerfi/app-earn-ui'
 import { type CardVariant } from '@summerfi/app-earn-ui/dist/types/src/components/atoms/Card/Card'
-import { type ForecastDataPoint, type TimeframesType } from '@summerfi/app-types'
+import { type ForecastDataPoints, type TimeframesType } from '@summerfi/app-types'
 
 import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
 import { ForecastChart } from '@/components/organisms/Charts/components/Forecast'
@@ -15,7 +15,7 @@ export const OpenPositionForecastChart = ({
   timeframe: TimeframesType
   setTimeframe: (timeframe: TimeframesType) => void
   cardVariant?: CardVariant
-  parsedData: ForecastDataPoint
+  parsedData: ForecastDataPoints
   isLoadingForecast?: boolean
 }) => {
   return (

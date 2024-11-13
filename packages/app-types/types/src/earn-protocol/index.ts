@@ -83,7 +83,7 @@ export type PositionForecastAPIResponse = {
   }
 }
 
-export type ForecastDataPoint = {
+export type ForecastDataPoints = {
   timestamp: string
   forecast: number
   bounds: [number, number]
@@ -93,8 +93,8 @@ export type ForecastData = {
   generatedAt: string
   amount: number
   dataPoints: {
-    daily: ForecastDataPoint
-    weekly: ForecastDataPoint
-    monthly: ForecastDataPoint
+    daily: ForecastDataPoints
+    weekly: ForecastDataPoints
+    monthly: ForecastDataPoints
   }
 }

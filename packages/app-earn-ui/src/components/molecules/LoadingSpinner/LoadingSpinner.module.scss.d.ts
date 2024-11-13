@@ -4,7 +4,7 @@ export type Styles = {
   animateSpinFast: string
   animateSpinFastAppear: string
   appearAnimation: string
-  spinAmination: string
+  spinAnimation: string
 }
 
 export type ClassNames = keyof Styles

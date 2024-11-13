@@ -21,5 +21,12 @@ export const formatChartCryptoValue = (amount: number) => {
 export const formatChartDate = (date: typeof chartTimestampFormat) => {
   const parsedDate = dayjs(date, chartTimestampFormat)
 
-  return parsedDate.isSame(dayjs(), 'day') ? 'Today' : parsedDate.format('MMM ‘YY')
+  if (!parsedDate.isValid()) {
+    return 'Invalid Date'
+  }
+
+  // Use startOf('day') to ensure timezone-safe comparison
+  return parsedDate.startOf('day').isSame(dayjs().startOf('day'))
+    ? 'Today'
+    : parsedDate.format('MMM ‘YY')
 }

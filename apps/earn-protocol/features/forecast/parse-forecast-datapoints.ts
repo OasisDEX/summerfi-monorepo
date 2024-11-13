@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import {
   type ForecastData,
-  type ForecastDataPoint,
+  type ForecastDataPoints,
   type PositionForecastAPIResponse,
 } from '@summerfi/app-types'
 import dayjs from 'dayjs'
@@ -25,7 +25,7 @@ export const parseForecastDatapoints: (
     { forecast: [], upper_bound: [], lower_bound: [] },
   )
 
-  const daily: ForecastDataPoint = [
+  const daily: ForecastDataPoints = [
     // we need to add the first point manually
     {
       timestamp: forecastData.forecast.timestamps[0],
@@ -33,14 +33,14 @@ export const parseForecastDatapoints: (
       bounds: [Number(seriesKeyed.lower_bound[0]), Number(seriesKeyed.upper_bound[0])],
     },
   ]
-  const weekly: ForecastDataPoint = [
+  const weekly: ForecastDataPoints = [
     {
       timestamp: forecastData.forecast.timestamps[0],
       forecast: Number(seriesKeyed.forecast[0]),
       bounds: [Number(seriesKeyed.lower_bound[0]), Number(seriesKeyed.upper_bound[0])],
     },
   ]
-  const monthly: ForecastDataPoint = [
+  const monthly: ForecastDataPoints = [
     {
       timestamp: forecastData.forecast.timestamps[0],
       forecast: Number(seriesKeyed.forecast[0]),

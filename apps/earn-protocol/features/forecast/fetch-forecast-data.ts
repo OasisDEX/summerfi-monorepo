@@ -17,15 +17,19 @@ export const fetchForecastData = async ({
     throw new Error('FORECAST_API_URL is not defined')
   }
 
-  return await fetch(forecastApiUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      fleet_commander_address: fleetAddress,
-      position_size: amount,
-      chain_id: chainId,
-    }),
-  })
+  try {
+    return await fetch(forecastApiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        fleet_commander_address: fleetAddress,
+        position_size: amount,
+        chain_id: chainId,
+      }),
+    })
+  } catch (error) {
+    throw new Error('Error fetching forecast data')
+  }
 }
