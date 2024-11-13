@@ -425,6 +425,7 @@ export enum ArkDailySnapshot_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
@@ -631,6 +632,7 @@ export enum ArkHourlySnapshot_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
@@ -904,6 +906,7 @@ export enum Ark_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
@@ -1218,6 +1221,7 @@ export enum Board_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
@@ -1537,6 +1541,7 @@ export enum Deposit_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
@@ -1841,6 +1846,7 @@ export enum Disembark_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
@@ -2409,6 +2415,7 @@ export enum Position_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
@@ -2627,6 +2634,7 @@ export enum PostActionArkSnapshot_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
@@ -2647,6 +2655,8 @@ export type PostActionVaultSnapshot = {
   id: Scalars['ID']['output'];
   /**  Amount of input token in the pool  */
   inputTokenBalance: Scalars['BigInt']['output'];
+  /**  Price of input token in USD  */
+  inputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   /**  Price per share of output token in USD  */
   outputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   /**  Total supply of output token  */
@@ -2699,6 +2709,14 @@ export type PostActionVaultSnapshot_Filter = {
   inputTokenBalance_lte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenPriceUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenPriceUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   or?: InputMaybe<Array<InputMaybe<PostActionVaultSnapshot_Filter>>>;
   outputTokenPriceUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
   outputTokenPriceUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -2789,6 +2807,7 @@ export enum PostActionVaultSnapshot_OrderBy {
   BlockNumber = 'blockNumber',
   Id = 'id',
   InputTokenBalance = 'inputTokenBalance',
+  InputTokenPriceUsd = 'inputTokenPriceUSD',
   OutputTokenPriceUsd = 'outputTokenPriceUSD',
   OutputTokenSupply = 'outputTokenSupply',
   PricePerShare = 'pricePerShare',
@@ -2827,6 +2846,7 @@ export enum PostActionVaultSnapshot_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
@@ -3995,6 +4015,7 @@ export enum Rebalance_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
@@ -5142,6 +5163,8 @@ export type Vault = {
   inputToken: Token;
   /**  Amount of input token in the pool  */
   inputTokenBalance: Scalars['BigInt']['output'];
+  /**  Price of input token in USD  */
+  inputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   lastUpdateTimestamp: Scalars['BigInt']['output'];
   /**  Name of liquidity pool (e.g. Curve.fi DAI/USDC/USDT)  */
   name?: Maybe<Scalars['String']['output']>;
@@ -5284,6 +5307,8 @@ export type VaultDailySnapshot = {
   id: Scalars['ID']['output'];
   /**  Amount of input token in the pool  */
   inputTokenBalance: Scalars['BigInt']['output'];
+  /**  Price of input token in USD  */
+  inputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   /**  Price per share of output token in USD  */
   outputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   /**  Total supply of output token  */
@@ -5390,6 +5415,14 @@ export type VaultDailySnapshot_Filter = {
   inputTokenBalance_lte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenPriceUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenPriceUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   or?: InputMaybe<Array<InputMaybe<VaultDailySnapshot_Filter>>>;
   outputTokenPriceUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
   outputTokenPriceUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -5506,6 +5539,7 @@ export enum VaultDailySnapshot_OrderBy {
   DailyTotalRevenueUsd = 'dailyTotalRevenueUSD',
   Id = 'id',
   InputTokenBalance = 'inputTokenBalance',
+  InputTokenPriceUsd = 'inputTokenPriceUSD',
   OutputTokenPriceUsd = 'outputTokenPriceUSD',
   OutputTokenSupply = 'outputTokenSupply',
   PricePerShare = 'pricePerShare',
@@ -5547,6 +5581,7 @@ export enum VaultDailySnapshot_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
@@ -5633,6 +5668,8 @@ export type VaultHourlySnapshot = {
   id: Scalars['ID']['output'];
   /**  Amount of input token in the pool  */
   inputTokenBalance: Scalars['BigInt']['output'];
+  /**  Price of input token in USD  */
+  inputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   /**  Price per share of output token in USD  */
   outputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   /**  Total supply of output token  */
@@ -5739,6 +5776,14 @@ export type VaultHourlySnapshot_Filter = {
   inputTokenBalance_lte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenPriceUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenPriceUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   or?: InputMaybe<Array<InputMaybe<VaultHourlySnapshot_Filter>>>;
   outputTokenPriceUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
   outputTokenPriceUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -5855,6 +5900,7 @@ export enum VaultHourlySnapshot_OrderBy {
   HourlyTotalRevenueUsd = 'hourlyTotalRevenueUSD',
   Id = 'id',
   InputTokenBalance = 'inputTokenBalance',
+  InputTokenPriceUsd = 'inputTokenPriceUSD',
   OutputTokenPriceUsd = 'outputTokenPriceUSD',
   OutputTokenSupply = 'outputTokenSupply',
   PricePerShare = 'pricePerShare',
@@ -5896,6 +5942,7 @@ export enum VaultHourlySnapshot_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
@@ -6048,6 +6095,14 @@ export type Vault_Filter = {
   inputTokenBalance_lte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenPriceUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenPriceUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   inputToken_?: InputMaybe<Token_Filter>;
   inputToken_contains?: InputMaybe<Scalars['String']['input']>;
   inputToken_contains_nocase?: InputMaybe<Scalars['String']['input']>;
@@ -6246,6 +6301,7 @@ export enum Vault_OrderBy {
   Id = 'id',
   InputToken = 'inputToken',
   InputTokenBalance = 'inputTokenBalance',
+  InputTokenPriceUsd = 'inputTokenPriceUSD',
   InputTokenDecimals = 'inputToken__decimals',
   InputTokenId = 'inputToken__id',
   InputTokenLastPriceBlockNumber = 'inputToken__lastPriceBlockNumber',
@@ -6601,6 +6657,7 @@ export enum Withdraw_OrderBy {
   VaultDepositLimit = 'vault__depositLimit',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',

@@ -6,26 +6,39 @@
   align-items: center;
   width: 100%;
   border-bottom: 1px solid var(--color-surface-lighter);
-
-  > * {
-    padding-top: var(--general-space-16);
-    padding-bottom: var(--general-space-24);
-  }
+  padding-bottom: var(--general-space-24);
 
   .logoSmall {
     width: 25px;
     display: inline;
   }
 
-  .closeIcon {
-    cursor: pointer;
-    opacity: 0.3;
-
-    &:hover,
-    &:focus {
-      opacity: 0.6;
-    }
+  .gradientOuterCircle {
+    position: relative;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    padding: 0;
+    background-color: var(--earn-protocol-neutral-85);
   }
+
+  .gradientInnerCircle {
+    background-image: var(--gradient-earn-protocol-dark);
+    content: '';
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    z-index: -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.linksListWrapper {
+  overflow-y: auto;
+  max-height: 70vh;
 }
 
 .linksList {
@@ -36,7 +49,8 @@
   row-gap: var(--general-space-24);
   padding: var(--general-space-16) 0;
 
-  > a > p {
+  > a {
+    color: var(--earn-protocol-secondary-40);
     padding-bottom: 0;
   }
 

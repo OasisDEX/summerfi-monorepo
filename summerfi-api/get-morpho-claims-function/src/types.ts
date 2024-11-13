@@ -86,6 +86,10 @@ type Program = {
 }
 
 type UserRewards = {
+  asset: {
+    address: Address
+  }
+  amount?: ForRewards
   user: Address
   type: 'market-reward'
   program: Program

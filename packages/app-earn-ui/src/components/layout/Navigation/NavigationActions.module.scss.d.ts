@@ -1,4 +1,6 @@
 export type Styles = {
+  gradientInnerCircle: string
+  gradientOuterCircle: string
   mobileMenuButton: string
   navigationActionsWrapper: string
   summerProButton: string
