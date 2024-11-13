@@ -28,7 +28,7 @@ import {
  */
 const aggregateClaimsByToken = (claims: MorphoAggregatedClaims[]): MorphoAggregatedClaims[] => {
   const aggregatedClaims: { [key: string]: MorphoAggregatedClaims } = {}
-  console.log('claims', claims)
+
   claims.forEach((claim) => {
     if (!aggregatedClaims[claim.rewardTokenAddress]) {
       aggregatedClaims[claim.rewardTokenAddress] = {
@@ -43,7 +43,7 @@ const aggregateClaimsByToken = (claims: MorphoAggregatedClaims[]): MorphoAggrega
     aggregatedClaims[claim.rewardTokenAddress].claimed += claim.claimed
     aggregatedClaims[claim.rewardTokenAddress].accrued += claim.accrued
   })
-  console.log('aggregatedClaims', aggregatedClaims)
+
   return Object.values(aggregatedClaims)
 }
 
