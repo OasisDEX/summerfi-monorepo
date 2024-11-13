@@ -5,7 +5,7 @@
   justify-content: center;
   width: 100%;
 
-  @include media("<=l") {
+  @include media('<=l') {
     display: none;
   }
 }
@@ -23,7 +23,9 @@
     img {
       opacity: 0.5;
       transform: rotate3d(1, 0, 0, 0deg);
-      transition: opacity 0.2s, transform 0.2s;
+      transition:
+        opacity 0.2s,
+        transform 0.2s;
     }
 
     span.active,
@@ -36,7 +38,6 @@
     }
 
     &:hover {
-
       span,
       a {
         color: var(--color-text-primary);
@@ -55,8 +56,8 @@
     }
   }
 
-  li>span,
-  li>a {
+  li > span,
+  li > a {
     font-size: 16px;
     font-weight: 600;
     line-height: var(--general-space-24);
@@ -64,15 +65,18 @@
     transition: opacity 0.2s;
   }
 
-  li>.dropdownContentWrapper {
+  li > .dropdownContentWrapper {
     pointer-events: none;
     position: absolute;
     width: max-content;
     left: -50px;
     opacity: 0;
-    transition: top 0.2s, opacity 0.2s;
+    transition:
+      top 0.2s,
+      opacity 0.2s;
     top: 0;
     padding-top: var(--general-space-32);
+    z-index: 5;
 
     .dropdownContent {
       padding: var(--general-space-24) var(--general-space-20) var(--general-space-8);
