@@ -21,7 +21,11 @@ export const OpenPositionForecastChart = ({
   return (
     <Card
       variant={cardVariant}
-      style={{ marginTop: 'var(--spacing-space-medium)', flexDirection: 'column' }}
+      style={{
+        marginTop: 'var(--spacing-space-medium)',
+        flexDirection: 'column',
+        paddingBottom: 0,
+      }}
     >
       <ChartHeader
         title="Open Position Forecast"
