@@ -91,14 +91,28 @@ export const getClaims = async ({
     const claimsAggregated: MorphoAggregatedClaims[] = aggregateClaimsByToken(
       userRewardsResponse.data
         .map((item) => {
+          // old weird morpho token that we don't support
+          if (item.asset.address.toLowerCase() === '0x039b598c6b99e70058e1e9021e000bdacd33d026') {
+            return null
+          }
+
           const rewards = item[resolvedClaimType]
 
           if (rewards) {
             return {
-              rewardTokenAddress: item.program.asset.address,
+              rewardTokenAddress: item.asset.address,
               claimable: safeParseBigInt(rewards.claimable_now) || 0n,
               accrued: safeParseBigInt(rewards.total) || 0n,
               claimed: safeParseBigInt(rewards.claimed) || 0n,
+            }
+          }
+
+          if (item.amount) {
+            return {
+              rewardTokenAddress: item.asset.address,
+              claimable: safeParseBigInt(item.amount.claimable_now) || 0n,
+              accrued: safeParseBigInt(item.amount.total) || 0n,
+              claimed: safeParseBigInt(item.amount.claimed) || 0n,
             }
           }
 
