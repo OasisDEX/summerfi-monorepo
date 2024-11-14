@@ -8,7 +8,7 @@ import { fontFtPolar, fontInter } from '@/helpers/fonts'
 
 export const metadata: Metadata = {
   title: 'Summer.fi Rays ☀️',
-  description: 'Something cool is coming. The future is bright. The future is sunny!',
+  description: 'Something cool is coming. The future is bright. The future is sunny.',
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
