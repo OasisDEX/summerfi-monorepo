@@ -11,6 +11,7 @@ import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { LoadingSpinner } from '@/components/molecules/LoadingSpinner/LoadingSpinner'
 import { MobileDrawer } from '@/components/molecules/MobileDrawer/MobileDrawer'
+import { useMobileCheck } from '@/hooks/use-mobile-check.ts'
 
 import sidebarClassNames from '@/components/organisms/Sidebar/Sidebar.module.scss'
 
@@ -42,17 +43,27 @@ export const Sidebar: FC<SidebarProps> = ({
   asDesktopOnly = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false)
+  const { isMobile } = useMobileCheck()
 
   const labelElement = primaryButton.loading ? <LoadingSpinner size={28} /> : primaryButton.label
 
   const sidebarWrapped = (
     <Card className={sidebarClassNames.sidebarWrapper} variant="cardPrimary">
-      <div className={sidebarClassNames.sidebarHeaderWrapper}>
+      <div
+        className={sidebarClassNames.sidebarHeaderWrapper}
+        onClick={() => {
+          if (isMobile) setIsOpen((prev) => !prev)
+        }}
+      >
         <div className={sidebarClassNames.sidebarHeaderActionButtonsWrapper}>
           {titleTabs && titleTabs.length > 0 ? (
             titleTabs.map((tab) => (
               <Text
-                onClick={() => onTitleTabChange?.(tab)}
+                onClick={(e) => {
+                  // eslint-disable-next-line no-unused-expressions
+                  isOpen && e.stopPropagation()
+                  onTitleTabChange?.(tab)
+                }}
                 key={`TitleTab_${tab}`}
                 as="h5"
                 variant="h5"
@@ -74,13 +85,10 @@ export const Sidebar: FC<SidebarProps> = ({
             </Text>
           )}
         </div>
-        <Button
-          variant="unstyled"
-          onClick={() => setIsOpen((prev) => !prev)}
-          className={sidebarClassNames.sidebarHeaderChevron}
-        >
+
+        <div className={sidebarClassNames.sidebarHeaderChevron}>
           <Icon iconName={isOpen ? 'chevron_down' : 'chevron_up'} variant="xs" />
-        </Button>
+        </div>
       </div>
 
       <div className={sidebarClassNames.sidebarHeaderSpacer} />
