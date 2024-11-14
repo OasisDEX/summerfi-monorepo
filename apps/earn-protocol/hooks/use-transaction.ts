@@ -18,6 +18,7 @@ import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { TransactionAction } from '@/constants/transaction-actions'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { type useClient } from '@/hooks/use-client'
+import { useClientChainId } from '@/hooks/use-client-chain-id'
 
 type UseTransactionParams = {
   vault: SDKVaultishType
@@ -55,6 +56,7 @@ export const useTransaction = ({
   const user = useUser()
   const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
   const { setChain, isSettingChain } = useChain()
+  const { clientChainId } = useClientChainId()
 
   const reset = useCallback(() => {
     manualSetAmount(undefined)
@@ -68,10 +70,9 @@ export const useTransaction = ({
     setTxHashes((prev) => prev.filter((tx) => tx.hash !== txHash))
   }, [])
 
-  const userChainId = transactionClient?.chain.id
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
 
-  const isProperChainSelected = userChainId === vaultChainId
+  const isProperChainSelected = clientChainId === vaultChainId
 
   const nextTransaction = useMemo(() => {
     if (!transactions || transactions.length === 0) {

@@ -5,12 +5,14 @@ import { subgraphNetworkToSDKId, ten } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import { createPublicClient, createWalletClient, custom, erc20Abi } from 'viem'
 
+import { useClientChainId } from '@/hooks/use-client-chain-id'
+
 export const useClient = ({ vault }: { vault?: SDKVaultishType }) => {
   const user = useUser()
   const { chain: connectedChain } = useChain()
   const [tokenBalance, setTokenBalance] = useState<BigNumber>()
   const [tokenBalanceLoading, setTokenBalanceLoading] = useState(true)
-
+  const { clientChainId } = useClientChainId()
   const transactionClient = useMemo(() => {
     // used for the tx itself
     if (user) {
@@ -49,10 +51,9 @@ export const useClient = ({ vault }: { vault?: SDKVaultishType }) => {
     [connectedChain, user],
   )
 
-  const userChainId = transactionClient?.chain.id
   const vaultChainId = vault ? subgraphNetworkToSDKId(vault.protocol.network) : null
 
-  const isProperChainSelected = userChainId === vaultChainId
+  const isProperChainSelected = clientChainId === vaultChainId
 
   useEffect(() => {
     const inputTokenAddress = vault?.inputToken.id
