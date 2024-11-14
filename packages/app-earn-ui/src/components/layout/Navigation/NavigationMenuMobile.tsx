@@ -95,7 +95,9 @@ export const NavigationMenuMobile = ({
         </div>
       </div>
       {signUpComponent}
-      {walletConnectionComponent}
+      <div onClick={toggleMobileMenu} className={navigationMenuMobileStyles.buttonWrapper}>
+        {walletConnectionComponent}
+      </div>
     </>
   )
 }

@@ -2,6 +2,8 @@ import { useAuthModal, useLogout, useSignerStatus, useUser } from '@account-kit/
 import { Button, LoadableAvatar, SkeletonLine, Text } from '@summerfi/app-earn-ui'
 import { formatAddress } from '@summerfi/app-utils'
 
+import classNames from './WalletLabel.module.scss'
+
 export default function WalletLabel() {
   const user = useUser()
   const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
@@ -29,6 +31,7 @@ export default function WalletLabel() {
         style={{
           padding: '0 var(--general-space-12) 0 6px',
         }}
+        className={classNames.wrapper}
       >
         <LoadableAvatar
           size={24}
@@ -44,7 +47,7 @@ export default function WalletLabel() {
   }
 
   return (
-    <Button variant="secondarySmall" onClick={openAuthModal}>
+    <Button variant="secondarySmall" onClick={openAuthModal} className={classNames.wrapper}>
       Log in
     </Button>
   )
