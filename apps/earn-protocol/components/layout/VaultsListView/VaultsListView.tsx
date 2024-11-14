@@ -15,12 +15,7 @@ import {
   type SDKNetwork,
   type SDKVaultsListType,
 } from '@summerfi/app-types'
-import {
-  formatCryptoBalance,
-  humanNetworktoSDKNetwork,
-  sdkNetworkToHumanNetwork,
-  zero,
-} from '@summerfi/app-utils'
+import { formatCryptoBalance, sdkNetworkToHumanNetwork, zero } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
 
 import { networkIconByNetworkName } from '@/constants/networkIcons'
@@ -50,9 +45,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
   const networkFilteredVaults = useMemo(
     () =>
       localVaultNetwork && localVaultNetwork !== 'all-networks'
-        ? vaultsList.filter(
-            (vault) => sdkNetworkToHumanNetwork(vault.protocol.network) === localVaultNetwork,
-          )
+        ? vaultsList.filter(({ protocol }) => protocol.network === localVaultNetwork)
         : vaultsList,
     [localVaultNetwork, vaultsList],
   )
@@ -63,10 +56,8 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
     () =>
       localVaultNetwork && localVaultNetwork !== 'all-networks'
         ? {
-            iconName: networkIconByNetworkName[
-              humanNetworktoSDKNetwork(localVaultNetwork)
-            ] as IconNamesList,
-            value: sdkNetworkToHumanNetwork(localVaultNetwork),
+            iconName: networkIconByNetworkName[localVaultNetwork] as IconNamesList,
+            value: localVaultNetwork,
             label: capitalize(sdkNetworkToHumanNetwork(localVaultNetwork)),
           }
         : allNetworksOption,
@@ -76,7 +67,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
     () => [
       ...[...new Set(vaultsList.map(({ protocol }) => protocol.network))].map((network) => ({
         iconName: networkIconByNetworkName[network] as IconNamesList,
-        value: sdkNetworkToHumanNetwork(network),
+        value: network,
         label: capitalize(sdkNetworkToHumanNetwork(network)),
       })),
       allNetworksOption,
@@ -101,7 +92,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
         if (selectedVaultData && selectedVaultData.protocol.network !== selected.value) {
           setVaultId(undefined)
         }
-        softRouterPush(`/earn/${selected.value}`)
+        softRouterPush(`/earn/${sdkNetworkToHumanNetwork(selected.value as SDKNetwork)}`)
 
         break
     }

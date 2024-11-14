@@ -13,12 +13,17 @@ export const isSupportedSDKChain = (
 ): chainId is SDKChainId.ARBITRUM | SDKChainId.BASE =>
   typeof chainId === 'number' && sdkSupportedChains.includes(chainId)
 
-export const sdkNetworkToHumanNetwork = (network: SDKNetwork): string => {
-  const humanReadableNetworkMap = {
-    [SDKNetwork.ArbitrumOne]: 'arbitrum',
-    [SDKNetwork.Base]: 'base',
-  }
+const humanReadableNetworkMap = {
+  [SDKNetwork.ArbitrumOne]: 'arbitrum',
+  [SDKNetwork.Base]: 'base',
+}
 
+const sdkNetworkMap = {
+  arbitrum: SDKNetwork.ArbitrumOne,
+  base: SDKNetwork.Base,
+}
+
+export const sdkNetworkToHumanNetwork = (network: SDKNetwork): string => {
   if (!humanReadableNetworkMap[network as SDKSupportedNetwork]) {
     // eslint-disable-next-line no-console
     console.error('sdkNetworkToHumanNetwork: Network needs mapping', network)
@@ -30,12 +35,10 @@ export const sdkNetworkToHumanNetwork = (network: SDKNetwork): string => {
 }
 
 export const humanNetworktoSDKNetwork = (network: string): SDKNetwork => {
-  const sdkNetworkMap = {
-    arbitrum: SDKNetwork.ArbitrumOne,
-    base: SDKNetwork.Base,
+  if (network in humanReadableNetworkMap) {
+    return network.toLowerCase() as SDKNetwork
   }
-
-  const sdkNetwork = sdkNetworkMap[network.toLowerCase() as Partial<keyof typeof sdkNetworkMap>]
+  const sdkNetwork = sdkNetworkMap[network.toLowerCase() as keyof typeof sdkNetworkMap]
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!sdkNetwork) {
