@@ -17,7 +17,7 @@ export const useClient = ({ vault }: { vault?: SDKVaultishType }) => {
     // used for the tx itself
     if (user) {
       // todo: handle other wallets, this is just working with metamask
-      if (user.type === 'eoa') {
+      if (user.type === 'eoa' && window.ethereum) {
         const externalProvider = window.ethereum
 
         return createWalletClient({
@@ -36,7 +36,7 @@ export const useClient = ({ vault }: { vault?: SDKVaultishType }) => {
     () => {
       if (user) {
         // todo: handle other wallets, this is just working with metamask
-        if (user.type === 'eoa') {
+        if (user.type === 'eoa' && window.ethereum) {
           const externalProvider = window.ethereum
 
           return createPublicClient({
