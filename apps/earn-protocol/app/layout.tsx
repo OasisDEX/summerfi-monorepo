@@ -2,7 +2,7 @@ import { cookieToInitialState } from '@account-kit/core'
 import { GlobalStyles } from '@summerfi/app-earn-ui'
 import { type DeviceType } from '@summerfi/app-types'
 import type { Metadata } from 'next'
-import { headers } from 'next/headers'
+import { cookies } from 'next/headers'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
 
@@ -25,7 +25,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const locale = await getLocale()
   const messages = await getMessages()
 
-  const cookie = headers().get('cookie')
+  const cookieRaw = await cookies()
+  const cookie = cookieRaw.toString()
 
   const forks = safeParseJson(getServerSideCookies(forksCookieName, cookie))
   const accountKitState = safeParseJson(getServerSideCookies(accountKitCookieStateName, cookie))
