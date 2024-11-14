@@ -1,5 +1,6 @@
 export type Styles = {
   activeLink: string
+  buttonWrapper: string
   gradientInnerCircle: string
   gradientOuterCircle: string
   linksList: string
