@@ -23,10 +23,37 @@ export type SDKUserActivityType = SDKUsersActivityType[0]
 // -ish because it can be a detailed vault or a vault from list (less details), use with that in mind
 export type SDKVaultishType = SDKVaultType | SDKVaultsListType[number]
 
+export const sdkSupportedNetworks = [Network.ArbitrumOne, Network.Base] as const
 export const sdkSupportedChains = [ChainId.ARBITRUM, ChainId.BASE] as const
+export type SDKSupportedNetwork = (typeof sdkSupportedNetworks)[number]
+export type SDKSupportedChain = (typeof sdkSupportedChains)[number]
 
 export const isSupportedSDKChain = (chainId: unknown): chainId is ChainId.ARBITRUM | ChainId.BASE =>
   typeof chainId === 'number' && sdkSupportedChains.includes(chainId)
+
+export const sdkNetworkToHumanNetwork = (network: Network): string => {
+  const humanReadableNetworkMap = {
+    [Network.ArbitrumOne]: 'arbitrum',
+    [Network.Base]: 'base',
+  }
+  if (!humanReadableNetworkMap[network as SDKSupportedNetwork]) {
+    console.error('sdkNetworkToHumanNetwork: Network needs mapping', network)
+    return network
+  }
+  return humanReadableNetworkMap[network as SDKSupportedNetwork]
+}
+
+export const humanNetworktoSDKNetwork = (network: string): Network => {
+  const sdkNetworkMap = {
+    arbitrum: Network.ArbitrumOne,
+    base: Network.Base,
+  }
+  if (!sdkNetworkMap[network.toLowerCase() as keyof typeof sdkNetworkMap]) {
+    console.error('humanNetworktoSDKNetwork: Network needs mapping', network)
+    return network as Network
+  }
+  return sdkNetworkMap[network.toLowerCase() as keyof typeof sdkNetworkMap]
+}
 
 export type SDKSupportedNetworkType = ChainId.ARBITRUM | ChainId.BASE
 export enum SDKSupportedNetworkIdsEnum {

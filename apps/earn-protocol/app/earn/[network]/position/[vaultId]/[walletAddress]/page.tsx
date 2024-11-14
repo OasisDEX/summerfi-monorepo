@@ -1,5 +1,5 @@
 import { Text } from '@summerfi/app-earn-ui'
-import { type SDKNetwork } from '@summerfi/app-types'
+import { humanNetworktoSDKNetwork, type SDKNetwork } from '@summerfi/app-types'
 import { parseServerResponseToClient } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client-react'
 
@@ -20,20 +20,21 @@ type EarnVaultManagePageProps = {
 export const revalidate = 60
 
 const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
+  const parsedNetwork = humanNetworktoSDKNetwork(params.network)
   const [vault, { vaults }, position, { userActivity, topDepositors }] = await Promise.all([
     getVaultDetails({
       vaultAddress: params.vaultId,
-      network: params.network,
+      network: parsedNetwork,
     }),
     getVaultsList(),
     getUserPosition({
       vaultAddress: params.vaultId,
-      network: params.network,
+      network: parsedNetwork,
       walletAddress: params.walletAddress,
     }),
     getUserActivity({
       vaultAddress: params.vaultId,
-      network: params.network,
+      network: parsedNetwork,
       walletAddress: params.walletAddress,
     }),
   ])
@@ -41,7 +42,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   if (!vault) {
     return (
       <Text>
-        No vault found with the id {params.vaultId} on the network {params.network}
+        No vault found with the id {params.vaultId} on the network {parsedNetwork}
       </Text>
     )
   }
@@ -49,7 +50,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   if (!position) {
     return (
       <Text>
-        No position found on {params.walletAddress} on the network {params.network}
+        No position found on {params.walletAddress} on the network {parsedNetwork}
       </Text>
     )
   }

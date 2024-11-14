@@ -1,5 +1,5 @@
 import { Text, VaultGridDetails } from '@summerfi/app-earn-ui'
-import { type SDKNetwork } from '@summerfi/app-types'
+import { humanNetworktoSDKNetwork, type SDKNetwork } from '@summerfi/app-types'
 
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
@@ -15,10 +15,11 @@ type EarnVaultDetailsPageProps = {
 export const revalidate = 60
 
 const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
+  const parsedNetwork = humanNetworktoSDKNetwork(params.network)
   const [vault, { vaults }] = await Promise.all([
     getVaultDetails({
       vaultAddress: params.vaultId,
-      network: params.network,
+      network: parsedNetwork,
     }),
     getVaultsList(),
   ])
@@ -26,7 +27,7 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
   if (!vault) {
     return (
       <Text>
-        No vault found with the id {params.vaultId} on the network {params.network}
+        No vault found with the id {params.vaultId} on the network {parsedNetwork}
       </Text>
     )
   }

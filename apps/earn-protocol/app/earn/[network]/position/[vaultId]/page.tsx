@@ -1,5 +1,9 @@
 import { Text } from '@summerfi/app-earn-ui'
-import { type PositionForecastAPIResponse, type SDKNetwork } from '@summerfi/app-types'
+import {
+  humanNetworktoSDKNetwork,
+  type PositionForecastAPIResponse,
+  type SDKNetwork,
+} from '@summerfi/app-types'
 
 import { getUserActivity } from '@/app/server-handlers/sdk/get-user-activity'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
@@ -19,24 +23,25 @@ type EarnVaultOpenPageProps = {
 export const revalidate = 60
 
 const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
+  const parsedNetwork = humanNetworktoSDKNetwork(params.network)
   const [vault, { vaults }, { userActivity, topDepositors }, forecastData] = await Promise.all([
     getVaultDetails({
       vaultAddress: params.vaultId,
-      network: params.network,
+      network: parsedNetwork,
     }),
     getVaultsList(),
-    getUserActivity({ vaultAddress: params.vaultId, network: params.network }),
+    getUserActivity({ vaultAddress: params.vaultId, network: parsedNetwork }),
     fetchForecastData({
       fleetAddress: params.vaultId as `0x${string}`,
       amount: 100, // rule of thumb value
-      chainId: subgraphNetworkToId(params.network),
+      chainId: subgraphNetworkToId(parsedNetwork),
     }).then(async (data) => (await data.json()) as PositionForecastAPIResponse),
   ])
 
   if (!vault) {
     return (
       <Text>
-        No vault found with the id {params.vaultId} on the network {params.network}
+        No vault found with the id {params.vaultId} on the network {parsedNetwork}
       </Text>
     )
   }

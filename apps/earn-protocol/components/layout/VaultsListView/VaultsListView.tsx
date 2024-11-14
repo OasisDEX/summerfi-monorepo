@@ -11,8 +11,10 @@ import {
 } from '@summerfi/app-earn-ui'
 import {
   type DropdownRawOption,
+  humanNetworktoSDKNetwork,
   type IconNamesList,
   type SDKNetwork,
+  sdkNetworkToHumanNetwork,
   type SDKVaultsListType,
 } from '@summerfi/app-types'
 import { formatCryptoBalance, zero } from '@summerfi/app-utils'
@@ -27,7 +29,7 @@ type VaultsListViewProps = {
 }
 
 const allNetworksOption = {
-  iconName: 'ether_circle_color' as IconNamesList,
+  iconName: 'question_mark' as IconNamesList,
   label: 'All Networks',
   value: 'all-networks',
 }
@@ -45,7 +47,9 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
   const networkFilteredVaults = useMemo(
     () =>
       localVaultNetwork && localVaultNetwork !== 'all-networks'
-        ? vaultsList.filter((vault) => vault.protocol.network === localVaultNetwork)
+        ? vaultsList.filter(
+            (vault) => sdkNetworkToHumanNetwork(vault.protocol.network) === localVaultNetwork,
+          )
         : vaultsList,
     [localVaultNetwork, vaultsList],
   )
@@ -54,14 +58,13 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
 
   const selectedNetworkOption = useMemo(
     () =>
-      localVaultNetwork
+      localVaultNetwork && localVaultNetwork !== 'all-networks'
         ? {
-            iconName:
-              localVaultNetwork !== 'all-networks'
-                ? (networkIconByNetworkName[localVaultNetwork] as IconNamesList)
-                : 'network_ethereum',
-            label: capitalize(localVaultNetwork),
-            value: localVaultNetwork,
+            iconName: networkIconByNetworkName[
+              humanNetworktoSDKNetwork(localVaultNetwork)
+            ] as IconNamesList,
+            value: sdkNetworkToHumanNetwork(localVaultNetwork),
+            label: capitalize(sdkNetworkToHumanNetwork(localVaultNetwork)),
           }
         : allNetworksOption,
     [localVaultNetwork],
@@ -70,8 +73,8 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
     () => [
       ...[...new Set(vaultsList.map(({ protocol }) => protocol.network))].map((network) => ({
         iconName: networkIconByNetworkName[network] as IconNamesList,
-        label: network,
-        value: network,
+        value: sdkNetworkToHumanNetwork(network),
+        label: capitalize(sdkNetworkToHumanNetwork(network)),
       })),
       allNetworksOption,
     ],
