@@ -37,6 +37,7 @@ jobs:
       ENVIRONMENT_TAG: staging
       SERVICE_NAME: summer-fi-rays-service-staging
       CLUSTER_NAME: summer-fi-rays-staging
+      CONFIG_URL: ${{ secrets.CONFIG_URL }}
       CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
       FUNCTIONS_API_URL: ${{ secrets.FUNCTIONS_API_URL }}
       BORROW_DB_READ_CONNECTION_STRING: ${{ secrets.BORROW_DB_READ_CONNECTION_STRING }}
