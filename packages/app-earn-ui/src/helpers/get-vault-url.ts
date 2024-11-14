@@ -1,15 +1,16 @@
 import { type SDKNetwork, type SDKVaultishType } from '@summerfi/app-types'
+import { sdkNetworkToHumanNetwork } from '@summerfi/app-utils'
 
 export const getVaultUrl = (vault?: SDKVaultishType) => {
   if (!vault) return ''
 
-  return `/earn/${vault.protocol.network.toLowerCase()}/position/${vault.id}`
+  return `/earn/${sdkNetworkToHumanNetwork(vault.protocol.network)}/position/${vault.id}`
 }
 
 export const getVaultDetailsUrl = (vault?: SDKVaultishType) => {
   if (!vault) return ''
 
-  return `/earn/${vault.protocol.network.toLowerCase()}/details/${vault.id}`
+  return `/earn/${sdkNetworkToHumanNetwork(vault.protocol.network)}/details/${vault.id}`
 }
 
 export const getVaultPositionUrl = ({
@@ -20,4 +21,4 @@ export const getVaultPositionUrl = ({
   network: SDKNetwork
   vaultId: string
   walletAddress: string
-}) => `/earn/${network.toLowerCase()}/position/${vaultId}/${walletAddress}`
+}) => `/earn/${sdkNetworkToHumanNetwork(network)}/position/${vaultId}/${walletAddress}`

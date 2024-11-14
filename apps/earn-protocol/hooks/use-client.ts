@@ -1,11 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useChain, useUser } from '@account-kit/react'
 import { type SDKVaultishType } from '@summerfi/app-types'
-import { ten } from '@summerfi/app-utils'
+import { subgraphNetworkToSDKId, ten } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import { createPublicClient, createWalletClient, custom, erc20Abi } from 'viem'
 
-import { subgraphNetworkToSDKId } from '@/helpers/network-helpers'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 
 export const useClient = ({ vault }: { vault?: SDKVaultishType }) => {

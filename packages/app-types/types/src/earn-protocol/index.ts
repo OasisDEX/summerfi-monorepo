@@ -23,12 +23,11 @@ export type SDKUserActivityType = SDKUsersActivityType[0]
 // -ish because it can be a detailed vault or a vault from list (less details), use with that in mind
 export type SDKVaultishType = SDKVaultType | SDKVaultsListType[number]
 
+export const sdkSupportedNetworks = [Network.ArbitrumOne, Network.Base] as const
 export const sdkSupportedChains = [ChainId.ARBITRUM, ChainId.BASE] as const
+export type SDKSupportedNetwork = (typeof sdkSupportedNetworks)[number]
+export type SDKSupportedChain = (typeof sdkSupportedChains)[number]
 
-export const isSupportedSDKChain = (chainId: unknown): chainId is ChainId.ARBITRUM | ChainId.BASE =>
-  typeof chainId === 'number' && sdkSupportedChains.includes(chainId)
-
-export type SDKSupportedNetworkType = ChainId.ARBITRUM | ChainId.BASE
 export enum SDKSupportedNetworkIdsEnum {
   ARBITRUM = ChainId.ARBITRUM,
   BASE = ChainId.BASE,
