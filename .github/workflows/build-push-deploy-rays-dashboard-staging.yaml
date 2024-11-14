@@ -139,7 +139,7 @@ jobs:
         env:
           CF_DIST_ID: ${{ secrets.CF_DIST_ID }}
         run: |
-          AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ env.CF_DIST_ID_STAGING }} --paths "/*"
+          AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.CF_DIST_ID_STAGING }} --paths "/*"
       - name: Trigger e2e tests in e2e-tests repository
         env:
           E2E_TESTS_PAT: ${{ secrets.E2E_TESTS_PAT }}
