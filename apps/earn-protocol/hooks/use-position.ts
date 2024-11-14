@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useUser } from '@account-kit/react'
-import { type SDKSupportedNetworkType } from '@summerfi/app-types'
+import { type SDKSupportedChain } from '@summerfi/app-types'
 import {
   Address,
   getChainInfoByChainId,
@@ -16,7 +16,7 @@ export const usePosition = ({
   chainId,
 }: {
   vaultId: string
-  chainId: SDKSupportedNetworkType
+  chainId: SDKSupportedChain
 }) => {
   const [position, setPosition] = useState<IArmadaPosition>()
   const { getUserPosition } = useAppSDK()

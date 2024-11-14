@@ -1,4 +1,5 @@
-import { humanNetworktoSDKNetwork, type SDKNetwork } from '@summerfi/app-types'
+import { type SDKNetwork } from '@summerfi/app-types'
+import { humanNetworktoSDKNetwork } from '@summerfi/app-utils'
 
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { VaultsListView } from '@/components/layout/VaultsListView/VaultsListView'

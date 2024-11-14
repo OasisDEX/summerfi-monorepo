@@ -1,5 +1,6 @@
 import { Text, VaultGridDetails } from '@summerfi/app-earn-ui'
-import { humanNetworktoSDKNetwork, type SDKNetwork } from '@summerfi/app-types'
+import { type SDKNetwork } from '@summerfi/app-types'
+import { humanNetworktoSDKNetwork } from '@summerfi/app-utils'
 
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'

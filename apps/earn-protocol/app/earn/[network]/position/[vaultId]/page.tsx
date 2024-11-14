@@ -1,9 +1,6 @@
 import { Text } from '@summerfi/app-earn-ui'
-import {
-  humanNetworktoSDKNetwork,
-  type PositionForecastAPIResponse,
-  type SDKNetwork,
-} from '@summerfi/app-types'
+import { type PositionForecastAPIResponse, type SDKNetwork } from '@summerfi/app-types'
+import { humanNetworktoSDKNetwork, subgraphNetworkToId } from '@summerfi/app-utils'
 
 import { getUserActivity } from '@/app/server-handlers/sdk/get-user-activity'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
@@ -11,7 +8,6 @@ import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { VaultOpenView } from '@/components/layout/VaultOpenView/VaultOpenView'
 import { fetchForecastData } from '@/features/forecast/fetch-forecast-data'
 import { parseForecastDatapoints } from '@/features/forecast/parse-forecast-datapoints'
-import { subgraphNetworkToId } from '@/helpers/network-helpers'
 
 type EarnVaultOpenPageProps = {
   params: {

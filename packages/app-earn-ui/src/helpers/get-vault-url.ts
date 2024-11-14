@@ -1,8 +1,5 @@
-import {
-  type SDKNetwork,
-  sdkNetworkToHumanNetwork,
-  type SDKVaultishType,
-} from '@summerfi/app-types'
+import { type SDKNetwork, type SDKVaultishType } from '@summerfi/app-types'
+import { sdkNetworkToHumanNetwork } from '@summerfi/app-utils'
 
 export const getVaultUrl = (vault?: SDKVaultishType) => {
   if (!vault) return ''

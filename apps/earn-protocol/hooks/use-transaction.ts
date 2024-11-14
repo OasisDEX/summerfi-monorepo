@@ -8,6 +8,7 @@ import {
   type SDKVaultishType,
   type TransactionInfoLabeled,
 } from '@summerfi/app-types'
+import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
 import { Address, ChainInfo, type TransactionInfo } from '@summerfi/sdk-client-react'
 import type BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
@@ -15,7 +16,6 @@ import { useRouter } from 'next/navigation'
 
 import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { TransactionAction } from '@/constants/transaction-actions'
-import { subgraphNetworkToSDKId } from '@/helpers/network-helpers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { type useClient } from '@/hooks/use-client'
 

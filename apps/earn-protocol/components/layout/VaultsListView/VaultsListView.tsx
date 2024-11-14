@@ -11,13 +11,16 @@ import {
 } from '@summerfi/app-earn-ui'
 import {
   type DropdownRawOption,
-  humanNetworktoSDKNetwork,
   type IconNamesList,
   type SDKNetwork,
-  sdkNetworkToHumanNetwork,
   type SDKVaultsListType,
 } from '@summerfi/app-types'
-import { formatCryptoBalance, zero } from '@summerfi/app-utils'
+import {
+  formatCryptoBalance,
+  humanNetworktoSDKNetwork,
+  sdkNetworkToHumanNetwork,
+  zero,
+} from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
 
 import { networkIconByNetworkName } from '@/constants/networkIcons'

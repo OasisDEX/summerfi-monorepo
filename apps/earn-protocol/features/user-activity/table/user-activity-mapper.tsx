@@ -6,12 +6,11 @@ import {
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { type TokenSymbolsList, UserActivityType, type UsersActivity } from '@summerfi/app-types'
-import { formatCryptoBalance, timeAgo } from '@summerfi/app-utils'
+import { formatCryptoBalance, subgraphNetworkToSDKId, timeAgo } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
 import { userActivitySorter } from '@/features/user-activity/table/user-activity-sorter'
-import { subgraphNetworkToSDKId } from '@/helpers/network-helpers'
 
 const activityLabelMap = {
   [UserActivityType.DEPOSIT]: 'Deposit',
