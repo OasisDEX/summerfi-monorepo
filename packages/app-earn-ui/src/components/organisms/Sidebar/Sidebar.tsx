@@ -26,7 +26,7 @@ export interface SidebarProps {
     url?: string
     disabled?: boolean
     loading?: boolean
-  } & ({ action: () => void; url?: never } | { action?: never; url: string })
+  }
   footnote?: ReactNode
   error?: string | ReactNode
   asDesktopOnly?: boolean
@@ -94,7 +94,7 @@ export const Sidebar: FC<SidebarProps> = ({
       <div className={sidebarClassNames.sidebarHeaderSpacer} />
       {content}
 
-      {primaryButton.action && (
+      {primaryButton.action && !primaryButton.url && (
         <Button
           variant="primaryLarge"
           style={{ marginBottom: 'var(--general-space-20)', width: '100%' }}
@@ -105,7 +105,7 @@ export const Sidebar: FC<SidebarProps> = ({
         </Button>
       )}
       {primaryButton.url && (
-        <Link href={primaryButton.url}>
+        <Link href={primaryButton.url} onClick={primaryButton.action}>
           <Button
             variant="primaryLarge"
             style={{ marginBottom: 'var(--general-space-20)', width: '100%' }}
