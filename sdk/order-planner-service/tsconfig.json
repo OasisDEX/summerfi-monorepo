@@ -7,5 +7,5 @@
   },
   "references": [{ "path": "../tokens-common" }, { "path": "../oracle-common" }],
   "include": ["src/**/*.ts", "tests/**/*.ts", "scripts/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]
 }
