@@ -245,7 +245,7 @@ export const useTransaction = ({
     }
 
     return {
-      label: `Prepare ${transactionType}`,
+      label: capitalize(transactionType),
       action: getTransactionsList,
     }
   }, [

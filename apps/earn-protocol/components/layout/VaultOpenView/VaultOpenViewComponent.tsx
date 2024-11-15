@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import {
-  Button,
   Expander,
   InputWithDropdown,
   ProjectedEarnings,
@@ -65,7 +64,7 @@ export const VaultOpenViewComponent = ({
   })
   const { amountParsed, manualSetAmount, amountDisplay, handleAmountChange, onBlur, onFocus } =
     useAmount({ vault })
-  const { sidebar, txHashes, removeTxHash, vaultChainId, reset } = useTransaction({
+  const { sidebar, txHashes, removeTxHash, vaultChainId } = useTransaction({
     vault,
     publicClient,
     transactionClient,
@@ -141,15 +140,6 @@ export const VaultOpenViewComponent = ({
     primaryButton: sidebar.primaryButton,
     footnote: (
       <>
-        {sidebar.error ?? amountParsed.gt(0) ? (
-          <Button
-            variant="secondarySmall"
-            style={{ width: '100%', marginBottom: 'var(--general-space-12)' }}
-            onClick={reset}
-          >
-            reset
-          </Button>
-        ) : null}
         {txHashes.map((transactionData) => (
           <TransactionHashPill
             key={transactionData.hash}
