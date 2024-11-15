@@ -76,7 +76,7 @@
     ],
     "outputs": [
       {
-        "name": "balance",
+        "name": "",
         "type": "uint256",
         "internalType": "uint256"
       }
@@ -1205,6 +1205,11 @@
   },
   {
     "type": "error",
+    "name": "GovernorNotSet",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "GovernorOnlyExecutor",
     "inputs": [
       {
@@ -1261,6 +1266,11 @@
         "internalType": "bytes32"
       }
     ]
+  },
+  {
+    "type": "error",
+    "name": "SummerGovernorInvalidCaller",
+    "inputs": []
   },
   {
     "type": "error",

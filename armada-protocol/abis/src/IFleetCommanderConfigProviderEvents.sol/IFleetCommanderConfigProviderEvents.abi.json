@@ -53,6 +53,19 @@
   },
   {
     "type": "event",
+    "name": "FleetCommanderStakingRewardsUpdated",
+    "inputs": [
+      {
+        "name": "newStakingRewards",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "FleetCommanderminimumBufferBalanceUpdated",
     "inputs": [
       {

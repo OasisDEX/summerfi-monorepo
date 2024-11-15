@@ -12,6 +12,19 @@
   },
   {
     "type": "function",
+    "name": "DECAY_CONTROLLER_ROLE",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "DEFAULT_ADMIN_ROLE",
     "inputs": [],
     "outputs": [
@@ -107,19 +120,6 @@
   },
   {
     "type": "function",
-    "name": "grantAdminRole",
-    "inputs": [
-      {
-        "name": "account",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "grantCommanderRole",
     "inputs": [
       {
@@ -164,10 +164,23 @@
     "name": "grantCuratorRole",
     "inputs": [
       {
-        "name": "fleetAddress",
+        "name": "fleetCommanderAddress",
         "type": "address",
         "internalType": "address"
       },
+      {
+        "name": "account",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "grantDecayControllerRole",
+    "inputs": [
       {
         "name": "account",
         "type": "address",
@@ -208,7 +221,7 @@
     "name": "grantKeeperRole",
     "inputs": [
       {
-        "name": "fleetAddress",
+        "name": "fleetCommanderAddress",
         "type": "address",
         "internalType": "address"
       },
@@ -296,19 +309,6 @@
   },
   {
     "type": "function",
-    "name": "revokeAdminRole",
-    "inputs": [
-      {
-        "name": "account",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "revokeCommanderRole",
     "inputs": [
       {
@@ -353,10 +353,23 @@
     "name": "revokeCuratorRole",
     "inputs": [
       {
-        "name": "fleetAddress",
+        "name": "fleetCommanderAddress",
         "type": "address",
         "internalType": "address"
       },
+      {
+        "name": "account",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "revokeDecayControllerRole",
+    "inputs": [
       {
         "name": "account",
         "type": "address",
@@ -397,7 +410,7 @@
     "name": "revokeKeeperRole",
     "inputs": [
       {
-        "name": "fleetAddress",
+        "name": "fleetCommanderAddress",
         "type": "address",
         "internalType": "address"
       },
@@ -626,6 +639,17 @@
   {
     "type": "error",
     "name": "CallerIsNotCurator",
+    "inputs": [
+      {
+        "name": "caller",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "CallerIsNotDecayController",
     "inputs": [
       {
         "name": "caller",

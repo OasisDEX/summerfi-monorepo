@@ -1,0 +1,15 @@
+[
+  {
+    "type": "event",
+    "name": "SlippageUpdated",
+    "inputs": [
+      {
+        "name": "newSlippagePercentage",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "Percentage"
+      }
+    ],
+    "anonymous": false
+  }
+]

@@ -392,6 +392,11 @@
         "internalType": "string"
       },
       {
+        "name": "details",
+        "type": "string",
+        "internalType": "string"
+      },
+      {
         "name": "symbol",
         "type": "string",
         "internalType": "string"
@@ -430,6 +435,19 @@
         "name": "initialTipRate",
         "type": "uint256",
         "internalType": "Percentage"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "fleetCommanderRewardsManagerFactory",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "contract FleetCommanderRewardsManagerFactory"
       }
     ],
     "stateMutability": "view"
@@ -482,6 +500,19 @@
   {
     "type": "function",
     "name": "governor",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "guardian",
     "inputs": [],
     "outputs": [
       {
@@ -585,6 +616,19 @@
   },
   {
     "type": "function",
+    "name": "mockGovernor",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "contract MockSummerGovernor"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "mockToken",
     "inputs": [],
     "outputs": [
@@ -674,6 +718,25 @@
   },
   {
     "type": "function",
+    "name": "rewardTokens",
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "contract ERC20Mock"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "setUp",
     "inputs": [],
     "outputs": [],
@@ -702,6 +765,19 @@
       }
     ],
     "stateMutability": "pure"
+  },
+  {
+    "type": "function",
+    "name": "stakingRewardsManager",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "contract IFleetCommanderRewardsManager"
+      }
+    ],
+    "stateMutability": "view"
   },
   {
     "type": "function",
@@ -861,6 +937,20 @@
   },
   {
     "type": "function",
+    "name": "test_AdjustBufferFromBufferWithMaxUint_ShouldFail",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "test_AdjustBufferFromMultipleArksToBufferWithMaxUint",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "test_AdjustBufferInvalidSourceArk",
     "inputs": [],
     "outputs": [],
@@ -903,6 +993,13 @@
   },
   {
     "type": "function",
+    "name": "test_AdjustBufferToBufferWithMaxUint_ShouldFail",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "test_AdjustBufferWithAmountExceedingMaxAllocation",
     "inputs": [],
     "outputs": [],
@@ -911,13 +1008,6 @@
   {
     "type": "function",
     "name": "test_AdjustBufferWithArkAtMaxAllocation",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "test_AdjustBufferWithMaxUint_ShouldFail",
     "inputs": [],
     "outputs": [],
     "stateMutability": "nonpayable"

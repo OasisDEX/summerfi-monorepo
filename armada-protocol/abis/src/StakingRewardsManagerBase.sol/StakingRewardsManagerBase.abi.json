@@ -288,10 +288,10 @@
   },
   {
     "type": "function",
-    "name": "stakeOnBehalf",
+    "name": "stakeOnBehalfOf",
     "inputs": [
       {
-        "name": "receiver",
+        "name": "account",
         "type": "address",
         "internalType": "address"
       },
@@ -332,6 +332,19 @@
   },
   {
     "type": "function",
+    "name": "unstake",
+    "inputs": [
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "userRewardPerTokenPaid",
     "inputs": [
       {
@@ -353,19 +366,6 @@
       }
     ],
     "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "withdraw",
-    "inputs": [
-      {
-        "name": "amount",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
   },
   {
     "type": "event",
@@ -496,6 +496,25 @@
   },
   {
     "type": "event",
+    "name": "Unstaked",
+    "inputs": [
+      {
+        "name": "account",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "Withdrawn",
     "inputs": [
       {
@@ -565,6 +584,17 @@
   {
     "type": "error",
     "name": "CallerIsNotCurator",
+    "inputs": [
+      {
+        "name": "caller",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "CallerIsNotDecayController",
     "inputs": [
       {
         "name": "caller",
@@ -658,6 +688,11 @@
   {
     "type": "error",
     "name": "CannotStakeZero",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "CannotUnstakeZero",
     "inputs": []
   },
   {
