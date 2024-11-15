@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - dev
+      - new-staging
 
 jobs:
   changes:
