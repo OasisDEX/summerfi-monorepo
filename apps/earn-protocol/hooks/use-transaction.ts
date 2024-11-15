@@ -256,16 +256,15 @@ export const useTransaction = ({
     isProperChainSelected,
     isSettingChain,
     amountParsed,
-    transactionType,
     txStatus,
     nextTransaction?.label,
+    transactionType,
     getTransactionsList,
     openAuthModal,
     isAuthModalOpen,
     vaultChainId,
     setChain,
-    transactions?.length,
-    txSteps,
+    vault.inputToken.symbol,
     executeNextTransaction,
   ])
 
