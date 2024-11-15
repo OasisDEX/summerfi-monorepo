@@ -1,4 +1,7 @@
 export type Styles = {
+  centerTitle: string
+  goBackButton: string
+  goBackButtonFillFLex: string
   sidebarErrorWrapper: string
   sidebarFootnoteWrapper: string
   sidebarHeaderActionButtonsWrapper: string

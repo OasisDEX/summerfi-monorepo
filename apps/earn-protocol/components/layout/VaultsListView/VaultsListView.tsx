@@ -27,7 +27,7 @@ type VaultsListViewProps = {
 }
 
 const allNetworksOption = {
-  iconName: 'question_mark' as IconNamesList,
+  iconName: 'earn_network_all' as IconNamesList,
   label: 'All Networks',
   value: 'all-networks',
 }

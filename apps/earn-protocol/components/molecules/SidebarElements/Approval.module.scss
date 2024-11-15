@@ -1,0 +1,22 @@
+.approvalText {
+  color: var(--color-text-secondary);
+  margin-top: var(--spacing-space-x-large);
+  margin-bottom: var(--general-space-24);
+}
+
+.customApprovalInput {
+  height: 54px;
+  border-radius: var(--radius-medium);
+  margin-left: var(--general-radius-32);
+  background-color: var(--color-surface-light);
+  text-align: left;
+  font-size: 16px;
+  line-height: 54px;
+  font-weight: 600;
+  line-height: 24px;
+  padding: 0 0 0 var(--spacing-space-medium);
+
+  &::placeholder {
+    color: var(--color-text-primary-disabled);
+  }
+}

@@ -19,19 +19,19 @@ const networks: { value: PortfolioAssetNetworkOption; icon?: ReactNode; label?: 
   },
   {
     value: NetworkNames.ethereumMainnet,
-    icon: <Icon iconName="network_ethereum" variant="m" />,
+    icon: <Icon iconName="earn_network_ethereum" variant="m" />,
   },
   {
     value: NetworkNames.baseMainnet,
-    icon: <Icon iconName="network_base" variant="m" />,
+    icon: <Icon iconName="earn_network_base" variant="m" />,
   },
   {
     value: NetworkNames.optimismMainnet,
-    icon: <Icon iconName="network_optimism" variant="m" />,
+    icon: <Icon iconName="earn_network_optimism" variant="m" />,
   },
   {
     value: NetworkNames.arbitrumMainnet,
-    icon: <Icon iconName="network_arbitrum" variant="m" />,
+    icon: <Icon iconName="earn_network_arbitrum" variant="m" />,
   },
 ]
 

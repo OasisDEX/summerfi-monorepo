@@ -1,12 +1,9 @@
 import { useEffect } from 'react'
 import {
   Expander,
-  InputWithDropdown,
-  ProjectedEarnings,
   Sidebar,
   SidebarFootnote,
   sidebarFootnote,
-  SkeletonLine,
   Text,
   useLocalStorageOnce,
   VaultOpenGrid,
@@ -20,12 +17,13 @@ import {
   type TokenSymbolsList,
   type UsersActivity,
 } from '@summerfi/app-types'
-import { formatCryptoBalance } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
 
 import { detailsLinks } from '@/components/layout/VaultOpenView/mocks'
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
+import { Approval } from '@/components/molecules/SidebarElements/Approval'
+import { InitialDeposit } from '@/components/molecules/SidebarElements/InitialDeposit'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { HistoricalYieldChart } from '@/components/organisms/Charts/HistoricalYieldChart'
 import { TransactionAction } from '@/constants/transaction-actions'
@@ -64,7 +62,7 @@ export const VaultOpenViewComponent = ({
   })
   const { amountParsed, manualSetAmount, amountDisplay, handleAmountChange, onBlur, onFocus } =
     useAmount({ vault })
-  const { sidebar, txHashes, removeTxHash, vaultChainId } = useTransaction({
+  const { sidebar, txHashes, removeTxHash, vaultChainId, nextTransaction, reset } = useTransaction({
     vault,
     publicClient,
     transactionClient,
@@ -106,36 +104,32 @@ export const VaultOpenViewComponent = ({
 
   const displayGraph = amountParsed.gt(0)
 
+  const sidebarContent = nextTransaction?.label ? (
+    {
+      approve: <Approval vault={vault} />,
+      deposit: <div>deposit</div>,
+    }[nextTransaction.label]
+  ) : (
+    <InitialDeposit
+      amountDisplay={amountDisplay}
+      handleAmountChange={handleAmountChange}
+      options={options}
+      dropdownValue={dropdownValue}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      tokenBalance={tokenBalance}
+      tokenBalanceLoading={tokenBalanceLoading}
+      manualSetAmount={manualSetAmount}
+      vault={vault}
+    />
+  )
+
   const sidebarProps = {
-    title: capitalize(TransactionAction.DEPOSIT),
-    content: (
-      <>
-        <InputWithDropdown
-          value={amountDisplay}
-          secondaryValue={amountDisplay ? `$${amountDisplay}` : undefined}
-          handleChange={handleAmountChange}
-          options={options}
-          dropdownValue={dropdownValue}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          selectAllOnFocus
-          heading={{
-            label: 'Balance',
-            value: tokenBalanceLoading ? (
-              <SkeletonLine />
-            ) : tokenBalance ? (
-              `${formatCryptoBalance(tokenBalance)} ${vault.inputToken.symbol}`
-            ) : (
-              '-'
-            ),
-            action: () => {
-              manualSetAmount(tokenBalance?.toString())
-            },
-          }}
-        />
-        <ProjectedEarnings earnings="1353" symbol={vault.inputToken.symbol as TokenSymbolsList} />
-      </>
-    ),
+    title: nextTransaction?.label
+      ? capitalize(nextTransaction.label)
+      : capitalize(TransactionAction.DEPOSIT),
+    content: sidebarContent,
+    goBackAction: nextTransaction?.label ? reset : undefined,
 
     primaryButton: sidebar.primaryButton,
     footnote: (

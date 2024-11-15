@@ -1,5 +1,6 @@
 .sidebarWrapperDesktop {
   visibility: hidden;
+
   @media screen and (min-width: 768px) {
     visibility: visible;
   }
@@ -18,6 +19,21 @@
   align-items: center;
   width: 100%;
   padding: var(--general-space-24) 0;
+
+  &.centerTitle {
+    justify-content: center;
+  }
+}
+
+.goBackButton {
+  width: 100%;
+  justify-self: flex-start;
+  cursor: pointer;
+}
+
+.goBackButtonFillFLex {
+  // fills the remaining space
+  width: 100%;
 }
 
 .sidebarHeaderActionButtonsWrapper {

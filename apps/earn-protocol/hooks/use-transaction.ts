@@ -230,7 +230,10 @@ export const useTransaction = ({
     // execute them one by one
     if (nextTransaction?.label) {
       return {
-        label: `${capitalize(nextTransaction.label)} (${transactions?.length}/${txSteps})`,
+        label: {
+          approve: `Approve ${vault.inputToken.symbol}`,
+          deposit: 'Deposit',
+        }[nextTransaction.label],
         action: executeNextTransaction,
       }
     }
@@ -281,6 +284,7 @@ export const useTransaction = ({
       primaryButton,
       error,
     },
+    nextTransaction,
     txHashes,
     removeTxHash,
     vaultChainId,

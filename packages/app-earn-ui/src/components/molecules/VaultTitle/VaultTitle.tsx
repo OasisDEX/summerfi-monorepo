@@ -12,17 +12,17 @@ import { Text } from '@/components/atoms/Text/Text'
 import { getTokenGuarded } from '@/tokens/helpers'
 
 const networkIdIconMap = {
-  [NetworkIds.MAINNET]: <Icon iconName="network_ethereum" size={16} />,
-  [NetworkIds.BASEMAINNET]: <Icon iconName="network_base" size={16} />,
-  [NetworkIds.ARBITRUMMAINNET]: <Icon iconName="network_arbitrum" size={16} />,
-  [NetworkIds.OPTIMISMMAINNET]: <Icon iconName="network_optimism" size={16} />,
+  [NetworkIds.MAINNET]: <Icon iconName="earn_network_ethereum" size={16} />,
+  [NetworkIds.BASEMAINNET]: <Icon iconName="earn_network_base" size={16} />,
+  [NetworkIds.ARBITRUMMAINNET]: <Icon iconName="earn_network_arbitrum" size={16} />,
+  [NetworkIds.OPTIMISMMAINNET]: <Icon iconName="earn_network_optimism" size={16} />,
 }
 
 const networkNameIconMap = {
-  [SDKNetwork.Mainnet]: <Icon iconName="network_ethereum" size={16} />,
-  [SDKNetwork.Base]: <Icon iconName="network_base" size={16} />,
-  [SDKNetwork.ArbitrumOne]: <Icon iconName="network_arbitrum" size={16} />,
-  [SDKNetwork.Optimism]: <Icon iconName="network_optimism" size={16} />,
+  [SDKNetwork.Mainnet]: <Icon iconName="earn_network_ethereum" size={16} />,
+  [SDKNetwork.Base]: <Icon iconName="earn_network_base" size={16} />,
+  [SDKNetwork.ArbitrumOne]: <Icon iconName="earn_network_arbitrum" size={16} />,
+  [SDKNetwork.Optimism]: <Icon iconName="earn_network_optimism" size={16} />,
 }
 
 interface VaultTitleProps {
