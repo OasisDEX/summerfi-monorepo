@@ -20,6 +20,7 @@ export { ToggleButton } from './components/atoms/ToggleButton/ToggleButton'
 export { Timeframes } from './components/atoms/Timeframes/Timeframes'
 export { LoadableAvatar } from './components/atoms/LoadableAvatar/LoadableAvatar'
 export { AnimateHeight } from './components/atoms/AnimateHeight/AnimateHeight'
+export { BallBlob } from './components/atoms/BallBlob/BallBlob'
 
 export { Footer } from './components/layout/Footer/Footer'
 
