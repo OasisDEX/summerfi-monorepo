@@ -99,6 +99,11 @@
             "name": "maxRebalanceOperations",
             "type": "uint256",
             "internalType": "uint256"
+          },
+          {
+            "name": "stakingRewardsManager",
+            "type": "address",
+            "internalType": "address"
           }
         ]
       }
@@ -150,6 +155,24 @@
         "name": "newDepositCap",
         "type": "uint256",
         "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "setArkMaxDepositPercentageOfTVL",
+    "inputs": [
+      {
+        "name": "ark",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "newMaxDepositPercentageOfTVL",
+        "type": "uint256",
+        "internalType": "Percentage"
       }
     ],
     "outputs": [],
@@ -231,6 +254,19 @@
     "stateMutability": "nonpayable"
   },
   {
+    "type": "function",
+    "name": "setStakingRewardsManager",
+    "inputs": [
+      {
+        "name": "newStakingRewardsManager",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
     "type": "event",
     "name": "ArkAdded",
     "inputs": [
@@ -278,6 +314,19 @@
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "FleetCommanderStakingRewardsUpdated",
+    "inputs": [
+      {
+        "name": "newStakingRewards",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
       }
     ],
     "anonymous": false
@@ -347,6 +396,11 @@
   {
     "type": "error",
     "name": "FleetCommanderInvalidArkAddress",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "FleetCommanderInvalidStakingRewardsManager",
     "inputs": []
   }
 ]

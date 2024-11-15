@@ -23,6 +23,11 @@
             "internalType": "string"
           },
           {
+            "name": "details",
+            "type": "string",
+            "internalType": "string"
+          },
+          {
             "name": "accessManager",
             "type": "address",
             "internalType": "address"
@@ -33,7 +38,7 @@
             "internalType": "address"
           },
           {
-            "name": "token",
+            "name": "asset",
             "type": "address",
             "internalType": "address"
           },
@@ -56,11 +61,29 @@
             "name": "requiresKeeperData",
             "type": "bool",
             "internalType": "bool"
+          },
+          {
+            "name": "maxDepositPercentageOfTVL",
+            "type": "uint256",
+            "internalType": "Percentage"
           }
         ]
       }
     ],
     "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "asset",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "contract IERC20"
+      }
+    ],
+    "stateMutability": "view"
   },
   {
     "type": "function",
@@ -135,7 +158,7 @@
         "internalType": "address"
       },
       {
-        "name": "token",
+        "name": "asset",
         "type": "address",
         "internalType": "contract IERC20"
       },
@@ -160,9 +183,19 @@
         "internalType": "string"
       },
       {
+        "name": "details",
+        "type": "string",
+        "internalType": "string"
+      },
+      {
         "name": "requiresKeeperData",
         "type": "bool",
         "internalType": "bool"
+      },
+      {
+        "name": "maxDepositPercentageOfTVL",
+        "type": "uint256",
+        "internalType": "Percentage"
       }
     ],
     "stateMutability": "view"
@@ -213,6 +246,19 @@
   },
   {
     "type": "function",
+    "name": "fleetCommanderRewardsManagerFactory",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "generateRole",
     "inputs": [
       {
@@ -256,7 +302,7 @@
             "internalType": "address"
           },
           {
-            "name": "token",
+            "name": "asset",
             "type": "address",
             "internalType": "contract IERC20"
           },
@@ -281,9 +327,19 @@
             "internalType": "string"
           },
           {
+            "name": "details",
+            "type": "string",
+            "internalType": "string"
+          },
+          {
             "name": "requiresKeeperData",
             "type": "bool",
             "internalType": "bool"
+          },
+          {
+            "name": "maxDepositPercentageOfTVL",
+            "type": "uint256",
+            "internalType": "Percentage"
           }
         ]
       }
@@ -326,6 +382,19 @@
       }
     ],
     "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "maxDepositPercentageOfTVL",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "Percentage"
+      }
+    ],
+    "stateMutability": "view"
   },
   {
     "type": "function",
@@ -442,6 +511,19 @@
   },
   {
     "type": "function",
+    "name": "setMaxDepositPercentageOfTVL",
+    "inputs": [
+      {
+        "name": "newMaxDepositPercentageOfTVL",
+        "type": "uint256",
+        "internalType": "Percentage"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "setMaxRebalanceInflow",
     "inputs": [
       {
@@ -499,19 +581,6 @@
         "name": "",
         "type": "address",
         "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "token",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "contract IERC20"
       }
     ],
     "stateMutability": "view"
@@ -697,6 +766,19 @@
   },
   {
     "type": "event",
+    "name": "MaxDepositPercentageOfTVLUpdated",
+    "inputs": [
+      {
+        "name": "newMaxDepositPercentageOfTVL",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "Percentage"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "MaxRebalanceInflowUpdated",
     "inputs": [
       {
@@ -817,6 +899,17 @@
   {
     "type": "error",
     "name": "CallerIsNotCurator",
+    "inputs": [
+      {
+        "name": "caller",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "CallerIsNotDecayController",
     "inputs": [
       {
         "name": "caller",
@@ -998,6 +1091,11 @@
   {
     "type": "error",
     "name": "KeeperDataRequired",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "ReentrancyGuardReentrantCall",
     "inputs": []
   },
   {

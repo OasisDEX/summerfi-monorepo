@@ -52,5 +52,10 @@
     "type": "error",
     "name": "FleetCommanderInvalidArkAddress",
     "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "FleetCommanderInvalidStakingRewardsManager",
+    "inputs": []
   }
 ]

@@ -188,7 +188,7 @@
   },
   {
     "type": "function",
-    "name": "stakeOnBehalf",
+    "name": "stakeOnBehalfOf",
     "inputs": [
       {
         "name": "account",
@@ -232,7 +232,7 @@
   },
   {
     "type": "function",
-    "name": "withdraw",
+    "name": "unstake",
     "inputs": [
       {
         "name": "amount",
@@ -372,6 +372,25 @@
   },
   {
     "type": "event",
+    "name": "Unstaked",
+    "inputs": [
+      {
+        "name": "account",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "Withdrawn",
     "inputs": [
       {
@@ -397,6 +416,11 @@
   {
     "type": "error",
     "name": "CannotStakeZero",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "CannotUnstakeZero",
     "inputs": []
   },
   {

@@ -25,7 +25,7 @@
       {
         "name": "vestingType",
         "type": "uint8",
-        "internalType": "enum SummerVestingWallet.VestingType"
+        "internalType": "enum ISummerVestingWallet.VestingType"
       },
       {
         "name": "_timeBasedVestingAmount",
@@ -141,7 +141,7 @@
       {
         "name": "",
         "type": "uint8",
-        "internalType": "enum SummerVestingWallet.VestingType"
+        "internalType": "enum ISummerVestingWallet.VestingType"
       }
     ],
     "stateMutability": "view"

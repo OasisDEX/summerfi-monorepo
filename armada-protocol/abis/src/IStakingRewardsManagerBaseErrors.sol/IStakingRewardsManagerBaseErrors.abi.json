@@ -11,6 +11,11 @@
   },
   {
     "type": "error",
+    "name": "CannotUnstakeZero",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "CannotWithdrawZero",
     "inputs": []
   },

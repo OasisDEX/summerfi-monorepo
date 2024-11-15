@@ -23,24 +23,34 @@
   },
   {
     "type": "error",
-    "name": "FleetCommanderCantRebalanceToArk",
-    "inputs": [
-      {
-        "name": "ark",
-        "type": "address",
-        "internalType": "address"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "FleetCommanderCantUseMaxUintForBufferAdjustement",
+    "name": "FleetCommanderCantUseMaxUintMovingFromBuffer",
     "inputs": []
   },
   {
     "type": "error",
     "name": "FleetCommanderCantUseRebalanceOnBufferArk",
     "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "FleetCommanderEffectiveDepositCapExceeded",
+    "inputs": [
+      {
+        "name": "ark",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "effectiveDepositCap",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
   },
   {
     "type": "error",
@@ -146,6 +156,11 @@
         "internalType": "uint256"
       }
     ]
+  },
+  {
+    "type": "error",
+    "name": "FleetCommanderStakingRewardsManagerNotSet",
+    "inputs": []
   },
   {
     "type": "error",
