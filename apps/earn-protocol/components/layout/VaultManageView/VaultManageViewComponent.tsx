@@ -55,7 +55,7 @@ export const VaultManageViewComponent = ({
   viewWalletAddress: string
 }) => {
   const user = useUser()
-  const { publicClient, transactionClient, tokenBalance, tokenBalanceLoading } = useClient({
+  const { tokenBalance, tokenBalanceLoading } = useClient({
     vault,
   })
   const { amountParsed, amountDisplay, manualSetAmount, handleAmountChange, onFocus, onBlur } =
@@ -70,8 +70,6 @@ export const VaultManageViewComponent = ({
     setTransactionType,
   } = useTransaction({
     vault,
-    publicClient,
-    transactionClient,
     amountParsed,
     manualSetAmount,
   })

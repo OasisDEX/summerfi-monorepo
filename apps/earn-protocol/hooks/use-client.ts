@@ -1,59 +1,29 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useChain, useUser } from '@account-kit/react'
-import { type SDKVaultishType } from '@summerfi/app-types'
-import { subgraphNetworkToSDKId, ten } from '@summerfi/app-utils'
+import { useUser } from '@account-kit/react'
+import { type SDKChainId, type SDKVaultishType } from '@summerfi/app-types'
+import { ten } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
-import { createPublicClient, createWalletClient, custom, erc20Abi } from 'viem'
+import { createPublicClient, erc20Abi, http } from 'viem'
 
-import { useClientChainId } from '@/hooks/use-client-chain-id'
+import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
+import { useUpdateAANetwork } from '@/hooks/use-update-aa-network'
 
 export const useClient = ({ vault }: { vault?: SDKVaultishType }) => {
   const user = useUser()
-  const { chain: connectedChain } = useChain()
   const [tokenBalance, setTokenBalance] = useState<BigNumber>()
   const [tokenBalanceLoading, setTokenBalanceLoading] = useState(true)
-  const { clientChainId } = useClientChainId()
-  const transactionClient = useMemo(() => {
-    // used for the tx itself
-    if (user) {
-      // todo: handle other wallets, this is just working with metamask
-      if (user.type === 'eoa' && window.ethereum) {
-        const externalProvider = window.ethereum
 
-        return createWalletClient({
-          chain: connectedChain,
-          transport: custom(externalProvider),
-          account: user.address,
-        })
-      }
-    }
+  const { appChain } = useUpdateAANetwork()
 
-    return null
-  }, [user, connectedChain])
-
-  const publicClient = useMemo(
-    // used for the tx receipt
-    () => {
-      if (user) {
-        // todo: handle other wallets, this is just working with metamask
-        if (user.type === 'eoa' && window.ethereum) {
-          const externalProvider = window.ethereum
-
-          return createPublicClient({
-            chain: connectedChain,
-            transport: custom(externalProvider),
-          })
-        }
-      }
-
-      return null
-    },
-    [connectedChain, user],
-  )
-
-  const vaultChainId = vault ? subgraphNetworkToSDKId(vault.protocol.network) : null
-
-  const isProperChainSelected = clientChainId === vaultChainId
+  // Client for read-only data fetching using our rpcGateway
+  const publicClient = useMemo(() => {
+    return createPublicClient({
+      chain: appChain,
+      transport: http(
+        SDKChainIdToRpcGatewayMap[appChain.id as SDKChainId.ARBITRUM | SDKChainId.BASE],
+      ),
+    })
+  }, [appChain])
 
   useEffect(() => {
     const inputTokenAddress = vault?.inputToken.id
@@ -63,8 +33,8 @@ export const useClient = ({ vault }: { vault?: SDKVaultishType }) => {
       setTokenBalance(undefined)
     }
 
-    if (user?.address && publicClient) {
-      if (inputTokenAddress && inputTokenDecimals && !tokenBalance && isProperChainSelected) {
+    if (user?.address) {
+      if (inputTokenAddress && inputTokenDecimals && !tokenBalance) {
         setTokenBalanceLoading(true)
         publicClient
           .readContract({
@@ -84,22 +54,14 @@ export const useClient = ({ vault }: { vault?: SDKVaultishType }) => {
             // eslint-disable-next-line no-console
             console.error('Error reading token balance', err)
           })
+      } else {
+        setTokenBalanceLoading(false)
       }
-      setTokenBalanceLoading(false)
     }
-  }, [
-    publicClient,
-    tokenBalance,
-    user,
-    tokenBalanceLoading,
-    vault?.inputToken.id,
-    vault?.inputToken.decimals,
-    isProperChainSelected,
-  ])
+  }, [publicClient, tokenBalance, user, vault?.inputToken.id, vault?.inputToken.decimals])
 
   return {
     publicClient,
-    transactionClient,
     tokenBalance,
     tokenBalanceLoading,
   }

@@ -23,7 +23,7 @@ export const formatDateDifference = ({ from, to }: { from: Date; to: Date }): st
   const seconds = Math.floor((to.getTime() - from.getTime()) / 1000)
 
   if (seconds < 60) {
-    return `${seconds} second${seconds !== 1 ? 's' : ''}`
+    return `just now`
   }
 
   const minutes = Math.floor(seconds / 60)
