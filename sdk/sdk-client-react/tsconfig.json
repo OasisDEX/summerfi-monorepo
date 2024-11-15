@@ -7,5 +7,5 @@
     "jsx": "react" // Add this line
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "tests/**/*.ts"],
-  "exclude": ["node_modules","dist"]
+  "exclude": ["node_modules", "dist"]
 }

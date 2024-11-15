@@ -12,5 +12,5 @@
   },
   "files": ["node_modules/jest-expect-message/types/index.d.ts"],
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules","dist"]
+  "exclude": ["node_modules", "dist"]
 }
