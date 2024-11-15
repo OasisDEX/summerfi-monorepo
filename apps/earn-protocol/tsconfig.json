@@ -23,5 +23,5 @@
     ".next/types/**/*.ts",
     "./.eslintrc.cjs"
   ],
-  "exclude": ["node_modules","dist", "out/**/*", "scripts/**/*"]
+  "exclude": ["node_modules", "dist", "out/**/*", "scripts/**/*", ".next"]
 }
