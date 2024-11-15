@@ -60,5 +60,6 @@
     {
       "path": "../rays-db/tsconfig.build.json"
     }
-  ]
+  ],
+  "exclude": ["../../node_modules", "../../.sst", "../../turbo", "../../.turbo"]
 }
