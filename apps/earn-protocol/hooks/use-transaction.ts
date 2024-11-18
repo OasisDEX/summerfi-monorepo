@@ -48,7 +48,6 @@ export const useTransaction = ({
   )
   const { refresh: refreshView } = useRouter()
   const [txHashes, setTxHashes] = useState<{ type: EarnTransactionTypes; hash: string }[]>([])
-  const [txSteps, setTxSteps] = useState<number>()
   const [txStatus, setTxStatus] = useState<EarnTransactionViewStates>('idle')
   const [transactions, setTransactions] = useState<TransactionInfoLabeled[]>()
   const [error, setError] = useState<string>()
@@ -165,7 +164,6 @@ export const useTransaction = ({
           throw new Error('Error getting the transactions list')
         }
         setTransactions(labelTransactions(transactionsList))
-        setTxSteps(transactionsList.length)
         setTxStatus('txPrepared')
       } catch (err) {
         if (err instanceof Error) {
