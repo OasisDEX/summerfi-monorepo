@@ -8,6 +8,7 @@ export type Styles = {
   sidebarHeaderChevron: string
   sidebarHeaderSpacer: string
   sidebarHeaderWrapper: string
+  sidebarTitle: string
   sidebarWrapper: string
   sidebarWrapperDesktop: string
 }

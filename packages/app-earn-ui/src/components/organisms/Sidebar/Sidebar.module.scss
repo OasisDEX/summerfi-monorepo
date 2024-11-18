@@ -41,6 +41,11 @@
   justify-content: flex-start;
 }
 
+.sidebarTitle {
+  color: var(--earn-protocol-secondary-100);
+  white-space: nowrap;
+}
+
 .sidebarHeaderChevron {
   display: flex;
 

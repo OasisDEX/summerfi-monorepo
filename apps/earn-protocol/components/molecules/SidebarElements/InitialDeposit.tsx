@@ -5,6 +5,7 @@ import type BigNumber from 'bignumber.js'
 
 type InitialDepositProps = {
   amountDisplay: string
+  amountDisplayUSD: string
   handleAmountChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   options: DropdownOption[]
   dropdownValue: DropdownOption
@@ -18,6 +19,7 @@ type InitialDepositProps = {
 
 export const InitialDeposit = ({
   amountDisplay,
+  amountDisplayUSD,
   handleAmountChange,
   options,
   dropdownValue,
@@ -32,7 +34,7 @@ export const InitialDeposit = ({
     <>
       <InputWithDropdown
         value={amountDisplay}
-        secondaryValue={amountDisplay ? `$${amountDisplay}` : undefined}
+        secondaryValue={amountDisplayUSD}
         handleChange={handleAmountChange}
         options={options}
         dropdownValue={dropdownValue}

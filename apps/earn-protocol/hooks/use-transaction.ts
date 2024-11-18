@@ -9,26 +9,30 @@ import {
   useUser,
 } from '@account-kit/react'
 import {
+  type EarnAllowanceTypes,
   type EarnTransactionTypes,
   type EarnTransactionViewStates,
   type SDKVaultishType,
   type TransactionInfoLabeled,
 } from '@summerfi/app-types'
-import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
+import { subgraphNetworkToSDKId, ten, zero } from '@summerfi/app-utils'
 import { Address, ChainInfo, type TransactionInfo } from '@summerfi/sdk-client-react'
-import type BigNumber from 'bignumber.js'
+import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 import { useRouter } from 'next/navigation'
+import { encodeFunctionData, erc20Abi } from 'viem'
 
 import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { TransactionAction } from '@/constants/transaction-actions'
 import { useAppSDK } from '@/hooks/use-app-sdk'
+import { type useClient } from '@/hooks/use-client'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 
 type UseTransactionParams = {
   vault: SDKVaultishType
-  amountParsed: BigNumber | undefined
-  manualSetAmount: (amountParsed: string | undefined) => void
+  amount: BigNumber | undefined
+  manualSetAmount: (amount: string | undefined) => void
+  publicClient?: ReturnType<typeof useClient>['publicClient']
 }
 
 const labelTransactions = (transactions: TransactionInfo[]) => {
@@ -39,38 +43,38 @@ const labelTransactions = (transactions: TransactionInfo[]) => {
   }))
 }
 
-export const useTransaction = ({ vault, manualSetAmount, amountParsed }: UseTransactionParams) => {
+export const useTransaction = ({
+  vault,
+  manualSetAmount,
+  amount,
+  publicClient,
+}: UseTransactionParams) => {
   const [transactionType, setTransactionType] = useState<TransactionAction>(
     TransactionAction.DEPOSIT,
   )
   const { refresh: refreshView } = useRouter()
+  const user = useUser()
+  const [approval, setApproval] = useState<BigNumber>()
+  const [approvalType, setApprovalType] = useState<EarnAllowanceTypes>('deposit')
+  const [approvalCustomValue, setApprovalCustomValue] = useState<BigNumber>(zero)
   const [txHashes, setTxHashes] = useState<{ type: EarnTransactionTypes; hash: string }[]>([])
   const [txStatus, setTxStatus] = useState<EarnTransactionViewStates>('idle')
   const [transactions, setTransactions] = useState<TransactionInfoLabeled[]>()
   const [error, setError] = useState<string>()
   const { getDepositTX, getWithdrawTX } = useAppSDK()
-  const user = useUser()
   const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
   const { setChain, isSettingChain } = useChain()
   const { clientChainId } = useClientChainId()
 
   const { client: smartAccountClient } = useSmartAccountClient({ type: 'LightAccount' })
 
-  const reset = useCallback(() => {
-    manualSetAmount(undefined)
-    setTransactions(undefined)
-    setTxStatus('idle')
-    setError(undefined)
-    setTxHashes([])
-  }, [manualSetAmount])
-
-  const removeTxHash = useCallback((txHash: string) => {
-    setTxHashes((prev) => prev.filter((tx) => tx.hash !== txHash))
-  }, [])
-
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
-
   const isProperChainSelected = clientChainId === vaultChainId
+  const {
+    symbol: inputTokenSymbol,
+    id: inputTokenAddress,
+    decimals: inputTokenDecimals,
+  } = vault.inputToken
 
   const nextTransaction = useMemo(() => {
     if (!transactions || transactions.length === 0) {
@@ -81,22 +85,19 @@ export const useTransaction = ({ vault, manualSetAmount, amountParsed }: UseTran
   }, [transactions])
 
   // Configure User Operation (transaction) sender, passing client which can be undefined
-  const { sendUserOperation } = useSendUserOperation({
+  const { sendUserOperation, error: sendUserOperationError } = useSendUserOperation({
     client: smartAccountClient,
     waitForTxn: true,
     onSuccess: ({ hash }) => {
-      // await publicClient.waitForTransactionReceipt({
-      //   hash,
-      //   confirmations: 5,
-      // })
-
-      setTxHashes((prev) => [
-        ...prev,
-        {
-          type: nextTransaction!.label,
-          hash,
-        },
-      ])
+      if (nextTransaction) {
+        setTxHashes((prev) => [
+          ...prev,
+          {
+            type: nextTransaction.label,
+            hash,
+          },
+        ])
+      }
       setTxStatus('txSuccess')
       setTransactions(transactions?.slice(1))
     },
@@ -112,38 +113,101 @@ export const useTransaction = ({ vault, manualSetAmount, amountParsed }: UseTran
     },
   })
 
-  const sendTransaction = ({
-    target,
-    data,
-    value = 0n,
-  }: {
-    target: `0x${string}`
-    data: `0x${string}`
-    value?: bigint
-  }) => {
-    sendUserOperation({
-      uo: {
-        target,
-        data,
-        value,
-      },
-    })
-  }
+  const sendTransaction = useCallback(
+    ({
+      target,
+      data,
+      value = 0n,
+    }: {
+      target: `0x${string}`
+      data: `0x${string}`
+      value?: bigint
+    }) => {
+      sendUserOperation({
+        uo: {
+          target,
+          data,
+          value,
+        },
+      })
+    },
+    [sendUserOperation],
+  )
 
-  const executeNextTransaction = useCallback(async () => {
+  const executeNextTransaction = useCallback(() => {
     setTxStatus('txInProgress')
 
     if (!nextTransaction) {
       throw new Error('No transaction to execute')
     }
-    sendTransaction({
-      target: nextTransaction.transaction.target.value,
-      data: nextTransaction.transaction.calldata,
-    })
-  }, [nextTransaction, transactions])
+    if (!user) {
+      throw new Error('User not logged in')
+    }
+    if (!publicClient) {
+      throw new Error('Public client not available')
+    }
+    if (nextTransaction.label === 'approve') {
+      // approval amount defaults to the amount user wants to deposit
+      if (approvalType === 'deposit') {
+        sendTransaction({
+          target: nextTransaction.transaction.target.value,
+          data: nextTransaction.transaction.calldata,
+        })
+
+        return
+      }
+      // if not, we need to approve a custom amount
+      const calldata = encodeFunctionData({
+        abi: erc20Abi,
+        functionName: 'approve',
+        args: [
+          user.address,
+          BigInt(approvalCustomValue.times(ten.pow(inputTokenDecimals)).toString()),
+        ],
+      })
+
+      sendTransaction({
+        target: nextTransaction.transaction.target.value,
+        data: calldata,
+      })
+    } else {
+      // this will be deposit/withdraw 99.99% of the time
+      sendTransaction({
+        target: nextTransaction.transaction.target.value,
+        data: nextTransaction.transaction.calldata,
+      })
+    }
+  }, [
+    approvalCustomValue,
+    approvalType,
+    inputTokenDecimals,
+    nextTransaction,
+    publicClient,
+    sendTransaction,
+    user,
+  ])
+
+  const backToInit = useCallback(() => {
+    // just goes to the first view, without any transactions loaded
+    setTransactions(undefined)
+    setTxStatus('idle')
+    setApprovalType('deposit')
+  }, [])
+
+  const reset = useCallback(() => {
+    // resets everything
+    backToInit()
+    manualSetAmount(undefined)
+    setError(undefined)
+    setTxHashes([])
+  }, [manualSetAmount, backToInit])
+
+  const removeTxHash = useCallback((txHash: string) => {
+    setTxHashes((prev) => prev.filter((tx) => tx.hash !== txHash))
+  }, [])
 
   const getTransactionsList = useCallback(async () => {
-    if (amountParsed && user) {
+    if (amount && user) {
       setTxStatus('loadingTx')
       try {
         let transactionsList: TransactionInfo[] = []
@@ -154,7 +218,7 @@ export const useTransaction = ({ vault, manualSetAmount, amountParsed }: UseTran
               walletAddress: Address.createFromEthereum({
                 value: user.address,
               }),
-              amount: amountParsed.toString(),
+              amount: amount.toString(),
               fleetAddress: vault.id,
               chainInfo: ChainInfo.createFrom({
                 name: vault.protocol.network,
@@ -168,7 +232,7 @@ export const useTransaction = ({ vault, manualSetAmount, amountParsed }: UseTran
               walletAddress: Address.createFromEthereum({
                 value: user.address,
               }),
-              amount: amountParsed.toString(),
+              amount: amount.toString(),
               fleetAddress: vault.id,
               chainInfo: ChainInfo.createFrom({
                 name: vault.protocol.network,
@@ -196,7 +260,7 @@ export const useTransaction = ({ vault, manualSetAmount, amountParsed }: UseTran
       }
     }
   }, [
-    amountParsed,
+    amount,
     user,
     transactionType,
     getDepositTX,
@@ -228,7 +292,7 @@ export const useTransaction = ({ vault, manualSetAmount, amountParsed }: UseTran
         loading: isSettingChain,
       }
     }
-    if (!amountParsed || amountParsed.isZero()) {
+    if (!amount || amount.isZero()) {
       return {
         label: capitalize(transactionType),
         action: () => null,
@@ -251,8 +315,9 @@ export const useTransaction = ({ vault, manualSetAmount, amountParsed }: UseTran
     if (nextTransaction?.label) {
       return {
         label: {
-          approve: `Approve ${vault.inputToken.symbol}`,
+          approve: `Approve ${inputTokenSymbol}`,
           deposit: 'Deposit',
+          withdraw: 'Withdraw',
         }[nextTransaction.label],
         action: executeNextTransaction,
       }
@@ -268,14 +333,14 @@ export const useTransaction = ({ vault, manualSetAmount, amountParsed }: UseTran
     }
 
     return {
-      label: capitalize(transactionType),
+      label: 'Preview',
       action: getTransactionsList,
     }
   }, [
     user,
     isProperChainSelected,
     isSettingChain,
-    amountParsed,
+    amount,
     txStatus,
     nextTransaction?.label,
     transactionType,
@@ -284,9 +349,50 @@ export const useTransaction = ({ vault, manualSetAmount, amountParsed }: UseTran
     isAuthModalOpen,
     vaultChainId,
     setChain,
-    vault.inputToken.symbol,
+    inputTokenSymbol,
     executeNextTransaction,
   ])
+
+  const title = useMemo(() => {
+    if (nextTransaction?.label === 'deposit') {
+      return 'Preview deposit'
+    }
+
+    return nextTransaction?.label
+      ? capitalize(nextTransaction.label)
+      : capitalize(TransactionAction.DEPOSIT)
+  }, [nextTransaction?.label])
+
+  // load approval amount
+  useEffect(() => {
+    if (publicClient && user) {
+      publicClient
+        .readContract({
+          abi: erc20Abi,
+          address: inputTokenAddress as `0x${string}`,
+          functionName: 'allowance',
+          args: [user.address, vault.id as `0x${string}`],
+        })
+        .then((approvalAmount) => {
+          const approvalParsed = new BigNumber(approvalAmount.toString()).div(
+            ten.pow(inputTokenDecimals),
+          )
+
+          setApproval(approvalParsed)
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error('Error reading token allowance', err)
+        })
+    }
+  }, [inputTokenAddress, inputTokenDecimals, publicClient, user, vault.id])
+
+  // skip approval if the user has enough allowance
+  useEffect(() => {
+    if (nextTransaction?.label === 'approve' && approval && approval.gte(amount ?? zero)) {
+      setTransactions(transactions?.slice(1))
+    }
+  }, [amount, approval, nextTransaction?.label, transactions])
 
   // refresh data when all transactions are executed and are successful
   useEffect(() => {
@@ -296,10 +402,17 @@ export const useTransaction = ({ vault, manualSetAmount, amountParsed }: UseTran
     }
   }, [refreshView, reset, transactions?.length, txStatus])
 
+  // watch for sendUserOperationError
+  useEffect(() => {
+    if (sendUserOperationError && txStatus === 'txInProgress') {
+      setTxStatus('txError')
+    }
+  }, [sendUserOperationError, txStatus])
+
   return {
     manualSetAmount,
-    amountParsed,
     sidebar: {
+      title,
       primaryButton,
       error,
     },
@@ -308,8 +421,13 @@ export const useTransaction = ({ vault, manualSetAmount, amountParsed }: UseTran
     removeTxHash,
     vaultChainId,
     reset,
+    backToInit,
     user,
     setTransactionType,
     transactionType,
+    approvalType,
+    setApprovalType,
+    setApprovalCustomValue,
+    approvalCustomValue,
   }
 }

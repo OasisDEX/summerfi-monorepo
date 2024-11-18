@@ -1,7 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { useUser } from '@account-kit/react'
 import {
-  Button,
   Expander,
   InputWithDropdown,
   ProjectedEarnings,
@@ -24,7 +23,6 @@ import {
 } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client-react'
-import { capitalize } from 'lodash-es'
 
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { HistoricalYieldChart } from '@/components/organisms/Charts/HistoricalYieldChart'
@@ -55,7 +53,7 @@ export const VaultManageViewComponent = ({
   viewWalletAddress: string
 }) => {
   const user = useUser()
-  const { tokenBalance, tokenBalanceLoading } = useClient({
+  const { tokenBalance, tokenBalanceLoading, publicClient } = useClient({
     vault,
   })
   const { amountParsed, amountDisplay, manualSetAmount, handleAmountChange, onFocus, onBlur } =
@@ -70,8 +68,9 @@ export const VaultManageViewComponent = ({
     setTransactionType,
   } = useTransaction({
     vault,
-    amountParsed,
+    amount: amountParsed,
     manualSetAmount,
+    publicClient,
   })
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
@@ -127,7 +126,7 @@ export const VaultManageViewComponent = ({
   }, [manualSetAmount, ownerView, position.amount.amount, tokenBalance, transactionType])
 
   const sidebarProps: SidebarProps = {
-    title: capitalize(transactionType),
+    title: transactionType,
     titleTabs: [TransactionAction.DEPOSIT, TransactionAction.WITHDRAW],
     onTitleTabChange: (action) => {
       setTransactionType(action as TransactionAction)
@@ -159,15 +158,6 @@ export const VaultManageViewComponent = ({
     primaryButton: sidebar.primaryButton,
     footnote: (
       <>
-        {sidebar.error ?? amountParsed.gt(0) ? (
-          <Button
-            variant="secondarySmall"
-            style={{ width: '100%', marginBottom: 'var(--general-space-12)' }}
-            onClick={reset}
-          >
-            reset
-          </Button>
-        ) : null}
         {txHashes.map((transactionData) => (
           <TransactionHashPill
             key={transactionData.hash}

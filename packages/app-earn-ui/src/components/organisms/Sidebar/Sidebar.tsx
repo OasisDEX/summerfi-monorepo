@@ -81,7 +81,7 @@ export const Sidebar: FC<SidebarProps> = ({
                   marginRight: 'var(--general-space-20)',
                   cursor: onTitleTabChange ? 'pointer' : 'default',
                   color:
-                    title === capitalize(tab)
+                    capitalize(title) === capitalize(tab)
                       ? 'var(--earn-protocol-secondary-100)'
                       : 'var(--color-text-primary-disabled)',
                 }}
@@ -90,7 +90,7 @@ export const Sidebar: FC<SidebarProps> = ({
               </Text>
             ))
           ) : (
-            <Text as="h5" variant="h5" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+            <Text as="h5" variant="h5" className={sidebarClassNames.sidebarTitle}>
               {title}
             </Text>
           )}

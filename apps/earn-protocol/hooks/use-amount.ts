@@ -29,6 +29,17 @@ export const useAmount = ({ vault }: UseAmountProps) => {
     return amountWithNoFollowingZeroes
   }, [amountRaw, editMode, vaultTokenDecimals])
 
+  const amountDisplayUSD = useMemo(() => {
+    if (!vault.inputTokenPriceUSD) {
+      return '-'
+    }
+    if (!amountRaw && amountRaw !== '0') {
+      return '$0.00'
+    }
+
+    return `$${new BigNumber(amountDisplay).times(new BigNumber(vault.inputTokenPriceUSD)).toFixed(vaultTokenDecimals)}`
+  }, [amountDisplay, amountRaw, vault.inputTokenPriceUSD, vaultTokenDecimals])
+
   useEffect(() => {
     if (!editMode) {
       setAmountRaw(amountDisplay)
@@ -89,6 +100,7 @@ export const useAmount = ({ vault }: UseAmountProps) => {
       A string version of the amount, formatted for display
     */
     amountDisplay,
+    amountDisplayUSD,
     /**
       A function to handle changes to the amount (with event)
     */

@@ -17,16 +17,15 @@ import {
   type TokenSymbolsList,
   type UsersActivity,
 } from '@summerfi/app-types'
-import { capitalize } from 'lodash-es'
 
 import { detailsLinks } from '@/components/layout/VaultOpenView/mocks'
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { Approval } from '@/components/molecules/SidebarElements/Approval'
+import { Deposit } from '@/components/molecules/SidebarElements/Deposit'
 import { InitialDeposit } from '@/components/molecules/SidebarElements/InitialDeposit'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { HistoricalYieldChart } from '@/components/organisms/Charts/HistoricalYieldChart'
-import { TransactionAction } from '@/constants/transaction-actions'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
@@ -57,15 +56,34 @@ export const VaultOpenViewComponent = ({
   const { getStorageOnce } = useLocalStorageOnce<string>({
     key: `${vault.id}-amount`,
   })
-  const { tokenBalance, tokenBalanceLoading } = useClient({
+  const { tokenBalance, tokenBalanceLoading, publicClient } = useClient({
     vault,
   })
-  const { amountParsed, manualSetAmount, amountDisplay, handleAmountChange, onBlur, onFocus } =
-    useAmount({ vault })
-  const { sidebar, txHashes, removeTxHash, vaultChainId, nextTransaction, reset } = useTransaction({
-    vault,
+  const {
     amountParsed,
     manualSetAmount,
+    amountDisplay,
+    amountDisplayUSD,
+    handleAmountChange,
+    onBlur,
+    onFocus,
+  } = useAmount({ vault })
+  const {
+    approvalType,
+    setApprovalType,
+    setApprovalCustomValue,
+    approvalCustomValue,
+    sidebar,
+    txHashes,
+    removeTxHash,
+    vaultChainId,
+    nextTransaction,
+    backToInit,
+  } = useTransaction({
+    vault,
+    amount: amountParsed,
+    manualSetAmount,
+    publicClient,
   })
 
   const position = usePosition({
@@ -104,12 +122,25 @@ export const VaultOpenViewComponent = ({
 
   const sidebarContent = nextTransaction?.label ? (
     {
-      approve: <Approval vault={vault} />,
-      deposit: <div>deposit</div>,
+      approve: (
+        <Approval
+          vault={vault}
+          approvalType={approvalType}
+          setApprovalType={setApprovalType}
+          setApprovalCustomValue={setApprovalCustomValue}
+          approvalCustomValue={approvalCustomValue}
+          tokenBalance={tokenBalance}
+        />
+      ),
+      deposit: (
+        <Deposit vault={vault} amountParsed={amountParsed} amountDisplayUSD={amountDisplayUSD} />
+      ),
+      withdraw: null, // just for types, withdraw doesnt happen on open view
     }[nextTransaction.label]
   ) : (
     <InitialDeposit
       amountDisplay={amountDisplay}
+      amountDisplayUSD={amountDisplayUSD}
       handleAmountChange={handleAmountChange}
       options={options}
       dropdownValue={dropdownValue}
@@ -123,11 +154,9 @@ export const VaultOpenViewComponent = ({
   )
 
   const sidebarProps = {
-    title: nextTransaction?.label
-      ? capitalize(nextTransaction.label)
-      : capitalize(TransactionAction.DEPOSIT),
+    title: sidebar.title,
     content: sidebarContent,
-    goBackAction: nextTransaction?.label ? reset : undefined,
+    goBackAction: nextTransaction?.label ? backToInit : undefined,
 
     primaryButton: sidebar.primaryButton,
     footnote: (
