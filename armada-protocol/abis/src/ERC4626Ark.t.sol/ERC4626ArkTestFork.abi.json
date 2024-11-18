@@ -318,6 +318,19 @@
   },
   {
     "type": "function",
+    "name": "fleetCommanderRewardsManagerFactory",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "contract FleetCommanderRewardsManagerFactory"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "getEthSignedMessageHash",
     "inputs": [
       {
@@ -338,6 +351,19 @@
   {
     "type": "function",
     "name": "governor",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "guardian",
     "inputs": [],
     "outputs": [
       {
@@ -385,6 +411,11 @@
         "internalType": "string"
       },
       {
+        "name": "details",
+        "type": "string",
+        "internalType": "string"
+      },
+      {
         "name": "accessManager",
         "type": "address",
         "internalType": "address"
@@ -395,7 +426,7 @@
         "internalType": "address"
       },
       {
-        "name": "token",
+        "name": "asset",
         "type": "address",
         "internalType": "address"
       },
@@ -418,6 +449,11 @@
         "name": "requiresKeeperData",
         "type": "bool",
         "internalType": "bool"
+      },
+      {
+        "name": "maxDepositPercentageOfTVL",
+        "type": "uint256",
+        "internalType": "Percentage"
       }
     ],
     "stateMutability": "view"

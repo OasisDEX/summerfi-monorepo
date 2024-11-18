@@ -57,7 +57,7 @@ export const ForecastChart = ({ data, isLoading, tokenPrice }: ForecastChartProp
             wrapperStyle={{ top: '-80%', opacity: isLoading ? 0 : 1 }}
           />
           <Area
-            type="monotone"
+            type="natural"
             dataKey="bounds"
             stroke="none"
             legendType="none"
@@ -66,7 +66,7 @@ export const ForecastChart = ({ data, isLoading, tokenPrice }: ForecastChartProp
             dot={false}
             activeDot={false}
             animationDuration={200}
-            animationBegin={100}
+            animationBegin={200}
             animateNewValues
           />
           <Line

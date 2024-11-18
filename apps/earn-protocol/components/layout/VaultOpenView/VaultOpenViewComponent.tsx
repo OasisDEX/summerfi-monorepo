@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import {
   Button,
   Expander,
@@ -8,6 +9,7 @@ import {
   sidebarFootnote,
   SkeletonLine,
   Text,
+  useLocalStorageOnce,
   VaultOpenGrid,
 } from '@summerfi/app-earn-ui'
 import {
@@ -55,15 +57,16 @@ export const VaultOpenViewComponent = ({
   topDepositors,
   preloadedForecast,
 }: VaultOpenViewComponentProps) => {
-  const { publicClient, transactionClient, tokenBalance, tokenBalanceLoading } = useClient({
+  const { getStorageOnce } = useLocalStorageOnce<string>({
+    key: `${vault.id}-amount`,
+  })
+  const { tokenBalance, tokenBalanceLoading } = useClient({
     vault,
   })
   const { amountParsed, manualSetAmount, amountDisplay, handleAmountChange, onBlur, onFocus } =
     useAmount({ vault })
   const { sidebar, txHashes, removeTxHash, vaultChainId, reset } = useTransaction({
     vault,
-    publicClient,
-    transactionClient,
     amountParsed,
     manualSetAmount,
   })
@@ -80,6 +83,13 @@ export const VaultOpenViewComponent = ({
     preloadedForecast,
   })
 
+  useEffect(() => {
+    const savedAmount = getStorageOnce()
+
+    if (savedAmount) {
+      manualSetAmount(savedAmount)
+    }
+  })
   useRedirectToPosition({ vault, position })
 
   const options: DropdownOption[] = [

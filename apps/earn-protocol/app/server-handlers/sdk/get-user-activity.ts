@@ -4,12 +4,11 @@ import {
   UserActivityType,
   type UsersActivity,
 } from '@summerfi/app-types'
-import { simpleSort, SortDirection } from '@summerfi/app-utils'
+import { simpleSort, SortDirection, subgraphNetworkToId } from '@summerfi/app-utils'
 import { ArmadaVaultId } from '@summerfi/armada-protocol-service'
 import { Address, getChainInfoByChainId } from '@summerfi/sdk-common'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
-import { subgraphNetworkToId } from '@/helpers/network-helpers'
 
 export async function getUserActivity({
   network,

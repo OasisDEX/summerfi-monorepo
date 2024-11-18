@@ -1,6 +1,19 @@
 [
   {
     "type": "function",
+    "name": "asset",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "contract IERC20"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "commander",
     "inputs": [],
     "outputs": [
@@ -46,7 +59,7 @@
             "internalType": "address"
           },
           {
-            "name": "token",
+            "name": "asset",
             "type": "address",
             "internalType": "contract IERC20"
           },
@@ -71,11 +84,34 @@
             "internalType": "string"
           },
           {
+            "name": "details",
+            "type": "string",
+            "internalType": "string"
+          },
+          {
             "name": "requiresKeeperData",
             "type": "bool",
             "internalType": "bool"
+          },
+          {
+            "name": "maxDepositPercentageOfTVL",
+            "type": "uint256",
+            "internalType": "Percentage"
           }
         ]
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "maxDepositPercentageOfTVL",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "Percentage"
       }
     ],
     "stateMutability": "view"
@@ -154,6 +190,19 @@
   },
   {
     "type": "function",
+    "name": "setMaxDepositPercentageOfTVL",
+    "inputs": [
+      {
+        "name": "newMaxDepositPercentageOfTVL",
+        "type": "uint256",
+        "internalType": "Percentage"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "setMaxRebalanceInflow",
     "inputs": [
       {
@@ -177,19 +226,6 @@
     ],
     "outputs": [],
     "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "token",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "contract IERC20"
-      }
-    ],
-    "stateMutability": "view"
   },
   {
     "type": "function",
@@ -233,6 +269,19 @@
         "type": "address",
         "indexed": false,
         "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "MaxDepositPercentageOfTVLUpdated",
+    "inputs": [
+      {
+        "name": "newMaxDepositPercentageOfTVL",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "Percentage"
       }
     ],
     "anonymous": false

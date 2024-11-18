@@ -15,6 +15,7 @@ import { ProjectedEarnings } from '@/components/molecules/ProjectedEarnings/Proj
 import { SidebarFootnote } from '@/components/molecules/SidebarFootnote/SidebarFootnote'
 import { Sidebar } from '@/components/organisms/Sidebar/Sidebar'
 import { getVaultUrl } from '@/helpers/get-vault-url'
+import { useLocalStorageOnce } from '@/hooks/use-local-storage-once'
 
 export type VaultSimulationFormProps = {
   vaultData: SDKVaultishType
@@ -22,6 +23,10 @@ export type VaultSimulationFormProps = {
 
 export const VaultSimulationForm = ({ vaultData }: VaultSimulationFormProps) => {
   const [inputValue, setInputValue] = useState<string>('1000')
+
+  const { setStorageOnce } = useLocalStorageOnce({
+    key: `${vaultData.id}-amount`,
+  })
 
   const handleInputChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     if (ev.target.value) {
@@ -78,6 +83,9 @@ export const VaultSimulationForm = ({ vaultData }: VaultSimulationFormProps) => 
         primaryButton: {
           label: 'Get Started',
           url: getVaultUrl(vaultData),
+          action: () => {
+            setStorageOnce(Number(inputValue.replaceAll(',', '')))
+          },
           disabled: false,
         },
         footnote: (

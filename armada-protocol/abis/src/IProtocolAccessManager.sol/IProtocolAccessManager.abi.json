@@ -25,19 +25,6 @@
   },
   {
     "type": "function",
-    "name": "grantAdminRole",
-    "inputs": [
-      {
-        "name": "account",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "grantCommanderRole",
     "inputs": [
       {
@@ -82,10 +69,23 @@
     "name": "grantCuratorRole",
     "inputs": [
       {
-        "name": "fleetAddress",
+        "name": "fleetCommanderAddress",
         "type": "address",
         "internalType": "address"
       },
+      {
+        "name": "account",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "grantDecayControllerRole",
+    "inputs": [
       {
         "name": "account",
         "type": "address",
@@ -126,7 +126,7 @@
     "name": "grantKeeperRole",
     "inputs": [
       {
-        "name": "fleetAddress",
+        "name": "fleetCommanderAddress",
         "type": "address",
         "internalType": "address"
       },
@@ -142,19 +142,6 @@
   {
     "type": "function",
     "name": "grantSuperKeeperRole",
-    "inputs": [
-      {
-        "name": "account",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "revokeAdminRole",
     "inputs": [
       {
         "name": "account",
@@ -211,10 +198,23 @@
     "name": "revokeCuratorRole",
     "inputs": [
       {
-        "name": "fleetAddress",
+        "name": "fleetCommanderAddress",
         "type": "address",
         "internalType": "address"
       },
+      {
+        "name": "account",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "revokeDecayControllerRole",
+    "inputs": [
       {
         "name": "account",
         "type": "address",
@@ -255,7 +255,7 @@
     "name": "revokeKeeperRole",
     "inputs": [
       {
-        "name": "fleetAddress",
+        "name": "fleetCommanderAddress",
         "type": "address",
         "internalType": "address"
       },

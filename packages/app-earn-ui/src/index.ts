@@ -84,6 +84,7 @@ export { useCurrentUrl } from './hooks/use-current-url'
 export { useQueryParams } from './hooks/use-query-params'
 export { useMobileCheck } from './hooks/use-mobile-check'
 export { useClientSideMount } from './hooks/use-client-side-mount'
+export { useLocalStorageOnce } from './hooks/use-local-storage-once'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
 export { getVaultUrl, getVaultDetailsUrl, getVaultPositionUrl } from './helpers/get-vault-url'

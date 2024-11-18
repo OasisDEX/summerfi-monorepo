@@ -1,0 +1,35 @@
+[
+  {
+    "type": "error",
+    "name": "CallerIsNotAuthorized",
+    "inputs": [
+      {
+        "name": "caller",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "CallerIsNotDecayManager",
+    "inputs": [
+      {
+        "name": "caller",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "InvalidVestingType",
+    "inputs": [
+      {
+        "name": "invalidType",
+        "type": "uint8",
+        "internalType": "enum ISummerVestingWallet.VestingType"
+      }
+    ]
+  }
+]

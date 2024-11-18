@@ -1,3 +1,4 @@
+import { SDKChainId } from '@summerfi/app-types'
 import { keyBy } from 'lodash-es'
 
 import { clientId } from '@/helpers/client-id'
@@ -97,6 +98,11 @@ export const optimismMainnetRpc = getRpc(NetworkNames.optimismMainnet)
 export const optimismGoerliRpc = getRpc(NetworkNames.optimismGoerli)
 export const baseMainnetRpc = getRpc(NetworkNames.baseMainnet)
 export const baseGoerliRpc = getRpc(NetworkNames.baseGoerli)
+
+export const SDKChainIdToRpcGatewayMap = {
+  [SDKChainId.ARBITRUM]: arbitrumMainnetRpc,
+  [SDKChainId.BASE]: baseMainnetRpc,
+}
 
 const mainnetConfig: NetworkConfig = {
   name: NetworkNames.ethereumMainnet,

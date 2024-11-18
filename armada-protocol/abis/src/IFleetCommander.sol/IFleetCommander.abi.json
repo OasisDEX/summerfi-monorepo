@@ -363,6 +363,11 @@
             "name": "maxRebalanceOperations",
             "type": "uint256",
             "internalType": "uint256"
+          },
+          {
+            "name": "stakingRewardsManager",
+            "type": "address",
+            "internalType": "address"
           }
         ]
       }
@@ -782,6 +787,24 @@
   },
   {
     "type": "function",
+    "name": "setArkMaxDepositPercentageOfTVL",
+    "inputs": [
+      {
+        "name": "ark",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "newMaxDepositPercentageOfTVL",
+        "type": "uint256",
+        "internalType": "Percentage"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "setArkMaxRebalanceInflow",
     "inputs": [
       {
@@ -863,6 +886,19 @@
         "name": "newMinimumPauseTime",
         "type": "uint256",
         "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "setStakingRewardsManager",
+    "inputs": [
+      {
+        "name": "newStakingRewardsManager",
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "outputs": [],
@@ -1292,6 +1328,19 @@
   },
   {
     "type": "event",
+    "name": "FleetCommanderStakingRewardsUpdated",
+    "inputs": [
+      {
+        "name": "newStakingRewards",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "FleetCommanderWithdrawnFromArks",
     "inputs": [
       {
@@ -1603,24 +1652,34 @@
   },
   {
     "type": "error",
-    "name": "FleetCommanderCantRebalanceToArk",
-    "inputs": [
-      {
-        "name": "ark",
-        "type": "address",
-        "internalType": "address"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "FleetCommanderCantUseMaxUintForBufferAdjustement",
+    "name": "FleetCommanderCantUseMaxUintMovingFromBuffer",
     "inputs": []
   },
   {
     "type": "error",
     "name": "FleetCommanderCantUseRebalanceOnBufferArk",
     "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "FleetCommanderEffectiveDepositCapExceeded",
+    "inputs": [
+      {
+        "name": "ark",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "effectiveDepositCap",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
   },
   {
     "type": "error",
@@ -1692,6 +1751,11 @@
   },
   {
     "type": "error",
+    "name": "FleetCommanderInvalidStakingRewardsManager",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "FleetCommanderMovedMoreThanAvailable",
     "inputs": []
   },
@@ -1731,6 +1795,11 @@
         "internalType": "uint256"
       }
     ]
+  },
+  {
+    "type": "error",
+    "name": "FleetCommanderStakingRewardsManagerNotSet",
+    "inputs": []
   },
   {
     "type": "error",

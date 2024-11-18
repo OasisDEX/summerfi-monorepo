@@ -1,13 +1,20 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useAuthModal, useChain, useUser } from '@account-kit/react'
+import {
+  useAuthModal,
+  useChain,
+  useSendUserOperation,
+  useSmartAccountClient,
+  useUser,
+} from '@account-kit/react'
 import {
   type EarnTransactionTypes,
   type EarnTransactionViewStates,
   type SDKVaultishType,
   type TransactionInfoLabeled,
 } from '@summerfi/app-types'
+import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
 import { Address, ChainInfo, type TransactionInfo } from '@summerfi/sdk-client-react'
 import type BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
@@ -15,16 +22,13 @@ import { useRouter } from 'next/navigation'
 
 import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { TransactionAction } from '@/constants/transaction-actions'
-import { subgraphNetworkToSDKId } from '@/helpers/network-helpers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
-import { type useClient } from '@/hooks/use-client'
+import { useClientChainId } from '@/hooks/use-client-chain-id'
 
 type UseTransactionParams = {
   vault: SDKVaultishType
   amountParsed: BigNumber | undefined
   manualSetAmount: (amountParsed: string | undefined) => void
-  transactionClient: ReturnType<typeof useClient>['transactionClient']
-  publicClient: ReturnType<typeof useClient>['publicClient']
 }
 
 const labelTransactions = (transactions: TransactionInfo[]) => {
@@ -35,13 +39,7 @@ const labelTransactions = (transactions: TransactionInfo[]) => {
   }))
 }
 
-export const useTransaction = ({
-  vault,
-  manualSetAmount,
-  transactionClient,
-  publicClient,
-  amountParsed,
-}: UseTransactionParams) => {
+export const useTransaction = ({ vault, manualSetAmount, amountParsed }: UseTransactionParams) => {
   const [transactionType, setTransactionType] = useState<TransactionAction>(
     TransactionAction.DEPOSIT,
   )
@@ -55,6 +53,9 @@ export const useTransaction = ({
   const user = useUser()
   const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
   const { setChain, isSettingChain } = useChain()
+  const { clientChainId } = useClientChainId()
+
+  const { client: smartAccountClient } = useSmartAccountClient({ type: 'LightAccount' })
 
   const reset = useCallback(() => {
     manualSetAmount(undefined)
@@ -68,10 +69,9 @@ export const useTransaction = ({
     setTxHashes((prev) => prev.filter((tx) => tx.hash !== txHash))
   }, [])
 
-  const userChainId = transactionClient?.chain.id
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
 
-  const isProperChainSelected = userChainId === vaultChainId
+  const isProperChainSelected = clientChainId === vaultChainId
 
   const nextTransaction = useMemo(() => {
     if (!transactions || transactions.length === 0) {
@@ -81,44 +81,67 @@ export const useTransaction = ({
     return transactions[0]
   }, [transactions])
 
-  const executeNextTransaction = useCallback(async () => {
-    setTxStatus('txInProgress')
-
-    if (!transactionClient || !publicClient) {
-      throw new Error('Error executing the transaction, no public or transaction client')
-    }
-
-    if (!nextTransaction) {
-      throw new Error('No transaction to execute')
-    }
-    try {
-      const transactionHash = await transactionClient.sendTransaction({
-        to: nextTransaction.transaction.target.value,
-        data: nextTransaction.transaction.calldata,
-      })
-
-      await publicClient.waitForTransactionReceipt({
-        hash: transactionHash,
-        confirmations: 5,
-      })
+  // Configure User Operation (transaction) sender, passing client which can be undefined
+  const { sendUserOperation } = useSendUserOperation({
+    client: smartAccountClient,
+    waitForTxn: true,
+    onSuccess: ({ hash }) => {
+      // await publicClient.waitForTransactionReceipt({
+      //   hash,
+      //   confirmations: 5,
+      // })
 
       setTxHashes((prev) => [
         ...prev,
         {
-          type: nextTransaction.label,
-          hash: transactionHash,
+          type: nextTransaction!.label,
+          hash,
         },
       ])
       setTxStatus('txSuccess')
       setTransactions(transactions?.slice(1))
-    } catch (err) {
+    },
+    onError: (err) => {
+      // eslint-disable-next-line no-console
+      console.error('Error executing the transaction:', err)
+
       if (err instanceof Error) {
         setError(err.message)
       } else {
         setError('Error executing the transaction')
       }
+    },
+  })
+
+  const sendTransaction = ({
+    target,
+    data,
+    value = 0n,
+  }: {
+    target: `0x${string}`
+    data: `0x${string}`
+    value?: bigint
+  }) => {
+    sendUserOperation({
+      uo: {
+        target,
+        data,
+        value,
+      },
+    })
+  }
+
+  const executeNextTransaction = useCallback(async () => {
+    setTxStatus('txInProgress')
+
+    if (!nextTransaction) {
+      throw new Error('No transaction to execute')
     }
-  }, [nextTransaction, transactionClient, publicClient, transactions])
+    sendTransaction({
+      target: nextTransaction.transaction.target.value,
+      data: nextTransaction.transaction.calldata,
+    })
+  }, [nextTransaction, transactions])
 
   const getTransactionsList = useCallback(async () => {
     if (amountParsed && user) {

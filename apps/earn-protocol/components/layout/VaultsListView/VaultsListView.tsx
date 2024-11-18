@@ -15,7 +15,7 @@ import {
   type SDKNetwork,
   type SDKVaultsListType,
 } from '@summerfi/app-types'
-import { formatCryptoBalance, zero } from '@summerfi/app-utils'
+import { formatCryptoBalance, sdkNetworkToHumanNetwork, zero } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
 
 import { networkIconByNetworkName } from '@/constants/networkIcons'
@@ -27,7 +27,7 @@ type VaultsListViewProps = {
 }
 
 const allNetworksOption = {
-  iconName: 'ether_circle_color' as IconNamesList,
+  iconName: 'question_mark' as IconNamesList,
   label: 'All Networks',
   value: 'all-networks',
 }
@@ -45,7 +45,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
   const networkFilteredVaults = useMemo(
     () =>
       localVaultNetwork && localVaultNetwork !== 'all-networks'
-        ? vaultsList.filter((vault) => vault.protocol.network === localVaultNetwork)
+        ? vaultsList.filter(({ protocol }) => protocol.network === localVaultNetwork)
         : vaultsList,
     [localVaultNetwork, vaultsList],
   )
@@ -54,14 +54,11 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
 
   const selectedNetworkOption = useMemo(
     () =>
-      localVaultNetwork
+      localVaultNetwork && localVaultNetwork !== 'all-networks'
         ? {
-            iconName:
-              localVaultNetwork !== 'all-networks'
-                ? (networkIconByNetworkName[localVaultNetwork] as IconNamesList)
-                : 'network_ethereum',
-            label: capitalize(localVaultNetwork),
+            iconName: networkIconByNetworkName[localVaultNetwork] as IconNamesList,
             value: localVaultNetwork,
+            label: capitalize(sdkNetworkToHumanNetwork(localVaultNetwork)),
           }
         : allNetworksOption,
     [localVaultNetwork],
@@ -70,8 +67,8 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
     () => [
       ...[...new Set(vaultsList.map(({ protocol }) => protocol.network))].map((network) => ({
         iconName: networkIconByNetworkName[network] as IconNamesList,
-        label: network,
         value: network,
+        label: capitalize(sdkNetworkToHumanNetwork(network)),
       })),
       allNetworksOption,
     ],
@@ -95,7 +92,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
         if (selectedVaultData && selectedVaultData.protocol.network !== selected.value) {
           setVaultId(undefined)
         }
-        softRouterPush(`/earn/${selected.value}`)
+        softRouterPush(`/earn/${sdkNetworkToHumanNetwork(selected.value as SDKNetwork)}`)
 
         break
     }

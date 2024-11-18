@@ -1,9 +1,6 @@
 /* eslint-disable camelcase */
-import {
-  type ForecastData,
-  isSupportedSDKChain,
-  type PositionForecastAPIResponse,
-} from '@summerfi/app-types'
+import { type ForecastData, type PositionForecastAPIResponse } from '@summerfi/app-types'
+import { isSupportedSDKChain } from '@summerfi/app-utils'
 import { isValidAddress } from '@summerfi/serverless-shared'
 import { NextResponse } from 'next/server'
 
