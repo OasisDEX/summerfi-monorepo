@@ -57,15 +57,13 @@ export const VaultOpenViewComponent = ({
   const { getStorageOnce } = useLocalStorageOnce<string>({
     key: `${vault.id}-amount`,
   })
-  const { publicClient, transactionClient, tokenBalance, tokenBalanceLoading } = useClient({
+  const { tokenBalance, tokenBalanceLoading } = useClient({
     vault,
   })
   const { amountParsed, manualSetAmount, amountDisplay, handleAmountChange, onBlur, onFocus } =
     useAmount({ vault })
   const { sidebar, txHashes, removeTxHash, vaultChainId, nextTransaction, reset } = useTransaction({
     vault,
-    publicClient,
-    transactionClient,
     amountParsed,
     manualSetAmount,
   })

@@ -10,10 +10,10 @@
     "lint-timing": "TIMING=1 eslint ."
   },
   "dependencies": {
-    "@account-kit/core": "^4.3.0",
-    "@account-kit/infra": "^4.3.0",
-    "@account-kit/react": "^4.3.0",
-    "@account-kit/signer": "^4.3.0",
+    "@account-kit/core": "^4.4.1",
+    "@account-kit/infra": "^4.4.1",
+    "@account-kit/react": "^4.4.1",
+    "@account-kit/signer": "^4.4.1",
     "@alchemy/aa-accounts": "3.19.0",
     "@alchemy/aa-alchemy": "3.19.0",
     "@alchemy/aa-core": "^3.19.0",
