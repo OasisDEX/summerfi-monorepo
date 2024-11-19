@@ -104,7 +104,6 @@ export const useTransaction = ({
           },
         ])
       }
-      setTransactions(transactions?.slice(1))
     },
     onError: (err) => {
       // eslint-disable-next-line no-console
@@ -421,7 +420,7 @@ export const useTransaction = ({
       refreshView()
       reset()
     }
-  }, [refreshView, reset, transactions?.length, txStatus, isSendingUserOperation])
+  }, [refreshView, reset, waitingForTx, transactions?.length, txStatus, isSendingUserOperation])
 
   // watch for sendUserOperationError
   useEffect(() => {
@@ -441,6 +440,7 @@ export const useTransaction = ({
         .then(() => {
           setTxStatus('txSuccess')
           setWaitingForTx(undefined)
+          setTransactions(transactions?.slice(1))
         })
         .catch((err) => {
           // eslint-disable-next-line no-console
@@ -448,7 +448,7 @@ export const useTransaction = ({
           setTxStatus('txError')
         })
     }
-  }, [waitingForTx, txStatus, publicClient])
+  }, [waitingForTx, txStatus, publicClient, transactions])
 
   return {
     manualSetAmount,
