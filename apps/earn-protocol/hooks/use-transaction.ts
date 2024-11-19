@@ -390,9 +390,9 @@ export const useTransaction = ({
   // skip approval if the user has enough allowance
   useEffect(() => {
     if (nextTransaction?.label === 'approve' && approval && approval.gte(amount ?? zero)) {
-      setTransactions(transactions?.slice(1))
+      setTransactions((prevTransactions) => prevTransactions?.slice(1))
     }
-  }, [amount, approval, nextTransaction?.label, transactions])
+  }, [amount, approval, nextTransaction?.label])
 
   // refresh data when all transactions are executed and are successful
   useEffect(() => {

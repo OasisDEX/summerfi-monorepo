@@ -21,9 +21,11 @@ import {
 import { detailsLinks } from '@/components/layout/VaultOpenView/mocks'
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
-import { Approval } from '@/components/molecules/SidebarElements/Approval'
-import { Deposit } from '@/components/molecules/SidebarElements/Deposit'
-import { InitialDeposit } from '@/components/molecules/SidebarElements/InitialDeposit'
+import {
+  ApprovalInfo,
+  DepositOrderInfo,
+  InitialDepositInfo,
+} from '@/components/molecules/SidebarElements'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { HistoricalYieldChart } from '@/components/organisms/Charts/HistoricalYieldChart'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
@@ -123,7 +125,7 @@ export const VaultOpenViewComponent = ({
   const sidebarContent = nextTransaction?.label ? (
     {
       approve: (
-        <Approval
+        <ApprovalInfo
           vault={vault}
           approvalType={approvalType}
           setApprovalType={setApprovalType}
@@ -133,12 +135,16 @@ export const VaultOpenViewComponent = ({
         />
       ),
       deposit: (
-        <Deposit vault={vault} amountParsed={amountParsed} amountDisplayUSD={amountDisplayUSD} />
+        <DepositOrderInfo
+          vault={vault}
+          amountParsed={amountParsed}
+          amountDisplayUSD={amountDisplayUSD}
+        />
       ),
       withdraw: null, // just for types, withdraw doesnt happen on open view
     }[nextTransaction.label]
   ) : (
-    <InitialDeposit
+    <InitialDepositInfo
       amountDisplay={amountDisplay}
       amountDisplayUSD={amountDisplayUSD}
       handleAmountChange={handleAmountChange}

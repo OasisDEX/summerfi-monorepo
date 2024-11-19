@@ -3,7 +3,7 @@ import { type DropdownOption, type SDKVaultType, type TokenSymbolsList } from '@
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import type BigNumber from 'bignumber.js'
 
-type InitialDepositProps = {
+type InitialDepositInfoProps = {
   amountDisplay: string
   amountDisplayUSD: string
   handleAmountChange: (e: React.ChangeEvent<HTMLInputElement>) => void
@@ -17,7 +17,7 @@ type InitialDepositProps = {
   vault: SDKVaultType
 }
 
-export const InitialDeposit = ({
+export const InitialDepositInfo = ({
   amountDisplay,
   amountDisplayUSD,
   handleAmountChange,
@@ -29,7 +29,7 @@ export const InitialDeposit = ({
   tokenBalanceLoading,
   manualSetAmount,
   vault,
-}: InitialDepositProps) => {
+}: InitialDepositInfoProps) => {
   return (
     <>
       <InputWithDropdown
@@ -51,7 +51,9 @@ export const InitialDeposit = ({
             '-'
           ),
           action: () => {
-            manualSetAmount(tokenBalance?.toString())
+            if (tokenBalance) {
+              manualSetAmount(tokenBalance.toString())
+            }
           },
         }}
       />
