@@ -1,5 +1,6 @@
 'use client'
 import { type FC, type ReactNode, useState } from 'react'
+import clsx from 'clsx'
 import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
@@ -30,6 +31,7 @@ export interface SidebarProps {
   footnote?: ReactNode
   error?: string | ReactNode
   asDesktopOnly?: boolean
+  goBackAction?: () => void
 }
 
 export const Sidebar: FC<SidebarProps> = ({
@@ -41,6 +43,7 @@ export const Sidebar: FC<SidebarProps> = ({
   error,
   onTitleTabChange,
   asDesktopOnly = false,
+  goBackAction,
 }) => {
   const [isOpen, setIsOpen] = useState(false)
   const { isMobile } = useMobileCheck()
@@ -50,12 +53,19 @@ export const Sidebar: FC<SidebarProps> = ({
   const sidebarWrapped = (
     <Card className={sidebarClassNames.sidebarWrapper} variant="cardPrimary">
       <div
-        className={sidebarClassNames.sidebarHeaderWrapper}
+        className={clsx(sidebarClassNames.sidebarHeaderWrapper, {
+          [sidebarClassNames.centerTitle]: !titleTabs && !!goBackAction,
+        })}
         onClick={() => {
           if (isMobile) setIsOpen((prev) => !prev)
         }}
       >
-        <div className={sidebarClassNames.sidebarHeaderActionButtonsWrapper}>
+        {goBackAction && (
+          <div onClick={goBackAction} className={sidebarClassNames.goBackButton}>
+            <Icon iconName="arrow_backward" color="var(--color-background-primary)" size={24} />
+          </div>
+        )}
+        <div className={clsx(sidebarClassNames.sidebarHeaderActionButtonsWrapper)}>
           {titleTabs && titleTabs.length > 0 ? (
             titleTabs.map((tab) => (
               <Text
@@ -71,7 +81,7 @@ export const Sidebar: FC<SidebarProps> = ({
                   marginRight: 'var(--general-space-20)',
                   cursor: onTitleTabChange ? 'pointer' : 'default',
                   color:
-                    title === capitalize(tab)
+                    capitalize(title) === capitalize(tab)
                       ? 'var(--earn-protocol-secondary-100)'
                       : 'var(--color-text-primary-disabled)',
                 }}
@@ -80,11 +90,12 @@ export const Sidebar: FC<SidebarProps> = ({
               </Text>
             ))
           ) : (
-            <Text as="h5" variant="h5" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+            <Text as="h5" variant="h5" className={sidebarClassNames.sidebarTitle}>
               {title}
             </Text>
           )}
         </div>
+        {goBackAction && <div className={sidebarClassNames.goBackButtonFillFLex} />}
 
         <div className={sidebarClassNames.sidebarHeaderChevron}>
           <Icon iconName={isOpen ? 'chevron_down' : 'chevron_up'} variant="xs" />

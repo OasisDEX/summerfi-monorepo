@@ -116,8 +116,12 @@ export type Ark = {
   cumulativeWithdrawals: Scalars['BigInt']['output'];
   /**  Vault daily snapshots  */
   dailySnapshots: Array<ArkDailySnapshot>;
-  /**  Some vaults have a deposit cap. This is in input token amount  */
+  /**  Arks have a deposit cap. This is in input token amount  */
+  depositCap: Scalars['BigInt']['output'];
+  /**  DEPRECATED (use depositCap instead): Arks have a deposit cap. This is in input token amount  */
   depositLimit: Scalars['BigInt']['output'];
+  /**  Details of the ark  */
+  details?: Maybe<Scalars['String']['output']>;
   /**  All withdrawals made from this vault  */
   disembarks: Array<Disembark>;
   /**  Type of fees incurred to the user. Should include all fees that apply to the vault  */
@@ -132,10 +136,18 @@ export type Ark = {
   inputTokenBalance: Scalars['BigInt']['output'];
   /**  Last update timestamp  */
   lastUpdateTimestamp: Scalars['BigInt']['output'];
+  /**  Arks have a maximum deposit percentage of TVL. This is a percentage (100 = 100%)  */
+  maxDepositPercentageOfTVL: Scalars['BigInt']['output'];
+  /**  Arks have a maximum inflow limit for the Ark during rebalancing. This is in input token amount  */
+  maxRebalanceInflow: Scalars['BigInt']['output'];
+  /**  Arks have a maximum outflow limit for the Ark during rebalancing. This is in input token amount  */
+  maxRebalanceOutflow: Scalars['BigInt']['output'];
   /**  Name of liquidity pool (e.g. Curve.fi DAI/USDC/USDT)  */
   name?: Maybe<Scalars['String']['output']>;
   rebalancesFrom: Array<Rebalance>;
   rebalancesTo: Array<Rebalance>;
+  /**  Arks require keeper data to board/disembark if true  */
+  requiresKeeperData: Scalars['Boolean']['output'];
   /**  Per-block reward token emission as of the current block normalized to a day, in token's native amount. This should be ideally calculated as the theoretical rate instead of the realized amount.  */
   rewardTokenEmissionsAmount?: Maybe<Array<Scalars['BigInt']['output']>>;
   /**  Per-block reward token emission as of the current block normalized to a day, in USD value. This should be ideally calculated as the theoretical rate instead of the realized amount.  */
@@ -381,11 +393,17 @@ export enum ArkDailySnapshot_OrderBy {
   ArkCumulativeSupplySideRevenueUsd = 'ark__cumulativeSupplySideRevenueUSD',
   ArkCumulativeTotalRevenueUsd = 'ark__cumulativeTotalRevenueUSD',
   ArkCumulativeWithdrawals = 'ark__cumulativeWithdrawals',
+  ArkDepositCap = 'ark__depositCap',
   ArkDepositLimit = 'ark__depositLimit',
+  ArkDetails = 'ark__details',
   ArkId = 'ark__id',
   ArkInputTokenBalance = 'ark__inputTokenBalance',
   ArkLastUpdateTimestamp = 'ark__lastUpdateTimestamp',
+  ArkMaxDepositPercentageOfTvl = 'ark__maxDepositPercentageOfTVL',
+  ArkMaxRebalanceInflow = 'ark__maxRebalanceInflow',
+  ArkMaxRebalanceOutflow = 'ark__maxRebalanceOutflow',
   ArkName = 'ark__name',
+  ArkRequiresKeeperData = 'ark__requiresKeeperData',
   ArkTotalValueLockedUsd = 'ark__totalValueLockedUSD',
   BlockNumber = 'blockNumber',
   Id = 'id',
@@ -422,16 +440,21 @@ export enum ArkDailySnapshot_OrderBy {
   VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
   VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
   VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
+  VaultDepositCap = 'vault__depositCap',
   VaultDepositLimit = 'vault__depositLimit',
+  VaultDetails = 'vault__details',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
   VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
+  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
   VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD'
 }
@@ -587,11 +610,17 @@ export enum ArkHourlySnapshot_OrderBy {
   ArkCumulativeSupplySideRevenueUsd = 'ark__cumulativeSupplySideRevenueUSD',
   ArkCumulativeTotalRevenueUsd = 'ark__cumulativeTotalRevenueUSD',
   ArkCumulativeWithdrawals = 'ark__cumulativeWithdrawals',
+  ArkDepositCap = 'ark__depositCap',
   ArkDepositLimit = 'ark__depositLimit',
+  ArkDetails = 'ark__details',
   ArkId = 'ark__id',
   ArkInputTokenBalance = 'ark__inputTokenBalance',
   ArkLastUpdateTimestamp = 'ark__lastUpdateTimestamp',
+  ArkMaxDepositPercentageOfTvl = 'ark__maxDepositPercentageOfTVL',
+  ArkMaxRebalanceInflow = 'ark__maxRebalanceInflow',
+  ArkMaxRebalanceOutflow = 'ark__maxRebalanceOutflow',
   ArkName = 'ark__name',
+  ArkRequiresKeeperData = 'ark__requiresKeeperData',
   ArkTotalValueLockedUsd = 'ark__totalValueLockedUSD',
   BlockNumber = 'blockNumber',
   CalculatedApr = 'calculatedApr',
@@ -629,16 +658,21 @@ export enum ArkHourlySnapshot_OrderBy {
   VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
   VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
   VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
+  VaultDepositCap = 'vault__depositCap',
   VaultDepositLimit = 'vault__depositLimit',
+  VaultDetails = 'vault__details',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
   VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
+  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
   VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD'
 }
@@ -722,6 +756,14 @@ export type Ark_Filter = {
   cumulativeWithdrawals_not?: InputMaybe<Scalars['BigInt']['input']>;
   cumulativeWithdrawals_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   dailySnapshots_?: InputMaybe<ArkDailySnapshot_Filter>;
+  depositCap?: InputMaybe<Scalars['BigInt']['input']>;
+  depositCap_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  depositCap_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  depositCap_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  depositCap_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  depositCap_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  depositCap_not?: InputMaybe<Scalars['BigInt']['input']>;
+  depositCap_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   depositLimit?: InputMaybe<Scalars['BigInt']['input']>;
   depositLimit_gt?: InputMaybe<Scalars['BigInt']['input']>;
   depositLimit_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -730,6 +772,26 @@ export type Ark_Filter = {
   depositLimit_lte?: InputMaybe<Scalars['BigInt']['input']>;
   depositLimit_not?: InputMaybe<Scalars['BigInt']['input']>;
   depositLimit_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  details?: InputMaybe<Scalars['String']['input']>;
+  details_contains?: InputMaybe<Scalars['String']['input']>;
+  details_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  details_ends_with?: InputMaybe<Scalars['String']['input']>;
+  details_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  details_gt?: InputMaybe<Scalars['String']['input']>;
+  details_gte?: InputMaybe<Scalars['String']['input']>;
+  details_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  details_lt?: InputMaybe<Scalars['String']['input']>;
+  details_lte?: InputMaybe<Scalars['String']['input']>;
+  details_not?: InputMaybe<Scalars['String']['input']>;
+  details_not_contains?: InputMaybe<Scalars['String']['input']>;
+  details_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  details_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  details_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  details_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  details_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  details_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  details_starts_with?: InputMaybe<Scalars['String']['input']>;
+  details_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   disembarks_?: InputMaybe<Disembark_Filter>;
   fees?: InputMaybe<Array<Scalars['String']['input']>>;
   fees_?: InputMaybe<VaultFee_Filter>;
@@ -784,6 +846,30 @@ export type Ark_Filter = {
   lastUpdateTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
   lastUpdateTimestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
   lastUpdateTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  maxDepositPercentageOfTVL?: InputMaybe<Scalars['BigInt']['input']>;
+  maxDepositPercentageOfTVL_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  maxDepositPercentageOfTVL_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  maxDepositPercentageOfTVL_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  maxDepositPercentageOfTVL_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  maxDepositPercentageOfTVL_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  maxDepositPercentageOfTVL_not?: InputMaybe<Scalars['BigInt']['input']>;
+  maxDepositPercentageOfTVL_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  maxRebalanceInflow?: InputMaybe<Scalars['BigInt']['input']>;
+  maxRebalanceInflow_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  maxRebalanceInflow_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  maxRebalanceInflow_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  maxRebalanceInflow_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  maxRebalanceInflow_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  maxRebalanceInflow_not?: InputMaybe<Scalars['BigInt']['input']>;
+  maxRebalanceInflow_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  maxRebalanceOutflow?: InputMaybe<Scalars['BigInt']['input']>;
+  maxRebalanceOutflow_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  maxRebalanceOutflow_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  maxRebalanceOutflow_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  maxRebalanceOutflow_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  maxRebalanceOutflow_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  maxRebalanceOutflow_not?: InputMaybe<Scalars['BigInt']['input']>;
+  maxRebalanceOutflow_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   name?: InputMaybe<Scalars['String']['input']>;
   name_contains?: InputMaybe<Scalars['String']['input']>;
   name_contains_nocase?: InputMaybe<Scalars['String']['input']>;
@@ -807,6 +893,10 @@ export type Ark_Filter = {
   or?: InputMaybe<Array<InputMaybe<Ark_Filter>>>;
   rebalancesFrom_?: InputMaybe<Rebalance_Filter>;
   rebalancesTo_?: InputMaybe<Rebalance_Filter>;
+  requiresKeeperData?: InputMaybe<Scalars['Boolean']['input']>;
+  requiresKeeperData_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  requiresKeeperData_not?: InputMaybe<Scalars['Boolean']['input']>;
+  requiresKeeperData_not_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
   rewardTokenEmissionsAmount?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
@@ -870,7 +960,9 @@ export enum Ark_OrderBy {
   CumulativeTotalRevenueUsd = 'cumulativeTotalRevenueUSD',
   CumulativeWithdrawals = 'cumulativeWithdrawals',
   DailySnapshots = 'dailySnapshots',
+  DepositCap = 'depositCap',
   DepositLimit = 'depositLimit',
+  Details = 'details',
   Disembarks = 'disembarks',
   Fees = 'fees',
   HourlySnapshots = 'hourlySnapshots',
@@ -884,9 +976,13 @@ export enum Ark_OrderBy {
   InputTokenName = 'inputToken__name',
   InputTokenSymbol = 'inputToken__symbol',
   LastUpdateTimestamp = 'lastUpdateTimestamp',
+  MaxDepositPercentageOfTvl = 'maxDepositPercentageOfTVL',
+  MaxRebalanceInflow = 'maxRebalanceInflow',
+  MaxRebalanceOutflow = 'maxRebalanceOutflow',
   Name = 'name',
   RebalancesFrom = 'rebalancesFrom',
   RebalancesTo = 'rebalancesTo',
+  RequiresKeeperData = 'requiresKeeperData',
   RewardTokenEmissionsAmount = 'rewardTokenEmissionsAmount',
   RewardTokenEmissionsUsd = 'rewardTokenEmissionsUSD',
   RewardTokens = 'rewardTokens',
@@ -903,16 +999,21 @@ export enum Ark_OrderBy {
   VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
   VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
   VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
+  VaultDepositCap = 'vault__depositCap',
   VaultDepositLimit = 'vault__depositLimit',
+  VaultDetails = 'vault__details',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
   VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
+  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
   VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD'
 }
@@ -1168,11 +1269,17 @@ export enum Board_OrderBy {
   ArkCumulativeSupplySideRevenueUsd = 'ark__cumulativeSupplySideRevenueUSD',
   ArkCumulativeTotalRevenueUsd = 'ark__cumulativeTotalRevenueUSD',
   ArkCumulativeWithdrawals = 'ark__cumulativeWithdrawals',
+  ArkDepositCap = 'ark__depositCap',
   ArkDepositLimit = 'ark__depositLimit',
+  ArkDetails = 'ark__details',
   ArkId = 'ark__id',
   ArkInputTokenBalance = 'ark__inputTokenBalance',
   ArkLastUpdateTimestamp = 'ark__lastUpdateTimestamp',
+  ArkMaxDepositPercentageOfTvl = 'ark__maxDepositPercentageOfTVL',
+  ArkMaxRebalanceInflow = 'ark__maxRebalanceInflow',
+  ArkMaxRebalanceOutflow = 'ark__maxRebalanceOutflow',
   ArkName = 'ark__name',
+  ArkRequiresKeeperData = 'ark__requiresKeeperData',
   ArkTotalValueLockedUsd = 'ark__totalValueLockedUSD',
   Asset = 'asset',
   AssetDecimals = 'asset__decimals',
@@ -1218,16 +1325,21 @@ export enum Board_OrderBy {
   VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
   VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
   VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
+  VaultDepositCap = 'vault__depositCap',
   VaultDepositLimit = 'vault__depositLimit',
+  VaultDetails = 'vault__details',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
   VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
+  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
   VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD'
 }
@@ -1538,16 +1650,21 @@ export enum Deposit_OrderBy {
   VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
   VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
   VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
+  VaultDepositCap = 'vault__depositCap',
   VaultDepositLimit = 'vault__depositLimit',
+  VaultDetails = 'vault__details',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
   VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
+  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
   VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD'
 }
@@ -1793,11 +1910,17 @@ export enum Disembark_OrderBy {
   ArkCumulativeSupplySideRevenueUsd = 'ark__cumulativeSupplySideRevenueUSD',
   ArkCumulativeTotalRevenueUsd = 'ark__cumulativeTotalRevenueUSD',
   ArkCumulativeWithdrawals = 'ark__cumulativeWithdrawals',
+  ArkDepositCap = 'ark__depositCap',
   ArkDepositLimit = 'ark__depositLimit',
+  ArkDetails = 'ark__details',
   ArkId = 'ark__id',
   ArkInputTokenBalance = 'ark__inputTokenBalance',
   ArkLastUpdateTimestamp = 'ark__lastUpdateTimestamp',
+  ArkMaxDepositPercentageOfTvl = 'ark__maxDepositPercentageOfTVL',
+  ArkMaxRebalanceInflow = 'ark__maxRebalanceInflow',
+  ArkMaxRebalanceOutflow = 'ark__maxRebalanceOutflow',
   ArkName = 'ark__name',
+  ArkRequiresKeeperData = 'ark__requiresKeeperData',
   ArkTotalValueLockedUsd = 'ark__totalValueLockedUSD',
   Asset = 'asset',
   AssetDecimals = 'asset__decimals',
@@ -1843,16 +1966,21 @@ export enum Disembark_OrderBy {
   VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
   VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
   VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
+  VaultDepositCap = 'vault__depositCap',
   VaultDepositLimit = 'vault__depositLimit',
+  VaultDetails = 'vault__details',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
   VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
+  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
   VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD'
 }
@@ -2412,16 +2540,21 @@ export enum Position_OrderBy {
   VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
   VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
   VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
+  VaultDepositCap = 'vault__depositCap',
   VaultDepositLimit = 'vault__depositLimit',
+  VaultDetails = 'vault__details',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
   VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
+  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
   VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
   Withdrawals = 'withdrawals'
@@ -2589,11 +2722,17 @@ export enum PostActionArkSnapshot_OrderBy {
   ArkCumulativeSupplySideRevenueUsd = 'ark__cumulativeSupplySideRevenueUSD',
   ArkCumulativeTotalRevenueUsd = 'ark__cumulativeTotalRevenueUSD',
   ArkCumulativeWithdrawals = 'ark__cumulativeWithdrawals',
+  ArkDepositCap = 'ark__depositCap',
   ArkDepositLimit = 'ark__depositLimit',
+  ArkDetails = 'ark__details',
   ArkId = 'ark__id',
   ArkInputTokenBalance = 'ark__inputTokenBalance',
   ArkLastUpdateTimestamp = 'ark__lastUpdateTimestamp',
+  ArkMaxDepositPercentageOfTvl = 'ark__maxDepositPercentageOfTVL',
+  ArkMaxRebalanceInflow = 'ark__maxRebalanceInflow',
+  ArkMaxRebalanceOutflow = 'ark__maxRebalanceOutflow',
   ArkName = 'ark__name',
+  ArkRequiresKeeperData = 'ark__requiresKeeperData',
   ArkTotalValueLockedUsd = 'ark__totalValueLockedUSD',
   BlockNumber = 'blockNumber',
   DepositLimit = 'depositLimit',
@@ -2631,16 +2770,21 @@ export enum PostActionArkSnapshot_OrderBy {
   VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
   VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
   VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
+  VaultDepositCap = 'vault__depositCap',
   VaultDepositLimit = 'vault__depositLimit',
+  VaultDetails = 'vault__details',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
   VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
+  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
   VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD'
 }
@@ -2843,16 +2987,21 @@ export enum PostActionVaultSnapshot_OrderBy {
   VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
   VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
   VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
+  VaultDepositCap = 'vault__depositCap',
   VaultDepositLimit = 'vault__depositLimit',
+  VaultDetails = 'vault__details',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
   VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
+  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
   VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD'
 }
@@ -3948,11 +4097,17 @@ export enum Rebalance_OrderBy {
   FromCumulativeSupplySideRevenueUsd = 'from__cumulativeSupplySideRevenueUSD',
   FromCumulativeTotalRevenueUsd = 'from__cumulativeTotalRevenueUSD',
   FromCumulativeWithdrawals = 'from__cumulativeWithdrawals',
+  FromDepositCap = 'from__depositCap',
   FromDepositLimit = 'from__depositLimit',
+  FromDetails = 'from__details',
   FromId = 'from__id',
   FromInputTokenBalance = 'from__inputTokenBalance',
   FromLastUpdateTimestamp = 'from__lastUpdateTimestamp',
+  FromMaxDepositPercentageOfTvl = 'from__maxDepositPercentageOfTVL',
+  FromMaxRebalanceInflow = 'from__maxRebalanceInflow',
+  FromMaxRebalanceOutflow = 'from__maxRebalanceOutflow',
   FromName = 'from__name',
+  FromRequiresKeeperData = 'from__requiresKeeperData',
   FromTotalValueLockedUsd = 'from__totalValueLockedUSD',
   Hash = 'hash',
   Id = 'id',
@@ -3994,11 +4149,17 @@ export enum Rebalance_OrderBy {
   ToCumulativeSupplySideRevenueUsd = 'to__cumulativeSupplySideRevenueUSD',
   ToCumulativeTotalRevenueUsd = 'to__cumulativeTotalRevenueUSD',
   ToCumulativeWithdrawals = 'to__cumulativeWithdrawals',
+  ToDepositCap = 'to__depositCap',
   ToDepositLimit = 'to__depositLimit',
+  ToDetails = 'to__details',
   ToId = 'to__id',
   ToInputTokenBalance = 'to__inputTokenBalance',
   ToLastUpdateTimestamp = 'to__lastUpdateTimestamp',
+  ToMaxDepositPercentageOfTvl = 'to__maxDepositPercentageOfTVL',
+  ToMaxRebalanceInflow = 'to__maxRebalanceInflow',
+  ToMaxRebalanceOutflow = 'to__maxRebalanceOutflow',
   ToName = 'to__name',
+  ToRequiresKeeperData = 'to__requiresKeeperData',
   ToTotalValueLockedUsd = 'to__totalValueLockedUSD',
   Vault = 'vault',
   VaultApr7d = 'vault__apr7d',
@@ -4012,16 +4173,21 @@ export enum Rebalance_OrderBy {
   VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
   VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
   VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
+  VaultDepositCap = 'vault__depositCap',
   VaultDepositLimit = 'vault__depositLimit',
+  VaultDetails = 'vault__details',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
   VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
+  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
   VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD'
 }
@@ -5150,9 +5316,13 @@ export type Vault = {
   /**  Vault daily snapshots  */
   dailySnapshots: Array<VaultDailySnapshot>;
   /**  Some vaults have a deposit cap. This is in input token amount  */
+  depositCap: Scalars['BigInt']['output'];
+  /**  DEPRECATED (use depositCap instead): Some vaults have a deposit cap. This is in input token amount  */
   depositLimit: Scalars['BigInt']['output'];
   /**  All deposits made to this vault  */
   deposits: Array<Deposit>;
+  /**  Details of the Fleet Commander  */
+  details?: Maybe<Scalars['String']['output']>;
   /**  Type of fees incurred to the user. Should include all fees that apply to the vault  */
   fees: Array<VaultFee>;
   /**  Vault hourly snapshots  */
@@ -5166,6 +5336,10 @@ export type Vault = {
   /**  Price of input token in USD  */
   inputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   lastUpdateTimestamp: Scalars['BigInt']['output'];
+  /**  Some vaults have a maximum number of rebalance operations.  */
+  maxRebalanceOperations: Scalars['BigInt']['output'];
+  /**  Some vaults have a minimum buffer balance. This is in input token amount  */
+  minimumBufferBalance: Scalars['BigInt']['output'];
   /**  Name of liquidity pool (e.g. Curve.fi DAI/USDC/USDT)  */
   name?: Maybe<Scalars['String']['output']>;
   /**  Token that is minted to track ownership of position in protocol  */
@@ -5187,6 +5361,8 @@ export type Vault = {
   rewardTokens?: Maybe<Array<RewardToken>>;
   /**  Total supply of output tokens that are staked (usually in the MasterChef contract). Used to calculate reward APY.  */
   stakedOutputTokenAmount?: Maybe<Scalars['BigInt']['output']>;
+  /**  Address of the staking rewards manager  */
+  stakingRewardsManager: Scalars['Bytes']['output'];
   /**  Symbol of liquidity pool (e.g. 3CRV)  */
   symbol?: Maybe<Scalars['String']['output']>;
   /**  Current TVL (Total Value Locked) of this pool in USD  */
@@ -5578,16 +5754,21 @@ export enum VaultDailySnapshot_OrderBy {
   VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
   VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
   VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
+  VaultDepositCap = 'vault__depositCap',
   VaultDepositLimit = 'vault__depositLimit',
+  VaultDetails = 'vault__details',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
   VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
+  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
   VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD'
 }
@@ -5939,16 +6120,21 @@ export enum VaultHourlySnapshot_OrderBy {
   VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
   VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
   VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
+  VaultDepositCap = 'vault__depositCap',
   VaultDepositLimit = 'vault__depositLimit',
+  VaultDetails = 'vault__details',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
   VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
+  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
   VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD'
 }
@@ -6061,6 +6247,14 @@ export type Vault_Filter = {
   cumulativeTotalRevenueUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
   cumulativeTotalRevenueUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   dailySnapshots_?: InputMaybe<VaultDailySnapshot_Filter>;
+  depositCap?: InputMaybe<Scalars['BigInt']['input']>;
+  depositCap_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  depositCap_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  depositCap_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  depositCap_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  depositCap_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  depositCap_not?: InputMaybe<Scalars['BigInt']['input']>;
+  depositCap_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   depositLimit?: InputMaybe<Scalars['BigInt']['input']>;
   depositLimit_gt?: InputMaybe<Scalars['BigInt']['input']>;
   depositLimit_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -6070,6 +6264,26 @@ export type Vault_Filter = {
   depositLimit_not?: InputMaybe<Scalars['BigInt']['input']>;
   depositLimit_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   deposits_?: InputMaybe<Deposit_Filter>;
+  details?: InputMaybe<Scalars['String']['input']>;
+  details_contains?: InputMaybe<Scalars['String']['input']>;
+  details_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  details_ends_with?: InputMaybe<Scalars['String']['input']>;
+  details_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  details_gt?: InputMaybe<Scalars['String']['input']>;
+  details_gte?: InputMaybe<Scalars['String']['input']>;
+  details_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  details_lt?: InputMaybe<Scalars['String']['input']>;
+  details_lte?: InputMaybe<Scalars['String']['input']>;
+  details_not?: InputMaybe<Scalars['String']['input']>;
+  details_not_contains?: InputMaybe<Scalars['String']['input']>;
+  details_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  details_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  details_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  details_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  details_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  details_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  details_starts_with?: InputMaybe<Scalars['String']['input']>;
+  details_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   fees?: InputMaybe<Array<Scalars['String']['input']>>;
   fees_?: InputMaybe<VaultFee_Filter>;
   fees_contains?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -6131,6 +6345,22 @@ export type Vault_Filter = {
   lastUpdateTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
   lastUpdateTimestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
   lastUpdateTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  maxRebalanceOperations?: InputMaybe<Scalars['BigInt']['input']>;
+  maxRebalanceOperations_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  maxRebalanceOperations_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  maxRebalanceOperations_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  maxRebalanceOperations_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  maxRebalanceOperations_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  maxRebalanceOperations_not?: InputMaybe<Scalars['BigInt']['input']>;
+  maxRebalanceOperations_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  minimumBufferBalance?: InputMaybe<Scalars['BigInt']['input']>;
+  minimumBufferBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  minimumBufferBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  minimumBufferBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  minimumBufferBalance_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  minimumBufferBalance_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  minimumBufferBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
+  minimumBufferBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   name?: InputMaybe<Scalars['String']['input']>;
   name_contains?: InputMaybe<Scalars['String']['input']>;
   name_contains_nocase?: InputMaybe<Scalars['String']['input']>;
@@ -6246,6 +6476,16 @@ export type Vault_Filter = {
   stakedOutputTokenAmount_lte?: InputMaybe<Scalars['BigInt']['input']>;
   stakedOutputTokenAmount_not?: InputMaybe<Scalars['BigInt']['input']>;
   stakedOutputTokenAmount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  stakingRewardsManager?: InputMaybe<Scalars['Bytes']['input']>;
+  stakingRewardsManager_contains?: InputMaybe<Scalars['Bytes']['input']>;
+  stakingRewardsManager_gt?: InputMaybe<Scalars['Bytes']['input']>;
+  stakingRewardsManager_gte?: InputMaybe<Scalars['Bytes']['input']>;
+  stakingRewardsManager_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
+  stakingRewardsManager_lt?: InputMaybe<Scalars['Bytes']['input']>;
+  stakingRewardsManager_lte?: InputMaybe<Scalars['Bytes']['input']>;
+  stakingRewardsManager_not?: InputMaybe<Scalars['Bytes']['input']>;
+  stakingRewardsManager_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
+  stakingRewardsManager_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
   symbol?: InputMaybe<Scalars['String']['input']>;
   symbol_contains?: InputMaybe<Scalars['String']['input']>;
   symbol_contains_nocase?: InputMaybe<Scalars['String']['input']>;
@@ -6294,8 +6534,10 @@ export enum Vault_OrderBy {
   CumulativeSupplySideRevenueUsd = 'cumulativeSupplySideRevenueUSD',
   CumulativeTotalRevenueUsd = 'cumulativeTotalRevenueUSD',
   DailySnapshots = 'dailySnapshots',
+  DepositCap = 'depositCap',
   DepositLimit = 'depositLimit',
   Deposits = 'deposits',
+  Details = 'details',
   Fees = 'fees',
   HourlySnapshots = 'hourlySnapshots',
   Id = 'id',
@@ -6309,6 +6551,8 @@ export enum Vault_OrderBy {
   InputTokenName = 'inputToken__name',
   InputTokenSymbol = 'inputToken__symbol',
   LastUpdateTimestamp = 'lastUpdateTimestamp',
+  MaxRebalanceOperations = 'maxRebalanceOperations',
+  MinimumBufferBalance = 'minimumBufferBalance',
   Name = 'name',
   OutputToken = 'outputToken',
   OutputTokenPriceUsd = 'outputTokenPriceUSD',
@@ -6343,6 +6587,7 @@ export enum Vault_OrderBy {
   RewardTokenEmissionsUsd = 'rewardTokenEmissionsUSD',
   RewardTokens = 'rewardTokens',
   StakedOutputTokenAmount = 'stakedOutputTokenAmount',
+  StakingRewardsManager = 'stakingRewardsManager',
   Symbol = 'symbol',
   TotalValueLockedUsd = 'totalValueLockedUSD',
   Withdraws = 'withdraws'
@@ -6654,16 +6899,21 @@ export enum Withdraw_OrderBy {
   VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
   VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
   VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
+  VaultDepositCap = 'vault__depositCap',
   VaultDepositLimit = 'vault__depositLimit',
+  VaultDetails = 'vault__details',
   VaultId = 'vault__id',
   VaultInputTokenBalance = 'vault__inputTokenBalance',
   VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
   VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
+  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
   VaultName = 'vault__name',
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
   VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD'
 }

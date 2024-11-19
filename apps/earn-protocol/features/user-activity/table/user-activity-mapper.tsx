@@ -56,7 +56,7 @@ export const userActivityMapper = (
         ),
         strategy: <TableCellText>{item.vault.name}</TableCellText>,
         timestamp: (
-          <TableCellText>
+          <TableCellText suppressHydrationWarning>
             {timeAgo({ from: new Date(), to: new Date(Number(item.timestamp) * 1000) })}
           </TableCellText>
         ),

@@ -1,13 +1,9 @@
 import { useEffect } from 'react'
 import {
-  Button,
   Expander,
-  InputWithDropdown,
-  ProjectedEarnings,
   Sidebar,
   SidebarFootnote,
   sidebarFootnote,
-  SkeletonLine,
   Text,
   useLocalStorageOnce,
   VaultOpenGrid,
@@ -21,15 +17,17 @@ import {
   type TokenSymbolsList,
   type UsersActivity,
 } from '@summerfi/app-types'
-import { formatCryptoBalance } from '@summerfi/app-utils'
-import { capitalize } from 'lodash-es'
 
 import { detailsLinks } from '@/components/layout/VaultOpenView/mocks'
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
+import {
+  ControlsApproval,
+  ControlsDepositWithdraw,
+  OrderInfoDeposit,
+} from '@/components/molecules/SidebarElements'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { HistoricalYieldChart } from '@/components/organisms/Charts/HistoricalYieldChart'
-import { TransactionAction } from '@/constants/transaction-actions'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
@@ -60,15 +58,34 @@ export const VaultOpenViewComponent = ({
   const { getStorageOnce } = useLocalStorageOnce<string>({
     key: `${vault.id}-amount`,
   })
-  const { tokenBalance, tokenBalanceLoading } = useClient({
+  const { tokenBalance, tokenBalanceLoading, publicClient } = useClient({
     vault,
   })
-  const { amountParsed, manualSetAmount, amountDisplay, handleAmountChange, onBlur, onFocus } =
-    useAmount({ vault })
-  const { sidebar, txHashes, removeTxHash, vaultChainId, reset } = useTransaction({
-    vault,
+  const {
     amountParsed,
     manualSetAmount,
+    amountDisplay,
+    amountDisplayUSD,
+    handleAmountChange,
+    onBlur,
+    onFocus,
+  } = useAmount({ vault })
+  const {
+    approvalType,
+    setApprovalType,
+    setApprovalCustomValue,
+    approvalCustomValue,
+    sidebar,
+    txHashes,
+    removeTxHash,
+    vaultChainId,
+    nextTransaction,
+    backToInit,
+  } = useTransaction({
+    vault,
+    amount: amountParsed,
+    manualSetAmount,
+    publicClient,
   })
 
   const position = usePosition({
@@ -105,49 +122,51 @@ export const VaultOpenViewComponent = ({
 
   const displayGraph = amountParsed.gt(0)
 
-  const sidebarProps = {
-    title: capitalize(TransactionAction.DEPOSIT),
-    content: (
-      <>
-        <InputWithDropdown
-          value={amountDisplay}
-          secondaryValue={amountDisplay ? `$${amountDisplay}` : undefined}
-          handleChange={handleAmountChange}
-          options={options}
-          dropdownValue={dropdownValue}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          selectAllOnFocus
-          heading={{
-            label: 'Balance',
-            value: tokenBalanceLoading ? (
-              <SkeletonLine />
-            ) : tokenBalance ? (
-              `${formatCryptoBalance(tokenBalance)} ${vault.inputToken.symbol}`
-            ) : (
-              '-'
-            ),
-            action: () => {
-              manualSetAmount(tokenBalance?.toString())
-            },
-          }}
+  const sidebarContent = nextTransaction?.label ? (
+    {
+      approve: (
+        <ControlsApproval
+          vault={vault}
+          approvalType={approvalType}
+          setApprovalType={setApprovalType}
+          setApprovalCustomValue={setApprovalCustomValue}
+          approvalCustomValue={approvalCustomValue}
+          tokenBalance={tokenBalance}
         />
-        <ProjectedEarnings earnings="1353" symbol={vault.inputToken.symbol as TokenSymbolsList} />
-      </>
-    ),
+      ),
+      deposit: (
+        <OrderInfoDeposit
+          vault={vault}
+          amountParsed={amountParsed}
+          amountDisplayUSD={amountDisplayUSD}
+        />
+      ),
+      withdraw: null, // just for types, withdraw doesnt happen on open view
+    }[nextTransaction.label]
+  ) : (
+    <ControlsDepositWithdraw
+      amountDisplay={amountDisplay}
+      amountDisplayUSD={amountDisplayUSD}
+      handleAmountChange={handleAmountChange}
+      options={options}
+      dropdownValue={dropdownValue}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      tokenBalance={tokenBalance}
+      tokenBalanceLoading={tokenBalanceLoading}
+      manualSetAmount={manualSetAmount}
+      vault={vault}
+    />
+  )
+
+  const sidebarProps = {
+    title: sidebar.title,
+    content: sidebarContent,
+    goBackAction: nextTransaction?.label ? backToInit : undefined,
 
     primaryButton: sidebar.primaryButton,
     footnote: (
       <>
-        {sidebar.error ?? amountParsed.gt(0) ? (
-          <Button
-            variant="secondarySmall"
-            style={{ width: '100%', marginBottom: 'var(--general-space-12)' }}
-            onClick={reset}
-          >
-            reset
-          </Button>
-        ) : null}
         {txHashes.map((transactionData) => (
           <TransactionHashPill
             key={transactionData.hash}

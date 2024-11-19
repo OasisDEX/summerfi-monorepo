@@ -1,0 +1,9 @@
+<svg width="32" height="33" viewBox="0 0 32 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path
+    d="M16 32.793C24.8366 32.793 32 25.6295 32 16.793C32 7.95641 24.8366 0.792969 16 0.792969C7.16344 0.792969 0 7.95641 0 16.793C0 25.6295 7.16344 32.793 16 32.793Z"
+    fill="#2B2B2B" />
+  <circle cx="11" cy="12" r="3" fill="#777576" />
+  <circle cx="11" cy="22" r="3" fill="#D2D2D2" />
+  <circle cx="21" cy="12" r="3" fill="#D2D2D2" />
+  <circle cx="21" cy="22" r="3" fill="#777576" />
+</svg>

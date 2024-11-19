@@ -41,7 +41,8 @@ export type EarnTransactionViewStates =
   | 'txError'
   | 'txSuccess'
 
-export type EarnTransactionTypes = 'approve' | 'deposit'
+export type EarnTransactionTypes = 'approve' | 'deposit' | 'withdraw'
+export type EarnAllowanceTypes = 'deposit' | 'custom'
 
 export type TransactionInfoLabeled = TransactionInfo & {
   label: EarnTransactionTypes

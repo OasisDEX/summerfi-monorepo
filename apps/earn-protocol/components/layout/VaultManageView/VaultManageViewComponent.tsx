@@ -1,15 +1,11 @@
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useUser } from '@account-kit/react'
 import {
-  Button,
   Expander,
-  InputWithDropdown,
-  ProjectedEarnings,
   Sidebar,
   SidebarFootnote,
   sidebarFootnote,
   type SidebarProps,
-  SkeletonLine,
   Text,
   useMobileCheck,
   VaultManageGrid,
@@ -22,10 +18,15 @@ import {
   type TokenSymbolsList,
   type UsersActivity,
 } from '@summerfi/app-types'
-import { formatCryptoBalance } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client-react'
-import { capitalize } from 'lodash-es'
+import BigNumber from 'bignumber.js'
 
+import {
+  ControlsApproval,
+  ControlsDepositWithdraw,
+  OrderInfoDeposit,
+  OrderInfoWithdraw,
+} from '@/components/molecules/SidebarElements'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { HistoricalYieldChart } from '@/components/organisms/Charts/HistoricalYieldChart'
 import { TransactionAction } from '@/constants/transaction-actions'
@@ -55,11 +56,18 @@ export const VaultManageViewComponent = ({
   viewWalletAddress: string
 }) => {
   const user = useUser()
-  const { tokenBalance, tokenBalanceLoading } = useClient({
+  const { tokenBalance, tokenBalanceLoading, publicClient } = useClient({
     vault,
   })
-  const { amountParsed, amountDisplay, manualSetAmount, handleAmountChange, onFocus, onBlur } =
-    useAmount({ vault })
+  const {
+    amountParsed,
+    manualSetAmount,
+    amountDisplay,
+    amountDisplayUSD,
+    handleAmountChange,
+    onBlur,
+    onFocus,
+  } = useAmount({ vault })
   const {
     sidebar,
     txHashes,
@@ -68,15 +76,26 @@ export const VaultManageViewComponent = ({
     reset,
     transactionType,
     setTransactionType,
+    nextTransaction,
+    approvalType,
+    setApprovalType,
+    setApprovalCustomValue,
+    approvalCustomValue,
+    backToInit,
   } = useTransaction({
     vault,
-    amountParsed,
+    amount: amountParsed,
     manualSetAmount,
+    publicClient,
   })
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
 
   const ownerView = viewWalletAddress.toLowerCase() === user?.address.toLowerCase()
+
+  const positionAmount = useMemo(() => {
+    return new BigNumber(position.amount.amount)
+  }, [position])
 
   const options: DropdownOption[] = [
     ...[...new Set(vaults.map(({ inputToken }) => inputToken.symbol))].map((symbol) => ({
@@ -89,85 +108,70 @@ export const VaultManageViewComponent = ({
   const dropdownValue =
     options.find((option) => option.value === vault.inputToken.symbol) ?? options[0]
 
-  const balanceValue = useMemo(() => {
-    if (ownerView) {
-      if (tokenBalanceLoading) {
-        return <SkeletonLine width={70} height={10} style={{ marginTop: '7px' }} />
+  const sidebarContent = nextTransaction?.label ? (
+    {
+      approve: (
+        <ControlsApproval
+          vault={vault}
+          approvalType={approvalType}
+          setApprovalType={setApprovalType}
+          setApprovalCustomValue={setApprovalCustomValue}
+          approvalCustomValue={approvalCustomValue}
+          tokenBalance={tokenBalance}
+        />
+      ),
+      deposit: (
+        <OrderInfoDeposit
+          vault={vault}
+          amountParsed={amountParsed}
+          amountDisplayUSD={amountDisplayUSD}
+        />
+      ),
+      withdraw: (
+        <OrderInfoWithdraw
+          vault={vault}
+          amountParsed={amountParsed}
+          amountDisplayUSD={amountDisplayUSD}
+        />
+      ),
+    }[nextTransaction.label]
+  ) : (
+    <ControlsDepositWithdraw
+      amountDisplay={amountDisplay}
+      amountDisplayUSD={amountDisplayUSD}
+      handleAmountChange={handleAmountChange}
+      options={options}
+      dropdownValue={dropdownValue}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      tokenBalance={
+        {
+          [TransactionAction.DEPOSIT]: tokenBalance,
+          [TransactionAction.WITHDRAW]: ownerView ? positionAmount : undefined,
+        }[transactionType]
       }
-
-      if (tokenBalance && transactionType === TransactionAction.DEPOSIT) {
-        return `${formatCryptoBalance(tokenBalance)} ${vault.inputToken.symbol}`
-      }
-      if (transactionType === TransactionAction.WITHDRAW) {
-        return `${formatCryptoBalance(position.amount.amount)} ${vault.inputToken.symbol}`
-      }
-    }
-
-    return '-'
-  }, [
-    ownerView,
-    position.amount.amount,
-    tokenBalance,
-    tokenBalanceLoading,
-    transactionType,
-    vault.inputToken.symbol,
-  ])
-
-  const balanceOnClickAction = useCallback(() => {
-    if (ownerView) {
-      if (tokenBalance && transactionType === TransactionAction.DEPOSIT) {
-        return manualSetAmount(tokenBalance.toString())
-      }
-      if (transactionType === TransactionAction.WITHDRAW) {
-        return manualSetAmount(position.amount.amount.toString())
-      }
-    }
-
-    return undefined
-  }, [manualSetAmount, ownerView, position.amount.amount, tokenBalance, transactionType])
+      tokenBalanceLoading={tokenBalanceLoading}
+      manualSetAmount={manualSetAmount}
+      vault={vault}
+    />
+  )
 
   const sidebarProps: SidebarProps = {
-    title: capitalize(transactionType),
-    titleTabs: [TransactionAction.DEPOSIT, TransactionAction.WITHDRAW],
+    title: !nextTransaction ? transactionType : sidebar.title,
+    titleTabs: !nextTransaction
+      ? [TransactionAction.DEPOSIT, TransactionAction.WITHDRAW]
+      : undefined,
     onTitleTabChange: (action) => {
       setTransactionType(action as TransactionAction)
       if (amountParsed.gt(0)) {
         reset()
       }
     },
-    content: (
-      <>
-        <InputWithDropdown
-          value={amountDisplay}
-          secondaryValue={amountDisplay ? `$${amountDisplay}` : undefined}
-          handleChange={handleAmountChange}
-          options={options}
-          dropdownValue={dropdownValue}
-          onFocus={onFocus}
-          selectAllOnFocus
-          onBlur={onBlur}
-          heading={{
-            label: 'Balance',
-            value: balanceValue,
-            action: balanceOnClickAction,
-          }}
-        />
-        <ProjectedEarnings earnings="1353" symbol={vault.inputToken.symbol as TokenSymbolsList} />
-      </>
-    ),
-
+    content: sidebarContent,
+    goBackAction: nextTransaction?.label ? backToInit : undefined,
     primaryButton: sidebar.primaryButton,
     footnote: (
       <>
-        {sidebar.error ?? amountParsed.gt(0) ? (
-          <Button
-            variant="secondarySmall"
-            style={{ width: '100%', marginBottom: 'var(--general-space-12)' }}
-            onClick={reset}
-          >
-            reset
-          </Button>
-        ) : null}
         {txHashes.map((transactionData) => (
           <TransactionHashPill
             key={transactionData.hash}
