@@ -20,10 +20,12 @@ import { Address, ChainInfo, type TransactionInfo } from '@summerfi/sdk-client-r
 import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 import { useRouter } from 'next/navigation'
-import { encodeFunctionData, erc20Abi } from 'viem'
+import { erc20Abi } from 'viem'
 
 import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { TransactionAction } from '@/constants/transaction-actions'
+import { getApprovalTx } from '@/helpers/get-approval-tx'
+import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { type useClient } from '@/hooks/use-client'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
@@ -49,11 +51,15 @@ export const useTransaction = ({
   amount,
   publicClient,
 }: UseTransactionParams) => {
+  const { refresh: refreshView } = useRouter()
+  const user = useUser()
+  const { getDepositTX, getWithdrawTX } = useAppSDK()
+  const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
+  const { setChain, isSettingChain } = useChain()
+  const { clientChainId } = useClientChainId()
   const [transactionType, setTransactionType] = useState<TransactionAction>(
     TransactionAction.DEPOSIT,
   )
-  const { refresh: refreshView } = useRouter()
-  const user = useUser()
   const [waitingForTx, setWaitingForTx] = useState<`0x${string}`>()
   const [approval, setApproval] = useState<BigNumber>()
   const [approvalType, setApprovalType] = useState<EarnAllowanceTypes>('deposit')
@@ -61,11 +67,7 @@ export const useTransaction = ({
   const [txHashes, setTxHashes] = useState<{ type: EarnTransactionTypes; hash: string }[]>([])
   const [txStatus, setTxStatus] = useState<EarnTransactionViewStates>('idle')
   const [transactions, setTransactions] = useState<TransactionInfoLabeled[]>()
-  const [error, setError] = useState<string>()
-  const { getDepositTX, getWithdrawTX } = useAppSDK()
-  const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
-  const { setChain, isSettingChain } = useChain()
-  const { clientChainId } = useClientChainId()
+  const [sidebarError, setSidebarError] = useState<string>()
 
   const { client: smartAccountClient } = useSmartAccountClient({ type: 'LightAccount' })
 
@@ -110,9 +112,9 @@ export const useTransaction = ({
       console.error('Error executing the transaction:', err)
 
       if (err instanceof Error) {
-        setError(err.message)
+        setSidebarError(err.message)
       } else {
-        setError('Error executing the transaction')
+        setSidebarError('Error executing the transaction')
       }
     },
   })
@@ -127,7 +129,7 @@ export const useTransaction = ({
       data: `0x${string}`
       value?: bigint
     }) => {
-      sendUserOperation({
+      return sendUserOperation({
         uo: {
           target,
           data,
@@ -150,37 +152,21 @@ export const useTransaction = ({
     if (!publicClient) {
       throw new Error('Public client not available')
     }
-    if (nextTransaction.label === 'approve') {
-      // approval amount defaults to the amount user wants to deposit
-      if (approvalType === 'deposit') {
-        sendTransaction({
-          target: nextTransaction.transaction.target.value,
-          data: nextTransaction.transaction.calldata,
-        })
+    const txParams =
+      nextTransaction.label === 'approve' && approvalType !== 'deposit'
+        ? {
+            target: nextTransaction.transaction.target.value,
+            data: getApprovalTx(
+              user.address,
+              BigInt(approvalCustomValue.times(ten.pow(inputTokenDecimals)).toString()),
+            ),
+          }
+        : {
+            target: nextTransaction.transaction.target.value,
+            data: nextTransaction.transaction.calldata,
+          }
 
-        return
-      }
-      // if not, we need to approve a custom amount
-      const calldata = encodeFunctionData({
-        abi: erc20Abi,
-        functionName: 'approve',
-        args: [
-          user.address,
-          BigInt(approvalCustomValue.times(ten.pow(inputTokenDecimals)).toString()),
-        ],
-      })
-
-      sendTransaction({
-        target: nextTransaction.transaction.target.value,
-        data: calldata,
-      })
-    } else {
-      // this will be deposit/withdraw 99.99% of the time
-      sendTransaction({
-        target: nextTransaction.transaction.target.value,
-        data: nextTransaction.transaction.calldata,
-      })
-    }
+    sendTransaction(txParams)
   }, [
     approvalCustomValue,
     approvalType,
@@ -188,6 +174,7 @@ export const useTransaction = ({
     nextTransaction,
     publicClient,
     sendTransaction,
+    setTxStatus,
     user,
   ])
 
@@ -196,59 +183,41 @@ export const useTransaction = ({
     setTransactions(undefined)
     setTxStatus('idle')
     setApprovalType('deposit')
-  }, [])
+  }, [setApprovalType, setTransactions, setTxStatus])
 
   const reset = useCallback(() => {
     // resets everything
     backToInit()
     manualSetAmount(undefined)
-    setError(undefined)
+    setSidebarError(undefined)
     setTxHashes([])
-  }, [manualSetAmount, backToInit])
+  }, [backToInit, manualSetAmount, setSidebarError, setTxHashes])
 
-  const removeTxHash = useCallback((txHash: string) => {
-    setTxHashes((prev) => prev.filter((tx) => tx.hash !== txHash))
-  }, [])
+  const removeTxHash = useCallback(
+    (txHash: string) => {
+      setTxHashes((prev) => prev.filter((tx) => tx.hash !== txHash))
+    },
+    [setTxHashes],
+  )
 
   const getTransactionsList = useCallback(async () => {
     if (amount && user) {
       setTxStatus('loadingTx')
       try {
-        let transactionsList: TransactionInfo[] = []
-
-        switch (transactionType) {
-          case TransactionAction.DEPOSIT:
-            transactionsList = await getDepositTX({
-              walletAddress: Address.createFromEthereum({
-                value: user.address,
-              }),
-              amount: amount.toString(),
-              fleetAddress: vault.id,
-              chainInfo: ChainInfo.createFrom({
-                name: vault.protocol.network,
-                chainId: vaultChainId,
-              }),
-            })
-
-            break
-          case TransactionAction.WITHDRAW:
-            transactionsList = await getWithdrawTX({
-              walletAddress: Address.createFromEthereum({
-                value: user.address,
-              }),
-              amount: amount.toString(),
-              fleetAddress: vault.id,
-              chainInfo: ChainInfo.createFrom({
-                name: vault.protocol.network,
-                chainId: vaultChainId,
-              }),
-            })
-
-            break
-
-          default:
-            throw new Error('Invalid transaction type')
-        }
+        const transactionsList: TransactionInfo[] = await {
+          [TransactionAction.DEPOSIT]: getDepositTX,
+          [TransactionAction.WITHDRAW]: getWithdrawTX,
+        }[transactionType]({
+          walletAddress: Address.createFromEthereum({
+            value: user.address,
+          }),
+          amount: amount.toString(),
+          fleetAddress: vault.id,
+          chainInfo: ChainInfo.createFrom({
+            name: vault.protocol.network,
+            chainId: vaultChainId,
+          }),
+        })
 
         if (transactionsList.length === 0) {
           throw new Error('Error getting the transactions list')
@@ -257,24 +226,27 @@ export const useTransaction = ({
         setTxStatus('txPrepared')
       } catch (err) {
         if (err instanceof Error) {
-          setError(err.message)
+          setSidebarError(err.message)
         } else {
-          setError('Error getting the transaction')
+          setSidebarError('Error getting the transaction')
         }
       }
     }
   }, [
     amount,
     user,
+    setTxStatus,
     transactionType,
+    setTransactions,
     getDepositTX,
     vault.id,
     vault.protocol.network,
     vaultChainId,
     getWithdrawTX,
+    setSidebarError,
   ])
 
-  const primaryButton = useMemo(() => {
+  const sidebarPrimaryButton = useMemo(() => {
     // missing data
     if (!user) {
       return {
@@ -359,7 +331,7 @@ export const useTransaction = ({
     executeNextTransaction,
   ])
 
-  const title = useMemo(() => {
+  const sidebarTitle = useMemo(() => {
     if (nextTransaction?.label === 'deposit') {
       return 'Preview deposit'
     }
@@ -397,6 +369,7 @@ export const useTransaction = ({
     publicClient,
     user,
     vault.id,
+    setApproval,
     /** last one is pretty important because we want to update
      * the allowance when the transactions change (are executed or not) */
     transactions?.length,
@@ -427,16 +400,12 @@ export const useTransaction = ({
     if (sendUserOperationError && txStatus === 'txInProgress') {
       setTxStatus('txError')
     }
-  }, [sendUserOperationError, txStatus])
+  }, [sendUserOperationError, setTxStatus, txStatus])
 
   // custom wait for tx to be processed
   useEffect(() => {
     if (waitingForTx && txStatus !== 'txSuccess' && publicClient) {
-      publicClient
-        .waitForTransactionReceipt({
-          hash: waitingForTx,
-          confirmations: 2,
-        })
+      waitForTransaction({ publicClient, hash: waitingForTx })
         .then(() => {
           setTxStatus('txSuccess')
           setWaitingForTx(undefined)
@@ -448,14 +417,22 @@ export const useTransaction = ({
           setTxStatus('txError')
         })
     }
-  }, [waitingForTx, txStatus, publicClient, transactions])
+  }, [
+    waitingForTx,
+    txStatus,
+    publicClient,
+    transactions,
+    setTxStatus,
+    setWaitingForTx,
+    setTransactions,
+  ])
 
   return {
     manualSetAmount,
     sidebar: {
-      title,
-      primaryButton,
-      error,
+      title: sidebarTitle,
+      primaryButton: sidebarPrimaryButton,
+      error: sidebarError,
     },
     nextTransaction,
     txHashes,
