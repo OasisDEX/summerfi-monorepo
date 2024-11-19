@@ -3,9 +3,9 @@ import { type EarnAllowanceTypes, type SDKVaultType } from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 
-import approvalInfoStyles from './ApprovalInfo.module.scss'
+import controlsApprovalStyles from './ControlsApproval.module.scss'
 
-type ApprovalInfoProps = {
+type ControlsApprovalProps = {
   vault: SDKVaultType
   approvalType: EarnAllowanceTypes
   setApprovalType: (type: EarnAllowanceTypes) => void
@@ -14,14 +14,14 @@ type ApprovalInfoProps = {
   tokenBalance?: BigNumber
 }
 
-export const ApprovalInfo = ({
+export const ControlsApproval = ({
   vault,
   approvalType,
   setApprovalType,
   setApprovalCustomValue,
   approvalCustomValue,
   tokenBalance,
-}: ApprovalInfoProps) => {
+}: ControlsApprovalProps) => {
   const tokenSymbol = vault.inputToken.symbol
 
   const handleCustomApproval = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,7 +37,7 @@ export const ApprovalInfo = ({
 
   return (
     <>
-      <Text variant="p2" className={approvalInfoStyles.approvalText}>
+      <Text variant="p2" className={controlsApprovalStyles.approvalText}>
         Approvals give our platform permission to interact with your tokens up to a threshold,
         determined by you. You can revoke the permission anytime you want.{' '}
       </Text>
@@ -52,10 +52,10 @@ export const ApprovalInfo = ({
         onClick={() => setApprovalType('custom')}
         active={approvalType === 'custom'}
         customContent={
-          <div className={approvalInfoStyles.customApprovalInputWrapper}>
+          <div className={controlsApprovalStyles.customApprovalInputWrapper}>
             <Input
-              className={clsx(approvalInfoStyles.customApprovalInput, {
-                [approvalInfoStyles.disabled]: approvalType !== 'custom',
+              className={clsx(controlsApprovalStyles.customApprovalInput, {
+                [controlsApprovalStyles.disabled]: approvalType !== 'custom',
               })}
               min="0"
               step="any"
@@ -68,7 +68,8 @@ export const ApprovalInfo = ({
             <Text
               variant="p4semiColorful"
               className={clsx({
-                [approvalInfoStyles.maxButtonDisabled]: approvalType !== 'custom' || !tokenBalance,
+                [controlsApprovalStyles.maxButtonDisabled]:
+                  approvalType !== 'custom' || !tokenBalance,
               })}
               onClick={handleMaxApproval}
             >

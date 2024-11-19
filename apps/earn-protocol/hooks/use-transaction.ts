@@ -54,6 +54,7 @@ export const useTransaction = ({
   )
   const { refresh: refreshView } = useRouter()
   const user = useUser()
+  const [waitingForTx, setWaitingForTx] = useState<`0x${string}`>()
   const [approval, setApproval] = useState<BigNumber>()
   const [approvalType, setApprovalType] = useState<EarnAllowanceTypes>('deposit')
   const [approvalCustomValue, setApprovalCustomValue] = useState<BigNumber>(zero)
@@ -85,10 +86,15 @@ export const useTransaction = ({
   }, [transactions])
 
   // Configure User Operation (transaction) sender, passing client which can be undefined
-  const { sendUserOperation, error: sendUserOperationError } = useSendUserOperation({
+  const {
+    sendUserOperation,
+    error: sendUserOperationError,
+    isSendingUserOperation,
+  } = useSendUserOperation({
     client: smartAccountClient,
     waitForTxn: true,
     onSuccess: ({ hash }) => {
+      setWaitingForTx(hash)
       if (nextTransaction) {
         setTxHashes((prev) => [
           ...prev,
@@ -98,7 +104,6 @@ export const useTransaction = ({
           },
         ])
       }
-      setTxStatus('txSuccess')
       setTransactions(transactions?.slice(1))
     },
     onError: (err) => {
@@ -324,9 +329,11 @@ export const useTransaction = ({
     }
 
     // if there are no transactions, and the last one was successful
+    // if this is what you're seeing it means it should automatically refresh the view
+    // if it didnt, it's a bug
     if (txStatus === 'txSuccess') {
       return {
-        label: 'Success :)',
+        label: 'Success',
         action: () => null,
         disabled: true,
       }
@@ -385,7 +392,16 @@ export const useTransaction = ({
           console.error('Error reading token allowance', err)
         })
     }
-  }, [inputTokenAddress, inputTokenDecimals, publicClient, user, vault.id])
+  }, [
+    inputTokenAddress,
+    inputTokenDecimals,
+    publicClient,
+    user,
+    vault.id,
+    /** last one is pretty important because we want to update
+     * the allowance when the transactions change (are executed or not) */
+    transactions?.length,
+  ])
 
   // skip approval if the user has enough allowance
   useEffect(() => {
@@ -396,11 +412,16 @@ export const useTransaction = ({
 
   // refresh data when all transactions are executed and are successful
   useEffect(() => {
-    if (txStatus === 'txSuccess' && transactions?.length === 0) {
+    if (
+      txStatus === 'txSuccess' &&
+      !isSendingUserOperation &&
+      transactions?.length === 0 &&
+      !waitingForTx
+    ) {
       refreshView()
       reset()
     }
-  }, [refreshView, reset, transactions?.length, txStatus])
+  }, [refreshView, reset, transactions?.length, txStatus, isSendingUserOperation])
 
   // watch for sendUserOperationError
   useEffect(() => {
@@ -408,6 +429,26 @@ export const useTransaction = ({
       setTxStatus('txError')
     }
   }, [sendUserOperationError, txStatus])
+
+  // custom wait for tx to be processed
+  useEffect(() => {
+    if (waitingForTx && txStatus !== 'txSuccess' && publicClient) {
+      publicClient
+        .waitForTransactionReceipt({
+          hash: waitingForTx,
+          confirmations: 2,
+        })
+        .then(() => {
+          setTxStatus('txSuccess')
+          setWaitingForTx(undefined)
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error('Error waiting for transaction', err)
+          setTxStatus('txError')
+        })
+    }
+  }, [waitingForTx, txStatus, publicClient])
 
   return {
     manualSetAmount,
