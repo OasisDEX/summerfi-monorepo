@@ -19,6 +19,7 @@ const Content: FC<ContentProps> = ({ option }) => (
 interface TransakExchangeInputProps {
   label: string
   defaultValue?: string
+  defaultOption?: DropdownOption
   readOnly?: boolean
   onInputChange?: (value: string) => void
   onOptionChange?: (value: string) => void
@@ -27,6 +28,7 @@ interface TransakExchangeInputProps {
 
 export const TransakExchangeInput: FC<TransakExchangeInputProps> = ({
   defaultValue = '',
+  defaultOption,
   readOnly,
   label,
   onInputChange,
@@ -35,8 +37,8 @@ export const TransakExchangeInput: FC<TransakExchangeInputProps> = ({
 }) => {
   const [fiatAmount, setFiatAmount] = useState<string>(defaultValue)
   const [option, setOption] = useState<DropdownRawOption>({
-    value: options[0].value,
-    content: <Content option={options[0]} />,
+    value: defaultOption?.value ?? options[0].value,
+    content: <Content option={defaultOption ?? options[0]} />,
   })
 
   const handleInputChange = (ev: ChangeEvent<HTMLInputElement>) => {

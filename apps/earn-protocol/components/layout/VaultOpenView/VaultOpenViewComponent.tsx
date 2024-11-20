@@ -269,6 +269,7 @@ export const VaultOpenViewComponent = ({
           <Sidebar {...sidebarProps} />
           {user?.address && (
             <TransakWidget
+              cryptoCurrency={vault.inputToken.symbol}
               walletAddress={user.address}
               email={user.email}
               isOpen={isTransakOpen}

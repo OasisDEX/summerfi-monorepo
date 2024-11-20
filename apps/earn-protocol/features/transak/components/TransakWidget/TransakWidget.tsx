@@ -65,6 +65,7 @@ const data = ({
 })
 
 interface TransakWidgetProps {
+  cryptoCurrency: string
   isOpen: boolean
   onClose: () => void
   walletAddress: string
@@ -72,6 +73,7 @@ interface TransakWidgetProps {
 }
 
 export const TransakWidget: FC<TransakWidgetProps> = ({
+  cryptoCurrency,
   walletAddress,
   email,
   isOpen,
@@ -81,7 +83,10 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
   const isSKDInit = useRef(false)
-  const [state, dispatch] = useReducer(transakReducer, transakInitialReducerState)
+  const [state, dispatch] = useReducer(transakReducer, {
+    ...transakInitialReducerState,
+    cryptoCurrency,
+  })
 
   const { step, fiatAmount, fiatCurrency, paymentMethod } = state
 

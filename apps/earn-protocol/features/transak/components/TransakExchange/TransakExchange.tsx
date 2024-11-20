@@ -165,6 +165,7 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
         label="You receive (estimate)"
         readOnly
         defaultValue={exchangeDetails?.cryptoAmount.toString()}
+        defaultOption={cryptoOptions.find((item) => item.value === cryptoCurrency)}
         onOptionChange={(value) => dispatch({ type: 'update-crypto-currency', payload: value })}
         options={cryptoOptions}
       />
