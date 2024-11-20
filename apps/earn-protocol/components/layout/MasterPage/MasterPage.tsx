@@ -4,7 +4,6 @@ import dynamic from 'next/dynamic'
 import Image from 'next/image'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
-import { TransakWidget } from '@/components/molecules/TransakWidget/TransakWidget'
 import { WalletInit } from '@/components/molecules/WalletInit/WalletInit'
 
 import './global.css'
@@ -34,7 +33,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({ children })
             gap: '20px',
           }}
         >
-          <SetForkModal /> <TransakWidget />
+          <SetForkModal />{' '}
           <Text as="p" variant="p2">
             Footer
           </Text>

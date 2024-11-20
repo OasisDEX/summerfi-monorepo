@@ -108,6 +108,11 @@
     rgba(255, 73, 164, 0.5) 0%,
     rgba(176, 73, 255, 0.5) 93%
   );
+  --gradient-earn-protocol-lighter: linear-gradient(
+    90deg,
+    rgba(255, 73, 164, 0.3) 0%,
+    rgba(176, 73, 255, 0.3) 93%
+  );
 
   --shadow-depth-1: 0px 0px 8px 0px #0000001a;
   --shadow-depth-2: 0px 0px 8px 8px #00000026;

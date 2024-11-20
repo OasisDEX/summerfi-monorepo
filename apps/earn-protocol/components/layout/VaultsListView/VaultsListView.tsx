@@ -110,6 +110,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
 
   return (
     <VaultGrid
+      isMobile={isMobile}
       networksList={vaultsNetworksList}
       selectedNetwork={selectedNetworkOption}
       onChangeNetwork={handleChangeNetwork}

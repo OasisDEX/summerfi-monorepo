@@ -1,7 +1,7 @@
 import { useChain, useUser } from '@account-kit/react'
 import { Button } from '@summerfi/app-earn-ui'
 
-import { getTransakConfig } from '@/transak/config'
+import { getTransakConfig } from '@/features/transak/config'
 
 // Base network usdcFleet address
 const usdcFleetAddress = '0xa09e82322f351154a155f9e0f9e6ddbc8791c794'

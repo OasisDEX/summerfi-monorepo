@@ -10,7 +10,6 @@ export type Styles = {
   sidebarHeaderWrapper: string
   sidebarTitle: string
   sidebarWrapper: string
-  sidebarWrapperDesktop: string
 }
 
 export type ClassNames = keyof Styles

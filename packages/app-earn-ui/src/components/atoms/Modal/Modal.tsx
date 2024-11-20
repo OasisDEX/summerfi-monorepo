@@ -33,7 +33,9 @@ export const Modal: FC<ModalProps> = ({
     if (openModal) {
       ref.current?.showModal()
       document.addEventListener('mousedown', handleOutsideClick)
+      document.body.style.overflow = 'hidden'
     } else {
+      document.body.style.overflow = 'auto'
       ref.current?.close()
     }
 

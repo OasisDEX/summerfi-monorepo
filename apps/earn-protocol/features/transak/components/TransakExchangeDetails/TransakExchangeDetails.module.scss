@@ -1,0 +1,27 @@
+.wrapper {
+  position: relative;
+}
+
+.line {
+  position: absolute;
+  border-left: 2px solid var(--earn-protocol-neutral-80);
+  height: 80px;
+  left: -20px;
+  top: -12px;
+}
+
+.dot {
+  position: absolute;
+  background-color: var(--earn-protocol-neutral-80);
+  border-radius: 50%;
+  height: 8px;
+  width: 8px;
+  left: -23px;
+  top: 6px;
+}
+
+.listItem {
+  color: var(--earn-protocol-secondary-60);
+  margin-bottom: var(--general-space-8);
+  position: relative;
+}

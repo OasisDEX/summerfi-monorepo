@@ -3,4 +3,8 @@
   padding: unset;
   background: unset;
   outline: none;
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.6);
+  }
 }
