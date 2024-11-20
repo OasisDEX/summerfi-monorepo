@@ -3,6 +3,8 @@
   padding: unset;
   background: unset;
   outline: none;
+  position: relative;
+  overflow: visible;
 
   &::backdrop {
     background-color: rgba(0, 0, 0, 0.6);

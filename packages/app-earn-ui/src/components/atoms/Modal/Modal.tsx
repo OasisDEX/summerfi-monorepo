@@ -46,6 +46,7 @@ export const Modal: FC<ModalProps> = ({
 
   return (
     <dialog ref={ref} onCancel={closeModal} className={modalStyles.dialog}>
+      <div id="modal-portal" style={{ position: 'absolute' }} />
       {children}
     </dialog>
   )

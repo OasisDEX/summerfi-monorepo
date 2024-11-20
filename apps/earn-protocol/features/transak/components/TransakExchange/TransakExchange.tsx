@@ -1,9 +1,10 @@
 import { type Dispatch, type FC, useEffect, useState } from 'react'
-import { Text } from '@summerfi/app-earn-ui'
+import { Icon, Text, Tooltip, useMobileCheck } from '@summerfi/app-earn-ui'
 import { type DropdownOption } from '@summerfi/app-types'
 import debounce from 'lodash-es/debounce'
 import { useParams } from 'next/navigation'
 
+import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { TransakExchangeDetails } from '@/features/transak/components/TransakExchangeDetails/TransakExchangeDetails'
 import { TransakExchangeInput } from '@/features/transak/components/TransakExchangeInput/TransakExchangeInput'
 import { TransakPaymentMethods } from '@/features/transak/components/TransakPaymentMethods/TransakPaymentMethods'
@@ -47,6 +48,8 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
   const params = useParams()
   const { network: rawNetwork } = params
   const network = rawNetwork as string
+  const { deviceType } = useDeviceType()
+  const { isMobile } = useMobileCheck(deviceType)
 
   const [showDetails, setShowDetails] = useState(false)
 
@@ -165,6 +168,14 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
         onOptionChange={(value) => dispatch({ type: 'update-crypto-currency', payload: value })}
         options={cryptoOptions}
       />
+      <div className={classNames.slippageWrapper}>
+        <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+          Slippage {exchangeDetails?.slippage ?? '-'}%
+        </Text>
+        <Tooltip tooltip="Lorem ipsum doler slarem" withinDialog={!isMobile}>
+          <Icon iconName="question_o" variant="xs" color="rgba(255, 251, 253, 1)" />
+        </Tooltip>
+      </div>
     </div>
   )
 }

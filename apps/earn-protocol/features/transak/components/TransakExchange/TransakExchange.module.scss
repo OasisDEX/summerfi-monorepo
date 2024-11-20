@@ -60,3 +60,15 @@
   margin-top: var(--general-space-8);
   max-width: 360px;
 }
+
+.slippageWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--general-space-16);
+  gap: var(--general-space-4);
+  width: 100%;
+  background-color: var(--earn-protocol-neutral-85);
+  border-radius: var(--general-radius-8);
+  height: 56px;
+}

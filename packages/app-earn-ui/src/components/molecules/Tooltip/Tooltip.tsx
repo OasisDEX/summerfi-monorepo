@@ -86,6 +86,7 @@ interface StatefulTooltipProps {
   style?: HTMLAttributes<HTMLDivElement>['style']
   showAbove?: boolean
   triggerOnClick?: boolean
+  withinDialog?: boolean
 }
 
 const childrenTypeGuard = (children: ReactNode | ChildrenCallback): children is ReactNode =>
@@ -99,6 +100,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
   tooltipCardVariant,
   showAbove = false,
   triggerOnClick = false,
+  withinDialog,
 }) => {
   const { tooltipOpen, setTooltipOpen } = useTooltip()
   const [portalElement, setPortalElement] = useState<HTMLElement | null>()
@@ -107,21 +109,25 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
   const { isMobile } = useMobileCheck()
 
   const tooltipRefRect = tooltipRef.current?.getBoundingClientRect()
+  const dialogRect = tooltipRef.current?.closest('dialog')?.getBoundingClientRect()
 
   useEffect(() => {
-    const element = document.getElementById('portal')
+    const element = document.getElementById(withinDialog ? 'modal-portal' : 'portal')
 
     if (element) {
       setPortalElement(element)
     }
-  }, [])
+  }, [withinDialog])
 
   useEffect(() => {
     if (portalElement && tooltipRefRect && tooltipOpen) {
-      portalElement.style.setProperty('top', `${tooltipRefRect.y + window.scrollY}px`)
-      portalElement.style.setProperty('left', `${tooltipRefRect.x}px`)
+      portalElement.style.setProperty(
+        'top',
+        `${tooltipRefRect.y - (dialogRect?.y ?? 0) + window.scrollY}px`,
+      )
+      portalElement.style.setProperty('left', `${tooltipRefRect.x - (dialogRect?.x ?? 0)}px`)
     }
-  }, [tooltipRefRect, portalElement, tooltipOpen])
+  }, [tooltipRefRect, portalElement, tooltipOpen, dialogRect])
 
   const handleMouseEnter = useMemo(
     () => (!isTouchDevice && !triggerOnClick ? () => setTooltipOpen(true) : undefined),
