@@ -105,27 +105,24 @@ export const Sidebar: FC<SidebarProps> = ({
       <div className={sidebarClassNames.sidebarHeaderSpacer} />
       {content}
 
-      {primaryButton.action && !primaryButton.url && (
-        <Button
-          variant="primaryLarge"
-          style={{ marginBottom: 'var(--general-space-20)', width: '100%' }}
-          onClick={primaryButton.action}
-          disabled={primaryButton.disabled}
-        >
-          {labelElement}
-        </Button>
-      )}
-      {primaryButton.url && (
-        <Link href={primaryButton.url} onClick={primaryButton.action}>
+      <div className={sidebarClassNames.sidebarCta}>
+        {primaryButton.action && !primaryButton.url && (
           <Button
             variant="primaryLarge"
-            style={{ marginBottom: 'var(--general-space-20)', width: '100%' }}
+            onClick={primaryButton.action}
             disabled={primaryButton.disabled}
           >
             {labelElement}
           </Button>
-        </Link>
-      )}
+        )}
+        {primaryButton.url && (
+          <Link href={primaryButton.url} onClick={primaryButton.action}>
+            <Button variant="primaryLarge" disabled={primaryButton.disabled}>
+              {labelElement}
+            </Button>
+          </Link>
+        )}
+      </div>
       <div
         style={{
           width: '100%',

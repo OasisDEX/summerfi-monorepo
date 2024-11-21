@@ -45,7 +45,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <head>
         <GlobalStyles />
       </head>
-      <body className={` ${fontInter.variable}`} style={{ backgroundColor: '#1B1B1B' }}>
+      <body className={` ${fontInter.variable}`}>
         <AlchemyAccountsProvider initialState={accountKitInitializedState}>
           <NextIntlClientProvider messages={messages}>
             <DeviceProvider value={deviceType}>

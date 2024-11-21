@@ -1,4 +1,5 @@
 .sidebarWrapperDesktop {
+  width: 100%;
   visibility: hidden;
 
   @media screen and (min-width: 768px) {
@@ -79,4 +80,9 @@
   color: var(--earn-protocol-critical-100);
   text-align: center;
   display: inline-block;
+}
+
+.sidebarCTA {
+  width: 100%;
+  margin-bottom: var(--general-space-20);
 }
