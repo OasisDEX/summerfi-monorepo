@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
 
-import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
+import { LandingMasterPage } from '@/components/layout/LandingMasterPage/LandingMasterPage'
 import { fontInter } from '@/helpers/fonts'
 
 export const metadata: Metadata = {
@@ -22,7 +22,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body className={` ${fontInter.variable}`}>
         <NextIntlClientProvider messages={messages}>
-          <MasterPage>{children}</MasterPage>
+          <LandingMasterPage>{children}</LandingMasterPage>
         </NextIntlClientProvider>
         <div id="portal" style={{ position: 'absolute' }} />
       </body>

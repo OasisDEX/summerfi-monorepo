@@ -3,11 +3,11 @@
 import { type SDKVaultishType } from '@summerfi/app-types'
 import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
-import clsx from 'clsx'
 
 import { Card } from '@/components/atoms/Card/Card'
 import { Text } from '@/components/atoms/Text/Text'
 import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
+import { GradientBox } from '@/components/molecules/GradientBox/GradientBox'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
 
 import vaultCardStyles from './VaultCard.module.scss'
@@ -41,13 +41,7 @@ export const VaultCard = ({
   const parsedTotalValueLockedUSD = formatCryptoBalance(new BigNumber(totalValueLockedUSD))
 
   return (
-    <div
-      className={clsx(vaultCardStyles.wrapper, {
-        [vaultCardStyles.withHover]: !selected && withHover,
-        [vaultCardStyles.selected]: selected,
-      })}
-      onClick={handleVaultClick}
-    >
+    <GradientBox withHover={withHover} selected={selected} onClick={handleVaultClick}>
       <Card
         className={vaultCardStyles.vaultCard}
         variant={secondary ? 'cardSecondary' : 'cardPrimary'}
@@ -81,6 +75,6 @@ export const VaultCard = ({
           </div>
         </div>
       </Card>
-    </div>
+    </GradientBox>
   )
 }

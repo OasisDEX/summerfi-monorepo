@@ -1,6 +1,7 @@
 export type Styles = {
-  selectionBlockBorderWrapper: string
-  selectionBlockWrapper: string
+  selected: string
+  withHover: string
+  wrapper: string
 }
 
 export type ClassNames = keyof Styles

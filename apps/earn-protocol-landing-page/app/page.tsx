@@ -1,5 +1,9 @@
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
-import { LandingPageContent } from '@/components/layout/LandingPageContent/LandingPageContent'
+import {
+  BigGradientBox,
+  EffortlessAccessBlock,
+  LandingPageHero,
+} from '@/components/layout/LandingPageContent'
 
 export const revalidate = 60
 
@@ -8,7 +12,10 @@ export default async function HomePage() {
 
   return (
     <div style={{ display: 'flex', gap: '8px', flexDirection: 'column', alignItems: 'center' }}>
-      <LandingPageContent vaultsList={vaults} />
+      <LandingPageHero vaultsList={vaults} />
+      <BigGradientBox>
+        <EffortlessAccessBlock />
+      </BigGradientBox>
     </div>
   )
 }

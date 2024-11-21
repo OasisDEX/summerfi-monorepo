@@ -82,7 +82,13 @@
   display: inline-block;
 }
 
-.sidebarCTA {
+.sidebarCta {
   width: 100%;
   margin-bottom: var(--general-space-20);
+
+  & a,
+  & button {
+    width: 100%;
+    display: inline-block;
+  }
 }

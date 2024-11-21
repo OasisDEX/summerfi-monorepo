@@ -3,15 +3,15 @@ import { MainBackground } from '@summerfi/app-earn-ui'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
 
-import masterPageStyles from './MasterPage.module.scss'
+import landingMasterPageStyles from './landingMasterPage.module.scss'
 
-interface MasterPageProps {}
+interface LandingMasterPageProps {}
 
-export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({ children }) => {
+export const LandingMasterPage: FC<PropsWithChildren<LandingMasterPageProps>> = ({ children }) => {
   return (
-    <div className={masterPageStyles.mainContainer}>
+    <div className={landingMasterPageStyles.mainContainer}>
       <NavigationWrapper />
-      <div className={masterPageStyles.appContainer}>
+      <div className={landingMasterPageStyles.appContainer}>
         {children}
         <div style={{ marginTop: '100px', textAlign: 'center' }}>Footer (:</div>
       </div>
