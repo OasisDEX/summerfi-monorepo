@@ -35,6 +35,11 @@
         "name": "amount",
         "type": "uint256",
         "internalType": "uint256"
+      },
+      {
+        "name": "receiver",
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "outputs": [
@@ -94,6 +99,24 @@
       },
       {
         "name": "to",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "stakeFleetShares",
+    "inputs": [
+      {
+        "name": "fleetCommander",
         "type": "address",
         "internalType": "address"
       },
@@ -227,6 +250,56 @@
   },
   {
     "type": "event",
+    "name": "FleetSharesStaked",
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "fleetCommander",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "FleetSharesUnstaked",
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "fleetCommander",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "Swapped",
     "inputs": [
       {
@@ -350,6 +423,11 @@
   {
     "type": "error",
     "name": "InvalidFleetCommander",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidRewardsManager",
     "inputs": []
   },
   {
