@@ -21,7 +21,7 @@ export const GradientBox = ({
 }: GradientBoxProps) => {
   return (
     <div
-      className={clsx(className, gradientBoxStyles.wrapper, {
+      className={clsx(className, gradientBoxStyles.gradientBoxWrapper, {
         [gradientBoxStyles.withHover]: !selected && withHover,
         [gradientBoxStyles.selected]: selected,
       })}

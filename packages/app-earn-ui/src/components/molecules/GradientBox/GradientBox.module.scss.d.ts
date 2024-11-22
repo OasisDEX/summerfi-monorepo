@@ -1,7 +1,7 @@
 export type Styles = {
+  gradientBoxWrapper: string
   selected: string
   withHover: string
-  wrapper: string
 }
 
 export type ClassNames = keyof Styles
