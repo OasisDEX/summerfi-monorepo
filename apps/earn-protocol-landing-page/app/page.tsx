@@ -4,6 +4,7 @@ import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import {
   BigGradientBox,
   EffortlessAccessBlock,
+  EnhancedRiskManagement,
   HigherYieldsBlock,
   LandingPageHero,
   MarketingPoints,
@@ -35,9 +36,7 @@ export default async function HomePage() {
       />
       <MarketingPoints>
         <HigherYieldsBlock />
-        <div>
-          <Text variant="h2">Enhanced risk management with time-saving automation.</Text>
-        </div>
+        <EnhancedRiskManagement />
         <div>
           <Text variant="h2">The very best of Decentralised Finance (DeFi)</Text>
         </div>

@@ -4,7 +4,7 @@ import { type SDKVaultsListType } from '@summerfi/app-types'
 import { SummerFiProBox } from '@/components/layout/LandingPageContent'
 import { LandingPageVaultPicker } from '@/components/organisms/LandingPageVaultPicker/LandingPageVaultPicker'
 
-import landingPageHeroStyles from '@/components/layout/LandingPageContent/LandingPageHero.module.scss'
+import landingPageHeroStyles from '@/components/layout/LandingPageContent/components/LandingPageHero.module.scss'
 
 export const LandingPageHero = ({ vaultsList }: { vaultsList: SDKVaultsListType }) => {
   return (

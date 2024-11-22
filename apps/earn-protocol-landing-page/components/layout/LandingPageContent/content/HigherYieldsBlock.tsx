@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Button, Text, WithArrow } from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
 import Image, { type StaticImageData } from 'next/image'
@@ -172,14 +172,17 @@ export const HigherYieldsBlock = () => {
   const [fadingOut, setFadingOut] = useState(false)
   const [activeSection, setActiveSection] = useState(higherYieldsBlockSectionsKeys[0])
 
-  const handleSetActiveSection = (sectionKey: keyof typeof higherYieldsBlockSections) => {
-    if (fadingOut) return
-    setFadingOut(true)
-    setTimeout(() => {
-      setActiveSection(sectionKey)
-      setFadingOut(false)
-    }, 200)
-  }
+  const handleSetActiveSection = useCallback(
+    (sectionKey: keyof typeof higherYieldsBlockSections) => {
+      if (fadingOut) return
+      setFadingOut(true)
+      setTimeout(() => {
+        setActiveSection(sectionKey)
+        setFadingOut(false)
+      }, 200)
+    },
+    [fadingOut],
+  )
 
   return (
     <div>
