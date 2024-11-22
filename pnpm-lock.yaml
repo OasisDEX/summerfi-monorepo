@@ -214,8 +214,8 @@ importers:
         specifier: ^5.51.1
         version: 5.51.1(react@18.3.1)
       '@transak/transak-sdk':
-        specifier: ^3.1.1
-        version: 3.1.1
+        specifier: ^3.1.3
+        version: 3.1.3
       '@web3-onboard/coinbase':
         specifier: ^2.4.1
         version: 2.4.1(typescript@5.6.2)(zod@3.22.4)
@@ -17473,8 +17473,8 @@ packages:
     resolution: {integrity: sha512-h8fVemW5pstsKbm/fTx+y61dZkh5Pepy/92lsyKp83KErf96jT+w4LGx4nEgeAVrdYQDTLg2tO7vu/boEb23Iw==}
     dev: false
 
-  /@transak/transak-sdk@3.1.1:
-    resolution: {integrity: sha512-zqUAEIQYq6mekhid/WhIHlLVWzD8tsuoEjsLdb9uubHFl+Ba8QGdZSVzxjhuTnHR3hVK5YdVHbil90CN43wTLA==}
+  /@transak/transak-sdk@3.1.3:
+    resolution: {integrity: sha512-Ea4/OY5Rz/vZLWt2mgwoJDaeUScNbK1AI/yDfhJrNHG0cmalX3SSQOMswY1uX/GAL+6VNSLAybJg9FRx5I1N/A==}
     engines: {node: '>=18.0.0'}
     dependencies:
       events: 3.3.0

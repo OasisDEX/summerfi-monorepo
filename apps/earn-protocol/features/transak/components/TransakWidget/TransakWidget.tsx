@@ -1,5 +1,5 @@
 'use client'
-import { type FC, useCallback, useEffect, useReducer, useRef } from 'react'
+import { type FC, useEffect, useReducer, useState } from 'react'
 import { useChain } from '@account-kit/react'
 import {
   Button,
@@ -90,7 +90,7 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
   const { chain } = useChain()
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
-  const isSKDInit = useRef(false)
+  const [transakInstance, setTransakInstance] = useState<Transak | null>(null)
   const [state, dispatch] = useReducer(transakReducer, {
     ...transakInitialReducerState,
     cryptoCurrency,
@@ -115,34 +115,41 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
     }
   }, [accessToken, orderData])
 
-  const handleOpen = useCallback(() => {
-    if (!isSKDInit.current) {
-      const transak = getTransakConfig({
-        config: {
-          walletAddress,
-          disableWalletAddressForm: true,
-          network: chain.name.toLowerCase(),
-          email,
-          ...getInitData({
-            fiatAmount,
-            fiatCurrency,
-            paymentMethod,
-            cryptoCurrencyCode: 'USDC',
-            productsAvailed: TransakAction.BUY,
-          }),
-        },
-      })
-
+  useEffect(() => {
+    if (transakInstance) {
       Transak.on(Transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (data) => {
-        transak.close()
         dispatch({ type: 'update-order-data', payload: data as TransakOrderData })
-        dispatch({ type: 'update-step', payload: TransakSteps.ORDER })
+        transakInstance.close()
       })
 
-      isSKDInit.current = true
-      transak.init()
+      return () => {
+        transakInstance.cleanup()
+      }
     }
-  }, [chain.name, email, fiatAmount, fiatCurrency, paymentMethod, walletAddress])
+
+    return () => null
+  }, [transakInstance])
+
+  const handleOpen = () => {
+    const transak = getTransakConfig({
+      config: {
+        walletAddress,
+        disableWalletAddressForm: true,
+        network: chain.name.toLowerCase(),
+        email,
+        ...getInitData({
+          fiatAmount,
+          fiatCurrency,
+          paymentMethod,
+          cryptoCurrencyCode: 'USDC',
+          productsAvailed: TransakAction.BUY,
+        }),
+      },
+    })
+
+    transak.init()
+    setTransakInstance(transak)
+  }
 
   const sidebarProps: SidebarProps = {
     title: getTransakTitle({ step }),
