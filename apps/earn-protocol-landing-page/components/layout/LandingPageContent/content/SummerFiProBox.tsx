@@ -1,7 +1,7 @@
 import { Card, GradientBox, Text } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
-import summerFiProBoxStyles from '@/components/layout/LandingPageContent/components/SummerFiProBox.module.scss'
+import summerFiProBoxStyles from '@/components/layout/LandingPageContent/content/SummerFiProBox.module.scss'
 
 export const SummerFiProBox = () => {
   return (

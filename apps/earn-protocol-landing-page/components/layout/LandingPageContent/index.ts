@@ -1,4 +1,10 @@
 export { LandingPageHero } from '@/components/layout/LandingPageContent/LandingPageHero'
 export { BigGradientBox } from '@/components/layout/LandingPageContent/components/BigGradientBox'
-export { SummerFiProBox } from '@/components/layout/LandingPageContent/components/SummerFiProBox'
-export { EffortlessAccessBlock } from '@/components/layout/LandingPageContent/components/EffortlessAccessBlock'
+export { Emphasis } from '@/components/layout/LandingPageContent/components/Emphasis'
+export { ProtocolScroller } from '@/components/layout/LandingPageContent/components/ProtocolScroller'
+export { MarketingPoints } from '@/components/layout/LandingPageContent/components/MarketingPoints'
+
+export { HigherYieldsBlock } from '@/components/layout/LandingPageContent/content/HigherYieldsBlock'
+export { SummerFiProBox } from '@/components/layout/LandingPageContent/content/SummerFiProBox'
+export { EffortlessAccessBlock } from '@/components/layout/LandingPageContent/content/EffortlessAccessBlock'
+export { SupportedNetworksList } from '@/components/layout/LandingPageContent/content/SupportedNetworksList'

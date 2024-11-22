@@ -1,7 +1,7 @@
 import { Carousel, Text } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
 
-import { SummerFiProBox } from '@/components/layout/LandingPageContent/components/SummerFiProBox'
+import { SummerFiProBox } from '@/components/layout/LandingPageContent'
 import { LandingPageVaultPicker } from '@/components/organisms/LandingPageVaultPicker/LandingPageVaultPicker'
 
 import landingPageHeroStyles from '@/components/layout/LandingPageContent/LandingPageHero.module.scss'

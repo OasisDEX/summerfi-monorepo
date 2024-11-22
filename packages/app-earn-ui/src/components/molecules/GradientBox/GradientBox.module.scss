@@ -22,7 +22,7 @@
       bottom: 0;
       left: 0;
       margin: -1px;
-      transition: opacity 0.2s ease-out;
+      transition: all 0.2s ease;
       border-radius: var(--radius-roundish);
       background: var(--gradient-earn-protocol-light);
     }
@@ -44,7 +44,7 @@
       left: 0;
       margin: -1px;
       opacity: 0;
-      transition: opacity 0.2s ease-out;
+      transition: all 0.2s ease;
       border-radius: var(--radius-roundish);
       background: var(--color-border-hover);
       box-shadow: var(--shadow-depth-3);

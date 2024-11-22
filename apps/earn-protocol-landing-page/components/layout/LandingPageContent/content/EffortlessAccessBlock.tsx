@@ -1,16 +1,11 @@
-import { type ReactNode } from 'react'
 import { Text } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
+
+import { Emphasis } from '@/components/layout/LandingPageContent/components/Emphasis'
 
 import effortlessAccessBlockStyles from './EffortlessAccessBlock.module.scss'
 
 import summerEarnUi from '@/public/img/landing-page/summer-earn-ui.png'
-
-const Emphasis = ({ children }: { children: ReactNode }) => (
-  <Text variant="h4colorful" as="span">
-    {children}
-  </Text>
-)
 
 export const EffortlessAccessBlock = () => {
   return (
