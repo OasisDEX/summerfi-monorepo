@@ -1,5 +1,5 @@
 'use client'
-import { type FC, useReducer, useRef } from 'react'
+import { type FC, useCallback, useEffect, useReducer, useRef } from 'react'
 import { useChain } from '@account-kit/react'
 import {
   Button,
@@ -10,6 +10,7 @@ import {
   useMobileCheck,
   WithArrow,
 } from '@summerfi/app-earn-ui'
+import { Transak } from '@transak/transak-sdk'
 import Link from 'next/link'
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
@@ -17,10 +18,16 @@ import { getTransakConfig } from '@/features/transak/config'
 import { getTransakPrimaryButtonDisabled } from '@/features/transak/helpers/get-primary-button-disabled'
 import { getTransakPrimaryButtonHidden } from '@/features/transak/helpers/get-primary-button-hidden'
 import { getTransakPrimaryButtonLabel } from '@/features/transak/helpers/get-primary-button-label'
+import { getTransakRefreshToken } from '@/features/transak/helpers/get-refresh-token'
 import { getTransakContent } from '@/features/transak/helpers/get-transak-content'
 import { getTransakTitle } from '@/features/transak/helpers/get-transak-title'
 import { transakInitialReducerState, transakReducer } from '@/features/transak/state'
-import { type TransakPaymentOptions, TransakSteps } from '@/features/transak/types'
+import {
+  TransakAction,
+  type TransakOrderData,
+  type TransakPaymentOptions,
+  TransakSteps,
+} from '@/features/transak/types'
 
 const waitOneSecond = new Promise<void>((resolve) => {
   setTimeout(resolve, 1000)
@@ -34,7 +41,7 @@ const data = ({
   fiatCurrency,
 }: {
   fiatAmount: string
-  productsAvailed: 'BUY' | 'SELL'
+  productsAvailed: TransakAction
   paymentMethod: TransakPaymentOptions
   cryptoCurrencyCode: string
   fiatCurrency: string
@@ -90,7 +97,15 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
 
   const { step, fiatAmount, fiatCurrency, paymentMethod } = state
 
-  const handleOpen = () => {
+  useEffect(() => {
+    if (isOpen) {
+      getTransakRefreshToken().then((token) =>
+        dispatch({ type: 'update-access-token', payload: token?.data.accessToken }),
+      )
+    }
+  }, [isOpen])
+
+  const handleOpen = useCallback(() => {
     if (!isSKDInit.current) {
       const transak = getTransakConfig({
         config: {
@@ -103,15 +118,20 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
             fiatCurrency,
             paymentMethod,
             cryptoCurrencyCode: 'USDC',
-            productsAvailed: 'BUY',
+            productsAvailed: TransakAction.BUY,
           }),
         },
+      })
+
+      Transak.on(Transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (orderData) => {
+        transak.close()
+        dispatch({ type: 'update-order-data', payload: orderData as TransakOrderData })
       })
 
       isSKDInit.current = true
       transak.init()
     }
-  }
+  }, [chain.name, email, fiatAmount, fiatCurrency, paymentMethod, walletAddress])
 
   const sidebarProps: SidebarProps = {
     title: getTransakTitle({ step }),

@@ -1,6 +1,6 @@
 import { transakPublicApiKey } from '@/features/transak/consts'
 import { getTransakUrl } from '@/features/transak/helpers/get-transak-url'
-import { type TransakPaymentOptions } from '@/features/transak/types'
+import { type TransakAction, type TransakPaymentOptions } from '@/features/transak/types'
 
 export const getTransakPricingUrl = ({
   fiatCurrency,
@@ -12,7 +12,7 @@ export const getTransakPricingUrl = ({
 }: {
   fiatCurrency: string
   cryptoCurrency: string
-  isBuyOrSell: 'BUY' | 'SELL'
+  isBuyOrSell: TransakAction
   network: string
   paymentMethod: TransakPaymentOptions
   fiatAmount: string
