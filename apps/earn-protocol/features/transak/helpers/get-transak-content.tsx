@@ -131,7 +131,7 @@ export const getTransakContent = ({
     case TransakSteps.EXCHANGE:
       return <TransakExchange dispatch={dispatch} state={state} />
     case TransakSteps.KYC:
-      return state.orderData ? null : (
+      return (
         <div
           id="transak-dialog"
           style={{

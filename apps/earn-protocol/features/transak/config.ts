@@ -16,6 +16,9 @@ export const getTransakConfig = ({ config }: { config: Partial<TransakConfig> })
     apiKey,
     environment,
     disableWalletAddressForm: true,
+    hideExchangeScreen: true,
+    themeColor: 'FF49A4FF',
+    containerId: 'transak-dialog',
   }
 
   return new Transak({ ...transakConfig, ...config })

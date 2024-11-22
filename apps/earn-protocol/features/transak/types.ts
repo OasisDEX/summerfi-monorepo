@@ -56,7 +56,6 @@ export type TransakOrderData = {
 }
 
 export type TransakReducerState = {
-  accessToken: string | undefined
   step: TransakSteps
   fiatAmount: string
   fiatCurrency: string
@@ -69,10 +68,6 @@ export type TransakReducerState = {
 }
 
 export type TransakReducerAction =
-  | {
-      type: 'update-access-token'
-      payload: string | undefined
-    }
   | {
       type: 'update-step'
       payload: TransakSteps

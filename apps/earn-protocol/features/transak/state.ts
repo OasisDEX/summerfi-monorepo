@@ -7,7 +7,6 @@ import {
 } from '@/features/transak/types'
 
 export const transakInitialReducerState: TransakReducerState = {
-  accessToken: undefined,
   step: TransakSteps.INITIAL,
   fiatAmount: '0',
   paymentMethod: TransakPaymentOptions.CREDIT_DEBIT_CARD,
@@ -25,8 +24,6 @@ export const transakReducer = (
   action: TransakReducerAction,
 ): TransakReducerState => {
   switch (action.type) {
-    case 'update-access-token':
-      return { ...prevState, accessToken: action.payload }
     case 'update-step':
       return { ...prevState, step: action.payload }
     case 'update-fiat-amount':

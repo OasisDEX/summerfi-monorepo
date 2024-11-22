@@ -20,8 +20,8 @@ import { getTransakPrimaryButtonHidden } from '@/features/transak/helpers/get-pr
 import { getTransakPrimaryButtonLabel } from '@/features/transak/helpers/get-primary-button-label'
 import { getTransakRefreshToken } from '@/features/transak/helpers/get-refresh-token'
 import { getTransakContent } from '@/features/transak/helpers/get-transak-content'
+import { getTransakOrder } from '@/features/transak/helpers/get-transak-order'
 import { getTransakTitle } from '@/features/transak/helpers/get-transak-title'
-import { getTransakWebhook } from '@/features/transak/helpers/get-transak-webhook'
 import { transakInitialReducerState, transakReducer } from '@/features/transak/state'
 import {
   TransakAction,
@@ -67,9 +67,6 @@ const getInitData = ({
   productsAvailed,
   paymentMethod,
   fiatCurrency,
-  hideExchangeScreen: true,
-  themeColor: 'FF49A4FF',
-  containerId: 'transak-dialog',
 })
 
 interface TransakWidgetProps {
@@ -96,30 +93,37 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
     cryptoCurrency,
   })
 
-  const { step, fiatAmount, fiatCurrency, paymentMethod, accessToken, orderData } = state
+  const { step, fiatAmount, fiatCurrency, paymentMethod, orderData } = state
 
   useEffect(() => {
     if (isOpen) {
-      getTransakRefreshToken().then((token) =>
-        dispatch({ type: 'update-access-token', payload: token?.data.accessToken }),
-      )
+      void getTransakRefreshToken()
     }
   }, [isOpen])
 
   useEffect(() => {
-    if (accessToken && orderData) {
-      getTransakWebhook({ accessToken, orderId: orderData.status.id }).then((resp) =>
-        // eslint-disable-next-line no-console
-        console.log('webhook', resp),
+    if (orderData && isOpen) {
+      const polling = setInterval(
+        () =>
+          getTransakOrder({ orderId: orderData.status.id }).then((resp) =>
+            // eslint-disable-next-line no-console
+            console.log('webhook', resp),
+          ),
+        5000,
       )
+
+      return () => clearInterval(polling)
     }
-  }, [accessToken, orderData])
+
+    return () => null
+  }, [orderData, isOpen])
 
   useEffect(() => {
     if (transakInstance) {
       Transak.on(Transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (data) => {
+        transakInstance.cleanup()
         dispatch({ type: 'update-order-data', payload: data as TransakOrderData })
-        transakInstance.close()
+        dispatch({ type: 'update-step', payload: TransakSteps.ORDER })
       })
 
       return () => {
