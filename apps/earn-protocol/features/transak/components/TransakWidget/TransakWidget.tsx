@@ -21,6 +21,7 @@ import { getTransakPrimaryButtonLabel } from '@/features/transak/helpers/get-pri
 import { getTransakRefreshToken } from '@/features/transak/helpers/get-refresh-token'
 import { getTransakContent } from '@/features/transak/helpers/get-transak-content'
 import { getTransakTitle } from '@/features/transak/helpers/get-transak-title'
+import { getTransakWebhook } from '@/features/transak/helpers/get-transak-webhook'
 import { transakInitialReducerState, transakReducer } from '@/features/transak/state'
 import {
   TransakAction,
@@ -33,7 +34,7 @@ const waitOneSecond = new Promise<void>((resolve) => {
   setTimeout(resolve, 1000)
 })
 
-const data = ({
+const getInitData = ({
   fiatAmount,
   productsAvailed,
   paymentMethod,
@@ -95,7 +96,7 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
     cryptoCurrency,
   })
 
-  const { step, fiatAmount, fiatCurrency, paymentMethod } = state
+  const { step, fiatAmount, fiatCurrency, paymentMethod, accessToken, orderData } = state
 
   useEffect(() => {
     if (isOpen) {
@@ -105,6 +106,15 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
     }
   }, [isOpen])
 
+  useEffect(() => {
+    if (accessToken && orderData) {
+      getTransakWebhook({ accessToken, orderId: orderData.status.id }).then((resp) =>
+        // eslint-disable-next-line no-console
+        console.log('webhook', resp),
+      )
+    }
+  }, [accessToken, orderData])
+
   const handleOpen = useCallback(() => {
     if (!isSKDInit.current) {
       const transak = getTransakConfig({
@@ -113,7 +123,7 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
           disableWalletAddressForm: true,
           network: chain.name.toLowerCase(),
           email,
-          ...data({
+          ...getInitData({
             fiatAmount,
             fiatCurrency,
             paymentMethod,
@@ -123,9 +133,9 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
         },
       })
 
-      Transak.on(Transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (orderData) => {
+      Transak.on(Transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (data) => {
         transak.close()
-        dispatch({ type: 'update-order-data', payload: orderData as TransakOrderData })
+        dispatch({ type: 'update-order-data', payload: data as TransakOrderData })
       })
 
       isSKDInit.current = true
