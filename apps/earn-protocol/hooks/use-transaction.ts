@@ -22,7 +22,7 @@ import { capitalize } from 'lodash-es'
 import { useRouter } from 'next/navigation'
 import { erc20Abi } from 'viem'
 
-import { SDKChainIdToAAChainMap } from '@/account-kit/config'
+import { accountType, SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { TransactionAction } from '@/constants/transaction-actions'
 import { getApprovalTx } from '@/helpers/get-approval-tx'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
@@ -69,7 +69,10 @@ export const useTransaction = ({
   const [transactions, setTransactions] = useState<TransactionInfoLabeled[]>()
   const [sidebarError, setSidebarError] = useState<string>()
 
-  const { client: smartAccountClient } = useSmartAccountClient({ type: 'LightAccount' })
+  const { client: smartAccountClient, error } = useSmartAccountClient({ type: accountType })
+
+  // eslint-disable-next-line no-console
+  console.log('smartAccountClient', { client: smartAccountClient, error })
 
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
   const isProperChainSelected = clientChainId === vaultChainId
