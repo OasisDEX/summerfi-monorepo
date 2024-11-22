@@ -5,11 +5,47 @@ import { type TransakPriceQuoteResponse } from '@/features/transak/types'
 
 import classNames from './TransakExchangeDetails.module.scss'
 
+const fees: {
+  label: string
+  id: TransakPriceQuoteResponse['feeBreakdown'][0]['id']
+}[] = [
+  {
+    label: 'Transak Fee',
+    id: 'transak_fee',
+  },
+  {
+    label: 'Network Fee',
+    id: 'network_fee',
+  },
+  {
+    label: 'Summer.fi Fee',
+    id: 'partner_fee',
+  },
+]
+
 const ListItem: FC<PropsWithChildren> = ({ children }) => (
   <Text as="div" variant="p4" className={classNames.listItem}>
     <div className={classNames.dot} />
     {children}
   </Text>
+)
+
+const getListItem = ({
+  label,
+  fiatCurrency,
+  details,
+  id,
+}: {
+  fiatCurrency: string
+  label: string
+  details?: TransakPriceQuoteResponse
+  id: TransakPriceQuoteResponse['feeBreakdown'][0]['id']
+}) => (
+  <li key={id}>
+    <ListItem>
+      {label} {details?.feeBreakdown.find((item) => item.id === id)?.value ?? '-'} {fiatCurrency}
+    </ListItem>
+  </li>
 )
 
 interface TransakExchangeDetailsProps {
@@ -25,21 +61,7 @@ export const TransakExchangeDetails: FC<TransakExchangeDetailsProps> = ({
     <div className={classNames.wrapper}>
       <div className={classNames.line} />
       <ul>
-        <li>
-          <ListItem>
-            Transak Fee {details?.feeBreakdown[0].value ?? '-'} {fiatCurrency}
-          </ListItem>
-        </li>
-        <li>
-          <ListItem>
-            Summer.fi Fee {details?.feeBreakdown[1].value ?? '-'} {fiatCurrency}
-          </ListItem>
-        </li>
-        <li>
-          <ListItem>
-            Network Fee {details?.feeBreakdown[2].value ?? '-'} {fiatCurrency}
-          </ListItem>
-        </li>
+        {fees.map((item) => getListItem({ fiatCurrency, details, id: item.id, label: item.label }))}
       </ul>
     </div>
   )
