@@ -1,5 +1,5 @@
 .summerProInfoBox {
-  width: 515px; // shoul match the carousel element width
+  width: 515px !important; // should match the carousel element width
   background-color: var(--earn-protocol-neutral-100);
 
   @include media('<=s') {
