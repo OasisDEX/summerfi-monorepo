@@ -195,7 +195,6 @@ export const HigherYieldsBlock = () => {
         <div className={higherYieldsBlockStyles.higherYieldsDetailsButtons}>
           {higherYieldsBlockSectionsKeys.map((sectionKey) => (
             <Button
-              variant="unstyled"
               key={`higher-yields-section-${sectionKey}`}
               onClick={() => handleSetActiveSection(sectionKey)}
               className={clsx(higherYieldsBlockStyles.higherYieldsDetailsButton, {
