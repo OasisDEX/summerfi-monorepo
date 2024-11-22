@@ -10,6 +10,8 @@ export const getTransakTitle = ({ step }: { step: TransakSteps }) => {
       return 'Buy crypto to your wallet'
     case TransakSteps.KYC:
       return 'KYC Process'
+    case TransakSteps.ORDER:
+      return 'Payment Authorization'
     default:
       return 'Define me'
   }

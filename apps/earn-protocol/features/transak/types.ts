@@ -5,6 +5,7 @@ export enum TransakSteps {
   ABOUT_KYC = 'ABOUT_KYC',
   EXCHANGE = 'EXCHANGE',
   KYC = 'KYC',
+  ORDER = 'ORDER',
 }
 
 export enum TransakPaymentOptions {

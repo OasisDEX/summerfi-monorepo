@@ -136,6 +136,7 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
       Transak.on(Transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (data) => {
         transak.close()
         dispatch({ type: 'update-order-data', payload: data as TransakOrderData })
+        dispatch({ type: 'update-step', payload: TransakSteps.ORDER })
       })
 
       isSKDInit.current = true

@@ -3,6 +3,7 @@ import { Text } from '@summerfi/app-earn-ui'
 
 import { TransakExchange } from '@/features/transak/components/TransakExchange/TransakExchange'
 import { TransakIconWrapper } from '@/features/transak/components/TransakIconWrapper/TransakIconWrapper'
+import { TransakOrder } from '@/features/transak/components/TransakOrder/TransakOrder'
 import {
   type TransakReducerAction,
   type TransakReducerState,
@@ -137,9 +138,14 @@ export const getTransakContent = ({
             width: isMobile ? '100%' : '500px',
             height: '800px',
             margin: 'var(--general-space-16) auto',
+            background: 'linear-gradient(rgb(52, 61, 75) 70%, rgb(49, 58, 71) 100%)',
+            padding: 'var(--general-space-16)',
+            borderRadius: 'var(--general-radius-8)',
           }}
         />
       )
+    case TransakSteps.ORDER:
+      return state.orderData ? <TransakOrder orderData={state.orderData} /> : null
     default:
       return 'Define me'
   }
