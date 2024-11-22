@@ -20,12 +20,15 @@
   "dependencies": {
     "@summerfi/allowance-manager-common": "workspace:^",
     "@summerfi/allowance-manager-service": "workspace:*",
+    "@summerfi/armada-protocol-abis": "workspace:*",
+    "@summerfi/blockchain-client-common": "workspace:*",
     "@summerfi/common": "workspace:*",
     "@summerfi/configuration-provider-common": "workspace:*",
     "@summerfi/armada-protocol-common": "workspace:*",
     "@summerfi/subgraph-manager-common": "workspace:*",
     "@summerfi/subgraph-manager-service": "workspace:*",
     "@summerfi/contracts-provider-common": "workspace:*",
+    "@summerfi/contracts-provider-service": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
     "@types/node-fetch": "^2.6.11",
     "node-fetch": "^2.7.0"

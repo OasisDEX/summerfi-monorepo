@@ -8,6 +8,7 @@ import {
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider, type IRebalanceData } from '@summerfi/contracts-provider-common'
+import { GenericContractWrapper } from '@summerfi/contracts-provider-service'
 import { IAddress, IPercentage, ITokenAmount, IUser, TransactionInfo } from '@summerfi/sdk-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { ArmadaPool } from './ArmadaPool'
@@ -15,6 +16,8 @@ import { ArmadaPoolInfo } from './ArmadaPoolInfo'
 import { ArmadaPosition } from './ArmadaPosition'
 import { parseGetUserPositionsQuery } from './extensions/parseGetUserPositionsQuery'
 import { parseGetUserPositionQuery } from './extensions/parseGetUserPositionQuery'
+import { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
+import { AdmiralsQuartersAbi } from '@summerfi/armada-protocol-abis'
 
 /**
  * @name ArmadaManager
@@ -25,6 +28,7 @@ export class ArmadaManager implements IArmadaManager {
   private _allowanceManager: IAllowanceManager
   private _contractsProvider: IContractsProvider
   private _subgraphManager: IArmadaSubgraphManager
+  private _blockchainClientProvider: IBlockchainClientProvider
 
   /** CONSTRUCTOR */
   constructor(params: {
@@ -32,11 +36,13 @@ export class ArmadaManager implements IArmadaManager {
     allowanceManager: IAllowanceManager
     contractsProvider: IContractsProvider
     subgraphManager: IArmadaSubgraphManager
+    blockchainClientProvider: IBlockchainClientProvider
   }) {
     this._configProvider = params.configProvider
     this._allowanceManager = params.allowanceManager
     this._contractsProvider = params.contractsProvider
     this._subgraphManager = params.subgraphManager
+    this._blockchainClientProvider = params.blockchainClientProvider
   }
 
   /** POOLS */
@@ -179,12 +185,16 @@ export class ArmadaManager implements IArmadaManager {
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+    const admiralsQuartersWrapper = await GenericContractWrapper.create({
       chainInfo: params.poolId.chainInfo,
       address: params.poolId.fleetAddress,
+      abi: AdmiralsQuartersAbi,
+      blockchainClient: this._blockchainClientProvider.getBlockchainClient({
+        chainInfo: params.poolId.chainInfo,
+      }),
     })
 
-    const fleetWithdrawTransaction = await fleetContract.withdraw({
+    const fleetWithdrawTransaction = await admiralsQuartersWrapper.contract.write.withdrawTokens({
       assets: params.amount,
       receiver: params.user.wallet.address,
       owner: params.user.wallet.address,

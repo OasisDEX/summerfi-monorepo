@@ -2122,9 +2122,15 @@ importers:
       '@summerfi/allowance-manager-service':
         specifier: workspace:*
         version: link:../allowance-manager-service
+      '@summerfi/armada-protocol-abis':
+        specifier: workspace:*
+        version: link:../../armada-protocol/abis
       '@summerfi/armada-protocol-common':
         specifier: workspace:*
         version: link:../armada-protocol-common
+      '@summerfi/blockchain-client-common':
+        specifier: workspace:*
+        version: link:../blockchain-client-common
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common
@@ -2134,6 +2140,9 @@ importers:
       '@summerfi/contracts-provider-common':
         specifier: workspace:*
         version: link:../contracts-provider-common
+      '@summerfi/contracts-provider-service':
+        specifier: workspace:*
+        version: link:../contracts-provider-service
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
