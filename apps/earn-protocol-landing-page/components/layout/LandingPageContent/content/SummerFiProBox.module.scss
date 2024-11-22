@@ -1,0 +1,21 @@
+.summerProInfoBox {
+  width: 515px; // shoul match the carousel element width
+  background-color: var(--earn-protocol-neutral-100);
+
+  @include media('<=s') {
+    width: 90%; // shoul match the carousel element width
+  }
+
+  &>div {
+    padding: var(--spacing-space-large) var(--spacing-space-x-large);
+  }
+
+  & span {
+    margin-bottom: var(--general-space-4);
+  }
+
+  .summerProInfoBoxLinks,
+  .summerProInfoBoxLinks>* {
+    color: var(--color-text-link)
+  }
+}

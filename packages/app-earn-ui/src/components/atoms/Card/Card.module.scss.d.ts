@@ -1,4 +1,6 @@
 export type Styles = {
+  cardGradientDark: string
+  cardGradientLight: string
   cardPrimary: string
   cardPrimarySmallPaddings: string
   cardSecondary: string

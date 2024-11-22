@@ -1,5 +1,4 @@
 .mainContainer {
-  position: relative;
   height: 100%;
 }
 
@@ -11,9 +10,8 @@
 }
 
 .appContainer {
-  position: relative;
   width: 100%;
-  max-width: 1070px;
+  max-width: 1310px;
   margin: 0 auto;
   padding: 0 var(--space-m);
   z-index: 2;

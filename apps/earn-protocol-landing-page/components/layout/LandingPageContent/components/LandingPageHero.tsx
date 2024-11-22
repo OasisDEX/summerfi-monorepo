@@ -1,14 +1,15 @@
 import { Carousel, Text } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
 
+import { SummerFiProBox } from '@/components/layout/LandingPageContent'
 import { LandingPageVaultPicker } from '@/components/organisms/LandingPageVaultPicker/LandingPageVaultPicker'
 
-import classNames from '@/components/layout/LandingPageContent/LandingPageContent.module.scss'
+import landingPageHeroStyles from '@/components/layout/LandingPageContent/components/LandingPageHero.module.scss'
 
-export const LandingPageContent = ({ vaultsList }: { vaultsList: SDKVaultsListType }) => {
+export const LandingPageHero = ({ vaultsList }: { vaultsList: SDKVaultsListType }) => {
   return (
-    <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <div className={classNames.pageHeader}>
+    <div className={landingPageHeroStyles.landingPageHeroWrapper}>
+      <div className={landingPageHeroStyles.heroHeader}>
         <Text
           as="h1"
           variant="h1"
@@ -30,6 +31,7 @@ export const LandingPageContent = ({ vaultsList }: { vaultsList: SDKVaultsListTy
         ))}
         contentWidth={515}
       />
+      <SummerFiProBox />
     </div>
   )
 }
