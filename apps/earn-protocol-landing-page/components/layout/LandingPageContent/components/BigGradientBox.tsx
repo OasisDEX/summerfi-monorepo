@@ -4,8 +4,8 @@ import clsx from 'clsx'
 import bigGradientBoxStyles from './BigGradientBox.module.scss'
 
 export const BigGradientBox: FC<{
-  children: ReactNode
   reversed?: boolean
+  children: ReactNode
 }> = ({ children, reversed = false }) => {
   return (
     <div
