@@ -1,5 +1,7 @@
 .cardPrimary,
 .cardSecondary,
+.cardGradientLight,
+.cardGradientDark,
 .cardPrimarySmallPaddings,
 .cardSecondarySmallPaddings {
   display: flex;
@@ -8,7 +10,9 @@
 }
 
 .cardPrimary,
-.cardSecondary {
+.cardSecondary,
+.cardGradientLight,
+.cardGradientDark {
   padding: var(--general-space-24);
 }
 
@@ -25,4 +29,12 @@
 .cardPrimarySmallPaddings,
 .cardSecondarySmallPaddings {
   padding: var(--general-space-12);
+}
+
+.cardGradientLight {
+  background: var(--earn-protocol-neutral-100) var(--gradient-earn-protocol-light-10);
+}
+
+.cardGradientDark {
+  background: var(--earn-protocol-neutral-100) var(--gradient-earn-protocol-dark-10);
 }

@@ -5,8 +5,8 @@ import { type AtomProps, getAtomClassList } from '@/components/atoms/getAtomClas
 import textStyles, { type ClassNames } from '@/components/atoms/Text/Text.module.scss'
 
 export type TextAllowedHtmlTags =
-  | 'address'
   | 'blockquote'
+  | 'address'
   | 'h1'
   | 'h2'
   | 'h3'

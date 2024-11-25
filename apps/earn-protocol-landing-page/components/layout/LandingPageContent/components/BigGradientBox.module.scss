@@ -1,0 +1,10 @@
+.bigGradientBox {
+  border-radius: var(--radius-rounder);
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(180deg, rgba(255, 73, 164, 0.1) 0%, rgba(176, 73, 255, 0.1) 47%, rgba(28, 28, 28, 0.03) 96%);
+
+  &.reversed {
+    background: linear-gradient(0deg, rgba(255, 73, 164, 0.1) 0%, rgba(176, 73, 255, 0.1) 47%, rgba(28, 28, 28, 0.03) 96%);
+  }
+}
