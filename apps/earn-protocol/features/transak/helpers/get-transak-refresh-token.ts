@@ -14,6 +14,10 @@ export const getTransakRefreshToken = async (): Promise<
       headers: { 'x-partner-api-key': transakPublicApiKey },
     })
 
+    if (!response.ok) {
+      throw new Error(`Failed to fetch refresh token: ${response.status} ${response.statusText}`)
+    }
+
     return await response.json()
   } catch (error) {
     // eslint-disable-next-line no-console

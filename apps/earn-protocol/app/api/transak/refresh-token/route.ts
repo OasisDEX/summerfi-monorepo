@@ -18,12 +18,12 @@ export async function GET(req: ExtendedApiRequest) {
   const partnerApiKey = req.headers.get('x-partner-api-key')
 
   if (!partnerApiKey) {
-    return NextResponse.json({ error: 'Partner key not provided' }, { status: 500 })
+    return NextResponse.json({ error: 'Partner key not provided' }, { status: 400 })
   }
   const transakSecret = process.env.TRANSAK_SECRET
 
   if (!transakSecret) {
-    return NextResponse.json({ error: 'ENV variable is not set' }, { status: 500 })
+    return NextResponse.json({ error: 'ENV variable is not set' }, { status: 400 })
   }
 
   const options = {

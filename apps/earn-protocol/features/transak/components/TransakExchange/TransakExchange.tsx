@@ -80,7 +80,7 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
   useEffect(() => {
     const fetchExchangeDetails = async () => {
       try {
-        const data = await fetch(
+        const response = await fetch(
           getTransakPricingUrl({
             fiatCurrency,
             cryptoCurrency,
@@ -89,22 +89,26 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
             network,
             paymentMethod,
           }),
-        ).then((resp) => resp.json())
+        )
+
+        if (!response.ok) {
+          if (response.status === 504) {
+            throw new Error('Request timeout. Please try again.')
+          }
+
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+
+        const data = await response.json()
 
         if (data.response) {
           dispatch({ type: 'update-exchange-details', payload: data.response })
-
-          // eslint-disable-next-line no-console
-          console.log('Exchange details', data.response)
         }
-
         if (data.error) {
           dispatch({ type: 'update-error', payload: data.error.message })
         }
       } catch (e) {
         dispatch({ type: 'update-error', payload: `${e}` })
-        // eslint-disable-next-line no-console
-        console.error('Error reading exchange details', e)
       }
     }
 

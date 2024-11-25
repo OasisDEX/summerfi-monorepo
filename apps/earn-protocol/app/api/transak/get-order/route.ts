@@ -23,7 +23,11 @@ export async function GET(req: NextRequest) {
 
   const options = {
     method: 'GET',
-    headers: { accept: 'application/json', 'access-token': accessToken.value },
+    headers: {
+      accept: 'application/json',
+      'access-token': accessToken.value,
+      signal: AbortSignal.timeout(5000), // 5 second timeout
+    },
   }
 
   try {
@@ -63,7 +67,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(sanitizedData)
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Transak API error:', error)
+    console.error('Transak API error:', error instanceof Error ? error.message : 'Unknown error')
 
     return NextResponse.json({ error: 'Failed to process request' }, { status: 500 })
   }
