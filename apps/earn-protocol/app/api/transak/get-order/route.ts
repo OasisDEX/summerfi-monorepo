@@ -39,15 +39,14 @@ export async function GET(req: NextRequest) {
       )
     }
 
-    const data = await response.json()
+    const { data, meta } = await response.json()
 
     // Sanitize response to only include necessary fields
     const sanitizedData = {
       meta: {
-        orderId: data.orderId,
+        orderId: meta.orderId,
       },
       data: {
-        _id: data.orderId,
         amount: data.amount,
         cryptocurrency: data.cryptocurrency,
         createdAt: data.createdAt,
