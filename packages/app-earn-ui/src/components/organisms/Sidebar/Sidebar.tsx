@@ -12,7 +12,6 @@ import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { LoadingSpinner } from '@/components/molecules/LoadingSpinner/LoadingSpinner'
 import { MobileDrawer } from '@/components/molecules/MobileDrawer/MobileDrawer'
-import { useMobileCheck } from '@/hooks/use-mobile-check.ts'
 
 import sidebarClassNames from '@/components/organisms/Sidebar/Sidebar.module.scss'
 
@@ -27,11 +26,23 @@ export interface SidebarProps {
     url?: string
     disabled?: boolean
     loading?: boolean
+    hidden?: boolean
   }
   footnote?: ReactNode
   error?: string | ReactNode
   asDesktopOnly?: boolean
+  isMobile?: boolean
   goBackAction?: () => void
+  drawerOptions?:
+    | {
+        slideFrom: 'bottom'
+        forceMobileOpen?: boolean
+      }
+    | {
+        slideFrom: 'right'
+        closeDrawer: () => void
+        forceMobileOpen?: boolean
+      }
 }
 
 export const Sidebar: FC<SidebarProps> = ({
@@ -44,9 +55,12 @@ export const Sidebar: FC<SidebarProps> = ({
   onTitleTabChange,
   asDesktopOnly = false,
   goBackAction,
+  isMobile,
+  drawerOptions = { slideFrom: 'bottom' },
 }) => {
   const [isOpen, setIsOpen] = useState(false)
-  const { isMobile } = useMobileCheck()
+
+  const isOpenResolved = drawerOptions.forceMobileOpen ?? isOpen
 
   const labelElement = primaryButton.loading ? <LoadingSpinner size={28} /> : primaryButton.label
 
@@ -71,7 +85,7 @@ export const Sidebar: FC<SidebarProps> = ({
               <Text
                 onClick={(e) => {
                   // eslint-disable-next-line no-unused-expressions
-                  isOpen && e.stopPropagation()
+                  isOpenResolved && e.stopPropagation()
                   onTitleTabChange?.(tab)
                 }}
                 key={`TitleTab_${tab}`}
@@ -98,7 +112,14 @@ export const Sidebar: FC<SidebarProps> = ({
         {goBackAction && <div className={sidebarClassNames.goBackButtonFillFLex} />}
 
         <div className={sidebarClassNames.sidebarHeaderChevron}>
-          <Icon iconName={isOpen ? 'chevron_down' : 'chevron_up'} variant="xs" />
+          {drawerOptions.slideFrom === 'bottom' && (
+            <Icon iconName={isOpenResolved ? 'chevron_down' : 'chevron_up'} variant="xs" />
+          )}
+          {drawerOptions.slideFrom === 'right' && (
+            <div onClick={drawerOptions.closeDrawer}>
+              <Icon iconName="close" variant="xs" color="var(--earn-protocol-secondary-40)" />
+            </div>
+          )}
         </div>
       </div>
 
@@ -106,7 +127,7 @@ export const Sidebar: FC<SidebarProps> = ({
       {content}
 
       <div className={sidebarClassNames.sidebarCta}>
-        {primaryButton.action && !primaryButton.url && (
+        {primaryButton.action && !primaryButton.url && !primaryButton.hidden && (
           <Button
             variant="primaryLarge"
             onClick={primaryButton.action}
@@ -139,19 +160,22 @@ export const Sidebar: FC<SidebarProps> = ({
   )
 
   return asDesktopOnly ? (
-    content
+    sidebarWrapped
   ) : (
     <>
-      <div className={sidebarClassNames.sidebarWrapperDesktop}>{sidebarWrapped}</div>
-      <MobileDrawer
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        slideFrom="bottom"
-        height="100%"
-        variant="sidebar"
-      >
-        {sidebarWrapped}
-      </MobileDrawer>
+      {isMobile ? (
+        <MobileDrawer
+          isOpen={isOpenResolved}
+          onClose={() => setIsOpen(false)}
+          slideFrom={drawerOptions.slideFrom}
+          height="100%"
+          variant="sidebar"
+        >
+          {sidebarWrapped}
+        </MobileDrawer>
+      ) : (
+        sidebarWrapped
+      )}
     </>
   )
 }

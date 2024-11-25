@@ -26,6 +26,7 @@ interface VaultOpenGridProps {
   simulationGraph: ReactNode
   detailsContent: ReactNode
   sidebarContent: ReactNode
+  isMobile?: boolean
 }
 
 export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
@@ -35,6 +36,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   simulationGraph,
   detailsContent,
   sidebarContent,
+  isMobile,
 }) => {
   const [displayGraphStaggered, setDisplayGraphStaggered] = useState(displayGraph)
   const apr30d = formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
@@ -149,7 +151,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
           <div className={vaultOpenGridStyles.rightBlock}>{sidebarContent}</div>
         </div>
       </div>
-      <div className={vaultOpenGridStyles.rightBlockMobile}>{sidebarContent}</div>
+      {isMobile && <div className={vaultOpenGridStyles.rightBlockMobile}>{sidebarContent}</div>}
     </>
   )
 }

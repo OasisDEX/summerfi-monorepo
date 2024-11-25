@@ -34,6 +34,8 @@ type UseTransactionParams = {
   vault: SDKVaultishType
   amount: BigNumber | undefined
   manualSetAmount: (amount: string | undefined) => void
+  tokenBalance: BigNumber | undefined
+  tokenBalanceLoading: boolean
   publicClient?: ReturnType<typeof useClient>['publicClient']
 }
 
@@ -50,11 +52,14 @@ export const useTransaction = ({
   manualSetAmount,
   amount,
   publicClient,
+  tokenBalance,
+  tokenBalanceLoading,
 }: UseTransactionParams) => {
   const { refresh: refreshView } = useRouter()
   const user = useUser()
   const { getDepositTX, getWithdrawTX } = useAppSDK()
   const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
+  const [isTransakOpen, setIsTransakOpen] = useState(false)
   const { setChain, isSettingChain } = useChain()
   const { clientChainId } = useClientChainId()
   const [transactionType, setTransactionType] = useState<TransactionAction>(
@@ -271,6 +276,15 @@ export const useTransaction = ({
         loading: isSettingChain,
       }
     }
+
+    if (!tokenBalanceLoading && tokenBalance && tokenBalance.isZero()) {
+      return {
+        label: 'Add funds',
+        action: () => setIsTransakOpen(true),
+        disabled: false,
+      }
+    }
+
     if (!amount || amount.isZero()) {
       return {
         label: capitalize(transactionType),
@@ -318,6 +332,8 @@ export const useTransaction = ({
       action: getTransactionsList,
     }
   }, [
+    tokenBalanceLoading,
+    tokenBalance,
     user,
     isProperChainSelected,
     isSettingChain,
@@ -450,5 +466,7 @@ export const useTransaction = ({
     setApprovalType,
     setApprovalCustomValue,
     approvalCustomValue,
+    isTransakOpen,
+    setIsTransakOpen,
   }
 }

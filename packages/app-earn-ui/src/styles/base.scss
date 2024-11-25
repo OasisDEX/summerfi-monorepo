@@ -64,3 +64,7 @@ a {
   transition: color 200ms;
   text-decoration: none;
 }
+
+dialog {
+  color: var(--color-text-primary);
+}

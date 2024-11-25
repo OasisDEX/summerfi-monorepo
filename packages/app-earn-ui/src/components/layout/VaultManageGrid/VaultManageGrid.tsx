@@ -165,7 +165,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
           <div className={vaultManageGridStyles.rightBlock}>{sidebarContent}</div>
         </div>
       </div>
-      <div className={vaultManageGridStyles.rightBlockMobile}>{sidebarContent}</div>
+      {isMobile && <div className={vaultManageGridStyles.rightBlockMobile}>{sidebarContent}</div>}
     </>
   )
 }

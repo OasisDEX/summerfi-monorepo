@@ -43,9 +43,6 @@
 .rightBlockMobile {
   position: absolute;
   display: block;
-  @media screen and (min-width: 900px) {
-    display: none;
-  }
 }
 
 .vaultOpenGridTopLeftWrapper {

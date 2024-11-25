@@ -1,4 +1,5 @@
 export type Styles = {
+  closeButton: string
   dialog: string
 }
 
