@@ -76,6 +76,7 @@ export enum TransakOrderDataStatus {
   EXPIRED = 'EXPIRED',
   CANCELED = 'CANCELED',
   PROCESSING = 'PROCESSING',
+  PENDING_DELIVERY_FROM_TRANSAK = 'PENDING_DELIVERY_FROM_TRANSAK',
 }
 
 // https://docs.transak.com/reference/get-order-by-order-id

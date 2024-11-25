@@ -70,8 +70,11 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
                 clearInterval(polling)
               }
             })
-            .catch(() => {
+            .catch((er) => {
               clearInterval(polling)
+              dispatch({ type: 'update-error', payload: 'Error fetching Transak order' })
+              // eslint-disable-next-line no-console
+              console.error('Error fetching Transak order:', er)
             }),
         5000,
       )

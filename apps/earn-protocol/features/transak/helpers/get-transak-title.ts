@@ -26,6 +26,6 @@ export const getTransakTitle = ({ state }: { state: TransakReducerState }) => {
           ? 'Transaction failed'
           : 'Transaction in progress'
     default:
-      return 'Define me'
+      return `Unknown step: ${state.step}`
   }
 }

@@ -4,15 +4,22 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { getTransakUrl } from '@/features/transak/helpers/get-transak-url'
 import { type TransakRefreshTokenResponse } from '@/features/transak/types'
 
-export async function GET(req: NextRequest) {
+interface ExtendedHeaders extends Headers {
+  'x-partner-api-key'?: string
+}
+
+interface ExtendedApiRequest extends NextRequest {
+  headers: ExtendedHeaders
+}
+
+export async function GET(req: ExtendedApiRequest) {
   const transakApiUrl = getTransakUrl()
   const requestUrl = `${transakApiUrl}/partners/api/v2/refresh-token`
-  const partnerApiKey = req.nextUrl.searchParams.get('partnerApiKey')
+  const partnerApiKey = req.headers.get('x-partner-api-key')
 
   if (!partnerApiKey) {
     return NextResponse.json({ error: 'Partner key not provided' }, { status: 500 })
   }
-
   const transakSecret = process.env.TRANSAK_SECRET
 
   if (!transakSecret) {

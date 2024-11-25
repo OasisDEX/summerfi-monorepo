@@ -17,5 +17,10 @@
     height: 30px;
     padding: 5px 10px;
     cursor: pointer;
+
+    &:hover {
+      opacity: 0.7;
+      transition: opacity 0.2s ease-out;
+    }
   }
 }

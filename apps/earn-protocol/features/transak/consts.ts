@@ -84,6 +84,11 @@ export const transakPaymentMethods = [
   },
 ]
 
+export const transakPendingOrderStatuses = [
+  TransakOrderDataStatus.PENDING_DELIVERY_FROM_TRANSAK,
+  TransakOrderDataStatus.PROCESSING,
+]
+
 export const transakFailedOrderStatuses = [
   TransakOrderDataStatus.FAILED,
   TransakOrderDataStatus.CANCELED,

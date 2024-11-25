@@ -79,46 +79,40 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
 
   useEffect(() => {
     const fetchExchangeDetails = async () => {
-      const data = await fetch(
-        getTransakPricingUrl({
-          fiatCurrency,
-          cryptoCurrency,
-          fiatAmount,
-          isBuyOrSell,
-          network,
-          paymentMethod,
-        }),
-      ).then((resp) => {
-        if (resp.status === 504) {
-          throw new Error('Failed to fetch exchange details, please refresh and try again.')
+      try {
+        const data = await fetch(
+          getTransakPricingUrl({
+            fiatCurrency,
+            cryptoCurrency,
+            fiatAmount,
+            isBuyOrSell,
+            network,
+            paymentMethod,
+          }),
+        ).then((resp) => resp.json())
+
+        if (data.response) {
+          dispatch({ type: 'update-exchange-details', payload: data.response })
+
+          // eslint-disable-next-line no-console
+          console.log('Exchange details', data.response)
         }
 
-        return resp.json()
-      })
-
-      if (data.response) {
-        dispatch({ type: 'update-exchange-details', payload: data.response })
-
-        // eslint-disable-next-line no-console
-        console.log('exchange details', data.response)
-      }
-
-      if (data.error) {
-        dispatch({ type: 'update-error', payload: data.error.message })
-      }
-    }
-
-    if (fiatAmount && fiatAmount !== '0') {
-      try {
-        dispatch({ type: 'update-error', payload: '' })
-
-        dispatch({ type: 'update-exchange-details', payload: undefined })
-        void fetchExchangeDetails()
+        if (data.error) {
+          dispatch({ type: 'update-error', payload: data.error.message })
+        }
       } catch (e) {
         dispatch({ type: 'update-error', payload: `${e}` })
         // eslint-disable-next-line no-console
         console.error('Error reading exchange details', e)
       }
+    }
+
+    if (fiatAmount && fiatAmount !== '0') {
+      dispatch({ type: 'update-error', payload: '' })
+      dispatch({ type: 'update-exchange-details', payload: undefined })
+
+      void fetchExchangeDetails()
     }
   }, [fiatAmount, fiatCurrency, cryptoCurrency, isBuyOrSell, paymentMethod, network, dispatch])
 

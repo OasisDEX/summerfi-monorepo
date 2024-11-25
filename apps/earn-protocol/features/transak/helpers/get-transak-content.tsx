@@ -49,6 +49,6 @@ export const getTransakContent = ({
     case TransakSteps.ORDER:
       return <TransakOrderStep orderData={state.orderData} />
     default:
-      return 'Define me'
+      return `Unknown step: ${state.step}`
   }
 }

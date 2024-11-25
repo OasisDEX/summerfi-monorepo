@@ -12,10 +12,18 @@ export const getTransakConfigInitData = ({
   paymentMethod: TransakPaymentOptions
   cryptoCurrencyCode: string
   fiatCurrency: string
-}) => ({
-  fiatAmount: Number(fiatAmount),
-  cryptoCurrencyCode,
-  productsAvailed,
-  paymentMethod,
-  fiatCurrency,
-})
+}) => {
+  const parsedAmount = Number(fiatAmount)
+
+  if (Number.isNaN(parsedAmount)) {
+    throw new Error('Invalid fiat amount provided')
+  }
+
+  return {
+    fiatAmount: parsedAmount,
+    cryptoCurrencyCode,
+    productsAvailed,
+    paymentMethod,
+    fiatCurrency,
+  }
+}

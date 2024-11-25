@@ -13,6 +13,6 @@ export const getTransakPrimaryButtonLabel = ({ state }: { state: TransakReducerS
     case TransakSteps.ORDER:
       return 'Go to deposit'
     default:
-      return 'Define me'
+      return `Unknown step: ${state.step}`
   }
 }

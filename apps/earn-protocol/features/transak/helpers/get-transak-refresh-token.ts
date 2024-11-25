@@ -5,7 +5,14 @@ export const getTransakRefreshToken = async (): Promise<
   TransakRefreshTokenResponse | undefined
 > => {
   try {
-    const response = await fetch(`/api/transak/refresh-token?partnerApiKey=${transakPublicApiKey}`)
+    if (!transakPublicApiKey) {
+      throw new Error('ENV variable missing')
+    }
+
+    const response = await fetch(`/api/transak/refresh-token`, {
+      method: 'GET',
+      headers: { 'x-partner-api-key': transakPublicApiKey },
+    })
 
     return await response.json()
   } catch (error) {
