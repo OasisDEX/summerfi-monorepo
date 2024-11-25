@@ -26,7 +26,6 @@ export async function GET(req: NextRequest) {
     headers: {
       accept: 'application/json',
       'access-token': accessToken.value,
-      signal: AbortSignal.timeout(5000), // 5 second timeout
     },
   }
 
