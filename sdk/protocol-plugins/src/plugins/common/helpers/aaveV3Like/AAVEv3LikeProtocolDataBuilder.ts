@@ -349,19 +349,19 @@ export class AaveV3LikeProtocolDataBuilder<
     const operation: QueuedOperation<void> = {
       operation: async () => {
         this._assertIsInitialised(this.tokensUsedAsReserves)
-        // const emodeCategoryPerAsset = await fetchEmodeCategoriesForReserves(
-        //   this.context,
-        //   this.tokensUsedAsReserves,
-        //   this.dataProviderContractAbi,
-        //   this.dataProviderContractAddress,
-        // )
-        // this._assertMatchingArrayLengths(emodeCategoryPerAsset, this.reservesAssetsList)
+        const emodeCategoryPerAsset = await fetchEmodeCategoriesForReserves(
+          this.context,
+          this.tokensUsedAsReserves,
+          this.dataProviderContractAbi,
+          this.dataProviderContractAddress,
+        )
+        this._assertMatchingArrayLengths(emodeCategoryPerAsset, this.reservesAssetsList)
         const nextReservesList = []
         for (const [index, asset] of this.reservesAssetsList.entries()) {
-          // const emodeCategoryForAsset = emodeCategoryPerAsset[index]
+          const emodeCategoryForAsset = emodeCategoryPerAsset[index]
           const assetWithEmode = {
             ...asset,
-            emode: 0, // hardcoded for now as we need to figure out
+            emode: emodeCategoryForAsset, // hardcoded for now as we need to figure out
             // how the new aave emode should work now
           }
           nextReservesList.push(assetWithEmode)
