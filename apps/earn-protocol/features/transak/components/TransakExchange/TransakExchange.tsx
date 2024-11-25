@@ -91,12 +91,8 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
           }),
         )
 
-        if (!response.ok) {
-          if (response.status === 504) {
-            throw new Error('Request timeout. Please try again.')
-          }
-
-          throw new Error(`HTTP error! status: ${response.status}`)
+        if (response.status === 504) {
+          throw new Error('Request timeout. Please try again.')
         }
 
         const data = await response.json()
