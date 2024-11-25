@@ -157,7 +157,7 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
       },
       hidden: getTransakPrimaryButtonHidden({ step }),
       disabled: getTransakPrimaryButtonDisabled({ state }),
-      loading: isLoading,
+      loading: isLoading && !state.error,
     },
     footnote: getTransakFootnote({ state, dispatch }),
     isMobile,
