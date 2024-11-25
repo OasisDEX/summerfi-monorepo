@@ -32,27 +32,48 @@ export async function GET(req: ExtendedApiRequest) {
       accept: 'application/json',
       'api-secret': transakSecret,
       'content-type': 'application/json',
+      'x-request-id': crypto.randomUUID(),
+      'x-content-type-options': 'nosniff',
     },
     body: JSON.stringify({ apiKey: partnerApiKey }),
   }
 
-  const data = await fetch(requestUrl, options)
+  try {
+    const data = await fetch(requestUrl, options)
 
-  const tokenResponse: TransakRefreshTokenResponse = await data.json()
+    if (!data.ok) {
+      throw new Error(`Refresh token API returned ${data.status}`)
+    }
+    const tokenResponse: TransakRefreshTokenResponse = await data.json()
 
-  const response = NextResponse.json({ success: true })
+    const response = NextResponse.json({ success: true })
 
-  const commonPayload: ResponseCookie = {
-    name: `transak-access-token`,
-    value: tokenResponse.data.accessToken,
-    httpOnly: true,
-    secure: true,
-    maxAge: 60 * 60 * 24 * 7, // 7 days
-    sameSite: true,
-    path: '/',
+    const commonPayload: ResponseCookie = {
+      name: `transak-access-token`,
+      value: tokenResponse.data.accessToken,
+      httpOnly: true,
+      secure: true,
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      sameSite: true,
+      path: '/',
+    }
+
+    response.cookies.set(commonPayload)
+
+    return response
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Token refresh failed:', error)
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: {
+          code: 'TOKEN_REFRESH_FAILED',
+          message: 'Failed to refresh token',
+        },
+      },
+      { status: 500 },
+    )
   }
-
-  response.cookies.set(commonPayload)
-
-  return response
 }

@@ -32,7 +32,7 @@ const TransakFootNoteLink: FC<TransakFootNoteLinkProps> = ({ label, href, withAr
 
 const defaultLink = {
   link: 'https://transak.com/',
-  label: 'Lean more about KYC',
+  label: 'Learn more about KYC',
 }
 
 export const getTransakFootnote = ({

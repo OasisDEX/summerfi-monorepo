@@ -16,5 +16,18 @@ export const getTransakPricingUrl = ({
   network: string
   paymentMethod: TransakPaymentOptions
   fiatAmount: string
-}) =>
-  `${getTransakUrl()}/api/v1/pricing/public/quotes?partnerApiKey=${transakPublicApiKey}&fiatCurrency=${fiatCurrency}&cryptoCurrency=${cryptoCurrency}&isBuyOrSell=${isBuyOrSell}&network=${network}&paymentMethod=${paymentMethod}&fiatAmount=${fiatAmount}`
+}) => {
+  if (!transakPublicApiKey) {
+    throw new Error('ENV variable missing')
+  }
+
+  return `${getTransakUrl()}/api/v1/pricing/public/quotes?${new URLSearchParams({
+    partnerApiKey: transakPublicApiKey,
+    fiatCurrency,
+    cryptoCurrency,
+    isBuyOrSell,
+    network,
+    paymentMethod,
+    fiatAmount,
+  }).toString()}`
+}

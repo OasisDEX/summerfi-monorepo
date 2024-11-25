@@ -112,7 +112,13 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
   const dialogRect = tooltipRef.current?.closest('dialog')?.getBoundingClientRect()
 
   useEffect(() => {
-    const element = document.getElementById(withinDialog ? 'modal-portal' : 'portal')
+    const portalId = withinDialog ? 'modal-portal' : 'portal'
+    const element = document.getElementById(portalId)
+
+    if (!element) {
+      // eslint-disable-next-line no-console
+      console.warn(`Portal element with id "${portalId}" not found`)
+    }
 
     if (element) {
       setPortalElement(element)

@@ -1,6 +1,7 @@
 import { type ChangeEvent, type FC, useState } from 'react'
 import { Dropdown, Icon, Text } from '@summerfi/app-earn-ui'
 import { type DropdownOption, type DropdownRawOption } from '@summerfi/app-types'
+import { mapNumericInput } from '@summerfi/app-utils'
 
 import classNames from './TransakExchangeInput.module.scss'
 
@@ -35,6 +36,10 @@ export const TransakExchangeInput: FC<TransakExchangeInputProps> = ({
   onOptionChange,
   options,
 }) => {
+  if (!options.length) {
+    throw new Error('TransakExchangeInput requires at least one option')
+  }
+
   const [fiatAmount, setFiatAmount] = useState<string>(defaultValue)
   const [option, setOption] = useState<DropdownRawOption>({
     value: defaultOption?.value ?? options[0].value,
@@ -46,8 +51,10 @@ export const TransakExchangeInput: FC<TransakExchangeInputProps> = ({
       return
     }
 
-    setFiatAmount(ev.target.value)
-    onInputChange?.(ev.target.value)
+    const updatedValue = mapNumericInput(ev.target.value)
+
+    setFiatAmount(updatedValue)
+    onInputChange?.(updatedValue)
   }
 
   const handleOptionChange = (newOption: DropdownRawOption) => {

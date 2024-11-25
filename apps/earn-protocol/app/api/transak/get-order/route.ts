@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
   }
 
   const transakApiUrl = getTransakUrl()
-  const requestUrl = `${transakApiUrl}/partners/api/v2/order/${orderId}`
+  const requestUrl = `${transakApiUrl}/partners/api/v2/order/${encodeURIComponent(orderId)}`
 
   const accessToken = req.cookies.get(`transak-access-token`)
 

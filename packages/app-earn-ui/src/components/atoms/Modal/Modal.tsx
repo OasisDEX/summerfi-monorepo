@@ -46,6 +46,7 @@ export const Modal: FC<ModalProps> = ({
 
     return () => {
       document.removeEventListener('mousedown', handleOutsideClick)
+      document.body.style.overflow = 'auto'
     }
   }, [openModal, closeModal, disableCloseOutside])
 

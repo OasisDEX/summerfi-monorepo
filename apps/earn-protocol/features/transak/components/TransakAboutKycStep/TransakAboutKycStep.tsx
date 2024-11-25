@@ -9,7 +9,7 @@ const aboutKYCCopies = [
   {
     title: 'Why need to do KYC?',
     description:
-      'Bibendum dolor nunc ultricies iaculis nullam in. Mauris in tristique suspendisse auctor nisl.',
+      'KYC is required by financial regulations to prevent fraud and ensure secure transactions.',
   },
   {
     title: 'Multiple KYC levels',

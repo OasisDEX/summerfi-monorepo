@@ -277,7 +277,7 @@ export const useTransaction = ({
       }
     }
 
-    if (!tokenBalanceLoading && tokenBalance?.isZero()) {
+    if (!tokenBalanceLoading && tokenBalance && tokenBalance.isZero()) {
       return {
         label: 'Add funds',
         action: () => setIsTransakOpen(true),
