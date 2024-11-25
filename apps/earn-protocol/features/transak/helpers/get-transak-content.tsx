@@ -38,7 +38,7 @@ export const getTransakContent = ({
           id="transak-dialog"
           style={{
             width: isMobile ? '100%' : '500px',
-            height: '800px',
+            height: '550px',
             margin: 'var(--general-space-16) auto',
             background: 'linear-gradient(rgb(52, 61, 75) 70%, rgb(49, 58, 71) 100%)',
             padding: 'var(--general-space-16)',

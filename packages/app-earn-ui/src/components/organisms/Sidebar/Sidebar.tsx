@@ -124,8 +124,7 @@ export const Sidebar: FC<SidebarProps> = ({
       </div>
 
       <div className={sidebarClassNames.sidebarHeaderSpacer} />
-      {content}
-
+      <div className={sidebarClassNames.sidebarContent}>{content}</div>
       <div className={sidebarClassNames.sidebarCta}>
         {primaryButton.action && !primaryButton.url && !primaryButton.hidden && (
           <Button

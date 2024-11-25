@@ -1,17 +1,9 @@
-.sidebarWrapperDesktop {
-  width: 100%;
-  visibility: hidden;
-
-  @media screen and (min-width: 768px) {
-    visibility: visible;
-  }
-}
-
 .sidebarWrapper {
   flex-direction: column;
   align-items: center;
   position: relative;
   padding-top: unset;
+  max-height: 90vh;
 }
 
 .sidebarHeaderWrapper {
@@ -24,6 +16,11 @@
   &.centerTitle {
     justify-content: center;
   }
+}
+
+.sidebarContent {
+  width: 100%;
+  overflow-y: auto;
 }
 
 .goBackButton {
