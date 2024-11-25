@@ -75,7 +75,7 @@ export const TransakExchangeInput: FC<TransakExchangeInputProps> = ({
             value: item.value,
             content: <Content option={item} />,
           }))}
-          dropdownValue={{ value: options[0].value, content: option.content }}
+          dropdownValue={{ value: option.value, content: option.content }}
           onChange={handleOptionChange}
         >
           {option.content}

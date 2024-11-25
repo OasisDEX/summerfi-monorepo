@@ -1,73 +1,29 @@
 'use client'
 import { type FC, useEffect, useReducer, useState } from 'react'
 import { useChain } from '@account-kit/react'
-import {
-  Button,
-  Icon,
-  Modal,
-  Sidebar,
-  type SidebarProps,
-  useMobileCheck,
-  WithArrow,
-} from '@summerfi/app-earn-ui'
+import { Modal, Sidebar, type SidebarProps, useMobileCheck } from '@summerfi/app-earn-ui'
+import { SDKChainId } from '@summerfi/app-types'
 import { Transak } from '@transak/transak-sdk'
-import Link from 'next/link'
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { getTransakConfig } from '@/features/transak/config'
-import { getTransakPrimaryButtonDisabled } from '@/features/transak/helpers/get-primary-button-disabled'
-import { getTransakPrimaryButtonHidden } from '@/features/transak/helpers/get-primary-button-hidden'
-import { getTransakPrimaryButtonLabel } from '@/features/transak/helpers/get-primary-button-label'
-import { getTransakRefreshToken } from '@/features/transak/helpers/get-refresh-token'
+import { getTransakConfigInitData } from '@/features/transak/helpers/get-transak-config-init-data'
 import { getTransakContent } from '@/features/transak/helpers/get-transak-content'
+import { getTransakFootnote } from '@/features/transak/helpers/get-transak-footnote'
 import { getTransakOrder } from '@/features/transak/helpers/get-transak-order'
+import { getTransakPrimaryButtonDisabled } from '@/features/transak/helpers/get-transak-primary-button-disabled'
+import { getTransakPrimaryButtonHidden } from '@/features/transak/helpers/get-transak-primary-button-hidden'
+import { getTransakPrimaryButtonLabel } from '@/features/transak/helpers/get-transak-primary-button-label'
+import { getTransakRefreshToken } from '@/features/transak/helpers/get-transak-refresh-token'
 import { getTransakTitle } from '@/features/transak/helpers/get-transak-title'
+import { waitTransakOneSecond } from '@/features/transak/helpers/wait-for-second'
 import { transakInitialReducerState, transakReducer } from '@/features/transak/state'
 import {
   TransakAction,
-  type TransakOrderData,
-  type TransakPaymentOptions,
+  type TransakEventOrderData,
+  TransakOrderDataStatus,
   TransakSteps,
 } from '@/features/transak/types'
-
-const waitOneSecond = new Promise<void>((resolve) => {
-  setTimeout(resolve, 1000)
-})
-
-const getInitData = ({
-  fiatAmount,
-  productsAvailed,
-  paymentMethod,
-  cryptoCurrencyCode,
-  fiatCurrency,
-}: {
-  fiatAmount: string
-  productsAvailed: TransakAction
-  paymentMethod: TransakPaymentOptions
-  cryptoCurrencyCode: string
-  fiatCurrency: string
-}) => ({
-  // userData: {
-  //   firstName: 'Satushi',
-  //   lastName: 'Nakamotos',
-  //   mobileNumber: '+15417543010',
-  //   dob: '1994-08-26',
-  //   email,
-  //   address: {
-  //     addressLine1: '170 Pine St',
-  //     addressLine2: 'San Francisco',
-  //     city: 'San Francisco',
-  //     state: 'CA',
-  //     postCode: '94111',
-  //     countryCode: 'US',
-  //   },
-  // },
-  fiatAmount: Number(fiatAmount),
-  cryptoCurrencyCode,
-  productsAvailed,
-  paymentMethod,
-  fiatCurrency,
-})
 
 interface TransakWidgetProps {
   cryptoCurrency: string
@@ -93,7 +49,9 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
     cryptoCurrency,
   })
 
-  const { step, fiatAmount, fiatCurrency, paymentMethod, orderData } = state
+  const { step, fiatAmount, fiatCurrency, paymentMethod, eventOrderData } = state
+
+  const isLoading = Number(state.fiatAmount) > 0 && !state.exchangeDetails
 
   useEffect(() => {
     if (isOpen) {
@@ -102,13 +60,19 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
   }, [isOpen])
 
   useEffect(() => {
-    if (orderData && isOpen) {
+    if (eventOrderData && isOpen) {
       const polling = setInterval(
         () =>
-          getTransakOrder({ orderId: orderData.status.id }).then((resp) =>
-            // eslint-disable-next-line no-console
-            console.log('webhook', resp),
-          ),
+          getTransakOrder({ orderId: eventOrderData.status.id })
+            .then((resp) => {
+              dispatch({ type: 'update-order-data', payload: resp })
+              if (resp.data.status === TransakOrderDataStatus.COMPLETED) {
+                clearInterval(polling)
+              }
+            })
+            .catch(() => {
+              clearInterval(polling)
+            }),
         5000,
       )
 
@@ -116,13 +80,13 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
     }
 
     return () => null
-  }, [orderData, isOpen])
+  }, [eventOrderData, isOpen])
 
   useEffect(() => {
     if (transakInstance) {
       Transak.on(Transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (data) => {
+        dispatch({ type: 'update-event-order-data', payload: data as TransakEventOrderData })
         transakInstance.cleanup()
-        dispatch({ type: 'update-order-data', payload: data as TransakOrderData })
         dispatch({ type: 'update-step', payload: TransakSteps.ORDER })
       })
 
@@ -141,11 +105,11 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
         disableWalletAddressForm: true,
         network: chain.name.toLowerCase(),
         email,
-        ...getInitData({
+        ...getTransakConfigInitData({
           fiatAmount,
           fiatCurrency,
           paymentMethod,
-          cryptoCurrencyCode: 'USDC',
+          cryptoCurrencyCode: cryptoCurrency,
           productsAvailed: TransakAction.BUY,
         }),
       },
@@ -156,21 +120,31 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
   }
 
   const sidebarProps: SidebarProps = {
-    title: getTransakTitle({ step }),
-    content: getTransakContent({ step, dispatch, state, isMobile }),
+    title: getTransakTitle({ state }),
+    content: getTransakContent({ dispatch, state, isMobile }),
     primaryButton: {
-      label: getTransakPrimaryButtonLabel({ step }),
+      label: getTransakPrimaryButtonLabel({ state }),
       action: async () => {
         switch (step) {
           case TransakSteps.INITIAL:
             return dispatch({ type: 'update-step', payload: TransakSteps.ABOUT_KYC })
           case TransakSteps.ABOUT_KYC:
+            if (chain.id === SDKChainId.MAINNET) {
+              return dispatch({ type: 'update-step', payload: TransakSteps.SWITCH_TO_L2 })
+            }
+
+            return dispatch({ type: 'update-step', payload: TransakSteps.EXCHANGE })
+          case TransakSteps.BUY_ETH:
+            dispatch({ type: 'update-crypto-currency', payload: 'ETH' })
+
             return dispatch({ type: 'update-step', payload: TransakSteps.EXCHANGE })
           case TransakSteps.EXCHANGE:
             dispatch({ type: 'update-step', payload: TransakSteps.KYC })
-            await waitOneSecond
+            await waitTransakOneSecond
 
             return handleOpen()
+          case TransakSteps.ORDER:
+            return onClose()
           default:
             // eslint-disable-next-line no-console
             console.log('No action defined')
@@ -179,15 +153,10 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
         }
       },
       hidden: getTransakPrimaryButtonHidden({ step }),
-      disabled: getTransakPrimaryButtonDisabled({ step, state }),
+      disabled: getTransakPrimaryButtonDisabled({ state }),
+      loading: isLoading,
     },
-    footnote: (
-      <Link href="https://transak.com/" target="_blank">
-        <WithArrow withStatic style={{ color: 'var(--earn-protocol-primary-100)' }}>
-          Lean more about KYC
-        </WithArrow>
-      </Link>
-    ),
+    footnote: getTransakFootnote({ state, dispatch }),
     isMobile,
   }
 
@@ -199,20 +168,6 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
   ) : (
     <Modal openModal={isOpen} closeModal={onClose}>
       <Sidebar {...sidebarProps} />
-      <Button
-        variant="unstyled"
-        onClick={onClose}
-        style={{
-          position: 'absolute',
-          top: '23px',
-          right: '15px',
-          height: '30px',
-          padding: '5px 10px',
-          cursor: 'pointer',
-        }}
-      >
-        <Icon iconName="close" variant="xs" color="var(--earn-protocol-secondary-40)" />
-      </Button>
     </Modal>
   )
 }

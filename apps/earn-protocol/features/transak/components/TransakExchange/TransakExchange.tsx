@@ -8,6 +8,7 @@ import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { TransakExchangeDetails } from '@/features/transak/components/TransakExchangeDetails/TransakExchangeDetails'
 import { TransakExchangeInput } from '@/features/transak/components/TransakExchangeInput/TransakExchangeInput'
 import { TransakPaymentMethods } from '@/features/transak/components/TransakPaymentMethods/TransakPaymentMethods'
+import { transakPaymentMethods } from '@/features/transak/consts'
 import { getTransakPricingUrl } from '@/features/transak/helpers/get-transak-pricing-url'
 import { type TransakReducerAction, type TransakReducerState } from '@/features/transak/types'
 
@@ -36,6 +37,11 @@ const cryptoOptions: DropdownOption[] = [
     label: 'DAI',
     tokenSymbol: 'DAI',
     value: 'DAI',
+  },
+  {
+    label: 'ETH',
+    tokenSymbol: 'ETH',
+    value: 'ETH',
   },
 ]
 
@@ -82,7 +88,13 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
           network,
           paymentMethod,
         }),
-      ).then((resp) => resp.json())
+      ).then((resp) => {
+        if (resp.status === 504) {
+          throw new Error('Failed to fetch exchange details, please refresh and try again.')
+        }
+
+        return resp.json()
+      })
 
       if (data.response) {
         dispatch({ type: 'update-exchange-details', payload: data.response })
@@ -103,11 +115,12 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
         dispatch({ type: 'update-exchange-details', payload: undefined })
         void fetchExchangeDetails()
       } catch (e) {
+        dispatch({ type: 'update-error', payload: `${e}` })
         // eslint-disable-next-line no-console
         console.error('Error reading exchange details', e)
       }
     }
-  }, [fiatAmount, fiatCurrency, cryptoCurrency, isBuyOrSell, paymentMethod, network])
+  }, [fiatAmount, fiatCurrency, cryptoCurrency, isBuyOrSell, paymentMethod, network, dispatch])
 
   return (
     <div className={classNames.wrapper}>
@@ -169,13 +182,27 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
         onOptionChange={(value) => dispatch({ type: 'update-crypto-currency', payload: value })}
         options={cryptoOptions}
       />
-      <div className={classNames.slippageWrapper}>
-        <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-          Slippage {exchangeDetails?.slippage ?? '-'}%
-        </Text>
-        <Tooltip tooltip="Lorem ipsum doler slarem" withinDialog={!isMobile}>
-          <Icon iconName="question_o" variant="xs" color="rgba(255, 251, 253, 1)" />
-        </Tooltip>
+      <div className={classNames.extraInfoWrapper}>
+        <div className={classNames.slippageWrapper}>
+          <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+            Slippage {exchangeDetails?.slippage ?? '-'}%
+          </Text>
+          <Tooltip tooltip="Lorem ipsum doler slarem" withinDialog={!isMobile}>
+            <Icon iconName="question_o" variant="xs" color="var(--earn-protocol-secondary-100)" />
+          </Tooltip>
+        </div>
+        <div className={classNames.averageProcessingTimeWrapper}>
+          <Icon iconName="clock" variant="s" color="var(--earn-protocol-secondary-40)" />
+          <div className={classNames.textual}>
+            <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+              Average Processing Time:{' '}
+            </Text>
+            <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+              {transakPaymentMethods.find((method) => method.id === paymentMethod)
+                ?.processingTime ?? '-'}
+            </Text>
+          </div>
+        </div>
       </div>
     </div>
   )

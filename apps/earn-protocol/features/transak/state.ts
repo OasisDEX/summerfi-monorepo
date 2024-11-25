@@ -13,6 +13,7 @@ export const transakInitialReducerState: TransakReducerState = {
   fiatCurrency: 'USD',
   isBuyOrSell: TransakAction.BUY,
   exchangeDetails: undefined,
+  eventOrderData: undefined,
   orderData: undefined,
   // dummy just for initialization which will be overwritten on first render
   cryptoCurrency: 'USDC',
@@ -36,6 +37,8 @@ export const transakReducer = (
       return { ...prevState, cryptoCurrency: action.payload }
     case 'update-exchange-details':
       return { ...prevState, exchangeDetails: action.payload }
+    case 'update-event-order-data':
+      return { ...prevState, eventOrderData: action.payload }
     case 'update-order-data':
       return { ...prevState, orderData: action.payload }
     case 'update-error':

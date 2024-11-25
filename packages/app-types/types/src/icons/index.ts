@@ -251,6 +251,8 @@ export type IconNamesList =
   | 'cut'
   | 'down_up'
   | 'kyc_colorful'
+  | 'dot_arrow_right_colorful'
+  | 'lightning_colorful'
 
 export type TokenSymbolsList =
   | 'AAVE'

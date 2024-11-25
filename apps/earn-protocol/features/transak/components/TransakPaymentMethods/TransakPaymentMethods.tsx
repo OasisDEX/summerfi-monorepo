@@ -7,8 +7,9 @@ import { TransakPaymentOptions } from '@/features/transak/types'
 import classNames from './TransakPaymentMethods.module.scss'
 
 const paymentMethods = [
-  { label: 'Bank Transfer', value: TransakPaymentOptions.GBP_BANK_TRANSFER },
   { label: 'Card payment', value: TransakPaymentOptions.CREDIT_DEBIT_CARD },
+  { label: 'Google Pay', value: TransakPaymentOptions.GOOGLE_PAY },
+  { label: 'Apple Pay', value: TransakPaymentOptions.APPLE_PAY },
 ]
 
 interface TransakPaymentMethodsProps {
@@ -36,7 +37,14 @@ export const TransakPaymentMethods: FC<TransakPaymentMethodsProps> = ({
       })}
     >
       <div className={classNames.button}>
-        <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+        <Text
+          as="p"
+          variant="p4semi"
+          style={{
+            color: 'var(--earn-protocol-secondary-100)',
+            padding: '0 var(--general-space-4)',
+          }}
+        >
           {method.label}
         </Text>
       </div>

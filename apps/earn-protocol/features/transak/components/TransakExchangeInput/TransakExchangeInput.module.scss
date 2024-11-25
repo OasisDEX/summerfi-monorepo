@@ -4,6 +4,7 @@
   height: 70px;
   border-radius: var(--general-radius-8);
   background-color: var(--earn-protocol-neutral-80);
+  justify-content: space-between;
 }
 
 .inputWrapper {
@@ -12,6 +13,7 @@
   align-items: flex-start;
   border-right: 1px solid var(--earn-protocol-neutral-70);
   padding: var(--general-space-4) var(--general-space-12);
+  flex: 1;
 
   input {
     outline: none;

@@ -1,6 +1,10 @@
 .wrapper {
   width: 100%;
   margin: var(--general-space-32) auto;
+
+  @media screen and (min-width: 768px) {
+    width: 420px;
+  }
 }
 
 .middleSection {
@@ -46,6 +50,7 @@
 .paymentMethodsWrapper {
   display: flex;
   gap: var(--general-space-16);
+  flex-wrap: wrap;
 }
 
 .showDetails {
@@ -61,14 +66,39 @@
   max-width: 360px;
 }
 
-.slippageWrapper {
+.extraInfoWrapper {
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: var(--general-space-16);
-  gap: var(--general-space-4);
-  width: 100%;
-  background-color: var(--earn-protocol-neutral-85);
+  gap: var(--general-space-16);
+  flex-wrap: wrap;
+}
+
+.slippageWrapper,
+.averageProcessingTimeWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
   border-radius: var(--general-radius-8);
   height: 56px;
+  min-width: 190px;
+}
+
+.slippageWrapper {
+  background-color: var(--earn-protocol-primary-40);
+  gap: var(--general-space-4);
+}
+
+.averageProcessingTimeWrapper {
+  background-color: var(--earn-protocol-neutral-85);
+  gap: var(--general-space-8);
+  padding: 0 var(--general-space-8);
+
+  .textual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }
