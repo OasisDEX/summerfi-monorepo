@@ -1,6 +1,6 @@
 import { IBlockchainClient } from '@summerfi/blockchain-client-common'
 import { IErc20Contract, IErc4626Contract } from '@summerfi/contracts-provider-common'
-import { IAddress, IChainInfo } from '@summerfi/sdk-common'
+import { IAddress, IChainInfo, type HexData, type TransactionInfo } from '@summerfi/sdk-common'
 import { ContractWrapper } from './ContractWrapper'
 
 import { Erc4626Contract } from './Erc4626Contract/Erc4626Contract'
@@ -63,12 +63,25 @@ export class GenericContractWrapper<
 
   /** CASTING METHODS */
 
-  /** @see IFleetCommanderContract.asErc20 */
+  createTransaction(params: {
+    calldata: HexData
+    description: string
+    value?: bigint
+  }): TransactionInfo {
+    return {
+      transaction: {
+        target: this.address,
+        calldata: params.calldata,
+        value: String(params.value ?? 0),
+      },
+      description: params.description,
+    }
+  }
+
   asErc20(): IErc20Contract {
     return this.asErc4626().asErc20()
   }
 
-  /** @see IFleetCommanderContract.asErc4626 */
   asErc4626(): IErc4626Contract {
     return this._erc4626Contract
   }

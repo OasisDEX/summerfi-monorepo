@@ -18,6 +18,7 @@ import { parseGetUserPositionsQuery } from './extensions/parseGetUserPositionsQu
 import { parseGetUserPositionQuery } from './extensions/parseGetUserPositionQuery'
 import { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { AdmiralsQuartersAbi } from '@summerfi/armada-protocol-abis'
+import { encodeFunctionData } from 'viem'
 
 /**
  * @name ArmadaManager
@@ -194,13 +195,9 @@ export class ArmadaManager implements IArmadaManager {
       }),
     })
 
-    const fleetWithdrawTransaction = await admiralsQuartersWrapper.contract.write.withdrawTokens({
-      assets: params.amount,
-      receiver: params.user.wallet.address,
-      owner: params.user.wallet.address,
-    })
+    // TODO: Implement this method
 
-    return [fleetWithdrawTransaction]
+    throw new Error('Method not implemented.')
   }
 
   /** @see IArmadaManager.convertToShares */
@@ -431,6 +428,16 @@ export class ArmadaManager implements IArmadaManager {
   }): Promise<TransactionInfo[]> {
     const transactions: TransactionInfo[] = []
 
+    const admiralsQuartersWrapper = await GenericContractWrapper.create({
+      chainInfo: params.poolId.chainInfo,
+      address: admiralsQuarterAddress,
+      abi: AdmiralsQuartersAbi,
+      // TODO: move to generic contract wrapper
+      blockchainClient: this._blockchainClientProvider.getBlockchainClient({
+        chainInfo: params.poolId.chainInfo,
+      }),
+    })
+
     // Approval
     const approvalTransaction = await this._allowanceManager.getApproval({
       chainInfo: params.poolId.chainInfo,
@@ -441,18 +448,35 @@ export class ArmadaManager implements IArmadaManager {
       transactions.push(...approvalTransaction)
     }
 
-    // Deposit
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.poolId.chainInfo,
-      address: params.poolId.fleetAddress,
+    const depositTokensCalldata = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'depositTokens',
+      args: [params.amount.token.address.value, params.amount.toSolidityValue()],
     })
 
-    const fleetDepositTransaction = await fleetContract.deposit({
-      assets: params.amount,
-      receiver: params.user.wallet.address,
+    const enterFleetCalldata = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'enterFleet',
+      args: [
+        params.poolId.fleetAddress.value,
+        params.amount.token.address.value,
+        params.amount.toSolidityValue(),
+        params.user.wallet.address.value,
+      ],
     })
 
-    transactions.push(fleetDepositTransaction)
+    const depositMulticallCalldata = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'multicall',
+      args: [[depositTokensCalldata, enterFleetCalldata]],
+    })
+
+    transactions.push(
+      admiralsQuartersWrapper.createTransaction({
+        calldata: depositMulticallCalldata,
+        description: 'Deposit Multicall Transaction',
+      }),
+    )
 
     return transactions
   }
