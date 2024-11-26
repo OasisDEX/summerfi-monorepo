@@ -132,14 +132,6 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
       <div className={classNames.middleSection}>
         <div className={classNames.line} />
         <div className={classNames.dot} />
-        <div
-          className={classNames.detailsCircleBtn}
-          onClick={() => setShowDetails((prev) => !prev)}
-        >
-          <Text as="span" style={{ color: 'var(--earn-protocol-secondary-70)' }}>
-            {showDetails ? '-' : '+'}
-          </Text>
-        </div>
         <Text
           as="p"
           variant="p4semi"
@@ -156,14 +148,25 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
             defaultMethod={paymentMethod}
           />
         </div>
-        <Text
-          as="p"
-          variant="p4semi"
-          className={classNames.showDetails}
-          onClick={() => setShowDetails((prev) => !prev)}
-        >
-          Show calculation
-        </Text>
+        <div className={classNames.showDetailsWrapper}>
+          <div
+            className={classNames.detailsCircleBtn}
+            onClick={() => setShowDetails((prev) => !prev)}
+          >
+            <Text as="span" style={{ color: 'var(--earn-protocol-secondary-70)' }}>
+              {showDetails ? '-' : '+'}
+            </Text>
+          </div>
+          <Text
+            as="p"
+            variant="p4semi"
+            className={classNames.showDetails}
+            onClick={() => setShowDetails((prev) => !prev)}
+          >
+            Show calculation
+          </Text>
+        </div>
+
         {showDetails && (
           <TransakExchangeDetails details={exchangeDetails} fiatCurrency={fiatCurrency} />
         )}

@@ -18,9 +18,13 @@
 .line {
   position: absolute;
   border-left: 2px solid var(--earn-protocol-neutral-80);
-  height: 80px;
+  height: 150px;
   left: 0;
   top: 10px;
+
+  @media (min-width: 418px) {
+    height: 80px;
+  }
 }
 
 .dot {
@@ -33,24 +37,28 @@
   top: 7px;
 }
 
-.detailsCircleBtn {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--earn-protocol-neutral-80);
-  border-radius: 50%;
-  height: 24px;
-  width: 24px;
-  left: -11px;
-  top: 85px;
-  cursor: pointer;
-}
-
 .paymentMethodsWrapper {
   display: flex;
   gap: var(--general-space-16);
   flex-wrap: wrap;
+}
+
+.showDetailsWrapper {
+  position: relative;
+
+  .detailsCircleBtn {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--earn-protocol-neutral-80);
+    border-radius: 50%;
+    height: 24px;
+    width: 24px;
+    left: -30px;
+    top: 17px;
+    cursor: pointer;
+  }
 }
 
 .showDetails {
