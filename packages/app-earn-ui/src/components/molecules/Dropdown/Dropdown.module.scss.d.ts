@@ -4,6 +4,7 @@ export type Styles = {
   dropdownOptions: string
   dropdownSelected: string
   dropdownShow: string
+  mobileContentWrapper: string
   selected: string
 }
 
