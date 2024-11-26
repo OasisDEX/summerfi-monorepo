@@ -109,11 +109,16 @@ export type TransakReducerState = {
   exchangeDetails: TransakPriceQuoteResponse | undefined
   eventOrderData: TransakEventOrderData | undefined
   orderData: TransakOrderData | undefined
+  ipCountryCode: string | undefined
   cryptoCurrency: string
   error: string
 }
 
 export type TransakReducerAction =
+  | {
+      type: 'update-ip-country-code'
+      payload: string | undefined
+    }
   | {
       type: 'update-step'
       payload: TransakSteps
@@ -156,4 +161,8 @@ export interface TransakRefreshTokenResponse {
     accessToken: string
     expiresAt: number
   }
+}
+
+export interface TransakIpCountryCodeResponse {
+  ipCountryCode: string
 }

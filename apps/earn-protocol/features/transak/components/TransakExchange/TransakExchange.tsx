@@ -67,6 +67,7 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
     paymentMethod,
     exchangeDetails,
     error,
+    ipCountryCode,
   } = state
 
   const handleInputChange = debounce((value: string) => {
@@ -88,6 +89,7 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
             isBuyOrSell,
             network,
             paymentMethod,
+            ipCountryCode,
           }),
         )
 

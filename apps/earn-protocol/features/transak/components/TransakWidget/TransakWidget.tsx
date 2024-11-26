@@ -10,6 +10,7 @@ import { getTransakConfig } from '@/features/transak/config'
 import { getTransakConfigInitData } from '@/features/transak/helpers/get-transak-config-init-data'
 import { getTransakContent } from '@/features/transak/helpers/get-transak-content'
 import { getTransakFootnote } from '@/features/transak/helpers/get-transak-footnote'
+import { getTransakIpCountryCode } from '@/features/transak/helpers/get-transak-ip-country-code'
 import { getTransakOrder } from '@/features/transak/helpers/get-transak-order'
 import { getTransakPrimaryButtonDisabled } from '@/features/transak/helpers/get-transak-primary-button-disabled'
 import { getTransakPrimaryButtonHidden } from '@/features/transak/helpers/get-transak-primary-button-hidden'
@@ -58,6 +59,14 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
       void getTransakRefreshToken()
     }
   }, [isOpen])
+
+  useEffect(() => {
+    if (isOpen && !state.ipCountryCode) {
+      void getTransakIpCountryCode().then((resp) =>
+        dispatch({ type: 'update-ip-country-code', payload: resp?.ipCountryCode }),
+      )
+    }
+  }, [isOpen, state.ipCountryCode])
 
   useEffect(() => {
     if (eventOrderData && isOpen) {

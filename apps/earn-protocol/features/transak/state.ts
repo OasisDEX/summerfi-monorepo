@@ -15,6 +15,7 @@ export const transakInitialReducerState: TransakReducerState = {
   exchangeDetails: undefined,
   eventOrderData: undefined,
   orderData: undefined,
+  ipCountryCode: undefined,
   // dummy just for initialization which will be overwritten on first render
   cryptoCurrency: 'USDC',
   error: '',
@@ -25,6 +26,8 @@ export const transakReducer = (
   action: TransakReducerAction,
 ): TransakReducerState => {
   switch (action.type) {
+    case 'update-ip-country-code':
+      return { ...prevState, ipCountryCode: action.payload }
     case 'update-step':
       return { ...prevState, step: action.payload }
     case 'update-fiat-amount':

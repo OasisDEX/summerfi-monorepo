@@ -111,7 +111,9 @@ export const Dropdown: FC<DropdownProps> = ({
           onClose={() => setIsOpen(false)}
           style={{ backgroundColor: 'unset' }}
         >
-          <MobileDrawerDefaultWrapper>{optionsMapped}</MobileDrawerDefaultWrapper>
+          <MobileDrawerDefaultWrapper>
+            <div className={dropdownStyles.mobileContentWrapper}>{optionsMapped}</div>
+          </MobileDrawerDefaultWrapper>
         </MobileDrawer>
       ) : (
         <div

@@ -58,4 +58,11 @@
   &Option.selected {
     background-color: #444;
   }
+
+  .mobileContentWrapper {
+    display: flex;
+    flexdirection: column;
+    overflow-y: auto;
+    max-height: 40vh;
+  }
 }

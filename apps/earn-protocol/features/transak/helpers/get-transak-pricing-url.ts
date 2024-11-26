@@ -9,6 +9,7 @@ export const getTransakPricingUrl = ({
   network,
   paymentMethod,
   fiatAmount,
+  ipCountryCode,
 }: {
   fiatCurrency: string
   cryptoCurrency: string
@@ -16,6 +17,7 @@ export const getTransakPricingUrl = ({
   network: string
   paymentMethod: TransakPaymentOptions
   fiatAmount: string
+  ipCountryCode: string | undefined
 }) => {
   if (!transakPublicApiKey) {
     throw new Error('ENV variable missing')
@@ -29,5 +31,8 @@ export const getTransakPricingUrl = ({
     network,
     paymentMethod,
     fiatAmount,
+    // this param is optional, but when defined
+    // exchange details will be more precise
+    quoteCountryCode: ipCountryCode ?? '',
   }).toString()}`
 }
