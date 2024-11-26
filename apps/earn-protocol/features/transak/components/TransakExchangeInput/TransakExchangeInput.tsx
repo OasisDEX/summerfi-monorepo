@@ -13,6 +13,18 @@ const Content: FC<ContentProps> = ({ option }) => (
   <>
     {'tokenSymbol' in option && <Icon tokenName={option.tokenSymbol} />}
     {'iconName' in option && <Icon iconName={option.iconName} />}
+    {'icon' in option && (
+      <div
+        dangerouslySetInnerHTML={{ __html: option.icon }}
+        style={{
+          width: '20px',
+          height: '20px',
+          display: 'flex',
+          alignItems: 'center',
+          overflow: 'hidden',
+        }}
+      />
+    )}
     <span>{option.label}</span>
   </>
 )

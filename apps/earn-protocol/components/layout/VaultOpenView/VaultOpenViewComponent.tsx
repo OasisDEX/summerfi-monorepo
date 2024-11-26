@@ -97,6 +97,7 @@ export const VaultOpenViewComponent = ({
     publicClient,
     tokenBalance,
     tokenBalanceLoading,
+    flow: 'open',
   })
 
   const position = usePosition({

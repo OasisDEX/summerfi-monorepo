@@ -100,6 +100,24 @@ export type TransakOrderData = {
   }
 }
 
+export type TransakFiatCurrencies = {
+  icon: string
+  name: string
+  symbol: string
+  isPopular: boolean
+  isAllowed: boolean
+  supportingCountries: string[]
+  paymentOptions: {
+    id: TransakPaymentOptions
+    name: string
+    icon: string
+    minAmount: number
+    maxAmount: number
+    processingTime: string
+    isActive: boolean
+  }[]
+}[]
+
 export type TransakReducerState = {
   step: TransakSteps
   fiatAmount: string
@@ -111,13 +129,35 @@ export type TransakReducerState = {
   orderData: TransakOrderData | undefined
   ipCountryCode: string | undefined
   cryptoCurrency: string
+  fiatCurrencies: TransakFiatCurrencies | undefined
   error: string
+}
+
+export interface TransakRefreshTokenResponse {
+  data: {
+    accessToken: string
+    expiresAt: number
+  }
+}
+
+export interface TransakIpCountryCodeResponse {
+  ipCountryCode: string
+}
+
+// https://docs.transak.com/reference/get-fiat-currencies
+// there is much more
+export interface TransakFiatCurrenciesResponse {
+  response: TransakFiatCurrencies
 }
 
 export type TransakReducerAction =
   | {
       type: 'update-ip-country-code'
       payload: string | undefined
+    }
+  | {
+      type: 'update-fiat-currencies'
+      payload: TransakFiatCurrencies | undefined
     }
   | {
       type: 'update-step'
@@ -155,14 +195,3 @@ export type TransakReducerAction =
       type: 'update-error'
       payload: string
     }
-
-export interface TransakRefreshTokenResponse {
-  data: {
-    accessToken: string
-    expiresAt: number
-  }
-}
-
-export interface TransakIpCountryCodeResponse {
-  ipCountryCode: string
-}

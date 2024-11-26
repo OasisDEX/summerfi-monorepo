@@ -1,30 +1,23 @@
-import { type FC, useState } from 'react'
+import { type FC } from 'react'
 import { Text } from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
 
-import { TransakPaymentOptions } from '@/features/transak/types'
+import { type TransakPaymentOptions } from '@/features/transak/types'
 
 import classNames from './TransakPaymentMethods.module.scss'
-
-const paymentMethods = [
-  { label: 'Card payment', value: TransakPaymentOptions.CREDIT_DEBIT_CARD },
-  { label: 'Google Pay', value: TransakPaymentOptions.GOOGLE_PAY },
-  { label: 'Apple Pay', value: TransakPaymentOptions.APPLE_PAY },
-]
 
 interface TransakPaymentMethodsProps {
   onChange: (paymentMethod: TransakPaymentOptions) => void
   defaultMethod: TransakPaymentOptions
+  paymentMethods: { label: string; value: TransakPaymentOptions }[]
 }
 
 export const TransakPaymentMethods: FC<TransakPaymentMethodsProps> = ({
   onChange,
   defaultMethod,
+  paymentMethods,
 }) => {
-  const [paymentMethod, setPaymentMethod] = useState<TransakPaymentOptions>(defaultMethod)
-
   const handleChange = (method: TransakPaymentOptions) => {
-    setPaymentMethod(method)
     onChange(method)
   }
 
@@ -33,7 +26,7 @@ export const TransakPaymentMethods: FC<TransakPaymentMethodsProps> = ({
       key={method.value}
       onClick={() => handleChange(method.value)}
       className={clsx(classNames.wrapper, {
-        [classNames.selected]: paymentMethod === method.value,
+        [classNames.selected]: defaultMethod === method.value,
       })}
     >
       <div className={classNames.button}>

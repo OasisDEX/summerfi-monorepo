@@ -8,8 +8,10 @@ import { Transak } from '@transak/transak-sdk'
 import { getCookies } from '@/constants/get-cookies'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { getTransakConfig } from '@/features/transak/config'
+import { getTransakFiatCurrency } from '@/features/transak/countries'
 import { getTransakConfigInitData } from '@/features/transak/helpers/get-transak-config-init-data'
 import { getTransakContent } from '@/features/transak/helpers/get-transak-content'
+import { getTransakFiatCurrencies } from '@/features/transak/helpers/get-transak-fiat-currencies'
 import { getTransakFootnote } from '@/features/transak/helpers/get-transak-footnote'
 import { getTransakIpCountryCode } from '@/features/transak/helpers/get-transak-ip-country-code'
 import { getTransakOrder } from '@/features/transak/helpers/get-transak-order'
@@ -57,7 +59,9 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
 
   const { step, fiatAmount, fiatCurrency, paymentMethod, eventOrderData } = state
 
-  const isLoading = Number(state.fiatAmount) > 0 && !state.exchangeDetails
+  const isLoading =
+    ((Number(state.fiatAmount) > 0 && !state.exchangeDetails) || !state.fiatCurrencies) &&
+    !state.error
 
   useEffect(() => {
     if (isOpen) {
@@ -67,11 +71,23 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
 
   useEffect(() => {
     if (isOpen && !state.ipCountryCode) {
-      void getTransakIpCountryCode().then((resp) =>
-        dispatch({ type: 'update-ip-country-code', payload: resp?.ipCountryCode }),
+      void getTransakIpCountryCode().then((resp) => {
+        dispatch({ type: 'update-ip-country-code', payload: resp?.ipCountryCode })
+        dispatch({
+          type: 'update-fiat-currency',
+          payload: getTransakFiatCurrency(resp?.ipCountryCode),
+        })
+      })
+    }
+  }, [isOpen, state.ipCountryCode, state.fiatCurrencies])
+
+  useEffect(() => {
+    if (isOpen && !state.fiatCurrencies) {
+      void getTransakFiatCurrencies().then((resp) =>
+        dispatch({ type: 'update-fiat-currencies', payload: resp?.response }),
       )
     }
-  }, [isOpen, state.ipCountryCode])
+  }, [isOpen, state.fiatCurrencies])
 
   useEffect(() => {
     if (eventOrderData && isOpen) {
@@ -171,7 +187,7 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
       },
       hidden: getTransakPrimaryButtonHidden({ step }),
       disabled: getTransakPrimaryButtonDisabled({ state }),
-      loading: isLoading && !state.error,
+      loading: isLoading,
     },
     footnote: getTransakFootnote({ state, dispatch }),
     isMobile,

@@ -4,7 +4,8 @@
   align-items: center;
   justify-content: center;
   height: 36px;
-  width: 98px;
+  flex: 30%;
+  max-width: 105px;
   border-radius: var(--general-radius-8);
 
   &.selected {

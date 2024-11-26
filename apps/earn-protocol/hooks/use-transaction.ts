@@ -37,6 +37,7 @@ type UseTransactionParams = {
   tokenBalance: BigNumber | undefined
   tokenBalanceLoading: boolean
   publicClient?: ReturnType<typeof useClient>['publicClient']
+  flow: 'open' | 'manage'
 }
 
 const labelTransactions = (transactions: TransactionInfo[]) => {
@@ -54,6 +55,7 @@ export const useTransaction = ({
   publicClient,
   tokenBalance,
   tokenBalanceLoading,
+  flow,
 }: UseTransactionParams) => {
   const { refresh: refreshView } = useRouter()
   const user = useUser()
@@ -277,7 +279,7 @@ export const useTransaction = ({
       }
     }
 
-    if (!tokenBalanceLoading && tokenBalance && tokenBalance.isZero()) {
+    if (!tokenBalanceLoading && tokenBalance && tokenBalance.isZero() && flow === 'open') {
       return {
         label: 'Add funds',
         action: () => setIsTransakOpen(true),

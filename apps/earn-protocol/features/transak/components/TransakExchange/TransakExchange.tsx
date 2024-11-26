@@ -10,22 +10,13 @@ import { TransakExchangeInput } from '@/features/transak/components/TransakExcha
 import { TransakPaymentMethods } from '@/features/transak/components/TransakPaymentMethods/TransakPaymentMethods'
 import { transakPaymentMethods } from '@/features/transak/consts'
 import { getTransakPricingUrl } from '@/features/transak/helpers/get-transak-pricing-url'
-import { type TransakReducerAction, type TransakReducerState } from '@/features/transak/types'
+import {
+  type TransakPaymentOptions,
+  type TransakReducerAction,
+  type TransakReducerState,
+} from '@/features/transak/types'
 
 import classNames from './TransakExchange.module.scss'
-
-const fiatOptions: DropdownOption[] = [
-  {
-    label: 'USD',
-    iconName: 'not_supported_icon',
-    value: 'USD',
-  },
-  {
-    label: 'EUR',
-    iconName: 'not_supported_icon',
-    value: 'EUR',
-  },
-]
 
 const cryptoOptions: DropdownOption[] = [
   {
@@ -116,15 +107,62 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
 
       void fetchExchangeDetails()
     }
-  }, [fiatAmount, fiatCurrency, cryptoCurrency, isBuyOrSell, paymentMethod, network, dispatch])
+  }, [
+    fiatAmount,
+    fiatCurrency,
+    cryptoCurrency,
+    isBuyOrSell,
+    paymentMethod,
+    network,
+    dispatch,
+    ipCountryCode,
+  ])
+
+  // const fiatCountryCurrency = transakCountries.find(
+  //   (country) => country.alpha2 === ipCountryCode || country.alpha3 === ipCountryCode,
+  // )?.currencyCode
+
+  const { fiatCurrencies } = state
+
+  if (fiatCurrencies === undefined) {
+    // at this point it should be always defined
+    // condition added to avoid typescript issues
+    return null
+  }
+
+  const paymentMethods = fiatCurrencies
+    .find((item) => item.symbol === state.fiatCurrency)
+    ?.paymentOptions.map((item) => ({ value: item.id as TransakPaymentOptions, label: item.name }))
+
+  if (paymentMethods === undefined) {
+    // at this point it should be always defined
+    return null
+  }
+
+  const fiatOptions = fiatCurrencies.map((item) => ({
+    icon: item.icon,
+    label: item.symbol,
+    value: item.symbol,
+  }))
 
   return (
     <div className={classNames.wrapper}>
       <TransakExchangeInput
         label="You pay"
         onInputChange={handleInputChange}
-        onOptionChange={(value) => dispatch({ type: 'update-fiat-currency', payload: value })}
+        onOptionChange={(value) => {
+          dispatch({ type: 'update-fiat-currency', payload: value })
+
+          // when fiat currency being changed, align payment method to the first available
+          const newPaymentMethod = fiatCurrencies.find((item) => item.symbol === value)
+            ?.paymentOptions[0].id
+
+          if (newPaymentMethod) {
+            dispatch({ type: 'update-payment-method', payload: newPaymentMethod })
+          }
+        }}
         options={fiatOptions}
+        defaultOption={fiatOptions.find((item) => item.value === state.fiatCurrency)}
       />
       {error && (
         <Text as="p" variant="p3" className={classNames.error}>
@@ -148,6 +186,7 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
           <TransakPaymentMethods
             onChange={(method) => dispatch({ type: 'update-payment-method', payload: method })}
             defaultMethod={paymentMethod}
+            paymentMethods={paymentMethods}
           />
         </div>
         <div className={classNames.showDetailsWrapper}>
