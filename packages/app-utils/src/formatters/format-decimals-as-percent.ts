@@ -14,6 +14,7 @@ import { formatToBigNumber } from '@/formatters/format-to-big-number'
  * @param plus - Whether to include a plus sign for positive percentages (default is `false`).
  * @param roundMode - The rounding mode to use (default is `BigNumber.ROUND_DOWN`).
  * @param noPercentSign - Whether to omit the percent sign (default is `false`).
+ * @param maxThreshold - Maximum threshold, if amount will be above it will fall back to this threshold (default is `1000`).
  * @returns The formatted percentage string.
  */
 export const formatDecimalAsPercent = (
@@ -23,16 +24,22 @@ export const formatDecimalAsPercent = (
     plus = false,
     roundMode = BigNumber.ROUND_DOWN,
     noPercentSign = false,
+    maxThreshold = '1000',
   }: {
     precision?: number
     plus?: boolean
     roundMode?: BigNumber.RoundingMode
     noPercentSign?: boolean
+    maxThreshold?: string
   } = {},
 ) => {
-  const resolvedAmount = formatToBigNumber(amount)
+  const formatedAmount = formatToBigNumber(amount)
 
-  return formatPercent(resolvedAmount.times(100), {
+  if (formatedAmount.times(100).isGreaterThan(maxThreshold)) {
+    return `>${maxThreshold}%`
+  }
+
+  return formatPercent(formatedAmount.times(100), {
     precision,
     plus,
     roundMode,
