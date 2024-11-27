@@ -1,24 +1,25 @@
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
+import { AdmiralsQuartersAbi } from '@summerfi/armada-protocol-abis'
 import {
   IArmadaManager,
-  IArmadaVaultId,
   IArmadaPoolInfo,
   IArmadaPosition,
   IArmadaPositionId,
+  IArmadaVaultId,
 } from '@summerfi/armada-protocol-common'
+import { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider, type IRebalanceData } from '@summerfi/contracts-provider-common'
 import { GenericContractWrapper } from '@summerfi/contracts-provider-service'
 import { IAddress, IPercentage, ITokenAmount, IUser, TransactionInfo } from '@summerfi/sdk-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
+import { encodeFunctionData } from 'viem'
+import { getDeployedContractAddress } from '../../deployments/config'
 import { ArmadaPool } from './ArmadaPool'
 import { ArmadaPoolInfo } from './ArmadaPoolInfo'
 import { ArmadaPosition } from './ArmadaPosition'
-import { parseGetUserPositionsQuery } from './extensions/parseGetUserPositionsQuery'
 import { parseGetUserPositionQuery } from './extensions/parseGetUserPositionQuery'
-import { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
-import { AdmiralsQuartersAbi } from '@summerfi/armada-protocol-abis'
-import { encodeFunctionData } from 'viem'
+import { parseGetUserPositionsQuery } from './extensions/parseGetUserPositionsQuery'
 
 /**
  * @name ArmadaManager
@@ -427,7 +428,11 @@ export class ArmadaManager implements IArmadaManager {
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
     const transactions: TransactionInfo[] = []
-
+    const admiralsQuarterAddress = getDeployedContractAddress({
+      chainInfo: params.poolId.chainInfo,
+      contractCategory: 'core',
+      contractName: 'admiralsQuarters',
+    })
     const admiralsQuartersWrapper = await GenericContractWrapper.create({
       chainInfo: params.poolId.chainInfo,
       address: admiralsQuarterAddress,

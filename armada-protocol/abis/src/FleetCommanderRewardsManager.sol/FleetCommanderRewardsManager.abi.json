@@ -130,6 +130,25 @@
   },
   {
     "type": "function",
+    "name": "hasAdmiralsQuartersRole",
+    "inputs": [
+      {
+        "name": "account",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "lastTimeRewardApplicable",
     "inputs": [
       {
@@ -363,6 +382,29 @@
     "type": "function",
     "name": "unstake",
     "inputs": [
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "unstakeOnBehalfOf",
+    "inputs": [
+      {
+        "name": "from",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "receiver",
+        "type": "address",
+        "internalType": "address"
+      },
       {
         "name": "amount",
         "type": "uint256",
@@ -711,6 +753,11 @@
   },
   {
     "type": "error",
+    "name": "CallerNotAdmiralsQuarters",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "CannotChangeRewardsDuration",
     "inputs": []
   },
@@ -786,6 +833,11 @@
   {
     "type": "error",
     "name": "InvalidRewardsDuration",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidUnstakeRecipient",
     "inputs": []
   },
   {

@@ -61,7 +61,7 @@
         "internalType": "contract IERC20"
       },
       {
-        "name": "amount",
+        "name": "assets",
         "type": "uint256",
         "internalType": "uint256"
       },
@@ -90,7 +90,7 @@
         "internalType": "address"
       },
       {
-        "name": "amount",
+        "name": "assets",
         "type": "uint256",
         "internalType": "uint256"
       }
@@ -129,6 +129,60 @@
       }
     ],
     "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "moveFromAaveToAdmiralsQuarters",
+    "inputs": [
+      {
+        "name": "aToken",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "assets",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "moveFromCompoundToAdmiralsQuarters",
+    "inputs": [
+      {
+        "name": "cToken",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "assets",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "moveFromERC4626ToAdmiralsQuarters",
+    "inputs": [
+      {
+        "name": "vault",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "shares",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
   },
   {
     "type": "function",
@@ -220,7 +274,7 @@
   },
   {
     "type": "function",
-    "name": "stakeFleetShares",
+    "name": "stake",
     "inputs": [
       {
         "name": "fleetCommander",
@@ -228,7 +282,7 @@
         "internalType": "address"
       },
       {
-        "name": "amount",
+        "name": "shares",
         "type": "uint256",
         "internalType": "uint256"
       }
@@ -251,7 +305,7 @@
         "internalType": "contract IERC20"
       },
       {
-        "name": "amount",
+        "name": "assets",
         "type": "uint256",
         "internalType": "uint256"
       },
@@ -316,6 +370,24 @@
   },
   {
     "type": "function",
+    "name": "unstakeAndWithdrawAssets",
+    "inputs": [
+      {
+        "name": "fleetCommander",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "shares",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "withdrawTokens",
     "inputs": [
       {
@@ -331,6 +403,81 @@
     ],
     "outputs": [],
     "stateMutability": "nonpayable"
+  },
+  {
+    "type": "event",
+    "name": "AavePositionImported",
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "aToken",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "CompoundPositionImported",
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "cToken",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "ERC4626PositionImported",
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "vault",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
   },
   {
     "type": "event",
@@ -624,6 +771,16 @@
   {
     "type": "error",
     "name": "InvalidToken",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MulticallAlreadyInProgress",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "NotMulticall",
     "inputs": []
   },
   {

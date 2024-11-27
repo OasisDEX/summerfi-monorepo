@@ -681,24 +681,6 @@
   },
   {
     "type": "function",
-    "name": "setTrustedRemote",
-    "inputs": [
-      {
-        "name": "_chainId",
-        "type": "uint32",
-        "internalType": "uint32"
-      },
-      {
-        "name": "_trustedRemote",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "setWhitelistAccountExpiration",
     "inputs": [
       {
@@ -945,25 +927,6 @@
         "type": "uint32",
         "indexed": true,
         "internalType": "uint32"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "TrustedRemoteSet",
-    "inputs": [
-      {
-        "name": "chainId",
-        "type": "uint32",
-        "indexed": true,
-        "internalType": "uint32"
-      },
-      {
-        "name": "trustedRemote",
-        "type": "address",
-        "indexed": false,
-        "internalType": "address"
       }
     ],
     "anonymous": false
@@ -1290,6 +1253,11 @@
   },
   {
     "type": "error",
+    "name": "SummerGovernorInvalidPeerArrays",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "SummerGovernorInvalidProposalThreshold",
     "inputs": [
       {
@@ -1306,17 +1274,6 @@
         "name": "maxThreshold",
         "type": "uint256",
         "internalType": "uint256"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "SummerGovernorInvalidSender",
-    "inputs": [
-      {
-        "name": "originSender",
-        "type": "address",
-        "internalType": "address"
       }
     ]
   },
