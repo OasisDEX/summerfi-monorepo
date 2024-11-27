@@ -11,7 +11,14 @@ import { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider, type IRebalanceData } from '@summerfi/contracts-provider-common'
 import { GenericContractWrapper } from '@summerfi/contracts-provider-service'
-import { IAddress, IPercentage, ITokenAmount, IUser, TransactionInfo } from '@summerfi/sdk-common'
+import {
+  IAddress,
+  IPercentage,
+  ITokenAmount,
+  IUser,
+  TransactionInfo,
+  type HexData,
+} from '@summerfi/sdk-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { encodeFunctionData } from 'viem'
 import { getDeployedContractAddress } from '../../deployments/config'
@@ -164,6 +171,7 @@ export class ArmadaManager implements IArmadaManager {
     poolId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
+    shouldStake?: boolean
   }): Promise<TransactionInfo[]> {
     return this._getDepositTX(params)
   }
@@ -173,11 +181,13 @@ export class ArmadaManager implements IArmadaManager {
     poolId: IArmadaVaultId
     positionId: IArmadaPositionId
     amount: ITokenAmount
+    shouldStake?: boolean
   }): Promise<TransactionInfo[]> {
     return this._getDepositTX({
       poolId: params.poolId,
       user: params.positionId.user,
       amount: params.amount,
+      shouldStake: params.shouldStake,
     })
   }
 
@@ -426,8 +436,20 @@ export class ArmadaManager implements IArmadaManager {
     poolId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
+    shouldStake?: boolean
   }): Promise<TransactionInfo[]> {
     const transactions: TransactionInfo[] = []
+
+    // Approval
+    const approvalTransaction = await this._allowanceManager.getApproval({
+      chainInfo: params.poolId.chainInfo,
+      spender: params.poolId.fleetAddress,
+      amount: params.amount,
+    })
+    if (approvalTransaction) {
+      transactions.push(...approvalTransaction)
+    }
+
     const admiralsQuarterAddress = getDeployedContractAddress({
       chainInfo: params.poolId.chainInfo,
       contractCategory: 'core',
@@ -443,21 +465,13 @@ export class ArmadaManager implements IArmadaManager {
       }),
     })
 
-    // Approval
-    const approvalTransaction = await this._allowanceManager.getApproval({
-      chainInfo: params.poolId.chainInfo,
-      spender: params.poolId.fleetAddress,
-      amount: params.amount,
-    })
-    if (approvalTransaction) {
-      transactions.push(...approvalTransaction)
-    }
-
+    const multicallArgs: HexData[] = []
     const depositTokensCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'depositTokens',
       args: [params.amount.token.address.value, params.amount.toSolidityValue()],
     })
+    multicallArgs.push(depositTokensCalldata)
 
     const enterFleetCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
@@ -469,11 +483,21 @@ export class ArmadaManager implements IArmadaManager {
         params.user.wallet.address.value,
       ],
     })
+    multicallArgs.push(enterFleetCalldata)
+
+    const stakeCalldata = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'stake',
+      args: [params.poolId.fleetAddress.value, 0n],
+    })
+    if (params.shouldStake ?? true) {
+      multicallArgs.push(stakeCalldata)
+    }
 
     const depositMulticallCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'multicall',
-      args: [[depositTokensCalldata, enterFleetCalldata]],
+      args: [multicallArgs],
     })
 
     transactions.push(
