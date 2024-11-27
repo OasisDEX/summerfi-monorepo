@@ -59,15 +59,8 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
     exchangeDetails,
     error,
     ipCountryCode,
+    fiatCurrencies,
   } = state
-
-  const handleInputChange = debounce((value: string) => {
-    dispatch({ type: 'update-fiat-amount', payload: value })
-    if (!value) {
-      dispatch({ type: 'update-exchange-details', payload: undefined })
-      dispatch({ type: 'update-error', payload: '' })
-    }
-  }, 300)
 
   useEffect(() => {
     const fetchExchangeDetails = async () => {
@@ -94,6 +87,13 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
           dispatch({ type: 'update-exchange-details', payload: data.response })
         }
         if (data.error) {
+          // filter out errors that we are handling on the UI and which seems to be bugged
+          // for example API says that min amount for GBP is 2, but based on fiatCurrencies response
+          // for gbp_bank_transfer it's 16
+          if (data.error.message.includes('Minimum') || data.error.message.includes('less than')) {
+            return
+          }
+
           dispatch({ type: 'update-error', payload: data.error.message })
         }
       } catch (e) {
@@ -102,7 +102,7 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
     }
 
     if (fiatAmount && fiatAmount !== '0') {
-      dispatch({ type: 'update-error', payload: '' })
+      // dispatch({ type: 'update-error', payload: '' })
       dispatch({ type: 'update-exchange-details', payload: undefined })
 
       void fetchExchangeDetails()
@@ -118,17 +118,46 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
     ipCountryCode,
   ])
 
-  // const fiatCountryCurrency = transakCountries.find(
-  //   (country) => country.alpha2 === ipCountryCode || country.alpha3 === ipCountryCode,
-  // )?.currencyCode
-
-  const { fiatCurrencies } = state
-
   if (fiatCurrencies === undefined) {
     // at this point it should be always defined
     // condition added to avoid typescript issues
     return null
   }
+
+  const handleInputChange = debounce((value: string) => {
+    dispatch({ type: 'update-error', payload: '' })
+
+    const amount = value.replaceAll(',', '')
+
+    dispatch({ type: 'update-fiat-amount', payload: amount })
+
+    // when fiat currency being changed, align payment method to the first available
+    const paymentMethodData = fiatCurrencies
+      .find((item) => item.symbol === state.fiatCurrency)
+      ?.paymentOptions.find((item) => item.id === state.paymentMethod)
+
+    const maxAmount = paymentMethodData?.maxAmount
+    const minAmount = paymentMethodData?.minAmount
+
+    if (maxAmount && Number(amount) >= maxAmount) {
+      dispatch({
+        type: 'update-error',
+        payload: `Maximum amount for this payment method is ${maxAmount}`,
+      })
+    }
+
+    if (minAmount && Number(amount) <= minAmount) {
+      dispatch({
+        type: 'update-error',
+        payload: `Minimum amount for this payment method is ${minAmount}`,
+      })
+    }
+
+    if (!value) {
+      dispatch({ type: 'update-exchange-details', payload: undefined })
+      dispatch({ type: 'update-error', payload: '' })
+    }
+  }, 400)
 
   const paymentMethods = fiatCurrencies
     .find((item) => item.symbol === state.fiatCurrency)
@@ -152,6 +181,7 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
         onInputChange={handleInputChange}
         onOptionChange={(value) => {
           dispatch({ type: 'update-fiat-currency', payload: value })
+          dispatch({ type: 'update-error', payload: '' })
 
           // when fiat currency being changed, align payment method to the first available
           const newPaymentMethod = fiatCurrencies.find((item) => item.symbol === value)
@@ -184,7 +214,10 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
         </Text>
         <div className={classNames.paymentMethodsWrapper}>
           <TransakPaymentMethods
-            onChange={(method) => dispatch({ type: 'update-payment-method', payload: method })}
+            onChange={(method) => {
+              dispatch({ type: 'update-error', payload: '' })
+              dispatch({ type: 'update-payment-method', payload: method })
+            }}
             defaultMethod={paymentMethod}
             paymentMethods={paymentMethods}
           />
@@ -217,7 +250,10 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
         readOnly
         defaultValue={exchangeDetails?.cryptoAmount.toString()}
         defaultOption={cryptoOptions.find((item) => item.value === cryptoCurrency)}
-        onOptionChange={(value) => dispatch({ type: 'update-crypto-currency', payload: value })}
+        onOptionChange={(value) => {
+          dispatch({ type: 'update-error', payload: '' })
+          dispatch({ type: 'update-crypto-currency', payload: value })
+        }}
         options={cryptoOptions}
       />
       <div className={classNames.extraInfoWrapper}>

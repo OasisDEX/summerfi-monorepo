@@ -36,7 +36,7 @@ export const transakReducer = (
     case 'update-fiat-amount':
       return {
         ...prevState,
-        fiatAmount: action.payload === '' ? '0' : action.payload.replaceAll(',', ''),
+        fiatAmount: action.payload === '' ? '0' : action.payload,
       }
     case 'update-payment-method':
       return { ...prevState, paymentMethod: action.payload }
