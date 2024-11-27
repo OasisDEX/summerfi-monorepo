@@ -131,6 +131,7 @@ export interface IArmadaManager {
     poolId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
+    shouldStake?: boolean
   }): Promise<TransactionInfo[]>
 
   /**

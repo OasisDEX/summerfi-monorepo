@@ -1,6 +1,8 @@
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import { AdmiralsQuartersAbi } from '@summerfi/armada-protocol-abis'
 import {
+  createTransaction,
+  getDeployedContractAddress,
   IArmadaManager,
   IArmadaPoolInfo,
   IArmadaPosition,
@@ -19,13 +21,11 @@ import {
 } from '@summerfi/sdk-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { encodeFunctionData } from 'viem'
-import { getDeployedContractAddress } from '../../deployments/config'
 import { ArmadaPool } from './ArmadaPool'
 import { ArmadaPoolInfo } from './ArmadaPoolInfo'
 import { ArmadaPosition } from './ArmadaPosition'
 import { parseGetUserPositionQuery } from './extensions/parseGetUserPositionQuery'
 import { parseGetUserPositionsQuery } from './extensions/parseGetUserPositionsQuery'
-import { createTransaction } from '../../utils/createTransaction'
 
 /**
  * @name ArmadaManager

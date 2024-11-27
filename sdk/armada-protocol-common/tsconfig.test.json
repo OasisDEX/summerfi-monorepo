@@ -7,6 +7,6 @@
       "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"]
     }
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/**/*.json", "src/**/*.json"],
   "exclude": ["node_modules", "dist"]
 }

@@ -79,6 +79,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     poolId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
+    shouldStake: boolean
   }): Promise<TransactionInfo[]> {
     return this.rpcClient.armada.users.getDepositTX.query(params)
   }

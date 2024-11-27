@@ -37,7 +37,7 @@
     "coverage:total": "node scripts/coverage-report/GenerateCoverageReport.js",
     "armada:install": "git submodule update --init armada-protocol/contracts && cd armada-protocol/contracts && pnpm i",
     "armada:build": "cd armada-protocol/contracts && pnpm build && cp -r packages/core-contracts/out/*.sol ../abis/src && cd ../.. && tsx ./scripts/transform-json-to-viem-abi.ts && cd armada-protocol/abis && pnpm genindex && pnpm build",
-    "armada:upconfig": "cd armada-protocol/contracts/packages/deployment/config && cp index.json ../../../../../sdk/armada-protocol-service/src/config"
+    "armada:upconfig": "cd armada-protocol/contracts/packages/deployment/config && cp index.json ../../../../../sdk/armada-protocol-common/src/config"
   },
   "devDependencies": {
     "@graphql-codegen/add": "^5.0.2",
