@@ -4,6 +4,7 @@ import { type FC, type ReactNode, useEffect, useRef, useState } from 'react'
 import { type DropdownRawOption } from '@summerfi/app-types'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
+import { Input } from '@/components/atoms/Input/Input.tsx'
 import {
   MobileDrawer,
   MobileDrawerDefaultWrapper,
@@ -18,6 +19,8 @@ export interface DropdownProps {
   onChange?: (option: DropdownRawOption) => void
   children: ReactNode
   asPill?: boolean
+  withSearch?: boolean
+  inputPlaceholder?: string
 }
 
 export const Dropdown: FC<DropdownProps> = ({
@@ -26,11 +29,15 @@ export const Dropdown: FC<DropdownProps> = ({
   onChange,
   children,
   asPill,
+  withSearch,
+  inputPlaceholder,
 }) => {
   const [selectedOption, setSelectedOption] = useState<DropdownRawOption>(dropdownValue)
   const [isOpen, setIsOpen] = useState(false) // To manage dropdown open/close state
   const dropdownRef = useRef<HTMLDivElement | null>(null) // Reference for the dropdown
   const { isMobile } = useMobileCheck()
+
+  const [inputValue, setInputValue] = useState('')
 
   useEffect(() => {
     if (!onChange) {
@@ -68,15 +75,19 @@ export const Dropdown: FC<DropdownProps> = ({
     }
   }, [])
 
-  const optionsMapped = options.map((option) => (
-    <div
-      key={option.value}
-      className={`${dropdownStyles.dropdownOption} ${option.value === selectedOption.value ? dropdownStyles.selected : ''}`}
-      onClick={() => handleSelectOption(option)}
-    >
-      {option.content}
-    </div>
-  ))
+  const optionsMapped = options
+    .filter((option) =>
+      inputValue.length ? option.value.toLowerCase().includes(inputValue.toLowerCase()) : true,
+    )
+    .map((option) => (
+      <div
+        key={option.value}
+        className={`${dropdownStyles.dropdownOption} ${option.value === selectedOption.value ? dropdownStyles.selected : ''}`}
+        onClick={() => handleSelectOption(option)}
+      >
+        {option.content}
+      </div>
+    ))
 
   return (
     <div className={dropdownStyles.dropdown} ref={dropdownRef}>
@@ -112,6 +123,14 @@ export const Dropdown: FC<DropdownProps> = ({
           style={{ backgroundColor: 'unset' }}
         >
           <MobileDrawerDefaultWrapper>
+            {withSearch && (
+              <Input
+                placeholder={inputPlaceholder}
+                className={dropdownStyles.searchInput}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+              />
+            )}
             <div className={dropdownStyles.mobileContentWrapper}>{optionsMapped}</div>
           </MobileDrawerDefaultWrapper>
         </MobileDrawer>
@@ -120,7 +139,15 @@ export const Dropdown: FC<DropdownProps> = ({
           className={`${dropdownStyles.dropdownOptions} ${isOpen ? dropdownStyles.dropdownShow : ''}`}
           aria-hidden={!isOpen} // For accessibility
         >
-          {optionsMapped}
+          {withSearch && (
+            <Input
+              placeholder={inputPlaceholder}
+              className={dropdownStyles.searchInput}
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+            />
+          )}
+          <div className={dropdownStyles.dropdownOverflowWrapper}>{optionsMapped}</div>
         </div>
       )}
     </div>

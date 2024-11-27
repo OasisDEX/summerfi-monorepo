@@ -96,6 +96,8 @@ export const TransakExchangeInput: FC<TransakExchangeInputProps> = ({
           }))}
           dropdownValue={{ value: option.value, content: option.content }}
           onChange={handleOptionChange}
+          withSearch
+          inputPlaceholder="Search for currency"
         >
           {option.content}
         </Dropdown>

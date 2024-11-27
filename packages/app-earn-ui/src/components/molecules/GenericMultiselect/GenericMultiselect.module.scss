@@ -30,6 +30,9 @@
   &:focus {
     outline: none;
   }
+  &:hover {
+    border-color: var(--color-border-hover);
+  }
   &::placeholder {
     color: var(--earn-protocol-secondary-40);
   }
