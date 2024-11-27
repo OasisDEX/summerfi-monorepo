@@ -437,7 +437,7 @@ export class ArmadaManager implements IArmadaManager {
       chainInfo: params.poolId.chainInfo,
       address: admiralsQuarterAddress,
       abi: AdmiralsQuartersAbi,
-      // TODO: move to generic contract wrapper
+      // TODO: move to generic contract wrapper later
       blockchainClient: this._blockchainClientProvider.getBlockchainClient({
         chainInfo: params.poolId.chainInfo,
       }),
