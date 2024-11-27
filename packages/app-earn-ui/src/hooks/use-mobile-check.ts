@@ -39,7 +39,7 @@ export const useMobileCheck = (deviceType?: DeviceType): ScreenInfo => {
 
   useLayoutEffect(() => {
     // Check if window is defined (important for SSR)
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined' || typeof screen === 'undefined') return
 
     const handleResize = () => {
       setScreenInfo({
@@ -53,10 +53,14 @@ export const useMobileCheck = (deviceType?: DeviceType): ScreenInfo => {
     handleResize()
 
     // Listen for resize events
-    window.addEventListener('resize', handleResize)
+    window.addEventListener('resize', () => handleResize())
+    screen.orientation.addEventListener('change', () => handleResize())
 
     // eslint-disable-next-line consistent-return
-    return () => window.removeEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', () => handleResize())
+      screen.orientation.removeEventListener('change', () => handleResize())
+    }
   }, [])
 
   return screenInfo
