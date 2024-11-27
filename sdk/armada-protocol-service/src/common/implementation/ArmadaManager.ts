@@ -7,10 +7,8 @@ import {
   IArmadaPositionId,
   IArmadaVaultId,
 } from '@summerfi/armada-protocol-common'
-import { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider, type IRebalanceData } from '@summerfi/contracts-provider-common'
-import { GenericContractWrapper } from '@summerfi/contracts-provider-service'
 import {
   IAddress,
   IPercentage,
@@ -27,6 +25,7 @@ import { ArmadaPoolInfo } from './ArmadaPoolInfo'
 import { ArmadaPosition } from './ArmadaPosition'
 import { parseGetUserPositionQuery } from './extensions/parseGetUserPositionQuery'
 import { parseGetUserPositionsQuery } from './extensions/parseGetUserPositionsQuery'
+import { createTransaction } from '../../utils/createTransaction'
 
 /**
  * @name ArmadaManager
@@ -37,7 +36,6 @@ export class ArmadaManager implements IArmadaManager {
   private _allowanceManager: IAllowanceManager
   private _contractsProvider: IContractsProvider
   private _subgraphManager: IArmadaSubgraphManager
-  private _blockchainClientProvider: IBlockchainClientProvider
 
   /** CONSTRUCTOR */
   constructor(params: {
@@ -45,13 +43,11 @@ export class ArmadaManager implements IArmadaManager {
     allowanceManager: IAllowanceManager
     contractsProvider: IContractsProvider
     subgraphManager: IArmadaSubgraphManager
-    blockchainClientProvider: IBlockchainClientProvider
   }) {
     this._configProvider = params.configProvider
     this._allowanceManager = params.allowanceManager
     this._contractsProvider = params.contractsProvider
     this._subgraphManager = params.subgraphManager
-    this._blockchainClientProvider = params.blockchainClientProvider
   }
 
   /** POOLS */
@@ -197,15 +193,6 @@ export class ArmadaManager implements IArmadaManager {
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
-    const admiralsQuartersWrapper = await GenericContractWrapper.create({
-      chainInfo: params.poolId.chainInfo,
-      address: params.poolId.fleetAddress,
-      abi: AdmiralsQuartersAbi,
-      blockchainClient: this._blockchainClientProvider.getBlockchainClient({
-        chainInfo: params.poolId.chainInfo,
-      }),
-    })
-
     // TODO: Implement this method
 
     throw new Error('Method not implemented.')
@@ -455,15 +442,6 @@ export class ArmadaManager implements IArmadaManager {
       contractCategory: 'core',
       contractName: 'admiralsQuarters',
     })
-    const admiralsQuartersWrapper = await GenericContractWrapper.create({
-      chainInfo: params.poolId.chainInfo,
-      address: admiralsQuarterAddress,
-      abi: AdmiralsQuartersAbi,
-      // TODO: move to generic contract wrapper later
-      blockchainClient: this._blockchainClientProvider.getBlockchainClient({
-        chainInfo: params.poolId.chainInfo,
-      }),
-    })
 
     const multicallArgs: HexData[] = []
     const depositTokensCalldata = encodeFunctionData({
@@ -501,7 +479,8 @@ export class ArmadaManager implements IArmadaManager {
     })
 
     transactions.push(
-      admiralsQuartersWrapper.createTransaction({
+      createTransaction({
+        target: admiralsQuarterAddress,
         calldata: depositMulticallCalldata,
         description: 'Deposit Multicall Transaction',
       }),
