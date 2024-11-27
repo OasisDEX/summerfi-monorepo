@@ -15,6 +15,7 @@ import {
   type TransakReducerAction,
   type TransakReducerState,
 } from '@/features/transak/types'
+import { validateTransakFiatInput } from '@/features/transak/validators'
 
 import classNames from './TransakExchange.module.scss'
 
@@ -118,6 +119,19 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
     ipCountryCode,
   ])
 
+  useEffect(() => {
+    if (fiatCurrencies && Number(fiatAmount) > 0) {
+      // listen for form changes and update limit errors
+      validateTransakFiatInput({
+        amount: fiatAmount,
+        dispatch,
+        fiatCurrencies,
+        fiatCurrency,
+        paymentMethod,
+      })
+    }
+  }, [dispatch, paymentMethod, fiatAmount, fiatCurrency, cryptoCurrency, fiatCurrencies])
+
   if (fiatCurrencies === undefined) {
     // at this point it should be always defined
     // condition added to avoid typescript issues
@@ -130,28 +144,6 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
     const amount = value.replaceAll(',', '')
 
     dispatch({ type: 'update-fiat-amount', payload: amount })
-
-    // when fiat currency being changed, align payment method to the first available
-    const paymentMethodData = fiatCurrencies
-      .find((item) => item.symbol === state.fiatCurrency)
-      ?.paymentOptions.find((item) => item.id === state.paymentMethod)
-
-    const maxAmount = paymentMethodData?.maxAmount
-    const minAmount = paymentMethodData?.minAmount
-
-    if (maxAmount && Number(amount) >= maxAmount) {
-      dispatch({
-        type: 'update-error',
-        payload: `Maximum amount for this payment method is ${maxAmount}`,
-      })
-    }
-
-    if (minAmount && Number(amount) <= minAmount) {
-      dispatch({
-        type: 'update-error',
-        payload: `Minimum amount for this payment method is ${minAmount}`,
-      })
-    }
 
     if (!value) {
       dispatch({ type: 'update-exchange-details', payload: undefined })
