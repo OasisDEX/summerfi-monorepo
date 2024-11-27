@@ -43,9 +43,9 @@ export const useMobileCheck = (deviceType?: DeviceType): ScreenInfo => {
 
     const handleResize = () => {
       setScreenInfo({
-        isMobile: window.innerWidth <= 768,
-        width: window.innerWidth,
-        height: window.innerHeight,
+        isMobile: screen.width <= 768,
+        width: screen.width,
+        height: screen.height,
       })
     }
 
@@ -53,14 +53,10 @@ export const useMobileCheck = (deviceType?: DeviceType): ScreenInfo => {
     handleResize()
 
     // Listen for resize events
-    window.addEventListener('resize', () => handleResize())
-    screen.orientation.addEventListener('change', () => handleResize())
+    window.addEventListener('resize', handleResize)
 
     // eslint-disable-next-line consistent-return
-    return () => {
-      window.removeEventListener('resize', () => handleResize())
-      screen.orientation.removeEventListener('change', () => handleResize())
-    }
+    return () => window.removeEventListener('resize', handleResize)
   }, [])
 
   return screenInfo
