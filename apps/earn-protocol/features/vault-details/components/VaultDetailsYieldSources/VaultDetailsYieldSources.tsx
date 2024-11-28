@@ -1,5 +1,5 @@
 import { type FC, useMemo } from 'react'
-import { Card, Table, Text } from '@summerfi/app-earn-ui'
+import { Card, RechartResponsiveWrapper, Table, Text } from '@summerfi/app-earn-ui'
 import { formatDecimalAsPercent } from '@summerfi/app-utils'
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip, type TooltipProps } from 'recharts'
 
@@ -59,7 +59,7 @@ export const VaultDetailsYieldSources = () => {
         Sources of USDC Vault Yield
       </Text>
       <div className={classNames.chartSection}>
-        <div className={classNames.chartWrapper}>
+        <RechartResponsiveWrapper>
           <ResponsiveContainer width="100%" height="100%">
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <PieChart width={390} height={390}>
@@ -84,7 +84,7 @@ export const VaultDetailsYieldSources = () => {
               </PieChart>
             </div>
           </ResponsiveContainer>
-        </div>
+        </RechartResponsiveWrapper>
         <div className={classNames.chartLegendWrapper}>
           {data.map((item) => (
             <LegendItem

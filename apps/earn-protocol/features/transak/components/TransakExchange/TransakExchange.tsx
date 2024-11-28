@@ -85,7 +85,6 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
     }
 
     if (fiatAmount && fiatAmount !== '0') {
-      // dispatch({ type: 'update-error', payload: '' })
       dispatch({ type: 'update-exchange-details', payload: undefined })
 
       void fetchExchangeDetails()
