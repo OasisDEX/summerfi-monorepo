@@ -291,4 +291,5 @@ export const icons = {
   zerox_circle_color: customLazy(() => import('./icons/zerox_circle_color.svg?react')),
   zerox_color: customLazy(() => import('./icons/zerox_color.svg?react')),
   zerox: customLazy(() => import('./icons/zerox.svg?react')),
+  wusdl: customLazy(() => import('./icons/wusdl.svg?react')),
 }

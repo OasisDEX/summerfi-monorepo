@@ -586,6 +586,11 @@ export const tokenConfigs: TokenConfig[] = [
     name: 'EURC',
     iconName: 'eurc',
   },
+  {
+    symbol: 'WUSDL',
+    name: 'WUSDL',
+    iconName: 'wusdl',
+  },
   // NOT SUPPORTED ICONS
   {
     symbol: 'UNIV2WBTCETH',

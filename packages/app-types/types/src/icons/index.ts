@@ -253,6 +253,7 @@ export type IconNamesList =
   | 'kyc_colorful'
   | 'dot_arrow_right_colorful'
   | 'lightning_colorful'
+  | 'wusdl'
 
 export type TokenSymbolsList =
   | 'AAVE'
@@ -368,6 +369,7 @@ export type TokenSymbolsList =
   | 'YIELDBTC'
   | 'YIELDETH'
   | 'ZRX'
+  | 'WUSDL'
   // deprecated ones
   | 'CRVV1ETHSTETH'
   | 'UNIV2AAVEETH'
