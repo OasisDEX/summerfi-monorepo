@@ -77,6 +77,7 @@ export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
   const armadaSubgraphManager = SubgraphManagerFactory.newArmadaSubgraph({ configProvider })
   const armadaManager = ArmadaManagerFactory.newArmadaManager({
     configProvider,
+    blockchainClientProvider,
     allowanceManager,
     contractsProvider,
     subgraphManager: armadaSubgraphManager,

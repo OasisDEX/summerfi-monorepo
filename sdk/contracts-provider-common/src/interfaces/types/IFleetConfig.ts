@@ -14,5 +14,5 @@ export interface IFleetConfig {
   /** The maximum number of rebalance operations that can be performed in a single rebalance transaction */
   readonly maxRebalanceOperations: string
   /** The address of the staking rewards manager contract */
-  // readonly stakingRewardsManager: IAddress
+  readonly stakingRewardsManager: IAddress
 }
