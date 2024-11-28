@@ -14,6 +14,7 @@ import { getTransakContent } from '@/features/transak/helpers/get-transak-conten
 import { getTransakFiatCurrencies } from '@/features/transak/helpers/get-transak-fiat-currencies'
 import { getTransakFootnote } from '@/features/transak/helpers/get-transak-footnote'
 import { getTransakIpCountryCode } from '@/features/transak/helpers/get-transak-ip-country-code'
+import { getTransakIsLoading } from '@/features/transak/helpers/get-transak-is-loading'
 import { getTransakOrder } from '@/features/transak/helpers/get-transak-order'
 import { getTransakPrimaryButtonDisabled } from '@/features/transak/helpers/get-transak-primary-button-disabled'
 import { getTransakPrimaryButtonHidden } from '@/features/transak/helpers/get-transak-primary-button-hidden'
@@ -58,10 +59,6 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
   console.log('country', country)
 
   const { step, fiatAmount, fiatCurrency, paymentMethod, eventOrderData } = state
-
-  const isLoading =
-    ((Number(state.fiatAmount) > 0 && !state.exchangeDetails) || !state.fiatCurrencies) &&
-    !state.error
 
   useEffect(() => {
     if (isOpen) {
@@ -187,7 +184,7 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
       },
       hidden: getTransakPrimaryButtonHidden({ step }),
       disabled: getTransakPrimaryButtonDisabled({ state }),
-      loading: isLoading,
+      loading: getTransakIsLoading({ state }),
     },
     footnote: getTransakFootnote({ state, dispatch }),
     isMobile,

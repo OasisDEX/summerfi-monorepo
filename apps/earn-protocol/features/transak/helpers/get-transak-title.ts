@@ -5,7 +5,14 @@ import {
   TransakSteps,
 } from '@/features/transak/types'
 
-export const getTransakTitle = ({ state }: { state: TransakReducerState }) => {
+/**
+ * Returns the title based on the current state of the Transak reducer.
+ *
+ * @param {Object} params - The parameters for generating the title.
+ * @param {TransakReducerState} params.state - The current state of the Transak reducer.
+ * @returns {string} - The title based on the current state.
+ */
+export const getTransakTitle = ({ state }: { state: TransakReducerState }): string => {
   switch (state.step) {
     case TransakSteps.INITIAL:
       return 'Add funds via Transak'

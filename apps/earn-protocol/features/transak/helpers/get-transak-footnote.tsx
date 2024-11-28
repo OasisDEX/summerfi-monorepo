@@ -1,7 +1,7 @@
-import { type Dispatch, type FC } from 'react'
-import { Text, WithArrow } from '@summerfi/app-earn-ui'
-import Link from 'next/link'
+import { type Dispatch, type ReactElement } from 'react'
+import { Text } from '@summerfi/app-earn-ui'
 
+import { TransakFootNoteLink } from '@/features/transak/components/TransakFootNoteLink/TransakFootNoteLink'
 import {
   TransakOrderDataStatus,
   type TransakReducerAction,
@@ -9,39 +9,26 @@ import {
   TransakSteps,
 } from '@/features/transak/types'
 
-interface TransakFootNoteLinkProps {
-  label: string
-  href: string
-  withArrow?: boolean
-}
-
-const TransakFootNoteLink: FC<TransakFootNoteLinkProps> = ({ label, href, withArrow = true }) => (
-  <Link href={href} target="_blank">
-    {withArrow && (
-      <WithArrow withStatic style={{ color: 'var(--earn-protocol-primary-100)' }} variant="p3semi">
-        {label}
-      </WithArrow>
-    )}
-    {!withArrow && (
-      <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-        {label}
-      </Text>
-    )}
-  </Link>
-)
-
 const defaultLink = {
   link: 'https://transak.com/',
   label: 'Learn more about KYC',
 }
 
+/**
+ * Generates the Transak footnote component based on the current state and dispatch function.
+ *
+ * @param {Object} params - The parameters for generating the Transak footnote.
+ * @param {TransakReducerState} params.state - The current state of the Transak reducer.
+ * @param {Dispatch<TransakReducerAction>} params.dispatch - The dispatch function for the Transak reducer.
+ * @returns {ReactElement} - The generated Transak footnote component.
+ */
 export const getTransakFootnote = ({
   state,
   dispatch,
 }: {
   state: TransakReducerState
   dispatch: Dispatch<TransakReducerAction>
-}) => {
+}): ReactElement => {
   switch (state.step) {
     case TransakSteps.ORDER: {
       const isOrderCompleted = state.orderData?.data.status === TransakOrderDataStatus.COMPLETED

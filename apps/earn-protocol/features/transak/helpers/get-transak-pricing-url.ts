@@ -1,7 +1,24 @@
 import { transakPublicApiKey } from '@/features/transak/consts'
 import { getTransakUrl } from '@/features/transak/helpers/get-transak-url'
-import { type TransakAction, type TransakPaymentOptions } from '@/features/transak/types'
+import {
+  type TransakAction,
+  type TransakPaymentOptions,
+  type TransakSupportedNetworksNames,
+} from '@/features/transak/types'
 
+/**
+ * Generates the Transak pricing URL based on the provided parameters.
+ *
+ * @param {Object} params - The parameters for generating the pricing URL.
+ * @param {string} params.fiatCurrency - The fiat currency code.
+ * @param {string} params.cryptoCurrency - The cryptocurrency code.
+ * @param {TransakAction} params.isBuyOrSell - The action type (buy or sell).
+ * @param {TransakSupportedNetworksNames} params.network - The blockchain network.
+ * @param {TransakPaymentOptions} params.paymentMethod - The payment method.
+ * @param {string} params.fiatAmount - The amount in fiat currency.
+ * @param {string | undefined} params.ipCountryCode - The IP country code (optional).
+ * @returns {string} - The generated Transak pricing URL.
+ */
 export const getTransakPricingUrl = ({
   fiatCurrency,
   cryptoCurrency,
@@ -14,11 +31,11 @@ export const getTransakPricingUrl = ({
   fiatCurrency: string
   cryptoCurrency: string
   isBuyOrSell: TransakAction
-  network: string
+  network: TransakSupportedNetworksNames
   paymentMethod: TransakPaymentOptions
   fiatAmount: string
   ipCountryCode: string | undefined
-}) => {
+}): string => {
   if (!transakPublicApiKey) {
     throw new Error('ENV variable missing')
   }

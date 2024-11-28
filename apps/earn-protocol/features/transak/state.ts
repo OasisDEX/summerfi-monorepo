@@ -22,6 +22,13 @@ export const transakInitialReducerState: TransakReducerState = {
   error: '',
 }
 
+/**
+ * Reducer function for managing the state of the Transak integration.
+ *
+ * @param {TransakReducerState} prevState - The previous state of the reducer.
+ * @param {TransakReducerAction} action - The action to be processed.
+ * @returns {TransakReducerState} The new state after applying the action.
+ */
 export const transakReducer = (
   prevState: TransakReducerState,
   action: TransakReducerAction,

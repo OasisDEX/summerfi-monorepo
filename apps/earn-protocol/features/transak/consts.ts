@@ -1,7 +1,9 @@
+import { type DropdownOption, NetworkNames } from '@summerfi/app-types'
+
 import {
   TransakOrderDataStatus,
   TransakPaymentOptions,
-  TransakSteps,
+  type TransakSupportedNetworksNames,
 } from '@/features/transak/types'
 
 export const transakStagingUrl = 'https://api-stg.transak.com'
@@ -9,13 +11,6 @@ export const transakProductionUrl = 'https://api.transak.com'
 
 export const transakEnvironment = process.env.NEXT_PUBLIC_TRANSAK_ENVIRONMENT
 export const transakPublicApiKey = process.env.NEXT_PUBLIC_TRANSAK_API_KEY
-
-export const transakSteps = [
-  TransakSteps.INITIAL,
-  TransakSteps.ABOUT_KYC,
-  TransakSteps.EXCHANGE,
-  TransakSteps.KYC,
-]
 
 export const transakPaymentMethods = [
   {
@@ -94,3 +89,61 @@ export const transakFailedOrderStatuses = [
   TransakOrderDataStatus.CANCELED,
   TransakOrderDataStatus.EXPIRED,
 ]
+
+export const transakCryptoOptions: {
+  [key in TransakSupportedNetworksNames]: DropdownOption[]
+} = {
+  [NetworkNames.ethereumMainnet]: [
+    {
+      label: 'ETH',
+      tokenSymbol: 'ETH',
+      value: 'ETH',
+    },
+    {
+      label: 'USDT',
+      tokenSymbol: 'USDT',
+      value: 'USDT',
+    },
+    {
+      label: 'USDC',
+      tokenSymbol: 'USDC',
+      value: 'USDC',
+    },
+    {
+      label: 'DAI',
+      tokenSymbol: 'DAI',
+      value: 'DAI',
+    },
+  ],
+  [NetworkNames.baseMainnet]: [
+    {
+      label: 'ETH',
+      tokenSymbol: 'ETH',
+      value: 'ETH',
+    },
+    {
+      label: 'USDC',
+      tokenSymbol: 'USDC',
+      value: 'USDC',
+    },
+  ],
+  [NetworkNames.arbitrumMainnet]: [
+    {
+      label: 'ETH',
+      tokenSymbol: 'ETH',
+      value: 'ETH',
+    },
+    {
+      label: 'USDC',
+      tokenSymbol: 'USDC',
+      value: 'USDC',
+    },
+  ],
+  [NetworkNames.optimismMainnet]: [
+    {
+      label: 'ETH',
+      tokenSymbol: 'ETH',
+      value: 'ETH',
+    },
+  ],
+}

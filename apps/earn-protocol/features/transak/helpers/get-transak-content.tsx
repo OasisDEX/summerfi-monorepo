@@ -1,4 +1,4 @@
-import { type Dispatch } from 'react'
+import { type Dispatch, type ReactNode } from 'react'
 
 import { TransakAboutKycStep } from '@/features/transak/components/TransakAboutKycStep/TransakAboutKycStep'
 import { TransakBuyEthStep } from '@/features/transak/components/TransakBuyEthStep/TransakBuyEthStep'
@@ -12,6 +12,15 @@ import {
   TransakSteps,
 } from '@/features/transak/types'
 
+/**
+ * Generates the Transak content component based on the current state, dispatch function, and device type.
+ *
+ * @param {Object} params - The parameters for generating the Transak content.
+ * @param {Dispatch<TransakReducerAction>} params.dispatch - The dispatch function for the Transak reducer.
+ * @param {TransakReducerState} params.state - The current state of the Transak reducer.
+ * @param {boolean} params.isMobile - Flag indicating if the device is mobile.
+ * @returns {ReactNode} - The generated Transak content component.
+ */
 export const getTransakContent = ({
   dispatch,
   state,
@@ -20,7 +29,7 @@ export const getTransakContent = ({
   dispatch: Dispatch<TransakReducerAction>
   state: TransakReducerState
   isMobile: boolean
-}) => {
+}): ReactNode => {
   switch (state.step) {
     case TransakSteps.INITIAL:
       return <TransakInitialStep />

@@ -1,6 +1,5 @@
 import { type Dispatch, type FC, useEffect, useState } from 'react'
 import { Icon, Text, Tooltip, useMobileCheck } from '@summerfi/app-earn-ui'
-import { type DropdownOption } from '@summerfi/app-types'
 import debounce from 'lodash-es/debounce'
 import { useParams } from 'next/navigation'
 
@@ -8,34 +7,17 @@ import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { TransakExchangeDetails } from '@/features/transak/components/TransakExchangeDetails/TransakExchangeDetails'
 import { TransakExchangeInput } from '@/features/transak/components/TransakExchangeInput/TransakExchangeInput'
 import { TransakPaymentMethods } from '@/features/transak/components/TransakPaymentMethods/TransakPaymentMethods'
-import { transakPaymentMethods } from '@/features/transak/consts'
+import { transakCryptoOptions, transakPaymentMethods } from '@/features/transak/consts'
 import { getTransakPricingUrl } from '@/features/transak/helpers/get-transak-pricing-url'
 import {
   type TransakPaymentOptions,
   type TransakReducerAction,
   type TransakReducerState,
+  type TransakSupportedNetworksNames,
 } from '@/features/transak/types'
 import { validateTransakFiatInput } from '@/features/transak/validators'
 
 import classNames from './TransakExchange.module.scss'
-
-const cryptoOptions: DropdownOption[] = [
-  {
-    label: 'USDC',
-    tokenSymbol: 'USDC',
-    value: 'USDC',
-  },
-  {
-    label: 'DAI',
-    tokenSymbol: 'DAI',
-    value: 'DAI',
-  },
-  {
-    label: 'ETH',
-    tokenSymbol: 'ETH',
-    value: 'ETH',
-  },
-]
 
 interface TransakExchangeProps {
   dispatch: Dispatch<TransakReducerAction>
@@ -44,12 +26,12 @@ interface TransakExchangeProps {
 
 export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) => {
   const params = useParams()
-  const { network: rawNetwork } = params
-  const network = rawNetwork as string
+  const [showDetails, setShowDetails] = useState(false)
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
 
-  const [showDetails, setShowDetails] = useState(false)
+  const { network: rawNetwork } = params
+  const network = rawNetwork as TransakSupportedNetworksNames
 
   const {
     fiatAmount,
@@ -241,12 +223,12 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) =
         label="You receive (estimate)"
         readOnly
         defaultValue={exchangeDetails?.cryptoAmount.toString()}
-        defaultOption={cryptoOptions.find((item) => item.value === cryptoCurrency)}
+        defaultOption={transakCryptoOptions[network].find((item) => item.value === cryptoCurrency)}
         onOptionChange={(value) => {
           dispatch({ type: 'update-error', payload: '' })
           dispatch({ type: 'update-crypto-currency', payload: value })
         }}
-        options={cryptoOptions}
+        options={transakCryptoOptions[network]}
       />
       <div className={classNames.extraInfoWrapper}>
         <div className={classNames.slippageWrapper}>

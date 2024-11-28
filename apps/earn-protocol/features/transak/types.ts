@@ -1,5 +1,7 @@
 import { type Transak } from '@transak/transak-sdk'
 
+import { type NetworkNames } from '@/constants/networks-list'
+
 export enum TransakSteps {
   INITIAL = 'INITIAL',
   ABOUT_KYC = 'ABOUT_KYC',
@@ -195,3 +197,9 @@ export type TransakReducerAction =
       type: 'update-error'
       payload: string
     }
+
+export type TransakSupportedNetworksNames =
+  | NetworkNames.ethereumMainnet
+  | NetworkNames.baseMainnet
+  | NetworkNames.arbitrumMainnet
+  | NetworkNames.optimismMainnet

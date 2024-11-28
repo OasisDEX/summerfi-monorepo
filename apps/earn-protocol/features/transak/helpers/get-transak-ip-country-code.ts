@@ -1,13 +1,15 @@
 import { transakProductionUrl } from '@/features/transak/consts'
 import { type TransakIpCountryCodeResponse } from '@/features/transak/types'
 
+/**
+ * Fetches the IP country code from the Transak API.
+ *
+ * @returns {Promise<TransakIpCountryCodeResponse | undefined>} A promise that resolves to the IP country code response or undefined if an error occurs.
+ */
 export const getTransakIpCountryCode = async (): Promise<
   TransakIpCountryCodeResponse | undefined
 > => {
   try {
-    if (!transakProductionUrl) {
-      throw new Error('ENV variable missing')
-    }
     const options = { method: 'GET', headers: { accept: 'application/json' } }
 
     const response = await fetch(`${transakProductionUrl}/fiat/public/v1/get/country`, options)

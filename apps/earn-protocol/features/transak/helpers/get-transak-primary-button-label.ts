@@ -1,6 +1,13 @@
 import { type TransakReducerState, TransakSteps } from '@/features/transak/types'
 
-export const getTransakPrimaryButtonLabel = ({ state }: { state: TransakReducerState }) => {
+/**
+ * Returns the label for the primary button based on the current state.
+ *
+ * @param {Object} params - The parameters for generating the button label.
+ * @param {TransakReducerState} params.state - The current state of the Transak reducer.
+ * @returns {string} - The label for the primary button.
+ */
+export const getTransakPrimaryButtonLabel = ({ state }: { state: TransakReducerState }): string => {
   switch (state.step) {
     case TransakSteps.INITIAL:
       return 'Continue'

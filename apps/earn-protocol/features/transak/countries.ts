@@ -1,3 +1,6 @@
+/**
+ * List of countries supported by Transak with their respective alpha-2, alpha-3 codes, currency codes, and names.
+ */
 export const transakCountries = [
   {
     alpha2: 'AS',
