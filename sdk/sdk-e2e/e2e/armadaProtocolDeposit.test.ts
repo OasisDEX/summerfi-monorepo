@@ -19,12 +19,14 @@ describe('Armada Protocol Deposit', () => {
       throw new Error('Missing fork url')
     }
 
-    describe(`Deposit/Withdraw with ${symbol} fleet on ${chainInfo.name}`, () => {
+    describe(`Deposit with ${symbol} fleet on ${chainInfo.name}`, () => {
       let poolId: IArmadaVaultId
       let token: IToken
       let user: IUser
 
       beforeEach(async () => {
+        console.log(`Running tests for ${symbol} on ${chainInfo.name}`)
+
         const data = await prepareData(symbol, chainInfo, sdk, signerAddress)
         poolId = ArmadaVaultId.createFrom({
           chainInfo,

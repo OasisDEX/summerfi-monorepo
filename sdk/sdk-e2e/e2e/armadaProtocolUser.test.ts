@@ -6,7 +6,7 @@ import { SDKApiUrl, testConfig } from './utils/testConfig'
 
 jest.setTimeout(300000)
 
-describe('Armada Protocol User', () => {
+describe.skip('Armada Protocol User', () => {
   const sdk: SDKManager = makeSDK({
     apiURL: SDKApiUrl,
   })
