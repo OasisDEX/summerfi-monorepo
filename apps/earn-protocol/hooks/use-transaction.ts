@@ -17,7 +17,7 @@ import {
   type TransactionInfoLabeled,
 } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId, ten, zero } from '@summerfi/app-utils'
-import { Address, ChainInfo, type TransactionInfo } from '@summerfi/sdk-client-react'
+import { Address, getChainInfoByChainId, type TransactionInfo } from '@summerfi/sdk-client-react'
 import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 import { useRouter } from 'next/navigation'
@@ -223,10 +223,8 @@ export const useTransaction = ({
           }),
           amount: amount.toString(),
           fleetAddress: vault.id,
-          chainInfo: ChainInfo.createFrom({
-            name: vault.protocol.network,
-            chainId: vaultChainId,
-          }),
+          // incorrect chainInfo
+          chainInfo: getChainInfoByChainId(vaultChainId),
         })
 
         if (transactionsList.length === 0) {
