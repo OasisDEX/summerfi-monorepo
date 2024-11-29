@@ -1,5 +1,5 @@
 'use client'
-import { type FC, type ReactNode, useState } from 'react'
+import { type CSSProperties, type FC, type ReactNode, useState } from 'react'
 import clsx from 'clsx'
 import { capitalize } from 'lodash-es'
 import Link from 'next/link'
@@ -43,6 +43,9 @@ export interface SidebarProps {
         closeDrawer: () => void
         forceMobileOpen?: boolean
       }
+  customHeader?: ReactNode
+  customHeaderStyles?: CSSProperties
+  handleIsDrawerOpen?: (flag: boolean) => void
 }
 
 export const Sidebar: FC<SidebarProps> = ({
@@ -57,6 +60,9 @@ export const Sidebar: FC<SidebarProps> = ({
   goBackAction,
   isMobile,
   drawerOptions = { slideFrom: 'bottom' },
+  customHeader,
+  customHeaderStyles,
+  handleIsDrawerOpen,
 }) => {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -71,56 +77,67 @@ export const Sidebar: FC<SidebarProps> = ({
           [sidebarClassNames.centerTitle]: !titleTabs && !!goBackAction,
         })}
         onClick={() => {
-          if (isMobile) setIsOpen((prev) => !prev)
-        }}
-      >
-        {goBackAction && (
-          <div onClick={goBackAction} className={sidebarClassNames.goBackButton}>
-            <Icon iconName="arrow_backward" color="var(--color-background-primary)" size={24} />
-          </div>
-        )}
-        <div className={clsx(sidebarClassNames.sidebarHeaderActionButtonsWrapper)}>
-          {titleTabs && titleTabs.length > 0 ? (
-            titleTabs.map((tab) => (
-              <Text
-                onClick={(e) => {
-                  // eslint-disable-next-line no-unused-expressions
-                  isOpenResolved && e.stopPropagation()
-                  onTitleTabChange?.(tab)
-                }}
-                key={`TitleTab_${tab}`}
-                as="h5"
-                variant="h5"
-                style={{
-                  marginRight: 'var(--general-space-20)',
-                  cursor: onTitleTabChange ? 'pointer' : 'default',
-                  color:
-                    capitalize(title) === capitalize(tab)
-                      ? 'var(--earn-protocol-secondary-100)'
-                      : 'var(--color-text-primary-disabled)',
-                }}
-              >
-                {capitalize(tab)}
-              </Text>
-            ))
-          ) : (
-            <Text as="h5" variant="h5" className={sidebarClassNames.sidebarTitle}>
-              {title}
-            </Text>
-          )}
-        </div>
-        {goBackAction && <div className={sidebarClassNames.goBackButtonFillFLex} />}
+          if (isMobile)
+            setIsOpen((prev) => {
+              handleIsDrawerOpen?.(!prev)
 
-        <div className={sidebarClassNames.sidebarHeaderChevron}>
-          {drawerOptions.slideFrom === 'bottom' && (
-            <Icon iconName={isOpenResolved ? 'chevron_down' : 'chevron_up'} variant="xs" />
-          )}
-          {drawerOptions.slideFrom === 'right' && (
-            <div onClick={drawerOptions.closeDrawer}>
-              <Icon iconName="close" variant="xs" color="var(--earn-protocol-secondary-40)" />
+              return !prev
+            })
+        }}
+        style={customHeaderStyles}
+      >
+        {customHeader ? (
+          customHeader
+        ) : (
+          <>
+            {goBackAction && (
+              <div onClick={goBackAction} className={sidebarClassNames.goBackButton}>
+                <Icon iconName="arrow_backward" color="var(--color-background-primary)" size={24} />
+              </div>
+            )}
+            <div className={clsx(sidebarClassNames.sidebarHeaderActionButtonsWrapper)}>
+              {titleTabs && titleTabs.length > 0 ? (
+                titleTabs.map((tab) => (
+                  <Text
+                    onClick={(e) => {
+                      // eslint-disable-next-line no-unused-expressions
+                      isOpenResolved && e.stopPropagation()
+                      onTitleTabChange?.(tab)
+                    }}
+                    key={`TitleTab_${tab}`}
+                    as="h5"
+                    variant="h5"
+                    style={{
+                      marginRight: 'var(--general-space-20)',
+                      cursor: onTitleTabChange ? 'pointer' : 'default',
+                      color:
+                        capitalize(title) === capitalize(tab)
+                          ? 'var(--earn-protocol-secondary-100)'
+                          : 'var(--color-text-primary-disabled)',
+                    }}
+                  >
+                    {capitalize(tab)}
+                  </Text>
+                ))
+              ) : (
+                <Text as="h5" variant="h5" className={sidebarClassNames.sidebarTitle}>
+                  {title}
+                </Text>
+              )}
             </div>
-          )}
-        </div>
+            {goBackAction && <div className={sidebarClassNames.goBackButtonFillFLex} />}
+            <div className={sidebarClassNames.sidebarHeaderChevron}>
+              {drawerOptions.slideFrom === 'bottom' && (
+                <Icon iconName={isOpenResolved ? 'chevron_down' : 'chevron_up'} variant="xs" />
+              )}
+              {drawerOptions.slideFrom === 'right' && (
+                <div onClick={drawerOptions.closeDrawer}>
+                  <Icon iconName="close" variant="xs" color="var(--earn-protocol-secondary-40)" />
+                </div>
+              )}
+            </div>
+          </>
+        )}
       </div>
 
       <div className={sidebarClassNames.sidebarHeaderSpacer} />

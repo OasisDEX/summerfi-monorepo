@@ -134,13 +134,13 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
           height: slideFrom === 'bottom' || slideFrom === 'top' ? `${height}` : '100vh',
           width: slideFrom === 'left' || slideFrom === 'right' ? `${width}vw` : '100vw',
           ...(zIndex && { zIndex }),
-          ...(variant === 'sidebar' && { borderTop: '1px solid var(--earn-protocol-neutral-70)' }),
+          ...(variant === 'sidebar' && { borderTop: '1px solid var(--earn-protocol-neutral-85)' }),
           ...style,
         }}
         ref={drawerRef}
       >
         <div className={drawerContentMap[variant][slideFrom]}>
-          {/* LETS TRY FOR NOW WITHOUT X BUTTON */}
+          {/* LET'S TRY FOR NOW WITHOUT X BUTTON */}
           {/* {onClose && (*/}
           {/*  <button className={styles.closeButton} onClick={onClose}>*/}
           {/*    &times;*/}

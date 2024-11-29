@@ -18,7 +18,7 @@
   }
 
   &.bottomSidebar {
-    transform: translateY(calc(100% - 76px));
+    transform: translateY(calc(100% - 66px));
   }
 
   /* Top sliding */
@@ -33,7 +33,7 @@
   }
 
   &.topSidebar {
-    transform: translateY(calc(-100% + 76px));
+    transform: translateY(calc(-100% + 66px));
   }
 
   /* Left sliding */
@@ -48,7 +48,7 @@
   }
 
   &.leftSidebar {
-    transform: translateX(calc(-100% + 76px));
+    transform: translateX(calc(-100% + 66px));
   }
 
   /* Right sliding */
@@ -95,7 +95,7 @@
 
 .drawerTopContentSidebar,
 .drawerBottomContentSidebar {
-  height: calc(100% - 76px);
+  height: calc(100% - 66px);
 }
 .drawerRightContentSidebar,
 .drawerLeftContentSidebar {

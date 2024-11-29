@@ -13,6 +13,7 @@ import {
   type EarnTransactionTypes,
   type EarnTransactionViewStates,
   type SDKVaultishType,
+  TransactionAction,
   type TransactionInfoLabeled,
 } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId, ten, zero } from '@summerfi/app-utils'
@@ -23,7 +24,6 @@ import { useRouter } from 'next/navigation'
 import { erc20Abi } from 'viem'
 
 import { accountType, SDKChainIdToAAChainMap } from '@/account-kit/config'
-import { TransactionAction } from '@/constants/transaction-actions'
 import { getApprovalTx } from '@/helpers/get-approval-tx'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useAppSDK } from '@/hooks/use-app-sdk'

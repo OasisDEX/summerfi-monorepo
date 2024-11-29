@@ -73,6 +73,7 @@ export { CopyToClipboard } from './components/molecules/CopyToClipboard/CopyToCl
 export { MobileDrawer } from './components/molecules/MobileDrawer/MobileDrawer'
 export { SelectionBlock } from './components/molecules/SelectionBlock/SelectionBlock'
 export { GradientBox } from './components/molecules/GradientBox/GradientBox'
+export { SidebarMobileHeader } from './components/molecules/SidebarMobileHeader/SidebarMobileHeader'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'

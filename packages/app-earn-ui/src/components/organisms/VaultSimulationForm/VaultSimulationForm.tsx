@@ -13,16 +13,19 @@ import { sidebarFootnote } from '@/common/sidebar/footnote'
 import { InputWithDropdown } from '@/components/molecules/InputWithDropdown/InputWithDropdown'
 import { ProjectedEarnings } from '@/components/molecules/ProjectedEarnings/ProjectedEarnings'
 import { SidebarFootnote } from '@/components/molecules/SidebarFootnote/SidebarFootnote'
+import { SidebarMobileHeader } from '@/components/molecules/SidebarMobileHeader/SidebarMobileHeader.tsx'
 import { Sidebar } from '@/components/organisms/Sidebar/Sidebar'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 import { useLocalStorageOnce } from '@/hooks/use-local-storage-once'
 
 export type VaultSimulationFormProps = {
   vaultData: SDKVaultishType
+  isMobile?: boolean
 }
 
-export const VaultSimulationForm = ({ vaultData }: VaultSimulationFormProps) => {
+export const VaultSimulationForm = ({ vaultData, isMobile }: VaultSimulationFormProps) => {
   const [inputValue, setInputValue] = useState<string>('1000')
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   const { setStorageOnce } = useLocalStorageOnce({
     key: `${vaultData.id}-amount`,
@@ -35,7 +38,7 @@ export const VaultSimulationForm = ({ vaultData }: VaultSimulationFormProps) => 
   }
 
   const estimatedEarnings = useMemo(() => {
-    if (!vaultData.calculatedApr) return 0
+    if (!vaultData.calculatedApr) return '0'
 
     return formatCryptoBalance(
       new BigNumber(
@@ -80,6 +83,15 @@ export const VaultSimulationForm = ({ vaultData }: VaultSimulationFormProps) => 
             />
           </>
         ),
+        customHeader: !isDrawerOpen ? (
+          <SidebarMobileHeader
+            type="open"
+            amount={estimatedEarnings}
+            token={vaultData.inputToken.symbol}
+          />
+        ) : undefined,
+        customHeaderStyles: !isDrawerOpen ? { padding: 'var(--general-space-12) 0' } : undefined,
+        handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
         primaryButton: {
           label: 'Get Started',
           url: getVaultUrl(vaultData),
@@ -96,6 +108,7 @@ export const VaultSimulationForm = ({ vaultData }: VaultSimulationFormProps) => 
           />
         ),
       }}
+      isMobile={isMobile}
     />
   )
 }

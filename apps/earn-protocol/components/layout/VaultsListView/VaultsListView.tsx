@@ -158,7 +158,10 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
         />
       ))}
       rightContent={
-        <VaultSimulationForm vaultData={selectedVaultData ?? networkFilteredVaults[0]} />
+        <VaultSimulationForm
+          vaultData={selectedVaultData ?? networkFilteredVaults[0]}
+          isMobile={isMobile}
+        />
       }
     />
   )

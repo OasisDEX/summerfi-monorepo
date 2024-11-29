@@ -1,10 +1,11 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useUser } from '@account-kit/react'
 import {
   Expander,
   Sidebar,
   SidebarFootnote,
   sidebarFootnote,
+  SidebarMobileHeader,
   type SidebarProps,
   Text,
   useMobileCheck,
@@ -16,6 +17,7 @@ import {
   type SDKVaultsListType,
   type SDKVaultType,
   type TokenSymbolsList,
+  TransactionAction,
   type UsersActivity,
 } from '@summerfi/app-types'
 import { type IArmadaPosition } from '@summerfi/sdk-client-react'
@@ -29,7 +31,6 @@ import {
 } from '@/components/molecules/SidebarElements'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { HistoricalYieldChart } from '@/components/organisms/Charts/HistoricalYieldChart'
-import { TransactionAction } from '@/constants/transaction-actions'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
@@ -93,6 +94,7 @@ export const VaultManageViewComponent = ({
   })
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   const ownerView = viewWalletAddress.toLowerCase() === user?.address.toLowerCase()
 
@@ -171,6 +173,15 @@ export const VaultManageViewComponent = ({
       }
     },
     content: sidebarContent,
+    customHeader: !isDrawerOpen ? (
+      <SidebarMobileHeader
+        type="manage"
+        transactionType={transactionType}
+        setTransactionType={setTransactionType}
+      />
+    ) : undefined,
+    customHeaderStyles: !isDrawerOpen ? { padding: 'var(--general-space-12) 0' } : undefined,
+    handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
     goBackAction: nextTransaction?.label ? backToInit : undefined,
     primaryButton: sidebar.primaryButton,
     footnote: (
@@ -191,6 +202,7 @@ export const VaultManageViewComponent = ({
       </>
     ),
     error: sidebar.error,
+    isMobile,
   }
 
   // needed due to type duality
