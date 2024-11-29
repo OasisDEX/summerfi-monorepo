@@ -1,5 +1,5 @@
 import { sdkSupportedChains } from '@summerfi/app-types'
-import { type IArmadaPosition } from '@summerfi/sdk-client-react'
+import { type IArmadaPosition } from '@summerfi/sdk-client'
 import { Address, getChainInfoByChainId, User, Wallet } from '@summerfi/sdk-common'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'

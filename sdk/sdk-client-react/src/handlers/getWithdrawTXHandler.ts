@@ -1,5 +1,4 @@
-import { ArmadaVaultId, ArmadaProtocol } from '@summerfi/armada-protocol-service'
-import { type ISDKManager } from '@summerfi/sdk-client'
+import { type ISDKManager, ArmadaVaultId } from '@summerfi/sdk-client'
 import {
   Address,
   TokenAmount,

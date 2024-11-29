@@ -20,7 +20,7 @@ import {
   TransactionAction,
   type UsersActivity,
 } from '@summerfi/app-types'
-import { type IArmadaPosition } from '@summerfi/sdk-client-react'
+import { type IArmadaPosition } from '@summerfi/sdk-client'
 import BigNumber from 'bignumber.js'
 
 import {

@@ -1,5 +1,5 @@
 import { type SDKVaultsListType } from '@summerfi/app-types'
-import { type IArmadaPosition } from '@summerfi/sdk-client-react'
+import { type IArmadaPosition } from '@summerfi/sdk-client'
 
 export type PortfolioPositionsDataParams = {
   position: IArmadaPosition

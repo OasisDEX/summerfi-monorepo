@@ -25,7 +25,6 @@
     "@summerfi/app-tos": "workspace:*",
     "@summerfi/app-types": "workspace:*",
     "@summerfi/app-utils": "workspace:*",
-    "@summerfi/armada-protocol-service": "workspace:*",
     "@summerfi/rays-db": "workspace:*",
     "@summerfi/sdk-client-react": "workspace:^",
     "@summerfi/sdk-client": "workspace:^",

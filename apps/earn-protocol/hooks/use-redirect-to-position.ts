@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useUser } from '@account-kit/react'
 import { getVaultPositionUrl } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType } from '@summerfi/app-types'
-import { type IArmadaPosition } from '@summerfi/sdk-client-react'
+import { type IArmadaPosition } from '@summerfi/sdk-client'
 import BigNumber from 'bignumber.js'
 import { useRouter } from 'next/navigation'
 
