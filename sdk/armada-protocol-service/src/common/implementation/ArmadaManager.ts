@@ -255,7 +255,7 @@ export class ArmadaManager implements IArmadaManager {
     })
     multicallArgs.push(withdrawTokensCalldata)
 
-    const depositMulticallCalldata = encodeFunctionData({
+    const withdrawMulticallCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'multicall',
       args: [multicallArgs],
@@ -269,8 +269,8 @@ export class ArmadaManager implements IArmadaManager {
     transactions.push(
       createTransaction({
         target: admiralsQuarterAddress,
-        calldata: depositMulticallCalldata,
-        description: 'Deposit Multicall Transaction',
+        calldata: withdrawMulticallCalldata,
+        description: 'Withdraw Multicall Transaction',
       }),
     )
 
