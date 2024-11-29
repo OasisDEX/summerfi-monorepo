@@ -83,14 +83,16 @@ export const VaultSimulationForm = ({ vaultData, isMobile }: VaultSimulationForm
             />
           </>
         ),
-        customHeader: !isDrawerOpen ? (
-          <SidebarMobileHeader
-            type="open"
-            amount={estimatedEarnings}
-            token={vaultData.inputToken.symbol}
-          />
-        ) : undefined,
-        customHeaderStyles: !isDrawerOpen ? { padding: 'var(--general-space-12) 0' } : undefined,
+        customHeader:
+          !isDrawerOpen && isMobile ? (
+            <SidebarMobileHeader
+              type="open"
+              amount={estimatedEarnings}
+              token={vaultData.inputToken.symbol}
+            />
+          ) : undefined,
+        customHeaderStyles:
+          !isDrawerOpen && isMobile ? { padding: 'var(--general-space-12) 0' } : undefined,
         handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
         primaryButton: {
           label: 'Get Started',

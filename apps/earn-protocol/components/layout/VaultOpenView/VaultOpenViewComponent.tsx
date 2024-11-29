@@ -177,10 +177,12 @@ export const VaultOpenViewComponent = ({
   const sidebarProps = {
     title: sidebar.title,
     content: sidebarContent,
-    customHeader: !isDrawerOpen ? (
-      <SidebarMobileHeader type="open" amount="6544,43" token={vault.inputToken.symbol} />
-    ) : undefined,
-    customHeaderStyles: !isDrawerOpen ? { padding: 'var(--general-space-12) 0' } : undefined,
+    customHeader:
+      !isDrawerOpen && isMobile ? (
+        <SidebarMobileHeader type="open" amount="6544,43" token={vault.inputToken.symbol} />
+      ) : undefined,
+    customHeaderStyles:
+      !isDrawerOpen && isMobile ? { padding: 'var(--general-space-12) 0' } : undefined,
     handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
     goBackAction: nextTransaction?.label ? backToInit : undefined,
     primaryButton: sidebar.primaryButton,

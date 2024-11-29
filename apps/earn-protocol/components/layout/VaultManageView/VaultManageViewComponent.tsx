@@ -173,14 +173,16 @@ export const VaultManageViewComponent = ({
       }
     },
     content: sidebarContent,
-    customHeader: !isDrawerOpen ? (
-      <SidebarMobileHeader
-        type="manage"
-        transactionType={transactionType}
-        setTransactionType={setTransactionType}
-      />
-    ) : undefined,
-    customHeaderStyles: !isDrawerOpen ? { padding: 'var(--general-space-12) 0' } : undefined,
+    customHeader:
+      !isDrawerOpen && isMobile ? (
+        <SidebarMobileHeader
+          type="manage"
+          transactionType={transactionType}
+          setTransactionType={setTransactionType}
+        />
+      ) : undefined,
+    customHeaderStyles:
+      !isDrawerOpen && isMobile ? { padding: 'var(--general-space-12) 0' } : undefined,
     handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
     goBackAction: nextTransaction?.label ? backToInit : undefined,
     primaryButton: sidebar.primaryButton,
