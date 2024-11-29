@@ -163,4 +163,37 @@ export interface IArmadaManagerUsersClient {
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]>
+
+  /**
+   * @method getStakedBalance
+   * @description Returns the staked balance of a user in a Fleet
+   *
+   * @param vaultId ID of the vault to check the balance in
+   * @param user Address of the user to check the balance for
+   *
+   * @returns The staked balance of the user in the Fleet
+   */
+  getStakedBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount>
+
+  /**
+   * @method getFleetBalance
+   * @description Returns the balance of a user in a Fleet
+   *
+   * @param vaultId ID of the vault to check the balance in
+   * @param user Address of the user to check the balance for
+   *
+   * @returns The balance of the user in the Fleet
+   */
+  getFleetBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount>
+
+  /**
+   * @method getTotalBalance
+   * @description Returns the total balance of a user in a Fleet
+   *
+   * @param vaultId ID of the vault to check the balance in
+   * @param user Address of the user to check the balance for
+   *
+   * @returns The total balance of the user in the Fleet
+   */
+  getTotalBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount>
 }

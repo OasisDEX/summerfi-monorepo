@@ -82,28 +82,28 @@ describe('Armada Protocol Deposit', () => {
         })
       })
 
-      // it(`should withdraw 0.99 USDC back from fleet at ${fleetAddress.value}`, async () => {
-      //   const amount = '0.99'
+      it(`should withdraw 0.99 USDC back from fleet at ${fleetAddress.value}`, async () => {
+        const amount = '0.99'
 
-      //   const transactions = await sdk.armada.users.getWithdrawTX({
-      //     poolId,
-      //     user,
-      //     amount: TokenAmount.createFrom({
-      //       amount,
-      //       token,
-      //     }),
-      //   })
+        const transactions = await sdk.armada.users.getWithdrawTX({
+          poolId,
+          user,
+          amount: TokenAmount.createFrom({
+            amount,
+            token,
+          }),
+        })
 
-      //   const { statuses } = await sendAndLogTransactions({
-      //     chainInfo,
-      //     transactions,
-      //     forkUrl,
-      //     privateKey: signerPrivateKey,
-      //   })
-      //   statuses.forEach((status) => {
-      //     expect(status).toBe('success')
-      //   })
-      // })
+        const { statuses } = await sendAndLogTransactions({
+          chainInfo,
+          transactions,
+          forkUrl,
+          privateKey: signerPrivateKey,
+        })
+        statuses.forEach((status) => {
+          expect(status).toBe('success')
+        })
+      })
     })
   }
 })

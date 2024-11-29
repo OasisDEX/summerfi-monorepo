@@ -39,6 +39,9 @@ import { getTokenBySymbol } from './handlers/getTokenBySymbol'
 import { getGlobalRebalancesRaw } from './armada-protocol-handlers/users/getGlobalRebalancesRaw'
 import { getUsersActivityRaw } from './armada-protocol-handlers/users/getUsersActivityRaw'
 import { getUserActivityRaw } from './armada-protocol-handlers/users/getUserActivityRaw'
+import { getFleetBalance } from './armada-protocol-handlers/users/getFleetBalance'
+import { getStakedBalance } from './armada-protocol-handlers/users/getStakedBalance'
+import { getTotalBalance } from './armada-protocol-handlers/users/getTotalBalance'
 
 /**
  * Server
@@ -80,6 +83,9 @@ export const sdkAppRouter = router({
       getDepositTX: getDepositTX,
       getUpdateDepositTX: getUpdateDepositTX,
       getWithdrawTX: getWithdrawTX,
+      getFleetBalance: getFleetBalance,
+      getStakedBalance: getStakedBalance,
+      getTotalBalance: getTotalBalance,
     },
     keepers: {
       rebalance: rebalance,

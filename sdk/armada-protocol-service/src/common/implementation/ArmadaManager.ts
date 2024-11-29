@@ -165,28 +165,25 @@ export class ArmadaManager implements IArmadaManager {
     })
   }
 
-  async getFleetShares(params: { poolId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount> {
+  async getFleetBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.poolId.chainInfo,
-      address: params.poolId.fleetAddress,
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
     })
 
     const fleetERC20Contract = fleetContract.asErc20()
     return fleetERC20Contract.balanceOf({ address: params.user.wallet.address })
   }
 
-  async getStakedFleetShares(params: {
-    poolId: IArmadaVaultId
-    user: IUser
-  }): Promise<ITokenAmount> {
+  async getStakedBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.poolId.chainInfo,
-      address: params.poolId.fleetAddress,
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
     })
 
     const { stakingRewardsManager } = await fleetContract.config()
     const client = this._blockchainClientProvider.getBlockchainClient({
-      chainInfo: params.poolId.chainInfo,
+      chainInfo: params.vaultId.chainInfo,
     })
     const balance = await client.readContract({
       abi: StakingRewardsManagerBaseAbi,
@@ -199,6 +196,13 @@ export class ArmadaManager implements IArmadaManager {
       token: await fleetContract.asErc20().getToken(),
       amount: balance.toString(),
     })
+  }
+
+  async getTotalBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount> {
+    const fleetBalance = await this.getFleetBalance(params)
+    const stakedBalance = await this.getStakedBalance(params)
+
+    return fleetBalance.add(stakedBalance)
   }
 
   /** USER TRANSACTIONS */
