@@ -241,17 +241,38 @@ export class ArmadaManager implements IArmadaManager {
     const transactions: TransactionInfo[] = []
     const multicallArgs: HexData[] = []
 
+    const admiralsQuarterAddress = getDeployedContractAddress({
+      chainInfo: params.poolId.chainInfo,
+      contractCategory: 'core',
+      contractName: 'admiralsQuarters',
+    })
+
+    const sharesAmount = await this.convertToShares({
+      poolId: params.poolId,
+      amount: params.amount,
+    })
+
+    // Approval
+    const approvalTransaction = await this._allowanceManager.getApproval({
+      chainInfo: params.poolId.chainInfo,
+      spender: admiralsQuarterAddress,
+      amount: sharesAmount,
+    })
+    if (approvalTransaction) {
+      transactions.push(...approvalTransaction)
+    }
+
     const exitFleetCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'exitFleet',
-      args: [params.poolId.fleetAddress.value, params.amount.toSolidityValue()],
+      args: [params.poolId.fleetAddress.value, sharesAmount.toSolidityValue()],
     })
     multicallArgs.push(exitFleetCalldata)
 
     const withdrawTokensCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'withdrawTokens',
-      args: [params.amount.token.address.value, params.amount.toSolidityValue()],
+      args: [params.amount.token.address.value, 0n],
     })
     multicallArgs.push(withdrawTokensCalldata)
 
@@ -261,11 +282,6 @@ export class ArmadaManager implements IArmadaManager {
       args: [multicallArgs],
     })
 
-    const admiralsQuarterAddress = getDeployedContractAddress({
-      chainInfo: params.poolId.chainInfo,
-      contractCategory: 'core',
-      contractName: 'admiralsQuarters',
-    })
     transactions.push(
       createTransaction({
         target: admiralsQuarterAddress,
