@@ -234,7 +234,16 @@ export class ArmadaManager implements IArmadaManager {
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
+    const transactions: TransactionInfo[] = []
     const multicallArgs: HexData[] = []
+
+    const exitFleetCalldata = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'exitFleet',
+      args: [params.poolId.fleetAddress.value, params.amount.toSolidityValue()],
+    })
+    multicallArgs.push(exitFleetCalldata)
+
     const withdrawTokensCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'withdrawTokens',
@@ -242,33 +251,17 @@ export class ArmadaManager implements IArmadaManager {
     })
     multicallArgs.push(withdrawTokensCalldata)
 
-    const exitFleetCalldata = encodeFunctionData({
-      abi: AdmiralsQuartersAbi,
-      functionName: 'exitFleet',
-      args: [
-        params.poolId.fleetAddress.value,
-        params.amount.token.address.value,
-        params.amount.toSolidityValue(),
-        lvTokenReceiver,
-      ],
-    })
-    multicallArgs.push(exitFleetCalldata)
-
-    const stakeCalldata = encodeFunctionData({
-      abi: AdmiralsQuartersAbi,
-      functionName: 'stake',
-      args: [params.poolId.fleetAddress.value, 0n],
-    })
-    if (params.shouldStake ?? true) {
-      multicallArgs.push(stakeCalldata)
-    }
-
     const depositMulticallCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'multicall',
       args: [multicallArgs],
     })
 
+    const admiralsQuarterAddress = getDeployedContractAddress({
+      chainInfo: params.poolId.chainInfo,
+      contractCategory: 'core',
+      contractName: 'admiralsQuarters',
+    })
     transactions.push(
       createTransaction({
         target: admiralsQuarterAddress,
@@ -508,6 +501,7 @@ export class ArmadaManager implements IArmadaManager {
     shouldStake?: boolean
   }): Promise<TransactionInfo[]> {
     const transactions: TransactionInfo[] = []
+    const shouldStake = params.shouldStake ?? true
 
     const admiralsQuarterAddress = getDeployedContractAddress({
       chainInfo: params.poolId.chainInfo,
@@ -534,9 +528,10 @@ export class ArmadaManager implements IArmadaManager {
     multicallArgs.push(depositTokensCalldata)
 
     // when staking admirals quarters will receive LV tokens, otherwise the user
-    const lvTokenReceiver = !params.shouldStake
+    const lvTokenReceiver = shouldStake
       ? admiralsQuarterAddress.value
       : params.user.wallet.address.value
+
     const enterFleetCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'enterFleet',
@@ -549,12 +544,12 @@ export class ArmadaManager implements IArmadaManager {
     })
     multicallArgs.push(enterFleetCalldata)
 
-    const stakeCalldata = encodeFunctionData({
-      abi: AdmiralsQuartersAbi,
-      functionName: 'stake',
-      args: [params.poolId.fleetAddress.value, 0n],
-    })
-    if (params.shouldStake ?? true) {
+    if (shouldStake) {
+      const stakeCalldata = encodeFunctionData({
+        abi: AdmiralsQuartersAbi,
+        functionName: 'stake',
+        args: [params.poolId.fleetAddress.value, 0n],
+      })
       multicallArgs.push(stakeCalldata)
     }
 
@@ -563,7 +558,6 @@ export class ArmadaManager implements IArmadaManager {
       functionName: 'multicall',
       args: [multicallArgs],
     })
-
     transactions.push(
       createTransaction({
         target: admiralsQuarterAddress,
