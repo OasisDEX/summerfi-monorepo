@@ -171,6 +171,7 @@ query GetVault($id: ID!) {
     inputTokenBalance
     inputTokenPriceUSD
     outputTokenPriceUSD
+
     depositLimit
     createdTimestamp
     totalValueLockedUSD

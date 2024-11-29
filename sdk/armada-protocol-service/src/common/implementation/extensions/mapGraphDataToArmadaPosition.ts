@@ -27,6 +27,15 @@ export const mapGraphDataToArmadaPosition =
 
     console.log('position', position)
 
+    const fleetBalance = BigNumber(position.inputTokenBalance.toString()).div(
+      10 ** position.vault.inputToken.decimals,
+    )
+    const stakedBalance = BigNumber(position.stakedInputTokenBalance.toString()).div(
+      10 ** position.vault.inputToken.decimals,
+    )
+    const sharesBalance = BigNumber(position.outputTokenBalance.toString())
+    const stakedSharesBalance = BigNumber(position.stakedOutputTokenBalance.toString())
+
     return ArmadaPosition.createFrom({
       id: ArmadaPositionId.createFrom({ id: position.id, user: user }),
 
@@ -39,9 +48,7 @@ export const mapGraphDataToArmadaPosition =
         }),
       }),
       amount: TokenAmount.createFrom({
-        amount: BigNumber(position.inputTokenBalance.toString())
-          .div(10 ** position.vault.inputToken.decimals)
-          .toString(),
+        amount: fleetBalance.plus(stakedBalance).toString(),
         token: Token.createFrom({
           chainInfo,
           address: Address.createFromEthereum({
@@ -85,7 +92,7 @@ export const mapGraphDataToArmadaPosition =
         }),
       ),
       shares: TokenAmount.createFrom({
-        amount: position.outputTokenBalance.toString(),
+        amount: sharesBalance.plus(stakedSharesBalance).toString(),
         token: Token.createFrom({
           chainInfo,
           address: Address.createFromEthereum({
