@@ -1372,7 +1372,7 @@ export type Deposit = Event & {
   protocol: YieldAggregator;
   /**  Timestamp of this event  */
   timestamp: Scalars['BigInt']['output'];
-  /**  Market that tokens are deposited into  */
+  /**  Address that received tokens  */
   to: Scalars['String']['output'];
   /**  The vault involving this transaction  */
   vault: Vault;
@@ -4470,15 +4470,15 @@ export enum RewardsManager_OrderBy {
 
 export type Staked = Event & {
   __typename?: 'Staked';
-  /**  Amount of token withdrawn in native units  */
+  /**  Amount of token staked in native units  */
   amount: Scalars['BigInt']['output'];
-  /**  Amount of token withdrawn in USD  */
+  /**  Amount of token staked in USD  */
   amountUSD: Scalars['BigDecimal']['output'];
-  /**  Token withdrawn  */
+  /**  Token staked  */
   asset: Token;
   /**  Block number of this event  */
   blockNumber: Scalars['BigInt']['output'];
-  /**  Market that tokens are withdrawn from  */
+  /**  Address that sent tokens  */
   from: Scalars['String']['output'];
   /**  Transaction hash of the transaction that emitted this event  */
   hash: Scalars['String']['output'];
@@ -4490,7 +4490,7 @@ export type Staked = Event & {
   inputTokenBalanceNormalizedUSD: Scalars['BigDecimal']['output'];
   /**  Event log index. For transactions that don't emit event, create arbitrary index starting from 0  */
   logIndex: Scalars['Int']['output'];
-  /**  Position that this withdraw belongs to  */
+  /**  Position that this stake belongs to  */
   position: Position;
   /**  The protocol this transaction belongs to  */
   protocol: YieldAggregator;
@@ -5591,15 +5591,15 @@ export enum Token_OrderBy {
 
 export type Unstaked = Event & {
   __typename?: 'Unstaked';
-  /**  Amount of token withdrawn in native units  */
+  /**  Amount of token unstaked in native units  */
   amount: Scalars['BigInt']['output'];
-  /**  Amount of token withdrawn in USD  */
+  /**  Amount of token unstaked in USD  */
   amountUSD: Scalars['BigDecimal']['output'];
   /**  Token withdrawn  */
   asset: Token;
   /**  Block number of this event  */
   blockNumber: Scalars['BigInt']['output'];
-  /**  Market that tokens are withdrawn from  */
+  /**  Address that sent tokens  */
   from: Scalars['String']['output'];
   /**  Transaction hash of the transaction that emitted this event  */
   hash: Scalars['String']['output'];
@@ -5611,7 +5611,7 @@ export type Unstaked = Event & {
   inputTokenBalanceNormalizedUSD: Scalars['BigDecimal']['output'];
   /**  Event log index. For transactions that don't emit event, create arbitrary index starting from 0  */
   logIndex: Scalars['Int']['output'];
-  /**  Position that this withdraw belongs to  */
+  /**  Position that this unstake belongs to  */
   position: Position;
   /**  The protocol this transaction belongs to  */
   protocol: YieldAggregator;
