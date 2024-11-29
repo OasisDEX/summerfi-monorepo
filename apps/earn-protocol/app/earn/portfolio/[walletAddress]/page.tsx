@@ -1,5 +1,5 @@
 import { parseServerResponseToClient } from '@summerfi/app-utils'
-import { type IArmadaPosition } from '@summerfi/sdk-client-react'
+import { type IArmadaPosition } from '@summerfi/sdk-client'
 
 import { portfolioPositionsHandler } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
 import { portfolioRewardsHandler } from '@/app/server-handlers/portfolio/portfolio-rewards-handler'

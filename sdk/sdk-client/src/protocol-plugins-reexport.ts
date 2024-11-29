@@ -42,4 +42,5 @@ export {
 } from '@summerfi/protocol-plugins/plugins/spark'
 
 // another workaround to re-export the protocol service - FE needs classes for superjson to be registered
+export * from '@summerfi/armada-protocol-common'
 export * from '@summerfi/armada-protocol-service'

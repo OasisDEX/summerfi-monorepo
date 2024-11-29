@@ -1,7 +1,7 @@
 import { Text } from '@summerfi/app-earn-ui'
 import { type SDKNetwork } from '@summerfi/app-types'
 import { humanNetworktoSDKNetwork, parseServerResponseToClient } from '@summerfi/app-utils'
-import { type IArmadaPosition } from '@summerfi/sdk-client-react'
+import { type IArmadaPosition } from '@summerfi/sdk-client'
 
 import { getUserActivity } from '@/app/server-handlers/sdk/get-user-activity'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'

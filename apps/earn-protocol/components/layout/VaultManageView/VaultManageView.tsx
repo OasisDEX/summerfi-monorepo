@@ -6,7 +6,8 @@ import {
   type SDKVaultType,
   type UsersActivity,
 } from '@summerfi/app-types'
-import { type IArmadaPosition, SDKContextProvider } from '@summerfi/sdk-client-react'
+import { type IArmadaPosition } from '@summerfi/sdk-client'
+import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
 import { VaultManageViewComponent } from '@/components/layout/VaultManageView/VaultManageViewComponent'
 import { sdkApiUrl } from '@/constants/sdk'

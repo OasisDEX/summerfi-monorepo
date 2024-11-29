@@ -1,13 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useUser } from '@account-kit/react'
 import { type SDKSupportedChain } from '@summerfi/app-types'
-import {
-  Address,
-  getChainInfoByChainId,
-  type IArmadaPosition,
-  User,
-  Wallet,
-} from '@summerfi/sdk-client-react'
+import { type IArmadaPosition } from '@summerfi/sdk-client'
+import { Address, getChainInfoByChainId, User, Wallet } from '@summerfi/sdk-client-react'
 
 import { useAppSDK } from '@/hooks/use-app-sdk'
 
