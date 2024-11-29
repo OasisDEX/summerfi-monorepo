@@ -16,6 +16,11 @@
   },
   {
     "type": "error",
+    "name": "InvalidRewardsManager",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "InvalidRouterAddress",
     "inputs": []
   },

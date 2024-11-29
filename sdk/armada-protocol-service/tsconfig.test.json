@@ -30,6 +30,6 @@
       "@summerfi/sdk-server-common": ["node_modules/@summerfi/sdk-server-common/src/index.ts"]
     }
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts", "e2e/**/*.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts", "e2e/**/*.ts", "src/**/*.json"],
   "exclude": ["node_modules", "dist"]
 }

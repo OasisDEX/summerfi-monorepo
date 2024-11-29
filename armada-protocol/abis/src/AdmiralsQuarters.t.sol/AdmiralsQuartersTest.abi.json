@@ -932,7 +932,28 @@
   },
   {
     "type": "function",
+    "name": "test_Deposit_Enter_Stake",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "test_Deposit_Enter_Stake_Reverts",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "test_Deposit_Reverts",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "test_DirectUnstakeAfterStakingThroughAdmiralsQuarters",
     "inputs": [],
     "outputs": [],
     "stateMutability": "nonpayable"
@@ -995,7 +1016,49 @@
   },
   {
     "type": "function",
+    "name": "test_UnstakeAndWithdrawAll",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "test_Withdraw_Reverts",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "test_unstakeAndWithdrawAssets",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "test_unstakeAndWithdrawAssetsRevert_InvalidFleet",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "test_unstakeAndWithdrawAssetsRevert_NotStaked",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "test_unstakeAndWithdrawAssets_DirectUnstakeReverts",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "test_unstakeAndWithdrawAssets_Full",
     "inputs": [],
     "outputs": [],
     "stateMutability": "nonpayable"

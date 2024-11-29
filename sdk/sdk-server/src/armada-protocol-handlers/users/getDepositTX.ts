@@ -9,6 +9,7 @@ export const getDepositTX = publicProcedure
       poolId: z.custom<IArmadaVaultId>(isArmadaVaultId),
       user: z.custom<IUser>(isUser),
       amount: z.custom<ITokenAmount>(isTokenAmount),
+      shouldStake: z.boolean().optional(),
     }),
   )
   .query(async (opts) => {

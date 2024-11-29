@@ -115,6 +115,40 @@ export interface IArmadaManager {
    */
   getPosition(params: { positionId: IArmadaPositionId }): Promise<IArmadaPosition>
 
+  /**
+   * @name getFleetBalance
+   * @description Get the balance of a user in a fleet
+   *
+   * @param poolId ID of the pool to retrieve the shares
+   * @param user Address of the user to retrieve the shares
+   *
+   * @returns ITokenAmount The amount of assets the user has in the fleet
+   */
+  getFleetBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount>
+
+  /**
+   * @name getStakedBalance
+   * @description Get the staked balance of a user in a rewards pool
+   *
+   * @param poolId ID of the vault to retrieve the balance
+   * @param user Address of the user to retrieve the balance
+   *
+   * @returns ITokenAmount The amount of assets the user has stake
+   */
+  getStakedBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount>
+
+  /**
+   *
+   * @name getTotalBalance
+   * @description Get the total balance of a user in a fleet
+   *
+   * @param poolId ID of the pool to retrieve the shares
+   * @param user Address of the user to retrieve the shares
+   *
+   * @returns ITokenAmount The total amount of assets the user has in the fleet
+   */
+  getTotalBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount>
+
   /** USER TRANSACTIONS */
 
   /**
@@ -131,6 +165,7 @@ export interface IArmadaManager {
     poolId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
+    shouldStake?: boolean
   }): Promise<TransactionInfo[]>
 
   /**

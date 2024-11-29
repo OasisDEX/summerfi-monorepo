@@ -4,6 +4,7 @@
     "rootDir": ".",
     "baseUrl": ".",
     "paths": {
+      "@summerfi/armada-protocol-abis": ["../../armada-protocol/abis/src/index.ts"],
       "@summerfi/armada-protocol-common": [
         "node_modules/@summerfi/armada-protocol-common/src/index.ts"
       ],

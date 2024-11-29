@@ -79,6 +79,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     poolId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
+    shouldStake?: boolean
   }): Promise<TransactionInfo[]> {
     return this.rpcClient.armada.users.getDepositTX.query(params)
   }
@@ -99,5 +100,17 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
     return this.rpcClient.armada.users.getWithdrawTX.query(params)
+  }
+
+  async getStakedBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount> {
+    return this.rpcClient.armada.users.getStakedBalance.query(params)
+  }
+
+  async getFleetBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount> {
+    return this.rpcClient.armada.users.getFleetBalance.query(params)
+  }
+
+  getTotalBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount> {
+    return this.rpcClient.armada.users.getTotalBalance.query(params)
   }
 }

@@ -27,6 +27,11 @@
   },
   {
     "type": "error",
+    "name": "SummerGovernorInvalidPeerArrays",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "SummerGovernorInvalidProposalThreshold",
     "inputs": [
       {
@@ -43,17 +48,6 @@
         "name": "maxThreshold",
         "type": "uint256",
         "internalType": "uint256"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "SummerGovernorInvalidSender",
-    "inputs": [
-      {
-        "name": "originSender",
-        "type": "address",
-        "internalType": "address"
       }
     ]
   },

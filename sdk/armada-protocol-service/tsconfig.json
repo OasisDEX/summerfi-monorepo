@@ -25,6 +25,6 @@
       "@summerfi/serverless-shared/*": ["node_modules/@summerfi/serverless-shared/src/*"]
     }
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts", "e2e/**/*.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts", "e2e/**/*.ts", "src/**/*.json"],
   "exclude": ["node_modules", "dist"]
 }
