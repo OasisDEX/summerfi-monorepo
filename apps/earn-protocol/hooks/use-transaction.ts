@@ -22,7 +22,7 @@ import { capitalize } from 'lodash-es'
 import { useRouter } from 'next/navigation'
 import { erc20Abi } from 'viem'
 
-import { SDKChainIdToAAChainMap } from '@/account-kit/config'
+import { accountType, SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { TransactionAction } from '@/constants/transaction-actions'
 import { getApprovalTx } from '@/helpers/get-approval-tx'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
@@ -34,7 +34,10 @@ type UseTransactionParams = {
   vault: SDKVaultishType
   amount: BigNumber | undefined
   manualSetAmount: (amount: string | undefined) => void
+  tokenBalance: BigNumber | undefined
+  tokenBalanceLoading: boolean
   publicClient?: ReturnType<typeof useClient>['publicClient']
+  flow: 'open' | 'manage'
 }
 
 const labelTransactions = (transactions: TransactionInfo[]) => {
@@ -50,11 +53,15 @@ export const useTransaction = ({
   manualSetAmount,
   amount,
   publicClient,
+  tokenBalance,
+  tokenBalanceLoading,
+  flow,
 }: UseTransactionParams) => {
   const { refresh: refreshView } = useRouter()
   const user = useUser()
   const { getDepositTX, getWithdrawTX } = useAppSDK()
   const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
+  const [isTransakOpen, setIsTransakOpen] = useState(false)
   const { setChain, isSettingChain } = useChain()
   const { clientChainId } = useClientChainId()
   const [transactionType, setTransactionType] = useState<TransactionAction>(
@@ -69,7 +76,10 @@ export const useTransaction = ({
   const [transactions, setTransactions] = useState<TransactionInfoLabeled[]>()
   const [sidebarError, setSidebarError] = useState<string>()
 
-  const { client: smartAccountClient } = useSmartAccountClient({ type: 'LightAccount' })
+  const { client: smartAccountClient, error } = useSmartAccountClient({ type: accountType })
+
+  // eslint-disable-next-line no-console
+  console.log('smartAccountClient', { client: smartAccountClient, error })
 
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
   const isProperChainSelected = clientChainId === vaultChainId
@@ -268,6 +278,15 @@ export const useTransaction = ({
         loading: isSettingChain,
       }
     }
+
+    if (!tokenBalanceLoading && tokenBalance && tokenBalance.isZero() && flow === 'open') {
+      return {
+        label: 'Add funds',
+        action: () => setIsTransakOpen(true),
+        disabled: false,
+      }
+    }
+
     if (!amount || amount.isZero()) {
       return {
         label: capitalize(transactionType),
@@ -315,6 +334,8 @@ export const useTransaction = ({
       action: getTransactionsList,
     }
   }, [
+    tokenBalanceLoading,
+    tokenBalance,
     user,
     isProperChainSelected,
     isSettingChain,
@@ -447,5 +468,7 @@ export const useTransaction = ({
     setApprovalType,
     setApprovalCustomValue,
     approvalCustomValue,
+    isTransakOpen,
+    setIsTransakOpen,
   }
 }

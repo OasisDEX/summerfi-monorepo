@@ -1,29 +1,9 @@
-.selectionBlockBorderWrapper {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  cursor: pointer;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: var(--general-space-12);
+div.selectionBlockBorderWrapper {
+  border-radius: var(--general-radius-12);
+  margin-bottom: var(--general-radius-12) !important;
 
-  &.active {
-    position: relative;
-    background-clip: padding-box;
-    box-sizing: border-box;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      margin: -1px;
-      transition: opacity 0.2s ease-out;
-      border-radius: var(--general-radius-12);
-      background: linear-gradient(90deg, rgba(255, 73, 164, 0.5), rgba(176, 73, 255, 0.5));
-    }
+  &::before {
+    border-radius: var(--general-radius-12) !important;
   }
 }
 

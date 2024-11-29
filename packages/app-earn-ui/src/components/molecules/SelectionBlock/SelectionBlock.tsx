@@ -1,6 +1,5 @@
-import clsx from 'clsx'
-
 import { Text } from '@/components/atoms/Text/Text'
+import { GradientBox } from '@/components/molecules/GradientBox/GradientBox'
 
 import selectionStyles from './SelectionBlock.module.scss'
 
@@ -22,11 +21,10 @@ export const SelectionBlock = ({
   style,
 }: SelectionBlockProps) => {
   return (
-    <div
+    <GradientBox
+      className={selectionStyles.selectionBlockBorderWrapper}
       onClick={onClick}
-      className={clsx(selectionStyles.selectionBlockBorderWrapper, {
-        [selectionStyles.active]: active,
-      })}
+      selected={active}
       style={style}
     >
       <div className={selectionStyles.selectionBlockWrapper}>
@@ -34,6 +32,6 @@ export const SelectionBlock = ({
         {subTitle && <Text variant="p4semiColorful">{subTitle}</Text>}
         {customContent}
       </div>
-    </div>
+    </GradientBox>
   )
 }

@@ -39,6 +39,13 @@ export function middleware(_request: NextRequest) {
 
   response.cookies.set('deviceType', deviceInfo.deviceType)
 
+  // Get `CloudFront-Viewer-Country` header if exists from request and set cookie
+  const country = _request.headers.get('CloudFront-Viewer-Country')
+
+  if (country) {
+    response.cookies.set('country', country)
+  }
+
   return response
 }
 

@@ -1,4 +1,4 @@
-import { LoadingSpinner } from '@summerfi/app-earn-ui'
+import { LoadingSpinner, RechartResponsiveWrapper } from '@summerfi/app-earn-ui'
 import { type ForecastDataPoints } from '@summerfi/app-types'
 import {
   Area,
@@ -25,7 +25,7 @@ type ForecastChartProps = {
 
 export const ForecastChart = ({ data, isLoading, tokenPrice }: ForecastChartProps) => {
   return (
-    <div style={{ width: '100%', height: '400px', position: 'relative' }}>
+    <RechartResponsiveWrapper>
       <ResponsiveContainer width="100%" height="90%">
         <ComposedChart data={data} style={{ opacity: isLoading ? 0.5 : 1 }}>
           <XAxis
@@ -103,6 +103,6 @@ export const ForecastChart = ({ data, isLoading, tokenPrice }: ForecastChartProp
           }}
         />
       )}
-    </div>
+    </RechartResponsiveWrapper>
   )
 }

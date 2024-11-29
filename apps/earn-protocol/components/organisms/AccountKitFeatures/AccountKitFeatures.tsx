@@ -7,9 +7,8 @@ import { type TOSSignMessage, useTermsOfService } from '@summerfi/app-tos'
 import { TOSStatus } from '@summerfi/app-types'
 
 import { TransakOneWidget } from '@/components/molecules/TransakOneWidget/TransakOneWidget'
-import { TransakWidget } from '@/components/molecules/TransakWidget/TransakWidget'
 
-const AccountKitFeatures = () => {
+export const AccountKitFeatures = () => {
   const signer = useSigner()
   const user = useUser()
   const { isModalOpen } = useUiConfig()
@@ -84,14 +83,7 @@ const AccountKitFeatures = () => {
           />
         </Card>
       </Modal>
-      {user && (
-        <>
-          <TransakWidget />
-          <TransakOneWidget />
-        </>
-      )}
+      {user && <TransakOneWidget />}
     </div>
   )
 }
-
-export default AccountKitFeatures

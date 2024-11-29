@@ -1,16 +1,9 @@
-.sidebarWrapperDesktop {
-  visibility: hidden;
-
-  @media screen and (min-width: 768px) {
-    visibility: visible;
-  }
-}
-
 .sidebarWrapper {
   flex-direction: column;
   align-items: center;
   position: relative;
   padding-top: unset;
+  max-height: 90vh;
 }
 
 .sidebarHeaderWrapper {
@@ -23,6 +16,10 @@
   &.centerTitle {
     justify-content: center;
   }
+}
+
+.sidebarContent {
+  width: 100%;
 }
 
 .goBackButton {
@@ -79,4 +76,17 @@
   color: var(--earn-protocol-critical-100);
   text-align: center;
   display: inline-block;
+}
+
+.sidebarCta {
+  width: 100%;
+  margin-bottom: var(--general-space-20);
+
+  & a,
+  & button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }

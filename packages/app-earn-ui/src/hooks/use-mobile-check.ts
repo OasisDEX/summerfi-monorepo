@@ -39,13 +39,13 @@ export const useMobileCheck = (deviceType?: DeviceType): ScreenInfo => {
 
   useLayoutEffect(() => {
     // Check if window is defined (important for SSR)
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined' || typeof screen === 'undefined') return
 
     const handleResize = () => {
       setScreenInfo({
-        isMobile: window.innerWidth <= 768,
-        width: window.innerWidth,
-        height: window.innerHeight,
+        isMobile: screen.width <= 768,
+        width: screen.width,
+        height: screen.height,
       })
     }
 

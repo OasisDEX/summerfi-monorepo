@@ -1,3 +1,4 @@
+import { RechartResponsiveWrapper } from '@summerfi/app-earn-ui'
 import { type TimeframesType } from '@summerfi/app-types'
 import {
   Area,
@@ -19,7 +20,7 @@ type YieldsChartProps = {
 
 export const YieldsChart = ({ data, dataNames, colors }: YieldsChartProps) => {
   return (
-    <div style={{ width: '100%', height: '400px' }}>
+    <RechartResponsiveWrapper>
       <ResponsiveContainer width="100%" height="90%">
         <ComposedChart
           data={data}
@@ -84,6 +85,6 @@ export const YieldsChart = ({ data, dataNames, colors }: YieldsChartProps) => {
           <Legend iconType="circle" iconSize={8} align="center" layout="horizontal" height={60} />
         </ComposedChart>
       </ResponsiveContainer>
-    </div>
+    </RechartResponsiveWrapper>
   )
 }

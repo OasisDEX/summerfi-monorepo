@@ -87,6 +87,9 @@ export const VaultManageViewComponent = ({
     amount: amountParsed,
     manualSetAmount,
     publicClient,
+    tokenBalance,
+    tokenBalanceLoading,
+    flow: 'manage',
   })
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)

@@ -2,6 +2,8 @@ export type Styles = {
   centerTitle: string
   goBackButton: string
   goBackButtonFillFLex: string
+  sidebarContent: string
+  sidebarCta: string
   sidebarErrorWrapper: string
   sidebarFootnoteWrapper: string
   sidebarHeaderActionButtonsWrapper: string
@@ -10,7 +12,6 @@ export type Styles = {
   sidebarHeaderWrapper: string
   sidebarTitle: string
   sidebarWrapper: string
-  sidebarWrapperDesktop: string
 }
 
 export type ClassNames = keyof Styles

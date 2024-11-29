@@ -71,8 +71,18 @@ interface MobileDrawerProps {
 }
 
 const drawerContentMap = {
-  default: styles.drawerContentDefault,
-  sidebar: styles.drawerContentSidebar,
+  default: {
+    bottom: styles.drawerContentDefault,
+    top: styles.drawerContentDefault,
+    left: styles.drawerContentDefault,
+    right: styles.drawerContentDefault,
+  },
+  sidebar: {
+    bottom: styles.drawerBottomContentSidebar,
+    top: styles.drawerTopContentSidebar,
+    left: styles.drawerLeftContentSidebar,
+    right: styles.drawerRightContentSidebar,
+  },
 }
 
 const slideFromMap = {
@@ -129,7 +139,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
         }}
         ref={drawerRef}
       >
-        <div className={drawerContentMap[variant]}>
+        <div className={drawerContentMap[variant][slideFrom]}>
           {/* LETS TRY FOR NOW WITHOUT X BUTTON */}
           {/* {onClose && (*/}
           {/*  <button className={styles.closeButton} onClick={onClose}>*/}

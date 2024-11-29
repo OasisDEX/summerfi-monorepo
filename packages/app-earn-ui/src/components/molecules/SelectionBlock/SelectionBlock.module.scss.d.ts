@@ -1,5 +1,4 @@
 export type Styles = {
-  active: string
   selectionBlockBorderWrapper: string
   selectionBlockWrapper: string
 }

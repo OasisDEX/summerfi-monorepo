@@ -6,6 +6,7 @@ import {
   sidebarFootnote,
   Text,
   useLocalStorageOnce,
+  useMobileCheck,
   VaultOpenGrid,
 } from '@summerfi/app-earn-ui'
 import {
@@ -28,7 +29,9 @@ import {
 } from '@/components/molecules/SidebarElements'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { HistoricalYieldChart } from '@/components/organisms/Charts/HistoricalYieldChart'
+import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
+import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 import { useAmount } from '@/hooks/use-amount'
@@ -61,6 +64,9 @@ export const VaultOpenViewComponent = ({
   const { tokenBalance, tokenBalanceLoading, publicClient } = useClient({
     vault,
   })
+  const { deviceType } = useDeviceType()
+  const { isMobile } = useMobileCheck(deviceType)
+
   const {
     amountParsed,
     manualSetAmount,
@@ -81,11 +87,17 @@ export const VaultOpenViewComponent = ({
     vaultChainId,
     nextTransaction,
     backToInit,
+    user,
+    isTransakOpen,
+    setIsTransakOpen,
   } = useTransaction({
     vault,
     amount: amountParsed,
     manualSetAmount,
     publicClient,
+    tokenBalance,
+    tokenBalanceLoading,
+    flow: 'open',
   })
 
   const position = usePosition({
@@ -183,6 +195,7 @@ export const VaultOpenViewComponent = ({
       </>
     ),
     error: sidebar.error,
+    isMobile,
   }
 
   // needed due to type duality
@@ -190,6 +203,7 @@ export const VaultOpenViewComponent = ({
 
   return (
     <VaultOpenGrid
+      isMobile={isMobile}
       vault={vault}
       vaults={vaults}
       displayGraph={displayGraph}
@@ -251,7 +265,20 @@ export const VaultOpenViewComponent = ({
           </Expander>
         </div>
       }
-      sidebarContent={<Sidebar {...sidebarProps} />}
+      sidebarContent={
+        <>
+          <Sidebar {...sidebarProps} />
+          {user?.address && (
+            <TransakWidget
+              cryptoCurrency={vault.inputToken.symbol}
+              walletAddress={user.address}
+              email={user.email}
+              isOpen={isTransakOpen}
+              onClose={() => setIsTransakOpen(false)}
+            />
+          )}
+        </>
+      }
     />
   )
 }

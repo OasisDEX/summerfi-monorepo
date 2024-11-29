@@ -248,6 +248,12 @@ export type IconNamesList =
   | 'trail_of_bits'
   | 'user'
   | 'withdraw'
+  | 'cut'
+  | 'down_up'
+  | 'kyc_colorful'
+  | 'dot_arrow_right_colorful'
+  | 'lightning_colorful'
+  | 'wusdl'
 
 export type TokenSymbolsList =
   | 'AAVE'
@@ -363,6 +369,7 @@ export type TokenSymbolsList =
   | 'YIELDBTC'
   | 'YIELDETH'
   | 'ZRX'
+  | 'WUSDL'
   // deprecated ones
   | 'CRVV1ETHSTETH'
   | 'UNIV2AAVEETH'

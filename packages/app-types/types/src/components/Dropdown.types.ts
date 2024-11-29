@@ -12,6 +12,11 @@ export type DropdownOption =
       value: string
       iconName: IconNamesList
     }
+  | {
+      label: string
+      value: string
+      icon: string
+    }
 
 export type DropdownRawOption = {
   value: string

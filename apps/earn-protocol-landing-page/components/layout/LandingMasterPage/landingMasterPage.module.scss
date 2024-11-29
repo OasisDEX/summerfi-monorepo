@@ -1,0 +1,18 @@
+.mainContainer {
+  height: 100%;
+}
+
+.backgroundSimple {
+  position: absolute;
+  top: 0;
+  max-width: none;
+  pointer-events: none;
+}
+
+.appContainer {
+  width: 100%;
+  max-width: 1310px;
+  margin: 0 auto;
+  padding: 0 var(--space-m);
+  z-index: 2;
+}

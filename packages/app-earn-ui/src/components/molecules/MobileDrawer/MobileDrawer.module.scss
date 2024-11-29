@@ -63,7 +63,7 @@
   }
 
   &.rightSidebar {
-    transform: translateX(calc(100% - 76px));
+    transform: translateX(100%);
   }
 
   /* Open states */
@@ -93,8 +93,13 @@
   height: 100%;
 }
 
-.drawerContentSidebar {
+.drawerTopContentSidebar,
+.drawerBottomContentSidebar {
   height: calc(100% - 76px);
+}
+.drawerRightContentSidebar,
+.drawerLeftContentSidebar {
+  height: 100%;
 }
 
 .closeButton {

@@ -1,7 +1,10 @@
 import { alchemy, arbitrum, base } from '@account-kit/infra'
 import { type AlchemyAccountsUIConfig, cookieStorage, createConfig } from '@account-kit/react'
 import { SDKChainId, SDKSupportedNetworkIdsEnum } from '@summerfi/app-types'
+import { QueryClient } from '@tanstack/react-query'
 import { type Chain } from 'viem'
+
+export const queryClient = new QueryClient()
 
 export const SDKChainIdToAAChainMap = {
   [SDKChainId.ARBITRUM]: arbitrum,
@@ -52,28 +55,11 @@ export const getAccountKitConfig = ({
       chains: Object.values(SDKChainIdToAAChainMap).map((chain) => ({
         chain,
       })),
-      ssr: false,
+      ssr: true,
       storage: cookieStorage,
     },
     uiConfig,
   )
 }
-
-export const staticConfig = createConfig(
-  {
-    transport: alchemy({ rpcUrl: `/api/rpc/chain/${defaultChain.id}` }),
-    signerConnection: {
-      // this is for Alchemy Signer requests
-      rpcUrl: '/api/rpc',
-    },
-    chain: defaultChain,
-    chains: Object.values(SDKChainIdToAAChainMap).map((chain) => ({
-      chain,
-    })),
-    ssr: true,
-    storage: cookieStorage,
-  },
-  uiConfig,
-)
 
 export const accountType = 'MultiOwnerModularAccount'
