@@ -10,8 +10,8 @@ export default function HomePage() {
         display: 'flex',
         gap: '8px',
         flexDirection: 'column',
-        alignItems: 'center',
         textAlign: 'center',
+        alignItems: 'center',
       }}
     >
       <Text as="p" variant="p2">
