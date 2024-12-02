@@ -11,6 +11,7 @@ import {
   SupportedNetworksList,
 } from '@/components/layout/LandingPageContent'
 import { BestOfDecentralizedFinance } from '@/components/layout/LandingPageContent/content/BestOfDecentralisedFinance'
+import { SumrToken } from '@/components/layout/LandingPageContent/content/SumrToken'
 
 export const revalidate = 60
 
@@ -38,9 +39,7 @@ export default async function HomePage() {
         <HigherYieldsBlock />
         <EnhancedRiskManagement protectedCapital="10B" />
         <BestOfDecentralizedFinance />
-        <div>
-          <Text variant="h2">The $SUMR Token</Text>
-        </div>
+        <SumrToken />
         <div>
           <Text variant="h2">Start earning now</Text>
         </div>
