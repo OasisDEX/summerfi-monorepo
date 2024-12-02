@@ -1,4 +1,3 @@
-export { BigGradientBox } from '@/components/layout/LandingPageContent/components/BigGradientBox'
 export { Emphasis } from '@/components/layout/LandingPageContent/components/Emphasis'
 export { LandingPageHero } from '@/components/layout/LandingPageContent/components/LandingPageHero'
 export { MarketingPoints } from '@/components/layout/LandingPageContent/components/MarketingPoints'

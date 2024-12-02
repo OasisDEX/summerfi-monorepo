@@ -1,8 +1,7 @@
-import { Text } from '@summerfi/app-earn-ui'
+import { BigGradientBox, Text } from '@summerfi/app-earn-ui'
 
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import {
-  BigGradientBox,
   EffortlessAccessBlock,
   EnhancedRiskManagement,
   HigherYieldsBlock,
@@ -11,6 +10,8 @@ import {
   ProtocolScroller,
   SupportedNetworksList,
 } from '@/components/layout/LandingPageContent'
+import { BestOfDecentralizedFinance } from '@/components/layout/LandingPageContent/content/BestOfDecentralisedFinance'
+import { SumrToken } from '@/components/layout/LandingPageContent/content/SumrToken'
 
 export const revalidate = 60
 
@@ -36,13 +37,9 @@ export default async function HomePage() {
       />
       <MarketingPoints>
         <HigherYieldsBlock />
-        <EnhancedRiskManagement />
-        <div>
-          <Text variant="h2">The very best of Decentralised Finance (DeFi)</Text>
-        </div>
-        <div>
-          <Text variant="h2">The $SUMR Token</Text>
-        </div>
+        <EnhancedRiskManagement protectedCapital="10B" />
+        <BestOfDecentralizedFinance />
+        <SumrToken />
         <div>
           <Text variant="h2">Start earning now</Text>
         </div>

@@ -58,7 +58,7 @@ const HigherYieldsSection = ({
           </WithArrow>
         </Link>
       </div>
-      <Image src={imageSrc} alt={title} />
+      <Image src={imageSrc} alt={title} placeholder="blur" />
       <div className={higherYieldsBlockStyles.higherYieldsSectionStatsWrapper}>
         {statsList.map((item) => (
           <div key={item.title} className={higherYieldsBlockStyles.higherYieldsSectionStats}>
@@ -137,7 +137,7 @@ const higherYieldsBlockSections = {
     title: 'How you save costs',
     content: (
       <HigherYieldsSection
-        title="No more chasing yields and paying unnecessary fees  "
+        title="No more chasing yields and paying unnecessary fees"
         description="With Summer, effortlessly earn the best yields and grow your capital faster. We automatically rebalance your assets to top protocols, maximizing your returns."
         ctaLabel="Deposit"
         ctaUrl="/"
@@ -213,7 +213,17 @@ export const HigherYieldsBlock = () => {
             [higherYieldsBlockStyles.higherYieldsDetailsContentFadingOut]: fadingOut,
           })}
         >
-          {higherYieldsBlockSections[activeSection].content}
+          {higherYieldsBlockSectionsKeys.map((sectionKey) => (
+            <div
+              key={`higher-yields-section-${sectionKey}`}
+              style={{
+                // needs this to prevent flash of old image when switching sections
+                display: activeSection === sectionKey ? 'block' : 'none',
+              }}
+            >
+              {higherYieldsBlockSections[sectionKey].content}
+            </div>
+          ))}
         </div>
       </div>
     </div>

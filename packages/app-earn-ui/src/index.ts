@@ -75,6 +75,7 @@ export { SelectionBlock } from './components/molecules/SelectionBlock/SelectionB
 export { GradientBox } from './components/molecules/GradientBox/GradientBox'
 export { SidebarMobileHeader } from './components/molecules/SidebarMobileHeader/SidebarMobileHeader'
 export { Dial } from './components/molecules/Dial/Dial'
+export { BigGradientBox } from './components/molecules/BigGradientBox/BigGradientBox'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'

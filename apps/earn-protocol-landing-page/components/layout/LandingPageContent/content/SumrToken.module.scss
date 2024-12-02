@@ -1,0 +1,46 @@
+.sumrTokenWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 1184px;
+  margin: 0 auto;
+  gap: var(--spacing-space-x-large);
+
+  @include media('<=s') {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  >div {
+    width: 50%;
+
+    @include media('<=s') {
+      width: 100%;
+    }
+  }
+}
+
+.sumrTokenDescription {
+  @include media('<=s') {
+    padding: 0 var(--spacing-space-medium);
+  }
+
+  h2 {
+    font-weight: 600;
+    margin-bottom: 48px;
+
+    span {
+      font-weight: 600;
+    }
+  }
+
+  h5 {
+    margin-bottom: var(--spacing-space-x-small);
+  }
+
+  p {
+    margin-bottom: var(--spacing-space-x-large);
+    color: var(--color-text-secondary);
+  }
+}
