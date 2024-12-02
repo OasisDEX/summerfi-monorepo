@@ -1,10 +1,13 @@
-.enhancedRiskManagementHeaderWrapper {
-  text-align: center;
-  padding: 0 var(--spacing-space-3x-large);
+.enhancedRiskManagementWrapper {
+  padding: 0 var(--spacing-space-2x-large);
 
   @include media('<=s') {
     padding: 0 var(--spacing-space-large);
   }
+}
+
+.enhancedRiskManagementHeaderWrapper {
+  text-align: center;
 }
 
 .enhancedRiskManagementHeader {

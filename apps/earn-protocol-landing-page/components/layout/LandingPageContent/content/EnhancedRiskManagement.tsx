@@ -23,7 +23,7 @@ const EnhancedRiskManagementProtocolIcon = ({
 
 export const EnhancedRiskManagement = ({ protectedCapital }: { protectedCapital: string }) => {
   return (
-    <div>
+    <div className={enhancedRiskManagementStyles.enhancedRiskManagementWrapper}>
       <div className={enhancedRiskManagementStyles.enhancedRiskManagementHeaderWrapper}>
         <Text variant="h2" className={enhancedRiskManagementStyles.enhancedRiskManagementHeader}>
           Enhanced risk management with time-saving automation.

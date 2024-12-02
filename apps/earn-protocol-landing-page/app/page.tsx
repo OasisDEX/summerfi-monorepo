@@ -10,6 +10,7 @@ import {
   ProtocolScroller,
   SupportedNetworksList,
 } from '@/components/layout/LandingPageContent'
+import { BestOfDecentralizedFinance } from '@/components/layout/LandingPageContent/content/BestOfDecentralisedFinance'
 
 export const revalidate = 60
 
@@ -36,9 +37,7 @@ export default async function HomePage() {
       <MarketingPoints>
         <HigherYieldsBlock />
         <EnhancedRiskManagement protectedCapital="10B" />
-        <div>
-          <Text variant="h2">The very best of Decentralised Finance (DeFi)</Text>
-        </div>
+        <BestOfDecentralizedFinance />
         <div>
           <Text variant="h2">The $SUMR Token</Text>
         </div>
