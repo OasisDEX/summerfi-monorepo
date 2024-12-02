@@ -10,8 +10,6 @@ jobs:
     name: Build and deploy Earn Protocol App
     runs-on: ubuntu-latest
     environment: staging
-    needs: changes
-    if: ${{ needs.changes.outputs.build-earn-protocol == 'true' }}
     env:
       AWS_REGION: us-east-1
       ENVIRONMENT_TAG: staging
