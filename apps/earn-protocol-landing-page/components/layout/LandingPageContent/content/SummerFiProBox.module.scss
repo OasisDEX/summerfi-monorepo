@@ -3,7 +3,8 @@
   background-color: var(--earn-protocol-neutral-100);
 
   @include media('<=s') {
-    width: 90%; // shoul match the carousel element width
+    margin-top: var(--spacing-space-2x-large);
+    width: 90% !important; // should match the carousel element width
   }
 
   &>div {

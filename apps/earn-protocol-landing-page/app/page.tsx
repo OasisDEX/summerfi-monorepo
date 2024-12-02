@@ -1,8 +1,7 @@
-import { Text } from '@summerfi/app-earn-ui'
+import { BigGradientBox, Text } from '@summerfi/app-earn-ui'
 
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import {
-  BigGradientBox,
   EffortlessAccessBlock,
   EnhancedRiskManagement,
   HigherYieldsBlock,
@@ -36,7 +35,7 @@ export default async function HomePage() {
       />
       <MarketingPoints>
         <HigherYieldsBlock />
-        <EnhancedRiskManagement />
+        <EnhancedRiskManagement protectedCapital="10B" />
         <div>
           <Text variant="h2">The very best of Decentralised Finance (DeFi)</Text>
         </div>

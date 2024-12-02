@@ -1,5 +1,9 @@
 .protocolScrollerWrapper {
   margin-top: var(--spacing-space-3x-large);
+
+  @include media('<=s') {
+    margin-top: var(--spacing-space-2x-large);
+  }
 }
 
 .protocolScrollerHeader {
@@ -43,6 +47,11 @@
   overflow: hidden;
   margin-top: var(--spacing-space-2x-large);
   margin-bottom: var(--spacing-space-4x-large);
+
+  @include media('<=s') {
+    margin-top: var(--spacing-space-2x-large);
+    margin-bottom: var(--spacing-space-3x-large);
+  }
 }
 
 .protocolScrollerTrack {

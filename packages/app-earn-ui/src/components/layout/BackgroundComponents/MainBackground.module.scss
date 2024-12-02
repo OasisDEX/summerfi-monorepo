@@ -6,6 +6,7 @@
   height: 100%; // should probably be different on longer pages, but we dont have any yet (just on homepage)
   z-index: 1;
   overflow: hidden;
+  pointer-events: none;
 
   >svg {
     position: absolute;

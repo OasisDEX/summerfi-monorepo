@@ -1,10 +1,27 @@
-import { Text } from '@summerfi/app-earn-ui'
+import { BigGradientBox, Text } from '@summerfi/app-earn-ui'
+import Image, { type StaticImageData } from 'next/image'
 
-import { BigGradientBox } from '@/components/layout/LandingPageContent'
+import blockAnalyticaLogo from '@/public/img/landing-page/block-analytica.svg'
+import morphoBlueLogo from '@/public/img/landing-page/protocols/morpho-blue.svg' // add the others
 
 import enhancedRiskManagementStyles from '@/components/layout/LandingPageContent/content/EnhancedRiskManagement.module.scss'
 
-export const EnhancedRiskManagement = () => {
+import rebalanceActivityImage from '@/public/img/landing-page/enhanced-risk-management_rebalance-activity.png'
+import strategyExposureImage from '@/public/img/landing-page/enhanced-risk-management_strategy-exposure.png'
+
+const EnhancedRiskManagementProtocolIcon = ({
+  protocolImage,
+}: {
+  protocolImage: StaticImageData
+}) => {
+  return (
+    <div className={enhancedRiskManagementStyles.protocolIcon}>
+      <Image src={protocolImage} alt="" />
+    </div>
+  )
+}
+
+export const EnhancedRiskManagement = ({ protectedCapital }: { protectedCapital: string }) => {
   return (
     <div>
       <div className={enhancedRiskManagementStyles.enhancedRiskManagementHeaderWrapper}>
@@ -12,10 +29,75 @@ export const EnhancedRiskManagement = () => {
           Enhanced risk management with time-saving automation.
         </Text>
       </div>
-      <BigGradientBox reversed>
-        <br />
-        <br />
+      <BigGradientBox reversed color="red">
+        <div className={enhancedRiskManagementStyles.topBlock}>
+          <div className={enhancedRiskManagementStyles.topBlockDescription}>
+            <Text variant="h5" as="h5">
+              Your capital’s safety, overseen and constantly assessed by DeFi’s premier risk team
+            </Text>
+            <Text variant="p2" as="p">
+              Lazy Summer requires 0 management from users. Apart from your own deposits, all risk
+              management, yield optimizing and strategy rebalancing is handled automatically.{' '}
+            </Text>
+            <div className={enhancedRiskManagementStyles.topBlockStats}>
+              <Image src={blockAnalyticaLogo} alt="Block Analytica" />
+              <div className={enhancedRiskManagementStyles.topBlockStatsData}>
+                <Text variant="h2colorful" as="h2">
+                  {protectedCapital}
+                </Text>
+                <Text variant="p3semi" as="p">
+                  Protected Capital
+                </Text>
+              </div>
+            </div>
+          </div>
+          <div className={enhancedRiskManagementStyles.topBlockProtocolIcons}>
+            {/** Add proper/final logos */}
+            <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
+            <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
+            <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
+            <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
+            <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
+            <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
+            <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
+            <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
+          </div>
+        </div>
       </BigGradientBox>
+      <div className={enhancedRiskManagementStyles.bottomBoxes}>
+        <BigGradientBox className={enhancedRiskManagementStyles.bottomBoxLeftGradient}>
+          <div className={enhancedRiskManagementStyles.bottomBoxDescription}>
+            <Text variant="h5" as="h5">
+              No more wasted time signing, approving, confirming
+            </Text>
+            <Text variant="p2" as="p">
+              Lazy Summer requires 0 management from users. Apart from your own deposits, all risk
+              management, yield optimizing and strategy rebalancing is handled automatically.
+            </Text>
+          </div>
+          <Image
+            src={rebalanceActivityImage}
+            alt="No more wasted time signing, approving, confirming"
+            placeholder="blur"
+          />
+        </BigGradientBox>
+        <BigGradientBox className={enhancedRiskManagementStyles.bottomBoxRightGradient}>
+          <div className={enhancedRiskManagementStyles.bottomBoxDescription}>
+            <Text variant="h5" as="h5">
+              Automatic diversification, zero chance of manual mistakes
+            </Text>
+            <Text variant="p2" as="p">
+              Lazy Summer requires 0 management from users. Apart from your own deposits, all risk
+              management, yield optimizing and strategy rebalancing is handled automatically.
+            </Text>
+          </div>
+          <Image
+            src={strategyExposureImage}
+            alt="Automatic diversification, zero chance of manual mistakes"
+            placeholder="blur"
+          />
+        </BigGradientBox>
+      </div>
     </div>
   )
 }
