@@ -5,17 +5,20 @@ import { TransactionUtils } from './TransactionUtils'
 export async function sendAndLogTransactions(params: {
   chainInfo: IChainInfo
   transactions: TransactionInfo[]
-  forkUrl: string
+  rpcUrl: string
   privateKey: string
+  useRpcGateway?: boolean
 }) {
   const privateKey = params.privateKey
   if (!privateKey) {
     throw new Error('Sender privateKey not set')
   }
-
-  const forkUrl = params.forkUrl
-  if (!forkUrl) {
-    throw new Error('Sender forkUrl not set')
+  if (!isHex(privateKey)) {
+    throw new Error('Sender privateKey is not a hex string')
+  }
+  const rpcUrl = params.rpcUrl
+  if (!rpcUrl) {
+    throw new Error('forkUrl or rpcUrl must be set')
   }
 
   // console.log('transactions', params.transactions)
@@ -25,13 +28,11 @@ export async function sendAndLogTransactions(params: {
   for (const [index, transaction] of params.transactions.entries()) {
     console.log(`Sending transaction ${index}...`, transaction.description)
 
-    if (!isHex(privateKey)) {
-      throw new Error('Invalid DEPLOYER_PRIVATE_KEY')
-    }
     const transactionUtils = new TransactionUtils({
-      rpcUrl: forkUrl,
+      rpcUrl: rpcUrl,
       walletPrivateKey: privateKey,
       chainInfo: params.chainInfo,
+      useRpcGateway: params.useRpcGateway ? true : false,
     })
 
     const receipt = await transactionUtils.sendTransactionWithReceipt({
