@@ -52,6 +52,7 @@ export const icons = {
   chainlink_color: customLazy(() => import('./icons/chainlink_color.svg?react')),
   chainlink: customLazy(() => import('./icons/chainlink.svg?react')),
   checkmark_colorful: customLazy(() => import('./icons/checkmark_colorful.svg?react')),
+  checkmark_colorful_slim: customLazy(() => import('./icons/checkmark_colorful_slim.svg?react')),
   checkmark: customLazy(() => import('./icons/checkmark.svg?react')),
   chevron_down: customLazy(() => import('./icons/chevron_down.svg?react')),
   chevron_left: customLazy(() => import('./icons/chevron_left.svg?react')),

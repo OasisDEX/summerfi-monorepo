@@ -11,6 +11,7 @@ import {
   SupportedNetworksList,
 } from '@/components/layout/LandingPageContent'
 import { BestOfDecentralizedFinance } from '@/components/layout/LandingPageContent/content/BestOfDecentralisedFinance'
+import { StartEarningNow } from '@/components/layout/LandingPageContent/content/StartEarningNow'
 import { SumrToken } from '@/components/layout/LandingPageContent/content/SumrToken'
 
 export const revalidate = 60
@@ -40,9 +41,7 @@ export default async function HomePage() {
         <EnhancedRiskManagement protectedCapital="10B" />
         <BestOfDecentralizedFinance />
         <SumrToken />
-        <div>
-          <Text variant="h2">Start earning now</Text>
-        </div>
+        <StartEarningNow />
         <div>
           <Text variant="h2">
             Summer.fi Pro, advanced DeFi features all in one app, just a click away.

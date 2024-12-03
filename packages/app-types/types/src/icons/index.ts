@@ -204,6 +204,7 @@ export type IconNamesList =
   | 'bug'
   | 'chain_security'
   | 'checkmark_colorful'
+  | 'checkmark_colorful_slim'
   | 'checkmark'
   | 'chevron_down'
   | 'chevron_left'
