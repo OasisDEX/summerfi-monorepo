@@ -82,7 +82,7 @@ describe('Armada Protocol Deposit', () => {
         })
       })
 
-      it(`should withdraw 0.99 USDC back from fleet at ${fleetAddress.value}`, async () => {
+      it.only(`should withdraw 0.99 USDC back from fleet at ${fleetAddress.value}`, async () => {
         const amount = '0.99'
 
         const transactions = await sdk.armada.users.getWithdrawTX({

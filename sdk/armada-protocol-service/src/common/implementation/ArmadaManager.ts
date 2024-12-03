@@ -10,10 +10,9 @@ import {
   IArmadaVaultId,
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
-import { IContractsProvider, type IRebalanceData } from '@summerfi/contracts-provider-common'
+import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import {
   IAddress,
-  IPercentage,
   ITokenAmount,
   IUser,
   TokenAmount,
@@ -65,8 +64,8 @@ export class ArmadaManager implements IArmadaManager {
   /** @see IArmadaManager.getVaultRaw */
   async getVaultRaw(params: Parameters<IArmadaManager['getVaultRaw']>[0]) {
     return this._subgraphManager.getVault({
-      chainId: params.poolId.chainInfo.chainId,
-      vaultId: params.poolId.fleetAddress.value,
+      chainId: params.vaultId.chainInfo.chainId,
+      vaultId: params.vaultId.fleetAddress.value,
     })
   }
 
@@ -83,16 +82,18 @@ export class ArmadaManager implements IArmadaManager {
   /** @see IArmadaManager.getUserActivityRaw */
   async getUserActivityRaw(params: Parameters<IArmadaManager['getUserActivityRaw']>[0]) {
     return this._subgraphManager.getUserActivity({
-      chainId: params.poolId.chainInfo.chainId,
-      vaultId: params.poolId.fleetAddress.value,
+      chainId: params.vaultId.chainInfo.chainId,
+      vaultId: params.vaultId.fleetAddress.value,
     })
   }
 
-  /** @see IArmadaManager.getPoolInfo */
-  async getPoolInfo(params: { poolId: IArmadaVaultId }): Promise<IArmadaPoolInfo> {
+  /** @see IArmadaManager.getVaultInfo */
+  async getVaultInfo(
+    params: Parameters<IArmadaManager['getVaultInfo']>[0],
+  ): Promise<IArmadaPoolInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.poolId.chainInfo,
-      address: params.poolId.fleetAddress,
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
     })
 
     const fleetERC4626Contract = fleetContract.asErc4626()
@@ -103,7 +104,7 @@ export class ArmadaManager implements IArmadaManager {
     const totalShares = await fleetERC20Contract.totalSupply()
 
     return ArmadaPoolInfo.createFrom({
-      id: params.poolId,
+      id: params.vaultId,
       depositCap: depositCap,
       totalDeposits: totalDeposits,
       totalShares: totalShares,
@@ -208,24 +209,18 @@ export class ArmadaManager implements IArmadaManager {
   /** USER TRANSACTIONS */
 
   /** @see IArmadaManager.getNewDepositTX */
-  async getNewDepositTX(params: {
-    poolId: IArmadaVaultId
-    user: IUser
-    amount: ITokenAmount
-    shouldStake?: boolean
-  }): Promise<TransactionInfo[]> {
+  async getNewDepositTX(
+    params: Parameters<IArmadaManager['getNewDepositTX']>[0],
+  ): Promise<TransactionInfo[]> {
     return this._getDepositTX(params)
   }
 
   /** @see IArmadaManager.getUpdateDepositTX */
-  async getUpdateDepositTX(params: {
-    poolId: IArmadaVaultId
-    positionId: IArmadaPositionId
-    amount: ITokenAmount
-    shouldStake?: boolean
-  }): Promise<TransactionInfo[]> {
+  async getUpdateDepositTX(
+    params: Parameters<IArmadaManager['getUpdateDepositTX']>[0],
+  ): Promise<TransactionInfo[]> {
     return this._getDepositTX({
-      poolId: params.poolId,
+      vaultId: params.vaultId,
       user: params.positionId.user,
       amount: params.amount,
       shouldStake: params.shouldStake,
@@ -233,74 +228,68 @@ export class ArmadaManager implements IArmadaManager {
   }
 
   /** @see IArmadaManager.getWithdrawTX */
-  async getWithdrawTX(params: {
-    poolId: IArmadaVaultId
-    user: IUser
-    amount: ITokenAmount
-  }): Promise<TransactionInfo[]> {
+  async getWithdrawTX(
+    params: Parameters<IArmadaManager['getWithdrawTX']>[0],
+  ): Promise<TransactionInfo[]> {
     const transactions: TransactionInfo[] = []
-    const multicallArgs: HexData[] = []
 
     const admiralsQuarterAddress = getDeployedContractAddress({
-      chainInfo: params.poolId.chainInfo,
+      chainInfo: params.vaultId.chainInfo,
       contractCategory: 'core',
       contractName: 'admiralsQuarters',
     })
 
     const sharesAmount = await this.convertToShares({
-      poolId: params.poolId,
+      vaultId: params.vaultId,
       amount: params.amount,
     })
 
-    // Approval
-    const approvalTransaction = await this._allowanceManager.getApproval({
-      chainInfo: params.poolId.chainInfo,
-      spender: admiralsQuarterAddress,
-      amount: sharesAmount,
+    const fleetBalance = await this.getFleetBalance({
+      vaultId: params.vaultId,
+      user: params.user,
     })
-    if (approvalTransaction) {
-      transactions.push(...approvalTransaction)
+    // Is unstaked tokens?
+    if (fleetBalance.toSolidityValue() > 0) {
+      // Yes. is the unstaked amount sufficient to meet the withdrawal?
+      if (fleetBalance.toSolidityValue() >= params.amount.toSolidityValue()) {
+        transactions.push(...(await this._getWithdrawTX(params)))
+      } else {
+        // No. First withdraw available unstaked
+        transactions.push(
+          ...(await this._getWithdrawTX({
+            ...params,
+            amount: TokenAmount.createFromBaseUnit({
+              token: params.amount.token,
+              amount: fleetBalance.toSolidityValue().toString(),
+            }),
+          })),
+        )
+        // and missing amount in staked tokens.
+        transactions.push(
+          ...(await this._getWithdrawUnstakeTX({
+            ...params,
+            amount: TokenAmount.createFromBaseUnit({
+              token: params.amount.token,
+              amount: (params.amount.toSolidityValue() - fleetBalance.toSolidityValue()).toString(),
+            }),
+          })),
+        )
+      }
+    } else {
+      // No. Withdraw from staked tokens.
+      transactions.push(...(await this._getWithdrawUnstakeTX(params)))
     }
-
-    const exitFleetCalldata = encodeFunctionData({
-      abi: AdmiralsQuartersAbi,
-      functionName: 'exitFleet',
-      args: [params.poolId.fleetAddress.value, params.amount.toSolidityValue()],
-    })
-    multicallArgs.push(exitFleetCalldata)
-
-    const withdrawTokensCalldata = encodeFunctionData({
-      abi: AdmiralsQuartersAbi,
-      functionName: 'withdrawTokens',
-      args: [params.amount.token.address.value, 0n],
-    })
-    multicallArgs.push(withdrawTokensCalldata)
-
-    const withdrawMulticallCalldata = encodeFunctionData({
-      abi: AdmiralsQuartersAbi,
-      functionName: 'multicall',
-      args: [multicallArgs],
-    })
-
-    transactions.push(
-      createTransaction({
-        target: admiralsQuarterAddress,
-        calldata: withdrawMulticallCalldata,
-        description: 'Withdraw Multicall Transaction',
-      }),
-    )
 
     return transactions
   }
 
   /** @see IArmadaManager.convertToShares */
-  async convertToShares(params: {
-    poolId: IArmadaVaultId
-    amount: ITokenAmount
-  }): Promise<ITokenAmount> {
+  async convertToShares(
+    params: Parameters<IArmadaManager['convertToShares']>[0],
+  ): Promise<ITokenAmount> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.poolId.chainInfo,
-      address: params.poolId.fleetAddress,
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
     })
 
     const erc4626Contract = fleetContract.asErc4626()
@@ -311,26 +300,22 @@ export class ArmadaManager implements IArmadaManager {
   /** KEEPERS TRANSACTIONS */
 
   /** @see IArmadaManager.rebalance */
-  async rebalance(params: {
-    poolId: IArmadaVaultId
-    rebalanceData: IRebalanceData[]
-  }): Promise<TransactionInfo> {
+  async rebalance(params: Parameters<IArmadaManager['rebalance']>[0]): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.poolId.chainInfo,
-      address: params.poolId.fleetAddress,
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
     })
 
     return fleetContract.rebalance({ rebalanceData: params.rebalanceData })
   }
 
   /** @see IArmadaManager.adjustBuffer */
-  async adjustBuffer(params: {
-    poolId: IArmadaVaultId
-    rebalanceData: IRebalanceData[]
-  }): Promise<TransactionInfo> {
+  async adjustBuffer(
+    params: Parameters<IArmadaManager['adjustBuffer']>[0],
+  ): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.poolId.chainInfo,
-      address: params.poolId.fleetAddress,
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
     })
 
     return fleetContract.adjustBuffer({ rebalanceData: params.rebalanceData })
@@ -339,94 +324,86 @@ export class ArmadaManager implements IArmadaManager {
   /** GOVERNANCE TRANSACTIONS */
 
   /** @see IArmadaManager.setFleetDepositCap */
-  async setFleetDepositCap(params: {
-    poolId: IArmadaVaultId
-    cap: ITokenAmount
-  }): Promise<TransactionInfo> {
+  async setFleetDepositCap(
+    params: Parameters<IArmadaManager['setFleetDepositCap']>[0],
+  ): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.poolId.chainInfo,
-      address: params.poolId.fleetAddress,
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
     })
 
     return fleetContract.setFleetDepositCap({ cap: params.cap })
   }
 
   /** @see IArmadaManager.setTipJar */
-  async setTipJar(params: { poolId: IArmadaVaultId }): Promise<TransactionInfo> {
+  async setTipJar(params: Parameters<IArmadaManager['setTipJar']>[0]): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.poolId.chainInfo,
-      address: params.poolId.fleetAddress,
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
     })
 
     return fleetContract.setTipJar()
   }
 
   /** @see IArmadaManager.setTipRate */
-  async setTipRate(params: {
-    poolId: IArmadaVaultId
-    rate: IPercentage
-  }): Promise<TransactionInfo> {
+  async setTipRate(params: Parameters<IArmadaManager['setTipRate']>[0]): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.poolId.chainInfo,
-      address: params.poolId.fleetAddress,
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
     })
 
     return fleetContract.setTipRate({ rate: params.rate })
   }
 
   /** @see IArmadaManager.addArk */
-  async addArk(params: { poolId: IArmadaVaultId; ark: IAddress }): Promise<TransactionInfo> {
+  async addArk(params: Parameters<IArmadaManager['addArk']>[0]): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.poolId.chainInfo,
-      address: params.poolId.fleetAddress,
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
     })
 
     return fleetContract.addArk({ ark: params.ark })
   }
 
   /** @see IArmadaManager.addArks */
-  async addArks(params: { poolId: IArmadaVaultId; arks: IAddress[] }): Promise<TransactionInfo> {
+  async addArks(params: Parameters<IArmadaManager['addArks']>[0]): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.poolId.chainInfo,
-      address: params.poolId.fleetAddress,
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
     })
 
     return fleetContract.addArks({ arks: params.arks })
   }
 
   /** @see IArmadaManager.removeArk */
-  async removeArk(params: { poolId: IArmadaVaultId; ark: IAddress }): Promise<TransactionInfo> {
+  async removeArk(params: Parameters<IArmadaManager['removeArk']>[0]): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.poolId.chainInfo,
-      address: params.poolId.fleetAddress,
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
     })
 
     return fleetContract.removeArk({ ark: params.ark })
   }
 
   /** @see IArmadaManager.setArkDepositCap */
-  async setArkDepositCap(params: {
-    poolId: IArmadaVaultId
-    ark: IAddress
-    cap: ITokenAmount
-  }): Promise<TransactionInfo> {
+  async setArkDepositCap(
+    params: Parameters<IArmadaManager['setArkDepositCap']>[0],
+  ): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.poolId.chainInfo,
-      address: params.poolId.fleetAddress,
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
     })
 
     return fleetContract.setArkDepositCap({ ark: params.ark, cap: params.cap })
   }
 
   /** @see IArmadaManager.setArkMaxRebalanceOutflow */
-  async setArkMaxRebalanceOutflow(params: {
-    poolId: IArmadaVaultId
-    ark: IAddress
-    maxRebalanceOutflow: ITokenAmount
-  }): Promise<TransactionInfo> {
+  async setArkMaxRebalanceOutflow(
+    params: Parameters<IArmadaManager['setArkMaxRebalanceOutflow']>[0],
+  ): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.poolId.chainInfo,
-      address: params.poolId.fleetAddress,
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
     })
 
     return fleetContract.setArkMaxRebalanceOutflow({
@@ -436,14 +413,12 @@ export class ArmadaManager implements IArmadaManager {
   }
 
   /** @see IArmadaManager.setArkMaxRebalanceInflow */
-  async setArkMaxRebalanceInflow(params: {
-    poolId: IArmadaVaultId
-    ark: IAddress
-    maxRebalanceInflow: ITokenAmount
-  }): Promise<TransactionInfo> {
+  async setArkMaxRebalanceInflow(
+    params: Parameters<IArmadaManager['setArkMaxRebalanceInflow']>[0],
+  ): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.poolId.chainInfo,
-      address: params.poolId.fleetAddress,
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
     })
 
     return fleetContract.setArkMaxRebalanceInflow({
@@ -453,13 +428,12 @@ export class ArmadaManager implements IArmadaManager {
   }
 
   /** @see IArmadaManager.setMinimumBufferBalance */
-  async setMinimumBufferBalance(params: {
-    poolId: IArmadaVaultId
-    minimumBufferBalance: ITokenAmount
-  }): Promise<TransactionInfo> {
+  async setMinimumBufferBalance(
+    params: Parameters<IArmadaManager['setMinimumBufferBalance']>[0],
+  ): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.poolId.chainInfo,
-      address: params.poolId.fleetAddress,
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
     })
 
     return fleetContract.setMinimumBufferBalance({
@@ -468,36 +442,36 @@ export class ArmadaManager implements IArmadaManager {
   }
 
   /** @see IArmadaManager.updateRebalanceCooldown */
-  async updateRebalanceCooldown(params: {
-    poolId: IArmadaVaultId
-    cooldown: number
-  }): Promise<TransactionInfo> {
+  async updateRebalanceCooldown(
+    params: Parameters<IArmadaManager['updateRebalanceCooldown']>[0],
+  ): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.poolId.chainInfo,
-      address: params.poolId.fleetAddress,
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
     })
 
     return fleetContract.updateRebalanceCooldown({ cooldown: params.cooldown })
   }
 
   /** @see IArmadaManager.forceRebalance */
-  async forceRebalance(params: {
-    poolId: IArmadaVaultId
-    rebalanceData: IRebalanceData[]
-  }): Promise<TransactionInfo> {
+  async forceRebalance(
+    params: Parameters<IArmadaManager['forceRebalance']>[0],
+  ): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.poolId.chainInfo,
-      address: params.poolId.fleetAddress,
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
     })
 
     return fleetContract.forceRebalance({ rebalanceData: params.rebalanceData })
   }
 
   /** @see IArmadaManager.emergencyShutdown */
-  async emergencyShutdown(params: { poolId: IArmadaVaultId }): Promise<TransactionInfo> {
+  async emergencyShutdown(
+    params: Parameters<IArmadaManager['emergencyShutdown']>[0],
+  ): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.poolId.chainInfo,
-      address: params.poolId.fleetAddress,
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
     })
 
     return fleetContract.emergencyShutdown()
@@ -515,7 +489,7 @@ export class ArmadaManager implements IArmadaManager {
    * @returns The transactions needed to deposit the tokens
    */
   private async _getDepositTX(params: {
-    poolId: IArmadaVaultId
+    vaultId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
     shouldStake?: boolean
@@ -524,14 +498,14 @@ export class ArmadaManager implements IArmadaManager {
     const shouldStake = params.shouldStake ?? true
 
     const admiralsQuarterAddress = getDeployedContractAddress({
-      chainInfo: params.poolId.chainInfo,
+      chainInfo: params.vaultId.chainInfo,
       contractCategory: 'core',
       contractName: 'admiralsQuarters',
     })
 
     // Approval
     const approvalTransaction = await this._allowanceManager.getApproval({
-      chainInfo: params.poolId.chainInfo,
+      chainInfo: params.vaultId.chainInfo,
       spender: admiralsQuarterAddress,
       amount: params.amount,
     })
@@ -556,7 +530,7 @@ export class ArmadaManager implements IArmadaManager {
       abi: AdmiralsQuartersAbi,
       functionName: 'enterFleet',
       args: [
-        params.poolId.fleetAddress.value,
+        params.vaultId.fleetAddress.value,
         params.amount.token.address.value,
         params.amount.toSolidityValue(),
         lvTokenReceiver,
@@ -568,7 +542,7 @@ export class ArmadaManager implements IArmadaManager {
       const stakeCalldata = encodeFunctionData({
         abi: AdmiralsQuartersAbi,
         functionName: 'stake',
-        args: [params.poolId.fleetAddress.value, 0n],
+        args: [params.vaultId.fleetAddress.value, 0n],
       })
       multicallArgs.push(stakeCalldata)
     }
@@ -583,6 +557,114 @@ export class ArmadaManager implements IArmadaManager {
         target: admiralsQuarterAddress,
         calldata: depositMulticallCalldata,
         description: 'Deposit Multicall Transaction',
+      }),
+    )
+
+    return transactions
+  }
+
+  /**
+   * Internal utility method to generate a withdraw TX
+   * @param params The parameters for the withdraw
+   *
+   * @returns The transactions needed to withdraw the tokens
+   */
+  async _getWithdrawTX(
+    params: Parameters<IArmadaManager['getWithdrawTX']>[0],
+  ): Promise<TransactionInfo[]> {
+    const transactions: TransactionInfo[] = []
+    const multicallArgs: HexData[] = []
+
+    const admiralsQuarterAddress = getDeployedContractAddress({
+      chainInfo: params.vaultId.chainInfo,
+      contractCategory: 'core',
+      contractName: 'admiralsQuarters',
+    })
+
+    const sharesAmount = await this.convertToShares({
+      vaultId: params.vaultId,
+      amount: params.amount,
+    })
+
+    const approvalTransaction = await this._allowanceManager.getApproval({
+      chainInfo: params.vaultId.chainInfo,
+      spender: admiralsQuarterAddress,
+      amount: sharesAmount,
+    })
+    if (approvalTransaction) {
+      transactions.push(...approvalTransaction)
+    }
+
+    const exitFleetCalldata = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'exitFleet',
+      args: [params.vaultId.fleetAddress.value, params.amount.toSolidityValue()],
+    })
+    multicallArgs.push(exitFleetCalldata)
+
+    const withdrawTokensCalldata = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'withdrawTokens',
+      args: [params.amount.token.address.value, 0n],
+    })
+    multicallArgs.push(withdrawTokensCalldata)
+
+    const withdrawMulticallCalldata = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'multicall',
+      args: [multicallArgs],
+    })
+    transactions.push(
+      createTransaction({
+        target: admiralsQuarterAddress,
+        calldata: withdrawMulticallCalldata,
+        description: 'Withdraw Multicall Transaction',
+      }),
+    )
+
+    return transactions
+  }
+
+  /**
+   * Internal utility method to generate a withdraw+unstake TX
+   * @param params The parameters for the withdraw+unstake
+   *
+   * @returns The transactions needed to withdraw+unstake the tokens
+   */
+  async _getWithdrawUnstakeTX(
+    params: Parameters<IArmadaManager['getWithdrawTX']>[0],
+  ): Promise<TransactionInfo[]> {
+    const transactions: TransactionInfo[] = []
+    const multicallArgs: HexData[] = []
+
+    const admiralsQuarterAddress = getDeployedContractAddress({
+      chainInfo: params.vaultId.chainInfo,
+      contractCategory: 'core',
+      contractName: 'admiralsQuarters',
+    })
+
+    const sharesAmount = await this.convertToShares({
+      vaultId: params.vaultId,
+      amount: params.amount,
+    })
+
+    const withdrawUnstake = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'unstakeAndWithdrawAssets',
+      args: [params.vaultId.fleetAddress.value, sharesAmount.toSolidityValue()],
+    })
+    multicallArgs.push(withdrawUnstake)
+
+    const withdrawUnstakeMulticallCalldata = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'multicall',
+      args: [multicallArgs],
+    })
+    transactions.push(
+      createTransaction({
+        target: admiralsQuarterAddress,
+        calldata: withdrawUnstakeMulticallCalldata,
+        description: 'Withdraw and Unstake Multicall Transaction',
       }),
     )
 

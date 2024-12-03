@@ -5,7 +5,7 @@ import { publicProcedure } from '../../SDKTRPC'
 export const getVaultRaw = publicProcedure
   .input(
     z.object({
-      poolId: z.custom<IArmadaVaultId>(isArmadaVaultId),
+      vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
     }),
   )
   .query(async (opts) => {

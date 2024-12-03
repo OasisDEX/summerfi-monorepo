@@ -2,7 +2,7 @@ import { IAddress, IPercentage, ITokenAmount, type ChainInfo } from '@summerfi/s
 import { TransactionInfo } from '@summerfi/sdk-common/orders'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IArmadaVaultId } from './IArmadaVaultId'
-import { IArmadaPoolInfo } from './IArmadaPoolInfo'
+import { IArmadaVaultInfo } from './IArmadaVaultInfo'
 import { IArmadaPosition } from './IArmadaPosition'
 import { IArmadaPositionId } from './IArmadaPositionId'
 import type {
@@ -35,11 +35,21 @@ export interface IArmadaManager {
    * @name getVaultRaw
    * @description Get the specific vault in the protocol
    *
-   * @param poolId ID of the pool to retrieve
+   * @param vaultId ID of the pool to retrieve
    *
    * @returns GetVaultQuery
    */
-  getVaultRaw(params: { poolId: IArmadaVaultId }): Promise<GetVaultQuery>
+  getVaultRaw(params: { vaultId: IArmadaVaultId }): Promise<GetVaultQuery>
+
+  /**
+   * @name getVaultRaw
+   * @description Get the specific vault in the protocol
+   *
+   * @param vaultId ID of the pool to retrieve
+   *
+   * @returns GetVaultQuery
+   */
+  getVaultRaw(params: { vaultId: IArmadaVaultId }): Promise<GetVaultQuery>
 
   /**
    * @name getGlobalRebalancesRaw
@@ -69,17 +79,17 @@ export interface IArmadaManager {
    *
    * @returns GerUsersActivityQuery
    */
-  getUserActivityRaw(params: { poolId: IArmadaVaultId }): Promise<GetUserActivityQuery>
+  getUserActivityRaw(params: { vaultId: IArmadaVaultId }): Promise<GetUserActivityQuery>
 
   /**
    * @name getPoolInfo
    * @description Get the extended position information for a position
    *
-   * @param poolId ID of the pool to retrieve
+   * @param vaultId ID of the pool to retrieve
    *
    * @returns IArmadaPoolInfo The extended information of the pool
    */
-  getPoolInfo(params: { poolId: IArmadaVaultId }): Promise<IArmadaPoolInfo>
+  getVaultInfo(params: { vaultId: IArmadaVaultId }): Promise<IArmadaVaultInfo>
 
   /** POSITIONS */
 
@@ -119,7 +129,7 @@ export interface IArmadaManager {
    * @name getFleetBalance
    * @description Get the balance of a user in a fleet
    *
-   * @param poolId ID of the pool to retrieve the shares
+   * @param vaultId ID of the pool to retrieve the shares
    * @param user Address of the user to retrieve the shares
    *
    * @returns ITokenAmount The amount of assets the user has in the fleet
@@ -130,7 +140,7 @@ export interface IArmadaManager {
    * @name getStakedBalance
    * @description Get the staked balance of a user in a rewards pool
    *
-   * @param poolId ID of the vault to retrieve the balance
+   * @param vaultId ID of the vault to retrieve the balance
    * @param user Address of the user to retrieve the balance
    *
    * @returns ITokenAmount The amount of assets the user has stake
@@ -142,7 +152,7 @@ export interface IArmadaManager {
    * @name getTotalBalance
    * @description Get the total balance of a user in a fleet
    *
-   * @param poolId ID of the pool to retrieve the shares
+   * @param vaultId ID of the pool to retrieve the shares
    * @param user Address of the user to retrieve the shares
    *
    * @returns ITokenAmount The total amount of assets the user has in the fleet
@@ -155,14 +165,15 @@ export interface IArmadaManager {
    * @name getNewDepositTX
    * @description Returns the transactions needed to deposit tokens in the Fleet for a new position
    *
-   * @param poolId ID of the pool to deposit in
+   * @param vaultId ID of the pool to deposit in
    * @param user Address of the user that is trying to deposit
    * @param amount Token amount to be deposited
+   * @param shouldStake Whether the user wants to stake the deposit
    *
    * @returns TransactionInfo[] An array of transactions that must be executed for the operation to succeed
    */
   getNewDepositTX(params: {
-    poolId: IArmadaVaultId
+    vaultId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
     shouldStake?: boolean
@@ -172,30 +183,32 @@ export interface IArmadaManager {
    * @name getUpdateDepositTX
    * @description Returns the transactions needed to deposit tokens in the Fleet for an existing position
    *
-   * @param poolId ID of the pool to deposit in
+   * @param vaultId ID of the pool to deposit in
    * @param positionId ID of the position to be updated
    * @param amount Token amount to be deposited
+   * @param shouldStake Whether the user wants to stake the deposit
    *
    * @returns TransactionInfo[] An array of transactions that must be executed for the operation to succeed
    */
   getUpdateDepositTX(params: {
-    poolId: IArmadaVaultId
+    vaultId: IArmadaVaultId
     positionId: IArmadaPositionId
     amount: ITokenAmount
+    shouldStake?: boolean
   }): Promise<TransactionInfo[]>
 
   /**
    * @name getWithdrawTX
    * @description Returns the transactions needed to withdraw tokens from the Fleet
    *
-   * @param poolId ID of the pool to withdraw from
+   * @param vaultId ID of the pool to withdraw from
    * @param user Address of the user that is trying to withdraw
    * @param amount Token amount to be withdrawn
    *
    * @returns TransactionInfo[] An array of transactions that must be executed for the operation to succeed
    */
   getWithdrawTX(params: {
-    poolId: IArmadaVaultId
+    vaultId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]>
@@ -211,7 +224,7 @@ export interface IArmadaManager {
    * @returns TransactionInfo The transaction information
    */
   rebalance(params: {
-    poolId: IArmadaVaultId
+    vaultId: IArmadaVaultId
     rebalanceData: IRebalanceData[]
   }): Promise<TransactionInfo>
 
@@ -224,7 +237,7 @@ export interface IArmadaManager {
    * @returns TransactionInfo The transaction information
    */
   adjustBuffer(params: {
-    poolId: IArmadaVaultId
+    vaultId: IArmadaVaultId
     rebalanceData: IRebalanceData[]
   }): Promise<TransactionInfo>
 
@@ -239,7 +252,7 @@ export interface IArmadaManager {
    * @returns TransactionInfo The transaction information
    */
   setFleetDepositCap(params: {
-    poolId: IArmadaVaultId
+    vaultId: IArmadaVaultId
     cap: ITokenAmount
   }): Promise<TransactionInfo>
 
@@ -249,64 +262,64 @@ export interface IArmadaManager {
    *
    * @returns TransactionInfo The transaction information
    */
-  setTipJar(params: { poolId: IArmadaVaultId }): Promise<TransactionInfo>
+  setTipJar(params: { vaultId: IArmadaVaultId }): Promise<TransactionInfo>
 
   /**
    * @name setTipRate
    * @description Sets the tip rate of the fleet. Used by the governance
    *
-   * @param poolId The ID of the pool
+   * @param vaultId The ID of the pool
    * @param rate The new tip rate
    *
    * @returns The transaction information
    */
-  setTipRate(params: { poolId: IArmadaVaultId; rate: IPercentage }): Promise<TransactionInfo>
+  setTipRate(params: { vaultId: IArmadaVaultId; rate: IPercentage }): Promise<TransactionInfo>
 
   /**
    * @name addArk
    * @description Adds a new ark to the fleet. Used by the governance
    *
-   * @param poolId The ID of the pool
+   * @param vaultId The ID of the pool
    * @param ark The address of the new ark
    *
    * @returns The transaction information
    */
-  addArk(params: { poolId: IArmadaVaultId; ark: IAddress }): Promise<TransactionInfo>
+  addArk(params: { vaultId: IArmadaVaultId; ark: IAddress }): Promise<TransactionInfo>
 
   /**
    * @name addArks
    * @description Adds a list of new arks to the fleet. Used by the governance
    *
-   * @param poolId The ID of the pool
+   * @param vaultId The ID of the pool
    * @param arks The list of addresses of the new arks
    *
    * @returns The transaction information
    */
-  addArks(params: { poolId: IArmadaVaultId; arks: IAddress[] }): Promise<TransactionInfo>
+  addArks(params: { vaultId: IArmadaVaultId; arks: IAddress[] }): Promise<TransactionInfo>
 
   /**
    * @name removeArk
    * @description Removes an ark from the fleet. Used by the governance
    *
-   * @param poolId The ID of the pool
+   * @param vaultId The ID of the pool
    * @param ark The address of the ark to remove
    *
    * @returns The transaction information
    */
-  removeArk(params: { poolId: IArmadaVaultId; ark: IAddress }): Promise<TransactionInfo>
+  removeArk(params: { vaultId: IArmadaVaultId; ark: IAddress }): Promise<TransactionInfo>
 
   /**
    * @name setArkDepositCap
    * @description Sets the deposit cap of an ark. Used by the governance
    *
-   * @param poolId The ID of the pool
+   * @param vaultId The ID of the pool
    * @param ark The address of the ark
    * @param cap The new deposit cap
    *
    * @returns The transaction information
    */
   setArkDepositCap(params: {
-    poolId: IArmadaVaultId
+    vaultId: IArmadaVaultId
     ark: IAddress
     cap: ITokenAmount
   }): Promise<TransactionInfo>
@@ -315,14 +328,14 @@ export interface IArmadaManager {
    * @name setArkMaxRebalanceOutflow
    * @description Sets the maximum rebalance outflow of an ark. Used by the governance
    *
-   * @param poolId The ID of the pool
+   * @param vaultId The ID of the pool
    * @param ark The address of the ark
    * @param maxRebalanceOutflow The new maximum rebalance outflow
    *
    * @returns The transaction information
    */
   setArkMaxRebalanceOutflow(params: {
-    poolId: IArmadaVaultId
+    vaultId: IArmadaVaultId
     ark: IAddress
     maxRebalanceOutflow: ITokenAmount
   }): Promise<TransactionInfo>
@@ -331,14 +344,14 @@ export interface IArmadaManager {
    * @name setArkMaxRebalanceInflow
    * @description Sets the maximum rebalance inflow of an ark. Used by the governance
    *
-   * @param poolId The ID of the pool
+   * @param vaultId The ID of the pool
    * @param ark The address of the ark
    * @param maxRebalanceInflow The new maximum rebalance inflow
    *
    * @returns The transaction information
    */
   setArkMaxRebalanceInflow(params: {
-    poolId: IArmadaVaultId
+    vaultId: IArmadaVaultId
     ark: IAddress
     maxRebalanceInflow: ITokenAmount
   }): Promise<TransactionInfo>
@@ -347,14 +360,14 @@ export interface IArmadaManager {
    * @name setArkMinimumBufferBalance
    * @description Sets the minimum buffer balance of an ark. Used by the governance
    *
-   * @param poolId The ID of the pool
+   * @param vaultId The ID of the pool
    * @param ark The address of the ark
    * @param minimumBufferBalance The new minimum buffer balance
    *
    * @returns The transaction information
    */
   setMinimumBufferBalance(params: {
-    poolId: IArmadaVaultId
+    vaultId: IArmadaVaultId
     minimumBufferBalance: ITokenAmount
   }): Promise<TransactionInfo>
 
@@ -362,13 +375,13 @@ export interface IArmadaManager {
    * @name setRebalanceCooldown
    * @description Sets the rebalance cooldown of the fleet. Used by the governance
    *
-   * @param poolId The ID of the pool
+   * @param vaultId The ID of the pool
    * @param cooldown The new rebalance cooldown
    *
    * @returns The transaction information
    */
   updateRebalanceCooldown(params: {
-    poolId: IArmadaVaultId
+    vaultId: IArmadaVaultId
     cooldown: number
   }): Promise<TransactionInfo>
 
@@ -376,13 +389,13 @@ export interface IArmadaManager {
    * @name forceRebalance
    * @description Forces a rebalance of the fleet. Used by the governance
    *
-   * @param poolId The ID of the pool
+   * @param vaultId The ID of the pool
    * @param rebalanceData The data for the rebalance
    *
    * @returns The transaction information
    */
   forceRebalance(params: {
-    poolId: IArmadaVaultId
+    vaultId: IArmadaVaultId
     rebalanceData: IRebalanceData[]
   }): Promise<TransactionInfo>
 
@@ -390,11 +403,11 @@ export interface IArmadaManager {
    * @name emergencyShutdown
    * @description Shuts down the fleet in case of an emergency. Used by the governance
    *
-   * @param poolId The ID of the pool
+   * @param vaultId The ID of the pool
    *
    * @returns The transaction information
    */
-  emergencyShutdown(params: { poolId: IArmadaVaultId }): Promise<TransactionInfo>
+  emergencyShutdown(params: { vaultId: IArmadaVaultId }): Promise<TransactionInfo>
 
   /** UTILITY FUNCTIONS */
 
@@ -402,10 +415,10 @@ export interface IArmadaManager {
    * @name convertToShares
    * @description Converts a token amount to shares in the Fleet
    *
-   * @param poolId ID of the pool to convert the tokens to shares
+   * @param vaultId ID of the vault to convert the tokens to shares
    * @param amount Token amount to be converted
    *
    * @returns ITokenAmount The amount of shares that the token amount represents
    */
-  convertToShares(params: { poolId: IArmadaVaultId; amount: ITokenAmount }): Promise<ITokenAmount>
+  convertToShares(params: { vaultId: IArmadaVaultId; amount: ITokenAmount }): Promise<ITokenAmount>
 }

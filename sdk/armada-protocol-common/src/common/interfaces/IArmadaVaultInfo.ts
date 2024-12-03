@@ -15,18 +15,18 @@ export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IArmadaPoolInfo
- * @description Interface for an the extended info of an Armada Protocol pool (fleet)
+ * @description Interface for an the extended info of an Armada Protocol vault (fleet)
  */
-export interface IArmadaPoolInfo extends IPoolInfo, IArmadaPoolInfoData {
+export interface IArmadaVaultInfo extends IPoolInfo, IArmadaVaultInfoData {
   /** Signature used to differentiate it from similar interfaces */
   readonly [__signature__]: symbol
-  /** ID of the pool */
+  /** ID of the vault */
   readonly id: IArmadaVaultId
-  /** Maximum amount that can be deposited into the pool at this moment */
+  /** Maximum amount that can be deposited into the vault at this moment */
   readonly depositCap: ITokenAmount
-  /** Total amount of assets currently deposited in the pool */
+  /** Total amount of assets currently deposited in the vault */
   readonly totalDeposits: ITokenAmount
-  /** Total amount of shares currently minted in the pool */
+  /** Total amount of shares currently minted in the vault */
   readonly totalShares: ITokenAmount
 
   // Re-declaring the properties to narrow the types
@@ -34,9 +34,9 @@ export interface IArmadaPoolInfo extends IPoolInfo, IArmadaPoolInfoData {
 }
 
 /**
- * @description Zod schema for IArmadaPoolInfo
+ * @description Zod schema for IArmadaVaultInfo
  */
-export const ArmadaPoolInfoDataSchema = z.object({
+export const ArmadaVaultInfoDataSchema = z.object({
   ...PoolInfoDataSchema.shape,
   id: z.custom<IArmadaVaultId>((val) => isArmadaVaultId(val)),
   depositCap: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
@@ -46,17 +46,17 @@ export const ArmadaPoolInfoDataSchema = z.object({
 })
 
 /**
- * Type for the data part of IArmadaPoolInfo
+ * Type for the data part of IArmadaVaultInfo
  */
-export type IArmadaPoolInfoData = Readonly<z.infer<typeof ArmadaPoolInfoDataSchema>>
+export type IArmadaVaultInfoData = Readonly<z.infer<typeof ArmadaVaultInfoDataSchema>>
 
 /**
- * @description Type guard for IArmadaPoolInfo
- * @param maybeArmadaPoolInfo Object to be checked
- * @returns true if the object is a IArmadaPoolInfo
+ * @description Type guard for IArmadaVaultInfo
+ * @param maybeArmadaVaultInfo Object to be checked
+ * @returns true if the object is a IArmadaVaultInfo
  */
-export function isArmadaPoolInfo(
-  maybeArmadaPoolInfo: unknown,
-): maybeArmadaPoolInfo is IArmadaPoolInfo {
-  return ArmadaPoolInfoDataSchema.safeParse(maybeArmadaPoolInfo).success
+export function isArmadaVaultInfo(
+  maybeArmadaVaultInfo: unknown,
+): maybeArmadaVaultInfo is IArmadaVaultInfo {
+  return ArmadaVaultInfoDataSchema.safeParse(maybeArmadaVaultInfo).success
 }
