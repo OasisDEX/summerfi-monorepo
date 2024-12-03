@@ -265,7 +265,7 @@ export class ArmadaManager implements IArmadaManager {
     const exitFleetCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'exitFleet',
-      args: [params.poolId.fleetAddress.value, sharesAmount.toSolidityValue()],
+      args: [params.poolId.fleetAddress.value, params.amount.toSolidityValue()],
     })
     multicallArgs.push(exitFleetCalldata)
 
