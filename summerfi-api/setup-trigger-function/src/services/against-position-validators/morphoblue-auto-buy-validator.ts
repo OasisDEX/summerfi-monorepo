@@ -170,7 +170,7 @@ const upsertErrorsValidation = paramsSchema
       const partialTakeProfitMinExecutionPrice =
         safeParseBigInt(partialTakeProfit.decodedParams.executionPrice) ?? 0n
 
-      return triggerData.maxBuyPrice > partialTakeProfitMinExecutionPrice
+      return triggerData.maxBuyPrice < partialTakeProfitMinExecutionPrice
     },
     {
       message: 'Max buy price is lower than partial take profit execution price',
