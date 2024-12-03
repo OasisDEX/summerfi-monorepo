@@ -27,7 +27,7 @@ export const getWithdrawTXHandler =
     })
 
     const poolInfo = await sdk.armada.users.getPoolInfo({
-      poolId,
+      vaultId: poolId,
     })
 
     const user = User.createFrom({
@@ -43,7 +43,7 @@ export const getWithdrawTXHandler =
     })
 
     return sdk.armada.users.getWithdrawTX({
-      poolId,
+      vaultId: poolId,
       user,
       amount: tokenAmount,
     })

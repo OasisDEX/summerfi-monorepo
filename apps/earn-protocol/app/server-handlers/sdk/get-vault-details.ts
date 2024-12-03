@@ -24,7 +24,7 @@ export async function getVaultDetails({
       fleetAddress,
     })
     const { vault } = await backendSDK.armada.users.getVaultRaw({
-      poolId,
+      vaultId: poolId,
     })
 
     return vault as SDKVaultType | undefined

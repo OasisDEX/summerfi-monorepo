@@ -4,7 +4,7 @@ import {
   createTransaction,
   getDeployedContractAddress,
   IArmadaManager,
-  IArmadaPoolInfo,
+  IArmadaVaultInfo,
   IArmadaPosition,
   IArmadaPositionId,
   IArmadaVaultId,
@@ -90,7 +90,7 @@ export class ArmadaManager implements IArmadaManager {
   /** @see IArmadaManager.getVaultInfo */
   async getVaultInfo(
     params: Parameters<IArmadaManager['getVaultInfo']>[0],
-  ): Promise<IArmadaPoolInfo> {
+  ): Promise<IArmadaVaultInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.vaultId.chainInfo,
       address: params.vaultId.fleetAddress,

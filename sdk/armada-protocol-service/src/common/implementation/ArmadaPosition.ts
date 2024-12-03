@@ -1,5 +1,5 @@
 import {
-  IArmadaPool,
+  IArmadaVault,
   IArmadaPosition,
   IArmadaPositionData,
   IArmadaPositionId,
@@ -25,7 +25,7 @@ export class ArmadaPosition extends Position implements IArmadaPosition {
   /** ATTRIBUTES */
   readonly type = PositionType.Armada
   readonly id: IArmadaPositionId
-  readonly pool: IArmadaPool
+  readonly pool: IArmadaVault
   readonly amount: ITokenAmount
   readonly shares: ITokenAmount
   readonly deposits: ITokenAmount[]

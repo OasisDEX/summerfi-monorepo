@@ -6,7 +6,7 @@ import { publicProcedure } from '../../SDKTRPC'
 export const setFleetDepositCap = publicProcedure
   .input(
     z.object({
-      poolId: z.custom<IArmadaVaultId>(isArmadaVaultId),
+      vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
       cap: z.custom<ITokenAmount>(isTokenAmount),
     }),
   )

@@ -5,7 +5,7 @@ import { IArmadaVaultId, isArmadaVaultId } from '@summerfi/armada-protocol-commo
 export const getUserActivityRaw = publicProcedure
   .input(
     z.object({
-      poolId: z.custom<IArmadaVaultId>(isArmadaVaultId),
+      vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
     }),
   )
   .query(async (opts) => {

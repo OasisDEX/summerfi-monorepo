@@ -1,5 +1,4 @@
-import { IArmadaVaultId, IRebalanceData } from '@summerfi/armada-protocol-common'
-import { IAddress, IPercentage, ITokenAmount, TransactionInfo } from '@summerfi/sdk-common'
+import { TransactionInfo } from '@summerfi/sdk-common'
 import { IArmadaManagerGovernanceClient } from '../../interfaces/ArmadaManager/IArmadaManagerGovernanceClient'
 import { IRPCClient } from '../../interfaces/IRPCClient'
 import { RPCMainClientType } from '../../rpc/SDKMainClient'
@@ -17,94 +16,93 @@ export class ArmadaManagerGovernanceClient
   }
 
   /** @see IArmadaManagerGovernanceClient.setFleetDepositCap */
-  async setFleetDepositCap(params: {
-    poolId: IArmadaVaultId
-    cap: ITokenAmount
-  }): Promise<TransactionInfo> {
+  async setFleetDepositCap(
+    params: Parameters<IArmadaManagerGovernanceClient['setFleetDepositCap']>[0],
+  ): Promise<TransactionInfo> {
     return this.rpcClient.armada.governance.setFleetDepositCap.query(params)
   }
 
   /** @see IArmadaManagerGovernanceClient.setTipJar */
-  async setTipJar(params: { poolId: IArmadaVaultId }): Promise<TransactionInfo> {
+  async setTipJar(
+    params: Parameters<IArmadaManagerGovernanceClient['setTipJar']>[0],
+  ): Promise<TransactionInfo> {
     return this.rpcClient.armada.governance.setTipJar.query(params)
   }
 
   /** @see IArmadaManagerGovernanceClient.setTipRate */
-  async setTipRate(params: {
-    poolId: IArmadaVaultId
-    rate: IPercentage
-  }): Promise<TransactionInfo> {
+  async setTipRate(
+    params: Parameters<IArmadaManagerGovernanceClient['setTipRate']>[0],
+  ): Promise<TransactionInfo> {
     return this.rpcClient.armada.governance.setTipRate.query(params)
   }
 
   /** @see IArmadaManagerGovernanceClient.addArk */
-  async addArk(params: { poolId: IArmadaVaultId; ark: IAddress }): Promise<TransactionInfo> {
+  async addArk(
+    params: Parameters<IArmadaManagerGovernanceClient['addArk']>[0],
+  ): Promise<TransactionInfo> {
     return this.rpcClient.armada.governance.addArk.query(params)
   }
 
   /** @see IArmadaManagerGovernanceClient.addArks */
-  async addArks(params: { poolId: IArmadaVaultId; arks: IAddress[] }): Promise<TransactionInfo> {
+  async addArks(
+    params: Parameters<IArmadaManagerGovernanceClient['addArks']>[0],
+  ): Promise<TransactionInfo> {
     return this.rpcClient.armada.governance.addArks.query(params)
   }
 
   /** @see IArmadaManagerGovernanceClient.removeArk */
-  async removeArk(params: { poolId: IArmadaVaultId; ark: IAddress }): Promise<TransactionInfo> {
+  async removeArk(
+    params: Parameters<IArmadaManagerGovernanceClient['removeArk']>[0],
+  ): Promise<TransactionInfo> {
     return this.rpcClient.armada.governance.removeArk.query(params)
   }
 
   /** @see IArmadaManagerGovernanceClient.setArkDepositCap */
-  async setArkDepositCap(params: {
-    poolId: IArmadaVaultId
-    ark: IAddress
-    cap: ITokenAmount
-  }): Promise<TransactionInfo> {
+  async setArkDepositCap(
+    params: Parameters<IArmadaManagerGovernanceClient['setArkDepositCap']>[0],
+  ): Promise<TransactionInfo> {
     return this.rpcClient.armada.governance.setArkDepositCap.query(params)
   }
 
   /** @see IArmadaManagerGovernanceClient.setArkMaxRebalanceOutflow */
-  async setArkMaxRebalanceOutflow(params: {
-    poolId: IArmadaVaultId
-    ark: IAddress
-    maxRebalanceOutflow: ITokenAmount
-  }): Promise<TransactionInfo> {
+  async setArkMaxRebalanceOutflow(
+    params: Parameters<IArmadaManagerGovernanceClient['setArkMaxRebalanceOutflow']>[0],
+  ): Promise<TransactionInfo> {
     return this.rpcClient.armada.governance.setArkMaxRebalanceOutflow.query(params)
   }
 
   /** @see IArmadaManagerGovernanceClient.setArkMaxRebalanceInflow */
-  async setArkMaxRebalanceInflow(params: {
-    poolId: IArmadaVaultId
-    ark: IAddress
-    maxRebalanceInflow: ITokenAmount
-  }): Promise<TransactionInfo> {
+  async setArkMaxRebalanceInflow(
+    params: Parameters<IArmadaManagerGovernanceClient['setArkMaxRebalanceInflow']>[0],
+  ): Promise<TransactionInfo> {
     return this.rpcClient.armada.governance.setArkMaxRebalanceInflow.query(params)
   }
 
   /** @see IArmadaManagerGovernanceClient.setMinimumBufferBalance */
-  async setMinimumBufferBalance(params: {
-    poolId: IArmadaVaultId
-    minimumBufferBalance: ITokenAmount
-  }): Promise<TransactionInfo> {
+  async setMinimumBufferBalance(
+    params: Parameters<IArmadaManagerGovernanceClient['setMinimumBufferBalance']>[0],
+  ): Promise<TransactionInfo> {
     return this.rpcClient.armada.governance.setMinimumBufferBalance.query(params)
   }
 
   /** @see IArmadaManagerGovernanceClient.updateRebalanceCooldown */
-  async updateRebalanceCooldown(params: {
-    poolId: IArmadaVaultId
-    cooldown: number
-  }): Promise<TransactionInfo> {
+  async updateRebalanceCooldown(
+    params: Parameters<IArmadaManagerGovernanceClient['updateRebalanceCooldown']>[0],
+  ): Promise<TransactionInfo> {
     return this.rpcClient.armada.governance.updateRebalanceCooldown.query(params)
   }
 
   /** @see IArmadaManagerGovernanceClient.emergencyShutdown */
-  forceRebalance(params: {
-    poolId: IArmadaVaultId
-    rebalanceData: IRebalanceData[]
-  }): Promise<TransactionInfo> {
+  forceRebalance(
+    params: Parameters<IArmadaManagerGovernanceClient['forceRebalance']>[0],
+  ): Promise<TransactionInfo> {
     return this.rpcClient.armada.governance.forceRebalance.query(params)
   }
 
   /** @see IArmadaManagerGovernanceClient.emergencyShutdown */
-  emergencyShutdown(params: { poolId: IArmadaVaultId }): Promise<TransactionInfo> {
+  emergencyShutdown(
+    params: Parameters<IArmadaManagerGovernanceClient['emergencyShutdown']>[0],
+  ): Promise<TransactionInfo> {
     return this.rpcClient.armada.governance.emergencyShutdown.query(params)
   }
 }

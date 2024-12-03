@@ -1,8 +1,8 @@
 import {
   IArmadaVaultId,
-  IArmadaPoolInfo,
-  IArmadaPoolInfoData,
-  __iarmadapoolinfo__,
+  IArmadaVaultInfo,
+  IArmadaVaultInfoData,
+  __iarmadavaultinfo__,
 } from '@summerfi/armada-protocol-common'
 import { ITokenAmount, PoolInfo, PoolType } from '@summerfi/sdk-common/common'
 import { SerializationService } from '@summerfi/sdk-common/services'
@@ -10,15 +10,15 @@ import { SerializationService } from '@summerfi/sdk-common/services'
 /**
  * Type for the parameters of ArmadaPool
  */
-export type ArmadaPoolInfoParameters = Omit<IArmadaPoolInfoData, 'type'>
+export type ArmadaPoolInfoParameters = Omit<IArmadaVaultInfoData, 'type'>
 
 /**
  * @class ArmadaPoolInfo
- * @see IArmadaPoolInfo
+ * @see IArmadaVaultInfo
  */
-export class ArmadaPoolInfo extends PoolInfo implements IArmadaPoolInfo {
+export class ArmadaPoolInfo extends PoolInfo implements IArmadaVaultInfo {
   /** SIGNATURE */
-  readonly [__iarmadapoolinfo__] = __iarmadapoolinfo__
+  readonly [__iarmadavaultinfo__] = __iarmadavaultinfo__
 
   /** ATTRIBUTES */
   readonly type = PoolType.Armada

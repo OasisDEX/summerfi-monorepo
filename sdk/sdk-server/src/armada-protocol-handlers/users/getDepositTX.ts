@@ -6,7 +6,7 @@ import { publicProcedure } from '../../SDKTRPC'
 export const getDepositTX = publicProcedure
   .input(
     z.object({
-      poolId: z.custom<IArmadaVaultId>(isArmadaVaultId),
+      vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
       user: z.custom<IUser>(isUser),
       amount: z.custom<ITokenAmount>(isTokenAmount),
       shouldStake: z.boolean().optional(),

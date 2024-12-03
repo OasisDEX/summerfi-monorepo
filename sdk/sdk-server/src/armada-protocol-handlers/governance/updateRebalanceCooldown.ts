@@ -5,7 +5,7 @@ import { publicProcedure } from '../../SDKTRPC'
 export const updateRebalanceCooldown = publicProcedure
   .input(
     z.object({
-      poolId: z.custom<IArmadaVaultId>(isArmadaVaultId),
+      vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
       cooldown: z.number(),
     }),
   )

@@ -27,7 +27,7 @@ export const getDepositTXHandler =
     })
 
     const poolInfo = await sdk.armada.users.getPoolInfo({
-      poolId,
+      vaultId: poolId,
     })
 
     const user = User.createFrom({
@@ -43,7 +43,7 @@ export const getDepositTXHandler =
     })
 
     return sdk.armada.users.getNewDepositTX({
-      poolId,
+      vaultId: poolId,
       user,
       amount: tokenAmount,
     })

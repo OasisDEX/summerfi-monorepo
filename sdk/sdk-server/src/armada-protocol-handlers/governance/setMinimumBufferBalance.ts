@@ -6,7 +6,7 @@ import { publicProcedure } from '../../SDKTRPC'
 export const setMinimumBufferBalance = publicProcedure
   .input(
     z.object({
-      poolId: z.custom<IArmadaVaultId>(isArmadaVaultId),
+      vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
       minimumBufferBalance: z.custom<ITokenAmount>(isTokenAmount),
     }),
   )

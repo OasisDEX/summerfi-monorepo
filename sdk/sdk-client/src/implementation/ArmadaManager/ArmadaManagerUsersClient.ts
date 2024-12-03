@@ -1,11 +1,6 @@
-import {
-  IArmadaVaultId,
-  IArmadaPoolInfo,
-  IArmadaPosition,
-  IArmadaPositionId,
-} from '@summerfi/armada-protocol-common'
+import { IArmadaVaultInfo, IArmadaPosition } from '@summerfi/armada-protocol-common'
 
-import { ITokenAmount, IUser, TransactionInfo, type IAddress } from '@summerfi/sdk-common'
+import { ITokenAmount, TransactionInfo } from '@summerfi/sdk-common'
 import { IArmadaManagerUsersClient } from '../../interfaces/ArmadaManager/IArmadaManagerUsersClient'
 import { IRPCClient } from '../../interfaces/IRPCClient'
 import { RPCMainClientType } from '../../rpc/SDKMainClient'
@@ -49,17 +44,23 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   }
 
   /** @see IArmadaManagerUsersClient.getPoolInfo */
-  async getPoolInfo(params: { poolId: IArmadaVaultId }): Promise<IArmadaPoolInfo> {
+  async getPoolInfo(
+    params: Parameters<IArmadaManagerUsersClient['getPoolInfo']>[0],
+  ): Promise<IArmadaVaultInfo> {
     return this.rpcClient.armada.users.getPoolInfo.query(params)
   }
 
   /** @see IArmadaManagerUsersClient.getUserPositions */
-  async getUserPositions(params: { user: IUser }): Promise<IArmadaPosition[]> {
+  async getUserPositions(
+    params: Parameters<IArmadaManagerUsersClient['getUserPositions']>[0],
+  ): Promise<IArmadaPosition[]> {
     return this.rpcClient.armada.users.getUserPositions.query(params)
   }
 
   /** @see IArmadaManagerUsersClient.getUserPositions */
-  async getUserPosition(params: { user: IUser; fleetAddress: IAddress }): Promise<IArmadaPosition> {
+  async getUserPosition(
+    params: Parameters<IArmadaManagerUsersClient['getUserPosition']>[0],
+  ): Promise<IArmadaPosition> {
     return this.rpcClient.armada.users.getUserPosition.query({
       user: params.user,
       fleetAddress: params.fleetAddress,
@@ -67,50 +68,48 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   }
 
   /** @see IArmadaManagerUsersClient.getPosition */
-  async getPosition(params: {
-    poolId: IArmadaVaultId
-    positionId: IArmadaPositionId
-  }): Promise<IArmadaPosition> {
+  async getPosition(
+    params: Parameters<IArmadaManagerUsersClient['getPosition']>[0],
+  ): Promise<IArmadaPosition> {
     return this.rpcClient.armada.users.getPosition.query(params)
   }
 
   /** @see IArmadaManagerUsersClient.getNewDepositTX */
-  async getNewDepositTX(params: {
-    poolId: IArmadaVaultId
-    user: IUser
-    amount: ITokenAmount
-    shouldStake?: boolean
-  }): Promise<TransactionInfo[]> {
+  async getNewDepositTX(
+    params: Parameters<IArmadaManagerUsersClient['getNewDepositTX']>[0],
+  ): Promise<TransactionInfo[]> {
     return this.rpcClient.armada.users.getDepositTX.query(params)
   }
 
   /** @see IArmadaManagerUsersClient.getUpdateDepositTX */
-  async getUpdateDepositTX(params: {
-    poolId: IArmadaVaultId
-    positionId: IArmadaPositionId
-    amount: ITokenAmount
-  }): Promise<TransactionInfo[]> {
+  async getUpdateDepositTX(
+    params: Parameters<IArmadaManagerUsersClient['getUpdateDepositTX']>[0],
+  ): Promise<TransactionInfo[]> {
     return this.rpcClient.armada.users.getUpdateDepositTX.query(params)
   }
 
   /** @see IArmadaManagerUsersClient.getWithdrawTX */
-  async getWithdrawTX(params: {
-    poolId: IArmadaVaultId
-    user: IUser
-    amount: ITokenAmount
-  }): Promise<TransactionInfo[]> {
+  async getWithdrawTX(
+    params: Parameters<IArmadaManagerUsersClient['getWithdrawTX']>[0],
+  ): Promise<TransactionInfo[]> {
     return this.rpcClient.armada.users.getWithdrawTX.query(params)
   }
 
-  async getStakedBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount> {
+  async getStakedBalance(
+    params: Parameters<IArmadaManagerUsersClient['getStakedBalance']>[0],
+  ): Promise<ITokenAmount> {
     return this.rpcClient.armada.users.getStakedBalance.query(params)
   }
 
-  async getFleetBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount> {
+  async getFleetBalance(
+    params: Parameters<IArmadaManagerUsersClient['getFleetBalance']>[0],
+  ): Promise<ITokenAmount> {
     return this.rpcClient.armada.users.getFleetBalance.query(params)
   }
 
-  getTotalBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount> {
+  getTotalBalance(
+    params: Parameters<IArmadaManagerUsersClient['getTotalBalance']>[0],
+  ): Promise<ITokenAmount> {
     return this.rpcClient.armada.users.getTotalBalance.query(params)
   }
 }

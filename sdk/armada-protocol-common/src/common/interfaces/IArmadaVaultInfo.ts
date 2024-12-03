@@ -14,7 +14,7 @@ import { IArmadaVaultId, isArmadaVaultId } from './IArmadaVaultId'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface IArmadaPoolInfo
+ * @interface IArmadaVaultInfo
  * @description Interface for an the extended info of an Armada Protocol vault (fleet)
  */
 export interface IArmadaVaultInfo extends IPoolInfo, IArmadaVaultInfoData {
