@@ -18,6 +18,7 @@ import { isAddress } from 'viem'
 import { getUserSumrEligibility } from '@/features/sumr-claim/helpers/getUserSumrEligibility'
 
 import classNames from './SumrClaimSearch.module.scss'
+import { NewsletterWrapper } from '@/features/newsletter/components/NewsletterWrapper/NewsletterWrapper'
 
 export const SumrClaimSearch = () => {
   const { push } = useRouter()
@@ -158,16 +159,17 @@ export const SumrClaimSearch = () => {
           <Text variant="p3" style={{ marginBottom: 'var(--general-space-16)' }}>
             The best way to earn SUMR is by depositing into the protocol when its live.
           </Text>
-          <Input
-            variant="withBorder"
-            placeholder="Type email here"
-            button={
-              <WithArrow as="p" withAnimated variant="p3semiColorful">
-                Join
-              </WithArrow>
-            }
-            wrapperStyles={{ maxWidth: '366px', fontSize: '14px' }}
-          />
+          {/*<Input*/}
+          {/*  variant="withBorder"*/}
+          {/*  placeholder="Type email here"*/}
+          {/*  button={*/}
+          {/*    <WithArrow as="p" withAnimated variant="p3semiColorful">*/}
+          {/*      Join*/}
+          {/*    </WithArrow>*/}
+          {/*  }*/}
+          {/*  wrapperStyles={{ maxWidth: '366px', fontSize: '14px' }}*/}
+          {/*/>*/}
+          <NewsletterWrapper />
         </Card>
       </GradientBox>
     </div>

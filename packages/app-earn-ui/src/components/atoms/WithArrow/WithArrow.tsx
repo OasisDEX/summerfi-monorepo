@@ -17,6 +17,7 @@ export function WithArrow({
   reserveSpace,
   withAnimated = true,
   withStatic = false,
+  onClick,
 }: PropsWithChildren<{
   gap?: string | number
   style?: CSSProperties
@@ -26,9 +27,10 @@ export function WithArrow({
   reserveSpace?: boolean
   withAnimated?: boolean
   withStatic?: boolean
+  onClick?: () => void
 }>) {
   return (
-    <span style={{ display: 'flex', alignItems: 'center' }}>
+    <span style={{ display: 'flex', alignItems: 'center' }} onClick={onClick}>
       <Text
         variant={variant}
         className={clsx(withArrowStyles.withArrow, className)}
