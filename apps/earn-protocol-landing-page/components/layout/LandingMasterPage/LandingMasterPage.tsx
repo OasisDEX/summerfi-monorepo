@@ -3,7 +3,7 @@ import { MainBackground } from '@summerfi/app-earn-ui'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
 
-import landingMasterPageStyles from './landingMasterPage.module.scss'
+import landingMasterPageStyles from '@/components/layout/LandingMasterPage/landingMasterPage.module.scss'
 
 interface LandingMasterPageProps {}
 

@@ -1,0 +1,53 @@
+.cryptoUtilitiesHeaderWrapper {
+  padding: 0 var(--spacing-space-3x-large);
+
+  >p {
+    margin-bottom: var(--spacing-space-x-small)
+  }
+
+  @include media('<=s') {
+    padding: 0 var(--spacing-space-large);
+  }
+}
+
+.cryptoUtilitiesHeader {
+  font-weight: 600;
+
+}
+
+.cryptoUtilitiesBlockWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: var(--spacing-space-medium);
+  padding: 0 var(--spacing-space-3x-large);
+  margin-top: var(--spacing-space-x-large);
+
+  @include media('<=s') {
+    flex-wrap: wrap;
+    padding: 0 var(--spacing-space-x-large);
+  }
+}
+
+.cryptoUtilityCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 1 / 1;
+
+  @include media('<=s') {
+    aspect-ratio: initial;
+    width: 150px;
+    height: 150px;
+  }
+
+  @supports not (aspect-ratio: 1 / 1) {
+    width: 150px;
+    height: 150px;
+  }
+
+  >span {
+    color: var(--color-text-secondary);
+  }
+}

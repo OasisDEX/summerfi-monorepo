@@ -11,6 +11,7 @@ import {
   SupportedNetworksList,
 } from '@/components/layout/LandingPageContent'
 import { BestOfDecentralizedFinance } from '@/components/layout/LandingPageContent/content/BestOfDecentralisedFinance'
+import { CryptoUtilities } from '@/components/layout/LandingPageContent/content/CryptoUtilities'
 import { StartEarningNow } from '@/components/layout/LandingPageContent/content/StartEarningNow'
 import { SummerFiProSection } from '@/components/layout/LandingPageContent/content/SummerFiProSection'
 import { SumrToken } from '@/components/layout/LandingPageContent/content/SumrToken'
@@ -44,9 +45,7 @@ export default async function HomePage() {
         <SumrToken />
         <StartEarningNow />
         <SummerFiProSection />
-        <div>
-          <Text variant="h2">Send, swap, bridge, buy and cash out, all in one app.</Text>
-        </div>
+        <CryptoUtilities />
         <div>
           <Text variant="h2">Top tier security & audits</Text>
         </div>

@@ -21,6 +21,10 @@
   gap: var(--spacing-space-medium);
   padding: 0 var(--spacing-space-3x-large);
   margin-top: 48px;
+
+  @include media('<=s') {
+    padding: 0 var(--spacing-space-medium);
+  }
 }
 
 .summerFiProSectionCard {
@@ -28,6 +32,10 @@
   flex-direction: row;
   align-items: center;
   padding: var(--spacing-space-x-large);
+
+  @include media('<=s') {
+    flex-direction: column;
+  }
 
   .summerFiProSectionCardDetails {
     display: flex;
@@ -45,6 +53,11 @@
     flex-direction: row;
     gap: var(--spacing-space-large);
     margin-top: var(--spacing-space-x-small);
+
+    @include media('<=s') {
+      margin-bottom: var(--spacing-space-x-large);
+      flex-direction: column;
+    }
 
     >span {
       display: flex;
