@@ -1,20 +1,13 @@
 'use client'
 import { type ChangeEvent, useEffect, useState } from 'react'
 import { useAuthModal, useUser } from '@account-kit/react'
-import {
-  Button,
-  Card,
-  GradientBox,
-  Input,
-  LoadingSpinner,
-  Text,
-  WithArrow,
-} from '@summerfi/app-earn-ui'
+import { Button, Card, GradientBox, Input, LoadingSpinner, Text } from '@summerfi/app-earn-ui'
 import { formatAddress } from '@summerfi/app-utils'
 import debounce from 'lodash-es/debounce'
 import { useRouter } from 'next/navigation'
 import { isAddress } from 'viem'
 
+import { NewsletterWrapper } from '@/features/newsletter/components/NewsletterWrapper/NewsletterWrapper'
 import { getUserSumrEligibility } from '@/features/sumr-claim/helpers/getUserSumrEligibility'
 
 import classNames from './SumrClaimSearch.module.scss'
@@ -158,16 +151,7 @@ export const SumrClaimSearch = () => {
           <Text variant="p3" style={{ marginBottom: 'var(--general-space-16)' }}>
             The best way to earn SUMR is by depositing into the protocol when its live.
           </Text>
-          <Input
-            variant="withBorder"
-            placeholder="Type email here"
-            button={
-              <WithArrow as="p" withAnimated variant="p3semiColorful">
-                Join
-              </WithArrow>
-            }
-            wrapperStyles={{ maxWidth: '366px', fontSize: '14px' }}
-          />
+          <NewsletterWrapper />
         </Card>
       </GradientBox>
     </div>
