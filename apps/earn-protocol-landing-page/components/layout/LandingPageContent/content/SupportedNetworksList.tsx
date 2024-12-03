@@ -5,7 +5,7 @@ import arbitrumLogo from '@/public/img/landing-page/networks/arbitrum.svg'
 import ethereumLogo from '@/public/img/landing-page/networks/ethereum.svg'
 import optimismLogo from '@/public/img/landing-page/networks/optimism.svg'
 
-import supportedNetworksListStyles from './SupportedNetworksList.module.scss'
+import supportedNetworksListStyles from '@/components/layout/LandingPageContent/content/SupportedNetworksList.module.scss'
 
 export const SupportedNetworksList = () => {
   return (
