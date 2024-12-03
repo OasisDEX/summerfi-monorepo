@@ -1,6 +1,7 @@
 export type Styles = {
   default: string
   iconWrapper: string
+  withBorder: string
   withIconOffset: string
   wrapper: string
 }

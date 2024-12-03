@@ -38,6 +38,7 @@ export function WithArrow({
         <span style={{ marginRight: gap }}>{children}</span>
         {withAnimated && !withStatic && (
           <>
+            {/* This one won't be displayed, it's just to reserve space for actual arrow. */}
             {reserveSpace && (
               <span className="arrow" style={{ color: 'transparent' }}>
                 →
@@ -48,6 +49,11 @@ export function WithArrow({
               style={{
                 position: 'absolute',
                 ...(reserveSpace && { right: 0 }),
+                ...(variant.includes('Colorful') && {
+                  backgroundImage: 'var(--gradient-earn-protocol-dark)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }),
               }}
             >
               →
