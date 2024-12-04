@@ -24,7 +24,7 @@ export interface IMakerLendingPosition extends ILendingPosition, IMakerLendingPo
   /** ID for the maker position */
   readonly id: IMakerLendingPositionId
   /** Lending pool associated to this position */
-  readonly pool: IMakerLendingPool
+  readonly vault: IMakerLendingPool
 
   // Re-declaring the enum type to fix Zod inferrence issue with enums
   readonly subtype: LendingPositionType

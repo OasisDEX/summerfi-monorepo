@@ -43,9 +43,9 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getUserActivityRaw.query(params)
   }
 
-  /** @see IArmadaManagerUsersClient.getPoolInfo */
-  async getPoolInfo(
-    params: Parameters<IArmadaManagerUsersClient['getPoolInfo']>[0],
+  /** @see IArmadaManagerUsersClient.getVaultInfo */
+  async getVaultInfo(
+    params: Parameters<IArmadaManagerUsersClient['getVaultInfo']>[0],
   ): Promise<IArmadaVaultInfo> {
     return this.rpcClient.armada.users.getPoolInfo.query(params)
   }
@@ -107,7 +107,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getFleetBalance.query(params)
   }
 
-  getTotalBalance(
+  async getTotalBalance(
     params: Parameters<IArmadaManagerUsersClient['getTotalBalance']>[0],
   ): Promise<ITokenAmount> {
     return this.rpcClient.armada.users.getTotalBalance.query(params)

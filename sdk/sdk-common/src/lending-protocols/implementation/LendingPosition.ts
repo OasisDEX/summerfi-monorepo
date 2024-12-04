@@ -29,7 +29,7 @@ export abstract class LendingPosition extends Position implements ILendingPositi
   readonly id: ILendingPositionId
   readonly debtAmount: ITokenAmount
   readonly collateralAmount: ITokenAmount
-  abstract readonly pool: ILendingPool
+  abstract readonly vault: ILendingPool
   readonly type = PositionType.Lending
 
   /** SEALED CONSTRUCTOR */

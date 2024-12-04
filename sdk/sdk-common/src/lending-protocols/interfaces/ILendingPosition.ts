@@ -27,7 +27,7 @@ export interface ILendingPosition extends IPosition, ILendingPositionData {
   /** Amount of collateral deposited in the pool */
   readonly collateralAmount: ITokenAmount
   /** Pool where the position is */
-  readonly pool: ILendingPool
+  readonly vault: ILendingPool
 
   // Re-declaring the properties to narrow the types
   readonly type: PositionType.Lending

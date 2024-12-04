@@ -21,7 +21,7 @@ export class MorphoDepositBorrowActionBuilder extends BaseActionBuilder<steps.De
   async build(params: ActionBuilderParams<steps.DepositBorrowStep>): Promise<void> {
     const { context, user, step, addressBookManager } = params
 
-    if (!isMorphoLendingPool(step.inputs.position.pool)) {
+    if (!isMorphoLendingPool(step.inputs.position.vault)) {
       throw new Error('Invalid Morpho lending pool id')
     }
 
@@ -49,7 +49,7 @@ export class MorphoDepositBorrowActionBuilder extends BaseActionBuilder<steps.De
       step: params.step,
       action: new MorphoDepositAction(),
       arguments: {
-        morphoLendingPool: step.inputs.position.pool,
+        morphoLendingPool: step.inputs.position.vault,
         amount: getValueFromReference(step.inputs.depositAmount),
         sumAmounts: false,
       },
@@ -67,7 +67,7 @@ export class MorphoDepositBorrowActionBuilder extends BaseActionBuilder<steps.De
       step: step,
       action: new MorphoBorrowAction(),
       arguments: {
-        morphoLendingPool: step.inputs.position.pool,
+        morphoLendingPool: step.inputs.position.vault,
         amount: borrowAmount,
       },
       connectedInputs: {},

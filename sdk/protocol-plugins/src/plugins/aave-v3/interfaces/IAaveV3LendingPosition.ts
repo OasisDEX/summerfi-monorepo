@@ -24,7 +24,7 @@ export interface IAaveV3LendingPosition extends ILendingPosition, IAaveV3Lending
   /** Signature used to differentiate it from similar interfaces */
   readonly [__signature__]: symbol
   /** The pool associated to this position */
-  readonly pool: IAaveV3LendingPool
+  readonly vault: IAaveV3LendingPool
   /** The id of the position */
   readonly id: IAaveV3LendingPositionId
 

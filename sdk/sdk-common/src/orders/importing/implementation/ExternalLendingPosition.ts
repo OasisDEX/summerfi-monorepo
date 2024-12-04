@@ -23,7 +23,7 @@ export class ExternalLendingPosition extends LendingPosition implements IExterna
 
   /** ATTRIBUTES */
   readonly id: IExternalLendingPositionId
-  readonly pool: ILendingPool
+  readonly vault: ILendingPool
 
   /** FACTORY */
   static createFrom(params: ExternalLendingPositionParameters): ExternalLendingPosition {
@@ -35,7 +35,7 @@ export class ExternalLendingPosition extends LendingPosition implements IExterna
     super(params)
 
     this.id = params.id
-    this.pool = params.pool
+    this.vault = params.pool
   }
 
   /** METHODS */

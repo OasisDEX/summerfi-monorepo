@@ -74,14 +74,14 @@ export interface IArmadaManagerUsersClient {
   getUserActivityRaw(params: { vaultId: IArmadaVaultId }): Promise<GetUserActivityQuery>
 
   /**
-   * @method getPoolInfo
-   * @description Retrieves the information of an Armada pool by its ID
+   * @method getVaultInfo
+   * @description Retrieves the information of an Armada vault by its ID
    *
-   * @param vaultId ID of the pool to retrieve
+   * @param vaultId ID of the vault to retrieve
    *
-   * @returns The information of the corresponding Armada pool
+   * @returns The information of the corresponding Armada vault
    */
-  getPoolInfo(params: { vaultId: IArmadaVaultId }): Promise<IArmadaVaultInfo>
+  getVaultInfo(params: { vaultId: IArmadaVaultId }): Promise<IArmadaVaultInfo>
 
   /**
    * @name getUserPositions

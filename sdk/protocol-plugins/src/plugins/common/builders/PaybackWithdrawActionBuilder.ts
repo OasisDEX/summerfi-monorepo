@@ -7,7 +7,7 @@ export class PaybackWithdrawActionBuilder extends BaseActionBuilder<steps.Paybac
 
   async build(params: ActionBuilderParams<steps.PaybackWithdrawStep>): Promise<void> {
     return this._delegateToProtocol({
-      protocolName: params.step.inputs.position.pool.id.protocol.name,
+      protocolName: params.step.inputs.position.vault.id.protocol.name,
       actionBuilderParams: params,
     })
   }

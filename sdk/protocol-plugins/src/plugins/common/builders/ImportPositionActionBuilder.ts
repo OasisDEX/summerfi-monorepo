@@ -9,7 +9,7 @@ export class ImportPositionActionBuilder extends BaseActionBuilder<steps.ImportS
     const externalPosition = params.step.inputs.externalPosition
 
     return this._delegateToProtocol({
-      protocolName: externalPosition.pool.id.protocol.name,
+      protocolName: externalPosition.vault.id.protocol.name,
       actionBuilderParams: params,
     })
   }

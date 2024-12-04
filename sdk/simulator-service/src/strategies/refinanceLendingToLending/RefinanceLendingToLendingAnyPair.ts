@@ -21,7 +21,7 @@ export async function refinanceLendingToLending(
   dependencies: IRefinanceDependencies,
 ): Promise<IRefinanceSimulation> {
   // args validation
-  if (!isLendingPool(args.sourcePosition.pool)) {
+  if (!isLendingPool(args.sourcePosition.vault)) {
     throw new Error('Source pool is not a lending pool')
   }
   if (!isLendingPool(args.targetPool)) {
@@ -29,7 +29,7 @@ export async function refinanceLendingToLending(
   }
 
   const position = args.sourcePosition
-  const sourcePool = args.sourcePosition.pool
+  const sourcePool = args.sourcePosition.vault
   const targetPool = args.targetPool
 
   if (!isLendingPosition(position)) {
@@ -94,7 +94,7 @@ export async function refinanceLendingToLending(
         name: 'SwapCollateralFromSourcePosition',
         type: SimulationSteps.Swap,
         inputs: await getSwapStepData({
-          chainInfo: position.pool.id.protocol.chainInfo,
+          chainInfo: position.vault.id.protocol.chainInfo,
           fromAmount: position.collateralAmount,
           toToken: targetPool.collateralToken,
           slippage: Percentage.createFrom({ value: args.slippage.value }),
@@ -140,7 +140,7 @@ export async function refinanceLendingToLending(
         name: 'SwapDebtFromTargetPosition',
         type: SimulationSteps.Swap,
         inputs: await getSwapStepData({
-          chainInfo: position.pool.id.protocol.chainInfo,
+          chainInfo: position.vault.id.protocol.chainInfo,
           fromAmount: getValueFromReference(
             ctx.getReference(['DepositBorrowToTargetPosition', 'borrowAmount']),
           ),

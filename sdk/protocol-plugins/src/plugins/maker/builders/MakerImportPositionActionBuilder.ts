@@ -12,7 +12,7 @@ export class MakerImportPositionActionBuilder extends BaseActionBuilder<steps.Im
   async build(params: ActionBuilderParams<steps.ImportStep>): Promise<void> {
     const { protocolsRegistry, step, user, context, positionsManager } = params
 
-    if (!isMakerLendingPoolId(step.inputs.externalPosition.pool.id)) {
+    if (!isMakerLendingPoolId(step.inputs.externalPosition.vault.id)) {
       throw new Error('Invalid Maker lending pool id')
     }
 

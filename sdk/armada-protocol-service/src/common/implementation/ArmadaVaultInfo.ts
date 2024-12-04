@@ -8,15 +8,15 @@ import { ITokenAmount, PoolInfo, PoolType } from '@summerfi/sdk-common/common'
 import { SerializationService } from '@summerfi/sdk-common/services'
 
 /**
- * Type for the parameters of ArmadaPool
+ * Type for the parameters
  */
-export type ArmadaPoolInfoParameters = Omit<IArmadaVaultInfoData, 'type'>
+export type ArmadaVaultInfoParameters = Omit<IArmadaVaultInfoData, 'type'>
 
 /**
- * @class ArmadaPoolInfo
+ * @class ArmadaVaultInfo
  * @see IArmadaVaultInfo
  */
-export class ArmadaPoolInfo extends PoolInfo implements IArmadaVaultInfo {
+export class ArmadaVaultInfo extends PoolInfo implements IArmadaVaultInfo {
   /** SIGNATURE */
   readonly [__iarmadavaultinfo__] = __iarmadavaultinfo__
 
@@ -28,12 +28,12 @@ export class ArmadaPoolInfo extends PoolInfo implements IArmadaVaultInfo {
   readonly totalShares: ITokenAmount
 
   /** FACTORY */
-  static createFrom(params: ArmadaPoolInfoParameters): ArmadaPoolInfo {
-    return new ArmadaPoolInfo(params)
+  static createFrom(params: ArmadaVaultInfoParameters): ArmadaVaultInfo {
+    return new ArmadaVaultInfo(params)
   }
 
   /** SEALED CONSTRUCTOR */
-  private constructor(params: ArmadaPoolInfoParameters) {
+  private constructor(params: ArmadaVaultInfoParameters) {
     super(params)
 
     this.id = params.id
@@ -43,4 +43,4 @@ export class ArmadaPoolInfo extends PoolInfo implements IArmadaVaultInfo {
   }
 }
 
-SerializationService.registerClass(ArmadaPoolInfo, { identifier: 'ArmadaPoolInfo' })
+SerializationService.registerClass(ArmadaVaultInfo, { identifier: 'ArmadaPoolInfo' })

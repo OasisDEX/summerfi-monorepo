@@ -27,7 +27,7 @@ export interface IMorphoLendingPosition extends ILendingPosition, IMorphoLending
   /** The position's ID */
   readonly id: IMorphoLendingPositionId
   /** The pool the position belongs to */
-  readonly pool: IMorphoLendingPool
+  readonly vault: IMorphoLendingPool
 
   // Re-declaring the properties to narrow the types
   readonly subtype: LendingPositionType

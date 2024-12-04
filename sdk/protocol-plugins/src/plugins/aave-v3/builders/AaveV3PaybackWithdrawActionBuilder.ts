@@ -23,7 +23,7 @@ export class AaveV3PaybackWithdrawActionBuilder extends BaseActionBuilder<steps.
   async build(params: ActionBuilderParams<steps.PaybackWithdrawStep>): Promise<void> {
     const { context, step, addressBookManager, user } = params
 
-    if (!isAaveV3LendingPool(step.inputs.position.pool)) {
+    if (!isAaveV3LendingPool(step.inputs.position.vault)) {
       throw new Error('Invalid AaveV3 lending pool')
     }
 

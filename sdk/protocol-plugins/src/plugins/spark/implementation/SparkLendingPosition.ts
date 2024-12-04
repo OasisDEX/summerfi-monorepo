@@ -23,7 +23,7 @@ export class SparkLendingPosition extends LendingPosition implements ISparkLendi
 
   /** ATTRIBUTES */
   readonly id: ISparkLendingPositionId
-  readonly pool: ISparkLendingPool
+  readonly vault: ISparkLendingPool
 
   /** FACTORY */
   static createFrom(params: SparkLendingPositionParameters): SparkLendingPosition {
@@ -35,7 +35,7 @@ export class SparkLendingPosition extends LendingPosition implements ISparkLendi
     super(params)
 
     this.id = params.id
-    this.pool = params.pool
+    this.vault = params.pool
   }
 }
 

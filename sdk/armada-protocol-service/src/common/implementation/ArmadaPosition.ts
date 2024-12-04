@@ -25,7 +25,7 @@ export class ArmadaPosition extends Position implements IArmadaPosition {
   /** ATTRIBUTES */
   readonly type = PositionType.Armada
   readonly id: IArmadaPositionId
-  readonly pool: IArmadaVault
+  readonly vault: IArmadaVault
   readonly amount: ITokenAmount
   readonly shares: ITokenAmount
   readonly deposits: ITokenAmount[]
@@ -41,7 +41,7 @@ export class ArmadaPosition extends Position implements IArmadaPosition {
     super(params)
 
     this.id = params.id
-    this.pool = params.pool
+    this.vault = params.vault
     this.amount = params.amount
     this.shares = params.shares
     this.deposits = params.deposits

@@ -27,7 +27,7 @@ export interface ISparkLendingPosition extends ILendingPosition, ISparkLendingPo
   /** Specific ID of the position for Spark */
   readonly id: ISparkLendingPositionId
   /** Pool where the position is */
-  readonly pool: ISparkLendingPool
+  readonly vault: ISparkLendingPool
 
   // Re-declaring the properties to narrow the types
   readonly subtype: LendingPositionType

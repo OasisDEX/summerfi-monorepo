@@ -23,7 +23,7 @@ import {
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { encodeFunctionData } from 'viem'
 import { ArmadaVault } from './ArmadaVault'
-import { ArmadaPoolInfo } from './ArmadaPoolInfo'
+import { ArmadaVaultInfo } from './ArmadaVaultInfo'
 import { ArmadaPosition } from './ArmadaPosition'
 import { parseGetUserPositionQuery } from './extensions/parseGetUserPositionQuery'
 import { parseGetUserPositionsQuery } from './extensions/parseGetUserPositionsQuery'
@@ -104,7 +104,7 @@ export class ArmadaManager implements IArmadaManager {
     const totalDeposits = await fleetERC4626Contract.totalAssets()
     const totalShares = await fleetERC20Contract.totalSupply()
 
-    return ArmadaPoolInfo.createFrom({
+    return ArmadaVaultInfo.createFrom({
       id: params.vaultId,
       depositCap: depositCap,
       totalDeposits: totalDeposits,
@@ -159,7 +159,7 @@ export class ArmadaManager implements IArmadaManager {
 
     return ArmadaPosition.createFrom({
       id: params.positionId,
-      pool: pool,
+      vault: pool,
       amount: userAssets,
       shares: userShares,
       deposits: [],
