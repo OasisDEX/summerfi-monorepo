@@ -26,8 +26,8 @@ export const getWithdrawTXHandler =
       fleetAddress: Address.createFromEthereum({ value: fleetAddress }),
     })
 
-    const poolInfo = await sdk.armada.users.getPoolInfo({
-      poolId,
+    const poolInfo = await sdk.armada.users.getVaultInfo({
+      vaultId: poolId,
     })
 
     const user = User.createFrom({
@@ -43,7 +43,7 @@ export const getWithdrawTXHandler =
     })
 
     return sdk.armada.users.getWithdrawTX({
-      poolId,
+      vaultId: poolId,
       user,
       amount: tokenAmount,
     })

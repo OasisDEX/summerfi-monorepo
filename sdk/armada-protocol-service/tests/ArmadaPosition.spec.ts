@@ -1,5 +1,5 @@
 import { Address, ChainFamilyMap, Token, TokenAmount, User, Wallet } from '@summerfi/sdk-common'
-import { ArmadaPool } from '../src/common/implementation/ArmadaPool'
+import { ArmadaVault } from '../src/common/implementation/ArmadaVault'
 import { ArmadaVaultId } from '../src/common/implementation/ArmadaVaultId'
 import { ArmadaPosition } from '../src/common/implementation/ArmadaPosition'
 import { ArmadaPositionId } from '../src/common/implementation/ArmadaPositionId'
@@ -27,7 +27,7 @@ describe('SDK Common | Armada | ArmadaPosition', () => {
     fleetAddress,
   })
 
-  const pool = ArmadaPool.createFrom({
+  const pool = ArmadaVault.createFrom({
     id: poolId,
   })
 
@@ -72,7 +72,7 @@ describe('SDK Common | Armada | ArmadaPosition', () => {
         id: positionId,
         amount: tokenAmount,
         shares: sharesAmount,
-        pool,
+        pool: pool,
         deposits: [],
         withdrawals: [],
       })

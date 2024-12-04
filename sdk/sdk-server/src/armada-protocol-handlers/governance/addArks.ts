@@ -6,7 +6,7 @@ import { publicProcedure } from '../../SDKTRPC'
 export const addArks = publicProcedure
   .input(
     z.object({
-      poolId: z.custom<IArmadaVaultId>(isArmadaVaultId),
+      vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
       arks: z.array(z.custom<IAddress>(isAddress)),
     }),
   )

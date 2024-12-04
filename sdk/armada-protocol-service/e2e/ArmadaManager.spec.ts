@@ -200,7 +200,7 @@ describe('Armada Protocol Service', () => {
     expect(positions[0].id).toStrictEqual(positionId)
     expect(positions[0].type).toBe(PositionType.Armada)
     expect(positions[0].amount).toStrictEqual(tokenAmount)
-    expect(positions[0].pool.id).toStrictEqual(poolId)
+    expect(positions[0].vault.id).toStrictEqual(poolId)
     expect(positions[0].shares).toBeDefined()
   })
 })

@@ -57,7 +57,7 @@ describe.skip('Armada Protocol User', () => {
 
       it('should getVault', async () => {
         const raw = await sdk.armada.users.getVaultRaw({
-          poolId: ArmadaVaultId.createFrom({
+          vaultId: ArmadaVaultId.createFrom({
             chainInfo,
             fleetAddress,
           }),

@@ -11,13 +11,13 @@ export interface IArmadaManagerKeepersClient {
    * @name rebalance
    * @description Rebalances the assets of the fleet
    *
-   * @param poolId The pool id
+   * @param vaultId The vault id
    * @param rebalanceData Data of the rebalance
    *
    * @returns TransactionInfo The transaction information
    */
   rebalance(params: {
-    poolId: IArmadaVaultId
+    vaultId: IArmadaVaultId
     rebalanceData: IRebalanceData[]
   }): Promise<TransactionInfo>
 
@@ -25,13 +25,13 @@ export interface IArmadaManagerKeepersClient {
    * @name adjustBuffer
    * @description Adjusts the buffer of the fleet
    *
-   * @param poolId The pool id
+   * @param vaultId The vault id
    * @param rebalanceData Data of the rebalance
    *
    * @returns TransactionInfo The transaction information
    */
   adjustBuffer(params: {
-    poolId: IArmadaVaultId
+    vaultId: IArmadaVaultId
     rebalanceData: IRebalanceData[]
   }): Promise<TransactionInfo>
 }

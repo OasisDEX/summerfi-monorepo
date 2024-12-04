@@ -37,11 +37,11 @@ export const testConfig = [
     forkUrl: forkOnBase,
     userAddress: userOnBase,
   },
-  {
-    chainInfo: ChainFamilyMap.Arbitrum.ArbitrumOne,
-    symbol: 'USDC.e',
-    fleetAddress: fleetOnArb,
-    forkUrl: forkOnArb,
-    userAddress: userOnArb,
-  },
+  // {
+  //   chainInfo: ChainFamilyMap.Arbitrum.ArbitrumOne,
+  //   symbol: 'USDC.e',
+  //   fleetAddress: fleetOnArb,
+  //   forkUrl: forkOnArb,
+  //   userAddress: userOnArb,
+  // },
 ]

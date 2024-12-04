@@ -35,7 +35,7 @@ export async function getUserActivity({
   })
 
   const { positions } = await backendSDK.armada.users.getUserActivityRaw({
-    poolId,
+    vaultId: poolId,
   })
 
   const userActivityList = positions

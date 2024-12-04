@@ -2,7 +2,7 @@ import {
   IArmadaVaultId,
   IArmadaVaultIdData,
   IArmadaProtocol,
-  __iarmadapoolid__,
+  __iarmadavaultid__,
 } from '@summerfi/armada-protocol-common'
 import { IAddress, PoolId } from '@summerfi/sdk-common'
 import { IChainInfo, PoolType } from '@summerfi/sdk-common/common'
@@ -20,7 +20,7 @@ export type ArmadaVaultIdParameters = Omit<IArmadaVaultIdData, 'type' | 'protoco
  */
 export class ArmadaVaultId extends PoolId implements IArmadaVaultId {
   /** SIGNATURE */
-  readonly [__iarmadapoolid__] = __iarmadapoolid__
+  readonly [__iarmadavaultid__] = __iarmadavaultid__
 
   /** ATTRIBUTES */
   readonly type = PoolType.Armada

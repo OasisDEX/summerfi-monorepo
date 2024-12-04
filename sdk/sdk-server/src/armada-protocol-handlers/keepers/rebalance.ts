@@ -6,7 +6,7 @@ import { isRebalanceData, type IRebalanceData } from '@summerfi/contracts-provid
 export const rebalance = publicProcedure
   .input(
     z.object({
-      poolId: z.custom<IArmadaVaultId>(isArmadaVaultId),
+      vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
       rebalanceData: z.array(z.custom<IRebalanceData>(isRebalanceData)),
     }),
   )

@@ -54,7 +54,7 @@ export class ArmadaSimulatedPosition extends ArmadaPosition implements IArmadaSi
     this.amount = this.amount.add(amount)
 
     this.shares = await this.armadaManager.convertToShares({
-      poolId: this.pool.id,
+      vaultId: this.pool.id,
       amount: this.amount,
     })
   }
@@ -70,7 +70,7 @@ export class ArmadaSimulatedPosition extends ArmadaPosition implements IArmadaSi
     this.amount = this.amount.subtract(amount)
 
     this.shares = await this.armadaManager.convertToShares({
-      poolId: this.pool.id,
+      vaultId: this.pool.id,
       amount: this.amount,
     })
   }

@@ -1,18 +1,28 @@
 export type { IArmadaManager } from './IArmadaManager'
-export { ArmadaPoolDataSchema, __signature__ as __iarmadapool__, isArmadaPool } from './IArmadaPool'
-export type { IArmadaPool, IArmadaPoolData } from './IArmadaPool'
+export {
+  ArmadaVaultDataSchema as ArmadaVaultDataSchema,
+  __signature__ as __iarmadavault__,
+  isArmadaVault as isArmadaVault,
+} from './IArmadaVault'
+export type {
+  IArmadaVault as IArmadaVault,
+  IArmadaVaultData as IArmadaVaultData,
+} from './IArmadaVault'
 export {
   ArmadaVaultIdDataSchema,
-  __signature__ as __iarmadapoolid__,
+  __signature__ as __iarmadavaultid__,
   isArmadaVaultId,
 } from './IArmadaVaultId'
 export type { IArmadaVaultId, IArmadaVaultIdData } from './IArmadaVaultId'
 export {
-  ArmadaPoolInfoDataSchema,
-  __signature__ as __iarmadapoolinfo__,
-  isArmadaPoolInfo,
-} from './IArmadaPoolInfo'
-export type { IArmadaPoolInfo, IArmadaPoolInfoData } from './IArmadaPoolInfo'
+  ArmadaVaultInfoDataSchema as ArmadaVaultInfoDataSchema,
+  __signature__ as __iarmadavaultinfo__,
+  isArmadaVaultInfo as isArmadaVaultInfo,
+} from './IArmadaVaultInfo'
+export type {
+  IArmadaVaultInfo as IArmadaVaultInfo,
+  IArmadaVaultInfoData as IArmadaVaultInfoData,
+} from './IArmadaVaultInfo'
 export {
   ArmadaPositionDataSchema,
   __signature__ as __iarmadaposition__,

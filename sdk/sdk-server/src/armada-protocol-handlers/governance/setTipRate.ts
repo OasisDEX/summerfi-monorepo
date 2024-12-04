@@ -6,7 +6,7 @@ import { publicProcedure } from '../../SDKTRPC'
 export const setTipRate = publicProcedure
   .input(
     z.object({
-      poolId: z.custom<IArmadaVaultId>(isArmadaVaultId),
+      vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
       rate: z.custom<IPercentage>(isPercentage),
     }),
   )

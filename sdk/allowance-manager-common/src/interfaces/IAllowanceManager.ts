@@ -19,5 +19,6 @@ export interface IAllowanceManager {
     chainInfo: IChainInfo
     spender: IAddress
     amount: ITokenAmount
+    owner?: IAddress
   }): Promise<TransactionInfo[]>
 }

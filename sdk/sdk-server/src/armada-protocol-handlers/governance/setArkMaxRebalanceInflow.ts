@@ -6,7 +6,7 @@ import { publicProcedure } from '../../SDKTRPC'
 export const setArkMaxRebalanceInflow = publicProcedure
   .input(
     z.object({
-      poolId: z.custom<IArmadaVaultId>(isArmadaVaultId),
+      vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
       ark: z.custom<IAddress>(isAddress),
       maxRebalanceInflow: z.custom<ITokenAmount>(isTokenAmount),
     }),
