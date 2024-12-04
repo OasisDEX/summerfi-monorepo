@@ -71,7 +71,7 @@ export const Sidebar: FC<SidebarProps> = ({
   const labelElement = primaryButton.loading ? <LoadingSpinner size={28} /> : primaryButton.label
 
   const sidebarWrapped = (
-    <Card className={sidebarClassNames.sidebarWrapper} variant="cardPrimary">
+    <Card className={sidebarClassNames.sidebarWrapper} variant="cardSecondary">
       <div
         className={clsx(sidebarClassNames.sidebarHeaderWrapper, {
           [sidebarClassNames.centerTitle]: !titleTabs && !!goBackAction,
