@@ -5,6 +5,7 @@ config({ path: './sdk/.env' })
 
 const {
   SDK_LOGGING_ENABLED = 'false',
+  SDK_DEBUG_ENABLED = 'true',
   POWERTOOLS_LOG_LEVEL = 'INFO',
   ONE_INCH_API_KEY,
   ONE_INCH_API_VERSION,
@@ -58,6 +59,7 @@ export function addSdkConfig({ stack }: StackContext, api: Api) {
     logFormat: 'JSON',
     timeout: 30,
     environment: {
+      SDK_DEBUG_ENABLED,
       SDK_LOGGING_ENABLED,
       POWERTOOLS_LOG_LEVEL,
       ONE_INCH_API_KEY,

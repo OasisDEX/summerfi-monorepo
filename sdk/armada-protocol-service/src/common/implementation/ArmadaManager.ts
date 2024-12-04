@@ -174,12 +174,8 @@ export class ArmadaManager implements IArmadaManager {
     })
 
     const fleetERC20Contract = fleetContract.asErc20()
-    const balance = await fleetERC20Contract.balanceOf({ address: params.user.wallet.address })
-
-    const shares = TokenAmount.createFromBaseUnit({
-      token: await fleetContract.asErc20().getToken(),
-      amount: balance.toString(),
-    })
+    const shares = await fleetERC20Contract.balanceOf({ address: params.user.wallet.address })
+    // LoggingService.debug('fleet shares', shares.toString())
 
     return fleetContract.asErc4626().convertToAssets({ amount: shares })
   }
@@ -205,6 +201,7 @@ export class ArmadaManager implements IArmadaManager {
       token: await fleetContract.asErc20().getToken(),
       amount: balance.toString(),
     })
+    // LoggingService.debug('staked shares', shares.toString())
 
     return fleetContract.asErc4626().convertToAssets({ amount: shares })
   }
@@ -268,8 +265,8 @@ export class ArmadaManager implements IArmadaManager {
       user: params.user,
     })
 
-    LoggingService.log({
-      fleetBalance: fleetBalance.toString(),
+    LoggingService.debug({
+      unstakedBalance: fleetBalance.toString(),
       stakedBalance: stakedBalance.toString(),
     })
 
@@ -277,7 +274,8 @@ export class ArmadaManager implements IArmadaManager {
     if (fleetBalance.toSolidityValue() > 0) {
       // Yes. is the unstaked amount sufficient to meet the withdrawal?
       if (fleetBalance.toSolidityValue() >= params.amount.toSolidityValue()) {
-        LoggingService.log('unstaked balance is greater than requested amount', {
+        LoggingService.debug('unstaked balance is greater than requested amount', {
+          unstakedBalance: fleetBalance.toString(),
           requested: params.amount.toString(),
         })
 
@@ -307,11 +305,11 @@ export class ArmadaManager implements IArmadaManager {
           }),
         )
       } else {
-        const missingAmount = params.amount.subtract(fleetBalance)
-        LoggingService.log('unstaked balance is less than requested amount', {
+        const amountToUnstake = params.amount.subtract(fleetBalance)
+        LoggingService.debug('unstaked balance is less than requested amount', {
           requestedAmount: params.amount.toString(),
-          fleetBalance: fleetBalance.toString(),
-          missingAmount: missingAmount.toString(),
+          unstakedBalance: fleetBalance.toString(),
+          amountToUnstake: amountToUnstake.toString(),
         })
 
         // No. First withdraw available unstaked
@@ -330,7 +328,7 @@ export class ArmadaManager implements IArmadaManager {
         // and missing amount in staked tokens.
         const tokensToWithdrawArgs = await this._getWithdrawArgs({
           ...params,
-          amount: missingAmount,
+          amount: amountToUnstake,
         })
         const tokensToWithdrawUnstakeArgs = await this._getWithdrawUnstakeArgs({
           ...params,
@@ -353,9 +351,9 @@ export class ArmadaManager implements IArmadaManager {
         )
       }
     } else {
-      LoggingService.log('unstaked balance is 0', {
+      LoggingService.debug('unstaked balance is 0', {
         requestedAmount: params.amount.toString(),
-        fleetBalance: fleetBalance.toString(),
+        unstakedBalance: fleetBalance.toString(),
         stakedBalance: stakedBalance.toString(),
       })
       // No. Withdraw from staked tokens.
