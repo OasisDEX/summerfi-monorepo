@@ -1,6 +1,6 @@
 export * from './ArmadaManager'
 export * from './ArmadaManagerFactory'
-export * from './ArmadaPool'
+export * from './ArmadaVault'
 export * from './ArmadaVaultId'
 export * from './ArmadaPoolInfo'
 export * from './ArmadaPosition'

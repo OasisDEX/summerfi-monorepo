@@ -8,7 +8,7 @@ import {
   type IChainInfo,
 } from '@summerfi/sdk-common'
 import type { GetUserPositionQuery } from '@summerfi/subgraph-manager-common'
-import { ArmadaPool } from '../ArmadaPool'
+import { ArmadaVault } from '../ArmadaVault'
 import { ArmadaVaultId } from '../ArmadaVaultId'
 import { ArmadaPosition } from '../ArmadaPosition'
 import { ArmadaPositionId } from '../ArmadaPositionId'
@@ -39,7 +39,7 @@ export const mapGraphDataToArmadaPosition =
     return ArmadaPosition.createFrom({
       id: ArmadaPositionId.createFrom({ id: position.id, user: user }),
 
-      pool: ArmadaPool.createFrom({
+      pool: ArmadaVault.createFrom({
         id: ArmadaVaultId.createFrom({
           chainInfo,
           fleetAddress: Address.createFromEthereum({

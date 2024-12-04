@@ -22,7 +22,7 @@ import {
 } from '@summerfi/sdk-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { encodeFunctionData } from 'viem'
-import { ArmadaPool } from './ArmadaPool'
+import { ArmadaVault } from './ArmadaVault'
 import { ArmadaPoolInfo } from './ArmadaPoolInfo'
 import { ArmadaPosition } from './ArmadaPosition'
 import { parseGetUserPositionQuery } from './extensions/parseGetUserPositionQuery'
@@ -137,12 +137,12 @@ export class ArmadaManager implements IArmadaManager {
 
   /** @see IArmadaManager.getPosition */
   async getPosition(params: {
-    poolId: IArmadaVaultId
+    vaultId: IArmadaVaultId
     positionId: IArmadaPositionId
   }): Promise<IArmadaPosition> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.poolId.chainInfo,
-      address: params.poolId.fleetAddress,
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
     })
 
     const fleetERC4626Contract = fleetContract.asErc4626()
@@ -153,8 +153,8 @@ export class ArmadaManager implements IArmadaManager {
     })
     const userAssets = await fleetERC4626Contract.convertToAssets({ amount: userShares })
 
-    const pool = ArmadaPool.createFrom({
-      id: params.poolId,
+    const pool = ArmadaVault.createFrom({
+      id: params.vaultId,
     })
 
     return ArmadaPosition.createFrom({
@@ -174,6 +174,7 @@ export class ArmadaManager implements IArmadaManager {
     })
 
     const fleetERC20Contract = fleetContract.asErc20()
+    // convert to assets
     return fleetERC20Contract.balanceOf({ address: params.user.wallet.address })
   }
 
@@ -193,6 +194,8 @@ export class ArmadaManager implements IArmadaManager {
       functionName: 'balanceOf',
       args: [params.user.wallet.address.value],
     })
+
+    // convert to assets
 
     return TokenAmount.createFromBaseUnit({
       token: await fleetContract.asErc20().getToken(),
@@ -234,6 +237,14 @@ export class ArmadaManager implements IArmadaManager {
   ): Promise<TransactionInfo[]> {
     const transactions: TransactionInfo[] = []
 
+    const totalBalance = await this.getTotalBalance({
+      vaultId: params.vaultId,
+      user: params.user,
+    })
+    if (params.amount.toSolidityValue() > totalBalance.toSolidityValue()) {
+      throw new Error('Insufficient balance for withdrawal')
+    }
+
     const admiralsQuarterAddress = getDeployedContractAddress({
       chainInfo: params.vaultId.chainInfo,
       contractCategory: 'core',
@@ -249,13 +260,17 @@ export class ArmadaManager implements IArmadaManager {
       user: params.user,
     })
 
+    LoggingService.log({
+      fleetBalance: fleetBalance.toString(),
+      stakedBalance: stakedBalance.toString(),
+    })
+
     // Is unstaked tokens?
     if (fleetBalance.toSolidityValue() > 0) {
       // Yes. is the unstaked amount sufficient to meet the withdrawal?
       if (fleetBalance.toSolidityValue() >= params.amount.toSolidityValue()) {
         LoggingService.log('unstaked balance is greater than requested amount', {
           requested: params.amount.toString(),
-          fleetBalance: fleetBalance.toString(),
         })
 
         const sharesAmount = await this.convertToShares({
@@ -366,6 +381,19 @@ export class ArmadaManager implements IArmadaManager {
     const erc4626Contract = fleetContract.asErc4626()
 
     return erc4626Contract.convertToShares({ amount: params.amount })
+  }
+
+  async convertToAssets(
+    params: Parameters<IArmadaManager['convertToAssets']>[0],
+  ): Promise<ITokenAmount> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    const erc4626Contract = fleetContract.asErc4626()
+
+    return erc4626Contract.convertToAssets({ amount: params.amount })
   }
 
   /** KEEPERS TRANSACTIONS */
@@ -553,7 +581,7 @@ export class ArmadaManager implements IArmadaManager {
   /**
    * Internal utility method to generate a deposit TX
    *
-   * @param poolId The pool for which the deposit is being made
+   * @param vaultId The vault for which the deposit is being made
    * @param user The user making the deposit
    * @param amount The amount being deposited
    *

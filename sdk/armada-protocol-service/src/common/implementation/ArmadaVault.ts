@@ -8,15 +8,15 @@ import { Pool, PoolType } from '@summerfi/sdk-common/common'
 import { SerializationService } from '@summerfi/sdk-common/services'
 
 /**
- * Type for the parameters of ArmadaPool
+ * Type for the parameters of ArmadaVault
  */
-export type ArmadaPoolParameters = Omit<IArmadaVaultData, 'type'>
+export type ArmadaVaultParameters = Omit<IArmadaVaultData, 'type'>
 
 /**
- * @class ArmadaPool
+ * @class ArmadaVault
  * @see IArmadaVault
  */
-export class ArmadaPool extends Pool implements IArmadaVault {
+export class ArmadaVault extends Pool implements IArmadaVault {
   /** SIGNATURE */
   readonly [__iarmadavault__] = __iarmadavault__
 
@@ -25,16 +25,16 @@ export class ArmadaPool extends Pool implements IArmadaVault {
   readonly id: IArmadaVaultId
 
   /** FACTORY */
-  static createFrom(params: ArmadaPoolParameters): ArmadaPool {
-    return new ArmadaPool(params)
+  static createFrom(params: ArmadaVaultParameters): ArmadaVault {
+    return new ArmadaVault(params)
   }
 
   /** SEALED CONSTRUCTOR */
-  private constructor(params: ArmadaPoolParameters) {
+  private constructor(params: ArmadaVaultParameters) {
     super(params)
 
     this.id = params.id
   }
 }
 
-SerializationService.registerClass(ArmadaPool, { identifier: 'ArmadaPool' })
+SerializationService.registerClass(ArmadaVault, { identifier: 'ArmadaVault' })

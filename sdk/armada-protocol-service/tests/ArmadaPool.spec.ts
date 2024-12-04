@@ -1,5 +1,5 @@
 import { Address, ChainFamilyMap, PoolType } from '@summerfi/sdk-common'
-import { ArmadaPool } from '../src/common/implementation/ArmadaPool'
+import { ArmadaVault } from '../src/common/implementation/ArmadaVault'
 import { ArmadaVaultId } from '../src/common/implementation/ArmadaVaultId'
 import { ArmadaProtocol } from '../src/common/implementation/ArmadaProtocol'
 
@@ -15,7 +15,7 @@ describe('SDK Common | Armada | ArmadaPool', () => {
 
   describe('#createFrom()', () => {
     it('should instantiate with right data', () => {
-      const pool = ArmadaPool.createFrom({
+      const pool = ArmadaVault.createFrom({
         id: poolId,
       })
 

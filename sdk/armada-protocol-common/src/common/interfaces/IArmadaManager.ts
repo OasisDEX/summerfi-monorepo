@@ -42,16 +42,6 @@ export interface IArmadaManager {
   getVaultRaw(params: { vaultId: IArmadaVaultId }): Promise<GetVaultQuery>
 
   /**
-   * @name getVaultRaw
-   * @description Get the specific vault in the protocol
-   *
-   * @param vaultId ID of the pool to retrieve
-   *
-   * @returns GetVaultQuery
-   */
-  getVaultRaw(params: { vaultId: IArmadaVaultId }): Promise<GetVaultQuery>
-
-  /**
    * @name getGlobalRebalancesRaw
    * @description Get all rebalances per given chain
    *
@@ -357,7 +347,7 @@ export interface IArmadaManager {
   }): Promise<TransactionInfo>
 
   /**
-   * @name setArkMinimumBufferBalance
+   * @name setMinimumBufferBalance
    * @description Sets the minimum buffer balance of an ark. Used by the governance
    *
    * @param vaultId The ID of the pool
@@ -421,4 +411,15 @@ export interface IArmadaManager {
    * @returns ITokenAmount The amount of shares that the token amount represents
    */
   convertToShares(params: { vaultId: IArmadaVaultId; amount: ITokenAmount }): Promise<ITokenAmount>
+
+  /**
+   * @name convertToAssets
+   * @description Converts shares to token amount in the Fleet
+   *
+   * @param vaultId ID of the vault to convert the tokens to shares
+   * @param amount Token amount to be converted
+   *
+   * @returns ITokenAmount The amount of token that the shares represents
+   */
+  convertToAssets(params: { vaultId: IArmadaVaultId; amount: ITokenAmount }): Promise<ITokenAmount>
 }
