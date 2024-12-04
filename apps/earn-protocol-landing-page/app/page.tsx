@@ -14,6 +14,7 @@ import { Audits } from '@/components/layout/LandingPageContent/content/Audits'
 import { BestOfDecentralizedFinance } from '@/components/layout/LandingPageContent/content/BestOfDecentralisedFinance'
 import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { CryptoUtilities } from '@/components/layout/LandingPageContent/content/CryptoUtilities'
+import { FaqSection } from '@/components/layout/LandingPageContent/content/FaqSection'
 import { StartEarningNow } from '@/components/layout/LandingPageContent/content/StartEarningNow'
 import { SummerFiProSection } from '@/components/layout/LandingPageContent/content/SummerFiProSection'
 import { SumrToken } from '@/components/layout/LandingPageContent/content/SumrToken'
@@ -50,9 +51,7 @@ export default async function HomePage() {
         <CryptoUtilities />
         <Audits />
         <BuildBySummerFi />
-        <div>
-          <Text variant="h2">FAQ</Text>
-        </div>
+        <FaqSection />
       </MarketingPoints>
     </div>
   )
