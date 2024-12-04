@@ -1,0 +1,36 @@
+.sumrTransferabilityCounterWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--general-space-24);
+
+  .heading {
+    margin-bottom: var(--general-space-16);
+  }
+
+  .dialsWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: var(--general-space-32);
+
+    .dialWrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      .dialCustomSize {
+        width: 68px;
+        height: 68px;
+      }
+
+      p {
+        margin-top: var(--general-space-12);
+        color: var(--earn-protocol-secondary-60);
+      }
+    }
+  }
+}
