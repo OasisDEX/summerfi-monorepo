@@ -270,7 +270,7 @@ export class ArmadaManager implements IArmadaManager {
       stakedBalance: stakedBalance.toString(),
     })
 
-    // unstaked tokens available?
+    // are unstaked tokens available?
     if (fleetBalance.toSolidityValue() > 0) {
       // Yes. is the unstaked amount sufficient to meet the withdrawal?
       if (fleetBalance.toSolidityValue() >= params.amount.toSolidityValue()) {
@@ -288,66 +288,68 @@ export class ArmadaManager implements IArmadaManager {
           chainInfo: params.vaultId.chainInfo,
           spender: admiralsQuarterAddress,
           amount: sharesAmount,
+          owner: params.user.wallet.address,
         })
         if (approvalTransactions) {
           transactions.push(...approvalTransactions)
         }
-
-        // and withdraw the requested amount
-        const withdrawArgs = await this._getWithdrawArgs(params)
-        const withdrawData = encodeFunctionData({
+        const multicallArgs = await this._getWithdrawArgs(params)
+        const multicallCalldata = encodeFunctionData({
           abi: AdmiralsQuartersAbi,
           functionName: 'multicall',
-          args: [withdrawArgs],
+          args: [multicallArgs],
         })
         transactions.push(
           createTransaction({
             target: admiralsQuarterAddress,
-            calldata: withdrawData,
+            calldata: multicallCalldata,
             description: 'Withdraw Multicall Transaction',
           }),
         )
       } else {
-        // No. Unstake missing amount from staked tokens
-        const missingUnstakedAmount = params.amount.subtract(fleetBalance)
+        // No. Request withdrawal of all unstaked tokens and the rest from staked tokens
+        const remainderFromStakedTokensAmount = params.amount.subtract(fleetBalance)
         LoggingService.debug('unstaked balance is not enough for requested amount', {
           requestedAmount: params.amount.toString(),
           unstakedBalance: fleetBalance.toString(),
-          missingUnstakedAmount: missingUnstakedAmount.toString(),
+          remainderFromStakedTokens: remainderFromStakedTokensAmount.toString(),
         })
 
-        const tokensToUnstakeTx = await this._getUnstakeTx({
-          ...params,
-          amount: missingUnstakedAmount,
-        })
-        transactions.push(tokensToUnstakeTx)
-
-        // then approve the requested amount
-        const sharesAmount = await this.convertToShares({
+        // approve to withdraw all unstaken balance tx
+        const withdrawUnstakenApprovalShares = await this.convertToShares({
           vaultId: params.vaultId,
-          amount: params.amount,
+          amount: fleetBalance,
         })
-        const approvalTransactions = await this._allowanceManager.getApproval({
+        const withdrawUnstakenApprovalTransactions = await this._allowanceManager.getApproval({
           chainInfo: params.vaultId.chainInfo,
           spender: admiralsQuarterAddress,
-          amount: sharesAmount,
+          amount: withdrawUnstakenApprovalShares,
+          owner: params.user.wallet.address,
         })
-        if (approvalTransactions) {
-          transactions.push(...approvalTransactions)
+        if (withdrawUnstakenApprovalTransactions) {
+          transactions.push(...withdrawUnstakenApprovalTransactions)
         }
 
-        // and withdraw the requested amount
-        const withdrawArgs = await this._getWithdrawArgs(params)
-        const withdrawData = encodeFunctionData({
+        // withdraw unstaked balance and the rest from staked tokens multicall tx
+        const withdrawUnstakedAmount = await this._getWithdrawArgs({
+          ...params,
+          amount: fleetBalance,
+        })
+        const remainderFromStakedTokensArgs = await this._getWithdrawUnstakeArgs({
+          ...params,
+          amount: remainderFromStakedTokensAmount,
+        })
+        const multicallCalldata = encodeFunctionData({
           abi: AdmiralsQuartersAbi,
           functionName: 'multicall',
-          args: [withdrawArgs],
+          args: [[...withdrawUnstakedAmount, ...remainderFromStakedTokensArgs]],
         })
         transactions.push(
           createTransaction({
             target: admiralsQuarterAddress,
-            calldata: withdrawData,
-            description: 'Withdraw Multicall Transaction',
+            calldata: multicallCalldata,
+            description:
+              'Withdraw Unstaken Balance and Unstake-Withdraw the rest Multicall Transaction',
           }),
         )
       }
@@ -614,6 +616,7 @@ export class ArmadaManager implements IArmadaManager {
       chainInfo: params.vaultId.chainInfo,
       spender: admiralsQuarterAddress,
       amount: params.amount,
+      owner: params.user.wallet.address,
     })
     if (approvalTransaction) {
       transactions.push(...approvalTransaction)
@@ -678,28 +681,7 @@ export class ArmadaManager implements IArmadaManager {
   async _getWithdrawArgs(
     params: Parameters<IArmadaManager['getWithdrawTX']>[0],
   ): Promise<HexData[]> {
-    const transactions: TransactionInfo[] = []
     const multicallArgs: HexData[] = []
-
-    const admiralsQuarterAddress = getDeployedContractAddress({
-      chainInfo: params.vaultId.chainInfo,
-      contractCategory: 'core',
-      contractName: 'admiralsQuarters',
-    })
-
-    const sharesAmount = await this.convertToShares({
-      vaultId: params.vaultId,
-      amount: params.amount,
-    })
-
-    const approvalTransaction = await this._allowanceManager.getApproval({
-      chainInfo: params.vaultId.chainInfo,
-      spender: admiralsQuarterAddress,
-      amount: sharesAmount,
-    })
-    if (approvalTransaction) {
-      transactions.push(...approvalTransaction)
-    }
 
     const exitFleetCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
@@ -711,22 +693,9 @@ export class ArmadaManager implements IArmadaManager {
     const withdrawTokensCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'withdrawTokens',
-      args: [params.amount.token.address.value, 0n],
+      args: [params.amount.token.address.value, params.amount.toSolidityValue()],
     })
     multicallArgs.push(withdrawTokensCalldata)
-
-    const withdrawMulticallCalldata = encodeFunctionData({
-      abi: AdmiralsQuartersAbi,
-      functionName: 'multicall',
-      args: [multicallArgs],
-    })
-    transactions.push(
-      createTransaction({
-        target: admiralsQuarterAddress,
-        calldata: withdrawMulticallCalldata,
-        description: 'Withdraw Multicall Transaction',
-      }),
-    )
 
     return multicallArgs
   }
@@ -746,6 +715,10 @@ export class ArmadaManager implements IArmadaManager {
       vaultId: params.vaultId,
       amount: params.amount,
     })
+
+    console.log('withdrawUnstake')
+    console.log(sharesAmount.toString())
+    console.log(sharesAmount.toSolidityValue())
 
     const withdrawUnstake = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
@@ -776,6 +749,7 @@ export class ArmadaManager implements IArmadaManager {
       vaultId: params.vaultId,
       amount: params.amount,
     })
+
     const withdrawUnstake = encodeFunctionData({
       abi: StakingRewardsManagerBaseAbi,
       functionName: 'unstake',
@@ -785,7 +759,7 @@ export class ArmadaManager implements IArmadaManager {
     return createTransaction({
       target: stakingRewardsManager,
       calldata: withdrawUnstake,
-      description: 'Withdraw Multicall Transaction',
+      description: 'Unstake Transaction',
     })
   }
 }
