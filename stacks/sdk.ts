@@ -5,7 +5,7 @@ config({ path: './sdk/.env' })
 
 const {
   SDK_LOGGING_ENABLED = 'false',
-  SDK_DEBUG_ENABLED = 'true',
+  SDK_DEBUG_ENABLED = 'false',
   POWERTOOLS_LOG_LEVEL = 'INFO',
   ONE_INCH_API_KEY,
   ONE_INCH_API_VERSION,
