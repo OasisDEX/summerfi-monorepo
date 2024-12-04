@@ -76,6 +76,8 @@ export { GradientBox } from './components/molecules/GradientBox/GradientBox'
 export { SidebarMobileHeader } from './components/molecules/SidebarMobileHeader/SidebarMobileHeader'
 export { Dial } from './components/molecules/Dial/Dial'
 export { BigGradientBox } from './components/molecules/BigGradientBox/BigGradientBox'
+export { Emphasis } from './components/molecules/Emphasis/Emphasis'
+export { IconWithBackground } from './components/molecules/IconWithBackground/IconWithBackground'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'
@@ -83,6 +85,10 @@ export { Table, type TableSortedColumn } from './components/organisms/Table/Tabl
 export { VaultSimulationForm } from './components/organisms/VaultSimulationForm/VaultSimulationForm'
 export { PortfolioPosition } from './components/organisms/PortfolioPosition/PortfolioPosition'
 export { Newsletter, type NewsletterPropsType } from './components/organisms/Newsletter/Newsletter'
+export {
+  MarketingPointsList,
+  type MarketingPointsListData,
+} from './components/organisms/MarketingPointsList/MarketkingPointsList'
 
 export { useToggle } from './hooks/use-toggle'
 export { useHash } from './hooks/use-hash'
