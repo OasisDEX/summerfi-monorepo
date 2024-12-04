@@ -1,4 +1,4 @@
-import { BigGradientBox, Text } from '@summerfi/app-earn-ui'
+import { BigGradientBox } from '@summerfi/app-earn-ui'
 
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import {
