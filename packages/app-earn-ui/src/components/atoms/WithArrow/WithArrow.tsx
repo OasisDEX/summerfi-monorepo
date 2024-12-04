@@ -17,6 +17,7 @@ export function WithArrow({
   reserveSpace,
   withAnimated = true,
   withStatic = false,
+  onClick,
 }: PropsWithChildren<{
   gap?: string | number
   style?: CSSProperties
@@ -26,9 +27,10 @@ export function WithArrow({
   reserveSpace?: boolean
   withAnimated?: boolean
   withStatic?: boolean
+  onClick?: () => void
 }>) {
   return (
-    <span style={{ display: 'flex', alignItems: 'center' }}>
+    <span style={{ display: 'flex', alignItems: 'center' }} onClick={onClick}>
       <Text
         variant={variant}
         className={clsx(withArrowStyles.withArrow, className)}
@@ -38,6 +40,7 @@ export function WithArrow({
         <span style={{ marginRight: gap }}>{children}</span>
         {withAnimated && !withStatic && (
           <>
+            {/* This one won't be displayed, it's just to reserve space for actual arrow. */}
             {reserveSpace && (
               <span className="arrow" style={{ color: 'transparent' }}>
                 →
@@ -48,6 +51,11 @@ export function WithArrow({
               style={{
                 position: 'absolute',
                 ...(reserveSpace && { right: 0 }),
+                ...(variant.includes('Colorful') && {
+                  backgroundImage: 'var(--gradient-earn-protocol-dark)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }),
               }}
             >
               →

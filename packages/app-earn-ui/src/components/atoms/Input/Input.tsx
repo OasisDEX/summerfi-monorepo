@@ -3,6 +3,7 @@ import {
   type DetailedHTMLProps,
   type FC,
   type InputHTMLAttributes,
+  type ReactNode,
 } from 'react'
 import { type IconNamesList } from '@summerfi/app-types'
 
@@ -19,10 +20,12 @@ export const Input: FC<
     icon?: {
       name: IconNamesList
       size?: number
+      style?: CSSProperties
     }
     CustomIcon?: FC
     wrapperStyles?: CSSProperties
     secondaryValue?: string
+    button?: ReactNode
   }
 > = ({
   variant = 'default',
@@ -31,13 +34,14 @@ export const Input: FC<
   icon,
   wrapperStyles,
   secondaryValue,
+  button,
   ...rest
 }) => {
   return (
     <div className={inputStyles.wrapper} style={wrapperStyles}>
       {icon && (
         <div className={inputStyles.iconWrapper}>
-          <Icon iconName={icon.name} size={icon.size} variant="s" />
+          <Icon iconName={icon.name} size={icon.size} variant="s" style={icon.style} />
         </div>
       )}
       {CustomIcon && (
@@ -52,6 +56,9 @@ export const Input: FC<
         ].join(' ')}
         {...rest}
       />
+      {button && (
+        <div style={{ position: 'absolute', right: '34px', cursor: 'pointer' }}>{button}</div>
+      )}
       {secondaryValue !== '0' && secondaryValue !== '' && (
         <Text
           as="p"

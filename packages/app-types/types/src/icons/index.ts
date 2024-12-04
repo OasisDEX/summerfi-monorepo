@@ -204,6 +204,7 @@ export type IconNamesList =
   | 'bug'
   | 'chain_security'
   | 'checkmark_colorful'
+  | 'checkmark_colorful_slim'
   | 'checkmark'
   | 'chevron_down'
   | 'chevron_left'
@@ -254,6 +255,11 @@ export type IconNamesList =
   | 'dot_arrow_right_colorful'
   | 'lightning_colorful'
   | 'wusdl'
+  | 'landing_page_bridge'
+  | 'landing_page_buy'
+  | 'landing_page_cashout'
+  | 'landing_page_send'
+  | 'landing_page_swap'
 
 export type TokenSymbolsList =
   | 'AAVE'

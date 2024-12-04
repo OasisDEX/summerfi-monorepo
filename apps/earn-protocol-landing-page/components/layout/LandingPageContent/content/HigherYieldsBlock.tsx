@@ -6,7 +6,7 @@ import clsx from 'clsx'
 import Image, { type StaticImageData } from 'next/image'
 import Link from 'next/link'
 
-import higherYieldsBlockStyles from './HigherYieldsBlock.module.scss'
+import higherYieldsBlockStyles from '@/components/layout/LandingPageContent/content/HigherYieldsBlock.module.scss'
 
 import continousAutoRebalancingImage from '@/public/img/landing-page/higher-yields_continous-auto-rebalancing.png'
 import howYouEarnMoreImage from '@/public/img/landing-page/higher-yields_how-you-earn-more.png'

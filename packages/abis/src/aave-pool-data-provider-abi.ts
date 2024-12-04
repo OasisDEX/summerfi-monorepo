@@ -59,7 +59,7 @@ export const aavePoolDataProviderAbi = [
             type: 'address',
           },
         ],
-        internalType: 'struct AaveProtocolDataProvider.TokenData[]',
+        internalType: 'struct IPoolDataProvider.TokenData[]',
         name: '',
         type: 'tuple[]',
       },
@@ -84,7 +84,7 @@ export const aavePoolDataProviderAbi = [
             type: 'address',
           },
         ],
-        internalType: 'struct AaveProtocolDataProvider.TokenData[]',
+        internalType: 'struct IPoolDataProvider.TokenData[]',
         name: '',
         type: 'tuple[]',
       },
@@ -338,111 +338,6 @@ export const aavePoolDataProviderAbi = [
         internalType: 'uint40',
         name: 'lastUpdateTimestamp',
         type: 'uint40',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'asset',
-        type: 'address',
-      },
-    ],
-    name: 'getReserveEModeCategory',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'asset',
-        type: 'address',
-      },
-    ],
-    name: 'getReserveTokensAddresses',
-    outputs: [
-      {
-        internalType: 'address',
-        name: 'aTokenAddress',
-        type: 'address',
-      },
-      {
-        internalType: 'address',
-        name: 'stableDebtTokenAddress',
-        type: 'address',
-      },
-      {
-        internalType: 'address',
-        name: 'variableDebtTokenAddress',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'asset',
-        type: 'address',
-      },
-    ],
-    name: 'getSiloedBorrowing',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'asset',
-        type: 'address',
-      },
-    ],
-    name: 'getTotalDebt',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'asset',
-        type: 'address',
-      },
-    ],
-    name: 'getUnbackedMintCap',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
       },
     ],
     stateMutability: 'view',

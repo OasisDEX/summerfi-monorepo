@@ -11,6 +11,9 @@ import {
   SupportedNetworksList,
 } from '@/components/layout/LandingPageContent'
 import { BestOfDecentralizedFinance } from '@/components/layout/LandingPageContent/content/BestOfDecentralisedFinance'
+import { CryptoUtilities } from '@/components/layout/LandingPageContent/content/CryptoUtilities'
+import { StartEarningNow } from '@/components/layout/LandingPageContent/content/StartEarningNow'
+import { SummerFiProSection } from '@/components/layout/LandingPageContent/content/SummerFiProSection'
 import { SumrToken } from '@/components/layout/LandingPageContent/content/SumrToken'
 
 export const revalidate = 60
@@ -40,17 +43,9 @@ export default async function HomePage() {
         <EnhancedRiskManagement protectedCapital="10B" />
         <BestOfDecentralizedFinance />
         <SumrToken />
-        <div>
-          <Text variant="h2">Start earning now</Text>
-        </div>
-        <div>
-          <Text variant="h2">
-            Summer.fi Pro, advanced DeFi features all in one app, just a click away.
-          </Text>
-        </div>
-        <div>
-          <Text variant="h2">Send, swap, bridge, buy and cash out, all in one app.</Text>
-        </div>
+        <StartEarningNow />
+        <SummerFiProSection />
+        <CryptoUtilities />
         <div>
           <Text variant="h2">Top tier security & audits</Text>
         </div>

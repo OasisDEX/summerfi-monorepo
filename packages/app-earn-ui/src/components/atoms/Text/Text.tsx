@@ -19,6 +19,7 @@ export type TextAllowedHtmlTags =
   | 'small'
   | 'span'
   | 'div'
+  | 'li'
 
 export const Text = forwardRef<
   HTMLElementTagNameMap[TextAllowedHtmlTags],

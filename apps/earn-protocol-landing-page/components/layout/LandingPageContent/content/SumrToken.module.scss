@@ -16,6 +16,7 @@
     width: 50%;
 
     @include media('<=s') {
+      padding: 0 var(--spacing-space-medium);
       width: 100%;
     }
   }
