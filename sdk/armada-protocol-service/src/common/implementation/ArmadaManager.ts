@@ -15,6 +15,7 @@ import {
   IAddress,
   ITokenAmount,
   IUser,
+  LoggingService,
   TokenAmount,
   TransactionInfo,
   type HexData,
@@ -243,11 +244,32 @@ export class ArmadaManager implements IArmadaManager {
       vaultId: params.vaultId,
       user: params.user,
     })
+    const stakedBalance = await this.getStakedBalance({
+      vaultId: params.vaultId,
+      user: params.user,
+    })
 
     // Is unstaked tokens?
     if (fleetBalance.toSolidityValue() > 0) {
       // Yes. is the unstaked amount sufficient to meet the withdrawal?
       if (fleetBalance.toSolidityValue() >= params.amount.toSolidityValue()) {
+        LoggingService.log('unstaked balance is greater than requested amount', {
+          requested: params.amount.toSolidityValue(),
+          fleetBalance: fleetBalance.toSolidityValue(),
+        })
+
+        const sharesAmount = await this.convertToShares({
+          vaultId: params.vaultId,
+          amount: params.amount,
+        })
+        const approvalTransaction = await this._allowanceManager.getApproval({
+          chainInfo: params.vaultId.chainInfo,
+          spender: admiralsQuarterAddress,
+          amount: sharesAmount,
+        })
+        if (approvalTransaction) {
+          transactions.push(...approvalTransaction)
+        }
         const multicallArgs = await this._getWithdrawArgs(params)
         const multicallCalldata = encodeFunctionData({
           abi: AdmiralsQuartersAbi,
@@ -262,15 +284,31 @@ export class ArmadaManager implements IArmadaManager {
           }),
         )
       } else {
+        const missingAmount = params.amount.subtract(fleetBalance)
+        LoggingService.log('unstaked balance is less than requested amount', {
+          requestedAmount: params.amount.toSolidityValue(),
+          fleetBalance: fleetBalance.toSolidityValue(),
+          missingAmount: missingAmount.toSolidityValue(),
+        })
+
         // No. First withdraw available unstaked
+        const withdrawSharesAmount = await this.convertToShares({
+          vaultId: params.vaultId,
+          amount: fleetBalance,
+        })
+        const withdrawApprovalTransaction = await this._allowanceManager.getApproval({
+          chainInfo: params.vaultId.chainInfo,
+          spender: admiralsQuarterAddress,
+          amount: withdrawSharesAmount,
+        })
+        if (withdrawApprovalTransaction) {
+          transactions.push(...withdrawApprovalTransaction)
+        }
+        // and missing amount in staked tokens.
         const tokensToWithdrawArgs = await this._getWithdrawArgs({
           ...params,
-          amount: TokenAmount.createFromBaseUnit({
-            token: params.amount.token,
-            amount: fleetBalance.toSolidityValue().toString(),
-          }),
+          amount: missingAmount,
         })
-        // and missing amount in staked tokens.
         const tokensToWithdrawUnstakeArgs = await this._getWithdrawUnstakeArgs({
           ...params,
           amount: TokenAmount.createFromBaseUnit({
@@ -292,6 +330,11 @@ export class ArmadaManager implements IArmadaManager {
         )
       }
     } else {
+      LoggingService.log('unstaked balance is 0', {
+        requestedAmount: params.amount.toSolidityValue(),
+        fleetBalance: fleetBalance.toSolidityValue(),
+        stakedBalance: stakedBalance.toSolidityValue(),
+      })
       // No. Withdraw from staked tokens.
       const multicallArgs = await this._getWithdrawUnstakeArgs(params)
       const multicallCalldata = encodeFunctionData({
