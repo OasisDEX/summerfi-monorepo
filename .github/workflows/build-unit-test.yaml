@@ -70,7 +70,7 @@ jobs:
             hashFiles('apps/rays-dashboard/**/*.ts', 'apps/rays-dashboard/**/*.tsx') }}
           restore-keys: ${{ runner.os }}-rays-dashboard-app-${{ hashFiles('pnpm-lock.yaml') }}-
 
-     - name: Establish VPN connection
+      - name: Establish VPN connection
         run: |
           sudo apt update
           sudo apt install -y openvpn openvpn-systemd-resolved
