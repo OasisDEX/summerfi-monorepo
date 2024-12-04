@@ -254,8 +254,8 @@ export class ArmadaManager implements IArmadaManager {
       // Yes. is the unstaked amount sufficient to meet the withdrawal?
       if (fleetBalance.toSolidityValue() >= params.amount.toSolidityValue()) {
         LoggingService.log('unstaked balance is greater than requested amount', {
-          requested: params.amount.toSolidityValue(),
-          fleetBalance: fleetBalance.toSolidityValue(),
+          requested: params.amount.toString(),
+          fleetBalance: fleetBalance.toString(),
         })
 
         const sharesAmount = await this.convertToShares({
@@ -286,9 +286,9 @@ export class ArmadaManager implements IArmadaManager {
       } else {
         const missingAmount = params.amount.subtract(fleetBalance)
         LoggingService.log('unstaked balance is less than requested amount', {
-          requestedAmount: params.amount.toSolidityValue(),
-          fleetBalance: fleetBalance.toSolidityValue(),
-          missingAmount: missingAmount.toSolidityValue(),
+          requestedAmount: params.amount.toString(),
+          fleetBalance: fleetBalance.toString(),
+          missingAmount: missingAmount.toString(),
         })
 
         // No. First withdraw available unstaked
@@ -331,9 +331,9 @@ export class ArmadaManager implements IArmadaManager {
       }
     } else {
       LoggingService.log('unstaked balance is 0', {
-        requestedAmount: params.amount.toSolidityValue(),
-        fleetBalance: fleetBalance.toSolidityValue(),
-        stakedBalance: stakedBalance.toSolidityValue(),
+        requestedAmount: params.amount.toString(),
+        fleetBalance: fleetBalance.toString(),
+        stakedBalance: stakedBalance.toString(),
       })
       // No. Withdraw from staked tokens.
       const multicallArgs = await this._getWithdrawUnstakeArgs(params)
