@@ -1,0 +1,86 @@
+.buildBySummerFiHeaderWrapper {
+  text-align: center;
+  padding: 0 var(--spacing-space-4x-large);
+
+  @include media('<=s') {
+    padding: 0 var(--spacing-space-large);
+  }
+}
+
+.buildBySummerFiHeader {
+  font-weight: 600;
+
+  >span {
+    font-weight: 600;
+  }
+}
+
+.buildBySummerFiDescription {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-medium);
+  padding: 0 var(--spacing-space-4x-large);
+  margin-top: 48px;
+
+  @include media('<=s') {
+    padding: 0 var(--spacing-space-medium);
+  }
+
+  p {
+    color: var(--color-text-secondary);
+    text-align: center;
+    margin-bottom: var(--spacing-space-medium);
+  }
+}
+
+.buildBySummerFiBottomLink {
+  text-align: center;
+  margin-bottom: var(--spacing-space-x-large);
+
+  a>span {
+    display: inline-flex !important;
+    justify-content: center;
+  }
+
+  a,
+  a * {
+    color: var(--earn-protocol-primary-100);
+  }
+}
+
+.buildBySummerFiStatBlockWrapper {
+  display: flex;
+  flex-direction: row;
+  padding: var(--spacing-space-x-large) var(--spacing-space-3x-large);
+  justify-content: space-around;
+
+  @include media('<=s') {
+    flex-direction: column;
+    padding: 0 var(--spacing-space-large);
+  }
+
+  .buildBySummerFiStatBlockDivider {
+    width: 1px;
+    background-color: rgba(61, 61, 61, 1);
+
+    @include media('<=s') {
+      margin-top: var(--spacing-space-large);
+      height: 1px;
+      width: 100%;
+    }
+  }
+
+  .statBlock {
+    @include media('<=s') {
+      margin-top: var(--spacing-space-large);
+    }
+
+    * {
+      text-align: center;
+    }
+
+    p {
+      color: var(--color-text-secondary);
+    }
+  }
+}

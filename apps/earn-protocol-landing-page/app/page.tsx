@@ -1,4 +1,4 @@
-import { BigGradientBox, Text } from '@summerfi/app-earn-ui'
+import { BigGradientBox } from '@summerfi/app-earn-ui'
 
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import {
@@ -10,8 +10,11 @@ import {
   ProtocolScroller,
   SupportedNetworksList,
 } from '@/components/layout/LandingPageContent'
+import { Audits } from '@/components/layout/LandingPageContent/content/Audits'
 import { BestOfDecentralizedFinance } from '@/components/layout/LandingPageContent/content/BestOfDecentralisedFinance'
+import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { CryptoUtilities } from '@/components/layout/LandingPageContent/content/CryptoUtilities'
+import { FaqSection } from '@/components/layout/LandingPageContent/content/FaqSection'
 import { StartEarningNow } from '@/components/layout/LandingPageContent/content/StartEarningNow'
 import { SummerFiProSection } from '@/components/layout/LandingPageContent/content/SummerFiProSection'
 import { SumrToken } from '@/components/layout/LandingPageContent/content/SumrToken'
@@ -46,15 +49,9 @@ export default async function HomePage() {
         <StartEarningNow />
         <SummerFiProSection />
         <CryptoUtilities />
-        <div>
-          <Text variant="h2">Top tier security & audits</Text>
-        </div>
-        <div>
-          <Text variant="h2">Built by Summer.fi, DeFi’s most trusted frontend app.</Text>
-        </div>
-        <div>
-          <Text variant="h2">FAQ</Text>
-        </div>
+        <Audits />
+        <BuildBySummerFi />
+        <FaqSection />
       </MarketingPoints>
     </div>
   )
