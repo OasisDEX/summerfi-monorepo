@@ -12,6 +12,7 @@ import {
 } from '@/components/layout/LandingPageContent'
 import { Audits } from '@/components/layout/LandingPageContent/content/Audits'
 import { BestOfDecentralizedFinance } from '@/components/layout/LandingPageContent/content/BestOfDecentralisedFinance'
+import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { CryptoUtilities } from '@/components/layout/LandingPageContent/content/CryptoUtilities'
 import { StartEarningNow } from '@/components/layout/LandingPageContent/content/StartEarningNow'
 import { SummerFiProSection } from '@/components/layout/LandingPageContent/content/SummerFiProSection'
@@ -48,9 +49,7 @@ export default async function HomePage() {
         <SummerFiProSection />
         <CryptoUtilities />
         <Audits />
-        <div>
-          <Text variant="h2">Built by Summer.fi, DeFi’s most trusted frontend app.</Text>
-        </div>
+        <BuildBySummerFi />
         <div>
           <Text variant="h2">FAQ</Text>
         </div>

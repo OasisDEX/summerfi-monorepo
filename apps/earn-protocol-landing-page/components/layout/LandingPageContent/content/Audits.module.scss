@@ -28,6 +28,10 @@
   padding: 0 var(--spacing-space-3x-large);
   padding-bottom: var(--spacing-space-medium);
 
+  @include media('<=s') {
+    padding: 0 var(--spacing-space-large);
+  }
+
   hr {
     width: 100%;
     border: none;
