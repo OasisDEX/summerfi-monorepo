@@ -26,7 +26,11 @@ export async function sendAndLogTransactions(params: {
   const statuses: string[] = []
 
   for (const [index, transaction] of params.transactions.entries()) {
-    console.log(`Sending transaction ${index}...`, transaction.description)
+    console.log(
+      `Sending transaction ${params.useRpcGateway ? 'using gateway' : ''} ${index + 1}... `,
+      transaction.description,
+      rpcUrl,
+    )
 
     const transactionUtils = new TransactionUtils({
       rpcUrl: rpcUrl,
