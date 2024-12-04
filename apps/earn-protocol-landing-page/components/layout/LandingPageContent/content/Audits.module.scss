@@ -1,0 +1,61 @@
+.auditsHeaderWrapper {
+  padding: 0 var(--spacing-space-3x-large);
+  margin-bottom: var(--spacing-space-2x-large);
+
+  >p {
+    margin-bottom: var(--spacing-space-x-small)
+  }
+
+  @include media('<=s') {
+    padding: 0 var(--spacing-space-large);
+  }
+}
+
+// auditBlockImageWrapper
+// auditBlockImage
+// auditDescription
+// auditsHeaderWrapper
+// auditsHeader
+// auditsBlockWrapper
+
+.auditsHeader {
+  font-weight: 600;
+}
+
+.auditBlock {
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--spacing-space-3x-large);
+  padding-bottom: var(--spacing-space-medium);
+
+  hr {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid rgba(61, 61, 61, 1);
+  }
+
+  .auditBlockImage {
+    max-width: 300px;
+    margin-bottom: var(--spacing-space-medium);
+  }
+
+  .auditDescription {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-space-medium);
+  }
+
+  a {
+    margin-bottom: var(--spacing-space-medium);
+  }
+
+  a,
+  a * {
+    color: var(--earn-protocol-primary-100);
+  }
+}
+
+.auditBlock:last-of-type {
+  hr {
+    border-bottom: none;
+  }
+}

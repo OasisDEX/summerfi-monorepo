@@ -10,6 +10,7 @@ import {
   ProtocolScroller,
   SupportedNetworksList,
 } from '@/components/layout/LandingPageContent'
+import { Audits } from '@/components/layout/LandingPageContent/content/Audits'
 import { BestOfDecentralizedFinance } from '@/components/layout/LandingPageContent/content/BestOfDecentralisedFinance'
 import { CryptoUtilities } from '@/components/layout/LandingPageContent/content/CryptoUtilities'
 import { StartEarningNow } from '@/components/layout/LandingPageContent/content/StartEarningNow'
@@ -46,9 +47,7 @@ export default async function HomePage() {
         <StartEarningNow />
         <SummerFiProSection />
         <CryptoUtilities />
-        <div>
-          <Text variant="h2">Top tier security & audits</Text>
-        </div>
+        <Audits />
         <div>
           <Text variant="h2">Built by Summer.fi, DeFi’s most trusted frontend app.</Text>
         </div>
