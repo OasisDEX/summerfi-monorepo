@@ -20,7 +20,7 @@ export abstract class Position implements IPosition {
   /** ATTRIBUTES */
   abstract readonly type: PositionType
   abstract readonly id: IPositionId
-  abstract readonly vault: IPool
+  abstract readonly pool: IPool
 
   /** SEALED CONSTRUCTOR */
   protected constructor(_: PositionParameters) {

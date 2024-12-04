@@ -22,7 +22,7 @@ export class SparkDepositBorrowActionBuilder extends BaseActionBuilder<steps.Dep
   async build(params: ActionBuilderParams<steps.DepositBorrowStep>): Promise<void> {
     const { context, user, step, addressBookManager } = params
 
-    if (!isSparkLendingPool(step.inputs.position.vault)) {
+    if (!isSparkLendingPool(step.inputs.position.pool)) {
       throw new Error('Invalid Spark lending pool')
     }
 

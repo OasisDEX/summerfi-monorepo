@@ -15,7 +15,7 @@ export class MorphoPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.
   async build(params: ActionBuilderParams<steps.PaybackWithdrawStep>): Promise<void> {
     const { context, positionsManager, step, addressBookManager, user } = params
 
-    if (!isMorphoLendingPool(step.inputs.position.vault)) {
+    if (!isMorphoLendingPool(step.inputs.position.pool)) {
       throw new Error('Invalid Morpho lending pool id')
     }
 
@@ -46,7 +46,7 @@ export class MorphoPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.
       step: params.step,
       action: new MorphoPaybackAction(),
       arguments: {
-        morphoLendingPool: step.inputs.position.vault,
+        morphoLendingPool: step.inputs.position.pool,
         amount: getValueFromReference(step.inputs.paybackAmount),
         onBehalf: positionsManager.address,
         paybackAll: paybackAmount.isGreaterOrEqualThan(step.inputs.position.debtAmount),
@@ -64,7 +64,7 @@ export class MorphoPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.
       step: step,
       action: new MorphoWithdrawAction(),
       arguments: {
-        morphoLendingPool: step.inputs.position.vault,
+        morphoLendingPool: step.inputs.position.pool,
         amount: step.inputs.withdrawAmount,
         to: positionsManager.address,
       },

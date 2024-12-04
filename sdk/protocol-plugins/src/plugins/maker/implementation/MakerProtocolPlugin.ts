@@ -137,7 +137,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
     externalPosition: IExternalLendingPosition
     positionsManager: IPositionsManager
   }): Promise<Maybe<TransactionInfo>> {
-    if (!isMakerLendingPoolId(params.externalPosition.vault.id)) {
+    if (!isMakerLendingPoolId(params.externalPosition.pool.id)) {
       throw new Error('Invalid Maker pool ID')
     }
     if (!isMakerLendingPositionId(params.externalPosition.id.protocolId)) {

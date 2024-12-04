@@ -7,7 +7,7 @@ export class DepositBorrowActionBuilder extends BaseActionBuilder<steps.DepositB
 
   async build(params: ActionBuilderParams<steps.DepositBorrowStep>): Promise<void> {
     return this._delegateToProtocol({
-      protocolName: params.step.inputs.position.vault.id.protocol.name,
+      protocolName: params.step.inputs.position.pool.id.protocol.name,
       actionBuilderParams: params,
     })
   }

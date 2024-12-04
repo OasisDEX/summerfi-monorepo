@@ -159,7 +159,7 @@ export class ArmadaManager implements IArmadaManager {
 
     return ArmadaPosition.createFrom({
       id: params.positionId,
-      vault: pool,
+      pool: pool,
       amount: userAssets,
       shares: userShares,
       deposits: [],
@@ -174,8 +174,14 @@ export class ArmadaManager implements IArmadaManager {
     })
 
     const fleetERC20Contract = fleetContract.asErc20()
-    // convert to assets
-    return fleetERC20Contract.balanceOf({ address: params.user.wallet.address })
+    const balance = await fleetERC20Contract.balanceOf({ address: params.user.wallet.address })
+
+    const shares = TokenAmount.createFromBaseUnit({
+      token: await fleetContract.asErc20().getToken(),
+      amount: balance.toString(),
+    })
+
+    return fleetContract.asErc4626().convertToAssets({ amount: shares })
   }
 
   async getStakedBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount> {
@@ -195,12 +201,12 @@ export class ArmadaManager implements IArmadaManager {
       args: [params.user.wallet.address.value],
     })
 
-    // convert to assets
-
-    return TokenAmount.createFromBaseUnit({
+    const shares = TokenAmount.createFromBaseUnit({
       token: await fleetContract.asErc20().getToken(),
       amount: balance.toString(),
     })
+
+    return fleetContract.asErc4626().convertToAssets({ amount: shares })
   }
 
   async getTotalBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount> {
@@ -242,7 +248,9 @@ export class ArmadaManager implements IArmadaManager {
       user: params.user,
     })
     if (params.amount.toSolidityValue() > totalBalance.toSolidityValue()) {
-      throw new Error('Insufficient balance for withdrawal')
+      throw new Error(
+        `Insufficient balance ${totalBalance.toString()} to withdraw requested: ${params.amount.toString()}`,
+      )
     }
 
     const admiralsQuarterAddress = getDeployedContractAddress({

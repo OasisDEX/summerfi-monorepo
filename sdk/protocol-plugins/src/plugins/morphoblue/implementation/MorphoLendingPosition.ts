@@ -23,7 +23,7 @@ export class MorphoLendingPosition extends LendingPosition implements IMorphoLen
 
   /** ATTRIBUTES */
   readonly id: IMorphoLendingPositionId
-  readonly vault: IMorphoLendingPool
+  readonly pool: IMorphoLendingPool
 
   /** FACTORY */
   static createFrom(params: MorphoLendingPositionParameters): MorphoLendingPosition {
@@ -35,7 +35,7 @@ export class MorphoLendingPosition extends LendingPosition implements IMorphoLen
     super(params)
 
     this.id = params.id
-    this.vault = params.pool
+    this.pool = params.pool
   }
 }
 

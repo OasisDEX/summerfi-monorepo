@@ -12,10 +12,10 @@ export const portfolioPositionsHandler = ({
   position,
   vaultsList,
 }: PortfolioPositionsDataParams) => {
-  const vaultData = vaultsList.find((vault) => vault.id === position.vault.id.fleetAddress.value)
+  const vaultData = vaultsList.find((vault) => vault.id === position.pool.id.fleetAddress.value)
 
   if (!vaultData) {
-    throw new Error(`Vault not found for position ${position.vault.id.fleetAddress.value}`)
+    throw new Error(`Vault not found for position ${position.pool.id.fleetAddress.value}`)
   }
 
   return {

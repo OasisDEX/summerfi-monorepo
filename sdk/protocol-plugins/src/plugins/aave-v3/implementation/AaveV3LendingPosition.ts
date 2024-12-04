@@ -22,7 +22,7 @@ export class AaveV3LendingPosition extends LendingPosition implements IAaveV3Len
   readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
-  readonly vault: IAaveV3LendingPool
+  readonly pool: IAaveV3LendingPool
   readonly id: IAaveV3LendingPositionId
 
   /** FACTORY */
@@ -34,7 +34,7 @@ export class AaveV3LendingPosition extends LendingPosition implements IAaveV3Len
   private constructor(params: AaveV3LendingPositionParameters) {
     super(params)
 
-    this.vault = params.pool
+    this.pool = params.pool
     this.id = params.id
   }
 }

@@ -33,7 +33,7 @@ export function depositToPosition(
     id: position.id,
     debtAmount: position.debtAmount,
     collateralAmount: position.collateralAmount.add(amount),
-    pool: position.vault,
+    pool: position.pool,
   } as unknown as LendingPosition
 }
 
@@ -47,7 +47,7 @@ export function withdrawFromPosition(
     id: position.id,
     debtAmount: position.debtAmount,
     collateralAmount: position.collateralAmount.subtract(amount),
-    pool: position.vault,
+    pool: position.pool,
   } as unknown as LendingPosition
 }
 
@@ -61,7 +61,7 @@ export function borrowFromPosition(
     id: position.id,
     debtAmount: position.debtAmount.add(amount),
     collateralAmount: position.collateralAmount,
-    pool: position.vault,
+    pool: position.pool,
   } as unknown as LendingPosition
 }
 
@@ -75,6 +75,6 @@ export function repayPositionDebt(
     id: position.id,
     debtAmount: position.debtAmount.subtract(amount),
     collateralAmount: position.collateralAmount,
-    pool: position.vault,
+    pool: position.pool,
   } as unknown as LendingPosition
 }

@@ -23,7 +23,7 @@ export class MakerLendingPosition extends LendingPosition implements IMakerLendi
 
   /** ATTRIBUTES */
   readonly id: IMakerLendingPositionId
-  readonly vault: IMakerLendingPool
+  readonly pool: IMakerLendingPool
 
   /** FACTORY */
   static createFrom(params: MakerLendingPositionParameters): MakerLendingPosition {
@@ -35,7 +35,7 @@ export class MakerLendingPosition extends LendingPosition implements IMakerLendi
     super(params)
 
     this.id = params.id
-    this.vault = params.pool
+    this.pool = params.pool
   }
 }
 

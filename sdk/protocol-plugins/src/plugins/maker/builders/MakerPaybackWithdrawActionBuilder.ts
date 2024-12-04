@@ -15,11 +15,11 @@ export class MakerPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.P
   async build(params: ActionBuilderParams<steps.PaybackWithdrawStep>): Promise<void> {
     const { context, user, positionsManager, step, addressBookManager } = params
 
-    if (!isMakerLendingPoolId(step.inputs.position.vault.id)) {
+    if (!isMakerLendingPoolId(step.inputs.position.pool.id)) {
       throw new Error('Invalid Maker lending pool id')
     }
 
-    const ilkType = step.inputs.position.vault.id.ilkType
+    const ilkType = step.inputs.position.pool.id.ilkType
 
     const joinName = MakerIlkToJoinMap[ilkType]
     const joinAddress = await this._getContractAddress({
