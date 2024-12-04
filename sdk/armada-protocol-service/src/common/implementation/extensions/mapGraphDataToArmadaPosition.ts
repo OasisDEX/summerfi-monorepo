@@ -25,8 +25,6 @@ export const mapGraphDataToArmadaPosition =
       })
     }
 
-    console.log('position', position)
-
     const fleetBalance = BigNumber(position.inputTokenBalance.toString()).div(
       10 ** position.vault.inputToken.decimals,
     )
