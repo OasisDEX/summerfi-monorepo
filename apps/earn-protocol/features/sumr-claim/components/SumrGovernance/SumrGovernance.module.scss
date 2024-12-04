@@ -1,0 +1,40 @@
+.sumrGovernanceWrapper {
+  margin-top: 90px;
+
+  .sumrGovernanceContent {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+
+    @media (min-width: 768px) {
+      min-width: 849px;
+    }
+
+    > p {
+      margin-bottom: var(--general-space-24);
+      color: var(--earn-protocol-secondary-40);
+    }
+
+    .customCard {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      border: 1px solid var(--earn-protocol-neutral-70);
+      margin-bottom: var(--general-space-24);
+    }
+
+    .actionableWrapper {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: var(--general-space-12);
+
+      > button {
+        min-width: unset;
+        height: 38px;
+        font-size: 14px;
+      }
+    }
+  }
+}

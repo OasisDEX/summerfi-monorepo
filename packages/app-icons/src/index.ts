@@ -298,4 +298,11 @@ export const icons = {
   zerox_color: customLazy(() => import('./icons/zerox_color.svg?react')),
   zerox: customLazy(() => import('./icons/zerox.svg?react')),
   wusdl: customLazy(() => import('./icons/wusdl.svg?react')),
+  plant_colorful: customLazy(() => import('./icons/plant_colorful.svg?react')),
+  checkmark_cookie_colorful: customLazy(
+    () => import('./icons/checkmark_cookie_colorful.svg?react'),
+  ),
+  migrate_colorful: customLazy(() => import('./icons/migrate_colorful.svg?react')),
+  referer_colorful: customLazy(() => import('./icons/referer_colorful.svg?react')),
+  x_colorful: customLazy(() => import('./icons/x_colorful.svg?react')),
 }

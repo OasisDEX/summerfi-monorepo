@@ -71,7 +71,7 @@ export const NewsletterWrapper = () => {
             By entering your email address, you acknowledge that Oazo Apps Limited will collect and
             process your personal data for marketing purposes (e.g. newsletter, updates). For more
             information please refer to our{' '}
-            <Link legacyBehavior prefetch={false} href="/privacy">
+            <Link legacyBehavior prefetch={false} href="/privacy" target="_blank">
               <Text as="span" variant="p3" style={{ color: 'var(--earn-protocol-primary-100)' }}>
                 Privacy Policy
               </Text>
