@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - dev
+      - vpn
 
 jobs:
   changes:
@@ -158,7 +158,6 @@ jobs:
           # push it to ECR so that it can
           # be deployed to ECS.
           docker build -f apps/earn-protocol/docker/Dockerfile \
-                       --build-arg BORROW_DB_READ_CONNECTION_STRING=${{ secrets.NEW_BORROW_DB_READ_CONNECTION_STRING }} \
                        --build-arg EARN_PROTOCOL_DB_CONNECTION_STRING=${{ secrets.EARN_PROTOCOL_DB_CONNECTION_STRING }} \
                        --build-arg CONTENTFUL_SPACE_ID=${{ secrets.CONTENTFUL_SPACE_ID }} \
                        --build-arg CONTENTFUL_ACCESS_TOKEN=${{ secrets.CONTENTFUL_ACCESS_TOKEN }} \
