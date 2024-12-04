@@ -26,6 +26,8 @@ jobs:
               - 'packages/app-types/**'
               - 'packages/app-earn-ui/**'
               - 'packages/app-icons/**'
+              - '.github/workflows/deploy-earn-protocol-staging.yaml'
+
   build-earn-protocol:
     name: Build and deploy Earn Protocol App
     runs-on: ubuntu-latest
