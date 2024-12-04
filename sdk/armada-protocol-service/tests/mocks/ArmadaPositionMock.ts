@@ -72,7 +72,7 @@ export const ArmadaPositionMock = ArmadaPosition.createFrom({
   id: positionId,
   amount: tokenAmount,
   shares: sharesAmount,
-  vault: pool,
+  pool: pool,
   deposits: [],
   withdrawals: [],
 })

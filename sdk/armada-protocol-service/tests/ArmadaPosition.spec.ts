@@ -72,7 +72,7 @@ describe('SDK Common | Armada | ArmadaPosition', () => {
         id: positionId,
         amount: tokenAmount,
         shares: sharesAmount,
-        vault: pool,
+        pool: pool,
         deposits: [],
         withdrawals: [],
       })
@@ -80,7 +80,7 @@ describe('SDK Common | Armada | ArmadaPosition', () => {
       expect(position).toBeDefined()
       expect(position.id).toEqual(positionId)
       expect(position.amount).toEqual(tokenAmount)
-      expect(position.vault).toEqual(pool)
+      expect(position.pool).toEqual(pool)
     })
   })
 })
