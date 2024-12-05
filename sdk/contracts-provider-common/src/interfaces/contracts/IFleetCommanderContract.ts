@@ -41,7 +41,7 @@ export interface IFleetCommanderContract extends IContractWrapper {
 
   /**
    * @name deposit
-   * @description Deposits an amount of assets into the FleetCommander contract
+   * @description Deposits an amount of assets into the fleet
    *
    * @param assets The amount of assets to deposit
    * @param receiver The address of the receiver of the shares
@@ -52,9 +52,9 @@ export interface IFleetCommanderContract extends IContractWrapper {
 
   /**
    * @name withdraw
-   * @description Deposits an amount of assets into the FleetCommander contract
+   * @description Withdraws an amount of assets from the fleet
    *
-   * @param assets The amount of assets to deposit
+   * @param assets The amount of assets to withdraw
    * @param receiver The address of the receiver of the shares
    * @param owner The address of the owner of the shares
    *

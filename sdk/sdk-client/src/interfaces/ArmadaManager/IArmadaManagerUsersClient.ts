@@ -128,7 +128,7 @@ export interface IArmadaManagerUsersClient {
   getNewDepositTX(params: {
     vaultId: IArmadaVaultId
     user: IUser
-    amount: ITokenAmount
+    assets: ITokenAmount
     shouldStake?: boolean
   }): Promise<TransactionInfo[]>
 
@@ -145,7 +145,7 @@ export interface IArmadaManagerUsersClient {
   getUpdateDepositTX(params: {
     vaultId: IArmadaVaultId
     positionId: IArmadaPositionId
-    amount: ITokenAmount
+    assets: ITokenAmount
   }): Promise<TransactionInfo[]>
 
   /**
@@ -161,7 +161,7 @@ export interface IArmadaManagerUsersClient {
   getWithdrawTX(params: {
     vaultId: IArmadaVaultId
     user: IUser
-    amount: ITokenAmount
+    assets: ITokenAmount
   }): Promise<TransactionInfo[]>
 
   /**

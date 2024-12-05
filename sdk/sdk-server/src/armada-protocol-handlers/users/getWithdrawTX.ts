@@ -8,7 +8,7 @@ export const getWithdrawTX = publicProcedure
     z.object({
       vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
       user: z.custom<IUser>(isUser),
-      amount: z.custom<ITokenAmount>(isTokenAmount),
+      assets: z.custom<ITokenAmount>(isTokenAmount),
     }),
   )
   .query(async (opts) => {

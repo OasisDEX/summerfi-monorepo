@@ -6,6 +6,7 @@ import {
   IChainInfo,
   IToken,
   ITokenAmount,
+  LoggingService,
   Maybe,
   TokenAmount,
   TransactionInfo,
@@ -99,6 +100,13 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
     const token = await this.asset()
     const assetsAmount = await this.contract.read.convertToAssets([params.amount.toSolidityValue()])
 
+    LoggingService.debug(
+      'convertToAssets',
+      params.amount.toSolidityValue(),
+      '=>',
+      assetsAmount.toString(),
+    )
+
     return TokenAmount.createFromBaseUnit({
       token,
       amount: String(assetsAmount),
@@ -110,9 +118,56 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
     const token = await this.asErc20().getToken()
     const sharesAmount = await this.contract.read.convertToShares([params.amount.toSolidityValue()])
 
+    LoggingService.debug(
+      'convertToShares',
+      params.amount.toSolidityValue(),
+      '=>',
+      sharesAmount.toString(),
+    )
+
     return TokenAmount.createFromBaseUnit({
       token,
       amount: String(sharesAmount),
+    })
+  }
+
+  /** @see IErc4626Contract.previewDeposit */
+  async previewDeposit(
+    params: Parameters<IErc4626Contract['previewDeposit']>[0],
+  ): Promise<ITokenAmount> {
+    const token = await this.asErc20().getToken()
+    const sharesAmount = await this.contract.read.previewDeposit([params.assets.toSolidityValue()])
+
+    LoggingService.debug(
+      'previewDeposit',
+      params.assets.toSolidityValue(),
+      '=>',
+      sharesAmount.toString(),
+    )
+
+    return TokenAmount.createFromBaseUnit({
+      token,
+      amount: sharesAmount.toString(),
+    })
+  }
+
+  /** @see IErc4626Contract.previewWithdraw */
+  async previewWithdraw(
+    params: Parameters<IErc4626Contract['previewWithdraw']>[0],
+  ): Promise<ITokenAmount> {
+    const token = await this.asErc20().getToken()
+    const sharesAmount = await this.contract.read.previewWithdraw([params.assets.toSolidityValue()])
+
+    LoggingService.debug(
+      'previewWithdraw',
+      params.assets.toSolidityValue(),
+      '=>',
+      sharesAmount.toString(),
+    )
+
+    return TokenAmount.createFromBaseUnit({
+      token,
+      amount: sharesAmount.toString(),
     })
   }
 

@@ -41,6 +41,26 @@ export interface IErc4626Contract extends IContractWrapper {
    */
   convertToShares(params: { amount: ITokenAmount }): Promise<ITokenAmount>
 
+  /**
+   * @name previewDeposit
+   * @description Previews the deposit of the provided amount into the vault
+   *
+   * @param assets The amount to deposit
+   *
+   * @returns The amount that will be received
+   */
+  previewDeposit(params: { assets: ITokenAmount }): Promise<ITokenAmount>
+
+  /**
+   * @name previewWithdraw
+   * @description Previews the withdrawal of the provided amount from the vault
+   *
+   * @param assets The amount to withdraw
+   *
+   * @returns The amount that will be received
+   */
+  previewWithdraw(params: { assets: ITokenAmount }): Promise<ITokenAmount>
+
   /** WRITE METHODS */
 
   /**
