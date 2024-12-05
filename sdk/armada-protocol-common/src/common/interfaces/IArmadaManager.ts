@@ -124,7 +124,10 @@ export interface IArmadaManager {
    *
    * @returns ITokenAmount The amount of assets the user has in the fleet
    */
-  getFleetBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount>
+  getFleetBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<{
+    shares: ITokenAmount
+    assets: ITokenAmount
+  }>
 
   /**
    * @name getStakedBalance
@@ -133,9 +136,12 @@ export interface IArmadaManager {
    * @param vaultId ID of the vault to retrieve the balance
    * @param user Address of the user to retrieve the balance
    *
-   * @returns ITokenAmount The amount of assets the user has stake
+   * @returns ITokenAmount The amount of assets the user has staked
    */
-  getStakedBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount>
+  getStakedBalance(params: {
+    vaultId: IArmadaVaultId
+    user: IUser
+  }): Promise<{ shares: ITokenAmount; assets: ITokenAmount }>
 
   /**
    *
@@ -147,7 +153,10 @@ export interface IArmadaManager {
    *
    * @returns ITokenAmount The total amount of assets the user has in the fleet
    */
-  getTotalBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount>
+  getTotalBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<{
+    shares: ITokenAmount
+    assets: ITokenAmount
+  }>
 
   /** USER TRANSACTIONS */
 

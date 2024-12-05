@@ -57,7 +57,7 @@ export function addSdkConfig({ stack }: StackContext, api: Api) {
     handler: 'sdk/sdk-router-function/src/index.handler',
     runtime: 'nodejs20.x',
     logFormat: 'JSON',
-    timeout: 30,
+    timeout: '90 seconds',
     environment: {
       SDK_DEBUG_ENABLED,
       SDK_LOGGING_ENABLED,
