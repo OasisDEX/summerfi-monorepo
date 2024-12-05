@@ -143,6 +143,9 @@ export const SumrClaimSearch = () => {
       <GradientBox
         selected
         className={`${classNames.gradientBox} ${isBoxVisible ? classNames.gradientBoxOpened : ''}`}
+        style={{
+          position: isBoxVisible ? 'relative' : 'absolute',
+        }}
       >
         <Card variant="cardGradientLight" style={{ flexDirection: 'column' }}>
           <Text variant="p2semiColorful" style={{ marginBottom: 'var(--general-space-8)' }}>
