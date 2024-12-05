@@ -1,3 +1,6 @@
+import { type CSSProperties } from 'react'
+import clsx from 'clsx'
+
 import { Icon, type IconNamesList } from '@/components/atoms/Icon/Icon'
 
 import classNames from './IconWithBackground.module.scss'
@@ -8,15 +11,19 @@ export const IconWithBackground = ({
   size,
   with3rdLayer,
   backgroundSize = 100,
+  wrapperStyle,
+  wrapperClassName,
 }: {
   iconName: IconNamesList
   color?: string
   size?: number
   with3rdLayer?: boolean
   backgroundSize?: number
+  wrapperStyle?: CSSProperties
+  wrapperClassName?: string
 }) => {
   return (
-    <div className={classNames.wrapper}>
+    <div className={clsx(classNames.wrapper, wrapperClassName)} style={wrapperStyle}>
       <div
         className={classNames.firstLayerCircle}
         style={{ width: backgroundSize, height: backgroundSize }}

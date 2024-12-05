@@ -1,0 +1,37 @@
+.sumrRaysRewadsWrapper {
+  margin-top: 90px;
+
+  .sumrRaysRewardsContent {
+    display: flex;
+    flex-direction: column;
+
+    .customCard {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: var(--general-space-24);
+      padding: 52px;
+      width: fit-content;
+
+      > h5 {
+        margin-top: var(--general-space-24);
+        margin-bottom: var(--general-space-8);
+      }
+
+      > p {
+        max-width: 304px;
+      }
+    }
+
+    .actionableWrapper {
+      display: flex;
+      align-items: center;
+      gap: var(--general-space-16);
+
+      a > button {
+        min-width: unset;
+        height: 38px;
+        font-size: 14px;
+      }
+    }
+  }
+}

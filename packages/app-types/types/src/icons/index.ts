@@ -265,6 +265,7 @@ export type IconNamesList =
   | 'migrate_colorful'
   | 'referer_colorful'
   | 'x_colorful'
+  | 'stack_colorful'
 
 export type TokenSymbolsList =
   | 'AAVE'
