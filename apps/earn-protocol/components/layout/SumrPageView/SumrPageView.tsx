@@ -4,6 +4,7 @@ import { SumrClaimSearch } from '@/features/sumr-claim/components/SumrClaimSearc
 import { SumrConversionAndPrice } from '@/features/sumr-claim/components/SumrConversionAndPrice/SumrConversionAndPrice'
 import { SumrFundamentalUtility } from '@/features/sumr-claim/components/SumrFundamentalUtility/SumrFundamentalUtility'
 import { SumrGovernance } from '@/features/sumr-claim/components/SumrGovernance/SumrGovernance'
+import { SumrMultipleWaysToEarn } from '@/features/sumr-claim/components/SumrMultipleWaysToEarn/SumrMultipleWaysToEarn'
 import { SumrNotTransferable } from '@/features/sumr-claim/components/SumrNotTransferable/SumrNotTransferable'
 import { SumrTransferabilityCounter } from '@/features/sumr-claim/components/SumrTransferabilityCounter/SumrTransferabilityCounter'
 import { SumrWhatIsSumrToken } from '@/features/sumr-claim/components/SumrWhatIsSumrToken/SumrWhatIsSumrToken'
@@ -24,6 +25,7 @@ export const SumrPageView: FC<SumrPageViewProps> = ({ sumrPrice }) => {
       <SumrGovernance />
       <SumrFundamentalUtility />
       <SumrNotTransferable />
+      <SumrMultipleWaysToEarn />
     </div>
   )
 }
