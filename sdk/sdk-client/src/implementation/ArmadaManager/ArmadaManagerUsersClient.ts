@@ -97,19 +97,28 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
 
   async getStakedBalance(
     params: Parameters<IArmadaManagerUsersClient['getStakedBalance']>[0],
-  ): Promise<ITokenAmount> {
+  ): Promise<{
+    shares: ITokenAmount
+    assets: ITokenAmount
+  }> {
     return this.rpcClient.armada.users.getStakedBalance.query(params)
   }
 
   async getFleetBalance(
     params: Parameters<IArmadaManagerUsersClient['getFleetBalance']>[0],
-  ): Promise<ITokenAmount> {
+  ): Promise<{
+    shares: ITokenAmount
+    assets: ITokenAmount
+  }> {
     return this.rpcClient.armada.users.getFleetBalance.query(params)
   }
 
   async getTotalBalance(
     params: Parameters<IArmadaManagerUsersClient['getTotalBalance']>[0],
-  ): Promise<ITokenAmount> {
+  ): Promise<{
+    shares: ITokenAmount
+    assets: ITokenAmount
+  }> {
     return this.rpcClient.armada.users.getTotalBalance.query(params)
   }
 }
