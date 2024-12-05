@@ -1,6 +1,6 @@
 import {
   type EarnAppConfigType,
-  SDKVaultishType,
+  type SDKVaultishType,
   type SDKVaultsListType,
 } from '@summerfi/app-types'
 import { subgraphNetworkToId } from '@summerfi/app-utils'

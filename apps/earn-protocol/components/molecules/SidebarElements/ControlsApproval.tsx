@@ -1,5 +1,9 @@
 import { Input, SelectionBlock, Text } from '@summerfi/app-earn-ui'
-import { type EarnAllowanceTypes, SDKVaultishType, type SDKVaultType } from '@summerfi/app-types'
+import {
+  type EarnAllowanceTypes,
+  type SDKVaultishType,
+  type SDKVaultType,
+} from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 

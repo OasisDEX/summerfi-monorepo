@@ -7,6 +7,7 @@ COPY public .next/standalone/apps/earn-protocol-landing-page/public
 COPY .next/static .next/standalone/apps/earn-protocol-landing-page/.next/static
 
 ARG CONFIG_URL \
+    CONFIG_URL_EARN \
     MIXPANEL_KEY \
     NEXT_PUBLIC_MIXPANEL_KEY \
     SDK_API_URL \
@@ -14,6 +15,7 @@ ARG CONFIG_URL \
 
 
 ENV CONFIG_URL=$CONFIG_URL \
+    CONFIG_URL_EARN=$CONFIG_URL_EARN \
     MIXPANEL_KEY=$MIXPANEL_KEY \
     NEXT_PUBLIC_MIXPANEL_KEY=$NEXT_PUBLIC_MIXPANEL_KEY \
     SDK_API_URL=$SDK_API_URL \
