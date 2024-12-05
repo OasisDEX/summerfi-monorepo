@@ -14,6 +14,7 @@ import {
   type DropdownOption,
   type ForecastData,
   type SDKUsersActivityType,
+  type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
   type TokenSymbolsList,
@@ -45,7 +46,7 @@ import { useTransaction } from '@/hooks/use-transaction'
 import vaultOpenViewStyles from './VaultOpenView.module.scss'
 
 type VaultOpenViewComponentProps = {
-  vault: SDKVaultType
+  vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
   userActivity: UsersActivity
   topDepositors: SDKUsersActivityType
@@ -245,7 +246,7 @@ export const VaultOpenViewComponent = ({
             }
             defaultExpanded
           >
-            <VaultExposure vault={vault} />
+            <VaultExposure vault={vault as SDKVaultType} />
           </Expander>
           <Expander
             title={

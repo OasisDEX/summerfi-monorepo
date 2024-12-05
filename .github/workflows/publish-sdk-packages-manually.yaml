@@ -42,6 +42,7 @@ jobs:
         sdk_package: [sdk-common, sdk-client, protocol-plugins]
     env:
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
+      CONFIG_URL_EARN: ${{ secrets.CONFIG_URL_EARN }}
       CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
 

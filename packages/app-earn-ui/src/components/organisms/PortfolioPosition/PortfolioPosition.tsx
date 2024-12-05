@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react'
-import { type IArmadaPosition, type SDKVaultsListType } from '@summerfi/app-types'
+import { type IArmadaPosition, type SDKVaultishType } from '@summerfi/app-types'
 import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
@@ -18,7 +18,7 @@ import portfolioPositionStyles from './PortfolioPosition.module.scss'
 type PortfolioPositionProps = {
   position: {
     positionData: IArmadaPosition
-    vaultData: SDKVaultsListType[number]
+    vaultData: SDKVaultishType
   }
   positionGraph: ReactNode
 }
@@ -33,6 +33,7 @@ export const PortfolioPosition = ({ position, positionGraph }: PortfolioPosition
     totalValueLockedUSD,
     id: vaultId,
     inputTokenPriceUSD,
+    customFields,
   } = position.vaultData
   const {
     amount,
@@ -73,7 +74,7 @@ export const PortfolioPosition = ({ position, positionGraph }: PortfolioPosition
             <VaultTitleWithRisk
               symbol={inputToken.symbol}
               // TODO: fill data
-              risk="low"
+              risk={customFields?.risk ?? 'medium'}
               networkName={protocol.network}
             />
             <Text
@@ -93,7 +94,7 @@ export const PortfolioPosition = ({ position, positionGraph }: PortfolioPosition
               Strategy
             </Text>
             <Text variant="h4" className={portfolioPositionStyles.value}>
-              {vaultName}
+              {customFields?.name ?? vaultName}
             </Text>
             <Text variant="p3semi" className={portfolioPositionStyles.subValue}>
               xxx
@@ -131,7 +132,7 @@ export const PortfolioPosition = ({ position, positionGraph }: PortfolioPosition
             <Link
               href={getVaultPositionUrl({
                 network: protocol.network,
-                vaultId,
+                vaultId: customFields?.slug ?? vaultId,
                 walletAddress,
               })}
             >

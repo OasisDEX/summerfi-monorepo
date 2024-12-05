@@ -1,12 +1,16 @@
 import { Input, SelectionBlock, Text } from '@summerfi/app-earn-ui'
-import { type EarnAllowanceTypes, type SDKVaultType } from '@summerfi/app-types'
+import {
+  type EarnAllowanceTypes,
+  type SDKVaultishType,
+  type SDKVaultType,
+} from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 
 import controlsApprovalStyles from './ControlsApproval.module.scss'
 
 type ControlsApprovalProps = {
-  vault: SDKVaultType
+  vault: SDKVaultType | SDKVaultishType
   approvalType: EarnAllowanceTypes
   setApprovalType: (type: EarnAllowanceTypes) => void
   setApprovalCustomValue: (value: BigNumber) => void

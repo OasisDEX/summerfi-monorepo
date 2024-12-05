@@ -51,7 +51,7 @@ export const BestOfDecentralizedFinance = () => {
           <BestOfDecentralizedFinanceBlock
             tag="Transparent"
             title="Never second guess the source of your yield"
-            description="With Summer, effortlessly earn the best yields and grow your capital faster. We automatically rebalance your assets to top protocols, maximizing your returns."
+            description="With best in class yield breakdowns that are simple to understand, you as a user will always know how, why and where your yield is generated."
             content={
               <div className={bestOfDecentralizedFinanceStyles.chart}>
                 <Image
@@ -71,7 +71,7 @@ export const BestOfDecentralizedFinance = () => {
           <BestOfDecentralizedFinanceBlock
             tag="Liquid"
             title="Exit anytime, no matter your size"
-            description="With Summer, effortlessly earn the best yields and grow your capital faster. We automatically rebalance your assets to top protocols, maximizing your returns."
+            description="Lazy Summer protocol purposely selects for strategies and protocols that are of the deepest liquidity, so size is never an issue."
             content={
               <div className={bestOfDecentralizedFinanceStyles.ui}>
                 <Image src={bestOfDecentralizedFinanceUI} alt="Exit anytime, no matter your size" />
@@ -83,7 +83,7 @@ export const BestOfDecentralizedFinance = () => {
           <BestOfDecentralizedFinanceBlock
             tag="Permissionless"
             title="No black boxes. Fully on-chain."
-            description="With Summer, effortlessly earn the best yields and grow your capital faster. We automatically rebalance your assets to top protocols, maximizing your returns."
+            description="Staying true to crypto values, the Lazy Summer Protocol is fully on-chain and non custodial, users are 100% in control of their funds at all times."
             content={
               <div className={bestOfDecentralizedFinanceStyles.protocols}>
                 <Image

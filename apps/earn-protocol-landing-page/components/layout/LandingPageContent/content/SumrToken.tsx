@@ -25,8 +25,9 @@ export const SumrToken = () => {
           Governed by $SUMR, governed by you.
         </Text>
         <Text variant="p2" as="p">
-          With Summer, effortlessly earn the best yields and grow your capital faster. We
-          automatically rebalance your assets to top protocols, maximizing your returns.
+          The Lazy Summer Protocol is governed by the $SUMR token. Holders of $SUMR are responsible
+          for curating the best of DeFi, keeping contributors accountable, and allocating protocol
+          capital.
         </Text>
         <Link href="#">
           <Button variant="secondarySmall">Get $SUMR</Button>

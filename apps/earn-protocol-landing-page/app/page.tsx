@@ -1,6 +1,8 @@
 import { BigGradientBox, FaqSection } from '@summerfi/app-earn-ui'
+import { parseServerResponseToClient } from '@summerfi/app-utils'
 
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
+import systemConfigHandler from '@/app/server-handlers/system-config'
 import {
   EffortlessAccessBlock,
   EnhancedRiskManagement,
@@ -17,15 +19,18 @@ import { CryptoUtilities } from '@/components/layout/LandingPageContent/content/
 import { StartEarningNow } from '@/components/layout/LandingPageContent/content/StartEarningNow'
 import { SummerFiProSection } from '@/components/layout/LandingPageContent/content/SummerFiProSection'
 import { SumrToken } from '@/components/layout/LandingPageContent/content/SumrToken'
+import { decorateCustomVaultFields } from '@/helpers/vault-custom-value-helpers'
 
 export const revalidate = 60
 
 export default async function HomePage() {
   const { vaults } = await getVaultsList()
+  const { config } = parseServerResponseToClient(await systemConfigHandler())
+  const vaultsDecorated = decorateCustomVaultFields(vaults, config)
 
   return (
     <div style={{ display: 'flex', gap: '8px', flexDirection: 'column', alignItems: 'center' }}>
-      <LandingPageHero vaultsList={vaults} />
+      <LandingPageHero vaultsList={vaultsDecorated} />
       <BigGradientBox>
         <EffortlessAccessBlock />
         <SupportedNetworksList />

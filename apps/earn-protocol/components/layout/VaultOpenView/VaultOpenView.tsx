@@ -3,6 +3,7 @@
 import {
   type ForecastData,
   type SDKUsersActivityType,
+  type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
   type UsersActivity,
@@ -19,7 +20,7 @@ export const VaultOpenView = ({
   topDepositors,
   preloadedForecast,
 }: {
-  vault: SDKVaultType
+  vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
   userActivity: UsersActivity
   topDepositors: SDKUsersActivityType

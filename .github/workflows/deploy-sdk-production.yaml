@@ -36,6 +36,7 @@ jobs:
       RAYS_DB_READ_CONNECTION_STRING: ${{ secrets.RAYS_DB_READ_CONNECTION_STRING }}
       BORROW_DB_READ_CONNECTION_STRING: ${{ secrets.BORROW_DB_READ_CONNECTION_STRING }}
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
+      CONFIG_URL_EARN: ${{ secrets.CONFIG_URL_EARN }}
       CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
     steps:
       - name: Send start notification to Discord

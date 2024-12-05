@@ -71,7 +71,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
             </Text>
           </Link>
           <Text as="span" variant="p3" color="white">
-            {vault.id}
+            {vault.customFields?.name ?? vault.id}
           </Text>
         </div>
       </div>
@@ -91,7 +91,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
               <VaultTitleWithRisk
                 symbol={vault.inputToken.symbol}
                 // TODO: fill data
-                risk="low"
+                risk={vault.customFields?.risk ?? 'medium'}
                 networkName={vault.protocol.network}
               />
             </Dropdown>

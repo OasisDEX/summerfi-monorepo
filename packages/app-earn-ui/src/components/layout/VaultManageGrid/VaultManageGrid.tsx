@@ -76,7 +76,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
           </Text>
           <Link href={getVaultUrl(vault)} style={{ color: 'white' }}>
             <Text as="span" variant="p3">
-              {vault.id}
+              {vault.customFields?.name ?? vault.id}
             </Text>
           </Link>
           <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>

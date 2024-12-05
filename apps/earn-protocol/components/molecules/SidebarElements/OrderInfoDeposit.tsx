@@ -1,12 +1,13 @@
 import { Box, Icon, SimpleGrid, Text } from '@summerfi/app-earn-ui'
 import { type SDKVaultType, type TokenSymbolsList } from '@summerfi/app-types'
+import { type SDKVaultishType } from '@summerfi/app-types/types/src/earn-protocol'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import type BigNumber from 'bignumber.js'
 
 import orderInfoDepositWithdrawStyles from './OrderInfoDepositWithdraw.module.scss'
 
 type OrderInfoDepositProps = {
-  vault: SDKVaultType
+  vault: SDKVaultType | SDKVaultishType
   amountParsed: BigNumber
   amountDisplayUSD: string
 }

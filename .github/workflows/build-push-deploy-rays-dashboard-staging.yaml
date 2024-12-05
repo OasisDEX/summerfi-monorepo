@@ -40,6 +40,7 @@ jobs:
       SERVICE_NAME: summer-fi-rays-service-staging
       CLUSTER_NAME: summer-fi-rays-staging
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
+      CONFIG_URL_EARN: ${{ secrets.CONFIG_URL_EARN }}
       CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
       FUNCTIONS_API_URL: ${{ secrets.FUNCTIONS_API_URL }}
       BORROW_DB_READ_CONNECTION_STRING: ${{ secrets.NEW_BORROW_DB_READ_CONNECTION_STRING }}
@@ -128,7 +129,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume:  ${{ secrets.BUILD_DEPLOY_OIDC_ROLE_STAGING }}
+          role-to-assume: ${{ secrets.BUILD_DEPLOY_OIDC_ROLE_STAGING }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
@@ -161,7 +162,7 @@ jobs:
 
       #- name: Wait for all services to become stable
       #  uses: oryanmoshe/ecs-wait-action@v1.3
-      #  with: 
+      #  with:
       #    ecs-cluster: ${{ env.CLUSTER_NAME }}
       #    ecs-services: '["${{ env.SERVICE_NAME }}"]'
 

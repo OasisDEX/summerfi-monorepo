@@ -14,6 +14,7 @@ import {
 import {
   type DropdownOption,
   type SDKUsersActivityType,
+  type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
   type TokenSymbolsList,
@@ -49,7 +50,7 @@ export const VaultManageViewComponent = ({
   topDepositors,
   viewWalletAddress,
 }: {
-  vault: SDKVaultType
+  vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
   position: IArmadaPosition
   userActivity: UsersActivity
@@ -237,7 +238,7 @@ export const VaultManageViewComponent = ({
             }
             defaultExpanded
           >
-            <VaultExposure vault={vault} />
+            <VaultExposure vault={vault as SDKVaultType} />
           </Expander>
           <Expander
             title={

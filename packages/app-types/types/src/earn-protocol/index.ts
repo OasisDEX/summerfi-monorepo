@@ -8,20 +8,27 @@ import {
 import { ChainId } from '@summerfi/serverless-shared'
 import { type TransactionInfo } from '@summerfi/sdk-common'
 import { type IArmadaPosition } from '@summerfi/armada-protocol-common'
+import { EarnAppFleetCustomConfigType } from '../generated/earn-app-config'
 
 export { Network as SDKNetwork }
 export { ChainId as SDKChainId }
 export { IArmadaPosition }
 
-export type SDKVaultsListType = GetVaultsQuery['vaults']
-export type SDKVaultType = Exclude<GetVaultQuery['vault'], null | undefined>
+type VaultCustomFields = {
+  // custom fields for vaults - decorated within the earn/lp apps
+  customFields?: EarnAppFleetCustomConfigType
+}
+export type SDKVaultsListType = GetVaultsQuery['vaults'] & VaultCustomFields
+export type SDKVaultType = Exclude<GetVaultQuery['vault'] & VaultCustomFields, null | undefined>
 export type SDKGlobalRebalancesType = GetGlobalRebalancesQuery['rebalances']
 export type SDKGlobalRebalanceType = SDKGlobalRebalancesType[0]
 export type SDKUsersActivityType = GetUsersActivityQuery['positions']
 export type SDKUserActivityType = SDKUsersActivityType[0]
 
+export type Risk = 'low' | 'medium' | 'high'
+
 // -ish because it can be a detailed vault or a vault from list (less details), use with that in mind
-export type SDKVaultishType = SDKVaultType | SDKVaultsListType[number]
+export type SDKVaultishType = (SDKVaultType | SDKVaultsListType[number]) & VaultCustomFields
 
 export const sdkSupportedNetworks = [Network.ArbitrumOne, Network.Base] as const
 export const sdkSupportedChains = [ChainId.ARBITRUM, ChainId.BASE] as const

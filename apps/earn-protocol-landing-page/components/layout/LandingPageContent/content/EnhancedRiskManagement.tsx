@@ -36,8 +36,8 @@ export const EnhancedRiskManagement = ({ protectedCapital }: { protectedCapital:
               Your capital’s safety, overseen and constantly assessed by DeFi’s premier risk team
             </Text>
             <Text variant="p2" as="p">
-              Lazy Summer requires 0 management from users. Apart from your own deposits, all risk
-              management, yield optimizing and strategy rebalancing is handled automatically.{' '}
+              In the Lazy Summer Protocol, Block Analitica is the third party risk curator that
+              provides objective analysis to critical protocol decisions.
             </Text>
             <div className={enhancedRiskManagementStyles.topBlockStats}>
               <Image src={blockAnalyticaLogo} alt="Block Analytica" />
@@ -71,8 +71,8 @@ export const EnhancedRiskManagement = ({ protectedCapital }: { protectedCapital:
               No more wasted time signing, approving, confirming
             </Text>
             <Text variant="p2" as="p">
-              Lazy Summer requires 0 management from users. Apart from your own deposits, all risk
-              management, yield optimizing and strategy rebalancing is handled automatically.
+              Get back all the time, effort and mental energy it takes to manually execute
+              transactions on chain. In Lazy Summer, its all set and forget.
             </Text>
           </div>
           <Image
@@ -87,8 +87,8 @@ export const EnhancedRiskManagement = ({ protectedCapital }: { protectedCapital:
               Automatic diversification, zero chance of manual mistakes
             </Text>
             <Text variant="p2" as="p">
-              Lazy Summer requires 0 management from users. Apart from your own deposits, all risk
-              management, yield optimizing and strategy rebalancing is handled automatically.
+              Never be overexposed to a single protocol and risk the chance of ruin, and with
+              automated the transactions, the chances of you fat fingering a trade just become zero.
             </Text>
           </div>
           <Image

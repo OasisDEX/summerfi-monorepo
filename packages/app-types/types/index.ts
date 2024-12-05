@@ -1,6 +1,10 @@
 // know i said no barrel files but these are just types
 export { type AppConfigType, emptyConfig, FeaturesEnum } from './src/generated/main-config'
 export {
+  type EarnAppConfigType,
+  type EarnAppFleetCustomConfigType,
+} from './src/generated/earn-app-config'
+export {
   type AppRaysConfigType,
   type ProductNetworkConfig,
   type Products,
@@ -22,7 +26,6 @@ export * from './src/server-handlers'
 export * from './src/translatable'
 export * from './src/terms-of-service'
 export * from './src/auth'
-export * from './src/risk'
 export * from './src/earn-protocol'
 export * from './src/device-type'
 export * from './src/transaction'
