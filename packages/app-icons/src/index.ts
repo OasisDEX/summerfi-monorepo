@@ -305,4 +305,5 @@ export const icons = {
   migrate_colorful: customLazy(() => import('./icons/migrate_colorful.svg?react')),
   referer_colorful: customLazy(() => import('./icons/referer_colorful.svg?react')),
   x_colorful: customLazy(() => import('./icons/x_colorful.svg?react')),
+  stack_colorful: customLazy(() => import('./icons/stack_colorful.svg?react')),
 }

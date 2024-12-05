@@ -1,4 +1,4 @@
-import { BigGradientBox } from '@summerfi/app-earn-ui'
+import { BigGradientBox, FaqSection } from '@summerfi/app-earn-ui'
 
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import {
@@ -14,7 +14,6 @@ import { Audits } from '@/components/layout/LandingPageContent/content/Audits'
 import { BestOfDecentralizedFinance } from '@/components/layout/LandingPageContent/content/BestOfDecentralisedFinance'
 import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { CryptoUtilities } from '@/components/layout/LandingPageContent/content/CryptoUtilities'
-import { FaqSection } from '@/components/layout/LandingPageContent/content/FaqSection'
 import { StartEarningNow } from '@/components/layout/LandingPageContent/content/StartEarningNow'
 import { SummerFiProSection } from '@/components/layout/LandingPageContent/content/SummerFiProSection'
 import { SumrToken } from '@/components/layout/LandingPageContent/content/SumrToken'
@@ -51,7 +50,26 @@ export default async function HomePage() {
         <CryptoUtilities />
         <Audits />
         <BuildBySummerFi />
-        <FaqSection />
+        <FaqSection
+          data={[
+            {
+              title: 'Why should I trust your platform?',
+              content: 'Good question ✨',
+            },
+            {
+              title: 'How does the strategy work?',
+              content: 'Good question ✨',
+            },
+            {
+              title: 'Where does the yield come from?',
+              content: 'Good question ✨',
+            },
+            {
+              title: 'What’s the platform of Summer.fi?',
+              content: 'Good question ✨',
+            },
+          ]}
+        />
       </MarketingPoints>
     </div>
   )

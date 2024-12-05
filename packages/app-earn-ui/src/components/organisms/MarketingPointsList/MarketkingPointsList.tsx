@@ -12,9 +12,14 @@ export type MarketingPointsListData = { [key: string]: { title: string; content:
 interface MarketkingPointsListProps {
   data: MarketingPointsListData
   header?: string
+  detailsWrapperClassName?: string
 }
 
-export const MarketingPointsList: FC<MarketkingPointsListProps> = ({ data, header }) => {
+export const MarketingPointsList: FC<MarketkingPointsListProps> = ({
+  data,
+  header,
+  detailsWrapperClassName,
+}) => {
   const [fadingOut, setFadingOut] = useState(false)
   const blockSectionsKeys = Object.keys(data) as (keyof typeof data)[]
   const [activeSection, setActiveSection] = useState(blockSectionsKeys[0])
@@ -40,7 +45,7 @@ export const MarketingPointsList: FC<MarketkingPointsListProps> = ({ data, heade
           </Text>
         </div>
       )}
-      <div className={classNames.marketingPointsListDetailsWrapper}>
+      <div className={clsx(classNames.marketingPointsListDetailsWrapper, detailsWrapperClassName)}>
         <div className={classNames.marketingPointsListDetailsButtons}>
           {blockSectionsKeys.map((sectionKey) => (
             <Button

@@ -124,6 +124,7 @@ export const SumrGovernance = () => {
       <MarketingPointsList
         header="Governance power, robust tokenomic’s and multiple ways to earn"
         data={data}
+        detailsWrapperClassName={classNames.marketingDetailsCustomWrapper}
       />
     </div>
   )
