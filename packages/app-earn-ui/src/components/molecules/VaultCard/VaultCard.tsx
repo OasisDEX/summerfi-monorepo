@@ -30,6 +30,7 @@ export const VaultCard = ({
   selected = false,
   onClick,
   calculatedApr,
+  customFields,
 }: VaultCardProps) => {
   const handleVaultClick = () => {
     if (onClick) {
@@ -49,12 +50,10 @@ export const VaultCard = ({
         <div className={vaultCardStyles.vaultCardHeaderWrapper}>
           <VaultTitleWithRisk
             symbol={inputToken.symbol}
-            // TODO: fill data
-            risk="low"
+            risk={customFields?.risk ?? 'medium'}
             networkName={protocol.network}
           />
           <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-            {/** TODO: fill data */}
             <BonusLabel tokenBonus="some" apy={parsedApr} />
           </Text>
         </div>
@@ -71,7 +70,9 @@ export const VaultCard = ({
             <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
               Best for
             </Text>
-            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>some kind</Text>
+            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+              {customFields?.bestFor ?? '-'}
+            </Text>
           </div>
         </div>
       </Card>

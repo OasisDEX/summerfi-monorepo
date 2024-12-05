@@ -45,14 +45,14 @@ const getInterfaces = (_) => {
 }`
     return `${interfaces}\n${emptyConfig}`
   } catch (error) {
-    console.error(`Error generating config types: ${error}`)
+    console.error(`Rays Dashboard Summer.fi: Error generating config types: ${error}`)
     return ''
   }
 }
 
 const main = async () => {
   if (!process.env.CONFIG_URL_RAYS) {
-    console.error('CONFIG_URL_RAYS environment variable not set')
+    console.error('Rays Dashboard Summer.fi: CONFIG_URL_RAYS environment variable not set')
     return
   }
   const config = await getConfig()
@@ -63,20 +63,20 @@ const main = async () => {
   if (!configPathExists) {
     await mkdir(configPath)
       .catch(() => {
-        console.error('Error creating rays types/generated directory')
+        console.error('Rays Dashboard Summer.fi: Error creating rays types/generated directory')
       })
       .then(() => {
-        console.info(`Rays ${configPath} directory created`)
+        console.info(`Rays Dashboard Summer.fi: Rays ${configPath} directory created`)
       })
   }
 
   if (interfaces !== '') {
     writeFile(join(configPath, 'rays-config.ts'), interfaces)
       .then(() => {
-        console.info('Rays Config types generated')
+        console.info('Rays Dashboard Summer.fi: Rays Config types generated')
       })
       .catch((error) => {
-        console.error(`Error generating rays config types: ${error}`)
+        console.error(`Rays Dashboard Summer.fi: Error generating rays config types: ${error}`)
       })
   }
 }

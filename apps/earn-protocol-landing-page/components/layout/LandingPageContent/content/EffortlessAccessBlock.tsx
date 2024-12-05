@@ -11,10 +11,9 @@ export const EffortlessAccessBlock = () => {
   return (
     <div className={effortlessAccessBlockStyles.wrapper}>
       <Text as="p" variant="h4" className={effortlessAccessBlockStyles.callout}>
-        With Summer, get <Emphasis>effortless access</Emphasis> to crypto’s{' '}
-        <Emphasis>best DeFi yields</Emphasis>, continually rebalanced to{' '}
-        <Emphasis>earn you more</Emphasis> while{' '}
-        <Emphasis>saving time and reducing costs.</Emphasis>
+        <Emphasis>Effortless access</Emphasis> to crypto’s <Emphasis>best DeFi yields</Emphasis>,
+        continually rebalanced to <Emphasis>earn you more</Emphasis> while{' '}
+        <Emphasis>saving time and reducing costs</Emphasis>.
       </Text>
       <Image
         src={summerEarnUi}

@@ -2,6 +2,7 @@
 
 import {
   type SDKUsersActivityType,
+  type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
   type UsersActivity,
@@ -20,7 +21,7 @@ export const VaultManageView = ({
   topDepositors,
   viewWalletAddress,
 }: {
-  vault: SDKVaultType
+  vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
   position: IArmadaPosition
   userActivity: UsersActivity

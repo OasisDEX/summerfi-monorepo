@@ -1,12 +1,12 @@
 import { Carousel, Text } from '@summerfi/app-earn-ui'
-import { type SDKVaultsListType } from '@summerfi/app-types'
+import { type SDKVaultishType } from '@summerfi/app-types'
 
 import { SummerFiProBox } from '@/components/layout/LandingPageContent'
 import { LandingPageVaultPicker } from '@/components/organisms/LandingPageVaultPicker/LandingPageVaultPicker'
 
 import landingPageHeroStyles from '@/components/layout/LandingPageContent/components/LandingPageHero.module.scss'
 
-export const LandingPageHero = ({ vaultsList }: { vaultsList: SDKVaultsListType }) => {
+export const LandingPageHero = ({ vaultsList }: { vaultsList: SDKVaultishType[] }) => {
   return (
     <div className={landingPageHeroStyles.landingPageHeroWrapper}>
       <div className={landingPageHeroStyles.heroHeader}>

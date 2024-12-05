@@ -1,8 +1,8 @@
-import { type AppConfigType } from '@summerfi/app-types'
+import { type EarnAppConfigType } from '@summerfi/app-types'
 
-export const configFetcher = async function (): Promise<Partial<AppConfigType>> {
+export const configFetcher = async function (): Promise<Partial<EarnAppConfigType>> {
   try {
-    const response = await fetch(process.env.CONFIG_URL as string, {
+    const response = await fetch(process.env.CONFIG_URL_EARN as string, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -11,11 +11,11 @@ export const configFetcher = async function (): Promise<Partial<AppConfigType>> 
     })
     const data = await response.json()
 
-    return data as AppConfigType
+    return data as EarnAppConfigType
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     // eslint-disable-next-line no-console
-    console.error('Error in configFetcher', error, 'accessing:', process.env.CONFIG_URL)
+    console.error('Error in configFetcher', error, 'accessing:', process.env.CONFIG_URL_EARN)
 
     throw error
   }

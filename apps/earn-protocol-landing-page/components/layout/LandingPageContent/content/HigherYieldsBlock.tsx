@@ -81,7 +81,7 @@ const higherYieldsBlockSections = {
     content: (
       <HigherYieldsSection
         title="DeFi’s best yield, all of the time."
-        description="With Summer, effortlessly earn the best yields and grow your capital faster. We automatically rebalance your assets to top protocols, maximizing your returns."
+        description="With Summer, effortlessly earn the best yields and grow your capital faster. The protocol automatically rebalance your assets to top protocols, maximizing your returns."
         ctaLabel="Get started"
         ctaUrl="/"
         secondaryCtaLabel="View Yields"
@@ -109,7 +109,7 @@ const higherYieldsBlockSections = {
     content: (
       <HigherYieldsSection
         title="Everything, optimized and automated."
-        description="With Summer, effortlessly earn the best yields and grow your capital faster. We automatically rebalance your assets to top protocols, maximizing your returns."
+        description="From yield generation to risk management, the protocol automates every step of the process. Optimizing your assets to ensure your capital is always working harder for you.  "
         ctaLabel="Get started"
         ctaUrl="/"
         secondaryCtaLabel="Learn more"
@@ -138,7 +138,7 @@ const higherYieldsBlockSections = {
     content: (
       <HigherYieldsSection
         title="No more chasing yields and paying unnecessary fees"
-        description="With Summer, effortlessly earn the best yields and grow your capital faster. We automatically rebalance your assets to top protocols, maximizing your returns."
+        description="Automated rebalancing between strategies dramatically improves the efficiency of transactions across positions, saving you the cost of transaction fees."
         ctaLabel="Deposit"
         ctaUrl="/"
         secondaryCtaLabel="Learn more"

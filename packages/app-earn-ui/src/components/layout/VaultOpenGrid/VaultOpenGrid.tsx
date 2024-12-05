@@ -71,7 +71,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
             </Text>
           </Link>
           <Text as="span" variant="p3" color="white">
-            {vault.id}
+            {vault.customFields?.name ?? vault.id}
           </Text>
         </div>
       </div>

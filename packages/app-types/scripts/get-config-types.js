@@ -43,14 +43,14 @@ ${featuresList.map((feature) => `  ${feature} = '${feature}',`).join('\n')}
 }`
     return `${interfaces}\n${featuresEnum}\n${emptyConfig}`
   } catch (error) {
-    console.error(`Error generating config types: ${error}`)
+    console.error(`Main Summer.fi: Error generating config types: ${error}`)
     return ''
   }
 }
 
 const main = async () => {
   if (!process.env.CONFIG_URL) {
-    console.error('CONFIG_URL environment variable not set')
+    console.error('Main Summer.fi: CONFIG_URL environment variable not set')
     return
   }
   const config = await getConfig()
@@ -61,20 +61,20 @@ const main = async () => {
   if (!configPathExists) {
     await mkdir(configPath)
       .catch(() => {
-        console.error('Error creating types/generated directory')
+        console.error('Main Summer.fi: Error creating types/generated directory')
       })
       .then(() => {
-        console.info(`${configPath} directory created`)
+        console.info(`Main Summer.fi: ${configPath} directory created`)
       })
   }
 
   if (interfaces !== '') {
     writeFile(join(configPath, 'main-config.ts'), interfaces)
       .then(() => {
-        console.info('Config types generated')
+        console.info('Main Summer.fi: Config types generated')
       })
       .catch((error) => {
-        console.error(`Error generating config types: ${error}`)
+        console.error(`Main Summer.fi: Error generating config types: ${error}`)
       })
   }
 }

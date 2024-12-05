@@ -1,5 +1,10 @@
 import { InputWithDropdown, ProjectedEarnings, SkeletonLine } from '@summerfi/app-earn-ui'
-import { type DropdownOption, type SDKVaultType, type TokenSymbolsList } from '@summerfi/app-types'
+import {
+  type DropdownOption,
+  type SDKVaultishType,
+  type SDKVaultType,
+  type TokenSymbolsList,
+} from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import type BigNumber from 'bignumber.js'
 
@@ -14,7 +19,7 @@ type ControlsDepositWithdrawProps = {
   tokenBalance: BigNumber | undefined
   tokenBalanceLoading: boolean
   manualSetAmount: (amountParsed: string | undefined) => void
-  vault: SDKVaultType
+  vault: SDKVaultType | SDKVaultishType
 }
 
 export const ControlsDepositWithdraw = ({

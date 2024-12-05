@@ -1,13 +1,23 @@
 import { Text } from '@summerfi/app-earn-ui'
 import { type SDKNetwork } from '@summerfi/app-types'
-import { humanNetworktoSDKNetwork, parseServerResponseToClient } from '@summerfi/app-utils'
+import {
+  humanNetworktoSDKNetwork,
+  parseServerResponseToClient,
+  subgraphNetworkToId,
+} from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
+import { isAddress } from 'viem'
 
 import { getUserActivity } from '@/app/server-handlers/sdk/get-user-activity'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
+import systemConfigHandler from '@/app/server-handlers/system-config'
 import { VaultManageView } from '@/components/layout/VaultManageView/VaultManageView'
+import {
+  decorateCustomVaultFields,
+  getVaultIdByVaultCustomName,
+} from '@/helpers/vault-custom-value-helpers'
 
 type EarnVaultManagePageProps = {
   params: {
@@ -21,23 +31,31 @@ export const revalidate = 60
 
 const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   const parsedNetwork = humanNetworktoSDKNetwork(params.network)
+  const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
+  const { config } = parseServerResponseToClient(await systemConfigHandler())
+
+  const parsedVaultId = isAddress(params.vaultId)
+    ? params.vaultId
+    : getVaultIdByVaultCustomName(params.vaultId, String(parsedNetworkId), config)
+
   const [vault, { vaults }, position, { userActivity, topDepositors }] = await Promise.all([
     getVaultDetails({
-      vaultAddress: params.vaultId,
+      vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),
     getVaultsList(),
     getUserPosition({
-      vaultAddress: params.vaultId,
+      vaultAddress: parsedVaultId,
       network: parsedNetwork,
       walletAddress: params.walletAddress,
     }),
     getUserActivity({
-      vaultAddress: params.vaultId,
+      vaultAddress: parsedVaultId,
       network: parsedNetwork,
       walletAddress: params.walletAddress,
     }),
   ])
+  const [vaultDecorated] = vault ? decorateCustomVaultFields([vault], config) : []
 
   if (!vault) {
     return (
@@ -59,7 +77,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
 
   return (
     <VaultManageView
-      vault={vault}
+      vault={vaultDecorated}
       vaults={vaults}
       position={positionJsonSafe}
       viewWalletAddress={params.walletAddress}
