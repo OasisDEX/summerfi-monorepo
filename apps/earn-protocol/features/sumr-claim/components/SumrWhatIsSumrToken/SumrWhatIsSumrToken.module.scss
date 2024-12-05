@@ -1,0 +1,38 @@
+.sumrWhatIsSumrTokenWrapper {
+  margin-top: 90px;
+  flex-direction: column;
+
+  .content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap-reverse;
+
+    .textual {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      max-width: 513px;
+      flex: 1;
+      margin-top: var(--general-space-12);
+
+      @media (min-width: 768px) {
+        margin: 0 70px;
+      }
+
+      .actionable {
+        min-width: unset;
+        gap: 12px;
+      }
+    }
+  }
+  .videoWrapper {
+    height: 350px;
+    width: 100%;
+    margin-top: var(--general-space-24);
+
+    @media (min-width: 768px) {
+      height: 500px;
+    }
+  }
+}

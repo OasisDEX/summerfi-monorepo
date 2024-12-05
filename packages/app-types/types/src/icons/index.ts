@@ -260,6 +260,11 @@ export type IconNamesList =
   | 'landing_page_cashout'
   | 'landing_page_send'
   | 'landing_page_swap'
+  | 'plant_colorful'
+  | 'checkmark_cookie_colorful'
+  | 'migrate_colorful'
+  | 'referer_colorful'
+  | 'x_colorful'
 
 export type TokenSymbolsList =
   | 'AAVE'

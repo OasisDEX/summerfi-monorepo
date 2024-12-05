@@ -24,7 +24,7 @@ export const HistoricalYieldChart = ({ aprHourlyList }: { aprHourlyList: string[
       .reverse()
       .map((item, itemIndex) => ({
         name: now.subtract(itemIndex, 'hour').format('MMM DD, HH:mm'),
-        'Summer Strategy': new BigNumber(item).toFixed(2),
+        'Summer Strategy': Number(new BigNumber(item).toFixed(2)), // this has to be a number for the chart to render it properly
       }))
       .reverse()
   }, [aprHourlyList])
