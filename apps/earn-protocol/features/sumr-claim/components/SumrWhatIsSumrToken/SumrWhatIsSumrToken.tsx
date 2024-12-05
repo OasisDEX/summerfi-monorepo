@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Button, Card, Emphasis, Text } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 
-import sumrTokenBubbles from '@/public/img/sumr-token_bubbles.svg'
+import sumrTokenBubbles from '@/public/img/sumr/sumr_token_bubbles.svg'
 
 import classNames from './SumrWhatIsSumrToken.module.scss'
 
