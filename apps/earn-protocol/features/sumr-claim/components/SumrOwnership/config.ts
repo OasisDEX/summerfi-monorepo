@@ -1,32 +1,32 @@
 export const sumrOwnershipChartData = [
   {
-    name: 'Community + Grants',
+    name: 'Community Rewards',
     value: 0.25,
-    valueRaw: 2500000,
+    valueRaw: 250000000,
     fill: 'var(--earn-protocol-primary-100)',
   },
   {
-    name: 'Key stake holders (7 advisors)',
+    name: 'Governance Treasury & Grants',
+    value: 0.1,
+    valueRaw: 100000000,
+    fill: 'rgba(255, 164, 209, 1)',
+  },
+  {
+    name: 'Key stakeholders and Advisors',
     value: 0.25,
-    valueRaw: 2500000,
+    valueRaw: 250000000,
     fill: 'var(--earn-protocol-primary-70)',
   },
   {
-    name: 'Core contributors (current + future)',
+    name: 'Core contributors (Current + Future)',
     value: 0.2,
-    valueRaw: 2000000,
+    valueRaw: 200000000,
     fill: 'var(--earn-protocol-primary-40)',
   },
   {
-    name: 'Foundation (liquidity, treasure + future)',
+    name: 'Foundation - Liquidity, Treasury, IP and Future Development',
     value: 0.2,
-    valueRaw: 2000000,
+    valueRaw: 200000000,
     fill: 'rgba(184, 50, 117, 1)',
-  },
-  {
-    name: 'Governance treasure + grants',
-    value: 0.1,
-    valueRaw: 1000000,
-    fill: 'rgba(255, 164, 209, 1)',
   },
 ]

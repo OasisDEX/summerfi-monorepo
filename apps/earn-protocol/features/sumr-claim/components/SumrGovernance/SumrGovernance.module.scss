@@ -1,6 +1,10 @@
 .sumrGovernanceWrapper {
   margin-top: 90px;
 
+  @media (min-width: 768px) {
+    min-height: 740px;
+  }
+
   .sumrGovernanceContent {
     display: flex;
     flex-direction: column;
@@ -35,6 +39,15 @@
         height: 38px;
         font-size: 14px;
       }
+    }
+  }
+
+  .marketingDetailsCustomWrapper {
+    padding-top: var(--spacing-space-2x-large);
+    padding-right: 0;
+
+    @include media('<=s') {
+      padding: var(--spacing-space-small);
     }
   }
 }
