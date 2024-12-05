@@ -3,7 +3,6 @@ import { type ChangeEvent, useEffect, useState } from 'react'
 import { useAuthModal, useUser } from '@account-kit/react'
 import { Button, Card, GradientBox, Input, LoadingSpinner, Text } from '@summerfi/app-earn-ui'
 import { formatAddress } from '@summerfi/app-utils'
-import debounce from 'lodash-es/debounce'
 import { useRouter } from 'next/navigation'
 import { isAddress } from 'viem'
 
@@ -17,7 +16,8 @@ export const SumrClaimSearch = () => {
   const user = useUser()
   const { openAuthModal } = useAuthModal()
 
-  const [eligibleUser, setEligibleUser] = useState<{ ens: string | null; userAddress: string }>()
+  const [eligibleUsers, setEligibleUsers] =
+    useState<{ ens: string | null; userAddress: string }[]>()
   const [isBoxVisible, setIsBoxVisible] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [inputError, setInputError] = useState('')
@@ -25,9 +25,19 @@ export const SumrClaimSearch = () => {
 
   const resolvedAddress = inputValue || user?.address
 
-  const handleSearch = debounce((e: ChangeEvent<HTMLInputElement>) => {
+  const eligibleUser = eligibleUsers?.length === 1 ? eligibleUsers[0] : undefined
+
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setInputError('')
     const newInputValue = e.target.value
+
+    if (newInputValue.length > 0) {
+      setIsLoading(true)
+    }
+
+    if (newInputValue.length === 0) {
+      setIsLoading(false)
+    }
 
     if (newInputValue.startsWith('0x')) {
       setInputError(isAddress(newInputValue) ? '' : 'Please enter a valid address')
@@ -35,7 +45,7 @@ export const SumrClaimSearch = () => {
 
     setInputValue(newInputValue)
     setIsBoxVisible(true)
-  }, 400)
+  }
 
   const handleButtonClick = () => {
     if (!user) {
@@ -56,32 +66,29 @@ export const SumrClaimSearch = () => {
   }
 
   useEffect(() => {
-    setEligibleUser(undefined)
-    const request = async (address: string) => {
-      // don't fetch if the address is not valid
-      if (address.startsWith('0x') && !isAddress(address)) {
-        return
-      }
+    const timeout = setTimeout(() => {
+      setEligibleUsers(undefined)
+      const request = async (address: string) => {
+        try {
+          const leaderboard = await getUserSumrEligibility(address)
 
-      try {
-        setIsLoading(true)
-        const leaderboard = await getUserSumrEligibility(address)
+          setEligibleUsers(
+            leaderboard.map((item) => ({ ens: item.ens, userAddress: item.userAddress })),
+          )
 
-        // pick exact match
-        if (leaderboard.length === 1) {
-          setEligibleUser({ ens: leaderboard[0].ens, userAddress: leaderboard[0].userAddress })
+          setIsLoading(false)
+        } catch (e) {
+          setIsLoading(false)
+          setInputError('Error fetching user $SUMR eligibility')
         }
-
-        setIsLoading(false)
-      } catch (e) {
-        setIsLoading(false)
-        setInputError('Error fetching user $SUMR eligibility')
       }
-    }
 
-    if (resolvedAddress) {
-      void request(resolvedAddress)
-    }
+      if (resolvedAddress) {
+        void request(resolvedAddress)
+      }
+    }, 400)
+
+    return () => clearTimeout(timeout)
   }, [resolvedAddress])
 
   const resolvedHeaderText = eligibleUser
@@ -124,7 +131,41 @@ export const SumrClaimSearch = () => {
             style: { color: 'var(--earn-protocol-secondary-100)' },
           }}
           onChange={handleSearch}
+          value={inputValue}
         />
+        <Card
+          className={
+            (eligibleUsers?.length ?? 0) > 1 && inputValue.length > 1
+              ? classNames.autoComplete
+              : classNames.autoCompleteHidden
+          }
+          variant="cardPrimarySmallPaddings"
+          style={{ borderRadius: 'var(--general-radius-16)' }}
+        >
+          <ul>
+            {eligibleUsers?.slice(0, 4).map((item) => (
+              <li
+                key={item.userAddress}
+                onClick={() => {
+                  setIsLoading(true)
+                  setInputError('')
+                  setInputValue(item.ens ?? item.userAddress)
+                }}
+              >
+                {item.ens ?? item.userAddress}
+              </li>
+            ))}
+          </ul>
+          {eligibleUsers && eligibleUsers.length > 4 && (
+            <Text
+              as="p"
+              variant="p3"
+              style={{ color: 'var(--earn-protocol-neutral-40)', textAlign: 'center' }}
+            >
+              ...
+            </Text>
+          )}
+        </Card>
         {inputError.length > 0 && (
           <Text variant="p3" style={{ color: 'var(--earn-protocol-critical-100)' }}>
             {inputError}
@@ -143,6 +184,9 @@ export const SumrClaimSearch = () => {
       <GradientBox
         selected
         className={`${classNames.gradientBox} ${isBoxVisible ? classNames.gradientBoxOpened : ''}`}
+        style={{
+          position: isBoxVisible ? 'relative' : 'absolute',
+        }}
       >
         <Card variant="cardGradientLight" style={{ flexDirection: 'column' }}>
           <Text variant="p2semiColorful" style={{ marginBottom: 'var(--general-space-8)' }}>

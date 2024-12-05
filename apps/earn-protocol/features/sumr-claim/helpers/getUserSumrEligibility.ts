@@ -12,7 +12,7 @@ import { type LeaderboardItem, type LeaderboardResponse } from '@summerfi/app-ty
 export const getUserSumrEligibility = async (address: string): Promise<LeaderboardItem[]> => {
   try {
     const { leaderboard }: LeaderboardResponse = await fetch(
-      `/api/leaderboard?page=1&limit=5&userAddress=${address.toLowerCase()}`,
+      `/api/leaderboard?page=1&limit=10&userAddress=${address.toLowerCase()}`,
     ).then((resp) => resp.json())
 
     return leaderboard

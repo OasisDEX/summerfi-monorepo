@@ -54,6 +54,7 @@
 
           .legendItemText {
             margin-bottom: var(--general-space-8);
+            max-width: 300px;
           }
           .legendItemValue {
             color: var(--earn-protocol-secondary-60);
@@ -61,7 +62,7 @@
         }
 
         .dot {
-          width: 10px;
+          min-width: 10px;
           height: 10px;
           border-radius: var(--radius-circle);
         }

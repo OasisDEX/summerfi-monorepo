@@ -23,13 +23,13 @@
     padding: 0 var(--spacing-space-x-large);
   }
 
-  >div {
+  > div {
     // expander wrapper
     padding: var(--spacing-space-large) 0;
     border-bottom: 1px solid rgba(61, 61, 61, 1);
   }
 
-  >div:last-of-type {
+  > div:last-of-type {
     border-bottom: none;
   }
 

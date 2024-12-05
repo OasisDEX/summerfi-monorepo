@@ -26,6 +26,44 @@
     align-items: center;
     gap: var(--general-space-8);
     width: 302px;
+    position: relative;
+
+    .autoComplete,
+    .autoCompleteHidden {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 57px;
+      left: 0;
+      z-index: 2;
+      background-color: var(--earn-protocol-neutral-80);
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.2s ease;
+
+      @media (min-width: 768px) {
+        width: fit-content;
+      }
+
+      > ul {
+        li {
+          padding: var(--general-space-8) var(--general-space-8);
+          cursor: pointer;
+          transition: background-color 0.2s ease;
+          border-radius: var(--general-radius-16);
+
+          &:hover {
+            background-color: var(--earn-protocol-neutral-60);
+            border-radius: var(--general-radius-16);
+          }
+        }
+      }
+    }
+
+    .autoCompleteHidden {
+      opacity: 0;
+      visibility: hidden;
+    }
   }
 
   .gradientBox {
