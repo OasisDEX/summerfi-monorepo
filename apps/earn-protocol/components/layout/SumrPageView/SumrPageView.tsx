@@ -2,6 +2,7 @@ import { type FC } from 'react'
 
 import { SumrClaimSearch } from '@/features/sumr-claim/components/SumrClaimSearch/SumrClaimSearch'
 import { SumrConversionAndPrice } from '@/features/sumr-claim/components/SumrConversionAndPrice/SumrConversionAndPrice'
+import { SumrFaq } from '@/features/sumr-claim/components/SumrFaq/SumrFaq'
 import { SumrFundamentalUtility } from '@/features/sumr-claim/components/SumrFundamentalUtility/SumrFundamentalUtility'
 import { SumrGovernance } from '@/features/sumr-claim/components/SumrGovernance/SumrGovernance'
 import { SumrMultipleWaysToEarn } from '@/features/sumr-claim/components/SumrMultipleWaysToEarn/SumrMultipleWaysToEarn'
@@ -28,6 +29,7 @@ export const SumrPageView: FC<SumrPageViewProps> = ({ sumrPrice }) => {
       <SumrNotTransferable />
       <SumrMultipleWaysToEarn />
       <SumrRaysRewards />
+      <SumrFaq />
     </div>
   )
 }
