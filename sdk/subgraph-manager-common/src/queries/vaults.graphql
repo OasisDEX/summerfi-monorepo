@@ -125,9 +125,7 @@ query GetVault($id: ID!) {
       id
       name
       depositLimit
-      cumulativeDeposits
       cumulativeEarnings
-      cumulativeWithdrawals
       inputTokenBalance
       inputToken {
         id

@@ -64,11 +64,11 @@ export const PortfolioPosition = ({ position, positionGraph }: PortfolioPosition
   )
 
   const earnedInToken = netContribution.minus(totalDepositedInToken.minus(totalWithdrawnInToken))
-  const earnedInUSD = earnedInToken.times(inputTokenPriceUSD || 0)
+  const earnedInUSD = earnedInToken.times(inputTokenPriceUSD ?? 0)
 
   return (
     <Card variant="cardSecondary" style={{ marginTop: 'var(--general-space-20)' }}>
-      <div>
+      <div className={portfolioPositionStyles.positionWrapper}>
         <SimpleGrid columns={3}>
           <div className={portfolioPositionStyles.basicInfoWrapper}>
             <VaultTitleWithRisk
