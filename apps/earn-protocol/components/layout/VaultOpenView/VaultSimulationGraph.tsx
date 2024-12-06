@@ -85,6 +85,7 @@ export const VaultSimulationGraph = ({
         marginBottom: 'var(--general-space-16)',
         textAlign: 'center',
       }}
+      variant="cardSecondary"
     >
       <Text
         variant="p1semi"
@@ -128,6 +129,7 @@ export const VaultSimulationGraph = ({
         setTimeframe={setTimeframe}
         parsedData={parsedData}
         isLoadingForecast={isLoadingForecast}
+        cardVariant="cardPrimary"
       />
     </Card>
   )

@@ -27,7 +27,7 @@ export const VaultCard = ({
   inputToken,
   totalValueLockedUSD,
   withHover,
-  secondary = false,
+  secondary = true,
   selected = false,
   onClick,
   calculatedApr,

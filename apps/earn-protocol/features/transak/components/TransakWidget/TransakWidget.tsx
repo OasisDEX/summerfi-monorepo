@@ -5,7 +5,6 @@ import { Modal, Sidebar, type SidebarProps, useMobileCheck } from '@summerfi/app
 import { SDKChainId } from '@summerfi/app-types'
 import { Transak } from '@transak/transak-sdk'
 
-import { getCookies } from '@/constants/get-cookies'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { getTransakConfig } from '@/features/transak/config'
 import { getTransakFiatCurrency } from '@/features/transak/countries'
@@ -53,10 +52,6 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
     ...transakInitialReducerState,
     cryptoCurrency,
   })
-  const country = getCookies('country')
-
-  // eslint-disable-next-line no-console
-  console.log('country', country)
 
   const { step, fiatAmount, fiatCurrency, paymentMethod, eventOrderData } = state
 
