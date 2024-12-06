@@ -151,7 +151,6 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
         <VaultCard
           key={vault.id}
           {...vault}
-          secondary
           withHover
           selected={vaultId === vault.id || (!vaultId && vaultIndex === 0)}
           onClick={handleChangeVault}

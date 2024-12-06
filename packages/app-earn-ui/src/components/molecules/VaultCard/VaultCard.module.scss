@@ -2,6 +2,10 @@
   flex-direction: column;
   align-items: center;
   position: relative;
+
+  &Selected {
+    background: var(--earn-protocol-neutral-80);
+  }
 }
 
 .vaultCardHeaderWrapper {

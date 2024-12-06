@@ -71,7 +71,10 @@ export const MarketingPointsList: FC<MarketkingPointsListProps> = ({
               key={`marketing-points-list-section-${sectionKey}`}
               style={{
                 // needs this to prevent flash of old image when switching sections
-                display: activeSection === sectionKey ? 'block' : 'none',
+                // also there was some issue with rendering icons when using display: none / block
+                // therefore we use visibility and position
+                visibility: activeSection === sectionKey ? 'visible' : 'hidden',
+                position: activeSection === sectionKey ? 'relative' : 'absolute',
               }}
             >
               {data[sectionKey].content}

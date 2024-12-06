@@ -2,6 +2,7 @@ export type Styles = {
   vaultCard: string
   vaultCardAssetsWrapper: string
   vaultCardHeaderWrapper: string
+  vaultCardSelected: string
 }
 
 export type ClassNames = keyof Styles

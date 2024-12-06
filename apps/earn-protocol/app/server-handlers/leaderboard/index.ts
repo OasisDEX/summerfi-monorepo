@@ -15,7 +15,7 @@ export const fetchRaysLeaderboard = async (
       `${process.env.FUNCTIONS_API_URL}/api/rays/leaderboard?${urlParams}`,
       {
         method: 'GET',
-        // next: { revalidate: 60, tags: [urlParams] },
+        next: { revalidate: 60, tags: [urlParams] },
         headers: {
           'Content-Type': 'application/json',
         },
