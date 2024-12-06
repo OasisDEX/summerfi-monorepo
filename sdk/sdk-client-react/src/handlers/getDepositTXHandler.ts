@@ -2,11 +2,11 @@ import { type ISDKManager, ArmadaVaultId } from '@summerfi/sdk-client'
 import {
   Address,
   Percentage,
-  TokenAmount,
   User,
   Wallet,
   type IAddress,
   type IChainInfo,
+  type ITokenAmount,
 } from '@summerfi/sdk-common'
 
 export const getDepositTXHandler =
@@ -21,7 +21,7 @@ export const getDepositTXHandler =
   }: {
     fleetAddress: string
     walletAddress: IAddress
-    amount: string
+    amount: ITokenAmount
     chainInfo: IChainInfo
     slippage: number
     shouldStake?: boolean
@@ -31,10 +31,6 @@ export const getDepositTXHandler =
       fleetAddress: Address.createFromEthereum({ value: fleetAddress }),
     })
 
-    const poolInfo = await sdk.armada.users.getVaultInfo({
-      vaultId: poolId,
-    })
-
     const user = User.createFrom({
       chainInfo,
       wallet: Wallet.createFrom({
@@ -42,15 +38,10 @@ export const getDepositTXHandler =
       }),
     })
 
-    const tokenAmount = TokenAmount.createFrom({
-      amount,
-      token: poolInfo.totalDeposits.token,
-    })
-
     return sdk.armada.users.getNewDepositTX({
       vaultId: poolId,
       user,
-      assets: tokenAmount,
+      assets: amount,
       slippage: Percentage.createFrom({ value: slippage }),
       shouldStake,
     })

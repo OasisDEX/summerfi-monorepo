@@ -1,6 +1,7 @@
 import { InputWithDropdown, ProjectedEarnings, SkeletonLine } from '@summerfi/app-earn-ui'
 import {
   type DropdownOption,
+  type DropdownRawOption,
   type SDKVaultishType,
   type SDKVaultType,
   type TokenSymbolsList,
@@ -12,6 +13,7 @@ type ControlsDepositWithdrawProps = {
   amountDisplay: string
   amountDisplayUSD: string
   handleAmountChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  handleDropdownChange: (option: DropdownRawOption) => void
   options: DropdownOption[]
   dropdownValue: DropdownOption
   onFocus: () => void
@@ -26,6 +28,7 @@ export const ControlsDepositWithdraw = ({
   amountDisplay,
   amountDisplayUSD,
   handleAmountChange,
+  handleDropdownChange,
   options,
   dropdownValue,
   onFocus,
@@ -41,6 +44,7 @@ export const ControlsDepositWithdraw = ({
         value={amountDisplay}
         secondaryValue={amountDisplayUSD}
         handleChange={handleAmountChange}
+        handleDropdownChange={handleDropdownChange}
         options={options}
         dropdownValue={dropdownValue}
         onFocus={onFocus}

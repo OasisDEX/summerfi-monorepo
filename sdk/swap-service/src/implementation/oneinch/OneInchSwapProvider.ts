@@ -95,24 +95,27 @@ export class OneInchSwapProvider
       const errorJSON = await response.json()
       const errorType = this._parseErrorType(errorJSON.description)
 
-      throw SwapError.createFrom({
-        type: SDKErrorType.SwapError,
-        subtype: errorType,
-        reason: errorJSON.description,
-        message: `Error performing 1inch swap data request ${swapUrl}: ${await response.body}`,
-        apiQuery: swapUrl,
-        statusCode: response.status,
-      })
+      throw Error(
+        `Error performing 1inch swap data request: ${JSON.stringify({
+          apiQuery: swapUrl,
+          statusCode: response.status,
+          json: errorJSON,
+          subtype: errorType,
+        })}`,
+      )
     }
 
     const responseData = (await response.json()) as OneInchSwapResponse
 
+    console.log('responseData', {
+      ...responseData,
+    })
     return {
       provider: SwapProviderType.OneInch,
       fromTokenAmount: params.fromAmount,
       toTokenAmount: TokenAmount.createFromBaseUnit({
         token: params.toToken,
-        amount: responseData.toTokenAmount,
+        amount: responseData.toTokenAmount || responseData.dstAmount,
       }),
       calldata: responseData.tx.data as HexData,
       targetContract: Address.createFromEthereum({ value: responseData.tx.to as HexData }),
@@ -159,7 +162,7 @@ export class OneInchSwapProvider
       fromTokenAmount: params.fromAmount,
       toTokenAmount: TokenAmount.createFromBaseUnit({
         token: params.toToken,
-        amount: responseData.toTokenAmount,
+        amount: responseData.toTokenAmount || responseData.dstAmount,
       }),
       routes: this._extractSwapRoutes(responseData.protocols),
       estimatedGas: responseData.estimatedGas,
@@ -285,7 +288,7 @@ export class OneInchSwapProvider
       !ONE_INCH_API_URL ||
       !ONE_INCH_API_KEY ||
       !ONE_INCH_API_VERSION ||
-      !ONE_INCH_ALLOWED_SWAP_PROTOCOLS ||
+      ONE_INCH_ALLOWED_SWAP_PROTOCOLS == null ||
       !ONE_INCH_SWAP_CHAIN_IDS
     ) {
       console.error(

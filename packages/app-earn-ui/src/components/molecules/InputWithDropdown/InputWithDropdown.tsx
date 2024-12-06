@@ -1,5 +1,5 @@
 import { type ChangeEventHandler, type FC, type ReactNode } from 'react'
-import { type DropdownOption } from '@summerfi/app-types'
+import { type DropdownOption, type DropdownRawOption } from '@summerfi/app-types'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Input } from '@/components/atoms/Input/Input'
@@ -26,6 +26,7 @@ interface InputWithDropdownProps {
   value: string
   secondaryValue?: string
   handleChange: ChangeEventHandler<HTMLInputElement>
+  handleDropdownChange?: (option: DropdownRawOption) => void
   selectAllOnFocus?: boolean
   heading?: {
     label: ReactNode
@@ -42,6 +43,7 @@ export const InputWithDropdown: FC<InputWithDropdownProps> = ({
   value,
   secondaryValue,
   handleChange,
+  handleDropdownChange,
   heading,
   onFocus,
   onBlur,
@@ -83,6 +85,7 @@ export const InputWithDropdown: FC<InputWithDropdownProps> = ({
             content: <Content option={dropdownValue} />,
           }}
           asPill
+          onChange={handleDropdownChange}
         >
           <Content option={dropdownValue} />
         </Dropdown>
