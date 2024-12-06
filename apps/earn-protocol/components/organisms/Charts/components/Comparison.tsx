@@ -56,7 +56,7 @@ export const ComparisonChart = ({ data, dataNames, colors, compare }: Comparison
             dataName === 'Summer Strategy' ? (
               <Area
                 key={dataName}
-                type="basis"
+                type="natural"
                 animationDuration={300}
                 animationBegin={dataIndex * 50}
                 animationEasing="ease-out"
@@ -73,7 +73,7 @@ export const ComparisonChart = ({ data, dataNames, colors, compare }: Comparison
                 animationDuration={300}
                 animationBegin={dataIndex * 50}
                 animationEasing="ease-out"
-                type="basis"
+                type="natural"
                 dataKey={dataName}
                 strokeDasharray="3 3"
                 stroke={colors[`${dataName}-color` as keyof typeof colors]}
