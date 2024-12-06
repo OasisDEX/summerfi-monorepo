@@ -31,12 +31,12 @@ export class ArmadaOrderPlanner implements IOrderPlanner {
 
     const transactions = previousPosition.amount.isZero()
       ? await armadaManager.getNewDepositTX({
-          amount: newPosition.amount,
+          assets: newPosition.amount,
           vaultId: newPosition.pool.id,
           user,
         })
       : await armadaManager.getUpdateDepositTX({
-          amount: newPosition.amount,
+          assets: newPosition.amount,
           vaultId: newPosition.pool.id,
           positionId: previousPosition.id,
         })

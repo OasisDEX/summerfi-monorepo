@@ -3,12 +3,7 @@ import { addSdkConfig } from './sdk'
 
 export function SdkAPI(stackContext: StackContext) {
   const { stack } = stackContext
-  const api = new Api(stack, 'sdk', {
-    defaults: {
-      function: {},
-    },
-    routes: {},
-  })
+  const api = new Api(stack, 'sdk', {})
 
   addSdkConfig(stackContext, api)
 

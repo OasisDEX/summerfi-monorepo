@@ -128,7 +128,7 @@ export interface IArmadaManagerUsersClient {
   getNewDepositTX(params: {
     vaultId: IArmadaVaultId
     user: IUser
-    amount: ITokenAmount
+    assets: ITokenAmount
     shouldStake?: boolean
   }): Promise<TransactionInfo[]>
 
@@ -145,7 +145,7 @@ export interface IArmadaManagerUsersClient {
   getUpdateDepositTX(params: {
     vaultId: IArmadaVaultId
     positionId: IArmadaPositionId
-    amount: ITokenAmount
+    assets: ITokenAmount
   }): Promise<TransactionInfo[]>
 
   /**
@@ -161,7 +161,7 @@ export interface IArmadaManagerUsersClient {
   getWithdrawTX(params: {
     vaultId: IArmadaVaultId
     user: IUser
-    amount: ITokenAmount
+    assets: ITokenAmount
   }): Promise<TransactionInfo[]>
 
   /**
@@ -173,7 +173,10 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns The staked balance of the user in the Fleet
    */
-  getStakedBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount>
+  getStakedBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<{
+    shares: ITokenAmount
+    assets: ITokenAmount
+  }>
 
   /**
    * @method getFleetBalance
@@ -184,7 +187,10 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns The balance of the user in the Fleet
    */
-  getFleetBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount>
+  getFleetBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<{
+    shares: ITokenAmount
+    assets: ITokenAmount
+  }>
 
   /**
    * @method getTotalBalance
@@ -195,5 +201,8 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns The total balance of the user in the Fleet
    */
-  getTotalBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount>
+  getTotalBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<{
+    shares: ITokenAmount
+    assets: ITokenAmount
+  }>
 }

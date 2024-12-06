@@ -67,7 +67,7 @@ describe('Armada Protocol Deposit', () => {
         const transactions = await sdk.armada.users.getNewDepositTX({
           vaultId,
           user,
-          amount: TokenAmount.createFrom({
+          assets: TokenAmount.createFrom({
             amount,
             token,
           }),
@@ -115,7 +115,7 @@ describe('Armada Protocol Deposit', () => {
         const transactions = await sdk.armada.users.getNewDepositTX({
           vaultId: vaultId,
           user,
-          amount: TokenAmount.createFrom({
+          assets: TokenAmount.createFrom({
             amount,
             token,
           }),
@@ -140,7 +140,7 @@ describe('Armada Protocol Deposit', () => {
         const transactions = await sdk.armada.users.getWithdrawTX({
           vaultId: vaultId,
           user,
-          amount: TokenAmount.createFrom({
+          assets: TokenAmount.createFrom({
             amount,
             token,
           }),

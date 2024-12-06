@@ -124,7 +124,10 @@ export interface IArmadaManager {
    *
    * @returns ITokenAmount The amount of assets the user has in the fleet
    */
-  getFleetBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount>
+  getFleetBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<{
+    shares: ITokenAmount
+    assets: ITokenAmount
+  }>
 
   /**
    * @name getStakedBalance
@@ -133,9 +136,12 @@ export interface IArmadaManager {
    * @param vaultId ID of the vault to retrieve the balance
    * @param user Address of the user to retrieve the balance
    *
-   * @returns ITokenAmount The amount of assets the user has stake
+   * @returns ITokenAmount The amount of assets the user has staked
    */
-  getStakedBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount>
+  getStakedBalance(params: {
+    vaultId: IArmadaVaultId
+    user: IUser
+  }): Promise<{ shares: ITokenAmount; assets: ITokenAmount }>
 
   /**
    *
@@ -147,7 +153,10 @@ export interface IArmadaManager {
    *
    * @returns ITokenAmount The total amount of assets the user has in the fleet
    */
-  getTotalBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount>
+  getTotalBalance(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<{
+    shares: ITokenAmount
+    assets: ITokenAmount
+  }>
 
   /** USER TRANSACTIONS */
 
@@ -157,7 +166,7 @@ export interface IArmadaManager {
    *
    * @param vaultId ID of the pool to deposit in
    * @param user Address of the user that is trying to deposit
-   * @param amount Token amount to be deposited
+   * @param assets Token amount to be deposited
    * @param shouldStake Whether the user wants to stake the deposit
    *
    * @returns TransactionInfo[] An array of transactions that must be executed for the operation to succeed
@@ -165,7 +174,7 @@ export interface IArmadaManager {
   getNewDepositTX(params: {
     vaultId: IArmadaVaultId
     user: IUser
-    amount: ITokenAmount
+    assets: ITokenAmount
     shouldStake?: boolean
   }): Promise<TransactionInfo[]>
 
@@ -175,7 +184,7 @@ export interface IArmadaManager {
    *
    * @param vaultId ID of the pool to deposit in
    * @param positionId ID of the position to be updated
-   * @param amount Token amount to be deposited
+   * @param assets Token amount to be deposited
    * @param shouldStake Whether the user wants to stake the deposit
    *
    * @returns TransactionInfo[] An array of transactions that must be executed for the operation to succeed
@@ -183,7 +192,7 @@ export interface IArmadaManager {
   getUpdateDepositTX(params: {
     vaultId: IArmadaVaultId
     positionId: IArmadaPositionId
-    amount: ITokenAmount
+    assets: ITokenAmount
     shouldStake?: boolean
   }): Promise<TransactionInfo[]>
 
@@ -193,14 +202,14 @@ export interface IArmadaManager {
    *
    * @param vaultId ID of the pool to withdraw from
    * @param user Address of the user that is trying to withdraw
-   * @param amount Token amount to be withdrawn
+   * @param assets Token amount to be withdrawn
    *
    * @returns TransactionInfo[] An array of transactions that must be executed for the operation to succeed
    */
   getWithdrawTX(params: {
     vaultId: IArmadaVaultId
     user: IUser
-    amount: ITokenAmount
+    assets: ITokenAmount
   }): Promise<TransactionInfo[]>
 
   /** KEEPERS TRANSACTIONS */

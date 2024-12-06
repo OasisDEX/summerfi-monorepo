@@ -95,7 +95,7 @@ describe('Armada Protocol Service', () => {
     const transactionInfo = await armadaManager.getNewDepositTX({
       poolId,
       user,
-      amount: tokenAmount,
+      assets: tokenAmount,
     })
 
     expect(transactionInfo.length).toBe(1)
@@ -115,7 +115,7 @@ describe('Armada Protocol Service', () => {
     const transactionInfo = await armadaManager.getUpdateDepositTX({
       poolId,
       positionId,
-      amount: tokenAmount,
+      assets: tokenAmount,
     })
 
     expect(transactionInfo.length).toBe(1)
@@ -135,7 +135,7 @@ describe('Armada Protocol Service', () => {
     const transactionInfo = await armadaManager.getWithdrawTX({
       poolId,
       user,
-      amount: tokenAmount,
+      assets: tokenAmount,
     })
 
     expect(transactionInfo.length).toBe(1)

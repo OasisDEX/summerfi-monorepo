@@ -45,6 +45,6 @@ export const getDepositTXHandler =
     return sdk.armada.users.getNewDepositTX({
       vaultId: poolId,
       user,
-      amount: tokenAmount,
+      assets: tokenAmount,
     })
   }

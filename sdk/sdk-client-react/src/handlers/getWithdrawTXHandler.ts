@@ -45,6 +45,6 @@ export const getWithdrawTXHandler =
     return sdk.armada.users.getWithdrawTX({
       vaultId: poolId,
       user,
-      amount: tokenAmount,
+      assets: tokenAmount,
     })
   }
