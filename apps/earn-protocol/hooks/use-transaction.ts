@@ -223,8 +223,9 @@ export const useTransaction = ({
           }),
           amount: amount.toString(),
           fleetAddress: vault.id,
-          // incorrect chainInfo
           chainInfo: getChainInfoByChainId(vaultChainId),
+          // TODO: we should update slippage once it'll be configurable from the wallet dropdown menu
+          slippage: 0.01, // 1%
         })
 
         if (transactionsList.length === 0) {

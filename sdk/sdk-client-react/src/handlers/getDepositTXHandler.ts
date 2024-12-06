@@ -1,6 +1,7 @@
-import { type ISDKManager, ArmadaVaultId, ArmadaProtocol } from '@summerfi/sdk-client'
+import { type ISDKManager, ArmadaVaultId } from '@summerfi/sdk-client'
 import {
   Address,
+  Percentage,
   TokenAmount,
   User,
   Wallet,
@@ -15,11 +16,15 @@ export const getDepositTXHandler =
     walletAddress,
     amount,
     chainInfo,
+    slippage,
+    shouldStake,
   }: {
     fleetAddress: string
     walletAddress: IAddress
     amount: string
     chainInfo: IChainInfo
+    slippage: number
+    shouldStake?: boolean
   }) => {
     const poolId = ArmadaVaultId.createFrom({
       chainInfo,
@@ -46,5 +51,7 @@ export const getDepositTXHandler =
       vaultId: poolId,
       user,
       assets: tokenAmount,
+      slippage: Percentage.createFrom({ value: slippage }),
+      shouldStake,
     })
   }

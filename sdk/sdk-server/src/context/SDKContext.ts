@@ -81,6 +81,7 @@ export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
     allowanceManager,
     contractsProvider,
     subgraphManager: armadaSubgraphManager,
+    swapManager,
   })
 
   return {

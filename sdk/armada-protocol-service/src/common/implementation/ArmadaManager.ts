@@ -19,6 +19,8 @@ import {
   TokenAmount,
   TransactionInfo,
   type HexData,
+  type IPercentage,
+  type IToken,
 } from '@summerfi/sdk-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { encodeFunctionData } from 'viem'
@@ -28,6 +30,7 @@ import { ArmadaPosition } from './ArmadaPosition'
 import { parseGetUserPositionQuery } from './extensions/parseGetUserPositionQuery'
 import { parseGetUserPositionsQuery } from './extensions/parseGetUserPositionsQuery'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
+import type { ISwapManager } from '@summerfi/swap-common'
 
 /**
  * @name ArmadaManager
@@ -39,6 +42,7 @@ export class ArmadaManager implements IArmadaManager {
   private _contractsProvider: IContractsProvider
   private _subgraphManager: IArmadaSubgraphManager
   private _blockchainClientProvider: IBlockchainClientProvider
+  private _swapManager: ISwapManager
 
   /** CONSTRUCTOR */
   constructor(params: {
@@ -47,12 +51,14 @@ export class ArmadaManager implements IArmadaManager {
     contractsProvider: IContractsProvider
     subgraphManager: IArmadaSubgraphManager
     blockchainClientProvider: IBlockchainClientProvider
+    swapManager: ISwapManager
   }) {
     this._configProvider = params.configProvider
     this._allowanceManager = params.allowanceManager
     this._contractsProvider = params.contractsProvider
     this._subgraphManager = params.subgraphManager
     this._blockchainClientProvider = params.blockchainClientProvider
+    this._swapManager = params.swapManager
   }
 
   /** POOLS */
@@ -267,6 +273,7 @@ export class ArmadaManager implements IArmadaManager {
       user: params.positionId.user,
       assets: params.assets,
       shouldStake: params.shouldStake,
+      slippage: params.slippage,
     })
   }
 
@@ -609,6 +616,43 @@ export class ArmadaManager implements IArmadaManager {
     return fleetContract.emergencyShutdown()
   }
 
+  async _getSwapData(params: {
+    vaultId: IArmadaVaultId
+    fromAmount: ITokenAmount
+    toToken: IToken
+    slippage: IPercentage
+  }): Promise<HexData> {
+    // get the admirals quarters address
+    const admiralsQuarterAddress = getDeployedContractAddress({
+      chainInfo: params.vaultId.chainInfo,
+      contractCategory: 'core',
+      contractName: 'admiralsQuarters',
+    })
+
+    // get swapdata from the 1inch swap api
+    const swapData = await this._swapManager.getSwapDataExactInput({
+      fromAmount: params.fromAmount,
+      toToken: params.toToken,
+      recipient: admiralsQuarterAddress,
+      slippage: params.slippage,
+    })
+
+    // prepare calldata
+    const swapArgs = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'swap',
+      args: [
+        params.fromAmount.token.address.value,
+        params.toToken.address.value,
+        params.fromAmount.toSolidityValue(),
+        swapData.toTokenAmount.toSolidityValue(),
+        swapData.calldata,
+      ],
+    })
+
+    return swapArgs
+  }
+
   /** PRIVATE */
 
   /**
@@ -624,6 +668,7 @@ export class ArmadaManager implements IArmadaManager {
     vaultId: IArmadaVaultId
     user: IUser
     assets: ITokenAmount
+    slippage: IPercentage
     shouldStake?: boolean
   }): Promise<TransactionInfo[]> {
     const transactions: TransactionInfo[] = []
@@ -657,6 +702,22 @@ export class ArmadaManager implements IArmadaManager {
       args: [params.assets.token.address.value, params.assets.toSolidityValue()],
     })
     multicallArgs.push(depositTokensCalldata)
+
+    const fleetCommander = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+    const fleetToken = await fleetCommander.asErc4626().asset()
+    // If depositing a token that is not the fleet token, we need to swap it
+    if (!params.assets.token.address.equals(fleetToken.address)) {
+      const swapData = await this._getSwapData({
+        vaultId: params.vaultId,
+        fromAmount: params.assets,
+        toToken: fleetToken,
+        slippage: params.slippage,
+      })
+      multicallArgs.push(swapData)
+    }
 
     // when staking admirals quarters will receive LV tokens, otherwise the user
     const lvTokenReceiver = shouldStake

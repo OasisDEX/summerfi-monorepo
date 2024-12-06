@@ -19,7 +19,41 @@ import type { IRebalanceData } from '@summerfi/contracts-provider-common'
  * @description Interface for the Armada Protocol Manager which handles generating transactions for a Fleet
  */
 export interface IArmadaManager {
-  /** POOLS */
+  /** POSITIONS */
+
+  /**
+   * @name getUserPositions
+   * @description Get all user positions in all fleets
+   *
+   * @param user target user
+   *
+   * @returns IArmadaPosition[]
+   */
+  getUserPositions(params: { user: IUser }): Promise<IArmadaPosition[]>
+
+  /**
+   * @name getUserBalance
+   * @description Get user position in the fleet
+   *
+   * @param user target user
+   * @param fleetAddress Address of the fleet
+   *
+   * @returns IArmadaPosition
+   */
+  getUserPosition(params: { user: IUser; fleetAddress: IAddress }): Promise<IArmadaPosition>
+
+  /**
+   * @name getPosition
+   * @description Get the position of a user in the specified fleet
+   *
+   * @param positionId ID of the position to retrieve
+   *
+   * @returns IArmadaPosition The position of the user in the fleet
+   *
+   */
+  getPosition(params: { positionId: IArmadaPositionId }): Promise<IArmadaPosition>
+
+  /** VAULT */
 
   /**
    * @name getVaultsRaw
@@ -72,48 +106,14 @@ export interface IArmadaManager {
   getUserActivityRaw(params: { vaultId: IArmadaVaultId }): Promise<GetUserActivityQuery>
 
   /**
-   * @name getPoolInfo
-   * @description Get the extended position information for a position
+   * @name getVaultInfo
+   * @description Get the extended information of the vault
    *
-   * @param vaultId ID of the pool to retrieve
+   * @param vaultId ID of the vault to retrieve
    *
-   * @returns IArmadaPoolInfo The extended information of the pool
+   * @returns IArmadaVaultInfo The extended information of the vault
    */
   getVaultInfo(params: { vaultId: IArmadaVaultId }): Promise<IArmadaVaultInfo>
-
-  /** POSITIONS */
-
-  /**
-   * @name getUserPositions
-   * @description Get all user positions in all fleets
-   *
-   * @param user target user
-   *
-   * @returns IArmadaPosition[]
-   */
-  getUserPositions(params: { user: IUser }): Promise<IArmadaPosition[]>
-
-  /**
-   * @name getUserBalance
-   * @description Get user position in the fleet
-   *
-   * @param user target user
-   * @param fleetAddress Address of the fleet
-   *
-   * @returns IArmadaPosition
-   */
-  getUserPosition(params: { user: IUser; fleetAddress: IAddress }): Promise<IArmadaPosition>
-
-  /**
-   * @name getPosition
-   * @description Get the position of a user in the specified fleet
-   *
-   * @param positionId ID of the position to retrieve
-   *
-   * @returns IArmadaPosition The position of the user in the fleet
-   *
-   */
-  getPosition(params: { positionId: IArmadaPositionId }): Promise<IArmadaPosition>
 
   /**
    * @name getFleetBalance
@@ -167,6 +167,7 @@ export interface IArmadaManager {
    * @param vaultId ID of the pool to deposit in
    * @param user Address of the user that is trying to deposit
    * @param assets Token amount to be deposited
+   * @param slippage Maximum slippage allowed for the operation
    * @param shouldStake Whether the user wants to stake the deposit
    *
    * @returns TransactionInfo[] An array of transactions that must be executed for the operation to succeed
@@ -175,6 +176,7 @@ export interface IArmadaManager {
     vaultId: IArmadaVaultId
     user: IUser
     assets: ITokenAmount
+    slippage: IPercentage
     shouldStake?: boolean
   }): Promise<TransactionInfo[]>
 
@@ -193,6 +195,7 @@ export interface IArmadaManager {
     vaultId: IArmadaVaultId
     positionId: IArmadaPositionId
     assets: ITokenAmount
+    slippage: IPercentage
     shouldStake?: boolean
   }): Promise<TransactionInfo[]>
 

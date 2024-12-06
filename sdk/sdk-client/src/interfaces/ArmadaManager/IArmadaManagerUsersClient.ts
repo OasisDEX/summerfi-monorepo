@@ -15,6 +15,7 @@ import {
   TransactionInfo,
   type ChainInfo,
   type IAddress,
+  type IPercentage,
 } from '@summerfi/sdk-common'
 
 /**
@@ -129,23 +130,8 @@ export interface IArmadaManagerUsersClient {
     vaultId: IArmadaVaultId
     user: IUser
     assets: ITokenAmount
+    slippage: IPercentage
     shouldStake?: boolean
-  }): Promise<TransactionInfo[]>
-
-  /**
-   * @method getUpdateDepositTX
-   * @description Returns the transactions needed to deposit tokens in the Fleet for an existing position
-   *
-   * @param vaultId ID of the pool to deposit in
-   * @param positionId ID of the position to deposit in
-   * @param amount Token amount to be deposited
-   *
-   * @returns The transactions needed to deposit the tokens
-   */
-  getUpdateDepositTX(params: {
-    vaultId: IArmadaVaultId
-    positionId: IArmadaPositionId
-    assets: ITokenAmount
   }): Promise<TransactionInfo[]>
 
   /**

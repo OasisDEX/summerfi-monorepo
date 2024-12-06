@@ -20,7 +20,6 @@ import { getVaultsRaw } from './armada-protocol-handlers/users/getVaults'
 import { getVaultRaw } from './armada-protocol-handlers/users/getVault'
 import { getPoolInfo } from './armada-protocol-handlers/users/getPoolInfo'
 import { getPosition as getArmadaPosition } from './armada-protocol-handlers/users/getPosition'
-import { getUpdateDepositTX } from './armada-protocol-handlers/users/getUpdateDepositTX'
 import { getUserPositions } from './armada-protocol-handlers/users/getUserPositions'
 import { getUserPosition } from './armada-protocol-handlers/users/getUserPosition'
 import { getWithdrawTX } from './armada-protocol-handlers/users/getWithdrawTX'
@@ -81,7 +80,6 @@ export const sdkAppRouter = router({
       getUserPositions: getUserPositions,
       getUserPosition: getUserPosition,
       getDepositTX: getDepositTX,
-      getUpdateDepositTX: getUpdateDepositTX,
       getWithdrawTX: getWithdrawTX,
       getFleetBalance: getFleetBalance,
       getStakedBalance: getStakedBalance,
