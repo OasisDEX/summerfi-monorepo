@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import {
   DataBlock,
   SimpleGrid,
+  Text,
   useMobileCheck,
   VaultCard,
   VaultGrid,
@@ -147,15 +148,24 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
           />
         </SimpleGrid>
       }
-      leftContent={networkFilteredVaults.map((vault, vaultIndex) => (
-        <VaultCard
-          key={vault.id}
-          {...vault}
-          withHover
-          selected={vaultId === vault.id || (!vaultId && vaultIndex === 0)}
-          onClick={handleChangeVault}
-        />
-      ))}
+      leftContent={
+        <>
+          <div>
+            <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+              Choose a strategy
+            </Text>
+          </div>
+          {networkFilteredVaults.map((vault, vaultIndex) => (
+            <VaultCard
+              key={vault.id}
+              {...vault}
+              withHover
+              selected={vaultId === vault.id || (!vaultId && vaultIndex === 0)}
+              onClick={handleChangeVault}
+            />
+          ))}
+        </>
+      }
       rightContent={
         <VaultSimulationForm
           vaultData={selectedVaultData ?? networkFilteredVaults[0]}

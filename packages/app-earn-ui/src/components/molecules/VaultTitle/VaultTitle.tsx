@@ -30,9 +30,16 @@ interface VaultTitleProps {
   networkId?: NetworkIds
   networkName?: SDKNetwork
   value?: ReactNode
+  selected?: boolean
 }
 
-export const VaultTitle: FC<VaultTitleProps> = ({ symbol, value, networkId, networkName }) => {
+export const VaultTitle: FC<VaultTitleProps> = ({
+  symbol,
+  value,
+  networkId,
+  networkName,
+  selected,
+}) => {
   const isIconDefined = getTokenGuarded(symbol)?.iconName
 
   return (
@@ -55,15 +62,32 @@ export const VaultTitle: FC<VaultTitleProps> = ({ symbol, value, networkId, netw
         )}
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <Text
-          as="h4"
-          variant="h4"
-          style={{ color: 'white', fontSize: '24px', lineHeight: '30px' }}
-          data-testid="vault-token"
-        >
-          {symbol}
-        </Text>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--general-space-4)' }}>
+        <div style={{ display: 'flex', gap: 'var(--general-space-8)', alignItems: 'center' }}>
+          <Text
+            as="h4"
+            variant="h4"
+            style={{ color: 'white', fontSize: '24px', lineHeight: '30px' }}
+            data-testid="vault-token"
+          >
+            {symbol}
+          </Text>
+          {selected && (
+            <div
+              style={{
+                width: '24px',
+                height: '24px',
+                backgroundColor: 'var(--earn-protocol-primary-40)',
+                borderRadius: '50%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Icon iconName="checkmark" size={12} />
+            </div>
+          )}
+        </div>
         {value && <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>{value}</div>}
       </div>
     </div>

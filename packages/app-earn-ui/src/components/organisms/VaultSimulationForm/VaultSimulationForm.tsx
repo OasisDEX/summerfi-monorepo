@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   type DropdownOption,
   type SDKVaultishType,
@@ -18,6 +18,8 @@ import { Sidebar } from '@/components/organisms/Sidebar/Sidebar'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 import { useLocalStorageOnce } from '@/hooks/use-local-storage-once'
 
+import classNames from './VaultSimulationForm.module.scss'
+
 export type VaultSimulationFormProps = {
   vaultData: SDKVaultishType
   isMobile?: boolean
@@ -26,6 +28,23 @@ export type VaultSimulationFormProps = {
 export const VaultSimulationForm = ({ vaultData, isMobile }: VaultSimulationFormProps) => {
   const [inputValue, setInputValue] = useState<string>('1000')
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [isGradientBorder, setIsGradientBorder] = useState(false)
+
+  useEffect(() => {
+    if (vaultData.id) {
+      setIsGradientBorder(true)
+      const timeout = setTimeout(() => {
+        setIsGradientBorder(false)
+      }, 1000)
+
+      return () => {
+        setIsGradientBorder(false)
+        clearTimeout(timeout)
+      }
+    }
+
+    return () => null
+  }, [vaultData.id])
 
   const { setStorageOnce } = useLocalStorageOnce({
     key: `${vaultData.id}-amount`,
@@ -59,58 +78,61 @@ export const VaultSimulationForm = ({ vaultData, isMobile }: VaultSimulationForm
   const token = vaultData.inputToken.symbol
 
   return (
-    <Sidebar
-      {...{
-        title: 'Deposit',
-        content: (
-          <>
-            <InputWithDropdown
-              value={inputValue}
-              secondaryValue={`$${inputValue}`}
-              handleChange={handleInputChange}
-              options={[dropdownLockedValue]}
-              dropdownValue={dropdownLockedValue}
-              heading={{
-                label: 'Balance',
-                value: `${formatCryptoBalance(balance)} ${token}`,
-                // eslint-disable-next-line no-console
-                action: () => console.log('clicked'),
-              }}
-            />
-            <ProjectedEarnings
-              earnings={estimatedEarnings}
-              symbol={vaultData.inputToken.symbol as TokenSymbolsList}
-            />
-          </>
-        ),
-        customHeader:
-          !isDrawerOpen && isMobile ? (
-            <SidebarMobileHeader
-              type="open"
-              amount={estimatedEarnings}
-              token={vaultData.inputToken.symbol}
-            />
-          ) : undefined,
-        customHeaderStyles:
-          !isDrawerOpen && isMobile ? { padding: 'var(--general-space-12) 0' } : undefined,
-        handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
-        primaryButton: {
-          label: 'Get Started',
-          url: getVaultUrl(vaultData),
-          action: () => {
-            setStorageOnce(Number(inputValue.replaceAll(',', '')))
+    <div style={{ position: 'relative', width: '100%', padding: '1px' }}>
+      <Sidebar
+        {...{
+          title: 'Deposit',
+          content: (
+            <>
+              <InputWithDropdown
+                value={inputValue}
+                secondaryValue={`$${inputValue}`}
+                handleChange={handleInputChange}
+                options={[dropdownLockedValue]}
+                dropdownValue={dropdownLockedValue}
+                heading={{
+                  label: 'Balance',
+                  value: `${formatCryptoBalance(balance)} ${token}`,
+                  // eslint-disable-next-line no-console
+                  action: () => console.log('clicked'),
+                }}
+              />
+              <ProjectedEarnings
+                earnings={estimatedEarnings}
+                symbol={vaultData.inputToken.symbol as TokenSymbolsList}
+              />
+            </>
+          ),
+          customHeader:
+            !isDrawerOpen && isMobile ? (
+              <SidebarMobileHeader
+                type="open"
+                amount={estimatedEarnings}
+                token={vaultData.inputToken.symbol}
+              />
+            ) : undefined,
+          customHeaderStyles:
+            !isDrawerOpen && isMobile ? { padding: 'var(--general-space-12) 0' } : undefined,
+          handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
+          primaryButton: {
+            label: 'Get Started',
+            url: getVaultUrl(vaultData),
+            action: () => {
+              setStorageOnce(Number(inputValue.replaceAll(',', '')))
+            },
+            disabled: false,
           },
-          disabled: false,
-        },
-        footnote: (
-          <SidebarFootnote
-            title={sidebarFootnote.title}
-            list={sidebarFootnote.list}
-            tooltip={sidebarFootnote.tooltip}
-          />
-        ),
-      }}
-      isMobile={isMobile}
-    />
+          footnote: (
+            <SidebarFootnote
+              title={sidebarFootnote.title}
+              list={sidebarFootnote.list}
+              tooltip={sidebarFootnote.tooltip}
+            />
+          ),
+        }}
+        isMobile={isMobile}
+      />
+      {isGradientBorder && <div className={classNames.cardAnimateGradientBorder} />}
+    </div>
   )
 }

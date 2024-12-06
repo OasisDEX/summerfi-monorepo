@@ -27,7 +27,7 @@ export const VaultCard = ({
   inputToken,
   totalValueLockedUSD,
   withHover,
-  secondary = true,
+  secondary = false,
   selected = false,
   onClick,
   calculatedApr,
@@ -55,6 +55,7 @@ export const VaultCard = ({
             symbol={inputToken.symbol}
             risk={customFields?.risk ?? 'medium'}
             networkName={protocol.network}
+            selected={selected}
           />
           <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
             <BonusLabel tokenBonus="some" apy={parsedApr} />
