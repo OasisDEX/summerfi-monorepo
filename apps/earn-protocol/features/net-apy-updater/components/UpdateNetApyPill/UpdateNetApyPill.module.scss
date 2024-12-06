@@ -1,0 +1,30 @@
+.updateNetApyPillWrapper {
+  display: flex;
+  gap: var(--general-space-8);
+
+  .pill {
+    display: flex;
+    gap: var(--general-space-8);
+    min-width: unset;
+    padding: var(--general-space-8) var(--general-space-12);
+  }
+}
+
+.updateNetApyContent {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: var(--general-space-4);
+
+  @media screen and (min-width: 768px) {
+    min-width: 321px;
+  }
+
+  .toggleWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--general-space-16);
+    padding-bottom: var(--general-space-24);
+  }
+}

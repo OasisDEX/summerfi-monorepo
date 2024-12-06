@@ -8,11 +8,11 @@ import {
 } from '@summerfi/app-types'
 import { formatCryptoBalance, mapNumericInput } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
+import Link from 'next/link'
 
-import { sidebarFootnote } from '@/common/sidebar/footnote'
+import { WithArrow } from '@/components/atoms/WithArrow/WithArrow.tsx'
 import { InputWithDropdown } from '@/components/molecules/InputWithDropdown/InputWithDropdown'
 import { ProjectedEarnings } from '@/components/molecules/ProjectedEarnings/ProjectedEarnings'
-import { SidebarFootnote } from '@/components/molecules/SidebarFootnote/SidebarFootnote'
 import { SidebarMobileHeader } from '@/components/molecules/SidebarMobileHeader/SidebarMobileHeader.tsx'
 import { Sidebar } from '@/components/organisms/Sidebar/Sidebar'
 import { getVaultUrl } from '@/helpers/get-vault-url'
@@ -123,11 +123,9 @@ export const VaultSimulationForm = ({ vaultData, isMobile }: VaultSimulationForm
             disabled: false,
           },
           footnote: (
-            <SidebarFootnote
-              title={sidebarFootnote.title}
-              list={sidebarFootnote.list}
-              tooltip={sidebarFootnote.tooltip}
-            />
+            <Link href={getVaultUrl(vaultData)}>
+              <WithArrow>View strategy</WithArrow>
+            </Link>
           ),
         }}
         isMobile={isMobile}

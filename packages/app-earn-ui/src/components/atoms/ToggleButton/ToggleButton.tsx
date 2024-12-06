@@ -1,3 +1,6 @@
+import { type ChangeEvent, type CSSProperties } from 'react'
+import clsx from 'clsx'
+
 import { Text } from '@/components/atoms/Text/Text'
 
 import slideButtonStyles from './ToggleButton.module.scss'
@@ -6,17 +9,31 @@ import { type ClassNames as TextVariants } from '@/components/atoms/Text/Text.mo
 type ToggleButtonProps = {
   title: string
   checked: boolean
-  onChange?: (event: React.FormEvent<HTMLInputElement>) => void
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void
   titleVariant?: TextVariants
+  wrapperStyle?: CSSProperties
+  trackVariant?: 'light' | 'dark'
 }
 
-export const ToggleButton = ({ title, titleVariant, checked, onChange }: ToggleButtonProps) => {
+export const ToggleButton = ({
+  title,
+  titleVariant,
+  checked,
+  onChange,
+  wrapperStyle,
+  trackVariant = 'light',
+}: ToggleButtonProps) => {
   return (
-    <div className={slideButtonStyles.slideButtonWrapper}>
+    <div className={slideButtonStyles.slideButtonWrapper} style={wrapperStyle}>
       <Text variant={titleVariant ?? 'p2semi'}>{title}</Text>
       <label className={slideButtonStyles.slideButtonWrapper}>
         <input type="checkbox" checked={checked} onChange={onChange} />
-        <span className={slideButtonStyles.slider}></span>
+        <span
+          className={clsx(slideButtonStyles.slider, {
+            [slideButtonStyles.sliderLight]: trackVariant === 'light',
+            [slideButtonStyles.sliderDark]: trackVariant === 'dark',
+          })}
+        />
       </label>
     </div>
   )

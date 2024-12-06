@@ -2,7 +2,6 @@
   display: flex;
   align-items: center;
 
-
   .slideButtonWrapper {
     position: relative;
     display: inline-block;
@@ -24,28 +23,35 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: var(--color-surface-light);
-    transition: .2s;
+    transition: 0.2s;
     border-radius: 34px;
+  }
+
+  .sliderLight {
+    background-color: var(--color-surface-light);
+  }
+
+  .sliderDark {
+    background-color: var(--earn-protocol-neutral-85);
   }
 
   .slider:before {
     position: absolute;
-    content: "";
+    content: '';
     height: 20px;
     width: 20px;
     left: 2px;
     bottom: 2px;
     background-color: var(--color-background-primary);
-    transition: .2s;
+    transition: 0.2s;
     border-radius: 50%;
   }
 
-  input:checked+.slider {
+  input:checked + .slider {
     background-color: var(--color-background-primary);
   }
 
-  input:checked+.slider:before {
+  input:checked + .slider:before {
     transform: translateX(20px);
     background-color: var(--color-text-primary);
   }

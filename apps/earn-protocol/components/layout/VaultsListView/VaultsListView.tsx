@@ -21,6 +21,7 @@ import { capitalize } from 'lodash-es'
 
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
+import { UpdateNetApyPill } from '@/features/net-apy-updater/components/UpdateNetApyPill/UpdateNetApyPill'
 
 type VaultsListViewProps = {
   vaultsList: SDKVaultsListType
@@ -42,6 +43,9 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
   const { isMobile } = useMobileCheck(deviceType)
   const [localVaultNetwork, setLocalVaultNetwork] =
     useState<VaultsListViewProps['selectedNetwork']>(selectedNetwork)
+
+  const [sumrToggle, setSumrToggle] = useState(true)
+  const handleSumrToggle = (flag: boolean) => setSumrToggle(flag)
 
   const networkFilteredVaults = useMemo(
     () =>
@@ -150,10 +154,11 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
       }
       leftContent={
         <>
-          <div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
               Choose a strategy
             </Text>
+            <UpdateNetApyPill toggleValue={sumrToggle} handleToggle={handleSumrToggle} />
           </div>
           {networkFilteredVaults.map((vault, vaultIndex) => (
             <VaultCard

@@ -54,6 +54,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           </NextIntlClientProvider>
         </AlchemyAccountsProvider>
         <div id="portal" style={{ position: 'absolute' }} />
+        {/* Separate portal for dropdown is needed to not mix up position calculation */}
+        <div id="portal-dropdown" style={{ position: 'absolute' }} />
       </body>
     </html>
   )
