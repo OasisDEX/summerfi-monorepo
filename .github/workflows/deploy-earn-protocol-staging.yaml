@@ -27,6 +27,8 @@ jobs:
               - 'packages/app-earn-ui/**'
               - 'packages/app-icons/**'
               - '.github/workflows/deploy-earn-protocol-staging.yaml'
+              - 'sdk/sdk-client/**'
+              - 'sdk/sdk-client-react/**'
 
   build-earn-protocol:
     name: Build and deploy Earn Protocol App
