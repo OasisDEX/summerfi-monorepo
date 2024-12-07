@@ -17836,7 +17836,7 @@ packages:
       ora: 4.1.1
       picocolors: 1.0.1
       rimraf: 3.0.2
-      semver: 7.6.2
+      semver: 7.6.3
       update-check: 1.5.4
     dev: true
 
@@ -18618,7 +18618,7 @@ packages:
       globby: 11.1.0
       is-glob: 4.0.3
       minimatch: 9.0.3
-      semver: 7.6.2
+      semver: 7.6.3
       ts-api-utils: 1.3.0(typescript@5.6.2)
       typescript: 5.6.2
     transitivePeerDependencies:
@@ -18640,7 +18640,7 @@ packages:
       globby: 11.1.0
       is-glob: 4.0.3
       minimatch: 9.0.4
-      semver: 7.6.2
+      semver: 7.6.3
       ts-api-utils: 1.3.0(typescript@5.6.2)
       typescript: 5.6.2
     transitivePeerDependencies:
@@ -18661,7 +18661,7 @@ packages:
       '@typescript-eslint/typescript-estree': 5.62.0(typescript@5.6.2)
       eslint: 8.57.0
       eslint-scope: 5.1.1
-      semver: 7.6.2
+      semver: 7.6.3
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -18680,7 +18680,7 @@ packages:
       '@typescript-eslint/types': 6.21.0
       '@typescript-eslint/typescript-estree': 6.21.0(typescript@5.6.2)
       eslint: 8.57.0
-      semver: 7.6.2
+      semver: 7.6.3
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -21522,7 +21522,7 @@ packages:
       '@types/cls-hooked': 4.3.8
       atomic-batcher: 1.0.2
       cls-hooked: 4.2.2
-      semver: 7.6.2
+      semver: 7.6.3
     dev: false
 
   /axe-core@4.7.0:
@@ -22944,7 +22944,7 @@ packages:
       json-schema-typed: 7.0.3
       onetime: 5.1.2
       pkg-up: 3.1.0
-      semver: 7.6.2
+      semver: 7.6.3
     dev: true
 
   /confbox@0.1.7:
@@ -23231,8 +23231,8 @@ packages:
       tslib: 2.2.0
     dev: true
 
-  /cross-spawn@6.0.5:
-    resolution: {integrity: sha512-eTVLrBSt7fjbDygz805pMnstIs2VTBNkRm0qxZd+M7A5XDdxVRWO5MxGBXZhjY4cqLYLdtrGqRf8mBPmzwSpWQ==}
+  /cross-spawn@6.0.6:
+    resolution: {integrity: sha512-VqCUuhcd1iB+dsv8gxPttb5iZh/D0iubSP21g36KXdEuf6I5JiioesUVjpCdHV9MZRUfVFlvwtIUyPfxo5trtw==}
     engines: {node: '>=4.8'}
     dependencies:
       nice-try: 1.0.5
@@ -25199,7 +25199,7 @@ packages:
       read-pkg-up: 7.0.1
       regexp-tree: 0.1.27
       regjsparser: 0.10.0
-      semver: 7.6.2
+      semver: 7.6.3
       strip-indent: 3.0.0
     transitivePeerDependencies:
       - supports-color
@@ -25742,7 +25742,7 @@ packages:
     resolution: {integrity: sha512-adbxcyWV46qiHyvSp50TKt05tB4tK3HcmF7/nxfAdhnox83seTDbwnaqKO4sXRy7roHAIFqJP/Rw/AuEbX61LA==}
     engines: {node: '>=6'}
     dependencies:
-      cross-spawn: 6.0.5
+      cross-spawn: 6.0.6
       get-stream: 4.1.0
       is-stream: 1.1.0
       npm-run-path: 2.0.2
@@ -34221,7 +34221,7 @@ packages:
       git-hooks-list: 3.1.0
       globby: 13.2.2
       is-plain-obj: 4.1.0
-      semver: 7.6.2
+      semver: 7.6.3
       sort-object-keys: 1.1.3
     dev: true
 
