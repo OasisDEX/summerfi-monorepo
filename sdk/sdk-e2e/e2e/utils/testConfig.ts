@@ -21,7 +21,7 @@ export const SDKApiUrl = process.env.E2E_SDK_API_URL,
     value: '0x2653014Cd3AD332a98B0A80Ccf12473740DF81C2',
   }),
   userOnBase = Address.createFromEthereum({
-    value: '0xe9c245293dac615c11a5bf26fcec91c3617645e4',
+    value: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
   }),
   userOnArb = Address.createFromEthereum({
     value: '0xe9c245293dac615c11a5bf26fcec91c3617645e4',

@@ -7,20 +7,18 @@ import {
   IToken,
   ITokenAmount,
   Percentage,
-  SDKErrorType,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
 import { ChainId, HexData } from '@summerfi/sdk-common/common/aliases'
 import {
   QuoteData,
   SwapData,
-  SwapError,
   SwapErrorType,
   SwapProviderType,
   SwapRoute,
 } from '@summerfi/sdk-common/swap'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
-import { ISwapProvider } from '@summerfi/swap-common/interfaces'
+import { type ISwapProvider } from '@summerfi/swap-common/interfaces'
 import fetch from 'node-fetch'
 import {
   OneInchAuthHeader,
@@ -30,6 +28,7 @@ import {
   OneInchSwapResponse,
   OneInchSwapRoute,
 } from './types'
+import { LoggingService } from '@summerfi/sdk-common'
 
 export class OneInchSwapProvider
   extends ManagerProviderBase<SwapProviderType>
@@ -106,10 +105,8 @@ export class OneInchSwapProvider
     }
 
     const responseData = (await response.json()) as OneInchSwapResponse
+    LoggingService.debug('OneInchSwapResponse', swapUrl, responseData)
 
-    console.log('responseData', {
-      ...responseData,
-    })
     return {
       provider: SwapProviderType.OneInch,
       fromTokenAmount: params.fromAmount,
@@ -145,14 +142,14 @@ export class OneInchSwapProvider
       const errorJSON = await response.json()
       const errorType = this._parseErrorType(errorJSON.description)
 
-      throw SwapError.createFrom({
-        type: SDKErrorType.SwapError,
-        subtype: errorType,
-        reason: errorJSON.description,
-        message: `Error performing 1inch swap quote request ${swapUrl}: ${await response.body}`,
-        apiQuery: swapUrl,
-        statusCode: response.status,
-      })
+      throw Error(
+        `Error performing 1inch swap quote request: ${JSON.stringify({
+          apiQuery: swapUrl,
+          statusCode: response.status,
+          json: errorJSON,
+          subtype: errorType,
+        })}`,
+      )
     }
 
     const responseData = (await response.json()) as OneInchQuoteResponse
@@ -212,11 +209,12 @@ export class OneInchSwapProvider
     const recipient = params.recipient.value.toLowerCase()
     const disableEstimate = params.disableEstimate ? params.disableEstimate : true
     const allowPartialFill = params.allowPartialFill ? params.allowPartialFill : false
-    const protocolsParam = this._allowedSwapProtocols.length
-      ? this._allowedSwapProtocols.join(',')
-      : ''
+    const protocolsParam =
+      this._allowedSwapProtocols.length > 0
+        ? '&protocols=' + this._allowedSwapProtocols.join(',')
+        : ''
 
-    return `${this._apiUrl}/swap/${this._version}/${chainId}/swap?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&fromAddress=${recipient}&slippage=${params.slippage.value}&protocols=${protocolsParam}&disableEstimate=${disableEstimate}&allowPartialFill=${allowPartialFill}`
+    return `${this._apiUrl}/swap/${this._version}/${chainId}/swap?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&fromAddress=${recipient}&slippage=${params.slippage.value}&disableEstimate=${disableEstimate}&allowPartialFill=${allowPartialFill}${protocolsParam}`
   }
 
   /**

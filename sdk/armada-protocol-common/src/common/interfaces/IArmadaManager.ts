@@ -116,6 +116,16 @@ export interface IArmadaManager {
   getVaultInfo(params: { vaultId: IArmadaVaultId }): Promise<IArmadaVaultInfo>
 
   /**
+   * @name getFleetShares
+   */
+  getFleetShares(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount>
+
+  /**
+   * @name getStakedShares
+   */
+  getStakedShares(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount>
+
+  /**
    * @name getFleetBalance
    * @description Get the balance of a user in a fleet
    *

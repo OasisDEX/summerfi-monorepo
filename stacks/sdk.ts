@@ -17,6 +17,8 @@ const {
   ONE_INCH_API_SPOT_KEY,
   RPC_GATEWAY,
   SUBGRAPH_BASE,
+  SDK_USE_FORK = '',
+  SDK_FORK_CONFIG = '',
 } = process.env
 
 export function addSdkConfig({ stack }: StackContext, api: Api) {
@@ -72,6 +74,8 @@ export function addSdkConfig({ stack }: StackContext, api: Api) {
       ONE_INCH_API_SPOT_KEY,
       RPC_GATEWAY,
       SUBGRAPH_BASE,
+      SDK_USE_FORK,
+      SDK_FORK_CONFIG,
     },
   })
 
