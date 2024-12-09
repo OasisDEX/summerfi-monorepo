@@ -19,6 +19,7 @@ import {
 import { formatCryptoBalance, sdkNetworkToHumanNetwork, zero } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
 
+import { SUMR_CAP } from '@/constants/earn-protocol'
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useLocalConfig } from '@/contexts/LocalConfigContext/LocalConfigContext'
@@ -54,6 +55,8 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
         : vaultsList,
     [localVaultNetwork, vaultsList],
   )
+
+  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   const [vaultId, setVaultId] = useState<string | undefined>(networkFilteredVaults[0].id)
 
@@ -193,7 +196,8 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
               withHover
               selected={vaultId === vault.id || (!vaultId && vaultIndex === 0)}
               onClick={handleChangeVault}
-              withSumr={sumrNetApyConfig.withSumr}
+              withTokenBonus={sumrNetApyConfig.withSumr}
+              sumrPrice={estimatedSumrPrice}
             />
           ))}
         </>
