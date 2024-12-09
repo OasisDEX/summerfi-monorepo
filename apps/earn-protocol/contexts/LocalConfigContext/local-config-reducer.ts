@@ -24,6 +24,7 @@ export const localConfigReducer = (prevState: LocalConfigState, action: LocalCon
         sumrNetApyConfig: {
           ...prevState.sumrNetApyConfig,
           ...action.payload,
+          dilutedValuation: action.payload.dilutedValuation.replaceAll(',', ''),
         },
       }
     default:

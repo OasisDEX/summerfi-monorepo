@@ -62,7 +62,10 @@ const UpdateNetApyContent: FC<UpdateNetApyContentProps> = ({ handleTooltipOpen }
       <Button
         variant="primarySmall"
         onClick={() => {
-          setSumrNetApyConfig({ withSumr: sumrToggle, dilutedValuation: inputValue })
+          setSumrNetApyConfig({
+            withSumr: sumrToggle,
+            dilutedValuation: inputValue,
+          })
           handleTooltipOpen(false)
         }}
       >
