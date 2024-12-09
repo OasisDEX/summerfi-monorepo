@@ -19,6 +19,10 @@ export const setCookie = (
     sameSite?: 'Strict' | 'Lax' | 'None'
   },
 ): void => {
+  if (!name || !value || days < 0) {
+    throw new Error('Invalid cookie parameters')
+  }
+
   const date = new Date()
 
   // eslint-disable-next-line no-mixed-operators
@@ -28,7 +32,7 @@ export const setCookie = (
   const secure = options?.secure ? 'Secure;' : ''
   const sameSite = options?.sameSite ? `SameSite=${options.sameSite};` : ''
 
-  document.cookie = `${name}=${value}; ${expires}; ${path}; ${secure} ${sameSite}`
+  document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; ${expires}; ${path}; ${secure} ${sameSite}`
 }
 
 /**
@@ -43,7 +47,7 @@ export const getCookie = (cookieName: string): string | null => {
   for (const cookie of cookies) {
     const [key, value] = cookie.trim().split('=')
 
-    if (key === cookieName) {
+    if (key === encodeURIComponent(cookieName)) {
       return decodeURIComponent(value)
     }
   }
