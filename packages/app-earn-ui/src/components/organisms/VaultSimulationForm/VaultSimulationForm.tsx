@@ -35,7 +35,7 @@ export const VaultSimulationForm = ({ vaultData, isMobile }: VaultSimulationForm
       setIsGradientBorder(true)
       const timeout = setTimeout(() => {
         setIsGradientBorder(false)
-      }, 1000)
+      }, 3800)
 
       return () => {
         setIsGradientBorder(false)
@@ -78,7 +78,7 @@ export const VaultSimulationForm = ({ vaultData, isMobile }: VaultSimulationForm
   const token = vaultData.inputToken.symbol
 
   return (
-    <div style={{ position: 'relative', width: '100%', padding: '1px' }}>
+    <div style={{ position: 'relative', width: '100%', padding: '2px' }}>
       <Sidebar
         {...{
           title: 'Deposit',

@@ -4,21 +4,37 @@
   left: 0;
   right: 0;
   bottom: 0;
-  border-radius: 24px;
-  background: var(--gradient-earn-protocol-light);
-  background-size: 100% 100%;
-  animation: border-fade 1s ease-in-out;
-  opacity: 0;
+  border: 2px solid transparent;
+  border-radius: var(--general-radius-24);
+  background:
+    linear-gradient(#1c1c1cff, #1c1c1cff) padding-box,
+    linear-gradient(var(--angle), #ff49a47f, #b049ff7f, #1c1c1cff) border-box;
+  animation: 4s rotate linear infinite;
   z-index: -1;
 }
 
-@keyframes border-fade {
-  0%,
-  100% {
+@keyframes rotate {
+  0% {
     opacity: 0;
+    --angle: 0deg;
   }
-  25%,
+  25% {
+    opacity: 0.75;
+  }
   50% {
     opacity: 1;
   }
+  75% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 0;
+    --angle: 360deg;
+  }
+}
+
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
 }

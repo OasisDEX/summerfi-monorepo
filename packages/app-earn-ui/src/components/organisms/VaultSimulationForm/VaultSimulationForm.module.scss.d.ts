@@ -1,6 +1,6 @@
 export type Styles = {
-  borderFade: string
   cardAnimateGradientBorder: string
+  rotate: string
 }
 
 export type ClassNames = keyof Styles
