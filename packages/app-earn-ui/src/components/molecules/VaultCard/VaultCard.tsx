@@ -49,7 +49,9 @@ export const VaultCard = ({
     : 0
 
   const tokenBonus = formatDecimalAsPercent(
-    sumrPrice ? ((bonusSumrDaily * 365 * sumrPrice) / Number(totalValueLockedUSD)).toString() : '0',
+    sumrPrice && Number(totalValueLockedUSD)
+      ? ((bonusSumrDaily * 365 * sumrPrice) / Number(totalValueLockedUSD)).toString()
+      : '0',
   )
 
   const handleVaultClick = () => {
