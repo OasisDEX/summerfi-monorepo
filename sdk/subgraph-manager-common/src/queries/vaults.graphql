@@ -60,6 +60,8 @@ query GetVaults {
     apr365d
     calculatedApr
     aprValues
+    withdrawableTotalAssets
+    withdrawableTotalAssetsUSD
   }
 }
 query GetVault($id: ID!) {
@@ -184,5 +186,7 @@ query GetVault($id: ID!) {
     apr365d
     calculatedApr
     aprValues
+    withdrawableTotalAssets
+    withdrawableTotalAssetsUSD
   }
 }
