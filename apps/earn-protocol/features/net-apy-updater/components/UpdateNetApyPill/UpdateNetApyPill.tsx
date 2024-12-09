@@ -1,19 +1,30 @@
-import { type FC, useCallback } from 'react'
+'use client'
+import { type ChangeEvent, type FC, useCallback, useState } from 'react'
 import { Button, Icon, Input, Text, ToggleButton, Tooltip } from '@summerfi/app-earn-ui'
+import { mapNumericInput } from '@summerfi/app-utils'
+
+import { useSumrNetApyConfig } from '@/features/net-apy-updater/hooks/useSumrNetApyConfig'
 
 import classNames from './UpdateNetApyPill.module.scss'
 
 interface UpdateNetApyContentProps {
-  toggleValue: boolean
-  handleToggle: (flag: boolean) => void
   handleTooltipOpen: (flag: boolean) => void
 }
 
-const UpdateNetApyContent: FC<UpdateNetApyContentProps> = ({
-  toggleValue,
-  handleToggle,
-  handleTooltipOpen,
-}) => {
+const UpdateNetApyContent: FC<UpdateNetApyContentProps> = ({ handleTooltipOpen }) => {
+  const [sumrNetApyConfig, setSumrNetApyConfig] = useSumrNetApyConfig()
+
+  const [inputValue, setInputValue] = useState(mapNumericInput(sumrNetApyConfig.dilutedValuation))
+  const [sumrToggle, setSumrToggle] = useState(sumrNetApyConfig.withSumr)
+
+  const handleInputChange = (ev: ChangeEvent<HTMLInputElement>) => {
+    if (ev.target.value) {
+      setInputValue(mapNumericInput(ev.target.value))
+    } else {
+      setInputValue('')
+    }
+  }
+
   return (
     <div className={classNames.updateNetApyContent}>
       <Text as="p" variant="p3semi" style={{ marginBottom: 'var(--general-space-8)' }}>
@@ -30,13 +41,18 @@ const UpdateNetApyContent: FC<UpdateNetApyContentProps> = ({
         Net APY is affected by rate and SUMR rewards. You can choose either include both or only one
         of those in APY.
       </Text>
-      <Input placeholder="Enter fully diluted valuation" variant="dark" />
+      <Input
+        placeholder="Enter fully diluted valuation"
+        variant="dark"
+        value={inputValue}
+        onChange={handleInputChange}
+      />
       <div className={classNames.toggleWrapper}>
         <ToggleButton
           title="Include SUMR"
-          checked={toggleValue}
+          checked={sumrToggle}
           onChange={(ev) => {
-            handleToggle(ev.target.checked)
+            setSumrToggle(ev.target.checked)
           }}
           titleVariant="p3semi"
           wrapperStyle={{ width: '100%', justifyContent: 'space-between' }}
@@ -46,6 +62,7 @@ const UpdateNetApyContent: FC<UpdateNetApyContentProps> = ({
       <Button
         variant="primarySmall"
         onClick={() => {
+          setSumrNetApyConfig({ withSumr: sumrToggle, dilutedValuation: inputValue })
           handleTooltipOpen(false)
         }}
       >
@@ -55,21 +72,14 @@ const UpdateNetApyContent: FC<UpdateNetApyContentProps> = ({
   )
 }
 
-interface UpdateNetApyPillProps {
-  toggleValue: boolean
-  handleToggle: (flag: boolean) => void
-}
+interface UpdateNetApyPillProps {}
 
-export const UpdateNetApyPill: FC<UpdateNetApyPillProps> = ({ toggleValue, handleToggle }) => {
+export const UpdateNetApyPill: FC<UpdateNetApyPillProps> = () => {
   const tooltip = useCallback(
     (_: boolean, handleTooltipOpen: (flag: boolean) => void) => (
-      <UpdateNetApyContent
-        toggleValue={toggleValue}
-        handleToggle={handleToggle}
-        handleTooltipOpen={handleTooltipOpen}
-      />
+      <UpdateNetApyContent handleTooltipOpen={handleTooltipOpen} />
     ),
-    [toggleValue, handleToggle],
+    [],
   )
 
   return (

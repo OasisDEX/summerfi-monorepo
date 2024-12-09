@@ -53,6 +53,8 @@ export const VaultSimulationForm = ({ vaultData, isMobile }: VaultSimulationForm
   const handleInputChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     if (ev.target.value) {
       setInputValue(mapNumericInput(ev.target.value))
+    } else {
+      setInputValue('')
     }
   }
 
@@ -86,7 +88,7 @@ export const VaultSimulationForm = ({ vaultData, isMobile }: VaultSimulationForm
             <>
               <InputWithDropdown
                 value={inputValue}
-                secondaryValue={`$${inputValue}`}
+                secondaryValue={inputValue.length ? `$${inputValue}` : ''}
                 handleChange={handleInputChange}
                 options={[dropdownLockedValue]}
                 dropdownValue={dropdownLockedValue}
