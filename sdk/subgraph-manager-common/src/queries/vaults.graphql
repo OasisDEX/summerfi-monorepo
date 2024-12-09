@@ -13,6 +13,7 @@ query GetVaults {
         decimals
       }
     }
+    rewardTokenEmissionsAmount
     rewardTokenEmissionsUSD
     arks {
       id
@@ -80,6 +81,7 @@ query GetVault($id: ID!) {
       }
     }
     rewardTokenEmissionsUSD
+    rewardTokenEmissionsAmount
     rebalances(orderBy: timestamp, orderDirection: desc) {
       id
       amount
