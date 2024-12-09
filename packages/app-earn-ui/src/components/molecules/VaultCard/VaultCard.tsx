@@ -19,7 +19,7 @@ type VaultCardProps = SDKVaultishType & {
   selected?: boolean
   withHover?: boolean
   staggerIndex?: number
-  withSumr: boolean
+  withSumr?: boolean
 }
 
 export const VaultCard = ({

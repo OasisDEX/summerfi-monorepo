@@ -23,7 +23,7 @@ type LocalConfigType = {
 export const defaultLocalConfig: LocalConfigState = {
   sumrNetApyConfig: {
     withSumr: true,
-    dilutedValuation: '25000000',
+    dilutedValuation: '250000000',
   },
 }
 
