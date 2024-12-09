@@ -68,6 +68,10 @@ const UpdateNetApyContent: FC<UpdateNetApyContentProps> = ({ handleTooltipOpen }
           })
           handleTooltipOpen(false)
         }}
+        disabled={
+          sumrNetApyConfig.dilutedValuation === inputValue.replaceAll(',', '') &&
+          sumrNetApyConfig.withSumr === sumrToggle
+        }
       >
         Save changes
       </Button>
