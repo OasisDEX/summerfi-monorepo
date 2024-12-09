@@ -107,6 +107,12 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
     setVaultId(nextVaultId)
   }
 
+  const formattedTotalLiquidity = useMemo(() => {
+    return formatCryptoBalance(
+      vaultsList.reduce((acc, vault) => acc.plus(vault.withdrawableTotalAssetsUSD ?? zero), zero),
+    )
+  }, [vaultsList])
+
   const formattedTotalAssets = useMemo(() => {
     return formatCryptoBalance(
       vaultsList.reduce((acc, vault) => acc.plus(vault.totalValueLockedUSD), zero),
@@ -139,8 +145,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
             // TODO: fill data
             titleTooltip="Tooltip about liquidity or something"
             size="large"
-            // TODO: fill data
-            value="14.3b"
+            value={`$${formattedTotalLiquidity}`}
           />
           <DataBlock
             title="Protocols Supported"
