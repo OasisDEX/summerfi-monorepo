@@ -25,7 +25,12 @@ export const useSumrNetApyConfig = (): [SumrNetApyConfig, (value: SumrNetApyConf
   const cookie = getCookie(sumrNetApyConfigCookieName)
 
   const setValue = (value: SumrNetApyConfig) => {
-    setCookie(sumrNetApyConfigCookieName, JSON.stringify(value), 365, { secure: true })
+    setCookie(
+      sumrNetApyConfigCookieName,
+      JSON.stringify({ ...value, dilutedValuation: value.dilutedValuation.replaceAll(',', '') }),
+      365,
+      { secure: true },
+    )
     dispatch({ type: LocalConfigDispatchActions.UPDATE_SUMR_NET_APY_CONFIG, payload: value })
   }
 
