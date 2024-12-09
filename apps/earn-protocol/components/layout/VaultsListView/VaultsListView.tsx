@@ -47,13 +47,6 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
   const [sumrToggle, setSumrToggle] = useState(true)
   const handleSumrToggle = (flag: boolean) => setSumrToggle(flag)
 
-  const totalLiquidity = useMemo(() => {
-    return vaultsList.reduce(
-      (acc, vault) => acc.plus(vault.withdrawableTotalAssetsUSD ?? zero),
-      zero,
-    )
-  }, [vaultsList])
-
   const networkFilteredVaults = useMemo(
     () =>
       localVaultNetwork && localVaultNetwork !== 'all-networks'
@@ -114,6 +107,12 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
     setVaultId(nextVaultId)
   }
 
+  const formattedTotalLiquidity = useMemo(() => {
+    return formatCryptoBalance(
+      vaultsList.reduce((acc, vault) => acc.plus(vault.withdrawableTotalAssetsUSD ?? zero), zero),
+    )
+  }, [vaultsList])
+
   const formattedTotalAssets = useMemo(() => {
     return formatCryptoBalance(
       vaultsList.reduce((acc, vault) => acc.plus(vault.totalValueLockedUSD), zero),
@@ -146,7 +145,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
             // TODO: fill data
             titleTooltip="Tooltip about liquidity or something"
             size="large"
-            value={formatCryptoBalance(totalLiquidity)}
+            value={`$${formattedTotalLiquidity}`}
           />
           <DataBlock
             title="Protocols Supported"
