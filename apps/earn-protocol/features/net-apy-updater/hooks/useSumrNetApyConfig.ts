@@ -31,7 +31,7 @@ export const useSumrNetApyConfig = (): [SumrNetApyConfig, (value: SumrNetApyConf
 
   useEffect(() => {
     if (!cookie) {
-      setCookie(sumrNetApyConfigCookieName, JSON.stringify(sumrNetApyConfig), 365)
+      setCookie(sumrNetApyConfigCookieName, JSON.stringify(sumrNetApyConfig), 365, { secure: true })
     }
   }, [cookie, sumrNetApyConfig])
 
