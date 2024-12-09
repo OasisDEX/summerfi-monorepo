@@ -1,4 +1,11 @@
-import { Address, ChainFamilyName, type ChainInfo, type IAddress } from '@summerfi/sdk-common'
+import {
+  Address,
+  ArbitrumChainNames,
+  BaseChainNames,
+  EthereumChainNames,
+  type ChainInfo,
+  type IAddress,
+} from '@summerfi/sdk-common'
 import config from './index.json'
 
 type Config = typeof config
@@ -7,9 +14,9 @@ type CategoryKey = keyof Config[ConfigKey]['deployedContracts']
 
 const getConfigKey = <TName extends string>(name: TName) => {
   const keyMap: Record<ChainInfo['name'], ConfigKey> = {
-    [ChainFamilyName.Ethereum]: 'mainnet',
-    [ChainFamilyName.Base]: 'base',
-    [ChainFamilyName.Arbitrum]: 'arbitrum',
+    [EthereumChainNames.Mainnet]: 'mainnet',
+    [BaseChainNames.Mainnet]: 'base',
+    [ArbitrumChainNames.ArbitrumOne]: 'arbitrum',
   }
 
   const key = keyMap[name]
