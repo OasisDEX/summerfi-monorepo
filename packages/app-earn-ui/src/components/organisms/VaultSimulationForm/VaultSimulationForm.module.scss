@@ -6,6 +6,7 @@
   bottom: 0;
   border: 2px solid transparent;
   border-radius: var(--general-radius-24);
+  box-shadow: 0 0 4px 0 rgba(255, 73, 164, 0.23);
   background:
     linear-gradient(#1c1c1cff, #1c1c1cff) padding-box,
     linear-gradient(var(--angle), #ff49a47f, #b049ff7f, #1c1c1cff) border-box;
