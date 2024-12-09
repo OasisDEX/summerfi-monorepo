@@ -19,6 +19,7 @@ type VaultCardProps = SDKVaultishType & {
   selected?: boolean
   withHover?: boolean
   staggerIndex?: number
+  withSumr: boolean
 }
 
 export const VaultCard = ({
@@ -32,6 +33,7 @@ export const VaultCard = ({
   onClick,
   calculatedApr,
   customFields,
+  withSumr,
 }: VaultCardProps) => {
   const handleVaultClick = () => {
     if (onClick) {
@@ -58,7 +60,7 @@ export const VaultCard = ({
             selected={selected}
           />
           <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-            <BonusLabel tokenBonus="some" apy={parsedApr} />
+            <BonusLabel tokenBonus="some" apy={parsedApr} withSumr={withSumr} />
           </Text>
         </div>
         <div className={vaultCardStyles.vaultCardAssetsWrapper}>
