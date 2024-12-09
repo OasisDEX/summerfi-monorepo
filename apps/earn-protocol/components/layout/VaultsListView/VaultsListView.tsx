@@ -119,6 +119,26 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
     )
   }, [vaultsList])
 
+  const formattedProtocolsSupportedList = useMemo(
+    () =>
+      new Set(
+        vaultsList.reduce(
+          (acc, { arks }) => [
+            // converting a list which looks like `protocolName-token-chainId`
+            // into a unique list of protocols for all vaults
+            ...acc,
+            ...arks
+              .map((ark) => ark.name?.split('-')[0])
+              .filter((arkName): arkName is string => Boolean(arkName)),
+          ],
+          [] as string[],
+        ),
+      ),
+    [vaultsList],
+  )
+
+  const formattedProtocolsSupportedCount = formattedProtocolsSupportedList.size
+
   return (
     <VaultGrid
       isMobile={isMobile}
@@ -149,11 +169,12 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
           />
           <DataBlock
             title="Protocols Supported"
-            // TODO: fill data
-            titleTooltip="Tooltip about protocols or something"
+            // TODO: fill data (this is just a placeholder)
+            titleTooltip={`Protocols supported: ${Array.from(formattedProtocolsSupportedList).join(
+              ', ',
+            )}`}
             size="large"
-            // TODO: fill data
-            value="6"
+            value={formattedProtocolsSupportedCount}
           />
         </SimpleGrid>
       }
