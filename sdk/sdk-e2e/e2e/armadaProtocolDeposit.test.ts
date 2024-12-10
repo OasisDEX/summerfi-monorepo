@@ -20,21 +20,23 @@ const useRpcGateway = true
 
 describe('Armada Protocol Deposit', () => {
   const main = async () => {
-    for (const { symbol, chainInfo, fleetAddress, forkUrl } of testConfig) {
+    for (const { symbol, swapSymbol, chainInfo, fleetAddress, forkUrl } of testConfig) {
       console.log(`Running tests for ${symbol} on ${chainInfo.name}`)
-      await runTests({ symbol, chainInfo, fleetAddress, forkUrl })
+      await runTests({ symbol, swapSymbol, chainInfo, fleetAddress, forkUrl })
     }
   }
   main()
 
   async function runTests({
     symbol,
+    swapSymbol,
     chainInfo,
     fleetAddress,
     forkUrl,
   }: {
     chainInfo: ChainInfo
     symbol: string
+    swapSymbol: string
     fleetAddress: Address
     forkUrl: string | undefined
   }) {
@@ -54,7 +56,7 @@ describe('Armada Protocol Deposit', () => {
     beforeEach(async () => {
       console.log(`Preparation for ${symbol} on ${chainInfo.name}`)
 
-      const data = await prepareData(symbol, chainInfo, sdk, signerAddress)
+      const data = await prepareData(symbol, swapSymbol, chainInfo, sdk, signerAddress)
       vaultId = ArmadaVaultId.createFrom({
         chainInfo,
         fleetAddress,
@@ -192,7 +194,7 @@ describe('Armada Protocol Deposit', () => {
         ).toBeGreaterThan(0.99)
       })
 
-      it(`should deposit and swap 1 ${swapToken.symbol} (with stake) to fleet at ${fleetAddress.value}`, async () => {
+      it(`should deposit and swap 1 ${swapSymbol} (with stake) to fleet at ${fleetAddress.value}`, async () => {
         const amount = '1'
         const transactions = await sdk.armada.users.getNewDepositTX({
           vaultId,
@@ -256,8 +258,8 @@ describe('Armada Protocol Deposit', () => {
     })
 
     describe(`Withdraw on ${chainInfo.name}`, () => {
-      it(`should withdraw 0.99 USDC back from fleet at ${fleetAddress.value}`, async () => {
-        const amount = '0.99'
+      it(`should withdraw 1 USDC back from fleet at ${fleetAddress.value}`, async () => {
+        const amount = '1'
 
         const transactions = await sdk.armada.users.getWithdrawTX({
           vaultId: vaultId,
@@ -311,7 +313,7 @@ describe('Armada Protocol Deposit', () => {
         expect(fleetAmountAfter.shares.toSolidityValue()).toEqual(
           fleetAmountBefore.shares.toSolidityValue(),
         )
-        expect(stakedAmountAfter.shares.toSolidityValue()).toEqual(
+        expect(stakedAmountAfter.shares.toSolidityValue()).toBeLessThan(
           stakedAmountBefore.shares.toSolidityValue(),
         )
         expect(

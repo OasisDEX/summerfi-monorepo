@@ -3,6 +3,7 @@ import { type ChainInfo, User, Wallet, Address } from '@summerfi/sdk-common'
 
 export async function prepareData(
   symbol: string,
+  swapSymbol: string,
   chainInfo: ChainInfo,
   sdk: SDKManager,
   walletAddress: string,
@@ -16,7 +17,7 @@ export async function prepareData(
 
   const chain = await sdk.chains.getChain({ chainInfo })
   const token = await chain.tokens.getTokenBySymbol({ symbol })
-  const swapToken = await chain.tokens.getTokenBySymbol({ symbol: 'DAI' })
+  const swapToken = await chain.tokens.getTokenBySymbol({ symbol: swapSymbol })
 
   return { chain, token, swapToken, user }
 }
