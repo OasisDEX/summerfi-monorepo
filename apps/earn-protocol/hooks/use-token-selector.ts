@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
   type DropdownOption,
   type DropdownRawOption,
@@ -14,23 +14,27 @@ type UseAmountProps = {
 const testTokens = ['USDBC']
 
 export const useTokenSelector = ({ vault }: UseAmountProps) => {
-  const tokenOptions: DropdownOption[] = [
-    ...[vault.inputToken.symbol].map((symbol) => ({
-      tokenSymbol: symbol as TokenSymbolsList,
-      label: symbol,
-      value: symbol,
-    })),
-  ]
+  const tokenOptions = useMemo(() => {
+    const options: DropdownOption[] = [
+      ...[vault.inputToken.symbol].map((symbol) => ({
+        tokenSymbol: symbol as TokenSymbolsList,
+        label: symbol,
+        value: symbol,
+      })),
+    ]
 
-  testTokens.forEach((testToken) => {
-    if (testToken !== vault.inputToken.symbol) {
-      tokenOptions.push({
-        tokenSymbol: testToken as TokenSymbolsList,
-        label: testToken,
-        value: testToken,
-      })
-    }
-  })
+    testTokens.forEach((testToken) => {
+      if (testToken !== vault.inputToken.symbol) {
+        options.push({
+          tokenSymbol: testToken as TokenSymbolsList,
+          label: testToken,
+          value: testToken,
+        })
+      }
+    })
+
+    return options
+  }, [vault.inputToken.symbol])
 
   const [selectedTokenOption, setSelectedTokenOption] = useState(() => {
     if (tokenOptions.length === 0) {
