@@ -12,6 +12,8 @@ import { accountKitCookieStateName } from '@/constants/account-kit-cookie-state-
 import { forksCookieName } from '@/constants/forks-cookie-name'
 import { safeParseJson } from '@/constants/safe-parse-json'
 import { DeviceProvider } from '@/contexts/DeviceContext/DeviceContext'
+import { sumrNetApyConfigCookieName } from '@/contexts/LocalConfigContext/constants'
+import { LocalConfigContextProvider } from '@/contexts/LocalConfigContext/LocalConfigContext'
 import { fontInter } from '@/helpers/fonts'
 import { getServerSideCookies } from '@/helpers/get-server-side-cookies'
 import { AlchemyAccountsProvider } from '@/providers/AlchemyAccountsProvider/AlchemyAccountsProvider'
@@ -31,6 +33,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const forks = safeParseJson(getServerSideCookies(forksCookieName, cookie))
   const accountKitState = safeParseJson(getServerSideCookies(accountKitCookieStateName, cookie))
   const deviceType = getServerSideCookies('deviceType', cookie) as DeviceType
+  const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
 
   const chainId: number | undefined = accountKitState.state?.chainId
   const forkRpcUrl: string | undefined = chainId ? forks[chainId] : undefined
@@ -49,11 +52,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <AlchemyAccountsProvider initialState={accountKitInitializedState}>
           <NextIntlClientProvider messages={messages}>
             <DeviceProvider value={deviceType}>
-              <MasterPage>{children}</MasterPage>
+              <LocalConfigContextProvider value={{ sumrNetApyConfig }}>
+                <MasterPage>{children}</MasterPage>
+              </LocalConfigContextProvider>
             </DeviceProvider>
           </NextIntlClientProvider>
         </AlchemyAccountsProvider>
         <div id="portal" style={{ position: 'absolute' }} />
+        {/* Separate portal for dropdown is needed to not mix up position calculation */}
+        <div id="portal-dropdown" style={{ position: 'absolute' }} />
       </body>
     </html>
   )

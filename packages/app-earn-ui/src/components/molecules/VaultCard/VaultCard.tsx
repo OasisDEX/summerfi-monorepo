@@ -19,6 +19,9 @@ type VaultCardProps = SDKVaultishType & {
   selected?: boolean
   withHover?: boolean
   staggerIndex?: number
+  withTokenBonus?: boolean
+  sumrDilutedValuation?: string
+  sumrPrice?: number
 }
 
 export const VaultCard = ({
@@ -32,7 +35,25 @@ export const VaultCard = ({
   onClick,
   calculatedApr,
   customFields,
+  rewardTokenEmissionsAmount,
+  rewardTokens,
+  withTokenBonus,
+  sumrPrice,
 }: VaultCardProps) => {
+  const sumrIndex = rewardTokens.findIndex((item) => item.token.symbol === 'SUMMER')
+
+  // calculate sumr daily bonus
+  const bonusSumrDaily = rewardTokenEmissionsAmount[sumrIndex]
+    ? // eslint-disable-next-line no-mixed-operators
+      Number(rewardTokenEmissionsAmount[sumrIndex]) / 10 ** 18
+    : 0
+
+  const tokenBonus = formatDecimalAsPercent(
+    sumrPrice && Number(totalValueLockedUSD)
+      ? ((bonusSumrDaily * 365 * sumrPrice) / Number(totalValueLockedUSD)).toString()
+      : '0',
+  )
+
   const handleVaultClick = () => {
     if (onClick) {
       onClick(id)
@@ -55,9 +76,10 @@ export const VaultCard = ({
             symbol={inputToken.symbol}
             risk={customFields?.risk ?? 'medium'}
             networkName={protocol.network}
+            selected={selected}
           />
           <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-            <BonusLabel tokenBonus="some" apy={parsedApr} />
+            <BonusLabel tokenBonus={tokenBonus} apy={parsedApr} withTokenBonus={withTokenBonus} />
           </Text>
         </div>
         <div className={vaultCardStyles.vaultCardAssetsWrapper}>

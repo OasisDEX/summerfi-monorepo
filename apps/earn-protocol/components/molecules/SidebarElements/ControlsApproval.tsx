@@ -81,7 +81,7 @@ export const ControlsApproval = ({
             </Text>
           </div>
         }
-        style={{ marginBottom: 'var(--spacing-space-x-large)' }}
+        style={{ marginBottom: 'var(--spacing-space-x-large) !important' }}
       />
     </>
   )

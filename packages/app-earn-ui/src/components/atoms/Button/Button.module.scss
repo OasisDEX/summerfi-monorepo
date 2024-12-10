@@ -65,6 +65,11 @@
     color: var(--color-text-secondary-disabled);
     cursor: not-allowed;
   }
+
+  &Active {
+    border-color: var(--earn-protocol-neutral-60);
+    color: var(--earn-protocol-secondary-100);
+  }
 }
 
 .neutralLarge,

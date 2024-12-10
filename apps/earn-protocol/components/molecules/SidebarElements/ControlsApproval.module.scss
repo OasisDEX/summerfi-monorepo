@@ -1,7 +1,8 @@
 .approvalText {
+  display: inline-block;
   color: var(--color-text-secondary);
   margin-top: var(--spacing-space-x-large);
-  margin-bottom: var(--general-space-24);
+  margin-bottom: var(--spacing-space-x-large);
 }
 
 .customApprovalInputWrapper {

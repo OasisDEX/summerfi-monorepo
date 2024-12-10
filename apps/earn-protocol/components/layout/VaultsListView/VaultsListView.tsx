@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import {
   DataBlock,
   SimpleGrid,
+  Text,
   useMobileCheck,
   VaultCard,
   VaultGrid,
@@ -18,8 +19,11 @@ import {
 import { formatCryptoBalance, sdkNetworkToHumanNetwork, zero } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
 
+import { SUMR_CAP } from '@/constants/earn-protocol'
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
+import { useLocalConfig } from '@/contexts/LocalConfigContext/LocalConfigContext'
+import { UpdateNetApyPill } from '@/features/net-apy-updater/components/UpdateNetApyPill/UpdateNetApyPill'
 
 type VaultsListViewProps = {
   vaultsList: SDKVaultsListType
@@ -41,7 +45,9 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
   const { isMobile } = useMobileCheck(deviceType)
   const [localVaultNetwork, setLocalVaultNetwork] =
     useState<VaultsListViewProps['selectedNetwork']>(selectedNetwork)
-
+  const {
+    state: { sumrNetApyConfig },
+  } = useLocalConfig()
   const networkFilteredVaults = useMemo(
     () =>
       localVaultNetwork && localVaultNetwork !== 'all-networks'
@@ -49,6 +55,8 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
         : vaultsList,
     [localVaultNetwork, vaultsList],
   )
+
+  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   const [vaultId, setVaultId] = useState<string | undefined>(networkFilteredVaults[0].id)
 
@@ -102,11 +110,37 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
     setVaultId(nextVaultId)
   }
 
+  const formattedTotalLiquidity = useMemo(() => {
+    return formatCryptoBalance(
+      vaultsList.reduce((acc, vault) => acc.plus(vault.withdrawableTotalAssetsUSD ?? zero), zero),
+    )
+  }, [vaultsList])
+
   const formattedTotalAssets = useMemo(() => {
     return formatCryptoBalance(
       vaultsList.reduce((acc, vault) => acc.plus(vault.totalValueLockedUSD), zero),
     )
   }, [vaultsList])
+
+  const formattedProtocolsSupportedList = useMemo(
+    () =>
+      new Set(
+        vaultsList.reduce(
+          (acc, { arks }) => [
+            // converting a list which looks like `protocolName-token-chainId`
+            // into a unique list of protocols for all vaults
+            ...acc,
+            ...arks
+              .map((ark) => ark.name?.split('-')[0])
+              .filter((arkName): arkName is string => Boolean(arkName)),
+          ],
+          [] as string[],
+        ),
+      ),
+    [vaultsList],
+  )
+
+  const formattedProtocolsSupportedCount = formattedProtocolsSupportedList.size
 
   return (
     <VaultGrid
@@ -134,28 +168,40 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
             // TODO: fill data
             titleTooltip="Tooltip about liquidity or something"
             size="large"
-            // TODO: fill data
-            value="14.3b"
+            value={`$${formattedTotalLiquidity}`}
           />
           <DataBlock
             title="Protocols Supported"
-            // TODO: fill data
-            titleTooltip="Tooltip about protocols or something"
+            // TODO: fill data (this is just a placeholder)
+            titleTooltip={`Protocols supported: ${Array.from(formattedProtocolsSupportedList).join(
+              ', ',
+            )}`}
             size="large"
-            // TODO: fill data
-            value="6"
+            value={formattedProtocolsSupportedCount}
           />
         </SimpleGrid>
       }
-      leftContent={networkFilteredVaults.map((vault, vaultIndex) => (
-        <VaultCard
-          key={vault.id}
-          {...vault}
-          withHover
-          selected={vaultId === vault.id || (!vaultId && vaultIndex === 0)}
-          onClick={handleChangeVault}
-        />
-      ))}
+      leftContent={
+        <>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+              Choose a strategy
+            </Text>
+            <UpdateNetApyPill />
+          </div>
+          {networkFilteredVaults.map((vault, vaultIndex) => (
+            <VaultCard
+              key={vault.id}
+              {...vault}
+              withHover
+              selected={vaultId === vault.id || (!vaultId && vaultIndex === 0)}
+              onClick={handleChangeVault}
+              withTokenBonus={sumrNetApyConfig.withSumr}
+              sumrPrice={estimatedSumrPrice}
+            />
+          ))}
+        </>
+      }
       rightContent={
         <VaultSimulationForm
           vaultData={selectedVaultData ?? networkFilteredVaults[0]}

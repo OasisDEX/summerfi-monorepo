@@ -1,6 +1,7 @@
 export type Styles = {
   basicInfoWrapper: string
   header: string
+  positionWrapper: string
   strategyInfoTopWrapper: string
   subValue: string
   value: string

@@ -10,11 +10,13 @@ export const BonusLabel = ({
   apy,
   rays,
   raw,
+  withTokenBonus = true,
 }: {
   tokenBonus?: string
   apy?: string
   rays?: string
   raw?: ReactNode
+  withTokenBonus?: boolean
 }) => (
   <Tooltip
     tooltip={
@@ -31,8 +33,8 @@ export const BonusLabel = ({
         <Pill>
           {tokenBonus ?? rays ? <Icon iconName="stars" size={24} color="white" /> : null}
           {apy ? `APY ${apy}` : ''}
-          {tokenBonus && apy ? <>&nbsp;+&nbsp;</> : ''}
-          {tokenBonus ? `${tokenBonus} SUMR` : ''}
+          {tokenBonus && withTokenBonus && apy ? <>&nbsp;+&nbsp;</> : ''}
+          {tokenBonus && withTokenBonus ? `${tokenBonus} SUMR` : ''}
           {rays ? `${rays} RAYS` : ''}
           {raw ? raw : ''}
         </Pill>

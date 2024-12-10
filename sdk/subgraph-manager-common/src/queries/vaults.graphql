@@ -13,6 +13,7 @@ query GetVaults {
         decimals
       }
     }
+    rewardTokenEmissionsAmount
     rewardTokenEmissionsUSD
     arks {
       id
@@ -60,6 +61,8 @@ query GetVaults {
     apr365d
     calculatedApr
     aprValues
+    withdrawableTotalAssets
+    withdrawableTotalAssetsUSD
   }
 }
 query GetVault($id: ID!) {
@@ -78,6 +81,7 @@ query GetVault($id: ID!) {
       }
     }
     rewardTokenEmissionsUSD
+    rewardTokenEmissionsAmount
     rebalances(orderBy: timestamp, orderDirection: desc) {
       id
       amount
@@ -125,6 +129,7 @@ query GetVault($id: ID!) {
       id
       name
       depositLimit
+      cumulativeEarnings
       inputTokenBalance
       inputToken {
         id
@@ -183,5 +188,7 @@ query GetVault($id: ID!) {
     apr365d
     calculatedApr
     aprValues
+    withdrawableTotalAssets
+    withdrawableTotalAssetsUSD
   }
 }

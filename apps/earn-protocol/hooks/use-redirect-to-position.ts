@@ -29,7 +29,7 @@ export const useRedirectToPosition = ({
     replace(
       getVaultPositionUrl({
         network: vault.protocol.network,
-        vaultId: vault.id,
+        vaultId: vault.customFields?.slug ?? vault.id,
         walletAddress: user.address,
       }),
     )

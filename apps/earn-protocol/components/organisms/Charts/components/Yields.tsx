@@ -11,6 +11,8 @@ import {
   YAxis,
 } from 'recharts'
 
+import { formatChartPercentageValue } from '@/features/forecast/chart-formatters'
+
 type YieldsChartProps = {
   data: unknown[]
   dataNames: string[]
@@ -37,11 +39,13 @@ export const YieldsChart = ({ data, dataNames, colors }: YieldsChartProps) => {
               <stop offset="100%" stopColor="#333333" stopOpacity={0.4} />
             </linearGradient>
           </defs>
-
-          <XAxis dataKey="name" fontSize={12} interval={5} tickMargin={10} />
-          <YAxis strokeWidth={0} width={45} tickFormatter={(label: string) => `${label}%`} />
+          <XAxis dataKey="name" fontSize={12} interval={2} tickMargin={10} />
+          <YAxis
+            strokeWidth={0}
+            tickFormatter={(label: string) => `${formatChartPercentageValue(Number(label))}`}
+          />
           <Tooltip
-            formatter={(val) => `${Number(val).toFixed(2)}`}
+            formatter={(val) => `${formatChartPercentageValue(Number(val), true)}`}
             useTranslate3d
             contentStyle={{
               zIndex: 1000,
@@ -55,7 +59,7 @@ export const YieldsChart = ({ data, dataNames, colors }: YieldsChartProps) => {
             dataName === 'Summer Strategy' ? (
               <Area
                 key={dataName}
-                type="basis"
+                type="natural"
                 animationDuration={300}
                 animationBegin={dataIndex * 50}
                 animationEasing="ease-out"
@@ -68,11 +72,11 @@ export const YieldsChart = ({ data, dataNames, colors }: YieldsChartProps) => {
             ) : (
               <Line
                 key={dataName}
+                type="natural"
                 animationId={dataIndex}
                 animationDuration={300}
                 animationBegin={dataIndex * 50}
                 animationEasing="ease-out"
-                type="basis"
                 dataKey={dataName}
                 strokeDasharray="3 3"
                 stroke={colors[`${dataName}-color` as keyof typeof colors]}

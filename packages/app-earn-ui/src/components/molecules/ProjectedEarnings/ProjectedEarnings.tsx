@@ -20,7 +20,7 @@ export const ProjectedEarnings: FC<ProjectedEarningsProps> = ({
   after = '1 year',
 }) => {
   return (
-    <Card className={classNames.wrapper} variant="cardSecondary">
+    <Card className={classNames.wrapper} variant="cardPrimary">
       <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
         Estimated earnings after {after}
       </Text>

@@ -33,6 +33,28 @@
   }
 }
 
+.dark {
+  padding: var(--general-space-16) var(--general-space-16);
+  font-weight: 500;
+  font-size: 16px;
+  width: 100%;
+  color: var(--color-text-primary);
+  border: unset;
+  outline: none;
+  background: var(--earn-protocol-neutral-85);
+  text-align: left;
+  border-radius: var(--general-radius-8);
+
+  &:hover {
+    border-color: var(--color-neutral-70);
+  }
+
+  &::placeholder {
+    color: var(--earn-protocol-secondary-40);
+    opacity: 1;
+  }
+}
+
 .withBorder {
   border: 1.5px solid var(--earn-protocol-neutral-70);
   border-radius: var(--general-radius-50);

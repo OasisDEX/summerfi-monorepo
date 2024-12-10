@@ -1,4 +1,5 @@
 export type Styles = {
+  dark: string
   default: string
   iconWrapper: string
   withBorder: string

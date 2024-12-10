@@ -1,3 +1,4 @@
+import { getCookies } from '@/constants/get-cookies'
 import { transakProductionUrl } from '@/features/transak/consts'
 import { type TransakIpCountryCodeResponse } from '@/features/transak/types'
 
@@ -10,6 +11,13 @@ export const getTransakIpCountryCode = async (): Promise<
   TransakIpCountryCodeResponse | undefined
 > => {
   try {
+    const country = getCookies('country')
+
+    // If the country is already set in the cookies, return it
+    if (country) {
+      return { ipCountryCode: country }
+    }
+
     const options = { method: 'GET', headers: { accept: 'application/json' } }
 
     const response = await fetch(`${transakProductionUrl}/fiat/public/v1/get/country`, options)

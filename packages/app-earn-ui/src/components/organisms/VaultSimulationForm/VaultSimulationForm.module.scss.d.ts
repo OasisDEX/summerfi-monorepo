@@ -1,8 +1,6 @@
 export type Styles = {
-  slideButtonWrapper: string
-  slider: string
-  sliderDark: string
-  sliderLight: string
+  cardAnimateGradientBorder: string
+  rotate: string
 }
 
 export type ClassNames = keyof Styles

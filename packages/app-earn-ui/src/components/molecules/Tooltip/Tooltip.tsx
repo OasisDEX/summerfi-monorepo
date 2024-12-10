@@ -24,7 +24,9 @@ import { useMobileCheck } from '@/hooks/use-mobile-check'
 import { type ClassNames as CardVariants } from '@/components/atoms/Card/Card.module.scss'
 import tooltipStyles from '@/components/molecules/Tooltip/Tooltip.module.scss'
 
-export function useTooltip() {
+const generateUniqueId = () => `tooltip-${Math.random().toString(36).slice(2, 9)}`
+
+export function useTooltip(uniqueId: string) {
   const [tooltipOpen, setTooltipOpen] = useState(false)
 
   const closeHandler = useCallback(() => {
@@ -33,15 +35,32 @@ export function useTooltip() {
 
   useEffect(() => {
     if (tooltipOpen) {
-      document.addEventListener('click', closeHandler, { capture: true })
+      const handleOutsideClick = (e: MouseEvent) => {
+        // Prevent closing if click is within the tooltip
+        const tooltipElements = document.querySelectorAll(`[data-tooltip-id="${uniqueId}"]`)
+        const tooltipBtnElements = document.querySelectorAll(`[data-tooltip-btn-id="${uniqueId}"]`)
 
-      return () => document.removeEventListener('click', closeHandler)
+        const isClickInsideTooltip = Array.from(tooltipElements).some((el) =>
+          el.contains(e.target as Node),
+        )
+        const isClickInsideTooltipBtn = Array.from(tooltipBtnElements).some((el) =>
+          el.contains(e.target as Node),
+        )
+
+        if (!isClickInsideTooltip && !isClickInsideTooltipBtn) {
+          closeHandler()
+        }
+      }
+
+      document.addEventListener('click', handleOutsideClick, { capture: true })
+
+      return () => document.removeEventListener('click', handleOutsideClick)
     }
 
     return () => null
-  }, [tooltipOpen, closeHandler])
+  }, [tooltipOpen, closeHandler, uniqueId])
 
-  return { tooltipOpen, setTooltipOpen }
+  return { tooltipOpen, setTooltipOpen, closeHandler }
 }
 
 interface TooltipWrapperProps extends HTMLAttributes<HTMLDivElement> {
@@ -49,6 +68,7 @@ interface TooltipWrapperProps extends HTMLAttributes<HTMLDivElement> {
   isOpen: boolean
   showAbove: boolean
   cardVariant?: CardVariants
+  generatedId: string
 }
 
 const TooltipWrapper: FC<TooltipWrapperProps> = ({
@@ -57,9 +77,11 @@ const TooltipWrapper: FC<TooltipWrapperProps> = ({
   style,
   showAbove,
   cardVariant = 'cardSecondary',
+  generatedId,
 }) => {
   return (
     <div
+      data-tooltip-id={generatedId}
       className={
         isOpen
           ? showAbove
@@ -69,28 +91,39 @@ const TooltipWrapper: FC<TooltipWrapperProps> = ({
       }
       style={style}
     >
-      <Card variant={cardVariant} style={{ backgroundColor: 'var(--earn-protocol-neutral-80)' }}>
+      <Card
+        variant={cardVariant}
+        style={{
+          backgroundColor: 'var(--earn-protocol-neutral-80)',
+          boxShadow: '0px 0px 8px 0px rgba(0, 0, 0, 0.1)',
+        }}
+      >
         {children}
       </Card>
     </div>
   )
 }
 
-type ChildrenCallback = (tooltipOpen: boolean) => ReactNode
+type ChildrenCallback = (tooltipOpen: boolean, setTooltipOpen: (flag: boolean) => void) => ReactNode
 
 interface StatefulTooltipProps {
-  tooltip: ReactNode
+  tooltip: ReactNode | ChildrenCallback
   children: ReactNode | ChildrenCallback
   tooltipWrapperStyles?: HTMLAttributes<HTMLDivElement>['style']
   tooltipCardVariant?: CardVariants
   style?: HTMLAttributes<HTMLDivElement>['style']
   showAbove?: boolean
   triggerOnClick?: boolean
+  persistWhenOpened?: boolean
   withinDialog?: boolean
+  tooltipId?: string
 }
 
 const childrenTypeGuard = (children: ReactNode | ChildrenCallback): children is ReactNode =>
   isValidElement(children)
+
+const tooltipTypeGuard = (tooltip: ReactNode | ChildrenCallback): tooltip is ReactNode =>
+  typeof tooltip === 'string' ? true : isValidElement(tooltip)
 
 export const Tooltip: FC<StatefulTooltipProps> = ({
   tooltip,
@@ -100,19 +133,32 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
   tooltipCardVariant,
   showAbove = false,
   triggerOnClick = false,
+  persistWhenOpened = false,
   withinDialog,
+  tooltipId,
 }) => {
-  const { tooltipOpen, setTooltipOpen } = useTooltip()
+  const generatedId = useRef(tooltipId ?? generateUniqueId()).current
+
+  const { tooltipOpen, setTooltipOpen, closeHandler } = useTooltip(generatedId)
   const [portalElement, setPortalElement] = useState<HTMLElement | null>()
   const tooltipRef = useRef<HTMLDivElement | null>(null)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
   const { isMobile } = useMobileCheck()
 
+  const handleTooltipOpenState = (flag: boolean) => {
+    closeHandler()
+    setTooltipOpen(flag)
+  }
+
   const tooltipRefRect = tooltipRef.current?.getBoundingClientRect()
   const dialogRect = tooltipRef.current?.closest('dialog')?.getBoundingClientRect()
 
   useEffect(() => {
-    const portalId = withinDialog ? 'modal-portal' : 'portal'
+    const portalId = persistWhenOpened
+      ? 'portal-dropdown'
+      : withinDialog
+        ? 'modal-portal'
+        : 'portal'
     const element = document.getElementById(portalId)
 
     if (!element) {
@@ -147,7 +193,11 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
 
   const handleClick = useCallback(() => {
     if (triggerOnClick) {
-      setTooltipOpen(true)
+      setTooltipOpen((prev) => !prev)
+
+      if (persistWhenOpened) {
+        return
+      }
 
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
@@ -159,7 +209,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
     } else {
       setTooltipOpen(true)
     }
-  }, [triggerOnClick])
+  }, [triggerOnClick, persistWhenOpened, setTooltipOpen])
 
   useEffect(() => {
     return () => {
@@ -170,7 +220,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
   }, [])
 
   if (!portalElement) {
-    return childrenTypeGuard(children) ? children : children(tooltipOpen)
+    return childrenTypeGuard(children) ? children : children(tooltipOpen, handleTooltipOpenState)
   }
 
   const portal = createPortal(
@@ -179,17 +229,18 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
       style={tooltipWrapperStyles}
       showAbove={showAbove}
       cardVariant={tooltipCardVariant}
+      generatedId={generatedId}
     >
-      {tooltip}
+      {tooltipTypeGuard(tooltip) ? tooltip : tooltip(tooltipOpen, handleTooltipOpenState)}
     </TooltipWrapper>,
     portalElement,
+    tooltipId,
   )
 
   return (
     <div
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onClick={handleClick}
       ref={tooltipRef}
       className={tooltipStyles.tooltipWrapper}
       style={style}
@@ -204,14 +255,18 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
           style={{ backgroundColor: 'unset' }}
         >
           <MobileDrawerDefaultWrapper>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>{tooltip}</div>
+            <div style={{ display: 'flex', flexDirection: 'column' }} data-tooltip-id={generatedId}>
+              {tooltipTypeGuard(tooltip) ? tooltip : tooltip(tooltipOpen, handleTooltipOpenState)}
+            </div>
           </MobileDrawerDefaultWrapper>
         </MobileDrawer>
       ) : (
         portal
       )}
 
-      {childrenTypeGuard(children) ? children : children(tooltipOpen)}
+      <div onClick={handleClick} data-tooltip-btn-id={generatedId}>
+        {childrenTypeGuard(children) ? children : children(tooltipOpen, handleTooltipOpenState)}
+      </div>
     </div>
   )
 }

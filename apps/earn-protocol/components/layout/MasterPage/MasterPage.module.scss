@@ -3,15 +3,20 @@
   height: 100%;
 }
 
-.backgroundSimple {
+.backgroundContainer {
   position: absolute;
   top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1440px;
   max-width: none;
   pointer-events: none;
+  z-index: 0;
 }
 
 .appContainer {
   position: relative;
+  z-index: 1;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
