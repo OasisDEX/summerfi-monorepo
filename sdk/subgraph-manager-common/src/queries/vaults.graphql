@@ -18,6 +18,7 @@ query GetVaults {
     arks {
       id
       name
+      details
       inputToken {
         id
         name
@@ -128,6 +129,7 @@ query GetVault($id: ID!) {
     arks {
       id
       name
+      details
       depositLimit
       cumulativeEarnings
       inputTokenBalance
