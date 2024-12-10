@@ -46,5 +46,6 @@ export async function sendAndLogTransactions(params: {
     statuses.push(receipt.status)
   }
 
+  console.log('Statuses ready', statuses)
   return { statuses }
 }

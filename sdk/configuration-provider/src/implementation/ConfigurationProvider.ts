@@ -14,8 +14,10 @@ export class ConfigurationProvider implements IConfigurationProvider {
   }
 
   public getConfigurationItem<ReturnType = ConfigItem>(params: { name: ConfigKey }): ReturnType {
-    if (!this._config[params.name]) {
-      throw new Error(`Missing env variable: ${params.name}. Please add it to stack configuration.`)
+    if (this._config[params.name] == null) {
+      throw new Error(
+        `Missing env variable: ${params.name}. Please add it to the stack configuration.`,
+      )
     }
     return this._config[params.name] as ReturnType
   }

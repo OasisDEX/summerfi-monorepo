@@ -16,6 +16,7 @@ export async function prepareData(
 
   const chain = await sdk.chains.getChain({ chainInfo })
   const token = await chain.tokens.getTokenBySymbol({ symbol })
+  const swapToken = await chain.tokens.getTokenBySymbol({ symbol: 'DAI' })
 
-  return { chain, token, user }
+  return { chain, token, swapToken, user }
 }

@@ -6330,18 +6330,22 @@ export type Vault = {
   /**  Price per share of output token in USD  */
   outputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   /**  Total supply of output token  */
-  outputTokenSupply?: Maybe<Scalars['BigInt']['output']>;
+  outputTokenSupply: Scalars['BigInt']['output'];
   /**  Amount of input token per full share of output token. Usually corresponds to the value of `pricePerShare` or `pricePerFullShare` in the vault contract.  */
   pricePerShare?: Maybe<Scalars['BigDecimal']['output']>;
   /**  The protocol this vault belongs to  */
   protocol: YieldAggregator;
   rebalances: Array<Rebalance>;
   /**  Per-block reward token emission as of the current block normalized to a day, in token's native amount. This should be ideally calculated as the theoretical rate instead of the realized amount.  */
-  rewardTokenEmissionsAmount?: Maybe<Array<Scalars['BigInt']['output']>>;
+  rewardTokenEmissionsAmount: Array<Scalars['BigInt']['output']>;
+  /**  Per-block reward token emission as of the current block normalized to a day, in token's native amount. This should be ideally calculated as the theoretical rate instead of the realized amount.  */
+  rewardTokenEmissionsAmountsPerOutputToken: Array<Scalars['BigInt']['output']>;
+  /**  Duration of the reward token emission in seconds  */
+  rewardTokenEmissionsFinish: Array<Scalars['BigInt']['output']>;
   /**  Per-block reward token emission as of the current block normalized to a day, in USD value. This should be ideally calculated as the theoretical rate instead of the realized amount.  */
   rewardTokenEmissionsUSD?: Maybe<Array<Scalars['BigDecimal']['output']>>;
   /**  Aditional tokens that are given as reward for position in a protocol, usually in liquidity mining programs. e.g. SUSHI in the Onsen program, MATIC for Aave Polygon  */
-  rewardTokens?: Maybe<Array<RewardToken>>;
+  rewardTokens: Array<RewardToken>;
   rewardsManager: RewardsManager;
   /**  Total supply of output tokens that are staked (usually in the MasterChef contract). Used to calculate reward APY.  */
   stakedOutputTokenAmount?: Maybe<Scalars['BigInt']['output']>;
@@ -7457,6 +7461,18 @@ export type Vault_Filter = {
   rewardTokenEmissionsAmount_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  rewardTokenEmissionsAmountsPerOutputToken?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  rewardTokenEmissionsAmountsPerOutputToken_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  rewardTokenEmissionsAmountsPerOutputToken_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  rewardTokenEmissionsAmountsPerOutputToken_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  rewardTokenEmissionsAmountsPerOutputToken_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  rewardTokenEmissionsAmountsPerOutputToken_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  rewardTokenEmissionsFinish?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  rewardTokenEmissionsFinish_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  rewardTokenEmissionsFinish_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  rewardTokenEmissionsFinish_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  rewardTokenEmissionsFinish_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  rewardTokenEmissionsFinish_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsUSD?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
@@ -7604,6 +7620,8 @@ export enum Vault_OrderBy {
   ProtocolType = 'protocol__type',
   Rebalances = 'rebalances',
   RewardTokenEmissionsAmount = 'rewardTokenEmissionsAmount',
+  RewardTokenEmissionsAmountsPerOutputToken = 'rewardTokenEmissionsAmountsPerOutputToken',
+  RewardTokenEmissionsFinish = 'rewardTokenEmissionsFinish',
   RewardTokenEmissionsUsd = 'rewardTokenEmissionsUSD',
   RewardTokens = 'rewardTokens',
   RewardsManager = 'rewardsManager',

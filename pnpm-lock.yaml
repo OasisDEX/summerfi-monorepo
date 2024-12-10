@@ -2149,6 +2149,12 @@ importers:
       '@summerfi/subgraph-manager-service':
         specifier: workspace:*
         version: link:../subgraph-manager-service
+      '@summerfi/swap-common':
+        specifier: workspace:*
+        version: link:../swap-common
+      '@summerfi/swap-service':
+        specifier: workspace:*
+        version: link:../swap-service
       '@types/node-fetch':
         specifier: ^2.6.11
         version: 2.6.11

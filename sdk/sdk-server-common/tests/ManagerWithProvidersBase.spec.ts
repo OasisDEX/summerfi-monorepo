@@ -63,6 +63,6 @@ describe('SDK Server Common | Unit | ManagerProviderBase', () => {
       testManager.getBestProvider({
         chainInfo: ChainFamilyMap.Arbitrum.ArbitrumOne,
       }),
-    ).toThrow('No provider found for chain: ArbitrumOne')
+    ).toThrow('No provider found for chainId: 42161')
   })
 })

@@ -9,6 +9,7 @@ import {
   getRpcGatewayEndpoint,
 } from '@summerfi/serverless-shared/getRpcGatewayEndpoint'
 import { assert } from 'console'
+import { getForkUrl } from './getForkUrl'
 
 /**
  * RPC configuration for the RPC Gateway
@@ -79,11 +80,16 @@ export class BlockchainClientProvider implements IBlockchainClientProvider {
   private _loadClients(chains: Chain[]) {
     for (const chain of chains) {
       const rpcGatewayUrl = this._configProvider.getConfigurationItem({ name: 'RPC_GATEWAY' })
+      const useFork = this._configProvider.getConfigurationItem({ name: 'SDK_USE_FORK' })
+      const forkConfig = this._configProvider.getConfigurationItem({ name: 'SDK_FORK_CONFIG' })
       if (!rpcGatewayUrl) {
         throw new Error('RPC_GATEWAY not found')
       }
 
-      const rpc = getRpcGatewayEndpoint(rpcGatewayUrl, chain.id, rpcConfig)
+      const rpc =
+        useFork === 'true'
+          ? getForkUrl(forkConfig, chain.id)
+          : getRpcGatewayEndpoint(rpcGatewayUrl, chain.id, rpcConfig)
       const transport = http(rpc, {
         batch: true,
         fetchOptions: {

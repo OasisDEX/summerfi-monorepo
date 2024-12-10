@@ -17,7 +17,13 @@ import {
   type TransactionInfoLabeled,
 } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId, ten, zero } from '@summerfi/app-utils'
-import { Address, getChainInfoByChainId, type TransactionInfo } from '@summerfi/sdk-client-react'
+import {
+  Address,
+  getChainInfoByChainId,
+  type IToken,
+  TokenAmount,
+  type TransactionInfo,
+} from '@summerfi/sdk-client-react'
 import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 import { useRouter } from 'next/navigation'
@@ -34,6 +40,7 @@ type UseTransactionParams = {
   vault: SDKVaultishType
   amount: BigNumber | undefined
   manualSetAmount: (amount: string | undefined) => void
+  token?: IToken
   tokenBalance: BigNumber | undefined
   tokenBalanceLoading: boolean
   publicClient?: ReturnType<typeof useClient>['publicClient']
@@ -53,6 +60,7 @@ export const useTransaction = ({
   manualSetAmount,
   amount,
   publicClient,
+  token,
   tokenBalance,
   tokenBalanceLoading,
   flow,
@@ -211,7 +219,7 @@ export const useTransaction = ({
   )
 
   const getTransactionsList = useCallback(async () => {
-    if (amount && user) {
+    if (token && amount && user) {
       setTxStatus('loadingTx')
       try {
         const transactionsList: TransactionInfo[] = await {
@@ -221,10 +229,14 @@ export const useTransaction = ({
           walletAddress: Address.createFromEthereum({
             value: user.address,
           }),
-          amount: amount.toString(),
+          amount: TokenAmount.createFrom({
+            token,
+            amount: amount.toString(),
+          }),
           fleetAddress: vault.id,
-          // incorrect chainInfo
           chainInfo: getChainInfoByChainId(vaultChainId),
+          // TODO: we should update slippage once it'll be configurable from the wallet dropdown menu
+          slippage: 0.01, // 1%
         })
 
         if (transactionsList.length === 0) {
@@ -241,6 +253,7 @@ export const useTransaction = ({
       }
     }
   }, [
+    token,
     amount,
     user,
     setTxStatus,

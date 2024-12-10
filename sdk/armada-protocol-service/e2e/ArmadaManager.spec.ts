@@ -7,6 +7,7 @@ import {
   ChainFamilyMap,
   ChainInfo,
   IUser,
+  Percentage,
   PositionType,
   Token,
   TokenAmount,
@@ -14,6 +15,7 @@ import {
   Wallet,
 } from '@summerfi/sdk-common'
 import { SubgraphManagerFactory } from '@summerfi/subgraph-manager-service'
+import { SwapManagerFactory } from '@summerfi/swap-service'
 import {
   decodeFleetDepositCalldata,
   decodeFleetWithdrawCalldata,
@@ -22,7 +24,6 @@ import { ArmadaPositionId } from '../src'
 import { ArmadaManager } from '../src/common/implementation/ArmadaManager'
 import { ArmadaManagerFactory } from '../src/common/implementation/ArmadaManagerFactory'
 import { ArmadaVaultId } from '../src/common/implementation/ArmadaVaultId'
-import { ArmadaProtocol } from '../src/common/implementation/ArmadaProtocol'
 
 describe('Armada Protocol Service', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Base.Base
@@ -36,7 +37,6 @@ describe('Armada Protocol Service', () => {
     }),
   })
 
-  const protocol = ArmadaProtocol.createFrom({ chainInfo })
   const fleetAddress = Address.createFromEthereum({
     value: '0xa09E82322f351154a155f9e0f9e6ddbc8791C794', // FleetCommander on Base
   })
@@ -54,10 +54,9 @@ describe('Armada Protocol Service', () => {
     amount: '123.45',
   })
 
-  const poolId = ArmadaVaultId.createFrom({
+  const vaultId = ArmadaVaultId.createFrom({
     chainInfo,
     fleetAddress,
-    protocol,
   })
 
   const positionId = ArmadaPositionId.createFrom({
@@ -79,6 +78,7 @@ describe('Armada Protocol Service', () => {
     const subgraphManager = SubgraphManagerFactory.newArmadaSubgraph({
       configProvider,
     })
+    const swapManager = SwapManagerFactory.newSwapManager({ configProvider })
 
     const allowanceManager = {
       getApproval: jest.fn().mockReturnValue([]),
@@ -88,14 +88,17 @@ describe('Armada Protocol Service', () => {
       allowanceManager,
       contractsProvider,
       subgraphManager,
+      blockchainClientProvider,
+      swapManager,
     })
   })
 
   it('should return new deposit transaction correctly', async () => {
     const transactionInfo = await armadaManager.getNewDepositTX({
-      poolId,
+      vaultId,
       user,
       assets: tokenAmount,
+      slippage: Percentage.createFrom({ value: 0.01 }),
     })
 
     expect(transactionInfo.length).toBe(1)
@@ -113,7 +116,7 @@ describe('Armada Protocol Service', () => {
 
   it('should return update deposit transaction correctly', async () => {
     const transactionInfo = await armadaManager.getUpdateDepositTX({
-      poolId,
+      vaultId,
       positionId,
       assets: tokenAmount,
     })
@@ -133,7 +136,7 @@ describe('Armada Protocol Service', () => {
 
   it('should return withdraw transaction correctly', async () => {
     const transactionInfo = await armadaManager.getWithdrawTX({
-      poolId,
+      vaultId: vaultId,
       user,
       assets: tokenAmount,
     })
@@ -164,7 +167,6 @@ describe('Armada Protocol Service', () => {
       }),
     })
 
-    const protocol = ArmadaProtocol.createFrom({ chainInfo })
     const fleetAddress = Address.createFromEthereum({
       value: '0x75d4f7cb1b2481385e0878c639f6f6d66592d399', // FleetCommander on Base
     })
@@ -187,7 +189,6 @@ describe('Armada Protocol Service', () => {
     const poolId = ArmadaVaultId.createFrom({
       chainInfo,
       fleetAddress,
-      protocol,
     })
 
     const positionId = ArmadaPositionId.createFrom({
@@ -200,7 +201,7 @@ describe('Armada Protocol Service', () => {
     expect(positions[0].id).toStrictEqual(positionId)
     expect(positions[0].type).toBe(PositionType.Armada)
     expect(positions[0].amount).toStrictEqual(tokenAmount)
-    expect(positions[0].vault.id).toStrictEqual(poolId)
+    expect(positions[0].pool.id).toStrictEqual(poolId)
     expect(positions[0].shares).toBeDefined()
   })
 })

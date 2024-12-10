@@ -692,5 +692,13 @@ export const StaticTokensData: TokenListData = {
       decimals: 18,
       logoURI: '',
     },
+    {
+      chainId: 8453,
+      symbol: 'USDbC',
+      name: 'Bridged USDC (Base)',
+      address: '0xd9aaec86b65d86f6a7b5b1b0c42ffa531710b6ca',
+      decimals: 6,
+      logoURI: '',
+    },
   ],
 }

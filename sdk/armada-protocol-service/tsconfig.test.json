@@ -27,7 +27,8 @@
       "@summerfi/subgraph-manager-service": [
         "node_modules/@summerfi/subgraph-manager-service/src/index.ts"
       ],
-      "@summerfi/sdk-server-common": ["node_modules/@summerfi/sdk-server-common/src/index.ts"]
+      "@summerfi/sdk-server-common": ["node_modules/@summerfi/sdk-server-common/src/index.ts"],
+      "@summerfi/swap-common/*": ["node_modules/@summerfi/swap-common/src/*"]
     }
   },
   "include": ["src/**/*.ts", "tests/**/*.ts", "e2e/**/*.ts", "src/**/*.json"],

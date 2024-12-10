@@ -15,6 +15,7 @@ export type OneInchSwapProviderConfig = {
 export interface OneInchBaseResponse {
   fromTokenAmount: string
   toTokenAmount: string
+  dstAmount: string
 }
 
 export interface OneInchSwapResponse extends OneInchBaseResponse {

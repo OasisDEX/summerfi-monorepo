@@ -19,6 +19,8 @@ import {
   TokenAmount,
   TransactionInfo,
   type HexData,
+  type IPercentage,
+  type IToken,
 } from '@summerfi/sdk-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { encodeFunctionData } from 'viem'
@@ -28,6 +30,8 @@ import { ArmadaPosition } from './ArmadaPosition'
 import { parseGetUserPositionQuery } from './extensions/parseGetUserPositionQuery'
 import { parseGetUserPositionsQuery } from './extensions/parseGetUserPositionsQuery'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
+import type { ISwapManager } from '@summerfi/swap-common'
+import BigNumber from 'bignumber.js'
 
 /**
  * @name ArmadaManager
@@ -39,6 +43,7 @@ export class ArmadaManager implements IArmadaManager {
   private _contractsProvider: IContractsProvider
   private _subgraphManager: IArmadaSubgraphManager
   private _blockchainClientProvider: IBlockchainClientProvider
+  private _swapManager: ISwapManager
 
   /** CONSTRUCTOR */
   constructor(params: {
@@ -47,12 +52,14 @@ export class ArmadaManager implements IArmadaManager {
     contractsProvider: IContractsProvider
     subgraphManager: IArmadaSubgraphManager
     blockchainClientProvider: IBlockchainClientProvider
+    swapManager: ISwapManager
   }) {
     this._configProvider = params.configProvider
     this._allowanceManager = params.allowanceManager
     this._contractsProvider = params.contractsProvider
     this._subgraphManager = params.subgraphManager
     this._blockchainClientProvider = params.blockchainClientProvider
+    this._swapManager = params.swapManager
   }
 
   /** POOLS */
@@ -167,7 +174,9 @@ export class ArmadaManager implements IArmadaManager {
     })
   }
 
-  async getFleetShares(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount> {
+  async getFleetShares(
+    params: Parameters<IArmadaManager['getFleetShares']>[0],
+  ): Promise<ITokenAmount> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.vaultId.chainInfo,
       address: params.vaultId.fleetAddress,
@@ -179,7 +188,9 @@ export class ArmadaManager implements IArmadaManager {
     return shares
   }
 
-  async getStakedShares(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount> {
+  async getStakedShares(
+    params: Parameters<IArmadaManager['getStakedShares']>[0],
+  ): Promise<ITokenAmount> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.vaultId.chainInfo,
       address: params.vaultId.fleetAddress,
@@ -267,6 +278,7 @@ export class ArmadaManager implements IArmadaManager {
       user: params.positionId.user,
       assets: params.assets,
       shouldStake: params.shouldStake,
+      slippage: params.slippage,
     })
   }
 
@@ -624,6 +636,7 @@ export class ArmadaManager implements IArmadaManager {
     vaultId: IArmadaVaultId
     user: IUser
     assets: ITokenAmount
+    slippage: IPercentage
     shouldStake?: boolean
   }): Promise<TransactionInfo[]> {
     const transactions: TransactionInfo[] = []
@@ -658,6 +671,25 @@ export class ArmadaManager implements IArmadaManager {
     })
     multicallArgs.push(depositTokensCalldata)
 
+    const fleetCommander = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+    const fleetToken = await fleetCommander.asErc4626().asset()
+    let enterFleetAssets = params.assets
+    // If depositing a token that is not the fleet token, we need to swap it
+    // and then deposit the received fleet token amount
+    if (!params.assets.token.address.equals(fleetToken.address)) {
+      const swapData = await this._getSwapData({
+        vaultId: params.vaultId,
+        fromAmount: params.assets,
+        toToken: fleetToken,
+        slippage: params.slippage,
+      })
+      multicallArgs.push(swapData.calldata)
+      enterFleetAssets = swapData.toAmount
+    }
+
     // when staking admirals quarters will receive LV tokens, otherwise the user
     const lvTokenReceiver = shouldStake
       ? admiralsQuarterAddress.value
@@ -666,12 +698,7 @@ export class ArmadaManager implements IArmadaManager {
     const enterFleetCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'enterFleet',
-      args: [
-        params.vaultId.fleetAddress.value,
-        params.assets.token.address.value,
-        params.assets.toSolidityValue(),
-        lvTokenReceiver,
-      ],
+      args: [params.vaultId.fleetAddress.value, fleetToken.address.value, 0n, lvTokenReceiver],
     })
     multicallArgs.push(enterFleetCalldata)
 
@@ -706,7 +733,7 @@ export class ArmadaManager implements IArmadaManager {
    *
    * @returns The transactions needed to withdraw the tokens
    */
-  async _getWithdrawData(params: {
+  private async _getWithdrawData(params: {
     vaultId: IArmadaVaultId
     assets: ITokenAmount
   }): Promise<HexData[]> {
@@ -735,7 +762,7 @@ export class ArmadaManager implements IArmadaManager {
    *
    * @returns The transactions needed to withdraw+unstake the tokens
    */
-  async _getUnstakeAndWithdrawData(params: {
+  private async _getUnstakeAndWithdrawData(params: {
     vaultId: IArmadaVaultId
     shares: ITokenAmount
   }): Promise<HexData[]> {
@@ -757,7 +784,7 @@ export class ArmadaManager implements IArmadaManager {
    *
    * @returns The transactions needed to withdraw+unstake the tokens
    */
-  async _getUnstakeTx(params: {
+  private async _getUnstakeTx(params: {
     vaultId: IArmadaVaultId
     shares: ITokenAmount
   }): Promise<TransactionInfo> {
@@ -780,7 +807,7 @@ export class ArmadaManager implements IArmadaManager {
     })
   }
 
-  async _previewWithdraw(params: { vaultId: IArmadaVaultId; assets: ITokenAmount }) {
+  private async _previewWithdraw(params: { vaultId: IArmadaVaultId; assets: ITokenAmount }) {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.vaultId.chainInfo,
       address: params.vaultId.fleetAddress,
@@ -788,11 +815,71 @@ export class ArmadaManager implements IArmadaManager {
     return await fleetContract.asErc4626().previewWithdraw({ assets: params.assets })
   }
 
-  async _previewDeposit(params: { vaultId: IArmadaVaultId; assets: ITokenAmount }) {
+  private async _previewDeposit(params: { vaultId: IArmadaVaultId; assets: ITokenAmount }) {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.vaultId.chainInfo,
       address: params.vaultId.fleetAddress,
     })
     return await fleetContract.asErc4626().previewDeposit({ assets: params.assets })
+  }
+
+  private async _getSwapData(params: {
+    vaultId: IArmadaVaultId
+    fromAmount: ITokenAmount
+    toToken: IToken
+    slippage: IPercentage
+  }): Promise<{
+    calldata: HexData
+    toAmount: ITokenAmount
+  }> {
+    // get the admirals quarters address
+    const admiralsQuarterAddress = getDeployedContractAddress({
+      chainInfo: params.vaultId.chainInfo,
+      contractCategory: 'core',
+      contractName: 'admiralsQuarters',
+    })
+
+    // get swapdata from the 1inch swap api
+    const swapData = await this._swapManager.getSwapDataExactInput({
+      fromAmount: params.fromAmount,
+      toToken: params.toToken,
+      recipient: admiralsQuarterAddress,
+      slippage: params.slippage,
+    })
+
+    const reverseSlippage = 1 - params.slippage.value
+    const minTokensReceived = BigInt(
+      new BigNumber(swapData.toTokenAmount.toSolidityValue().toString())
+        .times(reverseSlippage)
+        .toFixed(0, BigNumber.ROUND_DOWN),
+    )
+
+    LoggingService.debug('getSwapData', {
+      fromAmount: swapData.fromTokenAmount.toString(),
+      toAmount: swapData.toTokenAmount.toString(),
+      reverseSlippage: reverseSlippage.toString(),
+      minTokensReceived: minTokensReceived.toString(),
+    })
+
+    // prepare calldata
+    const swapArgs = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'swap',
+      args: [
+        params.fromAmount.token.address.value, // from token
+        params.toToken.address.value, // to token
+        params.fromAmount.toSolidityValue(), // from amount
+        minTokensReceived, // min to amount
+        swapData.calldata,
+      ],
+    })
+
+    return {
+      calldata: swapArgs,
+      toAmount: TokenAmount.createFromBaseUnit({
+        token: params.toToken,
+        amount: minTokensReceived.toString(),
+      }),
+    }
   }
 }
