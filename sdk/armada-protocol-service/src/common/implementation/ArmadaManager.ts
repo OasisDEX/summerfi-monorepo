@@ -676,7 +676,9 @@ export class ArmadaManager implements IArmadaManager {
       address: params.vaultId.fleetAddress,
     })
     const fleetToken = await fleetCommander.asErc4626().asset()
+    let enterFleetAssets = params.assets
     // If depositing a token that is not the fleet token, we need to swap it
+    // and then deposit the received fleet token amount
     if (!params.assets.token.address.equals(fleetToken.address)) {
       const swapData = await this._getSwapData({
         vaultId: params.vaultId,
@@ -684,7 +686,8 @@ export class ArmadaManager implements IArmadaManager {
         toToken: fleetToken,
         slippage: params.slippage,
       })
-      multicallArgs.push(swapData)
+      multicallArgs.push(swapData.calldata)
+      enterFleetAssets = swapData.toAmount
     }
 
     // when staking admirals quarters will receive LV tokens, otherwise the user
@@ -695,12 +698,7 @@ export class ArmadaManager implements IArmadaManager {
     const enterFleetCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'enterFleet',
-      args: [
-        params.vaultId.fleetAddress.value,
-        params.assets.token.address.value,
-        params.assets.toSolidityValue(),
-        lvTokenReceiver,
-      ],
+      args: [params.vaultId.fleetAddress.value, fleetToken.address.value, 0n, lvTokenReceiver],
     })
     multicallArgs.push(enterFleetCalldata)
 
@@ -830,7 +828,10 @@ export class ArmadaManager implements IArmadaManager {
     fromAmount: ITokenAmount
     toToken: IToken
     slippage: IPercentage
-  }): Promise<HexData> {
+  }): Promise<{
+    calldata: HexData
+    toAmount: ITokenAmount
+  }> {
     // get the admirals quarters address
     const admiralsQuarterAddress = getDeployedContractAddress({
       chainInfo: params.vaultId.chainInfo,
@@ -865,14 +866,20 @@ export class ArmadaManager implements IArmadaManager {
       abi: AdmiralsQuartersAbi,
       functionName: 'swap',
       args: [
-        params.fromAmount.token.address.value,
-        params.toToken.address.value,
-        params.fromAmount.toSolidityValue(),
-        minTokensReceived,
+        params.fromAmount.token.address.value, // from token
+        params.toToken.address.value, // to token
+        params.fromAmount.toSolidityValue(), // from amount
+        minTokensReceived, // min to amount
         swapData.calldata,
       ],
     })
 
-    return swapArgs
+    return {
+      calldata: swapArgs,
+      toAmount: TokenAmount.createFromBaseUnit({
+        token: params.toToken,
+        amount: minTokensReceived.toString(),
+      }),
+    }
   }
 }

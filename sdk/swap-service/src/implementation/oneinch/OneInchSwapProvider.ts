@@ -214,7 +214,7 @@ export class OneInchSwapProvider
         ? '&protocols=' + this._allowedSwapProtocols.join(',')
         : ''
 
-    return `${this._apiUrl}/swap/${this._version}/${chainId}/swap?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&fromAddress=${recipient}&slippage=${params.slippage.value}&disableEstimate=${disableEstimate}&allowPartialFill=${allowPartialFill}${protocolsParam}`
+    return `${this._apiUrl}/swap/${this._version}/${chainId}/swap?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&fromAddress=${recipient}&slippage=${params.slippage.value * 100}&disableEstimate=${disableEstimate}&allowPartialFill=${allowPartialFill}${protocolsParam}`
   }
 
   /**

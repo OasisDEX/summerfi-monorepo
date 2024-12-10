@@ -122,8 +122,8 @@ describe('Armada Protocol Deposit', () => {
         expect(stakedAmountAfter.shares.toSolidityValue()).toBeGreaterThan(
           stakedAmountBefore.shares.toSolidityValue(),
         )
-        expect(stakedAmountAfter.assets.subtract(stakedAmountBefore.assets).amount).toEqual(
-          '0.999999',
+        expect(stakedAmountAfter.assets.subtract(stakedAmountBefore.assets).amount).toBeGreaterThan(
+          0.999999,
         )
       })
     })
@@ -186,9 +186,9 @@ describe('Armada Protocol Deposit', () => {
         expect(stakedAmountAfter.shares.toSolidityValue()).toBeGreaterThan(
           stakedAmountBefore.shares.toSolidityValue(),
         )
-        expect(stakedAmountAfter.assets.subtract(stakedAmountBefore.assets).amount).toEqual(
-          '0.999999',
-        )
+        expect(
+          Number(stakedAmountAfter.assets.subtract(stakedAmountBefore.assets).amount),
+        ).toBeGreaterThan(0.99)
       })
     })
 
