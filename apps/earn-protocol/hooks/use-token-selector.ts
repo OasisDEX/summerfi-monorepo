@@ -32,9 +32,15 @@ export const useTokenSelector = ({ vault }: UseAmountProps) => {
     }
   })
 
-  const [selectedTokenOption, setSelectedTokenOption] = useState(
-    tokenOptions.find((option) => option.value === vault.inputToken.symbol) ?? tokenOptions[0],
-  )
+  const [selectedTokenOption, setSelectedTokenOption] = useState(() => {
+    if (tokenOptions.length === 0) {
+      throw new Error('No token options available')
+    }
+
+    return (
+      tokenOptions.find((option) => option.value === vault.inputToken.symbol) ?? tokenOptions[0]
+    )
+  })
   const handleTokenSelectionChange = (option: DropdownRawOption) => {
     const value = tokenOptions.find((opt) => opt.value === option.value) ?? tokenOptions[0]
 
