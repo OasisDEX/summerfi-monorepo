@@ -1,3 +1,5 @@
+import type { ITokenAmount } from '@summerfi/sdk-common'
+
 import { useAppSDK } from './use-app-sdk'
 
 export const useDepositTX = () => {
@@ -5,12 +7,12 @@ export const useDepositTX = () => {
 
   return ({
     fleetAddress,
-    amountString,
+    amount,
     slippage,
     shouldStake,
   }: {
     fleetAddress: string
-    amountString: string
+    amount: ITokenAmount
     slippage: number
     shouldStake?: boolean
   }) => {
@@ -18,7 +20,7 @@ export const useDepositTX = () => {
       chainInfo: getChainInfo(),
       walletAddress: getWalletAddress(),
       fleetAddress,
-      amount: amountString,
+      amount,
       slippage,
       shouldStake,
     })

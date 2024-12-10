@@ -64,13 +64,13 @@ describe('Armada Protocol Deposit', () => {
       user = data.user
     })
 
-    describe.skip(`Deposit with stake on ${chainInfo.name}`, () => {
-      it(`should approve and deposit 1 USDC (with stake) to fleet at ${fleetAddress.value}`, async () => {
+    describe.skip(`Deposit on ${chainInfo.name}`, () => {
+      it(`should deposit 1 USDC (with stake) to fleet at ${fleetAddress.value}`, async () => {
         const amount = '1'
         const transactions = await sdk.armada.users.getNewDepositTX({
           vaultId,
           user,
-          assets: TokenAmount.createFrom({
+          amount: TokenAmount.createFrom({
             amount,
             token,
           }),
@@ -79,7 +79,7 @@ describe('Armada Protocol Deposit', () => {
           }),
         })
 
-        const tokenAmountBefore = await sdk.armada.users.getFleetBalance({
+        const fleetAmountBefore = await sdk.armada.users.getFleetBalance({
           vaultId,
           user,
         })
@@ -89,7 +89,7 @@ describe('Armada Protocol Deposit', () => {
         })
         console.log(
           'before',
-          tokenAmountBefore.shares.toSolidityValue(),
+          fleetAmountBefore.shares.toSolidityValue(),
           stakedAmountBefore.shares.toSolidityValue(),
         )
         const { statuses } = await sendAndLogTransactions({
@@ -103,7 +103,7 @@ describe('Armada Protocol Deposit', () => {
           expect(status).toBe('success')
         })
 
-        const tokenAmountAfter = await sdk.armada.users.getFleetBalance({
+        const fleetAmountAfter = await sdk.armada.users.getFleetBalance({
           vaultId,
           user,
         })
@@ -113,11 +113,11 @@ describe('Armada Protocol Deposit', () => {
         })
         console.log(
           'after',
-          tokenAmountAfter.shares.toSolidityValue(),
+          fleetAmountAfter.shares.toSolidityValue(),
           stakedAmountAfter.shares.toSolidityValue(),
         )
-        expect(tokenAmountAfter.shares.toSolidityValue()).toEqual(
-          tokenAmountBefore.shares.toSolidityValue(),
+        expect(fleetAmountAfter.shares.toSolidityValue()).toEqual(
+          fleetAmountBefore.shares.toSolidityValue(),
         )
         expect(stakedAmountAfter.shares.toSolidityValue()).toBeGreaterThan(
           stakedAmountBefore.shares.toSolidityValue(),
@@ -126,24 +126,24 @@ describe('Armada Protocol Deposit', () => {
           0.999999,
         )
       })
-    })
 
-    describe(`Deposit and Swap with stake on ${chainInfo.name}`, () => {
-      it(`should approve and deposit 1 USDC (with stake) to fleet at ${fleetAddress.value}`, async () => {
+      it(`should deposit 1 USDC (without stake) to fleet at ${fleetAddress.value}`, async () => {
         const amount = '1'
+
         const transactions = await sdk.armada.users.getNewDepositTX({
-          vaultId,
+          vaultId: vaultId,
           user,
-          assets: TokenAmount.createFrom({
+          amount: TokenAmount.createFrom({
             amount,
-            token: swapToken,
+            token,
           }),
+          shouldStake: false,
           slippage: Percentage.createFrom({
             value: 0.01,
           }),
         })
 
-        const tokenAmountBefore = await sdk.armada.users.getFleetBalance({
+        const fleetAmountBefore = await sdk.armada.users.getFleetBalance({
           vaultId,
           user,
         })
@@ -153,7 +153,70 @@ describe('Armada Protocol Deposit', () => {
         })
         console.log(
           'before',
-          tokenAmountBefore.shares.toSolidityValue(),
+          fleetAmountBefore.shares.toSolidityValue(),
+          stakedAmountBefore.shares.toSolidityValue(),
+        )
+
+        const { statuses } = await sendAndLogTransactions({
+          chainInfo,
+          transactions,
+          rpcUrl: forkUrl,
+          privateKey: signerPrivateKey,
+          useRpcGateway,
+        })
+        statuses.forEach((status) => {
+          expect(status).toBe('success')
+        })
+
+        const fleetAmountAfter = await sdk.armada.users.getFleetBalance({
+          vaultId,
+          user,
+        })
+        const stakedAmountAfter = await sdk.armada.users.getStakedBalance({
+          vaultId,
+          user,
+        })
+        console.log(
+          'after',
+          fleetAmountAfter.shares.toSolidityValue(),
+          stakedAmountAfter.shares.toSolidityValue(),
+        )
+        expect(fleetAmountAfter.shares.toSolidityValue()).toBeGreaterThan(
+          fleetAmountBefore.shares.toSolidityValue(),
+        )
+        expect(stakedAmountAfter.shares.toSolidityValue()).toEqual(
+          stakedAmountBefore.shares.toSolidityValue(),
+        )
+        expect(
+          Number(stakedAmountAfter.assets.subtract(stakedAmountBefore.assets).amount),
+        ).toBeGreaterThan(0.99)
+      })
+
+      it(`should deposit and swap 1 ${swapToken.symbol} (with stake) to fleet at ${fleetAddress.value}`, async () => {
+        const amount = '1'
+        const transactions = await sdk.armada.users.getNewDepositTX({
+          vaultId,
+          user,
+          amount: TokenAmount.createFrom({
+            amount,
+            token: swapToken,
+          }),
+          slippage: Percentage.createFrom({
+            value: 0.01,
+          }),
+        })
+
+        const fleetAmountBefore = await sdk.armada.users.getFleetBalance({
+          vaultId,
+          user,
+        })
+        const stakedAmountBefore = await sdk.armada.users.getStakedBalance({
+          vaultId,
+          user,
+        })
+        console.log(
+          'before',
+          fleetAmountBefore.shares.toSolidityValue(),
           stakedAmountBefore.shares.toSolidityValue(),
         )
         const { statuses } = await sendAndLogTransactions({
@@ -167,7 +230,7 @@ describe('Armada Protocol Deposit', () => {
           expect(status).toBe('success')
         })
 
-        const tokenAmountAfter = await sdk.armada.users.getFleetBalance({
+        const fleetAmountAfter = await sdk.armada.users.getFleetBalance({
           vaultId,
           user,
         })
@@ -177,11 +240,11 @@ describe('Armada Protocol Deposit', () => {
         })
         console.log(
           'after',
-          tokenAmountAfter.shares.toSolidityValue(),
+          fleetAmountAfter.shares.toSolidityValue(),
           stakedAmountAfter.shares.toSolidityValue(),
         )
-        expect(tokenAmountAfter.shares.toSolidityValue()).toEqual(
-          tokenAmountBefore.shares.toSolidityValue(),
+        expect(fleetAmountAfter.shares.toSolidityValue()).toEqual(
+          fleetAmountBefore.shares.toSolidityValue(),
         )
         expect(stakedAmountAfter.shares.toSolidityValue()).toBeGreaterThan(
           stakedAmountBefore.shares.toSolidityValue(),
@@ -192,47 +255,35 @@ describe('Armada Protocol Deposit', () => {
       })
     })
 
-    describe.skip(`Deposit without stake on ${chainInfo.name}`, () => {
-      it(`should approve, deposit 1 USDC (without stake) to fleet at ${fleetAddress.value}`, async () => {
-        const amount = '1'
-
-        const transactions = await sdk.armada.users.getNewDepositTX({
-          vaultId: vaultId,
-          user,
-          assets: TokenAmount.createFrom({
-            amount,
-            token,
-          }),
-          shouldStake: false,
-          slippage: Percentage.createFrom({
-            value: 0.01,
-          }),
-        })
-
-        const { statuses } = await sendAndLogTransactions({
-          chainInfo,
-          transactions,
-          rpcUrl: forkUrl,
-          privateKey: signerPrivateKey,
-          useRpcGateway,
-        })
-        statuses.forEach((status) => {
-          expect(status).toBe('success')
-        })
-      })
-
+    describe(`Withdraw on ${chainInfo.name}`, () => {
       it(`should withdraw 0.99 USDC back from fleet at ${fleetAddress.value}`, async () => {
         const amount = '0.99'
 
         const transactions = await sdk.armada.users.getWithdrawTX({
           vaultId: vaultId,
           user,
-          assets: TokenAmount.createFrom({
+          amount: TokenAmount.createFrom({
             amount,
             token,
           }),
+          slippage: Percentage.createFrom({
+            value: 0.01,
+          }),
         })
 
+        const fleetAmountBefore = await sdk.armada.users.getFleetBalance({
+          vaultId,
+          user,
+        })
+        const stakedAmountBefore = await sdk.armada.users.getStakedBalance({
+          vaultId,
+          user,
+        })
+        console.log(
+          'before',
+          fleetAmountBefore.shares.toSolidityValue(),
+          stakedAmountBefore.shares.toSolidityValue(),
+        )
         const { statuses } = await sendAndLogTransactions({
           chainInfo,
           transactions,
@@ -243,6 +294,29 @@ describe('Armada Protocol Deposit', () => {
         statuses.forEach((status) => {
           expect(status).toBe('success')
         })
+
+        const fleetAmountAfter = await sdk.armada.users.getFleetBalance({
+          vaultId,
+          user,
+        })
+        const stakedAmountAfter = await sdk.armada.users.getStakedBalance({
+          vaultId,
+          user,
+        })
+        console.log(
+          'after',
+          fleetAmountAfter.shares.toSolidityValue(),
+          stakedAmountAfter.shares.toSolidityValue(),
+        )
+        expect(fleetAmountAfter.shares.toSolidityValue()).toEqual(
+          fleetAmountBefore.shares.toSolidityValue(),
+        )
+        expect(stakedAmountAfter.shares.toSolidityValue()).toEqual(
+          stakedAmountBefore.shares.toSolidityValue(),
+        )
+        expect(
+          Number(stakedAmountBefore.assets.subtract(stakedAmountAfter.assets).amount),
+        ).toBeGreaterThan(0.99)
       })
     })
   }
