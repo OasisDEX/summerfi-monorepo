@@ -1,6 +1,7 @@
 import { type ISDKManager, ArmadaVaultId } from '@summerfi/sdk-client'
 import {
   Address,
+  Percentage,
   User,
   Wallet,
   type IAddress,
@@ -15,11 +16,13 @@ export const getWithdrawTXHandler =
     walletAddress,
     amount,
     chainInfo,
+    slippage,
   }: {
     fleetAddress: string
     walletAddress: IAddress
     amount: ITokenAmount
     chainInfo: IChainInfo
+    slippage: number
   }) => {
     const poolId = ArmadaVaultId.createFrom({
       chainInfo,
@@ -36,6 +39,7 @@ export const getWithdrawTXHandler =
     return sdk.armada.users.getWithdrawTX({
       vaultId: poolId,
       user,
-      assets: amount,
+      amount: amount,
+      slippage: Percentage.createFrom({ value: slippage }),
     })
   }

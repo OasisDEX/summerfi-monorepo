@@ -123,13 +123,15 @@ export interface IArmadaManagerUsersClient {
    * @param vaultId ID of the pool to deposit in
    * @param user Address of the user that is trying to deposit
    * @param amount Token amount to be deposited
+   * @param slippage Maximum slippage allowed
+   * @param shouldStake Whether the user wants to stake the deposited tokens
    *
    * @returns The transactions needed to deposit the tokens
    */
   getNewDepositTX(params: {
     vaultId: IArmadaVaultId
     user: IUser
-    assets: ITokenAmount
+    amount: ITokenAmount
     slippage: IPercentage
     shouldStake?: boolean
   }): Promise<TransactionInfo[]>
@@ -141,13 +143,15 @@ export interface IArmadaManagerUsersClient {
    * @param vaultId ID of the pool to withdraw from
    * @param user user that is trying to withdraw
    * @param amount Token amount to be withdrawn
+   * @param slippage Slippage tolerance
    *
    * @returns The transactions needed to withdraw the tokens
    */
   getWithdrawTX(params: {
     vaultId: IArmadaVaultId
     user: IUser
-    assets: ITokenAmount
+    amount: ITokenAmount
+    slippage: IPercentage
   }): Promise<TransactionInfo[]>
 
   /**

@@ -33,6 +33,7 @@ export const testConfig = [
   {
     chainInfo: ChainFamilyMap.Base.Base,
     symbol: 'USDC',
+    swapSymbol: 'DAI',
     fleetAddress: fleetOnBase,
     forkUrl: forkOnBase,
     userAddress: userOnBase,

@@ -97,7 +97,7 @@ describe('Armada Protocol Service', () => {
     const transactionInfo = await armadaManager.getNewDepositTX({
       vaultId,
       user,
-      assets: tokenAmount,
+      amount: tokenAmount,
       slippage: Percentage.createFrom({ value: 0.01 }),
     })
 
@@ -138,7 +138,7 @@ describe('Armada Protocol Service', () => {
     const transactionInfo = await armadaManager.getWithdrawTX({
       vaultId: vaultId,
       user,
-      assets: tokenAmount,
+      amount: tokenAmount,
     })
 
     expect(transactionInfo.length).toBe(1)

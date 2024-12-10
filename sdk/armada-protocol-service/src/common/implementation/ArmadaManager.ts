@@ -276,7 +276,7 @@ export class ArmadaManager implements IArmadaManager {
     return this._getDepositTX({
       vaultId: params.vaultId,
       user: params.positionId.user,
-      assets: params.assets,
+      amount: params.amount,
       shouldStake: params.shouldStake,
       slippage: params.slippage,
     })
@@ -296,7 +296,7 @@ export class ArmadaManager implements IArmadaManager {
     LoggingService.debug('getWithdrawTX', {
       fleetAssets: fleetAssets.toString(),
       fleetShares: fleetShares.toString(),
-      requestedAmount: params.assets.toString(),
+      requestedAmount: params.amount.toString(),
     })
 
     const admiralsQuarterAddress = getDeployedContractAddress({
@@ -308,7 +308,7 @@ export class ArmadaManager implements IArmadaManager {
     // are unstaked tokens available?
     if (fleetAssets.toSolidityValue() > 0) {
       // Yes. is the unstaked amount sufficient to meet the withdrawal?
-      if (fleetAssets.toSolidityValue() >= params.assets.toSolidityValue()) {
+      if (fleetAssets.toSolidityValue() >= params.amount.toSolidityValue()) {
         LoggingService.debug('unstaked balance is enough for requested amount', {
           fleetAssets: fleetAssets.toString(),
         })
@@ -353,12 +353,12 @@ export class ArmadaManager implements IArmadaManager {
         // withdraw unstaken balance
         const withdrawUnstakedData = await this._getWithdrawData({
           ...params,
-          assets: fleetAssets,
+          amount: fleetAssets,
         })
         // and the reminder from staked tokens
         const sharesToWithdraw = await this._previewWithdraw({
           vaultId: params.vaultId,
-          assets: params.assets,
+          assets: params.amount,
         })
         const sharesToUnstake = sharesToWithdraw.subtract(fleetShares)
         const unstakeAndWithdrawData = await this._getUnstakeAndWithdrawData({
@@ -388,7 +388,7 @@ export class ArmadaManager implements IArmadaManager {
       // No. Unstake and withdraw from staked tokens.
       const sharesToWithdraw = await this._previewWithdraw({
         vaultId: params.vaultId,
-        assets: params.assets,
+        assets: params.amount,
       })
       const unstakeAndWithdrawData = await this._getUnstakeAndWithdrawData({
         vaultId: params.vaultId,
@@ -635,7 +635,7 @@ export class ArmadaManager implements IArmadaManager {
   private async _getDepositTX(params: {
     vaultId: IArmadaVaultId
     user: IUser
-    assets: ITokenAmount
+    amount: ITokenAmount
     slippage: IPercentage
     shouldStake?: boolean
   }): Promise<TransactionInfo[]> {
@@ -643,7 +643,7 @@ export class ArmadaManager implements IArmadaManager {
     const shouldStake = params.shouldStake ?? true
 
     LoggingService.debug('getDepositTX', {
-      requestedAmount: params.assets.toString(),
+      requestedAmount: params.amount.toString(),
     })
 
     const admiralsQuarterAddress = getDeployedContractAddress({
@@ -656,7 +656,7 @@ export class ArmadaManager implements IArmadaManager {
     const approvalTransaction = await this._allowanceManager.getApproval({
       chainInfo: params.vaultId.chainInfo,
       spender: admiralsQuarterAddress,
-      amount: params.assets,
+      amount: params.amount,
       owner: params.user.wallet.address,
     })
     if (approvalTransaction) {
@@ -667,7 +667,7 @@ export class ArmadaManager implements IArmadaManager {
     const depositTokensCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'depositTokens',
-      args: [params.assets.token.address.value, params.assets.toSolidityValue()],
+      args: [params.amount.token.address.value, params.amount.toSolidityValue()],
     })
     multicallArgs.push(depositTokensCalldata)
 
@@ -676,13 +676,13 @@ export class ArmadaManager implements IArmadaManager {
       address: params.vaultId.fleetAddress,
     })
     const fleetToken = await fleetCommander.asErc4626().asset()
-    let enterFleetAssets = params.assets
+    let enterFleetAssets = params.amount
     // If depositing a token that is not the fleet token, we need to swap it
     // and then deposit the received fleet token amount
-    if (!params.assets.token.address.equals(fleetToken.address)) {
+    if (!params.amount.token.address.equals(fleetToken.address)) {
       const swapData = await this._getSwapData({
         vaultId: params.vaultId,
-        fromAmount: params.assets,
+        fromAmount: params.amount,
         toToken: fleetToken,
         slippage: params.slippage,
       })
@@ -735,21 +735,21 @@ export class ArmadaManager implements IArmadaManager {
    */
   private async _getWithdrawData(params: {
     vaultId: IArmadaVaultId
-    assets: ITokenAmount
+    amount: ITokenAmount
   }): Promise<HexData[]> {
     const multicallArgs: HexData[] = []
 
     const exitFleetCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'exitFleet',
-      args: [params.vaultId.fleetAddress.value, params.assets.toSolidityValue()],
+      args: [params.vaultId.fleetAddress.value, params.amount.toSolidityValue()],
     })
     multicallArgs.push(exitFleetCalldata)
 
     const withdrawTokensCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'withdrawTokens',
-      args: [params.assets.token.address.value, params.assets.toSolidityValue()],
+      args: [params.amount.token.address.value, params.amount.toSolidityValue()],
     })
     multicallArgs.push(withdrawTokensCalldata)
 

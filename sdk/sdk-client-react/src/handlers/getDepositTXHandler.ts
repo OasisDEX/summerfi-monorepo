@@ -41,7 +41,7 @@ export const getDepositTXHandler =
     return sdk.armada.users.getNewDepositTX({
       vaultId: poolId,
       user,
-      assets: amount,
+      amount: amount,
       slippage: Percentage.createFrom({ value: slippage }),
       shouldStake,
     })

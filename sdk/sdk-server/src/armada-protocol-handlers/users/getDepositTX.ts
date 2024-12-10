@@ -15,7 +15,7 @@ export const getDepositTX = publicProcedure
     z.object({
       vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
       user: z.custom<IUser>(isUser),
-      assets: z.custom<ITokenAmount>(isTokenAmount),
+      amount: z.custom<ITokenAmount>(isTokenAmount),
       slippage: z.custom<IPercentage>(isPercentage),
       shouldStake: z.boolean().optional(),
     }),

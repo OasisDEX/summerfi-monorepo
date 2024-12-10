@@ -12,13 +12,10 @@ import {
   VaultManageGrid,
 } from '@summerfi/app-earn-ui'
 import {
-  type DropdownOption,
-  type DropdownRawOption,
   type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
-  type TokenSymbolsList,
   TransactionAction,
   type UsersActivity,
 } from '@summerfi/app-types'
@@ -40,6 +37,7 @@ import { VaultExposure } from '@/features/vault-exposure/components/VaultExposur
 import { useAmount } from '@/hooks/use-amount'
 import { useClient } from '@/hooks/use-client'
 import { useTokenBalance } from '@/hooks/use-token-balance'
+import { useTokenSelector } from '@/hooks/use-token-selector'
 import { useTransaction } from '@/hooks/use-transaction'
 
 import vaultManageViewStyles from './VaultManageView.module.scss'
@@ -62,37 +60,13 @@ export const VaultManageViewComponent = ({
   const user = useUser()
   const { publicClient } = useClient()
 
-  const options: DropdownOption[] = [
-    ...[...new Set(vaults.map(({ inputToken }) => inputToken.symbol))].map((symbol) => ({
-      tokenSymbol: symbol as TokenSymbolsList,
-      label: symbol,
-      value: symbol,
-    })),
-  ]
-
-  // For swap testing purposes only adding testToken to dropdown
-  const testToken = 'USDBC'
-
-  if (vault.inputToken.symbol !== testToken) {
-    options.push({
-      tokenSymbol: testToken,
-      label: testToken,
-      value: testToken,
-    })
-  }
-
-  const [dropdownValue, setDropdownValue] = useState(
-    options.find((option) => option.value === vault.inputToken.symbol) ?? options[0],
-  )
-  const handleDropdownChange = (option: DropdownRawOption) => {
-    const value = options.find((opt) => opt.value === option.value) ?? options[0]
-
-    setDropdownValue(value)
-  }
+  const { handleTokenSelectionChange, selectedTokenOption, tokenOptions } = useTokenSelector({
+    vault,
+  })
 
   const { token, tokenBalance, tokenBalanceLoading } = useTokenBalance({
     publicClient,
-    tokenSymbol: dropdownValue.value,
+    tokenSymbol: selectedTokenOption.value,
   })
 
   const {
@@ -171,9 +145,9 @@ export const VaultManageViewComponent = ({
       amountDisplay={amountDisplay}
       amountDisplayUSD={amountDisplayUSD}
       handleAmountChange={handleAmountChange}
-      handleDropdownChange={handleDropdownChange}
-      options={options}
-      dropdownValue={dropdownValue}
+      handleDropdownChange={handleTokenSelectionChange}
+      options={tokenOptions}
+      dropdownValue={selectedTokenOption}
       onFocus={onFocus}
       onBlur={onBlur}
       tokenBalance={

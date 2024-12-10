@@ -11,13 +11,11 @@ import {
   VaultOpenGrid,
 } from '@summerfi/app-earn-ui'
 import {
-  type DropdownOption,
   type ForecastData,
   type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
-  type TokenSymbolsList,
   type UsersActivity,
 } from '@summerfi/app-types'
 
@@ -41,6 +39,8 @@ import { useClient } from '@/hooks/use-client'
 import { useForecast } from '@/hooks/use-forecast'
 import { usePosition } from '@/hooks/use-position'
 import { useRedirectToPosition } from '@/hooks/use-redirect-to-position'
+import { useTokenBalance } from '@/hooks/use-token-balance'
+import { useTokenSelector } from '@/hooks/use-token-selector'
 import { useTransaction } from '@/hooks/use-transaction'
 
 import vaultOpenViewStyles from './VaultOpenView.module.scss'
@@ -63,13 +63,20 @@ export const VaultOpenViewComponent = ({
   const { getStorageOnce } = useLocalStorageOnce<string>({
     key: `${vault.id}-amount`,
   })
-  const { tokenBalance, tokenBalanceLoading, publicClient } = useClient({
-    vault,
-  })
+  const { publicClient } = useClient()
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+
+  const { handleTokenSelectionChange, selectedTokenOption, tokenOptions } = useTokenSelector({
+    vault,
+  })
+
+  const { token, tokenBalance, tokenBalanceLoading } = useTokenBalance({
+    publicClient,
+    tokenSymbol: selectedTokenOption.value,
+  })
 
   const {
     amountParsed,
@@ -99,6 +106,7 @@ export const VaultOpenViewComponent = ({
     amount: amountParsed,
     manualSetAmount,
     publicClient,
+    token,
     tokenBalance,
     tokenBalanceLoading,
     flow: 'open',
@@ -124,17 +132,6 @@ export const VaultOpenViewComponent = ({
     }
   })
   useRedirectToPosition({ vault, position })
-
-  const options: DropdownOption[] = [
-    ...[...new Set(vaults.map(({ inputToken }) => inputToken.symbol))].map((symbol) => ({
-      tokenSymbol: symbol as TokenSymbolsList,
-      label: symbol,
-      value: symbol,
-    })),
-  ]
-
-  const dropdownValue =
-    options.find((option) => option.value === vault.inputToken.symbol) ?? options[0]
 
   const displayGraph = amountParsed.gt(0)
 
@@ -164,8 +161,9 @@ export const VaultOpenViewComponent = ({
       amountDisplay={amountDisplay}
       amountDisplayUSD={amountDisplayUSD}
       handleAmountChange={handleAmountChange}
-      options={options}
-      dropdownValue={dropdownValue}
+      handleDropdownChange={handleTokenSelectionChange}
+      options={tokenOptions}
+      dropdownValue={selectedTokenOption}
       onFocus={onFocus}
       onBlur={onBlur}
       tokenBalance={tokenBalance}

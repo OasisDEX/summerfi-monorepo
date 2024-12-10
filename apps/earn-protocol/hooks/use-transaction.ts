@@ -40,7 +40,7 @@ type UseTransactionParams = {
   vault: SDKVaultishType
   amount: BigNumber | undefined
   manualSetAmount: (amount: string | undefined) => void
-  token?: IToken
+  token: IToken | undefined
   tokenBalance: BigNumber | undefined
   tokenBalanceLoading: boolean
   publicClient?: ReturnType<typeof useClient>['publicClient']
