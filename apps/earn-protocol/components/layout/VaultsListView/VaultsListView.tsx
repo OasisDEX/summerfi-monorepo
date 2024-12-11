@@ -24,6 +24,7 @@ import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useLocalConfig } from '@/contexts/LocalConfigContext/LocalConfigContext'
 import { UpdateNetApyPill } from '@/features/net-apy-updater/components/UpdateNetApyPill/UpdateNetApyPill'
+import { useTokenBalances } from '@/hooks/use-tokens-balances'
 
 type VaultsListViewProps = {
   vaultsList: SDKVaultsListType
@@ -87,6 +88,13 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
     () => vaultsList.find((vault) => vault.id === vaultId),
     [vaultsList, vaultId],
   )
+
+  const vaultData = selectedVaultData ?? networkFilteredVaults[0]
+
+  const tokenBalances = useTokenBalances({
+    tokenSymbol: vaultData.inputToken.symbol,
+    network: vaultData.protocol.network,
+  })
 
   const handleChangeNetwork = (selected: DropdownRawOption) => {
     setLocalVaultNetwork(selected.value as VaultsListViewProps['selectedNetwork'])
@@ -204,8 +212,9 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
       }
       rightContent={
         <VaultSimulationForm
-          vaultData={selectedVaultData ?? networkFilteredVaults[0]}
+          vaultData={vaultData}
           isMobile={isMobile}
+          tokenBalance={tokenBalances.tokenBalance}
         />
       }
     />
