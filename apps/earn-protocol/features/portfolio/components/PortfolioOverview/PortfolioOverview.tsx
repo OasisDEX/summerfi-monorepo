@@ -87,18 +87,22 @@ export const PortfolioOverview = ({ vaultsList, positions }: PortfolioOverviewPr
             Positions
           </Text>
           {positions.length > 0 ? (
-            positions.map((position) => (
-              <PortfolioPosition
-                key={`Position_${position.positionData.id.id}`}
-                position={position}
-                positionGraph={
-                  <HistoricalYieldChart
-                    chartData={position.vaultData.customFields?.chartsData}
-                    summerVaultName={position.vaultData.customFields?.name ?? 'Summer Vault'}
-                  />
-                }
-              />
-            ))
+            positions.map((position) => {
+              console.log('position.vaultData.customFields', position.vaultData.customFields)
+
+              return (
+                <PortfolioPosition
+                  key={`Position_${position.positionData.id.id}`}
+                  position={position}
+                  positionGraph={
+                    <HistoricalYieldChart
+                      chartData={position.vaultData.customFields?.chartsData}
+                      summerVaultName={position.vaultData.customFields?.name ?? 'Summer Vault'}
+                    />
+                  }
+                />
+              )
+            })
           ) : (
             <Text as="p" variant="p1semi">
               No positions

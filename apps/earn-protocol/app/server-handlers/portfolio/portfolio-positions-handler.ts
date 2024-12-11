@@ -1,12 +1,8 @@
-import {
-  type EarnAppConfigType,
-  type SDKVaultishType,
-  type SDKVaultsListType,
-} from '@summerfi/app-types'
-import { subgraphNetworkToId } from '@summerfi/app-utils'
+import { type EarnAppConfigType, type SDKVaultsListType } from '@summerfi/app-types'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
 
-import { getCustomVaultConfigById } from '@/helpers/vault-custom-value-helpers'
+import { getInterestRates } from '@/app/server-handlers/interest-rates'
+import { decorateCustomVaultFields } from '@/helpers/vault-custom-value-helpers'
 
 export type PortfolioPositionsDataParams = {
   position: IArmadaPosition
@@ -16,7 +12,7 @@ export type PortfolioPositionsDataParams = {
 
 // since we dont have vault details on the positions list
 // we need to merge the vault details with the position
-export const portfolioPositionsHandler = ({
+export const portfolioPositionsHandler = async ({
   position,
   vaultsList,
   config,
@@ -26,16 +22,19 @@ export const portfolioPositionsHandler = ({
   if (!vaultData) {
     throw new Error(`Vault not found for position ${position.pool.id.fleetAddress.value}`)
   }
-  const parsedNetworkId = subgraphNetworkToId(vaultData.protocol.network)
-  const customFields = getCustomVaultConfigById(vaultData.id, String(parsedNetworkId), config)
+  const [vaultWithInterestRates] = decorateCustomVaultFields(
+    [vaultData],
+    config,
+    await getInterestRates({
+      network: vaultData.protocol.network,
+      arksList: vaultData.arks,
+    }),
+  )
 
   return {
     positionData: position,
-    vaultData: {
-      ...vaultData,
-      customFields,
-    } as SDKVaultishType,
+    vaultData: vaultWithInterestRates,
   }
 }
 
-export type PortfolioPositionsList = ReturnType<typeof portfolioPositionsHandler>
+export type PortfolioPositionsList = Awaited<ReturnType<typeof portfolioPositionsHandler>>

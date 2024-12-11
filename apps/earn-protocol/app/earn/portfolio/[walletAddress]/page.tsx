@@ -1,7 +1,6 @@
 import { parseServerResponseToClient } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
 
-import { getInterestRates } from '@/app/server-handlers/interest-rates'
 import { portfolioPositionsHandler } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
 import { portfolioRewardsHandler } from '@/app/server-handlers/portfolio/portfolio-rewards-handler'
 import { portfolioWalletAssetsHandler } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
@@ -9,7 +8,6 @@ import { getUserPositions } from '@/app/server-handlers/sdk/get-user-positions'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { PortfolioPageView } from '@/components/layout/PortfolioPageView/PortfolioPageView'
-import { decorateCustomVaultFields } from '@/helpers/vault-custom-value-helpers'
 
 type PortfolioPageProps = {
   params: {
@@ -32,23 +30,11 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     : []
 
   const { config } = parseServerResponseToClient(await systemConfigHandler())
-  const positionsList = positionsJsonSafe.map((position) =>
-    portfolioPositionsHandler({ position, vaultsList: vaults, config }),
+  const positionsList = await Promise.all(
+    positionsJsonSafe.map((position) =>
+      portfolioPositionsHandler({ position, vaultsList: vaults, config }),
+    ),
   )
-  const vaultsWithInterestRates = await Promise.all(
-    positionsList.map(async ({ vaultData }) => {
-      const interestRates = await getInterestRates({
-        network: vaultData.protocol.network,
-        arksList: vaultData.arks,
-      })
-
-      console.log('interestRates', interestRates)
-
-      return decorateCustomVaultFields([vaultData], config, interestRates)
-    }),
-  )
-
-  console.log('vaultsWithInterestRates', vaultsWithInterestRates)
 
   return (
     <PortfolioPageView
@@ -56,7 +42,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       walletAddress={walletAddress}
       walletData={walletData}
       rewardsData={rewardsData}
-      vaultsList={vaultsDecorated}
+      vaultsList={vaults}
     />
   )
 }
