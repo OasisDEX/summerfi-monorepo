@@ -14,6 +14,13 @@ import Link from 'next/link'
 
 import { rebalanceActivitySorter } from '@/features/vault-exposure/table/sorter'
 
+export const arkNameMap: { [key: string]: string } = {
+  BufferArk: 'Buffer',
+  AaveV3: 'Aave V3',
+  CompoundV3: 'Compound V3',
+  PendlePt: 'Pendle',
+}
+
 export const vaultExposureMapper = (
   vault: SDKVaultType,
   sortConfig?: TableSortedColumn<string>,
@@ -33,7 +40,23 @@ export const vaultExposureMapper = (
     const apr = new BigNumber(item.calculatedApr.toString()).div(100)
 
     // temporary mapping, we need something more robust from subgraph
-    const protocol = item.name?.split('-')[0] ?? 'n/a'
+    const protocol = item.name?.split('-') ?? ['n/a']
+
+    // New mapping logic
+    const formatActionName = (nameParts: string[]) => {
+      const cleanedName = nameParts.slice(0, -1).join('-');
+
+      const baseName = cleanedName.split('-')[0];
+      if (baseName === 'MetaMorpho' || baseName === 'MorphoVault') {
+        return "Morpho " + cleanedName.split('-').slice(2).join(' ').replace(/_/g, ' ');
+      } else if (baseName === 'ERC4626') {
+        const secondPart = cleanedName.split('-')[1];
+        return secondPart.charAt(0).toUpperCase() + secondPart.slice(1);
+      }
+      return arkNameMap[baseName] ?? baseName;
+    }
+
+    const protocolLabel = formatActionName(protocol);
 
     return {
       content: {
@@ -41,7 +64,7 @@ export const vaultExposureMapper = (
           <TableCellNodes>
             <TableRowAccent backgroundColor="var(--earn-protocol-accent-1-100)" />
             <Icon tokenName={item.inputToken.symbol as TokenSymbolsList} variant="s" />
-            <TableCellText>{protocol}</TableCellText>
+            <TableCellText>{protocolLabel}</TableCellText>
           </TableCellNodes>
         ),
         allocation: <TableCellText>{formatDecimalAsPercent(allocation)}</TableCellText>,
