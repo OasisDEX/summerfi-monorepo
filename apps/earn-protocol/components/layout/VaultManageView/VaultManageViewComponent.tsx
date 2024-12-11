@@ -10,6 +10,7 @@ import {
   Text,
   useMobileCheck,
   VaultManageGrid,
+  useTokenSelector,
 } from '@summerfi/app-earn-ui'
 import {
   type SDKUsersActivityType,
@@ -37,7 +38,6 @@ import { VaultExposure } from '@/features/vault-exposure/components/VaultExposur
 import { useAmount } from '@/hooks/use-amount'
 import { useClient } from '@/hooks/use-client'
 import { useTokenBalance } from '@/hooks/use-token-balance'
-import { useTokenSelector } from '@/hooks/use-token-selector'
 import { useTransaction } from '@/hooks/use-transaction'
 
 import vaultManageViewStyles from './VaultManageView.module.scss'
