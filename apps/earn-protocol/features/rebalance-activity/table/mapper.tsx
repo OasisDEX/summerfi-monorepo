@@ -25,6 +25,25 @@ export const arkNameMap: { [key: string]: string } = {
   PendlePt: 'Pendle',
 }
 
+// todo: this is a temporary solution, we need to find a better way to handle this
+const formatActionName = (nameParts: string[]) => {
+  const cleanedName = nameParts.slice(0, -1).join('-')
+
+  const [baseName, ...remainingParts] = cleanedName.split('-')
+
+  if (baseName === 'MetaMorpho' || baseName === 'MorphoVault') {
+    const nameWithoutPrefix = remainingParts.join(' ').replace(/_/gu, ' ')
+
+    return `Morpho ${nameWithoutPrefix.split(' ').slice(1).join(' ')}`
+  } else if (baseName === 'ERC4626') {
+    const [secondPart] = remainingParts
+
+    return secondPart.charAt(0).toUpperCase() + secondPart.slice(1)
+  }
+
+  return arkNameMap[baseName] ?? baseName
+}
+
 const providerMap: { [key: string]: string } = {
   'Summer Earn Protocol': 'Summer.fi',
 }
@@ -78,11 +97,11 @@ export const rebalancingActivityMapper = (
 
     const amount = new BigNumber(item.amount.toString()).shiftedBy(-item.asset.decimals)
 
-    const actionFromRawName = item.from.name?.split('-')[0] ?? 'n/a'
-    const actionToRawName = item.to.name?.split('-')[0] ?? 'n/a'
+    const actionFromRawName = item.from.name?.split('-') ?? ['n/a']
+    const actionToRawName = item.to.name?.split('-') ?? ['n/a']
 
-    const actionFromLabel = arkNameMap[actionFromRawName] ?? actionFromRawName
-    const actionToLabel = arkNameMap[actionToRawName] ?? actionToRawName
+    const actionFromLabel = formatActionName(actionFromRawName)
+    const actionToLabel = formatActionName(actionToRawName)
 
     const purpose = purposeMapper(item)
 
