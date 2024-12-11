@@ -6,7 +6,7 @@ import {
   type SDKVaultishType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
-import { formatCryptoBalance, mapNumericInput } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatFiatBalance, mapNumericInput } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
@@ -22,11 +22,17 @@ import classNames from './VaultSimulationForm.module.scss'
 
 export type VaultSimulationFormProps = {
   vaultData: SDKVaultishType
+  tokenBalance?: BigNumber
+  tokenPriceUSD?: number
   isMobile?: boolean
 }
 
-export const VaultSimulationForm = ({ vaultData, isMobile }: VaultSimulationFormProps) => {
-  const [inputValue, setInputValue] = useState<string>('1000')
+export const VaultSimulationForm = ({
+  vaultData,
+  tokenBalance,
+  isMobile,
+}: VaultSimulationFormProps) => {
+  const [inputValue, setInputValue] = useState<string>(mapNumericInput('1000'))
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [isGradientBorder, setIsGradientBorder] = useState(false)
 
@@ -76,7 +82,8 @@ export const VaultSimulationForm = ({ vaultData, isMobile }: VaultSimulationForm
     } as DropdownOption
   }, [vaultData])
 
-  const balance = new BigNumber(123123)
+  const balance = tokenBalance ? tokenBalance : undefined
+  const tokenPrice = vaultData.inputTokenPriceUSD ? Number(vaultData.inputTokenPriceUSD) : undefined
   const token = vaultData.inputToken.symbol
 
   return (
@@ -88,15 +95,19 @@ export const VaultSimulationForm = ({ vaultData, isMobile }: VaultSimulationForm
             <>
               <InputWithDropdown
                 value={inputValue}
-                secondaryValue={inputValue.length ? `$${inputValue}` : ''}
+                secondaryValue={
+                  inputValue.length && tokenPrice
+                    ? `$${formatFiatBalance(Number(inputValue) * tokenPrice)}`
+                    : ''
+                }
                 handleChange={handleInputChange}
                 options={[dropdownLockedValue]}
                 dropdownValue={dropdownLockedValue}
                 heading={{
                   label: 'Balance',
-                  value: `${formatCryptoBalance(balance)} ${token}`,
+                  value: balance ? `${formatCryptoBalance(balance)} ${token}` : `-`,
                   // eslint-disable-next-line no-console
-                  action: () => console.log('clicked'),
+                  action: () => setInputValue(mapNumericInput(balance?.toString() ?? '1000')),
                 }}
               />
               <ProjectedEarnings
