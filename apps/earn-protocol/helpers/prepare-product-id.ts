@@ -8,7 +8,7 @@ export const getArkProductId = (
   }
   const parsedDetails = JSON.parse(ark.details as string) as ArkDetailsType
 
-  if (!parsedDetails) {
+  if (!('pool' in parsedDetails)) {
     return false
   }
 

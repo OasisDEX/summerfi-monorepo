@@ -1125,7 +1125,7 @@ export type GetInterestRatesQueryVariables = Exact<{
 }>;
 
 
-export type GetInterestRatesQuery = { __typename?: 'Query', dailyInterestRates: Array<{ __typename?: 'DailyInterestRate', averageRate: number, protocol: string, date: number, productId: string }>, hourlyInterestRates: Array<{ __typename?: 'HourlyInterestRate', averageRate: number, protocol: string, date: number, productId: string }>, weeklyInterestRates: Array<{ __typename?: 'WeeklyInterestRate', averageRate: number, protocol: string, productId: string, date: number }> };
+export type GetInterestRatesQuery = { __typename?: 'Query', dailyInterestRates: Array<{ __typename?: 'DailyInterestRate', averageRate: number, date: number }>, hourlyInterestRates: Array<{ __typename?: 'HourlyInterestRate', averageRate: number, date: number }>, weeklyInterestRates: Array<{ __typename?: 'WeeklyInterestRate', averageRate: number, date: number }> };
 
 
 export const GetInterestRatesDocument = /*#__PURE__*/ gql`
@@ -1137,20 +1137,16 @@ export const GetInterestRatesDocument = /*#__PURE__*/ gql`
     orderDirection: desc
   ) {
     averageRate
-    protocol
     date
-    productId
   }
   hourlyInterestRates(
     where: {productId: $productId}
-    first: 168
+    first: 720
     orderBy: date
     orderDirection: desc
   ) {
     averageRate
-    protocol
     date
-    productId
   }
   weeklyInterestRates(
     where: {productId: $productId}
@@ -1159,9 +1155,7 @@ export const GetInterestRatesDocument = /*#__PURE__*/ gql`
     orderDirection: desc
   ) {
     averageRate
-    protocol
     date: weekTimestamp
-    productId
   }
 }
     `;

@@ -7,7 +7,7 @@ import {
   GetInterestRatesDocument,
   type GetInterestRatesQuery,
 } from '@/graphql/clients/rates/client'
-import { getArkProductId, getArkProductIdList } from '@/helpers/prepare-product-id'
+import { getArkProductId } from '@/helpers/prepare-product-id'
 
 type GetInterestRatesParams = {
   network: SDKNetwork
@@ -45,27 +45,26 @@ export async function getInterestRates({ network, arksList }: GetInterestRatesPa
     throw new Error(`getInterestRates: No endpoint found for network: ${network}`)
   }
 
-  const productIds = getArkProductIdList(arksList)
+  const arkNamesList = arksList.map((ark) =>
+    ark.name ? ark.name : getArkProductId(ark) || 'NOT FOUND',
+  )
 
   const networkGraphQlClient = clients[network as keyof typeof clients]
   // networkGraphQlClient.batchRequests DOES NOT WORK on subgraphs we use
   // TODO: create a single gql`` query with multiple queries inside and dynamically rename variables
   const response = await Promise.all(
     arksList.map((ark) => {
-      return networkGraphQlClient
-        .request<GetInterestRatesQuery>(GetInterestRatesDocument, {
-          productId: getArkProductId(ark),
-        })
-        .then((data) => ({ ...data, tokenSymbol: ark.inputToken.symbol }))
+      return networkGraphQlClient.request<GetInterestRatesQuery>(GetInterestRatesDocument, {
+        productId: getArkProductId(ark),
+      })
     }),
   )
 
-  return productIds.reduce<{
-    [key: string]: GetInterestRatesQuery & {
-      tokenSymbol: string
-    }
-  }>((acc, productId, index) => {
-    acc[productId] = response[index]
+  return arkNamesList.reduce<{
+    // key in this case is the ark name
+    [key: string]: GetInterestRatesQuery
+  }>((acc, arkName, index) => {
+    acc[arkName] = response[index]
 
     return acc
   }, {})

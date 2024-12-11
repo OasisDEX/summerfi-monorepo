@@ -1,4 +1,6 @@
 query GetInterestRates($productId: String!) {
+  # as this query result can get very big very fast
+  # please please reconsider adding more fields
   dailyInterestRates(
     where: { productId: $productId }
     first: 365 # 365 days
@@ -6,20 +8,16 @@ query GetInterestRates($productId: String!) {
     orderDirection: desc
   ) {
     averageRate
-    protocol
     date
-    productId
   }
   hourlyInterestRates(
     where: { productId: $productId }
-    first: 168 # 24 * 7 = one week
+    first: 720 # 24 * 30 = one month
     orderBy: date
     orderDirection: desc
   ) {
     averageRate
-    protocol
     date
-    productId
   }
   weeklyInterestRates(
     where: { productId: $productId }
@@ -28,8 +26,6 @@ query GetInterestRates($productId: String!) {
     orderDirection: desc
   ) {
     averageRate
-    protocol
     date: weekTimestamp
-    productId
   }
 }

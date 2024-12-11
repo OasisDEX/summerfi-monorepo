@@ -10,6 +10,7 @@ import { memoize } from 'lodash-es'
 
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { CHART_TIMESTAMP_FORMAT } from '@/constants/charts'
+import { getProtocolLabel } from '@/helpers/get-protocol-label'
 
 const historicalChartprotocolsColorMap = {
   DEFAULT: '#cccccc',
@@ -18,6 +19,12 @@ const historicalChartprotocolsColorMap = {
   Fluid: '#005BB5',
   Morpho: '#CC5A55',
   Gearbox: '#c37227',
+  'Compound V3': '#4CAF50',
+  'Aave V3': '#FF5722',
+  'Morpho Gauntlet USDC Core': '#3F51B5',
+  'Morpho Re7 USDC': '#FFC107',
+  'Morpho Gauntlet USDC Prime': '#9C27B0',
+  'Morpho Steakhouse USDC': '#FF9800',
 }
 
 type BaseHistoricalChartsDataReturnType = {
@@ -83,12 +90,21 @@ export const decorateWithHistoricalChartsData = (
   vaults: SDKVaultishType[],
   arkInterestRatesMap: GetInterestRatesReturnType,
 ) => {
-  // I am mapping through a list of vaults, but in this case (arkInterestRatesMap present)
-  // it should be just one vault
+  // I am mapping through a list of vaults, but in this
+  // case (arkInterestRatesMap present) it should be just one vault
+  // EDIT: Unless its portfolio...
+
   return vaults.map(
     memoize((vault) => {
       const castedVault = vault as SDKVaultType
       const vaultName = castedVault.customFields?.name ?? 'Summer Vault'
+      const today = dayjs()
+      const threshold7d = today.startOf('hour').subtract(7, 'day').unix()
+      const threshold30d = today.startOf('hour').subtract(30, 'day').unix()
+      const threshold90d = today.startOf('day').subtract(90, 'day').unix()
+      const threshold6m = today.startOf('day').subtract(6, 'month').unix()
+      const threshold1y = today.startOf('day').subtract(1, 'year').unix()
+      const threshold3y = today.startOf('week').subtract(3, 'year').unix()
 
       const chartDataNames = [] // a list of names needed for the chart (vault + arks)
       // base data structure for the charts, filled with empty objects
@@ -99,62 +115,79 @@ export const decorateWithHistoricalChartsData = (
 
       // mapping the interest rates for the vault itself
       for (const vaultHourlyInterestRate of castedVault.hourlyInterestRates) {
-        const timestamp = dayjs(Number(vaultHourlyInterestRate.date) * 1000)
-          .startOf('hour')
-          .format(CHART_TIMESTAMP_FORMAT)
+        const timestamp = dayjs(Number(vaultHourlyInterestRate.date) * 1000).startOf('hour')
+        const timestampFormatted = timestamp.format(CHART_TIMESTAMP_FORMAT)
 
         const averageRate = Number(vaultHourlyInterestRate.averageRate)
-        const timestampData = { timestamp, [vaultName]: averageRate }
+        const timestampAndData = { timestamp: timestampFormatted, [vaultName]: averageRate }
 
-        if (!chartsDataRaw['7d'][timestamp]) {
-          chartsDataRaw['7d'][timestamp] = timestampData
-        } else {
-          chartsDataRaw['7d'][timestamp][vaultName] = averageRate
+        if (timestamp.unix() > threshold7d) {
+          if (!(timestampFormatted in chartsDataRaw['7d'])) {
+            chartsDataRaw['7d'][timestampFormatted] = timestampAndData
+          } else {
+            chartsDataRaw['7d'][timestampFormatted][vaultName] = averageRate
+          }
         }
 
-        if (!chartsDataRaw['30d'][timestamp]) {
-          chartsDataRaw['30d'][timestamp] = timestampData
-        } else {
-          chartsDataRaw['30d'][timestamp][vaultName] = averageRate
+        if (timestamp.unix() > threshold30d) {
+          if (!(timestampFormatted in chartsDataRaw['30d'])) {
+            chartsDataRaw['30d'][timestampFormatted] = timestampAndData
+          } else {
+            chartsDataRaw['30d'][timestampFormatted][vaultName] = averageRate
+          }
         }
       }
       for (const vaultDailyInterestRate of castedVault.dailyInterestRates) {
-        const timestamp = dayjs(Number(vaultDailyInterestRate.date) * 1000)
-          .startOf('day')
-          .format(CHART_TIMESTAMP_FORMAT)
+        const timestamp = dayjs(Number(vaultDailyInterestRate.date) * 1000).startOf('day')
+        const timestampFormatted = timestamp.format(CHART_TIMESTAMP_FORMAT)
 
-        chartsDataRaw['90d'][timestamp] = { timestamp }
-        chartsDataRaw['6m'][timestamp] = { timestamp }
-        chartsDataRaw['1y'][timestamp] = { timestamp }
-        chartsDataRaw['90d'][timestamp] = {
-          ...chartsDataRaw['90d'][timestamp],
-          [vaultName]: Number(vaultDailyInterestRate.averageRate),
+        chartsDataRaw['90d'][timestampFormatted] = { timestamp: timestampFormatted }
+        chartsDataRaw['6m'][timestampFormatted] = { timestamp: timestampFormatted }
+        chartsDataRaw['1y'][timestampFormatted] = { timestamp: timestampFormatted }
+
+        if (timestamp.unix() > threshold90d) {
+          chartsDataRaw['90d'][timestampFormatted] = {
+            ...chartsDataRaw['90d'][timestampFormatted],
+            [vaultName]: Number(vaultDailyInterestRate.averageRate),
+          }
         }
-        chartsDataRaw['6m'][timestamp] = {
-          ...chartsDataRaw['6m'][timestamp],
-          [vaultName]: Number(vaultDailyInterestRate.averageRate),
+
+        if (timestamp.unix() > threshold6m) {
+          chartsDataRaw['6m'][timestampFormatted] = {
+            ...chartsDataRaw['6m'][timestampFormatted],
+            [vaultName]: Number(vaultDailyInterestRate.averageRate),
+          }
         }
-        chartsDataRaw['1y'][timestamp] = {
-          ...chartsDataRaw['1y'][timestamp],
-          [vaultName]: Number(vaultDailyInterestRate.averageRate),
+        if (timestamp.unix() > threshold1y) {
+          chartsDataRaw['1y'][timestampFormatted] = {
+            ...chartsDataRaw['1y'][timestampFormatted],
+            [vaultName]: Number(vaultDailyInterestRate.averageRate),
+          }
         }
       }
       for (const vaultWeeklyInterestRate of castedVault.weeklyInterestRates) {
-        const timestamp = dayjs(Number(vaultWeeklyInterestRate.date) * 1000)
-          .startOf('week')
-          .format(CHART_TIMESTAMP_FORMAT)
+        const timestamp = dayjs(Number(vaultWeeklyInterestRate.date) * 1000).startOf('week')
+        const timestampFormatted = timestamp.format(CHART_TIMESTAMP_FORMAT)
 
-        chartsDataRaw['3y'][timestamp] = { timestamp }
-        chartsDataRaw['3y'][timestamp] = {
-          ...chartsDataRaw['3y'][timestamp],
-          [vaultName]: Number(vaultWeeklyInterestRate.averageRate),
+        chartsDataRaw['3y'][timestampFormatted] = { timestamp: timestampFormatted }
+
+        if (timestamp.unix() > threshold3y) {
+          chartsDataRaw['3y'][timestampFormatted] = {
+            ...chartsDataRaw['3y'][timestampFormatted],
+            [vaultName]: Number(vaultWeeklyInterestRate.averageRate),
+          }
         }
       }
 
       // mapping the interest rates for all arks (but only since the vault has APR)
+      // no need to check for the threshold, since we map ark interest rates only against the vaults data
       for (const arkInterestRateKey of arksInterestRatesKeys) {
         const interestRates = arkInterestRatesMap[arkInterestRateKey]
-        const arkUniqueName = `${arkInterestRateKey.split('-')[0]}-${arkInterestRateKey.split('-')[2].slice(0, 5)}`
+
+        // temporary mapping, we need something more robust from subgraph
+        const protocol = arkInterestRateKey.split('-')
+
+        const arkUniqueName = getProtocolLabel(protocol)
 
         chartDataNames.push(arkUniqueName)
 
@@ -227,14 +260,17 @@ export const decorateWithHistoricalChartsData = (
       )
 
       const chartColors = Object.keys(arkInterestRatesMap).reduce((acc, key) => {
-        const protocolKey = key.split('-')[0] as keyof typeof historicalChartprotocolsColorMap
-        const arkUniqueName = `${key.split('-')[0]}-${key.split('-')[2].slice(0, 5)}`
+        // temporary mapping, we need something more robust from subgraph
+        const protocol = key.split('-')
+        const arkUniqueName = getProtocolLabel(protocol)
 
         return {
           ...acc,
           [arkUniqueName]:
-            protocolKey in historicalChartprotocolsColorMap
-              ? historicalChartprotocolsColorMap[protocolKey]
+            arkUniqueName in historicalChartprotocolsColorMap
+              ? historicalChartprotocolsColorMap[
+                  arkUniqueName as keyof typeof historicalChartprotocolsColorMap
+                ]
               : historicalChartprotocolsColorMap.DEFAULT,
         }
       }, {})

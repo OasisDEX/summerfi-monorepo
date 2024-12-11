@@ -21,7 +21,7 @@ export const HistoricalYieldChart = ({ chartData, summerVaultName }: HistoricalY
     ...chartData?.colors,
   }
 
-  const dataNames = [...(chartData?.dataNames || []), summerVaultName]
+  const dataNames = [...(chartData?.dataNames ?? []), summerVaultName]
 
   const parsedData = useMemo(() => {
     if (!chartData) {
