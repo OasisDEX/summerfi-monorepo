@@ -44,19 +44,24 @@ export const vaultExposureMapper = (
 
     // New mapping logic
     const formatActionName = (nameParts: string[]) => {
-      const cleanedName = nameParts.slice(0, -1).join('-');
+      const cleanedName = nameParts.slice(0, -1).join('-')
 
-      const baseName = cleanedName.split('-')[0];
+      const [baseName, ...remainingParts] = cleanedName.split('-')
+
       if (baseName === 'MetaMorpho' || baseName === 'MorphoVault') {
-        return "Morpho " + cleanedName.split('-').slice(2).join(' ').replace(/_/g, ' ');
+        const nameWithoutPrefix = remainingParts.join(' ').replace(/_/gu, ' ')
+
+        return `Morpho ${nameWithoutPrefix.split(' ').slice(1).join(' ')}`
       } else if (baseName === 'ERC4626') {
-        const secondPart = cleanedName.split('-')[1];
-        return secondPart.charAt(0).toUpperCase() + secondPart.slice(1);
+        const [secondPart] = remainingParts
+
+        return secondPart.charAt(0).toUpperCase() + secondPart.slice(1)
       }
-      return arkNameMap[baseName] ?? baseName;
+
+      return arkNameMap[baseName] ?? baseName
     }
 
-    const protocolLabel = formatActionName(protocol);
+    const protocolLabel = formatActionName(protocol)
 
     return {
       content: {
