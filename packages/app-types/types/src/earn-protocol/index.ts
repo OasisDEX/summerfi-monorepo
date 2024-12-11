@@ -14,9 +14,29 @@ export { Network as SDKNetwork }
 export { ChainId as SDKChainId }
 export { IArmadaPosition }
 
+type ChartDataPoints = {
+  timestamp: number
+  [key: string]: number
+}
+
+export type ChartsDataTimeframes = {
+  '90d': ChartDataPoints[]
+  '6m': ChartDataPoints[]
+  '1y': ChartDataPoints[]
+  '3y': ChartDataPoints[]
+}
+
+export type VaultChartsHistoricalData = {
+  chartsData?: {
+    data: ChartsDataTimeframes
+    dataNames: string[]
+    colors: { [key: string]: string }
+  }
+}
+
 type VaultCustomFields = {
   // custom fields for vaults - decorated within the earn/lp apps
-  customFields?: EarnAppFleetCustomConfigType
+  customFields?: EarnAppFleetCustomConfigType & VaultChartsHistoricalData
 }
 export type SDKVaultsListType = GetVaultsQuery['vaults'] & VaultCustomFields
 export type SDKVaultType = Exclude<GetVaultQuery['vault'] & VaultCustomFields, null | undefined>
@@ -104,4 +124,13 @@ export type ForecastData = {
     weekly: ForecastDataPoints
     monthly: ForecastDataPoints
   }
+}
+
+export type ArkDetailsType = {
+  protocol: string
+  type: string
+  asset: string
+  marketAsset: string
+  pool: string
+  chainId: number
 }

@@ -1,35 +1,64 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { type TimeframesType } from '@summerfi/app-types'
-import BigNumber from 'bignumber.js'
-import dayjs from 'dayjs'
+import { Card } from '@summerfi/app-earn-ui'
+import { type TimeframesType, type VaultChartsHistoricalData } from '@summerfi/app-types'
 
+import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
 import { YieldsChart } from '@/components/organisms/Charts/components/Yields'
 
-const dataNames = ['Summer Strategy']
-
-const colors = {
-  'Summer Strategy-color': '#FF49A4',
+type HistoricalYieldChartProps = {
+  chartData: VaultChartsHistoricalData['chartsData']
+  summerVaultName: string
 }
 
-export const HistoricalYieldChart = ({ aprHourlyList }: { aprHourlyList: string[] }) => {
+export const HistoricalYieldChart = ({ chartData, summerVaultName }: HistoricalYieldChartProps) => {
   const [timeframe, setTimeframe] = useState<TimeframesType>('90d')
-  const _unused = setTimeframe
+  const [compare, setCompare] = useState(true)
+
+  const colors = {
+    [`${summerVaultName}`]: '#FF49A4',
+    ...chartData?.colors,
+  }
+
+  const dataNames = [...(chartData?.dataNames || []), summerVaultName]
 
   const parsedData = useMemo(() => {
-    const now = dayjs().startOf('hour')
+    if (!chartData) {
+      return []
+    }
 
-    return [...aprHourlyList]
-      .reverse()
-      .map((item, itemIndex) => ({
-        name: now.subtract(itemIndex, 'hour').format('MMM DD, HH:mm'),
-        'Summer Strategy': Number(new BigNumber(item).toFixed(2)), // this has to be a number for the chart to render it properly
+    if (!compare) {
+      return chartData.data[timeframe].map((point) => ({
+        timestamp: point.timestamp,
+        [summerVaultName]: point[summerVaultName],
       }))
-      .reverse()
-  }, [aprHourlyList])
+    }
+
+    return chartData.data[timeframe]
+  }, [timeframe, chartData, compare, summerVaultName])
 
   return (
-    <YieldsChart timeframe={timeframe} colors={colors} data={parsedData} dataNames={dataNames} />
+    <Card
+      style={{
+        marginTop: 'var(--spacing-space-medium)',
+        flexDirection: 'column',
+        paddingBottom: 0,
+      }}
+    >
+      <ChartHeader
+        compare={compare}
+        setCompare={(nextCompare) => setCompare(nextCompare)}
+        timeframe={timeframe}
+        setTimeframe={(nextTimeFrame) => setTimeframe(nextTimeFrame as TimeframesType)}
+      />
+      <YieldsChart
+        summerVaultName={summerVaultName}
+        timeframe={timeframe}
+        colors={colors}
+        data={parsedData}
+        dataNames={dataNames}
+      />
+    </Card>
   )
 }

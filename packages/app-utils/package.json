@@ -22,6 +22,7 @@
   "scripts": {
     "lint": "eslint *.ts*",
     "dev": "pnpm vite build -w true",
+    "prebuild": "pnpm vite build -w false",
     "build": "pnpm vite build -w false",
     "clean": "rm -rf dist"
   },

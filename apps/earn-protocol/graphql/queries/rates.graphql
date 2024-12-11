@@ -1,0 +1,35 @@
+query GetInterestRates($days: Int!, $weeks: Int!, $hours: Int!, $productId: String!) {
+  dailyInterestRates(
+    where: { productId: $productId }
+    first: $days
+    orderBy: date
+    orderDirection: desc
+  ) {
+    averageRate
+    protocol
+    date
+    productId
+  }
+  hourlyInterestRates(
+    where: { productId: $productId }
+    first: $hours
+    orderBy: date
+    orderDirection: desc
+  ) {
+    averageRate
+    protocol
+    date
+    productId
+  }
+  weeklyInterestRates(
+    where: { productId: $productId }
+    first: $weeks
+    orderBy: weekTimestamp
+    orderDirection: desc
+  ) {
+    averageRate
+    protocol
+    date: weekTimestamp
+    productId
+  }
+}

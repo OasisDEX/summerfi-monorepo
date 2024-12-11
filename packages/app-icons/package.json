@@ -13,6 +13,7 @@
     "lint": "eslint *.ts*",
     "dev": "vite build -w true --mode=dev",
     "build": "vite build -w false --mode=prod",
+    "prebuild": "vite build -w false --mode=dev",
     "clean": "rm -rf dist"
   },
   "dependencies": {

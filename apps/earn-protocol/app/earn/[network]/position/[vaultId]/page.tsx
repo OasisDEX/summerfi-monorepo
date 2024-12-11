@@ -7,6 +7,7 @@ import {
 } from '@summerfi/app-utils'
 import { isAddress } from 'viem'
 
+import { getInterestRates } from '@/app/server-handlers/interest-rates'
 import { getUserActivity } from '@/app/server-handlers/sdk/get-user-activity'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
@@ -50,7 +51,18 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       chainId: subgraphNetworkToId(parsedNetwork),
     }).then(async (data) => (await data.json()) as PositionForecastAPIResponse),
   ])
-  const [vaultDecorated] = vault ? decorateCustomVaultFields([vault], config) : []
+
+  const interestRates = vault?.arks
+    ? await getInterestRates({
+        network: parsedNetwork,
+        arksList: vault.arks,
+        dailyCount: 365,
+        hourlyCount: 1, // currently not displaying hourly data
+        weeklyCount: 52 * 3,
+      })
+    : {}
+
+  const [vaultDecorated] = vault ? decorateCustomVaultFields([vault], config, interestRates) : []
   const vaultsDecorated = decorateCustomVaultFields(vaults, config)
 
   if (!vault) {
