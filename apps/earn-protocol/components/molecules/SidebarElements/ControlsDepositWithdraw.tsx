@@ -53,7 +53,7 @@ export const ControlsDepositWithdraw = ({
         heading={{
           label: 'Balance',
           value: tokenBalanceLoading ? (
-            <SkeletonLine />
+            <SkeletonLine width={60} height={10} />
           ) : tokenBalance ? (
             `${formatCryptoBalance(tokenBalance)} ${vault.inputToken.symbol}`
           ) : (

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import {
   type DropdownOption,
+  type DropdownRawOption,
   type SDKVaultishType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
@@ -10,10 +11,11 @@ import { formatCryptoBalance, formatFiatBalance, mapNumericInput } from '@summer
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
-import { WithArrow } from '@/components/atoms/WithArrow/WithArrow.tsx'
+import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
+import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
 import { InputWithDropdown } from '@/components/molecules/InputWithDropdown/InputWithDropdown'
 import { ProjectedEarnings } from '@/components/molecules/ProjectedEarnings/ProjectedEarnings'
-import { SidebarMobileHeader } from '@/components/molecules/SidebarMobileHeader/SidebarMobileHeader.tsx'
+import { SidebarMobileHeader } from '@/components/molecules/SidebarMobileHeader/SidebarMobileHeader'
 import { Sidebar } from '@/components/organisms/Sidebar/Sidebar'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 import { useLocalStorageOnce } from '@/hooks/use-local-storage-once'
@@ -24,13 +26,21 @@ export type VaultSimulationFormProps = {
   vaultData: SDKVaultishType
   tokenBalance?: BigNumber
   tokenPriceUSD?: number
+  isTokenBalanceLoading?: boolean
   isMobile?: boolean
+  tokenOptions: DropdownOption[]
+  selectedTokenOption: DropdownOption
+  handleTokenSelectionChange: (option: DropdownRawOption) => void
 }
 
 export const VaultSimulationForm = ({
   vaultData,
   tokenBalance,
+  isTokenBalanceLoading,
   isMobile,
+  tokenOptions,
+  selectedTokenOption,
+  handleTokenSelectionChange,
 }: VaultSimulationFormProps) => {
   const [inputValue, setInputValue] = useState<string>(mapNumericInput('1000'))
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
@@ -74,14 +84,6 @@ export const VaultSimulationForm = ({
     )
   }, [vaultData, inputValue])
 
-  const dropdownLockedValue = useMemo(() => {
-    return {
-      tokenSymbol: vaultData.inputToken.symbol,
-      label: vaultData.inputToken.symbol,
-      value: vaultData.inputToken.symbol,
-    } as DropdownOption
-  }, [vaultData])
-
   const balance = tokenBalance ? tokenBalance : undefined
   const tokenPrice = vaultData.inputTokenPriceUSD ? Number(vaultData.inputTokenPriceUSD) : undefined
   const token = vaultData.inputToken.symbol
@@ -101,11 +103,18 @@ export const VaultSimulationForm = ({
                     : ''
                 }
                 handleChange={handleInputChange}
-                options={[dropdownLockedValue]}
-                dropdownValue={dropdownLockedValue}
+                handleDropdownChange={handleTokenSelectionChange}
+                options={tokenOptions}
+                dropdownValue={selectedTokenOption}
                 heading={{
                   label: 'Balance',
-                  value: balance ? `${formatCryptoBalance(balance)} ${token}` : `-`,
+                  value: isTokenBalanceLoading ? (
+                    <SkeletonLine width={60} height={10} />
+                  ) : balance ? (
+                    `${formatCryptoBalance(balance)} ${token}`
+                  ) : (
+                    `-`
+                  ),
                   // eslint-disable-next-line no-console
                   action: () => setInputValue(mapNumericInput(balance?.toString() ?? '1000')),
                 }}

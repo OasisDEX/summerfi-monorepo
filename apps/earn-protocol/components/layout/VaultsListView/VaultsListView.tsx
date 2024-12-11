@@ -6,6 +6,7 @@ import {
   SimpleGrid,
   Text,
   useMobileCheck,
+  useTokenSelector,
   VaultCard,
   VaultGrid,
   VaultSimulationForm,
@@ -91,8 +92,12 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
 
   const vaultData = selectedVaultData ?? networkFilteredVaults[0]
 
+  const { handleTokenSelectionChange, selectedTokenOption, tokenOptions } = useTokenSelector({
+    vault: vaultData,
+  })
+
   const tokenBalances = useTokenBalances({
-    tokenSymbol: vaultData.inputToken.symbol,
+    tokenSymbol: selectedTokenOption.value,
     network: vaultData.protocol.network,
   })
 
@@ -215,6 +220,10 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
           vaultData={vaultData}
           isMobile={isMobile}
           tokenBalance={tokenBalances.tokenBalance}
+          isTokenBalanceLoading={tokenBalances.tokenBalanceLoading}
+          selectedTokenOption={selectedTokenOption}
+          handleTokenSelectionChange={handleTokenSelectionChange}
+          tokenOptions={tokenOptions}
         />
       }
     />

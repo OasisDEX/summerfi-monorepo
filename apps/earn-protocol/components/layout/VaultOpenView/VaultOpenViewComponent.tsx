@@ -8,6 +8,7 @@ import {
   Text,
   useLocalStorageOnce,
   useMobileCheck,
+  useTokenSelector,
   VaultOpenGrid,
 } from '@summerfi/app-earn-ui'
 import {
@@ -40,7 +41,6 @@ import { useForecast } from '@/hooks/use-forecast'
 import { usePosition } from '@/hooks/use-position'
 import { useRedirectToPosition } from '@/hooks/use-redirect-to-position'
 import { useTokenBalance } from '@/hooks/use-token-balance'
-import { useTokenSelector } from '@/hooks/use-token-selector'
 import { useTransaction } from '@/hooks/use-transaction'
 
 import vaultOpenViewStyles from './VaultOpenView.module.scss'
