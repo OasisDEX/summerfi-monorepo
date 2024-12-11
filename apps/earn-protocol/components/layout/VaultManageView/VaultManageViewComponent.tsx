@@ -9,8 +9,8 @@ import {
   type SidebarProps,
   Text,
   useMobileCheck,
-  VaultManageGrid,
   useTokenSelector,
+  VaultManageGrid,
 } from '@summerfi/app-earn-ui'
 import {
   type SDKUsersActivityType,
