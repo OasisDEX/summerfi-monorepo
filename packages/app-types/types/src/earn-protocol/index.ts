@@ -9,6 +9,7 @@ import { ChainId } from '@summerfi/serverless-shared'
 import { type TransactionInfo } from '@summerfi/sdk-common'
 import { type IArmadaPosition } from '@summerfi/armada-protocol-common'
 import { EarnAppFleetCustomConfigType } from '../generated/earn-app-config'
+import { TimeframesType } from '../components'
 
 export { Network as SDKNetwork }
 export { ChainId as SDKChainId }
@@ -20,10 +21,7 @@ type ChartDataPoints = {
 }
 
 export type ChartsDataTimeframes = {
-  '90d': ChartDataPoints[]
-  '6m': ChartDataPoints[]
-  '1y': ChartDataPoints[]
-  '3y': ChartDataPoints[]
+  [key in TimeframesType]: ChartDataPoints[]
 }
 
 export type VaultChartsHistoricalData = {

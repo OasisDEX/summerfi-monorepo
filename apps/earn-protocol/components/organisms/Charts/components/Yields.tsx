@@ -70,7 +70,7 @@ export const YieldsChart = ({ data, dataNames, colors, summerVaultName }: Yields
             return dataName === summerVaultName ? (
               <Area
                 key={dataName}
-                type="natural"
+                type={data.length > 100 ? 'linear' : 'natural'}
                 animationDuration={300}
                 animationBegin={dataIndex * 50}
                 animationEasing="ease-out"
@@ -83,7 +83,7 @@ export const YieldsChart = ({ data, dataNames, colors, summerVaultName }: Yields
             ) : (
               <Line
                 key={dataName}
-                type="natural"
+                type={data.length > 100 ? 'linear' : 'natural'}
                 animationId={dataIndex}
                 animationDuration={300}
                 animationBegin={dataIndex * 50}

@@ -42,7 +42,7 @@ export const decorateCustomVaultFields = (
     ? decorateWithHistoricalChartsData(vaultsWithConfig, arkInterestRatesMap)
     : vaultsWithConfig
 
-  return vaultsWithChartsData
+  return vaultsWithChartsData as SDKVaultishType[]
 }
 
 export const getCustomVaultConfigById = (

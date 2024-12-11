@@ -2,6 +2,7 @@ import {
   type ChartsDataTimeframes,
   type SDKVaultishType,
   type SDKVaultType,
+  type TimeframesType,
   type VaultChartsHistoricalData,
 } from '@summerfi/app-types'
 import dayjs from 'dayjs'
@@ -19,41 +20,64 @@ const historicalChartprotocolsColorMap = {
   Gearbox: '#c37227',
 }
 
-const getBaseHistoricalChartsData = memoize((fillTimeframe = true) => {
-  const today = dayjs()
-  // establish a base values for the chart data
-  // each chart data points has a timestamp key and an empty object as value
-  // which will be filled with the interest rate data
+type BaseHistoricalChartsDataReturnType = {
+  [key in TimeframesType]: {
+    [key: string]: { [key: string]: number | string; timestamp: string }
+  }
+}
 
-  if (!fillTimeframe) {
-    // if we dont want to show the whole timeframe (ex 1y worth of points with only available data)
-    // just set this to false
-    return {
-      '90d': {},
-      '6m': {},
-      '1y': {},
-      '3y': {},
+const emptyChartRaw = {
+  '7d': {},
+  '30d': {},
+  '90d': {},
+  '6m': {},
+  '1y': {},
+  '3y': {},
+}
+
+const emptyChart = {
+  '7d': [{ timestamp: 0 }],
+  '30d': [{ timestamp: 0 }],
+  '90d': [{ timestamp: 0 }],
+  '6m': [{ timestamp: 0 }],
+  '1y': [{ timestamp: 0 }],
+  '3y': [{ timestamp: 0 }],
+}
+
+const getBaseHistoricalChartsData = memoize(
+  (fillTimeframe = true): BaseHistoricalChartsDataReturnType => {
+    const today = dayjs()
+    // establish a base values for the chart data
+    // each chart data points has a timestamp key and an empty object as value
+    // which will be filled with the interest rate data
+
+    if (!fillTimeframe) {
+      // if we dont want to show the whole timeframe (ex 1y worth of points with only available data)
+      // just set this to false
+      return emptyChartRaw
     }
-  }
 
-  const createDataArray = (arrLength: number, unit: dayjs.ManipulateType) =>
-    Array.from({ length: arrLength }).reduce<{
-      [key: string]: { [key: string]: number | string; timestamp: string }
-    }>((acc, _, i) => {
-      const timestamp = today.startOf(unit).subtract(i, unit).format(CHART_TIMESTAMP_FORMAT)
+    const createDataArray = (arrLength: number, unit: dayjs.ManipulateType) =>
+      Array.from({ length: arrLength }).reduce<{
+        [key: string]: { [key: string]: number | string; timestamp: string }
+      }>((acc, _, i) => {
+        const timestamp = today.startOf(unit).subtract(i, unit).format(CHART_TIMESTAMP_FORMAT)
 
-      acc[timestamp] = { timestamp }
+        acc[timestamp] = { timestamp }
 
-      return acc
-    }, {})
+        return acc
+      }, {})
 
-  return {
-    '90d': createDataArray(90, 'day'),
-    '6m': createDataArray(30 * 6, 'day'),
-    '1y': createDataArray(365, 'day'),
-    '3y': createDataArray(52 * 3, 'week'),
-  }
-})
+    return {
+      '7d': createDataArray(7 * 24, 'hour'),
+      '30d': createDataArray(30 * 24, 'hour'),
+      '90d': createDataArray(90, 'day'),
+      '6m': createDataArray(30 * 6, 'day'),
+      '1y': createDataArray(365, 'day'),
+      '3y': createDataArray(52 * 3, 'week'),
+    }
+  },
+)
 
 export const decorateWithHistoricalChartsData = (
   vaults: SDKVaultishType[],
@@ -66,14 +90,35 @@ export const decorateWithHistoricalChartsData = (
       const castedVault = vault as SDKVaultType
       const vaultName = castedVault.customFields?.name ?? 'Summer Vault'
 
-      // eslint-disable-next-line no-console
-      console.time(`decorateWithHistoricalChartsData ${vaultName}`)
-      const chartDataNames = []
+      const chartDataNames = [] // a list of names needed for the chart (vault + arks)
+      // base data structure for the charts, filled with empty objects
+      // created with displaying whole timeframe in mind, now we're displaying only the timeframe
+      // that has vault data available, but that might change (in that case just remove the false param)
       const chartsDataRaw = getBaseHistoricalChartsData(false)
       const arksInterestRatesKeys = Object.keys(arkInterestRatesMap) as string[]
 
       // mapping the interest rates for the vault itself
-      for (const vaultDailyInterestRate of castedVault.dailyApr) {
+      for (const vaultHourlyInterestRate of castedVault.hourlyInterestRates) {
+        const timestamp = dayjs(Number(vaultHourlyInterestRate.date) * 1000)
+          .startOf('hour')
+          .format(CHART_TIMESTAMP_FORMAT)
+
+        const averageRate = Number(vaultHourlyInterestRate.averageRate)
+        const timestampData = { timestamp, [vaultName]: averageRate }
+
+        if (!chartsDataRaw['7d'][timestamp]) {
+          chartsDataRaw['7d'][timestamp] = timestampData
+        } else {
+          chartsDataRaw['7d'][timestamp][vaultName] = averageRate
+        }
+
+        if (!chartsDataRaw['30d'][timestamp]) {
+          chartsDataRaw['30d'][timestamp] = timestampData
+        } else {
+          chartsDataRaw['30d'][timestamp][vaultName] = averageRate
+        }
+      }
+      for (const vaultDailyInterestRate of castedVault.dailyInterestRates) {
         const timestamp = dayjs(Number(vaultDailyInterestRate.date) * 1000)
           .startOf('day')
           .format(CHART_TIMESTAMP_FORMAT)
@@ -83,15 +128,26 @@ export const decorateWithHistoricalChartsData = (
         chartsDataRaw['1y'][timestamp] = { timestamp }
         chartsDataRaw['90d'][timestamp] = {
           ...chartsDataRaw['90d'][timestamp],
-          [vaultName]: Number(vaultDailyInterestRate.apr),
+          [vaultName]: Number(vaultDailyInterestRate.averageRate),
         }
         chartsDataRaw['6m'][timestamp] = {
           ...chartsDataRaw['6m'][timestamp],
-          [vaultName]: Number(vaultDailyInterestRate.apr),
+          [vaultName]: Number(vaultDailyInterestRate.averageRate),
         }
         chartsDataRaw['1y'][timestamp] = {
           ...chartsDataRaw['1y'][timestamp],
-          [vaultName]: Number(vaultDailyInterestRate.apr),
+          [vaultName]: Number(vaultDailyInterestRate.averageRate),
+        }
+      }
+      for (const vaultWeeklyInterestRate of castedVault.weeklyInterestRates) {
+        const timestamp = dayjs(Number(vaultWeeklyInterestRate.date) * 1000)
+          .startOf('week')
+          .format(CHART_TIMESTAMP_FORMAT)
+
+        chartsDataRaw['3y'][timestamp] = { timestamp }
+        chartsDataRaw['3y'][timestamp] = {
+          ...chartsDataRaw['3y'][timestamp],
+          [vaultName]: Number(vaultWeeklyInterestRate.averageRate),
         }
       }
 
@@ -101,6 +157,25 @@ export const decorateWithHistoricalChartsData = (
         const arkUniqueName = `${arkInterestRateKey.split('-')[0]}-${arkInterestRateKey.split('-')[2].slice(0, 5)}`
 
         chartDataNames.push(arkUniqueName)
+
+        for (const hourlyInterestRate of interestRates.hourlyInterestRates) {
+          const timestamp = dayjs(hourlyInterestRate.date * 1000)
+            .startOf('hour')
+            .format(CHART_TIMESTAMP_FORMAT)
+
+          if (timestamp in chartsDataRaw['7d']) {
+            chartsDataRaw['7d'][timestamp] = {
+              ...chartsDataRaw['7d'][timestamp],
+              [arkUniqueName]: Number(hourlyInterestRate.averageRate),
+            }
+          }
+          if (timestamp in chartsDataRaw['30d']) {
+            chartsDataRaw['30d'][timestamp] = {
+              ...chartsDataRaw['30d'][timestamp],
+              [arkUniqueName]: Number(hourlyInterestRate.averageRate),
+            }
+          }
+        }
 
         for (const dailyInterestRate of interestRates.dailyInterestRates) {
           const timestamp = dayjs(dailyInterestRate.date * 1000)
@@ -148,12 +223,7 @@ export const decorateWithHistoricalChartsData = (
             [key]: data.sort((a, b) => dayjs(a.timestamp).unix() - dayjs(b.timestamp).unix()), // final sorting
           } as ChartsDataTimeframes
         },
-        {
-          '90d': [{ timestamp: 0 }],
-          '6m': [{ timestamp: 0 }],
-          '1y': [{ timestamp: 0 }],
-          '3y': [{ timestamp: 0 }],
-        },
+        emptyChart,
       )
 
       const chartColors = Object.keys(arkInterestRatesMap).reduce((acc, key) => {
@@ -174,9 +244,6 @@ export const decorateWithHistoricalChartsData = (
         dataNames: chartDataNames,
         colors: chartColors,
       }
-
-      // eslint-disable-next-line no-console
-      console.timeEnd(`decorateWithHistoricalChartsData ${vault.customFields?.name}`)
 
       return {
         ...vault,

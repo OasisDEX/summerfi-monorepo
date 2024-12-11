@@ -30,7 +30,7 @@ export const ChartHeader = ({
       )}
       {timeframe && setTimeframe && (
         <Timeframes
-          timeframes={['90d', '6m', '1y', '3y']}
+          timeframes={['7d', '30d', '90d', '6m', '1y', '3y']}
           activeTimeframe={timeframe}
           setActiveTimeframe={setTimeframe}
         />

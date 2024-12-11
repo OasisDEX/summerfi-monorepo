@@ -1,6 +1,7 @@
 import { parseServerResponseToClient } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
 
+import { getInterestRates } from '@/app/server-handlers/interest-rates'
 import { portfolioPositionsHandler } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
 import { portfolioRewardsHandler } from '@/app/server-handlers/portfolio/portfolio-rewards-handler'
 import { portfolioWalletAssetsHandler } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
@@ -34,7 +35,20 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   const positionsList = positionsJsonSafe.map((position) =>
     portfolioPositionsHandler({ position, vaultsList: vaults, config }),
   )
-  const vaultsDecorated = decorateCustomVaultFields(vaults, config)
+  const vaultsWithInterestRates = await Promise.all(
+    positionsList.map(async ({ vaultData }) => {
+      const interestRates = await getInterestRates({
+        network: vaultData.protocol.network,
+        arksList: vaultData.arks,
+      })
+
+      console.log('interestRates', interestRates)
+
+      return decorateCustomVaultFields([vaultData], config, interestRates)
+    }),
+  )
+
+  console.log('vaultsWithInterestRates', vaultsWithInterestRates)
 
   return (
     <PortfolioPageView
