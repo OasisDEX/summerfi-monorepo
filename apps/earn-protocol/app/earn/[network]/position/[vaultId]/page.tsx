@@ -56,9 +56,6 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     ? await getInterestRates({
         network: parsedNetwork,
         arksList: vault.arks,
-        dailyCount: 365,
-        hourlyCount: 1, // currently not displaying hourly data
-        weeklyCount: 52 * 3,
       })
     : {}
 

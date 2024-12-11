@@ -1,7 +1,7 @@
-query GetInterestRates($days: Int!, $weeks: Int!, $hours: Int!, $productId: String!) {
+query GetInterestRates($productId: String!) {
   dailyInterestRates(
     where: { productId: $productId }
-    first: $days
+    first: 365 # 365 days
     orderBy: date
     orderDirection: desc
   ) {
@@ -12,7 +12,7 @@ query GetInterestRates($days: Int!, $weeks: Int!, $hours: Int!, $productId: Stri
   }
   hourlyInterestRates(
     where: { productId: $productId }
-    first: $hours
+    first: 168 # 24 * 7 = one week
     orderBy: date
     orderDirection: desc
   ) {
@@ -23,7 +23,7 @@ query GetInterestRates($days: Int!, $weeks: Int!, $hours: Int!, $productId: Stri
   }
   weeklyInterestRates(
     where: { productId: $productId }
-    first: $weeks
+    first: 156 # 52 * 3 = three years
     orderBy: weekTimestamp
     orderDirection: desc
   ) {

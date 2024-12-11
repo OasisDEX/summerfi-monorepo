@@ -36,51 +36,22 @@ const getBaseHistoricalChartsData = memoize((fillTimeframe = true) => {
     }
   }
 
+  const createDataArray = (arrLength: number, unit: dayjs.ManipulateType) =>
+    Array.from({ length: arrLength }).reduce<{
+      [key: string]: { [key: string]: number | string; timestamp: string }
+    }>((acc, _, i) => {
+      const timestamp = today.startOf(unit).subtract(i, unit).format(CHART_TIMESTAMP_FORMAT)
+
+      acc[timestamp] = { timestamp }
+
+      return acc
+    }, {})
+
   return {
-    // 90d - 1y are in days
-    '90d': Array.from({ length: 90 }).reduce<{
-      [key: string]: { [key: string]: number | string; timestamp: string }
-    }>((acc, _, i) => {
-      const timestamp = today.startOf('day').subtract(i, 'day').format(CHART_TIMESTAMP_FORMAT)
-
-      return {
-        ...acc,
-        [timestamp]: { timestamp },
-      }
-    }, {}),
-    // assuming 30 days in a month
-    '6m': Array.from({ length: 30 * 6 }).reduce<{
-      [key: string]: { [key: string]: number | string; timestamp: string }
-    }>((acc, _, i) => {
-      const timestamp = today.startOf('day').subtract(i, 'day').format(CHART_TIMESTAMP_FORMAT)
-
-      return {
-        ...acc,
-        [timestamp]: { timestamp },
-      }
-    }, {}),
-    // assuming regular 365 days in a year
-    '1y': Array.from({ length: 365 }).reduce<{
-      [key: string]: { [key: string]: number | string; timestamp: string }
-    }>((acc, _, i) => {
-      const timestamp = today.startOf('day').subtract(i, 'day').format(CHART_TIMESTAMP_FORMAT)
-
-      return {
-        ...acc,
-        [timestamp]: { timestamp },
-      }
-    }, {}),
-    // 3y is in weeks (~52 weeks in a year)
-    '3y': Array.from({ length: 52 * 3 }).reduce<{
-      [key: string]: { [key: string]: number | string; timestamp: string }
-    }>((acc, _, i) => {
-      const timestamp = today.startOf('week').subtract(i, 'week').format(CHART_TIMESTAMP_FORMAT)
-
-      return {
-        ...acc,
-        [timestamp]: { timestamp },
-      }
-    }, {}),
+    '90d': createDataArray(90, 'day'),
+    '6m': createDataArray(30 * 6, 'day'),
+    '1y': createDataArray(365, 'day'),
+    '3y': createDataArray(52 * 3, 'week'),
   }
 })
 

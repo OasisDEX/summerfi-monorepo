@@ -40,13 +40,7 @@ const clients = {
 
 const isProperNetwork = (network: string): network is keyof typeof clients => network in clients
 
-export async function getInterestRates({
-  network,
-  arksList,
-  hourlyCount = 12,
-  dailyCount = 7,
-  weeklyCount = 2,
-}: GetInterestRatesParams) {
+export async function getInterestRates({ network, arksList }: GetInterestRatesParams) {
   if (!isProperNetwork(network)) {
     throw new Error(`getInterestRates: No endpoint found for network: ${network}`)
   }
@@ -61,9 +55,6 @@ export async function getInterestRates({
       return networkGraphQlClient
         .request<GetInterestRatesQuery>(GetInterestRatesDocument, {
           productId: getArkProductId(ark),
-          hours: hourlyCount,
-          days: dailyCount,
-          weeks: weeklyCount,
         })
         .then((data) => ({ ...data, tokenSymbol: ark.inputToken.symbol }))
     }),

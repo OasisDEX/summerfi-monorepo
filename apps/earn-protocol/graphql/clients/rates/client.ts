@@ -1121,9 +1121,6 @@ export enum _SubgraphErrorPolicy_ {
 }
 
 export type GetInterestRatesQueryVariables = Exact<{
-  days: Scalars['Int']['input'];
-  weeks: Scalars['Int']['input'];
-  hours: Scalars['Int']['input'];
   productId: Scalars['String']['input'];
 }>;
 
@@ -1132,10 +1129,10 @@ export type GetInterestRatesQuery = { __typename?: 'Query', dailyInterestRates: 
 
 
 export const GetInterestRatesDocument = /*#__PURE__*/ gql`
-    query GetInterestRates($days: Int!, $weeks: Int!, $hours: Int!, $productId: String!) {
+    query GetInterestRates($productId: String!) {
   dailyInterestRates(
     where: {productId: $productId}
-    first: $days
+    first: 365
     orderBy: date
     orderDirection: desc
   ) {
@@ -1146,7 +1143,7 @@ export const GetInterestRatesDocument = /*#__PURE__*/ gql`
   }
   hourlyInterestRates(
     where: {productId: $productId}
-    first: $hours
+    first: 168
     orderBy: date
     orderDirection: desc
   ) {
@@ -1157,7 +1154,7 @@ export const GetInterestRatesDocument = /*#__PURE__*/ gql`
   }
   weeklyInterestRates(
     where: {productId: $productId}
-    first: $weeks
+    first: 156
     orderBy: weekTimestamp
     orderDirection: desc
   ) {
