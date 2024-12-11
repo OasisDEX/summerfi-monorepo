@@ -97,7 +97,7 @@ export const VaultSimulationForm = ({
                 value={inputValue}
                 secondaryValue={
                   inputValue.length && tokenPrice
-                    ? `$${formatFiatBalance(Number(inputValue) * tokenPrice)}`
+                    ? `$${formatFiatBalance(Number(inputValue.replaceAll(',', '')) * tokenPrice)}`
                     : ''
                 }
                 handleChange={handleInputChange}
