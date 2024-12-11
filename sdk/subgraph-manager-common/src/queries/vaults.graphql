@@ -188,6 +188,11 @@ query GetVault($id: ID!) {
     apr90d
     apr180d
     apr365d
+    # needed for the historical graph
+    dailyApr: dailySnapshots(first: 365) {
+      apr: calculatedApr
+      date: timestamp
+    }
     calculatedApr
     aprValues
     withdrawableTotalAssets
