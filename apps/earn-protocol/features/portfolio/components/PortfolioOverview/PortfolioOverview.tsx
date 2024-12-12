@@ -92,7 +92,12 @@ export const PortfolioOverview = ({ vaultsList, positions }: PortfolioOverviewPr
                 key={`Position_${position.positionData.id.id}`}
                 position={position}
                 positionGraph={
-                  <HistoricalYieldChart aprHourlyList={position.vaultData.aprValues} />
+                  <HistoricalYieldChart
+                    aprHourlyList={position.vaultData.dailyInterestRates.map((item) => ({
+                      rate: item.averageRate,
+                      timestamp: item.date.toString(),
+                    }))}
+                  />
                 }
               />
             ))
