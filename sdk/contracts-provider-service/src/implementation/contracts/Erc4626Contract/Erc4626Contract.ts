@@ -100,12 +100,12 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
     const token = await this.asset()
     const assetsAmount = await this.contract.read.convertToAssets([params.amount.toSolidityValue()])
 
-    LoggingService.debug(
-      'convertToAssets',
-      params.amount.toSolidityValue(),
-      '=>',
-      assetsAmount.toString(),
-    )
+    // LoggingService.debug(
+    //   'convertToAssets',
+    //   params.amount.toSolidityValue(),
+    //   '=>',
+    //   assetsAmount.toString(),
+    // )
 
     return TokenAmount.createFromBaseUnit({
       token,
@@ -118,12 +118,12 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
     const token = await this.asErc20().getToken()
     const sharesAmount = await this.contract.read.convertToShares([params.amount.toSolidityValue()])
 
-    LoggingService.debug(
-      'convertToShares',
-      params.amount.toSolidityValue(),
-      '=>',
-      sharesAmount.toString(),
-    )
+    // LoggingService.debug(
+    //   'convertToShares',
+    //   params.amount.toSolidityValue(),
+    //   '=>',
+    //   sharesAmount.toString(),
+    // )
 
     return TokenAmount.createFromBaseUnit({
       token,
@@ -140,8 +140,8 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
 
     LoggingService.debug(
       'previewDeposit',
-      params.assets.toSolidityValue(),
-      '=>',
+      params.assets.toString(),
+      '=> shares ',
       sharesAmount.toString(),
     )
 
@@ -160,8 +160,8 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
 
     LoggingService.debug(
       'previewWithdraw',
-      params.assets.toSolidityValue(),
-      '=>',
+      params.assets.toString(),
+      '=> shares ',
       sharesAmount.toString(),
     )
 

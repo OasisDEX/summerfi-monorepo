@@ -259,7 +259,7 @@ describe('Armada Protocol Deposit', () => {
 
     describe(`Withdraw on ${chainInfo.name}`, () => {
       it(`should withdraw 1 USDC unstaked assets back from fleet at ${fleetAddress.value}`, async () => {
-        const amount = '2'
+        const amount = '1'
 
         // const pre = await sdk.armada.users.getNewDepositTX({
         //   vaultId: vaultId,
@@ -284,7 +284,7 @@ describe('Armada Protocol Deposit', () => {
         const transactions = await sdk.armada.users.getWithdrawTX({
           vaultId: vaultId,
           user,
-          amount: TokenAmount.createFromBaseUnit({
+          amount: TokenAmount.createFrom({
             amount,
             token: swapToken,
           }),

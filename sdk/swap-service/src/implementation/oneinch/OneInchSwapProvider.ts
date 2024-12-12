@@ -105,7 +105,7 @@ export class OneInchSwapProvider
     }
 
     const responseData = (await response.json()) as OneInchSwapResponse
-    LoggingService.debug('OneInchSwapResponse', swapUrl, responseData)
+    // LoggingService.debug('OneInchSwapResponse', swapUrl, responseData)
 
     return {
       provider: SwapProviderType.OneInch,
@@ -161,7 +161,7 @@ export class OneInchSwapProvider
         token: params.toToken,
         amount: responseData.toTokenAmount || responseData.dstAmount,
       }),
-      routes: this._extractSwapRoutes(responseData.protocols),
+      routes: this._extractSwapRoutes(responseData.protocols ?? []),
       estimatedGas: responseData.estimatedGas,
     }
   }
