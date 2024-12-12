@@ -51,7 +51,9 @@ export class ManagerWithProvidersBase<
 
     const providers = this._providersByChainId.get(params.chainInfo.chainId) || []
     if (providers.length === 0) {
-      throw new Error(`No provider found for chainId: ${params.chainInfo.chainId}`)
+      throw new Error(
+        `No provider found for chainId: ${params.chainInfo.chainId} ${this._providersByChainId.entries()}`,
+      )
     }
 
     // For now, we just return the first provider. In the future, we can implement a logic to

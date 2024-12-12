@@ -90,9 +90,9 @@ export class OneInchSwapProvider
       headers: authHeader,
     })
 
-    if (!(response.status === 200 && response.statusText === 'OK')) {
+    if (!response.ok) {
       const errorJSON = await response.json()
-      const errorType = this._parseErrorType(errorJSON.description)
+      const errorType = this._parseErrorType(errorJSON?.description)
 
       throw Error(
         `Error performing 1inch swap data request: ${JSON.stringify({
@@ -138,9 +138,9 @@ export class OneInchSwapProvider
       headers: authHeader,
     })
 
-    if (!(response.status === 200 && response.statusText === 'OK')) {
+    if (!response.ok) {
       const errorJSON = await response.json()
-      const errorType = this._parseErrorType(errorJSON.description)
+      const errorType = this._parseErrorType(errorJSON?.description)
 
       throw Error(
         `Error performing 1inch swap quote request: ${JSON.stringify({
@@ -321,8 +321,11 @@ export class OneInchSwapProvider
    * @param errorDescription The error description from 1inch
    * @returns The parsed error type
    */
-  private _parseErrorType(errorDescription: string): SwapErrorType {
-    if (errorDescription.toLowerCase().includes('insufficient liquidity')) {
+  private _parseErrorType(errorDescription: unknown): SwapErrorType {
+    if (
+      typeof errorDescription === 'string' &&
+      errorDescription.toLowerCase().includes('insufficient liquidity')
+    ) {
       return SwapErrorType.NoLiquidity
     } else {
       return SwapErrorType.Unknown
