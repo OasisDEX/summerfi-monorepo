@@ -18,6 +18,7 @@ type ControlsDepositWithdrawProps = {
   dropdownValue: DropdownOption
   onFocus: () => void
   onBlur: () => void
+  tokenSymbol: string
   tokenBalance: BigNumber | undefined
   tokenBalanceLoading: boolean
   manualSetAmount: (amountParsed: string | undefined) => void
@@ -35,6 +36,7 @@ export const ControlsDepositWithdraw = ({
   dropdownValue,
   onFocus,
   onBlur,
+  tokenSymbol,
   tokenBalance,
   tokenBalanceLoading,
   manualSetAmount,
@@ -59,7 +61,7 @@ export const ControlsDepositWithdraw = ({
           value: tokenBalanceLoading ? (
             <SkeletonLine width={60} height={10} />
           ) : tokenBalance ? (
-            `${formatCryptoBalance(tokenBalance)} ${vault.inputToken.symbol}`
+            `${formatCryptoBalance(tokenBalance)} ${tokenSymbol}`
           ) : (
             '-'
           ),

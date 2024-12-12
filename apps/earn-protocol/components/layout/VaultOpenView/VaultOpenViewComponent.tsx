@@ -168,6 +168,7 @@ export const VaultOpenViewComponent = ({
       dropdownValue={selectedTokenOption}
       onFocus={onFocus}
       onBlur={onBlur}
+      tokenSymbol={selectedTokenOption.label}
       tokenBalance={tokenBalance}
       tokenBalanceLoading={tokenBalanceLoading}
       manualSetAmount={manualSetAmount}

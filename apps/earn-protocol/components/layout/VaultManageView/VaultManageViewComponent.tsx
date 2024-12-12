@@ -115,6 +115,29 @@ export const VaultManageViewComponent = ({
     return new BigNumber(position.amount.amount)
   }, [position])
 
+  const selectedTokenBalance = useMemo(() => {
+    switch (transactionType) {
+      case TransactionAction.DEPOSIT:
+        return tokenBalance
+      case TransactionAction.WITHDRAW:
+        // TODO: withdraw balance should be calculated from the selected input token
+        // and get position.amount
+        if (selectedTokenOption.value === vault.inputToken.symbol) {
+          return positionAmount
+        } else {
+          return undefined
+        }
+      default:
+        throw new Error('Invalid transaction type')
+    }
+  }, [
+    transactionType,
+    positionAmount,
+    tokenBalance,
+    selectedTokenOption.value,
+    vault.inputToken.symbol,
+  ])
+
   const { isLoadingForecast, oneYearEarningsForecast } = useForecast({
     fleetAddress: vault.id,
     chainId: vaultChainId,
@@ -169,10 +192,11 @@ export const VaultManageViewComponent = ({
       dropdownValue={selectedTokenOption}
       onFocus={onFocus}
       onBlur={onBlur}
+      tokenSymbol={selectedTokenOption.value}
       tokenBalance={
         {
           [TransactionAction.DEPOSIT]: tokenBalance,
-          [TransactionAction.WITHDRAW]: ownerView ? positionAmount : undefined,
+          [TransactionAction.WITHDRAW]: ownerView ? selectedTokenBalance : undefined,
         }[transactionType]
       }
       tokenBalanceLoading={tokenBalanceLoading}
