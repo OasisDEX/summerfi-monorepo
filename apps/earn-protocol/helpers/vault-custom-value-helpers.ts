@@ -3,32 +3,34 @@ import {
   type EarnAppFleetCustomConfigType,
   type SDKVaultishType,
 } from '@summerfi/app-types'
-import { subgraphNetworkToId } from '@summerfi/app-utils'
+
+import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
+import {
+  decorateWithArkInterestRatesData,
+  decorateWithFleetConfig,
+  decorateWithHistoricalChartsData,
+} from '@/helpers/vault-decorators'
 
 export const decorateCustomVaultFields = (
   vaults: SDKVaultishType[],
   systemConfig: Partial<EarnAppConfigType>,
+  arkInterestRatesMap?: GetInterestRatesReturnType,
 ) => {
   const { fleetMap } = systemConfig
 
-  if (!fleetMap) {
-    return vaults
-  }
+  const vaultsWithConfig = fleetMap ? decorateWithFleetConfig(vaults, fleetMap) : vaults
 
-  return vaults.map((vault) => {
-    const vaultNetworkId = subgraphNetworkToId(vault.protocol.network)
-    const vaultNetworkConfig = fleetMap[String(vaultNetworkId) as keyof typeof fleetMap]
-    const customFields = vaultNetworkConfig[vault.id.toLowerCase() as '0x']
+  const vaultsWithChartsData = arkInterestRatesMap
+    ? decorateWithHistoricalChartsData(vaultsWithConfig, arkInterestRatesMap)
+    : vaultsWithConfig
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    return customFields
-      ? {
-          ...vault,
-          customFields,
-        }
-      : vault
-  })
+  const vaultsWithArkInterestRates = arkInterestRatesMap
+    ? decorateWithArkInterestRatesData(vaultsWithChartsData, arkInterestRatesMap)
+    : vaultsWithChartsData
+
+  return vaultsWithArkInterestRates as SDKVaultishType[]
 }
+
 export const getCustomVaultConfigById = (
   vaultId: string,
   networkId: string,

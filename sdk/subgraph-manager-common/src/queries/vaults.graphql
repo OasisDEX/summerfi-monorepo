@@ -64,6 +64,31 @@ query GetVaults {
     aprValues
     withdrawableTotalAssets
     withdrawableTotalAssetsUSD
+    # needed for the historical graph
+    dailyInterestRates(
+      first: 365 # 365 days
+      orderBy: date
+      orderDirection: desc
+    ) {
+      averageRate
+      date
+    }
+    hourlyInterestRates(
+      first: 720 # 24 * 30 = one month
+      orderBy: date
+      orderDirection: desc
+    ) {
+      averageRate
+      date
+    }
+    weeklyInterestRates(
+      first: 156 # 52 * 3 = three years
+      orderBy: date
+      orderDirection: desc
+    ) {
+      averageRate
+      date
+    }
   }
 }
 query GetVault($id: ID!) {
@@ -192,5 +217,30 @@ query GetVault($id: ID!) {
     aprValues
     withdrawableTotalAssets
     withdrawableTotalAssetsUSD
+    # needed for the historical graph
+    dailyInterestRates(
+      first: 365 # 365 days
+      orderBy: date
+      orderDirection: desc
+    ) {
+      averageRate
+      date
+    }
+    hourlyInterestRates(
+      first: 720 # 24 * 30 = one month
+      orderBy: date
+      orderDirection: desc
+    ) {
+      averageRate
+      date
+    }
+    weeklyInterestRates(
+      first: 156 # 52 * 3 = three years
+      orderBy: date
+      orderDirection: desc
+    ) {
+      averageRate
+      date
+    }
   }
 }

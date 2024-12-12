@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { RechartResponsiveWrapper } from '@summerfi/app-earn-ui'
 import { type TimeframesType } from '@summerfi/app-types'
 import {
@@ -18,9 +19,13 @@ type YieldsChartProps = {
   dataNames: string[]
   colors: { [key: string]: string }
   timeframe: TimeframesType
+  summerVaultName: string
 }
 
-export const YieldsChart = ({ data, dataNames, colors }: YieldsChartProps) => {
+export const YieldsChart = ({ data, dataNames, colors, summerVaultName }: YieldsChartProps) => {
+  const [highlightedProtocol, setHighlightedProtocol] = useState<string>()
+  const xAxisInterval = Math.ceil(data.length / 7)
+
   return (
     <RechartResponsiveWrapper>
       <ResponsiveContainer width="100%" height="90%">
@@ -30,7 +35,7 @@ export const YieldsChart = ({ data, dataNames, colors }: YieldsChartProps) => {
             top: 50,
             right: 0,
             left: 0,
-            bottom: 0,
+            bottom: 10,
           }}
         >
           <defs>
@@ -39,54 +44,97 @@ export const YieldsChart = ({ data, dataNames, colors }: YieldsChartProps) => {
               <stop offset="100%" stopColor="#333333" stopOpacity={0.4} />
             </linearGradient>
           </defs>
-          <XAxis dataKey="name" fontSize={12} interval={2} tickMargin={10} />
+          <XAxis
+            dataKey="timestamp"
+            fontSize={12}
+            interval={xAxisInterval}
+            tickMargin={10}
+            tickFormatter={(timestamp: string) => {
+              return timestamp.split(' ')[0]
+            }}
+          />
           <YAxis
             strokeWidth={0}
             tickFormatter={(label: string) => `${formatChartPercentageValue(Number(label))}`}
           />
           <Tooltip
             formatter={(val) => `${formatChartPercentageValue(Number(val), true)}`}
-            useTranslate3d
-            contentStyle={{
+            wrapperStyle={{
               zIndex: 1000,
-              backgroundColor: 'var(--color-surface-subtler)',
+              backgroundColor: 'var(--color-surface-subtle)',
               borderRadius: '5px',
-              padding: '20px 30px',
+              padding: '10px',
+            }}
+            labelStyle={{
+              fontSize: '16px',
+              fontWeight: '700',
+              marginTop: '10px',
+              marginBottom: '10px',
+            }}
+            contentStyle={{
+              backgroundColor: 'transparent',
               border: 'none',
+              fontSize: '13px',
+              lineHeight: '11px',
+              letterSpacing: '-0.5px',
             }}
           />
-          {dataNames.map((dataName, dataIndex) =>
-            dataName === 'Summer Strategy' ? (
+          {dataNames.map((dataName, dataIndex) => {
+            return dataName === summerVaultName ? (
               <Area
                 key={dataName}
-                type="natural"
+                type={data.length > 100 ? 'linear' : 'natural'}
                 animationDuration={300}
                 animationBegin={dataIndex * 50}
                 animationEasing="ease-out"
                 dataKey={dataName}
-                strokeWidth={1}
-                stroke={colors[`${dataName}-color` as keyof typeof colors]}
+                strokeWidth={highlightedProtocol === dataName ? 2 : 1}
+                stroke={colors[dataName as keyof typeof colors]}
+                opacity={highlightedProtocol && highlightedProtocol !== dataName ? 0.1 : 1}
                 fillOpacity={1}
+                style={{
+                  transition: 'opacity 0.3s',
+                }}
                 fill="url(#summerYieldGradient)"
               />
             ) : (
               <Line
                 key={dataName}
-                type="natural"
+                type={data.length > 100 ? 'linear' : 'natural'}
                 animationId={dataIndex}
                 animationDuration={300}
                 animationBegin={dataIndex * 50}
                 animationEasing="ease-out"
                 dataKey={dataName}
-                strokeDasharray="3 3"
-                stroke={colors[`${dataName}-color` as keyof typeof colors]}
-                strokeWidth={0}
+                stroke={colors[dataName as keyof typeof colors]}
+                strokeWidth={highlightedProtocol === dataName ? 2 : 1}
+                style={{
+                  transition: 'opacity 0.3s',
+                }}
+                opacity={highlightedProtocol && highlightedProtocol !== dataName ? 0.1 : 1}
                 dot={false}
                 connectNulls
               />
-            ),
-          )}
-          <Legend iconType="circle" iconSize={8} align="center" layout="horizontal" height={60} />
+            )
+          })}
+          <Legend
+            onMouseEnter={({ dataKey }) => {
+              setHighlightedProtocol(dataKey as string)
+            }}
+            onMouseLeave={() => {
+              setHighlightedProtocol(undefined)
+            }}
+            wrapperStyle={{
+              userSelect: 'none',
+              padding: '20px 40px 0',
+              fontSize: '14px',
+            }}
+            iconType="circle"
+            iconSize={10}
+            align="center"
+            layout="horizontal"
+            height={60}
+          />
         </ComposedChart>
       </ResponsiveContainer>
     </RechartResponsiveWrapper>

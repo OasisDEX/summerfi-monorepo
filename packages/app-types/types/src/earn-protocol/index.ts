@@ -9,14 +9,38 @@ import { ChainId } from '@summerfi/serverless-shared'
 import { type TransactionInfo } from '@summerfi/sdk-common'
 import { type IArmadaPosition } from '@summerfi/armada-protocol-common'
 import { EarnAppFleetCustomConfigType } from '../generated/earn-app-config'
+import { TimeframesType } from '../components'
 
 export { Network as SDKNetwork }
 export { ChainId as SDKChainId }
 export { IArmadaPosition }
 
+type ChartDataPoints = {
+  timestamp: number
+  [key: string]: number
+}
+
+export type ChartsDataTimeframes = {
+  [key in TimeframesType]: ChartDataPoints[]
+}
+
+export type VaultChartsHistoricalData = {
+  chartsData?: {
+    data: ChartsDataTimeframes
+    dataNames: string[]
+    colors: { [key: string]: string }
+  }
+}
+
+export type VaultArkInterestRateMap = {
+  arksInterestRates?: {
+    [key: string]: number
+  }
+}
+
 type VaultCustomFields = {
   // custom fields for vaults - decorated within the earn/lp apps
-  customFields?: EarnAppFleetCustomConfigType
+  customFields?: EarnAppFleetCustomConfigType & VaultChartsHistoricalData & VaultArkInterestRateMap
 }
 export type SDKVaultsListType = GetVaultsQuery['vaults'] & VaultCustomFields
 export type SDKVaultType = Exclude<GetVaultQuery['vault'] & VaultCustomFields, null | undefined>
@@ -104,4 +128,13 @@ export type ForecastData = {
     weekly: ForecastDataPoints
     monthly: ForecastDataPoints
   }
+}
+
+export type ArkDetailsType = {
+  protocol: string
+  type: string
+  asset: string
+  marketAsset: string
+  pool: string
+  chainId: number
 }

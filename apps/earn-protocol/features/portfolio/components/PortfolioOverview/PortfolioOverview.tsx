@@ -92,7 +92,10 @@ export const PortfolioOverview = ({ vaultsList, positions }: PortfolioOverviewPr
                 key={`Position_${position.positionData.id.id}`}
                 position={position}
                 positionGraph={
-                  <HistoricalYieldChart aprHourlyList={position.vaultData.aprValues} />
+                  <HistoricalYieldChart
+                    chartData={position.vaultData.customFields?.chartsData}
+                    summerVaultName={position.vaultData.customFields?.name ?? 'Summer Vault'}
+                  />
                 }
               />
             ))

@@ -13,6 +13,7 @@ import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
 import { rebalanceActivitySorter } from '@/features/vault-exposure/table/sorter'
+import { getProtocolLabel } from '@/helpers/get-protocol-label'
 
 export const vaultExposureMapper = (
   vault: SDKVaultType,
@@ -30,10 +31,13 @@ export const vaultExposureMapper = (
       vaultInputToken.toString(),
     )
 
-    const apr = new BigNumber(item.calculatedApr.toString()).div(100)
+    const apr = new BigNumber(
+      vault.customFields?.arksInterestRates?.[item.name as string] ?? 0,
+    ).div(100)
 
     // temporary mapping, we need something more robust from subgraph
-    const protocol = item.name?.split('-')[0] ?? 'n/a'
+    const protocol = item.name?.split('-') ?? ['n/a']
+    const protocolLabel = getProtocolLabel(protocol)
 
     return {
       content: {
@@ -41,7 +45,7 @@ export const vaultExposureMapper = (
           <TableCellNodes>
             <TableRowAccent backgroundColor="var(--earn-protocol-accent-1-100)" />
             <Icon tokenName={item.inputToken.symbol as TokenSymbolsList} variant="s" />
-            <TableCellText>{protocol}</TableCellText>
+            <TableCellText>{protocolLabel}</TableCellText>
           </TableCellNodes>
         ),
         allocation: <TableCellText>{formatDecimalAsPercent(allocation)}</TableCellText>,

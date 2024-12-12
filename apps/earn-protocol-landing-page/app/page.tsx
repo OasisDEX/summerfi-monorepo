@@ -24,8 +24,9 @@ import { decorateCustomVaultFields } from '@/helpers/vault-custom-value-helpers'
 export const revalidate = 60
 
 export default async function HomePage() {
-  const { vaults } = await getVaultsList()
-  const { config } = parseServerResponseToClient(await systemConfigHandler())
+  const [{ vaults }, systemConfig] = await Promise.all([getVaultsList(), systemConfigHandler()])
+
+  const { config } = parseServerResponseToClient(systemConfig)
   const vaultsDecorated = decorateCustomVaultFields(vaults, config)
 
   return (

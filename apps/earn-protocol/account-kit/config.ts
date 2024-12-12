@@ -6,6 +6,8 @@ import { type Chain } from 'viem'
 
 export const queryClient = new QueryClient()
 
+export type AccountKitSupportedNetworks = SDKChainId.BASE | SDKChainId.ARBITRUM
+
 export const SDKChainIdToAAChainMap = {
   [SDKChainId.ARBITRUM]: arbitrum,
   [SDKChainId.BASE]: base,

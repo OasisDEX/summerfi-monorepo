@@ -8,7 +8,9 @@ import {
   SidebarMobileHeader,
   type SidebarProps,
   Text,
+  useForecast,
   useMobileCheck,
+  useTokenSelector,
   VaultManageGrid,
 } from '@summerfi/app-earn-ui'
 import {
@@ -19,6 +21,7 @@ import {
   TransactionAction,
   type UsersActivity,
 } from '@summerfi/app-types'
+import { zero } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
 import BigNumber from 'bignumber.js'
 
@@ -37,7 +40,6 @@ import { VaultExposure } from '@/features/vault-exposure/components/VaultExposur
 import { useAmount } from '@/hooks/use-amount'
 import { useClient } from '@/hooks/use-client'
 import { useTokenBalance } from '@/hooks/use-token-balance'
-import { useTokenSelector } from '@/hooks/use-token-selector'
 import { useTransaction } from '@/hooks/use-transaction'
 
 import vaultManageViewStyles from './VaultManageView.module.scss'
@@ -113,6 +115,23 @@ export const VaultManageViewComponent = ({
     return new BigNumber(position.amount.amount)
   }, [position])
 
+  const { isLoadingForecast, oneYearEarningsForecast } = useForecast({
+    fleetAddress: vault.id,
+    chainId: vaultChainId,
+    amount: {
+      [TransactionAction.DEPOSIT]: amountParsed.plus(positionAmount),
+      [TransactionAction.WITHDRAW]: positionAmount.minus(amountParsed).lt(zero)
+        ? zero
+        : positionAmount.minus(amountParsed),
+    }[transactionType].toString(),
+  })
+
+  const estimatedEarnings = useMemo(() => {
+    if (!oneYearEarningsForecast) return '0'
+
+    return oneYearEarningsForecast
+  }, [oneYearEarningsForecast])
+
   const sidebarContent = nextTransaction?.label ? (
     {
       approve: (
@@ -159,6 +178,8 @@ export const VaultManageViewComponent = ({
       tokenBalanceLoading={tokenBalanceLoading}
       manualSetAmount={manualSetAmount}
       vault={vault}
+      estimatedEarnings={estimatedEarnings}
+      isLoadingForecast={isLoadingForecast}
     />
   )
 
@@ -228,7 +249,10 @@ export const VaultManageViewComponent = ({
             }
             defaultExpanded
           >
-            <HistoricalYieldChart aprHourlyList={vault.aprValues} />
+            <HistoricalYieldChart
+              chartData={vault.customFields?.chartsData}
+              summerVaultName={vault.customFields?.name ?? 'Summer Vault'}
+            />
           </Expander>
           <Expander
             title={

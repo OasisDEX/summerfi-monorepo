@@ -1,12 +1,13 @@
-import { getChain } from '@alchemy/aa-core'
 import type { Chain } from 'viem'
+
+import { type AccountKitSupportedNetworks, SDKChainIdToAAChainMap } from '@/account-kit/config'
 
 export async function POST(req: Request) {
   const id = req.url.split('/').pop()
   let chain: Chain
 
   try {
-    chain = getChain(parseInt(id as string, 10))
+    chain = SDKChainIdToAAChainMap[parseInt(id as string, 10) as AccountKitSupportedNetworks]
   } catch (error) {
     return new Response(`Chain with id ${id} not found.`, {
       status: 404,

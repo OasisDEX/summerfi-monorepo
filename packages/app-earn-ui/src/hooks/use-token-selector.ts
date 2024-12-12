@@ -1,3 +1,4 @@
+'use client'
 import { useMemo, useState } from 'react'
 import {
   type DropdownOption,
@@ -13,6 +14,16 @@ type UseAmountProps = {
 // For swap testing purposes only adding testToken to dropdown
 const testTokens = ['USDBC']
 
+/**
+ * Custom hook to manage token selection for a given vault.
+ *
+ * @param {UseAmountProps} props - The properties for the hook.
+ * @param {SDKVaultishType} props.vault - The vault object containing the input token.
+ * @returns {Object} An object containing token options, the selected token option, and a handler to change the selected token.
+ * @returns {DropdownOption[]} return.tokenOptions - The list of token options available for selection.
+ * @returns {DropdownOption} return.selectedTokenOption - The currently selected token option.
+ * @returns {Function} return.handleTokenSelectionChange - The function to handle changes in token selection.
+ */
 export const useTokenSelector = ({ vault }: UseAmountProps) => {
   const tokenOptions = useMemo(() => {
     const options: DropdownOption[] = [

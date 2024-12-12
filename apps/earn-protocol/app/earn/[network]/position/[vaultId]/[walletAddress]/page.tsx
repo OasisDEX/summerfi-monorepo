@@ -8,6 +8,7 @@ import {
 import { type IArmadaPosition } from '@summerfi/sdk-client'
 import { isAddress } from 'viem'
 
+import { getInterestRates } from '@/app/server-handlers/interest-rates'
 import { getUserActivity } from '@/app/server-handlers/sdk/get-user-activity'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
@@ -55,7 +56,6 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       walletAddress: params.walletAddress,
     }),
   ])
-  const [vaultDecorated] = vault ? decorateCustomVaultFields([vault], config) : []
 
   if (!vault) {
     return (
@@ -72,13 +72,20 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       </Text>
     )
   }
+  const interestRates = await getInterestRates({
+    network: parsedNetwork,
+    arksList: vault.arks,
+  })
+
+  const [vaultDecorated] = decorateCustomVaultFields([vault], config, interestRates)
+  const vaultsDecorated = decorateCustomVaultFields(vaults, config)
 
   const positionJsonSafe = parseServerResponseToClient<IArmadaPosition>(position)
 
   return (
     <VaultManageView
       vault={vaultDecorated}
-      vaults={vaults}
+      vaults={vaultsDecorated}
       position={positionJsonSafe}
       viewWalletAddress={params.walletAddress}
       userActivity={userActivity}

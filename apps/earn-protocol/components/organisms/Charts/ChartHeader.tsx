@@ -13,7 +13,7 @@ type ChartHeaderProps = {
 
 export const ChartHeader = ({
   title,
-  compare,
+  compare = false,
   timeframe,
   setCompare,
   setTimeframe,
@@ -21,7 +21,7 @@ export const ChartHeader = ({
   return (
     <div className={classNames.wrapper}>
       {title && <Text variant="p2semi">{title}</Text>}
-      {compare && setCompare && (
+      {setCompare && (
         <ToggleButton
           checked={compare}
           title="Compare to others"
@@ -30,7 +30,7 @@ export const ChartHeader = ({
       )}
       {timeframe && setTimeframe && (
         <Timeframes
-          timeframes={['90d', '6m', '1y', '3y']}
+          timeframes={['7d', '30d', '90d', '6m', '1y', '3y']}
           activeTimeframe={timeframe}
           setActiveTimeframe={setTimeframe}
         />

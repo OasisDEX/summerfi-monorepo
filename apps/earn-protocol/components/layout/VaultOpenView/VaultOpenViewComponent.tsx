@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   Expander,
   Sidebar,
@@ -6,12 +6,13 @@ import {
   sidebarFootnote,
   SidebarMobileHeader,
   Text,
+  useForecast,
   useLocalStorageOnce,
   useMobileCheck,
+  useTokenSelector,
   VaultOpenGrid,
 } from '@summerfi/app-earn-ui'
 import {
-  type ForecastData,
   type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
@@ -36,11 +37,9 @@ import { UserActivity } from '@/features/user-activity/components/UserActivity/U
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 import { useAmount } from '@/hooks/use-amount'
 import { useClient } from '@/hooks/use-client'
-import { useForecast } from '@/hooks/use-forecast'
 import { usePosition } from '@/hooks/use-position'
 import { useRedirectToPosition } from '@/hooks/use-redirect-to-position'
 import { useTokenBalance } from '@/hooks/use-token-balance'
-import { useTokenSelector } from '@/hooks/use-token-selector'
 import { useTransaction } from '@/hooks/use-transaction'
 
 import vaultOpenViewStyles from './VaultOpenView.module.scss'
@@ -50,7 +49,6 @@ type VaultOpenViewComponentProps = {
   vaults: SDKVaultsListType
   userActivity: UsersActivity
   topDepositors: SDKUsersActivityType
-  preloadedForecast?: ForecastData
 }
 
 export const VaultOpenViewComponent = ({
@@ -58,7 +56,6 @@ export const VaultOpenViewComponent = ({
   vaults,
   userActivity,
   topDepositors,
-  preloadedForecast,
 }: VaultOpenViewComponentProps) => {
   const { getStorageOnce } = useLocalStorageOnce<string>({
     key: `${vault.id}-amount`,
@@ -117,11 +114,10 @@ export const VaultOpenViewComponent = ({
     vaultId: vault.id,
   })
 
-  const { forecast, isLoadingForecast } = useForecast({
+  const { forecast, isLoadingForecast, oneYearEarningsForecast } = useForecast({
     fleetAddress: vault.id,
     chainId: vaultChainId,
     amount: amountParsed.toString(),
-    preloadedForecast,
   })
 
   useEffect(() => {
@@ -134,6 +130,12 @@ export const VaultOpenViewComponent = ({
   useRedirectToPosition({ vault, position })
 
   const displayGraph = amountParsed.gt(0)
+
+  const estimatedEarnings = useMemo(() => {
+    if (!oneYearEarningsForecast) return '0'
+
+    return oneYearEarningsForecast
+  }, [oneYearEarningsForecast])
 
   const sidebarContent = nextTransaction?.label ? (
     {
@@ -154,7 +156,7 @@ export const VaultOpenViewComponent = ({
           amountDisplayUSD={amountDisplayUSD}
         />
       ),
-      withdraw: null, // just for types, withdraw doesnt happen on open view
+      withdraw: null, // just for types, withdraw doesn't happen on open view
     }[nextTransaction.label]
   ) : (
     <ControlsDepositWithdraw
@@ -170,6 +172,8 @@ export const VaultOpenViewComponent = ({
       tokenBalanceLoading={tokenBalanceLoading}
       manualSetAmount={manualSetAmount}
       vault={vault}
+      estimatedEarnings={estimatedEarnings}
+      isLoadingForecast={isLoadingForecast}
     />
   )
 
@@ -178,7 +182,12 @@ export const VaultOpenViewComponent = ({
     content: sidebarContent,
     customHeader:
       !isDrawerOpen && isMobile ? (
-        <SidebarMobileHeader type="open" amount="6544,43" token={vault.inputToken.symbol} />
+        <SidebarMobileHeader
+          type="open"
+          amount={estimatedEarnings}
+          token={vault.inputToken.symbol}
+          isLoadingForecast={isLoadingForecast}
+        />
       ) : undefined,
     customHeaderStyles:
       !isDrawerOpen && isMobile ? { padding: 'var(--general-space-12) 0' } : undefined,
@@ -234,7 +243,10 @@ export const VaultOpenViewComponent = ({
             }
             defaultExpanded
           >
-            <HistoricalYieldChart aprHourlyList={vault.aprValues} />
+            <HistoricalYieldChart
+              chartData={vault.customFields?.chartsData}
+              summerVaultName={vault.customFields?.name ?? 'Summer Vault'}
+            />
           </Expander>
           <Expander
             title={
@@ -244,7 +256,7 @@ export const VaultOpenViewComponent = ({
             }
             defaultExpanded
           >
-            <VaultExposure vault={vault as SDKVaultType} />
+            <VaultExposure vault={vault} />
           </Expander>
           <Expander
             title={

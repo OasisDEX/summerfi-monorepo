@@ -1,8 +1,7 @@
+import { chartTimestampFormat } from '@summerfi/app-earn-ui'
 import { formatAsShorthandNumbers, formatCryptoBalance } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
-
-export const chartTimestampFormat = 'YYYY-MM-DD' // Forecast API returns timestamps in this format
 
 const SHORTHAND_THRESHOLD = 10000
 const PERCENTAGE_SHORTHAND_THRESHOLD = 1000

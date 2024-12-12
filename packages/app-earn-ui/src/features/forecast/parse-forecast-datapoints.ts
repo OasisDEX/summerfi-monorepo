@@ -7,13 +7,19 @@ import {
 import dayjs from 'dayjs'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
 
-import { chartTimestampFormat } from '@/features/forecast/chart-formatters'
+import { chartTimestampFormat } from '@/features/forecast/chart-formatters.ts'
 
 dayjs.extend(weekOfYear)
 
+/**
+ * Parses forecast data points from the API response.
+ *
+ * @param {PositionForecastAPIResponse} forecastData - The forecast data from the API.
+ * @returns {ForecastData} The parsed forecast data points.
+ */
 export const parseForecastDatapoints: (
   forecastData: PositionForecastAPIResponse,
-) => ForecastData = (forecastData: PositionForecastAPIResponse) => {
+) => ForecastData = (forecastData: PositionForecastAPIResponse): ForecastData => {
   const seriesKeyed = forecastData.forecast.series.reduce<{
     [key in PositionForecastAPIResponse['forecast']['series'][number]['name']]: number[]
   }>(
