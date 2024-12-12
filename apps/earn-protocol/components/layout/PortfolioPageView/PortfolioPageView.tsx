@@ -2,7 +2,7 @@
 
 import { type FC } from 'react'
 import { TabBar } from '@summerfi/app-earn-ui'
-import { type SDKVaultsListType } from '@summerfi/app-types'
+import { type SDKVaultishType } from '@summerfi/app-types'
 
 import { type PortfolioPositionsList } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
 import { type PortfolioRewardsRawData } from '@/app/server-handlers/portfolio/portfolio-rewards-handler'
@@ -17,7 +17,7 @@ interface PortfolioPageViewProps {
   walletAddress: string
   walletData: PortfolioAssetsResponse
   rewardsData: PortfolioRewardsRawData[]
-  vaultsList: SDKVaultsListType
+  vaultsList: SDKVaultishType[]
   positions: PortfolioPositionsList[]
 }
 

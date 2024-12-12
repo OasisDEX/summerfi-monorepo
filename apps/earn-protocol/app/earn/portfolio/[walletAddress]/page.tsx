@@ -8,7 +8,6 @@ import { getUserPositions } from '@/app/server-handlers/sdk/get-user-positions'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { PortfolioPageView } from '@/components/layout/PortfolioPageView/PortfolioPageView'
-import { decorateCustomVaultFields } from '@/helpers/vault-custom-value-helpers'
 
 type PortfolioPageProps = {
   params: {
@@ -31,10 +30,11 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     : []
 
   const { config } = parseServerResponseToClient(await systemConfigHandler())
-  const positionsList = positionsJsonSafe.map((position) =>
-    portfolioPositionsHandler({ position, vaultsList: vaults, config }),
+  const positionsList = await Promise.all(
+    positionsJsonSafe.map((position) =>
+      portfolioPositionsHandler({ position, vaultsList: vaults, config }),
+    ),
   )
-  const vaultsDecorated = decorateCustomVaultFields(vaults, config)
 
   return (
     <PortfolioPageView
@@ -42,7 +42,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       walletAddress={walletAddress}
       walletData={walletData}
       rewardsData={rewardsData}
-      vaultsList={vaultsDecorated}
+      vaultsList={vaults}
     />
   )
 }

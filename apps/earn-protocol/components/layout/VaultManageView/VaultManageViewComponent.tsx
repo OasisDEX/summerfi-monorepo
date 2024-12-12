@@ -228,7 +228,10 @@ export const VaultManageViewComponent = ({
             }
             defaultExpanded
           >
-            <HistoricalYieldChart aprHourlyList={vault.aprValues} />
+            <HistoricalYieldChart
+              chartData={vault.customFields?.chartsData}
+              summerVaultName={vault.customFields?.name ?? 'Summer Vault'}
+            />
           </Expander>
           <Expander
             title={
