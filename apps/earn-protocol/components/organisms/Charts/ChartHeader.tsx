@@ -9,6 +9,7 @@ type ChartHeaderProps = {
   setCompare?: (value: boolean) => void
   timeframe?: TimeframesType
   setTimeframe?: (timeframe: string) => void
+  customTimeframes?: TimeframesType[]
 }
 
 export const ChartHeader = ({
@@ -17,6 +18,7 @@ export const ChartHeader = ({
   timeframe,
   setCompare,
   setTimeframe,
+  customTimeframes,
 }: ChartHeaderProps) => {
   return (
     <div className={classNames.wrapper}>
@@ -30,7 +32,7 @@ export const ChartHeader = ({
       )}
       {timeframe && setTimeframe && (
         <Timeframes
-          timeframes={['7d', '30d', '90d', '6m', '1y', '3y']}
+          timeframes={customTimeframes ?? ['7d', '30d', '90d', '6m', '1y', '3y']}
           activeTimeframe={timeframe}
           setActiveTimeframe={setTimeframe}
         />
