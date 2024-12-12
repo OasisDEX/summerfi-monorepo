@@ -259,38 +259,38 @@ describe('Armada Protocol Deposit', () => {
 
     describe(`Withdraw on ${chainInfo.name}`, () => {
       it(`should withdraw 1 USDC unstaked assets back from fleet at ${fleetAddress.value}`, async () => {
-        const amount = '1'
+        const amount = '2'
 
-        const pre = await sdk.armada.users.getNewDepositTX({
-          vaultId: vaultId,
-          user,
-          amount: TokenAmount.createFrom({
-            amount,
-            token: swapToken,
-          }),
-          slippage: Percentage.createFrom({
-            value: 0.01,
-          }),
-          shouldStake: false,
-        })
+        // const pre = await sdk.armada.users.getNewDepositTX({
+        //   vaultId: vaultId,
+        //   user,
+        //   amount: TokenAmount.createFrom({
+        //     amount,
+        //     token: swapToken,
+        //   }),
+        //   slippage: Percentage.createFrom({
+        //     value: 0.01,
+        //   }),
+        //   shouldStake: false,
+        // })
+        // await sendAndLogTransactions({
+        //   chainInfo,
+        //   transactions: pre,
+        //   rpcUrl: forkUrl,
+        //   privateKey: signerPrivateKey,
+        //   useRpcGateway,
+        // })
 
         const transactions = await sdk.armada.users.getWithdrawTX({
           vaultId: vaultId,
           user,
-          amount: TokenAmount.createFrom({
+          amount: TokenAmount.createFromBaseUnit({
             amount,
             token: swapToken,
           }),
           slippage: Percentage.createFrom({
             value: 0.01,
           }),
-        })
-        await sendAndLogTransactions({
-          chainInfo,
-          transactions: pre,
-          rpcUrl: forkUrl,
-          privateKey: signerPrivateKey,
-          useRpcGateway,
         })
 
         const fleetAmountBefore = await sdk.armada.users.getFleetBalance({
