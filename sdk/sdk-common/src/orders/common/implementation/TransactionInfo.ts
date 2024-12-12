@@ -21,4 +21,6 @@ export interface TransactionInfo {
   transaction: Transaction
   /** @description High-level description of the transaction */
   description: string
+  /** @description Additional metadata that can be attached to the transaction */
+  metadata?: Record<string, unknown>
 }

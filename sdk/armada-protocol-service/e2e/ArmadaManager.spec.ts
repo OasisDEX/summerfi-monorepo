@@ -81,7 +81,7 @@ describe('Armada Protocol Service', () => {
     const swapManager = SwapManagerFactory.newSwapManager({ configProvider })
 
     const allowanceManager = {
-      getApproval: jest.fn().mockReturnValue([]),
+      getApproval: jest.fn().mockReturnValue(undefined),
     } as unknown as IAllowanceManager
     armadaManager = ArmadaManagerFactory.newArmadaManager({
       configProvider,
@@ -118,7 +118,8 @@ describe('Armada Protocol Service', () => {
     const transactionInfo = await armadaManager.getUpdateDepositTX({
       vaultId,
       positionId,
-      assets: tokenAmount,
+      amount: tokenAmount,
+      slippage: Percentage.createFrom({ value: 0.01 }),
     })
 
     expect(transactionInfo.length).toBe(1)
@@ -139,6 +140,7 @@ describe('Armada Protocol Service', () => {
       vaultId: vaultId,
       user,
       amount: tokenAmount,
+      slippage: Percentage.createFrom({ value: 0.01 }),
     })
 
     expect(transactionInfo.length).toBe(1)

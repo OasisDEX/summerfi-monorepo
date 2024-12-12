@@ -50,11 +50,10 @@ describe('Armada Protocol Service', () => {
       amount: tokenAmount,
     })
 
-    expect(transactionInfo.length).toBe(1)
-    expect(transactionInfo[0].transaction.target.value).toBe(tokenAddress.value)
-    expect(transactionInfo[0].transaction.value).toBe('0')
+    expect(transactionInfo?.transaction.target.value).toBe(tokenAddress.value)
+    expect(transactionInfo?.transaction.value).toBe('0')
 
-    const decodedCalldata = decodeAllowanceCalldata(transactionInfo[0].transaction.calldata)
+    const decodedCalldata = decodeAllowanceCalldata(transactionInfo?.transaction.calldata)
     if (!decodedCalldata) {
       fail('Decoded calldata is undefined')
     }
