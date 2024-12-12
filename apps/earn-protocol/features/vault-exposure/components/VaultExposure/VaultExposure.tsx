@@ -2,7 +2,7 @@
 
 import { type Dispatch, type FC, type SetStateAction, useMemo, useState } from 'react'
 import { Button, Card, Icon, InlineButtons, Text } from '@summerfi/app-earn-ui'
-import { type SDKVaultType } from '@summerfi/app-types'
+import { type SDKVaultishType, type SDKVaultType } from '@summerfi/app-types'
 
 import { VaultExposureTable } from '@/features/vault-exposure/components/VaultExposureTable/VaultExposureTable'
 import { vaultExposureFilter } from '@/features/vault-exposure/table/filters/filters'
@@ -51,7 +51,7 @@ const VaultExposureTypePicker: FC<VaultExposureTypePickerProps> = ({
 const rowsToDisplay = 5
 
 interface VaultExposureProps {
-  vault: SDKVaultType
+  vault: SDKVaultishType
 }
 
 export const VaultExposure: FC<VaultExposureProps> = ({ vault }) => {
@@ -62,7 +62,7 @@ export const VaultExposure: FC<VaultExposureProps> = ({ vault }) => {
   const [seeAll, setSeeAll] = useState(false)
 
   const filteredVault = useMemo(
-    () => vaultExposureFilter({ vault, allocationType: exposureType }),
+    () => vaultExposureFilter({ vault: vault as SDKVaultType, allocationType: exposureType }),
     [vault, exposureType],
   )
 

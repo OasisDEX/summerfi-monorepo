@@ -31,7 +31,9 @@ export const vaultExposureMapper = (
       vaultInputToken.toString(),
     )
 
-    const apr = new BigNumber(item.calculatedApr.toString()).div(100)
+    const apr = new BigNumber(
+      vault.customFields?.arksInterestRates?.[item.name as string] ?? 0,
+    ).div(100)
 
     // temporary mapping, we need something more robust from subgraph
     const protocol = item.name?.split('-') ?? ['n/a']

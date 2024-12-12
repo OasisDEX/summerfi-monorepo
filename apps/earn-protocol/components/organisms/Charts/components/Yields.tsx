@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { RechartResponsiveWrapper } from '@summerfi/app-earn-ui'
 import { type TimeframesType } from '@summerfi/app-types'
 import {
@@ -22,6 +23,7 @@ type YieldsChartProps = {
 }
 
 export const YieldsChart = ({ data, dataNames, colors, summerVaultName }: YieldsChartProps) => {
+  const [highlightedProtocol, setHighlightedProtocol] = useState<string>()
   const xAxisInterval = Math.ceil(data.length / 7)
 
   return (
@@ -33,7 +35,7 @@ export const YieldsChart = ({ data, dataNames, colors, summerVaultName }: Yields
             top: 50,
             right: 0,
             left: 0,
-            bottom: 0,
+            bottom: 10,
           }}
         >
           <defs>
@@ -57,13 +59,24 @@ export const YieldsChart = ({ data, dataNames, colors, summerVaultName }: Yields
           />
           <Tooltip
             formatter={(val) => `${formatChartPercentageValue(Number(val), true)}`}
-            useTranslate3d
-            contentStyle={{
+            wrapperStyle={{
               zIndex: 1000,
-              backgroundColor: 'var(--color-surface-subtler)',
+              backgroundColor: 'var(--color-surface-subtle)',
               borderRadius: '5px',
-              padding: '20px 30px',
+              padding: '10px',
+            }}
+            labelStyle={{
+              fontSize: '16px',
+              fontWeight: '700',
+              marginTop: '10px',
+              marginBottom: '10px',
+            }}
+            contentStyle={{
+              backgroundColor: 'transparent',
               border: 'none',
+              fontSize: '13px',
+              lineHeight: '11px',
+              letterSpacing: '-0.5px',
             }}
           />
           {dataNames.map((dataName, dataIndex) => {
@@ -75,9 +88,13 @@ export const YieldsChart = ({ data, dataNames, colors, summerVaultName }: Yields
                 animationBegin={dataIndex * 50}
                 animationEasing="ease-out"
                 dataKey={dataName}
-                strokeWidth={1}
+                strokeWidth={highlightedProtocol === dataName ? 2 : 1}
                 stroke={colors[dataName as keyof typeof colors]}
+                opacity={highlightedProtocol && highlightedProtocol !== dataName ? 0.1 : 1}
                 fillOpacity={1}
+                style={{
+                  transition: 'opacity 0.3s',
+                }}
                 fill="url(#summerYieldGradient)"
               />
             ) : (
@@ -90,13 +107,34 @@ export const YieldsChart = ({ data, dataNames, colors, summerVaultName }: Yields
                 animationEasing="ease-out"
                 dataKey={dataName}
                 stroke={colors[dataName as keyof typeof colors]}
-                strokeWidth={1}
+                strokeWidth={highlightedProtocol === dataName ? 2 : 1}
+                style={{
+                  transition: 'opacity 0.3s',
+                }}
+                opacity={highlightedProtocol && highlightedProtocol !== dataName ? 0.1 : 1}
                 dot={false}
                 connectNulls
               />
             )
           })}
-          <Legend iconType="circle" iconSize={8} align="center" layout="horizontal" height={60} />
+          <Legend
+            onMouseEnter={({ dataKey }) => {
+              setHighlightedProtocol(dataKey as string)
+            }}
+            onMouseLeave={() => {
+              setHighlightedProtocol(undefined)
+            }}
+            wrapperStyle={{
+              userSelect: 'none',
+              padding: '20px 40px 0',
+              fontSize: '14px',
+            }}
+            iconType="circle"
+            iconSize={10}
+            align="center"
+            layout="horizontal"
+            height={60}
+          />
         </ComposedChart>
       </ResponsiveContainer>
     </RechartResponsiveWrapper>
