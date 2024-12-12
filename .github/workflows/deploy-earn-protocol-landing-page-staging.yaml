@@ -120,6 +120,7 @@ jobs:
                        --build-arg CONFIG_URL=${{ secrets.CONFIG_URL }} \
                        --build-arg CONFIG_URL_EARN=${{ secrets.CONFIG_URL_EARN }} \
                        --build-arg MIXPANEL_KEY=${{ secrets.MIXPANEL_KEY }} \
+                       --build-arg SUBGRAPH_BASE=${{ secrets.SUBGRAPH_BASE }} \
                        --build-arg NEXT_PUBLIC_MIXPANEL_KEY=${{ secrets.NEXT_PUBLIC_MIXPANEL_KEY }} \
                        --build-arg NEXT_TELEMETRY_DISABLED=${{ secrets.NEXT_TELEMETRY_DISABLED }} \
                        --build-arg SDK_API_URL=${{ secrets.SDK_API_URL }} \
