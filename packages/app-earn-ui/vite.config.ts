@@ -87,6 +87,7 @@ export default defineConfig(({ mode }) => {
           '@tabler/icons-react',
           'bignumber.js',
           'clsx',
+          'dayjs',
           'lodash-es',
           'next',
           'next/image',

@@ -7,8 +7,13 @@ import {
   type SDKVaultishType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
-import { formatCryptoBalance, formatFiatBalance, mapNumericInput } from '@summerfi/app-utils'
-import BigNumber from 'bignumber.js'
+import {
+  formatCryptoBalance,
+  formatFiatBalance,
+  mapNumericInput,
+  subgraphNetworkToSDKId,
+} from '@summerfi/app-utils'
+import type BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
 import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
@@ -17,6 +22,7 @@ import { InputWithDropdown } from '@/components/molecules/InputWithDropdown/Inpu
 import { ProjectedEarnings } from '@/components/molecules/ProjectedEarnings/ProjectedEarnings'
 import { SidebarMobileHeader } from '@/components/molecules/SidebarMobileHeader/SidebarMobileHeader'
 import { Sidebar } from '@/components/organisms/Sidebar/Sidebar'
+import { useForecast } from '@/features/forecast/use-forecast'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 import { useLocalStorageOnce } from '@/hooks/use-local-storage-once'
 
@@ -45,6 +51,14 @@ export const VaultSimulationForm = ({
   const [inputValue, setInputValue] = useState<string>(mapNumericInput('1000'))
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [isGradientBorder, setIsGradientBorder] = useState(false)
+
+  const rawInputValue = inputValue.replaceAll(',', '') || '0'
+
+  const { isLoadingForecast, oneYearEarningsForecast } = useForecast({
+    fleetAddress: vaultData.id,
+    chainId: subgraphNetworkToSDKId(vaultData.protocol.network),
+    amount: rawInputValue,
+  })
 
   useEffect(() => {
     if (vaultData.id) {
@@ -75,14 +89,10 @@ export const VaultSimulationForm = ({
   }
 
   const estimatedEarnings = useMemo(() => {
-    if (!vaultData.calculatedApr) return '0'
+    if (!oneYearEarningsForecast) return '0'
 
-    return formatCryptoBalance(
-      new BigNumber(
-        Number(inputValue.replaceAll(',', '')) * (Number(vaultData.calculatedApr) / 100),
-      ),
-    )
-  }, [vaultData, inputValue])
+    return oneYearEarningsForecast
+  }, [oneYearEarningsForecast])
 
   const balance = tokenBalance ? tokenBalance : undefined
   const tokenPrice = vaultData.inputTokenPriceUSD ? Number(vaultData.inputTokenPriceUSD) : undefined
@@ -122,6 +132,7 @@ export const VaultSimulationForm = ({
               <ProjectedEarnings
                 earnings={estimatedEarnings}
                 symbol={vaultData.inputToken.symbol as TokenSymbolsList}
+                isLoading={isLoadingForecast}
               />
             </>
           ),
@@ -131,6 +142,7 @@ export const VaultSimulationForm = ({
                 type="open"
                 amount={estimatedEarnings}
                 token={vaultData.inputToken.symbol}
+                isLoadingForecast={isLoadingForecast}
               />
             ) : undefined,
           customHeaderStyles:

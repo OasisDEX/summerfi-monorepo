@@ -8,8 +8,8 @@ import { decorateCustomVaultFields } from '@/helpers/vault-custom-value-helpers'
 export const revalidate = 60
 
 const EarnAllVaultsPage = async () => {
-  const { vaults } = await getVaultsList()
-  const { config } = parseServerResponseToClient(await systemConfigHandler())
+  const [{ vaults }, systemConfig] = await Promise.all([getVaultsList(), systemConfigHandler()])
+  const { config } = parseServerResponseToClient(systemConfig)
   const vaultsDecorated = decorateCustomVaultFields(vaults, config)
 
   return <VaultManageViewComponent vaultsList={vaultsDecorated} />

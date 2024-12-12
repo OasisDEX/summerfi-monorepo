@@ -22,6 +22,8 @@ type ControlsDepositWithdrawProps = {
   tokenBalanceLoading: boolean
   manualSetAmount: (amountParsed: string | undefined) => void
   vault: SDKVaultType | SDKVaultishType
+  estimatedEarnings: string
+  isLoadingForecast: boolean
 }
 
 export const ControlsDepositWithdraw = ({
@@ -37,6 +39,8 @@ export const ControlsDepositWithdraw = ({
   tokenBalanceLoading,
   manualSetAmount,
   vault,
+  estimatedEarnings,
+  isLoadingForecast,
 }: ControlsDepositWithdrawProps) => {
   return (
     <>
@@ -66,7 +70,11 @@ export const ControlsDepositWithdraw = ({
           },
         }}
       />
-      <ProjectedEarnings earnings="1353" symbol={vault.inputToken.symbol as TokenSymbolsList} />
+      <ProjectedEarnings
+        earnings={estimatedEarnings}
+        symbol={vault.inputToken.symbol as TokenSymbolsList}
+        isLoading={isLoadingForecast}
+      />
     </>
   )
 }

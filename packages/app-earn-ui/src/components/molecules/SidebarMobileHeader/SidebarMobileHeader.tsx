@@ -1,8 +1,10 @@
 /* eslint-disable react/destructuring-assignment */
 import { type FC } from 'react'
 import { TransactionAction } from '@summerfi/app-types'
+import { formatCryptoBalance } from '@summerfi/app-utils'
 
 import { Button } from '@/components/atoms/Button/Button.tsx'
+import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine.tsx'
 import { Text } from '@/components/atoms/Text/Text.tsx'
 
 type SidebarMobileHeaderProps =
@@ -10,6 +12,7 @@ type SidebarMobileHeaderProps =
       type: 'open'
       amount: string
       token: string
+      isLoadingForecast: boolean
     }
   | {
       type: 'manage'
@@ -24,9 +27,15 @@ export const SidebarMobileHeader: FC<SidebarMobileHeaderProps> = (props) => {
         <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
           Est. earnings after 1y
         </Text>
-        <Text as="p" variant="p3semiColorful">
-          {props.amount} {props.token}
-        </Text>
+        {props.isLoadingForecast ? (
+          <div style={{ display: 'flex', alignItems: 'center', height: '22px' }}>
+            <SkeletonLine width={80} height={12} />
+          </div>
+        ) : (
+          <Text as="p" variant="p3semiColorful">
+            {formatCryptoBalance(props.amount)} {props.token}
+          </Text>
+        )}
       </div>
       <Button variant="primarySmall" style={{ padding: '0 var(--general-space-16)' }}>
         Deposit

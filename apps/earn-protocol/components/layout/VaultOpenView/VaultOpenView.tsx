@@ -1,7 +1,6 @@
 'use client'
 
 import {
-  type ForecastData,
   type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
@@ -18,13 +17,11 @@ export const VaultOpenView = ({
   vaults,
   userActivity,
   topDepositors,
-  preloadedForecast,
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
   userActivity: UsersActivity
   topDepositors: SDKUsersActivityType
-  preloadedForecast?: ForecastData
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -33,7 +30,6 @@ export const VaultOpenView = ({
         vaults={vaults}
         userActivity={userActivity}
         topDepositors={topDepositors}
-        preloadedForecast={preloadedForecast}
       />
     </SDKContextProvider>
   )
