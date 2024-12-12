@@ -228,7 +228,12 @@ export const VaultManageViewComponent = ({
             }
             defaultExpanded
           >
-            <HistoricalYieldChart aprHourlyList={vault.aprValues} />
+            <HistoricalYieldChart
+              aprHourlyList={vault.dailyInterestRates.map((item) => ({
+                rate: item.averageRate,
+                timestamp: item.date.toString(),
+              }))}
+            />
           </Expander>
           <Expander
             title={
