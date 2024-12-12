@@ -2,7 +2,7 @@
 
 import { type Dispatch, type FC, type SetStateAction, useMemo, useState } from 'react'
 import { Button, Card, Icon, InlineButtons, Text } from '@summerfi/app-earn-ui'
-import { type SDKVaultishType, SDKVaultType } from '@summerfi/app-types'
+import { type SDKVaultishType, type SDKVaultType } from '@summerfi/app-types'
 
 import { VaultExposureTable } from '@/features/vault-exposure/components/VaultExposureTable/VaultExposureTable'
 import { vaultExposureFilter } from '@/features/vault-exposure/table/filters/filters'

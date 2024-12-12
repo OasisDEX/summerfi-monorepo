@@ -323,18 +323,12 @@ export const decorateWithArkInterestRatesData = (
     ...vault,
     customFields: {
       ...vault.customFields,
-      arksInterestRates: Object.keys(arkInterestRatesMap).reduce<{
-        [key: string]: number
-      }>((acc, key) => {
-        const interestRates = arkInterestRatesMap[key]
-
-        console.log(key, interestRates.latestInterestRate[0].rate[0].rate)
-
-        return {
-          ...acc,
-          [key]: interestRates.latestInterestRate[0].rate[0].rate,
-        }
-      }, {}),
+      arksInterestRates: Object.fromEntries(
+        Object.keys(arkInterestRatesMap).map((key) => [
+          key,
+          arkInterestRatesMap[key].latestInterestRate[0].rate[0].rate,
+        ]),
+      ),
     },
   }))
 }

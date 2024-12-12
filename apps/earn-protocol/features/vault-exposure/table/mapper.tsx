@@ -23,8 +23,6 @@ export const vaultExposureMapper = (
 
   const sortedArks = rebalanceActivitySorter({ vault, sortConfig })
 
-  console.log('vault.customFields?.arksInterestRates', vault.customFields?.arksInterestRates)
-
   return sortedArks.map((item) => {
     const allocationRaw = new BigNumber(item.inputTokenBalance.toString()).shiftedBy(
       -vault.inputToken.decimals,
