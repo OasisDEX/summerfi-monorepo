@@ -287,6 +287,12 @@ export class ArmadaManager implements IArmadaManager {
     params: Parameters<IArmadaManager['getWithdrawTX']>[0],
   ): Promise<TransactionInfo[]> {
     const transactions: TransactionInfo[] = []
+    const metadata: {
+      swapToAmount?: ITokenAmount
+    } = {}
+
+    let assetsToEOA: ITokenAmount = params.amount
+    let swapToToken: IToken | undefined
 
     const { assets: fleetAssets, shares: fleetShares } = await this.getFleetBalance({
       vaultId: params.vaultId,
@@ -294,10 +300,31 @@ export class ArmadaManager implements IArmadaManager {
     })
 
     LoggingService.debug('getWithdrawTX', {
+      requestedAmount: params.amount.toString(),
       fleetAssets: fleetAssets.toString(),
       fleetShares: fleetShares.toString(),
-      requestedAmount: params.amount.toString(),
     })
+
+    const fleetCommander = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+    const fleetToken = await fleetCommander.asErc4626().asset()
+    const shouldSwap = !params.amount.token.address.equals(fleetToken.address)
+
+    // If withdrawing a token that is not the fleet token
+    // we need to swap it to target asset
+    if (shouldSwap) {
+      const assetsToSwap = await this._getQuoteAmount({
+        fromAmount: assetsToEOA,
+        toToken: fleetToken,
+      })
+      swapToToken = assetsToEOA.token
+      assetsToEOA = assetsToSwap
+      LoggingService.debug('assetsToSwap', {
+        assetsToSwap: assetsToSwap.toString(),
+      })
+    }
 
     const admiralsQuarterAddress = getDeployedContractAddress({
       chainInfo: params.vaultId.chainInfo,
@@ -308,22 +335,127 @@ export class ArmadaManager implements IArmadaManager {
     // are unstaked tokens available?
     if (fleetAssets.toSolidityValue() > 0) {
       // Yes. is the unstaked amount sufficient to meet the withdrawal?
-      if (fleetAssets.toSolidityValue() >= params.amount.toSolidityValue()) {
-        LoggingService.debug('unstaked balance is enough for requested amount', {
+      if (fleetAssets.toSolidityValue() >= assetsToEOA.toSolidityValue()) {
+        LoggingService.debug('fleet balance is enough for requested amount', {
           fleetAssets: fleetAssets.toString(),
         })
 
-        // Yes. Approve the requested amount in shares
-        const approvalTransactions = await this._allowanceManager.getApproval({
+        const sharesToWithdraw = await this._previewWithdraw({
+          vaultId: params.vaultId,
+          assets: assetsToEOA,
+        })
+        // Approve the requested amount in shares
+        const approveToTakeUserShares = await this._allowanceManager.getApproval({
+          chainInfo: params.vaultId.chainInfo,
+          spender: admiralsQuarterAddress,
+          amount: sharesToWithdraw,
+          owner: params.user.wallet.address,
+        })
+        if (approveToTakeUserShares) {
+          transactions.push({
+            ...approveToTakeUserShares,
+            metadata: { amount: sharesToWithdraw },
+          })
+          LoggingService.debug('approveToTakeUserShares', {
+            sharesToWithdraw: sharesToWithdraw.toString(),
+          })
+        }
+        const withdrawCall = await this._getExitWithdrawCall({
+          vaultId: params.vaultId,
+          slippage: params.slippage,
+          amount: assetsToEOA,
+          swapToToken,
+        })
+        const multicallCalldata = encodeFunctionData({
+          abi: AdmiralsQuartersAbi,
+          functionName: 'multicall',
+          args: [withdrawCall.calldata],
+        })
+        transactions.push(
+          createTransaction({
+            target: admiralsQuarterAddress,
+            calldata: multicallCalldata,
+            description: 'Withdraw Multicall Transaction',
+            metadata,
+          }),
+        )
+      } else {
+        // Request withdrawal of all unstaked tokens and the rest from staked tokens
+        LoggingService.debug('fleet balance is not enough for requested amount', {
+          fleetAssets: fleetAssets.toString(),
+          assetsToEOA: assetsToEOA.toString(),
+        })
+        // approve all unstaken balance tx
+        const approveToTakeUserShares = await this._allowanceManager.getApproval({
           chainInfo: params.vaultId.chainInfo,
           spender: admiralsQuarterAddress,
           amount: fleetShares,
           owner: params.user.wallet.address,
         })
-        if (approvalTransactions) {
-          transactions.push(...approvalTransactions)
+        if (approveToTakeUserShares) {
+          transactions.push({
+            ...approveToTakeUserShares,
+            metadata: { amount: fleetShares },
+          })
+          LoggingService.debug('approveToTakeUserShares', {
+            sharesToWithdraw: fleetShares.toString(),
+          })
         }
-        const multicallArgs = await this._getWithdrawData(params)
+        // approval to swap from user EOA
+        if (swapToToken) {
+          const approveToSwap = await this._allowanceManager.getApproval({
+            chainInfo: params.vaultId.chainInfo,
+            spender: admiralsQuarterAddress,
+            amount: assetsToEOA,
+            owner: params.user.wallet.address,
+          })
+          if (approveToSwap) {
+            transactions.push({
+              ...approveToSwap,
+              metadata: { amount: assetsToEOA },
+            })
+            LoggingService.debug('approveToSwap', {
+              assetsToEOA: assetsToEOA.toString(),
+            })
+          }
+        }
+
+        const multicallArgs: HexData[] = []
+        // withdraw all fleet balance
+        const exitWithdrawCall = await this._getExitWithdrawCall({
+          vaultId: params.vaultId,
+          slippage: params.slippage,
+          amount: fleetAssets,
+        })
+        multicallArgs.push(...exitWithdrawCall.calldata)
+
+        // and the reminder from staked tokens
+        const sharesToEOA = await this._previewWithdraw({
+          vaultId: params.vaultId,
+          assets: assetsToEOA,
+        })
+        const sharesToUnstake = sharesToEOA.subtract(fleetShares)
+        LoggingService.debug('withdraw all from fleet and the rest from staked', {
+          sharesToEOA: sharesToEOA.toSolidityValue(),
+          sharesToUnstake: sharesToUnstake.toSolidityValue(),
+        })
+        const unstakeAndWithdrawCall = await this._getUnstakeAndWithdrawCall({
+          vaultId: params.vaultId,
+          shares: sharesToUnstake,
+        })
+        multicallArgs.push(...unstakeAndWithdrawCall.calldata)
+
+        // swap to target token from user EOA
+        if (swapToToken) {
+          const swapCall = await this._getEOASwapCall({
+            vaultId: params.vaultId,
+            slippage: params.slippage,
+            fromAmount: assetsToEOA,
+            toToken: swapToToken,
+          })
+          multicallArgs.push(...swapCall.calldata)
+        }
+        // compose multicall
         const multicallCalldata = encodeFunctionData({
           abi: AdmiralsQuartersAbi,
           functionName: 'multicall',
@@ -333,80 +465,70 @@ export class ArmadaManager implements IArmadaManager {
           createTransaction({
             target: admiralsQuarterAddress,
             calldata: multicallCalldata,
-            description: 'Withdraw Multicall Transaction',
-          }),
-        )
-      } else {
-        // No. Request withdrawal of all unstaked tokens and the rest from staked tokens
-
-        // approve all unstaken balance tx
-        const withdrawUnstakenApprovalTransactions = await this._allowanceManager.getApproval({
-          chainInfo: params.vaultId.chainInfo,
-          spender: admiralsQuarterAddress,
-          amount: fleetShares,
-          owner: params.user.wallet.address,
-        })
-        if (withdrawUnstakenApprovalTransactions) {
-          transactions.push(...withdrawUnstakenApprovalTransactions)
-        }
-
-        // withdraw unstaken balance
-        const withdrawUnstakedData = await this._getWithdrawData({
-          ...params,
-          amount: fleetAssets,
-        })
-        // and the reminder from staked tokens
-        const sharesToWithdraw = await this._previewWithdraw({
-          vaultId: params.vaultId,
-          assets: params.amount,
-        })
-        const sharesToUnstake = sharesToWithdraw.subtract(fleetShares)
-        const unstakeAndWithdrawData = await this._getUnstakeAndWithdrawData({
-          ...params,
-          shares: sharesToUnstake,
-        })
-        // compose multicall
-        const multicallCalldata = encodeFunctionData({
-          abi: AdmiralsQuartersAbi,
-          functionName: 'multicall',
-          args: [[...withdrawUnstakedData, ...unstakeAndWithdrawData]],
-        })
-        transactions.push(
-          createTransaction({
-            target: admiralsQuarterAddress,
-            calldata: multicallCalldata,
             description:
               'Withdraw Unstaken Balance and Unstake-Withdraw the rest Multicall Transaction',
+            metadata,
           }),
         )
-        LoggingService.debug('unstaked balance is not enough for requested amount', {
-          sharesToWithdraw: sharesToWithdraw.toSolidityValue(),
-          sharesToUnstake: sharesToUnstake.toSolidityValue(),
-        })
       }
     } else {
       // No. Unstake and withdraw from staked tokens.
-      const sharesToWithdraw = await this._previewWithdraw({
+      const sharesToEOA = await this._previewWithdraw({
         vaultId: params.vaultId,
-        assets: params.amount,
+        assets: assetsToEOA,
       })
-      const unstakeAndWithdrawData = await this._getUnstakeAndWithdrawData({
+      LoggingService.debug('fleet balance is 0', {
+        sharesToWithdraw: sharesToEOA.toString(),
+      })
+
+      // approval to swap from user EOA
+      if (swapToToken) {
+        const approveToSwap = await this._allowanceManager.getApproval({
+          chainInfo: params.vaultId.chainInfo,
+          spender: admiralsQuarterAddress,
+          amount: assetsToEOA,
+          owner: params.user.wallet.address,
+        })
+        if (approveToSwap) {
+          transactions.push({
+            ...approveToSwap,
+            metadata: { amount: assetsToEOA },
+          })
+          LoggingService.debug('approveToSwap', {
+            assetsToEOA: assetsToEOA.toString(),
+          })
+        }
+      }
+
+      const multicallArgs: HexData[] = []
+      const unstakeAndWithdrawCall = await this._getUnstakeAndWithdrawCall({
         vaultId: params.vaultId,
-        shares: sharesToWithdraw,
+        shares: sharesToEOA,
       })
+      multicallArgs.push(...unstakeAndWithdrawCall.calldata)
+
+      if (swapToToken) {
+        const swapCall = await this._getEOASwapCall({
+          vaultId: params.vaultId,
+          slippage: params.slippage,
+          fromAmount: assetsToEOA,
+          toToken: swapToToken,
+        })
+        multicallArgs.push(...swapCall.calldata)
+      }
+      // compose multicall
       const multicallCalldata = encodeFunctionData({
         abi: AdmiralsQuartersAbi,
         functionName: 'multicall',
-        args: [unstakeAndWithdrawData],
+        args: [multicallArgs],
       })
-      LoggingService.debug('unstaked balance is 0', {
-        sharesToWithdraw: sharesToWithdraw.toString(),
-      })
+
       transactions.push(
         createTransaction({
           target: admiralsQuarterAddress,
           calldata: multicallCalldata,
           description: 'Unstake and withdraw Multicall Transaction',
+          metadata,
         }),
       )
     }
@@ -623,6 +745,28 @@ export class ArmadaManager implements IArmadaManager {
 
   /** PRIVATE */
 
+  private async _previewWithdraw(params: {
+    vaultId: IArmadaVaultId
+    assets: ITokenAmount
+  }): Promise<ITokenAmount> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+    return await fleetContract.asErc4626().previewWithdraw({ assets: params.assets })
+  }
+
+  private async _previewDeposit(params: {
+    vaultId: IArmadaVaultId
+    assets: ITokenAmount
+  }): Promise<ITokenAmount> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+    return await fleetContract.asErc4626().previewDeposit({ assets: params.assets })
+  }
+
   /**
    * Internal utility method to generate a deposit TX
    *
@@ -641,10 +785,9 @@ export class ArmadaManager implements IArmadaManager {
   }): Promise<TransactionInfo[]> {
     const transactions: TransactionInfo[] = []
     const shouldStake = params.shouldStake ?? true
-
-    LoggingService.debug('getDepositTX', {
-      requestedAmount: params.amount.toString(),
-    })
+    const metadata: {
+      swapToAmount?: ITokenAmount
+    } = {}
 
     const admiralsQuarterAddress = getDeployedContractAddress({
       chainInfo: params.vaultId.chainInfo,
@@ -660,7 +803,13 @@ export class ArmadaManager implements IArmadaManager {
       owner: params.user.wallet.address,
     })
     if (approvalTransaction) {
-      transactions.push(...approvalTransaction)
+      transactions.push({
+        ...approvalTransaction,
+        metadata: { amount: params.amount },
+      })
+      LoggingService.debug('approvalTransaction', {
+        amount: params.amount.toString(),
+      })
     }
 
     const multicallArgs: HexData[] = []
@@ -676,25 +825,29 @@ export class ArmadaManager implements IArmadaManager {
       address: params.vaultId.fleetAddress,
     })
     const fleetToken = await fleetCommander.asErc4626().asset()
-    let enterFleetAssets = params.amount
-    // If depositing a token that is not the fleet token, we need to swap it
-    // and then deposit the received fleet token amount
+
+    // If depositing a token that is not the fleet token,
+    // we need to swap it to fleet asset
     if (!params.amount.token.address.equals(fleetToken.address)) {
-      const swapData = await this._getSwapData({
+      const swapCall = await this._getSwapCall({
         vaultId: params.vaultId,
         fromAmount: params.amount,
         toToken: fleetToken,
         slippage: params.slippage,
       })
-      multicallArgs.push(swapData.calldata)
-      enterFleetAssets = swapData.toAmount
+      multicallArgs.push(swapCall.calldata)
+      metadata.swapToAmount = swapCall.minAmount
     }
 
     // when staking admirals quarters will receive LV tokens, otherwise the user
     const lvTokenReceiver = shouldStake
       ? admiralsQuarterAddress.value
       : params.user.wallet.address.value
-
+    LoggingService.debug('getDepositTX', {
+      requestedAmount: params.amount.toString(),
+      shouldStake: shouldStake,
+      lvTokenReceiver: lvTokenReceiver.toString(),
+    })
     const enterFleetCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'enterFleet',
@@ -721,61 +874,11 @@ export class ArmadaManager implements IArmadaManager {
         target: admiralsQuarterAddress,
         calldata: depositMulticallCalldata,
         description: 'Deposit Multicall Transaction',
+        metadata: metadata,
       }),
     )
 
     return transactions
-  }
-
-  /**
-   * Internal utility method to generate a withdraw TX
-   * @param params The parameters for the withdraw
-   *
-   * @returns The transactions needed to withdraw the tokens
-   */
-  private async _getWithdrawData(params: {
-    vaultId: IArmadaVaultId
-    amount: ITokenAmount
-  }): Promise<HexData[]> {
-    const multicallArgs: HexData[] = []
-
-    const exitFleetCalldata = encodeFunctionData({
-      abi: AdmiralsQuartersAbi,
-      functionName: 'exitFleet',
-      args: [params.vaultId.fleetAddress.value, params.amount.toSolidityValue()],
-    })
-    multicallArgs.push(exitFleetCalldata)
-
-    const withdrawTokensCalldata = encodeFunctionData({
-      abi: AdmiralsQuartersAbi,
-      functionName: 'withdrawTokens',
-      args: [params.amount.token.address.value, params.amount.toSolidityValue()],
-    })
-    multicallArgs.push(withdrawTokensCalldata)
-
-    return multicallArgs
-  }
-
-  /**
-   * Internal utility method to generate a withdraw+unstake TX
-   * @param params The parameters for the withdraw+unstake
-   *
-   * @returns The transactions needed to withdraw+unstake the tokens
-   */
-  private async _getUnstakeAndWithdrawData(params: {
-    vaultId: IArmadaVaultId
-    shares: ITokenAmount
-  }): Promise<HexData[]> {
-    const multicallArgs: HexData[] = []
-
-    const withdrawUnstake = encodeFunctionData({
-      abi: AdmiralsQuartersAbi,
-      functionName: 'unstakeAndWithdrawAssets',
-      args: [params.vaultId.fleetAddress.value, params.shares.toSolidityValue()],
-    })
-    multicallArgs.push(withdrawUnstake)
-
-    return multicallArgs
   }
 
   /**
@@ -807,30 +910,113 @@ export class ArmadaManager implements IArmadaManager {
     })
   }
 
-  private async _previewWithdraw(params: { vaultId: IArmadaVaultId; assets: ITokenAmount }) {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
+  /**
+   * Internal utility method to generate a withdraw TX
+   * @param params The parameters for the withdraw
+   *
+   * @returns The transactions needed to withdraw the tokens
+   */
+  private async _getExitWithdrawCall(params: {
+    vaultId: IArmadaVaultId
+    amount: ITokenAmount
+    slippage: IPercentage
+    swapToToken?: IToken
+  }): Promise<{
+    calldata: HexData[]
+  }> {
+    const calldata: HexData[] = []
+
+    const exitFleetCalldata = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'exitFleet',
+      args: [params.vaultId.fleetAddress.value, params.amount.toSolidityValue()],
     })
-    return await fleetContract.asErc4626().previewWithdraw({ assets: params.assets })
+    calldata.push(exitFleetCalldata)
+    LoggingService.debug('exitFleet', {
+      amount: params.amount.toString(),
+    })
+
+    let outAssets = params.amount
+
+    if (params.swapToToken) {
+      // swap
+      const swapCall = await this._getSwapCall({
+        vaultId: params.vaultId,
+        fromAmount: params.amount,
+        toToken: params.swapToToken,
+        slippage: params.slippage,
+      })
+      calldata.push(swapCall.calldata)
+      LoggingService.debug('swap', {
+        minAmount: swapCall.minAmount.toString(),
+      })
+      outAssets = TokenAmount.createFromBaseUnit({
+        token: params.swapToToken,
+        amount: '0',
+      })
+    }
+
+    const withdrawTokensCalldata = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'withdrawTokens',
+      args: [outAssets.token.address.value, outAssets.toSolidityValue()],
+    })
+    calldata.push(withdrawTokensCalldata)
+    LoggingService.debug('withdrawTokens', {
+      amount: outAssets.toString(),
+    })
+
+    return { calldata }
   }
 
-  private async _previewDeposit(params: { vaultId: IArmadaVaultId; assets: ITokenAmount }) {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
+  /**
+   * Internal utility method to generate a withdraw+unstake TX
+   * @param params The parameters for the withdraw+unstake
+   *
+   * @returns The transactions needed to withdraw+unstake the tokens
+   */
+  private async _getUnstakeAndWithdrawCall(params: {
+    vaultId: IArmadaVaultId
+    shares: ITokenAmount
+  }): Promise<{
+    calldata: HexData[]
+  }> {
+    const calldata: HexData[] = []
+
+    const withdrawUnstake = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'unstakeAndWithdrawAssets',
+      args: [params.vaultId.fleetAddress.value, params.shares.toSolidityValue()],
     })
-    return await fleetContract.asErc4626().previewDeposit({ assets: params.assets })
+    calldata.push(withdrawUnstake)
+    LoggingService.debug('unstakeAndWithdrawAssets', {
+      amount: params.shares.toString(),
+    })
+
+    return { calldata }
   }
 
-  private async _getSwapData(params: {
+  private async _getQuoteAmount(params: {
+    fromAmount: ITokenAmount
+    toToken: IToken
+  }): Promise<ITokenAmount> {
+    // get swapdata from the 1inch swap api
+    const swapData = await this._swapManager.getSwapQuoteExactInput({
+      fromAmount: params.fromAmount,
+      toToken: params.toToken,
+    })
+
+    return swapData.toTokenAmount
+  }
+
+  private async _getSwapCall(params: {
     vaultId: IArmadaVaultId
     fromAmount: ITokenAmount
     toToken: IToken
     slippage: IPercentage
   }): Promise<{
     calldata: HexData
-    toAmount: ITokenAmount
+    minAmount: ITokenAmount
   }> {
     // get the admirals quarters address
     const admiralsQuarterAddress = getDeployedContractAddress({
@@ -854,15 +1040,8 @@ export class ArmadaManager implements IArmadaManager {
         .toFixed(0, BigNumber.ROUND_DOWN),
     )
 
-    LoggingService.debug('getSwapData', {
-      fromAmount: swapData.fromTokenAmount.toString(),
-      toAmount: swapData.toTokenAmount.toString(),
-      reverseSlippage: reverseSlippage.toString(),
-      minTokensReceived: minTokensReceived.toString(),
-    })
-
     // prepare calldata
-    const swapArgs = encodeFunctionData({
+    const calldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'swap',
       args: [
@@ -874,12 +1053,75 @@ export class ArmadaManager implements IArmadaManager {
       ],
     })
 
+    const minAmount = TokenAmount.createFromBaseUnit({
+      token: params.toToken,
+      amount: minTokensReceived.toString(),
+    })
+
+    LoggingService.debug('getSwapData', {
+      fromAmount: swapData.fromTokenAmount.toString(),
+      toAmount: swapData.toTokenAmount.toString(),
+      minAmount: minAmount.toString(),
+      slippage: params.slippage.toString(),
+      reverseSlippage: reverseSlippage.toString(),
+    })
+
     return {
-      calldata: swapArgs,
-      toAmount: TokenAmount.createFromBaseUnit({
-        token: params.toToken,
-        amount: minTokensReceived.toString(),
-      }),
+      calldata,
+      minAmount,
+    }
+  }
+
+  private async _getEOASwapCall(params: {
+    vaultId: IArmadaVaultId
+    fromAmount: ITokenAmount
+    toToken: IToken
+    slippage: IPercentage
+  }): Promise<{ calldata: HexData[]; minAmount: ITokenAmount }> {
+    const calldata: HexData[] = []
+
+    // swapping out assets
+    // deposit withdrawn assets
+    const depositTokensCalldata = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'depositTokens',
+      args: [params.fromAmount.token.address.value, params.fromAmount.toSolidityValue()],
+    })
+    calldata.push(depositTokensCalldata)
+    LoggingService.debug('depositTokens', {
+      amount: params.fromAmount.toString(),
+    })
+
+    // swap
+    const swapCall = await this._getSwapCall({
+      vaultId: params.vaultId,
+      fromAmount: params.fromAmount,
+      toToken: params.toToken,
+      slippage: params.slippage,
+    })
+    calldata.push(swapCall.calldata)
+    LoggingService.debug('swap', {
+      minAmount: swapCall.minAmount.toString(),
+    })
+    const outAssets = TokenAmount.createFromBaseUnit({
+      token: params.toToken,
+      amount: '0',
+    })
+
+    // withdraw swapped assets
+    const withdrawTokensCalldata = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'withdrawTokens',
+      args: [outAssets.token.address.value, outAssets.toSolidityValue()],
+    })
+    calldata.push(withdrawTokensCalldata)
+    LoggingService.debug('withdrawTokens', {
+      amount: outAssets.toString(),
+    })
+
+    return {
+      calldata,
+      minAmount: swapCall.minAmount,
     }
   }
 }

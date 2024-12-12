@@ -23,7 +23,7 @@ export class AllowanceManager implements IAllowanceManager {
   /** FUNCTIONS */
   async getApproval(
     params: Parameters<IAllowanceManager['getApproval']>[0],
-  ): Promise<TransactionInfo[]> {
+  ): Promise<TransactionInfo | undefined> {
     const erc20Contract = await this._contractsProvider.getErc20Contract({
       address: params.amount.token.address,
       chainInfo: params.chainInfo,
@@ -36,15 +36,13 @@ export class AllowanceManager implements IAllowanceManager {
       })
 
       if (allowance.isGreaterOrEqualThan(params.amount)) {
-        return []
+        return undefined
       }
     }
 
-    return [
-      await erc20Contract.approve({
-        amount: params.amount,
-        spender: params.spender,
-      }),
-    ]
+    return await erc20Contract.approve({
+      amount: params.amount,
+      spender: params.spender,
+    })
   }
 }

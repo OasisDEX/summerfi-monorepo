@@ -197,6 +197,7 @@ export interface IArmadaManager {
    * @param vaultId ID of the pool to deposit in
    * @param positionId ID of the position to be updated
    * @param amount Token amount to be deposited
+   * @param slippage Maximum slippage allowed for the operation
    * @param shouldStake Whether the user wants to stake the deposit
    *
    * @returns TransactionInfo[] An array of transactions that must be executed for the operation to succeed
@@ -216,6 +217,7 @@ export interface IArmadaManager {
    * @param vaultId ID of the pool to withdraw from
    * @param user Address of the user that is trying to withdraw
    * @param amount Token amount to be withdrawn
+   * @param slippage Maximum slippage allowed for the operation
    *
    * @returns TransactionInfo[] An array of transactions that must be executed for the operation to succeed
    */
@@ -223,6 +225,7 @@ export interface IArmadaManager {
     vaultId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
+    slippage: IPercentage
   }): Promise<TransactionInfo[]>
 
   /** KEEPERS TRANSACTIONS */

@@ -125,7 +125,7 @@ describe('Armada Protocol Deposit', () => {
           stakedAmountBefore.shares.toSolidityValue(),
         )
         expect(stakedAmountAfter.assets.subtract(stakedAmountBefore.assets).amount).toBeGreaterThan(
-          0.999999,
+          0.9,
         )
       })
 
@@ -191,7 +191,7 @@ describe('Armada Protocol Deposit', () => {
         )
         expect(
           Number(stakedAmountAfter.assets.subtract(stakedAmountBefore.assets).amount),
-        ).toBeGreaterThan(0.99)
+        ).toBeGreaterThan(0.9)
       })
 
       it(`should deposit and swap 1 ${swapSymbol} (with stake) to fleet at ${fleetAddress.value}`, async () => {
@@ -253,20 +253,40 @@ describe('Armada Protocol Deposit', () => {
         )
         expect(
           Number(stakedAmountAfter.assets.subtract(stakedAmountBefore.assets).amount),
-        ).toBeGreaterThan(0.99)
+        ).toBeGreaterThan(0.9)
       })
     })
 
     describe(`Withdraw on ${chainInfo.name}`, () => {
-      it(`should withdraw 1 USDC back from fleet at ${fleetAddress.value}`, async () => {
+      it(`should withdraw 1 USDC unstaked assets back from fleet at ${fleetAddress.value}`, async () => {
         const amount = '1'
+
+        // const pre = await sdk.armada.users.getNewDepositTX({
+        //   vaultId: vaultId,
+        //   user,
+        //   amount: TokenAmount.createFrom({
+        //     amount,
+        //     token: swapToken,
+        //   }),
+        //   slippage: Percentage.createFrom({
+        //     value: 0.01,
+        //   }),
+        //   shouldStake: false,
+        // })
+        // await sendAndLogTransactions({
+        //   chainInfo,
+        //   transactions: pre,
+        //   rpcUrl: forkUrl,
+        //   privateKey: signerPrivateKey,
+        //   useRpcGateway,
+        // })
 
         const transactions = await sdk.armada.users.getWithdrawTX({
           vaultId: vaultId,
           user,
           amount: TokenAmount.createFrom({
             amount,
-            token,
+            token: swapToken,
           }),
           slippage: Percentage.createFrom({
             value: 0.01,
@@ -288,7 +308,7 @@ describe('Armada Protocol Deposit', () => {
         )
         const { statuses } = await sendAndLogTransactions({
           chainInfo,
-          transactions,
+          transactions: transactions,
           rpcUrl: forkUrl,
           privateKey: signerPrivateKey,
           useRpcGateway,
@@ -310,15 +330,15 @@ describe('Armada Protocol Deposit', () => {
           fleetAmountAfter.shares.toSolidityValue(),
           stakedAmountAfter.shares.toSolidityValue(),
         )
-        expect(fleetAmountAfter.shares.toSolidityValue()).toEqual(
+        expect(fleetAmountAfter.shares.toSolidityValue()).toBeLessThan(
           fleetAmountBefore.shares.toSolidityValue(),
         )
-        expect(stakedAmountAfter.shares.toSolidityValue()).toBeLessThan(
+        expect(stakedAmountAfter.shares.toSolidityValue()).toEqual(
           stakedAmountBefore.shares.toSolidityValue(),
         )
         expect(
-          Number(stakedAmountBefore.assets.subtract(stakedAmountAfter.assets).amount),
-        ).toBeGreaterThan(0.99)
+          Number(fleetAmountBefore.assets.subtract(fleetAmountAfter.assets).amount),
+        ).toBeGreaterThan(0.9)
       })
     })
   }

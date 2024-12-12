@@ -5,6 +5,7 @@ export function createTransaction(params: {
   calldata: HexData
   description: string
   value?: bigint
+  metadata?: Record<string, unknown>
 }): TransactionInfo {
   return {
     transaction: {
@@ -13,5 +14,6 @@ export function createTransaction(params: {
       value: String(params.value ?? 0),
     },
     description: params.description,
+    metadata: params.metadata,
   }
 }
