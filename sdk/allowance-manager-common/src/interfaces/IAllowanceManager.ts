@@ -20,5 +20,5 @@ export interface IAllowanceManager {
     spender: IAddress
     amount: ITokenAmount
     owner?: IAddress
-  }): Promise<TransactionInfo>
+  }): Promise<TransactionInfo | undefined>
 }
