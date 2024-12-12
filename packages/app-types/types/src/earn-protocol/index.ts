@@ -32,9 +32,15 @@ export type VaultChartsHistoricalData = {
   }
 }
 
+export type VaultArkInterestRateMap = {
+  arksInterestRates?: {
+    [key: string]: number
+  }
+}
+
 type VaultCustomFields = {
   // custom fields for vaults - decorated within the earn/lp apps
-  customFields?: EarnAppFleetCustomConfigType & VaultChartsHistoricalData
+  customFields?: EarnAppFleetCustomConfigType & VaultChartsHistoricalData & VaultArkInterestRateMap
 }
 export type SDKVaultsListType = GetVaultsQuery['vaults'] & VaultCustomFields
 export type SDKVaultType = Exclude<GetVaultQuery['vault'] & VaultCustomFields, null | undefined>

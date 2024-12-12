@@ -23,6 +23,8 @@ export const vaultExposureMapper = (
 
   const sortedArks = rebalanceActivitySorter({ vault, sortConfig })
 
+  console.log('vault.customFields?.arksInterestRates', vault.customFields?.arksInterestRates)
+
   return sortedArks.map((item) => {
     const allocationRaw = new BigNumber(item.inputTokenBalance.toString()).shiftedBy(
       -vault.inputToken.decimals,
@@ -31,7 +33,9 @@ export const vaultExposureMapper = (
       vaultInputToken.toString(),
     )
 
-    const apr = new BigNumber(item.calculatedApr.toString()).div(100)
+    const apr = new BigNumber(
+      vault.customFields?.arksInterestRates?.[item.name as string] ?? 0,
+    ).div(100)
 
     // temporary mapping, we need something more robust from subgraph
     const protocol = item.name?.split('-') ?? ['n/a']

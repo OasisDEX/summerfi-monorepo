@@ -247,7 +247,7 @@ export const VaultOpenViewComponent = ({
             }
             defaultExpanded
           >
-            <VaultExposure vault={vault as SDKVaultType} />
+            <VaultExposure vault={vault} />
           </Expander>
           <Expander
             title={

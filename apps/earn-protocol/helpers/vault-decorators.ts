@@ -1,10 +1,12 @@
 import {
   type ChartsDataTimeframes,
+  type EarnAppConfigType,
   type SDKVaultishType,
   type SDKVaultType,
   type TimeframesType,
   type VaultChartsHistoricalData,
 } from '@summerfi/app-types'
+import { subgraphNetworkToId } from '@summerfi/app-utils'
 import dayjs from 'dayjs'
 import { memoize } from 'lodash-es'
 
@@ -32,6 +34,27 @@ type BaseHistoricalChartsDataReturnType = {
     [key: string]: { [key: string]: number | string; timestamp: string }
   }
 }
+
+export const decorateWithFleetConfig = (
+  vaults: SDKVaultishType[],
+  fleetMap: EarnAppConfigType['fleetMap'],
+) =>
+  vaults.map((vault) => {
+    const vaultNetworkId = subgraphNetworkToId(vault.protocol.network)
+    const vaultNetworkConfig = fleetMap[String(vaultNetworkId) as keyof typeof fleetMap]
+    const configCustomFields = vaultNetworkConfig[vault.id.toLowerCase() as '0x']
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    return configCustomFields
+      ? {
+          ...vault,
+          customFields: {
+            ...vault.customFields,
+            ...configCustomFields,
+          },
+        }
+      : vault
+  })
 
 const emptyChartRaw = {
   '7d': {},
@@ -289,5 +312,29 @@ export const decorateWithHistoricalChartsData = (
         },
       }
     }),
-  )
+  ) as SDKVaultishType[]
+}
+
+export const decorateWithArkInterestRatesData = (
+  vaults: SDKVaultishType[],
+  arkInterestRatesMap: GetInterestRatesReturnType,
+) => {
+  return vaults.map((vault) => ({
+    ...vault,
+    customFields: {
+      ...vault.customFields,
+      arksInterestRates: Object.keys(arkInterestRatesMap).reduce<{
+        [key: string]: number
+      }>((acc, key) => {
+        const interestRates = arkInterestRatesMap[key]
+
+        console.log(key, interestRates.latestInterestRate[0].rate[0].rate)
+
+        return {
+          ...acc,
+          [key]: interestRates.latestInterestRate[0].rate[0].rate,
+        }
+      }, {}),
+    },
+  }))
 }

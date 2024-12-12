@@ -28,4 +28,16 @@ query GetInterestRates($productId: String!) {
     averageRate
     date: weekTimestamp
   }
+  # latest interest rate, used in the arks list
+  latestInterestRate: hourlyInterestRates(
+      where: { productId: $productId }
+      first: 1
+      orderBy: date
+      orderDirection: desc
+    ) {
+    rate: interestRates(first: 1, orderBy: timestamp, orderDirection: desc) {
+      rate
+      timestamp
+    }
+  }
 }
