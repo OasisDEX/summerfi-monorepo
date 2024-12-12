@@ -1,33 +1,33 @@
+'use client'
 import { useEffect, useState } from 'react'
 import { type ForecastData, type SDKChainId } from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
 import debounce from 'lodash-es/debounce'
 
+import { getOneYearEarnings } from '@/helpers/get-one-year-earnings'
+
 type UseForecastProps = {
   fleetAddress: string
   chainId: SDKChainId
   amount: string
-  preloadedForecast?: ForecastData
 }
 
-export const useForecast = ({
-  fleetAddress,
-  chainId,
-  amount,
-  preloadedForecast,
-}: UseForecastProps) => {
-  const [isLoadingForecast, setIsLoadingForecast] = useState(false)
-  const [forecast, setForecast] = useState<ForecastData | undefined>(preloadedForecast)
+export const useForecast = ({ fleetAddress, chainId, amount }: UseForecastProps) => {
+  const [isLoadingForecast, setIsLoadingForecast] = useState(true)
+  const [forecast, setForecast] = useState<ForecastData | undefined>()
+  const [oneYearEarningsForecast, setOneYearEarningsForecast] = useState<string | undefined>()
 
   useEffect(() => {
+    setIsLoadingForecast(true)
     const fetchForecast = debounce(() => {
       if (
-        new BigNumber(amount).isZero() || // Don't fetch forecast for zero amounts
-        (forecast && new BigNumber(amount).eq(forecast.amount)) // Don't refetch if the amount hasn't changed (including preloaded)
+        new BigNumber(amount).isZero() // Don't fetch forecast for zero amounts
       ) {
+        setOneYearEarningsForecast(undefined)
+        setIsLoadingForecast(false)
+
         return () => {}
       }
-      setIsLoadingForecast(true)
       const controller = new AbortController()
 
       fetch(`/api/forecast/${fleetAddress}/${chainId}/${amount}`, {
@@ -36,6 +36,12 @@ export const useForecast = ({
         .then((res) => res.json())
         .then((data: ForecastData) => {
           setForecast(data)
+          setOneYearEarningsForecast(
+            getOneYearEarnings({
+              forecast: data,
+              inputValue: amount,
+            }),
+          )
           setIsLoadingForecast(false)
         })
         .catch((error) => {
@@ -58,7 +64,7 @@ export const useForecast = ({
     return () => {
       fetchForecast.cancel()
     }
-  }, [fleetAddress, chainId, amount, forecast])
+  }, [fleetAddress, chainId, amount])
 
-  return { forecast, isLoadingForecast }
+  return { forecast, isLoadingForecast, oneYearEarningsForecast }
 }

@@ -101,11 +101,18 @@ export { useClientSideMount } from './hooks/use-client-side-mount'
 export { useLocalStorageOnce } from './hooks/use-local-storage-once'
 export { useLocalStorage } from './hooks/use-local-storage'
 export { useTokenSelector } from './hooks/use-token-selector'
+export { useForecast } from './features/forecast/use-forecast.ts'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
 export { getVaultUrl, getVaultDetailsUrl, getVaultPositionUrl } from './helpers/get-vault-url'
 export { getTwitterShareUrl } from './helpers/get-twitter-share-url'
 export { getScannerUrl } from './helpers/get-scanner-url'
 export { getMedian } from './helpers/get-median'
+export { getOneYearEarnings } from './helpers/get-one-year-earnings'
 
 export { INTERNAL_LINKS, EXTERNAL_LINKS } from './helpers/application-links'
+
+// forecast stuff
+export { parseForecastDatapoints } from './features/forecast/parse-forecast-datapoints'
+export { fetchForecastData } from './features/forecast/fetch-forecast-data'
+export { chartTimestampFormat } from './features/forecast/chart-formatters'

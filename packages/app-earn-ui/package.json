@@ -53,6 +53,7 @@
     "bignumber.js": "^9.1.2",
     "boring-avatars": "1.10.2",
     "clsx": "^2.1.1",
+    "dayjs": "^1.11.12",
     "lodash-es": "^4.17.1",
     "next": "^14.2.15",
     "react-dom": "^18.3.1",

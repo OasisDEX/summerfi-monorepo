@@ -1,5 +1,5 @@
 import { Text } from '@summerfi/app-earn-ui'
-import { type PositionForecastAPIResponse, type SDKNetwork } from '@summerfi/app-types'
+import { type SDKNetwork } from '@summerfi/app-types'
 import {
   humanNetworktoSDKNetwork,
   parseServerResponseToClient,
@@ -12,8 +12,6 @@ import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { VaultOpenView } from '@/components/layout/VaultOpenView/VaultOpenView'
-import { fetchForecastData } from '@/features/forecast/fetch-forecast-data'
-import { parseForecastDatapoints } from '@/features/forecast/parse-forecast-datapoints'
 import {
   decorateCustomVaultFields,
   getVaultIdByVaultCustomName,
@@ -37,18 +35,13 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     ? params.vaultId
     : getVaultIdByVaultCustomName(params.vaultId, String(parsedNetworkId), config)
 
-  const [vault, { vaults }, { userActivity, topDepositors }, forecastData] = await Promise.all([
+  const [vault, { vaults }, { userActivity, topDepositors }] = await Promise.all([
     getVaultDetails({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),
     getVaultsList(),
     getUserActivity({ vaultAddress: parsedVaultId, network: parsedNetwork }),
-    fetchForecastData({
-      fleetAddress: parsedVaultId as `0x${string}`,
-      amount: 100, // rule of thumb value
-      chainId: subgraphNetworkToId(parsedNetwork),
-    }).then(async (data) => (await data.json()) as PositionForecastAPIResponse),
   ])
   const [vaultDecorated] = vault ? decorateCustomVaultFields([vault], config) : []
   const vaultsDecorated = decorateCustomVaultFields(vaults, config)
@@ -67,7 +60,6 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       vaults={vaultsDecorated}
       userActivity={userActivity}
       topDepositors={topDepositors}
-      preloadedForecast={parseForecastDatapoints(forecastData)}
     />
   )
 }

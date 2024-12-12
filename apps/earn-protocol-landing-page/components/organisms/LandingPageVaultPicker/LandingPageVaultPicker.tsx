@@ -11,7 +11,7 @@ export const LandingPageVaultPicker = ({ vault }: { vault: SDKVaultishType }) =>
 
   return (
     <div className={landingPageVaultPickerStyles.landingPageVaultPickerWrapper}>
-      <VaultCard {...vault} />
+      <VaultCard {...vault} secondary withTokenBonus={false} />
       <VaultSimulationForm
         vaultData={vault}
         selectedTokenOption={selectedTokenOption}
