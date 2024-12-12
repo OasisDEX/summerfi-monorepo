@@ -10,7 +10,7 @@ const {
   ONE_INCH_API_KEY,
   ONE_INCH_API_VERSION,
   ONE_INCH_API_URL,
-  ONE_INCH_ALLOWED_SWAP_PROTOCOLS,
+  ONE_INCH_ALLOWED_SWAP_PROTOCOLS = '',
   ONE_INCH_SWAP_CHAIN_IDS,
   ONE_INCH_API_SPOT_URL,
   ONE_INCH_API_SPOT_VERSION,
@@ -26,7 +26,6 @@ export function addSdkConfig({ stack }: StackContext, api: Api) {
     !ONE_INCH_API_KEY ||
     !ONE_INCH_API_VERSION ||
     !ONE_INCH_API_URL ||
-    ONE_INCH_ALLOWED_SWAP_PROTOCOLS == null ||
     !ONE_INCH_SWAP_CHAIN_IDS ||
     !ONE_INCH_API_SPOT_URL ||
     !ONE_INCH_API_SPOT_VERSION ||
@@ -41,7 +40,6 @@ export function addSdkConfig({ stack }: StackContext, api: Api) {
             ONE_INCH_API_KEY,
             ONE_INCH_API_VERSION,
             ONE_INCH_API_URL,
-            ONE_INCH_ALLOWED_SWAP_PROTOCOLS,
             ONE_INCH_SWAP_CHAIN_IDS,
             ONE_INCH_API_SPOT_URL,
             ONE_INCH_API_SPOT_VERSION,
