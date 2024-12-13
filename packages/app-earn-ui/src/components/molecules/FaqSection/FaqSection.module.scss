@@ -1,32 +1,24 @@
-.faqSectionHeaderWrapper {
-  padding: 0 var(--spacing-space-3x-large);
-
-  @include media('<=s') {
-    padding: 0 var(--spacing-space-large);
-  }
+.faqGeneralWrapper {
+  width: 100%;
 }
 
 .faqSectionHeader {
   font-weight: 600;
-  color: var(--color-text-secondary);
 }
 
 .faqSectionBlockWrapper {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0 var(--spacing-space-3x-large);
-  margin-top: var(--spacing-space-x-large);
+  margin-top: var(--general-space-16);
 
   @include media('<=s') {
     flex-wrap: wrap;
-    padding: 0 var(--spacing-space-x-large);
   }
 
   > div {
-    // expander wrapper
     padding: var(--spacing-space-large) 0;
-    border-bottom: 1px solid rgba(61, 61, 61, 1);
+    border-bottom: 1px solid var(--earn-protocol-neutral-70);
   }
 
   > div:last-of-type {

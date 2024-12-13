@@ -1,9 +1,11 @@
 import { type FC, type ReactNode } from 'react'
+import clsx from 'clsx'
 
 import { Expander } from '@/components/atoms/Expander/Expander'
 import { Text } from '@/components/atoms/Text/Text'
 
 import faqSectionStyles from './FaqSection.module.scss'
+import { type ClassNames as TextClassNames } from '@/components/atoms/Text/Text.module.scss'
 
 const ExpanderContent = ({ children }: { children: ReactNode }) => {
   return <div className={faqSectionStyles.faqSectionExpanderContent}>{children}</div>
@@ -15,17 +17,26 @@ interface FaqSectionProps {
     content: ReactNode
   }[]
   wrapperClassName?: string
+  headerClassName?: string
+  faqSectionClassName?: string
+  headerVariant?: TextClassNames
 }
 
-export const FaqSection: FC<FaqSectionProps> = ({ data, wrapperClassName }) => {
+export const FaqSection: FC<FaqSectionProps> = ({
+  data,
+  wrapperClassName,
+  headerVariant = 'h2',
+  headerClassName,
+  faqSectionClassName,
+}) => {
   return (
-    <div className={wrapperClassName}>
-      <div className={faqSectionStyles.faqSectionHeaderWrapper}>
-        <Text variant="h2" className={faqSectionStyles.faqSectionHeader}>
+    <div className={clsx(faqSectionStyles.faqGeneralWrapper, wrapperClassName)}>
+      <div className={clsx(headerClassName)}>
+        <Text variant={headerVariant} className={faqSectionStyles.faqSectionHeader}>
           FAQ
         </Text>
       </div>
-      <div className={faqSectionStyles.faqSectionBlockWrapper}>
+      <div className={clsx(faqSectionStyles.faqSectionBlockWrapper, faqSectionClassName)}>
         {data.map(({ title, content }) => (
           <Expander title={title} key={title}>
             <ExpanderContent>{content}</ExpanderContent>

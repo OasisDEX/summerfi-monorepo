@@ -41,6 +41,7 @@ import { usePosition } from '@/hooks/use-position'
 import { useRedirectToPosition } from '@/hooks/use-redirect-to-position'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useTransaction } from '@/hooks/use-transaction'
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import vaultOpenViewStyles from './VaultOpenView.module.scss'
 
@@ -74,6 +75,7 @@ export const VaultOpenViewComponent = ({
     publicClient,
     tokenSymbol: selectedTokenOption.value,
   })
+  const { userWalletAddress } = useUserWallet()
 
   const {
     amountParsed,
@@ -289,11 +291,11 @@ export const VaultOpenViewComponent = ({
       sidebarContent={
         <>
           <Sidebar {...sidebarProps} />
-          {user?.address && (
+          {userWalletAddress && (
             <TransakWidget
               cryptoCurrency={vault.inputToken.symbol}
-              walletAddress={user.address}
-              email={user.email}
+              walletAddress={userWalletAddress}
+              email={user?.email}
               isOpen={isTransakOpen}
               onClose={() => setIsTransakOpen(false)}
             />

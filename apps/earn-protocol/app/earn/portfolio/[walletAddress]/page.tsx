@@ -18,10 +18,11 @@ type PortfolioPageProps = {
 const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   const { walletAddress } = params
 
-  const [walletData, { vaults }, positions] = await Promise.all([
+  const [walletData, { vaults }, positions, systemConfig] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
-    await getVaultsList(),
-    await getUserPositions({ walletAddress }),
+    getVaultsList(),
+    getUserPositions({ walletAddress }),
+    systemConfigHandler(),
   ])
   const rewardsData = portfolioRewardsHandler(walletAddress)
 
@@ -29,7 +30,8 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     ? parseServerResponseToClient<IArmadaPosition[]>(positions)
     : []
 
-  const { config } = parseServerResponseToClient(await systemConfigHandler())
+  const { config } = parseServerResponseToClient(systemConfig)
+
   const positionsList = await Promise.all(
     positionsJsonSafe.map((position) =>
       portfolioPositionsHandler({ position, vaultsList: vaults, config }),

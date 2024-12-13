@@ -1,11 +1,14 @@
-import { useAuthModal, useLogout, useSignerStatus, useUser } from '@account-kit/react'
+import { useAuthModal, useLogout, useSignerStatus } from '@account-kit/react'
 import { Button, LoadableAvatar, SkeletonLine, Text } from '@summerfi/app-earn-ui'
 import { formatAddress } from '@summerfi/app-utils'
+
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './WalletLabel.module.scss'
 
 export default function WalletLabel() {
-  const user = useUser()
+  const { userWalletAddress } = useUserWallet()
+
   const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
   const { isInitializing: isSignerInitializing, isAuthenticating: isSignerAuthenticating } =
     useSignerStatus()
@@ -23,7 +26,7 @@ export default function WalletLabel() {
     )
   }
 
-  if (user) {
+  if (userWalletAddress) {
     return (
       <Button
         variant="secondarySmall"
@@ -35,12 +38,12 @@ export default function WalletLabel() {
       >
         <LoadableAvatar
           size={24}
-          name={btoa(user.address)}
+          name={btoa(userWalletAddress)}
           variant="pixel"
           colors={['#B90061', '#EC58A2', '#F8A4CE', '#FFFFFF']}
         />
         <Text variant="p3semi" style={{ color: 'white', paddingLeft: 'var(--general-space-8)' }}>
-          {formatAddress(user.address, { first: 6 })}
+          {formatAddress(userWalletAddress, { first: 6 })}
         </Text>
       </Button>
     )

@@ -46,13 +46,13 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     },
     {
       id: 'rewards',
-      label: 'Rewards',
+      label: 'SUMR Rewards',
       content: <PortfolioRewards rewardsData={rewardsData} />,
     },
   ]
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', padding: '0 16px' }}>
       <PortfolioHeader walletAddress={walletAddress} />
       <TabBar tabs={tabs} />
     </div>
