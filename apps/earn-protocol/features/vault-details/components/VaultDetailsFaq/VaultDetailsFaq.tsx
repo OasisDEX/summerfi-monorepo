@@ -21,7 +21,7 @@ const faqExpanders = [
 
 export const VaultDetailsFaq = () => {
   return (
-    <Card variant="cardPrimary">
+    <Card variant="cardSecondary">
       <div
         id="faq"
         style={{

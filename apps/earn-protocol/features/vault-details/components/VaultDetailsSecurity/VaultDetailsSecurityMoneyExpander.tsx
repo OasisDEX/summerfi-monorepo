@@ -19,7 +19,7 @@ const whitelistedActorsLinks = [
 
 export const VaultDetailsSecurityMoneyExpander = () => {
   return (
-    <Card variant="cardSecondary">
+    <Card>
       <Expander
         title={
           <Text as="p" variant="p1semi">

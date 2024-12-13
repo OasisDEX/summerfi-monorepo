@@ -29,7 +29,7 @@ const auditCards: LinkCardWithIconName[] = [
 
 export const VaultDetailsSecurityAuditsExpander = () => {
   return (
-    <Card variant="cardSecondary">
+    <Card>
       <Expander
         title={
           <Text as="p" variant="p1semi">

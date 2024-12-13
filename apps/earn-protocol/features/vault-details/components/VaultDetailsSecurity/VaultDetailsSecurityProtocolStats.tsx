@@ -49,7 +49,7 @@ export const VaultDetailsSecurityProtocolStats = () => {
     securityDropdownOptions[0]
 
   return (
-    <Card variant="cardSecondary">
+    <Card>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <Text as="p" variant="p1semi" style={{ marginBottom: 'var(--spacing-space-small)' }}>

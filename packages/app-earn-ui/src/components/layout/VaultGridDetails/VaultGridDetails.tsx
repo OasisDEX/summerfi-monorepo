@@ -64,7 +64,11 @@ export const VaultGridDetails = ({
           </Dropdown>
           <Button variant="primarySmall" style={{ height: '48px', paddingRight: '40px' }}>
             <Link href={getVaultUrl(vault)}>
-              <WithArrow as="span" variant="p2semi">
+              <WithArrow
+                as="span"
+                variant="p2semi"
+                style={{ color: 'var(-earn-protocol-secondary-100)' }}
+              >
                 Deposit
               </WithArrow>
             </Link>

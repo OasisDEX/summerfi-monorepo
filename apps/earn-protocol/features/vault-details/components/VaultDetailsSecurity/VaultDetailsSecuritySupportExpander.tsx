@@ -38,7 +38,7 @@ const items: {
 
 export const VaultDetailsSecuritySupportExpander = () => {
   return (
-    <Card variant="cardSecondary">
+    <Card>
       <Expander
         title={
           <Text as="p" variant="p1semi">

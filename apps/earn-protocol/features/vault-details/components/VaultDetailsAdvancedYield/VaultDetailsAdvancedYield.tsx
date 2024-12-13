@@ -36,7 +36,7 @@ export const VaultDetailsAdvancedYield = () => {
         asButtons
         variant="p4semi"
       />
-      <MockedLineChart />
+      <MockedLineChart cardVariant="cardPrimary" />
       <Text
         as="p"
         variant="p2semi"

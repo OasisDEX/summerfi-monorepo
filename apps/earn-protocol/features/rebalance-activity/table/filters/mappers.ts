@@ -25,6 +25,12 @@ const getProtocolIcon = (protocolLabel: string) => {
   if (lowerCasedProtocolLabel.includes('pendle')) {
     return 'pendle'
   }
+  if (lowerCasedProtocolLabel.includes('fluid')) {
+    return 'fluid'
+  }
+  if (lowerCasedProtocolLabel.includes('gearbox')) {
+    return 'gearbox'
+  }
 
   return 'not_supported_icon'
 }

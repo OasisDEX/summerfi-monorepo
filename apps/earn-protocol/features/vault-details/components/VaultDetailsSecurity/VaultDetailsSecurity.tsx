@@ -10,7 +10,7 @@ import classNames from './VaultDetailsSecurity.module.scss'
 
 export const VaultDetailsSecurity = () => {
   return (
-    <Card variant="cardPrimary">
+    <Card variant="cardSecondary">
       <div id="security" className={classNames.wrapper}>
         <VaultDetailsSecurityStats />
         <VaultDetailsSecurityProtocolStats />

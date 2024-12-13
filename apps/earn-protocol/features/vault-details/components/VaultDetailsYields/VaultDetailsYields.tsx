@@ -24,7 +24,7 @@ export const VaultDetailsYields: FC = () => {
   }, [hash])
 
   return (
-    <Card variant="cardPrimary">
+    <Card variant="cardSecondary">
       <div id="advanced-yield-data" />
       <div id="yield-sources" />
       <div

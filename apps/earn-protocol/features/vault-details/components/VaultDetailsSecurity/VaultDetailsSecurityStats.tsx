@@ -45,7 +45,7 @@ export const VaultDetailsSecurityStats = () => {
           width: '100%',
         }}
       >
-        <Card variant="cardSecondary">
+        <Card>
           <div className={classNames.dataBlockWrapper}>
             {dataBlocks.map((block) => (
               <DataBlock key={block.title} title={block.title} size="small" value={block.value} />

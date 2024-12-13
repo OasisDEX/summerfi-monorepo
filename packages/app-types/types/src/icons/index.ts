@@ -266,6 +266,8 @@ export type IconNamesList =
   | 'referer_colorful'
   | 'x_colorful'
   | 'stack_colorful'
+  | 'fluid'
+  | 'gearbox'
 
 export type TokenSymbolsList =
   | 'AAVE'

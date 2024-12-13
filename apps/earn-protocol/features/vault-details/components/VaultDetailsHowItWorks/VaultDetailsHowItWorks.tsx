@@ -18,7 +18,7 @@ export const VaultDetailsHowItWorks = () => {
   )
 
   return (
-    <Card variant="cardPrimary">
+    <Card variant="cardSecondary">
       <div
         id="how-it-works"
         style={{
