@@ -1,10 +1,20 @@
 import { Text, VaultGridDetails } from '@summerfi/app-earn-ui'
 import { type SDKNetwork } from '@summerfi/app-types'
-import { humanNetworktoSDKNetwork } from '@summerfi/app-utils'
+import {
+  humanNetworktoSDKNetwork,
+  parseServerResponseToClient,
+  subgraphNetworkToId,
+} from '@summerfi/app-utils'
+import { isAddress } from '@summerfi/sdk-common'
 
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
+import systemConfigHandler from '@/app/server-handlers/system-config'
 import { VaultDetailsView } from '@/components/layout/VaultDetailsView/VaultDetailsView'
+import {
+  decorateCustomVaultFields,
+  getVaultIdByVaultCustomName,
+} from '@/helpers/vault-custom-value-helpers'
 
 type EarnVaultDetailsPageProps = {
   params: {
@@ -17,24 +27,33 @@ export const revalidate = 60
 
 const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
   const parsedNetwork = humanNetworktoSDKNetwork(params.network)
+  const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
+  const { config } = parseServerResponseToClient(await systemConfigHandler())
+
+  const parsedVaultId = isAddress(params.vaultId)
+    ? params.vaultId
+    : getVaultIdByVaultCustomName(params.vaultId, String(parsedNetworkId), config)
+
   const [vault, { vaults }] = await Promise.all([
     getVaultDetails({
-      vaultAddress: params.vaultId,
+      vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),
     getVaultsList(),
   ])
 
+  const vaultsDecorated = decorateCustomVaultFields(vaults, config)
+
   if (!vault) {
     return (
       <Text>
-        No vault found with the id {params.vaultId} on the network {parsedNetwork}
+        No vault found with the id {parsedVaultId} on the network {parsedNetwork}
       </Text>
     )
   }
 
   return (
-    <VaultGridDetails vault={vault} vaults={vaults}>
+    <VaultGridDetails vault={vault} vaults={vaultsDecorated}>
       <VaultDetailsView />
     </VaultGridDetails>
   )
