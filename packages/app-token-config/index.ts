@@ -622,4 +622,9 @@ export const tokenConfigs: TokenConfig[] = [
     name: 'CRVV1ETHSTETH',
     iconName: 'not_supported_icon',
   },
+  {
+    symbol: 'MBASIS',
+    name: 'Midas Basis Trading Token',
+    iconName: 'not_supported_icon',
+  },
 ]

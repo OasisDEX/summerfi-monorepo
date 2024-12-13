@@ -384,6 +384,7 @@ export type TokenSymbolsList =
   | 'YIELDETH'
   | 'ZRX'
   | 'WUSDL'
+  | 'MBASIS'
   // deprecated ones
   | 'CRVV1ETHSTETH'
   | 'UNIV2AAVEETH'

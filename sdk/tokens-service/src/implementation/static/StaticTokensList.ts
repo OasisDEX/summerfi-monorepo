@@ -700,5 +700,13 @@ export const StaticTokensData: TokenListData = {
       decimals: 6,
       logoURI: '',
     },
+    {
+      chainId: 1,
+      symbol: 'mBASIS',
+      name: 'Midas Basis Trading Token',
+      address: '0x2a8c22E3b10036f3AEF5875d04f8441d4188b656',
+      decimals: 18,
+      logoURI: '',
+    },
   ],
 }
