@@ -1,12 +1,11 @@
 'use client'
 
 import { type FC } from 'react'
-import { useAccount, useUser } from '@account-kit/react'
 import { Button, Navigation, SkeletonLine, SupportBox } from '@summerfi/app-earn-ui'
 import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
 
-import { accountType } from '@/account-kit/config'
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 const WalletLabel = dynamic(() => import('../../molecules/WalletLabel/WalletLabel'), {
   ssr: false,
@@ -19,11 +18,7 @@ const WalletLabel = dynamic(() => import('../../molecules/WalletLabel/WalletLabe
 
 export const NavigationWrapper: FC = () => {
   const currentPath = usePathname()
-
-  const user = useUser()
-  const { account } = useAccount({ type: accountType })
-
-  const resolvedAddress = account?.address ?? user?.address
+  const { userWalletAddress } = useUserWallet()
 
   return (
     <Navigation
@@ -36,12 +31,12 @@ export const NavigationWrapper: FC = () => {
           id: 'earn',
           link: `/earn`,
         },
-        ...(resolvedAddress
+        ...(userWalletAddress
           ? [
               {
                 label: 'Portfolio',
                 id: 'portfolio',
-                link: `/earn/portfolio/${resolvedAddress}`,
+                link: `/earn/portfolio/${userWalletAddress}`,
               },
             ]
           : []),

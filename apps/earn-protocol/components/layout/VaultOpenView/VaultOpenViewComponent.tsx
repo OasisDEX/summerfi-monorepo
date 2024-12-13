@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useAccount } from '@account-kit/react'
 import {
   Expander,
   Sidebar,
@@ -21,7 +20,6 @@ import {
   type UsersActivity,
 } from '@summerfi/app-types'
 
-import { accountType } from '@/account-kit/config'
 import { detailsLinks } from '@/components/layout/VaultOpenView/mocks'
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
@@ -43,6 +41,7 @@ import { usePosition } from '@/hooks/use-position'
 import { useRedirectToPosition } from '@/hooks/use-redirect-to-position'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useTransaction } from '@/hooks/use-transaction'
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import vaultOpenViewStyles from './VaultOpenView.module.scss'
 
@@ -76,8 +75,7 @@ export const VaultOpenViewComponent = ({
     publicClient,
     tokenSymbol: selectedTokenOption.value,
   })
-
-  const { account } = useAccount({ type: accountType })
+  const { userWalletAddress } = useUserWallet()
 
   const {
     amountParsed,
@@ -222,9 +220,6 @@ export const VaultOpenViewComponent = ({
   // needed due to type duality
   const rebalancesList = `rebalances` in vault ? vault.rebalances : []
 
-  // smart accounts address is taken from account, EOA from user
-  const transakWalletAddress = account?.address ?? user?.address
-
   return (
     <VaultOpenGrid
       isMobile={isMobile}
@@ -295,10 +290,10 @@ export const VaultOpenViewComponent = ({
       sidebarContent={
         <>
           <Sidebar {...sidebarProps} />
-          {transakWalletAddress && (
+          {userWalletAddress && (
             <TransakWidget
               cryptoCurrency={vault.inputToken.symbol}
-              walletAddress={transakWalletAddress}
+              walletAddress={userWalletAddress}
               email={user?.email}
               isOpen={isTransakOpen}
               onClose={() => setIsTransakOpen(false)}
