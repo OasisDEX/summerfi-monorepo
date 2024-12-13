@@ -1,5 +1,5 @@
 'use client'
-import { type FC, type ReactNode, useEffect, useRef, useState } from 'react'
+import { type CSSProperties, type FC, type ReactNode, useEffect, useRef, useState } from 'react'
 
 import { Text } from '@/components/atoms/Text/Text'
 
@@ -15,9 +15,10 @@ interface Tab {
 interface TabBarProps {
   tabs: Tab[]
   textVariant?: TextClassNames
+  tabHeadersStyle?: CSSProperties
 }
 
-export const TabBar: FC<TabBarProps> = ({ tabs, textVariant = 'p2semi' }) => {
+export const TabBar: FC<TabBarProps> = ({ tabs, textVariant = 'p2semi', tabHeadersStyle }) => {
   const [activeIndex, setActiveIndex] = useState(0)
   const [underlineStyle, setUnderlineStyle] = useState<{ left: number; width: number }>({
     left: 0,
@@ -40,7 +41,7 @@ export const TabBar: FC<TabBarProps> = ({ tabs, textVariant = 'p2semi' }) => {
   return (
     <div className={styles.tabBar}>
       <div style={{ position: 'relative', height: 'fit-content' }}>
-        <div className={styles.tabHeaders}>
+        <div className={styles.tabHeaders} style={tabHeadersStyle}>
           {tabs.map((tab, index) => (
             <button
               key={index}

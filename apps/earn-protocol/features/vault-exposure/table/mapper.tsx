@@ -14,6 +14,7 @@ import Link from 'next/link'
 
 import { rebalanceActivitySorter } from '@/features/vault-exposure/table/sorter'
 import { getProtocolLabel } from '@/helpers/get-protocol-label'
+import { historicalChartprotocolsColorMap } from '@/helpers/vault-decorators'
 
 export const vaultExposureMapper = (
   vault: SDKVaultType,
@@ -43,7 +44,12 @@ export const vaultExposureMapper = (
       content: {
         vault: (
           <TableCellNodes>
-            <TableRowAccent backgroundColor="var(--earn-protocol-accent-1-100)" />
+            <TableRowAccent
+              backgroundColor={
+                historicalChartprotocolsColorMap[protocolLabel] ??
+                historicalChartprotocolsColorMap.DEFAULT
+              }
+            />
             <Icon tokenName={item.inputToken.symbol as TokenSymbolsList} variant="s" />
             <TableCellText>{protocolLabel}</TableCellText>
           </TableCellNodes>

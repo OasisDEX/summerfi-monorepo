@@ -1,7 +1,7 @@
 'use client'
 
-import { type Dispatch, type FC, type SetStateAction, useMemo, useState } from 'react'
-import { Button, Card, Icon, InlineButtons, Text } from '@summerfi/app-earn-ui'
+import { type Dispatch, type FC, type SetStateAction, useState } from 'react'
+import { Button, Card, Icon, TabBar, Text } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType, type SDKVaultType } from '@summerfi/app-types'
 
 import { VaultExposureTable } from '@/features/vault-exposure/components/VaultExposureTable/VaultExposureTable'
@@ -13,38 +13,56 @@ export enum VaultExposureFilterType {
   UNALLOCATED = 'UNALLOCATED',
 }
 
-const options = [
-  {
-    title: 'All',
-    key: VaultExposureFilterType.ALL,
-  },
-  {
-    title: 'Allocated',
-    key: VaultExposureFilterType.ALLOCATED,
-  },
-  {
-    title: 'Unallocated',
-    key: VaultExposureFilterType.UNALLOCATED,
-  },
-]
-
-interface VaultExposureTypePickerProps {
-  currentType: VaultExposureFilterType
-  setExposureType: Dispatch<SetStateAction<VaultExposureFilterType>>
+interface VaultExposureTableSectionProps {
+  allocationType: VaultExposureFilterType
+  filteredVault: SDKVaultishType
+  vault: SDKVaultishType
+  resolvedRowsToDisplay: number
+  seeAll: boolean
+  setSeeAll: Dispatch<SetStateAction<boolean>>
 }
 
-const VaultExposureTypePicker: FC<VaultExposureTypePickerProps> = ({
-  currentType,
-  setExposureType,
+const VaultExposureTableSection: FC<VaultExposureTableSectionProps> = ({
+  allocationType,
+  filteredVault,
+  vault,
+  resolvedRowsToDisplay,
+  seeAll,
+  setSeeAll,
 }) => {
   return (
-    <InlineButtons
-      options={options}
-      currentOption={options.find((item) => item.key === currentType) ?? options[0]}
-      handleOption={(option) => setExposureType(option.key)}
-      style={{ marginBottom: 'var(--spacing-space-small)' }}
-      variant="p4semi"
-    />
+    <>
+      <VaultExposureTable
+        vault={vaultExposureFilter({
+          vault: vault as SDKVaultType,
+          allocationType,
+        })}
+        rowsToDisplay={resolvedRowsToDisplay}
+      />
+      {filteredVault.arks.length > 5 && (
+        <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
+          <Button
+            variant="unstyled"
+            onClick={() => setSeeAll((prev) => !prev)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--general-space-4)',
+              marginTop: 'var(--general-space-16)',
+            }}
+          >
+            <Text as="p" variant="p3" style={{ color: 'var(--earn-protocol-primary-100)' }}>
+              View {seeAll ? 'less' : 'more'}
+            </Text>
+            <Icon
+              iconName={seeAll ? 'chevron_up' : 'chevron_down'}
+              variant="xxs"
+              color="var(--earn-protocol-primary-100)"
+            />
+          </Button>
+        </div>
+      )}
+    </>
   )
 }
 
@@ -55,22 +73,67 @@ interface VaultExposureProps {
 }
 
 export const VaultExposure: FC<VaultExposureProps> = ({ vault }) => {
-  const [exposureType, setExposureType] = useState<VaultExposureFilterType>(
-    VaultExposureFilterType.ALL,
-  )
-
   const [seeAll, setSeeAll] = useState(false)
-
-  const filteredVault = useMemo(
-    () => vaultExposureFilter({ vault: vault as SDKVaultType, allocationType: exposureType }),
-    [vault, exposureType],
-  )
 
   // hard to tell how many arks will be per vault therefore limiting it for now to 10
   const resolvedRowsToDisplay = seeAll ? 10 : rowsToDisplay
 
+  const tabs = [
+    {
+      label: 'All',
+      id: VaultExposureFilterType.ALL,
+      content: (
+        <VaultExposureTableSection
+          vault={vault}
+          filteredVault={vaultExposureFilter({
+            vault: vault as SDKVaultType,
+            allocationType: VaultExposureFilterType.ALL,
+          })}
+          seeAll={seeAll}
+          setSeeAll={setSeeAll}
+          resolvedRowsToDisplay={resolvedRowsToDisplay}
+          allocationType={VaultExposureFilterType.ALL}
+        />
+      ),
+    },
+    {
+      label: 'Allocated',
+      id: VaultExposureFilterType.ALLOCATED,
+      content: (
+        <VaultExposureTableSection
+          vault={vault}
+          filteredVault={vaultExposureFilter({
+            vault: vault as SDKVaultType,
+            allocationType: VaultExposureFilterType.ALLOCATED,
+          })}
+          seeAll={seeAll}
+          setSeeAll={setSeeAll}
+          resolvedRowsToDisplay={resolvedRowsToDisplay}
+          allocationType={VaultExposureFilterType.ALLOCATED}
+        />
+      ),
+    },
+    {
+      label: 'Unallocated',
+      id: VaultExposureFilterType.UNALLOCATED,
+      content: (
+        <VaultExposureTableSection
+          vault={vault}
+          filteredVault={vaultExposureFilter({
+            vault: vault as SDKVaultType,
+            allocationType: VaultExposureFilterType.UNALLOCATED,
+          })}
+          seeAll={seeAll}
+          setSeeAll={setSeeAll}
+          resolvedRowsToDisplay={resolvedRowsToDisplay}
+          allocationType={VaultExposureFilterType.UNALLOCATED}
+        />
+      ),
+    },
+  ]
+
   return (
-    <Card variant="cardSecondary" style={{ marginTop: 'var(--spacing-space-medium)' }}>
+    <Card style={{ marginTop: 'var(--spacing-space-medium)' }}>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Text
           as="p"
@@ -83,30 +146,11 @@ export const VaultExposure: FC<VaultExposureProps> = ({ vault }) => {
           This vault is composed of various DeFi protocols through our rigorous selection process.
           Vetted for security, performance and trustworthy teams.
         </Text>
-
-        <VaultExposureTypePicker currentType={exposureType} setExposureType={setExposureType} />
-        <VaultExposureTable vault={filteredVault} rowsToDisplay={resolvedRowsToDisplay} />
-        {filteredVault.arks.length > 5 && (
-          <Button
-            variant="unstyled"
-            onClick={() => setSeeAll((prev) => !prev)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 'var(--general-space-4)',
-              marginTop: 'var(--general-space-16)',
-            }}
-          >
-            <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-              View {seeAll ? 'less' : 'more'}
-            </Text>
-            <Icon
-              iconName={seeAll ? 'chevron_up' : 'chevron_down'}
-              variant="xxs"
-              color="var(--earn-protocol-primary-100)"
-            />
-          </Button>
-        )}
+        <TabBar
+          tabs={tabs}
+          textVariant="p3semi"
+          tabHeadersStyle={{ borderBottom: '1px solid var(--earn-protocol-neutral-80)' }}
+        />
       </div>
     </Card>
   )

@@ -52,9 +52,13 @@ export const UserActivity: FC<UserActivityProps> = ({
   ]
 
   return (
-    <Card variant="cardSecondary" style={{ marginTop: 'var(--spacing-space-medium)' }}>
+    <Card style={{ marginTop: 'var(--spacing-space-medium)' }}>
       <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-        <TabBar tabs={tabs} textVariant="p3semi" />
+        <TabBar
+          tabs={tabs}
+          textVariant="p3semi"
+          tabHeadersStyle={{ borderBottom: '1px solid var(--earn-protocol-neutral-80)' }}
+        />
         <Link href={`/earn/user-activity?strategies=${vaultId}`} style={{ width: 'fit-content' }}>
           <WithArrow as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
             View all depositors

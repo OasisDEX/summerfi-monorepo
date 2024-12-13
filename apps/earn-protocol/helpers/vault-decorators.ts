@@ -14,7 +14,7 @@ import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-
 import { CHART_TIMESTAMP_FORMAT } from '@/constants/charts'
 import { getProtocolLabel } from '@/helpers/get-protocol-label'
 
-const historicalChartprotocolsColorMap = {
+export const historicalChartprotocolsColorMap: { [key: string]: string } = {
   DEFAULT: '#cccccc',
   AaveV3: '#8A2D6E',
   CompoundV3: '#00A37A',

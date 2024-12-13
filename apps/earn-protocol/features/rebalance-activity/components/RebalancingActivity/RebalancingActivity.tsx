@@ -21,7 +21,7 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({ rebalancesLi
   const savedGasCost = useMemo(() => getRebalanceSavedGasCost(totalItems), [totalItems])
 
   return (
-    <Card variant="cardSecondary" style={{ marginTop: 'var(--spacing-space-medium)' }}>
+    <Card style={{ marginTop: 'var(--spacing-space-medium)' }}>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <Text as="p" variant="p2semi" style={{ marginBottom: 'var(--spacing-space-large)' }}>
           Previous 30 days
