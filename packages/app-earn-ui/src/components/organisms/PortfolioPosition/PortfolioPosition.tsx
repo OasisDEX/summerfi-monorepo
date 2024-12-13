@@ -7,7 +7,6 @@ import Link from 'next/link'
 import { Button } from '@/components/atoms/Button/Button'
 import { Card } from '@/components/atoms/Card/Card'
 import { Text } from '@/components/atoms/Text/Text'
-import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
 import { DataBlock } from '@/components/molecules/DataBlock/DataBlock'
 import { SimpleGrid } from '@/components/molecules/Grid/SimpleGrid'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
@@ -67,7 +66,7 @@ export const PortfolioPosition = ({ position, positionGraph }: PortfolioPosition
   const earnedInUSD = earnedInToken.times(inputTokenPriceUSD ?? 0)
 
   return (
-    <Card variant="cardSecondary" style={{ marginTop: 'var(--general-space-20)' }}>
+    <Card variant="cardPrimary" style={{ marginTop: 'var(--general-space-20)' }}>
       <div className={portfolioPositionStyles.positionWrapper}>
         <SimpleGrid columns={3}>
           <div className={portfolioPositionStyles.basicInfoWrapper}>
@@ -77,17 +76,6 @@ export const PortfolioPosition = ({ position, positionGraph }: PortfolioPosition
               risk={customFields?.risk ?? 'medium'}
               networkName={protocol.network}
             />
-            <Text
-              style={{
-                color: 'var(--earn-protocol-secondary-100)',
-                marginLeft: 'var(--general-space-16)',
-              }}
-            >
-              <BonusLabel
-                // TODO: fill data
-                rays="1,111"
-              />
-            </Text>
           </div>
           <div className={portfolioPositionStyles.strategyInfoTopWrapper}>
             <Text variant="p3semi" className={portfolioPositionStyles.header}>
