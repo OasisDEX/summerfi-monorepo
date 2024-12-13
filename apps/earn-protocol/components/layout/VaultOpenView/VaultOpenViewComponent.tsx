@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useAccount } from '@account-kit/react'
 import {
   Expander,
   Sidebar,
@@ -20,6 +21,7 @@ import {
   type UsersActivity,
 } from '@summerfi/app-types'
 
+import { accountType } from '@/account-kit/config'
 import { detailsLinks } from '@/components/layout/VaultOpenView/mocks'
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
@@ -74,6 +76,8 @@ export const VaultOpenViewComponent = ({
     publicClient,
     tokenSymbol: selectedTokenOption.value,
   })
+
+  const { account } = useAccount({ type: accountType })
 
   const {
     amountParsed,
@@ -218,6 +222,9 @@ export const VaultOpenViewComponent = ({
   // needed due to type duality
   const rebalancesList = `rebalances` in vault ? vault.rebalances : []
 
+  // smart accounts address is taken from account, EOA from user
+  const transakWalletAddress = account?.address ?? user?.address
+
   return (
     <VaultOpenGrid
       isMobile={isMobile}
@@ -288,11 +295,11 @@ export const VaultOpenViewComponent = ({
       sidebarContent={
         <>
           <Sidebar {...sidebarProps} />
-          {user?.address && (
+          {transakWalletAddress && (
             <TransakWidget
               cryptoCurrency={vault.inputToken.symbol}
-              walletAddress={user.address}
-              email={user.email}
+              walletAddress={transakWalletAddress}
+              email={user?.email}
               isOpen={isTransakOpen}
               onClose={() => setIsTransakOpen(false)}
             />
