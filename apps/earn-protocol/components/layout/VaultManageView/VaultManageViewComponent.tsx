@@ -32,7 +32,7 @@ import {
   OrderInfoWithdraw,
 } from '@/components/molecules/SidebarElements'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
-import { HistoricalYieldChart } from '@/components/organisms/Charts/HistoricalYieldChart'
+import { PerformanceYieldChart } from '@/components/organisms/Charts/PerformanceChart'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
@@ -273,10 +273,7 @@ export const VaultManageViewComponent = ({
             }
             defaultExpanded
           >
-            <HistoricalYieldChart
-              chartData={vault.customFields?.chartsData}
-              summerVaultName={vault.customFields?.name ?? 'Summer Vault'}
-            />
+            <PerformanceYieldChart chartData={[]} />
           </Expander>
           <Expander
             title={
