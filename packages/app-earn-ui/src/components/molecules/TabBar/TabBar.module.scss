@@ -13,7 +13,7 @@
 
 .tabHeaders {
   display: flex;
-  border-bottom: 3px solid #444; /* Grey underline spanning the entire container */
+  border-bottom: 1px solid var(--earn-protocol-neutral-85); /* Grey underline spanning the entire container */
   overflow-x: auto;
   scrollbar-width: none; /* Hide scrollbar on Firefox */
   -ms-overflow-style: none; /* Hide scrollbar on IE/Edge */

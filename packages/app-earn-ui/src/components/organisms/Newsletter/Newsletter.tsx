@@ -1,6 +1,6 @@
 'use client'
 
-import { type ReactNode, useState } from 'react'
+import { type CSSProperties, type ReactNode, useState } from 'react'
 import clsx from 'clsx'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
@@ -23,6 +23,10 @@ export type NewsletterPropsType = {
     onEmailUpdate: (email: string) => void
     onSubmit: (email: string) => void
   }
+  wrapperClassName?: string
+  inputWrapperClassName?: string
+  inputWrapperStyles?: CSSProperties
+  inputBtnLabel?: string
 }
 
 function NewsletterFormSuccess() {
@@ -57,7 +61,13 @@ function NewsletterFormSuccess() {
   )
 }
 
-export const Newsletter = ({ newsletter }: NewsletterPropsType) => {
+export const Newsletter = ({
+  newsletter,
+  wrapperClassName,
+  inputWrapperClassName,
+  inputWrapperStyles,
+  inputBtnLabel = 'Join',
+}: NewsletterPropsType) => {
   const [isFocused, setIsFocused] = useState(false)
   const updateEmail = (ev: React.ChangeEvent<HTMLInputElement>) => {
     newsletter.onEmailUpdate(ev.target.value)
@@ -72,7 +82,7 @@ export const Newsletter = ({ newsletter }: NewsletterPropsType) => {
   }
 
   return (
-    <div>
+    <div className={wrapperClassName}>
       <div className={newsletterStyles.newsletterInput}>
         <Input
           disabled={newsletter.newsletterStatus === 'loading' || !newsletter.enabled}
@@ -92,11 +102,12 @@ export const Newsletter = ({ newsletter }: NewsletterPropsType) => {
               <LoadingSpinner size={22} />
             ) : (
               <WithArrow as="p" withAnimated variant="p3semiColorful" onClick={handleSubmit}>
-                Join
+                {inputBtnLabel}
               </WithArrow>
             )
           }
-          wrapperStyles={{ maxWidth: '366px', fontSize: '14px' }}
+          wrapperStyles={{ fontSize: '14px', ...inputWrapperStyles }}
+          wrapperClassName={inputWrapperClassName}
         />
       </div>
       {newsletter.newsletterStatus === 'success' && <NewsletterFormSuccess />}

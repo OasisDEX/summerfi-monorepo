@@ -84,10 +84,7 @@ export const useTransaction = ({
   const [transactions, setTransactions] = useState<TransactionInfoLabeled[]>()
   const [sidebarError, setSidebarError] = useState<string>()
 
-  const { client: smartAccountClient, error } = useSmartAccountClient({ type: accountType })
-
-  // eslint-disable-next-line no-console
-  console.log('smartAccountClient', { client: smartAccountClient, error })
+  const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
 
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
   const isProperChainSelected = clientChainId === vaultChainId

@@ -28,7 +28,12 @@ const faqData = [
 export const SumrFaq = () => {
   return (
     <div className={classNames.sumrFaqWrapper}>
-      <FaqSection data={faqData} wrapperClassName={classNames.faqSectionCustomWrapper} />
+      <FaqSection
+        data={faqData}
+        wrapperClassName={classNames.faqSectionCustomWrapper}
+        headerClassName={classNames.faqSectionHeaderWrapper}
+        faqSectionClassName={classNames.faqSectionBlockWrapper}
+      />
     </div>
   )
 }

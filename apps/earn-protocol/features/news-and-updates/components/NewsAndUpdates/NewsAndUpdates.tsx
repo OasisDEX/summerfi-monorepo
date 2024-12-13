@@ -11,11 +11,11 @@ interface NewsAndUpdatesProps {
 
 export const NewsAndUpdates: FC<NewsAndUpdatesProps> = ({ items }) => {
   return (
-    <Card className={classNames.wrapper}>
+    <Card className={classNames.wrapper} variant="cardSecondary">
       <Text as="h5" variant="h5" className={classNames.header}>
         News & Updates
       </Text>
-      <Card variant="cardSecondary" className={classNames.wrapper}>
+      <Card className={classNames.wrapper}>
         <NewsAndUpdatesList items={items} />
       </Card>
     </Card>

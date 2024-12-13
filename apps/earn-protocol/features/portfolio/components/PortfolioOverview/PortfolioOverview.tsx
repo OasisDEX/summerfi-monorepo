@@ -72,7 +72,11 @@ export const PortfolioOverview = ({ vaultsList, positions }: PortfolioOverviewPr
         }}
       >
         {dataBlocks.map((item) => (
-          <Card key={item.title} style={{ flex: 1, background: item.gradient, minHeight: '142px' }}>
+          <Card
+            key={item.title}
+            style={{ flex: 1, background: item.gradient, minHeight: '142px' }}
+            variant="cardSecondary"
+          >
             <DataBlock
               title={item.title}
               titleStyle={{ color: item.titleColor }}
@@ -82,7 +86,7 @@ export const PortfolioOverview = ({ vaultsList, positions }: PortfolioOverviewPr
             />
           </Card>
         ))}
-        <Card style={{ flexDirection: 'column' }}>
+        <Card style={{ flexDirection: 'column' }} variant="cardSecondary">
           <Text as="h5" variant="h5">
             Positions
           </Text>

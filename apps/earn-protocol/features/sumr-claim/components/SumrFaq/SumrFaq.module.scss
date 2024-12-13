@@ -5,4 +5,22 @@
   .faqSectionCustomWrapper {
     width: 100%;
   }
+
+  .faqSectionHeaderWrapper {
+    color: var(--color-text-secondary);
+    padding: 0 var(--spacing-space-3x-large);
+
+    @include media('<=s') {
+      padding: 0 var(--spacing-space-large);
+    }
+  }
+
+  .faqSectionBlockWrapper {
+    padding: 0 var(--spacing-space-3x-large);
+    margin-top: var(--spacing-space-x-large);
+
+    @include media('<=s') {
+      padding: 0 var(--spacing-space-x-large);
+    }
+  }
 }

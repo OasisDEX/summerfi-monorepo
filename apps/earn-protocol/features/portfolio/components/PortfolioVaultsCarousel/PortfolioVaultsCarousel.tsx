@@ -20,7 +20,6 @@ export const PortfolioVaultsCarousel: FC<PortfolioVaultsCarouselProps> = ({
           <VaultCard
             key={vault.id}
             {...vault}
-            secondary
             withHover
             // eslint-disable-next-line no-console
             onClick={(item) => console.log('vault clicked', item)}

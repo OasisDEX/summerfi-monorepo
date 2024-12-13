@@ -11,6 +11,11 @@
   background-color: var(--color-surface-neutral);
   border: var(--border-1);
   border-radius: var(--radius-50);
+  width: 100%;
+
+  @media (min-width: 768px) {
+    width: unset;
+  }
 }
 
 .newsletterButtonLabel {

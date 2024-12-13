@@ -21,7 +21,7 @@ const blocks = [
 
 export const PortfolioRebalanceActivity = () => {
   return (
-    <Card className={classNames.wrapper}>
+    <Card className={classNames.wrapper} variant="cardSecondary">
       <Text as="h5" variant="h5" className={classNames.header}>
         Rebalance Activity
       </Text>

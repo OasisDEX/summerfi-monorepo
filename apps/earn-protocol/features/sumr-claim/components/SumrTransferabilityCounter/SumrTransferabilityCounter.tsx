@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { type CSSProperties, type FC, useEffect, useState } from 'react'
 import { Dial, Text } from '@summerfi/app-earn-ui'
 
 import classNames from './SumrTransferabilityCounter.module.scss'
@@ -28,7 +28,13 @@ const targetDate = new Date('2025-01-30T10:32:02').getTime()
 
 const initialTime = getTimeDifference(startDate, targetDate)
 
-export const SumrTransferabilityCounter = () => {
+interface SumrTransferabilityCounterProps {
+  wrapperStyles?: CSSProperties
+}
+
+export const SumrTransferabilityCounter: FC<SumrTransferabilityCounterProps> = ({
+  wrapperStyles,
+}) => {
   const [time, setTime] = useState(getTimeDifference(Date.now(), targetDate))
 
   useEffect(() => {
@@ -48,7 +54,7 @@ export const SumrTransferabilityCounter = () => {
   }, [])
 
   return (
-    <div className={classNames.sumrTransferabilityCounterWrapper}>
+    <div className={classNames.sumrTransferabilityCounterWrapper} style={wrapperStyles}>
       <Text as="p" variant="p3semi" className={classNames.heading}>
         Governance can enable transferability in
       </Text>

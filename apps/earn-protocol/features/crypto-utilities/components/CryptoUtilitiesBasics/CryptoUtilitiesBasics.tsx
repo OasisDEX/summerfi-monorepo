@@ -64,7 +64,7 @@ export const CryptoUtilitiesBasics = () => {
           icon={item.icon}
           description={item.description}
           link={item.link}
-          variant="cardSecondary"
+          variant="cardPrimary"
         />
       ))}
     </div>

@@ -6,6 +6,7 @@ import {
   type ReactNode,
 } from 'react'
 import { type IconNamesList } from '@summerfi/app-types'
+import clsx from 'clsx'
 
 import { getAtomClassList } from '@/components/atoms/getAtomClassList'
 import { Icon } from '@/components/atoms/Icon/Icon'
@@ -24,6 +25,7 @@ export const Input: FC<
     }
     CustomIcon?: FC
     wrapperStyles?: CSSProperties
+    wrapperClassName?: string
     secondaryValue?: string
     button?: ReactNode
   }
@@ -33,12 +35,13 @@ export const Input: FC<
   CustomIcon,
   icon,
   wrapperStyles,
+  wrapperClassName,
   secondaryValue,
   button,
   ...rest
 }) => {
   return (
-    <div className={inputStyles.wrapper} style={wrapperStyles}>
+    <div className={clsx(inputStyles.wrapper, wrapperClassName)} style={wrapperStyles}>
       {icon && (
         <div className={inputStyles.iconWrapper}>
           <Icon iconName={icon.name} size={icon.size} variant="s" style={icon.style} />
