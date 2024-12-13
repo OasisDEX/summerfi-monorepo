@@ -1,15 +1,23 @@
 import type { SDKGlobalRebalancesType, SDKGlobalRebalanceType } from '@summerfi/app-types'
 
+import { getProtocolLabel } from '@/helpers/get-protocol-label'
+
 const rebalanceFilterProtocols = ({
   protocolFilter,
   rebalance,
 }: {
   protocolFilter: string[]
   rebalance: SDKGlobalRebalanceType
-}) =>
-  !protocolFilter.length ||
-  protocolFilter.includes(rebalance.from.name?.split('-')[0] ?? '') ||
-  protocolFilter.includes(rebalance.to.name?.split('-')[0] ?? '')
+}) => {
+  const fromProtocol = getProtocolLabel(rebalance.from.name?.split('-') ?? ['n/a'])
+  const toProtocol = getProtocolLabel(rebalance.to.name?.split('-') ?? ['n/a'])
+
+  return (
+    !protocolFilter.length ||
+    protocolFilter.includes(fromProtocol) ||
+    protocolFilter.includes(toProtocol)
+  )
+}
 
 const rebalanceFilterStrategies = ({
   strategyFilter,

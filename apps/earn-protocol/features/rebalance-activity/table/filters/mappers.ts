@@ -1,24 +1,32 @@
 import type { GenericMultiselectOption } from '@summerfi/app-earn-ui'
-import {
-  type IconNamesList,
-  type SDKVaultsListType,
-  type TokenSymbolsList,
-} from '@summerfi/app-types'
+import { type SDKVaultsListType, type TokenSymbolsList } from '@summerfi/app-types'
 
 import { networkIconByNetworkName } from '@/constants/networkIcons'
-import { arkNameMap } from '@/features/rebalance-activity/table/mapper'
+import { getProtocolLabel } from '@/helpers/get-protocol-label'
 
-// it's handled like that for now until we will have protocol as property in subgraph
-const notSupportedProtocolsForNow = ['ERC4626', 'BufferArk']
+const getProtocolIcon = (protocolLabel: string) => {
+  const lowerCasedProtocolLabel = protocolLabel.toLowerCase()
 
-const protocolIconList: { [key: string]: IconNamesList } = {
-  AaveV3: 'aave_circle_color',
-  CompoundV3: 'compound_circle_color',
-  // not sure if these below will have these exact keys
-  Spark: 'spark_circle_color',
-  Sky: 'sky',
-  Morpho: 'morpho_circle_color',
-  PendlePt: 'pendle',
+  if (lowerCasedProtocolLabel.includes('morpho')) {
+    return 'morpho_circle_color'
+  }
+  if (lowerCasedProtocolLabel.includes('aave')) {
+    return 'aave_circle_color'
+  }
+  if (lowerCasedProtocolLabel.includes('compound')) {
+    return 'compound_circle_color'
+  }
+  if (lowerCasedProtocolLabel.includes('spark')) {
+    return 'spark_circle_color'
+  }
+  if (lowerCasedProtocolLabel.includes('sky')) {
+    return 'sky'
+  }
+  if (lowerCasedProtocolLabel.includes('pendle')) {
+    return 'pendle'
+  }
+
+  return 'not_supported_icon'
 }
 
 const mapStrategiesToMultiselectOptions = (
@@ -49,12 +57,20 @@ const mapProtocolsToMultiselectOptions = (
   vaultsList: SDKVaultsListType,
 ): GenericMultiselectOption[] => {
   const uniqueProtocolsList = [
-    ...new Set(vaultsList.flatMap((vault) => vault.arks.map((ark) => ark.name?.split('-')[0]))),
-  ].filter((item) => item && !notSupportedProtocolsForNow.includes(item)) as string[]
+    ...new Set(
+      vaultsList.flatMap((vault) =>
+        vault.arks.map((ark) => {
+          const protocol = ark.name?.split('-') ?? ['n/a']
+
+          return getProtocolLabel(protocol)
+        }),
+      ),
+    ),
+  ]
 
   return uniqueProtocolsList.map((protocol) => ({
-    label: arkNameMap[protocol],
-    icon: protocolIconList[protocol] ?? 'not_supported_icon',
+    label: protocol,
+    icon: getProtocolIcon(protocol),
     value: protocol,
   }))
 }
