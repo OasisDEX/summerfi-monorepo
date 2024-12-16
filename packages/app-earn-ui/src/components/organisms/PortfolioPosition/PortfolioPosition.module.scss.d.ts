@@ -1,9 +1,10 @@
 export type Styles = {
   basicInfoWrapper: string
+  graphWrapper: string
   header: string
   positionWrapper: string
+  statsWrapper: string
   strategyInfoTopWrapper: string
-  subValue: string
   value: string
 }
 

@@ -198,11 +198,13 @@ export const icons = {
   social_x: customLazy(() => import('./icons/social_x.svg?react')),
   spark_circle_color: customLazy(() => import('./icons/spark_circle_color.svg?react')),
   stars: customLazy(() => import('./icons/stars.svg?react')),
+  stars_colorful: customLazy(() => import('./icons/stars_colorful.svg?react')),
   steth_circle_color: customLazy(() => import('./icons/steth_circle_color.svg?react')),
   steth_eth: customLazy(() => import('./icons/steth_eth.svg?react')),
   steth_usdc: customLazy(() => import('./icons/steth_usdc.svg?react')),
   stopLoss: customLazy(() => import('./icons/stopLoss.svg?react')),
   styeth_circle_color: customLazy(() => import('./icons/styeth_circle_color.svg?react')),
+  sumr: customLazy(() => import('./icons/sumr.svg?react')),
   summer_illustration_check: customLazy(
     () => import('./icons/summer_illustration_check.svg?react'),
   ),
