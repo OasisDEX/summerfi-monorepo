@@ -15,7 +15,7 @@ import { formatChartPercentageValue } from '@/features/forecast/chart-formatters
 
 type PerformanceChartProps = {
   data: ({
-    name: number0000
+    name: number
   } & (
     | {
         value: number
