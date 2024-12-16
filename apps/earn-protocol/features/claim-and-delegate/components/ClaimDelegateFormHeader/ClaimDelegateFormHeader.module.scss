@@ -1,0 +1,41 @@
+.claimDelegateFormHeaderWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: var(--general-space-16);
+
+  @media (min-width: 768px) {
+    justify-content: center;
+    gap: unset;
+  }
+
+  .step {
+    display: flex;
+    align-items: center;
+    gap: var(--general-space-16);
+
+    .circle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: var(--general-radius-50);
+      background-color: var(--earn-protocol-neutral-85);
+
+      &.active {
+        background-image: var(--gradient-earn-protocol-dark);
+      }
+
+      &.completed {
+        background-color: var(--earn-protocol-success-10);
+      }
+    }
+  }
+
+  .separator {
+    border-bottom: 1px solid var(--earn-protocol-neutral-100);
+  }
+}
