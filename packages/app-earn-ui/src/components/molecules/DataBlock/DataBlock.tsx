@@ -6,7 +6,7 @@ import { TitleWithIcon } from '@/components/molecules/TitleWithIcon/TitleWithIco
 
 import dataBlockStyles from './DataBlock.module.scss'
 
-type DataBlockProps = {
+export type DataBlockProps = {
   title: ReactNode
   titleTooltip?: string
   size?: 'small' | 'large'
