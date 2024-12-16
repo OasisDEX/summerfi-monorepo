@@ -1,17 +1,22 @@
 .positionWrapper {
   width: 100%;
+  padding: var(--general-space-12);
 }
 
 .basicInfoWrapper {
   display: flex;
   align-items: center;
-  height: 100%;
+  gap: var(--spacing-space-2x-large);
 }
 
 .strategyInfoTopWrapper {
   display: flex;
   flex-direction: column;
-  text-align: right;
+  text-align: center;
+
+  &>* {
+    white-space: nowrap;
+  }
 
   .header {
     color: var(--color-text-secondary);
@@ -21,8 +26,18 @@
     color: var(--color-text-primary);
   }
 
-  .subValue {
-    color: var(--color-text-secondary);
-  }
+}
 
+.graphWrapper {
+  display: flex;
+  justify-content: center;
+  gap: 100px;
+}
+
+.statsWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--general-space-32);
+  min-width: 170px;
 }

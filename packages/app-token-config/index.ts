@@ -591,6 +591,11 @@ export const tokenConfigs: TokenConfig[] = [
     name: 'WUSDL',
     iconName: 'wusdl',
   },
+  {
+    symbol: 'SUMR',
+    name: 'SUMR',
+    iconName: 'sumr',
+  },
   // NOT SUPPORTED ICONS
   {
     symbol: 'UNIV2WBTCETH',
