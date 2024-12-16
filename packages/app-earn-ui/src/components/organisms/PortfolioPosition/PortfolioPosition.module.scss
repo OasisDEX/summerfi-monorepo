@@ -7,6 +7,10 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-space-2x-large);
+
+  @include media('<=s') {
+    flex-direction: column;
+  }
 }
 
 .strategyInfoTopWrapper {
@@ -32,6 +36,10 @@
   display: flex;
   justify-content: center;
   gap: 100px;
+
+  @include media('<=s') {
+    flex-direction: column;
+  }
 }
 
 .statsWrapper {
