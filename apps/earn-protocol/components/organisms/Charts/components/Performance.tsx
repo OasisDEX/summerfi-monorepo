@@ -54,7 +54,7 @@ const mockData: PerformanceChartProps['data'] = [
   }, // 2024-03-01
 ]
 
-export const PerformanceChart = ({ data }: PerformanceChartProps) => {
+export const PerformanceChart = (_props: PerformanceChartProps) => {
   return (
     <RechartResponsiveWrapper>
       <ResponsiveContainer width="100%" height="90%">
