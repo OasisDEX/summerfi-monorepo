@@ -52,7 +52,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   ]
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', padding: '0 16px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', padding: '0 16px', width: '100%' }}>
       <PortfolioHeader walletAddress={walletAddress} />
       <TabBar tabs={tabs} />
     </div>
