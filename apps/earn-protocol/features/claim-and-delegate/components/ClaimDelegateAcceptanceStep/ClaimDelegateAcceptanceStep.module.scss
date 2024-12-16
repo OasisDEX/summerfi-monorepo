@@ -1,0 +1,39 @@
+.claimDelegateAcceptanceStepWrapper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--general-space-16);
+
+  > ol {
+    li {
+      margin-bottom: var(--general-space-24);
+    }
+  }
+
+  .mainContentWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .cardWrapper {
+      max-width: 670px;
+      padding-right: var(--general-space-8);
+
+      .cardContentWrapper {
+        max-height: 708px;
+        overflow-y: scroll;
+        scrollbar-color: grey transparent;
+        scrollbar-width: thin;
+        padding-right: var(--general-space-8);
+      }
+    }
+
+    .footerWrapper {
+      display: flex;
+      justify-content: center;
+      margin-top: var(--general-space-24);
+      gap: var(--general-space-16);
+    }
+  }
+}

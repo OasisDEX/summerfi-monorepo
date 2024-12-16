@@ -1,0 +1,48 @@
+.claimDelegateStakeDelegateStepWrapper {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--general-space-16);
+
+  .leftContent {
+    display: flex;
+    flex-direction: column;
+    max-width: 359px;
+    width: 100%;
+
+    .cardWrapper {
+      flex-direction: column;
+      gap: var(--general-space-4);
+      align-items: center;
+      max-width: 560px;
+      margin-bottom: var(--general-space-32);
+
+      .valueWithIcon {
+        display: flex;
+        align-items: center;
+        gap: var(--general-space-16);
+      }
+    }
+
+    .spacer {
+      border-bottom: 1px solid var(--earn-protocol-neutral-60);
+      width: 100%;
+      margin: var(--general-space-24) 0;
+    }
+  }
+
+  .rightContent {
+    display: flex;
+    flex-direction: column;
+    max-width: 585px;
+    width: 100%;
+
+    .buttonsWrapper {
+      margin-top: var(--general-space-32);
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: var(--general-space-16);
+    }
+  }
+}
