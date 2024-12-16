@@ -1,0 +1,14 @@
+.portfolioRewardsCardsWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--general-space-16);
+
+  .cardWrapper {
+    flex: 1;
+    min-width: 250px;
+
+    @media (min-width: 768px) {
+      min-width: 420px;
+    }
+  }
+}
