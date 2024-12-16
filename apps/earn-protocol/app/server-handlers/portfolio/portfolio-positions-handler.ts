@@ -22,14 +22,13 @@ export const portfolioPositionsHandler = async ({
   if (!vaultData) {
     throw new Error(`Vault not found for position ${position.pool.id.fleetAddress.value}`)
   }
-  const [vaultWithInterestRates] = decorateCustomVaultFields(
-    [vaultData],
-    config,
-    await getInterestRates({
-      network: vaultData.protocol.network,
-      arksList: vaultData.arks,
-    }),
-  )
+  const interestRates = await getInterestRates({
+    network: vaultData.protocol.network,
+    arksList: vaultData.arks,
+  })
+  const [vaultWithInterestRates] = decorateCustomVaultFields([vaultData], config, {
+    arkInterestRatesMap: interestRates,
+  })
 
   return {
     positionData: position,

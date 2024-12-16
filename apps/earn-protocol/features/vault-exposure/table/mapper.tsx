@@ -14,7 +14,7 @@ import Link from 'next/link'
 
 import { rebalanceActivitySorter } from '@/features/vault-exposure/table/sorter'
 import { getProtocolLabel } from '@/helpers/get-protocol-label'
-import { historicalChartprotocolsColorMap } from '@/helpers/vault-decorators'
+import { historicalChartprotocolsColorMap } from '@/helpers/vault-decorators/chart-historical-data'
 
 export const vaultExposureMapper = (
   vault: SDKVaultType,

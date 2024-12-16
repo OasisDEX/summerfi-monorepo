@@ -1,5 +1,5 @@
-import { Text } from '@summerfi/app-earn-ui'
-import { type SDKNetwork } from '@summerfi/app-types'
+import { fetchForecastData, parseForecastDatapoints, Text } from '@summerfi/app-earn-ui'
+import { type PositionForecastAPIResponse, type SDKNetwork } from '@summerfi/app-types'
 import {
   humanNetworktoSDKNetwork,
   parseServerResponseToClient,
@@ -9,6 +9,7 @@ import { type IArmadaPosition } from '@summerfi/sdk-client'
 import { isAddress } from 'viem'
 
 import { getInterestRates } from '@/app/server-handlers/interest-rates'
+import { getPositionHistory } from '@/app/server-handlers/position-history'
 import { getUserActivity } from '@/app/server-handlers/sdk/get-user-activity'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
@@ -72,12 +73,37 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       </Text>
     )
   }
+
   const interestRates = await getInterestRates({
     network: parsedNetwork,
     arksList: vault.arks,
   })
 
-  const [vaultDecorated] = decorateCustomVaultFields([vault], config, interestRates)
+  const [positionHistory, positionForecastResponse] = await Promise.all([
+    await getPositionHistory({
+      network: parsedNetwork,
+      address: params.walletAddress.toLowerCase(),
+      vault,
+    }),
+    await fetchForecastData({
+      fleetAddress: vault.id as `0x${string}`,
+      chainId: Number(parsedNetworkId),
+      amount: Number(position.amount.amount),
+    }),
+  ])
+
+  if (!positionForecastResponse.ok) {
+    throw new Error('Failed to fetch forecast data')
+  }
+  const forecastData = (await positionForecastResponse.json()) as PositionForecastAPIResponse
+  const positionForecast = parseForecastDatapoints(forecastData)
+
+  const [vaultDecorated] = decorateCustomVaultFields([vault], config, {
+    arkInterestRatesMap: interestRates,
+    positionHistory,
+    positionForecast,
+  })
+
   const vaultsDecorated = decorateCustomVaultFields(vaults, config)
 
   const positionJsonSafe = parseServerResponseToClient<IArmadaPosition>(position)

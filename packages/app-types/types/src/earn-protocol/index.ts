@@ -17,7 +17,7 @@ export { IArmadaPosition }
 
 type ChartDataPoints = {
   timestamp: number
-  [key: string]: number
+  [key: string]: number | string | number[]
 }
 
 export type ChartsDataTimeframes = {
@@ -25,10 +25,16 @@ export type ChartsDataTimeframes = {
 }
 
 export type VaultChartsHistoricalData = {
-  chartsData?: {
+  historicalChartData?: {
     data: ChartsDataTimeframes
     dataNames: string[]
     colors: { [key: string]: string }
+  }
+}
+
+export type VaultChartsPerformanceData = {
+  performanceChartData?: {
+    data: ChartsDataTimeframes
   }
 }
 
@@ -40,7 +46,10 @@ export type VaultArkInterestRateMap = {
 
 type VaultCustomFields = {
   // custom fields for vaults - decorated within the earn/lp apps
-  customFields?: EarnAppFleetCustomConfigType & VaultChartsHistoricalData & VaultArkInterestRateMap
+  customFields?: EarnAppFleetCustomConfigType &
+    VaultChartsHistoricalData &
+    VaultChartsPerformanceData &
+    VaultArkInterestRateMap
 }
 export type SDKVaultsListType = GetVaultsQuery['vaults'] & VaultCustomFields
 export type SDKVaultType = Exclude<GetVaultQuery['vault'] & VaultCustomFields, null | undefined>
@@ -96,6 +105,13 @@ export interface UserActivity {
 
 export type UsersActivity = UserActivity[]
 
+type ForecastAPIPoints = {
+  timestamps: string[]
+  forecast: number[]
+  lower_bound: number[]
+  upper_bound: number[]
+}
+
 export type PositionForecastAPIResponse = {
   metadata: {
     fleet_commander_address: string
@@ -106,11 +122,13 @@ export type PositionForecastAPIResponse = {
     forecast_period: string
   }
   forecast: {
-    timestamps: string[]
-    series: {
-      name: 'forecast' | 'upper_bound' | 'lower_bound'
-      data: number[]
-    }[]
+    hourly: ForecastAPIPoints
+    daily: ForecastAPIPoints
+    weekly: ForecastAPIPoints
+    apy_metrics: {
+      average_apy: number
+      effective_apy: number
+    }
   }
 }
 
@@ -124,9 +142,9 @@ export type ForecastData = {
   generatedAt: string
   amount: number
   dataPoints: {
+    hourly: ForecastDataPoints
     daily: ForecastDataPoints
     weekly: ForecastDataPoints
-    monthly: ForecastDataPoints
   }
 }
 
