@@ -17,5 +17,5 @@ export const decorateWithArkInterestRatesData = (
         ]),
       ),
     },
-  }))
+  })) as SDKVaultishType[]
 }

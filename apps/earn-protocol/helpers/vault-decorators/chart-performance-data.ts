@@ -66,22 +66,18 @@ const mergePositionHistoryAndForecast = (
       isSameHour && positionAmount
         ? positionAmount
         : Math.max(point.deposits - Math.abs(point.withdrawals), 0)
+    const newPointData = {
+      timestamp: timestampUnix,
+      timestampParsed,
+      netValue: pointNetValue,
+      depositedValue: pointDepositedValue,
+    }
 
     if (timestampUnix >= thresholdHistorical7d) {
-      chartBaseData['7d'].push({
-        timestamp: timestampUnix,
-        timestampParsed,
-        netValue: pointNetValue,
-        depositedValue: pointDepositedValue,
-      })
+      chartBaseData['7d'].push(newPointData)
     }
     if (timestampUnix >= thresholdHistorical30d) {
-      chartBaseData['30d'].push({
-        timestamp: timestampUnix,
-        timestampParsed,
-        netValue: pointNetValue,
-        depositedValue: pointDepositedValue,
-      })
+      chartBaseData['30d'].push(newPointData)
     }
   })
 
@@ -98,30 +94,21 @@ const mergePositionHistoryAndForecast = (
       isSameDay && positionAmount
         ? positionAmount
         : Math.max(point.deposits - Math.abs(point.withdrawals), 0)
+    const newPointData = {
+      timestamp: timestampUnix,
+      timestampParsed,
+      netValue: pointNetValue,
+      depositedValue: pointDepositedValue,
+    }
 
     if (timestampUnix >= thresholdHistorical90d) {
-      chartBaseData['90d'].push({
-        timestamp: timestampUnix,
-        timestampParsed,
-        netValue: pointNetValue,
-        depositedValue: pointDepositedValue,
-      })
+      chartBaseData['90d'].push(newPointData)
     }
     if (timestampUnix >= thresholdHistorical6m) {
-      chartBaseData['6m'].push({
-        timestamp: timestampUnix,
-        timestampParsed,
-        netValue: pointNetValue,
-        depositedValue: pointDepositedValue,
-      })
+      chartBaseData['6m'].push(newPointData)
     }
     if (timestampUnix >= thresholdHistorical1y) {
-      chartBaseData['1y'].push({
-        timestamp: timestampUnix,
-        timestampParsed,
-        netValue: pointNetValue,
-        depositedValue: pointDepositedValue,
-      })
+      chartBaseData['1y'].push(newPointData)
     }
   })
 
@@ -138,19 +125,17 @@ const mergePositionHistoryAndForecast = (
       isSameWeek && positionAmount
         ? positionAmount
         : Math.max(point.deposits - Math.abs(point.withdrawals), 0)
+    const newPointData = {
+      timestamp: timestampUnix,
+      timestampParsed,
+      netValue: pointNetValue,
+      depositedValue: pointDepositedValue,
+    }
 
     if (timestampUnix >= thresholdHistorical3y) {
-      chartBaseData['3y'].push({
-        timestamp: timestampUnix,
-        timestampParsed,
-        netValue: pointNetValue,
-        depositedValue: pointDepositedValue,
-      })
+      chartBaseData['3y'].push(newPointData)
     }
   })
-
-  // history and forecast meeting point
-  // TBD
 
   // forecast hourly points
   positionForecast.dataPoints.hourly
@@ -309,5 +294,5 @@ export const decorateWithPerformanceChartData = (
         position,
       ),
     },
-  }))
+  })) as SDKVaultishType[]
 }

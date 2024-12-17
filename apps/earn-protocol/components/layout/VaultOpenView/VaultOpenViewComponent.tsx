@@ -29,7 +29,7 @@ import {
   OrderInfoDeposit,
 } from '@/components/molecules/SidebarElements'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
-import { HistoricalYieldChart } from '@/components/organisms/Charts/HistoricalYieldChart'
+import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
@@ -248,8 +248,8 @@ export const VaultOpenViewComponent = ({
             }
             defaultExpanded
           >
-            <HistoricalYieldChart
-              chartData={vault.customFields?.historicalChartData}
+            <ArkHistoricalYieldChart
+              chartData={vault.customFields?.arksHistoricalChartData}
               summerVaultName={vault.customFields?.name ?? 'Summer Vault'}
             />
           </Expander>
