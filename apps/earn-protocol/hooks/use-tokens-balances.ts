@@ -12,9 +12,11 @@ import { useTokenBalance } from '@/hooks/use-token-balance'
 export const useTokenBalances = ({
   tokenSymbol,
   network,
+  vaultTokenSymbol,
 }: {
   tokenSymbol: string
   network: SDKNetwork
+  vaultTokenSymbol: string
 }) => {
   if (!supportedNetworkGuard(network)) {
     throw new Error(`Unsupported network: ${network}`)
@@ -40,12 +42,14 @@ export const useTokenBalances = ({
     publicClient: arbitrumPublicClient,
     chainId: SDKChainId.ARBITRUM,
     skip: network !== SDKNetwork.ArbitrumOne,
+    vaultTokenSymbol,
   })
   const baseTokenBalance = useTokenBalance({
     tokenSymbol,
     publicClient: basePublicClient,
     chainId: SDKChainId.BASE,
     skip: network !== SDKNetwork.Base,
+    vaultTokenSymbol,
   })
 
   if (!user) {

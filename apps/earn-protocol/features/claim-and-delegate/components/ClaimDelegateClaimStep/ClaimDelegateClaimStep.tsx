@@ -6,6 +6,7 @@ import {
   type ClaimDelegateReducerAction,
   type ClaimDelegateState,
   ClaimDelegateSteps,
+  type ClamDelegateExternalData,
 } from '@/features/claim-and-delegate/types'
 
 import classNames from './ClaimDelegateClaimStep.module.scss'
@@ -13,9 +14,13 @@ import classNames from './ClaimDelegateClaimStep.module.scss'
 interface ClaimDelegateClaimStepProps {
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
+  externalData: ClamDelegateExternalData
 }
 
-export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({ dispatch }) => {
+export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
+  dispatch,
+  externalData,
+}) => {
   const handleBack = () => {
     dispatch({ type: 'update-step', payload: ClaimDelegateSteps.TERMS })
   }
@@ -24,8 +29,10 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({ dispat
     dispatch({ type: 'update-step', payload: ClaimDelegateSteps.DELEGATE })
   }
 
-  const earned = formatCryptoBalance(123)
-  const earnedInUSD = formatFiatBalance(123)
+  const earned = formatCryptoBalance(externalData.sumrEarned)
+  const earnedInUSD = formatFiatBalance(
+    Number(externalData.sumrEarned) * Number(externalData.sumrPrice),
+  )
 
   return (
     <div className={classNames.claimDelegateClaimStepWrapper}>
