@@ -10,14 +10,23 @@ type UseForecastProps = {
   fleetAddress: string
   chainId: SDKChainId
   amount: string
+  disabled?: boolean
 }
 
-export const useForecast = ({ fleetAddress, chainId, amount }: UseForecastProps) => {
+export const useForecast = ({
+  fleetAddress,
+  chainId,
+  amount,
+  disabled = false,
+}: UseForecastProps) => {
   const [isLoadingForecast, setIsLoadingForecast] = useState(true)
   const [forecast, setForecast] = useState<ForecastData | undefined>()
   const [oneYearEarningsForecast, setOneYearEarningsForecast] = useState<string | undefined>()
 
   useEffect(() => {
+    if (disabled) {
+      return () => {}
+    }
     setIsLoadingForecast(true)
     const fetchForecast = debounce(() => {
       if (
@@ -64,7 +73,7 @@ export const useForecast = ({ fleetAddress, chainId, amount }: UseForecastProps)
     return () => {
       fetchForecast.cancel()
     }
-  }, [fleetAddress, chainId, amount])
+  }, [fleetAddress, chainId, amount, disabled])
 
   return { forecast, isLoadingForecast, oneYearEarningsForecast }
 }
