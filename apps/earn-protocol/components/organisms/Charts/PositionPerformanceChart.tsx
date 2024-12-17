@@ -32,12 +32,11 @@ export const PositionPerformanceChart = ({ chartData }: PositionPerformanceChart
       style={{
         marginTop: 'var(--spacing-space-medium)',
         flexDirection: 'column',
+        alignItems: 'flex-end',
         paddingBottom: 0,
       }}
     >
       <ChartHeader
-        compare={compare}
-        setCompare={(nextCompare) => setCompare(nextCompare)}
         timeframe={timeframe}
         setTimeframe={(nextTimeFrame) => setTimeframe(nextTimeFrame as TimeframesType)}
       />

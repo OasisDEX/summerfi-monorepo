@@ -13,13 +13,27 @@ const mergePositionHistoryAndForecast = (
   positionHistory: GetPositionHistoryReturnType,
   positionForecast: ForecastData,
 ): VaultChartsPerformanceData['performanceChartData'] => {
-  const today = dayjs()
-  const threshold7d = today.startOf('hour').subtract(7, 'day').unix()
-  const threshold30d = today.startOf('hour').subtract(30, 'day').unix()
-  const threshold90d = today.startOf('day').subtract(90, 'day').unix()
-  const threshold6m = today.startOf('day').subtract(6, 'month').unix()
-  const threshold1y = today.startOf('day').subtract(1, 'year').unix()
-  const threshold3y = today.startOf('week').subtract(3, 'year').unix()
+  const now = dayjs()
+  const nowStartOfHour = now.startOf('hour')
+  const nowStartOfDay = now.startOf('day')
+  const nowStartOfWeek = now.startOf('week')
+
+  // should be ~2/3 of the whole timeframe
+  const thresholdHistorical7d = nowStartOfHour.subtract(Math.ceil(7 * (2 / 3)), 'day').unix()
+  const thresholdHistorical30d = nowStartOfHour.subtract(Math.ceil(30 * (2 / 3)), 'day').unix()
+  const thresholdHistorical90d = nowStartOfDay.subtract(Math.ceil(90 * (2 / 3)), 'day').unix()
+  const thresholdHistorical6m = nowStartOfDay.subtract(Math.ceil(6 * (2 / 3)), 'month').unix()
+  const thresholdHistorical1y = nowStartOfDay.subtract(Math.ceil(1 * (2 / 3)), 'year').unix()
+  const thresholdHistorical3y = nowStartOfWeek.subtract(Math.ceil(3 * (2 / 3)), 'year').unix()
+
+  // should be ~1/3 of the whole timeframe
+  const thresholdForecast7d = nowStartOfHour.add(Math.ceil(7 * (1 / 3)), 'day').unix()
+  const thresholdForecast30d = nowStartOfHour.add(Math.ceil(30 * (1 / 3)), 'day').unix()
+  const thresholdForecast90d = nowStartOfDay.add(Math.ceil(90 * (1 / 3)), 'day').unix()
+  const thresholdForecast6m = nowStartOfDay.add(Math.ceil(6 * (1 / 3)), 'month').unix()
+  const thresholdForecast1y = nowStartOfDay.add(Math.ceil(1 * (1 / 3)), 'year').unix()
+  const thresholdForecast3y = nowStartOfWeek.add(Math.ceil(3 * (1 / 3)), 'year').unix()
+
   const chartBaseData: ChartsDataTimeframes = {
     '7d': [], // hourly
     '30d': [], // hourly
@@ -40,7 +54,7 @@ const mergePositionHistoryAndForecast = (
     const timestamp = dayjs(point.timestamp * 1000).startOf('hour')
     const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT)
 
-    if (timestamp.unix() > threshold7d) {
+    if (timestamp.unix() >= thresholdHistorical7d) {
       chartBaseData['7d'].push({
         timestamp: timestamp.unix(),
         timestampParsed,
@@ -48,7 +62,7 @@ const mergePositionHistoryAndForecast = (
         depositedValue: Math.max(point.deposits - Math.abs(point.withdrawals), 0),
       })
     }
-    if (timestamp.unix() > threshold30d) {
+    if (timestamp.unix() >= thresholdHistorical30d) {
       chartBaseData['30d'].push({
         timestamp: timestamp.unix(),
         timestampParsed,
@@ -63,7 +77,7 @@ const mergePositionHistoryAndForecast = (
     const timestamp = dayjs(point.timestamp * 1000).startOf('day')
     const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT)
 
-    if (timestamp.unix() > threshold90d) {
+    if (timestamp.unix() >= thresholdHistorical90d) {
       chartBaseData['90d'].push({
         timestamp: timestamp.unix(),
         timestampParsed,
@@ -71,7 +85,7 @@ const mergePositionHistoryAndForecast = (
         depositedValue: Math.max(point.deposits - Math.abs(point.withdrawals), 0),
       })
     }
-    if (timestamp.unix() > threshold6m) {
+    if (timestamp.unix() >= thresholdHistorical6m) {
       chartBaseData['6m'].push({
         timestamp: timestamp.unix(),
         timestampParsed,
@@ -79,7 +93,7 @@ const mergePositionHistoryAndForecast = (
         depositedValue: Math.max(point.deposits - Math.abs(point.withdrawals), 0),
       })
     }
-    if (timestamp.unix() > threshold1y) {
+    if (timestamp.unix() >= thresholdHistorical1y) {
       chartBaseData['1y'].push({
         timestamp: timestamp.unix(),
         timestampParsed,
@@ -94,7 +108,7 @@ const mergePositionHistoryAndForecast = (
     const timestamp = dayjs(point.timestamp * 1000).startOf('week')
     const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT)
 
-    if (timestamp.unix() > threshold3y) {
+    if (timestamp.unix() >= thresholdHistorical3y) {
       chartBaseData['3y'].push({
         timestamp: timestamp.unix(),
         timestampParsed,
@@ -134,18 +148,22 @@ const mergePositionHistoryAndForecast = (
         return
       }
 
-      chartBaseData['7d'].push({
-        timestamp: timestamp.unix(),
-        timestampParsed,
-        forecast: point.forecast,
-        bounds: point.bounds,
-      })
-      chartBaseData['30d'].push({
-        timestamp: timestamp.unix(),
-        timestampParsed,
-        forecast: point.forecast,
-        bounds: point.bounds,
-      })
+      if (timestamp.unix() <= thresholdForecast7d) {
+        chartBaseData['7d'].push({
+          timestamp: timestamp.unix(),
+          timestampParsed,
+          forecast: point.forecast,
+          bounds: point.bounds,
+        })
+      }
+      if (timestamp.unix() <= thresholdForecast30d) {
+        chartBaseData['30d'].push({
+          timestamp: timestamp.unix(),
+          timestampParsed,
+          forecast: point.forecast,
+          bounds: point.bounds,
+        })
+      }
     })
 
   // forecast daily points
@@ -178,25 +196,30 @@ const mergePositionHistoryAndForecast = (
 
       return
     }
-
-    chartBaseData['90d'].push({
-      timestamp: timestamp.unix(),
-      timestampParsed,
-      forecast: point.forecast,
-      bounds: point.bounds,
-    })
-    chartBaseData['6m'].push({
-      timestamp: timestamp.unix(),
-      timestampParsed,
-      forecast: point.forecast,
-      bounds: point.bounds,
-    })
-    chartBaseData['1y'].push({
-      timestamp: timestamp.unix(),
-      timestampParsed,
-      forecast: point.forecast,
-      bounds: point.bounds,
-    })
+    if (timestamp.unix() <= thresholdForecast90d) {
+      chartBaseData['90d'].push({
+        timestamp: timestamp.unix(),
+        timestampParsed,
+        forecast: point.forecast,
+        bounds: point.bounds,
+      })
+    }
+    if (timestamp.unix() <= thresholdForecast6m) {
+      chartBaseData['6m'].push({
+        timestamp: timestamp.unix(),
+        timestampParsed,
+        forecast: point.forecast,
+        bounds: point.bounds,
+      })
+    }
+    if (timestamp.unix() <= thresholdForecast1y) {
+      chartBaseData['1y'].push({
+        timestamp: timestamp.unix(),
+        timestampParsed,
+        forecast: point.forecast,
+        bounds: point.bounds,
+      })
+    }
   })
 
   // forecast weekly points
@@ -220,12 +243,14 @@ const mergePositionHistoryAndForecast = (
         return
       }
 
-      chartBaseData['3y'].push({
-        timestamp: timestamp.unix(),
-        timestampParsed,
-        forecast: point.forecast,
-        bounds: point.bounds,
-      })
+      if (timestamp.unix() <= thresholdForecast3y) {
+        chartBaseData['3y'].push({
+          timestamp: timestamp.unix(),
+          timestampParsed,
+          forecast: point.forecast,
+          bounds: point.bounds,
+        })
+      }
     })
 
   return {

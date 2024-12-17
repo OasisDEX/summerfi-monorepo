@@ -1,8 +1,10 @@
 import { RechartResponsiveWrapper } from '@summerfi/app-earn-ui'
 import { type TimeframesType } from '@summerfi/app-types'
+import dayjs from 'dayjs'
 import {
   Area,
   ComposedChart,
+  Customized,
   Legend,
   Line,
   ResponsiveContainer,
@@ -10,40 +12,52 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
+import { type CategoricalChartState } from 'recharts/types/chart/types'
 
-import { formatChartPercentageValue } from '@/features/forecast/chart-formatters'
+import { PerformanceLegend } from '@/components/organisms/Charts/components/PerformanceLegend'
+import { CHART_TIMESTAMP_FORMAT } from '@/constants/charts'
+import { formatChartCryptoValue } from '@/features/forecast/chart-formatters'
 
 export type PerformanceChartProps = {
   data: unknown[]
   timeframe: TimeframesType
 }
 
-// const mockData: PerformanceChartProps['data'] = {
-//   data: [
-//     { name: 16803072000000, value: 1300 + Number(Math.random() * 150), deposits: 1300 }, // 2023-04-01
-//     { name: 16828992000000, value: 1400 + Number(Math.random() * 150), deposits: 1300 }, // 2023-05-01
-//     { name: 16855776000000, value: 1500 + Number(Math.random() * 150), deposits: 1300 }, // 2023-06-01
-//     { name: 16881696000000, value: 1600 + Number(Math.random() * 180), deposits: 1300 }, // 2023-07-01
-//     { name: 16908480000000, value: 1700 + Number(Math.random() * 200), deposits: 1300 }, // 2023-08-01
-//     { name: 16935264000000, value: 1800 + Number(Math.random() * 210), deposits: 1300 }, // 2023-09-01
-//     { name: 16961184000000, value: 1900 + Number(Math.random() * 220), deposits: 1300 }, // 2023-10-01
-//     { name: 16987968000000, value: 2000 + Number(Math.random() * 230), deposits: 1450 }, // 2023-11-01
-//     // forecast starts here
-//     { name: 17013888000000, value: 2300, deposits: 1450, bounds: [2299, 2301], forecast: 2300 }, // 2023-12-01
-//     {
-//       name: 17067456000000,
-//       deposits: 1450,
-//       bounds: [2200, 2400],
-//       forecast: 2300 + Number(Math.random() * 50),
-//     }, // 2024-02-01
-//     {
-//       name: 17067456000000,
-//       deposits: 1450,
-//       bounds: [2300, 2500],
-//       forecast: 2400 + Number(Math.random() * 50),
-//     }, // 2024-03-01
-//   ]
-// }
+const CustomizedCross = (props: CategoricalChartState) => {
+  const { formattedGraphicalItems, prevData, offset } = props
+
+  const meetingPointIndex = prevData?.findIndex(
+    (item) => 'bounds' in item && 'forecast' in item && 'netValue' in item,
+  )
+  const [firstSeries] = formattedGraphicalItems
+  const meetingPoint = firstSeries.props?.points[meetingPointIndex ?? 0]
+  const textStyle = {
+    color: '#777576',
+    fontFamily: 'Inter',
+    fontSize: '12px',
+    fontWeight: '600',
+  }
+
+  return (
+    <>
+      <text x={meetingPoint.x - 60} y={offset?.top ?? 5} style={textStyle}>
+        Historic
+      </text>
+      <text x={meetingPoint.x + 15} y={offset?.top ?? 5} style={textStyle}>
+        Forecast
+      </text>
+      <line
+        x1={meetingPoint.x}
+        x2={meetingPoint.x}
+        y1={(offset?.top ?? 5) - 10}
+        y2={`calc(100% - ${offset?.bottom}px)`}
+        stroke="#474747"
+        strokeWidth={2}
+        strokeDasharray="5 10"
+      />
+    </>
+  )
+}
 
 export const PerformanceChart = ({ data }: PerformanceChartProps) => {
   return (
@@ -63,16 +77,20 @@ export const PerformanceChart = ({ data }: PerformanceChartProps) => {
             fontSize={12}
             tickMargin={10}
             tickFormatter={(timestamp: string) => {
-              return timestamp
+              return timestamp.split(' ')[0]
             }}
           />
           <YAxis
             strokeWidth={0}
-            tickFormatter={(label: string) => `${formatChartPercentageValue(Number(label))}`}
+            tickFormatter={(label: string) => `${formatChartCryptoValue(Number(label))}`}
           />
           <Tooltip
-            // formatter={(val) => `${formatChartPercentageValue(Number(val), true)}`}
-            // labelFormatter={(label) => dayjs(label).format(CHART_TIMESTAMP_FORMAT)}
+            formatter={(val) =>
+              Array.isArray(val)
+                ? val.map((v) => `${formatChartCryptoValue(Number(v))}`).join(' - ')
+                : `${formatChartCryptoValue(Number(val))}`
+            }
+            labelFormatter={(label) => dayjs(label).format(CHART_TIMESTAMP_FORMAT)}
             wrapperStyle={{
               zIndex: 1000,
               backgroundColor: 'var(--color-surface-subtle)',
@@ -93,12 +111,13 @@ export const PerformanceChart = ({ data }: PerformanceChartProps) => {
               letterSpacing: '-0.5px',
             }}
           />
+          <Customized component={<CustomizedCross />} />
           <Area
             type="natural"
             dataKey="bounds"
             stroke="none"
             legendType="none"
-            fill="rgba(255, 73, 164, 0.4)"
+            fill="#8D3360"
             connectNulls
             dot={false}
             activeDot={false}
@@ -130,23 +149,20 @@ export const PerformanceChart = ({ data }: PerformanceChartProps) => {
             dot={false}
             type="step"
             dataKey="depositedValue"
-            stroke="#FF80BF"
+            stroke="#FF49A4"
             activeDot={false}
             connectNulls
             animationDuration={400}
             animateNewValues
           />
           <Legend
-            wrapperStyle={{
-              userSelect: 'none',
-              padding: '20px 40px 0',
-              fontSize: '14px',
-            }}
+            content={<PerformanceLegend />}
             iconType="circle"
             iconSize={10}
             align="center"
             layout="horizontal"
             height={60}
+            wrapperStyle={{ bottom: '-10px' }}
           />
         </ComposedChart>
       </ResponsiveContainer>
