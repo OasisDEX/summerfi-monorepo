@@ -70,7 +70,14 @@ export const useTokenBalance = ({
     } else {
       setTokenBalanceLoading(false)
     }
-  }, [tokenSymbol, publicClient, skip, chainId, walletAddress?.value, chainInfo.chainId.toString()])
+  }, [
+    tokenSymbol,
+    publicClient,
+    skip,
+    chainId,
+    walletAddress?.toString(),
+    chainInfo.chainId.toString(),
+  ])
 
   return {
     token,

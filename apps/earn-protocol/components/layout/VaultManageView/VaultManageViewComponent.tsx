@@ -39,6 +39,7 @@ import { UserActivity } from '@/features/user-activity/components/UserActivity/U
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 import { useAmount } from '@/hooks/use-amount'
 import { useClient } from '@/hooks/use-client'
+import { useSwapQuote } from '@/hooks/use-swap-quote'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useTransaction } from '@/hooks/use-transaction'
 
@@ -66,7 +67,11 @@ export const VaultManageViewComponent = ({
     vault,
   })
 
-  const { token, tokenBalance, tokenBalanceLoading } = useTokenBalance({
+  const {
+    token: selectedToken,
+    tokenBalance: selectedTokenBalance,
+    tokenBalanceLoading: selectedTokenBalanceLoading,
+  } = useTokenBalance({
     publicClient,
     tokenSymbol: selectedTokenOption.value,
   })
@@ -79,7 +84,8 @@ export const VaultManageViewComponent = ({
     handleAmountChange,
     onBlur,
     onFocus,
-  } = useAmount({ vault })
+  } = useAmount({ vault, selectedToken })
+
   const {
     sidebar,
     txHashes,
@@ -99,9 +105,9 @@ export const VaultManageViewComponent = ({
     amount: amountParsed,
     manualSetAmount,
     publicClient,
-    token,
-    tokenBalance,
-    tokenBalanceLoading,
+    token: selectedToken,
+    tokenBalance: selectedTokenBalance,
+    tokenBalanceLoading: selectedTokenBalanceLoading,
     flow: 'manage',
   })
 
@@ -114,29 +120,6 @@ export const VaultManageViewComponent = ({
   const positionAmount = useMemo(() => {
     return new BigNumber(position.amount.amount)
   }, [position])
-
-  const selectedTokenBalance = useMemo(() => {
-    switch (transactionType) {
-      case TransactionAction.DEPOSIT:
-        return tokenBalance
-      case TransactionAction.WITHDRAW:
-        // TODO: withdraw balance should be calculated from the selected input token
-        // and get position.amount
-        if (selectedTokenOption.value === vault.inputToken.symbol) {
-          return positionAmount
-        } else {
-          return undefined
-        }
-      default:
-        throw new Error('Invalid transaction type')
-    }
-  }, [
-    transactionType,
-    positionAmount,
-    tokenBalance,
-    selectedTokenOption.value,
-    vault.inputToken.symbol,
-  ])
 
   const { isLoadingForecast, oneYearEarningsForecast } = useForecast({
     fleetAddress: vault.id,
@@ -155,6 +138,37 @@ export const VaultManageViewComponent = ({
     return oneYearEarningsForecast
   }, [oneYearEarningsForecast])
 
+  const fromTokenSymbol: string = useMemo(() => {
+    return {
+      [TransactionAction.DEPOSIT]: selectedTokenOption.value,
+      [TransactionAction.WITHDRAW]: vault.inputToken.symbol,
+    }[transactionType]
+  }, [transactionType, selectedTokenOption.value, vault.inputToken.symbol])
+
+  const toTokenSymbol: string = useMemo(() => {
+    return {
+      [TransactionAction.DEPOSIT]: vault.inputToken.symbol,
+      [TransactionAction.WITHDRAW]: selectedTokenOption.value,
+    }[transactionType]
+  }, [transactionType, selectedTokenOption.value, vault.inputToken.symbol])
+
+  const { quote, quoteLoading } = useSwapQuote({
+    fromTokenSymbol,
+    fromAmount: amountDisplay,
+    toTokenSymbol,
+    slippage: 0.01,
+  })
+
+  const amountDisplayUSDWithSwap = useMemo(() => {
+    if (quoteLoading) {
+      return 'Loading...'
+    }
+
+    return quote !== undefined
+      ? `$${quote.toTokenAmount.toBigNumber().toFixed(vault.inputToken.decimals)}`
+      : amountDisplayUSD
+  }, [quote, quoteLoading, amountDisplayUSD, vault.inputToken.decimals])
+
   const sidebarContent = nextTransaction?.label ? (
     {
       approve: (
@@ -164,7 +178,7 @@ export const VaultManageViewComponent = ({
           setApprovalType={setApprovalType}
           setApprovalCustomValue={setApprovalCustomValue}
           approvalCustomValue={approvalCustomValue}
-          tokenBalance={tokenBalance}
+          tokenBalance={selectedTokenBalance}
         />
       ),
       deposit: (
@@ -185,21 +199,26 @@ export const VaultManageViewComponent = ({
   ) : (
     <ControlsDepositWithdraw
       amountDisplay={amountDisplay}
-      amountDisplayUSD={amountDisplayUSD}
+      amountDisplayUSD={amountDisplayUSDWithSwap}
       handleAmountChange={handleAmountChange}
       handleDropdownChange={handleTokenSelectionChange}
       options={tokenOptions}
       dropdownValue={selectedTokenOption}
       onFocus={onFocus}
       onBlur={onBlur}
-      tokenSymbol={selectedTokenOption.value}
-      tokenBalance={
+      tokenSymbol={
         {
-          [TransactionAction.DEPOSIT]: tokenBalance,
-          [TransactionAction.WITHDRAW]: ownerView ? selectedTokenBalance : undefined,
+          [TransactionAction.DEPOSIT]: selectedTokenOption.value,
+          [TransactionAction.WITHDRAW]: vault.inputToken.symbol,
         }[transactionType]
       }
-      tokenBalanceLoading={tokenBalanceLoading}
+      tokenBalance={
+        {
+          [TransactionAction.DEPOSIT]: selectedTokenBalance,
+          [TransactionAction.WITHDRAW]: ownerView ? positionAmount : undefined,
+        }[transactionType]
+      }
+      tokenBalanceLoading={selectedTokenBalanceLoading}
       manualSetAmount={manualSetAmount}
       vault={vault}
       estimatedEarnings={estimatedEarnings}
