@@ -13,6 +13,11 @@ export const SDKChainIdToAAChainMap = {
   [SDKChainId.BASE]: base,
 }
 
+export const GasSponsorshipIdMap = {
+  [SDKChainId.ARBITRUM]: undefined,
+  [SDKChainId.BASE]: '7d552463-eba5-4eac-a940-56f0515243f2',
+}
+
 const uiConfig: AlchemyAccountsUIConfig = {
   illustrationStyle: 'outline',
   auth: {
@@ -56,6 +61,7 @@ export const getAccountKitConfig = ({
       }[chainId ?? defaultChain.id] as Chain,
       chains: Object.values(SDKChainIdToAAChainMap).map((chain) => ({
         chain,
+        policyId: GasSponsorshipIdMap[chain.id as SDKChainId.ARBITRUM | SDKChainId.BASE],
       })),
       ssr: true,
       storage: cookieStorage,
