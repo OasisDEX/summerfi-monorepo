@@ -13,19 +13,14 @@ export type PositionPerformanceChartProps = {
 
 export const PositionPerformanceChart = ({ chartData }: PositionPerformanceChartProps) => {
   const [timeframe, setTimeframe] = useState<TimeframesType>('90d')
-  const [compare, setCompare] = useState(true)
 
   const parsedData = useMemo(() => {
     if (!chartData) {
       return []
     }
 
-    if (!compare) {
-      return chartData.data[timeframe]
-    }
-
     return chartData.data[timeframe]
-  }, [timeframe, chartData, compare])
+  }, [timeframe, chartData])
 
   return (
     <Card
