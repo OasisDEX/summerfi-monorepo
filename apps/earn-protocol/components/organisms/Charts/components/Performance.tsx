@@ -133,6 +133,7 @@ export const PerformanceChart = ({ data }: PerformanceChartProps) => {
             activeDot={false}
             connectNulls
             animationDuration={400}
+            strokeDasharray="5 5"
             animateNewValues
           />
           <Line
