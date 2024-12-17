@@ -2,6 +2,7 @@ import {
   type EarnAppConfigType,
   type EarnAppFleetCustomConfigType,
   type ForecastData,
+  type IArmadaPosition,
   type SDKVaultishType,
 } from '@summerfi/app-types'
 
@@ -12,15 +13,24 @@ import { decorateWithHistoricalChartsData } from '@/helpers/vault-decorators/cha
 import { decorateWithPerformanceChartData } from '@/helpers/vault-decorators/chart-performance-data'
 import { decorateWithFleetConfig } from '@/helpers/vault-decorators/fleet-config'
 
-export const decorateCustomVaultFields = (
-  vaults: SDKVaultishType[],
-  systemConfig: Partial<EarnAppConfigType>,
+type VaultDecoratorsType = {
+  // vaults will be a list of vaults if its just config, or a single vault if its decorators
+  vaults: SDKVaultishType[]
+  position?: IArmadaPosition
+  systemConfig: Partial<EarnAppConfigType>
   decorators?: {
     arkInterestRatesMap?: GetInterestRatesReturnType
     positionHistory?: GetPositionHistoryReturnType
     positionForecast?: ForecastData
-  },
-) => {
+  }
+}
+
+export const decorateCustomVaultFields = ({
+  vaults,
+  position,
+  systemConfig,
+  decorators,
+}: VaultDecoratorsType) => {
   const { fleetMap } = systemConfig
   const { arkInterestRatesMap, positionHistory, positionForecast } = decorators ?? {}
 
@@ -37,6 +47,7 @@ export const decorateCustomVaultFields = (
   const vaultsWithPerformanceChartData =
     positionHistory && positionForecast
       ? decorateWithPerformanceChartData(vaultsWithChartsData, {
+          position,
           positionHistory,
           positionForecast,
         })

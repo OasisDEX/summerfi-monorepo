@@ -22,8 +22,8 @@ export const revalidate = 60
 const EarnNetworkVaultsPage = async ({ params }: EarnNetworkVaultsPageProps) => {
   const parsedNetwork = humanNetworktoSDKNetwork(params.network)
   const { vaults } = await getVaultsList()
-  const { config } = parseServerResponseToClient(await systemConfigHandler())
-  const vaultsDecorated = decorateCustomVaultFields(vaults, config)
+  const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
+  const vaultsDecorated = decorateCustomVaultFields({ vaults, systemConfig })
 
   return (
     <>
