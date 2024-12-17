@@ -7,6 +7,7 @@ import cardStyles, { type ClassNames } from '@/components/atoms/Card/Card.module
 interface CardProps {
   children: ReactNode
   variant?: ClassNames
+  onClick?: () => void
 }
 
 export type CardVariant = ClassNames
@@ -16,9 +17,14 @@ export const Card: FC<CardProps & DetailedHTMLProps<HTMLAttributes<HTMLElement>,
   className,
   variant = 'cardPrimary',
   style,
+  onClick,
 }) => {
   return (
-    <div className={getAtomClassList({ className, variant: cardStyles[variant] })} style={style}>
+    <div
+      className={getAtomClassList({ className, variant: cardStyles[variant] })}
+      style={style}
+      onClick={onClick}
+    >
       {children}
     </div>
   )

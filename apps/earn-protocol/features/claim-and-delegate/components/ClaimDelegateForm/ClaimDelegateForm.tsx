@@ -1,16 +1,22 @@
 'use client'
-import { useReducer } from 'react'
+import { type Dispatch, type FC } from 'react'
 import { Card } from '@summerfi/app-earn-ui'
 
 import { ClaimDelegateFormContent } from '@/features/claim-and-delegate/components/ClaimDelegateFormContent/ClaimDelegateFormContent'
 import { ClaimDelegateFormHeader } from '@/features/claim-and-delegate/components/ClaimDelegateFormHeader/ClaimDelegateFormHeader'
-import { claimDelegateReducer, claimDelegateState } from '@/features/claim-and-delegate/state'
+import type {
+  ClaimDelegateReducerAction,
+  ClaimDelegateState,
+} from '@/features/claim-and-delegate/types'
 
 import classNames from './ClaimDelegateForm.module.scss'
 
-export const ClaimDelegateForm = () => {
-  const [state, dispatch] = useReducer(claimDelegateReducer, claimDelegateState)
+interface ClaimDelegateFormProps {
+  state: ClaimDelegateState
+  dispatch: Dispatch<ClaimDelegateReducerAction>
+}
 
+export const ClaimDelegateForm: FC<ClaimDelegateFormProps> = ({ state, dispatch }) => {
   return (
     <Card variant="cardSecondary" className={classNames.claimDelegateForm}>
       <ClaimDelegateFormHeader state={state} />

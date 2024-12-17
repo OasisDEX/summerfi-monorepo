@@ -4,11 +4,34 @@ export enum ClaimDelegateSteps {
   DELEGATE = 'delegate',
 }
 
-export type ClaimDelegateState = {
-  step: ClaimDelegateSteps
+export enum ClaimDelegateTxStatuses {
+  PENDING = 'pending',
+  COMPLETED = 'COMPLETED',
+  FAILED = 'failed',
 }
 
-export type ClaimDelegateReducerAction = {
-  type: 'update-step'
-  payload: ClaimDelegateSteps
+export type ClaimDelegateState = {
+  step: ClaimDelegateSteps
+  delegatee: string | undefined
+  claimStatus: ClaimDelegateTxStatuses | undefined
+  delegateStatus: ClaimDelegateTxStatuses | undefined
+  walletAddress: string
 }
+
+export type ClaimDelegateReducerAction =
+  | {
+      type: 'update-step'
+      payload: ClaimDelegateSteps
+    }
+  | {
+      type: 'update-delegatee'
+      payload: string | undefined
+    }
+  | {
+      type: 'update-claim-status'
+      payload: ClaimDelegateTxStatuses
+    }
+  | {
+      type: 'update-delegate-status'
+      payload: ClaimDelegateTxStatuses
+    }

@@ -2,7 +2,11 @@ import { type FC } from 'react'
 import { Icon, Text } from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
 
-import { type ClaimDelegateState, ClaimDelegateSteps } from '@/features/claim-and-delegate/types'
+import {
+  type ClaimDelegateState,
+  ClaimDelegateSteps,
+  ClaimDelegateTxStatuses,
+} from '@/features/claim-and-delegate/types'
 
 import classNames from './ClaimDelegateFormHeader.module.scss'
 
@@ -21,8 +25,10 @@ const steps = [
   },
 ]
 
-const getIsCompleted = ({ idx, currentStep }: { idx: number; currentStep: ClaimDelegateSteps }) =>
-  idx < steps.findIndex((item) => item.value === currentStep)
+const getIsCompleted = ({ idx, state }: { idx: number; state: ClaimDelegateState }) =>
+  idx < steps.findIndex((item) => item.value === state.step) ||
+  (state.step === ClaimDelegateSteps.DELEGATE &&
+    state.delegateStatus === ClaimDelegateTxStatuses.COMPLETED)
 
 interface ClaimDelegateFormHeaderProps {
   state: ClaimDelegateState
@@ -35,16 +41,16 @@ export const ClaimDelegateFormHeader: FC<ClaimDelegateFormHeaderProps> = ({ stat
         <div className={classNames.step} key={step.value}>
           <div
             className={clsx(classNames.circle, {
-              [classNames.active]: step.value === state.step,
-              [classNames.completed]: getIsCompleted({ idx, currentStep: state.step }),
+              [classNames.active]: step.value === state.step && !getIsCompleted({ idx, state }),
+              [classNames.completed]: getIsCompleted({ idx, state }),
             })}
           >
-            {!getIsCompleted({ idx, currentStep: state.step }) && (
+            {!getIsCompleted({ idx, state }) && (
               <Text as="p" variant="p2semi">
                 {idx + 1}
               </Text>
             )}
-            {getIsCompleted({ idx, currentStep: state.step }) && (
+            {getIsCompleted({ idx, state }) && (
               <Icon iconName="checkmark" variant="xs" color="var(--earn-protocol-success-100)" />
             )}
           </div>
