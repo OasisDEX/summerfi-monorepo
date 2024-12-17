@@ -177,8 +177,8 @@ export const VaultManageViewComponent = ({
     }
 
     const amountWithSwap = {
-      [TransactionAction.DEPOSIT]: `$${quote.toTokenAmount.toBigNumber().toFixed(vault.inputToken.decimals)}`,
-      [TransactionAction.WITHDRAW]: `${quote.toTokenAmount.toBigNumber().toFixed(vault.inputToken.decimals)} ${quote.toTokenAmount.token.symbol}`,
+      [TransactionAction.DEPOSIT]: `$${quote.toTokenAmount.toBigNumber().toFixed(2)}`, // Display 2 decimal places for USD
+      [TransactionAction.WITHDRAW]: `${quote.toTokenAmount.toBigNumber().toFixed(Math.min(vault.inputToken.decimals, 8))} ${quote.toTokenAmount.token.symbol}`, // Cap decimals at 8 for better readability
     }[transactionType]
 
     return amountWithSwap

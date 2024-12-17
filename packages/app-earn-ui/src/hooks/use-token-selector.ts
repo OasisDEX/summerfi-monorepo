@@ -42,8 +42,20 @@ export const useTokenSelector = ({ vault, chainId }: TokenSelectorProps) => {
       })),
     ]
 
+    const tokens = testTokens[chainId] ?? []
+
+    tokens.forEach((token) => {
+      if (token !== vault.inputToken.symbol) {
+        options.push({
+          tokenSymbol: token as TokenSymbolsList,
+          label: token,
+          value: token,
+        })
+      }
+    })
+
     return options
-  }, [vault.inputToken.symbol])
+  }, [vault.inputToken.symbol, chainId])
 
   const [selectedTokenOption, setSelectedTokenOption] = useState(() => {
     if (tokenOptions.length === 0) {
@@ -54,30 +66,19 @@ export const useTokenSelector = ({ vault, chainId }: TokenSelectorProps) => {
       tokenOptions.find((option) => option.value === vault.inputToken.symbol) ?? tokenOptions[0]
     )
   })
+
+  // when changing tokenOptions validate the selected token
+  useEffect(() => {
+    setSelectedTokenOption((selectedOption) => {
+      return tokenOptions.find((option) => option.value === selectedOption.value) ?? tokenOptions[0]
+    })
+  }, [tokenOptions])
+
   const handleTokenSelectionChange = (option: DropdownRawOption) => {
     const value = tokenOptions.find((opt) => opt.value === option.value) ?? tokenOptions[0]
 
     setSelectedTokenOption(value)
   }
-
-  // when changing chain, add async tokens to the dropdown and validate the current token
-  useEffect(() => {
-    const tokens = testTokens[chainId] ?? []
-
-    tokens.forEach((token) => {
-      if (token !== vault.inputToken.symbol) {
-        tokenOptions.push({
-          tokenSymbol: token as TokenSymbolsList,
-          label: token,
-          value: token,
-        })
-      }
-    })
-
-    setSelectedTokenOption((selectedOption) => {
-      return tokenOptions.find((option) => option.value === selectedOption.value) ?? tokenOptions[0]
-    })
-  }, [tokenOptions, chainId, vault.inputToken.symbol])
 
   return {
     tokenOptions,
