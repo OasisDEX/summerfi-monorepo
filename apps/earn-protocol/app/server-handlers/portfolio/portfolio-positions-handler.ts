@@ -26,8 +26,12 @@ export const portfolioPositionsHandler = async ({
     network: vaultData.protocol.network,
     arksList: vaultData.arks,
   })
-  const [vaultWithInterestRates] = decorateCustomVaultFields([vaultData], config, {
-    arkInterestRatesMap: interestRates,
+  const [vaultWithInterestRates] = decorateCustomVaultFields({
+    vaults: [vaultData],
+    systemConfig: config,
+    decorators: {
+      arkInterestRatesMap: interestRates,
+    },
   })
 
   return {

@@ -8,9 +8,9 @@ import { decorateCustomVaultFields } from '@/helpers/vault-custom-value-helpers'
 export const revalidate = 60
 
 const EarnAllVaultsPage = async () => {
-  const [{ vaults }, systemConfig] = await Promise.all([getVaultsList(), systemConfigHandler()])
-  const { config } = parseServerResponseToClient(systemConfig)
-  const vaultsDecorated = decorateCustomVaultFields(vaults, config)
+  const [{ vaults }, configRaw] = await Promise.all([getVaultsList(), systemConfigHandler()])
+  const { config: systemConfig } = parseServerResponseToClient(configRaw)
+  const vaultsDecorated = decorateCustomVaultFields({ vaults, systemConfig })
 
   return <VaultManageViewComponent vaultsList={vaultsDecorated} />
 }

@@ -1,6 +1,7 @@
 import {
   type ChartsDataTimeframes,
   type ForecastData,
+  type IArmadaPosition,
   type SDKVaultishType,
   type VaultChartsPerformanceData,
 } from '@summerfi/app-types'
@@ -12,6 +13,7 @@ import { CHART_TIMESTAMP_FORMAT } from '@/constants/charts'
 const mergePositionHistoryAndForecast = (
   positionHistory: GetPositionHistoryReturnType,
   positionForecast: ForecastData,
+  position?: IArmadaPosition,
 ): VaultChartsPerformanceData['performanceChartData'] => {
   const now = dayjs()
   const nowStartOfHour = now.startOf('hour')
@@ -49,25 +51,36 @@ const mergePositionHistoryAndForecast = (
     weekly: 52,
   }
 
+  const positionAmount = position?.amount.amount ? Number(position.amount.amount) : 0
+
   // history hourly points
   positionHistory.position?.hourlyPositionHistory.reverse().forEach((point) => {
     const timestamp = dayjs(point.timestamp * 1000).startOf('hour')
     const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT)
+    const timestampUnix = timestamp.unix()
 
-    if (timestamp.unix() >= thresholdHistorical7d) {
+    const isSameHour = timestamp.isSame(nowStartOfHour)
+
+    const pointNetValue = isSameHour && positionAmount ? positionAmount : point.netValue
+    const pointDepositedValue =
+      isSameHour && positionAmount
+        ? positionAmount
+        : Math.max(point.deposits - Math.abs(point.withdrawals), 0)
+
+    if (timestampUnix >= thresholdHistorical7d) {
       chartBaseData['7d'].push({
-        timestamp: timestamp.unix(),
+        timestamp: timestampUnix,
         timestampParsed,
-        netValue: point.netValue,
-        depositedValue: Math.max(point.deposits - Math.abs(point.withdrawals), 0),
+        netValue: pointNetValue,
+        depositedValue: pointDepositedValue,
       })
     }
-    if (timestamp.unix() >= thresholdHistorical30d) {
+    if (timestampUnix >= thresholdHistorical30d) {
       chartBaseData['30d'].push({
-        timestamp: timestamp.unix(),
+        timestamp: timestampUnix,
         timestampParsed,
-        netValue: point.netValue,
-        depositedValue: Math.max(point.deposits - Math.abs(point.withdrawals), 0),
+        netValue: pointNetValue,
+        depositedValue: pointDepositedValue,
       })
     }
   })
@@ -76,29 +89,38 @@ const mergePositionHistoryAndForecast = (
   positionHistory.position?.dailyPositionHistory.reverse().forEach((point) => {
     const timestamp = dayjs(point.timestamp * 1000).startOf('day')
     const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT)
+    const timestampUnix = timestamp.unix()
 
-    if (timestamp.unix() >= thresholdHistorical90d) {
+    const isSameDay = timestamp.isSame(nowStartOfDay)
+
+    const pointNetValue = isSameDay && positionAmount ? positionAmount : point.netValue
+    const pointDepositedValue =
+      isSameDay && positionAmount
+        ? positionAmount
+        : Math.max(point.deposits - Math.abs(point.withdrawals), 0)
+
+    if (timestampUnix >= thresholdHistorical90d) {
       chartBaseData['90d'].push({
-        timestamp: timestamp.unix(),
+        timestamp: timestampUnix,
         timestampParsed,
-        netValue: point.netValue,
-        depositedValue: Math.max(point.deposits - Math.abs(point.withdrawals), 0),
+        netValue: pointNetValue,
+        depositedValue: pointDepositedValue,
       })
     }
-    if (timestamp.unix() >= thresholdHistorical6m) {
+    if (timestampUnix >= thresholdHistorical6m) {
       chartBaseData['6m'].push({
-        timestamp: timestamp.unix(),
+        timestamp: timestampUnix,
         timestampParsed,
-        netValue: point.netValue,
-        depositedValue: Math.max(point.deposits - Math.abs(point.withdrawals), 0),
+        netValue: pointNetValue,
+        depositedValue: pointDepositedValue,
       })
     }
-    if (timestamp.unix() >= thresholdHistorical1y) {
+    if (timestampUnix >= thresholdHistorical1y) {
       chartBaseData['1y'].push({
-        timestamp: timestamp.unix(),
+        timestamp: timestampUnix,
         timestampParsed,
-        netValue: point.netValue,
-        depositedValue: Math.max(point.deposits - Math.abs(point.withdrawals), 0),
+        netValue: pointNetValue,
+        depositedValue: pointDepositedValue,
       })
     }
   })
@@ -107,13 +129,22 @@ const mergePositionHistoryAndForecast = (
   positionHistory.position?.weeklyPositionHistory.reverse().forEach((point) => {
     const timestamp = dayjs(point.timestamp * 1000).startOf('week')
     const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT)
+    const timestampUnix = timestamp.unix()
 
-    if (timestamp.unix() >= thresholdHistorical3y) {
+    const isSameWeek = timestamp.isSame(nowStartOfWeek)
+
+    const pointNetValue = isSameWeek && positionAmount ? positionAmount : point.netValue
+    const pointDepositedValue =
+      isSameWeek && positionAmount
+        ? positionAmount
+        : Math.max(point.deposits - Math.abs(point.withdrawals), 0)
+
+    if (timestampUnix >= thresholdHistorical3y) {
       chartBaseData['3y'].push({
-        timestamp: timestamp.unix(),
+        timestamp: timestampUnix,
         timestampParsed,
-        netValue: point.netValue,
-        depositedValue: Math.max(point.deposits - Math.abs(point.withdrawals), 0),
+        netValue: pointNetValue,
+        depositedValue: pointDepositedValue,
       })
     }
   })
@@ -261,17 +292,22 @@ const mergePositionHistoryAndForecast = (
 export const decorateWithPerformanceChartData = (
   vaults: SDKVaultishType[],
   vaultData: {
+    position?: IArmadaPosition
     positionHistory: GetPositionHistoryReturnType
     positionForecast: ForecastData
   },
 ) => {
-  const { positionHistory, positionForecast } = vaultData
+  const { positionHistory, positionForecast, position } = vaultData
 
   return vaults.map((vault) => ({
     ...vault,
     customFields: {
       ...vault.customFields,
-      performanceChartData: mergePositionHistoryAndForecast(positionHistory, positionForecast),
+      performanceChartData: mergePositionHistoryAndForecast(
+        positionHistory,
+        positionForecast,
+        position,
+      ),
     },
   }))
 }

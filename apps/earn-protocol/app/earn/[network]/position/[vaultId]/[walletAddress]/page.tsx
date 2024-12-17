@@ -34,11 +34,11 @@ export const revalidate = 60
 const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   const parsedNetwork = humanNetworktoSDKNetwork(params.network)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
-  const { config } = parseServerResponseToClient(await systemConfigHandler())
+  const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
 
   const parsedVaultId = isAddress(params.vaultId)
     ? params.vaultId
-    : getVaultIdByVaultCustomName(params.vaultId, String(parsedNetworkId), config)
+    : getVaultIdByVaultCustomName(params.vaultId, String(parsedNetworkId), systemConfig)
 
   const [vault, { vaults }, position, { userActivity, topDepositors }] = await Promise.all([
     getVaultDetails({
@@ -98,13 +98,18 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   const forecastData = (await positionForecastResponse.json()) as PositionForecastAPIResponse
   const positionForecast = parseForecastDatapoints(forecastData)
 
-  const [vaultDecorated] = decorateCustomVaultFields([vault], config, {
-    arkInterestRatesMap: interestRates,
-    positionHistory,
-    positionForecast,
+  const [vaultDecorated] = decorateCustomVaultFields({
+    vaults: [vault],
+    systemConfig,
+    position,
+    decorators: {
+      arkInterestRatesMap: interestRates,
+      positionHistory,
+      positionForecast,
+    },
   })
 
-  const vaultsDecorated = decorateCustomVaultFields(vaults, config)
+  const vaultsDecorated = decorateCustomVaultFields({ vaults, systemConfig })
 
   const positionJsonSafe = parseServerResponseToClient<IArmadaPosition>(position)
 
