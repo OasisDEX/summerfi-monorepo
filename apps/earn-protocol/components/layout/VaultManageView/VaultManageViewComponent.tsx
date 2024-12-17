@@ -32,7 +32,7 @@ import {
   OrderInfoWithdraw,
 } from '@/components/molecules/SidebarElements'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
-import { PerformanceYieldChart } from '@/components/organisms/Charts/PerformanceChart'
+import { PositionPerformanceChart } from '@/components/organisms/Charts/PositionPerformanceChart'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
@@ -273,7 +273,7 @@ export const VaultManageViewComponent = ({
             }
             defaultExpanded
           >
-            <PerformanceYieldChart chartData={[]} />
+            <PositionPerformanceChart chartData={vault.customFields?.performanceChartData} />
           </Expander>
           <Expander
             title={

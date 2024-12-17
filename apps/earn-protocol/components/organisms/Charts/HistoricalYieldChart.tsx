@@ -8,7 +8,7 @@ import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
 import { YieldsChart } from '@/components/organisms/Charts/components/Yields'
 
 type HistoricalYieldChartProps = {
-  chartData: VaultChartsHistoricalData['chartsData']
+  chartData: VaultChartsHistoricalData['historicalChartData']
   summerVaultName: string
 }
 

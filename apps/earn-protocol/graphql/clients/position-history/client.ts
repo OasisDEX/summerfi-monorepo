@@ -2,8 +2,8 @@
 // @ts-nocheck
 /* eslint-disable */
 import type { DocumentNode } from "graphql/language/ast";
-import { GraphQLClient, RequestOptions } from 'graphql-request';
-import gql from 'graphql-tag';
+import type { GraphQLClient, RequestOptions } from 'graphql-request';
+import { gql } from 'graphql-request';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -19,11 +19,11 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  BigDecimal: { input: string; output: string; }
-  BigInt: { input: bigint; output: bigint; }
-  Bytes: { input: string; output: string; }
-  Int8: { input: number; output: number; }
-  Timestamp: { input: number; output: number; }
+  BigDecimal: { input: any; output: any; }
+  BigInt: { input: any; output: any; }
+  Bytes: { input: any; output: any; }
+  Int8: { input: any; output: any; }
+  Timestamp: { input: any; output: any; }
 };
 
 export type Account = {
@@ -59,8 +59,8 @@ export type Account_Filter = {
 };
 
 export enum Account_OrderBy {
-  Id = 'id',
-  Positions = 'positions'
+  id = 'id',
+  positions = 'positions'
 }
 
 export type ActiveAccount = {
@@ -85,12 +85,12 @@ export type ActiveAccount_Filter = {
 };
 
 export enum ActiveAccount_OrderBy {
-  Id = 'id'
+  id = 'id'
 }
 
 export enum Aggregation_Interval {
-  Day = 'day',
-  Hour = 'hour'
+  day = 'day',
+  hour = 'hour'
 }
 
 export type Ark = {
@@ -386,86 +386,86 @@ export type ArkDailySnapshot_Filter = {
 };
 
 export enum ArkDailySnapshot_OrderBy {
-  Apr = 'apr',
-  Ark = 'ark',
-  ArkCumulativeDeposits = 'ark___cumulativeDeposits',
-  ArkCumulativeWithdrawals = 'ark___cumulativeWithdrawals',
-  ArkLastUpdateInputTokenBalance = 'ark___lastUpdateInputTokenBalance',
-  ArkCalculatedApr = 'ark__calculatedApr',
-  ArkCreatedBlockNumber = 'ark__createdBlockNumber',
-  ArkCreatedTimestamp = 'ark__createdTimestamp',
-  ArkCumulativeEarnings = 'ark__cumulativeEarnings',
-  ArkCumulativeProtocolSideRevenueUsd = 'ark__cumulativeProtocolSideRevenueUSD',
-  ArkCumulativeSupplySideRevenueUsd = 'ark__cumulativeSupplySideRevenueUSD',
-  ArkCumulativeTotalRevenueUsd = 'ark__cumulativeTotalRevenueUSD',
-  ArkDepositCap = 'ark__depositCap',
-  ArkDepositLimit = 'ark__depositLimit',
-  ArkDetails = 'ark__details',
-  ArkId = 'ark__id',
-  ArkInputTokenBalance = 'ark__inputTokenBalance',
-  ArkLastUpdateTimestamp = 'ark__lastUpdateTimestamp',
-  ArkMaxDepositPercentageOfTvl = 'ark__maxDepositPercentageOfTVL',
-  ArkMaxRebalanceInflow = 'ark__maxRebalanceInflow',
-  ArkMaxRebalanceOutflow = 'ark__maxRebalanceOutflow',
-  ArkName = 'ark__name',
-  ArkRequiresKeeperData = 'ark__requiresKeeperData',
-  ArkTotalValueLockedUsd = 'ark__totalValueLockedUSD',
-  BlockNumber = 'blockNumber',
-  Id = 'id',
-  InputTokenBalance = 'inputTokenBalance',
-  Protocol = 'protocol',
-  ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
-  ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
-  ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
-  ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
-  ProtocolId = 'protocol__id',
-  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
-  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
-  ProtocolLastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
-  ProtocolMethodologyVersion = 'protocol__methodologyVersion',
-  ProtocolName = 'protocol__name',
-  ProtocolNetwork = 'protocol__network',
-  ProtocolProtocolControlledValueUsd = 'protocol__protocolControlledValueUSD',
-  ProtocolSchemaVersion = 'protocol__schemaVersion',
-  ProtocolSlug = 'protocol__slug',
-  ProtocolSubgraphVersion = 'protocol__subgraphVersion',
-  ProtocolTotalPoolCount = 'protocol__totalPoolCount',
-  ProtocolTotalValueLockedUsd = 'protocol__totalValueLockedUSD',
-  ProtocolType = 'protocol__type',
-  Timestamp = 'timestamp',
-  TotalValueLockedUsd = 'totalValueLockedUSD',
-  Vault = 'vault',
-  VaultApr7d = 'vault__apr7d',
-  VaultApr30d = 'vault__apr30d',
-  VaultApr90d = 'vault__apr90d',
-  VaultApr180d = 'vault__apr180d',
-  VaultApr365d = 'vault__apr365d',
-  VaultCalculatedApr = 'vault__calculatedApr',
-  VaultCreatedBlockNumber = 'vault__createdBlockNumber',
-  VaultCreatedTimestamp = 'vault__createdTimestamp',
-  VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
-  VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
-  VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
-  VaultDepositCap = 'vault__depositCap',
-  VaultDepositLimit = 'vault__depositLimit',
-  VaultDetails = 'vault__details',
-  VaultId = 'vault__id',
-  VaultInputTokenBalance = 'vault__inputTokenBalance',
-  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
-  VaultLastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
-  VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
-  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
-  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
-  VaultName = 'vault__name',
-  VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
-  VaultOutputTokenSupply = 'vault__outputTokenSupply',
-  VaultPricePerShare = 'vault__pricePerShare',
-  VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
-  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
-  VaultSymbol = 'vault__symbol',
-  VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
-  VaultWithdrawableTotalAssets = 'vault__withdrawableTotalAssets',
-  VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD'
+  apr = 'apr',
+  ark = 'ark',
+  ark___cumulativeDeposits = 'ark___cumulativeDeposits',
+  ark___cumulativeWithdrawals = 'ark___cumulativeWithdrawals',
+  ark___lastUpdateInputTokenBalance = 'ark___lastUpdateInputTokenBalance',
+  ark__calculatedApr = 'ark__calculatedApr',
+  ark__createdBlockNumber = 'ark__createdBlockNumber',
+  ark__createdTimestamp = 'ark__createdTimestamp',
+  ark__cumulativeEarnings = 'ark__cumulativeEarnings',
+  ark__cumulativeProtocolSideRevenueUSD = 'ark__cumulativeProtocolSideRevenueUSD',
+  ark__cumulativeSupplySideRevenueUSD = 'ark__cumulativeSupplySideRevenueUSD',
+  ark__cumulativeTotalRevenueUSD = 'ark__cumulativeTotalRevenueUSD',
+  ark__depositCap = 'ark__depositCap',
+  ark__depositLimit = 'ark__depositLimit',
+  ark__details = 'ark__details',
+  ark__id = 'ark__id',
+  ark__inputTokenBalance = 'ark__inputTokenBalance',
+  ark__lastUpdateTimestamp = 'ark__lastUpdateTimestamp',
+  ark__maxDepositPercentageOfTVL = 'ark__maxDepositPercentageOfTVL',
+  ark__maxRebalanceInflow = 'ark__maxRebalanceInflow',
+  ark__maxRebalanceOutflow = 'ark__maxRebalanceOutflow',
+  ark__name = 'ark__name',
+  ark__requiresKeeperData = 'ark__requiresKeeperData',
+  ark__totalValueLockedUSD = 'ark__totalValueLockedUSD',
+  blockNumber = 'blockNumber',
+  id = 'id',
+  inputTokenBalance = 'inputTokenBalance',
+  protocol = 'protocol',
+  protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
+  protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
+  protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
+  protocol__cumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
+  protocol__id = 'protocol__id',
+  protocol__lastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  protocol__lastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
+  protocol__lastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
+  protocol__methodologyVersion = 'protocol__methodologyVersion',
+  protocol__name = 'protocol__name',
+  protocol__network = 'protocol__network',
+  protocol__protocolControlledValueUSD = 'protocol__protocolControlledValueUSD',
+  protocol__schemaVersion = 'protocol__schemaVersion',
+  protocol__slug = 'protocol__slug',
+  protocol__subgraphVersion = 'protocol__subgraphVersion',
+  protocol__totalPoolCount = 'protocol__totalPoolCount',
+  protocol__totalValueLockedUSD = 'protocol__totalValueLockedUSD',
+  protocol__type = 'protocol__type',
+  timestamp = 'timestamp',
+  totalValueLockedUSD = 'totalValueLockedUSD',
+  vault = 'vault',
+  vault__apr7d = 'vault__apr7d',
+  vault__apr30d = 'vault__apr30d',
+  vault__apr90d = 'vault__apr90d',
+  vault__apr180d = 'vault__apr180d',
+  vault__apr365d = 'vault__apr365d',
+  vault__calculatedApr = 'vault__calculatedApr',
+  vault__createdBlockNumber = 'vault__createdBlockNumber',
+  vault__createdTimestamp = 'vault__createdTimestamp',
+  vault__cumulativeProtocolSideRevenueUSD = 'vault__cumulativeProtocolSideRevenueUSD',
+  vault__cumulativeSupplySideRevenueUSD = 'vault__cumulativeSupplySideRevenueUSD',
+  vault__cumulativeTotalRevenueUSD = 'vault__cumulativeTotalRevenueUSD',
+  vault__depositCap = 'vault__depositCap',
+  vault__depositLimit = 'vault__depositLimit',
+  vault__details = 'vault__details',
+  vault__id = 'vault__id',
+  vault__inputTokenBalance = 'vault__inputTokenBalance',
+  vault__inputTokenPriceUSD = 'vault__inputTokenPriceUSD',
+  vault__lastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
+  vault__lastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  vault__maxRebalanceOperations = 'vault__maxRebalanceOperations',
+  vault__minimumBufferBalance = 'vault__minimumBufferBalance',
+  vault__name = 'vault__name',
+  vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
+  vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__pricePerShare = 'vault__pricePerShare',
+  vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  vault__stakingRewardsManager = 'vault__stakingRewardsManager',
+  vault__symbol = 'vault__symbol',
+  vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
+  vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
+  vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
 }
 
 export type ArkHourlySnapshot = {
@@ -609,86 +609,86 @@ export type ArkHourlySnapshot_Filter = {
 };
 
 export enum ArkHourlySnapshot_OrderBy {
-  Ark = 'ark',
-  ArkCumulativeDeposits = 'ark___cumulativeDeposits',
-  ArkCumulativeWithdrawals = 'ark___cumulativeWithdrawals',
-  ArkLastUpdateInputTokenBalance = 'ark___lastUpdateInputTokenBalance',
-  ArkCalculatedApr = 'ark__calculatedApr',
-  ArkCreatedBlockNumber = 'ark__createdBlockNumber',
-  ArkCreatedTimestamp = 'ark__createdTimestamp',
-  ArkCumulativeEarnings = 'ark__cumulativeEarnings',
-  ArkCumulativeProtocolSideRevenueUsd = 'ark__cumulativeProtocolSideRevenueUSD',
-  ArkCumulativeSupplySideRevenueUsd = 'ark__cumulativeSupplySideRevenueUSD',
-  ArkCumulativeTotalRevenueUsd = 'ark__cumulativeTotalRevenueUSD',
-  ArkDepositCap = 'ark__depositCap',
-  ArkDepositLimit = 'ark__depositLimit',
-  ArkDetails = 'ark__details',
-  ArkId = 'ark__id',
-  ArkInputTokenBalance = 'ark__inputTokenBalance',
-  ArkLastUpdateTimestamp = 'ark__lastUpdateTimestamp',
-  ArkMaxDepositPercentageOfTvl = 'ark__maxDepositPercentageOfTVL',
-  ArkMaxRebalanceInflow = 'ark__maxRebalanceInflow',
-  ArkMaxRebalanceOutflow = 'ark__maxRebalanceOutflow',
-  ArkName = 'ark__name',
-  ArkRequiresKeeperData = 'ark__requiresKeeperData',
-  ArkTotalValueLockedUsd = 'ark__totalValueLockedUSD',
-  BlockNumber = 'blockNumber',
-  CalculatedApr = 'calculatedApr',
-  Id = 'id',
-  InputTokenBalance = 'inputTokenBalance',
-  Protocol = 'protocol',
-  ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
-  ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
-  ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
-  ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
-  ProtocolId = 'protocol__id',
-  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
-  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
-  ProtocolLastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
-  ProtocolMethodologyVersion = 'protocol__methodologyVersion',
-  ProtocolName = 'protocol__name',
-  ProtocolNetwork = 'protocol__network',
-  ProtocolProtocolControlledValueUsd = 'protocol__protocolControlledValueUSD',
-  ProtocolSchemaVersion = 'protocol__schemaVersion',
-  ProtocolSlug = 'protocol__slug',
-  ProtocolSubgraphVersion = 'protocol__subgraphVersion',
-  ProtocolTotalPoolCount = 'protocol__totalPoolCount',
-  ProtocolTotalValueLockedUsd = 'protocol__totalValueLockedUSD',
-  ProtocolType = 'protocol__type',
-  Timestamp = 'timestamp',
-  TotalValueLockedUsd = 'totalValueLockedUSD',
-  Vault = 'vault',
-  VaultApr7d = 'vault__apr7d',
-  VaultApr30d = 'vault__apr30d',
-  VaultApr90d = 'vault__apr90d',
-  VaultApr180d = 'vault__apr180d',
-  VaultApr365d = 'vault__apr365d',
-  VaultCalculatedApr = 'vault__calculatedApr',
-  VaultCreatedBlockNumber = 'vault__createdBlockNumber',
-  VaultCreatedTimestamp = 'vault__createdTimestamp',
-  VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
-  VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
-  VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
-  VaultDepositCap = 'vault__depositCap',
-  VaultDepositLimit = 'vault__depositLimit',
-  VaultDetails = 'vault__details',
-  VaultId = 'vault__id',
-  VaultInputTokenBalance = 'vault__inputTokenBalance',
-  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
-  VaultLastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
-  VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
-  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
-  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
-  VaultName = 'vault__name',
-  VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
-  VaultOutputTokenSupply = 'vault__outputTokenSupply',
-  VaultPricePerShare = 'vault__pricePerShare',
-  VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
-  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
-  VaultSymbol = 'vault__symbol',
-  VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
-  VaultWithdrawableTotalAssets = 'vault__withdrawableTotalAssets',
-  VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD'
+  ark = 'ark',
+  ark___cumulativeDeposits = 'ark___cumulativeDeposits',
+  ark___cumulativeWithdrawals = 'ark___cumulativeWithdrawals',
+  ark___lastUpdateInputTokenBalance = 'ark___lastUpdateInputTokenBalance',
+  ark__calculatedApr = 'ark__calculatedApr',
+  ark__createdBlockNumber = 'ark__createdBlockNumber',
+  ark__createdTimestamp = 'ark__createdTimestamp',
+  ark__cumulativeEarnings = 'ark__cumulativeEarnings',
+  ark__cumulativeProtocolSideRevenueUSD = 'ark__cumulativeProtocolSideRevenueUSD',
+  ark__cumulativeSupplySideRevenueUSD = 'ark__cumulativeSupplySideRevenueUSD',
+  ark__cumulativeTotalRevenueUSD = 'ark__cumulativeTotalRevenueUSD',
+  ark__depositCap = 'ark__depositCap',
+  ark__depositLimit = 'ark__depositLimit',
+  ark__details = 'ark__details',
+  ark__id = 'ark__id',
+  ark__inputTokenBalance = 'ark__inputTokenBalance',
+  ark__lastUpdateTimestamp = 'ark__lastUpdateTimestamp',
+  ark__maxDepositPercentageOfTVL = 'ark__maxDepositPercentageOfTVL',
+  ark__maxRebalanceInflow = 'ark__maxRebalanceInflow',
+  ark__maxRebalanceOutflow = 'ark__maxRebalanceOutflow',
+  ark__name = 'ark__name',
+  ark__requiresKeeperData = 'ark__requiresKeeperData',
+  ark__totalValueLockedUSD = 'ark__totalValueLockedUSD',
+  blockNumber = 'blockNumber',
+  calculatedApr = 'calculatedApr',
+  id = 'id',
+  inputTokenBalance = 'inputTokenBalance',
+  protocol = 'protocol',
+  protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
+  protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
+  protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
+  protocol__cumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
+  protocol__id = 'protocol__id',
+  protocol__lastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  protocol__lastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
+  protocol__lastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
+  protocol__methodologyVersion = 'protocol__methodologyVersion',
+  protocol__name = 'protocol__name',
+  protocol__network = 'protocol__network',
+  protocol__protocolControlledValueUSD = 'protocol__protocolControlledValueUSD',
+  protocol__schemaVersion = 'protocol__schemaVersion',
+  protocol__slug = 'protocol__slug',
+  protocol__subgraphVersion = 'protocol__subgraphVersion',
+  protocol__totalPoolCount = 'protocol__totalPoolCount',
+  protocol__totalValueLockedUSD = 'protocol__totalValueLockedUSD',
+  protocol__type = 'protocol__type',
+  timestamp = 'timestamp',
+  totalValueLockedUSD = 'totalValueLockedUSD',
+  vault = 'vault',
+  vault__apr7d = 'vault__apr7d',
+  vault__apr30d = 'vault__apr30d',
+  vault__apr90d = 'vault__apr90d',
+  vault__apr180d = 'vault__apr180d',
+  vault__apr365d = 'vault__apr365d',
+  vault__calculatedApr = 'vault__calculatedApr',
+  vault__createdBlockNumber = 'vault__createdBlockNumber',
+  vault__createdTimestamp = 'vault__createdTimestamp',
+  vault__cumulativeProtocolSideRevenueUSD = 'vault__cumulativeProtocolSideRevenueUSD',
+  vault__cumulativeSupplySideRevenueUSD = 'vault__cumulativeSupplySideRevenueUSD',
+  vault__cumulativeTotalRevenueUSD = 'vault__cumulativeTotalRevenueUSD',
+  vault__depositCap = 'vault__depositCap',
+  vault__depositLimit = 'vault__depositLimit',
+  vault__details = 'vault__details',
+  vault__id = 'vault__id',
+  vault__inputTokenBalance = 'vault__inputTokenBalance',
+  vault__inputTokenPriceUSD = 'vault__inputTokenPriceUSD',
+  vault__lastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
+  vault__lastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  vault__maxRebalanceOperations = 'vault__maxRebalanceOperations',
+  vault__minimumBufferBalance = 'vault__minimumBufferBalance',
+  vault__name = 'vault__name',
+  vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
+  vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__pricePerShare = 'vault__pricePerShare',
+  vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  vault__stakingRewardsManager = 'vault__stakingRewardsManager',
+  vault__symbol = 'vault__symbol',
+  vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
+  vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
+  vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
 }
 
 export type Ark_Filter = {
@@ -970,78 +970,78 @@ export type Ark_Filter = {
 };
 
 export enum Ark_OrderBy {
-  CumulativeDeposits = '_cumulativeDeposits',
-  CumulativeWithdrawals = '_cumulativeWithdrawals',
-  LastUpdateInputTokenBalance = '_lastUpdateInputTokenBalance',
-  ActionSnapshots = 'actionSnapshots',
-  Boards = 'boards',
-  CalculatedApr = 'calculatedApr',
-  CreatedBlockNumber = 'createdBlockNumber',
-  CreatedTimestamp = 'createdTimestamp',
-  CumulativeEarnings = 'cumulativeEarnings',
-  CumulativeProtocolSideRevenueUsd = 'cumulativeProtocolSideRevenueUSD',
-  CumulativeSupplySideRevenueUsd = 'cumulativeSupplySideRevenueUSD',
-  CumulativeTotalRevenueUsd = 'cumulativeTotalRevenueUSD',
-  DailySnapshots = 'dailySnapshots',
-  DepositCap = 'depositCap',
-  DepositLimit = 'depositLimit',
-  Details = 'details',
-  Disembarks = 'disembarks',
-  Fees = 'fees',
-  HourlySnapshots = 'hourlySnapshots',
-  Id = 'id',
-  InputToken = 'inputToken',
-  InputTokenBalance = 'inputTokenBalance',
-  InputTokenDecimals = 'inputToken__decimals',
-  InputTokenId = 'inputToken__id',
-  InputTokenLastPriceBlockNumber = 'inputToken__lastPriceBlockNumber',
-  InputTokenLastPriceUsd = 'inputToken__lastPriceUSD',
-  InputTokenName = 'inputToken__name',
-  InputTokenSymbol = 'inputToken__symbol',
-  LastUpdateTimestamp = 'lastUpdateTimestamp',
-  MaxDepositPercentageOfTvl = 'maxDepositPercentageOfTVL',
-  MaxRebalanceInflow = 'maxRebalanceInflow',
-  MaxRebalanceOutflow = 'maxRebalanceOutflow',
-  Name = 'name',
-  RebalancesFrom = 'rebalancesFrom',
-  RebalancesTo = 'rebalancesTo',
-  RequiresKeeperData = 'requiresKeeperData',
-  RewardTokenEmissionsAmount = 'rewardTokenEmissionsAmount',
-  RewardTokenEmissionsUsd = 'rewardTokenEmissionsUSD',
-  RewardTokens = 'rewardTokens',
-  TotalValueLockedUsd = 'totalValueLockedUSD',
-  Vault = 'vault',
-  VaultApr7d = 'vault__apr7d',
-  VaultApr30d = 'vault__apr30d',
-  VaultApr90d = 'vault__apr90d',
-  VaultApr180d = 'vault__apr180d',
-  VaultApr365d = 'vault__apr365d',
-  VaultCalculatedApr = 'vault__calculatedApr',
-  VaultCreatedBlockNumber = 'vault__createdBlockNumber',
-  VaultCreatedTimestamp = 'vault__createdTimestamp',
-  VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
-  VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
-  VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
-  VaultDepositCap = 'vault__depositCap',
-  VaultDepositLimit = 'vault__depositLimit',
-  VaultDetails = 'vault__details',
-  VaultId = 'vault__id',
-  VaultInputTokenBalance = 'vault__inputTokenBalance',
-  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
-  VaultLastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
-  VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
-  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
-  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
-  VaultName = 'vault__name',
-  VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
-  VaultOutputTokenSupply = 'vault__outputTokenSupply',
-  VaultPricePerShare = 'vault__pricePerShare',
-  VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
-  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
-  VaultSymbol = 'vault__symbol',
-  VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
-  VaultWithdrawableTotalAssets = 'vault__withdrawableTotalAssets',
-  VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD'
+  _cumulativeDeposits = '_cumulativeDeposits',
+  _cumulativeWithdrawals = '_cumulativeWithdrawals',
+  _lastUpdateInputTokenBalance = '_lastUpdateInputTokenBalance',
+  actionSnapshots = 'actionSnapshots',
+  boards = 'boards',
+  calculatedApr = 'calculatedApr',
+  createdBlockNumber = 'createdBlockNumber',
+  createdTimestamp = 'createdTimestamp',
+  cumulativeEarnings = 'cumulativeEarnings',
+  cumulativeProtocolSideRevenueUSD = 'cumulativeProtocolSideRevenueUSD',
+  cumulativeSupplySideRevenueUSD = 'cumulativeSupplySideRevenueUSD',
+  cumulativeTotalRevenueUSD = 'cumulativeTotalRevenueUSD',
+  dailySnapshots = 'dailySnapshots',
+  depositCap = 'depositCap',
+  depositLimit = 'depositLimit',
+  details = 'details',
+  disembarks = 'disembarks',
+  fees = 'fees',
+  hourlySnapshots = 'hourlySnapshots',
+  id = 'id',
+  inputToken = 'inputToken',
+  inputTokenBalance = 'inputTokenBalance',
+  inputToken__decimals = 'inputToken__decimals',
+  inputToken__id = 'inputToken__id',
+  inputToken__lastPriceBlockNumber = 'inputToken__lastPriceBlockNumber',
+  inputToken__lastPriceUSD = 'inputToken__lastPriceUSD',
+  inputToken__name = 'inputToken__name',
+  inputToken__symbol = 'inputToken__symbol',
+  lastUpdateTimestamp = 'lastUpdateTimestamp',
+  maxDepositPercentageOfTVL = 'maxDepositPercentageOfTVL',
+  maxRebalanceInflow = 'maxRebalanceInflow',
+  maxRebalanceOutflow = 'maxRebalanceOutflow',
+  name = 'name',
+  rebalancesFrom = 'rebalancesFrom',
+  rebalancesTo = 'rebalancesTo',
+  requiresKeeperData = 'requiresKeeperData',
+  rewardTokenEmissionsAmount = 'rewardTokenEmissionsAmount',
+  rewardTokenEmissionsUSD = 'rewardTokenEmissionsUSD',
+  rewardTokens = 'rewardTokens',
+  totalValueLockedUSD = 'totalValueLockedUSD',
+  vault = 'vault',
+  vault__apr7d = 'vault__apr7d',
+  vault__apr30d = 'vault__apr30d',
+  vault__apr90d = 'vault__apr90d',
+  vault__apr180d = 'vault__apr180d',
+  vault__apr365d = 'vault__apr365d',
+  vault__calculatedApr = 'vault__calculatedApr',
+  vault__createdBlockNumber = 'vault__createdBlockNumber',
+  vault__createdTimestamp = 'vault__createdTimestamp',
+  vault__cumulativeProtocolSideRevenueUSD = 'vault__cumulativeProtocolSideRevenueUSD',
+  vault__cumulativeSupplySideRevenueUSD = 'vault__cumulativeSupplySideRevenueUSD',
+  vault__cumulativeTotalRevenueUSD = 'vault__cumulativeTotalRevenueUSD',
+  vault__depositCap = 'vault__depositCap',
+  vault__depositLimit = 'vault__depositLimit',
+  vault__details = 'vault__details',
+  vault__id = 'vault__id',
+  vault__inputTokenBalance = 'vault__inputTokenBalance',
+  vault__inputTokenPriceUSD = 'vault__inputTokenPriceUSD',
+  vault__lastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
+  vault__lastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  vault__maxRebalanceOperations = 'vault__maxRebalanceOperations',
+  vault__minimumBufferBalance = 'vault__minimumBufferBalance',
+  vault__name = 'vault__name',
+  vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
+  vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__pricePerShare = 'vault__pricePerShare',
+  vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  vault__stakingRewardsManager = 'vault__stakingRewardsManager',
+  vault__symbol = 'vault__symbol',
+  vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
+  vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
+  vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
 }
 
 export type BlockChangedFilter = {
@@ -1283,96 +1283,96 @@ export type Board_Filter = {
 };
 
 export enum Board_OrderBy {
-  Amount = 'amount',
-  AmountUsd = 'amountUSD',
-  Ark = 'ark',
-  ArkCumulativeDeposits = 'ark___cumulativeDeposits',
-  ArkCumulativeWithdrawals = 'ark___cumulativeWithdrawals',
-  ArkLastUpdateInputTokenBalance = 'ark___lastUpdateInputTokenBalance',
-  ArkCalculatedApr = 'ark__calculatedApr',
-  ArkCreatedBlockNumber = 'ark__createdBlockNumber',
-  ArkCreatedTimestamp = 'ark__createdTimestamp',
-  ArkCumulativeEarnings = 'ark__cumulativeEarnings',
-  ArkCumulativeProtocolSideRevenueUsd = 'ark__cumulativeProtocolSideRevenueUSD',
-  ArkCumulativeSupplySideRevenueUsd = 'ark__cumulativeSupplySideRevenueUSD',
-  ArkCumulativeTotalRevenueUsd = 'ark__cumulativeTotalRevenueUSD',
-  ArkDepositCap = 'ark__depositCap',
-  ArkDepositLimit = 'ark__depositLimit',
-  ArkDetails = 'ark__details',
-  ArkId = 'ark__id',
-  ArkInputTokenBalance = 'ark__inputTokenBalance',
-  ArkLastUpdateTimestamp = 'ark__lastUpdateTimestamp',
-  ArkMaxDepositPercentageOfTvl = 'ark__maxDepositPercentageOfTVL',
-  ArkMaxRebalanceInflow = 'ark__maxRebalanceInflow',
-  ArkMaxRebalanceOutflow = 'ark__maxRebalanceOutflow',
-  ArkName = 'ark__name',
-  ArkRequiresKeeperData = 'ark__requiresKeeperData',
-  ArkTotalValueLockedUsd = 'ark__totalValueLockedUSD',
-  Asset = 'asset',
-  AssetDecimals = 'asset__decimals',
-  AssetId = 'asset__id',
-  AssetLastPriceBlockNumber = 'asset__lastPriceBlockNumber',
-  AssetLastPriceUsd = 'asset__lastPriceUSD',
-  AssetName = 'asset__name',
-  AssetSymbol = 'asset__symbol',
-  BlockNumber = 'blockNumber',
-  From = 'from',
-  Hash = 'hash',
-  Id = 'id',
-  LogIndex = 'logIndex',
-  Protocol = 'protocol',
-  ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
-  ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
-  ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
-  ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
-  ProtocolId = 'protocol__id',
-  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
-  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
-  ProtocolLastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
-  ProtocolMethodologyVersion = 'protocol__methodologyVersion',
-  ProtocolName = 'protocol__name',
-  ProtocolNetwork = 'protocol__network',
-  ProtocolProtocolControlledValueUsd = 'protocol__protocolControlledValueUSD',
-  ProtocolSchemaVersion = 'protocol__schemaVersion',
-  ProtocolSlug = 'protocol__slug',
-  ProtocolSubgraphVersion = 'protocol__subgraphVersion',
-  ProtocolTotalPoolCount = 'protocol__totalPoolCount',
-  ProtocolTotalValueLockedUsd = 'protocol__totalValueLockedUSD',
-  ProtocolType = 'protocol__type',
-  Timestamp = 'timestamp',
-  To = 'to',
-  Vault = 'vault',
-  VaultApr7d = 'vault__apr7d',
-  VaultApr30d = 'vault__apr30d',
-  VaultApr90d = 'vault__apr90d',
-  VaultApr180d = 'vault__apr180d',
-  VaultApr365d = 'vault__apr365d',
-  VaultCalculatedApr = 'vault__calculatedApr',
-  VaultCreatedBlockNumber = 'vault__createdBlockNumber',
-  VaultCreatedTimestamp = 'vault__createdTimestamp',
-  VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
-  VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
-  VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
-  VaultDepositCap = 'vault__depositCap',
-  VaultDepositLimit = 'vault__depositLimit',
-  VaultDetails = 'vault__details',
-  VaultId = 'vault__id',
-  VaultInputTokenBalance = 'vault__inputTokenBalance',
-  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
-  VaultLastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
-  VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
-  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
-  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
-  VaultName = 'vault__name',
-  VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
-  VaultOutputTokenSupply = 'vault__outputTokenSupply',
-  VaultPricePerShare = 'vault__pricePerShare',
-  VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
-  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
-  VaultSymbol = 'vault__symbol',
-  VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
-  VaultWithdrawableTotalAssets = 'vault__withdrawableTotalAssets',
-  VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD'
+  amount = 'amount',
+  amountUSD = 'amountUSD',
+  ark = 'ark',
+  ark___cumulativeDeposits = 'ark___cumulativeDeposits',
+  ark___cumulativeWithdrawals = 'ark___cumulativeWithdrawals',
+  ark___lastUpdateInputTokenBalance = 'ark___lastUpdateInputTokenBalance',
+  ark__calculatedApr = 'ark__calculatedApr',
+  ark__createdBlockNumber = 'ark__createdBlockNumber',
+  ark__createdTimestamp = 'ark__createdTimestamp',
+  ark__cumulativeEarnings = 'ark__cumulativeEarnings',
+  ark__cumulativeProtocolSideRevenueUSD = 'ark__cumulativeProtocolSideRevenueUSD',
+  ark__cumulativeSupplySideRevenueUSD = 'ark__cumulativeSupplySideRevenueUSD',
+  ark__cumulativeTotalRevenueUSD = 'ark__cumulativeTotalRevenueUSD',
+  ark__depositCap = 'ark__depositCap',
+  ark__depositLimit = 'ark__depositLimit',
+  ark__details = 'ark__details',
+  ark__id = 'ark__id',
+  ark__inputTokenBalance = 'ark__inputTokenBalance',
+  ark__lastUpdateTimestamp = 'ark__lastUpdateTimestamp',
+  ark__maxDepositPercentageOfTVL = 'ark__maxDepositPercentageOfTVL',
+  ark__maxRebalanceInflow = 'ark__maxRebalanceInflow',
+  ark__maxRebalanceOutflow = 'ark__maxRebalanceOutflow',
+  ark__name = 'ark__name',
+  ark__requiresKeeperData = 'ark__requiresKeeperData',
+  ark__totalValueLockedUSD = 'ark__totalValueLockedUSD',
+  asset = 'asset',
+  asset__decimals = 'asset__decimals',
+  asset__id = 'asset__id',
+  asset__lastPriceBlockNumber = 'asset__lastPriceBlockNumber',
+  asset__lastPriceUSD = 'asset__lastPriceUSD',
+  asset__name = 'asset__name',
+  asset__symbol = 'asset__symbol',
+  blockNumber = 'blockNumber',
+  from = 'from',
+  hash = 'hash',
+  id = 'id',
+  logIndex = 'logIndex',
+  protocol = 'protocol',
+  protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
+  protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
+  protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
+  protocol__cumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
+  protocol__id = 'protocol__id',
+  protocol__lastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  protocol__lastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
+  protocol__lastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
+  protocol__methodologyVersion = 'protocol__methodologyVersion',
+  protocol__name = 'protocol__name',
+  protocol__network = 'protocol__network',
+  protocol__protocolControlledValueUSD = 'protocol__protocolControlledValueUSD',
+  protocol__schemaVersion = 'protocol__schemaVersion',
+  protocol__slug = 'protocol__slug',
+  protocol__subgraphVersion = 'protocol__subgraphVersion',
+  protocol__totalPoolCount = 'protocol__totalPoolCount',
+  protocol__totalValueLockedUSD = 'protocol__totalValueLockedUSD',
+  protocol__type = 'protocol__type',
+  timestamp = 'timestamp',
+  to = 'to',
+  vault = 'vault',
+  vault__apr7d = 'vault__apr7d',
+  vault__apr30d = 'vault__apr30d',
+  vault__apr90d = 'vault__apr90d',
+  vault__apr180d = 'vault__apr180d',
+  vault__apr365d = 'vault__apr365d',
+  vault__calculatedApr = 'vault__calculatedApr',
+  vault__createdBlockNumber = 'vault__createdBlockNumber',
+  vault__createdTimestamp = 'vault__createdTimestamp',
+  vault__cumulativeProtocolSideRevenueUSD = 'vault__cumulativeProtocolSideRevenueUSD',
+  vault__cumulativeSupplySideRevenueUSD = 'vault__cumulativeSupplySideRevenueUSD',
+  vault__cumulativeTotalRevenueUSD = 'vault__cumulativeTotalRevenueUSD',
+  vault__depositCap = 'vault__depositCap',
+  vault__depositLimit = 'vault__depositLimit',
+  vault__details = 'vault__details',
+  vault__id = 'vault__id',
+  vault__inputTokenBalance = 'vault__inputTokenBalance',
+  vault__inputTokenPriceUSD = 'vault__inputTokenPriceUSD',
+  vault__lastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
+  vault__lastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  vault__maxRebalanceOperations = 'vault__maxRebalanceOperations',
+  vault__minimumBufferBalance = 'vault__minimumBufferBalance',
+  vault__name = 'vault__name',
+  vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
+  vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__pricePerShare = 'vault__pricePerShare',
+  vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  vault__stakingRewardsManager = 'vault__stakingRewardsManager',
+  vault__symbol = 'vault__symbol',
+  vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
+  vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
+  vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
 }
 
 export type DailyInterestRate = {
@@ -1454,43 +1454,43 @@ export type DailyInterestRate_Filter = {
 };
 
 export enum DailyInterestRate_OrderBy {
-  AverageRate = 'averageRate',
-  Date = 'date',
-  Id = 'id',
-  SumRates = 'sumRates',
-  UpdateCount = 'updateCount',
-  Vault = 'vault',
-  VaultApr7d = 'vault__apr7d',
-  VaultApr30d = 'vault__apr30d',
-  VaultApr90d = 'vault__apr90d',
-  VaultApr180d = 'vault__apr180d',
-  VaultApr365d = 'vault__apr365d',
-  VaultCalculatedApr = 'vault__calculatedApr',
-  VaultCreatedBlockNumber = 'vault__createdBlockNumber',
-  VaultCreatedTimestamp = 'vault__createdTimestamp',
-  VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
-  VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
-  VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
-  VaultDepositCap = 'vault__depositCap',
-  VaultDepositLimit = 'vault__depositLimit',
-  VaultDetails = 'vault__details',
-  VaultId = 'vault__id',
-  VaultInputTokenBalance = 'vault__inputTokenBalance',
-  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
-  VaultLastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
-  VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
-  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
-  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
-  VaultName = 'vault__name',
-  VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
-  VaultOutputTokenSupply = 'vault__outputTokenSupply',
-  VaultPricePerShare = 'vault__pricePerShare',
-  VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
-  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
-  VaultSymbol = 'vault__symbol',
-  VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
-  VaultWithdrawableTotalAssets = 'vault__withdrawableTotalAssets',
-  VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD'
+  averageRate = 'averageRate',
+  date = 'date',
+  id = 'id',
+  sumRates = 'sumRates',
+  updateCount = 'updateCount',
+  vault = 'vault',
+  vault__apr7d = 'vault__apr7d',
+  vault__apr30d = 'vault__apr30d',
+  vault__apr90d = 'vault__apr90d',
+  vault__apr180d = 'vault__apr180d',
+  vault__apr365d = 'vault__apr365d',
+  vault__calculatedApr = 'vault__calculatedApr',
+  vault__createdBlockNumber = 'vault__createdBlockNumber',
+  vault__createdTimestamp = 'vault__createdTimestamp',
+  vault__cumulativeProtocolSideRevenueUSD = 'vault__cumulativeProtocolSideRevenueUSD',
+  vault__cumulativeSupplySideRevenueUSD = 'vault__cumulativeSupplySideRevenueUSD',
+  vault__cumulativeTotalRevenueUSD = 'vault__cumulativeTotalRevenueUSD',
+  vault__depositCap = 'vault__depositCap',
+  vault__depositLimit = 'vault__depositLimit',
+  vault__details = 'vault__details',
+  vault__id = 'vault__id',
+  vault__inputTokenBalance = 'vault__inputTokenBalance',
+  vault__inputTokenPriceUSD = 'vault__inputTokenPriceUSD',
+  vault__lastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
+  vault__lastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  vault__maxRebalanceOperations = 'vault__maxRebalanceOperations',
+  vault__minimumBufferBalance = 'vault__minimumBufferBalance',
+  vault__name = 'vault__name',
+  vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
+  vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__pricePerShare = 'vault__pricePerShare',
+  vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  vault__stakingRewardsManager = 'vault__stakingRewardsManager',
+  vault__symbol = 'vault__symbol',
+  vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
+  vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
+  vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
 }
 
 export type Deposit = Event & {
@@ -1743,91 +1743,91 @@ export type Deposit_Filter = {
 };
 
 export enum Deposit_OrderBy {
-  Amount = 'amount',
-  AmountUsd = 'amountUSD',
-  Asset = 'asset',
-  AssetDecimals = 'asset__decimals',
-  AssetId = 'asset__id',
-  AssetLastPriceBlockNumber = 'asset__lastPriceBlockNumber',
-  AssetLastPriceUsd = 'asset__lastPriceUSD',
-  AssetName = 'asset__name',
-  AssetSymbol = 'asset__symbol',
-  BlockNumber = 'blockNumber',
-  From = 'from',
-  Hash = 'hash',
-  Id = 'id',
-  InputTokenBalance = 'inputTokenBalance',
-  InputTokenBalanceNormalizedUsd = 'inputTokenBalanceNormalizedUSD',
-  LogIndex = 'logIndex',
-  Position = 'position',
-  PositionCreatedBlockNumber = 'position__createdBlockNumber',
-  PositionCreatedTimestamp = 'position__createdTimestamp',
-  PositionId = 'position__id',
-  PositionInputTokenBalance = 'position__inputTokenBalance',
-  PositionInputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
-  PositionInputTokenBalanceNormalizedInUsd = 'position__inputTokenBalanceNormalizedInUSD',
-  PositionInputTokenDeposits = 'position__inputTokenDeposits',
-  PositionInputTokenDepositsNormalizedInUsd = 'position__inputTokenDepositsNormalizedInUSD',
-  PositionInputTokenWithdrawals = 'position__inputTokenWithdrawals',
-  PositionInputTokenWithdrawalsNormalizedInUsd = 'position__inputTokenWithdrawalsNormalizedInUSD',
-  PositionOutputTokenBalance = 'position__outputTokenBalance',
-  PositionStakedInputTokenBalance = 'position__stakedInputTokenBalance',
-  PositionStakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
-  PositionStakedInputTokenBalanceNormalizedInUsd = 'position__stakedInputTokenBalanceNormalizedInUSD',
-  PositionStakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
-  Protocol = 'protocol',
-  ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
-  ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
-  ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
-  ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
-  ProtocolId = 'protocol__id',
-  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
-  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
-  ProtocolLastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
-  ProtocolMethodologyVersion = 'protocol__methodologyVersion',
-  ProtocolName = 'protocol__name',
-  ProtocolNetwork = 'protocol__network',
-  ProtocolProtocolControlledValueUsd = 'protocol__protocolControlledValueUSD',
-  ProtocolSchemaVersion = 'protocol__schemaVersion',
-  ProtocolSlug = 'protocol__slug',
-  ProtocolSubgraphVersion = 'protocol__subgraphVersion',
-  ProtocolTotalPoolCount = 'protocol__totalPoolCount',
-  ProtocolTotalValueLockedUsd = 'protocol__totalValueLockedUSD',
-  ProtocolType = 'protocol__type',
-  Timestamp = 'timestamp',
-  To = 'to',
-  Vault = 'vault',
-  VaultApr7d = 'vault__apr7d',
-  VaultApr30d = 'vault__apr30d',
-  VaultApr90d = 'vault__apr90d',
-  VaultApr180d = 'vault__apr180d',
-  VaultApr365d = 'vault__apr365d',
-  VaultCalculatedApr = 'vault__calculatedApr',
-  VaultCreatedBlockNumber = 'vault__createdBlockNumber',
-  VaultCreatedTimestamp = 'vault__createdTimestamp',
-  VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
-  VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
-  VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
-  VaultDepositCap = 'vault__depositCap',
-  VaultDepositLimit = 'vault__depositLimit',
-  VaultDetails = 'vault__details',
-  VaultId = 'vault__id',
-  VaultInputTokenBalance = 'vault__inputTokenBalance',
-  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
-  VaultLastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
-  VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
-  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
-  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
-  VaultName = 'vault__name',
-  VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
-  VaultOutputTokenSupply = 'vault__outputTokenSupply',
-  VaultPricePerShare = 'vault__pricePerShare',
-  VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
-  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
-  VaultSymbol = 'vault__symbol',
-  VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
-  VaultWithdrawableTotalAssets = 'vault__withdrawableTotalAssets',
-  VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD'
+  amount = 'amount',
+  amountUSD = 'amountUSD',
+  asset = 'asset',
+  asset__decimals = 'asset__decimals',
+  asset__id = 'asset__id',
+  asset__lastPriceBlockNumber = 'asset__lastPriceBlockNumber',
+  asset__lastPriceUSD = 'asset__lastPriceUSD',
+  asset__name = 'asset__name',
+  asset__symbol = 'asset__symbol',
+  blockNumber = 'blockNumber',
+  from = 'from',
+  hash = 'hash',
+  id = 'id',
+  inputTokenBalance = 'inputTokenBalance',
+  inputTokenBalanceNormalizedUSD = 'inputTokenBalanceNormalizedUSD',
+  logIndex = 'logIndex',
+  position = 'position',
+  position__createdBlockNumber = 'position__createdBlockNumber',
+  position__createdTimestamp = 'position__createdTimestamp',
+  position__id = 'position__id',
+  position__inputTokenBalance = 'position__inputTokenBalance',
+  position__inputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
+  position__inputTokenBalanceNormalizedInUSD = 'position__inputTokenBalanceNormalizedInUSD',
+  position__inputTokenDeposits = 'position__inputTokenDeposits',
+  position__inputTokenDepositsNormalizedInUSD = 'position__inputTokenDepositsNormalizedInUSD',
+  position__inputTokenWithdrawals = 'position__inputTokenWithdrawals',
+  position__inputTokenWithdrawalsNormalizedInUSD = 'position__inputTokenWithdrawalsNormalizedInUSD',
+  position__outputTokenBalance = 'position__outputTokenBalance',
+  position__stakedInputTokenBalance = 'position__stakedInputTokenBalance',
+  position__stakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
+  position__stakedInputTokenBalanceNormalizedInUSD = 'position__stakedInputTokenBalanceNormalizedInUSD',
+  position__stakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
+  protocol = 'protocol',
+  protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
+  protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
+  protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
+  protocol__cumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
+  protocol__id = 'protocol__id',
+  protocol__lastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  protocol__lastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
+  protocol__lastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
+  protocol__methodologyVersion = 'protocol__methodologyVersion',
+  protocol__name = 'protocol__name',
+  protocol__network = 'protocol__network',
+  protocol__protocolControlledValueUSD = 'protocol__protocolControlledValueUSD',
+  protocol__schemaVersion = 'protocol__schemaVersion',
+  protocol__slug = 'protocol__slug',
+  protocol__subgraphVersion = 'protocol__subgraphVersion',
+  protocol__totalPoolCount = 'protocol__totalPoolCount',
+  protocol__totalValueLockedUSD = 'protocol__totalValueLockedUSD',
+  protocol__type = 'protocol__type',
+  timestamp = 'timestamp',
+  to = 'to',
+  vault = 'vault',
+  vault__apr7d = 'vault__apr7d',
+  vault__apr30d = 'vault__apr30d',
+  vault__apr90d = 'vault__apr90d',
+  vault__apr180d = 'vault__apr180d',
+  vault__apr365d = 'vault__apr365d',
+  vault__calculatedApr = 'vault__calculatedApr',
+  vault__createdBlockNumber = 'vault__createdBlockNumber',
+  vault__createdTimestamp = 'vault__createdTimestamp',
+  vault__cumulativeProtocolSideRevenueUSD = 'vault__cumulativeProtocolSideRevenueUSD',
+  vault__cumulativeSupplySideRevenueUSD = 'vault__cumulativeSupplySideRevenueUSD',
+  vault__cumulativeTotalRevenueUSD = 'vault__cumulativeTotalRevenueUSD',
+  vault__depositCap = 'vault__depositCap',
+  vault__depositLimit = 'vault__depositLimit',
+  vault__details = 'vault__details',
+  vault__id = 'vault__id',
+  vault__inputTokenBalance = 'vault__inputTokenBalance',
+  vault__inputTokenPriceUSD = 'vault__inputTokenPriceUSD',
+  vault__lastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
+  vault__lastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  vault__maxRebalanceOperations = 'vault__maxRebalanceOperations',
+  vault__minimumBufferBalance = 'vault__minimumBufferBalance',
+  vault__name = 'vault__name',
+  vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
+  vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__pricePerShare = 'vault__pricePerShare',
+  vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  vault__stakingRewardsManager = 'vault__stakingRewardsManager',
+  vault__symbol = 'vault__symbol',
+  vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
+  vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
+  vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
 }
 
 export type Disembark = Event & {
@@ -2059,96 +2059,96 @@ export type Disembark_Filter = {
 };
 
 export enum Disembark_OrderBy {
-  Amount = 'amount',
-  AmountUsd = 'amountUSD',
-  Ark = 'ark',
-  ArkCumulativeDeposits = 'ark___cumulativeDeposits',
-  ArkCumulativeWithdrawals = 'ark___cumulativeWithdrawals',
-  ArkLastUpdateInputTokenBalance = 'ark___lastUpdateInputTokenBalance',
-  ArkCalculatedApr = 'ark__calculatedApr',
-  ArkCreatedBlockNumber = 'ark__createdBlockNumber',
-  ArkCreatedTimestamp = 'ark__createdTimestamp',
-  ArkCumulativeEarnings = 'ark__cumulativeEarnings',
-  ArkCumulativeProtocolSideRevenueUsd = 'ark__cumulativeProtocolSideRevenueUSD',
-  ArkCumulativeSupplySideRevenueUsd = 'ark__cumulativeSupplySideRevenueUSD',
-  ArkCumulativeTotalRevenueUsd = 'ark__cumulativeTotalRevenueUSD',
-  ArkDepositCap = 'ark__depositCap',
-  ArkDepositLimit = 'ark__depositLimit',
-  ArkDetails = 'ark__details',
-  ArkId = 'ark__id',
-  ArkInputTokenBalance = 'ark__inputTokenBalance',
-  ArkLastUpdateTimestamp = 'ark__lastUpdateTimestamp',
-  ArkMaxDepositPercentageOfTvl = 'ark__maxDepositPercentageOfTVL',
-  ArkMaxRebalanceInflow = 'ark__maxRebalanceInflow',
-  ArkMaxRebalanceOutflow = 'ark__maxRebalanceOutflow',
-  ArkName = 'ark__name',
-  ArkRequiresKeeperData = 'ark__requiresKeeperData',
-  ArkTotalValueLockedUsd = 'ark__totalValueLockedUSD',
-  Asset = 'asset',
-  AssetDecimals = 'asset__decimals',
-  AssetId = 'asset__id',
-  AssetLastPriceBlockNumber = 'asset__lastPriceBlockNumber',
-  AssetLastPriceUsd = 'asset__lastPriceUSD',
-  AssetName = 'asset__name',
-  AssetSymbol = 'asset__symbol',
-  BlockNumber = 'blockNumber',
-  From = 'from',
-  Hash = 'hash',
-  Id = 'id',
-  LogIndex = 'logIndex',
-  Protocol = 'protocol',
-  ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
-  ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
-  ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
-  ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
-  ProtocolId = 'protocol__id',
-  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
-  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
-  ProtocolLastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
-  ProtocolMethodologyVersion = 'protocol__methodologyVersion',
-  ProtocolName = 'protocol__name',
-  ProtocolNetwork = 'protocol__network',
-  ProtocolProtocolControlledValueUsd = 'protocol__protocolControlledValueUSD',
-  ProtocolSchemaVersion = 'protocol__schemaVersion',
-  ProtocolSlug = 'protocol__slug',
-  ProtocolSubgraphVersion = 'protocol__subgraphVersion',
-  ProtocolTotalPoolCount = 'protocol__totalPoolCount',
-  ProtocolTotalValueLockedUsd = 'protocol__totalValueLockedUSD',
-  ProtocolType = 'protocol__type',
-  Timestamp = 'timestamp',
-  To = 'to',
-  Vault = 'vault',
-  VaultApr7d = 'vault__apr7d',
-  VaultApr30d = 'vault__apr30d',
-  VaultApr90d = 'vault__apr90d',
-  VaultApr180d = 'vault__apr180d',
-  VaultApr365d = 'vault__apr365d',
-  VaultCalculatedApr = 'vault__calculatedApr',
-  VaultCreatedBlockNumber = 'vault__createdBlockNumber',
-  VaultCreatedTimestamp = 'vault__createdTimestamp',
-  VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
-  VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
-  VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
-  VaultDepositCap = 'vault__depositCap',
-  VaultDepositLimit = 'vault__depositLimit',
-  VaultDetails = 'vault__details',
-  VaultId = 'vault__id',
-  VaultInputTokenBalance = 'vault__inputTokenBalance',
-  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
-  VaultLastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
-  VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
-  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
-  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
-  VaultName = 'vault__name',
-  VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
-  VaultOutputTokenSupply = 'vault__outputTokenSupply',
-  VaultPricePerShare = 'vault__pricePerShare',
-  VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
-  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
-  VaultSymbol = 'vault__symbol',
-  VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
-  VaultWithdrawableTotalAssets = 'vault__withdrawableTotalAssets',
-  VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD'
+  amount = 'amount',
+  amountUSD = 'amountUSD',
+  ark = 'ark',
+  ark___cumulativeDeposits = 'ark___cumulativeDeposits',
+  ark___cumulativeWithdrawals = 'ark___cumulativeWithdrawals',
+  ark___lastUpdateInputTokenBalance = 'ark___lastUpdateInputTokenBalance',
+  ark__calculatedApr = 'ark__calculatedApr',
+  ark__createdBlockNumber = 'ark__createdBlockNumber',
+  ark__createdTimestamp = 'ark__createdTimestamp',
+  ark__cumulativeEarnings = 'ark__cumulativeEarnings',
+  ark__cumulativeProtocolSideRevenueUSD = 'ark__cumulativeProtocolSideRevenueUSD',
+  ark__cumulativeSupplySideRevenueUSD = 'ark__cumulativeSupplySideRevenueUSD',
+  ark__cumulativeTotalRevenueUSD = 'ark__cumulativeTotalRevenueUSD',
+  ark__depositCap = 'ark__depositCap',
+  ark__depositLimit = 'ark__depositLimit',
+  ark__details = 'ark__details',
+  ark__id = 'ark__id',
+  ark__inputTokenBalance = 'ark__inputTokenBalance',
+  ark__lastUpdateTimestamp = 'ark__lastUpdateTimestamp',
+  ark__maxDepositPercentageOfTVL = 'ark__maxDepositPercentageOfTVL',
+  ark__maxRebalanceInflow = 'ark__maxRebalanceInflow',
+  ark__maxRebalanceOutflow = 'ark__maxRebalanceOutflow',
+  ark__name = 'ark__name',
+  ark__requiresKeeperData = 'ark__requiresKeeperData',
+  ark__totalValueLockedUSD = 'ark__totalValueLockedUSD',
+  asset = 'asset',
+  asset__decimals = 'asset__decimals',
+  asset__id = 'asset__id',
+  asset__lastPriceBlockNumber = 'asset__lastPriceBlockNumber',
+  asset__lastPriceUSD = 'asset__lastPriceUSD',
+  asset__name = 'asset__name',
+  asset__symbol = 'asset__symbol',
+  blockNumber = 'blockNumber',
+  from = 'from',
+  hash = 'hash',
+  id = 'id',
+  logIndex = 'logIndex',
+  protocol = 'protocol',
+  protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
+  protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
+  protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
+  protocol__cumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
+  protocol__id = 'protocol__id',
+  protocol__lastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  protocol__lastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
+  protocol__lastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
+  protocol__methodologyVersion = 'protocol__methodologyVersion',
+  protocol__name = 'protocol__name',
+  protocol__network = 'protocol__network',
+  protocol__protocolControlledValueUSD = 'protocol__protocolControlledValueUSD',
+  protocol__schemaVersion = 'protocol__schemaVersion',
+  protocol__slug = 'protocol__slug',
+  protocol__subgraphVersion = 'protocol__subgraphVersion',
+  protocol__totalPoolCount = 'protocol__totalPoolCount',
+  protocol__totalValueLockedUSD = 'protocol__totalValueLockedUSD',
+  protocol__type = 'protocol__type',
+  timestamp = 'timestamp',
+  to = 'to',
+  vault = 'vault',
+  vault__apr7d = 'vault__apr7d',
+  vault__apr30d = 'vault__apr30d',
+  vault__apr90d = 'vault__apr90d',
+  vault__apr180d = 'vault__apr180d',
+  vault__apr365d = 'vault__apr365d',
+  vault__calculatedApr = 'vault__calculatedApr',
+  vault__createdBlockNumber = 'vault__createdBlockNumber',
+  vault__createdTimestamp = 'vault__createdTimestamp',
+  vault__cumulativeProtocolSideRevenueUSD = 'vault__cumulativeProtocolSideRevenueUSD',
+  vault__cumulativeSupplySideRevenueUSD = 'vault__cumulativeSupplySideRevenueUSD',
+  vault__cumulativeTotalRevenueUSD = 'vault__cumulativeTotalRevenueUSD',
+  vault__depositCap = 'vault__depositCap',
+  vault__depositLimit = 'vault__depositLimit',
+  vault__details = 'vault__details',
+  vault__id = 'vault__id',
+  vault__inputTokenBalance = 'vault__inputTokenBalance',
+  vault__inputTokenPriceUSD = 'vault__inputTokenPriceUSD',
+  vault__lastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
+  vault__lastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  vault__maxRebalanceOperations = 'vault__maxRebalanceOperations',
+  vault__minimumBufferBalance = 'vault__minimumBufferBalance',
+  vault__name = 'vault__name',
+  vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
+  vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__pricePerShare = 'vault__pricePerShare',
+  vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  vault__stakingRewardsManager = 'vault__stakingRewardsManager',
+  vault__symbol = 'vault__symbol',
+  vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
+  vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
+  vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
 }
 
 /**
@@ -2300,32 +2300,32 @@ export type Event_Filter = {
 };
 
 export enum Event_OrderBy {
-  BlockNumber = 'blockNumber',
-  From = 'from',
-  Hash = 'hash',
-  Id = 'id',
-  LogIndex = 'logIndex',
-  Protocol = 'protocol',
-  ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
-  ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
-  ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
-  ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
-  ProtocolId = 'protocol__id',
-  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
-  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
-  ProtocolLastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
-  ProtocolMethodologyVersion = 'protocol__methodologyVersion',
-  ProtocolName = 'protocol__name',
-  ProtocolNetwork = 'protocol__network',
-  ProtocolProtocolControlledValueUsd = 'protocol__protocolControlledValueUSD',
-  ProtocolSchemaVersion = 'protocol__schemaVersion',
-  ProtocolSlug = 'protocol__slug',
-  ProtocolSubgraphVersion = 'protocol__subgraphVersion',
-  ProtocolTotalPoolCount = 'protocol__totalPoolCount',
-  ProtocolTotalValueLockedUsd = 'protocol__totalValueLockedUSD',
-  ProtocolType = 'protocol__type',
-  Timestamp = 'timestamp',
-  To = 'to'
+  blockNumber = 'blockNumber',
+  from = 'from',
+  hash = 'hash',
+  id = 'id',
+  logIndex = 'logIndex',
+  protocol = 'protocol',
+  protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
+  protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
+  protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
+  protocol__cumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
+  protocol__id = 'protocol__id',
+  protocol__lastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  protocol__lastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
+  protocol__lastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
+  protocol__methodologyVersion = 'protocol__methodologyVersion',
+  protocol__name = 'protocol__name',
+  protocol__network = 'protocol__network',
+  protocol__protocolControlledValueUSD = 'protocol__protocolControlledValueUSD',
+  protocol__schemaVersion = 'protocol__schemaVersion',
+  protocol__slug = 'protocol__slug',
+  protocol__subgraphVersion = 'protocol__subgraphVersion',
+  protocol__totalPoolCount = 'protocol__totalPoolCount',
+  protocol__totalValueLockedUSD = 'protocol__totalValueLockedUSD',
+  protocol__type = 'protocol__type',
+  timestamp = 'timestamp',
+  to = 'to'
 }
 
 export type FinancialsDailySnapshot = {
@@ -2473,36 +2473,36 @@ export type FinancialsDailySnapshot_Filter = {
 };
 
 export enum FinancialsDailySnapshot_OrderBy {
-  BlockNumber = 'blockNumber',
-  CumulativeProtocolSideRevenueUsd = 'cumulativeProtocolSideRevenueUSD',
-  CumulativeSupplySideRevenueUsd = 'cumulativeSupplySideRevenueUSD',
-  CumulativeTotalRevenueUsd = 'cumulativeTotalRevenueUSD',
-  DailyProtocolSideRevenueUsd = 'dailyProtocolSideRevenueUSD',
-  DailySupplySideRevenueUsd = 'dailySupplySideRevenueUSD',
-  DailyTotalRevenueUsd = 'dailyTotalRevenueUSD',
-  Id = 'id',
-  Protocol = 'protocol',
-  ProtocolControlledValueUsd = 'protocolControlledValueUSD',
-  ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
-  ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
-  ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
-  ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
-  ProtocolId = 'protocol__id',
-  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
-  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
-  ProtocolLastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
-  ProtocolMethodologyVersion = 'protocol__methodologyVersion',
-  ProtocolName = 'protocol__name',
-  ProtocolNetwork = 'protocol__network',
-  ProtocolProtocolControlledValueUsd = 'protocol__protocolControlledValueUSD',
-  ProtocolSchemaVersion = 'protocol__schemaVersion',
-  ProtocolSlug = 'protocol__slug',
-  ProtocolSubgraphVersion = 'protocol__subgraphVersion',
-  ProtocolTotalPoolCount = 'protocol__totalPoolCount',
-  ProtocolTotalValueLockedUsd = 'protocol__totalValueLockedUSD',
-  ProtocolType = 'protocol__type',
-  Timestamp = 'timestamp',
-  TotalValueLockedUsd = 'totalValueLockedUSD'
+  blockNumber = 'blockNumber',
+  cumulativeProtocolSideRevenueUSD = 'cumulativeProtocolSideRevenueUSD',
+  cumulativeSupplySideRevenueUSD = 'cumulativeSupplySideRevenueUSD',
+  cumulativeTotalRevenueUSD = 'cumulativeTotalRevenueUSD',
+  dailyProtocolSideRevenueUSD = 'dailyProtocolSideRevenueUSD',
+  dailySupplySideRevenueUSD = 'dailySupplySideRevenueUSD',
+  dailyTotalRevenueUSD = 'dailyTotalRevenueUSD',
+  id = 'id',
+  protocol = 'protocol',
+  protocolControlledValueUSD = 'protocolControlledValueUSD',
+  protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
+  protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
+  protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
+  protocol__cumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
+  protocol__id = 'protocol__id',
+  protocol__lastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  protocol__lastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
+  protocol__lastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
+  protocol__methodologyVersion = 'protocol__methodologyVersion',
+  protocol__name = 'protocol__name',
+  protocol__network = 'protocol__network',
+  protocol__protocolControlledValueUSD = 'protocol__protocolControlledValueUSD',
+  protocol__schemaVersion = 'protocol__schemaVersion',
+  protocol__slug = 'protocol__slug',
+  protocol__subgraphVersion = 'protocol__subgraphVersion',
+  protocol__totalPoolCount = 'protocol__totalPoolCount',
+  protocol__totalValueLockedUSD = 'protocol__totalValueLockedUSD',
+  protocol__type = 'protocol__type',
+  timestamp = 'timestamp',
+  totalValueLockedUSD = 'totalValueLockedUSD'
 }
 
 export type HourlyInterestRate = {
@@ -2584,74 +2584,74 @@ export type HourlyInterestRate_Filter = {
 };
 
 export enum HourlyInterestRate_OrderBy {
-  AverageRate = 'averageRate',
-  Date = 'date',
-  Id = 'id',
-  SumRates = 'sumRates',
-  UpdateCount = 'updateCount',
-  Vault = 'vault',
-  VaultApr7d = 'vault__apr7d',
-  VaultApr30d = 'vault__apr30d',
-  VaultApr90d = 'vault__apr90d',
-  VaultApr180d = 'vault__apr180d',
-  VaultApr365d = 'vault__apr365d',
-  VaultCalculatedApr = 'vault__calculatedApr',
-  VaultCreatedBlockNumber = 'vault__createdBlockNumber',
-  VaultCreatedTimestamp = 'vault__createdTimestamp',
-  VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
-  VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
-  VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
-  VaultDepositCap = 'vault__depositCap',
-  VaultDepositLimit = 'vault__depositLimit',
-  VaultDetails = 'vault__details',
-  VaultId = 'vault__id',
-  VaultInputTokenBalance = 'vault__inputTokenBalance',
-  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
-  VaultLastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
-  VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
-  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
-  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
-  VaultName = 'vault__name',
-  VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
-  VaultOutputTokenSupply = 'vault__outputTokenSupply',
-  VaultPricePerShare = 'vault__pricePerShare',
-  VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
-  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
-  VaultSymbol = 'vault__symbol',
-  VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
-  VaultWithdrawableTotalAssets = 'vault__withdrawableTotalAssets',
-  VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD'
+  averageRate = 'averageRate',
+  date = 'date',
+  id = 'id',
+  sumRates = 'sumRates',
+  updateCount = 'updateCount',
+  vault = 'vault',
+  vault__apr7d = 'vault__apr7d',
+  vault__apr30d = 'vault__apr30d',
+  vault__apr90d = 'vault__apr90d',
+  vault__apr180d = 'vault__apr180d',
+  vault__apr365d = 'vault__apr365d',
+  vault__calculatedApr = 'vault__calculatedApr',
+  vault__createdBlockNumber = 'vault__createdBlockNumber',
+  vault__createdTimestamp = 'vault__createdTimestamp',
+  vault__cumulativeProtocolSideRevenueUSD = 'vault__cumulativeProtocolSideRevenueUSD',
+  vault__cumulativeSupplySideRevenueUSD = 'vault__cumulativeSupplySideRevenueUSD',
+  vault__cumulativeTotalRevenueUSD = 'vault__cumulativeTotalRevenueUSD',
+  vault__depositCap = 'vault__depositCap',
+  vault__depositLimit = 'vault__depositLimit',
+  vault__details = 'vault__details',
+  vault__id = 'vault__id',
+  vault__inputTokenBalance = 'vault__inputTokenBalance',
+  vault__inputTokenPriceUSD = 'vault__inputTokenPriceUSD',
+  vault__lastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
+  vault__lastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  vault__maxRebalanceOperations = 'vault__maxRebalanceOperations',
+  vault__minimumBufferBalance = 'vault__minimumBufferBalance',
+  vault__name = 'vault__name',
+  vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
+  vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__pricePerShare = 'vault__pricePerShare',
+  vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  vault__stakingRewardsManager = 'vault__stakingRewardsManager',
+  vault__symbol = 'vault__symbol',
+  vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
+  vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
+  vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
 }
 
 export enum Network {
-  ArbitrumOne = 'ARBITRUM_ONE',
-  ArweaveMainnet = 'ARWEAVE_MAINNET',
-  Aurora = 'AURORA',
-  Avalanche = 'AVALANCHE',
-  Base = 'BASE',
-  Boba = 'BOBA',
-  Bsc = 'BSC',
-  Celo = 'CELO',
-  Cosmos = 'COSMOS',
-  Cronos = 'CRONOS',
-  Fantom = 'FANTOM',
-  Fuse = 'FUSE',
-  Gnosis = 'GNOSIS',
-  Harmony = 'HARMONY',
-  Juno = 'JUNO',
-  Mainnet = 'MAINNET',
-  Matic = 'MATIC',
-  Moonbeam = 'MOONBEAM',
-  Moonriver = 'MOONRIVER',
-  NearMainnet = 'NEAR_MAINNET',
-  Optimism = 'OPTIMISM',
-  Osmosis = 'OSMOSIS'
+  ARBITRUM_ONE = 'ARBITRUM_ONE',
+  ARWEAVE_MAINNET = 'ARWEAVE_MAINNET',
+  AURORA = 'AURORA',
+  AVALANCHE = 'AVALANCHE',
+  BASE = 'BASE',
+  BOBA = 'BOBA',
+  BSC = 'BSC',
+  CELO = 'CELO',
+  COSMOS = 'COSMOS',
+  CRONOS = 'CRONOS',
+  FANTOM = 'FANTOM',
+  FUSE = 'FUSE',
+  GNOSIS = 'GNOSIS',
+  HARMONY = 'HARMONY',
+  JUNO = 'JUNO',
+  MAINNET = 'MAINNET',
+  MATIC = 'MATIC',
+  MOONBEAM = 'MOONBEAM',
+  MOONRIVER = 'MOONRIVER',
+  NEAR_MAINNET = 'NEAR_MAINNET',
+  OPTIMISM = 'OPTIMISM',
+  OSMOSIS = 'OSMOSIS'
 }
 
 /** Defines the order direction, either ascending or descending */
 export enum OrderDirection {
-  Asc = 'asc',
-  Desc = 'desc'
+  asc = 'asc',
+  desc = 'desc'
 }
 
 export type Position = {
@@ -2887,31 +2887,31 @@ export type PositionDailySnapshot_Filter = {
 };
 
 export enum PositionDailySnapshot_OrderBy {
-  Id = 'id',
-  InputTokenBalance = 'inputTokenBalance',
-  InputTokenBalanceNormalizedInUsd = 'inputTokenBalanceNormalizedInUSD',
-  InputTokenDeposits = 'inputTokenDeposits',
-  InputTokenDepositsNormalizedInUsd = 'inputTokenDepositsNormalizedInUSD',
-  InputTokenWithdrawals = 'inputTokenWithdrawals',
-  InputTokenWithdrawalsNormalizedInUsd = 'inputTokenWithdrawalsNormalizedInUSD',
-  OutputTokenBalance = 'outputTokenBalance',
-  Position = 'position',
-  PositionCreatedBlockNumber = 'position__createdBlockNumber',
-  PositionCreatedTimestamp = 'position__createdTimestamp',
-  PositionId = 'position__id',
-  PositionInputTokenBalance = 'position__inputTokenBalance',
-  PositionInputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
-  PositionInputTokenBalanceNormalizedInUsd = 'position__inputTokenBalanceNormalizedInUSD',
-  PositionInputTokenDeposits = 'position__inputTokenDeposits',
-  PositionInputTokenDepositsNormalizedInUsd = 'position__inputTokenDepositsNormalizedInUSD',
-  PositionInputTokenWithdrawals = 'position__inputTokenWithdrawals',
-  PositionInputTokenWithdrawalsNormalizedInUsd = 'position__inputTokenWithdrawalsNormalizedInUSD',
-  PositionOutputTokenBalance = 'position__outputTokenBalance',
-  PositionStakedInputTokenBalance = 'position__stakedInputTokenBalance',
-  PositionStakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
-  PositionStakedInputTokenBalanceNormalizedInUsd = 'position__stakedInputTokenBalanceNormalizedInUSD',
-  PositionStakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
-  Timestamp = 'timestamp'
+  id = 'id',
+  inputTokenBalance = 'inputTokenBalance',
+  inputTokenBalanceNormalizedInUSD = 'inputTokenBalanceNormalizedInUSD',
+  inputTokenDeposits = 'inputTokenDeposits',
+  inputTokenDepositsNormalizedInUSD = 'inputTokenDepositsNormalizedInUSD',
+  inputTokenWithdrawals = 'inputTokenWithdrawals',
+  inputTokenWithdrawalsNormalizedInUSD = 'inputTokenWithdrawalsNormalizedInUSD',
+  outputTokenBalance = 'outputTokenBalance',
+  position = 'position',
+  position__createdBlockNumber = 'position__createdBlockNumber',
+  position__createdTimestamp = 'position__createdTimestamp',
+  position__id = 'position__id',
+  position__inputTokenBalance = 'position__inputTokenBalance',
+  position__inputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
+  position__inputTokenBalanceNormalizedInUSD = 'position__inputTokenBalanceNormalizedInUSD',
+  position__inputTokenDeposits = 'position__inputTokenDeposits',
+  position__inputTokenDepositsNormalizedInUSD = 'position__inputTokenDepositsNormalizedInUSD',
+  position__inputTokenWithdrawals = 'position__inputTokenWithdrawals',
+  position__inputTokenWithdrawalsNormalizedInUSD = 'position__inputTokenWithdrawalsNormalizedInUSD',
+  position__outputTokenBalance = 'position__outputTokenBalance',
+  position__stakedInputTokenBalance = 'position__stakedInputTokenBalance',
+  position__stakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
+  position__stakedInputTokenBalanceNormalizedInUSD = 'position__stakedInputTokenBalanceNormalizedInUSD',
+  position__stakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
+  timestamp = 'timestamp'
 }
 
 export type PositionHourlySnapshot = {
@@ -3039,31 +3039,31 @@ export type PositionHourlySnapshot_Filter = {
 };
 
 export enum PositionHourlySnapshot_OrderBy {
-  Id = 'id',
-  InputTokenBalance = 'inputTokenBalance',
-  InputTokenBalanceNormalizedInUsd = 'inputTokenBalanceNormalizedInUSD',
-  InputTokenDeposits = 'inputTokenDeposits',
-  InputTokenDepositsNormalizedInUsd = 'inputTokenDepositsNormalizedInUSD',
-  InputTokenWithdrawals = 'inputTokenWithdrawals',
-  InputTokenWithdrawalsNormalizedInUsd = 'inputTokenWithdrawalsNormalizedInUSD',
-  OutputTokenBalance = 'outputTokenBalance',
-  Position = 'position',
-  PositionCreatedBlockNumber = 'position__createdBlockNumber',
-  PositionCreatedTimestamp = 'position__createdTimestamp',
-  PositionId = 'position__id',
-  PositionInputTokenBalance = 'position__inputTokenBalance',
-  PositionInputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
-  PositionInputTokenBalanceNormalizedInUsd = 'position__inputTokenBalanceNormalizedInUSD',
-  PositionInputTokenDeposits = 'position__inputTokenDeposits',
-  PositionInputTokenDepositsNormalizedInUsd = 'position__inputTokenDepositsNormalizedInUSD',
-  PositionInputTokenWithdrawals = 'position__inputTokenWithdrawals',
-  PositionInputTokenWithdrawalsNormalizedInUsd = 'position__inputTokenWithdrawalsNormalizedInUSD',
-  PositionOutputTokenBalance = 'position__outputTokenBalance',
-  PositionStakedInputTokenBalance = 'position__stakedInputTokenBalance',
-  PositionStakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
-  PositionStakedInputTokenBalanceNormalizedInUsd = 'position__stakedInputTokenBalanceNormalizedInUSD',
-  PositionStakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
-  Timestamp = 'timestamp'
+  id = 'id',
+  inputTokenBalance = 'inputTokenBalance',
+  inputTokenBalanceNormalizedInUSD = 'inputTokenBalanceNormalizedInUSD',
+  inputTokenDeposits = 'inputTokenDeposits',
+  inputTokenDepositsNormalizedInUSD = 'inputTokenDepositsNormalizedInUSD',
+  inputTokenWithdrawals = 'inputTokenWithdrawals',
+  inputTokenWithdrawalsNormalizedInUSD = 'inputTokenWithdrawalsNormalizedInUSD',
+  outputTokenBalance = 'outputTokenBalance',
+  position = 'position',
+  position__createdBlockNumber = 'position__createdBlockNumber',
+  position__createdTimestamp = 'position__createdTimestamp',
+  position__id = 'position__id',
+  position__inputTokenBalance = 'position__inputTokenBalance',
+  position__inputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
+  position__inputTokenBalanceNormalizedInUSD = 'position__inputTokenBalanceNormalizedInUSD',
+  position__inputTokenDeposits = 'position__inputTokenDeposits',
+  position__inputTokenDepositsNormalizedInUSD = 'position__inputTokenDepositsNormalizedInUSD',
+  position__inputTokenWithdrawals = 'position__inputTokenWithdrawals',
+  position__inputTokenWithdrawalsNormalizedInUSD = 'position__inputTokenWithdrawalsNormalizedInUSD',
+  position__outputTokenBalance = 'position__outputTokenBalance',
+  position__stakedInputTokenBalance = 'position__stakedInputTokenBalance',
+  position__stakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
+  position__stakedInputTokenBalanceNormalizedInUSD = 'position__stakedInputTokenBalanceNormalizedInUSD',
+  position__stakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
+  timestamp = 'timestamp'
 }
 
 export type PositionWeeklySnapshot = {
@@ -3191,31 +3191,31 @@ export type PositionWeeklySnapshot_Filter = {
 };
 
 export enum PositionWeeklySnapshot_OrderBy {
-  Id = 'id',
-  InputTokenBalance = 'inputTokenBalance',
-  InputTokenBalanceNormalizedInUsd = 'inputTokenBalanceNormalizedInUSD',
-  InputTokenDeposits = 'inputTokenDeposits',
-  InputTokenDepositsNormalizedInUsd = 'inputTokenDepositsNormalizedInUSD',
-  InputTokenWithdrawals = 'inputTokenWithdrawals',
-  InputTokenWithdrawalsNormalizedInUsd = 'inputTokenWithdrawalsNormalizedInUSD',
-  OutputTokenBalance = 'outputTokenBalance',
-  Position = 'position',
-  PositionCreatedBlockNumber = 'position__createdBlockNumber',
-  PositionCreatedTimestamp = 'position__createdTimestamp',
-  PositionId = 'position__id',
-  PositionInputTokenBalance = 'position__inputTokenBalance',
-  PositionInputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
-  PositionInputTokenBalanceNormalizedInUsd = 'position__inputTokenBalanceNormalizedInUSD',
-  PositionInputTokenDeposits = 'position__inputTokenDeposits',
-  PositionInputTokenDepositsNormalizedInUsd = 'position__inputTokenDepositsNormalizedInUSD',
-  PositionInputTokenWithdrawals = 'position__inputTokenWithdrawals',
-  PositionInputTokenWithdrawalsNormalizedInUsd = 'position__inputTokenWithdrawalsNormalizedInUSD',
-  PositionOutputTokenBalance = 'position__outputTokenBalance',
-  PositionStakedInputTokenBalance = 'position__stakedInputTokenBalance',
-  PositionStakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
-  PositionStakedInputTokenBalanceNormalizedInUsd = 'position__stakedInputTokenBalanceNormalizedInUSD',
-  PositionStakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
-  Timestamp = 'timestamp'
+  id = 'id',
+  inputTokenBalance = 'inputTokenBalance',
+  inputTokenBalanceNormalizedInUSD = 'inputTokenBalanceNormalizedInUSD',
+  inputTokenDeposits = 'inputTokenDeposits',
+  inputTokenDepositsNormalizedInUSD = 'inputTokenDepositsNormalizedInUSD',
+  inputTokenWithdrawals = 'inputTokenWithdrawals',
+  inputTokenWithdrawalsNormalizedInUSD = 'inputTokenWithdrawalsNormalizedInUSD',
+  outputTokenBalance = 'outputTokenBalance',
+  position = 'position',
+  position__createdBlockNumber = 'position__createdBlockNumber',
+  position__createdTimestamp = 'position__createdTimestamp',
+  position__id = 'position__id',
+  position__inputTokenBalance = 'position__inputTokenBalance',
+  position__inputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
+  position__inputTokenBalanceNormalizedInUSD = 'position__inputTokenBalanceNormalizedInUSD',
+  position__inputTokenDeposits = 'position__inputTokenDeposits',
+  position__inputTokenDepositsNormalizedInUSD = 'position__inputTokenDepositsNormalizedInUSD',
+  position__inputTokenWithdrawals = 'position__inputTokenWithdrawals',
+  position__inputTokenWithdrawalsNormalizedInUSD = 'position__inputTokenWithdrawalsNormalizedInUSD',
+  position__outputTokenBalance = 'position__outputTokenBalance',
+  position__stakedInputTokenBalance = 'position__stakedInputTokenBalance',
+  position__stakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
+  position__stakedInputTokenBalanceNormalizedInUSD = 'position__stakedInputTokenBalanceNormalizedInUSD',
+  position__stakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
+  timestamp = 'timestamp'
 }
 
 export type Position_Filter = {
@@ -3395,62 +3395,62 @@ export type Position_Filter = {
 };
 
 export enum Position_OrderBy {
-  Account = 'account',
-  AccountId = 'account__id',
-  CreatedBlockNumber = 'createdBlockNumber',
-  CreatedTimestamp = 'createdTimestamp',
-  DailySnapshots = 'dailySnapshots',
-  Deposits = 'deposits',
-  HourlySnapshots = 'hourlySnapshots',
-  Id = 'id',
-  InputTokenBalance = 'inputTokenBalance',
-  InputTokenBalanceNormalized = 'inputTokenBalanceNormalized',
-  InputTokenBalanceNormalizedInUsd = 'inputTokenBalanceNormalizedInUSD',
-  InputTokenDeposits = 'inputTokenDeposits',
-  InputTokenDepositsNormalizedInUsd = 'inputTokenDepositsNormalizedInUSD',
-  InputTokenWithdrawals = 'inputTokenWithdrawals',
-  InputTokenWithdrawalsNormalizedInUsd = 'inputTokenWithdrawalsNormalizedInUSD',
-  OutputTokenBalance = 'outputTokenBalance',
-  StakedEvents = 'stakedEvents',
-  StakedInputTokenBalance = 'stakedInputTokenBalance',
-  StakedInputTokenBalanceNormalized = 'stakedInputTokenBalanceNormalized',
-  StakedInputTokenBalanceNormalizedInUsd = 'stakedInputTokenBalanceNormalizedInUSD',
-  StakedOutputTokenBalance = 'stakedOutputTokenBalance',
-  UnstakedEvents = 'unstakedEvents',
-  Vault = 'vault',
-  VaultApr7d = 'vault__apr7d',
-  VaultApr30d = 'vault__apr30d',
-  VaultApr90d = 'vault__apr90d',
-  VaultApr180d = 'vault__apr180d',
-  VaultApr365d = 'vault__apr365d',
-  VaultCalculatedApr = 'vault__calculatedApr',
-  VaultCreatedBlockNumber = 'vault__createdBlockNumber',
-  VaultCreatedTimestamp = 'vault__createdTimestamp',
-  VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
-  VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
-  VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
-  VaultDepositCap = 'vault__depositCap',
-  VaultDepositLimit = 'vault__depositLimit',
-  VaultDetails = 'vault__details',
-  VaultId = 'vault__id',
-  VaultInputTokenBalance = 'vault__inputTokenBalance',
-  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
-  VaultLastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
-  VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
-  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
-  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
-  VaultName = 'vault__name',
-  VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
-  VaultOutputTokenSupply = 'vault__outputTokenSupply',
-  VaultPricePerShare = 'vault__pricePerShare',
-  VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
-  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
-  VaultSymbol = 'vault__symbol',
-  VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
-  VaultWithdrawableTotalAssets = 'vault__withdrawableTotalAssets',
-  VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD',
-  WeeklySnapshots = 'weeklySnapshots',
-  Withdrawals = 'withdrawals'
+  account = 'account',
+  account__id = 'account__id',
+  createdBlockNumber = 'createdBlockNumber',
+  createdTimestamp = 'createdTimestamp',
+  dailySnapshots = 'dailySnapshots',
+  deposits = 'deposits',
+  hourlySnapshots = 'hourlySnapshots',
+  id = 'id',
+  inputTokenBalance = 'inputTokenBalance',
+  inputTokenBalanceNormalized = 'inputTokenBalanceNormalized',
+  inputTokenBalanceNormalizedInUSD = 'inputTokenBalanceNormalizedInUSD',
+  inputTokenDeposits = 'inputTokenDeposits',
+  inputTokenDepositsNormalizedInUSD = 'inputTokenDepositsNormalizedInUSD',
+  inputTokenWithdrawals = 'inputTokenWithdrawals',
+  inputTokenWithdrawalsNormalizedInUSD = 'inputTokenWithdrawalsNormalizedInUSD',
+  outputTokenBalance = 'outputTokenBalance',
+  stakedEvents = 'stakedEvents',
+  stakedInputTokenBalance = 'stakedInputTokenBalance',
+  stakedInputTokenBalanceNormalized = 'stakedInputTokenBalanceNormalized',
+  stakedInputTokenBalanceNormalizedInUSD = 'stakedInputTokenBalanceNormalizedInUSD',
+  stakedOutputTokenBalance = 'stakedOutputTokenBalance',
+  unstakedEvents = 'unstakedEvents',
+  vault = 'vault',
+  vault__apr7d = 'vault__apr7d',
+  vault__apr30d = 'vault__apr30d',
+  vault__apr90d = 'vault__apr90d',
+  vault__apr180d = 'vault__apr180d',
+  vault__apr365d = 'vault__apr365d',
+  vault__calculatedApr = 'vault__calculatedApr',
+  vault__createdBlockNumber = 'vault__createdBlockNumber',
+  vault__createdTimestamp = 'vault__createdTimestamp',
+  vault__cumulativeProtocolSideRevenueUSD = 'vault__cumulativeProtocolSideRevenueUSD',
+  vault__cumulativeSupplySideRevenueUSD = 'vault__cumulativeSupplySideRevenueUSD',
+  vault__cumulativeTotalRevenueUSD = 'vault__cumulativeTotalRevenueUSD',
+  vault__depositCap = 'vault__depositCap',
+  vault__depositLimit = 'vault__depositLimit',
+  vault__details = 'vault__details',
+  vault__id = 'vault__id',
+  vault__inputTokenBalance = 'vault__inputTokenBalance',
+  vault__inputTokenPriceUSD = 'vault__inputTokenPriceUSD',
+  vault__lastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
+  vault__lastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  vault__maxRebalanceOperations = 'vault__maxRebalanceOperations',
+  vault__minimumBufferBalance = 'vault__minimumBufferBalance',
+  vault__name = 'vault__name',
+  vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
+  vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__pricePerShare = 'vault__pricePerShare',
+  vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  vault__stakingRewardsManager = 'vault__stakingRewardsManager',
+  vault__symbol = 'vault__symbol',
+  vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
+  vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
+  vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD',
+  weeklySnapshots = 'weeklySnapshots',
+  withdrawals = 'withdrawals'
 }
 
 export type PostActionArkSnapshot = {
@@ -3604,87 +3604,87 @@ export type PostActionArkSnapshot_Filter = {
 };
 
 export enum PostActionArkSnapshot_OrderBy {
-  Apr = 'apr',
-  Ark = 'ark',
-  ArkCumulativeDeposits = 'ark___cumulativeDeposits',
-  ArkCumulativeWithdrawals = 'ark___cumulativeWithdrawals',
-  ArkLastUpdateInputTokenBalance = 'ark___lastUpdateInputTokenBalance',
-  ArkCalculatedApr = 'ark__calculatedApr',
-  ArkCreatedBlockNumber = 'ark__createdBlockNumber',
-  ArkCreatedTimestamp = 'ark__createdTimestamp',
-  ArkCumulativeEarnings = 'ark__cumulativeEarnings',
-  ArkCumulativeProtocolSideRevenueUsd = 'ark__cumulativeProtocolSideRevenueUSD',
-  ArkCumulativeSupplySideRevenueUsd = 'ark__cumulativeSupplySideRevenueUSD',
-  ArkCumulativeTotalRevenueUsd = 'ark__cumulativeTotalRevenueUSD',
-  ArkDepositCap = 'ark__depositCap',
-  ArkDepositLimit = 'ark__depositLimit',
-  ArkDetails = 'ark__details',
-  ArkId = 'ark__id',
-  ArkInputTokenBalance = 'ark__inputTokenBalance',
-  ArkLastUpdateTimestamp = 'ark__lastUpdateTimestamp',
-  ArkMaxDepositPercentageOfTvl = 'ark__maxDepositPercentageOfTVL',
-  ArkMaxRebalanceInflow = 'ark__maxRebalanceInflow',
-  ArkMaxRebalanceOutflow = 'ark__maxRebalanceOutflow',
-  ArkName = 'ark__name',
-  ArkRequiresKeeperData = 'ark__requiresKeeperData',
-  ArkTotalValueLockedUsd = 'ark__totalValueLockedUSD',
-  BlockNumber = 'blockNumber',
-  DepositLimit = 'depositLimit',
-  Id = 'id',
-  InputTokenBalance = 'inputTokenBalance',
-  Protocol = 'protocol',
-  ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
-  ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
-  ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
-  ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
-  ProtocolId = 'protocol__id',
-  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
-  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
-  ProtocolLastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
-  ProtocolMethodologyVersion = 'protocol__methodologyVersion',
-  ProtocolName = 'protocol__name',
-  ProtocolNetwork = 'protocol__network',
-  ProtocolProtocolControlledValueUsd = 'protocol__protocolControlledValueUSD',
-  ProtocolSchemaVersion = 'protocol__schemaVersion',
-  ProtocolSlug = 'protocol__slug',
-  ProtocolSubgraphVersion = 'protocol__subgraphVersion',
-  ProtocolTotalPoolCount = 'protocol__totalPoolCount',
-  ProtocolTotalValueLockedUsd = 'protocol__totalValueLockedUSD',
-  ProtocolType = 'protocol__type',
-  Timestamp = 'timestamp',
-  TotalValueLockedUsd = 'totalValueLockedUSD',
-  Vault = 'vault',
-  VaultApr7d = 'vault__apr7d',
-  VaultApr30d = 'vault__apr30d',
-  VaultApr90d = 'vault__apr90d',
-  VaultApr180d = 'vault__apr180d',
-  VaultApr365d = 'vault__apr365d',
-  VaultCalculatedApr = 'vault__calculatedApr',
-  VaultCreatedBlockNumber = 'vault__createdBlockNumber',
-  VaultCreatedTimestamp = 'vault__createdTimestamp',
-  VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
-  VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
-  VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
-  VaultDepositCap = 'vault__depositCap',
-  VaultDepositLimit = 'vault__depositLimit',
-  VaultDetails = 'vault__details',
-  VaultId = 'vault__id',
-  VaultInputTokenBalance = 'vault__inputTokenBalance',
-  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
-  VaultLastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
-  VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
-  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
-  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
-  VaultName = 'vault__name',
-  VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
-  VaultOutputTokenSupply = 'vault__outputTokenSupply',
-  VaultPricePerShare = 'vault__pricePerShare',
-  VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
-  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
-  VaultSymbol = 'vault__symbol',
-  VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
-  VaultWithdrawableTotalAssets = 'vault__withdrawableTotalAssets',
-  VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD'
+  apr = 'apr',
+  ark = 'ark',
+  ark___cumulativeDeposits = 'ark___cumulativeDeposits',
+  ark___cumulativeWithdrawals = 'ark___cumulativeWithdrawals',
+  ark___lastUpdateInputTokenBalance = 'ark___lastUpdateInputTokenBalance',
+  ark__calculatedApr = 'ark__calculatedApr',
+  ark__createdBlockNumber = 'ark__createdBlockNumber',
+  ark__createdTimestamp = 'ark__createdTimestamp',
+  ark__cumulativeEarnings = 'ark__cumulativeEarnings',
+  ark__cumulativeProtocolSideRevenueUSD = 'ark__cumulativeProtocolSideRevenueUSD',
+  ark__cumulativeSupplySideRevenueUSD = 'ark__cumulativeSupplySideRevenueUSD',
+  ark__cumulativeTotalRevenueUSD = 'ark__cumulativeTotalRevenueUSD',
+  ark__depositCap = 'ark__depositCap',
+  ark__depositLimit = 'ark__depositLimit',
+  ark__details = 'ark__details',
+  ark__id = 'ark__id',
+  ark__inputTokenBalance = 'ark__inputTokenBalance',
+  ark__lastUpdateTimestamp = 'ark__lastUpdateTimestamp',
+  ark__maxDepositPercentageOfTVL = 'ark__maxDepositPercentageOfTVL',
+  ark__maxRebalanceInflow = 'ark__maxRebalanceInflow',
+  ark__maxRebalanceOutflow = 'ark__maxRebalanceOutflow',
+  ark__name = 'ark__name',
+  ark__requiresKeeperData = 'ark__requiresKeeperData',
+  ark__totalValueLockedUSD = 'ark__totalValueLockedUSD',
+  blockNumber = 'blockNumber',
+  depositLimit = 'depositLimit',
+  id = 'id',
+  inputTokenBalance = 'inputTokenBalance',
+  protocol = 'protocol',
+  protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
+  protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
+  protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
+  protocol__cumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
+  protocol__id = 'protocol__id',
+  protocol__lastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  protocol__lastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
+  protocol__lastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
+  protocol__methodologyVersion = 'protocol__methodologyVersion',
+  protocol__name = 'protocol__name',
+  protocol__network = 'protocol__network',
+  protocol__protocolControlledValueUSD = 'protocol__protocolControlledValueUSD',
+  protocol__schemaVersion = 'protocol__schemaVersion',
+  protocol__slug = 'protocol__slug',
+  protocol__subgraphVersion = 'protocol__subgraphVersion',
+  protocol__totalPoolCount = 'protocol__totalPoolCount',
+  protocol__totalValueLockedUSD = 'protocol__totalValueLockedUSD',
+  protocol__type = 'protocol__type',
+  timestamp = 'timestamp',
+  totalValueLockedUSD = 'totalValueLockedUSD',
+  vault = 'vault',
+  vault__apr7d = 'vault__apr7d',
+  vault__apr30d = 'vault__apr30d',
+  vault__apr90d = 'vault__apr90d',
+  vault__apr180d = 'vault__apr180d',
+  vault__apr365d = 'vault__apr365d',
+  vault__calculatedApr = 'vault__calculatedApr',
+  vault__createdBlockNumber = 'vault__createdBlockNumber',
+  vault__createdTimestamp = 'vault__createdTimestamp',
+  vault__cumulativeProtocolSideRevenueUSD = 'vault__cumulativeProtocolSideRevenueUSD',
+  vault__cumulativeSupplySideRevenueUSD = 'vault__cumulativeSupplySideRevenueUSD',
+  vault__cumulativeTotalRevenueUSD = 'vault__cumulativeTotalRevenueUSD',
+  vault__depositCap = 'vault__depositCap',
+  vault__depositLimit = 'vault__depositLimit',
+  vault__details = 'vault__details',
+  vault__id = 'vault__id',
+  vault__inputTokenBalance = 'vault__inputTokenBalance',
+  vault__inputTokenPriceUSD = 'vault__inputTokenPriceUSD',
+  vault__lastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
+  vault__lastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  vault__maxRebalanceOperations = 'vault__maxRebalanceOperations',
+  vault__minimumBufferBalance = 'vault__minimumBufferBalance',
+  vault__name = 'vault__name',
+  vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
+  vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__pricePerShare = 'vault__pricePerShare',
+  vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  vault__stakingRewardsManager = 'vault__stakingRewardsManager',
+  vault__symbol = 'vault__symbol',
+  vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
+  vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
+  vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
 }
 
 export type PostActionVaultSnapshot = {
@@ -3845,67 +3845,67 @@ export type PostActionVaultSnapshot_Filter = {
 };
 
 export enum PostActionVaultSnapshot_OrderBy {
-  Apr = 'apr',
-  BlockNumber = 'blockNumber',
-  Id = 'id',
-  InputTokenBalance = 'inputTokenBalance',
-  InputTokenPriceUsd = 'inputTokenPriceUSD',
-  OutputTokenPriceUsd = 'outputTokenPriceUSD',
-  OutputTokenSupply = 'outputTokenSupply',
-  PricePerShare = 'pricePerShare',
-  Protocol = 'protocol',
-  ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
-  ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
-  ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
-  ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
-  ProtocolId = 'protocol__id',
-  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
-  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
-  ProtocolLastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
-  ProtocolMethodologyVersion = 'protocol__methodologyVersion',
-  ProtocolName = 'protocol__name',
-  ProtocolNetwork = 'protocol__network',
-  ProtocolProtocolControlledValueUsd = 'protocol__protocolControlledValueUSD',
-  ProtocolSchemaVersion = 'protocol__schemaVersion',
-  ProtocolSlug = 'protocol__slug',
-  ProtocolSubgraphVersion = 'protocol__subgraphVersion',
-  ProtocolTotalPoolCount = 'protocol__totalPoolCount',
-  ProtocolTotalValueLockedUsd = 'protocol__totalValueLockedUSD',
-  ProtocolType = 'protocol__type',
-  Timestamp = 'timestamp',
-  TotalValueLockedUsd = 'totalValueLockedUSD',
-  Vault = 'vault',
-  VaultApr7d = 'vault__apr7d',
-  VaultApr30d = 'vault__apr30d',
-  VaultApr90d = 'vault__apr90d',
-  VaultApr180d = 'vault__apr180d',
-  VaultApr365d = 'vault__apr365d',
-  VaultCalculatedApr = 'vault__calculatedApr',
-  VaultCreatedBlockNumber = 'vault__createdBlockNumber',
-  VaultCreatedTimestamp = 'vault__createdTimestamp',
-  VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
-  VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
-  VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
-  VaultDepositCap = 'vault__depositCap',
-  VaultDepositLimit = 'vault__depositLimit',
-  VaultDetails = 'vault__details',
-  VaultId = 'vault__id',
-  VaultInputTokenBalance = 'vault__inputTokenBalance',
-  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
-  VaultLastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
-  VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
-  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
-  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
-  VaultName = 'vault__name',
-  VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
-  VaultOutputTokenSupply = 'vault__outputTokenSupply',
-  VaultPricePerShare = 'vault__pricePerShare',
-  VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
-  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
-  VaultSymbol = 'vault__symbol',
-  VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
-  VaultWithdrawableTotalAssets = 'vault__withdrawableTotalAssets',
-  VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD'
+  apr = 'apr',
+  blockNumber = 'blockNumber',
+  id = 'id',
+  inputTokenBalance = 'inputTokenBalance',
+  inputTokenPriceUSD = 'inputTokenPriceUSD',
+  outputTokenPriceUSD = 'outputTokenPriceUSD',
+  outputTokenSupply = 'outputTokenSupply',
+  pricePerShare = 'pricePerShare',
+  protocol = 'protocol',
+  protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
+  protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
+  protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
+  protocol__cumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
+  protocol__id = 'protocol__id',
+  protocol__lastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  protocol__lastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
+  protocol__lastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
+  protocol__methodologyVersion = 'protocol__methodologyVersion',
+  protocol__name = 'protocol__name',
+  protocol__network = 'protocol__network',
+  protocol__protocolControlledValueUSD = 'protocol__protocolControlledValueUSD',
+  protocol__schemaVersion = 'protocol__schemaVersion',
+  protocol__slug = 'protocol__slug',
+  protocol__subgraphVersion = 'protocol__subgraphVersion',
+  protocol__totalPoolCount = 'protocol__totalPoolCount',
+  protocol__totalValueLockedUSD = 'protocol__totalValueLockedUSD',
+  protocol__type = 'protocol__type',
+  timestamp = 'timestamp',
+  totalValueLockedUSD = 'totalValueLockedUSD',
+  vault = 'vault',
+  vault__apr7d = 'vault__apr7d',
+  vault__apr30d = 'vault__apr30d',
+  vault__apr90d = 'vault__apr90d',
+  vault__apr180d = 'vault__apr180d',
+  vault__apr365d = 'vault__apr365d',
+  vault__calculatedApr = 'vault__calculatedApr',
+  vault__createdBlockNumber = 'vault__createdBlockNumber',
+  vault__createdTimestamp = 'vault__createdTimestamp',
+  vault__cumulativeProtocolSideRevenueUSD = 'vault__cumulativeProtocolSideRevenueUSD',
+  vault__cumulativeSupplySideRevenueUSD = 'vault__cumulativeSupplySideRevenueUSD',
+  vault__cumulativeTotalRevenueUSD = 'vault__cumulativeTotalRevenueUSD',
+  vault__depositCap = 'vault__depositCap',
+  vault__depositLimit = 'vault__depositLimit',
+  vault__details = 'vault__details',
+  vault__id = 'vault__id',
+  vault__inputTokenBalance = 'vault__inputTokenBalance',
+  vault__inputTokenPriceUSD = 'vault__inputTokenPriceUSD',
+  vault__lastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
+  vault__lastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  vault__maxRebalanceOperations = 'vault__maxRebalanceOperations',
+  vault__minimumBufferBalance = 'vault__minimumBufferBalance',
+  vault__name = 'vault__name',
+  vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
+  vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__pricePerShare = 'vault__pricePerShare',
+  vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  vault__stakingRewardsManager = 'vault__stakingRewardsManager',
+  vault__symbol = 'vault__symbol',
+  vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
+  vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
+  vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
 }
 
 export type Protocol = {
@@ -3975,11 +3975,11 @@ export type ProtocolHourlyUsageMetricsArgs = {
 };
 
 export enum ProtocolType {
-  Bridge = 'BRIDGE',
-  Exchange = 'EXCHANGE',
-  Generic = 'GENERIC',
-  Lending = 'LENDING',
-  Yield = 'YIELD'
+  BRIDGE = 'BRIDGE',
+  EXCHANGE = 'EXCHANGE',
+  GENERIC = 'GENERIC',
+  LENDING = 'LENDING',
+  YIELD = 'YIELD'
 }
 
 export type Protocol_Filter = {
@@ -4165,24 +4165,24 @@ export type Protocol_Filter = {
 };
 
 export enum Protocol_OrderBy {
-  CumulativeProtocolSideRevenueUsd = 'cumulativeProtocolSideRevenueUSD',
-  CumulativeSupplySideRevenueUsd = 'cumulativeSupplySideRevenueUSD',
-  CumulativeTotalRevenueUsd = 'cumulativeTotalRevenueUSD',
-  CumulativeUniqueUsers = 'cumulativeUniqueUsers',
-  DailyUsageMetrics = 'dailyUsageMetrics',
-  FinancialMetrics = 'financialMetrics',
-  HourlyUsageMetrics = 'hourlyUsageMetrics',
-  Id = 'id',
-  MethodologyVersion = 'methodologyVersion',
-  Name = 'name',
-  Network = 'network',
-  ProtocolControlledValueUsd = 'protocolControlledValueUSD',
-  SchemaVersion = 'schemaVersion',
-  Slug = 'slug',
-  SubgraphVersion = 'subgraphVersion',
-  TotalPoolCount = 'totalPoolCount',
-  TotalValueLockedUsd = 'totalValueLockedUSD',
-  Type = 'type'
+  cumulativeProtocolSideRevenueUSD = 'cumulativeProtocolSideRevenueUSD',
+  cumulativeSupplySideRevenueUSD = 'cumulativeSupplySideRevenueUSD',
+  cumulativeTotalRevenueUSD = 'cumulativeTotalRevenueUSD',
+  cumulativeUniqueUsers = 'cumulativeUniqueUsers',
+  dailyUsageMetrics = 'dailyUsageMetrics',
+  financialMetrics = 'financialMetrics',
+  hourlyUsageMetrics = 'hourlyUsageMetrics',
+  id = 'id',
+  methodologyVersion = 'methodologyVersion',
+  name = 'name',
+  network = 'network',
+  protocolControlledValueUSD = 'protocolControlledValueUSD',
+  schemaVersion = 'schemaVersion',
+  slug = 'slug',
+  subgraphVersion = 'subgraphVersion',
+  totalPoolCount = 'totalPoolCount',
+  totalValueLockedUSD = 'totalValueLockedUSD',
+  type = 'type'
 }
 
 export type Query = {
@@ -5171,133 +5171,133 @@ export type Rebalance_Filter = {
 };
 
 export enum Rebalance_OrderBy {
-  Amount = 'amount',
-  AmountUsd = 'amountUSD',
-  Asset = 'asset',
-  AssetDecimals = 'asset__decimals',
-  AssetId = 'asset__id',
-  AssetLastPriceBlockNumber = 'asset__lastPriceBlockNumber',
-  AssetLastPriceUsd = 'asset__lastPriceUSD',
-  AssetName = 'asset__name',
-  AssetSymbol = 'asset__symbol',
-  BlockNumber = 'blockNumber',
-  From = 'from',
-  FromPostAction = 'fromPostAction',
-  FromPostActionApr = 'fromPostAction__apr',
-  FromPostActionBlockNumber = 'fromPostAction__blockNumber',
-  FromPostActionDepositLimit = 'fromPostAction__depositLimit',
-  FromPostActionId = 'fromPostAction__id',
-  FromPostActionInputTokenBalance = 'fromPostAction__inputTokenBalance',
-  FromPostActionTimestamp = 'fromPostAction__timestamp',
-  FromPostActionTotalValueLockedUsd = 'fromPostAction__totalValueLockedUSD',
-  FromCumulativeDeposits = 'from___cumulativeDeposits',
-  FromCumulativeWithdrawals = 'from___cumulativeWithdrawals',
-  FromLastUpdateInputTokenBalance = 'from___lastUpdateInputTokenBalance',
-  FromCalculatedApr = 'from__calculatedApr',
-  FromCreatedBlockNumber = 'from__createdBlockNumber',
-  FromCreatedTimestamp = 'from__createdTimestamp',
-  FromCumulativeEarnings = 'from__cumulativeEarnings',
-  FromCumulativeProtocolSideRevenueUsd = 'from__cumulativeProtocolSideRevenueUSD',
-  FromCumulativeSupplySideRevenueUsd = 'from__cumulativeSupplySideRevenueUSD',
-  FromCumulativeTotalRevenueUsd = 'from__cumulativeTotalRevenueUSD',
-  FromDepositCap = 'from__depositCap',
-  FromDepositLimit = 'from__depositLimit',
-  FromDetails = 'from__details',
-  FromId = 'from__id',
-  FromInputTokenBalance = 'from__inputTokenBalance',
-  FromLastUpdateTimestamp = 'from__lastUpdateTimestamp',
-  FromMaxDepositPercentageOfTvl = 'from__maxDepositPercentageOfTVL',
-  FromMaxRebalanceInflow = 'from__maxRebalanceInflow',
-  FromMaxRebalanceOutflow = 'from__maxRebalanceOutflow',
-  FromName = 'from__name',
-  FromRequiresKeeperData = 'from__requiresKeeperData',
-  FromTotalValueLockedUsd = 'from__totalValueLockedUSD',
-  Hash = 'hash',
-  Id = 'id',
-  LogIndex = 'logIndex',
-  Protocol = 'protocol',
-  ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
-  ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
-  ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
-  ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
-  ProtocolId = 'protocol__id',
-  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
-  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
-  ProtocolLastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
-  ProtocolMethodologyVersion = 'protocol__methodologyVersion',
-  ProtocolName = 'protocol__name',
-  ProtocolNetwork = 'protocol__network',
-  ProtocolProtocolControlledValueUsd = 'protocol__protocolControlledValueUSD',
-  ProtocolSchemaVersion = 'protocol__schemaVersion',
-  ProtocolSlug = 'protocol__slug',
-  ProtocolSubgraphVersion = 'protocol__subgraphVersion',
-  ProtocolTotalPoolCount = 'protocol__totalPoolCount',
-  ProtocolTotalValueLockedUsd = 'protocol__totalValueLockedUSD',
-  ProtocolType = 'protocol__type',
-  Timestamp = 'timestamp',
-  To = 'to',
-  ToPostAction = 'toPostAction',
-  ToPostActionApr = 'toPostAction__apr',
-  ToPostActionBlockNumber = 'toPostAction__blockNumber',
-  ToPostActionDepositLimit = 'toPostAction__depositLimit',
-  ToPostActionId = 'toPostAction__id',
-  ToPostActionInputTokenBalance = 'toPostAction__inputTokenBalance',
-  ToPostActionTimestamp = 'toPostAction__timestamp',
-  ToPostActionTotalValueLockedUsd = 'toPostAction__totalValueLockedUSD',
-  ToCumulativeDeposits = 'to___cumulativeDeposits',
-  ToCumulativeWithdrawals = 'to___cumulativeWithdrawals',
-  ToLastUpdateInputTokenBalance = 'to___lastUpdateInputTokenBalance',
-  ToCalculatedApr = 'to__calculatedApr',
-  ToCreatedBlockNumber = 'to__createdBlockNumber',
-  ToCreatedTimestamp = 'to__createdTimestamp',
-  ToCumulativeEarnings = 'to__cumulativeEarnings',
-  ToCumulativeProtocolSideRevenueUsd = 'to__cumulativeProtocolSideRevenueUSD',
-  ToCumulativeSupplySideRevenueUsd = 'to__cumulativeSupplySideRevenueUSD',
-  ToCumulativeTotalRevenueUsd = 'to__cumulativeTotalRevenueUSD',
-  ToDepositCap = 'to__depositCap',
-  ToDepositLimit = 'to__depositLimit',
-  ToDetails = 'to__details',
-  ToId = 'to__id',
-  ToInputTokenBalance = 'to__inputTokenBalance',
-  ToLastUpdateTimestamp = 'to__lastUpdateTimestamp',
-  ToMaxDepositPercentageOfTvl = 'to__maxDepositPercentageOfTVL',
-  ToMaxRebalanceInflow = 'to__maxRebalanceInflow',
-  ToMaxRebalanceOutflow = 'to__maxRebalanceOutflow',
-  ToName = 'to__name',
-  ToRequiresKeeperData = 'to__requiresKeeperData',
-  ToTotalValueLockedUsd = 'to__totalValueLockedUSD',
-  Vault = 'vault',
-  VaultApr7d = 'vault__apr7d',
-  VaultApr30d = 'vault__apr30d',
-  VaultApr90d = 'vault__apr90d',
-  VaultApr180d = 'vault__apr180d',
-  VaultApr365d = 'vault__apr365d',
-  VaultCalculatedApr = 'vault__calculatedApr',
-  VaultCreatedBlockNumber = 'vault__createdBlockNumber',
-  VaultCreatedTimestamp = 'vault__createdTimestamp',
-  VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
-  VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
-  VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
-  VaultDepositCap = 'vault__depositCap',
-  VaultDepositLimit = 'vault__depositLimit',
-  VaultDetails = 'vault__details',
-  VaultId = 'vault__id',
-  VaultInputTokenBalance = 'vault__inputTokenBalance',
-  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
-  VaultLastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
-  VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
-  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
-  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
-  VaultName = 'vault__name',
-  VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
-  VaultOutputTokenSupply = 'vault__outputTokenSupply',
-  VaultPricePerShare = 'vault__pricePerShare',
-  VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
-  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
-  VaultSymbol = 'vault__symbol',
-  VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
-  VaultWithdrawableTotalAssets = 'vault__withdrawableTotalAssets',
-  VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD'
+  amount = 'amount',
+  amountUSD = 'amountUSD',
+  asset = 'asset',
+  asset__decimals = 'asset__decimals',
+  asset__id = 'asset__id',
+  asset__lastPriceBlockNumber = 'asset__lastPriceBlockNumber',
+  asset__lastPriceUSD = 'asset__lastPriceUSD',
+  asset__name = 'asset__name',
+  asset__symbol = 'asset__symbol',
+  blockNumber = 'blockNumber',
+  from = 'from',
+  fromPostAction = 'fromPostAction',
+  fromPostAction__apr = 'fromPostAction__apr',
+  fromPostAction__blockNumber = 'fromPostAction__blockNumber',
+  fromPostAction__depositLimit = 'fromPostAction__depositLimit',
+  fromPostAction__id = 'fromPostAction__id',
+  fromPostAction__inputTokenBalance = 'fromPostAction__inputTokenBalance',
+  fromPostAction__timestamp = 'fromPostAction__timestamp',
+  fromPostAction__totalValueLockedUSD = 'fromPostAction__totalValueLockedUSD',
+  from___cumulativeDeposits = 'from___cumulativeDeposits',
+  from___cumulativeWithdrawals = 'from___cumulativeWithdrawals',
+  from___lastUpdateInputTokenBalance = 'from___lastUpdateInputTokenBalance',
+  from__calculatedApr = 'from__calculatedApr',
+  from__createdBlockNumber = 'from__createdBlockNumber',
+  from__createdTimestamp = 'from__createdTimestamp',
+  from__cumulativeEarnings = 'from__cumulativeEarnings',
+  from__cumulativeProtocolSideRevenueUSD = 'from__cumulativeProtocolSideRevenueUSD',
+  from__cumulativeSupplySideRevenueUSD = 'from__cumulativeSupplySideRevenueUSD',
+  from__cumulativeTotalRevenueUSD = 'from__cumulativeTotalRevenueUSD',
+  from__depositCap = 'from__depositCap',
+  from__depositLimit = 'from__depositLimit',
+  from__details = 'from__details',
+  from__id = 'from__id',
+  from__inputTokenBalance = 'from__inputTokenBalance',
+  from__lastUpdateTimestamp = 'from__lastUpdateTimestamp',
+  from__maxDepositPercentageOfTVL = 'from__maxDepositPercentageOfTVL',
+  from__maxRebalanceInflow = 'from__maxRebalanceInflow',
+  from__maxRebalanceOutflow = 'from__maxRebalanceOutflow',
+  from__name = 'from__name',
+  from__requiresKeeperData = 'from__requiresKeeperData',
+  from__totalValueLockedUSD = 'from__totalValueLockedUSD',
+  hash = 'hash',
+  id = 'id',
+  logIndex = 'logIndex',
+  protocol = 'protocol',
+  protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
+  protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
+  protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
+  protocol__cumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
+  protocol__id = 'protocol__id',
+  protocol__lastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  protocol__lastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
+  protocol__lastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
+  protocol__methodologyVersion = 'protocol__methodologyVersion',
+  protocol__name = 'protocol__name',
+  protocol__network = 'protocol__network',
+  protocol__protocolControlledValueUSD = 'protocol__protocolControlledValueUSD',
+  protocol__schemaVersion = 'protocol__schemaVersion',
+  protocol__slug = 'protocol__slug',
+  protocol__subgraphVersion = 'protocol__subgraphVersion',
+  protocol__totalPoolCount = 'protocol__totalPoolCount',
+  protocol__totalValueLockedUSD = 'protocol__totalValueLockedUSD',
+  protocol__type = 'protocol__type',
+  timestamp = 'timestamp',
+  to = 'to',
+  toPostAction = 'toPostAction',
+  toPostAction__apr = 'toPostAction__apr',
+  toPostAction__blockNumber = 'toPostAction__blockNumber',
+  toPostAction__depositLimit = 'toPostAction__depositLimit',
+  toPostAction__id = 'toPostAction__id',
+  toPostAction__inputTokenBalance = 'toPostAction__inputTokenBalance',
+  toPostAction__timestamp = 'toPostAction__timestamp',
+  toPostAction__totalValueLockedUSD = 'toPostAction__totalValueLockedUSD',
+  to___cumulativeDeposits = 'to___cumulativeDeposits',
+  to___cumulativeWithdrawals = 'to___cumulativeWithdrawals',
+  to___lastUpdateInputTokenBalance = 'to___lastUpdateInputTokenBalance',
+  to__calculatedApr = 'to__calculatedApr',
+  to__createdBlockNumber = 'to__createdBlockNumber',
+  to__createdTimestamp = 'to__createdTimestamp',
+  to__cumulativeEarnings = 'to__cumulativeEarnings',
+  to__cumulativeProtocolSideRevenueUSD = 'to__cumulativeProtocolSideRevenueUSD',
+  to__cumulativeSupplySideRevenueUSD = 'to__cumulativeSupplySideRevenueUSD',
+  to__cumulativeTotalRevenueUSD = 'to__cumulativeTotalRevenueUSD',
+  to__depositCap = 'to__depositCap',
+  to__depositLimit = 'to__depositLimit',
+  to__details = 'to__details',
+  to__id = 'to__id',
+  to__inputTokenBalance = 'to__inputTokenBalance',
+  to__lastUpdateTimestamp = 'to__lastUpdateTimestamp',
+  to__maxDepositPercentageOfTVL = 'to__maxDepositPercentageOfTVL',
+  to__maxRebalanceInflow = 'to__maxRebalanceInflow',
+  to__maxRebalanceOutflow = 'to__maxRebalanceOutflow',
+  to__name = 'to__name',
+  to__requiresKeeperData = 'to__requiresKeeperData',
+  to__totalValueLockedUSD = 'to__totalValueLockedUSD',
+  vault = 'vault',
+  vault__apr7d = 'vault__apr7d',
+  vault__apr30d = 'vault__apr30d',
+  vault__apr90d = 'vault__apr90d',
+  vault__apr180d = 'vault__apr180d',
+  vault__apr365d = 'vault__apr365d',
+  vault__calculatedApr = 'vault__calculatedApr',
+  vault__createdBlockNumber = 'vault__createdBlockNumber',
+  vault__createdTimestamp = 'vault__createdTimestamp',
+  vault__cumulativeProtocolSideRevenueUSD = 'vault__cumulativeProtocolSideRevenueUSD',
+  vault__cumulativeSupplySideRevenueUSD = 'vault__cumulativeSupplySideRevenueUSD',
+  vault__cumulativeTotalRevenueUSD = 'vault__cumulativeTotalRevenueUSD',
+  vault__depositCap = 'vault__depositCap',
+  vault__depositLimit = 'vault__depositLimit',
+  vault__details = 'vault__details',
+  vault__id = 'vault__id',
+  vault__inputTokenBalance = 'vault__inputTokenBalance',
+  vault__inputTokenPriceUSD = 'vault__inputTokenPriceUSD',
+  vault__lastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
+  vault__lastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  vault__maxRebalanceOperations = 'vault__maxRebalanceOperations',
+  vault__minimumBufferBalance = 'vault__minimumBufferBalance',
+  vault__name = 'vault__name',
+  vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
+  vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__pricePerShare = 'vault__pricePerShare',
+  vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  vault__stakingRewardsManager = 'vault__stakingRewardsManager',
+  vault__symbol = 'vault__symbol',
+  vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
+  vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
+  vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
 }
 
 export type RewardToken = {
@@ -5312,9 +5312,9 @@ export type RewardToken = {
 
 export enum RewardTokenType {
   /**  For reward tokens awarded to borrowers  */
-  Borrow = 'BORROW',
+  BORROW = 'BORROW',
   /**  For reward tokens awarded to LPs/lenders  */
-  Deposit = 'DEPOSIT'
+  DEPOSIT = 'DEPOSIT'
 }
 
 export type RewardToken_Filter = {
@@ -5358,15 +5358,15 @@ export type RewardToken_Filter = {
 };
 
 export enum RewardToken_OrderBy {
-  Id = 'id',
-  Token = 'token',
-  TokenDecimals = 'token__decimals',
-  TokenId = 'token__id',
-  TokenLastPriceBlockNumber = 'token__lastPriceBlockNumber',
-  TokenLastPriceUsd = 'token__lastPriceUSD',
-  TokenName = 'token__name',
-  TokenSymbol = 'token__symbol',
-  Type = 'type'
+  id = 'id',
+  token = 'token',
+  token__decimals = 'token__decimals',
+  token__id = 'token__id',
+  token__lastPriceBlockNumber = 'token__lastPriceBlockNumber',
+  token__lastPriceUSD = 'token__lastPriceUSD',
+  token__name = 'token__name',
+  token__symbol = 'token__symbol',
+  type = 'type'
 }
 
 export type RewardsManager = {
@@ -5412,39 +5412,39 @@ export type RewardsManager_Filter = {
 };
 
 export enum RewardsManager_OrderBy {
-  Id = 'id',
-  Vault = 'vault',
-  VaultApr7d = 'vault__apr7d',
-  VaultApr30d = 'vault__apr30d',
-  VaultApr90d = 'vault__apr90d',
-  VaultApr180d = 'vault__apr180d',
-  VaultApr365d = 'vault__apr365d',
-  VaultCalculatedApr = 'vault__calculatedApr',
-  VaultCreatedBlockNumber = 'vault__createdBlockNumber',
-  VaultCreatedTimestamp = 'vault__createdTimestamp',
-  VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
-  VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
-  VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
-  VaultDepositCap = 'vault__depositCap',
-  VaultDepositLimit = 'vault__depositLimit',
-  VaultDetails = 'vault__details',
-  VaultId = 'vault__id',
-  VaultInputTokenBalance = 'vault__inputTokenBalance',
-  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
-  VaultLastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
-  VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
-  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
-  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
-  VaultName = 'vault__name',
-  VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
-  VaultOutputTokenSupply = 'vault__outputTokenSupply',
-  VaultPricePerShare = 'vault__pricePerShare',
-  VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
-  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
-  VaultSymbol = 'vault__symbol',
-  VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
-  VaultWithdrawableTotalAssets = 'vault__withdrawableTotalAssets',
-  VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD'
+  id = 'id',
+  vault = 'vault',
+  vault__apr7d = 'vault__apr7d',
+  vault__apr30d = 'vault__apr30d',
+  vault__apr90d = 'vault__apr90d',
+  vault__apr180d = 'vault__apr180d',
+  vault__apr365d = 'vault__apr365d',
+  vault__calculatedApr = 'vault__calculatedApr',
+  vault__createdBlockNumber = 'vault__createdBlockNumber',
+  vault__createdTimestamp = 'vault__createdTimestamp',
+  vault__cumulativeProtocolSideRevenueUSD = 'vault__cumulativeProtocolSideRevenueUSD',
+  vault__cumulativeSupplySideRevenueUSD = 'vault__cumulativeSupplySideRevenueUSD',
+  vault__cumulativeTotalRevenueUSD = 'vault__cumulativeTotalRevenueUSD',
+  vault__depositCap = 'vault__depositCap',
+  vault__depositLimit = 'vault__depositLimit',
+  vault__details = 'vault__details',
+  vault__id = 'vault__id',
+  vault__inputTokenBalance = 'vault__inputTokenBalance',
+  vault__inputTokenPriceUSD = 'vault__inputTokenPriceUSD',
+  vault__lastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
+  vault__lastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  vault__maxRebalanceOperations = 'vault__maxRebalanceOperations',
+  vault__minimumBufferBalance = 'vault__minimumBufferBalance',
+  vault__name = 'vault__name',
+  vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
+  vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__pricePerShare = 'vault__pricePerShare',
+  vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  vault__stakingRewardsManager = 'vault__stakingRewardsManager',
+  vault__symbol = 'vault__symbol',
+  vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
+  vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
+  vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
 }
 
 export type Staked = Event & {
@@ -5697,91 +5697,91 @@ export type Staked_Filter = {
 };
 
 export enum Staked_OrderBy {
-  Amount = 'amount',
-  AmountUsd = 'amountUSD',
-  Asset = 'asset',
-  AssetDecimals = 'asset__decimals',
-  AssetId = 'asset__id',
-  AssetLastPriceBlockNumber = 'asset__lastPriceBlockNumber',
-  AssetLastPriceUsd = 'asset__lastPriceUSD',
-  AssetName = 'asset__name',
-  AssetSymbol = 'asset__symbol',
-  BlockNumber = 'blockNumber',
-  From = 'from',
-  Hash = 'hash',
-  Id = 'id',
-  InputTokenBalance = 'inputTokenBalance',
-  InputTokenBalanceNormalizedUsd = 'inputTokenBalanceNormalizedUSD',
-  LogIndex = 'logIndex',
-  Position = 'position',
-  PositionCreatedBlockNumber = 'position__createdBlockNumber',
-  PositionCreatedTimestamp = 'position__createdTimestamp',
-  PositionId = 'position__id',
-  PositionInputTokenBalance = 'position__inputTokenBalance',
-  PositionInputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
-  PositionInputTokenBalanceNormalizedInUsd = 'position__inputTokenBalanceNormalizedInUSD',
-  PositionInputTokenDeposits = 'position__inputTokenDeposits',
-  PositionInputTokenDepositsNormalizedInUsd = 'position__inputTokenDepositsNormalizedInUSD',
-  PositionInputTokenWithdrawals = 'position__inputTokenWithdrawals',
-  PositionInputTokenWithdrawalsNormalizedInUsd = 'position__inputTokenWithdrawalsNormalizedInUSD',
-  PositionOutputTokenBalance = 'position__outputTokenBalance',
-  PositionStakedInputTokenBalance = 'position__stakedInputTokenBalance',
-  PositionStakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
-  PositionStakedInputTokenBalanceNormalizedInUsd = 'position__stakedInputTokenBalanceNormalizedInUSD',
-  PositionStakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
-  Protocol = 'protocol',
-  ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
-  ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
-  ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
-  ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
-  ProtocolId = 'protocol__id',
-  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
-  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
-  ProtocolLastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
-  ProtocolMethodologyVersion = 'protocol__methodologyVersion',
-  ProtocolName = 'protocol__name',
-  ProtocolNetwork = 'protocol__network',
-  ProtocolProtocolControlledValueUsd = 'protocol__protocolControlledValueUSD',
-  ProtocolSchemaVersion = 'protocol__schemaVersion',
-  ProtocolSlug = 'protocol__slug',
-  ProtocolSubgraphVersion = 'protocol__subgraphVersion',
-  ProtocolTotalPoolCount = 'protocol__totalPoolCount',
-  ProtocolTotalValueLockedUsd = 'protocol__totalValueLockedUSD',
-  ProtocolType = 'protocol__type',
-  Timestamp = 'timestamp',
-  To = 'to',
-  Vault = 'vault',
-  VaultApr7d = 'vault__apr7d',
-  VaultApr30d = 'vault__apr30d',
-  VaultApr90d = 'vault__apr90d',
-  VaultApr180d = 'vault__apr180d',
-  VaultApr365d = 'vault__apr365d',
-  VaultCalculatedApr = 'vault__calculatedApr',
-  VaultCreatedBlockNumber = 'vault__createdBlockNumber',
-  VaultCreatedTimestamp = 'vault__createdTimestamp',
-  VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
-  VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
-  VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
-  VaultDepositCap = 'vault__depositCap',
-  VaultDepositLimit = 'vault__depositLimit',
-  VaultDetails = 'vault__details',
-  VaultId = 'vault__id',
-  VaultInputTokenBalance = 'vault__inputTokenBalance',
-  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
-  VaultLastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
-  VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
-  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
-  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
-  VaultName = 'vault__name',
-  VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
-  VaultOutputTokenSupply = 'vault__outputTokenSupply',
-  VaultPricePerShare = 'vault__pricePerShare',
-  VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
-  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
-  VaultSymbol = 'vault__symbol',
-  VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
-  VaultWithdrawableTotalAssets = 'vault__withdrawableTotalAssets',
-  VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD'
+  amount = 'amount',
+  amountUSD = 'amountUSD',
+  asset = 'asset',
+  asset__decimals = 'asset__decimals',
+  asset__id = 'asset__id',
+  asset__lastPriceBlockNumber = 'asset__lastPriceBlockNumber',
+  asset__lastPriceUSD = 'asset__lastPriceUSD',
+  asset__name = 'asset__name',
+  asset__symbol = 'asset__symbol',
+  blockNumber = 'blockNumber',
+  from = 'from',
+  hash = 'hash',
+  id = 'id',
+  inputTokenBalance = 'inputTokenBalance',
+  inputTokenBalanceNormalizedUSD = 'inputTokenBalanceNormalizedUSD',
+  logIndex = 'logIndex',
+  position = 'position',
+  position__createdBlockNumber = 'position__createdBlockNumber',
+  position__createdTimestamp = 'position__createdTimestamp',
+  position__id = 'position__id',
+  position__inputTokenBalance = 'position__inputTokenBalance',
+  position__inputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
+  position__inputTokenBalanceNormalizedInUSD = 'position__inputTokenBalanceNormalizedInUSD',
+  position__inputTokenDeposits = 'position__inputTokenDeposits',
+  position__inputTokenDepositsNormalizedInUSD = 'position__inputTokenDepositsNormalizedInUSD',
+  position__inputTokenWithdrawals = 'position__inputTokenWithdrawals',
+  position__inputTokenWithdrawalsNormalizedInUSD = 'position__inputTokenWithdrawalsNormalizedInUSD',
+  position__outputTokenBalance = 'position__outputTokenBalance',
+  position__stakedInputTokenBalance = 'position__stakedInputTokenBalance',
+  position__stakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
+  position__stakedInputTokenBalanceNormalizedInUSD = 'position__stakedInputTokenBalanceNormalizedInUSD',
+  position__stakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
+  protocol = 'protocol',
+  protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
+  protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
+  protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
+  protocol__cumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
+  protocol__id = 'protocol__id',
+  protocol__lastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  protocol__lastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
+  protocol__lastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
+  protocol__methodologyVersion = 'protocol__methodologyVersion',
+  protocol__name = 'protocol__name',
+  protocol__network = 'protocol__network',
+  protocol__protocolControlledValueUSD = 'protocol__protocolControlledValueUSD',
+  protocol__schemaVersion = 'protocol__schemaVersion',
+  protocol__slug = 'protocol__slug',
+  protocol__subgraphVersion = 'protocol__subgraphVersion',
+  protocol__totalPoolCount = 'protocol__totalPoolCount',
+  protocol__totalValueLockedUSD = 'protocol__totalValueLockedUSD',
+  protocol__type = 'protocol__type',
+  timestamp = 'timestamp',
+  to = 'to',
+  vault = 'vault',
+  vault__apr7d = 'vault__apr7d',
+  vault__apr30d = 'vault__apr30d',
+  vault__apr90d = 'vault__apr90d',
+  vault__apr180d = 'vault__apr180d',
+  vault__apr365d = 'vault__apr365d',
+  vault__calculatedApr = 'vault__calculatedApr',
+  vault__createdBlockNumber = 'vault__createdBlockNumber',
+  vault__createdTimestamp = 'vault__createdTimestamp',
+  vault__cumulativeProtocolSideRevenueUSD = 'vault__cumulativeProtocolSideRevenueUSD',
+  vault__cumulativeSupplySideRevenueUSD = 'vault__cumulativeSupplySideRevenueUSD',
+  vault__cumulativeTotalRevenueUSD = 'vault__cumulativeTotalRevenueUSD',
+  vault__depositCap = 'vault__depositCap',
+  vault__depositLimit = 'vault__depositLimit',
+  vault__details = 'vault__details',
+  vault__id = 'vault__id',
+  vault__inputTokenBalance = 'vault__inputTokenBalance',
+  vault__inputTokenPriceUSD = 'vault__inputTokenPriceUSD',
+  vault__lastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
+  vault__lastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  vault__maxRebalanceOperations = 'vault__maxRebalanceOperations',
+  vault__minimumBufferBalance = 'vault__minimumBufferBalance',
+  vault__name = 'vault__name',
+  vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
+  vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__pricePerShare = 'vault__pricePerShare',
+  vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  vault__stakingRewardsManager = 'vault__stakingRewardsManager',
+  vault__symbol = 'vault__symbol',
+  vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
+  vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
+  vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
 }
 
 export type Subscription = {
@@ -6615,17 +6615,17 @@ export type TokenPrice_Filter = {
 };
 
 export enum TokenPrice_OrderBy {
-  BlockNumber = 'blockNumber',
-  Id = 'id',
-  Oracle = 'oracle',
-  Price = 'price',
-  Token = 'token',
-  TokenDecimals = 'token__decimals',
-  TokenId = 'token__id',
-  TokenLastPriceBlockNumber = 'token__lastPriceBlockNumber',
-  TokenLastPriceUsd = 'token__lastPriceUSD',
-  TokenName = 'token__name',
-  TokenSymbol = 'token__symbol'
+  blockNumber = 'blockNumber',
+  id = 'id',
+  oracle = 'oracle',
+  price = 'price',
+  token = 'token',
+  token__decimals = 'token__decimals',
+  token__id = 'token__id',
+  token__lastPriceBlockNumber = 'token__lastPriceBlockNumber',
+  token__lastPriceUSD = 'token__lastPriceUSD',
+  token__name = 'token__name',
+  token__symbol = 'token__symbol'
 }
 
 export type Token_Filter = {
@@ -6708,12 +6708,12 @@ export type Token_Filter = {
 };
 
 export enum Token_OrderBy {
-  Decimals = 'decimals',
-  Id = 'id',
-  LastPriceBlockNumber = 'lastPriceBlockNumber',
-  LastPriceUsd = 'lastPriceUSD',
-  Name = 'name',
-  Symbol = 'symbol'
+  decimals = 'decimals',
+  id = 'id',
+  lastPriceBlockNumber = 'lastPriceBlockNumber',
+  lastPriceUSD = 'lastPriceUSD',
+  name = 'name',
+  symbol = 'symbol'
 }
 
 export type Unstaked = Event & {
@@ -6966,91 +6966,91 @@ export type Unstaked_Filter = {
 };
 
 export enum Unstaked_OrderBy {
-  Amount = 'amount',
-  AmountUsd = 'amountUSD',
-  Asset = 'asset',
-  AssetDecimals = 'asset__decimals',
-  AssetId = 'asset__id',
-  AssetLastPriceBlockNumber = 'asset__lastPriceBlockNumber',
-  AssetLastPriceUsd = 'asset__lastPriceUSD',
-  AssetName = 'asset__name',
-  AssetSymbol = 'asset__symbol',
-  BlockNumber = 'blockNumber',
-  From = 'from',
-  Hash = 'hash',
-  Id = 'id',
-  InputTokenBalance = 'inputTokenBalance',
-  InputTokenBalanceNormalizedUsd = 'inputTokenBalanceNormalizedUSD',
-  LogIndex = 'logIndex',
-  Position = 'position',
-  PositionCreatedBlockNumber = 'position__createdBlockNumber',
-  PositionCreatedTimestamp = 'position__createdTimestamp',
-  PositionId = 'position__id',
-  PositionInputTokenBalance = 'position__inputTokenBalance',
-  PositionInputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
-  PositionInputTokenBalanceNormalizedInUsd = 'position__inputTokenBalanceNormalizedInUSD',
-  PositionInputTokenDeposits = 'position__inputTokenDeposits',
-  PositionInputTokenDepositsNormalizedInUsd = 'position__inputTokenDepositsNormalizedInUSD',
-  PositionInputTokenWithdrawals = 'position__inputTokenWithdrawals',
-  PositionInputTokenWithdrawalsNormalizedInUsd = 'position__inputTokenWithdrawalsNormalizedInUSD',
-  PositionOutputTokenBalance = 'position__outputTokenBalance',
-  PositionStakedInputTokenBalance = 'position__stakedInputTokenBalance',
-  PositionStakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
-  PositionStakedInputTokenBalanceNormalizedInUsd = 'position__stakedInputTokenBalanceNormalizedInUSD',
-  PositionStakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
-  Protocol = 'protocol',
-  ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
-  ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
-  ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
-  ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
-  ProtocolId = 'protocol__id',
-  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
-  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
-  ProtocolLastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
-  ProtocolMethodologyVersion = 'protocol__methodologyVersion',
-  ProtocolName = 'protocol__name',
-  ProtocolNetwork = 'protocol__network',
-  ProtocolProtocolControlledValueUsd = 'protocol__protocolControlledValueUSD',
-  ProtocolSchemaVersion = 'protocol__schemaVersion',
-  ProtocolSlug = 'protocol__slug',
-  ProtocolSubgraphVersion = 'protocol__subgraphVersion',
-  ProtocolTotalPoolCount = 'protocol__totalPoolCount',
-  ProtocolTotalValueLockedUsd = 'protocol__totalValueLockedUSD',
-  ProtocolType = 'protocol__type',
-  Timestamp = 'timestamp',
-  To = 'to',
-  Vault = 'vault',
-  VaultApr7d = 'vault__apr7d',
-  VaultApr30d = 'vault__apr30d',
-  VaultApr90d = 'vault__apr90d',
-  VaultApr180d = 'vault__apr180d',
-  VaultApr365d = 'vault__apr365d',
-  VaultCalculatedApr = 'vault__calculatedApr',
-  VaultCreatedBlockNumber = 'vault__createdBlockNumber',
-  VaultCreatedTimestamp = 'vault__createdTimestamp',
-  VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
-  VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
-  VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
-  VaultDepositCap = 'vault__depositCap',
-  VaultDepositLimit = 'vault__depositLimit',
-  VaultDetails = 'vault__details',
-  VaultId = 'vault__id',
-  VaultInputTokenBalance = 'vault__inputTokenBalance',
-  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
-  VaultLastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
-  VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
-  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
-  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
-  VaultName = 'vault__name',
-  VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
-  VaultOutputTokenSupply = 'vault__outputTokenSupply',
-  VaultPricePerShare = 'vault__pricePerShare',
-  VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
-  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
-  VaultSymbol = 'vault__symbol',
-  VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
-  VaultWithdrawableTotalAssets = 'vault__withdrawableTotalAssets',
-  VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD'
+  amount = 'amount',
+  amountUSD = 'amountUSD',
+  asset = 'asset',
+  asset__decimals = 'asset__decimals',
+  asset__id = 'asset__id',
+  asset__lastPriceBlockNumber = 'asset__lastPriceBlockNumber',
+  asset__lastPriceUSD = 'asset__lastPriceUSD',
+  asset__name = 'asset__name',
+  asset__symbol = 'asset__symbol',
+  blockNumber = 'blockNumber',
+  from = 'from',
+  hash = 'hash',
+  id = 'id',
+  inputTokenBalance = 'inputTokenBalance',
+  inputTokenBalanceNormalizedUSD = 'inputTokenBalanceNormalizedUSD',
+  logIndex = 'logIndex',
+  position = 'position',
+  position__createdBlockNumber = 'position__createdBlockNumber',
+  position__createdTimestamp = 'position__createdTimestamp',
+  position__id = 'position__id',
+  position__inputTokenBalance = 'position__inputTokenBalance',
+  position__inputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
+  position__inputTokenBalanceNormalizedInUSD = 'position__inputTokenBalanceNormalizedInUSD',
+  position__inputTokenDeposits = 'position__inputTokenDeposits',
+  position__inputTokenDepositsNormalizedInUSD = 'position__inputTokenDepositsNormalizedInUSD',
+  position__inputTokenWithdrawals = 'position__inputTokenWithdrawals',
+  position__inputTokenWithdrawalsNormalizedInUSD = 'position__inputTokenWithdrawalsNormalizedInUSD',
+  position__outputTokenBalance = 'position__outputTokenBalance',
+  position__stakedInputTokenBalance = 'position__stakedInputTokenBalance',
+  position__stakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
+  position__stakedInputTokenBalanceNormalizedInUSD = 'position__stakedInputTokenBalanceNormalizedInUSD',
+  position__stakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
+  protocol = 'protocol',
+  protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
+  protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
+  protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
+  protocol__cumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
+  protocol__id = 'protocol__id',
+  protocol__lastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  protocol__lastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
+  protocol__lastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
+  protocol__methodologyVersion = 'protocol__methodologyVersion',
+  protocol__name = 'protocol__name',
+  protocol__network = 'protocol__network',
+  protocol__protocolControlledValueUSD = 'protocol__protocolControlledValueUSD',
+  protocol__schemaVersion = 'protocol__schemaVersion',
+  protocol__slug = 'protocol__slug',
+  protocol__subgraphVersion = 'protocol__subgraphVersion',
+  protocol__totalPoolCount = 'protocol__totalPoolCount',
+  protocol__totalValueLockedUSD = 'protocol__totalValueLockedUSD',
+  protocol__type = 'protocol__type',
+  timestamp = 'timestamp',
+  to = 'to',
+  vault = 'vault',
+  vault__apr7d = 'vault__apr7d',
+  vault__apr30d = 'vault__apr30d',
+  vault__apr90d = 'vault__apr90d',
+  vault__apr180d = 'vault__apr180d',
+  vault__apr365d = 'vault__apr365d',
+  vault__calculatedApr = 'vault__calculatedApr',
+  vault__createdBlockNumber = 'vault__createdBlockNumber',
+  vault__createdTimestamp = 'vault__createdTimestamp',
+  vault__cumulativeProtocolSideRevenueUSD = 'vault__cumulativeProtocolSideRevenueUSD',
+  vault__cumulativeSupplySideRevenueUSD = 'vault__cumulativeSupplySideRevenueUSD',
+  vault__cumulativeTotalRevenueUSD = 'vault__cumulativeTotalRevenueUSD',
+  vault__depositCap = 'vault__depositCap',
+  vault__depositLimit = 'vault__depositLimit',
+  vault__details = 'vault__details',
+  vault__id = 'vault__id',
+  vault__inputTokenBalance = 'vault__inputTokenBalance',
+  vault__inputTokenPriceUSD = 'vault__inputTokenPriceUSD',
+  vault__lastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
+  vault__lastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  vault__maxRebalanceOperations = 'vault__maxRebalanceOperations',
+  vault__minimumBufferBalance = 'vault__minimumBufferBalance',
+  vault__name = 'vault__name',
+  vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
+  vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__pricePerShare = 'vault__pricePerShare',
+  vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  vault__stakingRewardsManager = 'vault__stakingRewardsManager',
+  vault__symbol = 'vault__symbol',
+  vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
+  vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
+  vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
 }
 
 export type UsageMetricsDailySnapshot = {
@@ -7178,34 +7178,34 @@ export type UsageMetricsDailySnapshot_Filter = {
 };
 
 export enum UsageMetricsDailySnapshot_OrderBy {
-  BlockNumber = 'blockNumber',
-  CumulativeUniqueUsers = 'cumulativeUniqueUsers',
-  DailyActiveUsers = 'dailyActiveUsers',
-  DailyDepositCount = 'dailyDepositCount',
-  DailyTransactionCount = 'dailyTransactionCount',
-  DailyWithdrawCount = 'dailyWithdrawCount',
-  Id = 'id',
-  Protocol = 'protocol',
-  ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
-  ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
-  ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
-  ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
-  ProtocolId = 'protocol__id',
-  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
-  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
-  ProtocolLastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
-  ProtocolMethodologyVersion = 'protocol__methodologyVersion',
-  ProtocolName = 'protocol__name',
-  ProtocolNetwork = 'protocol__network',
-  ProtocolProtocolControlledValueUsd = 'protocol__protocolControlledValueUSD',
-  ProtocolSchemaVersion = 'protocol__schemaVersion',
-  ProtocolSlug = 'protocol__slug',
-  ProtocolSubgraphVersion = 'protocol__subgraphVersion',
-  ProtocolTotalPoolCount = 'protocol__totalPoolCount',
-  ProtocolTotalValueLockedUsd = 'protocol__totalValueLockedUSD',
-  ProtocolType = 'protocol__type',
-  Timestamp = 'timestamp',
-  TotalPoolCount = 'totalPoolCount'
+  blockNumber = 'blockNumber',
+  cumulativeUniqueUsers = 'cumulativeUniqueUsers',
+  dailyActiveUsers = 'dailyActiveUsers',
+  dailyDepositCount = 'dailyDepositCount',
+  dailyTransactionCount = 'dailyTransactionCount',
+  dailyWithdrawCount = 'dailyWithdrawCount',
+  id = 'id',
+  protocol = 'protocol',
+  protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
+  protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
+  protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
+  protocol__cumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
+  protocol__id = 'protocol__id',
+  protocol__lastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  protocol__lastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
+  protocol__lastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
+  protocol__methodologyVersion = 'protocol__methodologyVersion',
+  protocol__name = 'protocol__name',
+  protocol__network = 'protocol__network',
+  protocol__protocolControlledValueUSD = 'protocol__protocolControlledValueUSD',
+  protocol__schemaVersion = 'protocol__schemaVersion',
+  protocol__slug = 'protocol__slug',
+  protocol__subgraphVersion = 'protocol__subgraphVersion',
+  protocol__totalPoolCount = 'protocol__totalPoolCount',
+  protocol__totalValueLockedUSD = 'protocol__totalValueLockedUSD',
+  protocol__type = 'protocol__type',
+  timestamp = 'timestamp',
+  totalPoolCount = 'totalPoolCount'
 }
 
 export type UsageMetricsHourlySnapshot = {
@@ -7323,33 +7323,33 @@ export type UsageMetricsHourlySnapshot_Filter = {
 };
 
 export enum UsageMetricsHourlySnapshot_OrderBy {
-  BlockNumber = 'blockNumber',
-  CumulativeUniqueUsers = 'cumulativeUniqueUsers',
-  HourlyActiveUsers = 'hourlyActiveUsers',
-  HourlyDepositCount = 'hourlyDepositCount',
-  HourlyTransactionCount = 'hourlyTransactionCount',
-  HourlyWithdrawCount = 'hourlyWithdrawCount',
-  Id = 'id',
-  Protocol = 'protocol',
-  ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
-  ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
-  ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
-  ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
-  ProtocolId = 'protocol__id',
-  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
-  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
-  ProtocolLastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
-  ProtocolMethodologyVersion = 'protocol__methodologyVersion',
-  ProtocolName = 'protocol__name',
-  ProtocolNetwork = 'protocol__network',
-  ProtocolProtocolControlledValueUsd = 'protocol__protocolControlledValueUSD',
-  ProtocolSchemaVersion = 'protocol__schemaVersion',
-  ProtocolSlug = 'protocol__slug',
-  ProtocolSubgraphVersion = 'protocol__subgraphVersion',
-  ProtocolTotalPoolCount = 'protocol__totalPoolCount',
-  ProtocolTotalValueLockedUsd = 'protocol__totalValueLockedUSD',
-  ProtocolType = 'protocol__type',
-  Timestamp = 'timestamp'
+  blockNumber = 'blockNumber',
+  cumulativeUniqueUsers = 'cumulativeUniqueUsers',
+  hourlyActiveUsers = 'hourlyActiveUsers',
+  hourlyDepositCount = 'hourlyDepositCount',
+  hourlyTransactionCount = 'hourlyTransactionCount',
+  hourlyWithdrawCount = 'hourlyWithdrawCount',
+  id = 'id',
+  protocol = 'protocol',
+  protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
+  protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
+  protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
+  protocol__cumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
+  protocol__id = 'protocol__id',
+  protocol__lastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  protocol__lastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
+  protocol__lastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
+  protocol__methodologyVersion = 'protocol__methodologyVersion',
+  protocol__name = 'protocol__name',
+  protocol__network = 'protocol__network',
+  protocol__protocolControlledValueUSD = 'protocol__protocolControlledValueUSD',
+  protocol__schemaVersion = 'protocol__schemaVersion',
+  protocol__slug = 'protocol__slug',
+  protocol__subgraphVersion = 'protocol__subgraphVersion',
+  protocol__totalPoolCount = 'protocol__totalPoolCount',
+  protocol__totalValueLockedUSD = 'protocol__totalValueLockedUSD',
+  protocol__type = 'protocol__type',
+  timestamp = 'timestamp'
 }
 
 export type Vault = {
@@ -7828,76 +7828,76 @@ export type VaultDailySnapshot_Filter = {
 };
 
 export enum VaultDailySnapshot_OrderBy {
-  BlockNumber = 'blockNumber',
-  CalculatedApr = 'calculatedApr',
-  CumulativeProtocolSideRevenueUsd = 'cumulativeProtocolSideRevenueUSD',
-  CumulativeSupplySideRevenueUsd = 'cumulativeSupplySideRevenueUSD',
-  CumulativeTotalRevenueUsd = 'cumulativeTotalRevenueUSD',
-  DailyProtocolSideRevenueUsd = 'dailyProtocolSideRevenueUSD',
-  DailySupplySideRevenueUsd = 'dailySupplySideRevenueUSD',
-  DailyTotalRevenueUsd = 'dailyTotalRevenueUSD',
-  Id = 'id',
-  InputTokenBalance = 'inputTokenBalance',
-  InputTokenPriceUsd = 'inputTokenPriceUSD',
-  OutputTokenPriceUsd = 'outputTokenPriceUSD',
-  OutputTokenSupply = 'outputTokenSupply',
-  PricePerShare = 'pricePerShare',
-  Protocol = 'protocol',
-  ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
-  ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
-  ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
-  ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
-  ProtocolId = 'protocol__id',
-  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
-  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
-  ProtocolLastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
-  ProtocolMethodologyVersion = 'protocol__methodologyVersion',
-  ProtocolName = 'protocol__name',
-  ProtocolNetwork = 'protocol__network',
-  ProtocolProtocolControlledValueUsd = 'protocol__protocolControlledValueUSD',
-  ProtocolSchemaVersion = 'protocol__schemaVersion',
-  ProtocolSlug = 'protocol__slug',
-  ProtocolSubgraphVersion = 'protocol__subgraphVersion',
-  ProtocolTotalPoolCount = 'protocol__totalPoolCount',
-  ProtocolTotalValueLockedUsd = 'protocol__totalValueLockedUSD',
-  ProtocolType = 'protocol__type',
-  RewardTokenEmissionsAmount = 'rewardTokenEmissionsAmount',
-  RewardTokenEmissionsUsd = 'rewardTokenEmissionsUSD',
-  StakedOutputTokenAmount = 'stakedOutputTokenAmount',
-  Timestamp = 'timestamp',
-  TotalValueLockedUsd = 'totalValueLockedUSD',
-  Vault = 'vault',
-  VaultApr7d = 'vault__apr7d',
-  VaultApr30d = 'vault__apr30d',
-  VaultApr90d = 'vault__apr90d',
-  VaultApr180d = 'vault__apr180d',
-  VaultApr365d = 'vault__apr365d',
-  VaultCalculatedApr = 'vault__calculatedApr',
-  VaultCreatedBlockNumber = 'vault__createdBlockNumber',
-  VaultCreatedTimestamp = 'vault__createdTimestamp',
-  VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
-  VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
-  VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
-  VaultDepositCap = 'vault__depositCap',
-  VaultDepositLimit = 'vault__depositLimit',
-  VaultDetails = 'vault__details',
-  VaultId = 'vault__id',
-  VaultInputTokenBalance = 'vault__inputTokenBalance',
-  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
-  VaultLastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
-  VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
-  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
-  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
-  VaultName = 'vault__name',
-  VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
-  VaultOutputTokenSupply = 'vault__outputTokenSupply',
-  VaultPricePerShare = 'vault__pricePerShare',
-  VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
-  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
-  VaultSymbol = 'vault__symbol',
-  VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
-  VaultWithdrawableTotalAssets = 'vault__withdrawableTotalAssets',
-  VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD'
+  blockNumber = 'blockNumber',
+  calculatedApr = 'calculatedApr',
+  cumulativeProtocolSideRevenueUSD = 'cumulativeProtocolSideRevenueUSD',
+  cumulativeSupplySideRevenueUSD = 'cumulativeSupplySideRevenueUSD',
+  cumulativeTotalRevenueUSD = 'cumulativeTotalRevenueUSD',
+  dailyProtocolSideRevenueUSD = 'dailyProtocolSideRevenueUSD',
+  dailySupplySideRevenueUSD = 'dailySupplySideRevenueUSD',
+  dailyTotalRevenueUSD = 'dailyTotalRevenueUSD',
+  id = 'id',
+  inputTokenBalance = 'inputTokenBalance',
+  inputTokenPriceUSD = 'inputTokenPriceUSD',
+  outputTokenPriceUSD = 'outputTokenPriceUSD',
+  outputTokenSupply = 'outputTokenSupply',
+  pricePerShare = 'pricePerShare',
+  protocol = 'protocol',
+  protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
+  protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
+  protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
+  protocol__cumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
+  protocol__id = 'protocol__id',
+  protocol__lastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  protocol__lastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
+  protocol__lastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
+  protocol__methodologyVersion = 'protocol__methodologyVersion',
+  protocol__name = 'protocol__name',
+  protocol__network = 'protocol__network',
+  protocol__protocolControlledValueUSD = 'protocol__protocolControlledValueUSD',
+  protocol__schemaVersion = 'protocol__schemaVersion',
+  protocol__slug = 'protocol__slug',
+  protocol__subgraphVersion = 'protocol__subgraphVersion',
+  protocol__totalPoolCount = 'protocol__totalPoolCount',
+  protocol__totalValueLockedUSD = 'protocol__totalValueLockedUSD',
+  protocol__type = 'protocol__type',
+  rewardTokenEmissionsAmount = 'rewardTokenEmissionsAmount',
+  rewardTokenEmissionsUSD = 'rewardTokenEmissionsUSD',
+  stakedOutputTokenAmount = 'stakedOutputTokenAmount',
+  timestamp = 'timestamp',
+  totalValueLockedUSD = 'totalValueLockedUSD',
+  vault = 'vault',
+  vault__apr7d = 'vault__apr7d',
+  vault__apr30d = 'vault__apr30d',
+  vault__apr90d = 'vault__apr90d',
+  vault__apr180d = 'vault__apr180d',
+  vault__apr365d = 'vault__apr365d',
+  vault__calculatedApr = 'vault__calculatedApr',
+  vault__createdBlockNumber = 'vault__createdBlockNumber',
+  vault__createdTimestamp = 'vault__createdTimestamp',
+  vault__cumulativeProtocolSideRevenueUSD = 'vault__cumulativeProtocolSideRevenueUSD',
+  vault__cumulativeSupplySideRevenueUSD = 'vault__cumulativeSupplySideRevenueUSD',
+  vault__cumulativeTotalRevenueUSD = 'vault__cumulativeTotalRevenueUSD',
+  vault__depositCap = 'vault__depositCap',
+  vault__depositLimit = 'vault__depositLimit',
+  vault__details = 'vault__details',
+  vault__id = 'vault__id',
+  vault__inputTokenBalance = 'vault__inputTokenBalance',
+  vault__inputTokenPriceUSD = 'vault__inputTokenPriceUSD',
+  vault__lastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
+  vault__lastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  vault__maxRebalanceOperations = 'vault__maxRebalanceOperations',
+  vault__minimumBufferBalance = 'vault__minimumBufferBalance',
+  vault__name = 'vault__name',
+  vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
+  vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__pricePerShare = 'vault__pricePerShare',
+  vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  vault__stakingRewardsManager = 'vault__stakingRewardsManager',
+  vault__symbol = 'vault__symbol',
+  vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
+  vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
+  vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
 }
 
 export type VaultFee = {
@@ -7912,13 +7912,13 @@ export type VaultFee = {
 
 export enum VaultFeeType {
   /**  One-time fee charged by the protocol during deposit, in percentages of the deposit token  */
-  DepositFee = 'DEPOSIT_FEE',
+  DEPOSIT_FEE = 'DEPOSIT_FEE',
   /**  Fees charged by the protocol on a periodic basis, in percentages of the total principal  */
-  ManagementFee = 'MANAGEMENT_FEE',
+  MANAGEMENT_FEE = 'MANAGEMENT_FEE',
   /**  Fees charged by the protocol during harvest, in percentages of the interest accrued  */
-  PerformanceFee = 'PERFORMANCE_FEE',
+  PERFORMANCE_FEE = 'PERFORMANCE_FEE',
   /**  One-time fee charged by the protocol during withdrawal, in percentages of the withdrawal token  */
-  WithdrawalFee = 'WITHDRAWAL_FEE'
+  WITHDRAWAL_FEE = 'WITHDRAWAL_FEE'
 }
 
 export type VaultFee_Filter = {
@@ -7949,9 +7949,9 @@ export type VaultFee_Filter = {
 };
 
 export enum VaultFee_OrderBy {
-  FeePercentage = 'feePercentage',
-  FeeType = 'feeType',
-  Id = 'id'
+  feePercentage = 'feePercentage',
+  feeType = 'feeType',
+  id = 'id'
 }
 
 export type VaultHourlySnapshot = {
@@ -8198,76 +8198,76 @@ export type VaultHourlySnapshot_Filter = {
 };
 
 export enum VaultHourlySnapshot_OrderBy {
-  BlockNumber = 'blockNumber',
-  CalculatedApr = 'calculatedApr',
-  CumulativeProtocolSideRevenueUsd = 'cumulativeProtocolSideRevenueUSD',
-  CumulativeSupplySideRevenueUsd = 'cumulativeSupplySideRevenueUSD',
-  CumulativeTotalRevenueUsd = 'cumulativeTotalRevenueUSD',
-  HourlyProtocolSideRevenueUsd = 'hourlyProtocolSideRevenueUSD',
-  HourlySupplySideRevenueUsd = 'hourlySupplySideRevenueUSD',
-  HourlyTotalRevenueUsd = 'hourlyTotalRevenueUSD',
-  Id = 'id',
-  InputTokenBalance = 'inputTokenBalance',
-  InputTokenPriceUsd = 'inputTokenPriceUSD',
-  OutputTokenPriceUsd = 'outputTokenPriceUSD',
-  OutputTokenSupply = 'outputTokenSupply',
-  PricePerShare = 'pricePerShare',
-  Protocol = 'protocol',
-  ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
-  ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
-  ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
-  ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
-  ProtocolId = 'protocol__id',
-  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
-  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
-  ProtocolLastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
-  ProtocolMethodologyVersion = 'protocol__methodologyVersion',
-  ProtocolName = 'protocol__name',
-  ProtocolNetwork = 'protocol__network',
-  ProtocolProtocolControlledValueUsd = 'protocol__protocolControlledValueUSD',
-  ProtocolSchemaVersion = 'protocol__schemaVersion',
-  ProtocolSlug = 'protocol__slug',
-  ProtocolSubgraphVersion = 'protocol__subgraphVersion',
-  ProtocolTotalPoolCount = 'protocol__totalPoolCount',
-  ProtocolTotalValueLockedUsd = 'protocol__totalValueLockedUSD',
-  ProtocolType = 'protocol__type',
-  RewardTokenEmissionsAmount = 'rewardTokenEmissionsAmount',
-  RewardTokenEmissionsUsd = 'rewardTokenEmissionsUSD',
-  StakedOutputTokenAmount = 'stakedOutputTokenAmount',
-  Timestamp = 'timestamp',
-  TotalValueLockedUsd = 'totalValueLockedUSD',
-  Vault = 'vault',
-  VaultApr7d = 'vault__apr7d',
-  VaultApr30d = 'vault__apr30d',
-  VaultApr90d = 'vault__apr90d',
-  VaultApr180d = 'vault__apr180d',
-  VaultApr365d = 'vault__apr365d',
-  VaultCalculatedApr = 'vault__calculatedApr',
-  VaultCreatedBlockNumber = 'vault__createdBlockNumber',
-  VaultCreatedTimestamp = 'vault__createdTimestamp',
-  VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
-  VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
-  VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
-  VaultDepositCap = 'vault__depositCap',
-  VaultDepositLimit = 'vault__depositLimit',
-  VaultDetails = 'vault__details',
-  VaultId = 'vault__id',
-  VaultInputTokenBalance = 'vault__inputTokenBalance',
-  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
-  VaultLastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
-  VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
-  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
-  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
-  VaultName = 'vault__name',
-  VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
-  VaultOutputTokenSupply = 'vault__outputTokenSupply',
-  VaultPricePerShare = 'vault__pricePerShare',
-  VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
-  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
-  VaultSymbol = 'vault__symbol',
-  VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
-  VaultWithdrawableTotalAssets = 'vault__withdrawableTotalAssets',
-  VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD'
+  blockNumber = 'blockNumber',
+  calculatedApr = 'calculatedApr',
+  cumulativeProtocolSideRevenueUSD = 'cumulativeProtocolSideRevenueUSD',
+  cumulativeSupplySideRevenueUSD = 'cumulativeSupplySideRevenueUSD',
+  cumulativeTotalRevenueUSD = 'cumulativeTotalRevenueUSD',
+  hourlyProtocolSideRevenueUSD = 'hourlyProtocolSideRevenueUSD',
+  hourlySupplySideRevenueUSD = 'hourlySupplySideRevenueUSD',
+  hourlyTotalRevenueUSD = 'hourlyTotalRevenueUSD',
+  id = 'id',
+  inputTokenBalance = 'inputTokenBalance',
+  inputTokenPriceUSD = 'inputTokenPriceUSD',
+  outputTokenPriceUSD = 'outputTokenPriceUSD',
+  outputTokenSupply = 'outputTokenSupply',
+  pricePerShare = 'pricePerShare',
+  protocol = 'protocol',
+  protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
+  protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
+  protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
+  protocol__cumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
+  protocol__id = 'protocol__id',
+  protocol__lastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  protocol__lastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
+  protocol__lastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
+  protocol__methodologyVersion = 'protocol__methodologyVersion',
+  protocol__name = 'protocol__name',
+  protocol__network = 'protocol__network',
+  protocol__protocolControlledValueUSD = 'protocol__protocolControlledValueUSD',
+  protocol__schemaVersion = 'protocol__schemaVersion',
+  protocol__slug = 'protocol__slug',
+  protocol__subgraphVersion = 'protocol__subgraphVersion',
+  protocol__totalPoolCount = 'protocol__totalPoolCount',
+  protocol__totalValueLockedUSD = 'protocol__totalValueLockedUSD',
+  protocol__type = 'protocol__type',
+  rewardTokenEmissionsAmount = 'rewardTokenEmissionsAmount',
+  rewardTokenEmissionsUSD = 'rewardTokenEmissionsUSD',
+  stakedOutputTokenAmount = 'stakedOutputTokenAmount',
+  timestamp = 'timestamp',
+  totalValueLockedUSD = 'totalValueLockedUSD',
+  vault = 'vault',
+  vault__apr7d = 'vault__apr7d',
+  vault__apr30d = 'vault__apr30d',
+  vault__apr90d = 'vault__apr90d',
+  vault__apr180d = 'vault__apr180d',
+  vault__apr365d = 'vault__apr365d',
+  vault__calculatedApr = 'vault__calculatedApr',
+  vault__createdBlockNumber = 'vault__createdBlockNumber',
+  vault__createdTimestamp = 'vault__createdTimestamp',
+  vault__cumulativeProtocolSideRevenueUSD = 'vault__cumulativeProtocolSideRevenueUSD',
+  vault__cumulativeSupplySideRevenueUSD = 'vault__cumulativeSupplySideRevenueUSD',
+  vault__cumulativeTotalRevenueUSD = 'vault__cumulativeTotalRevenueUSD',
+  vault__depositCap = 'vault__depositCap',
+  vault__depositLimit = 'vault__depositLimit',
+  vault__details = 'vault__details',
+  vault__id = 'vault__id',
+  vault__inputTokenBalance = 'vault__inputTokenBalance',
+  vault__inputTokenPriceUSD = 'vault__inputTokenPriceUSD',
+  vault__lastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
+  vault__lastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  vault__maxRebalanceOperations = 'vault__maxRebalanceOperations',
+  vault__minimumBufferBalance = 'vault__minimumBufferBalance',
+  vault__name = 'vault__name',
+  vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
+  vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__pricePerShare = 'vault__pricePerShare',
+  vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  vault__stakingRewardsManager = 'vault__stakingRewardsManager',
+  vault__symbol = 'vault__symbol',
+  vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
+  vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
+  vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
 }
 
 export type VaultWeeklySnapshot = {
@@ -8514,76 +8514,76 @@ export type VaultWeeklySnapshot_Filter = {
 };
 
 export enum VaultWeeklySnapshot_OrderBy {
-  BlockNumber = 'blockNumber',
-  CalculatedApr = 'calculatedApr',
-  CumulativeProtocolSideRevenueUsd = 'cumulativeProtocolSideRevenueUSD',
-  CumulativeSupplySideRevenueUsd = 'cumulativeSupplySideRevenueUSD',
-  CumulativeTotalRevenueUsd = 'cumulativeTotalRevenueUSD',
-  Id = 'id',
-  InputTokenBalance = 'inputTokenBalance',
-  InputTokenPriceUsd = 'inputTokenPriceUSD',
-  OutputTokenPriceUsd = 'outputTokenPriceUSD',
-  OutputTokenSupply = 'outputTokenSupply',
-  PricePerShare = 'pricePerShare',
-  Protocol = 'protocol',
-  ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
-  ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
-  ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
-  ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
-  ProtocolId = 'protocol__id',
-  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
-  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
-  ProtocolLastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
-  ProtocolMethodologyVersion = 'protocol__methodologyVersion',
-  ProtocolName = 'protocol__name',
-  ProtocolNetwork = 'protocol__network',
-  ProtocolProtocolControlledValueUsd = 'protocol__protocolControlledValueUSD',
-  ProtocolSchemaVersion = 'protocol__schemaVersion',
-  ProtocolSlug = 'protocol__slug',
-  ProtocolSubgraphVersion = 'protocol__subgraphVersion',
-  ProtocolTotalPoolCount = 'protocol__totalPoolCount',
-  ProtocolTotalValueLockedUsd = 'protocol__totalValueLockedUSD',
-  ProtocolType = 'protocol__type',
-  RewardTokenEmissionsAmount = 'rewardTokenEmissionsAmount',
-  RewardTokenEmissionsUsd = 'rewardTokenEmissionsUSD',
-  StakedOutputTokenAmount = 'stakedOutputTokenAmount',
-  Timestamp = 'timestamp',
-  TotalValueLockedUsd = 'totalValueLockedUSD',
-  Vault = 'vault',
-  VaultApr7d = 'vault__apr7d',
-  VaultApr30d = 'vault__apr30d',
-  VaultApr90d = 'vault__apr90d',
-  VaultApr180d = 'vault__apr180d',
-  VaultApr365d = 'vault__apr365d',
-  VaultCalculatedApr = 'vault__calculatedApr',
-  VaultCreatedBlockNumber = 'vault__createdBlockNumber',
-  VaultCreatedTimestamp = 'vault__createdTimestamp',
-  VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
-  VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
-  VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
-  VaultDepositCap = 'vault__depositCap',
-  VaultDepositLimit = 'vault__depositLimit',
-  VaultDetails = 'vault__details',
-  VaultId = 'vault__id',
-  VaultInputTokenBalance = 'vault__inputTokenBalance',
-  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
-  VaultLastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
-  VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
-  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
-  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
-  VaultName = 'vault__name',
-  VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
-  VaultOutputTokenSupply = 'vault__outputTokenSupply',
-  VaultPricePerShare = 'vault__pricePerShare',
-  VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
-  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
-  VaultSymbol = 'vault__symbol',
-  VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
-  VaultWithdrawableTotalAssets = 'vault__withdrawableTotalAssets',
-  VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD',
-  WeeklyProtocolSideRevenueUsd = 'weeklyProtocolSideRevenueUSD',
-  WeeklySupplySideRevenueUsd = 'weeklySupplySideRevenueUSD',
-  WeeklyTotalRevenueUsd = 'weeklyTotalRevenueUSD'
+  blockNumber = 'blockNumber',
+  calculatedApr = 'calculatedApr',
+  cumulativeProtocolSideRevenueUSD = 'cumulativeProtocolSideRevenueUSD',
+  cumulativeSupplySideRevenueUSD = 'cumulativeSupplySideRevenueUSD',
+  cumulativeTotalRevenueUSD = 'cumulativeTotalRevenueUSD',
+  id = 'id',
+  inputTokenBalance = 'inputTokenBalance',
+  inputTokenPriceUSD = 'inputTokenPriceUSD',
+  outputTokenPriceUSD = 'outputTokenPriceUSD',
+  outputTokenSupply = 'outputTokenSupply',
+  pricePerShare = 'pricePerShare',
+  protocol = 'protocol',
+  protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
+  protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
+  protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
+  protocol__cumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
+  protocol__id = 'protocol__id',
+  protocol__lastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  protocol__lastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
+  protocol__lastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
+  protocol__methodologyVersion = 'protocol__methodologyVersion',
+  protocol__name = 'protocol__name',
+  protocol__network = 'protocol__network',
+  protocol__protocolControlledValueUSD = 'protocol__protocolControlledValueUSD',
+  protocol__schemaVersion = 'protocol__schemaVersion',
+  protocol__slug = 'protocol__slug',
+  protocol__subgraphVersion = 'protocol__subgraphVersion',
+  protocol__totalPoolCount = 'protocol__totalPoolCount',
+  protocol__totalValueLockedUSD = 'protocol__totalValueLockedUSD',
+  protocol__type = 'protocol__type',
+  rewardTokenEmissionsAmount = 'rewardTokenEmissionsAmount',
+  rewardTokenEmissionsUSD = 'rewardTokenEmissionsUSD',
+  stakedOutputTokenAmount = 'stakedOutputTokenAmount',
+  timestamp = 'timestamp',
+  totalValueLockedUSD = 'totalValueLockedUSD',
+  vault = 'vault',
+  vault__apr7d = 'vault__apr7d',
+  vault__apr30d = 'vault__apr30d',
+  vault__apr90d = 'vault__apr90d',
+  vault__apr180d = 'vault__apr180d',
+  vault__apr365d = 'vault__apr365d',
+  vault__calculatedApr = 'vault__calculatedApr',
+  vault__createdBlockNumber = 'vault__createdBlockNumber',
+  vault__createdTimestamp = 'vault__createdTimestamp',
+  vault__cumulativeProtocolSideRevenueUSD = 'vault__cumulativeProtocolSideRevenueUSD',
+  vault__cumulativeSupplySideRevenueUSD = 'vault__cumulativeSupplySideRevenueUSD',
+  vault__cumulativeTotalRevenueUSD = 'vault__cumulativeTotalRevenueUSD',
+  vault__depositCap = 'vault__depositCap',
+  vault__depositLimit = 'vault__depositLimit',
+  vault__details = 'vault__details',
+  vault__id = 'vault__id',
+  vault__inputTokenBalance = 'vault__inputTokenBalance',
+  vault__inputTokenPriceUSD = 'vault__inputTokenPriceUSD',
+  vault__lastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
+  vault__lastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  vault__maxRebalanceOperations = 'vault__maxRebalanceOperations',
+  vault__minimumBufferBalance = 'vault__minimumBufferBalance',
+  vault__name = 'vault__name',
+  vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
+  vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__pricePerShare = 'vault__pricePerShare',
+  vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  vault__stakingRewardsManager = 'vault__stakingRewardsManager',
+  vault__symbol = 'vault__symbol',
+  vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
+  vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
+  vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD',
+  weeklyProtocolSideRevenueUSD = 'weeklyProtocolSideRevenueUSD',
+  weeklySupplySideRevenueUSD = 'weeklySupplySideRevenueUSD',
+  weeklyTotalRevenueUSD = 'weeklyTotalRevenueUSD'
 }
 
 export type Vault_Filter = {
@@ -9013,92 +9013,92 @@ export type Vault_Filter = {
 };
 
 export enum Vault_OrderBy {
-  ActionSnapshots = 'actionSnapshots',
-  Apr7d = 'apr7d',
-  Apr30d = 'apr30d',
-  Apr90d = 'apr90d',
-  Apr180d = 'apr180d',
-  Apr365d = 'apr365d',
-  AprValues = 'aprValues',
-  Arks = 'arks',
-  ArksArray = 'arksArray',
-  CalculatedApr = 'calculatedApr',
-  CreatedBlockNumber = 'createdBlockNumber',
-  CreatedTimestamp = 'createdTimestamp',
-  CumulativeProtocolSideRevenueUsd = 'cumulativeProtocolSideRevenueUSD',
-  CumulativeSupplySideRevenueUsd = 'cumulativeSupplySideRevenueUSD',
-  CumulativeTotalRevenueUsd = 'cumulativeTotalRevenueUSD',
-  DailyInterestRates = 'dailyInterestRates',
-  DailySnapshots = 'dailySnapshots',
-  DepositCap = 'depositCap',
-  DepositLimit = 'depositLimit',
-  Deposits = 'deposits',
-  Details = 'details',
-  Fees = 'fees',
-  HourlyInterestRates = 'hourlyInterestRates',
-  HourlySnapshots = 'hourlySnapshots',
-  Id = 'id',
-  InputToken = 'inputToken',
-  InputTokenBalance = 'inputTokenBalance',
-  InputTokenPriceUsd = 'inputTokenPriceUSD',
-  InputTokenDecimals = 'inputToken__decimals',
-  InputTokenId = 'inputToken__id',
-  InputTokenLastPriceBlockNumber = 'inputToken__lastPriceBlockNumber',
-  InputTokenLastPriceUsd = 'inputToken__lastPriceUSD',
-  InputTokenName = 'inputToken__name',
-  InputTokenSymbol = 'inputToken__symbol',
-  LastUpdatePricePerShare = 'lastUpdatePricePerShare',
-  LastUpdateTimestamp = 'lastUpdateTimestamp',
-  MaxRebalanceOperations = 'maxRebalanceOperations',
-  MinimumBufferBalance = 'minimumBufferBalance',
-  Name = 'name',
-  OutputToken = 'outputToken',
-  OutputTokenPriceUsd = 'outputTokenPriceUSD',
-  OutputTokenSupply = 'outputTokenSupply',
-  OutputTokenDecimals = 'outputToken__decimals',
-  OutputTokenId = 'outputToken__id',
-  OutputTokenLastPriceBlockNumber = 'outputToken__lastPriceBlockNumber',
-  OutputTokenLastPriceUsd = 'outputToken__lastPriceUSD',
-  OutputTokenName = 'outputToken__name',
-  OutputTokenSymbol = 'outputToken__symbol',
-  Positions = 'positions',
-  PricePerShare = 'pricePerShare',
-  Protocol = 'protocol',
-  ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
-  ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
-  ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
-  ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
-  ProtocolId = 'protocol__id',
-  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
-  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
-  ProtocolLastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
-  ProtocolMethodologyVersion = 'protocol__methodologyVersion',
-  ProtocolName = 'protocol__name',
-  ProtocolNetwork = 'protocol__network',
-  ProtocolProtocolControlledValueUsd = 'protocol__protocolControlledValueUSD',
-  ProtocolSchemaVersion = 'protocol__schemaVersion',
-  ProtocolSlug = 'protocol__slug',
-  ProtocolSubgraphVersion = 'protocol__subgraphVersion',
-  ProtocolTotalPoolCount = 'protocol__totalPoolCount',
-  ProtocolTotalValueLockedUsd = 'protocol__totalValueLockedUSD',
-  ProtocolType = 'protocol__type',
-  Rebalances = 'rebalances',
-  RewardTokenEmissionsAmount = 'rewardTokenEmissionsAmount',
-  RewardTokenEmissionsAmountsPerOutputToken = 'rewardTokenEmissionsAmountsPerOutputToken',
-  RewardTokenEmissionsFinish = 'rewardTokenEmissionsFinish',
-  RewardTokenEmissionsUsd = 'rewardTokenEmissionsUSD',
-  RewardTokens = 'rewardTokens',
-  RewardsManager = 'rewardsManager',
-  RewardsManagerId = 'rewardsManager__id',
-  StakedOutputTokenAmount = 'stakedOutputTokenAmount',
-  StakingRewardsManager = 'stakingRewardsManager',
-  Symbol = 'symbol',
-  TotalValueLockedUsd = 'totalValueLockedUSD',
-  WeeklyInterestRates = 'weeklyInterestRates',
-  WeeklySnapshots = 'weeklySnapshots',
-  WithdrawableTotalAssets = 'withdrawableTotalAssets',
-  WithdrawableTotalAssetsUsd = 'withdrawableTotalAssetsUSD',
-  Withdraws = 'withdraws'
+  actionSnapshots = 'actionSnapshots',
+  apr7d = 'apr7d',
+  apr30d = 'apr30d',
+  apr90d = 'apr90d',
+  apr180d = 'apr180d',
+  apr365d = 'apr365d',
+  aprValues = 'aprValues',
+  arks = 'arks',
+  arksArray = 'arksArray',
+  calculatedApr = 'calculatedApr',
+  createdBlockNumber = 'createdBlockNumber',
+  createdTimestamp = 'createdTimestamp',
+  cumulativeProtocolSideRevenueUSD = 'cumulativeProtocolSideRevenueUSD',
+  cumulativeSupplySideRevenueUSD = 'cumulativeSupplySideRevenueUSD',
+  cumulativeTotalRevenueUSD = 'cumulativeTotalRevenueUSD',
+  dailyInterestRates = 'dailyInterestRates',
+  dailySnapshots = 'dailySnapshots',
+  depositCap = 'depositCap',
+  depositLimit = 'depositLimit',
+  deposits = 'deposits',
+  details = 'details',
+  fees = 'fees',
+  hourlyInterestRates = 'hourlyInterestRates',
+  hourlySnapshots = 'hourlySnapshots',
+  id = 'id',
+  inputToken = 'inputToken',
+  inputTokenBalance = 'inputTokenBalance',
+  inputTokenPriceUSD = 'inputTokenPriceUSD',
+  inputToken__decimals = 'inputToken__decimals',
+  inputToken__id = 'inputToken__id',
+  inputToken__lastPriceBlockNumber = 'inputToken__lastPriceBlockNumber',
+  inputToken__lastPriceUSD = 'inputToken__lastPriceUSD',
+  inputToken__name = 'inputToken__name',
+  inputToken__symbol = 'inputToken__symbol',
+  lastUpdatePricePerShare = 'lastUpdatePricePerShare',
+  lastUpdateTimestamp = 'lastUpdateTimestamp',
+  maxRebalanceOperations = 'maxRebalanceOperations',
+  minimumBufferBalance = 'minimumBufferBalance',
+  name = 'name',
+  outputToken = 'outputToken',
+  outputTokenPriceUSD = 'outputTokenPriceUSD',
+  outputTokenSupply = 'outputTokenSupply',
+  outputToken__decimals = 'outputToken__decimals',
+  outputToken__id = 'outputToken__id',
+  outputToken__lastPriceBlockNumber = 'outputToken__lastPriceBlockNumber',
+  outputToken__lastPriceUSD = 'outputToken__lastPriceUSD',
+  outputToken__name = 'outputToken__name',
+  outputToken__symbol = 'outputToken__symbol',
+  positions = 'positions',
+  pricePerShare = 'pricePerShare',
+  protocol = 'protocol',
+  protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
+  protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
+  protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
+  protocol__cumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
+  protocol__id = 'protocol__id',
+  protocol__lastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  protocol__lastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
+  protocol__lastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
+  protocol__methodologyVersion = 'protocol__methodologyVersion',
+  protocol__name = 'protocol__name',
+  protocol__network = 'protocol__network',
+  protocol__protocolControlledValueUSD = 'protocol__protocolControlledValueUSD',
+  protocol__schemaVersion = 'protocol__schemaVersion',
+  protocol__slug = 'protocol__slug',
+  protocol__subgraphVersion = 'protocol__subgraphVersion',
+  protocol__totalPoolCount = 'protocol__totalPoolCount',
+  protocol__totalValueLockedUSD = 'protocol__totalValueLockedUSD',
+  protocol__type = 'protocol__type',
+  rebalances = 'rebalances',
+  rewardTokenEmissionsAmount = 'rewardTokenEmissionsAmount',
+  rewardTokenEmissionsAmountsPerOutputToken = 'rewardTokenEmissionsAmountsPerOutputToken',
+  rewardTokenEmissionsFinish = 'rewardTokenEmissionsFinish',
+  rewardTokenEmissionsUSD = 'rewardTokenEmissionsUSD',
+  rewardTokens = 'rewardTokens',
+  rewardsManager = 'rewardsManager',
+  rewardsManager__id = 'rewardsManager__id',
+  stakedOutputTokenAmount = 'stakedOutputTokenAmount',
+  stakingRewardsManager = 'stakingRewardsManager',
+  symbol = 'symbol',
+  totalValueLockedUSD = 'totalValueLockedUSD',
+  weeklyInterestRates = 'weeklyInterestRates',
+  weeklySnapshots = 'weeklySnapshots',
+  withdrawableTotalAssets = 'withdrawableTotalAssets',
+  withdrawableTotalAssetsUSD = 'withdrawableTotalAssetsUSD',
+  withdraws = 'withdraws'
 }
 
 export type WeeklyInterestRate = {
@@ -9180,43 +9180,43 @@ export type WeeklyInterestRate_Filter = {
 };
 
 export enum WeeklyInterestRate_OrderBy {
-  AverageRate = 'averageRate',
-  Date = 'date',
-  Id = 'id',
-  SumRates = 'sumRates',
-  UpdateCount = 'updateCount',
-  Vault = 'vault',
-  VaultApr7d = 'vault__apr7d',
-  VaultApr30d = 'vault__apr30d',
-  VaultApr90d = 'vault__apr90d',
-  VaultApr180d = 'vault__apr180d',
-  VaultApr365d = 'vault__apr365d',
-  VaultCalculatedApr = 'vault__calculatedApr',
-  VaultCreatedBlockNumber = 'vault__createdBlockNumber',
-  VaultCreatedTimestamp = 'vault__createdTimestamp',
-  VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
-  VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
-  VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
-  VaultDepositCap = 'vault__depositCap',
-  VaultDepositLimit = 'vault__depositLimit',
-  VaultDetails = 'vault__details',
-  VaultId = 'vault__id',
-  VaultInputTokenBalance = 'vault__inputTokenBalance',
-  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
-  VaultLastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
-  VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
-  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
-  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
-  VaultName = 'vault__name',
-  VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
-  VaultOutputTokenSupply = 'vault__outputTokenSupply',
-  VaultPricePerShare = 'vault__pricePerShare',
-  VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
-  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
-  VaultSymbol = 'vault__symbol',
-  VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
-  VaultWithdrawableTotalAssets = 'vault__withdrawableTotalAssets',
-  VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD'
+  averageRate = 'averageRate',
+  date = 'date',
+  id = 'id',
+  sumRates = 'sumRates',
+  updateCount = 'updateCount',
+  vault = 'vault',
+  vault__apr7d = 'vault__apr7d',
+  vault__apr30d = 'vault__apr30d',
+  vault__apr90d = 'vault__apr90d',
+  vault__apr180d = 'vault__apr180d',
+  vault__apr365d = 'vault__apr365d',
+  vault__calculatedApr = 'vault__calculatedApr',
+  vault__createdBlockNumber = 'vault__createdBlockNumber',
+  vault__createdTimestamp = 'vault__createdTimestamp',
+  vault__cumulativeProtocolSideRevenueUSD = 'vault__cumulativeProtocolSideRevenueUSD',
+  vault__cumulativeSupplySideRevenueUSD = 'vault__cumulativeSupplySideRevenueUSD',
+  vault__cumulativeTotalRevenueUSD = 'vault__cumulativeTotalRevenueUSD',
+  vault__depositCap = 'vault__depositCap',
+  vault__depositLimit = 'vault__depositLimit',
+  vault__details = 'vault__details',
+  vault__id = 'vault__id',
+  vault__inputTokenBalance = 'vault__inputTokenBalance',
+  vault__inputTokenPriceUSD = 'vault__inputTokenPriceUSD',
+  vault__lastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
+  vault__lastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  vault__maxRebalanceOperations = 'vault__maxRebalanceOperations',
+  vault__minimumBufferBalance = 'vault__minimumBufferBalance',
+  vault__name = 'vault__name',
+  vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
+  vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__pricePerShare = 'vault__pricePerShare',
+  vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  vault__stakingRewardsManager = 'vault__stakingRewardsManager',
+  vault__symbol = 'vault__symbol',
+  vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
+  vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
+  vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
 }
 
 export type Withdraw = Event & {
@@ -9469,91 +9469,91 @@ export type Withdraw_Filter = {
 };
 
 export enum Withdraw_OrderBy {
-  Amount = 'amount',
-  AmountUsd = 'amountUSD',
-  Asset = 'asset',
-  AssetDecimals = 'asset__decimals',
-  AssetId = 'asset__id',
-  AssetLastPriceBlockNumber = 'asset__lastPriceBlockNumber',
-  AssetLastPriceUsd = 'asset__lastPriceUSD',
-  AssetName = 'asset__name',
-  AssetSymbol = 'asset__symbol',
-  BlockNumber = 'blockNumber',
-  From = 'from',
-  Hash = 'hash',
-  Id = 'id',
-  InputTokenBalance = 'inputTokenBalance',
-  InputTokenBalanceNormalizedUsd = 'inputTokenBalanceNormalizedUSD',
-  LogIndex = 'logIndex',
-  Position = 'position',
-  PositionCreatedBlockNumber = 'position__createdBlockNumber',
-  PositionCreatedTimestamp = 'position__createdTimestamp',
-  PositionId = 'position__id',
-  PositionInputTokenBalance = 'position__inputTokenBalance',
-  PositionInputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
-  PositionInputTokenBalanceNormalizedInUsd = 'position__inputTokenBalanceNormalizedInUSD',
-  PositionInputTokenDeposits = 'position__inputTokenDeposits',
-  PositionInputTokenDepositsNormalizedInUsd = 'position__inputTokenDepositsNormalizedInUSD',
-  PositionInputTokenWithdrawals = 'position__inputTokenWithdrawals',
-  PositionInputTokenWithdrawalsNormalizedInUsd = 'position__inputTokenWithdrawalsNormalizedInUSD',
-  PositionOutputTokenBalance = 'position__outputTokenBalance',
-  PositionStakedInputTokenBalance = 'position__stakedInputTokenBalance',
-  PositionStakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
-  PositionStakedInputTokenBalanceNormalizedInUsd = 'position__stakedInputTokenBalanceNormalizedInUSD',
-  PositionStakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
-  Protocol = 'protocol',
-  ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
-  ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
-  ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
-  ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
-  ProtocolId = 'protocol__id',
-  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
-  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
-  ProtocolLastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
-  ProtocolMethodologyVersion = 'protocol__methodologyVersion',
-  ProtocolName = 'protocol__name',
-  ProtocolNetwork = 'protocol__network',
-  ProtocolProtocolControlledValueUsd = 'protocol__protocolControlledValueUSD',
-  ProtocolSchemaVersion = 'protocol__schemaVersion',
-  ProtocolSlug = 'protocol__slug',
-  ProtocolSubgraphVersion = 'protocol__subgraphVersion',
-  ProtocolTotalPoolCount = 'protocol__totalPoolCount',
-  ProtocolTotalValueLockedUsd = 'protocol__totalValueLockedUSD',
-  ProtocolType = 'protocol__type',
-  Timestamp = 'timestamp',
-  To = 'to',
-  Vault = 'vault',
-  VaultApr7d = 'vault__apr7d',
-  VaultApr30d = 'vault__apr30d',
-  VaultApr90d = 'vault__apr90d',
-  VaultApr180d = 'vault__apr180d',
-  VaultApr365d = 'vault__apr365d',
-  VaultCalculatedApr = 'vault__calculatedApr',
-  VaultCreatedBlockNumber = 'vault__createdBlockNumber',
-  VaultCreatedTimestamp = 'vault__createdTimestamp',
-  VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
-  VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
-  VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
-  VaultDepositCap = 'vault__depositCap',
-  VaultDepositLimit = 'vault__depositLimit',
-  VaultDetails = 'vault__details',
-  VaultId = 'vault__id',
-  VaultInputTokenBalance = 'vault__inputTokenBalance',
-  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
-  VaultLastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
-  VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
-  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
-  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
-  VaultName = 'vault__name',
-  VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
-  VaultOutputTokenSupply = 'vault__outputTokenSupply',
-  VaultPricePerShare = 'vault__pricePerShare',
-  VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
-  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
-  VaultSymbol = 'vault__symbol',
-  VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
-  VaultWithdrawableTotalAssets = 'vault__withdrawableTotalAssets',
-  VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD'
+  amount = 'amount',
+  amountUSD = 'amountUSD',
+  asset = 'asset',
+  asset__decimals = 'asset__decimals',
+  asset__id = 'asset__id',
+  asset__lastPriceBlockNumber = 'asset__lastPriceBlockNumber',
+  asset__lastPriceUSD = 'asset__lastPriceUSD',
+  asset__name = 'asset__name',
+  asset__symbol = 'asset__symbol',
+  blockNumber = 'blockNumber',
+  from = 'from',
+  hash = 'hash',
+  id = 'id',
+  inputTokenBalance = 'inputTokenBalance',
+  inputTokenBalanceNormalizedUSD = 'inputTokenBalanceNormalizedUSD',
+  logIndex = 'logIndex',
+  position = 'position',
+  position__createdBlockNumber = 'position__createdBlockNumber',
+  position__createdTimestamp = 'position__createdTimestamp',
+  position__id = 'position__id',
+  position__inputTokenBalance = 'position__inputTokenBalance',
+  position__inputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
+  position__inputTokenBalanceNormalizedInUSD = 'position__inputTokenBalanceNormalizedInUSD',
+  position__inputTokenDeposits = 'position__inputTokenDeposits',
+  position__inputTokenDepositsNormalizedInUSD = 'position__inputTokenDepositsNormalizedInUSD',
+  position__inputTokenWithdrawals = 'position__inputTokenWithdrawals',
+  position__inputTokenWithdrawalsNormalizedInUSD = 'position__inputTokenWithdrawalsNormalizedInUSD',
+  position__outputTokenBalance = 'position__outputTokenBalance',
+  position__stakedInputTokenBalance = 'position__stakedInputTokenBalance',
+  position__stakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
+  position__stakedInputTokenBalanceNormalizedInUSD = 'position__stakedInputTokenBalanceNormalizedInUSD',
+  position__stakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
+  protocol = 'protocol',
+  protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
+  protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
+  protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
+  protocol__cumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
+  protocol__id = 'protocol__id',
+  protocol__lastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  protocol__lastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
+  protocol__lastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
+  protocol__methodologyVersion = 'protocol__methodologyVersion',
+  protocol__name = 'protocol__name',
+  protocol__network = 'protocol__network',
+  protocol__protocolControlledValueUSD = 'protocol__protocolControlledValueUSD',
+  protocol__schemaVersion = 'protocol__schemaVersion',
+  protocol__slug = 'protocol__slug',
+  protocol__subgraphVersion = 'protocol__subgraphVersion',
+  protocol__totalPoolCount = 'protocol__totalPoolCount',
+  protocol__totalValueLockedUSD = 'protocol__totalValueLockedUSD',
+  protocol__type = 'protocol__type',
+  timestamp = 'timestamp',
+  to = 'to',
+  vault = 'vault',
+  vault__apr7d = 'vault__apr7d',
+  vault__apr30d = 'vault__apr30d',
+  vault__apr90d = 'vault__apr90d',
+  vault__apr180d = 'vault__apr180d',
+  vault__apr365d = 'vault__apr365d',
+  vault__calculatedApr = 'vault__calculatedApr',
+  vault__createdBlockNumber = 'vault__createdBlockNumber',
+  vault__createdTimestamp = 'vault__createdTimestamp',
+  vault__cumulativeProtocolSideRevenueUSD = 'vault__cumulativeProtocolSideRevenueUSD',
+  vault__cumulativeSupplySideRevenueUSD = 'vault__cumulativeSupplySideRevenueUSD',
+  vault__cumulativeTotalRevenueUSD = 'vault__cumulativeTotalRevenueUSD',
+  vault__depositCap = 'vault__depositCap',
+  vault__depositLimit = 'vault__depositLimit',
+  vault__details = 'vault__details',
+  vault__id = 'vault__id',
+  vault__inputTokenBalance = 'vault__inputTokenBalance',
+  vault__inputTokenPriceUSD = 'vault__inputTokenPriceUSD',
+  vault__lastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
+  vault__lastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  vault__maxRebalanceOperations = 'vault__maxRebalanceOperations',
+  vault__minimumBufferBalance = 'vault__minimumBufferBalance',
+  vault__name = 'vault__name',
+  vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
+  vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__pricePerShare = 'vault__pricePerShare',
+  vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  vault__stakingRewardsManager = 'vault__stakingRewardsManager',
+  vault__symbol = 'vault__symbol',
+  vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
+  vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
+  vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
 }
 
 export type YieldAggregator = Protocol & {
@@ -9862,29 +9862,29 @@ export type YieldAggregator_Filter = {
 };
 
 export enum YieldAggregator_OrderBy {
-  CumulativeProtocolSideRevenueUsd = 'cumulativeProtocolSideRevenueUSD',
-  CumulativeSupplySideRevenueUsd = 'cumulativeSupplySideRevenueUSD',
-  CumulativeTotalRevenueUsd = 'cumulativeTotalRevenueUSD',
-  CumulativeUniqueUsers = 'cumulativeUniqueUsers',
-  DailyUsageMetrics = 'dailyUsageMetrics',
-  FinancialMetrics = 'financialMetrics',
-  HourlyUsageMetrics = 'hourlyUsageMetrics',
-  Id = 'id',
-  LastDailyUpdateTimestamp = 'lastDailyUpdateTimestamp',
-  LastHourlyUpdateTimestamp = 'lastHourlyUpdateTimestamp',
-  LastWeeklyUpdateTimestamp = 'lastWeeklyUpdateTimestamp',
-  MethodologyVersion = 'methodologyVersion',
-  Name = 'name',
-  Network = 'network',
-  ProtocolControlledValueUsd = 'protocolControlledValueUSD',
-  SchemaVersion = 'schemaVersion',
-  Slug = 'slug',
-  SubgraphVersion = 'subgraphVersion',
-  TotalPoolCount = 'totalPoolCount',
-  TotalValueLockedUsd = 'totalValueLockedUSD',
-  Type = 'type',
-  Vaults = 'vaults',
-  VaultsArray = 'vaultsArray'
+  cumulativeProtocolSideRevenueUSD = 'cumulativeProtocolSideRevenueUSD',
+  cumulativeSupplySideRevenueUSD = 'cumulativeSupplySideRevenueUSD',
+  cumulativeTotalRevenueUSD = 'cumulativeTotalRevenueUSD',
+  cumulativeUniqueUsers = 'cumulativeUniqueUsers',
+  dailyUsageMetrics = 'dailyUsageMetrics',
+  financialMetrics = 'financialMetrics',
+  hourlyUsageMetrics = 'hourlyUsageMetrics',
+  id = 'id',
+  lastDailyUpdateTimestamp = 'lastDailyUpdateTimestamp',
+  lastHourlyUpdateTimestamp = 'lastHourlyUpdateTimestamp',
+  lastWeeklyUpdateTimestamp = 'lastWeeklyUpdateTimestamp',
+  methodologyVersion = 'methodologyVersion',
+  name = 'name',
+  network = 'network',
+  protocolControlledValueUSD = 'protocolControlledValueUSD',
+  schemaVersion = 'schemaVersion',
+  slug = 'slug',
+  subgraphVersion = 'subgraphVersion',
+  totalPoolCount = 'totalPoolCount',
+  totalValueLockedUSD = 'totalValueLockedUSD',
+  type = 'type',
+  vaults = 'vaults',
+  vaultsArray = 'vaultsArray'
 }
 
 export type _Block_ = {
@@ -9918,490 +9918,51 @@ export type _Meta_ = {
 
 export enum _SubgraphErrorPolicy_ {
   /** Data will be returned even if the subgraph has indexing errors */
-  Allow = 'allow',
+  allow = 'allow',
   /** If the subgraph has indexing errors, data will be omitted. The default. */
-  Deny = 'deny'
+  deny = 'deny'
 }
 
-export type GetGlobalRebalancesQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetGlobalRebalancesQuery = { __typename?: 'Query', rebalances: Array<{ __typename?: 'Rebalance', id: string, amount: bigint, amountUSD: string, timestamp: bigint, asset: { __typename?: 'Token', id: string, symbol: string, decimals: number }, from: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, to: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, toPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, fromPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, protocol: { __typename?: 'YieldAggregator', name: string, network: Network }, vault: { __typename?: 'Vault', outputTokenPriceUSD?: string | null, inputTokenPriceUSD?: string | null, id: string, name?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string } } }> };
-
-export type GetUserPositionsQueryVariables = Exact<{
-  accountAddress: Scalars['String']['input'];
+export type GetPositionHistoryQueryVariables = Exact<{
+  positionId: Scalars['ID']['input'];
 }>;
 
 
-export type GetUserPositionsQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, inputTokenBalance: bigint, outputTokenBalance: bigint, stakedInputTokenBalance: bigint, stakedOutputTokenBalance: bigint, deposits: Array<{ __typename?: 'Deposit', amount: bigint, amountUSD: string, inputTokenBalance: bigint }>, withdrawals: Array<{ __typename?: 'Withdraw', amount: bigint, amountUSD: string, inputTokenBalance: bigint }>, vault: { __typename?: 'Vault', id: string, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number } | null, protocol: { __typename?: 'YieldAggregator', id: string } }, account: { __typename?: 'Account', id: string } }> };
-
-export type GetUserPositionQueryVariables = Exact<{
-  accountAddress: Scalars['String']['input'];
-  vaultId: Scalars['String']['input'];
-}>;
+export type GetPositionHistoryQuery = { __typename?: 'Query', position?: { __typename?: 'Position', hourlyPositionHistory: Array<{ __typename?: 'PositionHourlySnapshot', timestamp: number, netValue: number, deposits: number, withdrawals: number }>, dailyPositionHistory: Array<{ __typename?: 'PositionDailySnapshot', timestamp: number, netValue: number, deposits: number, withdrawals: number }>, weeklyPositionHistory: Array<{ __typename?: 'PositionWeeklySnapshot', timestamp: number, netValue: number, deposits: number, withdrawals: number }> } | null };
 
 
-export type GetUserPositionQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, inputTokenBalance: bigint, outputTokenBalance: bigint, stakedInputTokenBalance: bigint, stakedOutputTokenBalance: bigint, deposits: Array<{ __typename?: 'Deposit', amount: bigint, amountUSD: string, inputTokenBalance: bigint }>, withdrawals: Array<{ __typename?: 'Withdraw', amount: bigint, amountUSD: string, inputTokenBalance: bigint }>, vault: { __typename?: 'Vault', id: string, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number } | null, protocol: { __typename?: 'YieldAggregator', id: string } }, account: { __typename?: 'Account', id: string } }> };
-
-export type GetUserActivityQueryVariables = Exact<{
-  id: Scalars['ID']['input'];
-}>;
-
-
-export type GetUserActivityQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', inputTokenBalance: bigint, outputTokenBalance: bigint, account: { __typename?: 'Account', id: string }, deposits: Array<{ __typename?: 'Deposit', timestamp: bigint, amount: bigint, hash: string, inputTokenBalance: bigint }>, withdrawals: Array<{ __typename?: 'Withdraw', timestamp: bigint, amount: bigint, hash: string, inputTokenBalance: bigint }>, vault: { __typename?: 'Vault', id: string, name?: string | null, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, apr365d: string, inputToken: { __typename?: 'Token', id: string, symbol: string, decimals: number }, protocol: { __typename?: 'YieldAggregator', network: Network } } }> };
-
-export type GetUsersActivityQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetUsersActivityQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', inputTokenBalance: bigint, account: { __typename?: 'Account', id: string }, deposits: Array<{ __typename?: 'Deposit', timestamp: bigint, amount: bigint, hash: string, inputTokenBalance: bigint }>, withdrawals: Array<{ __typename?: 'Withdraw', timestamp: bigint, amount: bigint, hash: string, inputTokenBalance: bigint }>, vault: { __typename?: 'Vault', id: string, name?: string | null, outputTokenPriceUSD?: string | null, inputTokenPriceUSD?: string | null, apr365d: string, inputToken: { __typename?: 'Token', id: string, symbol: string, decimals: number }, protocol: { __typename?: 'YieldAggregator', network: Network } } }> };
-
-export type GetVaultsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsAmount: Array<bigint>, rewardTokenEmissionsUSD?: Array<string> | null, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, apr7d: string, apr30d: string, apr90d: string, apr180d: string, apr365d: string, calculatedApr: string, aprValues: Array<string>, withdrawableTotalAssets?: bigint | null, withdrawableTotalAssetsUSD?: string | null, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }>, arks: Array<{ __typename?: 'Ark', id: string, name?: string | null, details?: string | null, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, fees: Array<{ __typename?: 'VaultFee', id: string, feePercentage?: string | null, feeType: VaultFeeType }> }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null, dailyInterestRates: Array<{ __typename?: 'DailyInterestRate', averageRate: string, date: bigint }>, hourlyInterestRates: Array<{ __typename?: 'HourlyInterestRate', averageRate: string, date: bigint }>, weeklyInterestRates: Array<{ __typename?: 'WeeklyInterestRate', averageRate: string, date: bigint }> }> };
-
-export type GetVaultQueryVariables = Exact<{
-  id: Scalars['ID']['input'];
-}>;
-
-
-export type GetVaultQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsUSD?: Array<string> | null, rewardTokenEmissionsAmount: Array<bigint>, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, apr7d: string, apr30d: string, apr90d: string, apr180d: string, apr365d: string, calculatedApr: string, aprValues: Array<string>, withdrawableTotalAssets?: bigint | null, withdrawableTotalAssetsUSD?: string | null, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }>, rebalances: Array<{ __typename?: 'Rebalance', id: string, amount: bigint, amountUSD: string, timestamp: bigint, asset: { __typename?: 'Token', id: string, symbol: string, decimals: number }, from: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, to: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, toPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, fromPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, protocol: { __typename?: 'YieldAggregator', name: string, network: Network }, vault: { __typename?: 'Vault', id: string, name?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string } } }>, arks: Array<{ __typename?: 'Ark', id: string, name?: string | null, details?: string | null, depositLimit: bigint, cumulativeEarnings: bigint, inputTokenBalance: bigint, calculatedApr: string, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, dailySnapshots: Array<{ __typename?: 'ArkDailySnapshot', id: string, apr: string, totalValueLockedUSD: string, inputTokenBalance: bigint }>, hourlySnapshots: Array<{ __typename?: 'ArkHourlySnapshot', id: string, calculatedApr: string, totalValueLockedUSD: string, inputTokenBalance: bigint }>, fees: Array<{ __typename?: 'VaultFee', id: string, feePercentage?: string | null, feeType: VaultFeeType }> }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null, dailyInterestRates: Array<{ __typename?: 'DailyInterestRate', averageRate: string, date: bigint }>, hourlyInterestRates: Array<{ __typename?: 'HourlyInterestRate', averageRate: string, date: bigint }>, weeklyInterestRates: Array<{ __typename?: 'WeeklyInterestRate', averageRate: string, date: bigint }> } | null };
-
-
-export const GetGlobalRebalancesDocument = gql`
-    query GetGlobalRebalances {
-  rebalances(orderBy: timestamp, orderDirection: desc) {
-    id
-    amount
-    amountUSD
-    asset {
-      id
-      symbol
-      decimals
-    }
-    from {
-      name
-      depositLimit
-      calculatedApr
-      totalValueLockedUSD
-    }
-    to {
-      name
-      depositLimit
-      calculatedApr
-      totalValueLockedUSD
-    }
-    toPostAction {
-      totalValueLockedUSD
-      depositLimit
-    }
-    fromPostAction {
-      totalValueLockedUSD
-      depositLimit
-    }
-    protocol {
-      name
-      network
-    }
-    timestamp
-    vault {
-      outputTokenPriceUSD
-      inputTokenPriceUSD
-      id
-      name
-      inputToken {
-        id
-        symbol
-      }
-    }
-  }
-}
-    `;
-export const GetUserPositionsDocument = gql`
-    query GetUserPositions($accountAddress: String!) {
-  positions(where: {account_contains_nocase: $accountAddress}) {
-    id
-    inputTokenBalance
-    outputTokenBalance
-    stakedInputTokenBalance
-    stakedOutputTokenBalance
-    deposits {
-      amount
-      amountUSD
-      inputTokenBalance
-    }
-    withdrawals {
-      amount
-      amountUSD
-      inputTokenBalance
-    }
-    vault {
-      id
-      inputTokenBalance
-      inputTokenPriceUSD
-      outputTokenPriceUSD
-      inputToken {
-        id
-        symbol
-        name
-        decimals
-      }
-      outputToken {
-        id
-        symbol
-        name
-        decimals
-      }
-      protocol {
-        id
-      }
-    }
-    account {
-      id
-    }
-  }
-}
-    `;
-export const GetUserPositionDocument = gql`
-    query GetUserPosition($accountAddress: String!, $vaultId: String!) {
-  positions(where: {account_contains_nocase: $accountAddress, vault: $vaultId}) {
-    id
-    inputTokenBalance
-    outputTokenBalance
-    stakedInputTokenBalance
-    stakedOutputTokenBalance
-    deposits {
-      amount
-      amountUSD
-      inputTokenBalance
-    }
-    withdrawals {
-      amount
-      amountUSD
-      inputTokenBalance
-    }
-    vault {
-      id
-      inputTokenBalance
-      inputTokenPriceUSD
-      outputTokenPriceUSD
-      inputToken {
-        id
-        symbol
-        name
-        decimals
-      }
-      outputToken {
-        id
-        symbol
-        name
-        decimals
-      }
-      protocol {
-        id
-      }
-    }
-    account {
-      id
-    }
-  }
-}
-    `;
-export const GetUserActivityDocument = gql`
-    query GetUserActivity($id: ID!) {
-  positions(where: {vault_: {id: $id}}) {
-    account {
-      id
-    }
-    inputTokenBalance
-    outputTokenBalance
-    deposits {
+export const GetPositionHistoryDocument = /*#__PURE__*/ gql`
+    query GetPositionHistory($positionId: ID!) {
+  position(id: $positionId) {
+    hourlyPositionHistory: hourlySnapshots(
+      first: 480
+      orderBy: timestamp
+      orderDirection: desc
+    ) {
+      netValue: inputTokenBalanceNormalizedInUSD
+      deposits: inputTokenDepositsNormalizedInUSD
+      withdrawals: inputTokenWithdrawalsNormalizedInUSD
       timestamp
-      amount
-      hash
-      inputTokenBalance
     }
-    withdrawals {
+    dailyPositionHistory: dailySnapshots(
+      first: 243
+      orderBy: timestamp
+      orderDirection: desc
+    ) {
+      netValue: inputTokenBalanceNormalizedInUSD
+      deposits: inputTokenDepositsNormalizedInUSD
+      withdrawals: inputTokenWithdrawalsNormalizedInUSD
       timestamp
-      amount
-      hash
-      inputTokenBalance
     }
-    vault {
-      id
-      name
-      inputTokenBalance
-      inputTokenPriceUSD
-      outputTokenPriceUSD
-      inputToken {
-        id
-        symbol
-        decimals
-      }
-      protocol {
-        network
-      }
-      apr365d
-    }
-  }
-}
-    `;
-export const GetUsersActivityDocument = gql`
-    query GetUsersActivity {
-  positions {
-    account {
-      id
-    }
-    inputTokenBalance
-    deposits {
+    weeklyPositionHistory: weeklySnapshots(
+      first: 104
+      orderBy: timestamp
+      orderDirection: desc
+    ) {
+      netValue: inputTokenBalanceNormalizedInUSD
+      deposits: inputTokenDepositsNormalizedInUSD
+      withdrawals: inputTokenWithdrawalsNormalizedInUSD
       timestamp
-      amount
-      hash
-      inputTokenBalance
-    }
-    withdrawals {
-      timestamp
-      amount
-      hash
-      inputTokenBalance
-    }
-    vault {
-      id
-      name
-      outputTokenPriceUSD
-      inputTokenPriceUSD
-      inputToken {
-        id
-        symbol
-        decimals
-      }
-      protocol {
-        network
-      }
-      apr365d
-    }
-  }
-}
-    `;
-export const GetVaultsDocument = gql`
-    query GetVaults {
-  vaults {
-    protocol {
-      network
-    }
-    id
-    name
-    rewardTokens {
-      id
-      token {
-        id
-        symbol
-        decimals
-      }
-    }
-    rewardTokenEmissionsAmount
-    rewardTokenEmissionsUSD
-    arks {
-      id
-      name
-      details
-      inputToken {
-        id
-        name
-        symbol
-        decimals
-      }
-      fees {
-        id
-        feePercentage
-        feeType
-      }
-      createdTimestamp
-      lastUpdateTimestamp
-    }
-    inputToken {
-      id
-      name
-      symbol
-      decimals
-    }
-    outputToken {
-      id
-      name
-      symbol
-      decimals
-    }
-    inputTokenBalance
-    inputTokenPriceUSD
-    outputTokenPriceUSD
-    depositLimit
-    createdTimestamp
-    totalValueLockedUSD
-    cumulativeTotalRevenueUSD
-    cumulativeSupplySideRevenueUSD
-    cumulativeProtocolSideRevenueUSD
-    lastUpdateTimestamp
-    apr7d
-    apr30d
-    apr90d
-    apr180d
-    apr365d
-    calculatedApr
-    aprValues
-    withdrawableTotalAssets
-    withdrawableTotalAssetsUSD
-    dailyInterestRates(first: 365, orderBy: date, orderDirection: desc) {
-      averageRate
-      date
-    }
-    hourlyInterestRates(first: 720, orderBy: date, orderDirection: desc) {
-      averageRate
-      date
-    }
-    weeklyInterestRates(first: 156, orderBy: date, orderDirection: desc) {
-      averageRate
-      date
-    }
-  }
-}
-    `;
-export const GetVaultDocument = gql`
-    query GetVault($id: ID!) {
-  vault(id: $id) {
-    protocol {
-      network
-    }
-    id
-    name
-    rewardTokens {
-      id
-      token {
-        id
-        symbol
-        decimals
-      }
-    }
-    rewardTokenEmissionsUSD
-    rewardTokenEmissionsAmount
-    rebalances(orderBy: timestamp, orderDirection: desc) {
-      id
-      amount
-      amountUSD
-      asset {
-        id
-        symbol
-        decimals
-      }
-      from {
-        name
-        depositLimit
-        calculatedApr
-        totalValueLockedUSD
-      }
-      to {
-        name
-        depositLimit
-        calculatedApr
-        totalValueLockedUSD
-      }
-      toPostAction {
-        totalValueLockedUSD
-        depositLimit
-      }
-      fromPostAction {
-        totalValueLockedUSD
-        depositLimit
-      }
-      protocol {
-        name
-        network
-      }
-      timestamp
-      vault {
-        id
-        name
-        inputToken {
-          id
-          symbol
-        }
-      }
-    }
-    arks {
-      id
-      name
-      details
-      depositLimit
-      cumulativeEarnings
-      inputTokenBalance
-      inputToken {
-        id
-        name
-        symbol
-        decimals
-      }
-      dailySnapshots(first: 10) {
-        id
-        apr
-        totalValueLockedUSD
-        inputTokenBalance
-      }
-      hourlySnapshots(first: 10) {
-        id
-        calculatedApr
-        totalValueLockedUSD
-        inputTokenBalance
-      }
-      fees {
-        id
-        feePercentage
-        feeType
-      }
-      calculatedApr
-      createdTimestamp
-      lastUpdateTimestamp
-    }
-    inputToken {
-      id
-      name
-      symbol
-      decimals
-    }
-    outputToken {
-      id
-      name
-      symbol
-      decimals
-    }
-    inputTokenBalance
-    inputTokenPriceUSD
-    outputTokenPriceUSD
-    depositLimit
-    createdTimestamp
-    totalValueLockedUSD
-    cumulativeTotalRevenueUSD
-    cumulativeSupplySideRevenueUSD
-    cumulativeProtocolSideRevenueUSD
-    lastUpdateTimestamp
-    apr7d
-    apr30d
-    apr90d
-    apr180d
-    apr365d
-    calculatedApr
-    aprValues
-    withdrawableTotalAssets
-    withdrawableTotalAssetsUSD
-    dailyInterestRates(first: 365, orderBy: date, orderDirection: desc) {
-      averageRate
-      date
-    }
-    hourlyInterestRates(first: 720, orderBy: date, orderDirection: desc) {
-      averageRate
-      date
-    }
-    weeklyInterestRates(first: 156, orderBy: date, orderDirection: desc) {
-      averageRate
-      date
     }
   }
 }
@@ -10414,26 +9975,8 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    GetGlobalRebalances(variables?: GetGlobalRebalancesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetGlobalRebalancesQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetGlobalRebalancesQuery>(GetGlobalRebalancesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetGlobalRebalances', 'query', variables);
-    },
-    GetUserPositions(variables: GetUserPositionsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetUserPositionsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetUserPositionsQuery>(GetUserPositionsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetUserPositions', 'query', variables);
-    },
-    GetUserPosition(variables: GetUserPositionQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetUserPositionQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetUserPositionQuery>(GetUserPositionDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetUserPosition', 'query', variables);
-    },
-    GetUserActivity(variables: GetUserActivityQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetUserActivityQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetUserActivityQuery>(GetUserActivityDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetUserActivity', 'query', variables);
-    },
-    GetUsersActivity(variables?: GetUsersActivityQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetUsersActivityQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetUsersActivityQuery>(GetUsersActivityDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetUsersActivity', 'query', variables);
-    },
-    GetVaults(variables?: GetVaultsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetVaultsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetVaultsQuery>(GetVaultsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetVaults', 'query', variables);
-    },
-    GetVault(variables: GetVaultQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetVaultQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetVaultQuery>(GetVaultDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetVault', 'query', variables);
+    GetPositionHistory(variables: GetPositionHistoryQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetPositionHistoryQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetPositionHistoryQuery>(GetPositionHistoryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetPositionHistory', 'query', variables);
     }
   };
 }

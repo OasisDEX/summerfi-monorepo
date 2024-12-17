@@ -1,22 +1,28 @@
 import {
   type EarnAppConfigType,
   type EarnAppFleetCustomConfigType,
+  type ForecastData,
   type SDKVaultishType,
 } from '@summerfi/app-types'
 
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
-import {
-  decorateWithArkInterestRatesData,
-  decorateWithFleetConfig,
-  decorateWithHistoricalChartsData,
-} from '@/helpers/vault-decorators'
+import { type GetPositionHistoryReturnType } from '@/app/server-handlers/position-history'
+import { decorateWithArkInterestRatesData } from '@/helpers/vault-decorators/ark-interest-data'
+import { decorateWithHistoricalChartsData } from '@/helpers/vault-decorators/chart-historical-data'
+import { decorateWithPerformanceChartData } from '@/helpers/vault-decorators/chart-performance-data'
+import { decorateWithFleetConfig } from '@/helpers/vault-decorators/fleet-config'
 
 export const decorateCustomVaultFields = (
   vaults: SDKVaultishType[],
   systemConfig: Partial<EarnAppConfigType>,
-  arkInterestRatesMap?: GetInterestRatesReturnType,
+  decorators?: {
+    arkInterestRatesMap?: GetInterestRatesReturnType
+    positionHistory?: GetPositionHistoryReturnType
+    positionForecast?: ForecastData
+  },
 ) => {
   const { fleetMap } = systemConfig
+  const { arkInterestRatesMap, positionHistory, positionForecast } = decorators ?? {}
 
   const vaultsWithConfig = fleetMap ? decorateWithFleetConfig(vaults, fleetMap) : vaults
 
@@ -28,7 +34,15 @@ export const decorateCustomVaultFields = (
     ? decorateWithArkInterestRatesData(vaultsWithChartsData, arkInterestRatesMap)
     : vaultsWithChartsData
 
-  return vaultsWithArkInterestRates as SDKVaultishType[]
+  const vaultsWithPerformanceChartData =
+    positionHistory && positionForecast
+      ? decorateWithPerformanceChartData(vaultsWithChartsData, {
+          positionHistory,
+          positionForecast,
+        })
+      : vaultsWithArkInterestRates
+
+  return vaultsWithPerformanceChartData as SDKVaultishType[]
 }
 
 export const getCustomVaultConfigById = (

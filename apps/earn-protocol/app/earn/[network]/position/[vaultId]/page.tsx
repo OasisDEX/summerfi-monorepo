@@ -52,7 +52,11 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       })
     : {}
 
-  const [vaultDecorated] = vault ? decorateCustomVaultFields([vault], config, interestRates) : []
+  const [vaultDecorated] = vault
+    ? decorateCustomVaultFields([vault], config, {
+        arkInterestRatesMap: interestRates,
+      })
+    : []
   const vaultsDecorated = decorateCustomVaultFields(vaults, config)
 
   if (!vault) {

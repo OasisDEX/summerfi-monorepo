@@ -247,7 +247,7 @@ export const VaultOpenViewComponent = ({
             defaultExpanded
           >
             <HistoricalYieldChart
-              chartData={vault.customFields?.chartsData}
+              chartData={vault.customFields?.historicalChartData}
               summerVaultName={vault.customFields?.name ?? 'Summer Vault'}
             />
           </Expander>

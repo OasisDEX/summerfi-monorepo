@@ -1,35 +1,41 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Card } from '@summerfi/app-earn-ui'
-import { type TimeframesType } from '@summerfi/app-types'
+import { type TimeframesType, type VaultChartsPerformanceData } from '@summerfi/app-types'
 
 import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
 import { PerformanceChart } from '@/components/organisms/Charts/components/Performance'
 
-type PerformanceYieldChartProps = {
-  chartData: []
+export type PositionPerformanceChartProps = {
+  chartData: VaultChartsPerformanceData['performanceChartData']
 }
 
-export const PerformanceYieldChart = (_props: PerformanceYieldChartProps) => {
+export const PositionPerformanceChart = ({ chartData }: PositionPerformanceChartProps) => {
   const [timeframe, setTimeframe] = useState<TimeframesType>('90d')
-  const [compare, setCompare] = useState(true)
+
+  const parsedData = useMemo(() => {
+    if (!chartData) {
+      return []
+    }
+
+    return chartData.data[timeframe]
+  }, [timeframe, chartData])
 
   return (
     <Card
       style={{
         marginTop: 'var(--spacing-space-medium)',
         flexDirection: 'column',
+        alignItems: 'flex-end',
         paddingBottom: 0,
       }}
     >
       <ChartHeader
-        compare={compare}
-        setCompare={(nextCompare) => setCompare(nextCompare)}
         timeframe={timeframe}
         setTimeframe={(nextTimeFrame) => setTimeframe(nextTimeFrame as TimeframesType)}
       />
-      <PerformanceChart timeframe={timeframe} data={[]} />
+      <PerformanceChart timeframe={timeframe} data={parsedData} />
     </Card>
   )
 }

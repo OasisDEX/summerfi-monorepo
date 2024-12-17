@@ -1,0 +1,35 @@
+query GetPositionHistory($positionId: ID!) {# {wallet_address}-{vault_id}
+  # used in the performance and history chart
+  position(id: $positionId) {
+    hourlyPositionHistory: hourlySnapshots(
+      first: 480
+      orderBy: timestamp
+      orderDirection: desc
+    ) {
+      netValue: inputTokenBalanceNormalizedInUSD
+      deposits: inputTokenDepositsNormalizedInUSD
+      withdrawals: inputTokenWithdrawalsNormalizedInUSD
+      timestamp
+    }
+    dailyPositionHistory: dailySnapshots(
+      first: 243
+      orderBy: timestamp
+      orderDirection: desc
+    ) {
+      netValue: inputTokenBalanceNormalizedInUSD
+      deposits: inputTokenDepositsNormalizedInUSD
+      withdrawals: inputTokenWithdrawalsNormalizedInUSD
+      timestamp
+    }
+    weeklyPositionHistory: weeklySnapshots(
+      first: 104
+      orderBy: timestamp
+      orderDirection: desc
+    ) {
+      netValue: inputTokenBalanceNormalizedInUSD
+      deposits: inputTokenDepositsNormalizedInUSD
+      withdrawals: inputTokenWithdrawalsNormalizedInUSD
+      timestamp
+    }
+  }
+}
