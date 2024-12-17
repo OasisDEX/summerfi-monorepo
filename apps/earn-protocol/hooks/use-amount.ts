@@ -1,12 +1,14 @@
 import { type ChangeEvent, useEffect, useMemo, useState } from 'react'
 import { type SDKVaultishType } from '@summerfi/app-types'
+import type { IToken } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 
 type UseAmountProps = {
   vault: SDKVaultishType
+  selectedToken?: IToken
 }
 
-export const useAmount = ({ vault }: UseAmountProps) => {
+export const useAmount = ({ vault, selectedToken }: UseAmountProps) => {
   const vaultTokenDecimals = vault.inputToken.decimals
 
   const [editMode, setEditMode] = useState(false)
@@ -62,22 +64,20 @@ export const useAmount = ({ vault }: UseAmountProps) => {
 
       return
     }
-    const [integer, decimal] = value.split('.')
 
-    if (integer.startsWith('0')) {
-      ev.stopPropagation()
-      ev.preventDefault()
-
+    if (!selectedToken) {
       return
     }
+
+    const [, decimal] = value.split('.')
 
     if (
       // only one dot
       value.split('').filter((char) => char === '.').length > 1 ||
       // only numbers and dots
       /[^0-9.]/gu.test(value) ||
-      // leading numbers max is vaultTokenDecimals
-      (decimal || '').length > vaultTokenDecimals
+      // leading numbers max is selected token decimals
+      (decimal || '').length > selectedToken.decimals
     ) {
       ev.stopPropagation()
       ev.preventDefault()

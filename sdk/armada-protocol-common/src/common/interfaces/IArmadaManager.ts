@@ -1,4 +1,10 @@
-import { IAddress, IPercentage, ITokenAmount, type ChainInfo } from '@summerfi/sdk-common/common'
+import {
+  IAddress,
+  IPercentage,
+  ITokenAmount,
+  type ChainInfo,
+  type IToken,
+} from '@summerfi/sdk-common/common'
 import { TransactionInfo } from '@summerfi/sdk-common/orders'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IArmadaVaultId } from './IArmadaVaultId'
@@ -225,6 +231,7 @@ export interface IArmadaManager {
     vaultId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
+    toToken: IToken
     slippage: IPercentage
   }): Promise<TransactionInfo[]>
 

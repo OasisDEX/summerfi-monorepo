@@ -12,7 +12,7 @@ type UseAmountProps = {
 }
 
 // For swap testing purposes only adding testToken to dropdown
-const testTokens = ['USDBC']
+const testTokens = ['USDBC', 'WSTETH']
 
 /**
  * Custom hook to manage token selection for a given vault.

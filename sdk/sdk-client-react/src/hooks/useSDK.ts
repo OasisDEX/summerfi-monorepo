@@ -11,6 +11,7 @@ import { getChainHandler } from '../handlers/getChainHandler'
 import { getWalletAddressHandler } from '../factories/getWalletAddressHandler'
 import { getCurrentUserHandler } from '../handlers/getCurrentUserHandler'
 import { getChainInfoHandler } from '../handlers/getChainInfoHandler'
+import { getSwapQuoteHandler } from '../handlers/getSwapQuoteHandler'
 
 type UseSdk = {
   walletAddress?: string
@@ -46,15 +47,35 @@ export const useSDK = (params: UseSdk) => {
   const getUserPosition = useMemo(() => getUserPositionHandler(sdk), [sdk])
   const getUserPositions = useMemo(() => getUserPositionsHandler(sdk), [sdk])
 
-  return {
-    getCurrentUser,
-    getWalletAddress,
-    getChainInfo,
-    getChain,
-    getTokenBySymbol,
-    getDepositTX,
-    getWithdrawTX,
-    getUserPositions,
-    getUserPosition,
-  }
+  // SWAPS
+  const getSwapQuote = useMemo(() => getSwapQuoteHandler(sdk), [sdk])
+
+  const memo = useMemo(
+    () => ({
+      getCurrentUser,
+      getWalletAddress,
+      getChainInfo,
+      getChain,
+      getTokenBySymbol,
+      getDepositTX,
+      getWithdrawTX,
+      getUserPositions,
+      getUserPosition,
+      getSwapQuote,
+    }),
+    [
+      getCurrentUser,
+      getWalletAddress,
+      getChainInfo,
+      getChain,
+      getTokenBySymbol,
+      getDepositTX,
+      getWithdrawTX,
+      getUserPositions,
+      getUserPosition,
+      getSwapQuote,
+    ],
+  )
+
+  return memo
 }

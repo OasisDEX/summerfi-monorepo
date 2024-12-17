@@ -71,8 +71,9 @@ export const VaultOpenViewComponent = ({
     vault,
   })
 
-  const { token, tokenBalance, tokenBalanceLoading } = useTokenBalance({
+  const { vaultToken, token, tokenBalance, tokenBalanceLoading } = useTokenBalance({
     publicClient,
+    vaultTokenSymbol: vault.inputToken.symbol,
     tokenSymbol: selectedTokenOption.value,
   })
   const { userWalletAddress } = useUserWallet()
@@ -105,6 +106,7 @@ export const VaultOpenViewComponent = ({
     amount: amountParsed,
     manualSetAmount,
     publicClient,
+    vaultToken,
     token,
     tokenBalance,
     tokenBalanceLoading,
@@ -170,7 +172,7 @@ export const VaultOpenViewComponent = ({
       dropdownValue={selectedTokenOption}
       onFocus={onFocus}
       onBlur={onBlur}
-      tokenSymbol={selectedTokenOption.label}
+      tokenSymbol={selectedTokenOption.value}
       tokenBalance={tokenBalance}
       tokenBalanceLoading={tokenBalanceLoading}
       manualSetAmount={manualSetAmount}

@@ -291,40 +291,22 @@ export class ArmadaManager implements IArmadaManager {
       swapToAmount?: ITokenAmount
     } = {}
 
-    let assetsToEOA: ITokenAmount = params.amount
-    let swapToToken: IToken | undefined
-
     const { assets: fleetAssets, shares: fleetShares } = await this.getFleetBalance({
       vaultId: params.vaultId,
       user: params.user,
     })
 
+    const assetsToEOA = params.amount
+    const swapToToken = params.toToken
+    const shouldSwap = !swapToToken.equals(assetsToEOA.token)
+
     LoggingService.debug('getWithdrawTX', {
-      requestedAmount: params.amount.toString(),
+      assetsToEOA: assetsToEOA.toString(),
+      swapToToken: swapToToken.toString(),
+      shouldSwap,
       fleetAssets: fleetAssets.toString(),
       fleetShares: fleetShares.toString(),
     })
-
-    const fleetCommander = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-    const fleetToken = await fleetCommander.asErc4626().asset()
-    const shouldSwap = !params.amount.token.address.equals(fleetToken.address)
-
-    // If withdrawing a token that is not the fleet token
-    // we need to swap it to target asset
-    if (shouldSwap) {
-      const assetsToSwap = await this._getQuoteAmount({
-        fromAmount: assetsToEOA,
-        toToken: fleetToken,
-      })
-      swapToToken = assetsToEOA.token
-      assetsToEOA = assetsToSwap
-      LoggingService.debug('assetsToSwap', {
-        assetsToSwap: assetsToSwap.toString(),
-      })
-    }
 
     const admiralsQuarterAddress = getDeployedContractAddress({
       chainInfo: params.vaultId.chainInfo,
@@ -365,6 +347,7 @@ export class ArmadaManager implements IArmadaManager {
           slippage: params.slippage,
           amount: assetsToEOA,
           swapToToken,
+          shouldSwap,
         })
         const multicallCalldata = encodeFunctionData({
           abi: AdmiralsQuartersAbi,
@@ -402,7 +385,7 @@ export class ArmadaManager implements IArmadaManager {
           })
         }
         // approval to swap from user EOA
-        if (swapToToken) {
+        if (shouldSwap) {
           const approveToSwap = await this._allowanceManager.getApproval({
             chainInfo: params.vaultId.chainInfo,
             spender: admiralsQuarterAddress,
@@ -426,6 +409,8 @@ export class ArmadaManager implements IArmadaManager {
           vaultId: params.vaultId,
           slippage: params.slippage,
           amount: fleetAssets,
+          swapToToken,
+          shouldSwap,
         })
         multicallArgs.push(...exitWithdrawCall.calldata)
 
@@ -446,7 +431,7 @@ export class ArmadaManager implements IArmadaManager {
         multicallArgs.push(...unstakeAndWithdrawCall.calldata)
 
         // swap to target token from user EOA
-        if (swapToToken) {
+        if (shouldSwap) {
           const swapCall = await this._getEOASwapCall({
             vaultId: params.vaultId,
             slippage: params.slippage,
@@ -482,7 +467,7 @@ export class ArmadaManager implements IArmadaManager {
       })
 
       // approval to swap from user EOA
-      if (swapToToken) {
+      if (shouldSwap) {
         const approveToSwap = await this._allowanceManager.getApproval({
           chainInfo: params.vaultId.chainInfo,
           spender: admiralsQuarterAddress,
@@ -507,7 +492,7 @@ export class ArmadaManager implements IArmadaManager {
       })
       multicallArgs.push(...unstakeAndWithdrawCall.calldata)
 
-      if (swapToToken) {
+      if (shouldSwap) {
         const swapCall = await this._getEOASwapCall({
           vaultId: params.vaultId,
           slippage: params.slippage,
@@ -920,7 +905,8 @@ export class ArmadaManager implements IArmadaManager {
     vaultId: IArmadaVaultId
     amount: ITokenAmount
     slippage: IPercentage
-    swapToToken?: IToken
+    swapToToken: IToken
+    shouldSwap: boolean
   }): Promise<{
     calldata: HexData[]
   }> {
@@ -938,8 +924,8 @@ export class ArmadaManager implements IArmadaManager {
 
     let outAssets = params.amount
 
-    if (params.swapToToken) {
-      // swap
+    // should swap
+    if (params.shouldSwap) {
       const swapCall = await this._getSwapCall({
         vaultId: params.vaultId,
         fromAmount: params.amount,

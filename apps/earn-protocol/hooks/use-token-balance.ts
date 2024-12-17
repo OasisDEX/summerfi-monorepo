@@ -10,15 +10,18 @@ import type { useClient } from './use-client'
 
 export const useTokenBalance = ({
   publicClient,
+  vaultTokenSymbol,
   tokenSymbol,
   chainId,
   skip, // to be used when we there are multiple calls of this hook within single component
 }: {
   publicClient: ReturnType<typeof useClient>['publicClient']
+  vaultTokenSymbol: string
   tokenSymbol: string
   chainId?: number
   skip?: boolean
 }) => {
+  const [vaultToken, setVaultToken] = useState<IToken>()
   const [token, setToken] = useState<IToken>()
   const [tokenBalance, setTokenBalance] = useState<BigNumber>()
   const [tokenBalanceLoading, setTokenBalanceLoading] = useState(true)
@@ -32,13 +35,19 @@ export const useTokenBalance = ({
   useEffect(() => {
     const fetchTokenBalance = async (address: Address) => {
       setTokenBalanceLoading(true)
-
-      const fetchedToken = await sdk.getTokenBySymbol({
-        chainId: chainId ?? chainInfo.chainId,
-        symbol: tokenSymbol,
-      })
+      const [fetchedToken, fetchedVaultToken] = await Promise.all([
+        sdk.getTokenBySymbol({
+          chainId: chainId ?? chainInfo.chainId,
+          symbol: tokenSymbol,
+        }),
+        sdk.getTokenBySymbol({
+          chainId: chainId ?? chainInfo.chainId,
+          symbol: vaultTokenSymbol,
+        }),
+      ])
 
       setToken(fetchedToken)
+      setVaultToken(fetchedVaultToken)
 
       publicClient
         .readContract({
@@ -70,9 +79,19 @@ export const useTokenBalance = ({
     } else {
       setTokenBalanceLoading(false)
     }
-  }, [tokenSymbol, publicClient, skip, chainId, walletAddress?.value, chainInfo.chainId.toString()])
+  }, [
+    sdk,
+    walletAddress?.toString(),
+    chainInfo.chainId,
+    tokenSymbol,
+    vaultTokenSymbol,
+    publicClient,
+    skip,
+    chainId,
+  ])
 
   return {
+    vaultToken,
     token,
     tokenBalance,
     tokenBalanceLoading,
