@@ -5,11 +5,13 @@ import BigNumber from 'bignumber.js'
 import { useAppSDK } from './use-app-sdk'
 
 export const useSwapQuote = ({
+  chainId,
   fromAmount,
   fromTokenSymbol,
   toTokenSymbol,
   slippage,
 }: {
+  chainId: number
   fromAmount: string
   fromTokenSymbol: string
   toTokenSymbol: string
@@ -20,17 +22,15 @@ export const useSwapQuote = ({
 
   const sdk = useAppSDK()
 
-  const chainInfo = sdk.getChainInfo()
-
   useEffect(() => {
     const fetchQuote = async () => {
       const [fromToken, toToken] = await Promise.all([
         sdk.getTokenBySymbol({
-          chainId: chainInfo.chainId,
+          chainId,
           symbol: fromTokenSymbol,
         }),
         sdk.getTokenBySymbol({
-          chainId: chainInfo.chainId,
+          chainId,
           symbol: toTokenSymbol,
         }),
       ])
@@ -64,7 +64,7 @@ export const useSwapQuote = ({
     } else {
       setQuote(undefined)
     }
-  }, [fromAmount, fromTokenSymbol, toTokenSymbol, slippage, chainInfo.chainId, sdk])
+  }, [fromAmount, fromTokenSymbol, toTokenSymbol, slippage, chainId, sdk])
 
   return {
     quote,

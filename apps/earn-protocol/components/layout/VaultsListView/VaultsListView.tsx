@@ -17,7 +17,12 @@ import {
   type SDKNetwork,
   type SDKVaultsListType,
 } from '@summerfi/app-types'
-import { formatCryptoBalance, sdkNetworkToHumanNetwork, zero } from '@summerfi/app-utils'
+import {
+  formatCryptoBalance,
+  sdkNetworkToHumanNetwork,
+  subgraphNetworkToSDKId,
+  zero,
+} from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
 
 import { SUMR_CAP } from '@/constants/earn-protocol'
@@ -94,6 +99,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
 
   const { handleTokenSelectionChange, selectedTokenOption, tokenOptions } = useTokenSelector({
     vault: vaultData,
+    chainId: subgraphNetworkToSDKId(vaultData.protocol.network),
   })
 
   const tokenBalances = useTokenBalances({
@@ -219,6 +225,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
         <VaultSimulationForm
           vaultData={vaultData}
           isMobile={isMobile}
+          tokenSymbol={selectedTokenOption.value}
           tokenBalance={tokenBalances.tokenBalance}
           isTokenBalanceLoading={tokenBalances.tokenBalanceLoading}
           selectedTokenOption={selectedTokenOption}

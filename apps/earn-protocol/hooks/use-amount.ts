@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js'
 
 type UseAmountProps = {
   vault: SDKVaultishType
-  selectedToken?: IToken
+  selectedToken: IToken | undefined
 }
 
 export const useAmount = ({ vault, selectedToken }: UseAmountProps) => {

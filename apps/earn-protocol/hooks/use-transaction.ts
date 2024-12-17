@@ -16,7 +16,7 @@ import {
   TransactionAction,
   type TransactionInfoLabeled,
 } from '@summerfi/app-types'
-import { subgraphNetworkToSDKId, ten, zero } from '@summerfi/app-utils'
+import { ten, zero } from '@summerfi/app-utils'
 import {
   Address,
   getChainInfoByChainId,
@@ -24,6 +24,7 @@ import {
   TokenAmount,
   type TransactionInfo,
 } from '@summerfi/sdk-client-react'
+import type { ChainId } from '@summerfi/serverless-shared'
 import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 import { useRouter } from 'next/navigation'
@@ -38,6 +39,7 @@ import { useClientChainId } from '@/hooks/use-client-chain-id'
 
 type UseTransactionParams = {
   vault: SDKVaultishType
+  vaultChainId: ChainId.BASE | ChainId.ARBITRUM
   amount: BigNumber | undefined
   manualSetAmount: (amount: string | undefined) => void
   vaultToken: IToken | undefined
@@ -58,6 +60,7 @@ const labelTransactions = (transactions: TransactionInfo[]) => {
 
 export const useTransaction = ({
   vault,
+  vaultChainId,
   manualSetAmount,
   amount,
   publicClient,
@@ -88,7 +91,6 @@ export const useTransaction = ({
 
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
 
-  const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
   const isProperChainSelected = clientChainId === vaultChainId
   const {
     symbol: inputTokenSymbol,

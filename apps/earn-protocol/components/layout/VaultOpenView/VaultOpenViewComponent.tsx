@@ -19,6 +19,7 @@ import {
   type SDKVaultType,
   type UsersActivity,
 } from '@summerfi/app-types'
+import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
 
 import { detailsLinks } from '@/components/layout/VaultOpenView/mocks'
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
@@ -65,16 +66,20 @@ export const VaultOpenViewComponent = ({
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
 
+  const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
+
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   const { handleTokenSelectionChange, selectedTokenOption, tokenOptions } = useTokenSelector({
     vault,
+    chainId: vaultChainId,
   })
 
   const { vaultToken, token, tokenBalance, tokenBalanceLoading } = useTokenBalance({
     publicClient,
     vaultTokenSymbol: vault.inputToken.symbol,
     tokenSymbol: selectedTokenOption.value,
+    chainId: vaultChainId,
   })
   const { userWalletAddress } = useUserWallet()
 
@@ -95,7 +100,6 @@ export const VaultOpenViewComponent = ({
     sidebar,
     txHashes,
     removeTxHash,
-    vaultChainId,
     nextTransaction,
     backToInit,
     user,
@@ -103,6 +107,7 @@ export const VaultOpenViewComponent = ({
     setIsTransakOpen,
   } = useTransaction({
     vault,
+    vaultChainId,
     amount: amountParsed,
     manualSetAmount,
     publicClient,

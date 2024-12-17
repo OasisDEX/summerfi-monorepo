@@ -295,7 +295,7 @@ export class ArmadaManager implements IArmadaManager {
       vaultId: params.vaultId,
       user: params.user,
     })
-
+    // handling for ETH
     const assetsToEOA = params.amount
     const swapToToken = params.toToken
     const shouldSwap = !swapToToken.equals(assetsToEOA.token)
@@ -768,8 +768,10 @@ export class ArmadaManager implements IArmadaManager {
     slippage: IPercentage
     shouldStake?: boolean
   }): Promise<TransactionInfo[]> {
-    const transactions: TransactionInfo[] = []
     const shouldStake = params.shouldStake ?? true
+    const isEth = params.amount.token.symbol === 'ETH'
+
+    const transactions: TransactionInfo[] = []
     const metadata: {
       swapToAmount?: ITokenAmount
     } = {}
@@ -860,6 +862,8 @@ export class ArmadaManager implements IArmadaManager {
         calldata: depositMulticallCalldata,
         description: 'Deposit Multicall Transaction',
         metadata: metadata,
+        // If the user is depositing ETH, we need to add value to the deposit transaction
+        value: isEth ? params.amount.toSolidityValue() : undefined,
       }),
     )
 

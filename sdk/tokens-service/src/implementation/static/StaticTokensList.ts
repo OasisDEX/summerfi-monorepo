@@ -303,6 +303,15 @@ export const StaticTokensData: TokenListData = {
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png',
     },
     {
+      name: 'Arbitrum Bridged WBTC',
+      address: '0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f',
+      symbol: 'WBTC',
+      decimals: 8,
+      chainId: ChainFamilyMap.Arbitrum.ArbitrumOne.chainId,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png',
+    },
+    {
       name: 'Wrapped Ether',
       address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
       symbol: 'WETH',
@@ -557,7 +566,34 @@ export const StaticTokensData: TokenListData = {
       address: '0x4200000000000000000000000000000000000006',
       symbol: 'WETH',
       decimals: 18,
-      chainId: 8453,
+      chainId: ChainFamilyMap.Base.Base.chainId,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png',
+    },
+    {
+      name: 'Ether',
+      address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+      symbol: 'ETH',
+      decimals: 18,
+      chainId: ChainFamilyMap.Base.Base.chainId,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png',
+    },
+    {
+      name: 'Ether',
+      address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+      symbol: 'ETH',
+      decimals: 18,
+      chainId: ChainFamilyMap.Arbitrum.ArbitrumOne.chainId,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png',
+    },
+    {
+      name: 'Wrapped Ether',
+      address: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
+      symbol: 'WETH',
+      decimals: 18,
+      chainId: ChainFamilyMap.Arbitrum.ArbitrumOne.chainId,
       logoURI:
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png',
     },
@@ -572,6 +608,14 @@ export const StaticTokensData: TokenListData = {
     {
       address: '0xc1CBa3fCea344f92D9239c08C0568f6F2F0ee452',
       chainId: 8453,
+      name: 'WrappedliquidstakedEther2.0',
+      symbol: 'wstETH',
+      decimals: 18,
+      logoURI: 'https://tokens.1inch.io/0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0.png',
+    },
+    {
+      address: '0x5979d7b546e38e414f7e9822514be443a4800529',
+      chainId: ChainFamilyMap.Arbitrum.ArbitrumOne.chainId,
       name: 'WrappedliquidstakedEther2.0',
       symbol: 'wstETH',
       decimals: 18,

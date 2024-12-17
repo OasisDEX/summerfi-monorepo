@@ -21,7 +21,7 @@ import {
   TransactionAction,
   type UsersActivity,
 } from '@summerfi/app-types'
-import { zero } from '@summerfi/app-utils'
+import { subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
 import BigNumber from 'bignumber.js'
 
@@ -63,8 +63,11 @@ export const VaultManageViewComponent = ({
   const user = useUser()
   const { publicClient } = useClient()
 
+  const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
+
   const { handleTokenSelectionChange, selectedTokenOption, tokenOptions } = useTokenSelector({
     vault,
+    chainId: vaultChainId,
   })
 
   const {
@@ -76,6 +79,7 @@ export const VaultManageViewComponent = ({
     publicClient,
     vaultTokenSymbol: vault.inputToken.symbol,
     tokenSymbol: selectedTokenOption.value,
+    chainId: vaultChainId,
   })
 
   const {
@@ -92,7 +96,6 @@ export const VaultManageViewComponent = ({
     sidebar,
     txHashes,
     removeTxHash,
-    vaultChainId,
     reset,
     transactionType,
     setTransactionType,
@@ -104,6 +107,7 @@ export const VaultManageViewComponent = ({
     backToInit,
   } = useTransaction({
     vault,
+    vaultChainId,
     amount: amountParsed,
     manualSetAmount,
     publicClient,
@@ -156,6 +160,7 @@ export const VaultManageViewComponent = ({
   }, [transactionType, selectedTokenOption.value, vault.inputToken.symbol])
 
   const { quote, quoteLoading } = useSwapQuote({
+    chainId: vaultChainId,
     fromTokenSymbol,
     fromAmount: amountDisplay,
     toTokenSymbol,
@@ -167,10 +172,17 @@ export const VaultManageViewComponent = ({
       return 'Loading...'
     }
 
-    return quote !== undefined
-      ? `$${quote.toTokenAmount.toBigNumber().toFixed(vault.inputToken.decimals)}`
-      : amountDisplayUSD
-  }, [quote, quoteLoading, amountDisplayUSD, vault.inputToken.decimals])
+    if (quote === undefined) {
+      return amountDisplayUSD
+    }
+
+    const amountWithSwap = {
+      [TransactionAction.DEPOSIT]: `$${quote.toTokenAmount.toBigNumber().toFixed(vault.inputToken.decimals)}`,
+      [TransactionAction.WITHDRAW]: `${quote.toTokenAmount.toBigNumber().toFixed(vault.inputToken.decimals)} ${quote.toTokenAmount.token.symbol}`,
+    }[transactionType]
+
+    return amountWithSwap
+  }, [quote, quoteLoading, amountDisplayUSD, vault.inputToken.decimals, transactionType])
 
   const sidebarContent = nextTransaction?.label ? (
     {
