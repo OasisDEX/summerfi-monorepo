@@ -270,6 +270,8 @@ export type IconNamesList =
   | 'stack_colorful'
   | 'fluid'
   | 'gearbox'
+  | 'linkedin'
+  | 'x'
 
 export type TokenSymbolsList =
   | 'AAVE'

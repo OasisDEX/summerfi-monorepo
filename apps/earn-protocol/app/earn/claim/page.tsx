@@ -1,9 +1,9 @@
-import { ClaimPageView } from '@/components/layout/ClaimPageView/ClaimPageView'
+import { redirect } from 'next/navigation'
 
 export const revalidate = 60
 
-const ClaimPage = () => {
-  return <ClaimPageView />
+const ClaimRedirectPage = () => {
+  redirect(`/earn`)
 }
 
-export default ClaimPage
+export default ClaimRedirectPage

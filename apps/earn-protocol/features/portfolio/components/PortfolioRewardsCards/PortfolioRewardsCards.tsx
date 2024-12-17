@@ -1,10 +1,13 @@
+'use client'
 import { Button, DataModule, Text } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
+import { useParams } from 'next/navigation'
 
 import classNames from './PortfolioRewardsCards.module.scss'
 
 const SumrAvailableToClaim = () => {
+  const { walletAddress } = useParams()
   const rawSumr = 11
   const rawSumrUSD = 23
   const sumrAmount = formatCryptoBalance(rawSumr)
@@ -20,7 +23,7 @@ const SumrAvailableToClaim = () => {
         valueSize: 'large',
       }}
       actionable={
-        <Link href="/earn/claim" target="_blank">
+        <Link href={`/earn/claim/${walletAddress}`} target="_blank">
           <Button variant="primarySmall">Claim</Button>
         </Link>
       }

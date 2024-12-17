@@ -1,5 +1,6 @@
 import type { Dispatch, FC } from 'react'
 import { Button, Card, Text, WithArrow } from '@summerfi/app-earn-ui'
+import Link from 'next/link'
 
 import {
   type ClaimDelegateReducerAction,
@@ -35,7 +36,10 @@ interface ClaimDelegateAcceptanceStepProps {
   dispatch: Dispatch<ClaimDelegateReducerAction>
 }
 
-export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> = ({ dispatch }) => {
+export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> = ({
+  state,
+  dispatch,
+}) => {
   const handleAccept = () => {
     dispatch({ type: 'update-step', payload: ClaimDelegateSteps.CLAIM })
   }
@@ -117,11 +121,13 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
           </div>
         </Card>
         <div className={classNames.footerWrapper}>
-          <Button variant="secondarySmall">
-            <Text variant="p3semi" as="p">
-              Reject terms
-            </Text>
-          </Button>
+          <Link href={`/earn/portfolio/${state.walletAddress}`}>
+            <Button variant="secondarySmall">
+              <Text variant="p3semi" as="p">
+                Reject terms
+              </Text>
+            </Button>
+          </Link>
           <Button
             variant="primarySmall"
             style={{ paddingRight: 'var(--general-space-32)' }}
