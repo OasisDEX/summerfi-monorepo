@@ -16,6 +16,7 @@ import {
   type ChainInfo,
   type IAddress,
   type IPercentage,
+  type IToken,
 } from '@summerfi/sdk-common'
 
 /**
@@ -143,6 +144,7 @@ export interface IArmadaManagerUsersClient {
    * @param vaultId ID of the pool to withdraw from
    * @param user user that is trying to withdraw
    * @param amount Token amount to be withdrawn
+   * @param toToken Token to withdraw to
    * @param slippage Slippage tolerance
    *
    * @returns The transactions needed to withdraw the tokens
@@ -151,6 +153,7 @@ export interface IArmadaManagerUsersClient {
     vaultId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
+    toToken: IToken
     slippage: IPercentage
   }): Promise<TransactionInfo[]>
 

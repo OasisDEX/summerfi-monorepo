@@ -140,6 +140,7 @@ describe('Armada Protocol Service', () => {
       vaultId: vaultId,
       user,
       amount: tokenAmount,
+      toToken: tokenAmount.token,
       slippage: Percentage.createFrom({ value: 0.01 }),
     })
 

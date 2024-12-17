@@ -6,6 +6,7 @@ import {
   Wallet,
   type IAddress,
   type IChainInfo,
+  type IToken,
   type ITokenAmount,
 } from '@summerfi/sdk-common'
 
@@ -15,12 +16,14 @@ export const getWithdrawTXHandler =
     fleetAddress,
     walletAddress,
     amount,
+    toToken,
     chainInfo,
     slippage,
   }: {
     fleetAddress: string
     walletAddress: IAddress
     amount: ITokenAmount
+    toToken: IToken
     chainInfo: IChainInfo
     slippage: number
   }) => {
@@ -40,6 +43,7 @@ export const getWithdrawTXHandler =
       vaultId: poolId,
       user,
       amount: amount,
+      toToken: toToken,
       slippage: Percentage.createFrom({ value: slippage }),
     })
   }

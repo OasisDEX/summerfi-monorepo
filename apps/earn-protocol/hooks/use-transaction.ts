@@ -40,6 +40,7 @@ type UseTransactionParams = {
   vault: SDKVaultishType
   amount: BigNumber | undefined
   manualSetAmount: (amount: string | undefined) => void
+  vaultToken: IToken | undefined
   token: IToken | undefined
   tokenBalance: BigNumber | undefined
   tokenBalanceLoading: boolean
@@ -60,6 +61,7 @@ export const useTransaction = ({
   manualSetAmount,
   amount,
   publicClient,
+  vaultToken,
   token,
   tokenBalance,
   tokenBalanceLoading,
@@ -216,7 +218,16 @@ export const useTransaction = ({
   )
 
   const getTransactionsList = useCallback(async () => {
-    if (token && amount && user) {
+    if (token && vaultToken && amount && user) {
+      const fromToken = {
+        [TransactionAction.DEPOSIT]: token,
+        [TransactionAction.WITHDRAW]: vaultToken,
+      }[transactionType]
+      const toToken = {
+        [TransactionAction.DEPOSIT]: vaultToken,
+        [TransactionAction.WITHDRAW]: token,
+      }[transactionType]
+
       setTxStatus('loadingTx')
       try {
         const transactionsList: TransactionInfo[] = await {
@@ -227,9 +238,10 @@ export const useTransaction = ({
             value: user.address,
           }),
           amount: TokenAmount.createFrom({
-            token,
+            token: fromToken,
             amount: amount.toString(),
           }),
+          toToken,
           fleetAddress: vault.id,
           chainInfo: getChainInfoByChainId(vaultChainId),
           // TODO: we should update slippage once it'll be configurable from the wallet dropdown menu

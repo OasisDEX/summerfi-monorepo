@@ -68,11 +68,13 @@ export const VaultManageViewComponent = ({
   })
 
   const {
+    vaultToken,
     token: selectedToken,
     tokenBalance: selectedTokenBalance,
     tokenBalanceLoading: selectedTokenBalanceLoading,
   } = useTokenBalance({
     publicClient,
+    vaultTokenSymbol: vault.inputToken.symbol,
     tokenSymbol: selectedTokenOption.value,
   })
 
@@ -106,6 +108,7 @@ export const VaultManageViewComponent = ({
     manualSetAmount,
     publicClient,
     token: selectedToken,
+    vaultToken,
     tokenBalance: selectedTokenBalance,
     tokenBalanceLoading: selectedTokenBalanceLoading,
     flow: 'manage',

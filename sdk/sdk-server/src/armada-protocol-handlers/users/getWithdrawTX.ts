@@ -1,8 +1,10 @@
 import {
   IPercentage,
   isPercentage,
+  isToken,
   isTokenAmount,
   isUser,
+  type IToken,
   type ITokenAmount,
   type IUser,
 } from '@summerfi/sdk-common'
@@ -16,6 +18,7 @@ export const getWithdrawTX = publicProcedure
       vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
       user: z.custom<IUser>(isUser),
       amount: z.custom<ITokenAmount>(isTokenAmount),
+      toToken: z.custom<IToken>(isToken),
       slippage: z.custom<IPercentage>(isPercentage),
     }),
   )
