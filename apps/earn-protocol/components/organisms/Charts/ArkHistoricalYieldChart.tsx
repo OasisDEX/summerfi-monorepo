@@ -2,17 +2,20 @@
 
 import { useMemo, useState } from 'react'
 import { Card } from '@summerfi/app-earn-ui'
-import { type TimeframesType, type VaultChartsHistoricalData } from '@summerfi/app-types'
+import { type TimeframesType, type VaultWithChartsData } from '@summerfi/app-types'
 
 import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
 import { YieldsChart } from '@/components/organisms/Charts/components/Yields'
 
-type HistoricalYieldChartProps = {
-  chartData: VaultChartsHistoricalData['historicalChartData']
+type ArkHistoricalYieldChartProps = {
+  chartData: VaultWithChartsData['arksHistoricalChartData']
   summerVaultName: string
 }
 
-export const HistoricalYieldChart = ({ chartData, summerVaultName }: HistoricalYieldChartProps) => {
+export const ArkHistoricalYieldChart = ({
+  chartData,
+  summerVaultName,
+}: ArkHistoricalYieldChartProps) => {
   const [timeframe, setTimeframe] = useState<TimeframesType>('90d')
   const [compare, setCompare] = useState(true)
 

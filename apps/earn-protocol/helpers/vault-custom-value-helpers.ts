@@ -9,7 +9,8 @@ import {
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { type GetPositionHistoryReturnType } from '@/app/server-handlers/position-history'
 import { decorateWithArkInterestRatesData } from '@/helpers/vault-decorators/ark-interest-data'
-import { decorateWithHistoricalChartsData } from '@/helpers/vault-decorators/chart-historical-data'
+import { decorateWithArkHistoricalChartsData } from '@/helpers/vault-decorators/chart-ark-historical-data'
+import { decorateWithHistoryChartData } from '@/helpers/vault-decorators/chart-historical-data'
 import { decorateWithPerformanceChartData } from '@/helpers/vault-decorators/chart-performance-data'
 import { decorateWithFleetConfig } from '@/helpers/vault-decorators/fleet-config'
 
@@ -37,7 +38,7 @@ export const decorateCustomVaultFields = ({
   const vaultsWithConfig = fleetMap ? decorateWithFleetConfig(vaults, fleetMap) : vaults
 
   const vaultsWithChartsData = arkInterestRatesMap
-    ? decorateWithHistoricalChartsData(vaultsWithConfig, arkInterestRatesMap)
+    ? decorateWithArkHistoricalChartsData(vaultsWithConfig, arkInterestRatesMap)
     : vaultsWithConfig
 
   const vaultsWithArkInterestRates = arkInterestRatesMap
@@ -53,7 +54,14 @@ export const decorateCustomVaultFields = ({
         })
       : vaultsWithArkInterestRates
 
-  return vaultsWithPerformanceChartData as SDKVaultishType[]
+  const vaultsWithHistoryChartData = positionHistory
+    ? decorateWithHistoryChartData(vaultsWithPerformanceChartData, {
+        position,
+        positionHistory,
+      })
+    : vaultsWithArkInterestRates
+
+  return vaultsWithHistoryChartData as SDKVaultishType[]
 }
 
 export const getCustomVaultConfigById = (

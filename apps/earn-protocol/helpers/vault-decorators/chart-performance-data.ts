@@ -3,7 +3,7 @@ import {
   type ForecastData,
   type IArmadaPosition,
   type SDKVaultishType,
-  type VaultChartsPerformanceData,
+  type VaultWithChartsData,
 } from '@summerfi/app-types'
 import dayjs from 'dayjs'
 
@@ -14,7 +14,7 @@ const mergePositionHistoryAndForecast = (
   positionHistory: GetPositionHistoryReturnType,
   positionForecast: ForecastData,
   position?: IArmadaPosition,
-): VaultChartsPerformanceData['performanceChartData'] => {
+): VaultWithChartsData['performanceChartData'] => {
   const now = dayjs()
   const nowStartOfHour = now.startOf('hour')
   const nowStartOfDay = now.startOf('day')
@@ -51,7 +51,17 @@ const mergePositionHistoryAndForecast = (
     weekly: 52,
   }
 
+  const pointsNeededToDisplayAnyGraph = 3 // 3 hours
+
   const positionAmount = position?.amount.amount ? Number(position.amount.amount) : 0
+
+  if (
+    (positionHistory.position?.hourlyPositionHistory.length ?? 0) < pointsNeededToDisplayAnyGraph
+  ) {
+    return {
+      data: chartBaseData,
+    }
+  }
 
   // history hourly points
   positionHistory.position?.hourlyPositionHistory.reverse().forEach((point) => {
@@ -66,22 +76,18 @@ const mergePositionHistoryAndForecast = (
       isSameHour && positionAmount
         ? positionAmount
         : Math.max(point.deposits - Math.abs(point.withdrawals), 0)
+    const newPointData = {
+      timestamp: timestampUnix,
+      timestampParsed,
+      netValue: pointNetValue,
+      depositedValue: pointDepositedValue,
+    }
 
     if (timestampUnix >= thresholdHistorical7d) {
-      chartBaseData['7d'].push({
-        timestamp: timestampUnix,
-        timestampParsed,
-        netValue: pointNetValue,
-        depositedValue: pointDepositedValue,
-      })
+      chartBaseData['7d'].push(newPointData)
     }
     if (timestampUnix >= thresholdHistorical30d) {
-      chartBaseData['30d'].push({
-        timestamp: timestampUnix,
-        timestampParsed,
-        netValue: pointNetValue,
-        depositedValue: pointDepositedValue,
-      })
+      chartBaseData['30d'].push(newPointData)
     }
   })
 
@@ -98,30 +104,21 @@ const mergePositionHistoryAndForecast = (
       isSameDay && positionAmount
         ? positionAmount
         : Math.max(point.deposits - Math.abs(point.withdrawals), 0)
+    const newPointData = {
+      timestamp: timestampUnix,
+      timestampParsed,
+      netValue: pointNetValue,
+      depositedValue: pointDepositedValue,
+    }
 
     if (timestampUnix >= thresholdHistorical90d) {
-      chartBaseData['90d'].push({
-        timestamp: timestampUnix,
-        timestampParsed,
-        netValue: pointNetValue,
-        depositedValue: pointDepositedValue,
-      })
+      chartBaseData['90d'].push(newPointData)
     }
     if (timestampUnix >= thresholdHistorical6m) {
-      chartBaseData['6m'].push({
-        timestamp: timestampUnix,
-        timestampParsed,
-        netValue: pointNetValue,
-        depositedValue: pointDepositedValue,
-      })
+      chartBaseData['6m'].push(newPointData)
     }
     if (timestampUnix >= thresholdHistorical1y) {
-      chartBaseData['1y'].push({
-        timestamp: timestampUnix,
-        timestampParsed,
-        netValue: pointNetValue,
-        depositedValue: pointDepositedValue,
-      })
+      chartBaseData['1y'].push(newPointData)
     }
   })
 
@@ -138,19 +135,17 @@ const mergePositionHistoryAndForecast = (
       isSameWeek && positionAmount
         ? positionAmount
         : Math.max(point.deposits - Math.abs(point.withdrawals), 0)
+    const newPointData = {
+      timestamp: timestampUnix,
+      timestampParsed,
+      netValue: pointNetValue,
+      depositedValue: pointDepositedValue,
+    }
 
     if (timestampUnix >= thresholdHistorical3y) {
-      chartBaseData['3y'].push({
-        timestamp: timestampUnix,
-        timestampParsed,
-        netValue: pointNetValue,
-        depositedValue: pointDepositedValue,
-      })
+      chartBaseData['3y'].push(newPointData)
     }
   })
-
-  // history and forecast meeting point
-  // TBD
 
   // forecast hourly points
   positionForecast.dataPoints.hourly
@@ -309,5 +304,5 @@ export const decorateWithPerformanceChartData = (
         position,
       ),
     },
-  }))
+  })) as SDKVaultishType[]
 }

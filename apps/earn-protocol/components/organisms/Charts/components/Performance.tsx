@@ -30,7 +30,7 @@ const CustomizedCross = (props: CategoricalChartState) => {
     (item) => 'bounds' in item && 'forecast' in item && 'netValue' in item,
   )
   const [firstSeries] = formattedGraphicalItems
-  const meetingPoint = firstSeries.props?.points[meetingPointIndex ?? 0]
+  const meetingPoint = firstSeries.props?.points[meetingPointIndex ?? 0] ?? { x: 0, y: 0 }
   const textStyle = {
     color: '#777576',
     fontFamily: 'Inter',

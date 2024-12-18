@@ -22,5 +22,5 @@ export const decorateCustomVaultFields = (
           customFields,
         }
       : vault
-  })
+  }) as SDKVaultishType[]
 }

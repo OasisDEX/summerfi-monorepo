@@ -1,9 +1,9 @@
 import { Card, DataBlock, PortfolioPosition, Text, WithArrow } from '@summerfi/app-earn-ui'
-import { type SDKVaultsListType } from '@summerfi/app-types'
+import { type SDKVaultsListType, type TokenSymbolsList } from '@summerfi/app-types'
 import Link from 'next/link'
 
 import { type PortfolioPositionsList } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
-import { HistoricalYieldChart } from '@/components/organisms/Charts/HistoricalYieldChart'
+import { PositionHistoricalChart } from '@/components/organisms/Charts/PositionHistoricalChart'
 import { CryptoUtilities } from '@/features/crypto-utilities/components/CryptoUtilities/CryptoUtilities'
 import { NewsAndUpdates } from '@/features/news-and-updates/components/NewsAndUpdates/NewsAndUpdates'
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
@@ -96,9 +96,10 @@ export const PortfolioOverview = ({ vaultsList, positions }: PortfolioOverviewPr
                 key={`Position_${position.positionData.id.id}`}
                 position={position}
                 positionGraph={
-                  <HistoricalYieldChart
-                    chartData={position.vaultData.customFields?.historicalChartData}
-                    summerVaultName={position.vaultData.customFields?.name ?? 'Summer Vault'}
+                  <PositionHistoricalChart
+                    chartData={position.vaultData.customFields?.historyChartData}
+                    position={position}
+                    tokenSymbol={position.vaultData.inputToken.symbol as TokenSymbolsList}
                   />
                 }
               />

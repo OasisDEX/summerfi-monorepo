@@ -1,9 +1,5 @@
 import { type ReactNode } from 'react'
-import {
-  type IArmadaPosition,
-  type SDKVaultishType,
-  type TokenSymbolsList,
-} from '@summerfi/app-types'
+import { type IArmadaPosition, type SDKVaultishType } from '@summerfi/app-types'
 import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
@@ -12,7 +8,6 @@ import { Button } from '@/components/atoms/Button/Button'
 import { Card } from '@/components/atoms/Card/Card'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
-import { DataBlock } from '@/components/molecules/DataBlock/DataBlock'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
 import { getVaultPositionUrl } from '@/helpers/get-vault-url'
 
@@ -123,73 +118,7 @@ export const PortfolioPosition = ({ position, positionGraph }: PortfolioPosition
             </Button>
           </Link>
         </div>
-        <div className={portfolioPositionStyles.graphWrapper}>
-          {positionGraph}
-          <div className={portfolioPositionStyles.statsWrapper}>
-            <DataBlock
-              accent="var(--color-background-interactive)"
-              title="Market Value"
-              size="small"
-              valueStyle={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 'var(--general-space-4)',
-              }}
-              value={
-                <>
-                  <Icon tokenName={inputToken.symbol as TokenSymbolsList} size={20} />${marketValue}
-                </>
-              }
-            />
-            <DataBlock
-              accent="#FF80BF"
-              title="Net Contributions"
-              size="small"
-              valueStyle={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 'var(--general-space-4)',
-              }}
-              value={
-                <>
-                  <Icon tokenName={inputToken.symbol as TokenSymbolsList} size={20} />$
-                  {netContribution}
-                </>
-              }
-            />
-            <DataBlock
-              accent="var(--color-background-interactive-disabled)"
-              title="Earnings to Date"
-              size="small"
-              valueStyle={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 'var(--general-space-4)',
-              }}
-              value={
-                <>
-                  <Icon tokenName={inputToken.symbol as TokenSymbolsList} size={20} />${earnedInUSD}
-                </>
-              }
-            />
-            <DataBlock
-              accent="var(--color-text-primary)"
-              title="$SUMR Earned"
-              size="small"
-              valueStyle={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 'var(--general-space-4)',
-              }}
-              value={
-                <>
-                  <Icon tokenName="SUMR" size={20} />
-                  TBD
-                </>
-              }
-            />
-          </div>
-        </div>
+        <div className={portfolioPositionStyles.graphWrapper}>{positionGraph}</div>
       </div>
     </Card>
   )

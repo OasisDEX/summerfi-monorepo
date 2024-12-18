@@ -34,7 +34,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
 
   const positionsList = await Promise.all(
     positionsJsonSafe.map((position) =>
-      portfolioPositionsHandler({ position, vaultsList: vaults, config }),
+      portfolioPositionsHandler({ position, vaultsList: vaults, config, walletAddress }),
     ),
   )
 
