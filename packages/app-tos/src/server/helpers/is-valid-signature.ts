@@ -50,6 +50,9 @@ export async function isValidSignature({
 
     return true
   } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error('Error validating signature:', err)
+
     return false
   }
 }

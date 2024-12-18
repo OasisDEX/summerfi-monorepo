@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { type TOSState, TOSStatus } from '@summerfi/app-types'
 
 import { acceptanceStep } from '@/client/helpers/acceptance-step'
@@ -14,7 +14,7 @@ import { type TOSInput } from '@/types'
  * This hooks assume that there is API running on the same host (if not, `host` parameter should be defined and CORS configured)
  * with proper handling of all endpoints that are being called (`/api/tos/*`, `/api/auth/signin`).
  *
- * @param signMessage - web3 sign handler required for on-chain signature
+ * @param signMessage - web3 sign handler required for on-chain signature, needs to be memoized
  * @param chainId - chain id, i.e. 1 (ethereum mainnet)
  * @param walletAddress - user wallet address
  * @param version - Terms of Service version
@@ -38,7 +38,7 @@ export const useTermsOfService = ({
     status: TOSStatus.INIT,
   })
 
-  const memoizedSignMessage = useMemo(() => signMessage, [walletAddress, chainId])
+  const memoizedSignMessage = signMessage
 
   useEffect(() => {
     const request = async (walletAddress: string) => {

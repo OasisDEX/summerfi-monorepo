@@ -1,35 +1,21 @@
-import type { Dispatch, FC } from 'react'
+import { type Dispatch, type FC, useCallback, useEffect } from 'react'
+import { useSigner, useSmartAccountClient, useUser } from '@account-kit/react'
 import { Button, Card, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { type TOSSignMessage, useTermsOfService } from '@summerfi/app-tos'
+import { TOSStatus } from '@summerfi/app-types'
 import Link from 'next/link'
 
+import { accountType } from '@/account-kit/config'
+import { claimDelegateAcceptanceParagraphs } from '@/features/claim-and-delegate/components/ClaimDelegateAcceptanceStep/config'
 import {
   type ClaimDelegateReducerAction,
   type ClaimDelegateState,
   ClaimDelegateSteps,
 } from '@/features/claim-and-delegate/types'
+import { useSignMessageWithResult } from '@/hooks/use-sign-message-with-results'
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './ClaimDelegateAcceptanceStep.module.scss'
-
-const list = [
-  {
-    label: 'Introduction and Acceptance of Terms',
-  },
-  {
-    label: 'Eligibility and User Requirements',
-  },
-  {
-    label: 'Description of Services',
-  },
-  {
-    label: 'User Accounts and Security',
-  },
-  {
-    label: 'Risks & Disclosures',
-  },
-  {
-    label: 'Fees & Payments',
-  },
-]
 
 interface ClaimDelegateAcceptanceStepProps {
   state: ClaimDelegateState
@@ -40,14 +26,62 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
   state,
   dispatch,
 }) => {
+  const user = useUser()
+  const { userWalletAddress } = useUserWallet()
+  const { client } = useSmartAccountClient({ type: accountType })
+  const { signMessageWithResult } = useSignMessageWithResult(client)
+  const signer = useSigner()
+
+  const signMessage: TOSSignMessage = useCallback(
+    async (data: string) => {
+      // Signer from MM
+      if (user?.type === 'eoa') {
+        return await signMessageWithResult(data)
+      }
+      // Signer from Account Kit
+      else return await signer?.signMessage(data)
+    },
+    [signer, user?.type, signMessageWithResult],
+  )
+
+  const tosState = useTermsOfService({
+    signMessage,
+    chainId: 1,
+    walletAddress: user?.address,
+    isGnosisSafe: false,
+    version: 'sumr-version-16.01.2025',
+  })
+
+  useEffect(() => {
+    if (
+      tosState.status === TOSStatus.WAITING_FOR_ACCEPTANCE ||
+      tosState.status === TOSStatus.WAITING_FOR_ACCEPTANCE_UPDATED
+    ) {
+      tosState.action()
+    }
+  }, [tosState])
+
   const handleAccept = () => {
-    dispatch({ type: 'update-step', payload: ClaimDelegateSteps.CLAIM })
+    if (tosState.status === TOSStatus.DONE) {
+      dispatch({ type: 'update-step', payload: ClaimDelegateSteps.CLAIM })
+    }
+
+    if ('action' in tosState) {
+      tosState.action()
+    } else {
+      // eslint-disable-next-line no-console
+      console.warn('TOS - No action available')
+    }
   }
+
+  const isLoading = [TOSStatus.INIT, TOSStatus.LOADING].includes(tosState.status)
+  const isDisabled =
+    state.walletAddress.toLowerCase() !== userWalletAddress?.toLowerCase() || isLoading
 
   return (
     <div className={classNames.claimDelegateAcceptanceStepWrapper}>
       <ol>
-        {list.map((item, idx) => (
+        {claimDelegateAcceptanceParagraphs.map((item, idx) => (
           <li key={idx}>
             <Text as="p" variant="p3" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
               {idx + 1}. {item.label}
@@ -130,15 +164,21 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
           </Link>
           <Button
             variant="primarySmall"
-            style={{ paddingRight: 'var(--general-space-32)' }}
+            style={{ paddingRight: isLoading ? undefined : 'var(--general-space-32)' }}
             onClick={handleAccept}
+            disabled={isDisabled}
           >
             <WithArrow
               style={{ color: 'var(--earn-protocol-secondary-100)' }}
               variant="p3semi"
               as="p"
+              withAnimated={!isLoading}
             >
-              Accept & Sign
+              {tosState.status === TOSStatus.DONE
+                ? 'Continue'
+                : isLoading
+                  ? 'Loading...'
+                  : 'Accept & Sign'}
             </WithArrow>
           </Button>
         </div>
