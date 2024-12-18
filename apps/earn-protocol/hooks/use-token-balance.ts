@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
-import { useUser } from '@account-kit/react'
 import { ten } from '@summerfi/app-utils'
 import { type Address, type IToken } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import { erc20Abi } from 'viem'
+
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import { useAppSDK } from './use-app-sdk'
 import type { useClient } from './use-client'
@@ -25,11 +26,11 @@ export const useTokenBalance = ({
   const [token, setToken] = useState<IToken>()
   const [tokenBalance, setTokenBalance] = useState<BigNumber>()
   const [tokenBalanceLoading, setTokenBalanceLoading] = useState(true)
-  const user = useUser()
+  const { userWalletAddress } = useUserWallet()
 
   const sdk = useAppSDK()
 
-  const walletAddress = user ? sdk.getWalletAddress() : undefined
+  const walletAddress = userWalletAddress ? sdk.getWalletAddress() : undefined
   const chainInfo = sdk.getChainInfo()
 
   useEffect(() => {
