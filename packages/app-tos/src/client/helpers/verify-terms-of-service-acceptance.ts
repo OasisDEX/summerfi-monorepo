@@ -9,6 +9,7 @@ import { type TOSVerifyAcceptance } from '@/types'
  *
  * @param walletAddress - The wallet address of the user whose acceptance status is being verified.
  * @param version - The version of the terms of service document.
+ * @param cookiePrefix - The prefix of cookie that will be stored as http-only cookie.
  * @param host - Optional, to be used when API is not available under the same host (for example localhost development on different ports).
  *
  * @returns A promise that resolves to an object with the following properties:
@@ -21,15 +22,17 @@ import { type TOSVerifyAcceptance } from '@/types'
 export const verifyTermsOfServiceAcceptance = async ({
   walletAddress,
   version,
+  cookiePrefix,
   host = '',
 }: {
   walletAddress: string
   version: string
+  cookiePrefix: string
   host?: string
 }): Promise<TOSVerifyAcceptance | undefined> => {
   try {
     const { acceptance, updated, authorized }: TOSVerifyAcceptance = await fetch(
-      `${host}/api/tos/${version}/${walletAddress}`,
+      `${host}/api/tos/${version}/${walletAddress}/${cookiePrefix}`,
       {
         method: 'GET',
         headers: {

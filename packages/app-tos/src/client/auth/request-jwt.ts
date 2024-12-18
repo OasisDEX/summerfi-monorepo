@@ -19,6 +19,7 @@ import { type TOSSignMessage } from '@/types'
  * @param chainId - The chain ID of the blockchain network.
  * @param walletAddress - The wallet address to be used for signing.
  * @param isGnosisSafe - A boolean indicating if the wallet is a Gnosis Safe.
+ * @param cookiePrefix - The prefix of cookie that will be stored as http-only cookie.
  * @param host - Optional, to be used when API is not available under the same host (for example localhost development on different ports).
  *
  * @returns A promise that resolves to the JWT string or undefined if an error occurs.
@@ -29,12 +30,14 @@ export async function requestJWT({
   chainId,
   walletAddress,
   isGnosisSafe,
+  cookiePrefix,
   host,
 }: {
   signMessage: TOSSignMessage
   chainId: number
   walletAddress: string
   isGnosisSafe: boolean
+  cookiePrefix: string
   host?: string
 }): Promise<string | undefined> {
   const challenge = await requestChallenge({ walletAddress, isGnosisSafe, host })
@@ -69,6 +72,7 @@ export async function requestJWT({
               signature: offchainSignature,
               chainId,
               isGnosisSafe,
+              cookiePrefix,
               host,
             })
 
@@ -105,6 +109,7 @@ export async function requestJWT({
     signature,
     chainId,
     isGnosisSafe: false,
+    cookiePrefix,
     host,
   })
 }

@@ -8,13 +8,14 @@ import { type TOSRequestContext, type TOSRequiredDB } from '@/types'
 const paramsSchema = z.object({
   version: z.string(),
   walletAddress: z.string(),
+  cookiePrefix: z.string(),
 })
 
 /**
  * Retrieve Terms of Service (ToS) acceptance status for a given wallet address and version.
  *
  * @param req - The NextRequest object representing the incoming request.
- * @param context - The context object containing the parameters: version and walletAddress.
+ * @param context - The context object containing the parameters: version, walletAddress and cookiePrefix.
  * @param jwtSecret - The JWT secret.
  * @param db - The Kysely database instance.
  * @returns A NextResponse object containing the acceptance status and authorization status.
@@ -34,11 +35,11 @@ export async function getTos<DB extends TOSRequiredDB>({
   jwtSecret: string
   db: Kysely<DB>
 }) {
-  const { version, walletAddress } = paramsSchema.parse(context.params)
+  const { version, walletAddress, cookiePrefix } = paramsSchema.parse(context.params)
 
   const resolvedDB = db as unknown as Kysely<TOSRequiredDB>
 
-  const token = req.cookies.get(`token-${walletAddress.toLowerCase()}`)
+  const token = req.cookies.get(`${cookiePrefix}-${walletAddress.toLowerCase()}`)
 
   let authorized
 
@@ -52,10 +53,13 @@ export async function getTos<DB extends TOSRequiredDB>({
     }
   }
 
+  const sanitizedVersion = version.split('-')[0].replace(/[^a-zA-Z0-9.-]/gu, '')
+
   const tos = await resolvedDB
     .selectFrom('tosApproval')
     .where(({ eb, and }) => and([eb('address', '=', walletAddress.toLowerCase())]))
     .select('docVersion')
+    .where(({ eb, and }) => and([eb('docVersion', 'like', `%${sanitizedVersion}%`)]))
     .execute()
 
   if (tos.length === 0) {

@@ -8,6 +8,7 @@ import { type TOSRequiredDB } from '@/types'
 const tosSchema = z.object({
   docVersion: z.string(),
   walletAddress: z.string(),
+  cookiePrefix: z.string(),
 })
 
 /**
@@ -33,9 +34,9 @@ export async function signTos<DB extends TOSRequiredDB>({
 }) {
   const resolvedDB = db as unknown as Kysely<TOSRequiredDB>
 
-  const { docVersion, walletAddress } = tosSchema.parse(await req.json())
+  const { docVersion, walletAddress, cookiePrefix } = tosSchema.parse(await req.json())
 
-  const token = req.cookies.get(`token-${walletAddress.toLowerCase()}`)
+  const token = req.cookies.get(`${cookiePrefix}-${walletAddress.toLowerCase()}`)
 
   if (!token) {
     return NextResponse.json({ authenticated: false }, { status: 401 })
