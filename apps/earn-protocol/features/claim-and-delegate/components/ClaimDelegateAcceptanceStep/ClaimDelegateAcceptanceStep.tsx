@@ -1,5 +1,5 @@
 import { type Dispatch, type FC, useCallback, useEffect } from 'react'
-import { useSigner, useSmartAccountClient, useUser } from '@account-kit/react'
+import { useSigner, useSignMessage, useSmartAccountClient, useUser } from '@account-kit/react'
 import { Button, Card, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { type TOSSignMessage, useTermsOfService } from '@summerfi/app-tos'
 import { TOSStatus } from '@summerfi/app-types'
@@ -12,7 +12,6 @@ import {
   type ClaimDelegateState,
   ClaimDelegateSteps,
 } from '@/features/claim-and-delegate/types'
-import { useSignMessageWithResult } from '@/hooks/use-sign-message-with-results'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './ClaimDelegateAcceptanceStep.module.scss'
@@ -29,19 +28,21 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
   const user = useUser()
   const { userWalletAddress } = useUserWallet()
   const { client } = useSmartAccountClient({ type: accountType })
-  const { signMessageWithResult } = useSignMessageWithResult(client)
+  const { signMessageAsync } = useSignMessage({
+    client,
+  })
   const signer = useSigner()
 
   const signMessage: TOSSignMessage = useCallback(
     async (data: string) => {
-      // Signer from MM
       if (user?.type === 'eoa') {
-        return await signMessageWithResult(data)
+        return await signMessageAsync({ message: data })
       }
-      // Signer from Account Kit
+      // different handling for SCA, since signMessageAsync returns signature string
+      // that is completely different from signer.signMessage
       else return await signer?.signMessage(data)
     },
-    [signer, user?.type, signMessageWithResult],
+    [signer, user?.type],
   )
 
   const tosState = useTermsOfService({
@@ -76,7 +77,12 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
   }
 
   const isLoading =
-    [TOSStatus.INIT, TOSStatus.LOADING].includes(tosState.status) && !!userWalletAddress
+    [
+      TOSStatus.INIT,
+      TOSStatus.LOADING,
+      TOSStatus.WAITING_FOR_ACCEPTANCE,
+      TOSStatus.WAITING_FOR_ACCEPTANCE_UPDATED,
+    ].includes(tosState.status) && !!userWalletAddress
   const isDisabled =
     state.walletAddress.toLowerCase() !== userWalletAddress?.toLowerCase() || isLoading
 
