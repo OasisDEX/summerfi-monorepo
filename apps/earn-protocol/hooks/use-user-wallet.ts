@@ -1,4 +1,5 @@
 import { useAccount, useUser } from '@account-kit/react'
+import type { Address } from '@summerfi/sdk-common'
 
 import { accountType } from '@/account-kit/config'
 
@@ -12,7 +13,7 @@ import { accountType } from '@/account-kit/config'
  *
  * @returns {string | undefined} The user's wallet address, or `undefined` if not available.
  */
-export const useUserWallet = () => {
+export const useUserWallet = (): { userWalletAddress: Address | undefined } => {
   const user = useUser()
   const { account } = useAccount({ type: accountType })
 
@@ -22,5 +23,5 @@ export const useUserWallet = () => {
     return { userWalletAddress: undefined }
   }
 
-  return { userWalletAddress: account?.address ?? user?.address }
+  return { userWalletAddress: (account?.address ?? user?.address) as Address | undefined }
 }

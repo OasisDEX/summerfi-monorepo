@@ -30,7 +30,7 @@ export const useTokenBalance = ({
 
   const sdk = useAppSDK()
 
-  const walletAddress = userWalletAddress ? sdk.getWalletAddress() : undefined
+  const walletAddress = userWalletAddress
   const chainInfo = sdk.getChainInfo()
 
   useEffect(() => {
