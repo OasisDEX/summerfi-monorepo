@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { ten } from '@summerfi/app-utils'
-import { type Address, type IToken } from '@summerfi/sdk-common'
+import { type IToken } from '@summerfi/sdk-common'
+import { type Address } from '@summerfi/serverless-shared'
 import BigNumber from 'bignumber.js'
 import { erc20Abi } from 'viem'
 
@@ -34,7 +35,7 @@ export const useTokenBalance = ({
   const chainInfo = sdk.getChainInfo()
 
   useEffect(() => {
-    const fetchTokenBalance = async (address: Address) => {
+    const fetchTokenBalance = async (address: string) => {
       setTokenBalanceLoading(true)
       const [fetchedToken, fetchedVaultToken] = await Promise.all([
         sdk.getTokenBySymbol({
@@ -55,7 +56,7 @@ export const useTokenBalance = ({
           abi: erc20Abi,
           address: fetchedToken.address.value,
           functionName: 'balanceOf',
-          args: [address.value],
+          args: [address as Address],
         })
         .then((val) => {
           setTokenBalanceLoading(false)

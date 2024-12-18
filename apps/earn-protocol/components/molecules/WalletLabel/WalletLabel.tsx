@@ -38,7 +38,7 @@ export default function WalletLabel() {
       >
         <LoadableAvatar
           size={24}
-          name={btoa(userWalletAddress.toString())}
+          name={btoa(userWalletAddress)}
           variant="pixel"
           colors={['#B90061', '#EC58A2', '#F8A4CE', '#FFFFFF']}
         />
