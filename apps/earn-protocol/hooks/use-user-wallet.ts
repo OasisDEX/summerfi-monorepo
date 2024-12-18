@@ -12,9 +12,15 @@ import { accountType } from '@/account-kit/config'
  *
  * @returns {string | undefined} The user's wallet address, or `undefined` if not available.
  */
-export const useUserWallet = () => {
+export const useUserWallet = (): { userWalletAddress: string | undefined } => {
   const user = useUser()
   const { account } = useAccount({ type: accountType })
+
+  // user loads first and if sca we need to wait for account to be defined
+  // to avoid ui flickering
+  if (user?.type === 'sca' && !account?.address) {
+    return { userWalletAddress: undefined }
+  }
 
   return { userWalletAddress: account?.address ?? user?.address }
 }

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
-import { useUser } from '@account-kit/react'
 import { ten } from '@summerfi/app-utils'
-import { type Address, type IToken } from '@summerfi/sdk-common'
+import { type HexData, type IToken } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import { erc20Abi } from 'viem'
+
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import { useAppSDK } from './use-app-sdk'
 import type { useClient } from './use-client'
@@ -25,13 +26,13 @@ export const useTokenBalance = ({
   const [token, setToken] = useState<IToken>()
   const [tokenBalance, setTokenBalance] = useState<BigNumber>()
   const [tokenBalanceLoading, setTokenBalanceLoading] = useState(true)
-  const user = useUser()
+  const { userWalletAddress } = useUserWallet()
+  const walletAddress = userWalletAddress
+
   const sdk = useAppSDK()
 
-  const walletAddress = user ? sdk.getWalletAddress() : undefined
-
   useEffect(() => {
-    const fetchTokenBalance = async (address: Address) => {
+    const fetchTokenBalance = async (address: string) => {
       setTokenBalanceLoading(true)
       const tokenRequests: Promise<IToken | undefined>[] = [
         sdk.getTokenBySymbol({
@@ -61,7 +62,7 @@ export const useTokenBalance = ({
 
         publicClient
           .getBalance({
-            address: address.value,
+            address: address as HexData,
           })
           .then((val) => {
             setTokenBalanceLoading(false)
@@ -82,7 +83,7 @@ export const useTokenBalance = ({
             abi: erc20Abi,
             address: fetchedOrVaultToken.address.value,
             functionName: 'balanceOf',
-            args: [address.value],
+            args: [address as HexData],
           })
           .then((val) => {
             setTokenBalanceLoading(false)

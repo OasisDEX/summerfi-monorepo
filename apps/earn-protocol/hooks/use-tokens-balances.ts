@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import { arbitrum, base } from '@account-kit/infra'
-import { useUser } from '@account-kit/react'
 import { SDKChainId, SDKNetwork } from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
 import { createPublicClient, http } from 'viem'
@@ -8,6 +7,7 @@ import { createPublicClient, http } from 'viem'
 import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
 import { supportedNetworkGuard } from '@/helpers/supported-network-guard'
 import { useTokenBalance } from '@/hooks/use-token-balance'
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 export const useTokenBalances = ({
   tokenSymbol,
@@ -21,7 +21,7 @@ export const useTokenBalances = ({
   if (!supportedNetworkGuard(network)) {
     throw new Error(`Unsupported network: ${network}`)
   }
-  const user = useUser()
+  const { userWalletAddress } = useUserWallet()
 
   const arbitrumPublicClient = useMemo(() => {
     return createPublicClient({
@@ -52,7 +52,7 @@ export const useTokenBalances = ({
     skip: network !== SDKNetwork.Base,
   })
 
-  if (!user) {
+  if (!userWalletAddress) {
     return {
       token: tokenSymbol,
       tokenBalance: new BigNumber(0),
