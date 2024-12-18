@@ -1,21 +1,50 @@
-import { RechartResponsiveWrapper } from '@summerfi/app-earn-ui'
-import { type TimeframesType } from '@summerfi/app-types'
-import dayjs from 'dayjs'
-import { ComposedChart, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { useState } from 'react'
+import { getPositionValues, RechartResponsiveWrapper } from '@summerfi/app-earn-ui'
+import {
+  type IArmadaPosition,
+  type SDKVaultishType,
+  type TokenSymbolsList,
+} from '@summerfi/app-types'
+import { formatCryptoBalance } from '@summerfi/app-utils'
+import {
+  ComposedChart,
+  Customized,
+  Legend,
+  Line,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts'
 
-import { PerformanceLegend } from '@/components/organisms/Charts/components/PerformanceLegend'
-import { CHART_TIMESTAMP_FORMAT } from '@/constants/charts'
+import { ChartCross } from '@/components/organisms/Charts/components/ChartCross'
+import { HistoricalLegend } from '@/components/organisms/Charts/components/HistoricalLegend'
 import { formatChartCryptoValue } from '@/features/forecast/chart-formatters'
 
 export type HistoricalChartProps = {
-  data: unknown[]
-  timeframe: TimeframesType
+  data?: unknown[]
+  tokenSymbol: TokenSymbolsList
+  position: {
+    positionData: IArmadaPosition
+    vaultData: SDKVaultishType
+  }
 }
 
-export const HistoricalChart = ({ data }: HistoricalChartProps) => {
+export const HistoricalChart = ({ data, tokenSymbol, position }: HistoricalChartProps) => {
+  const { netDeposited, netEarnings, netValue } = getPositionValues(position)
+  const legendBaseData = {
+    netValue: `$${formatCryptoBalance(netValue)}`,
+    depositedValue: `$${formatCryptoBalance(netDeposited)}`,
+    earnings: `$${formatCryptoBalance(netEarnings)}`,
+    sumrEarned: `TBD`,
+  }
+  const [highlightedData, setHighlightedData] = useState<{
+    [key: string]: string | number
+  }>(legendBaseData)
+
   return (
     <RechartResponsiveWrapper>
-      <ResponsiveContainer width="100%" height="90%">
+      <ResponsiveContainer width="100%" height="100%">
         <ComposedChart
           data={data}
           margin={{
@@ -23,6 +52,23 @@ export const HistoricalChart = ({ data }: HistoricalChartProps) => {
             right: 0,
             left: 0,
             bottom: 10,
+          }}
+          onMouseMove={({ activePayload }) => {
+            if (activePayload) {
+              setHighlightedData((prevData) => ({
+                ...prevData,
+                ...activePayload.reduce(
+                  (acc, { dataKey, value }) => ({
+                    ...acc,
+                    [dataKey]: `$${formatCryptoBalance(value)}`,
+                  }),
+                  {},
+                ),
+              }))
+            }
+          }}
+          onMouseLeave={() => {
+            setHighlightedData(legendBaseData)
           }}
         >
           <XAxis
@@ -38,33 +84,9 @@ export const HistoricalChart = ({ data }: HistoricalChartProps) => {
             tickFormatter={(label: string) => `${formatChartCryptoValue(Number(label))}`}
             domain={['dataMin', 'dataMax + 5']}
           />
-          <Tooltip
-            formatter={(val) =>
-              Array.isArray(val)
-                ? val.map((v) => `${formatChartCryptoValue(Number(v))}`).join(' - ')
-                : `${formatChartCryptoValue(Number(val))}`
-            }
-            labelFormatter={(label) => dayjs(label).format(CHART_TIMESTAMP_FORMAT)}
-            wrapperStyle={{
-              zIndex: 1000,
-              backgroundColor: 'var(--color-surface-subtle)',
-              borderRadius: '5px',
-              padding: '10px',
-            }}
-            labelStyle={{
-              fontSize: '16px',
-              fontWeight: '700',
-              marginTop: '10px',
-              marginBottom: '10px',
-            }}
-            contentStyle={{
-              backgroundColor: 'transparent',
-              border: 'none',
-              fontSize: '13px',
-              lineHeight: '11px',
-              letterSpacing: '-0.5px',
-            }}
-          />
+          {/* Cursor is needed for the chart cross to work */}
+          <Tooltip content={() => null} cursor={false} />
+          <Customized component={<ChartCross />} />
           <Line
             dot={false}
             type="monotone"
@@ -86,13 +108,14 @@ export const HistoricalChart = ({ data }: HistoricalChartProps) => {
             animateNewValues
           />
           <Legend
-            content={<PerformanceLegend />}
+            content={
+              <HistoricalLegend tokenSymbol={tokenSymbol} highlightedData={highlightedData} />
+            }
             iconType="circle"
             iconSize={10}
-            align="center"
-            layout="horizontal"
-            height={60}
-            wrapperStyle={{ bottom: '-10px' }}
+            align="right"
+            verticalAlign="top"
+            layout="vertical"
           />
         </ComposedChart>
       </ResponsiveContainer>

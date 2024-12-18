@@ -3,7 +3,7 @@ import {
   type ForecastData,
   type IArmadaPosition,
   type SDKVaultishType,
-  type VaultChartsPerformanceData,
+  type VaultWithChartsData,
 } from '@summerfi/app-types'
 import dayjs from 'dayjs'
 
@@ -14,7 +14,7 @@ const mergePositionHistoryAndForecast = (
   positionHistory: GetPositionHistoryReturnType,
   positionForecast: ForecastData,
   position?: IArmadaPosition,
-): VaultChartsPerformanceData['performanceChartData'] => {
+): VaultWithChartsData['performanceChartData'] => {
   const now = dayjs()
   const nowStartOfHour = now.startOf('hour')
   const nowStartOfDay = now.startOf('day')
@@ -51,7 +51,17 @@ const mergePositionHistoryAndForecast = (
     weekly: 52,
   }
 
+  const pointsNeededToDisplayAnyGraph = 3 // 3 hours
+
   const positionAmount = position?.amount.amount ? Number(position.amount.amount) : 0
+
+  if (
+    (positionHistory.position?.hourlyPositionHistory.length ?? 0) < pointsNeededToDisplayAnyGraph
+  ) {
+    return {
+      data: chartBaseData,
+    }
+  }
 
   // history hourly points
   positionHistory.position?.hourlyPositionHistory.reverse().forEach((point) => {

@@ -1,5 +1,5 @@
 import { Card, DataBlock, PortfolioPosition, Text, WithArrow } from '@summerfi/app-earn-ui'
-import { type SDKVaultsListType } from '@summerfi/app-types'
+import { type SDKVaultsListType, type TokenSymbolsList } from '@summerfi/app-types'
 import Link from 'next/link'
 
 import { type PortfolioPositionsList } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
@@ -98,6 +98,8 @@ export const PortfolioOverview = ({ vaultsList, positions }: PortfolioOverviewPr
                 positionGraph={
                   <PositionHistoricalChart
                     chartData={position.vaultData.customFields?.historyChartData}
+                    position={position}
+                    tokenSymbol={position.vaultData.inputToken.symbol as TokenSymbolsList}
                   />
                 }
               />

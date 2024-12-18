@@ -1,0 +1,26 @@
+.historicalLegendWrapper {
+  margin-left: 80px;
+}
+
+.historicalLegendItemWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+
+  .historicalLegendItemTitle {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .historicalLegendItemValue {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 7px;
+    margin-left: 15px;
+    color: var(--color-text-primary);
+  }
+}

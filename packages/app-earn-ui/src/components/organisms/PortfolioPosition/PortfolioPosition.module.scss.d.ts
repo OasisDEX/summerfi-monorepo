@@ -3,7 +3,6 @@ export type Styles = {
   graphWrapper: string
   header: string
   positionWrapper: string
-  statsWrapper: string
   strategyInfoTopWrapper: string
   value: string
 }

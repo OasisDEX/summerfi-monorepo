@@ -41,11 +41,3 @@
     flex-direction: column;
   }
 }
-
-.statsWrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: var(--general-space-32);
-  min-width: 170px;
-}

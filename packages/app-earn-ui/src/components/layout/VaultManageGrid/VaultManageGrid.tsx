@@ -15,6 +15,7 @@ import { Dropdown } from '@/components/molecules/Dropdown/Dropdown'
 import { SimpleGrid } from '@/components/molecules/Grid/SimpleGrid'
 import { VaultTitleDropdownContent } from '@/components/molecules/VaultTitleDropdownContent/VaultTitleDropdownContent'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
+import { getPositionValues } from '@/helpers/get-position-values'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 
 import vaultManageGridStyles from './VaultManageGrid.module.scss'
@@ -44,23 +45,10 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   const aprCurrent = formatDecimalAsPercent(new BigNumber(vault.calculatedApr).div(100))
   const noOfDeposits = position.deposits.length.toString()
 
-  const inputTokenPriceUSD = vault.inputTokenPriceUSD ?? 0
-
-  const netContribution = new BigNumber(position.amount.amount)
-  const netContributionUSD = netContribution.times(inputTokenPriceUSD)
-
-  const totalDepositedInToken = position.deposits.reduce(
-    (acc, deposit) => acc.plus(deposit.amount),
-    new BigNumber(0),
-  )
-
-  const totalWithdrawnInToken = position.withdrawals.reduce(
-    (acc, withdrawal) => acc.plus(withdrawal.amount),
-    new BigNumber(0),
-  )
-
-  const earnedInToken = totalDepositedInToken.minus(totalWithdrawnInToken)
-  const earnedInUSD = earnedInToken.times(inputTokenPriceUSD)
+  const { netDepositedUSD, netEarnings, netEarningsUSD } = getPositionValues({
+    positionData: position,
+    vaultData: vault,
+  })
 
   return (
     <>
@@ -105,8 +93,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
             >
               <VaultTitleWithRisk
                 symbol={vault.inputToken.symbol}
-                // TODO: fill data
-                risk="low"
+                risk={vault.customFields?.risk ?? 'medium'}
                 networkName={vault.protocol.network}
               />
             </Dropdown>
@@ -127,10 +114,10 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 title="Earned"
                 value={
                   <>
-                    {formatCryptoBalance(earnedInToken)}&nbsp;{vault.inputToken.symbol}
+                    {formatCryptoBalance(netEarnings)}&nbsp;{vault.inputToken.symbol}
                   </>
                 }
-                subValue={`$${formatCryptoBalance(earnedInUSD)}`}
+                subValue={`$${formatCryptoBalance(netEarningsUSD)}`}
                 subValueType="neutral"
                 subValueSize="medium"
               />
@@ -140,7 +127,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 size="large"
                 titleSize="small"
                 title="Net Contribution"
-                value={`$${formatCryptoBalance(netContributionUSD)}`}
+                value={`$${formatCryptoBalance(netDepositedUSD)}`}
                 // TODO: fill data
                 subValue={`# of Deposits: ${noOfDeposits}`}
                 subValueSize="medium"
