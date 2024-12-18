@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { type DropdownOption, type SDKVaultishType, TransactionAction } from '@summerfi/app-types'
+import { formatCryptoBalance } from '@summerfi/app-utils'
 
 import { useSwapQuote } from './use-swap-quote'
 
@@ -52,14 +53,16 @@ export const useAmountWithSwap = ({
     }
 
     const amountWithSwap = {
-      [TransactionAction.DEPOSIT]: `$${quote.toTokenAmount.toBigNumber().toFixed(2)}`, // Display 2 decimal places for USD
-      [TransactionAction.WITHDRAW]: `${quote.toTokenAmount.toBigNumber().toFixed(Math.min(vault.inputToken.decimals, 8))} ${quote.toTokenAmount.token.symbol}`, // Cap decimals at 8 for better readability
+      [TransactionAction.DEPOSIT]: `${formatCryptoBalance(quote.toTokenAmount.toBigNumber())} ${quote.toTokenAmount.token.symbol}`, // Display 2 decimal places for USD
+      [TransactionAction.WITHDRAW]: `${formatCryptoBalance(quote.toTokenAmount.toBigNumber())} ${quote.toTokenAmount.token.symbol}`, // Cap decimals at 8 for better readability
     }[transactionType]
 
     return amountWithSwap
-  }, [quote, quoteLoading, amountDisplayUSD, vault.inputToken.decimals, transactionType])
+  }, [quote, quoteLoading, amountDisplayUSD, transactionType])
 
   return {
+    fromTokenSymbol,
+    toTokenSymbol,
     amountDisplayUSDWithSwap,
   }
 }

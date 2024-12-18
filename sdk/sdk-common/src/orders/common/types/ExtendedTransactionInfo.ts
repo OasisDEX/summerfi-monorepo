@@ -25,7 +25,6 @@ export type TransactionMetadataDeposit = {
   toAmount?: ITokenAmount
   priceImpact?: TransactionPriceImpact
   slippage: IPercentage
-  transactionFee: string
 }
 
 export type TransactionMetadataWithdraw = {
@@ -33,7 +32,6 @@ export type TransactionMetadataWithdraw = {
   toAmount?: ITokenAmount
   priceImpact?: TransactionPriceImpact
   slippage: IPercentage
-  transactionFee: string
 }
 
 /**

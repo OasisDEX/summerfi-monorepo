@@ -374,11 +374,6 @@ export class ArmadaManager implements IArmadaManager {
                 fromAmount: assetsToEOA,
                 toAmount: metadata.swapToAmount,
               }),
-              transactionFee: await this._getTransactionFee({
-                user: params.user,
-                target: admiralsQuarterAddress,
-                calldata: multicallCalldata,
-              }),
             },
           }),
         )
@@ -483,11 +478,6 @@ export class ArmadaManager implements IArmadaManager {
                 fromAmount: assetsToEOA,
                 toAmount: metadata.swapToAmount,
               }),
-              transactionFee: await this._getTransactionFee({
-                user: params.user,
-                target: admiralsQuarterAddress,
-                calldata: multicallCalldata,
-              }),
             },
           }),
         )
@@ -558,11 +548,6 @@ export class ArmadaManager implements IArmadaManager {
             priceImpact: await this._getPriceImpact({
               fromAmount: assetsToEOA,
               toAmount: metadata.swapToAmount,
-            }),
-            transactionFee: await this._getTransactionFee({
-              user: params.user,
-              target: admiralsQuarterAddress,
-              calldata: multicallCalldata,
             }),
           },
         }),
@@ -832,6 +817,12 @@ export class ArmadaManager implements IArmadaManager {
     let swapToAmount: ITokenAmount | undefined
     const transactions: ExtendedTransactionInfo[] = []
 
+    LoggingService.debug('getDepositTX', {
+      requestedAmount: params.amount.toString(),
+      shouldStake,
+      shouldSwap,
+    })
+
     const admiralsQuarterAddress = getDeployedContractAddress({
       chainInfo: params.vaultId.chainInfo,
       contractCategory: 'core',
@@ -882,11 +873,7 @@ export class ArmadaManager implements IArmadaManager {
     const lvTokenReceiver = shouldStake
       ? admiralsQuarterAddress.value
       : params.user.wallet.address.value
-    LoggingService.debug('getDepositTX', {
-      requestedAmount: params.amount.toString(),
-      shouldStake: shouldStake,
-      lvTokenReceiver: lvTokenReceiver.toString(),
-    })
+
     const enterFleetCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'enterFleet',
@@ -921,11 +908,6 @@ export class ArmadaManager implements IArmadaManager {
           priceImpact: await this._getPriceImpact({
             fromAmount: params.amount,
             toAmount: swapToAmount,
-          }),
-          transactionFee: await this._getTransactionFee({
-            user: params.user,
-            target: admiralsQuarterAddress,
-            calldata: multicallCalldata,
           }),
         },
       }),
@@ -1058,10 +1040,10 @@ export class ArmadaManager implements IArmadaManager {
       slippage: params.slippage,
     })
 
-    const reverseSlippage = 1 - params.slippage.value
+    const slippageComplement = params.slippage.toComplement()
     const minTokensReceived = BigInt(
       new BigNumber(swapData.toTokenAmount.toSolidityValue().toString())
-        .times(reverseSlippage)
+        .times(slippageComplement.value / 100)
         .toFixed(0, BigNumber.ROUND_DOWN),
     )
 
@@ -1088,7 +1070,7 @@ export class ArmadaManager implements IArmadaManager {
       toAmount: swapData.toTokenAmount.toString(),
       minAmount: minAmount.toString(),
       slippage: params.slippage.toString(),
-      reverseSlippage: reverseSlippage.toString(),
+      slippageComplement: slippageComplement.toString(),
     })
 
     return {
@@ -1180,7 +1162,22 @@ export class ArmadaManager implements IArmadaManager {
     calldata: HexData
     value?: bigint
   }): Promise<string> {
-    // TODO: not implemented
-    return 'N/A'
+    const client = await this._blockchainClientProvider.getBlockchainClient({
+      chainInfo: params.user.chainInfo,
+    })
+    let gas: bigint = 0n
+    try {
+      gas = await client.estimateGas({
+        account: params.user.wallet.address.value,
+        to: params.target.value,
+        data: params.calldata,
+      })
+      LoggingService.debug('getTransactionFee', { gas: gas.toString() })
+    } catch (e) {
+      return 'Gas Estimation failed'
+    }
+
+    // const gasPrice = await client.getGasPrice()
+    return gas.toString()
   }
 }

@@ -14,6 +14,7 @@ import {
   IUser,
   TransactionInfo,
   type ChainInfo,
+  type ExtendedTransactionInfo,
   type IAddress,
   type IPercentage,
   type IToken,
@@ -135,7 +136,7 @@ export interface IArmadaManagerUsersClient {
     amount: ITokenAmount
     slippage: IPercentage
     shouldStake?: boolean
-  }): Promise<TransactionInfo[]>
+  }): Promise<ExtendedTransactionInfo[]>
 
   /**
    * @method getWithdrawTX
@@ -155,7 +156,7 @@ export interface IArmadaManagerUsersClient {
     amount: ITokenAmount
     toToken: IToken
     slippage: IPercentage
-  }): Promise<TransactionInfo[]>
+  }): Promise<ExtendedTransactionInfo[]>
 
   /**
    * @method getStakedBalance

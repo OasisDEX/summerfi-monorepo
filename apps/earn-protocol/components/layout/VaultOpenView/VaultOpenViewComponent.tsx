@@ -21,6 +21,7 @@ import {
   type UsersActivity,
 } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
+import { TransactionType } from '@summerfi/sdk-common'
 
 import { detailsLinks } from '@/components/layout/VaultOpenView/mocks'
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
@@ -40,6 +41,7 @@ import { VaultExposure } from '@/features/vault-exposure/components/VaultExposur
 import { useAmount } from '@/hooks/use-amount'
 import { useAmountWithSwap } from '@/hooks/use-amount-with-swap'
 import { useClient } from '@/hooks/use-client'
+import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { usePosition } from '@/hooks/use-position'
 import { useRedirectToPosition } from '@/hooks/use-redirect-to-position'
 import { useTokenBalance } from '@/hooks/use-token-balance'
@@ -103,8 +105,8 @@ export const VaultOpenViewComponent = ({
   const {
     approvalType,
     setApprovalType,
-    setApprovalCustomValue,
     approvalCustomValue,
+    setApprovalCustomValue,
     sidebar,
     txHashes,
     removeTxHash,
@@ -154,7 +156,7 @@ export const VaultOpenViewComponent = ({
     return oneYearEarningsForecast
   }, [oneYearEarningsForecast])
 
-  const { amountDisplayUSDWithSwap } = useAmountWithSwap({
+  const { amountDisplayUSDWithSwap, fromTokenSymbol } = useAmountWithSwap({
     vault,
     vaultChainId,
     amountDisplay,
@@ -163,11 +165,17 @@ export const VaultOpenViewComponent = ({
     selectedTokenOption,
   })
 
-  const sidebarContent = nextTransaction?.label ? (
+  const { transactionFee, loading: transactionFeeLoading } = useGasEstimation({
+    chainId: vaultChainId,
+    transaction: nextTransaction,
+    walletAddress: user?.address,
+  })
+
+  const sidebarContent = nextTransaction?.type ? (
     {
-      approve: (
+      [TransactionType.Approve]: (
         <ControlsApproval
-          vault={vault}
+          tokenSymbol={fromTokenSymbol}
           approvalType={approvalType}
           setApprovalType={setApprovalType}
           setApprovalCustomValue={setApprovalCustomValue}
@@ -175,15 +183,17 @@ export const VaultOpenViewComponent = ({
           tokenBalance={selectedTokenBalance}
         />
       ),
-      deposit: (
+      [TransactionType.Deposit]: (
         <OrderInfoDeposit
-          vault={vault}
+          transaction={nextTransaction}
           amountParsed={amountParsed}
-          amountDisplayUSD={amountDisplayUSD}
+          amountDisplayUSD={amountDisplayUSDWithSwap}
+          transactionFee={transactionFee}
+          transactionFeeLoading={transactionFeeLoading}
         />
       ),
-      withdraw: null, // just for types, withdraw doesn't happen on open view
-    }[nextTransaction.label]
+      [TransactionType.Withdraw]: null, // just for types, withdraw doesn't happen on open view
+    }[nextTransaction.type]
   ) : (
     <ControlsDepositWithdraw
       amountDisplay={amountDisplay}
@@ -219,7 +229,7 @@ export const VaultOpenViewComponent = ({
     customHeaderStyles:
       !isDrawerOpen && isMobile ? { padding: 'var(--general-space-12) 0' } : undefined,
     handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
-    goBackAction: nextTransaction?.label ? backToInit : undefined,
+    goBackAction: nextTransaction?.type ? backToInit : undefined,
     primaryButton: sidebar.primaryButton,
     footnote: (
       <>

@@ -23,6 +23,7 @@ import {
 } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
+import { TransactionType } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 
 import {
@@ -40,6 +41,7 @@ import { VaultExposure } from '@/features/vault-exposure/components/VaultExposur
 import { useAmount } from '@/hooks/use-amount'
 import { useAmountWithSwap } from '@/hooks/use-amount-with-swap'
 import { useClient } from '@/hooks/use-client'
+import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useTransaction } from '@/hooks/use-transaction'
 
@@ -145,7 +147,7 @@ export const VaultManageViewComponent = ({
     return oneYearEarningsForecast
   }, [oneYearEarningsForecast])
 
-  const { amountDisplayUSDWithSwap } = useAmountWithSwap({
+  const { amountDisplayUSDWithSwap, fromTokenSymbol } = useAmountWithSwap({
     vault,
     vaultChainId,
     amountDisplay,
@@ -154,11 +156,17 @@ export const VaultManageViewComponent = ({
     selectedTokenOption,
   })
 
-  const sidebarContent = nextTransaction?.label ? (
+  const { transactionFee, loading: transactionFeeLoading } = useGasEstimation({
+    chainId: vaultChainId,
+    transaction: nextTransaction,
+    walletAddress: user?.address,
+  })
+
+  const sidebarContent = nextTransaction?.type ? (
     {
-      approve: (
+      [TransactionType.Approve]: (
         <ControlsApproval
-          vault={vault}
+          tokenSymbol={fromTokenSymbol}
           approvalType={approvalType}
           setApprovalType={setApprovalType}
           setApprovalCustomValue={setApprovalCustomValue}
@@ -166,21 +174,23 @@ export const VaultManageViewComponent = ({
           tokenBalance={selectedTokenBalance}
         />
       ),
-      deposit: (
+      [TransactionType.Deposit]: (
         <OrderInfoDeposit
-          vault={vault}
+          transaction={nextTransaction}
           amountParsed={amountParsed}
-          amountDisplayUSD={amountDisplayUSD}
+          amountDisplayUSD={amountDisplayUSDWithSwap}
+          transactionFee={transactionFee}
+          transactionFeeLoading={transactionFeeLoading}
         />
       ),
-      withdraw: (
+      [TransactionType.Withdraw]: (
         <OrderInfoWithdraw
           vault={vault}
           amountParsed={amountParsed}
           amountDisplayUSD={amountDisplayUSD}
         />
       ),
-    }[nextTransaction.label]
+    }[nextTransaction.type]
   ) : (
     <ControlsDepositWithdraw
       amountDisplay={amountDisplay}
@@ -234,7 +244,7 @@ export const VaultManageViewComponent = ({
     customHeaderStyles:
       !isDrawerOpen && isMobile ? { padding: 'var(--general-space-12) 0' } : undefined,
     handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
-    goBackAction: nextTransaction?.label ? backToInit : undefined,
+    goBackAction: nextTransaction?.type ? backToInit : undefined,
     primaryButton: sidebar.primaryButton,
     footnote: (
       <>
