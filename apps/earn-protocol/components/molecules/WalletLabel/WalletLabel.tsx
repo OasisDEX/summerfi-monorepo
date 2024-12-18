@@ -38,12 +38,12 @@ export default function WalletLabel() {
       >
         <LoadableAvatar
           size={24}
-          name={btoa(userWalletAddress)}
+          name={btoa(userWalletAddress.toString())}
           variant="pixel"
           colors={['#B90061', '#EC58A2', '#F8A4CE', '#FFFFFF']}
         />
         <Text variant="p3semi" style={{ color: 'white', paddingLeft: 'var(--general-space-8)' }}>
-          {formatAddress(userWalletAddress, { first: 6 })}
+          {formatAddress(userWalletAddress.toString(), { first: 6 })}
         </Text>
       </Button>
     )
