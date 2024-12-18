@@ -93,9 +93,9 @@ export async function makeSignIn({
 
   try {
     isArgentWallet = await checkIfArgentWallet(client, challenge.address)
-  } catch {
+  } catch (e) {
     // eslint-disable-next-line no-console
-    console.error('Check if argent wallet failed')
+    console.error('Check if argent wallet failed', e)
   }
 
   if (isGnosisSafe || isArgentWallet) {
