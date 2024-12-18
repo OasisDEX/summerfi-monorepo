@@ -1,4 +1,4 @@
-import type { Denomination, Maybe } from '@summerfi/sdk-common/common/aliases'
+import type { Denomination, Maybe } from '@summerfi/sdk-common/common/types'
 import type { IToken } from '@summerfi/sdk-common/common'
 import { isToken } from '@summerfi/sdk-common/common'
 import { IOracleManager, IOracleProvider } from '@summerfi/oracle-common'

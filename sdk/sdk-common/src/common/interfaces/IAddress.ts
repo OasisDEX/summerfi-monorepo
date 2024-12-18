@@ -1,7 +1,7 @@
 import { isHex } from 'viem'
 import { z } from 'zod'
-import { AddressValue } from '../aliases/AddressValue'
-import { AddressType } from '../types/AddressType'
+import { AddressValue } from '../types/AddressValue'
+import { AddressType } from '../enums/AddressType'
 import { IPrintable } from './IPrintable'
 import { IValueConverter } from './IValueConverter'
 

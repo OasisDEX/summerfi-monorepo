@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { ChainId, ChainIdSchema } from '../aliases/ChainId'
+import { ChainId, ChainIdSchema } from '../types/ChainId'
 import { IPrintable } from './IPrintable'
 
 /**

@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { IPoolId, PoolIdDataSchema } from '../../common/interfaces/IPoolId'
 import { IProtocol, isProtocol } from '../../common/interfaces/IProtocol'
-import { PoolType } from '../../common/types/PoolType'
+import { PoolType } from '../../common/enums/PoolType'
 
 /**
  * Unique signature to provide branded types to the interface

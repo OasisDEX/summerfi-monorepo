@@ -39,19 +39,17 @@ export const useTokenBalances = ({
 
   const arbitrumTokenBalance = useTokenBalance({
     tokenSymbol,
-    vaultTokenSymbol: tokenSymbol,
+    vaultTokenSymbol,
     publicClient: arbitrumPublicClient,
     chainId: SDKChainId.ARBITRUM,
     skip: network !== SDKNetwork.ArbitrumOne,
-    vaultTokenSymbol,
   })
   const baseTokenBalance = useTokenBalance({
     tokenSymbol,
-    vaultTokenSymbol: tokenSymbol,
+    vaultTokenSymbol,
     publicClient: basePublicClient,
     chainId: SDKChainId.BASE,
     skip: network !== SDKNetwork.Base,
-    vaultTokenSymbol,
   })
 
   if (!user) {

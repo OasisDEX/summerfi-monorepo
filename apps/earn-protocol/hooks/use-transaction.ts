@@ -101,9 +101,9 @@ export const useTransaction = ({
 
   const isProperChainSelected = clientChainId === vaultChainId
   const {
-    symbol: inputTokenSymbol,
-    id: inputTokenAddress,
-    decimals: inputTokenDecimals,
+    symbol: vaultTokenSymbol,
+    id: vaultTokenAddress,
+    decimals: vaultTokenDecimals,
   } = vault.inputToken
 
   const nextTransaction = useMemo(() => {
@@ -185,7 +185,7 @@ export const useTransaction = ({
             target: nextTransaction.transaction.target.value,
             data: getApprovalTx(
               user.address,
-              BigInt(approvalCustomValue.times(ten.pow(inputTokenDecimals)).toString()),
+              BigInt(approvalCustomValue.times(ten.pow(vaultTokenDecimals)).toString()),
             ),
           }
         : {
@@ -197,7 +197,7 @@ export const useTransaction = ({
   }, [
     approvalCustomValue,
     approvalType,
-    inputTokenDecimals,
+    vaultTokenDecimals,
     nextTransaction,
     publicClient,
     sendTransaction,
@@ -339,7 +339,7 @@ export const useTransaction = ({
     if (nextTransaction?.label) {
       return {
         label: {
-          approve: `Approve ${inputTokenSymbol}`,
+          approve: `Approve ${vaultTokenSymbol}`,
           deposit: 'Deposit',
           withdraw: 'Withdraw',
         }[nextTransaction.label],
@@ -378,7 +378,7 @@ export const useTransaction = ({
     isAuthModalOpen,
     vaultChainId,
     setChain,
-    inputTokenSymbol,
+    vaultTokenSymbol,
     executeNextTransaction,
   ])
 
@@ -398,13 +398,13 @@ export const useTransaction = ({
       publicClient
         .readContract({
           abi: erc20Abi,
-          address: inputTokenAddress as `0x${string}`,
+          address: vaultTokenAddress as `0x${string}`,
           functionName: 'allowance',
           args: [user.address, vault.id as `0x${string}`],
         })
         .then((approvalAmount) => {
           const approvalParsed = new BigNumber(approvalAmount.toString()).div(
-            ten.pow(inputTokenDecimals),
+            ten.pow(vaultTokenDecimals),
           )
 
           setApproval(approvalParsed)
@@ -415,8 +415,8 @@ export const useTransaction = ({
         })
     }
   }, [
-    inputTokenAddress,
-    inputTokenDecimals,
+    vaultTokenAddress,
+    vaultTokenDecimals,
     publicClient,
     user,
     vault.id,

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { PositionType } from '../types/PositionType'
+import { PositionType } from '../enums/PositionType'
 import { IPool, isPool } from './IPool'
 import { IPositionId, isPositionId } from './IPositionId'
 

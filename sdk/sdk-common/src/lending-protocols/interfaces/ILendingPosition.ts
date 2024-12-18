@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { IPosition, PositionDataSchema } from '../../common/interfaces/IPosition'
 import { ITokenAmount, isTokenAmount } from '../../common/interfaces/ITokenAmount'
-import { PositionType } from '../../common/types/PositionType'
+import { PositionType } from '../../common/enums/PositionType'
 import { LendingPositionType } from '../types/LendingPositionType'
 import { ILendingPool, isLendingPool } from './ILendingPool'
 import { ILendingPositionId, isLendingPositionId } from './ILendingPositionId'

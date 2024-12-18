@@ -1,8 +1,8 @@
-import { IPrintable } from '../../common/interfaces/IPrintable'
+import { IPrintable } from '../interfaces/IPrintable'
 import { SerializationService } from '../../services'
 import { IPoolId, IPoolIdData, __signature__ } from '../interfaces/IPoolId'
 import { IProtocol } from '../interfaces/IProtocol'
-import { PoolType } from '../types/PoolType'
+import { PoolType } from '../enums/PoolType'
 
 /**
  * Type for the parameters of PoolId

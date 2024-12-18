@@ -38,8 +38,8 @@ import { RebalancingActivity } from '@/features/rebalance-activity/components/Re
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 import { useAmount } from '@/hooks/use-amount'
+import { useAmountWithSwap } from '@/hooks/use-amount-with-swap'
 import { useClient } from '@/hooks/use-client'
-import { useSwapQuote } from '@/hooks/use-swap-quote'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useTransaction } from '@/hooks/use-transaction'
 
@@ -111,8 +111,8 @@ export const VaultManageViewComponent = ({
     amount: amountParsed,
     manualSetAmount,
     publicClient,
-    token: selectedToken,
     vaultToken,
+    token: selectedToken,
     tokenBalance: selectedTokenBalance,
     tokenBalanceLoading: selectedTokenBalanceLoading,
     flow: 'manage',
@@ -145,44 +145,14 @@ export const VaultManageViewComponent = ({
     return oneYearEarningsForecast
   }, [oneYearEarningsForecast])
 
-  const fromTokenSymbol: string = useMemo(() => {
-    return {
-      [TransactionAction.DEPOSIT]: selectedTokenOption.value,
-      [TransactionAction.WITHDRAW]: vault.inputToken.symbol,
-    }[transactionType]
-  }, [transactionType, selectedTokenOption.value, vault.inputToken.symbol])
-
-  const toTokenSymbol: string = useMemo(() => {
-    return {
-      [TransactionAction.DEPOSIT]: vault.inputToken.symbol,
-      [TransactionAction.WITHDRAW]: selectedTokenOption.value,
-    }[transactionType]
-  }, [transactionType, selectedTokenOption.value, vault.inputToken.symbol])
-
-  const { quote, quoteLoading } = useSwapQuote({
-    chainId: vaultChainId,
-    fromTokenSymbol,
-    fromAmount: amountDisplay,
-    toTokenSymbol,
-    slippage: 0.01,
+  const { amountDisplayUSDWithSwap } = useAmountWithSwap({
+    vault,
+    vaultChainId,
+    amountDisplay,
+    amountDisplayUSD,
+    transactionType,
+    selectedTokenOption,
   })
-
-  const amountDisplayUSDWithSwap = useMemo(() => {
-    if (quoteLoading) {
-      return 'Loading...'
-    }
-
-    if (quote === undefined) {
-      return amountDisplayUSD
-    }
-
-    const amountWithSwap = {
-      [TransactionAction.DEPOSIT]: `$${quote.toTokenAmount.toBigNumber().toFixed(2)}`, // Display 2 decimal places for USD
-      [TransactionAction.WITHDRAW]: `${quote.toTokenAmount.toBigNumber().toFixed(Math.min(vault.inputToken.decimals, 8))} ${quote.toTokenAmount.token.symbol}`, // Cap decimals at 8 for better readability
-    }[transactionType]
-
-    return amountWithSwap
-  }, [quote, quoteLoading, amountDisplayUSD, vault.inputToken.decimals, transactionType])
 
   const sidebarContent = nextTransaction?.label ? (
     {

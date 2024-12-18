@@ -9,7 +9,7 @@ import {
   Percentage,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
-import { ChainId, HexData } from '@summerfi/sdk-common/common/aliases'
+import { ChainId, HexData } from '@summerfi/sdk-common/common/types'
 import {
   QuoteData,
   SwapData,

@@ -17,6 +17,7 @@ import {
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
+  TransactionAction,
   type UsersActivity,
 } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
@@ -37,6 +38,7 @@ import { TransakWidget } from '@/features/transak/components/TransakWidget/Trans
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 import { useAmount } from '@/hooks/use-amount'
+import { useAmountWithSwap } from '@/hooks/use-amount-with-swap'
 import { useClient } from '@/hooks/use-client'
 import { usePosition } from '@/hooks/use-position'
 import { useRedirectToPosition } from '@/hooks/use-redirect-to-position'
@@ -75,7 +77,12 @@ export const VaultOpenViewComponent = ({
     chainId: vaultChainId,
   })
 
-  const { vaultToken, token, tokenBalance, tokenBalanceLoading } = useTokenBalance({
+  const {
+    vaultToken,
+    token: selectedToken,
+    tokenBalance: selectedTokenBalance,
+    tokenBalanceLoading: selectedTokenBalanceLoading,
+  } = useTokenBalance({
     publicClient,
     vaultTokenSymbol: vault.inputToken.symbol,
     tokenSymbol: selectedTokenOption.value,
@@ -91,7 +98,8 @@ export const VaultOpenViewComponent = ({
     handleAmountChange,
     onBlur,
     onFocus,
-  } = useAmount({ vault })
+  } = useAmount({ vault, selectedToken })
+
   const {
     approvalType,
     setApprovalType,
@@ -112,9 +120,9 @@ export const VaultOpenViewComponent = ({
     manualSetAmount,
     publicClient,
     vaultToken,
-    token,
-    tokenBalance,
-    tokenBalanceLoading,
+    token: selectedToken,
+    tokenBalance: selectedTokenBalance,
+    tokenBalanceLoading: selectedTokenBalanceLoading,
     flow: 'open',
   })
 
@@ -146,6 +154,15 @@ export const VaultOpenViewComponent = ({
     return oneYearEarningsForecast
   }, [oneYearEarningsForecast])
 
+  const { amountDisplayUSDWithSwap } = useAmountWithSwap({
+    vault,
+    vaultChainId,
+    amountDisplay,
+    amountDisplayUSD,
+    transactionType: TransactionAction.DEPOSIT,
+    selectedTokenOption,
+  })
+
   const sidebarContent = nextTransaction?.label ? (
     {
       approve: (
@@ -155,7 +172,7 @@ export const VaultOpenViewComponent = ({
           setApprovalType={setApprovalType}
           setApprovalCustomValue={setApprovalCustomValue}
           approvalCustomValue={approvalCustomValue}
-          tokenBalance={tokenBalance}
+          tokenBalance={selectedTokenBalance}
         />
       ),
       deposit: (
@@ -170,7 +187,7 @@ export const VaultOpenViewComponent = ({
   ) : (
     <ControlsDepositWithdraw
       amountDisplay={amountDisplay}
-      amountDisplayUSD={amountDisplayUSD}
+      amountDisplayUSD={amountDisplayUSDWithSwap}
       handleAmountChange={handleAmountChange}
       handleDropdownChange={handleTokenSelectionChange}
       options={tokenOptions}
@@ -178,8 +195,8 @@ export const VaultOpenViewComponent = ({
       onFocus={onFocus}
       onBlur={onBlur}
       tokenSymbol={selectedTokenOption.value}
-      tokenBalance={tokenBalance}
-      tokenBalanceLoading={tokenBalanceLoading}
+      tokenBalance={selectedTokenBalance}
+      tokenBalanceLoading={selectedTokenBalanceLoading}
       manualSetAmount={manualSetAmount}
       vault={vault}
       estimatedEarnings={estimatedEarnings}

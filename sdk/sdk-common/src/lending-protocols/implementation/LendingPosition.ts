@@ -1,6 +1,6 @@
 import { Position } from '../../common/implementation/Position'
 import { ITokenAmount } from '../../common/interfaces/ITokenAmount'
-import { PositionType } from '../../common/types/PositionType'
+import { PositionType } from '../../common/enums/PositionType'
 import { SerializationService } from '../../services/SerializationService'
 import { ILendingPool } from '../interfaces/ILendingPool'
 import {

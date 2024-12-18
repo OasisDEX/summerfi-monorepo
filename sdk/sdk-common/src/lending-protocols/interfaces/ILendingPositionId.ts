@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { IPositionId, PositionIdDataSchema } from '../../common/interfaces/IPositionId'
-import { PositionType } from '../../common/types/PositionType'
+import { PositionType } from '../../common/enums/PositionType'
 
 /**
  * Unique signature to provide branded types to the interface

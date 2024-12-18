@@ -1,7 +1,7 @@
 import { SerializationService } from '../../services/SerializationService'
 import { ISDKError } from '../interfaces'
 import { ISDKErrorData, __signature__ } from '../interfaces/ISDKError'
-import { SDKErrorType } from '../types/SDKErrorType'
+import { SDKErrorType } from '../enums/SDKErrorType'
 
 /**
  * Type for the parameters of SDKError

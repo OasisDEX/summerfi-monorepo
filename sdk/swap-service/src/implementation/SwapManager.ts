@@ -1,4 +1,4 @@
-import type { Maybe } from '@summerfi/sdk-common/common/aliases'
+import type { Maybe } from '@summerfi/sdk-common/common/types'
 import type { IPercentage, IAddress, IToken, ITokenAmount } from '@summerfi/sdk-common/common'
 import { ChainId, Percentage } from '@summerfi/sdk-common/common'
 import { ISwapProvider, ISwapManager } from '@summerfi/swap-common/interfaces'

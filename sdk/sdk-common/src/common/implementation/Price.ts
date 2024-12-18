@@ -1,6 +1,6 @@
 import { BigNumber } from 'bignumber.js'
 import { SerializationService } from '../../services/SerializationService'
-import { Denomination } from '../aliases/Denomination'
+import { Denomination } from '../types/Denomination'
 import { IPercentage, isPercentage } from '../interfaces'
 import { isFiatCurrencyAmount } from '../interfaces/IFiatCurrencyAmount'
 import {

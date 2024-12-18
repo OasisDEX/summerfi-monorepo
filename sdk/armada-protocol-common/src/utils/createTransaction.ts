@@ -1,12 +1,37 @@
-import type { HexData, IAddress, TransactionInfo } from '@summerfi/sdk-common'
+import {
+  type HexData,
+  type IAddress,
+  type ExtendedTransactionInfo,
+  TransactionType,
+  TransactionMetadataApproval,
+  TransactionMetadataDeposit,
+  TransactionMetadataWithdraw,
+} from '@summerfi/sdk-common'
 
-export function createTransaction(params: {
+export function createApprovalTransaction(params: {
+  transaction: {
+    target: IAddress
+    calldata: HexData
+    value: string
+  }
+  description: string
+  metadata: TransactionMetadataApproval
+}): ExtendedTransactionInfo {
+  return {
+    transaction: params.transaction,
+    description: params.description,
+    type: TransactionType.Approve,
+    metadata: params.metadata,
+  }
+}
+
+export function createDepositTransaction(params: {
   target: IAddress
   calldata: HexData
-  description: string
   value?: bigint
-  metadata?: Record<string, unknown>
-}): TransactionInfo {
+  description: string
+  metadata: TransactionMetadataDeposit
+}): ExtendedTransactionInfo {
   return {
     transaction: {
       target: params.target,
@@ -14,6 +39,26 @@ export function createTransaction(params: {
       value: String(params.value ?? 0),
     },
     description: params.description,
+    type: TransactionType.Deposit,
+    metadata: params.metadata,
+  }
+}
+
+export function createWithdrawTransaction(params: {
+  target: IAddress
+  calldata: HexData
+  value?: bigint
+  description: string
+  metadata: TransactionMetadataWithdraw
+}): ExtendedTransactionInfo {
+  return {
+    transaction: {
+      target: params.target,
+      calldata: params.calldata,
+      value: String(params.value ?? 0),
+    },
+    description: params.description,
+    type: TransactionType.Withdraw,
     metadata: params.metadata,
   }
 }

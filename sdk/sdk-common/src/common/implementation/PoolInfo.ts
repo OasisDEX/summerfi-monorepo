@@ -2,7 +2,7 @@ import { IPrintable } from '../../common/interfaces/IPrintable'
 import { SerializationService } from '../../services/SerializationService'
 import { IPoolId } from '../interfaces/IPoolId'
 import { IPoolInfo, IPoolInfoData, __signature__ } from '../interfaces/IPoolInfo'
-import { PoolType } from '../types/PoolType'
+import { PoolType } from '../enums/PoolType'
 
 /**
  * Type for the parameters of PoolInfo

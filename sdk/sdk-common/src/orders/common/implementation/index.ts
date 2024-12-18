@@ -1,3 +1,3 @@
-export * from './Order'
+export * from '../types/Order'
 export * from './PositionsManager'
-export * from './TransactionInfo'
+export * from '../types/TransactionInfo'

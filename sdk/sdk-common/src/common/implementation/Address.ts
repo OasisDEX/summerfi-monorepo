@@ -1,8 +1,8 @@
 import { BigNumber } from 'bignumber.js'
 import { SerializationService } from '../../services/SerializationService'
-import { AddressValue } from '../aliases/AddressValue'
+import { AddressValue } from '../types/AddressValue'
 import { IAddress, IAddressData, __signature__ } from '../interfaces/IAddress'
-import { AddressType } from '../types/AddressType'
+import { AddressType } from '../enums/AddressType'
 
 /**
  * Type for the parameters of Address
