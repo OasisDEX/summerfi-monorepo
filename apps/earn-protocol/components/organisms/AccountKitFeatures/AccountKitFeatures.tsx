@@ -36,6 +36,7 @@ export const AccountKitFeatures = () => {
     walletAddress,
     isGnosisSafe: false,
     version: 'version-26.06.2023',
+    cookiePrefix: 'test',
   })
 
   useEffect(() => {
