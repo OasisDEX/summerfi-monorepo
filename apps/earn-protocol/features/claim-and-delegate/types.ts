@@ -35,3 +35,10 @@ export type ClaimDelegateReducerAction =
       type: 'update-delegate-status'
       payload: ClaimDelegateTxStatuses
     }
+
+export type ClamDelegateExternalData = {
+  sumrPrice: string
+  sumrEarned: string
+  sumrApy: string
+  sumrDelegated: string
+}

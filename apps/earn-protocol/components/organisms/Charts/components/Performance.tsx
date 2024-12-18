@@ -40,18 +40,32 @@ const CustomizedCross = (props: CategoricalChartState) => {
 
   return (
     <>
-      <text x={meetingPoint.x - 60} y={offset?.top ?? 5} style={textStyle}>
-        Historic
-      </text>
+      {meetingPoint.x - 60 > 60 && (
+        // hides historic text if it's too close to the left edge
+        <text x={meetingPoint.x - 60} y={offset?.top ?? 5} style={textStyle}>
+          Historic
+        </text>
+      )}
       <text x={meetingPoint.x + 15} y={offset?.top ?? 5} style={textStyle}>
         Forecast
       </text>
       <line
+        // historic/forecast line
         x1={meetingPoint.x}
         x2={meetingPoint.x}
         y1={(offset?.top ?? 5) - 10}
         y2={`calc(100% - ${offset?.bottom}px)`}
         stroke="#474747"
+        strokeWidth={2}
+        strokeDasharray="5 10"
+      />
+      <line
+        // forecast deposit line
+        x1={meetingPoint.x}
+        x2={`calc(100% - ${offset?.right}px)`}
+        y1={meetingPoint.y}
+        y2={meetingPoint.y}
+        stroke="#3D3D3D"
         strokeWidth={2}
         strokeDasharray="5 10"
       />
@@ -66,7 +80,7 @@ export const PerformanceChart = ({ data }: PerformanceChartProps) => {
         <ComposedChart
           data={data}
           margin={{
-            top: 50,
+            top: 30,
             right: 0,
             left: 0,
             bottom: 10,
@@ -83,6 +97,7 @@ export const PerformanceChart = ({ data }: PerformanceChartProps) => {
           <YAxis
             strokeWidth={0}
             tickFormatter={(label: string) => `${formatChartCryptoValue(Number(label))}`}
+            domain={['dataMin', 'dataMax + 5']}
           />
           <Tooltip
             formatter={(val) =>
@@ -138,7 +153,7 @@ export const PerformanceChart = ({ data }: PerformanceChartProps) => {
           />
           <Line
             dot={false}
-            type="natural"
+            type="monotone"
             dataKey="netValue"
             stroke="#FF80BF"
             activeDot={false}
@@ -148,7 +163,7 @@ export const PerformanceChart = ({ data }: PerformanceChartProps) => {
           />
           <Line
             dot={false}
-            type="step"
+            type="stepAfter"
             dataKey="depositedValue"
             stroke="#FF49A4"
             activeDot={false}

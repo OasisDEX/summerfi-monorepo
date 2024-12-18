@@ -8,6 +8,7 @@ import { sumrDelegates } from '@/features/claim-and-delegate/consts'
 import type {
   ClaimDelegateReducerAction,
   ClaimDelegateState,
+  ClamDelegateExternalData,
 } from '@/features/claim-and-delegate/types'
 
 import classNames from './ClaimDelegateStakeDelegateCompletedSubstep.module.scss'
@@ -15,32 +16,33 @@ import classNames from './ClaimDelegateStakeDelegateCompletedSubstep.module.scss
 interface ClaimDelegateStakeDelegateCompletedSubstepProps {
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
+  externalData: ClamDelegateExternalData
 }
 
 export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
   ClaimDelegateStakeDelegateCompletedSubstepProps
-> = ({ state }) => {
+> = ({ state, externalData }) => {
   const { walletAddress } = useParams()
 
   const claimedSumr = (
     <>
-      {formatCryptoBalance(123)}{' '}
+      {formatCryptoBalance(externalData.sumrEarned)}{' '}
       <Text as="span" variant="p3semiColorful">
         $SUMR
       </Text>
     </>
   )
-  const claimedSumrUSD = `$${formatFiatBalance(123)}`
+  const claimedSumrUSD = `$${formatFiatBalance(Number(externalData.sumrEarned) * Number(externalData.sumrPrice))}`
 
   const apy = (
     <>
-      {formatDecimalAsPercent(0.032)}{' '}
+      {formatDecimalAsPercent(externalData.sumrApy).replace('%', '')}{' '}
       <Text as="span" variant="p3semi" style={{ color: 'var(--earn-protocol-success-100)' }}>
         %APY
       </Text>
     </>
   )
-  const apyPerYear = `$${formatFiatBalance(3214)} $SUMR/yr`
+  const sumrPerYear = `${formatFiatBalance((Number(externalData.sumrDelegated) + Number(externalData.sumrEarned)) * Number(externalData.sumrApy))} $SUMR/yr`
 
   if (state.delegatee === undefined) {
     // eslint-disable-next-line no-console
@@ -72,7 +74,7 @@ export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
             value={apy}
             valueStyle={{ color: 'var(--earn-protocol-success-100)' }}
             valueSize="large"
-            subValue={apyPerYear}
+            subValue={sumrPerYear}
             subValueSize="small"
           />
           <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
@@ -89,7 +91,7 @@ export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
             <div className={classNames.withIcon}>
               <Icon tokenName="SUMR" />
               <Text as="h4" variant="h4">
-                123,456
+                {Number(externalData.sumrDelegated) + Number(externalData.sumrEarned)}
               </Text>
             </div>
           </div>

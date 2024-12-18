@@ -105,6 +105,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
   const tokenBalances = useTokenBalances({
     tokenSymbol: selectedTokenOption.value,
     network: vaultData.protocol.network,
+    vaultTokenSymbol: vaultData.inputToken.symbol,
   })
 
   const handleChangeNetwork = (selected: DropdownRawOption) => {

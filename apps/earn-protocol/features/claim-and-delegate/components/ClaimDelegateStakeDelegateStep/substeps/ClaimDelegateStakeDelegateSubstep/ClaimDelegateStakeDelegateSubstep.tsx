@@ -10,6 +10,7 @@ import {
   type ClaimDelegateReducerAction,
   type ClaimDelegateState,
   ClaimDelegateTxStatuses,
+  type ClamDelegateExternalData,
 } from '@/features/claim-and-delegate/types'
 
 import classNames from './ClaimDelegateStakeDelegateSubstep.module.scss'
@@ -17,19 +18,23 @@ import classNames from './ClaimDelegateStakeDelegateSubstep.module.scss'
 interface ClaimDelegateStakeDelegateSubstepProps {
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
+  externalData: ClamDelegateExternalData
 }
 
 export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSubstepProps> = ({
   state,
   dispatch,
+  externalData,
 }) => {
   const { walletAddress } = useParams()
 
-  const claimed = formatCryptoBalance(123)
-  const claimedInUSD = formatFiatBalance(123)
+  const claimed = formatCryptoBalance(externalData.sumrEarned)
+  const claimedInUSD = formatFiatBalance(
+    Number(externalData.sumrEarned) * Number(externalData.sumrPrice),
+  )
 
-  const apy = formatDecimalAsPercent(0.032)
-  const sumrPerYear = '*11,032 $SUMR / Year'
+  const apy = formatDecimalAsPercent(externalData.sumrApy)
+  const sumrPerYear = `*${formatFiatBalance((Number(externalData.sumrDelegated) + Number(externalData.sumrEarned)) * Number(externalData.sumrApy))} $SUMR / Year`
 
   const handleStakeAndDelegate = () => {
     dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.COMPLETED })

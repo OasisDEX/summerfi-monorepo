@@ -30,11 +30,11 @@ export const revalidate = 60
 const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
   const parsedNetwork = humanNetworktoSDKNetwork(params.network)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
-  const { config } = parseServerResponseToClient(await systemConfigHandler())
+  const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
 
   const parsedVaultId = isAddress(params.vaultId)
     ? params.vaultId
-    : getVaultIdByVaultCustomName(params.vaultId, String(parsedNetworkId), config)
+    : getVaultIdByVaultCustomName(params.vaultId, String(parsedNetworkId), systemConfig)
 
   const [vault, { vaults }, { userActivity, topDepositors }] = await Promise.all([
     getVaultDetails({
@@ -53,11 +53,15 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     : {}
 
   const [vaultDecorated] = vault
-    ? decorateCustomVaultFields([vault], config, {
-        arkInterestRatesMap: interestRates,
+    ? decorateCustomVaultFields({
+        vaults: [vault],
+        systemConfig,
+        decorators: {
+          arkInterestRatesMap: interestRates,
+        },
       })
     : []
-  const vaultsDecorated = decorateCustomVaultFields(vaults, config)
+  const vaultsDecorated = decorateCustomVaultFields({ vaults, systemConfig })
 
   if (!vault) {
     return (

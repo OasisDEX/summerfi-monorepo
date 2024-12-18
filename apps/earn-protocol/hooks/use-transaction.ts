@@ -51,11 +51,19 @@ type UseTransactionParams = {
 }
 
 const labelTransactions = (transactions: TransactionInfo[]) => {
-  return transactions.map((tx) => ({
-    ...tx,
-    // kinda hacky, but works for now
-    label: tx.description.split(' ')[0].toLowerCase() as TransactionInfoLabeled['label'],
-  }))
+  return transactions.map((tx) => {
+    const tempLabel = tx.description.split(' ')[0].toLowerCase()
+
+    const label = (
+      tempLabel === 'unstake' ? 'withdraw' : tempLabel
+    ) as TransactionInfoLabeled['label']
+
+    return {
+      ...tx,
+      // kinda hacky, but works for now
+      label,
+    }
+  })
 }
 
 export const useTransaction = ({
@@ -272,7 +280,6 @@ export const useTransaction = ({
     setTransactions,
     getDepositTX,
     vault.id,
-    vault.protocol.network,
     vaultChainId,
     getWithdrawTX,
     setSidebarError,
@@ -356,6 +363,7 @@ export const useTransaction = ({
       action: getTransactionsList,
     }
   }, [
+    flow,
     tokenBalanceLoading,
     tokenBalance,
     user,

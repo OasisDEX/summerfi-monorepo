@@ -128,7 +128,11 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
       config: {
         walletAddress,
         disableWalletAddressForm: true,
-        network: chain.name.toLowerCase(),
+        network: {
+          [SDKChainId.MAINNET]: 'ethereum',
+          [SDKChainId.BASE]: 'base',
+          [SDKChainId.ARBITRUM]: 'arbitrum',
+        }[chain.id],
         email,
         ...getTransakConfigInitData({
           fiatAmount,

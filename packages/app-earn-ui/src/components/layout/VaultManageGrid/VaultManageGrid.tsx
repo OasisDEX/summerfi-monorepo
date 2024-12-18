@@ -59,7 +59,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
     new BigNumber(0),
   )
 
-  const earnedInToken = netContribution.minus(totalDepositedInToken.minus(totalWithdrawnInToken))
+  const earnedInToken = totalDepositedInToken.minus(totalWithdrawnInToken)
   const earnedInUSD = earnedInToken.times(inputTokenPriceUSD)
 
   return (

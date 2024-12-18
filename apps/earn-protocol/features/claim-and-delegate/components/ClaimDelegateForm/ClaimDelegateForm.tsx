@@ -7,6 +7,7 @@ import { ClaimDelegateFormHeader } from '@/features/claim-and-delegate/component
 import type {
   ClaimDelegateReducerAction,
   ClaimDelegateState,
+  ClamDelegateExternalData,
 } from '@/features/claim-and-delegate/types'
 
 import classNames from './ClaimDelegateForm.module.scss'
@@ -14,14 +15,19 @@ import classNames from './ClaimDelegateForm.module.scss'
 interface ClaimDelegateFormProps {
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
+  externalData: ClamDelegateExternalData
 }
 
-export const ClaimDelegateForm: FC<ClaimDelegateFormProps> = ({ state, dispatch }) => {
+export const ClaimDelegateForm: FC<ClaimDelegateFormProps> = ({
+  state,
+  dispatch,
+  externalData,
+}) => {
   return (
     <Card variant="cardSecondary" className={classNames.claimDelegateForm}>
       <ClaimDelegateFormHeader state={state} />
       <div className={classNames.separator} />
-      <ClaimDelegateFormContent state={state} dispatch={dispatch} />
+      <ClaimDelegateFormContent state={state} dispatch={dispatch} externalData={externalData} />
     </Card>
   )
 }
