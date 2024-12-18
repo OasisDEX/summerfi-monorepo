@@ -3,6 +3,7 @@ import { type FC, useEffect, useReducer, useState } from 'react'
 import { useChain } from '@account-kit/react'
 import { Modal, Sidebar, type SidebarProps, useMobileCheck } from '@summerfi/app-earn-ui'
 import { SDKChainId } from '@summerfi/app-types'
+import { type Address } from '@summerfi/sdk-common'
 import { Transak } from '@transak/transak-sdk'
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
@@ -33,7 +34,7 @@ interface TransakWidgetProps {
   cryptoCurrency: string
   isOpen: boolean
   onClose: () => void
-  walletAddress: string
+  walletAddress: Address
   email?: string
 }
 
@@ -126,7 +127,7 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
   const handleOpen = () => {
     const transak = getTransakConfig({
       config: {
-        walletAddress,
+        walletAddress: walletAddress as unknown as string,
         disableWalletAddressForm: true,
         network: {
           [SDKChainId.MAINNET]: 'ethereum',
