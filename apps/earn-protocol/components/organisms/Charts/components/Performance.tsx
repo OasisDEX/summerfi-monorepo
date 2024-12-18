@@ -38,6 +38,10 @@ const CustomizedCross = (props: CategoricalChartState) => {
     fontWeight: '600',
   }
 
+  if (!meetingPoint) {
+    return null
+  }
+
   return (
     <>
       {meetingPoint.x - 60 > 60 && (
