@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { type TOSState, TOSStatus } from '@summerfi/app-types'
 
 import { acceptanceStep } from '@/client/helpers/acceptance-step'
+import { isValidVersion } from '@/client/helpers/is-valid-version'
 import { signatureStep } from '@/client/helpers/signature-step'
 import { verifyTermsOfServiceAcceptance } from '@/client/helpers/verify-terms-of-service-acceptance'
 import { type TOSInput } from '@/types'
@@ -19,6 +20,7 @@ import { type TOSInput } from '@/types'
  * @param walletAddress - user wallet address
  * @param version - Terms of Service version
  * @param isGnosisSafe - boolean to determine whether user use safe multi-sig
+ * @param cookiePrefix - The prefix of cookie that will be stored as http-only cookie.
  * @param host - Optional, to be used when API is not available under the same host (for example localhost development on different ports).
  * @param forceDisconnect Optional, to be used to disconnect user when there is an issue with API to prevent him / her from using app without accepting TOS.
  *
@@ -33,10 +35,17 @@ export const useTermsOfService = ({
   isGnosisSafe,
   host,
   forceDisconnect,
+  cookiePrefix,
 }: TOSInput) => {
   const [tos, setTos] = useState<TOSState>({
     status: TOSStatus.INIT,
   })
+
+  if (!isValidVersion(version)) {
+    throw new Error(
+      'Invalid version format. The version must be in the following format: {name}_version-DD.MM.YYYY',
+    )
+  }
 
   const memoizedSignMessage = signMessage
 
@@ -48,6 +57,7 @@ export const useTermsOfService = ({
       const termsOfServiceAcceptance = await verifyTermsOfServiceAcceptance({
         walletAddress,
         version,
+        cookiePrefix,
         host,
       })
 
@@ -78,7 +88,14 @@ export const useTermsOfService = ({
        If acceptance doesn't exist & user is authorized, launch ToS acceptance process.
        */
       if (termsOfServiceAcceptance.authorized && !termsOfServiceAcceptance.acceptance) {
-        acceptanceStep({ setTos, termsOfServiceAcceptance, walletAddress, version, host })
+        acceptanceStep({
+          setTos,
+          termsOfServiceAcceptance,
+          walletAddress,
+          version,
+          cookiePrefix,
+          host,
+        })
       }
 
       /**
@@ -94,6 +111,7 @@ export const useTermsOfService = ({
           isGnosisSafe,
           chainId,
           signMessage: memoizedSignMessage,
+          cookiePrefix,
         })
       }
     }
@@ -103,7 +121,16 @@ export const useTermsOfService = ({
     }
 
     void request(walletAddress)
-  }, [walletAddress, version, chainId, isGnosisSafe, host, memoizedSignMessage, forceDisconnect])
+  }, [
+    walletAddress,
+    version,
+    cookiePrefix,
+    chainId,
+    isGnosisSafe,
+    host,
+    memoizedSignMessage,
+    forceDisconnect,
+  ])
 
   return tos
 }

@@ -49,7 +49,8 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
     chainId: 1,
     walletAddress: user?.address,
     isGnosisSafe: false,
-    version: 'sumr-version-16.01.2025',
+    version: 'sumr_version-16.01.2026',
+    cookiePrefix: 'sumr-claim-token',
   })
 
   useEffect(() => {
@@ -74,7 +75,8 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
     }
   }
 
-  const isLoading = [TOSStatus.INIT, TOSStatus.LOADING].includes(tosState.status)
+  const isLoading =
+    [TOSStatus.INIT, TOSStatus.LOADING].includes(tosState.status) && !!userWalletAddress
   const isDisabled =
     state.walletAddress.toLowerCase() !== userWalletAddress?.toLowerCase() || isLoading
 

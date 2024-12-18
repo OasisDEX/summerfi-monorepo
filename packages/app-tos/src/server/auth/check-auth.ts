@@ -5,12 +5,13 @@ import { verifyAccessToken } from '@/server/helpers/verify-access-token'
 
 const paramsSchema = z.object({
   walletAddress: z.string(),
+  cookiePrefix: z.string(),
 })
 
 export const checkAuth = async ({ req, jwtSecret }: { req: NextRequest; jwtSecret: string }) => {
-  const { walletAddress } = paramsSchema.parse(await req.json())
+  const { walletAddress, cookiePrefix } = paramsSchema.parse(await req.json())
 
-  const token = req.cookies.get(`token-${walletAddress.toLowerCase()}`)
+  const token = req.cookies.get(`${cookiePrefix}-${walletAddress.toLowerCase()}`)
 
   if (!token) {
     return NextResponse.json({ authenticated: false }, { status: 401 })

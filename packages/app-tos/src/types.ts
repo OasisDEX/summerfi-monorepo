@@ -8,7 +8,11 @@ export type TOSInput = {
   signMessage: TOSSignMessage
   chainId: number
   walletAddress?: string
+  /**
+   * The version must be in the following format: {name}_version-DD.MM.YYYY
+   */
   version: string
+  cookiePrefix: string
   isGnosisSafe: boolean
   host?: string
   forceDisconnect?: () => void
@@ -49,5 +53,6 @@ export interface TOSRequestContext {
   params: {
     version: string
     walletAddress: string
+    cookiePrefix: string
   }
 }

@@ -9,6 +9,7 @@
  * @param challenge - The challenge string to be signed.
  * @param chainId - The chain ID of the blockchain network.
  * @param isGnosisSafe - A boolean indicating if the wallet is a Gnosis Safe.
+ * @param cookiePrefix - The prefix of cookie that will be stored as http-only cookie.
  * @param host - Optional, to be used when API is not available under the same host (for example localhost development on different ports).
  *
  * @returns A promise that resolves to the JWT string or undefined if an error occurs.
@@ -19,12 +20,14 @@ export const requestSignin = async ({
   challenge,
   chainId,
   isGnosisSafe,
+  cookiePrefix,
   host = '',
 }: {
   signature: string
   challenge: string
   chainId: number
   isGnosisSafe: boolean
+  cookiePrefix: string
   host?: string
 }): Promise<string | undefined> => {
   try {
@@ -33,7 +36,7 @@ export const requestSignin = async ({
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ signature, challenge, chainId, isGnosisSafe }),
+      body: JSON.stringify({ signature, challenge, chainId, isGnosisSafe, cookiePrefix }),
       credentials: 'include',
     }).then((resp) => resp.json())
 

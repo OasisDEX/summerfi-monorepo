@@ -13,6 +13,7 @@ const offset = 14 * 24 * 60 * 60 * 1000 // 14 days
 const inputSchema = z.object({
   chainId: z.number(),
   walletAddress: z.string(),
+  cookiePrefix: z.string(),
 })
 
 /**
@@ -44,11 +45,11 @@ export const getRisk = async <DB extends RiskRequiredDB>({
   trmApiKey: string
   db: Kysely<DB>
 }) => {
-  const { chainId, walletAddress } = inputSchema.parse(await req.json())
+  const { chainId, walletAddress, cookiePrefix } = inputSchema.parse(await req.json())
 
   const resolvedDB = db as unknown as Kysely<RiskRequiredDB>
 
-  const token = req.cookies.get(`token-${walletAddress.toLowerCase()}`)
+  const token = req.cookies.get(`${cookiePrefix}-${walletAddress.toLowerCase()}`)
 
   if (!token) {
     return NextResponse.json({ authenticated: false }, { status: 401 })

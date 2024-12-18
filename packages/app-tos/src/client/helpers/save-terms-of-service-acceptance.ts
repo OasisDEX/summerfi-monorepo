@@ -11,6 +11,7 @@ interface TOSSaveAcceptance {
  *
  * @param walletAddress - The wallet address of the user accepting the terms of service.
  * @param version - The version of the terms of service document.
+ * @param cookiePrefix - The prefix of cookie that will be stored as http-only cookie.
  * @param host - Optional, to be used when API is not available under the same host (for example localhost development on different ports).
  *
  * @returns A promise that resolves to an object containing the document version of the accepted terms of service.
@@ -19,10 +20,12 @@ interface TOSSaveAcceptance {
 export const saveTermsOfServiceAcceptance = async ({
   walletAddress,
   version,
+  cookiePrefix,
   host = '',
 }: {
   walletAddress: string
   version: string
+  cookiePrefix: string
   host?: string
 }): Promise<TOSSaveAcceptance> => {
   const { docVersion }: TOSSaveAcceptance = await fetch(`${host}/api/tos`, {
@@ -33,6 +36,7 @@ export const saveTermsOfServiceAcceptance = async ({
     body: JSON.stringify({
       docVersion: version,
       walletAddress: walletAddress.toLowerCase(),
+      cookiePrefix,
     }),
     credentials: 'include',
   }).then((resp) => resp.json())

@@ -15,6 +15,7 @@ import { type TOSInput, type TosUpdate, type TOSVerifyAcceptance } from '@/types
  * @param termsOfServiceAcceptance - An object representing the terms of service acceptance status.
  * @param walletAddress - The wallet address of the user.
  * @param version - The version of the terms of service document.
+ * @param cookiePrefix - The prefix of cookie that will be stored as http-only cookie.
  * @param host - Optional, to be used when API is not available under the same host (for example localhost development on different ports).
  */
 export const acceptanceStep = ({
@@ -22,8 +23,9 @@ export const acceptanceStep = ({
   termsOfServiceAcceptance,
   walletAddress,
   version,
+  cookiePrefix,
   host,
-}: Pick<TOSInput, 'version' | 'host'> & {
+}: Pick<TOSInput, 'version' | 'host' | 'cookiePrefix'> & {
   setTos: TosUpdate
   walletAddress: string
   termsOfServiceAcceptance: TOSVerifyAcceptance
@@ -43,6 +45,7 @@ export const acceptanceStep = ({
         const { docVersion } = await saveTermsOfServiceAcceptance({
           walletAddress,
           version,
+          cookiePrefix,
           host,
         })
 

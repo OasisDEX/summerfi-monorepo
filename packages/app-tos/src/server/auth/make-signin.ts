@@ -29,6 +29,7 @@ const inputSchema = z.object({
   signature: z.string(),
   chainId: chainIdSchema,
   isGnosisSafe: z.boolean(),
+  cookiePrefix: z.string(),
 })
 
 const domainChainIdToViemChain: { [key in ChainId]: ViemChain } = {
@@ -146,7 +147,7 @@ export async function makeSignIn({
   const response = NextResponse.json({ jwt: token })
 
   const commonPayload: ResponseCookie = {
-    name: `token-${challenge.address.toLowerCase()}`,
+    name: `${body.cookiePrefix}-${challenge.address.toLowerCase()}`,
     value: token,
     httpOnly: true,
     secure: true,

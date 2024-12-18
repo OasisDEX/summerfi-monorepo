@@ -18,6 +18,7 @@ import { type TOSInput, type TosUpdate, type TOSVerifyAcceptance } from '@/types
  * @param termsOfServiceAcceptance - An object representing the terms of service acceptance status.
  * @param walletAddress - The wallet address of the user.
  * @param version - The version of the terms of service document.
+ * @param cookiePrefix - The prefix of cookie that will be stored as http-only cookie.
  * @param host - Optional, to be used when API is not available under the same host (for example localhost development on different ports).
  * @param isGnosisSafe - A boolean indicating if the wallet is a Gnosis Safe.
  */
@@ -29,6 +30,7 @@ export const signatureStep = ({
   termsOfServiceAcceptance,
   walletAddress,
   version,
+  cookiePrefix,
   host,
   isGnosisSafe,
 }: TOSInput & {
@@ -49,11 +51,19 @@ export const signatureStep = ({
           chainId,
           walletAddress,
           isGnosisSafe,
+          cookiePrefix,
           host,
         })
 
         if (jwt) {
-          acceptanceStep({ setTos, termsOfServiceAcceptance, walletAddress, version, host })
+          acceptanceStep({
+            setTos,
+            termsOfServiceAcceptance,
+            walletAddress,
+            version,
+            cookiePrefix,
+            host,
+          })
         } else {
           throw Error('Failed to generate JWT, try again or contact with Support.')
         }
