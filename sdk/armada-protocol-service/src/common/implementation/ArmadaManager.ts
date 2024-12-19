@@ -1155,29 +1155,4 @@ export class ArmadaManager implements IArmadaManager {
       impact,
     }
   }
-
-  private async _getTransactionFee(params: {
-    user: IUser
-    target: IAddress
-    calldata: HexData
-    value?: bigint
-  }): Promise<string> {
-    const client = await this._blockchainClientProvider.getBlockchainClient({
-      chainInfo: params.user.chainInfo,
-    })
-    let gas: bigint = 0n
-    try {
-      gas = await client.estimateGas({
-        account: params.user.wallet.address.value,
-        to: params.target.value,
-        data: params.calldata,
-      })
-      LoggingService.debug('getTransactionFee', { gas: gas.toString() })
-    } catch (e) {
-      return 'Gas Estimation failed'
-    }
-
-    // const gasPrice = await client.getGasPrice()
-    return gas.toString()
-  }
 }
