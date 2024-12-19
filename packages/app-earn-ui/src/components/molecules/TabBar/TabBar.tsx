@@ -16,19 +16,39 @@ interface TabBarProps {
   tabs: Tab[]
   textVariant?: TextClassNames
   tabHeadersStyle?: CSSProperties
+  defaultIndex?: number
+  /**
+  props below to use when using as controlled component
+  */
+  useAsControlled?: boolean
+  handleTabChange?: (tab: Tab) => void
 }
 
-export const TabBar: FC<TabBarProps> = ({ tabs, textVariant = 'p2semi', tabHeadersStyle }) => {
-  const [activeIndex, setActiveIndex] = useState(0)
+export const TabBar: FC<TabBarProps> = ({
+  tabs,
+  defaultIndex = 0,
+  textVariant = 'p2semi',
+  tabHeadersStyle,
+  useAsControlled,
+  handleTabChange,
+}) => {
+  const [activeIndex, setActiveIndex] = useState(defaultIndex)
   const [underlineStyle, setUnderlineStyle] = useState<{ left: number; width: number }>({
     left: 0,
     width: 0,
   })
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([])
 
+  const resolvedActiveIndex = useAsControlled ? defaultIndex : activeIndex
+
+  const handleSetActive = (tab: Tab, idx: number) => {
+    setActiveIndex(idx)
+    handleTabChange?.(tab)
+  }
+
   useEffect(() => {
     // Calculate the position and width of the underline based on the active tab
-    const activeTab = tabRefs.current[activeIndex]
+    const activeTab = tabRefs.current[resolvedActiveIndex]
 
     if (activeTab) {
       setUnderlineStyle({
@@ -36,7 +56,7 @@ export const TabBar: FC<TabBarProps> = ({ tabs, textVariant = 'p2semi', tabHeade
         width: activeTab.offsetWidth,
       })
     }
-  }, [activeIndex])
+  }, [resolvedActiveIndex])
 
   return (
     <div className={styles.tabBar}>
@@ -47,8 +67,8 @@ export const TabBar: FC<TabBarProps> = ({ tabs, textVariant = 'p2semi', tabHeade
               key={index}
               // @ts-ignore
               ref={(el) => (tabRefs.current[index] = el)}
-              className={`${styles.tabButton} ${activeIndex === index ? styles.active : ''}`}
-              onClick={() => setActiveIndex(index)}
+              className={`${styles.tabButton} ${resolvedActiveIndex === index ? styles.active : ''}`}
+              onClick={() => handleSetActive(tab, index)}
             >
               <Text as="p" variant={textVariant}>
                 {tab.label}
@@ -61,7 +81,7 @@ export const TabBar: FC<TabBarProps> = ({ tabs, textVariant = 'p2semi', tabHeade
           style={{ left: `${underlineStyle.left}px`, width: `${underlineStyle.width}px` }}
         />
       </div>
-      <div className={styles.tabContent}>{tabs[activeIndex].content}</div>
+      <div className={styles.tabContent}>{tabs[resolvedActiveIndex].content}</div>
     </div>
   )
 }

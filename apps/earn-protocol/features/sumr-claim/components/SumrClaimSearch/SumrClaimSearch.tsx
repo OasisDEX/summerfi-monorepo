@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { isAddress } from 'viem'
 
 import { NewsletterWrapper } from '@/features/newsletter/components/NewsletterWrapper/NewsletterWrapper'
+import { PortfolioTabs } from '@/features/portfolio/types'
 import { getUserSumrEligibility } from '@/features/sumr-claim/helpers/getUserSumrEligibility'
 
 import classNames from './SumrClaimSearch.module.scss'
@@ -57,7 +58,7 @@ export const SumrClaimSearch = () => {
     const resolvedPortfolioUserAddress = eligibleUser?.userAddress ?? user.address
 
     if (resolvedPortfolioUserAddress) {
-      push(`/earn/portfolio/${resolvedPortfolioUserAddress}`)
+      push(`/earn/portfolio/${resolvedPortfolioUserAddress}?tab=${PortfolioTabs.REWARDS}`)
 
       return
     }

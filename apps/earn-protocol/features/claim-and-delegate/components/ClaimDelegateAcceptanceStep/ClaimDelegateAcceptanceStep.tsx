@@ -12,6 +12,7 @@ import {
   type ClaimDelegateState,
   ClaimDelegateSteps,
 } from '@/features/claim-and-delegate/types'
+import { PortfolioTabs } from '@/features/portfolio/types'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 import { useVisibleParagraph } from '@/hooks/useVisibleParagraph'
 
@@ -133,7 +134,7 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
           </div>
         </Card>
         <div className={classNames.footerWrapper}>
-          <Link href={`/earn/portfolio/${state.walletAddress}`}>
+          <Link href={`/earn/portfolio/${state.walletAddress}?tab=${PortfolioTabs.REWARDS}`}>
             <Button variant="secondarySmall">
               <Text variant="p3semi" as="p">
                 Reject terms

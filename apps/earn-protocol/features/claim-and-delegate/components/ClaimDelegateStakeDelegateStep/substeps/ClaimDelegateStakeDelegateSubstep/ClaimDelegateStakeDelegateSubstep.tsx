@@ -12,6 +12,7 @@ import {
   ClaimDelegateTxStatuses,
   type ClamDelegateExternalData,
 } from '@/features/claim-and-delegate/types'
+import { PortfolioTabs } from '@/features/portfolio/types'
 
 import classNames from './ClaimDelegateStakeDelegateSubstep.module.scss'
 
@@ -109,7 +110,7 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
           />
         ))}
         <div className={classNames.buttonsWrapper}>
-          <Link href={`/earn/portfolio/${walletAddress}`}>
+          <Link href={`/earn/portfolio/${walletAddress}?tab=${PortfolioTabs.REWARDS}`}>
             <Button variant="secondarySmall">
               <Text variant="p3semi" as="p">
                 Claim & Forfeit staking yield
