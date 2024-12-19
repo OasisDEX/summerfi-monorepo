@@ -45,7 +45,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   const aprCurrent = formatDecimalAsPercent(new BigNumber(vault.calculatedApr).div(100))
   const noOfDeposits = position.deposits.length.toString()
 
-  const { netDepositedUSD, netEarnings, netEarningsUSD } = getPositionValues({
+  const { netDeposited, netDepositedUSD, netEarnings, netEarningsUSD } = getPositionValues({
     positionData: position,
     vaultData: vault,
   })
@@ -117,8 +117,15 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                     {formatCryptoBalance(netEarnings)}&nbsp;{vault.inputToken.symbol}
                   </>
                 }
-                subValue={`$${formatCryptoBalance(netEarningsUSD)}`}
-                subValueType="neutral"
+                subValue={
+                  <>
+                    {formatCryptoBalance(netEarnings.minus(netDeposited))}&nbsp;
+                    {vault.inputToken.symbol}
+                  </>
+                }
+                subValueType={
+                  netEarnings.minus(netDeposited).isPositive() ? 'positive' : 'negative'
+                }
                 subValueSize="medium"
               />
             </Box>
@@ -127,8 +134,12 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 size="large"
                 titleSize="small"
                 title="Net Contribution"
-                value={`$${formatCryptoBalance(netDepositedUSD)}`}
-                // TODO: fill data
+                value={
+                  <>
+                    {formatCryptoBalance(netDeposited)}&nbsp;
+                    {vault.inputToken.symbol}
+                  </>
+                }
                 subValue={`# of Deposits: ${noOfDeposits}`}
                 subValueSize="medium"
                 subValueStyle={{ color: 'var(--earn-protocol-success-100)' }}

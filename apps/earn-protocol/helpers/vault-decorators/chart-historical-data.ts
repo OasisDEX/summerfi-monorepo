@@ -1,3 +1,4 @@
+import { getPositionValues } from '@summerfi/app-earn-ui'
 import {
   type ChartsDataTimeframes,
   type IArmadaPosition,
@@ -12,6 +13,7 @@ import { CHART_TIMESTAMP_FORMAT } from '@/constants/charts'
 const mapPositionHistory = (
   positionHistory: GetPositionHistoryReturnType,
   position?: IArmadaPosition,
+  vault?: SDKVaultishType,
 ): VaultWithChartsData['historyChartData'] => {
   const now = dayjs()
   const nowStartOfHour = now.startOf('hour')
@@ -34,7 +36,24 @@ const mapPositionHistory = (
     '3y': [], // weekly
   }
 
-  const positionAmount = position?.amount.amount ? Number(position.amount.amount) : 0
+  const pointsNeededToDisplayAnyGraph = 3 // 3 hours
+  const inputTokenDecimals = position?.amount.token.decimals ?? 2
+
+  const positionValues =
+    position && vault
+      ? getPositionValues({
+          positionData: position,
+          vaultData: vault,
+        })
+      : false
+
+  if (
+    (positionHistory.position?.hourlyPositionHistory.length ?? 0) < pointsNeededToDisplayAnyGraph
+  ) {
+    return {
+      data: chartBaseData,
+    }
+  }
 
   // history hourly points
   positionHistory.position?.hourlyPositionHistory.reverse().forEach((point) => {
@@ -44,10 +63,13 @@ const mapPositionHistory = (
 
     const isSameHour = timestamp.isSame(nowStartOfHour)
 
-    const pointNetValue = isSameHour && positionAmount ? positionAmount : point.netValue
+    const pointNetValue =
+      isSameHour && positionValues
+        ? Number(positionValues.netEarnings.toFixed(inputTokenDecimals))
+        : point.netValue
     const pointDepositedValue =
-      isSameHour && positionAmount
-        ? positionAmount
+      isSameHour && positionValues
+        ? Number(positionValues.netDeposited.toFixed(inputTokenDecimals))
         : Math.max(point.deposits - Math.abs(point.withdrawals), 0)
     const newPointData = {
       timestamp: timestampUnix,
@@ -72,10 +94,13 @@ const mapPositionHistory = (
 
     const isSameDay = timestamp.isSame(nowStartOfDay)
 
-    const pointNetValue = isSameDay && positionAmount ? positionAmount : point.netValue
+    const pointNetValue =
+      isSameDay && positionValues
+        ? Number(positionValues.netEarnings.toFixed(inputTokenDecimals))
+        : point.netValue
     const pointDepositedValue =
-      isSameDay && positionAmount
-        ? positionAmount
+      isSameDay && positionValues
+        ? Number(positionValues.netDeposited.toFixed(inputTokenDecimals))
         : Math.max(point.deposits - Math.abs(point.withdrawals), 0)
     const newPointData = {
       timestamp: timestampUnix,
@@ -103,10 +128,13 @@ const mapPositionHistory = (
 
     const isSameWeek = timestamp.isSame(nowStartOfWeek)
 
-    const pointNetValue = isSameWeek && positionAmount ? positionAmount : point.netValue
+    const pointNetValue =
+      isSameWeek && positionValues
+        ? Number(positionValues.netEarnings.toFixed(inputTokenDecimals))
+        : point.netValue
     const pointDepositedValue =
-      isSameWeek && positionAmount
-        ? positionAmount
+      isSameWeek && positionValues
+        ? Number(positionValues.netDeposited.toFixed(inputTokenDecimals))
         : Math.max(point.deposits - Math.abs(point.withdrawals), 0)
     const newPointData = {
       timestamp: timestampUnix,
@@ -138,7 +166,7 @@ export const decorateWithHistoryChartData = (
     ...vault,
     customFields: {
       ...vault.customFields,
-      historyChartData: mapPositionHistory(positionHistory, position),
+      historyChartData: mapPositionHistory(positionHistory, position, vault),
     },
   })) as SDKVaultishType[]
 }

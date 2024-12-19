@@ -1,3 +1,4 @@
+import { getPositionValues } from '@summerfi/app-earn-ui'
 import {
   type ChartsDataTimeframes,
   type ForecastData,
@@ -14,6 +15,7 @@ const mergePositionHistoryAndForecast = (
   positionHistory: GetPositionHistoryReturnType,
   positionForecast: ForecastData,
   position?: IArmadaPosition,
+  vault?: SDKVaultishType,
 ): VaultWithChartsData['performanceChartData'] => {
   const now = dayjs()
   const nowStartOfHour = now.startOf('hour')
@@ -52,8 +54,15 @@ const mergePositionHistoryAndForecast = (
   }
 
   const pointsNeededToDisplayAnyGraph = 3 // 3 hours
+  const inputTokenDecimals = position?.amount.token.decimals ?? 2
 
-  const positionAmount = position?.amount.amount ? Number(position.amount.amount) : 0
+  const positionValues =
+    position && vault
+      ? getPositionValues({
+          positionData: position,
+          vaultData: vault,
+        })
+      : false
 
   if (
     (positionHistory.position?.hourlyPositionHistory.length ?? 0) < pointsNeededToDisplayAnyGraph
@@ -71,10 +80,13 @@ const mergePositionHistoryAndForecast = (
 
     const isSameHour = timestamp.isSame(nowStartOfHour)
 
-    const pointNetValue = isSameHour && positionAmount ? positionAmount : point.netValue
+    const pointNetValue =
+      isSameHour && positionValues
+        ? Number(positionValues.netEarnings.toFixed(inputTokenDecimals))
+        : point.netValue
     const pointDepositedValue =
-      isSameHour && positionAmount
-        ? positionAmount
+      isSameHour && positionValues
+        ? Number(positionValues.netDeposited.toFixed(inputTokenDecimals))
         : Math.max(point.deposits - Math.abs(point.withdrawals), 0)
     const newPointData = {
       timestamp: timestampUnix,
@@ -99,10 +111,13 @@ const mergePositionHistoryAndForecast = (
 
     const isSameDay = timestamp.isSame(nowStartOfDay)
 
-    const pointNetValue = isSameDay && positionAmount ? positionAmount : point.netValue
+    const pointNetValue =
+      isSameDay && positionValues
+        ? Number(positionValues.netEarnings.toFixed(inputTokenDecimals))
+        : point.netValue
     const pointDepositedValue =
-      isSameDay && positionAmount
-        ? positionAmount
+      isSameDay && positionValues
+        ? Number(positionValues.netDeposited.toFixed(inputTokenDecimals))
         : Math.max(point.deposits - Math.abs(point.withdrawals), 0)
     const newPointData = {
       timestamp: timestampUnix,
@@ -130,10 +145,13 @@ const mergePositionHistoryAndForecast = (
 
     const isSameWeek = timestamp.isSame(nowStartOfWeek)
 
-    const pointNetValue = isSameWeek && positionAmount ? positionAmount : point.netValue
+    const pointNetValue =
+      isSameWeek && positionValues
+        ? Number(positionValues.netEarnings.toFixed(inputTokenDecimals))
+        : point.netValue
     const pointDepositedValue =
-      isSameWeek && positionAmount
-        ? positionAmount
+      isSameWeek && positionValues
+        ? Number(positionValues.netDeposited.toFixed(inputTokenDecimals))
         : Math.max(point.deposits - Math.abs(point.withdrawals), 0)
     const newPointData = {
       timestamp: timestampUnix,
@@ -302,6 +320,7 @@ export const decorateWithPerformanceChartData = (
         positionHistory,
         positionForecast,
         position,
+        vault,
       ),
     },
   })) as SDKVaultishType[]

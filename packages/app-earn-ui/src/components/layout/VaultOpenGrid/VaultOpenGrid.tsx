@@ -139,8 +139,8 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 size="large"
                 titleSize="small"
                 title="Assets in vault"
-                value={`$${totalValueLockedUSDParsed}`}
-                subValue={`${totalValueLockedTokenParsed} ${vault.inputToken.symbol}`}
+                value={`${totalValueLockedTokenParsed} ${vault.inputToken.symbol}`}
+                subValue={`$${totalValueLockedUSDParsed}`}
                 subValueSize="medium"
               />
             </Box>

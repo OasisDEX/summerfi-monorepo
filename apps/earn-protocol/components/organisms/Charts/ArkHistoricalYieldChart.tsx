@@ -17,14 +17,14 @@ export const ArkHistoricalYieldChart = ({
   summerVaultName,
 }: ArkHistoricalYieldChartProps) => {
   const [timeframe, setTimeframe] = useState<TimeframesType>('90d')
-  const [compare, setCompare] = useState(true)
+  const [compare, setCompare] = useState(false)
 
   const colors = {
     [`${summerVaultName}`]: '#FF49A4',
     ...chartData?.colors,
   }
 
-  const dataNames = [summerVaultName, ...(chartData?.dataNames ?? [])]
+  const dataNames = [summerVaultName, ...(compare ? chartData?.dataNames ?? [] : [])]
 
   const parsedData = useMemo(() => {
     if (!chartData) {
