@@ -1764,11 +1764,19 @@ export enum Deposit_OrderBy {
   PositionInputTokenBalance = 'position__inputTokenBalance',
   PositionInputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
   PositionInputTokenBalanceNormalizedInUsd = 'position__inputTokenBalanceNormalizedInUSD',
+  PositionInputTokenDeposits = 'position__inputTokenDeposits',
+  PositionInputTokenDepositsNormalizedInUsd = 'position__inputTokenDepositsNormalizedInUSD',
+  PositionInputTokenWithdrawals = 'position__inputTokenWithdrawals',
+  PositionInputTokenWithdrawalsNormalizedInUsd = 'position__inputTokenWithdrawalsNormalizedInUSD',
   PositionOutputTokenBalance = 'position__outputTokenBalance',
   PositionStakedInputTokenBalance = 'position__stakedInputTokenBalance',
   PositionStakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
   PositionStakedInputTokenBalanceNormalizedInUsd = 'position__stakedInputTokenBalanceNormalizedInUSD',
   PositionStakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
+  PositionUnstakedInputTokenBalance = 'position__unstakedInputTokenBalance',
+  PositionUnstakedInputTokenBalanceNormalized = 'position__unstakedInputTokenBalanceNormalized',
+  PositionUnstakedInputTokenBalanceNormalizedInUsd = 'position__unstakedInputTokenBalanceNormalizedInUSD',
+  PositionUnstakedOutputTokenBalance = 'position__unstakedOutputTokenBalance',
   Protocol = 'protocol',
   ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
   ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
@@ -2656,7 +2664,9 @@ export type Position = {
   createdBlockNumber: Scalars['BigInt']['output'];
   /**  Creation timestamp  */
   createdTimestamp: Scalars['BigInt']['output'];
+  dailySnapshots: Array<PositionDailySnapshot>;
   deposits: Array<Deposit>;
+  hourlySnapshots: Array<PositionHourlySnapshot>;
   /**  Unique identifier for the position  */
   id: Scalars['ID']['output'];
   /**  Balance of the input token for the position  */
@@ -2665,6 +2675,14 @@ export type Position = {
   inputTokenBalanceNormalized: Scalars['BigDecimal']['output'];
   /**  Normalized supply of the input token in USD  */
   inputTokenBalanceNormalizedInUSD: Scalars['BigDecimal']['output'];
+  /**  Sum of deposits in the position - in input token precision */
+  inputTokenDeposits: Scalars['BigInt']['output'];
+  /**  Sum of deposits in the position - in input token precision normalized to USD */
+  inputTokenDepositsNormalizedInUSD: Scalars['BigDecimal']['output'];
+  /**  Sum of withdrawals in the position - in input token precision */
+  inputTokenWithdrawals: Scalars['BigInt']['output'];
+  /**  Sum of withdrawals in the position - in input token precision normalized to USD */
+  inputTokenWithdrawalsNormalizedInUSD: Scalars['BigDecimal']['output'];
   /**  Supply of the output token for the position  */
   outputTokenBalance: Scalars['BigInt']['output'];
   stakedEvents: Array<Staked>;
@@ -2677,9 +2695,27 @@ export type Position = {
   /**  Staked balance of the output token for the position  */
   stakedOutputTokenBalance: Scalars['BigInt']['output'];
   unstakedEvents: Array<Unstaked>;
+  /**  Unstaked balance of the input token for the position  */
+  unstakedInputTokenBalance: Scalars['BigInt']['output'];
+  /**  Normalized unstaked balance of the input token  */
+  unstakedInputTokenBalanceNormalized: Scalars['BigDecimal']['output'];
+  /**  Normalized unstaked balance of the input token in USD  */
+  unstakedInputTokenBalanceNormalizedInUSD: Scalars['BigDecimal']['output'];
+  /**  Unstaked balance of the output token for the position  */
+  unstakedOutputTokenBalance: Scalars['BigInt']['output'];
   /**  Vault where the position is held  */
   vault: Vault;
+  weeklySnapshots: Array<PositionWeeklySnapshot>;
   withdrawals: Array<Withdraw>;
+};
+
+
+export type PositionDailySnapshotsArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<PositionDailySnapshot_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<PositionDailySnapshot_Filter>;
 };
 
 
@@ -2689,6 +2725,15 @@ export type PositionDepositsArgs = {
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<Deposit_Filter>;
+};
+
+
+export type PositionHourlySnapshotsArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<PositionHourlySnapshot_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<PositionHourlySnapshot_Filter>;
 };
 
 
@@ -2710,6 +2755,15 @@ export type PositionUnstakedEventsArgs = {
 };
 
 
+export type PositionWeeklySnapshotsArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<PositionWeeklySnapshot_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<PositionWeeklySnapshot_Filter>;
+};
+
+
 export type PositionWithdrawalsArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Withdraw_OrderBy>;
@@ -2717,6 +2771,474 @@ export type PositionWithdrawalsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<Withdraw_Filter>;
 };
+
+export type PositionDailySnapshot = {
+  __typename?: 'PositionDailySnapshot';
+  /**  { Position ID }-{ # of days since Unix epoch time }  */
+  id: Scalars['ID']['output'];
+  /**  Amount of input token in the position  */
+  inputTokenBalance: Scalars['BigInt']['output'];
+  /**  Amount of input token in the position normalized to USD  */
+  inputTokenBalanceNormalizedInUSD: Scalars['BigDecimal']['output'];
+  /**  Sum of deposits in the position - in input token precision */
+  inputTokenDeposits: Scalars['BigInt']['output'];
+  /**  Sum of deposits in the position - in input token precision normalized to USD */
+  inputTokenDepositsNormalizedInUSD: Scalars['BigDecimal']['output'];
+  /**  Sum of withdrawals in the position - in input token precision */
+  inputTokenWithdrawals: Scalars['BigInt']['output'];
+  /**  Sum of withdrawals in the position - in input token precision normalized to USD */
+  inputTokenWithdrawalsNormalizedInUSD: Scalars['BigDecimal']['output'];
+  /**  Amount of output token in the position  */
+  outputTokenBalance: Scalars['BigInt']['output'];
+  /**  The position this snapshot belongs to  */
+  position: Position;
+  /**  Timestamp of this snapshot  */
+  timestamp: Scalars['BigInt']['output'];
+};
+
+export type PositionDailySnapshot_Filter = {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<PositionDailySnapshot_Filter>>>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_gt?: InputMaybe<Scalars['ID']['input']>;
+  id_gte?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_lt?: InputMaybe<Scalars['ID']['input']>;
+  id_lte?: InputMaybe<Scalars['ID']['input']>;
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  inputTokenBalance?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalanceNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedInUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalanceNormalizedInUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenBalance_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenDeposits?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDepositsNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalizedInUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenDepositsNormalizedInUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenDeposits_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDeposits_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDeposits_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenDeposits_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDeposits_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDeposits_not?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDeposits_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenWithdrawals?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenWithdrawalsNormalizedInUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenWithdrawals_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawals_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawals_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenWithdrawals_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawals_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawals_not?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawals_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  or?: InputMaybe<Array<InputMaybe<PositionDailySnapshot_Filter>>>;
+  outputTokenBalance?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  outputTokenBalance_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenBalance_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  position?: InputMaybe<Scalars['String']['input']>;
+  position_?: InputMaybe<Position_Filter>;
+  position_contains?: InputMaybe<Scalars['String']['input']>;
+  position_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_ends_with?: InputMaybe<Scalars['String']['input']>;
+  position_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_gt?: InputMaybe<Scalars['String']['input']>;
+  position_gte?: InputMaybe<Scalars['String']['input']>;
+  position_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  position_lt?: InputMaybe<Scalars['String']['input']>;
+  position_lte?: InputMaybe<Scalars['String']['input']>;
+  position_not?: InputMaybe<Scalars['String']['input']>;
+  position_not_contains?: InputMaybe<Scalars['String']['input']>;
+  position_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  position_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  position_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  position_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_starts_with?: InputMaybe<Scalars['String']['input']>;
+  position_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  timestamp?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  timestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+};
+
+export enum PositionDailySnapshot_OrderBy {
+  Id = 'id',
+  InputTokenBalance = 'inputTokenBalance',
+  InputTokenBalanceNormalizedInUsd = 'inputTokenBalanceNormalizedInUSD',
+  InputTokenDeposits = 'inputTokenDeposits',
+  InputTokenDepositsNormalizedInUsd = 'inputTokenDepositsNormalizedInUSD',
+  InputTokenWithdrawals = 'inputTokenWithdrawals',
+  InputTokenWithdrawalsNormalizedInUsd = 'inputTokenWithdrawalsNormalizedInUSD',
+  OutputTokenBalance = 'outputTokenBalance',
+  Position = 'position',
+  PositionCreatedBlockNumber = 'position__createdBlockNumber',
+  PositionCreatedTimestamp = 'position__createdTimestamp',
+  PositionId = 'position__id',
+  PositionInputTokenBalance = 'position__inputTokenBalance',
+  PositionInputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
+  PositionInputTokenBalanceNormalizedInUsd = 'position__inputTokenBalanceNormalizedInUSD',
+  PositionInputTokenDeposits = 'position__inputTokenDeposits',
+  PositionInputTokenDepositsNormalizedInUsd = 'position__inputTokenDepositsNormalizedInUSD',
+  PositionInputTokenWithdrawals = 'position__inputTokenWithdrawals',
+  PositionInputTokenWithdrawalsNormalizedInUsd = 'position__inputTokenWithdrawalsNormalizedInUSD',
+  PositionOutputTokenBalance = 'position__outputTokenBalance',
+  PositionStakedInputTokenBalance = 'position__stakedInputTokenBalance',
+  PositionStakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
+  PositionStakedInputTokenBalanceNormalizedInUsd = 'position__stakedInputTokenBalanceNormalizedInUSD',
+  PositionStakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
+  PositionUnstakedInputTokenBalance = 'position__unstakedInputTokenBalance',
+  PositionUnstakedInputTokenBalanceNormalized = 'position__unstakedInputTokenBalanceNormalized',
+  PositionUnstakedInputTokenBalanceNormalizedInUsd = 'position__unstakedInputTokenBalanceNormalizedInUSD',
+  PositionUnstakedOutputTokenBalance = 'position__unstakedOutputTokenBalance',
+  Timestamp = 'timestamp'
+}
+
+export type PositionHourlySnapshot = {
+  __typename?: 'PositionHourlySnapshot';
+  /**  { Position ID }-{ # of hours since Unix epoch time }  */
+  id: Scalars['ID']['output'];
+  /**  Amount of input token in the position  */
+  inputTokenBalance: Scalars['BigInt']['output'];
+  /**  Amount of input token in the position normalized to USD  */
+  inputTokenBalanceNormalizedInUSD: Scalars['BigDecimal']['output'];
+  /**  Sum of deposits in the position - in input token precision */
+  inputTokenDeposits: Scalars['BigInt']['output'];
+  /**  Sum of deposits in the position - in input token precision normalized to USD */
+  inputTokenDepositsNormalizedInUSD: Scalars['BigDecimal']['output'];
+  /**  Sum of withdrawals in the position - in input token precision */
+  inputTokenWithdrawals: Scalars['BigInt']['output'];
+  /**  Sum of withdrawals in the position - in input token precision normalized to USD */
+  inputTokenWithdrawalsNormalizedInUSD: Scalars['BigDecimal']['output'];
+  /**  Amount of output token in the position  */
+  outputTokenBalance: Scalars['BigInt']['output'];
+  /**  The position this snapshot belongs to  */
+  position: Position;
+  /**  Timestamp of this snapshot  */
+  timestamp: Scalars['BigInt']['output'];
+};
+
+export type PositionHourlySnapshot_Filter = {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<PositionHourlySnapshot_Filter>>>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_gt?: InputMaybe<Scalars['ID']['input']>;
+  id_gte?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_lt?: InputMaybe<Scalars['ID']['input']>;
+  id_lte?: InputMaybe<Scalars['ID']['input']>;
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  inputTokenBalance?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalanceNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedInUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalanceNormalizedInUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenBalance_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenDeposits?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDepositsNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalizedInUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenDepositsNormalizedInUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenDeposits_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDeposits_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDeposits_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenDeposits_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDeposits_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDeposits_not?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDeposits_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenWithdrawals?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenWithdrawalsNormalizedInUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenWithdrawals_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawals_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawals_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenWithdrawals_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawals_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawals_not?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawals_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  or?: InputMaybe<Array<InputMaybe<PositionHourlySnapshot_Filter>>>;
+  outputTokenBalance?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  outputTokenBalance_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenBalance_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  position?: InputMaybe<Scalars['String']['input']>;
+  position_?: InputMaybe<Position_Filter>;
+  position_contains?: InputMaybe<Scalars['String']['input']>;
+  position_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_ends_with?: InputMaybe<Scalars['String']['input']>;
+  position_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_gt?: InputMaybe<Scalars['String']['input']>;
+  position_gte?: InputMaybe<Scalars['String']['input']>;
+  position_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  position_lt?: InputMaybe<Scalars['String']['input']>;
+  position_lte?: InputMaybe<Scalars['String']['input']>;
+  position_not?: InputMaybe<Scalars['String']['input']>;
+  position_not_contains?: InputMaybe<Scalars['String']['input']>;
+  position_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  position_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  position_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  position_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_starts_with?: InputMaybe<Scalars['String']['input']>;
+  position_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  timestamp?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  timestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+};
+
+export enum PositionHourlySnapshot_OrderBy {
+  Id = 'id',
+  InputTokenBalance = 'inputTokenBalance',
+  InputTokenBalanceNormalizedInUsd = 'inputTokenBalanceNormalizedInUSD',
+  InputTokenDeposits = 'inputTokenDeposits',
+  InputTokenDepositsNormalizedInUsd = 'inputTokenDepositsNormalizedInUSD',
+  InputTokenWithdrawals = 'inputTokenWithdrawals',
+  InputTokenWithdrawalsNormalizedInUsd = 'inputTokenWithdrawalsNormalizedInUSD',
+  OutputTokenBalance = 'outputTokenBalance',
+  Position = 'position',
+  PositionCreatedBlockNumber = 'position__createdBlockNumber',
+  PositionCreatedTimestamp = 'position__createdTimestamp',
+  PositionId = 'position__id',
+  PositionInputTokenBalance = 'position__inputTokenBalance',
+  PositionInputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
+  PositionInputTokenBalanceNormalizedInUsd = 'position__inputTokenBalanceNormalizedInUSD',
+  PositionInputTokenDeposits = 'position__inputTokenDeposits',
+  PositionInputTokenDepositsNormalizedInUsd = 'position__inputTokenDepositsNormalizedInUSD',
+  PositionInputTokenWithdrawals = 'position__inputTokenWithdrawals',
+  PositionInputTokenWithdrawalsNormalizedInUsd = 'position__inputTokenWithdrawalsNormalizedInUSD',
+  PositionOutputTokenBalance = 'position__outputTokenBalance',
+  PositionStakedInputTokenBalance = 'position__stakedInputTokenBalance',
+  PositionStakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
+  PositionStakedInputTokenBalanceNormalizedInUsd = 'position__stakedInputTokenBalanceNormalizedInUSD',
+  PositionStakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
+  PositionUnstakedInputTokenBalance = 'position__unstakedInputTokenBalance',
+  PositionUnstakedInputTokenBalanceNormalized = 'position__unstakedInputTokenBalanceNormalized',
+  PositionUnstakedInputTokenBalanceNormalizedInUsd = 'position__unstakedInputTokenBalanceNormalizedInUSD',
+  PositionUnstakedOutputTokenBalance = 'position__unstakedOutputTokenBalance',
+  Timestamp = 'timestamp'
+}
+
+export type PositionWeeklySnapshot = {
+  __typename?: 'PositionWeeklySnapshot';
+  /**  { Position ID }-{ # of weeks since Unix epoch time }  */
+  id: Scalars['ID']['output'];
+  /**  Amount of input token in the position  */
+  inputTokenBalance: Scalars['BigInt']['output'];
+  /**  Amount of input token in the position normalized to USD  */
+  inputTokenBalanceNormalizedInUSD: Scalars['BigDecimal']['output'];
+  /**  Sum of deposits in the position - in input token precision */
+  inputTokenDeposits: Scalars['BigInt']['output'];
+  /**  Sum of deposits in the position - in input token precision normalized to USD */
+  inputTokenDepositsNormalizedInUSD: Scalars['BigDecimal']['output'];
+  /**  Sum of withdrawals in the position - in input token precision */
+  inputTokenWithdrawals: Scalars['BigInt']['output'];
+  /**  Sum of withdrawals in the position - in input token precision normalized to USD */
+  inputTokenWithdrawalsNormalizedInUSD: Scalars['BigDecimal']['output'];
+  /**  Amount of output token in the position  */
+  outputTokenBalance: Scalars['BigInt']['output'];
+  /**  The position this snapshot belongs to  */
+  position: Position;
+  /**  Timestamp of this snapshot  */
+  timestamp: Scalars['BigInt']['output'];
+};
+
+export type PositionWeeklySnapshot_Filter = {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<PositionWeeklySnapshot_Filter>>>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_gt?: InputMaybe<Scalars['ID']['input']>;
+  id_gte?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_lt?: InputMaybe<Scalars['ID']['input']>;
+  id_lte?: InputMaybe<Scalars['ID']['input']>;
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  inputTokenBalance?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalanceNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedInUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalanceNormalizedInUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenBalance_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenDeposits?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDepositsNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalizedInUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenDepositsNormalizedInUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenDeposits_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDeposits_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDeposits_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenDeposits_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDeposits_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDeposits_not?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDeposits_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenWithdrawals?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenWithdrawalsNormalizedInUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenWithdrawals_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawals_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawals_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenWithdrawals_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawals_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawals_not?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawals_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  or?: InputMaybe<Array<InputMaybe<PositionWeeklySnapshot_Filter>>>;
+  outputTokenBalance?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  outputTokenBalance_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenBalance_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  position?: InputMaybe<Scalars['String']['input']>;
+  position_?: InputMaybe<Position_Filter>;
+  position_contains?: InputMaybe<Scalars['String']['input']>;
+  position_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_ends_with?: InputMaybe<Scalars['String']['input']>;
+  position_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_gt?: InputMaybe<Scalars['String']['input']>;
+  position_gte?: InputMaybe<Scalars['String']['input']>;
+  position_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  position_lt?: InputMaybe<Scalars['String']['input']>;
+  position_lte?: InputMaybe<Scalars['String']['input']>;
+  position_not?: InputMaybe<Scalars['String']['input']>;
+  position_not_contains?: InputMaybe<Scalars['String']['input']>;
+  position_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  position_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  position_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  position_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_starts_with?: InputMaybe<Scalars['String']['input']>;
+  position_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  timestamp?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  timestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+};
+
+export enum PositionWeeklySnapshot_OrderBy {
+  Id = 'id',
+  InputTokenBalance = 'inputTokenBalance',
+  InputTokenBalanceNormalizedInUsd = 'inputTokenBalanceNormalizedInUSD',
+  InputTokenDeposits = 'inputTokenDeposits',
+  InputTokenDepositsNormalizedInUsd = 'inputTokenDepositsNormalizedInUSD',
+  InputTokenWithdrawals = 'inputTokenWithdrawals',
+  InputTokenWithdrawalsNormalizedInUsd = 'inputTokenWithdrawalsNormalizedInUSD',
+  OutputTokenBalance = 'outputTokenBalance',
+  Position = 'position',
+  PositionCreatedBlockNumber = 'position__createdBlockNumber',
+  PositionCreatedTimestamp = 'position__createdTimestamp',
+  PositionId = 'position__id',
+  PositionInputTokenBalance = 'position__inputTokenBalance',
+  PositionInputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
+  PositionInputTokenBalanceNormalizedInUsd = 'position__inputTokenBalanceNormalizedInUSD',
+  PositionInputTokenDeposits = 'position__inputTokenDeposits',
+  PositionInputTokenDepositsNormalizedInUsd = 'position__inputTokenDepositsNormalizedInUSD',
+  PositionInputTokenWithdrawals = 'position__inputTokenWithdrawals',
+  PositionInputTokenWithdrawalsNormalizedInUsd = 'position__inputTokenWithdrawalsNormalizedInUSD',
+  PositionOutputTokenBalance = 'position__outputTokenBalance',
+  PositionStakedInputTokenBalance = 'position__stakedInputTokenBalance',
+  PositionStakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
+  PositionStakedInputTokenBalanceNormalizedInUsd = 'position__stakedInputTokenBalanceNormalizedInUSD',
+  PositionStakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
+  PositionUnstakedInputTokenBalance = 'position__unstakedInputTokenBalance',
+  PositionUnstakedInputTokenBalanceNormalized = 'position__unstakedInputTokenBalanceNormalized',
+  PositionUnstakedInputTokenBalanceNormalizedInUsd = 'position__unstakedInputTokenBalanceNormalizedInUSD',
+  PositionUnstakedOutputTokenBalance = 'position__unstakedOutputTokenBalance',
+  Timestamp = 'timestamp'
+}
 
 export type Position_Filter = {
   /** Filter for the block changed event. */
@@ -2759,7 +3281,9 @@ export type Position_Filter = {
   createdTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
   createdTimestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
   createdTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  dailySnapshots_?: InputMaybe<PositionDailySnapshot_Filter>;
   deposits_?: InputMaybe<Deposit_Filter>;
+  hourlySnapshots_?: InputMaybe<PositionHourlySnapshot_Filter>;
   id?: InputMaybe<Scalars['ID']['input']>;
   id_gt?: InputMaybe<Scalars['ID']['input']>;
   id_gte?: InputMaybe<Scalars['ID']['input']>;
@@ -2792,6 +3316,38 @@ export type Position_Filter = {
   inputTokenBalance_lte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenDeposits?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDepositsNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalizedInUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenDepositsNormalizedInUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenDeposits_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDeposits_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDeposits_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenDeposits_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDeposits_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDeposits_not?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDeposits_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenWithdrawals?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenWithdrawalsNormalizedInUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenWithdrawals_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawals_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawals_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenWithdrawals_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawals_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawals_not?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawals_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   or?: InputMaybe<Array<InputMaybe<Position_Filter>>>;
   outputTokenBalance?: InputMaybe<Scalars['BigInt']['input']>;
   outputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
@@ -2835,6 +3391,38 @@ export type Position_Filter = {
   stakedOutputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
   stakedOutputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   unstakedEvents_?: InputMaybe<Unstaked_Filter>;
+  unstakedInputTokenBalance?: InputMaybe<Scalars['BigInt']['input']>;
+  unstakedInputTokenBalanceNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
+  unstakedInputTokenBalanceNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  unstakedInputTokenBalanceNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  unstakedInputTokenBalanceNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  unstakedInputTokenBalanceNormalizedInUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  unstakedInputTokenBalanceNormalizedInUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  unstakedInputTokenBalanceNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  unstakedInputTokenBalanceNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  unstakedInputTokenBalanceNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  unstakedInputTokenBalanceNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  unstakedInputTokenBalanceNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  unstakedInputTokenBalanceNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  unstakedInputTokenBalanceNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  unstakedInputTokenBalanceNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  unstakedInputTokenBalanceNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  unstakedInputTokenBalanceNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  unstakedInputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  unstakedInputTokenBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  unstakedInputTokenBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  unstakedInputTokenBalance_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  unstakedInputTokenBalance_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  unstakedInputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
+  unstakedInputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  unstakedOutputTokenBalance?: InputMaybe<Scalars['BigInt']['input']>;
+  unstakedOutputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  unstakedOutputTokenBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  unstakedOutputTokenBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  unstakedOutputTokenBalance_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  unstakedOutputTokenBalance_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  unstakedOutputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
+  unstakedOutputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   vault?: InputMaybe<Scalars['String']['input']>;
   vault_?: InputMaybe<Vault_Filter>;
   vault_contains?: InputMaybe<Scalars['String']['input']>;
@@ -2856,6 +3444,7 @@ export type Position_Filter = {
   vault_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   vault_starts_with?: InputMaybe<Scalars['String']['input']>;
   vault_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  weeklySnapshots_?: InputMaybe<PositionWeeklySnapshot_Filter>;
   withdrawals_?: InputMaybe<Withdraw_Filter>;
 };
 
@@ -2864,11 +3453,17 @@ export enum Position_OrderBy {
   AccountId = 'account__id',
   CreatedBlockNumber = 'createdBlockNumber',
   CreatedTimestamp = 'createdTimestamp',
+  DailySnapshots = 'dailySnapshots',
   Deposits = 'deposits',
+  HourlySnapshots = 'hourlySnapshots',
   Id = 'id',
   InputTokenBalance = 'inputTokenBalance',
   InputTokenBalanceNormalized = 'inputTokenBalanceNormalized',
   InputTokenBalanceNormalizedInUsd = 'inputTokenBalanceNormalizedInUSD',
+  InputTokenDeposits = 'inputTokenDeposits',
+  InputTokenDepositsNormalizedInUsd = 'inputTokenDepositsNormalizedInUSD',
+  InputTokenWithdrawals = 'inputTokenWithdrawals',
+  InputTokenWithdrawalsNormalizedInUsd = 'inputTokenWithdrawalsNormalizedInUSD',
   OutputTokenBalance = 'outputTokenBalance',
   StakedEvents = 'stakedEvents',
   StakedInputTokenBalance = 'stakedInputTokenBalance',
@@ -2876,6 +3471,10 @@ export enum Position_OrderBy {
   StakedInputTokenBalanceNormalizedInUsd = 'stakedInputTokenBalanceNormalizedInUSD',
   StakedOutputTokenBalance = 'stakedOutputTokenBalance',
   UnstakedEvents = 'unstakedEvents',
+  UnstakedInputTokenBalance = 'unstakedInputTokenBalance',
+  UnstakedInputTokenBalanceNormalized = 'unstakedInputTokenBalanceNormalized',
+  UnstakedInputTokenBalanceNormalizedInUsd = 'unstakedInputTokenBalanceNormalizedInUSD',
+  UnstakedOutputTokenBalance = 'unstakedOutputTokenBalance',
   Vault = 'vault',
   VaultApr7d = 'vault__apr7d',
   VaultApr30d = 'vault__apr30d',
@@ -2908,6 +3507,7 @@ export enum Position_OrderBy {
   VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
   VaultWithdrawableTotalAssets = 'vault__withdrawableTotalAssets',
   VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD',
+  WeeklySnapshots = 'weeklySnapshots',
   Withdrawals = 'withdrawals'
 }
 
@@ -3672,6 +4272,12 @@ export type Query = {
   hourlyInterestRate?: Maybe<HourlyInterestRate>;
   hourlyInterestRates: Array<HourlyInterestRate>;
   position?: Maybe<Position>;
+  positionDailySnapshot?: Maybe<PositionDailySnapshot>;
+  positionDailySnapshots: Array<PositionDailySnapshot>;
+  positionHourlySnapshot?: Maybe<PositionHourlySnapshot>;
+  positionHourlySnapshots: Array<PositionHourlySnapshot>;
+  positionWeeklySnapshot?: Maybe<PositionWeeklySnapshot>;
+  positionWeeklySnapshots: Array<PositionWeeklySnapshot>;
   positions: Array<Position>;
   postActionArkSnapshot?: Maybe<PostActionArkSnapshot>;
   postActionArkSnapshots: Array<PostActionArkSnapshot>;
@@ -3704,6 +4310,8 @@ export type Query = {
   vaultFees: Array<VaultFee>;
   vaultHourlySnapshot?: Maybe<VaultHourlySnapshot>;
   vaultHourlySnapshots: Array<VaultHourlySnapshot>;
+  vaultWeeklySnapshot?: Maybe<VaultWeeklySnapshot>;
+  vaultWeeklySnapshots: Array<VaultWeeklySnapshot>;
   vaults: Array<Vault>;
   weeklyInterestRate?: Maybe<WeeklyInterestRate>;
   weeklyInterestRates: Array<WeeklyInterestRate>;
@@ -3939,6 +4547,60 @@ export type QueryPositionArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryPositionDailySnapshotArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID']['input'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryPositionDailySnapshotsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<PositionDailySnapshot_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<PositionDailySnapshot_Filter>;
+};
+
+
+export type QueryPositionHourlySnapshotArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID']['input'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryPositionHourlySnapshotsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<PositionHourlySnapshot_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<PositionHourlySnapshot_Filter>;
+};
+
+
+export type QueryPositionWeeklySnapshotArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID']['input'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryPositionWeeklySnapshotsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<PositionWeeklySnapshot_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<PositionWeeklySnapshot_Filter>;
 };
 
 
@@ -4227,6 +4889,24 @@ export type QueryVaultHourlySnapshotsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   subgraphError?: _SubgraphErrorPolicy_;
   where?: InputMaybe<VaultHourlySnapshot_Filter>;
+};
+
+
+export type QueryVaultWeeklySnapshotArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID']['input'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryVaultWeeklySnapshotsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<VaultWeeklySnapshot_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<VaultWeeklySnapshot_Filter>;
 };
 
 
@@ -5098,11 +5778,19 @@ export enum Staked_OrderBy {
   PositionInputTokenBalance = 'position__inputTokenBalance',
   PositionInputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
   PositionInputTokenBalanceNormalizedInUsd = 'position__inputTokenBalanceNormalizedInUSD',
+  PositionInputTokenDeposits = 'position__inputTokenDeposits',
+  PositionInputTokenDepositsNormalizedInUsd = 'position__inputTokenDepositsNormalizedInUSD',
+  PositionInputTokenWithdrawals = 'position__inputTokenWithdrawals',
+  PositionInputTokenWithdrawalsNormalizedInUsd = 'position__inputTokenWithdrawalsNormalizedInUSD',
   PositionOutputTokenBalance = 'position__outputTokenBalance',
   PositionStakedInputTokenBalance = 'position__stakedInputTokenBalance',
   PositionStakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
   PositionStakedInputTokenBalanceNormalizedInUsd = 'position__stakedInputTokenBalanceNormalizedInUSD',
   PositionStakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
+  PositionUnstakedInputTokenBalance = 'position__unstakedInputTokenBalance',
+  PositionUnstakedInputTokenBalanceNormalized = 'position__unstakedInputTokenBalanceNormalized',
+  PositionUnstakedInputTokenBalanceNormalizedInUsd = 'position__unstakedInputTokenBalanceNormalizedInUSD',
+  PositionUnstakedOutputTokenBalance = 'position__unstakedOutputTokenBalance',
   Protocol = 'protocol',
   ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
   ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
@@ -5187,6 +5875,12 @@ export type Subscription = {
   hourlyInterestRate?: Maybe<HourlyInterestRate>;
   hourlyInterestRates: Array<HourlyInterestRate>;
   position?: Maybe<Position>;
+  positionDailySnapshot?: Maybe<PositionDailySnapshot>;
+  positionDailySnapshots: Array<PositionDailySnapshot>;
+  positionHourlySnapshot?: Maybe<PositionHourlySnapshot>;
+  positionHourlySnapshots: Array<PositionHourlySnapshot>;
+  positionWeeklySnapshot?: Maybe<PositionWeeklySnapshot>;
+  positionWeeklySnapshots: Array<PositionWeeklySnapshot>;
   positions: Array<Position>;
   postActionArkSnapshot?: Maybe<PostActionArkSnapshot>;
   postActionArkSnapshots: Array<PostActionArkSnapshot>;
@@ -5219,6 +5913,8 @@ export type Subscription = {
   vaultFees: Array<VaultFee>;
   vaultHourlySnapshot?: Maybe<VaultHourlySnapshot>;
   vaultHourlySnapshots: Array<VaultHourlySnapshot>;
+  vaultWeeklySnapshot?: Maybe<VaultWeeklySnapshot>;
+  vaultWeeklySnapshots: Array<VaultWeeklySnapshot>;
   vaults: Array<Vault>;
   weeklyInterestRate?: Maybe<WeeklyInterestRate>;
   weeklyInterestRates: Array<WeeklyInterestRate>;
@@ -5454,6 +6150,60 @@ export type SubscriptionPositionArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionPositionDailySnapshotArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID']['input'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionPositionDailySnapshotsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<PositionDailySnapshot_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<PositionDailySnapshot_Filter>;
+};
+
+
+export type SubscriptionPositionHourlySnapshotArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID']['input'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionPositionHourlySnapshotsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<PositionHourlySnapshot_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<PositionHourlySnapshot_Filter>;
+};
+
+
+export type SubscriptionPositionWeeklySnapshotArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID']['input'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionPositionWeeklySnapshotsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<PositionWeeklySnapshot_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<PositionWeeklySnapshot_Filter>;
 };
 
 
@@ -5742,6 +6492,24 @@ export type SubscriptionVaultHourlySnapshotsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   subgraphError?: _SubgraphErrorPolicy_;
   where?: InputMaybe<VaultHourlySnapshot_Filter>;
+};
+
+
+export type SubscriptionVaultWeeklySnapshotArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID']['input'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionVaultWeeklySnapshotsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<VaultWeeklySnapshot_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<VaultWeeklySnapshot_Filter>;
 };
 
 
@@ -6283,11 +7051,19 @@ export enum Unstaked_OrderBy {
   PositionInputTokenBalance = 'position__inputTokenBalance',
   PositionInputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
   PositionInputTokenBalanceNormalizedInUsd = 'position__inputTokenBalanceNormalizedInUSD',
+  PositionInputTokenDeposits = 'position__inputTokenDeposits',
+  PositionInputTokenDepositsNormalizedInUsd = 'position__inputTokenDepositsNormalizedInUSD',
+  PositionInputTokenWithdrawals = 'position__inputTokenWithdrawals',
+  PositionInputTokenWithdrawalsNormalizedInUsd = 'position__inputTokenWithdrawalsNormalizedInUSD',
   PositionOutputTokenBalance = 'position__outputTokenBalance',
   PositionStakedInputTokenBalance = 'position__stakedInputTokenBalance',
   PositionStakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
   PositionStakedInputTokenBalanceNormalizedInUsd = 'position__stakedInputTokenBalanceNormalizedInUSD',
   PositionStakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
+  PositionUnstakedInputTokenBalance = 'position__unstakedInputTokenBalance',
+  PositionUnstakedInputTokenBalanceNormalized = 'position__unstakedInputTokenBalanceNormalized',
+  PositionUnstakedInputTokenBalanceNormalizedInUsd = 'position__unstakedInputTokenBalanceNormalizedInUSD',
+  PositionUnstakedOutputTokenBalance = 'position__unstakedOutputTokenBalance',
   Protocol = 'protocol',
   ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
   ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
@@ -6703,6 +7479,7 @@ export type Vault = {
   outputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   /**  Total supply of output token  */
   outputTokenSupply: Scalars['BigInt']['output'];
+  positions: Array<Position>;
   /**  Amount of input token per full share of output token. Usually corresponds to the value of `pricePerShare` or `pricePerFullShare` in the vault contract.  */
   pricePerShare?: Maybe<Scalars['BigDecimal']['output']>;
   /**  The protocol this vault belongs to  */
@@ -6728,6 +7505,8 @@ export type Vault = {
   /**  Current TVL (Total Value Locked) of this pool in USD  */
   totalValueLockedUSD: Scalars['BigDecimal']['output'];
   weeklyInterestRates: Array<WeeklyInterestRate>;
+  /**  Vault weekly snapshots  */
+  weeklySnapshots: Array<VaultWeeklySnapshot>;
   /**  Total withdrawable assets  */
   withdrawableTotalAssets?: Maybe<Scalars['BigInt']['output']>;
   /**  Total withdrawable assets in USD  */
@@ -6818,6 +7597,15 @@ export type VaultHourlySnapshotsArgs = {
 };
 
 
+export type VaultPositionsArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Position_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<Position_Filter>;
+};
+
+
 export type VaultRebalancesArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Rebalance_OrderBy>;
@@ -6842,6 +7630,15 @@ export type VaultWeeklyInterestRatesArgs = {
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<WeeklyInterestRate_Filter>;
+};
+
+
+export type VaultWeeklySnapshotsArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<VaultWeeklySnapshot_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<VaultWeeklySnapshot_Filter>;
 };
 
 
@@ -7539,6 +8336,322 @@ export enum VaultHourlySnapshot_OrderBy {
   VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD'
 }
 
+export type VaultWeeklySnapshot = {
+  __typename?: 'VaultWeeklySnapshot';
+  /**  Block number of this snapshot  */
+  blockNumber: Scalars['BigInt']['output'];
+  /**  APR based on last week's revenue  */
+  calculatedApr: Scalars['BigDecimal']['output'];
+  /**  All revenue generated by the vault, accrued to the protocol.  */
+  cumulativeProtocolSideRevenueUSD: Scalars['BigDecimal']['output'];
+  /**  All revenue generated by the vault, accrued to the supply side.  */
+  cumulativeSupplySideRevenueUSD: Scalars['BigDecimal']['output'];
+  /**  All revenue generated by the vault.  */
+  cumulativeTotalRevenueUSD: Scalars['BigDecimal']['output'];
+  /**  { Smart contract address of the vault }-{ # of weeks since Unix epoch time }  */
+  id: Scalars['ID']['output'];
+  /**  Amount of input token in the pool  */
+  inputTokenBalance: Scalars['BigInt']['output'];
+  /**  Price of input token in USD  */
+  inputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
+  /**  Price per share of output token in USD  */
+  outputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
+  /**  Total supply of output token  */
+  outputTokenSupply: Scalars['BigInt']['output'];
+  /**  Amount of input token per full share of output token. Usually corresponds to the value of `pricePerShare` or `pricePerFullShare` in the vault contract.  */
+  pricePerShare?: Maybe<Scalars['BigDecimal']['output']>;
+  /**  The protocol this snapshot belongs to  */
+  protocol: YieldAggregator;
+  /**  Per-block reward token emission as of the current block normalized to a day, in token's native amount. This should be ideally calculated as the theoretical rate instead of the realized amount.  */
+  rewardTokenEmissionsAmount?: Maybe<Array<Scalars['BigInt']['output']>>;
+  /**  Per-block reward token emission as of the current block normalized to a day, in USD value. This should be ideally calculated as the theoretical rate instead of the realized amount.  */
+  rewardTokenEmissionsUSD?: Maybe<Array<Scalars['BigDecimal']['output']>>;
+  /**  Total supply of output tokens that are staked (usually in the MasterChef contract). Used to calculate reward APY.  */
+  stakedOutputTokenAmount?: Maybe<Scalars['BigInt']['output']>;
+  /**  Timestamp of this snapshot  */
+  timestamp: Scalars['BigInt']['output'];
+  /**  Current TVL (Total Value Locked) of this pool in USD  */
+  totalValueLockedUSD: Scalars['BigDecimal']['output'];
+  /**  The vault this snapshot belongs to  */
+  vault: Vault;
+  /**  Weekly revenue generated by the vault, accrued to the protocol.  */
+  weeklyProtocolSideRevenueUSD: Scalars['BigDecimal']['output'];
+  /**  Weekly revenue generated by the vault, accrued to the supply side.  */
+  weeklySupplySideRevenueUSD: Scalars['BigDecimal']['output'];
+  /**  Weekly revenue generated by the vault.  */
+  weeklyTotalRevenueUSD: Scalars['BigDecimal']['output'];
+};
+
+export type VaultWeeklySnapshot_Filter = {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<VaultWeeklySnapshot_Filter>>>;
+  blockNumber?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  blockNumber_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_not?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  calculatedApr?: InputMaybe<Scalars['BigDecimal']['input']>;
+  calculatedApr_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  calculatedApr_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  calculatedApr_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  calculatedApr_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  calculatedApr_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  calculatedApr_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  calculatedApr_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  cumulativeProtocolSideRevenueUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  cumulativeProtocolSideRevenueUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  cumulativeProtocolSideRevenueUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  cumulativeProtocolSideRevenueUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  cumulativeProtocolSideRevenueUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  cumulativeProtocolSideRevenueUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  cumulativeProtocolSideRevenueUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  cumulativeProtocolSideRevenueUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  cumulativeSupplySideRevenueUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  cumulativeSupplySideRevenueUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  cumulativeSupplySideRevenueUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  cumulativeSupplySideRevenueUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  cumulativeSupplySideRevenueUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  cumulativeSupplySideRevenueUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  cumulativeSupplySideRevenueUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  cumulativeSupplySideRevenueUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  cumulativeTotalRevenueUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  cumulativeTotalRevenueUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  cumulativeTotalRevenueUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  cumulativeTotalRevenueUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  cumulativeTotalRevenueUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  cumulativeTotalRevenueUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  cumulativeTotalRevenueUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  cumulativeTotalRevenueUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_gt?: InputMaybe<Scalars['ID']['input']>;
+  id_gte?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_lt?: InputMaybe<Scalars['ID']['input']>;
+  id_lte?: InputMaybe<Scalars['ID']['input']>;
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  inputTokenBalance?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenBalance_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenPriceUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenPriceUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenPriceUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  or?: InputMaybe<Array<InputMaybe<VaultWeeklySnapshot_Filter>>>;
+  outputTokenPriceUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  outputTokenPriceUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  outputTokenPriceUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  outputTokenPriceUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  outputTokenPriceUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  outputTokenPriceUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  outputTokenPriceUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  outputTokenPriceUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  outputTokenSupply?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenSupply_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenSupply_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenSupply_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  outputTokenSupply_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenSupply_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenSupply_not?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenSupply_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  pricePerShare?: InputMaybe<Scalars['BigDecimal']['input']>;
+  pricePerShare_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  pricePerShare_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  pricePerShare_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  pricePerShare_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  pricePerShare_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  pricePerShare_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  pricePerShare_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  protocol?: InputMaybe<Scalars['String']['input']>;
+  protocol_?: InputMaybe<YieldAggregator_Filter>;
+  protocol_contains?: InputMaybe<Scalars['String']['input']>;
+  protocol_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  protocol_ends_with?: InputMaybe<Scalars['String']['input']>;
+  protocol_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  protocol_gt?: InputMaybe<Scalars['String']['input']>;
+  protocol_gte?: InputMaybe<Scalars['String']['input']>;
+  protocol_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  protocol_lt?: InputMaybe<Scalars['String']['input']>;
+  protocol_lte?: InputMaybe<Scalars['String']['input']>;
+  protocol_not?: InputMaybe<Scalars['String']['input']>;
+  protocol_not_contains?: InputMaybe<Scalars['String']['input']>;
+  protocol_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  protocol_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  protocol_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  protocol_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  protocol_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  protocol_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  protocol_starts_with?: InputMaybe<Scalars['String']['input']>;
+  protocol_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  rewardTokenEmissionsAmount?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  rewardTokenEmissionsAmount_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  rewardTokenEmissionsAmount_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  rewardTokenEmissionsAmount_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  rewardTokenEmissionsAmount_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  rewardTokenEmissionsAmount_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  rewardTokenEmissionsUSD?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  rewardTokenEmissionsUSD_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  rewardTokenEmissionsUSD_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  rewardTokenEmissionsUSD_not?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  rewardTokenEmissionsUSD_not_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  rewardTokenEmissionsUSD_not_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  stakedOutputTokenAmount?: InputMaybe<Scalars['BigInt']['input']>;
+  stakedOutputTokenAmount_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  stakedOutputTokenAmount_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  stakedOutputTokenAmount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  stakedOutputTokenAmount_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  stakedOutputTokenAmount_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  stakedOutputTokenAmount_not?: InputMaybe<Scalars['BigInt']['input']>;
+  stakedOutputTokenAmount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  timestamp?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  timestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  totalValueLockedUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalValueLockedUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalValueLockedUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalValueLockedUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  totalValueLockedUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalValueLockedUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalValueLockedUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalValueLockedUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  vault?: InputMaybe<Scalars['String']['input']>;
+  vault_?: InputMaybe<Vault_Filter>;
+  vault_contains?: InputMaybe<Scalars['String']['input']>;
+  vault_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  vault_ends_with?: InputMaybe<Scalars['String']['input']>;
+  vault_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  vault_gt?: InputMaybe<Scalars['String']['input']>;
+  vault_gte?: InputMaybe<Scalars['String']['input']>;
+  vault_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  vault_lt?: InputMaybe<Scalars['String']['input']>;
+  vault_lte?: InputMaybe<Scalars['String']['input']>;
+  vault_not?: InputMaybe<Scalars['String']['input']>;
+  vault_not_contains?: InputMaybe<Scalars['String']['input']>;
+  vault_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  vault_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  vault_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  vault_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  vault_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  vault_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  vault_starts_with?: InputMaybe<Scalars['String']['input']>;
+  vault_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  weeklyProtocolSideRevenueUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weeklyProtocolSideRevenueUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weeklyProtocolSideRevenueUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weeklyProtocolSideRevenueUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  weeklyProtocolSideRevenueUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weeklyProtocolSideRevenueUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weeklyProtocolSideRevenueUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weeklyProtocolSideRevenueUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  weeklySupplySideRevenueUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weeklySupplySideRevenueUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weeklySupplySideRevenueUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weeklySupplySideRevenueUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  weeklySupplySideRevenueUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weeklySupplySideRevenueUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weeklySupplySideRevenueUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weeklySupplySideRevenueUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  weeklyTotalRevenueUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weeklyTotalRevenueUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weeklyTotalRevenueUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weeklyTotalRevenueUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  weeklyTotalRevenueUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weeklyTotalRevenueUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weeklyTotalRevenueUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weeklyTotalRevenueUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+};
+
+export enum VaultWeeklySnapshot_OrderBy {
+  BlockNumber = 'blockNumber',
+  CalculatedApr = 'calculatedApr',
+  CumulativeProtocolSideRevenueUsd = 'cumulativeProtocolSideRevenueUSD',
+  CumulativeSupplySideRevenueUsd = 'cumulativeSupplySideRevenueUSD',
+  CumulativeTotalRevenueUsd = 'cumulativeTotalRevenueUSD',
+  Id = 'id',
+  InputTokenBalance = 'inputTokenBalance',
+  InputTokenPriceUsd = 'inputTokenPriceUSD',
+  OutputTokenPriceUsd = 'outputTokenPriceUSD',
+  OutputTokenSupply = 'outputTokenSupply',
+  PricePerShare = 'pricePerShare',
+  Protocol = 'protocol',
+  ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
+  ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
+  ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
+  ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
+  ProtocolId = 'protocol__id',
+  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
+  ProtocolLastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
+  ProtocolMethodologyVersion = 'protocol__methodologyVersion',
+  ProtocolName = 'protocol__name',
+  ProtocolNetwork = 'protocol__network',
+  ProtocolProtocolControlledValueUsd = 'protocol__protocolControlledValueUSD',
+  ProtocolSchemaVersion = 'protocol__schemaVersion',
+  ProtocolSlug = 'protocol__slug',
+  ProtocolSubgraphVersion = 'protocol__subgraphVersion',
+  ProtocolTotalPoolCount = 'protocol__totalPoolCount',
+  ProtocolTotalValueLockedUsd = 'protocol__totalValueLockedUSD',
+  ProtocolType = 'protocol__type',
+  RewardTokenEmissionsAmount = 'rewardTokenEmissionsAmount',
+  RewardTokenEmissionsUsd = 'rewardTokenEmissionsUSD',
+  StakedOutputTokenAmount = 'stakedOutputTokenAmount',
+  Timestamp = 'timestamp',
+  TotalValueLockedUsd = 'totalValueLockedUSD',
+  Vault = 'vault',
+  VaultApr7d = 'vault__apr7d',
+  VaultApr30d = 'vault__apr30d',
+  VaultApr90d = 'vault__apr90d',
+  VaultApr180d = 'vault__apr180d',
+  VaultApr365d = 'vault__apr365d',
+  VaultCalculatedApr = 'vault__calculatedApr',
+  VaultCreatedBlockNumber = 'vault__createdBlockNumber',
+  VaultCreatedTimestamp = 'vault__createdTimestamp',
+  VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
+  VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
+  VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
+  VaultDepositCap = 'vault__depositCap',
+  VaultDepositLimit = 'vault__depositLimit',
+  VaultDetails = 'vault__details',
+  VaultId = 'vault__id',
+  VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
+  VaultLastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
+  VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
+  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
+  VaultName = 'vault__name',
+  VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
+  VaultOutputTokenSupply = 'vault__outputTokenSupply',
+  VaultPricePerShare = 'vault__pricePerShare',
+  VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
+  VaultSymbol = 'vault__symbol',
+  VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
+  VaultWithdrawableTotalAssets = 'vault__withdrawableTotalAssets',
+  VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD',
+  WeeklyProtocolSideRevenueUsd = 'weeklyProtocolSideRevenueUSD',
+  WeeklySupplySideRevenueUsd = 'weeklySupplySideRevenueUSD',
+  WeeklyTotalRevenueUsd = 'weeklyTotalRevenueUSD'
+}
+
 export type Vault_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
@@ -7829,6 +8942,13 @@ export type Vault_Filter = {
   outputToken_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   outputToken_starts_with?: InputMaybe<Scalars['String']['input']>;
   outputToken_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  positions?: InputMaybe<Array<Scalars['String']['input']>>;
+  positions_?: InputMaybe<Position_Filter>;
+  positions_contains?: InputMaybe<Array<Scalars['String']['input']>>;
+  positions_contains_nocase?: InputMaybe<Array<Scalars['String']['input']>>;
+  positions_not?: InputMaybe<Array<Scalars['String']['input']>>;
+  positions_not_contains?: InputMaybe<Array<Scalars['String']['input']>>;
+  positions_not_contains_nocase?: InputMaybe<Array<Scalars['String']['input']>>;
   pricePerShare?: InputMaybe<Scalars['BigDecimal']['input']>;
   pricePerShare_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   pricePerShare_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -7938,6 +9058,7 @@ export type Vault_Filter = {
   totalValueLockedUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
   totalValueLockedUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   weeklyInterestRates_?: InputMaybe<WeeklyInterestRate_Filter>;
+  weeklySnapshots_?: InputMaybe<VaultWeeklySnapshot_Filter>;
   withdrawableTotalAssets?: InputMaybe<Scalars['BigInt']['input']>;
   withdrawableTotalAssetsUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
   withdrawableTotalAssetsUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -8006,6 +9127,7 @@ export enum Vault_OrderBy {
   OutputTokenLastPriceUsd = 'outputToken__lastPriceUSD',
   OutputTokenName = 'outputToken__name',
   OutputTokenSymbol = 'outputToken__symbol',
+  Positions = 'positions',
   PricePerShare = 'pricePerShare',
   Protocol = 'protocol',
   ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
@@ -8039,6 +9161,7 @@ export enum Vault_OrderBy {
   Symbol = 'symbol',
   TotalValueLockedUsd = 'totalValueLockedUSD',
   WeeklyInterestRates = 'weeklyInterestRates',
+  WeeklySnapshots = 'weeklySnapshots',
   WithdrawableTotalAssets = 'withdrawableTotalAssets',
   WithdrawableTotalAssetsUsd = 'withdrawableTotalAssetsUSD',
   Withdraws = 'withdraws'
@@ -8435,11 +9558,19 @@ export enum Withdraw_OrderBy {
   PositionInputTokenBalance = 'position__inputTokenBalance',
   PositionInputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
   PositionInputTokenBalanceNormalizedInUsd = 'position__inputTokenBalanceNormalizedInUSD',
+  PositionInputTokenDeposits = 'position__inputTokenDeposits',
+  PositionInputTokenDepositsNormalizedInUsd = 'position__inputTokenDepositsNormalizedInUSD',
+  PositionInputTokenWithdrawals = 'position__inputTokenWithdrawals',
+  PositionInputTokenWithdrawalsNormalizedInUsd = 'position__inputTokenWithdrawalsNormalizedInUSD',
   PositionOutputTokenBalance = 'position__outputTokenBalance',
   PositionStakedInputTokenBalance = 'position__stakedInputTokenBalance',
   PositionStakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
   PositionStakedInputTokenBalanceNormalizedInUsd = 'position__stakedInputTokenBalanceNormalizedInUSD',
   PositionStakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
+  PositionUnstakedInputTokenBalance = 'position__unstakedInputTokenBalance',
+  PositionUnstakedInputTokenBalanceNormalized = 'position__unstakedInputTokenBalanceNormalized',
+  PositionUnstakedInputTokenBalanceNormalizedInUsd = 'position__unstakedInputTokenBalanceNormalizedInUSD',
+  PositionUnstakedOutputTokenBalance = 'position__unstakedOutputTokenBalance',
   Protocol = 'protocol',
   ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
   ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',

@@ -1775,6 +1775,10 @@ export enum Deposit_OrderBy {
   PositionStakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
   PositionStakedInputTokenBalanceNormalizedInUsd = 'position__stakedInputTokenBalanceNormalizedInUSD',
   PositionStakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
+  PositionUnstakedInputTokenBalance = 'position__unstakedInputTokenBalance',
+  PositionUnstakedInputTokenBalanceNormalized = 'position__unstakedInputTokenBalanceNormalized',
+  PositionUnstakedInputTokenBalanceNormalizedInUsd = 'position__unstakedInputTokenBalanceNormalizedInUSD',
+  PositionUnstakedOutputTokenBalance = 'position__unstakedOutputTokenBalance',
   Protocol = 'protocol',
   ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
   ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
@@ -2693,6 +2697,14 @@ export type Position = {
   /**  Staked balance of the output token for the position  */
   stakedOutputTokenBalance: Scalars['BigInt']['output'];
   unstakedEvents: Array<Unstaked>;
+  /**  Unstaked balance of the input token for the position  */
+  unstakedInputTokenBalance: Scalars['BigInt']['output'];
+  /**  Normalized unstaked balance of the input token  */
+  unstakedInputTokenBalanceNormalized: Scalars['BigDecimal']['output'];
+  /**  Normalized unstaked balance of the input token in USD  */
+  unstakedInputTokenBalanceNormalizedInUSD: Scalars['BigDecimal']['output'];
+  /**  Unstaked balance of the output token for the position  */
+  unstakedOutputTokenBalance: Scalars['BigInt']['output'];
   /**  Vault where the position is held  */
   vault: Vault;
   weeklySnapshots: Array<PositionWeeklySnapshot>;
@@ -2911,6 +2923,10 @@ export enum PositionDailySnapshot_OrderBy {
   PositionStakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
   PositionStakedInputTokenBalanceNormalizedInUsd = 'position__stakedInputTokenBalanceNormalizedInUSD',
   PositionStakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
+  PositionUnstakedInputTokenBalance = 'position__unstakedInputTokenBalance',
+  PositionUnstakedInputTokenBalanceNormalized = 'position__unstakedInputTokenBalanceNormalized',
+  PositionUnstakedInputTokenBalanceNormalizedInUsd = 'position__unstakedInputTokenBalanceNormalizedInUSD',
+  PositionUnstakedOutputTokenBalance = 'position__unstakedOutputTokenBalance',
   Timestamp = 'timestamp'
 }
 
@@ -3063,6 +3079,10 @@ export enum PositionHourlySnapshot_OrderBy {
   PositionStakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
   PositionStakedInputTokenBalanceNormalizedInUsd = 'position__stakedInputTokenBalanceNormalizedInUSD',
   PositionStakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
+  PositionUnstakedInputTokenBalance = 'position__unstakedInputTokenBalance',
+  PositionUnstakedInputTokenBalanceNormalized = 'position__unstakedInputTokenBalanceNormalized',
+  PositionUnstakedInputTokenBalanceNormalizedInUsd = 'position__unstakedInputTokenBalanceNormalizedInUSD',
+  PositionUnstakedOutputTokenBalance = 'position__unstakedOutputTokenBalance',
   Timestamp = 'timestamp'
 }
 
@@ -3215,6 +3235,10 @@ export enum PositionWeeklySnapshot_OrderBy {
   PositionStakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
   PositionStakedInputTokenBalanceNormalizedInUsd = 'position__stakedInputTokenBalanceNormalizedInUSD',
   PositionStakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
+  PositionUnstakedInputTokenBalance = 'position__unstakedInputTokenBalance',
+  PositionUnstakedInputTokenBalanceNormalized = 'position__unstakedInputTokenBalanceNormalized',
+  PositionUnstakedInputTokenBalanceNormalizedInUsd = 'position__unstakedInputTokenBalanceNormalizedInUSD',
+  PositionUnstakedOutputTokenBalance = 'position__unstakedOutputTokenBalance',
   Timestamp = 'timestamp'
 }
 
@@ -3369,6 +3393,38 @@ export type Position_Filter = {
   stakedOutputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
   stakedOutputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   unstakedEvents_?: InputMaybe<Unstaked_Filter>;
+  unstakedInputTokenBalance?: InputMaybe<Scalars['BigInt']['input']>;
+  unstakedInputTokenBalanceNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
+  unstakedInputTokenBalanceNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  unstakedInputTokenBalanceNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  unstakedInputTokenBalanceNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  unstakedInputTokenBalanceNormalizedInUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  unstakedInputTokenBalanceNormalizedInUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  unstakedInputTokenBalanceNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  unstakedInputTokenBalanceNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  unstakedInputTokenBalanceNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  unstakedInputTokenBalanceNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  unstakedInputTokenBalanceNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  unstakedInputTokenBalanceNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  unstakedInputTokenBalanceNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  unstakedInputTokenBalanceNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  unstakedInputTokenBalanceNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  unstakedInputTokenBalanceNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  unstakedInputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  unstakedInputTokenBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  unstakedInputTokenBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  unstakedInputTokenBalance_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  unstakedInputTokenBalance_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  unstakedInputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
+  unstakedInputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  unstakedOutputTokenBalance?: InputMaybe<Scalars['BigInt']['input']>;
+  unstakedOutputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  unstakedOutputTokenBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  unstakedOutputTokenBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  unstakedOutputTokenBalance_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  unstakedOutputTokenBalance_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  unstakedOutputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
+  unstakedOutputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   vault?: InputMaybe<Scalars['String']['input']>;
   vault_?: InputMaybe<Vault_Filter>;
   vault_contains?: InputMaybe<Scalars['String']['input']>;
@@ -3417,6 +3473,10 @@ export enum Position_OrderBy {
   StakedInputTokenBalanceNormalizedInUsd = 'stakedInputTokenBalanceNormalizedInUSD',
   StakedOutputTokenBalance = 'stakedOutputTokenBalance',
   UnstakedEvents = 'unstakedEvents',
+  UnstakedInputTokenBalance = 'unstakedInputTokenBalance',
+  UnstakedInputTokenBalanceNormalized = 'unstakedInputTokenBalanceNormalized',
+  UnstakedInputTokenBalanceNormalizedInUsd = 'unstakedInputTokenBalanceNormalizedInUSD',
+  UnstakedOutputTokenBalance = 'unstakedOutputTokenBalance',
   Vault = 'vault',
   VaultApr7d = 'vault__apr7d',
   VaultApr30d = 'vault__apr30d',
@@ -5729,6 +5789,10 @@ export enum Staked_OrderBy {
   PositionStakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
   PositionStakedInputTokenBalanceNormalizedInUsd = 'position__stakedInputTokenBalanceNormalizedInUSD',
   PositionStakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
+  PositionUnstakedInputTokenBalance = 'position__unstakedInputTokenBalance',
+  PositionUnstakedInputTokenBalanceNormalized = 'position__unstakedInputTokenBalanceNormalized',
+  PositionUnstakedInputTokenBalanceNormalizedInUsd = 'position__unstakedInputTokenBalanceNormalizedInUSD',
+  PositionUnstakedOutputTokenBalance = 'position__unstakedOutputTokenBalance',
   Protocol = 'protocol',
   ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
   ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
@@ -6998,6 +7062,10 @@ export enum Unstaked_OrderBy {
   PositionStakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
   PositionStakedInputTokenBalanceNormalizedInUsd = 'position__stakedInputTokenBalanceNormalizedInUSD',
   PositionStakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
+  PositionUnstakedInputTokenBalance = 'position__unstakedInputTokenBalance',
+  PositionUnstakedInputTokenBalanceNormalized = 'position__unstakedInputTokenBalanceNormalized',
+  PositionUnstakedInputTokenBalanceNormalizedInUsd = 'position__unstakedInputTokenBalanceNormalizedInUSD',
+  PositionUnstakedOutputTokenBalance = 'position__unstakedOutputTokenBalance',
   Protocol = 'protocol',
   ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
   ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
@@ -9501,6 +9569,10 @@ export enum Withdraw_OrderBy {
   PositionStakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
   PositionStakedInputTokenBalanceNormalizedInUsd = 'position__stakedInputTokenBalanceNormalizedInUSD',
   PositionStakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
+  PositionUnstakedInputTokenBalance = 'position__unstakedInputTokenBalance',
+  PositionUnstakedInputTokenBalanceNormalized = 'position__unstakedInputTokenBalanceNormalized',
+  PositionUnstakedInputTokenBalanceNormalizedInUsd = 'position__unstakedInputTokenBalanceNormalizedInUSD',
+  PositionUnstakedOutputTokenBalance = 'position__unstakedOutputTokenBalance',
   Protocol = 'protocol',
   ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
   ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
