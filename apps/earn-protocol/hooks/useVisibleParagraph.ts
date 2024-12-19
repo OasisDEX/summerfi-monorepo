@@ -70,22 +70,24 @@ export const useVisibleParagraph = (
 
     // Initial visibility check
     const checkInitialVisibility = () => {
-      paragraphRefs.current.forEach((ref, index) => {
-        if (ref) {
-          const rect = ref.getBoundingClientRect()
-          const isVisible =
-            rect.top >= 0 &&
-            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)
+      // Batch DOM reads
+      const rects = paragraphRefs.current.map((ref) => (ref ? ref.getBoundingClientRect() : null))
 
-          if (isVisible) {
-            setActiveParagraph(index)
-          }
-        }
-      })
+      // Find first visible paragraph
+      const visibleIndex = rects.findIndex(
+        (rect) =>
+          rect &&
+          rect.top >= 0 &&
+          rect.bottom <= (window.innerHeight || document.documentElement.clientHeight),
+      )
+
+      if (visibleIndex !== -1) {
+        setActiveParagraph(visibleIndex)
+      }
     }
 
-    // Delay initial check for rendering
-    setTimeout(checkInitialVisibility, 0)
+    // Use requestAnimationFrame for more reliable timing
+    requestAnimationFrame(checkInitialVisibility)
 
     return () => {
       if (observerRef.current) {
