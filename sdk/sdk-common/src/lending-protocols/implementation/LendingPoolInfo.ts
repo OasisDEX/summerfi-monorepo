@@ -1,6 +1,6 @@
 import { PoolInfo } from '../../common/implementation/PoolInfo'
 import { IPrintable } from '../../common/interfaces/IPrintable'
-import { PoolType } from '../../common/types/PoolType'
+import { PoolType } from '../../common/enums/PoolType'
 import { SerializationService } from '../../services'
 import { ICollateralInfo } from '../interfaces/ICollateralInfo'
 import { IDebtInfo } from '../interfaces/IDebtInfo'

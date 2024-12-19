@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { ten } from '@summerfi/app-utils'
-import { type IToken } from '@summerfi/sdk-common'
-import { type Address } from '@summerfi/serverless-shared'
+import { type HexData, type IToken } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import { erc20Abi } from 'viem'
 
@@ -20,7 +19,7 @@ export const useTokenBalance = ({
   publicClient: ReturnType<typeof useClient>['publicClient']
   vaultTokenSymbol: string
   tokenSymbol: string
-  chainId?: number
+  chainId: number
   skip?: boolean
 }) => {
   const [vaultToken, setVaultToken] = useState<IToken>()
@@ -28,47 +27,78 @@ export const useTokenBalance = ({
   const [tokenBalance, setTokenBalance] = useState<BigNumber>()
   const [tokenBalanceLoading, setTokenBalanceLoading] = useState(true)
   const { userWalletAddress } = useUserWallet()
+  const walletAddress = userWalletAddress
 
   const sdk = useAppSDK()
-
-  const walletAddress = userWalletAddress
-  const chainInfo = sdk.getChainInfo()
 
   useEffect(() => {
     const fetchTokenBalance = async (address: string) => {
       setTokenBalanceLoading(true)
-      const [fetchedToken, fetchedVaultToken] = await Promise.all([
+      const tokenRequests: Promise<IToken | undefined>[] = [
         sdk.getTokenBySymbol({
-          chainId: chainId ?? chainInfo.chainId,
-          symbol: tokenSymbol,
-        }),
-        sdk.getTokenBySymbol({
-          chainId: chainId ?? chainInfo.chainId,
+          chainId,
           symbol: vaultTokenSymbol,
         }),
-      ])
+      ]
 
-      setToken(fetchedToken)
+      if (tokenSymbol !== vaultTokenSymbol) {
+        tokenRequests.push(
+          sdk.getTokenBySymbol({
+            chainId,
+            symbol: tokenSymbol,
+          }),
+        )
+      }
+
+      const [fetchedVaultToken, fetchedToken] = (await Promise.all(tokenRequests)) as [
+        IToken,
+        IToken | undefined,
+      ]
+
       setVaultToken(fetchedVaultToken)
 
-      publicClient
-        .readContract({
-          abi: erc20Abi,
-          address: fetchedToken.address.value,
-          functionName: 'balanceOf',
-          args: [address as Address],
-        })
-        .then((val) => {
-          setTokenBalanceLoading(false)
-          setTokenBalance(
-            new BigNumber(val.toString()).div(new BigNumber(ten).pow(fetchedToken.decimals)),
-          )
-        })
-        .catch((err) => {
-          setTokenBalanceLoading(false)
-          // eslint-disable-next-line no-console
-          console.error('Error reading token balance', err)
-        })
+      if (tokenSymbol === 'ETH') {
+        setToken(fetchedToken)
+
+        publicClient
+          .getBalance({
+            address: address as HexData,
+          })
+          .then((val) => {
+            setTokenBalanceLoading(false)
+            setTokenBalance(new BigNumber(val.toString()).div(new BigNumber(ten).pow(18)))
+          })
+          .catch((err) => {
+            setTokenBalanceLoading(false)
+            // eslint-disable-next-line no-console
+            console.error('Error reading ETH balance', err)
+          })
+      } else {
+        const fetchedOrVaultToken = fetchedToken ?? fetchedVaultToken
+
+        setToken(fetchedOrVaultToken)
+
+        publicClient
+          .readContract({
+            abi: erc20Abi,
+            address: fetchedOrVaultToken.address.value,
+            functionName: 'balanceOf',
+            args: [address as HexData],
+          })
+          .then((val) => {
+            setTokenBalanceLoading(false)
+            setTokenBalance(
+              new BigNumber(val.toString()).div(
+                new BigNumber(ten).pow(fetchedOrVaultToken.decimals),
+              ),
+            )
+          })
+          .catch((err) => {
+            setTokenBalanceLoading(false)
+            // eslint-disable-next-line no-console
+            console.error('Error reading token balance', err)
+          })
+      }
     }
 
     if (!skip && walletAddress) {
@@ -81,16 +111,7 @@ export const useTokenBalance = ({
     } else {
       setTokenBalanceLoading(false)
     }
-  }, [
-    sdk,
-    walletAddress?.toString(),
-    chainInfo.chainId,
-    tokenSymbol,
-    vaultTokenSymbol,
-    publicClient,
-    skip,
-    chainId,
-  ])
+  }, [sdk, walletAddress?.toString(), tokenSymbol, vaultTokenSymbol, publicClient, skip, chainId])
 
   return {
     vaultToken,

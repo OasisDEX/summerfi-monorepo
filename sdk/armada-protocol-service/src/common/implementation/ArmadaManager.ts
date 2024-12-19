@@ -1,13 +1,15 @@
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import { AdmiralsQuartersAbi, StakingRewardsManagerBaseAbi } from '@summerfi/armada-protocol-abis'
 import {
-  createTransaction,
   getDeployedContractAddress,
   IArmadaManager,
   IArmadaVaultInfo,
   IArmadaPosition,
   IArmadaPositionId,
   IArmadaVaultId,
+  createApprovalTransaction,
+  createDepositTransaction,
+  createWithdrawTransaction,
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
@@ -16,11 +18,14 @@ import {
   ITokenAmount,
   IUser,
   LoggingService,
+  Percentage,
   TokenAmount,
   TransactionInfo,
+  type ExtendedTransactionInfo,
   type HexData,
   type IPercentage,
   type IToken,
+  type TransactionPriceImpact,
 } from '@summerfi/sdk-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { encodeFunctionData } from 'viem'
@@ -265,14 +270,14 @@ export class ArmadaManager implements IArmadaManager {
   /** @see IArmadaManager.getNewDepositTX */
   async getNewDepositTX(
     params: Parameters<IArmadaManager['getNewDepositTX']>[0],
-  ): Promise<TransactionInfo[]> {
+  ): Promise<ExtendedTransactionInfo[]> {
     return this._getDepositTX(params)
   }
 
   /** @see IArmadaManager.getUpdateDepositTX */
   async getUpdateDepositTX(
     params: Parameters<IArmadaManager['getUpdateDepositTX']>[0],
-  ): Promise<TransactionInfo[]> {
+  ): Promise<ExtendedTransactionInfo[]> {
     return this._getDepositTX({
       vaultId: params.vaultId,
       user: params.positionId.user,
@@ -285,8 +290,8 @@ export class ArmadaManager implements IArmadaManager {
   /** @see IArmadaManager.getWithdrawTX */
   async getWithdrawTX(
     params: Parameters<IArmadaManager['getWithdrawTX']>[0],
-  ): Promise<TransactionInfo[]> {
-    const transactions: TransactionInfo[] = []
+  ): Promise<ExtendedTransactionInfo[]> {
+    const transactions: ExtendedTransactionInfo[] = []
     const metadata: {
       swapToAmount?: ITokenAmount
     } = {}
@@ -295,7 +300,7 @@ export class ArmadaManager implements IArmadaManager {
       vaultId: params.vaultId,
       user: params.user,
     })
-
+    // handling for ETH
     const assetsToEOA = params.amount
     const swapToToken = params.toToken
     const shouldSwap = !swapToToken.equals(assetsToEOA.token)
@@ -334,10 +339,12 @@ export class ArmadaManager implements IArmadaManager {
           owner: params.user.wallet.address,
         })
         if (approveToTakeUserShares) {
-          transactions.push({
-            ...approveToTakeUserShares,
-            metadata: { amount: sharesToWithdraw },
-          })
+          transactions.push(
+            createApprovalTransaction({
+              ...approveToTakeUserShares,
+              metadata: { approvalAmount: sharesToWithdraw },
+            }),
+          )
           LoggingService.debug('approveToTakeUserShares', {
             sharesToWithdraw: sharesToWithdraw.toString(),
           })
@@ -355,11 +362,19 @@ export class ArmadaManager implements IArmadaManager {
           args: [withdrawCall.calldata],
         })
         transactions.push(
-          createTransaction({
+          createWithdrawTransaction({
             target: admiralsQuarterAddress,
             calldata: multicallCalldata,
-            description: 'Withdraw Multicall Transaction',
-            metadata,
+            description: 'Withdraw Operation using unstaked shares',
+            metadata: {
+              fromAmount: assetsToEOA,
+              toAmount: metadata.swapToAmount,
+              slippage: params.slippage,
+              priceImpact: await this._getPriceImpact({
+                fromAmount: assetsToEOA,
+                toAmount: metadata.swapToAmount,
+              }),
+            },
           }),
         )
       } else {
@@ -376,10 +391,12 @@ export class ArmadaManager implements IArmadaManager {
           owner: params.user.wallet.address,
         })
         if (approveToTakeUserShares) {
-          transactions.push({
-            ...approveToTakeUserShares,
-            metadata: { amount: fleetShares },
-          })
+          transactions.push(
+            createApprovalTransaction({
+              ...approveToTakeUserShares,
+              metadata: { approvalAmount: fleetShares },
+            }),
+          )
           LoggingService.debug('approveToTakeUserShares', {
             sharesToWithdraw: fleetShares.toString(),
           })
@@ -393,10 +410,12 @@ export class ArmadaManager implements IArmadaManager {
             owner: params.user.wallet.address,
           })
           if (approveToSwap) {
-            transactions.push({
-              ...approveToSwap,
-              metadata: { amount: assetsToEOA },
-            })
+            transactions.push(
+              createApprovalTransaction({
+                ...approveToSwap,
+                metadata: { approvalAmount: assetsToEOA },
+              }),
+            )
             LoggingService.debug('approveToSwap', {
               assetsToEOA: assetsToEOA.toString(),
             })
@@ -447,12 +466,19 @@ export class ArmadaManager implements IArmadaManager {
           args: [multicallArgs],
         })
         transactions.push(
-          createTransaction({
+          createWithdrawTransaction({
             target: admiralsQuarterAddress,
             calldata: multicallCalldata,
-            description:
-              'Withdraw Unstaken Balance and Unstake-Withdraw the rest Multicall Transaction',
-            metadata,
+            description: 'Withdraw Operation using mixed staked and unstaked shares',
+            metadata: {
+              fromAmount: assetsToEOA,
+              toAmount: metadata.swapToAmount,
+              slippage: params.slippage,
+              priceImpact: await this._getPriceImpact({
+                fromAmount: assetsToEOA,
+                toAmount: metadata.swapToAmount,
+              }),
+            },
           }),
         )
       }
@@ -475,10 +501,12 @@ export class ArmadaManager implements IArmadaManager {
           owner: params.user.wallet.address,
         })
         if (approveToSwap) {
-          transactions.push({
-            ...approveToSwap,
-            metadata: { amount: assetsToEOA },
-          })
+          transactions.push(
+            createApprovalTransaction({
+              ...approveToSwap,
+              metadata: { approvalAmount: assetsToEOA },
+            }),
+          )
           LoggingService.debug('approveToSwap', {
             assetsToEOA: assetsToEOA.toString(),
           })
@@ -509,11 +537,19 @@ export class ArmadaManager implements IArmadaManager {
       })
 
       transactions.push(
-        createTransaction({
+        createWithdrawTransaction({
           target: admiralsQuarterAddress,
           calldata: multicallCalldata,
-          description: 'Unstake and withdraw Multicall Transaction',
-          metadata,
+          description: 'Withdraw Operation using staked shares',
+          metadata: {
+            fromAmount: assetsToEOA,
+            toAmount: metadata.swapToAmount,
+            slippage: params.slippage,
+            priceImpact: await this._getPriceImpact({
+              fromAmount: assetsToEOA,
+              toAmount: metadata.swapToAmount,
+            }),
+          },
         }),
       )
     }
@@ -767,12 +803,25 @@ export class ArmadaManager implements IArmadaManager {
     amount: ITokenAmount
     slippage: IPercentage
     shouldStake?: boolean
-  }): Promise<TransactionInfo[]> {
-    const transactions: TransactionInfo[] = []
+  }): Promise<ExtendedTransactionInfo[]> {
+    const fleetCommander = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+    const fleetToken = await fleetCommander.asErc4626().asset()
+
+    const isEth = params.amount.token.symbol === 'ETH'
     const shouldStake = params.shouldStake ?? true
-    const metadata: {
-      swapToAmount?: ITokenAmount
-    } = {}
+    const shouldSwap = !params.amount.token.address.equals(fleetToken.address)
+
+    let swapToAmount: ITokenAmount | undefined
+    const transactions: ExtendedTransactionInfo[] = []
+
+    LoggingService.debug('getDepositTX', {
+      requestedAmount: params.amount.toString(),
+      shouldStake,
+      shouldSwap,
+    })
 
     const admiralsQuarterAddress = getDeployedContractAddress({
       chainInfo: params.vaultId.chainInfo,
@@ -788,10 +837,12 @@ export class ArmadaManager implements IArmadaManager {
       owner: params.user.wallet.address,
     })
     if (approvalTransaction) {
-      transactions.push({
-        ...approvalTransaction,
-        metadata: { amount: params.amount },
-      })
+      transactions.push(
+        createApprovalTransaction({
+          ...approvalTransaction,
+          metadata: { approvalAmount: params.amount },
+        }),
+      )
       LoggingService.debug('approvalTransaction', {
         amount: params.amount.toString(),
       })
@@ -805,15 +856,9 @@ export class ArmadaManager implements IArmadaManager {
     })
     multicallArgs.push(depositTokensCalldata)
 
-    const fleetCommander = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-    const fleetToken = await fleetCommander.asErc4626().asset()
-
     // If depositing a token that is not the fleet token,
     // we need to swap it to fleet asset
-    if (!params.amount.token.address.equals(fleetToken.address)) {
+    if (shouldSwap) {
       const swapCall = await this._getSwapCall({
         vaultId: params.vaultId,
         fromAmount: params.amount,
@@ -821,18 +866,14 @@ export class ArmadaManager implements IArmadaManager {
         slippage: params.slippage,
       })
       multicallArgs.push(swapCall.calldata)
-      metadata.swapToAmount = swapCall.minAmount
+      swapToAmount = swapCall.minAmount
     }
 
     // when staking admirals quarters will receive LV tokens, otherwise the user
     const lvTokenReceiver = shouldStake
       ? admiralsQuarterAddress.value
       : params.user.wallet.address.value
-    LoggingService.debug('getDepositTX', {
-      requestedAmount: params.amount.toString(),
-      shouldStake: shouldStake,
-      lvTokenReceiver: lvTokenReceiver.toString(),
-    })
+
     const enterFleetCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'enterFleet',
@@ -849,50 +890,30 @@ export class ArmadaManager implements IArmadaManager {
       multicallArgs.push(stakeCalldata)
     }
 
-    const depositMulticallCalldata = encodeFunctionData({
+    const multicallCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'multicall',
       args: [multicallArgs],
     })
     transactions.push(
-      createTransaction({
+      createDepositTransaction({
         target: admiralsQuarterAddress,
-        calldata: depositMulticallCalldata,
-        description: 'Deposit Multicall Transaction',
-        metadata: metadata,
+        calldata: multicallCalldata,
+        description: 'Deposit Operation',
+        value: isEth ? params.amount.toSolidityValue() : undefined,
+        metadata: {
+          fromAmount: params.amount,
+          toAmount: swapToAmount,
+          slippage: params.slippage,
+          priceImpact: await this._getPriceImpact({
+            fromAmount: params.amount,
+            toAmount: swapToAmount,
+          }),
+        },
       }),
     )
 
     return transactions
-  }
-
-  /**
-   * Internal utility method to generate a withdraw+unstake TX
-   * @param params The parameters for the withdraw+unstake
-   *
-   * @returns The transactions needed to withdraw+unstake the tokens
-   */
-  private async _getUnstakeTx(params: {
-    vaultId: IArmadaVaultId
-    shares: ITokenAmount
-  }): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-    const { stakingRewardsManager } = await fleetContract.config()
-
-    const unstake = encodeFunctionData({
-      abi: StakingRewardsManagerBaseAbi,
-      functionName: 'unstake',
-      args: [params.shares.toSolidityValue()],
-    })
-
-    return createTransaction({
-      target: stakingRewardsManager,
-      calldata: unstake,
-      description: 'Unstake Transaction',
-    })
   }
 
   /**
@@ -1019,10 +1040,10 @@ export class ArmadaManager implements IArmadaManager {
       slippage: params.slippage,
     })
 
-    const reverseSlippage = 1 - params.slippage.value
+    const slippageComplement = params.slippage.toComplement()
     const minTokensReceived = BigInt(
       new BigNumber(swapData.toTokenAmount.toSolidityValue().toString())
-        .times(reverseSlippage)
+        .times(slippageComplement.value / 100)
         .toFixed(0, BigNumber.ROUND_DOWN),
     )
 
@@ -1049,7 +1070,7 @@ export class ArmadaManager implements IArmadaManager {
       toAmount: swapData.toTokenAmount.toString(),
       minAmount: minAmount.toString(),
       slippage: params.slippage.toString(),
-      reverseSlippage: reverseSlippage.toString(),
+      slippageComplement: slippageComplement.toString(),
     })
 
     return {
@@ -1108,6 +1129,30 @@ export class ArmadaManager implements IArmadaManager {
     return {
       calldata,
       minAmount: swapCall.minAmount,
+    }
+  }
+
+  private async _getPriceImpact(params: {
+    fromAmount: ITokenAmount
+    toAmount?: ITokenAmount
+  }): Promise<TransactionPriceImpact | undefined> {
+    if (params.toAmount === undefined) {
+      return undefined
+    }
+
+    // TODO: not implemented
+    const price = TokenAmount.createFromBaseUnit({
+      token: params.toAmount.token,
+      amount: '0',
+    })
+
+    const impact = Percentage.createFrom({
+      value: 0,
+    })
+
+    return {
+      price,
+      impact,
     }
   }
 }

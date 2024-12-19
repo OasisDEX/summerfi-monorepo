@@ -1,6 +1,5 @@
-export * from './aliases'
+export * from './types'
 export * from './enums'
 export * from './implementation'
 export * from './interfaces'
-export * from './types'
 export * from './utils'

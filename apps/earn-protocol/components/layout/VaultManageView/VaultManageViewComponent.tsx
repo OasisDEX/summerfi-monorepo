@@ -21,8 +21,9 @@ import {
   TransactionAction,
   type UsersActivity,
 } from '@summerfi/app-types'
-import { zero } from '@summerfi/app-utils'
+import { subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
+import { TransactionType } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 
 import {
@@ -38,8 +39,9 @@ import { RebalancingActivity } from '@/features/rebalance-activity/components/Re
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 import { useAmount } from '@/hooks/use-amount'
+import { useAmountWithSwap } from '@/hooks/use-amount-with-swap'
 import { useClient } from '@/hooks/use-client'
-import { useSwapQuote } from '@/hooks/use-swap-quote'
+import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useTransaction } from '@/hooks/use-transaction'
 
@@ -63,8 +65,11 @@ export const VaultManageViewComponent = ({
   const user = useUser()
   const { publicClient } = useClient()
 
+  const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
+
   const { handleTokenSelectionChange, selectedTokenOption, tokenOptions } = useTokenSelector({
     vault,
+    chainId: vaultChainId,
   })
 
   const {
@@ -76,6 +81,7 @@ export const VaultManageViewComponent = ({
     publicClient,
     vaultTokenSymbol: vault.inputToken.symbol,
     tokenSymbol: selectedTokenOption.value,
+    chainId: vaultChainId,
   })
 
   const {
@@ -92,7 +98,6 @@ export const VaultManageViewComponent = ({
     sidebar,
     txHashes,
     removeTxHash,
-    vaultChainId,
     reset,
     transactionType,
     setTransactionType,
@@ -104,11 +109,12 @@ export const VaultManageViewComponent = ({
     backToInit,
   } = useTransaction({
     vault,
+    vaultChainId,
     amount: amountParsed,
     manualSetAmount,
     publicClient,
-    token: selectedToken,
     vaultToken,
+    token: selectedToken,
     tokenBalance: selectedTokenBalance,
     tokenBalanceLoading: selectedTokenBalanceLoading,
     flow: 'manage',
@@ -141,42 +147,26 @@ export const VaultManageViewComponent = ({
     return oneYearEarningsForecast
   }, [oneYearEarningsForecast])
 
-  const fromTokenSymbol: string = useMemo(() => {
-    return {
-      [TransactionAction.DEPOSIT]: selectedTokenOption.value,
-      [TransactionAction.WITHDRAW]: vault.inputToken.symbol,
-    }[transactionType]
-  }, [transactionType, selectedTokenOption.value, vault.inputToken.symbol])
-
-  const toTokenSymbol: string = useMemo(() => {
-    return {
-      [TransactionAction.DEPOSIT]: vault.inputToken.symbol,
-      [TransactionAction.WITHDRAW]: selectedTokenOption.value,
-    }[transactionType]
-  }, [transactionType, selectedTokenOption.value, vault.inputToken.symbol])
-
-  const { quote, quoteLoading } = useSwapQuote({
-    fromTokenSymbol,
-    fromAmount: amountDisplay,
-    toTokenSymbol,
-    slippage: 0.01,
+  const { amountDisplayUSDWithSwap, fromTokenSymbol } = useAmountWithSwap({
+    vault,
+    vaultChainId,
+    amountDisplay,
+    amountDisplayUSD,
+    transactionType,
+    selectedTokenOption,
   })
 
-  const amountDisplayUSDWithSwap = useMemo(() => {
-    if (quoteLoading) {
-      return 'Loading...'
-    }
+  const { transactionFee, loading: transactionFeeLoading } = useGasEstimation({
+    chainId: vaultChainId,
+    transaction: nextTransaction,
+    walletAddress: user?.address,
+  })
 
-    return quote !== undefined
-      ? `$${quote.toTokenAmount.toBigNumber().toFixed(vault.inputToken.decimals)}`
-      : amountDisplayUSD
-  }, [quote, quoteLoading, amountDisplayUSD, vault.inputToken.decimals])
-
-  const sidebarContent = nextTransaction?.label ? (
+  const sidebarContent = nextTransaction?.type ? (
     {
-      approve: (
+      [TransactionType.Approve]: (
         <ControlsApproval
-          vault={vault}
+          tokenSymbol={fromTokenSymbol}
           approvalType={approvalType}
           setApprovalType={setApprovalType}
           setApprovalCustomValue={setApprovalCustomValue}
@@ -184,21 +174,23 @@ export const VaultManageViewComponent = ({
           tokenBalance={selectedTokenBalance}
         />
       ),
-      deposit: (
+      [TransactionType.Deposit]: (
         <OrderInfoDeposit
-          vault={vault}
+          transaction={nextTransaction}
           amountParsed={amountParsed}
-          amountDisplayUSD={amountDisplayUSD}
+          amountDisplayUSD={amountDisplayUSDWithSwap}
+          transactionFee={transactionFee}
+          transactionFeeLoading={transactionFeeLoading}
         />
       ),
-      withdraw: (
+      [TransactionType.Withdraw]: (
         <OrderInfoWithdraw
           vault={vault}
           amountParsed={amountParsed}
           amountDisplayUSD={amountDisplayUSD}
         />
       ),
-    }[nextTransaction.label]
+    }[nextTransaction.type]
   ) : (
     <ControlsDepositWithdraw
       amountDisplay={amountDisplay}
@@ -252,7 +244,7 @@ export const VaultManageViewComponent = ({
     customHeaderStyles:
       !isDrawerOpen && isMobile ? { padding: 'var(--general-space-12) 0' } : undefined,
     handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
-    goBackAction: nextTransaction?.label ? backToInit : undefined,
+    goBackAction: nextTransaction?.type ? backToInit : undefined,
     primaryButton: sidebar.primaryButton,
     footnote: (
       <>

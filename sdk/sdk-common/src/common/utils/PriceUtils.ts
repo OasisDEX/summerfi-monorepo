@@ -1,5 +1,5 @@
 import { BigNumber } from 'bignumber.js'
-import { Denomination } from '../aliases/Denomination'
+import { Denomination } from '../types/Denomination'
 import { FiatCurrency, isFiatCurrency } from '../enums/FiatCurrency'
 import { IPercentage } from '../interfaces'
 import {

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { PoolType } from '../types/PoolType'
+import { PoolType } from '../enums/PoolType'
 import { IPoolId, isPoolId } from './IPoolId'
 import { IPrintable } from './IPrintable'
 

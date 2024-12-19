@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { Denomination, DenominationDataSchema } from '../aliases/Denomination'
+import { Denomination, DenominationDataSchema } from '../types/Denomination'
 import { type IFiatCurrencyAmount } from './IFiatCurrencyAmount'
 import { type IPercentage } from './IPercentage'
 import { IPrintable } from './IPrintable'

@@ -30,6 +30,7 @@ import classNames from './VaultSimulationForm.module.scss'
 
 export type VaultSimulationFormProps = {
   vaultData: SDKVaultishType
+  tokenSymbol: string
   tokenBalance?: BigNumber
   tokenPriceUSD?: number
   isTokenBalanceLoading?: boolean
@@ -41,6 +42,7 @@ export type VaultSimulationFormProps = {
 
 export const VaultSimulationForm = ({
   vaultData,
+  tokenSymbol,
   tokenBalance,
   isTokenBalanceLoading,
   isMobile,
@@ -96,7 +98,7 @@ export const VaultSimulationForm = ({
 
   const balance = tokenBalance ? tokenBalance : undefined
   const tokenPrice = vaultData.inputTokenPriceUSD ? Number(vaultData.inputTokenPriceUSD) : undefined
-  const token = vaultData.inputToken.symbol
+  const balanceSymbol = tokenSymbol
 
   return (
     <div style={{ position: 'relative', width: '100%', padding: '2px' }}>
@@ -121,7 +123,7 @@ export const VaultSimulationForm = ({
                   value: isTokenBalanceLoading ? (
                     <SkeletonLine width={60} height={10} />
                   ) : balance ? (
-                    `${formatCryptoBalance(balance)} ${token}`
+                    `${formatCryptoBalance(balance)} ${balanceSymbol}`
                   ) : (
                     `-`
                   ),

@@ -1,5 +1,5 @@
 import { Address } from '../src/common/implementation/Address'
-import { AddressType } from '../src/common/types/AddressType'
+import { AddressType } from '../src/common/enums/AddressType'
 
 describe('SDK Common | Address', () => {
   describe('#createFrom()', () => {

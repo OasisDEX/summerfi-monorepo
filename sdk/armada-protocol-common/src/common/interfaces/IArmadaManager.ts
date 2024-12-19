@@ -5,7 +5,7 @@ import {
   type ChainInfo,
   type IToken,
 } from '@summerfi/sdk-common/common'
-import { TransactionInfo } from '@summerfi/sdk-common/orders'
+import { TransactionInfo, ExtendedTransactionInfo } from '@summerfi/sdk-common/orders'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IArmadaVaultId } from './IArmadaVaultId'
 import { IArmadaVaultInfo } from './IArmadaVaultInfo'
@@ -186,7 +186,7 @@ export interface IArmadaManager {
    * @param slippage Maximum slippage allowed for the operation
    * @param shouldStake Whether the user wants to stake the deposit
    *
-   * @returns TransactionInfo[] An array of transactions that must be executed for the operation to succeed
+   * @returns ExtendedTransactionInfo[] An array of transactions that must be executed for the operation to succeed
    */
   getNewDepositTX(params: {
     vaultId: IArmadaVaultId
@@ -194,7 +194,7 @@ export interface IArmadaManager {
     amount: ITokenAmount
     slippage: IPercentage
     shouldStake?: boolean
-  }): Promise<TransactionInfo[]>
+  }): Promise<ExtendedTransactionInfo[]>
 
   /**
    * @name getUpdateDepositTX
@@ -214,7 +214,7 @@ export interface IArmadaManager {
     amount: ITokenAmount
     slippage: IPercentage
     shouldStake?: boolean
-  }): Promise<TransactionInfo[]>
+  }): Promise<ExtendedTransactionInfo[]>
 
   /**
    * @name getWithdrawTX
@@ -225,7 +225,7 @@ export interface IArmadaManager {
    * @param amount Token amount to be withdrawn
    * @param slippage Maximum slippage allowed for the operation
    *
-   * @returns TransactionInfo[] An array of transactions that must be executed for the operation to succeed
+   * @returns ExtendedTransactionInfo[] An array of transactions that must be executed for the operation to succeed
    */
   getWithdrawTX(params: {
     vaultId: IArmadaVaultId
@@ -233,7 +233,7 @@ export interface IArmadaManager {
     amount: ITokenAmount
     toToken: IToken
     slippage: IPercentage
-  }): Promise<TransactionInfo[]>
+  }): Promise<ExtendedTransactionInfo[]>
 
   /** KEEPERS TRANSACTIONS */
 

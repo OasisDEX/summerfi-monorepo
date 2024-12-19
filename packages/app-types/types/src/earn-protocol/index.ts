@@ -6,7 +6,6 @@ import {
   GetUsersActivityQuery,
 } from '@summerfi/subgraph-manager-common'
 import { ChainId } from '@summerfi/serverless-shared'
-import { type TransactionInfo } from '@summerfi/sdk-common'
 import { type IArmadaPosition } from '@summerfi/armada-protocol-common'
 import { EarnAppFleetCustomConfigType } from '../generated/earn-app-config'
 import { TimeframesType } from '../components'
@@ -79,12 +78,7 @@ export type EarnTransactionViewStates =
   | 'txError'
   | 'txSuccess'
 
-export type EarnTransactionTypes = 'approve' | 'deposit' | 'withdraw'
 export type EarnAllowanceTypes = 'deposit' | 'custom'
-
-export type TransactionInfoLabeled = TransactionInfo & {
-  label: EarnTransactionTypes
-}
 
 export enum UserActivityType {
   DEPOSIT = 'DEPOSIT',

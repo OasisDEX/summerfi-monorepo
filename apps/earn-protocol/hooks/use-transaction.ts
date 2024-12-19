@@ -10,24 +10,23 @@ import {
 } from '@account-kit/react'
 import {
   type EarnAllowanceTypes,
-  type EarnTransactionTypes,
   type EarnTransactionViewStates,
   type SDKVaultishType,
   TransactionAction,
-  type TransactionInfoLabeled,
 } from '@summerfi/app-types'
-import { subgraphNetworkToSDKId, ten, zero } from '@summerfi/app-utils'
+import { ten, zero } from '@summerfi/app-utils'
 import {
   Address,
+  type ExtendedTransactionInfo,
   getChainInfoByChainId,
   type IToken,
   TokenAmount,
-  type TransactionInfo,
+  TransactionType,
 } from '@summerfi/sdk-client-react'
-import BigNumber from 'bignumber.js'
+import type { ChainId } from '@summerfi/serverless-shared'
+import type BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 import { useRouter } from 'next/navigation'
-import { erc20Abi } from 'viem'
 
 import { accountType, SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { getApprovalTx } from '@/helpers/get-approval-tx'
@@ -38,6 +37,7 @@ import { useClientChainId } from '@/hooks/use-client-chain-id'
 
 type UseTransactionParams = {
   vault: SDKVaultishType
+  vaultChainId: ChainId.BASE | ChainId.ARBITRUM
   amount: BigNumber | undefined
   manualSetAmount: (amount: string | undefined) => void
   vaultToken: IToken | undefined
@@ -48,24 +48,9 @@ type UseTransactionParams = {
   flow: 'open' | 'manage'
 }
 
-const labelTransactions = (transactions: TransactionInfo[]) => {
-  return transactions.map((tx) => {
-    const tempLabel = tx.description.split(' ')[0].toLowerCase()
-
-    const label = (
-      tempLabel === 'unstake' ? 'withdraw' : tempLabel
-    ) as TransactionInfoLabeled['label']
-
-    return {
-      ...tx,
-      // kinda hacky, but works for now
-      label,
-    }
-  })
-}
-
 export const useTransaction = ({
   vault,
+  vaultChainId,
   manualSetAmount,
   amount,
   publicClient,
@@ -86,23 +71,16 @@ export const useTransaction = ({
     TransactionAction.DEPOSIT,
   )
   const [waitingForTx, setWaitingForTx] = useState<`0x${string}`>()
-  const [approval, setApproval] = useState<BigNumber>()
   const [approvalType, setApprovalType] = useState<EarnAllowanceTypes>('deposit')
   const [approvalCustomValue, setApprovalCustomValue] = useState<BigNumber>(zero)
-  const [txHashes, setTxHashes] = useState<{ type: EarnTransactionTypes; hash: string }[]>([])
+  const [txHashes, setTxHashes] = useState<{ type: TransactionType; hash: string }[]>([])
   const [txStatus, setTxStatus] = useState<EarnTransactionViewStates>('idle')
-  const [transactions, setTransactions] = useState<TransactionInfoLabeled[]>()
+  const [transactions, setTransactions] = useState<ExtendedTransactionInfo[]>()
   const [sidebarError, setSidebarError] = useState<string>()
 
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
 
-  const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
   const isProperChainSelected = clientChainId === vaultChainId
-  const {
-    symbol: inputTokenSymbol,
-    id: inputTokenAddress,
-    decimals: inputTokenDecimals,
-  } = vault.inputToken
 
   const nextTransaction = useMemo(() => {
     if (!transactions || transactions.length === 0) {
@@ -126,7 +104,7 @@ export const useTransaction = ({
         setTxHashes((prev) => [
           ...prev,
           {
-            type: nextTransaction.label,
+            type: nextTransaction.type,
             hash,
           },
         ])
@@ -177,13 +155,17 @@ export const useTransaction = ({
     if (!publicClient) {
       throw new Error('Public client not available')
     }
+    if (!token) {
+      throw new Error('Token not loaded')
+    }
+
     const txParams =
-      nextTransaction.label === 'approve' && approvalType !== 'deposit'
+      nextTransaction.type === TransactionType.Approve && approvalType !== 'deposit'
         ? {
             target: nextTransaction.transaction.target.value,
             data: getApprovalTx(
               user.address,
-              BigInt(approvalCustomValue.times(ten.pow(inputTokenDecimals)).toString()),
+              BigInt(approvalCustomValue.times(ten.pow(token.decimals)).toString()),
             ),
           }
         : {
@@ -193,9 +175,9 @@ export const useTransaction = ({
 
     sendTransaction(txParams)
   }, [
+    token,
     approvalCustomValue,
     approvalType,
-    inputTokenDecimals,
     nextTransaction,
     publicClient,
     sendTransaction,
@@ -238,7 +220,7 @@ export const useTransaction = ({
 
       setTxStatus('loadingTx')
       try {
-        const transactionsList: TransactionInfo[] = await {
+        const transactionsList = await {
           [TransactionAction.DEPOSIT]: getDepositTX,
           [TransactionAction.WITHDRAW]: getWithdrawTX,
         }[transactionType]({
@@ -253,13 +235,13 @@ export const useTransaction = ({
           fleetAddress: vault.id,
           chainInfo: getChainInfoByChainId(vaultChainId),
           // TODO: we should update slippage once it'll be configurable from the wallet dropdown menu
-          slippage: 0.01, // 1%
+          slippage: 1, // 1%
         })
 
         if (transactionsList.length === 0) {
           throw new Error('Error getting the transactions list')
         }
-        setTransactions(labelTransactions(transactionsList))
+        setTransactions(transactionsList)
         setTxStatus('txPrepared')
       } catch (err) {
         if (err instanceof Error) {
@@ -271,6 +253,7 @@ export const useTransaction = ({
     }
   }, [
     token,
+    vaultToken,
     amount,
     user,
     setTxStatus,
@@ -322,8 +305,18 @@ export const useTransaction = ({
       }
     }
 
-    // based on the txStatus
+    // if there are transactions pending
     if (['loadingTx', 'txInProgress'].includes(txStatus)) {
+      return {
+        label: 'Loading...',
+        action: () => null,
+        disabled: true,
+        loading: true,
+      }
+    }
+
+    // if token is loading
+    if (!token) {
       return {
         label: 'Loading...',
         action: () => null,
@@ -334,13 +327,13 @@ export const useTransaction = ({
 
     // transactions loaded from the SDK
     // execute them one by one
-    if (nextTransaction?.label) {
+    if (nextTransaction?.type) {
       return {
         label: {
-          approve: `Approve ${inputTokenSymbol}`,
-          deposit: 'Deposit',
-          withdraw: 'Withdraw',
-        }[nextTransaction.label],
+          [TransactionType.Approve]: `Approve ${token.symbol}`,
+          [TransactionType.Deposit]: 'Deposit',
+          [TransactionType.Withdraw]: 'Withdraw',
+        }[nextTransaction.type],
         action: executeNextTransaction,
       }
     }
@@ -361,6 +354,7 @@ export const useTransaction = ({
       action: getTransactionsList,
     }
   }, [
+    token,
     flow,
     tokenBalanceLoading,
     tokenBalance,
@@ -369,67 +363,25 @@ export const useTransaction = ({
     isSettingChain,
     amount,
     txStatus,
-    nextTransaction?.label,
+    nextTransaction?.type,
     transactionType,
     getTransactionsList,
     openAuthModal,
     isAuthModalOpen,
     vaultChainId,
     setChain,
-    inputTokenSymbol,
     executeNextTransaction,
   ])
 
   const sidebarTitle = useMemo(() => {
-    if (nextTransaction?.label === 'deposit') {
+    if (nextTransaction?.type === TransactionType.Deposit) {
       return 'Preview deposit'
     }
 
-    return nextTransaction?.label
-      ? capitalize(nextTransaction.label)
+    return nextTransaction?.type
+      ? capitalize(nextTransaction.type)
       : capitalize(TransactionAction.DEPOSIT)
-  }, [nextTransaction?.label])
-
-  // load approval amount
-  useEffect(() => {
-    if (publicClient && user) {
-      publicClient
-        .readContract({
-          abi: erc20Abi,
-          address: inputTokenAddress as `0x${string}`,
-          functionName: 'allowance',
-          args: [user.address, vault.id as `0x${string}`],
-        })
-        .then((approvalAmount) => {
-          const approvalParsed = new BigNumber(approvalAmount.toString()).div(
-            ten.pow(inputTokenDecimals),
-          )
-
-          setApproval(approvalParsed)
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error('Error reading token allowance', err)
-        })
-    }
-  }, [
-    inputTokenAddress,
-    inputTokenDecimals,
-    publicClient,
-    user,
-    vault.id,
-    setApproval,
-    /** last one is pretty important because we want to update
-     * the allowance when the transactions change (are executed or not) */
-    transactions?.length,
-  ])
-
-  // skip approval if the user has enough allowance
-  useEffect(() => {
-    if (nextTransaction?.label === 'approve' && approval && approval.gte(amount ?? zero)) {
-      setTransactions((prevTransactions) => prevTransactions?.slice(1))
-    }
-  }, [amount, approval, nextTransaction?.label])
+  }, [nextTransaction?.type])
 
   // refresh data when all transactions are executed and are successful
   useEffect(() => {

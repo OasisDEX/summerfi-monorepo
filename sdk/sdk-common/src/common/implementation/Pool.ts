@@ -1,5 +1,5 @@
-import { IPrintable } from '../../common/interfaces/IPrintable'
-import { PoolType } from '../../common/types/PoolType'
+import { IPrintable } from '../interfaces/IPrintable'
+import { PoolType } from '../enums/PoolType'
 import { SerializationService } from '../../services/SerializationService'
 import { IPool, IPoolData, __signature__ } from '../interfaces/IPool'
 import { IPoolId } from '../interfaces/IPoolId'

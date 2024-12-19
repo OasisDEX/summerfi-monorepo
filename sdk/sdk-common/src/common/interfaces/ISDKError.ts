@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { SDKErrorType } from '../types/SDKErrorType'
+import { SDKErrorType } from '../enums/SDKErrorType'
 import { IPrintable } from './IPrintable'
 
 /**

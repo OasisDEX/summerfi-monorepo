@@ -1,15 +1,4 @@
-import { HexData } from '@summerfi/sdk-common/common/aliases'
-import { Address } from '../../../common/implementation/Address'
-
-/**
- * @interface Transaction
- * @description Low level transaction that can be sent to the blockchain
- */
-export type Transaction = {
-  target: Address
-  calldata: HexData
-  value: string
-}
+import type { Transaction } from './Transaction'
 
 /**
  * @interface TransactionInfo
@@ -21,6 +10,4 @@ export interface TransactionInfo {
   transaction: Transaction
   /** @description High-level description of the transaction */
   description: string
-  /** @description Additional metadata that can be attached to the transaction */
-  metadata?: Record<string, unknown>
 }

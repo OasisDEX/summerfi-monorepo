@@ -9,7 +9,7 @@ import {
   Percentage,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
-import { ChainId, HexData } from '@summerfi/sdk-common/common/aliases'
+import { ChainId, HexData } from '@summerfi/sdk-common/common/types'
 import {
   QuoteData,
   SwapData,
@@ -214,7 +214,7 @@ export class OneInchSwapProvider
         ? '&protocols=' + this._allowedSwapProtocols.join(',')
         : ''
 
-    return `${this._apiUrl}/swap/${this._version}/${chainId}/swap?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&fromAddress=${recipient}&slippage=${params.slippage.value * 100}&disableEstimate=${disableEstimate}&allowPartialFill=${allowPartialFill}${protocolsParam}`
+    return `${this._apiUrl}/swap/${this._version}/${chainId}/swap?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&fromAddress=${recipient}&slippage=${params.slippage.value}&disableEstimate=${disableEstimate}&allowPartialFill=${allowPartialFill}${protocolsParam}`
   }
 
   /**
@@ -234,11 +234,12 @@ export class OneInchSwapProvider
     const fromTokenAddress = params.fromTokenAmount.token.address.value.toLowerCase()
     const toTokenAddress = params.toToken.address.value.toLowerCase()
     const fromAmount = params.fromTokenAmount.toSolidityValue()
-    const protocolsParam = this._allowedSwapProtocols.length
-      ? this._allowedSwapProtocols.join(',')
-      : ''
+    const protocolsParam =
+      this._allowedSwapProtocols.length > 0
+        ? '&protocols=' + this._allowedSwapProtocols.join(',')
+        : ''
 
-    return `${this._apiUrl}/swap/${this._version}/${chainId}/quote?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&protocols=${protocolsParam}`
+    return `${this._apiUrl}/swap/${this._version}/${chainId}/quote?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}${protocolsParam}`
   }
 
   /**
@@ -310,7 +311,9 @@ export class OneInchSwapProvider
         apiUrl: ONE_INCH_API_URL,
         apiKey: ONE_INCH_API_KEY,
         version: ONE_INCH_API_VERSION,
-        allowedSwapProtocols: ONE_INCH_ALLOWED_SWAP_PROTOCOLS.split(','),
+        allowedSwapProtocols: !ONE_INCH_ALLOWED_SWAP_PROTOCOLS
+          ? []
+          : ONE_INCH_ALLOWED_SWAP_PROTOCOLS.split(','),
       },
       chainIds: ONE_INCH_SWAP_CHAIN_IDS.split(',').map((id: string) => parseInt(id)),
     }

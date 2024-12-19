@@ -1,5 +1,5 @@
 import { SDKError } from '../../common/implementation/SDKError'
-import { SDKErrorType } from '../../common/types/SDKErrorType'
+import { SDKErrorType } from '../../common/enums/SDKErrorType'
 import { SerializationService } from '../../services/SerializationService'
 import { SwapErrorType } from '../enums/SwapErrorType'
 import { ISwapError, ISwapErrorData, __signature__ } from '../interfaces/ISwapError'

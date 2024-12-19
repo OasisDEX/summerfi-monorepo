@@ -6,7 +6,7 @@ import {
   OptimismChainNames,
 } from '../enums/ChainNames'
 import { ChainInfo } from './ChainInfo'
-import { ChainId } from '../aliases/ChainId'
+import { ChainId } from '../types/ChainId'
 
 /**
  * Chain definition per family

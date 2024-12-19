@@ -2,7 +2,7 @@ import { SerializationService } from '../../services/SerializationService'
 import { IPool } from '../interfaces'
 import { IPosition, IPositionData, __signature__ } from '../interfaces/IPosition'
 import { IPositionId } from '../interfaces/IPositionId'
-import { PositionType } from '../types/PositionType'
+import { PositionType } from '../enums/PositionType'
 
 /**
  * Type for the parameters of Position

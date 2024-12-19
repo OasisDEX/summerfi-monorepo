@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { IPool, PoolDataSchema } from '../../common/interfaces/IPool'
 import { IToken, isToken } from '../../common/interfaces/IToken'
-import { PoolType } from '../../common/types/PoolType'
+import { PoolType } from '../../common/enums/PoolType'
 import { ILendingPoolId, isLendingPoolId } from './ILendingPoolId'
 
 /**

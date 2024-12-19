@@ -17,8 +17,11 @@ import {
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
+  TransactionAction,
   type UsersActivity,
 } from '@summerfi/app-types'
+import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
+import { TransactionType } from '@summerfi/sdk-common'
 
 import { detailsLinks } from '@/components/layout/VaultOpenView/mocks'
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
@@ -36,7 +39,9 @@ import { TransakWidget } from '@/features/transak/components/TransakWidget/Trans
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 import { useAmount } from '@/hooks/use-amount'
+import { useAmountWithSwap } from '@/hooks/use-amount-with-swap'
 import { useClient } from '@/hooks/use-client'
+import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { usePosition } from '@/hooks/use-position'
 import { useRedirectToPosition } from '@/hooks/use-redirect-to-position'
 import { useTokenBalance } from '@/hooks/use-token-balance'
@@ -65,16 +70,25 @@ export const VaultOpenViewComponent = ({
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
 
+  const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
+
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   const { handleTokenSelectionChange, selectedTokenOption, tokenOptions } = useTokenSelector({
     vault,
+    chainId: vaultChainId,
   })
 
-  const { vaultToken, token, tokenBalance, tokenBalanceLoading } = useTokenBalance({
+  const {
+    vaultToken,
+    token: selectedToken,
+    tokenBalance: selectedTokenBalance,
+    tokenBalanceLoading: selectedTokenBalanceLoading,
+  } = useTokenBalance({
     publicClient,
     vaultTokenSymbol: vault.inputToken.symbol,
     tokenSymbol: selectedTokenOption.value,
+    chainId: vaultChainId,
   })
   const { userWalletAddress } = useUserWallet()
 
@@ -86,16 +100,16 @@ export const VaultOpenViewComponent = ({
     handleAmountChange,
     onBlur,
     onFocus,
-  } = useAmount({ vault })
+  } = useAmount({ vault, selectedToken })
+
   const {
     approvalType,
     setApprovalType,
-    setApprovalCustomValue,
     approvalCustomValue,
+    setApprovalCustomValue,
     sidebar,
     txHashes,
     removeTxHash,
-    vaultChainId,
     nextTransaction,
     backToInit,
     user,
@@ -103,13 +117,14 @@ export const VaultOpenViewComponent = ({
     setIsTransakOpen,
   } = useTransaction({
     vault,
+    vaultChainId,
     amount: amountParsed,
     manualSetAmount,
     publicClient,
     vaultToken,
-    token,
-    tokenBalance,
-    tokenBalanceLoading,
+    token: selectedToken,
+    tokenBalance: selectedTokenBalance,
+    tokenBalanceLoading: selectedTokenBalanceLoading,
     flow: 'open',
   })
 
@@ -141,31 +156,48 @@ export const VaultOpenViewComponent = ({
     return oneYearEarningsForecast
   }, [oneYearEarningsForecast])
 
-  const sidebarContent = nextTransaction?.label ? (
+  const { amountDisplayUSDWithSwap, fromTokenSymbol } = useAmountWithSwap({
+    vault,
+    vaultChainId,
+    amountDisplay,
+    amountDisplayUSD,
+    transactionType: TransactionAction.DEPOSIT,
+    selectedTokenOption,
+  })
+
+  const { transactionFee, loading: transactionFeeLoading } = useGasEstimation({
+    chainId: vaultChainId,
+    transaction: nextTransaction,
+    walletAddress: user?.address,
+  })
+
+  const sidebarContent = nextTransaction?.type ? (
     {
-      approve: (
+      [TransactionType.Approve]: (
         <ControlsApproval
-          vault={vault}
+          tokenSymbol={fromTokenSymbol}
           approvalType={approvalType}
           setApprovalType={setApprovalType}
           setApprovalCustomValue={setApprovalCustomValue}
           approvalCustomValue={approvalCustomValue}
-          tokenBalance={tokenBalance}
+          tokenBalance={selectedTokenBalance}
         />
       ),
-      deposit: (
+      [TransactionType.Deposit]: (
         <OrderInfoDeposit
-          vault={vault}
+          transaction={nextTransaction}
           amountParsed={amountParsed}
-          amountDisplayUSD={amountDisplayUSD}
+          amountDisplayUSD={amountDisplayUSDWithSwap}
+          transactionFee={transactionFee}
+          transactionFeeLoading={transactionFeeLoading}
         />
       ),
-      withdraw: null, // just for types, withdraw doesn't happen on open view
-    }[nextTransaction.label]
+      [TransactionType.Withdraw]: null, // just for types, withdraw doesn't happen on open view
+    }[nextTransaction.type]
   ) : (
     <ControlsDepositWithdraw
       amountDisplay={amountDisplay}
-      amountDisplayUSD={amountDisplayUSD}
+      amountDisplayUSD={amountDisplayUSDWithSwap}
       handleAmountChange={handleAmountChange}
       handleDropdownChange={handleTokenSelectionChange}
       options={tokenOptions}
@@ -173,8 +205,8 @@ export const VaultOpenViewComponent = ({
       onFocus={onFocus}
       onBlur={onBlur}
       tokenSymbol={selectedTokenOption.value}
-      tokenBalance={tokenBalance}
-      tokenBalanceLoading={tokenBalanceLoading}
+      tokenBalance={selectedTokenBalance}
+      tokenBalanceLoading={selectedTokenBalanceLoading}
       manualSetAmount={manualSetAmount}
       vault={vault}
       estimatedEarnings={estimatedEarnings}
@@ -197,7 +229,7 @@ export const VaultOpenViewComponent = ({
     customHeaderStyles:
       !isDrawerOpen && isMobile ? { padding: 'var(--general-space-12) 0' } : undefined,
     handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
-    goBackAction: nextTransaction?.label ? backToInit : undefined,
+    goBackAction: nextTransaction?.type ? backToInit : undefined,
     primaryButton: sidebar.primaryButton,
     footnote: (
       <>

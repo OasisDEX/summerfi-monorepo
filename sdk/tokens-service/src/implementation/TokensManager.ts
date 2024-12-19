@@ -1,4 +1,3 @@
-import type { Maybe } from '@summerfi/sdk-common/common/aliases'
 import type { IAddress, IChainInfo, IToken } from '@summerfi/sdk-common/common'
 import { TokensProviderType } from '@summerfi/sdk-common/tokens'
 import { ITokensManager, ITokensProvider } from '@summerfi/tokens-common'

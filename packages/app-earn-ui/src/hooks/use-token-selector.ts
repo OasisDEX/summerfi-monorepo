@@ -1,30 +1,38 @@
 'use client'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   type DropdownOption,
   type DropdownRawOption,
   type SDKVaultishType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
+import { ChainId } from '@summerfi/serverless-shared'
 
-type UseAmountProps = {
+type TokenSelectorProps = {
   vault: SDKVaultishType
+  chainId: number
 }
 
 // For swap testing purposes only adding testToken to dropdown
-const testTokens = ['USDBC', 'WSTETH']
+const testTokens: { [key: number]: TokenSymbolsList[] | undefined } = {
+  // base
+  [ChainId.BASE]: ['USDC', 'USDBC', 'WSTETH'],
+  // arbitrum
+  [ChainId.ARBITRUM]: ['USDC', 'WBTC', 'WSTETH'],
+}
 
 /**
  * Custom hook to manage token selection for a given vault.
  *
- * @param {UseAmountProps} props - The properties for the hook.
+ * @param {TokenSelectorProps} props - The properties for the hook.
  * @param {SDKVaultishType} props.vault - The vault object containing the input token.
+ * @param {number} props.chainId - The chain ID for the vault.
  * @returns {Object} An object containing token options, the selected token option, and a handler to change the selected token.
  * @returns {DropdownOption[]} return.tokenOptions - The list of token options available for selection.
  * @returns {DropdownOption} return.selectedTokenOption - The currently selected token option.
  * @returns {Function} return.handleTokenSelectionChange - The function to handle changes in token selection.
  */
-export const useTokenSelector = ({ vault }: UseAmountProps) => {
+export const useTokenSelector = ({ vault, chainId }: TokenSelectorProps) => {
   const tokenOptions = useMemo(() => {
     const options: DropdownOption[] = [
       ...[vault.inputToken.symbol].map((symbol) => ({
@@ -34,18 +42,20 @@ export const useTokenSelector = ({ vault }: UseAmountProps) => {
       })),
     ]
 
-    testTokens.forEach((testToken) => {
-      if (testToken !== vault.inputToken.symbol) {
+    const tokens = testTokens[chainId] ?? []
+
+    tokens.forEach((token) => {
+      if (token !== vault.inputToken.symbol) {
         options.push({
-          tokenSymbol: testToken as TokenSymbolsList,
-          label: testToken,
-          value: testToken,
+          tokenSymbol: token as TokenSymbolsList,
+          label: token,
+          value: token,
         })
       }
     })
 
     return options
-  }, [vault.inputToken.symbol])
+  }, [vault.inputToken.symbol, chainId])
 
   const [selectedTokenOption, setSelectedTokenOption] = useState(() => {
     if (tokenOptions.length === 0) {
@@ -56,6 +66,14 @@ export const useTokenSelector = ({ vault }: UseAmountProps) => {
       tokenOptions.find((option) => option.value === vault.inputToken.symbol) ?? tokenOptions[0]
     )
   })
+
+  // when changing tokenOptions validate the selected token
+  useEffect(() => {
+    setSelectedTokenOption((selectedOption) => {
+      return tokenOptions.find((option) => option.value === selectedOption.value) ?? tokenOptions[0]
+    })
+  }, [tokenOptions])
+
   const handleTokenSelectionChange = (option: DropdownRawOption) => {
     const value = tokenOptions.find((opt) => opt.value === option.value) ?? tokenOptions[0]
 

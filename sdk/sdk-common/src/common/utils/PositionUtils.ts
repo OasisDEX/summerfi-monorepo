@@ -4,7 +4,7 @@ import { ILendingPosition } from '../../lending-protocols/interfaces/ILendingPos
 import { LendingPositionType } from '../../lending-protocols/types/LendingPositionType'
 import { TokenAmount } from '../implementation/TokenAmount'
 import { ITokenAmount } from '../interfaces/ITokenAmount'
-import { PositionType } from '../types/PositionType'
+import { PositionType } from '../enums/PositionType'
 
 // TODO: add a proper internal position type only used by the simulator that can be instantiated
 // TODO implement Simulated position

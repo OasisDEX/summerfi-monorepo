@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { IPoolInfo, PoolInfoDataSchema } from '../../common/interfaces/IPoolInfo'
-import { PoolType } from '../../common/types/PoolType'
+import { PoolType } from '../../common/enums/PoolType'
 import { ICollateralInfo, isCollateralInfo } from './ICollateralInfo'
 import { IDebtInfo, isDebtInfo } from './IDebtInfo'
 import { ILendingPoolId, isLendingPoolId } from './ILendingPoolId'

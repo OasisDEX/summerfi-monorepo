@@ -1,5 +1,5 @@
 import { SerializationService } from '../../services/SerializationService'
-import { ChainId } from '../aliases/ChainId'
+import { ChainId } from '../types/ChainId'
 import { IChainInfo, IChainInfoData, __signature__ } from '../interfaces/IChainInfo'
 
 /**

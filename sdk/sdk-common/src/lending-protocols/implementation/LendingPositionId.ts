@@ -1,5 +1,5 @@
 import { PositionId } from '../../common/implementation/PositionId'
-import { PositionType } from '../../common/types/PositionType'
+import { PositionType } from '../../common/enums/PositionType'
 import { SerializationService } from '../../services/SerializationService'
 import { ILendingPositionIdData, __signature__ } from '../interfaces/ILendingPositionId'
 

@@ -65,7 +65,7 @@ export class StaticTokensProvider
 
     const tokenData = tokenMap.getBySymbol(params.symbol)
     if (!tokenData) {
-      throw new Error(`No token data found for symbol: ${params.symbol}`)
+      throw new Error(`No token data found for symbol: ${params.symbol} on chain: ${chainInfo}`)
     }
 
     return this._createToken({ chainInfo, tokenData })
@@ -82,7 +82,9 @@ export class StaticTokensProvider
 
     const tokenData = tokenMap.getByAddress(params.address.value)
     if (!tokenData) {
-      throw new Error(`No token data found for address: ${params.address.value}`)
+      throw new Error(
+        `No token data found for address: ${params.address.value} on chain: ${chainInfo}`,
+      )
     }
 
     return this._createToken({ chainInfo, tokenData })
@@ -99,7 +101,7 @@ export class StaticTokensProvider
 
     const tokenData = tokenMap.getByName(params.name)
     if (!tokenData) {
-      throw new Error(`No token data found for name: ${params.name}`)
+      throw new Error(`No token data found for name: ${params.name} on chain: ${chainInfo}`)
     }
 
     return this._createToken({ chainInfo, tokenData })
