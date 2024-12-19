@@ -25,6 +25,9 @@ export const defaultLocalConfig: LocalConfigState = {
     withSumr: true,
     dilutedValuation: '250000000',
   },
+  slippageConfig: {
+    slippage: '1.00',
+  },
 }
 
 const DeviceContext = createContext<LocalConfigType>({
@@ -45,6 +48,10 @@ export const LocalConfigContextProvider: FC<{
       value.sumrNetApyConfig && !isEmpty(value.sumrNetApyConfig)
         ? value.sumrNetApyConfig
         : defaultLocalConfig.sumrNetApyConfig,
+    slippageConfig:
+      value.slippageConfig && !isEmpty(value.slippageConfig)
+        ? value.slippageConfig
+        : defaultLocalConfig.slippageConfig,
   }
   const [state, dispatch] = useReducer(localConfigReducer, resolvedInitialState)
 

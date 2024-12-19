@@ -29,7 +29,6 @@ import { SUMR_CAP } from '@/constants/earn-protocol'
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useLocalConfig } from '@/contexts/LocalConfigContext/LocalConfigContext'
-import { UpdateNetApyPill } from '@/features/net-apy-updater/components/UpdateNetApyPill/UpdateNetApyPill'
 import { useTokenBalances } from '@/hooks/use-tokens-balances'
 
 type VaultsListViewProps = {
@@ -207,7 +206,6 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
             <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
               Choose a strategy
             </Text>
-            <UpdateNetApyPill />
           </div>
           {networkFilteredVaults.map((vault, vaultIndex) => (
             <VaultCard

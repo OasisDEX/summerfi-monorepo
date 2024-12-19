@@ -38,9 +38,16 @@ export const mapNumericInput = (value: string) => {
   const [int, dec] = value.split('.')
   const withDot = value.includes('.')
 
-  return withDot && !dec
-    ? `${new Intl.NumberFormat('en-US', inputFormatConfig).format(Number(int.replaceAll(',', '')))}.`
-    : new Intl.NumberFormat('en-US', inputFormatConfig).format(
-        Number(`${int.replaceAll(',', '')}${withDot ? `.${dec.replaceAll(',', '')}` || '' : ''}`),
-      )
+  // If we have a decimal point but no decimal digits yet (e.g., "123.")
+  if (withDot && !dec) {
+    return `${new Intl.NumberFormat('en-US', inputFormatConfig).format(Number(int.replaceAll(',', '')))}.`
+  }
+
+  // If we have decimal digits, preserve them exactly as typed
+  if (withDot && dec) {
+    return `${new Intl.NumberFormat('en-US', inputFormatConfig).format(Number(int.replaceAll(',', '')))}.${dec}`
+  }
+
+  // No decimal point, just format the integer
+  return new Intl.NumberFormat('en-US', inputFormatConfig).format(Number(int.replaceAll(',', '')))
 }

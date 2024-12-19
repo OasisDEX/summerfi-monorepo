@@ -43,7 +43,9 @@
   }
 
   @include media('<=l') {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: var(--general-space-8);
   }
 }
 
