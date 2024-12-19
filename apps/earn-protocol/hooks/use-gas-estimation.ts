@@ -34,7 +34,9 @@ export const useGasEstimation = ({
             account: _walletAddress,
             to: _transaction.transaction.target.value,
             data: _transaction.transaction.calldata,
-            // value: BigInt(_transaction.transaction.value),
+            value: _transaction.transaction.value
+              ? BigInt(_transaction.transaction.value)
+              : undefined,
           }),
           publicClient.getGasPrice(),
         ])
