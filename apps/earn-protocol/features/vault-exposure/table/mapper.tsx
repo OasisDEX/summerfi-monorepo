@@ -13,8 +13,8 @@ import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
 import { rebalanceActivitySorter } from '@/features/vault-exposure/table/sorter'
+import { getColor } from '@/helpers/get-color'
 import { getProtocolLabel } from '@/helpers/get-protocol-label'
-import { historicalChartprotocolsColorMap } from '@/helpers/vault-decorators/chart-ark-historical-data'
 
 export const vaultExposureMapper = (
   vault: SDKVaultType,
@@ -44,12 +44,7 @@ export const vaultExposureMapper = (
       content: {
         vault: (
           <TableCellNodes>
-            <TableRowAccent
-              backgroundColor={
-                historicalChartprotocolsColorMap[protocolLabel] ??
-                historicalChartprotocolsColorMap.DEFAULT
-              }
-            />
+            <TableRowAccent backgroundColor={getColor(protocolLabel)} />
             <Icon tokenName={item.inputToken.symbol as TokenSymbolsList} variant="s" />
             <TableCellText>{protocolLabel}</TableCellText>
           </TableCellNodes>

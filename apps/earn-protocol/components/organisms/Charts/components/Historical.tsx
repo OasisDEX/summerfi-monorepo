@@ -31,11 +31,11 @@ export type HistoricalChartProps = {
 }
 
 export const HistoricalChart = ({ data, tokenSymbol, position }: HistoricalChartProps) => {
-  const { netDeposited, netEarnings, netValue } = getPositionValues(position)
+  const { netDeposited, netEarnings } = getPositionValues(position)
   const legendBaseData = {
-    netValue: `$${formatCryptoBalance(netValue)}`,
+    netValue: `$${formatCryptoBalance(netEarnings)}`,
     depositedValue: `$${formatCryptoBalance(netDeposited)}`,
-    earnings: `$${formatCryptoBalance(netEarnings)}`,
+    earnings: `$${formatCryptoBalance(netEarnings.minus(netDeposited))}`,
     sumrEarned: `TBD`,
   }
   const [highlightedData, setHighlightedData] = useState<{

@@ -10,27 +10,13 @@ import { memoize } from 'lodash-es'
 
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { CHART_TIMESTAMP_FORMAT } from '@/constants/charts'
+import { getColor } from '@/helpers/get-color'
 import { getProtocolLabel } from '@/helpers/get-protocol-label'
 
 type BaseHistoricalChartsDataReturnType = {
   [key in TimeframesType]: {
     [key: string]: { [key: string]: number | string; timestamp: string }
   }
-}
-
-export const historicalChartprotocolsColorMap: { [key: string]: string } = {
-  DEFAULT: '#cccccc',
-  AaveV3: '#8A2D6E',
-  CompoundV3: '#00A37A',
-  Fluid: '#005BB5',
-  Morpho: '#CC5A55',
-  Gearbox: '#c37227',
-  'Compound V3': '#4CAF50',
-  'Aave V3': '#FF5722',
-  'Morpho Gauntlet USDC Core': '#3F51B5',
-  'Morpho Re7 USDC': '#FFC107',
-  'Morpho Gauntlet USDC Prime': '#9C27B0',
-  'Morpho Steakhouse USDC': '#FF9800',
 }
 
 const emptyChartRaw = {
@@ -266,12 +252,7 @@ export const decorateWithArkHistoricalChartsData = (
 
         return {
           ...acc,
-          [arkUniqueName]:
-            arkUniqueName in historicalChartprotocolsColorMap
-              ? historicalChartprotocolsColorMap[
-                  arkUniqueName as keyof typeof historicalChartprotocolsColorMap
-                ]
-              : historicalChartprotocolsColorMap.DEFAULT,
+          [arkUniqueName]: getColor(arkUniqueName),
         }
       }, {})
 
