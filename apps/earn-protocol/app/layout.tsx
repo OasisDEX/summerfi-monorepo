@@ -12,7 +12,10 @@ import { accountKitCookieStateName } from '@/constants/account-kit-cookie-state-
 import { forksCookieName } from '@/constants/forks-cookie-name'
 import { safeParseJson } from '@/constants/safe-parse-json'
 import { DeviceProvider } from '@/contexts/DeviceContext/DeviceContext'
-import { sumrNetApyConfigCookieName } from '@/contexts/LocalConfigContext/constants'
+import {
+  slippageConfigCookieName,
+  sumrNetApyConfigCookieName,
+} from '@/contexts/LocalConfigContext/constants'
 import { LocalConfigContextProvider } from '@/contexts/LocalConfigContext/LocalConfigContext'
 import { fontInter } from '@/helpers/fonts'
 import { getServerSideCookies } from '@/helpers/get-server-side-cookies'
@@ -34,6 +37,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const accountKitState = safeParseJson(getServerSideCookies(accountKitCookieStateName, cookie))
   const deviceType = getServerSideCookies('deviceType', cookie) as DeviceType
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
+  const slippageConfig = safeParseJson(getServerSideCookies(slippageConfigCookieName, cookie))
 
   const chainId: number | undefined = accountKitState.state?.chainId
   const forkRpcUrl: string | undefined = chainId ? forks[chainId] : undefined
@@ -52,7 +56,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <AlchemyAccountsProvider initialState={accountKitInitializedState}>
           <NextIntlClientProvider messages={messages}>
             <DeviceProvider value={deviceType}>
-              <LocalConfigContextProvider value={{ sumrNetApyConfig }}>
+              <LocalConfigContextProvider value={{ sumrNetApyConfig, slippageConfig }}>
                 <MasterPage>{children}</MasterPage>
               </LocalConfigContextProvider>
             </DeviceProvider>

@@ -5,6 +5,7 @@ import { Button, Navigation, SkeletonLine, SupportBox } from '@summerfi/app-earn
 import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
 
+import { NavConfig } from '@/features/nav-config/components/NavConfig/NavConfig'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
 const WalletLabel = dynamic(() => import('../../molecules/WalletLabel/WalletLabel'), {
@@ -75,6 +76,7 @@ export const NavigationWrapper: FC = () => {
         },
       ]}
       walletConnectionComponent={<WalletLabel />}
+      configComponent={<NavConfig />}
       onLogoClick={() => {
         // because router will use base path...
         window.location.href = '/'

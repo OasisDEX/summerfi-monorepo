@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react'
 import clsx from 'clsx'
 import Link from 'next/link'
 
@@ -9,8 +10,9 @@ import { INTERNAL_LINKS } from '@/helpers/application-links.ts'
 import navigationActionsStyles from '@/components/layout/Navigation/NavigationActions.module.scss'
 
 interface NavigationActionsProps {
-  signUpComponent?: React.ReactNode
-  walletConnectionComponent?: React.ReactNode
+  signUpComponent?: ReactNode
+  walletConnectionComponent?: ReactNode
+  configComponent?: ReactNode
   toggleMobileMenu: () => void
 }
 
@@ -18,6 +20,7 @@ export const NavigationActions = ({
   walletConnectionComponent,
   signUpComponent,
   toggleMobileMenu,
+  configComponent,
 }: NavigationActionsProps) => {
   return (
     <div>
@@ -29,6 +32,7 @@ export const NavigationActions = ({
         </Link>
         {signUpComponent}
         {walletConnectionComponent}
+        {configComponent}
       </div>
       <div className={navigationActionsStyles.mobileMenuButton}>
         <Button
@@ -39,6 +43,7 @@ export const NavigationActions = ({
           <div className={navigationActionsStyles.gradientInnerCircle} />
           <Icon iconName="menu" size={24} color="var(--earn-protocol-secondary-70)" />
         </Button>
+        {configComponent}
       </div>
     </div>
   )
