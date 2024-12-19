@@ -96,7 +96,6 @@ export const Navigation: FC<EarnNavigationProps> = ({
               currentPath={currentPath}
               toggleMobileMenu={toggleMobileMenu}
               walletConnectionComponent={walletConnectionComponent}
-              configComponent={configComponent}
               signUpComponent={signupComponent}
             />
           </MobileDrawerDefaultWrapper>
