@@ -7,13 +7,13 @@ import Link from 'next/link'
 
 import { accountType } from '@/account-kit/config'
 import { claimDelegateTerms } from '@/features/claim-and-delegate/components/ClaimDelegateAcceptanceStep/terms'
-import { useVisibleParagraph } from '@/features/claim-and-delegate/components/ClaimDelegateAcceptanceStep/useVisibleParagraph'
 import {
   type ClaimDelegateReducerAction,
   type ClaimDelegateState,
   ClaimDelegateSteps,
 } from '@/features/claim-and-delegate/types'
 import { useUserWallet } from '@/hooks/use-user-wallet'
+import { useVisibleParagraph } from '@/hooks/useVisibleParagraph'
 
 import classNames from './ClaimDelegateAcceptanceStep.module.scss'
 
