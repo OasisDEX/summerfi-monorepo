@@ -1,4 +1,9 @@
-import { fetchForecastData, parseForecastDatapoints, Text } from '@summerfi/app-earn-ui'
+import {
+  fetchForecastData,
+  getPositionValues,
+  parseForecastDatapoints,
+  Text,
+} from '@summerfi/app-earn-ui'
 import { type PositionForecastAPIResponse, type SDKNetwork } from '@summerfi/app-types'
 import {
   humanNetworktoSDKNetwork,
@@ -79,6 +84,11 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     arksList: vault.arks,
   })
 
+  const { netEarnings } = getPositionValues({
+    positionData: position,
+    vaultData: vault,
+  })
+
   const [positionHistory, positionForecastResponse] = await Promise.all([
     await getPositionHistory({
       network: parsedNetwork,
@@ -88,7 +98,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     await fetchForecastData({
       fleetAddress: vault.id as `0x${string}`,
       chainId: Number(parsedNetworkId),
-      amount: Number(position.amount.amount),
+      amount: Number(netEarnings.toFixed(position.amount.token.decimals)),
     }),
   ])
 

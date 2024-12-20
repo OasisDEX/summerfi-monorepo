@@ -3,17 +3,28 @@ export interface SumrNetApyConfig {
   dilutedValuation: string
 }
 
-export enum LocalConfigDispatchActions {
-  UPDATE_SUMR_NET_APY_CONFIG = 'UPDATE_SUMR_NET_APY_CONFIG',
+export interface SlippageConfig {
+  slippage: string
 }
 
-export type LocalConfigActions = {
-  type: LocalConfigDispatchActions.UPDATE_SUMR_NET_APY_CONFIG
-  payload: SumrNetApyConfig
+export enum LocalConfigDispatchActions {
+  UPDATE_SUMR_NET_APY_CONFIG = 'UPDATE_SUMR_NET_APY_CONFIG',
+  UPDATE_SLIPPAGE_CONFIG = 'UPDATE_SLIPPAGE_CONFIG',
 }
+
+export type LocalConfigActions =
+  | {
+      type: LocalConfigDispatchActions.UPDATE_SUMR_NET_APY_CONFIG
+      payload: SumrNetApyConfig
+    }
+  | {
+      type: LocalConfigDispatchActions.UPDATE_SLIPPAGE_CONFIG
+      payload: SlippageConfig
+    }
 
 export interface LocalConfigState {
   sumrNetApyConfig: SumrNetApyConfig
+  slippageConfig: SlippageConfig
 }
 
 export const localConfigReducer = (prevState: LocalConfigState, action: LocalConfigActions) => {
@@ -25,6 +36,14 @@ export const localConfigReducer = (prevState: LocalConfigState, action: LocalCon
           ...prevState.sumrNetApyConfig,
           ...action.payload,
           dilutedValuation: action.payload.dilutedValuation.replaceAll(',', ''),
+        },
+      }
+    case LocalConfigDispatchActions.UPDATE_SLIPPAGE_CONFIG:
+      return {
+        ...prevState,
+        slippageConfig: {
+          ...prevState.slippageConfig,
+          slippage: action.payload.slippage.replaceAll(',', ''),
         },
       }
     default:

@@ -1,5 +1,5 @@
 import { Box, getScannerUrl, Icon, Text } from '@summerfi/app-earn-ui'
-import { type EarnTransactionTypes } from '@summerfi/app-types'
+import { type TransactionType } from '@summerfi/sdk-common'
 import Link from 'next/link'
 
 import transactionsStyles from './TransactionHashPill.module.scss'
@@ -10,7 +10,7 @@ export const TransactionHashPill = ({
   removeTxHash,
 }: {
   transactionData: {
-    type: EarnTransactionTypes
+    type: TransactionType
     hash: string
   }
   chainId: number

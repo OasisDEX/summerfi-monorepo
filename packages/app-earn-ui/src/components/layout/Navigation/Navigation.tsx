@@ -28,6 +28,7 @@ export interface EarnNavigationProps {
     onClick?: () => void
   })[]
   walletConnectionComponent?: ReactNode
+  configComponent?: ReactNode
   signupComponent?: ReactNode
   onLogoClick?: () => void
 }
@@ -38,6 +39,7 @@ export const Navigation: FC<EarnNavigationProps> = ({
   links,
   currentPath,
   walletConnectionComponent,
+  configComponent,
   onLogoClick,
   signupComponent,
 }) => {
@@ -74,6 +76,7 @@ export const Navigation: FC<EarnNavigationProps> = ({
           walletConnectionComponent={walletConnectionComponent}
           signUpComponent={signupComponent}
           toggleMobileMenu={toggleMobileMenu}
+          configComponent={configComponent}
         />
       </header>
       {isMobile && (

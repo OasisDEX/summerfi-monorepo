@@ -101,7 +101,7 @@ export const PerformanceChart = ({ data }: PerformanceChartProps) => {
           <YAxis
             strokeWidth={0}
             tickFormatter={(label: string) => `${formatChartCryptoValue(Number(label))}`}
-            domain={['dataMin', 'dataMax + 5']}
+            domain={[0, (max: number) => Math.min(max * 1.1)]}
           />
           <Tooltip
             formatter={(val) =>

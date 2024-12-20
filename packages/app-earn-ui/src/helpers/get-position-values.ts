@@ -7,15 +7,16 @@ export const getPositionValues = (position: {
 }) => {
   const netValue = new BigNumber(position.positionData.amount.amount)
 
-  const netDeposited = new BigNumber(
-    position.positionData.deposits.reduce((acc, { amount }) => acc.plus(amount), new BigNumber(0)),
-  ).minus(
-    position.positionData.withdrawals.reduce(
-      (acc, { amount }) => acc.plus(amount),
-      new BigNumber(0),
-    ),
+  const depositsSum = position.positionData.deposits.reduce(
+    (acc, { amount }) => acc.plus(amount),
+    new BigNumber(0),
+  )
+  const withdrawalsSum = position.positionData.withdrawals.reduce(
+    (acc, { amount }) => acc.plus(amount), // these are NEGATIVE values
+    new BigNumber(0),
   )
 
+  const netDeposited = depositsSum.plus(withdrawalsSum)
   const netEarnings = netValue.minus(netDeposited)
   const inputTokenPrice = new BigNumber(position.vaultData.inputTokenPriceUSD as string)
 

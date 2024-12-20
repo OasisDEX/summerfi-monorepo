@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import { useUser } from '@account-kit/react'
 import { type SDKSupportedChain } from '@summerfi/app-types'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
 import { Address, getChainInfoByChainId, User, Wallet } from '@summerfi/sdk-client-react'
 
 import { useAppSDK } from '@/hooks/use-app-sdk'
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 export const usePosition = ({
   vaultId,
@@ -15,14 +15,14 @@ export const usePosition = ({
 }) => {
   const [position, setPosition] = useState<IArmadaPosition>()
   const { getUserPosition } = useAppSDK()
-  const user = useUser()
+  const { userWalletAddress } = useUserWallet()
 
   useEffect(() => {
-    if (!user) return
+    if (!userWalletAddress) return
 
     const wallet = Wallet.createFrom({
       address: Address.createFromEthereum({
-        value: user.address.toLowerCase(),
+        value: userWalletAddress.toLowerCase(),
       }),
     })
     const chainInfo = getChainInfoByChainId(chainId)
@@ -35,7 +35,7 @@ export const usePosition = ({
       fleetAddress: vaultId,
       user: sdkUser,
     }).then(setPosition)
-  }, [chainId, getUserPosition, user, vaultId])
+  }, [chainId, getUserPosition, userWalletAddress, vaultId])
 
   return position
 }

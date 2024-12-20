@@ -10,6 +10,7 @@ import type {
   ClaimDelegateState,
   ClamDelegateExternalData,
 } from '@/features/claim-and-delegate/types'
+import { PortfolioTabs } from '@/features/portfolio/types'
 
 import classNames from './ClaimDelegateStakeDelegateCompletedSubstep.module.scss'
 
@@ -119,7 +120,7 @@ export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
           $SUMR voting power delegated to make Lazy Summer Protocol Governance decisions.
         </Text>
       </Card>
-      <Link href={`/earn/portfolio/${walletAddress}`}>
+      <Link href={`/earn/portfolio/${walletAddress}?tab=${PortfolioTabs.REWARDS}`}>
         <Button variant="primarySmall">Go to $SUMR Overview</Button>
       </Link>
     </div>

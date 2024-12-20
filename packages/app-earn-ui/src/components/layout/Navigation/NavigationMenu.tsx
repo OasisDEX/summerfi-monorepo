@@ -40,6 +40,7 @@ export const NavigationMenu = ({ links, currentPath }: NavigationMenuType) => {
                 className={clsx({
                   [navigationMenuStyles.active]: link.link === currentPath,
                 })}
+                prefetch
               >
                 {link.label}
               </Link>

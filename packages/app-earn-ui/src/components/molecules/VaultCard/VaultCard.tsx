@@ -1,7 +1,7 @@
 'use client'
 
 import { type SDKVaultishType } from '@summerfi/app-types'
-import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatDecimalAsPercent, ten } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 
@@ -29,6 +29,7 @@ export const VaultCard = ({
   protocol,
   inputToken,
   totalValueLockedUSD,
+  inputTokenBalance,
   withHover,
   secondary = false,
   selected = false,
@@ -61,7 +62,10 @@ export const VaultCard = ({
   }
 
   const parsedApr = formatDecimalAsPercent(new BigNumber(calculatedApr).div(100))
-  const parsedTotalValueLockedUSD = formatCryptoBalance(new BigNumber(totalValueLockedUSD))
+  const parsedTotalValueLocked = formatCryptoBalance(
+    new BigNumber(String(inputTokenBalance)).div(ten.pow(inputToken.decimals)),
+  )
+  const parsedTotalValueLockedUSD = formatCryptoBalance(new BigNumber(String(totalValueLockedUSD)))
 
   return (
     <GradientBox withHover={withHover} selected={selected} onClick={handleVaultClick}>
@@ -88,6 +92,9 @@ export const VaultCard = ({
               Total assets
             </Text>
             <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+              {parsedTotalValueLocked}&nbsp;{inputToken.symbol}
+            </Text>
+            <Text variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
               ${parsedTotalValueLockedUSD}
             </Text>
           </div>

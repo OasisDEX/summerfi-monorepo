@@ -153,7 +153,7 @@ export const Sidebar: FC<SidebarProps> = ({
           </Button>
         )}
         {primaryButton.url && (
-          <Link href={primaryButton.url} onClick={primaryButton.action}>
+          <Link href={primaryButton.url} onClick={primaryButton.action} prefetch>
             <Button variant="primaryLarge" disabled={primaryButton.disabled}>
               {labelElement}
             </Button>

@@ -23,7 +23,7 @@ const SumrAvailableToClaim = () => {
         valueSize: 'large',
       }}
       actionable={
-        <Link href={`/earn/claim/${walletAddress}`} target="_blank">
+        <Link href={`/earn/claim/${walletAddress}`} prefetch>
           <Button variant="primarySmall">Claim</Button>
         </Link>
       }
