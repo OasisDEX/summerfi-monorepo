@@ -4,12 +4,17 @@ import { formatCryptoBalance, formatDecimalAsPercent, formatFiatBalance } from '
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
+import { SUMR_CAP } from '@/constants/earn-protocol'
+import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
+
 import classNames from './PortfolioRewardsCards.module.scss'
 
 const SumrAvailableToClaim = () => {
   const { walletAddress } = useParams()
+  const [sumrNetApyConfig] = useSumrNetApyConfig()
+  const assumedSumrPriceRaw = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
   const rawSumr = 11
-  const rawSumrUSD = 23
+  const rawSumrUSD = formatFiatBalance(rawSumr * assumedSumrPriceRaw)
   const sumrAmount = formatCryptoBalance(rawSumr)
   const sumrAmountUSD = formatFiatBalance(rawSumrUSD)
 
@@ -64,27 +69,34 @@ const StakedAndDelegatedSumr = () => {
 }
 
 const YourTotalSumr = () => {
+  const [sumrNetApyConfig] = useSumrNetApyConfig()
+  const assumedMarketCap = formatCryptoBalance(sumrNetApyConfig.dilutedValuation)
+
+  const assumedSumrPriceRaw = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
+  const assumedSumrPrice = formatFiatBalance(assumedSumrPriceRaw)
+
   const rawTotalSumr = 0
-  const rawTotalSumrUSD = 0
+  const rawTotalSumrUSD = formatFiatBalance(rawTotalSumr * assumedSumrPriceRaw)
 
   const totalSumr = formatCryptoBalance(rawTotalSumr)
   const totalSumrUSD = formatFiatBalance(rawTotalSumrUSD)
-
-  const assumedMarketCap = formatCryptoBalance(500000000)
 
   return (
     <DataModule
       dataBlock={{
         title: 'Your Total $SUMR',
         value: totalSumr,
-        subValue: totalSumrUSD,
+        subValue: `$${totalSumrUSD}`,
         titleSize: 'medium',
         valueSize: 'large',
       }}
       actionable={
         <Text variant="p3semi" style={{ color: 'var(--earn-protocol-success-100)' }}>
           Assumed Market Cap: {assumedMarketCap}
-          <span style={{ color: 'var(--earn-protocol-secondary-60)' }}> • 1 $SUMR = $4.67</span>
+          <span style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+            {' '}
+            • 1 $SUMR = ${assumedSumrPrice}
+          </span>
         </Text>
       }
     />
