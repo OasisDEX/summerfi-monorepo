@@ -22,16 +22,17 @@ import classNames from './TransakExchange.module.scss'
 interface TransakExchangeProps {
   dispatch: Dispatch<TransakReducerAction>
   state: TransakReducerState
+  injectedNetwork?: string
 }
 
-export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state }) => {
+export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state, injectedNetwork }) => {
   const params = useParams()
   const [showDetails, setShowDetails] = useState(false)
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
 
   const { network: rawNetwork } = params
-  const network = rawNetwork as TransakSupportedNetworksNames
+  const network = (injectedNetwork ?? rawNetwork) as TransakSupportedNetworksNames
 
   const {
     fiatAmount,

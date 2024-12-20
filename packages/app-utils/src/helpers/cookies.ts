@@ -1,7 +1,7 @@
 /**
  * Sets a cookie with the specified name, value, and expiration days.
  *
- * @param {string} name - The name of the cookie.
+ * @param {string} cookieName - The name of the cookie.
  * @param {string} value - The value of the cookie.
  * @param {number} days - The number of days until the cookie expires.
  * @param {Object} [options] - Optional settings for the cookie.
@@ -10,7 +10,7 @@
  * @param {'Strict' | 'Lax' | 'None'} [options.sameSite] - The SameSite attribute of the cookie.
  */
 export const setCookie = (
-  name: string,
+  cookieName: string,
   value: string,
   days: number,
   options?: {
@@ -19,7 +19,9 @@ export const setCookie = (
     sameSite?: 'Strict' | 'Lax' | 'None'
   },
 ): void => {
-  if (!name || !value || days < 0) {
+  if (typeof window === 'undefined') return // early return for non-browser environments
+
+  if (!cookieName || !value || days < 0) {
     throw new Error('Invalid cookie parameters')
   }
 
@@ -32,7 +34,7 @@ export const setCookie = (
   const secure = options?.secure ? 'Secure;' : ''
   const sameSite = options?.sameSite ? `SameSite=${options.sameSite};` : ''
 
-  document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; ${expires}; ${path}; ${secure} ${sameSite}`
+  document.cookie = `${encodeURIComponent(cookieName)}=${encodeURIComponent(value)}; ${expires}; ${path}; ${secure} ${sameSite}`
 }
 
 /**
@@ -42,6 +44,8 @@ export const setCookie = (
  * @returns {string | null} - The value of the cookie, or null if not found.
  */
 export const getCookie = (cookieName: string): string | null => {
+  if (typeof window === 'undefined') return null // early return for non-browser environments
+
   const cookies = document.cookie.split(';')
 
   for (const cookie of cookies) {

@@ -29,6 +29,7 @@ import { capitalize } from 'lodash-es'
 import { useRouter } from 'next/navigation'
 
 import { accountType, SDKChainIdToAAChainMap } from '@/account-kit/config'
+import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
 import { getApprovalTx } from '@/helpers/get-approval-tx'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -60,6 +61,7 @@ export const useTransaction = ({
   tokenBalanceLoading,
   flow,
 }: UseTransactionParams) => {
+  const [slippageConfig] = useSlippageConfig()
   const { refresh: refreshView } = useRouter()
   const user = useUser()
   const { getDepositTX, getWithdrawTX } = useAppSDK()
@@ -234,8 +236,7 @@ export const useTransaction = ({
           toToken,
           fleetAddress: vault.id,
           chainInfo: getChainInfoByChainId(vaultChainId),
-          // TODO: we should update slippage once it'll be configurable from the wallet dropdown menu
-          slippage: 1, // 1%
+          slippage: Number(slippageConfig.slippage),
         })
 
         if (transactionsList.length === 0) {
@@ -264,6 +265,7 @@ export const useTransaction = ({
     vaultChainId,
     getWithdrawTX,
     setSidebarError,
+    slippageConfig.slippage,
   ])
 
   const sidebarPrimaryButton = useMemo(() => {

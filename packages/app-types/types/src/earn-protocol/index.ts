@@ -47,7 +47,7 @@ type VaultCustomFields = {
   // custom fields for vaults - decorated within the earn/lp apps
   customFields?: EarnAppFleetCustomConfigType & VaultWithChartsData & VaultArkInterestRateMap
 }
-export type SDKVaultsListType = GetVaultsQuery['vaults'] & VaultCustomFields
+export type SDKVaultsListType = (GetVaultsQuery['vaults'][number] & VaultCustomFields)[]
 export type SDKVaultType = Exclude<GetVaultQuery['vault'] & VaultCustomFields, null | undefined>
 export type SDKGlobalRebalancesType = GetGlobalRebalancesQuery['rebalances']
 export type SDKGlobalRebalanceType = SDKGlobalRebalancesType[0]

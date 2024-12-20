@@ -15,12 +15,14 @@ import {
 import { type CategoricalChartState } from 'recharts/types/chart/types'
 
 import { PerformanceLegend } from '@/components/organisms/Charts/components/PerformanceLegend'
+import { historicalPerformanceLabelMap } from '@/components/organisms/Charts/labels'
 import { CHART_TIMESTAMP_FORMAT } from '@/constants/charts'
 import { formatChartCryptoValue } from '@/features/forecast/chart-formatters'
 
 export type PerformanceChartProps = {
   data: unknown[]
   timeframe: TimeframesType
+  inputToken: string
 }
 
 const CustomizedCross = (props: CategoricalChartState) => {
@@ -77,7 +79,7 @@ const CustomizedCross = (props: CategoricalChartState) => {
   )
 }
 
-export const PerformanceChart = ({ data }: PerformanceChartProps) => {
+export const PerformanceChart = ({ data, inputToken }: PerformanceChartProps) => {
   return (
     <RechartResponsiveWrapper>
       <ResponsiveContainer width="100%" height="90%">
@@ -104,11 +106,12 @@ export const PerformanceChart = ({ data }: PerformanceChartProps) => {
             domain={[0, (max: number) => Math.min(max * 1.1)]}
           />
           <Tooltip
-            formatter={(val) =>
+            formatter={(val, valueName) => [
               Array.isArray(val)
-                ? val.map((v) => `${formatChartCryptoValue(Number(v))}`).join(' - ')
-                : `${formatChartCryptoValue(Number(val))}`
-            }
+                ? `${val.map((v) => `${formatChartCryptoValue(Number(v))}`).join(' - ')} ${inputToken}`
+                : `${formatChartCryptoValue(Number(val))} ${inputToken}`,
+              historicalPerformanceLabelMap[valueName] ?? valueName,
+            ]}
             labelFormatter={(label) => dayjs(label).format(CHART_TIMESTAMP_FORMAT)}
             wrapperStyle={{
               zIndex: 1000,
