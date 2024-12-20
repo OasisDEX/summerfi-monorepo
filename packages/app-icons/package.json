@@ -11,8 +11,9 @@
   "sideEffects": false,
   "scripts": {
     "lint": "eslint *.ts*",
-    "dev": "vite build -w true --mode=dev",
-    "build": "vite build -w false --mode=prod",
+    "dev": "pnpm vite build -w true --mode=dev",
+    "build": "pnpm vite build -w false --mode=prod",
+    "prebuild": "pnpm vite build -w false --mode=prod",
     "clean": "rm -rf dist"
   },
   "dependencies": {

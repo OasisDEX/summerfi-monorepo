@@ -195,9 +195,6 @@ importers:
       '@summerfi/summer-protocol-db':
         specifier: workspace:*
         version: link:../../packages/summer-protocol-db
-      '@tabler/icons-react':
-        specifier: ^3.19.0
-        version: 3.19.0(react@18.3.1)
       '@tanstack/react-query':
         specifier: ^5.51.1
         version: 5.51.1(react@18.3.1)
@@ -382,9 +379,6 @@ importers:
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../packages/serverless-shared
-      '@tabler/icons-react':
-        specifier: ^3.19.0
-        version: 3.19.0(react@18.3.1)
       browser-detect:
         specifier: ^0.2.28
         version: 0.2.28
@@ -812,9 +806,6 @@ importers:
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../serverless-shared
-      '@tabler/icons-react':
-        specifier: ^3.19.0
-        version: 3.19.0(react@18.3.1)
       bignumber.js:
         specifier: ^9.1.2
         version: 9.1.2
@@ -1147,9 +1138,6 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1
     devDependencies:
-      '@tabler/icons-react':
-        specifier: ^3.19.0
-        version: 3.19.0(react@18.3.1)
       '@types/node':
         specifier: ^20.14.2
         version: 20.14.2
@@ -1277,6 +1265,12 @@ importers:
 
   packages/app-utils:
     dependencies:
+      '@summerfi/rays-db':
+        specifier: workspace:*
+        version: link:../rays-db
+      '@summerfi/serverless-shared':
+        specifier: workspace:*
+        version: link:../serverless-shared
       bignumber.js:
         specifier: ^9.1.2
         version: 9.1.2
@@ -16661,9 +16655,11 @@ packages:
     dependencies:
       '@tabler/icons': 3.19.0
       react: 18.3.1
+    dev: false
 
   /@tabler/icons@3.19.0:
     resolution: {integrity: sha512-A4WEWqpdbTfnpFEtwXqwAe9qf9sp1yRPvzppqAuwcoF0q5YInqB+JkJtSFToCyBpPVeLxJUxxkapLvt2qQgnag==}
+    dev: false
 
   /@tanstack/form-core@0.33.0:
     resolution: {integrity: sha512-ouu1JVwLZgfPkIdIq3TWIZs++KpLOo8Bx4tXYOc/1KwA9qUQ0Iv/+Y6GfiC4wMcUzGCtLKOww84eZ8Qdge3ZmQ==}

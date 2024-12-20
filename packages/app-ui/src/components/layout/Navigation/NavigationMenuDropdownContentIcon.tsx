@@ -14,8 +14,6 @@ export function NavigationMenuDropdownContentIcon({
   image,
   position,
   tokens,
-  customIcon: CustomIcon,
-  customIconProps,
 }: NavigationMenuDropdownContentIconProps) {
   const isGlobal = position === 'global'
   const iconForceSize = isGlobal && tokens?.length === 1 ? 40 : 30
@@ -30,15 +28,14 @@ export function NavigationMenuDropdownContentIcon({
         },
       )}
     >
-      {(icon ?? CustomIcon) && (
+      {icon && (
         <div
           className={clsx(
             'nav-icon',
             navigationMenuDropdownContentIconStyles.navigationMenuDropdownContentIcon,
           )}
         >
-          {icon && <Icon iconName={icon} size={20} />}
-          {CustomIcon && <CustomIcon {...customIconProps} size={customIconProps?.size ?? 20} />}
+          <Icon iconName={icon} size={20} />
         </div>
       )}
       {image && <Image alt={tokens?.join('-') ?? ''} src={image} width={26} />}

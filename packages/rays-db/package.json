@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest --passWithNoTests",
     "build": "tsc -b --preserveWatchOutput -v tsconfig.build.json",
+    "prebuild": "tsc -b --preserveWatchOutput -v tsconfig.build.json",
     "dev": "tsc -b --preserveWatchOutput -w tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

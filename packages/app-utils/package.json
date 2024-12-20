@@ -21,8 +21,9 @@
   ],
   "scripts": {
     "lint": "eslint *.ts*",
-    "dev": "pnpm vite build -w true",
-    "build": "pnpm vite build -w false",
+    "dev": "pnpm vite build -w true --mode=dev",
+    "build": "pnpm vite build -w false --mode=prod",
+    "prebuild": "pnpm vite build -w false --mode=prod",
     "clean": "rm -rf dist"
   },
   "devDependencies": {
@@ -41,6 +42,8 @@
     "access": "public"
   },
   "peerDependencies": {
+    "@summerfi/rays-db": "workspace:*",
+    "@summerfi/serverless-shared": "workspace:*",
     "bignumber.js": "^9.1.2",
     "dayjs": "^1.11.12",
     "lodash-es": "^4.17.1",

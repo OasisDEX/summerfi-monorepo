@@ -1,13 +1,9 @@
 'use client'
 
 import { type FC, type ReactNode } from 'react'
-import {
-  IconBrandDiscordFilled,
-  IconBrandGithubFilled,
-  IconBrandTwitterFilled,
-} from '@tabler/icons-react'
 import Link from 'next/link'
 
+import { Icon } from '@/components/atoms/Icon/Icon'
 import { ProxyLinkComponent } from '@/components/atoms/ProxyLinkComponent/ProxyLinkComponent'
 import { Text } from '@/components/atoms/Text/Text'
 import { EXTERNAL_LINKS, INTERNAL_LINKS } from '@/helpers/application-links'
@@ -110,17 +106,17 @@ export const Footer: FC<FooterProps> = ({ logo, newsletter, languageSwitcher }) 
         <ul className={footerStyles.socialsList}>
           <li>
             <Link href="https://twitter.com/summerfinance_" target="_blank" rel="noreferrer">
-              <IconBrandTwitterFilled size={20} />
+              <Icon iconName="brand_icon_twitter" size={20} />
             </Link>
           </li>
           <li>
             <Link href="https://discord.com/invite/summerfi" target="_blank" rel="noreferrer">
-              <IconBrandDiscordFilled size={20} />
+              <Icon iconName="brand_icon_discord" size={20} />
             </Link>
           </li>
           <li>
             <Link href="https://github.com/OasisDEX" target="_blank" rel="noreferrer">
-              <IconBrandGithubFilled size={20} />
+              <Icon iconName="brand_icon_github" size={20} />
             </Link>
           </li>
         </ul>
