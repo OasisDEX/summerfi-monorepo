@@ -2,6 +2,8 @@ import { useMemo } from 'react'
 import { type DropdownOption, type SDKVaultishType, TransactionAction } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 
+import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
+
 import { useSwapQuote } from './use-swap-quote'
 
 type UseAmountProps = {
@@ -21,6 +23,7 @@ export const useAmountWithSwap = ({
   transactionType,
   selectedTokenOption,
 }: UseAmountProps) => {
+  const [slippageConfig] = useSlippageConfig()
   const fromTokenSymbol: string = useMemo(() => {
     return {
       [TransactionAction.DEPOSIT]: selectedTokenOption.value,
@@ -40,7 +43,7 @@ export const useAmountWithSwap = ({
     fromTokenSymbol,
     fromAmount: amountDisplay,
     toTokenSymbol,
-    slippage: 0.01,
+    slippage: Number(slippageConfig.slippage),
   })
 
   const amountDisplayUSDWithSwap = useMemo(() => {
