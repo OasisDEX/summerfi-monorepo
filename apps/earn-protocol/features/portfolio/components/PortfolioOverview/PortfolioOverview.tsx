@@ -4,32 +4,30 @@ import Link from 'next/link'
 
 import { type PortfolioPositionsList } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
 import { PositionHistoricalChart } from '@/components/organisms/Charts/PositionHistoricalChart'
-import { CryptoUtilities } from '@/features/crypto-utilities/components/CryptoUtilities/CryptoUtilities'
-import { NewsAndUpdates } from '@/features/news-and-updates/components/NewsAndUpdates/NewsAndUpdates'
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
 
-const dummyNewsAndUpdatesItems = [
-  {
-    title: 'SUMR Market Cap hits 10b',
-    timestamp: 1729236816761,
-    link: './',
-  },
-  {
-    title: 'SUMR Market Cap hits 10b',
-    timestamp: 1729236816762,
-    link: './',
-  },
-  {
-    title: 'SUMR Market Cap hits 10b',
-    timestamp: 1729236816763,
-    link: './',
-  },
-  {
-    title: 'SUMR Market Cap hits 10b',
-    timestamp: 1729236816764,
-    link: './',
-  },
-]
+// const dummyNewsAndUpdatesItems = [
+//   {
+//     title: 'SUMR Market Cap hits 10b',
+//     timestamp: 1729236816761,
+//     link: './',
+//   },
+//   {
+//     title: 'SUMR Market Cap hits 10b',
+//     timestamp: 1729236816762,
+//     link: './',
+//   },
+//   {
+//     title: 'SUMR Market Cap hits 10b',
+//     timestamp: 1729236816763,
+//     link: './',
+//   },
+//   {
+//     title: 'SUMR Market Cap hits 10b',
+//     timestamp: 1729236816764,
+//     link: './',
+//   },
+// ]
 
 const dataBlocks = [
   {
@@ -114,8 +112,8 @@ export const PortfolioOverview = ({ vaultsList, positions }: PortfolioOverviewPr
             style={{ marginTop: 'var(--general-space-24)' }}
           />
         </Card>
-        <NewsAndUpdates items={dummyNewsAndUpdatesItems} />
-        <CryptoUtilities />
+        {/* <NewsAndUpdates items={dummyNewsAndUpdatesItems} /> */}
+        {/* <CryptoUtilities /> */}
       </div>
     </div>
   )
