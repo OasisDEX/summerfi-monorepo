@@ -143,9 +143,11 @@ export const NavConfigContent: FC<NavConfigContentProps> = () => {
             setSlippageConfig({ slippage })
           }}
           disabled={
-            sumrNetApyConfig.dilutedValuation === inputValue.replaceAll(',', '') &&
-            sumrNetApyConfig.withSumr === sumrToggle &&
-            slippageConfig.slippage === slippage.replaceAll(',', '')
+            (sumrNetApyConfig.dilutedValuation === inputValue.replaceAll(',', '') &&
+              sumrNetApyConfig.withSumr === sumrToggle &&
+              slippageConfig.slippage === slippage.replaceAll(',', '')) ||
+            slippage === '' ||
+            slippage.endsWith('.')
           }
         >
           Save changes

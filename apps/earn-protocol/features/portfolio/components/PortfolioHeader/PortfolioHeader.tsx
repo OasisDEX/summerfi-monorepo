@@ -1,14 +1,62 @@
-import { type FC } from 'react'
-import { Button, DataBlock, Icon, LoadableAvatar, Text } from '@summerfi/app-earn-ui'
+import { type FC, useState } from 'react'
+import { useUser } from '@account-kit/react'
+import { Button, DataBlock, Dropdown, Icon, LoadableAvatar, Text } from '@summerfi/app-earn-ui'
+import { type IconNamesList } from '@summerfi/app-types'
 import { formatAddress } from '@summerfi/app-utils'
 
+import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
+import { useUserWallet } from '@/hooks/use-user-wallet'
+
 import classNames from './PortfolioHeader.module.scss'
+
+const transakNetworkOptions: {
+  label: string
+  value: string
+  iconName: IconNamesList
+}[] = [
+  {
+    label: 'Ethereum',
+    value: 'ethereum',
+    iconName: 'earn_network_ethereum',
+  },
+  {
+    label: 'Base',
+    value: 'base',
+    iconName: 'earn_network_base',
+  },
+  {
+    label: 'Arbitrum',
+    value: 'arbitrum',
+    iconName: 'earn_network_arbitrum',
+  },
+]
+
+const TransakTrigger = ({ isOpen }: { isOpen: boolean }) => (
+  <Button variant="primaryLarge" style={{ minWidth: '156px' }}>
+    Add funds
+    <Icon
+      iconName={isOpen ? 'chevron_up' : 'chevron_down'}
+      color="rgba(255, 251, 253, 1)"
+      variant="xs"
+    />
+  </Button>
+)
 
 interface PortfolioHeaderProps {
   walletAddress: string
 }
 
 export const PortfolioHeader: FC<PortfolioHeaderProps> = ({ walletAddress }) => {
+  const { userWalletAddress } = useUserWallet()
+  const [isTransakOpen, setIsTransakOpen] = useState(false)
+  const [transakNetwork, setTransakNetwork] = useState<string | null>(null)
+  const user = useUser()
+
+  const handleNetworkSelect = (option: { value: string }) => {
+    setTransakNetwork(option.value)
+    setIsTransakOpen(true)
+  }
+
   return (
     <>
       <div className={classNames.firstRowWrapper}>
@@ -16,16 +64,28 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({ walletAddress }) => 
           Portfolio
         </Text>
         <div style={{ display: 'flex', gap: 'var(--spacing-space-x-small)' }}>
-          <Button variant="secondaryLarge" style={{ minWidth: 'unset' }}>
+          {/* <Button variant="secondaryLarge" style={{ minWidth: 'unset' }}>
             Send
           </Button>
           <Button variant="secondaryLarge" style={{ minWidth: 'unset' }}>
             Swap
-          </Button>
-          <Button variant="primaryLarge" style={{ minWidth: '156px' }}>
-            Add funds
-            <Icon iconName="chevron_down" color="rgba(255, 251, 253, 1)" variant="xs" />
-          </Button>
+          </Button> */}
+          <Dropdown
+            dropdownValue={{ value: transakNetwork ?? '', content: null }}
+            trigger={TransakTrigger}
+            options={transakNetworkOptions.map((option) => ({
+              value: option.value,
+              content: (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Icon iconName={option.iconName} />
+                  <span>{option.label}</span>
+                </div>
+              ),
+            }))}
+            onChange={handleNetworkSelect}
+          >
+            {null}
+          </Dropdown>
         </div>
       </div>
       <div className={classNames.secondRowWrapper}>
@@ -58,6 +118,19 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({ walletAddress }) => 
           />
         </div>
       </div>
+      {userWalletAddress && transakNetwork && (
+        <TransakWidget
+          cryptoCurrency="USDC"
+          walletAddress={userWalletAddress}
+          email={user?.email}
+          isOpen={isTransakOpen}
+          onClose={() => {
+            setIsTransakOpen(false)
+            setTransakNetwork(null)
+          }}
+          injectedNetwork={transakNetwork}
+        />
+      )}
     </>
   )
 }

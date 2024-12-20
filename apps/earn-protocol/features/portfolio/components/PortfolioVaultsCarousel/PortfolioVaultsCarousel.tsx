@@ -1,6 +1,10 @@
 import { type CSSProperties, type FC } from 'react'
-import { Icon, SlideCarousel, Text, VaultCard } from '@summerfi/app-earn-ui'
+import { getVaultUrl, Icon, SlideCarousel, Text, VaultCard } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
+import { useRouter } from 'next/navigation'
+
+import { SUMR_CAP } from '@/constants/earn-protocol'
+import { useLocalConfig } from '@/contexts/LocalConfigContext/LocalConfigContext'
 
 interface PortfolioVaultsCarouselProps {
   style?: CSSProperties
@@ -13,6 +17,14 @@ export const PortfolioVaultsCarousel: FC<PortfolioVaultsCarouselProps> = ({
   className,
   vaultsList,
 }) => {
+  const { push } = useRouter()
+
+  const {
+    state: { sumrNetApyConfig },
+  } = useLocalConfig()
+
+  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
+
   return (
     <div style={{ width: '100%', ...style }} className={className}>
       <SlideCarousel
@@ -21,8 +33,9 @@ export const PortfolioVaultsCarousel: FC<PortfolioVaultsCarouselProps> = ({
             key={vault.id}
             {...vault}
             withHover
-            // eslint-disable-next-line no-console
-            onClick={(item) => console.log('vault clicked', item)}
+            onClick={() => push(getVaultUrl(vault))}
+            withTokenBonus={sumrNetApyConfig.withSumr}
+            sumrPrice={estimatedSumrPrice}
           />
         ))}
         options={{ slidesToScroll: 'auto' }}

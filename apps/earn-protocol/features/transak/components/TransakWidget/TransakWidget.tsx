@@ -35,6 +35,7 @@ interface TransakWidgetProps {
   onClose: () => void
   walletAddress: string
   email?: string
+  injectedNetwork?: string
 }
 
 export const TransakWidget: FC<TransakWidgetProps> = ({
@@ -43,6 +44,7 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
   email,
   isOpen,
   onClose,
+  injectedNetwork,
 }) => {
   const { chain } = useChain()
   const { deviceType } = useDeviceType()
@@ -150,7 +152,7 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
 
   const sidebarProps: SidebarProps = {
     title: getTransakTitle({ state }),
-    content: getTransakContent({ dispatch, state, isMobile }),
+    content: getTransakContent({ dispatch, state, isMobile, injectedNetwork }),
     primaryButton: {
       label: getTransakPrimaryButtonLabel({ state }),
       action: async () => {

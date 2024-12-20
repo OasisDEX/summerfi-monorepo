@@ -25,10 +25,12 @@ export const getTransakContent = ({
   dispatch,
   state,
   isMobile,
+  injectedNetwork,
 }: {
   dispatch: Dispatch<TransakReducerAction>
   state: TransakReducerState
   isMobile: boolean
+  injectedNetwork?: string
 }): ReactNode => {
   switch (state.step) {
     case TransakSteps.INITIAL:
@@ -40,7 +42,7 @@ export const getTransakContent = ({
     case TransakSteps.SWITCH_TO_L2:
       return <TransakSwitchToL2Step dispatch={dispatch} />
     case TransakSteps.EXCHANGE:
-      return <TransakExchange dispatch={dispatch} state={state} />
+      return <TransakExchange dispatch={dispatch} state={state} injectedNetwork={injectedNetwork} />
     case TransakSteps.KYC:
       return (
         <div

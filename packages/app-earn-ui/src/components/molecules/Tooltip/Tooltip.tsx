@@ -264,7 +264,11 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
         portal
       )}
 
-      <div onClick={handleClick} data-tooltip-btn-id={generatedId}>
+      <div
+        onClick={handleClick}
+        data-tooltip-btn-id={generatedId}
+        style={{ display: 'flex', alignItems: 'center' }}
+      >
         {childrenTypeGuard(children) ? children : children(tooltipOpen, handleTooltipOpenState)}
       </div>
     </div>
