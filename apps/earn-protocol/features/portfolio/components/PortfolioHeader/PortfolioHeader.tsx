@@ -31,12 +31,22 @@ const transakNetworkOptions: {
   },
 ]
 
-const TransakTrigger = ({ isOpen }: { isOpen: boolean }) => (
-  <Button variant="primaryLarge" style={{ minWidth: '156px' }}>
+const TransakTrigger = ({
+  isOpen,
+  isDisabled = false,
+}: {
+  isOpen: boolean
+  isDisabled?: boolean
+}) => (
+  <Button variant="primaryLarge" style={{ minWidth: '156px' }} disabled={isDisabled}>
     Add funds
     <Icon
       iconName={isOpen ? 'chevron_up' : 'chevron_down'}
-      color="rgba(255, 251, 253, 1)"
+      style={{
+        color: isDisabled
+          ? 'var(--earn-protocol-secondary-40)'
+          : 'var(--earn-protocol-secondary-100)',
+      }}
       variant="xs"
     />
   </Button>
@@ -73,6 +83,7 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({ walletAddress }) => 
           <Dropdown
             dropdownValue={{ value: transakNetwork ?? '', content: null }}
             trigger={TransakTrigger}
+            isDisabled={!userWalletAddress}
             options={transakNetworkOptions.map((option) => ({
               value: option.value,
               content: (

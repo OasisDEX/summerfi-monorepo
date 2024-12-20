@@ -13,7 +13,7 @@ import { useMobileCheck } from '@/hooks/use-mobile-check'
 
 import dropdownStyles from '@/components/molecules/Dropdown/Dropdown.module.scss'
 
-type TriggerProps = { isOpen: boolean }
+type TriggerProps = { isOpen: boolean; isDisabled?: boolean }
 
 export interface DropdownProps {
   options: DropdownRawOption[]
@@ -24,6 +24,7 @@ export interface DropdownProps {
   withSearch?: boolean
   inputPlaceholder?: string
   trigger?: (props: TriggerProps) => ReactNode
+  isDisabled?: boolean
 }
 
 export const Dropdown: FC<DropdownProps> = ({
@@ -35,6 +36,7 @@ export const Dropdown: FC<DropdownProps> = ({
   withSearch,
   inputPlaceholder,
   trigger,
+  isDisabled,
 }) => {
   const [selectedOption, setSelectedOption] = useState<DropdownRawOption>(dropdownValue)
   const [isOpen, setIsOpen] = useState(false) // To manage dropdown open/close state
@@ -108,7 +110,7 @@ export const Dropdown: FC<DropdownProps> = ({
             : {}
         }
       >
-        {trigger ? trigger({ isOpen }) : children}
+        {trigger ? trigger({ isOpen, isDisabled }) : children}
         {!trigger && (
           <Icon
             iconName={isOpen ? 'chevron_up' : 'chevron_down'}
