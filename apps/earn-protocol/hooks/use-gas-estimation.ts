@@ -56,6 +56,8 @@ export const useGasEstimation = ({
           }),
         ])
 
+        // TODO: should change this to use the spot price
+        // there is no such public api in the sdk yet need to implement it and replace this
         const fetchedTransactionFee = await getSwapQuote({
           fromAmount: formatEther(txFee),
           fromToken: ethToken,
