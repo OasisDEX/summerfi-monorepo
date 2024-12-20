@@ -4,6 +4,7 @@ import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import type { ISwapManager } from '@summerfi/swap-common'
+import type { IOracleManager } from '@summerfi/oracle-common'
 
 import { ArmadaManager } from './ArmadaManager'
 
@@ -19,6 +20,7 @@ export class ArmadaManagerFactory {
     subgraphManager: IArmadaSubgraphManager
     blockchainClientProvider: IBlockchainClientProvider
     swapManager: ISwapManager
+    oracleManager: IOracleManager
   }): ArmadaManager {
     return new ArmadaManager(params)
   }

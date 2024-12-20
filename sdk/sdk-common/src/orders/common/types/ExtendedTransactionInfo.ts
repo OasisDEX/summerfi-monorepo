@@ -1,4 +1,4 @@
-import type { IPercentage, ITokenAmount } from '../../../common'
+import type { IPercentage, IPrice, ITokenAmount } from '../../../common'
 import type { Transaction } from './Transaction'
 
 /**
@@ -16,7 +16,7 @@ export type TransactionMetadataApproval = {
 }
 
 export type TransactionPriceImpact = {
-  price: ITokenAmount
+  price: IPrice
   impact: IPercentage
 }
 

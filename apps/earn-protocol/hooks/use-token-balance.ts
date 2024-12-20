@@ -27,7 +27,6 @@ export const useTokenBalance = ({
   const [tokenBalance, setTokenBalance] = useState<BigNumber>()
   const [tokenBalanceLoading, setTokenBalanceLoading] = useState(true)
   const { userWalletAddress } = useUserWallet()
-  const walletAddress = userWalletAddress
 
   const sdk = useAppSDK()
 
@@ -101,8 +100,8 @@ export const useTokenBalance = ({
       }
     }
 
-    if (!skip && walletAddress) {
-      fetchTokenBalance(walletAddress).catch((err) => {
+    if (!skip && userWalletAddress) {
+      fetchTokenBalance(userWalletAddress).catch((err) => {
         // eslint-disable-next-line no-console
         console.error('Error fetching token balance', err)
         setTokenBalance(undefined)
@@ -111,7 +110,7 @@ export const useTokenBalance = ({
     } else {
       setTokenBalanceLoading(false)
     }
-  }, [sdk, walletAddress?.toString(), tokenSymbol, vaultTokenSymbol, publicClient, skip, chainId])
+  }, [sdk, userWalletAddress, tokenSymbol, vaultTokenSymbol, publicClient, skip, chainId])
 
   return {
     vaultToken,

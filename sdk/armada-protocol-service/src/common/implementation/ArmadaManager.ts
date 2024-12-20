@@ -14,11 +14,12 @@ import {
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import {
+  calculatePriceImpact,
   IAddress,
   ITokenAmount,
   IUser,
   LoggingService,
-  Percentage,
+  Price,
   TokenAmount,
   TransactionInfo,
   type ExtendedTransactionInfo,
@@ -37,6 +38,7 @@ import { parseGetUserPositionsQuery } from './extensions/parseGetUserPositionsQu
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import type { ISwapManager } from '@summerfi/swap-common'
 import BigNumber from 'bignumber.js'
+import type { IOracleManager } from '@summerfi/oracle-common'
 
 /**
  * @name ArmadaManager
@@ -49,6 +51,7 @@ export class ArmadaManager implements IArmadaManager {
   private _subgraphManager: IArmadaSubgraphManager
   private _blockchainClientProvider: IBlockchainClientProvider
   private _swapManager: ISwapManager
+  private _oracleManager: IOracleManager
 
   /** CONSTRUCTOR */
   constructor(params: {
@@ -58,6 +61,7 @@ export class ArmadaManager implements IArmadaManager {
     subgraphManager: IArmadaSubgraphManager
     blockchainClientProvider: IBlockchainClientProvider
     swapManager: ISwapManager
+    oracleManager: IOracleManager
   }) {
     this._configProvider = params.configProvider
     this._allowanceManager = params.allowanceManager
@@ -65,6 +69,7 @@ export class ArmadaManager implements IArmadaManager {
     this._subgraphManager = params.subgraphManager
     this._blockchainClientProvider = params.blockchainClientProvider
     this._swapManager = params.swapManager
+    this._oracleManager = params.oracleManager
   }
 
   /** POOLS */
@@ -1140,18 +1145,27 @@ export class ArmadaManager implements IArmadaManager {
       return undefined
     }
 
-    // TODO: not implemented
-    const price = TokenAmount.createFromBaseUnit({
-      token: params.toAmount.token,
-      amount: '0',
+    const quotePrice = Price.createFrom({
+      base: params.fromAmount.token,
+      quote: params.toAmount.token,
+      value: new BigNumber(params.toAmount.amount).div(params.fromAmount.amount).toString(),
     })
 
-    const impact = Percentage.createFrom({
-      value: 0,
+    const spotPrice = await this._oracleManager.getSpotPrice({
+      baseToken: params.fromAmount.token,
+      quoteToken: params.toAmount.token,
+    })
+
+    const impact = calculatePriceImpact(spotPrice.price, quotePrice)
+
+    LoggingService.debug('getPriceImpact', {
+      spotPrice: spotPrice.price.toString(),
+      quotePrice: quotePrice.toString(),
+      impact: impact.toString(),
     })
 
     return {
-      price,
+      price: spotPrice.price,
       impact,
     }
   }
