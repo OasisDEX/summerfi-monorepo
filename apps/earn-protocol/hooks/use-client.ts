@@ -5,18 +5,22 @@ import { createPublicClient, http } from 'viem'
 import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
 import { useUpdateAANetwork } from '@/hooks/use-update-aa-network'
 
-export const useClient = () => {
+type UseClientProps = {
+  chainId?: SDKChainId.ARBITRUM | SDKChainId.BASE
+}
+
+export const useClient = (params?: UseClientProps) => {
   const { appChain } = useUpdateAANetwork()
+  const _chainId: SDKChainId.ARBITRUM | SDKChainId.BASE =
+    params?.chainId ?? (appChain.id as SDKChainId.ARBITRUM | SDKChainId.BASE)
 
   // Client for read-only data fetching using our rpcGateway
   const publicClient = useMemo(() => {
     return createPublicClient({
       chain: appChain,
-      transport: http(
-        SDKChainIdToRpcGatewayMap[appChain.id as SDKChainId.ARBITRUM | SDKChainId.BASE],
-      ),
+      transport: http(SDKChainIdToRpcGatewayMap[_chainId]),
     })
-  }, [appChain])
+  }, [appChain, _chainId])
 
   return {
     publicClient,

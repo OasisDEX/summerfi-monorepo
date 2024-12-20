@@ -1,7 +1,7 @@
-import { Box, Icon, SimpleGrid, Text } from '@summerfi/app-earn-ui'
+import { Box, Icon, SimpleGrid, SkeletonLine, Text } from '@summerfi/app-earn-ui'
 import { type TokenSymbolsList } from '@summerfi/app-types'
-import { formatCryptoBalance } from '@summerfi/app-utils'
-import { type ExtendedTransactionInfo, TransactionType } from '@summerfi/sdk-common'
+import { formatCryptoBalance, formatFiatBalance, formatPercent } from '@summerfi/app-utils'
+import { type ExtendedTransactionInfo, type IToken, TransactionType } from '@summerfi/sdk-common'
 import type BigNumber from 'bignumber.js'
 
 import orderInfoDepositWithdrawStyles from './OrderInfoDepositWithdraw.module.scss'
@@ -39,27 +39,57 @@ export const OrderInfoDeposit = ({
         <SimpleGrid columns={2} gap={2}>
           <Text variant="p3semi">Deposit Amount</Text>
           <Text variant="p3semi" className={orderInfoDepositWithdrawStyles.depositDetailsValue}>
-            {fromAmount.toString()}
+            {formatCryptoBalance(fromAmount.amount)} {fromAmount.token.symbol}
           </Text>
           {toAmount && priceImpact && (
             <>
               <Text variant="p3semi">Swap</Text>
-              <Text variant="p3semi" className={orderInfoDepositWithdrawStyles.depositDetailsValue}>
-                {fromAmount.toString()} {'->'} {toAmount.toString()}
-              </Text>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                <Icon
+                  tokenName={fromAmount.token.symbol.toUpperCase() as TokenSymbolsList}
+                  size={20}
+                />
+                <Text
+                  variant="p3semi"
+                  className={orderInfoDepositWithdrawStyles.depositDetailsValue}
+                >
+                  {formatCryptoBalance(fromAmount.amount)} {'-> '}
+                </Text>
+                <Icon
+                  tokenName={toAmount.token.symbol.toUpperCase() as TokenSymbolsList}
+                  size={18}
+                />
+                <Text
+                  variant="p3semi"
+                  className={orderInfoDepositWithdrawStyles.depositDetailsValue}
+                >
+                  {formatCryptoBalance(toAmount.amount)}
+                </Text>
+              </div>
               <Text variant="p3semi">Price Impact</Text>
               <Text variant="p3semi" className={orderInfoDepositWithdrawStyles.depositDetailsValue}>
-                {priceImpact.price.toString()} ({priceImpact.impact.toString()})
+                {formatCryptoBalance(priceImpact.price.value)}{' '}
+                {(priceImpact.price.quote as IToken).symbol} (
+                {formatPercent(priceImpact.impact.value, {
+                  precision: 2,
+                })}
+                )
               </Text>
               <Text variant="p3semi">Slippage</Text>
               <Text variant="p3semi" className={orderInfoDepositWithdrawStyles.depositDetailsValue}>
-                {slippage.toString()}
+                {formatPercent(slippage.value, { precision: 2 })}
               </Text>
             </>
           )}
           <Text variant="p3semi">Transaction Fee</Text>
           <Text variant="p3semi" className={orderInfoDepositWithdrawStyles.depositDetailsValue}>
-            {transactionFeeLoading ? 'Loading...' : transactionFee}
+            {!transactionFeeLoading ? (
+              <SkeletonLine style={{ display: 'inline-block' }} width={150} height={18} />
+            ) : transactionFee ? (
+              `$${formatFiatBalance(transactionFee)}`
+            ) : (
+              'n/a'
+            )}
           </Text>
         </SimpleGrid>
       </Box>

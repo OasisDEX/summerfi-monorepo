@@ -14,11 +14,12 @@ import {
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import {
+  calculatePriceImpact,
   IAddress,
   ITokenAmount,
   IUser,
   LoggingService,
-  Percentage,
+  Price,
   TokenAmount,
   TransactionInfo,
   type ExtendedTransactionInfo,
@@ -37,6 +38,7 @@ import { parseGetUserPositionsQuery } from './extensions/parseGetUserPositionsQu
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import type { ISwapManager } from '@summerfi/swap-common'
 import BigNumber from 'bignumber.js'
+import type { IOracleManager } from '@summerfi/oracle-common'
 
 /**
  * @name ArmadaManager
@@ -49,6 +51,7 @@ export class ArmadaManager implements IArmadaManager {
   private _subgraphManager: IArmadaSubgraphManager
   private _blockchainClientProvider: IBlockchainClientProvider
   private _swapManager: ISwapManager
+  private _oracleManager: IOracleManager
 
   /** CONSTRUCTOR */
   constructor(params: {
@@ -58,6 +61,7 @@ export class ArmadaManager implements IArmadaManager {
     subgraphManager: IArmadaSubgraphManager
     blockchainClientProvider: IBlockchainClientProvider
     swapManager: ISwapManager
+    oracleManager: IOracleManager
   }) {
     this._configProvider = params.configProvider
     this._allowanceManager = params.allowanceManager
@@ -65,6 +69,7 @@ export class ArmadaManager implements IArmadaManager {
     this._subgraphManager = params.subgraphManager
     this._blockchainClientProvider = params.blockchainClientProvider
     this._swapManager = params.swapManager
+    this._oracleManager = params.oracleManager
   }
 
   /** POOLS */
@@ -292,9 +297,6 @@ export class ArmadaManager implements IArmadaManager {
     params: Parameters<IArmadaManager['getWithdrawTX']>[0],
   ): Promise<ExtendedTransactionInfo[]> {
     const transactions: ExtendedTransactionInfo[] = []
-    const metadata: {
-      swapToAmount?: ITokenAmount
-    } = {}
 
     const { assets: fleetAssets, shares: fleetShares } = await this.getFleetBalance({
       vaultId: params.vaultId,
@@ -304,6 +306,7 @@ export class ArmadaManager implements IArmadaManager {
     const assetsToEOA = params.amount
     const swapToToken = params.toToken
     const shouldSwap = !swapToToken.equals(assetsToEOA.token)
+    let swapToAmount: ITokenAmount | undefined = undefined
 
     LoggingService.debug('getWithdrawTX', {
       assetsToEOA: assetsToEOA.toString(),
@@ -368,11 +371,11 @@ export class ArmadaManager implements IArmadaManager {
             description: 'Withdraw Operation using unstaked shares',
             metadata: {
               fromAmount: assetsToEOA,
-              toAmount: metadata.swapToAmount,
+              toAmount: swapToAmount,
               slippage: params.slippage,
               priceImpact: await this._getPriceImpact({
                 fromAmount: assetsToEOA,
-                toAmount: metadata.swapToAmount,
+                toAmount: swapToAmount,
               }),
             },
           }),
@@ -458,6 +461,7 @@ export class ArmadaManager implements IArmadaManager {
             toToken: swapToToken,
           })
           multicallArgs.push(...swapCall.calldata)
+          swapToAmount = swapCall.toAmount
         }
         // compose multicall
         const multicallCalldata = encodeFunctionData({
@@ -472,11 +476,11 @@ export class ArmadaManager implements IArmadaManager {
             description: 'Withdraw Operation using mixed staked and unstaked shares',
             metadata: {
               fromAmount: assetsToEOA,
-              toAmount: metadata.swapToAmount,
+              toAmount: swapToAmount,
               slippage: params.slippage,
               priceImpact: await this._getPriceImpact({
                 fromAmount: assetsToEOA,
-                toAmount: metadata.swapToAmount,
+                toAmount: swapToAmount,
               }),
             },
           }),
@@ -488,7 +492,7 @@ export class ArmadaManager implements IArmadaManager {
         vaultId: params.vaultId,
         assets: assetsToEOA,
       })
-      LoggingService.debug('fleet balance is 0', {
+      LoggingService.debug('fleet balance is 0, take all from staked', {
         sharesToWithdraw: sharesToEOA.toString(),
       })
 
@@ -510,6 +514,10 @@ export class ArmadaManager implements IArmadaManager {
           LoggingService.debug('approveToSwap', {
             assetsToEOA: assetsToEOA.toString(),
           })
+        } else {
+          LoggingService.debug('approveToSwap not needed, allowance exists', {
+            assetsToEOA: assetsToEOA.toString(),
+          })
         }
       }
 
@@ -528,6 +536,7 @@ export class ArmadaManager implements IArmadaManager {
           toToken: swapToToken,
         })
         multicallArgs.push(...swapCall.calldata)
+        swapToAmount = swapCall.toAmount
       }
       // compose multicall
       const multicallCalldata = encodeFunctionData({
@@ -543,11 +552,11 @@ export class ArmadaManager implements IArmadaManager {
           description: 'Withdraw Operation using staked shares',
           metadata: {
             fromAmount: assetsToEOA,
-            toAmount: metadata.swapToAmount,
+            toAmount: swapToAmount,
             slippage: params.slippage,
             priceImpact: await this._getPriceImpact({
               fromAmount: assetsToEOA,
-              toAmount: metadata.swapToAmount,
+              toAmount: swapToAmount,
             }),
           },
         }),
@@ -814,6 +823,7 @@ export class ArmadaManager implements IArmadaManager {
     const shouldStake = params.shouldStake ?? true
     const shouldSwap = !params.amount.token.address.equals(fleetToken.address)
 
+    let swapMinAmount: ITokenAmount | undefined
     let swapToAmount: ITokenAmount | undefined
     const transactions: ExtendedTransactionInfo[] = []
 
@@ -866,7 +876,8 @@ export class ArmadaManager implements IArmadaManager {
         slippage: params.slippage,
       })
       multicallArgs.push(swapCall.calldata)
-      swapToAmount = swapCall.minAmount
+      swapToAmount = swapCall.toAmount
+      swapMinAmount = swapCall.minAmount
     }
 
     // when staking admirals quarters will receive LV tokens, otherwise the user
@@ -1024,6 +1035,7 @@ export class ArmadaManager implements IArmadaManager {
   }): Promise<{
     calldata: HexData
     minAmount: ITokenAmount
+    toAmount: ITokenAmount
   }> {
     // get the admirals quarters address
     const admiralsQuarterAddress = getDeployedContractAddress({
@@ -1076,6 +1088,7 @@ export class ArmadaManager implements IArmadaManager {
     return {
       calldata,
       minAmount,
+      toAmount: swapData.toTokenAmount,
     }
   }
 
@@ -1084,7 +1097,7 @@ export class ArmadaManager implements IArmadaManager {
     fromAmount: ITokenAmount
     toToken: IToken
     slippage: IPercentage
-  }): Promise<{ calldata: HexData[]; minAmount: ITokenAmount }> {
+  }): Promise<{ calldata: HexData[]; minAmount: ITokenAmount; toAmount: ITokenAmount }> {
     const calldata: HexData[] = []
 
     // swapping out assets
@@ -1108,6 +1121,7 @@ export class ArmadaManager implements IArmadaManager {
     })
     calldata.push(swapCall.calldata)
     LoggingService.debug('swap', {
+      toAmount: swapCall.toAmount.toString(),
       minAmount: swapCall.minAmount.toString(),
     })
     const outAssets = TokenAmount.createFromBaseUnit({
@@ -1129,6 +1143,7 @@ export class ArmadaManager implements IArmadaManager {
     return {
       calldata,
       minAmount: swapCall.minAmount,
+      toAmount: swapCall.toAmount,
     }
   }
 
@@ -1140,18 +1155,28 @@ export class ArmadaManager implements IArmadaManager {
       return undefined
     }
 
-    // TODO: not implemented
-    const price = TokenAmount.createFromBaseUnit({
-      token: params.toAmount.token,
-      amount: '0',
+    // for quote we should use optimal quote not the min quote
+    const quotePrice = Price.createFrom({
+      base: params.fromAmount.token,
+      quote: params.toAmount.token,
+      value: new BigNumber(params.toAmount.amount).div(params.fromAmount.amount).toString(),
     })
 
-    const impact = Percentage.createFrom({
-      value: 0,
+    const spotPrice = await this._oracleManager.getSpotPrice({
+      baseToken: params.fromAmount.token,
+      quoteToken: params.toAmount.token,
+    })
+
+    const impact = calculatePriceImpact(spotPrice.price, quotePrice)
+
+    LoggingService.debug('getPriceImpact', {
+      spotPrice: spotPrice.price.toString(),
+      quotePrice: quotePrice.toString(),
+      impact: impact.toString(),
     })
 
     return {
-      price,
+      price: spotPrice.price,
       impact,
     }
   }

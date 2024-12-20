@@ -82,6 +82,7 @@ export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
     contractsProvider,
     subgraphManager: armadaSubgraphManager,
     swapManager,
+    oracleManager,
   })
 
   return {

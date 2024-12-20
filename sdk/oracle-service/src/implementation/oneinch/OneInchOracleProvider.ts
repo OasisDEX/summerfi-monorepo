@@ -47,7 +47,7 @@ export class OneInchOracleProvider
 
   /** @see IOracleProvider.getSupportedChainIds */
   getSupportedChainIds(): ChainId[] {
-    return [1]
+    return [1, 10, 8453, 42161]
   }
 
   /** @see IOracleProvider.getSpotPrice */

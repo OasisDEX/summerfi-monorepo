@@ -185,9 +185,11 @@ export const VaultManageViewComponent = ({
       ),
       [TransactionType.Withdraw]: (
         <OrderInfoWithdraw
-          vault={vault}
+          transaction={nextTransaction}
           amountParsed={amountParsed}
-          amountDisplayUSD={amountDisplayUSD}
+          amountDisplayUSD={amountDisplayUSDWithSwap}
+          transactionFee={transactionFee}
+          transactionFeeLoading={transactionFeeLoading}
         />
       ),
     }[nextTransaction.type]

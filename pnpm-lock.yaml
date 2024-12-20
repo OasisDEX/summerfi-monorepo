@@ -2149,6 +2149,9 @@ importers:
       '@summerfi/contracts-provider-service':
         specifier: workspace:*
         version: link:../contracts-provider-service
+      '@summerfi/oracle-common':
+        specifier: workspace:*
+        version: link:../oracle-common
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common

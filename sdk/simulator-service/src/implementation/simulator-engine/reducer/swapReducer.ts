@@ -1,7 +1,8 @@
-import { IPercentage, IPrice, Percentage, TokenAmount } from '@summerfi/sdk-common/common'
+import { Percentage, TokenAmount } from '@summerfi/sdk-common/common'
 import { steps } from '@summerfi/sdk-common/simulation'
 import { ISimulationState } from '../../../interfaces/simulation'
 import { addBalance, subtractBalance } from '../../utils'
+import { calculatePriceImpact } from '@summerfi/sdk-common'
 
 export function swapReducer(step: steps.SwapStep, state: ISimulationState): ISimulationState {
   const balanceWithoutFromToken = subtractBalance(step.inputs.inputAmount, state.balances)
@@ -35,23 +36,4 @@ export function swapReducer(step: steps.SwapStep, state: ISimulationState): ISim
     ],
     balances: balanceWithToToken,
   }
-}
-
-/**
- *
- * @param marketPrice - This price represents a blend of spot prices from various exchanges.
- * @param offerPrice - The offer price is price quoted to us by a liquidity provider and takes
- *      into account price impact - where price impact is a measure of how much our trade
- *      affects the price. It is determined by the breadth and depth of liquidity.
- */
-export function calculatePriceImpact(marketPrice: IPrice, offerPrice: IPrice): IPercentage {
-  return Percentage.createFrom({
-    value: marketPrice
-      .toBigNumber()
-      .minus(offerPrice.toBigNumber())
-      .div(marketPrice.toBigNumber())
-      .abs()
-      .times(100)
-      .toNumber(),
-  })
 }
