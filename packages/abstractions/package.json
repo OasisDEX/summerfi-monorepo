@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest --passWithNoTests",
     "build": "tsc -b --preserveWatchOutput -v",
+    "prebuild": "tsc -b --preserveWatchOutput -v",
     "dev": "tsc -b --preserveWatchOutput -w",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
