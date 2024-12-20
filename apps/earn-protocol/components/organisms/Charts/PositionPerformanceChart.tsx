@@ -9,9 +9,13 @@ import { PerformanceChart } from '@/components/organisms/Charts/components/Perfo
 
 export type PositionPerformanceChartProps = {
   chartData: VaultWithChartsData['performanceChartData']
+  inputToken: string
 }
 
-export const PositionPerformanceChart = ({ chartData }: PositionPerformanceChartProps) => {
+export const PositionPerformanceChart = ({
+  chartData,
+  inputToken,
+}: PositionPerformanceChartProps) => {
   const [timeframe, setTimeframe] = useState<TimeframesType>('90d')
 
   const parsedData = useMemo(() => {
@@ -50,7 +54,7 @@ export const PositionPerformanceChart = ({ chartData }: PositionPerformanceChart
         timeframe={timeframe}
         setTimeframe={(nextTimeFrame) => setTimeframe(nextTimeFrame as TimeframesType)}
       />
-      <PerformanceChart timeframe={timeframe} data={parsedData} />
+      <PerformanceChart timeframe={timeframe} data={parsedData} inputToken={inputToken} />
     </Card>
   )
 }

@@ -287,7 +287,10 @@ export const VaultManageViewComponent = ({
             }
             defaultExpanded
           >
-            <PositionPerformanceChart chartData={vault.customFields?.performanceChartData} />
+            <PositionPerformanceChart
+              chartData={vault.customFields?.performanceChartData}
+              inputToken={vault.inputToken.symbol}
+            />
           </Expander>
           <Expander
             title={

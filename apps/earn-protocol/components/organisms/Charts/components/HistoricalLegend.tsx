@@ -3,22 +3,14 @@ import { Icon, Text } from '@summerfi/app-earn-ui'
 import { type TokenSymbolsList } from '@summerfi/app-types'
 import { DefaultLegendContent, type LegendProps } from 'recharts'
 
-import historicalLegendStyles from './HistoricalLegend.module.scss'
+import { historicalPerformanceLabelMap } from '@/components/organisms/Charts/labels'
 
-const historicalLegendLabelMap: {
-  [key: string]: string
-} = {
-  forecast: 'Forecast Market Value',
-  netValue: 'Market Value',
-  depositedValue: 'Net Contributions',
-  earnings: 'Earnings to Date',
-  sumrEarned: '$SUMR Earned',
-}
+import historicalLegendStyles from './HistoricalLegend.module.scss'
 
 type HistoricalLegendProps = LegendProps & {
   tokenSymbol: TokenSymbolsList
   highlightedData: {
-    [key in keyof typeof historicalLegendLabelMap]: string | number
+    [key in keyof typeof historicalPerformanceLabelMap]: string | number
   }
 }
 
@@ -63,7 +55,7 @@ export const HistoricalLegend = ({
     value: (
       <LegendBlock
         color="var(--color-background-interactive-disabled)"
-        title={historicalLegendLabelMap.earnings}
+        title={historicalPerformanceLabelMap.earnings}
         value={
           <>
             <Icon tokenName={tokenSymbol} size={20} />
@@ -78,7 +70,7 @@ export const HistoricalLegend = ({
     value: (
       <LegendBlock
         color="white"
-        title={historicalLegendLabelMap.sumrEarned}
+        title={historicalPerformanceLabelMap.sumrEarned}
         value={
           <>
             <Icon tokenName="SUMR" size={20} />
@@ -95,7 +87,7 @@ export const HistoricalLegend = ({
       value: (
         <LegendBlock
           color={entry.color as string}
-          title={historicalLegendLabelMap[entry.value as string] ?? entry.value}
+          title={historicalPerformanceLabelMap[entry.value as string] ?? entry.value}
           value={
             <>
               <Icon tokenName={tokenSymbol} size={20} />
