@@ -1,7 +1,7 @@
 import { Box, Icon, SimpleGrid, Text } from '@summerfi/app-earn-ui'
 import { type TokenSymbolsList } from '@summerfi/app-types'
 import { formatCryptoBalance, formatFiatBalance, formatPercent } from '@summerfi/app-utils'
-import { type ExtendedTransactionInfo, TransactionType } from '@summerfi/sdk-common'
+import { type ExtendedTransactionInfo, type IToken, TransactionType } from '@summerfi/sdk-common'
 import type BigNumber from 'bignumber.js'
 
 import orderInfoDepositWithdrawStyles from './OrderInfoDepositWithdraw.module.scss'
@@ -68,12 +68,16 @@ export const OrderInfoDeposit = ({
               </div>
               <Text variant="p3semi">Price Impact</Text>
               <Text variant="p3semi" className={orderInfoDepositWithdrawStyles.depositDetailsValue}>
-                {formatCryptoBalance(priceImpact.price.value)} {priceImpact.price.quote.symbol} (
-                {formatPercent(priceImpact.impact.value)})
+                {formatCryptoBalance(priceImpact.price.value)}{' '}
+                {(priceImpact.price.quote as IToken).symbol} (
+                {formatPercent(priceImpact.impact.value, {
+                  precision: 2,
+                })}
+                )
               </Text>
               <Text variant="p3semi">Slippage</Text>
               <Text variant="p3semi" className={orderInfoDepositWithdrawStyles.depositDetailsValue}>
-                {formatPercent(slippage.value)}
+                {formatPercent(slippage.value, { precision: 2 })}
               </Text>
             </>
           )}

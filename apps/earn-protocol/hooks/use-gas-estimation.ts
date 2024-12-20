@@ -16,7 +16,7 @@ export const useGasEstimation = ({
   transaction,
   walletAddress,
 }: UseGasEstimationProps) => {
-  const { publicClient } = useClient()
+  const { publicClient } = useClient({ chainId })
   const { getSwapQuote, getTokenBySymbol } = useAppSDK()
 
   const [loading, setLoading] = useState<boolean>(false)
@@ -38,8 +38,12 @@ export const useGasEstimation = ({
               ? BigInt(_transaction.transaction.value)
               : undefined,
           }),
-          publicClient.getGasPrice(),
+          publicClient.estimateFeesPerGas(),
         ])
+        // fee calculation with 20% buffer and including priority fee
+        const txFee =
+          // eslint-disable-next-line no-mixed-operators
+          (fetchedGas * gasPrice.maxFeePerGas * 120n) / 100n
 
         const [ethToken, usdcToken] = await Promise.all([
           getTokenBySymbol({
@@ -53,10 +57,10 @@ export const useGasEstimation = ({
         ])
 
         const fetchedTransactionFee = await getSwapQuote({
-          fromAmount: formatEther(fetchedGas * gasPrice),
+          fromAmount: formatEther(txFee),
           fromToken: ethToken,
-          slippage: 1,
           toToken: usdcToken,
+          slippage: 1,
         })
 
         setTransactionFee(fetchedTransactionFee.toTokenAmount.amount)
