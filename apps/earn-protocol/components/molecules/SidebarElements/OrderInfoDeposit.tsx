@@ -1,4 +1,4 @@
-import { Box, Icon, SimpleGrid, Text } from '@summerfi/app-earn-ui'
+import { Box, Icon, SimpleGrid, SkeletonLine, Text } from '@summerfi/app-earn-ui'
 import { type TokenSymbolsList } from '@summerfi/app-types'
 import { formatCryptoBalance, formatFiatBalance, formatPercent } from '@summerfi/app-utils'
 import { type ExtendedTransactionInfo, type IToken, TransactionType } from '@summerfi/sdk-common'
@@ -83,11 +83,13 @@ export const OrderInfoDeposit = ({
           )}
           <Text variant="p3semi">Transaction Fee</Text>
           <Text variant="p3semi" className={orderInfoDepositWithdrawStyles.depositDetailsValue}>
-            {transactionFeeLoading
-              ? 'Loading...'
-              : transactionFee
-                ? `$${formatFiatBalance(transactionFee)}`
-                : 'N/A'}
+            {!transactionFeeLoading ? (
+              <SkeletonLine style={{ display: 'inline-block' }} width={150} height={18} />
+            ) : transactionFee ? (
+              `$${formatFiatBalance(transactionFee)}`
+            ) : (
+              'n/a'
+            )}
           </Text>
         </SimpleGrid>
       </Box>
