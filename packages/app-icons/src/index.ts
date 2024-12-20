@@ -312,4 +312,14 @@ export const icons = {
   gearbox: customLazy(() => import('./icons/gearbox.svg?react')),
   linkedin: customLazy(() => import('./icons/linkedin.svg?react')),
   x: customLazy(() => import('./icons/x.svg?react')),
+
+  // imported from tabler icon database
+
+  brand_icon_discord: customLazy(() => import('./icons/brand-discord.svg?react')),
+  brand_icon_github: customLazy(() => import('./icons/brand-github.svg?react')),
+  brand_icon_twitter: customLazy(() => import('./icons/brand-twitter.svg?react')),
+  tabler_x: customLazy(() => import('./icons/tabler-x.svg?react')),
+  tools_kitchen_off: customLazy(() => import('./icons/tools-kitchen-off.svg?react')),
+  tools_kitchen: customLazy(() => import('./icons/tools-kitchen.svg?react')),
+  device_floppy: customLazy(() => import('./icons/device-floppy.svg?react')),
 }

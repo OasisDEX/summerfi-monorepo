@@ -19,7 +19,6 @@
     "@types/react": "^18.3.1"
   },
   "devDependencies": {
-    "@tabler/icons-react": "^3.19.0",
     "@types/node-fetch": "^2.6.11",
     "@types/node": "^20.14.2",
     "@types/react": "^18.3.1",

@@ -1,5 +1,5 @@
 import { type PropsWithChildren, useState } from 'react'
-import { IconX } from '@tabler/icons-react'
+import { Icon } from '@summerfi/app-earn-ui'
 import { useToggle } from 'usehooks-ts'
 
 import modalButtonStyles from './ModalButton.module.scss'
@@ -41,7 +41,12 @@ export const ModalButton = ({ Button, ModalContent, modalWrapperStyles }: ModalP
           >
             <ModalContent />
             <div className={modalButtonStyles.closeButton} onClick={handleModalClose}>
-              <IconX stroke={2} />
+              <Icon
+                iconName="tabler_x"
+                style={{
+                  stroke: 'white',
+                }}
+              />
             </div>
           </div>
         </>
