@@ -83,7 +83,7 @@ export const OrderInfoDeposit = ({
           )}
           <Text variant="p3semi">Transaction Fee</Text>
           <Text variant="p3semi" className={orderInfoDepositWithdrawStyles.depositDetailsValue}>
-            {!transactionFeeLoading ? (
+            {transactionFeeLoading ? (
               <SkeletonLine style={{ display: 'inline-block' }} width={150} height={18} />
             ) : transactionFee ? (
               `$${formatFiatBalance(transactionFee)}`
