@@ -1,0 +1,159 @@
+name: Deploy Rays Dashboard Production
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build and deploy Rays Dashboard
+    runs-on: ubuntu-22.04
+    permissions:
+      id-token: write
+    environment: production
+    env:
+      AWS_REGION: us-east-1
+      ENVIRONMENT_TAG: prod
+      SERVICE_NAME: summer-fi-rays-service-prod
+      CLUSTER_NAME: summer-fi-rays-prod
+      CONFIG_URL: ${{ secrets.CONFIG_URL }}
+      CONFIG_URL_EARN: ${{ secrets.CONFIG_URL_EARN }}
+      CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
+      FUNCTIONS_API_URL: ${{ secrets.FUNCTIONS_API_URL }}
+      BORROW_DB_READ_CONNECTION_STRING: ${{ secrets.NEW_BORROW_DB_READ_CONNECTION_STRING }}
+      CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_ACCESS_TOKEN }}
+      CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_PREVIEW_ACCESS_TOKEN }}
+      CONTENTFUL_SPACE_ID: ${{ secrets.CONTENTFUL_SPACE_ID }}
+      MIXPANEL_KEY: ${{ secrets.MIXPANEL_KEY }}
+      NEXT_PUBLIC_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_MIXPANEL_KEY }}
+      SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
+      SDK_API_URL: ${{ secrets.SDK_API_URL }}
+      NEXT_TELEMETRY_DISABLED: ${{ secrets.NEXT_TELEMETRY_DISABLED }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Set up turbo cache
+        uses: rharkor/caching-for-turbo@v1.5
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 8.14.1
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Setup Rays Dashboard App Next.js Cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/apps/rays-dashboard/.next/cache
+          key:
+            ${{ runner.os }}-rays-dashboard-app-${{ hashFiles('pnpm-lock.yaml') }}-${{
+            hashFiles('apps/rays-dashboard/**/*.ts', 'apps/rays-dashboard/**/*.tsx') }}
+          restore-keys: ${{ runner.os }}-rays-dashboard-app-${{ hashFiles('pnpm-lock.yaml') }}-
+
+      - name: Establish VPN connection
+        run: |
+              sudo apt update
+              sudo apt install -y openvpn openvpn-systemd-resolved traceroute
+              echo "${{ secrets.NEW_VPN_CONFIG }}" > vpn-config.ovpn
+              echo "${{ secrets.NEW_VPN_USERNAME }}" > vpn-credentials.txt
+              echo "${{ secrets.NEW_VPN_PASSWORD }}" >> vpn-credentials.txt
+              sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-credentials.txt --daemon --log openvpn.log
+              sleep 10
+              echo 'VPN log:'
+              sudo cat openvpn.log
+          
+      - name: Update route tables
+        run: |
+              # Required for ip conflicts between gh runner and vpc (10.1.0.0)
+              PRIVATE_IP=$(hostname -I | awk '{print $1}')
+              echo "Private IP Address: $PRIVATE_IP"
+              GATEWAY=$(ip route | grep -m 1 tun0 | awk '{print $3}')
+              if [ -n "$GATEWAY" ]; then
+                echo "Found gateway: $GATEWAY"
+                # Add the route dynamically
+                sudo ip route add 10.1.0.0/16 via $GATEWAY dev tun0
+              else
+                echo "Error: Unable to find gateway for tun0"
+                exit 1
+              fi
+          
+      - name: Check VPN connection
+        env:
+              BORROW_DB_READ_DB: ${{ secrets.NEW_BORROW_DB_READ_DB }}
+              BORROW_DB_READ_HOST: ${{ secrets.NEW_BORROW_DB_READ_HOST }}
+              BORROW_DB_READ_USER: ${{ secrets.NEW_BORROW_DB_READ_USER }}
+              BORROW_DB_READ_PASSWORD: ${{ secrets.NEW_BORROW_DB_READ_PASSWORD }}
+              PGCONNECT_TIMEOUT: 5
+        run: |
+              echo 'Checking the VPN connection...'
+              PGPASSWORD=$BORROW_DB_READ_PASSWORD /usr/bin/psql -d $BORROW_DB_READ_DB -U $BORROW_DB_READ_USER -h $BORROW_DB_READ_HOST -c 'SELECT 1;' --echo-all --log-file=psql.log
+              cat psql.log
+
+      - name: Extract commit hash
+        id: vars
+        shell: bash
+        run: |
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Prebuild
+        run: pnpm prebuild
+
+      - name: Build
+        run: pnpm build-rays-frontend
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.BUILD_DEPLOY_OIDC_ROLE_PROD }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build docker image, copy build output and push to ECR
+        id: build-image
+        env:
+          LATEST_TAG: latest
+          ECR_REPO_NAME: summer-fi-rays-prod
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          SHA_TAG: ${{ steps.vars.outputs.sha_short }}
+        run: |
+          # Build a docker container and
+          # push it to ECR so that it can
+          # be deployed to ECS.
+          docker build -f apps/rays-dashboard/docker/Dockerfile \
+                       --build-arg CONTENTFUL_SPACE_ID=${{ secrets.CONTENTFUL_SPACE_ID }} \
+                       --build-arg CONTENTFUL_ACCESS_TOKEN=${{ secrets.CONTENTFUL_ACCESS_TOKEN }} \
+                       --build-arg CONTENTFUL_PREVIEW_ACCESS_TOKEN=${{ secrets.CONTENTFUL_PREVIEW_ACCESS_TOKEN }} \
+                       --build-arg CONFIG_URL=${{ secrets.CONFIG_URL }} \
+                       --build-arg CONFIG_URL_RAYS=${{ secrets.CONFIG_URL_RAYS }} \
+                       --build-arg FUNCTIONS_API_URL=${{ secrets.FUNCTIONS_API_URL }} \
+                       --build-arg MIXPANEL_KEY=${{ secrets.MIXPANEL_KEY }} \
+                       --build-arg NEXT_PUBLIC_MIXPANEL_KEY=${{ secrets.NEXT_PUBLIC_MIXPANEL_KEY }} \
+                       --build-arg NEXT_TELEMETRY_DISABLED=${{ secrets.NEXT_TELEMETRY_DISABLED }} \
+                       --cache-from=$ECR_REGISTRY/$ECR_REPO_NAME:$LATEST_TAG \
+                       -t $ECR_REGISTRY/$ECR_REPO_NAME:$SHA_TAG \
+                       -t $ECR_REGISTRY/$ECR_REPO_NAME:$LATEST_TAG \
+                       -t $ECR_REGISTRY/$ECR_REPO_NAME:$ENVIRONMENT_TAG \
+                       ./apps/rays-dashboard
+          docker push $ECR_REGISTRY/$ECR_REPO_NAME --all-tags
+
+      - name: Update ECS service with latest Docker image
+        id: service-update
+        run: |
+          aws ecs update-service --cluster $CLUSTER_NAME --service ${{ env.SERVICE_NAME }} --force-new-deployment --region $AWS_REGION
+
+      - name: Invalidate CloudFront
+        env:
+          CF_DIST_ID: ${{ secrets.CF_DIST_ID }}
+        run: |
+          AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.NEW_CF_DIST_ID_PROD }} --paths "/*"
