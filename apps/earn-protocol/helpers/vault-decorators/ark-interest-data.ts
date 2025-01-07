@@ -13,7 +13,7 @@ export const decorateWithArkInterestRatesData = (
       arksInterestRates: Object.fromEntries(
         Object.keys(arkInterestRatesMap).map((key) => [
           key,
-          arkInterestRatesMap[key].latestInterestRate[0].rate[0].rate,
+          arkInterestRatesMap[key].latestInterestRate[0]?.rate[0]?.rate,
         ]),
       ),
     },
