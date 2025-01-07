@@ -985,6 +985,9 @@ importers:
 
   packages/app-risk:
     dependencies:
+      '@summerfi/app-utils':
+        specifier: workspace:*
+        version: link:../app-utils
       kysely:
         specifier: ^0.27.3
         version: 0.27.3
@@ -1004,9 +1007,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@summerfi/app-utils':
-        specifier: workspace:*
-        version: link:../app-utils
       '@summerfi/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
