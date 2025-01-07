@@ -1,16 +1,10 @@
 'use client'
 
 import { type Dispatch, type FormEvent, type SetStateAction, useState } from 'react'
-import { Button, Input, SkeletonLine, Text } from '@summerfi/app-earn-ui'
+import { Button, Icon, Input, SkeletonLine, Text } from '@summerfi/app-earn-ui'
 import { sdkSupportedChains } from '@summerfi/app-types'
 import { isValidUrl } from '@summerfi/app-utils'
 import { type ChainId } from '@summerfi/sdk-common'
-import {
-  IconDeviceFloppy,
-  IconToolsKitchen2,
-  IconToolsKitchen2Off,
-  IconX,
-} from '@tabler/icons-react'
 
 import { ModalButton, type ModalButtonProps } from '@/components/molecules/Modal/ModalButton'
 import { forksCookieName } from '@/constants/forks-cookie-name'
@@ -191,7 +185,10 @@ const SetForkModalContent = () => {
                       lineHeight: '20px',
                       color: 'gray',
                     }}
-                    CustomIcon={forkCookies[network.id] ? IconToolsKitchen2 : IconToolsKitchen2Off}
+                    icon={{
+                      name: forkCookies[network.id] ? 'tools_kitchen' : 'tools_kitchen_off',
+                      size: 20,
+                    }}
                   />
                   <Button
                     variant="secondarySmall"
@@ -203,7 +200,7 @@ const SetForkModalContent = () => {
                     }}
                     type="submit"
                   >
-                    {network.label} <IconDeviceFloppy color="gray" size={18} />
+                    {network.label} <Icon iconName="device_floppy" color="gray" size={18} />
                   </Button>
                   <Button
                     disabled={!forkCookies[network.id]}
@@ -216,7 +213,11 @@ const SetForkModalContent = () => {
                     }}
                     onClick={resetFork({ chainId, setResetting })}
                   >
-                    <IconX color={forkCookies[network.id] ? 'black' : 'gray'} size={18} />
+                    <Icon
+                      iconName="tabler_x"
+                      color={forkCookies[network.id] ? 'black' : 'gray'}
+                      size={18}
+                    />
                   </Button>
                 </div>
               </form>

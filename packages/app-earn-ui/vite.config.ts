@@ -84,7 +84,6 @@ export default defineConfig(({ mode }) => {
           '@loadable/component',
           '@summerfi/app-icons',
           '@summerfi/armada-protocol-common',
-          '@tabler/icons-react',
           'bignumber.js',
           'clsx',
           'dayjs',
