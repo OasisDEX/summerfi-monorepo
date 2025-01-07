@@ -80,8 +80,25 @@ jobs:
           echo "${{ secrets.NEW_VPN_USERNAME }}" > vpn-credentials.txt
           echo "${{ secrets.NEW_VPN_PASSWORD }}" >> vpn-credentials.txt
           echo 'Connecting to the VPN...'
-          sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-credentials.txt --daemon
-          sleep 5
+          sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-credentials.txt --daemon --log openvpn.log
+          sleep 10
+          echo 'VPN log:'
+          sudo cat openvpn.log
+            
+      - name: Update route tables
+        run: |
+          # Required for ip conflicts between gh runner and vpc (10.2.0.0)
+          PRIVATE_IP=$(hostname -I | awk '{print $1}')
+          echo "Private IP Address: $PRIVATE_IP"
+          GATEWAY=$(ip route | grep -m 1 tun0 | awk '{print $3}')
+          if [ -n "$GATEWAY" ]; then
+            echo "Found gateway: $GATEWAY"
+            # Add the route dynamically
+            sudo ip route add 10.2.0.0/16 via $GATEWAY dev tun0
+          else
+            echo "Error: Unable to find gateway for tun0"
+            exit 1
+          fi
 
       - name: Check VPN connection
         env:
