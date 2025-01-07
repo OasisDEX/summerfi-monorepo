@@ -91,7 +91,7 @@ jobs:
           echo "${{ secrets.NEW_VPN_PASSWORD }}" >> vpn-credentials.txt
           echo 'Connecting to the VPN...'
           sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-credentials.txt --daemon
-          sleep 5
+          sleep 10
 
       - name: Check VPN connection
         env:
@@ -99,7 +99,7 @@ jobs:
           BORROW_DB_READ_HOST: ${{ secrets.NEW_BORROW_DB_READ_HOST }}
           BORROW_DB_READ_USER: ${{ secrets.NEW_BORROW_DB_READ_USER }}
           BORROW_DB_READ_PASSWORD: ${{ secrets.NEW_BORROW_DB_READ_PASSWORD }}
-          PGCONNECT_TIMEOUT: 5
+          PGCONNECT_TIMEOUT: 10
         run: |
           echo 'Checking the VPN connection...'
           sudo systemctl start postgresql.service
@@ -159,12 +159,6 @@ jobs:
         id: service-update
         run: |
           aws ecs update-service --cluster $CLUSTER_NAME --service ${{ env.SERVICE_NAME }} --force-new-deployment --region $AWS_REGION
-
-      #- name: Wait for all services to become stable
-      #  uses: oryanmoshe/ecs-wait-action@v1.3
-      #  with:
-      #    ecs-cluster: ${{ env.CLUSTER_NAME }}
-      #    ecs-services: '["${{ env.SERVICE_NAME }}"]'
 
       - name: Invalidate CloudFront
         env:
