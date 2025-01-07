@@ -59,7 +59,7 @@ export default defineConfig(({ mode }) => {
         formats: ['es'],
       },
       rollupOptions: {
-        external: ['react', 'next', 'next/server', 'zod', 'kysely'],
+        external: ['react', 'next', 'next/server', 'zod', 'kysely', '@summerfi/app-utils'],
         input: Object.fromEntries(
           glob
             .sync('src/**/*.{ts,tsx}')
