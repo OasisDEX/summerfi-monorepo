@@ -64,8 +64,8 @@ export default async function LeaderboardPage({
   })
 
   const topClimbers = await fetchLeaderboard({
-    page: '1',
     limit: climbersCount.toString(),
+    page: '1',
     sortMethod: 'top_gainers',
   })
 

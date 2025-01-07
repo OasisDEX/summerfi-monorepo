@@ -42,8 +42,8 @@ export default async function HomePage() {
           // TODO: Replace with real data
           { protocol: 'Spark', protocolIcon: 'spark_circle_color', url: '#', tvl: '1.2B' },
           { protocol: 'Aave', protocolIcon: 'aave_circle_color', url: '#', tvl: '1.2B' },
-          { protocol: 'Maker', protocolIcon: 'maker_circle_color', url: '#', tvl: '1.2B' },
           { protocol: 'Compound', protocolIcon: 'compound_circle_color', url: '#', tvl: '1.2B' },
+          { protocol: 'Maker', protocolIcon: 'maker_circle_color', url: '#', tvl: '1.2B' },
           { protocol: 'Ajna', protocolIcon: 'ajna_circle_color', url: '#', tvl: '1.2B' },
         ]}
       />
