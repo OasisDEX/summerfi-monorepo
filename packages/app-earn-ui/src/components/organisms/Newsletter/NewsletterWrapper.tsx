@@ -1,9 +1,11 @@
 'use client'
 
 import { type CSSProperties, type FC, useState } from 'react'
-import { Newsletter, type NewsletterPropsType, Text } from '@summerfi/app-earn-ui'
 import { EMAIL_REGEX } from '@summerfi/app-utils'
 import Link from 'next/link'
+
+import { Text } from '@/components/atoms/Text/Text'
+import { Newsletter, type NewsletterPropsType } from '@/components/organisms/Newsletter/Newsletter'
 
 const errorMessagesList = {
   emailIsInvalid: 'Please enter a valid email address',

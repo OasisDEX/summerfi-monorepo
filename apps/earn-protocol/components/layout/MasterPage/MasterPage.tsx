@@ -1,10 +1,9 @@
 import { type FC, type PropsWithChildren } from 'react'
-import { Footer, Text } from '@summerfi/app-earn-ui'
+import { Footer, NewsletterWrapper, Text } from '@summerfi/app-earn-ui'
 import dynamic from 'next/dynamic'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
 import { WalletInit } from '@/components/molecules/WalletInit/WalletInit'
-import { NewsletterWrapper } from '@/features/newsletter/components/NewsletterWrapper/NewsletterWrapper'
 
 import './global.css'
 import masterPageStyles from './MasterPage.module.scss'
