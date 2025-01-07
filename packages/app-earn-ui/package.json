@@ -26,7 +26,6 @@
   "devDependencies": {
     "@summerfi/app-token-config": "workspace:*",
     "@summerfi/app-types": "workspace:*",
-    "@summerfi/app-utils": "workspace:*",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
     "@types/loadable__component": "^5.13.9",
@@ -50,6 +49,8 @@
     "@loadable/component": "^5.16.4",
     "@summerfi/app-icons": "workspace:*",
     "@summerfi/armada-protocol-common": "workspace:*",
+    "@summerfi/app-utils": "workspace:*",
+    "@summerfi/serverless-shared": "workspace:*",
     "bignumber.js": "^9.1.2",
     "boring-avatars": "1.10.2",
     "clsx": "^2.1.1",
@@ -66,8 +67,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@summerfi/app-utils": "workspace:*",
-    "@summerfi/serverless-shared": "workspace:*",
     "include-media": "2.0.0",
     "react-animate-height": "^3.2.3",
     "rollup-preserve-directives": "^1.1.1",
