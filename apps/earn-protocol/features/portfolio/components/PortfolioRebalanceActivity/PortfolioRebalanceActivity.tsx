@@ -1,25 +1,59 @@
+import { type FC, useMemo, useState } from 'react'
+import InfiniteScroll from 'react-infinite-scroller'
 import { Card, DataBlock, Text } from '@summerfi/app-earn-ui'
+import { type SDKGlobalRebalancesType } from '@summerfi/app-types'
+import { formatFiatBalance, formatShorthandNumber } from '@summerfi/app-utils'
 
 import { PortfolioRebalanceActivityList } from '@/features/portfolio/components/PortfolioRebalanceActivityList/PortfolioRebalanceActivityList'
+import { getRebalanceSavedGasCost } from '@/features/rebalance-activity/helpers/get-saved-gas-cost'
+import { getRebalanceSavedTimeInHours } from '@/features/rebalance-activity/helpers/get-saved-time-in-hours'
 
 import classNames from './PortfolioRebalanceActivity.module.scss'
 
-const blocks = [
-  {
-    title: 'Rebalance actions',
-    value: '313',
-  },
-  {
-    title: 'User saved time',
-    value: '73.3 Hours',
-  },
-  {
-    title: 'Gas cost saving',
-    value: '$24',
-  },
-]
+interface PortfolioRebalanceActivityProps {
+  rebalancesList: SDKGlobalRebalancesType
+  walletAddress: string
+}
 
-export const PortfolioRebalanceActivity = () => {
+const initialRows = 10
+
+export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = ({
+  rebalancesList,
+  walletAddress,
+}) => {
+  const totalItems = rebalancesList.length
+  const savedTimeInHours = useMemo(() => getRebalanceSavedTimeInHours(totalItems), [totalItems])
+  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(totalItems), [totalItems])
+
+  const [current, setCurrent] = useState(initialRows)
+
+  const [currentlyLoadedList, setCurrentlyLoadedList] = useState(
+    rebalancesList.slice(0, initialRows),
+  )
+
+  const handleMoreItems = () => {
+    setCurrentlyLoadedList((prev) => [
+      ...prev,
+      ...rebalancesList.slice(current, current + initialRows),
+    ])
+    setCurrent(current + initialRows)
+  }
+
+  const blocks = [
+    {
+      title: 'Rebalance actions',
+      value: formatShorthandNumber(totalItems, { precision: 0 }),
+    },
+    {
+      title: 'User saved time',
+      value: `${formatShorthandNumber(savedTimeInHours, { precision: 1 })} hours`,
+    },
+    {
+      title: 'Gas cost saving',
+      value: `$${formatFiatBalance(savedGasCost)}`,
+    },
+  ]
+
   return (
     <Card className={classNames.wrapper} variant="cardSecondary">
       <Text as="h5" variant="h5" className={classNames.header}>
@@ -36,7 +70,12 @@ export const PortfolioRebalanceActivity = () => {
           />
         ))}
       </div>
-      <PortfolioRebalanceActivityList />
+      <InfiniteScroll loadMore={handleMoreItems} hasMore={totalItems > currentlyLoadedList.length}>
+        <PortfolioRebalanceActivityList
+          rebalancesList={currentlyLoadedList}
+          walletAddress={walletAddress}
+        />
+      </InfiniteScroll>
     </Card>
   )
 }

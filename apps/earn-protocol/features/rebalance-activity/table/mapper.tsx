@@ -48,7 +48,9 @@ const providerMap: { [key: string]: string } = {
   'Summer Earn Protocol': 'Summer.fi',
 }
 
-const purposeMapper = (item: SDKGlobalRebalanceType): { label: string; icon?: IconNamesList } => {
+export const rebalanceActivityPurposeMapper = (
+  item: SDKGlobalRebalanceType,
+): { label: string; icon: IconNamesList } => {
   const actionFromRawName = item.from.name?.split('-')[0] ?? 'n/a'
   const actionToRawName = item.to.name?.split('-')[0] ?? 'n/a'
 
@@ -77,7 +79,7 @@ const purposeMapper = (item: SDKGlobalRebalanceType): { label: string; icon?: Ic
   // eslint-disable-next-line no-console
   console.error('Unknown rebalance purpose, fallback to n/a')
 
-  return { label: 'n/a' }
+  return { label: 'n/a', icon: 'not_supported_icon' }
 }
 
 export const rebalancingActivityMapper = (
@@ -103,7 +105,7 @@ export const rebalancingActivityMapper = (
     const actionFromLabel = formatActionName(actionFromRawName)
     const actionToLabel = formatActionName(actionToRawName)
 
-    const purpose = purposeMapper(item)
+    const purpose = rebalanceActivityPurposeMapper(item)
 
     const providerLabel = providerMap[item.protocol.name] ?? 'n/a'
 

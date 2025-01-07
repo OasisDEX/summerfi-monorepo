@@ -2,7 +2,7 @@
 
 import { type FC } from 'react'
 import { TabBar } from '@summerfi/app-earn-ui'
-import { type SDKVaultishType } from '@summerfi/app-types'
+import { type SDKGlobalRebalancesType, type SDKVaultishType } from '@summerfi/app-types'
 
 import { type PortfolioPositionsList } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
 import { type PortfolioRewardsRawData } from '@/app/server-handlers/portfolio/portfolio-rewards-handler'
@@ -21,6 +21,7 @@ interface PortfolioPageViewProps {
   rewardsData: PortfolioRewardsRawData[]
   vaultsList: SDKVaultishType[]
   positions: PortfolioPositionsList[]
+  rebalancesList: SDKGlobalRebalancesType
 }
 
 export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
@@ -29,6 +30,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   rewardsData,
   vaultsList,
   positions,
+  rebalancesList,
 }) => {
   const [activeTab, updateTab] = useTabStateQuery({
     tabs: PortfolioTabs,
@@ -49,7 +51,9 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     {
       id: PortfolioTabs.REBALANCE_ACTIVITY,
       label: 'Rebalance Activity',
-      content: <PortfolioRebalanceActivity />,
+      content: (
+        <PortfolioRebalanceActivity rebalancesList={rebalancesList} walletAddress={walletAddress} />
+      ),
     },
     {
       id: PortfolioTabs.REWARDS,

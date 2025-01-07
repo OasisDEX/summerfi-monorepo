@@ -4,6 +4,7 @@ import { type IArmadaPosition } from '@summerfi/sdk-client'
 import { portfolioPositionsHandler } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
 import { portfolioRewardsHandler } from '@/app/server-handlers/portfolio/portfolio-rewards-handler'
 import { portfolioWalletAssetsHandler } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
+import { getGlobalRebalances } from '@/app/server-handlers/sdk/get-global-rebalances'
 import { getUserPositions } from '@/app/server-handlers/sdk/get-user-positions'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
@@ -19,11 +20,12 @@ type PortfolioPageProps = {
 const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   const { walletAddress } = params
 
-  const [walletData, { vaults }, positions, systemConfig] = await Promise.all([
+  const [walletData, { vaults }, positions, systemConfig, { rebalances }] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
     getVaultsList(),
     getUserPositions({ walletAddress }),
     systemConfigHandler(),
+    getGlobalRebalances(),
   ])
   const rewardsData = portfolioRewardsHandler(walletAddress)
 
@@ -38,8 +40,12 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       portfolioPositionsHandler({ position, vaultsList: vaults, config, walletAddress }),
     ),
   )
-
   const vaultsDecorated = decorateCustomVaultFields({ vaults, systemConfig: config })
+
+  const userVaultsIds = positionsList.map((position) => position.vaultData.id.toLowerCase())
+  const userRebalances = rebalances.filter((rebalance) =>
+    userVaultsIds.includes(rebalance.vault.id.toLowerCase()),
+  )
 
   return (
     <PortfolioPageView
@@ -48,6 +54,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       walletData={walletData}
       rewardsData={rewardsData}
       vaultsList={vaultsDecorated}
+      rebalancesList={userRebalances}
     />
   )
 }
