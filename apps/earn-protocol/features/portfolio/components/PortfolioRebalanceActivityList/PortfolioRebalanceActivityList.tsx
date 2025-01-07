@@ -1,117 +1,88 @@
-import { useState } from 'react'
-import { Icon, Text } from '@summerfi/app-earn-ui'
-import { type IconNamesList, type TokenSymbolsList } from '@summerfi/app-types'
-import { formatDecimalAsPercent, timeAgo } from '@summerfi/app-utils'
+import { type FC, useState } from 'react'
+import { getVaultPositionUrl, Icon, Text, useMobileCheck, WithArrow } from '@summerfi/app-earn-ui'
+import { type SDKGlobalRebalancesType, type TokenSymbolsList } from '@summerfi/app-types'
+import { formatFiatBalance, timeAgo } from '@summerfi/app-utils'
 import Link from 'next/link'
+
+import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
+import { rebalanceActivityPurposeMapper } from '@/features/rebalance-activity/table/mapper'
 
 import classNames from './PortfolioRebalanceActivityList.module.scss'
 
-const dummyList: {
-  token: TokenSymbolsList
-  icon: IconNamesList
-  title: string
-  timestamp: number
-  change: string
-  link: string
-}[] = [
-  {
-    token: 'DAI',
-    icon: 'withdraw',
-    title: 'Increased yield',
-    timestamp: 1729521746326,
-    change: '0.0031',
-    link: '/',
-  },
-  {
-    token: 'WBTC',
-    icon: 'withdraw',
-    title: 'Reduced Risk',
-    timestamp: 1729521746325,
-    change: '0.0031',
-    link: '/',
-  },
-  {
-    token: 'USDC',
-    icon: 'withdraw',
-    title: 'Reduced Risk',
-    timestamp: 1729521746324,
-    change: '0.0031',
-    link: '/',
-  },
-  {
-    token: 'USDT',
-    icon: 'withdraw',
-    title: 'Increased yield',
-    timestamp: 1729521746323,
-    change: '0.0031',
-    link: '/',
-  },
-  {
-    token: 'ETH',
-    icon: 'withdraw',
-    title: 'Increased yield',
-    timestamp: 1729521746322,
-    change: '0.0031',
-    link: '/',
-  },
-  {
-    token: 'ETH',
-    icon: 'withdraw',
-    title: 'Increased yield',
-    timestamp: 1729521746321,
-    change: '0.0031',
-    link: '/',
-  },
-]
+interface PortfolioRebalanceActivityListProps {
+  rebalancesList: SDKGlobalRebalancesType
+  walletAddress: string
+}
 
-export const PortfolioRebalanceActivityList = () => {
+export const PortfolioRebalanceActivityList: FC<PortfolioRebalanceActivityListProps> = ({
+  rebalancesList,
+  walletAddress,
+}) => {
   // timestamp should be unique, so can be used as id
   const [hoveredItemTimestamp, setHoveredItemTimestamp] = useState<number>()
 
+  const { deviceType } = useDeviceType()
+  const { isMobile } = useMobileCheck(deviceType)
+
   return (
     <div className={classNames.wrapper}>
-      {dummyList.map((item) => (
-        <Link
-          href={item.link}
-          key={item.title + item.token + item.change + item.timestamp}
-          onMouseEnter={() => setHoveredItemTimestamp(item.timestamp)}
-          onMouseLeave={() => setHoveredItemTimestamp(undefined)}
-        >
-          <div className={classNames.contentWrapper}>
-            <div className={classNames.leftContentWrapper}>
-              <div className={classNames.iconWrapper}>
-                <Icon
-                  iconName={item.icon}
-                  variant="s"
-                  color={
-                    hoveredItemTimestamp === item.timestamp
-                      ? 'rgba(210, 210, 210, 1)'
-                      : 'rgba(119, 117, 118, 1)'
-                  }
-                />
-              </div>
-              <div className={classNames.leftContent}>
-                <Text as="p" variant="p2semi">
-                  {item.title}
-                </Text>
-                <div className={classNames.leftContentDescription}>
-                  <Icon tokenName={item.token} variant="s" />
-                  <Text
-                    as="p"
-                    variant="p3semi"
-                    style={{ color: 'var(--earn-protocol-secondary-60)' }}
-                  >
-                    {formatDecimalAsPercent(item.change)}
+      {rebalancesList.map((item) => {
+        const purpose = rebalanceActivityPurposeMapper(item)
+
+        return (
+          <div
+            key={item.id}
+            onMouseEnter={() => setHoveredItemTimestamp(Number(item.timestamp))}
+            onMouseLeave={() => setHoveredItemTimestamp(undefined)}
+          >
+            <div className={classNames.contentWrapper}>
+              <div className={classNames.leftContentWrapper}>
+                <div className={classNames.iconWrapper}>
+                  <Icon
+                    iconName={purpose.icon}
+                    variant="s"
+                    color={
+                      hoveredItemTimestamp === Number(item.timestamp)
+                        ? 'rgba(210, 210, 210, 1)'
+                        : 'rgba(119, 117, 118, 1)'
+                    }
+                  />
+                </div>
+                <div className={classNames.leftContent}>
+                  <Text as="p" variant="p2semi">
+                    {purpose.label}
                   </Text>
+                  <div className={classNames.leftContentDescription}>
+                    <Icon tokenName={item.asset.symbol as TokenSymbolsList} variant="s" />
+                    <Text
+                      as="p"
+                      variant="p3semi"
+                      style={{ color: 'var(--earn-protocol-secondary-60)' }}
+                    >
+                      {formatFiatBalance(item.amountUSD)}
+                    </Text>
+                  </div>
                 </div>
               </div>
+              <div className={classNames.rightContentWrapper}>
+                <Text as="p" variant="p3semi" suppressHydrationWarning>
+                  {timeAgo({ from: new Date(), to: new Date(Number(item.timestamp) * 1000) })}
+                </Text>
+                {!isMobile && <span>&#8226;</span>}
+                <Link
+                  href={getVaultPositionUrl({
+                    network: item.protocol.network,
+                    vaultId: item.vault.id,
+                    walletAddress,
+                  })}
+                >
+                  <WithArrow reserveSpace={!isMobile}>Go to position</WithArrow>
+                </Link>
+              </div>
             </div>
-            <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-              {timeAgo({ from: new Date(), to: new Date(item.timestamp) })}
-            </Text>
           </div>
-        </Link>
-      ))}
+        )
+      })}
     </div>
   )
 }

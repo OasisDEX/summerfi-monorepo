@@ -36,7 +36,7 @@ export const mapGraphDataToArmadaPosition =
 
     return ArmadaPosition.createFrom({
       id: ArmadaPositionId.createFrom({ id: position.id, user: user }),
-
+      
       pool: ArmadaVault.createFrom({
         id: ArmadaVaultId.createFrom({
           chainInfo,
