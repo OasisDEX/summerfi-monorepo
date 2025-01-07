@@ -92,6 +92,8 @@ export default defineConfig(({ mode }) => {
           '@loadable/component',
           '@summerfi/app-icons',
           '@summerfi/app-types',
+          '@summerfi/serverless-shared',
+          '@summerfi/app-utils',
           '@tabler/icons-react',
           'bignumber.js',
           'boring-avatars',
@@ -103,7 +105,6 @@ export default defineConfig(({ mode }) => {
           'react',
           'react/jsx-runtime',
           'usehooks-ts',
-          '@summerfi/serverless-shared',
         ],
         input: Object.fromEntries(
           glob

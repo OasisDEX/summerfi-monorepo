@@ -42,6 +42,8 @@
   "peerDependencies": {
     "@loadable/component": "^5.16.4",
     "@summerfi/app-icons": "workspace:*",
+    "@summerfi/serverless-shared": "workspace:*",
+    "@summerfi/app-utils": "workspace:*",
     "@tabler/icons-react": "^3.19.0",
     "bignumber.js": "^9.1.2",
     "boring-avatars": "1.10.2",
@@ -56,8 +58,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@summerfi/serverless-shared": "workspace:*",
-    "@summerfi/app-utils": "workspace:*",
     "include-media": "2.0.0",
     "rollup-preserve-directives": "^1.1.1",
     "sanitize.css": "13.0.0",

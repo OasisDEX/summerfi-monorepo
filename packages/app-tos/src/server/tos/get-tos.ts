@@ -48,7 +48,9 @@ export async function getTos<DB extends TOSRequiredDB>({
   } else {
     const decoded = verifyAccessToken({ token: token.value, jwtSecret })
 
-    if (decoded) {
+    if (decoded?.address.toLowerCase() !== walletAddress.toLowerCase()) {
+      authorized = false
+    } else {
       authorized = true
     }
   }

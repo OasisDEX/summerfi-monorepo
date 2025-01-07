@@ -1,3 +1,4 @@
+import { verifyAccessToken } from '@summerfi/app-utils'
 import type { Kysely } from 'kysely'
 import { type NextRequest, NextResponse } from 'next/server'
 import * as z from 'zod'
@@ -40,10 +41,12 @@ export const getRisk = async <DB extends RiskRequiredDB>({
   req,
   trmApiKey,
   db,
+  jwtSecret,
 }: {
   req: NextRequest
   trmApiKey: string
   db: Kysely<DB>
+  jwtSecret: string
 }) => {
   const { chainId, walletAddress, cookiePrefix } = inputSchema.parse(await req.json())
 
@@ -52,6 +55,16 @@ export const getRisk = async <DB extends RiskRequiredDB>({
   const token = req.cookies.get(`${cookiePrefix}-${walletAddress.toLowerCase()}`)
 
   if (!token) {
+    return NextResponse.json({ authenticated: false }, { status: 401 })
+  }
+
+  const decoded = verifyAccessToken({ token: token.value, jwtSecret })
+
+  if (!decoded) {
+    return NextResponse.json({ authenticated: false }, { status: 401 })
+  }
+
+  if (decoded.address.toLowerCase() !== walletAddress.toLowerCase()) {
     return NextResponse.json({ authenticated: false }, { status: 401 })
   }
 
