@@ -36,7 +36,7 @@ export const HistoricalChart = ({ data, tokenSymbol, position }: HistoricalChart
     netValue: `$${formatCryptoBalance(netEarnings)}`,
     depositedValue: `$${formatCryptoBalance(netDeposited)}`,
     earnings: `$${formatCryptoBalance(netEarnings.minus(netDeposited))}`,
-    sumrEarned: `TBD`,
+    sumrEarned: `TBD `,
   }
   const [highlightedData, setHighlightedData] = useState<{
     [key: string]: string | number
