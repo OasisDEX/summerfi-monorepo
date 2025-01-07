@@ -80,6 +80,7 @@ export default defineConfig(({ mode }) => {
           '@summerfi/app-types',
           'next',
           'next/navigation',
+          'jsonwebtoken',
         ],
         output: {
           assetFileNames: 'assets/[name][extname]',

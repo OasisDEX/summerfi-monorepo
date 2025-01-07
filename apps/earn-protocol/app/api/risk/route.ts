@@ -22,5 +22,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Required ENV variable is not set' }, { status: 500 })
   }
 
-  return await getRisk({ req, trmApiKey, db })
+  const jwtSecret = process.env.EARN_PROTOCOL_JWT_SECRET
+
+  if (!jwtSecret) {
+    return NextResponse.json({ error: 'Required ENV variable is not set' }, { status: 500 })
+  }
+
+  return await getRisk({ req, trmApiKey, db, jwtSecret })
 }

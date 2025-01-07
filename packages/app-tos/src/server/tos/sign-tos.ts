@@ -48,6 +48,10 @@ export async function signTos<DB extends TOSRequiredDB>({
     return NextResponse.json({ authenticated: false }, { status: 401 })
   }
 
+  if (decoded.address.toLowerCase() !== walletAddress.toLowerCase()) {
+    return NextResponse.json({ authenticated: false }, { status: 401 })
+  }
+
   const approvalData = {
     address: decoded.address,
     signature: decoded.signature,
