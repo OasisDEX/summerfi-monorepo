@@ -3,7 +3,7 @@ import { type ArkDetailsType, type SDKVaultishType, type SDKVaultType } from '@s
 export const getArkProductId = (
   ark: SDKVaultishType['arks'][number] | SDKVaultType['arks'][number],
 ) => {
-  if (!ark.details) {
+  if (!ark.details || ark.name === 'BufferArk') {
     return false
   }
   const parsedDetails = JSON.parse(ark.details as string) as ArkDetailsType
