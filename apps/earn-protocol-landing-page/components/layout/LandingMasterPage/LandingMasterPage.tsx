@@ -1,5 +1,7 @@
+'use client'
+
 import { type FC, type PropsWithChildren } from 'react'
-import { Footer, MainBackground, NewsletterWrapper, Text } from '@summerfi/app-earn-ui'
+import { Footer, NewsletterWrapper, Text } from '@summerfi/app-earn-ui'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
 
@@ -10,8 +12,20 @@ interface LandingMasterPageProps {}
 export const LandingMasterPage: FC<PropsWithChildren<LandingMasterPageProps>> = ({ children }) => {
   return (
     <div className={landingMasterPageStyles.mainContainer}>
-      <NavigationWrapper />
+      <div className={landingMasterPageStyles.bubbles}>
+        <video
+          width="100%"
+          autoPlay
+          loop
+          muted
+          playsInline
+          className={landingMasterPageStyles.video}
+        >
+          <source src="/img/landing-page/bubbles.webm" type="video/mp4" />
+        </video>
+      </div>
       <div className={landingMasterPageStyles.appContainer}>
+        <NavigationWrapper />
         {children}
         <Footer
           logo="/img/branding/logo-light.svg"
@@ -47,7 +61,6 @@ export const LandingMasterPage: FC<PropsWithChildren<LandingMasterPageProps>> = 
           }
         />
       </div>
-      <MainBackground />
     </div>
   )
 }

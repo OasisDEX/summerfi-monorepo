@@ -1,9 +1,9 @@
 .container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   column-gap: var(--spacing-space-x-large);
   row-gap: var(--general-space-32);
-  padding: var(--general-space-64) 0;
+  padding: var(--general-space-64) var(--general-space-64);
 
   >div {
     min-width: 180px;
