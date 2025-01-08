@@ -4,7 +4,7 @@ import { Text } from '@summerfi/app-earn-ui'
 type EmphasisProps = { children: ReactNode; variant?: 'h4colorful' | 'h3colorful' | 'h2colorful' }
 
 export const Emphasis = ({ children, variant = 'h4colorful' }: EmphasisProps) => (
-  <Text variant={variant} as="span">
+  <Text variant={variant} as="span" style={{ letterSpacing: '0.1px' }}>
     {children}
   </Text>
 )

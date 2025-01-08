@@ -312,6 +312,15 @@ export const icons = {
   gearbox: customLazy(() => import('./icons/gearbox.svg?react')),
   linkedin: customLazy(() => import('./icons/linkedin.svg?react')),
   x: customLazy(() => import('./icons/x.svg?react')),
+  scroller_aave: customLazy(() => import('./icons/scroller_aave.svg?react')),
+  scroller_sky: customLazy(() => import('./icons/scroller_sky.svg?react')),
+  scroller_spark: customLazy(() => import('./icons/scroller_spark.svg?react')),
+  scroller_pendle: customLazy(() => import('./icons/scroller_pendle.svg?react')),
+  scroller_gearbox: customLazy(() => import('./icons/scroller_gearbox.svg?react')),
+  scroller_euler: customLazy(() => import('./icons/scroller_euler.svg?react')),
+  scroller_compound: customLazy(() => import('./icons/scroller_compound.svg?react')),
+  scroller_ethena: customLazy(() => import('./icons/scroller_ethena.svg?react')),
+  scroller_fluid: customLazy(() => import('./icons/scroller_fluid.svg?react')),
 
   // imported from tabler icon database
 

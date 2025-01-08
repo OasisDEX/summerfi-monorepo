@@ -40,11 +40,15 @@ export default async function HomePage() {
       <ProtocolScroller
         protocolsList={[
           // TODO: Replace with real data
-          { protocol: 'Spark', protocolIcon: 'spark_circle_color', url: '#', tvl: '1.2B' },
-          { protocol: 'Aave', protocolIcon: 'aave_circle_color', url: '#', tvl: '1.2B' },
-          { protocol: 'Compound', protocolIcon: 'compound_circle_color', url: '#', tvl: '1.2B' },
-          { protocol: 'Maker', protocolIcon: 'maker_circle_color', url: '#', tvl: '1.2B' },
-          { protocol: 'Ajna', protocolIcon: 'ajna_circle_color', url: '#', tvl: '1.2B' },
+          { protocol: 'Aave', protocolIcon: 'scroller_aave', url: '#', tvl: 100000n },
+          { protocol: 'Sky', protocolIcon: 'scroller_sky', url: '#', tvl: 100000n },
+          { protocol: 'Spark', protocolIcon: 'scroller_spark', url: '#', tvl: 100000n },
+          { protocol: 'Pendle', protocolIcon: 'scroller_pendle', url: '#', tvl: 100000n },
+          { protocol: 'Gearbox', protocolIcon: 'scroller_gearbox', url: '#', tvl: 100000n },
+          { protocol: 'Euler', protocolIcon: 'scroller_euler', url: '#', tvl: 100000n },
+          { protocol: 'Compound', protocolIcon: 'scroller_compound', url: '#', tvl: 100000n },
+          { protocol: 'Ethena', protocolIcon: 'scroller_ethena', url: '#', tvl: 100000n },
+          { protocol: 'Fluid', protocolIcon: 'scroller_fluid', url: '#', tvl: 100000n },
         ]}
       />
       <MarketingPoints>

@@ -1,6 +1,7 @@
 .summerProInfoBox {
   width: 515px !important; // should match the carousel element width
   background-color: var(--earn-protocol-neutral-100);
+  margin-top: var(--spacing-space-medium);
 
   @include media('<=s') {
     margin-top: var(--spacing-space-2x-large);
