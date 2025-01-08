@@ -1,8 +1,8 @@
-import { isValidAddress } from '@summerfi/serverless-shared'
 import { redirect } from 'next/navigation'
 
 import { StakeDelegatePageView } from '@/components/layout/StakeDelegatePageView/StakeDelegatePageView'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
+import { isValidAddress } from '@/helpers/is-valid-address'
 
 export const revalidate = 60
 
