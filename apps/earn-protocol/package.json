@@ -51,7 +51,7 @@
     "mixpanel-browser": "^2.53.0",
     "mixpanel": "^0.18.0",
     "next-intl": "^3.21.1",
-    "next": "^14.2.15",
+    "next": "^14.2.23",
     "react-dom": "^18.3.1",
     "react-infinite-scroller": "^1.2.6",
     "react": "^18.3.1",
