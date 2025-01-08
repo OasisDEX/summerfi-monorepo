@@ -67,6 +67,7 @@ export async function getInterestRates({ network, arksList }: GetInterestRatesPa
           ],
         })
       }
+
       return networkGraphQlClient.request<GetInterestRatesQuery>(GetInterestRatesDocument, {
         productId: getArkProductId(ark),
       })
