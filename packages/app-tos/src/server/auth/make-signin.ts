@@ -1,11 +1,5 @@
-import { type JWTChallenge, type JwtPayload } from '@summerfi/app-types'
-import {
-  type Address,
-  ChainId,
-  chainIdSchema,
-  getRpcGatewayEndpoint,
-  type IRpcConfig,
-} from '@summerfi/serverless-shared'
+import { type JWTChallenge, type JwtPayload, SDKChainId } from '@summerfi/app-types'
+import { chainIdSchema, getRpcGatewayEndpoint, type IRpcConfig } from '@summerfi/serverless-shared'
 import jwt from 'jsonwebtoken'
 import type { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 import { type NextRequest, NextResponse } from 'next/server'
@@ -32,12 +26,12 @@ const inputSchema = z.object({
   cookiePrefix: z.string(),
 })
 
-const domainChainIdToViemChain: { [key in ChainId]: ViemChain } = {
-  [ChainId.MAINNET]: mainnet,
-  [ChainId.ARBITRUM]: arbitrum,
-  [ChainId.OPTIMISM]: optimism,
-  [ChainId.BASE]: base,
-  [ChainId.SEPOLIA]: sepolia,
+const domainChainIdToViemChain: { [key in SDKChainId]: ViemChain } = {
+  [SDKChainId.MAINNET]: mainnet,
+  [SDKChainId.ARBITRUM]: arbitrum,
+  [SDKChainId.OPTIMISM]: optimism,
+  [SDKChainId.BASE]: base,
+  [SDKChainId.SEPOLIA]: sepolia,
 }
 
 const rpcConfig: IRpcConfig = {
@@ -104,7 +98,7 @@ export async function makeSignIn({
       client,
       address: challenge.address,
       message,
-      signature: body.signature as Address,
+      signature: body.signature as `0x${string}`,
     })
 
     if (!isValid) {
@@ -113,7 +107,7 @@ export async function makeSignIn({
   } else {
     const signedAddress = await recoverMessageAddress({
       message,
-      signature: body.signature as Address,
+      signature: body.signature as `0x${string}`,
     })
 
     if (signedAddress.toLowerCase() !== challenge.address) {
@@ -126,7 +120,7 @@ export async function makeSignIn({
           client,
           address: challenge.address,
           message,
-          signature: body.signature as Address,
+          signature: body.signature as `0x${string}`,
         })
 
         if (!isValid) {

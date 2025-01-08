@@ -2,7 +2,6 @@
 
 import { type AppConfigType } from '@summerfi/app-types'
 import { getLocalAppConfig } from '@summerfi/app-utils'
-import { isSSR } from '@summerfi/serverless-shared'
 import coinbaseModule from '@web3-onboard/coinbase'
 import gnosisModule from '@web3-onboard/gnosis'
 import injectedWalletsModule from '@web3-onboard/injected-wallets'
@@ -17,6 +16,7 @@ import { getCookies } from '@/constants/get-cookies'
 import { type NetworkConfig, networksList } from '@/constants/networks-list'
 import { networksList as ssrNetworksList } from '@/constants/networks-list-ssr'
 import { safeParseJson } from '@/constants/safe-parse-json'
+import { isSSR } from '@/helpers/is-ssr'
 
 const { connectionMethods, walletRpc } = getLocalAppConfig('parameters')
 

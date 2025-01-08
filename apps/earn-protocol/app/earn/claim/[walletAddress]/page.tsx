@@ -1,7 +1,7 @@
-import { isValidAddress } from '@summerfi/serverless-shared'
 import { redirect } from 'next/navigation'
 
 import { ClaimPageView } from '@/components/layout/ClaimPageView/ClaimPageView'
+import { isValidAddress } from '@/helpers/is-valid-address'
 
 export const revalidate = 60
 

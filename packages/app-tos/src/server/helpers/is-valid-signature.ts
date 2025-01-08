@@ -1,4 +1,3 @@
-import { type Address } from '@summerfi/serverless-shared'
 import { hashMessage, type PublicClient } from 'viem'
 
 const eip1271CompatibleContract = [
@@ -34,9 +33,9 @@ export async function isValidSignature({
   signature,
 }: {
   client: PublicClient
-  address: Address
+  address: `0x${string}`
   message: string
-  signature: Address
+  signature: `0x${string}`
 }): Promise<boolean> {
   const messageBytes32 = hashMessage(message)
 

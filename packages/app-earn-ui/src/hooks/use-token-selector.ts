@@ -3,10 +3,10 @@ import { useEffect, useMemo, useState } from 'react'
 import {
   type DropdownOption,
   type DropdownRawOption,
+  SDKChainId,
   type SDKVaultishType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
-import { ChainId } from '@summerfi/serverless-shared'
 
 type TokenSelectorProps = {
   vault: SDKVaultishType
@@ -16,9 +16,9 @@ type TokenSelectorProps = {
 // For swap testing purposes only adding testToken to dropdown
 const testTokens: { [key: number]: TokenSymbolsList[] | undefined } = {
   // base
-  [ChainId.BASE]: ['USDC', 'USDBC', 'WSTETH'],
+  [SDKChainId.BASE]: ['USDC', 'USDBC', 'WSTETH'],
   // arbitrum
-  [ChainId.ARBITRUM]: ['USDC', 'WBTC', 'WSTETH'],
+  [SDKChainId.ARBITRUM]: ['USDC', 'WBTC', 'WSTETH'],
 }
 
 /**
