@@ -7,10 +7,10 @@ import { useParams } from 'next/navigation'
 import { ClaimDelegateCard } from '@/features/claim-and-delegate/components/ClaimDelegateCard/ClaimDelegateCard'
 import { sumrDelegates } from '@/features/claim-and-delegate/consts'
 import {
+  type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
   type ClaimDelegateState,
   ClaimDelegateTxStatuses,
-  type ClaimDelegateExternalData,
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
 

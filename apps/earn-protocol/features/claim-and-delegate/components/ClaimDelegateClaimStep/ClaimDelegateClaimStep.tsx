@@ -3,10 +3,10 @@ import { Button, Card, Icon, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 
 import {
+  type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
   type ClaimDelegateState,
   ClaimDelegateSteps,
-  type ClaimDelegateExternalData,
 } from '@/features/claim-and-delegate/types'
 
 import classNames from './ClaimDelegateClaimStep.module.scss'
