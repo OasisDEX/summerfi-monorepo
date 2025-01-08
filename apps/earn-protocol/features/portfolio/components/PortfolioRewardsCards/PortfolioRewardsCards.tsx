@@ -38,6 +38,7 @@ const SumrAvailableToClaim = () => {
 }
 
 const StakedAndDelegatedSumr = () => {
+  const { walletAddress } = useParams()
   const rawApy = 0.026
   const rawStaked = 3500
 
@@ -58,7 +59,7 @@ const StakedAndDelegatedSumr = () => {
         valueSize: 'large',
       }}
       actionable={
-        <Link href="/" target="_blank">
+        <Link href={`/earn/stake-delegate/${walletAddress}`} prefetch>
           <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
             Stake and delegate
           </Text>
@@ -104,6 +105,7 @@ const YourTotalSumr = () => {
 }
 
 const YourDelegate = () => {
+  const { walletAddress } = useParams()
   const value = 'No delegate'
 
   return (
@@ -115,7 +117,7 @@ const YourDelegate = () => {
         valueSize: 'large',
       }}
       actionable={
-        <Link href="/" target="_blank">
+        <Link href={`/earn/stake-delegate/${walletAddress}`} prefetch>
           <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
             Change delegate
           </Text>

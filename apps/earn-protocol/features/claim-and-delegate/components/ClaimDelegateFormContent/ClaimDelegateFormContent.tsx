@@ -4,10 +4,10 @@ import { ClaimDelegateAcceptanceStep } from '@/features/claim-and-delegate/compo
 import { ClaimDelegateClaimStep } from '@/features/claim-and-delegate/components/ClaimDelegateClaimStep/ClaimDelegateClaimStep'
 import { ClaimDelegateStakeDelegateStep } from '@/features/claim-and-delegate/components/ClaimDelegateStakeDelegateStep/ClaimDelegateStakeDelegateStep'
 import {
+  type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
   type ClaimDelegateState,
   ClaimDelegateSteps,
-  type ClamDelegateExternalData,
 } from '@/features/claim-and-delegate/types'
 
 import classNames from './ClaimDelegateFormContent.module.scss'
@@ -15,7 +15,7 @@ import classNames from './ClaimDelegateFormContent.module.scss'
 interface ClaimDelegateFormContentProps {
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
-  externalData: ClamDelegateExternalData
+  externalData: ClaimDelegateExternalData
 }
 
 export const ClaimDelegateFormContent: FC<ClaimDelegateFormContentProps> = ({

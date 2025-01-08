@@ -6,7 +6,7 @@ import {
   type ClaimDelegateReducerAction,
   type ClaimDelegateState,
   ClaimDelegateSteps,
-  type ClamDelegateExternalData,
+  type ClaimDelegateExternalData,
 } from '@/features/claim-and-delegate/types'
 
 import classNames from './ClaimDelegateClaimStep.module.scss'
@@ -14,7 +14,7 @@ import classNames from './ClaimDelegateClaimStep.module.scss'
 interface ClaimDelegateClaimStepProps {
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
-  externalData: ClamDelegateExternalData
+  externalData: ClaimDelegateExternalData
 }
 
 export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
