@@ -752,5 +752,14 @@ export const StaticTokensData: TokenListData = {
       decimals: 18,
       logoURI: '',
     },
+    // temporary deployment
+    {
+      chainId: 8453,
+      symbol: 'SUMMER',
+      name: 'SummerToken',
+      address: '0x7eBD1bc062f4a32Aa2ADBF61aD9Ae694f1cB3BA1',
+      decimals: 18,
+      logoURI: '',
+    },
   ],
 }
