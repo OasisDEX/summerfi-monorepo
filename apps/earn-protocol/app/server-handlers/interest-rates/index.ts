@@ -59,10 +59,12 @@ export async function getInterestRates({ network, arksList }: GetInterestRatesPa
           dailyInterestRates: [{ averageRate: 0, date: 0, __typename: 'DailyInterestRate' }],
           hourlyInterestRates: [{ averageRate: 0, date: 0, __typename: 'HourlyInterestRate' }],
           weeklyInterestRates: [{ averageRate: 0, date: 0, __typename: 'WeeklyInterestRate' }],
-          latestInterestRate: [{
-            rate: [{ rate: 0, timestamp: 0, __typename: 'InterestRate' }],
-            __typename: 'HourlyInterestRate'
-          }]
+          latestInterestRate: [
+            {
+              rate: [{ rate: 0, timestamp: 0, __typename: 'InterestRate' }],
+              __typename: 'HourlyInterestRate',
+            },
+          ],
         })
       }
       return networkGraphQlClient.request<GetInterestRatesQuery>(GetInterestRatesDocument, {
@@ -79,7 +81,6 @@ export async function getInterestRates({ network, arksList }: GetInterestRatesPa
 
     return acc
   }, {})
-
 }
 
 export type GetInterestRatesReturnType = Awaited<ReturnType<typeof getInterestRates>>
