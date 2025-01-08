@@ -1,12 +1,19 @@
 'use client'
 import { type ChangeEvent, useEffect, useState } from 'react'
 import { useAuthModal, useUser } from '@account-kit/react'
-import { Button, Card, GradientBox, Input, LoadingSpinner, Text } from '@summerfi/app-earn-ui'
+import {
+  Button,
+  Card,
+  GradientBox,
+  Input,
+  LoadingSpinner,
+  NewsletterWrapper,
+  Text,
+} from '@summerfi/app-earn-ui'
 import { formatAddress } from '@summerfi/app-utils'
 import { useRouter } from 'next/navigation'
 import { isAddress } from 'viem'
 
-import { NewsletterWrapper } from '@/features/newsletter/components/NewsletterWrapper/NewsletterWrapper'
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { getUserSumrEligibility } from '@/features/sumr-claim/helpers/getUserSumrEligibility'
 

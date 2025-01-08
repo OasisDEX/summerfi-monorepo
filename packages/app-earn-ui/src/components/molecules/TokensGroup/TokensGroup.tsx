@@ -1,5 +1,4 @@
-import { type TokenSymbolsList } from '@summerfi/app-types'
-import { type NetworkNames } from '@summerfi/serverless-shared'
+import { type NetworkNames, type TokenSymbolsList } from '@summerfi/app-types'
 
 import { GenericTokenIcon } from '@/components/atoms/GenericTokenIcon/GenericTokenIcon'
 import { Icon, type IconPropsBase } from '@/components/atoms/Icon/Icon'

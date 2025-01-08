@@ -88,6 +88,7 @@ export { Table, type TableSortedColumn } from './components/organisms/Table/Tabl
 export { VaultSimulationForm } from './components/organisms/VaultSimulationForm/VaultSimulationForm'
 export { PortfolioPosition } from './components/organisms/PortfolioPosition/PortfolioPosition'
 export { Newsletter, type NewsletterPropsType } from './components/organisms/Newsletter/Newsletter'
+export { NewsletterWrapper } from './components/organisms/Newsletter/NewsletterWrapper'
 export {
   MarketingPointsList,
   type MarketingPointsListData,

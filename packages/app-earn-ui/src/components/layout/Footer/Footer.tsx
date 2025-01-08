@@ -4,7 +4,6 @@ import { type FC, type ReactNode } from 'react'
 import Link from 'next/link'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
-import { ProxyLinkComponent } from '@/components/atoms/ProxyLinkComponent/ProxyLinkComponent'
 import { Text } from '@/components/atoms/Text/Text'
 import { EXTERNAL_LINKS, INTERNAL_LINKS } from '@/helpers/application-links'
 
@@ -106,17 +105,29 @@ export const Footer: FC<FooterProps> = ({ logo, newsletter, languageSwitcher }) 
         <ul className={footerStyles.socialsList}>
           <li>
             <Link href="https://twitter.com/summerfinance_" target="_blank" rel="noreferrer">
-              <Icon iconName="brand_icon_twitter" size={20} />
+              <Icon
+                iconName="brand_icon_twitter"
+                size={20}
+                color="var(--color-background-primary)"
+              />
             </Link>
           </li>
           <li>
             <Link href="https://discord.com/invite/summerfi" target="_blank" rel="noreferrer">
-              <Icon iconName="brand_icon_discord" size={20} />
+              <Icon
+                iconName="brand_icon_discord"
+                size={20}
+                color="var(--color-background-primary)"
+              />
             </Link>
           </li>
           <li>
             <Link href="https://github.com/OasisDEX" target="_blank" rel="noreferrer">
-              <Icon iconName="brand_icon_github" size={20} />
+              <Icon
+                iconName="brand_icon_github"
+                size={20}
+                color="var(--color-background-primary)"
+              />
             </Link>
           </li>
         </ul>
@@ -130,12 +141,8 @@ export const Footer: FC<FooterProps> = ({ logo, newsletter, languageSwitcher }) 
           <ul className={footerStyles.linksList}>
             {links.map(({ label, url }, j) => (
               <li key={j}>
-                <Link passHref legacyBehavior prefetch={false} href={url}>
-                  <ProxyLinkComponent
-                    {...(url.startsWith('http') && { target: '_blank', rel: 'noreferrer' })}
-                  >
-                    <Text variant="p2">{label}</Text>
-                  </ProxyLinkComponent>
+                <Link prefetch={false} href={url}>
+                  <Text variant="p2">{label}</Text>
                 </Link>
               </li>
             ))}

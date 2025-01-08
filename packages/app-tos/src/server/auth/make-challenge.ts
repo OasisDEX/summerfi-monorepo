@@ -1,5 +1,5 @@
 import { type JWTChallenge } from '@summerfi/app-types'
-import { getRandomString } from '@summerfi/serverless-shared'
+import { getRandomString } from '@summerfi/app-utils'
 import jwt from 'jsonwebtoken'
 import { type NextRequest, NextResponse } from 'next/server'
 import { type Address } from 'viem'

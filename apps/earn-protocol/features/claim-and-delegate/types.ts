@@ -36,7 +36,7 @@ export type ClaimDelegateReducerAction =
       payload: ClaimDelegateTxStatuses
     }
 
-export type ClamDelegateExternalData = {
+export type ClaimDelegateExternalData = {
   sumrPrice: string
   sumrEarned: string
   sumrApy: string

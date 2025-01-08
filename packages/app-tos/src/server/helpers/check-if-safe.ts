@@ -1,5 +1,4 @@
 import { type JWTChallenge } from '@summerfi/app-types'
-import type { Address } from '@summerfi/serverless-shared'
 import { type PublicClient } from 'viem'
 
 export const safeAbi = [
@@ -27,7 +26,7 @@ export const safeAbi = [
 export async function checkIfSafeOwner(
   client: PublicClient,
   challenge: JWTChallenge,
-  signedAddress: Address,
+  signedAddress: `0x${string}`,
 ): Promise<boolean> {
   return await client.readContract({
     abi: safeAbi,

@@ -43,12 +43,10 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@summerfi/rays-db": "workspace:*",
-    "@summerfi/serverless-shared": "workspace:*",
     "bignumber.js": "^9.1.2",
     "dayjs": "^1.11.12",
     "lodash-es": "^4.17.1",
-    "next": "^14.2.15",
+    "next": "^14.2.23",
     "jsonwebtoken": "^9.0.0"
   },
   "dependencies": {
