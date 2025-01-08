@@ -14,7 +14,7 @@ export const LandingMasterPage: FC<PropsWithChildren<LandingMasterPageProps>> = 
     <div className={landingMasterPageStyles.mainContainer}>
       <div className={landingMasterPageStyles.bubbles}>
         <video
-          width="1440"
+          width="100%"
           autoPlay
           loop
           muted
