@@ -53,7 +53,7 @@ export const StartEarningNow = () => {
               Individual
             </Text>
           }
-          title="Start earning in minutes"
+          title="Start earning in minutes and discover the power of Summer"
           points={[
             'Start earning without a crypto wallet',
             'Deposit with any token if you already have a wallet',
@@ -67,36 +67,13 @@ export const StartEarningNow = () => {
           }
         />
         <StartEarningNowBlock
-          id="institutions"
-          tag={
-            <Text
-              variant="p3semi"
-              className={clsx(startEarningNowStyles.tag, startEarningNowStyles.institutionsTag)}
-            >
-              Institutions & DAO Treasuries
-            </Text>
-          }
-          title="Streamline your DeFi yield strategy"
-          points={[
-            'Best in class security',
-            'Deep liquidity',
-            'Audited and open source code',
-            'Withdraw anytime',
-          ]}
-          cta={
-            <Button variant="primarySmall" className={clsx(startEarningNowStyles.ctaButton)}>
-              <Text variant="p3semi">Set up a call</Text>
-            </Button>
-          }
-        />
-        <StartEarningNowBlock
           id="defiYieldEarners"
           tag={
             <Text variant="p3semiColorful" className={clsx(startEarningNowStyles.tag)}>
               For Existing DeFi Yield Earners
             </Text>
           }
-          title="Migrate your position to Summer in 1 transaction"
+          title="Migrate your existing DeFi positions to Summer in under a minute"
           points={[
             'Start earning optimized DeFi yields',
             'Keep some exposure to original strategy',
@@ -106,6 +83,29 @@ export const StartEarningNow = () => {
           cta={
             <Button variant="primarySmall" className={clsx(startEarningNowStyles.ctaButton)}>
               <Text variant="p3semi">Migrate</Text>
+            </Button>
+          }
+        />
+        <StartEarningNowBlock
+          id="institutions"
+          tag={
+            <Text
+              variant="p3semi"
+              className={clsx(startEarningNowStyles.tag, startEarningNowStyles.institutionsTag)}
+            >
+              HNW, Institutions & DAO Treasuries
+            </Text>
+          }
+          title="Get a personalised onboarding experience"
+          points={[
+            'For those with at least $100,000 USD',
+            'Personally onboarded with a member of the team through a Google Meet or Zoom call',
+            'A key contact person for any future support',
+            'Still able to withdraw at anytime',
+          ]}
+          cta={
+            <Button variant="primarySmall" className={clsx(startEarningNowStyles.ctaButton)}>
+              <Text variant="p3semi">Set up a call</Text>
             </Button>
           }
         />
