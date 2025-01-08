@@ -5,9 +5,9 @@ import { Card } from '@summerfi/app-earn-ui'
 import { ClaimDelegateFormContent } from '@/features/claim-and-delegate/components/ClaimDelegateFormContent/ClaimDelegateFormContent'
 import { ClaimDelegateFormHeader } from '@/features/claim-and-delegate/components/ClaimDelegateFormHeader/ClaimDelegateFormHeader'
 import type {
+  ClaimDelegateExternalData,
   ClaimDelegateReducerAction,
   ClaimDelegateState,
-  ClamDelegateExternalData,
 } from '@/features/claim-and-delegate/types'
 
 import classNames from './ClaimDelegateForm.module.scss'
@@ -15,7 +15,7 @@ import classNames from './ClaimDelegateForm.module.scss'
 interface ClaimDelegateFormProps {
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
-  externalData: ClamDelegateExternalData
+  externalData: ClaimDelegateExternalData
 }
 
 export const ClaimDelegateForm: FC<ClaimDelegateFormProps> = ({

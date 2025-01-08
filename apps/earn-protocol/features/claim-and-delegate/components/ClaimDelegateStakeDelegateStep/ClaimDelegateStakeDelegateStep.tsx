@@ -3,16 +3,16 @@ import type { Dispatch, FC } from 'react'
 import { ClaimDelegateStakeDelegateCompletedSubstep } from '@/features/claim-and-delegate/components/ClaimDelegateStakeDelegateStep/substeps/ClaimDelegateStakeDelegateCompletedSubstep/ClaimDelegateStakeDelegateCompletedSubstep'
 import { ClaimDelegateStakeDelegateSubstep } from '@/features/claim-and-delegate/components/ClaimDelegateStakeDelegateStep/substeps/ClaimDelegateStakeDelegateSubstep/ClaimDelegateStakeDelegateSubstep'
 import {
+  type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
   type ClaimDelegateState,
   ClaimDelegateTxStatuses,
-  type ClamDelegateExternalData,
 } from '@/features/claim-and-delegate/types'
 
 interface ClaimDelegateStakeDelegateStepProps {
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
-  externalData: ClamDelegateExternalData
+  externalData: ClaimDelegateExternalData
 }
 
 export const ClaimDelegateStakeDelegateStep: FC<ClaimDelegateStakeDelegateStepProps> = ({
@@ -21,7 +21,7 @@ export const ClaimDelegateStakeDelegateStep: FC<ClaimDelegateStakeDelegateStepPr
   externalData,
 }) => {
   return (
-    <div>
+    <>
       {state.delegateStatus !== ClaimDelegateTxStatuses.COMPLETED && (
         <ClaimDelegateStakeDelegateSubstep
           state={state}
@@ -36,6 +36,6 @@ export const ClaimDelegateStakeDelegateStep: FC<ClaimDelegateStakeDelegateStepPr
           externalData={externalData}
         />
       )}
-    </div>
+    </>
   )
 }

@@ -7,10 +7,10 @@ import { useParams } from 'next/navigation'
 import { ClaimDelegateCard } from '@/features/claim-and-delegate/components/ClaimDelegateCard/ClaimDelegateCard'
 import { sumrDelegates } from '@/features/claim-and-delegate/consts'
 import {
+  type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
   type ClaimDelegateState,
   ClaimDelegateTxStatuses,
-  type ClamDelegateExternalData,
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
 
@@ -19,7 +19,7 @@ import classNames from './ClaimDelegateStakeDelegateSubstep.module.scss'
 interface ClaimDelegateStakeDelegateSubstepProps {
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
-  externalData: ClamDelegateExternalData
+  externalData: ClaimDelegateExternalData
 }
 
 export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSubstepProps> = ({

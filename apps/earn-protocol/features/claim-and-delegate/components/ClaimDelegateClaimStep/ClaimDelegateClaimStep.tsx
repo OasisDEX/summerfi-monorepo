@@ -3,10 +3,10 @@ import { Button, Card, Icon, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 
 import {
+  type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
   type ClaimDelegateState,
   ClaimDelegateSteps,
-  type ClamDelegateExternalData,
 } from '@/features/claim-and-delegate/types'
 
 import classNames from './ClaimDelegateClaimStep.module.scss'
@@ -14,7 +14,7 @@ import classNames from './ClaimDelegateClaimStep.module.scss'
 interface ClaimDelegateClaimStepProps {
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
-  externalData: ClamDelegateExternalData
+  externalData: ClaimDelegateExternalData
 }
 
 export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({

@@ -6,9 +6,9 @@ import { useParams } from 'next/navigation'
 
 import { sumrDelegates } from '@/features/claim-and-delegate/consts'
 import type {
+  ClaimDelegateExternalData,
   ClaimDelegateReducerAction,
   ClaimDelegateState,
-  ClamDelegateExternalData,
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
 
@@ -17,7 +17,7 @@ import classNames from './ClaimDelegateStakeDelegateCompletedSubstep.module.scss
 interface ClaimDelegateStakeDelegateCompletedSubstepProps {
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
-  externalData: ClamDelegateExternalData
+  externalData: ClaimDelegateExternalData
 }
 
 export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
