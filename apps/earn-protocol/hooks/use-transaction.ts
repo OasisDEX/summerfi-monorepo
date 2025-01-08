@@ -23,12 +23,15 @@ import {
   TokenAmount,
   TransactionType,
 } from '@summerfi/sdk-client-react'
-import type { ChainId } from '@summerfi/serverless-shared'
 import type BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 import { useRouter } from 'next/navigation'
 
-import { accountType, SDKChainIdToAAChainMap } from '@/account-kit/config'
+import {
+  type AccountKitSupportedNetworks,
+  accountType,
+  SDKChainIdToAAChainMap,
+} from '@/account-kit/config'
 import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
 import { getApprovalTx } from '@/helpers/get-approval-tx'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
@@ -38,7 +41,7 @@ import { useClientChainId } from '@/hooks/use-client-chain-id'
 
 type UseTransactionParams = {
   vault: SDKVaultishType
-  vaultChainId: ChainId.BASE | ChainId.ARBITRUM
+  vaultChainId: AccountKitSupportedNetworks
   amount: BigNumber | undefined
   manualSetAmount: (amount: string | undefined) => void
   vaultToken: IToken | undefined

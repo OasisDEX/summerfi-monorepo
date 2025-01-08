@@ -1,4 +1,3 @@
-import { type Address } from '@summerfi/serverless-shared'
 import type { PublicClient } from 'viem'
 
 const walletDetectorABI = [
@@ -11,7 +10,7 @@ const walletDetectorABI = [
   },
 ] as const
 
-const WALLET_DETECTOR_ADDRESS: { [key: number]: Address } = {
+const WALLET_DETECTOR_ADDRESS: { [key: number]: `0x${string}` } = {
   1: '0xeca4B0bDBf7c55E9b7925919d03CbF8Dc82537E8',
 }
 
@@ -29,7 +28,7 @@ const WALLET_DETECTOR_ADDRESS: { [key: number]: Address } = {
  */
 export async function checkIfArgentWallet(
   client: PublicClient,
-  address: Address,
+  address: `0x${string}`,
 ): Promise<boolean> {
   return await client.readContract({
     abi: walletDetectorABI,

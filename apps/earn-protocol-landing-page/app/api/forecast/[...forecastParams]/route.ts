@@ -2,8 +2,9 @@
 import { fetchForecastData, parseForecastDatapoints } from '@summerfi/app-earn-ui'
 import { type ForecastData, type PositionForecastAPIResponse } from '@summerfi/app-types'
 import { isSupportedSDKChain } from '@summerfi/app-utils'
-import { isValidAddress } from '@summerfi/serverless-shared'
 import { NextResponse } from 'next/server'
+
+import { isValidAddress } from '@/helpers/is-valid-address'
 
 export const revalidate = 60
 

@@ -1,3 +1,3 @@
-import { getRandomString } from '@summerfi/serverless-shared'
+import { getRandomString } from '@summerfi/app-utils'
 
 export const clientId = getRandomString() + getRandomString()

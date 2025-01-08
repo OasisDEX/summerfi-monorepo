@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@summerfi/app-types": "workspace:*",
+    "@summerfi/app-utils": "workspace:*",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
     "@types/react": "^18.3.1",

@@ -76,7 +76,6 @@ export default defineConfig(({ mode }) => {
           'bignumber.js',
           'dayjs',
           'lodash-es',
-          '@summerfi/serverless-shared',
           '@summerfi/app-types',
           'next',
           'next/navigation',

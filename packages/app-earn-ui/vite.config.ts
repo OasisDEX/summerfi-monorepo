@@ -95,7 +95,6 @@ export default defineConfig(({ mode }) => {
           'react-dom',
           'react/jsx-runtime',
           'usehooks-ts',
-          '@summerfi/serverless-shared',
           '@summerfi/app-token-config',
           '@summerfi/app-types',
           '@summerfi/app-utils',

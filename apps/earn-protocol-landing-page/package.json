@@ -10,12 +10,9 @@
   },
   "dependencies": {
     "@loadable/component": "^5.16.4",
-    "@summerfi/app-db": "workspace:*",
     "@summerfi/app-earn-ui": "workspace:*",
-    "@summerfi/app-icons": "workspace:*",
     "@summerfi/app-types": "workspace:*",
     "@summerfi/app-utils": "workspace:*",
-    "@summerfi/serverless-shared": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/sdk-client": "workspace:^",
     "browser-detect": "^0.2.28",
