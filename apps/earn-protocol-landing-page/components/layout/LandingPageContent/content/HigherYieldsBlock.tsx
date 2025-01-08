@@ -8,9 +8,9 @@ import Link from 'next/link'
 
 import higherYieldsBlockStyles from '@/components/layout/LandingPageContent/content/HigherYieldsBlock.module.scss'
 
-import continousAutoRebalancingImage from '@/public/img/landing-page/higher-yields_continous-auto-rebalancing.png'
+import howWeUseAi from '@/public/img/landing-page/higher-yields_how-we-use-ai.png'
 import howYouEarnMoreImage from '@/public/img/landing-page/higher-yields_how-you-earn-more.png'
-import howYouSaveCostsImage from '@/public/img/landing-page/higher-yields_how-you-save-costs.png'
+import howYouSaveTimeAndCostsImage from '@/public/img/landing-page/higher-yields_how-you-save-costs.png'
 
 type HigherYieldsSectionProps = {
   title: string
@@ -58,7 +58,7 @@ const HigherYieldsSection = ({
           </WithArrow>
         </Link>
       </div>
-      <Image src={imageSrc} alt={title} placeholder="blur" />
+      <Image src={imageSrc} alt={title} placeholder="blur" unoptimized />
       <div className={higherYieldsBlockStyles.higherYieldsSectionStatsWrapper}>
         {statsList.map((item) => (
           <div key={item.title} className={higherYieldsBlockStyles.higherYieldsSectionStats}>
@@ -80,8 +80,8 @@ const higherYieldsBlockSections = {
     title: 'How you earn more',
     content: (
       <HigherYieldsSection
-        title="DeFi’s best yield, all of the time."
-        description="With Summer, effortlessly earn the best yields and grow your capital faster. The protocol automatically rebalance your assets to top protocols, maximizing your returns."
+        title="You’re earning DeFi’s highest yields, all of the time."
+        description="With Summer, your deposits are continuously monitored and reallocated across the top protocols, ensuring you are earning the best available yields."
         ctaLabel="Get started"
         ctaUrl="/"
         secondaryCtaLabel="View Yields"
@@ -104,17 +104,17 @@ const higherYieldsBlockSections = {
       />
     ),
   },
-  'continouse-auto-rebalancing': {
-    title: 'Continuous Auto-Rebalancing',
+  'how-we-use-ai': {
+    title: 'How we use AI to outperform',
     content: (
       <HigherYieldsSection
-        title="Everything, optimized and automated."
-        description="From yield generation to risk management, the protocol automates every step of the process. Optimizing your assets to ensure your capital is always working harder for you.  "
+        title="Always optimized, zero effort."
+        description="Summer's AI-powered keeper network requires a majority of AI Agents to agree on a single strategy to automatically rebalance your portfolio. It continually optimizes rebalancing strategies to maximize long-term yields."
         ctaLabel="Get started"
         ctaUrl="/"
         secondaryCtaLabel="Learn more"
         secondaryCtaUrl="/"
-        imageSrc={continousAutoRebalancingImage}
+        imageSrc={howWeUseAi}
         statsList={[
           {
             title: '45.2K',
@@ -133,17 +133,17 @@ const higherYieldsBlockSections = {
       />
     ),
   },
-  'how-you-save-costs': {
-    title: 'How you save costs',
+  'how-you-save-time-and-costs': {
+    title: 'How you save time and costs',
     content: (
       <HigherYieldsSection
-        title="No more chasing yields and paying unnecessary fees"
-        description="Automated rebalancing between strategies dramatically improves the efficiency of transactions across positions, saving you the cost of transaction fees."
+        title="Save Time, Cut Complexity and forget about Gas Costs"
+        description="With Summer, there is no need to keep a spreadsheet, check different apps and sign multiple transactions, chasing the best yields and seeing your profit disappear with gas fees. All rebalances are included in the 1% Annualized AUM Fee...sit back, relax and earn more the lazy way."
         ctaLabel="Deposit"
         ctaUrl="/"
         secondaryCtaLabel="Learn more"
         secondaryCtaUrl="/"
-        imageSrc={howYouSaveCostsImage}
+        imageSrc={howYouSaveTimeAndCostsImage}
         statsList={[
           {
             title: '14',
@@ -188,7 +188,7 @@ export const HigherYieldsBlock = () => {
     <div>
       <div className={higherYieldsBlockStyles.higherYieldsHeaderWrapper}>
         <Text variant="h2" className={higherYieldsBlockStyles.higherYieldsHeader}>
-          Sustainably higher yields, automatically.
+          Sustainably higher yields, optimized with AI.
         </Text>
       </div>
       <div className={higherYieldsBlockStyles.higherYieldsDetailsWrapper}>

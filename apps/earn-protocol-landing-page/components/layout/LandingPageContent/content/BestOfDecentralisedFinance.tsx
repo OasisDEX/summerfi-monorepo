@@ -4,7 +4,7 @@ import Image from 'next/image'
 
 import bestOfDecentralizedFinanceChart1 from '@/public/img/landing-page/best-of-decentralised-finance_chart-1.svg'
 import bestOfDecentralizedFinanceChart2 from '@/public/img/landing-page/best-of-decentralised-finance_chart-2.svg'
-import bestOfDecentralizedFinanceProtocols from '@/public/img/landing-page/best-of-decentralised-finance_protocols.svg'
+import bestOfDecentralizedFinancePermissionless from '@/public/img/landing-page/best-of-decentralised-finance_permissionless.svg'
 
 import bestOfDecentralizedFinanceStyles from '@/components/layout/LandingPageContent/content/BestOfDecentralizedFinance.module.scss'
 
@@ -43,15 +43,15 @@ export const BestOfDecentralizedFinance = () => {
           variant="h2"
           className={bestOfDecentralizedFinanceStyles.bestOfDecentralizedFinanceHeader}
         >
-          The very best of Decentralised Finance (DeFi)
+          The Power of DeFi, made accessible to everyone.
         </Text>
       </div>
       <div className={bestOfDecentralizedFinanceStyles.bestOfDecentralizedFinanceBlockWrapper}>
         <BigGradientBox className={bestOfDecentralizedFinanceStyles.gradientLeftBox}>
           <BestOfDecentralizedFinanceBlock
-            tag="Transparent"
-            title="Never second guess the source of your yield"
-            description="With best in class yield breakdowns that are simple to understand, you as a user will always know how, why and where your yield is generated."
+            tag="Transparent by Design"
+            title="Never second guess the source of your yield "
+            description="Summer ensures you never second guess the source of your yield. With our automated rebalances, every decision is fully traceable and optimized transparently."
             content={
               <div className={bestOfDecentralizedFinanceStyles.chart}>
                 <Image
@@ -69,12 +69,15 @@ export const BestOfDecentralizedFinance = () => {
         </BigGradientBox>
         <BigGradientBox className={bestOfDecentralizedFinanceStyles.gradientCenterBox}>
           <BestOfDecentralizedFinanceBlock
-            tag="Liquid"
-            title="Exit anytime, no matter your size"
-            description="Lazy Summer protocol purposely selects for strategies and protocols that are of the deepest liquidity, so size is never an issue."
+            tag="Instant Liquidity"
+            title="Exit anytime, no lockups or withdrawal delays"
+            description="With Summer, you can withdraw from your position at anytime as long as the capital is available from the underlying protocols (which is almost always). No queues or waiting for withdrawals to be processed."
             content={
               <div className={bestOfDecentralizedFinanceStyles.ui}>
-                <Image src={bestOfDecentralizedFinanceUI} alt="Exit anytime, no matter your size" />
+                <Image
+                  src={bestOfDecentralizedFinanceUI}
+                  alt="Exit anytime, no lockups or withdrawal delays"
+                />
               </div>
             }
           />
@@ -82,13 +85,13 @@ export const BestOfDecentralizedFinance = () => {
         <BigGradientBox className={bestOfDecentralizedFinanceStyles.gradientRightBox}>
           <BestOfDecentralizedFinanceBlock
             tag="Permissionless"
-            title="No black boxes. Fully on-chain."
-            description="Staying true to crypto values, the Lazy Summer Protocol is fully on-chain and non custodial, users are 100% in control of their funds at all times."
+            title="Always Non-Custodial, Always in Your Control"
+            description="Built entirely on-chain, Summer gives you unrestricted access and complete control over your assets—no middle-men and no opaque third parties with control over your capital."
             content={
               <div className={bestOfDecentralizedFinanceStyles.protocols}>
                 <Image
-                  src={bestOfDecentralizedFinanceProtocols}
-                  alt="Exit anytime, no matter your size"
+                  src={bestOfDecentralizedFinancePermissionless}
+                  alt="Always Non-Custodial, Always in Your Control"
                 />
               </div>
             }

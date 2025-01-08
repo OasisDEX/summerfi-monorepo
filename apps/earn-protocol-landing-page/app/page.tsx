@@ -53,7 +53,7 @@ export default async function HomePage() {
       />
       <MarketingPoints>
         <HigherYieldsBlock />
-        <EnhancedRiskManagement protectedCapital="10B" />
+        <EnhancedRiskManagement protectedCapital="$10B+" />
         <BestOfDecentralizedFinance />
         <SumrToken />
         <StartEarningNow />
