@@ -10,9 +10,25 @@
 }
 
 .appContainer {
+  position: relative;
   width: 100%;
   max-width: 1310px;
   margin: 0 auto;
   padding: 0 var(--space-m);
   z-index: 2;
+}
+
+.bubbles {
+  position: absolute;
+  top: 0;
+  left: calc(50% - 720px);
+  width: 1440px;
+  min-height: 100%; // should probably be different on longer pages, but we dont have any yet (just on homepage)
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+
+  .video {
+    margin: 0 auto !important;
+  }
 }
