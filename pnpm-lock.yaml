@@ -773,12 +773,6 @@ importers:
       '@loadable/component':
         specifier: ^5.16.4
         version: 5.16.4(react@18.3.1)
-      '@summerfi/app-icons':
-        specifier: workspace:*
-        version: link:../app-icons
-      '@summerfi/app-utils':
-        specifier: workspace:*
-        version: link:../app-utils
       '@summerfi/armada-protocol-common':
         specifier: workspace:*
         version: link:../../sdk/armada-protocol-common
@@ -834,12 +828,18 @@ importers:
         specifier: ^4.3.2
         version: 4.3.2(typescript@5.6.2)(vite@5.4.9)
     devDependencies:
+      '@summerfi/app-icons':
+        specifier: workspace:*
+        version: link:../app-icons
       '@summerfi/app-token-config':
         specifier: workspace:*
         version: link:../app-token-config
       '@summerfi/app-types':
         specifier: workspace:*
         version: link:../app-types
+      '@summerfi/app-utils':
+        specifier: workspace:*
+        version: link:../app-utils
       '@summerfi/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
