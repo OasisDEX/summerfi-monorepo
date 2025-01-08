@@ -54,6 +54,17 @@ export async function getInterestRates({ network, arksList }: GetInterestRatesPa
   // TODO: create a single gql`` query with multiple queries inside and dynamically rename variables
   const response = await Promise.all(
     arksList.map((ark) => {
+      if (ark.name === 'BufferArk') {
+        return Promise.resolve<GetInterestRatesQuery>({
+          dailyInterestRates: [{ averageRate: 0, date: 0, __typename: 'DailyInterestRate' }],
+          hourlyInterestRates: [{ averageRate: 0, date: 0, __typename: 'HourlyInterestRate' }],
+          weeklyInterestRates: [{ averageRate: 0, date: 0, __typename: 'WeeklyInterestRate' }],
+          latestInterestRate: [{
+            rate: [{ rate: 0, timestamp: 0, __typename: 'InterestRate' }],
+            __typename: 'HourlyInterestRate'
+          }]
+        })
+      }
       return networkGraphQlClient.request<GetInterestRatesQuery>(GetInterestRatesDocument, {
         productId: getArkProductId(ark),
       })
@@ -68,6 +79,7 @@ export async function getInterestRates({ network, arksList }: GetInterestRatesPa
 
     return acc
   }, {})
+
 }
 
 export type GetInterestRatesReturnType = Awaited<ReturnType<typeof getInterestRates>>
