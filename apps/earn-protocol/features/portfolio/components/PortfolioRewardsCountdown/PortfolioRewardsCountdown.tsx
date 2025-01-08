@@ -1,6 +1,5 @@
-import { Card, Text } from '@summerfi/app-earn-ui'
+import { Card, NewsletterWrapper, Text } from '@summerfi/app-earn-ui'
 
-import { NewsletterWrapper } from '@/features/newsletter/components/NewsletterWrapper/NewsletterWrapper'
 import { SumrTransferabilityCounter } from '@/features/sumr-claim/components/SumrTransferabilityCounter/SumrTransferabilityCounter'
 
 import classNames from './PortfolioRewardsCountdown.module.scss'

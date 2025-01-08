@@ -1,36 +1,19 @@
 export const INTERNAL_LINKS = {
   // earn protocol dedicated links
   summerPro: 'https://summer.fi',
-
-  // old links from borrow
   appUrl: 'https://summer.fi',
-  homepage: '/',
-  /**
-   To be used with address
-   `${INTERNAL_LINKS.portfolio}/${walletAddress}`
-   */
-  portfolio: '/portfolio',
-  about: '/about',
-  notFound: '/not-found',
-  privacy: '/privacy',
-  cookie: '/cookie',
-  terms: '/terms',
-  security: '/security',
-  referrals: '/referrals',
-  brand: '/brand',
-  borrow: '/borrow',
-  multiply: '/multiply',
-  earn: '/earn',
-  earnDSR: '/earn/dsr',
-  ajna: '/ajna',
-  ajnaBorrow: '/ajna/borrow',
-  ajnaEarn: '/ajna/earn',
-  ajnaMultiply: '/ajna/multiply',
-  ajnaRewards: '/ajna/rewards',
-  ajnaPoolFinder: '/ajna/pool-finder',
-  ajnaPoolCreator: '/ajna/pool-creator',
-  sparkRewards:
-    'https://forum.makerdao.com/t/sparkdao-spk-pre-farming-airdrop-general-subdao-farming-overview/21595',
+  homepage: '/earn/',
+  about: '/earn/about',
+  privacy: '/earn/privacy',
+  cookie: '/earn/cookie',
+  terms: '/earn/terms',
+  security: '/earn/security',
+  ajnaRewards: '/earn/ajna/rewards',
+  referrals: '/earn/referrals',
+  brand: '/earn/brand',
+  borrow: '/earn/borrow',
+  multiply: '/earn/multiply',
+  earn: '/earn/earn',
 }
 
 export const EXTERNAL_LINKS = {
