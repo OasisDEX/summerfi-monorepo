@@ -1,1 +1,0 @@
-export const IArkFactoryErrorsAbi = [{"type":"error","name":"CannotSetRaftToZeroAddress","inputs":[]}] as const

@@ -1,1 +1,0 @@
-export const MorphoStorageLibAbi = [] as const
