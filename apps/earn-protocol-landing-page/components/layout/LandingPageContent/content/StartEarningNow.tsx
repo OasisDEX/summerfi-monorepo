@@ -81,8 +81,15 @@ export const StartEarningNow = () => {
             'Withdraw anytime',
           ]}
           cta={
-            <Button variant="primarySmall" className={clsx(startEarningNowStyles.ctaButton)}>
-              <Text variant="p3semi">Migrate</Text>
+            <Button
+              variant="secondarySmall"
+              disabled
+              className={clsx(
+                startEarningNowStyles.ctaButton,
+                startEarningNowStyles.ctaButtonDisabled,
+              )}
+            >
+              <Text variant="p3semi">Coming soon</Text>
             </Button>
           }
         />

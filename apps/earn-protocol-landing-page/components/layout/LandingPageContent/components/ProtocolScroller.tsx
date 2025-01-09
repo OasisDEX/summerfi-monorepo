@@ -67,28 +67,32 @@ const ProtocolScrollerItem = ({ protocolIcon, protocol, tvl, url }: ProtocolScro
     setItemHovered(false)
   }
 
-  return (
-    <Link href={url}>
-      <GradientBox
-        onMouseOver={handleMouseOver}
-        onMouseLeave={handleMouseLeave}
-        selected={itemHovered}
-        withHover
-        className={protocolScrollerStyles.protocolScrollerItemGradient}
-      >
-        <div className={protocolScrollerStyles.protocolScrollerItem}>
-          <div className={protocolScrollerStyles.protocolScrollerItemNameIcon}>
-            {protocolIcon}
-            <Text variant="p1semi">{protocol}</Text>
-          </div>
-          <div className={protocolScrollerStyles.protocolScrollerItemTvl}>
-            <Text variant="p3semi">TVL</Text>
-            <Text variant="p2semi">{formatAsShorthandNumbers(tvl)}</Text>
-          </div>
+  const insides = (
+    <GradientBox
+      onMouseOver={handleMouseOver}
+      onMouseLeave={handleMouseLeave}
+      selected={itemHovered}
+      withHover
+      className={protocolScrollerStyles.protocolScrollerItemGradient}
+    >
+      <div className={protocolScrollerStyles.protocolScrollerItem}>
+        <div className={protocolScrollerStyles.protocolScrollerItemNameIcon}>
+          {protocolIcon}
+          <Text variant="p1semi">{protocol}</Text>
         </div>
-      </GradientBox>
-    </Link>
+        <div className={protocolScrollerStyles.protocolScrollerItemTvl}>
+          <Text variant="p3semi">TVL</Text>
+          <Text variant="p2semi">{formatAsShorthandNumbers(tvl)}</Text>
+        </div>
+      </div>
+    </GradientBox>
   )
+
+  if (!url) {
+    return insides
+  }
+
+  return <Link href={url}>{insides}</Link>
 }
 
 export const ProtocolScroller = ({

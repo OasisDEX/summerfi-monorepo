@@ -80,6 +80,8 @@
 }
 
 .protocolScrollerItemGradient {
+  cursor: auto !important;
+
   &::before {
     border-radius: var(--radius-large) !important;
   }
