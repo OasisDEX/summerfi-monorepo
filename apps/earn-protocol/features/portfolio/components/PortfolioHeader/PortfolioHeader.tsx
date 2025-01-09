@@ -2,7 +2,7 @@ import { type FC, useState } from 'react'
 import { useUser } from '@account-kit/react'
 import { Button, DataBlock, Dropdown, Icon, LoadableAvatar, Text } from '@summerfi/app-earn-ui'
 import { type IconNamesList } from '@summerfi/app-types'
-import { formatAddress } from '@summerfi/app-utils'
+import { formatAddress, formatCryptoBalance } from '@summerfi/app-utils'
 
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
 import { useUserWallet } from '@/hooks/use-user-wallet'
@@ -54,9 +54,10 @@ const TransakTrigger = ({
 
 interface PortfolioHeaderProps {
   walletAddress: string
+  totalSumr: string | undefined
 }
 
-export const PortfolioHeader: FC<PortfolioHeaderProps> = ({ walletAddress }) => {
+export const PortfolioHeader: FC<PortfolioHeaderProps> = ({ walletAddress, totalSumr = '0' }) => {
   const { userWalletAddress } = useUserWallet()
   const [isTransakOpen, setIsTransakOpen] = useState(false)
   const [transakNetwork, setTransakNetwork] = useState<string | null>(null)
@@ -115,7 +116,7 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({ walletAddress }) => 
         <div style={{ display: 'flex', gap: 'var(--spacing-space-large)', alignItems: 'center' }}>
           <DataBlock
             title="Total $SUMR"
-            value="313"
+            value={formatCryptoBalance(totalSumr)}
             titleSize="large"
             valueSize="large"
             valueStyle={{ textAlign: 'right' }}

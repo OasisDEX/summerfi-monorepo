@@ -1,3 +1,4 @@
+import { type TokenSymbolsList } from '@summerfi/app-types'
 import { parseServerResponseToClient } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
 
@@ -57,6 +58,10 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     userVaultsIds.includes(rebalance.vault.id.toLowerCase()),
   )
 
+  const totalSumr = walletData.assets.find(
+    (asset) => asset.symbol === ('SUMMER' as TokenSymbolsList),
+  )?.balance
+
   const rewardsData: ClaimDelegateExternalData = {
     sumrPrice: '0',
     sumrEarned: '123.45',
@@ -64,6 +69,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     sumrApy: '0.0123',
     sumrDelegated,
     delegatedTo,
+    totalSumr: totalSumr?.toString() ?? '0',
   }
 
   return (

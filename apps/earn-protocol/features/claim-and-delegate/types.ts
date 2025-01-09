@@ -43,6 +43,7 @@ export type ClaimDelegateExternalData = {
   sumrApy: string
   sumrDelegated: string
   delegatedTo: string
+  totalSumr?: string
   votes?: {
     delegate: string
     amountOfVotes: string

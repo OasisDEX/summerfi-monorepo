@@ -91,7 +91,7 @@ const YourTotalSumr: FC<YourTotalSumrProps> = ({ rewardsData }) => {
   const assumedSumrPriceRaw = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
   const assumedSumrPrice = formatFiatBalance(assumedSumrPriceRaw)
 
-  const rawTotalSumr = Number(rewardsData.sumrEarned)
+  const rawTotalSumr = Number(rewardsData.totalSumr ?? 0)
   const rawTotalSumrUSD = formatFiatBalance(rawTotalSumr * assumedSumrPriceRaw)
 
   const totalSumr = formatCryptoBalance(rawTotalSumr)
