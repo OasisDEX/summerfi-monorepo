@@ -58,13 +58,13 @@ export const SupportBox = ({ collapsible = false }: SupportBoxProps) => {
           url="/"
         />
         <SupportBoxElement
-          icon="question_o"
+          icon="question"
           description="Email support tickets for all your questions"
           urlLabel="Contact us"
           url="/"
         />
         <SupportBoxElement
-          icon="ether"
+          icon="discord"
           description="Live chat for your immediate needs"
           urlLabel="Start chatting"
           url="/"
