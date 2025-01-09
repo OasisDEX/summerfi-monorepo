@@ -2,6 +2,7 @@ import { type TokenSymbolsList } from '@summerfi/app-types'
 import { parseServerResponseToClient } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
 
+import { fetchRaysLeaderboard } from '@/app/server-handlers/leaderboard'
 import { portfolioPositionsHandler } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
 import { portfolioWalletAssetsHandler } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { getGlobalRebalances } from '@/app/server-handlers/sdk/get-global-rebalances'
@@ -29,6 +30,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     systemConfig,
     { rebalances },
     { sumrDelegated, delegatedTo },
+    sumrEligibility,
   ] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
     getVaultsList(),
@@ -38,6 +40,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     getSumrDelegateStake({
       walletAddress,
     }),
+    fetchRaysLeaderboard({ userAddress: walletAddress.toLowerCase(), page: '1', limit: '1' }),
   ])
 
   const positionsJsonSafe = positions
@@ -72,6 +75,8 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     totalSumr: totalSumr?.toString() ?? '0',
   }
 
+  const totalRays = Number(sumrEligibility.leaderboard[0]?.totalPoints ?? 0)
+
   return (
     <PortfolioPageView
       positions={positionsList}
@@ -80,6 +85,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       rewardsData={rewardsData}
       vaultsList={vaultsDecorated}
       rebalancesList={userRebalances}
+      totalRays={totalRays}
     />
   )
 }
