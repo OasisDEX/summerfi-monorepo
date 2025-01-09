@@ -20,6 +20,10 @@
     cursor: pointer;
     margin: 0 var(--general-space-32);
 
+    span {
+      padding: var(--general-space-16) 0;
+    }
+
     img {
       opacity: 0.5;
       transform: rotate3d(1, 0, 0, 0deg);
@@ -38,6 +42,7 @@
     }
 
     &:hover {
+
       span,
       a {
         color: var(--color-text-primary);
@@ -51,13 +56,13 @@
       .dropdownContentWrapper {
         pointer-events: all;
         opacity: 1;
-        top: var(--general-space-8);
+        top: var(--general-space-16);
       }
     }
   }
 
-  li > span,
-  li > a {
+  li>span,
+  li>a {
     font-size: 16px;
     font-weight: 600;
     line-height: var(--general-space-24);
@@ -65,7 +70,7 @@
     transition: opacity 0.2s;
   }
 
-  li > .dropdownContentWrapper {
+  li>.dropdownContentWrapper {
     pointer-events: none;
     position: absolute;
     width: max-content;
@@ -75,7 +80,7 @@
       top 0.2s,
       opacity 0.2s;
     top: 0;
-    padding-top: var(--general-space-32);
+    padding-top: 30px;
     z-index: 5;
 
     .dropdownContent {
