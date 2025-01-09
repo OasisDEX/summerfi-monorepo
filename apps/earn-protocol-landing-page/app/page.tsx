@@ -1,6 +1,8 @@
 import { BigGradientBox } from '@summerfi/app-earn-ui'
+import { type IconNamesList } from '@summerfi/app-types'
 import { parseServerResponseToClient } from '@summerfi/app-utils'
 
+import { getProtocolTvl } from '@/app/server-handlers/defillama/get-protocol-tvl'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import {
@@ -24,8 +26,103 @@ import { decorateCustomVaultFields } from '@/helpers/vault-custom-value-helpers'
 
 export const revalidate = 60
 
+type SupportedTvlProtocols =
+  | 'aave'
+  | 'sky'
+  | 'spark'
+  | 'pendle'
+  | 'gearbox'
+  | 'euler'
+  | 'compound'
+  | 'ethena'
+  | 'fluid'
+
+const supportedProtocolsConfig: {
+  [key in SupportedTvlProtocols]: {
+    displayName: string
+    defillamaProtocolName: string
+    icon: IconNamesList
+  }
+} = {
+  aave: {
+    displayName: 'Aave',
+    defillamaProtocolName: 'aave',
+    icon: 'scroller_aave',
+  },
+  sky: {
+    displayName: 'Sky',
+    defillamaProtocolName: 'maker',
+    icon: 'scroller_sky',
+  },
+  spark: {
+    displayName: 'Spark',
+    defillamaProtocolName: 'spark',
+    icon: 'scroller_spark',
+  },
+  pendle: {
+    displayName: 'Pendle',
+    defillamaProtocolName: 'pendle',
+    icon: 'scroller_pendle',
+  },
+  gearbox: {
+    displayName: 'Gearbox',
+    defillamaProtocolName: 'gearbox',
+    icon: 'scroller_gearbox',
+  },
+  euler: {
+    displayName: 'Euler',
+    defillamaProtocolName: 'euler',
+    icon: 'scroller_euler',
+  },
+  compound: {
+    displayName: 'Compound',
+    defillamaProtocolName: 'compound-v3',
+    icon: 'scroller_compound',
+  },
+  ethena: {
+    displayName: 'Ethena',
+    defillamaProtocolName: 'ethena',
+    icon: 'scroller_ethena',
+  },
+  fluid: {
+    displayName: 'Fluid',
+    defillamaProtocolName: 'fluid-lending',
+    icon: 'scroller_fluid',
+  },
+}
+
+const supportedProtocols = Object.keys(
+  supportedProtocolsConfig,
+) as (keyof typeof supportedProtocolsConfig)[]
+
+const emptyTvls = {
+  aave: 0n,
+  sky: 0n,
+  spark: 0n,
+  pendle: 0n,
+  gearbox: 0n,
+  euler: 0n,
+  compound: 0n,
+  ethena: 0n,
+  fluid: 0n,
+}
+
 export default async function HomePage() {
-  const [{ vaults }, systemConfig] = await Promise.all([getVaultsList(), systemConfigHandler()])
+  const [{ vaults }, systemConfig, ...protocolTvlsArray] = await Promise.all([
+    getVaultsList(),
+    systemConfigHandler(),
+    ...supportedProtocols.map((protocol) => {
+      return getProtocolTvl(
+        supportedProtocolsConfig[protocol as keyof typeof supportedProtocolsConfig]
+          .defillamaProtocolName,
+        protocol,
+      )
+    }),
+  ])
+
+  const protocolTvls = protocolTvlsArray.reduce<{
+    [key in SupportedTvlProtocols]: bigint
+  }>((acc, curr) => ({ ...acc, ...curr }), emptyTvls)
 
   const { config } = parseServerResponseToClient(systemConfig)
   const vaultsDecorated = decorateCustomVaultFields(vaults, config)
@@ -38,18 +135,16 @@ export default async function HomePage() {
         <SupportedNetworksList />
       </BigGradientBox>
       <ProtocolScroller
-        protocolsList={[
-          // TODO: Replace with real data
-          { protocol: 'Aave', protocolIcon: 'scroller_aave', url: '', tvl: 100000n },
-          { protocol: 'Sky', protocolIcon: 'scroller_sky', url: '', tvl: 100000n },
-          { protocol: 'Spark', protocolIcon: 'scroller_spark', url: '', tvl: 100000n },
-          { protocol: 'Pendle', protocolIcon: 'scroller_pendle', url: '', tvl: 100000n },
-          { protocol: 'Gearbox', protocolIcon: 'scroller_gearbox', url: '', tvl: 100000n },
-          { protocol: 'Euler', protocolIcon: 'scroller_euler', url: '', tvl: 100000n },
-          { protocol: 'Compound', protocolIcon: 'scroller_compound', url: '', tvl: 100000n },
-          { protocol: 'Ethena', protocolIcon: 'scroller_ethena', url: '', tvl: 100000n },
-          { protocol: 'Fluid', protocolIcon: 'scroller_fluid', url: '', tvl: 100000n },
-        ]}
+        protocolsList={supportedProtocols.map((protocol) => {
+          const protocolConfig = supportedProtocolsConfig[protocol]
+
+          return {
+            protocol: protocolConfig.displayName,
+            protocolIcon: supportedProtocolsConfig[protocol].icon,
+            tvl: protocolTvls[protocol],
+            url: '',
+          }
+        })}
       />
       <MarketingPoints>
         <HigherYieldsBlock />

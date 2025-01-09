@@ -82,7 +82,11 @@ const ProtocolScrollerItem = ({ protocolIcon, protocol, tvl, url }: ProtocolScro
         </div>
         <div className={protocolScrollerStyles.protocolScrollerItemTvl}>
           <Text variant="p3semi">TVL</Text>
-          <Text variant="p2semi">{formatAsShorthandNumbers(tvl)}</Text>
+          <Text variant="p2semi">
+            {formatAsShorthandNumbers(tvl, {
+              precision: 2,
+            })}
+          </Text>
         </div>
       </div>
     </GradientBox>
@@ -140,18 +144,34 @@ export const ProtocolScroller = ({
     }
   }, [hovered])
 
-  const totalLiquidity = useMemo(() => {
-    return protocolsList.reduce((acc, { tvl }) => {
-      return acc + tvl
-    }, 0n)
-  }, [protocolsList])
+  const totalLiquidityBigInt = useMemo(
+    () => protocolsList.reduce((acc, { tvl }) => acc + tvl, 0n),
+    [protocolsList],
+  )
+
+  const totalLiquidityInfo = useMemo(
+    () =>
+      formatAsShorthandNumbers(totalLiquidityBigInt, {
+        precision: 4,
+      }),
+    [totalLiquidityBigInt],
+  )
+
+  const totalLiquidityDisplay = useMemo(
+    () =>
+      formatAsShorthandNumbers(Math.floor(Number(totalLiquidityBigInt) / 1e9) * 1e9, {
+        precision: 0,
+      }),
+    [totalLiquidityBigInt],
+  )
 
   return (
     <div className={protocolScrollerStyles.protocolScrollerWrapper}>
       <Text variant="h3" as="p" className={protocolScrollerStyles.protocolScrollerHeader}>
         Automated access to <Emphasis variant="h3colorful">DeFi&apos;s best protocols</Emphasis>,
         <br />
-        with over {formatAsShorthandNumbers(totalLiquidity)} of total liquidity
+        with over <span title={`$${totalLiquidityInfo}`}>${totalLiquidityDisplay}</span> of total
+        liquidity
       </Text>
       <ProtocolScrollerTrack
         ref={trackRef}
