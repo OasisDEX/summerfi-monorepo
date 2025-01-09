@@ -39,6 +39,12 @@ export type ClaimDelegateReducerAction =
 export type ClaimDelegateExternalData = {
   sumrPrice: string
   sumrEarned: string
+  sumrToClaim: string
   sumrApy: string
   sumrDelegated: string
+  delegatedTo: string
+  votes?: {
+    delegate: string
+    amountOfVotes: string
+  }[]
 }
