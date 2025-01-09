@@ -1,1 +1,2 @@
 export const SUMR_CAP = 1000000000
+export const RAYS_TO_SUMR_CONVERSION_RATE = 2.4 // 1 RAY = 2.4 SUMR

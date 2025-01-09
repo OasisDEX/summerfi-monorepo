@@ -9,12 +9,13 @@ import classNames from './PortfolioRewards.module.scss'
 
 interface PortfolioRewardsProps {
   rewardsData: ClaimDelegateExternalData
+  totalRays: number
 }
 
-export const PortfolioRewards: FC<PortfolioRewardsProps> = ({ rewardsData }) => {
+export const PortfolioRewards: FC<PortfolioRewardsProps> = ({ rewardsData, totalRays }) => {
   return (
     <div className={classNames.wrapper}>
-      <PortfolioRewardsCards rewardsData={rewardsData} />
+      <PortfolioRewardsCards rewardsData={rewardsData} totalRays={totalRays} />
       <PortfolioRewardsCountdown />
       <PortfolioRewardsFaq />
     </div>

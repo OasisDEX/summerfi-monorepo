@@ -5,7 +5,7 @@ import { formatCryptoBalance, formatDecimalAsPercent, formatFiatBalance } from '
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
-import { SUMR_CAP } from '@/constants/earn-protocol'
+import { RAYS_TO_SUMR_CONVERSION_RATE, SUMR_CAP } from '@/constants/earn-protocol'
 import { sumrDelegates } from '@/features/claim-and-delegate/consts'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
@@ -153,13 +153,15 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData }) => {
   )
 }
 
-const YourRays = () => {
-  const rawValue = 0
+interface YourRaysProps {
+  totalRays: number
+}
 
+const YourRays: FC<YourRaysProps> = ({ totalRays }) => {
+  const rawValue = RAYS_TO_SUMR_CONVERSION_RATE * totalRays
   const value = formatCryptoBalance(rawValue)
 
-  const earnedRaw = 45232
-  const earned = formatCryptoBalance(earnedRaw)
+  const _totalRays = formatCryptoBalance(totalRays)
 
   return (
     <DataModule
@@ -168,7 +170,7 @@ const YourRays = () => {
         value,
         subValue: (
           <Text variant="p3semi" style={{ color: 'var(--earn-protocol-success-100)' }}>
-            Rays earned {earned}
+            Rays earned {_totalRays}
             <span style={{ color: 'var(--earn-protocol-secondary-60)' }}>
               {' '}
               • 1 $RAYS = 2.4 $SUMR
@@ -191,10 +193,14 @@ const YourRays = () => {
 
 interface PortfolioRewardsCardsProps {
   rewardsData: ClaimDelegateExternalData
+  totalRays: number
 }
 
-export const PortfolioRewardsCards: FC<PortfolioRewardsCardsProps> = ({ rewardsData }) => {
-  const hasRays = true
+export const PortfolioRewardsCards: FC<PortfolioRewardsCardsProps> = ({
+  rewardsData,
+  totalRays,
+}) => {
+  const hasRays = totalRays > 0
 
   return (
     <div className={classNames.portfolioRewardsCardsWrapper}>
@@ -216,7 +222,7 @@ export const PortfolioRewardsCards: FC<PortfolioRewardsCardsProps> = ({ rewardsD
       </div>
       {hasRays && (
         <div className={classNames.cardWrapper}>
-          <YourRays />
+          <YourRays totalRays={totalRays} />
         </div>
       )}
     </div>

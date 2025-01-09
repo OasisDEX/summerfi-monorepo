@@ -22,6 +22,7 @@ interface PortfolioPageViewProps {
   vaultsList: SDKVaultishType[]
   positions: PortfolioPositionsList[]
   rebalancesList: SDKGlobalRebalancesType
+  totalRays: number
 }
 
 export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
@@ -31,6 +32,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   vaultsList,
   positions,
   rebalancesList,
+  totalRays,
 }) => {
   const [activeTab, updateTab] = useTabStateQuery({
     tabs: PortfolioTabs,
@@ -58,7 +60,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     {
       id: PortfolioTabs.REWARDS,
       label: 'SUMR Rewards',
-      content: <PortfolioRewards rewardsData={rewardsData} />,
+      content: <PortfolioRewards rewardsData={rewardsData} totalRays={totalRays} />,
     },
   ]
 

@@ -13,15 +13,13 @@ import { SumrWhatIsSumrToken } from '@/features/sumr-claim/components/SumrWhatIs
 
 import classNames from './SumrPageView.module.scss'
 
-interface SumrPageViewProps {
-  sumrPrice: string
-}
+interface SumrPageViewProps {}
 
-export const SumrPageView: FC<SumrPageViewProps> = ({ sumrPrice }) => {
+export const SumrPageView: FC<SumrPageViewProps> = () => {
   return (
     <div className={classNames.sumrPageWrapper}>
       <SumrClaimSearch />
-      <SumrConversionAndPrice sumrPrice={sumrPrice} />
+      <SumrConversionAndPrice />
       <SumrTransferabilityCounter />
       <SumrWhatIsSumrToken />
       <SumrGovernance />
