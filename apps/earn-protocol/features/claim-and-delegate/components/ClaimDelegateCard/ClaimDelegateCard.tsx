@@ -8,7 +8,7 @@ import classNames from './ClaimDelegateCard.module.scss'
 
 interface ClaimDelegateCardProps {
   isActive: boolean
-  sumrAmount: string
+  sumrAmount?: string
   ens: string
   address: string
   title: string
@@ -23,7 +23,7 @@ interface ClaimDelegateCardProps {
 
 export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
   isActive,
-  sumrAmount,
+  sumrAmount = '0',
   address,
   title,
   description,

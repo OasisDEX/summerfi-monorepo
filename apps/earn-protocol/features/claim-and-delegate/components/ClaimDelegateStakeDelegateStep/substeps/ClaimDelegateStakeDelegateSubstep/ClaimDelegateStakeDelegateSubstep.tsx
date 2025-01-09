@@ -105,6 +105,9 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
           <ClaimDelegateCard
             key={delegate.title}
             {...delegate}
+            sumrAmount={
+              externalData.votes?.find((vote) => vote.delegate === delegate.address)?.amountOfVotes
+            }
             isActive={state.delegatee === delegate.address}
             handleClick={() => dispatch({ type: 'update-delegatee', payload: delegate.address })}
           />
@@ -121,7 +124,7 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
             variant="primarySmall"
             style={{ paddingRight: 'var(--general-space-32)' }}
             onClick={handleStakeAndDelegate}
-            disabled={!state.delegatee}
+            disabled={!state.delegatee || state.delegatee === externalData.delegatedTo}
           >
             <WithArrow
               style={{ color: 'var(--earn-protocol-secondary-100)' }}

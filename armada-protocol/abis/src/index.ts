@@ -237,6 +237,7 @@ export * from './Strings.sol';
 export * from './SummerToken.sol';
 export * from './SummerTokenMock.sol';
 export * from './SummerVestingWallet.sol';
+export * from './SummerVestingWalletFactory.t.sol';
 export * from './Test.sol';
 export * from './TestHelpers.sol';
 export * from './Time.sol';

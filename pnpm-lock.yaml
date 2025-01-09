@@ -171,6 +171,9 @@ importers:
       '@summerfi/app-utils':
         specifier: workspace:*
         version: link:../../packages/app-utils
+      '@summerfi/armada-protocol-abis':
+        specifier: workspace:*
+        version: link:../../armada-protocol/abis
       '@summerfi/sdk-client':
         specifier: workspace:^
         version: link:../../sdk/sdk-client
@@ -12905,8 +12908,8 @@ packages:
     dependencies:
       '@ethereumjs/tx': 4.2.0
       '@metamask/superstruct': 3.0.0
-      '@noble/hashes': 1.4.0
-      '@scure/base': 1.1.7
+      '@noble/hashes': 1.6.1
+      '@scure/base': 1.2.1
       '@types/debug': 4.1.12
       debug: 4.3.4(supports-color@8.1.1)
       pony-cause: 2.1.11

@@ -1,14 +1,16 @@
+import { type TokenSymbolsList } from '@summerfi/app-types'
 import { parseServerResponseToClient } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
 
 import { portfolioPositionsHandler } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
-import { portfolioRewardsHandler } from '@/app/server-handlers/portfolio/portfolio-rewards-handler'
 import { portfolioWalletAssetsHandler } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { getGlobalRebalances } from '@/app/server-handlers/sdk/get-global-rebalances'
 import { getUserPositions } from '@/app/server-handlers/sdk/get-user-positions'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
+import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { PortfolioPageView } from '@/components/layout/PortfolioPageView/PortfolioPageView'
+import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { decorateCustomVaultFields } from '@/helpers/vault-custom-value-helpers'
 
 type PortfolioPageProps = {
@@ -20,14 +22,23 @@ type PortfolioPageProps = {
 const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   const { walletAddress } = params
 
-  const [walletData, { vaults }, positions, systemConfig, { rebalances }] = await Promise.all([
+  const [
+    walletData,
+    { vaults },
+    positions,
+    systemConfig,
+    { rebalances },
+    { sumrDelegated, delegatedTo },
+  ] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
     getVaultsList(),
     getUserPositions({ walletAddress }),
     systemConfigHandler(),
     getGlobalRebalances(),
+    getSumrDelegateStake({
+      walletAddress,
+    }),
   ])
-  const rewardsData = portfolioRewardsHandler(walletAddress)
 
   const positionsJsonSafe = positions
     ? parseServerResponseToClient<IArmadaPosition[]>(positions)
@@ -46,6 +57,20 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   const userRebalances = rebalances.filter((rebalance) =>
     userVaultsIds.includes(rebalance.vault.id.toLowerCase()),
   )
+
+  const totalSumr = walletData.assets.find(
+    (asset) => asset.symbol === ('SUMMER' as TokenSymbolsList),
+  )?.balance
+
+  const rewardsData: ClaimDelegateExternalData = {
+    sumrPrice: '0',
+    sumrEarned: '123.45',
+    sumrToClaim: '1.23',
+    sumrApy: '0.0123',
+    sumrDelegated,
+    delegatedTo,
+    totalSumr: totalSumr?.toString() ?? '0',
+  }
 
   return (
     <PortfolioPageView
