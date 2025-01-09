@@ -142,6 +142,7 @@ export const icons = {
   mana: customLazy(() => import('./icons/mana.svg?react')),
   matic_circle_color: customLazy(() => import('./icons/matic_circle_color.svg?react')),
   matic_circle_mono: customLazy(() => import('./icons/matic_circle_mono.svg?react')),
+  mbasis: customLazy(() => import('./icons/mbasis.svg?react')),
   menu: customLazy(() => import('./icons/menu.svg?react')),
   meveth: customLazy(() => import('./icons/meveth.svg?react')),
   mkr_circle_color: customLazy(() => import('./icons/mkr_circle_color.svg?react')),

@@ -95,6 +95,7 @@ export type IconNamesList =
   | 'mana'
   | 'matic_circle_color'
   | 'matic_circle_mono'
+  | 'mbasis'
   | 'menu'
   | 'meveth'
   | 'mkr_circle_color'
