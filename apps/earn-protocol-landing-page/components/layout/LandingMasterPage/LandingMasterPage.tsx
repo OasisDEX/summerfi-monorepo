@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type PropsWithChildren } from 'react'
+import { type FC, type PropsWithChildren, useEffect, useState } from 'react'
 import { Footer, NewsletterWrapper, Text } from '@summerfi/app-earn-ui'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
@@ -10,9 +10,23 @@ import landingMasterPageStyles from '@/components/layout/LandingMasterPage/landi
 interface LandingMasterPageProps {}
 
 export const LandingMasterPage: FC<PropsWithChildren<LandingMasterPageProps>> = ({ children }) => {
+  const [scrolledAmount, setScrolledAmount] = useState(0)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolledAmount(window.scrollY)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
+
   return (
     <div className={landingMasterPageStyles.mainContainer}>
-      <div className={landingMasterPageStyles.bubbles}>
+      <div className={landingMasterPageStyles.bubbles} style={{ top: `${scrolledAmount * 0.2}px` }}>
         <video
           width="100%"
           autoPlay
