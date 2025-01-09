@@ -53,6 +53,10 @@
 
   .ctaButton {
     background: var(--gradient-earn-protocol-dark);
+
+    &Disabled {
+      background: rgba(255, 255, 255, 0.1)
+    }
   }
 }
 

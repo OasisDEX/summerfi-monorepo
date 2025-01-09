@@ -280,6 +280,15 @@ export type IconNamesList =
   | 'gearbox'
   | 'linkedin'
   | 'x'
+  | 'scroller_aave'
+  | 'scroller_sky'
+  | 'scroller_spark'
+  | 'scroller_pendle'
+  | 'scroller_gearbox'
+  | 'scroller_euler'
+  | 'scroller_compound'
+  | 'scroller_ethena'
+  | 'scroller_fluid'
 
 export type TokenSymbolsList =
   | 'AAVE'
