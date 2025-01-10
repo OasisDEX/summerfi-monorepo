@@ -1,7 +1,7 @@
 'use client'
 
 import { type FC } from 'react'
-import { TabBar } from '@summerfi/app-earn-ui'
+import { getPositionValues, TabBar } from '@summerfi/app-earn-ui'
 import { type SDKGlobalRebalancesType, type SDKVaultishType } from '@summerfi/app-types'
 
 import { type PortfolioPositionsList } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
@@ -64,9 +64,25 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     },
   ]
 
+  const totalWalletValue =
+    positions.reduce(
+      (acc, position) =>
+        acc +
+        getPositionValues({
+          positionData: position.positionData,
+          vaultData: position.vaultData,
+        }).netEarningsUSD.toNumber(),
+
+      0,
+    ) + walletData.totalAssetsUsdValue
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', padding: '0 16px', width: '100%' }}>
-      <PortfolioHeader walletAddress={walletAddress} totalSumr={rewardsData.totalSumr} />
+      <PortfolioHeader
+        walletAddress={walletAddress}
+        totalSumr={rewardsData.totalSumr}
+        totalWalletValue={totalWalletValue}
+      />
       <TabBar
         tabs={tabs}
         defaultIndex={tabs.findIndex((item) => item.id === activeTab)}

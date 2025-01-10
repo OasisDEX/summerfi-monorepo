@@ -45,7 +45,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   const aprCurrent = formatDecimalAsPercent(new BigNumber(vault.calculatedApr).div(100))
   const noOfDeposits = position.deposits.length.toString()
 
-  const { netDeposited, netDepositedUSD, netEarnings, netEarningsUSD } = getPositionValues({
+  const { netDeposited, netEarnings } = getPositionValues({
     positionData: position,
     vaultData: vault,
   })
