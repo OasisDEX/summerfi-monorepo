@@ -289,6 +289,12 @@ export type IconNamesList =
   | 'scroller_compound'
   | 'scroller_ethena'
   | 'scroller_fluid'
+  | 'earn_1_on_1'
+  | 'earn_discord'
+  | 'earn_email'
+  | 'earn_rebalance_activities'
+  | 'earn_user_activities'
+  | 'earn_yield_trend'
 
 export type TokenSymbolsList =
   | 'AAVE'

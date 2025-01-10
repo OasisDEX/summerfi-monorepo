@@ -25,10 +25,10 @@ const SupportBoxElement = ({
   return (
     <div className={supportBoxStyles.supportBox}>
       <Icon iconName={icon} color="white" size={20} />
-      <Text as="p" variant="p2">
+      <Text as="p" variant="p2semi">
         {description}
       </Text>
-      <Link href={url}>
+      <Link href={url} style={{ marginTop: '-8px' }}>
         <Text as="p" variant="p3semi">
           <WithArrow>{urlLabel}</WithArrow>
         </Text>

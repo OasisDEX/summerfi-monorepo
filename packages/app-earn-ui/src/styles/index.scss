@@ -1,6 +1,17 @@
 @import './vendor.scss';
 @import './base.scss';
 
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
 :root {
   --general-radius-50: 50px;
   --general-radius-32: 32px;

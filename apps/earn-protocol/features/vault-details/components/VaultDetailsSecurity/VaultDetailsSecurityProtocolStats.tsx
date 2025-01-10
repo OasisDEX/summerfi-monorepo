@@ -53,7 +53,7 @@ export const VaultDetailsSecurityProtocolStats = () => {
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <Text as="p" variant="p1semi" style={{ marginBottom: 'var(--spacing-space-small)' }}>
-            Curate Protocol Stats
+            Curated Protocol Stats
           </Text>
           <div>
             <Dropdown

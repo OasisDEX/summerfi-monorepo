@@ -35,7 +35,7 @@ export const LandingMasterPage: FC<PropsWithChildren<LandingMasterPageProps>> = 
           playsInline
           className={landingMasterPageStyles.video}
         >
-          <source src="/img/landing-page/bubbles.webm" type="video/mp4" />
+          <source src="/img/landing-page/bubbles.mp4" type="video/mp4" />
         </video>
       </div>
       <div className={landingMasterPageStyles.appContainer}>
