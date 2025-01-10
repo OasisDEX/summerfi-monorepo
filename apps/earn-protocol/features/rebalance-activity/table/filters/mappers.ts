@@ -32,6 +32,10 @@ const getProtocolIcon = (protocolLabel: string) => {
     return 'gearbox'
   }
 
+  if (lowerCasedProtocolLabel.includes('buffer')) {
+    return 'cog'
+  }
+
   return 'not_supported_icon'
 }
 

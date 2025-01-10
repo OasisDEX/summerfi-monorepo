@@ -17,32 +17,7 @@ import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
 import { rebalanceActivitySorter } from '@/features/rebalance-activity/table/sorter'
-
-export const arkNameMap: { [key: string]: string } = {
-  BufferArk: 'Buffer',
-  AaveV3: 'Aave V3',
-  CompoundV3: 'Compound V3',
-  PendlePt: 'Pendle',
-}
-
-// todo: this is a temporary solution, we need to find a better way to handle this
-const formatActionName = (nameParts: string[]) => {
-  const cleanedName = nameParts.slice(0, -1).join('-')
-
-  const [baseName, ...remainingParts] = cleanedName.split('-')
-
-  if (baseName === 'MetaMorpho' || baseName === 'MorphoVault') {
-    const nameWithoutPrefix = remainingParts.join(' ').replace(/_/gu, ' ')
-
-    return `Morpho ${nameWithoutPrefix.split(' ').slice(1).join(' ')}`
-  } else if (baseName === 'ERC4626') {
-    const [secondPart] = remainingParts
-
-    return secondPart.charAt(0).toUpperCase() + secondPart.slice(1)
-  }
-
-  return arkNameMap[baseName] ?? baseName
-}
+import { getProtocolLabel } from '@/helpers/get-protocol-label'
 
 const providerMap: { [key: string]: string } = {
   'Summer Earn Protocol': 'Summer.fi',
@@ -94,16 +69,16 @@ export const rebalancingActivityMapper = (
     // dummy mapping for now
     const providerLink =
       {
-        'Summer Earn Protocol': '/',
-      }[item.protocol.name] ?? '/'
+        'Summer Earn Protocol': '/earn',
+      }[item.protocol.name] ?? '/earn'
 
     const amount = new BigNumber(item.amount.toString()).shiftedBy(-item.asset.decimals)
 
     const actionFromRawName = item.from.name?.split('-') ?? ['n/a']
     const actionToRawName = item.to.name?.split('-') ?? ['n/a']
 
-    const actionFromLabel = formatActionName(actionFromRawName)
-    const actionToLabel = formatActionName(actionToRawName)
+    const actionFromLabel = getProtocolLabel(actionFromRawName)
+    const actionToLabel = getProtocolLabel(actionToRawName)
 
     const purpose = rebalanceActivityPurposeMapper(item)
 
