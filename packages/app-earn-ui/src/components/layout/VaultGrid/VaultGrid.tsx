@@ -2,6 +2,7 @@
 
 import { type ReactNode } from 'react'
 import { type DropdownOption, type DropdownRawOption } from '@summerfi/app-types'
+import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
 import { Box } from '@/components/atoms/Box/Box'
@@ -39,6 +40,11 @@ export const VaultGrid = ({
           options={networksList}
           onChangeNetwork={onChangeNetwork}
           selected={selectedNetwork}
+          tooltip={
+            selectedNetwork && selectedNetwork.label !== 'All Networks'
+              ? `You can deposit your assets into the strategies on ${capitalize(selectedNetwork.label)} network`
+              : undefined
+          }
         />
         <Link href="/" style={{ display: 'block', width: 'min-content', whiteSpace: 'pre' }}>
           <Text as="p" variant="p3semi" style={{ display: 'inline' }}>

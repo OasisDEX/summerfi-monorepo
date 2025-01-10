@@ -67,7 +67,7 @@ export const VaultTitle: FC<VaultTitleProps> = ({
           <Text
             as="h4"
             variant="h4"
-            style={{ color: 'white', fontSize: '24px', lineHeight: '30px' }}
+            style={{ color: 'white', fontSize: '24px', fontWeight: 600, lineHeight: '30px' }}
             data-testid="vault-token"
           >
             {symbol}

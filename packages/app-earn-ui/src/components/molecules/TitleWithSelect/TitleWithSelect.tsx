@@ -6,6 +6,7 @@ import { type DropdownOption, type DropdownRawOption } from '@summerfi/app-types
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { Dropdown } from '@/components/molecules/Dropdown/Dropdown'
+import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 
 import titleWithSelectStyles from '@/components/molecules/TitleWithSelect/TitleWithSelect.module.scss'
 
@@ -26,12 +27,14 @@ type TitleWithSelectProps =
       options?: DropdownOption[]
       onChangeNetwork?: (selected: DropdownRawOption) => void
       selected?: DropdownOption
+      tooltip?: string
     }
   | {
       title: string
       options: DropdownOption[]
       onChangeNetwork: (selected: DropdownRawOption) => void
       selected: DropdownOption
+      tooltip?: string
     }
 
 export const TitleWithSelect = ({
@@ -39,25 +42,38 @@ export const TitleWithSelect = ({
   options,
   onChangeNetwork,
   selected,
+  tooltip,
 }: TitleWithSelectProps) => {
+  const tooltipContent = selected && options && onChangeNetwork && (
+    <Dropdown
+      dropdownValue={{ value: selected.value, content: <Content option={selected} /> }}
+      options={options.map((option) => ({
+        value: option.value,
+        content: <Content option={option} />,
+      }))}
+      onChange={onChangeNetwork}
+      asPill
+    >
+      <Content option={selected} />
+    </Dropdown>
+  )
+
   return (
     <div className={titleWithSelectStyles.titleWithSelectWrapper}>
       <div className={titleWithSelectStyles.titleLine}>
         <Text as="h2" variant="h2">
           {title}
         </Text>
-        {selected && options && onChangeNetwork && (
-          <Dropdown
-            dropdownValue={{ value: selected.value, content: <Content option={selected} /> }}
-            options={options.map((option) => ({
-              value: option.value,
-              content: <Content option={option} />,
-            }))}
-            onChange={onChangeNetwork}
-            asPill
+        {tooltip ? (
+          <Tooltip
+            tooltip={tooltip}
+            style={{ maxWidth: 'auto' }}
+            tooltipWrapperStyles={{ textWrap: 'nowrap', right: 0, top: 10 }}
           >
-            <Content option={selected} />
-          </Dropdown>
+            {tooltipContent}
+          </Tooltip>
+        ) : (
+          <>{tooltipContent}</>
         )}
       </div>
     </div>
