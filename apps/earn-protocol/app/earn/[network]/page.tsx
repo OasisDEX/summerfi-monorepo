@@ -3,7 +3,7 @@ import { humanNetworktoSDKNetwork, parseServerResponseToClient } from '@summerfi
 
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
-import { VaultManageViewComponent } from '@/components/layout/VaultsListView/VaultListViewComponent'
+import { VaultListViewComponent } from '@/components/layout/VaultsListView/VaultListViewComponent'
 import { decorateCustomVaultFields } from '@/helpers/vault-custom-value-helpers'
 
 type EarnNetworkVaultsPageProps = {
@@ -20,7 +20,7 @@ const EarnNetworkVaultsPage = async ({ params }: EarnNetworkVaultsPageProps) => 
   const { config: systemConfig } = parseServerResponseToClient(configRaw)
   const vaultsDecorated = decorateCustomVaultFields({ vaults, systemConfig })
 
-  return <VaultManageViewComponent vaultsList={vaultsDecorated} selectedNetwork={parsedNetwork} />
+  return <VaultListViewComponent vaultsList={vaultsDecorated} selectedNetwork={parsedNetwork} />
 }
 
 export default EarnNetworkVaultsPage

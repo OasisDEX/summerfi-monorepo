@@ -6,12 +6,12 @@ import { SDKContextProvider } from '@summerfi/sdk-client-react'
 import { VaultsListView } from '@/components/layout/VaultsListView/VaultsListView'
 import { sdkApiUrl } from '@/constants/sdk'
 
-interface VaultManageViewComponentProps {
+interface VaultListViewComponentProps {
   vaultsList: SDKVaultsListType
   selectedNetwork?: SDKNetwork | 'all-networks'
 }
 
-export const VaultManageViewComponent: FC<VaultManageViewComponentProps> = ({
+export const VaultListViewComponent: FC<VaultListViewComponentProps> = ({
   vaultsList,
   selectedNetwork,
 }) => {
