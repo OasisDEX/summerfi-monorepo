@@ -32,11 +32,13 @@ export const BonusLabel = ({
       {!!tokenBonus || !!apy || !!rays || !!raw ? (
         <Pill>
           {tokenBonus ?? rays ? <Icon iconName="stars" size={24} color="white" /> : null}
-          {apy ? `APY ${apy}` : ''}
-          {tokenBonus && withTokenBonus && apy ? <>&nbsp;+&nbsp;</> : ''}
-          {tokenBonus && withTokenBonus ? `${tokenBonus} SUMR` : ''}
-          {rays ? `${rays} RAYS` : ''}
-          {raw ? raw : ''}
+          <span style={{ fontWeight: 600 }}>
+            {apy ? `APY ${apy}` : ''}
+            {tokenBonus && withTokenBonus && apy ? <>&nbsp;+&nbsp;</> : ''}
+            {tokenBonus && withTokenBonus ? `${tokenBonus} SUMR` : ''}
+            {rays ? `${rays} RAYS` : ''}
+            {raw ? raw : ''}
+          </span>
         </Pill>
       ) : null}
     </Text>

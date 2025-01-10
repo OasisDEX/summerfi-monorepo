@@ -27,6 +27,7 @@ export const LandingMasterPage: FC<PropsWithChildren<LandingMasterPageProps>> = 
   return (
     <div className={landingMasterPageStyles.mainContainer}>
       <div className={landingMasterPageStyles.bubbles} style={{ top: `${scrolledAmount * 0.2}px` }}>
+        <div className={landingMasterPageStyles.bubblesShadow} />
         <video
           width="100%"
           autoPlay
@@ -35,7 +36,7 @@ export const LandingMasterPage: FC<PropsWithChildren<LandingMasterPageProps>> = 
           playsInline
           className={landingMasterPageStyles.video}
         >
-          <source src="/img/landing-page/bubbles.webm" type="video/mp4" />
+          <source src="/img/landing-page/bubbles.mp4" type="video/mp4" />
         </video>
       </div>
       <div className={landingMasterPageStyles.appContainer}>

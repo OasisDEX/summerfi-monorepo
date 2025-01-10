@@ -57,8 +57,7 @@ export const VaultGridDetails = ({
           >
             <VaultTitleWithRisk
               symbol={vault.inputToken.symbol}
-              // TODO: fill data
-              risk="low"
+              risk={vault.customFields?.risk ?? 'medium'}
               networkName={vault.protocol.network}
             />
           </Dropdown>

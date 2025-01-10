@@ -41,7 +41,16 @@
       }
     }
 
+    span>div>svg {
+      stroke: var(--earn-protocol-secondary-40);
+      transition: all 0.2s;
+    }
+
     &:hover {
+      span>div>svg {
+        stroke: #fff;
+        transform: rotate3d(1, 0, 0, 180deg);
+      }
 
       span,
       a {

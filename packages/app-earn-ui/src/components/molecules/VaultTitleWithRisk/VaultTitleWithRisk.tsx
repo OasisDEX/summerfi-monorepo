@@ -35,7 +35,7 @@ export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
       value={
         <>
           <Text as="p" variant="p3" style={{ color }}>
-            {capitalize(risk)} risk
+            {capitalize(risk)} Risk
           </Text>
           <Tooltip tooltip="TBD">
             <Icon iconName="question_o" variant="s" color={color} />

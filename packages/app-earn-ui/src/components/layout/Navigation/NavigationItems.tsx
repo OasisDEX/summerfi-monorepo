@@ -26,7 +26,7 @@ export const NavigationItems = ({ items, currentPath }: NavigationItemsProps) =>
         <Link href={item.url} key={`NavItems_${item.id}`}>
           <div className={navigationItemsStyles.navigationItemsItem}>
             <div className={navigationItemsStyles.navigationItemsIconWrapper}>
-              <Icon iconName={item.icon} size={item.iconSize ?? 24} />
+              <Icon iconName={item.icon} size={item.iconSize ?? 32} />
             </div>
             <div>
               <Text
