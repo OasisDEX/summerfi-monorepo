@@ -67,8 +67,13 @@ export const TitleWithSelect = ({
         {tooltip ? (
           <Tooltip
             tooltip={tooltip}
-            style={{ maxWidth: 'auto' }}
-            tooltipWrapperStyles={{ textWrap: 'nowrap', right: 0, top: 10 }}
+            tooltipWrapperStyles={{
+              textWrap: 'nowrap',
+              maxWidth: 'auto',
+              width: 'auto',
+              right: 0,
+              top: 10,
+            }}
           >
             {tooltipContent}
           </Tooltip>
