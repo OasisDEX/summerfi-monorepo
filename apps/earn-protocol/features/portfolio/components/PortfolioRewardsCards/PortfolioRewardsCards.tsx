@@ -23,7 +23,7 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
   const rawSumr = Number(rewardsData.sumrToClaim)
   const rawSumrUSD = formatFiatBalance(rawSumr * assumedSumrPriceRaw)
   const sumrAmount = formatCryptoBalance(rawSumr)
-  const sumrAmountUSD = `${formatFiatBalance(rawSumrUSD)}`
+  const sumrAmountUSD = `$${formatFiatBalance(rawSumrUSD)}`
 
   return (
     <DataModule
