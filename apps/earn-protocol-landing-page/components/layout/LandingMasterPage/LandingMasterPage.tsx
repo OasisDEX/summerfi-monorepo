@@ -27,6 +27,7 @@ export const LandingMasterPage: FC<PropsWithChildren<LandingMasterPageProps>> = 
   return (
     <div className={landingMasterPageStyles.mainContainer}>
       <div className={landingMasterPageStyles.bubbles} style={{ top: `${scrolledAmount * 0.2}px` }}>
+        <div className={landingMasterPageStyles.bubblesShadow} />
         <video
           width="100%"
           autoPlay
