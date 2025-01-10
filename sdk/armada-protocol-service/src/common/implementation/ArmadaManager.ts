@@ -10,6 +10,7 @@ import {
   createApprovalTransaction,
   createDepositTransaction,
   createWithdrawTransaction,
+  type IArmadaManagerClaims,
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
@@ -39,12 +40,15 @@ import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-comm
 import type { ISwapManager } from '@summerfi/swap-common'
 import BigNumber from 'bignumber.js'
 import type { IOracleManager } from '@summerfi/oracle-common'
+import { ArmadaManagerClaims } from './ArmadaManagerClaims'
 
 /**
  * @name ArmadaManager
  * @description This class is the implementation of the IArmadaManager interface. Takes care of choosing the best provider for a price consultation
  */
 export class ArmadaManager implements IArmadaManager {
+  claims: IArmadaManagerClaims
+
   private _configProvider: IConfigurationProvider
   private _allowanceManager: IAllowanceManager
   private _contractsProvider: IContractsProvider
@@ -70,6 +74,8 @@ export class ArmadaManager implements IArmadaManager {
     this._blockchainClientProvider = params.blockchainClientProvider
     this._swapManager = params.swapManager
     this._oracleManager = params.oracleManager
+
+    this.claims = new ArmadaManagerClaims(params)
   }
 
   /** POOLS */
@@ -270,6 +276,34 @@ export class ArmadaManager implements IArmadaManager {
     }
   }
 
+  /** @see IArmadaManager.convertToShares */
+  async convertToShares(
+    params: Parameters<IArmadaManager['convertToShares']>[0],
+  ): Promise<ITokenAmount> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    const erc4626Contract = fleetContract.asErc4626()
+
+    return erc4626Contract.convertToShares({ amount: params.amount })
+  }
+
+  /** @see IArmadaManager.convertToAssets */
+  async convertToAssets(
+    params: Parameters<IArmadaManager['convertToAssets']>[0],
+  ): Promise<ITokenAmount> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    const erc4626Contract = fleetContract.asErc4626()
+
+    return erc4626Contract.convertToAssets({ amount: params.amount })
+  }
+
   /** USER TRANSACTIONS */
 
   /** @see IArmadaManager.getNewDepositTX */
@@ -296,6 +330,221 @@ export class ArmadaManager implements IArmadaManager {
   async getWithdrawTX(
     params: Parameters<IArmadaManager['getWithdrawTX']>[0],
   ): Promise<ExtendedTransactionInfo[]> {
+    return this._getWithdrawTX(params)
+  }
+
+  /** CLAIMS TRANSACTIONS */
+
+  /** @see IArmadaManagerClaims.eligibleForClaim */
+  async eligibleForClaim(
+    params: Parameters<IArmadaManagerClaims['eligibleForClaim']>[0],
+  ): ReturnType<IArmadaManagerClaims['eligibleForClaim']> {
+    return this.claims.eligibleForClaim(params)
+  }
+
+  /** @see IArmadaManagerClaims.getClaimTX */
+  async getClaimTX(
+    params: Parameters<IArmadaManagerClaims['getClaimTX']>[0],
+  ): ReturnType<IArmadaManagerClaims['getClaimTX']> {
+    return this.claims.getClaimTX(params)
+  }
+
+  /** @see IArmadaManagerClaims.getClaimAllTX */
+  async getClaimAllTX(
+    params: Parameters<IArmadaManagerClaims['getClaimAllTX']>[0],
+  ): ReturnType<IArmadaManagerClaims['getClaimAllTX']> {
+    return this.claims.getClaimAllTX(params)
+  }
+
+  /** KEEPERS TRANSACTIONS */
+
+  /** @see IArmadaManager.rebalance */
+  async rebalance(params: Parameters<IArmadaManager['rebalance']>[0]): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    return fleetContract.rebalance({ rebalanceData: params.rebalanceData })
+  }
+
+  /** @see IArmadaManager.adjustBuffer */
+  async adjustBuffer(
+    params: Parameters<IArmadaManager['adjustBuffer']>[0],
+  ): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    return fleetContract.adjustBuffer({ rebalanceData: params.rebalanceData })
+  }
+
+  /** GOVERNANCE TRANSACTIONS */
+
+  /** @see IArmadaManager.setFleetDepositCap */
+  async setFleetDepositCap(
+    params: Parameters<IArmadaManager['setFleetDepositCap']>[0],
+  ): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    return fleetContract.setFleetDepositCap({ cap: params.cap })
+  }
+
+  /** @see IArmadaManager.setTipJar */
+  async setTipJar(params: Parameters<IArmadaManager['setTipJar']>[0]): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    return fleetContract.setTipJar()
+  }
+
+  /** @see IArmadaManager.setTipRate */
+  async setTipRate(params: Parameters<IArmadaManager['setTipRate']>[0]): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    return fleetContract.setTipRate({ rate: params.rate })
+  }
+
+  /** @see IArmadaManager.addArk */
+  async addArk(params: Parameters<IArmadaManager['addArk']>[0]): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    return fleetContract.addArk({ ark: params.ark })
+  }
+
+  /** @see IArmadaManager.addArks */
+  async addArks(params: Parameters<IArmadaManager['addArks']>[0]): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    return fleetContract.addArks({ arks: params.arks })
+  }
+
+  /** @see IArmadaManager.removeArk */
+  async removeArk(params: Parameters<IArmadaManager['removeArk']>[0]): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    return fleetContract.removeArk({ ark: params.ark })
+  }
+
+  /** @see IArmadaManager.setArkDepositCap */
+  async setArkDepositCap(
+    params: Parameters<IArmadaManager['setArkDepositCap']>[0],
+  ): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    return fleetContract.setArkDepositCap({ ark: params.ark, cap: params.cap })
+  }
+
+  /** @see IArmadaManager.setArkMaxRebalanceOutflow */
+  async setArkMaxRebalanceOutflow(
+    params: Parameters<IArmadaManager['setArkMaxRebalanceOutflow']>[0],
+  ): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    return fleetContract.setArkMaxRebalanceOutflow({
+      ark: params.ark,
+      maxRebalanceOutflow: params.maxRebalanceOutflow,
+    })
+  }
+
+  /** @see IArmadaManager.setArkMaxRebalanceInflow */
+  async setArkMaxRebalanceInflow(
+    params: Parameters<IArmadaManager['setArkMaxRebalanceInflow']>[0],
+  ): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    return fleetContract.setArkMaxRebalanceInflow({
+      ark: params.ark,
+      maxRebalanceInflow: params.maxRebalanceInflow,
+    })
+  }
+
+  /** @see IArmadaManager.setMinimumBufferBalance */
+  async setMinimumBufferBalance(
+    params: Parameters<IArmadaManager['setMinimumBufferBalance']>[0],
+  ): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    return fleetContract.setMinimumBufferBalance({
+      minimumBufferBalance: params.minimumBufferBalance,
+    })
+  }
+
+  /** @see IArmadaManager.updateRebalanceCooldown */
+  async updateRebalanceCooldown(
+    params: Parameters<IArmadaManager['updateRebalanceCooldown']>[0],
+  ): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    return fleetContract.updateRebalanceCooldown({ cooldown: params.cooldown })
+  }
+
+  /** @see IArmadaManager.forceRebalance */
+  async forceRebalance(
+    params: Parameters<IArmadaManager['forceRebalance']>[0],
+  ): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    return fleetContract.forceRebalance({ rebalanceData: params.rebalanceData })
+  }
+
+  /** @see IArmadaManager.emergencyShutdown */
+  async emergencyShutdown(
+    params: Parameters<IArmadaManager['emergencyShutdown']>[0],
+  ): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    return fleetContract.emergencyShutdown()
+  }
+
+  /** PRIVATE */
+
+  private async _getWithdrawTX(params: {
+    vaultId: IArmadaVaultId
+    user: IUser
+    amount: ITokenAmount
+    slippage: IPercentage
+    toToken: IToken
+  }): Promise<ExtendedTransactionInfo[]> {
     const transactions: ExtendedTransactionInfo[] = []
 
     const { assets: fleetAssets, shares: fleetShares } = await this.getFleetBalance({
@@ -565,215 +814,6 @@ export class ArmadaManager implements IArmadaManager {
 
     return transactions
   }
-
-  /** @see IArmadaManager.convertToShares */
-  async convertToShares(
-    params: Parameters<IArmadaManager['convertToShares']>[0],
-  ): Promise<ITokenAmount> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    const erc4626Contract = fleetContract.asErc4626()
-
-    return erc4626Contract.convertToShares({ amount: params.amount })
-  }
-
-  async convertToAssets(
-    params: Parameters<IArmadaManager['convertToAssets']>[0],
-  ): Promise<ITokenAmount> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    const erc4626Contract = fleetContract.asErc4626()
-
-    return erc4626Contract.convertToAssets({ amount: params.amount })
-  }
-
-  /** KEEPERS TRANSACTIONS */
-
-  /** @see IArmadaManager.rebalance */
-  async rebalance(params: Parameters<IArmadaManager['rebalance']>[0]): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.rebalance({ rebalanceData: params.rebalanceData })
-  }
-
-  /** @see IArmadaManager.adjustBuffer */
-  async adjustBuffer(
-    params: Parameters<IArmadaManager['adjustBuffer']>[0],
-  ): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.adjustBuffer({ rebalanceData: params.rebalanceData })
-  }
-
-  /** GOVERNANCE TRANSACTIONS */
-
-  /** @see IArmadaManager.setFleetDepositCap */
-  async setFleetDepositCap(
-    params: Parameters<IArmadaManager['setFleetDepositCap']>[0],
-  ): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.setFleetDepositCap({ cap: params.cap })
-  }
-
-  /** @see IArmadaManager.setTipJar */
-  async setTipJar(params: Parameters<IArmadaManager['setTipJar']>[0]): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.setTipJar()
-  }
-
-  /** @see IArmadaManager.setTipRate */
-  async setTipRate(params: Parameters<IArmadaManager['setTipRate']>[0]): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.setTipRate({ rate: params.rate })
-  }
-
-  /** @see IArmadaManager.addArk */
-  async addArk(params: Parameters<IArmadaManager['addArk']>[0]): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.addArk({ ark: params.ark })
-  }
-
-  /** @see IArmadaManager.addArks */
-  async addArks(params: Parameters<IArmadaManager['addArks']>[0]): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.addArks({ arks: params.arks })
-  }
-
-  /** @see IArmadaManager.removeArk */
-  async removeArk(params: Parameters<IArmadaManager['removeArk']>[0]): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.removeArk({ ark: params.ark })
-  }
-
-  /** @see IArmadaManager.setArkDepositCap */
-  async setArkDepositCap(
-    params: Parameters<IArmadaManager['setArkDepositCap']>[0],
-  ): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.setArkDepositCap({ ark: params.ark, cap: params.cap })
-  }
-
-  /** @see IArmadaManager.setArkMaxRebalanceOutflow */
-  async setArkMaxRebalanceOutflow(
-    params: Parameters<IArmadaManager['setArkMaxRebalanceOutflow']>[0],
-  ): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.setArkMaxRebalanceOutflow({
-      ark: params.ark,
-      maxRebalanceOutflow: params.maxRebalanceOutflow,
-    })
-  }
-
-  /** @see IArmadaManager.setArkMaxRebalanceInflow */
-  async setArkMaxRebalanceInflow(
-    params: Parameters<IArmadaManager['setArkMaxRebalanceInflow']>[0],
-  ): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.setArkMaxRebalanceInflow({
-      ark: params.ark,
-      maxRebalanceInflow: params.maxRebalanceInflow,
-    })
-  }
-
-  /** @see IArmadaManager.setMinimumBufferBalance */
-  async setMinimumBufferBalance(
-    params: Parameters<IArmadaManager['setMinimumBufferBalance']>[0],
-  ): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.setMinimumBufferBalance({
-      minimumBufferBalance: params.minimumBufferBalance,
-    })
-  }
-
-  /** @see IArmadaManager.updateRebalanceCooldown */
-  async updateRebalanceCooldown(
-    params: Parameters<IArmadaManager['updateRebalanceCooldown']>[0],
-  ): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.updateRebalanceCooldown({ cooldown: params.cooldown })
-  }
-
-  /** @see IArmadaManager.forceRebalance */
-  async forceRebalance(
-    params: Parameters<IArmadaManager['forceRebalance']>[0],
-  ): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.forceRebalance({ rebalanceData: params.rebalanceData })
-  }
-
-  /** @see IArmadaManager.emergencyShutdown */
-  async emergencyShutdown(
-    params: Parameters<IArmadaManager['emergencyShutdown']>[0],
-  ): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.emergencyShutdown()
-  }
-
-  /** PRIVATE */
 
   private async _previewWithdraw(params: {
     vaultId: IArmadaVaultId

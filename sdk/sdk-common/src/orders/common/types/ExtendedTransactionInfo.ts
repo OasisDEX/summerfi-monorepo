@@ -9,6 +9,7 @@ export enum TransactionType {
   Approve = 'Approve',
   Deposit = 'Deposit',
   Withdraw = 'Withdraw',
+  Claim = 'Claim',
 }
 
 export type TransactionMetadataApproval = {
@@ -34,25 +35,31 @@ export type TransactionMetadataWithdraw = {
   slippage: IPercentage
 }
 
+type TransactionInfo = {
+  transaction: Transaction
+  description: string
+}
+
 /**
  * @interface ExtendedTransactionInfo
  * @description Contains the low level transaction plus a description of what the transaction is for.
  */
-export type ExtendedTransactionInfo = {
-  transaction: Transaction
-  /** @description High-level description of the transaction */
-  description: string
-} & (
-  | {
-      type: TransactionType.Approve
-      metadata: TransactionMetadataApproval
-    }
-  | {
-      type: TransactionType.Deposit
-      metadata: TransactionMetadataDeposit
-    }
-  | {
-      type: TransactionType.Withdraw
-      metadata: TransactionMetadataWithdraw
-    }
-)
+export type ExtendedTransactionInfo = TransactionInfo &
+  (
+    | {
+        type: TransactionType.Approve
+        metadata: TransactionMetadataApproval
+      }
+    | {
+        type: TransactionType.Deposit
+        metadata: TransactionMetadataDeposit
+      }
+    | {
+        type: TransactionType.Withdraw
+        metadata: TransactionMetadataWithdraw
+      }
+  )
+
+export type ClaimTransactionInfo = TransactionInfo & {
+  type: TransactionType.Claim
+}
