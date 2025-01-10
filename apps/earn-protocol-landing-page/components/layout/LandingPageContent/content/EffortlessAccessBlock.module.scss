@@ -7,7 +7,6 @@
   padding: 88px var(--spacing-space-3x-large) 64px var(--spacing-space-3x-large);
   font-weight: 600;
   line-height: 40px;
-  letter-spacing: 0.1px;
 
   @include media('<=s') {
     padding: var(--general-space-40) var(--spacing-space-large);
