@@ -54,7 +54,7 @@ export type SDKGlobalRebalanceType = SDKGlobalRebalancesType[0]
 export type SDKUsersActivityType = GetUsersActivityQuery['positions']
 export type SDKUserActivityType = SDKUsersActivityType[0]
 
-export type Risk = 'low' | 'medium' | 'high'
+export type Risk = 'lower' | 'medium' | 'higher'
 
 // -ish because it can be a detailed vault or a vault from list (less details), use with that in mind
 export type SDKVaultishType = (SDKVaultType | SDKVaultsListType[number]) & VaultCustomFields

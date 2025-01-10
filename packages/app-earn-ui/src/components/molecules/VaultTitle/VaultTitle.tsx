@@ -47,7 +47,7 @@ export const VaultTitle: FC<VaultTitleProps> = ({
       <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
         {isIconDefined ? (
           /* if any icon breaks, this is probably because of TokenSymbolsList vs whatever comes from the subgraph */
-          <Icon tokenName={symbol as TokenSymbolsList} variant="xxl" />
+          <Icon tokenName={symbol as TokenSymbolsList} size={44} />
         ) : (
           <GenericTokenIcon symbol={symbol} customSize={32} />
         )}
