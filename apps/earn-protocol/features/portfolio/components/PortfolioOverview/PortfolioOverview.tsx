@@ -4,6 +4,8 @@ import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 
 import { type PortfolioPositionsList } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
 import { PositionHistoricalChart } from '@/components/organisms/Charts/PositionHistoricalChart'
+import { SUMR_CAP } from '@/constants/earn-protocol'
+import { useLocalConfig } from '@/contexts/LocalConfigContext/LocalConfigContext'
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
 
 // const dummyNewsAndUpdatesItems = [
@@ -65,6 +67,11 @@ type PortfolioOverviewProps = {
 }
 
 export const PortfolioOverview = ({ vaultsList, positions }: PortfolioOverviewProps) => {
+  const {
+    state: { sumrNetApyConfig },
+  } = useLocalConfig()
+  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
+
   const totalSummerPortfolioUSD = positions.reduce(
     (acc, position) =>
       acc +
@@ -119,6 +126,7 @@ export const PortfolioOverview = ({ vaultsList, positions }: PortfolioOverviewPr
                     tokenSymbol={position.vaultData.inputToken.symbol as TokenSymbolsList}
                   />
                 }
+                sumrPrice={estimatedSumrPrice}
               />
             ))
           ) : (
