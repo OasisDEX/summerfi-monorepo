@@ -1,6 +1,6 @@
-import { Card, DataBlock, PortfolioPosition, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { Card, DataBlock, getPositionValues, PortfolioPosition, Text } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType, type TokenSymbolsList } from '@summerfi/app-types'
-import Link from 'next/link'
+import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 
 import { type PortfolioPositionsList } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
 import { PositionHistoricalChart } from '@/components/organisms/Charts/PositionHistoricalChart'
@@ -29,27 +29,33 @@ import { PortfolioVaultsCarousel } from '@/features/portfolio/components/Portfol
 //   },
 // ]
 
-const dataBlocks = [
+const getDatablocks = ({
+  totalSummerPortfolioUSD,
+  sumrTokenRewards,
+}: {
+  totalSummerPortfolioUSD: number
+  sumrTokenRewards: number
+}) => [
   {
     title: 'Total Summer.fi Portfolio',
-    value: '$100,233.32',
+    value: `$${formatFiatBalance(totalSummerPortfolioUSD)}`,
     gradient: 'var(--gradient-earn-protocol-light)',
     titleColor: 'var(--earn-protocol-secondary-60)',
   },
   {
     title: 'SUMR Token Rewards',
-    value: '45,232 $SUMR',
+    value: `${formatCryptoBalance(sumrTokenRewards)} $SUMR`,
   },
   {
     title: 'Available to Migrate',
-    value: '$1002,322,32',
-    subValue: (
-      <Link href="/apps/earn-protocol/public">
-        <WithArrow as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-          Migrate
-        </WithArrow>
-      </Link>
-    ),
+    value: 'Coming Soon',
+    // subValue: (
+    //   <Link href="/apps/earn-protocol/public">
+    //     <WithArrow as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
+    //       Migrate
+    //     </WithArrow>
+    //   </Link>
+    // ),
   },
 ]
 
@@ -59,6 +65,19 @@ type PortfolioOverviewProps = {
 }
 
 export const PortfolioOverview = ({ vaultsList, positions }: PortfolioOverviewProps) => {
+  const totalSummerPortfolioUSD = positions.reduce(
+    (acc, position) =>
+      acc +
+      getPositionValues({
+        positionData: position.positionData,
+        vaultData: position.vaultData,
+      }).netEarningsUSD.toNumber(),
+
+    0,
+  )
+  // TODO: get sumrTokenRewards
+  const sumrTokenRewards = 0
+
   return (
     <div>
       <div
@@ -69,7 +88,7 @@ export const PortfolioOverview = ({ vaultsList, positions }: PortfolioOverviewPr
           flexWrap: 'wrap',
         }}
       >
-        {dataBlocks.map((item) => (
+        {getDatablocks({ totalSummerPortfolioUSD, sumrTokenRewards }).map((item) => (
           <Card
             key={item.title}
             style={{ flex: 1, background: item.gradient, minHeight: '142px' }}
@@ -80,7 +99,7 @@ export const PortfolioOverview = ({ vaultsList, positions }: PortfolioOverviewPr
               titleStyle={{ color: item.titleColor }}
               value={item.value}
               valueSize="large"
-              subValue={item.subValue}
+              // subValue={item.subValue}
             />
           </Card>
         ))}
