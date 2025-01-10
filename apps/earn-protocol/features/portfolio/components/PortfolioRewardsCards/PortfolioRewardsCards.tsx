@@ -1,7 +1,12 @@
 'use client'
 import { type FC } from 'react'
 import { Button, DataModule, Text } from '@summerfi/app-earn-ui'
-import { formatCryptoBalance, formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
+import {
+  ADDRESS_ZERO,
+  formatCryptoBalance,
+  formatDecimalAsPercent,
+  formatFiatBalance,
+} from '@summerfi/app-utils'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
@@ -56,6 +61,14 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }
   const value = formatCryptoBalance(rawStaked)
   const apy = formatDecimalAsPercent(rawApy)
 
+  const isDelegated = rewardsData.delegatedTo !== ADDRESS_ZERO
+
+  const handleRemoveDelegation = () => {
+    // TODO: Implement remove delegation
+    // eslint-disable-next-line no-console
+    console.log('remove delegation clicked')
+  }
+
   return (
     <DataModule
       dataBlock={{
@@ -70,11 +83,19 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }
         valueSize: 'large',
       }}
       actionable={
-        <Link href={`/earn/stake-delegate/${walletAddress}`} prefetch>
-          <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-            Stake and delegate
-          </Text>
-        </Link>
+        isDelegated ? (
+          <Button variant="unstyled" onClick={handleRemoveDelegation}>
+            <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
+              Remove delegate
+            </Text>
+          </Button>
+        ) : (
+          <Link href={`/earn/stake-delegate/${walletAddress}`} prefetch>
+            <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
+              Stake and delegate
+            </Text>
+          </Link>
+        )
       }
     />
   )
