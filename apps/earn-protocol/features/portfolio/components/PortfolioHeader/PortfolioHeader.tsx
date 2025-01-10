@@ -116,7 +116,7 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
           <Text as="p" variant="p1semi">
             {formatAddress(walletAddress, { first: 6 })}
           </Text>
-          <Icon iconName="edit" color="rgba(255, 73, 164, 1)" variant="s" />
+          {/* <Icon iconName="edit" color="rgba(255, 73, 164, 1)" variant="s" /> */}
         </div>
         <div style={{ display: 'flex', gap: 'var(--spacing-space-large)', alignItems: 'center' }}>
           <DataBlock

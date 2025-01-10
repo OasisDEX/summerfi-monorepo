@@ -36,7 +36,6 @@ export const vaultExposureMapper = (
       vault.customFields?.arksInterestRates?.[item.name as string] ?? 0,
     ).div(100)
 
-    // temporary mapping, we need something more robust from subgraph
     const protocol = item.name?.split('-') ?? ['n/a']
     const protocolLabel = getProtocolLabel(protocol)
 

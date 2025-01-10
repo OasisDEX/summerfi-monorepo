@@ -7,8 +7,7 @@ export const arkNameMap: { [key: string]: string } = {
 
 // New mapping logic
 export const getProtocolLabel = (nameParts: string[]) => {
-  const cleanedName = nameParts.slice(0, -1).join('-')
-
+  const cleanedName = nameParts.length > 1 ? nameParts.slice(0, -1).join('-') : nameParts[0]
   const [baseName, ...remainingParts] = cleanedName.split('-')
 
   if (baseName === 'MetaMorpho' || baseName === 'MorphoVault') {
