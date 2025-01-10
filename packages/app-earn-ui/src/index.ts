@@ -112,6 +112,7 @@ export { getScannerUrl } from './helpers/get-scanner-url'
 export { getMedian } from './helpers/get-median'
 export { getOneYearEarnings } from './helpers/get-one-year-earnings'
 export { getPositionValues } from './helpers/get-position-values'
+export { getSumrTokenBonus } from './helpers/get-sumr-token-bonus'
 
 export { INTERNAL_LINKS, EXTERNAL_LINKS } from './helpers/application-links'
 

@@ -10,6 +10,7 @@ import { Text } from '@/components/atoms/Text/Text'
 import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
 import { GradientBox } from '@/components/molecules/GradientBox/GradientBox'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
+import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 
 import vaultCardStyles from './VaultCard.module.scss'
 
@@ -41,18 +42,11 @@ export const VaultCard = ({
   withTokenBonus,
   sumrPrice,
 }: VaultCardProps) => {
-  const sumrIndex = rewardTokens.findIndex((item) => item.token.symbol === 'SUMMER')
-
-  // calculate sumr daily bonus
-  const bonusSumrDaily = rewardTokenEmissionsAmount[sumrIndex]
-    ? // eslint-disable-next-line no-mixed-operators
-      Number(rewardTokenEmissionsAmount[sumrIndex]) / 10 ** 18
-    : 0
-
-  const tokenBonus = formatDecimalAsPercent(
-    sumrPrice && Number(totalValueLockedUSD)
-      ? ((bonusSumrDaily * 365 * sumrPrice) / Number(totalValueLockedUSD)).toString()
-      : '0',
+  const tokenBonus = getSumrTokenBonus(
+    rewardTokens,
+    rewardTokenEmissionsAmount,
+    sumrPrice,
+    totalValueLockedUSD,
   )
 
   const handleVaultClick = () => {

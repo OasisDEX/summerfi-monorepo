@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react'
 import { type IArmadaPosition, type SDKVaultishType } from '@summerfi/app-types'
-import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
+import { formatDecimalAsPercent } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
@@ -9,6 +9,7 @@ import { Card } from '@/components/atoms/Card/Card'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
+import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getVaultPositionUrl } from '@/helpers/get-vault-url'
 
 import portfolioPositionStyles from './PortfolioPosition.module.scss'
@@ -19,6 +20,7 @@ type PortfolioPositionProps = {
     vaultData: SDKVaultishType
   }
   positionGraph: ReactNode
+  sumrPrice?: number
 }
 
 const PortfolioPositionHeaderValue = ({
@@ -40,7 +42,11 @@ const PortfolioPositionHeaderValue = ({
   </div>
 )
 
-export const PortfolioPosition = ({ position, positionGraph }: PortfolioPositionProps) => {
+export const PortfolioPosition = ({
+  position,
+  positionGraph,
+  sumrPrice,
+}: PortfolioPositionProps) => {
   const {
     inputToken,
     protocol,
@@ -48,11 +54,11 @@ export const PortfolioPosition = ({ position, positionGraph }: PortfolioPosition
     calculatedApr,
     totalValueLockedUSD,
     id: vaultId,
-    inputTokenPriceUSD,
     customFields,
+    rewardTokenEmissionsAmount,
+    rewardTokens,
   } = position.vaultData
   const {
-    amount,
     id: {
       user: {
         wallet: {
@@ -60,28 +66,16 @@ export const PortfolioPosition = ({ position, positionGraph }: PortfolioPosition
         },
       },
     },
-    deposits,
-    withdrawals,
   } = position.positionData
   const currentApr = formatDecimalAsPercent(new BigNumber(calculatedApr).div(100))
   const apr30dParsed = formatDecimalAsPercent(new BigNumber(apr30d).div(100))
-  const marketValue = formatCryptoBalance(totalValueLockedUSD)
-  const netContribution = formatCryptoBalance(new BigNumber(amount.amount))
 
-  const totalDepositedInToken = deposits.reduce(
-    (acc, deposit) => acc.plus(deposit.amount),
-    new BigNumber(0),
+  const tokenBonus = getSumrTokenBonus(
+    rewardTokens,
+    rewardTokenEmissionsAmount,
+    sumrPrice,
+    totalValueLockedUSD,
   )
-
-  const totalWithdrawnInToken = withdrawals.reduce(
-    (acc, withdrawal) => acc.plus(withdrawal.amount),
-    new BigNumber(0),
-  )
-
-  const earnedInToken = new BigNumber(amount.amount).minus(
-    totalDepositedInToken.minus(totalWithdrawnInToken),
-  )
-  const earnedInUSD = formatCryptoBalance(earnedInToken.times(inputTokenPriceUSD ?? 0))
 
   return (
     <Card variant="cardPrimary" style={{ marginTop: 'var(--general-space-20)' }}>
@@ -102,7 +96,7 @@ export const PortfolioPosition = ({ position, positionGraph }: PortfolioPosition
                 <Icon iconName="stars_colorful" size={24} style={{ display: 'inline' }} />
               </>
             }
-            value="TBD%"
+            value={tokenBonus}
           />
           <PortfolioPositionHeaderValue title="30d APY" value={apr30dParsed} />
           <PortfolioPositionHeaderValue title="Current APY" value={currentApr} />
