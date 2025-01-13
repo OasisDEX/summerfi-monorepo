@@ -1,6 +1,7 @@
 export type Styles = {
   headingWrapper: string
   headingWrapperAction: string
+  headingWrapperActionDisabled: string
   inputWrapper: string
   wrapper: string
 }

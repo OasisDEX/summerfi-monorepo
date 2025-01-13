@@ -63,6 +63,7 @@ export const VaultManageViewComponent = ({
   viewWalletAddress: string
 }) => {
   const user = useUser()
+  const ownerView = viewWalletAddress.toLowerCase() === user?.address.toLowerCase()
   const { publicClient } = useClient()
 
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
@@ -94,6 +95,10 @@ export const VaultManageViewComponent = ({
     onFocus,
   } = useAmount({ vault, selectedToken })
 
+  const positionAmount = useMemo(() => {
+    return new BigNumber(position.amount.amount)
+  }, [position])
+
   const {
     sidebar,
     txHashes,
@@ -118,17 +123,13 @@ export const VaultManageViewComponent = ({
     tokenBalance: selectedTokenBalance,
     tokenBalanceLoading: selectedTokenBalanceLoading,
     flow: 'manage',
+    ownerView,
+    positionAmount,
   })
 
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-
-  const ownerView = viewWalletAddress.toLowerCase() === user?.address.toLowerCase()
-
-  const positionAmount = useMemo(() => {
-    return new BigNumber(position.amount.amount)
-  }, [position])
 
   const { isLoadingForecast, oneYearEarningsForecast } = useForecast({
     fleetAddress: vault.id,
@@ -139,6 +140,7 @@ export const VaultManageViewComponent = ({
         ? zero
         : positionAmount.minus(amountParsed),
     }[transactionType].toString(),
+    disabled: !ownerView,
   })
 
   const estimatedEarnings = useMemo(() => {
@@ -203,6 +205,7 @@ export const VaultManageViewComponent = ({
       dropdownValue={selectedTokenOption}
       onFocus={onFocus}
       onBlur={onBlur}
+      ownerView={ownerView}
       tokenSymbol={
         {
           [TransactionAction.DEPOSIT]: selectedTokenOption.value,

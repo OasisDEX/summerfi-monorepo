@@ -2,6 +2,7 @@
 
 import { type FC, type ReactNode, useEffect, useRef, useState } from 'react'
 import { type DropdownRawOption } from '@summerfi/app-types'
+import clsx from 'clsx'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Input } from '@/components/atoms/Input/Input.tsx'
@@ -98,7 +99,9 @@ export const Dropdown: FC<DropdownProps> = ({
   return (
     <div className={dropdownStyles.dropdown} ref={dropdownRef}>
       <div
-        className={dropdownStyles.dropdownSelected}
+        className={clsx(dropdownStyles.dropdownSelected, {
+          [dropdownStyles.disabled]: isDisabled,
+        })}
         onClick={toggleDropdown}
         style={
           asPill

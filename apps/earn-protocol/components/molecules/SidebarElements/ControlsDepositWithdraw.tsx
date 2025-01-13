@@ -25,6 +25,7 @@ type ControlsDepositWithdrawProps = {
   vault: SDKVaultType | SDKVaultishType
   estimatedEarnings: string
   isLoadingForecast: boolean
+  ownerView?: boolean
 }
 
 export const ControlsDepositWithdraw = ({
@@ -43,6 +44,7 @@ export const ControlsDepositWithdraw = ({
   vault,
   estimatedEarnings,
   isLoadingForecast,
+  ownerView,
 }: ControlsDepositWithdrawProps) => {
   return (
     <>
@@ -55,6 +57,7 @@ export const ControlsDepositWithdraw = ({
         dropdownValue={dropdownValue}
         onFocus={onFocus}
         onBlur={onBlur}
+        disabled={!ownerView}
         selectAllOnFocus
         heading={{
           label: 'Balance',
@@ -65,18 +68,22 @@ export const ControlsDepositWithdraw = ({
           ) : (
             '-'
           ),
-          action: () => {
-            if (tokenBalance) {
-              manualSetAmount(tokenBalance.toString())
-            }
-          },
+          action: ownerView
+            ? () => {
+                if (tokenBalance) {
+                  manualSetAmount(tokenBalance.toString())
+                }
+              }
+            : undefined,
         }}
       />
-      <ProjectedEarnings
-        earnings={estimatedEarnings}
-        symbol={vault.inputToken.symbol as TokenSymbolsList}
-        isLoading={isLoadingForecast}
-      />
+      {ownerView && (
+        <ProjectedEarnings
+          earnings={estimatedEarnings}
+          symbol={vault.inputToken.symbol as TokenSymbolsList}
+          isLoading={isLoadingForecast}
+        />
+      )}
     </>
   )
 }

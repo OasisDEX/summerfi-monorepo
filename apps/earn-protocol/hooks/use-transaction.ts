@@ -50,10 +50,13 @@ type UseTransactionParams = {
   tokenBalanceLoading: boolean
   publicClient?: ReturnType<typeof useClient>['publicClient']
   flow: 'open' | 'manage'
+  ownerView?: boolean
+  positionAmount?: BigNumber
 }
 
 const errorsMap = {
   insufficientBalanceError: 'Insufficient balance',
+  insufficientPositionBalanceError: 'Insufficient position balance',
   transactionExecutionError: 'Error executing the transaction',
   transactionRetrievalError: 'Error getting the transaction',
 }
@@ -69,6 +72,8 @@ export const useTransaction = ({
   tokenBalance,
   tokenBalanceLoading,
   flow,
+  ownerView, // on non-owner views we dont want to make all of these calls
+  positionAmount,
 }: UseTransactionParams) => {
   const [slippageConfig] = useSlippageConfig()
   const { refresh: refreshView } = useRouter()
@@ -219,7 +224,7 @@ export const useTransaction = ({
   )
 
   const getTransactionsList = useCallback(async () => {
-    if (token && vaultToken && amount && user) {
+    if (ownerView && token && vaultToken && amount && user) {
       const fromToken = {
         [TransactionAction.DEPOSIT]: token,
         [TransactionAction.WITHDRAW]: vaultToken,
@@ -262,6 +267,7 @@ export const useTransaction = ({
       }
     }
   }, [
+    ownerView,
     token,
     vaultToken,
     amount,
@@ -285,6 +291,14 @@ export const useTransaction = ({
         action: openAuthModal,
         disabled: isAuthModalOpen,
         loading: isAuthModalOpen,
+      }
+    }
+    if (!ownerView) {
+      // only if logged in (check above)
+      return {
+        label: 'Preview',
+        action: () => null,
+        disabled: true,
       }
     }
     if (!isProperChainSelected || isSettingChain) {
@@ -374,6 +388,7 @@ export const useTransaction = ({
       action: getTransactionsList,
     }
   }, [
+    ownerView,
     token,
     flow,
     tokenBalanceLoading,
@@ -449,13 +464,23 @@ export const useTransaction = ({
   ])
 
   useEffect(() => {
-    if (amount && tokenBalance && amount.isGreaterThan(tokenBalance) && !sidebarError) {
-      setSidebarError(errorsMap.insufficientBalanceError)
+    if (transactionType === TransactionAction.DEPOSIT) {
+      if (amount && tokenBalance && amount.isGreaterThan(tokenBalance) && !sidebarError) {
+        setSidebarError(errorsMap.insufficientBalanceError)
+      }
+      if (amount && tokenBalance && !amount.isGreaterThan(tokenBalance) && sidebarError) {
+        setSidebarError(undefined)
+      }
     }
-    if (amount && tokenBalance && !amount.isGreaterThan(tokenBalance) && sidebarError) {
-      setSidebarError(undefined)
+    if (transactionType === TransactionAction.WITHDRAW) {
+      if (amount && positionAmount && amount.isGreaterThan(positionAmount) && !sidebarError) {
+        setSidebarError(errorsMap.insufficientPositionBalanceError)
+      }
+      if (amount && positionAmount && !amount.isGreaterThan(positionAmount) && sidebarError) {
+        setSidebarError(undefined)
+      }
     }
-  }, [amount, sidebarError, tokenBalance])
+  }, [amount, sidebarError, tokenBalance, transactionType, positionAmount])
 
   return {
     manualSetAmount,

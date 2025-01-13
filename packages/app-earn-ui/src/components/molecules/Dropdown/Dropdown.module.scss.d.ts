@@ -1,4 +1,5 @@
 export type Styles = {
+  disabled: string
   dropdown: string
   dropdownOption: string
   dropdownOptions: string
