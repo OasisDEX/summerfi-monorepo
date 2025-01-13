@@ -928,7 +928,7 @@ export class ArmadaManager implements IArmadaManager {
     const enterFleetCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'enterFleet',
-      args: [params.vaultId.fleetAddress.value, fleetToken.address.value, 0n, lvTokenReceiver],
+      args: [params.vaultId.fleetAddress.value, 0n, lvTokenReceiver],
     })
     multicallArgs.push(enterFleetCalldata)
 
@@ -1036,15 +1036,17 @@ export class ArmadaManager implements IArmadaManager {
   private async _getUnstakeAndWithdrawCall(params: {
     vaultId: IArmadaVaultId
     shares: ITokenAmount
+    claimRewards?: boolean
   }): Promise<{
     calldata: HexData[]
   }> {
+    const claimRewards = params.claimRewards || true
     const calldata: HexData[] = []
 
     const withdrawUnstake = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'unstakeAndWithdrawAssets',
-      args: [params.vaultId.fleetAddress.value, params.shares.toSolidityValue()],
+      args: [params.vaultId.fleetAddress.value, params.shares.toSolidityValue(), claimRewards],
     })
     calldata.push(withdrawUnstake)
     LoggingService.debug('unstakeAndWithdrawAssets', {
