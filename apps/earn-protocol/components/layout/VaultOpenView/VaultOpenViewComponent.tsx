@@ -38,6 +38,7 @@ import { RebalancingActivity } from '@/features/rebalance-activity/components/Re
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
+import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { useAmount } from '@/hooks/use-amount'
 import { useAmountWithSwap } from '@/hooks/use-amount-with-swap'
 import { useClient } from '@/hooks/use-client'
@@ -133,10 +134,24 @@ export const VaultOpenViewComponent = ({
     vaultId: vault.id,
   })
 
+  const { amountDisplayUSDWithSwap, fromTokenSymbol, rawToTokenAmount } = useAmountWithSwap({
+    vault,
+    vaultChainId,
+    amountDisplay,
+    amountDisplayUSD,
+    transactionType: TransactionAction.DEPOSIT,
+    selectedTokenOption,
+  })
+
+  const resolvedAmountParsed = getResolvedForecastAmountParsed({
+    amountParsed,
+    rawToTokenAmount,
+  })
+
   const { forecast, isLoadingForecast, oneYearEarningsForecast } = useForecast({
     fleetAddress: vault.id,
     chainId: vaultChainId,
-    amount: amountParsed.toString(),
+    amount: resolvedAmountParsed.toString(),
   })
 
   useEffect(() => {
@@ -155,15 +170,6 @@ export const VaultOpenViewComponent = ({
 
     return oneYearEarningsForecast
   }, [oneYearEarningsForecast])
-
-  const { amountDisplayUSDWithSwap, fromTokenSymbol } = useAmountWithSwap({
-    vault,
-    vaultChainId,
-    amountDisplay,
-    amountDisplayUSD,
-    transactionType: TransactionAction.DEPOSIT,
-    selectedTokenOption,
-  })
 
   const { transactionFee, loading: transactionFeeLoading } = useGasEstimation({
     chainId: vaultChainId,
