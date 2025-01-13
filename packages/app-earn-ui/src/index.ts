@@ -31,6 +31,10 @@ export { VaultGridDetails } from './components/layout/VaultGridDetails/VaultGrid
 export { NavigationItems } from './components/layout/Navigation/NavigationItems'
 export { getNavigationItems } from './components/layout/Navigation/get-navigation-items'
 export { SupportBox } from './components/layout/Navigation/SupportBox'
+export {
+  NonOwnerPositionBanner,
+  NonOwnerPortfolioBanner,
+} from './components/layout/Banners/NonOwnerBanners'
 
 export { Tooltip } from './components/molecules/Tooltip/Tooltip'
 export { Dropdown } from './components/molecules/Dropdown/Dropdown'

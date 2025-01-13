@@ -17,7 +17,12 @@
 
   &Action {
     cursor: pointer;
+    user-select: none;
     color: var(--earn-protocol-secondary-60);
+
+    &Disabled {
+      cursor: unset;
+    }
 
     &:hover {
       color: var(--earn-protocol-secondary-70);

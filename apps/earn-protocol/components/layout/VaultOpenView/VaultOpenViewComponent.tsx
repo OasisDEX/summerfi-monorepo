@@ -127,6 +127,7 @@ export const VaultOpenViewComponent = ({
     tokenBalance: selectedTokenBalance,
     tokenBalanceLoading: selectedTokenBalanceLoading,
     flow: 'open',
+    ownerView: true,
   })
 
   const position = usePosition({
@@ -217,6 +218,7 @@ export const VaultOpenViewComponent = ({
       vault={vault}
       estimatedEarnings={estimatedEarnings}
       isLoadingForecast={isLoadingForecast}
+      ownerView
     />
   )
 

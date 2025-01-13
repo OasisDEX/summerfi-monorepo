@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useUser } from '@account-kit/react'
 import {
   Expander,
+  NonOwnerPositionBanner,
   Sidebar,
   SidebarFootnote,
   sidebarFootnote,
@@ -64,6 +65,7 @@ export const VaultManageViewComponent = ({
   viewWalletAddress: string
 }) => {
   const user = useUser()
+  const ownerView = viewWalletAddress.toLowerCase() === user?.address.toLowerCase()
   const { publicClient } = useClient()
 
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
@@ -95,6 +97,10 @@ export const VaultManageViewComponent = ({
     onFocus,
   } = useAmount({ vault, selectedToken })
 
+  const positionAmount = useMemo(() => {
+    return new BigNumber(position.amount.amount)
+  }, [position])
+
   const {
     sidebar,
     txHashes,
@@ -119,17 +125,13 @@ export const VaultManageViewComponent = ({
     tokenBalance: selectedTokenBalance,
     tokenBalanceLoading: selectedTokenBalanceLoading,
     flow: 'manage',
+    ownerView,
+    positionAmount,
   })
 
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-
-  const ownerView = viewWalletAddress.toLowerCase() === user?.address.toLowerCase()
-
-  const positionAmount = useMemo(() => {
-    return new BigNumber(position.amount.amount)
-  }, [position])
 
   const { amountDisplayUSDWithSwap, fromTokenSymbol, rawToTokenAmount } = useAmountWithSwap({
     vault,
@@ -154,6 +156,7 @@ export const VaultManageViewComponent = ({
         ? zero
         : positionAmount.minus(resolvedAmountParsed),
     }[transactionType].toString(),
+    disabled: !ownerView,
   })
 
   const estimatedEarnings = useMemo(() => {
@@ -209,6 +212,7 @@ export const VaultManageViewComponent = ({
       dropdownValue={selectedTokenOption}
       onFocus={onFocus}
       onBlur={onBlur}
+      ownerView={ownerView}
       tokenSymbol={
         {
           [TransactionAction.DEPOSIT]: selectedTokenOption.value,
@@ -279,70 +283,73 @@ export const VaultManageViewComponent = ({
   const rebalancesList = `rebalances` in vault ? vault.rebalances : []
 
   return (
-    <VaultManageGrid
-      vault={vault}
-      vaults={vaults}
-      position={position}
-      viewWalletAddress={viewWalletAddress}
-      connectedWalletAddress={user?.address}
-      detailsContent={
-        <div className={vaultManageViewStyles.leftContentWrapper}>
-          <Expander
-            title={
-              <Text as="p" variant="p1semi">
-                Performance
-              </Text>
-            }
-            defaultExpanded
-          >
-            <PositionPerformanceChart
-              chartData={vault.customFields?.performanceChartData}
-              inputToken={vault.inputToken.symbol}
-            />
-          </Expander>
-          <Expander
-            title={
-              <Text as="p" variant="p1semi">
-                Vault exposure
-              </Text>
-            }
-            defaultExpanded
-          >
-            <VaultExposure vault={vault as SDKVaultType} />
-          </Expander>
-          <Expander
-            title={
-              <Text as="p" variant="p1semi">
-                Rebalancing activity
-              </Text>
-            }
-            defaultExpanded
-          >
-            <RebalancingActivity
-              rebalancesList={rebalancesList}
-              vaultId={vault.id}
-              totalRebalances={Number(vault.rebalanceCount)}
-            />
-          </Expander>
-          <Expander
-            title={
-              <Text as="p" variant="p1semi">
-                User activity
-              </Text>
-            }
-            defaultExpanded
-          >
-            <UserActivity
-              userActivity={userActivity}
-              topDepositors={topDepositors}
-              vaultId={vault.id}
-              page="manage"
-            />
-          </Expander>
-        </div>
-      }
-      sidebarContent={<Sidebar {...sidebarProps} />}
-      isMobile={isMobile}
-    />
+    <>
+      <NonOwnerPositionBanner isOwner={ownerView} />
+      <VaultManageGrid
+        vault={vault}
+        vaults={vaults}
+        position={position}
+        viewWalletAddress={viewWalletAddress}
+        connectedWalletAddress={user?.address}
+        detailsContent={
+          <div className={vaultManageViewStyles.leftContentWrapper}>
+            <Expander
+              title={
+                <Text as="p" variant="p1semi">
+                  Performance
+                </Text>
+              }
+              defaultExpanded
+            >
+              <PositionPerformanceChart
+                chartData={vault.customFields?.performanceChartData}
+                inputToken={vault.inputToken.symbol}
+              />
+            </Expander>
+            <Expander
+              title={
+                <Text as="p" variant="p1semi">
+                  Vault exposure
+                </Text>
+              }
+              defaultExpanded
+            >
+              <VaultExposure vault={vault as SDKVaultType} />
+            </Expander>
+            <Expander
+              title={
+                <Text as="p" variant="p1semi">
+                  Rebalancing activity
+                </Text>
+              }
+              defaultExpanded
+            >
+              <RebalancingActivity
+                rebalancesList={rebalancesList}
+                vaultId={vault.id}
+                totalRebalances={Number(vault.rebalanceCount)}
+              />
+            </Expander>
+            <Expander
+              title={
+                <Text as="p" variant="p1semi">
+                  User activity
+                </Text>
+              }
+              defaultExpanded
+            >
+              <UserActivity
+                userActivity={userActivity}
+                topDepositors={topDepositors}
+                vaultId={vault.id}
+                page="manage"
+              />
+            </Expander>
+          </div>
+        }
+        sidebarContent={<Sidebar {...sidebarProps} />}
+        isMobile={isMobile}
+      />
+    </>
   )
 }
