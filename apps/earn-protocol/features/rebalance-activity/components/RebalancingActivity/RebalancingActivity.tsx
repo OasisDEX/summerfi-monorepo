@@ -11,14 +11,21 @@ import { getRebalanceSavedTimeInHours } from '@/features/rebalance-activity/help
 interface RebalancingActivityProps {
   rebalancesList: SDKGlobalRebalancesType
   vaultId: string
+  totalRebalances: number
 }
 
 const rowsToDisplay = 4
 
-export const RebalancingActivity: FC<RebalancingActivityProps> = ({ rebalancesList, vaultId }) => {
-  const totalItems = rebalancesList.length
-  const savedTimeInHours = useMemo(() => getRebalanceSavedTimeInHours(totalItems), [totalItems])
-  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(totalItems), [totalItems])
+export const RebalancingActivity: FC<RebalancingActivityProps> = ({
+  rebalancesList,
+  vaultId,
+  totalRebalances,
+}) => {
+  const savedTimeInHours = useMemo(
+    () => getRebalanceSavedTimeInHours(totalRebalances),
+    [totalRebalances],
+  )
+  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(totalRebalances), [totalRebalances])
 
   return (
     <Card style={{ marginTop: 'var(--spacing-space-medium)' }}>
@@ -34,7 +41,7 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({ rebalancesLi
             flexWrap: 'wrap',
           }}
         >
-          <DataBlock title="Rebalance actions" size="small" value={`${rebalancesList.length}`} />
+          <DataBlock title="Rebalance actions" size="small" value={`${totalRebalances}`} />
           <DataBlock title="User saved time" size="small" value={`${savedTimeInHours} Hours`} />
           <DataBlock
             title="Gas cost savings"

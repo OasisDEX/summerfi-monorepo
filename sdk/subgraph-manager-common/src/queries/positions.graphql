@@ -21,6 +21,7 @@ query GetUserPositions($accountAddress: String!) {
       inputTokenBalance
       inputTokenPriceUSD
       outputTokenPriceUSD
+      rebalanceCount
       inputToken {
         id
         symbol

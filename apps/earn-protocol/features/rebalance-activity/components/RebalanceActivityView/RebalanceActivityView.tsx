@@ -107,7 +107,7 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
     },
   ]
 
-  const totalItems = rebalancesList.length
+  const totalItems = vaultsList.reduce((acc, vault) => acc + Number(vault.rebalanceCount), 0)
   const savedTimeInHours = useMemo(() => getRebalanceSavedTimeInHours(totalItems), [totalItems])
   const savedGasCost = useMemo(() => getRebalanceSavedGasCost(totalItems), [totalItems])
 

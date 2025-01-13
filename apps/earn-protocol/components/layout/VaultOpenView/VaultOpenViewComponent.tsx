@@ -303,7 +303,11 @@ export const VaultOpenViewComponent = ({
             }
             defaultExpanded
           >
-            <RebalancingActivity rebalancesList={rebalancesList} vaultId={vault.id} />
+            <RebalancingActivity
+              rebalancesList={rebalancesList}
+              vaultId={vault.id}
+              totalRebalances={Number(vault.rebalanceCount)}
+            />
           </Expander>
           <Expander
             title={
