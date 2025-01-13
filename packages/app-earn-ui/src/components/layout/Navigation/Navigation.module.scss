@@ -29,6 +29,7 @@
   width: 100%;
   max-width: 200px;
   margin-right: auto;
+  transition: opacity 0.3s;
 
   img {
     height: 22px;
@@ -49,5 +50,10 @@
     @include media('<=s') {
       display: inline;
     }
+  }
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.5;
   }
 }

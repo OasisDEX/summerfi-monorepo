@@ -28,8 +28,7 @@ export const NavigationMenu = ({ links, currentPath }: NavigationMenuType) => {
               >
                 {link.label}{' '}
                 <Icon
-                  style={{ marginLeft: '6px', display: 'inline' }}
-                  color="white"
+                  style={{ marginLeft: '4px', display: 'inline' }}
                   iconName="chevron_down"
                   size={13}
                 />

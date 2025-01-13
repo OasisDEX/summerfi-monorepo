@@ -13,14 +13,22 @@ export const LandingPageHero = ({ vaultsList }: { vaultsList: SDKVaultishType[] 
         <Text
           as="h1"
           variant="h1"
-          style={{ color: 'var(--earn-protocol-secondary-100)', textAlign: 'center' }}
+          style={{
+            color: 'var(--earn-protocol-secondary-100)',
+            textAlign: 'center',
+            fontWeight: '600',
+          }}
         >
           Automated Exposure to DeFi’s
         </Text>
         <Text
           as="h1"
           variant="h1"
-          style={{ color: 'var(--earn-protocol-primary-100)', textAlign: 'center' }}
+          style={{
+            color: 'var(--earn-protocol-primary-100)',
+            textAlign: 'center',
+            fontWeight: '600',
+          }}
         >
           Highest Quality Yield
         </Text>

@@ -460,6 +460,7 @@ export enum ArkDailySnapshot_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -683,6 +684,7 @@ export enum ArkHourlySnapshot_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -1036,6 +1038,7 @@ export enum Ark_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -1367,6 +1370,7 @@ export enum Board_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -1485,6 +1489,7 @@ export enum DailyInterestRate_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -1826,6 +1831,7 @@ export enum Deposit_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -2147,6 +2153,7 @@ export enum Disembark_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -2619,6 +2626,7 @@ export enum HourlyInterestRate_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -3503,6 +3511,7 @@ export enum Position_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -3739,6 +3748,7 @@ export enum PostActionArkSnapshot_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -3960,6 +3970,7 @@ export enum PostActionVaultSnapshot_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -5352,6 +5363,7 @@ export enum Rebalance_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -5499,6 +5511,7 @@ export enum RewardsManager_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -5840,6 +5853,7 @@ export enum Staked_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -7113,6 +7127,7 @@ export enum Unstaked_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -7486,6 +7501,7 @@ export type Vault = {
   pricePerShare?: Maybe<Scalars['BigDecimal']['output']>;
   /**  The protocol this vault belongs to  */
   protocol: YieldAggregator;
+  rebalanceCount: Scalars['BigInt']['output'];
   rebalances: Array<Rebalance>;
   /**  Per-block reward token emission as of the current block normalized to a day, in token's native amount. This should be ideally calculated as the theoretical rate instead of the realized amount.  */
   rewardTokenEmissionsAmount: Array<Scalars['BigInt']['output']>;
@@ -7960,6 +7976,7 @@ export enum VaultDailySnapshot_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -8330,6 +8347,7 @@ export enum VaultHourlySnapshot_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -8643,6 +8661,7 @@ export enum VaultWeeklySnapshot_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -8980,6 +8999,14 @@ export type Vault_Filter = {
   protocol_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   protocol_starts_with?: InputMaybe<Scalars['String']['input']>;
   protocol_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  rebalanceCount?: InputMaybe<Scalars['BigInt']['input']>;
+  rebalanceCount_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  rebalanceCount_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  rebalanceCount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  rebalanceCount_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  rebalanceCount_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  rebalanceCount_not?: InputMaybe<Scalars['BigInt']['input']>;
+  rebalanceCount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rebalances_?: InputMaybe<Rebalance_Filter>;
   rewardTokenEmissionsAmount?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
@@ -9150,6 +9177,7 @@ export enum Vault_OrderBy {
   ProtocolTotalPoolCount = 'protocol__totalPoolCount',
   ProtocolTotalValueLockedUsd = 'protocol__totalValueLockedUSD',
   ProtocolType = 'protocol__type',
+  RebalanceCount = 'rebalanceCount',
   Rebalances = 'rebalances',
   RewardTokenEmissionsAmount = 'rewardTokenEmissionsAmount',
   RewardTokenEmissionsAmountsPerOutputToken = 'rewardTokenEmissionsAmountsPerOutputToken',
@@ -9279,6 +9307,7 @@ export enum WeeklyInterestRate_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -9620,6 +9649,7 @@ export enum Withdraw_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -10005,7 +10035,7 @@ export type GetUserPositionsQueryVariables = Exact<{
 }>;
 
 
-export type GetUserPositionsQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, inputTokenBalance: bigint, outputTokenBalance: bigint, stakedInputTokenBalance: bigint, stakedOutputTokenBalance: bigint, createdTimestamp: bigint, deposits: Array<{ __typename?: 'Deposit', amount: bigint, amountUSD: string, inputTokenBalance: bigint }>, withdrawals: Array<{ __typename?: 'Withdraw', amount: bigint, amountUSD: string, inputTokenBalance: bigint }>, vault: { __typename?: 'Vault', id: string, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number } | null, protocol: { __typename?: 'YieldAggregator', id: string } }, account: { __typename?: 'Account', id: string } }> };
+export type GetUserPositionsQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, inputTokenBalance: bigint, outputTokenBalance: bigint, stakedInputTokenBalance: bigint, stakedOutputTokenBalance: bigint, createdTimestamp: bigint, deposits: Array<{ __typename?: 'Deposit', amount: bigint, amountUSD: string, inputTokenBalance: bigint }>, withdrawals: Array<{ __typename?: 'Withdraw', amount: bigint, amountUSD: string, inputTokenBalance: bigint }>, vault: { __typename?: 'Vault', id: string, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, rebalanceCount: bigint, inputToken: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number } | null, protocol: { __typename?: 'YieldAggregator', id: string } }, account: { __typename?: 'Account', id: string } }> };
 
 export type GetUserPositionQueryVariables = Exact<{
   accountAddress: Scalars['String']['input'];
@@ -10030,14 +10060,14 @@ export type GetUsersActivityQuery = { __typename?: 'Query', positions: Array<{ _
 export type GetVaultsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsAmount: Array<bigint>, rewardTokenEmissionsUSD?: Array<string> | null, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, apr7d: string, apr30d: string, apr90d: string, apr180d: string, apr365d: string, calculatedApr: string, aprValues: Array<string>, withdrawableTotalAssets?: bigint | null, withdrawableTotalAssetsUSD?: string | null, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }>, arks: Array<{ __typename?: 'Ark', id: string, name?: string | null, details?: string | null, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, fees: Array<{ __typename?: 'VaultFee', id: string, feePercentage?: string | null, feeType: VaultFeeType }> }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null, dailyInterestRates: Array<{ __typename?: 'DailyInterestRate', averageRate: string, date: bigint }>, hourlyInterestRates: Array<{ __typename?: 'HourlyInterestRate', averageRate: string, date: bigint }>, weeklyInterestRates: Array<{ __typename?: 'WeeklyInterestRate', averageRate: string, date: bigint }> }> };
+export type GetVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsAmount: Array<bigint>, rewardTokenEmissionsUSD?: Array<string> | null, rebalanceCount: bigint, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, apr7d: string, apr30d: string, apr90d: string, apr180d: string, apr365d: string, calculatedApr: string, aprValues: Array<string>, withdrawableTotalAssets?: bigint | null, withdrawableTotalAssetsUSD?: string | null, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }>, arks: Array<{ __typename?: 'Ark', id: string, name?: string | null, details?: string | null, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, fees: Array<{ __typename?: 'VaultFee', id: string, feePercentage?: string | null, feeType: VaultFeeType }> }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null, dailyInterestRates: Array<{ __typename?: 'DailyInterestRate', averageRate: string, date: bigint }>, hourlyInterestRates: Array<{ __typename?: 'HourlyInterestRate', averageRate: string, date: bigint }>, weeklyInterestRates: Array<{ __typename?: 'WeeklyInterestRate', averageRate: string, date: bigint }> }> };
 
 export type GetVaultQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type GetVaultQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsUSD?: Array<string> | null, rewardTokenEmissionsAmount: Array<bigint>, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, apr7d: string, apr30d: string, apr90d: string, apr180d: string, apr365d: string, calculatedApr: string, aprValues: Array<string>, withdrawableTotalAssets?: bigint | null, withdrawableTotalAssetsUSD?: string | null, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }>, rebalances: Array<{ __typename?: 'Rebalance', id: string, amount: bigint, amountUSD: string, timestamp: bigint, asset: { __typename?: 'Token', id: string, symbol: string, decimals: number }, from: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, to: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, toPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, fromPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, protocol: { __typename?: 'YieldAggregator', name: string, network: Network }, vault: { __typename?: 'Vault', id: string, name?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string } } }>, arks: Array<{ __typename?: 'Ark', id: string, name?: string | null, details?: string | null, depositLimit: bigint, cumulativeEarnings: bigint, inputTokenBalance: bigint, calculatedApr: string, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, dailySnapshots: Array<{ __typename?: 'ArkDailySnapshot', id: string, apr: string, totalValueLockedUSD: string, inputTokenBalance: bigint }>, hourlySnapshots: Array<{ __typename?: 'ArkHourlySnapshot', id: string, calculatedApr: string, totalValueLockedUSD: string, inputTokenBalance: bigint }>, fees: Array<{ __typename?: 'VaultFee', id: string, feePercentage?: string | null, feeType: VaultFeeType }> }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null, dailyInterestRates: Array<{ __typename?: 'DailyInterestRate', averageRate: string, date: bigint }>, hourlyInterestRates: Array<{ __typename?: 'HourlyInterestRate', averageRate: string, date: bigint }>, weeklyInterestRates: Array<{ __typename?: 'WeeklyInterestRate', averageRate: string, date: bigint }> } | null };
+export type GetVaultQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsUSD?: Array<string> | null, rewardTokenEmissionsAmount: Array<bigint>, rebalanceCount: bigint, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, apr7d: string, apr30d: string, apr90d: string, apr180d: string, apr365d: string, calculatedApr: string, aprValues: Array<string>, withdrawableTotalAssets?: bigint | null, withdrawableTotalAssetsUSD?: string | null, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }>, rebalances: Array<{ __typename?: 'Rebalance', id: string, amount: bigint, amountUSD: string, timestamp: bigint, asset: { __typename?: 'Token', id: string, symbol: string, decimals: number }, from: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, to: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, toPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, fromPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, protocol: { __typename?: 'YieldAggregator', name: string, network: Network }, vault: { __typename?: 'Vault', id: string, name?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string } } }>, arks: Array<{ __typename?: 'Ark', id: string, name?: string | null, details?: string | null, depositLimit: bigint, cumulativeEarnings: bigint, inputTokenBalance: bigint, calculatedApr: string, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, dailySnapshots: Array<{ __typename?: 'ArkDailySnapshot', id: string, apr: string, totalValueLockedUSD: string, inputTokenBalance: bigint }>, hourlySnapshots: Array<{ __typename?: 'ArkHourlySnapshot', id: string, calculatedApr: string, totalValueLockedUSD: string, inputTokenBalance: bigint }>, fees: Array<{ __typename?: 'VaultFee', id: string, feePercentage?: string | null, feeType: VaultFeeType }> }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null, dailyInterestRates: Array<{ __typename?: 'DailyInterestRate', averageRate: string, date: bigint }>, hourlyInterestRates: Array<{ __typename?: 'HourlyInterestRate', averageRate: string, date: bigint }>, weeklyInterestRates: Array<{ __typename?: 'WeeklyInterestRate', averageRate: string, date: bigint }> } | null };
 
 
 export const GetGlobalRebalancesDocument = gql`
@@ -10113,6 +10143,7 @@ export const GetUserPositionsDocument = gql`
       inputTokenBalance
       inputTokenPriceUSD
       outputTokenPriceUSD
+      rebalanceCount
       inputToken {
         id
         symbol
@@ -10275,6 +10306,7 @@ export const GetVaultsDocument = gql`
     }
     rewardTokenEmissionsAmount
     rewardTokenEmissionsUSD
+    rebalanceCount
     arks {
       id
       name
@@ -10357,6 +10389,7 @@ export const GetVaultDocument = gql`
     }
     rewardTokenEmissionsUSD
     rewardTokenEmissionsAmount
+    rebalanceCount
     rebalances(orderBy: timestamp, orderDirection: desc) {
       id
       amount

@@ -20,7 +20,7 @@
   justify-content: space-between;
   align-items: center;
   padding: var(--spacing-space-3x-large) var(--spacing-space-2x-large);
-  gap: 140px;
+  gap: 240px;
 
   @include media('<=s') {
     gap: var(--spacing-space-large);
@@ -48,55 +48,56 @@
   }
 }
 
-.topBlockStats {
+.smallGradientBlock {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-top: var(--spacing-space-large);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--radius-large);
+  padding: var(--spacing-space-large);
+  margin-bottom: var(--spacing-space-x-small);
+  background: linear-gradient(90deg, rgba(255, 73, 164, 0.1) 0%, rgba(176, 73, 255, 0.1) 93%);
 
   @include media('<=s') {
     margin-bottom: var(--spacing-space-large);
   }
 }
 
-.topBlockStatsData {
+.protectedCapital {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-
-  @include media('<=s') {
-    align-items: center;
-  }
-
-  >h2 {
-    font-weight: 600;
-  }
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--spacing-space-large);
 
   >p {
     color: var(--color-text-secondary);
+  }
+
+  >h4 {
+    font-weight: 600;
   }
 }
 
 .topBlockProtocolIcons {
   display: grid;
-  grid-template-columns: repeat(4, 100px);
-  gap: var(--spacing-space-small);
+  grid-template-columns: repeat(4, 76px);
+  gap: 8px;
   justify-content: center;
-  width: 50%;
-
 
   @include media('<=s') {
     width: 100%;
-    grid-template-columns: repeat(3, 100px);
+    grid-template-columns: repeat(3, 76px);
   }
 }
 
 .protocolIcon {
   border-radius: var(--radius-large);
-  padding: var(--spacing-space-x-large);
+  padding: 20px;
   background: var(--gradient-earn-protocol-light-10);
-  width: 100px;
-  height: 100px;
+  width: 76px;
+  height: 76px;
 
   >img {
     padding: 0;

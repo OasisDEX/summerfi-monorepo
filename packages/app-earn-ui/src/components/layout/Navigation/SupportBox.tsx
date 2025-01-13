@@ -25,10 +25,10 @@ const SupportBoxElement = ({
   return (
     <div className={supportBoxStyles.supportBox}>
       <Icon iconName={icon} color="white" size={20} />
-      <Text as="p" variant="p2">
+      <Text as="p" variant="p2semi">
         {description}
       </Text>
-      <Link href={url}>
+      <Link href={url} style={{ marginTop: '-8px' }}>
         <Text as="p" variant="p3semi">
           <WithArrow>{urlLabel}</WithArrow>
         </Text>
@@ -58,13 +58,13 @@ export const SupportBox = ({ collapsible = false }: SupportBoxProps) => {
           url="/"
         />
         <SupportBoxElement
-          icon="question_o"
+          icon="question"
           description="Email support tickets for all your questions"
           urlLabel="Contact us"
           url="/"
         />
         <SupportBoxElement
-          icon="ether"
+          icon="discord"
           description="Live chat for your immediate needs"
           urlLabel="Start chatting"
           url="/"

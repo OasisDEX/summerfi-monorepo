@@ -60,3 +60,5 @@ export {
 export { setCookie, getCookie } from './helpers/cookies'
 export { verifyAccessToken } from './helpers/verify-access-token'
 export { getRandomString } from './helpers/get-random-string'
+
+export { ADDRESS_ZERO } from './address-zero'

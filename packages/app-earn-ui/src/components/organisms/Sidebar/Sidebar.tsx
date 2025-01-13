@@ -46,6 +46,7 @@ export interface SidebarProps {
   customHeader?: ReactNode
   customHeaderStyles?: CSSProperties
   handleIsDrawerOpen?: (flag: boolean) => void
+  hiddenHeaderChevron?: boolean
 }
 
 export const Sidebar: FC<SidebarProps> = ({
@@ -63,6 +64,7 @@ export const Sidebar: FC<SidebarProps> = ({
   customHeader,
   customHeaderStyles,
   handleIsDrawerOpen,
+  hiddenHeaderChevron = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -126,16 +128,18 @@ export const Sidebar: FC<SidebarProps> = ({
               )}
             </div>
             {goBackAction && <div className={sidebarClassNames.goBackButtonFillFLex} />}
-            <div className={sidebarClassNames.sidebarHeaderChevron}>
-              {drawerOptions.slideFrom === 'bottom' && (
-                <Icon iconName={isOpenResolved ? 'chevron_down' : 'chevron_up'} variant="xs" />
-              )}
-              {drawerOptions.slideFrom === 'right' && (
-                <div onClick={drawerOptions.closeDrawer}>
-                  <Icon iconName="close" variant="xs" color="var(--earn-protocol-secondary-40)" />
-                </div>
-              )}
-            </div>
+            {!hiddenHeaderChevron && (
+              <div className={sidebarClassNames.sidebarHeaderChevron}>
+                {drawerOptions.slideFrom === 'bottom' && (
+                  <Icon iconName={isOpenResolved ? 'chevron_down' : 'chevron_up'} variant="xs" />
+                )}
+                {drawerOptions.slideFrom === 'right' && (
+                  <div onClick={drawerOptions.closeDrawer}>
+                    <Icon iconName="close" variant="xs" color="var(--earn-protocol-secondary-40)" />
+                  </div>
+                )}
+              </div>
+            )}
           </>
         )}
       </div>

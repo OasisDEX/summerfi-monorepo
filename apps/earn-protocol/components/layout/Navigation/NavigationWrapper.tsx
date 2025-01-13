@@ -1,7 +1,7 @@
 'use client'
 
 import { type FC } from 'react'
-import { Button, Navigation, SkeletonLine, SupportBox } from '@summerfi/app-earn-ui'
+import { Button, getNavigationItems, Navigation, SkeletonLine } from '@summerfi/app-earn-ui'
 import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
 
@@ -26,55 +26,9 @@ export const NavigationWrapper: FC = () => {
       currentPath={currentPath}
       logo="/img/branding/logo-dark.svg"
       logoSmall="/img/branding/dot-dark.svg"
-      links={[
-        {
-          label: 'Earn',
-          id: 'earn',
-          link: `/earn`,
-        },
-        ...(userWalletAddress
-          ? [
-              {
-                label: 'Portfolio',
-                id: 'portfolio',
-                link: `/earn/portfolio/${userWalletAddress}`,
-              },
-            ]
-          : []),
-        {
-          label: 'Explore',
-          id: 'explore',
-          itemsList: [
-            {
-              url: '/earn/user-activity',
-              id: 'user-activity',
-              title: 'User activity',
-              description: 'Text for user activity',
-              icon: 'user',
-              iconSize: 18,
-            },
-            {
-              url: '/earn/rebalance-activity',
-              id: 'rebalancing-activity',
-              title: 'Rebalancing Activity',
-              description: 'Text for rebalancing activity',
-              icon: 'rebalancing',
-            },
-            {
-              url: '/yield-trend',
-              id: 'yield-trend',
-              title: 'Yield Trend',
-              description: 'Text for rebalancing activity',
-              icon: 'rebalancing',
-            },
-          ],
-        },
-        {
-          label: 'Support',
-          id: 'support',
-          dropdownContent: <SupportBox />,
-        },
-      ]}
+      links={getNavigationItems({
+        userWalletAddress,
+      })}
       walletConnectionComponent={<WalletLabel />}
       configComponent={<NavConfig />}
       onLogoClick={() => {

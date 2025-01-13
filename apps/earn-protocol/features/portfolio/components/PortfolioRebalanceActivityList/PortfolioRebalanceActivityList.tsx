@@ -1,9 +1,11 @@
 import { type FC, useState } from 'react'
 import { getVaultPositionUrl, Icon, Text, useMobileCheck, WithArrow } from '@summerfi/app-earn-ui'
 import { type SDKGlobalRebalancesType, type TokenSymbolsList } from '@summerfi/app-types'
-import { formatFiatBalance, timeAgo } from '@summerfi/app-utils'
+import { formatFiatBalance, sdkNetworkToHumanNetwork, timeAgo } from '@summerfi/app-utils'
+import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
+import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { rebalanceActivityPurposeMapper } from '@/features/rebalance-activity/table/mapper'
 
@@ -61,6 +63,22 @@ export const PortfolioRebalanceActivityList: FC<PortfolioRebalanceActivityListPr
                     >
                       {formatFiatBalance(item.amountUSD)}
                     </Text>
+                    {!isMobile && <span>&#8226;</span>}
+                    <div className={classNames.leftContentDescriptionNetwork}>
+                      <Icon
+                        iconName={
+                          networkIconByNetworkName[item.protocol.network] ?? 'not_supported_icon'
+                        }
+                        variant="xs"
+                      />
+                      <Text
+                        as="p"
+                        variant="p3semi"
+                        style={{ color: 'var(--earn-protocol-secondary-60)' }}
+                      >
+                        {capitalize(sdkNetworkToHumanNetwork(item.protocol.network))}
+                      </Text>
+                    </div>
                   </div>
                 </div>
               </div>

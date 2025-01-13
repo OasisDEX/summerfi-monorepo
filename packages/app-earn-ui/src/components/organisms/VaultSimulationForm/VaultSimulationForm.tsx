@@ -38,6 +38,7 @@ export type VaultSimulationFormProps = {
   tokenOptions: DropdownOption[]
   selectedTokenOption: DropdownOption
   handleTokenSelectionChange: (option: DropdownRawOption) => void
+  hiddenHeaderChevron?: boolean
 }
 
 export const VaultSimulationForm = ({
@@ -49,6 +50,7 @@ export const VaultSimulationForm = ({
   tokenOptions,
   selectedTokenOption,
   handleTokenSelectionChange,
+  hiddenHeaderChevron,
 }: VaultSimulationFormProps) => {
   const [inputValue, setInputValue] = useState<string>(mapNumericInput('1000'))
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
@@ -165,6 +167,7 @@ export const VaultSimulationForm = ({
           ),
         }}
         isMobile={isMobile}
+        hiddenHeaderChevron={hiddenHeaderChevron}
       />
       {isGradientBorder && <div className={classNames.cardAnimateGradientBorder} />}
     </div>

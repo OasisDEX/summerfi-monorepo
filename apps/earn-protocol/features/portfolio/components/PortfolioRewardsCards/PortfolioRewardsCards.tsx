@@ -1,22 +1,34 @@
 'use client'
+import { type FC } from 'react'
 import { Button, DataModule, Text } from '@summerfi/app-earn-ui'
-import { formatCryptoBalance, formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
+import {
+  ADDRESS_ZERO,
+  formatCryptoBalance,
+  formatDecimalAsPercent,
+  formatFiatBalance,
+} from '@summerfi/app-utils'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
-import { SUMR_CAP } from '@/constants/earn-protocol'
+import { RAYS_TO_SUMR_CONVERSION_RATE, SUMR_CAP } from '@/constants/earn-protocol'
+import { sumrDelegates } from '@/features/claim-and-delegate/consts'
+import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
 
 import classNames from './PortfolioRewardsCards.module.scss'
 
-const SumrAvailableToClaim = () => {
+interface SumrAvailableToClaimProps {
+  rewardsData: ClaimDelegateExternalData
+}
+
+const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) => {
   const { walletAddress } = useParams()
   const [sumrNetApyConfig] = useSumrNetApyConfig()
   const assumedSumrPriceRaw = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
-  const rawSumr = 11
+  const rawSumr = Number(rewardsData.sumrToClaim)
   const rawSumrUSD = formatFiatBalance(rawSumr * assumedSumrPriceRaw)
   const sumrAmount = formatCryptoBalance(rawSumr)
-  const sumrAmountUSD = formatFiatBalance(rawSumrUSD)
+  const sumrAmountUSD = `$${formatFiatBalance(rawSumrUSD)}`
 
   return (
     <DataModule
@@ -37,13 +49,25 @@ const SumrAvailableToClaim = () => {
   )
 }
 
-const StakedAndDelegatedSumr = () => {
+interface StakedAndDelegatedSumrProps {
+  rewardsData: ClaimDelegateExternalData
+}
+
+const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }) => {
   const { walletAddress } = useParams()
-  const rawApy = 0.026
-  const rawStaked = 3500
+  const rawApy = rewardsData.sumrApy
+  const rawStaked = rewardsData.sumrDelegated
 
   const value = formatCryptoBalance(rawStaked)
   const apy = formatDecimalAsPercent(rawApy)
+
+  const isDelegated = rewardsData.delegatedTo !== ADDRESS_ZERO
+
+  const handleRemoveDelegation = () => {
+    // TODO: Implement remove delegation
+    // eslint-disable-next-line no-console
+    console.log('remove delegation clicked')
+  }
 
   return (
     <DataModule
@@ -59,24 +83,36 @@ const StakedAndDelegatedSumr = () => {
         valueSize: 'large',
       }}
       actionable={
-        <Link href={`/earn/stake-delegate/${walletAddress}`} prefetch>
-          <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-            Stake and delegate
-          </Text>
-        </Link>
+        isDelegated ? (
+          <Button variant="unstyled" onClick={handleRemoveDelegation}>
+            <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
+              Remove delegate
+            </Text>
+          </Button>
+        ) : (
+          <Link href={`/earn/stake-delegate/${walletAddress}`} prefetch>
+            <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
+              Stake and delegate
+            </Text>
+          </Link>
+        )
       }
     />
   )
 }
 
-const YourTotalSumr = () => {
+interface YourTotalSumrProps {
+  rewardsData: ClaimDelegateExternalData
+}
+
+const YourTotalSumr: FC<YourTotalSumrProps> = ({ rewardsData }) => {
   const [sumrNetApyConfig] = useSumrNetApyConfig()
   const assumedMarketCap = formatCryptoBalance(sumrNetApyConfig.dilutedValuation)
 
   const assumedSumrPriceRaw = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
   const assumedSumrPrice = formatFiatBalance(assumedSumrPriceRaw)
 
-  const rawTotalSumr = 0
+  const rawTotalSumr = Number(rewardsData.totalSumr ?? 0)
   const rawTotalSumrUSD = formatFiatBalance(rawTotalSumr * assumedSumrPriceRaw)
 
   const totalSumr = formatCryptoBalance(rawTotalSumr)
@@ -104,9 +140,19 @@ const YourTotalSumr = () => {
   )
 }
 
-const YourDelegate = () => {
+interface YourDelegateProps {
+  rewardsData: ClaimDelegateExternalData
+}
+
+const YourDelegate: FC<YourDelegateProps> = ({ rewardsData }) => {
   const { walletAddress } = useParams()
-  const value = 'No delegate'
+
+  const delegatee = sumrDelegates.find(
+    (item) => item.address.toLowerCase() === rewardsData.delegatedTo.toLowerCase(),
+  )
+
+  const value = delegatee ? delegatee.title : 'No delegate'
+  const subValue = delegatee ? '' : 'You have not delegated'
 
   return (
     <DataModule
@@ -115,6 +161,7 @@ const YourDelegate = () => {
         value,
         titleSize: 'medium',
         valueSize: 'large',
+        subValue,
       }}
       actionable={
         <Link href={`/earn/stake-delegate/${walletAddress}`} prefetch>
@@ -127,13 +174,15 @@ const YourDelegate = () => {
   )
 }
 
-const YourRays = () => {
-  const rawValue = 0
+interface YourRaysProps {
+  totalRays: number
+}
 
+const YourRays: FC<YourRaysProps> = ({ totalRays }) => {
+  const rawValue = RAYS_TO_SUMR_CONVERSION_RATE * totalRays
   const value = formatCryptoBalance(rawValue)
 
-  const earnedRaw = 45232
-  const earned = formatCryptoBalance(earnedRaw)
+  const _totalRays = formatCryptoBalance(totalRays)
 
   return (
     <DataModule
@@ -142,7 +191,7 @@ const YourRays = () => {
         value,
         subValue: (
           <Text variant="p3semi" style={{ color: 'var(--earn-protocol-success-100)' }}>
-            Rays earned {earned}
+            Rays earned {_totalRays}
             <span style={{ color: 'var(--earn-protocol-secondary-60)' }}>
               {' '}
               • 1 $RAYS = 2.4 $SUMR
@@ -163,30 +212,38 @@ const YourRays = () => {
   )
 }
 
-export const PortfolioRewardsCards = () => {
-  const hasRays = true
+interface PortfolioRewardsCardsProps {
+  rewardsData: ClaimDelegateExternalData
+  totalRays: number
+}
+
+export const PortfolioRewardsCards: FC<PortfolioRewardsCardsProps> = ({
+  rewardsData,
+  totalRays,
+}) => {
+  const hasRays = totalRays > 0
 
   return (
     <div className={classNames.portfolioRewardsCardsWrapper}>
       {!hasRays ? (
         <div className={classNames.cardWrapper}>
-          <YourTotalSumr />
+          <YourTotalSumr rewardsData={rewardsData} />
         </div>
       ) : (
-        <YourTotalSumr />
+        <YourTotalSumr rewardsData={rewardsData} />
       )}
       <div className={classNames.cardWrapper}>
-        <SumrAvailableToClaim />
+        <SumrAvailableToClaim rewardsData={rewardsData} />
       </div>
       <div className={classNames.cardWrapper}>
-        <StakedAndDelegatedSumr />
+        <StakedAndDelegatedSumr rewardsData={rewardsData} />
       </div>
       <div className={classNames.cardWrapper}>
-        <YourDelegate />
+        <YourDelegate rewardsData={rewardsData} />
       </div>
       {hasRays && (
         <div className={classNames.cardWrapper}>
-          <YourRays />
+          <YourRays totalRays={totalRays} />
         </div>
       )}
     </div>

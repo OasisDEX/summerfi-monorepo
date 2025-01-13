@@ -596,6 +596,11 @@ export const tokenConfigs: TokenConfig[] = [
     name: 'SUMR',
     iconName: 'sumr',
   },
+  {
+    symbol: 'MBASIS',
+    name: 'Midas Basis Trading Token',
+    iconName: 'mbasis',
+  },
   // NOT SUPPORTED ICONS
   {
     symbol: 'UNIV2WBTCETH',
@@ -625,11 +630,6 @@ export const tokenConfigs: TokenConfig[] = [
   {
     symbol: 'CRVV1ETHSTETH',
     name: 'CRVV1ETHSTETH',
-    iconName: 'not_supported_icon',
-  },
-  {
-    symbol: 'MBASIS',
-    name: 'Midas Basis Trading Token',
     iconName: 'not_supported_icon',
   },
 ]

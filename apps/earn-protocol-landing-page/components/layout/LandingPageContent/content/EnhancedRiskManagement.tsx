@@ -26,41 +26,42 @@ export const EnhancedRiskManagement = ({ protectedCapital }: { protectedCapital:
     <div className={enhancedRiskManagementStyles.enhancedRiskManagementWrapper}>
       <div className={enhancedRiskManagementStyles.enhancedRiskManagementHeaderWrapper}>
         <Text variant="h2" className={enhancedRiskManagementStyles.enhancedRiskManagementHeader}>
-          Enhanced risk management with time-saving automation.
+          Superior risk management by DeFi’s top risk team
         </Text>
       </div>
       <BigGradientBox reversed color="red">
         <div className={enhancedRiskManagementStyles.topBlock}>
           <div className={enhancedRiskManagementStyles.topBlockDescription}>
             <Text variant="h5" as="h5">
-              Your capital’s safety, overseen and constantly assessed by DeFi’s premier risk team
+              Your capital’s safety and diversification overseen and constantly assessed
             </Text>
             <Text variant="p2" as="p">
-              In the Lazy Summer Protocol, Block Analitica is the third party risk curator that
-              provides objective analysis to critical protocol decisions.
+              Block Analitica is the Risk Curator to the Lazy Summer Protocol, who will set and
+              manage all the core risk parameters. They come to Summer with a wealth of experience,
+              using sophisticated models to simulate market conditions and their own knowledge to
+              prevent any unnecessary risks taken to the protocol.
             </Text>
-            <div className={enhancedRiskManagementStyles.topBlockStats}>
+          </div>
+          <div>
+            <div className={enhancedRiskManagementStyles.smallGradientBlock}>
               <Image src={blockAnalyticaLogo} alt="Block Analytica" />
-              <div className={enhancedRiskManagementStyles.topBlockStatsData}>
-                <Text variant="h2colorful" as="h2">
-                  {protectedCapital}
-                </Text>
+            </div>
+            <div className={enhancedRiskManagementStyles.smallGradientBlock}>
+              <div className={enhancedRiskManagementStyles.topBlockProtocolIcons}>
+                <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
+                <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
+                <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
+                <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
+              </div>
+              <div className={enhancedRiskManagementStyles.protectedCapital}>
                 <Text variant="p3semi" as="p">
                   Protected Capital
                 </Text>
+                <Text variant="h4colorful" as="h4">
+                  {protectedCapital}
+                </Text>
               </div>
             </div>
-          </div>
-          <div className={enhancedRiskManagementStyles.topBlockProtocolIcons}>
-            {/** Add proper/final logos */}
-            <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
-            <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
-            <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
-            <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
-            <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
-            <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
-            <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
-            <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
           </div>
         </div>
       </BigGradientBox>
@@ -68,32 +69,35 @@ export const EnhancedRiskManagement = ({ protectedCapital }: { protectedCapital:
         <BigGradientBox className={enhancedRiskManagementStyles.bottomBoxLeftGradient}>
           <div className={enhancedRiskManagementStyles.bottomBoxDescription}>
             <Text variant="h5" as="h5">
-              No more wasted time signing, approving, confirming
+              Highest yields with minimum risk of ruin
             </Text>
             <Text variant="p2" as="p">
-              Get back all the time, effort and mental energy it takes to manually execute
-              transactions on chain. In Lazy Summer, its all set and forget.
+              The Risk Curator will set and continually manage all Vault parameters to prevent over
+              exposure risk to any single protocol or collateral paired assets. Through their own
+              models and experience, they will monitor and manage the risk ensuring the best risk
+              adjusted yields.
             </Text>
           </div>
           <Image
             src={rebalanceActivityImage}
-            alt="No more wasted time signing, approving, confirming"
+            alt="Highest yields with minimum risk of ruin"
             placeholder="blur"
           />
         </BigGradientBox>
         <BigGradientBox className={enhancedRiskManagementStyles.bottomBoxRightGradient}>
           <div className={enhancedRiskManagementStyles.bottomBoxDescription}>
             <Text variant="h5" as="h5">
-              Automatic diversification, zero chance of manual mistakes
+              Automatic Diversified Exposure
             </Text>
             <Text variant="p2" as="p">
-              Never be overexposed to a single protocol and risk the chance of ruin, and with
-              automated the transactions, the chances of you fat fingering a trade just become zero.
+              Summer requires no management from users after they have deposited. All risk
+              management, yield optimizing and strategy rebalancing is handled automatically within
+              the parameters set by the Risk Curator. No chance of fat fingering a trade again.
             </Text>
           </div>
           <Image
             src={strategyExposureImage}
-            alt="Automatic diversification, zero chance of manual mistakes"
+            alt="Automatic Diversified Exposure"
             placeholder="blur"
           />
         </BigGradientBox>

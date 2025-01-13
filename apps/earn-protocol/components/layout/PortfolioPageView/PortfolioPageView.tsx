@@ -1,12 +1,12 @@
 'use client'
 
 import { type FC } from 'react'
-import { TabBar } from '@summerfi/app-earn-ui'
+import { getPositionValues, TabBar } from '@summerfi/app-earn-ui'
 import { type SDKGlobalRebalancesType, type SDKVaultishType } from '@summerfi/app-types'
 
 import { type PortfolioPositionsList } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
-import { type PortfolioRewardsRawData } from '@/app/server-handlers/portfolio/portfolio-rewards-handler'
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
+import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { PortfolioHeader } from '@/features/portfolio/components/PortfolioHeader/PortfolioHeader'
 import { PortfolioOverview } from '@/features/portfolio/components/PortfolioOverview/PortfolioOverview'
 import { PortfolioRebalanceActivity } from '@/features/portfolio/components/PortfolioRebalanceActivity/PortfolioRebalanceActivity'
@@ -18,10 +18,11 @@ import { useTabStateQuery } from '@/hooks/use-tab-state'
 interface PortfolioPageViewProps {
   walletAddress: string
   walletData: PortfolioAssetsResponse
-  rewardsData: PortfolioRewardsRawData[]
+  rewardsData: ClaimDelegateExternalData
   vaultsList: SDKVaultishType[]
   positions: PortfolioPositionsList[]
   rebalancesList: SDKGlobalRebalancesType
+  totalRays: number
 }
 
 export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
@@ -31,11 +32,17 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   vaultsList,
   positions,
   rebalancesList,
+  totalRays,
 }) => {
   const [activeTab, updateTab] = useTabStateQuery({
     tabs: PortfolioTabs,
     defaultTab: PortfolioTabs.OVERVIEW,
   })
+
+  const totalRebalances = positions.reduce(
+    (acc, position) => acc + Number(position.vaultData.rebalanceCount),
+    0,
+  )
 
   const tabs = [
     {
@@ -52,19 +59,39 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
       id: PortfolioTabs.REBALANCE_ACTIVITY,
       label: 'Rebalance Activity',
       content: (
-        <PortfolioRebalanceActivity rebalancesList={rebalancesList} walletAddress={walletAddress} />
+        <PortfolioRebalanceActivity
+          rebalancesList={rebalancesList}
+          walletAddress={walletAddress}
+          totalRebalances={totalRebalances}
+        />
       ),
     },
     {
       id: PortfolioTabs.REWARDS,
       label: 'SUMR Rewards',
-      content: <PortfolioRewards rewardsData={rewardsData} />,
+      content: <PortfolioRewards rewardsData={rewardsData} totalRays={totalRays} />,
     },
   ]
 
+  const totalWalletValue =
+    positions.reduce(
+      (acc, position) =>
+        acc +
+        getPositionValues({
+          positionData: position.positionData,
+          vaultData: position.vaultData,
+        }).netEarningsUSD.toNumber(),
+
+      0,
+    ) + walletData.totalAssetsUsdValue
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', padding: '0 16px', width: '100%' }}>
-      <PortfolioHeader walletAddress={walletAddress} />
+      <PortfolioHeader
+        walletAddress={walletAddress}
+        totalSumr={rewardsData.totalSumr}
+        totalWalletValue={totalWalletValue}
+      />
       <TabBar
         tabs={tabs}
         defaultIndex={tabs.findIndex((item) => item.id === activeTab)}

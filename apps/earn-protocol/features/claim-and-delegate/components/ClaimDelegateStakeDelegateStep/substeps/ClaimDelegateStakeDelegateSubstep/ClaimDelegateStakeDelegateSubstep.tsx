@@ -4,6 +4,8 @@ import { formatCryptoBalance, formatDecimalAsPercent, formatFiatBalance } from '
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
+import { SUMR_CAP } from '@/constants/earn-protocol'
+import { useLocalConfig } from '@/contexts/LocalConfigContext/LocalConfigContext'
 import { ClaimDelegateCard } from '@/features/claim-and-delegate/components/ClaimDelegateCard/ClaimDelegateCard'
 import { sumrDelegates } from '@/features/claim-and-delegate/consts'
 import {
@@ -28,11 +30,13 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
   externalData,
 }) => {
   const { walletAddress } = useParams()
+  const {
+    state: { sumrNetApyConfig },
+  } = useLocalConfig()
+  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   const claimed = formatCryptoBalance(externalData.sumrEarned)
-  const claimedInUSD = formatFiatBalance(
-    Number(externalData.sumrEarned) * Number(externalData.sumrPrice),
-  )
+  const claimedInUSD = formatFiatBalance(Number(externalData.sumrEarned) * estimatedSumrPrice)
 
   const apy = formatDecimalAsPercent(externalData.sumrApy)
   const sumrPerYear = `*${formatFiatBalance((Number(externalData.sumrDelegated) + Number(externalData.sumrEarned)) * Number(externalData.sumrApy))} $SUMR / Year`
@@ -105,6 +109,9 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
           <ClaimDelegateCard
             key={delegate.title}
             {...delegate}
+            sumrAmount={
+              externalData.votes?.find((vote) => vote.delegate === delegate.address)?.amountOfVotes
+            }
             isActive={state.delegatee === delegate.address}
             handleClick={() => dispatch({ type: 'update-delegatee', payload: delegate.address })}
           />
@@ -121,7 +128,7 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
             variant="primarySmall"
             style={{ paddingRight: 'var(--general-space-32)' }}
             onClick={handleStakeAndDelegate}
-            disabled={!state.delegatee}
+            disabled={!state.delegatee || state.delegatee === externalData.delegatedTo}
           >
             <WithArrow
               style={{ color: 'var(--earn-protocol-secondary-100)' }}

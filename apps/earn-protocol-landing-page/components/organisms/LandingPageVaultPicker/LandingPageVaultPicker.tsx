@@ -22,6 +22,7 @@ export const LandingPageVaultPicker = ({ vault }: { vault: SDKVaultishType }) =>
         handleTokenSelectionChange={handleTokenSelectionChange}
         tokenOptions={tokenOptions}
         tokenSymbol={selectedTokenOption.value}
+        hiddenHeaderChevron
       />
     </div>
   )

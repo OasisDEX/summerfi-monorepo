@@ -2,6 +2,8 @@ import type { Dispatch, FC } from 'react'
 import { Button, Card, Icon, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 
+import { SUMR_CAP } from '@/constants/earn-protocol'
+import { useLocalConfig } from '@/contexts/LocalConfigContext/LocalConfigContext'
 import {
   type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
@@ -21,6 +23,11 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   dispatch,
   externalData,
 }) => {
+  const {
+    state: { sumrNetApyConfig },
+  } = useLocalConfig()
+  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
+
   const handleBack = () => {
     dispatch({ type: 'update-step', payload: ClaimDelegateSteps.TERMS })
   }
@@ -30,9 +37,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   }
 
   const earned = formatCryptoBalance(externalData.sumrEarned)
-  const earnedInUSD = formatFiatBalance(
-    Number(externalData.sumrEarned) * Number(externalData.sumrPrice),
-  )
+  const earnedInUSD = formatFiatBalance(Number(externalData.sumrEarned) * estimatedSumrPrice)
 
   return (
     <div className={classNames.claimDelegateClaimStepWrapper}>

@@ -1,9 +1,12 @@
 'use client'
 
 import { type FC } from 'react'
-import { Button, Navigation, SupportBox } from '@summerfi/app-earn-ui'
+import { Button, getNavigationItems, Navigation } from '@summerfi/app-earn-ui'
+import clsx from 'clsx'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+
+import navigationWrapperStyles from './NavigationWrapper.module.scss'
 
 export const NavigationWrapper: FC = () => {
   const currentPath = usePathname()
@@ -13,50 +16,22 @@ export const NavigationWrapper: FC = () => {
       currentPath={currentPath}
       logo="/img/branding/logo-dark.svg"
       logoSmall="/img/branding/dot-dark.svg"
-      links={[
-        {
-          label: 'Earn',
-          id: 'earn',
-          link: `/earn`,
-        },
-        {
-          label: 'Explore',
-          id: 'explore',
-          itemsList: [
-            {
-              url: '/earn/user-activity',
-              id: 'user-activity',
-              title: 'User activity',
-              description: 'Text for user activity',
-              icon: 'user',
-              iconSize: 18,
-            },
-            {
-              url: '/earn/rebalance-activity',
-              id: 'rebalancing-activity',
-              title: 'Rebalancing Activity',
-              description: 'Text for rebalancing activity',
-              icon: 'rebalancing',
-            },
-            {
-              url: '/yield-trend',
-              id: 'yield-trend',
-              title: 'Yield Trend',
-              description: 'Text for rebalancing activity',
-              icon: 'rebalancing',
-            },
-          ],
-        },
-        {
-          label: 'Support',
-          id: 'support',
-          dropdownContent: <SupportBox />,
-        },
-      ]}
-      signupComponent={<Button variant="primarySmall">Sign up</Button>}
+      links={getNavigationItems({})}
+      signupComponent={
+        <Button
+          variant="primarySmall"
+          className={clsx(navigationWrapperStyles.actionButton, navigationWrapperStyles.gradient)}
+        >
+          Sign up
+        </Button>
+      }
       walletConnectionComponent={
         <Link href="/earn">
-          <Button variant="secondarySmall" onClick={() => {}}>
+          <Button
+            variant="secondarySmall"
+            onClick={() => {}}
+            className={navigationWrapperStyles.actionButton}
+          >
             Launch app
           </Button>
         </Link>

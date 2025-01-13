@@ -1,6 +1,6 @@
 import { type FC } from 'react'
 
-import type { PortfolioRewardsRawData } from '@/app/server-handlers/portfolio/portfolio-rewards-handler'
+import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { PortfolioRewardsCards } from '@/features/portfolio/components/PortfolioRewardsCards/PortfolioRewardsCards'
 import { PortfolioRewardsCountdown } from '@/features/portfolio/components/PortfolioRewardsCountdown/PortfolioRewardsCountdown'
 import { PortfolioRewardsFaq } from '@/features/portfolio/components/PortfolioRewardsFaq/PortfolioRewardsFaq'
@@ -8,13 +8,14 @@ import { PortfolioRewardsFaq } from '@/features/portfolio/components/PortfolioRe
 import classNames from './PortfolioRewards.module.scss'
 
 interface PortfolioRewardsProps {
-  rewardsData: PortfolioRewardsRawData[]
+  rewardsData: ClaimDelegateExternalData
+  totalRays: number
 }
 
-export const PortfolioRewards: FC<PortfolioRewardsProps> = () => {
+export const PortfolioRewards: FC<PortfolioRewardsProps> = ({ rewardsData, totalRays }) => {
   return (
     <div className={classNames.wrapper}>
-      <PortfolioRewardsCards />
+      <PortfolioRewardsCards rewardsData={rewardsData} totalRays={totalRays} />
       <PortfolioRewardsCountdown />
       <PortfolioRewardsFaq />
     </div>

@@ -9,7 +9,6 @@
 .h4colorful,
 .h5colorful {
   font-family: var(--font-inter);
-  letter-spacing: -1px;
 }
 
 .h1,
@@ -121,6 +120,7 @@
 .h4colorful,
 .h5colorful {
   background-image: var(--gradient-earn-protocol-dark);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   width: fit-content;

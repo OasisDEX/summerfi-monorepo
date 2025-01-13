@@ -142,6 +142,7 @@ export const icons = {
   mana: customLazy(() => import('./icons/mana.svg?react')),
   matic_circle_color: customLazy(() => import('./icons/matic_circle_color.svg?react')),
   matic_circle_mono: customLazy(() => import('./icons/matic_circle_mono.svg?react')),
+  mbasis: customLazy(() => import('./icons/mbasis.svg?react')),
   menu: customLazy(() => import('./icons/menu.svg?react')),
   meveth: customLazy(() => import('./icons/meveth.svg?react')),
   mkr_circle_color: customLazy(() => import('./icons/mkr_circle_color.svg?react')),
@@ -312,6 +313,23 @@ export const icons = {
   gearbox: customLazy(() => import('./icons/gearbox.svg?react')),
   linkedin: customLazy(() => import('./icons/linkedin.svg?react')),
   x: customLazy(() => import('./icons/x.svg?react')),
+  scroller_aave: customLazy(() => import('./icons/scroller_aave.svg?react')),
+  scroller_sky: customLazy(() => import('./icons/scroller_sky.svg?react')),
+  scroller_spark: customLazy(() => import('./icons/scroller_spark.svg?react')),
+  scroller_pendle: customLazy(() => import('./icons/scroller_pendle.svg?react')),
+  scroller_gearbox: customLazy(() => import('./icons/scroller_gearbox.svg?react')),
+  scroller_euler: customLazy(() => import('./icons/scroller_euler.svg?react')),
+  scroller_compound: customLazy(() => import('./icons/scroller_compound.svg?react')),
+  scroller_ethena: customLazy(() => import('./icons/scroller_ethena.svg?react')),
+  scroller_fluid: customLazy(() => import('./icons/scroller_fluid.svg?react')),
+  earn_1_on_1: customLazy(() => import('./icons/earn_1_on_1.svg?react')),
+  earn_discord: customLazy(() => import('./icons/earn_discord.svg?react')),
+  earn_email: customLazy(() => import('./icons/earn_email.svg?react')),
+  earn_rebalance_activities: customLazy(
+    () => import('./icons/earn_rebalance_activities.svg?react'),
+  ),
+  earn_user_activities: customLazy(() => import('./icons/earn_user_activities.svg?react')),
+  earn_yield_trend: customLazy(() => import('./icons/earn_yield_trend.svg?react')),
 
   // imported from tabler icon database
 

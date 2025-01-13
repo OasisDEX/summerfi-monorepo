@@ -1,5 +1,7 @@
-import { type FC, type PropsWithChildren } from 'react'
-import { Footer, MainBackground, NewsletterWrapper, Text } from '@summerfi/app-earn-ui'
+'use client'
+
+import { type FC, type PropsWithChildren, useEffect, useState } from 'react'
+import { Footer, NewsletterWrapper, Text } from '@summerfi/app-earn-ui'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
 
@@ -8,10 +10,37 @@ import landingMasterPageStyles from '@/components/layout/LandingMasterPage/landi
 interface LandingMasterPageProps {}
 
 export const LandingMasterPage: FC<PropsWithChildren<LandingMasterPageProps>> = ({ children }) => {
+  const [scrolledAmount, setScrolledAmount] = useState(0)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolledAmount(window.scrollY)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
+
   return (
     <div className={landingMasterPageStyles.mainContainer}>
-      <NavigationWrapper />
+      <div className={landingMasterPageStyles.bubbles} style={{ top: `${scrolledAmount * 0.2}px` }}>
+        <div className={landingMasterPageStyles.bubblesShadow} />
+        <video
+          width="100%"
+          autoPlay
+          loop
+          muted
+          playsInline
+          className={landingMasterPageStyles.video}
+        >
+          <source src="/img/landing-page/bubbles.mp4" type="video/mp4" />
+        </video>
+      </div>
       <div className={landingMasterPageStyles.appContainer}>
+        <NavigationWrapper />
         {children}
         <Footer
           logo="/img/branding/logo-light.svg"
@@ -47,7 +76,6 @@ export const LandingMasterPage: FC<PropsWithChildren<LandingMasterPageProps>> = 
           }
         />
       </div>
-      <MainBackground />
     </div>
   )
 }

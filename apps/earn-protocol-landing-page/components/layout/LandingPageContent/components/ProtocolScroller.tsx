@@ -11,6 +11,7 @@ import {
   useState,
 } from 'react'
 import { GradientBox, Icon, type IconNamesList, Text } from '@summerfi/app-earn-ui'
+import { formatAsShorthandNumbers } from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import { Emphasis } from '@/components/layout/LandingPageContent'
@@ -24,17 +25,17 @@ type ProtocolScrollerTrackProps = {
   style: CSSProperties
 }
 type ProtocolScrollerItemProps = {
-  protocolIcon: ReactNode
   protocol: string
-  tvl: string
+  protocolIcon: ReactNode
+  tvl: bigint
   url: string
 }
 
 export type ProtocolScrollerProps = {
-  protocolsList?: {
+  protocolsList: {
     protocol: string
     protocolIcon: IconNamesList
-    tvl: string
+    tvl: bigint
     url: string
   }[]
   animationPixelPerSecond?: number
@@ -66,28 +67,36 @@ const ProtocolScrollerItem = ({ protocolIcon, protocol, tvl, url }: ProtocolScro
     setItemHovered(false)
   }
 
-  return (
-    <Link href={url}>
-      <GradientBox
-        onMouseOver={handleMouseOver}
-        onMouseLeave={handleMouseLeave}
-        selected={itemHovered}
-        withHover
-        className={protocolScrollerStyles.protocolScrollerItemGradient}
-      >
-        <div className={protocolScrollerStyles.protocolScrollerItem}>
-          <div className={protocolScrollerStyles.protocolScrollerItemNameIcon}>
-            {protocolIcon}
-            <Text variant="p1semi">{protocol}</Text>
-          </div>
-          <div className={protocolScrollerStyles.protocolScrollerItemTvl}>
-            <Text variant="p3semi">TVL</Text>
-            <Text variant="p2semi">{tvl}</Text>
-          </div>
+  const insides = (
+    <GradientBox
+      onMouseOver={handleMouseOver}
+      onMouseLeave={handleMouseLeave}
+      selected={itemHovered}
+      withHover
+      className={protocolScrollerStyles.protocolScrollerItemGradient}
+    >
+      <div className={protocolScrollerStyles.protocolScrollerItem}>
+        <div className={protocolScrollerStyles.protocolScrollerItemNameIcon}>
+          {protocolIcon}
+          <Text variant="p1semi">{protocol}</Text>
         </div>
-      </GradientBox>
-    </Link>
+        <div className={protocolScrollerStyles.protocolScrollerItemTvl}>
+          <Text variant="p3semi">TVL</Text>
+          <Text variant="p2semi">
+            {formatAsShorthandNumbers(tvl, {
+              precision: 2,
+            })}
+          </Text>
+        </div>
+      </div>
+    </GradientBox>
   )
+
+  if (!url) {
+    return insides
+  }
+
+  return <Link href={url}>{insides}</Link>
 }
 
 export const ProtocolScroller = ({
@@ -99,10 +108,9 @@ export const ProtocolScroller = ({
   const trackRef = useRef<HTMLDivElement>(null)
 
   // 280 is the width of the item, 16 is the gap
-  const singleProtocolListWidth = (protocolsList?.length ?? 0) * (280 + 16)
+  const singleProtocolListWidth = protocolsList.length * (280 + 16)
 
   const protocolsListToDisplay = useMemo(() => {
-    if (!protocolsList) return null
     // we need to get a list that will fill the whole screen horizontally
     // as the items in the scroller are fixed width + fixed gap we dont need to measure them
     const itemsListMultiplier = Math.ceil(screenSize.width / singleProtocolListWidth) * 2 // always at least two lists
@@ -136,11 +144,34 @@ export const ProtocolScroller = ({
     }
   }, [hovered])
 
-  return protocolsListToDisplay ? (
+  const totalLiquidityBigInt = useMemo(
+    () => protocolsList.reduce((acc, { tvl }) => acc + tvl, 0n),
+    [protocolsList],
+  )
+
+  const totalLiquidityInfo = useMemo(
+    () =>
+      formatAsShorthandNumbers(totalLiquidityBigInt, {
+        precision: 4,
+      }),
+    [totalLiquidityBigInt],
+  )
+
+  const totalLiquidityDisplay = useMemo(
+    () =>
+      formatAsShorthandNumbers(Math.floor(Number(totalLiquidityBigInt) / 1e9) * 1e9, {
+        precision: 0,
+      }),
+    [totalLiquidityBigInt],
+  )
+
+  return (
     <div className={protocolScrollerStyles.protocolScrollerWrapper}>
       <Text variant="h3" as="p" className={protocolScrollerStyles.protocolScrollerHeader}>
         Automated access to <Emphasis variant="h3colorful">DeFi&apos;s best protocols</Emphasis>,
-        with over 15Bn of total liquidity
+        <br />
+        with over <span title={`$${totalLiquidityInfo}`}>${totalLiquidityDisplay}</span> of total
+        liquidity
       </Text>
       <ProtocolScrollerTrack
         ref={trackRef}
@@ -160,5 +191,5 @@ export const ProtocolScroller = ({
         ))}
       </ProtocolScrollerTrack>
     </div>
-  ) : null
+  )
 }
