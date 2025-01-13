@@ -25,7 +25,7 @@ export const NavigationActions = ({
   return (
     <div>
       <div className={navigationActionsStyles.navigationActionsWrapper}>
-        <Link href={INTERNAL_LINKS.summerPro}>
+        <Link href={INTERNAL_LINKS.summerPro} target="_blank">
           <Text as="p" variant="p3semi" className={clsx(navigationActionsStyles.summerProButton)}>
             Summer.fi Pro
           </Text>

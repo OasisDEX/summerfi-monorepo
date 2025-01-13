@@ -67,5 +67,7 @@ export const useAmountWithSwap = ({
     fromTokenSymbol,
     toTokenSymbol,
     amountDisplayUSDWithSwap,
+    rawToTokenAmount: quote?.toTokenAmount.toBigNumber(),
+    rawFromTokenAmount: quote?.fromTokenAmount.toBigNumber(),
   }
 }

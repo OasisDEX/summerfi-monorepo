@@ -55,6 +55,8 @@ export const networkNameToSDKNetwork = (network: NetworkNames) => {
   return {
     [NetworkNames.arbitrumMainnet.toLowerCase()]: SDKNetwork.ArbitrumOne,
     [NetworkNames.baseMainnet.toLowerCase()]: SDKNetwork.Base,
+    [NetworkNames.ethereumMainnet.toLowerCase()]: SDKNetwork.Mainnet,
+    [NetworkNames.optimismMainnet.toLowerCase()]: SDKNetwork.Optimism,
   }[network.toLowerCase()]
 }
 

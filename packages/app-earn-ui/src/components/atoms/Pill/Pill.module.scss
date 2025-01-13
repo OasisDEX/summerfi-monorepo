@@ -2,8 +2,9 @@
 .smallXPaddings,
 .smallLeftPadding,
 .smallRightPadding {
+  display: flex;
   align-items: center;
-  height: 38px;
+  min-height: 38px;
   border-radius: var(--radius-roundish);
   vertical-align: bottom;
   position: relative;
