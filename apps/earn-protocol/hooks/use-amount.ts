@@ -1,5 +1,6 @@
 import { type ChangeEvent, useEffect, useMemo, useState } from 'react'
 import { type SDKVaultishType } from '@summerfi/app-types'
+import { formatFiatBalance } from '@summerfi/app-utils'
 import type { IToken } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 
@@ -39,8 +40,8 @@ export const useAmount = ({ vault, selectedToken }: UseAmountProps) => {
       return '$0.00'
     }
 
-    return `$${new BigNumber(amountDisplay).times(new BigNumber(vault.inputTokenPriceUSD)).toFixed(vaultTokenDecimals)}`
-  }, [amountDisplay, amountRaw, vault.inputTokenPriceUSD, vaultTokenDecimals])
+    return `$${formatFiatBalance(new BigNumber(amountDisplay).times(new BigNumber(vault.inputTokenPriceUSD)))}`
+  }, [amountDisplay, amountRaw, vault.inputTokenPriceUSD])
 
   useEffect(() => {
     if (!editMode) {
