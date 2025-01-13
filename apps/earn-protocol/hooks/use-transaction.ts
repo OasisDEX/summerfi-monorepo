@@ -52,6 +52,12 @@ type UseTransactionParams = {
   flow: 'open' | 'manage'
 }
 
+const errorsMap = {
+  insufficientBalanceError: 'Insufficient balance',
+  transactionExecutionError: 'Error executing the transaction',
+  transactionRetrievalError: 'Error getting the transaction',
+}
+
 export const useTransaction = ({
   vault,
   vaultChainId,
@@ -122,7 +128,7 @@ export const useTransaction = ({
       if (err instanceof Error) {
         setSidebarError(err.message)
       } else {
-        setSidebarError('Error executing the transaction')
+        setSidebarError(errorsMap.transactionExecutionError)
       }
     },
   })
@@ -251,7 +257,7 @@ export const useTransaction = ({
         if (err instanceof Error) {
           setSidebarError(err.message)
         } else {
-          setSidebarError('Error getting the transaction')
+          setSidebarError(errorsMap.transactionRetrievalError)
         }
       }
     }
@@ -299,6 +305,15 @@ export const useTransaction = ({
         label: 'Add funds',
         action: () => setIsTransakOpen(true),
         disabled: false,
+      }
+    }
+    // if there are transactions pending
+    if (tokenBalance && amount && amount.isGreaterThan(tokenBalance)) {
+      return {
+        label: capitalize(transactionType),
+        action: () => null,
+        disabled: true,
+        loading: false,
       }
     }
 
@@ -432,6 +447,15 @@ export const useTransaction = ({
     setWaitingForTx,
     setTransactions,
   ])
+
+  useEffect(() => {
+    if (amount && tokenBalance && amount.isGreaterThan(tokenBalance) && !sidebarError) {
+      setSidebarError(errorsMap.insufficientBalanceError)
+    }
+    if (amount && tokenBalance && !amount.isGreaterThan(tokenBalance) && sidebarError) {
+      setSidebarError(undefined)
+    }
+  }, [amount, sidebarError, tokenBalance])
 
   return {
     manualSetAmount,
