@@ -75,6 +75,7 @@ export const userActivityMapper = (
         link: (
           <Link
             href={getScannerUrl(subgraphNetworkToSDKId(item.vault.protocol.network), item.hash)}
+            target="_blank"
           >
             <WithArrow
               as="p"
