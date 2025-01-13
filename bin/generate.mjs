@@ -14,29 +14,31 @@ const govAbis = ['SummerToken.sol']
 const dest = 'armada-protocol/abis/src'
 await $`pwd`
 
-// cd('armada-protocol/contracts')
-// await $`pnpm i`
-// cd('../..')
+// install deps
+cd('armada-protocol/contracts')
+await $`pnpm i`
+cd('../..')
 
-// Promise.all([
-//   await $`cd armada-protocol/contracts/packages/core-contracts && forge build --extra-output-files abi`,
-//   await $`cd armada-protocol/contracts/packages/gov-contracts && forge build --extra-output-files abi`,
-//   await $`cd armada-protocol/contracts/packages/rewards-contracts && forge build --extra-output-files abi`,
-// ])
+// gen abis
+Promise.all([
+  await $`cd armada-protocol/contracts/packages/core-contracts && forge build --extra-output-files abi`,
+  await $`cd armada-protocol/contracts/packages/gov-contracts && forge build --extra-output-files abi`,
+  await $`cd armada-protocol/contracts/packages/rewards-contracts && forge build --extra-output-files abi`,
+])
 
+// copy abis
 for await (const f of coreAbis) {
   await $`mkdir -p ${dest}/${f}`
   await $`cp -vr armada-protocol/contracts/packages/core-contracts/out/${f}/*.abi.json ${dest}/${f}/`
 }
-
 for await (const f of rewardsAbis) {
   await $`mkdir -p ${dest}/${f}`
   await $`cp -vr armada-protocol/contracts/packages/rewards-contracts/out/${f}/*.abi.json ${dest}/${f}/`
 }
-
 for await (const f of govAbis) {
   await $`mkdir -p ${dest}/${f}`
   await $`cp -vr armada-protocol/contracts/packages/gov-contracts/out/${f}/*.abi.json ${dest}/${f}/`
 }
 
+// process abis to TS
 await $`tsx scripts/transform-json-to-viem-abi.ts && cd armada-protocol/abis && pnpm genindex && pnpm build`
