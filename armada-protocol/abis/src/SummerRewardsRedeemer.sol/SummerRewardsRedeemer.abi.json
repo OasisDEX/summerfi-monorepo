@@ -103,6 +103,11 @@
     "name": "canClaim",
     "inputs": [
       {
+        "name": "user",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
         "name": "index",
         "type": "uint256",
         "internalType": "uint256"
@@ -132,6 +137,11 @@
     "name": "claim",
     "inputs": [
       {
+        "name": "user",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
         "name": "index",
         "type": "uint256",
         "internalType": "uint256"
@@ -154,6 +164,34 @@
     "type": "function",
     "name": "claimMultiple",
     "inputs": [
+      {
+        "name": "indices",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      },
+      {
+        "name": "amounts",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      },
+      {
+        "name": "proofs",
+        "type": "bytes32[][]",
+        "internalType": "bytes32[][]"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "claimMultiple",
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address",
+        "internalType": "address"
+      },
       {
         "name": "indices",
         "type": "uint256[]",
@@ -544,6 +582,11 @@
         "internalType": "address"
       }
     ]
+  },
+  {
+    "type": "error",
+    "name": "CallerNotAdmiralsQuarters",
+    "inputs": []
   },
   {
     "type": "error",

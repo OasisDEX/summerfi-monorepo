@@ -36,7 +36,7 @@
     "format:fix": "prettier --write \"./**/*.{ts,tsx,js,jsx,json}\"",
     "coverage:total": "node scripts/coverage-report/GenerateCoverageReport.js",
     "armada:install": "git submodule update --init armada-protocol/contracts && cd armada-protocol/contracts && pnpm i",
-    "armada:generate": "sh bin/generate.sh",
+    "armada:generate": "zx bin/generate.mjs",
     "armada:upconfig": "cd armada-protocol/contracts/packages/deployment/config && cp -r index.json ../../../../../sdk/armada-protocol-common/src/deployments/index.json"
   },
   "devDependencies": {
@@ -72,7 +72,7 @@
     "tsx": "^4.16.5",
     "turbo": "^2.1.2",
     "typescript": "^5.6.2",
-    "zx": "^8.0.1"
+    "zx": "^8.3.0"
   },
   "name": "summerfi-monorepo",
   "packageManager": "pnpm@8.15.4",

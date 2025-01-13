@@ -17,6 +17,75 @@
   },
   {
     "type": "function",
+    "name": "claimFleetRewards",
+    "inputs": [
+      {
+        "name": "fleetCommanders",
+        "type": "address[]",
+        "internalType": "address[]"
+      },
+      {
+        "name": "rewardToken",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "claimGovernanceRewards",
+    "inputs": [
+      {
+        "name": "govRewardsManager",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "rewardToken",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "claimMerkleRewards",
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "indices",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      },
+      {
+        "name": "amounts",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      },
+      {
+        "name": "proofs",
+        "type": "bytes32[][]",
+        "internalType": "bytes32[][]"
+      },
+      {
+        "name": "rewardsRedeemer",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "configurationManager",
     "inputs": [],
     "outputs": [
@@ -756,6 +825,16 @@
   {
     "type": "error",
     "name": "InvalidFleetCommander",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidRewardsManager",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidRewardsRedeemer",
     "inputs": []
   },
   {
