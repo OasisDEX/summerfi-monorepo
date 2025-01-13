@@ -1,6 +1,7 @@
-import { type DropdownOption, NetworkNames } from '@summerfi/app-types'
+import { type DropdownOption, NetworkNames, SDKChainId } from '@summerfi/app-types'
 
 import {
+  type TransakNetworkOption,
   TransakOrderDataStatus,
   TransakPaymentOptions,
   type TransakSupportedNetworksNames,
@@ -147,3 +148,24 @@ export const transakCryptoOptions: {
     },
   ],
 }
+
+export const transakNetworkOptions: TransakNetworkOption[] = [
+  {
+    label: 'Ethereum',
+    value: 'ethereum',
+    chainId: SDKChainId.MAINNET,
+    iconName: 'earn_network_ethereum',
+  },
+  {
+    label: 'Base',
+    value: 'base',
+    chainId: SDKChainId.BASE,
+    iconName: 'earn_network_base',
+  },
+  {
+    label: 'Arbitrum',
+    value: 'arbitrum',
+    chainId: SDKChainId.ARBITRUM,
+    iconName: 'earn_network_arbitrum',
+  },
+]
