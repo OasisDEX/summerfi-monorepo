@@ -25,6 +25,7 @@ import { transakInitialReducerState, transakReducer } from '@/features/transak/s
 import {
   TransakAction,
   type TransakEventOrderData,
+  type TransakNetworkOption,
   TransakOrderDataStatus,
   TransakSteps,
 } from '@/features/transak/types'
@@ -35,7 +36,7 @@ interface TransakWidgetProps {
   onClose: () => void
   walletAddress: string
   email?: string
-  injectedNetwork?: string
+  injectedNetwork?: TransakNetworkOption
 }
 
 export const TransakWidget: FC<TransakWidgetProps> = ({
@@ -56,6 +57,8 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
   })
 
   const { step, fiatAmount, fiatCurrency, paymentMethod, eventOrderData } = state
+
+  const resolvedChainId = injectedNetwork ? injectedNetwork.chainId : chain.id
 
   useEffect(() => {
     if (isOpen) {
@@ -134,7 +137,7 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
           [SDKChainId.MAINNET]: 'ethereum',
           [SDKChainId.BASE]: 'base',
           [SDKChainId.ARBITRUM]: 'arbitrum',
-        }[chain.id],
+        }[resolvedChainId],
         email,
         ...getTransakConfigInitData({
           fiatAmount,
@@ -152,7 +155,12 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
 
   const sidebarProps: SidebarProps = {
     title: getTransakTitle({ state }),
-    content: getTransakContent({ dispatch, state, isMobile, injectedNetwork }),
+    content: getTransakContent({
+      dispatch,
+      state,
+      isMobile,
+      injectedNetworkValue: injectedNetwork?.value,
+    }),
     primaryButton: {
       label: getTransakPrimaryButtonLabel({ state }),
       action: async () => {
@@ -160,7 +168,7 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
           case TransakSteps.INITIAL:
             return dispatch({ type: 'update-step', payload: TransakSteps.ABOUT_KYC })
           case TransakSteps.ABOUT_KYC:
-            if (chain.id === SDKChainId.MAINNET) {
+            if (chain.id === SDKChainId.MAINNET && !injectedNetwork) {
               return dispatch({ type: 'update-step', payload: TransakSteps.SWITCH_TO_L2 })
             }
 
