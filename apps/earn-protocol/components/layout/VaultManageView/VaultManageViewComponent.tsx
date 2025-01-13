@@ -38,6 +38,7 @@ import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
+import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { useAmount } from '@/hooks/use-amount'
 import { useAmountWithSwap } from '@/hooks/use-amount-with-swap'
 import { useClient } from '@/hooks/use-client'
@@ -130,14 +131,28 @@ export const VaultManageViewComponent = ({
     return new BigNumber(position.amount.amount)
   }, [position])
 
+  const { amountDisplayUSDWithSwap, fromTokenSymbol, rawToTokenAmount } = useAmountWithSwap({
+    vault,
+    vaultChainId,
+    amountDisplay,
+    amountDisplayUSD,
+    transactionType,
+    selectedTokenOption,
+  })
+
+  const resolvedAmountParsed = getResolvedForecastAmountParsed({
+    amountParsed,
+    rawToTokenAmount,
+  })
+
   const { isLoadingForecast, oneYearEarningsForecast } = useForecast({
     fleetAddress: vault.id,
     chainId: vaultChainId,
     amount: {
-      [TransactionAction.DEPOSIT]: amountParsed.plus(positionAmount),
-      [TransactionAction.WITHDRAW]: positionAmount.minus(amountParsed).lt(zero)
+      [TransactionAction.DEPOSIT]: resolvedAmountParsed.plus(positionAmount),
+      [TransactionAction.WITHDRAW]: positionAmount.minus(resolvedAmountParsed).lt(zero)
         ? zero
-        : positionAmount.minus(amountParsed),
+        : positionAmount.minus(resolvedAmountParsed),
     }[transactionType].toString(),
   })
 
@@ -146,15 +161,6 @@ export const VaultManageViewComponent = ({
 
     return oneYearEarningsForecast
   }, [oneYearEarningsForecast])
-
-  const { amountDisplayUSDWithSwap, fromTokenSymbol } = useAmountWithSwap({
-    vault,
-    vaultChainId,
-    amountDisplay,
-    amountDisplayUSD,
-    transactionType,
-    selectedTokenOption,
-  })
 
   const { transactionFee, loading: transactionFeeLoading } = useGasEstimation({
     chainId: vaultChainId,
