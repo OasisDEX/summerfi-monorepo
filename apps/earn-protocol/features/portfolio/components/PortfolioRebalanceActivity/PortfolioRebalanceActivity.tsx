@@ -13,6 +13,7 @@ import classNames from './PortfolioRebalanceActivity.module.scss'
 interface PortfolioRebalanceActivityProps {
   rebalancesList: SDKGlobalRebalancesType
   walletAddress: string
+  totalRebalances: number
 }
 
 const initialRows = 10
@@ -20,10 +21,13 @@ const initialRows = 10
 export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = ({
   rebalancesList,
   walletAddress,
+  totalRebalances,
 }) => {
-  const totalItems = rebalancesList.length
-  const savedTimeInHours = useMemo(() => getRebalanceSavedTimeInHours(totalItems), [totalItems])
-  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(totalItems), [totalItems])
+  const savedTimeInHours = useMemo(
+    () => getRebalanceSavedTimeInHours(totalRebalances),
+    [totalRebalances],
+  )
+  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(totalRebalances), [totalRebalances])
 
   const [current, setCurrent] = useState(initialRows)
 
@@ -42,7 +46,7 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
   const blocks = [
     {
       title: 'Rebalance actions',
-      value: formatShorthandNumber(totalItems, { precision: 0 }),
+      value: formatShorthandNumber(totalRebalances, { precision: 0 }),
     },
     {
       title: 'User saved time',
@@ -70,7 +74,10 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
           />
         ))}
       </div>
-      <InfiniteScroll loadMore={handleMoreItems} hasMore={totalItems > currentlyLoadedList.length}>
+      <InfiniteScroll
+        loadMore={handleMoreItems}
+        hasMore={totalRebalances > currentlyLoadedList.length}
+      >
         <PortfolioRebalanceActivityList
           rebalancesList={currentlyLoadedList}
           walletAddress={walletAddress}

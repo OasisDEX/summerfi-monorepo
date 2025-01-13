@@ -39,6 +39,11 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     defaultTab: PortfolioTabs.OVERVIEW,
   })
 
+  const totalRebalances = positions.reduce(
+    (acc, position) => acc + Number(position.vaultData.rebalanceCount),
+    0,
+  )
+
   const tabs = [
     {
       id: PortfolioTabs.OVERVIEW,
@@ -54,7 +59,11 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
       id: PortfolioTabs.REBALANCE_ACTIVITY,
       label: 'Rebalance Activity',
       content: (
-        <PortfolioRebalanceActivity rebalancesList={rebalancesList} walletAddress={walletAddress} />
+        <PortfolioRebalanceActivity
+          rebalancesList={rebalancesList}
+          walletAddress={walletAddress}
+          totalRebalances={totalRebalances}
+        />
       ),
     },
     {
