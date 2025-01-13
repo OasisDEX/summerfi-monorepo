@@ -1,7 +1,8 @@
 'use client'
 
 import { type FC } from 'react'
-import { getPositionValues, TabBar } from '@summerfi/app-earn-ui'
+import { useUser } from '@account-kit/react'
+import { getPositionValues, NonOwnerPortfolioBanner, TabBar } from '@summerfi/app-earn-ui'
 import { type SDKGlobalRebalancesType, type SDKVaultishType } from '@summerfi/app-types'
 
 import { type PortfolioPositionsList } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
@@ -34,6 +35,8 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   rebalancesList,
   totalRays,
 }) => {
+  const user = useUser()
+  const ownerView = walletAddress.toLowerCase() === user?.address.toLowerCase()
   const [activeTab, updateTab] = useTabStateQuery({
     tabs: PortfolioTabs,
     defaultTab: PortfolioTabs.OVERVIEW,
@@ -86,17 +89,20 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     ) + walletData.totalAssetsUsdValue
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', padding: '0 16px', width: '100%' }}>
-      <PortfolioHeader
-        walletAddress={walletAddress}
-        totalSumr={rewardsData.totalSumr}
-        totalWalletValue={totalWalletValue}
-      />
-      <TabBar
-        tabs={tabs}
-        defaultIndex={tabs.findIndex((item) => item.id === activeTab)}
-        handleTabChange={(tab) => updateTab(tab.id as PortfolioTabs)}
-      />
-    </div>
+    <>
+      <NonOwnerPortfolioBanner isOwner={ownerView} />
+      <div style={{ display: 'flex', flexDirection: 'column', padding: '0 16px', width: '100%' }}>
+        <PortfolioHeader
+          walletAddress={walletAddress}
+          totalSumr={rewardsData.totalSumr}
+          totalWalletValue={totalWalletValue}
+        />
+        <TabBar
+          tabs={tabs}
+          defaultIndex={tabs.findIndex((item) => item.id === activeTab)}
+          handleTabChange={(tab) => updateTab(tab.id as PortfolioTabs)}
+        />
+      </div>
+    </>
   )
 }

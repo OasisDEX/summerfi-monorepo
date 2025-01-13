@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useUser } from '@account-kit/react'
 import {
   Expander,
+  NonOwnerPositionBanner,
   Sidebar,
   SidebarFootnote,
   sidebarFootnote,
@@ -276,70 +277,73 @@ export const VaultManageViewComponent = ({
   const rebalancesList = `rebalances` in vault ? vault.rebalances : []
 
   return (
-    <VaultManageGrid
-      vault={vault}
-      vaults={vaults}
-      position={position}
-      viewWalletAddress={viewWalletAddress}
-      connectedWalletAddress={user?.address}
-      detailsContent={
-        <div className={vaultManageViewStyles.leftContentWrapper}>
-          <Expander
-            title={
-              <Text as="p" variant="p1semi">
-                Performance
-              </Text>
-            }
-            defaultExpanded
-          >
-            <PositionPerformanceChart
-              chartData={vault.customFields?.performanceChartData}
-              inputToken={vault.inputToken.symbol}
-            />
-          </Expander>
-          <Expander
-            title={
-              <Text as="p" variant="p1semi">
-                Vault exposure
-              </Text>
-            }
-            defaultExpanded
-          >
-            <VaultExposure vault={vault as SDKVaultType} />
-          </Expander>
-          <Expander
-            title={
-              <Text as="p" variant="p1semi">
-                Rebalancing activity
-              </Text>
-            }
-            defaultExpanded
-          >
-            <RebalancingActivity
-              rebalancesList={rebalancesList}
-              vaultId={vault.id}
-              totalRebalances={Number(vault.rebalanceCount)}
-            />
-          </Expander>
-          <Expander
-            title={
-              <Text as="p" variant="p1semi">
-                User activity
-              </Text>
-            }
-            defaultExpanded
-          >
-            <UserActivity
-              userActivity={userActivity}
-              topDepositors={topDepositors}
-              vaultId={vault.id}
-              page="manage"
-            />
-          </Expander>
-        </div>
-      }
-      sidebarContent={<Sidebar {...sidebarProps} />}
-      isMobile={isMobile}
-    />
+    <>
+      <NonOwnerPositionBanner isOwner={ownerView} />
+      <VaultManageGrid
+        vault={vault}
+        vaults={vaults}
+        position={position}
+        viewWalletAddress={viewWalletAddress}
+        connectedWalletAddress={user?.address}
+        detailsContent={
+          <div className={vaultManageViewStyles.leftContentWrapper}>
+            <Expander
+              title={
+                <Text as="p" variant="p1semi">
+                  Performance
+                </Text>
+              }
+              defaultExpanded
+            >
+              <PositionPerformanceChart
+                chartData={vault.customFields?.performanceChartData}
+                inputToken={vault.inputToken.symbol}
+              />
+            </Expander>
+            <Expander
+              title={
+                <Text as="p" variant="p1semi">
+                  Vault exposure
+                </Text>
+              }
+              defaultExpanded
+            >
+              <VaultExposure vault={vault as SDKVaultType} />
+            </Expander>
+            <Expander
+              title={
+                <Text as="p" variant="p1semi">
+                  Rebalancing activity
+                </Text>
+              }
+              defaultExpanded
+            >
+              <RebalancingActivity
+                rebalancesList={rebalancesList}
+                vaultId={vault.id}
+                totalRebalances={Number(vault.rebalanceCount)}
+              />
+            </Expander>
+            <Expander
+              title={
+                <Text as="p" variant="p1semi">
+                  User activity
+                </Text>
+              }
+              defaultExpanded
+            >
+              <UserActivity
+                userActivity={userActivity}
+                topDepositors={topDepositors}
+                vaultId={vault.id}
+                page="manage"
+              />
+            </Expander>
+          </div>
+        }
+        sidebarContent={<Sidebar {...sidebarProps} />}
+        isMobile={isMobile}
+      />
+    </>
   )
 }
