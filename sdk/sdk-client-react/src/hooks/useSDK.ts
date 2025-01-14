@@ -79,3 +79,5 @@ export const useSDK = (params: UseSdk) => {
 
   return memo
 }
+
+export type SdkClient = ReturnType<typeof useSDK>

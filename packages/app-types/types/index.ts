@@ -29,3 +29,6 @@ export * from './src/auth'
 export * from './src/earn-protocol'
 export * from './src/device-type'
 export * from './src/transaction'
+
+export type { SdkClient } from './src/sdk-client-react'
+export type { IToken, QuoteData } from './src/sdk-common'
