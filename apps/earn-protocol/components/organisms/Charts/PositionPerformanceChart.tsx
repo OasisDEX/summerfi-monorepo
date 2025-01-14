@@ -1,10 +1,15 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { Card, Text } from '@summerfi/app-earn-ui'
+import { Card } from '@summerfi/app-earn-ui'
 import { type TimeframesType, type VaultWithChartsData } from '@summerfi/app-types'
 
 import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
+import {
+  DAYS_TO_WAIT_FOR_CHART,
+  POINTS_REQUIRED_FOR_CHART,
+} from '@/components/organisms/Charts/components/constants'
+import { NotEnoughData } from '@/components/organisms/Charts/components/NotEnoughData'
 import { PerformanceChart } from '@/components/organisms/Charts/components/Performance'
 
 export type PositionPerformanceChartProps = {
@@ -26,20 +31,7 @@ export const PositionPerformanceChart = ({
     return chartData.data[timeframe]
   }, [timeframe, chartData])
 
-  if (parsedData.length === 0) {
-    return (
-      <Card
-        style={{
-          marginTop: 'var(--spacing-space-medium)',
-          flexDirection: 'column',
-          alignItems: 'center',
-          padding: 'var(--spacing-space-x-large)',
-        }}
-      >
-        <Text variant="p3semi">No enough data available.</Text>
-      </Card>
-    )
-  }
+  const parsedDataWithCutoff = parsedData.length <= POINTS_REQUIRED_FOR_CHART ? [] : parsedData
 
   return (
     <Card
@@ -48,13 +40,15 @@ export const PositionPerformanceChart = ({
         flexDirection: 'column',
         alignItems: 'flex-end',
         paddingBottom: 0,
+        position: 'relative',
       }}
     >
+      {!parsedDataWithCutoff.length && <NotEnoughData daysToWait={DAYS_TO_WAIT_FOR_CHART} />}
       <ChartHeader
         timeframe={timeframe}
         setTimeframe={(nextTimeFrame) => setTimeframe(nextTimeFrame as TimeframesType)}
       />
-      <PerformanceChart timeframe={timeframe} data={parsedData} inputToken={inputToken} />
+      <PerformanceChart timeframe={timeframe} data={parsedDataWithCutoff} inputToken={inputToken} />
     </Card>
   )
 }

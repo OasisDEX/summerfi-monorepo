@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { Card, Text } from '@summerfi/app-earn-ui'
+import { Card } from '@summerfi/app-earn-ui'
 import {
   type IArmadaPosition,
   type SDKVaultishType,
@@ -11,7 +11,12 @@ import {
 } from '@summerfi/app-types'
 
 import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
+import {
+  DAYS_TO_WAIT_FOR_CHART,
+  POINTS_REQUIRED_FOR_CHART,
+} from '@/components/organisms/Charts/components/constants'
 import { HistoricalChart } from '@/components/organisms/Charts/components/Historical'
+import { NotEnoughData } from '@/components/organisms/Charts/components/NotEnoughData'
 
 export type PositionHistoricalChartProps = {
   chartData: VaultWithChartsData['historyChartData']
@@ -37,20 +42,7 @@ export const PositionHistoricalChart = ({
     return chartData.data[timeframe]
   }, [timeframe, chartData])
 
-  if (parsedData.length === 0) {
-    return (
-      <Card
-        style={{
-          marginTop: 'var(--spacing-space-medium)',
-          flexDirection: 'column',
-          alignItems: 'center',
-          padding: 'var(--spacing-space-x-large)',
-        }}
-      >
-        <Text variant="p3semi">No enough data available.</Text>
-      </Card>
-    )
-  }
+  const parsedDataWithCutoff = parsedData.length <= POINTS_REQUIRED_FOR_CHART ? [] : parsedData
 
   return (
     <Card
@@ -59,13 +51,15 @@ export const PositionHistoricalChart = ({
         flexDirection: 'column',
         alignItems: 'flex-end',
         paddingBottom: 0,
+        position: 'relative',
       }}
     >
+      {!parsedDataWithCutoff.length && <NotEnoughData daysToWait={DAYS_TO_WAIT_FOR_CHART} />}
       <ChartHeader
         timeframe={timeframe}
         setTimeframe={(nextTimeFrame) => setTimeframe(nextTimeFrame as TimeframesType)}
       />
-      <HistoricalChart data={parsedData} tokenSymbol={tokenSymbol} position={position} />
+      <HistoricalChart data={parsedDataWithCutoff} tokenSymbol={tokenSymbol} position={position} />
     </Card>
   )
 }
