@@ -71,6 +71,12 @@
   }
 }
 
+.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .searchInput {
   height: 36px;
   padding: var(--general-space-8);
@@ -85,9 +91,11 @@
   &:focus {
     outline: none;
   }
+
   &:hover {
     border-color: var(--color-border-hover);
   }
+
   &::placeholder {
     color: var(--earn-protocol-secondary-40);
   }

@@ -1,5 +1,6 @@
 import { type ChangeEventHandler, type FC, type ReactNode } from 'react'
 import { type DropdownOption, type DropdownRawOption } from '@summerfi/app-types'
+import clsx from 'clsx'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Input } from '@/components/atoms/Input/Input'
@@ -31,10 +32,11 @@ interface InputWithDropdownProps {
   heading?: {
     label: ReactNode
     value: ReactNode
-    action: () => void
+    action?: () => void
   }
   onFocus?: () => void
   onBlur?: () => void
+  disabled?: boolean
 }
 
 export const InputWithDropdown: FC<InputWithDropdownProps> = ({
@@ -48,6 +50,7 @@ export const InputWithDropdown: FC<InputWithDropdownProps> = ({
   onFocus,
   onBlur,
   selectAllOnFocus,
+  disabled,
 }) => {
   const handleFocus = (ev: React.FocusEvent<HTMLInputElement>) => {
     if (selectAllOnFocus) {
@@ -67,7 +70,9 @@ export const InputWithDropdown: FC<InputWithDropdownProps> = ({
           <Text
             as="p"
             variant="p3semi"
-            className={classNames.headingWrapperAction}
+            className={clsx(classNames.headingWrapperAction, {
+              [classNames.headingWrapperActionDisabled]: !heading.action,
+            })}
             onClick={heading.action}
           >
             {heading.value}
@@ -86,6 +91,7 @@ export const InputWithDropdown: FC<InputWithDropdownProps> = ({
           }}
           asPill
           onChange={handleDropdownChange}
+          isDisabled={disabled}
         >
           <Content option={dropdownValue} />
         </Dropdown>
@@ -96,6 +102,7 @@ export const InputWithDropdown: FC<InputWithDropdownProps> = ({
           secondaryValue={secondaryValue}
           onFocus={handleFocus}
           onBlur={onBlur}
+          disabled={disabled}
         />
       </div>
     </div>

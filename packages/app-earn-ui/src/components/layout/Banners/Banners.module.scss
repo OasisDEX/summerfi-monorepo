@@ -1,0 +1,25 @@
+.bannerWrapper {
+  width: 100vw;
+  height: 36px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-top: -50px;
+  margin-bottom: 20px;
+
+  &Warning {
+    background-color: var(--color-background-warning);
+    color: var(--color-text-warning)
+  }
+
+  &Critical {
+    background-color: var(--color-background-critical);
+    color: var(--color-text-critical)
+  }
+
+  &Success {
+    background-color: var(--color-background-success);
+    color: var(--color-text-success)
+  }
+}

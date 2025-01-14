@@ -28,6 +28,7 @@ type ControlsDepositWithdrawProps = {
   onFocus: () => void
   onBlur: () => void
   manualSetAmount: (amountParsed: string | undefined) => void
+  ownerView?: boolean
 }
 
 export const ControlsDepositWithdraw = ({
@@ -46,6 +47,7 @@ export const ControlsDepositWithdraw = ({
   onFocus,
   onBlur,
   manualSetAmount,
+  ownerView,
 }: ControlsDepositWithdrawProps) => {
   return (
     <>
@@ -58,6 +60,7 @@ export const ControlsDepositWithdraw = ({
         dropdownValue={dropdownValue}
         onFocus={onFocus}
         onBlur={onBlur}
+        disabled={!ownerView}
         selectAllOnFocus
         heading={{
           label: 'Balance',
@@ -68,18 +71,22 @@ export const ControlsDepositWithdraw = ({
           ) : (
             '-'
           ),
-          action: () => {
-            if (tokenBalance) {
-              manualSetAmount(tokenBalance.toString())
-            }
-          },
+          action: ownerView
+            ? () => {
+                if (tokenBalance) {
+                  manualSetAmount(tokenBalance.toString())
+                }
+              }
+            : undefined,
         }}
       />
-      <ProjectedEarnings
-        earnings={estimatedEarnings}
-        symbol={vault.inputToken.symbol as TokenSymbolsList}
-        isLoading={isLoadingForecast}
-      />
+      {ownerView && (
+        <ProjectedEarnings
+          earnings={estimatedEarnings}
+          symbol={vault.inputToken.symbol as TokenSymbolsList}
+          isLoading={isLoadingForecast}
+        />
+      )}
     </>
   )
 }
