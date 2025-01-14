@@ -178,15 +178,17 @@ export const PerformanceChart = ({ data, inputToken }: PerformanceChartProps) =>
             animationDuration={400}
             animateNewValues
           />
-          <Legend
-            content={<PerformanceLegend />}
-            iconType="circle"
-            iconSize={10}
-            align="center"
-            layout="horizontal"
-            height={60}
-            wrapperStyle={{ bottom: '-10px' }}
-          />
+          {data.length && (
+            <Legend
+              content={<PerformanceLegend />}
+              iconType="circle"
+              iconSize={10}
+              align="center"
+              layout="horizontal"
+              height={60}
+              wrapperStyle={{ bottom: '-10px' }}
+            />
+          )}
         </ComposedChart>
       </ResponsiveContainer>
     </RechartResponsiveWrapper>
