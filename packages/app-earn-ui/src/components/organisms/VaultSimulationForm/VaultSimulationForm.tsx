@@ -1,26 +1,18 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { type Dispatch, type SetStateAction, useEffect, useMemo, useState } from 'react'
 import {
   type DropdownOption,
   type DropdownRawOption,
   type SDKVaultishType,
-  type TokenSymbolsList,
 } from '@summerfi/app-types'
-import {
-  formatCryptoBalance,
-  formatFiatBalance,
-  mapNumericInput,
-  subgraphNetworkToSDKId,
-} from '@summerfi/app-utils'
+import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
 import type BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
-import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
-import { InputWithDropdown } from '@/components/molecules/InputWithDropdown/InputWithDropdown'
-import { ProjectedEarnings } from '@/components/molecules/ProjectedEarnings/ProjectedEarnings'
 import { SidebarMobileHeader } from '@/components/molecules/SidebarMobileHeader/SidebarMobileHeader'
+import { ControlsDepositWithdraw } from '@/components/organisms/ControlsDepositWithdraw/ControlsDepositWithdraw'
 import { Sidebar } from '@/components/organisms/Sidebar/Sidebar'
 import { useForecast } from '@/features/forecast/use-forecast'
 import { getVaultUrl } from '@/helpers/get-vault-url'
@@ -30,7 +22,6 @@ import classNames from './VaultSimulationForm.module.scss'
 
 export type VaultSimulationFormProps = {
   vaultData: SDKVaultishType
-  tokenSymbol: string
   tokenBalance?: BigNumber
   tokenPriceUSD?: number
   isTokenBalanceLoading?: boolean
@@ -39,11 +30,20 @@ export type VaultSimulationFormProps = {
   selectedTokenOption: DropdownOption
   handleTokenSelectionChange: (option: DropdownRawOption) => void
   hiddenHeaderChevron?: boolean
+  handleAmountChange: (ev: React.ChangeEvent<HTMLInputElement>) => void
+  inputProps: {
+    onFocus: () => void
+    onBlur: () => void
+    amountDisplay: string
+    amountDisplayUSDWithSwap: string
+    manualSetAmount: Dispatch<SetStateAction<string | undefined>>
+  }
+  resolvedForecastAmount: BigNumber
+  amountParsed: BigNumber
 }
 
 export const VaultSimulationForm = ({
   vaultData,
-  tokenSymbol,
   tokenBalance,
   isTokenBalanceLoading,
   isMobile,
@@ -51,17 +51,18 @@ export const VaultSimulationForm = ({
   selectedTokenOption,
   handleTokenSelectionChange,
   hiddenHeaderChevron,
+  handleAmountChange,
+  inputProps: { onFocus, onBlur, amountDisplay, amountDisplayUSDWithSwap, manualSetAmount },
+  resolvedForecastAmount,
+  amountParsed,
 }: VaultSimulationFormProps) => {
-  const [inputValue, setInputValue] = useState<string>(mapNumericInput('1000'))
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [isGradientBorder, setIsGradientBorder] = useState(false)
-
-  const rawInputValue = inputValue.replaceAll(',', '') || '0'
 
   const { isLoadingForecast, oneYearEarningsForecast } = useForecast({
     fleetAddress: vaultData.id,
     chainId: subgraphNetworkToSDKId(vaultData.protocol.network),
-    amount: rawInputValue,
+    amount: resolvedForecastAmount.toString(),
   })
 
   useEffect(() => {
@@ -84,23 +85,11 @@ export const VaultSimulationForm = ({
     key: `${vaultData.id}-amount`,
   })
 
-  const handleInputChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
-    if (ev.target.value) {
-      setInputValue(mapNumericInput(ev.target.value))
-    } else {
-      setInputValue('')
-    }
-  }
-
   const estimatedEarnings = useMemo(() => {
     if (!oneYearEarningsForecast) return '0'
 
     return oneYearEarningsForecast
   }, [oneYearEarningsForecast])
-
-  const balance = tokenBalance ? tokenBalance : undefined
-  const tokenPrice = vaultData.inputTokenPriceUSD ? Number(vaultData.inputTokenPriceUSD) : undefined
-  const balanceSymbol = tokenSymbol
 
   return (
     <div style={{ position: 'relative', width: '100%', padding: '2px' }}>
@@ -108,37 +97,23 @@ export const VaultSimulationForm = ({
         {...{
           title: 'Deposit',
           content: (
-            <>
-              <InputWithDropdown
-                value={inputValue}
-                secondaryValue={
-                  inputValue.length && tokenPrice
-                    ? `$${formatFiatBalance(Number(inputValue.replaceAll(',', '')) * tokenPrice)}`
-                    : ''
-                }
-                handleChange={handleInputChange}
-                handleDropdownChange={handleTokenSelectionChange}
-                options={tokenOptions}
-                dropdownValue={selectedTokenOption}
-                heading={{
-                  label: 'Balance',
-                  value: isTokenBalanceLoading ? (
-                    <SkeletonLine width={60} height={10} />
-                  ) : balance ? (
-                    `${formatCryptoBalance(balance)} ${balanceSymbol}`
-                  ) : (
-                    `-`
-                  ),
-                  // eslint-disable-next-line no-console
-                  action: () => setInputValue(mapNumericInput(balance?.toString() ?? '1000')),
-                }}
-              />
-              <ProjectedEarnings
-                earnings={estimatedEarnings}
-                symbol={vaultData.inputToken.symbol as TokenSymbolsList}
-                isLoading={isLoadingForecast}
-              />
-            </>
+            <ControlsDepositWithdraw
+              amountDisplay={amountDisplay}
+              amountDisplayUSD={amountDisplayUSDWithSwap}
+              handleAmountChange={handleAmountChange}
+              handleDropdownChange={handleTokenSelectionChange}
+              options={tokenOptions}
+              dropdownValue={selectedTokenOption}
+              onFocus={onFocus}
+              onBlur={onBlur}
+              tokenSymbol={selectedTokenOption.value}
+              tokenBalance={tokenBalance}
+              tokenBalanceLoading={!!isTokenBalanceLoading}
+              manualSetAmount={manualSetAmount}
+              vault={vaultData}
+              estimatedEarnings={estimatedEarnings}
+              isLoadingForecast={isLoadingForecast}
+            />
           ),
           customHeader:
             !isDrawerOpen && isMobile ? (
@@ -156,7 +131,7 @@ export const VaultSimulationForm = ({
             label: 'Get Started',
             url: getVaultUrl(vaultData),
             action: () => {
-              setStorageOnce(Number(inputValue.replaceAll(',', '')))
+              setStorageOnce(amountParsed.toNumber())
             },
             disabled: false,
           },

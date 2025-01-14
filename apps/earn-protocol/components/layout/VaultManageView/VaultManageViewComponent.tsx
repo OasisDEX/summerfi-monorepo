@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useUser } from '@account-kit/react'
 import {
+  ControlsDepositWithdraw,
   Expander,
   Sidebar,
   SidebarFootnote,
@@ -8,6 +9,8 @@ import {
   SidebarMobileHeader,
   type SidebarProps,
   Text,
+  useAmount,
+  useAmountWithSwap,
   useForecast,
   useMobileCheck,
   useTokenSelector,
@@ -28,19 +31,18 @@ import BigNumber from 'bignumber.js'
 
 import {
   ControlsApproval,
-  ControlsDepositWithdraw,
   OrderInfoDeposit,
   OrderInfoWithdraw,
 } from '@/components/molecules/SidebarElements'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { PositionPerformanceChart } from '@/components/organisms/Charts/PositionPerformanceChart'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
+import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
-import { useAmount } from '@/hooks/use-amount'
-import { useAmountWithSwap } from '@/hooks/use-amount-with-swap'
+import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useClient } from '@/hooks/use-client'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useTokenBalance } from '@/hooks/use-token-balance'
@@ -121,6 +123,9 @@ export const VaultManageViewComponent = ({
     flow: 'manage',
   })
 
+  const sdk = useAppSDK()
+  const [slippageConfig] = useSlippageConfig()
+
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
@@ -138,6 +143,8 @@ export const VaultManageViewComponent = ({
     amountDisplayUSD,
     transactionType,
     selectedTokenOption,
+    sdk,
+    slippageConfig,
   })
 
   const resolvedAmountParsed = getResolvedForecastAmountParsed({

@@ -1,26 +1,44 @@
+'use client'
 import { useEffect, useState } from 'react'
-import { type QuoteData } from '@summerfi/sdk-common'
+import { type QuoteData, type SdkClient } from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
 
-import { useAppSDK } from './use-app-sdk'
-
+/**
+ * Hook that fetches and manages swap quotes between tokens with debounced updates.
+ *
+ * @param chainId - Network chain ID where the swap will occur
+ * @param fromAmount - Amount of source token to swap
+ * @param fromTokenSymbol - Symbol of the source token
+ * @param toTokenSymbol - Symbol of the destination token
+ * @param slippage - Allowed slippage percentage for the swap
+ * @param sdk - SDK client instance for fetching quotes
+ *
+ * @returns {Object} Quote information:
+ *   - quote: Current quote data containing swap details and prices
+ *   - quoteLoading: Boolean indicating if a quote is being fetched
+ *
+ * @remarks
+ * - Quote updates are debounced by 500ms to prevent excessive API calls
+ * - Returns undefined quote if fromAmount is 0 or tokens are the same
+ * - Automatically cleans up pending requests on unmount
+ */
 export const useSwapQuote = ({
   chainId,
   fromAmount,
   fromTokenSymbol,
   toTokenSymbol,
   slippage,
+  sdk,
 }: {
   chainId: number
   fromAmount: string
   fromTokenSymbol: string
   toTokenSymbol: string
   slippage: number
+  sdk: SdkClient
 }) => {
   const [quote, setQuote] = useState<QuoteData>()
   const [quoteLoading, setQuoteLoading] = useState(false)
-
-  const sdk = useAppSDK()
 
   useEffect(() => {
     const fetchQuote = async () => {
@@ -63,6 +81,8 @@ export const useSwapQuote = ({
       return () => clearTimeout(timeout)
     } else {
       setQuote(undefined)
+
+      return () => null
     }
   }, [fromAmount, fromTokenSymbol, toTokenSymbol, slippage, chainId, sdk])
 

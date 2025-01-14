@@ -92,6 +92,7 @@ export {
   MarketingPointsList,
   type MarketingPointsListData,
 } from './components/organisms/MarketingPointsList/MarketkingPointsList'
+export { ControlsDepositWithdraw } from './components/organisms/ControlsDepositWithdraw/ControlsDepositWithdraw'
 
 export { useToggle } from './hooks/use-toggle'
 export { useHash } from './hooks/use-hash'
@@ -103,6 +104,8 @@ export { useClientSideMount } from './hooks/use-client-side-mount'
 export { useLocalStorageOnce } from './hooks/use-local-storage-once'
 export { useLocalStorage } from './hooks/use-local-storage'
 export { useTokenSelector } from './hooks/use-token-selector'
+export { useAmount } from './hooks/use-amount'
+export { useAmountWithSwap } from './hooks/use-amount-with-swap'
 export { useForecast } from './features/forecast/use-forecast.ts'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
@@ -113,6 +116,7 @@ export { getMedian } from './helpers/get-median'
 export { getOneYearEarnings } from './helpers/get-one-year-earnings'
 export { getPositionValues } from './helpers/get-position-values'
 export { getSumrTokenBonus } from './helpers/get-sumr-token-bonus'
+export { getResolvedForecastAmountParsed } from './helpers/get-resolved-forecast-amount-parsed'
 
 export { INTERNAL_LINKS, EXTERNAL_LINKS } from './helpers/application-links'
 

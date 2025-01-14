@@ -9,6 +9,19 @@ import { supportedNetworkGuard } from '@/helpers/supported-network-guard'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
+/**
+ * Hook to fetch token and vault token balances for a specific network
+ * @param {Object} params - The parameters object
+ * @param {string} params.tokenSymbol - The symbol of the token to fetch balance for
+ * @param {SDKNetwork} params.network - The network to fetch balances from (Arbitrum or Base)
+ * @param {string} params.vaultTokenSymbol - The symbol of the vault token
+ * @returns {Object} Object containing:
+ *  - token: Token information
+ *  - vaultToken: Vault token information
+ *  - tokenBalance: Current balance as BigNumber
+ *  - tokenBalanceLoading: Loading state boolean
+ * @throws {Error} If an unsupported network is provided
+ */
 export const useTokenBalances = ({
   tokenSymbol,
   network,
@@ -23,6 +36,10 @@ export const useTokenBalances = ({
   }
   const { userWalletAddress } = useUserWallet()
 
+  /**
+   * Public client instances for interacting with different networks
+   * Memoized to prevent unnecessary re-creation
+   */
   const arbitrumPublicClient = useMemo(() => {
     return createPublicClient({
       chain: arbitrum,
@@ -52,16 +69,22 @@ export const useTokenBalances = ({
     skip: network !== SDKNetwork.Base,
   })
 
+  const balance = {
+    [SDKNetwork.ArbitrumOne]: arbitrumTokenBalance,
+    [SDKNetwork.Base]: baseTokenBalance,
+  }[network]
+
+  /**
+   * Returns zero balance for disconnected wallets while preserving token metadata
+   */
   if (!userWalletAddress) {
     return {
-      token: tokenSymbol,
+      token: balance.token,
+      vaultToken: balance.vaultToken,
       tokenBalance: new BigNumber(0),
       tokenBalanceLoading: false,
     }
   }
 
-  return {
-    [SDKNetwork.ArbitrumOne]: arbitrumTokenBalance,
-    [SDKNetwork.Base]: baseTokenBalance,
-  }[network]
+  return balance
 }
