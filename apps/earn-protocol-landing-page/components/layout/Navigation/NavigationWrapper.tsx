@@ -2,7 +2,6 @@
 
 import { type FC } from 'react'
 import { Button, getNavigationItems, Navigation } from '@summerfi/app-earn-ui'
-import clsx from 'clsx'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -17,20 +16,12 @@ export const NavigationWrapper: FC = () => {
       logo="/img/branding/logo-dark.svg"
       logoSmall="/img/branding/dot-dark.svg"
       links={getNavigationItems({})}
-      signupComponent={
-        <Button
-          variant="primarySmall"
-          className={clsx(navigationWrapperStyles.actionButton, navigationWrapperStyles.gradient)}
-        >
-          Sign up
-        </Button>
-      }
       walletConnectionComponent={
         <Link href="/earn">
           <Button
-            variant="secondarySmall"
+            variant="primarySmall"
             onClick={() => {}}
-            className={navigationWrapperStyles.actionButton}
+            className={(navigationWrapperStyles.actionButton, navigationWrapperStyles.gradient)}
           >
             Launch app
           </Button>

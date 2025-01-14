@@ -21,6 +21,11 @@ export const getNavigationItems = ({
       ]
     : []),
   {
+    label: '$SUMR',
+    id: 'sumr',
+    link: `/earn/sumr`,
+  },
+  {
     label: 'Explore',
     id: 'explore',
     itemsList: [

@@ -1,6 +1,12 @@
 'use client'
 import { type FC } from 'react'
-import { Card, SUMR_CAP, Text, useLocalConfig } from '@summerfi/app-earn-ui'
+import {
+  Card,
+  RAYS_TO_SUMR_CONVERSION_RATE,
+  SUMR_CAP,
+  Text,
+  useLocalConfig,
+} from '@summerfi/app-earn-ui'
 import { formatFiatBalance } from '@summerfi/app-utils'
 
 import classNames from './SumrConversionAndPrice.module.scss'
@@ -8,7 +14,7 @@ import classNames from './SumrConversionAndPrice.module.scss'
 const getData = (price: string, dilutedValuation: string) => [
   {
     title: '$RAYS <> $SUMR Conversion',
-    value: '2.2 for 1',
+    value: `${RAYS_TO_SUMR_CONVERSION_RATE} for 1`,
     description: '*Season 1 $RAYS',
   },
   {
