@@ -1,7 +1,7 @@
 import { ChainFamilyMap } from '@summerfi/sdk-common'
 import { AddressType } from '@summerfi/sdk-common/common'
 import { AddressBookManager } from '../src'
-import { DeploymentIndex } from '@summerfi/deployment-utils'
+import { DeploymentIndex } from '@summerfi/deployment-utils/deployment'
 import { IAddressBookManager } from '@summerfi/address-book-common'
 import assert from 'assert'
 

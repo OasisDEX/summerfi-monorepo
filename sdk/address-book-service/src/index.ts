@@ -1,1 +1,1 @@
-export * from './implementation'
+export { AddressBookManager, AddressBookManagerFactory } from './implementation'

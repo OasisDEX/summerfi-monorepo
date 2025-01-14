@@ -1,1 +1,1 @@
-export * from './interfaces'
+export type { ISwapManager, ISwapProvider } from './interfaces'

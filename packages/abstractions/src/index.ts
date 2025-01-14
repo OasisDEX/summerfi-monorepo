@@ -1,2 +1,2 @@
-export * from './distributed-cache'
-export * from './logger'
+export type { DistributedCache } from './distributed-cache'
+export type { Logger } from './logger'

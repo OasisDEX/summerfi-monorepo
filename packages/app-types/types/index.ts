@@ -30,5 +30,5 @@ export * from './src/earn-protocol'
 export * from './src/device-type'
 export * from './src/transaction'
 
-export type { SdkClient } from './src/sdk-client-react'
-export type { IToken, QuoteData } from './src/sdk-common'
+export type { SdkClient } from '@summerfi/sdk-client-react'
+export type { IToken, QuoteData } from '@summerfi/sdk-common'

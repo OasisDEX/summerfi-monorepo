@@ -4,9 +4,17 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
-    ".": {
-      "import": "./src/index.ts",
-      "types": "./src/index.d.ts"
+    "./deployment": {
+      "import": "./src/deployment/index.ts",
+      "types": "./src/deployment/index.d.ts"
+    },
+    "./test": {
+      "import": "./src/test/index.ts",
+      "types": "./src/test/index.d.ts"
+    },
+    "./utils": {
+      "import": "./src/utils/index.ts",
+      "types": "./src/utils/index.d.ts"
     }
   },
   "scripts": {

@@ -1,5 +1,5 @@
 import { Config, ConfigEntry } from '@summerfi/deployment-types'
-import { Deployments } from '@summerfi/deployment-utils'
+import { Deployments } from '@summerfi/deployment-utils/deployment'
 import { recurseConfig } from './utils'
 import { ContractsVersionsSnapshot } from '../versions'
 

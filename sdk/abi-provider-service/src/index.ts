@@ -1,1 +1,1 @@
-export * from './implementation'
+export { AbiProvider, AbiProviderFactory } from './implementation'

@@ -1,1 +1,1 @@
-export * from './interfaces'
+export type { IProtocolManager, IProtocolManagerContext } from './interfaces'

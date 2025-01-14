@@ -1,1 +1,1 @@
-export * from './interfaces'
+export type { IOracleManager, IOracleProvider } from './interfaces'

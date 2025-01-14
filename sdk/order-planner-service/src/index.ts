@@ -1,1 +1,1 @@
-export * from './implementation'
+export { OrderPlannerService } from './implementation'

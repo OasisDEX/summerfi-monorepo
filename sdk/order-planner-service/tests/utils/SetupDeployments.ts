@@ -1,4 +1,4 @@
-import { Deployment, DeploymentIndex } from '@summerfi/deployment-utils'
+import { Deployment, DeploymentIndex } from '@summerfi/deployment-utils/deployment'
 import { IChainInfo } from '@summerfi/sdk-common/common'
 import { AddressBookManagerMock } from '@summerfi/testing-utils'
 

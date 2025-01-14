@@ -9,7 +9,7 @@ import {
 } from '@summerfi/sdk-common/common'
 
 import { Deployments } from '@summerfi/core-contracts'
-import { DeploymentIndex } from '@summerfi/deployment-utils'
+import { DeploymentIndex } from '@summerfi/deployment-utils/deployment'
 import { makeSDK, type Chain } from '@summerfi/sdk-client'
 import { CommonTokenSymbols } from '@summerfi/sdk-common/common/enums'
 import { Order, PositionsManager, RefinanceParameters } from '@summerfi/sdk-common/orders'

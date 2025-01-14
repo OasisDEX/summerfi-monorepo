@@ -1,5 +1,5 @@
 import { Config, ConfigEntry } from '@summerfi/deployment-types'
-import { Deployments } from '@summerfi/deployment-utils'
+import { Deployments } from '@summerfi/deployment-utils/deployment'
 import ContractVersions from '../../versions/contracts-versions.snapshot.json'
 import { getContractLabel, getLabelHash, recurseConfig } from './utils'
 import { Address } from '@summerfi/common'

@@ -1,2 +1,2 @@
-export * from './AddressBookManager'
-export * from './AddressBookManagerFactory'
+export { AddressBookManager } from './AddressBookManager'
+export { AddressBookManagerFactory } from './AddressBookManagerFactory'

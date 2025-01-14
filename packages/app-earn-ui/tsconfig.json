@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
     "preserveWatchOutput": true,
-    "target": "ES2022",
     "useDefineForClassFields": true,
-    "lib": ["ES2023", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
+    "lib": ["es2022"],
+    "target": "es2022",
+    "module": "ES2022",
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "moduleResolution": "bundler",
@@ -22,5 +22,46 @@
     },
     "outDir": "./dist/types/src"
   },
-  "include": ["src"]
+  "include": ["src"],
+  "references": [
+    {
+      "path": "../serverless-shared/tsconfig.json"
+    },
+    {
+      "path": "../prices-subgraph/tsconfig.json"
+    },
+    {
+      "path": "../automation-subgraph/tsconfig.json"
+    },
+    {
+      "path": "../aave-spark-subgraph/tsconfig.json"
+    },
+    {
+      "path": "../ajna-subgraph/tsconfig.json"
+    },
+    {
+      "path": "../morpho-blue-subgraph/tsconfig.json"
+    },
+    {
+      "path": "../morpho-blue-external-api-client/tsconfig.json"
+    },
+    {
+      "path": "../triggers-calculations/tsconfig.json"
+    },
+    {
+      "path": "../triggers-shared/tsconfig.json"
+    },
+    {
+      "path": "../abstractions/tsconfig.json"
+    },
+    {
+      "path": "../redis-cache/tsconfig.json"
+    },
+    {
+      "path": "../defi-llama-client/tsconfig.json"
+    },
+    {
+      "path": "../rays-db/tsconfig.build.json"
+    }
+  ]
 }

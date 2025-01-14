@@ -1,7 +1,7 @@
 import type { Maybe } from '@summerfi/sdk-common/common/types'
 import type { IAddress, IChainInfo } from '@summerfi/sdk-common/common'
 import { IAddressBookManager } from '@summerfi/address-book-common'
-import { DeploymentIndex } from '@summerfi/deployment-utils'
+import { DeploymentIndex } from '@summerfi/deployment-utils/deployment'
 import { Address, AddressValue } from '@summerfi/sdk-common'
 
 /**

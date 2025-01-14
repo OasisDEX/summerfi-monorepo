@@ -1,4 +1,4 @@
-import { Deployment, DeploymentIndex } from '@summerfi/deployment-utils'
+import { Deployment, DeploymentIndex } from '@summerfi/deployment-utils/deployment'
 
 export function SetupDeployments(): DeploymentIndex {
   return {

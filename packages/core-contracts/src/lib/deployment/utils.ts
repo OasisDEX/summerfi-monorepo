@@ -1,5 +1,5 @@
 import { isConfigEntry } from '@summerfi/deployment-types'
-import { Deployments } from '@summerfi/deployment-utils'
+import { Deployments } from '@summerfi/deployment-utils/deployment'
 import { keccak256 } from '@ethersproject/keccak256'
 import { ContractsVersionsSnapshot } from '../versions/types'
 

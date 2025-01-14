@@ -1,7 +1,7 @@
 import { IAddressBookManager } from '@summerfi/address-book-common'
 import { type IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { Deployments } from '@summerfi/core-contracts'
-import { DeploymentIndex } from '@summerfi/deployment-utils'
+import { DeploymentIndex } from '@summerfi/deployment-utils/deployment'
 import { AddressBookManager } from './AddressBookManager'
 
 /**

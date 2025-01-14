@@ -1,4 +1,9 @@
-export * from './system'
-export * from './mainnet'
-export * from './localhost'
+export {
+  ActionsConfiguration,
+  AutomationConfiguration,
+  CoreConfiguration,
+  SystemConfiguration,
+} from './system'
+export { MainnetConfig } from './mainnet'
+export { LocalhostConfig } from './localhost'
 export { loadDeploymentConfig } from './utils'

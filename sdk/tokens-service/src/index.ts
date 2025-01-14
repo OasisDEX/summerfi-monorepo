@@ -1,1 +1,1 @@
-export * from './implementation'
+export { StaticTokensProvider, TokensManager, TokensManagerFactory } from './implementation'

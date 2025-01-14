@@ -42,5 +42,6 @@
     "@summerfi/sdk-server-common": "workspace:*",
     "@summerfi/testing-utils": "workspace:*",
     "@summerfi/typescript-config": "workspace:*"
-  }
+  },
+  "sideEffects": false
 }

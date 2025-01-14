@@ -62,5 +62,6 @@
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*"
-  }
+  },
+  "sideEffect": false
 }

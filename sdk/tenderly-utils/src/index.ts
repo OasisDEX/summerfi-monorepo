@@ -1,2 +1,2 @@
-export * from './Tenderly'
-export * from './TenderlyFork'
+export { Tenderly } from './Tenderly'
+export { TenderlyFork } from './TenderlyFork'

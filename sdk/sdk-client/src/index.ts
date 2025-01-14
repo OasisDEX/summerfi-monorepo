@@ -1,23 +1,136 @@
-export * from './implementation/Chain'
-export * from './implementation/ChainsManager'
-export * from './implementation/MakeSDK'
-export * from './implementation/PortfolioManager'
-export * from './implementation/ProtocolsManagerClient'
-export * from './implementation/SDKManager'
-export * from './implementation/TokensManagerClient'
-export * from './implementation/UserClient'
-export * from './implementation/UsersManager'
-export * from './interfaces/ArmadaManager/IArmadaManagerClient'
-export * from './interfaces/IChain'
-export * from './interfaces/IChainsManager'
-export * from './interfaces/IProtocolsManagerClient'
-export * from './interfaces/IPortfolioManager'
-export * from './interfaces/IRPCClient'
-export * from './interfaces/ISDKManager'
-export * from './interfaces/ITokensManagerClient'
-export * from './interfaces/IUserClient'
-export * from './interfaces/IUsersManager'
-export * from './utils/PositionUtils'
+export { Chain } from './implementation/Chain'
+export { ChainsManagerClient } from './implementation/ChainsManager'
+export { makeSDK } from './implementation/MakeSDK'
+export { PortfolioManager } from './implementation/PortfolioManager'
+export { ProtocolsManagerClient } from './implementation/ProtocolsManagerClient'
+export { SDKManager } from './implementation/SDKManager'
+export { TokensManagerClient } from './implementation/TokensManagerClient'
+export { UserClient } from './implementation/UserClient'
+export { UsersManager } from './implementation/UsersManager'
+export { type IArmadaManagerClient } from './interfaces/ArmadaManager/IArmadaManagerClient'
+export { type IChain } from './interfaces/IChain'
+export type { IChainsManagerClient } from './interfaces/IChainsManager'
+export type { IProtocolsManagerClient } from './interfaces/IProtocolsManagerClient'
+export type { IPortfolioManager } from './interfaces/IPortfolioManager'
+export { IRPCClient } from './interfaces/IRPCClient'
+export type { ISDKManager } from './interfaces/ISDKManager'
+export type { ITokensManagerClient } from './interfaces/ITokensManagerClient'
+export type { IUserClient } from './interfaces/IUserClient'
+export type { IUsersManager } from './interfaces/IUsersManager'
+export { PositionUtils } from './utils/PositionUtils'
 
 // WORKAROUND: re-exporting protocol-plugins to give FE access to protocol plugins types
-export * from './protocol-plugins-reexport'
+export {
+  AaveV3LendingPoolId,
+  AaveV3LendingPosition,
+  AaveV3LendingPositionId,
+  isAaveV3LendingPoolId,
+  AaveV3Protocol,
+  EmodeType,
+  MakerLendingPoolId,
+  MakerLendingPosition,
+  MakerLendingPositionId,
+  isMakerLendingPoolId,
+  MakerProtocol,
+  MorphoLendingPoolId,
+  MorphoLendingPosition,
+  MorphoLendingPositionId,
+  isMorphoLendingPoolId,
+  MorphoProtocol,
+  SparkLendingPoolId,
+  SparkLendingPosition,
+  SparkLendingPositionId,
+  isSparkLendingPoolId,
+  SparkProtocol,
+  ArmadaVaultDataSchema,
+  isArmadaVault,
+  ArmadaVaultIdDataSchema,
+  isArmadaVaultId,
+  ArmadaVaultInfoDataSchema,
+  isArmadaVaultInfo,
+  ArmadaPositionDataSchema,
+  isArmadaPosition,
+  ArmadaPositionIdDataSchema,
+  isArmadaPositionId,
+  ArmadaProtocolDataSchema,
+  isArmadaProtocol,
+  ArmadaParametersDataSchema,
+  isArmadaParameters,
+  ArmadaSimulatedPositionDataSchema,
+  isArmadaSimulatedPosition,
+  ArmadaSimulationSchema,
+  isArmadaSimulation,
+  ArmadaOperationType,
+  createApprovalTransaction,
+  createDepositTransaction,
+  createWithdrawTransaction,
+  getDeployedContractAddress,
+  ArmadaManager,
+  ArmadaManagerFactory,
+  ArmadaParameters,
+  ArmadaPosition,
+  ArmadaPositionId,
+  ArmadaProtocol,
+  ArmadaSimulatedPosition,
+  ArmadaSimulation,
+  ArmadaSimulator,
+  ArmadaVault,
+  ArmadaVaultId,
+  ArmadaVaultInfo,
+  __iarmadaparameters__,
+  __iarmadaposition__,
+  __iarmadapositionid__,
+  __iarmadaprotocol__,
+  __iarmadasimulatedposition__,
+  __iarmadasimulation__,
+  __iarmadavault__,
+  __iarmadavaultid__,
+  __iarmadavaultinfo__,
+} from './protocol-plugins-reexport'
+export type {
+  ILKType,
+  ArmadaParametersParameters,
+  ArmadaPositionIdParameters,
+  ArmadaPositionParameters,
+  ArmadaProtocolParameters,
+  ArmadaSimulatedPositionParameters,
+  ArmadaSimulationParameters,
+  ArmadaVaultIdParameters,
+  ArmadaVaultInfoParameters,
+  ArmadaVaultParameters,
+  GetGlobalRebalancesQuery,
+  GetUserActivityQuery,
+  GetUsersActivityQuery,
+  GetVaultQuery,
+  GetVaultsQuery,
+  IAaveV3LendingPoolId,
+  IAaveV3Protocol,
+  IArmadaManager,
+  IArmadaParameters,
+  IArmadaParametersData,
+  IArmadaPosition,
+  IArmadaPositionData,
+  IArmadaPositionId,
+  IArmadaPositionIdData,
+  IArmadaProtocol,
+  IArmadaProtocolData,
+  IArmadaSimulatedPosition,
+  IArmadaSimulatedPositionData,
+  IArmadaSimulation,
+  IArmadaSimulationData,
+  IArmadaVault,
+  IArmadaVaultData,
+  IArmadaVaultId,
+  IArmadaVaultIdData,
+  IArmadaVaultInfo,
+  IArmadaVaultInfoData,
+  IMakerLendingPoolId,
+  IMakerProtocol,
+  IMorphoLendingPoolId,
+  IMorphoProtocol,
+  ISparkLendingPoolId,
+  IRebalanceData,
+  ISparkProtocol,
+  MakerLendingPositionIdParameters,
+  MakerLendingPositionParameters,
+} from './protocol-plugins-reexport'

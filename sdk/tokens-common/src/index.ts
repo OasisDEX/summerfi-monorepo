@@ -1,1 +1,1 @@
-export * from './interfaces'
+export type { ITokensManager, ITokensProvider } from './interfaces'

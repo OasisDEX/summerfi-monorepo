@@ -1,5 +1,5 @@
 import { loadDeploymentConfig } from '@summerfi/deployment-configs'
-import { DeploymentFlags, Deployments, ProviderTypes } from '@summerfi/deployment-utils'
+import { DeploymentFlags, Deployments, ProviderTypes } from '@summerfi/deployment-utils/deployment'
 import { ChainsType } from '@summerfi/hardhat-utils'
 import hre from 'hardhat'
 import { deployAll, configureAll, verifyAll, addAllDependencies } from '../src/lib/deployment'

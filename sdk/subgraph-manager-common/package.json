@@ -32,5 +32,6 @@
     "@summerfi/jest-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
     "graphql": "^16.8.1"
-  }
+  },
+  "sideEffects": false
 }

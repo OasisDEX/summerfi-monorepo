@@ -34,5 +34,6 @@
     "@summerfi/jest-config": "workspace:*",
     "@summerfi/testing-utils": "workspace:*",
     "@summerfi/typescript-config": "workspace:*"
-  }
+  },
+  "sideEffects": false
 }

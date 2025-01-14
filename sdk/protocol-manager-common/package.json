@@ -26,5 +26,6 @@
     "@summerfi/jest-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
     "@summerfi/order-planner-common": "workspace:*"
-  }
+  },
+  "sideEffects": false
 }

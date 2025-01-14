@@ -1,3 +1,1 @@
-import type { ITokenStanalone, QuoteDataStanalone } from '@summerfi/sdk-common'
-
-export type { ITokenStanalone as IToken, QuoteDataStanalone as QuoteData }
+export type { IToken, QuoteData } from '@summerfi/sdk-common'

@@ -1,1 +1,1 @@
-export * from './implementation'
+export { AllowanceManager, AllowanceManagerFactory } from './implementation'

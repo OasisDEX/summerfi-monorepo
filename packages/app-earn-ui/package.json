@@ -14,7 +14,7 @@
   "scripts": {
     "lint": "eslint *.ts*",
     "resolve-tspaths-watch": "tsc-watch --onSuccess 'pnpm resolve-tspaths'",
-    "generate-component-types": "tsc",
+    "generate-component-types": "tsc --explainFiles",
     "generate-component-types-watch": "tsc -w",
     "generate-module-types": "typed-scss-modules 'src/**/*.module.scss' & typed-scss-modules --outputFolder 'dist/types' 'src/**/*.module.scss'",
     "generate-module-types-watch": "typed-scss-modules -w 'src/**/*.module.scss' & typed-scss-modules --outputFolder 'dist/types' -w 'src/**/*.module.scss'",

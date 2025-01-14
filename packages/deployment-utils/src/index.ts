@@ -1,3 +1,55 @@
-export * from './deployment'
-export * from './test'
-export * from './utils'
+export {
+  getDeploymentType,
+  parseDeploymentName,
+  DeploymentFileExtension,
+  DeploymentTypeSeparator,
+  LocalExportsFileName,
+  NumConfirmationsWait,
+  RemoteExportsFileName,
+  Deployments,
+  DeploymentFlags,
+  DirectoryFilterType,
+  ProviderTypes,
+  DeploymentChain,
+  getDeploymentNameFromType,
+  getDeploymentTypeFromName,
+  getDeploymentsName,
+  getLegacyDeploymentNameFromType,
+  isDeploymentParams,
+  isWalletClient,
+  verifyContract,
+} from './deployment'
+export type {
+  BlockNumber,
+  ConfigName,
+  Contract,
+  ContractAndDeploymentTransaction,
+  CurrentBlock,
+  Deployment,
+  DeploymentExportPair,
+  DeploymentIndex,
+  DeploymentInitParams,
+  DeploymentObject,
+  DeploymentOptions,
+  DeploymentParams,
+  DeploymentTransaction,
+  DeploymentType,
+  ImportPair,
+  Network,
+  Provider,
+  PublicClient,
+  Quantity,
+  TestClient,
+  TransactionReceipt,
+  WalletClient,
+} from './deployment'
+export { showConsoleLogs } from './test'
+export {
+  fastForwardChain,
+  getCurrentBlock,
+  getCurrentTimestamp,
+  getLastTimestamp,
+  getNextTimestamp,
+  setNextBlockTimestamp,
+  toCamelCase,
+} from './utils'

@@ -1,2 +1,2 @@
-export * from './implementation'
-export * from './interfaces'
+export { ManagerProviderBase, ManagerWithProvidersBase } from './implementation'
+export type { IManagerProvider, IManagerWithProviders } from './interfaces'
