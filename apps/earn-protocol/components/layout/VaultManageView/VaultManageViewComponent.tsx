@@ -48,6 +48,7 @@ import { useClient } from '@/hooks/use-client'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useTransaction } from '@/hooks/use-transaction'
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import vaultManageViewStyles from './VaultManageView.module.scss'
 
@@ -67,7 +68,8 @@ export const VaultManageViewComponent = ({
   viewWalletAddress: string
 }) => {
   const user = useUser()
-  const ownerView = viewWalletAddress.toLowerCase() === user?.address.toLowerCase()
+  const { userWalletAddress } = useUserWallet()
+  const ownerView = viewWalletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
   const { publicClient } = useClient()
 
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)

@@ -1,7 +1,6 @@
 'use client'
 
 import { type FC } from 'react'
-import { useUser } from '@account-kit/react'
 import { getPositionValues, NonOwnerPortfolioBanner, TabBar } from '@summerfi/app-earn-ui'
 import { type SDKGlobalRebalancesType, type SDKVaultishType } from '@summerfi/app-types'
 
@@ -15,6 +14,7 @@ import { PortfolioRewards } from '@/features/portfolio/components/PortfolioRewar
 import { PortfolioWallet } from '@/features/portfolio/components/PortfolioWallet/PortfolioWallet'
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { useTabStateQuery } from '@/hooks/use-tab-state'
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 interface PortfolioPageViewProps {
   walletAddress: string
@@ -35,8 +35,8 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   rebalancesList,
   totalRays,
 }) => {
-  const user = useUser()
-  const ownerView = walletAddress.toLowerCase() === user?.address.toLowerCase()
+  const { userWalletAddress } = useUserWallet()
+  const ownerView = walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
   const [activeTab, updateTab] = useTabStateQuery({
     tabs: PortfolioTabs,
     defaultTab: PortfolioTabs.OVERVIEW,
