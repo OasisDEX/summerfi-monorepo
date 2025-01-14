@@ -458,6 +458,7 @@ export enum ArkDailySnapshot_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -681,6 +682,7 @@ export enum ArkHourlySnapshot_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -1034,6 +1036,7 @@ export enum Ark_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -1365,6 +1368,7 @@ export enum Board_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -1483,6 +1487,7 @@ export enum DailyInterestRate_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -1824,6 +1829,7 @@ export enum Deposit_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -2145,6 +2151,7 @@ export enum Disembark_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -2617,6 +2624,7 @@ export enum HourlyInterestRate_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -3501,6 +3509,7 @@ export enum Position_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -3737,6 +3746,7 @@ export enum PostActionArkSnapshot_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -3958,6 +3968,7 @@ export enum PostActionVaultSnapshot_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -5350,6 +5361,7 @@ export enum Rebalance_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -5497,6 +5509,7 @@ export enum RewardsManager_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -5838,6 +5851,7 @@ export enum Staked_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -7111,6 +7125,7 @@ export enum Unstaked_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -7484,6 +7499,7 @@ export type Vault = {
   pricePerShare?: Maybe<Scalars['BigDecimal']['output']>;
   /**  The protocol this vault belongs to  */
   protocol: YieldAggregator;
+  rebalanceCount: Scalars['BigInt']['output'];
   rebalances: Array<Rebalance>;
   /**  Per-block reward token emission as of the current block normalized to a day, in token's native amount. This should be ideally calculated as the theoretical rate instead of the realized amount.  */
   rewardTokenEmissionsAmount: Array<Scalars['BigInt']['output']>;
@@ -7958,6 +7974,7 @@ export enum VaultDailySnapshot_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -8328,6 +8345,7 @@ export enum VaultHourlySnapshot_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -8641,6 +8659,7 @@ export enum VaultWeeklySnapshot_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -8978,6 +8997,14 @@ export type Vault_Filter = {
   protocol_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   protocol_starts_with?: InputMaybe<Scalars['String']['input']>;
   protocol_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  rebalanceCount?: InputMaybe<Scalars['BigInt']['input']>;
+  rebalanceCount_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  rebalanceCount_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  rebalanceCount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  rebalanceCount_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  rebalanceCount_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  rebalanceCount_not?: InputMaybe<Scalars['BigInt']['input']>;
+  rebalanceCount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rebalances_?: InputMaybe<Rebalance_Filter>;
   rewardTokenEmissionsAmount?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
@@ -9148,6 +9175,7 @@ export enum Vault_OrderBy {
   ProtocolTotalPoolCount = 'protocol__totalPoolCount',
   ProtocolTotalValueLockedUsd = 'protocol__totalValueLockedUSD',
   ProtocolType = 'protocol__type',
+  RebalanceCount = 'rebalanceCount',
   Rebalances = 'rebalances',
   RewardTokenEmissionsAmount = 'rewardTokenEmissionsAmount',
   RewardTokenEmissionsAmountsPerOutputToken = 'rewardTokenEmissionsAmountsPerOutputToken',
@@ -9277,6 +9305,7 @@ export enum WeeklyInterestRate_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
@@ -9618,6 +9647,7 @@ export enum Withdraw_OrderBy {
   VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
   VaultOutputTokenSupply = 'vault__outputTokenSupply',
   VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultStakingRewardsManager = 'vault__stakingRewardsManager',
   VaultSymbol = 'vault__symbol',
