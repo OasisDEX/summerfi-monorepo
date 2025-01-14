@@ -45,7 +45,7 @@ export const NavigationMenuMobile = ({
       </div>
       <div className={navigationMenuMobileStyles.linksListWrapper}>
         <div className={navigationMenuMobileStyles.linksList}>
-          <Link href={INTERNAL_LINKS.summerPro}>
+          <Link href={INTERNAL_LINKS.summerPro} target="_blank">
             <Text
               as="p"
               variant="p2semi"

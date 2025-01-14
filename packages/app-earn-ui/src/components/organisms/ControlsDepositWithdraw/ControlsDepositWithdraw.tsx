@@ -1,4 +1,3 @@
-import { InputWithDropdown, ProjectedEarnings, SkeletonLine } from '@summerfi/app-earn-ui'
 import {
   type DropdownOption,
   type DropdownRawOption,
@@ -9,40 +8,46 @@ import {
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import type BigNumber from 'bignumber.js'
 
+import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
+import { InputWithDropdown } from '@/components/molecules/InputWithDropdown/InputWithDropdown'
+import { ProjectedEarnings } from '@/components/molecules/ProjectedEarnings/ProjectedEarnings'
+
 type ControlsDepositWithdrawProps = {
   amountDisplay: string
   amountDisplayUSD: string
-  handleAmountChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  handleDropdownChange: (option: DropdownRawOption) => void
   options: DropdownOption[]
   dropdownValue: DropdownOption
-  onFocus: () => void
-  onBlur: () => void
   tokenSymbol: string
   tokenBalance: BigNumber | undefined
   tokenBalanceLoading: boolean
-  manualSetAmount: (amountParsed: string | undefined) => void
   vault: SDKVaultType | SDKVaultishType
   estimatedEarnings: string
   isLoadingForecast: boolean
+  handleAmountChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  handleDropdownChange: (option: DropdownRawOption) => void
+  onFocus: () => void
+  onBlur: () => void
+  manualSetAmount: (amountParsed: string | undefined) => void
+  ownerView?: boolean
 }
 
 export const ControlsDepositWithdraw = ({
   amountDisplay,
   amountDisplayUSD,
-  handleAmountChange,
-  handleDropdownChange,
   options,
   dropdownValue,
-  onFocus,
-  onBlur,
   tokenSymbol,
   tokenBalance,
   tokenBalanceLoading,
-  manualSetAmount,
   vault,
   estimatedEarnings,
   isLoadingForecast,
+  handleAmountChange,
+  handleDropdownChange,
+  onFocus,
+  onBlur,
+  manualSetAmount,
+  ownerView,
 }: ControlsDepositWithdrawProps) => {
   return (
     <>
@@ -55,6 +60,7 @@ export const ControlsDepositWithdraw = ({
         dropdownValue={dropdownValue}
         onFocus={onFocus}
         onBlur={onBlur}
+        disabled={!ownerView}
         selectAllOnFocus
         heading={{
           label: 'Balance',
@@ -65,18 +71,22 @@ export const ControlsDepositWithdraw = ({
           ) : (
             '-'
           ),
-          action: () => {
-            if (tokenBalance) {
-              manualSetAmount(tokenBalance.toString())
-            }
-          },
+          action: ownerView
+            ? () => {
+                if (tokenBalance) {
+                  manualSetAmount(tokenBalance.toString())
+                }
+              }
+            : undefined,
         }}
       />
-      <ProjectedEarnings
-        earnings={estimatedEarnings}
-        symbol={vault.inputToken.symbol as TokenSymbolsList}
-        isLoading={isLoadingForecast}
-      />
+      {ownerView && (
+        <ProjectedEarnings
+          earnings={estimatedEarnings}
+          symbol={vault.inputToken.symbol as TokenSymbolsList}
+          isLoading={isLoadingForecast}
+        />
+      )}
     </>
   )
 }

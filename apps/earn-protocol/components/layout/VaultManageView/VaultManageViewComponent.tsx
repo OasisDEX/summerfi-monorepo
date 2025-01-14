@@ -1,13 +1,17 @@
 import { useMemo, useState } from 'react'
 import { useUser } from '@account-kit/react'
 import {
+  ControlsDepositWithdraw,
   Expander,
+  NonOwnerPositionBanner,
   Sidebar,
   SidebarFootnote,
   sidebarFootnote,
   SidebarMobileHeader,
   type SidebarProps,
   Text,
+  useAmount,
+  useAmountWithSwap,
   useForecast,
   useMobileCheck,
   useTokenSelector,
@@ -28,18 +32,18 @@ import BigNumber from 'bignumber.js'
 
 import {
   ControlsApproval,
-  ControlsDepositWithdraw,
   OrderInfoDeposit,
   OrderInfoWithdraw,
 } from '@/components/molecules/SidebarElements'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { PositionPerformanceChart } from '@/components/organisms/Charts/PositionPerformanceChart'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
+import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
-import { useAmount } from '@/hooks/use-amount'
-import { useAmountWithSwap } from '@/hooks/use-amount-with-swap'
+import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
+import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useClient } from '@/hooks/use-client'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useTokenBalance } from '@/hooks/use-token-balance'
@@ -63,6 +67,7 @@ export const VaultManageViewComponent = ({
   viewWalletAddress: string
 }) => {
   const user = useUser()
+  const ownerView = viewWalletAddress.toLowerCase() === user?.address.toLowerCase()
   const { publicClient } = useClient()
 
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
@@ -94,6 +99,10 @@ export const VaultManageViewComponent = ({
     onFocus,
   } = useAmount({ vault, selectedToken })
 
+  const positionAmount = useMemo(() => {
+    return new BigNumber(position.amount.amount)
+  }, [position])
+
   const {
     sidebar,
     txHashes,
@@ -118,27 +127,43 @@ export const VaultManageViewComponent = ({
     tokenBalance: selectedTokenBalance,
     tokenBalanceLoading: selectedTokenBalanceLoading,
     flow: 'manage',
+    ownerView,
+    positionAmount,
   })
+
+  const sdk = useAppSDK()
+  const [slippageConfig] = useSlippageConfig()
 
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
-  const ownerView = viewWalletAddress.toLowerCase() === user?.address.toLowerCase()
+  const { amountDisplayUSDWithSwap, fromTokenSymbol, rawToTokenAmount } = useAmountWithSwap({
+    vault,
+    vaultChainId,
+    amountDisplay,
+    amountDisplayUSD,
+    transactionType,
+    selectedTokenOption,
+    sdk,
+    slippageConfig,
+  })
 
-  const positionAmount = useMemo(() => {
-    return new BigNumber(position.amount.amount)
-  }, [position])
+  const resolvedAmountParsed = getResolvedForecastAmountParsed({
+    amountParsed,
+    rawToTokenAmount,
+  })
 
   const { isLoadingForecast, oneYearEarningsForecast } = useForecast({
     fleetAddress: vault.id,
     chainId: vaultChainId,
     amount: {
-      [TransactionAction.DEPOSIT]: amountParsed.plus(positionAmount),
-      [TransactionAction.WITHDRAW]: positionAmount.minus(amountParsed).lt(zero)
+      [TransactionAction.DEPOSIT]: resolvedAmountParsed.plus(positionAmount),
+      [TransactionAction.WITHDRAW]: positionAmount.minus(resolvedAmountParsed).lt(zero)
         ? zero
-        : positionAmount.minus(amountParsed),
+        : positionAmount.minus(resolvedAmountParsed),
     }[transactionType].toString(),
+    disabled: !ownerView,
   })
 
   const estimatedEarnings = useMemo(() => {
@@ -146,15 +171,6 @@ export const VaultManageViewComponent = ({
 
     return oneYearEarningsForecast
   }, [oneYearEarningsForecast])
-
-  const { amountDisplayUSDWithSwap, fromTokenSymbol } = useAmountWithSwap({
-    vault,
-    vaultChainId,
-    amountDisplay,
-    amountDisplayUSD,
-    transactionType,
-    selectedTokenOption,
-  })
 
   const { transactionFee, loading: transactionFeeLoading } = useGasEstimation({
     chainId: vaultChainId,
@@ -203,6 +219,7 @@ export const VaultManageViewComponent = ({
       dropdownValue={selectedTokenOption}
       onFocus={onFocus}
       onBlur={onBlur}
+      ownerView={ownerView}
       tokenSymbol={
         {
           [TransactionAction.DEPOSIT]: selectedTokenOption.value,
@@ -273,70 +290,73 @@ export const VaultManageViewComponent = ({
   const rebalancesList = `rebalances` in vault ? vault.rebalances : []
 
   return (
-    <VaultManageGrid
-      vault={vault}
-      vaults={vaults}
-      position={position}
-      viewWalletAddress={viewWalletAddress}
-      connectedWalletAddress={user?.address}
-      detailsContent={
-        <div className={vaultManageViewStyles.leftContentWrapper}>
-          <Expander
-            title={
-              <Text as="p" variant="p1semi">
-                Performance
-              </Text>
-            }
-            defaultExpanded
-          >
-            <PositionPerformanceChart
-              chartData={vault.customFields?.performanceChartData}
-              inputToken={vault.inputToken.symbol}
-            />
-          </Expander>
-          <Expander
-            title={
-              <Text as="p" variant="p1semi">
-                Vault exposure
-              </Text>
-            }
-            defaultExpanded
-          >
-            <VaultExposure vault={vault as SDKVaultType} />
-          </Expander>
-          <Expander
-            title={
-              <Text as="p" variant="p1semi">
-                Rebalancing activity
-              </Text>
-            }
-            defaultExpanded
-          >
-            <RebalancingActivity
-              rebalancesList={rebalancesList}
-              vaultId={vault.id}
-              totalRebalances={Number(vault.rebalanceCount)}
-            />
-          </Expander>
-          <Expander
-            title={
-              <Text as="p" variant="p1semi">
-                User activity
-              </Text>
-            }
-            defaultExpanded
-          >
-            <UserActivity
-              userActivity={userActivity}
-              topDepositors={topDepositors}
-              vaultId={vault.id}
-              page="manage"
-            />
-          </Expander>
-        </div>
-      }
-      sidebarContent={<Sidebar {...sidebarProps} />}
-      isMobile={isMobile}
-    />
+    <>
+      <NonOwnerPositionBanner isOwner={ownerView} />
+      <VaultManageGrid
+        vault={vault}
+        vaults={vaults}
+        position={position}
+        viewWalletAddress={viewWalletAddress}
+        connectedWalletAddress={user?.address}
+        detailsContent={
+          <div className={vaultManageViewStyles.leftContentWrapper}>
+            <Expander
+              title={
+                <Text as="p" variant="p1semi">
+                  Performance
+                </Text>
+              }
+              defaultExpanded
+            >
+              <PositionPerformanceChart
+                chartData={vault.customFields?.performanceChartData}
+                inputToken={vault.inputToken.symbol}
+              />
+            </Expander>
+            <Expander
+              title={
+                <Text as="p" variant="p1semi">
+                  Vault exposure
+                </Text>
+              }
+              defaultExpanded
+            >
+              <VaultExposure vault={vault as SDKVaultType} />
+            </Expander>
+            <Expander
+              title={
+                <Text as="p" variant="p1semi">
+                  Rebalancing activity
+                </Text>
+              }
+              defaultExpanded
+            >
+              <RebalancingActivity
+                rebalancesList={rebalancesList}
+                vaultId={vault.id}
+                totalRebalances={Number(vault.rebalanceCount)}
+              />
+            </Expander>
+            <Expander
+              title={
+                <Text as="p" variant="p1semi">
+                  User activity
+                </Text>
+              }
+              defaultExpanded
+            >
+              <UserActivity
+                userActivity={userActivity}
+                topDepositors={topDepositors}
+                vaultId={vault.id}
+                page="manage"
+              />
+            </Expander>
+          </div>
+        }
+        sidebarContent={<Sidebar {...sidebarProps} />}
+        isMobile={isMobile}
+      />
+    </>
   )
 }

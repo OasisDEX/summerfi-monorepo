@@ -1,11 +1,14 @@
 import { useEffect, useMemo, useState } from 'react'
 import {
+  ControlsDepositWithdraw,
   Expander,
   Sidebar,
   SidebarFootnote,
   sidebarFootnote,
   SidebarMobileHeader,
   Text,
+  useAmount,
+  useAmountWithSwap,
   useForecast,
   useLocalStorageOnce,
   useMobileCheck,
@@ -26,20 +29,17 @@ import { TransactionType } from '@summerfi/sdk-common'
 import { detailsLinks } from '@/components/layout/VaultOpenView/mocks'
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
-import {
-  ControlsApproval,
-  ControlsDepositWithdraw,
-  OrderInfoDeposit,
-} from '@/components/molecules/SidebarElements'
+import { ControlsApproval, OrderInfoDeposit } from '@/components/molecules/SidebarElements'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
+import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
-import { useAmount } from '@/hooks/use-amount'
-import { useAmountWithSwap } from '@/hooks/use-amount-with-swap'
+import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
+import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useClient } from '@/hooks/use-client'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { usePosition } from '@/hooks/use-position'
@@ -71,6 +71,9 @@ export const VaultOpenViewComponent = ({
   const { isMobile } = useMobileCheck(deviceType)
 
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
+
+  const [slippageConfig] = useSlippageConfig()
+  const sdk = useAppSDK()
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
@@ -126,6 +129,7 @@ export const VaultOpenViewComponent = ({
     tokenBalance: selectedTokenBalance,
     tokenBalanceLoading: selectedTokenBalanceLoading,
     flow: 'open',
+    ownerView: true,
   })
 
   const position = usePosition({
@@ -133,10 +137,26 @@ export const VaultOpenViewComponent = ({
     vaultId: vault.id,
   })
 
+  const { amountDisplayUSDWithSwap, fromTokenSymbol, rawToTokenAmount } = useAmountWithSwap({
+    vault,
+    vaultChainId,
+    amountDisplay,
+    amountDisplayUSD,
+    transactionType: TransactionAction.DEPOSIT,
+    selectedTokenOption,
+    sdk,
+    slippageConfig,
+  })
+
+  const resolvedAmountParsed = getResolvedForecastAmountParsed({
+    amountParsed,
+    rawToTokenAmount,
+  })
+
   const { forecast, isLoadingForecast, oneYearEarningsForecast } = useForecast({
     fleetAddress: vault.id,
     chainId: vaultChainId,
-    amount: amountParsed.toString(),
+    amount: resolvedAmountParsed.toString(),
   })
 
   useEffect(() => {
@@ -155,15 +175,6 @@ export const VaultOpenViewComponent = ({
 
     return oneYearEarningsForecast
   }, [oneYearEarningsForecast])
-
-  const { amountDisplayUSDWithSwap, fromTokenSymbol } = useAmountWithSwap({
-    vault,
-    vaultChainId,
-    amountDisplay,
-    amountDisplayUSD,
-    transactionType: TransactionAction.DEPOSIT,
-    selectedTokenOption,
-  })
 
   const { transactionFee, loading: transactionFeeLoading } = useGasEstimation({
     chainId: vaultChainId,
@@ -211,6 +222,7 @@ export const VaultOpenViewComponent = ({
       vault={vault}
       estimatedEarnings={estimatedEarnings}
       isLoadingForecast={isLoadingForecast}
+      ownerView
     />
   )
 

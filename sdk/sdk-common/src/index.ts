@@ -8,3 +8,6 @@ export * from './simulation'
 export * from './swap'
 export * from './tokens'
 export * from './user'
+
+export type { IToken as ITokenStanalone } from './common/interfaces/IToken'
+export type { QuoteData as QuoteDataStanalone } from './swap/implementation/QuoteData'

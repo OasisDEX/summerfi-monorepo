@@ -22,7 +22,7 @@ import {
   type IToken,
   TokenAmount,
   TransactionType,
-} from '@summerfi/sdk-client-react'
+} from '@summerfi/sdk-common'
 import type BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 import { useRouter } from 'next/navigation'
@@ -50,6 +50,18 @@ type UseTransactionParams = {
   tokenBalanceLoading: boolean
   publicClient?: ReturnType<typeof useClient>['publicClient']
   flow: 'open' | 'manage'
+  ownerView?: boolean
+  positionAmount?: BigNumber
+}
+
+const errorsMap = {
+  // our custom errors
+  insufficientBalanceError: 'Insufficient balance',
+  insufficientPositionBalanceError: 'Insufficient position balance',
+  transactionExecutionError: 'Error executing the transaction',
+  transactionRetrievalError: 'Error getting the transaction',
+  // mapped package rejections
+  TransactionExecutionError: 'Error executing the transaction',
 }
 
 export const useTransaction = ({
@@ -63,6 +75,8 @@ export const useTransaction = ({
   tokenBalance,
   tokenBalanceLoading,
   flow,
+  ownerView, // on non-owner views we dont want to make all of these calls
+  positionAmount,
 }: UseTransactionParams) => {
   const [slippageConfig] = useSlippageConfig()
   const { refresh: refreshView } = useRouter()
@@ -81,7 +95,8 @@ export const useTransaction = ({
   const [txHashes, setTxHashes] = useState<{ type: TransactionType; hash: string }[]>([])
   const [txStatus, setTxStatus] = useState<EarnTransactionViewStates>('idle')
   const [transactions, setTransactions] = useState<ExtendedTransactionInfo[]>()
-  const [sidebarError, setSidebarError] = useState<string>()
+  const [sidebarTransactionError, setSidebarTransactionError] = useState<string>()
+  const [sidebarValidationError, setSidebarValidationError] = useState<string>()
 
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
 
@@ -119,10 +134,12 @@ export const useTransaction = ({
       // eslint-disable-next-line no-console
       console.error('Error executing the transaction:', err)
 
-      if (err instanceof Error) {
-        setSidebarError(err.message)
+      if (err instanceof Error && 'shortMessage' in err && typeof err.shortMessage === 'string') {
+        setSidebarTransactionError(err.shortMessage)
+      } else if (err instanceof Error && err.name in errorsMap) {
+        setSidebarTransactionError(errorsMap[err.name as keyof typeof errorsMap])
       } else {
-        setSidebarError('Error executing the transaction')
+        setSidebarTransactionError(errorsMap.TransactionExecutionError)
       }
     },
   })
@@ -201,9 +218,10 @@ export const useTransaction = ({
     // resets everything
     backToInit()
     manualSetAmount(undefined)
-    setSidebarError(undefined)
+    setSidebarTransactionError(undefined)
+    setSidebarValidationError(undefined)
     setTxHashes([])
-  }, [backToInit, manualSetAmount, setSidebarError, setTxHashes])
+  }, [backToInit, manualSetAmount, setSidebarTransactionError, setTxHashes])
 
   const removeTxHash = useCallback(
     (txHash: string) => {
@@ -213,7 +231,7 @@ export const useTransaction = ({
   )
 
   const getTransactionsList = useCallback(async () => {
-    if (token && vaultToken && amount && user) {
+    if (ownerView && token && vaultToken && amount && user) {
       const fromToken = {
         [TransactionAction.DEPOSIT]: token,
         [TransactionAction.WITHDRAW]: vaultToken,
@@ -249,13 +267,14 @@ export const useTransaction = ({
         setTxStatus('txPrepared')
       } catch (err) {
         if (err instanceof Error) {
-          setSidebarError(err.message)
+          setSidebarTransactionError(err.message)
         } else {
-          setSidebarError('Error getting the transaction')
+          setSidebarTransactionError(errorsMap.transactionRetrievalError)
         }
       }
     }
   }, [
+    ownerView,
     token,
     vaultToken,
     amount,
@@ -267,7 +286,7 @@ export const useTransaction = ({
     vault.id,
     vaultChainId,
     getWithdrawTX,
-    setSidebarError,
+    setSidebarTransactionError,
     slippageConfig.slippage,
   ])
 
@@ -279,6 +298,14 @@ export const useTransaction = ({
         action: openAuthModal,
         disabled: isAuthModalOpen,
         loading: isAuthModalOpen,
+      }
+    }
+    if (!ownerView) {
+      // only if logged in (check above)
+      return {
+        label: 'Preview',
+        action: () => null,
+        disabled: true,
       }
     }
     if (!isProperChainSelected || isSettingChain) {
@@ -299,6 +326,15 @@ export const useTransaction = ({
         label: 'Add funds',
         action: () => setIsTransakOpen(true),
         disabled: false,
+      }
+    }
+    // if there are transactions pending
+    if (tokenBalance && amount && amount.isGreaterThan(tokenBalance)) {
+      return {
+        label: capitalize(transactionType),
+        action: () => null,
+        disabled: true,
+        loading: false,
       }
     }
 
@@ -359,6 +395,7 @@ export const useTransaction = ({
       action: getTransactionsList,
     }
   }, [
+    ownerView,
     token,
     flow,
     tokenBalanceLoading,
@@ -433,12 +470,42 @@ export const useTransaction = ({
     setTransactions,
   ])
 
+  useEffect(() => {
+    setSidebarTransactionError(undefined)
+    if (transactionType === TransactionAction.DEPOSIT) {
+      if (amount && tokenBalance && amount.isGreaterThan(tokenBalance) && !sidebarValidationError) {
+        setSidebarValidationError(errorsMap.insufficientBalanceError)
+      }
+      if (amount && tokenBalance && !amount.isGreaterThan(tokenBalance) && sidebarValidationError) {
+        setSidebarValidationError(undefined)
+      }
+    }
+    if (transactionType === TransactionAction.WITHDRAW) {
+      if (
+        amount &&
+        positionAmount &&
+        amount.isGreaterThan(positionAmount) &&
+        !sidebarValidationError
+      ) {
+        setSidebarValidationError(errorsMap.insufficientPositionBalanceError)
+      }
+      if (
+        amount &&
+        positionAmount &&
+        !amount.isGreaterThan(positionAmount) &&
+        sidebarValidationError
+      ) {
+        setSidebarValidationError(undefined)
+      }
+    }
+  }, [amount, sidebarValidationError, tokenBalance, transactionType, positionAmount])
+
   return {
     manualSetAmount,
     sidebar: {
       title: sidebarTitle,
       primaryButton: sidebarPrimaryButton,
-      error: sidebarError,
+      error: sidebarTransactionError ?? sidebarValidationError,
     },
     nextTransaction,
     txHashes,

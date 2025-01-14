@@ -5,6 +5,8 @@ import {
   DataBlock,
   SimpleGrid,
   Text,
+  useAmount,
+  useAmountWithSwap,
   useMobileCheck,
   useTokenSelector,
   VaultCard,
@@ -16,6 +18,7 @@ import {
   type IconNamesList,
   type SDKNetwork,
   type SDKVaultsListType,
+  TransactionAction,
 } from '@summerfi/app-types'
 import {
   formatCryptoBalance,
@@ -29,6 +32,8 @@ import { SUMR_CAP } from '@/constants/earn-protocol'
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useLocalConfig } from '@/contexts/LocalConfigContext/LocalConfigContext'
+import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
+import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useTokenBalances } from '@/hooks/use-tokens-balances'
 
 type VaultsListViewProps = {
@@ -52,7 +57,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
   const [localVaultNetwork, setLocalVaultNetwork] =
     useState<VaultsListViewProps['selectedNetwork']>(selectedNetwork)
   const {
-    state: { sumrNetApyConfig },
+    state: { sumrNetApyConfig, slippageConfig },
   } = useLocalConfig()
   const networkFilteredVaults = useMemo(
     () =>
@@ -61,7 +66,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
         : vaultsList,
     [localVaultNetwork, vaultsList],
   )
-
+  const sdk = useAppSDK()
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   const [vaultId, setVaultId] = useState<string | undefined>(networkFilteredVaults[0].id)
@@ -161,6 +166,32 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
 
   const formattedProtocolsSupportedCount = formattedProtocolsSupportedList.size
 
+  const {
+    amountParsed,
+    manualSetAmount,
+    amountDisplay,
+    amountDisplayUSD,
+    handleAmountChange,
+    onBlur,
+    onFocus,
+  } = useAmount({ vault: vaultData, selectedToken: tokenBalances.token })
+
+  const { amountDisplayUSDWithSwap, rawToTokenAmount } = useAmountWithSwap({
+    vault: vaultData,
+    vaultChainId: subgraphNetworkToSDKId(vaultData.protocol.network),
+    amountDisplay,
+    amountDisplayUSD,
+    transactionType: TransactionAction.DEPOSIT,
+    selectedTokenOption,
+    sdk,
+    slippageConfig,
+  })
+
+  const resolvedForecastAmount = getResolvedForecastAmountParsed({
+    amountParsed,
+    rawToTokenAmount,
+  })
+
   return (
     <VaultGrid
       isMobile={isMobile}
@@ -224,12 +255,21 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
         <VaultSimulationForm
           vaultData={vaultData}
           isMobile={isMobile}
-          tokenSymbol={selectedTokenOption.value}
           tokenBalance={tokenBalances.tokenBalance}
           isTokenBalanceLoading={tokenBalances.tokenBalanceLoading}
           selectedTokenOption={selectedTokenOption}
           handleTokenSelectionChange={handleTokenSelectionChange}
           tokenOptions={tokenOptions}
+          handleAmountChange={handleAmountChange}
+          inputProps={{
+            onFocus,
+            onBlur,
+            amountDisplay,
+            amountDisplayUSDWithSwap,
+            manualSetAmount,
+          }}
+          resolvedForecastAmount={resolvedForecastAmount}
+          amountParsed={amountParsed}
         />
       }
     />

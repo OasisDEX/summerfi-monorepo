@@ -3,7 +3,7 @@
 import { type FC, type ReactNode } from 'react'
 import { type SDKVaultishType, type SDKVaultsListType } from '@summerfi/app-types'
 import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
-import { type IArmadaPosition } from '@summerfi/armada-protocol-common'
+import { type IArmadaPositionStandalone as IArmadaPosition } from '@summerfi/armada-protocol-common'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 

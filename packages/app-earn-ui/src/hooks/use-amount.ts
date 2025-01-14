@@ -1,23 +1,41 @@
+'use client'
 import { type ChangeEvent, useEffect, useMemo, useState } from 'react'
-import { type SDKVaultishType } from '@summerfi/app-types'
+import { type IToken, type SDKVaultishType } from '@summerfi/app-types'
 import { formatFiatBalance } from '@summerfi/app-utils'
-import type { IToken } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 
 type UseAmountProps = {
   vault: SDKVaultishType
   selectedToken: IToken | undefined
+  initialAmount?: string
 }
 
-export const useAmount = ({ vault, selectedToken }: UseAmountProps) => {
+/**
+ * Hook for managing amount input with formatting and validation for vault interactions.
+ *
+ * @param vault - Vault instance containing token decimals and price information
+ * @param selectedToken - Token selected for the transaction
+ * @param initialAmount - Optional initial amount to populate the input
+ *
+ * @returns {Object} Amount management utilities:
+ *   - amountRaw: String version of the amount as entered
+ *   - amountParsed: BigNumber version of the amount
+ *   - amountDisplay: Formatted string version for display (handles decimals)
+ *   - amountDisplayUSD: USD value of the amount with $ prefix
+ *   - handleAmountChange: Event handler for input changes with validation
+ *   - manualSetAmount: Function to programmatically set the amount
+ *   - onFocus: Handler to enable edit mode
+ *   - onBlur: Handler to disable edit mode and format amount
+ */
+export const useAmount = ({ vault, selectedToken, initialAmount }: UseAmountProps) => {
   const vaultTokenDecimals = vault.inputToken.decimals
 
   const [editMode, setEditMode] = useState(false)
-  const [amountRaw, setAmountRaw] = useState<string>()
+  const [amountRaw, setAmountRaw] = useState<string | undefined>(initialAmount)
 
   const amountDisplay = useMemo(() => {
     if (!amountRaw && amountRaw !== '0') {
-      return '0.00'
+      return '0'
     }
 
     if (new BigNumber(amountRaw).isNaN() || editMode) {
@@ -62,6 +80,13 @@ export const useAmount = ({ vault, selectedToken }: UseAmountProps) => {
 
     if (!value) {
       setAmountRaw(undefined)
+
+      return
+    }
+
+    // replace 02 with 2 etc.
+    if (/^0[0-9]+$/u.test(value)) {
+      setAmountRaw(parseInt(value, 10).toString())
 
       return
     }
