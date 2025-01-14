@@ -14,13 +14,13 @@
 
 .emblaTwoSlides {
   @media (min-width: 900px) {
-    --slide-size: 50%;
+    --slide-size: calc(50% - var(--general-space-8));
   }
 }
 
 .emblaThreeSlides {
   @media (min-width: 900px) {
-    --slide-size: 33.3%;
+    --slide-size: calc(33.3% - var(--general-space-12));
   }
 }
 
@@ -35,7 +35,13 @@
   transform: translate3d(0, 0, 0);
   flex: 0 0 var(--slide-size);
   min-width: 0;
+  margin-right: var(--general-space-16);
 }
+
+.emblaSlide:last-child {
+  margin-right: 0;
+}
+
 .emblaSlideNumber {
   display: flex;
   align-items: center;

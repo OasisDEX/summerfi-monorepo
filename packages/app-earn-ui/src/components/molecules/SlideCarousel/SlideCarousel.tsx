@@ -86,7 +86,10 @@ export const SlideCarousel: FC<PropType> = ({
       {buttonPosition === SlideCarouselButtonPosition.TOP && (
         <div className={classNames.emblaControls}>
           {title}
-          <div className={classNames.emblaButtons}>
+          <div
+            className={classNames.emblaButtons}
+            style={{ display: slides.length > 2 ? 'grid' : 'none' }}
+          >
             <SlideCarouselButton
               onClick={onPrevButtonClick}
               disabled={prevBtnDisabled}
