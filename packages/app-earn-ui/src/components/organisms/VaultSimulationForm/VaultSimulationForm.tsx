@@ -113,6 +113,7 @@ export const VaultSimulationForm = ({
               vault={vaultData}
               estimatedEarnings={estimatedEarnings}
               isLoadingForecast={isLoadingForecast}
+              ownerView
             />
           ),
           customHeader:

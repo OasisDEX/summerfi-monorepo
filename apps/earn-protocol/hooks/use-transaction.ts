@@ -22,7 +22,7 @@ import {
   type IToken,
   TokenAmount,
   TransactionType,
-} from '@summerfi/sdk-client-react'
+} from '@summerfi/sdk-common'
 import type BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 import { useRouter } from 'next/navigation'
