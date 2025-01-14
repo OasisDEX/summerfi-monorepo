@@ -1,5 +1,12 @@
-import { GlobalStyles } from '@summerfi/app-earn-ui'
+import {
+  GlobalStyles,
+  LocalConfigContextProvider,
+  slippageConfigCookieName,
+  sumrNetApyConfigCookieName,
+} from '@summerfi/app-earn-ui'
+import { getServerSideCookies, safeParseJson } from '@summerfi/app-utils'
 import type { Metadata } from 'next'
+import { cookies } from 'next/headers'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
 
@@ -15,6 +22,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const locale = await getLocale()
   const messages = await getMessages()
 
+  const cookieRaw = await cookies()
+  const cookie = cookieRaw.toString()
+
+  const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
+  const slippageConfig = safeParseJson(getServerSideCookies(slippageConfigCookieName, cookie))
+
   return (
     <html lang={locale}>
       <head>
@@ -22,7 +35,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body className={` ${fontInter.variable}`}>
         <NextIntlClientProvider messages={messages}>
-          <LandingMasterPage>{children}</LandingMasterPage>
+          <LocalConfigContextProvider value={{ sumrNetApyConfig, slippageConfig }}>
+            <LandingMasterPage>{children}</LandingMasterPage>
+          </LocalConfigContextProvider>
         </NextIntlClientProvider>
         <div id="portal" style={{ position: 'absolute' }} />
       </body>

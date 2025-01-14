@@ -61,4 +61,7 @@ export { setCookie, getCookie } from './helpers/cookies'
 export { verifyAccessToken } from './helpers/verify-access-token'
 export { getRandomString } from './helpers/get-random-string'
 
+export { safeParseJson } from './helpers/safe-parse-json'
+export { getServerSideCookies } from './helpers/get-server-side-cookies'
+
 export { ADDRESS_ZERO } from './address-zero'

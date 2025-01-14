@@ -1,3 +1,8 @@
+/**
+ * Safely parses a JSON string, returning an empty object if parsing fails
+ * @param json - The JSON string to parse
+ * @returns The parsed JSON object or an empty object if parsing fails
+ */
 export const safeParseJson = (json: string) => {
   if (!json) {
     return {}

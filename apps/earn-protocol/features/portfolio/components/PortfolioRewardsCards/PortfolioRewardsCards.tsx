@@ -1,6 +1,12 @@
 'use client'
 import { type FC } from 'react'
-import { Button, DataModule, Text } from '@summerfi/app-earn-ui'
+import {
+  Button,
+  DataModule,
+  RAYS_TO_SUMR_CONVERSION_RATE,
+  SUMR_CAP,
+  Text,
+} from '@summerfi/app-earn-ui'
 import {
   ADDRESS_ZERO,
   formatCryptoBalance,
@@ -10,7 +16,6 @@ import {
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
-import { RAYS_TO_SUMR_CONVERSION_RATE, SUMR_CAP } from '@/constants/earn-protocol'
 import { sumrDelegates } from '@/features/claim-and-delegate/consts'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
