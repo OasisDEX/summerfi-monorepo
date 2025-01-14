@@ -1,13 +1,12 @@
 'use client'
 import { useEffect } from 'react'
-import { getCookie, setCookie } from '@summerfi/app-utils'
-
-import { sumrNetApyConfigCookieName } from '@/contexts/LocalConfigContext/constants'
 import {
   LocalConfigDispatchActions,
   type SumrNetApyConfig,
-} from '@/contexts/LocalConfigContext/local-config-reducer'
-import { useLocalConfig } from '@/contexts/LocalConfigContext/LocalConfigContext'
+  sumrNetApyConfigCookieName,
+  useLocalConfig,
+} from '@summerfi/app-earn-ui'
+import { getCookie, setCookie } from '@summerfi/app-utils'
 
 /**
  * Custom hook to manage SUMR Net APY configuration.

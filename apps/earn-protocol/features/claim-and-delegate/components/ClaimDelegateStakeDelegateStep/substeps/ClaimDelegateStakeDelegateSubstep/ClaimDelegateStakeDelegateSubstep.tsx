@@ -1,11 +1,18 @@
 import type { Dispatch, FC } from 'react'
-import { Button, Card, DataBlock, Icon, Text, WithArrow } from '@summerfi/app-earn-ui'
+import {
+  Button,
+  Card,
+  DataBlock,
+  Icon,
+  SUMR_CAP,
+  Text,
+  useLocalConfig,
+  WithArrow,
+} from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
-import { SUMR_CAP } from '@/constants/earn-protocol'
-import { useLocalConfig } from '@/contexts/LocalConfigContext/LocalConfigContext'
 import { ClaimDelegateCard } from '@/features/claim-and-delegate/components/ClaimDelegateCard/ClaimDelegateCard'
 import { sumrDelegates } from '@/features/claim-and-delegate/consts'
 import {

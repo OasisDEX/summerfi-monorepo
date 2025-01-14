@@ -1,13 +1,12 @@
 'use client'
 import { useEffect } from 'react'
-import { getCookie, setCookie } from '@summerfi/app-utils'
-
-import { slippageConfigCookieName } from '@/contexts/LocalConfigContext/constants'
 import {
   LocalConfigDispatchActions,
   type SlippageConfig,
-} from '@/contexts/LocalConfigContext/local-config-reducer'
-import { useLocalConfig } from '@/contexts/LocalConfigContext/LocalConfigContext'
+  slippageConfigCookieName,
+  useLocalConfig,
+} from '@summerfi/app-earn-ui'
+import { getCookie, setCookie } from '@summerfi/app-utils'
 
 /**
  * Custom hook to manage slippage configuration.

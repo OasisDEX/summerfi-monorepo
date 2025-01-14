@@ -1,9 +1,15 @@
 import type { Dispatch, FC } from 'react'
-import { Button, Card, Icon, Text, WithArrow } from '@summerfi/app-earn-ui'
+import {
+  Button,
+  Card,
+  Icon,
+  SUMR_CAP,
+  Text,
+  useLocalConfig,
+  WithArrow,
+} from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 
-import { SUMR_CAP } from '@/constants/earn-protocol'
-import { useLocalConfig } from '@/contexts/LocalConfigContext/LocalConfigContext'
 import {
   type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,

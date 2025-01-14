@@ -3,14 +3,13 @@
 import { type Dispatch, type FormEvent, type SetStateAction, useState } from 'react'
 import { Button, Icon, Input, SkeletonLine, Text } from '@summerfi/app-earn-ui'
 import { sdkSupportedChains } from '@summerfi/app-types'
-import { isValidUrl } from '@summerfi/app-utils'
+import { isValidUrl, safeParseJson } from '@summerfi/app-utils'
 import { type ChainId } from '@summerfi/sdk-common'
 
 import { ModalButton, type ModalButtonProps } from '@/components/molecules/Modal/ModalButton'
 import { forksCookieName } from '@/constants/forks-cookie-name'
 import { getCookies } from '@/constants/get-cookies'
 import { networksById } from '@/constants/networks-list'
-import { safeParseJson } from '@/constants/safe-parse-json'
 
 const setFork =
   ({

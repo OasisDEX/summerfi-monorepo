@@ -1,11 +1,17 @@
-import { Card, DataBlock, getPositionValues, PortfolioPosition, Text } from '@summerfi/app-earn-ui'
+import {
+  Card,
+  DataBlock,
+  getPositionValues,
+  PortfolioPosition,
+  SUMR_CAP,
+  Text,
+  useLocalConfig,
+} from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType, type TokenSymbolsList } from '@summerfi/app-types'
 import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 
 import { type PortfolioPositionsList } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
 import { PositionHistoricalChart } from '@/components/organisms/Charts/PositionHistoricalChart'
-import { SUMR_CAP } from '@/constants/earn-protocol'
-import { useLocalConfig } from '@/contexts/LocalConfigContext/LocalConfigContext'
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
 
 // const dummyNewsAndUpdatesItems = [

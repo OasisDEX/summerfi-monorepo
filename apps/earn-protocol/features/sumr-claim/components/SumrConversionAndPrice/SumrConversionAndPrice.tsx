@@ -1,10 +1,7 @@
 'use client'
 import { type FC } from 'react'
-import { Card, Text } from '@summerfi/app-earn-ui'
+import { Card, SUMR_CAP, Text, useLocalConfig } from '@summerfi/app-earn-ui'
 import { formatFiatBalance } from '@summerfi/app-utils'
-
-import { SUMR_CAP } from '@/constants/earn-protocol'
-import { useLocalConfig } from '@/contexts/LocalConfigContext/LocalConfigContext'
 
 import classNames from './SumrConversionAndPrice.module.scss'
 
