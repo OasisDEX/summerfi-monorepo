@@ -24,6 +24,9 @@ import {
   Price,
   TokenAmount,
   TransactionInfo,
+  TransactionType,
+  type ChainInfo,
+  type ClaimTransactionInfo,
   type ExtendedTransactionInfo,
   type HexData,
   type IPercentage,
@@ -358,6 +361,52 @@ export class ArmadaManager implements IArmadaManager {
     params: Parameters<IArmadaManagerClaims['getClaimGovernanceRewardsTx']>[0],
   ): ReturnType<IArmadaManagerClaims['getClaimGovernanceRewardsTx']> {
     return this.claims.getClaimGovernanceRewardsTx(params)
+  }
+
+  async getClaims(params: { user: IUser; chainInfo: ChainInfo }): Promise<ClaimTransactionInfo> {
+    const summerTokenAddress = await getDeployedContractAddress({
+      chainInfo: params.chainInfo,
+      contractCategory: 'gov',
+      contractName: 'summerToken',
+    })
+
+    // call  summer token to get regovRewardsManagerAddress
+
+    const rewardToken = ''
+
+    const multicallArgs: HexData[] = []
+
+    const claimMerkleRewards = await this.claims.getClaimMerkleRewardsTx({ user: params.user })
+    multicallArgs.push(claimMerkleRewards.transaction.calldata)
+
+    const claimGovernanceRewards = await this.claims.getClaimGovernanceRewardsTx({
+      govRewardsManagerAddress,
+      rewardToken,
+    })
+
+    multicallArgs.push(claimGovernanceRewards.transaction.calldata)
+
+    const admiralsQuartersAddress = getDeployedContractAddress({
+      chainInfo: params.chainInfo,
+      contractCategory: 'core',
+      contractName: 'admiralsQuarters',
+    })
+
+    const multicallCalldata = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'multicall',
+      args: [multicallArgs],
+    })
+
+    return {
+      type: TransactionType.Claim,
+      description: 'Claiming all rewards',
+      transaction: {
+        target: admiralsQuartersAddress,
+        calldata: multicallCalldata,
+        value: '0',
+      },
+    }
   }
 
   /** KEEPERS TRANSACTIONS */

@@ -5,7 +5,11 @@ import {
   type ChainInfo,
   type IToken,
 } from '@summerfi/sdk-common/common'
-import { TransactionInfo, ExtendedTransactionInfo } from '@summerfi/sdk-common/orders'
+import {
+  TransactionInfo,
+  ExtendedTransactionInfo,
+  type ClaimTransactionInfo,
+} from '@summerfi/sdk-common/orders'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IArmadaVaultId } from './IArmadaVaultId'
 import { IArmadaVaultInfo } from './IArmadaVaultInfo'
@@ -19,12 +23,17 @@ import type {
   GetUserActivityQuery,
 } from '@summerfi/subgraph-manager-common'
 import type { IRebalanceData } from '@summerfi/contracts-provider-common'
+import type { IArmadaManagerClaims } from './IArmadaManagerClaims'
+import type { IArmadaManagerToken } from './IArmadaManagerToken'
 
 /**
  * @name IArmadaManager
  * @description Interface for the Armada Protocol Manager which handles generating transactions for a Fleet
  */
 export interface IArmadaManager {
+  claims: IArmadaManagerClaims
+  token: IArmadaManagerToken
+
   /** POSITIONS */
 
   /**
@@ -234,6 +243,8 @@ export interface IArmadaManager {
     toToken: IToken
     slippage: IPercentage
   }): Promise<ExtendedTransactionInfo[]>
+
+  getClaims(params: { user: IUser; chainInfo: ChainInfo }): Promise<ClaimTransactionInfo>
 
   /** KEEPERS TRANSACTIONS */
 
