@@ -18,8 +18,10 @@ const TransakTrigger = ({
   isOpen: boolean
   isDisabled?: boolean
 }) => (
-  <Button variant="primaryLarge" style={{ minWidth: '156px' }} disabled={isDisabled}>
-    Add funds
+  <Button variant="primaryMedium" style={{ minWidth: '130px' }} disabled={isDisabled}>
+    <Text as="span" variant="p3semi">
+      Add funds
+    </Text>
     <Icon
       iconName={isOpen ? 'chevron_up' : 'chevron_down'}
       style={{
