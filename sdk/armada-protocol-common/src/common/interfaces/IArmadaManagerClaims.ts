@@ -1,4 +1,4 @@
-import type { ClaimTransactionInfo, IUser } from '@summerfi/sdk-common'
+import type { ClaimTransactionInfo, IAddress, IChainInfo, IUser } from '@summerfi/sdk-common'
 
 /**
  * @name IArmadaManagerClaims
@@ -12,24 +12,61 @@ export interface IArmadaManagerClaims {
    * @returns Promise<boolean>
    * @throws Error
    */
-  eligibleForClaim: (params: { user: IUser }) => Promise<boolean>
+  canClaim: (params: { user: IUser }) => Promise<[bigint, boolean][]>
 
   /**
-   * @name claimTX
-   * @description Claims the rewards for a user from a vault
-   * @param params.index The index of a distribution
+   * @name hasClaimed
+   * @description Checks if a user has claimed
+   * @param params.user The user
+   * @returns Promise<boolean>
+   * @throws Error
+   */
+  hasClaimed: (params: { user: IUser }) => Promise<[bigint, boolean][]>
+
+  /**
+   * @name amountToClaim
+   * @description Returns the amount a user is eligible to claim
+   * @param params.user The user
+   * @returns Promise<number>
+   * @throws Error
+   */
+  amountToClaim: (params: { user: IUser }) => Promise<bigint>
+
+  /**
+   * @name getClaimMerkleRewardsTx
+   * @description Claims merkle rewards for a user
    * @param params.user The user
    * @returns Promise<TransactionInfoClaim>
    * @throws Error
    */
-  getClaimTX: (params: { index: string; user: IUser }) => Promise<ClaimTransactionInfo | null>
+  getClaimMerkleRewardsTx: (params: { user: IUser }) => Promise<ClaimTransactionInfo>
 
   /**
-   * @name claimAllTX
-   * @description Claims the rewards for a user from multiple vaults
-   * @param params.user The user
+   * @name getClaimGovernanceRewardsTx
+   * @description Claims governance rewards for a user
+   * @param params.rewardToken The reward token
    * @returns Promise<TransactionInfoClaim>
    * @throws Error
    */
-  getClaimAllTX: (params: { user: IUser }) => Promise<ClaimTransactionInfo>
+  getClaimGovernanceRewardsTx: (params: {
+    govRewardsManagerAddress: IAddress // z summertoken rewards manager
+    rewardToken: IAddress
+  }) => Promise<ClaimTransactionInfo>
+
+  /**
+   * @name getClaimFleetRewardsTx
+   * @description Claims fleet rewards for a user
+   * @param params.user The user
+   * @param params.chainInfo The chain info
+   * @param params.fleetCommandersAddresses The fleet commanders addresses
+   * @param params.rewardToken The reward token
+   * @returns Promise<TransactionInfoClaim>
+   * @throws Error
+   */
+  getClaimFleetRewardsTx: (params: {
+    user: IUser
+    chainInfo: IChainInfo
+    fleetCommandersAddresses: IAddress[]
+    rewardToken: IAddress
+  }) => Promise<ClaimTransactionInfo>
 }

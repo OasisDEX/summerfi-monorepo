@@ -11,6 +11,7 @@ import {
   createDepositTransaction,
   createWithdrawTransaction,
   type IArmadaManagerClaims,
+  type IArmadaManagerToken,
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
@@ -41,6 +42,7 @@ import type { ISwapManager } from '@summerfi/swap-common'
 import BigNumber from 'bignumber.js'
 import type { IOracleManager } from '@summerfi/oracle-common'
 import { ArmadaManagerClaims } from './ArmadaManagerClaims'
+import { ArmadaManagerToken } from './ArmadaManagerToken'
 
 /**
  * @name ArmadaManager
@@ -48,6 +50,7 @@ import { ArmadaManagerClaims } from './ArmadaManagerClaims'
  */
 export class ArmadaManager implements IArmadaManager {
   claims: IArmadaManagerClaims
+  token: IArmadaManagerToken
 
   private _configProvider: IConfigurationProvider
   private _allowanceManager: IAllowanceManager
@@ -76,6 +79,7 @@ export class ArmadaManager implements IArmadaManager {
     this._oracleManager = params.oracleManager
 
     this.claims = new ArmadaManagerClaims(params)
+    this.token = new ArmadaManagerToken(params)
   }
 
   /** POOLS */
@@ -335,25 +339,25 @@ export class ArmadaManager implements IArmadaManager {
 
   /** CLAIMS TRANSACTIONS */
 
-  /** @see IArmadaManagerClaims.eligibleForClaim */
+  /** @see IArmadaManagerClaims.canClaim */
   async eligibleForClaim(
-    params: Parameters<IArmadaManagerClaims['eligibleForClaim']>[0],
-  ): ReturnType<IArmadaManagerClaims['eligibleForClaim']> {
-    return this.claims.eligibleForClaim(params)
+    params: Parameters<IArmadaManagerClaims['canClaim']>[0],
+  ): ReturnType<IArmadaManagerClaims['canClaim']> {
+    return this.claims.canClaim(params)
   }
 
-  /** @see IArmadaManagerClaims.getClaimTX */
-  async getClaimTX(
-    params: Parameters<IArmadaManagerClaims['getClaimTX']>[0],
-  ): ReturnType<IArmadaManagerClaims['getClaimTX']> {
-    return this.claims.getClaimTX(params)
+  /** @see IArmadaManagerClaims.getClaimMerkleRewardsTx */
+  async getClaimMerkleRewardsTx(
+    params: Parameters<IArmadaManagerClaims['getClaimMerkleRewardsTx']>[0],
+  ): ReturnType<IArmadaManagerClaims['getClaimMerkleRewardsTx']> {
+    return this.claims.getClaimMerkleRewardsTx(params)
   }
 
-  /** @see IArmadaManagerClaims.getClaimAllTX */
-  async getClaimAllTX(
-    params: Parameters<IArmadaManagerClaims['getClaimAllTX']>[0],
-  ): ReturnType<IArmadaManagerClaims['getClaimAllTX']> {
-    return this.claims.getClaimAllTX(params)
+  /** @see IArmadaManagerClaims.getClaimGovernanceRewardsTx */
+  async getClaimGovernanceRewardsTx(
+    params: Parameters<IArmadaManagerClaims['getClaimGovernanceRewardsTx']>[0],
+  ): ReturnType<IArmadaManagerClaims['getClaimGovernanceRewardsTx']> {
+    return this.claims.getClaimGovernanceRewardsTx(params)
   }
 
   /** KEEPERS TRANSACTIONS */
@@ -565,7 +569,7 @@ export class ArmadaManager implements IArmadaManager {
       fleetShares: fleetShares.toString(),
     })
 
-    const admiralsQuarterAddress = getDeployedContractAddress({
+    const admiralsQuartersAddress = getDeployedContractAddress({
       chainInfo: params.vaultId.chainInfo,
       contractCategory: 'core',
       contractName: 'admiralsQuarters',
@@ -586,7 +590,7 @@ export class ArmadaManager implements IArmadaManager {
         // Approve the requested amount in shares
         const approveToTakeUserShares = await this._allowanceManager.getApproval({
           chainInfo: params.vaultId.chainInfo,
-          spender: admiralsQuarterAddress,
+          spender: admiralsQuartersAddress,
           amount: sharesToWithdraw,
           owner: params.user.wallet.address,
         })
@@ -615,7 +619,7 @@ export class ArmadaManager implements IArmadaManager {
         })
         transactions.push(
           createWithdrawTransaction({
-            target: admiralsQuarterAddress,
+            target: admiralsQuartersAddress,
             calldata: multicallCalldata,
             description: 'Withdraw Operation using unstaked shares',
             metadata: {
@@ -638,7 +642,7 @@ export class ArmadaManager implements IArmadaManager {
         // approve all unstaken balance tx
         const approveToTakeUserShares = await this._allowanceManager.getApproval({
           chainInfo: params.vaultId.chainInfo,
-          spender: admiralsQuarterAddress,
+          spender: admiralsQuartersAddress,
           amount: fleetShares,
           owner: params.user.wallet.address,
         })
@@ -657,7 +661,7 @@ export class ArmadaManager implements IArmadaManager {
         if (shouldSwap) {
           const approveToSwap = await this._allowanceManager.getApproval({
             chainInfo: params.vaultId.chainInfo,
-            spender: admiralsQuarterAddress,
+            spender: admiralsQuartersAddress,
             amount: assetsToEOA,
             owner: params.user.wallet.address,
           })
@@ -720,7 +724,7 @@ export class ArmadaManager implements IArmadaManager {
         })
         transactions.push(
           createWithdrawTransaction({
-            target: admiralsQuarterAddress,
+            target: admiralsQuartersAddress,
             calldata: multicallCalldata,
             description: 'Withdraw Operation using mixed staked and unstaked shares',
             metadata: {
@@ -749,7 +753,7 @@ export class ArmadaManager implements IArmadaManager {
       if (shouldSwap) {
         const approveToSwap = await this._allowanceManager.getApproval({
           chainInfo: params.vaultId.chainInfo,
-          spender: admiralsQuarterAddress,
+          spender: admiralsQuartersAddress,
           amount: assetsToEOA,
           owner: params.user.wallet.address,
         })
@@ -796,7 +800,7 @@ export class ArmadaManager implements IArmadaManager {
 
       transactions.push(
         createWithdrawTransaction({
-          target: admiralsQuarterAddress,
+          target: admiralsQuartersAddress,
           calldata: multicallCalldata,
           description: 'Withdraw Operation using staked shares',
           metadata: {
@@ -873,7 +877,7 @@ export class ArmadaManager implements IArmadaManager {
       shouldSwap,
     })
 
-    const admiralsQuarterAddress = getDeployedContractAddress({
+    const admiralsQuartersAddress = getDeployedContractAddress({
       chainInfo: params.vaultId.chainInfo,
       contractCategory: 'core',
       contractName: 'admiralsQuarters',
@@ -882,7 +886,7 @@ export class ArmadaManager implements IArmadaManager {
     // Approval
     const approvalTransaction = await this._allowanceManager.getApproval({
       chainInfo: params.vaultId.chainInfo,
-      spender: admiralsQuarterAddress,
+      spender: admiralsQuartersAddress,
       amount: params.amount,
       owner: params.user.wallet.address,
     })
@@ -922,7 +926,7 @@ export class ArmadaManager implements IArmadaManager {
 
     // when staking admirals quarters will receive LV tokens, otherwise the user
     const lvTokenReceiver = shouldStake
-      ? admiralsQuarterAddress.value
+      ? admiralsQuartersAddress.value
       : params.user.wallet.address.value
 
     const enterFleetCalldata = encodeFunctionData({
@@ -948,7 +952,7 @@ export class ArmadaManager implements IArmadaManager {
     })
     transactions.push(
       createDepositTransaction({
-        target: admiralsQuarterAddress,
+        target: admiralsQuartersAddress,
         calldata: multicallCalldata,
         description: 'Deposit Operation',
         value: isEth ? params.amount.toSolidityValue() : undefined,
@@ -1080,7 +1084,7 @@ export class ArmadaManager implements IArmadaManager {
     toAmount: ITokenAmount
   }> {
     // get the admirals quarters address
-    const admiralsQuarterAddress = getDeployedContractAddress({
+    const admiralsQuartersAddress = getDeployedContractAddress({
       chainInfo: params.vaultId.chainInfo,
       contractCategory: 'core',
       contractName: 'admiralsQuarters',
@@ -1090,7 +1094,7 @@ export class ArmadaManager implements IArmadaManager {
     const swapData = await this._swapManager.getSwapDataExactInput({
       fromAmount: params.fromAmount,
       toToken: params.toToken,
-      recipient: admiralsQuarterAddress,
+      recipient: admiralsQuartersAddress,
       slippage: params.slippage,
     })
 

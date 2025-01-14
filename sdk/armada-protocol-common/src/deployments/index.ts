@@ -2,6 +2,7 @@ import {
   Address,
   ArbitrumChainNames,
   BaseChainNames,
+  ChainFamilyName,
   EthereumChainNames,
   type ChainInfo,
   type IAddress,
@@ -54,16 +55,14 @@ export const getDeployedContractAddress = <
   })
 }
 
-export const getDeployedRewardsRedeemerAddress = (params: { chainInfo: ChainInfo }) => {
-  const key = getConfigKey(params.chainInfo.name)
+export const getDeployedRewardsRedeemerAddress = () => {
+  const key = getConfigKey(ChainFamilyName.Base)
   const maybeAddress = (
     config[key].deployedContracts.gov as { rewardsRedeemer: { address: string | undefined } }
   ).rewardsRedeemer.address
   if (!maybeAddress) {
     throw new Error(
-      'Rewards redeemer contract is not available on: ' +
-        params.chainInfo.name +
-        ' chain. It is only on Base.',
+      'Rewards redeemer contract is not available on ' + key + '. It is only on Base.',
     )
   }
   return Address.createFromEthereum({ value: maybeAddress })

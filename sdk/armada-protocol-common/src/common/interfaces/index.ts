@@ -1,5 +1,6 @@
 export type { IArmadaManager } from './IArmadaManager'
 export type { IArmadaManagerClaims } from './IArmadaManagerClaims'
+export type { IArmadaManagerToken } from './IArmadaManagerToken'
 
 export {
   ArmadaVaultDataSchema as ArmadaVaultDataSchema,

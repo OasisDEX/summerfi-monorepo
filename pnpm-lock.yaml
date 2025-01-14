@@ -136,8 +136,8 @@ importers:
         specifier: ^5.6.2
         version: 5.6.2
       zx:
-        specifier: ^8.0.1
-        version: 8.0.1
+        specifier: ^8.3.0
+        version: 8.3.0
 
   apps/earn-protocol:
     dependencies:
@@ -36921,9 +36921,9 @@ packages:
       react: 18.3.1
     dev: false
 
-  /zx@8.0.1:
-    resolution: {integrity: sha512-Y+ITW1GQjADk7qgrbhnukMgoNsJmlyx53cUQ6/6NXU+BMBdCbTc6flTOHUctmzKvPjTmdwaddzJY/dbLie9sQg==}
-    engines: {node: '>= 16.0.0'}
+  /zx@8.3.0:
+    resolution: {integrity: sha512-L8mY3yfJwo3a8ZDD6f9jZzAcRWJZYcV8GauZmBxLB/aSTwaMzMIEVpPp2Kyx+7yF0gdvuxKnMxAZRft9UCawiw==}
+    engines: {node: '>= 12.17.0'}
     hasBin: true
     optionalDependencies:
       '@types/fs-extra': 11.0.4
