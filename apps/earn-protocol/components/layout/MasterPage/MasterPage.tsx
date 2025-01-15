@@ -34,7 +34,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({ children })
         >
           {/* <SetForkModal /> */}
           <Footer
-            logo="/img/branding/logo-light.svg"
+            logo="/earn/img/branding/logo-light.svg"
             newsletter={
               <div>
                 <Text

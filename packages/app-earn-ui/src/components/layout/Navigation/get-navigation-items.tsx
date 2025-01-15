@@ -3,41 +3,43 @@ import { SupportBox } from '@/components/layout/Navigation/SupportBox'
 
 export const getNavigationItems = ({
   userWalletAddress,
+  isEarnApp,
 }: {
   userWalletAddress?: string
+  isEarnApp?: boolean
 }): EarnNavigationProps['links'] => [
   {
     label: 'Earn',
     id: 'earn',
-    link: `/earn`,
+    link: !isEarnApp ? `/earn` : `/`,
   },
   ...(userWalletAddress
     ? [
         {
           label: 'Portfolio',
           id: 'portfolio',
-          link: `/earn/portfolio/${userWalletAddress}`,
+          link: `${!isEarnApp ? `/earn` : ``}/portfolio/${userWalletAddress}`,
         },
       ]
     : []),
   {
     label: '$SUMR',
     id: 'sumr',
-    link: `/earn/sumr`,
+    link: `${!isEarnApp ? `/earn` : ``}/sumr`,
   },
   {
     label: 'Explore',
     id: 'explore',
     itemsList: [
       {
-        url: '/earn/user-activity',
+        url: `${!isEarnApp ? `/earn` : ``}/user-activity`,
         id: 'user-activity',
         title: 'User Activity',
         description: 'Transparent view of global user activity',
         icon: 'earn_user_activities',
       },
       {
-        url: '/earn/rebalance-activity',
+        url: `${!isEarnApp ? `/earn` : ``}/rebalance-activity`,
         id: 'rebalancing-activity',
         title: 'Rebalancing Activity',
         description: 'Vault optimizations performed by AI-powered keepers',

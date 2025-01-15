@@ -174,6 +174,7 @@ export const VaultManageViewComponent = ({
         : positionAmount.minus(resolvedAmountParsed),
     }[transactionType].toString(),
     disabled: !ownerView,
+    isEarnApp: true,
   })
 
   const estimatedEarnings = useMemo(() => {

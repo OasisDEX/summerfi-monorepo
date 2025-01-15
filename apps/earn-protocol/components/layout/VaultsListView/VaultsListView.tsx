@@ -278,6 +278,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
           }}
           resolvedForecastAmount={resolvedForecastAmount}
           amountParsed={amountParsed}
+          isEarnApp
         />
       }
     />

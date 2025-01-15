@@ -45,7 +45,7 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
         valueSize: 'large',
       }}
       actionable={
-        <Link href={`/earn/claim/${walletAddress}`} prefetch>
+        <Link href={`/claim/${walletAddress}`} prefetch>
           <Button variant="primarySmall">Claim</Button>
         </Link>
       }
@@ -95,7 +95,7 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }
             </Text>
           </Button>
         ) : (
-          <Link href={`/earn/stake-delegate/${walletAddress}`} prefetch>
+          <Link href={`/stake-delegate/${walletAddress}`} prefetch>
             <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
               Stake and delegate
             </Text>
@@ -170,7 +170,7 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData }) => {
         subValue,
       }}
       actionable={
-        <Link href={`/earn/stake-delegate/${walletAddress}`} prefetch>
+        <Link href={`/stake-delegate/${walletAddress}`} prefetch>
           <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
             Change delegate
           </Text>

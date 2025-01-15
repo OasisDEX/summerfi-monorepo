@@ -126,7 +126,7 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
           />
         ))}
         <div className={classNames.buttonsWrapper}>
-          <Link href={`/earn/portfolio/${walletAddress}?tab=${PortfolioTabs.REWARDS}`}>
+          <Link href={`/portfolio/${walletAddress}?tab=${PortfolioTabs.REWARDS}`}>
             <Button variant="secondarySmall">
               <Text variant="p3semi" as="p">
                 Claim & Forfeit staking yield

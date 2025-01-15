@@ -19,7 +19,7 @@ const StakeDelegatePage = async ({ params }: StakeDelegatePageProps) => {
   const { walletAddress } = params
 
   if (!isValidAddress(walletAddress)) {
-    redirect(`/earn`)
+    redirect(`/`)
   }
 
   const [votes, sumrStakeDelegate, sumrBalances] = await Promise.all([

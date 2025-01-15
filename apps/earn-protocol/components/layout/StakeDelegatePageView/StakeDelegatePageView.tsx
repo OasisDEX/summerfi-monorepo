@@ -29,10 +29,7 @@ export const StakeDelegatePageView: FC<StakeDelegatePageViewProps> = ({
     <div className={classNames.stakeDelegatePageWrapper}>
       <div className={classNames.stakeDelegateHeaderWrapper}>
         <div className={classNames.pathLinkWrapper}>
-          <Link
-            href={`/earn/portfolio/${state.walletAddress}?tab=${PortfolioTabs.REWARDS}`}
-            prefetch
-          >
+          <Link href={`/portfolio/${state.walletAddress}?tab=${PortfolioTabs.REWARDS}`} prefetch>
             <Text as="p" variant="p1" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
               $SUMR
             </Text>

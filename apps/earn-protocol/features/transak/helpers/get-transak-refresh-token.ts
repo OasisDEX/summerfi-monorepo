@@ -15,7 +15,7 @@ export const getTransakRefreshToken = async (): Promise<
       throw new Error('ENV variable missing')
     }
 
-    const response = await fetch(`/api/transak/refresh-token`, {
+    const response = await fetch(`/earn/api/transak/refresh-token`, {
       method: 'GET',
       headers: { 'x-partner-api-key': transakPublicApiKey },
     })

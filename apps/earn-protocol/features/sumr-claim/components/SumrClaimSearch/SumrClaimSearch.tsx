@@ -65,7 +65,7 @@ export const SumrClaimSearch = () => {
     const resolvedPortfolioUserAddress = eligibleUser?.userAddress ?? user.address
 
     if (resolvedPortfolioUserAddress) {
-      push(`/earn/portfolio/${resolvedPortfolioUserAddress}?tab=${PortfolioTabs.REWARDS}`)
+      push(`/portfolio/${resolvedPortfolioUserAddress}?tab=${PortfolioTabs.REWARDS}`)
 
       return
     }

@@ -174,6 +174,7 @@ export const VaultOpenViewComponent = ({
     fleetAddress: vault.id,
     chainId: vaultChainId,
     amount: resolvedAmountParsed.toString(),
+    isEarnApp: true,
   })
 
   useEffect(() => {
