@@ -6,12 +6,12 @@ import { Text } from '@/components/atoms/Text/Text'
 import bannerStyles from './Banners.module.scss'
 
 export const NonOwnerPositionBanner = ({ isOwner }: { isOwner: boolean }) => {
-  if (isOwner) {
-    return null
-  }
-
   return (
-    <div className={clsx(bannerStyles.bannerWrapper, bannerStyles.bannerWrapperWarning)}>
+    <div
+      className={clsx(bannerStyles.bannerWrapper, bannerStyles.bannerWrapperWarning, {
+        [bannerStyles.bannerWrapperVisible]: !isOwner,
+      })}
+    >
       <Icon iconName="eye" />
       <Text variant="p4semi">
         This is not your position. You are viewing another users open position
@@ -21,12 +21,12 @@ export const NonOwnerPositionBanner = ({ isOwner }: { isOwner: boolean }) => {
 }
 
 export const NonOwnerPortfolioBanner = ({ isOwner }: { isOwner: boolean }) => {
-  if (isOwner) {
-    return null
-  }
-
   return (
-    <div className={clsx(bannerStyles.bannerWrapper, bannerStyles.bannerWrapperWarning)}>
+    <div
+      className={clsx(bannerStyles.bannerWrapper, bannerStyles.bannerWrapperWarning, {
+        [bannerStyles.bannerWrapperVisible]: !isOwner,
+      })}
+    >
       <Icon iconName="eye" />
       <Text variant="p4semi">You are viewing other people’s portfolio</Text>
     </div>

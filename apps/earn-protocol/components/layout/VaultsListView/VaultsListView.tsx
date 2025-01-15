@@ -18,6 +18,7 @@ import {
 import {
   type DropdownRawOption,
   type IconNamesList,
+  type IToken,
   type SDKNetwork,
   type SDKVaultsListType,
   TransactionAction,
@@ -174,7 +175,14 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
     handleAmountChange,
     onBlur,
     onFocus,
-  } = useAmount({ vault: vaultData, selectedToken: tokenBalances.token })
+  } = useAmount({
+    vault: vaultData,
+    selectedToken:
+      tokenBalances.token ??
+      ({
+        decimals: vaultData.inputToken.decimals,
+      } as IToken),
+  })
 
   const { amountDisplayUSDWithSwap, rawToTokenAmount } = useAmountWithSwap({
     vault: vaultData,
