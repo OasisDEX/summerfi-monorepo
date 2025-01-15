@@ -91,13 +91,6 @@ export const SumrSupplySchedule = () => {
                 bottom: 0,
               }}
             >
-              <defs>
-                <linearGradient id="summerYieldGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#FF49A4" stopOpacity={0.8} />
-                  <stop offset="100%" stopColor="#333333" stopOpacity={0.4} />
-                </linearGradient>
-              </defs>
-
               <XAxis dataKey="name" fontSize={12} interval={isMobile ? 16 : 5} tickMargin={10} />
               <YAxis
                 strokeWidth={0}
