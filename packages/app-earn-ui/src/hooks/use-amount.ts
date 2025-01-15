@@ -10,6 +10,8 @@ type UseAmountProps = {
   initialAmount?: string
 }
 
+const MAX_AMOUNT_LENGTH = 10
+
 /**
  * Hook for managing amount input with formatting and validation for vault interactions.
  *
@@ -77,6 +79,13 @@ export const useAmount = ({ vault, selectedToken, initialAmount }: UseAmountProp
 
   const handleAmountChange = (ev: ChangeEvent<HTMLInputElement>) => {
     const { value } = ev.target
+
+    if (value.length > MAX_AMOUNT_LENGTH) {
+      ev.stopPropagation()
+      ev.preventDefault()
+
+      return
+    }
 
     if (!value) {
       setAmountRaw(undefined)

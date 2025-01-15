@@ -24,7 +24,7 @@ import {
   type UsersActivity,
 } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
-import { TransactionType } from '@summerfi/sdk-common'
+import { type IToken, TransactionType } from '@summerfi/sdk-common'
 
 import { detailsLinks } from '@/components/layout/VaultOpenView/mocks'
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
@@ -103,7 +103,16 @@ export const VaultOpenViewComponent = ({
     handleAmountChange,
     onBlur,
     onFocus,
-  } = useAmount({ vault, selectedToken })
+  } = useAmount({
+    vault,
+    selectedToken:
+      selectedToken ??
+      ({
+        // if youre not connected, the selected token is not available
+        // we need to fill it here
+        decimals: vault.inputToken.decimals,
+      } as IToken),
+  })
 
   const {
     approvalType,
