@@ -36,13 +36,13 @@ const TransakTrigger = ({
 
 interface PortfolioHeaderProps {
   walletAddress: string
-  totalSumr: string | undefined
+  totalSumr: string
   totalWalletValue: number
 }
 
 export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
   walletAddress,
-  totalSumr = '0',
+  totalSumr,
   totalWalletValue,
 }) => {
   const { userWalletAddress } = useUserWallet()

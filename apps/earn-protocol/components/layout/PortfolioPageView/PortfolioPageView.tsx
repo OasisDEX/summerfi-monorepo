@@ -94,7 +94,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
       <div style={{ display: 'flex', flexDirection: 'column', padding: '0 16px', width: '100%' }}>
         <PortfolioHeader
           walletAddress={walletAddress}
-          totalSumr={rewardsData.totalSumr}
+          totalSumr={rewardsData.sumrBalances.total}
           totalWalletValue={totalWalletValue}
         />
         <TabBar
