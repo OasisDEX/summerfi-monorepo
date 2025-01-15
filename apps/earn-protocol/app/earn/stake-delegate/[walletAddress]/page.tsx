@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 
 import { getDelegatesVotes } from '@/app/server-handlers/delegates-votes'
+import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
 import { StakeDelegateViewComponent } from '@/components/layout/StakeDelegatePageView/StakeDelegateViewComponent'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
@@ -21,9 +22,12 @@ const StakeDelegatePage = async ({ params }: StakeDelegatePageProps) => {
     redirect(`/earn`)
   }
 
-  const [votes, { sumrDelegated, delegatedTo }] = await Promise.all([
+  const [votes, sumrStakeDelegate, sumrBalances] = await Promise.all([
     getDelegatesVotes(),
     getSumrDelegateStake({
+      walletAddress,
+    }),
+    getSumrBalances({
       walletAddress,
     }),
   ])
@@ -34,9 +38,9 @@ const StakeDelegatePage = async ({ params }: StakeDelegatePageProps) => {
     sumrEarned: '123.45',
     sumrToClaim: '1.23',
     sumrApy: '0.0123',
-    sumrDelegated,
-    delegatedTo,
+    sumrStakeDelegate,
     votes,
+    sumrBalances,
   }
 
   return <StakeDelegateViewComponent walletAddress={walletAddress} externalData={externalData} />

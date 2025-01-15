@@ -43,7 +43,7 @@ export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
       </Text>
     </>
   )
-  const sumrPerYear = `${formatFiatBalance((Number(externalData.sumrDelegated) + Number(externalData.sumrEarned)) * Number(externalData.sumrApy))} $SUMR/yr`
+  const sumrPerYear = `${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(externalData.sumrEarned)) * Number(externalData.sumrApy))} $SUMR/yr`
 
   if (state.delegatee === undefined) {
     // eslint-disable-next-line no-console
@@ -92,7 +92,8 @@ export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
             <div className={classNames.withIcon}>
               <Icon tokenName="SUMR" />
               <Text as="h4" variant="h4">
-                {Number(externalData.sumrDelegated) + Number(externalData.sumrEarned)}
+                {Number(externalData.sumrStakeDelegate.sumrDelegated) +
+                  Number(externalData.sumrEarned)}
               </Text>
             </div>
           </div>

@@ -46,11 +46,13 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
   const claimedInUSD = formatFiatBalance(Number(externalData.sumrEarned) * estimatedSumrPrice)
 
   const apy = formatDecimalAsPercent(externalData.sumrApy)
-  const sumrPerYear = `*${formatFiatBalance((Number(externalData.sumrDelegated) + Number(externalData.sumrEarned)) * Number(externalData.sumrApy))} $SUMR / Year`
+  const sumrPerYear = `*${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(externalData.sumrEarned)) * Number(externalData.sumrApy))} $SUMR / Year`
 
   const handleStakeAndDelegate = () => {
     dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.COMPLETED })
   }
+
+  const hasNothingToStake = externalData.sumrBalances.base === '0'
 
   return (
     <div className={classNames.claimDelegateStakeDelegateSubstepWrapper}>
@@ -135,14 +137,16 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
             variant="primarySmall"
             style={{ paddingRight: 'var(--general-space-32)' }}
             onClick={handleStakeAndDelegate}
-            disabled={!state.delegatee || state.delegatee === externalData.delegatedTo}
+            disabled={
+              !state.delegatee || state.delegatee === externalData.sumrStakeDelegate.delegatedTo
+            }
           >
             <WithArrow
               style={{ color: 'var(--earn-protocol-secondary-100)' }}
               variant="p3semi"
               as="p"
             >
-              Stake & Delegate
+              {hasNothingToStake ? 'Delegate' : 'Stake & Delegate'}
             </WithArrow>
           </Button>
         </div>

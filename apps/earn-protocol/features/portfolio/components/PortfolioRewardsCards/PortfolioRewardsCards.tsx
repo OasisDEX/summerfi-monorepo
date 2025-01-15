@@ -61,12 +61,12 @@ interface StakedAndDelegatedSumrProps {
 const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }) => {
   const { walletAddress } = useParams()
   const rawApy = rewardsData.sumrApy
-  const rawStaked = rewardsData.sumrDelegated
+  const rawStaked = rewardsData.sumrStakeDelegate.sumrDelegated
 
   const value = formatCryptoBalance(rawStaked)
   const apy = formatDecimalAsPercent(rawApy)
 
-  const isDelegated = rewardsData.delegatedTo !== ADDRESS_ZERO
+  const isDelegated = rewardsData.sumrStakeDelegate.sumrDelegated !== ADDRESS_ZERO
 
   const handleRemoveDelegation = () => {
     // TODO: Implement remove delegation
@@ -117,8 +117,8 @@ const YourTotalSumr: FC<YourTotalSumrProps> = ({ rewardsData }) => {
   const assumedSumrPriceRaw = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
   const assumedSumrPrice = formatFiatBalance(assumedSumrPriceRaw)
 
-  const rawTotalSumr = Number(rewardsData.totalSumr ?? 0)
-  const rawTotalSumrUSD = formatFiatBalance(rawTotalSumr * assumedSumrPriceRaw)
+  const rawTotalSumr = Number(rewardsData.sumrBalances.total)
+  const rawTotalSumrUSD = rawTotalSumr * assumedSumrPriceRaw
 
   const totalSumr = formatCryptoBalance(rawTotalSumr)
   const totalSumrUSD = formatFiatBalance(rawTotalSumrUSD)
@@ -153,7 +153,8 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData }) => {
   const { walletAddress } = useParams()
 
   const delegatee = sumrDelegates.find(
-    (item) => item.address.toLowerCase() === rewardsData.delegatedTo.toLowerCase(),
+    (item) =>
+      item.address.toLowerCase() === rewardsData.sumrStakeDelegate.sumrDelegated.toLowerCase(),
   )
 
   const value = delegatee ? delegatee.title : 'No delegate'

@@ -9,6 +9,7 @@ export const claimDelegateState: ClaimDelegateState = {
   delegatee: undefined,
   claimStatus: undefined,
   delegateStatus: undefined,
+  stakingStatus: undefined,
   walletAddress: '0x0', // dummy, invalid address for init
 }
 
@@ -36,6 +37,11 @@ export const claimDelegateReducer = (
       return {
         ...prevState,
         delegateStatus: action.payload,
+      }
+    case 'update-staking-status':
+      return {
+        ...prevState,
+        stakingStatus: action.payload,
       }
     default:
       return prevState

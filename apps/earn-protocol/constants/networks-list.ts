@@ -102,6 +102,9 @@ export const baseGoerliRpc = getRpc(NetworkNames.baseGoerli)
 export const SDKChainIdToRpcGatewayMap = {
   [SDKChainId.ARBITRUM]: arbitrumMainnetRpc,
   [SDKChainId.BASE]: baseMainnetRpc,
+  [SDKChainId.MAINNET]: mainnetRpc,
+  [SDKChainId.OPTIMISM]: optimismMainnetRpc,
+  [SDKChainId.SEPOLIA]: baseGoerliRpc, // dummy for now, not used anyway
 }
 
 const mainnetConfig: NetworkConfig = {
