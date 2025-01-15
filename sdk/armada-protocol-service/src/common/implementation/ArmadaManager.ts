@@ -1,5 +1,9 @@
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
-import { AdmiralsQuartersAbi, StakingRewardsManagerBaseAbi } from '@summerfi/armada-protocol-abis'
+import {
+  AdmiralsQuartersAbi,
+  StakingRewardsManagerBaseAbi,
+  SummerTokenAbi,
+} from '@summerfi/armada-protocol-abis'
 import {
   getDeployedContractAddress,
   IArmadaManager,
@@ -16,6 +20,7 @@ import {
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import {
+  Address,
   calculatePriceImpact,
   IAddress,
   ITokenAmount,
@@ -363,28 +368,55 @@ export class ArmadaManager implements IArmadaManager {
     return this.claims.getClaimGovernanceRewardsTx(params)
   }
 
-  async getClaims(params: { user: IUser; chainInfo: ChainInfo }): Promise<ClaimTransactionInfo> {
+  async getClaimsTx(
+    params: Parameters<IArmadaManager['getClaimsTx']>[0],
+  ): ReturnType<IArmadaManager['getClaimsTx']> {
+    const hubChainId = await this._configProvider.getConfigurationItem({ name: 'SDK_HUB_CHAIN_ID' })
+    const isHubChain = params.chainInfo.chainId === Number(hubChainId)
+
     const summerTokenAddress = await getDeployedContractAddress({
       chainInfo: params.chainInfo,
       contractCategory: 'gov',
       contractName: 'summerToken',
     })
 
-    // call  summer token to get regovRewardsManagerAddress
+    // for now reward token is just summer token
+    // in future potential partners can be added
+    const rewardToken = summerTokenAddress
 
-    const rewardToken = ''
+    // read contract on the summer token to get rewardsManager method
+    const client = this._blockchainClientProvider.getBlockchainClient({
+      chainInfo: params.chainInfo,
+    })
+    const govRewardsManagerAddress = await client.readContract({
+      abi: SummerTokenAbi,
+      address: summerTokenAddress.value,
+      functionName: 'rewardsManager',
+    })
 
     const multicallArgs: HexData[] = []
 
-    const claimMerkleRewards = await this.claims.getClaimMerkleRewardsTx({ user: params.user })
-    multicallArgs.push(claimMerkleRewards.transaction.calldata)
-
-    const claimGovernanceRewards = await this.claims.getClaimGovernanceRewardsTx({
-      govRewardsManagerAddress,
+    // only hub chain can claim merkle rewards
+    if (isHubChain) {
+      const claimMerkleRewards = await this.claims.getClaimMerkleRewardsTx({ user: params.user })
+      multicallArgs.push(claimMerkleRewards.transaction.calldata)
+    }
+    // only hub chain can claim governance rewards
+    if (isHubChain) {
+      const claimGovernanceRewards = await this.claims.getClaimGovernanceRewardsTx({
+        govRewardsManagerAddress: Address.createFromEthereum({ value: govRewardsManagerAddress }),
+        rewardToken,
+      })
+      multicallArgs.push(claimGovernanceRewards.transaction.calldata)
+    }
+    // any chain can claim fleet rewards
+    const claimFleetRewards = await this.claims.getClaimFleetRewardsTx({
+      chainInfo: params.chainInfo,
+      user: params.user,
+      fleetCommandersAddresses: params.fleetCommandersAddresses,
       rewardToken,
     })
-
-    multicallArgs.push(claimGovernanceRewards.transaction.calldata)
+    multicallArgs.push(claimFleetRewards.transaction.calldata)
 
     const admiralsQuartersAddress = getDeployedContractAddress({
       chainInfo: params.chainInfo,
@@ -400,7 +432,7 @@ export class ArmadaManager implements IArmadaManager {
 
     return {
       type: TransactionType.Claim,
-      description: 'Claiming all rewards',
+      description: 'Claiming all available rewards on the provided chain',
       transaction: {
         target: admiralsQuartersAddress,
         calldata: multicallCalldata,

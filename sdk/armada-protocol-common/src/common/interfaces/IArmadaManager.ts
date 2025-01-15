@@ -244,7 +244,23 @@ export interface IArmadaManager {
     slippage: IPercentage
   }): Promise<ExtendedTransactionInfo[]>
 
-  getClaims(params: { user: IUser; chainInfo: ChainInfo }): Promise<ClaimTransactionInfo>
+  /**
+   * @name getClaimTX
+   * @description Returns the transactions needed to claim rewards from the Fleet
+   *
+   * @param chainInfo Chain information
+   * @param user Address of the user that is trying to claim
+   * @param fleetCommandersAddresses Fleet commanders addresses
+   * @param rewardToken Reward token
+   *
+   * @returns TransactionInfo[] An array of transactions that must be executed
+   */
+  getClaimsTx(params: {
+    chainInfo: ChainInfo
+    user: IUser
+    fleetCommandersAddresses: IAddress[]
+    rewardToken: IAddress
+  }): Promise<ClaimTransactionInfo>
 
   /** KEEPERS TRANSACTIONS */
 
