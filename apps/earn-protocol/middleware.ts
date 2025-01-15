@@ -51,5 +51,5 @@ export function middleware(_request: NextRequest) {
 
 // Specify the paths to apply the middleware to
 export const config = {
-  matcher: ['/earn/:path*'],
+  matcher: ['/:path*'],
 }

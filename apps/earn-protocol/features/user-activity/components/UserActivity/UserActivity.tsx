@@ -59,7 +59,7 @@ export const UserActivity: FC<UserActivityProps> = ({
           textVariant="p3semi"
           tabHeadersStyle={{ borderBottom: '1px solid var(--earn-protocol-neutral-80)' }}
         />
-        <Link href={`/earn/user-activity?strategies=${vaultId}`} style={{ width: 'fit-content' }}>
+        <Link href={`/user-activity?strategies=${vaultId}`} style={{ width: 'fit-content' }}>
           <WithArrow as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
             View all depositors
           </WithArrow>

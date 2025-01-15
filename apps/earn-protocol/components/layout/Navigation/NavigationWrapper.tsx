@@ -24,16 +24,17 @@ export const NavigationWrapper: FC = () => {
   return (
     <Navigation
       currentPath={currentPath}
-      logo="/img/branding/logo-dark.svg"
-      logoSmall="/img/branding/dot-dark.svg"
+      logo="/earn/img/branding/logo-dark.svg"
+      logoSmall="/earn/img/branding/dot-dark.svg"
       links={getNavigationItems({
         userWalletAddress,
+        isEarnApp: true,
       })}
       walletConnectionComponent={<WalletLabel />}
       configComponent={<NavConfig />}
       onLogoClick={() => {
         // because router will use base path...
-        window.location.href = '/'
+        window.location.replace('/')
       }}
     />
   )

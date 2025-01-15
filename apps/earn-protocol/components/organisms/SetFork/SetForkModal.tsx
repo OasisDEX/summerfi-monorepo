@@ -36,7 +36,7 @@ const setFork =
     }
     setUpdating((prev) => [...prev, chainId])
 
-    fetch('/api/set-fork', {
+    fetch('/earn/api/set-fork', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ const resetFork =
     }
 
     setResetting(true)
-    fetch('/api/set-fork', {
+    fetch('/earn/api/set-fork', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

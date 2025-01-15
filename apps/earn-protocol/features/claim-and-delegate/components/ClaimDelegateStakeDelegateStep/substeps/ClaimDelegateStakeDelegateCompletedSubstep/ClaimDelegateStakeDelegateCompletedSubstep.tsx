@@ -121,7 +121,7 @@ export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
           $SUMR voting power delegated to make Lazy Summer Protocol Governance decisions.
         </Text>
       </Card>
-      <Link href={`/earn/portfolio/${walletAddress}?tab=${PortfolioTabs.REWARDS}`}>
+      <Link href={`/portfolio/${walletAddress}?tab=${PortfolioTabs.REWARDS}`}>
         <Button variant="primarySmall">Go to $SUMR Overview</Button>
       </Link>
     </div>

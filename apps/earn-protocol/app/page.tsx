@@ -1,27 +1,18 @@
-import { Text } from '@summerfi/app-earn-ui'
-import Link from 'next/link'
+import { parseServerResponseToClient } from '@summerfi/app-utils'
+
+import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
+import systemConfigHandler from '@/app/server-handlers/system-config'
+import { VaultListViewComponent } from '@/components/layout/VaultsListView/VaultListViewComponent'
+import { decorateCustomVaultFields } from '@/helpers/vault-custom-value-helpers'
 
 export const revalidate = 60
 
-export default function HomePage() {
-  return (
-    <div
-      style={{
-        display: 'flex',
-        gap: '8px',
-        flexDirection: 'column',
-        textAlign: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <Text as="p" variant="p2">
-        I love ya ❤️❤️❤️
-        <br /> <br />
-        BTW you are probably looking for the{' '}
-        <Link href="/earn" style={{ display: 'inline', color: 'var(--color-text-link)' }}>
-          Earn page
-        </Link>
-      </Text>
-    </div>
-  )
+const EarnAllVaultsPage = async () => {
+  const [{ vaults }, configRaw] = await Promise.all([getVaultsList(), systemConfigHandler()])
+  const { config: systemConfig } = parseServerResponseToClient(configRaw)
+  const vaultsDecorated = decorateCustomVaultFields({ vaults, systemConfig })
+
+  return <VaultListViewComponent vaultsList={vaultsDecorated} />
 }
+
+export default EarnAllVaultsPage
