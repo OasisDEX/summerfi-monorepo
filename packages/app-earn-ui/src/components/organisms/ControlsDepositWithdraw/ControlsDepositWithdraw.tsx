@@ -49,6 +49,8 @@ export const ControlsDepositWithdraw = ({
   manualSetAmount,
   ownerView,
 }: ControlsDepositWithdrawProps) => {
+  console.log('tokenBalance', tokenBalance?.toString())
+
   return (
     <>
       <InputWithDropdown
