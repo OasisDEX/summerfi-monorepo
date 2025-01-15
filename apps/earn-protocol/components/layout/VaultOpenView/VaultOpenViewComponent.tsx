@@ -115,10 +115,17 @@ export const VaultOpenViewComponent = ({
   })
 
   const {
+    amountParsed: approvalAmountParsed,
+    amountDisplay: approvalCustomAmount,
+    handleAmountChange: approvalHandleAmountChange,
+    onBlur: approvalOnBlur,
+    onFocus: approvalOnFocus,
+    manualSetAmount: approvalManualSetAmount,
+  } = useAmount({ vault, selectedToken })
+
+  const {
     approvalType,
     setApprovalType,
-    approvalCustomValue,
-    setApprovalCustomValue,
     sidebar,
     txHashes,
     removeTxHash,
@@ -139,6 +146,7 @@ export const VaultOpenViewComponent = ({
     tokenBalanceLoading: selectedTokenBalanceLoading,
     flow: 'open',
     ownerView: true,
+    approvalCustomValue: approvalAmountParsed,
   })
 
   const position = usePosition({
@@ -198,8 +206,11 @@ export const VaultOpenViewComponent = ({
           tokenSymbol={fromTokenSymbol}
           approvalType={approvalType}
           setApprovalType={setApprovalType}
-          setApprovalCustomValue={setApprovalCustomValue}
-          approvalCustomValue={approvalCustomValue}
+          setApprovalCustomValue={approvalHandleAmountChange}
+          approvalCustomValue={approvalCustomAmount}
+          customApprovalManualSetAmount={approvalManualSetAmount}
+          customApprovalOnBlur={approvalOnBlur}
+          customApprovalOnFocus={approvalOnFocus}
           tokenBalance={selectedTokenBalance}
         />
       ),
