@@ -13,10 +13,10 @@
     "generate": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config"
   },
   "dependencies": {
-    "@account-kit/core": "^4.6.1",
-    "@account-kit/infra": "^4.6.1",
-    "@account-kit/react": "^4.6.1",
-    "@account-kit/signer": "^4.6.1",
+    "@account-kit/core": "^4.9.0",
+    "@account-kit/infra": "^4.9.0",
+    "@account-kit/react": "^4.9.0",
+    "@account-kit/signer": "^4.9.0",
     "@loadable/component": "^5.16.4",
     "@summerfi/app-earn-ui": "workspace:*",
     "@summerfi/app-risk": "workspace:*",
