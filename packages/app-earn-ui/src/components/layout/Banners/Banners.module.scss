@@ -1,5 +1,5 @@
 .bannerWrapper {
-  width: 100vw;
+  width: calc(100vw - var(--general-space-16));
   height: 36px;
   display: flex;
   flex-direction: row;
@@ -10,16 +10,16 @@
 
   &Warning {
     background-color: var(--color-background-warning);
-    color: var(--color-text-warning)
+    color: var(--color-text-warning);
   }
 
   &Critical {
     background-color: var(--color-background-critical);
-    color: var(--color-text-critical)
+    color: var(--color-text-critical);
   }
 
   &Success {
     background-color: var(--color-background-success);
-    color: var(--color-text-success)
+    color: var(--color-text-success);
   }
 }
