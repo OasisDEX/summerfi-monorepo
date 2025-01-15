@@ -328,8 +328,29 @@ export const useTransaction = ({
         disabled: false,
       }
     }
-    // if there are transactions pending
-    if (tokenBalance && amount && amount.isGreaterThan(tokenBalance)) {
+
+    // deposit balance check
+    if (
+      transactionType === TransactionAction.DEPOSIT &&
+      tokenBalance &&
+      amount &&
+      amount.isGreaterThan(tokenBalance)
+    ) {
+      return {
+        label: capitalize(transactionType),
+        action: () => null,
+        disabled: true,
+        loading: false,
+      }
+    }
+
+    // withdraw balance check
+    if (
+      transactionType === TransactionAction.WITHDRAW &&
+      positionAmount &&
+      amount &&
+      amount.isGreaterThan(positionAmount)
+    ) {
       return {
         label: capitalize(transactionType),
         action: () => null,
@@ -413,6 +434,7 @@ export const useTransaction = ({
     vaultChainId,
     setChain,
     executeNextTransaction,
+    positionAmount,
   ])
 
   const sidebarTitle = useMemo(() => {
