@@ -86,6 +86,7 @@ export const PortfolioPosition = ({
               symbol={inputToken.symbol}
               risk={customFields?.risk ?? 'medium'}
               networkName={protocol.network}
+              titleVariant="h3"
             />
           </div>
           <PortfolioPositionHeaderValue

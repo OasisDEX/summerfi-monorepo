@@ -1,1 +1,3 @@
 export const CHART_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH:mm:ss'
+export const POINTS_REQUIRED_FOR_CHART = 6
+export const DAYS_TO_WAIT_FOR_CHART = 3

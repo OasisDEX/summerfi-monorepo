@@ -8,7 +8,7 @@ import {
 import dayjs from 'dayjs'
 
 import { type GetPositionHistoryReturnType } from '@/app/server-handlers/position-history'
-import { CHART_TIMESTAMP_FORMAT } from '@/constants/charts'
+import { CHART_TIMESTAMP_FORMAT, POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
 
 const mapPositionHistory = (
   positionHistory: GetPositionHistoryReturnType,
@@ -148,8 +148,20 @@ const mapPositionHistory = (
     }
   })
 
+  const filterTooSmallDataset = (data: ChartsDataTimeframes) => {
+    return Object.keys(data).reduce<ChartsDataTimeframes | { [key: string]: never }>((acc, key) => {
+      const keyTyped = key as keyof ChartsDataTimeframes
+
+      if (data[keyTyped].length > POINTS_REQUIRED_FOR_CHART) {
+        acc[keyTyped] = data[keyTyped]
+      }
+
+      return acc
+    }, {}) as ChartsDataTimeframes
+  }
+
   return {
-    data: chartBaseData,
+    data: filterTooSmallDataset(chartBaseData),
   }
 }
 

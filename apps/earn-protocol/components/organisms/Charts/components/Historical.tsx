@@ -43,7 +43,7 @@ export const HistoricalChart = ({ data, tokenSymbol, position }: HistoricalChart
   }>(legendBaseData)
 
   return (
-    <RechartResponsiveWrapper>
+    <RechartResponsiveWrapper height="340px">
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart
           data={data}

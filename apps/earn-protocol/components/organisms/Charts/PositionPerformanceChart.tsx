@@ -5,12 +5,9 @@ import { Card } from '@summerfi/app-earn-ui'
 import { type TimeframesType, type VaultWithChartsData } from '@summerfi/app-types'
 
 import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
-import {
-  DAYS_TO_WAIT_FOR_CHART,
-  POINTS_REQUIRED_FOR_CHART,
-} from '@/components/organisms/Charts/components/constants'
 import { NotEnoughData } from '@/components/organisms/Charts/components/NotEnoughData'
 import { PerformanceChart } from '@/components/organisms/Charts/components/Performance'
+import { DAYS_TO_WAIT_FOR_CHART, POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
 
 export type PositionPerformanceChartProps = {
   chartData: VaultWithChartsData['performanceChartData']

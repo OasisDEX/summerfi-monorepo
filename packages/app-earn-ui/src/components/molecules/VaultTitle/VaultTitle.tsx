@@ -11,6 +11,8 @@ import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { getTokenGuarded } from '@/tokens/helpers'
 
+import { type ClassNames as TextVariants } from '@/components/atoms/Text/Text.module.scss'
+
 const networkIdIconMap = {
   [NetworkIds.MAINNET]: <Icon iconName="earn_network_ethereum" size={16} />,
   [NetworkIds.BASEMAINNET]: <Icon iconName="earn_network_base" size={16} />,
@@ -31,6 +33,7 @@ interface VaultTitleProps {
   networkName?: SDKNetwork
   value?: ReactNode
   selected?: boolean
+  titleVariant?: TextVariants
 }
 
 export const VaultTitle: FC<VaultTitleProps> = ({
@@ -39,6 +42,7 @@ export const VaultTitle: FC<VaultTitleProps> = ({
   networkId,
   networkName,
   selected,
+  titleVariant = 'h4',
 }) => {
   const isIconDefined = getTokenGuarded(symbol)?.iconName
 
@@ -66,8 +70,8 @@ export const VaultTitle: FC<VaultTitleProps> = ({
         <div style={{ display: 'flex', gap: 'var(--general-space-8)', alignItems: 'center' }}>
           <Text
             as="h4"
-            variant="h4"
-            style={{ color: 'white', fontSize: '24px', fontWeight: 600, lineHeight: '30px' }}
+            variant={titleVariant}
+            style={{ color: 'white', fontWeight: 600 }}
             data-testid="vault-token"
           >
             {symbol}

@@ -11,12 +11,9 @@ import {
 } from '@summerfi/app-types'
 
 import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
-import {
-  DAYS_TO_WAIT_FOR_CHART,
-  POINTS_REQUIRED_FOR_CHART,
-} from '@/components/organisms/Charts/components/constants'
 import { HistoricalChart } from '@/components/organisms/Charts/components/Historical'
 import { NotEnoughData } from '@/components/organisms/Charts/components/NotEnoughData'
+import { DAYS_TO_WAIT_FOR_CHART, POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
 
 export type PositionHistoricalChartProps = {
   chartData: VaultWithChartsData['historyChartData']
@@ -49,16 +46,22 @@ export const PositionHistoricalChart = ({
       style={{
         marginTop: 'var(--spacing-space-medium)',
         flexDirection: 'column',
-        alignItems: 'flex-end',
         paddingBottom: 0,
         position: 'relative',
       }}
     >
       {!parsedDataWithCutoff.length && <NotEnoughData daysToWait={DAYS_TO_WAIT_FOR_CHART} />}
-      <ChartHeader
-        timeframe={timeframe}
-        setTimeframe={(nextTimeFrame) => setTimeframe(nextTimeFrame as TimeframesType)}
-      />
+      <div
+        style={{
+          marginLeft: '90px',
+          marginBottom: '10px',
+        }}
+      >
+        <ChartHeader
+          timeframe={timeframe}
+          setTimeframe={(nextTimeFrame) => setTimeframe(nextTimeFrame as TimeframesType)}
+        />
+      </div>
       <HistoricalChart data={parsedDataWithCutoff} tokenSymbol={tokenSymbol} position={position} />
     </Card>
   )

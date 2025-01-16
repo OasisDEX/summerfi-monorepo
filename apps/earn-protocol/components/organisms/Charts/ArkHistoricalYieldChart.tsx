@@ -5,12 +5,9 @@ import { Card } from '@summerfi/app-earn-ui'
 import { type TimeframesType, type VaultWithChartsData } from '@summerfi/app-types'
 
 import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
-import {
-  DAYS_TO_WAIT_FOR_CHART,
-  POINTS_REQUIRED_FOR_CHART,
-} from '@/components/organisms/Charts/components/constants'
 import { NotEnoughData } from '@/components/organisms/Charts/components/NotEnoughData'
 import { YieldsChart } from '@/components/organisms/Charts/components/Yields'
+import { DAYS_TO_WAIT_FOR_CHART, POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
 
 type ArkHistoricalYieldChartProps = {
   chartData: VaultWithChartsData['arksHistoricalChartData']
