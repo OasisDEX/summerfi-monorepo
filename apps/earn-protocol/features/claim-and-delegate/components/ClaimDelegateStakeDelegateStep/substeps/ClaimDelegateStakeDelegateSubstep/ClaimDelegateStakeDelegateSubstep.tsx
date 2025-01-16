@@ -45,8 +45,8 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
   const claimed = formatCryptoBalance(externalData.sumrEarned)
   const claimedInUSD = formatFiatBalance(Number(externalData.sumrEarned) * estimatedSumrPrice)
 
-  const apy = formatDecimalAsPercent(externalData.sumrApy)
-  const sumrPerYear = `*${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(externalData.sumrEarned)) * Number(externalData.sumrApy))} $SUMR / Year`
+  const apy = formatDecimalAsPercent(externalData.sumrStakingInfo.sumrStakingApy)
+  const sumrPerYear = `*${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(externalData.sumrEarned)) * Number(externalData.sumrStakingInfo.sumrStakingApy))} $SUMR / Year`
 
   const handleStakeAndDelegate = () => {
     dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.COMPLETED })

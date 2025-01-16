@@ -9,6 +9,7 @@ import { getUserPositions } from '@/app/server-handlers/sdk/get-user-positions'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
+import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { PortfolioPageView } from '@/components/layout/PortfolioPageView/PortfolioPageView'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
@@ -32,6 +33,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     sumrStakeDelegate,
     sumrEligibility,
     sumrBalances,
+    sumrStakingInfo,
   ] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
     getVaultsList(),
@@ -45,6 +47,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     getSumrBalances({
       walletAddress,
     }),
+    getSumrStakingInfo(),
   ])
 
   const positionsJsonSafe = positions
@@ -66,12 +69,11 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   )
 
   const rewardsData: ClaimDelegateExternalData = {
-    sumrPrice: '0',
     sumrEarned: '123.45',
     sumrToClaim: '1.23',
-    sumrApy: '0.0123',
     sumrStakeDelegate,
     sumrBalances,
+    sumrStakingInfo,
   }
 
   const totalRays = Number(sumrEligibility.leaderboard[0]?.totalPoints ?? 0)
