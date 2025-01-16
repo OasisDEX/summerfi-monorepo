@@ -1,3 +1,4 @@
+import { type CSSProperties } from 'react'
 import { Text } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 
@@ -5,9 +6,15 @@ import graphIcon from '@/public/img/misc/graph_icon.svg'
 
 import notEnoughDataStyles from './NotEnoughData.module.scss'
 
-export const NotEnoughData = ({ daysToWait }: { daysToWait: number }) => {
+export const NotEnoughData = ({
+  daysToWait,
+  style,
+}: {
+  daysToWait: number
+  style?: CSSProperties
+}) => {
   return (
-    <div className={notEnoughDataStyles.notEnoughDataInfo}>
+    <div className={notEnoughDataStyles.notEnoughDataInfo} style={style}>
       <Image
         src={graphIcon}
         alt="Not enough data to show this graph"

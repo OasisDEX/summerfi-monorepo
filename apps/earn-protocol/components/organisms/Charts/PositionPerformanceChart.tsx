@@ -1,16 +1,13 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { Card } from '@summerfi/app-earn-ui'
 import { type TimeframesType, type VaultWithChartsData } from '@summerfi/app-types'
 
 import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
-import {
-  DAYS_TO_WAIT_FOR_CHART,
-  POINTS_REQUIRED_FOR_CHART,
-} from '@/components/organisms/Charts/components/constants'
-import { NotEnoughData } from '@/components/organisms/Charts/components/NotEnoughData'
 import { PerformanceChart } from '@/components/organisms/Charts/components/Performance'
+import { POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
+import { useTimeframes } from '@/hooks/use-timeframes'
 
 export type PositionPerformanceChartProps = {
   chartData: VaultWithChartsData['performanceChartData']
@@ -21,7 +18,9 @@ export const PositionPerformanceChart = ({
   chartData,
   inputToken,
 }: PositionPerformanceChartProps) => {
-  const [timeframe, setTimeframe] = useState<TimeframesType>('90d')
+  const { timeframe, setTimeframe, timeframes } = useTimeframes({
+    chartData,
+  })
 
   const parsedData = useMemo(() => {
     if (!chartData) {
@@ -31,7 +30,8 @@ export const PositionPerformanceChart = ({
     return chartData.data[timeframe]
   }, [timeframe, chartData])
 
-  const parsedDataWithCutoff = parsedData.length <= POINTS_REQUIRED_FOR_CHART ? [] : parsedData
+  const parsedDataWithCutoff =
+    !chartData || chartData.data['7d'].length <= POINTS_REQUIRED_FOR_CHART['7d'] ? [] : parsedData
 
   return (
     <Card
@@ -43,8 +43,8 @@ export const PositionPerformanceChart = ({
         position: 'relative',
       }}
     >
-      {!parsedDataWithCutoff.length && <NotEnoughData daysToWait={DAYS_TO_WAIT_FOR_CHART} />}
       <ChartHeader
+        timeframes={timeframes}
         timeframe={timeframe}
         setTimeframe={(nextTimeFrame) => setTimeframe(nextTimeFrame as TimeframesType)}
       />

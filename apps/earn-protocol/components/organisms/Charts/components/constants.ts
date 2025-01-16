@@ -1,2 +1,0 @@
-export const POINTS_REQUIRED_FOR_CHART = 20
-export const DAYS_TO_WAIT_FOR_CHART = 3
