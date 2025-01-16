@@ -81,7 +81,7 @@ const data = {
     ),
   },
   'stake-to-delegate': {
-    title: 'Stake to delegate + earn',
+    title: 'Stake to Delegate + Earn',
     content: (
       <SumrGovernanceContent
         header="Earn more $SUMR while protecting the protocol"

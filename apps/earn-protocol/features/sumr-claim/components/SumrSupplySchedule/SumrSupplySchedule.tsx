@@ -67,7 +67,6 @@ export const SumrSupplySchedule = () => {
           backgroundColor: 'var(--earn-protocol-neutral-100)',
           padding: 'var(--general-space-16) var(--general-space-20)',
           flexDirection: 'column',
-          border: '1px solid var(--earn-protocol-neutral-70)',
         }}
       >
         <Text

@@ -5,30 +5,30 @@ import classNames from './SumrNotTransferable.module.scss'
 
 const boxes = [
   {
-    preTitle: 'Reason 1',
-    title: 'Rational reason 1',
+    preTitle: 'Long Term Focus',
+    title: 'Encourages Long-Term Alignment',
     description:
-      'With Summer, effortlessly earn the best yields and grow your capital faster. We automatically rebalance your assets to top protocols, maximizing your returns.',
+      'Non-transferability eliminates the potential for immediate price volatility caused by speculators buying and selling the token.',
     link: {
       label: 'Get $SUMR',
       href: '/',
     },
   },
   {
-    preTitle: 'Reason 2',
-    title: 'Rational reason 2',
+    preTitle: 'Mercenary Users',
+    title: 'Discourages Bad Actors',
     description:
-      'With Summer, effortlessly earn the best yields and grow your capital faster. We automatically rebalance your assets to top protocols, maximizing your returns.',
+      'Non-transferable tokens cannot be exploited by bots or malicious actors attempting to farm and sell tokens indiscriminately.',
     link: {
       label: 'Get $SUMR',
       href: '/',
     },
   },
   {
-    preTitle: 'Reason 3',
-    title: 'Rational reason 3',
+    preTitle: 'Smooth Transition',
+    title: 'Smooth Transition to Full Utility',
     description:
-      'With Summer, effortlessly earn the best yields and grow your capital faster. We automatically rebalance your assets to top protocols, maximizing your returns.',
+      'A non-transferable token allows the protocol to focus on refining its utility before introducing liquidity through transferability.',
     link: {
       label: 'Get $SUMR',
       href: '/',
