@@ -7,6 +7,7 @@ const coreAbis = [
   'FleetCommander.sol',
   'StakingRewardsManagerBase.sol',
   'SummerVestingWallet.sol',
+  'HarborCommand.sol',
 ]
 const rewardsAbis = ['SummerRewardsRedeemer.sol']
 const govAbis = ['SummerToken.sol']
