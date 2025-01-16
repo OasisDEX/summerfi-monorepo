@@ -7,7 +7,7 @@ import {
   type ChainInfo,
   type IAddress,
 } from '@summerfi/sdk-common'
-import config from './index.json'
+import config from './config.json'
 
 type Config = typeof config
 type ConfigKey = 'mainnet' | 'base' | 'arbitrum'
