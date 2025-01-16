@@ -14,10 +14,12 @@ export {
   DAY,
   WEEK,
   SECONDS_PER_YEAR,
+  SECONDS_PER_DAY,
   HOUR_BI,
   DAY_BI,
   WEEK_BI,
   SECONDS_PER_YEAR_BI,
+  SECONDS_PER_DAY_BI,
 } from './times'
 export { EMAIL_REGEX } from './regex'
 

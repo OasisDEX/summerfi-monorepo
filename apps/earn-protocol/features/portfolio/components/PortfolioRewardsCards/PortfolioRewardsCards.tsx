@@ -60,7 +60,7 @@ interface StakedAndDelegatedSumrProps {
 
 const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }) => {
   const { walletAddress } = useParams()
-  const rawApy = rewardsData.sumrApy
+  const rawApy = rewardsData.sumrStakingInfo.sumrStakingApy
   const rawStaked = rewardsData.sumrStakeDelegate.sumrDelegated
 
   const value = formatCryptoBalance(rawStaked)

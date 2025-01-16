@@ -1,5 +1,14 @@
 import type { Dispatch, FC } from 'react'
-import { Button, Card, DataBlock, Icon, LoadableAvatar, Text } from '@summerfi/app-earn-ui'
+import {
+  Button,
+  Card,
+  DataBlock,
+  Icon,
+  LoadableAvatar,
+  SUMR_CAP,
+  Text,
+  useLocalConfig,
+} from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
@@ -24,7 +33,9 @@ export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
   ClaimDelegateStakeDelegateCompletedSubstepProps
 > = ({ state, externalData }) => {
   const { walletAddress } = useParams()
-
+  const {
+    state: { sumrNetApyConfig },
+  } = useLocalConfig()
   const claimedSumr = (
     <>
       {formatCryptoBalance(externalData.sumrEarned)}{' '}
@@ -33,17 +44,18 @@ export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
       </Text>
     </>
   )
-  const claimedSumrUSD = `$${formatFiatBalance(Number(externalData.sumrEarned) * Number(externalData.sumrPrice))}`
+  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
+  const claimedSumrUSD = `$${formatFiatBalance(Number(externalData.sumrEarned) * estimatedSumrPrice)}`
 
   const apy = (
     <>
-      {formatDecimalAsPercent(externalData.sumrApy).replace('%', '')}{' '}
+      {formatDecimalAsPercent(externalData.sumrStakingInfo.sumrStakingApy).replace('%', '')}{' '}
       <Text as="span" variant="p3semi" style={{ color: 'var(--earn-protocol-success-100)' }}>
         %APY
       </Text>
     </>
   )
-  const sumrPerYear = `${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(externalData.sumrEarned)) * Number(externalData.sumrApy))} $SUMR/yr`
+  const sumrPerYear = `${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(externalData.sumrEarned)) * Number(externalData.sumrStakingInfo.sumrStakingApy))} $SUMR/yr`
 
   if (state.delegatee === undefined) {
     // eslint-disable-next-line no-console
