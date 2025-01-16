@@ -1,7 +1,7 @@
 import { Kysely, sql } from 'kysely'
 
 export async function up(db: Kysely<never>) {
- await sql`
+  await sql`
    CREATE OR REPLACE FUNCTION take_tge_snapshot()
    RETURNS void
    LANGUAGE plpgsql AS $function$
@@ -35,5 +35,5 @@ export async function up(db: Kysely<never>) {
 }
 
 export async function down(db: Kysely<never>) {
- await sql`DROP FUNCTION IF EXISTS take_tge_snapshot`.execute(db)
+  await sql`DROP FUNCTION IF EXISTS take_tge_snapshot`.execute(db)
 }
