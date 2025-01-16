@@ -16,6 +16,14 @@ export interface IArmadaManagerToken {
   getDelegateTx: (params: { user: IUser }) => Promise<DelegateTransactionInfo>
 
   /**
+   * @name undelegate
+   * @description Undelegates votes from the sender
+   * @returns Promise<boolean>
+   * @throws Error
+   */
+  getUndelegateTx: () => Promise<DelegateTransactionInfo>
+
+  /**
    * @name delegates
    * @description Returns delegatee that the account has chosen
    * @param params.user The user
