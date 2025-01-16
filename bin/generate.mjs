@@ -10,7 +10,7 @@ const coreAbis = [
   'HarborCommand.sol',
 ]
 const rewardsAbis = ['SummerRewardsRedeemer.sol']
-const govAbis = ['SummerToken.sol']
+const govAbis = ['SummerToken.sol', 'GovernanceRewardsManager.sol']
 
 const dest = 'armada-protocol/abis/src'
 await $`pwd`
