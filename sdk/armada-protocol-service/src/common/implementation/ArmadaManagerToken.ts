@@ -46,6 +46,24 @@ export class ArmadaManagerToken implements IArmadaManagerToken {
     }
   }
 
+  async getUndelegateTx(): ReturnType<IArmadaManagerToken['getUndelegateTx']> {
+    const calldata = encodeFunctionData({
+      abi: SummerTokenAbi,
+      functionName: 'delegate',
+      args: ['0x0'],
+    })
+
+    return {
+      type: TransactionType.Delegate,
+      description: 'Undelegating votes',
+      transaction: {
+        target: Address.createFromEthereum({ value: this._summerTokenAddress.value }),
+        calldata: calldata,
+        value: '0',
+      },
+    }
+  }
+
   async delegates(
     params: Parameters<IArmadaManagerToken['delegates']>[0],
   ): ReturnType<IArmadaManagerToken['delegates']> {
