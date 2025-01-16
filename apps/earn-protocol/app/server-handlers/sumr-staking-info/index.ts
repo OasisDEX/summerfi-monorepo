@@ -113,7 +113,10 @@ export const getSumrStakingInfo = async (): Promise<SumrStakingInfoData> => {
       .shiftedBy(-sumrToken.decimals)
       .toNumber()
 
-    const sumrStakingApy = (sumrTokenDailyEmissionAmount * 365) / sumrTokenWrappedStakedAmount
+    const sumrStakingApy =
+      sumrTokenWrappedStakedAmount > 0
+        ? (sumrTokenDailyEmissionAmount * 365) / sumrTokenWrappedStakedAmount
+        : 0
 
     return { sumrTokenWrappedStakedAmount, sumrTokenDailyEmissionAmount, sumrStakingApy }
   } catch (error) {
