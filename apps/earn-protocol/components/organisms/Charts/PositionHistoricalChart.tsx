@@ -41,7 +41,7 @@ export const PositionHistoricalChart = ({
     return chartData.data[timeframe]
   }, [timeframe, chartData])
 
-  const chartHidden = parsedData.length < POINTS_REQUIRED_FOR_CHART['7d']
+  const chartHidden = parsedData.length < POINTS_REQUIRED_FOR_CHART[timeframe]
 
   return (
     <Card
@@ -71,7 +71,12 @@ export const PositionHistoricalChart = ({
           />
         )}
       </div>
-      <HistoricalChart data={parsedData} tokenSymbol={tokenSymbol} position={position} />
+      <HistoricalChart
+        timeframe={timeframe}
+        data={parsedData}
+        tokenSymbol={tokenSymbol}
+        position={position}
+      />
     </Card>
   )
 }

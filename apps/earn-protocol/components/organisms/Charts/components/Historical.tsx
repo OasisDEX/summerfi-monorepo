@@ -3,6 +3,7 @@ import { getPositionValues, RechartResponsiveWrapper } from '@summerfi/app-earn-
 import {
   type IArmadaPosition,
   type SDKVaultishType,
+  type TimeframesType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
@@ -30,9 +31,15 @@ export type HistoricalChartProps = {
     positionData: IArmadaPosition
     vaultData: SDKVaultishType
   }
+  timeframe: TimeframesType
 }
 
-export const HistoricalChart = ({ data, tokenSymbol, position }: HistoricalChartProps) => {
+export const HistoricalChart = ({
+  data,
+  tokenSymbol,
+  position,
+  timeframe,
+}: HistoricalChartProps) => {
   const { netDeposited, netEarnings } = getPositionValues(position)
   const legendBaseData = {
     netValue: `$${formatCryptoBalance(netEarnings)}`,
@@ -44,7 +51,7 @@ export const HistoricalChart = ({ data, tokenSymbol, position }: HistoricalChart
     [key: string]: string | number
   }>(legendBaseData)
 
-  const chartHidden = !data || data.length < POINTS_REQUIRED_FOR_CHART['7d']
+  const chartHidden = !data || data.length < POINTS_REQUIRED_FOR_CHART[timeframe]
 
   return (
     <RechartResponsiveWrapper height="340px">
