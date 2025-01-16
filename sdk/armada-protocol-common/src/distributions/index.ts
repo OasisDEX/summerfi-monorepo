@@ -21,7 +21,7 @@ export interface Claim {
   amount: bigint
   proof: HexData[]
 }
-export const getClaims = (walletAddress: string) => {
+export const getAllMerkleClaims = (walletAddress: string) => {
   const claims: Claim[] = []
 
   distributions.forEach((distribution) => {
@@ -41,7 +41,7 @@ export const getClaims = (walletAddress: string) => {
   return claims
 }
 
-export const getClaim = (walletAddress: string, index: string) => {
+export const getMerkleClaim = (walletAddress: string, index: string) => {
   const distribution = distributions.find((distribution) => {
     return distribution.distributionId === index
   })

@@ -16,12 +16,14 @@ import {
   createWithdrawTransaction,
   type IArmadaManagerClaims,
   type IArmadaManagerToken,
+  getDeployedRewardsRedeemerAddress,
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import {
   Address,
   calculatePriceImpact,
+  getChainInfoByChainId,
   IAddress,
   ITokenAmount,
   IUser,
@@ -60,6 +62,9 @@ export class ArmadaManager implements IArmadaManager {
   claims: IArmadaManagerClaims
   token: IArmadaManagerToken
 
+  private _rewardsRedeemerAddress: IAddress
+
+  private _hubChainInfo: ChainInfo
   private _configProvider: IConfigurationProvider
   private _allowanceManager: IAllowanceManager
   private _contractsProvider: IContractsProvider
@@ -86,7 +91,17 @@ export class ArmadaManager implements IArmadaManager {
     this._swapManager = params.swapManager
     this._oracleManager = params.oracleManager
 
-    this.claims = new ArmadaManagerClaims(params)
+    const _hubChainId = this._configProvider.getConfigurationItem({
+      name: 'SDK_HUB_CHAIN_ID',
+    })
+    this._hubChainInfo = getChainInfoByChainId(Number(_hubChainId))
+    this._rewardsRedeemerAddress = getDeployedRewardsRedeemerAddress()
+
+    this.claims = new ArmadaManagerClaims({
+      ...params,
+      hubChainInfo: this._hubChainInfo,
+      rewardsRedeemerAddress: this._rewardsRedeemerAddress,
+    })
     this.token = new ArmadaManagerToken(params)
   }
 
@@ -347,32 +362,31 @@ export class ArmadaManager implements IArmadaManager {
 
   /** CLAIMS TRANSACTIONS */
 
-  /** @see IArmadaManagerClaims.canClaim */
+  /** @see IArmadaManagerClaims.canClaimDistributions */
   async eligibleForClaim(
-    params: Parameters<IArmadaManagerClaims['canClaim']>[0],
-  ): ReturnType<IArmadaManagerClaims['canClaim']> {
-    return this.claims.canClaim(params)
+    params: Parameters<IArmadaManagerClaims['canClaimDistributions']>[0],
+  ): ReturnType<IArmadaManagerClaims['canClaimDistributions']> {
+    return this.claims.canClaimDistributions(params)
   }
 
-  /** @see IArmadaManagerClaims.getClaimMerkleRewardsTx */
+  /** @see IArmadaManagerClaims.getClaimDistributionTx */
   async getClaimMerkleRewardsTx(
-    params: Parameters<IArmadaManagerClaims['getClaimMerkleRewardsTx']>[0],
-  ): ReturnType<IArmadaManagerClaims['getClaimMerkleRewardsTx']> {
-    return this.claims.getClaimMerkleRewardsTx(params)
+    params: Parameters<IArmadaManagerClaims['getClaimDistributionTx']>[0],
+  ): ReturnType<IArmadaManagerClaims['getClaimDistributionTx']> {
+    return this.claims.getClaimDistributionTx(params)
   }
 
-  /** @see IArmadaManagerClaims.getClaimGovernanceRewardsTx */
+  /** @see IArmadaManagerClaims.getClaimVoteDelegationRewardsTx */
   async getClaimGovernanceRewardsTx(
-    params: Parameters<IArmadaManagerClaims['getClaimGovernanceRewardsTx']>[0],
-  ): ReturnType<IArmadaManagerClaims['getClaimGovernanceRewardsTx']> {
-    return this.claims.getClaimGovernanceRewardsTx(params)
+    params: Parameters<IArmadaManagerClaims['getClaimVoteDelegationRewardsTx']>[0],
+  ): ReturnType<IArmadaManagerClaims['getClaimVoteDelegationRewardsTx']> {
+    return this.claims.getClaimVoteDelegationRewardsTx(params)
   }
 
   async getClaimsTx(
     params: Parameters<IArmadaManager['getClaimsTx']>[0],
   ): ReturnType<IArmadaManager['getClaimsTx']> {
-    const hubChainId = await this._configProvider.getConfigurationItem({ name: 'SDK_HUB_CHAIN_ID' })
-    const isHubChain = params.chainInfo.chainId === Number(hubChainId)
+    const isHubChain = params.chainInfo.chainId === this._hubChainInfo.chainId
 
     const summerTokenAddress = await getDeployedContractAddress({
       chainInfo: params.chainInfo,
@@ -398,19 +412,19 @@ export class ArmadaManager implements IArmadaManager {
 
     // only hub chain can claim merkle rewards
     if (isHubChain) {
-      const claimMerkleRewards = await this.claims.getClaimMerkleRewardsTx({ user: params.user })
+      const claimMerkleRewards = await this.claims.getClaimDistributionTx({ user: params.user })
       multicallArgs.push(claimMerkleRewards.transaction.calldata)
     }
     // only hub chain can claim governance rewards
     if (isHubChain) {
-      const claimGovernanceRewards = await this.claims.getClaimGovernanceRewardsTx({
+      const claimGovernanceRewards = await this.claims.getClaimVoteDelegationRewardsTx({
         govRewardsManagerAddress: Address.createFromEthereum({ value: govRewardsManagerAddress }),
         rewardToken,
       })
       multicallArgs.push(claimGovernanceRewards.transaction.calldata)
     }
     // any chain can claim fleet rewards
-    const claimFleetRewards = await this.claims.getClaimFleetRewardsTx({
+    const claimFleetRewards = await this.claims.getClaimProtocolUsageRewardsTx({
       chainInfo: params.chainInfo,
       user: params.user,
       fleetCommandersAddresses: params.fleetCommandersAddresses,

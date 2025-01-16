@@ -1,11 +1,23 @@
-import { AdmiralsQuartersAbi, SummerRewardsRedeemerAbi } from '@summerfi/armada-protocol-abis'
+import {
+  AdmiralsQuartersAbi,
+  GovernanceRewardsManagerAbi,
+  StakingRewardsManagerBaseAbi,
+  SummerRewardsRedeemerAbi,
+  SummerTokenAbi,
+} from '@summerfi/armada-protocol-abis'
 import {
   type IArmadaManagerClaims,
-  getClaims,
+  getAllMerkleClaims,
   getDeployedContractAddress,
   getDeployedRewardsRedeemerAddress,
 } from '@summerfi/armada-protocol-common'
-import { ChainFamilyMap, TransactionType, type IAddress } from '@summerfi/sdk-common'
+import {
+  ChainFamilyMap,
+  TransactionType,
+  type IAddress,
+  type IChainInfo,
+  type IUser,
+} from '@summerfi/sdk-common'
 import { encodeFunctionData } from 'viem'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 
@@ -16,22 +28,28 @@ import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-comm
 export class ArmadaManagerClaims implements IArmadaManagerClaims {
   private _blockchainClientProvider: IBlockchainClientProvider
 
+  private _hubChainInfo: IChainInfo
   private _rewardsRedeemerAddress: IAddress
 
   /** CONSTRUCTOR */
-  constructor(params: { blockchainClientProvider: IBlockchainClientProvider }) {
+  constructor(params: {
+    blockchainClientProvider: IBlockchainClientProvider
+    hubChainInfo: IChainInfo
+    rewardsRedeemerAddress: IAddress
+  }) {
     this._blockchainClientProvider = params.blockchainClientProvider
-    this._rewardsRedeemerAddress = getDeployedRewardsRedeemerAddress()
+    this._hubChainInfo = params.hubChainInfo
+    this._rewardsRedeemerAddress = params.rewardsRedeemerAddress
   }
 
-  async canClaim(
-    params: Parameters<IArmadaManagerClaims['canClaim']>[0],
-  ): ReturnType<IArmadaManagerClaims['canClaim']> {
+  async canClaimDistributions(
+    params: Parameters<IArmadaManagerClaims['canClaimDistributions']>[0],
+  ): ReturnType<IArmadaManagerClaims['canClaimDistributions']> {
     const client = this._blockchainClientProvider.getBlockchainClient({
       chainInfo: params.user.chainInfo,
     })
 
-    const claims = getClaims(params.user.wallet.address.value)
+    const claims = getAllMerkleClaims(params.user.wallet.address.value)
 
     const promises = claims.map((claim) =>
       client.readContract({
@@ -47,14 +65,14 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     return claims.map((claim, index) => [claim.index, canClaimResults[index]])
   }
 
-  async hasClaimed(
-    params: Parameters<IArmadaManagerClaims['hasClaimed']>[0],
-  ): ReturnType<IArmadaManagerClaims['hasClaimed']> {
+  async hasClaimedDistributions(
+    params: Parameters<IArmadaManagerClaims['hasClaimedDistributions']>[0],
+  ): ReturnType<IArmadaManagerClaims['hasClaimedDistributions']> {
     const client = this._blockchainClientProvider.getBlockchainClient({
       chainInfo: params.user.chainInfo,
     })
 
-    const claims = getClaims(params.user.wallet.address.value)
+    const claims = getAllMerkleClaims(params.user.wallet.address.value)
 
     const promises = claims.map((claim) =>
       client.readContract({
@@ -70,20 +88,65 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     return claims.map((claim, index) => [claim.index, hasClaimedResults[index]])
   }
 
-  async amountToClaim(
-    params: Parameters<IArmadaManagerClaims['amountToClaim']>[0],
-  ): ReturnType<IArmadaManagerClaims['amountToClaim']> {
-    const claims = getClaims(params.user.wallet.address.value)
+  private async getMerkleDistributionRewards(user: IUser): Promise<bigint> {
+    const merkleClaims = getAllMerkleClaims(user.wallet.address.value)
 
-    const amount = claims.map((claim) => claim.amount).reduce((acc, curr) => acc + curr, 0n)
+    // TODO: check if has claimed?
 
-    return amount
+    // get merkle rewards amount
+    return merkleClaims.map((claim) => claim.amount).reduce((acc, curr) => acc + curr, 0n)
   }
 
-  async getClaimMerkleRewardsTx(
-    params: Parameters<IArmadaManagerClaims['getClaimMerkleRewardsTx']>[0],
-  ): ReturnType<IArmadaManagerClaims['getClaimMerkleRewardsTx']> {
-    const claims = getClaims(params.user.wallet.address.value)
+  private async getVoteDelegationRewards(user: IUser): Promise<bigint> {
+    const summerTokenAddress = getDeployedContractAddress({
+      chainInfo: this._hubChainInfo,
+      contractCategory: 'gov',
+      contractName: 'summerToken',
+    })
+    const client = this._blockchainClientProvider.getBlockchainClient({
+      chainInfo: this._hubChainInfo,
+    })
+    const rewardsManagerAddressString = await client.readContract({
+      abi: SummerTokenAbi,
+      address: summerTokenAddress.value,
+      functionName: 'rewardsManager',
+      args: [],
+    })
+    return client.readContract({
+      abi: GovernanceRewardsManagerAbi,
+      address: rewardsManagerAddressString,
+      functionName: 'earned',
+      args: [user.wallet.address.value, summerTokenAddress.value],
+    })
+  }
+
+  private async getProtocolUsageRewards(user: IUser, chainInfo: IChainInfo): Promise<bigint> {
+    // TODO: implement
+    throw new Error('Not implemented')
+  }
+
+  async aggregatedRewards(
+    params: Parameters<IArmadaManagerClaims['aggregatedRewards']>[0],
+  ): ReturnType<IArmadaManagerClaims['aggregatedRewards']> {
+    const merkleDistributionRewards = await this.getMerkleDistributionRewards(params.user)
+    const voteDelegationRewards = await this.getVoteDelegationRewards(params.user)
+    const protocolUsageRewards = await this.getProtocolUsageRewards(params.user)
+
+    const total = merkleDistributionRewards + voteDelegationRewards + protocolUsageRewards
+    const perChain = {
+      [params.user.chainInfo.chainId]: total,
+    }
+
+    return {
+      total,
+      perChain,
+    }
+  }
+
+  async getClaimDistributionTx(
+    params: Parameters<IArmadaManagerClaims['getClaimDistributionTx']>[0],
+  ): ReturnType<IArmadaManagerClaims['getClaimDistributionTx']> {
+    const claims = getAllMerkleClaims(params.user.wallet.address.value)
 
     const calldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
@@ -114,9 +177,9 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     }
   }
 
-  async getClaimGovernanceRewardsTx(
-    params: Parameters<IArmadaManagerClaims['getClaimGovernanceRewardsTx']>[0],
-  ): ReturnType<IArmadaManagerClaims['getClaimGovernanceRewardsTx']> {
+  async getClaimVoteDelegationRewardsTx(
+    params: Parameters<IArmadaManagerClaims['getClaimVoteDelegationRewardsTx']>[0],
+  ): ReturnType<IArmadaManagerClaims['getClaimVoteDelegationRewardsTx']> {
     const calldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'claimGovernanceRewards',
@@ -140,9 +203,9 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     }
   }
 
-  async getClaimFleetRewardsTx(
-    params: Parameters<IArmadaManagerClaims['getClaimFleetRewardsTx']>[0],
-  ): ReturnType<IArmadaManagerClaims['getClaimFleetRewardsTx']> {
+  async getClaimProtocolUsageRewardsTx(
+    params: Parameters<IArmadaManagerClaims['getClaimProtocolUsageRewardsTx']>[0],
+  ): ReturnType<IArmadaManagerClaims['getClaimProtocolUsageRewardsTx']> {
     const calldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'claimFleetRewards',
