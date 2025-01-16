@@ -14,7 +14,7 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
 import { ClaimDelegateCard } from '@/features/claim-and-delegate/components/ClaimDelegateCard/ClaimDelegateCard'
-import { sumrDelegates } from '@/features/claim-and-delegate/consts'
+import { mergeDelegatesData } from '@/features/claim-and-delegate/consts'
 import {
   type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
@@ -53,6 +53,8 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
   }
 
   const hasNothingToStake = externalData.sumrBalances.base === '0'
+
+  const mappedSumrDelegatesData = mergeDelegatesData(externalData.sumrDelegates)
 
   return (
     <div className={classNames.claimDelegateStakeDelegateSubstepWrapper}>
@@ -114,17 +116,29 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
         </Text>
       </div>
       <div className={classNames.rightContent}>
-        {sumrDelegates.map((delegate) => (
-          <ClaimDelegateCard
-            key={delegate.title}
-            {...delegate}
-            sumrAmount={
-              externalData.votes?.find((vote) => vote.delegate === delegate.address)?.amountOfVotes
-            }
-            isActive={state.delegatee === delegate.address}
-            handleClick={() => dispatch({ type: 'update-delegatee', payload: delegate.address })}
-          />
-        ))}
+        <div className={classNames.delegates}>
+          {mappedSumrDelegatesData.map((delegate) => (
+            <ClaimDelegateCard
+              key={delegate.address}
+              {...delegate}
+              isActive={state.delegatee === delegate.address}
+              handleClick={() => dispatch({ type: 'update-delegatee', payload: delegate.address })}
+            />
+          ))}
+          {mappedSumrDelegatesData.length === 0 && (
+            <Text
+              as="p"
+              variant="p2semi"
+              style={{
+                color: 'var(--earn-protocol-secondary-40)',
+                textAlign: 'center',
+                marginTop: 'var(--general-space-32)',
+              }}
+            >
+              No delegates found
+            </Text>
+          )}
+        </div>
         <div className={classNames.buttonsWrapper}>
           <Link href={`/portfolio/${walletAddress}?tab=${PortfolioTabs.REWARDS}`}>
             <Button variant="secondarySmall">
