@@ -13,7 +13,7 @@ import { formatCryptoBalance, formatDecimalAsPercent, formatFiatBalance } from '
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
-import { sumrDelegates } from '@/features/claim-and-delegate/consts'
+import { localSumrDelegates } from '@/features/claim-and-delegate/consts'
 import type {
   ClaimDelegateExternalData,
   ClaimDelegateReducerAction,
@@ -57,12 +57,22 @@ export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
   )
   const sumrPerYear = `${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(externalData.sumrEarned)) * Number(externalData.sumrStakingInfo.sumrStakingApy))} $SUMR/yr`
 
-  if (state.delegatee === undefined) {
+  const delegatee = state.delegatee?.toLowerCase()
+
+  if (delegatee === undefined) {
     // eslint-disable-next-line no-console
     console.error('Delegatee is undefined')
 
     return null
   }
+  // use name from tally api, if not fallback to local mapping
+  // last resort is delegatee address
+  const delegateeName =
+    externalData.sumrDelegates.find(
+      (delegate) => delegate.account.address.toLowerCase() === delegatee,
+    )?.account.name ??
+    localSumrDelegates.find((item) => item.address === state.delegatee)?.title ??
+    delegatee
 
   return (
     <div className={classNames.claimDelegateStakeDelegateCompletedSubstepWrapper}>
@@ -119,12 +129,12 @@ export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
             <div className={classNames.withIcon}>
               <LoadableAvatar
                 size={38}
-                name={btoa(state.delegatee)}
+                name={btoa(delegateeName)}
                 variant="pixel"
                 colors={['#B90061', '#EC58A2', '#F8A4CE', '#FFFFFF']}
               />
               <Text as="h4" variant="h4">
-                {sumrDelegates.find((item) => item.address === state.delegatee)?.title}
+                {delegateeName}
               </Text>
             </div>
           </div>

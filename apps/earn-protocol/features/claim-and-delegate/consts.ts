@@ -1,67 +1,61 @@
-export const sumrDelegates = [
+import { formatAddress } from '@summerfi/app-utils'
+
+import { type SumrDelegates } from '@/app/server-handlers/sumr-delegates'
+
+interface SumrDelegate {
+  sumrAmount: number
+  ens: string
+  address: string
+  title: string
+  description: string
+  social: {
+    linkedin: string | undefined
+    x: string | undefined
+    link: string | undefined
+  }
+}
+
+export const localSumrDelegates: Partial<SumrDelegate>[] = [
   {
-    sumrAmount: '433333',
     ens: 'a16z',
     address: '0xb0f758323D3798a6A567C1601d84f30d1BCAAA0b',
     title: 'Don Halaprixos',
     description:
-      'Don Halaprixos is a crypto investor known for his love for the crypto space and teammates',
-    social: {
-      linkedin: '/',
-      x: '/',
-      link: '/',
-    },
-  },
-  {
-    sumrAmount: '433333',
-    ens: 'a16z',
-    address: '0x0000000000000000000000000000000000000001',
-    title: 'a16z Crypto 1',
-    description:
-      'Andreessen Horowitz (aka a16z) is a venture capital firm that backs bold entrepreneurs building the future through technology',
-    social: {
-      linkedin: '/',
-      x: '/',
-      link: '/',
-    },
-  },
-  {
-    sumrAmount: '433333',
-    ens: 'a16z',
-    address: '0x0000000000000000000000000000000000000002',
-    title: 'a16z Crypto 2',
-    description:
-      'Andreessen Horowitz (aka a16z) is a venture capital firm that backs bold entrepreneur§s building the future through technology',
-    social: {
-      linkedin: '/',
-      x: '/',
-      link: '/',
-    },
-  },
-  {
-    sumrAmount: '433333',
-    ens: 'a16z',
-    address: '0x0000000000000000000000000000000000000003',
-    title: 'a16z Crypto 3',
-    description:
-      'Andreessen Horowitz (aka a16z) is a venture capital firm that backs bold entrepreneurs building the future through technology',
-    social: {
-      linkedin: '/',
-      x: '/',
-      link: '/',
-    },
-  },
-  {
-    sumrAmount: '433333',
-    ens: 'a16z',
-    address: '0x0000000000000000000000000000000000000004',
-    title: 'a16z Crypto 4',
-    description:
-      'Andreessen Horowitz (aka a16z) is a venture capital firm that backs bold entrepreneurs building the future through technology',
-    social: {
-      linkedin: '/',
-      x: '/',
-      link: '/',
-    },
+      'Don Halaprixos is a crypto investor known for his love for the crypto space and teammates.',
   },
 ]
+
+export function mergeDelegatesData(sumrDelegates: SumrDelegates[]): SumrDelegate[] {
+  return sumrDelegates
+    .map((sumrDelegate) => {
+      const localDelegate = localSumrDelegates.find(
+        (local) => local.address?.toLowerCase() === sumrDelegate.account.address.toLowerCase(),
+      )
+
+      return {
+        // eslint-disable-next-line no-mixed-operators
+        sumrAmount: Number(sumrDelegate.votesCount) / 10 ** 18,
+        ens: sumrDelegate.account.ens !== '' ? sumrDelegate.account.ens : localDelegate?.ens ?? '',
+        address: sumrDelegate.account.address,
+        title:
+          sumrDelegate.account.name !== ''
+            ? sumrDelegate.account.name
+            : localDelegate?.title ?? formatAddress(sumrDelegate.account.address),
+        description:
+          sumrDelegate.account.bio !== ''
+            ? sumrDelegate.account.bio
+            : sumrDelegate.statement && sumrDelegate.statement.statementSummary !== ''
+              ? sumrDelegate.statement.statementSummary
+              : localDelegate?.description ?? 'Description not available.',
+        social: {
+          x:
+            sumrDelegate.account.twitter !== ''
+              ? sumrDelegate.account.twitter
+              : localDelegate?.social?.x ?? undefined,
+          linkedin: localDelegate?.social?.linkedin ?? undefined,
+          link: `https://basescan.org/address/${sumrDelegate.account.address}`,
+        },
+      }
+    })
+    .sort((a, b) => b.sumrAmount - a.sumrAmount)
+}

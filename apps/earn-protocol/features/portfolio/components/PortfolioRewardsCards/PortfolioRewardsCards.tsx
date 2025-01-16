@@ -16,7 +16,7 @@ import {
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
-import { sumrDelegates } from '@/features/claim-and-delegate/consts'
+import { localSumrDelegates } from '@/features/claim-and-delegate/consts'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
 
@@ -152,9 +152,9 @@ interface YourDelegateProps {
 const YourDelegate: FC<YourDelegateProps> = ({ rewardsData }) => {
   const { walletAddress } = useParams()
 
-  const delegatee = sumrDelegates.find(
+  const delegatee = localSumrDelegates.find(
     (item) =>
-      item.address.toLowerCase() === rewardsData.sumrStakeDelegate.sumrDelegated.toLowerCase(),
+      item.address?.toLowerCase() === rewardsData.sumrStakeDelegate.sumrDelegated.toLowerCase(),
   )
 
   const value = delegatee ? delegatee.title : 'No delegate'
