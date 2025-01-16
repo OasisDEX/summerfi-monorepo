@@ -1,7 +1,7 @@
 import { type SumrBalancesData } from '@/app/server-handlers/sumr-balances'
 import { type SumrDelegateStakeData } from '@/app/server-handlers/sumr-delegate-stake'
-import { type SumrStakingInfoData } from '@/app/server-handlers/sumr-staking-info'
 import { type SumrDelegates } from '@/app/server-handlers/sumr-delegates'
+import { type SumrStakingInfoData } from '@/app/server-handlers/sumr-staking-info'
 
 export enum ClaimDelegateSteps {
   TERMS = 'terms',
