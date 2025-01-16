@@ -1,5 +1,5 @@
 import { Text, Timeframes, ToggleButton } from '@summerfi/app-earn-ui'
-import { type TimeframesType } from '@summerfi/app-types'
+import { type TimeframesItem, type TimeframesType } from '@summerfi/app-types'
 
 import classNames from './ChartHeader.module.scss'
 
@@ -8,6 +8,7 @@ type ChartHeaderProps = {
   compare?: boolean
   setCompare?: (value: boolean) => void
   timeframe?: TimeframesType
+  timeframes: TimeframesItem
   setTimeframe?: (timeframe: string) => void
 }
 
@@ -17,6 +18,7 @@ export const ChartHeader = ({
   timeframe,
   setCompare,
   setTimeframe,
+  timeframes,
 }: ChartHeaderProps) => {
   return (
     <div className={classNames.wrapper}>
@@ -30,7 +32,7 @@ export const ChartHeader = ({
       )}
       {timeframe && setTimeframe && (
         <Timeframes
-          timeframes={['7d', '30d', '90d', '6m', '1y', '3y']}
+          timeframes={timeframes}
           activeTimeframe={timeframe}
           setActiveTimeframe={setTimeframe}
         />

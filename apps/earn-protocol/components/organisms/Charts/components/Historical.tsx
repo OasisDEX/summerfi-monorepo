@@ -19,6 +19,8 @@ import {
 
 import { ChartCross } from '@/components/organisms/Charts/components/ChartCross'
 import { HistoricalLegend } from '@/components/organisms/Charts/components/HistoricalLegend'
+import { NotEnoughData } from '@/components/organisms/Charts/components/NotEnoughData'
+import { DAYS_TO_WAIT_FOR_CHART, POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
 import { formatChartCryptoValue } from '@/features/forecast/chart-formatters'
 
 export type HistoricalChartProps = {
@@ -42,19 +44,40 @@ export const HistoricalChart = ({ data, tokenSymbol, position }: HistoricalChart
     [key: string]: string | number
   }>(legendBaseData)
 
+  const chartHidden = !data || data.length < POINTS_REQUIRED_FOR_CHART['7d']
+
   return (
     <RechartResponsiveWrapper height="340px">
-      <ResponsiveContainer width="100%" height="100%">
+      {chartHidden && (
+        <NotEnoughData
+          daysToWait={DAYS_TO_WAIT_FOR_CHART}
+          style={{
+            width: '80%',
+            backgroundColor: 'var(--color-surface-subtle)',
+          }}
+        />
+      )}
+      <ResponsiveContainer
+        width={chartHidden ? '30%' : '100%'}
+        height="100%"
+        style={
+          chartHidden
+            ? {
+                marginLeft: '70%',
+              }
+            : {}
+        }
+      >
         <ComposedChart
           data={data}
           margin={{
-            top: 30,
+            top: chartHidden ? 0 : 20,
             right: 0,
             left: 0,
             bottom: 10,
           }}
           onMouseMove={({ activePayload }) => {
-            if (activePayload) {
+            if (activePayload && !chartHidden) {
               setHighlightedData((prevData) => ({
                 ...prevData,
                 ...activePayload.reduce(
@@ -78,15 +101,17 @@ export const HistoricalChart = ({ data, tokenSymbol, position }: HistoricalChart
             tickFormatter={(timestamp: string) => {
               return timestamp.split(' ')[0]
             }}
+            hide={chartHidden}
           />
           <YAxis
             strokeWidth={0}
             tickFormatter={(label: string) => `${formatChartCryptoValue(Number(label))}`}
             domain={['dataMin', 'dataMax + 5']}
+            hide={chartHidden}
           />
           {/* Cursor is needed for the chart cross to work */}
           <Tooltip content={() => null} cursor={false} />
-          <Customized component={<ChartCross />} />
+          {!chartHidden ? <Customized component={<ChartCross />} /> : null}
           <Line
             dot={false}
             type="monotone"
@@ -96,6 +121,7 @@ export const HistoricalChart = ({ data, tokenSymbol, position }: HistoricalChart
             connectNulls
             animationDuration={400}
             animateNewValues
+            hide={chartHidden}
           />
           <Line
             dot={false}
@@ -106,6 +132,7 @@ export const HistoricalChart = ({ data, tokenSymbol, position }: HistoricalChart
             connectNulls
             animationDuration={400}
             animateNewValues
+            hide={chartHidden}
           />
           {data?.length && (
             <Legend

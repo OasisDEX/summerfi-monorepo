@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { Card } from '@summerfi/app-earn-ui'
 import {
   type IArmadaPosition,
@@ -12,8 +12,8 @@ import {
 
 import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
 import { HistoricalChart } from '@/components/organisms/Charts/components/Historical'
-import { NotEnoughData } from '@/components/organisms/Charts/components/NotEnoughData'
-import { DAYS_TO_WAIT_FOR_CHART, POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
+import { POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
+import { useTimeframes } from '@/hooks/use-timeframes'
 
 export type PositionHistoricalChartProps = {
   chartData: VaultWithChartsData['historyChartData']
@@ -29,7 +29,9 @@ export const PositionHistoricalChart = ({
   tokenSymbol,
   position,
 }: PositionHistoricalChartProps) => {
-  const [timeframe, setTimeframe] = useState<TimeframesType>('90d')
+  const { timeframe, setTimeframe, timeframes } = useTimeframes({
+    chartData,
+  })
 
   const parsedData = useMemo(() => {
     if (!chartData) {
@@ -39,7 +41,7 @@ export const PositionHistoricalChart = ({
     return chartData.data[timeframe]
   }, [timeframe, chartData])
 
-  const parsedDataWithCutoff = parsedData.length <= POINTS_REQUIRED_FOR_CHART ? [] : parsedData
+  const chartHidden = parsedData.length < POINTS_REQUIRED_FOR_CHART['7d']
 
   return (
     <Card
@@ -48,21 +50,28 @@ export const PositionHistoricalChart = ({
         flexDirection: 'column',
         paddingBottom: 0,
         position: 'relative',
+        ...(chartHidden && {
+          // so much hacks to just because the legend is used as a separate UI element
+          // will need to refactor this
+          paddingLeft: 0,
+        }),
       }}
     >
-      {!parsedDataWithCutoff.length && <NotEnoughData daysToWait={DAYS_TO_WAIT_FOR_CHART} />}
       <div
         style={{
           marginLeft: '90px',
           marginBottom: '10px',
         }}
       >
-        <ChartHeader
-          timeframe={timeframe}
-          setTimeframe={(nextTimeFrame) => setTimeframe(nextTimeFrame as TimeframesType)}
-        />
+        {!chartHidden && (
+          <ChartHeader
+            timeframes={timeframes}
+            timeframe={timeframe}
+            setTimeframe={(nextTimeFrame) => setTimeframe(nextTimeFrame as TimeframesType)}
+          />
+        )}
       </div>
-      <HistoricalChart data={parsedDataWithCutoff} tokenSymbol={tokenSymbol} position={position} />
+      <HistoricalChart data={parsedData} tokenSymbol={tokenSymbol} position={position} />
     </Card>
   )
 }

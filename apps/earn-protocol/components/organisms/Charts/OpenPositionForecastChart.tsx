@@ -30,6 +30,14 @@ export const OpenPositionForecastChart = ({
       }}
     >
       <ChartHeader
+        timeframes={{
+          '7d': true,
+          '30d': true,
+          '90d': true,
+          '6m': true,
+          '1y': true,
+          '3y': true,
+        }}
         title="Open Position Forecast"
         timeframe={timeframe}
         setTimeframe={(nextTimeFrame) => setTimeframe(nextTimeFrame as TimeframesType)}

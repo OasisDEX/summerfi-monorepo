@@ -1,4 +1,4 @@
-import { type TimeframesType } from '@summerfi/app-types'
+import { type TimeframesItem, type TimeframesType } from '@summerfi/app-types'
 
 import { Text } from '@/components/atoms/Text/Text'
 
@@ -9,17 +9,25 @@ export const Timeframes = ({
   activeTimeframe,
   setActiveTimeframe,
 }: {
-  timeframes: Partial<TimeframesType[]>
+  timeframes: TimeframesItem
   activeTimeframe: TimeframesType
   setActiveTimeframe: (timeframe: TimeframesType) => void
 }) => {
   return (
     <div className={timeframesStyles.timeframesWrapper}>
-      {timeframes.map((timeframe) => (
+      {Object.keys(timeframes).map((timeframe: TimeframesType) => (
         <button
           key={timeframe}
-          onClick={() => timeframe && setActiveTimeframe(timeframe)}
+          onClick={() => setActiveTimeframe(timeframe)}
           className={activeTimeframe === timeframe ? 'active' : ''}
+          style={
+            !timeframes[timeframe]
+              ? {
+                  opacity: 0.2,
+                  pointerEvents: 'none',
+                }
+              : {}
+          }
         >
           <Text
             variant="p2semi"

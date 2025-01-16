@@ -8,6 +8,7 @@ import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
 import { NotEnoughData } from '@/components/organisms/Charts/components/NotEnoughData'
 import { YieldsChart } from '@/components/organisms/Charts/components/Yields'
 import { DAYS_TO_WAIT_FOR_CHART, POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
+import { useTimeframes } from '@/hooks/use-timeframes'
 
 type ArkHistoricalYieldChartProps = {
   chartData: VaultWithChartsData['arksHistoricalChartData']
@@ -18,7 +19,9 @@ export const ArkHistoricalYieldChart = ({
   chartData,
   summerVaultName,
 }: ArkHistoricalYieldChartProps) => {
-  const [timeframe, setTimeframe] = useState<TimeframesType>('90d')
+  const { timeframe, setTimeframe, timeframes } = useTimeframes({
+    chartData,
+  })
   const [compare, setCompare] = useState(false)
 
   const colors = {
@@ -43,7 +46,8 @@ export const ArkHistoricalYieldChart = ({
     return chartData.data[timeframe]
   }, [timeframe, chartData, compare, summerVaultName])
 
-  const parsedDataWithCutoff = parsedData.length <= POINTS_REQUIRED_FOR_CHART ? [] : parsedData
+  const parsedDataWithCutoff =
+    !chartData || chartData.data['7d'].length <= POINTS_REQUIRED_FOR_CHART['7d'] ? [] : parsedData
 
   return (
     <Card
@@ -56,6 +60,7 @@ export const ArkHistoricalYieldChart = ({
     >
       {!parsedDataWithCutoff.length && <NotEnoughData daysToWait={DAYS_TO_WAIT_FOR_CHART} />}
       <ChartHeader
+        timeframes={timeframes}
         compare={compare}
         setCompare={(nextCompare) => setCompare(nextCompare)}
         timeframe={timeframe}
