@@ -109,7 +109,10 @@ export class ArmadaManager implements IArmadaManager {
       rewardsRedeemerAddress: this._rewardsRedeemerAddress,
       supportedChains: this._supportedChains,
     })
-    this.token = new ArmadaManagerToken(params)
+    this.token = new ArmadaManagerToken({
+      ...params,
+      hubChainInfo: this._hubChainInfo,
+    })
   }
 
   /** POOLS */
