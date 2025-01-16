@@ -1,6 +1,7 @@
 import {
   AdmiralsQuartersAbi,
   GovernanceRewardsManagerAbi,
+  HarborCommandAbi,
   StakingRewardsManagerBaseAbi,
   SummerRewardsRedeemerAbi,
   SummerTokenAbi,
@@ -9,17 +10,19 @@ import {
   type IArmadaManagerClaims,
   getAllMerkleClaims,
   getDeployedContractAddress,
-  getDeployedRewardsRedeemerAddress,
 } from '@summerfi/armada-protocol-common'
 import {
+  Address,
   ChainFamilyMap,
   TransactionType,
+  type HexData,
   type IAddress,
   type IChainInfo,
   type IUser,
 } from '@summerfi/sdk-common'
 import { encodeFunctionData } from 'viem'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
+import type { IContractsProvider } from '@summerfi/contracts-provider-common'
 
 /**
  * @name ArmadaManager
@@ -27,17 +30,23 @@ import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-comm
  */
 export class ArmadaManagerClaims implements IArmadaManagerClaims {
   private _blockchainClientProvider: IBlockchainClientProvider
+  private _contractsProvider: IContractsProvider
 
+  private _supportedChains: IChainInfo[]
   private _hubChainInfo: IChainInfo
   private _rewardsRedeemerAddress: IAddress
 
   /** CONSTRUCTOR */
   constructor(params: {
     blockchainClientProvider: IBlockchainClientProvider
+    contractsProvider: IContractsProvider
+    supportedChains: IChainInfo[]
     hubChainInfo: IChainInfo
     rewardsRedeemerAddress: IAddress
   }) {
     this._blockchainClientProvider = params.blockchainClientProvider
+    this._contractsProvider = params.contractsProvider
+    this._supportedChains = params.supportedChains
     this._hubChainInfo = params.hubChainInfo
     this._rewardsRedeemerAddress = params.rewardsRedeemerAddress
   }
@@ -98,14 +107,15 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
   }
 
   private async getVoteDelegationRewards(user: IUser): Promise<bigint> {
+    const client = this._blockchainClientProvider.getBlockchainClient({
+      chainInfo: this._hubChainInfo,
+    })
     const summerTokenAddress = getDeployedContractAddress({
       chainInfo: this._hubChainInfo,
       contractCategory: 'gov',
       contractName: 'summerToken',
     })
-    const client = this._blockchainClientProvider.getBlockchainClient({
-      chainInfo: this._hubChainInfo,
-    })
+
     const rewardsManagerAddressString = await client.readContract({
       abi: SummerTokenAbi,
       address: summerTokenAddress.value,
@@ -121,8 +131,63 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
   }
 
   private async getProtocolUsageRewards(user: IUser, chainInfo: IChainInfo): Promise<bigint> {
-    // TODO: implement
-    throw new Error('Not implemented')
+    const client = this._blockchainClientProvider.getBlockchainClient({
+      chainInfo,
+    })
+
+    const summerTokenAddress = getDeployedContractAddress({
+      chainInfo,
+      contractCategory: 'gov',
+      contractName: 'summerToken',
+    })
+
+    const harborCommandAddress = getDeployedContractAddress({
+      chainInfo,
+      contractCategory: 'core',
+      contractName: 'harborCommand',
+    })
+
+    // readContract summer token abi
+    const fleetCommanderAddresses = await client.readContract({
+      abi: HarborCommandAbi,
+      address: harborCommandAddress.value,
+      functionName: 'getActiveFleetCommanders',
+    })
+
+    const contractCalls: {
+      abi: typeof StakingRewardsManagerBaseAbi
+      address: HexData
+      functionName: 'earned'
+    }[] = []
+    for await (const fleetCommanderAddress of fleetCommanderAddresses) {
+      // read earned staking rewards from rewards manager
+      const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+        chainInfo,
+        address: Address.createFromEthereum({ value: fleetCommanderAddress }),
+      })
+      const { stakingRewardsManager } = await fleetContract.config()
+      const earnedCall = {
+        abi: StakingRewardsManagerBaseAbi,
+        address: stakingRewardsManager.value,
+        functionName: 'earned',
+        args: [user.wallet.address.value, summerTokenAddress.value],
+      } as const
+      contractCalls.push(earnedCall)
+    }
+
+    return client
+      .multicall({
+        contracts: contractCalls,
+      })
+      .then((results) => {
+        return results.reduce((prev, current) => {
+          if (current.status === 'success') {
+            return prev + current.result
+          } else {
+            throw new Error('Error in multicall reading protocol usage rewards: ' + current.error)
+          }
+        }, 0n)
+      })
   }
 
   async aggregatedRewards(
@@ -130,12 +195,24 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
   ): ReturnType<IArmadaManagerClaims['aggregatedRewards']> {
     const merkleDistributionRewards = await this.getMerkleDistributionRewards(params.user)
     const voteDelegationRewards = await this.getVoteDelegationRewards(params.user)
-    const protocolUsageRewards = await this.getProtocolUsageRewards(params.user)
+
+    // get protocol usage rewards for each chain
+    const perChain: Record<number, bigint> = {}
+
+    let protocolUsageRewards = 0n
+    for await (const chainInfo of this._supportedChains) {
+      const rewards = await this.getProtocolUsageRewards(params.user, chainInfo)
+      protocolUsageRewards += rewards
+
+      // perChain: on hubchain we add delegation and distribution rewards
+      if (chainInfo.chainId === this._hubChainInfo.chainId) {
+        perChain[chainInfo.chainId] = rewards + voteDelegationRewards + merkleDistributionRewards
+      } else {
+        perChain[chainInfo.chainId] = rewards
+      }
+    }
 
     const total = merkleDistributionRewards + voteDelegationRewards + protocolUsageRewards
-    const perChain = {
-      [params.user.chainInfo.chainId]: total,
-    }
 
     return {
       total,

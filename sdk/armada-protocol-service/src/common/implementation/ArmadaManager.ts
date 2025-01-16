@@ -23,6 +23,7 @@ import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import {
   Address,
   calculatePriceImpact,
+  ChainFamilyMap,
   getChainInfoByChainId,
   IAddress,
   ITokenAmount,
@@ -33,7 +34,6 @@ import {
   TransactionInfo,
   TransactionType,
   type ChainInfo,
-  type ClaimTransactionInfo,
   type ExtendedTransactionInfo,
   type HexData,
   type IPercentage,
@@ -62,6 +62,7 @@ export class ArmadaManager implements IArmadaManager {
   claims: IArmadaManagerClaims
   token: IArmadaManagerToken
 
+  private _supportedChains: ChainInfo[]
   private _rewardsRedeemerAddress: IAddress
 
   private _hubChainInfo: ChainInfo
@@ -91,6 +92,11 @@ export class ArmadaManager implements IArmadaManager {
     this._swapManager = params.swapManager
     this._oracleManager = params.oracleManager
 
+    this._supportedChains = [
+      ChainFamilyMap.Base.Base,
+      ChainFamilyMap.Arbitrum.ArbitrumOne,
+      ChainFamilyMap.Ethereum.Mainnet,
+    ]
     const _hubChainId = this._configProvider.getConfigurationItem({
       name: 'SDK_HUB_CHAIN_ID',
     })
@@ -101,6 +107,7 @@ export class ArmadaManager implements IArmadaManager {
       ...params,
       hubChainInfo: this._hubChainInfo,
       rewardsRedeemerAddress: this._rewardsRedeemerAddress,
+      supportedChains: this._supportedChains,
     })
     this.token = new ArmadaManagerToken(params)
   }
