@@ -10,7 +10,7 @@ import { formatDecimalAsPercent } from '@summerfi/app-utils'
  * @returns Formatted percentage string representing annual SUMMER token bonus (e.g., "12.34%")
  *
  * @example
- * const bonus = calculateTokenBonus(
+ * const bonus = getSumrTokenBonus(
  *   rewardTokens,
  *   rewardTokenEmissionsAmount,
  *   1.23, // SUMMER price in USD

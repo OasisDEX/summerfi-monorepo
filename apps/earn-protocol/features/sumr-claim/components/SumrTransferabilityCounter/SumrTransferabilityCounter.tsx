@@ -23,8 +23,8 @@ const getTimeDifference = (
   }
 }
 
-const startDate = new Date('2024-12-01T10:00:00').getTime()
-const targetDate = new Date('2025-01-30T10:32:02').getTime()
+const startDate = new Date('2025-01-22T00:00:00').getTime()
+const targetDate = new Date('2025-07-01T00:00:00').getTime()
 
 const initialTime = getTimeDifference(startDate, targetDate)
 

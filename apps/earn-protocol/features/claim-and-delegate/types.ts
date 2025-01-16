@@ -1,5 +1,6 @@
 import { type SumrBalancesData } from '@/app/server-handlers/sumr-balances'
 import { type SumrDelegateStakeData } from '@/app/server-handlers/sumr-delegate-stake'
+import { type SumrStakingInfoData } from '@/app/server-handlers/sumr-staking-info'
 
 export enum ClaimDelegateSteps {
   TERMS = 'terms',
@@ -45,12 +46,11 @@ export type ClaimDelegateReducerAction =
     }
 
 export type ClaimDelegateExternalData = {
-  sumrPrice: string
   sumrEarned: string
   sumrToClaim: string
-  sumrApy: string
   sumrStakeDelegate: SumrDelegateStakeData
   sumrBalances: SumrBalancesData
+  sumrStakingInfo: SumrStakingInfoData
   votes?: {
     delegate: string
     amountOfVotes: string
