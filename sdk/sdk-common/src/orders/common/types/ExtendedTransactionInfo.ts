@@ -12,6 +12,7 @@ export enum TransactionType {
   Claim = 'Claim',
   Delegate = 'Delegate',
   Stake = 'Stake',
+  Unstake = 'Unstake',
 }
 
 export type TransactionMetadataApproval = {
@@ -72,4 +73,8 @@ export type DelegateTransactionInfo = TransactionInfo & {
 
 export type StakeTransactionInfo = TransactionInfo & {
   type: TransactionType.Stake
+}
+
+export type UnstakeTransactionInfo = TransactionInfo & {
+  type: TransactionType.Unstake
 }

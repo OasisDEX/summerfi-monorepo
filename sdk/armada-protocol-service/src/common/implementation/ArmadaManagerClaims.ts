@@ -238,7 +238,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     })
 
     const admiralsQuartersAddress = getDeployedContractAddress({
-      chainInfo: ChainFamilyMap.Base.Base,
+      chainInfo: this._hubChainInfo,
       contractCategory: 'core',
       contractName: 'admiralsQuarters',
     })
@@ -264,7 +264,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     })
 
     const admiralsQuartersAddress = getDeployedContractAddress({
-      chainInfo: ChainFamilyMap.Base.Base,
+      chainInfo: this._hubChainInfo,
       contractCategory: 'core',
       contractName: 'admiralsQuarters',
     })
