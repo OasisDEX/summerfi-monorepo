@@ -123,6 +123,25 @@ export interface PointsDistribution {
   userAddressId: number | null
 }
 
+export interface Leaderboard {
+  position: Int8 | null
+  totalPoints: Numeric | null
+  userAddress: string | null
+  details: Json | null
+  ens: string | null
+}
+export interface LeaderboardNew {
+  position: Int8 | null
+  rank: Int8 | null
+  rank22h: Int8 | null
+  points22h: Numeric | null
+  totalPoints: Numeric | null
+  userAddress: string | null
+  details: Json | null
+  ens: string | null
+  tgeSnapshotPoints: Numeric | null
+  tgeSumrAwarded: Numeric | null
+}
 export interface Position {
   address: string
   chainId: number
@@ -191,4 +210,7 @@ export interface Database {
   updatePointsLastRun: UpdatePointsLastRun
   updatePointsLock: UpdatePointsLock
   userAddress: UserAddress
+  leaderboard: Leaderboard
+  // to be removed after we check if its all valid
+  leaderboard_new: LeaderboardNew
 }
