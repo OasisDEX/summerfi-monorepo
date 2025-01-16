@@ -38,6 +38,16 @@
     max-width: 585px;
     width: 100%;
 
+    .delegates {
+      display: flex;
+      flex-direction: column;
+      max-height: 700px;
+      overflow-y: auto;
+      scrollbar-color: grey transparent;
+      scrollbar-width: thin;
+      height: 100%;
+    }
+
     .buttonsWrapper {
       margin-top: var(--general-space-32);
       display: flex;

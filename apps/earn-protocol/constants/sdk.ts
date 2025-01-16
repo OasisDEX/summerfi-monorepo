@@ -1,1 +1,1 @@
-export const sdkApiUrl = '/api/sdk'
+export const sdkApiUrl = '/earn/api/sdk'

@@ -106,6 +106,14 @@ export const MockedLineChart = ({
       style={{ marginTop: 'var(--spacing-space-medium)', flexDirection: 'column' }}
     >
       <ChartHeader
+        timeframes={{
+          '7d': true,
+          '30d': true,
+          '90d': true,
+          '6m': true,
+          '1y': true,
+          '3y': true,
+        }}
         compare={compare}
         setCompare={setCompare}
         timeframe={timeframe}

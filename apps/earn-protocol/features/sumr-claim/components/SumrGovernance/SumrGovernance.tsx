@@ -9,6 +9,7 @@ import {
 } from '@/features/sumr-claim/components/SumrGovernance/const'
 import { SumrGovernanceList } from '@/features/sumr-claim/components/SumrGovernanceList/SumrGovernanceList'
 import { SumrOwnership } from '@/features/sumr-claim/components/SumrOwnership/SumrOwnership'
+import { SumrSupplySchedule } from '@/features/sumr-claim/components/SumrSupplySchedule/SumrSupplySchedule'
 
 import classNames from './SumrGovernance.module.scss'
 
@@ -80,7 +81,7 @@ const data = {
     ),
   },
   'stake-to-delegate': {
-    title: 'Stake to delegate + earn',
+    title: 'Stake to Delegate + Earn',
     content: (
       <SumrGovernanceContent
         header="Earn more $SUMR while protecting the protocol"
@@ -110,9 +111,9 @@ const data = {
         header="Predictable and transparent supply schedule"
         description="35% Community Allocation. Overtime, a significant portion of $SUMR will be distributed to the community, ensuring decentralized control and fostering a user-driven protocol."
         button={{ label: 'Claim $SUMR', action: () => null }}
-        link={{ label: 'Claim $SUMR', href: '/' }}
+        link={{ label: 'See SUMR Vesting Conditions', href: '/' }}
       >
-        Content
+        <SumrSupplySchedule />
       </SumrGovernanceContent>
     ),
   },

@@ -8,15 +8,15 @@ import classNames from './ClaimDelegateCard.module.scss'
 
 interface ClaimDelegateCardProps {
   isActive: boolean
-  sumrAmount?: string
+  sumrAmount?: number
   ens: string
   address: string
   title: string
   description: string
   social?: {
-    linkedin: string
-    x: string
-    link: string
+    linkedin: string | undefined
+    x: string | undefined
+    link: string | undefined
   }
   handleClick: () => void
 }

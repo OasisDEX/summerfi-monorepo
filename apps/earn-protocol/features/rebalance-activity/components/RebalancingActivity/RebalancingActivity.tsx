@@ -67,7 +67,7 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({
           rowsToDisplay={rowsToDisplay}
         />
         <Link
-          href={`/earn/rebalance-activity?strategies=${vaultId}`}
+          href={`/rebalance-activity?strategies=${vaultId}`}
           style={{ marginTop: 'var(--spacing-space-large)', width: 'fit-content' }}
         >
           <WithArrow as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>

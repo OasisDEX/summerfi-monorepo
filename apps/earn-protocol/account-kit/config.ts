@@ -52,10 +52,12 @@ export const getAccountKitConfig = ({
 }) => {
   return createConfig(
     {
-      transport: alchemy({ rpcUrl: forkRpcUrl ?? `/api/rpc/chain/${chainId ?? defaultChain.id}` }),
+      transport: alchemy({
+        rpcUrl: forkRpcUrl ?? `/earn/api/rpc/chain/${chainId ?? defaultChain.id}`,
+      }),
       signerConnection: {
         // this is for Alchemy Signer requests
-        rpcUrl: '/api/rpc',
+        rpcUrl: '/earn/api/rpc',
       },
       chain: {
         [SDKSupportedNetworkIdsEnum.ARBITRUM]: arbitrum,

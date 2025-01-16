@@ -5,7 +5,10 @@ import { Card } from '@summerfi/app-earn-ui'
 import { type TimeframesType, type VaultWithChartsData } from '@summerfi/app-types'
 
 import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
+import { NotEnoughData } from '@/components/organisms/Charts/components/NotEnoughData'
 import { YieldsChart } from '@/components/organisms/Charts/components/Yields'
+import { DAYS_TO_WAIT_FOR_CHART, POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
+import { useTimeframes } from '@/hooks/use-timeframes'
 
 type ArkHistoricalYieldChartProps = {
   chartData: VaultWithChartsData['arksHistoricalChartData']
@@ -16,7 +19,9 @@ export const ArkHistoricalYieldChart = ({
   chartData,
   summerVaultName,
 }: ArkHistoricalYieldChartProps) => {
-  const [timeframe, setTimeframe] = useState<TimeframesType>('90d')
+  const { timeframe, setTimeframe, timeframes } = useTimeframes({
+    chartData,
+  })
   const [compare, setCompare] = useState(false)
 
   const colors = {
@@ -41,15 +46,21 @@ export const ArkHistoricalYieldChart = ({
     return chartData.data[timeframe]
   }, [timeframe, chartData, compare, summerVaultName])
 
+  const parsedDataWithCutoff =
+    !chartData || chartData.data['7d'].length <= POINTS_REQUIRED_FOR_CHART['7d'] ? [] : parsedData
+
   return (
     <Card
       style={{
         marginTop: 'var(--spacing-space-medium)',
         flexDirection: 'column',
         paddingBottom: 0,
+        position: 'relative',
       }}
     >
+      {!parsedDataWithCutoff.length && <NotEnoughData daysToWait={DAYS_TO_WAIT_FOR_CHART} />}
       <ChartHeader
+        timeframes={timeframes}
         compare={compare}
         setCompare={(nextCompare) => setCompare(nextCompare)}
         timeframe={timeframe}
@@ -59,7 +70,7 @@ export const ArkHistoricalYieldChart = ({
         summerVaultName={summerVaultName}
         timeframe={timeframe}
         colors={colors}
-        data={parsedData}
+        data={parsedDataWithCutoff}
         dataNames={dataNames}
       />
     </Card>

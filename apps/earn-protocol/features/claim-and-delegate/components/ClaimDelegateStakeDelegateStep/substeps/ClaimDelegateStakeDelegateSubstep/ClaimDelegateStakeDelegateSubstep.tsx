@@ -1,13 +1,20 @@
 import type { Dispatch, FC } from 'react'
-import { Button, Card, DataBlock, Icon, Text, WithArrow } from '@summerfi/app-earn-ui'
+import {
+  Button,
+  Card,
+  DataBlock,
+  Icon,
+  SUMR_CAP,
+  Text,
+  useLocalConfig,
+  WithArrow,
+} from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
-import { SUMR_CAP } from '@/constants/earn-protocol'
-import { useLocalConfig } from '@/contexts/LocalConfigContext/LocalConfigContext'
 import { ClaimDelegateCard } from '@/features/claim-and-delegate/components/ClaimDelegateCard/ClaimDelegateCard'
-import { sumrDelegates } from '@/features/claim-and-delegate/consts'
+import { mergeDelegatesData } from '@/features/claim-and-delegate/consts'
 import {
   type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
@@ -38,12 +45,16 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
   const claimed = formatCryptoBalance(externalData.sumrEarned)
   const claimedInUSD = formatFiatBalance(Number(externalData.sumrEarned) * estimatedSumrPrice)
 
-  const apy = formatDecimalAsPercent(externalData.sumrApy)
-  const sumrPerYear = `*${formatFiatBalance((Number(externalData.sumrDelegated) + Number(externalData.sumrEarned)) * Number(externalData.sumrApy))} $SUMR / Year`
+  const apy = formatDecimalAsPercent(externalData.sumrStakingInfo.sumrStakingApy)
+  const sumrPerYear = `*${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(externalData.sumrEarned)) * Number(externalData.sumrStakingInfo.sumrStakingApy))} $SUMR / Year`
 
   const handleStakeAndDelegate = () => {
     dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.COMPLETED })
   }
+
+  const hasNothingToStake = externalData.sumrBalances.base === '0'
+
+  const mappedSumrDelegatesData = mergeDelegatesData(externalData.sumrDelegates)
 
   return (
     <div className={classNames.claimDelegateStakeDelegateSubstepWrapper}>
@@ -105,19 +116,31 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
         </Text>
       </div>
       <div className={classNames.rightContent}>
-        {sumrDelegates.map((delegate) => (
-          <ClaimDelegateCard
-            key={delegate.title}
-            {...delegate}
-            sumrAmount={
-              externalData.votes?.find((vote) => vote.delegate === delegate.address)?.amountOfVotes
-            }
-            isActive={state.delegatee === delegate.address}
-            handleClick={() => dispatch({ type: 'update-delegatee', payload: delegate.address })}
-          />
-        ))}
+        <div className={classNames.delegates}>
+          {mappedSumrDelegatesData.map((delegate) => (
+            <ClaimDelegateCard
+              key={delegate.address}
+              {...delegate}
+              isActive={state.delegatee === delegate.address}
+              handleClick={() => dispatch({ type: 'update-delegatee', payload: delegate.address })}
+            />
+          ))}
+          {mappedSumrDelegatesData.length === 0 && (
+            <Text
+              as="p"
+              variant="p2semi"
+              style={{
+                color: 'var(--earn-protocol-secondary-40)',
+                textAlign: 'center',
+                marginTop: 'var(--general-space-32)',
+              }}
+            >
+              No delegates found
+            </Text>
+          )}
+        </div>
         <div className={classNames.buttonsWrapper}>
-          <Link href={`/earn/portfolio/${walletAddress}?tab=${PortfolioTabs.REWARDS}`}>
+          <Link href={`/portfolio/${walletAddress}?tab=${PortfolioTabs.REWARDS}`}>
             <Button variant="secondarySmall">
               <Text variant="p3semi" as="p">
                 Claim & Forfeit staking yield
@@ -128,14 +151,16 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
             variant="primarySmall"
             style={{ paddingRight: 'var(--general-space-32)' }}
             onClick={handleStakeAndDelegate}
-            disabled={!state.delegatee || state.delegatee === externalData.delegatedTo}
+            disabled={
+              !state.delegatee || state.delegatee === externalData.sumrStakeDelegate.delegatedTo
+            }
           >
             <WithArrow
               style={{ color: 'var(--earn-protocol-secondary-100)' }}
               variant="p3semi"
               as="p"
             >
-              Stake & Delegate
+              {hasNothingToStake ? 'Delegate' : 'Stake & Delegate'}
             </WithArrow>
           </Button>
         </div>

@@ -1,6 +1,12 @@
 'use client'
 import { type FC } from 'react'
-import { Button, DataModule, Text } from '@summerfi/app-earn-ui'
+import {
+  Button,
+  DataModule,
+  RAYS_TO_SUMR_CONVERSION_RATE,
+  SUMR_CAP,
+  Text,
+} from '@summerfi/app-earn-ui'
 import {
   ADDRESS_ZERO,
   formatCryptoBalance,
@@ -10,8 +16,7 @@ import {
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
-import { RAYS_TO_SUMR_CONVERSION_RATE, SUMR_CAP } from '@/constants/earn-protocol'
-import { sumrDelegates } from '@/features/claim-and-delegate/consts'
+import { localSumrDelegates } from '@/features/claim-and-delegate/consts'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
 
@@ -40,7 +45,7 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
         valueSize: 'large',
       }}
       actionable={
-        <Link href={`/earn/claim/${walletAddress}`} prefetch>
+        <Link href={`/claim/${walletAddress}`} prefetch>
           <Button variant="primarySmall">Claim</Button>
         </Link>
       }
@@ -55,13 +60,13 @@ interface StakedAndDelegatedSumrProps {
 
 const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }) => {
   const { walletAddress } = useParams()
-  const rawApy = rewardsData.sumrApy
-  const rawStaked = rewardsData.sumrDelegated
+  const rawApy = rewardsData.sumrStakingInfo.sumrStakingApy
+  const rawStaked = rewardsData.sumrStakeDelegate.sumrDelegated
 
   const value = formatCryptoBalance(rawStaked)
   const apy = formatDecimalAsPercent(rawApy)
 
-  const isDelegated = rewardsData.delegatedTo !== ADDRESS_ZERO
+  const isDelegated = rewardsData.sumrStakeDelegate.sumrDelegated !== ADDRESS_ZERO
 
   const handleRemoveDelegation = () => {
     // TODO: Implement remove delegation
@@ -90,7 +95,7 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }
             </Text>
           </Button>
         ) : (
-          <Link href={`/earn/stake-delegate/${walletAddress}`} prefetch>
+          <Link href={`/stake-delegate/${walletAddress}`} prefetch>
             <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
               Stake and delegate
             </Text>
@@ -112,8 +117,8 @@ const YourTotalSumr: FC<YourTotalSumrProps> = ({ rewardsData }) => {
   const assumedSumrPriceRaw = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
   const assumedSumrPrice = formatFiatBalance(assumedSumrPriceRaw)
 
-  const rawTotalSumr = Number(rewardsData.totalSumr ?? 0)
-  const rawTotalSumrUSD = formatFiatBalance(rawTotalSumr * assumedSumrPriceRaw)
+  const rawTotalSumr = Number(rewardsData.sumrBalances.total)
+  const rawTotalSumrUSD = rawTotalSumr * assumedSumrPriceRaw
 
   const totalSumr = formatCryptoBalance(rawTotalSumr)
   const totalSumrUSD = formatFiatBalance(rawTotalSumrUSD)
@@ -147,8 +152,9 @@ interface YourDelegateProps {
 const YourDelegate: FC<YourDelegateProps> = ({ rewardsData }) => {
   const { walletAddress } = useParams()
 
-  const delegatee = sumrDelegates.find(
-    (item) => item.address.toLowerCase() === rewardsData.delegatedTo.toLowerCase(),
+  const delegatee = localSumrDelegates.find(
+    (item) =>
+      item.address?.toLowerCase() === rewardsData.sumrStakeDelegate.sumrDelegated.toLowerCase(),
   )
 
   const value = delegatee ? delegatee.title : 'No delegate'
@@ -164,7 +170,7 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData }) => {
         subValue,
       }}
       actionable={
-        <Link href={`/earn/stake-delegate/${walletAddress}`} prefetch>
+        <Link href={`/stake-delegate/${walletAddress}`} prefetch>
           <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
             Change delegate
           </Text>

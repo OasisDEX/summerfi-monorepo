@@ -18,8 +18,10 @@ const TransakTrigger = ({
   isOpen: boolean
   isDisabled?: boolean
 }) => (
-  <Button variant="primaryLarge" style={{ minWidth: '156px' }} disabled={isDisabled}>
-    Add funds
+  <Button variant="primaryMedium" style={{ minWidth: '130px' }} disabled={isDisabled}>
+    <Text as="span" variant="p3semi">
+      Add funds
+    </Text>
     <Icon
       iconName={isOpen ? 'chevron_up' : 'chevron_down'}
       style={{
@@ -34,13 +36,13 @@ const TransakTrigger = ({
 
 interface PortfolioHeaderProps {
   walletAddress: string
-  totalSumr: string | undefined
+  totalSumr: string
   totalWalletValue: number
 }
 
 export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
   walletAddress,
-  totalSumr = '0',
+  totalSumr,
   totalWalletValue,
 }) => {
   const { userWalletAddress } = useUserWallet()

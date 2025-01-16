@@ -22,21 +22,22 @@ export const sumrGovernLazySummerData: SumrGovernListData = [
   {
     iconName: 'migrate_colorful',
     title: 'Allocate Protocol Captial',
-    description: 'Influence revenue allocations to balance growth',
+    description:
+      'Decide on how to spend revenue, allocate SUMR token rewards and issue grants to balance growth with long term sustainability.',
   },
 ]
 
 export const sumrStakeToDelegate: SumrGovernListData = [
   {
     iconName: 'plant_colorful',
-    title: 'Stake for 2.6%',
+    title: 'Stake, Delegate and Earn on your $SUMR',
     description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      'When you stake and delegate your SUMR, you won’t only be protecting the Lazy Summer Protocol, you will be earning additional $SUMR.',
   },
   {
     iconName: 'checkmark_cookie_colorful',
-    title: 'Delegate decision making',
+    title: 'Always ensure you’re delegating to an active delegate',
     description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      'Choosing who you delegate to may impact the voting power your are assigning and also the rewards you can earn. Each delegate has a voting power decay factor, which drops if they miss votes or stop participating in governance. The higher their decay, the more you earn. So stay on top of your delegate and ensure you’re always delegating to an active delegate. ',
   },
 ]

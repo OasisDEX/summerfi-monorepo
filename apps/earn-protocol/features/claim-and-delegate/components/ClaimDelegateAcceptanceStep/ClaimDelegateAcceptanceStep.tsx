@@ -134,7 +134,7 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
           </div>
         </Card>
         <div className={classNames.footerWrapper}>
-          <Link href={`/earn/portfolio/${state.walletAddress}?tab=${PortfolioTabs.REWARDS}`}>
+          <Link href={`/portfolio/${state.walletAddress}?tab=${PortfolioTabs.REWARDS}`}>
             <Button variant="secondarySmall">
               <Text variant="p3semi" as="p">
                 Reject terms

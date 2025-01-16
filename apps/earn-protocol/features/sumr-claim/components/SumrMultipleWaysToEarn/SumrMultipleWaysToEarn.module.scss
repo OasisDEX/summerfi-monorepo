@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--general-space-64);
-  margin-top: 90px;
+  margin-top: var(--general-space-128);
 
   .boxes {
     display: flex;

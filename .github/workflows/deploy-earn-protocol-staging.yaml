@@ -63,6 +63,7 @@ jobs:
       EARN_PROTOCOL_JWT_CHALLENGE_SECRET: ${{ secrets.EARN_PROTOCOL_JWT_CHALLENGE_SECRET }}
       RPC_GATEWAY: ${{ secrets.RPC_GATEWAY }}
       TRM_API_KEY: ${{ secrets.TRM_API_KEY }}
+      TALLY_API_KEY: ${{ secrets.TALLY_API_KEY }}
       NEXT_TELEMETRY_DISABLED: ${{ secrets.NEXT_TELEMETRY_DISABLED }}
 
     steps:
@@ -181,6 +182,7 @@ jobs:
                        --build-arg NEXT_PUBLIC_TRANSAK_ENVIRONMENT=${{ secrets.NEXT_PUBLIC_TRANSAK_ENVIRONMENT }} \
                        --build-arg RPC_GATEWAY=${{ secrets.RPC_GATEWAY }} \
                        --build-arg TRM_API_KEY=${{ secrets.TRM_API_KEY }} \
+                       --build-arg TALLY_API_KEY=${{ secrets.TALLY_API_KEY }} \
                        --build-arg NEXT_TELEMETRY_DISABLED=${{ secrets.NEXT_TELEMETRY_DISABLED }} \
                        --build-arg SDK_API_URL=${{ secrets.SDK_API_URL }} \
                        --cache-from type=registry,ref=189194422115.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/buildkit-test:cache \

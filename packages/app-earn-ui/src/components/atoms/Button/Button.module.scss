@@ -1,4 +1,5 @@
 .primaryLarge,
+.primaryMedium,
 .primarySmall,
 .secondaryLarge,
 .secondarySmall,
@@ -29,6 +30,13 @@
   border-radius: var(--radius-circle);
 }
 
+.primaryMedium {
+  height: 38px;
+  font-size: 14px;
+  border-radius: var(--radius-circle);
+  padding: 0 var(--general-space-16);
+}
+
 .primarySmall,
 .secondarySmall,
 .neutralSmall {
@@ -38,6 +46,7 @@
 }
 
 .primaryLarge,
+.primaryMedium,
 .primarySmall {
   color: var(--color-text-primary);
   background-color: var(--color-background-primary);

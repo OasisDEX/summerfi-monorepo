@@ -48,6 +48,7 @@ import { useClient } from '@/hooks/use-client'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useTransaction } from '@/hooks/use-transaction'
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import vaultManageViewStyles from './VaultManageView.module.scss'
 
@@ -67,7 +68,8 @@ export const VaultManageViewComponent = ({
   viewWalletAddress: string
 }) => {
   const user = useUser()
-  const ownerView = viewWalletAddress.toLowerCase() === user?.address.toLowerCase()
+  const { userWalletAddress } = useUserWallet()
+  const ownerView = viewWalletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
   const { publicClient } = useClient()
 
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
@@ -99,6 +101,15 @@ export const VaultManageViewComponent = ({
     onFocus,
   } = useAmount({ vault, selectedToken })
 
+  const {
+    amountParsed: approvalAmountParsed,
+    amountDisplay: approvalCustomAmount,
+    handleAmountChange: approvalHandleAmountChange,
+    onBlur: approvalOnBlur,
+    onFocus: approvalOnFocus,
+    manualSetAmount: approvalManualSetAmount,
+  } = useAmount({ vault, selectedToken, initialAmount: amountParsed.toString() })
+
   const positionAmount = useMemo(() => {
     return new BigNumber(position.amount.amount)
   }, [position])
@@ -113,8 +124,6 @@ export const VaultManageViewComponent = ({
     nextTransaction,
     approvalType,
     setApprovalType,
-    setApprovalCustomValue,
-    approvalCustomValue,
     backToInit,
   } = useTransaction({
     vault,
@@ -129,6 +138,7 @@ export const VaultManageViewComponent = ({
     flow: 'manage',
     ownerView,
     positionAmount,
+    approvalCustomValue: approvalAmountParsed,
   })
 
   const sdk = useAppSDK()
@@ -164,6 +174,7 @@ export const VaultManageViewComponent = ({
         : positionAmount.minus(resolvedAmountParsed),
     }[transactionType].toString(),
     disabled: !ownerView,
+    isEarnApp: true,
   })
 
   const estimatedEarnings = useMemo(() => {
@@ -185,8 +196,11 @@ export const VaultManageViewComponent = ({
           tokenSymbol={fromTokenSymbol}
           approvalType={approvalType}
           setApprovalType={setApprovalType}
-          setApprovalCustomValue={setApprovalCustomValue}
-          approvalCustomValue={approvalCustomValue}
+          setApprovalCustomValue={approvalHandleAmountChange}
+          approvalCustomValue={approvalCustomAmount}
+          customApprovalManualSetAmount={approvalManualSetAmount}
+          customApprovalOnBlur={approvalOnBlur}
+          customApprovalOnFocus={approvalOnFocus}
           tokenBalance={selectedTokenBalance}
         />
       ),

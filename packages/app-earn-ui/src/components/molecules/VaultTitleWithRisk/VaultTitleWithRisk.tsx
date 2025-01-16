@@ -8,12 +8,15 @@ import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { VaultTitle } from '@/components/molecules/VaultTitle/VaultTitle'
 import { riskColors } from '@/helpers/risk-colors'
 
+import { type ClassNames as TextVariants } from '@/components/atoms/Text/Text.module.scss'
+
 interface VaultTitleWithRiskProps {
   risk: Risk
   symbol: SDKVaultType['inputToken']['symbol']
   networkId?: NetworkIds
   networkName?: SDKNetwork
   selected?: boolean
+  titleVariant?: TextVariants
 }
 
 export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
@@ -22,6 +25,7 @@ export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
   networkId,
   networkName,
   selected,
+  titleVariant = 'h4',
 }) => {
   const color = riskColors[risk]
 
@@ -30,6 +34,7 @@ export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
       symbol={symbol}
       networkId={networkId}
       selected={selected}
+      titleVariant={titleVariant}
       /* networkName should work 99% of the time, because SDKVault returns very similar results for that */
       networkName={networkName}
       value={

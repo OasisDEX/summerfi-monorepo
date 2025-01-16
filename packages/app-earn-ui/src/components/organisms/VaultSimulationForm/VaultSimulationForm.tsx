@@ -40,6 +40,7 @@ export type VaultSimulationFormProps = {
   }
   resolvedForecastAmount: BigNumber
   amountParsed: BigNumber
+  isEarnApp?: boolean
 }
 
 export const VaultSimulationForm = ({
@@ -55,6 +56,7 @@ export const VaultSimulationForm = ({
   inputProps: { onFocus, onBlur, amountDisplay, amountDisplayUSDWithSwap, manualSetAmount },
   resolvedForecastAmount,
   amountParsed,
+  isEarnApp,
 }: VaultSimulationFormProps) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [isGradientBorder, setIsGradientBorder] = useState(false)
@@ -63,6 +65,7 @@ export const VaultSimulationForm = ({
     fleetAddress: vaultData.id,
     chainId: subgraphNetworkToSDKId(vaultData.protocol.network),
     amount: resolvedForecastAmount.toString(),
+    isEarnApp,
   })
 
   useEffect(() => {

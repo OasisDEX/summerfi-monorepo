@@ -14,7 +14,7 @@ import {
   type SDKVaultishType,
   TransactionAction,
 } from '@summerfi/app-types'
-import { ten, zero } from '@summerfi/app-utils'
+import { ten } from '@summerfi/app-utils'
 import {
   Address,
   type ExtendedTransactionInfo,
@@ -52,6 +52,7 @@ type UseTransactionParams = {
   flow: 'open' | 'manage'
   ownerView?: boolean
   positionAmount?: BigNumber
+  approvalCustomValue?: BigNumber
 }
 
 const errorsMap = {
@@ -77,6 +78,7 @@ export const useTransaction = ({
   flow,
   ownerView, // on non-owner views we dont want to make all of these calls
   positionAmount,
+  approvalCustomValue,
 }: UseTransactionParams) => {
   const [slippageConfig] = useSlippageConfig()
   const { refresh: refreshView } = useRouter()
@@ -91,7 +93,6 @@ export const useTransaction = ({
   )
   const [waitingForTx, setWaitingForTx] = useState<`0x${string}`>()
   const [approvalType, setApprovalType] = useState<EarnAllowanceTypes>('deposit')
-  const [approvalCustomValue, setApprovalCustomValue] = useState<BigNumber>(zero)
   const [txHashes, setTxHashes] = useState<{ type: TransactionType; hash: string }[]>([])
   const [txStatus, setTxStatus] = useState<EarnTransactionViewStates>('idle')
   const [transactions, setTransactions] = useState<ExtendedTransactionInfo[]>()
@@ -182,7 +183,9 @@ export const useTransaction = ({
     }
 
     const txParams =
-      nextTransaction.type === TransactionType.Approve && approvalType !== 'deposit'
+      nextTransaction.type === TransactionType.Approve &&
+      approvalType !== 'deposit' &&
+      approvalCustomValue
         ? {
             target: nextTransaction.transaction.target.value,
             data: getApprovalTx(
@@ -328,8 +331,29 @@ export const useTransaction = ({
         disabled: false,
       }
     }
-    // if there are transactions pending
-    if (tokenBalance && amount && amount.isGreaterThan(tokenBalance)) {
+
+    // deposit balance check
+    if (
+      transactionType === TransactionAction.DEPOSIT &&
+      tokenBalance &&
+      amount &&
+      amount.isGreaterThan(tokenBalance)
+    ) {
+      return {
+        label: capitalize(transactionType),
+        action: () => null,
+        disabled: true,
+        loading: false,
+      }
+    }
+
+    // withdraw balance check
+    if (
+      transactionType === TransactionAction.WITHDRAW &&
+      positionAmount &&
+      amount &&
+      amount.isGreaterThan(positionAmount)
+    ) {
       return {
         label: capitalize(transactionType),
         action: () => null,
@@ -413,6 +437,7 @@ export const useTransaction = ({
     vaultChainId,
     setChain,
     executeNextTransaction,
+    positionAmount,
   ])
 
   const sidebarTitle = useMemo(() => {
@@ -518,8 +543,6 @@ export const useTransaction = ({
     transactionType,
     approvalType,
     setApprovalType,
-    setApprovalCustomValue,
-    approvalCustomValue,
     isTransakOpen,
     setIsTransakOpen,
   }

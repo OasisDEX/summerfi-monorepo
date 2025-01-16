@@ -4,9 +4,11 @@ import { useMemo, useState } from 'react'
 import {
   DataBlock,
   SimpleGrid,
+  SUMR_CAP,
   Text,
   useAmount,
   useAmountWithSwap,
+  useLocalConfig,
   useMobileCheck,
   useTokenSelector,
   VaultCard,
@@ -16,6 +18,7 @@ import {
 import {
   type DropdownRawOption,
   type IconNamesList,
+  type IToken,
   type SDKNetwork,
   type SDKVaultsListType,
   TransactionAction,
@@ -28,10 +31,8 @@ import {
 } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
 
-import { SUMR_CAP } from '@/constants/earn-protocol'
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
-import { useLocalConfig } from '@/contexts/LocalConfigContext/LocalConfigContext'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useTokenBalances } from '@/hooks/use-tokens-balances'
@@ -174,7 +175,14 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
     handleAmountChange,
     onBlur,
     onFocus,
-  } = useAmount({ vault: vaultData, selectedToken: tokenBalances.token })
+  } = useAmount({
+    vault: vaultData,
+    selectedToken:
+      tokenBalances.token ??
+      ({
+        decimals: vaultData.inputToken.decimals,
+      } as IToken),
+  })
 
   const { amountDisplayUSDWithSwap, rawToTokenAmount } = useAmountWithSwap({
     vault: vaultData,
@@ -270,6 +278,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
           }}
           resolvedForecastAmount={resolvedForecastAmount}
           amountParsed={amountParsed}
+          isEarnApp
         />
       }
     />

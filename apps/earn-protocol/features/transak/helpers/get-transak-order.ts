@@ -14,7 +14,9 @@ export const getTransakOrder = async ({
   orderId: string
 }): Promise<TransakOrderData> => {
   try {
-    const response = await fetch(`/api/transak/get-order?orderId=${encodeURIComponent(orderId)}`)
+    const response = await fetch(
+      `/earn/api/transak/get-order?orderId=${encodeURIComponent(orderId)}`,
+    )
 
     return await response.json()
   } catch (error) {

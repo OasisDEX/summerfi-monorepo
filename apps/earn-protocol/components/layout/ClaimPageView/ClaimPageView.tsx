@@ -16,7 +16,7 @@ interface ClaimPageViewProps {
 export const ClaimPageView: FC<ClaimPageViewProps> = ({ walletAddress, externalData }) => {
   const [state, dispatch] = useReducer(claimDelegateReducer, {
     ...claimDelegateState,
-    delegatee: externalData.delegatedTo,
+    delegatee: externalData.sumrStakeDelegate.delegatedTo,
     walletAddress,
   })
 

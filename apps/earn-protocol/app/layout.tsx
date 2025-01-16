@@ -1,6 +1,12 @@
 import { cookieToInitialState } from '@account-kit/core'
-import { GlobalStyles } from '@summerfi/app-earn-ui'
+import {
+  GlobalStyles,
+  LocalConfigContextProvider,
+  slippageConfigCookieName,
+  sumrNetApyConfigCookieName,
+} from '@summerfi/app-earn-ui'
 import { type DeviceType } from '@summerfi/app-types'
+import { getServerSideCookies, safeParseJson } from '@summerfi/app-utils'
 import type { Metadata } from 'next'
 import { cookies, headers } from 'next/headers'
 import { NextIntlClientProvider } from 'next-intl'
@@ -10,15 +16,8 @@ import { getAccountKitConfig } from '@/account-kit/config'
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
 import { accountKitCookieStateName } from '@/constants/account-kit-cookie-state-name'
 import { forksCookieName } from '@/constants/forks-cookie-name'
-import { safeParseJson } from '@/constants/safe-parse-json'
 import { DeviceProvider } from '@/contexts/DeviceContext/DeviceContext'
-import {
-  slippageConfigCookieName,
-  sumrNetApyConfigCookieName,
-} from '@/contexts/LocalConfigContext/constants'
-import { LocalConfigContextProvider } from '@/contexts/LocalConfigContext/LocalConfigContext'
 import { fontInter } from '@/helpers/fonts'
-import { getServerSideCookies } from '@/helpers/get-server-side-cookies'
 import { AlchemyAccountsProvider } from '@/providers/AlchemyAccountsProvider/AlchemyAccountsProvider'
 
 export const metadata: Metadata = {

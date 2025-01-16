@@ -1,11 +1,13 @@
 'use client'
 
-import { useMemo, useState } from 'react'
-import { Card, Text } from '@summerfi/app-earn-ui'
+import { useMemo } from 'react'
+import { Card } from '@summerfi/app-earn-ui'
 import { type TimeframesType, type VaultWithChartsData } from '@summerfi/app-types'
 
 import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
 import { PerformanceChart } from '@/components/organisms/Charts/components/Performance'
+import { POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
+import { useTimeframes } from '@/hooks/use-timeframes'
 
 export type PositionPerformanceChartProps = {
   chartData: VaultWithChartsData['performanceChartData']
@@ -16,7 +18,9 @@ export const PositionPerformanceChart = ({
   chartData,
   inputToken,
 }: PositionPerformanceChartProps) => {
-  const [timeframe, setTimeframe] = useState<TimeframesType>('90d')
+  const { timeframe, setTimeframe, timeframes } = useTimeframes({
+    chartData,
+  })
 
   const parsedData = useMemo(() => {
     if (!chartData) {
@@ -26,20 +30,8 @@ export const PositionPerformanceChart = ({
     return chartData.data[timeframe]
   }, [timeframe, chartData])
 
-  if (parsedData.length === 0) {
-    return (
-      <Card
-        style={{
-          marginTop: 'var(--spacing-space-medium)',
-          flexDirection: 'column',
-          alignItems: 'center',
-          padding: 'var(--spacing-space-x-large)',
-        }}
-      >
-        <Text variant="p3semi">No enough data available.</Text>
-      </Card>
-    )
-  }
+  const parsedDataWithCutoff =
+    !chartData || chartData.data['7d'].length <= POINTS_REQUIRED_FOR_CHART['7d'] ? [] : parsedData
 
   return (
     <Card
@@ -48,13 +40,15 @@ export const PositionPerformanceChart = ({
         flexDirection: 'column',
         alignItems: 'flex-end',
         paddingBottom: 0,
+        position: 'relative',
       }}
     >
       <ChartHeader
+        timeframes={timeframes}
         timeframe={timeframe}
         setTimeframe={(nextTimeFrame) => setTimeframe(nextTimeFrame as TimeframesType)}
       />
-      <PerformanceChart timeframe={timeframe} data={parsedData} inputToken={inputToken} />
+      <PerformanceChart timeframe={timeframe} data={parsedDataWithCutoff} inputToken={inputToken} />
     </Card>
   )
 }

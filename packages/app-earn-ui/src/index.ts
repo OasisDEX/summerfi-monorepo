@@ -128,3 +128,22 @@ export { INTERNAL_LINKS, EXTERNAL_LINKS } from './helpers/application-links'
 export { parseForecastDatapoints } from './features/forecast/parse-forecast-datapoints'
 export { fetchForecastData } from './features/forecast/fetch-forecast-data'
 export { chartTimestampFormat } from './features/forecast/chart-formatters'
+
+// contexts
+export {
+  LocalConfigContextProvider,
+  useLocalConfig,
+} from './contexts/LocalConfigContext/LocalConfigContext'
+export {
+  sumrNetApyConfigCookieName,
+  slippageConfigCookieName,
+} from './contexts/LocalConfigContext/constants'
+
+export {
+  LocalConfigDispatchActions,
+  type SlippageConfig,
+  type SumrNetApyConfig,
+} from './contexts/LocalConfigContext/local-config-reducer'
+
+// constants
+export { SUMR_CAP, RAYS_TO_SUMR_CONVERSION_RATE } from './constants/earn-protocol'

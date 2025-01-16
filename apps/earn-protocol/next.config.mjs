@@ -4,6 +4,7 @@ const withNextIntl = createNextIntlPlugin()
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  basePath: '/earn',
   output: 'standalone',
   reactStrictMode: false,
   webpack: (config) => {

@@ -8,7 +8,7 @@ type SelectionBlockProps = {
   subTitle?: string
   active?: boolean
   onClick?: () => void
-  customContent?: React.ReactNode
+  children?: React.ReactNode
   style?: React.CSSProperties
 }
 
@@ -17,7 +17,7 @@ export const SelectionBlock = ({
   subTitle,
   onClick,
   active = false,
-  customContent,
+  children,
   style,
 }: SelectionBlockProps) => {
   return (
@@ -30,7 +30,7 @@ export const SelectionBlock = ({
       <div className={selectionStyles.selectionBlockWrapper}>
         <Text variant="p2semi">{title}</Text>
         {subTitle && <Text variant="p4semiColorful">{subTitle}</Text>}
-        {customContent}
+        {children}
       </div>
     </GradientBox>
   )

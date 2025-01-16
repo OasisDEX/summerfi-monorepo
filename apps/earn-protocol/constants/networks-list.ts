@@ -85,7 +85,7 @@ function getRpc(network: NetworkNames): string {
     return ''
   }
 
-  return `${window.location.origin}/api/rpcGateway?network=${network}&clientId=${clientId}`
+  return `${window.location.origin}/earn/api/rpcGateway?network=${network}&clientId=${clientId}`
 }
 
 export const mainnetRpc = getRpc(NetworkNames.ethereumMainnet)
@@ -102,6 +102,9 @@ export const baseGoerliRpc = getRpc(NetworkNames.baseGoerli)
 export const SDKChainIdToRpcGatewayMap = {
   [SDKChainId.ARBITRUM]: arbitrumMainnetRpc,
   [SDKChainId.BASE]: baseMainnetRpc,
+  [SDKChainId.MAINNET]: mainnetRpc,
+  [SDKChainId.OPTIMISM]: optimismMainnetRpc,
+  [SDKChainId.SEPOLIA]: baseGoerliRpc, // dummy for now, not used anyway
 }
 
 const mainnetConfig: NetworkConfig = {

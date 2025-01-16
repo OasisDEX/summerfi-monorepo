@@ -24,7 +24,7 @@ import {
   type UsersActivity,
 } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
-import { TransactionType } from '@summerfi/sdk-common'
+import { type IToken, TransactionType } from '@summerfi/sdk-common'
 
 import { detailsLinks } from '@/components/layout/VaultOpenView/mocks'
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
@@ -103,13 +103,29 @@ export const VaultOpenViewComponent = ({
     handleAmountChange,
     onBlur,
     onFocus,
+  } = useAmount({
+    vault,
+    selectedToken:
+      selectedToken ??
+      ({
+        // if youre not connected, the selected token is not available
+        // we need to fill it here
+        decimals: vault.inputToken.decimals,
+      } as IToken),
+  })
+
+  const {
+    amountParsed: approvalAmountParsed,
+    amountDisplay: approvalCustomAmount,
+    handleAmountChange: approvalHandleAmountChange,
+    onBlur: approvalOnBlur,
+    onFocus: approvalOnFocus,
+    manualSetAmount: approvalManualSetAmount,
   } = useAmount({ vault, selectedToken })
 
   const {
     approvalType,
     setApprovalType,
-    approvalCustomValue,
-    setApprovalCustomValue,
     sidebar,
     txHashes,
     removeTxHash,
@@ -130,6 +146,7 @@ export const VaultOpenViewComponent = ({
     tokenBalanceLoading: selectedTokenBalanceLoading,
     flow: 'open',
     ownerView: true,
+    approvalCustomValue: approvalAmountParsed,
   })
 
   const position = usePosition({
@@ -157,6 +174,7 @@ export const VaultOpenViewComponent = ({
     fleetAddress: vault.id,
     chainId: vaultChainId,
     amount: resolvedAmountParsed.toString(),
+    isEarnApp: true,
   })
 
   useEffect(() => {
@@ -189,8 +207,11 @@ export const VaultOpenViewComponent = ({
           tokenSymbol={fromTokenSymbol}
           approvalType={approvalType}
           setApprovalType={setApprovalType}
-          setApprovalCustomValue={setApprovalCustomValue}
-          approvalCustomValue={approvalCustomValue}
+          setApprovalCustomValue={approvalHandleAmountChange}
+          approvalCustomValue={approvalCustomAmount}
+          customApprovalManualSetAmount={approvalManualSetAmount}
+          customApprovalOnBlur={approvalOnBlur}
+          customApprovalOnFocus={approvalOnFocus}
           tokenBalance={selectedTokenBalance}
         />
       ),

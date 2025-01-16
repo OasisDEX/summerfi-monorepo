@@ -1,10 +1,19 @@
 import type { Dispatch, FC } from 'react'
-import { Button, Card, DataBlock, Icon, LoadableAvatar, Text } from '@summerfi/app-earn-ui'
+import {
+  Button,
+  Card,
+  DataBlock,
+  Icon,
+  LoadableAvatar,
+  SUMR_CAP,
+  Text,
+  useLocalConfig,
+} from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
-import { sumrDelegates } from '@/features/claim-and-delegate/consts'
+import { localSumrDelegates } from '@/features/claim-and-delegate/consts'
 import type {
   ClaimDelegateExternalData,
   ClaimDelegateReducerAction,
@@ -24,7 +33,9 @@ export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
   ClaimDelegateStakeDelegateCompletedSubstepProps
 > = ({ state, externalData }) => {
   const { walletAddress } = useParams()
-
+  const {
+    state: { sumrNetApyConfig },
+  } = useLocalConfig()
   const claimedSumr = (
     <>
       {formatCryptoBalance(externalData.sumrEarned)}{' '}
@@ -33,24 +44,35 @@ export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
       </Text>
     </>
   )
-  const claimedSumrUSD = `$${formatFiatBalance(Number(externalData.sumrEarned) * Number(externalData.sumrPrice))}`
+  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
+  const claimedSumrUSD = `$${formatFiatBalance(Number(externalData.sumrEarned) * estimatedSumrPrice)}`
 
   const apy = (
     <>
-      {formatDecimalAsPercent(externalData.sumrApy).replace('%', '')}{' '}
+      {formatDecimalAsPercent(externalData.sumrStakingInfo.sumrStakingApy).replace('%', '')}{' '}
       <Text as="span" variant="p3semi" style={{ color: 'var(--earn-protocol-success-100)' }}>
         %APY
       </Text>
     </>
   )
-  const sumrPerYear = `${formatFiatBalance((Number(externalData.sumrDelegated) + Number(externalData.sumrEarned)) * Number(externalData.sumrApy))} $SUMR/yr`
+  const sumrPerYear = `${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(externalData.sumrEarned)) * Number(externalData.sumrStakingInfo.sumrStakingApy))} $SUMR/yr`
 
-  if (state.delegatee === undefined) {
+  const delegatee = state.delegatee?.toLowerCase()
+
+  if (delegatee === undefined) {
     // eslint-disable-next-line no-console
     console.error('Delegatee is undefined')
 
     return null
   }
+  // use name from tally api, if not fallback to local mapping
+  // last resort is delegatee address
+  const delegateeName =
+    externalData.sumrDelegates.find(
+      (delegate) => delegate.account.address.toLowerCase() === delegatee,
+    )?.account.name ??
+    localSumrDelegates.find((item) => item.address === state.delegatee)?.title ??
+    delegatee
 
   return (
     <div className={classNames.claimDelegateStakeDelegateCompletedSubstepWrapper}>
@@ -92,7 +114,8 @@ export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
             <div className={classNames.withIcon}>
               <Icon tokenName="SUMR" />
               <Text as="h4" variant="h4">
-                {Number(externalData.sumrDelegated) + Number(externalData.sumrEarned)}
+                {Number(externalData.sumrStakeDelegate.sumrDelegated) +
+                  Number(externalData.sumrEarned)}
               </Text>
             </div>
           </div>
@@ -106,12 +129,12 @@ export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
             <div className={classNames.withIcon}>
               <LoadableAvatar
                 size={38}
-                name={btoa(state.delegatee)}
+                name={btoa(delegateeName)}
                 variant="pixel"
                 colors={['#B90061', '#EC58A2', '#F8A4CE', '#FFFFFF']}
               />
               <Text as="h4" variant="h4">
-                {sumrDelegates.find((item) => item.address === state.delegatee)?.title}
+                {delegateeName}
               </Text>
             </div>
           </div>
@@ -120,7 +143,7 @@ export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
           $SUMR voting power delegated to make Lazy Summer Protocol Governance decisions.
         </Text>
       </Card>
-      <Link href={`/earn/portfolio/${walletAddress}?tab=${PortfolioTabs.REWARDS}`}>
+      <Link href={`/portfolio/${walletAddress}?tab=${PortfolioTabs.REWARDS}`}>
         <Button variant="primarySmall">Go to $SUMR Overview</Button>
       </Link>
     </div>

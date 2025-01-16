@@ -2,20 +2,27 @@
 import { useEffect, useState } from 'react'
 import {
   getResolvedForecastAmountParsed,
+  SUMR_CAP,
   useAmount,
   useAmountWithSwap,
+  useLocalConfig,
   useTokenSelector,
   VaultCard,
   VaultSimulationForm,
 } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType, TransactionAction } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
-import { type IToken, useSDK } from '@summerfi/sdk-client-react'
+import { useSDK } from '@summerfi/sdk-client-react'
+import { type IToken } from '@summerfi/sdk-common'
 
 import landingPageVaultPickerStyles from '@/components/organisms/LandingPageVaultPicker/LandingPageVaultPicker.module.scss'
 
 export const LandingPageVaultPicker = ({ vault }: { vault: SDKVaultishType }) => {
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
+  const {
+    state: { sumrNetApyConfig, slippageConfig },
+  } = useLocalConfig()
+  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   const { handleTokenSelectionChange, selectedTokenOption, tokenOptions } = useTokenSelector({
     vault,
@@ -55,7 +62,7 @@ export const LandingPageVaultPicker = ({ vault }: { vault: SDKVaultishType }) =>
     amountDisplayUSD,
     transactionType: TransactionAction.DEPOSIT,
     selectedTokenOption,
-    slippageConfig: { slippage: '0.01' }, // doesn't matter that much here
+    slippageConfig,
     sdk,
   })
 
@@ -66,7 +73,12 @@ export const LandingPageVaultPicker = ({ vault }: { vault: SDKVaultishType }) =>
 
   return (
     <div className={landingPageVaultPickerStyles.landingPageVaultPickerWrapper}>
-      <VaultCard {...vault} secondary withTokenBonus={false} />
+      <VaultCard
+        {...vault}
+        secondary
+        withTokenBonus={sumrNetApyConfig.withSumr}
+        sumrPrice={estimatedSumrPrice}
+      />
       <VaultSimulationForm
         vaultData={vault}
         selectedTokenOption={selectedTokenOption}

@@ -15,7 +15,7 @@ export const getTransakFiatCurrencies = async (): Promise<
       throw new Error('ENV variable missing')
     }
 
-    const response = await fetch(`/api/transak/fiat-currencies`, {
+    const response = await fetch(`/earn/api/transak/fiat-currencies`, {
       method: 'GET',
       headers: { 'x-partner-api-key': transakPublicApiKey },
     })

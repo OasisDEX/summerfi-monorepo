@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useAuthModal, useLogout, useSignerStatus } from '@account-kit/react'
 import { Button, LoadableAvatar, SkeletonLine, Text } from '@summerfi/app-earn-ui'
 import { formatAddress } from '@summerfi/app-utils'
@@ -17,6 +18,12 @@ export default function WalletLabel() {
   const handleLogout = () => {
     logout()
   }
+
+  // removes dark mode from the document
+  // to ensure that account-kit modal is always in light mode
+  useEffect(() => {
+    document.documentElement.classList.remove('dark')
+  }, [])
 
   if (isSignerInitializing || isAuthModalOpen || isSignerAuthenticating) {
     return (

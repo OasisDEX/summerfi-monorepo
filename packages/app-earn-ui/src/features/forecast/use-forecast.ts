@@ -11,6 +11,7 @@ type UseForecastProps = {
   chainId: SDKChainId
   amount: string
   disabled?: boolean
+  isEarnApp?: boolean
 }
 
 export const useForecast = ({
@@ -18,6 +19,7 @@ export const useForecast = ({
   chainId,
   amount,
   disabled = false,
+  isEarnApp = false,
 }: UseForecastProps) => {
   const [isLoadingForecast, setIsLoadingForecast] = useState(true)
   const [forecast, setForecast] = useState<ForecastData | undefined>()
@@ -39,7 +41,7 @@ export const useForecast = ({
       }
       const controller = new AbortController()
 
-      fetch(`/api/forecast/${fleetAddress}/${chainId}/${amount}`, {
+      fetch(`${isEarnApp ? '/earn' : ''}/api/forecast/${fleetAddress}/${chainId}/${amount}`, {
         signal: controller.signal,
       })
         .then((res) => res.json())

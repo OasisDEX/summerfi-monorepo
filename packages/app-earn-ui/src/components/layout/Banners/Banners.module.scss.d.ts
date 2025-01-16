@@ -2,6 +2,7 @@ export type Styles = {
   bannerWrapper: string
   bannerWrapperCritical: string
   bannerWrapperSuccess: string
+  bannerWrapperVisible: string
   bannerWrapperWarning: string
 }
 

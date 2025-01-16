@@ -1,7 +1,7 @@
 'use client'
 
-import { useMemo, useState } from 'react'
-import { Card, Text } from '@summerfi/app-earn-ui'
+import { useMemo } from 'react'
+import { Card } from '@summerfi/app-earn-ui'
 import {
   type IArmadaPosition,
   type SDKVaultishType,
@@ -12,6 +12,8 @@ import {
 
 import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
 import { HistoricalChart } from '@/components/organisms/Charts/components/Historical'
+import { POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
+import { useTimeframes } from '@/hooks/use-timeframes'
 
 export type PositionHistoricalChartProps = {
   chartData: VaultWithChartsData['historyChartData']
@@ -27,7 +29,9 @@ export const PositionHistoricalChart = ({
   tokenSymbol,
   position,
 }: PositionHistoricalChartProps) => {
-  const [timeframe, setTimeframe] = useState<TimeframesType>('90d')
+  const { timeframe, setTimeframe, timeframes } = useTimeframes({
+    chartData,
+  })
 
   const parsedData = useMemo(() => {
     if (!chartData) {
@@ -37,35 +41,42 @@ export const PositionHistoricalChart = ({
     return chartData.data[timeframe]
   }, [timeframe, chartData])
 
-  if (parsedData.length === 0) {
-    return (
-      <Card
-        style={{
-          marginTop: 'var(--spacing-space-medium)',
-          flexDirection: 'column',
-          alignItems: 'center',
-          padding: 'var(--spacing-space-x-large)',
-        }}
-      >
-        <Text variant="p3semi">No enough data available.</Text>
-      </Card>
-    )
-  }
+  const chartHidden = parsedData.length < POINTS_REQUIRED_FOR_CHART[timeframe]
 
   return (
     <Card
       style={{
         marginTop: 'var(--spacing-space-medium)',
         flexDirection: 'column',
-        alignItems: 'flex-end',
         paddingBottom: 0,
+        position: 'relative',
+        ...(chartHidden && {
+          // so much hacks to just because the legend is used as a separate UI element
+          // will need to refactor this
+          paddingLeft: 0,
+        }),
       }}
     >
-      <ChartHeader
+      <div
+        style={{
+          marginLeft: '90px',
+          marginBottom: '10px',
+        }}
+      >
+        {!chartHidden && (
+          <ChartHeader
+            timeframes={timeframes}
+            timeframe={timeframe}
+            setTimeframe={(nextTimeFrame) => setTimeframe(nextTimeFrame as TimeframesType)}
+          />
+        )}
+      </div>
+      <HistoricalChart
         timeframe={timeframe}
-        setTimeframe={(nextTimeFrame) => setTimeframe(nextTimeFrame as TimeframesType)}
+        data={parsedData}
+        tokenSymbol={tokenSymbol}
+        position={position}
       />
-      <HistoricalChart data={parsedData} tokenSymbol={tokenSymbol} position={position} />
     </Card>
   )
 }

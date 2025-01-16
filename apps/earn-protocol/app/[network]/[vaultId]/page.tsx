@@ -12,7 +12,7 @@ const RedirectToVaultDetails = ({
   const { network, vaultId } = params
 
   // redirect to vault position page
-  redirect(`/earn/${network.toLowerCase()}/position/${vaultId}`)
+  redirect(`/${network.toLowerCase()}/position/${vaultId}`)
 }
 
 export default RedirectToVaultDetails

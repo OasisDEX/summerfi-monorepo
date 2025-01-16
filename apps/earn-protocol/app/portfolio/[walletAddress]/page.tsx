@@ -1,4 +1,3 @@
-import { type TokenSymbolsList } from '@summerfi/app-types'
 import { parseServerResponseToClient } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
 
@@ -8,7 +7,10 @@ import { portfolioWalletAssetsHandler } from '@/app/server-handlers/portfolio/po
 import { getGlobalRebalances } from '@/app/server-handlers/sdk/get-global-rebalances'
 import { getUserPositions } from '@/app/server-handlers/sdk/get-user-positions'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
+import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
+import { getSumrDelegates } from '@/app/server-handlers/sumr-delegates'
+import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { PortfolioPageView } from '@/components/layout/PortfolioPageView/PortfolioPageView'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
@@ -29,8 +31,11 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     positions,
     systemConfig,
     { rebalances },
-    { sumrDelegated, delegatedTo },
+    sumrStakeDelegate,
     sumrEligibility,
+    sumrBalances,
+    sumrStakingInfo,
+    sumrDelegates,
   ] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
     getVaultsList(),
@@ -41,6 +46,11 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       walletAddress,
     }),
     fetchRaysLeaderboard({ userAddress: walletAddress.toLowerCase(), page: '1', limit: '1' }),
+    getSumrBalances({
+      walletAddress,
+    }),
+    getSumrStakingInfo(),
+    getSumrDelegates(),
   ])
 
   const positionsJsonSafe = positions
@@ -61,18 +71,13 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     userVaultsIds.includes(rebalance.vault.id.toLowerCase()),
   )
 
-  const totalSumr = walletData.assets.find(
-    (asset) => asset.symbol === ('SUMMER' as TokenSymbolsList),
-  )?.balance
-
   const rewardsData: ClaimDelegateExternalData = {
-    sumrPrice: '0',
     sumrEarned: '123.45',
     sumrToClaim: '1.23',
-    sumrApy: '0.0123',
-    sumrDelegated,
-    delegatedTo,
-    totalSumr: totalSumr?.toString() ?? '0',
+    sumrStakeDelegate,
+    sumrBalances,
+    sumrStakingInfo,
+    sumrDelegates,
   }
 
   const totalRays = Number(sumrEligibility.leaderboard[0]?.totalPoints ?? 0)

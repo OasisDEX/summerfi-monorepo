@@ -1,10 +1,15 @@
 import { type CSSProperties, type FC } from 'react'
-import { getVaultUrl, Icon, SlideCarousel, Text, VaultCard } from '@summerfi/app-earn-ui'
+import {
+  getVaultUrl,
+  Icon,
+  SlideCarousel,
+  SUMR_CAP,
+  Text,
+  useLocalConfig,
+  VaultCard,
+} from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
 import { useRouter } from 'next/navigation'
-
-import { SUMR_CAP } from '@/constants/earn-protocol'
-import { useLocalConfig } from '@/contexts/LocalConfigContext/LocalConfigContext'
 
 interface PortfolioVaultsCarouselProps {
   style?: CSSProperties
