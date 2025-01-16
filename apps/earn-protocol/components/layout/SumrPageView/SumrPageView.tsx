@@ -1,7 +1,7 @@
 import { type FC } from 'react'
 
 import { SumrClaimSearch } from '@/features/sumr-claim/components/SumrClaimSearch/SumrClaimSearch'
-import { SumrConversionAndPrice } from '@/features/sumr-claim/components/SumrConversionAndPrice/SumrConversionAndPrice'
+import { SumrConversionAndTotalSupply } from '@/features/sumr-claim/components/SumrConversionAndTotalSupply/SumrConversionAndTotalSupply'
 import { SumrFaq } from '@/features/sumr-claim/components/SumrFaq/SumrFaq'
 import { SumrFundamentalUtility } from '@/features/sumr-claim/components/SumrFundamentalUtility/SumrFundamentalUtility'
 import { SumrGovernance } from '@/features/sumr-claim/components/SumrGovernance/SumrGovernance'
@@ -19,7 +19,7 @@ export const SumrPageView: FC<SumrPageViewProps> = () => {
   return (
     <div className={classNames.sumrPageWrapper}>
       <SumrClaimSearch />
-      <SumrConversionAndPrice />
+      <SumrConversionAndTotalSupply />
       <SumrTransferabilityCounter />
       <SumrWhatIsSumrToken />
       <SumrGovernance />

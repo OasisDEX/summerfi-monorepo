@@ -2,8 +2,10 @@ import type { FC } from 'react'
 import {
   Button,
   Card,
+  EXTERNAL_LINKS,
   type IconNamesList,
   IconWithBackground,
+  INTERNAL_LINKS,
   MarketingPointsList,
   Text,
   WithArrow,
@@ -68,9 +70,9 @@ const data = {
       <SumrRaysRewardsContent
         icon={{ iconName: 'stack_colorful', size: 24 }}
         title="Borrow for Rays"
-        description="Approve or off board markets, ensuring only the best and safest yield opportunities are available."
-        button={{ label: 'Borrow', href: '/' }}
-        link={{ label: 'Learn more', href: '/' }}
+        description="Unlock liquidity from your favourite crypto assets with the best protocols."
+        button={{ label: 'Borrow', href: `${INTERNAL_LINKS.summerPro}/borrow` }}
+        link={{ label: 'Learn more', href: EXTERNAL_LINKS.KB.HELP }}
       />
     ),
   },
@@ -80,9 +82,9 @@ const data = {
       <SumrRaysRewardsContent
         icon={{ iconName: 'x_colorful', size: 20 }}
         title="Multiply for Rays"
-        description="Approve or off board markets, ensuring only the best and safest yield opportunities are available."
-        button={{ label: 'Multiply', href: '/' }}
-        link={{ label: 'Learn more', href: '/' }}
+        description="The easiest way to Amplify Exposure to your favourite assets like ETH and BTC."
+        button={{ label: 'Multiply', href: `${INTERNAL_LINKS.summerPro}/multiply` }}
+        link={{ label: 'Learn more', href: EXTERNAL_LINKS.KB.HELP }}
       />
     ),
   },
@@ -92,9 +94,9 @@ const data = {
       <SumrRaysRewardsContent
         icon={{ iconName: 'plant_colorful' }}
         title="Yield loop for Rays"
-        description="Approve or off board markets, ensuring only the best and safest yield opportunities are available."
-        button={{ label: 'Multiply', href: '/' }}
-        link={{ label: 'Learn more', href: '/' }}
+        description="Enhance your yield up to 7x in a single transaction."
+        button={{ label: 'Multiply', href: `${INTERNAL_LINKS.summerPro}/earn` }}
+        link={{ label: 'Learn more', href: EXTERNAL_LINKS.KB.HELP }}
       />
     ),
   },
@@ -104,9 +106,9 @@ const data = {
       <SumrRaysRewardsContent
         icon={{ iconName: 'referer_colorful' }}
         title="Refer for Rays"
-        description="Approve or off board markets, ensuring only the best and safest yield opportunities are available."
-        button={{ label: 'Refer', href: '/' }}
-        link={{ label: 'Learn more', href: '/' }}
+        description="Get rewarded in Rays for onboarding your friends to Summer.fi pro products.  "
+        button={{ label: 'Refer', href: `${INTERNAL_LINKS.summerPro}/referrals` }}
+        link={{ label: 'Learn more', href: EXTERNAL_LINKS.KB.HELP }}
       />
     ),
   },

@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-top: 139px;
+  margin-top: var(--general-space-128);
 
   .header {
     display: flex;

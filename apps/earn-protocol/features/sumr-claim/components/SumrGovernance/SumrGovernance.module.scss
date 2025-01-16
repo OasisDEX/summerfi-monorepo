@@ -1,5 +1,5 @@
 .sumrGovernanceWrapper {
-  margin-top: 90px;
+  margin-top: var(--general-space-128);
 
   @media (min-width: 768px) {
     min-height: 740px;
@@ -24,7 +24,6 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      border: 1px solid var(--earn-protocol-neutral-70);
       margin-bottom: var(--general-space-24);
     }
 
