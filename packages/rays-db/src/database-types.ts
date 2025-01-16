@@ -71,23 +71,33 @@ export interface EligibilityCondition {
   updatedAt: Generated<Timestamp>
 }
 
-export interface Leaderboard {
-  position: Int8 | null
-  totalPoints: Numeric | null
-  userAddress: string | null
-  details: Json | null
-  ens: string | null
-}
-
-export interface LeaderboardNew {
-  position: Int8 | null
-  rank: Int8 | null
-  rank22h: Int8 | null
+export interface LeaderboardHistory {
+  lastUpdated: Generated<Timestamp | null>
+  points0h: Numeric
+  points10h: Numeric | null
+  points12h: Numeric | null
+  points14h: Numeric | null
+  points16h: Numeric | null
+  points18h: Numeric | null
+  points20h: Numeric | null
   points22h: Numeric | null
-  totalPoints: Numeric | null
-  userAddress: string | null
-  details: Json | null
-  ens: string | null
+  points2h: Numeric | null
+  points4h: Numeric | null
+  points6h: Numeric | null
+  points8h: Numeric | null
+  position0h: Int8
+  position10h: Int8 | null
+  position12h: Int8 | null
+  position14h: Int8 | null
+  position16h: Int8 | null
+  position18h: Int8 | null
+  position20h: Int8 | null
+  position22h: Int8 | null
+  position2h: Int8 | null
+  position4h: Int8 | null
+  position6h: Int8 | null
+  position8h: Int8 | null
+  userAddressId: string
 }
 
 export interface Multiplier {
@@ -128,6 +138,16 @@ export interface Position {
   vaultId: number
 }
 
+export interface Snapshot {
+  createdAt: Generated<Timestamp>
+  id: Generated<number>
+  name: string
+  points: Generated<Numeric>
+  sumrAwarded: Generated<Numeric>
+  updatedAt: Generated<Timestamp>
+  userAddressId: number
+}
+
 export interface UpdatePointsChangelog {
   createdAt: Generated<Timestamp>
   endTimestamp: Timestamp
@@ -162,12 +182,11 @@ export interface Database {
   'cron.job': CronJob
   'cron.jobRunDetails': CronJobRunDetails
   eligibilityCondition: EligibilityCondition
-  leaderboard: Leaderboard
-  // to be removed after we check if its all valid
-  leaderboard_new: LeaderboardNew
+  leaderboardHistory: LeaderboardHistory
   multiplier: Multiplier
   pointsDistribution: PointsDistribution
   position: Position
+  snapshot: Snapshot
   updatePointsChangelog: UpdatePointsChangelog
   updatePointsLastRun: UpdatePointsLastRun
   updatePointsLock: UpdatePointsLock
