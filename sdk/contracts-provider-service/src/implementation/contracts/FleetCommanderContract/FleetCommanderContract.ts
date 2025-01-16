@@ -77,7 +77,7 @@ export class FleetCommanderContract<
 
   /** @see IFleetCommanderContract.arks */
   async arks(): Promise<IAddress[]> {
-    const arks = await this.contract.read.getArks()
+    const arks = await this.contract.read.getActiveArks()
 
     return arks.map((ark) => Address.createFromEthereum({ value: ark }))
   }
