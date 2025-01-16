@@ -17,6 +17,10 @@ export async function up(db: Kysely<never>) {
      
      SELECT SUM(l.total_points) INTO total_sum FROM leaderboard_new l;
      
+     IF total_sum = 0 THEN
+     	RAISE EXCEPTION 'Total points sum is zero, cannot compute sumr_awarded';
+	  END IF;
+     
      INSERT INTO snapshot (user_address_id, points, sumr_awarded, name)
      SELECT 
        ua.id,
