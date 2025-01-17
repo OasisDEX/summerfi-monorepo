@@ -165,7 +165,8 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
     [vaultsList],
   )
 
-  const formattedProtocolsSupportedCount = formattedProtocolsSupportedList.size
+  // -1 because BufferArk is not a protocol
+  const formattedProtocolsSupportedCount = formattedProtocolsSupportedList.size - 1
 
   const {
     amountParsed,
@@ -231,9 +232,9 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
           <DataBlock
             title="Protocols Supported"
             // TODO: fill data (this is just a placeholder)
-            titleTooltip={`Protocols supported: ${Array.from(formattedProtocolsSupportedList).join(
-              ', ',
-            )}`}
+            titleTooltip={`Protocols supported: ${Array.from(formattedProtocolsSupportedList)
+              .filter((item) => item !== 'BufferArk')
+              .join(', ')}`}
             size="large"
             value={formattedProtocolsSupportedCount}
           />
