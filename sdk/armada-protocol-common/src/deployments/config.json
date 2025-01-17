@@ -3,19 +3,19 @@
     "deployedContracts": {
       "gov": {
         "summerGovernor": {
-          "address": "0xc41AF022a0cBBbD95b4A4Eb5B9EbB51bB888bB0D"
+          "address": "0x1bd84d0Abe55f00890A0737d9213DdC306dD28F4"
         },
         "summerToken": {
-          "address": "0xD33E132C34c978C18ACd8CD90D14467C1BF10f30"
+          "address": "0x52A94964b494A4dc6912A10949f88c0770E0a514"
         },
         "timelock": {
-          "address": "0xEcCd16aA1ae0B32b231a3B5FFE8567aBf68616E2"
+          "address": "0x565C070505196c4ff684d9aE70e2405325dd921B"
         },
         "protocolAccessManager": {
-          "address": "0x5dFacd9C14bA264D76548549Af1d27440B877407"
+          "address": "0x49C50db8704Fc14367a089690f8560739A123E49"
         },
         "rewardsRedeemer": {
-          "address": "0xa3B8e720cFff63fd47Ea80e18b773965E25c2b6c"
+          "address": "0xD7c18F5df960617fa409f9D7c6BFDAfBbCA13462"
         }
       },
       "buyAndBurn": {
@@ -25,22 +25,22 @@
       },
       "core": {
         "tipJar": {
-          "address": "0x0000000000000000000000000000000000000000"
+          "address": "0xB5168c70F5a81E315959E1A96629175E2f3cF93D"
         },
         "raft": {
-          "address": "0x0000000000000000000000000000000000000000"
+          "address": "0x0a14Edaf9e835525B3c5e0648C64A2A0D262255a"
         },
         "configurationManager": {
-          "address": "0x0000000000000000000000000000000000000000"
+          "address": "0xB566eeacd4B9c6904A467B3250d895041B94D655"
         },
         "harborCommand": {
-          "address": "0x0000000000000000000000000000000000000000"
+          "address": "0x79BDBaa087175aA490F311EC743264bD6268C933"
         },
         "admiralsQuarters": {
-          "address": "0x0000000000000000000000000000000000000000"
+          "address": "0x34f72f4B4979f0EA13d2AD80243c1f1Bd4E750db"
         },
         "fleetCommanderRewardsManagerFactory": {
-          "address": "0x0000000000000000000000000000000000000000"
+          "address": "0x09276B3013C606F8aABB7701Accbab5fFD0bb189"
         }
       }
     },
@@ -56,7 +56,6 @@
     },
     "common": {
       "initialSupply": "1000000000",
-      "treasury": "0xAb1a4Ae0F851700CC42442c588f458B553cB2620",
       "swapProvider": "0x111111125421ca6dc452d289314280a0f8842a65",
       "tipRate": "100",
       "layerZero": {
@@ -123,17 +122,20 @@
   "arbitrum": {
     "deployedContracts": {
       "gov": {
-        "protocolAccessManager": {
-          "address": "0x0000000000000000000000000000000000000000"
-        },
         "summerGovernor": {
-          "address": "0x0000000000000000000000000000000000000000"
+          "address": "0xE52d32df7752E8Da97fD093CEC1Dacd633198910"
         },
         "summerToken": {
-          "address": "0x0000000000000000000000000000000000000000"
+          "address": "0xc4E635b196Fb8B1f0AB58Ec3cCC73e79188741a0"
         },
         "timelock": {
-          "address": "0x0000000000000000000000000000000000000000"
+          "address": "0x8C3d2BC0F5ad577FE2FcA70b8E5319067b5dD70D"
+        },
+        "protocolAccessManager": {
+          "address": "0xCfe9Ec0BE2e692667eb9a4Ee362299520C620D20"
+        },
+        "rewardsRedeemer": {
+          "address": "0x5DDf8a03A327A0e9c3B2E71e9720e69735406447"
         }
       },
       "buyAndBurn": {
@@ -143,22 +145,22 @@
       },
       "core": {
         "tipJar": {
-          "address": "0x0000000000000000000000000000000000000000"
+          "address": "0xc1F47C95f313e2738f1eE8f37d817884F1bf0038"
         },
         "raft": {
-          "address": "0x0000000000000000000000000000000000000000"
+          "address": "0x6c54Ac96C6BE868ebb5c04fcCA0B9081ab9dC87A"
         },
         "configurationManager": {
-          "address": "0x0000000000000000000000000000000000000000"
+          "address": "0x90295011Cd38c76f54948cfea4CD31C316be0d68"
         },
         "harborCommand": {
-          "address": "0x0000000000000000000000000000000000000000"
+          "address": "0x2eA9c38Bf6170C47a2B7D81F9AB01EcF0849E6B4"
         },
         "admiralsQuarters": {
-          "address": "0x0000000000000000000000000000000000000000"
+          "address": "0xebA00532bd17B01229d70c48F838F715f5571C41"
         },
         "fleetCommanderRewardsManagerFactory": {
-          "address": "0x0000000000000000000000000000000000000000"
+          "address": "0xE38F9440e02F54ECa1E07cBeE5C2860E101e362E"
         }
       }
     },
@@ -166,13 +168,12 @@
       "usdc": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
       "dai": "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
       "usde": "0x5d3a1ff2b6bab83b63cd9ad0787074081a52ef34",
-      "usdt": "0x0000000000000000000000000000000000000000",
+      "usdt": "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9",
       "usdce": "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
       "weth": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1"
     },
     "common": {
       "initialSupply": "0",
-      "treasury": "0x13371f8Cf79706907a5A18939b77b426636C3BA0",
       "swapProvider": "0x111111125421ca6dc452d289314280a0f8842a65",
       "tipRate": "100",
       "layerZero": {
@@ -183,10 +184,14 @@
     "protocolSpecific": {
       "erc4626": {
         "usdc": {
-          "Gearbox": "0x890A69EF363C9c7BdD5E36eb95Ceb569F63ACbF6"
+          "Gearbox": "0x890A69EF363C9c7BdD5E36eb95Ceb569F63ACbF6",
+          "Fluid": "0x1A996cb54bb95462040408C06122D45D6Cdb6096"
         },
         "usdce": {
           "Gearbox": "0xa76c604145D7394DEc36C49Af494C144Ff327861"
+        },
+        "usdt": {
+          "Fluid": "0x4A03F37e7d3fC243e3f99341d36f4b829BEe5E03"
         }
       },
       "pendle": {
@@ -300,9 +305,8 @@
       "stakedUsds": "0xa3931d71877C0E7a3148CB7Eb4463524FEc27fbD"
     },
     "common": {
-      "treasury": "0x0000000000000000000000000000000000000000",
-      "lzEndpoint": "0x0000000000000000000000000000000000000000",
-      "swapProvider": "0x0000000000000000000000000000000000000000",
+      "initialSupply": "0",
+      "swapProvider": "0x111111125421cA6dc452d289314280a0f8842A65",
       "tipRate": "100",
       "layerZero": {
         "eID": "30101",
@@ -315,7 +319,12 @@
         "dai": {},
         "usde": {},
         "usdt": {},
-        "usdce": {}
+        "usdce": {},
+        "weth": {
+          "Gearbox": "0xda0002859b2d05f66a753d8241fcde8623f26f4f",
+          "Fluid": "0x90551c1795392094FE6D29B758EcCD233cFAa260",
+          "Euler_Prime": "0xD8b27CF359b7D15710a5BE299AF6e7Bf904984C2"
+        }
       },
       "pendle": {
         "router": "0x0000000000000000000000000000000000000000",
@@ -344,18 +353,32 @@
         }
       },
       "aaveV3": {
-        "pool": "0x0000000000000000000000000000000000000000",
-        "rewards": "0x0000000000000000000000000000000000000000"
+        "pool": "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2",
+        "rewards": "0x223d844fc4B006D67c0cDbd39371A9F73f69d974"
+      },
+      "spark": {
+        "pool": "0xC13e21B648A5Ee794902342038FF3aDAB66BE987 ",
+        "rewards": "0xf09e48dd4CA8e76F63a57ADd428bB06fee7932a4"
       },
       "morpho": {
         "blue": "0x0000000000000000000000000000000000000000",
         "urdFactory": "0x9baA51245CDD28D8D74Afe8B3959b616E9ee7c8D",
         "vaults": {
-          "usdc": {},
+          "usdc": {
+            "Gauntlet_USDC_Core": "0x8eB67A509616cd6A7c1B3c8C21D48FF57df3d458",
+            "Flagship_USDC": "0x186514400e52270cef3D80e1c6F8d10A75d47344",
+            "Steakhouse": "0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB",
+            "Gauntlet_USDC_Prime": "0xdd0f28e19C1780eb6396170735D45153D261490d",
+            "RE7_USDC": "0x60d715515d4411f7F43e4206dc5d4a3677f0eC78"
+          },
           "dai": {},
           "usde": {},
           "usdt": {},
-          "usdce": {}
+          "usdce": {},
+          "weth": {
+            "Gauntlet_WETH_Prime": "0x4881Ef0BF6d2365D3dd6499ccd7532bcdBCE0658",
+            "Re7_WETH": "0x78Fc2c2eD1A4cDb5402365934aE5648aDAd094d0"
+          }
         },
         "markets": {
           "usdc": {},
@@ -381,6 +404,9 @@
           },
           "usdce": {
             "cToken": "0x0000000000000000000000000000000000000000"
+          },
+          "weth": {
+            "cToken": "0xA17581A9E3356d9A858b789D68B4d866e593aE94"
           }
         },
         "rewards": "0x0000000000000000000000000000000000000000"
