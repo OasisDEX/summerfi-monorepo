@@ -688,6 +688,8 @@ export class ArmadaManager implements IArmadaManager {
           fleetAssets: fleetAssets.toString(),
         })
 
+        // TODO: when withdraw from fleetAssets and no swap, we can skip approval and multicall and withdraw directly from fleet
+
         const sharesToWithdraw = await this._previewWithdraw({
           vaultId: params.vaultId,
           assets: assetsToEOA,
