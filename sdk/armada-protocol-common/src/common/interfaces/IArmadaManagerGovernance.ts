@@ -7,11 +7,11 @@ import type {
 } from '@summerfi/sdk-common'
 
 /**
- * @name IArmadaManagerToken
+ * @name IArmadaManagerGovernance
  * @description Interface for the Armada Manager Token which handles delegating votes
  *
  */
-export interface IArmadaManagerToken {
+export interface IArmadaManagerGovernance {
   /**
    * @name delegates
    * @description Returns delegatee that the account has chosen

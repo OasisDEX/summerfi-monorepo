@@ -15,7 +15,7 @@ import {
   createDepositTransaction,
   createWithdrawTransaction,
   type IArmadaManagerClaims,
-  type IArmadaManagerToken,
+  type IArmadaManagerGovernance,
   getDeployedRewardsRedeemerAddress,
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
@@ -52,7 +52,7 @@ import type { ISwapManager } from '@summerfi/swap-common'
 import BigNumber from 'bignumber.js'
 import type { IOracleManager } from '@summerfi/oracle-common'
 import { ArmadaManagerClaims } from './ArmadaManagerClaims'
-import { ArmadaManagerToken } from './ArmadaManagerToken'
+import { ArmadaManagerGovernance } from './ArmadaManagerGovernance'
 
 /**
  * @name ArmadaManager
@@ -60,7 +60,7 @@ import { ArmadaManagerToken } from './ArmadaManagerToken'
  */
 export class ArmadaManager implements IArmadaManager {
   claims: IArmadaManagerClaims
-  token: IArmadaManagerToken
+  governance: IArmadaManagerGovernance
 
   private _supportedChains: ChainInfo[]
   private _rewardsRedeemerAddress: IAddress
@@ -109,7 +109,7 @@ export class ArmadaManager implements IArmadaManager {
       rewardsRedeemerAddress: this._rewardsRedeemerAddress,
       supportedChains: this._supportedChains,
     })
-    this.token = new ArmadaManagerToken({
+    this.governance = new ArmadaManagerGovernance({
       ...params,
       hubChainInfo: this._hubChainInfo,
     })

@@ -1,7 +1,7 @@
 import { GovernanceRewardsManagerAbi, SummerTokenAbi } from '@summerfi/armada-protocol-abis'
 import {
   getDeployedContractAddress,
-  type IArmadaManagerToken,
+  type IArmadaManagerGovernance,
 } from '@summerfi/armada-protocol-common'
 import { Address, TransactionType, type IAddress, type IChainInfo } from '@summerfi/sdk-common'
 import { encodeFunctionData } from 'viem'
@@ -11,7 +11,7 @@ import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-comm
  * @name ArmadaManager
  * @description This class is the implementation of the IArmadaManager interface. Takes care of choosing the best provider for a price consultation
  */
-export class ArmadaManagerToken implements IArmadaManagerToken {
+export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
   private _blockchainClientProvider: IBlockchainClientProvider
 
   private _hubChainSummerTokenAddress: IAddress
@@ -33,8 +33,8 @@ export class ArmadaManagerToken implements IArmadaManagerToken {
   }
 
   async delegates(
-    params: Parameters<IArmadaManagerToken['delegates']>[0],
-  ): ReturnType<IArmadaManagerToken['delegates']> {
+    params: Parameters<IArmadaManagerGovernance['delegates']>[0],
+  ): ReturnType<IArmadaManagerGovernance['delegates']> {
     const client = this._blockchainClientProvider.getBlockchainClient({
       chainInfo: params.user.chainInfo,
     })
@@ -50,8 +50,8 @@ export class ArmadaManagerToken implements IArmadaManagerToken {
   }
 
   async getDelegateTx(
-    params: Parameters<IArmadaManagerToken['getDelegateTx']>[0],
-  ): ReturnType<IArmadaManagerToken['getDelegateTx']> {
+    params: Parameters<IArmadaManagerGovernance['getDelegateTx']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getDelegateTx']> {
     const calldata = encodeFunctionData({
       abi: SummerTokenAbi,
       functionName: 'delegate',
@@ -69,7 +69,7 @@ export class ArmadaManagerToken implements IArmadaManagerToken {
     }
   }
 
-  async getUndelegateTx(): ReturnType<IArmadaManagerToken['getUndelegateTx']> {
+  async getUndelegateTx(): ReturnType<IArmadaManagerGovernance['getUndelegateTx']> {
     const calldata = encodeFunctionData({
       abi: SummerTokenAbi,
       functionName: 'delegate',
@@ -88,8 +88,8 @@ export class ArmadaManagerToken implements IArmadaManagerToken {
   }
 
   async getVotes(
-    params: Parameters<IArmadaManagerToken['getVotes']>[0],
-  ): ReturnType<IArmadaManagerToken['getVotes']> {
+    params: Parameters<IArmadaManagerGovernance['getVotes']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getVotes']> {
     const client = this._blockchainClientProvider.getBlockchainClient({
       chainInfo: params.user.chainInfo,
     })
@@ -103,8 +103,8 @@ export class ArmadaManagerToken implements IArmadaManagerToken {
   }
 
   async getStakedBalance(
-    params: Parameters<IArmadaManagerToken['getStakedBalance']>[0],
-  ): ReturnType<IArmadaManagerToken['getStakedBalance']> {
+    params: Parameters<IArmadaManagerGovernance['getStakedBalance']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getStakedBalance']> {
     const client = this._blockchainClientProvider.getBlockchainClient({
       chainInfo: this._hubChainInfo,
     })
@@ -125,8 +125,8 @@ export class ArmadaManagerToken implements IArmadaManagerToken {
   }
 
   async getStakeTx(
-    params: Parameters<IArmadaManagerToken['getStakeTx']>[0],
-  ): ReturnType<IArmadaManagerToken['getStakeTx']> {
+    params: Parameters<IArmadaManagerGovernance['getStakeTx']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getStakeTx']> {
     const calldata = encodeFunctionData({
       abi: GovernanceRewardsManagerAbi,
       functionName: 'stake',
@@ -155,8 +155,8 @@ export class ArmadaManagerToken implements IArmadaManagerToken {
   }
 
   async getUnstakeTx(
-    params: Parameters<IArmadaManagerToken['getUnstakeTx']>[0],
-  ): ReturnType<IArmadaManagerToken['getUnstakeTx']> {
+    params: Parameters<IArmadaManagerGovernance['getUnstakeTx']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getUnstakeTx']> {
     const calldata = encodeFunctionData({
       abi: GovernanceRewardsManagerAbi,
       functionName: 'unstake',
