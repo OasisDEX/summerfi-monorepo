@@ -111,7 +111,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
               <DataBlock
                 size="large"
                 titleSize="small"
-                title="Earned"
+                title="Market Value"
                 value={
                   <>
                     {formatCryptoBalance(netValue)}&nbsp;{vault.inputToken.symbol}
@@ -119,6 +119,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 }
                 subValue={
                   <>
+                    Earned:&nbsp;
                     {formatCryptoBalance(netEarnings)}&nbsp;
                     {vault.inputToken.symbol}
                   </>
