@@ -1,6 +1,6 @@
 'use client'
 import { useEffect } from 'react'
-import { arbitrum, base } from '@account-kit/infra'
+import { arbitrum, base, mainnet } from '@account-kit/infra'
 import { useChain } from '@account-kit/react'
 import { humanNetworktoSDKNetwork, subgraphNetworkToId } from '@summerfi/app-utils'
 import { useParams } from 'next/navigation'
@@ -11,6 +11,7 @@ import { useClientChainId } from '@/hooks/use-client-chain-id'
 export const networkIdsToAccountKitChainsMap = {
   [NetworkIds.BASEMAINNET]: base,
   [NetworkIds.ARBITRUMMAINNET]: arbitrum,
+  [NetworkIds.MAINNET]: mainnet,
 }
 
 // Update account kit network based on app network derived from currently displayed strategy
