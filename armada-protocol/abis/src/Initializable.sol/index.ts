@@ -1,1 +1,0 @@
-export * from './Initializable.abi';

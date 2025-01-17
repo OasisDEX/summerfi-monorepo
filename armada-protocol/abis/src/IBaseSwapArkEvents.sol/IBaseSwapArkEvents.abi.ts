@@ -1,1 +1,0 @@
-export const IBaseSwapArkEventsAbi = [{"type":"event","name":"SlippageUpdated","inputs":[{"name":"newSlippagePercentage","type":"uint256","indexed":false,"internalType":"Percentage"}],"anonymous":false}] as const

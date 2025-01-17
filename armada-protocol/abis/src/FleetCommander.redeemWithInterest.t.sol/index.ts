@@ -1,1 +1,0 @@
-export * from './RedeemWithInterestTest.abi';

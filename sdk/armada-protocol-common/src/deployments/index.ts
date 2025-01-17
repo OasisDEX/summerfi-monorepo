@@ -2,11 +2,12 @@ import {
   Address,
   ArbitrumChainNames,
   BaseChainNames,
+  ChainFamilyName,
   EthereumChainNames,
   type ChainInfo,
   type IAddress,
 } from '@summerfi/sdk-common'
-import config from './index.json'
+import config from './config.json'
 
 type Config = typeof config
 type ConfigKey = 'mainnet' | 'base' | 'arbitrum'
@@ -28,9 +29,10 @@ const getConfigKey = <TName extends string>(name: TName) => {
 
 export const getDeployedContractAddress = <
   TKey extends ConfigKey,
+  TChainInfo extends ChainInfo,
   TCategory extends CategoryKey,
 >(params: {
-  chainInfo: ChainInfo
+  chainInfo: TChainInfo
   contractCategory: TCategory
   contractName: keyof Config[TKey]['deployedContracts'][TCategory]
 }): IAddress => {
@@ -51,4 +53,17 @@ export const getDeployedContractAddress = <
   return Address.createFromEthereum({
     value: contract.address,
   })
+}
+
+export const getDeployedRewardsRedeemerAddress = () => {
+  const key = getConfigKey(ChainFamilyName.Base)
+  const maybeAddress = (
+    config[key].deployedContracts.gov as { rewardsRedeemer: { address: string | undefined } }
+  ).rewardsRedeemer.address
+  if (!maybeAddress) {
+    throw new Error(
+      'Rewards redeemer contract is not available on ' + key + '. It is only on Base.',
+    )
+  }
+  return Address.createFromEthereum({ value: maybeAddress })
 }

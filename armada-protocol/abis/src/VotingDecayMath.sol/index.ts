@@ -1,1 +1,0 @@
-export * from './VotingDecayMath.abi';

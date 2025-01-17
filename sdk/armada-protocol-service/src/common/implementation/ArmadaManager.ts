@@ -1,5 +1,9 @@
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
-import { AdmiralsQuartersAbi, StakingRewardsManagerBaseAbi } from '@summerfi/armada-protocol-abis'
+import {
+  AdmiralsQuartersAbi,
+  StakingRewardsManagerBaseAbi,
+  SummerTokenAbi,
+} from '@summerfi/armada-protocol-abis'
 import {
   getDeployedContractAddress,
   IArmadaManager,
@@ -10,11 +14,17 @@ import {
   createApprovalTransaction,
   createDepositTransaction,
   createWithdrawTransaction,
+  type IArmadaManagerClaims,
+  type IArmadaManagerGovernance,
+  getDeployedRewardsRedeemerAddress,
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import {
+  Address,
   calculatePriceImpact,
+  ChainFamilyMap,
+  getChainInfoByChainId,
   IAddress,
   ITokenAmount,
   IUser,
@@ -22,6 +32,8 @@ import {
   Price,
   TokenAmount,
   TransactionInfo,
+  TransactionType,
+  type ChainInfo,
   type ExtendedTransactionInfo,
   type HexData,
   type IPercentage,
@@ -39,12 +51,21 @@ import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-comm
 import type { ISwapManager } from '@summerfi/swap-common'
 import BigNumber from 'bignumber.js'
 import type { IOracleManager } from '@summerfi/oracle-common'
+import { ArmadaManagerClaims } from './ArmadaManagerClaims'
+import { ArmadaManagerGovernance } from './ArmadaManagerGovernance'
 
 /**
  * @name ArmadaManager
  * @description This class is the implementation of the IArmadaManager interface. Takes care of choosing the best provider for a price consultation
  */
 export class ArmadaManager implements IArmadaManager {
+  claims: IArmadaManagerClaims
+  governance: IArmadaManagerGovernance
+
+  private _supportedChains: ChainInfo[]
+  private _rewardsRedeemerAddress: IAddress
+
+  private _hubChainInfo: ChainInfo
   private _configProvider: IConfigurationProvider
   private _allowanceManager: IAllowanceManager
   private _contractsProvider: IContractsProvider
@@ -70,6 +91,28 @@ export class ArmadaManager implements IArmadaManager {
     this._blockchainClientProvider = params.blockchainClientProvider
     this._swapManager = params.swapManager
     this._oracleManager = params.oracleManager
+
+    this._supportedChains = [
+      ChainFamilyMap.Base.Base,
+      ChainFamilyMap.Arbitrum.ArbitrumOne,
+      ChainFamilyMap.Ethereum.Mainnet,
+    ]
+    const _hubChainId = this._configProvider.getConfigurationItem({
+      name: 'SDK_HUB_CHAIN_ID',
+    })
+    this._hubChainInfo = getChainInfoByChainId(Number(_hubChainId))
+    this._rewardsRedeemerAddress = getDeployedRewardsRedeemerAddress()
+
+    this.claims = new ArmadaManagerClaims({
+      ...params,
+      hubChainInfo: this._hubChainInfo,
+      rewardsRedeemerAddress: this._rewardsRedeemerAddress,
+      supportedChains: this._supportedChains,
+    })
+    this.governance = new ArmadaManagerGovernance({
+      ...params,
+      hubChainInfo: this._hubChainInfo,
+    })
   }
 
   /** POOLS */
@@ -270,6 +313,34 @@ export class ArmadaManager implements IArmadaManager {
     }
   }
 
+  /** @see IArmadaManager.convertToShares */
+  async convertToShares(
+    params: Parameters<IArmadaManager['convertToShares']>[0],
+  ): Promise<ITokenAmount> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    const erc4626Contract = fleetContract.asErc4626()
+
+    return erc4626Contract.convertToShares({ amount: params.amount })
+  }
+
+  /** @see IArmadaManager.convertToAssets */
+  async convertToAssets(
+    params: Parameters<IArmadaManager['convertToAssets']>[0],
+  ): Promise<ITokenAmount> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    const erc4626Contract = fleetContract.asErc4626()
+
+    return erc4626Contract.convertToAssets({ amount: params.amount })
+  }
+
   /** USER TRANSACTIONS */
 
   /** @see IArmadaManager.getNewDepositTX */
@@ -296,301 +367,102 @@ export class ArmadaManager implements IArmadaManager {
   async getWithdrawTX(
     params: Parameters<IArmadaManager['getWithdrawTX']>[0],
   ): Promise<ExtendedTransactionInfo[]> {
-    const transactions: ExtendedTransactionInfo[] = []
+    return this._getWithdrawTX(params)
+  }
 
-    const { assets: fleetAssets, shares: fleetShares } = await this.getFleetBalance({
-      vaultId: params.vaultId,
+  /** CLAIMS TRANSACTIONS */
+
+  /** @see IArmadaManagerClaims.canClaimDistributions */
+  async eligibleForClaim(
+    params: Parameters<IArmadaManagerClaims['canClaimDistributions']>[0],
+  ): ReturnType<IArmadaManagerClaims['canClaimDistributions']> {
+    return this.claims.canClaimDistributions(params)
+  }
+
+  /** @see IArmadaManagerClaims.getClaimDistributionTx */
+  async getClaimMerkleRewardsTx(
+    params: Parameters<IArmadaManagerClaims['getClaimDistributionTx']>[0],
+  ): ReturnType<IArmadaManagerClaims['getClaimDistributionTx']> {
+    return this.claims.getClaimDistributionTx(params)
+  }
+
+  /** @see IArmadaManagerClaims.getClaimVoteDelegationRewardsTx */
+  async getClaimGovernanceRewardsTx(
+    params: Parameters<IArmadaManagerClaims['getClaimVoteDelegationRewardsTx']>[0],
+  ): ReturnType<IArmadaManagerClaims['getClaimVoteDelegationRewardsTx']> {
+    return this.claims.getClaimVoteDelegationRewardsTx(params)
+  }
+
+  async getClaimsTx(
+    params: Parameters<IArmadaManager['getClaimsTx']>[0],
+  ): ReturnType<IArmadaManager['getClaimsTx']> {
+    const isHubChain = params.chainInfo.chainId === this._hubChainInfo.chainId
+
+    const summerTokenAddress = await getDeployedContractAddress({
+      chainInfo: params.chainInfo,
+      contractCategory: 'gov',
+      contractName: 'summerToken',
+    })
+
+    // for now reward token is just summer token
+    // in future potential partners can be added
+    const rewardToken = summerTokenAddress
+
+    // read contract on the summer token to get rewardsManager method
+    const client = this._blockchainClientProvider.getBlockchainClient({
+      chainInfo: params.chainInfo,
+    })
+    const govRewardsManagerAddress = await client.readContract({
+      abi: SummerTokenAbi,
+      address: summerTokenAddress.value,
+      functionName: 'rewardsManager',
+    })
+
+    const multicallArgs: HexData[] = []
+
+    // only hub chain can claim merkle rewards
+    if (isHubChain) {
+      const claimMerkleRewards = await this.claims.getClaimDistributionTx({ user: params.user })
+      multicallArgs.push(claimMerkleRewards.transaction.calldata)
+    }
+    // only hub chain can claim governance rewards
+    if (isHubChain) {
+      const claimGovernanceRewards = await this.claims.getClaimVoteDelegationRewardsTx({
+        govRewardsManagerAddress: Address.createFromEthereum({ value: govRewardsManagerAddress }),
+        rewardToken,
+      })
+      multicallArgs.push(claimGovernanceRewards.transaction.calldata)
+    }
+    // any chain can claim fleet rewards
+    const claimFleetRewards = await this.claims.getClaimProtocolUsageRewardsTx({
+      chainInfo: params.chainInfo,
       user: params.user,
+      fleetCommandersAddresses: params.fleetCommandersAddresses,
+      rewardToken,
     })
-    // handling for ETH
-    const assetsToEOA = params.amount
-    const swapToToken = params.toToken
-    const shouldSwap = !swapToToken.equals(assetsToEOA.token)
-    let swapToAmount: ITokenAmount | undefined = undefined
+    multicallArgs.push(claimFleetRewards.transaction.calldata)
 
-    LoggingService.debug('getWithdrawTX', {
-      assetsToEOA: assetsToEOA.toString(),
-      swapToToken: swapToToken.toString(),
-      shouldSwap,
-      fleetAssets: fleetAssets.toString(),
-      fleetShares: fleetShares.toString(),
-    })
-
-    const admiralsQuarterAddress = getDeployedContractAddress({
-      chainInfo: params.vaultId.chainInfo,
+    const admiralsQuartersAddress = getDeployedContractAddress({
+      chainInfo: params.chainInfo,
       contractCategory: 'core',
       contractName: 'admiralsQuarters',
     })
 
-    // are unstaked tokens available?
-    if (fleetAssets.toSolidityValue() > 0) {
-      // Yes. is the unstaked amount sufficient to meet the withdrawal?
-      if (fleetAssets.toSolidityValue() >= assetsToEOA.toSolidityValue()) {
-        LoggingService.debug('fleet balance is enough for requested amount', {
-          fleetAssets: fleetAssets.toString(),
-        })
+    const multicallCalldata = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'multicall',
+      args: [multicallArgs],
+    })
 
-        const sharesToWithdraw = await this._previewWithdraw({
-          vaultId: params.vaultId,
-          assets: assetsToEOA,
-        })
-        // Approve the requested amount in shares
-        const approveToTakeUserShares = await this._allowanceManager.getApproval({
-          chainInfo: params.vaultId.chainInfo,
-          spender: admiralsQuarterAddress,
-          amount: sharesToWithdraw,
-          owner: params.user.wallet.address,
-        })
-        if (approveToTakeUserShares) {
-          transactions.push(
-            createApprovalTransaction({
-              ...approveToTakeUserShares,
-              metadata: { approvalAmount: sharesToWithdraw },
-            }),
-          )
-          LoggingService.debug('approveToTakeUserShares', {
-            sharesToWithdraw: sharesToWithdraw.toString(),
-          })
-        }
-        const withdrawCall = await this._getExitWithdrawCall({
-          vaultId: params.vaultId,
-          slippage: params.slippage,
-          amount: assetsToEOA,
-          swapToToken,
-          shouldSwap,
-        })
-        const multicallCalldata = encodeFunctionData({
-          abi: AdmiralsQuartersAbi,
-          functionName: 'multicall',
-          args: [withdrawCall.calldata],
-        })
-        transactions.push(
-          createWithdrawTransaction({
-            target: admiralsQuarterAddress,
-            calldata: multicallCalldata,
-            description: 'Withdraw Operation using unstaked shares',
-            metadata: {
-              fromAmount: assetsToEOA,
-              toAmount: swapToAmount,
-              slippage: params.slippage,
-              priceImpact: await this._getPriceImpact({
-                fromAmount: assetsToEOA,
-                toAmount: swapToAmount,
-              }),
-            },
-          }),
-        )
-      } else {
-        // Request withdrawal of all unstaked tokens and the rest from staked tokens
-        LoggingService.debug('fleet balance is not enough for requested amount', {
-          fleetAssets: fleetAssets.toString(),
-          assetsToEOA: assetsToEOA.toString(),
-        })
-        // approve all unstaken balance tx
-        const approveToTakeUserShares = await this._allowanceManager.getApproval({
-          chainInfo: params.vaultId.chainInfo,
-          spender: admiralsQuarterAddress,
-          amount: fleetShares,
-          owner: params.user.wallet.address,
-        })
-        if (approveToTakeUserShares) {
-          transactions.push(
-            createApprovalTransaction({
-              ...approveToTakeUserShares,
-              metadata: { approvalAmount: fleetShares },
-            }),
-          )
-          LoggingService.debug('approveToTakeUserShares', {
-            sharesToWithdraw: fleetShares.toString(),
-          })
-        }
-        // approval to swap from user EOA
-        if (shouldSwap) {
-          const approveToSwap = await this._allowanceManager.getApproval({
-            chainInfo: params.vaultId.chainInfo,
-            spender: admiralsQuarterAddress,
-            amount: assetsToEOA,
-            owner: params.user.wallet.address,
-          })
-          if (approveToSwap) {
-            transactions.push(
-              createApprovalTransaction({
-                ...approveToSwap,
-                metadata: { approvalAmount: assetsToEOA },
-              }),
-            )
-            LoggingService.debug('approveToSwap', {
-              assetsToEOA: assetsToEOA.toString(),
-            })
-          }
-        }
-
-        const multicallArgs: HexData[] = []
-        // withdraw all fleet balance
-        const exitWithdrawCall = await this._getExitWithdrawCall({
-          vaultId: params.vaultId,
-          slippage: params.slippage,
-          amount: fleetAssets,
-          swapToToken,
-          shouldSwap,
-        })
-        multicallArgs.push(...exitWithdrawCall.calldata)
-
-        // and the reminder from staked tokens
-        const sharesToEOA = await this._previewWithdraw({
-          vaultId: params.vaultId,
-          assets: assetsToEOA,
-        })
-        const sharesToUnstake = sharesToEOA.subtract(fleetShares)
-        LoggingService.debug('withdraw all from fleet and the rest from staked', {
-          sharesToEOA: sharesToEOA.toSolidityValue(),
-          sharesToUnstake: sharesToUnstake.toSolidityValue(),
-        })
-        const unstakeAndWithdrawCall = await this._getUnstakeAndWithdrawCall({
-          vaultId: params.vaultId,
-          shares: sharesToUnstake,
-        })
-        multicallArgs.push(...unstakeAndWithdrawCall.calldata)
-
-        // swap to target token from user EOA
-        if (shouldSwap) {
-          const swapCall = await this._getEOASwapCall({
-            vaultId: params.vaultId,
-            slippage: params.slippage,
-            fromAmount: assetsToEOA,
-            toToken: swapToToken,
-          })
-          multicallArgs.push(...swapCall.calldata)
-          swapToAmount = swapCall.toAmount
-        }
-        // compose multicall
-        const multicallCalldata = encodeFunctionData({
-          abi: AdmiralsQuartersAbi,
-          functionName: 'multicall',
-          args: [multicallArgs],
-        })
-        transactions.push(
-          createWithdrawTransaction({
-            target: admiralsQuarterAddress,
-            calldata: multicallCalldata,
-            description: 'Withdraw Operation using mixed staked and unstaked shares',
-            metadata: {
-              fromAmount: assetsToEOA,
-              toAmount: swapToAmount,
-              slippage: params.slippage,
-              priceImpact: await this._getPriceImpact({
-                fromAmount: assetsToEOA,
-                toAmount: swapToAmount,
-              }),
-            },
-          }),
-        )
-      }
-    } else {
-      // No. Unstake and withdraw from staked tokens.
-      const sharesToEOA = await this._previewWithdraw({
-        vaultId: params.vaultId,
-        assets: assetsToEOA,
-      })
-      LoggingService.debug('fleet balance is 0, take all from staked', {
-        sharesToWithdraw: sharesToEOA.toString(),
-      })
-
-      // approval to swap from user EOA
-      if (shouldSwap) {
-        const approveToSwap = await this._allowanceManager.getApproval({
-          chainInfo: params.vaultId.chainInfo,
-          spender: admiralsQuarterAddress,
-          amount: assetsToEOA,
-          owner: params.user.wallet.address,
-        })
-        if (approveToSwap) {
-          transactions.push(
-            createApprovalTransaction({
-              ...approveToSwap,
-              metadata: { approvalAmount: assetsToEOA },
-            }),
-          )
-          LoggingService.debug('approveToSwap', {
-            assetsToEOA: assetsToEOA.toString(),
-          })
-        } else {
-          LoggingService.debug('approveToSwap not needed, allowance exists', {
-            assetsToEOA: assetsToEOA.toString(),
-          })
-        }
-      }
-
-      const multicallArgs: HexData[] = []
-      const unstakeAndWithdrawCall = await this._getUnstakeAndWithdrawCall({
-        vaultId: params.vaultId,
-        shares: sharesToEOA,
-      })
-      multicallArgs.push(...unstakeAndWithdrawCall.calldata)
-
-      if (shouldSwap) {
-        const swapCall = await this._getEOASwapCall({
-          vaultId: params.vaultId,
-          slippage: params.slippage,
-          fromAmount: assetsToEOA,
-          toToken: swapToToken,
-        })
-        multicallArgs.push(...swapCall.calldata)
-        swapToAmount = swapCall.toAmount
-      }
-      // compose multicall
-      const multicallCalldata = encodeFunctionData({
-        abi: AdmiralsQuartersAbi,
-        functionName: 'multicall',
-        args: [multicallArgs],
-      })
-
-      transactions.push(
-        createWithdrawTransaction({
-          target: admiralsQuarterAddress,
-          calldata: multicallCalldata,
-          description: 'Withdraw Operation using staked shares',
-          metadata: {
-            fromAmount: assetsToEOA,
-            toAmount: swapToAmount,
-            slippage: params.slippage,
-            priceImpact: await this._getPriceImpact({
-              fromAmount: assetsToEOA,
-              toAmount: swapToAmount,
-            }),
-          },
-        }),
-      )
+    return {
+      type: TransactionType.Claim,
+      description: 'Claiming all available rewards on the provided chain',
+      transaction: {
+        target: admiralsQuartersAddress,
+        calldata: multicallCalldata,
+        value: '0',
+      },
     }
-
-    return transactions
-  }
-
-  /** @see IArmadaManager.convertToShares */
-  async convertToShares(
-    params: Parameters<IArmadaManager['convertToShares']>[0],
-  ): Promise<ITokenAmount> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    const erc4626Contract = fleetContract.asErc4626()
-
-    return erc4626Contract.convertToShares({ amount: params.amount })
-  }
-
-  async convertToAssets(
-    params: Parameters<IArmadaManager['convertToAssets']>[0],
-  ): Promise<ITokenAmount> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    const erc4626Contract = fleetContract.asErc4626()
-
-    return erc4626Contract.convertToAssets({ amount: params.amount })
   }
 
   /** KEEPERS TRANSACTIONS */
@@ -775,6 +647,283 @@ export class ArmadaManager implements IArmadaManager {
 
   /** PRIVATE */
 
+  private async _getWithdrawTX(params: {
+    vaultId: IArmadaVaultId
+    user: IUser
+    amount: ITokenAmount
+    slippage: IPercentage
+    toToken: IToken
+  }): Promise<ExtendedTransactionInfo[]> {
+    const transactions: ExtendedTransactionInfo[] = []
+
+    const { assets: fleetAssets, shares: fleetShares } = await this.getFleetBalance({
+      vaultId: params.vaultId,
+      user: params.user,
+    })
+    // handling for ETH
+    const assetsToEOA = params.amount
+    const swapToToken = params.toToken
+    const shouldSwap = !swapToToken.equals(assetsToEOA.token)
+    let swapToAmount: ITokenAmount | undefined = undefined
+
+    LoggingService.debug('getWithdrawTX', {
+      assetsToEOA: assetsToEOA.toString(),
+      swapToToken: swapToToken.toString(),
+      shouldSwap,
+      fleetAssets: fleetAssets.toString(),
+      fleetShares: fleetShares.toString(),
+    })
+
+    const admiralsQuartersAddress = getDeployedContractAddress({
+      chainInfo: params.vaultId.chainInfo,
+      contractCategory: 'core',
+      contractName: 'admiralsQuarters',
+    })
+
+    // are unstaked tokens available?
+    if (fleetAssets.toSolidityValue() > 0) {
+      // Yes. is the unstaked amount sufficient to meet the withdrawal?
+      if (fleetAssets.toSolidityValue() >= assetsToEOA.toSolidityValue()) {
+        LoggingService.debug('fleet balance is enough for requested amount', {
+          fleetAssets: fleetAssets.toString(),
+        })
+
+        const sharesToWithdraw = await this._previewWithdraw({
+          vaultId: params.vaultId,
+          assets: assetsToEOA,
+        })
+        // Approve the requested amount in shares
+        const approveToTakeUserShares = await this._allowanceManager.getApproval({
+          chainInfo: params.vaultId.chainInfo,
+          spender: admiralsQuartersAddress,
+          amount: sharesToWithdraw,
+          owner: params.user.wallet.address,
+        })
+        if (approveToTakeUserShares) {
+          transactions.push(
+            createApprovalTransaction({
+              ...approveToTakeUserShares,
+              metadata: { approvalAmount: sharesToWithdraw },
+            }),
+          )
+          LoggingService.debug('approveToTakeUserShares', {
+            sharesToWithdraw: sharesToWithdraw.toString(),
+          })
+        }
+        const withdrawCall = await this._getExitWithdrawCall({
+          vaultId: params.vaultId,
+          slippage: params.slippage,
+          amount: assetsToEOA,
+          swapToToken,
+          shouldSwap,
+        })
+        const multicallCalldata = encodeFunctionData({
+          abi: AdmiralsQuartersAbi,
+          functionName: 'multicall',
+          args: [withdrawCall.calldata],
+        })
+        transactions.push(
+          createWithdrawTransaction({
+            target: admiralsQuartersAddress,
+            calldata: multicallCalldata,
+            description: 'Withdraw Operation using unstaked shares',
+            metadata: {
+              fromAmount: assetsToEOA,
+              toAmount: swapToAmount,
+              slippage: params.slippage,
+              priceImpact: await this._getPriceImpact({
+                fromAmount: assetsToEOA,
+                toAmount: swapToAmount,
+              }),
+            },
+          }),
+        )
+      } else {
+        // Request withdrawal of all unstaked tokens and the rest from staked tokens
+        LoggingService.debug('fleet balance is not enough for requested amount', {
+          fleetAssets: fleetAssets.toString(),
+          assetsToEOA: assetsToEOA.toString(),
+        })
+        // approve all unstaken balance tx
+        const approveToTakeUserShares = await this._allowanceManager.getApproval({
+          chainInfo: params.vaultId.chainInfo,
+          spender: admiralsQuartersAddress,
+          amount: fleetShares,
+          owner: params.user.wallet.address,
+        })
+        if (approveToTakeUserShares) {
+          transactions.push(
+            createApprovalTransaction({
+              ...approveToTakeUserShares,
+              metadata: { approvalAmount: fleetShares },
+            }),
+          )
+          LoggingService.debug('approveToTakeUserShares', {
+            sharesToWithdraw: fleetShares.toString(),
+          })
+        }
+        // approval to swap from user EOA
+        if (shouldSwap) {
+          const approveToSwap = await this._allowanceManager.getApproval({
+            chainInfo: params.vaultId.chainInfo,
+            spender: admiralsQuartersAddress,
+            amount: assetsToEOA,
+            owner: params.user.wallet.address,
+          })
+          if (approveToSwap) {
+            transactions.push(
+              createApprovalTransaction({
+                ...approveToSwap,
+                metadata: { approvalAmount: assetsToEOA },
+              }),
+            )
+            LoggingService.debug('approveToSwap', {
+              assetsToEOA: assetsToEOA.toString(),
+            })
+          }
+        }
+
+        const multicallArgs: HexData[] = []
+        // withdraw all fleet balance
+        const exitWithdrawCall = await this._getExitWithdrawCall({
+          vaultId: params.vaultId,
+          slippage: params.slippage,
+          amount: fleetAssets,
+          swapToToken,
+          shouldSwap,
+        })
+        multicallArgs.push(...exitWithdrawCall.calldata)
+
+        // and the reminder from staked tokens
+        const sharesToEOA = await this._previewWithdraw({
+          vaultId: params.vaultId,
+          assets: assetsToEOA,
+        })
+        const sharesToUnstake = sharesToEOA.subtract(fleetShares)
+        LoggingService.debug('withdraw all from fleet and the rest from staked', {
+          sharesToEOA: sharesToEOA.toSolidityValue(),
+          sharesToUnstake: sharesToUnstake.toSolidityValue(),
+        })
+        const unstakeAndWithdrawCall = await this._getUnstakeAndWithdrawCall({
+          vaultId: params.vaultId,
+          shares: sharesToUnstake,
+        })
+        multicallArgs.push(...unstakeAndWithdrawCall.calldata)
+
+        // swap to target token from user EOA
+        if (shouldSwap) {
+          const swapCall = await this._getEOASwapCall({
+            vaultId: params.vaultId,
+            slippage: params.slippage,
+            fromAmount: assetsToEOA,
+            toToken: swapToToken,
+          })
+          multicallArgs.push(...swapCall.calldata)
+          swapToAmount = swapCall.toAmount
+        }
+        // compose multicall
+        const multicallCalldata = encodeFunctionData({
+          abi: AdmiralsQuartersAbi,
+          functionName: 'multicall',
+          args: [multicallArgs],
+        })
+        transactions.push(
+          createWithdrawTransaction({
+            target: admiralsQuartersAddress,
+            calldata: multicallCalldata,
+            description: 'Withdraw Operation using mixed staked and unstaked shares',
+            metadata: {
+              fromAmount: assetsToEOA,
+              toAmount: swapToAmount,
+              slippage: params.slippage,
+              priceImpact: await this._getPriceImpact({
+                fromAmount: assetsToEOA,
+                toAmount: swapToAmount,
+              }),
+            },
+          }),
+        )
+      }
+    } else {
+      // No. Unstake and withdraw from staked tokens.
+      const sharesToEOA = await this._previewWithdraw({
+        vaultId: params.vaultId,
+        assets: assetsToEOA,
+      })
+      LoggingService.debug('fleet balance is 0, take all from staked', {
+        sharesToWithdraw: sharesToEOA.toString(),
+      })
+
+      // approval to swap from user EOA
+      if (shouldSwap) {
+        const approveToSwap = await this._allowanceManager.getApproval({
+          chainInfo: params.vaultId.chainInfo,
+          spender: admiralsQuartersAddress,
+          amount: assetsToEOA,
+          owner: params.user.wallet.address,
+        })
+        if (approveToSwap) {
+          transactions.push(
+            createApprovalTransaction({
+              ...approveToSwap,
+              metadata: { approvalAmount: assetsToEOA },
+            }),
+          )
+          LoggingService.debug('approveToSwap', {
+            assetsToEOA: assetsToEOA.toString(),
+          })
+        } else {
+          LoggingService.debug('approveToSwap not needed, allowance exists', {
+            assetsToEOA: assetsToEOA.toString(),
+          })
+        }
+      }
+
+      const multicallArgs: HexData[] = []
+      const unstakeAndWithdrawCall = await this._getUnstakeAndWithdrawCall({
+        vaultId: params.vaultId,
+        shares: sharesToEOA,
+      })
+      multicallArgs.push(...unstakeAndWithdrawCall.calldata)
+
+      if (shouldSwap) {
+        const swapCall = await this._getEOASwapCall({
+          vaultId: params.vaultId,
+          slippage: params.slippage,
+          fromAmount: assetsToEOA,
+          toToken: swapToToken,
+        })
+        multicallArgs.push(...swapCall.calldata)
+        swapToAmount = swapCall.toAmount
+      }
+      // compose multicall
+      const multicallCalldata = encodeFunctionData({
+        abi: AdmiralsQuartersAbi,
+        functionName: 'multicall',
+        args: [multicallArgs],
+      })
+
+      transactions.push(
+        createWithdrawTransaction({
+          target: admiralsQuartersAddress,
+          calldata: multicallCalldata,
+          description: 'Withdraw Operation using staked shares',
+          metadata: {
+            fromAmount: assetsToEOA,
+            toAmount: swapToAmount,
+            slippage: params.slippage,
+            priceImpact: await this._getPriceImpact({
+              fromAmount: assetsToEOA,
+              toAmount: swapToAmount,
+            }),
+          },
+        }),
+      )
+    }
+
+    return transactions
+  }
+
   private async _previewWithdraw(params: {
     vaultId: IArmadaVaultId
     assets: ITokenAmount
@@ -833,7 +982,7 @@ export class ArmadaManager implements IArmadaManager {
       shouldSwap,
     })
 
-    const admiralsQuarterAddress = getDeployedContractAddress({
+    const admiralsQuartersAddress = getDeployedContractAddress({
       chainInfo: params.vaultId.chainInfo,
       contractCategory: 'core',
       contractName: 'admiralsQuarters',
@@ -842,7 +991,7 @@ export class ArmadaManager implements IArmadaManager {
     // Approval
     const approvalTransaction = await this._allowanceManager.getApproval({
       chainInfo: params.vaultId.chainInfo,
-      spender: admiralsQuarterAddress,
+      spender: admiralsQuartersAddress,
       amount: params.amount,
       owner: params.user.wallet.address,
     })
@@ -882,13 +1031,13 @@ export class ArmadaManager implements IArmadaManager {
 
     // when staking admirals quarters will receive LV tokens, otherwise the user
     const lvTokenReceiver = shouldStake
-      ? admiralsQuarterAddress.value
+      ? admiralsQuartersAddress.value
       : params.user.wallet.address.value
 
     const enterFleetCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'enterFleet',
-      args: [params.vaultId.fleetAddress.value, fleetToken.address.value, 0n, lvTokenReceiver],
+      args: [params.vaultId.fleetAddress.value, 0n, lvTokenReceiver],
     })
     multicallArgs.push(enterFleetCalldata)
 
@@ -908,7 +1057,7 @@ export class ArmadaManager implements IArmadaManager {
     })
     transactions.push(
       createDepositTransaction({
-        target: admiralsQuarterAddress,
+        target: admiralsQuartersAddress,
         calldata: multicallCalldata,
         description: 'Deposit Operation',
         value: isEth ? params.amount.toSolidityValue() : undefined,
@@ -996,15 +1145,17 @@ export class ArmadaManager implements IArmadaManager {
   private async _getUnstakeAndWithdrawCall(params: {
     vaultId: IArmadaVaultId
     shares: ITokenAmount
+    claimRewards?: boolean
   }): Promise<{
     calldata: HexData[]
   }> {
+    const claimRewards = params.claimRewards || true
     const calldata: HexData[] = []
 
     const withdrawUnstake = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'unstakeAndWithdrawAssets',
-      args: [params.vaultId.fleetAddress.value, params.shares.toSolidityValue()],
+      args: [params.vaultId.fleetAddress.value, params.shares.toSolidityValue(), claimRewards],
     })
     calldata.push(withdrawUnstake)
     LoggingService.debug('unstakeAndWithdrawAssets', {
@@ -1038,7 +1189,7 @@ export class ArmadaManager implements IArmadaManager {
     toAmount: ITokenAmount
   }> {
     // get the admirals quarters address
-    const admiralsQuarterAddress = getDeployedContractAddress({
+    const admiralsQuartersAddress = getDeployedContractAddress({
       chainInfo: params.vaultId.chainInfo,
       contractCategory: 'core',
       contractName: 'admiralsQuarters',
@@ -1048,7 +1199,7 @@ export class ArmadaManager implements IArmadaManager {
     const swapData = await this._swapManager.getSwapDataExactInput({
       fromAmount: params.fromAmount,
       toToken: params.toToken,
-      recipient: admiralsQuarterAddress,
+      recipient: admiralsQuartersAddress,
       slippage: params.slippage,
     })
 
