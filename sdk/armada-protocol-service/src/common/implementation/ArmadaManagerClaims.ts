@@ -13,7 +13,6 @@ import {
 } from '@summerfi/armada-protocol-common'
 import {
   Address,
-  ChainFamilyMap,
   TransactionType,
   type HexData,
   type IAddress,
@@ -58,9 +57,9 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       chainInfo: params.user.chainInfo,
     })
 
-    const claims = getAllMerkleClaims(params.user.wallet.address.value)
+    const merkleClaims = getAllMerkleClaims(params.user.wallet.address.value)
 
-    const canClaimCalls = claims.map(
+    const canClaimCalls = merkleClaims.map(
       (claim) =>
         ({
           abi: SummerRewardsRedeemerAbi,
@@ -78,7 +77,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
 
     canClaimResults.forEach((result, index) => {
       if (result.status === 'success') {
-        canClaimRecord[claims[index].index.toString()] = result.result
+        canClaimRecord[merkleClaims[index].index.toString()] = result.result
       } else {
         throw new Error('Error in multicall reading canClaimDistributions: ' + result.error)
       }
@@ -94,9 +93,9 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       chainInfo: params.user.chainInfo,
     })
 
-    const claims = getAllMerkleClaims(params.user.wallet.address.value)
+    const merkleClaims = getAllMerkleClaims(params.user.wallet.address.value)
 
-    const hasClaimedCalls = claims.map(
+    const hasClaimedCalls = merkleClaims.map(
       (claim) =>
         ({
           abi: SummerRewardsRedeemerAbi,
@@ -114,7 +113,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
 
     hasClaimedResults.forEach((result, index) => {
       if (result.status === 'success') {
-        hasClaimedRecord[claims[index].index.toString()] = result.result
+        hasClaimedRecord[merkleClaims[index].index.toString()] = result.result
       } else {
         throw new Error('Error in multicall reading hasClaimedDistributions: ' + result.error)
       }
@@ -255,16 +254,23 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
   async getClaimDistributionTx(
     params: Parameters<IArmadaManagerClaims['getClaimDistributionTx']>[0],
   ): ReturnType<IArmadaManagerClaims['getClaimDistributionTx']> {
-    const claims = getAllMerkleClaims(params.user.wallet.address.value)
+    const merkleClaims = getAllMerkleClaims(params.user.wallet.address.value)
+
+    const hasClaimedRecord = await this.hasClaimedDistributions({ user: params.user })
+
+    // filter not claimed rewards
+    const filteredClaims = merkleClaims.filter((claim) => {
+      return !hasClaimedRecord[claim.index.toString()]
+    }, 0n)
 
     const calldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'claimMerkleRewards',
       args: [
         params.user.wallet.address.value,
-        claims.map((claim) => claim.index),
-        claims.map((claim) => claim.amount),
-        claims.map((claim) => claim.proof),
+        filteredClaims.map((claim) => claim.index),
+        filteredClaims.map((claim) => claim.amount),
+        filteredClaims.map((claim) => claim.proof),
         this._rewardsRedeemerAddress.value,
       ],
     })
