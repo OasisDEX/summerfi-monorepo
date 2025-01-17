@@ -7,7 +7,14 @@ import { erc20Abi } from 'viem'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import { useAppSDK } from './use-app-sdk'
-import type { useClient } from './use-client'
+import type { useNetworkAlignedClient } from './use-network-aligned-client'
+
+export interface TokenBalanceData {
+  vaultToken: IToken | undefined
+  token: IToken | undefined
+  tokenBalance: BigNumber | undefined
+  tokenBalanceLoading: boolean
+}
 
 export const useTokenBalance = ({
   publicClient,
@@ -16,12 +23,12 @@ export const useTokenBalance = ({
   chainId,
   skip, // to be used when we there are multiple calls of this hook within single component
 }: {
-  publicClient: ReturnType<typeof useClient>['publicClient']
+  publicClient: ReturnType<typeof useNetworkAlignedClient>['publicClient']
   vaultTokenSymbol: string
   tokenSymbol: string
   chainId: number
   skip?: boolean
-}) => {
+}): TokenBalanceData => {
   const [vaultToken, setVaultToken] = useState<IToken>()
   const [token, setToken] = useState<IToken>()
   const [tokenBalance, setTokenBalance] = useState<BigNumber>()

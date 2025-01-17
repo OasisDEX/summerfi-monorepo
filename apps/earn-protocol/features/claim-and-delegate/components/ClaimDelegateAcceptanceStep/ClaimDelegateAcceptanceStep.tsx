@@ -55,6 +55,7 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
     isGnosisSafe: false,
     version: 'sumr_version-16.01.2026',
     cookiePrefix: 'sumr-claim-token',
+    host: '/earn',
   })
 
   useEffect(() => {

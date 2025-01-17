@@ -37,6 +37,7 @@ export const AccountKitFeatures = () => {
     isGnosisSafe: false,
     version: 'version-26.06.2023',
     cookiePrefix: 'test',
+    host: '/earn',
   })
 
   useEffect(() => {

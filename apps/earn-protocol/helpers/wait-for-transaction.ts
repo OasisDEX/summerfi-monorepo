@@ -1,7 +1,7 @@
-import { type useClient } from '@/hooks/use-client'
+import { type useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 
 type WaitForTransactionParams = {
-  publicClient: ReturnType<typeof useClient>['publicClient']
+  publicClient: ReturnType<typeof useNetworkAlignedClient>['publicClient']
   hash: `0x${string}`
 }
 

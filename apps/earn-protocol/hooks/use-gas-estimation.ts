@@ -3,7 +3,7 @@ import { type ExtendedTransactionInfo, type HexData, TransactionType } from '@su
 import { formatEther } from 'viem'
 
 import { useAppSDK } from './use-app-sdk'
-import { useClient } from './use-client'
+import { useNetworkAlignedClient } from './use-network-aligned-client'
 
 type UseGasEstimationProps = {
   chainId: number
@@ -16,7 +16,7 @@ export const useGasEstimation = ({
   transaction,
   walletAddress,
 }: UseGasEstimationProps) => {
-  const { publicClient } = useClient({ chainId })
+  const { publicClient } = useNetworkAlignedClient({ chainId })
   const { getSwapQuote, getTokenBySymbol } = useAppSDK()
 
   const [loading, setLoading] = useState<boolean>(false)

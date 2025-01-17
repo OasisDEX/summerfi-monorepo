@@ -44,8 +44,8 @@ import { UserActivity } from '@/features/user-activity/components/UserActivity/U
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { useAppSDK } from '@/hooks/use-app-sdk'
-import { useClient } from '@/hooks/use-client'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
+import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useTransaction } from '@/hooks/use-transaction'
 import { useUserWallet } from '@/hooks/use-user-wallet'
@@ -70,7 +70,7 @@ export const VaultManageViewComponent = ({
   const user = useUser()
   const { userWalletAddress } = useUserWallet()
   const ownerView = viewWalletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
-  const { publicClient } = useClient()
+  const { publicClient } = useNetworkAlignedClient()
 
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
 
