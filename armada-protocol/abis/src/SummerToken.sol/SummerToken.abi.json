@@ -5,7 +5,7 @@
       {
         "name": "params",
         "type": "tuple",
-        "internalType": "struct ISummerToken.TokenParams",
+        "internalType": "struct ISummerToken.ConstructorParams",
         "components": [
           {
             "name": "name",
@@ -23,7 +23,7 @@
             "internalType": "address"
           },
           {
-            "name": "owner",
+            "name": "initialOwner",
             "type": "address",
             "internalType": "address"
           },
@@ -33,19 +33,9 @@
             "internalType": "address"
           },
           {
-            "name": "initialDecayFreeWindow",
-            "type": "uint40",
-            "internalType": "uint40"
-          },
-          {
-            "name": "initialDecayRate",
+            "name": "maxSupply",
             "type": "uint256",
             "internalType": "uint256"
-          },
-          {
-            "name": "initialDecayFunction",
-            "type": "uint8",
-            "internalType": "enum VotingDecayLibrary.DecayFunction"
           },
           {
             "name": "transferEnableDate",
@@ -53,14 +43,9 @@
             "internalType": "uint256"
           },
           {
-            "name": "maxSupply",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "initialSupply",
-            "type": "uint256",
-            "internalType": "uint256"
+            "name": "hubChainId",
+            "type": "uint32",
+            "internalType": "uint32"
           }
         ]
       }
@@ -676,6 +661,38 @@
   },
   {
     "type": "function",
+    "name": "getDecayRatePerYear",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "Percentage"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getDelegationChainLength",
+    "inputs": [
+      {
+        "name": "account",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "getPastTotalSupply",
     "inputs": [
       {
@@ -754,6 +771,54 @@
       }
     ],
     "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "hubChainId",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint32",
+        "internalType": "uint32"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "initialize",
+    "inputs": [
+      {
+        "name": "params",
+        "type": "tuple",
+        "internalType": "struct ISummerToken.InitializeParams",
+        "components": [
+          {
+            "name": "initialSupply",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "initialDecayFreeWindow",
+            "type": "uint40",
+            "internalType": "uint40"
+          },
+          {
+            "name": "initialYearlyDecayRate",
+            "type": "uint256",
+            "internalType": "Percentage"
+          },
+          {
+            "name": "initialDecayFunction",
+            "type": "uint8",
+            "internalType": "enum VotingDecayLibrary.DecayFunction"
+          }
+        ]
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
   },
   {
     "type": "function",
@@ -1582,12 +1647,12 @@
   },
   {
     "type": "function",
-    "name": "setDecayRatePerSecond",
+    "name": "setDecayRatePerYear",
     "inputs": [
       {
-        "name": "newRatePerSecond",
+        "name": "newYearlyRate",
         "type": "uint256",
-        "internalType": "uint256"
+        "internalType": "Percentage"
       }
     ],
     "outputs": [],
@@ -2242,6 +2307,11 @@
   },
   {
     "type": "error",
+    "name": "AlreadyInitialized",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "CallerIsNotAdmin",
     "inputs": [
       {
@@ -2325,6 +2395,17 @@
   {
     "type": "error",
     "name": "CallerIsNotDecayManager",
+    "inputs": [
+      {
+        "name": "caller",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "CallerIsNotFoundation",
     "inputs": [
       {
         "name": "caller",
@@ -2424,6 +2505,17 @@
     "type": "error",
     "name": "DecayController__ZeroAddress",
     "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "DecayRateTooHigh",
+    "inputs": [
+      {
+        "name": "rate",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
   },
   {
     "type": "error",
@@ -2680,6 +2772,22 @@
   },
   {
     "type": "error",
+    "name": "InvalidAddressLength",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidDecayFreeWindow",
+    "inputs": [
+      {
+        "name": "window",
+        "type": "uint40",
+        "internalType": "uint40"
+      }
+    ]
+  },
+  {
+    "type": "error",
     "name": "InvalidDecayRate",
     "inputs": []
   },
@@ -2752,6 +2860,22 @@
     "inputs": [
       {
         "name": "msgValue",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "NotHubChain",
+    "inputs": [
+      {
+        "name": "chainId",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "hubChainId",
         "type": "uint256",
         "internalType": "uint256"
       }
@@ -2912,6 +3036,11 @@
         "internalType": "string"
       }
     ]
+  },
+  {
+    "type": "error",
+    "name": "SummerTokenInvalidPeerArrays",
+    "inputs": []
   },
   {
     "type": "error",

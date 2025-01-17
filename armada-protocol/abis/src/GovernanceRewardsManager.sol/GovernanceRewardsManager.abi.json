@@ -8,7 +8,7 @@
         "internalType": "address"
       },
       {
-        "name": "_accessManager",
+        "name": "accessManager",
         "type": "address",
         "internalType": "address"
       }
@@ -705,7 +705,13 @@
     "name": "Staked",
     "inputs": [
       {
-        "name": "account",
+        "name": "staker",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "receiver",
         "type": "address",
         "indexed": true,
         "internalType": "address"
@@ -762,7 +768,13 @@
     "name": "Unstaked",
     "inputs": [
       {
-        "name": "account",
+        "name": "staker",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "receiver",
         "type": "address",
         "indexed": true,
         "internalType": "address"
@@ -858,6 +870,17 @@
   {
     "type": "error",
     "name": "CallerIsNotDecayController",
+    "inputs": [
+      {
+        "name": "caller",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "CallerIsNotFoundation",
     "inputs": [
       {
         "name": "caller",
