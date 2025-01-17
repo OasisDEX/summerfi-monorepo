@@ -1,4 +1,6 @@
 import type { Dispatch, FC } from 'react'
+import { SDKChainId } from '@summerfi/app-types'
+import { base } from 'viem/chains'
 
 import { ClaimDelegateStakeDelegateCompletedSubstep } from '@/features/claim-and-delegate/components/ClaimDelegateStakeDelegateStep/substeps/ClaimDelegateStakeDelegateCompletedSubstep/ClaimDelegateStakeDelegateCompletedSubstep'
 import { ClaimDelegateStakeDelegateSubstep } from '@/features/claim-and-delegate/components/ClaimDelegateStakeDelegateStep/substeps/ClaimDelegateStakeDelegateSubstep/ClaimDelegateStakeDelegateSubstep'
@@ -8,6 +10,8 @@ import {
   type ClaimDelegateState,
   ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
+import { usePublicClient } from '@/hooks/use-public-client'
+import { useTokenBalance } from '@/hooks/use-token-balance'
 
 interface ClaimDelegateStakeDelegateStepProps {
   state: ClaimDelegateState
@@ -20,6 +24,15 @@ export const ClaimDelegateStakeDelegateStep: FC<ClaimDelegateStakeDelegateStepPr
   dispatch,
   externalData,
 }) => {
+  const { publicClient } = usePublicClient({ chain: base })
+
+  const sumrBalanceData = useTokenBalance({
+    publicClient,
+    vaultTokenSymbol: 'SUMMER',
+    tokenSymbol: 'SUMMER',
+    chainId: SDKChainId.BASE,
+  })
+
   return (
     <>
       {state.delegateStatus !== ClaimDelegateTxStatuses.COMPLETED && (
@@ -27,6 +40,7 @@ export const ClaimDelegateStakeDelegateStep: FC<ClaimDelegateStakeDelegateStepPr
           state={state}
           dispatch={dispatch}
           externalData={externalData}
+          sumrBalanceData={sumrBalanceData}
         />
       )}
       {state.delegateStatus === ClaimDelegateTxStatuses.COMPLETED && (
@@ -34,6 +48,7 @@ export const ClaimDelegateStakeDelegateStep: FC<ClaimDelegateStakeDelegateStepPr
           state={state}
           dispatch={dispatch}
           externalData={externalData}
+          sumrBalanceData={sumrBalanceData}
         />
       )}
     </>

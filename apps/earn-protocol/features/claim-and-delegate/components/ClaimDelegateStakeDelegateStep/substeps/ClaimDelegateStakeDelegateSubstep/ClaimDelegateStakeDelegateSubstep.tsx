@@ -1,9 +1,10 @@
-import type { Dispatch, FC } from 'react'
+import { type Dispatch, type FC } from 'react'
 import {
   Button,
   Card,
   DataBlock,
   Icon,
+  SkeletonLine,
   SUMR_CAP,
   Text,
   useLocalConfig,
@@ -22,6 +23,7 @@ import {
   ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
+import { type TokenBalanceData } from '@/hooks/use-token-balance'
 
 import classNames from './ClaimDelegateStakeDelegateSubstep.module.scss'
 
@@ -29,12 +31,14 @@ interface ClaimDelegateStakeDelegateSubstepProps {
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
   externalData: ClaimDelegateExternalData
+  sumrBalanceData: TokenBalanceData
 }
 
 export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSubstepProps> = ({
   state,
   dispatch,
   externalData,
+  sumrBalanceData,
 }) => {
   const { walletAddress } = useParams()
   const {
@@ -42,8 +46,12 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
   } = useLocalConfig()
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
-  const claimed = formatCryptoBalance(externalData.sumrEarned)
-  const claimedInUSD = formatFiatBalance(Number(externalData.sumrEarned) * estimatedSumrPrice)
+  // for now what user claimed will be basically user balance on base
+  // until sumr token transferability will be enabled
+  const claimed = formatCryptoBalance(sumrBalanceData.tokenBalance ?? '0')
+  const claimedInUSD = formatFiatBalance(
+    Number(sumrBalanceData.tokenBalance ?? '0') * estimatedSumrPrice,
+  )
 
   const apy = formatDecimalAsPercent(externalData.sumrStakingInfo.sumrStakingApy)
   const sumrPerYear = `*${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(externalData.sumrEarned)) * Number(externalData.sumrStakingInfo.sumrStakingApy))} $SUMR / Year`
@@ -66,11 +74,33 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
           <div className={classNames.valueWithIcon}>
             <Icon tokenName="SUMR" />
             <Text as="h4" variant="h4">
-              {claimed}
+              {sumrBalanceData.tokenBalanceLoading ? (
+                <SkeletonLine
+                  height="16px"
+                  width="70px"
+                  style={{
+                    marginTop: 'var(--general-space-12)',
+                    marginBottom: 'var(--general-space-12)',
+                  }}
+                />
+              ) : (
+                claimed
+              )}
             </Text>
           </div>
           <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-            ${claimedInUSD}
+            {sumrBalanceData.tokenBalanceLoading ? (
+              <SkeletonLine
+                height="12px"
+                width="40px"
+                style={{
+                  marginTop: '5px',
+                  marginBottom: '5px',
+                }}
+              />
+            ) : (
+              `$${claimedInUSD}`
+            )}
           </Text>
         </Card>
         <Text as="p" variant="p2semi" style={{ marginBottom: 'var(--general-space-4)' }}>

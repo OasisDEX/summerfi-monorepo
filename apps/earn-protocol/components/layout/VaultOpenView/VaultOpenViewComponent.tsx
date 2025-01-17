@@ -40,8 +40,8 @@ import { UserActivity } from '@/features/user-activity/components/UserActivity/U
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { useAppSDK } from '@/hooks/use-app-sdk'
-import { useClient } from '@/hooks/use-client'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
+import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { usePosition } from '@/hooks/use-position'
 import { useRedirectToPosition } from '@/hooks/use-redirect-to-position'
 import { useTokenBalance } from '@/hooks/use-token-balance'
@@ -66,7 +66,7 @@ export const VaultOpenViewComponent = ({
   const { getStorageOnce } = useLocalStorageOnce<string>({
     key: `${vault.id}-amount`,
   })
-  const { publicClient } = useClient()
+  const { publicClient } = useNetworkAlignedClient()
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
 

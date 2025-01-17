@@ -5,11 +5,17 @@ import {
   DataBlock,
   Icon,
   LoadableAvatar,
+  SkeletonLine,
   SUMR_CAP,
   Text,
   useLocalConfig,
 } from '@summerfi/app-earn-ui'
-import { formatCryptoBalance, formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
+import {
+  formatAddress,
+  formatCryptoBalance,
+  formatDecimalAsPercent,
+  formatFiatBalance,
+} from '@summerfi/app-utils'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
@@ -20,6 +26,7 @@ import type {
   ClaimDelegateState,
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
+import { type TokenBalanceData } from '@/hooks/use-token-balance'
 
 import classNames from './ClaimDelegateStakeDelegateCompletedSubstep.module.scss'
 
@@ -27,25 +34,34 @@ interface ClaimDelegateStakeDelegateCompletedSubstepProps {
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
   externalData: ClaimDelegateExternalData
+  sumrBalanceData: TokenBalanceData
 }
 
 export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
   ClaimDelegateStakeDelegateCompletedSubstepProps
-> = ({ state, externalData }) => {
+> = ({ state, externalData, sumrBalanceData }) => {
   const { walletAddress } = useParams()
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
   const claimedSumr = (
     <>
-      {formatCryptoBalance(externalData.sumrEarned)}{' '}
+      {sumrBalanceData.tokenBalanceLoading ? (
+        <SkeletonLine height="16px" width="70px" />
+      ) : (
+        formatCryptoBalance(sumrBalanceData.tokenBalance ?? '0')
+      )}{' '}
       <Text as="span" variant="p3semiColorful">
         $SUMR
       </Text>
     </>
   )
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
-  const claimedSumrUSD = `$${formatFiatBalance(Number(externalData.sumrEarned) * estimatedSumrPrice)}`
+  const claimedSumrUSD = sumrBalanceData.tokenBalanceLoading ? (
+    <SkeletonLine height="12px" width="40px" />
+  ) : (
+    `$${formatFiatBalance(Number(sumrBalanceData.tokenBalance ?? '0') * estimatedSumrPrice)}`
+  )
 
   const apy = (
     <>
@@ -65,14 +81,18 @@ export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
 
     return null
   }
+
+  const externalDelegatee = externalData.sumrDelegates.find(
+    (delegate) => delegate.account.address.toLowerCase() === delegatee,
+  )
+
   // use name from tally api, if not fallback to local mapping
   // last resort is delegatee address
   const delegateeName =
-    externalData.sumrDelegates.find(
-      (delegate) => delegate.account.address.toLowerCase() === delegatee,
-    )?.account.name ??
-    localSumrDelegates.find((item) => item.address === state.delegatee)?.title ??
-    delegatee
+    externalDelegatee?.account.name !== ''
+      ? externalDelegatee?.account.name
+      : localSumrDelegates.find((item) => item.address === state.delegatee)?.title ??
+        formatAddress(delegatee)
 
   return (
     <div className={classNames.claimDelegateStakeDelegateCompletedSubstepWrapper}>
