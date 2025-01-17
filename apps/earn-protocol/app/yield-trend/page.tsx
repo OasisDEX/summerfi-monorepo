@@ -1,5 +1,5 @@
 const YieldTrendPage = () => {
-  return <>empty page</>
+  return <div>empty page</div>
 }
 
 export default YieldTrendPage
