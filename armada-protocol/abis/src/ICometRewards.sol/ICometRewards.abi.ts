@@ -1,1 +1,0 @@
-export const ICometRewardsAbi = [{"type":"function","name":"claim","inputs":[{"name":"comet","type":"address","internalType":"address"},{"name":"src","type":"address","internalType":"address"},{"name":"shouldAccrue","type":"bool","internalType":"bool"}],"outputs":[],"stateMutability":"nonpayable"}] as const

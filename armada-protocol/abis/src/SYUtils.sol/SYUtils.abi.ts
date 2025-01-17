@@ -1,1 +1,0 @@
-export const SYUtilsAbi = [] as const

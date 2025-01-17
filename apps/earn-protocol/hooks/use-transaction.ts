@@ -312,11 +312,13 @@ export const useTransaction = ({
       }
     }
     if (!isProperChainSelected || isSettingChain) {
+      const nextChain = SDKChainIdToAAChainMap[vaultChainId]
+
       return {
-        label: `Change network to ${vaultChainId}`,
+        label: `Change network to ${nextChain.name}`,
         action: () => {
           setChain({
-            chain: SDKChainIdToAAChainMap[vaultChainId],
+            chain: nextChain,
           })
         },
         disabled: isSettingChain,

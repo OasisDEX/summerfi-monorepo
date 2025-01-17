@@ -54,7 +54,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
     <>
       <div className={vaultManageGridStyles.vaultManageGridBreadcrumbsWrapper}>
         <div style={{ display: 'inline-block' }}>
-          <Link href="/earn">
+          <Link href="/">
             <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
               Earn
             </Text>

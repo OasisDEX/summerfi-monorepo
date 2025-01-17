@@ -20,7 +20,7 @@ folderNameList.forEach((folderName) => {
     const filePath = path.resolve(pathToAbiFolder, folderName, fileName)
     // read the file content as json
     const fileContent = fs.readFileSync(filePath, 'utf8')
-    const jsonContent = JSON.parse(fileContent).abi
+    const jsonContent = JSON.parse(fileContent)
     // create a new ts file with the json content assigned to a const
     const className = fileName.split('.')[0]
     const tsFileContent = `export const ${className}Abi = ${JSON.stringify(jsonContent)} as const`

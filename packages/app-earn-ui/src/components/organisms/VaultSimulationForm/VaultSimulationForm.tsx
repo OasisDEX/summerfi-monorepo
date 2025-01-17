@@ -94,6 +94,8 @@ export const VaultSimulationForm = ({
     return oneYearEarningsForecast
   }, [oneYearEarningsForecast])
 
+  const vaultUrl = !isEarnApp ? `/earn${getVaultUrl(vaultData)}` : getVaultUrl(vaultData)
+
   return (
     <div style={{ position: 'relative', width: '100%', padding: '2px' }}>
       <Sidebar
@@ -133,14 +135,14 @@ export const VaultSimulationForm = ({
           handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
           primaryButton: {
             label: 'Get Started',
-            url: getVaultUrl(vaultData),
+            url: vaultUrl,
             action: () => {
               setStorageOnce(amountParsed.toNumber())
             },
             disabled: false,
           },
           footnote: (
-            <Link href={getVaultUrl(vaultData)}>
+            <Link href={vaultUrl}>
               <WithArrow>View strategy</WithArrow>
             </Link>
           ),

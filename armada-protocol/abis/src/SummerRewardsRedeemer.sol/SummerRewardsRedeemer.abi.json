@@ -3,34 +3,9 @@
     "type": "constructor",
     "inputs": [
       {
-        "name": "_token",
+        "name": "_rewardsToken",
         "type": "address",
         "internalType": "address"
-      },
-      {
-        "name": "beneficiaryAddress",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "startTimestamp",
-        "type": "uint64",
-        "internalType": "uint64"
-      },
-      {
-        "name": "vestingType",
-        "type": "uint8",
-        "internalType": "enum ISummerVestingWallet.VestingType"
-      },
-      {
-        "name": "_timeBasedVestingAmount",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "_goalAmounts",
-        "type": "uint256[]",
-        "internalType": "uint256[]"
       },
       {
         "name": "_accessManager",
@@ -39,10 +14,6 @@
       }
     ],
     "stateMutability": "nonpayable"
-  },
-  {
-    "type": "receive",
-    "stateMutability": "payable"
   },
   {
     "type": "function",
@@ -111,12 +82,17 @@
   },
   {
     "type": "function",
-    "name": "addNewGoal",
+    "name": "addRoot",
     "inputs": [
       {
-        "name": "goalAmount",
+        "name": "index",
         "type": "uint256",
         "internalType": "uint256"
+      },
+      {
+        "name": "root",
+        "type": "bytes32",
+        "internalType": "bytes32"
       }
     ],
     "outputs": [],
@@ -124,7 +100,120 @@
   },
   {
     "type": "function",
-    "name": "duration",
+    "name": "canClaim",
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "index",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "proof",
+        "type": "bytes32[]",
+        "internalType": "bytes32[]"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "claim",
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "index",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "proof",
+        "type": "bytes32[]",
+        "internalType": "bytes32[]"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "claimMultiple",
+    "inputs": [
+      {
+        "name": "indices",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      },
+      {
+        "name": "amounts",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      },
+      {
+        "name": "proofs",
+        "type": "bytes32[][]",
+        "internalType": "bytes32[][]"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "claimMultiple",
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "indices",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      },
+      {
+        "name": "amounts",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      },
+      {
+        "name": "proofs",
+        "type": "bytes32[][]",
+        "internalType": "bytes32[][]"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "deployedAt",
     "inputs": [],
     "outputs": [
       {
@@ -137,16 +226,26 @@
   },
   {
     "type": "function",
-    "name": "end",
-    "inputs": [],
-    "outputs": [
+    "name": "emergencyWithdraw",
+    "inputs": [
       {
-        "name": "",
+        "name": "token",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "to",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
         "type": "uint256",
         "internalType": "uint256"
       }
     ],
-    "stateMutability": "view"
+    "outputs": [],
+    "stateMutability": "nonpayable"
   },
   {
     "type": "function",
@@ -174,23 +273,10 @@
   },
   {
     "type": "function",
-    "name": "getVestingType",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint8",
-        "internalType": "enum ISummerVestingWallet.VestingType"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "goalAmounts",
+    "name": "getRoot",
     "inputs": [
       {
-        "name": "",
+        "name": "index",
         "type": "uint256",
         "internalType": "uint256"
       }
@@ -198,27 +284,8 @@
     "outputs": [
       {
         "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "goalsReached",
-    "inputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool",
-        "internalType": "bool"
+        "type": "bytes32",
+        "internalType": "bytes32"
       }
     ],
     "stateMutability": "view"
@@ -244,232 +311,88 @@
   },
   {
     "type": "function",
-    "name": "markGoalReached",
+    "name": "hasClaimed",
     "inputs": [
       {
-        "name": "goalNumber",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "owner",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "recallUnvestedTokens",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "releasable",
-    "inputs": [
-      {
-        "name": "token",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "releasable",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "release",
-    "inputs": [
-      {
-        "name": "token",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "release",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "released",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "released",
-    "inputs": [
-      {
-        "name": "token",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "renounceOwnership",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "start",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "timeBasedVestingAmount",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "token",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "transferOwnership",
-    "inputs": [
-      {
-        "name": "newOwner",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "vestedAmount",
-    "inputs": [
-      {
-        "name": "timestamp",
-        "type": "uint64",
-        "internalType": "uint64"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "vestedAmount",
-    "inputs": [
-      {
-        "name": "token",
+        "name": "user",
         "type": "address",
         "internalType": "address"
       },
       {
-        "name": "timestamp",
-        "type": "uint64",
-        "internalType": "uint64"
+        "name": "index",
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "outputs": [
       {
         "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "removeRoot",
+    "inputs": [
+      {
+        "name": "index",
         "type": "uint256",
         "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "rewardsToken",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "contract IERC20"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "roots",
+    "inputs": [
+      {
+        "name": "index",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "rootHash",
+        "type": "bytes32",
+        "internalType": "bytes32"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "event",
-    "name": "ERC20Released",
+    "name": "Claimed",
     "inputs": [
       {
-        "name": "token",
+        "name": "user",
         "type": "address",
         "indexed": true,
         "internalType": "address"
+      },
+      {
+        "name": "index",
+        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256"
       },
       {
         "name": "amount",
@@ -482,76 +405,31 @@
   },
   {
     "type": "event",
-    "name": "EtherReleased",
+    "name": "RootAdded",
     "inputs": [
       {
-        "name": "amount",
+        "name": "index",
         "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "GoalReached",
-    "inputs": [
-      {
-        "name": "goalNumber",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "NewGoalAdded",
-    "inputs": [
-      {
-        "name": "goalAmount",
-        "type": "uint256",
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256"
       },
       {
-        "name": "goalNumber",
-        "type": "uint256",
+        "name": "root",
+        "type": "bytes32",
         "indexed": false,
-        "internalType": "uint256"
+        "internalType": "bytes32"
       }
     ],
     "anonymous": false
   },
   {
     "type": "event",
-    "name": "OwnershipTransferred",
+    "name": "RootRemoved",
     "inputs": [
       {
-        "name": "previousOwner",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      },
-      {
-        "name": "newOwner",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "UnvestedTokensRecalled",
-    "inputs": [
-      {
-        "name": "unvestedTokens",
+        "name": "index",
         "type": "uint256",
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256"
       }
     ],
@@ -718,6 +596,53 @@
   },
   {
     "type": "error",
+    "name": "CallerNotAdmiralsQuarters",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "ClaimMultipleEmpty",
+    "inputs": [
+      {
+        "name": "indices",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      },
+      {
+        "name": "amounts",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      },
+      {
+        "name": "proofs",
+        "type": "bytes32[][]",
+        "internalType": "bytes32[][]"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "ClaimMultipleLengthMismatch",
+    "inputs": [
+      {
+        "name": "indices",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      },
+      {
+        "name": "amounts",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      },
+      {
+        "name": "proofs",
+        "type": "bytes32[][]",
+        "internalType": "bytes32[][]"
+      }
+    ]
+  },
+  {
+    "type": "error",
     "name": "DirectGrantIsDisabled",
     "inputs": [
       {
@@ -740,27 +665,6 @@
   },
   {
     "type": "error",
-    "name": "FailedCall",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "InsufficientBalance",
-    "inputs": [
-      {
-        "name": "balance",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "needed",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ]
-  },
-  {
-    "type": "error",
     "name": "InvalidAccessManagerAddress",
     "inputs": [
       {
@@ -772,17 +676,7 @@
   },
   {
     "type": "error",
-    "name": "InvalidGoalArrayLength",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "InvalidGoalNumber",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "InvalidToken",
+    "name": "InvalidRewardsToken",
     "inputs": [
       {
         "name": "token",
@@ -793,28 +687,17 @@
   },
   {
     "type": "error",
-    "name": "OnlyTeamVesting",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "OwnableInvalidOwner",
+    "name": "RootAlreadyAdded",
     "inputs": [
       {
-        "name": "owner",
-        "type": "address",
-        "internalType": "address"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "OwnableUnauthorizedAccount",
-    "inputs": [
+        "name": "index",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
       {
-        "name": "account",
-        "type": "address",
-        "internalType": "address"
+        "name": "root",
+        "type": "bytes32",
+        "internalType": "bytes32"
       }
     ]
   },
@@ -826,6 +709,58 @@
         "name": "token",
         "type": "address",
         "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "UserAlreadyClaimed",
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "index",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "proof",
+        "type": "bytes32[]",
+        "internalType": "bytes32[]"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "UserCannotClaim",
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "index",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "proof",
+        "type": "bytes32[]",
+        "internalType": "bytes32[]"
       }
     ]
   }

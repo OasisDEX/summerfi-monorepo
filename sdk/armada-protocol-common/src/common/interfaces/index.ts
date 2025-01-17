@@ -1,4 +1,7 @@
 export type { IArmadaManager } from './IArmadaManager'
+export type { IArmadaManagerClaims } from './IArmadaManagerClaims'
+export type { IArmadaManagerGovernance } from './IArmadaManagerGovernance'
+
 export {
   ArmadaVaultDataSchema as ArmadaVaultDataSchema,
   __signature__ as __iarmadavault__,
