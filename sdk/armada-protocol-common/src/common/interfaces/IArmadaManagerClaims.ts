@@ -12,7 +12,7 @@ export interface IArmadaManagerClaims {
    * @returns Promise<boolean>
    * @throws Error
    */
-  canClaimDistributions: (params: { user: IUser }) => Promise<[bigint, boolean][]>
+  canClaimDistributions: (params: { user: IUser }) => Promise<Record<string, boolean>>
 
   /**
    * @name hasClaimedDistributions
@@ -21,7 +21,7 @@ export interface IArmadaManagerClaims {
    * @returns Promise<boolean>
    * @throws Error
    */
-  hasClaimedDistributions: (params: { user: IUser }) => Promise<[bigint, boolean][]>
+  hasClaimedDistributions: (params: { user: IUser }) => Promise<Record<string, boolean>>
 
   /**
    * @name aggregatedClaims

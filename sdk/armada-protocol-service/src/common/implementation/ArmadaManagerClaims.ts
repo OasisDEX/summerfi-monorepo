@@ -60,18 +60,31 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
 
     const claims = getAllMerkleClaims(params.user.wallet.address.value)
 
-    const promises = claims.map((claim) =>
-      client.readContract({
-        abi: SummerRewardsRedeemerAbi,
-        address: this._rewardsRedeemerAddress.value,
-        functionName: 'canClaim',
-        args: [params.user.wallet.address.value, claim.index, claim.amount, claim.proof],
-      }),
+    const canClaimCalls = claims.map(
+      (claim) =>
+        ({
+          abi: SummerRewardsRedeemerAbi,
+          address: this._rewardsRedeemerAddress.value,
+          functionName: 'canClaim',
+          args: [params.user.wallet.address.value, claim.index, claim.amount, claim.proof],
+        }) as const,
     )
 
-    const canClaimResults = await Promise.all(promises)
+    const canClaimResults = await client.multicall({
+      contracts: canClaimCalls,
+    })
 
-    return claims.map((claim, index) => [claim.index, canClaimResults[index]])
+    const canClaimRecord: Record<string, boolean> = {}
+
+    canClaimResults.forEach((result, index) => {
+      if (result.status === 'success') {
+        canClaimRecord[claims[index].index.toString()] = result.result
+      } else {
+        throw new Error('Error in multicall reading canClaimDistributions: ' + result.error)
+      }
+    })
+
+    return canClaimRecord
   }
 
   async hasClaimedDistributions(
@@ -83,27 +96,46 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
 
     const claims = getAllMerkleClaims(params.user.wallet.address.value)
 
-    const promises = claims.map((claim) =>
-      client.readContract({
-        abi: SummerRewardsRedeemerAbi,
-        address: this._rewardsRedeemerAddress.value,
-        functionName: 'hasClaimed',
-        args: [params.user.wallet.address.value, claim.index],
-      }),
+    const hasClaimedCalls = claims.map(
+      (claim) =>
+        ({
+          abi: SummerRewardsRedeemerAbi,
+          address: this._rewardsRedeemerAddress.value,
+          functionName: 'hasClaimed',
+          args: [params.user.wallet.address.value, claim.index],
+        }) as const,
     )
 
-    const hasClaimedResults = await Promise.all(promises)
+    const hasClaimedResults = await client.multicall({
+      contracts: hasClaimedCalls,
+    })
 
-    return claims.map((claim, index) => [claim.index, hasClaimedResults[index]])
+    const hasClaimedRecord: Record<string, boolean> = {}
+
+    hasClaimedResults.forEach((result, index) => {
+      if (result.status === 'success') {
+        hasClaimedRecord[claims[index].index.toString()] = result.result
+      } else {
+        throw new Error('Error in multicall reading hasClaimedDistributions: ' + result.error)
+      }
+    })
+
+    return hasClaimedRecord
   }
 
   private async getMerkleDistributionRewards(user: IUser): Promise<bigint> {
     const merkleClaims = getAllMerkleClaims(user.wallet.address.value)
 
-    // TODO: check if has claimed?
+    const hasClaimedRecord = await this.hasClaimedDistributions({ user })
 
     // get merkle rewards amount
-    return merkleClaims.map((claim) => claim.amount).reduce((acc, curr) => acc + curr, 0n)
+    return merkleClaims.reduce((amount, claim) => {
+      if (hasClaimedRecord[claim.index.toString()]) {
+        return amount
+      } else {
+        return amount + claim.amount
+      }
+    }, 0n)
   }
 
   private async getVoteDelegationRewards(user: IUser): Promise<bigint> {
