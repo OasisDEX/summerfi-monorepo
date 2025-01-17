@@ -768,7 +768,7 @@ export const StaticTokensData: TokenListData = {
       decimals: 18,
       logoURI: '',
     },
-    // temporary deployment
+    // take from config json deployments
     {
       chainId: 8453,
       symbol: 'SUMMER',
