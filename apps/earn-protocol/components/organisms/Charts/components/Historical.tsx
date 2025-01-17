@@ -40,9 +40,10 @@ export const HistoricalChart = ({
   position,
   timeframe,
 }: HistoricalChartProps) => {
-  const { netDeposited, netEarnings } = getPositionValues(position)
+  const { netValue, netDeposited, netEarnings } = getPositionValues(position)
+
   const legendBaseData = {
-    netValue: `$${formatCryptoBalance(netEarnings)}`,
+    netValue: `$${formatCryptoBalance(netValue)}`,
     depositedValue: `$${formatCryptoBalance(netDeposited)}`,
     earnings: `$${formatCryptoBalance(netEarnings.minus(netDeposited))}`,
     sumrEarned: `TBD `,

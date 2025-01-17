@@ -45,7 +45,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   const aprCurrent = formatDecimalAsPercent(new BigNumber(vault.calculatedApr).div(100))
   const noOfDeposits = position.deposits.length.toString()
 
-  const { netDeposited, netEarnings } = getPositionValues({
+  const { netDeposited, netEarnings, netValue } = getPositionValues({
     positionData: position,
     vaultData: vault,
   })
@@ -111,21 +111,20 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
               <DataBlock
                 size="large"
                 titleSize="small"
-                title="Earned"
+                title="Market Value"
                 value={
                   <>
-                    {formatCryptoBalance(netEarnings)}&nbsp;{vault.inputToken.symbol}
+                    {formatCryptoBalance(netValue)}&nbsp;{vault.inputToken.symbol}
                   </>
                 }
                 subValue={
                   <>
-                    {formatCryptoBalance(netEarnings.minus(netDeposited))}&nbsp;
+                    Earned:&nbsp;
+                    {formatCryptoBalance(netEarnings)}&nbsp;
                     {vault.inputToken.symbol}
                   </>
                 }
-                subValueType={
-                  netEarnings.minus(netDeposited).isPositive() ? 'positive' : 'negative'
-                }
+                subValueType={netEarnings.isPositive() ? 'positive' : 'negative'}
                 subValueSize="medium"
               />
             </Box>
