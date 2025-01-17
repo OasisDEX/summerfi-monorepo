@@ -400,6 +400,22 @@ export const StaticTokensData: TokenListData = {
       chainId: 1,
       logoURI: 'https://tokens.1inch.io/0xdac17f958d2ee523a2206206994597c13d831ec7.png',
     },
+    {
+      name: 'Tether USD Stablecoin',
+      address: '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9',
+      symbol: 'USDT',
+      decimals: 6,
+      chainId: 42161,
+      logoURI: 'https://tokens.1inch.io/0xdac17f958d2ee523a2206206994597c13d831ec7.png',
+    },
+    {
+      name: 'Tether USD Stablecoin',
+      address: '0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2',
+      symbol: 'USDT',
+      decimals: 6,
+      chainId: 8453,
+      logoURI: 'https://tokens.1inch.io/0xdac17f958d2ee523a2206206994597c13d831ec7.png',
+    },
     // UNKNOWN
     {
       name: 'Dai Stablecoin',
@@ -757,7 +773,7 @@ export const StaticTokensData: TokenListData = {
       chainId: 8453,
       symbol: 'SUMMER',
       name: 'SummerToken',
-      address: '0x7eBD1bc062f4a32Aa2ADBF61aD9Ae694f1cB3BA1',
+      address: '0xD33E132C34c978C18ACd8CD90D14467C1BF10f30',
       decimals: 18,
       logoURI: '',
     },
