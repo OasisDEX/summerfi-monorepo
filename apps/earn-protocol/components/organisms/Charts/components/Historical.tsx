@@ -42,7 +42,6 @@ export const HistoricalChart = ({
 }: HistoricalChartProps) => {
   const { netValue, netDeposited, netEarnings } = getPositionValues(position)
 
-  console.log('netDeposited', netDeposited.toString())
   const legendBaseData = {
     netValue: `$${formatCryptoBalance(netValue)}`,
     depositedValue: `$${formatCryptoBalance(netDeposited)}`,
