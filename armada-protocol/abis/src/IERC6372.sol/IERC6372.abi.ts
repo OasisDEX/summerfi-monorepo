@@ -1,1 +1,0 @@
-export const IERC6372Abi = [{"type":"function","name":"CLOCK_MODE","inputs":[],"outputs":[{"name":"","type":"string","internalType":"string"}],"stateMutability":"view"},{"type":"function","name":"clock","inputs":[],"outputs":[{"name":"","type":"uint48","internalType":"uint48"}],"stateMutability":"view"}] as const

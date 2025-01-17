@@ -3,6 +3,7 @@ import clsx from 'clsx'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text, type TextAllowedHtmlTags } from '@/components/atoms/Text/Text'
+import { LoadingSpinner } from '@/components/molecules/LoadingSpinner/LoadingSpinner'
 
 import { type ClassNames as TextClassNames } from '@/components/atoms/Text/Text.module.scss'
 import withArrowStyles from '@/components/atoms/WithArrow/WithArrow.module.scss'
@@ -18,6 +19,8 @@ export function WithArrow({
   withAnimated = true,
   withStatic = false,
   onClick,
+  hideArrow = false,
+  isLoading = false,
 }: PropsWithChildren<{
   gap?: string | number
   style?: CSSProperties
@@ -28,17 +31,26 @@ export function WithArrow({
   withAnimated?: boolean
   withStatic?: boolean
   onClick?: () => void
+  hideArrow?: boolean
+  isLoading?: boolean
 }>) {
   return (
-    <span style={{ display: 'flex', alignItems: 'center' }} onClick={onClick}>
+    <span style={{ display: 'flex', alignItems: isLoading ? 'unset' : 'center' }} onClick={onClick}>
       <Text
         variant={variant}
         className={clsx(withArrowStyles.withArrow, className)}
         style={{ color: 'var(--earn-protocol-primary-100)', ...style }}
         {...(as ? { as } : { as: 'span' })}
       >
-        <span style={{ marginRight: gap }}>{children}</span>
-        {withAnimated && !withStatic && (
+        {isLoading ? (
+          <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-8)' }}>
+            <LoadingSpinner size={16} />
+            {children}
+          </span>
+        ) : (
+          <span style={{ marginRight: gap }}>{children}</span>
+        )}
+        {!hideArrow && !isLoading && withAnimated && !withStatic && (
           <>
             {/* This one won't be displayed, it's just to reserve space for actual arrow. */}
             {reserveSpace && (

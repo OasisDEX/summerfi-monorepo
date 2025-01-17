@@ -27,7 +27,7 @@ export const VaultGridDetails = ({
     <>
       <div className={vaultGridDetailsStyles.vaultGridDetailsBreadcrumbsWrapper}>
         <div style={{ display: 'inline-block' }}>
-          <Link href="/earn">
+          <Link href="/">
             <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
               Earn /
             </Text>

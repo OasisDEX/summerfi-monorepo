@@ -1,1 +1,0 @@
-export const IHarborCommandErrorsAbi = [{"type":"error","name":"FleetCommanderAlreadyEnlisted","inputs":[{"name":"fleetCommander","type":"address","internalType":"address"}]},{"type":"error","name":"FleetCommanderNotEnlisted","inputs":[{"name":"fleetCommander","type":"address","internalType":"address"}]}] as const

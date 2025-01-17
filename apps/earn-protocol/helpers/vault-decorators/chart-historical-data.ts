@@ -70,7 +70,7 @@ const mapPositionHistory = (
     const pointDepositedValue =
       isSameHour && positionValues
         ? Number(positionValues.netDeposited.toFixed(inputTokenDecimals))
-        : Math.max(point.deposits - Math.abs(point.withdrawals), 0)
+        : Math.max(Math.abs(point.deposits) - Math.abs(point.withdrawals), 0)
     const newPointData = {
       timestamp: timestampUnix,
       timestampParsed,
@@ -101,7 +101,7 @@ const mapPositionHistory = (
     const pointDepositedValue =
       isSameDay && positionValues
         ? Number(positionValues.netDeposited.toFixed(inputTokenDecimals))
-        : Math.max(point.deposits - Math.abs(point.withdrawals), 0)
+        : Math.max(Math.abs(point.deposits) - Math.abs(point.withdrawals), 0)
     const newPointData = {
       timestamp: timestampUnix,
       timestampParsed,
@@ -135,7 +135,7 @@ const mapPositionHistory = (
     const pointDepositedValue =
       isSameWeek && positionValues
         ? Number(positionValues.netDeposited.toFixed(inputTokenDecimals))
-        : Math.max(point.deposits - Math.abs(point.withdrawals), 0)
+        : Math.max(Math.abs(point.deposits) - Math.abs(point.withdrawals), 0)
     const newPointData = {
       timestamp: timestampUnix,
       timestampParsed,

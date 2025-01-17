@@ -1,1 +1,0 @@
-export const IHarborCommandEventsAbi = [{"type":"event","name":"FleetCommanderDecommissioned","inputs":[{"name":"fleetCommander","type":"address","indexed":true,"internalType":"address"}],"anonymous":false},{"type":"event","name":"FleetCommanderEnlisted","inputs":[{"name":"fleetCommander","type":"address","indexed":true,"internalType":"address"}],"anonymous":false}] as const

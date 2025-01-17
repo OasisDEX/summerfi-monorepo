@@ -5,7 +5,11 @@ import {
   type ChainInfo,
   type IToken,
 } from '@summerfi/sdk-common/common'
-import { TransactionInfo, ExtendedTransactionInfo } from '@summerfi/sdk-common/orders'
+import {
+  TransactionInfo,
+  ExtendedTransactionInfo,
+  type ClaimTransactionInfo,
+} from '@summerfi/sdk-common/orders'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IArmadaVaultId } from './IArmadaVaultId'
 import { IArmadaVaultInfo } from './IArmadaVaultInfo'
@@ -19,12 +23,17 @@ import type {
   GetUserActivityQuery,
 } from '@summerfi/subgraph-manager-common'
 import type { IRebalanceData } from '@summerfi/contracts-provider-common'
+import type { IArmadaManagerClaims } from './IArmadaManagerClaims'
+import type { IArmadaManagerGovernance } from './IArmadaManagerGovernance'
 
 /**
  * @name IArmadaManager
  * @description Interface for the Armada Protocol Manager which handles generating transactions for a Fleet
  */
 export interface IArmadaManager {
+  claims: IArmadaManagerClaims
+  governance: IArmadaManagerGovernance
+
   /** POSITIONS */
 
   /**
@@ -234,6 +243,24 @@ export interface IArmadaManager {
     toToken: IToken
     slippage: IPercentage
   }): Promise<ExtendedTransactionInfo[]>
+
+  /**
+   * @name getClaimTX
+   * @description Returns the transactions needed to claim rewards from the Fleet
+   *
+   * @param chainInfo Chain information
+   * @param user Address of the user that is trying to claim
+   * @param fleetCommandersAddresses Fleet commanders addresses
+   * @param rewardToken Reward token
+   *
+   * @returns TransactionInfo[] An array of transactions that must be executed
+   */
+  getClaimsTx(params: {
+    chainInfo: ChainInfo
+    user: IUser
+    fleetCommandersAddresses: IAddress[]
+    rewardToken: IAddress
+  }): Promise<ClaimTransactionInfo>
 
   /** KEEPERS TRANSACTIONS */
 

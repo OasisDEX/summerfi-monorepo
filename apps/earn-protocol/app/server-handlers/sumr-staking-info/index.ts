@@ -1,6 +1,6 @@
 import { SDKChainId } from '@summerfi/app-types'
 import { SECONDS_PER_DAY } from '@summerfi/app-utils'
-import { IGovernanceRewardsManagerAbi, SummerTokenAbi } from '@summerfi/armada-protocol-abis'
+import { GovernanceRewardsManagerAbi, SummerTokenAbi } from '@summerfi/armada-protocol-abis'
 import { getChainInfoByChainId } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import { createPublicClient, http } from 'viem'
@@ -63,12 +63,12 @@ export const getSumrStakingInfo = async (): Promise<SumrStakingInfoData> => {
         contracts: [
           {
             address: rewardsManager,
-            abi: IGovernanceRewardsManagerAbi,
+            abi: GovernanceRewardsManagerAbi,
             functionName: 'wrappedStakingToken',
           },
           {
             address: rewardsManager,
-            abi: IGovernanceRewardsManagerAbi,
+            abi: GovernanceRewardsManagerAbi,
             functionName: 'rewardData',
             args: [sumrToken.address.value],
           },

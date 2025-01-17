@@ -1,1 +1,0 @@
-export const MathAbi = [{"type":"error","name":"MathOverflowedMulDiv","inputs":[]}] as const

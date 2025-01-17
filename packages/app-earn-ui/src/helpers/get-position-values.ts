@@ -1,4 +1,5 @@
 import { type IArmadaPosition, type SDKVaultishType } from '@summerfi/app-types'
+import { zero } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
 export const getPositionValues = (position: {
@@ -23,7 +24,7 @@ export const getPositionValues = (position: {
   return {
     netValue,
     netValueUSD: netValue.times(inputTokenPrice),
-    netDeposited,
+    netDeposited: netDeposited.lt(0) ? zero : netDeposited,
     netDepositedUSD: netDeposited.times(inputTokenPrice),
     netEarnings,
     netEarningsUSD: netEarnings.times(inputTokenPrice),

@@ -1,1 +1,0 @@
-export * from './IIrm.abi';

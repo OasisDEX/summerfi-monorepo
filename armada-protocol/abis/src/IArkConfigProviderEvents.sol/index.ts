@@ -1,1 +1,0 @@
-export * from './IArkConfigProviderEvents.abi';

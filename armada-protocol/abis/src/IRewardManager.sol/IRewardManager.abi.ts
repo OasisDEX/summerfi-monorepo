@@ -1,1 +1,0 @@
-export const IRewardManagerAbi = [{"type":"function","name":"userReward","inputs":[{"name":"token","type":"address","internalType":"address"},{"name":"user","type":"address","internalType":"address"}],"outputs":[{"name":"index","type":"uint128","internalType":"uint128"},{"name":"accrued","type":"uint128","internalType":"uint128"}],"stateMutability":"view"}] as const

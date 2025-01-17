@@ -7,10 +7,6 @@ import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
 
 import supportBoxStyles from './SupportBox.module.scss'
 
-type SupportBoxProps = {
-  collapsible?: boolean
-}
-
 const SupportBoxElement = ({
   icon,
   description,
@@ -37,7 +33,7 @@ const SupportBoxElement = ({
   )
 }
 
-export const SupportBox = ({ collapsible = false }: SupportBoxProps) => {
+export const SupportBox = () => {
   return (
     <div className={supportBoxStyles.supportBoxWrapper}>
       <div className={supportBoxStyles.supportBoxTitleBarWrapper}>

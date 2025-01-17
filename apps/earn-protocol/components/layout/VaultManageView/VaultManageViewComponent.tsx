@@ -3,6 +3,7 @@ import { useUser } from '@account-kit/react'
 import {
   ControlsDepositWithdraw,
   Expander,
+  getPositionValues,
   NonOwnerPositionBanner,
   Sidebar,
   SidebarFootnote,
@@ -28,7 +29,6 @@ import {
 import { subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
 import { TransactionType } from '@summerfi/sdk-common'
-import BigNumber from 'bignumber.js'
 
 import {
   ControlsApproval,
@@ -110,9 +110,10 @@ export const VaultManageViewComponent = ({
     manualSetAmount: approvalManualSetAmount,
   } = useAmount({ vault, selectedToken, initialAmount: amountParsed.toString() })
 
-  const positionAmount = useMemo(() => {
-    return new BigNumber(position.amount.amount)
-  }, [position])
+  const { netValue } = getPositionValues({
+    positionData: position,
+    vaultData: vault,
+  })
 
   const {
     sidebar,
@@ -137,7 +138,7 @@ export const VaultManageViewComponent = ({
     tokenBalanceLoading: selectedTokenBalanceLoading,
     flow: 'manage',
     ownerView,
-    positionAmount,
+    positionAmount: netValue,
     approvalCustomValue: approvalAmountParsed,
   })
 
@@ -168,10 +169,10 @@ export const VaultManageViewComponent = ({
     fleetAddress: vault.id,
     chainId: vaultChainId,
     amount: {
-      [TransactionAction.DEPOSIT]: resolvedAmountParsed.plus(positionAmount),
-      [TransactionAction.WITHDRAW]: positionAmount.minus(resolvedAmountParsed).lt(zero)
+      [TransactionAction.DEPOSIT]: resolvedAmountParsed.plus(netValue),
+      [TransactionAction.WITHDRAW]: netValue.minus(resolvedAmountParsed).lt(zero)
         ? zero
-        : positionAmount.minus(resolvedAmountParsed),
+        : netValue.minus(resolvedAmountParsed),
     }[transactionType].toString(),
     disabled: !ownerView,
     isEarnApp: true,
@@ -243,7 +244,7 @@ export const VaultManageViewComponent = ({
       tokenBalance={
         {
           [TransactionAction.DEPOSIT]: selectedTokenBalance,
-          [TransactionAction.WITHDRAW]: ownerView ? positionAmount : undefined,
+          [TransactionAction.WITHDRAW]: ownerView ? netValue : undefined,
         }[transactionType]
       }
       tokenBalanceLoading={selectedTokenBalanceLoading}

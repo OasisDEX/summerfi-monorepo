@@ -152,7 +152,7 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
               style={{ color: 'var(--earn-protocol-secondary-100)' }}
               variant="p3semi"
               as="p"
-              withAnimated={!isLoading}
+              isLoading={isLoading}
             >
               {tosState.status === TOSStatus.DONE
                 ? 'Continue'

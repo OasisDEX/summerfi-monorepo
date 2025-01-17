@@ -1,1 +1,0 @@
-export const IGovernanceRewardsManagerErrorsAbi = [{"type":"error","name":"InvalidCaller","inputs":[]}] as const

@@ -1,1 +1,0 @@
-export * from './TipJar.abi';
