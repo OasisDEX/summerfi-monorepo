@@ -36,8 +36,8 @@ import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig
 import { getApprovalTx } from '@/helpers/get-approval-tx'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useAppSDK } from '@/hooks/use-app-sdk'
-import { type useClient } from '@/hooks/use-client'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
+import { type useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 
 type UseTransactionParams = {
   vault: SDKVaultishType
@@ -48,7 +48,7 @@ type UseTransactionParams = {
   token: IToken | undefined
   tokenBalance: BigNumber | undefined
   tokenBalanceLoading: boolean
-  publicClient?: ReturnType<typeof useClient>['publicClient']
+  publicClient?: ReturnType<typeof useNetworkAlignedClient>['publicClient']
   flow: 'open' | 'manage'
   ownerView?: boolean
   positionAmount?: BigNumber
