@@ -89,8 +89,8 @@ export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
   // use name from tally api, if not fallback to local mapping
   // last resort is delegatee address
   const delegateeName =
-    externalDelegatee?.account.name !== ''
-      ? externalDelegatee?.account.name
+    externalDelegatee && externalDelegatee.account.name !== ''
+      ? externalDelegatee.account.name
       : localSumrDelegates.find((item) => item.address === state.delegatee)?.title ??
         formatAddress(delegatee)
 
