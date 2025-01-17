@@ -770,14 +770,6 @@ export const StaticTokensData: TokenListData = {
     },
     // take from config json deployments
     {
-      chainId: 8453,
-      symbol: 'SUMMER',
-      name: 'SummerToken',
-      address: '0x52A94964b494A4dc6912A10949f88c0770E0a514',
-      decimals: 18,
-      logoURI: '',
-    },
-    {
       chainId: ChainFamilyMap.Base.Base.chainId,
       symbol: 'SUMMER',
       name: 'SummerToken',
