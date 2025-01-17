@@ -1,4 +1,5 @@
 import type { Dispatch, FC } from 'react'
+import { useChain } from '@account-kit/react'
 import {
   Button,
   Card,
@@ -8,14 +9,18 @@ import {
   useLocalConfig,
   WithArrow,
 } from '@summerfi/app-earn-ui'
+import { SDKChainId } from '@summerfi/app-types'
 import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 
+import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import {
   type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
   type ClaimDelegateState,
   ClaimDelegateSteps,
+  ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
+import { useClientChainId } from '@/hooks/use-client-chain-id'
 
 import classNames from './ClaimDelegateClaimStep.module.scss'
 
@@ -26,12 +31,15 @@ interface ClaimDelegateClaimStepProps {
 }
 
 export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
+  state,
   dispatch,
   externalData,
 }) => {
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
+  const { setChain } = useChain()
+  const { clientChainId } = useClientChainId()
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   const handleBack = () => {
@@ -39,11 +47,28 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   }
 
   const handleAccept = () => {
-    dispatch({ type: 'update-step', payload: ClaimDelegateSteps.DELEGATE })
+    // claiming is only supported on base
+    if (clientChainId !== SDKChainId.BASE) {
+      // eslint-disable-next-line no-console
+      console.log('update network to base')
+      setChain({ chain: SDKChainIdToAAChainMap[SDKChainId.BASE] })
+    }
+
+    // TODO: Implement claim
+    // eslint-disable-next-line no-console
+    console.log('claim clicked')
+
+    dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.COMPLETED })
+
+    if (state.claimStatus === ClaimDelegateTxStatuses.COMPLETED) {
+      dispatch({ type: 'update-step', payload: ClaimDelegateSteps.DELEGATE })
+    }
   }
 
   const earned = formatCryptoBalance(externalData.sumrEarned)
   const earnedInUSD = formatFiatBalance(Number(externalData.sumrEarned) * estimatedSumrPrice)
+
+  const hideButtonArrow = state.claimStatus === ClaimDelegateTxStatuses.PENDING
 
   return (
     <div className={classNames.claimDelegateClaimStepWrapper}>
@@ -69,15 +94,23 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
         </Button>
         <Button
           variant="primarySmall"
-          style={{ paddingRight: 'var(--general-space-32)' }}
+          style={{
+            paddingRight: hideButtonArrow ? 'var(--general-space-24)' : 'var(--general-space-32)',
+          }}
           onClick={handleAccept}
+          disabled={state.claimStatus === ClaimDelegateTxStatuses.PENDING}
         >
           <WithArrow
             style={{ color: 'var(--earn-protocol-secondary-100)' }}
             variant="p3semi"
             as="p"
+            hideArrow={hideButtonArrow}
+            isLoading={state.claimStatus === ClaimDelegateTxStatuses.PENDING}
           >
-            Claim
+            {state.claimStatus === ClaimDelegateTxStatuses.PENDING && 'Claiming...'}
+            {state.claimStatus === ClaimDelegateTxStatuses.COMPLETED && 'Continue'}
+            {state.claimStatus === ClaimDelegateTxStatuses.FAILED && 'Retry'}
+            {state.claimStatus === undefined && 'Claim'}
           </WithArrow>
         </Button>
       </div>

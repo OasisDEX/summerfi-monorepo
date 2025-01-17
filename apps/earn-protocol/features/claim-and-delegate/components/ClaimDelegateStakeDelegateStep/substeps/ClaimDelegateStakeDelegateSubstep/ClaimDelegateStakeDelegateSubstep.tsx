@@ -56,13 +56,27 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
   const apy = formatDecimalAsPercent(externalData.sumrStakingInfo.sumrStakingApy)
   const sumrPerYear = `*${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(externalData.sumrEarned)) * Number(externalData.sumrStakingInfo.sumrStakingApy))} $SUMR / Year`
 
-  const handleStakeAndDelegate = () => {
-    dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.COMPLETED })
-  }
-
   const hasNothingToStake = externalData.sumrBalances.base === '0'
 
+  const handleStakeAndDelegate = () => {
+    if (state.stakingStatus === ClaimDelegateTxStatuses.COMPLETED || hasNothingToStake) {
+      // delegate tx here
+      // eslint-disable-next-line no-console
+      console.log('delegate tx here')
+      dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.COMPLETED })
+    } else {
+      // stake tx here
+      // eslint-disable-next-line no-console
+      console.log('stake tx here')
+      dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.COMPLETED })
+    }
+  }
+
   const mappedSumrDelegatesData = mergeDelegatesData(externalData.sumrDelegates)
+
+  const isLoading =
+    state.stakingStatus === ClaimDelegateTxStatuses.PENDING ||
+    state.delegateStatus === ClaimDelegateTxStatuses.PENDING
 
   return (
     <div className={classNames.claimDelegateStakeDelegateSubstepWrapper}>
@@ -189,8 +203,16 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
               style={{ color: 'var(--earn-protocol-secondary-100)' }}
               variant="p3semi"
               as="p"
+              isLoading={isLoading}
             >
-              {hasNothingToStake ? 'Delegate' : 'Stake & Delegate'}
+              {hasNothingToStake || state.stakingStatus === ClaimDelegateTxStatuses.COMPLETED
+                ? 'Delegate'
+                : 'Stake'}
+              {state.stakingStatus === ClaimDelegateTxStatuses.PENDING && 'Staking...'}
+              {state.delegateStatus === ClaimDelegateTxStatuses.PENDING && 'Delegating...'}
+              {[state.delegateStatus, state.stakingStatus].includes(
+                ClaimDelegateTxStatuses.FAILED,
+              ) && 'Retry'}
             </WithArrow>
           </Button>
         </div>

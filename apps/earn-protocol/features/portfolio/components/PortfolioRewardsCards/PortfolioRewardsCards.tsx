@@ -77,6 +77,8 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }
   const handleRemoveDelegation = () => {
     // delegation is only supported on base
     if (clientChainId !== SDKChainId.BASE) {
+      // eslint-disable-next-line no-console
+      console.log('update network to base')
       setChain({ chain: SDKChainIdToAAChainMap[SDKChainId.BASE] })
     }
 
