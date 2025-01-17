@@ -1,5 +1,6 @@
 'use client'
 import { type FC } from 'react'
+import { useChain } from '@account-kit/react'
 import {
   Button,
   DataModule,
@@ -7,6 +8,7 @@ import {
   SUMR_CAP,
   Text,
 } from '@summerfi/app-earn-ui'
+import { SDKChainId } from '@summerfi/app-types'
 import {
   ADDRESS_ZERO,
   formatCryptoBalance,
@@ -16,9 +18,11 @@ import {
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
+import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { localSumrDelegates } from '@/features/claim-and-delegate/consts'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
+import { useClientChainId } from '@/hooks/use-client-chain-id'
 
 import classNames from './PortfolioRewardsCards.module.scss'
 
@@ -62,6 +66,8 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }
   const { walletAddress } = useParams()
   const rawApy = rewardsData.sumrStakingInfo.sumrStakingApy
   const rawStaked = rewardsData.sumrStakeDelegate.sumrDelegated
+  const { setChain } = useChain()
+  const { clientChainId } = useClientChainId()
 
   const value = formatCryptoBalance(rawStaked)
   const apy = formatDecimalAsPercent(rawApy)
@@ -69,6 +75,11 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }
   const isDelegated = rewardsData.sumrStakeDelegate.sumrDelegated !== ADDRESS_ZERO
 
   const handleRemoveDelegation = () => {
+    // delegation is only supported on base
+    if (clientChainId !== SDKChainId.BASE) {
+      setChain({ chain: SDKChainIdToAAChainMap[SDKChainId.BASE] })
+    }
+
     // TODO: Implement remove delegation
     // eslint-disable-next-line no-console
     console.log('remove delegation clicked')
