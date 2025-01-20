@@ -41,6 +41,8 @@ export type VaultSimulationFormProps = {
   resolvedForecastAmount: BigNumber
   amountParsed: BigNumber
   isEarnApp?: boolean
+  positionExists?: boolean
+  userWalletAddress?: string
 }
 
 export const VaultSimulationForm = ({
@@ -57,6 +59,8 @@ export const VaultSimulationForm = ({
   resolvedForecastAmount,
   amountParsed,
   isEarnApp,
+  positionExists,
+  userWalletAddress,
 }: VaultSimulationFormProps) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [isGradientBorder, setIsGradientBorder] = useState(false)
@@ -133,19 +137,25 @@ export const VaultSimulationForm = ({
           customHeaderStyles:
             !isDrawerOpen && isMobile ? { padding: 'var(--general-space-12) 0' } : undefined,
           handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
-          primaryButton: {
-            label: 'Get Started',
-            url: vaultUrl,
-            action: () => {
-              setStorageOnce(amountParsed.toNumber())
-            },
-            disabled: false,
-          },
-          footnote: (
+          primaryButton: positionExists
+            ? {
+                label: 'View your position',
+                url: `${vaultUrl}/${userWalletAddress}`,
+                disabled: false,
+              }
+            : {
+                label: 'Get Started',
+                url: vaultUrl,
+                action: () => {
+                  setStorageOnce(amountParsed.toNumber())
+                },
+                disabled: false,
+              },
+          footnote: !positionExists ? (
             <Link href={vaultUrl}>
               <WithArrow>View strategy</WithArrow>
             </Link>
-          ),
+          ) : null,
         }}
         isMobile={isMobile}
         hiddenHeaderChevron={hiddenHeaderChevron}

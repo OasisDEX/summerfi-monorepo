@@ -35,7 +35,9 @@ import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { useAppSDK } from '@/hooks/use-app-sdk'
+import { usePosition } from '@/hooks/use-position'
 import { useTokenBalances } from '@/hooks/use-tokens-balances'
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 type VaultsListViewProps = {
   vaultsList: SDKVaultsListType
@@ -101,6 +103,13 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
   )
 
   const vaultData = selectedVaultData ?? networkFilteredVaults[0]
+  const { userWalletAddress } = useUserWallet()
+
+  const positionExists = usePosition({
+    chainId: subgraphNetworkToSDKId(vaultData.protocol.network),
+    vaultId: vaultData.id,
+    onlyActive: true,
+  })
 
   const { handleTokenSelectionChange, selectedTokenOption, tokenOptions } = useTokenSelector({
     vault: vaultData,
@@ -280,6 +289,8 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
           resolvedForecastAmount={resolvedForecastAmount}
           amountParsed={amountParsed}
           isEarnApp
+          positionExists={Boolean(positionExists)}
+          userWalletAddress={userWalletAddress}
         />
       }
     />
