@@ -92,14 +92,14 @@ export class ArmadaManager implements IArmadaManager {
     this._swapManager = params.swapManager
     this._oracleManager = params.oracleManager
 
-    this._supportedChains = [
-      ChainFamilyMap.Base.Base,
-      ChainFamilyMap.Arbitrum.ArbitrumOne,
-      // for now mainnet doesn't have a deployment
-      // ChainFamilyMap.Ethereum.Mainnet,
-    ]
+    this._supportedChains = this._configProvider
+      .getConfigurationItem({
+        name: 'SUMMER_DEPLOYED_CHAINS_ID',
+      })
+      .split(',')
+      .map((chainId) => getChainInfoByChainId(Number(chainId)))
     const _hubChainId = this._configProvider.getConfigurationItem({
-      name: 'SDK_HUB_CHAIN_ID',
+      name: 'SUMMER_HUB_CHAIN_ID',
     })
     this._hubChainInfo = getChainInfoByChainId(Number(_hubChainId))
     this._rewardsRedeemerAddress = getDeployedRewardsRedeemerAddress()

@@ -19,7 +19,8 @@ const {
   SUBGRAPH_BASE,
   SDK_USE_FORK = '',
   SDK_FORK_CONFIG = '',
-  SDK_HUB_CHAIN_ID,
+  SUMMER_HUB_CHAIN_ID,
+  SUMMER_DEPLOYED_CHAINS_ID,
 } = process.env
 
 export function addSdkConfig({ stack }: StackContext, api: Api) {
@@ -33,7 +34,8 @@ export function addSdkConfig({ stack }: StackContext, api: Api) {
     !ONE_INCH_API_SPOT_KEY ||
     !RPC_GATEWAY ||
     !SUBGRAPH_BASE ||
-    !SDK_HUB_CHAIN_ID
+    !SUMMER_HUB_CHAIN_ID ||
+    !SUMMER_DEPLOYED_CHAINS_ID
   ) {
     throw new Error(
       'Some SDK configuration env variables are missing: ' +
@@ -48,7 +50,8 @@ export function addSdkConfig({ stack }: StackContext, api: Api) {
             ONE_INCH_API_SPOT_KEY,
             RPC_GATEWAY,
             SUBGRAPH_BASE,
-            SDK_HUB_CHAIN_ID,
+            SUMMER_HUB_CHAIN_ID,
+            SUMMER_DEPLOYED_CHAINS_ID,
           }),
           null,
           2,
@@ -77,7 +80,8 @@ export function addSdkConfig({ stack }: StackContext, api: Api) {
       SUBGRAPH_BASE,
       SDK_USE_FORK,
       SDK_FORK_CONFIG,
-      SDK_HUB_CHAIN_ID,
+      SUMMER_HUB_CHAIN_ID,
+      SUMMER_DEPLOYED_CHAINS_ID,
     },
   })
 
