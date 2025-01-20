@@ -1,5 +1,6 @@
 'use client'
 import { SDKChainId } from '@summerfi/app-types'
+import { ADDRESS_ZERO } from '@summerfi/app-utils'
 import { SummerTokenAbi } from '@summerfi/armada-protocol-abis'
 import { useQuery } from '@tanstack/react-query'
 import BigNumber from 'bignumber.js'
@@ -29,34 +30,46 @@ export const useDecayFactor = (delegatedAddress?: string): DecayFactorResponse =
   const sdk = useAppSDK()
 
   const fetchDecayFactor = async (address: Address): Promise<number> => {
-    const publicClient = createPublicClient({
-      chain: base,
-      transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.BASE]),
-    })
+    try {
+      const publicClient = createPublicClient({
+        chain: base,
+        transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.BASE]),
+      })
 
-    const sumrToken = await sdk.getTokenBySymbol({
-      chainId: SDKChainId.BASE,
-      symbol: 'SUMMER',
-    })
+      const sumrToken = await sdk
+        .getTokenBySymbol({
+          chainId: SDKChainId.BASE,
+          symbol: 'SUMMER',
+        })
+        .catch((error) => {
+          throw new Error(`Failed to fetch SUMMER token: ${error.message}`)
+        })
 
-    const decayFactor = await publicClient.readContract({
-      abi: SummerTokenAbi,
-      address: sumrToken.address.value,
-      functionName: 'getDecayFactor',
-      args: [address],
-    })
+      const decayFactor = await publicClient
+        .readContract({
+          abi: SummerTokenAbi,
+          address: sumrToken.address.value,
+          functionName: 'getDecayFactor',
+          args: [address],
+        })
+        .catch((error) => {
+          throw new Error(`Failed to fetch decay factor: ${error.message}`)
+        })
 
-    if (!decayFactor) {
-      throw new Error('Failed to fetch decay factor')
+      if (!decayFactor) {
+        throw new Error('Failed to fetch decay factor')
+      }
+
+      return new BigNumber(decayFactor.toString()).shiftedBy(-sumrToken.decimals).toNumber()
+    } catch (err) {
+      throw err instanceof Error ? err : new Error('Unknown error occurred')
     }
-
-    return new BigNumber(decayFactor.toString()).shiftedBy(-sumrToken.decimals).toNumber()
   }
 
-  const { data, isLoading, error } = useQuery({
+  const { data, error, isLoading } = useQuery({
     queryKey: ['decayFactor', delegatedAddress],
     queryFn: () => (delegatedAddress ? fetchDecayFactor(delegatedAddress as Address) : undefined),
-    enabled: !!delegatedAddress,
+    enabled: delegatedAddress !== ADDRESS_ZERO,
   })
 
   return {
