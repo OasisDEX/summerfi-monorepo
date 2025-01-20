@@ -4,6 +4,7 @@ import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
 import { getSumrDelegates } from '@/app/server-handlers/sumr-delegates'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
+import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
 import { ClaimPageViewComponent } from '@/components/layout/ClaimPageView/ClaimPageViewComponent'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { isValidAddress } from '@/helpers/is-valid-address'
@@ -23,21 +24,22 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
     redirect(`/`)
   }
 
-  const [sumrStakeDelegate, sumrBalances, sumrStakingInfo, sumrDelegates] = await Promise.all([
-    getSumrDelegateStake({
-      walletAddress,
-    }),
-    getSumrBalances({
-      walletAddress,
-    }),
-    getSumrStakingInfo(),
-    getSumrDelegates(),
-  ])
+  const [sumrStakeDelegate, sumrBalances, sumrStakingInfo, sumrDelegates, sumrToClaim] =
+    await Promise.all([
+      getSumrDelegateStake({
+        walletAddress,
+      }),
+      getSumrBalances({
+        walletAddress,
+      }),
+      getSumrStakingInfo(),
+      getSumrDelegates(),
+      getSumrToClaim({ walletAddress }),
+    ])
 
   // TODO fetch external data once available and data needed for transactions
   const externalData: ClaimDelegateExternalData = {
-    sumrEarned: '123.45',
-    sumrToClaim: '1.23',
+    sumrToClaim,
     sumrStakeDelegate,
     sumrBalances,
     sumrStakingInfo,

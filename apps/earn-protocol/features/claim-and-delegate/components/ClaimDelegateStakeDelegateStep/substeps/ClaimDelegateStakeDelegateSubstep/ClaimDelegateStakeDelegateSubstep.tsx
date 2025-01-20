@@ -10,6 +10,7 @@ import {
   useLocalConfig,
   WithArrow,
 } from '@summerfi/app-earn-ui'
+import { SDKChainId } from '@summerfi/app-types'
 import { formatCryptoBalance, formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
@@ -58,9 +59,10 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
   const claimedInUSD = formatFiatBalance(
     Number(sumrBalanceData.tokenBalance ?? '0') * estimatedSumrPrice,
   )
+  const sumrToClaim = externalData.sumrToClaim.perChain[SDKChainId.BASE] ?? 0
 
   const apy = formatDecimalAsPercent(externalData.sumrStakingInfo.sumrStakingApy * decayFactor)
-  const sumrPerYear = `*${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(externalData.sumrEarned)) * Number(externalData.sumrStakingInfo.sumrStakingApy * decayFactor))} $SUMR / Year`
+  const sumrPerYear = `*${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(sumrToClaim)) * Number(externalData.sumrStakingInfo.sumrStakingApy * decayFactor))} $SUMR / Year`
 
   const hasNothingToStake = externalData.sumrBalances.base === '0'
 
