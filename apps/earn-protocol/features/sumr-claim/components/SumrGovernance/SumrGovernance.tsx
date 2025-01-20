@@ -10,6 +10,7 @@ import {
 import { SumrGovernanceList } from '@/features/sumr-claim/components/SumrGovernanceList/SumrGovernanceList'
 import { SumrOwnership } from '@/features/sumr-claim/components/SumrOwnership/SumrOwnership'
 import { SumrSupplySchedule } from '@/features/sumr-claim/components/SumrSupplySchedule/SumrSupplySchedule'
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './SumrGovernance.module.scss'
 
@@ -19,12 +20,14 @@ interface SumrGovernanceContentProps {
   description?: string
   button: {
     label: string
-    action: () => void
+    href: string
   }
+  showButton?: boolean
   link: {
     label: string
     href: string
   }
+  showLink?: boolean
 }
 
 const SumrGovernanceContent: FC<SumrGovernanceContentProps> = ({
@@ -33,6 +36,8 @@ const SumrGovernanceContent: FC<SumrGovernanceContentProps> = ({
   description,
   button,
   link,
+  showButton = true,
+  showLink = true,
 }) => {
   return (
     <div className={classNames.sumrGovernanceContent}>
@@ -56,25 +61,36 @@ const SumrGovernanceContent: FC<SumrGovernanceContentProps> = ({
         {children}
       </Card>
       <div className={classNames.actionableWrapper}>
-        <Button variant="primaryLarge" onClick={button.action}>
-          {button.label}
-        </Button>
-        <Link href={link.href}>
-          <WithArrow>{link.label}</WithArrow>
-        </Link>
+        {showButton && (
+          <Link href={button.href}>
+            <Button variant="primarySmall">
+              <Text as="p" variant="p3semi">
+                {button.label}
+              </Text>
+            </Button>
+          </Link>
+        )}
+        {showLink && (
+          <Link href={link.href}>
+            <WithArrow variant="p3semi">{link.label}</WithArrow>
+          </Link>
+        )}
       </div>
     </div>
   )
 }
 
-const data = {
+const getData = (userWalletAddress: string | undefined) => ({
   'govern-lazy-summer': {
     title: 'Govern Lazy Summer',
     content: (
       <SumrGovernanceContent
         header="The only way to govern Lazy Summer Protocol"
-        button={{ label: 'Go to Governance', action: () => null }}
-        link={{ label: 'Claim $SUMR', href: '/' }}
+        button={{ label: 'Learn about $SUMR', href: '/' }}
+        link={{
+          label: 'Claim $SUMR',
+          href: userWalletAddress ? `/portfolio/${userWalletAddress}?tab=rewards` : '/sumr#claim',
+        }}
       >
         <SumrGovernanceList list={sumrGovernLazySummerData} />
       </SumrGovernanceContent>
@@ -85,8 +101,14 @@ const data = {
     content: (
       <SumrGovernanceContent
         header="Earn more $SUMR while protecting the protocol"
-        button={{ label: 'Stake your $SUMR', action: () => null }}
-        link={{ label: 'View delegates', href: '/' }}
+        button={{
+          label: 'Stake your $SUMR',
+          href: userWalletAddress ? `/stake-delegate/${userWalletAddress}` : '/sumr#claim',
+        }}
+        link={{
+          label: 'Learn more',
+          href: '/',
+        }}
       >
         <SumrGovernanceList list={sumrStakeToDelegate} />
       </SumrGovernanceContent>
@@ -97,8 +119,11 @@ const data = {
     content: (
       <SumrGovernanceContent
         header="$SUMR ownership"
-        button={{ label: 'Go to Governance', action: () => null }}
-        link={{ label: 'Claim $SUMR', href: '/' }}
+        button={{ label: 'Learn about $SUMR', href: '/' }}
+        link={{
+          label: 'Claim $SUMR',
+          href: userWalletAddress ? `/portfolio/${userWalletAddress}?tab=rewards` : '/sumr#claim',
+        }}
       >
         <SumrOwnership />
       </SumrGovernanceContent>
@@ -110,16 +135,22 @@ const data = {
       <SumrGovernanceContent
         header="Predictable and transparent supply schedule"
         description="35% Community Allocation. Overtime, a significant portion of $SUMR will be distributed to the community, ensuring decentralized control and fostering a user-driven protocol."
-        button={{ label: 'Claim $SUMR', action: () => null }}
+        button={{
+          label: 'Claim $SUMR',
+          href: userWalletAddress ? `/portfolio/${userWalletAddress}?tab=rewards` : '/sumr#claim',
+        }}
         link={{ label: 'See SUMR Vesting Conditions', href: '/' }}
       >
         <SumrSupplySchedule />
       </SumrGovernanceContent>
     ),
   },
-}
+})
 
 export const SumrGovernance = () => {
+  const { userWalletAddress } = useUserWallet()
+  const data = getData(userWalletAddress)
+
   return (
     <div className={classNames.sumrGovernanceWrapper}>
       <MarketingPointsList
