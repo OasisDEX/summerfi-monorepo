@@ -1,4 +1,5 @@
 import {
+  Button,
   Card,
   DataBlock,
   getPositionValues,
@@ -9,10 +10,13 @@ import {
 } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType, type TokenSymbolsList } from '@summerfi/app-types'
 import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
+import Link from 'next/link'
 
 import { type PortfolioPositionsList } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
 import { PositionHistoricalChart } from '@/components/organisms/Charts/PositionHistoricalChart'
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
+
+import portfolioOverviewStyles from './PortfolioOverview.module.scss'
 
 // const dummyNewsAndUpdatesItems = [
 //   {
@@ -136,9 +140,19 @@ export const PortfolioOverview = ({ vaultsList, positions }: PortfolioOverviewPr
               />
             ))
           ) : (
-            <Text as="p" variant="p1semi">
-              No positions
-            </Text>
+            <div className={portfolioOverviewStyles.noPositionsWrapper}>
+              <Text as="h5" variant="h5">
+                You don’t have any positions yet
+              </Text>
+              <Text as="p" variant="p2">
+                Start earning sustainably higher yields, optimized with AI.
+                <br />
+                Earn more, save time, and reduce costs.
+              </Text>
+              <Link href="/">
+                <Button variant="primaryMedium">View strategies</Button>
+              </Link>
+            </div>
           )}
           <PortfolioVaultsCarousel
             vaultsList={vaultsList}
