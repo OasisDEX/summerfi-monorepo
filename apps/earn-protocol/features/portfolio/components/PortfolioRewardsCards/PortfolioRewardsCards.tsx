@@ -34,7 +34,7 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
   const { walletAddress } = useParams()
   const [sumrNetApyConfig] = useSumrNetApyConfig()
   const assumedSumrPriceRaw = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
-  const rawSumr = Number(rewardsData.sumrToClaim)
+  const rawSumr = Number(rewardsData.sumrToClaim.total)
   const rawSumrUSD = formatFiatBalance(rawSumr * assumedSumrPriceRaw)
   const sumrAmount = formatCryptoBalance(rawSumr)
   const sumrAmountUSD = `$${formatFiatBalance(rawSumrUSD)}`

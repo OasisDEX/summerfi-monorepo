@@ -65,8 +65,12 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     }
   }
 
-  const earned = formatCryptoBalance(externalData.sumrEarned)
-  const earnedInUSD = formatFiatBalance(Number(externalData.sumrEarned) * estimatedSumrPrice)
+  // here we will most likely need to split it per each chain
+  // and handle claiming per given chain
+  const sumrToClaim = externalData.sumrToClaim.perChain[SDKChainId.BASE] ?? 0
+
+  const earned = formatCryptoBalance(sumrToClaim)
+  const earnedInUSD = formatFiatBalance(Number(sumrToClaim) * estimatedSumrPrice)
 
   const hideButtonArrow = state.claimStatus === ClaimDelegateTxStatuses.PENDING
 
@@ -98,7 +102,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
             paddingRight: hideButtonArrow ? 'var(--general-space-24)' : 'var(--general-space-32)',
           }}
           onClick={handleAccept}
-          disabled={state.claimStatus === ClaimDelegateTxStatuses.PENDING}
+          disabled={state.claimStatus === ClaimDelegateTxStatuses.PENDING || sumrToClaim === 0}
         >
           <WithArrow
             style={{ color: 'var(--earn-protocol-secondary-100)' }}

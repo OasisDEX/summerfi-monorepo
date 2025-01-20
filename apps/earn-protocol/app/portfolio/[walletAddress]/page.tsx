@@ -11,6 +11,7 @@ import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
 import { getSumrDelegates } from '@/app/server-handlers/sumr-delegates'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
+import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { PortfolioPageView } from '@/components/layout/PortfolioPageView/PortfolioPageView'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
@@ -36,6 +37,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     sumrBalances,
     sumrStakingInfo,
     sumrDelegates,
+    sumrToClaim,
   ] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
     getVaultsList(),
@@ -51,6 +53,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     }),
     getSumrStakingInfo(),
     getSumrDelegates(),
+    getSumrToClaim({ walletAddress }),
   ])
 
   const positionsJsonSafe = positions
@@ -72,8 +75,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   )
 
   const rewardsData: ClaimDelegateExternalData = {
-    sumrEarned: '123.45',
-    sumrToClaim: '1.23',
+    sumrToClaim,
     sumrStakeDelegate,
     sumrBalances,
     sumrStakingInfo,
