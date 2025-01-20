@@ -39,7 +39,7 @@ jobs:
       CONFIG_URL_EARN: ${{ secrets.CONFIG_URL_EARN }}
       CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
       SUMMER_HUB_CHAIN_ID: ${{ secrets.SDK_HUB_CHAIN_ID }}
-      SUMMER_DEPLOYED_CHAINS_IDS: ${{ secrets.SUMMER_DEPLOYED_CHAINS_ID }}
+      SUMMER_DEPLOYED_CHAINS_ID: ${{ secrets.SUMMER_DEPLOYED_CHAINS_ID }}
     steps:
       - name: Send start notification to Discord
         uses: Ilshidur/action-discord@0.3.2
