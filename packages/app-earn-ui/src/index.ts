@@ -129,6 +129,9 @@ export { parseForecastDatapoints } from './features/forecast/parse-forecast-data
 export { fetchForecastData } from './features/forecast/fetch-forecast-data'
 export { chartTimestampFormat } from './features/forecast/chart-formatters'
 
+// newsletter stuff
+export { handleNewsletterSubscription } from './features/newsletter'
+
 // contexts
 export {
   LocalConfigContextProvider,

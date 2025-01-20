@@ -203,7 +203,7 @@ export const SumrClaimSearch = () => {
           <Text variant="p3" style={{ marginBottom: 'var(--general-space-16)' }}>
             The best way to earn SUMR is by depositing into the protocol when its live.
           </Text>
-          <NewsletterWrapper inputWrapperStyles={{ maxWidth: '366px' }} />
+          <NewsletterWrapper inputWrapperStyles={{ maxWidth: '366px' }} isEarnApp />
         </Card>
       </GradientBox>
     </div>
