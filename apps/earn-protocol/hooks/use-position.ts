@@ -9,16 +9,21 @@ import { useUserWallet } from '@/hooks/use-user-wallet'
 export const usePosition = ({
   vaultId,
   chainId,
+  onlyActive,
 }: {
   vaultId: string
   chainId: SDKSupportedChain
+  onlyActive?: boolean
 }) => {
   const [position, setPosition] = useState<IArmadaPosition>()
   const { getUserPosition } = useAppSDK()
   const { userWalletAddress } = useUserWallet()
 
   useEffect(() => {
-    if (!userWalletAddress) return
+    if (!userWalletAddress) {
+      return
+    }
+    setPosition(undefined)
 
     const wallet = Wallet.createFrom({
       address: Address.createFromEthereum({
@@ -34,8 +39,16 @@ export const usePosition = ({
     getUserPosition({
       fleetAddress: vaultId,
       user: sdkUser,
-    }).then(setPosition)
-  }, [chainId, getUserPosition, userWalletAddress, vaultId])
+    }).then((pos) => {
+      if (onlyActive && Number(pos.amount.amount) < 0.01) {
+        setPosition(undefined)
+
+        return
+      }
+
+      setPosition(pos)
+    })
+  }, [chainId, getUserPosition, userWalletAddress, vaultId, onlyActive])
 
   return position
 }
