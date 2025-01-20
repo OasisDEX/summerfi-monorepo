@@ -32,6 +32,8 @@ interface ClaimDelegateStakeDelegateSubstepProps {
   dispatch: Dispatch<ClaimDelegateReducerAction>
   externalData: ClaimDelegateExternalData
   sumrBalanceData: TokenBalanceData
+  decayFactor: number | undefined
+  decayFactorLoading: boolean
 }
 
 export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSubstepProps> = ({
@@ -39,6 +41,10 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
   dispatch,
   externalData,
   sumrBalanceData,
+  // fallback to 1 to avoid UI flickering when
+  // decay factor is loading
+  decayFactor = 1,
+  decayFactorLoading,
 }) => {
   const { walletAddress } = useParams()
   const {
@@ -53,8 +59,8 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
     Number(sumrBalanceData.tokenBalance ?? '0') * estimatedSumrPrice,
   )
 
-  const apy = formatDecimalAsPercent(externalData.sumrStakingInfo.sumrStakingApy)
-  const sumrPerYear = `*${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(externalData.sumrEarned)) * Number(externalData.sumrStakingInfo.sumrStakingApy))} $SUMR / Year`
+  const apy = formatDecimalAsPercent(externalData.sumrStakingInfo.sumrStakingApy * decayFactor)
+  const sumrPerYear = `*${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(externalData.sumrEarned)) * Number(externalData.sumrStakingInfo.sumrStakingApy * decayFactor))} $SUMR / Year`
 
   const hasNothingToStake = externalData.sumrBalances.base === '0'
 
@@ -143,13 +149,36 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
             marginBottom: 'var(--general-space-8)',
           }}
           titleSize="medium"
-          value={apy}
+          value={
+            decayFactorLoading ? (
+              <SkeletonLine
+                height="18px"
+                width="60px"
+                style={{ marginTop: '7px', marginBottom: '7px)' }}
+              />
+            ) : (
+              apy
+            )
+          }
           valueStyle={{
             color: 'var(--earn-protocol-success-100)',
             marginBottom: 'var(--general-space-8)',
           }}
           valueSize="small"
-          subValue={sumrPerYear}
+          subValue={
+            decayFactorLoading ? (
+              <SkeletonLine
+                height="12px"
+                width="80px"
+                style={{
+                  marginTop: '6px',
+                  marginBottom: 'var(--general-space-4)',
+                }}
+              />
+            ) : (
+              sumrPerYear
+            )
+          }
           subValueStyle={{
             color: 'var(--earn-protocol-primary-100)',
             marginBottom: 'var(--general-space-8)',

@@ -66,11 +66,12 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }
   const { walletAddress } = useParams()
   const rawApy = rewardsData.sumrStakingInfo.sumrStakingApy
   const rawStaked = rewardsData.sumrStakeDelegate.sumrDelegated
+  const rawDecayFactor = rewardsData.sumrStakeDelegate.delegatedToDecayFactor
   const { setChain } = useChain()
   const { clientChainId } = useClientChainId()
 
   const value = formatCryptoBalance(rawStaked)
-  const apy = formatDecimalAsPercent(rawApy)
+  const apy = formatDecimalAsPercent(rawApy * rawDecayFactor)
 
   const isDelegated = rewardsData.sumrStakeDelegate.sumrDelegated !== ADDRESS_ZERO
 
