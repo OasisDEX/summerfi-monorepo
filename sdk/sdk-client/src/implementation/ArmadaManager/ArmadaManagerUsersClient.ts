@@ -114,4 +114,10 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   }> {
     return this.rpcClient.armada.users.getTotalBalance.query(params)
   }
+
+  async getAggregatedRewards(
+    params: Parameters<IArmadaManagerUsersClient['getAggregatedRewards']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getAggregatedRewards']> {
+    return this.rpcClient.armada.users.getAggregatedRewards.query(params)
+  }
 }

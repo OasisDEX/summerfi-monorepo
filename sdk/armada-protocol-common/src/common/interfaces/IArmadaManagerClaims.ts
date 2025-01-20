@@ -24,13 +24,13 @@ export interface IArmadaManagerClaims {
   hasClaimedDistributions: (params: { user: IUser }) => Promise<Record<string, boolean>>
 
   /**
-   * @name aggregatedClaims
+   * @name getAggregatedRewards
    * @description Returns the amount a user is eligible to claim cross-chain
    * @param params.user The user
    * @returns Promise<number>
    * @throws Error
    */
-  aggregatedRewards: (params: { user: IUser }) => Promise<{
+  getAggregatedRewards: (params: { user: IUser }) => Promise<{
     total: bigint
     perChain: Record<number, bigint>
   }>
@@ -58,7 +58,7 @@ export interface IArmadaManagerClaims {
 
   /**
    * @name getClaimProtocolUsageRewardsTx
-   * @description Claims protoclo usage rewards for a user
+   * @description Claims protocol usage rewards for a user
    * @param params.user The user
    * @param params.chainInfo The chain info
    * @param params.fleetCommandersAddresses The fleet commanders addresses
