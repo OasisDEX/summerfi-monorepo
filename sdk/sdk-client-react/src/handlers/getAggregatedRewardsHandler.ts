@@ -3,7 +3,7 @@ import { type IUser } from '@summerfi/sdk-common'
 
 export const getAggregatedRewardsHandler =
   (sdk: ISDKManager) =>
-  async ({ user }: { user: IUser; fleetAddress: string }) => {
+  async ({ user }: { user: IUser }) => {
     const position = await sdk.armada.users.getAggregatedRewards({
       user,
     })

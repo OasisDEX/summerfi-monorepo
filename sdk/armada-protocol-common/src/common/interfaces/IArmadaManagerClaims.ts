@@ -1,4 +1,10 @@
-import type { ClaimTransactionInfo, IAddress, IChainInfo, IUser } from '@summerfi/sdk-common'
+import type {
+  ChainInfo,
+  ClaimTransactionInfo,
+  IAddress,
+  IChainInfo,
+  IUser,
+} from '@summerfi/sdk-common'
 
 /**
  * @name IArmadaManagerClaims
@@ -72,4 +78,18 @@ export interface IArmadaManagerClaims {
     fleetCommandersAddresses: IAddress[]
     rewardToken: IAddress
   }) => Promise<ClaimTransactionInfo>
+
+  /**
+   * @name getAggregatedClaimsForChainTX
+   * @description Returns the multicall transaction needed to claim rewards from the Fleet
+   *
+   * @param chainInfo Chain information
+   * @param user Address of the user that is trying to claim
+   *
+   * @returns The transaction needed to claim the rewards
+   */
+  getAggregatedClaimsForChainTX(params: {
+    chainInfo: ChainInfo
+    user: IUser
+  }): Promise<ClaimTransactionInfo>
 }

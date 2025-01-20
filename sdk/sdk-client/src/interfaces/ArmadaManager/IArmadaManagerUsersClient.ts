@@ -14,6 +14,7 @@ import {
   IUser,
   TransactionInfo,
   type ChainInfo,
+  type ClaimTransactionInfo,
   type ExtendedTransactionInfo,
   type IAddress,
   type IPercentage,
@@ -212,4 +213,17 @@ export interface IArmadaManagerUsersClient {
     total: bigint
     perChain: Record<number, bigint>
   }>
+
+  /**
+   * @method getAggregatedClaimsForChainTX
+   * @description Returns the multicall transaction needed to claim rewards from the Fleet
+   * @param chainInfo Chain information
+   * @param user Address of the user to claim rewards for
+   *
+   * @returns The transaction needed to claim the rewards
+   */
+  getAggregatedClaimsForChainTX(params: {
+    chainInfo: ChainInfo
+    user: IUser
+  }): Promise<ClaimTransactionInfo>
 }

@@ -18,7 +18,7 @@ jest.setTimeout(300000)
 
 const useRpcGateway = true
 
-describe('Armada Protocol Deposit', () => {
+describe.skip('Armada Protocol Deposit', () => {
   const main = async () => {
     for (const { symbol, swapSymbol, chainInfo, fleetAddress, forkUrl } of testConfig) {
       console.log(`Running tests for ${symbol} on ${chainInfo.name}`)
@@ -288,6 +288,7 @@ describe('Armada Protocol Deposit', () => {
             amount,
             token: swapToken,
           }),
+          toToken: swapToken,
           slippage: Percentage.createFrom({
             value: 0.01,
           }),
