@@ -95,7 +95,8 @@ export class ArmadaManager implements IArmadaManager {
     this._supportedChains = [
       ChainFamilyMap.Base.Base,
       ChainFamilyMap.Arbitrum.ArbitrumOne,
-      ChainFamilyMap.Ethereum.Mainnet,
+      // for now mainnet doesn't have a deployment
+      // ChainFamilyMap.Ethereum.Mainnet,
     ]
     const _hubChainId = this._configProvider.getConfigurationItem({
       name: 'SDK_HUB_CHAIN_ID',
