@@ -42,6 +42,7 @@ import { getFleetBalance } from './armada-protocol-handlers/users/getFleetBalanc
 import { getStakedBalance } from './armada-protocol-handlers/users/getStakedBalance'
 import { getTotalBalance } from './armada-protocol-handlers/users/getTotalBalance'
 import { getAggregatedRewards } from './armada-protocol-handlers/users/getAggregatedRewards'
+import { getAggregatedClaimsForChainTX } from './armada-protocol-handlers/users/getAggregatedClaimsForChainTX'
 
 /**
  * Server
@@ -86,6 +87,7 @@ export const sdkAppRouter = router({
       getStakedBalance: getStakedBalance,
       getTotalBalance: getTotalBalance,
       getAggregatedRewards: getAggregatedRewards,
+      getAggregatedClaimsForChainTX: getAggregatedClaimsForChainTX,
     },
     keepers: {
       rebalance: rebalance,

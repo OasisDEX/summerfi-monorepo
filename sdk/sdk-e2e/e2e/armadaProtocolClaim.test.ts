@@ -1,7 +1,8 @@
 import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
-import { User, Wallet } from '@summerfi/sdk-common'
+import { ChainFamilyMap, User, Wallet } from '@summerfi/sdk-common'
 
-import { SDKApiUrl, testConfig } from './utils/testConfig'
+import { SDKApiUrl, signerPrivateKey, testConfig } from './utils/testConfig'
+import { sendAndLogTransactions } from '@summerfi/testing-utils'
 
 jest.setTimeout(300000)
 
@@ -29,8 +30,47 @@ describe('Armada Protocol Claim', () => {
             user,
           })
           expect(rewards.total).toBeGreaterThan(0n)
-          expect(rewards.perChain['8453']).toBeGreaterThan(0n)
-          expect(rewards.perChain['42161']).toBe(0n)
+          expect(rewards.perChain[ChainFamilyMap.Base.Base.chainId]).toBeGreaterThan(0n)
+          expect(rewards.perChain[ChainFamilyMap.Arbitrum.ArbitrumOne.chainId]).toBe(0n)
+        })
+      })
+
+      describe(`claimRewards`, () => {
+        it(`should claim rewards`, async () => {
+          const rewards = await sdk.armada.users.getAggregatedRewards({
+            user,
+          })
+
+          if (rewards.total > 0n) {
+            const tx = await sdk.armada.users.getAggregatedClaimsForChainTX({
+              chainInfo,
+              user,
+            })
+            expect(tx).toBeDefined()
+
+            const rewards = await sdk.armada.users.getAggregatedRewards({
+              user,
+            })
+            const toClaimBefore = rewards.perChain[ChainFamilyMap.Base.Base.chainId]
+            console.log('before', toClaimBefore)
+
+            const { statuses } = await sendAndLogTransactions({
+              chainInfo,
+              transactions: [tx],
+              rpcUrl: forkUrl,
+              privateKey: signerPrivateKey,
+              useRpcGateway: true,
+            })
+            statuses.forEach((status) => {
+              expect(status).toBe('success')
+            })
+
+            const rewardsAfter = await sdk.armada.users.getAggregatedRewards({
+              user,
+            })
+            const toClaimAfter = rewardsAfter.perChain[ChainFamilyMap.Base.Base.chainId]
+            console.log('after', toClaimAfter)
+          }
         })
       })
     })

@@ -13,6 +13,7 @@ import { getCurrentUserHandler } from '../handlers/getCurrentUserHandler'
 import { getChainInfoHandler } from '../handlers/getChainInfoHandler'
 import { getSwapQuoteHandler } from '../handlers/getSwapQuoteHandler'
 import { getAggregatedRewardsHandler } from '../handlers/getAggregatedRewardsHandler'
+import { getAggregatedClaimsForChainTXHandler } from '../handlers/getAggregatedClaimsForChainTXHandler'
 
 type UseSdk = {
   walletAddress?: string
@@ -53,6 +54,10 @@ export const useSDK = (params: UseSdk) => {
 
   // CLAIMS
   const getAggregatedRewards = useMemo(() => getAggregatedRewardsHandler(sdk), [sdk])
+  const getAggregatedClaimsForChainTX = useMemo(
+    () => getAggregatedClaimsForChainTXHandler(sdk),
+    [sdk],
+  )
 
   const memo = useMemo(
     () => ({
@@ -67,6 +72,7 @@ export const useSDK = (params: UseSdk) => {
       getUserPosition,
       getSwapQuote,
       getAggregatedRewards,
+      getAggregatedClaimsForChainTX,
     }),
     [
       getCurrentUser,
@@ -80,6 +86,7 @@ export const useSDK = (params: UseSdk) => {
       getUserPosition,
       getSwapQuote,
       getAggregatedRewards,
+      getAggregatedClaimsForChainTX,
     ],
   )
 

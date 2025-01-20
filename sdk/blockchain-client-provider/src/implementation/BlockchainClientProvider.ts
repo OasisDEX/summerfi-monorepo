@@ -3,7 +3,7 @@ import { arbitrum, base, mainnet, optimism } from 'viem/chains'
 
 import { IBlockchainClient, IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
-import { LoggingService, type IChainInfo } from '@summerfi/sdk-common'
+import { type IChainInfo } from '@summerfi/sdk-common'
 import {
   IRpcConfig,
   getRpcGatewayEndpoint,

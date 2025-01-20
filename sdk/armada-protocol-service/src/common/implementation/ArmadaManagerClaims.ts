@@ -343,4 +343,91 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       },
     }
   }
+
+  async getAggregatedClaimsForChainTX(
+    params: Parameters<IArmadaManagerClaims['getAggregatedClaimsForChainTX']>[0],
+  ): ReturnType<IArmadaManagerClaims['getAggregatedClaimsForChainTX']> {
+    const isHubChain = params.chainInfo.chainId === this._hubChainInfo.chainId
+
+    const summerTokenAddress = await getDeployedContractAddress({
+      chainInfo: params.chainInfo,
+      contractCategory: 'gov',
+      contractName: 'summerToken',
+    })
+
+    // for now reward token is just summer token
+    // in future potential partners can be added
+    const rewardToken = summerTokenAddress
+
+    // read contract on the summer token to get rewardsManager method
+    const client = this._blockchainClientProvider.getBlockchainClient({
+      chainInfo: params.chainInfo,
+    })
+    const govRewardsManagerAddress = await client.readContract({
+      abi: SummerTokenAbi,
+      address: summerTokenAddress.value,
+      functionName: 'rewardsManager',
+    })
+
+    const multicallArgs: HexData[] = []
+
+    // only hub chain can claim merkle rewards
+    if (isHubChain) {
+      const claimMerkleRewards = await this.getClaimDistributionTx({ user: params.user })
+      multicallArgs.push(claimMerkleRewards.transaction.calldata)
+    }
+    // only hub chain can claim governance rewards
+    if (isHubChain) {
+      const claimGovernanceRewards = await this.getClaimVoteDelegationRewardsTx({
+        govRewardsManagerAddress: Address.createFromEthereum({ value: govRewardsManagerAddress }),
+        rewardToken,
+      })
+      multicallArgs.push(claimGovernanceRewards.transaction.calldata)
+    }
+    // any chain can claim fleet rewards
+    // get fleet commanders addresses from harbor command contract
+    const harborCommandAddress = getDeployedContractAddress({
+      chainInfo: params.chainInfo,
+      contractCategory: 'core',
+      contractName: 'harborCommand',
+    })
+
+    const fleetCommandersAddresses = await client.readContract({
+      abi: HarborCommandAbi,
+      address: harborCommandAddress.value,
+      functionName: 'getActiveFleetCommanders',
+    })
+
+    const claimFleetRewards = await this.getClaimProtocolUsageRewardsTx({
+      chainInfo: params.chainInfo,
+      user: params.user,
+      fleetCommandersAddresses: fleetCommandersAddresses.map((addressValue) =>
+        Address.createFromEthereum({ value: addressValue }),
+      ),
+      rewardToken,
+    })
+    multicallArgs.push(claimFleetRewards.transaction.calldata)
+
+    const admiralsQuartersAddress = getDeployedContractAddress({
+      chainInfo: params.chainInfo,
+      contractCategory: 'core',
+      contractName: 'admiralsQuarters',
+    })
+
+    const multicallCalldata = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'multicall',
+      args: [multicallArgs],
+    })
+
+    return {
+      type: TransactionType.Claim,
+      description: 'Claiming all available rewards on the provided chain',
+      transaction: {
+        target: admiralsQuartersAddress,
+        calldata: multicallCalldata,
+        value: '0',
+      },
+    }
+  }
 }
