@@ -39,8 +39,8 @@ export const usePosition = ({
     getUserPosition({
       fleetAddress: vaultId,
       user: sdkUser,
-    }).then((pos) => {
-      if (onlyActive && Number(pos.amount.amount) < 0.01) {
+    }).then((pos: IArmadaPosition | undefined) => {
+      if (onlyActive && Number(pos?.amount.amount) < 0.01) {
         setPosition(undefined)
 
         return

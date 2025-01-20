@@ -16,7 +16,14 @@ export const formatChartCryptoValue = (amount: number) => {
     return formatAsShorthandNumbers(amount)
   }
 
-  return Number(formatCryptoBalance(amount.toFixed(3))).toString() // this removes trailing zeroes
+  const unformattedValue = formatCryptoBalance(amount)
+
+  if (unformattedValue.includes('.')) {
+    // remove unnecessary trailing zeros
+    return unformattedValue.replace(/\.?0+$/u, '')
+  }
+
+  return unformattedValue
 }
 
 export const formatChartPercentageValue = (amount: number, detailed: boolean = false) => {
