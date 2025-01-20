@@ -137,20 +137,21 @@ export const VaultSimulationForm = ({
           customHeaderStyles:
             !isDrawerOpen && isMobile ? { padding: 'var(--general-space-12) 0' } : undefined,
           handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
-          primaryButton: positionExists
-            ? {
-                label: 'View your position',
-                url: `${vaultUrl}/${userWalletAddress}`,
-                disabled: false,
-              }
-            : {
-                label: 'Get Started',
-                url: vaultUrl,
-                action: () => {
-                  setStorageOnce(amountParsed.toNumber())
+          primaryButton:
+            positionExists && userWalletAddress
+              ? {
+                  label: 'View your position',
+                  url: `${vaultUrl}/${userWalletAddress}`,
+                  disabled: false,
+                }
+              : {
+                  label: 'Get Started',
+                  url: vaultUrl,
+                  action: () => {
+                    setStorageOnce(amountParsed.toNumber())
+                  },
+                  disabled: false,
                 },
-                disabled: false,
-              },
           footnote: !positionExists ? (
             <Link href={vaultUrl}>
               <WithArrow>View strategy</WithArrow>
