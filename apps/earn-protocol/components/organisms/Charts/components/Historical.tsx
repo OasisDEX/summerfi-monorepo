@@ -45,7 +45,7 @@ export const HistoricalChart = ({
   const legendBaseData = {
     netValue: `$${formatCryptoBalance(netValue)}`,
     depositedValue: `$${formatCryptoBalance(netDeposited)}`,
-    earnings: `$${formatCryptoBalance(netEarnings.minus(netDeposited))}`,
+    earnings: `$${formatCryptoBalance(netEarnings)}`,
     sumrEarned: `TBD `,
   }
   const [highlightedData, setHighlightedData] = useState<{
@@ -114,7 +114,16 @@ export const HistoricalChart = ({
           <YAxis
             strokeWidth={0}
             tickFormatter={(label: string) => `${formatChartCryptoValue(Number(label))}`}
-            domain={['dataMin', 'dataMax + 5']}
+            interval="preserveStartEnd"
+            scale="linear"
+            domain={[
+              (dataMin: number) => {
+                return Math.max(dataMin - 5, 0)
+              },
+              (dataMax: number) => {
+                return Math.min(dataMax + 5, dataMax * 2)
+              },
+            ]}
             hide={chartHidden}
           />
           {/* Cursor is needed for the chart cross to work */}
