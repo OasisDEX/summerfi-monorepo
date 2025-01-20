@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
 
   if (!NEWSLETTER_API_KEY || !NEWSLETTER_PUBLICATION_ID) {
     return NextResponse.json(
-      { error: 'Environment newslee variables not configured properly' },
+      { error: 'Environment newsletter variables not configured properly' },
       { status: 500 },
     )
   }
