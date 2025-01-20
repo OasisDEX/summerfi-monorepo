@@ -56,7 +56,7 @@ const SumrRaysRewardsContent: FC<SumrRaysRewardsContentProps> = ({
           <Button variant="primaryLarge">{button.label}</Button>
         </Link>
         <Link href={link.href}>
-          <WithArrow>{link.label}</WithArrow>
+          <WithArrow variant="p3semi">{link.label}</WithArrow>
         </Link>
       </div>
     </div>

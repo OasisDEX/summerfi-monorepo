@@ -119,7 +119,7 @@ export const SumrClaimSearch = () => {
     (!eligibleUser && inputValue.length > 0 && !isAddress(inputValue) && !!user)
 
   return (
-    <div className={classNames.sumrClaimSearchWrapper}>
+    <div className={classNames.sumrClaimSearchWrapper} id="claim">
       <Text as="h1" variant="h1" className={classNames.headerTextual}>
         {resolvedHeaderText}
         <Text as="span" variant="h1" className={classNames.headerTextualColored}>

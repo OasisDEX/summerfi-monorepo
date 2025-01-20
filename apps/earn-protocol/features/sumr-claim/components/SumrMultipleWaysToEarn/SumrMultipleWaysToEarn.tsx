@@ -1,7 +1,10 @@
+'use client'
 import type { FC } from 'react'
 import { BigGradientBox, Text, WithArrow } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 import Link from 'next/link'
+
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './SumrMultipleWaysToEarn.module.scss'
 
@@ -31,13 +34,15 @@ const SumrMultipleWaysToEarnTextualContent: FC<SumrMultipleWaysToEarnTextualCont
         {description}
       </Text>
       <Link href={link.href}>
-        <WithArrow>{link.label}</WithArrow>
+        <WithArrow variant="p3semi">{link.label}</WithArrow>
       </Link>
     </div>
   )
 }
 
 export const SumrMultipleWaysToEarn = () => {
+  const { userWalletAddress } = useUserWallet()
+
   return (
     <div className={classNames.sumrMultipleWaysToEarnWrapper}>
       <Text as="h2" variant="h2">
@@ -55,7 +60,9 @@ export const SumrMultipleWaysToEarn = () => {
             title="Stake & Delegate to earn $SUMR"
             description="Lazy Summer requires 0 management from users. Apart from your own deposits, all risk management, yield optimizing and strategy rebalancing is handled automatically. "
             link={{
-              href: '/earn/portfolio',
+              href: userWalletAddress
+                ? `/portfolio/${userWalletAddress}?tab=rewards`
+                : '/sumr#claim',
               label: 'Stake & Earn',
             }}
           />
@@ -66,7 +73,7 @@ export const SumrMultipleWaysToEarn = () => {
             title="Deposit to earn $SUMR"
             description="Lazy Summer requires 0 management from users. Apart from your own deposits, all risk management, yield optimizing and strategy rebalancing is handled automatically. "
             link={{
-              href: '/earn/portfolio',
+              href: '/',
               label: 'Sign up',
             }}
           />
