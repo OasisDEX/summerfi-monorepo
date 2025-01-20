@@ -27,6 +27,7 @@ export const PortfolioRewardsCountdown = () => {
         <NewsletterWrapper
           wrapperClassName={classNames.customNewsletterSection}
           inputBtnLabel="Get updates"
+          isEarnApp
         />
       </div>
       <Card className={classNames.countdownWrapper}>
