@@ -53,7 +53,7 @@ const mergePositionHistoryAndForecast = (
     weekly: 52,
   }
 
-  const pointsNeededToDisplayAnyGraph = 3 // 3 hours
+  const pointsNeededToDisplayAnyGraph = 1 // 1 hours
   const inputTokenDecimals = position?.amount.token.decimals ?? 2
 
   const positionValues =
