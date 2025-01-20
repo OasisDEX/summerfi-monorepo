@@ -4,6 +4,7 @@ import { base } from 'viem/chains'
 
 import { ClaimDelegateStakeDelegateCompletedSubstep } from '@/features/claim-and-delegate/components/ClaimDelegateStakeDelegateStep/substeps/ClaimDelegateStakeDelegateCompletedSubstep/ClaimDelegateStakeDelegateCompletedSubstep'
 import { ClaimDelegateStakeDelegateSubstep } from '@/features/claim-and-delegate/components/ClaimDelegateStakeDelegateStep/substeps/ClaimDelegateStakeDelegateSubstep/ClaimDelegateStakeDelegateSubstep'
+import { useDecayFactor } from '@/features/claim-and-delegate/hooks/use-decay-factor'
 import {
   type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
@@ -33,6 +34,8 @@ export const ClaimDelegateStakeDelegateStep: FC<ClaimDelegateStakeDelegateStepPr
     chainId: SDKChainId.BASE,
   })
 
+  const { decayFactor, isLoading } = useDecayFactor(state.delegatee)
+
   return (
     <>
       {state.delegateStatus !== ClaimDelegateTxStatuses.COMPLETED && (
@@ -41,6 +44,8 @@ export const ClaimDelegateStakeDelegateStep: FC<ClaimDelegateStakeDelegateStepPr
           dispatch={dispatch}
           externalData={externalData}
           sumrBalanceData={sumrBalanceData}
+          decayFactor={decayFactor}
+          decayFactorLoading={isLoading}
         />
       )}
       {state.delegateStatus === ClaimDelegateTxStatuses.COMPLETED && (
@@ -49,6 +54,7 @@ export const ClaimDelegateStakeDelegateStep: FC<ClaimDelegateStakeDelegateStepPr
           dispatch={dispatch}
           externalData={externalData}
           sumrBalanceData={sumrBalanceData}
+          decayFactor={decayFactor}
         />
       )}
     </>

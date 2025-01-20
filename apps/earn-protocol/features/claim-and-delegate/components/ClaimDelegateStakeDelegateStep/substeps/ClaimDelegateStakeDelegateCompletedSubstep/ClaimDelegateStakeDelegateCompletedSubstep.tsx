@@ -35,11 +35,19 @@ interface ClaimDelegateStakeDelegateCompletedSubstepProps {
   dispatch: Dispatch<ClaimDelegateReducerAction>
   externalData: ClaimDelegateExternalData
   sumrBalanceData: TokenBalanceData
+  decayFactor: number | undefined
 }
 
 export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
   ClaimDelegateStakeDelegateCompletedSubstepProps
-> = ({ state, externalData, sumrBalanceData }) => {
+> = ({
+  state,
+  externalData,
+  sumrBalanceData,
+  // fallback to 1 to avoid UI flickering when
+  // decay factor is loading
+  decayFactor = 1,
+}) => {
   const { walletAddress } = useParams()
   const {
     state: { sumrNetApyConfig },
@@ -65,13 +73,16 @@ export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
 
   const apy = (
     <>
-      {formatDecimalAsPercent(externalData.sumrStakingInfo.sumrStakingApy).replace('%', '')}{' '}
+      {formatDecimalAsPercent(externalData.sumrStakingInfo.sumrStakingApy * decayFactor).replace(
+        '%',
+        '',
+      )}{' '}
       <Text as="span" variant="p3semi" style={{ color: 'var(--earn-protocol-success-100)' }}>
         %APY
       </Text>
     </>
   )
-  const sumrPerYear = `${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(externalData.sumrEarned)) * Number(externalData.sumrStakingInfo.sumrStakingApy))} $SUMR/yr`
+  const sumrPerYear = `${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(externalData.sumrEarned)) * Number(externalData.sumrStakingInfo.sumrStakingApy * decayFactor))} $SUMR/yr`
 
   const delegatee = state.delegatee?.toLowerCase()
 
