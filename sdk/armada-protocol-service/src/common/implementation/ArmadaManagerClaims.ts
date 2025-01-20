@@ -221,9 +221,9 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       })
   }
 
-  async aggregatedRewards(
-    params: Parameters<IArmadaManagerClaims['aggregatedRewards']>[0],
-  ): ReturnType<IArmadaManagerClaims['aggregatedRewards']> {
+  async getAggregatedRewards(
+    params: Parameters<IArmadaManagerClaims['getAggregatedRewards']>[0],
+  ): ReturnType<IArmadaManagerClaims['getAggregatedRewards']> {
     const merkleDistributionRewards = await this.getMerkleDistributionRewards(params.user)
     const voteDelegationRewards = await this.getVoteDelegationRewards(params.user)
 

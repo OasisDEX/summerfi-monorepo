@@ -199,4 +199,18 @@ export interface IArmadaManagerUsersClient {
     shares: ITokenAmount
     assets: ITokenAmount
   }>
+
+  /**
+   * @method getAggregatedRewards
+   * @description Returns the aggregated rewards of a user in a Fleet
+   *
+   * @param vaultId ID of the vault to check the rewards in
+   * @param user Address of the user to check the rewards for
+   *
+   * @returns The aggregated rewards of the user in the Fleet
+   */
+  getAggregatedRewards(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<{
+    total: bigint
+    perChain: Record<number, bigint>
+  }>
 }
