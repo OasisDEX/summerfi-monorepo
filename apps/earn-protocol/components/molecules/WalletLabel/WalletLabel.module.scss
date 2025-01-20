@@ -1,7 +1,29 @@
 .wrapper {
   width: 100%;
+  position: relative;
 
   @media screen and (min-width: 768px) {
     width: auto;
+  }
+
+  .walletAddress {
+    opacity: 1;
+    transition: opacity 0.3s;
+  }
+
+  .logout {
+    opacity: 0;
+    transition: opacity 0.3s;
+    position: absolute;
+  }
+
+  &:hover {
+    .logout {
+      opacity: 1;
+    }
+
+    .walletAddress {
+      opacity: 0;
+    }
   }
 }
