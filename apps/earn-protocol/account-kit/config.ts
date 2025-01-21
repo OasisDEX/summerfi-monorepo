@@ -1,4 +1,4 @@
-import { alchemy, arbitrum, base, mainnet } from '@account-kit/infra'
+import { alchemy, arbitrum, base, mainnet, optimism } from '@account-kit/infra'
 import { type AlchemyAccountsUIConfig, cookieStorage, createConfig } from '@account-kit/react'
 import { SDKChainId, SDKSupportedNetworkIdsEnum } from '@summerfi/app-types'
 import { QueryClient } from '@tanstack/react-query'
@@ -12,12 +12,14 @@ export const SDKChainIdToAAChainMap = {
   [SDKChainId.ARBITRUM]: arbitrum,
   [SDKChainId.BASE]: base,
   [SDKChainId.MAINNET]: mainnet,
+  [SDKChainId.OPTIMISM]: optimism,
 }
 
 export const GasSponsorshipIdMap = {
   [SDKChainId.ARBITRUM]: undefined,
   [SDKChainId.BASE]: '7d552463-eba5-4eac-a940-56f0515243f2',
   [SDKChainId.MAINNET]: undefined,
+  [SDKChainId.OPTIMISM]: undefined,
 }
 
 const uiConfig: AlchemyAccountsUIConfig = {
@@ -63,6 +65,7 @@ export const getAccountKitConfig = ({
         [SDKSupportedNetworkIdsEnum.ARBITRUM]: arbitrum,
         [SDKSupportedNetworkIdsEnum.BASE]: base,
         [SDKSupportedNetworkIdsEnum.MAINNET]: mainnet,
+        [SDKSupportedNetworkIdsEnum.OPTIMISM]: optimism,
       }[chainId ?? defaultChain.id] as Chain,
       chains: Object.values(SDKChainIdToAAChainMap).map((chain) => ({
         chain,

@@ -82,16 +82,16 @@ interface StakedAndDelegatedSumrProps {
 
 const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }) => {
   const { walletAddress } = useParams()
-  const rawApy = rewardsData.sumrStakingInfo.sumrStakingApy
-  const rawStaked = rewardsData.sumrStakeDelegate.sumrDelegated
-  const rawDecayFactor = rewardsData.sumrStakeDelegate.delegatedToDecayFactor
   const { setChain } = useChain()
   const { clientChainId } = useClientChainId()
 
-  const value = formatCryptoBalance(rawStaked)
-  const apy = formatDecimalAsPercent(rawApy * rawDecayFactor)
+  const rawApy = rewardsData.sumrStakingInfo.sumrStakingApy
+  const isDelegated = rewardsData.sumrStakeDelegate.delegatedTo !== ADDRESS_ZERO
+  const rawStakedAndDelegated = isDelegated ? rewardsData.sumrStakeDelegate.sumrDelegated : '0'
+  const rawDecayFactor = rewardsData.sumrStakeDelegate.delegatedToDecayFactor
 
-  const isDelegated = rewardsData.sumrStakeDelegate.sumrDelegated !== ADDRESS_ZERO
+  const value = formatCryptoBalance(rawStakedAndDelegated)
+  const apy = formatDecimalAsPercent(rawApy * rawDecayFactor)
 
   const handleRemoveDelegation = () => {
     // delegation is only supported on base
