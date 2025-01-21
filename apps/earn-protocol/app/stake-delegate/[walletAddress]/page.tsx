@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
+import { getSumrDecayFactor } from '@/app/server-handlers/sumr-decay-factor'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
 import { getSumrDelegates } from '@/app/server-handlers/sumr-delegates'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
@@ -37,13 +38,17 @@ const StakeDelegatePage = async ({ params }: StakeDelegatePageProps) => {
       getSumrToClaim({ walletAddress }),
     ])
 
-  // TODO fetch external data once available and data needed for transactions
+  const sumrDecayFactors = await getSumrDecayFactor(
+    sumrDelegates.map((delegate) => delegate.account.address),
+  )
+
   const externalData: ClaimDelegateExternalData = {
     sumrToClaim,
     sumrStakeDelegate,
     sumrBalances,
     sumrStakingInfo,
     sumrDelegates,
+    sumrDecayFactors,
   }
 
   return <StakeDelegateViewComponent walletAddress={walletAddress} externalData={externalData} />

@@ -2,7 +2,7 @@ import { formatAddress } from '@summerfi/app-utils'
 
 import { type SumrDelegates } from '@/app/server-handlers/sumr-delegates'
 
-interface SumrDelegate {
+export interface SumrDelegate {
   sumrAmount: number
   ens: string
   address: string

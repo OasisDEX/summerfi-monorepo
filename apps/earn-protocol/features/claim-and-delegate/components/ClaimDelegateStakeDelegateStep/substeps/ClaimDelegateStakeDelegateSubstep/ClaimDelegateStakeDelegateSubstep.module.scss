@@ -4,6 +4,7 @@
   flex-wrap: wrap;
   gap: var(--general-space-16);
   width: 100%;
+  min-height: 650px;
 
   .leftContent {
     display: flex;
@@ -25,6 +26,10 @@
       }
     }
 
+    .selfDelegateCard {
+      margin-top: var(--general-space-32);
+    }
+
     .spacer {
       border-bottom: 1px solid var(--earn-protocol-neutral-60);
       width: 100%;
@@ -37,6 +42,15 @@
     flex-direction: column;
     max-width: 585px;
     width: 100%;
+
+    .inputWrapper {
+      max-width: 345px;
+      margin-bottom: var(--general-space-16);
+
+      .inputCustomStyles {
+        font-size: 14px;
+      }
+    }
 
     .delegates {
       display: flex;

@@ -8,6 +8,7 @@ import { getGlobalRebalances } from '@/app/server-handlers/sdk/get-global-rebala
 import { getUserPositions } from '@/app/server-handlers/sdk/get-user-positions'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
+import { getSumrDecayFactor } from '@/app/server-handlers/sumr-decay-factor'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
 import { getSumrDelegates } from '@/app/server-handlers/sumr-delegates'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
@@ -74,12 +75,17 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     userVaultsIds.includes(rebalance.vault.id.toLowerCase()),
   )
 
+  const sumrDecayFactors = await getSumrDecayFactor(
+    sumrDelegates.map((delegate) => delegate.account.address),
+  )
+
   const rewardsData: ClaimDelegateExternalData = {
     sumrToClaim,
     sumrStakeDelegate,
     sumrBalances,
     sumrStakingInfo,
     sumrDelegates,
+    sumrDecayFactors,
   }
 
   const totalRays = Number(sumrEligibility.leaderboard[0]?.totalPoints ?? 0)
