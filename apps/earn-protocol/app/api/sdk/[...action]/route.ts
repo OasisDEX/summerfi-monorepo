@@ -1,5 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 
+import { REVALIDATION_TIMES } from '@/constants/revalidations'
+
 export async function POST(req: NextRequest) {
   const sdkApiUrl = process.env.SDK_API_URL
 
@@ -13,6 +15,9 @@ export async function POST(req: NextRequest) {
     headers,
     method: 'POST',
     body: JSON.stringify(await req.json()),
+    next: {
+      revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
+    },
   })
 
   if (!response.ok) {
@@ -35,7 +40,12 @@ export async function GET(req: NextRequest) {
   const url = sdkApiUrl + req.nextUrl.pathname + req.nextUrl.search
 
   const headers = {}
-  const response = await fetch(url, { headers })
+  const response = await fetch(url, {
+    headers,
+    next: {
+      revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
+    },
+  })
 
   return NextResponse.json(await response.json())
 }

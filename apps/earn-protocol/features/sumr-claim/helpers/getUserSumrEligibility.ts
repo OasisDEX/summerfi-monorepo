@@ -1,5 +1,7 @@
 import { type LeaderboardItem, type LeaderboardResponse } from '@summerfi/app-types'
 
+import { REVALIDATION_TIMES } from '@/constants/revalidations'
+
 /**
  * Fetches the SUMR eligibility for a given user address.
  * We are using the leaderboard endpoint to fetch the user's eligibility, since
@@ -13,6 +15,9 @@ export const getUserSumrEligibility = async (address: string): Promise<Leaderboa
   try {
     const { leaderboard }: LeaderboardResponse = await fetch(
       `/earn/api/leaderboard?page=1&limit=10&userAddress=${address.toLowerCase()}`,
+      {
+        next: { revalidate: REVALIDATION_TIMES.ALWAYS_FRESH },
+      },
     ).then((resp) => resp.json())
 
     return leaderboard

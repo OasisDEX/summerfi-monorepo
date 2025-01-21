@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server'
 
+import { REVALIDATION_TIMES } from '@/constants/revalidations'
 import { getTransakUrl } from '@/features/transak/helpers/get-transak-url'
 
 export async function GET(req: NextRequest) {
@@ -21,16 +22,17 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Not authorized' }, { status: 401 })
   }
 
-  const options = {
-    method: 'GET',
-    headers: {
-      accept: 'application/json',
-      'access-token': accessToken.value,
-    },
-  }
-
   try {
-    const response = await fetch(requestUrl, options)
+    const response = await fetch(requestUrl, {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        'access-token': accessToken.value,
+      },
+      next: {
+        revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
+      },
+    })
 
     if (!response.ok) {
       return NextResponse.json(

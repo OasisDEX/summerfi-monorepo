@@ -25,7 +25,6 @@ import {
 } from '@summerfi/sdk-common'
 import type BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
-import { useRouter } from 'next/navigation'
 
 import {
   type AccountKitSupportedNetworks,
@@ -34,6 +33,7 @@ import {
 } from '@/account-kit/config'
 import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
 import { getApprovalTx } from '@/helpers/get-approval-tx'
+import { revalidateUser } from '@/helpers/revalidate-user'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
@@ -81,7 +81,6 @@ export const useTransaction = ({
   approvalCustomValue,
 }: UseTransactionParams) => {
   const [slippageConfig] = useSlippageConfig()
-  const { refresh: refreshView } = useRouter()
   const user = useUser()
   const { getDepositTX, getWithdrawTX } = useAppSDK()
   const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
@@ -460,10 +459,12 @@ export const useTransaction = ({
       transactions?.length === 0 &&
       !waitingForTx
     ) {
-      refreshView()
       reset()
+      if (user?.address) {
+        revalidateUser(user.address)
+      }
     }
-  }, [refreshView, reset, waitingForTx, transactions?.length, txStatus, isSendingUserOperation])
+  }, [reset, waitingForTx, transactions?.length, txStatus, isSendingUserOperation, user])
 
   // watch for sendUserOperationError
   useEffect(() => {

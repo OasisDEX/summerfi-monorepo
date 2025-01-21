@@ -2,6 +2,8 @@
 
 import { type LeaderboardResponse } from '@summerfi/app-types'
 
+import { REVALIDATION_TIMES } from '@/constants/revalidations'
+
 export const fetchRaysLeaderboard = async (
   query:
     | {
@@ -15,7 +17,7 @@ export const fetchRaysLeaderboard = async (
       `${process.env.FUNCTIONS_API_URL}/api/rays/leaderboard?${urlParams}`,
       {
         method: 'GET',
-        next: { revalidate: 60, tags: [urlParams] },
+        next: { revalidate: REVALIDATION_TIMES.RAYS_LEADERBOARD, tags: [urlParams] },
         headers: {
           'Content-Type': 'application/json',
         },
