@@ -16,6 +16,8 @@ import { PortfolioTabs } from '@/features/portfolio/types'
 import { useTabStateQuery } from '@/hooks/use-tab-state'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
+import classNames from './PortfolioPageView.module.scss'
+
 interface PortfolioPageViewProps {
   walletAddress: string
   walletData: PortfolioAssetsResponse
@@ -91,7 +93,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   return (
     <>
       <NonOwnerPortfolioBanner isOwner={ownerView} />
-      <div style={{ display: 'flex', flexDirection: 'column', padding: '0 64px', width: '100%' }}>
+      <div className={classNames.portfolioPageViewWrapper}>
         <PortfolioHeader
           walletAddress={walletAddress}
           totalSumr={rewardsData.sumrBalances.total}

@@ -53,9 +53,11 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
             }
             tooltipWrapperStyles={{ minWidth: '240px' }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
               <Icon iconName="info" variant="s" />
-              {' Total $SUMR available to claim'}
+              <Text as="p" variant="p2semi">
+                Total $SUMR available to claim
+              </Text>
             </div>
           </Tooltip>
         ),
