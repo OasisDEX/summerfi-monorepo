@@ -3,6 +3,7 @@
 import { SDKNetwork, type SDKVaultishType, type SDKVaultType } from '@summerfi/app-types'
 import { GraphQLClient } from 'graphql-request'
 
+import { REVALIDATION_TIMES } from '@/constants/revalidations'
 import {
   GetInterestRatesDocument,
   type GetInterestRatesQuery,
@@ -17,11 +18,21 @@ type GetInterestRatesParams = {
   arksList: SDKVaultishType['arks'] | SDKVaultType['arks']
 }
 
-const INTEREST_RATE_CACHE_DURATION = 30 // seconds
+const noInterestRates: GetInterestRatesQuery = {
+  dailyInterestRates: [{ averageRate: 0, date: 0, __typename: 'DailyInterestRate' }],
+  hourlyInterestRates: [{ averageRate: 0, date: 0, __typename: 'HourlyInterestRate' }],
+  weeklyInterestRates: [{ averageRate: 0, date: 0, __typename: 'WeeklyInterestRate' }],
+  latestInterestRate: [
+    {
+      rate: [{ rate: 0, timestamp: 0, __typename: 'InterestRate' }],
+      __typename: 'HourlyInterestRate',
+    },
+  ],
+}
 
 // passing next.js fetcher with cache duration
 const customFetchCache = async (url: RequestInfo | URL, params?: RequestInit) =>
-  await fetch(url, { ...params, next: { revalidate: INTEREST_RATE_CACHE_DURATION } })
+  await fetch(url, { ...params, next: { revalidate: REVALIDATION_TIMES.INTEREST_RATES } })
 
 const clients = {
   [SDKNetwork.Base]: new GraphQLClient(
@@ -55,17 +66,7 @@ export async function getInterestRates({ network, arksList }: GetInterestRatesPa
   const response = await Promise.all(
     arksList.map((ark) => {
       if (getArkProductId(ark) === false) {
-        return Promise.resolve<GetInterestRatesQuery>({
-          dailyInterestRates: [{ averageRate: 0, date: 0, __typename: 'DailyInterestRate' }],
-          hourlyInterestRates: [{ averageRate: 0, date: 0, __typename: 'HourlyInterestRate' }],
-          weeklyInterestRates: [{ averageRate: 0, date: 0, __typename: 'WeeklyInterestRate' }],
-          latestInterestRate: [
-            {
-              rate: [{ rate: 0, timestamp: 0, __typename: 'InterestRate' }],
-              __typename: 'HourlyInterestRate',
-            },
-          ],
-        })
+        return Promise.resolve<GetInterestRatesQuery>(noInterestRates)
       }
 
       return networkGraphQlClient.request<GetInterestRatesQuery>(GetInterestRatesDocument, {

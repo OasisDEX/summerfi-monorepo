@@ -1,6 +1,7 @@
 import type { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 import { type NextRequest, NextResponse } from 'next/server'
 
+import { REVALIDATION_TIMES } from '@/constants/revalidations'
 import { getTransakUrl } from '@/features/transak/helpers/get-transak-url'
 import { type TransakRefreshTokenResponse } from '@/features/transak/types'
 
@@ -36,6 +37,9 @@ export async function GET(req: ExtendedApiRequest) {
       'x-content-type-options': 'nosniff',
     },
     body: JSON.stringify({ apiKey: partnerApiKey }),
+    next: {
+      revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
+    },
   }
 
   try {

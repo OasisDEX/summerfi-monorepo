@@ -1,3 +1,4 @@
+import { REVALIDATION_TIMES } from '@/constants/revalidations'
 import { transakPublicApiKey } from '@/features/transak/consts'
 import { type TransakRefreshTokenResponse } from '@/features/transak/types'
 
@@ -18,6 +19,9 @@ export const getTransakRefreshToken = async (): Promise<
     const response = await fetch(`/earn/api/transak/refresh-token`, {
       method: 'GET',
       headers: { 'x-partner-api-key': transakPublicApiKey },
+      next: {
+        revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
+      },
     })
 
     if (!response.ok) {

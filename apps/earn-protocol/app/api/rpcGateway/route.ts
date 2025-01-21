@@ -2,6 +2,7 @@ import { type AppConfigType, NetworkNames } from '@summerfi/app-types'
 import { type NextRequest, NextResponse } from 'next/server'
 
 import { mainConfigFetcher } from '@/app/server-handlers/system-config/calls/config'
+import { REVALIDATION_TIMES } from '@/constants/revalidations'
 
 let cachedConfig: Partial<AppConfigType> | undefined
 let cacheExpirationTime: number | undefined
@@ -143,7 +144,11 @@ export async function POST(req: NextRequest) {
       'Content-Length': body.length.toString(),
     },
   })
-  const response = await fetch(request)
+  const response = await fetch(request, {
+    next: {
+      revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
+    },
+  })
 
   if (response.status !== 200) {
     return NextResponse.json({ error: response.statusText }, { status: response.status })

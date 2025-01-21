@@ -3,6 +3,7 @@ import { Icon, Text, Tooltip, useMobileCheck } from '@summerfi/app-earn-ui'
 import debounce from 'lodash-es/debounce'
 import { useParams } from 'next/navigation'
 
+import { REVALIDATION_TIMES } from '@/constants/revalidations'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { TransakExchangeDetails } from '@/features/transak/components/TransakExchangeDetails/TransakExchangeDetails'
 import { TransakExchangeInput } from '@/features/transak/components/TransakExchangeInput/TransakExchangeInput'
@@ -59,6 +60,11 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state, inj
             paymentMethod,
             ipCountryCode,
           }),
+          {
+            next: {
+              revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
+            },
+          },
         )
 
         if (response.status === 504) {

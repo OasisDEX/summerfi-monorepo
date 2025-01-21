@@ -1,5 +1,7 @@
 import { type NetworkNames, type TokenSymbolsList } from '@summerfi/app-types'
 
+import { REVALIDATION_TIMES } from '@/constants/revalidations'
+
 export type PortfolioWalletAsset = {
   name: string
   network: NetworkNames
@@ -21,6 +23,12 @@ export const portfolioWalletAssetsHandler = async (
 ): Promise<PortfolioAssetsResponse> => {
   return await fetch(
     `${process.env.FUNCTIONS_API_URL}/api/portfolio/assets?address=${walletAddress}`,
+    {
+      next: {
+        revalidate: REVALIDATION_TIMES.PORTFOLIO_ASSETS,
+        tags: ['portfolio-assets', walletAddress.toLowerCase()],
+      },
+    },
   )
     .then((resp) => resp.json())
     .catch((error) => {
