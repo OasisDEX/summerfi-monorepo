@@ -4,9 +4,11 @@ import { useChain } from '@account-kit/react'
 import {
   Button,
   DataModule,
+  Icon,
   RAYS_TO_SUMR_CONVERSION_RATE,
   SUMR_CAP,
   Text,
+  Tooltip,
 } from '@summerfi/app-earn-ui'
 import { SDKChainId } from '@summerfi/app-types'
 import {
@@ -42,7 +44,21 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
   return (
     <DataModule
       dataBlock={{
-        title: '$SUMR available to claim',
+        title: (
+          <Tooltip
+            tooltip={
+              <Text as="p" variant="p4semi">
+                SUMR available to claim across all networks. Mainet, Base, and Optimism
+              </Text>
+            }
+            tooltipWrapperStyles={{ minWidth: '240px' }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4' }}>
+              <Icon iconName="info" variant="s" />
+              {' Total $SUMR available to claim'}
+            </div>
+          </Tooltip>
+        ),
         value: sumrAmount,
         subValue: sumrAmountUSD,
         titleSize: 'medium',
