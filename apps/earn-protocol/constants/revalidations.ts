@@ -1,6 +1,5 @@
 export const REVALIDATION_TIMES = {
   // values are seconds
-  POSITION_HISTORY: 120,
   PORTFOLIO_ASSETS: 60,
   INTEREST_RATES: 60,
   RAYS_LEADERBOARD: 60,
