@@ -1,6 +1,6 @@
 import { IArmadaVaultInfo, IArmadaPosition } from '@summerfi/armada-protocol-common'
 
-import { ITokenAmount } from '@summerfi/sdk-common'
+import { ITokenAmount, type IUser } from '@summerfi/sdk-common'
 import { IArmadaManagerUsersClient } from '../../interfaces/ArmadaManager/IArmadaManagerUsersClient'
 import { IRPCClient } from '../../interfaces/IRPCClient'
 import { RPCMainClientType } from '../../rpc/SDKMainClient'
@@ -153,6 +153,12 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     params: Parameters<IArmadaManagerUsersClient['getUserStakedBalance']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getUserStakedBalance']> {
     return this.rpcClient.armada.users.getUserStakedBalance.query(params)
+  }
+
+  async getUserEarnedRewards(
+    params: Parameters<IArmadaManagerUsersClient['getUserEarnedRewards']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getUserEarnedRewards']> {
+    return this.rpcClient.armada.users.getUserEarnedRewards.query(params)
   }
 
   async getStakeTx(

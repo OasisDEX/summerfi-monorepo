@@ -11,12 +11,12 @@ describe('Armada Protocol Claim', () => {
     apiURL: SDKApiUrl,
   })
 
-  for (const { chainInfo, forkUrl, userAddress } of testConfig) {
-    if (!forkUrl) {
+  for (const { chainInfo, rpcUrl, userAddress } of testConfig) {
+    if (!rpcUrl) {
       throw new Error('Missing fork url')
     }
 
-    describe(`Rewards on ${chainInfo.name} for user ${userAddress.value}`, () => {
+    describe(`Running on ${chainInfo.name} for user ${userAddress.value}`, () => {
       const user = User.createFrom({
         chainInfo,
         wallet: Wallet.createFrom({
@@ -57,9 +57,8 @@ describe('Armada Protocol Claim', () => {
             const { statuses } = await sendAndLogTransactions({
               chainInfo,
               transactions: [tx],
-              rpcUrl: forkUrl,
+              rpcUrl: rpcUrl,
               privateKey: signerPrivateKey,
-              useRpcGateway: true,
             })
             statuses.forEach((status) => {
               expect(status).toBe('success')

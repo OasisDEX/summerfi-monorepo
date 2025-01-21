@@ -50,6 +50,8 @@ import { getUserVotes } from './armada-protocol-handlers/users/getUserVotes'
 import { getUserStakedBalance } from './armada-protocol-handlers/users/getUserStakedBalance'
 import { getStakeTx } from './armada-protocol-handlers/users/getStakeTx'
 import { getUnstakeTx } from './armada-protocol-handlers/users/getUnstakeTx'
+import type { get } from 'http'
+import { getUserEarnedRewards } from './armada-protocol-handlers/users/getUserEarnedRewards'
 
 /**
  * Server
@@ -100,6 +102,7 @@ export const sdkAppRouter = router({
       getUndelegateTx: getUndelegateTx,
       getUserVotes: getUserVotes,
       getUserStakedBalance: getUserStakedBalance,
+      getUserEarnedRewards: getUserEarnedRewards,
       getStakeTX: getStakeTx,
       getUnstakeTX: getUnstakeTx,
     },

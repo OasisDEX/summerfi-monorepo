@@ -7,7 +7,6 @@ export async function sendAndLogTransactions(params: {
   transactions: TransactionInfo[]
   rpcUrl: string
   privateKey: string
-  useRpcGateway?: boolean
 }) {
   const privateKey = params.privateKey
   if (!privateKey) {
@@ -21,13 +20,15 @@ export async function sendAndLogTransactions(params: {
     throw new Error('forkUrl or rpcUrl must be set')
   }
 
+  const useFork = process.env.SDK_USE_FORK === 'true'
+
   // console.log('transactions', params.transactions)
 
   const statuses: string[] = []
 
   for (const [index, transaction] of params.transactions.entries()) {
     console.log(
-      `Sending transaction ${params.useRpcGateway ? 'using gateway' : ''} ${index + 1}... `,
+      `Sending transaction ${useFork ? 'using fork' : ''} ${index + 1}... `,
       transaction.description,
       rpcUrl,
     )
@@ -36,7 +37,7 @@ export async function sendAndLogTransactions(params: {
       rpcUrl: rpcUrl,
       walletPrivateKey: privateKey,
       chainInfo: params.chainInfo,
-      useRpcGateway: params.useRpcGateway ? true : false,
+      useFork: useFork ? true : false,
     })
 
     const receipt = await transactionUtils.sendTransactionWithReceipt({

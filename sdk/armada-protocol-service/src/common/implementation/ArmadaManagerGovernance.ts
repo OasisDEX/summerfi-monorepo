@@ -4,7 +4,7 @@ import {
   type IArmadaManagerGovernance,
 } from '@summerfi/armada-protocol-common'
 import { Address, TransactionType, type IAddress, type IChainInfo } from '@summerfi/sdk-common'
-import { encodeFunctionData } from 'viem'
+import { encodeFunctionData, zeroAddress } from 'viem'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 
 /**
@@ -73,7 +73,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     const calldata = encodeFunctionData({
       abi: SummerTokenAbi,
       functionName: 'delegate',
-      args: ['0x0'],
+      args: [zeroAddress],
     })
 
     return {
@@ -121,6 +121,32 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       address: rewardsManagerAddressString,
       functionName: 'balanceOf',
       args: [params.user.wallet.address.value],
+    })
+  }
+
+  async getUserEarnedRewards(
+    params: Parameters<IArmadaManagerGovernance['getUserEarnedRewards']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getUserEarnedRewards']> {
+    const client = this._blockchainClientProvider.getBlockchainClient({
+      chainInfo: this._hubChainInfo,
+    })
+
+    const rewardsManagerAddressString = await client.readContract({
+      abi: SummerTokenAbi,
+      address: this._hubChainSummerTokenAddress.value,
+      functionName: 'rewardsManager',
+      args: [],
+    })
+
+    // for now reward token is just summer token
+    // in future potential partners can be added
+    const rewardToken = this._hubChainSummerTokenAddress
+
+    return client.readContract({
+      abi: GovernanceRewardsManagerAbi,
+      address: rewardsManagerAddressString,
+      functionName: 'earned',
+      args: [params.user.wallet.address.value, rewardToken.value],
     })
   }
 

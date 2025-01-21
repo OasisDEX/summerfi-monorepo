@@ -11,12 +11,12 @@ describe.skip('Armada Protocol User', () => {
     apiURL: SDKApiUrl,
   })
 
-  for (const { chainInfo, fleetAddress, forkUrl, userAddress } of testConfig) {
-    if (!forkUrl) {
+  for (const { chainInfo, fleetAddress, rpcUrl, userAddress } of testConfig) {
+    if (!rpcUrl) {
       throw new Error('Missing fork url')
     }
 
-    describe(`Positions on ${chainInfo.name} for user ${userAddress.value}`, () => {
+    describe(`Running on ${chainInfo.name} for user ${userAddress.value}`, () => {
       const user = User.createFrom({
         chainInfo,
         wallet: Wallet.createFrom({

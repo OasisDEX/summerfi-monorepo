@@ -61,6 +61,16 @@ export interface IArmadaManagerGovernance {
   getUserStakedBalance: (params: { user: IUser }) => Promise<bigint>
 
   /**
+   * @method getUserEarnedRewards
+   * @description Returns the rewards the user has earned
+   *
+   * @param user The user
+   *
+   * @returns The rewards earned
+   */
+  getUserEarnedRewards: (params: { user: IUser }) => Promise<bigint>
+
+  /**
    * @method getStakeTx
    * @description Returns the transaction to stake tokens
    *
