@@ -15,9 +15,14 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
 
   /** CONSTRUCTOR */
   constructor(params: { configProvider: IConfigurationProvider }) {
-    const urlPerChain = JSON.parse(
-      params.configProvider.getConfigurationItem({ name: 'SDK_SUBGRAPH_CONFIG' }),
-    )
+    let urlPerChain
+    try {
+      urlPerChain = JSON.parse(
+        params.configProvider.getConfigurationItem({ name: 'SDK_SUBGRAPH_CONFIG' }),
+      )
+    } catch (error: unknown) {
+      throw new Error('Invalid format of SDK_SUBGRAPH_CONFIG')
+    }
 
     if (!urlPerChain) {
       throw new Error('No subgraph config in env')

@@ -1,5 +1,5 @@
 import type { ISDKManager } from '@summerfi/sdk-client'
 
-export const getUndelegateTx = (sdk: ISDKManager) => async () => {
+export const getUndelegateTxHandler = (sdk: ISDKManager) => async () => {
   return sdk.armada.users.getUndelegateTx()
 }

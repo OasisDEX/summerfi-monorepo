@@ -1,6 +1,6 @@
 import { IArmadaVaultInfo, IArmadaPosition } from '@summerfi/armada-protocol-common'
 
-import { ITokenAmount, TransactionInfo } from '@summerfi/sdk-common'
+import { ITokenAmount } from '@summerfi/sdk-common'
 import { IArmadaManagerUsersClient } from '../../interfaces/ArmadaManager/IArmadaManagerUsersClient'
 import { IRPCClient } from '../../interfaces/IRPCClient'
 import { RPCMainClientType } from '../../rpc/SDKMainClient'
@@ -125,5 +125,45 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     params: Parameters<IArmadaManagerUsersClient['getAggregatedClaimsForChainTX']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getAggregatedClaimsForChainTX']> {
     return this.rpcClient.armada.users.getAggregatedClaimsForChainTX.query(params)
+  }
+
+  async getUserDelegatee(
+    params: Parameters<IArmadaManagerUsersClient['getUserDelegatee']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getUserDelegatee']> {
+    return this.rpcClient.armada.users.getUserDelegatee.query(params)
+  }
+
+  async getDelegateTx(
+    params: Parameters<IArmadaManagerUsersClient['getDelegateTx']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getDelegateTx']> {
+    return this.rpcClient.armada.users.getDelegateTX.query(params)
+  }
+
+  async getUndelegateTx(): ReturnType<IArmadaManagerUsersClient['getUndelegateTx']> {
+    return this.rpcClient.armada.users.getUndelegateTx.query()
+  }
+
+  async getUserVotes(
+    params: Parameters<IArmadaManagerUsersClient['getUserVotes']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getUserVotes']> {
+    return this.rpcClient.armada.users.getUserVotes.query(params)
+  }
+
+  async getUserStakedBalance(
+    params: Parameters<IArmadaManagerUsersClient['getUserStakedBalance']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getUserStakedBalance']> {
+    return this.rpcClient.armada.users.getUserStakedBalance.query(params)
+  }
+
+  async getStakeTx(
+    params: Parameters<IArmadaManagerUsersClient['getStakeTx']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getStakeTx']> {
+    return this.rpcClient.armada.users.getStakeTX.query(params)
+  }
+
+  async getUnstakeTx(
+    params: Parameters<IArmadaManagerUsersClient['getUnstakeTx']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getUnstakeTx']> {
+    return this.rpcClient.armada.users.getUnstakeTX.query(params)
   }
 }

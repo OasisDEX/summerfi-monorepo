@@ -1,6 +1,6 @@
 import type { ISDKManager } from '@summerfi/sdk-client'
 
-export const getUnstakeTx =
+export const getUnstakeTxHandler =
   (sdk: ISDKManager) =>
   async ({ amount }: { amount: bigint }) => {
     return sdk.armada.users.getUnstakeTx({ amount })
