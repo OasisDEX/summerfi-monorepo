@@ -1,4 +1,4 @@
-import { ChainFamilyMap, IChainInfo, Maybe } from '@summerfi/sdk-common'
+import { IChainInfo, Maybe } from '@summerfi/sdk-common'
 import { Transaction } from '@summerfi/sdk-common/orders'
 import { getRpcGatewayEndpoint } from '@summerfi/serverless-shared'
 import {
@@ -30,11 +30,11 @@ export class TransactionUtils {
 
   constructor(params: {
     rpcUrl: string
-    chainInfo?: IChainInfo
+    chainInfo: IChainInfo
     walletPrivateKey?: Hex
     useRpcGateway?: boolean
   }) {
-    this.chainInfo = params.chainInfo || ChainFamilyMap.Ethereum.Mainnet
+    this.chainInfo = params.chainInfo
     if (params.walletPrivateKey) {
       this.account = privateKeyToAccount(params.walletPrivateKey)
     }

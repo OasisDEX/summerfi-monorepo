@@ -82,6 +82,7 @@ export class TenderlyFork {
     })
 
     const transactionUtils = new TransactionUtils({
+      chainInfo: params.chainInfo,
       rpcUrl: forkConfig.forkUrl,
     })
 
@@ -139,6 +140,7 @@ export class TenderlyFork {
     transaction: Transaction
   }): Promise<TransactionReceipt> {
     const transactionUtils = new TransactionUtils({
+      chainInfo: this.chainInfo,
       rpcUrl: this.forkUrl,
       walletPrivateKey: params.walletPrivateKey,
     })
