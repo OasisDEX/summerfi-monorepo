@@ -67,6 +67,7 @@ export type SDKSupportedChain = (typeof sdkSupportedChains)[number]
 export enum SDKSupportedNetworkIdsEnum {
   ARBITRUM = ChainId.ARBITRUM,
   BASE = ChainId.BASE,
+  OPTIMISM = ChainId.OPTIMISM,
   MAINNET = ChainId.MAINNET,
 }
 

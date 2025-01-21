@@ -1,3 +1,4 @@
+/* eslint-disable no-mixed-operators */
 import { SDKChainId } from '@summerfi/app-types'
 import { getChainInfoByChainId } from '@summerfi/sdk-common'
 import { Address } from '@summerfi/sdk-common/common'
@@ -30,11 +31,11 @@ export const getSumrToClaim = async ({
   })
 
   return {
-    total: Number(aggregatedRewards.total),
+    total: Number(aggregatedRewards.total) / 10 ** 18,
     perChain: Object.fromEntries(
       Object.entries(aggregatedRewards.perChain).map(([chainId, amount]) => [
         chainId,
-        Number(amount),
+        Number(amount) / 10 ** 18,
       ]),
     ),
   }

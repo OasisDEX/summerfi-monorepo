@@ -1,14 +1,6 @@
-import type { Dispatch, FC } from 'react'
+import { type Dispatch, type FC, useState } from 'react'
 import { useChain } from '@account-kit/react'
-import {
-  Button,
-  Card,
-  Icon,
-  SUMR_CAP,
-  Text,
-  useLocalConfig,
-  WithArrow,
-} from '@summerfi/app-earn-ui'
+import { Button, SUMR_CAP, Text, useLocalConfig, WithArrow } from '@summerfi/app-earn-ui'
 import { SDKChainId } from '@summerfi/app-types'
 import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 
@@ -20,9 +12,29 @@ import {
   ClaimDelegateSteps,
   ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
+import { useClaimSumrTransaction } from '@/hooks/use-claim-sumr-transaction'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 
+import { ClaimDelegateToClaim } from './ClaimDelegateToClaim'
+
 import classNames from './ClaimDelegateClaimStep.module.scss'
+
+const claimItems: {
+  chainId: SDKChainId.BASE | SDKChainId.OPTIMISM | SDKChainId.MAINNET | SDKChainId.ARBITRUM
+}[] = [
+  {
+    chainId: SDKChainId.BASE,
+  },
+  {
+    chainId: SDKChainId.ARBITRUM,
+  },
+  {
+    chainId: SDKChainId.OPTIMISM,
+  },
+  {
+    chainId: SDKChainId.MAINNET,
+  },
+]
 
 interface ClaimDelegateClaimStepProps {
   state: ClaimDelegateState
@@ -38,6 +50,20 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
+
+  const [claimOnChainId, setClaimOnChainId] = useState<
+    SDKChainId.BASE | SDKChainId.OPTIMISM | SDKChainId.MAINNET | SDKChainId.ARBITRUM
+  >(SDKChainId.BASE)
+
+  const { claimSumrTransaction } = useClaimSumrTransaction({
+    onSuccess: () => {
+      dispatch({ type: 'update-step', payload: ClaimDelegateSteps.DELEGATE })
+    },
+    onError: () => {
+      dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.FAILED })
+    },
+  })
+
   const { setChain } = useChain()
   const { clientChainId } = useClientChainId()
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
@@ -46,50 +72,45 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     dispatch({ type: 'update-step', payload: ClaimDelegateSteps.TERMS })
   }
 
-  const handleAccept = () => {
-    // claiming is only supported on base
-    if (clientChainId !== SDKChainId.BASE) {
-      // eslint-disable-next-line no-console
-      console.log('update network to base')
-      setChain({ chain: SDKChainIdToAAChainMap[SDKChainId.BASE] })
-    }
-
-    // TODO: Implement claim
-    // eslint-disable-next-line no-console
-    console.log('claim clicked')
-
-    dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.COMPLETED })
-
+  const handleAccept = async () => {
     if (state.claimStatus === ClaimDelegateTxStatuses.COMPLETED) {
       dispatch({ type: 'update-step', payload: ClaimDelegateSteps.DELEGATE })
+
+      return
     }
+
+    if (clientChainId !== claimOnChainId) {
+      setChain({ chain: SDKChainIdToAAChainMap[claimOnChainId] })
+
+      return
+    }
+
+    dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.PENDING })
+
+    await claimSumrTransaction().catch((err) => {
+      // eslint-disable-next-line no-console
+      console.error('Error claiming SUMR:', err)
+    })
   }
 
-  // here we will most likely need to split it per each chain
-  // and handle claiming per given chain
-  const sumrToClaim = externalData.sumrToClaim.perChain[SDKChainId.BASE] ?? 0
-
-  const earned = formatCryptoBalance(sumrToClaim)
-  const earnedInUSD = formatFiatBalance(Number(sumrToClaim) * estimatedSumrPrice)
+  const sumrToClaim = externalData.sumrToClaim.perChain[claimOnChainId] ?? 0
 
   const hideButtonArrow = state.claimStatus === ClaimDelegateTxStatuses.PENDING
 
   return (
     <div className={classNames.claimDelegateClaimStepWrapper}>
-      <Card className={classNames.cardWrapper}>
-        <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-          You have earned
-        </Text>
-        <div className={classNames.valueWithIcon}>
-          <Icon tokenName="SUMR" />
-          <Text as="h2" variant="h2">
-            {earned}
-          </Text>
-        </div>
-        <Text as="p" variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-          ${earnedInUSD}
-        </Text>
-      </Card>
+      {claimItems.map((item) => (
+        <ClaimDelegateToClaim
+          key={item.chainId}
+          {...item}
+          earned={formatCryptoBalance(externalData.sumrToClaim.perChain[item.chainId] ?? 0)}
+          earnedInUSD={formatFiatBalance(
+            Number(externalData.sumrToClaim.perChain[item.chainId] ?? 0) * estimatedSumrPrice,
+          )}
+          isActive={claimOnChainId === item.chainId}
+          onClick={() => setClaimOnChainId(item.chainId)}
+        />
+      ))}
       <div className={classNames.footerWrapper}>
         <Button variant="secondarySmall" onClick={handleBack}>
           <Text variant="p3semi" as="p">
@@ -113,8 +134,10 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
           >
             {state.claimStatus === ClaimDelegateTxStatuses.PENDING && 'Claiming...'}
             {state.claimStatus === ClaimDelegateTxStatuses.COMPLETED && 'Continue'}
-            {state.claimStatus === ClaimDelegateTxStatuses.FAILED && 'Retry'}
-            {state.claimStatus === undefined && 'Claim'}
+            {state.claimStatus === ClaimDelegateTxStatuses.FAILED &&
+              (claimOnChainId !== clientChainId ? 'Switch Network' : 'Retry')}
+            {state.claimStatus === undefined &&
+              (claimOnChainId !== clientChainId ? 'Switch Network' : 'Claim')}
           </WithArrow>
         </Button>
       </div>
