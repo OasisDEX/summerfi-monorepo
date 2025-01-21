@@ -8,7 +8,7 @@ export const getUndelegateTx = publicProcedure.input(z.undefined()).query(async 
   } catch (error) {
     throw new TRPCError({
       code: 'INTERNAL_SERVER_ERROR',
-      message: 'Failed to get undelegate transaction',
+      message: 'Failed to call getUndelegateTx',
       cause: error,
     })
   }
