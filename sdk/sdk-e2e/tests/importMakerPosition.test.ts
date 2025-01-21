@@ -166,6 +166,7 @@ describe.skip('Import Maker Position | SDK', () => {
 
     const privateKey = process.env.DEPLOYER_PRIVATE_KEY as Hex
     const transactionUtils = new TransactionUtils({
+      chainInfo: chain.chainInfo,
       rpcUrl: TenderlyForkUrl,
       walletPrivateKey: privateKey,
     })

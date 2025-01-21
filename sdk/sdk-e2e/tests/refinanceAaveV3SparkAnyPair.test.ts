@@ -210,6 +210,7 @@ describe.skip('Refinance AaveV3 Spark | SDK', () => {
 
       const privateKey = process.env.DEPLOYER_PRIVATE_KEY as Hex
       const transactionUtils = new TransactionUtils({
+        chainInfo: chain.chainInfo,
         rpcUrl: config.TenderlyForkUrl,
         walletPrivateKey: privateKey,
       })
