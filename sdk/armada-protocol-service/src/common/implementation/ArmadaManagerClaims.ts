@@ -13,6 +13,7 @@ import {
 } from '@summerfi/armada-protocol-common'
 import {
   Address,
+  LoggingService,
   TransactionType,
   type HexData,
   type IAddress,
@@ -263,14 +264,23 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       return !hasClaimedRecord[claim.index.toString()]
     }, 0n)
 
+    LoggingService.debug(
+      'Filtered claims for user: ' + params.user.toString(),
+      filteredClaims.map((claim) => claim.amount),
+    )
+
+    const indices = filteredClaims.map((claim) => claim.index)
+    const amounts = filteredClaims.map((claim) => claim.amount)
+    const proofs = filteredClaims.map((claim) => claim.proof)
+
     const calldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'claimMerkleRewards',
       args: [
         params.user.wallet.address.value,
-        filteredClaims.map((claim) => claim.index),
-        filteredClaims.map((claim) => claim.amount),
-        filteredClaims.map((claim) => claim.proof),
+        indices,
+        amounts,
+        proofs,
         this._rewardsRedeemerAddress.value,
       ],
     })
@@ -382,8 +392,10 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
         govRewardsManagerAddress: Address.createFromEthereum({ value: govRewardsManagerAddress }),
         rewardToken,
       })
-      multicallArgs.push(claimGovernanceRewards.transaction.calldata)
+      // TODO: temporary disabled because not ready
+      // multicallArgs.push(claimGovernanceRewards.transaction.calldata)
     }
+
     // any chain can claim fleet rewards
     // get fleet commanders addresses from harbor command contract
     const harborCommandAddress = getDeployedContractAddress({
@@ -406,7 +418,8 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       ),
       rewardToken,
     })
-    multicallArgs.push(claimFleetRewards.transaction.calldata)
+    // TODO: temporary disabled because not ready
+    // multicallArgs.push(claimFleetRewards.transaction.calldata)
 
     const admiralsQuartersAddress = getDeployedContractAddress({
       chainInfo: params.chainInfo,
