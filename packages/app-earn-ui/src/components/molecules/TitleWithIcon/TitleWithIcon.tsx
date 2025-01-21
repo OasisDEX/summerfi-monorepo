@@ -34,7 +34,7 @@ export const TitleWithIcon = ({
 
   return (
     <div className={clsx(className, titleWithIconStyles.titleWithIcon)}>
-      <Text as="p" variant={titleVariant ?? 'p3semi'} style={{ color, ...resolvedTitleStyle }}>
+      <Text as="div" variant={titleVariant ?? 'p3semi'} style={{ color, ...resolvedTitleStyle }}>
         {title}
       </Text>
       {iconName && !tooltip && <Icon iconName={iconName} size={18} color={color} />}

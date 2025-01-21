@@ -71,6 +71,7 @@ export type IconNamesList =
   | 'guniv3_dai_usdc1_circles_color'
   | 'gusd_circle_color'
   | 'gusd_circle_mono'
+  | 'info'
   | 'knc_circle_color'
   | 'kyber_circle_color'
   | 'kyber_color'

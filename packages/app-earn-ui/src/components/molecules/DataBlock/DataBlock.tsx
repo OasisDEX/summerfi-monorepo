@@ -1,4 +1,5 @@
 import { type CSSProperties, type ReactNode } from 'react'
+import { type IconNamesList } from '@summerfi/app-types'
 import clsx from 'clsx'
 
 import { Text } from '@/components/atoms/Text/Text'
@@ -21,6 +22,7 @@ export type DataBlockProps = {
   centered?: boolean
   subValueStyle?: CSSProperties
   accent?: string
+  tooltipIconName?: IconNamesList
 }
 
 export const DataBlock = ({
@@ -38,6 +40,7 @@ export const DataBlock = ({
   subValueSize,
   subValueStyle,
   accent,
+  tooltipIconName,
 }: DataBlockProps) => {
   const titleVariant = {
     small: 'p3semi' as const,
@@ -69,7 +72,7 @@ export const DataBlock = ({
         <TitleWithIcon
           titleVariant={titleVariant}
           title={title}
-          iconName={titleTooltip ? 'question_o' : undefined}
+          iconName={titleTooltip ? tooltipIconName ?? 'question_o' : undefined}
           tooltip={titleTooltip}
           color="rgb(119, 117, 118)"
           titleStyle={titleStyle}

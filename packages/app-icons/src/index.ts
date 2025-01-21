@@ -112,6 +112,7 @@ export const icons = {
   ),
   gusd_circle_color: customLazy(() => import('./icons/gusd_circle_color.svg?react')),
   gusd_circle_mono: customLazy(() => import('./icons/gusd_circle_mono.svg?react')),
+  info: customLazy(() => import('./icons/info.svg?react')),
   knc_circle_color: customLazy(() => import('./icons/knc_circle_color.svg?react')),
   kyber_circle_color: customLazy(() => import('./icons/kyber_circle_color.svg?react')),
   kyber_color: customLazy(() => import('./icons/kyber_color.svg?react')),

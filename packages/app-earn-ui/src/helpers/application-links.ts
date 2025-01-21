@@ -90,6 +90,8 @@ export const EXTERNAL_LINKS = {
     WHY_BORROW_ON_SUMMER: 'https://blog.summer.fi/why-borrow-on-summer',
     WHY_MULTIPLY_ON_SUMMER: 'https://blog.summer.fi/why-multiply-on-summer',
     WHY_EARN_ON_SUMMER: 'https://blog.summer.fi/why-earn-on-summer',
+    INTRODUCING_SUMR_TOKEN: 'https://blog.summer.fi/introducing-sumr-token',
+    WELCOME_LAZY_SUMMER: 'https://blog.summer.fi/welcome-lazy-summer',
   },
   DOCS: {
     FAQ: {

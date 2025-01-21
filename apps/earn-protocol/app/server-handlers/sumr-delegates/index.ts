@@ -1,3 +1,5 @@
+import { REVALIDATION_TIMES } from '@/constants/revalidations'
+
 export interface SumrDelegates {
   id: string
   account: {
@@ -72,6 +74,10 @@ export const getSumrDelegates = async (): Promise<SumrDelegates[]> => {
         }
       }`,
     }),
+    next: {
+      revalidate: REVALIDATION_TIMES.SUMR_DELEGATES,
+      tags: ['sumr-delegates'],
+    },
   })
 
   if (!response.ok) {

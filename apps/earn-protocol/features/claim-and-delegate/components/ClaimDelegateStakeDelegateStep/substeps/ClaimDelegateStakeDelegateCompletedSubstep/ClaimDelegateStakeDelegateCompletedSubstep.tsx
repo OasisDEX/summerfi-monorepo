@@ -10,6 +10,7 @@ import {
   Text,
   useLocalConfig,
 } from '@summerfi/app-earn-ui'
+import { SDKChainId } from '@summerfi/app-types'
 import {
   formatAddress,
   formatCryptoBalance,
@@ -52,6 +53,7 @@ export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
+
   const claimedSumr = (
     <>
       {sumrBalanceData.tokenBalanceLoading ? (
@@ -82,7 +84,9 @@ export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
       </Text>
     </>
   )
-  const sumrPerYear = `${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(externalData.sumrEarned)) * Number(externalData.sumrStakingInfo.sumrStakingApy * decayFactor))} $SUMR/yr`
+  const sumrClaimedStepBefore = externalData.sumrToClaim.perChain[SDKChainId.BASE] ?? 0
+  // we are not refetching sumrDelegated therefore we need to add sumrClaimedStepBefore to it
+  const sumrPerYear = `${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(sumrClaimedStepBefore)) * Number(externalData.sumrStakingInfo.sumrStakingApy * decayFactor))} $SUMR/yr`
 
   const delegatee = state.delegatee?.toLowerCase()
 
@@ -146,7 +150,7 @@ export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
               <Icon tokenName="SUMR" />
               <Text as="h4" variant="h4">
                 {Number(externalData.sumrStakeDelegate.sumrDelegated) +
-                  Number(externalData.sumrEarned)}
+                  Number(sumrClaimedStepBefore)}
               </Text>
             </div>
           </div>
