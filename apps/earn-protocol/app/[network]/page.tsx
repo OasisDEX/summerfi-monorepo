@@ -12,6 +12,7 @@ type EarnNetworkVaultsPageProps = {
   }
 }
 
+export const dynamic = 'force-static'
 export const revalidate = 60
 
 const EarnNetworkVaultsPage = async ({ params }: EarnNetworkVaultsPageProps) => {

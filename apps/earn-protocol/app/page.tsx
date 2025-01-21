@@ -5,6 +5,7 @@ import systemConfigHandler from '@/app/server-handlers/system-config'
 import { VaultListViewComponent } from '@/components/layout/VaultsListView/VaultListViewComponent'
 import { decorateCustomVaultFields } from '@/helpers/vault-custom-value-helpers'
 
+export const dynamic = 'force-static'
 export const revalidate = 60
 
 const EarnAllVaultsPage = async () => {
