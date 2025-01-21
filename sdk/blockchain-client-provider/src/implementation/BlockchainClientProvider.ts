@@ -79,12 +79,13 @@ export class BlockchainClientProvider implements IBlockchainClientProvider {
    */
   private _loadClients(chains: Chain[]) {
     for (const chain of chains) {
-      const rpcGatewayUrl = this._configProvider.getConfigurationItem({ name: 'RPC_GATEWAY' })
+      const rpcGatewayUrl = this._configProvider.getConfigurationItem({ name: 'SDK_RPC_GATEWAY' })
+      if (!rpcGatewayUrl) {
+        throw new Error('SDK_RPC_GATEWAY not found')
+      }
+
       const useFork = this._configProvider.getConfigurationItem({ name: 'SDK_USE_FORK' })
       const forkConfig = this._configProvider.getConfigurationItem({ name: 'SDK_FORK_CONFIG' })
-      if (!rpcGatewayUrl) {
-        throw new Error('RPC_GATEWAY not found')
-      }
 
       const rpc =
         useFork === 'true'

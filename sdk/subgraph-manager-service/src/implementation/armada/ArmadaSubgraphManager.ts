@@ -3,7 +3,7 @@ import { IArmadaSubgraphManager, createGraphQLClient } from '@summerfi/subgraph-
 import { type ChainId } from '@summerfi/sdk-common'
 
 export interface SubgraphConfig {
-  urlBase: string
+  urlPerChain: Record<ChainId, string>
 }
 
 /**
@@ -15,10 +15,16 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
 
   /** CONSTRUCTOR */
   constructor(params: { configProvider: IConfigurationProvider }) {
-    const urlBase = params.configProvider.getConfigurationItem({ name: 'SUBGRAPH_BASE' })
+    const urlPerChain = JSON.parse(
+      params.configProvider.getConfigurationItem({ name: 'SDK_SUBGRAPH_CONFIG' }),
+    )
+
+    if (!urlPerChain) {
+      throw new Error('No subgraph config in env')
+    }
 
     this._subgraphConfig = {
-      urlBase,
+      urlPerChain,
     }
   }
 
@@ -62,6 +68,18 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
 
   /** PRIVATE */
   _getClient(chainId: ChainId): ReturnType<typeof createGraphQLClient> {
-    return createGraphQLClient(chainId, this._subgraphConfig.urlBase)
+    const subgraphApiUrl = this._subgraphConfig.urlPerChain[chainId]
+
+    if (!this._subgraphConfig.urlPerChain[chainId]) {
+      throw new Error(
+        `Chain ID ${chainId} is not supported. Supported chains are: ${Object.keys(this._subgraphConfig.urlPerChain).join(', ')}`,
+      )
+    }
+
+    if (!subgraphApiUrl) {
+      throw new Error(`No subgraph url found for chainId: ${chainId}`)
+    }
+
+    return createGraphQLClient(subgraphApiUrl)
   }
 }

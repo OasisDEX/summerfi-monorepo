@@ -20,14 +20,21 @@ export const SDKApiUrl = process.env.E2E_SDK_API_URL,
   fleetOnArb = Address.createFromEthereum({
     value: '0x2653014Cd3AD332a98B0A80Ccf12473740DF81C2',
   }),
+  fleetOnMainnet = Address.createFromEthereum({
+    value: '0x5c442EA2a29c0A595F017E1b2bEad568d9AA77Da',
+  }),
   userOnBase = Address.createFromEthereum({
     value: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
   }),
   userOnArb = Address.createFromEthereum({
-    value: '0xe9c245293dac615c11a5bf26fcec91c3617645e4',
+    value: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
+  }),
+  userOnMainnet = Address.createFromEthereum({
+    value: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
   }),
   forkOnBase = process.env.E2E_SDK_FORK_URL_BASE,
-  forkOnArb = process.env.E2E_SDK_FORK_URL_ARBITRUM
+  forkOnArb = process.env.E2E_SDK_FORK_URL_ARBITRUM,
+  forkOnMainnet = process.env.E2E_SDK_FORK_URL_MAINNET
 
 export const testConfig = [
   {
@@ -44,5 +51,12 @@ export const testConfig = [
   //   fleetAddress: fleetOnArb,
   //   forkUrl: forkOnArb,
   //   userAddress: userOnArb,
+  // },
+  // {
+  //   chainInfo: ChainFamilyMap.Ethereum.Mainnet,
+  //   symbol: 'USDC',
+  //   fleetAddress: fleetOnMainnet,
+  //   forkUrl: forkOnMainnet,
+  //   userAddress: userOnMainnet,
   // },
 ]
