@@ -15,10 +15,13 @@ import {
   TransactionInfo,
   type ChainInfo,
   type ClaimTransactionInfo,
+  type DelegateTransactionInfo,
   type ExtendedTransactionInfo,
   type IAddress,
   type IPercentage,
   type IToken,
+  type StakeTransactionInfo,
+  type UnstakeTransactionInfo,
 } from '@summerfi/sdk-common'
 
 /**
@@ -226,4 +229,72 @@ export interface IArmadaManagerUsersClient {
     chainInfo: ChainInfo
     user: IUser
   }): Promise<ClaimTransactionInfo>
+
+  /**
+   * @method getUserDelegatee
+   * @description Returns delegatee that the account has chosen
+   *
+   * @param user The user
+   *
+   * @returns The delegatee address
+   */
+  getUserDelegatee(params: { user: IUser }): Promise<IAddress>
+
+  /**
+   * @method getDelegateTx
+   * @description Delegates votes from the sender to delegatee
+   *
+   * @param user The user
+   *
+   * @returns The transaction information
+   */
+  getDelegateTx(params: { user: IUser }): Promise<DelegateTransactionInfo>
+
+  /**
+   * @method getUndelegateTx
+   * @description Undelegates votes from the sender
+   *
+   * @returns The transaction information
+   */
+  getUndelegateTx(): Promise<DelegateTransactionInfo>
+
+  /**
+   * @method getUserVotes
+   * @description Returns the number of votes the user has
+   *
+   * @param user The user
+   *
+   * @returns The number of votes
+   */
+  getUserVotes(params: { user: IUser }): Promise<bigint>
+
+  /**
+   * @method getUserStakedBalance
+   * @description Returns the staked balance of the user
+   *
+   * @param user The user
+   *
+   * @returns The staked balance
+   */
+  getUserStakedBalance(params: { user: IUser }): Promise<bigint>
+
+  /**
+   * @method getStakeTx
+   * @description Returns the transaction to stake tokens
+   *
+   * @param amount The amount to stake
+   *
+   * @returns The transaction information
+   */
+  getStakeTx(params: { amount: bigint }): Promise<StakeTransactionInfo>
+
+  /**
+   * @method getUnstakeTx
+   * @description Returns the transaction to unstake tokens
+   *
+   * @param amount The amount to unstake
+   *
+   * @returns The transaction information
+   */
+  getUnstakeTx(params: { amount: bigint }): Promise<UnstakeTransactionInfo>
 }

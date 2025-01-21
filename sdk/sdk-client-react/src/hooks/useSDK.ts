@@ -14,6 +14,13 @@ import { getChainInfoHandler } from '../handlers/getChainInfoHandler'
 import { getSwapQuoteHandler } from '../handlers/getSwapQuoteHandler'
 import { getAggregatedRewardsHandler } from '../handlers/getAggregatedRewardsHandler'
 import { getAggregatedClaimsForChainTXHandler } from '../handlers/getAggregatedClaimsForChainTXHandler'
+import { getDelegateTxHandler } from '../handlers/getDelegateTxHandler'
+import { getStakeTxHandler } from '../handlers/getStakeTxHandler'
+import { getUndelegateTxHandler } from '../handlers/getUndelegateTxHandler'
+import { getUnstakeTxHandler } from '../handlers/getUnstakeTxHandler'
+import { getUserDelegateeHandler } from '../handlers/getUserDelegateeHandler'
+import { getUserStakedBalanceHandler } from '../handlers/getUserStakedBalanceHandler'
+import { getUserVotesHandler } from '../handlers/getUserVotesHandler'
 
 type UseSdk = {
   walletAddress?: string
@@ -59,6 +66,14 @@ export const useSDK = (params: UseSdk) => {
     [sdk],
   )
 
+  const getDelegateTx = useMemo(() => getDelegateTxHandler(sdk), [sdk])
+  const getStakeTx = useMemo(() => getStakeTxHandler(sdk), [sdk])
+  const getUndelegateTx = useMemo(() => getUndelegateTxHandler(sdk), [sdk])
+  const getUnstakeTx = useMemo(() => getUnstakeTxHandler(sdk), [sdk])
+  const getUserDelegatee = useMemo(() => getUserDelegateeHandler(sdk), [sdk])
+  const getUserStakedBalance = useMemo(() => getUserStakedBalanceHandler(sdk), [sdk])
+  const getUserVotes = useMemo(() => getUserVotesHandler(sdk), [sdk])
+
   const memo = useMemo(
     () => ({
       getCurrentUser,
@@ -73,6 +88,13 @@ export const useSDK = (params: UseSdk) => {
       getSwapQuote,
       getAggregatedRewards,
       getAggregatedClaimsForChainTX,
+      getDelegateTx,
+      getStakeTx,
+      getUndelegateTx,
+      getUnstakeTx,
+      getUserDelegatee,
+      getUserStakedBalance,
+      getUserVotes,
     }),
     [
       getCurrentUser,
@@ -87,6 +109,13 @@ export const useSDK = (params: UseSdk) => {
       getSwapQuote,
       getAggregatedRewards,
       getAggregatedClaimsForChainTX,
+      getDelegateTx,
+      getStakeTx,
+      getUndelegateTx,
+      getUnstakeTx,
+      getUserDelegatee,
+      getUserStakedBalance,
+      getUserVotes,
     ],
   )
 
