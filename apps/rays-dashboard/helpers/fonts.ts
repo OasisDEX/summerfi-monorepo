@@ -11,7 +11,7 @@ export const fontFtPolar = localFont({
       weight: '400',
     },
   ],
-  display: 'block',
+  display: 'swap',
   variable: '--font-ft-polar',
   preload: true,
 })
@@ -31,7 +31,7 @@ export const fontInter = localFont({
       weight: '400',
     },
   ],
-  display: 'block',
+  display: 'swap',
   variable: '--font-inter',
   preload: true,
 })

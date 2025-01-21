@@ -6,7 +6,7 @@ export const fontInter = localFont({
       path: '../public/fonts/inter-variable.ttf',
     },
   ],
-  display: 'block',
+  display: 'swap',
   variable: '--font-inter',
   preload: true,
 })
