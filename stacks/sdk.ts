@@ -15,8 +15,8 @@ const {
   ONE_INCH_API_SPOT_URL,
   ONE_INCH_API_SPOT_VERSION,
   ONE_INCH_API_SPOT_KEY,
-  RPC_GATEWAY,
-  SUBGRAPH_BASE,
+  SDK_RPC_GATEWAY,
+  SDK_SUBGRAPH_CONFIG,
   SDK_USE_FORK = '',
   SDK_FORK_CONFIG = '',
   SUMMER_HUB_CHAIN_ID,
@@ -32,8 +32,8 @@ export function addSdkConfig({ stack }: StackContext, api: Api) {
     !ONE_INCH_API_SPOT_URL ||
     !ONE_INCH_API_SPOT_VERSION ||
     !ONE_INCH_API_SPOT_KEY ||
-    !RPC_GATEWAY ||
-    !SUBGRAPH_BASE ||
+    !SDK_RPC_GATEWAY ||
+    !SDK_SUBGRAPH_CONFIG ||
     !SUMMER_HUB_CHAIN_ID ||
     !SUMMER_DEPLOYED_CHAINS_ID
   ) {
@@ -48,8 +48,8 @@ export function addSdkConfig({ stack }: StackContext, api: Api) {
             ONE_INCH_API_SPOT_URL,
             ONE_INCH_API_SPOT_VERSION,
             ONE_INCH_API_SPOT_KEY,
-            RPC_GATEWAY,
-            SUBGRAPH_BASE,
+            SDK_RPC_GATEWAY,
+            SDK_SUBGRAPH_CONFIG,
             SUMMER_HUB_CHAIN_ID,
             SUMMER_DEPLOYED_CHAINS_ID,
           }),
@@ -76,8 +76,8 @@ export function addSdkConfig({ stack }: StackContext, api: Api) {
       ONE_INCH_API_SPOT_URL,
       ONE_INCH_API_SPOT_VERSION,
       ONE_INCH_API_SPOT_KEY,
-      RPC_GATEWAY,
-      SUBGRAPH_BASE,
+      SDK_RPC_GATEWAY,
+      SDK_SUBGRAPH_CONFIG,
       SDK_USE_FORK,
       SDK_FORK_CONFIG,
       SUMMER_HUB_CHAIN_ID,

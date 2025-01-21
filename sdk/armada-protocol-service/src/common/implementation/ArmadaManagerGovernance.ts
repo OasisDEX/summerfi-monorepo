@@ -32,9 +32,9 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     })
   }
 
-  async delegates(
-    params: Parameters<IArmadaManagerGovernance['delegates']>[0],
-  ): ReturnType<IArmadaManagerGovernance['delegates']> {
+  async getUserDelegatee(
+    params: Parameters<IArmadaManagerGovernance['getUserDelegatee']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getUserDelegatee']> {
     const client = this._blockchainClientProvider.getBlockchainClient({
       chainInfo: params.user.chainInfo,
     })
@@ -87,9 +87,9 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     }
   }
 
-  async getVotes(
-    params: Parameters<IArmadaManagerGovernance['getVotes']>[0],
-  ): ReturnType<IArmadaManagerGovernance['getVotes']> {
+  async getUserVotes(
+    params: Parameters<IArmadaManagerGovernance['getUserVotes']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getUserVotes']> {
     const client = this._blockchainClientProvider.getBlockchainClient({
       chainInfo: params.user.chainInfo,
     })
@@ -102,9 +102,9 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     })
   }
 
-  async getStakedBalance(
-    params: Parameters<IArmadaManagerGovernance['getStakedBalance']>[0],
-  ): ReturnType<IArmadaManagerGovernance['getStakedBalance']> {
+  async getUserStakedBalance(
+    params: Parameters<IArmadaManagerGovernance['getUserStakedBalance']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getUserStakedBalance']> {
     const client = this._blockchainClientProvider.getBlockchainClient({
       chainInfo: this._hubChainInfo,
     })

@@ -13,64 +13,70 @@ import type {
  */
 export interface IArmadaManagerGovernance {
   /**
-   * @name delegates
+   * @method getUserDelegatee
    * @description Returns delegatee that the account has chosen
-   * @param params.user The user
-   * @returns Promise<boolean>
-   * @throws Error
+   *
+   * @param user The user
+   *
+   * @returns The delegatee address
    */
-  delegates: (params: { user: IUser }) => Promise<IAddress>
+  getUserDelegatee: (params: { user: IUser }) => Promise<IAddress>
 
   /**
-   * @name getDelegateTx
+   * @method getDelegateTx
    * @description Delegates votes from the sender to delegatee
-   * @param params.user The user
-   * @returns Promise<boolean>
-   * @throws Error
+   *
+   * @param user The user
+   *
+   * @returns The transaction information
    */
   getDelegateTx: (params: { user: IUser }) => Promise<DelegateTransactionInfo>
 
   /**
-   * @name getUndelegateTx
+   * @method getUndelegateTx
    * @description Undelegates votes from the sender
-   * @returns Promise<boolean>
-   * @throws Error
+   *
+   * @returns The transaction information
    */
   getUndelegateTx: () => Promise<DelegateTransactionInfo>
 
   /**
-   * @name getVotes
-   * @description Returns the current amount of votes that account has
-   * @param params.user The user
-   * @returns Promise<TransactionInfoClaim>
-   * @throws Error
+   * @method getUserVotes
+   * @description Returns the number of votes the user has
+   *
+   * @param user The user
+   *
+   * @returns The number of votes
    */
-  getVotes: (params: { user: IUser }) => Promise<bigint>
+  getUserVotes: (params: { user: IUser }) => Promise<bigint>
 
   /**
-   * @name getStakedBalance
-   * @description Returns the current amount of tokens that account has staked
-   * @param params.user The user
-   * @returns Promise<bigint>
-   * @throws Error
+   * @method getUserStakedBalance
+   * @description Returns the staked balance of the user
+   *
+   * @param user The user
+   *
+   * @returns The staked balance
    */
-  getStakedBalance: (params: { user: IUser }) => Promise<bigint>
+  getUserStakedBalance: (params: { user: IUser }) => Promise<bigint>
 
   /**
-   * @name getStakeTx
-   * @description Stakes an amount of tokens
-   * @param params.amount The amount to stake
-   * @returns Promise<StakeTransactionInfo>
-   * @throws Error
+   * @method getStakeTx
+   * @description Returns the transaction to stake tokens
+   *
+   * @param amount The amount to stake
+   *
+   * @returns The transaction information
    */
   getStakeTx: (params: { amount: bigint }) => Promise<StakeTransactionInfo>
 
   /**
-   * @name getUnstakeTx
-   * @description Unstakes an amount of tokens
-   * @param params.amount The amount to unstake
-   * @returns Promise<UnstakeTransactionInfo>
-   * @throws Error
+   * @method getUnstakeTx
+   * @description Returns the transaction to unstake tokens
+   *
+   * @param amount The amount to unstake
+   *
+   * @returns The transaction information
    */
   getUnstakeTx: (params: { amount: bigint }) => Promise<UnstakeTransactionInfo>
 }

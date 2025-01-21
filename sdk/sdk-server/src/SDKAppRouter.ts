@@ -43,6 +43,13 @@ import { getStakedBalance } from './armada-protocol-handlers/users/getStakedBala
 import { getTotalBalance } from './armada-protocol-handlers/users/getTotalBalance'
 import { getAggregatedRewards } from './armada-protocol-handlers/users/getAggregatedRewards'
 import { getAggregatedClaimsForChainTX } from './armada-protocol-handlers/users/getAggregatedClaimsForChainTX'
+import { getUserDelegatee } from './armada-protocol-handlers/users/getUserDelegatee'
+import { getDelegateTx } from './armada-protocol-handlers/users/getDelegateTx'
+import { getUndelegateTx } from './armada-protocol-handlers/users/getUndelegateTx'
+import { getUserVotes } from './armada-protocol-handlers/users/getUserVotes'
+import { getUserStakedBalance } from './armada-protocol-handlers/users/getUserStakedBalance'
+import { getStakeTx } from './armada-protocol-handlers/users/getStakeTx'
+import { getUnstakeTx } from './armada-protocol-handlers/users/getUnstakeTx'
 
 /**
  * Server
@@ -88,6 +95,13 @@ export const sdkAppRouter = router({
       getTotalBalance: getTotalBalance,
       getAggregatedRewards: getAggregatedRewards,
       getAggregatedClaimsForChainTX: getAggregatedClaimsForChainTX,
+      getUserDelegatee: getUserDelegatee,
+      getDelegateTX: getDelegateTx,
+      getUndelegateTx: getUndelegateTx,
+      getUserVotes: getUserVotes,
+      getUserStakedBalance: getUserStakedBalance,
+      getStakeTX: getStakeTx,
+      getUnstakeTX: getUnstakeTx,
     },
     keepers: {
       rebalance: rebalance,
