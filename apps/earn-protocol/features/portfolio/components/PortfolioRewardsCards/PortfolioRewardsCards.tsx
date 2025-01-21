@@ -68,7 +68,9 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
       }}
       actionable={
         <Link href={`/claim/${walletAddress}`} prefetch>
-          <Button variant="primarySmall">Claim</Button>
+          <Button variant="primarySmall" disabled={rawSumr === 0}>
+            Claim
+          </Button>
         </Link>
       }
       gradientBackground
