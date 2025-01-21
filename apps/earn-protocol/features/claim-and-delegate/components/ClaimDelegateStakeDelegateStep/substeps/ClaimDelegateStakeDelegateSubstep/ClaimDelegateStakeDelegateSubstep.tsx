@@ -1,9 +1,10 @@
-import { type Dispatch, type FC } from 'react'
+import { type ChangeEvent, type Dispatch, type FC, useState } from 'react'
 import {
   Button,
   Card,
   DataBlock,
   Icon,
+  Input,
   SkeletonLine,
   SUMR_CAP,
   Text,
@@ -16,7 +17,7 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
 import { ClaimDelegateCard } from '@/features/claim-and-delegate/components/ClaimDelegateCard/ClaimDelegateCard'
-import { mergeDelegatesData } from '@/features/claim-and-delegate/consts'
+import { mergeDelegatesData, type SumrDelegate } from '@/features/claim-and-delegate/consts'
 import {
   type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
@@ -27,6 +28,16 @@ import { PortfolioTabs } from '@/features/portfolio/types'
 import { type TokenBalanceData } from '@/hooks/use-token-balance'
 
 import classNames from './ClaimDelegateStakeDelegateSubstep.module.scss'
+
+const getFilteredDelegates = (delegates: SumrDelegate[], searchValue: string) => {
+  return delegates.filter((delegate) => {
+    return (
+      delegate.title.toLowerCase().includes(searchValue.toLowerCase()) ||
+      delegate.ens.toLowerCase().includes(searchValue.toLowerCase()) ||
+      delegate.address.toLowerCase().includes(searchValue.toLowerCase())
+    )
+  })
+}
 
 interface ClaimDelegateStakeDelegateSubstepProps {
   state: ClaimDelegateState
@@ -51,6 +62,13 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
+
+  const [searchValue, setSearchValue] = useState('')
+
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value)
+  }
+
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   // for now what user claimed will be basically user balance on base
@@ -61,7 +79,14 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
   )
   const sumrToClaim = externalData.sumrToClaim.perChain[SDKChainId.BASE] ?? 0
 
-  const apy = formatDecimalAsPercent(externalData.sumrStakingInfo.sumrStakingApy * decayFactor)
+  const apy = (
+    <Text as="h5" variant="h5">
+      up to {formatDecimalAsPercent(externalData.sumrStakingInfo.sumrStakingApy * decayFactor)}{' '}
+      <Text as="span" variant="p4semi">
+        APY
+      </Text>
+    </Text>
+  )
   const sumrPerYear = `*${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(sumrToClaim)) * Number(externalData.sumrStakingInfo.sumrStakingApy * decayFactor))} $SUMR / Year`
 
   const hasNothingToStake = externalData.sumrBalances.base === '0'
@@ -189,18 +214,52 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
         <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
           Earn $SUMR rewards for staking and delegating your tokens.
         </Text>
+        <div className={classNames.selfDelegateCard}>
+          <ClaimDelegateCard
+            title="Delegate to yourself"
+            description="Be your own Delegate. In order to accrue full staking rewards, you must vote on every proposal and remain active."
+            ens=""
+            address={walletAddress as string}
+            isActive={state.delegatee === (walletAddress as string).toLowerCase()}
+            handleClick={() =>
+              dispatch({
+                type: 'update-delegatee',
+                payload: (walletAddress as string).toLowerCase(),
+              })
+            }
+            selfDelegate
+          />
+        </div>
       </div>
       <div className={classNames.rightContent}>
+        <div className={classNames.inputWrapper}>
+          <Input
+            variant="withBorder"
+            placeholder="Find a delegate (Name, ENS or Address)"
+            className={classNames.inputCustomStyles}
+            icon={{
+              name: 'search_icon',
+              size: 20,
+              style: { color: 'var(--earn-protocol-secondary-40)' },
+            }}
+            onChange={handleSearch}
+            value={searchValue}
+          />
+        </div>
         <div className={classNames.delegates}>
-          {mappedSumrDelegatesData.map((delegate) => (
+          {getFilteredDelegates(mappedSumrDelegatesData, searchValue).map((delegate) => (
             <ClaimDelegateCard
               key={delegate.address}
               {...delegate}
               isActive={state.delegatee === delegate.address}
               handleClick={() => dispatch({ type: 'update-delegatee', payload: delegate.address })}
+              votingPower={
+                externalData.sumrDecayFactors.find((factor) => factor.address === delegate.address)
+                  ?.decayFactor ?? 1
+              }
             />
           ))}
-          {mappedSumrDelegatesData.length === 0 && (
+          {getFilteredDelegates(mappedSumrDelegatesData, searchValue).length === 0 && (
             <Text
               as="p"
               variant="p2semi"
