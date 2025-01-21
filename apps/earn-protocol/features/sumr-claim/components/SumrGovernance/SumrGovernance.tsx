@@ -1,6 +1,13 @@
 'use client'
 import { type FC, type ReactNode } from 'react'
-import { Button, Card, MarketingPointsList, Text, WithArrow } from '@summerfi/app-earn-ui'
+import {
+  Button,
+  Card,
+  EXTERNAL_LINKS,
+  MarketingPointsList,
+  Text,
+  WithArrow,
+} from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
 import {
@@ -86,7 +93,10 @@ const getData = (userWalletAddress: string | undefined) => ({
     content: (
       <SumrGovernanceContent
         header="The only way to govern Lazy Summer Protocol"
-        button={{ label: 'Learn about $SUMR', href: '/' }}
+        button={{
+          label: 'Learn about $SUMR',
+          href: `${EXTERNAL_LINKS.BLOG.INTRODUCING_SUMR_TOKEN}`,
+        }}
         link={{
           label: 'Claim $SUMR',
           href: userWalletAddress ? `/portfolio/${userWalletAddress}?tab=rewards` : '/sumr#claim',
@@ -107,7 +117,7 @@ const getData = (userWalletAddress: string | undefined) => ({
         }}
         link={{
           label: 'Learn more',
-          href: '/',
+          href: `${EXTERNAL_LINKS.BLOG.WELCOME_LAZY_SUMMER}`,
         }}
       >
         <SumrGovernanceList list={sumrStakeToDelegate} />
@@ -119,7 +129,10 @@ const getData = (userWalletAddress: string | undefined) => ({
     content: (
       <SumrGovernanceContent
         header="$SUMR ownership"
-        button={{ label: 'Learn about $SUMR', href: '/' }}
+        button={{
+          label: 'Learn about $SUMR',
+          href: `${EXTERNAL_LINKS.BLOG.INTRODUCING_SUMR_TOKEN}`,
+        }}
         link={{
           label: 'Claim $SUMR',
           href: userWalletAddress ? `/portfolio/${userWalletAddress}?tab=rewards` : '/sumr#claim',
@@ -139,7 +152,10 @@ const getData = (userWalletAddress: string | undefined) => ({
           label: 'Claim $SUMR',
           href: userWalletAddress ? `/portfolio/${userWalletAddress}?tab=rewards` : '/sumr#claim',
         }}
-        link={{ label: 'See SUMR Vesting Conditions', href: '/' }}
+        link={{
+          label: 'See SUMR Vesting Conditions',
+          href: `${EXTERNAL_LINKS.BLOG.WELCOME_LAZY_SUMMER}`,
+        }}
       >
         <SumrSupplySchedule />
       </SumrGovernanceContent>
