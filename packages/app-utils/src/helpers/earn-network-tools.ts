@@ -16,11 +16,13 @@ export const isSupportedSDKChain = (
 const humanReadableNetworkMap = {
   [SDKNetwork.ArbitrumOne]: 'arbitrum',
   [SDKNetwork.Base]: 'base',
+  [SDKNetwork.Mainnet]: 'mainnet',
 }
 
 const sdkNetworkMap = {
   arbitrum: SDKNetwork.ArbitrumOne,
   base: SDKNetwork.Base,
+  mainnet: SDKNetwork.Mainnet,
 }
 
 export const sdkNetworkToHumanNetwork = (network: SDKNetwork): string => {
@@ -64,6 +66,7 @@ export const subgraphNetworkToId = (network: SDKNetwork) => {
   return {
     [SDKNetwork.ArbitrumOne.toLowerCase()]: NetworkIds.ARBITRUMMAINNET,
     [SDKNetwork.Base.toLowerCase()]: NetworkIds.BASEMAINNET,
+    [SDKNetwork.Mainnet.toLowerCase()]: NetworkIds.MAINNET,
   }[network.toLowerCase()]
 }
 
@@ -71,5 +74,6 @@ export const subgraphNetworkToSDKId = (network: SDKNetwork) => {
   return {
     [SDKNetwork.ArbitrumOne.toLowerCase()]: SDKChainId.ARBITRUM,
     [SDKNetwork.Base.toLowerCase()]: SDKChainId.BASE,
+    [SDKNetwork.Mainnet.toLowerCase()]: SDKChainId.MAINNET,
   }[network.toLowerCase()] as SDKSupportedChain
 }

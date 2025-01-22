@@ -149,8 +149,10 @@ export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
             <div className={classNames.withIcon}>
               <Icon tokenName="SUMR" />
               <Text as="h4" variant="h4">
-                {Number(externalData.sumrStakeDelegate.sumrDelegated) +
-                  Number(sumrClaimedStepBefore)}
+                {formatCryptoBalance(
+                  Number(externalData.sumrStakeDelegate.sumrDelegated) +
+                    Number(sumrClaimedStepBefore),
+                )}
               </Text>
             </div>
           </div>

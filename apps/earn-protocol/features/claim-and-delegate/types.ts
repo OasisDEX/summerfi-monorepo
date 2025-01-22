@@ -23,6 +23,7 @@ export type ClaimDelegateState = {
   claimStatus: ClaimDelegateTxStatuses | undefined
   delegateStatus: ClaimDelegateTxStatuses | undefined
   stakingStatus: ClaimDelegateTxStatuses | undefined
+  stakingApproveStatus: ClaimDelegateTxStatuses | undefined
   walletAddress: string
 }
 
@@ -45,6 +46,10 @@ export type ClaimDelegateReducerAction =
     }
   | {
       type: 'update-staking-status'
+      payload: ClaimDelegateTxStatuses
+    }
+  | {
+      type: 'update-staking-approve-status'
       payload: ClaimDelegateTxStatuses
     }
 
