@@ -22,7 +22,7 @@ const networkSDKChainIdIconMap = {
 interface ClaimDelegateToClaimProps {
   earned: string
   earnedInUSD: string
-  chainId: SDKChainId.BASE | SDKChainId.OPTIMISM | SDKChainId.MAINNET | SDKChainId.ARBITRUM
+  chainId: SDKChainId.BASE | SDKChainId.MAINNET | SDKChainId.ARBITRUM
   isActive: boolean
   onClick: () => void
 }
