@@ -56,7 +56,7 @@ describe('Armada Protocol Claim', () => {
 
             const { statuses } = await sendAndLogTransactions({
               chainInfo,
-              transactions: [tx],
+              transactions: tx,
               rpcUrl: rpcUrl,
               privateKey: signerPrivateKey,
             })

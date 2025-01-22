@@ -89,7 +89,7 @@ describe('Armada Protocol Gov', () => {
 
           const { statuses } = await sendAndLogTransactions({
             chainInfo,
-            transactions: [unstakeTx],
+            transactions: unstakeTx,
             rpcUrl: rpcUrl,
             privateKey: signerPrivateKey,
           })
@@ -125,7 +125,7 @@ describe('Armada Protocol Gov', () => {
 
           const { statuses } = await sendAndLogTransactions({
             chainInfo,
-            transactions: [undelegateTx],
+            transactions: undelegateTx,
             rpcUrl: rpcUrl,
             privateKey: signerPrivateKey,
           })
@@ -152,7 +152,7 @@ describe('Armada Protocol Gov', () => {
 
           const { statuses } = await sendAndLogTransactions({
             chainInfo,
-            transactions: [delegateTx],
+            transactions: delegateTx,
             rpcUrl: rpcUrl,
             privateKey: signerPrivateKey,
           })
