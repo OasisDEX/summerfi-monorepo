@@ -94,7 +94,7 @@ export const getSumrStakingInfo = async (): Promise<SumrStakingInfoData> => {
     const [, rewardRate] = rewardData
     // eslint-disable-next-line no-mixed-operators
     const sumrTokenDailyEmissionAmount = new BigNumber(Number(rewardRate))
-      .shiftedBy(-sumrToken.decimals)
+      .shiftedBy(-sumrToken.decimals * 2)
       .multipliedBy(SECONDS_PER_DAY)
       .toNumber()
 
