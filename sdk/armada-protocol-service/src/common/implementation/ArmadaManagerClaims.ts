@@ -441,6 +441,10 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       contractName: 'admiralsQuarters',
     })
 
+    if (multicallArgs.length === 0) {
+      return undefined
+    }
+
     const multicallCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'multicall',

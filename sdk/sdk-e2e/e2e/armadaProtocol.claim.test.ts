@@ -35,7 +35,7 @@ describe('Armada Protocol Claim', () => {
         })
       })
 
-      describe.skip(`claimRewards`, () => {
+      describe(`claimRewards`, () => {
         it(`should claim rewards`, async () => {
           const rewards = await sdk.armada.users.getAggregatedRewards({
             user,
@@ -46,7 +46,9 @@ describe('Armada Protocol Claim', () => {
               chainInfo,
               user,
             })
-            expect(tx).toBeDefined()
+            if (!tx) {
+              throw new Error('No claims')
+            }
 
             const rewards = await sdk.armada.users.getAggregatedRewards({
               user,
