@@ -75,8 +75,8 @@ interface VaultExposureProps {
 export const VaultExposure: FC<VaultExposureProps> = ({ vault }) => {
   const [seeAll, setSeeAll] = useState(false)
 
-  // hard to tell how many arks will be per vault therefore limiting it for now to 10
-  const resolvedRowsToDisplay = seeAll ? 10 : rowsToDisplay
+  // hard to tell how many arks will be per vault therefore limiting it for now to 20
+  const resolvedRowsToDisplay = seeAll ? 20 : rowsToDisplay
 
   const tabs = [
     {
