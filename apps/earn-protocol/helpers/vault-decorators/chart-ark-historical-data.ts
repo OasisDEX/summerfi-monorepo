@@ -97,7 +97,10 @@ export const decorateWithArkHistoricalChartsData = (
       // created with displaying whole timeframe in mind, now we're displaying only the timeframe
       // that has vault data available, but that might change (in that case just remove the false param)
       const chartsDataRaw = getBaseHistoricalChartsData(false)
-      const arksInterestRatesKeys = Object.keys(arkInterestRatesMap) as string[]
+
+      const arksInterestRatesKeys = Object.keys(arkInterestRatesMap).filter(
+        (arkName) => !arkName.toLowerCase().includes('buffer'),
+      ) as string[]
 
       // mapping the interest rates for the vault itself
       for (const vaultHourlyInterestRate of castedVault.hourlyInterestRates) {
