@@ -7,7 +7,6 @@ import {
   IArmadaPosition,
   IArmadaPositionId,
   IArmadaVaultId,
-  createApprovalTransaction,
   createDepositTransaction,
   createWithdrawTransaction,
   type IArmadaManagerClaims,
@@ -601,12 +600,7 @@ export class ArmadaManager implements IArmadaManager {
           owner: params.user.wallet.address,
         })
         if (approveToTakeUserShares) {
-          transactions.push(
-            createApprovalTransaction({
-              ...approveToTakeUserShares,
-              metadata: { approvalAmount: sharesToWithdraw },
-            }),
-          )
+          transactions.push(approveToTakeUserShares)
           LoggingService.debug('approveToTakeUserShares', {
             sharesToWithdraw: sharesToWithdraw.toString(),
           })
@@ -653,12 +647,7 @@ export class ArmadaManager implements IArmadaManager {
           owner: params.user.wallet.address,
         })
         if (approveToTakeUserShares) {
-          transactions.push(
-            createApprovalTransaction({
-              ...approveToTakeUserShares,
-              metadata: { approvalAmount: fleetShares },
-            }),
-          )
+          transactions.push(approveToTakeUserShares)
           LoggingService.debug('approveToTakeUserShares', {
             sharesToWithdraw: fleetShares.toString(),
           })
@@ -672,12 +661,7 @@ export class ArmadaManager implements IArmadaManager {
             owner: params.user.wallet.address,
           })
           if (approveToSwap) {
-            transactions.push(
-              createApprovalTransaction({
-                ...approveToSwap,
-                metadata: { approvalAmount: assetsToEOA },
-              }),
-            )
+            transactions.push(approveToSwap)
             LoggingService.debug('approveToSwap', {
               assetsToEOA: assetsToEOA.toString(),
             })
@@ -764,12 +748,7 @@ export class ArmadaManager implements IArmadaManager {
           owner: params.user.wallet.address,
         })
         if (approveToSwap) {
-          transactions.push(
-            createApprovalTransaction({
-              ...approveToSwap,
-              metadata: { approvalAmount: assetsToEOA },
-            }),
-          )
+          transactions.push(approveToSwap)
           LoggingService.debug('approveToSwap', {
             assetsToEOA: assetsToEOA.toString(),
           })
@@ -897,12 +876,7 @@ export class ArmadaManager implements IArmadaManager {
       owner: params.user.wallet.address,
     })
     if (approvalTransaction) {
-      transactions.push(
-        createApprovalTransaction({
-          ...approvalTransaction,
-          metadata: { approvalAmount: params.amount },
-        }),
-      )
+      transactions.push(approvalTransaction)
       LoggingService.debug('approvalTransaction', {
         amount: params.amount.toString(),
       })
