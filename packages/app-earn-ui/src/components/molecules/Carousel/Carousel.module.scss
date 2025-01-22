@@ -17,7 +17,7 @@
   transform-style: preserve-3d;
 
   @include media('<=s') {
-    height: 690px;
+    height: 725px;
   }
 }
 
@@ -59,6 +59,11 @@
   justify-content: space-between;
   transform: translateY(-50%);
   pointer-events: none;
+
+  @include media('<=s') {
+    top: 255px;
+    gap: calc(100vw - 90px) !important;
+  }
 }
 
 .buttonLeft,
@@ -74,9 +79,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
+  @include media('<=s') {
+    box-shadow: var(--shadow-depth-2);
+    width: 42px;
+    height: 42px;
+  }
 }
 
 .buttonLeft:hover,
 .buttonRight:hover {
   background-color: #555;
+
+  @include media('<=s') {
+    background-color: var(--earn-protocol-neutral-90);
+  }
 }
