@@ -37,14 +37,6 @@ export const useRedirectToPositionView = ({
       walletAddress: user.address,
     })
 
-    console.log('debug', {
-      positionAmount: position.amount.amount,
-      emptyPosition,
-      pathname,
-      vaultUrl,
-      vaultPositionUrl,
-    })
-
     if (pathname === vaultUrl && !emptyPosition) {
       replace(vaultPositionUrl)
     } else if (pathname === vaultPositionUrl && emptyPosition) {
