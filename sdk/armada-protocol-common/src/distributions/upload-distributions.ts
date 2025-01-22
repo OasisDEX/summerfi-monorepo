@@ -43,6 +43,7 @@ async function uploadDistributions(fileNames: string[]) {
           Bucket: bucketName,
           Key: fileName,
           Body: fileContent,
+          ContentType: 'application/json',
           ACL: 'public-read', // Make the file publicly readable
         }),
       )
