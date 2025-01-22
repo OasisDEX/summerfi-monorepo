@@ -31,7 +31,7 @@ describe('Armada Protocol Claim', () => {
           })
           expect(rewards.total).toBeGreaterThan(0n)
           expect(rewards.perChain[ChainFamilyMap.Base.Base.chainId]).toBeGreaterThan(0n)
-          expect(rewards.perChain[ChainFamilyMap.Arbitrum.ArbitrumOne.chainId]).toBe(0n)
+          expect(rewards.perChain[ChainFamilyMap.Arbitrum.ArbitrumOne.chainId]).toBeGreaterThan(0n)
         })
       })
 
@@ -46,7 +46,9 @@ describe('Armada Protocol Claim', () => {
               chainInfo,
               user,
             })
-            expect(tx).toBeDefined()
+            if (!tx) {
+              throw new Error('No claims')
+            }
 
             const rewards = await sdk.armada.users.getAggregatedRewards({
               user,

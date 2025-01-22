@@ -229,7 +229,7 @@ export interface IArmadaManagerUsersClient {
   getAggregatedClaimsForChainTX(params: {
     chainInfo: ChainInfo
     user: IUser
-  }): Promise<[ClaimTransactionInfo]>
+  }): Promise<[ClaimTransactionInfo] | undefined>
 
   /**
    * @method getUserDelegatee

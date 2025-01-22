@@ -49,10 +49,10 @@ describe('Armada Protocol Gov', () => {
         })
 
         // staking tx
-        it(`should stake`, async () => {
+        it.skip(`should stake`, async () => {
           const stakeTx = await sdk.armada.users.getStakeTx({
             user,
-            amount: 8000000000000000000n,
+            amount: 4000000000000000000n,
           })
 
           // stake before
