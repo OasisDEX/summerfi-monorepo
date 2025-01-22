@@ -1,4 +1,5 @@
 import type {
+  ApproveTransactionInfo,
   DelegateTransactionInfo,
   IAddress,
   IUser,
@@ -30,7 +31,7 @@ export interface IArmadaManagerGovernance {
    *
    * @returns The transaction information
    */
-  getDelegateTx: (params: { user: IUser }) => Promise<DelegateTransactionInfo>
+  getDelegateTx: (params: { user: IUser }) => Promise<[DelegateTransactionInfo]>
 
   /**
    * @method getUndelegateTx
@@ -38,7 +39,7 @@ export interface IArmadaManagerGovernance {
    *
    * @returns The transaction information
    */
-  getUndelegateTx: () => Promise<DelegateTransactionInfo>
+  getUndelegateTx: () => Promise<[DelegateTransactionInfo]>
 
   /**
    * @method getUserVotes
@@ -49,6 +50,16 @@ export interface IArmadaManagerGovernance {
    * @returns The number of votes
    */
   getUserVotes: (params: { user: IUser }) => Promise<bigint>
+
+  /**
+   * @method getUserBalance
+   * @description Returns the balance of the user
+   *
+   * @param user The user
+   *
+   * @returns The balance
+   */
+  getUserBalance: (params: { user: IUser }) => Promise<bigint>
 
   /**
    * @method getUserStakedBalance
@@ -74,11 +85,15 @@ export interface IArmadaManagerGovernance {
    * @method getStakeTx
    * @description Returns the transaction to stake tokens
    *
+   * @param user The user
    * @param amount The amount to stake
    *
    * @returns The transaction information
    */
-  getStakeTx: (params: { amount: bigint }) => Promise<StakeTransactionInfo>
+  getStakeTx: (params: {
+    user: IUser
+    amount: bigint
+  }) => Promise<[ApproveTransactionInfo, StakeTransactionInfo] | [StakeTransactionInfo]>
 
   /**
    * @method getUnstakeTx
@@ -88,5 +103,5 @@ export interface IArmadaManagerGovernance {
    *
    * @returns The transaction information
    */
-  getUnstakeTx: (params: { amount: bigint }) => Promise<UnstakeTransactionInfo>
+  getUnstakeTx: (params: { amount: bigint }) => Promise<[UnstakeTransactionInfo]>
 }

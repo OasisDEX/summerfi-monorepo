@@ -1,4 +1,9 @@
-import type { IAddress, IChainInfo, ITokenAmount, TransactionInfo } from '@summerfi/sdk-common'
+import type {
+  ApproveTransactionInfo,
+  IAddress,
+  IChainInfo,
+  ITokenAmount,
+} from '@summerfi/sdk-common'
 
 /**
  * @name IAllowanceManager
@@ -20,5 +25,5 @@ export interface IAllowanceManager {
     spender: IAddress
     amount: ITokenAmount
     owner?: IAddress
-  }): Promise<TransactionInfo | undefined>
+  }): Promise<ApproveTransactionInfo | undefined>
 }

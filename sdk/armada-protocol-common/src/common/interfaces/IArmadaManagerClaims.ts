@@ -48,19 +48,19 @@ export interface IArmadaManagerClaims {
    * @returns Promise<TransactionInfoClaim>
    * @throws Error
    */
-  getClaimDistributionTx: (params: { user: IUser }) => Promise<ClaimTransactionInfo>
+  getClaimDistributionTx: (params: { user: IUser }) => Promise<[ClaimTransactionInfo]>
 
   /**
    * @name getClaimVoteDelegationRewardsTx
    * @description Claims governance rewards for a user
-   * @param params.rewardToken The reward token
+   * @param params.r;ewardToken The reward token
    * @returns Promise<TransactionInfoClaim>
    * @throws Error
    */
   getClaimVoteDelegationRewardsTx: (params: {
     govRewardsManagerAddress: IAddress // z summertoken rewards manager
     rewardToken: IAddress
-  }) => Promise<ClaimTransactionInfo>
+  }) => Promise<[ClaimTransactionInfo]>
 
   /**
    * @name getClaimProtocolUsageRewardsTx
@@ -77,7 +77,7 @@ export interface IArmadaManagerClaims {
     chainInfo: IChainInfo
     fleetCommandersAddresses: IAddress[]
     rewardToken: IAddress
-  }) => Promise<ClaimTransactionInfo>
+  }) => Promise<[ClaimTransactionInfo]>
 
   /**
    * @name getAggregatedClaimsForChainTX
@@ -91,5 +91,5 @@ export interface IArmadaManagerClaims {
   getAggregatedClaimsForChainTX(params: {
     chainInfo: ChainInfo
     user: IUser
-  }): Promise<ClaimTransactionInfo>
+  }): Promise<[ClaimTransactionInfo]>
 }

@@ -26,6 +26,13 @@ describe('Armada Protocol Gov', () => {
       })
 
       describe(`unstaking and staking`, () => {
+        it(`should get balance`, async () => {
+          const balance = await sdk.armada.users.getUserBalance({
+            user,
+          })
+          expect(balance).toBeGreaterThan(0n)
+          console.log('balance', balance)
+        })
         it(`should get staked balance`, async () => {
           const staked = await sdk.armada.users.getUserStakedBalance({
             user,
@@ -44,6 +51,7 @@ describe('Armada Protocol Gov', () => {
         // staking tx
         it(`should stake`, async () => {
           const stakeTx = await sdk.armada.users.getStakeTx({
+            user,
             amount: 8000000000000000000n,
           })
 
@@ -54,7 +62,7 @@ describe('Armada Protocol Gov', () => {
 
           const { statuses } = await sendAndLogTransactions({
             chainInfo,
-            transactions: [stakeTx],
+            transactions: stakeTx,
             rpcUrl: rpcUrl,
             privateKey: signerPrivateKey,
           })

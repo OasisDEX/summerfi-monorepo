@@ -1,7 +1,7 @@
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
-import { IAddress, IChainInfo, ITokenAmount, TransactionInfo } from '@summerfi/sdk-common'
+import { TransactionType } from '@summerfi/sdk-common'
 
 /**
  * @name AllowanceManager
@@ -23,7 +23,7 @@ export class AllowanceManager implements IAllowanceManager {
   /** FUNCTIONS */
   async getApproval(
     params: Parameters<IAllowanceManager['getApproval']>[0],
-  ): Promise<TransactionInfo | undefined> {
+  ): ReturnType<IAllowanceManager['getApproval']> {
     const erc20Contract = await this._contractsProvider.getErc20Contract({
       address: params.amount.token.address,
       chainInfo: params.chainInfo,
@@ -40,9 +40,17 @@ export class AllowanceManager implements IAllowanceManager {
       }
     }
 
-    return await erc20Contract.approve({
+    const tx = await erc20Contract.approve({
       amount: params.amount,
       spender: params.spender,
     })
+
+    return {
+      ...tx,
+      type: TransactionType.Approve,
+      metadata: {
+        approvalAmount: params.amount,
+      },
+    }
   }
 }

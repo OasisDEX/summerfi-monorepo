@@ -3,9 +3,17 @@ import {
   getDeployedContractAddress,
   type IArmadaManagerGovernance,
 } from '@summerfi/armada-protocol-common'
-import { Address, TransactionType, type IAddress, type IChainInfo } from '@summerfi/sdk-common'
+import {
+  Address,
+  Token,
+  TokenAmount,
+  TransactionType,
+  type IAddress,
+  type IChainInfo,
+} from '@summerfi/sdk-common'
 import { encodeFunctionData, zeroAddress } from 'viem'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
+import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 
 /**
  * @name ArmadaManager
@@ -13,6 +21,7 @@ import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-comm
  */
 export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
   private _blockchainClientProvider: IBlockchainClientProvider
+  private _allowanceManager: IAllowanceManager
 
   private _hubChainSummerTokenAddress: IAddress
   private _hubChainInfo: IChainInfo
@@ -20,15 +29,27 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
   /** CONSTRUCTOR */
   constructor(params: {
     blockchainClientProvider: IBlockchainClientProvider
+    allowanceManager: IAllowanceManager
     hubChainInfo: IChainInfo
   }) {
     this._blockchainClientProvider = params.blockchainClientProvider
+    this._allowanceManager = params.allowanceManager
     this._hubChainInfo = params.hubChainInfo
 
     this._hubChainSummerTokenAddress = getDeployedContractAddress({
       chainInfo: this._hubChainInfo,
       contractCategory: 'gov',
       contractName: 'summerToken',
+    })
+  }
+
+  private getSummerToken(params: { chainInfo: IChainInfo; address: IAddress }): Token {
+    return Token.createFrom({
+      chainInfo: params.chainInfo,
+      address: params.address,
+      decimals: 18,
+      name: 'SummerToken',
+      symbol: 'SUMMER',
     })
   }
 
@@ -58,15 +79,17 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       args: [params.user.wallet.address.value],
     })
 
-    return {
-      type: TransactionType.Delegate,
-      description: 'Delegating votes',
-      transaction: {
-        target: Address.createFromEthereum({ value: this._hubChainSummerTokenAddress.value }),
-        calldata: calldata,
-        value: '0',
+    return [
+      {
+        type: TransactionType.Delegate,
+        description: 'Delegating votes',
+        transaction: {
+          target: Address.createFromEthereum({ value: this._hubChainSummerTokenAddress.value }),
+          calldata: calldata,
+          value: '0',
+        },
       },
-    }
+    ]
   }
 
   async getUndelegateTx(): ReturnType<IArmadaManagerGovernance['getUndelegateTx']> {
@@ -76,15 +99,17 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       args: [zeroAddress],
     })
 
-    return {
-      type: TransactionType.Delegate,
-      description: 'Undelegating votes',
-      transaction: {
-        target: Address.createFromEthereum({ value: this._hubChainSummerTokenAddress.value }),
-        calldata: calldata,
-        value: '0',
+    return [
+      {
+        type: TransactionType.Delegate,
+        description: 'Undelegating votes',
+        transaction: {
+          target: Address.createFromEthereum({ value: this._hubChainSummerTokenAddress.value }),
+          calldata: calldata,
+          value: '0',
+        },
       },
-    }
+    ]
   }
 
   async getUserVotes(
@@ -98,6 +123,21 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       abi: SummerTokenAbi,
       address: this._hubChainSummerTokenAddress.value,
       functionName: 'getVotes',
+      args: [params.user.wallet.address.value],
+    })
+  }
+
+  async getUserBalance(
+    params: Parameters<IArmadaManagerGovernance['getUserBalance']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getUserBalance']> {
+    const client = this._blockchainClientProvider.getBlockchainClient({
+      chainInfo: params.user.chainInfo,
+    })
+
+    return client.readContract({
+      abi: SummerTokenAbi,
+      address: this._hubChainSummerTokenAddress.value,
+      functionName: 'balanceOf',
       args: [params.user.wallet.address.value],
     })
   }
@@ -169,7 +209,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       args: [],
     })
 
-    return {
+    const stakeTx = {
       type: TransactionType.Stake,
       description: 'Staking tokens',
       transaction: {
@@ -177,6 +217,25 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
         calldata: calldata,
         value: '0',
       },
+    } as const
+
+    const approveToStakeUserTokens = await this._allowanceManager.getApproval({
+      chainInfo: this._hubChainInfo,
+      spender: Address.createFromEthereum({ value: rewardsManagerAddressString }),
+      amount: TokenAmount.createFromBaseUnit({
+        amount: params.amount.toString(),
+        token: this.getSummerToken({
+          chainInfo: this._hubChainInfo,
+          address: this._hubChainSummerTokenAddress,
+        }),
+      }),
+      owner: params.user.wallet.address,
+    })
+
+    if (approveToStakeUserTokens) {
+      return [approveToStakeUserTokens, stakeTx]
+    } else {
+      return [stakeTx]
     }
   }
 
@@ -199,14 +258,16 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       args: [],
     })
 
-    return {
-      type: TransactionType.Unstake,
-      description: 'Unstaking tokens',
-      transaction: {
-        target: Address.createFromEthereum({ value: rewardsManagerAddressString }),
-        calldata: calldata,
-        value: '0',
+    return [
+      {
+        type: TransactionType.Unstake,
+        description: 'Unstaking tokens',
+        transaction: {
+          target: Address.createFromEthereum({ value: rewardsManagerAddressString }),
+          calldata: calldata,
+          value: '0',
+        },
       },
-    }
+    ]
   }
 }

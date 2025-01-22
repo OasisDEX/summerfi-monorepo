@@ -291,15 +291,17 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       contractName: 'admiralsQuarters',
     })
 
-    return {
-      type: TransactionType.Claim,
-      description: 'Claiming merkle rewards',
-      transaction: {
-        target: admiralsQuartersAddress,
-        calldata: calldata,
-        value: '0',
+    return [
+      {
+        type: TransactionType.Claim,
+        description: 'Claiming merkle rewards',
+        transaction: {
+          target: admiralsQuartersAddress,
+          calldata: calldata,
+          value: '0',
+        },
       },
-    }
+    ]
   }
 
   async getClaimVoteDelegationRewardsTx(
@@ -317,15 +319,17 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       contractName: 'admiralsQuarters',
     })
 
-    return {
-      type: TransactionType.Claim,
-      description: 'Claiming governance rewards',
-      transaction: {
-        target: admiralsQuartersAddress,
-        calldata: calldata,
-        value: '0',
+    return [
+      {
+        type: TransactionType.Claim,
+        description: 'Claiming governance rewards',
+        transaction: {
+          target: admiralsQuartersAddress,
+          calldata: calldata,
+          value: '0',
+        },
       },
-    }
+    ]
   }
 
   async getClaimProtocolUsageRewardsTx(
@@ -343,15 +347,17 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       contractName: 'admiralsQuarters',
     })
 
-    return {
-      type: TransactionType.Claim,
-      description: 'Claiming fleet rewards',
-      transaction: {
-        target: admiralsQuartersAddress,
-        calldata: calldata,
-        value: '0',
+    return [
+      {
+        type: TransactionType.Claim,
+        description: 'Claiming fleet rewards',
+        transaction: {
+          target: admiralsQuartersAddress,
+          calldata: calldata,
+          value: '0',
+        },
       },
-    }
+    ]
   }
 
   async getAggregatedClaimsForChainTX(
@@ -384,7 +390,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     // only hub chain can claim merkle rewards
     if (isHubChain) {
       const claimMerkleRewards = await this.getClaimDistributionTx({ user: params.user })
-      multicallArgs.push(claimMerkleRewards.transaction.calldata)
+      multicallArgs.push(claimMerkleRewards[0].transaction.calldata)
     }
     // only hub chain can claim governance rewards
     if (isHubChain) {
@@ -433,14 +439,16 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       args: [multicallArgs],
     })
 
-    return {
-      type: TransactionType.Claim,
-      description: 'Claiming all available rewards on the provided chain',
-      transaction: {
-        target: admiralsQuartersAddress,
-        calldata: multicallCalldata,
-        value: '0',
+    return [
+      {
+        type: TransactionType.Claim,
+        description: 'Claiming all available rewards on the provided chain',
+        transaction: {
+          target: admiralsQuartersAddress,
+          calldata: multicallCalldata,
+          value: '0',
+        },
       },
-    }
+    ]
   }
 }

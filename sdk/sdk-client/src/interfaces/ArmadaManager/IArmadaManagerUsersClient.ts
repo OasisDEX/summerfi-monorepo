@@ -13,6 +13,7 @@ import {
   ITokenAmount,
   IUser,
   TransactionInfo,
+  type ApproveTransactionInfo,
   type ChainInfo,
   type ClaimTransactionInfo,
   type DelegateTransactionInfo,
@@ -228,7 +229,7 @@ export interface IArmadaManagerUsersClient {
   getAggregatedClaimsForChainTX(params: {
     chainInfo: ChainInfo
     user: IUser
-  }): Promise<ClaimTransactionInfo>
+  }): Promise<[ClaimTransactionInfo]>
 
   /**
    * @method getUserDelegatee
@@ -248,7 +249,7 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns The transaction information
    */
-  getDelegateTx(params: { user: IUser }): Promise<DelegateTransactionInfo>
+  getDelegateTx(params: { user: IUser }): Promise<[DelegateTransactionInfo]>
 
   /**
    * @method getUndelegateTx
@@ -256,7 +257,7 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns The transaction information
    */
-  getUndelegateTx(): Promise<DelegateTransactionInfo>
+  getUndelegateTx(): Promise<[DelegateTransactionInfo]>
 
   /**
    * @method getUserVotes
@@ -267,6 +268,16 @@ export interface IArmadaManagerUsersClient {
    * @returns The number of votes
    */
   getUserVotes(params: { user: IUser }): Promise<bigint>
+
+  /**
+   * @method getUserBalance
+   * @description Returns the balance of the user
+   *
+   * @param user The user
+   *
+   * @returns The balance
+   */
+  getUserBalance(params: { user: IUser }): Promise<bigint>
 
   /**
    * @method getUserStakedBalance
@@ -292,11 +303,15 @@ export interface IArmadaManagerUsersClient {
    * @method getStakeTx
    * @description Returns the transaction to stake tokens
    *
+   * @param user The user
    * @param amount The amount to stake
    *
    * @returns The transaction information
    */
-  getStakeTx(params: { amount: bigint }): Promise<StakeTransactionInfo>
+  getStakeTx(params: {
+    user: IUser
+    amount: bigint
+  }): Promise<[ApproveTransactionInfo, StakeTransactionInfo] | [StakeTransactionInfo]>
 
   /**
    * @method getUnstakeTx
@@ -306,5 +321,5 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns The transaction information
    */
-  getUnstakeTx(params: { amount: bigint }): Promise<UnstakeTransactionInfo>
+  getUnstakeTx(params: { amount: bigint }): Promise<[UnstakeTransactionInfo]>
 }
