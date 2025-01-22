@@ -1,4 +1,5 @@
 import { type ChangeEvent, type Dispatch, type FC, useState } from 'react'
+import { useUser } from '@account-kit/react'
 import {
   Button,
   Card,
@@ -26,6 +27,7 @@ import {
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { type TokenBalanceData } from '@/hooks/use-token-balance'
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './ClaimDelegateStakeDelegateSubstep.module.scss'
 
@@ -59,9 +61,14 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
   decayFactorLoading,
 }) => {
   const { walletAddress } = useParams()
+
+  const resolvedWalletAddress = Array.isArray(walletAddress) ? walletAddress[0] : walletAddress
+
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
+  const user = useUser()
+  const { userWalletAddress } = useUserWallet()
 
   const [searchValue, setSearchValue] = useState('')
 
@@ -110,6 +117,10 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
   const isLoading =
     state.stakingStatus === ClaimDelegateTxStatuses.PENDING ||
     state.delegateStatus === ClaimDelegateTxStatuses.PENDING
+
+  // self delegating is available on for EOA only
+  // since we use tally that doesn't support SCA
+  const isEoa = user?.type === 'eoa'
 
   return (
     <div className={classNames.claimDelegateStakeDelegateSubstepWrapper}>
@@ -214,22 +225,24 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
         <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
           Earn $SUMR rewards for staking and delegating your tokens.
         </Text>
-        <div className={classNames.selfDelegateCard}>
-          <ClaimDelegateCard
-            title="Delegate to yourself"
-            description="Be your own Delegate. In order to accrue full staking rewards, you must vote on every proposal and remain active."
-            ens=""
-            address={walletAddress as string}
-            isActive={state.delegatee === (walletAddress as string).toLowerCase()}
-            handleClick={() =>
-              dispatch({
-                type: 'update-delegatee',
-                payload: (walletAddress as string).toLowerCase(),
-              })
-            }
-            selfDelegate
-          />
-        </div>
+        {isEoa && (
+          <div className={classNames.selfDelegateCard}>
+            <ClaimDelegateCard
+              title="Delegate to yourself"
+              description="Be your own Delegate. In order to accrue full staking rewards, you must vote on every proposal and remain active."
+              ens=""
+              address={resolvedWalletAddress}
+              isActive={state.delegatee === resolvedWalletAddress.toLowerCase()}
+              handleClick={() =>
+                dispatch({
+                  type: 'update-delegatee',
+                  payload: resolvedWalletAddress.toLowerCase(),
+                })
+              }
+              selfDelegate
+            />
+          </div>
+        )}
       </div>
       <div className={classNames.rightContent}>
         <div className={classNames.inputWrapper}>
@@ -286,7 +299,9 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
             style={{ paddingRight: 'var(--general-space-32)' }}
             onClick={handleStakeAndDelegate}
             disabled={
-              !state.delegatee || state.delegatee === externalData.sumrStakeDelegate.delegatedTo
+              !state.delegatee ||
+              state.delegatee === externalData.sumrStakeDelegate.delegatedTo ||
+              userWalletAddress?.toLowerCase() !== resolvedWalletAddress.toLowerCase()
             }
           >
             <WithArrow
