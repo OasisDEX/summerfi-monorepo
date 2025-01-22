@@ -32,14 +32,14 @@ export class TransactionUtils {
     rpcUrl: string
     chainInfo: IChainInfo
     walletPrivateKey?: Hex
-    useRpcGateway?: boolean
+    useFork?: boolean
   }) {
     this.chainInfo = params.chainInfo
     if (params.walletPrivateKey) {
       this.account = privateKeyToAccount(params.walletPrivateKey)
     }
 
-    const rpc =
+    const gatewayUrl =
       params.chainInfo &&
       getRpcGatewayEndpoint(params.rpcUrl, params.chainInfo.chainId, {
         skipCache: false,
@@ -48,14 +48,14 @@ export class TransactionUtils {
         stage: 'stg',
         source: 'e2e',
       })
-    this.transport = params.useRpcGateway
-      ? http(rpc, {
+    this.transport = params.useFork
+      ? http(params.rpcUrl)
+      : http(gatewayUrl, {
           batch: true,
           fetchOptions: {
             method: 'POST',
           },
         })
-      : http(params.rpcUrl)
 
     this.chain = defineChain({
       id: this.chainInfo.chainId,
@@ -132,7 +132,6 @@ export class TransactionUtils {
       to: params.transaction.target.value,
       value: BigInt(params.transaction.value),
       data: params.transaction.calldata,
-      gas: 1000000000n,
       chain: this.chain,
     })
   }

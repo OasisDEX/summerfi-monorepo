@@ -20,9 +20,9 @@ const useRpcGateway = true
 
 describe.skip('Armada Protocol Deposit', () => {
   const main = async () => {
-    for (const { symbol, swapSymbol, chainInfo, fleetAddress, forkUrl } of testConfig) {
+    for (const { symbol, swapSymbol, chainInfo, fleetAddress, rpcUrl } of testConfig) {
       console.log(`Running tests for ${symbol} on ${chainInfo.name}`)
-      await runTests({ symbol, swapSymbol, chainInfo, fleetAddress, forkUrl })
+      await runTests({ symbol, swapSymbol, chainInfo, fleetAddress, forkUrl: rpcUrl })
     }
   }
   main()
@@ -99,7 +99,6 @@ describe.skip('Armada Protocol Deposit', () => {
           transactions,
           rpcUrl: forkUrl,
           privateKey: signerPrivateKey,
-          useRpcGateway,
         })
         statuses.forEach((status) => {
           expect(status).toBe('success')
@@ -164,7 +163,6 @@ describe.skip('Armada Protocol Deposit', () => {
           transactions,
           rpcUrl: forkUrl,
           privateKey: signerPrivateKey,
-          useRpcGateway,
         })
         statuses.forEach((status) => {
           expect(status).toBe('success')
@@ -226,7 +224,6 @@ describe.skip('Armada Protocol Deposit', () => {
           transactions,
           rpcUrl: forkUrl,
           privateKey: signerPrivateKey,
-          useRpcGateway,
         })
         statuses.forEach((status) => {
           expect(status).toBe('success')
@@ -278,7 +275,6 @@ describe.skip('Armada Protocol Deposit', () => {
         //   transactions: pre,
         //   rpcUrl: forkUrl,
         //   privateKey: signerPrivateKey,
-        //   useRpcGateway,
         // })
 
         const transactions = await sdk.armada.users.getWithdrawTX({
@@ -312,7 +308,6 @@ describe.skip('Armada Protocol Deposit', () => {
           transactions: transactions,
           rpcUrl: forkUrl,
           privateKey: signerPrivateKey,
-          useRpcGateway,
         })
         statuses.forEach((status) => {
           expect(status).toBe('success')

@@ -39,9 +39,9 @@ export const useClaimSumrTransaction = ({
 
     return await sendUserOperationAsync({
       uo: {
-        target: tx.transaction.target.value,
-        data: tx.transaction.calldata,
-        value: BigInt(tx.transaction.value),
+        target: tx[0].transaction.target.value,
+        data: tx[0].transaction.calldata,
+        value: BigInt(tx[0].transaction.value),
       },
     })
   }

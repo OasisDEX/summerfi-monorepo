@@ -3,27 +3,9 @@ import {
   type IAddress,
   type ExtendedTransactionInfo,
   TransactionType,
-  TransactionMetadataApproval,
   TransactionMetadataDeposit,
   TransactionMetadataWithdraw,
 } from '@summerfi/sdk-common'
-
-export function createApprovalTransaction(params: {
-  transaction: {
-    target: IAddress
-    calldata: HexData
-    value: string
-  }
-  description: string
-  metadata: TransactionMetadataApproval
-}): ExtendedTransactionInfo {
-  return {
-    transaction: params.transaction,
-    description: params.description,
-    type: TransactionType.Approve,
-    metadata: params.metadata,
-  }
-}
 
 export function createDepositTransaction(params: {
   target: IAddress

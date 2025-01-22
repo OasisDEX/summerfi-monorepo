@@ -43,25 +43,29 @@ type TransactionInfo = {
   description: string
 }
 
+export type ApproveTransactionInfo = TransactionInfo & {
+  type: TransactionType.Approve
+  metadata: TransactionMetadataApproval
+}
+
+export type DepositTransactionInfo = TransactionInfo & {
+  type: TransactionType.Deposit
+  metadata: TransactionMetadataDeposit
+}
+
+export type WithdrawTransactionInfo = TransactionInfo & {
+  type: TransactionType.Withdraw
+  metadata: TransactionMetadataWithdraw
+}
+
 /**
  * @interface ExtendedTransactionInfo
  * @description Contains the low level transaction plus a description of what the transaction is for.
  */
-export type ExtendedTransactionInfo = TransactionInfo &
-  (
-    | {
-        type: TransactionType.Approve
-        metadata: TransactionMetadataApproval
-      }
-    | {
-        type: TransactionType.Deposit
-        metadata: TransactionMetadataDeposit
-      }
-    | {
-        type: TransactionType.Withdraw
-        metadata: TransactionMetadataWithdraw
-      }
-  )
+export type ExtendedTransactionInfo =
+  | ApproveTransactionInfo
+  | DepositTransactionInfo
+  | WithdrawTransactionInfo
 
 export type ClaimTransactionInfo = TransactionInfo & {
   type: TransactionType.Claim
