@@ -1,7 +1,7 @@
 import { type FC, type PropsWithChildren } from 'react'
 import { Footer, NewsletterWrapper, Text } from '@summerfi/app-earn-ui'
+import dynamic from 'next/dynamic'
 
-// import dynamic from 'next/dynamic'
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
 
 import './global.css'
@@ -9,9 +9,9 @@ import masterPageStyles from './MasterPage.module.scss'
 
 interface MasterPageProps {}
 
-// const SetForkModal = dynamic(() => import('@/components/organisms/SetFork/SetForkModal'), {
-//   ssr: false,
-// })
+const SetForkModal = dynamic(() => import('@/components/organisms/SetFork/SetForkModal'), {
+  ssr: false,
+})
 
 export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({ children }) => {
   return (
@@ -29,7 +29,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({ children })
           gap: '20px',
         }}
       >
-        {/* <SetForkModal /> */}
+        <SetForkModal />
         <Footer
           logo="/earn/img/branding/logo-light.svg"
           newsletter={
