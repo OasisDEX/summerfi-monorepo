@@ -37,6 +37,10 @@ export const useClaimSumrTransaction = ({
 
     const tx = await getAggregatedClaimsForChainTX({ user, chainInfo })
 
+    if (tx === undefined) {
+      throw new Error('aggregated claims tx is undefined')
+    }
+
     return await sendUserOperationAsync({
       uo: {
         target: tx[0].transaction.target.value,
