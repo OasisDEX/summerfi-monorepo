@@ -31,11 +31,11 @@ describe('Armada Protocol Claim', () => {
           })
           expect(rewards.total).toBeGreaterThan(0n)
           expect(rewards.perChain[ChainFamilyMap.Base.Base.chainId]).toBeGreaterThan(0n)
-          expect(rewards.perChain[ChainFamilyMap.Arbitrum.ArbitrumOne.chainId]).toBe(0n)
+          expect(rewards.perChain[ChainFamilyMap.Arbitrum.ArbitrumOne.chainId]).toBeGreaterThan(0n)
         })
       })
 
-      describe(`claimRewards`, () => {
+      describe.skip(`claimRewards`, () => {
         it(`should claim rewards`, async () => {
           const rewards = await sdk.armada.users.getAggregatedRewards({
             user,

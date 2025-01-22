@@ -389,17 +389,22 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
 
     // only hub chain can claim merkle rewards
     if (isHubChain) {
-      const claimMerkleRewards = await this.getClaimDistributionTx({ user: params.user })
-      multicallArgs.push(claimMerkleRewards[0].transaction.calldata)
+      const merkleDistributionRewards = await this.getMerkleDistributionRewards(params.user)
+      if (merkleDistributionRewards > 0n) {
+        const claimMerkleRewards = await this.getClaimDistributionTx({ user: params.user })
+        multicallArgs.push(claimMerkleRewards[0].transaction.calldata)
+      }
     }
-    // only hub chain can claim governance rewards
+    // only hub chain can claim vote del rewards
     if (isHubChain) {
-      const claimGovernanceRewards = await this.getClaimVoteDelegationRewardsTx({
-        govRewardsManagerAddress: Address.createFromEthereum({ value: govRewardsManagerAddress }),
-        rewardToken,
-      })
-      // TODO: temporary disabled because not ready
-      // multicallArgs.push(claimGovernanceRewards.transaction.calldata)
+      const voteDelegationRewards = await this.getVoteDelegationRewards(params.user)
+      if (voteDelegationRewards > 0n) {
+        const claimGovernanceRewards = await this.getClaimVoteDelegationRewardsTx({
+          govRewardsManagerAddress: Address.createFromEthereum({ value: govRewardsManagerAddress }),
+          rewardToken,
+        })
+        multicallArgs.push(claimGovernanceRewards[0].transaction.calldata)
+      }
     }
 
     // any chain can claim fleet rewards
@@ -416,16 +421,19 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       functionName: 'getActiveFleetCommanders',
     })
 
-    const claimFleetRewards = await this.getClaimProtocolUsageRewardsTx({
-      chainInfo: params.chainInfo,
-      user: params.user,
-      fleetCommandersAddresses: fleetCommandersAddresses.map((addressValue) =>
-        Address.createFromEthereum({ value: addressValue }),
-      ),
-      rewardToken,
-    })
-    // TODO: temporary disabled because not ready
-    // multicallArgs.push(claimFleetRewards.transaction.calldata)
+    const protocolUsageRewards = await this.getProtocolUsageRewards(params.user, params.chainInfo)
+
+    if (protocolUsageRewards > 0n) {
+      const claimFleetRewards = await this.getClaimProtocolUsageRewardsTx({
+        chainInfo: params.chainInfo,
+        user: params.user,
+        fleetCommandersAddresses: fleetCommandersAddresses.map((addressValue) =>
+          Address.createFromEthereum({ value: addressValue }),
+        ),
+        rewardToken,
+      })
+      multicallArgs.push(claimFleetRewards[0].transaction.calldata)
+    }
 
     const admiralsQuartersAddress = getDeployedContractAddress({
       chainInfo: params.chainInfo,
