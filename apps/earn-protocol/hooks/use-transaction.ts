@@ -8,6 +8,7 @@ import {
   useSmartAccountClient,
   useUser,
 } from '@account-kit/react'
+import { getVaultPositionUrl, getVaultUrl } from '@summerfi/app-earn-ui'
 import {
   type EarnAllowanceTypes,
   type EarnTransactionViewStates,
@@ -25,6 +26,7 @@ import {
 } from '@summerfi/sdk-common'
 import type BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
+import { useRouter } from 'next/navigation'
 
 import {
   type AccountKitSupportedNetworks,
@@ -80,6 +82,7 @@ export const useTransaction = ({
   positionAmount,
   approvalCustomValue,
 }: UseTransactionParams) => {
+  const { refresh: refreshView, push } = useRouter()
   const [slippageConfig] = useSlippageConfig()
   const user = useUser()
   const { getDepositTX, getWithdrawTX } = useAppSDK()
@@ -461,10 +464,48 @@ export const useTransaction = ({
     ) {
       reset()
       if (user?.address) {
+        // refreshes the view
+        refreshView()
+        // revalidates users wallet data (all of fetches with wallet tagged in it)
         revalidateUser(user.address)
+
+        // makes sure the user is redirected to the correct page
+        // after closing or opening
+        const isOpening = transactionType === TransactionAction.DEPOSIT && flow === 'open'
+        const isClosing =
+          transactionType === TransactionAction.WITHDRAW &&
+          positionAmount &&
+          flow === 'manage' &&
+          amount?.eq(positionAmount)
+
+        if (isOpening || isClosing) {
+          push(
+            isOpening
+              ? getVaultPositionUrl({
+                  network: vault.protocol.network,
+                  vaultId: vault.customFields?.slug ?? vault.id,
+                  walletAddress: user.address,
+                })
+              : getVaultUrl(vault),
+          )
+        }
       }
     }
-  }, [reset, waitingForTx, transactions?.length, txStatus, isSendingUserOperation, user])
+  }, [
+    refreshView,
+    amount,
+    flow,
+    isSendingUserOperation,
+    positionAmount,
+    push,
+    reset,
+    transactionType,
+    transactions?.length,
+    txStatus,
+    user?.address,
+    vault,
+    waitingForTx,
+  ])
 
   // watch for sendUserOperationError
   useEffect(() => {

@@ -31,8 +31,16 @@ const noInterestRates: GetInterestRatesQuery = {
 }
 
 // passing next.js fetcher with cache duration
-const customFetchCache = async (url: RequestInfo | URL, params?: RequestInit) =>
-  await fetch(url, { ...params, next: { revalidate: REVALIDATION_TIMES.INTEREST_RATES } })
+const customFetchCache = async (url: RequestInfo | URL, params?: RequestInit) => {
+  try {
+    return await fetch(url, { ...params, next: { revalidate: REVALIDATION_TIMES.INTEREST_RATES } })
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('customFetchCache error', error)
+
+    throw error
+  }
+}
 
 const clients = {
   [SDKNetwork.Base]: new GraphQLClient(

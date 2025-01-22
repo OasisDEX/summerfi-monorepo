@@ -43,7 +43,7 @@ import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { usePosition } from '@/hooks/use-position'
-import { useRedirectToPosition } from '@/hooks/use-redirect-to-position'
+import { useRedirectToPositionView } from '@/hooks/use-redirect-to-position'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useTransaction } from '@/hooks/use-transaction'
 import { useUserWallet } from '@/hooks/use-user-wallet'
@@ -184,7 +184,7 @@ export const VaultOpenViewComponent = ({
       manualSetAmount(savedAmount)
     }
   })
-  useRedirectToPosition({ vault, position })
+  useRedirectToPositionView({ vault, position })
 
   const displayGraph = amountParsed.gt(0)
 

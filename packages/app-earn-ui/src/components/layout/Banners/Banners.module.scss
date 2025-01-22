@@ -8,11 +8,13 @@
   opacity: 0;
   height: 0;
   transition: opacity 0.3s ease-in-out;
+  pointer-events: none;
 
   &Visible {
     height: 36px;
     display: flex;
     opacity: 1;
+    pointer-events: all;
   }
 
   &Warning {
