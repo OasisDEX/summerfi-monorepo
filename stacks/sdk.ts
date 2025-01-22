@@ -17,6 +17,7 @@ const {
   ONE_INCH_API_SPOT_KEY,
   SDK_RPC_GATEWAY,
   SDK_SUBGRAPH_CONFIG,
+  SDK_DISTRIBUTIONS_URLS,
   SDK_USE_FORK = '',
   SDK_FORK_CONFIG = '',
   SUMMER_HUB_CHAIN_ID,
@@ -34,6 +35,7 @@ export function addSdkConfig({ stack }: StackContext, api: Api) {
     !ONE_INCH_API_SPOT_KEY ||
     !SDK_RPC_GATEWAY ||
     !SDK_SUBGRAPH_CONFIG ||
+    !SDK_DISTRIBUTIONS_URLS ||
     !SUMMER_HUB_CHAIN_ID ||
     !SUMMER_DEPLOYED_CHAINS_ID
   ) {
@@ -50,6 +52,7 @@ export function addSdkConfig({ stack }: StackContext, api: Api) {
             ONE_INCH_API_SPOT_KEY,
             SDK_RPC_GATEWAY,
             SDK_SUBGRAPH_CONFIG,
+            SDK_DISTRIBUTIONS_URLS,
             SUMMER_HUB_CHAIN_ID,
             SUMMER_DEPLOYED_CHAINS_ID,
           }),
@@ -78,6 +81,7 @@ export function addSdkConfig({ stack }: StackContext, api: Api) {
       ONE_INCH_API_SPOT_KEY,
       SDK_RPC_GATEWAY,
       SDK_SUBGRAPH_CONFIG,
+      SDK_DISTRIBUTIONS_URLS,
       SDK_USE_FORK,
       SDK_FORK_CONFIG,
       SUMMER_HUB_CHAIN_ID,

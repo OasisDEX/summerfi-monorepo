@@ -11,7 +11,18 @@ interface Distribution {
     [walletAddress: string]: { amount: string; proof: string[] }
   }
 }
-const distributions: Distribution[] = [distribution1, distribution2]
+
+const loadDistributions = async (urls: string[]) => {
+  try {
+    const distributions: Distribution[] = [distribution1, distribution2]
+    const calls = urls.map((url) => fetch(url).then((res) => res.json()))
+    const results = await Promise.all(calls)
+    distributions.push(...results)
+    return distributions
+  } catch (error) {
+    throw Error('Failed to load distributions:' + error)
+  }
+}
 
 // public
 export interface Claim {
@@ -21,11 +32,16 @@ export interface Claim {
   amount: bigint
   proof: HexData[]
 }
-export const getAllMerkleClaims = (walletAddress: string) => {
+export const getAllMerkleClaims = async (params: {
+  walletAddress: string
+  distributionsUrls: string[]
+}) => {
   const claims: Claim[] = []
 
+  const distributions = await loadDistributions(params.distributionsUrls)
+
   distributions.forEach((distribution) => {
-    const claim = distribution.claims[walletAddress]
+    const claim = distribution.claims[params.walletAddress]
 
     if (claim !== undefined) {
       claims.push({
@@ -39,26 +55,4 @@ export const getAllMerkleClaims = (walletAddress: string) => {
   })
 
   return claims
-}
-
-export const getMerkleClaim = (walletAddress: string, index: string) => {
-  const distribution = distributions.find((distribution) => {
-    return distribution.distributionId === index
-  })
-
-  if (distribution !== undefined) {
-    const claim = distribution.claims[walletAddress]
-
-    if (claim !== undefined) {
-      return {
-        index: BigInt(index),
-        chainId: Number(distribution.chainId),
-        merkleRoot: distribution.merkleRoot,
-        amount: BigInt(claim.amount),
-        proof: claim.proof as HexData[],
-      }
-    }
-  }
-
-  return null
 }
