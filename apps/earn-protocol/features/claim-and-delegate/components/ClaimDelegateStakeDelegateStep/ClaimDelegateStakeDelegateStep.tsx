@@ -1,5 +1,6 @@
 import type { Dispatch, FC } from 'react'
 import { SDKChainId } from '@summerfi/app-types'
+import { useParams } from 'next/navigation'
 import { base } from 'viem/chains'
 
 import { ClaimDelegateStakeDelegateCompletedSubstep } from '@/features/claim-and-delegate/components/ClaimDelegateStakeDelegateStep/substeps/ClaimDelegateStakeDelegateCompletedSubstep/ClaimDelegateStakeDelegateCompletedSubstep'
@@ -26,12 +27,14 @@ export const ClaimDelegateStakeDelegateStep: FC<ClaimDelegateStakeDelegateStepPr
   externalData,
 }) => {
   const { publicClient } = usePublicClient({ chain: base })
+  const { walletAddress } = useParams()
 
   const sumrBalanceData = useTokenBalance({
     publicClient,
     vaultTokenSymbol: 'SUMMER',
     tokenSymbol: 'SUMMER',
     chainId: SDKChainId.BASE,
+    overwriteWalletAddress: walletAddress as string,
   })
 
   const { decayFactor, isLoading } = useDecayFactor(state.delegatee)

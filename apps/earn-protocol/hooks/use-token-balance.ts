@@ -16,24 +16,38 @@ export interface TokenBalanceData {
   tokenBalanceLoading: boolean
 }
 
+/**
+ * Hook to fetch token balances for vault tokens and their underlying assets
+ * @param publicClient - Viem public client for blockchain interactions
+ * @param vaultTokenSymbol - Symbol of the vault token (e.g., "STETH")
+ * @param tokenSymbol - Symbol of the underlying token (e.g., "USDC")
+ * @param chainId - Network chain ID
+ * @param skip - Optional flag to skip balance fetching
+ * @param overwriteWalletAddress - Optional address to override the connected wallet
+ * @returns TokenBalanceData containing vault token, underlying token, balance, and loading state
+ */
 export const useTokenBalance = ({
   publicClient,
   vaultTokenSymbol,
   tokenSymbol,
   chainId,
   skip, // to be used when we there are multiple calls of this hook within single component
+  overwriteWalletAddress,
 }: {
   publicClient: ReturnType<typeof useNetworkAlignedClient>['publicClient']
   vaultTokenSymbol: string
   tokenSymbol: string
   chainId: number
   skip?: boolean
+  overwriteWalletAddress?: string
 }): TokenBalanceData => {
   const [vaultToken, setVaultToken] = useState<IToken>()
   const [token, setToken] = useState<IToken>()
   const [tokenBalance, setTokenBalance] = useState<BigNumber>()
   const [tokenBalanceLoading, setTokenBalanceLoading] = useState(true)
   const { userWalletAddress } = useUserWallet()
+
+  const walletAddress = overwriteWalletAddress ?? userWalletAddress
 
   const sdk = useAppSDK()
 
@@ -107,8 +121,8 @@ export const useTokenBalance = ({
       }
     }
 
-    if (!skip && userWalletAddress) {
-      fetchTokenBalance(userWalletAddress).catch((err) => {
+    if (!skip && walletAddress) {
+      fetchTokenBalance(walletAddress).catch((err) => {
         // eslint-disable-next-line no-console
         console.error('Error fetching token balance', err)
         setTokenBalance(undefined)
@@ -117,7 +131,7 @@ export const useTokenBalance = ({
     } else {
       setTokenBalanceLoading(false)
     }
-  }, [sdk, userWalletAddress, tokenSymbol, vaultTokenSymbol, publicClient, skip, chainId])
+  }, [sdk, walletAddress, tokenSymbol, vaultTokenSymbol, publicClient, skip, chainId])
 
   return {
     vaultToken,

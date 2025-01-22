@@ -232,7 +232,7 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
               description="Be your own Delegate. In order to accrue full staking rewards, you must vote on every proposal and remain active."
               ens=""
               address={resolvedWalletAddress}
-              isActive={state.delegatee === resolvedWalletAddress.toLowerCase()}
+              isActive={state.delegatee?.toLowerCase() === resolvedWalletAddress.toLowerCase()}
               handleClick={() =>
                 dispatch({
                   type: 'update-delegatee',
