@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { arbitrum, base } from '@account-kit/infra'
+import { arbitrum, base, mainnet } from '@account-kit/infra'
 import { SDKChainId, SDKNetwork } from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
 import { createPublicClient, http } from 'viem'
@@ -54,6 +54,13 @@ export const useTokenBalances = ({
     })
   }, [])
 
+  const mainnetPublicClient = useMemo(() => {
+    return createPublicClient({
+      chain: mainnet,
+      transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.MAINNET]),
+    })
+  }, [])
+
   const arbitrumTokenBalance = useTokenBalance({
     tokenSymbol,
     vaultTokenSymbol,
@@ -68,10 +75,18 @@ export const useTokenBalances = ({
     chainId: SDKChainId.BASE,
     skip: network !== SDKNetwork.Base,
   })
+  const mainnetTokenBalance = useTokenBalance({
+    tokenSymbol,
+    vaultTokenSymbol,
+    publicClient: mainnetPublicClient,
+    chainId: SDKChainId.MAINNET,
+    skip: network !== SDKNetwork.Mainnet,
+  })
 
   const balance = {
     [SDKNetwork.ArbitrumOne]: arbitrumTokenBalance,
     [SDKNetwork.Base]: baseTokenBalance,
+    [SDKNetwork.Mainnet]: mainnetTokenBalance,
   }[network]
 
   /**

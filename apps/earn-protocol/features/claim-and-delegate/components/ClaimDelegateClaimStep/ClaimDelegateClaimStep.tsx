@@ -20,16 +20,13 @@ import { ClaimDelegateToClaim } from './ClaimDelegateToClaim'
 import classNames from './ClaimDelegateClaimStep.module.scss'
 
 const claimItems: {
-  chainId: SDKChainId.BASE | SDKChainId.OPTIMISM | SDKChainId.MAINNET | SDKChainId.ARBITRUM
+  chainId: SDKChainId.BASE | SDKChainId.MAINNET | SDKChainId.ARBITRUM
 }[] = [
   {
     chainId: SDKChainId.BASE,
   },
   {
     chainId: SDKChainId.ARBITRUM,
-  },
-  {
-    chainId: SDKChainId.OPTIMISM,
   },
   {
     chainId: SDKChainId.MAINNET,
@@ -52,12 +49,12 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   } = useLocalConfig()
 
   const [claimOnChainId, setClaimOnChainId] = useState<
-    SDKChainId.BASE | SDKChainId.OPTIMISM | SDKChainId.MAINNET | SDKChainId.ARBITRUM
+    SDKChainId.BASE | SDKChainId.MAINNET | SDKChainId.ARBITRUM
   >(SDKChainId.BASE)
 
   const { claimSumrTransaction } = useClaimSumrTransaction({
     onSuccess: () => {
-      dispatch({ type: 'update-step', payload: ClaimDelegateSteps.DELEGATE })
+      dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.COMPLETED })
     },
     onError: () => {
       dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.FAILED })

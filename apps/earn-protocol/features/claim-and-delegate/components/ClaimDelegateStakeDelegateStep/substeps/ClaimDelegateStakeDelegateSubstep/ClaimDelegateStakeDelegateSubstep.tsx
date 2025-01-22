@@ -26,8 +26,12 @@ import {
   ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
+import { useStakeSumrTransaction } from '@/hooks/use-stake-sumr-transaction'
+import { useSumrDelegateTransaction } from '@/hooks/use-sumr-delegate-transaction'
 import { type TokenBalanceData } from '@/hooks/use-token-balance'
 import { useUserWallet } from '@/hooks/use-user-wallet'
+
+import { getStakeDelegateButtonLabel } from './getStakeDelegateButtonLabel'
 
 import classNames from './ClaimDelegateStakeDelegateSubstep.module.scss'
 
@@ -98,17 +102,71 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
 
   const hasNothingToStake = externalData.sumrBalances.base === '0'
 
-  const handleStakeAndDelegate = () => {
-    if (state.stakingStatus === ClaimDelegateTxStatuses.COMPLETED || hasNothingToStake) {
-      // delegate tx here
-      // eslint-disable-next-line no-console
-      console.log('delegate tx here')
-      dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.COMPLETED })
-    } else {
-      // stake tx here
-      // eslint-disable-next-line no-console
-      console.log('stake tx here')
+  const { stakeSumrTransaction, approveSumrTransaction } = useStakeSumrTransaction({
+    amount: Number(externalData.sumrBalances.base),
+    onStakeSuccess: () => {
       dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.COMPLETED })
+    },
+    onApproveSuccess: () => {
+      dispatch({
+        type: 'update-staking-approve-status',
+        payload: ClaimDelegateTxStatuses.COMPLETED,
+      })
+    },
+    onStakeError: () => {
+      dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.FAILED })
+    },
+    onApproveError: () => {
+      dispatch({ type: 'update-staking-approve-status', payload: ClaimDelegateTxStatuses.FAILED })
+    },
+  })
+
+  const { sumrDelegateTransaction } = useSumrDelegateTransaction({
+    onSuccess: () => {
+      dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.COMPLETED })
+    },
+    onError: () => {
+      dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.FAILED })
+    },
+    delegateTo: state.delegatee,
+  })
+
+  const withApproval = !!approveSumrTransaction
+
+  const handleStakeAndDelegate = async () => {
+    if (state.stakingStatus === ClaimDelegateTxStatuses.COMPLETED || hasNothingToStake) {
+      dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.PENDING })
+
+      await sumrDelegateTransaction().catch((err) => {
+        // eslint-disable-next-line no-console
+        console.error('Error delegating SUMR:', err)
+      })
+    } else {
+      if (
+        approveSumrTransaction &&
+        state.stakingApproveStatus !== ClaimDelegateTxStatuses.COMPLETED
+      ) {
+        dispatch({
+          type: 'update-staking-approve-status',
+          payload: ClaimDelegateTxStatuses.PENDING,
+        })
+
+        await approveSumrTransaction().catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error('Error approving staking SUMR:', err)
+        })
+
+        return
+      }
+
+      if (stakeSumrTransaction) {
+        dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.PENDING })
+
+        await stakeSumrTransaction().catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error('Error staking SUMR:', err)
+        })
+      }
     }
   }
 
@@ -116,6 +174,7 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
 
   const isLoading =
     state.stakingStatus === ClaimDelegateTxStatuses.PENDING ||
+    state.stakingApproveStatus === ClaimDelegateTxStatuses.PENDING ||
     state.delegateStatus === ClaimDelegateTxStatuses.PENDING
 
   // self delegating is available on for EOA only
@@ -299,6 +358,7 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
             style={{ paddingRight: 'var(--general-space-32)' }}
             onClick={handleStakeAndDelegate}
             disabled={
+              isLoading ||
               !state.delegatee ||
               state.delegatee === externalData.sumrStakeDelegate.delegatedTo ||
               userWalletAddress?.toLowerCase() !== resolvedWalletAddress.toLowerCase()
@@ -310,14 +370,11 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
               as="p"
               isLoading={isLoading}
             >
-              {hasNothingToStake || state.stakingStatus === ClaimDelegateTxStatuses.COMPLETED
-                ? 'Delegate'
-                : 'Stake'}
-              {state.stakingStatus === ClaimDelegateTxStatuses.PENDING && 'Staking...'}
-              {state.delegateStatus === ClaimDelegateTxStatuses.PENDING && 'Delegating...'}
-              {[state.delegateStatus, state.stakingStatus].includes(
-                ClaimDelegateTxStatuses.FAILED,
-              ) && 'Retry'}
+              {getStakeDelegateButtonLabel({
+                state,
+                hasNothingToStake,
+                withApproval,
+              })}
             </WithArrow>
           </Button>
         </div>

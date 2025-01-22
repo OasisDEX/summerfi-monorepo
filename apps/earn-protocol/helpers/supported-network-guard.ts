@@ -8,6 +8,6 @@ import { SDKNetwork } from '@summerfi/app-types'
  */
 export const supportedNetworkGuard = (
   network: SDKNetwork,
-): network is SDKNetwork.ArbitrumOne | SDKNetwork.Base => {
-  return [SDKNetwork.ArbitrumOne, SDKNetwork.Base].includes(network)
+): network is SDKNetwork.ArbitrumOne | SDKNetwork.Base | SDKNetwork.Mainnet => {
+  return [SDKNetwork.ArbitrumOne, SDKNetwork.Base, SDKNetwork.Mainnet].includes(network)
 }
