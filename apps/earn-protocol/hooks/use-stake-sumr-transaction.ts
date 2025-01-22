@@ -49,6 +49,7 @@ export const useStakeSumrTransaction = ({
   useEffect(() => {
     const fetchStakeTx = async () => {
       const user = getCurrentUser()
+      // eslint-disable-next-line no-mixed-operators
       const tx = await getStakeTx({ user, amount: BigInt(amount * 10 ** 18) })
 
       if (tx === undefined) {
