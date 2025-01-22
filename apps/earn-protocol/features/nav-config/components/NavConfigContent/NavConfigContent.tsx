@@ -1,6 +1,14 @@
 'use client'
 import { type ChangeEvent, type FC, useState } from 'react'
-import { Button, Card, Input, PercentageBadge, Text, ToggleButton } from '@summerfi/app-earn-ui'
+import {
+  Button,
+  Card,
+  Icon,
+  Input,
+  PercentageBadge,
+  Text,
+  ToggleButton,
+} from '@summerfi/app-earn-ui'
 import { mapNumericInput } from '@summerfi/app-utils'
 import Link from 'next/link'
 
@@ -9,11 +17,13 @@ import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyCo
 
 import classNames from './NavConfigContent.module.scss'
 
-interface NavConfigContentProps {}
+interface NavConfigContentProps {
+  handleOpenClose?: () => void
+}
 
 const slippageOptions = ['0.5', '1.00', '2.00', '2.50']
 
-export const NavConfigContent: FC<NavConfigContentProps> = () => {
+export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose }) => {
   const [sumrNetApyConfig, setSumrNetApyConfig] = useSumrNetApyConfig()
   const [slippageConfig, setSlippageConfig] = useSlippageConfig()
 
@@ -133,25 +143,43 @@ export const NavConfigContent: FC<NavConfigContentProps> = () => {
             />
           ))}
         </div>
-        <Button
-          variant="primaryLarge"
-          onClick={() => {
-            setSumrNetApyConfig({
-              withSumr: sumrToggle,
-              dilutedValuation: inputValue,
-            })
-            setSlippageConfig({ slippage })
-          }}
-          disabled={
-            (sumrNetApyConfig.dilutedValuation === inputValue.replaceAll(',', '') &&
-              sumrNetApyConfig.withSumr === sumrToggle &&
-              slippageConfig.slippage === slippage.replaceAll(',', '')) ||
-            slippage === '' ||
-            slippage.endsWith('.')
+        <div
+          style={
+            handleOpenClose
+              ? {
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  flexDirection: 'row',
+                }
+              : {}
           }
         >
-          Save changes
-        </Button>
+          {handleOpenClose && (
+            <Button variant="secondaryLarge" onClick={handleOpenClose}>
+              <Icon iconName="close" size={12} style={{ opacity: 0.5 }} />
+              Close
+            </Button>
+          )}
+          <Button
+            variant="primaryLarge"
+            onClick={() => {
+              setSumrNetApyConfig({
+                withSumr: sumrToggle,
+                dilutedValuation: inputValue,
+              })
+              setSlippageConfig({ slippage })
+            }}
+            disabled={
+              (sumrNetApyConfig.dilutedValuation === inputValue.replaceAll(',', '') &&
+                sumrNetApyConfig.withSumr === sumrToggle &&
+                slippageConfig.slippage === slippage.replaceAll(',', '')) ||
+              slippage === '' ||
+              slippage.endsWith('.')
+            }
+          >
+            Save changes
+          </Button>
+        </div>
       </div>
     </Card>
   )
