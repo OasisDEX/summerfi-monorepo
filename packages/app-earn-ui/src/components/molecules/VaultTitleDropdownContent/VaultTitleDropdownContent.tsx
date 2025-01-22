@@ -15,6 +15,7 @@ interface VaultDropdownContentProps {
 }
 
 const networkNameIconMap = {
+  [SDKNetwork.Mainnet]: <Icon iconName="network_ethereum" size={10} />,
   [SDKNetwork.ArbitrumOne]: <Icon iconName="network_arbitrum" size={10} />,
   [SDKNetwork.Base]: <Icon iconName="network_base" size={10} />,
 }

@@ -3,6 +3,7 @@
   "globalDependencies": ["**/.env.*local"],
   "globalEnv": [
     "SUBGRAPH_BASE",
+    "TEMPORARY_MAINNET_SUBGRAPH",
     "DEBANK_API_KEY",
     "DEBANK_API_URL",
     "RPC_GATEWAY",

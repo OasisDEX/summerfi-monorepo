@@ -43,6 +43,12 @@ const customFetchCache = async (url: RequestInfo | URL, params?: RequestInit) =>
 }
 
 const clients = {
+  [SDKNetwork.Mainnet]: new GraphQLClient(
+    `${process.env.SUBGRAPH_BASE}/summer-earn-protocol-rates`,
+    {
+      fetch: customFetchCache,
+    },
+  ),
   [SDKNetwork.Base]: new GraphQLClient(
     `${process.env.SUBGRAPH_BASE}/summer-earn-protocol-rates-base`,
     {
