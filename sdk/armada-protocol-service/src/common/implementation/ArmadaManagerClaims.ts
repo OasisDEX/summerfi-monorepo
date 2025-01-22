@@ -23,6 +23,7 @@ import {
 import { encodeFunctionData } from 'viem'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import type { IContractsProvider } from '@summerfi/contracts-provider-common'
+import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 
 /**
  * @name ArmadaManager
@@ -31,24 +32,39 @@ import type { IContractsProvider } from '@summerfi/contracts-provider-common'
 export class ArmadaManagerClaims implements IArmadaManagerClaims {
   private _blockchainClientProvider: IBlockchainClientProvider
   private _contractsProvider: IContractsProvider
+  private _configProvider: IConfigurationProvider
 
   private _supportedChains: IChainInfo[]
   private _hubChainInfo: IChainInfo
   private _rewardsRedeemerAddress: IAddress
+  private _distributionsUrls: string[]
 
   /** CONSTRUCTOR */
   constructor(params: {
     blockchainClientProvider: IBlockchainClientProvider
     contractsProvider: IContractsProvider
+    configProvider: IConfigurationProvider
     supportedChains: IChainInfo[]
     hubChainInfo: IChainInfo
     rewardsRedeemerAddress: IAddress
   }) {
     this._blockchainClientProvider = params.blockchainClientProvider
     this._contractsProvider = params.contractsProvider
+    this._configProvider = params.configProvider
     this._supportedChains = params.supportedChains
     this._hubChainInfo = params.hubChainInfo
     this._rewardsRedeemerAddress = params.rewardsRedeemerAddress
+
+    const _distributionsBaseUrl = this._configProvider.getConfigurationItem({
+      name: 'SDK_DISTRIBUTIONS_BASE_URL',
+    })
+
+    this._distributionsUrls = this._configProvider
+      .getConfigurationItem({
+        name: 'SDK_DISTRIBUTIONS_FILES',
+      })
+      .split(',')
+      .map((file) => `${_distributionsBaseUrl.trim()}/${file.trim()}`)
   }
 
   async canClaimDistributions(
@@ -58,7 +74,10 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       chainInfo: params.user.chainInfo,
     })
 
-    const merkleClaims = getAllMerkleClaims(params.user.wallet.address.value)
+    const merkleClaims = await getAllMerkleClaims({
+      distributionsUrls: this._distributionsUrls,
+      walletAddress: params.user.wallet.address.value,
+    })
 
     const canClaimCalls = merkleClaims.map(
       (claim) =>
@@ -94,8 +113,10 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       chainInfo: params.user.chainInfo,
     })
 
-    const merkleClaims = getAllMerkleClaims(params.user.wallet.address.value)
-
+    const merkleClaims = await getAllMerkleClaims({
+      distributionsUrls: this._distributionsUrls,
+      walletAddress: params.user.wallet.address.value,
+    })
     const hasClaimedCalls = merkleClaims.map(
       (claim) =>
         ({
@@ -124,7 +145,10 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
   }
 
   private async getMerkleDistributionRewards(user: IUser): Promise<bigint> {
-    const merkleClaims = getAllMerkleClaims(user.wallet.address.value)
+    const merkleClaims = await getAllMerkleClaims({
+      distributionsUrls: this._distributionsUrls,
+      walletAddress: user.wallet.address.value,
+    })
 
     const hasClaimedRecord = await this.hasClaimedDistributions({ user })
 
@@ -255,8 +279,10 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
   async getClaimDistributionTx(
     params: Parameters<IArmadaManagerClaims['getClaimDistributionTx']>[0],
   ): ReturnType<IArmadaManagerClaims['getClaimDistributionTx']> {
-    const merkleClaims = getAllMerkleClaims(params.user.wallet.address.value)
-
+    const merkleClaims = await getAllMerkleClaims({
+      distributionsUrls: this._distributionsUrls,
+      walletAddress: params.user.wallet.address.value,
+    })
     const hasClaimedRecord = await this.hasClaimedDistributions({ user: params.user })
 
     // filter not claimed rewards

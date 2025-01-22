@@ -1,6 +1,4 @@
 import type { HexData } from '@summerfi/sdk-common'
-import distribution1 from './distribution-1.json'
-import distribution2 from './distribution-2.json'
 
 // private
 interface Distribution {
@@ -11,7 +9,16 @@ interface Distribution {
     [walletAddress: string]: { amount: string; proof: string[] }
   }
 }
-const distributions: Distribution[] = [distribution1, distribution2]
+
+const loadDistributions = async (urls: string[]) => {
+  try {
+    const calls = urls.map((url) => fetch(url).then((res) => res.json()))
+    const results = await Promise.all(calls)
+    return results as Distribution[]
+  } catch (error) {
+    throw Error('Failed to load distributions:' + error)
+  }
+}
 
 // public
 export interface Claim {
@@ -21,11 +28,15 @@ export interface Claim {
   amount: bigint
   proof: HexData[]
 }
-export const getAllMerkleClaims = (walletAddress: string) => {
-  const claims: Claim[] = []
+export const getAllMerkleClaims = async (params: {
+  walletAddress: string
+  distributionsUrls: string[]
+}) => {
+  const distributions = await loadDistributions(params.distributionsUrls)
 
+  const claims: Claim[] = []
   distributions.forEach((distribution) => {
-    const claim = distribution.claims[walletAddress]
+    const claim = distribution.claims[params.walletAddress]
 
     if (claim !== undefined) {
       claims.push({
@@ -39,26 +50,4 @@ export const getAllMerkleClaims = (walletAddress: string) => {
   })
 
   return claims
-}
-
-export const getMerkleClaim = (walletAddress: string, index: string) => {
-  const distribution = distributions.find((distribution) => {
-    return distribution.distributionId === index
-  })
-
-  if (distribution !== undefined) {
-    const claim = distribution.claims[walletAddress]
-
-    if (claim !== undefined) {
-      return {
-        index: BigInt(index),
-        chainId: Number(distribution.chainId),
-        merkleRoot: distribution.merkleRoot,
-        amount: BigInt(claim.amount),
-        proof: claim.proof as HexData[],
-      }
-    }
-  }
-
-  return null
 }
