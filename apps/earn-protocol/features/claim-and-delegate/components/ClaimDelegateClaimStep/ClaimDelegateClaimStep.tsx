@@ -19,6 +19,12 @@ import { ClaimDelegateToClaim } from './ClaimDelegateToClaim'
 
 import classNames from './ClaimDelegateClaimStep.module.scss'
 
+const delayPerNetwork = {
+  [SDKChainId.BASE]: 3000,
+  [SDKChainId.ARBITRUM]: 3000,
+  [SDKChainId.MAINNET]: 13000,
+}
+
 const claimItems: {
   chainId: SDKChainId.BASE | SDKChainId.MAINNET | SDKChainId.ARBITRUM
 }[] = [
@@ -54,7 +60,11 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
 
   const { claimSumrTransaction } = useClaimSumrTransaction({
     onSuccess: () => {
-      dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.COMPLETED })
+      // delay complete status to make sure that in the next step
+      // when fetching sumr balance, it will be updated
+      setTimeout(() => {
+        dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.COMPLETED })
+      }, delayPerNetwork[claimOnChainId])
     },
     onError: () => {
       dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.FAILED })

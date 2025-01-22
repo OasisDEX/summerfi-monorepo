@@ -17,7 +17,6 @@ import {
   formatDecimalAsPercent,
   formatFiatBalance,
 } from '@summerfi/app-utils'
-import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
 import { localSumrDelegates } from '@/features/claim-and-delegate/consts'
@@ -180,9 +179,10 @@ export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
           $SUMR voting power delegated to make Lazy Summer Protocol Governance decisions.
         </Text>
       </Card>
-      <Link href={`/portfolio/${walletAddress}?tab=${PortfolioTabs.REWARDS}`}>
+      {/* anchor to force full reload of portfolio page and its server fetched data */}
+      <a href={`/earn/portfolio/${walletAddress}?tab=${PortfolioTabs.REWARDS}`}>
         <Button variant="primarySmall">Go to $SUMR Overview</Button>
-      </Link>
+      </a>
     </div>
   )
 }
