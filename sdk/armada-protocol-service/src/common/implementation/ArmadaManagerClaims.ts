@@ -64,7 +64,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
         name: 'SDK_DISTRIBUTIONS_FILES',
       })
       .split(',')
-      .map((file) => `${_distributionsBaseUrl}/${file}`)
+      .map((file) => `${_distributionsBaseUrl.trim()}/${file.trim()}`)
   }
 
   async canClaimDistributions(

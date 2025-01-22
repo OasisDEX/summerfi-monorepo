@@ -12,8 +12,8 @@ interface Distribution {
 
 const loadDistributions = async (urls: string[]) => {
   try {
-    const calls = urls.map((url) => fetch(url).then((res) => res.json()))
-    const results = await Promise.all(calls)
+    const calls = urls.map((url) => fetch(url).then((res) => res.text()))
+    const results = (await Promise.all(calls)).map((result) => JSON.parse(result))
     return results as Distribution[]
   } catch (error) {
     throw Error('Failed to load distributions:' + error)
@@ -32,10 +32,9 @@ export const getAllMerkleClaims = async (params: {
   walletAddress: string
   distributionsUrls: string[]
 }) => {
-  const claims: Claim[] = []
-
   const distributions = await loadDistributions(params.distributionsUrls)
 
+  const claims: Claim[] = []
   distributions.forEach((distribution) => {
     const claim = distribution.claims[params.walletAddress]
 
