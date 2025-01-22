@@ -13,6 +13,7 @@ import {
 import { SDKChainId } from '@summerfi/app-types'
 import {
   ADDRESS_ZERO,
+  formatAddress,
   formatCryptoBalance,
   formatDecimalAsPercent,
   formatFiatBalance,
@@ -186,13 +187,19 @@ interface YourDelegateProps {
 const YourDelegate: FC<YourDelegateProps> = ({ rewardsData }) => {
   const { walletAddress } = useParams()
 
+  const sumrDelegatedTo = rewardsData.sumrStakeDelegate.delegatedTo.toLowerCase()
+
   const delegatee = localSumrDelegates.find(
-    (item) =>
-      item.address?.toLowerCase() === rewardsData.sumrStakeDelegate.sumrDelegated.toLowerCase(),
+    (item) => item.address?.toLowerCase() === sumrDelegatedTo,
   )
 
-  const value = delegatee ? delegatee.title : 'No delegate'
-  const subValue = delegatee ? '' : 'You have not delegated'
+  const value = delegatee
+    ? delegatee.title
+    : sumrDelegatedTo !== ADDRESS_ZERO
+      ? formatAddress(sumrDelegatedTo)
+      : 'No delegate'
+
+  const subValue = sumrDelegatedTo !== ADDRESS_ZERO ? '' : 'You have not delegated'
 
   return (
     <DataModule
