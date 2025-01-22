@@ -12,8 +12,8 @@ interface Distribution {
 
 const loadDistributions = async (urls: string[]) => {
   try {
-    const calls = urls.map((url) => fetch(url).then((res) => res.text()))
-    const results = (await Promise.all(calls)).map((result) => JSON.parse(result))
+    const calls = urls.map((url) => fetch(url).then((res) => res.json()))
+    const results = await Promise.all(calls)
     return results as Distribution[]
   } catch (error) {
     throw Error('Failed to load distributions:' + error)
