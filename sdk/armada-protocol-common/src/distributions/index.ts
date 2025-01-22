@@ -1,6 +1,4 @@
 import type { HexData } from '@summerfi/sdk-common'
-import distribution1 from './distribution-1.json'
-import distribution2 from './distribution-2.json'
 
 // private
 interface Distribution {
@@ -14,11 +12,9 @@ interface Distribution {
 
 const loadDistributions = async (urls: string[]) => {
   try {
-    const distributions: Distribution[] = [distribution1, distribution2]
     const calls = urls.map((url) => fetch(url).then((res) => res.json()))
     const results = await Promise.all(calls)
-    distributions.push(...results)
-    return distributions
+    return results as Distribution[]
   } catch (error) {
     throw Error('Failed to load distributions:' + error)
   }

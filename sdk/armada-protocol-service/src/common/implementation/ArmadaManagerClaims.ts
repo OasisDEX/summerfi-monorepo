@@ -55,11 +55,16 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     this._hubChainInfo = params.hubChainInfo
     this._rewardsRedeemerAddress = params.rewardsRedeemerAddress
 
+    const _distributionsBaseUrl = this._configProvider.getConfigurationItem({
+      name: 'SDK_DISTRIBUTIONS_BASE_URL',
+    })
+
     this._distributionsUrls = this._configProvider
       .getConfigurationItem({
-        name: 'SDK_DISTRIBUTIONS_URLS',
+        name: 'SDK_DISTRIBUTIONS_FILES',
       })
       .split(',')
+      .map((file) => `${_distributionsBaseUrl}/${file}`)
   }
 
   async canClaimDistributions(
