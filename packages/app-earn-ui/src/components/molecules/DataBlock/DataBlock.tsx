@@ -13,6 +13,7 @@ export type DataBlockProps = {
   size?: 'small' | 'large'
   titleSize?: 'small' | 'medium' | 'large'
   titleStyle?: CSSProperties
+  titleWrapperStyles?: CSSProperties
   subValueSize?: 'small' | 'medium' | 'large'
   valueSize?: 'small' | 'large' | 'largeColorful'
   valueStyle?: CSSProperties
@@ -30,6 +31,7 @@ export const DataBlock = ({
   titleTooltip,
   titleSize,
   titleStyle,
+  titleWrapperStyles,
   size = 'small',
   value,
   valueSize,
@@ -67,7 +69,7 @@ export const DataBlock = ({
         [dataBlockStyles.hasAccent]: accent,
       })}
     >
-      <div className={dataBlockStyles.titleWrapper}>
+      <div className={dataBlockStyles.titleWrapper} style={titleWrapperStyles}>
         {accent && <div className={dataBlockStyles.accent} style={{ backgroundColor: accent }} />}
         <TitleWithIcon
           titleVariant={titleVariant}

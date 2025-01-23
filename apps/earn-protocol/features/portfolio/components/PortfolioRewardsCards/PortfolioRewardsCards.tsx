@@ -209,6 +209,9 @@ const YourTotalSumr: FC<YourTotalSumrProps> = ({ rewardsData }) => {
     <DataModule
       dataBlock={{
         title: 'Your Total $SUMR (Accrued + Staked + In your wallet)',
+        titleWrapperStyles: {
+          whiteSpace: 'unset',
+        },
         value: totalSumr,
         subValue: `$${totalSumrUSD}`,
         titleSize: 'medium',
