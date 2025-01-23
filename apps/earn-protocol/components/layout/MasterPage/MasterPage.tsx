@@ -1,17 +1,13 @@
 import { type FC, type PropsWithChildren } from 'react'
 import { Footer, NewsletterWrapper, Text } from '@summerfi/app-earn-ui'
-import dynamic from 'next/dynamic'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
+import SetForkModal from '@/components/organisms/SetFork/SetForkModal'
 
 import './global.css'
 import masterPageStyles from './MasterPage.module.scss'
 
 interface MasterPageProps {}
-
-const SetForkModal = dynamic(() => import('@/components/organisms/SetFork/SetForkModal'), {
-  ssr: false,
-})
 
 export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({ children }) => {
   return (
