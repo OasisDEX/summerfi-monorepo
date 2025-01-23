@@ -41,7 +41,7 @@ export const ClaimDelegateStakeDelegateStep: FC<ClaimDelegateStakeDelegateStepPr
 
   return (
     <>
-      {state.delegateStatus !== ClaimDelegateTxStatuses.COMPLETED && (
+      {state.stakingStatus !== ClaimDelegateTxStatuses.COMPLETED && (
         <ClaimDelegateStakeDelegateSubstep
           state={state}
           dispatch={dispatch}
@@ -51,7 +51,7 @@ export const ClaimDelegateStakeDelegateStep: FC<ClaimDelegateStakeDelegateStepPr
           decayFactorLoading={isLoading}
         />
       )}
-      {state.delegateStatus === ClaimDelegateTxStatuses.COMPLETED && (
+      {state.stakingStatus === ClaimDelegateTxStatuses.COMPLETED && (
         <ClaimDelegateStakeDelegateCompletedSubstep
           state={state}
           dispatch={dispatch}

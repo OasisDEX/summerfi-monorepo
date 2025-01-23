@@ -134,14 +134,7 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
   const withApproval = !!approveSumrTransaction
 
   const handleStakeAndDelegate = async () => {
-    if (state.stakingStatus === ClaimDelegateTxStatuses.COMPLETED || hasNothingToStake) {
-      dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.PENDING })
-
-      await sumrDelegateTransaction().catch((err) => {
-        // eslint-disable-next-line no-console
-        console.error('Error delegating SUMR:', err)
-      })
-    } else {
+    if (state.delegateStatus === ClaimDelegateTxStatuses.COMPLETED && !hasNothingToStake) {
       if (
         approveSumrTransaction &&
         state.stakingApproveStatus !== ClaimDelegateTxStatuses.COMPLETED
@@ -167,6 +160,17 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
           console.error('Error staking SUMR:', err)
         })
       }
+    } else {
+      if (state.delegateStatus === ClaimDelegateTxStatuses.COMPLETED) {
+        return
+      }
+
+      dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.PENDING })
+
+      await sumrDelegateTransaction().catch((err) => {
+        // eslint-disable-next-line no-console
+        console.error('Error delegating SUMR:', err)
+      })
     }
   }
 
