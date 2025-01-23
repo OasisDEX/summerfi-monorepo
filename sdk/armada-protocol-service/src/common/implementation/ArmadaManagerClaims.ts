@@ -292,7 +292,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
 
     LoggingService.debug(
       'Filtered claims for user: ' + params.user.toString(),
-      filteredClaims.map((claim) => claim.amount),
+      filteredClaims.map(({ amount, index }) => ({ amount, index })),
     )
 
     const indices = filteredClaims.map((claim) => claim.index)
@@ -418,7 +418,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       const merkleDistributionRewards = await this.getMerkleDistributionRewards(params.user)
       if (merkleDistributionRewards > 0n) {
         const claimMerkleRewards = await this.getClaimDistributionTx({ user: params.user })
-        LoggingService.debug('Claiming merkle rewards', claimMerkleRewards)
+        LoggingService.debug('Claiming merkle rewards', merkleDistributionRewards)
         multicallArgs.push(claimMerkleRewards[0].transaction.calldata)
       }
     }
@@ -430,10 +430,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
           govRewardsManagerAddress: Address.createFromEthereum({ value: govRewardsManagerAddress }),
           rewardToken,
         })
-        LoggingService.debug(
-          'Claiming governance rewards',
-          claimGovernanceRewards.map((tx) => tx.transaction.calldata),
-        )
+        LoggingService.debug('Claiming governance rewards', voteDelegationRewards)
         multicallArgs.push(claimGovernanceRewards[0].transaction.calldata)
       }
     }
@@ -463,10 +460,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
         ),
         rewardToken,
       })
-      LoggingService.debug(
-        'Claiming fleet rewards',
-        claimFleetRewards.map((tx) => tx.transaction.calldata),
-      )
+      LoggingService.debug('Claiming fleet rewards', protocolUsageRewards)
       multicallArgs.push(claimFleetRewards[0].transaction.calldata)
     }
 

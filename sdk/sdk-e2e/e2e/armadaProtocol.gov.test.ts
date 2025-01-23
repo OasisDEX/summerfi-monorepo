@@ -1,6 +1,7 @@
 import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
 import { User, Wallet } from '@summerfi/sdk-common'
 import { zeroAddress } from 'viem'
+import assert from 'assert'
 
 import { SDKApiUrl, signerPrivateKey, testConfig } from './utils/testConfig'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
@@ -25,14 +26,7 @@ describe('Armada Protocol Gov', () => {
         }),
       })
 
-      describe(`unstaking and staking`, () => {
-        it(`should get balance`, async () => {
-          const balance = await sdk.armada.users.getUserBalance({
-            user,
-          })
-          expect(balance).toBeGreaterThan(0n)
-          console.log('balance', balance)
-        })
+      describe.skip(`check staked balance and rewards`, () => {
         it(`should get staked balance`, async () => {
           const staked = await sdk.armada.users.getUserStakedBalance({
             user,
@@ -47,12 +41,34 @@ describe('Armada Protocol Gov', () => {
           expect(earned).toBeGreaterThan(0n)
           console.log('earned', earned)
         })
+      })
+
+      describe(`staking`, () => {
+        it(`should get balance`, async () => {
+          const balance = await sdk.armada.users.getUserBalance({
+            user,
+          })
+          expect(balance).toBeGreaterThan(0n)
+          console.log('balance', balance)
+        })
+        it(`should have a delegate`, async () => {
+          const delegate = await sdk.armada.users.getUserDelegatee({
+            user,
+          })
+          console.log('delegatee', delegate)
+          assert(delegate.value !== zeroAddress, 'No delegate')
+        })
 
         // staking tx
-        it.skip(`should stake`, async () => {
+        it.skip(`should stake all`, async () => {
+          const balance = await sdk.armada.users.getUserBalance({
+            user,
+          })
+          console.log('stake all balance', balance)
+
           const stakeTx = await sdk.armada.users.getStakeTx({
             user,
-            amount: 4000000000000000000n,
+            amount: balance,
           })
 
           // stake before
@@ -75,7 +91,10 @@ describe('Armada Protocol Gov', () => {
           })
           expect(stakedAfter).toBeGreaterThan(stakedBefore)
         })
+      })
 
+      // unstaking
+      describe.skip(`unstaking`, () => {
         // unstaking tx
         it.skip(`should unstake`, async () => {
           const unstakeTx = await sdk.armada.users.getUnstakeTx({
@@ -104,43 +123,8 @@ describe('Armada Protocol Gov', () => {
         })
       })
 
-      describe(`undelegation and delegation`, () => {
-        it(`should have delegatee`, async () => {
-          const delegatee = await sdk.armada.users.getUserDelegatee({
-            user,
-          })
-          expect(delegatee.value).toEqual(user.wallet.address.value)
-          console.log('delegatee', delegatee)
-        })
-        it(`should have votes`, async () => {
-          const votes = await sdk.armada.users.getUserVotes({
-            user,
-          })
-          expect(votes).toBeGreaterThan(0n)
-          console.log('votes', votes)
-        })
-
-        it.skip(`should undelegate`, async () => {
-          const undelegateTx = await sdk.armada.users.getUndelegateTx()
-
-          const { statuses } = await sendAndLogTransactions({
-            chainInfo,
-            transactions: undelegateTx,
-            rpcUrl: rpcUrl,
-            privateKey: signerPrivateKey,
-          })
-          statuses.forEach((status) => {
-            expect(status).toBe('success')
-          })
-
-          const delegateeAfter = await sdk.armada.users.getUserDelegatee({
-            user,
-          })
-
-          expect(delegateeAfter.value).toEqual(zeroAddress)
-        })
-
-        it.skip(`should delegate`, async () => {
+      describe.skip(`delegation`, () => {
+        it(`should delegate`, async () => {
           const delegateTx = await sdk.armada.users.getDelegateTx({
             user,
           })
@@ -166,6 +150,44 @@ describe('Armada Protocol Gov', () => {
 
           expect(delegateeBefore).not.toEqual(delegateeAfter)
           expect(delegateeAfter.value).toEqual(user.wallet.address.value)
+        })
+      })
+
+      // desc un-delegation
+      describe.skip(`undelegation`, () => {
+        it(`should have a delegate`, async () => {
+          const delegatee = await sdk.armada.users.getUserDelegatee({
+            user,
+          })
+          expect(delegatee.value).not.toEqual(zeroAddress)
+          console.log('delegate', delegatee)
+        })
+        it(`should have votes`, async () => {
+          const votes = await sdk.armada.users.getUserVotes({
+            user,
+          })
+          expect(votes).toBeGreaterThan(0n)
+          console.log('votes', votes)
+        })
+
+        it(`should undelegate`, async () => {
+          const undelegateTx = await sdk.armada.users.getUndelegateTx()
+
+          const { statuses } = await sendAndLogTransactions({
+            chainInfo,
+            transactions: undelegateTx,
+            rpcUrl: rpcUrl,
+            privateKey: signerPrivateKey,
+          })
+          statuses.forEach((status) => {
+            expect(status).toBe('success')
+          })
+
+          const delegateeAfter = await sdk.armada.users.getUserDelegatee({
+            user,
+          })
+
+          expect(delegateeAfter.value).toEqual(zeroAddress)
         })
       })
     })
