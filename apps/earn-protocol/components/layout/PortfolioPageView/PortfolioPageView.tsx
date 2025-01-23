@@ -1,11 +1,12 @@
 'use client'
 
-import { type FC } from 'react'
+import { type FC, useReducer } from 'react'
 import { getPositionValues, NonOwnerPortfolioBanner, TabBar } from '@summerfi/app-earn-ui'
 import { type SDKGlobalRebalancesType, type SDKVaultishType } from '@summerfi/app-types'
 
 import { type PortfolioPositionsList } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
+import { claimDelegateReducer, claimDelegateState } from '@/features/claim-and-delegate/state'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { PortfolioHeader } from '@/features/portfolio/components/PortfolioHeader/PortfolioHeader'
 import { PortfolioOverview } from '@/features/portfolio/components/PortfolioOverview/PortfolioOverview'
@@ -43,6 +44,11 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     tabs: PortfolioTabs,
     defaultTab: PortfolioTabs.OVERVIEW,
   })
+  const [state, dispatch] = useReducer(claimDelegateReducer, {
+    ...claimDelegateState,
+    delegatee: rewardsData.sumrStakeDelegate.delegatedTo,
+    walletAddress,
+  })
 
   const totalRebalances = positions.reduce(
     (acc, position) => acc + Number(position.vaultData.rebalanceCount),
@@ -74,7 +80,14 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     {
       id: PortfolioTabs.REWARDS,
       label: 'SUMR Rewards',
-      content: <PortfolioRewards rewardsData={rewardsData} totalRays={totalRays} />,
+      content: (
+        <PortfolioRewards
+          rewardsData={rewardsData}
+          totalRays={totalRays}
+          state={state}
+          dispatch={dispatch}
+        />
+      ),
     },
   ]
 
