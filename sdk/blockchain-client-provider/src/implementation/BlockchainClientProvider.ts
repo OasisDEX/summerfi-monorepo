@@ -86,11 +86,12 @@ export class BlockchainClientProvider implements IBlockchainClientProvider {
 
       const useFork = this._configProvider.getConfigurationItem({ name: 'SDK_USE_FORK' })
       const forkConfig = this._configProvider.getConfigurationItem({ name: 'SDK_FORK_CONFIG' })
+      let forkRpc = undefined
+      if (useFork && forkConfig) {
+        forkRpc = getForkUrl(forkConfig, chain.id)
+      }
 
-      const rpc =
-        useFork === 'true'
-          ? getForkUrl(forkConfig, chain.id)
-          : getRpcGatewayEndpoint(rpcGatewayUrl, chain.id, rpcConfig)
+      const rpc = forkRpc ? forkRpc : getRpcGatewayEndpoint(rpcGatewayUrl, chain.id, rpcConfig)
       const transport = http(rpc, {
         batch: true,
         fetchOptions: {
