@@ -16,9 +16,11 @@ type TokenSelectorProps = {
 // For swap testing purposes only adding testToken to dropdown
 const testTokens: { [key: number]: TokenSymbolsList[] | undefined } = {
   // base
-  [SDKChainId.BASE]: ['USDC', 'USDBC', 'WSTETH'],
+  [SDKChainId.BASE]: ['USDC', 'USDBC', 'WSTETH', 'ETH'],
   // arbitrum
-  [SDKChainId.ARBITRUM]: ['USDC', 'WBTC', 'WSTETH'],
+  [SDKChainId.ARBITRUM]: ['USDC', 'WBTC', 'WSTETH', 'ETH'],
+  // mainnet
+  [SDKChainId.MAINNET]: ['ETH'],
 }
 
 /**
