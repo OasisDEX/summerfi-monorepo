@@ -32,12 +32,12 @@ export const getStakeDelegateButtonLabel = ({
     return 'Retry'
   }
 
-  if (!hasNothingToStake && withApproval && state.stakingApproveStatus === undefined) {
-    return 'Approve'
+  if (hasNothingToStake || state.delegateStatus !== ClaimDelegateTxStatuses.COMPLETED) {
+    return 'Delegate'
   }
 
-  if (hasNothingToStake || state.stakingStatus === ClaimDelegateTxStatuses.COMPLETED) {
-    return 'Delegate'
+  if (withApproval) {
+    return 'Approve'
   }
 
   return 'Stake'

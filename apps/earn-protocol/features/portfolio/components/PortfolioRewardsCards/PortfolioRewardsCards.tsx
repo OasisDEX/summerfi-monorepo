@@ -103,10 +103,10 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({
 
   const rawApy = rewardsData.sumrStakingInfo.sumrStakingApy
   const isDelegated = rewardsData.sumrStakeDelegate.delegatedTo !== ADDRESS_ZERO
-  const rawStakedAndDelegated = isDelegated ? rewardsData.sumrStakeDelegate.sumrDelegated : '0'
+  const rawStaked = isDelegated ? rewardsData.sumrStakeDelegate.stakedAmount : '0'
   const rawDecayFactor = rewardsData.sumrStakeDelegate.delegatedToDecayFactor
 
-  const value = formatCryptoBalance(rawStakedAndDelegated)
+  const value = formatCryptoBalance(rawStaked)
   const apy = formatDecimalAsPercent(rawApy * rawDecayFactor)
 
   const { sumrDelegateTransaction } = useSumrDelegateTransaction({
@@ -140,7 +140,7 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({
   return (
     <DataModule
       dataBlock={{
-        title: 'Staked & Delegated $SUMR',
+        title: 'Staked $SUMR',
         value,
         subValue: (
           <Text variant="p3semi" style={{ color: 'var(--earn-protocol-success-100)' }}>
@@ -195,7 +195,11 @@ const YourTotalSumr: FC<YourTotalSumrProps> = ({ rewardsData }) => {
   const assumedSumrPriceRaw = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
   const assumedSumrPrice = formatFiatBalance(assumedSumrPriceRaw)
 
-  const rawTotalSumr = Number(rewardsData.sumrBalances.total)
+  const rawTotalSumr =
+    Number(rewardsData.sumrBalances.total) +
+    Number(rewardsData.sumrStakeDelegate.stakedAmount) +
+    Number(rewardsData.sumrToClaim.total)
+
   const rawTotalSumrUSD = rawTotalSumr * assumedSumrPriceRaw
 
   const totalSumr = formatCryptoBalance(rawTotalSumr)
@@ -204,7 +208,7 @@ const YourTotalSumr: FC<YourTotalSumrProps> = ({ rewardsData }) => {
   return (
     <DataModule
       dataBlock={{
-        title: 'Your Total $SUMR',
+        title: 'Your Total $SUMR (Accrued + Staked + In your wallet)',
         value: totalSumr,
         subValue: `$${totalSumrUSD}`,
         titleSize: 'medium',
@@ -279,7 +283,7 @@ const YourRays: FC<YourRaysProps> = ({ totalRays }) => {
   return (
     <DataModule
       dataBlock={{
-        title: 'Your season 1 $SUMR',
+        title: 'Your season 2 $RATS',
         value,
         subValue: (
           <Text variant="p3semi" style={{ color: 'var(--earn-protocol-success-100)' }}>

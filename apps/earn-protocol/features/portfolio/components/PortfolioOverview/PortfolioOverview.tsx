@@ -74,9 +74,14 @@ const getDatablocks = ({
 type PortfolioOverviewProps = {
   vaultsList: SDKVaultsListType
   positions: PortfolioPositionsList[]
+  sumrTokenRewards: number
 }
 
-export const PortfolioOverview = ({ vaultsList, positions }: PortfolioOverviewProps) => {
+export const PortfolioOverview = ({
+  vaultsList,
+  positions,
+  sumrTokenRewards,
+}: PortfolioOverviewProps) => {
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
@@ -92,8 +97,6 @@ export const PortfolioOverview = ({ vaultsList, positions }: PortfolioOverviewPr
 
     0,
   )
-  // TODO: get sumrTokenRewards
-  const sumrTokenRewards = 0
 
   return (
     <div>

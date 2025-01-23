@@ -55,11 +55,22 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     0,
   )
 
+  const totalSumr =
+    Number(rewardsData.sumrBalances.total) +
+    Number(rewardsData.sumrStakeDelegate.stakedAmount) +
+    Number(rewardsData.sumrToClaim.total)
+
   const tabs = [
     {
       id: PortfolioTabs.OVERVIEW,
       label: 'Overview',
-      content: <PortfolioOverview positions={positions} vaultsList={vaultsList} />,
+      content: (
+        <PortfolioOverview
+          positions={positions}
+          vaultsList={vaultsList}
+          sumrTokenRewards={rewardsData.sumrToClaim.total}
+        />
+      ),
     },
     {
       id: PortfolioTabs.WALLET,
@@ -109,7 +120,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
       <div className={classNames.portfolioPageViewWrapper}>
         <PortfolioHeader
           walletAddress={walletAddress}
-          totalSumr={rewardsData.sumrBalances.total}
+          totalSumr={totalSumr}
           totalWalletValue={totalWalletValue}
         />
         <TabBar
