@@ -50,7 +50,7 @@ export const useStakeSumrTransaction = ({
     const fetchStakeTx = async () => {
       const user = getCurrentUser()
       // eslint-disable-next-line no-mixed-operators
-      const tx = await getStakeTx({ user, amount: BigInt(amount * 10 ** 18) })
+      const tx = await getStakeTx({ user, amount: BigInt(amount) })
 
       if (tx === undefined) {
         throw new Error('stake tx is undefined')

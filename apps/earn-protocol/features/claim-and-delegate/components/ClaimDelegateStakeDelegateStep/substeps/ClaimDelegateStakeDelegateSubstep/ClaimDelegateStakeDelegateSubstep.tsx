@@ -103,7 +103,7 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
   const hasNothingToStake = externalData.sumrBalances.base === '0'
 
   const { stakeSumrTransaction, approveSumrTransaction } = useStakeSumrTransaction({
-    amount: Number(externalData.sumrBalances.base),
+    amount: Number(externalData.sumrBalances.raw.base),
     onStakeSuccess: () => {
       dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.COMPLETED })
     },
