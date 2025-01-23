@@ -30,6 +30,7 @@ export const useRedirectToPositionView = ({
       return
     }
     const emptyPosition = new BigNumber(position.amount.amount).lt(minAmount)
+
     const vaultUrl = getVaultUrl(vault)
     const vaultPositionUrl = getVaultPositionUrl({
       network: vault.protocol.network,

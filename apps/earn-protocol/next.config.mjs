@@ -8,9 +8,10 @@ const nextConfig = {
   output: 'standalone',
   reactStrictMode: false,
   webpack: (config) => {
-    config.externals.push('pino-pretty', 'encoding')
-
-    return config
+    return {
+      ...config,
+      externals: [...config.externals, 'pino-pretty', 'encoding'],
+    }
   },
   sassOptions: {
     prependData: `

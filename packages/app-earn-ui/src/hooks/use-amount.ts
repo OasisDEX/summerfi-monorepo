@@ -10,7 +10,7 @@ type UseAmountProps = {
   initialAmount?: string
 }
 
-const MAX_AMOUNT_LENGTH = 10
+const MAX_AMOUNT_LENGTH = 20
 
 /**
  * Hook for managing amount input with formatting and validation for vault interactions.
