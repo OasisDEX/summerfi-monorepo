@@ -1,10 +1,11 @@
 'use client'
-import { type FC } from 'react'
+import { type Dispatch, type FC } from 'react'
 import { useChain } from '@account-kit/react'
 import {
   Button,
   DataModule,
   Icon,
+  LoadingSpinner,
   RAYS_TO_SUMR_CONVERSION_RATE,
   SUMR_CAP,
   Text,
@@ -23,9 +24,15 @@ import { useParams } from 'next/navigation'
 
 import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { localSumrDelegates } from '@/features/claim-and-delegate/consts'
-import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
+import {
+  type ClaimDelegateExternalData,
+  type ClaimDelegateReducerAction,
+  type ClaimDelegateState,
+  ClaimDelegateTxStatuses,
+} from '@/features/claim-and-delegate/types'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
+import { useSumrDelegateTransaction } from '@/hooks/use-sumr-delegate-transaction'
 
 import classNames from './PortfolioRewardsCards.module.scss'
 
@@ -81,9 +88,15 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
 
 interface StakedAndDelegatedSumrProps {
   rewardsData: ClaimDelegateExternalData
+  state: ClaimDelegateState
+  dispatch: Dispatch<ClaimDelegateReducerAction>
 }
 
-const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }) => {
+const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({
+  rewardsData,
+  state,
+  dispatch,
+}) => {
   const { walletAddress } = useParams()
   const { setChain } = useChain()
   const { clientChainId } = useClientChainId()
@@ -96,17 +109,32 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }
   const value = formatCryptoBalance(rawStakedAndDelegated)
   const apy = formatDecimalAsPercent(rawApy * rawDecayFactor)
 
-  const handleRemoveDelegation = () => {
+  const { sumrDelegateTransaction } = useSumrDelegateTransaction({
+    onSuccess: () => {
+      dispatch({ type: 'update-delegatee', payload: ADDRESS_ZERO })
+      dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.COMPLETED })
+    },
+    onError: () => {
+      dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.FAILED })
+    },
+    delegateTo: ADDRESS_ZERO, // address zero is the default delegate (no delegate)
+  })
+
+  const handleRemoveDelegation = async () => {
     // delegation is only supported on base
     if (clientChainId !== SDKChainId.BASE) {
       // eslint-disable-next-line no-console
       console.log('update network to base')
       setChain({ chain: SDKChainIdToAAChainMap[SDKChainId.BASE] })
+
+      return
     }
 
-    // TODO: Implement remove delegation
-    // eslint-disable-next-line no-console
-    console.log('remove delegation clicked')
+    dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.PENDING })
+    await sumrDelegateTransaction().catch((err) => {
+      // eslint-disable-next-line no-console
+      console.error('Error removing delegate', err)
+    })
   }
 
   return (
@@ -123,10 +151,25 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }
         valueSize: 'large',
       }}
       actionable={
-        isDelegated ? (
-          <Button variant="unstyled" onClick={handleRemoveDelegation}>
-            <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-              Remove delegate
+        isDelegated && state.delegateStatus !== ClaimDelegateTxStatuses.COMPLETED ? (
+          <Button
+            variant="unstyled"
+            onClick={handleRemoveDelegation}
+            disabled={state.delegateStatus === ClaimDelegateTxStatuses.PENDING}
+          >
+            <Text variant="p3semi" as="div" style={{ color: 'var(--earn-protocol-primary-100)' }}>
+              {clientChainId !== SDKChainId.BASE ? (
+                'Change network to remove delegate'
+              ) : state.delegateStatus === ClaimDelegateTxStatuses.PENDING ? (
+                <div
+                  style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}
+                >
+                  <LoadingSpinner size={14} />
+                  Removing delegate...
+                </div>
+              ) : (
+                'Remove delegate'
+              )}
             </Text>
           </Button>
         ) : (
@@ -182,12 +225,14 @@ const YourTotalSumr: FC<YourTotalSumrProps> = ({ rewardsData }) => {
 
 interface YourDelegateProps {
   rewardsData: ClaimDelegateExternalData
+  state: ClaimDelegateState
 }
 
-const YourDelegate: FC<YourDelegateProps> = ({ rewardsData }) => {
+const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
   const { walletAddress } = useParams()
 
-  const sumrDelegatedTo = rewardsData.sumrStakeDelegate.delegatedTo.toLowerCase()
+  const sumrDelegatedTo =
+    state.delegatee?.toLowerCase() ?? rewardsData.sumrStakeDelegate.delegatedTo.toLowerCase()
 
   const delegatee = localSumrDelegates.find(
     (item) => item.address?.toLowerCase() === sumrDelegatedTo,
@@ -241,7 +286,7 @@ const YourRays: FC<YourRaysProps> = ({ totalRays }) => {
             Rays earned {_totalRays}
             <span style={{ color: 'var(--earn-protocol-secondary-60)' }}>
               {' '}
-              • 1 $RAYS = 2.4 $SUMR
+              • {RAYS_TO_SUMR_CONVERSION_RATE} $RAYS = 1 $SUMR
             </span>
           </Text>
         ),
@@ -262,11 +307,15 @@ const YourRays: FC<YourRaysProps> = ({ totalRays }) => {
 interface PortfolioRewardsCardsProps {
   rewardsData: ClaimDelegateExternalData
   totalRays: number
+  state: ClaimDelegateState
+  dispatch: Dispatch<ClaimDelegateReducerAction>
 }
 
 export const PortfolioRewardsCards: FC<PortfolioRewardsCardsProps> = ({
   rewardsData,
   totalRays,
+  state,
+  dispatch,
 }) => {
   const hasRays = totalRays > 0
 
@@ -283,10 +332,10 @@ export const PortfolioRewardsCards: FC<PortfolioRewardsCardsProps> = ({
         <SumrAvailableToClaim rewardsData={rewardsData} />
       </div>
       <div className={classNames.cardWrapper}>
-        <StakedAndDelegatedSumr rewardsData={rewardsData} />
+        <StakedAndDelegatedSumr rewardsData={rewardsData} state={state} dispatch={dispatch} />
       </div>
       <div className={classNames.cardWrapper}>
-        <YourDelegate rewardsData={rewardsData} />
+        <YourDelegate rewardsData={rewardsData} state={state} />
       </div>
       {hasRays && (
         <div className={classNames.cardWrapper}>

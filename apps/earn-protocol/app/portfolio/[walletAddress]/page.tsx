@@ -14,7 +14,7 @@ import { getSumrDelegates } from '@/app/server-handlers/sumr-delegates'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
 import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
 import systemConfigHandler from '@/app/server-handlers/system-config'
-import { PortfolioPageView } from '@/components/layout/PortfolioPageView/PortfolioPageView'
+import { PortfolioPageViewComponent } from '@/components/layout/PortfolioPageView/PortfolioPageViewComponent'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { decorateCustomVaultFields } from '@/helpers/vault-custom-value-helpers'
 
@@ -91,7 +91,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   const totalRays = Number(sumrEligibility.leaderboard[0]?.totalPoints ?? 0)
 
   return (
-    <PortfolioPageView
+    <PortfolioPageViewComponent
       positions={positionsList}
       walletAddress={walletAddress}
       walletData={walletData}

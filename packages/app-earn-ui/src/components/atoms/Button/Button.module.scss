@@ -125,3 +125,7 @@
   outline: revert;
   cursor: pointer;
 }
+.unstyled:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
