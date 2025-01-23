@@ -21,4 +21,4 @@ export const getVaultPositionUrl = ({
   network: SDKNetwork
   vaultId: string
   walletAddress: string
-}) => `/${sdkNetworkToHumanNetwork(network)}/position/${vaultId}/${walletAddress}`
+}) => `/${sdkNetworkToHumanNetwork(network)}/position/${vaultId}/${walletAddress.toLowerCase()}`

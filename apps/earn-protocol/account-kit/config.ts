@@ -6,9 +6,15 @@ import { type Chain } from 'viem'
 
 export const queryClient = new QueryClient()
 
-export type AccountKitSupportedNetworks = SDKChainId.BASE | SDKChainId.ARBITRUM | SDKChainId.MAINNET
+export type AccountKitSupportedNetworks =
+  | SDKChainId.BASE
+  | SDKChainId.ARBITRUM
+  | SDKChainId.MAINNET
+  | SDKChainId.OPTIMISM
 
-export const SDKChainIdToAAChainMap = {
+export const SDKChainIdToAAChainMap: {
+  [key in AccountKitSupportedNetworks]: Chain
+} = {
   [SDKChainId.ARBITRUM]: arbitrum,
   [SDKChainId.BASE]: base,
   [SDKChainId.MAINNET]: mainnet,
