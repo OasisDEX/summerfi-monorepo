@@ -418,6 +418,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       const merkleDistributionRewards = await this.getMerkleDistributionRewards(params.user)
       if (merkleDistributionRewards > 0n) {
         const claimMerkleRewards = await this.getClaimDistributionTx({ user: params.user })
+        LoggingService.debug('Claiming merkle rewards', claimMerkleRewards)
         multicallArgs.push(claimMerkleRewards[0].transaction.calldata)
       }
     }
@@ -429,6 +430,10 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
           govRewardsManagerAddress: Address.createFromEthereum({ value: govRewardsManagerAddress }),
           rewardToken,
         })
+        LoggingService.debug(
+          'Claiming governance rewards',
+          claimGovernanceRewards.map((tx) => tx.transaction.calldata),
+        )
         multicallArgs.push(claimGovernanceRewards[0].transaction.calldata)
       }
     }
@@ -458,6 +463,10 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
         ),
         rewardToken,
       })
+      LoggingService.debug(
+        'Claiming fleet rewards',
+        claimFleetRewards.map((tx) => tx.transaction.calldata),
+      )
       multicallArgs.push(claimFleetRewards[0].transaction.calldata)
     }
 

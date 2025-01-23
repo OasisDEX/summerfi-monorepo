@@ -36,7 +36,7 @@ export const getAllMerkleClaims = async (params: {
 
   const claims: Claim[] = []
   distributions.forEach((distribution) => {
-    const claim = distribution.claims[params.walletAddress]
+    const claim = distribution.claims[params.walletAddress.toLowerCase()]
 
     if (claim !== undefined) {
       claims.push({
