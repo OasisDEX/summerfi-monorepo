@@ -11,4 +11,10 @@
       min-width: 420px;
     }
   }
+
+  .votingPower {
+    display: flex;
+    align-items: center;
+    gap: var(--general-space-4);
+  }
 }

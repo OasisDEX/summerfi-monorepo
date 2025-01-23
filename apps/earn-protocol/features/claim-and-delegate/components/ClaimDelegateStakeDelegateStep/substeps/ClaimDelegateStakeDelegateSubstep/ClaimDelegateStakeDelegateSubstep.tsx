@@ -185,6 +185,11 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
   // since we use tally that doesn't support SCA
   const isEoa = user?.type === 'eoa'
 
+  const votingPower =
+    externalData.sumrDecayFactors.find(
+      (factor) => factor.address.toLowerCase() === state.delegatee?.toLowerCase(),
+    )?.decayFactor ?? 1
+
   return (
     <div className={classNames.claimDelegateStakeDelegateSubstepWrapper}>
       <div className={classNames.leftContent}>
@@ -329,10 +334,7 @@ export const ClaimDelegateStakeDelegateSubstep: FC<ClaimDelegateStakeDelegateSub
               {...delegate}
               isActive={state.delegatee === delegate.address}
               handleClick={() => dispatch({ type: 'update-delegatee', payload: delegate.address })}
-              votingPower={
-                externalData.sumrDecayFactors.find((factor) => factor.address === delegate.address)
-                  ?.decayFactor ?? 1
-              }
+              votingPower={votingPower}
             />
           ))}
           {getFilteredDelegates(mappedSumrDelegatesData, searchValue).length === 0 && (

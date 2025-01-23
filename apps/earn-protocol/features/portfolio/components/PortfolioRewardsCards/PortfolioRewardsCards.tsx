@@ -4,6 +4,7 @@ import { useChain } from '@account-kit/react'
 import {
   Button,
   DataModule,
+  getVotingPowerColor,
   Icon,
   LoadingSpinner,
   RAYS_TO_SUMR_CONVERSION_RATE,
@@ -18,6 +19,7 @@ import {
   formatCryptoBalance,
   formatDecimalAsPercent,
   formatFiatBalance,
+  formatShorthandNumber,
 } from '@summerfi/app-utils'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
@@ -69,6 +71,9 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
             </div>
           </Tooltip>
         ),
+        titleWrapperStyles: {
+          whiteSpace: 'unset',
+        },
         value: sumrAmount,
         subValue: sumrAmountUSD,
         titleSize: 'medium',
@@ -251,7 +256,24 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
       ? formatAddress(sumrDelegatedTo)
       : 'No delegate'
 
-  const subValue = sumrDelegatedTo !== ADDRESS_ZERO ? '' : 'You have not delegated'
+  const votingPower =
+    rewardsData.sumrDecayFactors.find(
+      (factor) => factor.address.toLowerCase() === state.delegatee?.toLowerCase(),
+    )?.decayFactor ?? 1
+
+  const subValue =
+    sumrDelegatedTo !== ADDRESS_ZERO ? (
+      <div className={classNames.votingPower}>
+        <Text as="p" variant="p3semi" style={{ color: getVotingPowerColor(votingPower) }}>
+          Vote and Reward Power: {formatShorthandNumber(votingPower, { precision: 2 })}
+        </Text>
+        <Tooltip tooltip="TBD">
+          <Icon iconName="info" variant="s" color={getVotingPowerColor(votingPower)} />
+        </Tooltip>
+      </div>
+    ) : (
+      'You have not delegated'
+    )
 
   return (
     <DataModule

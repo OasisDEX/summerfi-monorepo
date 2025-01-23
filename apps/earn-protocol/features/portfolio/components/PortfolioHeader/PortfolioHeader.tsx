@@ -100,7 +100,15 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
           </Text>
           {/* <Icon iconName="edit" color="rgba(255, 73, 164, 1)" variant="s" /> */}
         </div>
-        <div style={{ display: 'flex', gap: 'var(--spacing-space-large)', alignItems: 'center' }}>
+        <div
+          style={{
+            display: 'flex',
+            gap: 'var(--spacing-space-large)',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+          }}
+        >
           <DataBlock
             title="Total $SUMR"
             value={formatCryptoBalance(totalSumr)}

@@ -1,22 +1,17 @@
 import { type FC } from 'react'
-import { Card, Icon, LoadableAvatar, Text, Tooltip } from '@summerfi/app-earn-ui'
+import {
+  Card,
+  getVotingPowerColor,
+  Icon,
+  LoadableAvatar,
+  Text,
+  Tooltip,
+} from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatShorthandNumber } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import Link from 'next/link'
 
 import classNames from './ClaimDelegateCard.module.scss'
-
-const getVotingPowerColor = (votingPower: number) => {
-  if (votingPower === 1) {
-    return 'var(--earn-protocol-success-100)'
-  }
-
-  if (votingPower > 0.7) {
-    return 'var(--earn-protocol-warning-100)'
-  }
-
-  return 'var(--earn-protocol-critical-100)'
-}
 
 interface ClaimDelegateCardProps {
   isActive: boolean
@@ -108,7 +103,7 @@ export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
           {!selfDelegate && votingPower && (
             <div className={classNames.votingPower}>
               <Text as="p" variant="p3semi" style={{ color: getVotingPowerColor(votingPower) }}>
-                Voting and Reward Power: {formatShorthandNumber(votingPower, { precision: 2 })}
+                Vote and Reward Power: {formatShorthandNumber(votingPower, { precision: 2 })}
               </Text>
               <Tooltip tooltip="TBD">
                 <Icon iconName="info" variant="s" color={getVotingPowerColor(votingPower)} />
