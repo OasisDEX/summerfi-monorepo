@@ -145,7 +145,7 @@ export const VaultSimulationForm = ({
                   disabled: false,
                 }
               : {
-                  label: 'Get Started',
+                  label: 'Deposit',
                   url: vaultUrl,
                   action: () => {
                     setStorageOnce(amountParsed.toNumber())

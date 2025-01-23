@@ -143,8 +143,10 @@ export const VaultExposure: FC<VaultExposureProps> = ({ vault }) => {
             color: 'var(--earn-protocol-secondary-60)',
           }}
         >
-          This vault is composed of various DeFi protocols through our rigorous selection process.
-          Vetted for security, performance and trustworthy teams.
+          This Vault is composed of various DeFi protocols and markets on the Arbitrum Network.
+          These are selected and maintained through a rigorous selection process with risk exposure
+          managed by BlockAnalitica, an independant risk team. All protocols are vetted for
+          security, performance and trustworthy teams.
         </Text>
         <TabBar
           tabs={tabs}

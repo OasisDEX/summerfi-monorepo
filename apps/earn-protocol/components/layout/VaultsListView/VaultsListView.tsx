@@ -224,17 +224,15 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
           gap={isMobile ? 16 : 170}
         >
           <DataBlock
-            title="Total Assets"
-            // TODO: fill data
-            titleTooltip="Tooltip about assets or something"
+            title="Protocol TVL"
+            titleTooltip="Protocol TVL is the total amount of Assets currently deployed across all of the strategies"
             size="large"
             value={`$${formattedTotalAssets}`}
           />
 
           <DataBlock
-            title="Total Liquidity"
-            // TODO: fill data
-            titleTooltip="Tooltip about liquidity or something"
+            title="Instant Liquidity"
+            titleTooltip={`This is the total amount of assets in USD that is instantly withdrawable from the strategies. There are currently ${formattedProtocolsSupportedCount} different protocols or markets supported across all active strategies.`}
             size="large"
             value={`$${formattedTotalLiquidity}`}
           />

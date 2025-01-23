@@ -1,5 +1,5 @@
 import { type FC, useMemo } from 'react'
-import { Card, DataBlock, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { Card, DataBlock, Icon, Text, Tooltip, WithArrow } from '@summerfi/app-earn-ui'
 import { type SDKGlobalRebalancesType } from '@summerfi/app-types'
 import { formatFiatBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
@@ -42,9 +42,33 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({
           }}
         >
           <DataBlock title="Rebalance actions" size="small" value={`${totalRebalances}`} />
-          <DataBlock title="User saved time" size="small" value={`${savedTimeInHours} Hours`} />
           <DataBlock
-            title="Gas cost savings"
+            title={
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
+                User saved time
+                <Tooltip
+                  tooltip="Time users have saved by relying on our AI-Powered keeper network to optimize positions"
+                  tooltipWrapperStyles={{ minWidth: '230px' }}
+                >
+                  <Icon iconName="info" size={18} />
+                </Tooltip>
+              </div>
+            }
+            size="small"
+            value={`${savedTimeInHours} Hours`}
+          />
+          <DataBlock
+            title={
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
+                Gas cost savings
+                <Tooltip
+                  tooltip="Gas cost savings achieved by users relying on our AI-Powered keeper network to optimize their positions, instead of manual management."
+                  tooltipWrapperStyles={{ minWidth: '230px' }}
+                >
+                  <Icon iconName="info" size={18} />
+                </Tooltip>
+              </div>
+            }
             size="small"
             value={`$${formatFiatBalance(savedGasCost)}`}
           />
@@ -57,9 +81,10 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({
             marginBottom: 'var(--spacing-space-large)',
           }}
         >
-          Rebalancing crucial in attaining the best possible yield for a Strategy, It is responsible
-          for reallocating assets from lower performing strategies to higher performing ones, within
-          a threshold of risk.
+          Continuous monitoring and rebalancing is crucial in attaining the best possible yield for
+          any strategy. It is responsible for reallocating assets from lower performing protocols
+          and markets to higher performing ones; strict risk thresholds are set by an independant
+          Risk Manager.
         </Text>
         <RebalanceActivityTable
           rebalancesList={rebalancesList}

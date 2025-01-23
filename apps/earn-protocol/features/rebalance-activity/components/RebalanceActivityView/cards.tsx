@@ -1,3 +1,4 @@
+import { Icon, Tooltip } from '@summerfi/app-earn-ui'
 import { formatFiatBalance, formatShorthandNumber } from '@summerfi/app-utils'
 
 export const rebalanceActivityHeading = {
@@ -22,13 +23,33 @@ export const getRebalanceActivityHeadingCards = ({
       'Justo enim sollicitudin suspendisse lectus tellus tortor magna. Velit id nulla tempor arcu quis condimentum parturient.',
   },
   {
-    title: 'User saved time',
+    title: (
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
+        User saved time
+        <Tooltip
+          tooltip="Time users have saved by relying on our AI-Powered keeper network to optimize positions"
+          tooltipWrapperStyles={{ minWidth: '230px' }}
+        >
+          <Icon iconName="info" size={18} />
+        </Tooltip>
+      </div>
+    ),
     value: `${formatShorthandNumber(savedTimeInHours, { precision: 1 })} hours`,
     description:
       'Justo enim sollicitudin suspendisse lectus tellus tortor magna. Velit id nulla tempor arcu quis condimentum parturient.',
   },
   {
-    title: 'Gas cost savings',
+    title: (
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
+        Gas cost savings
+        <Tooltip
+          tooltip="Gas cost savings achieved by users relying on our AI-Powered keeper network to optimize their positions, instead of manual management."
+          tooltipWrapperStyles={{ minWidth: '230px' }}
+        >
+          <Icon iconName="info" size={18} />
+        </Tooltip>
+      </div>
+    ),
     value: `$${formatFiatBalance(savedGasCost)}`,
     description:
       'Justo enim sollicitudin suspendisse lectus tellus tortor magna. Velit id nulla tempor arcu quis condimentum parturient.',

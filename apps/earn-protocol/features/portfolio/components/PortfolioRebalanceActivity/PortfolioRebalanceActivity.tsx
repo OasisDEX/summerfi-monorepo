@@ -1,6 +1,6 @@
 import { type FC, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
-import { Card, DataBlock, Text } from '@summerfi/app-earn-ui'
+import { Card, DataBlock, Icon, Text, Tooltip } from '@summerfi/app-earn-ui'
 import { type SDKGlobalRebalancesType } from '@summerfi/app-types'
 import { formatFiatBalance, formatShorthandNumber } from '@summerfi/app-utils'
 
@@ -49,11 +49,31 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
       value: formatShorthandNumber(totalRebalances, { precision: 0 }),
     },
     {
-      title: 'User saved time',
+      title: (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
+          User saved time
+          <Tooltip
+            tooltip="Time users have saved by relying on our AI-Powered keeper network to optimize positions"
+            tooltipWrapperStyles={{ minWidth: '230px' }}
+          >
+            <Icon iconName="info" size={18} />
+          </Tooltip>
+        </div>
+      ),
       value: `${formatShorthandNumber(savedTimeInHours, { precision: 1 })} hours`,
     },
     {
-      title: 'Gas cost saving',
+      title: (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
+          Gas cost savings
+          <Tooltip
+            tooltip="Gas cost savings achieved by users relying on our AI-Powered keeper network to optimize their positions, instead of manual management."
+            tooltipWrapperStyles={{ minWidth: '230px' }}
+          >
+            <Icon iconName="info" size={18} />
+          </Tooltip>
+        </div>
+      ),
       value: `$${formatFiatBalance(savedGasCost)}`,
     },
   ]
@@ -66,7 +86,7 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
       <div className={classNames.blocksWrapper}>
         {blocks.map((block) => (
           <DataBlock
-            key={block.title}
+            key={block.value}
             title={block.title}
             value={block.value}
             titleSize="large"
