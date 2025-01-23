@@ -120,8 +120,18 @@ export async function POST(req: NextRequest) {
   if (!networkQuery) {
     return NextResponse.json({ error: 'Missing network query' }, { status: 400 })
   }
+  if (!process.env.TEMPORARY_MAINNET_RPC) {
+    return NextResponse.json(
+      { error: 'TEMPORARY_MAINNET_RPC env variable is not set' },
+      { status: 400 },
+    )
+  }
+
   const networkName = networkQuery.toString() as NetworkNames
-  const rpcGatewayUrl = await getRpcGatewayUrl(networkName)
+  const rpcGatewayUrl =
+    networkName === NetworkNames.ethereumMainnet
+      ? process.env.TEMPORARY_MAINNET_RPC
+      : await getRpcGatewayUrl(networkName)
 
   if (!rpcGatewayUrl) {
     return NextResponse.json({ error: 'Invalid network or RPC Config is missing' }, { status: 400 })

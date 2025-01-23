@@ -59,6 +59,7 @@ jobs:
       TRANSAK_SECRET: ${{ secrets.TRANSAK_SECRET }}
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
       TEMPORARY_MAINNET_SUBGRAPH: ${{ secrets.TEMPORARY_MAINNET_SUBGRAPH }}
+      TEMPORARY_MAINNET_RPC: ${{ secrets.TEMPORARY_MAINNET_RPC }}
       SDK_API_URL: ${{ secrets.SDK_API_URL }}
       EARN_PROTOCOL_JWT_SECRET: ${{ secrets.EARN_PROTOCOL_JWT_SECRET }}
       EARN_PROTOCOL_JWT_CHALLENGE_SECRET: ${{ secrets.EARN_PROTOCOL_JWT_CHALLENGE_SECRET }}
@@ -177,6 +178,7 @@ jobs:
                        --build-arg MIXPANEL_KEY=${{ secrets.MIXPANEL_KEY }} \
                        --build-arg SUBGRAPH_BASE=${{ secrets.SUBGRAPH_BASE }} \
                        --build-arg TEMPORARY_MAINNET_SUBGRAPH=${{ secrets.TEMPORARY_MAINNET_SUBGRAPH }} \
+                       --build-arg TEMPORARY_MAINNET_RPC=${{ secrets.TEMPORARY_MAINNET_RPC }} \
                        --build-arg NEXT_PUBLIC_MIXPANEL_KEY=${{ secrets.NEXT_PUBLIC_MIXPANEL_KEY }} \
                        --build-arg ACCOUNT_KIT_API_KEY=${{ secrets.ACCOUNT_KIT_API_KEY }} \
                        --build-arg FORECAST_API_URL=${{ secrets.FORECAST_API_URL }} \
