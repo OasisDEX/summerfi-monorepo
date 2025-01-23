@@ -121,6 +121,7 @@ export { getOneYearEarnings } from './helpers/get-one-year-earnings'
 export { getPositionValues } from './helpers/get-position-values'
 export { getSumrTokenBonus } from './helpers/get-sumr-token-bonus'
 export { getResolvedForecastAmountParsed } from './helpers/get-resolved-forecast-amount-parsed'
+export { getVotingPowerColor } from './helpers/get-voting-power-color'
 
 export { INTERNAL_LINKS, EXTERNAL_LINKS } from './helpers/application-links'
 
