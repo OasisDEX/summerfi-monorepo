@@ -2,6 +2,7 @@ import { type ReactNode } from 'react'
 import { type IArmadaPosition, type SDKVaultishType } from '@summerfi/app-types'
 import { formatDecimalAsPercent } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 
 import { Button } from '@/components/atoms/Button/Button'
@@ -57,6 +58,7 @@ export const PortfolioPosition = ({
     customFields,
     rewardTokenEmissionsAmount,
     rewardTokens,
+    createdTimestamp,
   } = position.vaultData
   const {
     id: {
@@ -67,8 +69,13 @@ export const PortfolioPosition = ({
       },
     },
   } = position.positionData
+  const isVaultAtLeast30dOld = createdTimestamp
+    ? dayjs().diff(dayjs(Number(createdTimestamp) * 1000), 'day') > 30
+    : false
   const currentApr = formatDecimalAsPercent(new BigNumber(calculatedApr).div(100))
-  const apr30dParsed = formatDecimalAsPercent(new BigNumber(apr30d).div(100))
+  const apr30dParsed = isVaultAtLeast30dOld
+    ? formatDecimalAsPercent(new BigNumber(apr30d).div(100))
+    : 'New Strategy'
 
   const tokenBonus = getSumrTokenBonus(
     rewardTokens,

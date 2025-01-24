@@ -5,6 +5,7 @@ import { type SDKVaultishType, type SDKVaultsListType } from '@summerfi/app-type
 import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
 import { type IArmadaPositionStandalone as IArmadaPosition } from '@summerfi/armada-protocol-common'
 import BigNumber from 'bignumber.js'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 
 import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
@@ -48,6 +49,11 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
 }) => {
   const [displaySimulationGraphStaggered, setDisplaySimulationGraphStaggered] =
     useState(displaySimulationGraph)
+
+  const isVaultAtLeast30dOld = vault.createdTimestamp
+    ? dayjs().diff(dayjs(Number(vault.createdTimestamp) * 1000), 'day') > 30
+    : false
+
   const apr30d = formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
   const aprCurrent = formatDecimalAsPercent(new BigNumber(vault.calculatedApr).div(100))
   const noOfDeposits = position.deposits.length.toString()
@@ -170,15 +176,19 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
               />
             </Box>
             <Box>
-              <DataBlock
-                size="large"
-                titleSize="small"
-                title="30d APY"
-                value={apr30d}
-                subValue={`Current APY: ${aprCurrent}`}
-                subValueType="neutral"
-                subValueSize="medium"
-              />
+              {isVaultAtLeast30dOld ? (
+                <DataBlock
+                  size="large"
+                  titleSize="small"
+                  title="30d APY"
+                  value={apr30d}
+                  subValue={`Current APY: ${aprCurrent}`}
+                  subValueType="neutral"
+                  subValueSize="medium"
+                />
+              ) : (
+                <DataBlock size="large" titleSize="small" title="Current APY" value={aprCurrent} />
+              )}
             </Box>
           </SimpleGrid>
           {Array.isArray(detailsContent) && detailsContent.length > 0 ? (
