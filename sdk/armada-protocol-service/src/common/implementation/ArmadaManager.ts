@@ -1074,7 +1074,7 @@ export class ArmadaManager implements IArmadaManager {
   }): Promise<{
     calldata: HexData
   }> {
-    const claimRewards = params.claimRewards || true
+    const claimRewards = params.claimRewards ?? true
 
     const calldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
