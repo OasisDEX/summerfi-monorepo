@@ -1,2 +1,2 @@
-// used 3 min as average rebalance action
-export const getRebalanceSavedTimeInHours = (totalItems: number) => (totalItems * 3) / 60
+// used 5 min as average rebalance action
+export const getRebalanceSavedTimeInHours = (totalItems: number) => (totalItems * 5) / 60

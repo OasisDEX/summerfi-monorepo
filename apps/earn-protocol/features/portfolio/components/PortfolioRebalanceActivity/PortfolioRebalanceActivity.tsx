@@ -1,7 +1,7 @@
 import { type FC, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import { Card, DataBlock, Icon, Text, Tooltip } from '@summerfi/app-earn-ui'
-import { type SDKGlobalRebalancesType } from '@summerfi/app-types'
+import { type SDKGlobalRebalancesType, type SDKVaultsListType } from '@summerfi/app-types'
 import { formatFiatBalance, formatShorthandNumber } from '@summerfi/app-utils'
 
 import { PortfolioRebalanceActivityList } from '@/features/portfolio/components/PortfolioRebalanceActivityList/PortfolioRebalanceActivityList'
@@ -14,6 +14,7 @@ interface PortfolioRebalanceActivityProps {
   rebalancesList: SDKGlobalRebalancesType
   walletAddress: string
   totalRebalances: number
+  vaultsList: SDKVaultsListType
 }
 
 const initialRows = 10
@@ -22,12 +23,13 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
   rebalancesList,
   walletAddress,
   totalRebalances,
+  vaultsList,
 }) => {
   const savedTimeInHours = useMemo(
     () => getRebalanceSavedTimeInHours(totalRebalances),
     [totalRebalances],
   )
-  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(totalRebalances), [totalRebalances])
+  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(vaultsList), [vaultsList])
 
   const [current, setCurrent] = useState(initialRows)
 
