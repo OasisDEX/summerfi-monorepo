@@ -55,6 +55,7 @@ type UseTransactionParams = {
   ownerView?: boolean
   positionAmount?: BigNumber
   approvalCustomValue?: BigNumber
+  approvalTokenSymbol?: string
 }
 
 const errorsMap = {
@@ -112,6 +113,12 @@ export const useTransaction = ({
 
     return transactions[0]
   }, [transactions])
+
+  const approvalTokenSymbol = useMemo(() => {
+    return nextTransaction?.type === TransactionType.Approve
+      ? nextTransaction.metadata.approvalAmount.token.symbol
+      : ''
+  }, [nextTransaction?.metadata, nextTransaction?.type])
 
   // Configure User Operation (transaction) sender, passing client which can be undefined
   const {
@@ -191,13 +198,19 @@ export const useTransaction = ({
         ? {
             target: nextTransaction.transaction.target.value,
             data: getApprovalTx(
-              user.address,
-              BigInt(approvalCustomValue.times(ten.pow(token.decimals)).toString()),
+              nextTransaction.metadata.approvalSpender.value,
+              BigInt(
+                approvalCustomValue
+                  .times(ten.pow(nextTransaction.metadata.approvalAmount.token.decimals))
+                  .toString(),
+              ),
             ),
+            value: BigInt(nextTransaction.transaction.value),
           }
         : {
             target: nextTransaction.transaction.target.value,
             data: nextTransaction.transaction.calldata,
+            value: BigInt(nextTransaction.transaction.value),
           }
 
     sendTransaction(txParams)
@@ -399,7 +412,7 @@ export const useTransaction = ({
     if (nextTransaction?.type) {
       return {
         label: {
-          [TransactionType.Approve]: `Approve ${token.symbol}`,
+          [TransactionType.Approve]: `Approve ${approvalTokenSymbol}`,
           [TransactionType.Deposit]: 'Deposit',
           [TransactionType.Withdraw]: 'Withdraw',
         }[nextTransaction.type],
@@ -442,6 +455,7 @@ export const useTransaction = ({
     setChain,
     executeNextTransaction,
     positionAmount,
+    approvalTokenSymbol,
   ])
 
   const sidebarTitle = useMemo(() => {
@@ -583,6 +597,7 @@ export const useTransaction = ({
     reset,
     backToInit,
     user,
+    approvalTokenSymbol,
     setTransactionType,
     transactionType,
     approvalType,

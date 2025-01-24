@@ -127,6 +127,7 @@ export const VaultOpenViewComponent = ({
 
   const {
     approvalType,
+    approvalTokenSymbol,
     setApprovalType,
     sidebar,
     txHashes,
@@ -156,7 +157,7 @@ export const VaultOpenViewComponent = ({
     vaultId: vault.id,
   })
 
-  const { amountDisplayUSDWithSwap, fromTokenSymbol, rawToTokenAmount } = useAmountWithSwap({
+  const { amountDisplayUSDWithSwap, rawToTokenAmount } = useAmountWithSwap({
     vault,
     vaultChainId,
     amountDisplay,
@@ -208,7 +209,7 @@ export const VaultOpenViewComponent = ({
     {
       [TransactionType.Approve]: (
         <ControlsApproval
-          tokenSymbol={fromTokenSymbol}
+          tokenSymbol={approvalTokenSymbol}
           approvalType={approvalType}
           setApprovalType={setApprovalType}
           setApprovalCustomValue={approvalHandleAmountChange}

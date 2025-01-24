@@ -127,6 +127,7 @@ export const VaultManageViewComponent = ({
     setTransactionType,
     nextTransaction,
     approvalType,
+    approvalTokenSymbol,
     setApprovalType,
     backToInit,
   } = useTransaction({
@@ -154,7 +155,7 @@ export const VaultManageViewComponent = ({
 
   useRedirectToPositionView({ vault, position })
 
-  const { amountDisplayUSDWithSwap, fromTokenSymbol, rawToTokenAmount } = useAmountWithSwap({
+  const { amountDisplayUSDWithSwap, rawToTokenAmount } = useAmountWithSwap({
     vault,
     vaultChainId,
     amountDisplay,
@@ -201,7 +202,7 @@ export const VaultManageViewComponent = ({
     {
       [TransactionType.Approve]: (
         <ControlsApproval
-          tokenSymbol={fromTokenSymbol}
+          tokenSymbol={approvalTokenSymbol}
           approvalType={approvalType}
           setApprovalType={setApprovalType}
           setApprovalCustomValue={approvalHandleAmountChange}

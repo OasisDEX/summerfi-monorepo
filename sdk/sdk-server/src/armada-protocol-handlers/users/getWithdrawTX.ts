@@ -11,6 +11,7 @@ import {
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 import { isArmadaVaultId, type IArmadaVaultId } from '@summerfi/armada-protocol-common'
+import { TRPCError } from '@trpc/server'
 
 export const getWithdrawTX = publicProcedure
   .input(
@@ -23,5 +24,13 @@ export const getWithdrawTX = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.getWithdrawTX(opts.input)
+    try {
+      return await opts.ctx.armadaManager.getWithdrawTX(opts.input)
+    } catch (error) {
+      console.error(error)
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Failed to call getWithdrawTX',
+      })
+    }
   })

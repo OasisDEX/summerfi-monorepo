@@ -154,7 +154,7 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
   /** @see IErc4626Contract.previewWithdraw */
   async previewWithdraw(
     params: Parameters<IErc4626Contract['previewWithdraw']>[0],
-  ): Promise<ITokenAmount> {
+  ): ReturnType<IErc4626Contract['previewWithdraw']> {
     const token = await this.asErc20().getToken()
     const sharesAmount = await this.contract.read.previewWithdraw([params.assets.toSolidityValue()])
 
@@ -168,6 +168,26 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
     return TokenAmount.createFromBaseUnit({
       token,
       amount: sharesAmount.toString(),
+    })
+  }
+
+  /** @see IErc4626Contract.previewRedeem*/
+  async previewRedeem(
+    params: Parameters<IErc4626Contract['previewRedeem']>[0],
+  ): ReturnType<IErc4626Contract['previewRedeem']> {
+    const token = await this.asErc20().getToken()
+    const assetsAmount = await this.contract.read.previewRedeem([params.shares.toSolidityValue()])
+
+    LoggingService.debug(
+      'previewRedeem',
+      params.shares.toString(),
+      '=> assets ',
+      assetsAmount.toString(),
+    )
+
+    return TokenAmount.createFromBaseUnit({
+      token,
+      amount: assetsAmount.toString(),
     })
   }
 
