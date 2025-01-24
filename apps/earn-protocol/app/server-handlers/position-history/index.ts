@@ -56,10 +56,14 @@ export async function getPositionHistory({ network, address, vault }: GetPositio
   }
 
   const networkGraphQlClient = clients[network as keyof typeof clients]
+  const request = await networkGraphQlClient.request<GetPositionHistoryQuery>(
+    GetPositionHistoryDocument,
+    {
+      positionId,
+    },
+  )
 
-  return await networkGraphQlClient.request<GetPositionHistoryQuery>(GetPositionHistoryDocument, {
-    positionId,
-  })
+  return request
 }
 
 export type GetPositionHistoryReturnType = Awaited<ReturnType<typeof getPositionHistory>>

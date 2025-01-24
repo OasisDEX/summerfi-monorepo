@@ -96,6 +96,7 @@ export const icons = {
   ether_color: customLazy(() => import('./icons/ether_color.svg?react')),
   ether: customLazy(() => import('./icons/ether.svg?react')),
   eurc: customLazy(() => import('./icons/eurc.svg?react')),
+  euler: customLazy(() => import('./icons/euler.svg?react')),
   euro_circle_color: customLazy(() => import('./icons/euro_circle_color.svg?react')),
   exchange: customLazy(() => import('./icons/exchange.svg?react')),
   eye: customLazy(() => import('./icons/eye.svg?react')),

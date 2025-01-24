@@ -61,6 +61,7 @@ export type IconNamesList =
   | 'euro_circle_color'
   | 'exchange'
   | 'ezeth'
+  | 'euler'
   | 'frax_circle_color'
   | 'gemini_circle_color'
   | 'gemini_color'
