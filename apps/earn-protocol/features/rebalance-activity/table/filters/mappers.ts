@@ -36,6 +36,10 @@ const getProtocolIcon = (protocolLabel: string) => {
     return 'cog'
   }
 
+  if (lowerCasedProtocolLabel.includes('euler')) {
+    return 'euler'
+  }
+
   return 'not_supported_icon'
 }
 
