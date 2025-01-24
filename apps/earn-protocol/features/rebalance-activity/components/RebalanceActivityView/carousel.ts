@@ -2,27 +2,27 @@ export const rebalanceActivityTableCarouselData = [
   {
     title: 'Reduced costs',
     description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus luctus massa ac sapien eleifend.',
+      'All rebalances are included in the 1% Annualised AUM Fee, and say goodbye to seeing your profit disappear with gas fees... Sit back, relax and earn more the lazy way.',
     link: {
-      label: 'Add to position',
+      label: 'Start Earning',
       href: '/',
     },
   },
   {
     title: 'Optimized Yield',
     description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus luctus massa ac sapien eleifend.',
+      'With Summer, your deposits are continuously monitored and reallocated across the top protocols, ensuring you are earning the best available yields.',
     link: {
-      label: 'Add to position',
+      label: 'Start Earning',
       href: '/',
     },
   },
   {
     title: 'Saved Time',
     description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus luctus massa ac sapien eleifend.',
+      'With Summer, there is no need to keep a spreadsheet, check different apps and sign multiple transactions chasing the best yields and seeing your profit disappear with gas fees. ',
     link: {
-      label: 'Add to position',
+      label: 'Start Earning',
       href: '/',
     },
   },

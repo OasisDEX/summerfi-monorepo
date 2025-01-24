@@ -1,9 +1,9 @@
-import { formatShorthandNumber } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatShorthandNumber } from '@summerfi/app-utils'
 
 export const userActivityHeading = {
   title: 'Lazy Summer Global User Activity',
   description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lacinia bibendum nulla sed consectetur. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Nullam quis risus eget.',
+    'Below is a transparent view of global user activity for the Lazy Summer Protocol, showcasing the activity of all our users and access to their individual position pages.',
 }
 
 export const getUserActivityHeadingCards = ({
@@ -18,19 +18,16 @@ export const getUserActivityHeadingCards = ({
   {
     title: 'Total deposits',
     value: formatShorthandNumber(totalItems, { precision: 0 }),
-    description:
-      'Justo enim sollicitudin suspendisse lectus tellus tortor magna. Velit id nulla tempor arcu quis condimentum parturient.',
+    description: 'The total USD value of all deposits across all strategies and users. ',
   },
   {
     title: '# of users',
     value: `${formatShorthandNumber(totalUsers)} `,
-    description:
-      'Justo enim sollicitudin suspendisse lectus tellus tortor magna. Velit id nulla tempor arcu quis condimentum parturient.',
+    description: 'The total number of unique users using the Lazy Summer Protocol.',
   },
   {
     title: 'Median Deposits Size',
-    value: `${formatShorthandNumber(medianDeposit, { precision: 2 })}`,
-    description:
-      'Justo enim sollicitudin suspendisse lectus tellus tortor magna. Velit id nulla tempor arcu quis condimentum parturient.',
+    value: `${formatCryptoBalance(medianDeposit)}`,
+    description: 'The median size of a deposit across all users and positions. ',
   },
 ]

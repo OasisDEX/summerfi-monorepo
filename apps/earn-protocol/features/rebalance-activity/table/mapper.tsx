@@ -69,8 +69,8 @@ export const rebalancingActivityMapper = (
     // dummy mapping for now
     const providerLink =
       {
-        'Summer Earn Protocol': '/earn',
-      }[item.protocol.name] ?? '/earn'
+        'Summer Earn Protocol': '/',
+      }[item.protocol.name] ?? '/'
 
     const amount = new BigNumber(item.amount.toString()).shiftedBy(-item.asset.decimals)
 

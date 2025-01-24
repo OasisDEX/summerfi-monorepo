@@ -4,7 +4,7 @@ import { formatFiatBalance, formatShorthandNumber } from '@summerfi/app-utils'
 export const rebalanceActivityHeading = {
   title: 'Lazy Summer Global Rebalance Activity',
   description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lacinia bibendum nulla sed consectetur. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Nullam quis risus eget.',
+    'Summer.fi delivers sustainably higher yields, optimized with AI, to help you earn more, save time, and reduce costs. Below are the strategy optimizations performed by our AI-powered keeper network. This network requires a majority of AI agents to agree on a single strategy before automatically rebalancing a portfolio. It continuously optimizes by rebalancing strategies to maximize long-term yields.',
 }
 
 export const getRebalanceActivityHeadingCards = ({
@@ -20,7 +20,7 @@ export const getRebalanceActivityHeadingCards = ({
     title: 'Rebalance actions',
     value: formatShorthandNumber(totalItems, { precision: 0 }),
     description:
-      'Justo enim sollicitudin suspendisse lectus tellus tortor magna. Velit id nulla tempor arcu quis condimentum parturient.',
+      'The total number of rebalance actions performed by our AI-Powered keeper network to optimize user positions across all strategies.',
   },
   {
     title: (
@@ -36,7 +36,7 @@ export const getRebalanceActivityHeadingCards = ({
     ),
     value: `${formatShorthandNumber(savedTimeInHours, { precision: 1 })} hours`,
     description:
-      'Justo enim sollicitudin suspendisse lectus tellus tortor magna. Velit id nulla tempor arcu quis condimentum parturient.',
+      'Total time users have saved by relying on our AI-Powered keeper network to optimize positions across strategies, instead of doing it manually.',
   },
   {
     title: (
@@ -52,6 +52,6 @@ export const getRebalanceActivityHeadingCards = ({
     ),
     value: `$${formatFiatBalance(savedGasCost)}`,
     description:
-      'Justo enim sollicitudin suspendisse lectus tellus tortor magna. Velit id nulla tempor arcu quis condimentum parturient.',
+      'Total gas cost savings achieved by users relying on our AI-Powered keeper network to optimize their positions, instead of manual management.',
   },
 ]
