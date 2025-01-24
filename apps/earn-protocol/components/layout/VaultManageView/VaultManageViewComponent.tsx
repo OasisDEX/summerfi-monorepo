@@ -30,12 +30,14 @@ import { subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
 import { TransactionType } from '@summerfi/sdk-common'
 
+import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import {
   ControlsApproval,
   OrderInfoDeposit,
   OrderInfoWithdraw,
 } from '@/components/molecules/SidebarElements'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
+import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
 import { PositionPerformanceChart } from '@/components/organisms/Charts/PositionPerformanceChart'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
@@ -168,7 +170,7 @@ export const VaultManageViewComponent = ({
     rawToTokenAmount,
   })
 
-  const { isLoadingForecast, oneYearEarningsForecast } = useForecast({
+  const { isLoadingForecast, oneYearEarningsForecast, forecast } = useForecast({
     fleetAddress: vault.id,
     chainId: vaultChainId,
     amount: {
@@ -180,6 +182,8 @@ export const VaultManageViewComponent = ({
     disabled: !ownerView,
     isEarnApp: true,
   })
+
+  const displaySimulationGraph = resolvedAmountParsed.gt(0)
 
   const estimatedEarnings = useMemo(() => {
     if (!oneYearEarningsForecast) return '0'
@@ -316,8 +320,17 @@ export const VaultManageViewComponent = ({
         position={position}
         viewWalletAddress={viewWalletAddress}
         connectedWalletAddress={user?.address}
-        detailsContent={
-          <div className={vaultManageViewStyles.leftContentWrapper}>
+        displaySimulationGraph={displaySimulationGraph}
+        simulationGraph={
+          <VaultSimulationGraph
+            vault={vault}
+            forecast={forecast}
+            isLoadingForecast={isLoadingForecast}
+            amount={amountParsed}
+          />
+        }
+        detailsContent={[
+          <div className={vaultManageViewStyles.leftContentWrapper} key="PerformanceBlock">
             <Expander
               title={
                 <Text as="p" variant="p1semi">
@@ -331,15 +344,67 @@ export const VaultManageViewComponent = ({
                 inputToken={vault.inputToken.symbol}
               />
             </Expander>
+          </div>,
+          <div className={vaultManageViewStyles.leftContentWrapper} key="AboutTheStrategy">
+            <div>
+              <Text
+                as="p"
+                variant="p1semi"
+                style={{
+                  marginBottom: 'var(--spacing-space-medium)',
+                }}
+              >
+                About the strategy
+              </Text>
+              <Text
+                as="p"
+                variant="p2"
+                style={{
+                  color: 'var(--color-text-secondary)',
+                }}
+              >
+                The Summer Earn Protocol is a permissionless passive lending product, which sets out
+                to offer effortless and secure optimised yield, while diversifying risk.
+              </Text>
+            </div>
+            <Expander
+              title={
+                <Text as="p" variant="p1semi">
+                  Historical yield
+                </Text>
+              }
+            >
+              <ArkHistoricalYieldChart
+                chartData={vault.customFields?.arksHistoricalChartData}
+                summerVaultName={vault.customFields?.name ?? 'Summer Vault'}
+              />
+            </Expander>
             <Expander
               title={
                 <Text as="p" variant="p1semi">
                   Vault exposure
                 </Text>
               }
-              defaultExpanded
             >
               <VaultExposure vault={vault as SDKVaultType} />
+            </Expander>
+            <Expander
+              title={
+                <Text as="p" variant="p1semi">
+                  Strategy management fee
+                </Text>
+              }
+            >
+              <Text
+                as="p"
+                variant="p2"
+                style={{
+                  color: 'var(--color-text-secondary)',
+                }}
+              >
+                The Summer Earn Protocol is a permissionless passive lending product, which sets out
+                to offer effortless and secure optimised yield, while diversifying risk.
+              </Text>
             </Expander>
             <Expander
               title={
@@ -347,7 +412,6 @@ export const VaultManageViewComponent = ({
                   Rebalancing activity
                 </Text>
               }
-              defaultExpanded
             >
               <RebalancingActivity
                 rebalancesList={rebalancesList}
@@ -362,7 +426,6 @@ export const VaultManageViewComponent = ({
                   User activity
                 </Text>
               }
-              defaultExpanded
             >
               <UserActivity
                 userActivity={userActivity}
@@ -371,8 +434,8 @@ export const VaultManageViewComponent = ({
                 page="manage"
               />
             </Expander>
-          </div>
-        }
+          </div>,
+        ]}
         sidebarContent={<Sidebar {...sidebarProps} />}
         isMobile={isMobile}
       />

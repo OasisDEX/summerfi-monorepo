@@ -55,6 +55,7 @@ type VaultOpenViewComponentProps = {
   vaults: SDKVaultsListType
   userActivity: UsersActivity
   topDepositors: SDKUsersActivityType
+  medianDefiYield?: number
 }
 
 export const VaultOpenViewComponent = ({
@@ -62,6 +63,7 @@ export const VaultOpenViewComponent = ({
   vaults,
   userActivity,
   topDepositors,
+  medianDefiYield,
 }: VaultOpenViewComponentProps) => {
   const { getStorageOnce } = useLocalStorageOnce<string>({
     key: `${vault.id}-amount`,
@@ -177,6 +179,8 @@ export const VaultOpenViewComponent = ({
     isEarnApp: true,
   })
 
+  const summerVaultName = vault.customFields?.name ?? 'Summer Vault'
+
   useEffect(() => {
     const savedAmount = getStorageOnce()
 
@@ -186,7 +190,7 @@ export const VaultOpenViewComponent = ({
   })
   useRedirectToPositionView({ vault, position })
 
-  const displayGraph = amountParsed.gt(0)
+  const displaySimulationGraph = amountParsed.gt(0)
 
   const estimatedEarnings = useMemo(() => {
     if (!oneYearEarningsForecast) return '0'
@@ -293,7 +297,8 @@ export const VaultOpenViewComponent = ({
       isMobile={isMobile}
       vault={vault}
       vaults={vaults}
-      displayGraph={displayGraph}
+      medianDefiYield={medianDefiYield}
+      displaySimulationGraph={displaySimulationGraph}
       simulationGraph={
         <VaultSimulationGraph
           vault={vault}
@@ -315,7 +320,7 @@ export const VaultOpenViewComponent = ({
           >
             <ArkHistoricalYieldChart
               chartData={vault.customFields?.arksHistoricalChartData}
-              summerVaultName={vault.customFields?.name ?? 'Summer Vault'}
+              summerVaultName={summerVaultName}
             />
           </Expander>
           <Expander
