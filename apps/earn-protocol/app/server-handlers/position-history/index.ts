@@ -63,10 +63,6 @@ export async function getPositionHistory({ network, address, vault }: GetPositio
     },
   )
 
-  if (vault.inputToken.symbol === 'WETH') {
-    console.log('getPositionHistory', positionId)
-  }
-
   return request
 }
 
