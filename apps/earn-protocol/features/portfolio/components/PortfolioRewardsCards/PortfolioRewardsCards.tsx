@@ -308,7 +308,7 @@ const YourRays: FC<YourRaysProps> = ({ totalRays }) => {
   return (
     <DataModule
       dataBlock={{
-        title: 'Your season 2 $RAYS',
+        title: 'Your season 2 $SUMR',
         value,
         subValue: (
           <Text variant="p3semi" style={{ color: 'var(--earn-protocol-success-100)' }}>
