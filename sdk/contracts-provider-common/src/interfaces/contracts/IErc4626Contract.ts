@@ -61,6 +61,16 @@ export interface IErc4626Contract extends IContractWrapper {
    */
   previewWithdraw(params: { assets: ITokenAmount }): Promise<ITokenAmount>
 
+  /**
+   * @name previewRedeem
+   * @description Previews the redemption of the provided amount of shares
+   *
+   * @param shares The amount of shares to redeem
+   *
+   * @returns The amount that will be received
+   */
+  previewRedeem(params: { shares: ITokenAmount }): Promise<ITokenAmount>
+
   /** WRITE METHODS */
 
   /**
