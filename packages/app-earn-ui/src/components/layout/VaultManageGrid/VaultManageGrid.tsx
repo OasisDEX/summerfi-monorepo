@@ -24,7 +24,7 @@ interface VaultManageGridProps {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
   position: IArmadaPosition
-  detailsContent: ReactNode
+  detailsContent: ReactNode[]
   sidebarContent: ReactNode
   connectedWalletAddress?: string
   viewWalletAddress: string
@@ -156,7 +156,19 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
               />
             </Box>
           </SimpleGrid>
-          <Box className={vaultManageGridStyles.leftBlock}>{detailsContent}</Box>
+          {Array.isArray(detailsContent) && detailsContent.length > 0 ? (
+            detailsContent.map((content, index) => (
+              <Box
+                key={index}
+                className={vaultManageGridStyles.leftBlock}
+                style={{ marginBottom: 'var(--general-space-20)' }}
+              >
+                {content}
+              </Box>
+            ))
+          ) : (
+            <Box className={vaultManageGridStyles.leftBlock}>{detailsContent}</Box>
+          )}
         </div>
         <div className={vaultManageGridStyles.rightBlockWrapper}>
           <div className={vaultManageGridStyles.rightBlock}>{sidebarContent}</div>
