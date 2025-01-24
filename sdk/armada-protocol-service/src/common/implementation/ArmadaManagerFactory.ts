@@ -7,6 +7,7 @@ import type { ISwapManager } from '@summerfi/swap-common'
 import type { IOracleManager } from '@summerfi/oracle-common'
 
 import { ArmadaManager } from './ArmadaManager'
+import type { ITokensManager } from '@summerfi/tokens-common'
 
 /**
  * @name ArmadaManagerFactory
@@ -21,6 +22,7 @@ export class ArmadaManagerFactory {
     blockchainClientProvider: IBlockchainClientProvider
     swapManager: ISwapManager
     oracleManager: IOracleManager
+    tokensManager: ITokensManager
   }): ArmadaManager {
     return new ArmadaManager(params)
   }
