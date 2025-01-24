@@ -50,6 +50,7 @@ export class AllowanceManager implements IAllowanceManager {
       type: TransactionType.Approve,
       metadata: {
         approvalAmount: params.amount,
+        approvalSpender: params.spender,
       },
     }
   }

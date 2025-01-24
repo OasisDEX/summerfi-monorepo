@@ -861,8 +861,15 @@ export class ArmadaManager implements IArmadaManager {
           sharesToUnstake: sharesToUnstake.toSolidityValue(),
         })
 
-        // approval to swap from user EOA
+        const unstakeAndWithdrawCall = await this._getUnstakeAndWithdrawCall({
+          vaultId: params.vaultId,
+          shares: sharesToUnstake,
+        })
+        multicallArgs.push(unstakeAndWithdrawCall.calldata)
+        multicallOperations.push('unstakeAndWithdraw ' + sharesToUnstake.toString())
+
         if (shouldSwap) {
+          // approval to swap from user EOA
           const approveToSwapForUser = await this._allowanceManager.getApproval({
             chainInfo: params.vaultId.chainInfo,
             spender: admiralsQuartersAddress,
@@ -875,16 +882,7 @@ export class ArmadaManager implements IArmadaManager {
               outAmount: outAmount.toString(),
             })
           }
-        }
 
-        const unstakeAndWithdrawCall = await this._getUnstakeAndWithdrawCall({
-          vaultId: params.vaultId,
-          shares: sharesToUnstake,
-        })
-        multicallArgs.push(unstakeAndWithdrawCall.calldata)
-        multicallOperations.push('unstakeAndWithdraw ' + sharesToUnstake.toString())
-
-        if (shouldSwap) {
           const depositSwapWithdrawMulticall = await this._getDepositSwapWithdrawMulticall({
             vaultId: params.vaultId,
             slippage: params.slippage,
@@ -931,22 +929,6 @@ export class ArmadaManager implements IArmadaManager {
         outShares: outShares.toString(),
       })
 
-      // approval to swap from user EOA
-      if (shouldSwap) {
-        const approveToSwapForUser = await this._allowanceManager.getApproval({
-          chainInfo: params.vaultId.chainInfo,
-          spender: admiralsQuartersAddress,
-          amount: outAmount,
-          owner: params.user.wallet.address,
-        })
-        if (approveToSwapForUser) {
-          transactions.push(approveToSwapForUser)
-          LoggingService.debug('approveToSwapForUser', {
-            assetsToEOA: outAmount.toString(),
-          })
-        }
-      }
-
       // withdraw all from staked tokens
       const unstakeAndWithdrawCall = await this._getUnstakeAndWithdrawCall({
         vaultId: params.vaultId,
@@ -956,6 +938,20 @@ export class ArmadaManager implements IArmadaManager {
       multicallOperations.push('unstakeAndWithdraw ' + outShares.toString())
 
       if (shouldSwap) {
+        // approval to swap from user EOA
+        const approveToSwapForUser = await this._allowanceManager.getApproval({
+          chainInfo: params.vaultId.chainInfo,
+          spender: admiralsQuartersAddress,
+          amount: outAmount,
+          owner: params.user.wallet.address,
+        })
+        if (approveToSwapForUser) {
+          transactions.push(approveToSwapForUser)
+          LoggingService.debug('approveToSwapForUser', {
+            approveToSwapForUser: outAmount.toString(),
+          })
+        }
+
         const depositSwapWithdrawMulticall = await this._getDepositSwapWithdrawMulticall({
           vaultId: params.vaultId,
           slippage: params.slippage,
