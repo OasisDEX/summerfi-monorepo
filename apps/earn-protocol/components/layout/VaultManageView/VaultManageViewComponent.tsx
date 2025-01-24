@@ -353,6 +353,7 @@ export const VaultManageViewComponent = ({
                 rebalancesList={rebalancesList}
                 vaultId={vault.id}
                 totalRebalances={Number(vault.rebalanceCount)}
+                vaultsList={vaults}
               />
             </Expander>
             <Expander

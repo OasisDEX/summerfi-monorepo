@@ -32,7 +32,7 @@ export const rebalanceActivityPurposeMapper = (
   const isFromBuffer = actionFromRawName === 'BufferArk'
   const isToBuffer = actionToRawName === 'BufferArk'
 
-  if (!isFromBuffer && !isToBuffer && Number(item.from.depositLimit) !== 0) {
+  if (!isFromBuffer && !isToBuffer && Number(item.fromPostAction.depositLimit) !== 0) {
     return Number(item.fromPostAction.totalValueLockedUSD) + Number(item.amountUSD) <
       Number(item.fromPostAction.depositLimit)
       ? { label: 'Rate Enhancement', icon: 'arrow_increase' }
