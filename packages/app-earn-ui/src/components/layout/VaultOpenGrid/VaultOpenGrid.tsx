@@ -22,7 +22,7 @@ import vaultOpenGridStyles from './VaultOpenGrid.module.scss'
 interface VaultOpenGridProps {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
-  displayGraph?: boolean
+  displaySimulationGraph?: boolean
   simulationGraph: ReactNode
   detailsContent: ReactNode
   sidebarContent: ReactNode
@@ -32,13 +32,14 @@ interface VaultOpenGridProps {
 export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   vault,
   vaults,
-  displayGraph,
+  displaySimulationGraph,
   simulationGraph,
   detailsContent,
   sidebarContent,
   isMobile,
 }) => {
-  const [displayGraphStaggered, setDisplayGraphStaggered] = useState(displayGraph)
+  const [displaySimulationGraphStaggered, setDisplaySimulationGraphStaggered] =
+    useState(displaySimulationGraph)
   const apr30d = formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
   const aprCurrent = formatDecimalAsPercent(new BigNumber(vault.calculatedApr).div(100))
   const totalValueLockedUSDParsed = formatCryptoBalance(new BigNumber(vault.totalValueLockedUSD))
@@ -48,18 +49,18 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDisplayGraphStaggered(false)
+      setDisplaySimulationGraphStaggered(false)
     }, 1000)
 
-    if (displayGraph) {
+    if (displaySimulationGraph) {
       clearInterval(timer)
-      setDisplayGraphStaggered(true)
+      setDisplaySimulationGraphStaggered(true)
     }
 
     return () => {
       clearInterval(timer)
     }
-  }, [displayGraph])
+  }, [displaySimulationGraph])
 
   return (
     <>
@@ -99,7 +100,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
               <BonusLabel rays="1,111" />
             </Text>
           </div>
-          <AnimateHeight id="simulation-graph" scale show={displayGraphStaggered}>
+          <AnimateHeight id="simulation-graph" scale show={displaySimulationGraphStaggered}>
             {simulationGraph}
           </AnimateHeight>
           <SimpleGrid

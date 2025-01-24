@@ -1,12 +1,13 @@
 'use client'
 
-import { type FC, type ReactNode } from 'react'
+import { type FC, type ReactNode, useEffect, useState } from 'react'
 import { type SDKVaultishType, type SDKVaultsListType } from '@summerfi/app-types'
 import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
 import { type IArmadaPositionStandalone as IArmadaPosition } from '@summerfi/armada-protocol-common'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
+import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
 import { Box } from '@/components/atoms/Box/Box'
 import { Text } from '@/components/atoms/Text/Text'
 import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
@@ -29,6 +30,8 @@ interface VaultManageGridProps {
   connectedWalletAddress?: string
   viewWalletAddress: string
   isMobile?: boolean
+  displaySimulationGraph?: boolean
+  simulationGraph: ReactNode
 }
 
 export const VaultManageGrid: FC<VaultManageGridProps> = ({
@@ -40,10 +43,29 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   connectedWalletAddress,
   viewWalletAddress,
   isMobile,
+  simulationGraph,
+  displaySimulationGraph,
 }) => {
+  const [displaySimulationGraphStaggered, setDisplaySimulationGraphStaggered] =
+    useState(displaySimulationGraph)
   const apr30d = formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
   const aprCurrent = formatDecimalAsPercent(new BigNumber(vault.calculatedApr).div(100))
   const noOfDeposits = position.deposits.length.toString()
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDisplaySimulationGraphStaggered(false)
+    }, 1000)
+
+    if (displaySimulationGraph) {
+      clearInterval(timer)
+      setDisplaySimulationGraphStaggered(true)
+    }
+
+    return () => {
+      clearInterval(timer)
+    }
+  }, [displaySimulationGraph])
 
   const { netDeposited, netEarnings, netValue } = getPositionValues({
     positionData: position,
@@ -101,6 +123,9 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
               <BonusLabel rays="1,111" />
             </Text>
           </div>
+          <AnimateHeight id="simulation-graph" scale show={displaySimulationGraphStaggered}>
+            {simulationGraph}
+          </AnimateHeight>
           <SimpleGrid
             columns={isMobile ? 1 : 3}
             rows={isMobile ? 3 : 1}

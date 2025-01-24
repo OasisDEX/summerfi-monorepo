@@ -186,7 +186,7 @@ export const VaultOpenViewComponent = ({
   })
   useRedirectToPositionView({ vault, position })
 
-  const displayGraph = amountParsed.gt(0)
+  const displaySimulationGraph = amountParsed.gt(0)
 
   const estimatedEarnings = useMemo(() => {
     if (!oneYearEarningsForecast) return '0'
@@ -293,7 +293,7 @@ export const VaultOpenViewComponent = ({
       isMobile={isMobile}
       vault={vault}
       vaults={vaults}
-      displayGraph={displayGraph}
+      displaySimulationGraph={displaySimulationGraph}
       simulationGraph={
         <VaultSimulationGraph
           vault={vault}

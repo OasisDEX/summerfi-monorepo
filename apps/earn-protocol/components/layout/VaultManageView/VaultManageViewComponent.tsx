@@ -30,6 +30,7 @@ import { subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
 import { TransactionType } from '@summerfi/sdk-common'
 
+import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import {
   ControlsApproval,
   OrderInfoDeposit,
@@ -169,7 +170,7 @@ export const VaultManageViewComponent = ({
     rawToTokenAmount,
   })
 
-  const { isLoadingForecast, oneYearEarningsForecast } = useForecast({
+  const { isLoadingForecast, oneYearEarningsForecast, forecast } = useForecast({
     fleetAddress: vault.id,
     chainId: vaultChainId,
     amount: {
@@ -181,6 +182,8 @@ export const VaultManageViewComponent = ({
     disabled: !ownerView,
     isEarnApp: true,
   })
+
+  const displaySimulationGraph = resolvedAmountParsed.gt(0)
 
   const estimatedEarnings = useMemo(() => {
     if (!oneYearEarningsForecast) return '0'
@@ -317,6 +320,15 @@ export const VaultManageViewComponent = ({
         position={position}
         viewWalletAddress={viewWalletAddress}
         connectedWalletAddress={user?.address}
+        displaySimulationGraph={displaySimulationGraph}
+        simulationGraph={
+          <VaultSimulationGraph
+            vault={vault}
+            forecast={forecast}
+            isLoadingForecast={isLoadingForecast}
+            amount={amountParsed}
+          />
+        }
         detailsContent={[
           <div className={vaultManageViewStyles.leftContentWrapper} key="PerformanceBlock">
             <Expander
