@@ -581,7 +581,7 @@ export class ArmadaManager implements IArmadaManager {
         TokenAmount.createFrom({
           amount: inAmount.amount,
           token: await this._tokensManager.getTokenBySymbol({
-            chainInfo: params.user.chainInfo,
+            chainInfo: params.vaultId.chainInfo,
             symbol: 'WETH',
           }),
         })
@@ -732,6 +732,7 @@ export class ArmadaManager implements IArmadaManager {
     })
 
     const outAmount = params.amount
+    const isEth = params.toToken.symbol === 'ETH'
     const swapToToken = params.toToken
     const shouldSwap = !swapToToken.equals(outAmount.token)
 
@@ -741,8 +742,9 @@ export class ArmadaManager implements IArmadaManager {
 
     LoggingService.debug('getWithdrawTX', {
       outAmount: outAmount.toString(),
-      swapToToken: swapToToken.toString(),
       shouldSwap,
+      isEth,
+      swapToToken: swapToToken.toString(),
       unstakedFleetAssets: unstakedFleetAssets.toString(),
       stakedFleetShares: stakedFleetShares.toString(),
     })
@@ -888,6 +890,7 @@ export class ArmadaManager implements IArmadaManager {
             slippage: params.slippage,
             fromAmount: outAmount,
             toToken: swapToToken,
+            isEth,
           })
           multicallArgs.push(...depositSwapWithdrawMulticall.multicallArgs)
           multicallOperations.push(...depositSwapWithdrawMulticall.multicallOperations)
@@ -917,10 +920,10 @@ export class ArmadaManager implements IArmadaManager {
         )
       }
     } else {
+      // No. Unstake and withdraw everything from staked tokens.
       const multicallArgs: HexData[] = []
       const multicallOperations: string[] = []
 
-      // No. Unstake and withdraw everything from staked tokens.
       const outShares = await this._previewWithdraw({
         vaultId: params.vaultId,
         assets: outAmount,
@@ -957,6 +960,7 @@ export class ArmadaManager implements IArmadaManager {
           slippage: params.slippage,
           fromAmount: outAmount,
           toToken: swapToToken,
+          isEth,
         })
         multicallArgs.push(...depositSwapWithdrawMulticall.multicallArgs)
         multicallOperations.push(...depositSwapWithdrawMulticall.multicallOperations)
@@ -1151,6 +1155,7 @@ export class ArmadaManager implements IArmadaManager {
     fromAmount: ITokenAmount
     toToken: IToken
     slippage: IPercentage
+    isEth: boolean
   }): Promise<{
     multicallArgs: HexData[]
     multicallOperations: string[]
@@ -1168,11 +1173,20 @@ export class ArmadaManager implements IArmadaManager {
     multicallArgs.push(depositTokensCalldata)
     multicallOperations.push('depositTokens ' + params.fromAmount.toString())
 
+    let outToken = params.toToken
+    // if the out token is ETH, we need to use wrapped ETH to withdraw
+    if (params.isEth) {
+      outToken = await this._tokensManager.getTokenBySymbol({
+        chainInfo: params.vaultId.chainInfo,
+        symbol: 'WETH',
+      })
+    }
+
     // swap
     const swapCall = await this._getSwapCall({
       vaultId: params.vaultId,
       fromAmount: params.fromAmount,
-      toToken: params.toToken,
+      toToken: outToken,
       slippage: params.slippage,
     })
     multicallArgs.push(swapCall.calldata)
@@ -1182,7 +1196,7 @@ export class ArmadaManager implements IArmadaManager {
 
     const outAmount = TokenAmount.createFromBaseUnit({
       token: params.toToken,
-      amount: '0',
+      amount: '0', // all tokens
     })
     // withdraw swapped assets
     const withdrawTokensCalldata = encodeFunctionData({
