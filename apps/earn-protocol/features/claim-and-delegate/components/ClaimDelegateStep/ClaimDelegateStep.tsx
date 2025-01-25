@@ -15,6 +15,7 @@ import { type DropdownRawOption, SDKChainId } from '@summerfi/app-types'
 import {
   ADDRESS_ZERO,
   formatAddress,
+  formatCryptoBalance,
   formatDecimalAsPercent,
   formatFiatBalance,
 } from '@summerfi/app-utils'
@@ -262,7 +263,8 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
                 gap: 'var(--general-space-8)',
               }}
             >
-              Total voting weight: <Icon tokenName="SUMR" size={16} /> {votes.sumrAmount}
+              Total voting weight: <Icon tokenName="SUMR" size={16} />{' '}
+              {formatCryptoBalance(votes.sumrAmount)}
             </Text>
           )}
         </Card>
