@@ -1,18 +1,15 @@
 'use client'
 import { type Dispatch, type FC } from 'react'
-import { useChain } from '@account-kit/react'
 import {
   Button,
   DataModule,
   getVotingPowerColor,
   Icon,
-  LoadingSpinner,
   RAYS_TO_SUMR_CONVERSION_RATE,
   SUMR_CAP,
   Text,
   Tooltip,
 } from '@summerfi/app-earn-ui'
-import { SDKChainId } from '@summerfi/app-types'
 import {
   ADDRESS_ZERO,
   formatAddress,
@@ -24,17 +21,13 @@ import {
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
-import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { localSumrDelegates } from '@/features/claim-and-delegate/consts'
 import {
   type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
   type ClaimDelegateState,
-  ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
-import { useClientChainId } from '@/hooks/use-client-chain-id'
-import { useSumrDelegateTransaction } from '@/hooks/use-sumr-delegate-transaction'
 
 import classNames from './PortfolioRewardsCards.module.scss'
 
@@ -58,7 +51,7 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
           <Tooltip
             tooltip={
               <Text as="p" variant="p4semi">
-                SUMR available to claim across all networks. Mainet, Base, and Optimism
+                SUMR available to claim across all networks. Mainet, Base, and Arbitrum
               </Text>
             }
             tooltipWrapperStyles={{ minWidth: '240px' }}
@@ -93,18 +86,10 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
 
 interface StakedAndDelegatedSumrProps {
   rewardsData: ClaimDelegateExternalData
-  state: ClaimDelegateState
-  dispatch: Dispatch<ClaimDelegateReducerAction>
 }
 
-const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({
-  rewardsData,
-  state,
-  dispatch,
-}) => {
+const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }) => {
   const { walletAddress } = useParams()
-  const { setChain } = useChain()
-  const { clientChainId } = useClientChainId()
 
   const rawApy = rewardsData.sumrStakingInfo.sumrStakingApy
   const isDelegated = rewardsData.sumrStakeDelegate.delegatedTo !== ADDRESS_ZERO
@@ -113,34 +98,6 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({
 
   const value = formatCryptoBalance(rawStaked)
   const apy = formatDecimalAsPercent(rawApy * rawDecayFactor)
-
-  const { sumrDelegateTransaction } = useSumrDelegateTransaction({
-    onSuccess: () => {
-      dispatch({ type: 'update-delegatee', payload: ADDRESS_ZERO })
-      dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.COMPLETED })
-    },
-    onError: () => {
-      dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.FAILED })
-    },
-    delegateTo: ADDRESS_ZERO, // address zero is the default delegate (no delegate)
-  })
-
-  const handleRemoveDelegation = async () => {
-    // delegation is only supported on base
-    if (clientChainId !== SDKChainId.BASE) {
-      // eslint-disable-next-line no-console
-      console.log('update network to base')
-      setChain({ chain: SDKChainIdToAAChainMap[SDKChainId.BASE] })
-
-      return
-    }
-
-    dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.PENDING })
-    await sumrDelegateTransaction().catch((err) => {
-      // eslint-disable-next-line no-console
-      console.error('Error removing delegate', err)
-    })
-  }
 
   return (
     <DataModule
@@ -156,34 +113,11 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({
         valueSize: 'large',
       }}
       actionable={
-        isDelegated && state.delegateStatus !== ClaimDelegateTxStatuses.COMPLETED ? (
-          <Button
-            variant="unstyled"
-            onClick={handleRemoveDelegation}
-            disabled={state.delegateStatus === ClaimDelegateTxStatuses.PENDING}
-          >
-            <Text variant="p3semi" as="div" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-              {clientChainId !== SDKChainId.BASE ? (
-                'Change network to remove delegate'
-              ) : state.delegateStatus === ClaimDelegateTxStatuses.PENDING ? (
-                <div
-                  style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}
-                >
-                  <LoadingSpinner size={14} />
-                  Removing delegate...
-                </div>
-              ) : (
-                'Remove delegate'
-              )}
-            </Text>
-          </Button>
-        ) : (
-          <Link href={`/stake-delegate/${walletAddress}`} prefetch>
-            <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-              Stake and delegate
-            </Text>
-          </Link>
-        )
+        <Link href={`/stake-delegate/${walletAddress}?step=stake`} prefetch>
+          <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
+            Add stake or remove stake
+          </Text>
+        </Link>
       }
     />
   )
@@ -344,7 +278,6 @@ export const PortfolioRewardsCards: FC<PortfolioRewardsCardsProps> = ({
   rewardsData,
   totalRays,
   state,
-  dispatch,
 }) => {
   const hasRays = totalRays > 0
 
@@ -361,7 +294,7 @@ export const PortfolioRewardsCards: FC<PortfolioRewardsCardsProps> = ({
         <SumrAvailableToClaim rewardsData={rewardsData} />
       </div>
       <div className={classNames.cardWrapper}>
-        <StakedAndDelegatedSumr rewardsData={rewardsData} state={state} dispatch={dispatch} />
+        <StakedAndDelegatedSumr rewardsData={rewardsData} />
       </div>
       <div className={classNames.cardWrapper}>
         <YourDelegate rewardsData={rewardsData} state={state} />

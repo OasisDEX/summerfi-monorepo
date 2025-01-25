@@ -1,11 +1,11 @@
-import type { Dispatch, FC } from 'react'
+import type { FC } from 'react'
+import { useChain } from '@account-kit/react'
 import {
   Button,
   Card,
   DataBlock,
   Icon,
   LoadableAvatar,
-  SkeletonLine,
   SUMR_CAP,
   Text,
   useLocalConfig,
@@ -20,64 +20,51 @@ import {
 import { useParams } from 'next/navigation'
 
 import { localSumrDelegates } from '@/features/claim-and-delegate/consts'
+import { useDecayFactor } from '@/features/claim-and-delegate/hooks/use-decay-factor'
 import type {
   ClaimDelegateExternalData,
-  ClaimDelegateReducerAction,
   ClaimDelegateState,
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
-import { type TokenBalanceData } from '@/hooks/use-token-balance'
 
-import classNames from './ClaimDelegateStakeDelegateCompletedSubstep.module.scss'
+import classNames from './ClaimDelegateCompletedStep.module.scss'
 
-interface ClaimDelegateStakeDelegateCompletedSubstepProps {
+interface ClaimDelegateCompletedStepProps {
   state: ClaimDelegateState
-  dispatch: Dispatch<ClaimDelegateReducerAction>
   externalData: ClaimDelegateExternalData
-  sumrBalanceData: TokenBalanceData
-  decayFactor: number | undefined
 }
 
-export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
-  ClaimDelegateStakeDelegateCompletedSubstepProps
-> = ({
+export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = ({
   state,
   externalData,
-  sumrBalanceData,
-  // fallback to 1 to avoid UI flickering when
-  // decay factor is loading
-  decayFactor = 1,
 }) => {
   const { walletAddress } = useParams()
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
 
+  const { decayFactor } = useDecayFactor(state.delegatee)
+
+  const { chain } = useChain()
+
+  const claimedSumrRaw = externalData.sumrToClaim.perChain[chain.id] ?? 0
+
   const claimedSumr = (
     <>
-      {sumrBalanceData.tokenBalanceLoading ? (
-        <SkeletonLine height="16px" width="70px" />
-      ) : (
-        formatCryptoBalance(sumrBalanceData.tokenBalance ?? '0')
-      )}{' '}
+      {formatCryptoBalance(claimedSumrRaw)}{' '}
       <Text as="span" variant="p3semiColorful">
         $SUMR
       </Text>
     </>
   )
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
-  const claimedSumrUSD = sumrBalanceData.tokenBalanceLoading ? (
-    <SkeletonLine height="12px" width="40px" />
-  ) : (
-    `$${formatFiatBalance(Number(sumrBalanceData.tokenBalance ?? '0') * estimatedSumrPrice)}`
-  )
+  const claimedSumrUSD = `$${formatFiatBalance(claimedSumrRaw * estimatedSumrPrice)}`
 
   const apy = (
     <>
-      {formatDecimalAsPercent(externalData.sumrStakingInfo.sumrStakingApy * decayFactor).replace(
-        '%',
-        '',
-      )}{' '}
+      {formatDecimalAsPercent(
+        externalData.sumrStakingInfo.sumrStakingApy * (decayFactor ?? 1),
+      ).replace('%', '')}{' '}
       <Text as="span" variant="p3semi" style={{ color: 'var(--earn-protocol-success-100)' }}>
         %APY
       </Text>
@@ -85,7 +72,7 @@ export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
   )
   const sumrClaimedStepBefore = externalData.sumrToClaim.perChain[SDKChainId.BASE] ?? 0
   // we are not refetching sumrDelegated therefore we need to add sumrClaimedStepBefore to it
-  const sumrPerYear = `${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(sumrClaimedStepBefore)) * Number(externalData.sumrStakingInfo.sumrStakingApy * decayFactor))} $SUMR/yr`
+  const sumrPerYear = `${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(sumrClaimedStepBefore)) * Number(externalData.sumrStakingInfo.sumrStakingApy * (decayFactor ?? 1)))} $SUMR/yr`
 
   const delegatee = state.delegatee?.toLowerCase()
 
@@ -126,7 +113,7 @@ export const ClaimDelegateStakeDelegateCompletedSubstep: FC<
         </Card>
         <Card className={classNames.cardWrapper}>
           <DataBlock
-            title="Earning"
+            title="Potential Earning"
             titleSize="medium"
             value={apy}
             valueStyle={{ color: 'var(--earn-protocol-success-100)' }}

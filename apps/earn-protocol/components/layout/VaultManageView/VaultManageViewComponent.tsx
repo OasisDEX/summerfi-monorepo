@@ -100,7 +100,11 @@ export const VaultManageViewComponent = ({
     handleAmountChange,
     onBlur,
     onFocus,
-  } = useAmount({ vault, selectedToken })
+  } = useAmount({
+    tokenDecimals: vault.inputToken.decimals,
+    tokenPrice: vault.inputTokenPriceUSD,
+    selectedToken,
+  })
 
   const {
     amountParsed: approvalAmountParsed,
@@ -109,7 +113,12 @@ export const VaultManageViewComponent = ({
     onBlur: approvalOnBlur,
     onFocus: approvalOnFocus,
     manualSetAmount: approvalManualSetAmount,
-  } = useAmount({ vault, selectedToken, initialAmount: amountParsed.toString() })
+  } = useAmount({
+    tokenDecimals: vault.inputToken.decimals,
+    tokenPrice: vault.inputTokenPriceUSD,
+    selectedToken,
+    initialAmount: amountParsed.toString(),
+  })
 
   const { netValue } = getPositionValues({
     positionData: position,

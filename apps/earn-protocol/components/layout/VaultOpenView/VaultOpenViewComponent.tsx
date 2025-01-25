@@ -104,7 +104,8 @@ export const VaultOpenViewComponent = ({
     onBlur,
     onFocus,
   } = useAmount({
-    vault,
+    tokenDecimals: vault.inputToken.decimals,
+    tokenPrice: vault.inputTokenPriceUSD,
     selectedToken:
       selectedToken ??
       ({
@@ -121,7 +122,11 @@ export const VaultOpenViewComponent = ({
     onBlur: approvalOnBlur,
     onFocus: approvalOnFocus,
     manualSetAmount: approvalManualSetAmount,
-  } = useAmount({ vault, selectedToken })
+  } = useAmount({
+    tokenDecimals: vault.inputToken.decimals,
+    tokenPrice: vault.inputTokenPriceUSD,
+    selectedToken,
+  })
 
   const {
     approvalType,

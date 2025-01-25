@@ -52,12 +52,12 @@ export const SumrMultipleWaysToEarn = () => {
         <BigGradientBox className={classNames.bottomBoxLeftGradient}>
           <Image
             src={rebalanceActivity}
-            alt="Stake & Delegate to earn $SUMR"
+            alt="Delegate & Stake to earn $SUMR"
             placeholder="blur"
             quality={100}
           />
           <SumrMultipleWaysToEarnTextualContent
-            title="Stake & Delegate to earn $SUMR"
+            title="Delegate & Stake to earn $SUMR"
             description="Lazy Summer requires 0 management from users. Apart from your own deposits, all risk management, yield optimizing and strategy rebalancing is handled automatically. "
             link={{
               href: userWalletAddress

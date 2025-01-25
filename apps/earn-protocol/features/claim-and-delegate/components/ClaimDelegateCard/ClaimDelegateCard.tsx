@@ -28,6 +28,7 @@ interface ClaimDelegateCardProps {
   handleClick: () => void
   votingPower?: number
   selfDelegate?: boolean
+  disabled?: boolean
 }
 
 export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
@@ -40,6 +41,7 @@ export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
   social,
   votingPower,
   selfDelegate,
+  disabled,
 }) => {
   return (
     <Card
@@ -47,6 +49,7 @@ export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
       variant={isActive ? 'cardPrimaryColorfulBorder' : 'cardPrimary'}
       style={{ border: !isActive ? '1px solid transparent' : undefined }}
       onClick={handleClick}
+      disabled={disabled}
     >
       <div className={clsx(classNames.checkmarkIcon, { [classNames.active]: isActive })}>
         <Icon

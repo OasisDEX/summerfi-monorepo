@@ -8,13 +8,11 @@ import { useAppSDK } from './use-app-sdk'
 export const useSumrDelegateTransaction = ({
   onSuccess,
   onError,
-  delegateTo,
 }: {
   onSuccess: () => void
   onError: () => void
-  delegateTo?: string
 }): {
-  sumrDelegateTransaction: () => Promise<unknown>
+  sumrDelegateTransaction: (delegateTo?: string) => Promise<unknown>
   isLoading: boolean
   error: Error | null
 } => {
@@ -29,7 +27,7 @@ export const useSumrDelegateTransaction = ({
     onError,
   })
 
-  const sumrDelegateTransaction = async () => {
+  const sumrDelegateTransaction = async (delegateTo?: string) => {
     if (!delegateTo) {
       throw new Error('Delegate to address is required')
     }

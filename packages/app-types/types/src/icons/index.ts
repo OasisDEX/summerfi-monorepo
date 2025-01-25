@@ -73,6 +73,7 @@ export type IconNamesList =
   | 'gusd_circle_color'
   | 'gusd_circle_mono'
   | 'info'
+  | 'info_colorful'
   | 'knc_circle_color'
   | 'kyber_circle_color'
   | 'kyber_color'
