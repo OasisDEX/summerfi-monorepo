@@ -1,2 +1,3 @@
 // used 5 min as average rebalance action
-export const getRebalanceSavedTimeInHours = (totalItems: number) => (totalItems * 5) / 60
+export const getRebalanceSavedTimeInHours = (totalItems: number) =>
+  Number(((totalItems * 5) / 60).toFixed(1))

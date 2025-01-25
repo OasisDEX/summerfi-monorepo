@@ -62,7 +62,7 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
           </Tooltip>
         </div>
       ),
-      value: `${formatShorthandNumber(savedTimeInHours, { precision: 1 })} hours`,
+      value: `${savedTimeInHours} hours`,
     },
     {
       title: (
