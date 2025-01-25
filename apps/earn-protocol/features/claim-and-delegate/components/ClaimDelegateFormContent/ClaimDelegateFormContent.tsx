@@ -2,7 +2,9 @@ import { type Dispatch, type FC } from 'react'
 
 import { ClaimDelegateAcceptanceStep } from '@/features/claim-and-delegate/components/ClaimDelegateAcceptanceStep/ClaimDelegateAcceptanceStep'
 import { ClaimDelegateClaimStep } from '@/features/claim-and-delegate/components/ClaimDelegateClaimStep/ClaimDelegateClaimStep'
-import { ClaimDelegateStakeDelegateStep } from '@/features/claim-and-delegate/components/ClaimDelegateStakeDelegateStep/ClaimDelegateStakeDelegateStep'
+import { ClaimDelegateCompletedStep } from '@/features/claim-and-delegate/components/ClaimDelegateCompletedStep/ClaimDelegateCompletedStep'
+import { ClaimDelegateStakeStep } from '@/features/claim-and-delegate/components/ClaimDelegateStakeStep/ClaimDelegateStakeStep'
+import { ClaimDelegateStep } from '@/features/claim-and-delegate/components/ClaimDelegateStep/ClaimDelegateStep'
 import {
   type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
@@ -30,13 +32,15 @@ export const ClaimDelegateFormContent: FC<ClaimDelegateFormContentProps> = ({
       )}
       {state.step === ClaimDelegateSteps.CLAIM && (
         <ClaimDelegateClaimStep state={state} dispatch={dispatch} externalData={externalData} />
-      )}{' '}
+      )}
       {state.step === ClaimDelegateSteps.DELEGATE && (
-        <ClaimDelegateStakeDelegateStep
-          state={state}
-          dispatch={dispatch}
-          externalData={externalData}
-        />
+        <ClaimDelegateStep state={state} dispatch={dispatch} externalData={externalData} />
+      )}
+      {state.step === ClaimDelegateSteps.STAKE && (
+        <ClaimDelegateStakeStep state={state} dispatch={dispatch} externalData={externalData} />
+      )}
+      {state.step === ClaimDelegateSteps.COMPLETED && (
+        <ClaimDelegateCompletedStep state={state} externalData={externalData} />
       )}
     </div>
   )

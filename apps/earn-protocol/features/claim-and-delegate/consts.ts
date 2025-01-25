@@ -1,5 +1,6 @@
 import { formatAddress } from '@summerfi/app-utils'
 
+import { type SumrDecayFactorData } from '@/app/server-handlers/sumr-decay-factor'
 import { type SumrDelegates } from '@/app/server-handlers/sumr-delegates'
 
 export interface SumrDelegate {
@@ -15,6 +16,10 @@ export interface SumrDelegate {
   }
 }
 
+export interface SumrDelegateWithDecayFactor extends SumrDelegate {
+  decayFactor: number
+}
+
 export const localSumrDelegates: Partial<SumrDelegate>[] = [
   {
     ens: 'a16z',
@@ -25,12 +30,20 @@ export const localSumrDelegates: Partial<SumrDelegate>[] = [
   },
 ]
 
-export function mergeDelegatesData(sumrDelegates: SumrDelegates[]): SumrDelegate[] {
+export function mergeDelegatesData(
+  sumrDelegates: SumrDelegates[],
+  sumrDecayFactors: SumrDecayFactorData[],
+): SumrDelegateWithDecayFactor[] {
   return sumrDelegates
     .map((sumrDelegate) => {
       const localDelegate = localSumrDelegates.find(
         (local) => local.address?.toLowerCase() === sumrDelegate.account.address.toLowerCase(),
       )
+
+      const decayFactor =
+        sumrDecayFactors.find(
+          (factor) => factor.address.toLowerCase() === sumrDelegate.account.address.toLowerCase(),
+        )?.decayFactor ?? 1
 
       return {
         // eslint-disable-next-line no-mixed-operators
@@ -55,6 +68,7 @@ export function mergeDelegatesData(sumrDelegates: SumrDelegates[]): SumrDelegate
           linkedin: localDelegate?.social?.linkedin ?? undefined,
           link: `https://basescan.org/address/${sumrDelegate.account.address}`,
         },
+        decayFactor,
       }
     })
     .sort((a, b) => b.sumrAmount - a.sumrAmount)

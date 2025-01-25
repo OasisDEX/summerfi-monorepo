@@ -9,6 +9,8 @@ export enum ClaimDelegateSteps {
   TERMS = 'terms',
   CLAIM = 'claim',
   DELEGATE = 'delegate',
+  STAKE = 'stake',
+  COMPLETED = 'completed',
 }
 
 export enum ClaimDelegateTxStatuses {
@@ -38,19 +40,19 @@ export type ClaimDelegateReducerAction =
     }
   | {
       type: 'update-claim-status'
-      payload: ClaimDelegateTxStatuses
+      payload: ClaimDelegateTxStatuses | undefined
     }
   | {
       type: 'update-delegate-status'
-      payload: ClaimDelegateTxStatuses
+      payload: ClaimDelegateTxStatuses | undefined
     }
   | {
       type: 'update-staking-status'
-      payload: ClaimDelegateTxStatuses
+      payload: ClaimDelegateTxStatuses | undefined
     }
   | {
       type: 'update-staking-approve-status'
-      payload: ClaimDelegateTxStatuses
+      payload: ClaimDelegateTxStatuses | undefined
     }
 
 export type ClaimDelegateExternalData = {

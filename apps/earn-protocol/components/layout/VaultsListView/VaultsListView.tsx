@@ -186,7 +186,8 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
     onBlur,
     onFocus,
   } = useAmount({
-    vault: vaultData,
+    tokenDecimals: vaultData.inputToken.decimals,
+    tokenPrice: vaultData.inputTokenPriceUSD,
     selectedToken:
       tokenBalances.token ??
       ({

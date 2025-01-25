@@ -1,11 +1,12 @@
 'use client'
 import { type ChangeEvent, useEffect, useMemo, useState } from 'react'
-import { type IToken, type SDKVaultishType } from '@summerfi/app-types'
+import { type IToken } from '@summerfi/app-types'
 import { formatFiatBalance } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
 type UseAmountProps = {
-  vault: SDKVaultishType
+  tokenDecimals: number
+  tokenPrice: string | null | undefined
   selectedToken: IToken | undefined
   initialAmount?: string
 }
@@ -15,7 +16,8 @@ const MAX_AMOUNT_LENGTH = 20
 /**
  * Hook for managing amount input with formatting and validation for vault interactions.
  *
- * @param vault - Vault instance containing token decimals and price information
+ * @param tokenDecimals - Token decimals
+ * @param tokenPrice - Token price
  * @param selectedToken - Token selected for the transaction
  * @param initialAmount - Optional initial amount to populate the input
  *
@@ -29,9 +31,12 @@ const MAX_AMOUNT_LENGTH = 20
  *   - onFocus: Handler to enable edit mode
  *   - onBlur: Handler to disable edit mode and format amount
  */
-export const useAmount = ({ vault, selectedToken, initialAmount }: UseAmountProps) => {
-  const vaultTokenDecimals = vault.inputToken.decimals
-
+export const useAmount = ({
+  tokenDecimals,
+  tokenPrice,
+  selectedToken,
+  initialAmount,
+}: UseAmountProps) => {
   const [editMode, setEditMode] = useState(false)
   const [amountRaw, setAmountRaw] = useState<string | undefined>(initialAmount)
 
@@ -46,22 +51,22 @@ export const useAmount = ({ vault, selectedToken, initialAmount }: UseAmountProp
 
     const amountWithNoFollowingZeroes = new BigNumber(
       // double parsing removes zeroes at the end
-      new BigNumber(amountRaw).toFixed(vaultTokenDecimals), // and this gives it a "max" decimals
+      new BigNumber(amountRaw).toFixed(tokenDecimals), // and this gives it a "max" decimals
     ).toString()
 
     return amountWithNoFollowingZeroes
-  }, [amountRaw, editMode, vaultTokenDecimals])
+  }, [amountRaw, editMode, tokenDecimals])
 
   const amountDisplayUSD = useMemo(() => {
-    if (!vault.inputTokenPriceUSD) {
+    if (!tokenPrice) {
       return '-'
     }
     if (!amountRaw && amountRaw !== '0') {
       return '$0.00'
     }
 
-    return `$${formatFiatBalance(new BigNumber(amountDisplay).times(new BigNumber(vault.inputTokenPriceUSD)))}`
-  }, [amountDisplay, amountRaw, vault.inputTokenPriceUSD])
+    return `$${formatFiatBalance(new BigNumber(amountDisplay).times(new BigNumber(tokenPrice)))}`
+  }, [amountDisplay, amountRaw, tokenPrice])
 
   useEffect(() => {
     if (!editMode) {

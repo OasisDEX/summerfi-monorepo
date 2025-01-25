@@ -10,47 +10,74 @@ import {
 
 import classNames from './ClaimDelegateFormHeader.module.scss'
 
-const steps = [
+const getSteps = (isJustStakeDelegate: boolean) => [
+  ...(!isJustStakeDelegate
+    ? [
+        {
+          label: 'Accept Terms',
+          value: ClaimDelegateSteps.TERMS,
+        },
+        {
+          label: 'Claim $SUMR',
+          value: ClaimDelegateSteps.CLAIM,
+        },
+      ]
+    : []),
   {
-    label: 'Accept Terms',
-    value: ClaimDelegateSteps.TERMS,
-  },
-  {
-    label: 'Claim $SUMR',
-    value: ClaimDelegateSteps.CLAIM,
-  },
-  {
-    label: 'Stake & Delegate',
+    label: 'Delegate',
     value: ClaimDelegateSteps.DELEGATE,
+  },
+  {
+    label: 'Stake',
+    value: ClaimDelegateSteps.STAKE,
+  },
+  {
+    label: 'Completed',
+    value: ClaimDelegateSteps.COMPLETED,
   },
 ]
 
-const getIsCompleted = ({ idx, state }: { idx: number; state: ClaimDelegateState }) =>
+const getIsCompleted = ({
+  idx,
+  state,
+  steps,
+}: {
+  idx: number
+  state: ClaimDelegateState
+  steps: { label: string; value: ClaimDelegateSteps }[]
+}) =>
   idx < steps.findIndex((item) => item.value === state.step) ||
   (state.step === ClaimDelegateSteps.DELEGATE &&
     state.delegateStatus === ClaimDelegateTxStatuses.COMPLETED)
 
 interface ClaimDelegateFormHeaderProps {
   state: ClaimDelegateState
+  isJustStakeDelegate?: boolean
 }
 
-export const ClaimDelegateFormHeader: FC<ClaimDelegateFormHeaderProps> = ({ state }) => {
+export const ClaimDelegateFormHeader: FC<ClaimDelegateFormHeaderProps> = ({
+  state,
+  isJustStakeDelegate,
+}) => {
+  const steps = getSteps(!!isJustStakeDelegate)
+
   return (
     <div className={classNames.claimDelegateFormHeaderWrapper}>
       {steps.map((step, idx) => (
         <div className={classNames.step} key={step.value}>
           <div
             className={clsx(classNames.circle, {
-              [classNames.active]: step.value === state.step && !getIsCompleted({ idx, state }),
-              [classNames.completed]: getIsCompleted({ idx, state }),
+              [classNames.active]:
+                step.value === state.step && !getIsCompleted({ idx, state, steps }),
+              [classNames.completed]: getIsCompleted({ idx, state, steps }),
             })}
           >
-            {!getIsCompleted({ idx, state }) && (
+            {!getIsCompleted({ idx, state, steps }) && (
               <Text as="p" variant="p2semi">
                 {idx + 1}
               </Text>
             )}
-            {getIsCompleted({ idx, state }) && (
+            {getIsCompleted({ idx, state, steps }) && (
               <Icon iconName="checkmark" variant="xs" color="var(--earn-protocol-success-100)" />
             )}
           </div>

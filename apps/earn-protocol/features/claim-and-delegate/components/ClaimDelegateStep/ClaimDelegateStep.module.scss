@@ -1,4 +1,4 @@
-.claimDelegateStakeDelegateSubstepWrapper {
+.claimDelegateStepWrapper {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -43,12 +43,27 @@
     max-width: 585px;
     width: 100%;
 
-    .inputWrapper {
-      max-width: 345px;
+    .rightContentHeading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--general-space-16);
       margin-bottom: var(--general-space-16);
 
-      .inputCustomStyles {
-        font-size: 14px;
+      .inputWrapper {
+        width: 100%;
+
+        @media (min-width: 768px) {
+          max-width: 345px;
+        }
+
+        .inputCustomStyles {
+          font-size: 14px;
+        }
+      }
+
+      .sortWrapper {
       }
     }
 
