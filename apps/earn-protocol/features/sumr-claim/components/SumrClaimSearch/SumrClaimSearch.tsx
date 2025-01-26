@@ -20,7 +20,7 @@ import { getUserSumrEligibility } from '@/features/sumr-claim/helpers/getUserSum
 import classNames from './SumrClaimSearch.module.scss'
 
 export const SumrClaimSearch = () => {
-  const { push } = useRouter()
+  const { push, prefetch } = useRouter()
   const user = useUser()
   const { openAuthModal } = useAuthModal()
 
@@ -55,14 +55,14 @@ export const SumrClaimSearch = () => {
     setIsBoxVisible(true)
   }
 
+  const resolvedPortfolioUserAddress = eligibleUser?.userAddress ?? user?.address
+
   const handleButtonClick = () => {
     if (!user) {
       openAuthModal()
 
       return
     }
-
-    const resolvedPortfolioUserAddress = eligibleUser?.userAddress ?? user.address
 
     if (resolvedPortfolioUserAddress) {
       push(`/portfolio/${resolvedPortfolioUserAddress}?tab=${PortfolioTabs.REWARDS}`)
@@ -98,6 +98,12 @@ export const SumrClaimSearch = () => {
 
     return () => clearTimeout(timeout)
   }, [resolvedAddress])
+
+  useEffect(() => {
+    if (resolvedPortfolioUserAddress) {
+      prefetch(`/portfolio/${resolvedPortfolioUserAddress}?tab=${PortfolioTabs.REWARDS}`)
+    }
+  }, [resolvedPortfolioUserAddress, prefetch])
 
   const resolvedHeaderText = eligibleUser
     ? `Address ${eligibleUser.ens ? eligibleUser.ens : formatAddress(eligibleUser.userAddress)} is eligible for `
