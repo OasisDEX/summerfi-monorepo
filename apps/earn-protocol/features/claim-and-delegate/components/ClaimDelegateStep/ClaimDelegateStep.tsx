@@ -41,7 +41,7 @@ import {
   ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
-import { BASIC_TOAST_CONFIG } from '@/features/toastify/config'
+import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
@@ -174,7 +174,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
     onSuccess: () => {
       dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.COMPLETED })
 
-      toast.success('Delegate has been updated', BASIC_TOAST_CONFIG)
+      toast.success('Delegate has been updated', SUCCESS_TOAST_CONFIG)
 
       if (action === ClaimDelegateAction.REMOVE) {
         dispatch({ type: 'update-step', payload: ClaimDelegateSteps.COMPLETED })
@@ -187,7 +187,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
     onError: () => {
       dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.FAILED })
 
-      toast.error('Failed to update delegate', BASIC_TOAST_CONFIG)
+      toast.error('Failed to update delegate', ERROR_TOAST_CONFIG)
     },
   })
 

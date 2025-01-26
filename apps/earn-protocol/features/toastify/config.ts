@@ -11,5 +11,24 @@ export const BASIC_TOAST_CONFIG: ToastOptions = {
   theme: 'colored',
   style: {
     fontFamily: 'var(--font-inter)',
+    fontSize: '14px',
+    fontWeight: '600',
+    minHeight: '46px',
+  },
+}
+
+export const SUCCESS_TOAST_CONFIG: ToastOptions = {
+  ...BASIC_TOAST_CONFIG,
+  style: {
+    ...BASIC_TOAST_CONFIG.style,
+    backgroundColor: 'var(--earn-protocol-success-100)',
+  },
+}
+
+export const ERROR_TOAST_CONFIG: ToastOptions = {
+  ...BASIC_TOAST_CONFIG,
+  style: {
+    ...BASIC_TOAST_CONFIG.style,
+    backgroundColor: 'var(--earn-protocol-critical-100)',
   },
 }

@@ -14,7 +14,7 @@ import {
   ClaimDelegateSteps,
   ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
-import { BASIC_TOAST_CONFIG } from '@/features/toastify/config'
+import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 
 import { ClaimDelegateToClaim } from './ClaimDelegateToClaim'
@@ -67,13 +67,13 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
       setTimeout(() => {
         dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.COMPLETED })
 
-        toast.success('Claimed SUMR tokens successfully', BASIC_TOAST_CONFIG)
+        toast.success('Claimed SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
       }, delayPerNetwork[claimOnChainId])
     },
     onError: () => {
       dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.FAILED })
 
-      toast.error('Failed to claim SUMR tokens', BASIC_TOAST_CONFIG)
+      toast.error('Failed to claim SUMR tokens', ERROR_TOAST_CONFIG)
     },
   })
 
