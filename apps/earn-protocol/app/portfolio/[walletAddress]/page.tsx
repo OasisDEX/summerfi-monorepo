@@ -88,7 +88,10 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     sumrDecayFactors,
   }
 
-  const totalRays = Number(sumrEligibility.leaderboard[0]?.totalPoints ?? 0)
+  const totalRaysPoints = Number(sumrEligibility.leaderboard[0]?.totalPoints ?? 0)
+  const tgeSnapshotPoints = Number(sumrEligibility.leaderboard[0]?.tgeSnapshotPoints ?? 0)
+
+  const totalRays = totalRaysPoints - tgeSnapshotPoints
 
   return (
     <PortfolioPageViewComponent

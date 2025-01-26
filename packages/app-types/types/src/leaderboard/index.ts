@@ -10,6 +10,8 @@ export type LeaderboardItem = Leaderboard & {
   rank: string
   rank22h: string
   points22h: string
+  tgeSnapshotPoints: string
+  tgeSumrAwarded: string
 }
 
 export type LeaderboardResponse = { leaderboard: LeaderboardItem[]; error?: unknown }
