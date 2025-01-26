@@ -29,7 +29,11 @@ export const getStakeButtonLabel = ({
     return 'Retry'
   }
 
-  if (withApproval && state.stakeType === ClaimDelegateStakeType.ADD_STAKE) {
+  if (
+    withApproval &&
+    state.stakeType === ClaimDelegateStakeType.ADD_STAKE &&
+    state.stakingApproveStatus !== ClaimDelegateTxStatuses.COMPLETED
+  ) {
     return 'Approve'
   }
 
