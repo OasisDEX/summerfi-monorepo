@@ -1,5 +1,6 @@
 'use client'
 import { type Dispatch, type FC } from 'react'
+import { useAuthModal } from '@account-kit/react'
 import {
   Button,
   DataModule,
@@ -28,6 +29,7 @@ import {
   type ClaimDelegateState,
 } from '@/features/claim-and-delegate/types'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './PortfolioRewardsCards.module.scss'
 
@@ -38,11 +40,22 @@ interface SumrAvailableToClaimProps {
 const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) => {
   const { walletAddress } = useParams()
   const [sumrNetApyConfig] = useSumrNetApyConfig()
+  const { openAuthModal } = useAuthModal()
   const assumedSumrPriceRaw = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
   const rawSumr = Number(rewardsData.sumrToClaim.total)
   const rawSumrUSD = rawSumr * assumedSumrPriceRaw
   const sumrAmount = formatCryptoBalance(rawSumr)
   const sumrAmountUSD = `$${formatFiatBalance(rawSumrUSD)}`
+
+  const { userWalletAddress } = useUserWallet()
+
+  const resolvedWalletAddress = walletAddress as string
+
+  const handleConnect = () => {
+    if (!userWalletAddress) {
+      openAuthModal()
+    }
+  }
 
   return (
     <DataModule
@@ -73,11 +86,23 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
         valueSize: 'large',
       }}
       actionable={
-        <Link href={`/claim/${walletAddress}`} prefetch>
-          <Button variant="primarySmall" disabled={rawSumr === 0}>
+        !userWalletAddress ? (
+          <Button variant="primarySmall" onClick={handleConnect}>
             Claim
           </Button>
-        </Link>
+        ) : (
+          <Link href={`/claim/${walletAddress}`} prefetch>
+            <Button
+              variant="primarySmall"
+              disabled={
+                rawSumr === 0 ||
+                userWalletAddress.toLowerCase() !== resolvedWalletAddress.toLowerCase()
+              }
+            >
+              Claim
+            </Button>
+          </Link>
+        )
       }
       gradientBackground
     />
@@ -90,7 +115,9 @@ interface StakedAndDelegatedSumrProps {
 
 const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }) => {
   const { walletAddress } = useParams()
-
+  const resolvedWalletAddress = walletAddress as string
+  const { userWalletAddress } = useUserWallet()
+  const { openAuthModal } = useAuthModal()
   const rawApy = rewardsData.sumrStakingInfo.sumrStakingApy
   const isDelegated = rewardsData.sumrStakeDelegate.delegatedTo !== ADDRESS_ZERO
   const rawStaked = isDelegated ? rewardsData.sumrStakeDelegate.stakedAmount : '0'
@@ -98,6 +125,12 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }
 
   const value = formatCryptoBalance(rawStaked)
   const apy = formatDecimalAsPercent(rawApy * rawDecayFactor)
+
+  const handleConnect = () => {
+    if (!userWalletAddress) {
+      openAuthModal()
+    }
+  }
 
   return (
     <DataModule
@@ -113,11 +146,24 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }
         valueSize: 'large',
       }}
       actionable={
-        <Link href={`/stake-delegate/${walletAddress}?step=stake`} prefetch>
-          <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-            Add stake or remove stake
-          </Text>
-        </Link>
+        !userWalletAddress ? (
+          <Button variant="unstyled" onClick={handleConnect}>
+            <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
+              Add stake or remove stake
+            </Text>
+          </Button>
+        ) : (
+          <Link href={`/stake-delegate/${walletAddress}?step=stake`} prefetch>
+            <Button
+              variant="unstyled"
+              disabled={userWalletAddress.toLowerCase() !== resolvedWalletAddress.toLowerCase()}
+            >
+              <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
+                Add stake or remove stake
+              </Text>
+            </Button>
+          </Link>
+        )
       }
     />
   )
@@ -176,6 +222,9 @@ interface YourDelegateProps {
 
 const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
   const { walletAddress } = useParams()
+  const resolvedWalletAddress = walletAddress as string
+  const { userWalletAddress } = useUserWallet()
+  const { openAuthModal } = useAuthModal()
 
   const sumrDelegatedTo =
     state.delegatee?.toLowerCase() ?? rewardsData.sumrStakeDelegate.delegatedTo.toLowerCase()
@@ -209,6 +258,12 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
       'You have not delegated'
     )
 
+  const handleConnect = () => {
+    if (!userWalletAddress) {
+      openAuthModal()
+    }
+  }
+
   return (
     <DataModule
       dataBlock={{
@@ -219,11 +274,24 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
         subValue,
       }}
       actionable={
-        <Link href={`/stake-delegate/${walletAddress}`} prefetch>
-          <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-            Change delegate
-          </Text>
-        </Link>
+        !userWalletAddress ? (
+          <Button variant="unstyled" onClick={handleConnect}>
+            <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
+              Change delegate
+            </Text>
+          </Button>
+        ) : (
+          <Link href={`/stake-delegate/${walletAddress}`} prefetch>
+            <Button
+              variant="unstyled"
+              disabled={userWalletAddress.toLowerCase() !== resolvedWalletAddress.toLowerCase()}
+            >
+              <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
+                Change delegate
+              </Text>
+            </Button>
+          </Link>
+        )
       }
     />
   )

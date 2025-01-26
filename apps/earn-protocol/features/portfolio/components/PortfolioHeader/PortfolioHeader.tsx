@@ -71,7 +71,7 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
           <Dropdown
             dropdownValue={{ value: transakNetwork?.value ?? '', content: null }}
             trigger={TransakTrigger}
-            isDisabled={!userWalletAddress}
+            isDisabled={userWalletAddress?.toLowerCase() !== walletAddress.toLowerCase()}
             options={transakNetworkOptions.map((option) => ({
               value: option.value,
               content: (
