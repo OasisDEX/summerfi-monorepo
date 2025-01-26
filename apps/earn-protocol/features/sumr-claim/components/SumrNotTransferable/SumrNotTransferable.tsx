@@ -48,10 +48,11 @@ export const SumrNotTransferable = () => {
         <Text as="h2" variant="h2">
           Non-Transferable, A feature not a bug
         </Text>
-        <Text as="p" variant="p1">
-          For the first 6 months, $SUMR will not be able to be bought or sold, it can only be
-          earned. We believe that this is highly beneficial for our community and creates the most
-          long term value.
+        <Text as="p" variant="p1" style={{ maxWidth: '800px', margin: '0 auto' }}>
+          For at least the first 6 months, $SUMR will not be tradeable, it can only be earned and
+          used to govern the protocol. This is highly beneficial to both the protocol and for our
+          community because it removes distractions and immediate short term thinking, creating the
+          most long term value.
         </Text>
       </div>
       <div className={classNames.boxes}>

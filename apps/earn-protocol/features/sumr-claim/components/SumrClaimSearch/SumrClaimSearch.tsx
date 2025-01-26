@@ -133,7 +133,7 @@ export const SumrClaimSearch = () => {
         </Text>
       </Text>
       <Text as="p" variant="p1" className={classNames.headerDescription}>
-        $SUMR, the token powering the best of Defi for everyone
+        The token that powers DeFi’s best yield optimizer
       </Text>
       <div className={classNames.actionableWrapper}>
         <Input
