@@ -21,7 +21,8 @@ export const SUCCESS_TOAST_CONFIG: ToastOptions = {
   ...BASIC_TOAST_CONFIG,
   style: {
     ...BASIC_TOAST_CONFIG.style,
-    backgroundColor: 'var(--earn-protocol-success-100)',
+    backgroundColor: 'var(--earn-protocol-success-10)',
+    color: 'var(--earn-protocol-success-100)',
   },
 }
 
@@ -29,6 +30,7 @@ export const ERROR_TOAST_CONFIG: ToastOptions = {
   ...BASIC_TOAST_CONFIG,
   style: {
     ...BASIC_TOAST_CONFIG.style,
-    backgroundColor: 'var(--earn-protocol-critical-100)',
+    backgroundColor: 'var(--earn-protocol-critical-10)',
+    color: 'var(--earn-protocol-critical-100)',
   },
 }
