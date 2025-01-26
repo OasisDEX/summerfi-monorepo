@@ -14,7 +14,7 @@ import {
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { useUserWallet } from '@/hooks/use-user-wallet'
-import { useVisibleParagraph } from '@/hooks/useVisibleParagraph'
+import { useVisibleParagraph } from '@/hooks/use-visible-paragraph'
 
 import classNames from './ClaimDelegateAcceptanceStep.module.scss'
 

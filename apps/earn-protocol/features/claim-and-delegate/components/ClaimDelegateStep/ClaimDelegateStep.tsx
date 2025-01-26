@@ -31,6 +31,7 @@ import {
   type SumrDelegateWithDecayFactor,
 } from '@/features/claim-and-delegate/consts'
 import { useDecayFactor } from '@/features/claim-and-delegate/hooks/use-decay-factor'
+import { useSumrDelegateTransaction } from '@/features/claim-and-delegate/hooks/use-sumr-delegate-transaction'
 import {
   type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
@@ -40,7 +41,6 @@ import {
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
-import { useSumrDelegateTransaction } from '@/hooks/use-sumr-delegate-transaction'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import {

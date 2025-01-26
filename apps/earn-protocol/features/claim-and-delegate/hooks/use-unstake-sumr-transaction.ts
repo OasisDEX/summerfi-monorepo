@@ -1,9 +1,19 @@
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
 
 import { accountType } from '@/account-kit/config'
+import { useAppSDK } from '@/hooks/use-app-sdk'
 
-import { useAppSDK } from './use-app-sdk'
-
+/**
+ * Hook to handle unstaking SUMR tokens through a user operation transaction
+ * @param {Object} params - Hook parameters
+ * @param {number} params.amount - Amount of SUMR tokens to unstake
+ * @param {() => void} params.onSuccess - Callback function called when the transaction succeeds
+ * @param {() => void} params.onError - Callback function called when the transaction fails
+ * @returns {Object} Object containing the unstake transaction function, loading state, and error state
+ * @returns {() => Promise<unknown>} returns.unstakeSumrTransaction - Function to execute the unstake transaction
+ * @returns {boolean} returns.isLoading - Whether the transaction is currently being processed
+ * @returns {Error | null} returns.error - Error object if the transaction failed, null otherwise
+ */
 export const useUnstakeSumrTransaction = ({
   amount,
   onSuccess,

@@ -2,9 +2,18 @@
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
 
 import { accountType } from '@/account-kit/config'
+import { useAppSDK } from '@/hooks/use-app-sdk'
 
-import { useAppSDK } from './use-app-sdk'
-
+/**
+ * Hook to handle claiming SUMR tokens through a user operation transaction
+ * @param {Object} params - Hook parameters
+ * @param {() => void} params.onSuccess - Callback function called when the transaction succeeds
+ * @param {() => void} params.onError - Callback function called when the transaction fails
+ * @returns {Object} Object containing the claim transaction function, loading state, and error state
+ * @returns {() => Promise<unknown>} returns.claimSumrTransaction - Function to execute the claim transaction
+ * @returns {boolean} returns.isLoading - Whether the transaction is currently being processed
+ * @returns {Error | null} returns.error - Error object if the transaction failed, null otherwise
+ */
 export const useClaimSumrTransaction = ({
   onSuccess,
   onError,

@@ -5,6 +5,7 @@ import { SDKChainId } from '@summerfi/app-types'
 import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 
 import { SDKChainIdToAAChainMap } from '@/account-kit/config'
+import { useClaimSumrTransaction } from '@/features/claim-and-delegate/hooks/use-claim-sumr-transaction'
 import {
   type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
@@ -12,7 +13,6 @@ import {
   ClaimDelegateSteps,
   ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
-import { useClaimSumrTransaction } from '@/hooks/use-claim-sumr-transaction'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 
 import { ClaimDelegateToClaim } from './ClaimDelegateToClaim'

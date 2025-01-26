@@ -28,6 +28,8 @@ import { base } from 'viem/chains'
 import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { ClaimDelegateActionCard } from '@/features/claim-and-delegate/components/ClaimDelegateActionCard/ClaimDelegateActionCard'
 import { useDecayFactor } from '@/features/claim-and-delegate/hooks/use-decay-factor'
+import { useStakeSumrTransaction } from '@/features/claim-and-delegate/hooks/use-stake-sumr-transaction'
+import { useUnstakeSumrTransaction } from '@/features/claim-and-delegate/hooks/use-unstake-sumr-transaction'
 import {
   type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
@@ -37,9 +39,7 @@ import {
 } from '@/features/claim-and-delegate/types'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { usePublicClient } from '@/hooks/use-public-client'
-import { useStakeSumrTransaction } from '@/hooks/use-stake-sumr-transaction'
 import { useTokenBalance } from '@/hooks/use-token-balance'
-import { useUnstakeSumrTransaction } from '@/hooks/use-unstake-sumr-transaction'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import { getStakeButtonLabel } from './getStakeButtonLabel'

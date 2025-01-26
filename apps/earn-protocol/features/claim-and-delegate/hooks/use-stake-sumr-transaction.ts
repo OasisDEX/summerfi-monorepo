@@ -2,9 +2,22 @@ import { useEffect, useState } from 'react'
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
 
 import { accountType } from '@/account-kit/config'
+import { useAppSDK } from '@/hooks/use-app-sdk'
 
-import { useAppSDK } from './use-app-sdk'
-
+/**
+ * Hook to handle staking SUMR tokens through user operation transactions
+ * @param {Object} params - Hook parameters
+ * @param {number} params.amount - Amount of SUMR tokens to stake
+ * @param {() => void} params.onStakeSuccess - Callback function called when the stake transaction succeeds
+ * @param {() => void} params.onApproveSuccess - Callback function called when the approve transaction succeeds
+ * @param {() => void} params.onStakeError - Callback function called when the stake transaction fails
+ * @param {() => void} params.onApproveError - Callback function called when the approve transaction fails
+ * @returns {Object} Object containing transaction functions, loading state, and error state
+ * @returns {() => Promise<unknown>} returns.stakeSumrTransaction - Function to execute the stake transaction
+ * @returns {() => Promise<unknown>} returns.approveSumrTransaction - Function to execute the approve transaction (if needed)
+ * @returns {boolean} returns.isLoading - Whether any transaction is currently being processed
+ * @returns {Error | null} returns.error - Error object if any transaction failed, null otherwise
+ */
 export const useStakeSumrTransaction = ({
   amount,
   onStakeSuccess,
