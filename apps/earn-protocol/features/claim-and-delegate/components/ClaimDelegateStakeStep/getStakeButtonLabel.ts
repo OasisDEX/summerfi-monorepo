@@ -1,19 +1,16 @@
 import {
+  ClaimDelegateStakeType,
   type ClaimDelegateState,
   ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
 
-import { ClaimDelegateStakeStepTabs } from './types'
-
 export const getStakeButtonLabel = ({
   state,
   withApproval,
-  tab,
   isBase,
 }: {
   state: ClaimDelegateState
   withApproval: boolean
-  tab: ClaimDelegateStakeStepTabs
   isBase: boolean
 }) => {
   if (!isBase) {
@@ -25,16 +22,16 @@ export const getStakeButtonLabel = ({
   }
 
   if (state.stakingStatus === ClaimDelegateTxStatuses.PENDING) {
-    return tab === ClaimDelegateStakeStepTabs.ADD_STAKE ? 'Staking...' : 'Unstaking...'
+    return state.stakeType === ClaimDelegateStakeType.ADD_STAKE ? 'Staking...' : 'Unstaking...'
   }
 
   if ([state.stakingStatus, state.stakingApproveStatus].includes(ClaimDelegateTxStatuses.FAILED)) {
     return 'Retry'
   }
 
-  if (withApproval && tab === ClaimDelegateStakeStepTabs.ADD_STAKE) {
+  if (withApproval && state.stakeType === ClaimDelegateStakeType.ADD_STAKE) {
     return 'Approve'
   }
 
-  return tab === ClaimDelegateStakeStepTabs.ADD_STAKE ? 'Stake' : 'Unstake'
+  return state.stakeType === ClaimDelegateStakeType.ADD_STAKE ? 'Stake' : 'Unstake'
 }

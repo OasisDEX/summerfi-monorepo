@@ -1,4 +1,4 @@
-import { type Dispatch, type FC, useState } from 'react'
+import { type Dispatch, type FC } from 'react'
 import { useChain } from '@account-kit/react'
 import {
   Button,
@@ -33,6 +33,7 @@ import { useUnstakeSumrTransaction } from '@/features/claim-and-delegate/hooks/u
 import {
   type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
+  ClaimDelegateStakeType,
   type ClaimDelegateState,
   ClaimDelegateSteps,
   ClaimDelegateTxStatuses,
@@ -43,7 +44,6 @@ import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import { getStakeButtonLabel } from './getStakeButtonLabel'
-import { ClaimDelegateStakeStepTabs } from './types'
 
 import classNames from './ClaimDelegateStakeStep.module.scss'
 
@@ -88,8 +88,6 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
   dispatch,
   externalData,
 }) => {
-  const [tab, setTab] = useState<ClaimDelegateStakeStepTabs>(ClaimDelegateStakeStepTabs.ADD_STAKE)
-
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
@@ -147,6 +145,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
     amount: amountParsedStake.shiftedBy(18).toNumber(),
     onStakeSuccess: () => {
       dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.COMPLETED })
+      dispatch({ type: 'update-step', payload: ClaimDelegateSteps.COMPLETED })
     },
     onApproveSuccess: () => {
       dispatch({
@@ -166,6 +165,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
     amount: amountParsedUnstake.shiftedBy(18).toNumber(),
     onSuccess: () => {
       dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.COMPLETED })
+      dispatch({ type: 'update-step', payload: ClaimDelegateSteps.COMPLETED })
     },
     onError: () => {
       dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.FAILED })
@@ -190,6 +190,11 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
       dispatch({
         type: 'update-staking-approve-status',
         payload: ClaimDelegateTxStatuses.PENDING,
+      })
+
+      dispatch({
+        type: 'update-stake-change-amount',
+        payload: amountParsedStake.toString(),
       })
 
       await approveSumrTransaction().catch((err) => {
@@ -222,6 +227,11 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
     if (unstakeSumrTransaction) {
       dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.PENDING })
 
+      dispatch({
+        type: 'update-stake-change-amount',
+        payload: amountParsedUnstake.times(-1).toString(),
+      })
+
       await unstakeSumrTransaction().catch((err) => {
         // eslint-disable-next-line no-console
         console.error('Error unstaking SUMR:', err)
@@ -230,7 +240,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
   }
 
   const resolvedButtonAction =
-    tab === ClaimDelegateStakeStepTabs.ADD_STAKE ? handleStake : handleUnstake
+    state.stakeType === ClaimDelegateStakeType.ADD_STAKE ? handleStake : handleUnstake
 
   const apy = (
     <Text as="h5" variant="h5">
@@ -358,7 +368,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
             <TabBar
               tabs={[
                 {
-                  id: ClaimDelegateStakeStepTabs.ADD_STAKE,
+                  id: ClaimDelegateStakeType.ADD_STAKE,
                   label: 'Add stake',
                   content: (
                     <div
@@ -405,7 +415,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
                   ),
                 },
                 {
-                  id: ClaimDelegateStakeStepTabs.REMOVE_STAKE,
+                  id: ClaimDelegateStakeType.REMOVE_STAKE,
                   label: 'Remove stake',
                   content: (
                     <div
@@ -447,7 +457,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
                 },
               ]}
               handleTabChange={(_tab) => {
-                setTab(_tab.id as ClaimDelegateStakeStepTabs)
+                dispatch({ type: 'update-stake-type', payload: _tab.id as ClaimDelegateStakeType })
                 if (
                   [state.stakingApproveStatus, state.stakingStatus].includes(
                     ClaimDelegateTxStatuses.FAILED,
@@ -462,6 +472,10 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
               <Button
                 variant="secondarySmall"
                 onClick={() => {
+                  dispatch({
+                    type: 'update-stake-change-amount',
+                    payload: undefined,
+                  })
                   dispatch({ type: 'update-step', payload: ClaimDelegateSteps.COMPLETED })
                 }}
                 disabled={isLoading}
@@ -477,12 +491,13 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
                 disabled={
                   isLoading ||
                   userWalletAddress?.toLowerCase() !== resolvedWalletAddress.toLowerCase() ||
-                  (tab === ClaimDelegateStakeStepTabs.REMOVE_STAKE &&
+                  (state.stakeType === ClaimDelegateStakeType.REMOVE_STAKE &&
                     amountParsedUnstake.isZero()) ||
-                  (tab === ClaimDelegateStakeStepTabs.ADD_STAKE && amountParsedStake.isZero()) ||
-                  (tab === ClaimDelegateStakeStepTabs.REMOVE_STAKE &&
+                  (state.stakeType === ClaimDelegateStakeType.ADD_STAKE &&
+                    amountParsedStake.isZero()) ||
+                  (state.stakeType === ClaimDelegateStakeType.REMOVE_STAKE &&
                     amountParsedUnstake.toNumber() > Number(stakedAmount)) ||
-                  (tab === ClaimDelegateStakeStepTabs.ADD_STAKE &&
+                  (state.stakeType === ClaimDelegateStakeType.ADD_STAKE &&
                     amountParsedStake.toNumber() > Number(sumrBalance))
                 }
               >
@@ -495,7 +510,6 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
                   {getStakeButtonLabel({
                     state,
                     withApproval,
-                    tab,
                     isBase,
                   })}
                 </WithArrow>

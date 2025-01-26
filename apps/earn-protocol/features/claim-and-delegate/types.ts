@@ -19,6 +19,11 @@ export enum ClaimDelegateTxStatuses {
   FAILED = 'failed',
 }
 
+export enum ClaimDelegateStakeType {
+  ADD_STAKE = 'add-stake',
+  REMOVE_STAKE = 'remove-stake',
+}
+
 export type ClaimDelegateState = {
   step: ClaimDelegateSteps
   delegatee: string | undefined
@@ -26,6 +31,8 @@ export type ClaimDelegateState = {
   delegateStatus: ClaimDelegateTxStatuses | undefined
   stakingStatus: ClaimDelegateTxStatuses | undefined
   stakingApproveStatus: ClaimDelegateTxStatuses | undefined
+  stakeType: ClaimDelegateStakeType
+  stakeChangeAmount: string | undefined
   walletAddress: string
 }
 
@@ -53,6 +60,14 @@ export type ClaimDelegateReducerAction =
   | {
       type: 'update-staking-approve-status'
       payload: ClaimDelegateTxStatuses | undefined
+    }
+  | {
+      type: 'update-stake-type'
+      payload: ClaimDelegateStakeType
+    }
+  | {
+      type: 'update-stake-change-amount'
+      payload: string | undefined
     }
 
 export type ClaimDelegateExternalData = {

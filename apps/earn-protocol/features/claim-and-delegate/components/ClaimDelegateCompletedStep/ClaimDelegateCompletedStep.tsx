@@ -12,6 +12,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import { SDKChainId } from '@summerfi/app-types'
 import {
+  ADDRESS_ZERO,
   formatAddress,
   formatCryptoBalance,
   formatDecimalAsPercent,
@@ -21,13 +22,130 @@ import { useParams } from 'next/navigation'
 
 import { localSumrDelegates } from '@/features/claim-and-delegate/consts'
 import { useDecayFactor } from '@/features/claim-and-delegate/hooks/use-decay-factor'
-import type {
-  ClaimDelegateExternalData,
-  ClaimDelegateState,
+import {
+  type ClaimDelegateExternalData,
+  type ClaimDelegateState,
+  ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
 
 import classNames from './ClaimDelegateCompletedStep.module.scss'
+
+interface ClaimedCardProps {
+  externalData: ClaimDelegateExternalData
+  chainId: SDKChainId
+  estimatedSumrPrice: number
+}
+
+const ClaimedCard: FC<ClaimedCardProps> = ({ externalData, chainId, estimatedSumrPrice }) => {
+  const claimedSumrRaw = externalData.sumrToClaim.perChain[chainId] ?? 0
+
+  const claimedSumr = (
+    <>
+      {formatCryptoBalance(claimedSumrRaw)}{' '}
+      <Text as="span" variant="p3semiColorful">
+        $SUMR
+      </Text>
+    </>
+  )
+
+  const claimedSumrUSD = `$${formatFiatBalance(claimedSumrRaw * estimatedSumrPrice)}`
+
+  return (
+    <Card className={classNames.cardWrapper}>
+      <DataBlock
+        title="Claimed"
+        titleSize="medium"
+        value={claimedSumr}
+        valueSize="largeColorful"
+        subValue={claimedSumrUSD}
+        subValueSize="small"
+      />
+      <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+        $SUMR claimed from earning Summer.fi Pro $RAYS Lazy Summer Protocol deposits.
+      </Text>
+    </Card>
+  )
+}
+
+interface PotentialEarningCardProps {
+  externalData: ClaimDelegateExternalData
+  state: ClaimDelegateState
+  totalDelegated: number
+}
+
+const PotentialEarningCard: FC<PotentialEarningCardProps> = ({
+  externalData,
+  state,
+  totalDelegated,
+}) => {
+  const { decayFactor } = useDecayFactor(state.delegatee)
+
+  const apy = (
+    <>
+      {formatDecimalAsPercent(
+        externalData.sumrStakingInfo.sumrStakingApy * (decayFactor ?? 1),
+      ).replace('%', '')}{' '}
+      <Text as="span" variant="p3semi" style={{ color: 'var(--earn-protocol-success-100)' }}>
+        %APY
+      </Text>
+    </>
+  )
+
+  const sumrPerYear = `${formatFiatBalance(totalDelegated * Number(externalData.sumrStakingInfo.sumrStakingApy * (decayFactor ?? 1)))} $SUMR/yr`
+
+  return (
+    <Card className={classNames.cardWrapper}>
+      <DataBlock
+        title="Potential Earning"
+        titleSize="medium"
+        value={apy}
+        valueStyle={{ color: 'var(--earn-protocol-success-100)' }}
+        valueSize="large"
+        subValue={sumrPerYear}
+        subValueSize="small"
+      />
+      <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+        $SUMR Earned from staking and delegating claimed tokens in Lazy Summer Governance.
+      </Text>
+    </Card>
+  )
+}
+
+interface TotalStakedCardProps {
+  externalData: ClaimDelegateExternalData
+  state: ClaimDelegateState
+  estimatedSumrPrice: number
+}
+
+const TotalStakedCard: FC<TotalStakedCardProps> = ({ externalData, state, estimatedSumrPrice }) => {
+  const totalStakedRaw =
+    Number(externalData.sumrStakeDelegate.stakedAmount) + Number(state.stakeChangeAmount ?? 0)
+
+  const totalStaked = (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-8)' }}>
+      <Icon tokenName="SUMR" />
+      <Text as="span" variant="h4">
+        {formatCryptoBalance(totalStakedRaw)}
+      </Text>
+    </div>
+  )
+
+  const totalStakedUSD = `$${formatFiatBalance(totalStakedRaw * estimatedSumrPrice)}`
+
+  return (
+    <Card className={classNames.cardWrapper}>
+      <DataBlock
+        title="Total staked"
+        titleSize="medium"
+        value={totalStaked}
+        valueSize="largeColorful"
+        subValue={totalStakedUSD}
+        subValueSize="small"
+      />
+    </Card>
+  )
+}
 
 interface ClaimDelegateCompletedStepProps {
   state: ClaimDelegateState
@@ -42,37 +160,16 @@ export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = (
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
-
-  const { decayFactor } = useDecayFactor(state.delegatee)
-
   const { chain } = useChain()
 
-  const claimedSumrRaw = externalData.sumrToClaim.perChain[chain.id] ?? 0
-
-  const claimedSumr = (
-    <>
-      {formatCryptoBalance(claimedSumrRaw)}{' '}
-      <Text as="span" variant="p3semiColorful">
-        $SUMR
-      </Text>
-    </>
-  )
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
-  const claimedSumrUSD = `$${formatFiatBalance(claimedSumrRaw * estimatedSumrPrice)}`
 
-  const apy = (
-    <>
-      {formatDecimalAsPercent(
-        externalData.sumrStakingInfo.sumrStakingApy * (decayFactor ?? 1),
-      ).replace('%', '')}{' '}
-      <Text as="span" variant="p3semi" style={{ color: 'var(--earn-protocol-success-100)' }}>
-        %APY
-      </Text>
-    </>
-  )
-  const sumrClaimedStepBefore = externalData.sumrToClaim.perChain[SDKChainId.BASE] ?? 0
-  // we are not refetching sumrDelegated therefore we need to add sumrClaimedStepBefore to it
-  const sumrPerYear = `${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(sumrClaimedStepBefore)) * Number(externalData.sumrStakingInfo.sumrStakingApy * (decayFactor ?? 1)))} $SUMR/yr`
+  const sumrClaimedStepBefore =
+    state.claimStatus === ClaimDelegateTxStatuses.COMPLETED
+      ? externalData.sumrToClaim.perChain[SDKChainId.BASE] ?? 0
+      : 0
+
+  const externalDataSumrDelegated = externalData.sumrStakeDelegate.sumrDelegated
 
   const delegatee = state.delegatee?.toLowerCase()
 
@@ -93,38 +190,36 @@ export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = (
     externalDelegatee && externalDelegatee.account.name !== ''
       ? externalDelegatee.account.name
       : localSumrDelegates.find((item) => item.address === state.delegatee)?.title ??
-        formatAddress(delegatee)
+        (delegatee === ADDRESS_ZERO ? 'No delegate' : formatAddress(delegatee))
+
+  // if delegatee is address zero it means that user removed delegatee
+  // therefore fallback to 0
+  const totalDelegated =
+    delegatee !== ADDRESS_ZERO
+      ? // we are not refetching sumrDelegated therefore we need to add sumrClaimedStepBefore to it
+        Number(externalDataSumrDelegated) + Number(sumrClaimedStepBefore)
+      : 0
 
   return (
     <div className={classNames.claimDelegateStakeDelegateCompletedSubstepWrapper}>
       <div className={classNames.mainContent}>
-        <Card className={classNames.cardWrapper}>
-          <DataBlock
-            title="Claimed"
-            titleSize="medium"
-            value={claimedSumr}
-            valueSize="largeColorful"
-            subValue={claimedSumrUSD}
-            subValueSize="small"
+        {state.claimStatus === ClaimDelegateTxStatuses.COMPLETED && (
+          <ClaimedCard
+            externalData={externalData}
+            chainId={chain.id}
+            estimatedSumrPrice={estimatedSumrPrice}
           />
-          <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-            $SUMR claimed from earning Summer.fi Pro $RAYS Lazy Summer Protocol deposits.
-          </Text>
-        </Card>
-        <Card className={classNames.cardWrapper}>
-          <DataBlock
-            title="Potential Earning"
-            titleSize="medium"
-            value={apy}
-            valueStyle={{ color: 'var(--earn-protocol-success-100)' }}
-            valueSize="large"
-            subValue={sumrPerYear}
-            subValueSize="small"
-          />
-          <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-            $SUMR Earned from staking and delegating claimed tokens in Lazy Summer Governance.
-          </Text>
-        </Card>
+        )}
+        <TotalStakedCard
+          externalData={externalData}
+          state={state}
+          estimatedSumrPrice={estimatedSumrPrice}
+        />
+        <PotentialEarningCard
+          externalData={externalData}
+          state={state}
+          totalDelegated={totalDelegated}
+        />
       </div>
       <Card className={classNames.footer}>
         <div className={classNames.status}>
@@ -135,10 +230,7 @@ export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = (
             <div className={classNames.withIcon}>
               <Icon tokenName="SUMR" />
               <Text as="h4" variant="h4">
-                {formatCryptoBalance(
-                  Number(externalData.sumrStakeDelegate.sumrDelegated) +
-                    Number(sumrClaimedStepBefore),
-                )}
+                {formatCryptoBalance(totalDelegated)}
               </Text>
             </div>
           </div>

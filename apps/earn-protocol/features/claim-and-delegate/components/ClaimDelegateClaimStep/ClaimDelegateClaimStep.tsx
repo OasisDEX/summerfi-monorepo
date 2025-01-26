@@ -20,8 +20,8 @@ import { ClaimDelegateToClaim } from './ClaimDelegateToClaim'
 import classNames from './ClaimDelegateClaimStep.module.scss'
 
 const delayPerNetwork = {
-  [SDKChainId.BASE]: 3000,
-  [SDKChainId.ARBITRUM]: 3000,
+  [SDKChainId.BASE]: 4000,
+  [SDKChainId.ARBITRUM]: 4000,
   [SDKChainId.MAINNET]: 13000,
 }
 
