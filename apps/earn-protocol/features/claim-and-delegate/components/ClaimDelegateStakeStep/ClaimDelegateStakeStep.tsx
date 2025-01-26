@@ -63,7 +63,7 @@ const PercentageButtons: FC<PercentageButtonsProps> = ({ onSelect, max }) => {
         <Button
           variant="secondarySmall"
           key={percentage}
-          onClick={() => onSelect((Number(max ?? 1) * percentage).toString())}
+          onClick={() => onSelect((Number(max ?? 0) * percentage).toString())}
           style={{
             borderRadius: 'var(--general-radius-4)',
             flex: 1,
