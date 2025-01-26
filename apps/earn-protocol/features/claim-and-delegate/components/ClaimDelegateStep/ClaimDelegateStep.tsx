@@ -450,6 +450,19 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
 
         {hasStake && action === ClaimDelegateAction.REMOVE ? null : (
           <div className={classNames.buttonsWrapper}>
+            {hasDelegatee && (
+              <Button
+                variant="secondarySmall"
+                disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
+                onClick={() => {
+                  dispatch({ type: 'update-step', payload: ClaimDelegateSteps.STAKE })
+                }}
+              >
+                <Text variant="p3semi" as="p">
+                  Skip
+                </Text>
+              </Button>
+            )}
             {hasDelegatee ? (
               !isBase ? null : (
                 <Button
