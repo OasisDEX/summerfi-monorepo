@@ -1,4 +1,5 @@
 import { type Dispatch, type FC, useState } from 'react'
+import { useChain } from '@account-kit/react'
 import {
   Button,
   Card,
@@ -24,6 +25,7 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { base } from 'viem/chains'
 
+import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { ClaimDelegateActionCard } from '@/features/claim-and-delegate/components/ClaimDelegateActionCard/ClaimDelegateActionCard'
 import { useDecayFactor } from '@/features/claim-and-delegate/hooks/use-decay-factor'
 import {
@@ -33,6 +35,7 @@ import {
   ClaimDelegateSteps,
   ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
+import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { usePublicClient } from '@/hooks/use-public-client'
 import { useStakeSumrTransaction } from '@/hooks/use-stake-sumr-transaction'
 import { useTokenBalance } from '@/hooks/use-token-balance'
@@ -94,6 +97,8 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
   const { walletAddress } = useParams()
   const resolvedWalletAddress = Array.isArray(walletAddress) ? walletAddress[0] : walletAddress
 
+  const { setChain } = useChain()
+  const { clientChainId } = useClientChainId()
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   const { publicClient } = usePublicClient({ chain: base })
@@ -167,7 +172,17 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
     },
   })
 
+  const isBase = clientChainId === SDKChainId.BASE
+
   const handleStake = async () => {
+    // staking is only supported on base
+    if (!isBase) {
+      // eslint-disable-next-line no-console
+      setChain({ chain: SDKChainIdToAAChainMap[SDKChainId.BASE] })
+
+      return
+    }
+
     if (
       approveSumrTransaction &&
       state.stakingApproveStatus !== ClaimDelegateTxStatuses.COMPLETED
@@ -196,6 +211,14 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
   }
 
   const handleUnstake = async () => {
+    // unstaking is only supported on base
+    if (!isBase) {
+      // eslint-disable-next-line no-console
+      setChain({ chain: SDKChainIdToAAChainMap[SDKChainId.BASE] })
+
+      return
+    }
+
     if (unstakeSumrTransaction) {
       dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.PENDING })
 
@@ -473,6 +496,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
                     state,
                     withApproval,
                     tab,
+                    isBase,
                   })}
                 </WithArrow>
               </Button>

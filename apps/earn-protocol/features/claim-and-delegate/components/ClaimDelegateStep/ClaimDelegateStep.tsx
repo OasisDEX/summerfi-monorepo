@@ -1,5 +1,5 @@
 import { type ChangeEvent, type Dispatch, type FC, useState } from 'react'
-import { useUser } from '@account-kit/react'
+import { useChain, useUser } from '@account-kit/react'
 import {
   Button,
   Card,
@@ -22,6 +22,7 @@ import {
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
+import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { ClaimDelegateActionCard } from '@/features/claim-and-delegate/components/ClaimDelegateActionCard/ClaimDelegateActionCard'
 import { ClaimDelegateCard } from '@/features/claim-and-delegate/components/ClaimDelegateCard/ClaimDelegateCard'
 import {
@@ -38,6 +39,7 @@ import {
   ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
+import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { useSumrDelegateTransaction } from '@/hooks/use-sumr-delegate-transaction'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
@@ -133,6 +135,8 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
   const { walletAddress } = useParams()
 
   const [action, setAction] = useState<ClaimDelegateAction>()
+  const { setChain } = useChain()
+  const { clientChainId } = useClientChainId()
 
   const [sortBy, setSortBy] = useState<DropdownRawOption>(
     getDelegateSortOptions(DelegateSortOptions.HIGHEST_VOTING_WEIGHT)[0],
@@ -183,7 +187,17 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
 
   const hasStake = Number(externalData.sumrStakeDelegate.stakedAmount) > 0
 
+  const isBase = clientChainId === SDKChainId.BASE
+
   const handleDelegate = async (updateDelegatee?: string) => {
+    // delegation is only supported on base
+    if (!isBase) {
+      // eslint-disable-next-line no-console
+      setChain({ chain: SDKChainIdToAAChainMap[SDKChainId.BASE] })
+
+      return
+    }
+
     if (updateDelegatee !== ADDRESS_ZERO) {
       setAction(ClaimDelegateAction.CHANGE)
     } else {
@@ -437,18 +451,21 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
         {hasStake && action === ClaimDelegateAction.REMOVE ? null : (
           <div className={classNames.buttonsWrapper}>
             {hasDelegatee ? (
-              <Button
-                variant="secondarySmall"
-                disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
-                onClick={() => handleDelegate(ADDRESS_ZERO)}
-              >
-                <Text variant="p3semi" as="p">
-                  {getRemoveDelegateButtonLabel({
-                    state,
-                    action,
-                  })}
-                </Text>
-              </Button>
+              !isBase ? null : (
+                <Button
+                  variant="secondarySmall"
+                  disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
+                  onClick={() => handleDelegate(ADDRESS_ZERO)}
+                >
+                  <Text variant="p3semi" as="p">
+                    {getRemoveDelegateButtonLabel({
+                      state,
+                      action,
+                      isBase,
+                    })}
+                  </Text>
+                </Button>
+              )
             ) : (
               <Link href={`/portfolio/${walletAddress}?tab=${PortfolioTabs.REWARDS}`}>
                 <Button
@@ -483,6 +500,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
                 {getChangeDelegateButtonLabel({
                   state,
                   action,
+                  isBase,
                 })}
               </WithArrow>
             </Button>

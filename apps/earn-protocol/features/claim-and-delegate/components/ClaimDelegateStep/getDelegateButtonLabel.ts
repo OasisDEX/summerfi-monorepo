@@ -8,10 +8,16 @@ import { ClaimDelegateAction } from './types'
 export const getChangeDelegateButtonLabel = ({
   state,
   action,
+  isBase,
 }: {
   state: ClaimDelegateState
   action?: ClaimDelegateAction
+  isBase: boolean
 }) => {
+  if (!isBase) {
+    return 'Change network to Base'
+  }
+
   if (action !== ClaimDelegateAction.CHANGE) {
     return 'Delegate'
   }
@@ -30,10 +36,16 @@ export const getChangeDelegateButtonLabel = ({
 export const getRemoveDelegateButtonLabel = ({
   state,
   action,
+  isBase,
 }: {
   state: ClaimDelegateState
   action?: ClaimDelegateAction
+  isBase: boolean
 }) => {
+  if (!isBase) {
+    return 'Change network to Base'
+  }
+
   if (action !== ClaimDelegateAction.REMOVE) {
     return 'Remove delegation'
   }

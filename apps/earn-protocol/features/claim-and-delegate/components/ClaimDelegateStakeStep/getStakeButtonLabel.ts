@@ -9,11 +9,17 @@ export const getStakeButtonLabel = ({
   state,
   withApproval,
   tab,
+  isBase,
 }: {
   state: ClaimDelegateState
   withApproval: boolean
   tab: ClaimDelegateStakeStepTabs
+  isBase: boolean
 }) => {
+  if (!isBase) {
+    return 'Change network to Base'
+  }
+
   if (state.stakingApproveStatus === ClaimDelegateTxStatuses.PENDING) {
     return 'Approving...'
   }
