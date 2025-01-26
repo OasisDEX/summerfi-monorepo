@@ -237,6 +237,9 @@ importers:
       react-infinite-scroller:
         specifier: ^1.2.6
         version: 1.2.6(react@18.3.1)
+      react-toastify:
+        specifier: ^11.0.3
+        version: 11.0.3(react-dom@18.3.1)(react@18.3.1)
       recharts:
         specifier: ^2.13.0
         version: 2.13.0(react-dom@18.3.1)(react@18.3.1)
@@ -33166,6 +33169,17 @@ packages:
       react: '>=16.8.0'
     dependencies:
       react: 18.3.1
+    dev: false
+
+  /react-toastify@11.0.3(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-cbPtHJPfc0sGqVwozBwaTrTu1ogB9+BLLjd4dDXd863qYLj7DGrQ2sg5RAChjFUB4yc3w8iXOtWcJqPK/6xqRQ==}
+    peerDependencies:
+      react: ^18 || ^19
+      react-dom: ^18 || ^19
+    dependencies:
+      clsx: 2.1.1
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
     dev: false
 
   /react-transition-group@4.4.5(react-dom@18.3.1)(react@18.3.1):

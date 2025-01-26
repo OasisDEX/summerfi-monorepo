@@ -1,4 +1,5 @@
 import { type Dispatch, type FC } from 'react'
+import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
 import {
   Button,
@@ -38,6 +39,7 @@ import {
   ClaimDelegateSteps,
   ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
+import { BASIC_TOAST_CONFIG } from '@/features/toastify/config'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { usePublicClient } from '@/hooks/use-public-client'
 import { useTokenBalance } from '@/hooks/use-token-balance'
@@ -152,12 +154,18 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
         type: 'update-staking-approve-status',
         payload: ClaimDelegateTxStatuses.COMPLETED,
       })
+
+      toast.success('Staked SUMR tokens successfully', BASIC_TOAST_CONFIG)
     },
     onStakeError: () => {
       dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.FAILED })
+
+      toast.error('Failed to stake SUMR tokens', BASIC_TOAST_CONFIG)
     },
     onApproveError: () => {
       dispatch({ type: 'update-staking-approve-status', payload: ClaimDelegateTxStatuses.FAILED })
+
+      toast.error('Failed to approve staking SUMR tokens', BASIC_TOAST_CONFIG)
     },
   })
 
@@ -166,9 +174,13 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
     onSuccess: () => {
       dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.COMPLETED })
       dispatch({ type: 'update-step', payload: ClaimDelegateSteps.COMPLETED })
+
+      toast.success('Unstaked SUMR tokens successfully', BASIC_TOAST_CONFIG)
     },
     onError: () => {
       dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.FAILED })
+
+      toast.error('Failed to unstake SUMR tokens', BASIC_TOAST_CONFIG)
     },
   })
 

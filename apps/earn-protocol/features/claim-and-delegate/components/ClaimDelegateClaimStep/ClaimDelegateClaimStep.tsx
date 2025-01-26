@@ -1,4 +1,5 @@
 import { type Dispatch, type FC, useState } from 'react'
+import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
 import { Button, SUMR_CAP, Text, useLocalConfig, WithArrow } from '@summerfi/app-earn-ui'
 import { SDKChainId } from '@summerfi/app-types'
@@ -13,6 +14,7 @@ import {
   ClaimDelegateSteps,
   ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
+import { BASIC_TOAST_CONFIG } from '@/features/toastify/config'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 
 import { ClaimDelegateToClaim } from './ClaimDelegateToClaim'
@@ -64,10 +66,14 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
       // when fetching sumr balance, it will be updated
       setTimeout(() => {
         dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.COMPLETED })
+
+        toast.success('Claimed SUMR tokens successfully', BASIC_TOAST_CONFIG)
       }, delayPerNetwork[claimOnChainId])
     },
     onError: () => {
       dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.FAILED })
+
+      toast.error('Failed to claim SUMR tokens', BASIC_TOAST_CONFIG)
     },
   })
 

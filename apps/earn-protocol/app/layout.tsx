@@ -1,3 +1,4 @@
+import { ToastContainer } from 'react-toastify'
 import { cookieToInitialState } from '@account-kit/core'
 import {
   GlobalStyles,
@@ -64,6 +65,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <div id="portal" style={{ position: 'absolute' }} />
         {/* Separate portal for dropdown is needed to not mix up position calculation */}
         <div id="portal-dropdown" style={{ position: 'absolute' }} />
+        <ToastContainer />
       </body>
     </html>
   )
