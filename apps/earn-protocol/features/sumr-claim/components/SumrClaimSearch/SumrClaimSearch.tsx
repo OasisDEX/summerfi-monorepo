@@ -11,6 +11,7 @@ import {
   Text,
 } from '@summerfi/app-earn-ui'
 import { formatAddress } from '@summerfi/app-utils'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { isAddress } from 'viem'
 
@@ -20,7 +21,7 @@ import { getUserSumrEligibility } from '@/features/sumr-claim/helpers/getUserSum
 import classNames from './SumrClaimSearch.module.scss'
 
 export const SumrClaimSearch = () => {
-  const { push, prefetch } = useRouter()
+  const { push } = useRouter()
   const user = useUser()
   const { openAuthModal } = useAuthModal()
 
@@ -98,12 +99,6 @@ export const SumrClaimSearch = () => {
 
     return () => clearTimeout(timeout)
   }, [resolvedAddress])
-
-  useEffect(() => {
-    if (resolvedPortfolioUserAddress) {
-      prefetch(`/portfolio/${resolvedPortfolioUserAddress}?tab=${PortfolioTabs.REWARDS}`)
-    }
-  }, [resolvedPortfolioUserAddress, prefetch])
 
   const resolvedHeaderText = eligibleUser
     ? `Address ${eligibleUser.ens ? eligibleUser.ens : formatAddress(eligibleUser.userAddress)} is eligible for `
@@ -185,14 +180,23 @@ export const SumrClaimSearch = () => {
             {inputError}
           </Text>
         )}
-        <Button
-          variant="primaryLarge"
-          style={{ minWidth: 'unset', width: '100%' }}
-          onClick={handleButtonClick}
-          disabled={isButtonDisabled}
+        <Link
+          href={
+            !user || !resolvedPortfolioUserAddress
+              ? '/sumr'
+              : `/portfolio/${resolvedPortfolioUserAddress}?tab=${PortfolioTabs.REWARDS}`
+          }
+          prefetch
         >
-          {isLoading ? <LoadingSpinner size={28} /> : resolvedButtonText}
-        </Button>
+          <Button
+            variant="primaryLarge"
+            style={{ minWidth: 'unset', width: '100%' }}
+            onClick={handleButtonClick}
+            disabled={isButtonDisabled}
+          >
+            {isLoading ? <LoadingSpinner size={28} /> : resolvedButtonText}
+          </Button>
+        </Link>
       </div>
 
       <GradientBox
