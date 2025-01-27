@@ -1,8 +1,6 @@
 import { type DeviceInfo, DeviceType } from '@summerfi/app-types'
 import { type NextRequest, NextResponse } from 'next/server'
 
-import { isFullyLaunched } from '@/constants/is-fully-launched'
-
 /**
  * Detects the type of device based on the user agent string.
  *
@@ -34,15 +32,6 @@ export const getDeviceType = (userAgent: string): DeviceInfo => {
 }
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
-
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (!isFullyLaunched && !pathname.includes('/_next/') && !pathname.includes('/api/')) {
-    if (pathname === '/') {
-      return NextResponse.redirect(new URL('/earn/sumr', request.url))
-    }
-  }
-
   const userAgent = request.headers.get('user-agent') ?? ''
   const deviceInfo = getDeviceType(userAgent)
   // Set a cookie with the device type info
