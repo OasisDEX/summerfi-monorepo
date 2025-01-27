@@ -19,7 +19,7 @@ export const useUnstakeSumrTransaction = ({
   onSuccess,
   onError,
 }: {
-  amount: number
+  amount: bigint
   onSuccess: () => void
   onError: () => void
 }): {
@@ -38,7 +38,7 @@ export const useUnstakeSumrTransaction = ({
   })
 
   const unstakeSumrTransaction = async () => {
-    const tx = await getUnstakeTx({ amount: BigInt(amount) })
+    const tx = await getUnstakeTx({ amount })
 
     if (tx === undefined) {
       throw new Error('unstake tx is undefined')

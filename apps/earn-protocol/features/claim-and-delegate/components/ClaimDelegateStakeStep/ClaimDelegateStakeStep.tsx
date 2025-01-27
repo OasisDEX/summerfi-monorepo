@@ -20,6 +20,7 @@ import {
   ADDRESS_ZERO,
   formatCryptoBalance,
   formatDecimalAsPercent,
+  formatDecimalToBigInt,
   formatFiatBalance,
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
@@ -115,6 +116,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
   })
 
   const {
+    amountRaw: amountRawStake,
     amountParsed: amountParsedStake,
     manualSetAmount: manualSetAmountStake,
     amountDisplay: amountDisplayStake,
@@ -129,6 +131,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
   })
 
   const {
+    amountRaw: amountRawUnstake,
     amountParsed: amountParsedUnstake,
     manualSetAmount: manualSetAmountUnstake,
     amountDisplay: amountDisplayUnstake,
@@ -145,7 +148,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
   const { decayFactor, isLoading: decayFactorLoading } = useDecayFactor(state.delegatee)
 
   const { stakeSumrTransaction, approveSumrTransaction } = useStakeSumrTransaction({
-    amount: amountParsedStake.shiftedBy(18).toNumber(),
+    amount: formatDecimalToBigInt(amountRawStake),
     onStakeSuccess: () => {
       dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.COMPLETED })
       dispatch({ type: 'update-step', payload: ClaimDelegateSteps.COMPLETED })
@@ -173,7 +176,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
   })
 
   const { unstakeSumrTransaction } = useUnstakeSumrTransaction({
-    amount: amountParsedUnstake.shiftedBy(18).toNumber(),
+    amount: formatDecimalToBigInt(amountRawUnstake),
     onSuccess: () => {
       dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.COMPLETED })
       dispatch({ type: 'update-step', payload: ClaimDelegateSteps.COMPLETED })

@@ -25,7 +25,7 @@ export const useStakeSumrTransaction = ({
   onStakeError,
   onApproveError,
 }: {
-  amount: number
+  amount: bigint
   onStakeSuccess: () => void
   onApproveSuccess: () => void
   onStakeError: () => void
@@ -64,11 +64,11 @@ export const useStakeSumrTransaction = ({
       const user = getCurrentUser()
       // eslint-disable-next-line no-mixed-operators
 
-      if (amount === 0) {
+      if (amount === 0n) {
         return
       }
 
-      const tx = await getStakeTx({ user, amount: BigInt(amount) })
+      const tx = await getStakeTx({ user, amount })
 
       if (tx === undefined) {
         throw new Error('stake tx is undefined')
