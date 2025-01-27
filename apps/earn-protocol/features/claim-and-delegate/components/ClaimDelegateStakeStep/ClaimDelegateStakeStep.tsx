@@ -331,11 +331,9 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
           titleSize="medium"
           value={
             decayFactorLoading ? (
-              <SkeletonLine
-                height="18px"
-                width="60px"
-                style={{ marginTop: '7px', marginBottom: '7px)' }}
-              />
+              <div style={{ marginTop: '9px', marginBottom: '7px)' }}>
+                <SkeletonLine height="18px" width="60px" />
+              </div>
             ) : (
               apy
             )
@@ -347,14 +345,16 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
           valueSize="small"
           subValue={
             decayFactorLoading ? (
-              <SkeletonLine
-                height="12px"
-                width="80px"
-                style={{
-                  marginTop: '6px',
-                  marginBottom: 'var(--general-space-4)',
-                }}
-              />
+              <div style={{ marginTop: '9px', marginBottom: '7px)' }}>
+                <SkeletonLine
+                  height="12px"
+                  width="80px"
+                  style={{
+                    marginTop: '6px',
+                    marginBottom: 'var(--general-space-4)',
+                  }}
+                />
+              </div>
             ) : (
               sumrPerYear
             )

@@ -63,6 +63,12 @@ const getFilteredDelegates = (delegates: SumrDelegateWithDecayFactor[], searchVa
   })
 }
 
+const getIsCardFaded = ({ address, state }: { address: string; state: ClaimDelegateState }) => {
+  return (
+    state.delegatee !== ADDRESS_ZERO && state.delegatee?.toLowerCase() !== address.toLowerCase()
+  )
+}
+
 interface ClaimDelegateStepProps {
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
@@ -316,11 +322,9 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
           titleSize="medium"
           value={
             decayFactorLoading ? (
-              <SkeletonLine
-                height="18px"
-                width="60px"
-                style={{ marginTop: '7px', marginBottom: '7px)' }}
-              />
+              <div style={{ marginTop: '9px', marginBottom: '7px)' }}>
+                <SkeletonLine height="18px" width="60px" />
+              </div>
             ) : (
               apy
             )
@@ -332,14 +336,16 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
           valueSize="small"
           subValue={
             decayFactorLoading ? (
-              <SkeletonLine
-                height="12px"
-                width="80px"
-                style={{
-                  marginTop: '6px',
-                  marginBottom: 'var(--general-space-4)',
-                }}
-              />
+              <div style={{ marginTop: '9px', marginBottom: '7px)' }}>
+                <SkeletonLine
+                  height="12px"
+                  width="80px"
+                  style={{
+                    marginTop: '6px',
+                    marginBottom: 'var(--general-space-4)',
+                  }}
+                />
+              </div>
             ) : (
               sumrPerYear
             )
@@ -368,6 +374,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
               }
               selfDelegate
               disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
+              isFaded={getIsCardFaded({ address: resolvedWalletAddress, state })}
             />
           </div>
         )}
@@ -436,6 +443,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
                   }
                   votingPower={delegate.decayFactor}
                   disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
+                  isFaded={getIsCardFaded({ address: delegate.address, state })}
                 />
               ))}
             {getFilteredDelegates(mappedSumrDelegatesData, searchValue).length === 0 && (

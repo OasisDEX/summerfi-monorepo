@@ -57,6 +57,7 @@ export type IconNamesList =
   | 'ether_circle_color'
   | 'ether_color'
   | 'ether'
+  | 'etherscan'
   | 'eurc'
   | 'euro_circle_color'
   | 'exchange'

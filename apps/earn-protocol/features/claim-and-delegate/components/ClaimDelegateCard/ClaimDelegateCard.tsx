@@ -29,6 +29,7 @@ interface ClaimDelegateCardProps {
   votingPower?: number
   selfDelegate?: boolean
   disabled?: boolean
+  isFaded?: boolean
 }
 
 export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
@@ -42,12 +43,16 @@ export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
   votingPower,
   selfDelegate,
   disabled,
+  isFaded,
 }) => {
   return (
     <Card
       className={classNames.claimDelegateCardWrapper}
       variant={isActive ? 'cardPrimaryColorfulBorder' : 'cardPrimary'}
-      style={{ border: !isActive ? '1px solid transparent' : undefined }}
+      style={{
+        border: !isActive ? '1px solid transparent' : undefined,
+        opacity: isFaded ? 0.6 : 1,
+      }}
       onClick={handleClick}
       disabled={disabled}
     >
@@ -82,7 +87,7 @@ export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
             </div>
           )}
         </div>
-        <Text as="p" variant="p3" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+        <Text as="p" variant="p3" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
           {description}
         </Text>
         <div className={classNames.footer}>
@@ -99,7 +104,7 @@ export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
             )}
             {social?.link && (
               <Link href={social.link} target="_blank">
-                <Icon iconName="link" variant="s" />
+                <Icon iconName="etherscan" variant="s" />
               </Link>
             )}
           </div>

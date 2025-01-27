@@ -101,6 +101,7 @@ export const icons = {
   exchange: customLazy(() => import('./icons/exchange.svg?react')),
   eye: customLazy(() => import('./icons/eye.svg?react')),
   ezeth: customLazy(() => import('./icons/ezeth.svg?react')),
+  etherscan: customLazy(() => import('./icons/etherscan.svg?react')),
   frax_circle_color: customLazy(() => import('./icons/frax_circle_color.svg?react')),
   gemini_circle_color: customLazy(() => import('./icons/gemini_circle_color.svg?react')),
   gemini_color: customLazy(() => import('./icons/gemini_color.svg?react')),
