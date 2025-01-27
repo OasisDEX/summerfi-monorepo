@@ -1,6 +1,8 @@
 import { type DeviceInfo, DeviceType } from '@summerfi/app-types'
 import { type NextRequest, NextResponse } from 'next/server'
 
+import { isFullyLaunched } from '@/constants/is-fully-launched'
+
 /**
  * Detects the type of device based on the user agent string.
  *
@@ -31,8 +33,17 @@ export const getDeviceType = (userAgent: string): DeviceInfo => {
   return { deviceType }
 }
 
-export function middleware(_request: NextRequest) {
-  const userAgent = _request.headers.get('user-agent') ?? ''
+export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl
+
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (!isFullyLaunched && !pathname.includes('/_next/') && !pathname.includes('/api/')) {
+    if (pathname === '/') {
+      return NextResponse.redirect(new URL('/earn/sumr', request.url))
+    }
+  }
+
+  const userAgent = request.headers.get('user-agent') ?? ''
   const deviceInfo = getDeviceType(userAgent)
   // Set a cookie with the device type info
   const response = NextResponse.next()
@@ -40,7 +51,7 @@ export function middleware(_request: NextRequest) {
   response.cookies.set('deviceType', deviceInfo.deviceType)
 
   // Get `CloudFront-Viewer-Country` header if exists from request and set cookie
-  const country = _request.headers.get('CloudFront-Viewer-Country')
+  const country = request.headers.get('CloudFront-Viewer-Country')
 
   if (country) {
     response.cookies.set('country', country)

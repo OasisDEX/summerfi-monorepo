@@ -14,6 +14,7 @@ import Link from 'next/link'
 
 import { type PortfolioPositionsList } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
 import { PositionHistoricalChart } from '@/components/organisms/Charts/PositionHistoricalChart'
+import { isFullyLaunched } from '@/constants/is-fully-launched'
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
 
 import portfolioOverviewStyles from './PortfolioOverview.module.scss'
@@ -157,10 +158,13 @@ export const PortfolioOverview = ({
               </Link>
             </div>
           )}
-          <PortfolioVaultsCarousel
-            vaultsList={vaultsList}
-            style={{ marginTop: 'var(--general-space-24)' }}
-          />
+          {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
+          {isFullyLaunched ? (
+            <PortfolioVaultsCarousel
+              vaultsList={vaultsList}
+              style={{ marginTop: 'var(--general-space-24)' }}
+            />
+          ) : null}
         </Card>
         {/* <NewsAndUpdates items={dummyNewsAndUpdatesItems} /> */}
         {/* <CryptoUtilities /> */}

@@ -25,6 +25,7 @@ export interface EarnNavigationProps {
     itemsList?: NavigationItemsProps['items']
     dropdownContent?: ReactNode
     link?: string
+    disabled?: boolean
     onClick?: () => void
   })[]
   walletConnectionComponent?: ReactNode
