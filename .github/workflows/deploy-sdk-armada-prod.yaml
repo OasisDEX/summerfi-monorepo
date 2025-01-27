@@ -1,4 +1,4 @@
-name: 'Deploy SDK Production'
+name: 'Deploy SDK Armada Prod'
 
 on:
   workflow_dispatch:
@@ -8,14 +8,13 @@ permissions:
   contents: read # This is required for actions/checkout
 jobs:
   deploy:
-    name: Build & Deploy SDK to production using SST
-    environment: production
+    name: Build & Deploy SDK Armada to production using SST
+    environment: staging
     runs-on: ubuntu-latest
     env:
       ONE_INCH_API_KEY: ${{ secrets.ONE_INCH_API_KEY }}
       ONE_INCH_API_VERSION: ${{ secrets.ONE_INCH_API_VERSION }}
       ONE_INCH_API_URL: ${{ secrets.ONE_INCH_API_URL }}
-      ONE_INCH_ALLOWED_SWAP_PROTOCOLS: ${{ secrets.ONE_INCH_ALLOWED_SWAP_PROTOCOLS }}
       ONE_INCH_SWAP_CHAIN_IDS: ${{ secrets.ONE_INCH_SWAP_CHAIN_IDS }}
       ONE_INCH_API_SPOT_URL: ${{ secrets.ONE_INCH_API_SPOT_URL }}
       ONE_INCH_API_SPOT_VERSION: ${{ secrets.ONE_INCH_API_SPOT_VERSION }}
@@ -43,6 +42,8 @@ jobs:
       SUMMER_DEPLOYED_CHAINS_ID: ${{ secrets.SUMMER_DEPLOYED_CHAINS_ID }}
       SDK_DISTRIBUTIONS_BASE_URL: ${{ secrets.SDK_DISTRIBUTIONS_BASE_URL }}
       SDK_DISTRIBUTIONS_FILES: ${{ secrets.SDK_DISTRIBUTIONS_FILES }}
+      SDK_USE_FORK: ${{ secrets.SDK_USE_FORK }}
+      SDK_FORK_CONFIG: ${{ secrets.SDK_FORK_CONFIG }}
     steps:
       - name: Send start notification to Discord
         uses: Ilshidur/action-discord@0.3.2
@@ -54,7 +55,7 @@ jobs:
             }}"}]'
         with:
           args:
-            'SDK deployment `${{github.run_id}}` started on production 🚀 (from branch `${{
+            'SDK deployment `${{github.run_id}}` started on armada prod 🚀 (from branch `${{
             github.ref_name }}` by [${{github.triggering_actor
             }}](https://github.com/${{github.triggering_actor }})).'
 
@@ -91,14 +92,14 @@ jobs:
 
       - name: Deploy app
         run: |
-          pnpm run sst:deploy:sdk:prod
+          pnpm run sst:deploy:sdk:armada-prod
 
       - name: Send success notification to Discord
         uses: Ilshidur/action-discord@0.3.2
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_SDK_DEPLOY }}
         with:
-          args: 'SDK deployment `${{github.run_id}}` finished successfully on production 🎉'
+          args: 'SDK deployment `${{github.run_id}}` finished successfully on armada prod 🎉'
 
       - name: Send failure notification to Discord
         if: failure()
@@ -106,7 +107,7 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_SDK_DEPLOY }}
         with:
-          args: 'SDK deployment `${{github.run_id}}` failed on staging ❌'
+          args: 'SDK deployment `${{github.run_id}}` failed on armada prod ❌'
 
       - name: Send cancellation notification to Discord
         if: cancelled()
@@ -114,4 +115,4 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_SDK_DEPLOY }}
         with:
-          args: 'SDK deployment `${{github.run_id}}` was cancelled 🚫'
+          args: 'SDK deployment `${{github.run_id}}` was cancelled on armada prod 🚫'
