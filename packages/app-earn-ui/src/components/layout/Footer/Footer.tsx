@@ -21,7 +21,7 @@ const linksList = [
     links: [
       {
         label: 'Team',
-        url: INTERNAL_LINKS.about,
+        url: INTERNAL_LINKS.tempAbout,
       },
       {
         label: 'Contact',
@@ -33,19 +33,19 @@ const linksList = [
       },
       {
         label: 'Privacy',
-        url: INTERNAL_LINKS.privacy,
+        url: INTERNAL_LINKS.tempPrivacy,
       },
       {
         label: 'Cookie Policy',
-        url: INTERNAL_LINKS.cookie,
+        url: INTERNAL_LINKS.tempCookie,
       },
       {
         label: 'Terms',
-        url: INTERNAL_LINKS.terms,
+        url: INTERNAL_LINKS.tempTerms,
       },
       {
         label: 'Security',
-        url: INTERNAL_LINKS.security,
+        url: INTERNAL_LINKS.tempSecurity,
       },
     ],
   },
@@ -66,15 +66,15 @@ const linksList = [
       },
       {
         label: 'Ajna rewards',
-        url: INTERNAL_LINKS.ajnaRewards,
+        url: INTERNAL_LINKS.tempAjnaRewards,
       },
       {
         label: 'Referrals',
-        url: INTERNAL_LINKS.referrals,
+        url: INTERNAL_LINKS.tempReferrals,
       },
       {
         label: 'Brand assets',
-        url: INTERNAL_LINKS.brand,
+        url: INTERNAL_LINKS.tempBrand,
       },
     ],
   },
@@ -83,15 +83,15 @@ const linksList = [
     links: [
       {
         label: 'Borrow',
-        url: INTERNAL_LINKS.borrow,
+        url: INTERNAL_LINKS.tempBorrow,
       },
       {
         label: 'Multiply',
-        url: INTERNAL_LINKS.multiply,
+        url: INTERNAL_LINKS.tempMultiply,
       },
       {
         label: 'Earn',
-        url: INTERNAL_LINKS.earn,
+        url: INTERNAL_LINKS.tempEarn,
       },
     ],
   },
@@ -139,13 +139,17 @@ export const Footer: FC<FooterProps> = ({ logo, newsletter, languageSwitcher }) 
             {title}
           </Text>
           <ul className={footerStyles.linksList}>
-            {links.map(({ label, url }, j) => (
-              <li key={j}>
-                <Link prefetch={false} href={url}>
-                  <Text variant="p2">{label}</Text>
-                </Link>
-              </li>
-            ))}
+            {links.map(({ label, url }, j) => {
+              const isOutsideLink = url.startsWith('http')
+
+              return (
+                <li key={j}>
+                  <Link prefetch={false} href={url} target={isOutsideLink ? '_blank' : undefined}>
+                    <Text variant="p2">{label}</Text>
+                  </Link>
+                </li>
+              )
+            })}
           </ul>
         </div>
       ))}

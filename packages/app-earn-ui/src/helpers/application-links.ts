@@ -14,6 +14,18 @@ export const INTERNAL_LINKS = {
   borrow: '/earn/borrow',
   multiply: '/earn/multiply',
   earn: '/earn/earn',
+  // temporary links
+  tempAbout: 'https://summer.fi/about',
+  tempPrivacy: 'https://summer.fi/privacy',
+  tempCookie: 'https://summer.fi/cookie',
+  tempTerms: 'https://summer.fi/terms',
+  tempSecurity: 'https://summer.fi/security',
+  tempAjnaRewards: 'https://summer.fi/ajna/rewards',
+  tempReferrals: 'https://summer.fi/referrals',
+  tempBrand: 'https://summer.fi/brand',
+  tempBorrow: 'https://summer.fi/earn/borrow',
+  tempMultiply: 'https://summer.fi/earn/multiply',
+  tempEarn: 'https://summer.fi/earn/earn',
 }
 
 export const EXTERNAL_LINKS = {
