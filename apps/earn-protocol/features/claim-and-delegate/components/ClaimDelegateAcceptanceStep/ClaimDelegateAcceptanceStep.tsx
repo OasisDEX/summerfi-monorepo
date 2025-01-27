@@ -57,9 +57,10 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
     chainId: clientChainId,
     walletAddress: user?.address,
     isGnosisSafe: true,
-    version: 'sumr_version-12.12.2024',
+    version: 'sumr_version-27.01.2025',
     cookiePrefix: 'sumr-claim-token',
     host: '/earn',
+    type: 'sumrAirdrop',
   })
 
   useEffect(() => {

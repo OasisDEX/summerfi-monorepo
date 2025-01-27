@@ -22,6 +22,7 @@ import { type TOSInput } from '@/types'
  * @param isGnosisSafe - boolean to determine whether user use safe multi-sig
  * @param cookiePrefix - The prefix of cookie that will be stored as http-only cookie.
  * @param host - Optional, to be used when API is not available under the same host (for example localhost development on different ports).
+ * @param type - The type of Terms of Service message to generate.
  * @param forceDisconnect Optional, to be used to disconnect user when there is an issue with API to prevent him / her from using app without accepting TOS.
  *
  * @returns Returns state of Terms of Service flow
@@ -36,6 +37,7 @@ export const useTermsOfService = ({
   host,
   forceDisconnect,
   cookiePrefix,
+  type = 'default',
 }: TOSInput) => {
   const [tos, setTos] = useState<TOSState>({
     status: TOSStatus.INIT,
@@ -112,6 +114,7 @@ export const useTermsOfService = ({
           chainId,
           signMessage: memoizedSignMessage,
           cookiePrefix,
+          type,
         })
       }
     }
@@ -130,6 +133,7 @@ export const useTermsOfService = ({
     host,
     memoizedSignMessage,
     forceDisconnect,
+    type,
   ])
 
   return tos
