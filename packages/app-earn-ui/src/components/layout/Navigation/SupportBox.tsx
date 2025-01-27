@@ -26,7 +26,9 @@ const SupportBoxElement = ({
       </Text>
       <Link href={url} style={{ marginTop: '-8px' }}>
         <Text as="p" variant="p3semi">
-          <WithArrow>{urlLabel}</WithArrow>
+          <WithArrow as="span" variant="p3semi">
+            {urlLabel}
+          </WithArrow>
         </Text>
       </Link>
     </div>
