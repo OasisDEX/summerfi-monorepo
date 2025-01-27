@@ -70,13 +70,14 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
     ) {
       tosState.action()
     }
-  }, [tosState])
 
-  const handleAccept = () => {
+    // since this was added, continue btn handling is not longer needed
     if (tosState.status === TOSStatus.DONE) {
       dispatch({ type: 'update-step', payload: ClaimDelegateSteps.CLAIM })
     }
+  }, [tosState, dispatch])
 
+  const handleAccept = () => {
     if ('action' in tosState) {
       tosState.action()
     } else {
@@ -162,19 +163,17 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
             variant="primarySmall"
             style={{ paddingRight: isLoading ? undefined : 'var(--general-space-32)' }}
             onClick={handleAccept}
-            disabled={isDisabled}
+            // disiabled when done to avoid button text flickering just before automatic change of step to claim
+            disabled={isDisabled || tosState.status === TOSStatus.DONE}
           >
             <WithArrow
               style={{ color: 'var(--earn-protocol-secondary-100)' }}
               variant="p3semi"
               as="p"
-              isLoading={isLoading}
+              isLoading={isLoading || tosState.status === TOSStatus.DONE}
             >
-              {tosState.status === TOSStatus.DONE
-                ? 'Continue'
-                : isLoading
-                  ? 'Loading...'
-                  : 'Accept & Sign'}
+              {/* Loading... when done to avoid button text flickering just before automatic change of step to claim  */}
+              {isLoading || tosState.status === TOSStatus.DONE ? 'Loading...' : 'Accept & Sign'}
             </WithArrow>
           </Button>
         </div>
