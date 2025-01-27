@@ -94,7 +94,7 @@ export const PortfolioOverview = ({
       getPositionValues({
         positionData: position.positionData,
         vaultData: position.vaultData,
-      }).netEarningsUSD.toNumber(),
+      }).netValueUSD.toNumber(),
 
     0,
   )
