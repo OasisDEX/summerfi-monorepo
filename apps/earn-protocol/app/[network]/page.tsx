@@ -18,8 +18,6 @@ export const dynamic = 'force-static'
 export const revalidate = 60
 
 const EarnNetworkVaultsPage = async ({ params }: EarnNetworkVaultsPageProps) => {
-  console.log('isFullyLaunched', isFullyLaunched)
-
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!isFullyLaunched) {
     return redirect('/sumr')
