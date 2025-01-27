@@ -1,8 +1,12 @@
 import { type Dispatch, type SetStateAction } from 'react'
 import { type TOSState } from '@summerfi/app-types'
 import type { ColumnType } from 'kysely'
+import * as z from 'zod'
 
 export type TOSSignMessage = (data: string) => Promise<string | undefined>
+
+export const TOSMessageTypeSchema = z.enum(['default', 'sumrAirdrop'])
+export type TOSMessageType = z.infer<typeof TOSMessageTypeSchema>
 
 export type TOSInput = {
   signMessage: TOSSignMessage
@@ -16,6 +20,7 @@ export type TOSInput = {
   isGnosisSafe: boolean
   host?: string
   forceDisconnect?: () => void
+  type?: TOSMessageType
 }
 
 export interface TOSVerifyAcceptance {

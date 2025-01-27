@@ -4,6 +4,7 @@ import { type SignMessageResponse } from '@safe-global/safe-apps-sdk'
 import { decode } from 'jsonwebtoken'
 
 import { getDataToSignFromChallenge } from '@/client/helpers/get-data-to-sign-from-challenge'
+import { type TOSMessageType } from '@/types'
 
 const LOCAL_STORAGE_GNOSIS_SAFE_PENDING = 'gnosis-safe-pending'
 
@@ -38,6 +39,7 @@ export const getGnosisSafeDetails = async (
   chainId: number,
   account: string,
   newChallenge: string,
+  type: TOSMessageType,
 ): Promise<GnosisSafeSignInDetailsWithData> => {
   const key = `${LOCAL_STORAGE_GNOSIS_SAFE_PENDING}/${chainId}-${account}`
   const localStorageItem = localStorage.getItem(key)
@@ -51,12 +53,12 @@ export const getGnosisSafeDetails = async (
     if (exp && exp * 1000 >= Date.now()) {
       return {
         ...pendingSignature,
-        dataToSign: getDataToSignFromChallenge(pendingSignature.challenge),
+        dataToSign: getDataToSignFromChallenge(pendingSignature.challenge, type),
       }
     }
   }
 
-  const dataToSign = getDataToSignFromChallenge(newChallenge)
+  const dataToSign = getDataToSignFromChallenge(newChallenge, type)
   const res = (await sdk.txs.signMessage(dataToSign)) as SignMessageResponse
   let messageHash: string | undefined
 
