@@ -1,17 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useAuthModal, useChain, useLogout, useSignerStatus } from '@account-kit/react'
-import {
-  Button,
-  LoadableAvatar,
-  SkeletonLine,
-  Text,
-  Tooltip,
-  useMobileCheck,
-} from '@summerfi/app-earn-ui'
+import { Button, LoadableAvatar, SkeletonLine, Text, Tooltip } from '@summerfi/app-earn-ui'
 import { formatAddress } from '@summerfi/app-utils'
 
 import { networkSDKChainIdIconMap } from '@/constants/network-id-to-icon'
-import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import walletLabelStyles from './WalletLabel.module.scss'
@@ -20,8 +12,6 @@ export default function WalletLabel() {
   const [addressCopied, setAddressCopied] = useState(false)
   const { userWalletAddress } = useUserWallet()
   const { chain } = useChain()
-  const { deviceType } = useDeviceType()
-  const { isMobile } = useMobileCheck(deviceType)
 
   const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
   const { isInitializing: isSignerInitializing, isAuthenticating: isSignerAuthenticating } =
