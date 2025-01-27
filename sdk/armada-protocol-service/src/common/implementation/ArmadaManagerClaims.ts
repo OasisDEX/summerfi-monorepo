@@ -259,17 +259,20 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
 
     let protocolUsageRewards = 0n
     if (!onlyGovernanceDeployed) {
-      for await (const chainInfo of this._supportedChains) {
-        const rewards = await this.getProtocolUsageRewards(params.user, chainInfo)
-        protocolUsageRewards += rewards
-
-        // perChain: on hubchain we add delegation and distribution rewards
-        if (chainInfo.chainId === this._hubChainInfo.chainId) {
-          perChain[chainInfo.chainId] = rewards + voteDelegationRewards + merkleDistributionRewards
-        } else {
-          perChain[chainInfo.chainId] = rewards
-        }
-      }
+      const chainRewards = await Promise.all(
+        this._supportedChains.map(async (chainInfo) => {
+          const rewards = await this.getProtocolUsageRewards(params.user, chainInfo)
+          // perChain: on hubchain we add delegation and distribution rewards
+          if (chainInfo.chainId === this._hubChainInfo.chainId) {
+            perChain[chainInfo.chainId] =
+              rewards + voteDelegationRewards + merkleDistributionRewards
+          } else {
+            perChain[chainInfo.chainId] = rewards
+          }
+          return rewards
+        }),
+      )
+      protocolUsageRewards = chainRewards.reduce((acc, rewards) => acc + rewards, 0n)
     }
 
     const total = merkleDistributionRewards + voteDelegationRewards + protocolUsageRewards
