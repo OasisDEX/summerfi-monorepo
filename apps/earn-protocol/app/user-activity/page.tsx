@@ -4,7 +4,7 @@ import { type ReadonlyURLSearchParams, redirect } from 'next/navigation'
 
 import { getUsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
-import { isFullyLaunched } from '@/constants/is-fully-launched'
+import { isPreLaunchVersion } from '@/constants/is-pre-launch-version'
 import { UserActivityView } from '@/features/user-activity/components/UserActivityView/UserActivityView'
 
 export const revalidate = 60
@@ -15,7 +15,7 @@ interface UserActivityPageProps {
 
 const UserActivityPage: FC<UserActivityPageProps> = async ({ searchParams }) => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (!isFullyLaunched) {
+  if (isPreLaunchVersion) {
     return redirect('/sumr')
   }
   const [{ vaults }, { usersActivity, totalUsers, topDepositors }] = await Promise.all([

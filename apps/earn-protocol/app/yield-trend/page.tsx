@@ -1,10 +1,10 @@
 import { redirect } from 'next/navigation'
 
-import { isFullyLaunched } from '@/constants/is-fully-launched'
+import { isPreLaunchVersion } from '@/constants/is-pre-launch-version'
 
 const YieldTrendPage = () => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (!isFullyLaunched) {
+  if (isPreLaunchVersion) {
     return redirect('/sumr')
   }
 

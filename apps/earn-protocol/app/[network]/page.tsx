@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { VaultListViewComponent } from '@/components/layout/VaultsListView/VaultListViewComponent'
-import { isFullyLaunched } from '@/constants/is-fully-launched'
+import { isPreLaunchVersion } from '@/constants/is-pre-launch-version'
 import { decorateCustomVaultFields } from '@/helpers/vault-custom-value-helpers'
 
 type EarnNetworkVaultsPageProps = {
@@ -19,7 +19,7 @@ export const revalidate = 60
 
 const EarnNetworkVaultsPage = async ({ params }: EarnNetworkVaultsPageProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (!isFullyLaunched) {
+  if (isPreLaunchVersion) {
     return redirect('/sumr')
   }
   const parsedNetwork = humanNetworktoSDKNetwork(params.network)

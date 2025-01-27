@@ -14,7 +14,7 @@ import Link from 'next/link'
 
 import { type PortfolioPositionsList } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
 import { PositionHistoricalChart } from '@/components/organisms/Charts/PositionHistoricalChart'
-import { isFullyLaunched } from '@/constants/is-fully-launched'
+import { isPreLaunchVersion } from '@/constants/is-pre-launch-version'
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
 
 import portfolioOverviewStyles from './PortfolioOverview.module.scss'
@@ -159,7 +159,7 @@ export const PortfolioOverview = ({
             </div>
           )}
           {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
-          {isFullyLaunched ? (
+          {!isPreLaunchVersion ? (
             <PortfolioVaultsCarousel
               vaultsList={vaultsList}
               style={{ marginTop: 'var(--general-space-24)' }}

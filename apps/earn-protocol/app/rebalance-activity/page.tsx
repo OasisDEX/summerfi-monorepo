@@ -4,7 +4,7 @@ import { type ReadonlyURLSearchParams, redirect } from 'next/navigation'
 
 import { getGlobalRebalances } from '@/app/server-handlers/sdk/get-global-rebalances'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
-import { isFullyLaunched } from '@/constants/is-fully-launched'
+import { isPreLaunchVersion } from '@/constants/is-pre-launch-version'
 import { RebalanceActivityView } from '@/features/rebalance-activity/components/RebalanceActivityView/RebalanceActivityView'
 
 export const revalidate = 60
@@ -15,7 +15,7 @@ interface RebalanceActivityPageProps {
 
 const RebalanceActivityPage: FC<RebalanceActivityPageProps> = async ({ searchParams }) => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (!isFullyLaunched) {
+  if (isPreLaunchVersion) {
     return redirect('/sumr')
   }
   const [{ vaults }, { rebalances }] = await Promise.all([getVaultsList(), getGlobalRebalances()])

@@ -2,7 +2,7 @@ import { type FC, type PropsWithChildren } from 'react'
 import { Footer, NewsletterWrapper, Text } from '@summerfi/app-earn-ui'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
-import { isFullyLaunched } from '@/constants/is-fully-launched'
+import { isPreLaunchVersion } from '@/constants/is-pre-launch-version'
 
 import './global.css'
 import masterPageStyles from './MasterPage.module.scss'
@@ -12,7 +12,7 @@ interface MasterPageProps {}
 export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({ children }) => {
   return (
     <div className={masterPageStyles.mainContainer}>
-      <NavigationWrapper isFullyLaunched={isFullyLaunched} />
+      <NavigationWrapper isPreLaunchVersion={isPreLaunchVersion} />
       <div className={masterPageStyles.appContainer}>{children}</div>
       <div
         style={{
