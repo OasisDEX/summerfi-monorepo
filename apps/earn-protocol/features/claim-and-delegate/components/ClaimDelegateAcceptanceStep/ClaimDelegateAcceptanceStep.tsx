@@ -56,7 +56,7 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
     signMessage,
     chainId: clientChainId,
     walletAddress: user?.address,
-    isGnosisSafe: false,
+    isGnosisSafe: true,
     version: 'sumr_version-12.12.2024',
     cookiePrefix: 'sumr-claim-token',
     host: '/earn',
