@@ -6,13 +6,17 @@ import { TOSStatus } from '@summerfi/app-types'
 import Link from 'next/link'
 
 import { accountType } from '@/account-kit/config'
-import { claimDelegateTerms } from '@/features/claim-and-delegate/components/ClaimDelegateAcceptanceStep/terms'
+import {
+  airdropToS,
+  claimDelegateTerms,
+} from '@/features/claim-and-delegate/components/ClaimDelegateAcceptanceStep/terms'
 import {
   type ClaimDelegateReducerAction,
   type ClaimDelegateState,
   ClaimDelegateSteps,
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
+import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 import { useVisibleParagraph } from '@/hooks/use-visible-paragraph'
 
@@ -35,7 +39,7 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
   })
   const signer = useSigner()
   const { activeParagraph, paragraphRefs } = useVisibleParagraph()
-
+  const { clientChainId } = useClientChainId()
   const signMessage: TOSSignMessage = useCallback(
     async (data: string) => {
       if (user?.type === 'eoa') {
@@ -50,10 +54,10 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
 
   const tosState = useTermsOfService({
     signMessage,
-    chainId: 1,
+    chainId: clientChainId,
     walletAddress: user?.address,
     isGnosisSafe: false,
-    version: 'sumr_version-16.01.2026',
+    version: 'sumr_version-12.12.2024',
     cookiePrefix: 'sumr-claim-token',
     host: '/earn',
   })
@@ -120,9 +124,20 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
       <div className={classNames.mainContentWrapper}>
         <Card className={classNames.cardWrapper}>
           <div className={classNames.cardContentWrapper}>
+            <div className={classNames.airDrop}>
+              <Text as="p" variant="p2" style={{ textAlign: 'center' }}>
+                {airdropToS.header}
+              </Text>
+              <Text as="p" variant="p3">
+                {airdropToS.lastRevised}
+              </Text>
+              <Text as="p" variant="p3">
+                {airdropToS.content}
+              </Text>
+            </div>
             {claimDelegateTerms.map((item, index) => (
               <Text
-                as="p"
+                as="div"
                 variant="p3"
                 key={`content-${index}`}
                 ref={(element: HTMLParagraphElement | null) => {
