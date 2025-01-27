@@ -6,11 +6,13 @@ import {
   subgraphNetworkToId,
 } from '@summerfi/app-utils'
 import { isAddress } from '@summerfi/sdk-common'
+import { redirect } from 'next/navigation'
 
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { VaultDetailsView } from '@/components/layout/VaultDetailsView/VaultDetailsView'
+import { isPreLaunchVersion } from '@/constants/is-pre-launch-version'
 import {
   decorateCustomVaultFields,
   getVaultIdByVaultCustomName,
@@ -26,6 +28,10 @@ type EarnVaultDetailsPageProps = {
 export const revalidate = 60
 
 const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (isPreLaunchVersion) {
+    return redirect('/sumr')
+  }
   const parsedNetwork = humanNetworktoSDKNetwork(params.network)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
   const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())

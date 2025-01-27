@@ -4,14 +4,17 @@ import { SupportBox } from '@/components/layout/Navigation/SupportBox'
 export const getNavigationItems = ({
   userWalletAddress,
   isEarnApp,
+  isPreLaunchVersion,
 }: {
   userWalletAddress?: string
   isEarnApp?: boolean
+  isPreLaunchVersion?: boolean
 }): EarnNavigationProps['links'] => [
   {
     label: 'Earn',
     id: 'earn',
     link: !isEarnApp ? `/earn` : `/`,
+    disabled: isPreLaunchVersion,
   },
   ...(userWalletAddress
     ? [
@@ -30,6 +33,7 @@ export const getNavigationItems = ({
   {
     label: 'Explore',
     id: 'explore',
+    disabled: isPreLaunchVersion,
     itemsList: [
       {
         url: `${!isEarnApp ? `/earn` : ``}/user-activity`,

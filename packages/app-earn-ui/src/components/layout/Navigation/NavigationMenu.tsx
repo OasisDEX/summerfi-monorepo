@@ -19,7 +19,12 @@ export const NavigationMenu = ({ links, currentPath }: NavigationMenuType) => {
     <div className={navigationMenuStyles.navigationMenu}>
       <ul className={navigationMenuStyles.navigationMenuLinks}>
         {links?.map((link) => (
-          <li key={`MenuLinkLabel-${link.id}`}>
+          <li
+            key={`MenuLinkLabel-${link.id}`}
+            className={clsx({
+              [navigationMenuStyles.disabled]: link.disabled,
+            })}
+          >
             {link.itemsList ?? link.dropdownContent ? (
               <span
                 className={clsx({
@@ -35,25 +40,27 @@ export const NavigationMenu = ({ links, currentPath }: NavigationMenuType) => {
               </span>
             ) : (
               <Link
-                href={link.link ?? '/'}
+                href={link.disabled ? '' : link.link ?? '/'}
                 className={clsx({
                   [navigationMenuStyles.active]: link.link === currentPath,
                 })}
-                prefetch
+                prefetch={Boolean(link.disabled)}
               >
                 {link.label}
               </Link>
             )}
-            {(link.itemsList ?? link.dropdownContent) && (
-              <div className={navigationMenuStyles.dropdownContentWrapper}>
-                <div className={navigationMenuStyles.dropdownContent}>
-                  {link.itemsList && (
-                    <NavigationItems items={link.itemsList} currentPath={currentPath} />
-                  )}
-                  {link.dropdownContent}
-                </div>
-              </div>
-            )}
+            {!link.disabled
+              ? (link.itemsList ?? link.dropdownContent) && (
+                  <div className={navigationMenuStyles.dropdownContentWrapper}>
+                    <div className={navigationMenuStyles.dropdownContent}>
+                      {link.itemsList && (
+                        <NavigationItems items={link.itemsList} currentPath={currentPath} />
+                      )}
+                      {link.dropdownContent}
+                    </div>
+                  </div>
+                )
+              : null}
           </li>
         ))}
       </ul>

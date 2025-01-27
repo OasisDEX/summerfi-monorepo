@@ -31,8 +31,8 @@ export const getDeviceType = (userAgent: string): DeviceInfo => {
   return { deviceType }
 }
 
-export function middleware(_request: NextRequest) {
-  const userAgent = _request.headers.get('user-agent') ?? ''
+export function middleware(request: NextRequest) {
+  const userAgent = request.headers.get('user-agent') ?? ''
   const deviceInfo = getDeviceType(userAgent)
   // Set a cookie with the device type info
   const response = NextResponse.next()
@@ -40,7 +40,7 @@ export function middleware(_request: NextRequest) {
   response.cookies.set('deviceType', deviceInfo.deviceType)
 
   // Get `CloudFront-Viewer-Country` header if exists from request and set cookie
-  const country = _request.headers.get('CloudFront-Viewer-Country')
+  const country = request.headers.get('CloudFront-Viewer-Country')
 
   if (country) {
     response.cookies.set('country', country)

@@ -20,7 +20,7 @@
     cursor: pointer;
     margin: 0 var(--general-space-32);
 
-    > span {
+    >span {
       padding: var(--general-space-16) 0;
     }
 
@@ -32,6 +32,18 @@
         transform 0.2s;
     }
 
+    &.disabled,
+    span.disabled,
+    a.disabled {
+      pointer-events: none;
+      opacity: 0.5;
+
+      img {
+        pointer-events: none;
+        opacity: 0.5;
+      }
+    }
+
     span.active,
     a.active {
       color: var(--color-text-primary);
@@ -41,13 +53,13 @@
       }
     }
 
-    span > div > svg {
+    span>div>svg {
       stroke: var(--earn-protocol-secondary-40);
       transition: all 0.2s;
     }
 
     &:hover {
-      span > div > svg {
+      span>div>svg {
         stroke: #fff;
         transform: rotate3d(1, 0, 0, 180deg);
       }
@@ -75,8 +87,8 @@
     }
   }
 
-  li > span,
-  li > a {
+  li>span,
+  li>a {
     font-size: 16px;
     font-weight: 600;
     line-height: var(--general-space-24);
@@ -84,7 +96,7 @@
     transition: opacity 0.2s;
   }
 
-  li > .dropdownContentWrapper {
+  li>.dropdownContentWrapper {
     pointer-events: none;
     position: absolute;
     width: max-content;

@@ -2,7 +2,7 @@ import { SDKChainId } from '@summerfi/app-types'
 import { SummerTokenAbi } from '@summerfi/armada-protocol-abis'
 import { getChainInfoByChainId } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
-import { type Address, createPublicClient, http } from 'viem'
+import { type Address, createPublicClient, http, zeroAddress } from 'viem'
 import { arbitrum, base, mainnet } from 'viem/chains'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
@@ -60,7 +60,7 @@ export const getSumrBalances = async ({
             })
             .catch(() => null)
 
-          if (!sumrToken) {
+          if (!sumrToken || sumrToken.address.value.toLowerCase() === zeroAddress.toLowerCase()) {
             // Token not available on this network
             return {
               chain: chainName,

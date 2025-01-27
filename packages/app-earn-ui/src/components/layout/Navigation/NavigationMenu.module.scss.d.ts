@@ -1,5 +1,6 @@
 export type Styles = {
   active: string
+  disabled: string
   dropdownContent: string
   dropdownContentWrapper: string
   navigationMenu: string
