@@ -182,6 +182,7 @@ const YourTotalSumr: FC<YourTotalSumrProps> = ({ rewardsData }) => {
 
   const rawTotalSumr =
     Number(rewardsData.sumrBalances.total) +
+    Number(rewardsData.sumrBalances.vested) +
     Number(rewardsData.sumrStakeDelegate.stakedAmount) +
     Number(rewardsData.sumrToClaim.total)
 

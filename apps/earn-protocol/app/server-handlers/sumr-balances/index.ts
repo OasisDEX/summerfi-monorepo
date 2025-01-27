@@ -1,5 +1,5 @@
 import { SDKChainId } from '@summerfi/app-types'
-import { SummerTokenAbi } from '@summerfi/armada-protocol-abis'
+import { SummerTokenAbi, SummerVestingWalletFactoryAbi } from '@summerfi/armada-protocol-abis'
 import { getChainInfoByChainId } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import { type Address, createPublicClient, http, zeroAddress } from 'viem'
@@ -12,12 +12,14 @@ export interface SumrBalancesData {
   mainnet: string
   arbitrum: string
   base: string
-  total: string
+  total: string // without vesting
+  vested: string
   raw: {
     mainnet: string
     arbitrum: string
     base: string
     total: string
+    vested: string
   }
 }
 
@@ -76,6 +78,30 @@ export const getSumrBalances = async ({
             args: [resolvedWalletAddress],
           })
 
+          let vestingBalanceOnBase = 0n
+
+          if (chainId === SDKChainId.BASE) {
+            const vestingWalletFactory = await publicClient.readContract({
+              abi: SummerTokenAbi,
+              address: sumrToken.address.value,
+              functionName: 'vestingWalletFactory',
+            })
+
+            const vestingWallet = await publicClient.readContract({
+              abi: SummerVestingWalletFactoryAbi,
+              address: vestingWalletFactory,
+              functionName: 'vestingWallets',
+              args: [resolvedWalletAddress],
+            })
+
+            vestingBalanceOnBase = await publicClient.readContract({
+              abi: SummerTokenAbi,
+              address: sumrToken.address.value,
+              functionName: 'balanceOf',
+              args: [vestingWallet],
+            })
+          }
+
           if (balanceResult === undefined) {
             return {
               chain: chainName,
@@ -90,6 +116,10 @@ export const getSumrBalances = async ({
               .shiftedBy(-sumrToken.decimals)
               .toString(),
             rawBalance: balanceResult.toString(),
+            vestingBalance: new BigNumber(vestingBalanceOnBase.toString())
+              .shiftedBy(-sumrToken.decimals)
+              .toString(),
+            vestingRawBalance: vestingBalanceOnBase.toString(),
           }
         } catch (error) {
           // Log the error but don't throw, return 0 balance instead
@@ -110,11 +140,13 @@ export const getSumrBalances = async ({
       arbitrum: '0',
       base: '0',
       total: '0',
+      vested: '0',
       raw: {
         mainnet: '0',
         arbitrum: '0',
         base: '0',
         total: '0',
+        vested: '0',
       },
     }
 
@@ -132,9 +164,11 @@ export const getSumrBalances = async ({
     return {
       ...result,
       total: total.toString(),
+      vested: balances.find((b) => b.chain === 'base')?.vestingBalance ?? '0',
       raw: {
         ...result.raw,
         total: rawTotal.toString(),
+        vested: balances.find((b) => b.chain === 'base')?.vestingRawBalance ?? '0',
       },
     }
   } catch (error) {

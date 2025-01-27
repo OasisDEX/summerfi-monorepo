@@ -57,6 +57,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
 
   const totalSumr =
     Number(rewardsData.sumrBalances.total) +
+    Number(rewardsData.sumrBalances.vested) +
     Number(rewardsData.sumrStakeDelegate.stakedAmount) +
     Number(rewardsData.sumrToClaim.total)
 
