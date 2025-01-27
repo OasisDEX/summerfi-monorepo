@@ -586,7 +586,7 @@ export class ArmadaManager implements IArmadaManager {
           }),
         })
       : inAmount
-    const shouldSwap = !inAmount.token.address.equals(fleetToken.address)
+    const shouldSwap = !swapFromAmount.token.address.equals(fleetToken.address)
     const shouldStake = params.shouldStake ?? true
 
     let swapMinAmount: ITokenAmount | undefined
