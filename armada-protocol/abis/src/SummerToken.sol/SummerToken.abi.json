@@ -760,6 +760,30 @@
   },
   {
     "type": "function",
+    "name": "getRawVotesAt",
+    "inputs": [
+      {
+        "name": "account",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "timestamp",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "getVotes",
     "inputs": [
       {
@@ -837,6 +861,11 @@
             "name": "initialDecayFunction",
             "type": "uint8",
             "internalType": "enum VotingDecayLibrary.DecayFunction"
+          },
+          {
+            "name": "vestingWalletFactory",
+            "type": "address",
+            "internalType": "address"
           }
         ]
       }
@@ -1514,7 +1543,7 @@
       {
         "name": "",
         "type": "address",
-        "internalType": "contract IGovernanceRewardsManager"
+        "internalType": "address"
       }
     ],
     "stateMutability": "view"
@@ -1934,7 +1963,7 @@
       {
         "name": "",
         "type": "address",
-        "internalType": "contract SummerVestingWalletFactory"
+        "internalType": "address"
       }
     ],
     "stateMutability": "view"
@@ -2514,6 +2543,11 @@
         "internalType": "address"
       }
     ]
+  },
+  {
+    "type": "error",
+    "name": "CannotUndelegateWhileStaked",
+    "inputs": []
   },
   {
     "type": "error",
