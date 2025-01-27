@@ -490,10 +490,15 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       args: [multicallArgs],
     })
 
+    LoggingService.debug(
+      'Aggregated claims for chain: ' + params.chainInfo.toString(),
+      multicallOperations,
+    )
+
     return [
       {
         type: TransactionType.Claim,
-        description: 'Claiming operations: ' + multicallOperations.join(', '),
+        description: 'Claiming aggregated rewards',
         transaction: {
           target: admiralsQuartersAddress,
           calldata: multicallCalldata,
