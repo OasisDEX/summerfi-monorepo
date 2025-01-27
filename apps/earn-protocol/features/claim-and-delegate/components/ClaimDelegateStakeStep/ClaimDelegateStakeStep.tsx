@@ -22,6 +22,7 @@ import {
   formatDecimalAsPercent,
   formatFiatBalance,
 } from '@summerfi/app-utils'
+import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { base } from 'viem/chains'
@@ -65,7 +66,7 @@ const PercentageButtons: FC<PercentageButtonsProps> = ({ onSelect, max }) => {
         <Button
           variant="secondarySmall"
           key={percentage}
-          onClick={() => onSelect((Number(max ?? 0) * percentage).toString())}
+          onClick={() => onSelect(new BigNumber(max ?? 0).times(percentage).toString())}
           style={{
             borderRadius: 'var(--general-radius-4)',
             flex: 1,
