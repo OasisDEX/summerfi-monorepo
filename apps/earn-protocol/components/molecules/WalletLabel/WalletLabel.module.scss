@@ -1,29 +1,54 @@
-.wrapper {
-  width: 100%;
+.mainButtonWrapper {
+  display: flex;
   position: relative;
+  justify-content: space-between;
+  align-items: center;
+  width: 180px;
+  padding: 0 var(--general-space-12) 0 6px;
 
-  @media screen and (min-width: 768px) {
-    width: auto;
+}
+
+.logoutButton {
+  width: 100%;
+}
+
+.walletAddressPopup {
+  font-family: monospace;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+  line-height: 24px;
+
+  &>p {
+    color: var(--earn-protocol-primary-100);
   }
+}
 
-  .walletAddress {
-    opacity: 1;
-    transition: opacity 0.3s;
-  }
+.popupDivider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--color-border);
+  margin: 15px 0 15px
+}
 
-  .logout {
-    opacity: 0;
-    transition: opacity 0.3s;
-    position: absolute;
-  }
+.popupWrapper {
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--general-space-8);
+  padding: var(--general-space-16);
 
-  &:hover {
-    .logout {
-      opacity: 1;
-    }
+}
 
-    .walletAddress {
-      opacity: 0;
-    }
+.mobileCopyLogoutButtons {
+  display: none;
+
+  @include media('<=s') {
+    display: flex;
+    flex-direction: row;
   }
 }
