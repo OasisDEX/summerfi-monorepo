@@ -54,7 +54,7 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
 
   const handleClaimEventButton = () => {
     trackButtonClick({
-      id: 'SumrAvailableToClaim',
+      id: 'SumrClaimPortfolioButton',
       page: `/portfolio/${resolvedWalletAddress}`,
       userAddress: userWalletAddress,
       totalSumr: sumrAmount,
@@ -137,7 +137,17 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }
   const value = formatCryptoBalance(rawStaked)
   const apy = formatDecimalAsPercent(rawApy * rawDecayFactor)
 
+  const handleStakeAndDelegateEventButton = () => {
+    trackButtonClick({
+      id: 'SumrStakeAndDelegatePortfolioButton',
+      page: `/portfolio/${resolvedWalletAddress}`,
+      userAddress: userWalletAddress,
+      totalSumrStaked: value,
+    })
+  }
+
   const handleConnect = () => {
+    handleStakeAndDelegateEventButton()
     if (!userWalletAddress) {
       openAuthModal()
     }
@@ -164,7 +174,11 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }
             </Text>
           </Button>
         ) : (
-          <Link href={`/stake-delegate/${walletAddress}?step=stake`} prefetch>
+          <Link
+            href={`/stake-delegate/${walletAddress}?step=stake`}
+            prefetch
+            onClick={handleStakeAndDelegateEventButton}
+          >
             <Button
               variant="unstyled"
               disabled={userWalletAddress.toLowerCase() !== resolvedWalletAddress.toLowerCase()}
@@ -270,7 +284,17 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
       'You have not delegated'
     )
 
+  const handleChangeDelegateEventButton = () => {
+    trackButtonClick({
+      id: 'SumrChangeDelegatePortfolioButton',
+      page: `/portfolio/${resolvedWalletAddress}`,
+      userAddress: userWalletAddress,
+      totalSumrStaked: value,
+    })
+  }
+
   const handleConnect = () => {
+    handleChangeDelegateEventButton()
     if (!userWalletAddress) {
       openAuthModal()
     }
@@ -293,7 +317,11 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
             </Text>
           </Button>
         ) : (
-          <Link href={`/stake-delegate/${walletAddress}`} prefetch>
+          <Link
+            href={`/stake-delegate/${walletAddress}`}
+            prefetch
+            onClick={handleChangeDelegateEventButton}
+          >
             <Button
               variant="unstyled"
               disabled={userWalletAddress.toLowerCase() !== resolvedWalletAddress.toLowerCase()}
