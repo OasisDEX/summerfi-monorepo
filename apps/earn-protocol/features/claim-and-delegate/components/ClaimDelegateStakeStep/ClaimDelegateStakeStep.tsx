@@ -74,7 +74,7 @@ const PercentageButtons: FC<PercentageButtonsProps> = ({ onSelect, max }) => {
             ...(percentage === 1 && { backgroundColor: 'var(--earn-protocol-neutral-60)' }),
           }}
         >
-          {percentage === 1 ? 'Max' : `${percentage}%`}
+          {percentage === 1 ? 'Max' : `${formatDecimalAsPercent(percentage).replace('.00', '')}`}
         </Button>
       ))}
     </div>
