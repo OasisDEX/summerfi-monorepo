@@ -47,6 +47,7 @@
     "react-infinite-scroller": "^1.2.6",
     "react": "^18.3.1",
     "recharts": "^2.13.0",
+    "@safe-global/safe-apps-sdk": "^9.0.0",
     "sharp": "^0.33.5",
     "uniqolor": "1.1.1",
     "usehooks-ts": "^3.1.0",
