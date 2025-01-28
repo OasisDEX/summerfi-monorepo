@@ -151,12 +151,13 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
   }
 
   private async getMerkleDistributionRewards(user: IUser): Promise<bigint> {
-    const merkleClaims = await getAllMerkleClaims({
-      distributionsUrls: this._distributionsUrls,
-      walletAddress: user.wallet.address.value,
-    })
-
-    const hasClaimedRecord = await this.hasClaimedDistributions({ user })
+    const [merkleClaims, hasClaimedRecord] = await Promise.all([
+      getAllMerkleClaims({
+        distributionsUrls: this._distributionsUrls,
+        walletAddress: user.wallet.address.value,
+      }),
+      this.hasClaimedDistributions({ user }),
+    ])
 
     // get merkle rewards amount
     return merkleClaims.reduce((amount, claim) => {
@@ -255,8 +256,10 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
   async getAggregatedRewards(
     params: Parameters<IArmadaManagerClaims['getAggregatedRewards']>[0],
   ): ReturnType<IArmadaManagerClaims['getAggregatedRewards']> {
-    const merkleDistributionRewards = await this.getMerkleDistributionRewards(params.user)
-    const voteDelegationRewards = await this.getVoteDelegationRewards(params.user)
+    const [merkleDistributionRewards, voteDelegationRewards] = await Promise.all([
+      this.getMerkleDistributionRewards(params.user),
+      this.getVoteDelegationRewards(params.user),
+    ])
 
     // get protocol usage rewards for each chain
     const perChain: Record<number, bigint> = {}
@@ -294,11 +297,13 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
   async getClaimDistributionTx(
     params: Parameters<IArmadaManagerClaims['getClaimDistributionTx']>[0],
   ): ReturnType<IArmadaManagerClaims['getClaimDistributionTx']> {
-    const merkleClaims = await getAllMerkleClaims({
-      distributionsUrls: this._distributionsUrls,
-      walletAddress: params.user.wallet.address.value,
-    })
-    const hasClaimedRecord = await this.hasClaimedDistributions({ user: params.user })
+    const [merkleClaims, hasClaimedRecord] = await Promise.all([
+      getAllMerkleClaims({
+        distributionsUrls: this._distributionsUrls,
+        walletAddress: params.user.wallet.address.value,
+      }),
+      this.hasClaimedDistributions({ user: params.user }),
+    ])
 
     // filter not claimed rewards
     const filteredClaims = merkleClaims.filter((claim) => {
@@ -460,13 +465,14 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
         contractName: 'harborCommand',
       })
 
-      const fleetCommandersAddresses = await client.readContract({
-        abi: HarborCommandAbi,
-        address: harborCommandAddress.value,
-        functionName: 'getActiveFleetCommanders',
-      })
-
-      const protocolUsageRewards = await this.getProtocolUsageRewards(params.user, params.chainInfo)
+      const [fleetCommandersAddresses, protocolUsageRewards] = await Promise.all([
+        client.readContract({
+          abi: HarborCommandAbi,
+          address: harborCommandAddress.value,
+          functionName: 'getActiveFleetCommanders',
+        }),
+        this.getProtocolUsageRewards(params.user, params.chainInfo),
+      ])
 
       if (protocolUsageRewards > 0n) {
         const claimFleetRewards = await this.getClaimProtocolUsageRewardsTx({

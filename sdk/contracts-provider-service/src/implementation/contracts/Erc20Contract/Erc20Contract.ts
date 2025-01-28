@@ -62,8 +62,10 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
 
   /** @see IErc20Contract.balanceOf */
   async balanceOf(params: { address: IAddress }): Promise<ITokenAmount> {
-    const balance = await this.contract.read.balanceOf([params.address.value])
-    const token = await this.getToken()
+    const [balance, token] = await Promise.all([
+      this.contract.read.balanceOf([params.address.value]),
+      this.getToken(),
+    ])
 
     return TokenAmount.createFromBaseUnit({
       token,
@@ -72,8 +74,10 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
   }
 
   async totalSupply(): Promise<ITokenAmount> {
-    const totalSupply = await this.contract.read.totalSupply()
-    const token = await this.getToken()
+    const [totalSupply, token] = await Promise.all([
+      this.contract.read.totalSupply(),
+      this.getToken(),
+    ])
 
     return TokenAmount.createFromBaseUnit({
       token,
@@ -83,8 +87,10 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
 
   /** @see IErc20Contract.allowance */
   async allowance(params: { owner: IAddress; spender: IAddress }): Promise<ITokenAmount> {
-    const allowance = await this.contract.read.allowance([params.owner.value, params.spender.value])
-    const token = await this.getToken()
+    const [allowance, token] = await Promise.all([
+      this.contract.read.allowance([params.owner.value, params.spender.value]),
+      this.getToken(),
+    ])
 
     return TokenAmount.createFromBaseUnit({
       token,
