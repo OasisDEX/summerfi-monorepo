@@ -202,10 +202,20 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
   const isBase = clientChainId === SDKChainId.BASE
 
   const handleDelegate = async (updateDelegatee?: string) => {
+    const isDelegateUnchanged =
+      externalData.sumrStakeDelegate.delegatedTo.toLowerCase() === updateDelegatee?.toLowerCase() &&
+      externalData.sumrStakeDelegate.delegatedTo !== ADDRESS_ZERO
+
     // delegation is only supported on base
     if (!isBase) {
       // eslint-disable-next-line no-console
       setChain({ chain: SDKChainIdToAAChainMap[SDKChainId.BASE] })
+
+      return
+    }
+
+    if (isDelegateUnchanged) {
+      dispatch({ type: 'update-step', payload: ClaimDelegateSteps.STAKE })
 
       return
     }
@@ -514,7 +524,8 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
                 isChangeDelegateLoading ||
                 isRemoveDelegateLoading ||
                 !state.delegatee ||
-                state.delegatee === externalData.sumrStakeDelegate.delegatedTo ||
+                (state.delegatee === ADDRESS_ZERO &&
+                  externalData.sumrStakeDelegate.delegatedTo === ADDRESS_ZERO) ||
                 userWalletAddress?.toLowerCase() !== resolvedWalletAddress.toLowerCase()
               }
             >
