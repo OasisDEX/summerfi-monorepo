@@ -27,11 +27,14 @@ export class AaveV3PaybackWithdrawActionBuilder extends BaseActionBuilder<steps.
       throw new Error('Invalid AaveV3 lending pool')
     }
 
-    const sparkLendingPoolAddress = await getContractAddress({
-      addressBookManager,
-      chainInfo: user.chainInfo,
-      contractName: 'AavePool',
-    })
+    const [sparkLendingPoolAddress, withdrawTo] = await Promise.all([
+      getContractAddress({
+        addressBookManager,
+        chainInfo: user.chainInfo,
+        contractName: 'AavePool',
+      }),
+      this._getWithdrawTargetAddress(params),
+    ])
 
     const paybackAmount = getValueFromReference(step.inputs.paybackAmount)
 
@@ -74,7 +77,7 @@ export class AaveV3PaybackWithdrawActionBuilder extends BaseActionBuilder<steps.
       action: new AaveV3WithdrawAction(),
       arguments: {
         withdrawAmount: withdrawAmount,
-        withdrawTo: await this._getWithdrawTargetAddress(params),
+        withdrawTo,
       },
       connectedInputs: {},
       connectedOutputs: {

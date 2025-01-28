@@ -26,11 +26,14 @@ export class SparkPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.P
       throw new Error('Invalid Spark lending pool')
     }
 
-    const sparkLendingPoolAddress = await this._getContractAddress({
-      addressBookManager,
-      chainInfo: user.chainInfo,
-      contractName: 'SparkLendingPool',
-    })
+    const [sparkLendingPoolAddress, withdrawTo] = await Promise.all([
+      this._getContractAddress({
+        addressBookManager,
+        chainInfo: user.chainInfo,
+        contractName: 'SparkLendingPool',
+      }),
+      this._getWithdrawTargetAddress(params),
+    ])
 
     const paybackAmount = getValueFromReference(step.inputs.paybackAmount)
 
@@ -73,7 +76,7 @@ export class SparkPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.P
       action: new SparkWithdrawAction(),
       arguments: {
         withdrawAmount: withdrawAmount,
-        withdrawTo: await this._getWithdrawTargetAddress(params),
+        withdrawTo,
       },
       connectedInputs: {},
       connectedOutputs: {

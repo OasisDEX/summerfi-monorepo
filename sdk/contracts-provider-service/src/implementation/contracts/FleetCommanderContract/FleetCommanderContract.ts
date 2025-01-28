@@ -85,13 +85,15 @@ export class FleetCommanderContract<
   /** @see IFleetCommanderContract.config */
   async config(): Promise<IFleetConfig> {
     const [
-      bufferArkAddress,
-      minimumBufferBalance,
-      depositCap,
-      maxRebalanceOperations,
-      stakingRewardsManager,
-    ] = await this.contract.read.config()
-    const token = await this._erc4626Contract.asset()
+      [
+        bufferArkAddress,
+        minimumBufferBalance,
+        depositCap,
+        maxRebalanceOperations,
+        stakingRewardsManager,
+      ],
+      token,
+    ] = await Promise.all([this.contract.read.config(), this._erc4626Contract.asset()])
     return {
       bufferArk: Address.createFromEthereum({ value: bufferArkAddress }),
       minimumBufferBalance: TokenAmount.createFromBaseUnit({
@@ -106,16 +108,20 @@ export class FleetCommanderContract<
 
   /** @see IFleetCommanderContract.maxDeposit */
   async maxDeposit(params: { user: IAddress }): Promise<ITokenAmount> {
-    const token = await this._erc4626Contract.asset()
-    const maxDeposit = await this.contract.read.maxDeposit([params.user.value])
+    const [token, maxDeposit] = await Promise.all([
+      this._erc4626Contract.asset(),
+      this.contract.read.maxDeposit([params.user.value]),
+    ])
 
     return TokenAmount.createFromBaseUnit({ token, amount: String(maxDeposit) })
   }
 
   /** @see IFleetCommanderContract.maxWithdraw */
   async maxWithdraw(params: { user: IAddress }): Promise<ITokenAmount> {
-    const token = await this._erc4626Contract.asset()
-    const maxWithdraw = await this.contract.read.maxWithdraw([params.user.value])
+    const [token, maxWithdraw] = await Promise.all([
+      this._erc4626Contract.asset(),
+      this.contract.read.maxWithdraw([params.user.value]),
+    ])
 
     return TokenAmount.createFromBaseUnit({ token, amount: String(maxWithdraw) })
   }
