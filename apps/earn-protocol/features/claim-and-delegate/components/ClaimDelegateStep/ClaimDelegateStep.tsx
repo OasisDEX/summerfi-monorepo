@@ -183,6 +183,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
       toast.success('Delegate has been updated', SUCCESS_TOAST_CONFIG)
 
       if (action === ClaimDelegateAction.REMOVE) {
+        dispatch({ type: 'update-delegatee', payload: ADDRESS_ZERO })
         dispatch({ type: 'update-step', payload: ClaimDelegateSteps.COMPLETED })
 
         return
@@ -492,10 +493,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
                 <Button
                   variant="secondarySmall"
                   disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
-                  onClick={() => {
-                    dispatch({ type: 'update-delegatee', payload: ADDRESS_ZERO })
-                    handleDelegate(ADDRESS_ZERO)
-                  }}
+                  onClick={() => handleDelegate(ADDRESS_ZERO)}
                 >
                   <Text variant="p3semi" as="p">
                     {getRemoveDelegateButtonLabel({
