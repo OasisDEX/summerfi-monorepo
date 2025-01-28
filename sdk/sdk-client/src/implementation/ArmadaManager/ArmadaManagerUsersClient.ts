@@ -14,6 +14,11 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     super(params)
   }
 
+  /** @see IArmadaManagerUsersClient.getSummerToken */
+  async getSummerToken(params: Parameters<IArmadaManagerUsersClient['getSummerToken']>[0]) {
+    return this.rpcClient.armada.users.getSummerToken.query(params)
+  }
+
   /** @see IArmadaManagerUsersClient.getVaultsRaw */
   async getVaultsRaw(params: Parameters<IArmadaManagerUsersClient['getVaultsRaw']>[0]) {
     return this.rpcClient.armada.users.getVaultsRaw.query(params)

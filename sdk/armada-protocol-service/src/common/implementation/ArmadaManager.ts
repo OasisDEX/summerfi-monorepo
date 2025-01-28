@@ -16,9 +16,7 @@ import {
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import {
-  Address,
   calculatePriceImpact,
-  ChainFamilyMap,
   getChainInfoByChainId,
   IAddress,
   ITokenAmount,
@@ -49,6 +47,8 @@ import BigNumber from 'bignumber.js'
 import type { IOracleManager } from '@summerfi/oracle-common'
 import { ArmadaManagerClaims } from './ArmadaManagerClaims'
 import { ArmadaManagerGovernance } from './ArmadaManagerGovernance'
+
+const testDeployment = true
 
 /**
  * @name ArmadaManager
@@ -108,10 +108,30 @@ export class ArmadaManager implements IArmadaManager {
       hubChainInfo: this._hubChainInfo,
       rewardsRedeemerAddress: this._rewardsRedeemerAddress,
       supportedChains: this._supportedChains,
+      getSummerToken: this.getSummerToken.bind(this),
     })
     this.governance = new ArmadaManagerGovernance({
       ...params,
       hubChainInfo: this._hubChainInfo,
+      getSummerToken: this.getSummerToken.bind(this),
+    })
+  }
+
+  getSummerToken(
+    params: Parameters<IArmadaManager['getSummerToken']>[0],
+  ): ReturnType<IArmadaManager['getSummerToken']> {
+    const address = getDeployedContractAddress({
+      chainInfo: params.chainInfo,
+      contractCategory: 'gov',
+      contractName: 'summerToken',
+    })
+
+    return Token.createFrom({
+      chainInfo: params.chainInfo,
+      address: address,
+      decimals: 18,
+      name: 'SummerToken',
+      symbol: testDeployment ? 'BUMMER' : 'SUMMER',
     })
   }
 
