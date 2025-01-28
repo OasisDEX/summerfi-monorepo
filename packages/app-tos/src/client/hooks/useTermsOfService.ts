@@ -19,11 +19,12 @@ import { type TOSInput } from '@/types'
  * @param chainId - chain id, i.e. 1 (ethereum mainnet)
  * @param walletAddress - user wallet address
  * @param version - Terms of Service version
- * @param isGnosisSafe - boolean to determine whether user use safe multi-sig
  * @param cookiePrefix - The prefix of cookie that will be stored as http-only cookie.
  * @param host - Optional, to be used when API is not available under the same host (for example localhost development on different ports).
  * @param type - The type of Terms of Service message to generate.
  * @param forceDisconnect Optional, to be used to disconnect user when there is an issue with API to prevent him / her from using app without accepting TOS.
+ * @param isSmartAccount - A boolean indicating if the wallet is a Smart Account.
+ * @param publicClient - public viem client
  *
  * @returns Returns state of Terms of Service flow
  *
@@ -33,12 +34,13 @@ export const useTermsOfService = ({
   chainId,
   walletAddress,
   version,
-  isGnosisSafe,
   host,
   forceDisconnect,
   cookiePrefix,
   type = 'default',
-}: TOSInput) => {
+  isSmartAccount,
+  publicClient,
+}: Omit<TOSInput, 'isGnosisSafe'>) => {
   const [tos, setTos] = useState<TOSState>({
     status: TOSStatus.INIT,
   })
@@ -53,6 +55,17 @@ export const useTermsOfService = ({
 
   useEffect(() => {
     const request = async (walletAddress: string) => {
+      // smart account could be the one from account kit
+      // which handles signatures well
+      // condition below is for safe specific case
+      const bytecodeOfPotentialContract = !isSmartAccount
+        ? await publicClient.getBytecode({
+            address: walletAddress as `0x${string}`,
+          })
+        : undefined
+
+      const isGnosisSafe = (bytecodeOfPotentialContract?.length ?? 0) > 0
+
       /**
          Initial step - fetch info about user acceptance from database.
          */
@@ -129,11 +142,12 @@ export const useTermsOfService = ({
     version,
     cookiePrefix,
     chainId,
-    isGnosisSafe,
     host,
     memoizedSignMessage,
     forceDisconnect,
     type,
+    publicClient,
+    isSmartAccount,
   ])
 
   return tos

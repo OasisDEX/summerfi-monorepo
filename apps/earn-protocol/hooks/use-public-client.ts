@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { type SDKChainId } from '@summerfi/app-types'
-import { type Chain, createPublicClient, http } from 'viem'
+import { type Chain, createPublicClient, http, type PublicClient } from 'viem'
 
 import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
 
@@ -9,7 +9,7 @@ import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
  * @param chain - Viem Chain object containing network configuration
  * @returns Object containing the configured public client
  */
-export const usePublicClient = ({ chain }: { chain: Chain }) => {
+export const usePublicClient = ({ chain }: { chain: Chain }): { publicClient: PublicClient } => {
   const publicClient = useMemo(() => {
     return createPublicClient({
       chain,
