@@ -52,15 +52,9 @@ export const getSumrBalances = async ({
         })
 
         try {
-          const chainResponse = await backendSDK.chains.getChain({
+          const sumrToken = await backendSDK.armada.users.getSummerToken({
             chainInfo: getChainInfoByChainId(chainId),
           })
-
-          const sumrToken = await chainResponse.tokens
-            .getTokenBySymbol({
-              symbol: 'SUMMER',
-            })
-            .catch(() => null)
 
           if (!sumrToken || sumrToken.address.value.toLowerCase() === zeroAddress.toLowerCase()) {
             // Token not available on this network

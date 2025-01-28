@@ -30,19 +30,9 @@ export const getSumrStakingInfo = async (): Promise<SumrStakingInfoData> => {
       transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.BASE]),
     })
 
-    const chainResponse = await backendSDK.chains
-      .getChain({
+    const sumrToken = await backendSDK.armada.users
+      .getSummerToken({
         chainInfo: getChainInfoByChainId(SDKChainId.BASE),
-      })
-      .catch((error) => {
-        throw new Error(`Failed to get chain info: ${error.message}`)
-      })
-
-    const { tokens } = chainResponse
-
-    const sumrToken = await tokens
-      .getTokenBySymbol({
-        symbol: 'SUMMER',
       })
       .catch((error) => {
         throw new Error(`Failed to get SUMMER token: ${error.message}`)

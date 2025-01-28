@@ -2,13 +2,14 @@
 import { SDKChainId } from '@summerfi/app-types'
 import { ADDRESS_ZERO } from '@summerfi/app-utils'
 import { SummerTokenAbi } from '@summerfi/armada-protocol-abis'
+import { getChainInfoByChainId } from '@summerfi/sdk-common'
 import { useQuery } from '@tanstack/react-query'
 import BigNumber from 'bignumber.js'
 import { type Address, createPublicClient, http } from 'viem'
 import { base } from 'viem/chains'
 
+import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
-import { useAppSDK } from '@/hooks/use-app-sdk'
 
 type DecayFactorResponse = {
   decayFactor: number | undefined
@@ -27,8 +28,6 @@ type DecayFactorResponse = {
  *  - error: Error object if request fails
  */
 export const useDecayFactor = (delegatedAddress?: string): DecayFactorResponse => {
-  const sdk = useAppSDK()
-
   const fetchDecayFactor = async (address: Address): Promise<number> => {
     try {
       const publicClient = createPublicClient({
@@ -36,10 +35,9 @@ export const useDecayFactor = (delegatedAddress?: string): DecayFactorResponse =
         transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.BASE]),
       })
 
-      const sumrToken = await sdk
-        .getTokenBySymbol({
-          chainId: SDKChainId.BASE,
-          symbol: 'SUMMER',
+      const sumrToken = await backendSDK.armada.users
+        .getSummerToken({
+          chainInfo: getChainInfoByChainId(SDKChainId.BASE),
         })
         .catch((error) => {
           throw new Error(`Failed to fetch SUMMER token: ${error.message}`)

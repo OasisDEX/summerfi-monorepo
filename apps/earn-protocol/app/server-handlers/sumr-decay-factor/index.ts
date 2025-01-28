@@ -35,12 +35,8 @@ export const getSumrDecayFactor = async (addresses: string[]): Promise<SumrDecay
     let sumrToken
 
     try {
-      const chainResponse = await backendSDK.chains.getChain({
+      sumrToken = await backendSDK.armada.users.getSummerToken({
         chainInfo: getChainInfoByChainId(SDKChainId.BASE),
-      })
-
-      sumrToken = await chainResponse.tokens.getTokenBySymbol({
-        symbol: 'SUMMER',
       })
     } catch (error) {
       throw new Error(
