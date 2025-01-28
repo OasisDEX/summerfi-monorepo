@@ -5,7 +5,11 @@ import { type TOSSignMessage, useTermsOfService } from '@summerfi/app-tos'
 import { TOSStatus } from '@summerfi/app-types'
 import Link from 'next/link'
 
-import { accountType } from '@/account-kit/config'
+import {
+  type AccountKitSupportedNetworks,
+  accountType,
+  SDKChainIdToAAChainMap,
+} from '@/account-kit/config'
 import {
   airdropToS,
   claimDelegateTerms,
@@ -17,6 +21,7 @@ import {
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
+import { usePublicClient } from '@/hooks/use-public-client'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 import { useVisibleParagraph } from '@/hooks/use-visible-paragraph'
 
@@ -52,11 +57,17 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
     [signer, user?.type],
   )
 
+  const { publicClient } = usePublicClient({
+    chain: SDKChainIdToAAChainMap[clientChainId as AccountKitSupportedNetworks],
+  })
+
   const tosState = useTermsOfService({
+    // @ts-ignore
+    publicClient, // ignored for now, we need to align viem versionon all subpackages
     signMessage,
     chainId: clientChainId,
     walletAddress: user?.address,
-    isGnosisSafe: true,
+    isSmartAccount: user?.type === 'sca',
     version: 'sumr_version-27.01.2025',
     cookiePrefix: 'sumr-claim-token',
     host: '/earn',

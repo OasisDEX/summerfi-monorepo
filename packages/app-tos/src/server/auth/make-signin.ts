@@ -89,7 +89,10 @@ export async function makeSignIn({
   let isArgentWallet = false
 
   try {
-    isArgentWallet = await checkIfArgentWallet(client, challenge.address)
+    // argent wallet is only on mainnet
+    if (body.chainId === 1) {
+      isArgentWallet = await checkIfArgentWallet(client, challenge.address)
+    }
   } catch (e) {
     // eslint-disable-next-line no-console
     console.error('Check if argent wallet failed', e)

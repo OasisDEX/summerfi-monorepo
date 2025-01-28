@@ -111,6 +111,7 @@ export { useTokenSelector } from './hooks/use-token-selector'
 export { useAmount } from './hooks/use-amount'
 export { useAmountWithSwap } from './hooks/use-amount-with-swap'
 export { useForecast } from './features/forecast/use-forecast.ts'
+export { useIsIframe } from './hooks/use-is-iframe'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
 export { getVaultUrl, getVaultDetailsUrl, getVaultPositionUrl } from './helpers/get-vault-url'

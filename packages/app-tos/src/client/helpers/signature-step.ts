@@ -40,7 +40,7 @@ export const signatureStep = ({
   host,
   isGnosisSafe,
   type,
-}: TOSInput & {
+}: Omit<TOSInput, 'publicClient' | 'isSmartAccount'> & {
   setTos: TosUpdate
   termsOfServiceAcceptance: TOSVerifyAcceptance
   walletAddress: string
