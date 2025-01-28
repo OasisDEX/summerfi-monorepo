@@ -1,6 +1,7 @@
 import { GovernanceRewardsManagerAbi, SummerTokenAbi } from '@summerfi/armada-protocol-abis'
 import {
   getDeployedContractAddress,
+  getDeployedGovRewardsManagerAddress,
   type IArmadaManagerGovernance,
 } from '@summerfi/armada-protocol-common'
 import {
@@ -142,16 +143,11 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       chainInfo: this._hubChainInfo,
     })
 
-    const rewardsManagerAddressString = await client.readContract({
-      abi: SummerTokenAbi,
-      address: this._hubChainSummerTokenAddress.value,
-      functionName: 'rewardsManager',
-      args: [],
-    })
+    const rewardsManagerAddress = getDeployedGovRewardsManagerAddress()
 
     return client.readContract({
       abi: GovernanceRewardsManagerAbi,
-      address: rewardsManagerAddressString,
+      address: rewardsManagerAddress.value,
       functionName: 'balanceOf',
       args: [params.user.wallet.address.value],
     })
@@ -164,12 +160,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       chainInfo: this._hubChainInfo,
     })
 
-    const rewardsManagerAddressString = await client.readContract({
-      abi: SummerTokenAbi,
-      address: this._hubChainSummerTokenAddress.value,
-      functionName: 'rewardsManager',
-      args: [],
-    })
+    const rewardsManagerAddress = getDeployedGovRewardsManagerAddress()
 
     // for now reward token is just summer token
     // in future potential partners can be added
@@ -177,7 +168,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
 
     return client.readContract({
       abi: GovernanceRewardsManagerAbi,
-      address: rewardsManagerAddressString,
+      address: rewardsManagerAddress.value,
       functionName: 'earned',
       args: [params.user.wallet.address.value, rewardToken.value],
     })
@@ -192,21 +183,13 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       args: [params.amount],
     })
 
-    const client = this._blockchainClientProvider.getBlockchainClient({
-      chainInfo: this._hubChainInfo,
-    })
-    const rewardsManagerAddressString = await client.readContract({
-      abi: SummerTokenAbi,
-      address: this._hubChainSummerTokenAddress.value,
-      functionName: 'rewardsManager',
-      args: [],
-    })
+    const rewardsManagerAddress = getDeployedGovRewardsManagerAddress()
 
     const stakeTx = {
       type: TransactionType.Stake,
       description: 'Staking tokens',
       transaction: {
-        target: Address.createFromEthereum({ value: rewardsManagerAddressString }),
+        target: rewardsManagerAddress,
         calldata: calldata,
         value: '0',
       },
@@ -214,7 +197,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
 
     const approveToStakeUserTokens = await this._allowanceManager.getApproval({
       chainInfo: this._hubChainInfo,
-      spender: Address.createFromEthereum({ value: rewardsManagerAddressString }),
+      spender: rewardsManagerAddress,
       amount: TokenAmount.createFromBaseUnit({
         amount: params.amount.toString(),
         token: this._getSummerToken({
@@ -240,22 +223,14 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       args: [params.amount],
     })
 
-    const client = this._blockchainClientProvider.getBlockchainClient({
-      chainInfo: this._hubChainInfo,
-    })
-    const rewardsManagerAddressString = await client.readContract({
-      abi: SummerTokenAbi,
-      address: this._hubChainSummerTokenAddress.value,
-      functionName: 'rewardsManager',
-      args: [],
-    })
+    const rewardsManagerAddress = getDeployedGovRewardsManagerAddress()
 
     return [
       {
         type: TransactionType.Unstake,
         description: 'Unstaking tokens',
         transaction: {
-          target: Address.createFromEthereum({ value: rewardsManagerAddressString }),
+          target: rewardsManagerAddress,
           calldata: calldata,
           value: '0',
         },
