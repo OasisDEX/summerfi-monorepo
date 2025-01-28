@@ -261,6 +261,10 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     // get protocol usage rewards for each chain
     const perChain: Record<number, bigint> = {}
 
+    if (onlyGovernanceDeployed) {
+      perChain[this._hubChainInfo.chainId] = merkleDistributionRewards + voteDelegationRewards
+    }
+
     let protocolUsageRewards = 0n
     if (!onlyGovernanceDeployed) {
       const chainRewards = await Promise.all(
