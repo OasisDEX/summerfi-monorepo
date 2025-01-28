@@ -492,7 +492,10 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
                 <Button
                   variant="secondarySmall"
                   disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
-                  onClick={() => handleDelegate(ADDRESS_ZERO)}
+                  onClick={() => {
+                    dispatch({ type: 'update-delegatee', payload: ADDRESS_ZERO })
+                    handleDelegate(ADDRESS_ZERO)
+                  }}
                 >
                   <Text variant="p3semi" as="p">
                     {getRemoveDelegateButtonLabel({
