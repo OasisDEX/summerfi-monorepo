@@ -7,13 +7,13 @@ import { mixpanelBrowser } from '@/helpers/mixpanel-init'
 export const optedOutCheck = () =>
   process.env.NODE_ENV !== 'development' && mixpanelBrowser.has_opted_out_tracking()
 
-const includeBasePath = (path: string) => `${path.replace(/\/$/u, '')}`
+const includeBasePath = (path: string) => `/earn${path.replace(/\/$/u, '')}`
 
 export const trackEvent = (eventName: string, eventBody: { [key: string]: unknown }) => {
   // eslint-disable-next-line turbo/no-undeclared-env-vars
-  if (process.env.TURBOPACK) {
-    return
-  }
+  // if (process.env.TURBOPACK) {
+  //   return
+  // }
   let win: Window
 
   if (typeof window === 'undefined') {
@@ -36,7 +36,7 @@ export const trackEvent = (eventName: string, eventBody: { [key: string]: unknow
       : new URL(initialReferrer).hostname
     : ''
 
-  void fetch(`/api/t`, {
+  void fetch(`/earn/api/t`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -71,7 +71,7 @@ type PageViewType = {
 export const trackPageView = ({ path, userAddress }: PageViewType) => {
   try {
     const eventBody = {
-      product: MixpanelEventProduct.Rays,
+      product: MixpanelEventProduct.EarnProtocol,
       id: includeBasePath(path),
       userAddress,
     }
@@ -93,26 +93,26 @@ export const trackPageViewTimed = ({ path, userAddress }: PageViewType) => {
 
 type AccountChangeType = {
   account: `0x${string}`
+  accountType?: string
   network: string
   connectionMethod: string
-  walletLabel: string | undefined
 }
 
 // account change
 export const trackAccountChange = ({
   account,
   network,
+  accountType,
   connectionMethod,
-  walletLabel,
 }: AccountChangeType) => {
   try {
     const eventBody = {
-      product: MixpanelEventProduct.Rays,
+      product: MixpanelEventProduct.EarnProtocol,
       id: 'AccountChange',
       account,
       network,
       connectionMethod,
-      walletLabel,
+      accountType,
     }
 
     if (!optedOutCheck()) {
@@ -135,7 +135,7 @@ type ButtonClickType = {
 export const trackButtonClick = ({ id, page, userAddress, ...rest }: ButtonClickType) => {
   try {
     const eventBody = {
-      product: MixpanelEventProduct.Rays,
+      product: MixpanelEventProduct.EarnProtocol,
       id,
       page: includeBasePath(page),
       userAddress,
@@ -162,7 +162,7 @@ type InputChangeType = {
 export const trackInputChange = ({ id, page, userAddress, ...rest }: InputChangeType) => {
   try {
     const eventBody = {
-      product: MixpanelEventProduct.Rays,
+      product: MixpanelEventProduct.EarnProtocol,
       id,
       page: includeBasePath(page),
       userAddress,

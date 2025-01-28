@@ -29,6 +29,7 @@ import {
   type ClaimDelegateState,
 } from '@/features/claim-and-delegate/types'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
+import { trackButtonClick } from '@/helpers/mixpanel'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './PortfolioRewardsCards.module.scss'
@@ -51,8 +52,18 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
 
   const resolvedWalletAddress = walletAddress as string
 
+  const handleClaimEventButton = () => {
+    trackButtonClick({
+      id: 'SumrAvailableToClaim',
+      page: `/portfolio/${resolvedWalletAddress}`,
+      userAddress: userWalletAddress,
+      totalSumr: sumrAmount,
+    })
+  }
+
   const handleConnect = () => {
     if (!userWalletAddress) {
+      handleClaimEventButton()
       openAuthModal()
     }
   }
@@ -91,7 +102,7 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
             Claim
           </Button>
         ) : (
-          <Link href={`/claim/${walletAddress}`} prefetch>
+          <Link href={`/claim/${walletAddress}`} prefetch onClick={handleClaimEventButton}>
             <Button
               variant="primarySmall"
               disabled={

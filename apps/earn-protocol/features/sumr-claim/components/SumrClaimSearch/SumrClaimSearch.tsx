@@ -18,6 +18,7 @@ import { isAddress } from 'viem'
 
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { getUserSumrEligibility } from '@/features/sumr-claim/helpers/getUserSumrEligibility'
+import { trackButtonClick, trackInputChange } from '@/helpers/mixpanel'
 import { useUserAggregatedRewards } from '@/hooks/use-user-aggregated-rewards'
 
 import classNames from './SumrClaimSearch.module.scss'
@@ -66,12 +67,23 @@ export const SumrClaimSearch = () => {
 
   const handleButtonClick = () => {
     if (!user) {
+      trackButtonClick({
+        id: 'SumrClaimSearch',
+        page: '/sumr',
+        userAddress: '',
+      })
       openAuthModal()
 
       return
     }
 
     if (resolvedPortfolioUserAddress) {
+      trackButtonClick({
+        id: 'SumrClaimSearch',
+        page: '/sumr',
+        userAddress: resolvedPortfolioUserAddress,
+        searcherdForAddress: resolvedAddress,
+      })
       push(`/portfolio/${resolvedPortfolioUserAddress}?tab=${PortfolioTabs.REWARDS}`)
 
       return
@@ -101,9 +113,19 @@ export const SumrClaimSearch = () => {
       if (resolvedAddress) {
         void request(resolvedAddress)
       }
+      if (inputValue) {
+        trackInputChange({
+          id: 'SumrClaimSearch',
+          page: '/sumr',
+          userAddress: user?.address,
+          searcherdForAddress: resolvedAddress,
+        })
+      }
     }, 400)
 
     return () => clearTimeout(timeout)
+    // we dont need to update on user?.address change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resolvedAddress])
 
   const resolvedHeaderText = eligibleUser

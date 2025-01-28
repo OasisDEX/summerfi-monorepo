@@ -52,8 +52,8 @@ jobs:
       CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_ACCESS_TOKEN }}
       CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_PREVIEW_ACCESS_TOKEN }}
       CONTENTFUL_SPACE_ID: ${{ secrets.CONTENTFUL_SPACE_ID }}
-      MIXPANEL_KEY: ${{ secrets.MIXPANEL_KEY }}
-      NEXT_PUBLIC_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_MIXPANEL_KEY }}
+      EARN_MIXPANEL_KEY: ${{ secrets.EARN_MIXPANEL_KEY }}
+      NEXT_PUBLIC_EARN_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_EARN_MIXPANEL_KEY }}
       ACCOUNT_KIT_API_KEY: ${{ secrets.ACCOUNT_KIT_API_KEY }}
       FORECAST_API_URL: ${{ secrets.FORECAST_API_URL }}
       NEXT_PUBLIC_TRANSAK_API_KEY: ${{ secrets.NEXT_PUBLIC_TRANSAK_API_KEY }}
@@ -177,11 +177,11 @@ jobs:
                        --build-arg CONFIG_URL_EARN=${{ secrets.CONFIG_URL_EARN }} \
                        --build-arg CONFIG_URL_RAYS=${{ secrets.CONFIG_URL_RAYS }} \
                        --build-arg FUNCTIONS_API_URL=${{ secrets.FUNCTIONS_API_URL }} \
-                       --build-arg MIXPANEL_KEY=${{ secrets.MIXPANEL_KEY }} \
+                       --build-arg EARN_MIXPANEL_KEY=${{ secrets.EARN_MIXPANEL_KEY }} \
                        --build-arg SUBGRAPH_BASE=${{ secrets.SUBGRAPH_BASE }} \
                        --build-arg TEMPORARY_MAINNET_SUBGRAPH=${{ secrets.TEMPORARY_MAINNET_SUBGRAPH }} \
                        --build-arg TEMPORARY_MAINNET_RPC=${{ secrets.TEMPORARY_MAINNET_RPC }} \
-                       --build-arg NEXT_PUBLIC_MIXPANEL_KEY=${{ secrets.NEXT_PUBLIC_MIXPANEL_KEY }} \
+                       --build-arg NEXT_PUBLIC_EARN_MIXPANEL_KEY=${{ secrets.NEXT_PUBLIC_EARN_MIXPANEL_KEY }} \
                        --build-arg ACCOUNT_KIT_API_KEY=${{ secrets.ACCOUNT_KIT_API_KEY }} \
                        --build-arg FORECAST_API_URL=${{ secrets.FORECAST_API_URL }} \
                        --build-arg NEXT_PUBLIC_TRANSAK_API_KEY=${{ secrets.NEXT_PUBLIC_TRANSAK_API_KEY }} \
