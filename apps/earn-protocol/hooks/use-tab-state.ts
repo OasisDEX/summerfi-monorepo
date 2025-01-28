@@ -3,9 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 
-import { trackButtonClick } from '@/helpers/mixpanel'
-
-/**
+**
  * Extracts the values from an enum-like object or returns the array as-is.
  */
 function extractTabValues<T extends string>(
