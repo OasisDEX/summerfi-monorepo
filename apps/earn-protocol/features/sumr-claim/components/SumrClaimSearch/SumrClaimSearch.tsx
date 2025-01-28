@@ -8,15 +8,17 @@ import {
   Input,
   LoadingSpinner,
   NewsletterWrapper,
+  SkeletonLine,
   Text,
 } from '@summerfi/app-earn-ui'
-import { formatAddress } from '@summerfi/app-utils'
+import { formatAddress, formatCryptoBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { isAddress } from 'viem'
 
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { getUserSumrEligibility } from '@/features/sumr-claim/helpers/getUserSumrEligibility'
+import { useUserAggregatedRewards } from '@/hooks/use-user-aggregated-rewards'
 
 import classNames from './SumrClaimSearch.module.scss'
 
@@ -35,6 +37,10 @@ export const SumrClaimSearch = () => {
   const resolvedAddress = inputValue || user?.address
 
   const eligibleUser = eligibleUsers?.length === 1 ? eligibleUsers[0] : undefined
+
+  const { aggregatedRewards, isLoading: isAggregatedRewardsLoading } = useUserAggregatedRewards({
+    walletAddress: eligibleUser?.userAddress,
+  })
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setInputError('')
@@ -119,12 +125,21 @@ export const SumrClaimSearch = () => {
     inputError.length > 0 ||
     (!eligibleUser && inputValue.length > 0 && !isAddress(inputValue) && !!user)
 
+  const sumrToClaim = isAggregatedRewardsLoading ? (
+    <SkeletonLine width="100px" height="30px" />
+  ) : aggregatedRewards?.total ? (
+    // eslint-disable-next-line no-mixed-operators
+    formatCryptoBalance(Number(aggregatedRewards.total) / 10 ** 18)
+  ) : (
+    ''
+  )
+
   return (
     <div className={classNames.sumrClaimSearchWrapper} id="claim">
       <Text as="h1" variant="h1" className={classNames.headerTextual}>
         {resolvedHeaderText}
         <Text as="span" variant="h1" className={classNames.headerTextualColored}>
-          $SUMR
+          {eligibleUser ? sumrToClaim : null} $SUMR
         </Text>
       </Text>
       <Text as="p" variant="p1" className={classNames.headerDescription}>

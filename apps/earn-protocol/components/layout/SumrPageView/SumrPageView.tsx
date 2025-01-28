@@ -1,5 +1,8 @@
+'use client'
 import { type FC } from 'react'
+import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
+import { sdkApiUrl } from '@/constants/sdk'
 import { SumrClaimSearch } from '@/features/sumr-claim/components/SumrClaimSearch/SumrClaimSearch'
 import { SumrConversionAndTotalSupply } from '@/features/sumr-claim/components/SumrConversionAndTotalSupply/SumrConversionAndTotalSupply'
 import { SumrFaq } from '@/features/sumr-claim/components/SumrFaq/SumrFaq'
@@ -17,17 +20,19 @@ interface SumrPageViewProps {}
 
 export const SumrPageView: FC<SumrPageViewProps> = () => {
   return (
-    <div className={classNames.sumrPageWrapper}>
-      <SumrClaimSearch />
-      <SumrConversionAndTotalSupply />
-      <SumrTransferabilityCounter />
-      <SumrWhatIsSumrToken />
-      <SumrGovernance />
-      <SumrFundamentalUtility />
-      <SumrNotTransferable />
-      <SumrMultipleWaysToEarn />
-      <SumrRaysRewards />
-      <SumrFaq />
-    </div>
+    <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
+      <div className={classNames.sumrPageWrapper}>
+        <SumrClaimSearch />
+        <SumrConversionAndTotalSupply />
+        <SumrTransferabilityCounter />
+        <SumrWhatIsSumrToken />
+        <SumrGovernance />
+        <SumrFundamentalUtility />
+        <SumrNotTransferable />
+        <SumrMultipleWaysToEarn />
+        <SumrRaysRewards />
+        <SumrFaq />
+      </div>
+    </SDKContextProvider>
   )
 }
