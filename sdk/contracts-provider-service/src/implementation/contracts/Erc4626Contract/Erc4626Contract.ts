@@ -86,8 +86,7 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
 
   /** @see IErc4626Contract.totalAssets */
   async totalAssets(): Promise<ITokenAmount> {
-    const totalAssets = await this.contract.read.totalAssets()
-    const token = await this.asset()
+    const [totalAssets, token] = await Promise.all([this.contract.read.totalAssets(), this.asset()])
 
     return TokenAmount.createFromBaseUnit({
       token,
@@ -97,8 +96,10 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
 
   /** @see IErc4626Contract.convertToAssets */
   async convertToAssets(params: { amount: ITokenAmount }): Promise<ITokenAmount> {
-    const token = await this.asset()
-    const assetsAmount = await this.contract.read.convertToAssets([params.amount.toSolidityValue()])
+    const [token, assetsAmount] = await Promise.all([
+      this.asset(),
+      this.contract.read.convertToAssets([params.amount.toSolidityValue()]),
+    ])
 
     // LoggingService.debug(
     //   'convertToAssets',
@@ -115,8 +116,10 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
 
   /** @see IErc4626Contract.convertToShares */
   async convertToShares(params: { amount: ITokenAmount }): Promise<ITokenAmount> {
-    const token = await this.asErc20().getToken()
-    const sharesAmount = await this.contract.read.convertToShares([params.amount.toSolidityValue()])
+    const [token, sharesAmount] = await Promise.all([
+      this.asErc20().getToken(),
+      this.contract.read.convertToShares([params.amount.toSolidityValue()]),
+    ])
 
     // LoggingService.debug(
     //   'convertToShares',
@@ -135,8 +138,10 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
   async previewDeposit(
     params: Parameters<IErc4626Contract['previewDeposit']>[0],
   ): Promise<ITokenAmount> {
-    const token = await this.asErc20().getToken()
-    const sharesAmount = await this.contract.read.previewDeposit([params.assets.toSolidityValue()])
+    const [token, sharesAmount] = await Promise.all([
+      this.asErc20().getToken(),
+      this.contract.read.previewDeposit([params.assets.toSolidityValue()]),
+    ])
 
     LoggingService.debug(
       'previewDeposit',
@@ -155,8 +160,10 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
   async previewWithdraw(
     params: Parameters<IErc4626Contract['previewWithdraw']>[0],
   ): ReturnType<IErc4626Contract['previewWithdraw']> {
-    const token = await this.asErc20().getToken()
-    const sharesAmount = await this.contract.read.previewWithdraw([params.assets.toSolidityValue()])
+    const [token, sharesAmount] = await Promise.all([
+      this.asErc20().getToken(),
+      this.contract.read.previewWithdraw([params.assets.toSolidityValue()]),
+    ])
 
     LoggingService.debug(
       'previewWithdraw',
@@ -175,8 +182,10 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
   async previewRedeem(
     params: Parameters<IErc4626Contract['previewRedeem']>[0],
   ): ReturnType<IErc4626Contract['previewRedeem']> {
-    const token = await this.asErc20().getToken()
-    const assetsAmount = await this.contract.read.previewRedeem([params.shares.toSolidityValue()])
+    const [token, assetsAmount] = await Promise.all([
+      this.asErc20().getToken(),
+      this.contract.read.previewRedeem([params.shares.toSolidityValue()]),
+    ])
 
     LoggingService.debug(
       'previewRedeem',

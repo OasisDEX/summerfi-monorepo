@@ -119,20 +119,23 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
     morphoLendingPoolId: IMorphoLendingPoolId,
   ): Promise<MorphoLendingPoolInfo> {
     const morphoLendingPool = await this._getLendingPoolImpl(morphoLendingPoolId)
-    const marketInfo = await this._getMarketInfo(morphoLendingPool)
-    const marketCollateralPriceInDebt = await this._getMarketOraclePrice(morphoLendingPool)
+    const [marketInfo, marketCollateralPriceInDebt] = await Promise.all([
+      this._getMarketInfo(morphoLendingPool),
+      this._getMarketOraclePrice(morphoLendingPool),
+    ])
 
-    const collateralInfo = await this._getCollateralInfo({
-      morphoLendingPool,
-      marketInfo,
-      marketCollateralPriceInDebt,
-    })
-
-    const debtInfo = await this._getDebtInfo({
-      morphoLendingPool,
-      marketInfo,
-      marketCollateralPriceInDebt,
-    })
+    const [collateralInfo, debtInfo] = await Promise.all([
+      this._getCollateralInfo({
+        morphoLendingPool,
+        marketInfo,
+        marketCollateralPriceInDebt,
+      }),
+      this._getDebtInfo({
+        morphoLendingPool,
+        marketInfo,
+        marketCollateralPriceInDebt,
+      }),
+    ])
 
     return MorphoLendingPoolInfo.createFrom({
       id: morphoLendingPoolId,
