@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { ten } from '@summerfi/app-utils'
-import { type HexData, type IToken } from '@summerfi/sdk-common'
+import { getChainInfoByChainId, type HexData, type IToken } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import { erc20Abi } from 'viem'
 
@@ -50,24 +50,27 @@ export const useTokenBalance = ({
   const walletAddress = overwriteWalletAddress ?? userWalletAddress
 
   const sdk = useAppSDK()
+  const getTokenRequest = useCallback(
+    (symbol: string) =>
+      symbol === 'SUMMER'
+        ? sdk.getSummerToken({
+            chainInfo: getChainInfoByChainId(chainId),
+          })
+        : sdk.getTokenBySymbol({
+            chainId,
+            symbol,
+          }),
+    [sdk, chainId],
+  )
 
   useEffect(() => {
     const fetchTokenBalance = async (address: string) => {
       setTokenBalanceLoading(true)
-      const tokenRequests: Promise<IToken | undefined>[] = [
-        sdk.getTokenBySymbol({
-          chainId,
-          symbol: vaultTokenSymbol,
-        }),
-      ]
+
+      const tokenRequests: Promise<IToken | undefined>[] = [getTokenRequest(vaultTokenSymbol)]
 
       if (tokenSymbol !== vaultTokenSymbol) {
-        tokenRequests.push(
-          sdk.getTokenBySymbol({
-            chainId,
-            symbol: tokenSymbol,
-          }),
-        )
+        tokenRequests.push(getTokenRequest(tokenSymbol))
       }
 
       const [fetchedVaultToken, fetchedToken] = (await Promise.all(tokenRequests)) as [
