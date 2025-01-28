@@ -11,6 +11,7 @@
     gap: var(--general-space-12);
     flex-direction: column;
     justify-content: center;
+    flex-wrap: wrap;
 
     @media (min-width: 768px) {
       flex-direction: row;
