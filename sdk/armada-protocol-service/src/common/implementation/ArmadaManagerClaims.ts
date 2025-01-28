@@ -18,6 +18,7 @@ import {
   type HexData,
   type IAddress,
   type IChainInfo,
+  type IToken,
   type IUser,
 } from '@summerfi/sdk-common'
 import { encodeFunctionData } from 'viem'
@@ -35,6 +36,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
   private _blockchainClientProvider: IBlockchainClientProvider
   private _contractsProvider: IContractsProvider
   private _configProvider: IConfigurationProvider
+  private _getSummerToken: (params: { chainInfo: IChainInfo }) => IToken
 
   private _supportedChains: IChainInfo[]
   private _hubChainInfo: IChainInfo
@@ -49,6 +51,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     supportedChains: IChainInfo[]
     hubChainInfo: IChainInfo
     rewardsRedeemerAddress: IAddress
+    getSummerToken: (params: { chainInfo: IChainInfo }) => IToken
   }) {
     this._blockchainClientProvider = params.blockchainClientProvider
     this._contractsProvider = params.contractsProvider
@@ -56,6 +59,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     this._supportedChains = params.supportedChains
     this._hubChainInfo = params.hubChainInfo
     this._rewardsRedeemerAddress = params.rewardsRedeemerAddress
+    this._getSummerToken = params.getSummerToken
 
     const _distributionsBaseUrl = this._configProvider.getConfigurationItem({
       name: 'SDK_DISTRIBUTIONS_BASE_URL',

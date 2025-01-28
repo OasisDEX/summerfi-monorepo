@@ -5,17 +5,15 @@ import {
 } from '@summerfi/armada-protocol-common'
 import {
   Address,
-  Token,
   TokenAmount,
   TransactionType,
   type IAddress,
   type IChainInfo,
+  type IToken,
 } from '@summerfi/sdk-common'
 import { encodeFunctionData, zeroAddress } from 'viem'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
-
-const testDeployment = true
 
 /**
  * @name ArmadaManager
@@ -24,6 +22,7 @@ const testDeployment = true
 export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
   private _blockchainClientProvider: IBlockchainClientProvider
   private _allowanceManager: IAllowanceManager
+  private _getSummerToken: (params: { chainInfo: IChainInfo }) => IToken
 
   private _hubChainSummerTokenAddress: IAddress
   private _hubChainInfo: IChainInfo
@@ -33,25 +32,17 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     blockchainClientProvider: IBlockchainClientProvider
     allowanceManager: IAllowanceManager
     hubChainInfo: IChainInfo
+    getSummerToken: (params: { chainInfo: IChainInfo }) => IToken
   }) {
     this._blockchainClientProvider = params.blockchainClientProvider
     this._allowanceManager = params.allowanceManager
     this._hubChainInfo = params.hubChainInfo
+    this._getSummerToken = params.getSummerToken
 
     this._hubChainSummerTokenAddress = getDeployedContractAddress({
       chainInfo: this._hubChainInfo,
       contractCategory: 'gov',
       contractName: 'summerToken',
-    })
-  }
-
-  private getSummerToken(params: { chainInfo: IChainInfo; address: IAddress }): Token {
-    return Token.createFrom({
-      chainInfo: params.chainInfo,
-      address: params.address,
-      decimals: 18,
-      name: 'SummerToken',
-      symbol: testDeployment ? 'BUMMER' : 'SUMMER',
     })
   }
 
@@ -226,9 +217,8 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       spender: Address.createFromEthereum({ value: rewardsManagerAddressString }),
       amount: TokenAmount.createFromBaseUnit({
         amount: params.amount.toString(),
-        token: this.getSummerToken({
+        token: this._getSummerToken({
           chainInfo: this._hubChainInfo,
-          address: this._hubChainSummerTokenAddress,
         }),
       }),
       owner: params.user.wallet.address,

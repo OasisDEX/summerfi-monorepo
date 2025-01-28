@@ -26,8 +26,8 @@ describe('Armada Protocol Gov', () => {
         }),
       })
 
-      describe(`check staked balance and rewards`, () => {
-        it(`should get balance`, async () => {
+      describe.skip(`check user not using gov`, () => {
+        it(`should have balance`, async () => {
           const balance = await sdk.armada.users.getUserBalance({
             user,
           })
@@ -40,24 +40,36 @@ describe('Armada Protocol Gov', () => {
           })
           assert(delegate.value === zeroAddress, 'Should not have a delegate')
         })
-        it(`should get staked balance`, async () => {
+        it(`should not have staked balance`, async () => {
           const staked = await sdk.armada.users.getUserStakedBalance({
             user,
           })
-          expect(staked).toBeGreaterThan(0n)
+          expect(staked).toBe(0n)
           console.log('staked', staked)
         })
-        it(`should get earned rewards`, async () => {
+        it(`should not have votes`, async () => {
+          const votes = await sdk.armada.users.getUserVotes({
+            user,
+          })
+          expect(votes).toBe(0n)
+          console.log('votes', votes)
+        })
+        it(`should not have earned rewards`, async () => {
           const earned = await sdk.armada.users.getUserEarnedRewards({
             user,
           })
-          expect(earned).toBeGreaterThan(0n)
+          expect(earned).toBe(0n)
           console.log('earned', earned)
         })
       })
 
       describe.skip(`delegation`, () => {
         it(`should delegate`, async () => {
+          const votes = await sdk.armada.users.getUserVotes({
+            user,
+          })
+          assert(votes === 0n, 'Votes should be 0')
+
           const delegateTx = await sdk.armada.users.getDelegateTx({
             user,
           })
@@ -80,7 +92,7 @@ describe('Armada Protocol Gov', () => {
           })
 
           expect(delegateAfter.value).toEqual(user.wallet.address.value)
-          expect(votesAfter).toBeGreaterThan(0n)
+          expect(votesAfter).toBeGreaterThan(votes)
         })
       })
 
@@ -97,14 +109,13 @@ describe('Armada Protocol Gov', () => {
           })
           assert(delegate.value !== zeroAddress, 'Should have a delegate')
 
+          const staked = await sdk.armada.users.getUserStakedBalance({
+            user,
+          })
+
           const stakeTx = await sdk.armada.users.getStakeTx({
             user,
             amount: balance,
-          })
-
-          // stake before
-          const stakedBefore = await sdk.armada.users.getUserStakedBalance({
-            user,
           })
 
           const { statuses } = await sendAndLogTransactions({
@@ -120,7 +131,7 @@ describe('Armada Protocol Gov', () => {
           const stakedAfter = await sdk.armada.users.getUserStakedBalance({
             user,
           })
-          expect(stakedAfter).toBeGreaterThan(stakedBefore)
+          expect(stakedAfter).toBeGreaterThan(staked)
         })
       })
 
@@ -128,23 +139,22 @@ describe('Armada Protocol Gov', () => {
       describe.skip(`unstaking`, () => {
         // unstaking tx
         it(`should unstake all`, async () => {
-          const stakedBalance = await sdk.armada.users.getUserStakedBalance({
+          const staked = await sdk.armada.users.getUserStakedBalance({
             user,
           })
-          assert(stakedBalance > 0n, 'Staked balance should be greater than 0')
+          assert(staked > 0n, 'Staked balance should be greater than 0')
 
           const delegate = await sdk.armada.users.getUserDelegatee({
             user,
           })
           assert(delegate.value !== zeroAddress, 'Should have a delegate')
 
-          const unstakeTx = await sdk.armada.users.getUnstakeTx({
-            amount: stakedBalance,
+          const votes = await sdk.armada.users.getUserVotes({
+            user,
           })
 
-          // unstake before
-          const stakedBefore = await sdk.armada.users.getUserStakedBalance({
-            user,
+          const unstakeTx = await sdk.armada.users.getUnstakeTx({
+            amount: staked,
           })
 
           const { statuses } = await sendAndLogTransactions({
@@ -160,17 +170,28 @@ describe('Armada Protocol Gov', () => {
           const stakedAfter = await sdk.armada.users.getUserStakedBalance({
             user,
           })
-          expect(stakedAfter).toBeLessThan(stakedBefore)
+          const votesAfter = await sdk.armada.users.getUserVotes({
+            user,
+          })
+
+          expect(stakedAfter).toBeLessThan(staked)
+          expect(votesAfter).toBeLessThan(votes)
         })
       })
 
       // desc un-delegation
-      describe.skip(`undelegation`, () => {
+      describe(`undelegation`, () => {
         it(`should undelegate`, async () => {
+          // hasve delegate
           const delegate = await sdk.armada.users.getUserDelegatee({
             user,
           })
           assert(delegate.value !== zeroAddress, 'Should have a delegate')
+
+          const staked = await sdk.armada.users.getUserStakedBalance({
+            user,
+          })
+          assert(staked === 0n, 'should not have staked balance')
 
           const undelegateTx = await sdk.armada.users.getUndelegateTx()
 
