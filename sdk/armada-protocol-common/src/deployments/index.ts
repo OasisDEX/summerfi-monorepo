@@ -75,7 +75,7 @@ export const getDeployedGovRewardsManagerAddress = () => {
   ).rewardsManager.address
   if (!maybeAddress) {
     throw new Error(
-      'Rewards redeemer contract is not available on ' + key + '. It is only on Base.',
+      'Gov rewards manager contract is not available on ' + key + '. It is only on Base.',
     )
   }
   return Address.createFromEthereum({ value: maybeAddress })
