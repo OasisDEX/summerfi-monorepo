@@ -81,8 +81,8 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
 
   const rewardsData: ClaimDelegateExternalData = {
     sumrToClaim,
-    sumrStakeDelegate,
     sumrBalances,
+    sumrStakeDelegate,
     sumrStakingInfo,
     sumrDelegates,
     sumrDecayFactors,
