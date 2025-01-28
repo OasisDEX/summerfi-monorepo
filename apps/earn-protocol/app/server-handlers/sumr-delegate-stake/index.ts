@@ -39,26 +39,11 @@ export const getSumrDelegateStake = async ({
       transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.BASE]),
     })
 
-    let tokens
-
-    try {
-      const chainResponse = await backendSDK.chains.getChain({
-        chainInfo: getChainInfoByChainId(SDKChainId.BASE),
-      })
-
-      // eslint-disable-next-line prefer-destructuring
-      tokens = chainResponse.tokens
-    } catch (error) {
-      throw new Error(
-        `Failed to fetch chain data: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      )
-    }
-
     let sumrToken
 
     try {
-      sumrToken = await tokens.getTokenBySymbol({
-        symbol: 'SUMMER',
+      sumrToken = await backendSDK.armada.users.getSummerToken({
+        chainInfo: getChainInfoByChainId(SDKChainId.BASE),
       })
     } catch (error) {
       throw new Error(
