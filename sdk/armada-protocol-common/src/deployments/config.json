@@ -16,6 +16,9 @@
         },
         "rewardsRedeemer": {
           "address": "0x2aF041B4505743f0C01Dd4C6AA8e23bD22dE379e"
+        },
+        "rewardsManager": {
+          "address": "0xa563121Fa251E20D7359CD4d8DBDc36810093A51"
         }
       },
       "buyAndBurn": {

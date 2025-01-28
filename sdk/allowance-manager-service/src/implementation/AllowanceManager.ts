@@ -29,24 +29,25 @@ export class AllowanceManager implements IAllowanceManager {
       chainInfo: params.chainInfo,
     })
 
-    if (params.owner != null) {
-      const allowance = await erc20Contract.allowance({
-        owner: params.owner,
+    const [allowance, approveTx] = await Promise.all([
+      params.owner != null
+        ? erc20Contract.allowance({
+            owner: params.owner,
+            spender: params.spender,
+          })
+        : Promise.resolve(null),
+      erc20Contract.approve({
+        amount: params.amount,
         spender: params.spender,
-      })
+      }),
+    ])
 
-      if (allowance.isGreaterOrEqualThan(params.amount)) {
-        return undefined
-      }
+    if (allowance != null && allowance.isGreaterOrEqualThan(params.amount)) {
+      return undefined
     }
 
-    const tx = await erc20Contract.approve({
-      amount: params.amount,
-      spender: params.spender,
-    })
-
     return {
-      ...tx,
+      ...approveTx,
       type: TransactionType.Approve,
       metadata: {
         approvalAmount: params.amount,
