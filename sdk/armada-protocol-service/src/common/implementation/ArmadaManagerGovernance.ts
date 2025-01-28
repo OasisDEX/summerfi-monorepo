@@ -15,6 +15,8 @@ import { encodeFunctionData, zeroAddress } from 'viem'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 
+const testDeployment = true
+
 /**
  * @name ArmadaManager
  * @description This class is the implementation of the IArmadaManager interface. Takes care of choosing the best provider for a price consultation
@@ -49,7 +51,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       address: params.address,
       decimals: 18,
       name: 'SummerToken',
-      symbol: 'SUMMER',
+      symbol: testDeployment ? 'BUMMER' : 'SUMMER',
     })
   }
 
