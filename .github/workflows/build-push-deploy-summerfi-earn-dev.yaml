@@ -8,7 +8,9 @@ on:
 jobs:
   changes:
     name: Check for earn protocol changes
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+    permissions:
+      id-token: write
     if: ${{ github.event_name == 'push' }}
     permissions:
       pull-requests: read
