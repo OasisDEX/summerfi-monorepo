@@ -7,7 +7,7 @@ import { createPublicClient, http } from 'viem'
 import { base } from 'viem/chains'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
-import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
+import { SDKChainIdToSSRRpcGatewayMap } from '@/helpers/rpc-gateway-ssr'
 
 export interface SumrStakingInfoData {
   sumrTokenWrappedStakedAmount: number
@@ -27,7 +27,7 @@ export const getSumrStakingInfo = async (): Promise<SumrStakingInfoData> => {
   try {
     const publicClient = createPublicClient({
       chain: base,
-      transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.BASE]),
+      transport: http(await SDKChainIdToSSRRpcGatewayMap[SDKChainId.BASE]),
     })
 
     const sumrToken = await backendSDK.armada.users
