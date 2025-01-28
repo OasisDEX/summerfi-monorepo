@@ -7,6 +7,7 @@ import { createPublicClient, http } from 'viem'
 import { base } from 'viem/chains'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
+import { GOVERNANCE_REWARDS_MANAGER_ADDRESS } from '@/constants/addresses'
 import { SDKChainIdToSSRRpcGatewayMap } from '@/helpers/rpc-gateway-ssr'
 
 export interface SumrStakingInfoData {
@@ -38,26 +39,16 @@ export const getSumrStakingInfo = async (): Promise<SumrStakingInfoData> => {
         throw new Error(`Failed to get SUMMER token: ${error.message}`)
       })
 
-    const rewardsManager = await publicClient
-      .readContract({
-        address: sumrToken.address.value,
-        abi: SummerTokenAbi,
-        functionName: 'rewardsManager',
-      })
-      .catch((error) => {
-        throw new Error(`Failed to read rewardsManager: ${error.message}`)
-      })
-
     const [wrappedStakingTokenResult, rewardDataResult] = await publicClient
       .multicall({
         contracts: [
           {
-            address: rewardsManager,
+            address: GOVERNANCE_REWARDS_MANAGER_ADDRESS,
             abi: GovernanceRewardsManagerAbi,
             functionName: 'wrappedStakingToken',
           },
           {
-            address: rewardsManager,
+            address: GOVERNANCE_REWARDS_MANAGER_ADDRESS,
             abi: GovernanceRewardsManagerAbi,
             functionName: 'rewardData',
             args: [sumrToken.address.value],
@@ -93,7 +84,7 @@ export const getSumrStakingInfo = async (): Promise<SumrStakingInfoData> => {
         address: wrappedStakingToken,
         abi: SummerTokenAbi,
         functionName: 'balanceOf',
-        args: [rewardsManager],
+        args: [GOVERNANCE_REWARDS_MANAGER_ADDRESS],
       })
       .catch((error) => {
         throw new Error(`Failed to read wrapped staked SUMR balance: ${error.message}`)

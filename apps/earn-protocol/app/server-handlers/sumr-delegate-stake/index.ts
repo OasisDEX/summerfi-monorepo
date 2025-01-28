@@ -6,6 +6,10 @@ import { type Address, createPublicClient, http } from 'viem'
 import { base } from 'viem/chains'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
+import {
+  GOVERNANCE_REWARDS_MANAGER_ADDRESS,
+  VESTING_WALLET_FACTORY_ADDRESS,
+} from '@/constants/addresses'
 import { SDKChainIdToSSRRpcGatewayMap } from '@/helpers/rpc-gateway-ssr'
 
 export interface SumrDelegateStakeData {
@@ -52,12 +56,7 @@ export const getSumrDelegateStake = async ({
     }
 
     try {
-      const [
-        sumrAmountResult,
-        delegatedToResult,
-        vestingWalletFactoryResult,
-        rewardsManagerResult,
-      ] = await publicClient.multicall({
+      const [sumrAmountResult, delegatedToResult] = await publicClient.multicall({
         contracts: [
           {
             abi: SummerTokenAbi,
@@ -71,27 +70,13 @@ export const getSumrDelegateStake = async ({
             functionName: 'delegates',
             args: [resolvedWalletAddress],
           },
-          {
-            abi: SummerTokenAbi,
-            address: sumrToken.address.value,
-            functionName: 'vestingWalletFactory',
-            args: [],
-          },
-          {
-            abi: SummerTokenAbi,
-            address: sumrToken.address.value,
-            functionName: 'rewardsManager',
-            args: [],
-          },
         ],
       })
 
       const _sumrAmount = sumrAmountResult.result
       const delegatedTo = delegatedToResult.result
-      const verstingWalletFactory = vestingWalletFactoryResult.result
-      const rewardsManager = rewardsManagerResult.result
 
-      if (!verstingWalletFactory || !rewardsManager || !delegatedTo) {
+      if (!delegatedTo) {
         throw new Error('Failed to fetch vesting or staking data or delegated to data')
       }
 
@@ -101,13 +86,13 @@ export const getSumrDelegateStake = async ({
           contracts: [
             {
               abi: SummerVestingWalletFactoryAbi,
-              address: verstingWalletFactory,
+              address: VESTING_WALLET_FACTORY_ADDRESS,
               functionName: 'vestingWallets',
               args: [resolvedWalletAddress],
             },
             {
               abi: SummerTokenAbi,
-              address: rewardsManager,
+              address: GOVERNANCE_REWARDS_MANAGER_ADDRESS,
               functionName: 'balanceOf',
               args: [resolvedWalletAddress],
             },

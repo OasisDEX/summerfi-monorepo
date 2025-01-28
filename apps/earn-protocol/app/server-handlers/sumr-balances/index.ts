@@ -6,6 +6,7 @@ import { type Address, createPublicClient, http, zeroAddress } from 'viem'
 import { arbitrum, base, mainnet } from 'viem/chains'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
+import { VESTING_WALLET_FACTORY_ADDRESS } from '@/constants/addresses'
 import { SDKChainIdToSSRRpcGatewayMap } from '@/helpers/rpc-gateway-ssr'
 
 export interface SumrBalancesData {
@@ -75,15 +76,9 @@ export const getSumrBalances = async ({
           let vestingBalanceOnBase = 0n
 
           if (chainId === SDKChainId.BASE) {
-            const vestingWalletFactory = await publicClient.readContract({
-              abi: SummerTokenAbi,
-              address: sumrToken.address.value,
-              functionName: 'vestingWalletFactory',
-            })
-
             const vestingWallet = await publicClient.readContract({
               abi: SummerVestingWalletFactoryAbi,
-              address: vestingWalletFactory,
+              address: VESTING_WALLET_FACTORY_ADDRESS,
               functionName: 'vestingWallets',
               args: [resolvedWalletAddress],
             })
