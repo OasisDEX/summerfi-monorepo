@@ -11,9 +11,8 @@ jobs:
     runs-on: ubuntu-22.04
     permissions:
       id-token: write
-    if: ${{ github.event_name == 'push' }}
-    permissions:
       pull-requests: read
+    if: ${{ github.event_name == 'push' }} 
     outputs:
       build-earn-protocol: ${{ steps.filter.outputs.build-earn-protocol }}
     steps:
