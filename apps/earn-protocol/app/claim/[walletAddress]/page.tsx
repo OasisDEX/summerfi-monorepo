@@ -24,7 +24,6 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
   if (!isValidAddress(walletAddress)) {
     redirect(`/`)
   }
-
   const [sumrStakeDelegate, sumrBalances, sumrStakingInfo, sumrDelegates, sumrToClaim] =
     await Promise.all([
       getSumrDelegateStake({

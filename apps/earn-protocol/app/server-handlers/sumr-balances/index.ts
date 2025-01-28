@@ -6,7 +6,7 @@ import { type Address, createPublicClient, http, zeroAddress } from 'viem'
 import { arbitrum, base, mainnet } from 'viem/chains'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
-import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
+import { SDKChainIdToSSRRpcGatewayMap } from '@/helpers/rpc-gateway-ssr'
 
 export interface SumrBalancesData {
   mainnet: string
@@ -48,7 +48,7 @@ export const getSumrBalances = async ({
       chainConfigs.map(async ({ chain, chainId, chainName }) => {
         const publicClient = createPublicClient({
           chain,
-          transport: http(SDKChainIdToRpcGatewayMap[chainId]),
+          transport: http(await SDKChainIdToSSRRpcGatewayMap[chainId]),
         })
 
         try {

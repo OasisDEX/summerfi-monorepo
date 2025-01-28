@@ -6,7 +6,7 @@ import { type Address, createPublicClient, http } from 'viem'
 import { base } from 'viem/chains'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
-import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
+import { SDKChainIdToSSRRpcGatewayMap } from '@/helpers/rpc-gateway-ssr'
 
 export interface SumrDelegateStakeData {
   delegatedTo: Address
@@ -36,7 +36,7 @@ export const getSumrDelegateStake = async ({
 
     const publicClient = createPublicClient({
       chain: base,
-      transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.BASE]),
+      transport: http(await SDKChainIdToSSRRpcGatewayMap[SDKChainId.BASE]),
     })
 
     let sumrToken
