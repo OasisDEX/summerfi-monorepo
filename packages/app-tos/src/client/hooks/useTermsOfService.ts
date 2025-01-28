@@ -59,9 +59,16 @@ export const useTermsOfService = ({
       // which handles signatures well
       // condition below is for safe specific case
       const bytecodeOfPotentialContract = !isSmartAccount
-        ? await publicClient.getBytecode({
-            address: walletAddress as `0x${string}`,
-          })
+        ? await publicClient
+            .getBytecode({
+              address: walletAddress as `0x${string}`,
+            })
+            .catch((error) => {
+              // eslint-disable-next-line no-console
+              console.error('Failed to fetch bytecode:', error)
+
+              return undefined
+            })
         : undefined
 
       const isGnosisSafe = (bytecodeOfPotentialContract?.length ?? 0) > 0
