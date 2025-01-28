@@ -11,9 +11,9 @@ const includeBasePath = (path: string) => `/earn${path.replace(/\/$/u, '')}`
 
 export const trackEvent = (eventName: string, eventBody: { [key: string]: unknown }) => {
   // eslint-disable-next-line turbo/no-undeclared-env-vars
-  // if (process.env.TURBOPACK) {
-  //   return
-  // }
+  if (process.env.TURBOPACK) {
+    return
+  }
   let win: Window
 
   if (typeof window === 'undefined') {
