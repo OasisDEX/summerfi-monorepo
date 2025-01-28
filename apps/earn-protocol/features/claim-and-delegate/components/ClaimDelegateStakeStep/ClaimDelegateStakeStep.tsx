@@ -287,9 +287,9 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
   const withApproval = !!approveSumrTransaction
 
   const hasNoDelegatee =
-    (state.delegatee === ADDRESS_ZERO &&
-      state.delegateStatus === ClaimDelegateTxStatuses.COMPLETED) ||
-    externalData.sumrStakeDelegate.delegatedTo === ADDRESS_ZERO
+    state.delegateStatus === ClaimDelegateTxStatuses.COMPLETED
+      ? state.delegatee === ADDRESS_ZERO
+      : externalData.sumrStakeDelegate.delegatedTo === ADDRESS_ZERO
 
   return (
     <div className={classNames.claimDelegateStakeStepWrapper}>
