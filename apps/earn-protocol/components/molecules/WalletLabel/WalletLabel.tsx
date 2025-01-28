@@ -1,6 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useAuthModal, useChain, useLogout, useSignerStatus } from '@account-kit/react'
-import { Button, LoadableAvatar, SkeletonLine, Text, Tooltip } from '@summerfi/app-earn-ui'
+import {
+  Button,
+  LoadableAvatar,
+  SkeletonLine,
+  Text,
+  Tooltip,
+  useIsIframe,
+} from '@summerfi/app-earn-ui'
 import { formatAddress } from '@summerfi/app-utils'
 
 import { networkSDKChainIdIconMap } from '@/constants/network-id-to-icon'
@@ -17,6 +24,7 @@ export default function WalletLabel() {
   const { isInitializing: isSignerInitializing, isAuthenticating: isSignerAuthenticating } =
     useSignerStatus()
   const { logout } = useLogout()
+  const isIframe = useIsIframe()
 
   const handleLogout = () => {
     logout()
@@ -36,7 +44,8 @@ export default function WalletLabel() {
     }, 2000)
   }
 
-  if (isSignerInitializing || isAuthModalOpen || isSignerAuthenticating) {
+  // we are not showing the skeleton in iframe, because isSignerInitializing never goes to true
+  if ((isSignerInitializing || isAuthModalOpen || isSignerAuthenticating) && !isIframe) {
     return (
       <Button variant="secondarySmall">
         <SkeletonLine width={100} height={10} style={{ opacity: 0.2 }} />

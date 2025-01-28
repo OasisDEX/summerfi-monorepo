@@ -1,17 +1,4 @@
-import { hashMessage, type PublicClient } from 'viem'
-
-const eip1271CompatibleContract = [
-  {
-    inputs: [
-      { internalType: 'bytes32', name: '_message', type: 'bytes32' },
-      { internalType: 'bytes', name: '_signature', type: 'bytes' },
-    ],
-    name: 'isValidSignature',
-    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-] as const
+import { type PublicClient } from 'viem'
 
 /**
  * Validate a signature against a message using an EIP-1271 compatible contract.
@@ -37,14 +24,11 @@ export async function isValidSignature({
   message: string
   signature: `0x${string}`
 }): Promise<boolean> {
-  const messageBytes32 = hashMessage(message)
-
   try {
-    await client.readContract({
-      abi: eip1271CompatibleContract,
-      functionName: 'isValidSignature',
+    await client.verifyMessage({
       address,
-      args: [messageBytes32, signature],
+      message,
+      signature,
     })
 
     return true
