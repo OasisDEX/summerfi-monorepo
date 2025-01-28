@@ -21,6 +21,7 @@ import { getUnstakeTxHandler } from '../handlers/getUnstakeTxHandler'
 import { getUserDelegateeHandler } from '../handlers/getUserDelegateeHandler'
 import { getUserStakedBalanceHandler } from '../handlers/getUserStakedBalanceHandler'
 import { getUserVotesHandler } from '../handlers/getUserVotesHandler'
+import { getSummerTokenHandler } from '../handlers/getSummerTokenHandler'
 
 type UseSdk = {
   walletAddress?: string
@@ -73,6 +74,7 @@ export const useSDK = (params: UseSdk) => {
   const getUserDelegatee = useMemo(() => getUserDelegateeHandler(sdk), [sdk])
   const getUserStakedBalance = useMemo(() => getUserStakedBalanceHandler(sdk), [sdk])
   const getUserVotes = useMemo(() => getUserVotesHandler(sdk), [sdk])
+  const getSummerToken = useMemo(() => getSummerTokenHandler(sdk), [sdk])
 
   const memo = useMemo(
     () => ({
@@ -95,6 +97,7 @@ export const useSDK = (params: UseSdk) => {
       getUserDelegatee,
       getUserStakedBalance,
       getUserVotes,
+      getSummerToken,
     }),
     [
       getCurrentUser,
@@ -116,6 +119,7 @@ export const useSDK = (params: UseSdk) => {
       getUserDelegatee,
       getUserStakedBalance,
       getUserVotes,
+      getSummerToken,
     ],
   )
 

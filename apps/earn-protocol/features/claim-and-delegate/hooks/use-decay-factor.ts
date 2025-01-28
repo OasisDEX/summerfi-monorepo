@@ -8,8 +8,8 @@ import BigNumber from 'bignumber.js'
 import { type Address, createPublicClient, http } from 'viem'
 import { base } from 'viem/chains'
 
-import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
+import { useAppSDK } from '@/hooks/use-app-sdk'
 
 type DecayFactorResponse = {
   decayFactor: number | undefined
@@ -28,6 +28,8 @@ type DecayFactorResponse = {
  *  - error: Error object if request fails
  */
 export const useDecayFactor = (delegatedAddress?: string): DecayFactorResponse => {
+  const sdk = useAppSDK()
+
   const fetchDecayFactor = async (address: Address): Promise<number> => {
     try {
       const publicClient = createPublicClient({
@@ -35,7 +37,7 @@ export const useDecayFactor = (delegatedAddress?: string): DecayFactorResponse =
         transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.BASE]),
       })
 
-      const sumrToken = await backendSDK.armada.users
+      const sumrToken = await sdk
         .getSummerToken({
           chainInfo: getChainInfoByChainId(SDKChainId.BASE),
         })
