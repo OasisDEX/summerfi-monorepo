@@ -7,6 +7,10 @@ import { usePathname, useRouter } from 'next/navigation'
 
 import { ClaimRaysTitle } from '@/components/molecules/ClaimRaysTitle/ClaimRaysTitle'
 import { CriteriaList } from '@/components/molecules/CriteriaList/CriteriaList'
+import {
+  HomepageAnnouncement,
+  type HomepageAnnouncementProps,
+} from '@/components/molecules/HomepageAnnouncement/HomepageAnnouncement'
 import { CalculatorModal } from '@/components/organisms/CalculatorModal/CalculatorModal'
 import { trackButtonClick } from '@/helpers/mixpanel'
 
@@ -23,9 +27,15 @@ interface ClaimRaysPageProps {
         rays?: undefined
       }
     | null
+  announcement: HomepageAnnouncementProps['announcement']
 }
 
-export default ({ userAddress, userRays, pointsEarnedPerYear }: ClaimRaysPageProps) => {
+export default ({
+  userAddress,
+  userRays,
+  pointsEarnedPerYear,
+  announcement,
+}: ClaimRaysPageProps) => {
   const [{ wallet }, connect] = useConnectWallet()
   const { push } = useRouter()
   const currentPath = usePathname()
@@ -77,6 +87,7 @@ export default ({ userAddress, userRays, pointsEarnedPerYear }: ClaimRaysPagePro
 
   return (
     <>
+      <HomepageAnnouncement announcement={announcement} />
       <ClaimRaysTitle
         userAddress={userAddress}
         userRays={userRays}
