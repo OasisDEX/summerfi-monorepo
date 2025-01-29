@@ -50,7 +50,7 @@ export const getSumrDelegates = async (): Promise<SumrDelegates[]> => {
               organizationId: "2439139313007462075"
               governorId: "eip155:8453:0xBE5A4DD68c3526F32B454fE28C9909cA0601e9Fa"
             }
-            page: { limit: 4 }
+            page: { limit: 100 }
           }
         ) {
           nodes {
