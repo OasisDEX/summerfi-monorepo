@@ -53,7 +53,7 @@ export const localSumrDelegates: SumrDelegateWithDecayFactor[] = [
   },
   {
     ens: '',
-    title: 'IDMW',
+    title: 'IDMW - FBrinkkemper',
     address: '0xC8BC108777f5b11Bf2C6Ad28fd1a7D42eFe734fF',
     description:
       'Delegate to me to focus on sustainable protocol growth, minimal governance, maximum TVL. Value creation should come first, revenue should come later.',
