@@ -29,15 +29,15 @@ export async function getPositionHistory({ network, address, vault }: GetPositio
       },
     })
 
-  if (!process.env.TEMPORARY_MAINNET_SUBGRAPH) {
-    throw new Error('TEMPORARY_MAINNET_SUBGRAPH env variable is not set')
-  }
-
   const clients = {
-    // [SDKNetwork.Mainnet]: new GraphQLClient(`${process.env.SUBGRAPH_BASE}/summer-protocol`, {
-    [SDKNetwork.Mainnet]: new GraphQLClient(process.env.TEMPORARY_MAINNET_SUBGRAPH, {
-      fetch: customFetchCache,
-    }),
+    [SDKNetwork.Mainnet]: new GraphQLClient(
+      process.env.TEMPORARY_MAINNET_SUBGRAPH
+        ? process.env.TEMPORARY_MAINNET_SUBGRAPH
+        : `${process.env.SUBGRAPH_BASE}/summer-protocol`,
+      {
+        fetch: customFetchCache,
+      },
+    ),
     [SDKNetwork.Base]: new GraphQLClient(`${process.env.SUBGRAPH_BASE}/summer-protocol-base`, {
       fetch: customFetchCache,
     }),
