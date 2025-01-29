@@ -1,4 +1,4 @@
-import { formatAddress } from '@summerfi/app-utils'
+import { formatAddress, isValidLink } from '@summerfi/app-utils'
 
 import { type SumrDecayFactorData } from '@/app/server-handlers/sumr-decay-factor'
 import { type SumrDelegates } from '@/app/server-handlers/sumr-delegates'
@@ -139,7 +139,11 @@ export function mergeDelegatesData(
         localDelegate?.description ||
         'Description not available.',
       social: {
-        x: sumrDelegate.account.twitter || localDelegate?.social.x,
+        x: isValidLink(sumrDelegate.account.twitter)
+          ? sumrDelegate.account.twitter
+          : sumrDelegate.account.twitter
+            ? `https://x.com/${sumrDelegate.account.twitter}`
+            : localDelegate?.social.x,
         linkedin: localDelegate?.social.linkedin,
         etherscan: `https://basescan.org/address/${sumrDelegate.account.address}`,
         link: localDelegate?.social.link,
