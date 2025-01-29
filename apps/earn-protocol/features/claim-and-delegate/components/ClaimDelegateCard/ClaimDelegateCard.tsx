@@ -100,7 +100,11 @@ export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
             </div>
           )}
         </div>
-        <Text as="p" variant="p3" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+        <Text
+          as="p"
+          variant="p3"
+          style={{ color: 'var(--earn-protocol-secondary-60)', wordBreak: 'break-word' }}
+        >
           {description}
         </Text>
         <div className={classNames.footer}>
