@@ -16,7 +16,18 @@ export const SumrWhatIsSumrToken = () => {
           </Text>
           <Text as="p" variant="p1" style={{ marginBottom: 'var(--general-space-40)' }}>
             $SUMR is the governance token for Lazy Summer Protocol. A DeFi yield curation protocol
-            that optimizes DeFi’s highest quality yields, for everyone.
+            that optimizes DeFi’s highest quality{' '}
+            <span style={{ position: 'relative' }}>
+              yields
+              <Text
+                as="span"
+                variant="p4"
+                style={{ position: 'absolute', top: '-6px', right: '-4px' }}
+              >
+                1
+              </Text>
+            </span>
+            , for everyone.
           </Text>
           <Link href="/" target="_blank">
             <Button variant="primaryLarge" className={classNames.actionable}>

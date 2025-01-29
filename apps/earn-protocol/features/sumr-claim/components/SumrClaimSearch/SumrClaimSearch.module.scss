@@ -12,6 +12,7 @@
     flex-direction: column;
     justify-content: center;
     flex-wrap: wrap;
+    word-break: break-word;
 
     @media (min-width: 768px) {
       flex-direction: row;

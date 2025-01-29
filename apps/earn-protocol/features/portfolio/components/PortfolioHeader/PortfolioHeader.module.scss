@@ -4,6 +4,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--general-space-16);
+  padding: 0 var(--general-space-16);
 
   @media screen and (min-width: 600px) {
     gap: unset;
