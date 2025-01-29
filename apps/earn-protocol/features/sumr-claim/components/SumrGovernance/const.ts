@@ -38,6 +38,6 @@ export const sumrStakeToDelegate: SumrGovernListData = [
     iconName: 'checkmark_cookie_colorful',
     title: 'Always ensure you’re delegating to an active delegate',
     description:
-      'Choosing who you delegate to may impact the voting power your are assigning and also the rewards you can earn. Each delegate has a voting power decay factor, which drops if they miss votes or stop participating in governance. The higher their decay, the more you earn. So stay on top of your delegate and ensure you’re always delegating to an active delegate. ',
+      'Choosing who you delegate to may impact the voting power you are assigning and also the rewards you can earn. Each delegate has a voting power decay factor, which drops if they miss votes or stop participating in governance. The higher their decay, the more you earn. So stay on top of your delegate and ensure you’re always delegating to an active delegate. ',
   },
 ]

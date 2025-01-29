@@ -316,7 +316,8 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
             marginBottom: 'var(--general-space-4)',
           }}
         >
-          Every delegate declares their governance objectives.
+          Each delegate has their own values, intentions and visions for the Lazy Summer Protocol.
+          Delegate your voting power to those who best align with your values.
         </Text>
         <Link href="https://forum.summer.fi/c/delegates/19" target="_blank">
           <WithArrow as="p" variant="p3">

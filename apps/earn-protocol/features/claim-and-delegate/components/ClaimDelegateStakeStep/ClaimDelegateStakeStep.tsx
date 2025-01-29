@@ -321,7 +321,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
         >
           Every delegate declares their governance objectives.
         </Text>
-        <Link href="/" target="_blank">
+        <Link href="https://forum.summer.fi/c/delegates/19" target="_blank">
           <WithArrow as="p" variant="p3">
             Learn more about Governance
           </WithArrow>
