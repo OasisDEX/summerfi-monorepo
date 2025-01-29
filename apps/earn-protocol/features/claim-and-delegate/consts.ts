@@ -102,44 +102,45 @@ export function mergeDelegatesData(
   sumrDelegates: SumrDelegates[],
   sumrDecayFactors: SumrDecayFactorData[],
 ): SumrDelegateWithDecayFactor[] {
-  return [
-    ...localSumrDelegates,
-    ...sumrDelegates.map((sumrDelegate) => {
-      const localDelegate = localSumrDelegates.find(
-        (local) => local.address.toLowerCase() === sumrDelegate.account.address.toLowerCase(),
-      )
+  const mergedDelegates = new Map<string, SumrDelegateWithDecayFactor>()
 
-      const decayFactor =
-        sumrDecayFactors.find(
-          (factor) => factor.address.toLowerCase() === sumrDelegate.account.address.toLowerCase(),
-        )?.decayFactor ?? 1
+  // First add all local delegates to the map
+  localSumrDelegates.forEach((delegate) => {
+    mergedDelegates.set(delegate.address.toLowerCase(), delegate)
+  })
 
-      return {
-        // eslint-disable-next-line no-mixed-operators
-        sumrAmount: Number(sumrDelegate.votesCount) / 10 ** 18,
-        ens: sumrDelegate.account.ens !== '' ? sumrDelegate.account.ens : localDelegate?.ens ?? '',
-        address: sumrDelegate.account.address,
-        title:
-          sumrDelegate.account.name !== ''
-            ? sumrDelegate.account.name
-            : localDelegate?.title ?? formatAddress(sumrDelegate.account.address),
-        description:
-          sumrDelegate.account.bio !== ''
-            ? sumrDelegate.account.bio
-            : sumrDelegate.statement && sumrDelegate.statement.statementSummary !== ''
-              ? sumrDelegate.statement.statementSummary
-              : localDelegate?.description ?? 'Description not available.',
-        social: {
-          x:
-            sumrDelegate.account.twitter !== ''
-              ? sumrDelegate.account.twitter
-              : localDelegate?.social.x ?? undefined,
-          linkedin: localDelegate?.social.linkedin ?? undefined,
-          etherscan: `https://basescan.org/address/${sumrDelegate.account.address}`,
-          link: localDelegate?.social.link ?? undefined,
-        },
-        decayFactor,
-      }
-    }),
-  ].sort((a, b) => b.sumrAmount - a.sumrAmount)
+  // Process delegates from sumrDelegates, overwriting local values if they exist
+  sumrDelegates.forEach((sumrDelegate) => {
+    const normalizedAddress = sumrDelegate.account.address.toLowerCase()
+    const localDelegate = mergedDelegates.get(normalizedAddress)
+    const decayFactor =
+      sumrDecayFactors.find((factor) => factor.address.toLowerCase() === normalizedAddress)
+        ?.decayFactor ?? 1
+
+    mergedDelegates.set(normalizedAddress, {
+      // eslint-disable-next-line no-mixed-operators
+      sumrAmount: Number(sumrDelegate.votesCount) / 10 ** 18,
+      ens: sumrDelegate.account.ens || localDelegate?.ens || '',
+      address: sumrDelegate.account.address,
+      title:
+        sumrDelegate.account.name ||
+        localDelegate?.title ||
+        formatAddress(sumrDelegate.account.address),
+      description:
+        sumrDelegate.account.bio ||
+        sumrDelegate.statement?.statementSummary ||
+        '' ||
+        localDelegate?.description ||
+        'Description not available.',
+      social: {
+        x: sumrDelegate.account.twitter || localDelegate?.social.x,
+        linkedin: localDelegate?.social.linkedin,
+        etherscan: `https://basescan.org/address/${sumrDelegate.account.address}`,
+        link: localDelegate?.social.link,
+      },
+      decayFactor,
+    })
+  })
+
+  return Array.from(mergedDelegates.values()).sort((a, b) => b.sumrAmount - a.sumrAmount)
 }
