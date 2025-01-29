@@ -70,7 +70,7 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
             marginBottom: 'var(--general-space-8)',
           }}
         >
-          Update Net APY
+          Update $SUMR valuation
         </Text>
         <Text
           as="p"
@@ -80,8 +80,10 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
             color: 'var(--earn-protocol-secondary-60)',
           }}
         >
-          Net APY is affected by rate and SUMR rewards. You can choose either include both or only
-          one of those in APY.
+          Across the app, SUMR Reward APYs depend on a Fully Diluted Valuation of the SUMR token.
+          Because the token is not currently transferrable, you must choose an appropriate valuation
+          to best reflect the reward rate of the SUMR token, or alternatively, exclude SUMR from any
+          calculations.
         </Text>
         <Input
           placeholder="Enter fully diluted valuation"

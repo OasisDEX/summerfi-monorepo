@@ -1,5 +1,4 @@
 import { type EarnNavigationProps } from '@/components/layout/Navigation/Navigation'
-import { SupportBox } from '@/components/layout/Navigation/SupportBox'
 
 export const getNavigationItems = ({
   userWalletAddress,
@@ -58,9 +57,10 @@ export const getNavigationItems = ({
       },
     ],
   },
-  {
-    label: 'Support',
-    id: 'support',
-    dropdownContent: <SupportBox />,
-  },
+  // hide for now until we provide all the necessary channels of support
+  // {
+  //   label: 'Support',
+  //   id: 'support',
+  //   dropdownContent: <SupportBox />,
+  // },
 ]
