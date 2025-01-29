@@ -48,7 +48,7 @@ export const getSumrDelegates = async (): Promise<SumrDelegates[]> => {
           input: {
             filters: {
               organizationId: "2439139313007462075"
-              governorId: "eip155:8453:0xd76ad62Dd879F63a9f5e500a1684F598AA798d0c"
+              governorId: "eip155:8453:0xBE5A4DD68c3526F32B454fE28C9909cA0601e9Fa"
             }
             page: { limit: 4 }
           }
