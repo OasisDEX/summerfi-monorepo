@@ -131,7 +131,7 @@ export class ArmadaManager implements IArmadaManager {
       address: address,
       decimals: 18,
       name: 'SummerToken',
-      symbol: testDeployment ? 'BUMMER' : 'SUMMER',
+      symbol: testDeployment ? 'BUMMER' : 'SUMR',
     })
   }
 
