@@ -24,6 +24,7 @@ interface ClaimDelegateCardProps {
     linkedin: string | undefined
     x: string | undefined
     link: string | undefined
+    etherscan: string | undefined
   }
   handleClick: () => void
   votingPower?: number
@@ -104,6 +105,11 @@ export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
             )}
             {social?.link && (
               <Link href={social.link} target="_blank">
+                <Icon iconName="link" variant="s" />
+              </Link>
+            )}
+            {social?.etherscan && (
+              <Link href={social.etherscan} target="_blank">
                 <Icon iconName="etherscan" variant="s" />
               </Link>
             )}
