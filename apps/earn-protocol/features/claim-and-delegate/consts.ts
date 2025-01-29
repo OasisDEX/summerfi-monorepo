@@ -15,6 +15,7 @@ export interface SumrDelegate {
     link: string | undefined
     etherscan: string | undefined
   }
+  picture: string | undefined
 }
 
 export interface SumrDelegateWithDecayFactor extends SumrDelegate {
@@ -35,6 +36,7 @@ export const localSumrDelegates: SumrDelegateWithDecayFactor[] = [
     },
     sumrAmount: 0,
     decayFactor: 1,
+    picture: undefined,
   },
   {
     title: 'StableLab.eth',
@@ -50,6 +52,7 @@ export const localSumrDelegates: SumrDelegateWithDecayFactor[] = [
     },
     sumrAmount: 0,
     decayFactor: 1,
+    picture: undefined,
   },
   {
     ens: '',
@@ -65,6 +68,7 @@ export const localSumrDelegates: SumrDelegateWithDecayFactor[] = [
     },
     sumrAmount: 0,
     decayFactor: 1,
+    picture: undefined,
   },
   {
     ens: '',
@@ -80,6 +84,7 @@ export const localSumrDelegates: SumrDelegateWithDecayFactor[] = [
     },
     sumrAmount: 0,
     decayFactor: 1,
+    picture: undefined,
   },
   {
     ens: '',
@@ -95,6 +100,7 @@ export const localSumrDelegates: SumrDelegateWithDecayFactor[] = [
     },
     sumrAmount: 0,
     decayFactor: 1,
+    picture: undefined,
   },
 ]
 
@@ -138,6 +144,7 @@ export function mergeDelegatesData(
         etherscan: `https://basescan.org/address/${sumrDelegate.account.address}`,
         link: localDelegate?.social.link,
       },
+      picture: sumrDelegate.account.picture ?? '',
       decayFactor,
     })
   })

@@ -9,6 +9,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatShorthandNumber } from '@summerfi/app-utils'
 import clsx from 'clsx'
+import Image from 'next/image'
 import Link from 'next/link'
 
 import classNames from './ClaimDelegateCard.module.scss'
@@ -31,6 +32,7 @@ interface ClaimDelegateCardProps {
   selfDelegate?: boolean
   disabled?: boolean
   isFaded?: boolean
+  picture?: string
 }
 
 export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
@@ -45,6 +47,7 @@ export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
   selfDelegate,
   disabled,
   isFaded,
+  picture,
 }) => {
   return (
     <Card
@@ -67,7 +70,16 @@ export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
       <div className={classNames.content}>
         <div className={classNames.heading}>
           <div className={classNames.title}>
-            {!selfDelegate && (
+            {picture && !selfDelegate && (
+              <Image
+                src={picture}
+                alt="avatar"
+                width={38}
+                height={38}
+                style={{ borderRadius: '50%' }}
+              />
+            )}
+            {!selfDelegate && !picture && (
               <LoadableAvatar
                 size={38}
                 name={btoa(address)}
