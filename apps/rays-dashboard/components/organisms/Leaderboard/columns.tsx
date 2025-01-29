@@ -79,7 +79,7 @@ export const leaderboardColumns = {
       if (isConnectedUser) {
         return (
           <LeaderboardRays
-            raysCount={Math.max(0, userRays?.rays?.allPossiblePoints ?? 0)}
+            raysCount={Math.max(0, userRays?.rays?.allPossiblePoints ?? Number(cell.totalPoints))}
             cell={cell}
             userWalletAddress={userWalletAddress}
           />
