@@ -1,7 +1,7 @@
 'use client'
 import { useCallback, useMemo } from 'react'
 import { type RaysApiResponse } from '@summerfi/app-types'
-import { Button, Text, useClientSideMount } from '@summerfi/app-ui'
+import { Button, EXTERNAL_LINKS, Text, useClientSideMount } from '@summerfi/app-ui'
 import { useConnectWallet } from '@web3-onboard/react'
 import { usePathname, useRouter } from 'next/navigation'
 
@@ -62,7 +62,7 @@ export default ({
         page: currentPath,
         userAddress,
       })
-      push(`${currentPath}/claimed?userAddress=${dynamicWalletAddress}`)
+      window.open(`${EXTERNAL_LINKS.EARN_APP_PORTFOLIO}/${userAddress}`, '_blank')
 
       return
     }

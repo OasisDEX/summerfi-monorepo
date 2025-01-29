@@ -2,6 +2,8 @@ import { type IconNamesList } from '@summerfi/app-types'
 import { Icon, Text, WithArrow } from '@summerfi/app-ui'
 import Link from 'next/link'
 
+import homepageAnnouncementStyles from './HomepageAnnouncement.module.scss'
+
 export type HomepageAnnouncementProps = {
   announcement?: {
     message: string
@@ -19,33 +21,11 @@ export function HomepageAnnouncement({ announcement }: HomepageAnnouncementProps
         width: 'fit-content',
         margin: '0 auto',
       }}
+      target="_blank"
     >
-      <div
-        style={{
-          background: '#FFFFFF',
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          borderRadius: '32px',
-          padding: '8px',
-          paddingRight: '32px',
-          marginTop: '16px',
-          marginBottom: '36px',
-          color: '#17344F',
-        }}
-      >
+      <div className={homepageAnnouncementStyles.wrapper}>
         {announcement.icon ? (
-          <div
-            style={{
-              padding: '0 5px',
-              width: '24px',
-              height: '24px',
-              minWidth: '24px',
-              minHeight: '24px',
-              borderRadius: '32px',
-              marginRight: '16px',
-            }}
-          >
+          <div className={homepageAnnouncementStyles.iconWrapper}>
             <Icon iconName={announcement.icon as IconNamesList} size={24} />
           </div>
         ) : null}
