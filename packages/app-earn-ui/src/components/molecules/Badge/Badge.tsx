@@ -3,9 +3,9 @@ import clsx from 'clsx'
 
 import { Text } from '@/components/atoms/Text/Text'
 
-import classNames from './PercentageBadge.module.scss'
+import classNames from './Badge.module.scss'
 
-interface PercentageBadgeProps {
+interface BadgeProps {
   value: string
   wrapperClassName?: string
   textClassName?: string
@@ -13,7 +13,7 @@ interface PercentageBadgeProps {
   onClick?: () => void
 }
 
-export const PercentageBadge: FC<PercentageBadgeProps> = ({
+export const Badge: FC<BadgeProps> = ({
   value,
   wrapperClassName,
   textClassName,
@@ -22,13 +22,13 @@ export const PercentageBadge: FC<PercentageBadgeProps> = ({
 }) => {
   return (
     <div
-      className={clsx(classNames.percentageBadgeWrapper, wrapperClassName, {
+      className={clsx(classNames.badgeWrapper, wrapperClassName, {
         [classNames.active]: isActive,
       })}
       onClick={onClick}
     >
-      <Text as="p" variant="p4" className={textClassName}>
-        {value}%
+      <Text as="p" variant="p4semi" className={textClassName}>
+        {value}
       </Text>
     </div>
   )

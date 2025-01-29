@@ -1,6 +1,6 @@
 export type Styles = {
   active: string
-  percentageBadgeWrapper: string
+  badgeWrapper: string
 }
 
 export type ClassNames = keyof Styles

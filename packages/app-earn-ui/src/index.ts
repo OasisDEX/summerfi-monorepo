@@ -83,7 +83,7 @@ export { Emphasis } from './components/molecules/Emphasis/Emphasis'
 export { IconWithBackground } from './components/molecules/IconWithBackground/IconWithBackground'
 export { FaqSection } from './components/molecules/FaqSection/FaqSection'
 export { DataModule } from './components/molecules/DataModule/DataModule'
-export { PercentageBadge } from './components/molecules/PercentageBadge/PercentageBadge'
+export { Badge } from './components/molecules/Badge/Badge'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'
