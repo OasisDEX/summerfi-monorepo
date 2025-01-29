@@ -48,7 +48,7 @@ import type { IOracleManager } from '@summerfi/oracle-common'
 import { ArmadaManagerClaims } from './ArmadaManagerClaims'
 import { ArmadaManagerGovernance } from './ArmadaManagerGovernance'
 
-const testDeployment = true
+const testDeployment = false
 
 /**
  * @name ArmadaManager
