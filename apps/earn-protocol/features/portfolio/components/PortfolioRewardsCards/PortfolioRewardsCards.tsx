@@ -357,7 +357,7 @@ const YourRays: FC<YourRaysProps> = ({ totalRays }) => {
             Rays earned {_totalRays}
             <span style={{ color: 'var(--earn-protocol-secondary-60)' }}>
               {' '}
-              • {RAYS_TO_SUMR_CONVERSION_RATE} $RAYS = 1 $SUMR
+              • ~{RAYS_TO_SUMR_CONVERSION_RATE} $RAYS = 1 $SUMR
             </span>
           </Text>
         ),
