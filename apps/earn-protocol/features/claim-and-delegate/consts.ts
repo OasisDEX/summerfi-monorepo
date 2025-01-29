@@ -26,7 +26,7 @@ export const localSumrDelegates: Partial<SumrDelegate>[] = [
     address: '0xb0f758323D3798a6A567C1601d84f30d1BCAAA0b',
     title: 'Don Halaprixos',
     description:
-      'Don Halaprixos is a crypto investor known for his love for the crypto space and teammates.',
+      'Don Halaprixos is a crypto investor known for his love for the crypto space and team.',
   },
 ]
 
