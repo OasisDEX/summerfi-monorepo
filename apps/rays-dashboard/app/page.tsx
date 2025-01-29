@@ -16,7 +16,7 @@ import {
   userLeaderboardDefaults,
 } from '@/constants/leaderboard'
 import { fetchLeaderboard } from '@/server-handlers/leaderboard'
-import { fetchRays } from '@/server-handlers/rays'
+import { fetchRays, type FetchRaysReturnType } from '@/server-handlers/rays'
 
 export default async function LeaderboardPage({
   searchParams,
@@ -27,7 +27,7 @@ export default async function LeaderboardPage({
 }) {
   const userRays = parseServerResponseToClient(
     await fetchRays({ address: searchParams.userAddress }),
-  )
+  ) as FetchRaysReturnType
 
   const userLeaderboardStartingPage = String(
     userRays.rays?.positionInLeaderboard
@@ -61,6 +61,7 @@ export default async function LeaderboardPage({
       : undefined,
     skipBanner: true,
     page: '/',
+    userRays,
   })
 
   const topClimbers = await fetchLeaderboard({

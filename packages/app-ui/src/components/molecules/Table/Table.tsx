@@ -16,7 +16,7 @@ interface TableProps {
 }
 
 export const Table: React.FC<TableProps> = ({ columns, rows }) => {
-  const middleIndex = Math.floor(columns.length / 2)
+  const middleIndex = Math.floor(columns.length / 2) - 1
 
   return (
     <table className={styles.table}>
