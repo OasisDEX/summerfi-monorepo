@@ -2,6 +2,7 @@
 
 import { type LeaderboardItem } from '@summerfi/app-types'
 import { Button, ProxyLinkComponent, Text } from '@summerfi/app-ui'
+import { formatAddress } from '@summerfi/app-utils'
 import {
   IconArrowDown,
   IconArrowRight,
@@ -94,7 +95,7 @@ export const LeaderboardUser = ({
         userWalletAddress && userWalletAddress === cell.userAddress ? { marginTop: '30px' } : {}
       }
     >
-      {cell.ens ?? cell.userAddress}
+      {cell.ens ?? formatAddress(cell.userAddress, { first: 5, last: 5 })}
       <Link
         href={{
           pathname: '/',
@@ -123,9 +124,11 @@ export const LeaderboardUser = ({
 
 export const LeaderboardRays = ({
   cell,
+  raysCount,
   userWalletAddress,
 }: {
   cell: LeaderboardItem
+  raysCount: number
   userWalletAddress?: string
 }) => {
   return (
@@ -137,9 +140,7 @@ export const LeaderboardRays = ({
           : { color: 'var(--color-neutral-80)' }
       }
     >
-      {new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(
-        Number(cell.totalPoints),
-      )}
+      {new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(Number(raysCount))}
     </Text>
   )
 }
@@ -176,9 +177,7 @@ export const LeaderboardPortfolio = ({
               })
             }}
           >
-            {cell.details
-              ? `${cell.details.activePositions} positions, ${cell.details.activeTriggers} automations `
-              : 'No positions '}
+            {cell.details ? `${cell.details.activePositions} positions` : 'No positions '}
             <IconArrowRight size={14} />
           </Button>
         </ProxyLinkComponent>

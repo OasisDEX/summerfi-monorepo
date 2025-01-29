@@ -8,6 +8,7 @@ import { LeaderboardSearchBoxAndResults } from '@/components/organisms/Leaderboa
 import { PageViewHandler } from '@/components/organisms/PageViewHandler/PageViewHandler'
 import { wholeLeaderboardDefaults } from '@/constants/leaderboard'
 import { fetchLeaderboard } from '@/server-handlers/leaderboard'
+import { fetchRays, type FetchRaysReturnType } from '@/server-handlers/rays'
 
 export default async function LeaderboardPage({
   searchParams,
@@ -18,6 +19,10 @@ export default async function LeaderboardPage({
     search?: string
   }
 }) {
+  const userRays = parseServerResponseToClient(
+    await fetchRays({ address: searchParams.userAddress }),
+  ) as FetchRaysReturnType
+
   const topLeaderboardResponse = parseServerResponseToClient(
     await fetchLeaderboard({
       ...wholeLeaderboardDefaults,
@@ -30,6 +35,7 @@ export default async function LeaderboardPage({
     userWalletAddress: searchParams.userAddress,
     bannerEveryNth: 40,
     page: '/leaderboard',
+    userRays,
   })
 
   const previousPageAvailable = searchParams.page && Number(searchParams.page) !== 1
