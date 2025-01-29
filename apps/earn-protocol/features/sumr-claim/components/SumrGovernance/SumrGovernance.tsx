@@ -154,7 +154,7 @@ const getData = (userWalletAddress: string | undefined) => ({
         }}
         link={{
           label: 'See SUMR Vesting Conditions',
-          href: `${EXTERNAL_LINKS.BLOG.WELCOME_LAZY_SUMMER}`,
+          href: `${EXTERNAL_LINKS.BLOG.INTRODUCING_SUMR_TOKEN}`,
         }}
       >
         <SumrSupplySchedule />

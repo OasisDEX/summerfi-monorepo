@@ -1,6 +1,7 @@
 export const INTERNAL_LINKS = {
   // earn protocol dedicated links
   summerPro: 'https://summer.fi',
+  summerLazy: 'https://lazy.summer.fi',
   appUrl: 'https://summer.fi',
   homepage: '/earn/',
   about: '/earn/about',

@@ -120,7 +120,10 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
           }}
         >
           Select the amount of slippage you would like.{' '}
-          <Link href="/apps/earn-protocol/public">
+          <Link
+            href="http://docs.summer.fi/summer.fi-pro/products/multiply/frequently-asked-questions"
+            target="_blank"
+          >
             <span style={{ color: 'var(--earn-protocol-primary-100)' }}>Learn more</span>
           </Link>
         </Text>
