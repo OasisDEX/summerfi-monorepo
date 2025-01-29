@@ -75,7 +75,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     Number(rewardsData.sumrToClaim.total)
 
   const tabs = [
-    isPreLaunchVersion
+    ...(isPreLaunchVersion
       ? []
       : [
           {
@@ -89,13 +89,13 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
               />
             ),
           },
-        ],
+        ]),
     {
       id: PortfolioTabs.WALLET,
       label: 'Wallet',
       content: <PortfolioWallet walletData={walletData} vaultsList={vaultsList} />,
     },
-    isPreLaunchVersion
+    ...(isPreLaunchVersion
       ? []
       : [
           {
@@ -110,7 +110,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
               />
             ),
           },
-        ],
+        ]),
     {
       id: PortfolioTabs.REWARDS,
       label: 'SUMR Rewards',
