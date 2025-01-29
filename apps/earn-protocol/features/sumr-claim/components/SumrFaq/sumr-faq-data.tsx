@@ -86,6 +86,7 @@ export const sumrFaqData = [
           <Link
             href={`${EXTERNAL_LINKS.KB.READ_ABOUT_RAYS}`}
             style={{ color: 'var(--earn-protocol-primary-100)' }}
+            target="_blank"
           >
             $RAYS
           </Link>{' '}
@@ -102,10 +103,10 @@ export const sumrFaqData = [
           into the protocol and earn $SUMR.
         </Text>{' '}
         <Text as="p" variant="p2" style={{}}>
-          The protocol will be launching one week after the $SUMR airdrop, and users can get ready
+          The protocol will be launching two weeks after the $SUMR airdrop, and users can get ready
           at{' '}
           <Link
-            href={`${INTERNAL_LINKS.summerLazy}`}
+            href={`${INTERNAL_LINKS.summerLazy}/earn/sumr`}
             style={{ color: 'var(--earn-protocol-primary-100)' }}
           >
             lazy.summer.fi
@@ -205,6 +206,7 @@ export const sumrFaqData = [
           <Link
             href={`${EXTERNAL_LINKS.KB.READ_ABOUT_RAYS}`}
             style={{ color: 'var(--earn-protocol-primary-100)' }}
+            target="_blank"
           >
             $RAYS
           </Link>{' '}

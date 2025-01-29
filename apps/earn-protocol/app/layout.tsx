@@ -23,8 +23,9 @@ import { fontInter } from '@/helpers/fonts'
 import { AlchemyAccountsProvider } from '@/providers/AlchemyAccountsProvider/AlchemyAccountsProvider'
 
 export const metadata: Metadata = {
-  title: 'Summer.fi Earn Protocol ⛱️',
-  description: '⛱️',
+  title: 'Summer.fi - The home of $SUMR and curated DeFi Yields',
+  description:
+    'Claim, Delegate and Stake your $SUMR, the governance token for Lazy Summer Protocol.',
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
