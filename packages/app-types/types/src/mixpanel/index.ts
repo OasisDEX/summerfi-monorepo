@@ -14,4 +14,5 @@ export enum MixpanelEventTypes {
 
 export enum MixpanelEventProduct {
   Rays = 'Rays',
+  EarnProtocol = 'EarnProtocol',
 }

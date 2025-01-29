@@ -15,6 +15,7 @@ import { getLocale, getMessages } from 'next-intl/server'
 
 import { getAccountKitConfig } from '@/account-kit/config'
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
+import { GlobalEventTracker } from '@/components/organisms/Events/GlobalEventTracker'
 import { accountKitCookieStateName } from '@/constants/account-kit-cookie-state-name'
 import { forksCookieName } from '@/constants/forks-cookie-name'
 import { DeviceProvider } from '@/contexts/DeviceContext/DeviceContext'
@@ -54,6 +55,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body className={`${fontInter.variable}`}>
         <AlchemyAccountsProvider initialState={accountKitInitializedState}>
+          <GlobalEventTracker />
           <NextIntlClientProvider messages={messages}>
             <DeviceProvider value={deviceType}>
               <LocalConfigContextProvider value={{ sumrNetApyConfig, slippageConfig }}>

@@ -2,11 +2,11 @@ import { init } from 'mixpanel'
 
 export type MixpanelPropertyNameType = '$initial_referrer' | '$user_id'
 
-if (!process.env.MIXPANEL_KEY) {
-  throw new Error('MIXPANEL_KEY is not defined')
+if (!process.env.EARN_MIXPANEL_KEY) {
+  throw new Error('EARN_MIXPANEL_KEY is not defined')
 }
 
-const mixpanel = init(process.env.MIXPANEL_KEY)
+const mixpanel = init(process.env.EARN_MIXPANEL_KEY)
 
 export const trackEventHandler = (eventName: string, eventBody: { [key: string]: unknown }) => {
   const env = process.env.MIXPANEL_ENV

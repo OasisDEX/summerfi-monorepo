@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, useReducer } from 'react'
+import { type FC, useEffect, useReducer } from 'react'
 import { getPositionValues, NonOwnerPortfolioBanner, TabBar } from '@summerfi/app-earn-ui'
 import { type SDKGlobalRebalancesType, type SDKVaultishType } from '@summerfi/app-types'
 
@@ -14,6 +14,7 @@ import { PortfolioRebalanceActivity } from '@/features/portfolio/components/Port
 import { PortfolioRewards } from '@/features/portfolio/components/PortfolioRewards/PortfolioRewards'
 import { PortfolioWallet } from '@/features/portfolio/components/PortfolioWallet/PortfolioWallet'
 import { PortfolioTabs } from '@/features/portfolio/types'
+import { trackButtonClick } from '@/helpers/mixpanel'
 import { useTabStateQuery } from '@/hooks/use-tab-state'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
@@ -49,6 +50,17 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     delegatee: rewardsData.sumrStakeDelegate.delegatedTo,
     walletAddress,
   })
+
+  useEffect(() => {
+    trackButtonClick({
+      id: 'TabChange_Portfolio',
+      page: `/portfolio/${walletAddress}`,
+      userAddress: userWalletAddress,
+      activeTab,
+    })
+    // only on tab change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab])
 
   const totalRebalances = positions.reduce(
     (acc, position) => acc + Number(position.vaultData.rebalanceCount),
