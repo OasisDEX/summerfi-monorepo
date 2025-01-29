@@ -17,6 +17,7 @@ import {
 } from '@/constants/leaderboard'
 import { fetchLeaderboard } from '@/server-handlers/leaderboard'
 import { fetchRays, type FetchRaysReturnType } from '@/server-handlers/rays'
+import { configFetcher } from '@/server-handlers/system-config/calls/config'
 
 export default async function LeaderboardPage({
   searchParams,
@@ -25,9 +26,12 @@ export default async function LeaderboardPage({
     userAddress: string
   }
 }) {
-  const userRays = parseServerResponseToClient(
-    await fetchRays({ address: searchParams.userAddress }),
-  ) as FetchRaysReturnType
+  const [config, userRays] = await Promise.all([
+    configFetcher(),
+    fetchRays({ address: searchParams.userAddress }).then(
+      parseServerResponseToClient,
+    ) as Promise<FetchRaysReturnType>,
+  ])
 
   const userLeaderboardStartingPage = String(
     userRays.rays?.positionInLeaderboard
@@ -76,6 +80,7 @@ export default async function LeaderboardPage({
         userAddress={searchParams.userAddress}
         userRays={userRays}
         pointsEarnedPerYear={userYearlyRays?.details?.pointsEarnedPerYear}
+        announcement={config.parameters?.announcement}
       />
       <div
         style={{ marginBottom: 'var(--space-xxxl)', marginTop: 'var(--space-xxxl)', width: '100%' }}

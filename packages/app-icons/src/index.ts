@@ -211,6 +211,7 @@ export const icons = {
   stopLoss: customLazy(() => import('./icons/stopLoss.svg?react')),
   styeth_circle_color: customLazy(() => import('./icons/styeth_circle_color.svg?react')),
   sumr: customLazy(() => import('./icons/sumr.svg?react')),
+  summer_light: customLazy(() => import('./icons/summer_light.svg?react')),
   summer_illustration_check: customLazy(
     () => import('./icons/summer_illustration_check.svg?react'),
   ),
