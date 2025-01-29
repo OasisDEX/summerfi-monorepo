@@ -29,7 +29,7 @@ export const SumrWhatIsSumrToken = () => {
             </span>
             , for everyone.
           </Text>
-          <Link href="/" target="_blank">
+          <Link href="https://youtu.be/ypCtCk27Ck4" target="_blank">
             <Button variant="primaryLarge" className={classNames.actionable}>
               <span>&#9654;</span> Watch the video
             </Button>
