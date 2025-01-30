@@ -255,15 +255,18 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
   const sumrDelegatedTo =
     state.delegatee?.toLowerCase() ?? rewardsData.sumrStakeDelegate.delegatedTo.toLowerCase()
 
-  const delegatee = localSumrDelegates.find(
+  const localDelegate = localSumrDelegates.find(
     (item) => item.address.toLowerCase() === sumrDelegatedTo,
   )
 
-  const value = delegatee
-    ? delegatee.title
-    : sumrDelegatedTo !== ADDRESS_ZERO
-      ? formatAddress(sumrDelegatedTo)
-      : 'No delegate'
+  const rewardsDataDelegatee = rewardsData.sumrDelegates.find(
+    (item) => item.account.address.toLowerCase() === sumrDelegatedTo,
+  )
+
+  const value =
+    sumrDelegatedTo === ADDRESS_ZERO
+      ? 'No delegate'
+      : rewardsDataDelegatee?.account.name ?? localDelegate?.title ?? formatAddress(sumrDelegatedTo)
 
   const votingPower =
     rewardsData.sumrDecayFactors.find(
