@@ -52,6 +52,10 @@ const getConfigKey = <TName extends string>(name: TName) => {
   return key
 }
 
+const getConfig = () => {
+  return isTestDeployment() ? bummerConfig : sumrConfig
+}
+
 export const getDeployedContractAddress = <
   TKey extends ConfigKey,
   TChainInfo extends ChainInfo,
@@ -61,7 +65,7 @@ export const getDeployedContractAddress = <
   contractCategory: TCategory
   contractName: keyof Config[TKey]['deployedContracts'][TCategory]
 }): IAddress => {
-  const config = isTestDeployment() ? bummerConfig : sumrConfig
+  const config = getConfig()
   const key = getConfigKey(params.chainInfo.name) as TKey
 
   const contract = config[key].deployedContracts[params.contractCategory][params.contractName] as
@@ -82,7 +86,7 @@ export const getDeployedContractAddress = <
 }
 
 export const getDeployedRewardsRedeemerAddress = () => {
-  const config = isTestDeployment() ? bummerConfig : sumrConfig
+  const config = getConfig()
   const key = getConfigKey(ChainFamilyName.Base)
 
   const maybeAddress = (
@@ -97,7 +101,7 @@ export const getDeployedRewardsRedeemerAddress = () => {
 }
 
 export const getDeployedGovRewardsManagerAddress = () => {
-  const config = isTestDeployment() ? bummerConfig : sumrConfig
+  const config = getConfig()
   const key = getConfigKey(ChainFamilyName.Base)
 
   const maybeAddress = (
