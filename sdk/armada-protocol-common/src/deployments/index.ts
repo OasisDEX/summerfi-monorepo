@@ -10,16 +10,20 @@ import {
 import sumrConfig from './sumr.json'
 import bummerConfig from './bummer.json'
 
-if (
-  process.env.SUMMER_DEPLOYMENT_CONFIG !== 'SUMMER' &&
-  process.env.SUMMER_DEPLOYMENT_CONFIG !== 'BUMMER'
-) {
-  throw new Error('SUMMER_DEPLOYMENT_CONFIG must be set to "SUMMER" or "BUMMER"')
+export const isTestDeployment = () => {
+  switch (process.env.SUMMER_DEPLOYMENT_CONFIG) {
+    case 'BUMMER':
+      return true
+    case 'SUMMER':
+      return false
+    default:
+      throw new Error('SUMMER_DEPLOYMENT_CONFIG must be set to "SUMMER" or "BUMMER"')
+  }
 }
 
-const config = process.env.SUMMER_DEPLOYMENT_CONFIG === 'BUMMER' ? bummerConfig : sumrConfig
+const config = isTestDeployment() ? bummerConfig : sumrConfig
 
-type Config = typeof config
+type Config = typeof sumrConfig
 type ConfigKey = 'mainnet' | 'base' | 'arbitrum'
 type CategoryKey = keyof Config[ConfigKey]['deployedContracts']
 

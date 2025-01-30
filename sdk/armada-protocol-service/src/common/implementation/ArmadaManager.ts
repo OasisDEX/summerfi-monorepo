@@ -12,6 +12,7 @@ import {
   type IArmadaManagerClaims,
   type IArmadaManagerGovernance,
   getDeployedRewardsRedeemerAddress,
+  isTestDeployment,
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
@@ -47,8 +48,6 @@ import BigNumber from 'bignumber.js'
 import type { IOracleManager } from '@summerfi/oracle-common'
 import { ArmadaManagerClaims } from './ArmadaManagerClaims'
 import { ArmadaManagerGovernance } from './ArmadaManagerGovernance'
-
-const testDeployment = false
 
 /**
  * @name ArmadaManager
@@ -131,7 +130,7 @@ export class ArmadaManager implements IArmadaManager {
       address: address,
       decimals: 18,
       name: 'SummerToken',
-      symbol: testDeployment ? 'BUMMER' : 'SUMR',
+      symbol: isTestDeployment() ? 'BUMMER' : 'SUMR',
     })
   }
 

@@ -10,6 +10,7 @@ import {
   getAllMerkleClaims,
   getDeployedContractAddress,
   getDeployedGovRewardsManagerAddress,
+  isTestDeployment,
 } from '@summerfi/armada-protocol-common'
 import {
   Address,
@@ -25,8 +26,6 @@ import { encodeFunctionData } from 'viem'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import type { IContractsProvider } from '@summerfi/contracts-provider-common'
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
-
-const onlyGovernanceDeployed = true
 
 /**
  * @name ArmadaManager
@@ -257,12 +256,12 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     // get protocol usage rewards for each chain
     const perChain: Record<number, bigint> = {}
 
-    if (onlyGovernanceDeployed) {
+    if (!isTestDeployment()) {
       perChain[this._hubChainInfo.chainId] = merkleDistributionRewards + voteDelegationRewards
     }
 
     let protocolUsageRewards = 0n
-    if (!onlyGovernanceDeployed) {
+    if (isTestDeployment()) {
       const chainRewards = await Promise.all(
         this._supportedChains.map(async (chainInfo) => {
           const rewards = await this.getProtocolUsageRewards(params.user, chainInfo)
@@ -447,7 +446,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       )
     }
 
-    if (!onlyGovernanceDeployed) {
+    if (isTestDeployment()) {
       const fleetRewardToken = getDeployedContractAddress({
         chainInfo: params.chainInfo,
         contractCategory: 'gov',
