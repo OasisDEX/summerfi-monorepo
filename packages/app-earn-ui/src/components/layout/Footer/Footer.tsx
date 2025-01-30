@@ -65,12 +65,12 @@ const linksList = [
         url: EXTERNAL_LINKS.BUG_BOUNTY,
       },
       {
-        label: 'Ajna rewards',
-        url: INTERNAL_LINKS.tempAjnaRewards,
+        label: 'SUMR Governance',
+        url: EXTERNAL_LINKS.EARN.GOVERNANCE,
       },
       {
-        label: 'Referrals',
-        url: INTERNAL_LINKS.tempReferrals,
+        label: 'Forum',
+        url: EXTERNAL_LINKS.EARN.FORUM,
       },
       {
         label: 'Brand assets',
@@ -82,16 +82,12 @@ const linksList = [
     title: 'Products',
     links: [
       {
-        label: 'Borrow',
-        url: INTERNAL_LINKS.tempBorrow,
+        label: 'Summer.fi Pro',
+        url: INTERNAL_LINKS.summerPro,
       },
       {
-        label: 'Multiply',
-        url: INTERNAL_LINKS.tempMultiply,
-      },
-      {
-        label: 'Earn',
-        url: INTERNAL_LINKS.tempEarn,
+        label: 'SUMR',
+        url: INTERNAL_LINKS.tempSumr,
       },
     ],
   },

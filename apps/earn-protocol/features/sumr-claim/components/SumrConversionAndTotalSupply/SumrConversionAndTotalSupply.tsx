@@ -7,7 +7,7 @@ import classNames from './SumrConversionAndTotalSupply.module.scss'
 const data = [
   {
     title: '$RAYS <> $SUMR Conversion',
-    value: `${RAYS_TO_SUMR_CONVERSION_RATE} for 1`,
+    value: `~${RAYS_TO_SUMR_CONVERSION_RATE} for 1`,
     description: '*Season 1 $RAYS',
   },
   {

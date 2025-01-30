@@ -90,18 +90,18 @@ export async function handleNewsletterSubscription({
       return { status: 200 }
     }
 
-    const memberData: SubscriptionResponse['data'] = await memberResponse.json()
+    const memberData: SubscriptionResponse = await memberResponse.json()
 
-    if (memberData.status === 'pending') {
+    if (memberData.data.status === 'pending') {
       return { status: 409, error: 'emailPending' }
     }
 
-    if (memberData.status === 'active') {
+    if (memberData.data.status === 'active') {
       return { status: 409, error: 'emailAlreadyExists' }
     }
 
     // Resubscribe if inactive
-    if (memberData.status === 'inactive') {
+    if (memberData.data.status === 'inactive') {
       const resubscribeResponse = await fetch(SUBSCRIBE_POST_ENDPOINT, {
         method: 'POST',
         headers,

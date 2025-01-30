@@ -263,15 +263,19 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
 
   const hasDelegatee = sumrDelegatedTo !== ADDRESS_ZERO
 
-  const delegatee = localSumrDelegates.find(
-    (item) => item.address?.toLowerCase() === sumrDelegatedTo,
+  const localDelegate = localSumrDelegates.find(
+    (item) => item.address.toLowerCase() === sumrDelegatedTo,
   )
 
-  const value = delegatee
-    ? delegatee.title
-    : sumrDelegatedTo !== ADDRESS_ZERO
-      ? formatAddress(sumrDelegatedTo)
-      : 'No delegate'
+  const rewardsDataDelegatee = externalData.sumrDelegates.find(
+    (item) => item.account.address.toLowerCase() === sumrDelegatedTo,
+  )
+  const value =
+    sumrDelegatedTo === ADDRESS_ZERO
+      ? 'No delegate'
+      : rewardsDataDelegatee?.account.name && rewardsDataDelegatee.account.name !== ''
+        ? rewardsDataDelegatee.account.name
+        : localDelegate?.title ?? formatAddress(sumrDelegatedTo)
 
   const votes = mappedSumrDelegatesData.find(
     (item) => item.address.toLowerCase() === sumrDelegatedTo,
@@ -316,9 +320,10 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
             marginBottom: 'var(--general-space-4)',
           }}
         >
-          Every delegate declares their governance objectives.
+          Each delegate has their own values, intentions and visions for the Lazy Summer Protocol.
+          Delegate your voting power to those who best align with your values.
         </Text>
-        <Link href="/" target="_blank">
+        <Link href="https://forum.summer.fi/c/delegates/19" target="_blank">
           <WithArrow as="p" variant="p3">
             Learn more about Governance
           </WithArrow>

@@ -49,8 +49,8 @@ export const SumrNotTransferable = () => {
           Non-Transferable, A feature not a bug
         </Text>
         <Text as="p" variant="p1" style={{ maxWidth: '800px', margin: '0 auto' }}>
-          For at least the first 6 months, $SUMR will not be tradeable, it can only be earned and
-          used to govern the protocol. This is highly beneficial to both the protocol and for our
+          Until at least July 1st 2025, $SUMR will not be tradeable, it can only be earned and used
+          to govern the protocol. This is highly beneficial to both the protocol and for our
           community because it removes distractions and immediate short term thinking, creating the
           most long term value.
         </Text>

@@ -43,8 +43,8 @@ jobs:
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
       CONFIG_URL_EARN: ${{ secrets.CONFIG_URL_EARN }}
       CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
-      MIXPANEL_KEY: ${{ secrets.MIXPANEL_KEY }}
-      NEXT_PUBLIC_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_MIXPANEL_KEY }}
+      EARN_MIXPANEL_KEY: ${{ secrets.EARN_MIXPANEL_KEY }}
+      NEXT_PUBLIC_EARN_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_EARN_MIXPANEL_KEY }}
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
       NEXT_TELEMETRY_DISABLED: ${{ secrets.NEXT_TELEMETRY_DISABLED }}
       FORECAST_API_URL: ${{ secrets.FORECAST_API_URL }}
@@ -123,9 +123,9 @@ jobs:
           docker build -f apps/earn-protocol-landing-page/docker/Dockerfile \
                        --build-arg CONFIG_URL=${{ secrets.CONFIG_URL }} \
                        --build-arg CONFIG_URL_EARN=${{ secrets.CONFIG_URL_EARN }} \
-                       --build-arg MIXPANEL_KEY=${{ secrets.MIXPANEL_KEY }} \
+                       --build-arg EARN_MIXPANEL_KEY=${{ secrets.EARN_MIXPANEL_KEY }} \
                        --build-arg SUBGRAPH_BASE=${{ secrets.SUBGRAPH_BASE }} \
-                       --build-arg NEXT_PUBLIC_MIXPANEL_KEY=${{ secrets.NEXT_PUBLIC_MIXPANEL_KEY }} \
+                       --build-arg NEXT_PUBLIC_EARN_MIXPANEL_KEY=${{ secrets.NEXT_PUBLIC_EARN_MIXPANEL_KEY }} \
                        --build-arg NEXT_TELEMETRY_DISABLED=${{ secrets.NEXT_TELEMETRY_DISABLED }} \
                        --build-arg FORECAST_API_URL=${{ secrets.FORECAST_API_URL }} \
                        --build-arg SDK_API_URL=${{ secrets.SDK_API_URL }} \

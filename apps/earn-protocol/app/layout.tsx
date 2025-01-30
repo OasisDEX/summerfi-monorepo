@@ -15,6 +15,7 @@ import { getLocale, getMessages } from 'next-intl/server'
 
 import { getAccountKitConfig } from '@/account-kit/config'
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
+import { GlobalEventTracker } from '@/components/organisms/Events/GlobalEventTracker'
 import { accountKitCookieStateName } from '@/constants/account-kit-cookie-state-name'
 import { forksCookieName } from '@/constants/forks-cookie-name'
 import { DeviceProvider } from '@/contexts/DeviceContext/DeviceContext'
@@ -22,8 +23,9 @@ import { fontInter } from '@/helpers/fonts'
 import { AlchemyAccountsProvider } from '@/providers/AlchemyAccountsProvider/AlchemyAccountsProvider'
 
 export const metadata: Metadata = {
-  title: 'Summer.fi Earn Protocol ⛱️',
-  description: '⛱️',
+  title: 'Summer.fi - The home of $SUMR and curated DeFi Yields',
+  description:
+    'Claim, Delegate and Stake your $SUMR, the governance token for Lazy Summer Protocol.',
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -47,13 +49,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     headers().get('cookie') ?? undefined,
   )
 
+  // the style on the html tag is needed to prevent a flash of white background on page load
   return (
-    <html lang={locale}>
+    <html lang={locale} style={{ backgroundColor: '#1c1c1c' }}>
       <head>
         <GlobalStyles />
       </head>
       <body className={`${fontInter.variable}`}>
         <AlchemyAccountsProvider initialState={accountKitInitializedState}>
+          <GlobalEventTracker />
           <NextIntlClientProvider messages={messages}>
             <DeviceProvider value={deviceType}>
               <LocalConfigContextProvider value={{ sumrNetApyConfig, slippageConfig }}>

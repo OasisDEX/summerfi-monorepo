@@ -1,11 +1,10 @@
 import { SDKChainId } from '@summerfi/app-types'
-import { SummerTokenAbi } from '@summerfi/armada-protocol-abis'
-import { getChainInfoByChainId } from '@summerfi/sdk-common'
+import { GovernanceRewardsManagerAbi } from '@summerfi/armada-protocol-abis'
 import BigNumber from 'bignumber.js'
 import { createPublicClient, http } from 'viem'
 import { base } from 'viem/chains'
 
-import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
+import { GOVERNANCE_REWARDS_MANAGER_ADDRESS } from '@/constants/addresses'
 import { SDKChainIdToSSRRpcGatewayMap } from '@/helpers/rpc-gateway-ssr'
 
 export interface SumrDecayFactorData {
@@ -32,26 +31,14 @@ export const getSumrDecayFactor = async (addresses: string[]): Promise<SumrDecay
       transport: http(await SDKChainIdToSSRRpcGatewayMap[SDKChainId.BASE]),
     })
 
-    let sumrToken
-
-    try {
-      sumrToken = await backendSDK.armada.users.getSummerToken({
-        chainInfo: getChainInfoByChainId(SDKChainId.BASE),
-      })
-    } catch (error) {
-      throw new Error(
-        `Failed to fetch SUMMER token data: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      )
-    }
-
     try {
       const decayFactors = await publicClient.multicall({
         contracts: addresses.map(
           (address) =>
             ({
-              abi: SummerTokenAbi,
-              address: sumrToken.address.value,
-              functionName: 'getDecayFactor',
+              abi: GovernanceRewardsManagerAbi,
+              address: GOVERNANCE_REWARDS_MANAGER_ADDRESS,
+              functionName: 'calculateSmoothedDecayFactor',
               args: [address],
             }) as const,
         ),
@@ -63,9 +50,7 @@ export const getSumrDecayFactor = async (addresses: string[]): Promise<SumrDecay
 
       return addresses.map((address, index) => ({
         address: address.toLowerCase(),
-        decayFactor: new BigNumber(decayFactors[index].result.toString() ?? '0')
-          .shiftedBy(-sumrToken.decimals)
-          .toNumber(),
+        decayFactor: new BigNumber(decayFactors[index].result.toString()).shiftedBy(-18).toNumber(),
       }))
     } catch (error) {
       throw new Error(

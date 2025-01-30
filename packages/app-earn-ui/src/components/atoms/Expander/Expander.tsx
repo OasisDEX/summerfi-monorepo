@@ -11,6 +11,7 @@ interface ExpanderProps {
   defaultExpanded?: boolean
   children: ReactNode
   expanderButtonStyles?: CSSProperties
+  disabled?: boolean
 }
 
 export const Expander: FC<ExpanderProps> = ({
@@ -18,6 +19,7 @@ export const Expander: FC<ExpanderProps> = ({
   defaultExpanded = false,
   children,
   expanderButtonStyles = {},
+  disabled = false,
 }) => {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded)
 
@@ -27,13 +29,18 @@ export const Expander: FC<ExpanderProps> = ({
 
   return (
     <div className={styles.expander}>
-      <button className={styles.expanderButton} onClick={toggleExpand} style={expanderButtonStyles}>
+      <button
+        className={styles.expanderButton}
+        onClick={toggleExpand}
+        style={expanderButtonStyles}
+        disabled={disabled}
+      >
         {title}
         <div className={styles.chevron}>
           <Icon
             iconName={isExpanded ? 'chevron_up' : 'chevron_down'}
             variant="xs"
-            color="rgba(119, 117, 118, 1)"
+            color={disabled ? 'rgba(119, 117, 118, 0.5)' : 'rgba(119, 117, 118, 1)'}
           />
         </div>
       </button>

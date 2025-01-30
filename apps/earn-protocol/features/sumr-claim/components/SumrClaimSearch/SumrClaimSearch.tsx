@@ -8,15 +8,18 @@ import {
   Input,
   LoadingSpinner,
   NewsletterWrapper,
+  SkeletonLine,
   Text,
 } from '@summerfi/app-earn-ui'
-import { formatAddress } from '@summerfi/app-utils'
+import { formatAddress, formatCryptoBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { isAddress } from 'viem'
 
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { getUserSumrEligibility } from '@/features/sumr-claim/helpers/getUserSumrEligibility'
+import { trackButtonClick, trackInputChange } from '@/helpers/mixpanel'
+import { useUserAggregatedRewards } from '@/hooks/use-user-aggregated-rewards'
 
 import classNames from './SumrClaimSearch.module.scss'
 
@@ -35,6 +38,10 @@ export const SumrClaimSearch = () => {
   const resolvedAddress = inputValue || user?.address
 
   const eligibleUser = eligibleUsers?.length === 1 ? eligibleUsers[0] : undefined
+
+  const { aggregatedRewards, isLoading: isAggregatedRewardsLoading } = useUserAggregatedRewards({
+    walletAddress: eligibleUser?.userAddress,
+  })
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setInputError('')
@@ -60,12 +67,23 @@ export const SumrClaimSearch = () => {
 
   const handleButtonClick = () => {
     if (!user) {
+      trackButtonClick({
+        id: 'SumrClaimSearch',
+        page: '/sumr',
+        userAddress: '',
+      })
       openAuthModal()
 
       return
     }
 
     if (resolvedPortfolioUserAddress) {
+      trackButtonClick({
+        id: 'SumrClaimSearch',
+        page: '/sumr',
+        userAddress: resolvedPortfolioUserAddress,
+        searcherdForAddress: resolvedAddress,
+      })
       push(`/portfolio/${resolvedPortfolioUserAddress}?tab=${PortfolioTabs.REWARDS}`)
 
       return
@@ -95,17 +113,27 @@ export const SumrClaimSearch = () => {
       if (resolvedAddress) {
         void request(resolvedAddress)
       }
+      if (inputValue) {
+        trackInputChange({
+          id: 'SumrClaimSearch',
+          page: '/sumr',
+          userAddress: user?.address,
+          searcherdForAddress: resolvedAddress,
+        })
+      }
     }, 400)
 
     return () => clearTimeout(timeout)
+    // we dont need to update on user?.address change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resolvedAddress])
 
   const resolvedHeaderText = eligibleUser
-    ? `Address ${eligibleUser.ens ? eligibleUser.ens : formatAddress(eligibleUser.userAddress)} is eligible for `
-    : user?.address
-      ? `Address ${formatAddress(user.address)} is not eligible for  `
-      : inputValue.length > 0
-        ? 'Given address is not eligible for '
+    ? `Address ${eligibleUser.ens ? eligibleUser.ens : formatAddress(eligibleUser.userAddress).toLowerCase()} is eligible for `
+    : inputValue.length > 0
+      ? 'Given address is not eligible for '
+      : user?.address
+        ? `Address ${formatAddress(user.address).toLowerCase()} is not eligible for  `
         : 'Claim your '
 
   const resolvedButtonText = !user
@@ -119,12 +147,21 @@ export const SumrClaimSearch = () => {
     inputError.length > 0 ||
     (!eligibleUser && inputValue.length > 0 && !isAddress(inputValue) && !!user)
 
+  const sumrToClaim = isAggregatedRewardsLoading ? (
+    <SkeletonLine width="100px" height="30px" />
+  ) : aggregatedRewards?.total ? (
+    // eslint-disable-next-line no-mixed-operators
+    formatCryptoBalance(Number(aggregatedRewards.total) / 10 ** 18)
+  ) : (
+    ''
+  )
+
   return (
     <div className={classNames.sumrClaimSearchWrapper} id="claim">
       <Text as="h1" variant="h1" className={classNames.headerTextual}>
         {resolvedHeaderText}
         <Text as="span" variant="h1" className={classNames.headerTextualColored}>
-          $SUMR
+          {eligibleUser ? sumrToClaim : null} $SUMR
         </Text>
       </Text>
       <Text as="p" variant="p1" className={classNames.headerDescription}>

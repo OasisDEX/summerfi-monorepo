@@ -1,3 +1,0 @@
-[submodule "armada-protocol/contracts"]
-	path = armada-protocol/contracts
-	url = git@github.com:OasisDEX/summer-earn-protocol.git

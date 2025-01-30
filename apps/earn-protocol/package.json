@@ -13,10 +13,10 @@
     "generate": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config"
   },
   "dependencies": {
-    "@account-kit/core": "^4.9.0",
-    "@account-kit/infra": "^4.9.0",
-    "@account-kit/react": "^4.9.0",
-    "@account-kit/signer": "^4.9.0",
+    "@account-kit/core": "^4.11.0",
+    "@account-kit/infra": "^4.11.0",
+    "@account-kit/react": "^4.11.0",
+    "@account-kit/signer": "^4.11.0",
     "@loadable/component": "^5.16.4",
     "@summerfi/app-earn-ui": "workspace:*",
     "@summerfi/app-risk": "workspace:*",
@@ -47,6 +47,7 @@
     "react-infinite-scroller": "^1.2.6",
     "react": "^18.3.1",
     "recharts": "^2.13.0",
+    "@safe-global/safe-apps-sdk": "^9.0.0",
     "sharp": "^0.33.5",
     "uniqolor": "1.1.1",
     "usehooks-ts": "^3.1.0",

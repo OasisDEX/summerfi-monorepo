@@ -1,13 +1,15 @@
-.percentageBadgeWrapper {
+.badgeWrapper {
   display: flex;
   align-items: center;
+  justify-content: center;
   height: 36px;
   border: 1px solid var(--earn-protocol-neutral-70);
   border-radius: var(--general-radius-8);
-  padding: var(--general-space-8) var(--general-space-16);
+  padding: var(--general-space-8) 0;
   background-origin: border-box;
   background-clip: padding-box, border-box;
   cursor: pointer;
+  flex: 1;
 
   @media screen and (min-width: 768px) {
     padding: var(--general-space-8) var(--general-space-24);

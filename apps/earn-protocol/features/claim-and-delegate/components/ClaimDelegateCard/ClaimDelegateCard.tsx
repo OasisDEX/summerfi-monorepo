@@ -9,6 +9,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatShorthandNumber } from '@summerfi/app-utils'
 import clsx from 'clsx'
+import Image from 'next/image'
 import Link from 'next/link'
 
 import classNames from './ClaimDelegateCard.module.scss'
@@ -24,12 +25,14 @@ interface ClaimDelegateCardProps {
     linkedin: string | undefined
     x: string | undefined
     link: string | undefined
+    etherscan: string | undefined
   }
   handleClick: () => void
   votingPower?: number
   selfDelegate?: boolean
   disabled?: boolean
   isFaded?: boolean
+  picture?: string
 }
 
 export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
@@ -44,6 +47,7 @@ export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
   selfDelegate,
   disabled,
   isFaded,
+  picture,
 }) => {
   return (
     <Card
@@ -66,7 +70,16 @@ export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
       <div className={classNames.content}>
         <div className={classNames.heading}>
           <div className={classNames.title}>
-            {!selfDelegate && (
+            {picture && !selfDelegate && (
+              <Image
+                src={picture}
+                alt="avatar"
+                width={38}
+                height={38}
+                style={{ borderRadius: '50%' }}
+              />
+            )}
+            {!selfDelegate && !picture && (
               <LoadableAvatar
                 size={38}
                 name={btoa(address)}
@@ -87,7 +100,11 @@ export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
             </div>
           )}
         </div>
-        <Text as="p" variant="p3" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+        <Text
+          as="p"
+          variant="p3"
+          style={{ color: 'var(--earn-protocol-secondary-60)', wordBreak: 'break-word' }}
+        >
           {description}
         </Text>
         <div className={classNames.footer}>
@@ -104,6 +121,11 @@ export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
             )}
             {social?.link && (
               <Link href={social.link} target="_blank">
+                <Icon iconName="link" variant="s" />
+              </Link>
+            )}
+            {social?.etherscan && (
+              <Link href={social.etherscan} target="_blank">
                 <Icon iconName="etherscan" variant="s" />
               </Link>
             )}
@@ -113,7 +135,10 @@ export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
               <Text as="p" variant="p3semi" style={{ color: getVotingPowerColor(votingPower) }}>
                 Vote and Reward Power: {formatShorthandNumber(votingPower, { precision: 2 })}
               </Text>
-              <Tooltip tooltip="TBD">
+              <Tooltip
+                tooltip="Vote and Reward Power reflects a delegates activity within governance. A 1.0 Power will give you full staking rewards. Anything less will reduce your reward amounts."
+                tooltipWrapperStyles={{ minWidth: '230px', left: '-200px' }}
+              >
                 <Icon iconName="info" variant="s" color={getVotingPowerColor(votingPower)} />
               </Tooltip>
             </div>
