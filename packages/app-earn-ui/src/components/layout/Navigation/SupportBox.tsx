@@ -58,7 +58,7 @@ export const SupportBox = () => {
           icon="earn_1_on_1"
           description="1 on 1 guidance and onboarding"
           urlLabel="Sign up"
-          url="https://cal.com/jordan-jackson-d278ib/summer.fi-support-call "
+          url="https://cal.com/jordan-jackson-d278ib/summer.fi-support-call"
         />
         <SupportBoxElement
           icon="earn_email"
