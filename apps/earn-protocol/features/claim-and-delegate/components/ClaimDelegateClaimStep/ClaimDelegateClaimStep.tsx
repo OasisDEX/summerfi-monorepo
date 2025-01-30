@@ -4,6 +4,7 @@ import { useChain } from '@account-kit/react'
 import { Button, SUMR_CAP, Text, useLocalConfig, WithArrow } from '@summerfi/app-earn-ui'
 import { SDKChainId } from '@summerfi/app-types'
 import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
+import { useParams } from 'next/navigation'
 
 import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { useClaimSumrTransaction } from '@/features/claim-and-delegate/hooks/use-claim-sumr-transaction'
@@ -17,6 +18,7 @@ import {
 import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { useRiskVerification } from '@/hooks/use-risk-verification'
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import { ClaimDelegateToClaim } from './ClaimDelegateToClaim'
 
@@ -56,6 +58,9 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
+  const { userWalletAddress } = useUserWallet()
+  const { walletAddress } = useParams()
+  const resolvedWalletAddress = Array.isArray(walletAddress) ? walletAddress[0] : walletAddress
 
   const { checkRisk } = useRiskVerification()
 
@@ -141,7 +146,11 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
             paddingRight: hideButtonArrow ? 'var(--general-space-24)' : 'var(--general-space-32)',
           }}
           onClick={handleAccept}
-          disabled={state.claimStatus === ClaimDelegateTxStatuses.PENDING || sumrToClaim === 0}
+          disabled={
+            state.claimStatus === ClaimDelegateTxStatuses.PENDING ||
+            sumrToClaim === 0 ||
+            userWalletAddress?.toLowerCase() !== resolvedWalletAddress.toLowerCase()
+          }
         >
           <WithArrow
             style={{ color: 'var(--earn-protocol-secondary-100)' }}
