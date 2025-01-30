@@ -1,0 +1,170 @@
+# Query latest interest rates
+query GetLatestInterestRates(
+  $productId: String, 
+  $limit: Int,
+  $fromTimestamp: BigInt,
+  $toTimestamp: BigInt
+) {
+  interestRates(
+    orderBy: timestamp
+    orderDirection: desc
+    first: $limit
+    where: { 
+      productId: $productId
+      timestamp_gte: $fromTimestamp
+      timestamp_lte: $toTimestamp
+    }
+  ) {
+    id
+    type
+    rate
+    blockNumber
+    timestamp
+    protocol
+    token {
+      id
+      symbol
+      decimals
+      precision
+    }
+    productId
+    dailyRateId {
+      id
+      date
+      sumRates
+      updateCount
+      averageRate
+      protocol
+      token
+      productId
+    }
+    hourlyRateId {
+      id
+      date
+      sumRates
+      updateCount
+      averageRate
+      protocol
+      token
+      productId
+    }
+    weeklyRateId {
+      id
+      weekTimestamp
+      sumRates
+      updateCount
+      averageRate
+      protocol
+      token
+      productId
+    }
+  }
+}
+
+# Query daily rates
+query GetDailyRates(
+  $productId: String
+  $fromDate: BigInt
+  $toDate: BigInt
+  $limit: Int
+) {
+  dailyInterestRates(
+    orderBy: date
+    orderDirection: desc
+    first: $limit
+    where: {
+      productId: $productId
+      date_gte: $fromDate
+      date_lte: $toDate
+    }
+  ) {
+    id
+    date
+    sumRates
+    updateCount
+    averageRate
+
+    protocol
+
+    token
+    productId
+    interestRates {
+      id
+      rate
+    }
+  }
+}
+
+# Query hourly rates
+query GetHourlyRates(
+  $productId: String
+  $fromDate: BigInt
+  $toDate: BigInt
+  $limit: Int
+) {
+  hourlyInterestRates(
+    orderBy: date
+    orderDirection: desc
+    first: $limit
+    where: {
+      productId: $productId
+      date_gte: $fromDate
+      date_lte: $toDate
+    }
+  ) {
+    id
+    date
+    sumRates
+    updateCount
+    averageRate
+    protocol
+    token
+    productId
+    interestRates {
+      id
+      rate
+    }
+  }
+}
+
+# Query weekly rates
+query GetWeeklyRates(
+  $productId: String
+  $fromDate: BigInt
+  $toDate: BigInt
+  $limit: Int
+) {
+  weeklyInterestRates(
+    orderBy: weekTimestamp
+    orderDirection: desc
+    first: $limit
+    where: {
+      productId: $productId
+      weekTimestamp_gte: $fromDate
+      weekTimestamp_lte: $toDate
+    }
+  ) {
+    id
+    weekTimestamp
+    sumRates
+    updateCount
+    averageRate
+    protocol
+    token
+    productId
+    interestRates {
+      id
+      rate
+    }
+  }
+}
+
+# Query single token
+query GetToken($address: ID!) {
+  token(id: $address) {
+    id
+    symbol
+    decimals
+    precision
+  }
+}

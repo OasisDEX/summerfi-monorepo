@@ -611,6 +611,52 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.12.7)
 
+  background-jobs/update-summer-earn-rewards-apr:
+    dependencies:
+      '@aws-lambda-powertools/logger':
+        specifier: ^2.0.2
+        version: 2.0.4
+      '@aws-lambda-powertools/metrics':
+        specifier: ^2.0.2
+        version: 2.0.4
+      '@aws-lambda-powertools/tracer':
+        specifier: ^2.0.2
+        version: 2.0.4
+      '@summerfi/serverless-shared':
+        specifier: workspace:*
+        version: link:../../packages/serverless-shared
+      '@summerfi/summer-earn-rates-subgraph':
+        specifier: workspace:*
+        version: link:../../packages/summer-earn-rates-subgraph
+      '@summerfi/summer-protocol-db':
+        specifier: workspace:*
+        version: link:../../packages/summer-protocol-db
+      graphql-tag:
+        specifier: ^2.12.6
+        version: 2.12.6(graphql@16.8.2)
+      kysely:
+        specifier: ^0.27.3
+        version: 0.27.3
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      '@types/node':
+        specifier: ^20.11.5
+        version: 20.14.2
+      eslint:
+        specifier: ^8.56.0
+        version: 8.57.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.14.2)
+
   external-api/get-collateral-locked-function:
     dependencies:
       '@aws-lambda-powertools/logger':
@@ -1732,6 +1778,43 @@ importers:
       graphql-request:
         specifier: ^6.1.0
         version: 6.1.0(graphql@16.8.2)
+    devDependencies:
+      '@graphql-codegen/cli':
+        specifier: ^5.0.2
+        version: 5.0.2(@types/node@20.14.2)(graphql@16.8.2)(typescript@5.6.2)
+      '@graphql-codegen/typescript':
+        specifier: ^4.0.9
+        version: 4.0.9(graphql@16.8.2)
+      '@graphql-codegen/typescript-graphql-request':
+        specifier: ^6.2.0
+        version: 6.2.0(graphql-request@6.1.0)(graphql-tag@2.12.6)(graphql@16.8.2)
+      '@graphql-codegen/typescript-operations':
+        specifier: ^4.2.0
+        version: 4.2.0(graphql@16.8.2)
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../jest-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^20.12.7
+        version: 20.14.2
+
+  packages/summer-earn-rates-subgraph:
+    dependencies:
+      '@summerfi/serverless-shared':
+        specifier: workspace:*
+        version: link:../serverless-shared
+      graphql-request:
+        specifier: ^6.1.0
+        version: 6.1.0(graphql@16.8.2)
+      graphql-tag:
+        specifier: ^2.12.6
+        version: 2.12.6(graphql@16.8.2)
     devDependencies:
       '@graphql-codegen/cli':
         specifier: ^5.0.2
@@ -11295,7 +11378,7 @@ packages:
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
-      '@graphql-codegen/plugin-helpers': 5.0.3(graphql@16.8.2)
+      '@graphql-codegen/plugin-helpers': 5.0.4(graphql@16.8.2)
       '@graphql-codegen/typescript': 4.0.9(graphql@16.8.2)
       '@graphql-codegen/visitor-plugin-common': 5.1.0(graphql@16.8.2)
       auto-bind: 4.0.0
@@ -11900,10 +11983,10 @@ packages:
       '@types/ws': 8.5.10
       '@whatwg-node/fetch': 0.9.17
       graphql: 16.8.2
-      isomorphic-ws: 5.0.0(ws@8.17.1)
+      isomorphic-ws: 5.0.0(ws@8.18.0)
       tslib: 2.2.0
       value-or-promise: 1.0.12
-      ws: 8.17.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ws: 8.18.0
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -11927,10 +12010,10 @@ packages:
       '@types/ws': 8.5.10
       '@whatwg-node/fetch': 0.9.17
       graphql: 16.8.2
-      isomorphic-ws: 5.0.0(ws@8.17.1)
+      isomorphic-ws: 5.0.0(ws@8.18.0)
       tslib: 2.2.0
       value-or-promise: 1.0.12
-      ws: 8.17.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ws: 8.18.0
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -28426,6 +28509,14 @@ packages:
       ws: 8.17.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     dev: true
 
+  /isomorphic-ws@5.0.0(ws@8.18.0):
+    resolution: {integrity: sha512-muId7Zzn9ywDsyXgTIafTry2sV3nySZeUDe6YedVd1Hvuuep5AsIlqK+XefWpYTyJG5e503F2xIuT2lcU6rCSw==}
+    peerDependencies:
+      ws: '*'
+    dependencies:
+      ws: 8.18.0
+    dev: true
+
   /isows@1.0.3(ws@8.13.0):
     resolution: {integrity: sha512-2cKei4vlmg2cxEjm3wVSqn8pcoRF/LX/wpifuuNquFO4SQmPwarClT+SUCA2lt+l581tTeZIPIZuIDo2jWN1fg==}
     peerDependencies:
@@ -37413,7 +37504,6 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
-    dev: false
 
   /xcode@3.0.1:
     resolution: {integrity: sha512-kCz5k7J7XbJtjABOvkc5lJmkiDh8VhjVCGNiqdKCscmVpdVUpEAyXv1xmCLkQJ5dsHqx3IPO4XW+NTDhU/fatA==}
