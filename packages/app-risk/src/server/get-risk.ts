@@ -29,13 +29,12 @@ const inputSchema = z.object({
  * This function checks the risk status of a given wallet address. It follows these steps:
  * 1. Parse and validate the request body to get the chain ID and wallet address.
  * 2. Verify the presence of an authentication token in the request cookies.
- * 3. If the chain ID is not 1, it returns a non-risky status.
- * 4. Checks if a risk record for the address exists in the database.
- * 5. If no record exists, it fetches the risk status from the TRM service and creates a new record.
- * 6. If a record exists and is flagged as risky, it forces a re-check to verify the current risk status.
- * 7. If a record exists but is not flagged as risky, it checks if the record is older than the defined offset (14 days).
- * 8. If the record is outdated, it updates the risk status from the TRM service.
- * 9. Handles any errors that occur during the process and logs them.
+ * 3. Checks if a risk record for the address exists in the database.
+ * 4. If no record exists, it fetches the risk status from the TRM service and creates a new record.
+ * 5. If a record exists and is flagged as risky, it forces a re-check to verify the current risk status.
+ * 6. If a record exists but is not flagged as risky, it checks if the record is older than the defined offset (14 days).
+ * 7. If the record is outdated, it updates the risk status from the TRM service.
+ * 8. Handles any errors that occur during the process and logs them.
  */
 export const getRisk = async <DB extends RiskRequiredDB>({
   req,
@@ -68,17 +67,17 @@ export const getRisk = async <DB extends RiskRequiredDB>({
     return NextResponse.json({ authenticated: false }, { status: 401 })
   }
 
-  if (chainId !== 1) {
-    return NextResponse.json({ isRisky: false })
-  }
-
   try {
     // check if record exists
     const risk = await selectRiskForAddress({ db: resolvedDB, address: walletAddress })
 
     // create record in db
     if (!risk) {
-      const isRisky = await checkIfRisky({ address: walletAddress, apiKey: trmApiKey })
+      const isRisky = await checkIfRisky({
+        address: walletAddress,
+        apiKey: trmApiKey,
+        chainId,
+      })
 
       await createRiskForAddress({ db: resolvedDB, address: walletAddress, isRisky })
 
@@ -89,7 +88,11 @@ export const getRisk = async <DB extends RiskRequiredDB>({
     // it's necessary for cases where provider flags user as risky by mistake
     // and after a short period of time it's fixed on provider side
     if (risk.isRisky) {
-      const isRisky = await checkIfRisky({ address: walletAddress, apiKey: trmApiKey })
+      const isRisky = await checkIfRisky({
+        address: walletAddress,
+        apiKey: trmApiKey,
+        chainId,
+      })
 
       await updateRiskForAddress({ db: resolvedDB, address: walletAddress, isRisky })
 
@@ -105,7 +108,11 @@ export const getRisk = async <DB extends RiskRequiredDB>({
     }
 
     // update
-    const isRisky = await checkIfRisky({ address: walletAddress, apiKey: trmApiKey })
+    const isRisky = await checkIfRisky({
+      address: walletAddress,
+      apiKey: trmApiKey,
+      chainId,
+    })
 
     await updateRiskForAddress({ db: resolvedDB, address: walletAddress, isRisky })
 

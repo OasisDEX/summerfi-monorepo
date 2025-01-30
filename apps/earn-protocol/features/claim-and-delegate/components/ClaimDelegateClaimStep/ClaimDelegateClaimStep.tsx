@@ -106,9 +106,13 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
       return
     }
 
-    await checkRisk()
-
     dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.PENDING })
+
+    const risk = await checkRisk()
+
+    if (risk.isRisky) {
+      return
+    }
 
     await claimSumrTransaction().catch((err) => {
       // eslint-disable-next-line no-console

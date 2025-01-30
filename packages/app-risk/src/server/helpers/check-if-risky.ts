@@ -6,6 +6,7 @@ import { getTrmRisk } from '@/server/helpers/get-trm-risk'
  *
  * @param address - The address to be checked for risk.
  * @param apiKey - The API key for accessing the TRM risk assessment service.
+ * @param chainId - The chain id to be checked for risk.
  * @returns A promise that resolves to a boolean indicating whether the address is risky.
  *
  * @remarks
@@ -14,9 +15,17 @@ import { getTrmRisk } from '@/server/helpers/get-trm-risk'
  * The function logs the TRM response data for auditing purposes and handles any errors that may occur during the process.
  * If an error occurs during the TRM check, it logs the error and rethrows it.
  */
-export const checkIfRisky = async ({ address, apiKey }: { address: string; apiKey: string }) => {
+export const checkIfRisky = async ({
+  address,
+  apiKey,
+  chainId,
+}: {
+  address: string
+  apiKey: string
+  chainId: number
+}) => {
   try {
-    const trmData = await getTrmRisk({ address, apiKey })
+    const trmData = await getTrmRisk({ address, apiKey, chainId })
 
     try {
       console.info(`TRM_LOG ${address} check, payload ${JSON.stringify(trmData)}`)

@@ -1,10 +1,18 @@
 import { type RiskDataResponse } from '@/types'
 
+const chainIdToTrmNetwork: { [key: number]: string } = {
+  1: 'ethereum',
+  8453: 'base',
+  42161: 'arbitrum',
+  10: 'optimism',
+}
+
 /**
  * Fetch the risk data for a given address using the TRM Labs API.
  *
  * @param address - The address to be screened for risk.
  * @param apiKey - The API key for accessing the TRM Labs API.
+ * @param chainId - The chain id to be checked for risk.
  * @returns A promise that resolves to a RiskDataResponse object containing the risk data.
  *
  * @remarks
@@ -16,10 +24,18 @@ import { type RiskDataResponse } from '@/types'
 export const getTrmRisk = async ({
   address,
   apiKey,
+  chainId,
 }: {
   address: string
   apiKey: string
+  chainId: number
 }): Promise<RiskDataResponse> => {
+  const chain = chainIdToTrmNetwork[chainId]
+
+  if (!chain) {
+    throw new Error(`Unsupported chain id: ${chainId}`)
+  }
+
   return fetch('https://api.trmlabs.com/public/v2/screening/addresses', {
     method: 'POST',
     headers: {
@@ -29,7 +45,7 @@ export const getTrmRisk = async ({
     body: JSON.stringify([
       {
         address,
-        chain: 'ethereum',
+        chain,
         accountExternalId: 'oazo',
       },
     ]),

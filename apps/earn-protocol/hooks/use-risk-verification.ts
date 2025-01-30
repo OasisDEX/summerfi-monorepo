@@ -11,7 +11,7 @@ import { useUserWallet } from './use-user-wallet'
  * If a wallet is flagged as risky, the user will be logged out and notified.
  *
  * @returns {Object} Object containing the checkRisk function
- * @returns {() => Promise<void>} checkRisk - Async function to perform the risk verification
+ * @returns {() => Promise<RiskDataResponse>} checkRisk - Async function to perform the risk verification
  */
 export const useRiskVerification = () => {
   const { logout } = useLogout()
@@ -23,7 +23,7 @@ export const useRiskVerification = () => {
       // eslint-disable-next-line no-console
       console.error('Missing required parameters for risk check')
 
-      return
+      return { isRisky: false }
     }
 
     try {
@@ -41,9 +41,13 @@ export const useRiskVerification = () => {
           'Your wallet has been flagged by our automated risk tools, and as such your access to lazy.summer.fi restricted. If you believe this to be incorrect, please reach out to support@summer.fi',
         )
       }
+
+      return risk
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to perform risk check:', error)
+
+      return { isRisky: false }
     }
   }, [clientChainId, logout, userWalletAddress])
 
