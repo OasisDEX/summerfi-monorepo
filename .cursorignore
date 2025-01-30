@@ -1,6 +1,5 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-# KEEP THIS FILE UP TO DATE WITH .cursorignore
-
+# KEEP THIS FILE UP TO DATE WITH .gitignore
 # dependencies
 node_modules
 .pnp
