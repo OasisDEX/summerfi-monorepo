@@ -70,6 +70,7 @@ jobs:
       NEWSLETTER_PUBLICATION_ID: ${{ secrets.NEWSLETTER_PUBLICATION_ID }}
       NEWSLETTER_ENDPOINT: ${{ secrets.NEWSLETTER_ENDPOINT }}
       NEXT_TELEMETRY_DISABLED: ${{ secrets.NEXT_TELEMETRY_DISABLED }}
+      SUMMER_DEPLOYMENT_CONFIG: ${{ secrets.SUMMER_DEPLOYMENT_CONFIG }}
 
     steps:
       - name: Check out code
