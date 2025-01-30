@@ -23,6 +23,7 @@ const {
   SDK_FORK_CONFIG = '',
   SUMMER_HUB_CHAIN_ID,
   SUMMER_DEPLOYED_CHAINS_ID,
+  SUMMER_DEPLOYMENT_CONFIG,
 } = process.env
 
 export function addSdkConfig({ stack }: StackContext, api: Api) {
@@ -39,7 +40,8 @@ export function addSdkConfig({ stack }: StackContext, api: Api) {
     !SDK_DISTRIBUTIONS_BASE_URL ||
     !SDK_DISTRIBUTIONS_FILES ||
     !SUMMER_HUB_CHAIN_ID ||
-    !SUMMER_DEPLOYED_CHAINS_ID
+    !SUMMER_DEPLOYED_CHAINS_ID ||
+    !SUMMER_DEPLOYMENT_CONFIG
   ) {
     throw new Error(
       'Some SDK configuration env variables are missing: ' +
@@ -58,6 +60,7 @@ export function addSdkConfig({ stack }: StackContext, api: Api) {
             SDK_DISTRIBUTIONS_FILES,
             SUMMER_HUB_CHAIN_ID,
             SUMMER_DEPLOYED_CHAINS_ID,
+            SUMMER_DEPLOYMENT_CONFIG,
           }),
           null,
           2,
@@ -90,6 +93,7 @@ export function addSdkConfig({ stack }: StackContext, api: Api) {
       SDK_FORK_CONFIG,
       SUMMER_HUB_CHAIN_ID,
       SUMMER_DEPLOYED_CHAINS_ID,
+      SUMMER_DEPLOYMENT_CONFIG,
     },
   })
 

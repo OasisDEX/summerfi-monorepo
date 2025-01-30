@@ -16,8 +16,6 @@ import { signerPrivateKey, SDKApiUrl, testConfig, signerAddress } from './utils/
 
 jest.setTimeout(300000)
 
-const useRpcGateway = true
-
 describe.skip('Armada Protocol Deposit', () => {
   const main = async () => {
     for (const { symbol, swapSymbol, chainInfo, fleetAddress, rpcUrl } of testConfig) {

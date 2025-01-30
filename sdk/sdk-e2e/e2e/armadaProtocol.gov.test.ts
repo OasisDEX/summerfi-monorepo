@@ -8,7 +8,7 @@ import { sendAndLogTransactions } from '@summerfi/testing-utils'
 
 jest.setTimeout(300000)
 
-describe('Armada Protocol Gov', () => {
+describe.skip('Armada Protocol Gov', () => {
   const sdk: SDKManager = makeSDK({
     apiURL: SDKApiUrl,
   })

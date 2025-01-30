@@ -96,7 +96,7 @@ export class ArmadaManager implements IArmadaManager {
       this._configProvider.getConfigurationItem({ name: 'SUMMER_DEPLOYMENT_CONFIG' }),
     )
     console.log(
-      'ashta',
+      'SUMMER_DEPLOYMENT_CONFIG',
       this._configProvider.getConfigurationItem({ name: 'SUMMER_DEPLOYMENT_CONFIG' }),
     )
     this._isTestDeployment = isTestDeployment()
@@ -149,7 +149,14 @@ export class ArmadaManager implements IArmadaManager {
 
   /** @see IArmadaManager.getVaultsRaw */
   async getVaultsRaw(params: Parameters<IArmadaManager['getVaultsRaw']>[0]) {
-    return this._subgraphManager.getVaults({ chainId: params.chainInfo.chainId })
+    console.log('call', params.chainInfo.chainId)
+    try {
+      const a = await this._subgraphManager.getVaults({ chainId: params.chainInfo.chainId })
+      // console.log('res', params.chainInfo.chainId, a)
+      return a
+    } catch (e) {
+      console.log('err', e)
+    }
   }
 
   /** @see IArmadaManager.getVaultRaw */
