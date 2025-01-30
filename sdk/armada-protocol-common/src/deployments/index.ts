@@ -7,7 +7,17 @@ import {
   type ChainInfo,
   type IAddress,
 } from '@summerfi/sdk-common'
-import config from './config.json'
+import sumrConfig from './sumr.json'
+import bummerConfig from './bummer.json'
+
+if (
+  process.env.SUMMER_DEPLOYMENT_CONFIG !== 'SUMMER' &&
+  process.env.SUMMER_DEPLOYMENT_CONFIG !== 'BUMMER'
+) {
+  throw new Error('SUMMER_DEPLOYMENT_CONFIG must be set to "SUMMER" or "BUMMER"')
+}
+
+const config = process.env.SUMMER_DEPLOYMENT_CONFIG === 'BUMMER' ? bummerConfig : sumrConfig
 
 type Config = typeof config
 type ConfigKey = 'mainnet' | 'base' | 'arbitrum'
