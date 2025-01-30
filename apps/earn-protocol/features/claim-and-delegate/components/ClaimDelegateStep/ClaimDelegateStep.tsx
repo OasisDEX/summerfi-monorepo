@@ -263,15 +263,19 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
 
   const hasDelegatee = sumrDelegatedTo !== ADDRESS_ZERO
 
-  const delegatee = localSumrDelegates.find(
-    (item) => item.address?.toLowerCase() === sumrDelegatedTo,
+  const localDelegate = localSumrDelegates.find(
+    (item) => item.address.toLowerCase() === sumrDelegatedTo,
   )
 
-  const value = delegatee
-    ? delegatee.title
-    : sumrDelegatedTo !== ADDRESS_ZERO
-      ? formatAddress(sumrDelegatedTo)
-      : 'No delegate'
+  const rewardsDataDelegatee = externalData.sumrDelegates.find(
+    (item) => item.account.address.toLowerCase() === sumrDelegatedTo,
+  )
+  const value =
+    sumrDelegatedTo === ADDRESS_ZERO
+      ? 'No delegate'
+      : rewardsDataDelegatee?.account.name && rewardsDataDelegatee.account.name !== ''
+        ? rewardsDataDelegatee.account.name
+        : localDelegate?.title ?? formatAddress(sumrDelegatedTo)
 
   const votes = mappedSumrDelegatesData.find(
     (item) => item.address.toLowerCase() === sumrDelegatedTo,

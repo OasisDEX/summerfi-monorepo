@@ -266,7 +266,9 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
   const value =
     sumrDelegatedTo === ADDRESS_ZERO
       ? 'No delegate'
-      : rewardsDataDelegatee?.account.name ?? localDelegate?.title ?? formatAddress(sumrDelegatedTo)
+      : rewardsDataDelegatee?.account.name && rewardsDataDelegatee.account.name !== ''
+        ? rewardsDataDelegatee.account.name
+        : localDelegate?.title ?? formatAddress(sumrDelegatedTo)
 
   const votingPower =
     rewardsData.sumrDecayFactors.find(
@@ -295,7 +297,7 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
       id: 'SumrChangeDelegatePortfolioButton',
       page: `/portfolio/${resolvedWalletAddress}`,
       userAddress: userWalletAddress,
-      totalSumrStaked: value,
+      totalSumrStaked: rewardsData.sumrStakeDelegate.stakedAmount,
     })
   }
 
