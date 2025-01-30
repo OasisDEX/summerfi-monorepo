@@ -7,9 +7,34 @@ import {
   type ChainInfo,
   type IAddress,
 } from '@summerfi/sdk-common'
-import config from './config.json'
+import sumrConfig from './sumr.json'
+import bummerConfig from './bummer.json'
 
-type Config = typeof config
+let _deployment: 'SUMMER' | 'BUMMER'
+
+export const setTestDeployment = (deployment: string) => {
+  switch (deployment) {
+    case 'BUMMER':
+    case 'SUMMER':
+      _deployment = deployment
+      break
+    default:
+      throw new Error('SUMMER_DEPLOYMENT_CONFIG must be set to "SUMMER" or "BUMMER"')
+  }
+}
+
+export const isTestDeployment = () => {
+  switch (_deployment) {
+    case 'BUMMER':
+      return true
+    case 'SUMMER':
+      return false
+    default:
+      throw new Error('_deployment must be set to "SUMMER" or "BUMMER"')
+  }
+}
+
+type Config = typeof sumrConfig
 type ConfigKey = 'mainnet' | 'base' | 'arbitrum'
 type CategoryKey = keyof Config[ConfigKey]['deployedContracts']
 
@@ -36,6 +61,7 @@ export const getDeployedContractAddress = <
   contractCategory: TCategory
   contractName: keyof Config[TKey]['deployedContracts'][TCategory]
 }): IAddress => {
+  const config = isTestDeployment() ? bummerConfig : sumrConfig
   const key = getConfigKey(params.chainInfo.name) as TKey
 
   const contract = config[key].deployedContracts[params.contractCategory][params.contractName] as
@@ -56,7 +82,9 @@ export const getDeployedContractAddress = <
 }
 
 export const getDeployedRewardsRedeemerAddress = () => {
+  const config = isTestDeployment() ? bummerConfig : sumrConfig
   const key = getConfigKey(ChainFamilyName.Base)
+
   const maybeAddress = (
     config[key].deployedContracts.gov as { rewardsRedeemer: { address: string | undefined } }
   ).rewardsRedeemer.address
@@ -69,7 +97,9 @@ export const getDeployedRewardsRedeemerAddress = () => {
 }
 
 export const getDeployedGovRewardsManagerAddress = () => {
+  const config = isTestDeployment() ? bummerConfig : sumrConfig
   const key = getConfigKey(ChainFamilyName.Base)
+
   const maybeAddress = (
     config[key].deployedContracts.gov as { rewardsManager: { address: string | undefined } }
   ).rewardsManager.address
