@@ -49,8 +49,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     headers().get('cookie') ?? undefined,
   )
 
+  // the style on the html tag is needed to prevent a flash of white background on page load
   return (
-    <html lang={locale}>
+    <html lang={locale} style={{ backgroundColor: '#1c1c1c' }}>
       <head>
         <GlobalStyles />
       </head>
