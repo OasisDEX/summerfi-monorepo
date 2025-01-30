@@ -60,7 +60,6 @@ export class ArmadaManager implements IArmadaManager {
 
   private _supportedChains: ChainInfo[]
   private _rewardsRedeemerAddress: IAddress
-  private _isTestDeployment: boolean
 
   private _hubChainInfo: ChainInfo
   private _configProvider: IConfigurationProvider
@@ -91,15 +90,6 @@ export class ArmadaManager implements IArmadaManager {
     this._swapManager = params.swapManager
     this._oracleManager = params.oracleManager
     this._tokensManager = params.tokensManager
-
-    setTestDeployment(
-      this._configProvider.getConfigurationItem({ name: 'SUMMER_DEPLOYMENT_CONFIG' }),
-    )
-    console.log(
-      'SUMMER_DEPLOYMENT_CONFIG',
-      this._configProvider.getConfigurationItem({ name: 'SUMMER_DEPLOYMENT_CONFIG' }),
-    )
-    this._isTestDeployment = isTestDeployment()
 
     this._supportedChains = this._configProvider
       .getConfigurationItem({
@@ -136,12 +126,20 @@ export class ArmadaManager implements IArmadaManager {
       contractName: 'summerToken',
     })
 
+    setTestDeployment(
+      this._configProvider.getConfigurationItem({ name: 'SUMMER_DEPLOYMENT_CONFIG' }),
+    )
+    console.log(
+      'SUMMER_DEPLOYMENT_CONFIG',
+      this._configProvider.getConfigurationItem({ name: 'SUMMER_DEPLOYMENT_CONFIG' }),
+    )
+
     return Token.createFrom({
       chainInfo: params.chainInfo,
       address: address,
       decimals: 18,
       name: 'SummerToken',
-      symbol: this._isTestDeployment ? 'BUMMER' : 'SUMR',
+      symbol: isTestDeployment() ? 'BUMMER' : 'SUMR',
     })
   }
 
