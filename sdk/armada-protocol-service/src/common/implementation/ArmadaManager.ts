@@ -149,14 +149,7 @@ export class ArmadaManager implements IArmadaManager {
 
   /** @see IArmadaManager.getVaultsRaw */
   async getVaultsRaw(params: Parameters<IArmadaManager['getVaultsRaw']>[0]) {
-    console.log('call', params.chainInfo.chainId)
-    try {
-      const a = await this._subgraphManager.getVaults({ chainId: params.chainInfo.chainId })
-      // console.log('res', params.chainInfo.chainId, a)
-      return a
-    } catch (e) {
-      console.log('err', e)
-    }
+    return await this._subgraphManager.getVaults({ chainId: params.chainInfo.chainId })
   }
 
   /** @see IArmadaManager.getVaultRaw */
