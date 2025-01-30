@@ -16,6 +16,7 @@ import {
 } from '@/features/claim-and-delegate/types'
 import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
+import { useRiskVerification } from '@/hooks/use-risk-verification'
 
 import { ClaimDelegateToClaim } from './ClaimDelegateToClaim'
 
@@ -55,6 +56,8 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
+
+  const { checkRisk } = useRiskVerification()
 
   const [claimOnChainId, setClaimOnChainId] = useState<
     SDKChainId.BASE | SDKChainId.MAINNET | SDKChainId.ARBITRUM
@@ -97,6 +100,8 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
 
       return
     }
+
+    await checkRisk()
 
     dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.PENDING })
 

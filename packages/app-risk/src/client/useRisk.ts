@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 
-import { type RiskResponse, UseRiskInput } from '@/types'
+import { type RiskResponse, type UseRiskInput } from '@/types'
 
 export interface RiskState extends RiskResponse {
   isLoading?: boolean
@@ -16,6 +16,7 @@ export interface RiskState extends RiskResponse {
  *
  * @param chainId - The chain ID of the blockchain network.
  * @param walletAddress - The wallet address to be checked for risk status (optional).
+ * @param cookiePrefix - The prefix for the cookie.
  * @param host - Optional, to be used when API is not available under the same host (for example localhost development on different ports).
  * @returns An object representing the risk state which includes:
  * - `isRisky` - A boolean indicating if the wallet is considered risky.
@@ -26,18 +27,27 @@ export interface RiskState extends RiskResponse {
  * const { isRisky, isLoading, error } = useRisk({ chainId: 1, walletAddress: '0x123...', host: 'https://api.example.com' });
  */
 
-export const useRisk = ({ chainId, walletAddress, host = '' }: UseRiskInput) => {
+export const useRisk = ({ chainId, walletAddress, cookiePrefix, host = '' }: UseRiskInput) => {
   const [risk, setRisk] = useState<RiskState>({ isLoading: false })
 
   useEffect(() => {
-    const request = async (chainId: number, walletAddress: string, host?: string) => {
+    const request = async (
+      _chainId: number,
+      _walletAddress: string,
+      _cookiePrefix: string,
+      _host?: string,
+    ) => {
       try {
         const riskResponse: RiskResponse = await fetch(`${host}/api/risk`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ chainId, walletAddress }),
+          body: JSON.stringify({
+            chainId: _chainId,
+            walletAddress: _walletAddress,
+            cookiePrefix: _cookiePrefix,
+          }),
           credentials: 'include',
         }).then((resp) => resp.json())
 
@@ -51,9 +61,9 @@ export const useRisk = ({ chainId, walletAddress, host = '' }: UseRiskInput) => 
 
     if (walletAddress) {
       setRisk({ isLoading: true })
-      void request(chainId, walletAddress, host)
+      void request(chainId, walletAddress, cookiePrefix, host)
     }
-  }, [chainId, walletAddress, host])
+  }, [chainId, walletAddress, cookiePrefix, host])
 
   return risk
 }
