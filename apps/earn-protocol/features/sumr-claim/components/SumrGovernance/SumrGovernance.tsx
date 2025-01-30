@@ -117,7 +117,7 @@ const getData = (userWalletAddress: string | undefined) => ({
         }}
         link={{
           label: 'Learn more',
-          href: `${EXTERNAL_LINKS.BLOG.WELCOME_LAZY_SUMMER}`,
+          href: `${EXTERNAL_LINKS.BLOG.INTRODUCING_SUMR_TOKEN}`,
         }}
       >
         <SumrGovernanceList list={sumrStakeToDelegate} />
