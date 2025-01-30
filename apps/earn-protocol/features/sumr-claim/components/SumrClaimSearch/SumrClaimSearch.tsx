@@ -129,11 +129,11 @@ export const SumrClaimSearch = () => {
   }, [resolvedAddress])
 
   const resolvedHeaderText = eligibleUser
-    ? `Address ${eligibleUser.ens ? eligibleUser.ens : formatAddress(eligibleUser.userAddress)} is eligible for `
+    ? `Address ${eligibleUser.ens ? eligibleUser.ens : formatAddress(eligibleUser.userAddress).toLowerCase()} is eligible for `
     : inputValue.length > 0
       ? 'Given address is not eligible for '
       : user?.address
-        ? `Address ${formatAddress(user.address)} is not eligible for  `
+        ? `Address ${formatAddress(user.address).toLowerCase()} is not eligible for  `
         : 'Claim your '
 
   const resolvedButtonText = !user
