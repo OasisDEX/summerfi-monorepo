@@ -6,12 +6,12 @@ import {
   IToken,
   ITokenAmount,
   Maybe,
-  Token,
   TokenAmount,
   TransactionInfo,
 } from '@summerfi/sdk-common'
 import { erc20Abi } from 'viem'
 import { ContractWrapper } from '../ContractWrapper'
+import type { ITokensManager } from '@summerfi/tokens-common'
 
 /**
  * @name Erc20Contract
@@ -23,6 +23,7 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
   implements IErc20Contract
 {
   private _token: Maybe<IToken>
+  private _tokensManager: ITokensManager
 
   /** FACTORY METHOD */
 
@@ -33,6 +34,7 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
    */
   static async create<TClient extends IBlockchainClient, TAddress extends IAddress>(params: {
     blockchainClient: TClient
+    tokensManager: ITokensManager
     chainInfo: IChainInfo
     address: TAddress
   }): Promise<IErc20Contract> {
@@ -42,10 +44,12 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
   /** SEALED CONSTRUCTOR */
   private constructor(params: {
     blockchainClient: TClient
+    tokensManager: ITokensManager
     chainInfo: IChainInfo
     address: TAddress
   }) {
     super(params)
+    this._tokensManager = params.tokensManager
   }
 
   /** PUBLIC */
@@ -55,7 +59,10 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
   /** @see IErc20Contract.getToken */
   async getToken(): Promise<IToken> {
     if (!this._token) {
-      this._token = await this._retrieveTokenInfo()
+      this._token = await this._tokensManager.getTokenByAddress({
+        address: this.address,
+        chainInfo: this.chainInfo,
+      })
     }
     return this._token
   }
@@ -111,52 +118,6 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
       functionName: 'approve',
       args: [params.spender.value, params.amount.toSolidityValue()],
       description: `Approve ${params.spender} to spend ${params.amount} of ${this.address}`,
-    })
-  }
-
-  /** PRIVATE */
-  private async _retrieveTokenInfo(): Promise<IToken> {
-    const abi = this.getAbi()
-    const address = this.address.value
-
-    const results = await this.blockchainClient.multicall({
-      contracts: [
-        {
-          abi,
-          address,
-          functionName: 'decimals',
-        },
-        {
-          abi,
-          address,
-          functionName: 'symbol',
-        },
-        {
-          abi,
-          address,
-          functionName: 'name',
-        },
-      ],
-    })
-
-    const [{ status: statusDecimals }, { status: statusSymbol }, { status: statusName }] = results
-    if (statusDecimals !== 'success' || statusSymbol !== 'success' || statusName !== 'success') {
-      throw new Error('Error retrieving token info')
-    }
-
-    const [{ result: decimals }, { result: symbol }, { result: name }] = results
-    if (!decimals || !symbol || !name) {
-      throw new Error(
-        'Contract reading succeeded but some values are undefined, this should not happen',
-      )
-    }
-
-    return Token.createFrom({
-      address: this.address,
-      chainInfo: this.chainInfo,
-      decimals,
-      symbol,
-      name,
     })
   }
 }

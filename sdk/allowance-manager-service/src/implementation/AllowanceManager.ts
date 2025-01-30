@@ -1,6 +1,6 @@
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
-import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
-import { IContractsProvider } from '@summerfi/contracts-provider-common'
+import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
+import type { IContractsProvider } from '@summerfi/contracts-provider-common'
 import { TransactionType } from '@summerfi/sdk-common'
 
 /**

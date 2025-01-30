@@ -2296,6 +2296,9 @@ importers:
       '@summerfi/testing-utils':
         specifier: workspace:*
         version: link:../testing-utils
+      '@summerfi/tokens-common':
+        specifier: workspace:*
+        version: link:../tokens-common
       '@types/node-fetch':
         specifier: ^2.6.11
         version: 2.6.11

@@ -22,6 +22,7 @@ import { ContractWrapper } from '../ContractWrapper'
 
 import { FleetCommanderAbi } from '@summerfi/armada-protocol-abis'
 import { Erc4626Contract } from '../Erc4626Contract/Erc4626Contract'
+import type { ITokensManager } from '@summerfi/tokens-common'
 
 /**
  * @name FleetCommanderContract
@@ -46,6 +47,7 @@ export class FleetCommanderContract<
    */
   static async create<TClient extends IBlockchainClient, TAddress extends IAddress>(params: {
     blockchainClient: TClient
+    tokensManager: ITokensManager
     chainInfo: IChainInfo
     address: TAddress
   }): Promise<IFleetCommanderContract> {

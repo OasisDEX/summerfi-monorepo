@@ -15,6 +15,7 @@ import assert from 'assert'
 import { erc4626Abi } from 'viem'
 import { ContractWrapper } from '../ContractWrapper'
 import { Erc20Contract } from '../Erc20Contract/Erc20Contract'
+import type { ITokensManager } from '@summerfi/tokens-common'
 
 /**
  * @name Erc4626Contract
@@ -28,6 +29,7 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
   private readonly _erc20Contract: IErc20Contract
   private _asset: Maybe<IToken>
   private _share: Maybe<IToken>
+  private _tokensManager: ITokensManager
 
   /** FACTORY METHOD */
 
@@ -38,6 +40,7 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
    */
   static async create<TClient extends IBlockchainClient, TAddress extends IAddress>(params: {
     blockchainClient: TClient
+    tokensManager: ITokensManager
     chainInfo: IChainInfo
     address: TAddress
   }): Promise<IErc4626Contract> {
@@ -45,6 +48,7 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
 
     const instance = new Erc4626Contract({
       blockchainClient: params.blockchainClient,
+      tokensManager: params.tokensManager,
       chainInfo: params.chainInfo,
       address: params.address,
       erc20Contract,
@@ -64,6 +68,7 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
    */
   private constructor(params: {
     blockchainClient: TClient
+    tokensManager: ITokensManager
     chainInfo: IChainInfo
     address: TAddress
     erc20Contract: IErc20Contract
@@ -71,6 +76,7 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
     super(params)
 
     this._erc20Contract = params.erc20Contract
+    this._tokensManager = params.tokensManager
   }
 
   /** PUBLIC */
@@ -246,6 +252,7 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
 
     const assetErc20Contract = await Erc20Contract.create({
       blockchainClient: this.blockchainClient,
+      tokensManager: this._tokensManager,
       chainInfo: this.chainInfo,
       address: Address.createFromEthereum({
         value: assetAddress,
