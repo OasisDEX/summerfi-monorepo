@@ -38,19 +38,19 @@ export const getSumrBalances = async ({
 }: {
   walletAddress: string
 }): Promise<SumrBalancesData> => {
-  return await unstableCache(
-    async () => {
-      try {
-        const resolvedWalletAddress = walletAddress as Address
+  try {
+    const resolvedWalletAddress = walletAddress as Address
 
-        const chainConfigs = [
-          { chain: base, chainId: SDKChainId.BASE, chainName: 'base' },
-          { chain: mainnet, chainId: SDKChainId.MAINNET, chainName: 'mainnet' },
-          { chain: arbitrum, chainId: SDKChainId.ARBITRUM, chainName: 'arbitrum' },
-        ]
+    const chainConfigs = [
+      { chain: base, chainId: SDKChainId.BASE, chainName: 'base' },
+      { chain: mainnet, chainId: SDKChainId.MAINNET, chainName: 'mainnet' },
+      { chain: arbitrum, chainId: SDKChainId.ARBITRUM, chainName: 'arbitrum' },
+    ]
 
-        const balances = await Promise.all(
-          chainConfigs.map(async ({ chain, chainId, chainName }) => {
+    const balances = await Promise.all(
+      chainConfigs.map(
+        unstableCache(
+          async ({ chain, chainId, chainName }) => {
             const publicClient = createPublicClient({
               chain,
               transport: http(await SDKChainIdToSSRRpcGatewayMap[chainId]),
@@ -128,58 +128,58 @@ export const getSumrBalances = async ({
                 rawBalance: '0',
               }
             }
-          }),
-        )
-
-        const result = {
-          mainnet: '0',
-          arbitrum: '0',
-          base: '0',
-          total: '0',
-          vested: '0',
-          raw: {
-            mainnet: '0',
-            arbitrum: '0',
-            base: '0',
-            total: '0',
-            vested: '0',
           },
-        }
-
-        const total = balances.reduce((acc, { balance }) => acc.plus(balance), new BigNumber(0))
-        const rawTotal = balances.reduce(
-          (acc, { rawBalance }) => acc.plus(rawBalance),
-          new BigNumber(0),
-        )
-
-        balances.forEach(({ chain, balance, rawBalance }) => {
-          result[chain as keyof Omit<SumrBalancesData, 'total' | 'raw'>] = balance
-          result.raw[chain as keyof Omit<typeof result.raw, 'total'>] = rawBalance
-        })
-
-        return {
-          ...result,
-          total: total.toString(),
-          vested: balances.find((b) => b.chain === 'base')?.vestingBalance ?? '0',
-          raw: {
-            ...result.raw,
-            total: rawTotal.toString(),
-            vested: balances.find((b) => b.chain === 'base')?.vestingRawBalance ?? '0',
+          [],
+          {
+            revalidate: REVALIDATION_TIMES.PORTFOLIO_DATA,
+            tags: [walletAddress.toLowerCase()],
           },
-        }
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('Error in getSumrBalances:', error)
+        ),
+      ),
+    )
 
-        throw new Error(
-          `Failed to get SUMR balances: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        )
-      }
-    },
-    ['walletAddress'],
-    {
-      revalidate: REVALIDATION_TIMES.PORTFOLIO_DATA,
-      tags: [walletAddress.toLowerCase()],
-    },
-  )()
+    const result = {
+      mainnet: '0',
+      arbitrum: '0',
+      base: '0',
+      total: '0',
+      vested: '0',
+      raw: {
+        mainnet: '0',
+        arbitrum: '0',
+        base: '0',
+        total: '0',
+        vested: '0',
+      },
+    }
+
+    const total = balances.reduce((acc, { balance }) => acc.plus(balance), new BigNumber(0))
+    const rawTotal = balances.reduce(
+      (acc, { rawBalance }) => acc.plus(rawBalance),
+      new BigNumber(0),
+    )
+
+    balances.forEach(({ chain, balance, rawBalance }) => {
+      result[chain as keyof Omit<SumrBalancesData, 'total' | 'raw'>] = balance
+      result.raw[chain as keyof Omit<typeof result.raw, 'total'>] = rawBalance
+    })
+
+    return {
+      ...result,
+      total: total.toString(),
+      vested: balances.find((b) => b.chain === 'base')?.vestingBalance ?? '0',
+      raw: {
+        ...result.raw,
+        total: rawTotal.toString(),
+        vested: balances.find((b) => b.chain === 'base')?.vestingRawBalance ?? '0',
+      },
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error in getSumrBalances:', error)
+
+    throw new Error(
+      `Failed to get SUMR balances: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    )
+  }
 }

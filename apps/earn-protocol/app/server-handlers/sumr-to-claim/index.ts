@@ -23,7 +23,7 @@ export const getSumrToClaim = async ({
 }: {
   walletAddress: string
 }): Promise<SumrToClaimData> => {
-  return await unstableCache(
+  const sumrToClaim = await unstableCache(
     async () => {
       const { user } = await backendSDK.users.getUserClient({
         walletAddress: Address.createFromEthereum({ value: walletAddress }),
@@ -44,9 +44,12 @@ export const getSumrToClaim = async ({
         ),
       }
     },
-    ['walletAddress'],
+    [],
     {
       revalidate: REVALIDATION_TIMES.PORTFOLIO_DATA,
+      tags: [walletAddress.toLowerCase()],
     },
   )()
+
+  return sumrToClaim
 }

@@ -123,7 +123,7 @@ export const getSumrDelegates = unstableCache(
 
     return allDelegates
   },
-  ['walletAddress'],
+  [],
   {
     revalidate: REVALIDATION_TIMES.PORTFOLIO_DATA,
   },

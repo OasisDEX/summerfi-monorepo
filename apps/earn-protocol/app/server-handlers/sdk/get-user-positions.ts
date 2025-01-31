@@ -6,12 +6,12 @@ import { unstable_cache as unstableCache } from 'next/cache'
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 import { REVALIDATION_TIMES } from '@/constants/revalidations'
 
-export const getUserPositions = async ({ walletAddress }: { walletAddress: string }) => {
-  return await unstableCache(
-    async () => {
-      try {
-        const userPositionsAllNetworksCalls = await Promise.all(
-          sdkSupportedChains.map(async (chainId) => {
+export async function getUserPositions({ walletAddress }: { walletAddress: string }) {
+  try {
+    const userPositionsAllNetworksCalls = await Promise.all(
+      sdkSupportedChains.map(
+        unstableCache(
+          async (chainId) => {
             const chainInfo = getChainInfoByChainId(chainId)
 
             const wallet = Wallet.createFrom({
@@ -27,22 +27,22 @@ export const getUserPositions = async ({ walletAddress }: { walletAddress: strin
             return await backendSDK.armada.users.getUserPositions({
               user,
             })
-          }),
-        )
+          },
+          [],
+          {
+            revalidate: REVALIDATION_TIMES.PORTFOLIO_DATA,
+            tags: [walletAddress.toLowerCase()],
+          },
+        ),
+      ),
+    )
 
-        const positionsList = userPositionsAllNetworksCalls
-          .filter(Boolean)
-          .reduce((acc, position) => [...acc, ...position], [])
+    const positionsList = userPositionsAllNetworksCalls
+      .filter(Boolean)
+      .reduce((acc, position) => [...acc, ...position], [])
 
-        return positionsList as IArmadaPosition[] | undefined
-      } catch (error) {
-        throw new Error(`Failed to get users positions: ${error}`)
-      }
-    },
-    ['walletAddress'],
-    {
-      revalidate: REVALIDATION_TIMES.PORTFOLIO_DATA,
-      tags: [walletAddress.toLowerCase()],
-    },
-  )()
+    return positionsList as IArmadaPosition[] | undefined
+  } catch (error) {
+    throw new Error(`Failed to get users positions: ${error}`)
+  }
 }

@@ -22,57 +22,65 @@ export interface SumrDecayFactorData {
  * The decay factor represents the token holder's voting power, if 1 is the maximum
  * voting power,  0.5 is half the voting power etc.
  */
-export const getSumrDecayFactor = unstableCache(
-  async (addresses: string[]): Promise<SumrDecayFactorData[]> => {
+export const getSumrDecayFactor = async (
+  addresses: string[],
+  walletAddress: string,
+): Promise<SumrDecayFactorData[]> => {
+  try {
+    if (!addresses.length) {
+      return []
+    }
+
+    const publicClient = createPublicClient({
+      chain: base,
+      transport: http(await SDKChainIdToSSRRpcGatewayMap[SDKChainId.BASE]),
+    })
+
     try {
-      if (!addresses.length) {
-        return []
-      }
+      const decayFactors = await unstableCache(
+        async () => {
+          const callResult = await publicClient.multicall({
+            contracts: addresses.map(
+              (address) =>
+                ({
+                  abi: GovernanceRewardsManagerAbi,
+                  address: GOVERNANCE_REWARDS_MANAGER_ADDRESS,
+                  functionName: 'calculateSmoothedDecayFactor',
+                  args: [address],
+                }) as const,
+            ),
+          })
 
-      const publicClient = createPublicClient({
-        chain: base,
-        transport: http(await SDKChainIdToSSRRpcGatewayMap[SDKChainId.BASE]),
-      })
+          if (!callResult.every((result) => result.status === 'success')) {
+            throw new Error('Some decay factor queries failed')
+          }
 
-      try {
-        const decayFactors = await publicClient.multicall({
-          contracts: addresses.map(
-            (address) =>
-              ({
-                abi: GovernanceRewardsManagerAbi,
-                address: GOVERNANCE_REWARDS_MANAGER_ADDRESS,
-                functionName: 'calculateSmoothedDecayFactor',
-                args: [address],
-              }) as const,
-          ),
-        })
+          return addresses.map((address, index) => ({
+            address: address.toLowerCase(),
+            decayFactor: new BigNumber(callResult[index].result.toString())
+              .shiftedBy(-18)
+              .toNumber(),
+          }))
+        },
+        [],
+        {
+          revalidate: REVALIDATION_TIMES.PORTFOLIO_DATA,
+          tags: [walletAddress.toLowerCase()],
+        },
+      )()
 
-        if (!decayFactors.every((result) => result.status === 'success')) {
-          throw new Error('Some decay factor queries failed')
-        }
-
-        return addresses.map((address, index) => ({
-          address: address.toLowerCase(),
-          decayFactor: new BigNumber(decayFactors[index].result.toString())
-            .shiftedBy(-18)
-            .toNumber(),
-        }))
-      } catch (error) {
-        throw new Error(
-          `Failed to fetch decay factors: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        )
-      }
+      return decayFactors
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Error in getSumrDecayFactor:', error)
-
       throw new Error(
-        `Failed to get SUMR decay factors: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        `Failed to fetch decay factors: ${error instanceof Error ? error.message : 'Unknown error'}`,
       )
     }
-  },
-  ['addresses'],
-  {
-    revalidate: REVALIDATION_TIMES.PORTFOLIO_DATA,
-  },
-)
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error in getSumrDecayFactor:', error)
+
+    throw new Error(
+      `Failed to get SUMR decay factors: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    )
+  }
+}

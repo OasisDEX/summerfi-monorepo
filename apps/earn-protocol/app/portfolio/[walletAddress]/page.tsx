@@ -29,6 +29,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
 
   const walletAddress = walletAddressRaw.toLowerCase()
 
+  console.time('portfolio')
   const [
     walletData,
     vaultsData,
@@ -55,6 +56,8 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     getSumrToClaim({ walletAddress }),
   ])
 
+  console.timeEnd('portfolio')
+
   const { vaults } = vaultsData
   const { rebalances } = rebalancesData
 
@@ -78,6 +81,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
 
   const sumrDecayFactors = await getSumrDecayFactor(
     sumrDelegates.map((delegate) => delegate.account.address),
+    walletAddress,
   )
 
   const rewardsData: ClaimDelegateExternalData = {
