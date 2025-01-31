@@ -237,4 +237,20 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       },
     ]
   }
+
+  async getDelegationChainLength(
+    params: Parameters<IArmadaManagerGovernance['getDelegationChainLength']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getDelegationChainLength']> {
+    const client = this._blockchainClientProvider.getBlockchainClient({
+      chainInfo: this._hubChainInfo,
+    })
+
+    const length = await client.readContract({
+      abi: SummerTokenAbi,
+      address: this._hubChainSummerTokenAddress.value,
+      functionName: 'getDelegationChainLength',
+      args: [params.user.wallet.address.value],
+    })
+    return Number(length.toString())
+  }
 }
