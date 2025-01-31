@@ -12,9 +12,11 @@ generates:
       - typescript-operations:
           strictScalars: true
           immutableTypes: false
+          namingConvention: keep
+          avoidOptionals: true
           scalars:
             BigDecimal: number
-            BigInt: number
+            BigInt: string
             Int8: number
             BooleanType: boolean
             CustomData: Record<string, unknown>
@@ -29,3 +31,7 @@ generates:
             UploadId: string
             Timestamp: number
       - 'typescript-graphql-request'
+    config:
+      enumsAsTypes: true
+      skipTypename: true
+      preResolveTypes: true
