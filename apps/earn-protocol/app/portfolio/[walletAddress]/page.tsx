@@ -29,10 +29,10 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
 
   const [
     walletData,
-    { vaults },
+    vaultsData,
     positions,
     systemConfig,
-    { rebalances },
+    rebalancesData,
     sumrStakeDelegate,
     sumrEligibility,
     sumrBalances,
@@ -45,17 +45,20 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     getUserPositions({ walletAddress }),
     systemConfigHandler(),
     getGlobalRebalances(),
-    getSumrDelegateStake({
-      walletAddress,
+    getSumrDelegateStake({ walletAddress }),
+    fetchRaysLeaderboard({
+      userAddress: walletAddress.toLowerCase(),
+      page: '1',
+      limit: '1',
     }),
-    fetchRaysLeaderboard({ userAddress: walletAddress.toLowerCase(), page: '1', limit: '1' }),
-    getSumrBalances({
-      walletAddress,
-    }),
+    getSumrBalances({ walletAddress }),
     getSumrStakingInfo(),
     getSumrDelegates(),
     getSumrToClaim({ walletAddress }),
   ])
+
+  const { vaults } = vaultsData
+  const { rebalances } = rebalancesData
 
   const positionsJsonSafe = positions
     ? parseServerResponseToClient<IArmadaPosition[]>(positions)
