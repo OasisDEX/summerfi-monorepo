@@ -29,8 +29,6 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
 
   const walletAddress = walletAddressRaw.toLowerCase()
 
-  console.time('PortfolioPage')
-
   const [
     walletData,
     vaultsData,
@@ -56,8 +54,6 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     getSumrDelegates(),
     getSumrToClaim({ walletAddress }),
   ])
-
-  console.timeEnd('PortfolioPage')
 
   const { vaults } = vaultsData
   const { rebalances } = rebalancesData
