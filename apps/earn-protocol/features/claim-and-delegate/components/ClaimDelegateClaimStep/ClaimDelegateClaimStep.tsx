@@ -7,6 +7,7 @@ import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 import { useParams } from 'next/navigation'
 
 import { SDKChainIdToAAChainMap } from '@/account-kit/config'
+import { TermsOfServiceCookiePrefix } from '@/constants/terms-of-service'
 import { useClaimSumrTransaction } from '@/features/claim-and-delegate/hooks/use-claim-sumr-transaction'
 import {
   type ClaimDelegateExternalData,
@@ -62,7 +63,9 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   const { walletAddress } = useParams()
   const resolvedWalletAddress = Array.isArray(walletAddress) ? walletAddress[0] : walletAddress
 
-  const { checkRisk } = useRiskVerification()
+  const { checkRisk } = useRiskVerification({
+    cookiePrefix: TermsOfServiceCookiePrefix.SUMR_CLAIM_TOKEN,
+  })
 
   const [claimOnChainId, setClaimOnChainId] = useState<
     SDKChainId.BASE | SDKChainId.MAINNET | SDKChainId.ARBITRUM

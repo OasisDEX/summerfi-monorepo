@@ -2,6 +2,8 @@ import { useCallback } from 'react'
 import { useLogout } from '@account-kit/react'
 import { fetchRisk } from '@summerfi/app-risk'
 
+import { type TermsOfServiceCookiePrefix } from '@/constants/terms-of-service'
+
 import { useClientChainId } from './use-client-chain-id'
 import { useUserWallet } from './use-user-wallet'
 
@@ -9,11 +11,15 @@ import { useUserWallet } from './use-user-wallet'
  * Hook to verify wallet risk status.
  * Performs risk assessment check for the connected wallet and handles risky wallet detection.
  * If a wallet is flagged as risky, the user will be logged out and notified.
- *
+ * @param {TermsOfServiceCookiePrefix} cookiePrefix - The cookie prefix to use for the risk check
  * @returns {Object} Object containing the checkRisk function
  * @returns {() => Promise<RiskDataResponse>} checkRisk - Async function to perform the risk verification
  */
-export const useRiskVerification = () => {
+export const useRiskVerification = ({
+  cookiePrefix,
+}: {
+  cookiePrefix: TermsOfServiceCookiePrefix
+}) => {
   const { logout } = useLogout()
   const { userWalletAddress } = useUserWallet()
   const { clientChainId } = useClientChainId()
@@ -30,7 +36,7 @@ export const useRiskVerification = () => {
       const risk = await fetchRisk({
         chainId: clientChainId,
         walletAddress: userWalletAddress,
-        cookiePrefix: 'sumr-claim-token',
+        cookiePrefix,
         host: '/earn',
       })
 
