@@ -826,6 +826,7 @@ export class ArmadaManager implements IArmadaManager {
               amount: outAmount,
               swapToToken,
               shouldSwap,
+              isEth,
             }),
             this._getPriceImpact({
               fromAmount: outAmount,
@@ -900,6 +901,7 @@ export class ArmadaManager implements IArmadaManager {
             amount: fleetAssets,
             swapToToken,
             shouldSwap,
+            isEth,
           }),
           this._getUnstakeAndWithdrawCall({
             vaultId: params.vaultId,
@@ -1059,14 +1061,15 @@ export class ArmadaManager implements IArmadaManager {
     slippage: IPercentage
     swapToToken: IToken
     shouldSwap: boolean
+    isEth: boolean
   }): Promise<{
     multicallArgs: HexData[]
     multicallOperations: string[]
   }> {
-    let outAmount = params.amount
-
     const multicallArgs: HexData[] = []
     const multicallOperations: string[] = []
+
+    let outAmount = params.amount
 
     const exitFleetCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
@@ -1076,24 +1079,33 @@ export class ArmadaManager implements IArmadaManager {
     multicallArgs.push(exitFleetCalldata)
     multicallOperations.push('exitFleet ' + outAmount.toString())
 
+    let outToken = params.swapToToken
+    // if the out token is ETH, we need to use wrapped ETH to withdraw
+    if (params.isEth) {
+      outToken = await this._tokensManager.getTokenBySymbol({
+        chainInfo: params.vaultId.chainInfo,
+        symbol: 'WETH',
+      })
+    }
+
     // should swap
     if (params.shouldSwap) {
       const swapCall = await this._getSwapCall({
         vaultId: params.vaultId,
         fromAmount: outAmount,
-        toToken: params.swapToToken,
+        toToken: outToken,
         slippage: params.slippage,
       })
       multicallArgs.push(swapCall.calldata)
       multicallOperations.push(
         `swap ${outAmount.toString()} to min ${swapCall.minAmount.toString()}`,
       )
-
-      outAmount = TokenAmount.createFromBaseUnit({
-        token: params.swapToToken,
-        amount: '0', // all
-      })
     }
+
+    outAmount = TokenAmount.createFromBaseUnit({
+      token: params.swapToToken,
+      amount: '0', // all
+    })
 
     const withdrawTokensCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
