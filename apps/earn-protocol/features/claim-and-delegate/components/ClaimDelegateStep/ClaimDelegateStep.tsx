@@ -170,7 +170,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
       up to{' '}
       {formatDecimalAsPercent(externalData.sumrStakingInfo.sumrStakingApy * (decayFactor ?? 1))}{' '}
       <Text as="span" variant="p4semi">
-        APY
+        APR
       </Text>
     </Text>
   )

@@ -160,7 +160,7 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }
         value,
         subValue: (
           <Text variant="p3semi" style={{ color: 'var(--earn-protocol-success-100)' }}>
-            Earning {apy} APY
+            Earning {apy} APR
           </Text>
         ),
         titleSize: 'medium',
