@@ -3,10 +3,7 @@ import { Cron, Function, FunctionProps } from 'sst/constructs'
 import * as process from 'node:process'
 
 export function addSummerProtocolConfig({ stack, vpc, app }: SummerStackContext) {
-  const {
-    EARN_PROTOCOL_DB_CONNECTION_STRING,
-    SUBGRAPH_BASE,
-  } = process.env
+  const { EARN_PROTOCOL_DB_CONNECTION_STRING, SUBGRAPH_BASE } = process.env
 
   if (!EARN_PROTOCOL_DB_CONNECTION_STRING) {
     throw new Error('EARN_PROTOCOL_DB_CONNECTION_STRING is not set')
@@ -44,4 +41,4 @@ export function addSummerProtocolConfig({ stack, vpc, app }: SummerStackContext)
     enabled: true,
     job: updateEarnRewardsAprCronFunction,
   })
-} 
+}

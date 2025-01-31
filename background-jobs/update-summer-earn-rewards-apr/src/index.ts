@@ -6,7 +6,7 @@ import {
   getAllClients,
   SubgraphClient,
   Products,
-  Product
+  Product,
 } from '@summerfi/summer-earn-rates-subgraph'
 import { ChainId } from '@summerfi/serverless-shared'
 import { RewardsService } from './rewards-service'
@@ -19,11 +19,11 @@ const networkToChainId: Record<string, ChainId> = {
   arbitrum: ChainId.ARBITRUM,
   optimism: ChainId.OPTIMISM,
   base: ChainId.BASE,
-  mainnet: ChainId.MAINNET
+  mainnet: ChainId.MAINNET,
 }
 export enum Protocol {
   Morpho = 'Morpho',
-  Euler = 'Euler'
+  Euler = 'Euler',
 }
 const supportedProtocols = [Protocol.Morpho, Protocol.Euler]
 
@@ -53,9 +53,12 @@ async function updateRewardRates(
   trx: Transaction<Database>,
   network: NetworkStatus,
   products: Product[],
-  updateStartTimestamp: number
+  updateStartTimestamp: number,
 ) {
-  const rewardRates = await rewardsService.getRewardRates(products, networkToChainId[network.network])
+  const rewardRates = await rewardsService.getRewardRates(
+    products,
+    networkToChainId[network.network],
+  )
 
   const currentTimestamp = updateStartTimestamp
 
@@ -70,18 +73,18 @@ async function updateRewardRates(
           symbol: rewardRate.token.symbol,
           decimals: rewardRate.token.decimals,
           precision: rewardRate.token.precision.toString(),
-          network: network.network
+          network: network.network,
         })
         .onConflict((oc) => oc.doNothing())
         .execute()
     }
 
-
     // Calculate period timestamps
     const hourTimestamp = Math.floor(currentTimestamp / HOUR_IN_SECONDS) * HOUR_IN_SECONDS
     const dayTimestamp = Math.floor(currentTimestamp / DAY_IN_SECONDS) * DAY_IN_SECONDS
     const offsetTimestamp = currentTimestamp + EPOCH_WEEK_OFFSET
-    const weekTimestamp = Math.floor(offsetTimestamp / WEEK_IN_SECONDS) * WEEK_IN_SECONDS - EPOCH_WEEK_OFFSET
+    const weekTimestamp =
+      Math.floor(offsetTimestamp / WEEK_IN_SECONDS) * WEEK_IN_SECONDS - EPOCH_WEEK_OFFSET
 
     // Calculate total reward rate
     const totalRewardRate = productRewardRates
@@ -99,7 +102,7 @@ async function updateRewardRates(
           rate: rewardRate.rate,
           network: network.network,
           productId: product.id,
-          timestamp: currentTimestamp
+          timestamp: currentTimestamp,
         })
         .onConflict((oc) => oc.doNothing())
         .execute()
@@ -121,7 +124,7 @@ async function updateHourlyRewardAverage(
   network: NetworkStatus,
   product: Product,
   newRate: string,
-  hourTimestamp: number
+  hourTimestamp: number,
 ) {
   const hourlyRateId = `${network.network}-${product.id}-${hourTimestamp}`
 
@@ -144,13 +147,13 @@ async function updateHourlyRewardAverage(
         averageRate: newRate,
         protocol: product.protocol,
         network: network.network,
-        productId: product.id
+        productId: product.id,
       })
       .execute()
   } else {
     // Update existing
     const newSum = (parseFloat(hourlyRate.sumRates) + parseFloat(newRate)).toString()
-    const newCount = (+hourlyRate.updateCount + 1)
+    const newCount = +hourlyRate.updateCount + 1
     const newAverage = (parseFloat(newSum) / newCount).toString()
 
     await trx
@@ -158,7 +161,7 @@ async function updateHourlyRewardAverage(
       .set({
         sumRates: newSum,
         updateCount: newCount,
-        averageRate: newAverage
+        averageRate: newAverage,
       })
       .where('id', '=', hourlyRateId)
       .execute()
@@ -170,7 +173,7 @@ async function updateDailyRewardAverage(
   network: NetworkStatus,
   product: Product,
   newRate: string,
-  dayTimestamp: number
+  dayTimestamp: number,
 ) {
   const dailyRateId = `${network.network}-${product.id}-${dayTimestamp}`
 
@@ -191,12 +194,12 @@ async function updateDailyRewardAverage(
         averageRate: newRate,
         protocol: product.protocol,
         network: network.network,
-        productId: product.id
+        productId: product.id,
       })
       .execute()
   } else {
     const newSum = (parseFloat(dailyRate.sumRates) + parseFloat(newRate)).toString()
-    const newCount = (+dailyRate.updateCount + 1)
+    const newCount = +dailyRate.updateCount + 1
     const newAverage = (parseFloat(newSum) / newCount).toString()
 
     await trx
@@ -204,7 +207,7 @@ async function updateDailyRewardAverage(
       .set({
         sumRates: newSum,
         updateCount: newCount,
-        averageRate: newAverage
+        averageRate: newAverage,
       })
       .where('id', '=', dailyRateId)
       .execute()
@@ -216,7 +219,7 @@ async function updateWeeklyRewardAverage(
   network: NetworkStatus,
   product: Product,
   newRate: string,
-  weekTimestamp: number
+  weekTimestamp: number,
 ) {
   const weeklyRateId = `${network.network}-${product.id}-${weekTimestamp}`
 
@@ -237,12 +240,12 @@ async function updateWeeklyRewardAverage(
         averageRate: newRate,
         protocol: product.protocol,
         network: network.network,
-        productId: product.id
+        productId: product.id,
       })
       .execute()
   } else {
     const newSum = (parseFloat(weeklyRate.sumRates) + parseFloat(newRate)).toString()
-    const newCount = (+weeklyRate.updateCount + 1)
+    const newCount = +weeklyRate.updateCount + 1
     const newAverage = (parseFloat(newSum) / newCount).toString()
 
     await trx
@@ -250,7 +253,7 @@ async function updateWeeklyRewardAverage(
       .set({
         sumRates: newSum,
         updateCount: newCount,
-        averageRate: newAverage
+        averageRate: newAverage,
       })
       .where('id', '=', weeklyRateId)
       .execute()
@@ -260,7 +263,7 @@ async function updateWeeklyRewardAverage(
 async function ensureTokensExist(
   trx: Transaction<Database>,
   network: NetworkStatus,
-  products: Product[]
+  products: Product[],
 ) {
   // Insert token if it doesn't exist
   for (const product of products) {
@@ -271,7 +274,7 @@ async function ensureTokensExist(
         symbol: product.token.symbol,
         decimals: +product.token.decimals,
         precision: product.token.precision.toString(),
-        network: network.network
+        network: network.network,
       })
       .onConflict((oc) => oc.doNothing())
       .execute()
@@ -326,14 +329,19 @@ export const handler = async (
     const networks = await trx
       .selectFrom('networkStatus')
       .where('isUpdating', '=', false)
-      .where(eb => eb('lastUpdatedAt', '<=', (Math.floor(Date.now() / 1000) - MIN_UPDATE_INTERVAL).toString())
-        .or('lastUpdatedAt', 'is', null))
+      .where((eb) =>
+        eb(
+          'lastUpdatedAt',
+          '<=',
+          (Math.floor(Date.now() / 1000) - MIN_UPDATE_INTERVAL).toString(),
+        ).or('lastUpdatedAt', 'is', null),
+      )
       .selectAll()
       .execute()
 
     for (const network of networks) {
       const updateStartTimestamp = Math.floor(Date.now() / 1000)
-      
+
       try {
         // Acquire lock by setting isUpdating to true
         await trx
@@ -360,11 +368,10 @@ export const handler = async (
           .set({
             lastUpdatedAt: updateStartTimestamp,
             lastBlockNumber: network.lastBlockNumber,
-            isUpdating: false
+            isUpdating: false,
           })
           .where('network', '=', network.network)
           .execute()
-
       } catch (error) {
         logger.error(`Error processing network ${network.network}`, { error })
         // Release lock on error within transaction

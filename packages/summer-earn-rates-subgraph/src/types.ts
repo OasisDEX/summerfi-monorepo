@@ -1,6 +1,9 @@
 import { ChainId } from '@summerfi/serverless-shared'
 import { getSdk } from './generated/client'
-import {type InterestRate as InterestRateType, GetProductsQuery as GetProductsQueryType } from './generated/client'
+import {
+  type InterestRate as InterestRateType,
+  GetProductsQuery as GetProductsQueryType,
+} from './generated/client'
 export interface SubgraphClientConfig {
   chainId: ChainId
   urlBase: string
