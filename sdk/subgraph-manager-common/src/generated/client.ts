@@ -128,8 +128,6 @@ export type Ark = {
   details?: Maybe<Scalars['String']['output']>;
   /**  All withdrawals made from this vault  */
   disembarks: Array<Disembark>;
-  /**  Type of fees incurred to the user. Should include all fees that apply to the vault  */
-  fees: Array<VaultFee>;
   /**  Vault hourly snapshots  */
   hourlySnapshots: Array<ArkHourlySnapshot>;
   /**  Smart contract address of the vault  */
@@ -198,15 +196,6 @@ export type ArkDisembarksArgs = {
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<Disembark_Filter>;
-};
-
-
-export type ArkFeesArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<VaultFee_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  where?: InputMaybe<VaultFee_Filter>;
 };
 
 
@@ -817,13 +806,6 @@ export type Ark_Filter = {
   details_starts_with?: InputMaybe<Scalars['String']['input']>;
   details_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   disembarks_?: InputMaybe<Disembark_Filter>;
-  fees?: InputMaybe<Array<Scalars['String']['input']>>;
-  fees_?: InputMaybe<VaultFee_Filter>;
-  fees_contains?: InputMaybe<Array<Scalars['String']['input']>>;
-  fees_contains_nocase?: InputMaybe<Array<Scalars['String']['input']>>;
-  fees_not?: InputMaybe<Array<Scalars['String']['input']>>;
-  fees_not_contains?: InputMaybe<Array<Scalars['String']['input']>>;
-  fees_not_contains_nocase?: InputMaybe<Array<Scalars['String']['input']>>;
   hourlySnapshots_?: InputMaybe<ArkHourlySnapshot_Filter>;
   id?: InputMaybe<Scalars['ID']['input']>;
   id_gt?: InputMaybe<Scalars['ID']['input']>;
@@ -989,7 +971,6 @@ export enum Ark_OrderBy {
   DepositLimit = 'depositLimit',
   Details = 'details',
   Disembarks = 'disembarks',
-  Fees = 'fees',
   HourlySnapshots = 'hourlySnapshots',
   Id = 'id',
   InputToken = 'inputToken',
@@ -7469,7 +7450,7 @@ export type Vault = {
   deposits: Array<Deposit>;
   /**  Details of the Fleet Commander  */
   details?: Maybe<Scalars['String']['output']>;
-  /**  Type of fees incurred to the user. Should include all fees that apply to the vault  */
+  /**  fees incurred to the user  */
   fees: Array<VaultFee>;
   hourlyInterestRates: Array<HourlyInterestRate>;
   /**  Vault hourly snapshots  */
@@ -7987,12 +7968,26 @@ export enum VaultDailySnapshot_OrderBy {
 
 export type VaultFee = {
   __typename?: 'VaultFee';
+  /**  Block number of the transaction  */
+  blockNumber: Scalars['BigInt']['output'];
   /**  Fee as a percentage of the trade (swap) amount. Does not always apply  */
   feePercentage?: Maybe<Scalars['BigDecimal']['output']>;
   /**  Type of fee this vault uses  */
   feeType: VaultFeeType;
   /**  { Vault fee type }-{ Vault address }  */
   id: Scalars['ID']['output'];
+  /**  Amount of input token that is charged for the fee  */
+  inputTokenAmount?: Maybe<Scalars['BigInt']['output']>;
+  /**  Amount of input token that is charged for the fee, normalized in USD  */
+  inputTokenAmountNormalizedInUSD?: Maybe<Scalars['BigDecimal']['output']>;
+  /**  Amount of output token that is charged for the fee  */
+  outputTokenAmount?: Maybe<Scalars['BigInt']['output']>;
+  /**  Timestamp of the transaction  */
+  timestamp: Scalars['BigInt']['output'];
+  /**  Token that is charged for the fee  */
+  token: Token;
+  /**  Vault that is charged for the fee  */
+  vault: Vault;
 };
 
 export enum VaultFeeType {
@@ -8010,6 +8005,14 @@ export type VaultFee_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
   and?: InputMaybe<Array<InputMaybe<VaultFee_Filter>>>;
+  blockNumber?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  blockNumber_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_not?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   feePercentage?: InputMaybe<Scalars['BigDecimal']['input']>;
   feePercentage_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   feePercentage_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -8030,13 +8033,132 @@ export type VaultFee_Filter = {
   id_lte?: InputMaybe<Scalars['ID']['input']>;
   id_not?: InputMaybe<Scalars['ID']['input']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  inputTokenAmount?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenAmountNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenAmountNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenAmountNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenAmountNormalizedInUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenAmountNormalizedInUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenAmountNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenAmountNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenAmountNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenAmount_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenAmount_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenAmount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenAmount_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenAmount_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenAmount_not?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenAmount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   or?: InputMaybe<Array<InputMaybe<VaultFee_Filter>>>;
+  outputTokenAmount?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenAmount_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenAmount_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenAmount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  outputTokenAmount_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenAmount_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenAmount_not?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenAmount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  timestamp?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  timestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  token?: InputMaybe<Scalars['String']['input']>;
+  token_?: InputMaybe<Token_Filter>;
+  token_contains?: InputMaybe<Scalars['String']['input']>;
+  token_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  token_ends_with?: InputMaybe<Scalars['String']['input']>;
+  token_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  token_gt?: InputMaybe<Scalars['String']['input']>;
+  token_gte?: InputMaybe<Scalars['String']['input']>;
+  token_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  token_lt?: InputMaybe<Scalars['String']['input']>;
+  token_lte?: InputMaybe<Scalars['String']['input']>;
+  token_not?: InputMaybe<Scalars['String']['input']>;
+  token_not_contains?: InputMaybe<Scalars['String']['input']>;
+  token_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  token_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  token_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  token_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  token_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  token_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  token_starts_with?: InputMaybe<Scalars['String']['input']>;
+  token_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  vault?: InputMaybe<Scalars['String']['input']>;
+  vault_?: InputMaybe<Vault_Filter>;
+  vault_contains?: InputMaybe<Scalars['String']['input']>;
+  vault_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  vault_ends_with?: InputMaybe<Scalars['String']['input']>;
+  vault_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  vault_gt?: InputMaybe<Scalars['String']['input']>;
+  vault_gte?: InputMaybe<Scalars['String']['input']>;
+  vault_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  vault_lt?: InputMaybe<Scalars['String']['input']>;
+  vault_lte?: InputMaybe<Scalars['String']['input']>;
+  vault_not?: InputMaybe<Scalars['String']['input']>;
+  vault_not_contains?: InputMaybe<Scalars['String']['input']>;
+  vault_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  vault_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  vault_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  vault_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  vault_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  vault_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  vault_starts_with?: InputMaybe<Scalars['String']['input']>;
+  vault_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum VaultFee_OrderBy {
+  BlockNumber = 'blockNumber',
   FeePercentage = 'feePercentage',
   FeeType = 'feeType',
-  Id = 'id'
+  Id = 'id',
+  InputTokenAmount = 'inputTokenAmount',
+  InputTokenAmountNormalizedInUsd = 'inputTokenAmountNormalizedInUSD',
+  OutputTokenAmount = 'outputTokenAmount',
+  Timestamp = 'timestamp',
+  Token = 'token',
+  TokenDecimals = 'token__decimals',
+  TokenId = 'token__id',
+  TokenLastPriceBlockNumber = 'token__lastPriceBlockNumber',
+  TokenLastPriceUsd = 'token__lastPriceUSD',
+  TokenName = 'token__name',
+  TokenSymbol = 'token__symbol',
+  Vault = 'vault',
+  VaultApr7d = 'vault__apr7d',
+  VaultApr30d = 'vault__apr30d',
+  VaultApr90d = 'vault__apr90d',
+  VaultApr180d = 'vault__apr180d',
+  VaultApr365d = 'vault__apr365d',
+  VaultCalculatedApr = 'vault__calculatedApr',
+  VaultCreatedBlockNumber = 'vault__createdBlockNumber',
+  VaultCreatedTimestamp = 'vault__createdTimestamp',
+  VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
+  VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
+  VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
+  VaultDepositCap = 'vault__depositCap',
+  VaultDepositLimit = 'vault__depositLimit',
+  VaultDetails = 'vault__details',
+  VaultId = 'vault__id',
+  VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
+  VaultLastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
+  VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
+  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
+  VaultName = 'vault__name',
+  VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
+  VaultOutputTokenSupply = 'vault__outputTokenSupply',
+  VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
+  VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
+  VaultSymbol = 'vault__symbol',
+  VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
+  VaultWithdrawableTotalAssets = 'vault__withdrawableTotalAssets',
+  VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD'
 }
 
 export type VaultHourlySnapshot = {
@@ -8819,13 +8941,7 @@ export type Vault_Filter = {
   details_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   details_starts_with?: InputMaybe<Scalars['String']['input']>;
   details_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  fees?: InputMaybe<Array<Scalars['String']['input']>>;
   fees_?: InputMaybe<VaultFee_Filter>;
-  fees_contains?: InputMaybe<Array<Scalars['String']['input']>>;
-  fees_contains_nocase?: InputMaybe<Array<Scalars['String']['input']>>;
-  fees_not?: InputMaybe<Array<Scalars['String']['input']>>;
-  fees_not_contains?: InputMaybe<Array<Scalars['String']['input']>>;
-  fees_not_contains_nocase?: InputMaybe<Array<Scalars['String']['input']>>;
   hourlyInterestRates_?: InputMaybe<HourlyInterestRate_Filter>;
   hourlySnapshots_?: InputMaybe<VaultHourlySnapshot_Filter>;
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -10060,14 +10176,14 @@ export type GetUsersActivityQuery = { __typename?: 'Query', positions: Array<{ _
 export type GetVaultsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsAmount: Array<bigint>, rewardTokenEmissionsUSD?: Array<string> | null, rebalanceCount: bigint, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, apr7d: string, apr30d: string, apr90d: string, apr180d: string, apr365d: string, calculatedApr: string, aprValues: Array<string>, withdrawableTotalAssets?: bigint | null, withdrawableTotalAssetsUSD?: string | null, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }>, arks: Array<{ __typename?: 'Ark', id: string, name?: string | null, details?: string | null, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, fees: Array<{ __typename?: 'VaultFee', id: string, feePercentage?: string | null, feeType: VaultFeeType }> }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null, dailyInterestRates: Array<{ __typename?: 'DailyInterestRate', averageRate: string, date: bigint }>, hourlyInterestRates: Array<{ __typename?: 'HourlyInterestRate', averageRate: string, date: bigint }>, weeklyInterestRates: Array<{ __typename?: 'WeeklyInterestRate', averageRate: string, date: bigint }> }> };
+export type GetVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsAmount: Array<bigint>, rewardTokenEmissionsUSD?: Array<string> | null, rebalanceCount: bigint, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, apr7d: string, apr30d: string, apr90d: string, apr180d: string, apr365d: string, calculatedApr: string, aprValues: Array<string>, withdrawableTotalAssets?: bigint | null, withdrawableTotalAssetsUSD?: string | null, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }>, arks: Array<{ __typename?: 'Ark', id: string, name?: string | null, details?: string | null, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null, dailyInterestRates: Array<{ __typename?: 'DailyInterestRate', averageRate: string, date: bigint }>, hourlyInterestRates: Array<{ __typename?: 'HourlyInterestRate', averageRate: string, date: bigint }>, weeklyInterestRates: Array<{ __typename?: 'WeeklyInterestRate', averageRate: string, date: bigint }> }> };
 
 export type GetVaultQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type GetVaultQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsUSD?: Array<string> | null, rewardTokenEmissionsAmount: Array<bigint>, rebalanceCount: bigint, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, apr7d: string, apr30d: string, apr90d: string, apr180d: string, apr365d: string, calculatedApr: string, aprValues: Array<string>, withdrawableTotalAssets?: bigint | null, withdrawableTotalAssetsUSD?: string | null, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }>, rebalances: Array<{ __typename?: 'Rebalance', id: string, amount: bigint, amountUSD: string, timestamp: bigint, asset: { __typename?: 'Token', id: string, symbol: string, decimals: number }, from: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, to: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, toPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, fromPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, protocol: { __typename?: 'YieldAggregator', name: string, network: Network }, vault: { __typename?: 'Vault', id: string, name?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string } } }>, arks: Array<{ __typename?: 'Ark', id: string, name?: string | null, details?: string | null, depositLimit: bigint, cumulativeEarnings: bigint, inputTokenBalance: bigint, calculatedApr: string, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, dailySnapshots: Array<{ __typename?: 'ArkDailySnapshot', id: string, apr: string, totalValueLockedUSD: string, inputTokenBalance: bigint }>, hourlySnapshots: Array<{ __typename?: 'ArkHourlySnapshot', id: string, calculatedApr: string, totalValueLockedUSD: string, inputTokenBalance: bigint }>, fees: Array<{ __typename?: 'VaultFee', id: string, feePercentage?: string | null, feeType: VaultFeeType }> }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null, dailyInterestRates: Array<{ __typename?: 'DailyInterestRate', averageRate: string, date: bigint }>, hourlyInterestRates: Array<{ __typename?: 'HourlyInterestRate', averageRate: string, date: bigint }>, weeklyInterestRates: Array<{ __typename?: 'WeeklyInterestRate', averageRate: string, date: bigint }> } | null };
+export type GetVaultQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsUSD?: Array<string> | null, rewardTokenEmissionsAmount: Array<bigint>, rebalanceCount: bigint, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, apr7d: string, apr30d: string, apr90d: string, apr180d: string, apr365d: string, calculatedApr: string, aprValues: Array<string>, withdrawableTotalAssets?: bigint | null, withdrawableTotalAssetsUSD?: string | null, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }>, rebalances: Array<{ __typename?: 'Rebalance', id: string, amount: bigint, amountUSD: string, timestamp: bigint, asset: { __typename?: 'Token', id: string, symbol: string, decimals: number }, from: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, to: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, toPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, fromPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, protocol: { __typename?: 'YieldAggregator', name: string, network: Network }, vault: { __typename?: 'Vault', id: string, name?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string } } }>, arks: Array<{ __typename?: 'Ark', id: string, name?: string | null, details?: string | null, depositLimit: bigint, cumulativeEarnings: bigint, inputTokenBalance: bigint, calculatedApr: string, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, dailySnapshots: Array<{ __typename?: 'ArkDailySnapshot', id: string, apr: string, totalValueLockedUSD: string, inputTokenBalance: bigint }>, hourlySnapshots: Array<{ __typename?: 'ArkHourlySnapshot', id: string, calculatedApr: string, totalValueLockedUSD: string, inputTokenBalance: bigint }> }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null, dailyInterestRates: Array<{ __typename?: 'DailyInterestRate', averageRate: string, date: bigint }>, hourlyInterestRates: Array<{ __typename?: 'HourlyInterestRate', averageRate: string, date: bigint }>, weeklyInterestRates: Array<{ __typename?: 'WeeklyInterestRate', averageRate: string, date: bigint }> } | null };
 
 
 export const GetGlobalRebalancesDocument = gql`
@@ -10317,11 +10433,6 @@ export const GetVaultsDocument = gql`
         symbol
         decimals
       }
-      fees {
-        id
-        feePercentage
-        feeType
-      }
       createdTimestamp
       lastUpdateTimestamp
     }
@@ -10457,11 +10568,6 @@ export const GetVaultDocument = gql`
         calculatedApr
         totalValueLockedUSD
         inputTokenBalance
-      }
-      fees {
-        id
-        feePercentage
-        feeType
       }
       calculatedApr
       createdTimestamp

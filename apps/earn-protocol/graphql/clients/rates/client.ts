@@ -47,6 +47,7 @@ export type DailyInterestRate = {
   date: Scalars['BigInt']['output'];
   id: Scalars['ID']['output'];
   interestRates: Array<InterestRate>;
+  product: Product;
   productId: Scalars['String']['output'];
   protocol: Scalars['String']['output'];
   sumRates: Scalars['BigDecimal']['output'];
@@ -93,6 +94,7 @@ export type DailyInterestRate_Filter = {
   id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
   interestRates_?: InputMaybe<InterestRate_Filter>;
   or?: InputMaybe<Array<InputMaybe<DailyInterestRate_Filter>>>;
+  product?: InputMaybe<Scalars['String']['input']>;
   productId?: InputMaybe<Scalars['String']['input']>;
   productId_contains?: InputMaybe<Scalars['String']['input']>;
   productId_contains_nocase?: InputMaybe<Scalars['String']['input']>;
@@ -113,6 +115,26 @@ export type DailyInterestRate_Filter = {
   productId_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   productId_starts_with?: InputMaybe<Scalars['String']['input']>;
   productId_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_?: InputMaybe<Product_Filter>;
+  product_contains?: InputMaybe<Scalars['String']['input']>;
+  product_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_ends_with?: InputMaybe<Scalars['String']['input']>;
+  product_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_gt?: InputMaybe<Scalars['String']['input']>;
+  product_gte?: InputMaybe<Scalars['String']['input']>;
+  product_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  product_lt?: InputMaybe<Scalars['String']['input']>;
+  product_lte?: InputMaybe<Scalars['String']['input']>;
+  product_not?: InputMaybe<Scalars['String']['input']>;
+  product_not_contains?: InputMaybe<Scalars['String']['input']>;
+  product_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  product_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  product_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  product_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_starts_with?: InputMaybe<Scalars['String']['input']>;
+  product_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   protocol?: InputMaybe<Scalars['String']['input']>;
   protocol_contains?: InputMaybe<Scalars['String']['input']>;
   protocol_contains_nocase?: InputMaybe<Scalars['String']['input']>;
@@ -166,7 +188,11 @@ export enum DailyInterestRate_OrderBy {
   date = 'date',
   id = 'id',
   interestRates = 'interestRates',
+  product = 'product',
   productId = 'productId',
+  product__id = 'product__id',
+  product__name = 'product__name',
+  product__protocol = 'product__protocol',
   protocol = 'protocol',
   sumRates = 'sumRates',
   token = 'token',
@@ -179,6 +205,7 @@ export type HourlyInterestRate = {
   date: Scalars['BigInt']['output'];
   id: Scalars['ID']['output'];
   interestRates: Array<InterestRate>;
+  product: Product;
   productId: Scalars['String']['output'];
   protocol: Scalars['String']['output'];
   sumRates: Scalars['BigDecimal']['output'];
@@ -225,6 +252,7 @@ export type HourlyInterestRate_Filter = {
   id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
   interestRates_?: InputMaybe<InterestRate_Filter>;
   or?: InputMaybe<Array<InputMaybe<HourlyInterestRate_Filter>>>;
+  product?: InputMaybe<Scalars['String']['input']>;
   productId?: InputMaybe<Scalars['String']['input']>;
   productId_contains?: InputMaybe<Scalars['String']['input']>;
   productId_contains_nocase?: InputMaybe<Scalars['String']['input']>;
@@ -245,6 +273,26 @@ export type HourlyInterestRate_Filter = {
   productId_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   productId_starts_with?: InputMaybe<Scalars['String']['input']>;
   productId_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_?: InputMaybe<Product_Filter>;
+  product_contains?: InputMaybe<Scalars['String']['input']>;
+  product_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_ends_with?: InputMaybe<Scalars['String']['input']>;
+  product_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_gt?: InputMaybe<Scalars['String']['input']>;
+  product_gte?: InputMaybe<Scalars['String']['input']>;
+  product_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  product_lt?: InputMaybe<Scalars['String']['input']>;
+  product_lte?: InputMaybe<Scalars['String']['input']>;
+  product_not?: InputMaybe<Scalars['String']['input']>;
+  product_not_contains?: InputMaybe<Scalars['String']['input']>;
+  product_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  product_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  product_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  product_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_starts_with?: InputMaybe<Scalars['String']['input']>;
+  product_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   protocol?: InputMaybe<Scalars['String']['input']>;
   protocol_contains?: InputMaybe<Scalars['String']['input']>;
   protocol_contains_nocase?: InputMaybe<Scalars['String']['input']>;
@@ -298,7 +346,11 @@ export enum HourlyInterestRate_OrderBy {
   date = 'date',
   id = 'id',
   interestRates = 'interestRates',
+  product = 'product',
   productId = 'productId',
+  product__id = 'product__id',
+  product__name = 'product__name',
+  product__protocol = 'product__protocol',
   protocol = 'protocol',
   sumRates = 'sumRates',
   token = 'token',
@@ -311,6 +363,7 @@ export type InterestRate = {
   dailyRateId: DailyInterestRate;
   hourlyRateId: HourlyInterestRate;
   id: Scalars['String']['output'];
+  product: Product;
   productId: Scalars['String']['output'];
   protocol: Scalars['String']['output'];
   rate: Scalars['BigDecimal']['output'];
@@ -395,6 +448,7 @@ export type InterestRate_Filter = {
   id_starts_with?: InputMaybe<Scalars['String']['input']>;
   id_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   or?: InputMaybe<Array<InputMaybe<InterestRate_Filter>>>;
+  product?: InputMaybe<Scalars['String']['input']>;
   productId?: InputMaybe<Scalars['String']['input']>;
   productId_contains?: InputMaybe<Scalars['String']['input']>;
   productId_contains_nocase?: InputMaybe<Scalars['String']['input']>;
@@ -415,6 +469,26 @@ export type InterestRate_Filter = {
   productId_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   productId_starts_with?: InputMaybe<Scalars['String']['input']>;
   productId_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_?: InputMaybe<Product_Filter>;
+  product_contains?: InputMaybe<Scalars['String']['input']>;
+  product_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_ends_with?: InputMaybe<Scalars['String']['input']>;
+  product_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_gt?: InputMaybe<Scalars['String']['input']>;
+  product_gte?: InputMaybe<Scalars['String']['input']>;
+  product_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  product_lt?: InputMaybe<Scalars['String']['input']>;
+  product_lte?: InputMaybe<Scalars['String']['input']>;
+  product_not?: InputMaybe<Scalars['String']['input']>;
+  product_not_contains?: InputMaybe<Scalars['String']['input']>;
+  product_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  product_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  product_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  product_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_starts_with?: InputMaybe<Scalars['String']['input']>;
+  product_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   protocol?: InputMaybe<Scalars['String']['input']>;
   protocol_contains?: InputMaybe<Scalars['String']['input']>;
   protocol_contains_nocase?: InputMaybe<Scalars['String']['input']>;
@@ -536,7 +610,11 @@ export enum InterestRate_OrderBy {
   hourlyRateId__token = 'hourlyRateId__token',
   hourlyRateId__updateCount = 'hourlyRateId__updateCount',
   id = 'id',
+  product = 'product',
   productId = 'productId',
+  product__id = 'product__id',
+  product__name = 'product__name',
+  product__protocol = 'product__protocol',
   protocol = 'protocol',
   rate = 'rate',
   timestamp = 'timestamp',
@@ -564,6 +642,150 @@ export enum OrderDirection {
   desc = 'desc'
 }
 
+export type Product = {
+  __typename?: 'Product';
+  dailyInterestRates: Array<DailyInterestRate>;
+  hourlyInterestRates: Array<HourlyInterestRate>;
+  id: Scalars['ID']['output'];
+  interestRates: Array<InterestRate>;
+  name: Scalars['String']['output'];
+  protocol: Scalars['String']['output'];
+  token: Token;
+  weeklyInterestRates: Array<WeeklyInterestRate>;
+};
+
+
+export type ProductDailyInterestRatesArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<DailyInterestRate_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<DailyInterestRate_Filter>;
+};
+
+
+export type ProductHourlyInterestRatesArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<HourlyInterestRate_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<HourlyInterestRate_Filter>;
+};
+
+
+export type ProductInterestRatesArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<InterestRate_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<InterestRate_Filter>;
+};
+
+
+export type ProductWeeklyInterestRatesArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<WeeklyInterestRate_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<WeeklyInterestRate_Filter>;
+};
+
+export type Product_Filter = {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<Product_Filter>>>;
+  dailyInterestRates_?: InputMaybe<DailyInterestRate_Filter>;
+  hourlyInterestRates_?: InputMaybe<HourlyInterestRate_Filter>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_gt?: InputMaybe<Scalars['ID']['input']>;
+  id_gte?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_lt?: InputMaybe<Scalars['ID']['input']>;
+  id_lte?: InputMaybe<Scalars['ID']['input']>;
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  interestRates_?: InputMaybe<InterestRate_Filter>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  name_contains?: InputMaybe<Scalars['String']['input']>;
+  name_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  name_ends_with?: InputMaybe<Scalars['String']['input']>;
+  name_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  name_gt?: InputMaybe<Scalars['String']['input']>;
+  name_gte?: InputMaybe<Scalars['String']['input']>;
+  name_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  name_lt?: InputMaybe<Scalars['String']['input']>;
+  name_lte?: InputMaybe<Scalars['String']['input']>;
+  name_not?: InputMaybe<Scalars['String']['input']>;
+  name_not_contains?: InputMaybe<Scalars['String']['input']>;
+  name_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  name_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  name_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  name_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  name_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  name_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  name_starts_with?: InputMaybe<Scalars['String']['input']>;
+  name_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  or?: InputMaybe<Array<InputMaybe<Product_Filter>>>;
+  protocol?: InputMaybe<Scalars['String']['input']>;
+  protocol_contains?: InputMaybe<Scalars['String']['input']>;
+  protocol_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  protocol_ends_with?: InputMaybe<Scalars['String']['input']>;
+  protocol_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  protocol_gt?: InputMaybe<Scalars['String']['input']>;
+  protocol_gte?: InputMaybe<Scalars['String']['input']>;
+  protocol_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  protocol_lt?: InputMaybe<Scalars['String']['input']>;
+  protocol_lte?: InputMaybe<Scalars['String']['input']>;
+  protocol_not?: InputMaybe<Scalars['String']['input']>;
+  protocol_not_contains?: InputMaybe<Scalars['String']['input']>;
+  protocol_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  protocol_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  protocol_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  protocol_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  protocol_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  protocol_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  protocol_starts_with?: InputMaybe<Scalars['String']['input']>;
+  protocol_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  token?: InputMaybe<Scalars['String']['input']>;
+  token_?: InputMaybe<Token_Filter>;
+  token_contains?: InputMaybe<Scalars['String']['input']>;
+  token_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  token_ends_with?: InputMaybe<Scalars['String']['input']>;
+  token_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  token_gt?: InputMaybe<Scalars['String']['input']>;
+  token_gte?: InputMaybe<Scalars['String']['input']>;
+  token_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  token_lt?: InputMaybe<Scalars['String']['input']>;
+  token_lte?: InputMaybe<Scalars['String']['input']>;
+  token_not?: InputMaybe<Scalars['String']['input']>;
+  token_not_contains?: InputMaybe<Scalars['String']['input']>;
+  token_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  token_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  token_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  token_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  token_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  token_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  token_starts_with?: InputMaybe<Scalars['String']['input']>;
+  token_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  weeklyInterestRates_?: InputMaybe<WeeklyInterestRate_Filter>;
+};
+
+export enum Product_OrderBy {
+  dailyInterestRates = 'dailyInterestRates',
+  hourlyInterestRates = 'hourlyInterestRates',
+  id = 'id',
+  interestRates = 'interestRates',
+  name = 'name',
+  protocol = 'protocol',
+  token = 'token',
+  token__address = 'token__address',
+  token__decimals = 'token__decimals',
+  token__id = 'token__id',
+  token__precision = 'token__precision',
+  token__symbol = 'token__symbol',
+  weeklyInterestRates = 'weeklyInterestRates'
+}
+
 export type Query = {
   __typename?: 'Query';
   /** Access to subgraph metadata */
@@ -574,6 +796,8 @@ export type Query = {
   hourlyInterestRates: Array<HourlyInterestRate>;
   interestRate?: Maybe<InterestRate>;
   interestRates: Array<InterestRate>;
+  product?: Maybe<Product>;
+  products: Array<Product>;
   token?: Maybe<Token>;
   tokens: Array<Token>;
   vaultState?: Maybe<VaultState>;
@@ -642,6 +866,24 @@ export type QueryInterestRatesArgs = {
 };
 
 
+export type QueryProductArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID']['input'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryProductsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Product_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Product_Filter>;
+};
+
+
 export type QueryTokenArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
@@ -705,6 +947,8 @@ export type Subscription = {
   hourlyInterestRates: Array<HourlyInterestRate>;
   interestRate?: Maybe<InterestRate>;
   interestRates: Array<InterestRate>;
+  product?: Maybe<Product>;
+  products: Array<Product>;
   token?: Maybe<Token>;
   tokens: Array<Token>;
   vaultState?: Maybe<VaultState>;
@@ -770,6 +1014,24 @@ export type SubscriptionInterestRatesArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   subgraphError?: _SubgraphErrorPolicy_;
   where?: InputMaybe<InterestRate_Filter>;
+};
+
+
+export type SubscriptionProductArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID']['input'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionProductsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Product_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Product_Filter>;
 };
 
 
@@ -957,6 +1219,7 @@ export type WeeklyInterestRate = {
   averageRate: Scalars['BigDecimal']['output'];
   id: Scalars['ID']['output'];
   interestRates: Array<InterestRate>;
+  product: Product;
   productId: Scalars['String']['output'];
   protocol: Scalars['String']['output'];
   sumRates: Scalars['BigDecimal']['output'];
@@ -996,6 +1259,7 @@ export type WeeklyInterestRate_Filter = {
   id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
   interestRates_?: InputMaybe<InterestRate_Filter>;
   or?: InputMaybe<Array<InputMaybe<WeeklyInterestRate_Filter>>>;
+  product?: InputMaybe<Scalars['String']['input']>;
   productId?: InputMaybe<Scalars['String']['input']>;
   productId_contains?: InputMaybe<Scalars['String']['input']>;
   productId_contains_nocase?: InputMaybe<Scalars['String']['input']>;
@@ -1016,6 +1280,26 @@ export type WeeklyInterestRate_Filter = {
   productId_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   productId_starts_with?: InputMaybe<Scalars['String']['input']>;
   productId_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_?: InputMaybe<Product_Filter>;
+  product_contains?: InputMaybe<Scalars['String']['input']>;
+  product_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_ends_with?: InputMaybe<Scalars['String']['input']>;
+  product_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_gt?: InputMaybe<Scalars['String']['input']>;
+  product_gte?: InputMaybe<Scalars['String']['input']>;
+  product_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  product_lt?: InputMaybe<Scalars['String']['input']>;
+  product_lte?: InputMaybe<Scalars['String']['input']>;
+  product_not?: InputMaybe<Scalars['String']['input']>;
+  product_not_contains?: InputMaybe<Scalars['String']['input']>;
+  product_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  product_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  product_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  product_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_starts_with?: InputMaybe<Scalars['String']['input']>;
+  product_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   protocol?: InputMaybe<Scalars['String']['input']>;
   protocol_contains?: InputMaybe<Scalars['String']['input']>;
   protocol_contains_nocase?: InputMaybe<Scalars['String']['input']>;
@@ -1076,7 +1360,11 @@ export enum WeeklyInterestRate_OrderBy {
   averageRate = 'averageRate',
   id = 'id',
   interestRates = 'interestRates',
+  product = 'product',
   productId = 'productId',
+  product__id = 'product__id',
+  product__name = 'product__name',
+  product__protocol = 'product__protocol',
   protocol = 'protocol',
   sumRates = 'sumRates',
   token = 'token',
