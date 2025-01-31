@@ -6,6 +6,7 @@ import {
   IToken,
   ITokenAmount,
   Maybe,
+  Token,
   TokenAmount,
   TransactionInfo,
 } from '@summerfi/sdk-common'
@@ -59,9 +60,20 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
   /** @see IErc20Contract.getToken */
   async getToken(): Promise<IToken> {
     if (!this._token) {
-      this._token = await this._tokensManager.getTokenByAddress({
+      const [tokenInfo, token] = await Promise.all([
+        this._retrieveTokenInfo(),
+        this._tokensManager.getTokenByAddress({
+          address: this.address,
+          chainInfo: this.chainInfo,
+        }),
+      ])
+
+      return Token.createFrom({
         address: this.address,
         chainInfo: this.chainInfo,
+        decimals: tokenInfo.decimals,
+        symbol: token.symbol || tokenInfo.symbol,
+        name: tokenInfo.name,
       })
     }
     return this._token
@@ -119,5 +131,44 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
       args: [params.spender.value, params.amount.toSolidityValue()],
       description: `Approve ${params.spender} to spend ${params.amount} of ${this.address}`,
     })
+  }
+
+  private async _retrieveTokenInfo(): Promise<{ decimals: number; symbol: string; name: string }> {
+    const abi = this.getAbi()
+    const address = this.address.value
+    const results = await this.blockchainClient.multicall({
+      contracts: [
+        {
+          abi,
+          address,
+          functionName: 'decimals',
+        },
+        {
+          abi,
+          address,
+          functionName: 'symbol',
+        },
+        {
+          abi,
+          address,
+          functionName: 'name',
+        },
+      ],
+    })
+    const [{ status: statusDecimals }, { status: statusSymbol }, { status: statusName }] = results
+    if (statusDecimals !== 'success' || statusSymbol !== 'success' || statusName !== 'success') {
+      throw new Error('Error retrieving token info')
+    }
+    const [{ result: decimals }, { result: symbol }, { result: name }] = results
+    if (!decimals || !symbol || !name) {
+      throw new Error(
+        'Contract reading succeeded but some values are undefined, this should not happen',
+      )
+    }
+    return {
+      decimals: Number(decimals),
+      symbol,
+      name,
+    }
   }
 }
