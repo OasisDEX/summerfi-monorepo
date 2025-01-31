@@ -60,7 +60,7 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
   /** @see IErc20Contract.getToken */
   async getToken(): Promise<IToken> {
     if (!this._token) {
-      const [tokenInfo, token] = await Promise.all([
+      const [tokenInfo, token] = await Promise.allSettled([
         this._retrieveTokenInfo(),
         this._tokensManager.getTokenByAddress({
           address: this.address,
@@ -68,12 +68,16 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
         }),
       ])
 
+      if (tokenInfo.status === 'rejected') {
+        throw tokenInfo.reason
+      }
+
       return Token.createFrom({
         address: this.address,
         chainInfo: this.chainInfo,
-        decimals: tokenInfo.decimals,
-        symbol: token.symbol || tokenInfo.symbol,
-        name: tokenInfo.name,
+        decimals: tokenInfo.value.decimals,
+        symbol: token.status === 'fulfilled' ? token.value.symbol : tokenInfo.value.symbol,
+        name: tokenInfo.value.name,
       })
     }
     return this._token
