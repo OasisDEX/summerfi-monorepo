@@ -28,6 +28,14 @@ export interface SidebarProps {
     loading?: boolean
     hidden?: boolean
   }
+  secondaryButton?: {
+    label: string
+    action?: () => void
+    url?: string
+    disabled?: boolean
+    loading?: boolean
+    hidden?: boolean
+  }
   footnote?: ReactNode
   error?: string | ReactNode
   asDesktopOnly?: boolean
@@ -54,6 +62,7 @@ export const Sidebar: FC<SidebarProps> = ({
   titleTabs,
   content,
   primaryButton,
+  secondaryButton,
   footnote,
   error,
   onTitleTabChange,
@@ -160,6 +169,22 @@ export const Sidebar: FC<SidebarProps> = ({
           <Link href={primaryButton.url} onClick={primaryButton.action} prefetch>
             <Button variant="primaryLarge" disabled={primaryButton.disabled}>
               {labelElement}
+            </Button>
+          </Link>
+        )}
+        {secondaryButton?.action && !secondaryButton.url && !secondaryButton.hidden && (
+          <Button
+            variant="secondaryLarge"
+            onClick={secondaryButton.action}
+            disabled={secondaryButton.disabled}
+          >
+            {secondaryButton.label}
+          </Button>
+        )}
+        {secondaryButton?.url && (
+          <Link href={secondaryButton.url} onClick={secondaryButton.action} prefetch>
+            <Button variant="secondaryLarge" disabled={secondaryButton.disabled}>
+              {secondaryButton.label}
             </Button>
           </Link>
         )}

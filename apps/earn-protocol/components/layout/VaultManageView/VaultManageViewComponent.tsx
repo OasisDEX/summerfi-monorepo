@@ -18,11 +18,13 @@ import {
   useTokenSelector,
   VaultManageGrid,
 } from '@summerfi/app-earn-ui'
+import { useTermsOfService } from '@summerfi/app-tos'
 import {
   type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
+  TOSStatus,
   TransactionAction,
   type UsersActivity,
 } from '@summerfi/app-types'
@@ -39,6 +41,7 @@ import {
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
 import { PositionPerformanceChart } from '@/components/organisms/Charts/PositionPerformanceChart'
+import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
@@ -49,6 +52,8 @@ import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { useRedirectToPositionView } from '@/hooks/use-redirect-to-position'
+import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
+import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useTransaction } from '@/hooks/use-transaction'
 import { useUserWallet } from '@/hooks/use-user-wallet'
@@ -193,6 +198,23 @@ export const VaultManageViewComponent = ({
     isEarnApp: true,
   })
 
+  const { signTosMessage } = useTermsOfServiceSigner()
+
+  const tosState = useTermsOfService({
+    // @ts-ignore
+    publicClient, // ignored for now, we need to align viem versionon all subpackages
+    signMessage: signTosMessage,
+    chainId: vaultChainId,
+    walletAddress: user?.address,
+    isSmartAccount: user?.type === 'sca',
+    version: TermsOfServiceVersion.APP_VERSION,
+    cookiePrefix: TermsOfServiceCookiePrefix.APP_TOKEN,
+    host: '/earn',
+    type: 'default',
+  })
+
+  const { tosSidebarProps } = useTermsOfServiceSidebar({ tosState, handleGoBack: backToInit })
+
   const displaySimulationGraph = resolvedAmountParsed.gt(0)
 
   const estimatedEarnings = useMemo(() => {
@@ -317,6 +339,17 @@ export const VaultManageViewComponent = ({
     error: sidebar.error,
     isMobile,
   }
+
+  const nextTransactionType = nextTransaction?.type
+
+  const resovledSidebarProps =
+    tosState.status !== TOSStatus.DONE &&
+    nextTransactionType &&
+    [TransactionType.Approve, TransactionType.Deposit, TransactionType.Withdraw].includes(
+      nextTransactionType,
+    )
+      ? tosSidebarProps
+      : sidebarProps
 
   // needed due to type duality
   const rebalancesList = `rebalances` in vault ? vault.rebalances : []
@@ -446,7 +479,7 @@ export const VaultManageViewComponent = ({
             </Expander>
           </div>,
         ]}
-        sidebarContent={<Sidebar {...sidebarProps} />}
+        sidebarContent={<Sidebar {...resovledSidebarProps} />}
         isMobile={isMobile}
       />
     </>
