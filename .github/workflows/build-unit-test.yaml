@@ -24,8 +24,6 @@ jobs:
       EARN_MIXPANEL_KEY: ${{ secrets.EARN_MIXPANEL_KEY }}
       NEXT_PUBLIC_EARN_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_EARN_MIXPANEL_KEY }}
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
-      TEMPORARY_MAINNET_SUBGRAPH: ${{ secrets.TEMPORARY_MAINNET_SUBGRAPH }}
-      TEMPORARY_MAINNET_RPC: ${{ secrets.TEMPORARY_MAINNET_RPC }}
       SDK_API_URL: ${{ secrets.SDK_API_URL }}
     steps:
       - name: Check out code
