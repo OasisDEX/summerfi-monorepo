@@ -25,7 +25,11 @@ type PortfolioPageProps = {
 }
 
 const PortfolioPage = async ({ params }: PortfolioPageProps) => {
-  const { walletAddress } = params
+  const { walletAddress: walletAddressRaw } = params
+
+  const walletAddress = walletAddressRaw.toLowerCase()
+
+  console.time('PortfolioPage')
 
   const [
     walletData,
@@ -46,16 +50,14 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     systemConfigHandler(),
     getGlobalRebalances(),
     getSumrDelegateStake({ walletAddress }),
-    fetchRaysLeaderboard({
-      userAddress: walletAddress.toLowerCase(),
-      page: '1',
-      limit: '1',
-    }),
+    fetchRaysLeaderboard({ userAddress: walletAddress, page: '1', limit: '1' }),
     getSumrBalances({ walletAddress }),
     getSumrStakingInfo(),
     getSumrDelegates(),
     getSumrToClaim({ walletAddress }),
   ])
+
+  console.timeEnd('PortfolioPage')
 
   const { vaults } = vaultsData
   const { rebalances } = rebalancesData

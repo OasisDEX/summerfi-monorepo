@@ -29,6 +29,6 @@ export const getVaultsList = unstableCache(
   },
   [],
   {
-    revalidate: REVALIDATION_TIMES.PORTFOLIO_DATA,
+    revalidate: REVALIDATION_TIMES.VAULTS_LIST,
   },
 )
