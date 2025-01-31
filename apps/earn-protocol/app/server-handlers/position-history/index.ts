@@ -31,35 +31,25 @@ export async function getPositionHistory({ network, address, vault }: GetPositio
 
   const subgraphsMap = process.env.NEXT_PUBLIC_IS_PRE_LAUNCH_VERSION
     ? {
-        [SDKNetwork.Mainnet]: `${process.env.SUBGRAPH_BASE}/summer-protocol/version/1.0.0-test-deployment/api`,
-        [SDKNetwork.Base]: `${process.env.SUBGRAPH_BASE}/summer-protocol-base/version/1.0.0-test-deployment/api`,
-        [SDKNetwork.ArbitrumOne]: `${process.env.SUBGRAPH_BASE}/summer-protocol-arbitrum/version/1.0.0-test-deployment/api`,
-      }
-    : {
         [SDKNetwork.Mainnet]: `${process.env.SUBGRAPH_BASE}/summer-protocol`,
         [SDKNetwork.Base]: `${process.env.SUBGRAPH_BASE}/summer-protocol-base`,
         [SDKNetwork.ArbitrumOne]: `${process.env.SUBGRAPH_BASE}/summer-protocol-arbitrum`,
       }
+    : {
+        [SDKNetwork.Mainnet]: `${process.env.SUBGRAPH_BASE}/summer-protocol/version/1.0.0-test-deployment/api`,
+        [SDKNetwork.Base]: `${process.env.SUBGRAPH_BASE}/summer-protocol-base/version/1.0.0-test-deployment/api`,
+        [SDKNetwork.ArbitrumOne]: `${process.env.SUBGRAPH_BASE}/summer-protocol-arbitrum/version/1.0.0-test-deployment/api`,
+      }
 
-  const clients = {
-    [SDKNetwork.Mainnet]: new GraphQLClient(subgraphsMap[SDKNetwork.Mainnet], {
-      fetch: customFetchCache,
-    }),
-    [SDKNetwork.Base]: new GraphQLClient(subgraphsMap[SDKNetwork.Base], {
-      fetch: customFetchCache,
-    }),
-    [SDKNetwork.ArbitrumOne]: new GraphQLClient(subgraphsMap[SDKNetwork.ArbitrumOne], {
-      fetch: customFetchCache,
-    }),
-  }
-
-  const isProperNetwork = (net: string): net is keyof typeof clients => net in clients
+  const isProperNetwork = (net: string): net is keyof typeof subgraphsMap => net in subgraphsMap
 
   if (!isProperNetwork(network)) {
     throw new Error(`getPositionHistory: No endpoint found for network: ${network}`)
   }
 
-  const networkGraphQlClient = clients[network as keyof typeof clients]
+  const networkGraphQlClient = new GraphQLClient(subgraphsMap[SDKNetwork.ArbitrumOne], {
+    fetch: customFetchCache,
+  })
   const request = await networkGraphQlClient.request<GetPositionHistoryQuery>(
     GetPositionHistoryDocument,
     {
