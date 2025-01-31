@@ -53,10 +53,11 @@ async function updateRewardRates(
   trx: Transaction<Database>,
   network: NetworkStatus,
   products: Product[],
+  updateStartTimestamp: number
 ) {
   const rewardRates = await rewardsService.getRewardRates(products, networkToChainId[network.network])
 
-  const currentTimestamp = Math.floor(Date.now() / 1000)
+  const currentTimestamp = updateStartTimestamp
 
   for (const product of products) {
     const productRewardRates = rewardRates[product.id]
@@ -105,24 +106,24 @@ async function updateRewardRates(
     }
 
     // Update hourly average
-    await updateHourlyRewardAverage(trx, network, product.id, totalRewardRate, hourTimestamp)
+    await updateHourlyRewardAverage(trx, network, product, totalRewardRate, hourTimestamp)
 
     // Update daily average
-    await updateDailyRewardAverage(trx, network, product.id, totalRewardRate, dayTimestamp)
+    await updateDailyRewardAverage(trx, network, product, totalRewardRate, dayTimestamp)
 
     // Update weekly average
-    await updateWeeklyRewardAverage(trx, network, product.id, totalRewardRate, weekTimestamp)
+    await updateWeeklyRewardAverage(trx, network, product, totalRewardRate, weekTimestamp)
   }
 }
 
 async function updateHourlyRewardAverage(
   trx: Transaction<Database>,
   network: NetworkStatus,
-  productId: string,
+  product: Product,
   newRate: string,
   hourTimestamp: number
 ) {
-  const hourlyRateId = `${network.network}-${productId}-${hourTimestamp}`
+  const hourlyRateId = `${network.network}-${product.id}-${hourTimestamp}`
 
   // Get or create hourly rate
   const hourlyRate = await trx
@@ -141,9 +142,9 @@ async function updateHourlyRewardAverage(
         sumRates: newRate,
         updateCount: 1,
         averageRate: newRate,
-        protocol: productId.split('-')[0],
+        protocol: product.protocol,
         network: network.network,
-        productId
+        productId: product.id
       })
       .execute()
   } else {
@@ -167,11 +168,11 @@ async function updateHourlyRewardAverage(
 async function updateDailyRewardAverage(
   trx: Transaction<Database>,
   network: NetworkStatus,
-  productId: string,
+  product: Product,
   newRate: string,
   dayTimestamp: number
 ) {
-  const dailyRateId = `${network.network}-${productId}-${dayTimestamp}`
+  const dailyRateId = `${network.network}-${product.id}-${dayTimestamp}`
 
   const dailyRate = await trx
     .selectFrom('dailyRewardRate')
@@ -188,9 +189,9 @@ async function updateDailyRewardAverage(
         sumRates: newRate,
         updateCount: 1,
         averageRate: newRate,
-        protocol: productId.split('-')[0],
+        protocol: product.protocol,
         network: network.network,
-        productId
+        productId: product.id
       })
       .execute()
   } else {
@@ -213,11 +214,11 @@ async function updateDailyRewardAverage(
 async function updateWeeklyRewardAverage(
   trx: Transaction<Database>,
   network: NetworkStatus,
-  productId: string,
+  product: Product,
   newRate: string,
   weekTimestamp: number
 ) {
-  const weeklyRateId = `${network.network}-${productId}-${weekTimestamp}`
+  const weeklyRateId = `${network.network}-${product.id}-${weekTimestamp}`
 
   const weeklyRate = await trx
     .selectFrom('weeklyRewardRate')
@@ -234,9 +235,9 @@ async function updateWeeklyRewardAverage(
         sumRates: newRate,
         updateCount: 1,
         averageRate: newRate,
-        protocol: productId.split('-')[0],
+        protocol: product.protocol,
         network: network.network,
-        productId
+        productId: product.id
       })
       .execute()
   } else {
@@ -320,7 +321,6 @@ export const handler = async (
 
   const clients = getAllClients(SUBGRAPH_BASE)
 
-
   await db.transaction().execute(async (trx) => {
     // Get all networks that need updating
     const networks = await trx
@@ -332,57 +332,34 @@ export const handler = async (
       .execute()
 
     for (const network of networks) {
+      const updateStartTimestamp = Math.floor(Date.now() / 1000)
+      
       try {
+        // Acquire lock by setting isUpdating to true
+        await trx
+          .updateTable('networkStatus')
+          .set({ isUpdating: true })
+          .where('network', '=', network.network)
+          .execute()
+
         const chainId = networkToChainId[network.network]
         const subgraphClient = clients[chainId]
         const products = await getSupportedProducts(subgraphClient)
 
-        // Try to acquire lock for this network
-        const updatedNetwork = await trx
-          .updateTable('networkStatus')
-          .set({ isUpdating: true })
-          .where('network', '=', network.network)
-          .where('isUpdating', '=', false)
-          .returningAll()
-          .executeTakeFirst()
+        // Token updates in SEPARATE transaction
+        await db.transaction().execute(async (tokenTrx) => {
+          await ensureTokensExist(tokenTrx, network, products)
+        })
 
-        if (!updatedNetwork) {
-          logger.info(`Network ${network.network} is already being updated`)
-          continue
-        }
+        // Rates updates in MAIN transaction, passing the start timestamp
+        await updateRewardRates(trx, network, products, updateStartTimestamp)
 
-        if (products.length === 0) {
-          logger.info(`No supported product IDs for network ${network.network}`)
-          continue
-        }
-
-        logger.info(`Processing network ${network.network} for products: ${products.map(product => product.id).join(', ')}`)
-
-        // Process each product ID
-
-        try {
-          // Ensure tokens exist first
-          await db.transaction().execute(trx =>
-            ensureTokensExist(trx, network, products)
-          )
-
-          // Then process reward and interest rates
-          await db.transaction().execute(trx =>
-            updateRewardRates(trx, network, products)
-          )
-
-        } catch (error) {
-          logger.error(`Error processing product ${products.map(product => product.id).join(', ')}`, { error })
-          // Continue with next product
-        }
-
-
-        // Update network status after processing all products
+        // Update network status only if everything succeeded
         await trx
           .updateTable('networkStatus')
           .set({
-            lastUpdatedAt: Math.floor(Date.now() / 1000),
-            lastBlockNumber: network.lastBlockNumber, // We might want to track this per product
+            lastUpdatedAt: updateStartTimestamp,
+            lastBlockNumber: network.lastBlockNumber,
             isUpdating: false
           })
           .where('network', '=', network.network)
@@ -390,7 +367,6 @@ export const handler = async (
 
       } catch (error) {
         logger.error(`Error processing network ${network.network}`, { error })
-
         // Release lock on error within transaction
         await trx
           .updateTable('networkStatus')

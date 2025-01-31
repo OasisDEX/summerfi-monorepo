@@ -5,11 +5,11 @@ import { Logger } from "@aws-lambda-powertools/logger"
 
 
 const morphoTokenByChainId = {
-  [ChainId.ARBITRUM]: '0x00',
-  [ChainId.OPTIMISM]: '0x000000',
+  [ChainId.ARBITRUM]: '0x',
+  [ChainId.OPTIMISM]: '0x',
   [ChainId.BASE]: '0xBAa5CC21fd487B8Fcc2F632f3F4E8D37262a0842',
   [ChainId.MAINNET]: '0x5956F3590814dC8f92Cf1D16d7D3B54e56Ec9090',
-  [ChainId.SEPOLIA]: '0x000000',
+  [ChainId.SEPOLIA]: '0x',
 }
 
 export interface RewardRate {
@@ -19,7 +19,7 @@ export interface RewardRate {
     address: string
     symbol: string
     decimals: number
-    precision: number
+    precision: string
   }
 }
 
@@ -210,7 +210,7 @@ export class RewardsService {
         address: reward.asset.address,
         symbol: reward.asset.symbol,
         decimals: reward.asset.decimals,
-        precision: reward.asset.decimals
+        precision: (10n ** BigInt(reward.asset.decimals)).toString()
       }
     }));
 
@@ -226,7 +226,7 @@ export class RewardsService {
           address: morphoTokenByChainId[chainId],
           symbol: 'Morpho',
           decimals: 18,
-          precision: 18
+          precision: (10n ** BigInt(18)).toString()
         }
       }
     ];
@@ -264,7 +264,7 @@ export class RewardsService {
               address: reward.rewardToken.address,
               symbol: reward.rewardToken.symbol,
               decimals: reward.rewardToken.decimals,
-              precision: reward.rewardToken.decimals
+              precision: (10n ** BigInt(reward.rewardToken.decimals)).toString()
             }
           }));
 
