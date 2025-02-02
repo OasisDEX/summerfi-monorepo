@@ -129,7 +129,7 @@ export const getSumrBalances = async ({
               }
             }
           },
-          [],
+          [walletAddress],
           {
             revalidate: REVALIDATION_TIMES.PORTFOLIO_DATA,
             tags: [walletAddress.toLowerCase()],

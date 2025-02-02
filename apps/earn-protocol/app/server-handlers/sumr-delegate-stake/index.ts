@@ -53,7 +53,7 @@ export const getSumrDelegateStake = async ({
           await backendSDK.armada.users.getSummerToken({
             chainInfo: getChainInfoByChainId(SDKChainId.BASE),
           }),
-        [],
+        [walletAddress],
         {
           revalidate: REVALIDATION_TIMES.PORTFOLIO_DATA,
           tags: [walletAddress.toLowerCase()],
@@ -171,7 +171,7 @@ export const getSumrDelegateStake = async ({
             stakedAmount,
           }
         },
-        [],
+        [walletAddress],
         {
           revalidate: REVALIDATION_TIMES.PORTFOLIO_DATA,
           tags: [walletAddress.toLowerCase()],

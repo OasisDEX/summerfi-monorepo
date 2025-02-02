@@ -29,17 +29,6 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
 
   const walletAddress = walletAddressRaw.toLowerCase()
 
-  console.time('portfolioWalletAssetsHandler')
-  console.time('getVaultsList')
-  console.time('getUserPositions')
-  console.time('systemConfigHandler')
-  console.time('getGlobalRebalances')
-  console.time('getSumrDelegateStake')
-  console.time('fetchRaysLeaderboard')
-  console.time('getSumrBalances')
-  console.time('getSumrStakingInfo')
-  console.time('getSumrDelegates')
-  console.time('getSumrToClaim')
   const [
     walletData,
     vaultsData,
@@ -53,39 +42,17 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     sumrDelegates,
     sumrToClaim,
   ] = await Promise.all([
-    portfolioWalletAssetsHandler(walletAddress).finally(() => {
-      console.timeEnd('portfolioWalletAssetsHandler')
-    }),
-    getVaultsList().finally(() => {
-      console.timeEnd('getVaultsList')
-    }),
-    getUserPositions({ walletAddress }).finally(() => {
-      console.timeEnd('getUserPositions')
-    }),
-    systemConfigHandler().finally(() => {
-      console.timeEnd('systemConfigHandler')
-    }),
-    getGlobalRebalances().finally(() => {
-      console.timeEnd('getGlobalRebalances')
-    }),
-    getSumrDelegateStake({ walletAddress }).finally(() => {
-      console.timeEnd('getSumrDelegateStake')
-    }),
-    fetchRaysLeaderboard({ userAddress: walletAddress, page: '1', limit: '1' }).finally(() => {
-      console.timeEnd('fetchRaysLeaderboard')
-    }),
-    getSumrBalances({ walletAddress }).finally(() => {
-      console.timeEnd('getSumrBalances')
-    }),
-    getSumrStakingInfo().finally(() => {
-      console.timeEnd('getSumrStakingInfo')
-    }),
-    getSumrDelegates().finally(() => {
-      console.timeEnd('getSumrDelegates')
-    }),
-    getSumrToClaim({ walletAddress }).finally(() => {
-      console.timeEnd('getSumrToClaim')
-    }),
+    portfolioWalletAssetsHandler(walletAddress),
+    getVaultsList(),
+    getUserPositions({ walletAddress }),
+    systemConfigHandler(),
+    getGlobalRebalances(),
+    getSumrDelegateStake({ walletAddress }),
+    fetchRaysLeaderboard({ userAddress: walletAddress, page: '1', limit: '1' }),
+    getSumrBalances({ walletAddress }),
+    getSumrStakingInfo(),
+    getSumrDelegates(),
+    getSumrToClaim({ walletAddress }),
   ])
 
   const { vaults } = vaultsData

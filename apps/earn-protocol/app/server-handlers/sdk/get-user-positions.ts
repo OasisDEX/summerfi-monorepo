@@ -28,7 +28,7 @@ export async function getUserPositions({ walletAddress }: { walletAddress: strin
               user,
             })
           },
-          [],
+          [walletAddress],
           {
             revalidate: REVALIDATION_TIMES.PORTFOLIO_DATA,
             tags: [walletAddress.toLowerCase()],

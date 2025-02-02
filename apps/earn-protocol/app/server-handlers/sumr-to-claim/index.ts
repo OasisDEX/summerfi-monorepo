@@ -44,7 +44,7 @@ export const getSumrToClaim = async ({
         ),
       }
     },
-    [],
+    [walletAddress],
     {
       revalidate: REVALIDATION_TIMES.PORTFOLIO_DATA,
       tags: [walletAddress.toLowerCase()],
