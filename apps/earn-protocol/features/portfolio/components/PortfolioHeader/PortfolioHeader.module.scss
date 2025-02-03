@@ -12,6 +12,52 @@
   }
 }
 
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.headerWrapper {
+  display: inline-flex;
+  align-items: center;
+
+  &>div {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  svg {
+    transition: all 0.3s;
+    opacity: 0;
+    pointer-events: none;
+    margin-left: -10px;
+  }
+
+  &:hover {
+    svg {
+      opacity: 1;
+      pointer-events: all;
+      margin-left: 10px;
+      cursor: pointer
+    }
+  }
+}
+
+.refreshing {
+  svg {
+    opacity: 1;
+    pointer-events: all;
+    margin-left: 10px;
+    cursor: pointer;
+    animation: rotate 1s linear infinite;
+  }
+}
+
 .secondRowWrapper {
   display: flex;
   justify-content: space-between;
