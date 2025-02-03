@@ -1,5 +1,3 @@
-import { unstable_cache as unstableCache } from 'next/cache'
-
 import { REVALIDATION_TIMES } from '@/constants/revalidations'
 
 export interface SumrDelegates {
@@ -36,20 +34,19 @@ interface TallyResponse {
   }[]
 }
 
-export const getSumrDelegates = unstableCache(
-  async (): Promise<SumrDelegates[]> => {
-    const apiKey = process.env.TALLY_API_KEY ?? ''
+export const getSumrDelegates = async (): Promise<SumrDelegates[]> => {
+  const apiKey = process.env.TALLY_API_KEY ?? ''
 
-    if (!apiKey) {
-      throw new Error('TALLY_API_KEY is not set')
-    }
+  if (!apiKey) {
+    throw new Error('TALLY_API_KEY is not set')
+  }
 
-    let allDelegates: SumrDelegates[] = []
-    let hasMore = true
-    let cursor: string | null = null
+  let allDelegates: SumrDelegates[] = []
+  let hasMore = true
+  let cursor: string | null = null
 
-    while (hasMore) {
-      const query = `query {
+  while (hasMore) {
+    const query = `query {
       delegates(
         input: {
           filters: {
@@ -84,47 +81,42 @@ export const getSumrDelegates = unstableCache(
       }
     }`
 
-      const response = await fetch('https://api.tally.xyz/query', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Api-Key': apiKey,
-        },
-        body: JSON.stringify({ query }),
-        next: {
-          revalidate: REVALIDATION_TIMES.SUMR_DELEGATES,
-          tags: ['sumr-delegates'],
-        },
-      })
+    const response = await fetch('https://api.tally.xyz/query', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Api-Key': apiKey,
+      },
+      body: JSON.stringify({ query }),
+      next: {
+        revalidate: REVALIDATION_TIMES.SUMR_DELEGATES,
+        tags: ['sumr-delegates'],
+      },
+    })
 
-      if (!response.ok) {
-        throw new Error(`Tally API request failed: ${response.statusText}`)
-      }
-
-      const result: TallyResponse = await response.json()
-
-      if (result.errors) {
-        throw new Error(`GraphQL Error: ${result.errors[0].message}`)
-      }
-
-      if (!result.data) {
-        // eslint-disable-next-line no-console
-        console.error('No data returned from Tally API')
-
-        return allDelegates
-      }
-
-      allDelegates = [...allDelegates, ...result.data.delegates.nodes]
-
-      // If we got less than the requested limit, we've reached the end
-      hasMore = result.data.delegates.nodes.length === 20
-      cursor = result.data.delegates.pageInfo.lastCursor
+    if (!response.ok) {
+      throw new Error(`Tally API request failed: ${response.statusText}`)
     }
 
-    return allDelegates
-  },
-  [],
-  {
-    revalidate: REVALIDATION_TIMES.PORTFOLIO_DATA,
-  },
-)
+    const result: TallyResponse = await response.json()
+
+    if (result.errors) {
+      throw new Error(`GraphQL Error: ${result.errors[0].message}`)
+    }
+
+    if (!result.data) {
+      // eslint-disable-next-line no-console
+      console.error('No data returned from Tally API')
+
+      return allDelegates
+    }
+
+    allDelegates = [...allDelegates, ...result.data.delegates.nodes]
+
+    // If we got less than the requested limit, we've reached the end
+    hasMore = result.data.delegates.nodes.length === 20
+    cursor = result.data.delegates.pageInfo.lastCursor
+  }
+
+  return allDelegates
+}

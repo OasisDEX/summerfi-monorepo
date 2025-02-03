@@ -39,7 +39,6 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
 
   const sumrDecayFactors = await getSumrDecayFactor(
     sumrDelegates.map((delegate) => delegate.account.address),
-    walletAddress,
   )
 
   const externalData: ClaimDelegateExternalData = {

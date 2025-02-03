@@ -183,7 +183,6 @@ export const icons = {
   rays: customLazy(() => import('./icons/rays.svg?react')),
   rbn_circle_color: customLazy(() => import('./icons/rbn_circle_color.svg?react')),
   rebalancing: customLazy(() => import('./icons/rebalancing.svg?react')),
-  refresh: customLazy(() => import('./icons/refresh.svg?react')),
   renbtc_circle_color: customLazy(() => import('./icons/renbtc_circle_color.svg?react')),
   reth_circle_color: customLazy(() => import('./icons/reth_circle_color.svg?react')),
   reth_eth: customLazy(() => import('./icons/reth_eth.svg?react')),

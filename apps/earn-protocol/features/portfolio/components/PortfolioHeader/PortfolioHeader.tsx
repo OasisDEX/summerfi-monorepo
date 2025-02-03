@@ -3,12 +3,10 @@ import { useUser } from '@account-kit/react'
 import { Button, DataBlock, Dropdown, Icon, LoadableAvatar, Text } from '@summerfi/app-earn-ui'
 import { type DropdownRawOption } from '@summerfi/app-types'
 import { formatAddress, formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
-import clsx from 'clsx'
 
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
 import { transakNetworkOptions } from '@/features/transak/consts'
 import { type TransakNetworkOption } from '@/features/transak/types'
-import { revalidateUser } from '@/helpers/revalidate-user'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './PortfolioHeader.module.scss'
@@ -47,7 +45,6 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
   totalSumr,
   totalWalletValue,
 }) => {
-  const [isRefreshing, setIsRefreshing] = useState(false)
   const { userWalletAddress } = useUserWallet()
   const [isTransakOpen, setIsTransakOpen] = useState(false)
   const [transakNetwork, setTransakNetwork] = useState<TransakNetworkOption | null>(null)
@@ -58,28 +55,11 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
     setIsTransakOpen(true)
   }
 
-  const handleUserRefresh = () => {
-    revalidateUser(userWalletAddress)
-    setIsRefreshing(true)
-    setTimeout(() => {
-      setIsRefreshing(false)
-    }, 5000)
-  }
-
   return (
     <>
       <div className={classNames.firstRowWrapper}>
-        <Text
-          as="h2"
-          variant="h2"
-          className={clsx(classNames.headerWrapper, {
-            [classNames.refreshing]: isRefreshing,
-          })}
-        >
+        <Text as="h2" variant="h2">
           Portfolio
-          <div onClick={handleUserRefresh}>
-            <Icon iconName="refresh" size={14} />
-          </div>
         </Text>
         <div style={{ display: 'flex', gap: 'var(--spacing-space-x-small)' }}>
           {/* <Button variant="secondaryLarge" style={{ minWidth: 'unset' }}>
