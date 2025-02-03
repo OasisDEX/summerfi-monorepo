@@ -53,7 +53,7 @@ import { getUnstakeTx } from './armada-protocol-handlers/users/getUnstakeTx'
 import { getUserEarnedRewards } from './armada-protocol-handlers/users/getUserEarnedRewards'
 import { getUserBalance } from './armada-protocol-handlers/users/getUserBalance'
 import { getSummerToken } from './armada-protocol-handlers/users/getSummerToken'
-import { pong } from 'src/handlers/debugPong'
+import { pong } from './handlers/debugPong'
 
 /**
  * Server
