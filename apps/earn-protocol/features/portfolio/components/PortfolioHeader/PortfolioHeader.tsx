@@ -110,6 +110,22 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
       <div className={classNames.secondRowWrapper}>
         <div style={{ display: 'flex', gap: 'var(--spacing-space-x-small)', alignItems: 'center' }}>
           <LoadableAvatar
+            fallback={
+              <svg
+                viewBox="0 0 6.35 6.35"
+                color="inherit"
+                display="inline-block"
+                width={48}
+                height={48}
+              >
+                <circle
+                  style={{ fill: '#9d9d9d', fillOpacity: 0.35, strokeWidth: 0.34 }}
+                  cx="3.175"
+                  cy="3.175"
+                  r="3.175"
+                />
+              </svg>
+            }
             size={48}
             name={btoa(walletAddress)}
             variant="pixel"
