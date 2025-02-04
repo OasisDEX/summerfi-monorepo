@@ -78,7 +78,7 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
         >
           Portfolio
           <div onClick={handleUserRefresh}>
-            <Icon iconName="refresh" size={14} />
+            <Icon iconName="refresh" size={16} />
           </div>
         </Text>
         <div style={{ display: 'flex', gap: 'var(--spacing-space-x-small)' }}>

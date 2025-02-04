@@ -32,18 +32,16 @@
   }
 
   svg {
+    opacity: 0.6;
+    cursor: pointer;
+    margin-left: 10px;
     transition: all 0.3s;
-    opacity: 0;
-    pointer-events: none;
-    margin-left: -10px;
   }
 
   &:hover {
     svg {
       opacity: 1;
-      pointer-events: all;
-      margin-left: 10px;
-      cursor: pointer
+      color: var(--earn-protocol-primary-100);
     }
   }
 }
@@ -51,10 +49,8 @@
 .refreshing {
   svg {
     opacity: 1;
-    pointer-events: all;
-    margin-left: 10px;
-    cursor: pointer;
     animation: rotate 1s linear infinite;
+    color: var(--earn-protocol-primary-100);
   }
 }
 
