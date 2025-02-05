@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 
 import { isPreLaunchVersion } from '@/constants/is-pre-launch-version'
+import { YieldTrendView } from '@/features/yield-trend/YieldTrendView'
 
 const YieldTrendPage = () => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -8,7 +9,7 @@ const YieldTrendPage = () => {
     return redirect('/sumr')
   }
 
-  return <div>empty page</div>
+  return <YieldTrendView />
 }
 
 export default YieldTrendPage

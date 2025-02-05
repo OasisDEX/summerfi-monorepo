@@ -13,7 +13,7 @@ import classNames from './HeadingWithCards.module.scss'
 interface HeadingWithSocialAndCardsProps {
   title: string
   description: string
-  cards: { title: ReactNode; value: string; description: string }[]
+  cards?: { title: ReactNode; value: string; description: string }[]
   social: {
     linkToCopy: string
     linkToShare: string
@@ -48,20 +48,22 @@ export const HeadingWithCards: FC<HeadingWithSocialAndCardsProps> = ({
       <Text as="p" variant="p2" className={classNames.description}>
         {description}
       </Text>
-      <div className={classNames.cardsWrapper}>
-        {cards.map((card) => (
-          <Card key={card.value} className={classNames.card}>
-            <DataBlock
-              title={card.title}
-              titleSize="medium"
-              value={card.value}
-              valueSize="largeColorful"
-              subValue={card.description}
-              subValueSize="small"
-            />
-          </Card>
-        ))}
-      </div>
+      {cards && (
+        <div className={classNames.cardsWrapper}>
+          {cards.map((card) => (
+            <Card key={card.value} className={classNames.card}>
+              <DataBlock
+                title={card.title}
+                titleSize="medium"
+                value={card.value}
+                valueSize="largeColorful"
+                subValue={card.description}
+                subValueSize="small"
+              />
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
