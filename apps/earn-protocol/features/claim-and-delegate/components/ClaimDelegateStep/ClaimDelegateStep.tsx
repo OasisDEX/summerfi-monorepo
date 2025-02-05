@@ -42,6 +42,7 @@ import {
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
+import { revalidateUser } from '@/helpers/revalidate-user'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
@@ -233,10 +234,14 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
 
     dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.PENDING })
 
-    await sumrDelegateTransaction(updateDelegatee).catch((err) => {
-      // eslint-disable-next-line no-console
-      console.error('Error delegating SUMR:', err)
-    })
+    await sumrDelegateTransaction(updateDelegatee)
+      .catch((err) => {
+        // eslint-disable-next-line no-console
+        console.error('Error delegating SUMR:', err)
+      })
+      .finally(() => {
+        revalidateUser(userWalletAddress)
+      })
   }
 
   const mappedSumrDelegatesData = mergeDelegatesData(

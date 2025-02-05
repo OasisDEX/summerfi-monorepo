@@ -3,6 +3,7 @@ import { type SidebarProps, Text, useMobileCheck, WithArrow } from '@summerfi/ap
 import { type TOSState, TOSStatus } from '@summerfi/app-types'
 import Link from 'next/link'
 
+import { TermsOfServiceCookiePrefix } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 
 import { useRiskVerification } from './use-risk-verification'
@@ -35,7 +36,7 @@ export const useTermsOfServiceSidebar = ({
 }) => {
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
-  const { checkRisk } = useRiskVerification()
+  const { checkRisk } = useRiskVerification({ cookiePrefix: TermsOfServiceCookiePrefix.APP_TOKEN })
   const tosStatus = tosState.status
   const tosAction = 'action' in tosState ? tosState.action : undefined
 

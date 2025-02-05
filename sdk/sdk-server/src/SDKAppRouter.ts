@@ -54,11 +54,15 @@ import { getUserEarnedRewards } from './armada-protocol-handlers/users/getUserEa
 import { getUserBalance } from './armada-protocol-handlers/users/getUserBalance'
 import { getSummerToken } from './armada-protocol-handlers/users/getSummerToken'
 import { getDelegationChainLength } from './armada-protocol-handlers/users/getDelegationChainLength'
+import { pong } from './handlers/debugPong'
 
 /**
  * Server
  */
 export const sdkAppRouter = router({
+  debug: {
+    ping: pong,
+  },
   protocols: {
     getPosition: getPosition,
     getLendingPool: getLendingPool,

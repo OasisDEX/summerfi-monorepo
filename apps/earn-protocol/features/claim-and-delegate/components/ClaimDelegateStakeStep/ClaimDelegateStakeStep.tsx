@@ -42,6 +42,7 @@ import {
   ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
 import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
+import { revalidateUser } from '@/helpers/revalidate-user'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { usePublicClient } from '@/hooks/use-public-client'
 import { useTokenBalance } from '@/hooks/use-token-balance'
@@ -226,10 +227,14 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
     if (stakeSumrTransaction) {
       dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.PENDING })
 
-      await stakeSumrTransaction().catch((err) => {
-        // eslint-disable-next-line no-console
-        console.error('Error staking SUMR:', err)
-      })
+      await stakeSumrTransaction()
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error('Error staking SUMR:', err)
+        })
+        .finally(() => {
+          revalidateUser(userWalletAddress)
+        })
     }
   }
 
@@ -250,10 +255,14 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
         payload: amountParsedUnstake.times(-1).toString(),
       })
 
-      await unstakeSumrTransaction().catch((err) => {
-        // eslint-disable-next-line no-console
-        console.error('Error unstaking SUMR:', err)
-      })
+      await unstakeSumrTransaction()
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error('Error unstaking SUMR:', err)
+        })
+        .finally(() => {
+          revalidateUser(userWalletAddress)
+        })
     }
   }
 

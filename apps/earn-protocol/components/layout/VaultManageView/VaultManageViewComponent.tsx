@@ -76,7 +76,7 @@ export const VaultManageViewComponent = ({
   viewWalletAddress: string
 }) => {
   const user = useUser()
-  const { userWalletAddress } = useUserWallet()
+  const { userWalletAddress, isLoadingAccount } = useUserWallet()
   const ownerView = viewWalletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
   const { publicClient } = useNetworkAlignedClient()
 
@@ -356,7 +356,7 @@ export const VaultManageViewComponent = ({
 
   return (
     <>
-      <NonOwnerPositionBanner isOwner={ownerView} />
+      <NonOwnerPositionBanner isOwner={ownerView} walletStateLoaded={!isLoadingAccount} />
       <VaultManageGrid
         vault={vault}
         vaults={vaults}

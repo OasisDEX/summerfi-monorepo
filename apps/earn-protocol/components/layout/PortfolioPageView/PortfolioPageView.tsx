@@ -40,7 +40,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   rebalancesList,
   totalRays,
 }) => {
-  const { userWalletAddress } = useUserWallet()
+  const { userWalletAddress, isLoadingAccount } = useUserWallet()
   const ownerView = walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
   const [activeTab, updateTab] = useTabStateQuery({
     tabs: PortfolioTabs,
@@ -139,7 +139,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
 
   return (
     <>
-      <NonOwnerPortfolioBanner isOwner={ownerView} />
+      <NonOwnerPortfolioBanner isOwner={ownerView} walletStateLoaded={!isLoadingAccount} />
       <div className={classNames.portfolioPageViewWrapper}>
         <PortfolioHeader
           walletAddress={walletAddress}
