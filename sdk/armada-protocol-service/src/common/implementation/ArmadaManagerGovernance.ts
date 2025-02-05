@@ -251,6 +251,10 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       functionName: 'getDelegationChainLength',
       args: [params.user.wallet.address.value],
     })
-    return Number(length.toString())
+    const num = Number(length.toString())
+    if (!Number.isSafeInteger(num)) {
+      throw new Error('Delegation chain length exceeds safe integer limits')
+    }
+    return num
   }
 }

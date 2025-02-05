@@ -111,7 +111,7 @@ export interface IArmadaManagerGovernance {
    *
    * @param user The user
    *
-   * @returns The transaction information
+   * @returns The length of the delegation chain
    */
   getDelegationChainLength: (params: { user: IUser }) => Promise<number>
 }
