@@ -11,8 +11,8 @@ export const getDelegationChainLength = publicProcedure
   .query(async (opts) => {
     try {
       return await opts.ctx.armadaManager.governance.getDelegationChainLength(opts.input)
-    } catch (error) {
-      console.error(`Failed to get delegation chain length: ${error}`)
-      throw new Error(`Failed to get delegation chain length: ${error}`)
+    } catch (error: unknown) {
+      console.error(`Failed to get delegation chain length for user ${opts.input.user}: ${error}`)
+      throw error instanceof Error ? error : new Error(String(error))
     }
   })
