@@ -1,6 +1,4 @@
-import { FaqSection, Text } from '@summerfi/app-earn-ui'
-
-import classNames from './LandingFaqSection.module.scss'
+import { Text } from '@summerfi/app-earn-ui'
 
 export const vaultFaqData = [
   {
@@ -108,13 +106,7 @@ export const vaultFaqData = [
         >
           These yields are generated through four core strategies:
         </Text>
-        <ul
-          style={{
-            listStyleType: 'disc',
-            paddingLeft: 'var(--general-space-32)',
-            marginBottom: 'var(--general-space-12)',
-          }}
-        >
+        <ul style={{ listStyleType: 'disc', paddingLeft: '32px' }}>
           <li>
             <Text variant="p2" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
               <strong>Lending:</strong> Earn interest by providing liquidity to borrowers.
@@ -147,13 +139,3 @@ export const vaultFaqData = [
     ),
   },
 ]
-
-export const LandingFaqSection = () => {
-  return (
-    <FaqSection
-      headerClassName={classNames.faqSectionHeaderWrapper}
-      faqSectionClassName={classNames.faqSectionBlockWrapper}
-      data={vaultFaqData}
-    />
-  )
-}
