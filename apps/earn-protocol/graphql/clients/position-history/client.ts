@@ -128,8 +128,6 @@ export type Ark = {
   details?: Maybe<Scalars['String']['output']>;
   /**  All withdrawals made from this vault  */
   disembarks: Array<Disembark>;
-  /**  Type of fees incurred to the user. Should include all fees that apply to the vault  */
-  fees: Array<VaultFee>;
   /**  Vault hourly snapshots  */
   hourlySnapshots: Array<ArkHourlySnapshot>;
   /**  Smart contract address of the vault  */
@@ -198,15 +196,6 @@ export type ArkDisembarksArgs = {
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<Disembark_Filter>;
-};
-
-
-export type ArkFeesArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<VaultFee_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  where?: InputMaybe<VaultFee_Filter>;
 };
 
 
@@ -464,6 +453,7 @@ export enum ArkDailySnapshot_OrderBy {
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   vault__stakingRewardsManager = 'vault__stakingRewardsManager',
   vault__symbol = 'vault__symbol',
+  vault__tipRate = 'vault__tipRate',
   vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
   vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
   vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
@@ -688,6 +678,7 @@ export enum ArkHourlySnapshot_OrderBy {
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   vault__stakingRewardsManager = 'vault__stakingRewardsManager',
   vault__symbol = 'vault__symbol',
+  vault__tipRate = 'vault__tipRate',
   vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
   vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
   vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
@@ -817,13 +808,6 @@ export type Ark_Filter = {
   details_starts_with?: InputMaybe<Scalars['String']['input']>;
   details_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   disembarks_?: InputMaybe<Disembark_Filter>;
-  fees?: InputMaybe<Array<Scalars['String']['input']>>;
-  fees_?: InputMaybe<VaultFee_Filter>;
-  fees_contains?: InputMaybe<Array<Scalars['String']['input']>>;
-  fees_contains_nocase?: InputMaybe<Array<Scalars['String']['input']>>;
-  fees_not?: InputMaybe<Array<Scalars['String']['input']>>;
-  fees_not_contains?: InputMaybe<Array<Scalars['String']['input']>>;
-  fees_not_contains_nocase?: InputMaybe<Array<Scalars['String']['input']>>;
   hourlySnapshots_?: InputMaybe<ArkHourlySnapshot_Filter>;
   id?: InputMaybe<Scalars['ID']['input']>;
   id_gt?: InputMaybe<Scalars['ID']['input']>;
@@ -989,7 +973,6 @@ export enum Ark_OrderBy {
   depositLimit = 'depositLimit',
   details = 'details',
   disembarks = 'disembarks',
-  fees = 'fees',
   hourlySnapshots = 'hourlySnapshots',
   id = 'id',
   inputToken = 'inputToken',
@@ -1042,6 +1025,7 @@ export enum Ark_OrderBy {
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   vault__stakingRewardsManager = 'vault__stakingRewardsManager',
   vault__symbol = 'vault__symbol',
+  vault__tipRate = 'vault__tipRate',
   vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
   vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
   vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
@@ -1374,6 +1358,7 @@ export enum Board_OrderBy {
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   vault__stakingRewardsManager = 'vault__stakingRewardsManager',
   vault__symbol = 'vault__symbol',
+  vault__tipRate = 'vault__tipRate',
   vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
   vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
   vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
@@ -1493,6 +1478,7 @@ export enum DailyInterestRate_OrderBy {
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   vault__stakingRewardsManager = 'vault__stakingRewardsManager',
   vault__symbol = 'vault__symbol',
+  vault__tipRate = 'vault__tipRate',
   vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
   vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
   vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
@@ -1835,6 +1821,7 @@ export enum Deposit_OrderBy {
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   vault__stakingRewardsManager = 'vault__stakingRewardsManager',
   vault__symbol = 'vault__symbol',
+  vault__tipRate = 'vault__tipRate',
   vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
   vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
   vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
@@ -2157,6 +2144,7 @@ export enum Disembark_OrderBy {
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   vault__stakingRewardsManager = 'vault__stakingRewardsManager',
   vault__symbol = 'vault__symbol',
+  vault__tipRate = 'vault__tipRate',
   vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
   vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
   vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
@@ -2630,6 +2618,7 @@ export enum HourlyInterestRate_OrderBy {
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   vault__stakingRewardsManager = 'vault__stakingRewardsManager',
   vault__symbol = 'vault__symbol',
+  vault__tipRate = 'vault__tipRate',
   vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
   vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
   vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
@@ -3515,6 +3504,7 @@ export enum Position_OrderBy {
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   vault__stakingRewardsManager = 'vault__stakingRewardsManager',
   vault__symbol = 'vault__symbol',
+  vault__tipRate = 'vault__tipRate',
   vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
   vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
   vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD',
@@ -3752,6 +3742,7 @@ export enum PostActionArkSnapshot_OrderBy {
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   vault__stakingRewardsManager = 'vault__stakingRewardsManager',
   vault__symbol = 'vault__symbol',
+  vault__tipRate = 'vault__tipRate',
   vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
   vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
   vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
@@ -3974,6 +3965,7 @@ export enum PostActionVaultSnapshot_OrderBy {
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   vault__stakingRewardsManager = 'vault__stakingRewardsManager',
   vault__symbol = 'vault__symbol',
+  vault__tipRate = 'vault__tipRate',
   vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
   vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
   vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
@@ -5367,6 +5359,7 @@ export enum Rebalance_OrderBy {
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   vault__stakingRewardsManager = 'vault__stakingRewardsManager',
   vault__symbol = 'vault__symbol',
+  vault__tipRate = 'vault__tipRate',
   vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
   vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
   vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
@@ -5515,6 +5508,7 @@ export enum RewardsManager_OrderBy {
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   vault__stakingRewardsManager = 'vault__stakingRewardsManager',
   vault__symbol = 'vault__symbol',
+  vault__tipRate = 'vault__tipRate',
   vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
   vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
   vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
@@ -5857,6 +5851,7 @@ export enum Staked_OrderBy {
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   vault__stakingRewardsManager = 'vault__stakingRewardsManager',
   vault__symbol = 'vault__symbol',
+  vault__tipRate = 'vault__tipRate',
   vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
   vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
   vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
@@ -7131,6 +7126,7 @@ export enum Unstaked_OrderBy {
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   vault__stakingRewardsManager = 'vault__stakingRewardsManager',
   vault__symbol = 'vault__symbol',
+  vault__tipRate = 'vault__tipRate',
   vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
   vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
   vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
@@ -7469,7 +7465,7 @@ export type Vault = {
   deposits: Array<Deposit>;
   /**  Details of the Fleet Commander  */
   details?: Maybe<Scalars['String']['output']>;
-  /**  Type of fees incurred to the user. Should include all fees that apply to the vault  */
+  /**  fees incurred to the user  */
   fees: Array<VaultFee>;
   hourlyInterestRates: Array<HourlyInterestRate>;
   /**  Vault hourly snapshots  */
@@ -7520,6 +7516,7 @@ export type Vault = {
   stakingRewardsManager: Scalars['Bytes']['output'];
   /**  Symbol of liquidity pool (e.g. 3CRV)  */
   symbol?: Maybe<Scalars['String']['output']>;
+  tipRate: Scalars['BigInt']['output'];
   /**  Current TVL (Total Value Locked) of this pool in USD  */
   totalValueLockedUSD: Scalars['BigDecimal']['output'];
   weeklyInterestRates: Array<WeeklyInterestRate>;
@@ -7980,6 +7977,7 @@ export enum VaultDailySnapshot_OrderBy {
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   vault__stakingRewardsManager = 'vault__stakingRewardsManager',
   vault__symbol = 'vault__symbol',
+  vault__tipRate = 'vault__tipRate',
   vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
   vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
   vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
@@ -7987,12 +7985,26 @@ export enum VaultDailySnapshot_OrderBy {
 
 export type VaultFee = {
   __typename?: 'VaultFee';
+  /**  Block number of the transaction  */
+  blockNumber: Scalars['BigInt']['output'];
   /**  Fee as a percentage of the trade (swap) amount. Does not always apply  */
   feePercentage?: Maybe<Scalars['BigDecimal']['output']>;
   /**  Type of fee this vault uses  */
   feeType: VaultFeeType;
   /**  { Vault fee type }-{ Vault address }  */
   id: Scalars['ID']['output'];
+  /**  Amount of input token that is charged for the fee  */
+  inputTokenAmount?: Maybe<Scalars['BigInt']['output']>;
+  /**  Amount of input token that is charged for the fee, normalized in USD  */
+  inputTokenAmountNormalizedInUSD?: Maybe<Scalars['BigDecimal']['output']>;
+  /**  Amount of output token that is charged for the fee  */
+  outputTokenAmount?: Maybe<Scalars['BigInt']['output']>;
+  /**  Timestamp of the transaction  */
+  timestamp: Scalars['BigInt']['output'];
+  /**  Token that is charged for the fee  */
+  token: Token;
+  /**  Vault that is charged for the fee  */
+  vault: Vault;
 };
 
 export enum VaultFeeType {
@@ -8010,6 +8022,14 @@ export type VaultFee_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
   and?: InputMaybe<Array<InputMaybe<VaultFee_Filter>>>;
+  blockNumber?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  blockNumber_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_not?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   feePercentage?: InputMaybe<Scalars['BigDecimal']['input']>;
   feePercentage_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   feePercentage_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -8030,13 +8050,133 @@ export type VaultFee_Filter = {
   id_lte?: InputMaybe<Scalars['ID']['input']>;
   id_not?: InputMaybe<Scalars['ID']['input']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  inputTokenAmount?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenAmountNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenAmountNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenAmountNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenAmountNormalizedInUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenAmountNormalizedInUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenAmountNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenAmountNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenAmountNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenAmount_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenAmount_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenAmount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  inputTokenAmount_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenAmount_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenAmount_not?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenAmount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   or?: InputMaybe<Array<InputMaybe<VaultFee_Filter>>>;
+  outputTokenAmount?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenAmount_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenAmount_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenAmount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  outputTokenAmount_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenAmount_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenAmount_not?: InputMaybe<Scalars['BigInt']['input']>;
+  outputTokenAmount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  timestamp?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  timestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  token?: InputMaybe<Scalars['String']['input']>;
+  token_?: InputMaybe<Token_Filter>;
+  token_contains?: InputMaybe<Scalars['String']['input']>;
+  token_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  token_ends_with?: InputMaybe<Scalars['String']['input']>;
+  token_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  token_gt?: InputMaybe<Scalars['String']['input']>;
+  token_gte?: InputMaybe<Scalars['String']['input']>;
+  token_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  token_lt?: InputMaybe<Scalars['String']['input']>;
+  token_lte?: InputMaybe<Scalars['String']['input']>;
+  token_not?: InputMaybe<Scalars['String']['input']>;
+  token_not_contains?: InputMaybe<Scalars['String']['input']>;
+  token_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  token_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  token_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  token_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  token_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  token_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  token_starts_with?: InputMaybe<Scalars['String']['input']>;
+  token_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  vault?: InputMaybe<Scalars['String']['input']>;
+  vault_?: InputMaybe<Vault_Filter>;
+  vault_contains?: InputMaybe<Scalars['String']['input']>;
+  vault_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  vault_ends_with?: InputMaybe<Scalars['String']['input']>;
+  vault_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  vault_gt?: InputMaybe<Scalars['String']['input']>;
+  vault_gte?: InputMaybe<Scalars['String']['input']>;
+  vault_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  vault_lt?: InputMaybe<Scalars['String']['input']>;
+  vault_lte?: InputMaybe<Scalars['String']['input']>;
+  vault_not?: InputMaybe<Scalars['String']['input']>;
+  vault_not_contains?: InputMaybe<Scalars['String']['input']>;
+  vault_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  vault_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  vault_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  vault_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  vault_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  vault_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  vault_starts_with?: InputMaybe<Scalars['String']['input']>;
+  vault_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum VaultFee_OrderBy {
+  blockNumber = 'blockNumber',
   feePercentage = 'feePercentage',
   feeType = 'feeType',
-  id = 'id'
+  id = 'id',
+  inputTokenAmount = 'inputTokenAmount',
+  inputTokenAmountNormalizedInUSD = 'inputTokenAmountNormalizedInUSD',
+  outputTokenAmount = 'outputTokenAmount',
+  timestamp = 'timestamp',
+  token = 'token',
+  token__decimals = 'token__decimals',
+  token__id = 'token__id',
+  token__lastPriceBlockNumber = 'token__lastPriceBlockNumber',
+  token__lastPriceUSD = 'token__lastPriceUSD',
+  token__name = 'token__name',
+  token__symbol = 'token__symbol',
+  vault = 'vault',
+  vault__apr7d = 'vault__apr7d',
+  vault__apr30d = 'vault__apr30d',
+  vault__apr90d = 'vault__apr90d',
+  vault__apr180d = 'vault__apr180d',
+  vault__apr365d = 'vault__apr365d',
+  vault__calculatedApr = 'vault__calculatedApr',
+  vault__createdBlockNumber = 'vault__createdBlockNumber',
+  vault__createdTimestamp = 'vault__createdTimestamp',
+  vault__cumulativeProtocolSideRevenueUSD = 'vault__cumulativeProtocolSideRevenueUSD',
+  vault__cumulativeSupplySideRevenueUSD = 'vault__cumulativeSupplySideRevenueUSD',
+  vault__cumulativeTotalRevenueUSD = 'vault__cumulativeTotalRevenueUSD',
+  vault__depositCap = 'vault__depositCap',
+  vault__depositLimit = 'vault__depositLimit',
+  vault__details = 'vault__details',
+  vault__id = 'vault__id',
+  vault__inputTokenBalance = 'vault__inputTokenBalance',
+  vault__inputTokenPriceUSD = 'vault__inputTokenPriceUSD',
+  vault__lastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
+  vault__lastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  vault__maxRebalanceOperations = 'vault__maxRebalanceOperations',
+  vault__minimumBufferBalance = 'vault__minimumBufferBalance',
+  vault__name = 'vault__name',
+  vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
+  vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__pricePerShare = 'vault__pricePerShare',
+  vault__rebalanceCount = 'vault__rebalanceCount',
+  vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  vault__stakingRewardsManager = 'vault__stakingRewardsManager',
+  vault__symbol = 'vault__symbol',
+  vault__tipRate = 'vault__tipRate',
+  vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
+  vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
+  vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
 }
 
 export type VaultHourlySnapshot = {
@@ -8351,6 +8491,7 @@ export enum VaultHourlySnapshot_OrderBy {
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   vault__stakingRewardsManager = 'vault__stakingRewardsManager',
   vault__symbol = 'vault__symbol',
+  vault__tipRate = 'vault__tipRate',
   vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
   vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
   vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
@@ -8665,6 +8806,7 @@ export enum VaultWeeklySnapshot_OrderBy {
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   vault__stakingRewardsManager = 'vault__stakingRewardsManager',
   vault__symbol = 'vault__symbol',
+  vault__tipRate = 'vault__tipRate',
   vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
   vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
   vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD',
@@ -8819,13 +8961,7 @@ export type Vault_Filter = {
   details_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   details_starts_with?: InputMaybe<Scalars['String']['input']>;
   details_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  fees?: InputMaybe<Array<Scalars['String']['input']>>;
   fees_?: InputMaybe<VaultFee_Filter>;
-  fees_contains?: InputMaybe<Array<Scalars['String']['input']>>;
-  fees_contains_nocase?: InputMaybe<Array<Scalars['String']['input']>>;
-  fees_not?: InputMaybe<Array<Scalars['String']['input']>>;
-  fees_not_contains?: InputMaybe<Array<Scalars['String']['input']>>;
-  fees_not_contains_nocase?: InputMaybe<Array<Scalars['String']['input']>>;
   hourlyInterestRates_?: InputMaybe<HourlyInterestRate_Filter>;
   hourlySnapshots_?: InputMaybe<VaultHourlySnapshot_Filter>;
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -9078,6 +9214,14 @@ export type Vault_Filter = {
   symbol_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   symbol_starts_with?: InputMaybe<Scalars['String']['input']>;
   symbol_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  tipRate?: InputMaybe<Scalars['BigInt']['input']>;
+  tipRate_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  tipRate_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  tipRate_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  tipRate_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  tipRate_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  tipRate_not?: InputMaybe<Scalars['BigInt']['input']>;
+  tipRate_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   totalValueLockedUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
   totalValueLockedUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   totalValueLockedUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -9189,6 +9333,7 @@ export enum Vault_OrderBy {
   stakedOutputTokenAmount = 'stakedOutputTokenAmount',
   stakingRewardsManager = 'stakingRewardsManager',
   symbol = 'symbol',
+  tipRate = 'tipRate',
   totalValueLockedUSD = 'totalValueLockedUSD',
   weeklyInterestRates = 'weeklyInterestRates',
   weeklySnapshots = 'weeklySnapshots',
@@ -9311,6 +9456,7 @@ export enum WeeklyInterestRate_OrderBy {
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   vault__stakingRewardsManager = 'vault__stakingRewardsManager',
   vault__symbol = 'vault__symbol',
+  vault__tipRate = 'vault__tipRate',
   vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
   vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
   vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
@@ -9653,6 +9799,7 @@ export enum Withdraw_OrderBy {
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   vault__stakingRewardsManager = 'vault__stakingRewardsManager',
   vault__symbol = 'vault__symbol',
+  vault__tipRate = 'vault__tipRate',
   vault__totalValueLockedUSD = 'vault__totalValueLockedUSD',
   vault__withdrawableTotalAssets = 'vault__withdrawableTotalAssets',
   vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'

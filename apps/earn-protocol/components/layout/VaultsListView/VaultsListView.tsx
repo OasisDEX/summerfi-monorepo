@@ -252,7 +252,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
         <>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-              Choose a strategy
+              1. Choose a strategy
             </Text>
           </div>
           {networkFilteredVaults.map((vault, vaultIndex) => (
