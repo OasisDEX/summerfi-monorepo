@@ -9,6 +9,8 @@ query GetProducts($protocols: [String!], $first: Int = 1000) {
       decimals
       precision
     }
+    network
+    pool
   }
 }
 

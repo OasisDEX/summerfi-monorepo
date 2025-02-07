@@ -3,12 +3,9 @@ import { Protocol } from '.'
 import { ChainId } from '@summerfi/serverless-shared'
 import { Logger } from '@aws-lambda-powertools/logger'
 
-const morphoTokenByChainId = {
-  [ChainId.ARBITRUM]: '0x',
-  [ChainId.OPTIMISM]: '0x',
+const morphoTokenByChainId: Partial<Record<ChainId, string>> = {
   [ChainId.BASE]: '0xBAa5CC21fd487B8Fcc2F632f3F4E8D37262a0842',
   [ChainId.MAINNET]: '0x5956F3590814dC8f92Cf1D16d7D3B54e56Ec9090',
-  [ChainId.SEPOLIA]: '0x',
 }
 
 export interface RewardRate {
@@ -62,7 +59,7 @@ interface RetryConfig {
 
 export class RewardsService {
   private readonly MORPHO_API_URL = 'https://blue-api.morpho.org/graphql'
-  private readonly EULER_API_URL = 'https://app.euler.finance/api/v1/rewards/merkl?chainId=' // TODO: Add actual Euler API URL
+  private readonly EULER_API_URL = 'https://app.euler.finance/api/v1/rewards/merkl?chainId='
   private readonly DEFAULT_RETRY_CONFIG: RetryConfig = {
     maxRetries: 5,
     initialDelay: 2000, // 2 seconds
@@ -96,7 +93,7 @@ export class RewardsService {
     // Process Morpho products in batch
     if (protocolGroups[Protocol.Morpho]?.length) {
       const morphoResults = await this.getMorphoRewardsBatch(
-        protocolGroups[Protocol.Morpho].map((p) => p.id),
+        protocolGroups[Protocol.Morpho],
         chainId,
       )
       Object.assign(results, morphoResults)
@@ -104,10 +101,7 @@ export class RewardsService {
 
     // Process Euler products in batch
     if (protocolGroups[Protocol.Euler]?.length) {
-      const eulerResults = await this.getEulerRewardsBatch(
-        protocolGroups[Protocol.Euler].map((p) => p.id),
-        chainId,
-      )
+      const eulerResults = await this.getEulerRewardsBatch(protocolGroups[Protocol.Euler], chainId)
       Object.assign(results, eulerResults)
     }
 
@@ -126,7 +120,12 @@ export class RewardsService {
       try {
         const response = await fetch(url, options)
         if (response.ok) return response
-        throw new Error(`HTTP error! status: ${response.text}`)
+        try {
+          const text = await response.text()
+          throw new Error(`HTTP error! status: ${response.status} ${text}`)
+        } catch (error) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
       } catch (error) {
         attempt++
         if (attempt > config.maxRetries!) {
@@ -143,18 +142,14 @@ export class RewardsService {
   }
 
   private async getMorphoRewardsBatch(
-    productIds: string[],
+    products: Product[],
     chainId: ChainId,
   ): Promise<Record<string, RewardRate[]>> {
     this.logger.info(
-      `[RewardsService] Getting Morpho rewards for ${productIds.length} products on chain ${chainId}`,
+      `[RewardsService] Getting Morpho rewards for ${products.length} products on chain ${chainId}`,
     )
 
-    const vaults = productIds.map((id) => {
-      const [, , vault] = id.split('-')
-      return vault
-    })
-
+    const vaults = products.map((product) => product.pool)
     const uniqueVaults = [...new Set(vaults)]
     const query = `
       query GetVaultRewards($vaults: [String!]!, $chainId: Int!) {
@@ -201,23 +196,25 @@ export class RewardsService {
       // Create a map for quick lookup
       const vaultMap = new Map(vaultItems.map((v) => [v.address.toLowerCase(), v]))
 
-      return productIds.reduce(
-        (acc, productId) => {
-          const [, , vault] = productId.split('-')
-          const vaultData = vaultMap.get(vault.toLowerCase())
+      return products.reduce(
+        (acc, product) => {
+          const vaultData = vaultMap.get(product.pool.toLowerCase())
 
-          acc[productId] = vaultData ? this.processMorphoVault(vaultData, chainId) : []
+          acc[product.id] = vaultData ? this.processMorphoVault(vaultData, chainId) : []
           return acc
         },
         {} as Record<string, RewardRate[]>,
       )
     } catch (error) {
       console.error('[RewardsService] Error fetching Morpho rewards:', error)
-      return Object.fromEntries(productIds.map((id) => [id, []]))
+      return Object.fromEntries(products.map((product) => [product.id, []]))
     }
   }
 
   private processMorphoVault(vaultData: MorphoVaultReward, chainId: ChainId): RewardRate[] {
+    if (!morphoTokenByChainId[chainId]) {
+      return []
+    }
     const totalRewardsRate =
       (parseFloat(vaultData.state.netApy.toString()) -
         parseFloat(vaultData.state.netApyWithoutRewards.toString())) *
@@ -253,7 +250,7 @@ export class RewardsService {
   }
 
   private async getEulerRewardsBatch(
-    productIds: string[],
+    products: Product[],
     chainId: ChainId,
   ): Promise<Record<string, RewardRate[]>> {
     const currentTimestamp = Math.floor(Date.now() / 1000)
@@ -272,12 +269,11 @@ export class RewardsService {
           ),
         )) as Record<string, EulerReward[]>
 
-      return productIds.reduce(
-        (acc, productId) => {
-          const [, , vault] = productId.split('-')
-          const rewards = data[vault.toLowerCase()] || []
+      return products.reduce(
+        (acc, product) => {
+          const rewards = data[product.pool.toLowerCase()] || []
 
-          acc[productId] = rewards
+          acc[product.id] = rewards
             .filter(
               (reward) =>
                 reward.startTimestamp <= currentTimestamp &&
@@ -300,7 +296,7 @@ export class RewardsService {
       )
     } catch (error) {
       console.error('[RewardsService] Error fetching Euler rewards:', error)
-      return Object.fromEntries(productIds.map((id) => [id, []]))
+      return Object.fromEntries(products.map((product) => [product.id, []]))
     }
   }
 }

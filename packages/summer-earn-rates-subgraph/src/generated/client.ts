@@ -188,6 +188,8 @@ export type DailyInterestRate_OrderBy =
   | 'productId'
   | 'product__id'
   | 'product__name'
+  | 'product__network'
+  | 'product__pool'
   | 'product__protocol'
   | 'protocol'
   | 'sumRates'
@@ -344,6 +346,8 @@ export type HourlyInterestRate_OrderBy =
   | 'productId'
   | 'product__id'
   | 'product__name'
+  | 'product__network'
+  | 'product__pool'
   | 'product__protocol'
   | 'protocol'
   | 'sumRates'
@@ -606,6 +610,8 @@ export type InterestRate_OrderBy =
   | 'productId'
   | 'product__id'
   | 'product__name'
+  | 'product__network'
+  | 'product__pool'
   | 'product__protocol'
   | 'protocol'
   | 'rate'
@@ -638,6 +644,8 @@ export type Product = {
   id: Scalars['ID']['output'];
   interestRates: Array<InterestRate>;
   name: Scalars['String']['output'];
+  network: Scalars['String']['output'];
+  pool: Scalars['String']['output'];
   protocol: Scalars['String']['output'];
   token: Token;
   weeklyInterestRates: Array<WeeklyInterestRate>;
@@ -714,7 +722,47 @@ export type Product_Filter = {
   name_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   name_starts_with?: InputMaybe<Scalars['String']['input']>;
   name_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  network?: InputMaybe<Scalars['String']['input']>;
+  network_contains?: InputMaybe<Scalars['String']['input']>;
+  network_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  network_ends_with?: InputMaybe<Scalars['String']['input']>;
+  network_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  network_gt?: InputMaybe<Scalars['String']['input']>;
+  network_gte?: InputMaybe<Scalars['String']['input']>;
+  network_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  network_lt?: InputMaybe<Scalars['String']['input']>;
+  network_lte?: InputMaybe<Scalars['String']['input']>;
+  network_not?: InputMaybe<Scalars['String']['input']>;
+  network_not_contains?: InputMaybe<Scalars['String']['input']>;
+  network_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  network_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  network_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  network_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  network_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  network_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  network_starts_with?: InputMaybe<Scalars['String']['input']>;
+  network_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   or?: InputMaybe<Array<InputMaybe<Product_Filter>>>;
+  pool?: InputMaybe<Scalars['String']['input']>;
+  pool_contains?: InputMaybe<Scalars['String']['input']>;
+  pool_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  pool_ends_with?: InputMaybe<Scalars['String']['input']>;
+  pool_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  pool_gt?: InputMaybe<Scalars['String']['input']>;
+  pool_gte?: InputMaybe<Scalars['String']['input']>;
+  pool_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  pool_lt?: InputMaybe<Scalars['String']['input']>;
+  pool_lte?: InputMaybe<Scalars['String']['input']>;
+  pool_not?: InputMaybe<Scalars['String']['input']>;
+  pool_not_contains?: InputMaybe<Scalars['String']['input']>;
+  pool_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  pool_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  pool_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  pool_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  pool_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  pool_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  pool_starts_with?: InputMaybe<Scalars['String']['input']>;
+  pool_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   protocol?: InputMaybe<Scalars['String']['input']>;
   protocol_contains?: InputMaybe<Scalars['String']['input']>;
   protocol_contains_nocase?: InputMaybe<Scalars['String']['input']>;
@@ -765,6 +813,8 @@ export type Product_OrderBy =
   | 'id'
   | 'interestRates'
   | 'name'
+  | 'network'
+  | 'pool'
   | 'protocol'
   | 'token'
   | 'token__address'
@@ -1345,6 +1395,8 @@ export type WeeklyInterestRate_OrderBy =
   | 'productId'
   | 'product__id'
   | 'product__name'
+  | 'product__network'
+  | 'product__pool'
   | 'product__protocol'
   | 'protocol'
   | 'sumRates'
@@ -1391,7 +1443,7 @@ export type GetProductsQueryVariables = Exact<{
 }>;
 
 
-export type GetProductsQuery = { products: Array<{ id: string, protocol: string, name: string, token: { id: string, symbol: string, decimals: string, precision: string } }> };
+export type GetProductsQuery = { products: Array<{ id: string, protocol: string, name: string, network: string, pool: string, token: { id: string, symbol: string, decimals: string, precision: string } }> };
 
 export type GetLatestInterestRatesQueryVariables = Exact<{
   productId: InputMaybe<Scalars['String']['input']>;
@@ -1453,6 +1505,8 @@ export const GetProductsDocument: DocumentNode = gql`
       decimals
       precision
     }
+    network
+    pool
   }
 }
     `;
