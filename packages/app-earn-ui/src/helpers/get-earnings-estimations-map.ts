@@ -49,18 +49,12 @@ export const getEarningsEstimationsMap = ({
   const getPointInTime = (time: Dayjs) => {
     const point = forecastData.dataPoints.daily.find((p) => {
       return (
-        dayjs(p.timestamp).startOf('day').isSame(time, 'day') ||
-        dayjs(p.timestamp).startOf('day').subtract(1, 'day').isSame(time, 'day') // 3y needs -1 day
+        time.format('YYYY-MM-DD') === p.timestamp ||
+        time.subtract(1, 'day').format('YYYY-MM-DD') === p.timestamp // 3y needs -1 day
       )
     })
 
     if (!point) {
-      console.log(
-        `getEarningsEstimationsMap: could not find forecast data for ${time.format('YYYY-MM-DD')}`,
-        'last point: ',
-        forecastData.dataPoints.daily[forecastData.dataPoints.daily.length - 1],
-      )
-
       return emptyMap
     }
     const {
