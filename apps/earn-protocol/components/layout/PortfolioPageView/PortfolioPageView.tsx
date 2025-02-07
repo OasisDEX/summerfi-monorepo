@@ -2,7 +2,11 @@
 
 import { type FC, useEffect, useReducer } from 'react'
 import { getPositionValues, NonOwnerPortfolioBanner, TabBar } from '@summerfi/app-earn-ui'
-import { type SDKGlobalRebalancesType, type SDKVaultishType } from '@summerfi/app-types'
+import {
+  type SDKGlobalRebalancesType,
+  type SDKVaultishType,
+  type UsersActivity,
+} from '@summerfi/app-types'
 
 import { type PortfolioPositionsList } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
@@ -14,6 +18,7 @@ import { PortfolioOverview } from '@/features/portfolio/components/PortfolioOver
 import { PortfolioRebalanceActivity } from '@/features/portfolio/components/PortfolioRebalanceActivity/PortfolioRebalanceActivity'
 import { PortfolioRewards } from '@/features/portfolio/components/PortfolioRewards/PortfolioRewards'
 import { PortfolioWallet } from '@/features/portfolio/components/PortfolioWallet/PortfolioWallet'
+import { PortfolioYourActivity } from '@/features/portfolio/components/PortfolioYourActivity/PotfolioYourActivity'
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { trackButtonClick } from '@/helpers/mixpanel'
 import { useTabStateQuery } from '@/hooks/use-tab-state'
@@ -28,6 +33,7 @@ interface PortfolioPageViewProps {
   vaultsList: SDKVaultishType[]
   positions: PortfolioPositionsList[]
   rebalancesList: SDKGlobalRebalancesType
+  userActivity: UsersActivity
   totalRays: number
 }
 
@@ -38,6 +44,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   vaultsList,
   positions,
   rebalancesList,
+  userActivity,
   totalRays,
 }) => {
   const { userWalletAddress, isLoadingAccount } = useUserWallet()
@@ -98,6 +105,11 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     ...(isPreLaunchVersion
       ? []
       : [
+          {
+            id: PortfolioTabs.YOUR_ACTIVITY,
+            label: 'Your Activity',
+            content: <PortfolioYourActivity userActivity={userActivity} />,
+          },
           {
             id: PortfolioTabs.REBALANCE_ACTIVITY,
             label: 'Rebalance Activity',

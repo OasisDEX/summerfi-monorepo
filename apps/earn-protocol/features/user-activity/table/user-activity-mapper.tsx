@@ -10,6 +10,7 @@ import { formatCryptoBalance, subgraphNetworkToSDKId, timeAgo } from '@summerfi/
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
+import { networkSDKChainIdIconMap } from '@/constants/network-id-to-icon'
 import { userActivitySorter } from '@/features/user-activity/table/user-activity-sorter'
 
 const activityLabelMap = {
@@ -37,6 +38,22 @@ export const userActivityMapper = (
 
     return {
       content: {
+        position: (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--spacing-space-2x-small)',
+              position: 'relative',
+            }}
+          >
+            <div style={{ position: 'absolute', top: '-5px', left: '-3px' }}>
+              {networkSDKChainIdIconMap(subgraphNetworkToSDKId(item.vault.protocol.network), 10)}
+            </div>
+            <Icon tokenName={asset} variant="s" />
+            <TableCellText>{asset}</TableCellText>
+          </div>
+        ),
         activity: (
           <TableCellText style={{ color: activityColorMap[item.activity] }}>
             {activityLabelMap[item.activity]}

@@ -197,6 +197,7 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
               idx: 3,
               content: <TableCarousel carouselData={userActivityTableCarouselData} />,
             }}
+            hiddenColumns={['position']}
           />
         </InfiniteScroll>
       ),
