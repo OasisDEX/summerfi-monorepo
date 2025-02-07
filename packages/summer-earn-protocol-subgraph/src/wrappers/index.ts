@@ -1,1 +1,4 @@
-export * from './getUserPositions'
+export { getUserPositions } from './getUserPositions'
+export { getUsersPositions } from './getUsersPositions'
+export { getVaults } from './getVaults'
+export { getUsers } from './getUsers'

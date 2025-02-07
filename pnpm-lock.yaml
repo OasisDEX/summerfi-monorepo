@@ -663,6 +663,46 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.12.7)
 
+  external-api/get-protocol-info-function:
+    dependencies:
+      '@aws-lambda-powertools/logger':
+        specifier: ^2.0.4
+        version: 2.0.4
+      '@aws-lambda-powertools/metrics':
+        specifier: ^2.0.4
+        version: 2.0.4
+      '@aws-lambda-powertools/tracer':
+        specifier: ^2.0.4
+        version: 2.0.4
+      '@summerfi/serverless-shared':
+        specifier: workspace:*
+        version: link:../../packages/serverless-shared
+      '@summerfi/summer-earn-protocol-subgraph':
+        specifier: workspace:*
+        version: link:../../packages/summer-earn-protocol-subgraph
+      bignumber.js:
+        specifier: ^9.1.2
+        version: 9.1.2
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      '@types/node':
+        specifier: ^20.12.7
+        version: 20.14.2
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.14.2)
+
   packages/aave-spark-subgraph:
     dependencies:
       '@aws-lambda-powertools/logger':
@@ -1738,6 +1778,9 @@ importers:
       graphql-request:
         specifier: ^6.1.0
         version: 6.1.0(graphql@16.8.2)
+      graphql-tag:
+        specifier: ^2.12.6
+        version: 2.12.6(graphql@16.8.2)
     devDependencies:
       '@graphql-codegen/cli':
         specifier: ^5.0.2
@@ -6280,6 +6323,7 @@ packages:
     dependencies:
       '@smithy/types': 2.12.0
       tslib: 2.2.0
+    dev: true
 
   /@aws-sdk/types@3.731.0:
     resolution: {integrity: sha512-NrdkJg6oOUbXR2r9WvHP408CLyvST8cJfp1/jP9pemtjvjPoh6NukbCtiSFdOOb1eryP02CnqQWItfJC1p2Y/Q==}
@@ -6287,7 +6331,6 @@ packages:
     dependencies:
       '@smithy/types': 4.1.0
       tslib: 2.2.0
-    dev: true
 
   /@aws-sdk/util-arn-parser@3.535.0:
     resolution: {integrity: sha512-smVo29nUPAOprp8Z5Y3GHuhiOtw6c8/EtLCm5AVMtRsTPw4V414ZXL2H66tzmb5kEeSzQlbfBSBEdIFZoxO9kg==}
@@ -16645,7 +16688,6 @@ packages:
     engines: {node: '>=18.0.0'}
     dependencies:
       tslib: 2.2.0
-    dev: true
 
   /@smithy/url-parser@2.2.0:
     resolution: {integrity: sha512-hoA4zm61q1mNTpksiSWp2nEl1dt3j726HdRhiNgVJQMj7mLp7dprtF57mOB6JvEk/x9d2bsuL5hlqZbBuHQylQ==}
@@ -21772,12 +21814,12 @@ packages:
     resolution: {integrity: sha512-+UnYmVEni9NNJvE6aFY1dbvMtFquXSYAj+HYfm+90icoGKYvvLD71R7PHyFFnYct5of4NFpEXJtUJrWMv8e4mQ==}
     engines: {node: '>= 14.x'}
     dependencies:
-      '@aws-sdk/types': 3.567.0
+      '@aws-sdk/types': 3.731.0
       '@smithy/service-error-classification': 2.1.5
       '@types/cls-hooked': 4.3.8
       atomic-batcher: 1.0.2
       cls-hooked: 4.2.2
-      semver: 7.6.2
+      semver: 7.6.3
     dev: false
 
   /axe-core@4.7.0:
@@ -28988,10 +29030,10 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@babel/core': 7.26.0
-      '@babel/generator': 7.24.7
+      '@babel/generator': 7.26.0
       '@babel/plugin-syntax-jsx': 7.24.7(@babel/core@7.26.0)
       '@babel/plugin-syntax-typescript': 7.24.7(@babel/core@7.26.0)
-      '@babel/types': 7.25.8
+      '@babel/types': 7.26.0
       '@jest/expect-utils': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
@@ -34063,6 +34105,7 @@ packages:
     resolution: {integrity: sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==}
     engines: {node: '>=10'}
     hasBin: true
+    dev: true
 
   /semver@7.6.3:
     resolution: {integrity: sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A==}
