@@ -332,4 +332,14 @@ export interface IArmadaManagerUsersClient {
    * @returns The transaction information
    */
   getUnstakeTx(params: { amount: bigint }): Promise<[UnstakeTransactionInfo]>
+
+  /**
+   * @method getDelegationChainLength
+   * @description Returns the length of the delegation chain
+   *
+   * @param user The user
+   *
+   * @returns The length of the delegation
+   */
+  getDelegationChainLength: (params: { user: IUser }) => Promise<number>
 }

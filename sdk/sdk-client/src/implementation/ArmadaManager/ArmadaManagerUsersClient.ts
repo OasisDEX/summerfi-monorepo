@@ -183,4 +183,10 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   ): ReturnType<IArmadaManagerUsersClient['getUnstakeTx']> {
     return this.rpcClient.armada.users.getUnstakeTX.query(params)
   }
+
+  async getDelegationChainLength(
+    params: Parameters<IArmadaManagerUsersClient['getDelegationChainLength']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getDelegationChainLength']> {
+    return this.rpcClient.armada.users.getDelegationChainLength.query(params)
+  }
 }

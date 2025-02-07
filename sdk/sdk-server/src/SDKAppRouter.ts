@@ -53,6 +53,7 @@ import { getUnstakeTx } from './armada-protocol-handlers/users/getUnstakeTx'
 import { getUserEarnedRewards } from './armada-protocol-handlers/users/getUserEarnedRewards'
 import { getUserBalance } from './armada-protocol-handlers/users/getUserBalance'
 import { getSummerToken } from './armada-protocol-handlers/users/getSummerToken'
+import { getDelegationChainLength } from './armada-protocol-handlers/users/getDelegationChainLength'
 import { pong } from './handlers/debugPong'
 
 /**
@@ -112,6 +113,7 @@ export const sdkAppRouter = router({
       getUnstakeTX: getUnstakeTx,
       getUserBalance: getUserBalance,
       getSummerToken: getSummerToken,
+      getDelegationChainLength: getDelegationChainLength,
     },
     keepers: {
       rebalance: rebalance,
