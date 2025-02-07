@@ -24,12 +24,15 @@ const chainIdToTrmNetwork: { [key: number]: string } = {
 export const getTrmRisk = async ({
   address,
   apiKey,
-  chainId,
+  // chainId,
 }: {
   address: string
   apiKey: string
   chainId: number
 }): Promise<RiskDataResponse> => {
+  // we use hardcoded 1 since TRM aggregates all chains risks under mainnet
+  const chainId = 1
+
   const chain = chainIdToTrmNetwork[chainId]
 
   if (!chain) {
