@@ -28,8 +28,6 @@ type EarnVaultOpenPageProps = {
   }
 }
 
-export const revalidate = 60
-
 const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (isPreLaunchVersion) {

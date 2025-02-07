@@ -10,8 +10,6 @@ import { ClaimPageViewComponent } from '@/components/layout/ClaimPageView/ClaimP
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { isValidAddress } from '@/helpers/is-valid-address'
 
-export const revalidate = 60
-
 type ClaimPageProps = {
   params: {
     walletAddress: string

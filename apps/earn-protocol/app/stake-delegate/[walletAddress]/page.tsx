@@ -10,8 +10,6 @@ import { StakeDelegateViewComponent } from '@/components/layout/StakeDelegatePag
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { isValidAddress } from '@/helpers/is-valid-address'
 
-export const revalidate = 60
-
 type StakeDelegatePageProps = {
   params: {
     walletAddress: string

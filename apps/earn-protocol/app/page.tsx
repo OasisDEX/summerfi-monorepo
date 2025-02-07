@@ -7,9 +7,6 @@ import { VaultListViewComponent } from '@/components/layout/VaultsListView/Vault
 import { isPreLaunchVersion } from '@/constants/is-pre-launch-version'
 import { decorateCustomVaultFields } from '@/helpers/vault-custom-value-helpers'
 
-export const dynamic = 'force-static'
-export const revalidate = 60
-
 const EarnAllVaultsPage = async () => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (isPreLaunchVersion) {

@@ -34,8 +34,6 @@ type EarnVaultManagePageProps = {
   }
 }
 
-export const revalidate = 60
-
 const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   const parsedNetwork = humanNetworktoSDKNetwork(params.network)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)

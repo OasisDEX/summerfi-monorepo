@@ -7,8 +7,6 @@ import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { isPreLaunchVersion } from '@/constants/is-pre-launch-version'
 import { RebalanceActivityView } from '@/features/rebalance-activity/components/RebalanceActivityView/RebalanceActivityView'
 
-export const revalidate = 60
-
 interface RebalanceActivityPageProps {
   searchParams: ReadonlyURLSearchParams
 }

@@ -25,8 +25,6 @@ type EarnVaultDetailsPageProps = {
   }
 }
 
-export const revalidate = 60
-
 const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (isPreLaunchVersion) {
