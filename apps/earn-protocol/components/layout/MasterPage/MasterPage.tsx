@@ -7,12 +7,17 @@ import { isPreLaunchVersion } from '@/constants/is-pre-launch-version'
 import './global.css'
 import masterPageStyles from './MasterPage.module.scss'
 
-interface MasterPageProps {}
+interface MasterPageProps {
+  skipNavigation?: boolean
+}
 
-export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({ children }) => {
+export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
+  children,
+  skipNavigation = false,
+}) => {
   return (
     <div className={masterPageStyles.mainContainer}>
-      <NavigationWrapper isPreLaunchVersion={isPreLaunchVersion} />
+      {!skipNavigation && <NavigationWrapper isPreLaunchVersion={isPreLaunchVersion} />}
       <div className={masterPageStyles.appContainer}>{children}</div>
       <div
         style={{
