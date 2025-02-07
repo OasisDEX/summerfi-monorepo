@@ -1,12 +1,11 @@
-import { UsersQuery,  getSdk } from '../generated/client'
+import { UsersQuery, getSdk } from '../generated/client'
 import { createClient } from '../createClient'
 import { SubgraphClientConfig } from '../types'
 
 export interface GetUsersParams {
-    first: number
-    skip: number
-  }
-
+  first: number
+  skip: number
+}
 
 export async function getUsers(
   params: GetUsersParams,
