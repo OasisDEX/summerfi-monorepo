@@ -83,6 +83,7 @@ export const LandingPageVaultPicker = ({ vault }: { vault: SDKVaultishType }) =>
         secondary
         withTokenBonus={sumrNetApyConfig.withSumr}
         sumrPrice={estimatedSumrPrice}
+        showCombinedBonus
       />
       <VaultSimulationForm
         vaultData={vault}

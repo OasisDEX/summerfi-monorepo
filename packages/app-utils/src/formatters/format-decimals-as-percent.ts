@@ -24,7 +24,7 @@ export const formatDecimalAsPercent = (
     plus = false,
     roundMode = BigNumber.ROUND_DOWN,
     noPercentSign = false,
-    maxThreshold = '1000',
+    maxThreshold,
   }: {
     precision?: number
     plus?: boolean
@@ -35,7 +35,7 @@ export const formatDecimalAsPercent = (
 ) => {
   const formatedAmount = formatToBigNumber(amount)
 
-  if (formatedAmount.times(100).isGreaterThan(maxThreshold)) {
+  if (maxThreshold && formatedAmount.times(100).isGreaterThan(maxThreshold)) {
     return `>${maxThreshold}%`
   }
 

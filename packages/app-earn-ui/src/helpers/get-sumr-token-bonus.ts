@@ -16,14 +16,14 @@ import { formatDecimalAsPercent } from '@summerfi/app-utils'
  *   1.23, // SUMMER price in USD
  *   "1000000" // $1M TVL
  * )
- * // Returns something like "5.67%"
+ * // Returns something like { sumrTokenBonus: "5.67%", rawSumrTokenBonus: "0.0567" }
  */
 export const getSumrTokenBonus = (
   rewardTokens: SDKVaultishType['rewardTokens'],
   rewardTokenEmissionsAmount: SDKVaultishType['rewardTokenEmissionsAmount'],
   sumrPrice: number | undefined,
   totalValueLockedUSD: string,
-): string => {
+): { sumrTokenBonus: string; rawSumrTokenBonus: string } => {
   const sumrIndex = rewardTokens.findIndex((item) => item.token.symbol === 'SUMMER')
 
   const bonusSumrDaily = rewardTokenEmissionsAmount[sumrIndex]
@@ -31,9 +31,13 @@ export const getSumrTokenBonus = (
       Number(rewardTokenEmissionsAmount[sumrIndex]) / 10 ** 18
     : 0
 
-  return formatDecimalAsPercent(
+  const raw =
     sumrPrice && Number(totalValueLockedUSD)
       ? ((bonusSumrDaily * 365 * sumrPrice) / Number(totalValueLockedUSD)).toString()
-      : '0',
-  )
+      : '0'
+
+  return {
+    sumrTokenBonus: formatDecimalAsPercent(raw),
+    rawSumrTokenBonus: raw,
+  }
 }
