@@ -63,13 +63,17 @@ export const ControlsDepositWithdraw = ({
         disabled={!ownerView}
         selectAllOnFocus
         heading={{
-          label: 'Balance',
+          // this was used as a 'row', like 'Balance: 1000 USDC', but now is used as columns
+          // Deposit token      Balance: 10 USDC
+          // some token         deposit amount
+          // also i'm removing the `-` because its always showing up on landing page
+          label: 'Deposit token',
           value: tokenBalanceLoading ? (
             <SkeletonLine width={60} height={10} />
           ) : tokenBalance ? (
-            `${formatCryptoBalance(tokenBalance)} ${tokenSymbol}`
+            `Balance: ${formatCryptoBalance(tokenBalance)} ${tokenSymbol}`
           ) : (
-            '-'
+            ''
           ),
           action: ownerView
             ? () => {
