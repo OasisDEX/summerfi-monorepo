@@ -177,3 +177,34 @@ export const trackInputChange = ({ id, page, userAddress, ...rest }: InputChange
     console.error('Error tracking button click', error)
   }
 }
+
+type AppError = {
+  id: string
+  page: string
+  userAddress?: string
+  digest?: string
+  message?: string
+  [key: string]: unknown
+}
+
+// app error - global error handler
+export const trackError = ({ id, page, message, digest, userAddress, ...rest }: AppError) => {
+  try {
+    const eventBody = {
+      product: MixpanelEventProduct.EarnProtocol,
+      id,
+      page: includeBasePath(page),
+      userAddress,
+      digest,
+      message,
+      ...rest,
+    }
+
+    if (!optedOutCheck()) {
+      trackEvent(MixpanelEventTypes.AppError, eventBody)
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error tracking button click', error)
+  }
+}
