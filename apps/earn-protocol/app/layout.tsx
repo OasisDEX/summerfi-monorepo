@@ -37,7 +37,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   const locale = await getLocale()
 
-  if (config.maintenance) {
+  if (config.maintenance && process.env.NODE_ENV !== 'development') {
     return (
       <html lang={locale} style={{ backgroundColor: '#1c1c1c' }}>
         <head>
