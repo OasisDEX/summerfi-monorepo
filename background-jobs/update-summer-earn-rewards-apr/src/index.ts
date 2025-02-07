@@ -338,9 +338,9 @@ export const handler = async (
       )
       .selectAll()
       .execute()
-
+    const updateStartTimestamp = Math.floor(Date.now() / 1000)
     for (const network of networks) {
-      const updateStartTimestamp = Math.floor(Date.now() / 1000)
+
 
       try {
         // Acquire lock by setting isUpdating to true
