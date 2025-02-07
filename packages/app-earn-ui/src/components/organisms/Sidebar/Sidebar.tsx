@@ -196,7 +196,13 @@ export const Sidebar: FC<SidebarProps> = ({
       >
         <AnimateHeight show={!!error} id="sidebar-error">
           <Box className={sidebarClassNames.sidebarErrorWrapper}>
-            {typeof error === 'string' ? <Text variant="p4">{error}</Text> : error}
+            {typeof error === 'string' ? (
+              <Text variant="p4" style={{ textAlign: 'center' }}>
+                {error}
+              </Text>
+            ) : (
+              error
+            )}
           </Box>
         </AnimateHeight>
       </div>
