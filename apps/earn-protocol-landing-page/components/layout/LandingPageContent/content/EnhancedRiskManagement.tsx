@@ -2,7 +2,10 @@ import { BigGradientBox, Text } from '@summerfi/app-earn-ui'
 import Image, { type StaticImageData } from 'next/image'
 
 import blockAnalyticaLogo from '@/public/img/landing-page/block-analytica.svg'
-import morphoBlueLogo from '@/public/img/landing-page/protocols/morpho-blue.svg' // add the others
+import aaveLogo from '@/public/img/landing-page/protocols/aave.svg'
+import morphoBlueLogo from '@/public/img/landing-page/protocols/morpho-blue.svg'
+import skyLogo from '@/public/img/landing-page/protocols/sky.svg'
+import sparkLogo from '@/public/img/landing-page/protocols/spark.svg'
 
 import enhancedRiskManagementStyles from '@/components/layout/LandingPageContent/content/EnhancedRiskManagement.module.scss'
 
@@ -49,9 +52,9 @@ export const EnhancedRiskManagement = ({ protectedCapital }: { protectedCapital:
             <div className={enhancedRiskManagementStyles.smallGradientBlock}>
               <div className={enhancedRiskManagementStyles.topBlockProtocolIcons}>
                 <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
-                <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
-                <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
-                <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
+                <EnhancedRiskManagementProtocolIcon protocolImage={sparkLogo} />
+                <EnhancedRiskManagementProtocolIcon protocolImage={skyLogo} />
+                <EnhancedRiskManagementProtocolIcon protocolImage={aaveLogo} />
               </div>
               <div className={enhancedRiskManagementStyles.protectedCapital}>
                 <Text variant="p3semi" as="p">

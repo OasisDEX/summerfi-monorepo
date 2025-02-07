@@ -1,4 +1,4 @@
-import { Text, WithArrow } from '@summerfi/app-earn-ui'
+import { INTERNAL_LINKS, Text, WithArrow } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
 import { Emphasis } from '@/components/layout/LandingPageContent/components/Emphasis'
@@ -34,7 +34,7 @@ export const BuildBySummerFi = () => {
         </Text>
       </div>
       <div className={buildBySummerFiStyles.buildBySummerFiBottomLink}>
-        <Link href="#">
+        <Link href={`${INTERNAL_LINKS.summerPro}/about`} target="_blank">
           <WithArrow>
             <Text variant="p2semi">View leadership</Text>
           </WithArrow>
