@@ -2,6 +2,8 @@ import type BigNumber from 'bignumber.js'
 
 import { formatToBigNumber } from '@/formatters/format-to-big-number'
 
+import { formatAsShorthandNumbers } from './format-as-shorthand-numbers'
+
 /**
  * Formats a `BigNumber` as a percentage string.
  *
@@ -35,5 +37,5 @@ export const formatPercent = (
 
   const sign = plus && resolvedAmount.isGreaterThan(0) ? '+' : ''
 
-  return `${sign}${resolvedAmount.toFixed(precision, roundMode)}${noPercentSign ? '' : '%'}`
+  return `${sign}${formatAsShorthandNumbers(resolvedAmount.toFixed(precision, roundMode), { precision })}${noPercentSign ? '' : '%'}`
 }

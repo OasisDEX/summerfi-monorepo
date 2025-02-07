@@ -77,7 +77,7 @@ export const PortfolioPosition = ({
     ? formatDecimalAsPercent(new BigNumber(apr30d).div(100))
     : 'New Strategy'
 
-  const tokenBonus = getSumrTokenBonus(
+  const { sumrTokenBonus } = getSumrTokenBonus(
     rewardTokens,
     rewardTokenEmissionsAmount,
     sumrPrice,
@@ -104,7 +104,7 @@ export const PortfolioPosition = ({
                 <Icon iconName="stars_colorful" size={24} style={{ display: 'inline' }} />
               </>
             }
-            value={tokenBonus}
+            value={sumrTokenBonus}
           />
           <PortfolioPositionHeaderValue title="30d APY" value={apr30dParsed} />
           <PortfolioPositionHeaderValue title="Current APY" value={currentApr} />
