@@ -295,7 +295,7 @@ async function getSupportedProducts(client: SubgraphClient): Promise<Products> {
 }
 
 export const handler = async (
-  event: EventBridgeEvent<'Scheduled Event', never>,
+  _: EventBridgeEvent<'Scheduled Event', never>,
   context: Context,
 ): Promise<void> => {
   logger.addContext(context)
@@ -323,69 +323,69 @@ export const handler = async (
   const { db } = await getSummerProtocolDB(dbConfig)
 
   const clients = getAllClients(SUBGRAPH_BASE)
+  const updateStartTimestamp = Math.floor(Date.now() / 1000)
 
-  await db.transaction().execute(async (trx) => {
-    // Get all networks that need updating
-    const networks = await trx
-      .selectFrom('networkStatus')
-      .where('isUpdating', '=', false)
-      .where((eb) =>
-        eb(
-          'lastUpdatedAt',
-          '<=',
-          (Math.floor(Date.now() / 1000) - MIN_UPDATE_INTERVAL).toString(),
-        ).or('lastUpdatedAt', 'is', null),
-      )
-      .selectAll()
-      .execute()
-    const updateStartTimestamp = Math.floor(Date.now() / 1000)
-    for (const network of networks) {
+  // Get all potential networks
+  const allNetworks = await db.selectFrom('networkStatus').selectAll().execute()
 
+  for (const network of allNetworks) {
+    let lockAcquired = false
+    try {
+      // Atomic lock acquisition
+      const updatedNetwork = await db
+        .updateTable('networkStatus')
+        .set({ isUpdating: true })
+        .where('network', '=', network.network)
+        .where('isUpdating', '=', false)
+        .where((eb) =>
+          eb('lastUpdatedAt', '<=', (updateStartTimestamp - MIN_UPDATE_INTERVAL).toString()).or(
+            'lastUpdatedAt',
+            'is',
+            null,
+          ),
+        )
+        .returningAll()
+        .executeTakeFirst()
 
-      try {
-        // Acquire lock by setting isUpdating to true
-        await trx
-          .updateTable('networkStatus')
-          .set({ isUpdating: true })
-          .where('network', '=', network.network)
-          .execute()
+      if (!updatedNetwork) continue
+      lockAcquired = true
 
-        const chainId = networkToChainId[network.network]
+      // Main processing transaction
+      await db.transaction().execute(async (trx) => {
+        const chainId = networkToChainId[updatedNetwork.network]
         const subgraphClient = clients[chainId]
         const products = await getSupportedProducts(subgraphClient)
 
-        // Token updates in SEPARATE transaction
+        // Token updates in separate transaction
         await db.transaction().execute(async (tokenTrx) => {
-          await ensureTokensExist(tokenTrx, network, products)
+          await ensureTokensExist(tokenTrx, updatedNetwork, products)
         })
 
-        // Rates updates in MAIN transaction, passing the start timestamp
-        await updateRewardRates(trx, network, products, updateStartTimestamp)
+        await updateRewardRates(trx, updatedNetwork, products, updateStartTimestamp)
 
-        // Update network status only if everything succeeded
+        // Final status update
         await trx
           .updateTable('networkStatus')
           .set({
             lastUpdatedAt: updateStartTimestamp,
-            lastBlockNumber: network.lastBlockNumber,
+            lastBlockNumber: updatedNetwork.lastBlockNumber,
             isUpdating: false,
           })
-          .where('network', '=', network.network)
+          .where('network', '=', updatedNetwork.network)
           .execute()
-      } catch (error) {
-        logger.error(`Error processing network ${network.network}`, { error })
-        // Release lock on error within transaction
-        await trx
+      })
+    } catch (error) {
+      logger.error(`Error processing network ${network.network}`, { error })
+      if (lockAcquired) {
+        // Emergency lock release outside main transaction
+        await db
           .updateTable('networkStatus')
           .set({ isUpdating: false })
           .where('network', '=', network.network)
           .execute()
-
-        // Re-throw to trigger transaction rollback
-        throw error
       }
     }
-  })
+  }
 }
 
 export default handler
