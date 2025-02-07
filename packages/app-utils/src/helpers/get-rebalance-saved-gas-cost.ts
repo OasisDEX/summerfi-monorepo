@@ -1,5 +1,6 @@
 import { type SDKNetwork, type SDKVaultsListType } from '@summerfi/app-types'
-import { sdkNetworkToHumanNetwork } from '@summerfi/app-utils'
+
+import { sdkNetworkToHumanNetwork } from './earn-network-tools'
 
 const NETWORK_GAS_SAVINGS: { [key: string]: number } = {
   base: 0.05, // $0.05

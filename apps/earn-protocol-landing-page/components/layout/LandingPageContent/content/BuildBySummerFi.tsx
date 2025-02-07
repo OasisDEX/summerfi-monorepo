@@ -41,11 +41,11 @@ export const BuildBySummerFi = () => {
         </Link>
       </div>
       <div className={buildBySummerFiStyles.buildBySummerFiStatBlockWrapper}>
-        <StatBlock title="Summer.fi TVL" value="1.2B" />
+        <StatBlock title="Summer.fi TVL" value="4.01B" />
         <div className={buildBySummerFiStyles.buildBySummerFiStatBlockDivider} />
-        <StatBlock title="Summer.fi 30D Volume" value="$643.2m" />
+        <StatBlock title="Summer.fi 30D Volume" value="$1.61B" />
         <div className={buildBySummerFiStyles.buildBySummerFiStatBlockDivider} />
-        <StatBlock title="Capital Automated" value="$259.7M" />
+        <StatBlock title="Capital Automated" value="$268.95M" />
         <div className={buildBySummerFiStyles.buildBySummerFiStatBlockDivider} />
         <StatBlock title="Time Operating" value="7 years" />
       </div>
