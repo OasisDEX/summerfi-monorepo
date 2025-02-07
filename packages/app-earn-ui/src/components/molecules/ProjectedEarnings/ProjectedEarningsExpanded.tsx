@@ -1,3 +1,5 @@
+'use client'
+
 import { type FC, useState } from 'react'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 
