@@ -97,7 +97,7 @@ export const VaultCard = ({
               Best for
             </Text>
             <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-              {customFields?.bestFor ?? '-'}
+              {customFields?.bestFor ?? 'Optimized lending yield'}
             </Text>
           </div>
         </div>
