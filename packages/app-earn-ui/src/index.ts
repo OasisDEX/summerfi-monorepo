@@ -66,6 +66,7 @@ export {
 export { PillSelector } from './components/molecules/PillSelector/PillSelector'
 export { BonusLabel } from './components/molecules/BonusLabel/BonusLabel'
 export { ProjectedEarnings } from './components/molecules/ProjectedEarnings/ProjectedEarnings'
+export { ProjectedEarningsExpanded } from './components/molecules/ProjectedEarnings/ProjectedEarningsExpanded'
 export { HeadingWithCards } from './components/molecules/HeadingWithCards/HeadingWithCards'
 export { TableCarousel } from './components/molecules/TableCarousel/TableCarousel'
 export {
@@ -123,6 +124,10 @@ export { getPositionValues } from './helpers/get-position-values'
 export { getSumrTokenBonus } from './helpers/get-sumr-token-bonus'
 export { getResolvedForecastAmountParsed } from './helpers/get-resolved-forecast-amount-parsed'
 export { getVotingPowerColor } from './helpers/get-voting-power-color'
+export {
+  type EarningsEstimationsMap,
+  getEarningsEstimationsMap,
+} from './helpers/get-earnings-estimations-map'
 
 export { INTERNAL_LINKS, EXTERNAL_LINKS } from './helpers/application-links'
 

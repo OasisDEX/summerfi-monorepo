@@ -276,6 +276,7 @@ export const VaultOpenViewComponent = ({
       estimatedEarnings={estimatedEarnings}
       isLoadingForecast={isLoadingForecast}
       ownerView
+      isOpen
     />
   )
 

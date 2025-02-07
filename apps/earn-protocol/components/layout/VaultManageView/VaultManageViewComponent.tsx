@@ -185,7 +185,7 @@ export const VaultManageViewComponent = ({
     rawToTokenAmount,
   })
 
-  const { isLoadingForecast, oneYearEarningsForecast, forecast } = useForecast({
+  const { isLoadingForecast, oneYearEarningsForecast, forecast, forecastSummaryMap } = useForecast({
     fleetAddress: vault.id,
     chainId: vaultChainId,
     amount: {
@@ -290,6 +290,7 @@ export const VaultManageViewComponent = ({
       manualSetAmount={manualSetAmount}
       vault={vault}
       estimatedEarnings={estimatedEarnings}
+      forecastSummaryMap={forecastSummaryMap}
       isLoadingForecast={isLoadingForecast}
     />
   )
