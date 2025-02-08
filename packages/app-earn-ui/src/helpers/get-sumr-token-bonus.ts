@@ -24,11 +24,14 @@ export const getSumrTokenBonus = (
   sumrPrice: number | undefined,
   totalValueLockedUSD: string,
 ): { sumrTokenBonus: string; rawSumrTokenBonus: string } => {
-  const sumrIndex = rewardTokens.findIndex((item) => item.token.symbol === 'SUMMER')
+  const sumrIndex = rewardTokens.findIndex(
+    // BUMMER to be removed after prod deployment
+    (item) => item.token.symbol === 'SUMR' || item.token.symbol === 'BUMMER',
+  )
 
   const bonusSumrDaily = rewardTokenEmissionsAmount[sumrIndex]
     ? // eslint-disable-next-line no-mixed-operators
-      Number(rewardTokenEmissionsAmount[sumrIndex]) / 10 ** 18
+      Number(rewardTokenEmissionsAmount[sumrIndex]) / 10 ** 36
     : 0
 
   const raw =
