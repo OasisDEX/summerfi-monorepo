@@ -28,6 +28,8 @@ export type Scalars = {
 
 export type Account = {
   __typename?: 'Account';
+  claimedSummerToken: Scalars['BigInt']['output'];
+  claimedSummerTokenNormalized: Scalars['BigDecimal']['output'];
   /**  Address of the account  */
   id: Scalars['ID']['output'];
   positions: Array<Position>;
@@ -46,6 +48,22 @@ export type Account_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
   and?: InputMaybe<Array<InputMaybe<Account_Filter>>>;
+  claimedSummerToken?: InputMaybe<Scalars['BigInt']['input']>;
+  claimedSummerTokenNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimedSummerTokenNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimedSummerTokenNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimedSummerTokenNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  claimedSummerTokenNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimedSummerTokenNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimedSummerTokenNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimedSummerTokenNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  claimedSummerToken_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  claimedSummerToken_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  claimedSummerToken_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  claimedSummerToken_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  claimedSummerToken_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  claimedSummerToken_not?: InputMaybe<Scalars['BigInt']['input']>;
+  claimedSummerToken_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   id?: InputMaybe<Scalars['ID']['input']>;
   id_gt?: InputMaybe<Scalars['ID']['input']>;
   id_gte?: InputMaybe<Scalars['ID']['input']>;
@@ -59,6 +77,8 @@ export type Account_Filter = {
 };
 
 export enum Account_OrderBy {
+  claimedSummerToken = 'claimedSummerToken',
+  claimedSummerTokenNormalized = 'claimedSummerTokenNormalized',
   id = 'id',
   positions = 'positions'
 }
@@ -1751,6 +1771,8 @@ export enum Deposit_OrderBy {
   inputTokenBalanceNormalizedUSD = 'inputTokenBalanceNormalizedUSD',
   logIndex = 'logIndex',
   position = 'position',
+  position__claimedSummerToken = 'position__claimedSummerToken',
+  position__claimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   position__createdBlockNumber = 'position__createdBlockNumber',
   position__createdTimestamp = 'position__createdTimestamp',
   position__id = 'position__id',
@@ -2659,6 +2681,8 @@ export type Position = {
   __typename?: 'Position';
   /**  Account associated with the position  */
   account: Account;
+  claimedSummerToken: Scalars['BigInt']['output'];
+  claimedSummerTokenNormalized: Scalars['BigDecimal']['output'];
   /**  Creation block number  */
   createdBlockNumber: Scalars['BigInt']['output'];
   /**  Creation timestamp  */
@@ -2905,6 +2929,8 @@ export enum PositionDailySnapshot_OrderBy {
   inputTokenWithdrawalsNormalizedInUSD = 'inputTokenWithdrawalsNormalizedInUSD',
   outputTokenBalance = 'outputTokenBalance',
   position = 'position',
+  position__claimedSummerToken = 'position__claimedSummerToken',
+  position__claimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   position__createdBlockNumber = 'position__createdBlockNumber',
   position__createdTimestamp = 'position__createdTimestamp',
   position__id = 'position__id',
@@ -3061,6 +3087,8 @@ export enum PositionHourlySnapshot_OrderBy {
   inputTokenWithdrawalsNormalizedInUSD = 'inputTokenWithdrawalsNormalizedInUSD',
   outputTokenBalance = 'outputTokenBalance',
   position = 'position',
+  position__claimedSummerToken = 'position__claimedSummerToken',
+  position__claimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   position__createdBlockNumber = 'position__createdBlockNumber',
   position__createdTimestamp = 'position__createdTimestamp',
   position__id = 'position__id',
@@ -3217,6 +3245,8 @@ export enum PositionWeeklySnapshot_OrderBy {
   inputTokenWithdrawalsNormalizedInUSD = 'inputTokenWithdrawalsNormalizedInUSD',
   outputTokenBalance = 'outputTokenBalance',
   position = 'position',
+  position__claimedSummerToken = 'position__claimedSummerToken',
+  position__claimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   position__createdBlockNumber = 'position__createdBlockNumber',
   position__createdTimestamp = 'position__createdTimestamp',
   position__id = 'position__id',
@@ -3264,6 +3294,22 @@ export type Position_Filter = {
   account_starts_with?: InputMaybe<Scalars['String']['input']>;
   account_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   and?: InputMaybe<Array<InputMaybe<Position_Filter>>>;
+  claimedSummerToken?: InputMaybe<Scalars['BigInt']['input']>;
+  claimedSummerTokenNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimedSummerTokenNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimedSummerTokenNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimedSummerTokenNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  claimedSummerTokenNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimedSummerTokenNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimedSummerTokenNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimedSummerTokenNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  claimedSummerToken_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  claimedSummerToken_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  claimedSummerToken_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  claimedSummerToken_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  claimedSummerToken_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  claimedSummerToken_not?: InputMaybe<Scalars['BigInt']['input']>;
+  claimedSummerToken_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   createdBlockNumber?: InputMaybe<Scalars['BigInt']['input']>;
   createdBlockNumber_gt?: InputMaybe<Scalars['BigInt']['input']>;
   createdBlockNumber_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -3449,7 +3495,11 @@ export type Position_Filter = {
 
 export enum Position_OrderBy {
   account = 'account',
+  account__claimedSummerToken = 'account__claimedSummerToken',
+  account__claimedSummerTokenNormalized = 'account__claimedSummerTokenNormalized',
   account__id = 'account__id',
+  claimedSummerToken = 'claimedSummerToken',
+  claimedSummerTokenNormalized = 'claimedSummerTokenNormalized',
   createdBlockNumber = 'createdBlockNumber',
   createdTimestamp = 'createdTimestamp',
   dailySnapshots = 'dailySnapshots',
@@ -5781,6 +5831,8 @@ export enum Staked_OrderBy {
   inputTokenBalanceNormalizedUSD = 'inputTokenBalanceNormalizedUSD',
   logIndex = 'logIndex',
   position = 'position',
+  position__claimedSummerToken = 'position__claimedSummerToken',
+  position__claimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   position__createdBlockNumber = 'position__createdBlockNumber',
   position__createdTimestamp = 'position__createdTimestamp',
   position__id = 'position__id',
@@ -7056,6 +7108,8 @@ export enum Unstaked_OrderBy {
   inputTokenBalanceNormalizedUSD = 'inputTokenBalanceNormalizedUSD',
   logIndex = 'logIndex',
   position = 'position',
+  position__claimedSummerToken = 'position__claimedSummerToken',
+  position__claimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   position__createdBlockNumber = 'position__createdBlockNumber',
   position__createdTimestamp = 'position__createdTimestamp',
   position__id = 'position__id',
@@ -9729,6 +9783,8 @@ export enum Withdraw_OrderBy {
   inputTokenBalanceNormalizedUSD = 'inputTokenBalanceNormalizedUSD',
   logIndex = 'logIndex',
   position = 'position',
+  position__claimedSummerToken = 'position__claimedSummerToken',
+  position__claimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   position__createdBlockNumber = 'position__createdBlockNumber',
   position__createdTimestamp = 'position__createdTimestamp',
   position__id = 'position__id',
