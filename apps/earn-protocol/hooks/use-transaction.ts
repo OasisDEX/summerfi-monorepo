@@ -41,6 +41,8 @@ import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { type useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 
+import { useUserWallet } from './use-user-wallet'
+
 type UseTransactionParams = {
   vault: SDKVaultishType
   vaultChainId: AccountKitSupportedNetworks
@@ -86,6 +88,7 @@ export const useTransaction = ({
   const { refresh: refreshView, push } = useRouter()
   const [slippageConfig] = useSlippageConfig()
   const user = useUser()
+  const { userWalletAddress } = useUserWallet()
   const { getDepositTX, getWithdrawTX } = useAppSDK()
   const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
   const [isTransakOpen, setIsTransakOpen] = useState(false)
@@ -477,11 +480,11 @@ export const useTransaction = ({
       !waitingForTx
     ) {
       reset()
-      if (user?.address) {
+      if (userWalletAddress) {
         // refreshes the view
         refreshView()
         // revalidates users wallet data (all of fetches with wallet tagged in it)
-        revalidateUser(user.address)
+        revalidateUser(userWalletAddress)
 
         // makes sure the user is redirected to the correct page
         // after closing or opening
@@ -498,7 +501,7 @@ export const useTransaction = ({
               ? getVaultPositionUrl({
                   network: vault.protocol.network,
                   vaultId: vault.customFields?.slug ?? vault.id,
-                  walletAddress: user.address,
+                  walletAddress: userWalletAddress,
                 })
               : getVaultUrl(vault),
           )
@@ -516,9 +519,9 @@ export const useTransaction = ({
     transactionType,
     transactions?.length,
     txStatus,
-    user?.address,
     vault,
     waitingForTx,
+    userWalletAddress,
   ])
 
   // watch for sendUserOperationError
