@@ -347,26 +347,32 @@ export const handler = async (
           productCount: products.length,
         })
 
-        // Token updates
-        await trx
-          .insertInto('token')
-          .values(
-            products.map((product) => ({
-              address: product.token.id,
-              symbol: product.token.symbol,
-              decimals: +product.token.decimals,
-              precision: product.token.precision.toString(),
-              network: updatedNetwork.network,
-            })),
-          )
-          .onConflict((oc) => oc.doNothing())
-          .execute()
+        if (products.length > 0) {
+          // Token updates
+          await trx
+            .insertInto('token')
+            .values(
+              products.map((product) => ({
+                address: product.token.id,
+                symbol: product.token.symbol,
+                decimals: +product.token.decimals,
+                precision: product.token.precision.toString(),
+                network: updatedNetwork.network,
+              })),
+            )
+            .onConflict((oc) => oc.doNothing())
+            .execute()
 
-        await updateRewardRates(trx, updatedNetwork, products, updateStartTimestamp)
-        logger.debug('Updated reward rates', {
-          network: updatedNetwork.network,
-          timestamp: updateStartTimestamp,
-        })
+          await updateRewardRates(trx, updatedNetwork, products, updateStartTimestamp)
+          logger.debug('Updated reward rates', {
+            network: updatedNetwork.network,
+            timestamp: updateStartTimestamp,
+          })
+        } else {
+          logger.debug('No products found for network', {
+            network: updatedNetwork.network,
+          })
+        }
 
         // Final update including lock release
         await trx
