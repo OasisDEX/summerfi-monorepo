@@ -1,12 +1,13 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useUser } from '@account-kit/react'
 import { getVaultPositionUrl, getVaultUrl } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType } from '@summerfi/app-types'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
 import BigNumber from 'bignumber.js'
 import { usePathname, useRouter } from 'next/navigation'
+
+import { useUserWallet } from './use-user-wallet'
 
 // Minimum amount to consider a position to be "open"
 const minAmount = new BigNumber(0.01)
@@ -23,10 +24,10 @@ export const useRedirectToPositionView = ({
 }) => {
   const pathname = usePathname()
   const { replace } = useRouter()
-  const user = useUser()
+  const { userWalletAddress } = useUserWallet()
 
   useEffect(() => {
-    if (!position || !user) {
+    if (!position || !userWalletAddress) {
       return
     }
     const emptyPosition = new BigNumber(position.amount.amount).lt(minAmount)
@@ -35,7 +36,7 @@ export const useRedirectToPositionView = ({
     const vaultPositionUrl = getVaultPositionUrl({
       network: vault.protocol.network,
       vaultId: vault.customFields?.slug ?? vault.id,
-      walletAddress: user.address,
+      walletAddress: userWalletAddress,
     })
 
     if (pathname === vaultUrl && !emptyPosition) {
@@ -43,5 +44,5 @@ export const useRedirectToPositionView = ({
     } else if (pathname === vaultPositionUrl && emptyPosition) {
       replace(vaultUrl)
     }
-  }, [pathname, position, replace, user, vault])
+  }, [pathname, position, replace, userWalletAddress, vault])
 }
