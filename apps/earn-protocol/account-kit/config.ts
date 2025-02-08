@@ -60,9 +60,6 @@ export const getAccountKitConfig = ({
 }) => {
   return createConfig(
     {
-      transport: alchemy({
-        rpcUrl: forkRpcUrl ?? `/earn/api/rpc/chain/${chainId ?? defaultChain.id}`,
-      }),
       signerConnection: {
         // this is for Alchemy Signer requests
         rpcUrl: '/earn/api/rpc',
@@ -76,6 +73,9 @@ export const getAccountKitConfig = ({
       chains: Object.values(SDKChainIdToAAChainMap).map((chain) => ({
         chain,
         policyId: GasSponsorshipIdMap[chain.id as SDKChainId.ARBITRUM | SDKChainId.BASE],
+        transport: alchemy({
+          rpcUrl: forkRpcUrl ?? `/earn/api/rpc/chain/${chain.id}`,
+        }),
       })),
       ssr: true,
       storage: cookieStorage,
