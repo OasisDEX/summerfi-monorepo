@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useUser } from '@account-kit/react'
 import {
+  Card,
   ControlsDepositWithdraw,
   Expander,
   getPositionValues,
@@ -445,16 +446,29 @@ export const VaultManageViewComponent = ({
                 </Text>
               }
             >
-              <Text
-                as="p"
-                variant="p2"
-                style={{
-                  color: 'var(--color-text-secondary)',
-                }}
-              >
-                The Summer Earn Protocol is a permissionless passive lending product, which sets out
-                to offer effortless and secure optimised yield, while diversifying risk.
-              </Text>
+              <Card style={{ flexDirection: 'column', marginTop: 'var(--general-space-16)' }}>
+                <Text
+                  as="p"
+                  variant="p2semi"
+                  style={{
+                    color: 'var(--color-text-primary)',
+                    marginBottom: 'var(--general-space-24)',
+                  }}
+                >
+                  1% Management Fee, already included in APY
+                </Text>
+                <Text
+                  as="p"
+                  variant="p2"
+                  style={{
+                    color: 'var(--color-text-secondary)',
+                  }}
+                >
+                  A 1% management fee is applied to your position, but it’s already factored into
+                  the APY you see. This means the rate displayed reflects your net return - no
+                  hidden fees, just straightforward earnings.
+                </Text>
+              </Card>
             </Expander>
             <Expander
               title={
