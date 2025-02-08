@@ -254,10 +254,9 @@ export class RewardsService {
     chainId: ChainId,
   ): Promise<Record<string, RewardRate[]>> {
     const currentTimestamp = Math.floor(Date.now() / 1000)
-    // const vaultAddresses = productIds.map(id => {
-    //   const [, , vault] = id.split('-');
-    //   return vault.toLowerCase();
-    // });
+    this.logger.info(
+      `[RewardsService] Getting Euler rewards for ${products.length} products on chain ${chainId}`,
+    )
 
     try {
       const response = await this.fetchWithRetry(`${this.EULER_API_URL}${chainId}`)

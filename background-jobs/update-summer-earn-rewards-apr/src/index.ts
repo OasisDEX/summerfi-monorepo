@@ -42,13 +42,6 @@ const WEEK_IN_SECONDS = 604800
 const EPOCH_WEEK_OFFSET = 345600 // 4 days
 const MIN_UPDATE_INTERVAL = 10 * 60 // 10 minutes in seconds
 
-// type Token = {
-//   address: string
-//   symbol: string
-//   decimals: number
-//   precision: number
-// }
-
 async function updateRewardRates(
   trx: Transaction<Database>,
   network: NetworkStatus,
@@ -260,27 +253,6 @@ async function updateWeeklyRewardAverage(
   }
 }
 
-async function ensureTokensExist(
-  trx: Transaction<Database>,
-  network: NetworkStatus,
-  products: Product[],
-) {
-  // Insert token if it doesn't exist
-  for (const product of products) {
-    await trx
-      .insertInto('token')
-      .values({
-        address: product.token.id,
-        symbol: product.token.symbol,
-        decimals: +product.token.decimals,
-        precision: product.token.precision.toString(),
-        network: network.network,
-      })
-      .onConflict((oc) => oc.doNothing())
-      .execute()
-  }
-}
-
 async function getSupportedProducts(client: SubgraphClient): Promise<Products> {
   let products: Products = []
   try {
@@ -299,6 +271,7 @@ export const handler = async (
   context: Context,
 ): Promise<void> => {
   logger.addContext(context)
+  logger.debug('Handler started')
 
   const { SUBGRAPH_BASE, EARN_PROTOCOL_DB_CONNECTION_STRING, NODE_ENV } = process.env
 
@@ -328,42 +301,74 @@ export const handler = async (
   // Get all potential networks
   const allNetworks = await db.selectFrom('networkStatus').selectAll().execute()
 
+  logger.debug('Starting network processing', { networkCount: allNetworks.length })
+
   for (const network of allNetworks) {
-    let lockAcquired = false
+    logger.debug('Processing network', { network: network.network })
     try {
-      // Atomic lock acquisition
-      const updatedNetwork = await db
-        .updateTable('networkStatus')
-        .set({ isUpdating: true })
-        .where('network', '=', network.network)
-        .where('isUpdating', '=', false)
-        .where((eb) =>
-          eb('lastUpdatedAt', '<=', (updateStartTimestamp - MIN_UPDATE_INTERVAL).toString()).or(
-            'lastUpdatedAt',
-            'is',
-            null,
-          ),
-        )
-        .returningAll()
-        .executeTakeFirst()
-
-      if (!updatedNetwork) continue
-      lockAcquired = true
-
-      // Main processing transaction
+      // Start transaction that includes both lock acquisition and processing
       await db.transaction().execute(async (trx) => {
+        // Attempt to acquire lock within transaction
+        const updatedNetwork = await trx
+          .updateTable('networkStatus')
+          .set({ isUpdating: true })
+          .where('network', '=', network.network)
+          .where('isUpdating', '=', false)
+          .where((eb) =>
+            eb('lastUpdatedAt', '<=', (updateStartTimestamp - MIN_UPDATE_INTERVAL).toString()).or(
+              'lastUpdatedAt',
+              'is',
+              null,
+            ),
+          )
+          .returningAll()
+          .executeTakeFirst()
+
+        if (!updatedNetwork) {
+          logger.debug('Skipping network - lock not acquired or too soon to update', {
+            network: network.network,
+            lastUpdate: network.lastUpdatedAt,
+          })
+          return
+        }
+
+        logger.debug('Lock acquired for network', {
+          network: updatedNetwork.network,
+          chainId: networkToChainId[updatedNetwork.network],
+          timestamp: updateStartTimestamp,
+        })
+
+        // Main processing
         const chainId = networkToChainId[updatedNetwork.network]
         const subgraphClient = clients[chainId]
         const products = await getSupportedProducts(subgraphClient)
-
-        // Token updates in separate transaction
-        await db.transaction().execute(async (tokenTrx) => {
-          await ensureTokensExist(tokenTrx, updatedNetwork, products)
+        logger.debug('Retrieved products', {
+          network: updatedNetwork.network,
+          productCount: products.length,
         })
 
-        await updateRewardRates(trx, updatedNetwork, products, updateStartTimestamp)
+        // Token updates
+        await trx
+          .insertInto('token')
+          .values(
+            products.map((product) => ({
+              address: product.token.id,
+              symbol: product.token.symbol,
+              decimals: +product.token.decimals,
+              precision: product.token.precision.toString(),
+              network: updatedNetwork.network,
+            })),
+          )
+          .onConflict((oc) => oc.doNothing())
+          .execute()
 
-        // Final status update
+        await updateRewardRates(trx, updatedNetwork, products, updateStartTimestamp)
+        logger.debug('Updated reward rates', {
+          network: updatedNetwork.network,
+          timestamp: updateStartTimestamp,
+        })
+
+        // Final update including lock release
         await trx
           .updateTable('networkStatus')
           .set({
@@ -373,19 +378,22 @@ export const handler = async (
           })
           .where('network', '=', updatedNetwork.network)
           .execute()
+
+        logger.debug('Network processing completed successfully', {
+          network: updatedNetwork.network,
+        })
       })
     } catch (error) {
-      logger.error(`Error processing network ${network.network}`, { error })
-      if (lockAcquired) {
-        // Emergency lock release outside main transaction
-        await db
-          .updateTable('networkStatus')
-          .set({ isUpdating: false })
-          .where('network', '=', network.network)
-          .execute()
-      }
+      logger.error(`Error processing network ${network.network}`, {
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+        network: network.network,
+        timestamp: updateStartTimestamp,
+      })
     }
   }
+
+  logger.debug('Handler completed')
 }
 
 export default handler
