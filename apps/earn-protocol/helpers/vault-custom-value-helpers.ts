@@ -47,7 +47,7 @@ export const decorateCustomVaultFields = ({
 
   const vaultsWithPerformanceChartData =
     positionHistory && positionForecast
-      ? decorateWithPerformanceChartData(vaultsWithChartsData, {
+      ? decorateWithPerformanceChartData(vaultsWithArkInterestRates, {
           position,
           positionHistory,
           positionForecast,
