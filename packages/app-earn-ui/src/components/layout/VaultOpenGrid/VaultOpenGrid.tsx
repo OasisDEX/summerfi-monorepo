@@ -17,6 +17,7 @@ import { SimpleGrid } from '@/components/molecules/Grid/SimpleGrid'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { VaultTitleDropdownContent } from '@/components/molecules/VaultTitleDropdownContent/VaultTitleDropdownContent'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
+import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 
 import vaultOpenGridStyles from './VaultOpenGrid.module.scss'
@@ -30,6 +31,7 @@ interface VaultOpenGridProps {
   sidebarContent: ReactNode
   isMobile?: boolean
   medianDefiYield?: number
+  sumrPrice?: number
 }
 
 export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
@@ -41,6 +43,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   sidebarContent,
   isMobile,
   medianDefiYield,
+  sumrPrice,
 }) => {
   const [displaySimulationGraphStaggered, setDisplaySimulationGraphStaggered] =
     useState(displaySimulationGraph)
@@ -77,6 +80,13 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
     }
   }, [displaySimulationGraph])
 
+  const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus(
+    vault.rewardTokens,
+    vault.rewardTokenEmissionsAmount,
+    sumrPrice,
+    vault.totalValueLockedUSD,
+  )
+
   return (
     <>
       <div className={vaultOpenGridStyles.vaultOpenGridBreadcrumbsWrapper}>
@@ -111,9 +121,11 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 networkName={vault.protocol.network}
               />
             </Dropdown>
-            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-              <BonusLabel rays="1,111" />
-            </Text>
+            {Number(rawSumrTokenBonus) > 0 && (
+              <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+                <BonusLabel tokenBonus={sumrTokenBonus} withTokenBonus />
+              </Text>
+            )}
           </div>
           <AnimateHeight id="simulation-graph" scale show={displaySimulationGraphStaggered}>
             {simulationGraph}

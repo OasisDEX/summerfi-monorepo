@@ -10,10 +10,12 @@ import {
   sidebarFootnote,
   SidebarMobileHeader,
   type SidebarProps,
+  SUMR_CAP,
   Text,
   useAmount,
   useAmountWithSwap,
   useForecast,
+  useLocalConfig,
   useMobileCheck,
   useTokenSelector,
   VaultManageGrid,
@@ -43,7 +45,6 @@ import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistor
 import { PositionPerformanceChart } from '@/components/organisms/Charts/PositionPerformanceChart'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
-import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
@@ -161,7 +162,9 @@ export const VaultManageViewComponent = ({
   })
 
   const sdk = useAppSDK()
-  const [slippageConfig] = useSlippageConfig()
+  const {
+    state: { sumrNetApyConfig, slippageConfig },
+  } = useLocalConfig()
 
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
@@ -355,6 +358,8 @@ export const VaultManageViewComponent = ({
   // needed due to type duality
   const rebalancesList = `rebalances` in vault ? vault.rebalances : []
 
+  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
+
   return (
     <>
       <NonOwnerPositionBanner isOwner={ownerView} walletStateLoaded={!isLoadingAccount} />
@@ -373,6 +378,7 @@ export const VaultManageViewComponent = ({
             amount={amountParsed}
           />
         }
+        sumrPrice={estimatedSumrPrice}
         detailsContent={[
           <div className={vaultManageViewStyles.leftContentWrapper} key="PerformanceBlock">
             <Expander

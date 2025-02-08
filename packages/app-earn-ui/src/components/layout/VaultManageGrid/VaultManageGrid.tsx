@@ -18,6 +18,7 @@ import { SimpleGrid } from '@/components/molecules/Grid/SimpleGrid'
 import { VaultTitleDropdownContent } from '@/components/molecules/VaultTitleDropdownContent/VaultTitleDropdownContent'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
 import { getPositionValues } from '@/helpers/get-position-values'
+import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 
 import vaultManageGridStyles from './VaultManageGrid.module.scss'
@@ -33,6 +34,7 @@ interface VaultManageGridProps {
   isMobile?: boolean
   displaySimulationGraph?: boolean
   simulationGraph: ReactNode
+  sumrPrice?: number
 }
 
 export const VaultManageGrid: FC<VaultManageGridProps> = ({
@@ -46,6 +48,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   isMobile,
   simulationGraph,
   displaySimulationGraph,
+  sumrPrice,
 }) => {
   const [displaySimulationGraphStaggered, setDisplaySimulationGraphStaggered] =
     useState(displaySimulationGraph)
@@ -77,6 +80,13 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
     positionData: position,
     vaultData: vault,
   })
+
+  const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus(
+    vault.rewardTokens,
+    vault.rewardTokenEmissionsAmount,
+    sumrPrice,
+    vault.totalValueLockedUSD,
+  )
 
   return (
     <>
@@ -125,9 +135,11 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 networkName={vault.protocol.network}
               />
             </Dropdown>
-            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-              <BonusLabel rays="1,111" />
-            </Text>
+            {Number(rawSumrTokenBonus) > 0 && (
+              <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+                <BonusLabel tokenBonus={sumrTokenBonus} withTokenBonus />
+              </Text>
+            )}
           </div>
           <AnimateHeight id="simulation-graph" scale show={displaySimulationGraphStaggered}>
             {simulationGraph}

@@ -6,10 +6,12 @@ import {
   SidebarFootnote,
   sidebarFootnote,
   SidebarMobileHeader,
+  SUMR_CAP,
   Text,
   useAmount,
   useAmountWithSwap,
   useForecast,
+  useLocalConfig,
   useLocalStorageOnce,
   useMobileCheck,
   useTokenSelector,
@@ -36,7 +38,6 @@ import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/
 import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
-import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
@@ -79,7 +80,9 @@ export const VaultOpenViewComponent = ({
 
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
 
-  const [slippageConfig] = useSlippageConfig()
+  const {
+    state: { sumrNetApyConfig, slippageConfig },
+  } = useLocalConfig()
   const sdk = useAppSDK()
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
@@ -330,6 +333,8 @@ export const VaultOpenViewComponent = ({
   // needed due to type duality
   const rebalancesList = `rebalances` in vault ? vault.rebalances : []
 
+  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
+
   return (
     <VaultOpenGrid
       isMobile={isMobile}
@@ -337,6 +342,7 @@ export const VaultOpenViewComponent = ({
       vaults={vaults}
       medianDefiYield={medianDefiYield}
       displaySimulationGraph={displaySimulationGraph}
+      sumrPrice={estimatedSumrPrice}
       simulationGraph={
         <VaultSimulationGraph
           vault={vault}

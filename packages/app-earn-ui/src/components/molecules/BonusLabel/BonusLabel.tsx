@@ -24,9 +24,11 @@ export const BonusLabel = ({
     <Tooltip
       tooltip={
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <Text as="p" variant="p4semi">
-            Native Yield: {apy}
-          </Text>
+          {apy && (
+            <Text as="p" variant="p4semi">
+              Native Yield: {apy}
+            </Text>
+          )}
           {tokenBonus && withTokenBonus && (
             <Text as="p" variant="p4semi">
               SUMR Rewards: {tokenBonus}
