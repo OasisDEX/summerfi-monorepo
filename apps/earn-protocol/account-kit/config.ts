@@ -35,9 +35,8 @@ const uiConfig: AlchemyAccountsUIConfig = {
       [{ type: 'email' }],
       [
         { type: 'passkey' },
-        // to be re-enabled once verified
-        // { type: 'social', authProviderId: 'google', mode: 'popup' },
-        // { type: 'social', authProviderId: 'facebook', mode: 'popup' },
+        { type: 'social', authProviderId: 'google', mode: 'popup' },
+        { type: 'social', authProviderId: 'facebook', mode: 'popup' },
       ],
       [
         {
