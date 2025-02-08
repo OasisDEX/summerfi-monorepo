@@ -1,4 +1,4 @@
-export { getUserPositions } from './getUserPositions'
+export { getUserPositions, type UserPositionsQuery } from './getUserPositions'
 export { getUsersPositions } from './getUsersPositions'
 export { getVaults } from './getVaults'
 export { getUsers } from './getUsers'

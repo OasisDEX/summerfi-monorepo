@@ -8,13 +8,16 @@ import {
 import { chainIdSchema } from '@summerfi/serverless-shared/validators'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { Address, ChainId, isValidAddress } from '@summerfi/serverless-shared'
-import { getUsers, getUsersPositions } from '@summerfi/summer-earn-protocol-subgraph'
+import {
+  getUsers,
+  getUsersPositions,
+  UserPositionsQuery,
+} from '@summerfi/summer-earn-protocol-subgraph'
 import { getVaults } from '@summerfi/summer-earn-protocol-subgraph'
 import { createPublicClient, http } from 'viem'
 import { mainnet, optimism, arbitrum, base } from 'viem/chains'
 import { supportedChains } from '@summerfi/summer-earn-protocol-subgraph'
 import { fleetRewardsManagerAbi } from './abis/fleetRewardsManager'
-import { UserPositionsQuery } from '../../../packages/summer-earn-protocol-subgraph/src/generated/client'
 
 const rewardTokenPerChain: Partial<Record<ChainId, Address>> = {
   [ChainId.MAINNET]: '0x887482d43792330Bf42C20154d11B0c308aFb4bc',
