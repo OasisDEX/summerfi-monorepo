@@ -13,7 +13,7 @@ import { RewardsService } from './rewards-service'
 import { Transaction } from 'kysely'
 import { Database, mapDbNetworkToChainId } from '@summerfi/summer-protocol-db'
 
-const logger = new Logger({ serviceName: 'update-rays-cron-function' })
+const logger = new Logger({ serviceName: 'update-summer-earn-rewards-apr' })
 
 export enum Protocol {
   Morpho = 'Morpho',
