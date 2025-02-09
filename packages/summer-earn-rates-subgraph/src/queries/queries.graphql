@@ -13,134 +13,68 @@ query GetProducts($protocols: [String!], $first: Int = 1000) {
     pool
   }
 }
-
-# Query latest interest rates
-query GetLatestInterestRates(
-  $productId: String
-  $limit: Int
-  $fromTimestamp: BigInt
-  $toTimestamp: BigInt
-) {
-  interestRates(
-    orderBy: timestamp
-    orderDirection: desc
-    first: $limit
-    where: { productId: $productId, timestamp_gte: $fromTimestamp, timestamp_lte: $toTimestamp }
-  ) {
-    id
-    type
-    rate
-    blockNumber
-    timestamp
-    protocol
-    token {
-      id
-      symbol
-      decimals
-      precision
-    }
-    dailyRateId {
-      id
-      date
-      sumRates
-      updateCount
-      averageRate
-      protocol
-      token
-    }
-    hourlyRateId {
-      id
-      date
-      sumRates
-      updateCount
-      averageRate
-      protocol
-      token
-    }
-    weeklyRateId {
-      id
-      weekTimestamp
-      sumRates
-      updateCount
-      averageRate
-      protocol
-      token
-    }
-  }
-}
-
-# Query daily rates
-query GetDailyRates($productId: String, $fromDate: BigInt, $toDate: BigInt, $limit: Int) {
+query GetInterestRates($productId: String!) {
+  # as this query result can get very big very fast
+  # please please reconsider adding more fields
   dailyInterestRates(
+    where: { productId: $productId }
+    first: 365 # 365 days
     orderBy: date
     orderDirection: desc
-    first: $limit
-    where: { productId: $productId, date_gte: $fromDate, date_lte: $toDate }
   ) {
     id
-    date
-    sumRates
-    updateCount
     averageRate
-    protocol
-    token
-    interestRates {
-      id
-      rate
-    }
+    date
   }
-}
-
-# Query hourly rates
-query GetHourlyRates($productId: String, $fromDate: BigInt, $toDate: BigInt, $limit: Int) {
   hourlyInterestRates(
+    where: { productId: $productId }
+    first: 720 # 24 * 30 = one month
     orderBy: date
     orderDirection: desc
-    first: $limit
-    where: { productId: $productId, date_gte: $fromDate, date_lte: $toDate }
   ) {
     id
-    date
-    sumRates
-    updateCount
     averageRate
-    protocol
-    token
-    interestRates {
-      id
-      rate
-    }
+    date
   }
-}
-
-# Query weekly rates
-query GetWeeklyRates($productId: String, $fromDate: BigInt, $toDate: BigInt, $limit: Int) {
   weeklyInterestRates(
+    where: { productId: $productId }
+    first: 156 # 52 * 3 = three years
     orderBy: weekTimestamp
     orderDirection: desc
-    first: $limit
-    where: { productId: $productId, weekTimestamp_gte: $fromDate, weekTimestamp_lte: $toDate }
   ) {
     id
-    weekTimestamp
-    sumRates
-    updateCount
     averageRate
-    protocol
-    token
-    interestRates {
+    date: weekTimestamp
+  }
+  # latest interest rate, used in the arks list
+  latestInterestRate: hourlyInterestRates(
+    where: { productId: $productId }
+    first: 1
+    orderBy: date
+    orderDirection: desc
+  ) {
+    rate: interestRates(first: 1, orderBy: timestamp, orderDirection: desc) {
       id
       rate
+      timestamp
     }
   }
 }
 
-# Query single token
-query GetToken($address: ID!) {
-  token(id: $address) {
-    id
-    symbol
-    decimals
-    precision
+query GetArkRates($productId: String!) {
+  interestRates(
+    where: { productId: $productId }
+    orderBy: timestamp
+    orderDirection: desc
+    first: 20
+  ) {
+    timestamp
+    rate
+    productId
+    protocol
+    token {
+      symbol
+      address
+    }
   }
 }

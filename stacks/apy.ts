@@ -1,4 +1,4 @@
-import { Function, FunctionProps } from 'sst/constructs'
+import { Function as SSTFunction, FunctionProps } from 'sst/constructs'
 import { SummerStackContext } from './summer-stack-context'
 
 export function addApyConfig({ stack, api, vpc, cache }: SummerStackContext) {
@@ -21,44 +21,62 @@ export function addApyConfig({ stack, api, vpc, cache }: SummerStackContext) {
     SUBGRAPH_BASE: SUBGRAPH_BASE,
     POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
     STAGE: stack.stage || 'dev',
+    EARN_PROTOCOL_DB_CONNECTION_STRING: process.env.EARN_PROTOCOL_DB_CONNECTION_STRING || '',
   }
-  const functionConfig: FunctionProps = vpc
-    ? {
-        handler: 'summerfi-api/get-apy-function/src/index.handler',
-        runtime: 'nodejs20.x',
-        environment,
-        vpc: vpc.vpc,
-        vpcSubnets: {
-          subnets: [...vpc.vpc.privateSubnets],
-        },
-        securityGroups: [vpc.securityGroup],
+
+  const createFunctionConfig = (handler: string): FunctionProps =>
+    vpc
+      ? {
+          handler,
+          runtime: 'nodejs20.x',
+          environment,
+          vpc: vpc.vpc,
+          vpcSubnets: {
+            subnets: [...vpc.vpc.privateSubnets],
+          },
+          securityGroups: [vpc.securityGroup],
+        }
+      : {
+          handler,
+          runtime: 'nodejs20.x',
+          environment,
+        }
+
+  const getApyFunction = new SSTFunction(
+    stack,
+    'get-apy-function',
+    createFunctionConfig('summerfi-api/get-apy-function/src/index.handler'),
+  )
+
+  const getRatesFunction = new SSTFunction(
+    stack,
+    'get-rates-function',
+    createFunctionConfig('summerfi-api/get-rates-function/src/index.handler'),
+  )
+
+  const configureCacheForFunction = (fn: SSTFunction) => {
+    if (cache) {
+      fn.addToRolePolicy(cache.policyStatement)
+      fn.addEnvironment('REDIS_CACHE_URL', cache.url)
+    } else {
+      if (REDIS_CACHE_URL) {
+        fn.addEnvironment('REDIS_CACHE_URL', REDIS_CACHE_URL)
       }
-    : {
-        handler: 'summerfi-api/get-apy-function/src/index.handler',
-        runtime: 'nodejs20.x',
-        environment,
+      if (REDIS_CACHE_PASSWORD) {
+        fn.addEnvironment('REDIS_CACHE_PASSWORD', REDIS_CACHE_PASSWORD)
       }
-
-  const getApyFunction = new Function(stack, 'get-apy-function', functionConfig)
-
-  if (cache) {
-    getApyFunction.addToRolePolicy(cache.policyStatement)
-    getApyFunction.addEnvironment('REDIS_CACHE_URL', cache.url)
-  } else {
-    if (REDIS_CACHE_URL) {
-      getApyFunction.addEnvironment('REDIS_CACHE_URL', REDIS_CACHE_URL)
-    }
-
-    if (REDIS_CACHE_PASSWORD) {
-      getApyFunction.addEnvironment('REDIS_CACHE_PASSWORD', REDIS_CACHE_PASSWORD)
-    }
-
-    if (REDIS_CACHE_USER) {
-      getApyFunction.addEnvironment('REDIS_CACHE_USER', REDIS_CACHE_USER)
+      if (REDIS_CACHE_USER) {
+        fn.addEnvironment('REDIS_CACHE_USER', REDIS_CACHE_USER)
+      }
     }
   }
+
+  configureCacheForFunction(getApyFunction)
+  configureCacheForFunction(getRatesFunction)
 
   api.addRoutes(stack, {
     'GET /api/apy/{chainId}/{protocol}': getApyFunction,
+    'GET /api/rates/{chainId}': getRatesFunction,
+    'GET /api/historicalRates/{chainId}': getRatesFunction,
   })
 }
