@@ -44,6 +44,7 @@ export type VaultSimulationFormProps = {
   isEarnApp?: boolean
   positionExists?: boolean
   userWalletAddress?: string
+  isLoading?: boolean
 }
 
 export const VaultSimulationForm = ({
@@ -62,6 +63,7 @@ export const VaultSimulationForm = ({
   isEarnApp,
   positionExists,
   userWalletAddress,
+  isLoading = false,
 }: VaultSimulationFormProps) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [isGradientBorder, setIsGradientBorder] = useState(false)
@@ -146,7 +148,7 @@ export const VaultSimulationForm = ({
               ? {
                   label: 'View your position',
                   url: `${vaultUrl}/${userWalletAddress}`,
-                  disabled: false,
+                  disabled: isLoading,
                 }
               : {
                   label: 'Deposit',
@@ -154,7 +156,7 @@ export const VaultSimulationForm = ({
                   action: () => {
                     setStorageOnce(amountParsed.toNumber())
                   },
-                  disabled: false,
+                  disabled: isLoading,
                 },
           footnote: !positionExists ? (
             <Link href={vaultUrl}>

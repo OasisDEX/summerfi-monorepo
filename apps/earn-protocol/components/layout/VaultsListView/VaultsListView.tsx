@@ -105,7 +105,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
   const vaultData = selectedVaultData ?? networkFilteredVaults[0]
   const { userWalletAddress } = useUserWallet()
 
-  const positionExists = usePosition({
+  const { position: positionExists, isLoading } = usePosition({
     chainId: subgraphNetworkToSDKId(vaultData.protocol.network),
     vaultId: vaultData.id,
     onlyActive: true,
@@ -290,6 +290,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
           isEarnApp
           positionExists={Boolean(positionExists)}
           userWalletAddress={userWalletAddress}
+          isLoading={isLoading}
         />
       }
     />

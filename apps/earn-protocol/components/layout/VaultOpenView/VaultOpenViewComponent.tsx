@@ -165,7 +165,7 @@ export const VaultOpenViewComponent = ({
     approvalCustomValue: approvalAmountParsed,
   })
 
-  const position = usePosition({
+  const { position } = usePosition({
     chainId: vaultChainId,
     vaultId: vault.id,
   })
