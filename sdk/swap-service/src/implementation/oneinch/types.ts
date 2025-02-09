@@ -10,6 +10,7 @@ export type OneInchSwapProviderConfig = {
   apiKey: string
   version: string
   allowedSwapProtocols: string[]
+  excludedSwapProtocols: string[]
 }
 
 export interface OneInchBaseResponse {
