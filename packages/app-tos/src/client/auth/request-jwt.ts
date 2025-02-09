@@ -5,7 +5,7 @@ import { getGnosisSafeDetails } from '@/client/auth/gnosis/get-gnosis-safe-detai
 import { requestChallenge } from '@/client/auth/request-challenge'
 import { requestSignin } from '@/client/auth/request-signin'
 import { signTypedPayload } from '@/client/helpers/sign-typed-payload'
-import { type TOSSignMessage } from '@/types'
+import { type TOSMessageType, type TOSSignMessage } from '@/types'
 
 /**
  * Requests a JSON Web Token (JWT) by signing a challenge.
@@ -31,6 +31,7 @@ export async function requestJWT({
   walletAddress,
   isGnosisSafe,
   cookiePrefix,
+  type,
   host,
 }: {
   signMessage: TOSSignMessage
@@ -38,6 +39,7 @@ export async function requestJWT({
   walletAddress: string
   isGnosisSafe: boolean
   cookiePrefix: string
+  type: TOSMessageType
   host?: string
 }): Promise<string | undefined> {
   const challenge = await requestChallenge({ walletAddress, isGnosisSafe, host })
@@ -54,6 +56,7 @@ export async function requestJWT({
       chainId,
       walletAddress,
       challenge,
+      type,
     )
 
     // start polling
@@ -74,6 +77,7 @@ export async function requestJWT({
               isGnosisSafe,
               cookiePrefix,
               host,
+              type,
             })
 
             return returnValue(safeJwt)
@@ -98,7 +102,7 @@ export async function requestJWT({
     return token
   }
 
-  const signature = await signTypedPayload(challenge, signMessage)
+  const signature = await signTypedPayload(challenge, signMessage, type)
 
   if (!signature) {
     throw new Error('Signing process declined or failed, try again or contact with support')
@@ -111,5 +115,6 @@ export async function requestJWT({
     isGnosisSafe: false,
     cookiePrefix,
     host,
+    type,
   })
 }

@@ -78,6 +78,7 @@ export const DataBlock = ({
           tooltip={titleTooltip}
           color="rgb(119, 117, 118)"
           titleStyle={titleStyle}
+          tooltipWrapperStyles={{ minWidth: '230px', left: '-120px' }}
         />
       </div>
       <Text variant={valueVariant} style={valueStyle}>

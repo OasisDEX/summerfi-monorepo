@@ -1,12 +1,15 @@
 import { type FC, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import { Card, DataBlock, Icon, Text, Tooltip } from '@summerfi/app-earn-ui'
-import { type SDKGlobalRebalancesType } from '@summerfi/app-types'
-import { formatFiatBalance, formatShorthandNumber } from '@summerfi/app-utils'
+import { type SDKGlobalRebalancesType, type SDKVaultsListType } from '@summerfi/app-types'
+import {
+  formatFiatBalance,
+  formatShorthandNumber,
+  getRebalanceSavedGasCost,
+  getRebalanceSavedTimeInHours,
+} from '@summerfi/app-utils'
 
 import { PortfolioRebalanceActivityList } from '@/features/portfolio/components/PortfolioRebalanceActivityList/PortfolioRebalanceActivityList'
-import { getRebalanceSavedGasCost } from '@/features/rebalance-activity/helpers/get-saved-gas-cost'
-import { getRebalanceSavedTimeInHours } from '@/features/rebalance-activity/helpers/get-saved-time-in-hours'
 
 import classNames from './PortfolioRebalanceActivity.module.scss'
 
@@ -14,6 +17,7 @@ interface PortfolioRebalanceActivityProps {
   rebalancesList: SDKGlobalRebalancesType
   walletAddress: string
   totalRebalances: number
+  vaultsList: SDKVaultsListType
 }
 
 const initialRows = 10
@@ -22,12 +26,13 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
   rebalancesList,
   walletAddress,
   totalRebalances,
+  vaultsList,
 }) => {
   const savedTimeInHours = useMemo(
     () => getRebalanceSavedTimeInHours(totalRebalances),
     [totalRebalances],
   )
-  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(totalRebalances), [totalRebalances])
+  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(vaultsList), [vaultsList])
 
   const [current, setCurrent] = useState(initialRows)
 
@@ -60,7 +65,7 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
           </Tooltip>
         </div>
       ),
-      value: `${formatShorthandNumber(savedTimeInHours, { precision: 1 })} hours`,
+      value: `${savedTimeInHours} hours`,
     },
     {
       title: (

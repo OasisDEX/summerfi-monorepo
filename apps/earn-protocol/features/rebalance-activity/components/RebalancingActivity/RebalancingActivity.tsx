@@ -1,17 +1,20 @@
 import { type FC, useMemo } from 'react'
 import { Card, DataBlock, Icon, Text, Tooltip, WithArrow } from '@summerfi/app-earn-ui'
-import { type SDKGlobalRebalancesType } from '@summerfi/app-types'
-import { formatFiatBalance } from '@summerfi/app-utils'
+import { type SDKGlobalRebalancesType, type SDKVaultsListType } from '@summerfi/app-types'
+import {
+  formatFiatBalance,
+  getRebalanceSavedGasCost,
+  getRebalanceSavedTimeInHours,
+} from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import { RebalanceActivityTable } from '@/features/rebalance-activity/components/RebalanceActivityTable/RebalanceActivityTable'
-import { getRebalanceSavedGasCost } from '@/features/rebalance-activity/helpers/get-saved-gas-cost'
-import { getRebalanceSavedTimeInHours } from '@/features/rebalance-activity/helpers/get-saved-time-in-hours'
 
 interface RebalancingActivityProps {
   rebalancesList: SDKGlobalRebalancesType
   vaultId: string
   totalRebalances: number
+  vaultsList: SDKVaultsListType
 }
 
 const rowsToDisplay = 4
@@ -20,12 +23,13 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({
   rebalancesList,
   vaultId,
   totalRebalances,
+  vaultsList,
 }) => {
   const savedTimeInHours = useMemo(
     () => getRebalanceSavedTimeInHours(totalRebalances),
     [totalRebalances],
   )
-  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(totalRebalances), [totalRebalances])
+  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(vaultsList), [vaultsList])
 
   return (
     <Card style={{ marginTop: 'var(--spacing-space-medium)' }}>

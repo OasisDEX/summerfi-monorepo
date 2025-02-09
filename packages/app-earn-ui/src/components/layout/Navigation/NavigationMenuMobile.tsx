@@ -60,12 +60,19 @@ export const NavigationMenuMobile = ({
             link.link ? (
               <Link
                 key={`Mobile_${link.id}`}
-                href={link.link}
+                href={link.disabled ? '' : link.link ?? '/'}
                 className={clsx({
                   [navigationMenuMobileStyles.activeLink]: currentPath === link.link,
                 })}
+                prefetch={Boolean(link.disabled)}
               >
-                <Text as="p" variant="p2semi">
+                <Text
+                  as="p"
+                  variant="p2semi"
+                  style={{
+                    opacity: link.disabled ? '0.5' : '1',
+                  }}
+                >
                   {link.label}
                 </Text>
               </Link>
@@ -73,7 +80,13 @@ export const NavigationMenuMobile = ({
               <Fragment key={`Mobile_${link.id}`}>
                 <Expander
                   title={
-                    <Text as="p" variant="p2semi">
+                    <Text
+                      as="p"
+                      variant="p2semi"
+                      style={{
+                        opacity: link.disabled ? '0.5' : '1',
+                      }}
+                    >
                       {link.label}
                     </Text>
                   }
@@ -81,6 +94,7 @@ export const NavigationMenuMobile = ({
                     justifyContent: 'flex-start',
                     color: 'var(--earn-protocol-secondary-40)',
                   }}
+                  disabled={link.disabled}
                 >
                   <div style={{ padding: 'var(--general-space-8)' }}>
                     {link.itemsList && (

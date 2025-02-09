@@ -34,6 +34,7 @@ export const fetchRays = async (query: { [key: string]: string } | string) => {
       rays: {
         ...rays,
         allPossiblePoints: rays.allPossiblePoints + calculatedData.allBonusRays,
+        dailyChallengeRays: calculatedData.dailyChallengeRays,
       },
     }
   } catch (e) {
@@ -42,3 +43,5 @@ export const fetchRays = async (query: { [key: string]: string } | string) => {
     }
   }
 }
+
+export type FetchRaysReturnType = Awaited<ReturnType<typeof fetchRays>>

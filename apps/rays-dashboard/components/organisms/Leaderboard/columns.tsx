@@ -7,6 +7,7 @@ import {
   LeaderboardRays,
   LeaderboardUser,
 } from '@/components/organisms/Leaderboard/components/LeaderboardColumns'
+import { type FetchRaysReturnType } from '@/server-handlers/rays'
 
 export const leaderboardColumns = {
   rank: {
@@ -21,11 +22,78 @@ export const leaderboardColumns = {
       <LeaderboardUser cell={cell} userWalletAddress={userWalletAddress} />
     ),
   },
-  rays: {
-    title: 'Rays',
+  raysS1: {
+    title: 'Season 1 Rays',
     cellMapper: (cell: LeaderboardItem, userWalletAddress?: string) => (
-      <LeaderboardRays cell={cell} userWalletAddress={userWalletAddress} />
+      <LeaderboardRays
+        raysCount={Number(cell.tgeSnapshotPoints)}
+        cell={cell}
+        userWalletAddress={userWalletAddress}
+      />
     ),
+  },
+  raysS2: {
+    title: 'Season 2 Rays',
+    cellMapper: (
+      cell: LeaderboardItem,
+      userWalletAddress?: string,
+      userRays?: FetchRaysReturnType,
+    ) => {
+      const isConnectedUser = userWalletAddress === cell.userAddress
+
+      if (isConnectedUser) {
+        // theres no daily users data for the leaderboard unfortunately
+        // so we're showing the daily rays count from the user's data
+        const dailyRaysCount = userRays?.rays?.dailyChallengeRays ?? 0
+
+        return (
+          <LeaderboardRays
+            raysCount={Math.max(
+              0,
+              Number(cell.totalPoints) - Number(cell.tgeSnapshotPoints) + dailyRaysCount,
+            )}
+            cell={cell}
+            userWalletAddress={userWalletAddress}
+          />
+        )
+      }
+
+      return (
+        <LeaderboardRays
+          raysCount={Math.max(0, Number(cell.totalPoints) - Number(cell.tgeSnapshotPoints))}
+          cell={cell}
+          userWalletAddress={userWalletAddress}
+        />
+      )
+    },
+  },
+  totalRays: {
+    title: 'Total Rays',
+    cellMapper: (
+      cell: LeaderboardItem,
+      userWalletAddress?: string,
+      userRays?: FetchRaysReturnType,
+    ) => {
+      const isConnectedUser = userWalletAddress === cell.userAddress
+
+      if (isConnectedUser) {
+        return (
+          <LeaderboardRays
+            raysCount={Math.max(0, userRays?.rays?.allPossiblePoints ?? Number(cell.totalPoints))}
+            cell={cell}
+            userWalletAddress={userWalletAddress}
+          />
+        )
+      }
+
+      return (
+        <LeaderboardRays
+          raysCount={Number(cell.totalPoints)}
+          cell={cell}
+          userWalletAddress={userWalletAddress}
+        />
+      )
+    },
   },
   portfolio: {
     title: 'Summer portfolio',
@@ -41,12 +109,14 @@ export const mapLeaderboardColumns = ({
   skipBanner,
   page,
   bannerEveryNth,
+  userRays,
 }: {
   leaderboardData: (LeaderboardItem | 'separator')[]
   userWalletAddress?: string
   page: string
   skipBanner?: boolean
   bannerEveryNth?: number
+  userRays?: FetchRaysReturnType
 }) => {
   const index = 4
 
@@ -82,7 +152,9 @@ export const mapLeaderboardColumns = ({
           cells: [
             leaderboardColumns.rank.cellMapper(item, parsedWalletAddress),
             leaderboardColumns.user.cellMapper(item, parsedWalletAddress),
-            leaderboardColumns.rays.cellMapper(item, parsedWalletAddress),
+            leaderboardColumns.raysS1.cellMapper(item, parsedWalletAddress),
+            leaderboardColumns.raysS2.cellMapper(item, parsedWalletAddress, userRays),
+            leaderboardColumns.totalRays.cellMapper(item, parsedWalletAddress, userRays),
             leaderboardColumns.portfolio.cellMapper(item, parsedWalletAddress),
           ],
         },

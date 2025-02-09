@@ -1,12 +1,13 @@
 import { SDKChainId } from '@summerfi/app-types'
-import { SummerTokenAbi } from '@summerfi/armada-protocol-abis'
-import { getChainInfoByChainId } from '@summerfi/sdk-common'
+import { GovernanceRewardsManagerAbi } from '@summerfi/armada-protocol-abis'
 import BigNumber from 'bignumber.js'
+import { unstable_cache as unstableCache } from 'next/cache'
 import { createPublicClient, http } from 'viem'
 import { base } from 'viem/chains'
 
-import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
-import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
+import { GOVERNANCE_REWARDS_MANAGER_ADDRESS } from '@/constants/addresses'
+import { REVALIDATION_TIMES } from '@/constants/revalidations'
+import { SDKChainIdToSSRRpcGatewayMap } from '@/helpers/rpc-gateway-ssr'
 
 export interface SumrDecayFactorData {
   address: string
@@ -21,7 +22,10 @@ export interface SumrDecayFactorData {
  * The decay factor represents the token holder's voting power, if 1 is the maximum
  * voting power,  0.5 is half the voting power etc.
  */
-export const getSumrDecayFactor = async (addresses: string[]): Promise<SumrDecayFactorData[]> => {
+export const getSumrDecayFactor = async (
+  addresses: string[],
+  walletAddress: string,
+): Promise<SumrDecayFactorData[]> => {
   try {
     if (!addresses.length) {
       return []
@@ -29,48 +33,43 @@ export const getSumrDecayFactor = async (addresses: string[]): Promise<SumrDecay
 
     const publicClient = createPublicClient({
       chain: base,
-      transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.BASE]),
+      transport: http(await SDKChainIdToSSRRpcGatewayMap[SDKChainId.BASE]),
     })
 
-    let sumrToken
-
     try {
-      const chainResponse = await backendSDK.chains.getChain({
-        chainInfo: getChainInfoByChainId(SDKChainId.BASE),
-      })
+      const decayFactors = await unstableCache(
+        async () => {
+          const callResult = await publicClient.multicall({
+            contracts: addresses.map(
+              (address) =>
+                ({
+                  abi: GovernanceRewardsManagerAbi,
+                  address: GOVERNANCE_REWARDS_MANAGER_ADDRESS,
+                  functionName: 'calculateSmoothedDecayFactor',
+                  args: [address],
+                }) as const,
+            ),
+          })
 
-      sumrToken = await chainResponse.tokens.getTokenBySymbol({
-        symbol: 'SUMMER',
-      })
-    } catch (error) {
-      throw new Error(
-        `Failed to fetch SUMMER token data: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      )
-    }
+          if (!callResult.every((result) => result.status === 'success')) {
+            throw new Error('Some decay factor queries failed')
+          }
 
-    try {
-      const decayFactors = await publicClient.multicall({
-        contracts: addresses.map(
-          (address) =>
-            ({
-              abi: SummerTokenAbi,
-              address: sumrToken.address.value,
-              functionName: 'getDecayFactor',
-              args: [address],
-            }) as const,
-        ),
-      })
+          return addresses.map((address, index) => ({
+            address: address.toLowerCase(),
+            decayFactor: new BigNumber(callResult[index].result.toString())
+              .shiftedBy(-18)
+              .toNumber(),
+          }))
+        },
+        [],
+        {
+          revalidate: REVALIDATION_TIMES.PORTFOLIO_DATA,
+          tags: [walletAddress.toLowerCase()],
+        },
+      )()
 
-      if (!decayFactors.every((result) => result.status === 'success')) {
-        throw new Error('Some decay factor queries failed')
-      }
-
-      return addresses.map((address, index) => ({
-        address: address.toLowerCase(),
-        decayFactor: new BigNumber(decayFactors[index].result.toString() ?? '0')
-          .shiftedBy(-sumrToken.decimals)
-          .toNumber(),
-      }))
+      return decayFactors
     } catch (error) {
       throw new Error(
         `Failed to fetch decay factors: ${error instanceof Error ? error.message : 'Unknown error'}`,

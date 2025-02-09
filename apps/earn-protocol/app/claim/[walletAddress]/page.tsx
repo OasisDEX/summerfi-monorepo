@@ -10,8 +10,6 @@ import { ClaimPageViewComponent } from '@/components/layout/ClaimPageView/ClaimP
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { isValidAddress } from '@/helpers/is-valid-address'
 
-export const revalidate = 60
-
 type ClaimPageProps = {
   params: {
     walletAddress: string
@@ -24,7 +22,6 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
   if (!isValidAddress(walletAddress)) {
     redirect(`/`)
   }
-
   const [sumrStakeDelegate, sumrBalances, sumrStakingInfo, sumrDelegates, sumrToClaim] =
     await Promise.all([
       getSumrDelegateStake({
@@ -40,6 +37,7 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
 
   const sumrDecayFactors = await getSumrDecayFactor(
     sumrDelegates.map((delegate) => delegate.account.address),
+    walletAddress,
   )
 
   const externalData: ClaimDelegateExternalData = {

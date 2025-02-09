@@ -1,6 +1,7 @@
 export const INTERNAL_LINKS = {
   // earn protocol dedicated links
   summerPro: 'https://summer.fi',
+  summerLazy: 'https://lazy.summer.fi',
   appUrl: 'https://summer.fi',
   homepage: '/earn/',
   about: '/earn/about',
@@ -14,6 +15,19 @@ export const INTERNAL_LINKS = {
   borrow: '/earn/borrow',
   multiply: '/earn/multiply',
   earn: '/earn/earn',
+  // temporary links
+  tempAbout: 'https://summer.fi/about',
+  tempPrivacy: 'https://summer.fi/privacy',
+  tempCookie: 'https://summer.fi/cookie',
+  tempTerms: 'https://summer.fi/terms',
+  tempSecurity: 'https://summer.fi/security',
+  tempAjnaRewards: 'https://summer.fi/ajna/rewards',
+  tempReferrals: 'https://summer.fi/referrals',
+  tempBrand: 'https://summer.fi/brand',
+  tempBorrow: 'https://summer.fi/earn/borrow',
+  tempMultiply: 'https://summer.fi/earn/multiply',
+  tempEarn: 'https://summer.fi/earn/earn',
+  tempSumr: 'https://lazy.summer.fi/earn/sumr',
 }
 
 export const EXTERNAL_LINKS = {
@@ -91,7 +105,6 @@ export const EXTERNAL_LINKS = {
     WHY_MULTIPLY_ON_SUMMER: 'https://blog.summer.fi/why-multiply-on-summer',
     WHY_EARN_ON_SUMMER: 'https://blog.summer.fi/why-earn-on-summer',
     INTRODUCING_SUMR_TOKEN: 'https://blog.summer.fi/introducing-sumr-token',
-    WELCOME_LAZY_SUMMER: 'https://blog.summer.fi/welcome-lazy-summer',
   },
   DOCS: {
     FAQ: {
@@ -143,4 +156,8 @@ export const EXTERNAL_LINKS = {
   LIDO_FI_STETH_LIQUIDITY:
     'https://blog.lido.fi/providing-steth-liquidity-via-curve-to-receive-rewards',
   HOW_TO_SET_UP_AUTO_TAKE_PROFIT_VIDEO: 'https://youtu.be/ZqnvxeccJDQ?feature=shared',
+  EARN: {
+    GOVERNANCE: 'https://gov.summer.fi',
+    FORUM: 'https://forum.summer.fi',
+  },
 }

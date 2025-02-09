@@ -26,11 +26,14 @@ export class SparkDepositBorrowActionBuilder extends BaseActionBuilder<steps.Dep
       throw new Error('Invalid Spark lending pool')
     }
 
-    const sparkLendingPoolAddress = await this._getContractAddress({
-      addressBookManager,
-      chainInfo: user.chainInfo,
-      contractName: 'SparkLendingPool',
-    })
+    const [sparkLendingPoolAddress, borrowTo] = await Promise.all([
+      this._getContractAddress({
+        addressBookManager,
+        chainInfo: user.chainInfo,
+        contractName: 'SparkLendingPool',
+      }),
+      this._getBorrowTargetAddress(params),
+    ])
 
     context.addActionCall({
       step: step,
@@ -69,7 +72,7 @@ export class SparkDepositBorrowActionBuilder extends BaseActionBuilder<steps.Dep
       action: new SparkBorrowAction(),
       arguments: {
         borrowAmount: borrowAmount,
-        borrowTo: await this._getBorrowTargetAddress(params),
+        borrowTo,
       },
       connectedInputs: {},
       connectedOutputs: {

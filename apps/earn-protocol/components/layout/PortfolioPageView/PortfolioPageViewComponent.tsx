@@ -1,6 +1,10 @@
 'use client'
 import { type FC } from 'react'
-import { type SDKGlobalRebalancesType, type SDKVaultishType } from '@summerfi/app-types'
+import {
+  type SDKGlobalRebalancesType,
+  type SDKVaultishType,
+  type UsersActivity,
+} from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
 import { type PortfolioPositionsList } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
@@ -17,6 +21,7 @@ interface PortfolioPageViewComponentProps {
   vaultsList: SDKVaultishType[]
   positions: PortfolioPositionsList[]
   rebalancesList: SDKGlobalRebalancesType
+  userActivity: UsersActivity
   totalRays: number
 }
 
@@ -27,6 +32,7 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
   vaultsList,
   positions,
   rebalancesList,
+  userActivity,
   totalRays,
 }) => {
   return (
@@ -38,6 +44,7 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
         rewardsData={rewardsData}
         vaultsList={vaultsList}
         rebalancesList={rebalancesList}
+        userActivity={userActivity}
         totalRays={totalRays}
       />
     </SDKContextProvider>

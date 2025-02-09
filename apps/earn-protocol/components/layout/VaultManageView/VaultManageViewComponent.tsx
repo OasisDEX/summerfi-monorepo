@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useUser } from '@account-kit/react'
 import {
+  Card,
   ControlsDepositWithdraw,
   Expander,
   getPositionValues,
@@ -10,19 +11,23 @@ import {
   sidebarFootnote,
   SidebarMobileHeader,
   type SidebarProps,
+  SUMR_CAP,
   Text,
   useAmount,
   useAmountWithSwap,
   useForecast,
+  useLocalConfig,
   useMobileCheck,
   useTokenSelector,
   VaultManageGrid,
 } from '@summerfi/app-earn-ui'
+import { useTermsOfService } from '@summerfi/app-tos'
 import {
   type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
+  TOSStatus,
   TransactionAction,
   type UsersActivity,
 } from '@summerfi/app-types'
@@ -30,15 +35,17 @@ import { subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
 import { TransactionType } from '@summerfi/sdk-common'
 
+import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import {
   ControlsApproval,
   OrderInfoDeposit,
   OrderInfoWithdraw,
 } from '@/components/molecules/SidebarElements'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
+import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
 import { PositionPerformanceChart } from '@/components/organisms/Charts/PositionPerformanceChart'
+import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
-import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
@@ -47,6 +54,8 @@ import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { useRedirectToPositionView } from '@/hooks/use-redirect-to-position'
+import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
+import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useTransaction } from '@/hooks/use-transaction'
 import { useUserWallet } from '@/hooks/use-user-wallet'
@@ -69,7 +78,7 @@ export const VaultManageViewComponent = ({
   viewWalletAddress: string
 }) => {
   const user = useUser()
-  const { userWalletAddress } = useUserWallet()
+  const { userWalletAddress, isLoadingAccount } = useUserWallet()
   const ownerView = viewWalletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
   const { publicClient } = useNetworkAlignedClient()
 
@@ -100,7 +109,11 @@ export const VaultManageViewComponent = ({
     handleAmountChange,
     onBlur,
     onFocus,
-  } = useAmount({ vault, selectedToken })
+  } = useAmount({
+    tokenDecimals: vault.inputToken.decimals,
+    tokenPrice: vault.inputTokenPriceUSD,
+    selectedToken,
+  })
 
   const {
     amountParsed: approvalAmountParsed,
@@ -109,7 +122,12 @@ export const VaultManageViewComponent = ({
     onBlur: approvalOnBlur,
     onFocus: approvalOnFocus,
     manualSetAmount: approvalManualSetAmount,
-  } = useAmount({ vault, selectedToken, initialAmount: amountParsed.toString() })
+  } = useAmount({
+    tokenDecimals: vault.inputToken.decimals,
+    tokenPrice: vault.inputTokenPriceUSD,
+    selectedToken,
+    initialAmount: amountParsed.toString(),
+  })
 
   const { netValue } = getPositionValues({
     positionData: position,
@@ -125,6 +143,7 @@ export const VaultManageViewComponent = ({
     setTransactionType,
     nextTransaction,
     approvalType,
+    approvalTokenSymbol,
     setApprovalType,
     backToInit,
   } = useTransaction({
@@ -144,7 +163,9 @@ export const VaultManageViewComponent = ({
   })
 
   const sdk = useAppSDK()
-  const [slippageConfig] = useSlippageConfig()
+  const {
+    state: { sumrNetApyConfig, slippageConfig },
+  } = useLocalConfig()
 
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
@@ -152,7 +173,7 @@ export const VaultManageViewComponent = ({
 
   useRedirectToPositionView({ vault, position })
 
-  const { amountDisplayUSDWithSwap, fromTokenSymbol, rawToTokenAmount } = useAmountWithSwap({
+  const { amountDisplayUSDWithSwap, rawToTokenAmount } = useAmountWithSwap({
     vault,
     vaultChainId,
     amountDisplay,
@@ -168,7 +189,7 @@ export const VaultManageViewComponent = ({
     rawToTokenAmount,
   })
 
-  const { isLoadingForecast, oneYearEarningsForecast } = useForecast({
+  const { isLoadingForecast, oneYearEarningsForecast, forecast, forecastSummaryMap } = useForecast({
     fleetAddress: vault.id,
     chainId: vaultChainId,
     amount: {
@@ -180,6 +201,25 @@ export const VaultManageViewComponent = ({
     disabled: !ownerView,
     isEarnApp: true,
   })
+
+  const { signTosMessage } = useTermsOfServiceSigner()
+
+  const tosState = useTermsOfService({
+    // @ts-ignore
+    publicClient, // ignored for now, we need to align viem versionon all subpackages
+    signMessage: signTosMessage,
+    chainId: vaultChainId,
+    walletAddress: user?.address,
+    isSmartAccount: user?.type === 'sca',
+    version: TermsOfServiceVersion.APP_VERSION,
+    cookiePrefix: TermsOfServiceCookiePrefix.APP_TOKEN,
+    host: '/earn',
+    type: 'default',
+  })
+
+  const { tosSidebarProps } = useTermsOfServiceSidebar({ tosState, handleGoBack: backToInit })
+
+  const displaySimulationGraph = resolvedAmountParsed.gt(0)
 
   const estimatedEarnings = useMemo(() => {
     if (!oneYearEarningsForecast) return '0'
@@ -197,7 +237,7 @@ export const VaultManageViewComponent = ({
     {
       [TransactionType.Approve]: (
         <ControlsApproval
-          tokenSymbol={fromTokenSymbol}
+          tokenSymbol={approvalTokenSymbol}
           approvalType={approvalType}
           setApprovalType={setApprovalType}
           setApprovalCustomValue={approvalHandleAmountChange}
@@ -254,6 +294,7 @@ export const VaultManageViewComponent = ({
       manualSetAmount={manualSetAmount}
       vault={vault}
       estimatedEarnings={estimatedEarnings}
+      forecastSummaryMap={forecastSummaryMap}
       isLoadingForecast={isLoadingForecast}
     />
   )
@@ -304,20 +345,43 @@ export const VaultManageViewComponent = ({
     isMobile,
   }
 
+  const nextTransactionType = nextTransaction?.type
+
+  const resovledSidebarProps =
+    tosState.status !== TOSStatus.DONE &&
+    nextTransactionType &&
+    [TransactionType.Approve, TransactionType.Deposit, TransactionType.Withdraw].includes(
+      nextTransactionType,
+    )
+      ? tosSidebarProps
+      : sidebarProps
+
   // needed due to type duality
   const rebalancesList = `rebalances` in vault ? vault.rebalances : []
 
+  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
+
   return (
     <>
-      <NonOwnerPositionBanner isOwner={ownerView} />
+      <NonOwnerPositionBanner isOwner={ownerView} walletStateLoaded={!isLoadingAccount} />
       <VaultManageGrid
         vault={vault}
         vaults={vaults}
         position={position}
         viewWalletAddress={viewWalletAddress}
         connectedWalletAddress={user?.address}
-        detailsContent={
-          <div className={vaultManageViewStyles.leftContentWrapper}>
+        displaySimulationGraph={displaySimulationGraph}
+        simulationGraph={
+          <VaultSimulationGraph
+            vault={vault}
+            forecast={forecast}
+            isLoadingForecast={isLoadingForecast}
+            amount={amountParsed}
+          />
+        }
+        sumrPrice={estimatedSumrPrice}
+        detailsContent={[
+          <div className={vaultManageViewStyles.leftContentWrapper} key="PerformanceBlock">
             <Expander
               title={
                 <Text as="p" variant="p1semi">
@@ -331,15 +395,80 @@ export const VaultManageViewComponent = ({
                 inputToken={vault.inputToken.symbol}
               />
             </Expander>
+          </div>,
+          <div className={vaultManageViewStyles.leftContentWrapper} key="AboutTheStrategy">
+            <div>
+              <Text
+                as="p"
+                variant="p1semi"
+                style={{
+                  marginBottom: 'var(--spacing-space-medium)',
+                }}
+              >
+                About the strategy
+              </Text>
+              <Text
+                as="p"
+                variant="p2"
+                style={{
+                  color: 'var(--color-text-secondary)',
+                }}
+              >
+                The Summer Earn Protocol is a permissionless passive lending product, which sets out
+                to offer effortless and secure optimised yield, while diversifying risk.
+              </Text>
+            </div>
+            <Expander
+              title={
+                <Text as="p" variant="p1semi">
+                  Historical yield
+                </Text>
+              }
+            >
+              <ArkHistoricalYieldChart
+                chartData={vault.customFields?.arksHistoricalChartData}
+                summerVaultName={vault.customFields?.name ?? 'Summer Vault'}
+              />
+            </Expander>
             <Expander
               title={
                 <Text as="p" variant="p1semi">
                   Vault exposure
                 </Text>
               }
-              defaultExpanded
             >
               <VaultExposure vault={vault as SDKVaultType} />
+            </Expander>
+            <Expander
+              title={
+                <Text as="p" variant="p1semi">
+                  Strategy management fee
+                </Text>
+              }
+            >
+              <Card style={{ flexDirection: 'column', marginTop: 'var(--general-space-16)' }}>
+                <Text
+                  as="p"
+                  variant="p2semi"
+                  style={{
+                    color: 'var(--color-text-primary)',
+                    marginBottom: 'var(--general-space-24)',
+                  }}
+                >
+                  1% Management Fee, already included in APY
+                </Text>
+                <Text
+                  as="p"
+                  variant="p2"
+                  style={{
+                    color: 'var(--color-text-secondary)',
+                  }}
+                >
+                  A 1% management fee is applied to your position, but it’s already factored into
+                  the APY you see. This means the rate displayed reflects your net return - no
+                  hidden fees, just straightforward earnings.
+                </Text>
+              </Card>
             </Expander>
             <Expander
               title={
@@ -347,12 +476,12 @@ export const VaultManageViewComponent = ({
                   Rebalancing activity
                 </Text>
               }
-              defaultExpanded
             >
               <RebalancingActivity
                 rebalancesList={rebalancesList}
                 vaultId={vault.id}
                 totalRebalances={Number(vault.rebalanceCount)}
+                vaultsList={vaults}
               />
             </Expander>
             <Expander
@@ -361,7 +490,6 @@ export const VaultManageViewComponent = ({
                   User activity
                 </Text>
               }
-              defaultExpanded
             >
               <UserActivity
                 userActivity={userActivity}
@@ -370,9 +498,9 @@ export const VaultManageViewComponent = ({
                 page="manage"
               />
             </Expander>
-          </div>
-        }
-        sidebarContent={<Sidebar {...sidebarProps} />}
+          </div>,
+        ]}
+        sidebarContent={<Sidebar {...resovledSidebarProps} />}
         isMobile={isMobile}
       />
     </>

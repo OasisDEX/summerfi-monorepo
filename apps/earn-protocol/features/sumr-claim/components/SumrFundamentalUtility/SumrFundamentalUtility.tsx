@@ -66,7 +66,7 @@ export const SumrFundamentalUtility = () => {
             title="Rewarding sustained protocol usage"
             description="Lazy Summer requires 0 management from users. Only your own deposits, all risk management, yield optimizing and strategy rebalancing is handled automatically."
             link={{
-              href: '/earn',
+              href: '/',
               label: 'Earn $SUMR',
             }}
           />

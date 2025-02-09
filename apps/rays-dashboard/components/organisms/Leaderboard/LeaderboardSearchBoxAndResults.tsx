@@ -9,6 +9,7 @@ import { mapLeaderboardColumns } from '@/components/organisms/Leaderboard/column
 import { Leaderboard } from '@/components/organisms/Leaderboard/Leaderboard'
 import { basePath } from '@/helpers/base-path'
 import { trackInputChange } from '@/helpers/mixpanel'
+import { type FetchRaysReturnType } from '@/server-handlers/rays'
 
 import leaderboardSearchBoxAndResults from './LeaderboardSearchBoxAndResults.module.scss'
 
@@ -16,6 +17,7 @@ export const LeaderboardSearchBoxAndResults = () => {
   const [input, setInput] = useState('')
   const [debouncedInput, setDebouncedInput] = useState('')
   const [leaderboardResponse, setLeaderboardResponse] = useState<LeaderboardResponse>()
+  const [userRaysResponse, setUserRaysResponse] = useState<FetchRaysReturnType>()
   const [isLoading, setIsLoading] = useState(false)
   const currentPath = usePathname()
 
@@ -46,12 +48,17 @@ export const LeaderboardSearchBoxAndResults = () => {
       })
       setIsLoading(true)
       setLeaderboardResponse(undefined)
-      const data = await fetch(
-        `${basePath}/api/leaderboard?page=1&limit=5&userAddress=${debouncedInput.toLocaleLowerCase()}`,
-      ).then((resp) => resp.json())
-      const castedData = data as LeaderboardResponse
+      const [leaderboardData, raysData] = (await Promise.all([
+        fetch(
+          `${basePath}/api/leaderboard?page=1&limit=5&userAddress=${debouncedInput.toLocaleLowerCase()}`,
+        ).then((resp) => resp.json()),
+        fetch(`${basePath}/api/rays?address=${debouncedInput.toLocaleLowerCase()}`).then((resp) =>
+          resp.json(),
+        ),
+      ])) as [LeaderboardResponse, FetchRaysReturnType]
 
-      setLeaderboardResponse(castedData)
+      setLeaderboardResponse(leaderboardData)
+      setUserRaysResponse(raysData)
       setIsLoading(false)
     }
 
@@ -68,6 +75,7 @@ export const LeaderboardSearchBoxAndResults = () => {
         userWalletAddress: debouncedInput,
         skipBanner: true,
         page: currentPath,
+        userRays: userRaysResponse,
       })
     : []
 

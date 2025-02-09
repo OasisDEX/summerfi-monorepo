@@ -148,7 +148,7 @@ export default async function HomePage() {
         })}
       />
       <MarketingPoints>
-        <HigherYieldsBlock />
+        <HigherYieldsBlock vaultsList={vaultsDecorated} />
         <EnhancedRiskManagement protectedCapital="$10B+" />
         <BestOfDecentralizedFinance />
         <SumrToken />

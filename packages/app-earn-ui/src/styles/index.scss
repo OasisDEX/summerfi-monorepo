@@ -1,7 +1,6 @@
 @import './vendor.scss';
 @import './base.scss';
 
-
 html {
   scroll-behavior: smooth;
 }
@@ -43,6 +42,7 @@ body {
   --earn-protocol-neutral-80: rgba(51, 51, 51, 1);
   --earn-protocol-neutral-70: rgba(61, 61, 61, 1);
   --earn-protocol-neutral-60: rgba(71, 71, 71, 1);
+  --earn-protocol-neutral-40: rgba(119, 117, 118, 1);
   --earn-protocol-success-50: rgba(67, 126, 39, 1);
   --earn-protocol-primary-100: rgba(255, 73, 164, 1);
   --earn-protocol-primary-70: rgba(255, 128, 191, 1);
@@ -62,6 +62,7 @@ body {
   --color-background-primary-disabled: var(--earn-protocol-primary-40);
   --color-background-secondary: var(--earn-protocol-neutral-80);
   --color-background-secondary-hover: var(--earn-protocol-neutral-60);
+  --color-background-secondary-disabled: var(--earn-protocol-neutral-85);
   --color-background-interactive-bold: var(--earn-protocol-primary-100);
   --color-background-interactive: var(--earn-protocol-primary-100);
   --color-background-interactive-hover: var(--earn-protocol-primary-70);
@@ -84,6 +85,7 @@ body {
   --color-text-primary: var(--earn-protocol-secondary-100);
   --color-text-primary-hover: var(--earn-protocol-secondary-70);
   --color-text-primary-disabled: var(--earn-protocol-secondary-40);
+  --color-text-secondary-disabled: var(--earn-protocol-secondary-40);
   --color-text-secondary: var(--earn-protocol-secondary-60);
   --color-text-link: var(--earn-protocol-primary-100);
   --color-text-link-hover: var(--earn-protocol-primary-70);
@@ -113,9 +115,21 @@ body {
   --radius-circle: var(--general-radius-50);
 
   --gradient-earn-protocol-dark: linear-gradient(90deg, #ff49a4 0%, #b049ff 100%);
-  --gradient-earn-protocol-light: linear-gradient(90deg, rgba(255, 73, 164, 0.5) 0%, rgba(176, 73, 255, 0.5) 100%);
-  --gradient-earn-protocol-dark-10: linear-gradient(90deg, rgba(255, 73, 164, 0.1) 0%, rgba(176, 73, 255, 0.1) 100%);
-  --gradient-earn-protocol-light-10: linear-gradient(90deg, rgba(255, 73, 164, 0.1) 0%, rgba(176, 73, 255, 0.1) 100%);
+  --gradient-earn-protocol-light: linear-gradient(
+    90deg,
+    rgba(255, 73, 164, 0.5) 0%,
+    rgba(176, 73, 255, 0.5) 100%
+  );
+  --gradient-earn-protocol-dark-10: linear-gradient(
+    90deg,
+    rgba(255, 73, 164, 0.1) 0%,
+    rgba(176, 73, 255, 0.1) 100%
+  );
+  --gradient-earn-protocol-light-10: linear-gradient(
+    90deg,
+    rgba(255, 73, 164, 0.1) 0%,
+    rgba(176, 73, 255, 0.1) 100%
+  );
 
   --shadow-depth-1: 0px 0px 8px 0px #0000001a;
   --shadow-depth-2: 0px 0px 8px 8px #00000026;

@@ -26,11 +26,6 @@ query GetVaults {
         symbol
         decimals
       }
-      fees {
-        id
-        feePercentage
-        feeType
-      }
       createdTimestamp
       lastUpdateTimestamp
     }
@@ -177,11 +172,6 @@ query GetVault($id: ID!) {
         calculatedApr
         totalValueLockedUSD
         inputTokenBalance
-      }
-      fees {
-        id
-        feePercentage
-        feeType
       }
       calculatedApr
       createdTimestamp

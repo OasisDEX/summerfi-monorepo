@@ -6,20 +6,24 @@ import {
   SidebarFootnote,
   sidebarFootnote,
   SidebarMobileHeader,
+  SUMR_CAP,
   Text,
   useAmount,
   useAmountWithSwap,
   useForecast,
+  useLocalConfig,
   useLocalStorageOnce,
   useMobileCheck,
   useTokenSelector,
   VaultOpenGrid,
 } from '@summerfi/app-earn-ui'
+import { useTermsOfService } from '@summerfi/app-tos'
 import {
   type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
+  TOSStatus,
   TransactionAction,
   type UsersActivity,
 } from '@summerfi/app-types'
@@ -32,8 +36,8 @@ import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSim
 import { ControlsApproval, OrderInfoDeposit } from '@/components/molecules/SidebarElements'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
+import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
-import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
@@ -44,6 +48,8 @@ import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { usePosition } from '@/hooks/use-position'
 import { useRedirectToPositionView } from '@/hooks/use-redirect-to-position'
+import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
+import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useTransaction } from '@/hooks/use-transaction'
 import { useUserWallet } from '@/hooks/use-user-wallet'
@@ -55,6 +61,7 @@ type VaultOpenViewComponentProps = {
   vaults: SDKVaultsListType
   userActivity: UsersActivity
   topDepositors: SDKUsersActivityType
+  medianDefiYield?: number
 }
 
 export const VaultOpenViewComponent = ({
@@ -62,6 +69,7 @@ export const VaultOpenViewComponent = ({
   vaults,
   userActivity,
   topDepositors,
+  medianDefiYield,
 }: VaultOpenViewComponentProps) => {
   const { getStorageOnce } = useLocalStorageOnce<string>({
     key: `${vault.id}-amount`,
@@ -72,7 +80,9 @@ export const VaultOpenViewComponent = ({
 
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
 
-  const [slippageConfig] = useSlippageConfig()
+  const {
+    state: { sumrNetApyConfig, slippageConfig },
+  } = useLocalConfig()
   const sdk = useAppSDK()
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
@@ -104,7 +114,8 @@ export const VaultOpenViewComponent = ({
     onBlur,
     onFocus,
   } = useAmount({
-    vault,
+    tokenDecimals: vault.inputToken.decimals,
+    tokenPrice: vault.inputTokenPriceUSD,
     selectedToken:
       selectedToken ??
       ({
@@ -121,10 +132,15 @@ export const VaultOpenViewComponent = ({
     onBlur: approvalOnBlur,
     onFocus: approvalOnFocus,
     manualSetAmount: approvalManualSetAmount,
-  } = useAmount({ vault, selectedToken })
+  } = useAmount({
+    tokenDecimals: vault.inputToken.decimals,
+    tokenPrice: vault.inputTokenPriceUSD,
+    selectedToken,
+  })
 
   const {
     approvalType,
+    approvalTokenSymbol,
     setApprovalType,
     sidebar,
     txHashes,
@@ -149,12 +165,12 @@ export const VaultOpenViewComponent = ({
     approvalCustomValue: approvalAmountParsed,
   })
 
-  const position = usePosition({
+  const { position } = usePosition({
     chainId: vaultChainId,
     vaultId: vault.id,
   })
 
-  const { amountDisplayUSDWithSwap, fromTokenSymbol, rawToTokenAmount } = useAmountWithSwap({
+  const { amountDisplayUSDWithSwap, rawToTokenAmount } = useAmountWithSwap({
     vault,
     vaultChainId,
     amountDisplay,
@@ -177,6 +193,25 @@ export const VaultOpenViewComponent = ({
     isEarnApp: true,
   })
 
+  const { signTosMessage } = useTermsOfServiceSigner()
+
+  const tosState = useTermsOfService({
+    // @ts-ignore
+    publicClient, // ignored for now, we need to align viem versionon all subpackages
+    signMessage: signTosMessage,
+    chainId: vaultChainId,
+    walletAddress: user?.address,
+    isSmartAccount: user?.type === 'sca',
+    version: TermsOfServiceVersion.APP_VERSION,
+    cookiePrefix: TermsOfServiceCookiePrefix.APP_TOKEN,
+    host: '/earn',
+    type: 'default',
+  })
+
+  const { tosSidebarProps } = useTermsOfServiceSidebar({ tosState, handleGoBack: backToInit })
+
+  const summerVaultName = vault.customFields?.name ?? 'Summer Vault'
+
   useEffect(() => {
     const savedAmount = getStorageOnce()
 
@@ -186,7 +221,7 @@ export const VaultOpenViewComponent = ({
   })
   useRedirectToPositionView({ vault, position })
 
-  const displayGraph = amountParsed.gt(0)
+  const displaySimulationGraph = amountParsed.gt(0)
 
   const estimatedEarnings = useMemo(() => {
     if (!oneYearEarningsForecast) return '0'
@@ -204,7 +239,7 @@ export const VaultOpenViewComponent = ({
     {
       [TransactionType.Approve]: (
         <ControlsApproval
-          tokenSymbol={fromTokenSymbol}
+          tokenSymbol={approvalTokenSymbol}
           approvalType={approvalType}
           setApprovalType={setApprovalType}
           setApprovalCustomValue={approvalHandleAmountChange}
@@ -244,6 +279,7 @@ export const VaultOpenViewComponent = ({
       estimatedEarnings={estimatedEarnings}
       isLoadingForecast={isLoadingForecast}
       ownerView
+      isOpen
     />
   )
 
@@ -285,15 +321,28 @@ export const VaultOpenViewComponent = ({
     isMobile,
   }
 
+  const nextTransactionType = nextTransaction?.type
+
+  const resovledSidebarProps =
+    tosState.status !== TOSStatus.DONE &&
+    nextTransactionType &&
+    [TransactionType.Approve, TransactionType.Deposit].includes(nextTransactionType)
+      ? tosSidebarProps
+      : sidebarProps
+
   // needed due to type duality
   const rebalancesList = `rebalances` in vault ? vault.rebalances : []
+
+  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   return (
     <VaultOpenGrid
       isMobile={isMobile}
       vault={vault}
       vaults={vaults}
-      displayGraph={displayGraph}
+      medianDefiYield={medianDefiYield}
+      displaySimulationGraph={displaySimulationGraph}
+      sumrPrice={estimatedSumrPrice}
       simulationGraph={
         <VaultSimulationGraph
           vault={vault}
@@ -315,7 +364,7 @@ export const VaultOpenViewComponent = ({
           >
             <ArkHistoricalYieldChart
               chartData={vault.customFields?.arksHistoricalChartData}
-              summerVaultName={vault.customFields?.name ?? 'Summer Vault'}
+              summerVaultName={summerVaultName}
             />
           </Expander>
           <Expander
@@ -340,6 +389,7 @@ export const VaultOpenViewComponent = ({
               rebalancesList={rebalancesList}
               vaultId={vault.id}
               totalRebalances={Number(vault.rebalanceCount)}
+              vaultsList={vaults}
             />
           </Expander>
           <Expander
@@ -361,7 +411,7 @@ export const VaultOpenViewComponent = ({
       }
       sidebarContent={
         <>
-          <Sidebar {...sidebarProps} />
+          <Sidebar {...resovledSidebarProps} />
           {userWalletAddress && (
             <TransakWidget
               cryptoCurrency={vault.inputToken.symbol}

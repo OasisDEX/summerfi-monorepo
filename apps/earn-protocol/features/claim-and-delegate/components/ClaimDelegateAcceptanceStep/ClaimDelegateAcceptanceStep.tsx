@@ -1,20 +1,27 @@
-import { type Dispatch, type FC, useCallback, useEffect } from 'react'
-import { useSigner, useSignMessage, useSmartAccountClient, useUser } from '@account-kit/react'
+import { type Dispatch, type FC, useEffect } from 'react'
+import { useUser } from '@account-kit/react'
 import { Button, Card, Text, WithArrow } from '@summerfi/app-earn-ui'
-import { type TOSSignMessage, useTermsOfService } from '@summerfi/app-tos'
+import { useTermsOfService } from '@summerfi/app-tos'
 import { TOSStatus } from '@summerfi/app-types'
 import Link from 'next/link'
 
-import { accountType } from '@/account-kit/config'
-import { claimDelegateTerms } from '@/features/claim-and-delegate/components/ClaimDelegateAcceptanceStep/terms'
+import { type AccountKitSupportedNetworks, SDKChainIdToAAChainMap } from '@/account-kit/config'
+import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
+import {
+  airdropToS,
+  claimDelegateTerms,
+} from '@/features/claim-and-delegate/components/ClaimDelegateAcceptanceStep/terms'
 import {
   type ClaimDelegateReducerAction,
   type ClaimDelegateState,
   ClaimDelegateSteps,
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
+import { useClientChainId } from '@/hooks/use-client-chain-id'
+import { usePublicClient } from '@/hooks/use-public-client'
+import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
 import { useUserWallet } from '@/hooks/use-user-wallet'
-import { useVisibleParagraph } from '@/hooks/useVisibleParagraph'
+import { useVisibleParagraph } from '@/hooks/use-visible-paragraph'
 
 import classNames from './ClaimDelegateAcceptanceStep.module.scss'
 
@@ -29,33 +36,26 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
 }) => {
   const user = useUser()
   const { userWalletAddress } = useUserWallet()
-  const { client } = useSmartAccountClient({ type: accountType })
-  const { signMessageAsync } = useSignMessage({
-    client,
-  })
-  const signer = useSigner()
   const { activeParagraph, paragraphRefs } = useVisibleParagraph()
+  const { clientChainId } = useClientChainId()
 
-  const signMessage: TOSSignMessage = useCallback(
-    async (data: string) => {
-      if (user?.type === 'eoa') {
-        return await signMessageAsync({ message: data })
-      }
-      // different handling for SCA, since signMessageAsync returns signature string
-      // that is completely different from signer.signMessage
-      else return await signer?.signMessage(data)
-    },
-    [signer, user?.type],
-  )
+  const { signTosMessage } = useTermsOfServiceSigner()
+
+  const { publicClient } = usePublicClient({
+    chain: SDKChainIdToAAChainMap[clientChainId as AccountKitSupportedNetworks],
+  })
 
   const tosState = useTermsOfService({
-    signMessage,
-    chainId: 1,
+    // @ts-ignore
+    publicClient, // ignored for now, we need to align viem versionon all subpackages
+    signMessage: signTosMessage,
+    chainId: clientChainId,
     walletAddress: user?.address,
-    isGnosisSafe: false,
-    version: 'sumr_version-16.01.2026',
-    cookiePrefix: 'sumr-claim-token',
+    isSmartAccount: user?.type === 'sca',
+    version: TermsOfServiceVersion.SUMR_CLAIM_TOKEN_VERSION,
+    cookiePrefix: TermsOfServiceCookiePrefix.SUMR_CLAIM_TOKEN,
     host: '/earn',
+    type: 'sumrAirdrop',
   })
 
   useEffect(() => {
@@ -65,13 +65,14 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
     ) {
       tosState.action()
     }
-  }, [tosState])
 
-  const handleAccept = () => {
+    // since this was added, continue btn handling is not longer needed
     if (tosState.status === TOSStatus.DONE) {
       dispatch({ type: 'update-step', payload: ClaimDelegateSteps.CLAIM })
     }
+  }, [tosState, dispatch])
 
+  const handleAccept = () => {
     if ('action' in tosState) {
       tosState.action()
     } else {
@@ -120,9 +121,20 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
       <div className={classNames.mainContentWrapper}>
         <Card className={classNames.cardWrapper}>
           <div className={classNames.cardContentWrapper}>
+            <div className={classNames.airDrop}>
+              <Text as="p" variant="p2" style={{ textAlign: 'center' }}>
+                {airdropToS.header}
+              </Text>
+              <Text as="p" variant="p3">
+                {airdropToS.lastRevised}
+              </Text>
+              <Text as="p" variant="p3">
+                {airdropToS.content}
+              </Text>
+            </div>
             {claimDelegateTerms.map((item, index) => (
               <Text
-                as="p"
+                as="div"
                 variant="p3"
                 key={`content-${index}`}
                 ref={(element: HTMLParagraphElement | null) => {
@@ -146,19 +158,17 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
             variant="primarySmall"
             style={{ paddingRight: isLoading ? undefined : 'var(--general-space-32)' }}
             onClick={handleAccept}
-            disabled={isDisabled}
+            // disiabled when done to avoid button text flickering just before automatic change of step to claim
+            disabled={isDisabled || tosState.status === TOSStatus.DONE}
           >
             <WithArrow
               style={{ color: 'var(--earn-protocol-secondary-100)' }}
               variant="p3semi"
               as="p"
-              isLoading={isLoading}
+              isLoading={isLoading || tosState.status === TOSStatus.DONE}
             >
-              {tosState.status === TOSStatus.DONE
-                ? 'Continue'
-                : isLoading
-                  ? 'Loading...'
-                  : 'Accept & Sign'}
+              {/* Loading... when done to avoid button text flickering just before automatic change of step to claim  */}
+              {isLoading || tosState.status === TOSStatus.DONE ? 'Loading...' : 'Accept & Sign'}
             </WithArrow>
           </Button>
         </div>

@@ -28,6 +28,14 @@ export interface SidebarProps {
     loading?: boolean
     hidden?: boolean
   }
+  secondaryButton?: {
+    label: string
+    action?: () => void
+    url?: string
+    disabled?: boolean
+    loading?: boolean
+    hidden?: boolean
+  }
   footnote?: ReactNode
   error?: string | ReactNode
   asDesktopOnly?: boolean
@@ -54,6 +62,7 @@ export const Sidebar: FC<SidebarProps> = ({
   titleTabs,
   content,
   primaryButton,
+  secondaryButton,
   footnote,
   error,
   onTitleTabChange,
@@ -163,6 +172,22 @@ export const Sidebar: FC<SidebarProps> = ({
             </Button>
           </Link>
         )}
+        {secondaryButton?.action && !secondaryButton.url && !secondaryButton.hidden && (
+          <Button
+            variant="secondaryLarge"
+            onClick={secondaryButton.action}
+            disabled={secondaryButton.disabled}
+          >
+            {secondaryButton.label}
+          </Button>
+        )}
+        {secondaryButton?.url && (
+          <Link href={secondaryButton.url} onClick={secondaryButton.action} prefetch>
+            <Button variant="secondaryLarge" disabled={secondaryButton.disabled}>
+              {secondaryButton.label}
+            </Button>
+          </Link>
+        )}
       </div>
       <div
         style={{
@@ -171,7 +196,13 @@ export const Sidebar: FC<SidebarProps> = ({
       >
         <AnimateHeight show={!!error} id="sidebar-error">
           <Box className={sidebarClassNames.sidebarErrorWrapper}>
-            {typeof error === 'string' ? <Text variant="p4">{error}</Text> : error}
+            {typeof error === 'string' ? (
+              <Text variant="p4" style={{ textAlign: 'center' }}>
+                {error}
+              </Text>
+            ) : (
+              error
+            )}
           </Box>
         </AnimateHeight>
       </div>

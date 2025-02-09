@@ -7,9 +7,23 @@
   .headerTextual {
     text-align: center;
     margin-bottom: var(--general-space-16);
+    display: flex;
+    gap: var(--general-space-12);
+    flex-direction: column;
+    justify-content: center;
+    flex-wrap: wrap;
+    word-break: break-word;
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+    }
 
     &Colored {
       color: var(--earn-protocol-primary-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--general-space-12);
     }
   }
 

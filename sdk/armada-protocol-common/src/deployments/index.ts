@@ -7,9 +7,34 @@ import {
   type ChainInfo,
   type IAddress,
 } from '@summerfi/sdk-common'
-import config from './config.json'
+import sumrConfig from './sumr.json'
+import bummerConfig from './bummer.json'
 
-type Config = typeof config
+let _deployment: 'SUMMER' | 'BUMMER'
+
+export const setTestDeployment = (deployment: string) => {
+  switch (deployment) {
+    case 'BUMMER':
+    case 'SUMMER':
+      _deployment = deployment
+      break
+    default:
+      throw new Error('SUMMER_DEPLOYMENT_CONFIG must be set to "SUMMER" or "BUMMER"')
+  }
+}
+
+export const isTestDeployment = () => {
+  switch (_deployment) {
+    case 'BUMMER':
+      return true
+    case 'SUMMER':
+      return false
+    default:
+      throw new Error('_deployment must be set to "SUMMER" or "BUMMER"')
+  }
+}
+
+type Config = typeof sumrConfig
 type ConfigKey = 'mainnet' | 'base' | 'arbitrum'
 type CategoryKey = keyof Config[ConfigKey]['deployedContracts']
 
@@ -27,6 +52,10 @@ const getConfigKey = <TName extends string>(name: TName) => {
   return key
 }
 
+const getConfig = () => {
+  return isTestDeployment() ? bummerConfig : sumrConfig
+}
+
 export const getDeployedContractAddress = <
   TKey extends ConfigKey,
   TChainInfo extends ChainInfo,
@@ -36,6 +65,7 @@ export const getDeployedContractAddress = <
   contractCategory: TCategory
   contractName: keyof Config[TKey]['deployedContracts'][TCategory]
 }): IAddress => {
+  const config = getConfig()
   const key = getConfigKey(params.chainInfo.name) as TKey
 
   const contract = config[key].deployedContracts[params.contractCategory][params.contractName] as
@@ -56,13 +86,30 @@ export const getDeployedContractAddress = <
 }
 
 export const getDeployedRewardsRedeemerAddress = () => {
+  const config = getConfig()
   const key = getConfigKey(ChainFamilyName.Base)
+
   const maybeAddress = (
     config[key].deployedContracts.gov as { rewardsRedeemer: { address: string | undefined } }
   ).rewardsRedeemer.address
   if (!maybeAddress) {
     throw new Error(
       'Rewards redeemer contract is not available on ' + key + '. It is only on Base.',
+    )
+  }
+  return Address.createFromEthereum({ value: maybeAddress })
+}
+
+export const getDeployedGovRewardsManagerAddress = () => {
+  const config = getConfig()
+  const key = getConfigKey(ChainFamilyName.Base)
+
+  const maybeAddress = (
+    config[key].deployedContracts.gov as { rewardsManager: { address: string | undefined } }
+  ).rewardsManager.address
+  if (!maybeAddress) {
+    throw new Error(
+      'Gov rewards manager contract is not available on ' + key + '. It is only on Base.',
     )
   }
   return Address.createFromEthereum({ value: maybeAddress })

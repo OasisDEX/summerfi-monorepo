@@ -2,7 +2,7 @@ import {
   IAddress,
   IPercentage,
   ITokenAmount,
-  type ChainInfo,
+  type IChainInfo,
   type IToken,
 } from '@summerfi/sdk-common/common'
 import { TransactionInfo, ExtendedTransactionInfo } from '@summerfi/sdk-common/orders'
@@ -29,6 +29,16 @@ import type { IArmadaManagerGovernance } from './IArmadaManagerGovernance'
 export interface IArmadaManager {
   claims: IArmadaManagerClaims
   governance: IArmadaManagerGovernance
+
+  /**
+   * @method getSummerToken
+   * @description Retrieves the Summer token for a given chain
+   *
+   * @param chainInfo Chain information
+   *
+   * @returns The Summer token for the given chain
+   */
+  getSummerToken: (params: { chainInfo: IChainInfo }) => IToken
 
   /** POSITIONS */
 
@@ -74,7 +84,7 @@ export interface IArmadaManager {
    *
    * @returns GetVaultsQuery
    */
-  getVaultsRaw(params: { chainInfo: ChainInfo }): Promise<GetVaultsQuery>
+  getVaultsRaw(params: { chainInfo: IChainInfo }): Promise<GetVaultsQuery>
 
   /**
    * @name getVaultRaw
@@ -94,7 +104,7 @@ export interface IArmadaManager {
    *
    * @returns GerRebalancesQuery
    */
-  getGlobalRebalancesRaw(params: { chainInfo: ChainInfo }): Promise<GetGlobalRebalancesQuery>
+  getGlobalRebalancesRaw(params: { chainInfo: IChainInfo }): Promise<GetGlobalRebalancesQuery>
 
   /**
    * @name getUsersActivityRaw
@@ -104,7 +114,7 @@ export interface IArmadaManager {
    *
    * @returns GerUsersActivityQuery
    */
-  getUsersActivityRaw(params: { chainInfo: ChainInfo }): Promise<GetUsersActivityQuery>
+  getUsersActivityRaw(params: { chainInfo: IChainInfo }): Promise<GetUsersActivityQuery>
 
   /**
    * @name getUserActivityRaw

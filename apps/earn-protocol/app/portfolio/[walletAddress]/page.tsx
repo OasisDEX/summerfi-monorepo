@@ -6,6 +6,7 @@ import { portfolioPositionsHandler } from '@/app/server-handlers/portfolio/portf
 import { portfolioWalletAssetsHandler } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { getGlobalRebalances } from '@/app/server-handlers/sdk/get-global-rebalances'
 import { getUserPositions } from '@/app/server-handlers/sdk/get-user-positions'
+import { getUsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDecayFactor } from '@/app/server-handlers/sumr-decay-factor'
@@ -25,37 +26,40 @@ type PortfolioPageProps = {
 }
 
 const PortfolioPage = async ({ params }: PortfolioPageProps) => {
-  const { walletAddress } = params
+  const { walletAddress: walletAddressRaw } = params
+
+  const walletAddress = walletAddressRaw.toLowerCase()
 
   const [
     walletData,
-    { vaults },
+    vaultsData,
     positions,
     systemConfig,
-    { rebalances },
+    rebalancesData,
     sumrStakeDelegate,
     sumrEligibility,
     sumrBalances,
     sumrStakingInfo,
     sumrDelegates,
     sumrToClaim,
+    usersActivity,
   ] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
     getVaultsList(),
     getUserPositions({ walletAddress }),
     systemConfigHandler(),
     getGlobalRebalances(),
-    getSumrDelegateStake({
-      walletAddress,
-    }),
-    fetchRaysLeaderboard({ userAddress: walletAddress.toLowerCase(), page: '1', limit: '1' }),
-    getSumrBalances({
-      walletAddress,
-    }),
+    getSumrDelegateStake({ walletAddress }),
+    fetchRaysLeaderboard({ userAddress: walletAddress, page: '1', limit: '1' }),
+    getSumrBalances({ walletAddress }),
     getSumrStakingInfo(),
     getSumrDelegates(),
     getSumrToClaim({ walletAddress }),
+    getUsersActivity(),
   ])
+
+  const { vaults } = vaultsData
+  const { rebalances } = rebalancesData
 
   const positionsJsonSafe = positions
     ? parseServerResponseToClient<IArmadaPosition[]>(positions)
@@ -77,18 +81,26 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
 
   const sumrDecayFactors = await getSumrDecayFactor(
     sumrDelegates.map((delegate) => delegate.account.address),
+    walletAddress,
   )
 
   const rewardsData: ClaimDelegateExternalData = {
     sumrToClaim,
-    sumrStakeDelegate,
     sumrBalances,
+    sumrStakeDelegate,
     sumrStakingInfo,
     sumrDelegates,
     sumrDecayFactors,
   }
 
-  const totalRays = Number(sumrEligibility.leaderboard[0]?.totalPoints ?? 0)
+  const totalRaysPoints = Number(sumrEligibility.leaderboard[0]?.totalPoints ?? 0)
+  const tgeSnapshotPoints = Number(sumrEligibility.leaderboard[0]?.tgeSnapshotPoints ?? 0)
+
+  const totalRays = totalRaysPoints - tgeSnapshotPoints
+
+  const userActivity = usersActivity.usersActivity.filter(
+    (activity) => activity.account.toLowerCase() === walletAddress.toLowerCase(),
+  )
 
   return (
     <PortfolioPageViewComponent
@@ -99,6 +111,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       vaultsList={vaultsDecorated}
       rebalancesList={userRebalances}
       totalRays={totalRays}
+      userActivity={userActivity}
     />
   )
 }

@@ -40,7 +40,7 @@ export const NavigationItems = ({ items, currentPath }: NavigationItemsProps) =>
               >
                 {item.title}
               </Text>
-              <Text as="p" variant="p3">
+              <Text as="p" variant="p3" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
                 {item.description}
               </Text>
             </div>

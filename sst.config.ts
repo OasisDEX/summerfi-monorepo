@@ -4,7 +4,7 @@ import { ExternalAPI } from './stacks/partners-stack'
 import { SdkAPI } from './stacks/sdk-stack'
 import { $, chalk, echo } from 'zx'
 
-const availableStage = ['dev', 'feature', 'staging', 'production']
+const availableStage = ['dev', 'staging', 'production', 'armada-prod']
 
 enum App {
   SummerfiStack = 'summerfi-stack',
@@ -107,7 +107,11 @@ export const sstConfig: SSTConfig = {
       )
     }
 
-    if (_input.stage === 'staging' || _input.stage === 'production') {
+    if (
+      _input.stage === 'staging' ||
+      _input.stage === 'production' ||
+      _input.stage === 'armada-prod'
+    ) {
       if (_input.stage === 'production') {
         if (currentBranch !== 'main' && currentBranch !== 'dev') {
           throw new Error('You can only deploy to production from main or dev branch')

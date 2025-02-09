@@ -3,6 +3,7 @@
 import { SDKNetwork, type SDKVaultishType, type SDKVaultType } from '@summerfi/app-types'
 import { GraphQLClient } from 'graphql-request'
 
+import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@/constants/revalidations'
 import {
   GetPositionHistoryDocument,
   type GetPositionHistoryQuery,
@@ -14,8 +15,6 @@ type GetPositionHistoryParams = {
   vault: SDKVaultishType | SDKVaultType
 }
 
-const POSITION_HISTORY_DURATION = 120 // seconds
-
 export async function getPositionHistory({ network, address, vault }: GetPositionHistoryParams) {
   const positionId = `${address}-${vault.id}`
 
@@ -24,20 +23,20 @@ export async function getPositionHistory({ network, address, vault }: GetPositio
     await fetch(url, {
       ...params,
       next: {
-        revalidate: POSITION_HISTORY_DURATION,
-        tags: ['position-history', address.toLowerCase()],
+        revalidate: REVALIDATION_TIMES.POSITION_HISTORY,
+        tags: [REVALIDATION_TAGS.POSITION_HISTORY, address.toLowerCase()],
       },
     })
 
-  if (!process.env.TEMPORARY_MAINNET_SUBGRAPH) {
-    throw new Error('TEMPORARY_MAINNET_SUBGRAPH env variable is not set')
-  }
-
   const clients = {
-    // [SDKNetwork.Mainnet]: new GraphQLClient(`${process.env.SUBGRAPH_BASE}/summer-protocol`, {
-    [SDKNetwork.Mainnet]: new GraphQLClient(process.env.TEMPORARY_MAINNET_SUBGRAPH, {
-      fetch: customFetchCache,
-    }),
+    [SDKNetwork.Mainnet]: new GraphQLClient(
+      process.env.TEMPORARY_MAINNET_SUBGRAPH
+        ? process.env.TEMPORARY_MAINNET_SUBGRAPH
+        : `${process.env.SUBGRAPH_BASE}/summer-protocol`,
+      {
+        fetch: customFetchCache,
+      },
+    ),
     [SDKNetwork.Base]: new GraphQLClient(`${process.env.SUBGRAPH_BASE}/summer-protocol-base`, {
       fetch: customFetchCache,
     }),
@@ -56,10 +55,14 @@ export async function getPositionHistory({ network, address, vault }: GetPositio
   }
 
   const networkGraphQlClient = clients[network as keyof typeof clients]
+  const request = await networkGraphQlClient.request<GetPositionHistoryQuery>(
+    GetPositionHistoryDocument,
+    {
+      positionId,
+    },
+  )
 
-  return await networkGraphQlClient.request<GetPositionHistoryQuery>(GetPositionHistoryDocument, {
-    positionId,
-  })
+  return request
 }
 
 export type GetPositionHistoryReturnType = Awaited<ReturnType<typeof getPositionHistory>>

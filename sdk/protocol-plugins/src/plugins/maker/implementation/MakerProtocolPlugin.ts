@@ -111,8 +111,10 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
     makerLendingPoolId: IMakerLendingPoolId,
   ): Promise<MakerLendingPoolInfo> {
     const protocolData = await this._getProtocolData(makerLendingPoolId)
-    const collateralInfo = await this._getCollateralInfo(protocolData)
-    const debtInfo = await this._getDebtInfo(protocolData)
+    const [collateralInfo, debtInfo] = await Promise.all([
+      this._getCollateralInfo(protocolData),
+      this._getDebtInfo(protocolData),
+    ])
 
     return MakerLendingPoolInfo.createFrom({
       id: makerLendingPoolId,
@@ -150,14 +152,16 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
       )
     }
 
-    const cdpManagerAddress = await this._getContractAddress({
-      chainInfo: params.user.chainInfo,
-      contractName: this.CdpManagerContractName,
-    })
-    const dssProxyActionsAddress = await this._getContractAddress({
-      chainInfo: params.user.chainInfo,
-      contractName: this.DssProxyActionsContractName,
-    })
+    const [cdpManagerAddress, dssProxyActionsAddress] = await Promise.all([
+      this._getContractAddress({
+        chainInfo: params.user.chainInfo,
+        contractName: this.CdpManagerContractName,
+      }),
+      this._getContractAddress({
+        chainInfo: params.user.chainInfo,
+        contractName: this.DssProxyActionsContractName,
+      }),
+    ])
 
     const result = encodeMakerAllowThroughProxyActions({
       cdpManagerAddress: cdpManagerAddress.value,
@@ -338,26 +342,29 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
   }
 
   private async _getIlkProtocolData(params: { chainInfo: IChainInfo; ilkInHex: `0x${string}` }) {
-    const makerDogDef = await this._getContractDef({
-      chainInfo: params.chainInfo,
-      contractName: 'Dog',
-    })
-    const makerVatDef = await this._getContractDef({
-      chainInfo: params.chainInfo,
-      contractName: 'Vat',
-    })
-    const makerSpotDef = await this._getContractDef({
-      chainInfo: params.chainInfo,
-      contractName: 'Spot',
-    })
-    const makerJugDef = await this._getContractDef({
-      chainInfo: params.chainInfo,
-      contractName: 'McdJug',
-    })
-    const makerIlkRegistryDef = await this._getContractDef({
-      chainInfo: params.chainInfo,
-      contractName: 'IlkRegistry',
-    })
+    const [makerDogDef, makerVatDef, makerSpotDef, makerJugDef, makerIlkRegistryDef] =
+      await Promise.all([
+        this._getContractDef({
+          chainInfo: params.chainInfo,
+          contractName: 'Dog',
+        }),
+        this._getContractDef({
+          chainInfo: params.chainInfo,
+          contractName: 'Vat',
+        }),
+        this._getContractDef({
+          chainInfo: params.chainInfo,
+          contractName: 'Spot',
+        }),
+        this._getContractDef({
+          chainInfo: params.chainInfo,
+          contractName: 'McdJug',
+        }),
+        this._getContractDef({
+          chainInfo: params.chainInfo,
+          contractName: 'IlkRegistry',
+        }),
+      ])
 
     const [
       {

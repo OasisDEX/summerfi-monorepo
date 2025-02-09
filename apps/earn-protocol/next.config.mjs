@@ -49,6 +49,15 @@ const nextConfig = {
       },
     ]
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'static.tally.xyz',
+        pathname: '/**',
+      },
+    ],
+  },
 }
 
 export default withNextIntl(nextConfig)

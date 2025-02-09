@@ -7,8 +7,8 @@ export default () => {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
         marginBottom: 'var(--space-xxxxl)',
+        alignItems: 'center',
         marginTop: 'var(--space-xxl)',
       }}
     >

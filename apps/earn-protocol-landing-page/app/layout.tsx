@@ -14,8 +14,9 @@ import { LandingMasterPage } from '@/components/layout/LandingMasterPage/Landing
 import { fontInter } from '@/helpers/fonts'
 
 export const metadata: Metadata = {
-  title: 'Summer.fi Earn Protocol Landing Page ⛱️',
-  description: '⛱️',
+  title: 'Summer.fi - The home of $SUMR and curated DeFi Yields',
+  description:
+    'Claim, Delegate and Stake your $SUMR, the governance token for Lazy Summer Protocol.',
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

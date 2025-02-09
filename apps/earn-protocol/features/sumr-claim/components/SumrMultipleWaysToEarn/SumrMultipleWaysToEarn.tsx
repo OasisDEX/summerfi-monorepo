@@ -52,13 +52,13 @@ export const SumrMultipleWaysToEarn = () => {
         <BigGradientBox className={classNames.bottomBoxLeftGradient}>
           <Image
             src={rebalanceActivity}
-            alt="Stake & Delegate to earn $SUMR"
+            alt="Delegate & Stake to earn $SUMR"
             placeholder="blur"
             quality={100}
           />
           <SumrMultipleWaysToEarnTextualContent
-            title="Stake & Delegate to earn $SUMR"
-            description="Lazy Summer requires 0 management from users. Apart from your own deposits, all risk management, yield optimizing and strategy rebalancing is handled automatically. "
+            title="Delegate & Stake to earn $SUMR"
+            description="Put your $SUMR to work by staking and delegating. Earn passive rewards while contributing to protocol governance. Shape the future of Lazy Summer and grow your holdings effortlessly."
             link={{
               href: userWalletAddress
                 ? `/portfolio/${userWalletAddress}?tab=rewards`
@@ -71,7 +71,7 @@ export const SumrMultipleWaysToEarn = () => {
           <Image src={earnSumr} alt="Deposit to earn $SUMR" placeholder="blur" quality={100} />
           <SumrMultipleWaysToEarnTextualContent
             title="Deposit to earn $SUMR"
-            description="Lazy Summer requires 0 management from users. Apart from your own deposits, all risk management, yield optimizing and strategy rebalancing is handled automatically. "
+            description="Earn $SUMR as a reward for using the protocol and grow your portfolio by simply depositing into Lazy Summer. Gaining both yields optimized by AI and governance power in one seamless experience."
             link={{
               href: '/',
               label: 'Sign up',

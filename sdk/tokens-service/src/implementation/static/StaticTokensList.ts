@@ -321,6 +321,15 @@ export const StaticTokensData: TokenListData = {
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png',
     },
     {
+      name: 'Ether',
+      address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+      symbol: 'ETH',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png',
+    },
+    {
       chainId: 1,
       address: '0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e',
       name: 'yearn finance',
@@ -765,31 +774,6 @@ export const StaticTokensData: TokenListData = {
       symbol: 'mBASIS',
       name: 'Midas Basis Trading Token',
       address: '0x2a8c22E3b10036f3AEF5875d04f8441d4188b656',
-      decimals: 18,
-      logoURI: '',
-    },
-    // take from config json deployments
-    {
-      chainId: ChainFamilyMap.Base.Base.chainId,
-      symbol: 'SUMMER',
-      name: 'SummerToken',
-      address: '0x52A94964b494A4dc6912A10949f88c0770E0a514',
-      decimals: 18,
-      logoURI: '',
-    },
-    {
-      chainId: ChainFamilyMap.Arbitrum.ArbitrumOne.chainId,
-      symbol: 'SUMMER',
-      name: 'SummerToken',
-      address: '0xc4E635b196Fb8B1f0AB58Ec3cCC73e79188741a0',
-      decimals: 18,
-      logoURI: '',
-    },
-    {
-      chainId: ChainFamilyMap.Ethereum.Mainnet.chainId,
-      symbol: 'SUMMER',
-      name: 'SummerToken',
-      address: '0x0000000000000000000000000000000000000000',
       decimals: 18,
       logoURI: '',
     },

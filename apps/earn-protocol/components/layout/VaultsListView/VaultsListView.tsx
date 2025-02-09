@@ -105,7 +105,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
   const vaultData = selectedVaultData ?? networkFilteredVaults[0]
   const { userWalletAddress } = useUserWallet()
 
-  const positionExists = usePosition({
+  const { position: positionExists, isLoading } = usePosition({
     chainId: subgraphNetworkToSDKId(vaultData.protocol.network),
     vaultId: vaultData.id,
     onlyActive: true,
@@ -186,7 +186,8 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
     onBlur,
     onFocus,
   } = useAmount({
-    vault: vaultData,
+    tokenDecimals: vaultData.inputToken.decimals,
+    tokenPrice: vaultData.inputTokenPriceUSD,
     selectedToken:
       tokenBalances.token ??
       ({
@@ -251,7 +252,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
         <>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-              Choose a strategy
+              1. Choose a strategy
             </Text>
           </div>
           {networkFilteredVaults.map((vault, vaultIndex) => (
@@ -289,6 +290,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
           isEarnApp
           positionExists={Boolean(positionExists)}
           userWalletAddress={userWalletAddress}
+          isLoading={isLoading}
         />
       }
     />

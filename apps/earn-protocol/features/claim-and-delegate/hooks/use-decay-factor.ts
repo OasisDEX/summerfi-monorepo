@@ -2,6 +2,7 @@
 import { SDKChainId } from '@summerfi/app-types'
 import { ADDRESS_ZERO } from '@summerfi/app-utils'
 import { SummerTokenAbi } from '@summerfi/armada-protocol-abis'
+import { getChainInfoByChainId } from '@summerfi/sdk-common'
 import { useQuery } from '@tanstack/react-query'
 import BigNumber from 'bignumber.js'
 import { type Address, createPublicClient, http } from 'viem'
@@ -37,9 +38,8 @@ export const useDecayFactor = (delegatedAddress?: string): DecayFactorResponse =
       })
 
       const sumrToken = await sdk
-        .getTokenBySymbol({
-          chainId: SDKChainId.BASE,
-          symbol: 'SUMMER',
+        .getSummerToken({
+          chainInfo: getChainInfoByChainId(SDKChainId.BASE),
         })
         .catch((error) => {
           throw new Error(`Failed to fetch SUMMER token: ${error.message}`)

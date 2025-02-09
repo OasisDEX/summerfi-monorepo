@@ -7,6 +7,7 @@ import {
   IFleetCommanderContract,
 } from '@summerfi/contracts-provider-common'
 import { IAddress, IChainInfo } from '@summerfi/sdk-common'
+import type { ITokensManager } from '@summerfi/tokens-common'
 import { Erc20Contract } from './contracts/Erc20Contract/Erc20Contract'
 import { Erc4626Contract } from './contracts/Erc4626Contract/Erc4626Contract'
 import { FleetCommanderContract } from './contracts/FleetCommanderContract/FleetCommanderContract'
@@ -18,14 +19,17 @@ import { FleetCommanderContract } from './contracts/FleetCommanderContract/Fleet
 export class ContractsProvider implements IContractsProvider {
   private _configProvider: IConfigurationProvider
   private _blockchainClientProvider: IBlockchainClientProvider
+  private _tokensManager: ITokensManager
 
   /** CONSTRUCTOR */
   constructor(params: {
     configProvider: IConfigurationProvider
     blockchainClientProvider: IBlockchainClientProvider
+    tokensManager: ITokensManager
   }) {
     this._configProvider = params.configProvider
     this._blockchainClientProvider = params.blockchainClientProvider
+    this._tokensManager = params.tokensManager
   }
 
   /** PUBLIC */
@@ -39,6 +43,7 @@ export class ContractsProvider implements IContractsProvider {
       blockchainClient: this._blockchainClientProvider.getBlockchainClient({
         chainInfo: params.chainInfo,
       }),
+      tokensManager: this._tokensManager,
       chainInfo: params.chainInfo,
       address: params.address,
     })
@@ -53,6 +58,7 @@ export class ContractsProvider implements IContractsProvider {
       blockchainClient: this._blockchainClientProvider.getBlockchainClient({
         chainInfo: params.chainInfo,
       }),
+      tokensManager: this._tokensManager,
       chainInfo: params.chainInfo,
       address: params.address,
     })
@@ -67,6 +73,7 @@ export class ContractsProvider implements IContractsProvider {
       blockchainClient: this._blockchainClientProvider.getBlockchainClient({
         chainInfo: params.chainInfo,
       }),
+      tokensManager: this._tokensManager,
       chainInfo: params.chainInfo,
       address: params.address,
     })

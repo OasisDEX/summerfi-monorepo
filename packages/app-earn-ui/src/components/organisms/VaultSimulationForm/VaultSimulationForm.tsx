@@ -6,8 +6,9 @@ import {
   type DropdownRawOption,
   type SDKVaultishType,
 } from '@summerfi/app-types'
-import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
+import { sdkNetworkToHumanNetwork, subgraphNetworkToSDKId } from '@summerfi/app-utils'
 import type BigNumber from 'bignumber.js'
+import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
 import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
@@ -43,6 +44,7 @@ export type VaultSimulationFormProps = {
   isEarnApp?: boolean
   positionExists?: boolean
   userWalletAddress?: string
+  isLoading?: boolean
 }
 
 export const VaultSimulationForm = ({
@@ -61,6 +63,7 @@ export const VaultSimulationForm = ({
   isEarnApp,
   positionExists,
   userWalletAddress,
+  isLoading = false,
 }: VaultSimulationFormProps) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [isGradientBorder, setIsGradientBorder] = useState(false)
@@ -104,7 +107,9 @@ export const VaultSimulationForm = ({
     <div style={{ position: 'relative', width: '100%', padding: '2px' }}>
       <Sidebar
         {...{
-          title: 'Deposit',
+          title: isEarnApp
+            ? `2. Deposit into ${vaultData.inputToken.symbol} on ${capitalize(sdkNetworkToHumanNetwork(vaultData.protocol.network))}`
+            : 'Deposit',
           content: (
             <ControlsDepositWithdraw
               amountDisplay={amountDisplay}
@@ -116,13 +121,14 @@ export const VaultSimulationForm = ({
               onFocus={onFocus}
               onBlur={onBlur}
               tokenSymbol={selectedTokenOption.value}
-              tokenBalance={tokenBalance}
-              tokenBalanceLoading={!!isTokenBalanceLoading}
+              tokenBalance={isEarnApp ? tokenBalance : undefined}
+              tokenBalanceLoading={!!isEarnApp && !!isTokenBalanceLoading}
               manualSetAmount={manualSetAmount}
               vault={vaultData}
               estimatedEarnings={estimatedEarnings}
               isLoadingForecast={isLoadingForecast}
               ownerView
+              isSimulation
             />
           ),
           customHeader:
@@ -142,7 +148,7 @@ export const VaultSimulationForm = ({
               ? {
                   label: 'View your position',
                   url: `${vaultUrl}/${userWalletAddress}`,
-                  disabled: false,
+                  disabled: isLoading,
                 }
               : {
                   label: 'Deposit',
@@ -150,7 +156,7 @@ export const VaultSimulationForm = ({
                   action: () => {
                     setStorageOnce(amountParsed.toNumber())
                   },
-                  disabled: false,
+                  disabled: isLoading,
                 },
           footnote: !positionExists ? (
             <Link href={vaultUrl}>

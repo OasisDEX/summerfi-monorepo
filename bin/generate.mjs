@@ -46,4 +46,4 @@ for await (const f of govAbis) {
 }
 
 // process abis to TS
-await $`tsx scripts/transform-json-to-viem-abi.ts && cd armada-protocol/abis && pnpm genindex && pnpm build`
+await $`tsx scripts/transform-json-to-viem-abi.ts && cd armada-protocol/abis && pnpm genindex && pnpm prebuild`

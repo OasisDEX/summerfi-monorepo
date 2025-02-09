@@ -3,7 +3,12 @@ import { TOSStatus } from '@summerfi/app-types'
 import { requestJWT } from '@/client/auth/request-jwt'
 import { acceptanceStep } from '@/client/helpers/acceptance-step'
 import { actionErrorWrapper } from '@/client/helpers/action-error-wrapper'
-import { type TOSInput, type TosUpdate, type TOSVerifyAcceptance } from '@/types'
+import {
+  type TOSInput,
+  type TOSMessageType,
+  type TosUpdate,
+  type TOSVerifyAcceptance,
+} from '@/types'
 
 /**
  * Manages the signature step in the Terms of Service (TOS) flow.
@@ -21,6 +26,7 @@ import { type TOSInput, type TosUpdate, type TOSVerifyAcceptance } from '@/types
  * @param cookiePrefix - The prefix of cookie that will be stored as http-only cookie.
  * @param host - Optional, to be used when API is not available under the same host (for example localhost development on different ports).
  * @param isGnosisSafe - A boolean indicating if the wallet is a Gnosis Safe.
+ * @param type - The type of Terms of Service message to generate.
  */
 
 export const signatureStep = ({
@@ -33,10 +39,12 @@ export const signatureStep = ({
   cookiePrefix,
   host,
   isGnosisSafe,
-}: TOSInput & {
+  type,
+}: Omit<TOSInput, 'publicClient' | 'isSmartAccount'> & {
   setTos: TosUpdate
   termsOfServiceAcceptance: TOSVerifyAcceptance
   walletAddress: string
+  type: TOSMessageType
 }) => {
   setTos({
     status: TOSStatus.WAITING_FOR_SIGNATURE,
@@ -53,6 +61,7 @@ export const signatureStep = ({
           isGnosisSafe,
           cookiePrefix,
           host,
+          type,
         })
 
         if (jwt) {

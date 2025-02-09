@@ -12,6 +12,8 @@ import {
 } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
+import { isOutsideLink } from '@/helpers/is-outside-link'
+
 import classNames from './SumrRaysRewards.module.scss'
 
 interface SumrRaysRewardsContentProps {
@@ -52,7 +54,7 @@ const SumrRaysRewardsContent: FC<SumrRaysRewardsContentProps> = ({
         </Text>
       </Card>
       <div className={classNames.actionableWrapper}>
-        <Link href={button.href}>
+        <Link href={button.href} target={isOutsideLink(button.href) ? '_blank' : undefined}>
           <Button variant="primaryLarge">{button.label}</Button>
         </Link>
         <Link href={link.href}>

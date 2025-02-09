@@ -17,6 +17,7 @@ import { checkIfArgentWallet } from '@/server/helpers/check-if-argent'
 import { checkIfSafeOwner } from '@/server/helpers/check-if-safe'
 import { isValidSignature } from '@/server/helpers/is-valid-signature'
 import { recreateSignedMessage } from '@/server/helpers/recreate-signed-message'
+import { TOSMessageTypeSchema } from '@/types'
 
 const inputSchema = z.object({
   challenge: z.string(),
@@ -24,6 +25,7 @@ const inputSchema = z.object({
   chainId: chainIdSchema,
   isGnosisSafe: z.boolean(),
   cookiePrefix: z.string(),
+  type: TOSMessageTypeSchema,
 })
 
 const domainChainIdToViemChain: { [key in SDKChainId]: ViemChain } = {
@@ -81,13 +83,16 @@ export async function makeSignIn({
     transport,
   })
 
-  const message = recreateSignedMessage(challenge)
+  const message = recreateSignedMessage(challenge, body.type)
 
   const { isGnosisSafe } = body
   let isArgentWallet = false
 
   try {
-    isArgentWallet = await checkIfArgentWallet(client, challenge.address)
+    // argent wallet is only on mainnet
+    if (body.chainId === 1) {
+      isArgentWallet = await checkIfArgentWallet(client, challenge.address)
+    }
   } catch (e) {
     // eslint-disable-next-line no-console
     console.error('Check if argent wallet failed', e)

@@ -32,6 +32,16 @@ import {
  */
 export interface IArmadaManagerUsersClient {
   /**
+   * @method getSummerToken
+   * @description Retrieves the Summer token for a given chain
+   *
+   * @param chainInfo Chain information
+   *
+   * @returns The Summer token for the given chain
+   */
+  getSummerToken(params: { chainInfo: ChainInfo }): Promise<IToken>
+
+  /**
    * @method getVaultsRaw
    * @description Retrieves all protocol vaults
    *
@@ -322,4 +332,14 @@ export interface IArmadaManagerUsersClient {
    * @returns The transaction information
    */
   getUnstakeTx(params: { amount: bigint }): Promise<[UnstakeTransactionInfo]>
+
+  /**
+   * @method getDelegationChainLength
+   * @description Returns the length of the delegation chain
+   *
+   * @param user The user
+   *
+   * @returns The length of the delegation
+   */
+  getDelegationChainLength: (params: { user: IUser }) => Promise<number>
 }

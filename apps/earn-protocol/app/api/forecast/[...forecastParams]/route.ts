@@ -6,8 +6,6 @@ import { NextResponse } from 'next/server'
 
 import { isValidAddress } from '@/helpers/is-valid-address'
 
-export const revalidate = 60
-
 // Simple in-memory cache
 const cache = {} as {
   [key: string /** timestamp */]:

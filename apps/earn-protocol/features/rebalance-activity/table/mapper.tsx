@@ -1,4 +1,5 @@
 import {
+  getScannerUrl,
   Icon,
   TableCellNodes,
   TableCellText,
@@ -12,16 +13,12 @@ import {
   type SDKGlobalRebalanceType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
-import { formatCryptoBalance, timeAgo } from '@summerfi/app-utils'
+import { formatCryptoBalance, subgraphNetworkToSDKId, timeAgo } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
 import { rebalanceActivitySorter } from '@/features/rebalance-activity/table/sorter'
 import { getProtocolLabel } from '@/helpers/get-protocol-label'
-
-const providerMap: { [key: string]: string } = {
-  'Summer Earn Protocol': 'Summer.fi',
-}
 
 export const rebalanceActivityPurposeMapper = (
   item: SDKGlobalRebalanceType,
@@ -32,7 +29,7 @@ export const rebalanceActivityPurposeMapper = (
   const isFromBuffer = actionFromRawName === 'BufferArk'
   const isToBuffer = actionToRawName === 'BufferArk'
 
-  if (!isFromBuffer && !isToBuffer && Number(item.from.depositLimit) !== 0) {
+  if (!isFromBuffer && !isToBuffer && Number(item.fromPostAction.depositLimit) !== 0) {
     return Number(item.fromPostAction.totalValueLockedUSD) + Number(item.amountUSD) <
       Number(item.fromPostAction.depositLimit)
       ? { label: 'Rate Enhancement', icon: 'arrow_increase' }
@@ -66,11 +63,10 @@ export const rebalancingActivityMapper = (
   return sorted.map((item) => {
     const asset = item.asset.symbol as TokenSymbolsList
 
-    // dummy mapping for now
-    const providerLink =
-      {
-        'Summer Earn Protocol': '/earn',
-      }[item.protocol.name] ?? '/earn'
+    const scannerLink = getScannerUrl(
+      subgraphNetworkToSDKId(item.protocol.network),
+      item.id.split('-')[0] ?? '',
+    )
 
     const amount = new BigNumber(item.amount.toString()).shiftedBy(-item.asset.decimals)
 
@@ -81,8 +77,6 @@ export const rebalancingActivityMapper = (
     const actionToLabel = getProtocolLabel(actionToRawName)
 
     const purpose = rebalanceActivityPurposeMapper(item)
-
-    const providerLabel = providerMap[item.protocol.name] ?? 'n/a'
 
     return {
       content: {
@@ -117,15 +111,15 @@ export const rebalancingActivityMapper = (
             {timeAgo({ from: new Date(), to: new Date(Number(item.timestamp) * 1000) })}
           </TableCellText>
         ),
-        provider: (
-          <Link href={providerLink}>
+        transaction: (
+          <Link href={scannerLink} target="_blank">
             <WithArrow
               as="p"
               variant="p3"
               style={{ color: 'var(--earn-protocol-primary-100)' }}
               withStatic
             >
-              {providerLabel}
+              View
             </WithArrow>
           </Link>
         ),

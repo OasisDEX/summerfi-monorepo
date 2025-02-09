@@ -41,6 +41,8 @@ import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { type useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 
+import { useUserWallet } from './use-user-wallet'
+
 type UseTransactionParams = {
   vault: SDKVaultishType
   vaultChainId: AccountKitSupportedNetworks
@@ -55,6 +57,7 @@ type UseTransactionParams = {
   ownerView?: boolean
   positionAmount?: BigNumber
   approvalCustomValue?: BigNumber
+  approvalTokenSymbol?: string
 }
 
 const errorsMap = {
@@ -85,6 +88,7 @@ export const useTransaction = ({
   const { refresh: refreshView, push } = useRouter()
   const [slippageConfig] = useSlippageConfig()
   const user = useUser()
+  const { userWalletAddress } = useUserWallet()
   const { getDepositTX, getWithdrawTX } = useAppSDK()
   const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
   const [isTransakOpen, setIsTransakOpen] = useState(false)
@@ -112,6 +116,12 @@ export const useTransaction = ({
 
     return transactions[0]
   }, [transactions])
+
+  const approvalTokenSymbol = useMemo(() => {
+    return nextTransaction?.type === TransactionType.Approve
+      ? nextTransaction.metadata.approvalAmount.token.symbol
+      : ''
+  }, [nextTransaction?.metadata, nextTransaction?.type])
 
   // Configure User Operation (transaction) sender, passing client which can be undefined
   const {
@@ -191,13 +201,19 @@ export const useTransaction = ({
         ? {
             target: nextTransaction.transaction.target.value,
             data: getApprovalTx(
-              user.address,
-              BigInt(approvalCustomValue.times(ten.pow(token.decimals)).toString()),
+              nextTransaction.metadata.approvalSpender.value,
+              BigInt(
+                approvalCustomValue
+                  .times(ten.pow(nextTransaction.metadata.approvalAmount.token.decimals))
+                  .toString(),
+              ),
             ),
+            value: BigInt(nextTransaction.transaction.value),
           }
         : {
             target: nextTransaction.transaction.target.value,
             data: nextTransaction.transaction.calldata,
+            value: BigInt(nextTransaction.transaction.value),
           }
 
     sendTransaction(txParams)
@@ -399,7 +415,7 @@ export const useTransaction = ({
     if (nextTransaction?.type) {
       return {
         label: {
-          [TransactionType.Approve]: `Approve ${token.symbol}`,
+          [TransactionType.Approve]: `Approve ${approvalTokenSymbol}`,
           [TransactionType.Deposit]: 'Deposit',
           [TransactionType.Withdraw]: 'Withdraw',
         }[nextTransaction.type],
@@ -442,6 +458,7 @@ export const useTransaction = ({
     setChain,
     executeNextTransaction,
     positionAmount,
+    approvalTokenSymbol,
   ])
 
   const sidebarTitle = useMemo(() => {
@@ -463,11 +480,11 @@ export const useTransaction = ({
       !waitingForTx
     ) {
       reset()
-      if (user?.address) {
+      if (userWalletAddress) {
         // refreshes the view
         refreshView()
         // revalidates users wallet data (all of fetches with wallet tagged in it)
-        revalidateUser(user.address)
+        revalidateUser(userWalletAddress)
 
         // makes sure the user is redirected to the correct page
         // after closing or opening
@@ -484,7 +501,7 @@ export const useTransaction = ({
               ? getVaultPositionUrl({
                   network: vault.protocol.network,
                   vaultId: vault.customFields?.slug ?? vault.id,
-                  walletAddress: user.address,
+                  walletAddress: userWalletAddress,
                 })
               : getVaultUrl(vault),
           )
@@ -502,9 +519,9 @@ export const useTransaction = ({
     transactionType,
     transactions?.length,
     txStatus,
-    user?.address,
     vault,
     waitingForTx,
+    userWalletAddress,
   ])
 
   // watch for sendUserOperationError
@@ -583,6 +600,7 @@ export const useTransaction = ({
     reset,
     backToInit,
     user,
+    approvalTokenSymbol,
     setTransactionType,
     transactionType,
     approvalType,

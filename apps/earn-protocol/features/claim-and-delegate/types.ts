@@ -9,12 +9,19 @@ export enum ClaimDelegateSteps {
   TERMS = 'terms',
   CLAIM = 'claim',
   DELEGATE = 'delegate',
+  STAKE = 'stake',
+  COMPLETED = 'completed',
 }
 
 export enum ClaimDelegateTxStatuses {
   PENDING = 'pending',
   COMPLETED = 'completed',
   FAILED = 'failed',
+}
+
+export enum ClaimDelegateStakeType {
+  ADD_STAKE = 'add-stake',
+  REMOVE_STAKE = 'remove-stake',
 }
 
 export type ClaimDelegateState = {
@@ -24,6 +31,8 @@ export type ClaimDelegateState = {
   delegateStatus: ClaimDelegateTxStatuses | undefined
   stakingStatus: ClaimDelegateTxStatuses | undefined
   stakingApproveStatus: ClaimDelegateTxStatuses | undefined
+  stakeType: ClaimDelegateStakeType
+  stakeChangeAmount: string | undefined
   walletAddress: string
 }
 
@@ -38,19 +47,27 @@ export type ClaimDelegateReducerAction =
     }
   | {
       type: 'update-claim-status'
-      payload: ClaimDelegateTxStatuses
+      payload: ClaimDelegateTxStatuses | undefined
     }
   | {
       type: 'update-delegate-status'
-      payload: ClaimDelegateTxStatuses
+      payload: ClaimDelegateTxStatuses | undefined
     }
   | {
       type: 'update-staking-status'
-      payload: ClaimDelegateTxStatuses
+      payload: ClaimDelegateTxStatuses | undefined
     }
   | {
       type: 'update-staking-approve-status'
-      payload: ClaimDelegateTxStatuses
+      payload: ClaimDelegateTxStatuses | undefined
+    }
+  | {
+      type: 'update-stake-type'
+      payload: ClaimDelegateStakeType
+    }
+  | {
+      type: 'update-stake-change-amount'
+      payload: string | undefined
     }
 
 export type ClaimDelegateExternalData = {

@@ -142,20 +142,23 @@ importers:
   apps/earn-protocol:
     dependencies:
       '@account-kit/core':
-        specifier: ^4.9.0
-        version: 4.9.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(immer@9.0.21)(react@18.3.1)(typescript@5.6.2)(viem@2.20.0)(wagmi@2.10.9)
+        specifier: ^4.11.0
+        version: 4.11.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(immer@9.0.21)(react@18.3.1)(typescript@5.6.2)(viem@2.20.0)(wagmi@2.10.9)
       '@account-kit/infra':
-        specifier: ^4.9.0
-        version: 4.9.0(typescript@5.6.2)(viem@2.20.0)
+        specifier: ^4.11.0
+        version: 4.11.0(typescript@5.6.2)(viem@2.20.0)
       '@account-kit/react':
-        specifier: ^4.9.0
-        version: 4.9.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@tanstack/react-query@5.51.1)(@types/react@18.3.1)(@wagmi/core@2.13.8)(immer@9.0.21)(react-dom@18.3.1)(react-native@0.74.3)(react@18.3.1)(tailwindcss@3.4.13)(typescript@5.6.2)(viem@2.20.0)(wagmi@2.10.9)
+        specifier: ^4.11.0
+        version: 4.11.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@tanstack/react-query@5.51.1)(@types/react@18.3.1)(@wagmi/core@2.13.8)(immer@9.0.21)(react-dom@18.3.1)(react-native@0.74.3)(react@18.3.1)(tailwindcss@3.4.13)(typescript@5.6.2)(viem@2.20.0)(wagmi@2.10.9)
       '@account-kit/signer':
-        specifier: ^4.9.0
-        version: 4.9.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(react@18.3.1)(typescript@5.6.2)(viem@2.20.0)
+        specifier: ^4.11.0
+        version: 4.11.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(react@18.3.1)(typescript@5.6.2)(viem@2.20.0)
       '@loadable/component':
         specifier: ^5.16.4
         version: 5.16.4(react@18.3.1)
+      '@safe-global/safe-apps-sdk':
+        specifier: ^9.0.0
+        version: 9.1.0(typescript@5.6.2)(zod@3.22.4)
       '@summerfi/app-earn-ui':
         specifier: workspace:*
         version: link:../../packages/app-earn-ui
@@ -237,6 +240,9 @@ importers:
       react-infinite-scroller:
         specifier: ^1.2.6
         version: 1.2.6(react@18.3.1)
+      react-toastify:
+        specifier: ^11.0.3
+        version: 11.0.3(react-dom@18.3.1)(react@18.3.1)
       recharts:
         specifier: ^2.13.0
         version: 2.13.0(react-dom@18.3.1)(react@18.3.1)
@@ -2202,6 +2208,9 @@ importers:
       '@summerfi/swap-service':
         specifier: workspace:*
         version: link:../swap-service
+      '@summerfi/tokens-common':
+        specifier: workspace:*
+        version: link:../tokens-common
       '@types/node-fetch':
         specifier: ^2.6.11
         version: 2.6.11
@@ -2373,6 +2382,9 @@ importers:
       '@summerfi/testing-utils':
         specifier: workspace:*
         version: link:../testing-utils
+      '@summerfi/tokens-common':
+        specifier: workspace:*
+        version: link:../tokens-common
       '@types/node-fetch':
         specifier: ^2.6.11
         version: 2.6.11
@@ -4052,8 +4064,8 @@ importers:
 
 packages:
 
-  /@aa-sdk/core@4.9.0(typescript@5.6.2)(viem@2.20.0):
-    resolution: {integrity: sha512-jtB6Xho1oZl7xiQvCQxSwNe2fs8KWSOSNaKuMZaBweh/EStw1+iypTxVVjeh5VpkeGUnt6WMa5PCXtUuteUIPQ==}
+  /@aa-sdk/core@4.11.0(typescript@5.6.2)(viem@2.20.0):
+    resolution: {integrity: sha512-VMmiU9qoAaiwdXbPKxhPpcaANUMPkKxg+J7QTLoYqycpLop7jA1lx97d3fSOPtGBQIcJQix6PQIN1Maixcif1w==}
     peerDependencies:
       viem: ^2.20.0
     dependencies:
@@ -4070,16 +4082,16 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /@account-kit/core@4.9.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(immer@9.0.21)(react@18.3.1)(typescript@5.6.2)(viem@2.20.0)(wagmi@2.10.9):
-    resolution: {integrity: sha512-XBD8yP0X0mSXSRtR3wUpC9ZvgqgbJct2Vev32Ced6yM6580unPrOnwFcagkIGYHZGQcXUd9DLItrvpyMjHALKw==}
+  /@account-kit/core@4.11.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(immer@9.0.21)(react@18.3.1)(typescript@5.6.2)(viem@2.20.0)(wagmi@2.10.9):
+    resolution: {integrity: sha512-mapuPgPAZEfm1k309ywx1At45FbDELLAKfrcVFTfyv18MAiJwlJT4oNaOHT1CSN79eZVmDNAxOVxV0vdKhVmJw==}
     peerDependencies:
       viem: ^2.20.0
       wagmi: ^2.12.7
     dependencies:
-      '@account-kit/infra': 4.9.0(typescript@5.6.2)(viem@2.20.0)
-      '@account-kit/logging': 4.9.0
-      '@account-kit/signer': 4.9.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(react@18.3.1)(typescript@5.6.2)(viem@2.20.0)
-      '@account-kit/smart-contracts': 4.9.0(typescript@5.6.2)(viem@2.20.0)
+      '@account-kit/infra': 4.11.0(typescript@5.6.2)(viem@2.20.0)
+      '@account-kit/logging': 4.11.0
+      '@account-kit/signer': 4.11.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(react@18.3.1)(typescript@5.6.2)(viem@2.20.0)
+      '@account-kit/smart-contracts': 4.11.0(typescript@5.6.2)(viem@2.20.0)
       js-cookie: 3.0.5
       viem: 2.20.0(typescript@5.6.2)(zod@3.22.4)
       wagmi: 2.10.9(@tanstack/react-query@5.51.1)(@types/react@18.3.1)(immer@9.0.21)(react-dom@18.3.1)(react-native@0.74.3)(react@18.3.1)(typescript@5.6.2)(viem@2.20.0)(zod@3.22.4)
@@ -4102,13 +4114,13 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@account-kit/infra@4.9.0(typescript@5.6.2)(viem@2.20.0):
-    resolution: {integrity: sha512-DRnSRh3SvxuODwR7msEqMthBoviFuTUzF1BjXOTnAdIz4CvYIEI4t0D1absSCoUOhgVAGGdEslpG683OE/sNUQ==}
+  /@account-kit/infra@4.11.0(typescript@5.6.2)(viem@2.20.0):
+    resolution: {integrity: sha512-/WNDGNeIZn3bZV6knBSN5nXWbjmsKtcz7+8JHdm/I+6ivR9m/gkZIsSLisnQvH1CPjZqvpcS2+xTwpLOOecusA==}
     peerDependencies:
       viem: ^2.20.0
     dependencies:
-      '@aa-sdk/core': 4.9.0(typescript@5.6.2)(viem@2.20.0)
-      '@account-kit/logging': 4.9.0
+      '@aa-sdk/core': 4.11.0(typescript@5.6.2)(viem@2.20.0)
+      '@account-kit/logging': 4.11.0
       eventemitter3: 5.0.1
       viem: 2.20.0(typescript@5.6.2)(zod@3.22.4)
       zod: 3.22.4
@@ -4123,8 +4135,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@account-kit/logging@4.9.0:
-    resolution: {integrity: sha512-Qt1gHtcC8EdTtwIoj1g0cuMZ3XUHKhbIdyxpTq1SmKby9wy6uksGIgavDF375seUAF9GET+PioIgDtmBDFfWJA==}
+  /@account-kit/logging@4.11.0:
+    resolution: {integrity: sha512-O+Av1OU+5zd/B7JBiFobsPppC+qCOoUp+Fb7i04KXui6xpuxYJ5srugDtb0E0gauKbRpOh1VyVKUZUNLT8zchg==}
     dependencies:
       '@segment/analytics-next': 1.75.0
       uuid: 11.0.3
@@ -4132,8 +4144,8 @@ packages:
       - encoding
     dev: false
 
-  /@account-kit/react@4.9.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@tanstack/react-query@5.51.1)(@types/react@18.3.1)(@wagmi/core@2.13.8)(immer@9.0.21)(react-dom@18.3.1)(react-native@0.74.3)(react@18.3.1)(tailwindcss@3.4.13)(typescript@5.6.2)(viem@2.20.0)(wagmi@2.10.9):
-    resolution: {integrity: sha512-ZlkrDTRIT/+mjfO6mi+H/04Jv+cXBr+oXGIgwda9VHljrGjDPViS1FecHiH726++uKkLmUsc62n+hRD4Dmf0Cg==}
+  /@account-kit/react@4.11.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@tanstack/react-query@5.51.1)(@types/react@18.3.1)(@wagmi/core@2.13.8)(immer@9.0.21)(react-dom@18.3.1)(react-native@0.74.3)(react@18.3.1)(tailwindcss@3.4.13)(typescript@5.6.2)(viem@2.20.0)(wagmi@2.10.9):
+    resolution: {integrity: sha512-LYEEKNluxKoiyoKoUL0Dfu7hQnH1CT2dlsrphWVTk9KkKca2WLLT3TyMH1A4Nrib7IFukA1VNfBVkDMwKobiaA==}
     peerDependencies:
       '@tanstack/react-query': ^5.28.9
       react: ^18.2.0
@@ -4142,10 +4154,10 @@ packages:
       viem: ^2.20.0
       wagmi: ^2.12.7
     dependencies:
-      '@account-kit/core': 4.9.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(immer@9.0.21)(react@18.3.1)(typescript@5.6.2)(viem@2.20.0)(wagmi@2.10.9)
-      '@account-kit/infra': 4.9.0(typescript@5.6.2)(viem@2.20.0)
-      '@account-kit/logging': 4.9.0
-      '@account-kit/signer': 4.9.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(react@18.3.1)(typescript@5.6.2)(viem@2.20.0)
+      '@account-kit/core': 4.11.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(immer@9.0.21)(react@18.3.1)(typescript@5.6.2)(viem@2.20.0)(wagmi@2.10.9)
+      '@account-kit/infra': 4.11.0(typescript@5.6.2)(viem@2.20.0)
+      '@account-kit/logging': 4.11.0
+      '@account-kit/signer': 4.11.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(react@18.3.1)(typescript@5.6.2)(viem@2.20.0)
       '@tanstack/react-form': 0.33.0(react-dom@18.3.1)(react@18.3.1)(typescript@5.6.2)
       '@tanstack/react-query': 5.51.1(react@18.3.1)
       '@tanstack/zod-form-adapter': 0.33.0(zod@3.22.4)
@@ -4192,13 +4204,13 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@account-kit/signer@4.9.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(react@18.3.1)(typescript@5.6.2)(viem@2.20.0):
-    resolution: {integrity: sha512-eymcC7q9TJLHqz3AXtuHHqLbs6XpByk/QLKyfG7yiQ+8GlR8KDI5PHUbTifiBgkb2L6mcPCsZUxCquvuSzDxfg==}
+  /@account-kit/signer@4.11.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(react@18.3.1)(typescript@5.6.2)(viem@2.20.0):
+    resolution: {integrity: sha512-LkLTlEQrV6JC9+wpQo76T6vTMUpdoZU3+8iTP2u0qp81iYxdQEdLuWcS+DL75qW7yNm/XCHd0iEvTJCi5ooFSQ==}
     peerDependencies:
       viem: ^2.20.0
     dependencies:
-      '@aa-sdk/core': 4.9.0(typescript@5.6.2)(viem@2.20.0)
-      '@account-kit/logging': 4.9.0
+      '@aa-sdk/core': 4.11.0(typescript@5.6.2)(viem@2.20.0)
+      '@account-kit/logging': 4.11.0
       '@turnkey/http': 2.10.0
       '@turnkey/iframe-stamper': 1.2.0
       '@turnkey/viem': 0.4.22(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(react@18.3.1)(viem@2.20.0)
@@ -4218,13 +4230,13 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@account-kit/smart-contracts@4.9.0(typescript@5.6.2)(viem@2.20.0):
-    resolution: {integrity: sha512-CjOFdmzrxke4D/OydVv6L/kukktbl7wwKUz0TYr4cpHHECLn/OPO7CWvN1MzGEzIMPdVioPqkauSYnmZUJkQHw==}
+  /@account-kit/smart-contracts@4.11.0(typescript@5.6.2)(viem@2.20.0):
+    resolution: {integrity: sha512-s+Pkxav+ShcU55UsLMuJ6h6K/pv7aG1bX/BvVoCn75WrrTTDFAZKhmwi3dnhEwPKmAaDK4MXX46fuCRJ6WthIA==}
     peerDependencies:
       viem: ^2.20.0
     dependencies:
-      '@aa-sdk/core': 4.9.0(typescript@5.6.2)(viem@2.20.0)
-      '@account-kit/infra': 4.9.0(typescript@5.6.2)(viem@2.20.0)
+      '@aa-sdk/core': 4.11.0(typescript@5.6.2)(viem@2.20.0)
+      '@account-kit/infra': 4.11.0(typescript@5.6.2)(viem@2.20.0)
       viem: 2.20.0(typescript@5.6.2)(zod@3.22.4)
     transitivePeerDependencies:
       - bufferutil
@@ -11955,10 +11967,10 @@ packages:
       '@types/ws': 8.5.10
       duplexify: 3.7.1
       inherits: 2.0.4
-      isomorphic-ws: 4.0.1(ws@8.17.1)
+      isomorphic-ws: 4.0.1(ws@8.18.0)
       readable-stream: 2.3.8
       safe-buffer: 5.2.1
-      ws: 8.17.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ws: 8.18.0
       xtend: 4.0.2
     transitivePeerDependencies:
       - bufferutil
@@ -15587,7 +15599,7 @@ packages:
     resolution: {integrity: sha512-N5p/ulfnnA2Pi2M3YeWjULeWbjo7ei22JwU/IXnhoHzKq3pYCN6ynL9mJBOlvDVv892EgLPCWCOwQk/uBT2v0Q==}
     dependencies:
       '@safe-global/safe-gateway-typescript-sdk': 3.21.2
-      viem: 2.20.0(typescript@5.6.2)(zod@3.22.4)
+      viem: 2.21.55(typescript@5.6.2)(zod@3.22.4)
     transitivePeerDependencies:
       - bufferutil
       - typescript
@@ -17753,7 +17765,7 @@ packages:
       ripple-lib: 1.10.1
       socks-proxy-agent: 6.1.1
       tslib: 2.2.0
-      ws: 8.17.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ws: 8.18.0
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -22295,7 +22307,7 @@ packages:
   /bs58check@3.0.1:
     resolution: {integrity: sha512-hjuuJvoWEybo7Hn/0xOrczQKKEKD63WguEjlhLExYs2wUBcebDC1jDNK17eEAD2lYfw82d5ASC1d7K3SWszjaQ==}
     dependencies:
-      '@noble/hashes': 1.4.0
+      '@noble/hashes': 1.6.1
       bs58: 5.0.0
     dev: false
 
@@ -28356,12 +28368,12 @@ packages:
       ws: 7.5.9
     dev: false
 
-  /isomorphic-ws@4.0.1(ws@8.17.1):
+  /isomorphic-ws@4.0.1(ws@8.18.0):
     resolution: {integrity: sha512-BhBvN2MBpWTaSHdWRb/bwdZJ1WaehQ2L1KngkCkfLUGF0mAWAT1sQUQacEmQ0jXkFw/czDXPNQSL5u2/Krsz1w==}
     peerDependencies:
       ws: '*'
     dependencies:
-      ws: 8.17.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ws: 8.18.0
     dev: true
 
   /isomorphic-ws@5.0.0(ws@8.17.1):
@@ -33129,6 +33141,17 @@ packages:
       react: '>=16.8.0'
     dependencies:
       react: 18.3.1
+    dev: false
+
+  /react-toastify@11.0.3(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-cbPtHJPfc0sGqVwozBwaTrTu1ogB9+BLLjd4dDXd863qYLj7DGrQ2sg5RAChjFUB4yc3w8iXOtWcJqPK/6xqRQ==}
+    peerDependencies:
+      react: ^18 || ^19
+      react-dom: ^18 || ^19
+    dependencies:
+      clsx: 2.1.1
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
     dev: false
 
   /react-transition-group@4.4.5(react-dom@18.3.1)(react@18.3.1):

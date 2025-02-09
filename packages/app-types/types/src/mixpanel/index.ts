@@ -10,8 +10,10 @@ export enum MixpanelEventTypes {
   TopBannerEvent = 'top-banner-event',
   ProductHubChange = 'product-hub-change',
   RaysTopClimbers = 'rays-top-climbers',
+  AppError = 'app-error',
 }
 
 export enum MixpanelEventProduct {
   Rays = 'Rays',
+  EarnProtocol = 'EarnProtocol',
 }

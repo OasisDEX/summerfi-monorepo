@@ -1,4 +1,7 @@
-import type { IPercentage, IPrice, ITokenAmount } from '../../../common'
+import type { ITokenAmount } from '../../../common/interfaces/ITokenAmount'
+import type { IAddress } from '../../../common/interfaces/IAddress'
+import type { IPrice } from '../../../common/interfaces/IPrice'
+import type { IPercentage } from '../../../common/interfaces/IPercentage'
 import type { Transaction } from './Transaction'
 
 /**
@@ -17,6 +20,7 @@ export enum TransactionType {
 
 export type TransactionMetadataApproval = {
   approvalAmount: ITokenAmount
+  approvalSpender: IAddress
 }
 
 export type TransactionPriceImpact = {

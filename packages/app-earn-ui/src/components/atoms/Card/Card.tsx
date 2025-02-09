@@ -8,6 +8,7 @@ interface CardProps {
   children: ReactNode
   variant?: ClassNames
   onClick?: () => void
+  disabled?: boolean
 }
 
 export type CardVariant = ClassNames
@@ -18,11 +19,12 @@ export const Card: FC<CardProps & DetailedHTMLProps<HTMLAttributes<HTMLElement>,
   variant = 'cardPrimary',
   style,
   onClick,
+  disabled,
 }) => {
   return (
     <div
       className={getAtomClassList({ className, variant: cardStyles[variant] })}
-      style={style}
+      style={{ ...(disabled ? { opacity: 0.5, cursor: 'not-allowed' } : {}), ...style }}
       onClick={onClick}
     >
       {children}

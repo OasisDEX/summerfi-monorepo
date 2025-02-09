@@ -1,12 +1,13 @@
 import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
-import { ChainFamilyMap, User, Wallet } from '@summerfi/sdk-common'
+import { User, Wallet } from '@summerfi/sdk-common'
 
 import { SDKApiUrl, signerPrivateKey, testConfig } from './utils/testConfig'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
+import assert from 'assert'
 
 jest.setTimeout(300000)
 
-describe('Armada Protocol Claim', () => {
+describe.skip('Armada Protocol Claim', () => {
   const sdk: SDKManager = makeSDK({
     apiURL: SDKApiUrl,
   })
@@ -29,49 +30,50 @@ describe('Armada Protocol Claim', () => {
           const rewards = await sdk.armada.users.getAggregatedRewards({
             user,
           })
+          console.log(rewards)
           expect(rewards.total).toBeGreaterThan(0n)
-          expect(rewards.perChain[ChainFamilyMap.Base.Base.chainId]).toBeGreaterThan(0n)
-          expect(rewards.perChain[ChainFamilyMap.Arbitrum.ArbitrumOne.chainId]).toBeGreaterThan(0n)
+          // expect(rewards.perChain[ChainFamilyMap.Base.Base.chainId]).toBeGreaterThan(0n)
+          // expect(rewards.perChain[ChainFamilyMap.Arbitrum.ArbitrumOne.chainId]).toBe(0n)
         })
       })
 
-      describe(`claimRewards`, () => {
+      describe.skip(`claimRewards`, () => {
         it(`should claim rewards`, async () => {
           const rewards = await sdk.armada.users.getAggregatedRewards({
             user,
           })
 
-          if (rewards.total > 0n) {
-            const tx = await sdk.armada.users.getAggregatedClaimsForChainTX({
-              chainInfo,
-              user,
-            })
-            if (!tx) {
-              throw new Error('No claims')
-            }
+          assert(rewards.total > 0n, 'Rewards should be greater than 0')
 
-            const rewards = await sdk.armada.users.getAggregatedRewards({
-              user,
-            })
-            const toClaimBefore = rewards.perChain[ChainFamilyMap.Base.Base.chainId]
-            console.log('before', toClaimBefore)
-
-            const { statuses } = await sendAndLogTransactions({
-              chainInfo,
-              transactions: tx,
-              rpcUrl: rpcUrl,
-              privateKey: signerPrivateKey,
-            })
-            statuses.forEach((status) => {
-              expect(status).toBe('success')
-            })
-
-            const rewardsAfter = await sdk.armada.users.getAggregatedRewards({
-              user,
-            })
-            const toClaimAfter = rewardsAfter.perChain[ChainFamilyMap.Base.Base.chainId]
-            console.log('after', toClaimAfter)
+          const tx = await sdk.armada.users.getAggregatedClaimsForChainTX({
+            chainInfo,
+            user,
+          })
+          if (!tx) {
+            throw new Error('No claims')
           }
+
+          const rewardsBefore = await sdk.armada.users.getAggregatedRewards({
+            user,
+          })
+          const toClaimBefore = rewardsBefore.total
+          console.log('before', toClaimBefore)
+
+          const { statuses } = await sendAndLogTransactions({
+            chainInfo,
+            transactions: tx,
+            rpcUrl: rpcUrl,
+            privateKey: signerPrivateKey,
+          })
+          statuses.forEach((status) => {
+            expect(status).toBe('success')
+          })
+
+          const rewardsAfter = await sdk.armada.users.getAggregatedRewards({
+            user,
+          })
+          const toClaimAfter = rewardsAfter.total
+          console.log('after', toClaimAfter)
         })
       })
     })

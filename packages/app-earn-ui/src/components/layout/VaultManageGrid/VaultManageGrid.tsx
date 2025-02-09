@@ -1,12 +1,14 @@
 'use client'
 
-import { type FC, type ReactNode } from 'react'
+import { type FC, type ReactNode, useEffect, useState } from 'react'
 import { type SDKVaultishType, type SDKVaultsListType } from '@summerfi/app-types'
 import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
 import { type IArmadaPositionStandalone as IArmadaPosition } from '@summerfi/armada-protocol-common'
 import BigNumber from 'bignumber.js'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 
+import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
 import { Box } from '@/components/atoms/Box/Box'
 import { Text } from '@/components/atoms/Text/Text'
 import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
@@ -16,6 +18,7 @@ import { SimpleGrid } from '@/components/molecules/Grid/SimpleGrid'
 import { VaultTitleDropdownContent } from '@/components/molecules/VaultTitleDropdownContent/VaultTitleDropdownContent'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
 import { getPositionValues } from '@/helpers/get-position-values'
+import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 
 import vaultManageGridStyles from './VaultManageGrid.module.scss'
@@ -24,11 +27,14 @@ interface VaultManageGridProps {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
   position: IArmadaPosition
-  detailsContent: ReactNode
+  detailsContent: ReactNode[]
   sidebarContent: ReactNode
   connectedWalletAddress?: string
   viewWalletAddress: string
   isMobile?: boolean
+  displaySimulationGraph?: boolean
+  simulationGraph: ReactNode
+  sumrPrice?: number
 }
 
 export const VaultManageGrid: FC<VaultManageGridProps> = ({
@@ -40,15 +46,47 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   connectedWalletAddress,
   viewWalletAddress,
   isMobile,
+  simulationGraph,
+  displaySimulationGraph,
+  sumrPrice,
 }) => {
+  const [displaySimulationGraphStaggered, setDisplaySimulationGraphStaggered] =
+    useState(displaySimulationGraph)
+
+  const isVaultAtLeast30dOld = vault.createdTimestamp
+    ? dayjs().diff(dayjs(Number(vault.createdTimestamp) * 1000), 'day') > 30
+    : false
+
   const apr30d = formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
   const aprCurrent = formatDecimalAsPercent(new BigNumber(vault.calculatedApr).div(100))
   const noOfDeposits = position.deposits.length.toString()
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDisplaySimulationGraphStaggered(false)
+    }, 1000)
+
+    if (displaySimulationGraph) {
+      clearInterval(timer)
+      setDisplaySimulationGraphStaggered(true)
+    }
+
+    return () => {
+      clearInterval(timer)
+    }
+  }, [displaySimulationGraph])
 
   const { netDeposited, netEarnings, netValue } = getPositionValues({
     positionData: position,
     vaultData: vault,
   })
+
+  const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus(
+    vault.rewardTokens,
+    vault.rewardTokenEmissionsAmount,
+    sumrPrice,
+    vault.totalValueLockedUSD,
+  )
 
   return (
     <>
@@ -97,10 +135,15 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 networkName={vault.protocol.network}
               />
             </Dropdown>
-            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-              <BonusLabel rays="1,111" />
-            </Text>
+            {Number(rawSumrTokenBonus) > 0 && (
+              <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+                <BonusLabel tokenBonus={sumrTokenBonus} withTokenBonus />
+              </Text>
+            )}
           </div>
+          <AnimateHeight id="simulation-graph" scale show={displaySimulationGraphStaggered}>
+            {simulationGraph}
+          </AnimateHeight>
           <SimpleGrid
             columns={isMobile ? 1 : 3}
             rows={isMobile ? 3 : 1}
@@ -145,18 +188,34 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
               />
             </Box>
             <Box>
-              <DataBlock
-                size="large"
-                titleSize="small"
-                title="30d APY"
-                value={apr30d}
-                subValue={`Current APY: ${aprCurrent}`}
-                subValueType="neutral"
-                subValueSize="medium"
-              />
+              {isVaultAtLeast30dOld ? (
+                <DataBlock
+                  size="large"
+                  titleSize="small"
+                  title="30d APY"
+                  value={apr30d}
+                  subValue={`Current APY: ${aprCurrent}`}
+                  subValueType="neutral"
+                  subValueSize="medium"
+                />
+              ) : (
+                <DataBlock size="large" titleSize="small" title="Current APY" value={aprCurrent} />
+              )}
             </Box>
           </SimpleGrid>
-          <Box className={vaultManageGridStyles.leftBlock}>{detailsContent}</Box>
+          {Array.isArray(detailsContent) && detailsContent.length > 0 ? (
+            detailsContent.map((content, index) => (
+              <Box
+                key={index}
+                className={vaultManageGridStyles.leftBlock}
+                style={{ marginBottom: 'var(--general-space-20)' }}
+              >
+                {content}
+              </Box>
+            ))
+          ) : (
+            <Box className={vaultManageGridStyles.leftBlock}>{detailsContent}</Box>
+          )}
         </div>
         <div className={vaultManageGridStyles.rightBlockWrapper}>
           <div className={vaultManageGridStyles.rightBlock}>{sidebarContent}</div>

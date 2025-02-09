@@ -23,6 +23,7 @@ type VaultCardProps = SDKVaultishType & {
   withTokenBonus?: boolean
   sumrDilutedValuation?: string
   sumrPrice?: number
+  showCombinedBonus?: boolean
 }
 
 export const VaultCard = ({
@@ -41,8 +42,9 @@ export const VaultCard = ({
   rewardTokens,
   withTokenBonus,
   sumrPrice,
+  showCombinedBonus = false,
 }: VaultCardProps) => {
-  const tokenBonus = getSumrTokenBonus(
+  const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus(
     rewardTokens,
     rewardTokenEmissionsAmount,
     sumrPrice,
@@ -55,11 +57,17 @@ export const VaultCard = ({
     }
   }
 
-  const parsedApr = formatDecimalAsPercent(new BigNumber(calculatedApr).div(100))
+  const rawApr = new BigNumber(calculatedApr).div(100)
+
+  const parsedApr = formatDecimalAsPercent(rawApr)
   const parsedTotalValueLocked = formatCryptoBalance(
     new BigNumber(String(inputTokenBalance)).div(ten.pow(inputToken.decimals)),
   )
   const parsedTotalValueLockedUSD = formatCryptoBalance(new BigNumber(String(totalValueLockedUSD)))
+
+  const combinedApr = showCombinedBonus
+    ? formatDecimalAsPercent(rawApr.plus(rawSumrTokenBonus))
+    : undefined
 
   return (
     <GradientBox withHover={withHover} selected={selected} onClick={handleVaultClick}>
@@ -77,7 +85,12 @@ export const VaultCard = ({
             selected={selected}
           />
           <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-            <BonusLabel tokenBonus={tokenBonus} apy={parsedApr} withTokenBonus={withTokenBonus} />
+            <BonusLabel
+              tokenBonus={sumrTokenBonus}
+              apy={parsedApr}
+              withTokenBonus={withTokenBonus}
+              combinedApr={combinedApr}
+            />
           </Text>
         </div>
         <div className={vaultCardStyles.vaultCardAssetsWrapper}>
@@ -97,7 +110,7 @@ export const VaultCard = ({
               Best for
             </Text>
             <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-              {customFields?.bestFor ?? '-'}
+              {customFields?.bestFor ?? 'Optimized lending yield'}
             </Text>
           </div>
         </div>

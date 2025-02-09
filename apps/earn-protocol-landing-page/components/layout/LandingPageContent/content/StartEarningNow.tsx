@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react'
 import { Button, Card, Icon, Text } from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
+import Link from 'next/link'
 
 import startEarningNowStyles from '@/components/layout/LandingPageContent/content/StartEarningNow.module.scss'
 
@@ -61,9 +62,11 @@ export const StartEarningNow = () => {
             'Withdraw anytime',
           ]}
           cta={
-            <Button variant="primarySmall" className={clsx(startEarningNowStyles.ctaButton)}>
-              <Text variant="p3semi">Sign up</Text>
-            </Button>
+            <Link href="/earn">
+              <Button variant="primarySmall" className={clsx(startEarningNowStyles.ctaButton)}>
+                <Text variant="p3semi">Sign up</Text>
+              </Button>
+            </Link>
           }
         />
         <StartEarningNowBlock
@@ -111,9 +114,11 @@ export const StartEarningNow = () => {
             'Still able to withdraw at anytime',
           ]}
           cta={
-            <Button variant="primarySmall" className={clsx(startEarningNowStyles.ctaButton)}>
-              <Text variant="p3semi">Set up a call</Text>
-            </Button>
+            <Link href="https://chat.summer.fi/" target="_blank">
+              <Button variant="primarySmall" className={clsx(startEarningNowStyles.ctaButton)}>
+                <Text variant="p3semi">Set up a call</Text>
+              </Button>
+            </Link>
           }
         />
       </div>

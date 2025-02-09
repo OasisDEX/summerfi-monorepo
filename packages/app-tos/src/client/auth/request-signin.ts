@@ -1,3 +1,5 @@
+import { type TOSMessageType } from '@/types'
+
 /**
  * Requests a JSON Web Token (JWT) by sending a signed challenge to the authentication server.
  *
@@ -11,6 +13,7 @@
  * @param isGnosisSafe - A boolean indicating if the wallet is a Gnosis Safe.
  * @param cookiePrefix - The prefix of cookie that will be stored as http-only cookie.
  * @param host - Optional, to be used when API is not available under the same host (for example localhost development on different ports).
+ * @param type - The type of Terms of Service message to generate.
  *
  * @returns A promise that resolves to the JWT string or undefined if an error occurs.
  * @throws Will log an error to the console if the request fails.
@@ -21,6 +24,7 @@ export const requestSignin = async ({
   chainId,
   isGnosisSafe,
   cookiePrefix,
+  type,
   host = '',
 }: {
   signature: string
@@ -28,6 +32,7 @@ export const requestSignin = async ({
   chainId: number
   isGnosisSafe: boolean
   cookiePrefix: string
+  type: TOSMessageType
   host?: string
 }): Promise<string | undefined> => {
   try {
@@ -36,7 +41,7 @@ export const requestSignin = async ({
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ signature, challenge, chainId, isGnosisSafe, cookiePrefix }),
+      body: JSON.stringify({ signature, challenge, chainId, isGnosisSafe, cookiePrefix, type }),
       credentials: 'include',
     }).then((resp) => resp.json())
 

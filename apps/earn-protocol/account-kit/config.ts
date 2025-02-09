@@ -22,7 +22,7 @@ export const SDKChainIdToAAChainMap: {
 }
 
 export const GasSponsorshipIdMap = {
-  [SDKChainId.ARBITRUM]: undefined,
+  [SDKChainId.ARBITRUM]: '99eeab13-6d37-4f9e-adf6-d59cd8060d7f',
   [SDKChainId.BASE]: '7d552463-eba5-4eac-a940-56f0515243f2',
   [SDKChainId.MAINNET]: undefined,
   [SDKChainId.OPTIMISM]: undefined,
@@ -60,9 +60,6 @@ export const getAccountKitConfig = ({
 }) => {
   return createConfig(
     {
-      transport: alchemy({
-        rpcUrl: forkRpcUrl ?? `/earn/api/rpc/chain/${chainId ?? defaultChain.id}`,
-      }),
       signerConnection: {
         // this is for Alchemy Signer requests
         rpcUrl: '/earn/api/rpc',
@@ -76,6 +73,9 @@ export const getAccountKitConfig = ({
       chains: Object.values(SDKChainIdToAAChainMap).map((chain) => ({
         chain,
         policyId: GasSponsorshipIdMap[chain.id as SDKChainId.ARBITRUM | SDKChainId.BASE],
+        transport: alchemy({
+          rpcUrl: forkRpcUrl ?? `/earn/api/rpc/chain/${chain.id}`,
+        }),
       })),
       ssr: true,
       storage: cookieStorage,

@@ -5,7 +5,7 @@ on:
 jobs:
   build:
     name: Build and deploy Rays Dashboard
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     environment: production
     env:
       AWS_REGION: us-east-1
@@ -62,15 +62,15 @@ jobs:
           echo "${{ secrets.VPN_PASSWORD }}" >> vpn-credentials.txt
           echo 'Connecting to the VPN...'
           sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-credentials.txt --daemon
-          sleep 5
+          sleep 10
 
       - name: Check VPN connection
         env:
-          BORROW_DB_READ_DB: ${{ secrets.BORROW_DB_READ_DB }}
-          BORROW_DB_READ_HOST: ${{ secrets.BORROW_DB_READ_HOST }}
-          BORROW_DB_READ_USER: ${{ secrets.BORROW_DB_READ_USER }}
-          BORROW_DB_READ_PASSWORD: ${{ secrets.BORROW_DB_READ_PASSWORD }}
-          PGCONNECT_TIMEOUT: 5
+          BORROW_DB_READ_DB: ${{ secrets.NEW_BORROW_DB_READ_DB }}
+          BORROW_DB_READ_HOST: ${{ secrets.NEW_BORROW_DB_READ_HOST }}
+          BORROW_DB_READ_USER: ${{ secrets.NEW_BORROW_DB_READ_USER }}
+          BORROW_DB_READ_PASSWORD: ${{ secrets.NEW_BORROW_DB_READ_PASSWORD }}
+          PGCONNECT_TIMEOUT: 10
         run: |
           echo 'Checking the VPN connection...'
           sudo systemctl start postgresql.service

@@ -34,6 +34,7 @@ export { formatFiatBalance } from './formatters/format-fiat-balance'
 export { timeAgo } from './formatters/time-ago'
 export { formatToBigNumber } from './formatters/format-to-big-number'
 export { formatDateDifference } from './formatters/format-time-difference'
+export { formatDecimalToBigInt } from './formatters/format-decimal-to-bigint'
 
 export { timeUntil } from './helpers/time-until'
 export { isValidUrl } from './helpers/is-valid-url'
@@ -62,6 +63,9 @@ export {
 export { setCookie, getCookie } from './helpers/cookies'
 export { verifyAccessToken } from './helpers/verify-access-token'
 export { getRandomString } from './helpers/get-random-string'
+export { isValidLink } from './helpers/is-valid-link'
+export { getRebalanceSavedGasCost } from './helpers/get-rebalance-saved-gas-cost'
+export { getRebalanceSavedTimeInHours } from './helpers/get-rebalance-saved-time-in-hours'
 
 export { safeParseJson } from './helpers/safe-parse-json'
 export { getServerSideCookies } from './helpers/get-server-side-cookies'

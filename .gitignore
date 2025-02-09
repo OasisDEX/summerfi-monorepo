@@ -1,4 +1,5 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# KEEP THIS FILE UP TO DATE WITH .cursorignore
 
 # dependencies
 node_modules

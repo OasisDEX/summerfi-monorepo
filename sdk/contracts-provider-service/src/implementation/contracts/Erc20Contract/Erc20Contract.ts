@@ -12,6 +12,7 @@ import {
 } from '@summerfi/sdk-common'
 import { erc20Abi } from 'viem'
 import { ContractWrapper } from '../ContractWrapper'
+import type { ITokensManager } from '@summerfi/tokens-common'
 
 /**
  * @name Erc20Contract
@@ -23,6 +24,7 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
   implements IErc20Contract
 {
   private _token: Maybe<IToken>
+  private _tokensManager: ITokensManager
 
   /** FACTORY METHOD */
 
@@ -33,6 +35,7 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
    */
   static async create<TClient extends IBlockchainClient, TAddress extends IAddress>(params: {
     blockchainClient: TClient
+    tokensManager: ITokensManager
     chainInfo: IChainInfo
     address: TAddress
   }): Promise<IErc20Contract> {
@@ -42,10 +45,12 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
   /** SEALED CONSTRUCTOR */
   private constructor(params: {
     blockchainClient: TClient
+    tokensManager: ITokensManager
     chainInfo: IChainInfo
     address: TAddress
   }) {
     super(params)
+    this._tokensManager = params.tokensManager
   }
 
   /** PUBLIC */
@@ -55,15 +60,35 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
   /** @see IErc20Contract.getToken */
   async getToken(): Promise<IToken> {
     if (!this._token) {
-      this._token = await this._retrieveTokenInfo()
+      const [tokenInfo, token] = await Promise.allSettled([
+        this._retrieveTokenInfo(),
+        this._tokensManager.getTokenByAddress({
+          address: this.address,
+          chainInfo: this.chainInfo,
+        }),
+      ])
+
+      if (tokenInfo.status === 'rejected') {
+        throw tokenInfo.reason
+      }
+
+      return Token.createFrom({
+        address: this.address,
+        chainInfo: this.chainInfo,
+        decimals: tokenInfo.value.decimals,
+        symbol: token.status === 'fulfilled' ? token.value.symbol : tokenInfo.value.symbol,
+        name: tokenInfo.value.name,
+      })
     }
     return this._token
   }
 
   /** @see IErc20Contract.balanceOf */
   async balanceOf(params: { address: IAddress }): Promise<ITokenAmount> {
-    const balance = await this.contract.read.balanceOf([params.address.value])
-    const token = await this.getToken()
+    const [balance, token] = await Promise.all([
+      this.contract.read.balanceOf([params.address.value]),
+      this.getToken(),
+    ])
 
     return TokenAmount.createFromBaseUnit({
       token,
@@ -72,8 +97,10 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
   }
 
   async totalSupply(): Promise<ITokenAmount> {
-    const totalSupply = await this.contract.read.totalSupply()
-    const token = await this.getToken()
+    const [totalSupply, token] = await Promise.all([
+      this.contract.read.totalSupply(),
+      this.getToken(),
+    ])
 
     return TokenAmount.createFromBaseUnit({
       token,
@@ -83,8 +110,10 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
 
   /** @see IErc20Contract.allowance */
   async allowance(params: { owner: IAddress; spender: IAddress }): Promise<ITokenAmount> {
-    const allowance = await this.contract.read.allowance([params.owner.value, params.spender.value])
-    const token = await this.getToken()
+    const [allowance, token] = await Promise.all([
+      this.contract.read.allowance([params.owner.value, params.spender.value]),
+      this.getToken(),
+    ])
 
     return TokenAmount.createFromBaseUnit({
       token,
@@ -108,11 +137,9 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
     })
   }
 
-  /** PRIVATE */
-  private async _retrieveTokenInfo(): Promise<IToken> {
+  private async _retrieveTokenInfo(): Promise<{ decimals: number; symbol: string; name: string }> {
     const abi = this.getAbi()
     const address = this.address.value
-
     const results = await this.blockchainClient.multicall({
       contracts: [
         {
@@ -132,25 +159,20 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
         },
       ],
     })
-
     const [{ status: statusDecimals }, { status: statusSymbol }, { status: statusName }] = results
     if (statusDecimals !== 'success' || statusSymbol !== 'success' || statusName !== 'success') {
       throw new Error('Error retrieving token info')
     }
-
     const [{ result: decimals }, { result: symbol }, { result: name }] = results
     if (!decimals || !symbol || !name) {
       throw new Error(
         'Contract reading succeeded but some values are undefined, this should not happen',
       )
     }
-
-    return Token.createFrom({
-      address: this.address,
-      chainInfo: this.chainInfo,
-      decimals,
+    return {
+      decimals: Number(decimals),
       symbol,
       name,
-    })
+    }
   }
 }

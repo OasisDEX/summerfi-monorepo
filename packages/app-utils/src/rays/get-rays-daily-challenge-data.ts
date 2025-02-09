@@ -4,6 +4,7 @@ const dailyRaysAmount = 10
 const bonusRaysAmount = 30
 
 const getRaysDailyChallengeDateFormat = () => dayjs().format('YYYY-MM-DD')
+const s1Cutoff = dayjs('2025-01-24').subtract(1, 'day') // because its a full day
 
 // this function is taken from oasis-borrow, if you make changes here you should also update it there
 export const getRaysDailyChallengeData = (claimedDates?: string[]) => {
@@ -16,11 +17,14 @@ export const getRaysDailyChallengeData = (claimedDates?: string[]) => {
       streaks: 0,
     }
   }
+  // season 1 cutoff
+  const claimedDatesFiltered = claimedDates.filter((date) => dayjs(date).isAfter(s1Cutoff))
+
   // every day the user claims the daily challenge, they get 100 points
   // every 7 consecutive days, the user gets a 500 points bonus
-  const dailyChallengeRays = claimedDates.length * dailyRaysAmount
+  const dailyChallengeRays = claimedDatesFiltered.length * dailyRaysAmount
 
-  const consecutiveDaysMap = claimedDates
+  const consecutiveDaysMap = claimedDatesFiltered
     .sort((a, b) => {
       return dayjs(a).isBefore(dayjs(b)) ? -1 : 1
     })

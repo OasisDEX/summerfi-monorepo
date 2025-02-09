@@ -11,36 +11,52 @@ export const BonusLabel = ({
   rays,
   raw,
   withTokenBonus = true,
+  combinedApr,
 }: {
   tokenBonus?: string
   apy?: string
   rays?: string
   raw?: ReactNode
   withTokenBonus?: boolean
-}) => (
-  <Tooltip
-    tooltip={
-      <Text as="p" variant="p4semi">
-        Tortor mauris id neque viverra. Felis id scelerisque nulla pharetra ultrices enim vehicula
-        ut. Diam curabitur fusce eleifend eu.
+  combinedApr?: string
+}) => {
+  return (
+    <Tooltip
+      tooltip={
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {apy && (
+            <Text as="p" variant="p4semi">
+              Native Yield: {apy}
+            </Text>
+          )}
+          {tokenBonus && withTokenBonus && (
+            <Text as="p" variant="p4semi">
+              SUMR Rewards: {tokenBonus}
+            </Text>
+          )}
+        </div>
+      }
+      tooltipWrapperStyles={{ minWidth: '240px', top: '30px', left: '0px' }}
+      tooltipCardVariant="cardSecondarySmallPaddings"
+    >
+      <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+        {!!tokenBonus || !!apy || !!rays || !!raw ? (
+          <Pill>
+            {tokenBonus ?? rays ? <Icon iconName="stars" size={24} color="white" /> : null}
+            {combinedApr ? (
+              <span style={{ fontWeight: 600, fontSize: '16px' }}>{combinedApr} APY</span>
+            ) : (
+              <span style={{ fontWeight: 600 }}>
+                {apy ? `APY ${apy}` : ''}
+                {tokenBonus && withTokenBonus && apy ? <>&nbsp;+&nbsp;</> : ''}
+                {tokenBonus && withTokenBonus ? `${tokenBonus} SUMR` : ''}
+                {rays ? `${rays} RAYS` : ''}
+                {raw ? raw : ''}
+              </span>
+            )}
+          </Pill>
+        ) : null}
       </Text>
-    }
-    tooltipWrapperStyles={{ minWidth: '240px', top: '30px', left: '0px' }}
-    tooltipCardVariant="cardSecondarySmallPaddings"
-  >
-    <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-      {!!tokenBonus || !!apy || !!rays || !!raw ? (
-        <Pill>
-          {tokenBonus ?? rays ? <Icon iconName="stars" size={24} color="white" /> : null}
-          <span style={{ fontWeight: 600 }}>
-            {apy ? `APY ${apy}` : ''}
-            {tokenBonus && withTokenBonus && apy ? <>&nbsp;+&nbsp;</> : ''}
-            {tokenBonus && withTokenBonus ? `${tokenBonus} SUMR` : ''}
-            {rays ? `${rays} RAYS` : ''}
-            {raw ? raw : ''}
-          </span>
-        </Pill>
-      ) : null}
-    </Text>
-  </Tooltip>
-)
+    </Tooltip>
+  )
+}

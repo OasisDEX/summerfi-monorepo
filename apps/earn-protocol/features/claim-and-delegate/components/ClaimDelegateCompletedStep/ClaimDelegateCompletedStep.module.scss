@@ -1,0 +1,71 @@
+.claimDelegateStakeDelegateCompletedSubstepWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .mainContent {
+    display: flex;
+    gap: var(--general-space-16);
+    flex-wrap: wrap;
+    width: 100%;
+
+    .cardWrapper {
+      min-width: 200px;
+      flex: 1;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--general-space-12);
+
+      @media (min-width: 768px) {
+        min-width: 400px;
+      }
+    }
+  }
+
+  .footer {
+    flex-direction: column;
+    align-items: center;
+    margin-top: var(--general-space-16);
+    margin-bottom: var(--general-space-24);
+
+    .status {
+      display: flex;
+      gap: var(--general-space-8);
+      align-items: center;
+      margin-bottom: var(--general-space-12);
+      flex-wrap: wrap;
+
+      @media (min-width: 768px) {
+        gap: var(--general-space-64);
+      }
+
+      .block {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--general-space-4);
+
+        .withIcon {
+          display: flex;
+          align-items: center;
+          gap: var(--general-space-8);
+        }
+      }
+
+      .arrow {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background-color: var(--earn-protocol-neutral-80);
+        border-radius: var(--general-radius-50);
+        color: var(--earn-protocol-secondary-70);
+
+        @media (min-width: 768px) {
+          display: flex;
+        }
+      }
+    }
+  }
+}

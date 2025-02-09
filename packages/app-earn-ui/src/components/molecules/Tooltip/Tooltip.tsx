@@ -255,7 +255,10 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
           style={{ backgroundColor: 'unset' }}
         >
           <MobileDrawerDefaultWrapper>
-            <div style={{ display: 'flex', flexDirection: 'column' }} data-tooltip-id={generatedId}>
+            <div
+              style={{ display: 'flex', flexDirection: 'column', whiteSpace: 'break-spaces' }}
+              data-tooltip-id={generatedId}
+            >
               {tooltipTypeGuard(tooltip) ? tooltip : tooltip(tooltipOpen, handleTooltipOpenState)}
             </div>
           </MobileDrawerDefaultWrapper>

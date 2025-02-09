@@ -52,12 +52,13 @@ export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
   const configProvider = new ConfigurationProvider()
   const blockchainClientProvider = new BlockchainClientProvider({ configProvider })
   const abiProvider = AbiProviderFactory.newAbiProvider({ configProvider })
+  const tokensManager = TokensManagerFactory.newTokensManager({ configProvider })
   const contractsProvider = ContractsProviderFactory.newContractsProvider({
     configProvider,
     blockchainClientProvider,
+    tokensManager,
   })
   const addressBookManager = AddressBookManagerFactory.newAddressBookManager({ configProvider })
-  const tokensManager = TokensManagerFactory.newTokensManager({ configProvider })
   const orderPlannerService = new OrderPlannerService()
   const swapManager = SwapManagerFactory.newSwapManager({ configProvider })
   const oracleManager = OracleManagerFactory.newOracleManager({ configProvider })
@@ -83,6 +84,7 @@ export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
     subgraphManager: armadaSubgraphManager,
     swapManager,
     oracleManager,
+    tokensManager,
   })
 
   return {

@@ -17,6 +17,7 @@ import {
 import { SumrGovernanceList } from '@/features/sumr-claim/components/SumrGovernanceList/SumrGovernanceList'
 import { SumrOwnership } from '@/features/sumr-claim/components/SumrOwnership/SumrOwnership'
 import { SumrSupplySchedule } from '@/features/sumr-claim/components/SumrSupplySchedule/SumrSupplySchedule'
+import { isOutsideLink } from '@/helpers/is-outside-link'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './SumrGovernance.module.scss'
@@ -69,7 +70,7 @@ const SumrGovernanceContent: FC<SumrGovernanceContentProps> = ({
       </Card>
       <div className={classNames.actionableWrapper}>
         {showButton && (
-          <Link href={button.href}>
+          <Link href={button.href} target={isOutsideLink(button.href) ? '_blank' : undefined}>
             <Button variant="primarySmall">
               <Text as="p" variant="p3semi">
                 {button.label}
@@ -117,7 +118,7 @@ const getData = (userWalletAddress: string | undefined) => ({
         }}
         link={{
           label: 'Learn more',
-          href: `${EXTERNAL_LINKS.BLOG.WELCOME_LAZY_SUMMER}`,
+          href: `${EXTERNAL_LINKS.BLOG.INTRODUCING_SUMR_TOKEN}`,
         }}
       >
         <SumrGovernanceList list={sumrStakeToDelegate} />
@@ -154,7 +155,7 @@ const getData = (userWalletAddress: string | undefined) => ({
         }}
         link={{
           label: 'See SUMR Vesting Conditions',
-          href: `${EXTERNAL_LINKS.BLOG.WELCOME_LAZY_SUMMER}`,
+          href: `${EXTERNAL_LINKS.BLOG.INTRODUCING_SUMR_TOKEN}`,
         }}
       >
         <SumrSupplySchedule />
