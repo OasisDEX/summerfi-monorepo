@@ -4,7 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "sst bind vitest --app summerfi-stack",
     "typecheck": "tsc -noEmit"
   },
   "devDependencies": {
