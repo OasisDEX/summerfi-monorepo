@@ -12,7 +12,7 @@ import {
 import {
   fetchReservesCap,
   fetchAssetConfigurationData,
-  fetchEmodeCategoriesForReserves,
+  // fetchEmodeCategoriesForReserves,
   fetchAssetReserveData,
   fetchAssetPrices,
   fetchReservesTokens,
@@ -357,7 +357,7 @@ export class AaveV3LikeProtocolDataBuilder<
         // )
         // this._assertMatchingArrayLengths(emodeCategoryPerAsset, this.reservesAssetsList)
         const nextReservesList = []
-        for (const [index, asset] of this.reservesAssetsList.entries()) {
+        for (const [, asset] of this.reservesAssetsList.entries()) {
           // const emodeCategoryForAsset = emodeCategoryPerAsset[index]
           const assetWithEmode = {
             ...asset,
