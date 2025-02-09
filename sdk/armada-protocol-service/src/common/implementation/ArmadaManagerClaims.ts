@@ -185,7 +185,13 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
   }
 
   // TODO optimise stakingRewardsManager addresses to config
-  private async getProtocolUsageRewards(user: IUser, chainInfo: IChainInfo): Promise<bigint> {
+  private async getProtocolUsageRewards(
+    user: IUser,
+    chainInfo: IChainInfo,
+  ): Promise<{
+    total: bigint
+    perFleet: Record<string, bigint>
+  }> {
     const client = this._blockchainClientProvider.getBlockchainClient({
       chainInfo,
     })
@@ -230,19 +236,31 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       contractCalls.push(earnedCall)
     }
 
-    return client
+    const perFleet = await client
       .multicall({
         contracts: contractCalls,
       })
-      .then((results) => {
-        return results.reduce((prev, current) => {
-          if (current.status === 'success') {
-            return prev + current.result
-          } else {
-            throw new Error('Error in multicall reading protocol usage rewards: ' + current.error)
-          }
-        }, 0n)
+      .then((multicallResults) => {
+        return multicallResults.reduce(
+          (earnedDict, result, index) => {
+            if (result.status === 'success') {
+              const address = fleetCommanderAddresses[index]
+              earnedDict[address] = result.result
+              return earnedDict
+            } else {
+              throw new Error('Error in multicall reading protocol usage rewards: ' + result.error)
+            }
+          },
+          {} as Record<string, bigint>,
+        )
       })
+
+    LoggingService.debug(`Read protocol rewards on ` + chainInfo.toString(), perFleet)
+
+    return {
+      total: Object.values(perFleet).reduce((acc, rewards) => acc + rewards, 0n),
+      perFleet: perFleet,
+    }
   }
 
   async getAggregatedRewards(
@@ -268,14 +286,14 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
           // perChain: on hubchain we add delegation and distribution rewards
           if (chainInfo.chainId === this._hubChainInfo.chainId) {
             perChain[chainInfo.chainId] =
-              rewards + voteDelegationRewards + merkleDistributionRewards
+              rewards.total + voteDelegationRewards + merkleDistributionRewards
           } else {
-            perChain[chainInfo.chainId] = rewards
+            perChain[chainInfo.chainId] = rewards.total
           }
           return rewards
         }),
       )
-      protocolUsageRewards = chainRewards.reduce((acc, rewards) => acc + rewards, 0n)
+      protocolUsageRewards = chainRewards.reduce((acc, rewards) => acc + rewards.total, 0n)
     }
 
     const total = merkleDistributionRewards + voteDelegationRewards + protocolUsageRewards
@@ -403,9 +421,6 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
   ): ReturnType<IArmadaManagerClaims['getAggregatedClaimsForChainTX']> {
     const isHubChain = params.chainInfo.chainId === this._hubChainInfo.chainId
 
-    const client = this._blockchainClientProvider.getBlockchainClient({
-      chainInfo: params.chainInfo,
-    })
     const govRewardsManagerAddress = getDeployedGovRewardsManagerAddress()
 
     const multicallArgs: HexData[] = []
@@ -453,38 +468,28 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
         contractName: 'summerToken',
       })
 
-      const harborCommandAddress = getDeployedContractAddress({
-        chainInfo: params.chainInfo,
-        contractCategory: 'core',
-        contractName: 'harborCommand',
-      })
-
       requests.push(
-        client
-          .readContract({
-            abi: HarborCommandAbi,
-            address: harborCommandAddress.value,
-            functionName: 'getActiveFleetCommanders',
-          })
-          .then((fleetCommandersAddresses) => {
-            return this.getProtocolUsageRewards(params.user, params.chainInfo).then(
-              (protocolUsageRewards) => {
-                if (protocolUsageRewards > 0n) {
-                  return this.getClaimProtocolUsageRewardsTx({
-                    chainInfo: params.chainInfo,
-                    user: params.user,
-                    fleetCommandersAddresses: fleetCommandersAddresses.map((addressValue) =>
-                      Address.createFromEthereum({ value: addressValue }),
-                    ),
-                    rewardToken: fleetRewardToken,
-                  }).then((claimFleetRewards) => {
-                    multicallArgs.push(claimFleetRewards[0].transaction.calldata)
-                    multicallOperations.push('fleet rewards: ' + protocolUsageRewards)
-                  })
-                }
-              },
+        this.getProtocolUsageRewards(params.user, params.chainInfo).then((protocolUsageRewards) => {
+          if (protocolUsageRewards.total > 0n) {
+            const fleetCommandersAddresses = Object.entries(protocolUsageRewards.perFleet)
+              .filter(([_, rewards]) => rewards > 0n)
+              .map(([addressKey]) => Address.createFromEthereum({ value: addressKey }))
+            LoggingService.debug(
+              'Claiming from following fleets :',
+              fleetCommandersAddresses.map((a) => a.value),
             )
-          }),
+
+            return this.getClaimProtocolUsageRewardsTx({
+              chainInfo: params.chainInfo,
+              user: params.user,
+              fleetCommandersAddresses,
+              rewardToken: fleetRewardToken,
+            }).then((claimFleetRewards) => {
+              multicallArgs.push(claimFleetRewards[0].transaction.calldata)
+              multicallOperations.push('fleet rewards: ' + protocolUsageRewards.total)
+            })
+          }
+        }),
       )
     }
 
@@ -507,7 +512,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     })
 
     LoggingService.debug(
-      'Aggregated claims for chain: ' + params.chainInfo.toString(),
+      'Multicall with claims on: ' + params.chainInfo.toString(),
       multicallOperations,
     )
 
