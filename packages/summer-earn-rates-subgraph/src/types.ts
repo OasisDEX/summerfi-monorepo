@@ -3,6 +3,8 @@ import { getSdk } from './generated/client'
 import {
   type InterestRate as InterestRateType,
   GetProductsQuery as GetProductsQueryType,
+  GetInterestRatesQuery as GetInterestRatesQueryType,
+  GetArkRatesQuery as GetArkRatesQueryType,
 } from './generated/client'
 export interface SubgraphClientConfig {
   chainId: ChainId
@@ -11,6 +13,14 @@ export interface SubgraphClientConfig {
 
 export type SubgraphClient = ReturnType<typeof getSdk>
 
+export type GetInterestRatesQuery = GetInterestRatesQueryType
+export type GetArkRatesQuery = GetArkRatesQueryType
+
 export type InterestRate = InterestRateType
 export type Products = GetProductsQueryType['products']
 export type Product = Products[number]
+
+export type LatestInterestRate = GetInterestRatesQuery['latestInterestRate']
+export type HourlyInterestRates = GetInterestRatesQuery['hourlyInterestRates']
+export type DailyInterestRates = GetInterestRatesQuery['dailyInterestRates']
+export type WeeklyInterestRates = GetInterestRatesQuery['weeklyInterestRates']

@@ -1445,52 +1445,19 @@ export type GetProductsQueryVariables = Exact<{
 
 export type GetProductsQuery = { products: Array<{ id: string, protocol: string, name: string, network: string, pool: string, token: { id: string, symbol: string, decimals: string, precision: string } }> };
 
-export type GetLatestInterestRatesQueryVariables = Exact<{
-  productId: InputMaybe<Scalars['String']['input']>;
-  limit: InputMaybe<Scalars['Int']['input']>;
-  fromTimestamp: InputMaybe<Scalars['BigInt']['input']>;
-  toTimestamp: InputMaybe<Scalars['BigInt']['input']>;
+export type GetInterestRatesQueryVariables = Exact<{
+  productId: Scalars['String']['input'];
 }>;
 
 
-export type GetLatestInterestRatesQuery = { interestRates: Array<{ id: string, type: string, rate: number, blockNumber: string, timestamp: string, protocol: string, token: { id: string, symbol: string, decimals: string, precision: string }, dailyRateId: { id: string, date: string, sumRates: number, updateCount: string, averageRate: number, protocol: string, token: string }, hourlyRateId: { id: string, date: string, sumRates: number, updateCount: string, averageRate: number, protocol: string, token: string }, weeklyRateId: { id: string, weekTimestamp: string, sumRates: number, updateCount: string, averageRate: number, protocol: string, token: string } }> };
+export type GetInterestRatesQuery = { dailyInterestRates: Array<{ id: string, averageRate: number, date: string }>, hourlyInterestRates: Array<{ id: string, averageRate: number, date: string }>, weeklyInterestRates: Array<{ id: string, averageRate: number, date: string }>, latestInterestRate: Array<{ rate: Array<{ id: string, rate: number, timestamp: string }> }> };
 
-export type GetDailyRatesQueryVariables = Exact<{
-  productId: InputMaybe<Scalars['String']['input']>;
-  fromDate: InputMaybe<Scalars['BigInt']['input']>;
-  toDate: InputMaybe<Scalars['BigInt']['input']>;
-  limit: InputMaybe<Scalars['Int']['input']>;
+export type GetArkRatesQueryVariables = Exact<{
+  productId: Scalars['String']['input'];
 }>;
 
 
-export type GetDailyRatesQuery = { dailyInterestRates: Array<{ id: string, date: string, sumRates: number, updateCount: string, averageRate: number, protocol: string, token: string, interestRates: Array<{ id: string, rate: number }> }> };
-
-export type GetHourlyRatesQueryVariables = Exact<{
-  productId: InputMaybe<Scalars['String']['input']>;
-  fromDate: InputMaybe<Scalars['BigInt']['input']>;
-  toDate: InputMaybe<Scalars['BigInt']['input']>;
-  limit: InputMaybe<Scalars['Int']['input']>;
-}>;
-
-
-export type GetHourlyRatesQuery = { hourlyInterestRates: Array<{ id: string, date: string, sumRates: number, updateCount: string, averageRate: number, protocol: string, token: string, interestRates: Array<{ id: string, rate: number }> }> };
-
-export type GetWeeklyRatesQueryVariables = Exact<{
-  productId: InputMaybe<Scalars['String']['input']>;
-  fromDate: InputMaybe<Scalars['BigInt']['input']>;
-  toDate: InputMaybe<Scalars['BigInt']['input']>;
-  limit: InputMaybe<Scalars['Int']['input']>;
-}>;
-
-
-export type GetWeeklyRatesQuery = { weeklyInterestRates: Array<{ id: string, weekTimestamp: string, sumRates: number, updateCount: string, averageRate: number, protocol: string, token: string, interestRates: Array<{ id: string, rate: number }> }> };
-
-export type GetTokenQueryVariables = Exact<{
-  address: Scalars['ID']['input'];
-}>;
-
-
-export type GetTokenQuery = { token: { id: string, symbol: string, decimals: string, precision: string } | null };
+export type GetArkRatesQuery = { interestRates: Array<{ timestamp: string, rate: number, productId: string, protocol: string, token: { symbol: string, address: string } }> };
 
 
 export const GetProductsDocument: DocumentNode = gql`
@@ -1510,129 +1477,68 @@ export const GetProductsDocument: DocumentNode = gql`
   }
 }
     `;
-export const GetLatestInterestRatesDocument: DocumentNode = gql`
-    query GetLatestInterestRates($productId: String, $limit: Int, $fromTimestamp: BigInt, $toTimestamp: BigInt) {
-  interestRates(
-    orderBy: timestamp
-    orderDirection: desc
-    first: $limit
-    where: {productId: $productId, timestamp_gte: $fromTimestamp, timestamp_lte: $toTimestamp}
-  ) {
-    id
-    type
-    rate
-    blockNumber
-    timestamp
-    protocol
-    token {
-      id
-      symbol
-      decimals
-      precision
-    }
-    dailyRateId {
-      id
-      date
-      sumRates
-      updateCount
-      averageRate
-      protocol
-      token
-    }
-    hourlyRateId {
-      id
-      date
-      sumRates
-      updateCount
-      averageRate
-      protocol
-      token
-    }
-    weeklyRateId {
-      id
-      weekTimestamp
-      sumRates
-      updateCount
-      averageRate
-      protocol
-      token
-    }
-  }
-}
-    `;
-export const GetDailyRatesDocument: DocumentNode = gql`
-    query GetDailyRates($productId: String, $fromDate: BigInt, $toDate: BigInt, $limit: Int) {
+export const GetInterestRatesDocument: DocumentNode = gql`
+    query GetInterestRates($productId: String!) {
   dailyInterestRates(
+    where: {productId: $productId}
+    first: 365
     orderBy: date
     orderDirection: desc
-    first: $limit
-    where: {productId: $productId, date_gte: $fromDate, date_lte: $toDate}
   ) {
     id
-    date
-    sumRates
-    updateCount
     averageRate
-    protocol
-    token
-    interestRates {
-      id
-      rate
-    }
+    date
   }
-}
-    `;
-export const GetHourlyRatesDocument: DocumentNode = gql`
-    query GetHourlyRates($productId: String, $fromDate: BigInt, $toDate: BigInt, $limit: Int) {
   hourlyInterestRates(
+    where: {productId: $productId}
+    first: 720
     orderBy: date
     orderDirection: desc
-    first: $limit
-    where: {productId: $productId, date_gte: $fromDate, date_lte: $toDate}
   ) {
     id
-    date
-    sumRates
-    updateCount
     averageRate
-    protocol
-    token
-    interestRates {
-      id
-      rate
-    }
+    date
   }
-}
-    `;
-export const GetWeeklyRatesDocument: DocumentNode = gql`
-    query GetWeeklyRates($productId: String, $fromDate: BigInt, $toDate: BigInt, $limit: Int) {
   weeklyInterestRates(
+    where: {productId: $productId}
+    first: 156
     orderBy: weekTimestamp
     orderDirection: desc
-    first: $limit
-    where: {productId: $productId, weekTimestamp_gte: $fromDate, weekTimestamp_lte: $toDate}
   ) {
     id
-    weekTimestamp
-    sumRates
-    updateCount
     averageRate
-    protocol
-    token
-    interestRates {
+    date: weekTimestamp
+  }
+  latestInterestRate: hourlyInterestRates(
+    where: {productId: $productId}
+    first: 1
+    orderBy: date
+    orderDirection: desc
+  ) {
+    rate: interestRates(first: 1, orderBy: timestamp, orderDirection: desc) {
       id
       rate
+      timestamp
     }
   }
 }
     `;
-export const GetTokenDocument: DocumentNode = gql`
-    query GetToken($address: ID!) {
-  token(id: $address) {
-    id
-    symbol
-    decimals
-    precision
+export const GetArkRatesDocument: DocumentNode = gql`
+    query GetArkRates($productId: String!) {
+  interestRates(
+    where: {productId: $productId}
+    orderBy: timestamp
+    orderDirection: desc
+    first: 20
+  ) {
+    timestamp
+    rate
+    productId
+    protocol
+    token {
+      symbol
+      address
+    }
   }
 }
     `;
@@ -1647,20 +1553,11 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     GetProducts(variables?: GetProductsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetProductsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetProductsQuery>(GetProductsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetProducts', 'query', variables);
     },
-    GetLatestInterestRates(variables?: GetLatestInterestRatesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetLatestInterestRatesQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetLatestInterestRatesQuery>(GetLatestInterestRatesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetLatestInterestRates', 'query', variables);
+    GetInterestRates(variables: GetInterestRatesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetInterestRatesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetInterestRatesQuery>(GetInterestRatesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetInterestRates', 'query', variables);
     },
-    GetDailyRates(variables?: GetDailyRatesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetDailyRatesQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetDailyRatesQuery>(GetDailyRatesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetDailyRates', 'query', variables);
-    },
-    GetHourlyRates(variables?: GetHourlyRatesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetHourlyRatesQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetHourlyRatesQuery>(GetHourlyRatesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetHourlyRates', 'query', variables);
-    },
-    GetWeeklyRates(variables?: GetWeeklyRatesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetWeeklyRatesQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetWeeklyRatesQuery>(GetWeeklyRatesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetWeeklyRates', 'query', variables);
-    },
-    GetToken(variables: GetTokenQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetTokenQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetTokenQuery>(GetTokenDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetToken', 'query', variables);
+    GetArkRates(variables: GetArkRatesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetArkRatesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetArkRatesQuery>(GetArkRatesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetArkRates', 'query', variables);
     }
   };
 }

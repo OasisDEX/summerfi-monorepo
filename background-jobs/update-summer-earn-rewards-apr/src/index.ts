@@ -8,19 +8,13 @@ import {
   Products,
   Product,
 } from '@summerfi/summer-earn-rates-subgraph'
-import { ChainId } from '@summerfi/serverless-shared'
+
 import { RewardsService } from './rewards-service'
 import { Transaction } from 'kysely'
-import { Database } from '@summerfi/summer-protocol-db'
+import { Database, mapDbNetworkToChainId } from '@summerfi/summer-protocol-db'
 
 const logger = new Logger({ serviceName: 'update-rays-cron-function' })
 
-const networkToChainId: Record<string, ChainId> = {
-  arbitrum: ChainId.ARBITRUM,
-  optimism: ChainId.OPTIMISM,
-  base: ChainId.BASE,
-  mainnet: ChainId.MAINNET,
-}
 export enum Protocol {
   Morpho = 'Morpho',
   Euler = 'Euler',
@@ -48,10 +42,8 @@ async function updateRewardRates(
   products: Product[],
   updateStartTimestamp: number,
 ) {
-  const rewardRates = await rewardsService.getRewardRates(
-    products,
-    networkToChainId[network.network],
-  )
+  const chainId = mapDbNetworkToChainId(network.network)
+  const rewardRates = await rewardsService.getRewardRates(products, chainId)
 
   const currentTimestamp = updateStartTimestamp
 
@@ -334,12 +326,12 @@ export const handler = async (
 
         logger.debug('Lock acquired for network', {
           network: updatedNetwork.network,
-          chainId: networkToChainId[updatedNetwork.network],
+          chainId: mapDbNetworkToChainId(updatedNetwork.network),
           timestamp: updateStartTimestamp,
         })
 
         // Main processing
-        const chainId = networkToChainId[updatedNetwork.network]
+        const chainId = mapDbNetworkToChainId(updatedNetwork.network)
         const subgraphClient = clients[chainId]
         const products = await getSupportedProducts(subgraphClient)
         logger.debug('Retrieved products', {
