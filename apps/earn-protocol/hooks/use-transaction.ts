@@ -31,6 +31,7 @@ import { useRouter } from 'next/navigation'
 import {
   type AccountKitSupportedNetworks,
   accountType,
+  overridesGasSponsorship,
   SDKChainIdToAAChainMap,
 } from '@/account-kit/config'
 import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
@@ -158,27 +159,31 @@ export const useTransaction = ({
   })
 
   const sendTransaction = useCallback(
-    ({
-      target,
-      data,
-      value = 0n,
-    }: {
-      target: `0x${string}`
-      data: `0x${string}`
-      value?: bigint
-    }) => {
+    (
+      {
+        target,
+        data,
+        value = 0n,
+      }: {
+        target: `0x${string}`
+        data: `0x${string}`
+        value?: bigint
+      },
+      overrides?: { paymasterAndData: `0x${string}` },
+    ) => {
       return sendUserOperation({
         uo: {
           target,
           data,
           value,
         },
+        overrides,
       })
     },
     [sendUserOperation],
   )
 
-  const executeNextTransaction = useCallback(() => {
+  const executeNextTransaction = useCallback(async () => {
     setTxStatus('txInProgress')
 
     if (!nextTransaction) {
@@ -216,7 +221,14 @@ export const useTransaction = ({
             value: BigInt(nextTransaction.transaction.value),
           }
 
-    sendTransaction(txParams)
+    const eligibilityData = await smartAccountClient?.checkGasSponsorshipEligibility({
+      uo: txParams,
+    })
+
+    const resolvedOverrides =
+      eligibilityData?.eligible === false ? overridesGasSponsorship : undefined
+
+    sendTransaction(txParams, resolvedOverrides)
   }, [
     token,
     approvalCustomValue,
@@ -226,6 +238,7 @@ export const useTransaction = ({
     sendTransaction,
     setTxStatus,
     user,
+    smartAccountClient,
   ])
 
   const backToInit = useCallback(() => {
