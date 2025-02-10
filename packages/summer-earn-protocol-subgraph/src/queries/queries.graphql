@@ -5,5 +5,51 @@ query UserPositions($userAddress: String!) {
     outputTokenBalance
     inputTokenBalanceNormalized
     inputTokenBalanceNormalizedInUSD
+    claimedSummerTokenNormalized
+    account {
+      id
+      claimedSummerTokenNormalized
+    }
+    vault {
+      rewardsManager {
+        id
+      }
+    }
+  }
+}
+query UsersPositions($userAddresses: [String!]) {
+  positions(where: { account_in: $userAddresses }, first: 1000) {
+    id
+    inputTokenBalance
+    outputTokenBalance
+    inputTokenBalanceNormalized
+    inputTokenBalanceNormalizedInUSD
+    claimedSummerTokenNormalized
+    account {
+      id
+      claimedSummerTokenNormalized
+    }
+    vault {
+      rewardsManager {
+        id
+      }
+    }
+  }
+}
+query Vaults {
+  vaults(first: 1000) {
+    id
+    name
+    totalValueLockedUSD
+    rewardsManager {
+      id
+    }
+  }
+}
+
+query Users($first: Int, $skip: Int) {
+  accounts(first: $first, skip: $skip, orderBy: id, orderDirection: asc) {
+    id
+    claimedSummerTokenNormalized
   }
 }

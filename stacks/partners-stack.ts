@@ -28,8 +28,25 @@ export function ExternalAPI(stackContext: StackContext) {
     systemLogLevel: 'INFO',
   })
 
+  const getProtocolInfo = new Function(stack, 'get-protocol-info', {
+    handler: 'external-api/get-protocol-info-function/src/index.handler',
+    runtime: 'nodejs20.x',
+    logFormat: 'JSON',
+    environment: {
+      SUBGRAPH_BASE: SUBGRAPH_BASE,
+      POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
+    },
+    tracing: 'active',
+    disableCloudWatchLogs: false,
+    applicationLogLevel: 'INFO',
+    systemLogLevel: 'INFO',
+  })
+
   apiForPartners.addRoutes(stack, {
     'GET /api/locked-weeth': getLockedWeEth,
+    'GET /api/protocol-info/users': getProtocolInfo,
+    'GET /api/protocol-info/protocol': getProtocolInfo,
+    'GET /api/protocol-info/all-users': getProtocolInfo,
   })
 
   stack.addOutputs({
