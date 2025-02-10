@@ -63,7 +63,7 @@ export const usePosition = ({
       })
       .catch(() => {
         // eslint-disable-next-line no-console
-        console.error('Failed to fetch existing position')
+        console.info('The user does not have a position for this vault', vaultId)
         setIsLoading(false)
       })
   }, [chainId, getUserPosition, userWalletAddress, vaultId, onlyActive])
