@@ -7,7 +7,7 @@ import {
   type HourlyInterestRates,
   LatestInterestRate,
 } from '@summerfi/summer-earn-rates-subgraph'
-import { RatesService, DBRate, DBAggregatedRate, DBLatestRate } from './db-service'
+import { RatesService, DBRate, DBAggregatedRate, DBHistoricalRates } from './db-service'
 
 const logger = new Logger({ serviceName: 'get-rates-function' })
 const clients = getAllClients(process.env.SUBGRAPH_BASE || '')
@@ -44,15 +44,22 @@ function combineRatesById(
   })
 }
 
-function combineLatestRates(subgraphRate: LatestInterestRate, dbRate: DBLatestRate) {
-  logger.info('subgraphRate', JSON.stringify(subgraphRate))
-  logger.info('dbRate', JSON.stringify(dbRate))
-  if (!subgraphRate[0].rate[0].rate || !dbRate?.rate?.[0]) {
-    return subgraphRate || dbRate
+function combineLatestRates(subgraphRate: LatestInterestRate, dbRates: DBHistoricalRates | null) {
+  if (!dbRates || !dbRates.latestRate || !dbRates.latestRate[0]?.rate) {
+    return {
+      rate: [
+        {
+          ...subgraphRate[0].rate[0],
+          rate: subgraphRate[0].rate[0].rate,
+          rewardRate: 0,
+          nativeRate: subgraphRate[0].rate[0].rate,
+        },
+      ],
+    }
   }
 
   const baseRate = Number(subgraphRate[0].rate[0].rate)
-  const rewardRate = Number(dbRate.rate[0].rate)
+  const rewardRate = Number(dbRates.latestRate[0].rate)
 
   return {
     rate: [
@@ -156,10 +163,9 @@ export async function handler(event: APIGatewayProxyEventV2): Promise<APIGateway
           dbRates?.weeklyRates || [],
         ).slice(0, 156),
 
-        latestInterestRate:
-          subgraphRates?.latestInterestRate?.[0] && dbRates?.latestRate?.[0]
-            ? [combineLatestRates(subgraphRates.latestInterestRate, dbRates.latestRate[0])]
-            : [],
+        latestInterestRate: subgraphRates?.latestInterestRate?.[0]
+          ? [combineLatestRates(subgraphRates.latestInterestRate, dbRates)]
+          : [],
       }
 
       logger.info('Historical rates result', {
