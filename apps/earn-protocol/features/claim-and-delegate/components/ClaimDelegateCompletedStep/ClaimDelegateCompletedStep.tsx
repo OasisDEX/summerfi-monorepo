@@ -17,7 +17,6 @@ import {
   formatCryptoBalance,
   formatDecimalAsPercent,
   formatFiatBalance,
-  safeATOB,
 } from '@summerfi/app-utils'
 import { useParams } from 'next/navigation'
 
@@ -245,7 +244,7 @@ export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = (
             <div className={classNames.withIcon}>
               <LoadableAvatar
                 size={38}
-                name={safeATOB(delegateeName)}
+                name={safeBTOA(delegateeName)}
                 variant="pixel"
                 colors={['#B90061', '#EC58A2', '#F8A4CE', '#FFFFFF']}
               />

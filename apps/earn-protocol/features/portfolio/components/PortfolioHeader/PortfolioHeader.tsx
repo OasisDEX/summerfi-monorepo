@@ -6,7 +6,7 @@ import {
   formatAddress,
   formatCryptoBalance,
   formatFiatBalance,
-  safeATOB,
+  safeBTOA,
 } from '@summerfi/app-utils'
 import clsx from 'clsx'
 
@@ -132,7 +132,7 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
               </svg>
             }
             size={48}
-            name={safeATOB(walletAddress)}
+            name={safeBTOA(walletAddress)}
             variant="pixel"
             colors={['#B90061', '#EC58A2', '#F8A4CE', '#FFFFFF']}
           />
