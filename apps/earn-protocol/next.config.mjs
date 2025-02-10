@@ -61,6 +61,11 @@ const nextConfig = {
       // product redirects
       redirectToProSummer('/multiply'),
       redirectToProSummer('/borrow'),
+      // network + position (or others) redirects
+      redirectToProSummer('/ethereum/:otherPosition*'),
+      redirectToProSummer('/base/:otherPosition*'),
+      redirectToProSummer('/optimism/:otherPosition*'),
+      redirectToProSummer('/arbitrum/:otherPosition*'),
       // maker position redirects
       // matches to `/{number}`
       redirectToProSummer('/:makerPosition(\\d{1,})'),
