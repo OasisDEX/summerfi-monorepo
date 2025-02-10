@@ -288,7 +288,8 @@ export const handler = async (
   const { db } = await getSummerProtocolDB(dbConfig)
 
   const clients = getAllClients(SUBGRAPH_BASE)
-  const updateStartTimestamp = Math.floor(Date.now() / 1000)
+  // rounded to full minutes
+  const updateStartTimestamp = Math.floor(Date.now() / 1000 / 60) * 60
 
   // Get all potential networks
   const allNetworks = await db.selectFrom('networkStatus').selectAll().execute()
