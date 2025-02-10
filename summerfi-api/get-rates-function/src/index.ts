@@ -45,7 +45,12 @@ function combineRatesById(
 }
 
 function combineLatestRates(subgraphRate: LatestInterestRate, dbRates: DBHistoricalRates | null) {
-  if (!dbRates || !dbRates.latestRate || !dbRates.latestRate[0]?.rate) {
+  if (
+    !dbRates ||
+    !dbRates.latestRate ||
+    dbRates.latestRate.length === 0 ||
+    !dbRates.latestRate[0].rate
+  ) {
     return {
       rate: [
         {
@@ -59,7 +64,7 @@ function combineLatestRates(subgraphRate: LatestInterestRate, dbRates: DBHistori
   }
 
   const baseRate = Number(subgraphRate[0].rate[0].rate)
-  const rewardRate = Number(dbRates.latestRate[0].rate)
+  const rewardRate = Number(dbRates.latestRate[0].rate[0].rate)
 
   return {
     rate: [
