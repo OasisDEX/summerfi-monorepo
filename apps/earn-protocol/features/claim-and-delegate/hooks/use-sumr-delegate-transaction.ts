@@ -3,6 +3,7 @@ import { useIsIframe } from '@summerfi/app-earn-ui'
 import { Address, User, Wallet } from '@summerfi/sdk-common'
 
 import { accountType } from '@/account-kit/config'
+import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { sendSafeTx } from '@/helpers/send-safe-tx'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 
@@ -74,12 +75,20 @@ export const useSumrDelegateTransaction = ({
       })
     }
 
+    const txParams = {
+      target: tx[0].transaction.target.value,
+      data: tx[0].transaction.calldata,
+      value: BigInt(tx[0].transaction.value),
+    }
+
+    const resolvedOverrides = await getGasSponsorshipOverride({
+      smartAccountClient: client,
+      txParams,
+    })
+
     return await sendUserOperationAsync({
-      uo: {
-        target: tx[0].transaction.target.value,
-        data: tx[0].transaction.calldata,
-        value: BigInt(tx[0].transaction.value),
-      },
+      uo: txParams,
+      overrides: resolvedOverrides,
     })
   }
 
