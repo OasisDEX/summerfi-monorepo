@@ -64,13 +64,16 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
     state: { sumrNetApyConfig, slippageConfig },
   } = useLocalConfig()
 
-  const networkFilteredVaults = useMemo(
-    () =>
+  const networkFilteredVaults = useMemo(() => {
+    const properVaultsList =
       localVaultNetwork && localVaultNetwork !== 'all-networks'
         ? vaultsList.filter(({ protocol }) => protocol.network === localVaultNetwork)
-        : vaultsList,
-    [localVaultNetwork, vaultsList],
-  )
+        : vaultsList
+
+    return properVaultsList.sort((a, b) => {
+      return Number(a.calculatedApr) > Number(b.calculatedApr) ? -1 : 1
+    })
+  }, [localVaultNetwork, vaultsList])
   const sdk = useAppSDK()
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
