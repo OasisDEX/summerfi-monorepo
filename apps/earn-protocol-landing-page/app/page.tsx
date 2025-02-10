@@ -24,7 +24,6 @@ import { SummerFiProSection } from '@/components/layout/LandingPageContent/conte
 import { SumrToken } from '@/components/layout/LandingPageContent/content/SumrToken'
 import { decorateCustomVaultFields } from '@/helpers/vault-custom-value-helpers'
 
-export const dynamic = 'force-static'
 export const revalidate = 60
 
 type SupportedTvlProtocols =
