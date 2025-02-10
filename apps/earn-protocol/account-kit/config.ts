@@ -79,6 +79,9 @@ export const getAccountKitConfig = ({
       })),
       ssr: true,
       storage: cookieStorage,
+      sessionConfig: {
+        expirationTimeMs: 1000 * 60 * 90, // 90 minutes,
+      },
     },
     uiConfig,
   )
