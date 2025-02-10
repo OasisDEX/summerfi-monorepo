@@ -264,7 +264,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
           </div>
           {networkFilteredVaults.map((vault, vaultIndex) => (
             <VaultCard
-              key={vault.id}
+              key={getUniqueVaultId(vault)}
               {...vault}
               withHover
               selected={
