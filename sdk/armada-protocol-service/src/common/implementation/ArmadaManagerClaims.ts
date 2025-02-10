@@ -10,7 +10,6 @@ import {
   getAllMerkleClaims,
   getDeployedContractAddress,
   getDeployedGovRewardsManagerAddress,
-  isTestDeployment,
 } from '@summerfi/armada-protocol-common'
 import {
   Address,
@@ -274,27 +273,22 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     // get protocol usage rewards for each chain
     const perChain: Record<number, bigint> = {}
 
-    if (!isTestDeployment()) {
-      perChain[this._hubChainInfo.chainId] = merkleDistributionRewards + voteDelegationRewards
-    }
-
     let protocolUsageRewards = 0n
-    if (isTestDeployment()) {
-      const chainRewards = await Promise.all(
-        this._supportedChains.map(async (chainInfo) => {
-          const rewards = await this.getProtocolUsageRewards(params.user, chainInfo)
-          // perChain: on hubchain we add delegation and distribution rewards
-          if (chainInfo.chainId === this._hubChainInfo.chainId) {
-            perChain[chainInfo.chainId] =
-              rewards.total + voteDelegationRewards + merkleDistributionRewards
-          } else {
-            perChain[chainInfo.chainId] = rewards.total
-          }
-          return rewards
-        }),
-      )
-      protocolUsageRewards = chainRewards.reduce((acc, rewards) => acc + rewards.total, 0n)
-    }
+    const perChainRewards = await Promise.all(
+      this._supportedChains.map(async (chainInfo) => {
+        const rewards = await this.getProtocolUsageRewards(params.user, chainInfo)
+        if (chainInfo.chainId === this._hubChainInfo.chainId) {
+          // on hubchain we add delegation and distribution rewards
+          perChain[chainInfo.chainId] =
+            rewards.total + voteDelegationRewards + merkleDistributionRewards
+        } else {
+          // on other chains we add only protocol usage rewards
+          perChain[chainInfo.chainId] = rewards.total
+        }
+        return rewards
+      }),
+    )
+    protocolUsageRewards = perChainRewards.reduce((acc, rewards) => acc + rewards.total, 0n)
 
     const total = merkleDistributionRewards + voteDelegationRewards + protocolUsageRewards
 
@@ -461,37 +455,35 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       )
     }
 
-    if (isTestDeployment()) {
-      const fleetRewardToken = getDeployedContractAddress({
-        chainInfo: params.chainInfo,
-        contractCategory: 'gov',
-        contractName: 'summerToken',
-      })
+    const fleetRewardToken = getDeployedContractAddress({
+      chainInfo: params.chainInfo,
+      contractCategory: 'gov',
+      contractName: 'summerToken',
+    })
 
-      requests.push(
-        this.getProtocolUsageRewards(params.user, params.chainInfo).then((protocolUsageRewards) => {
-          if (protocolUsageRewards.total > 0n) {
-            const fleetCommandersAddresses = Object.entries(protocolUsageRewards.perFleet)
-              .filter(([_, rewards]) => rewards > 0n)
-              .map(([addressKey]) => Address.createFromEthereum({ value: addressKey }))
-            LoggingService.debug(
-              'Claiming from following fleets :',
-              fleetCommandersAddresses.map((a) => a.value),
-            )
+    requests.push(
+      this.getProtocolUsageRewards(params.user, params.chainInfo).then((protocolUsageRewards) => {
+        if (protocolUsageRewards.total > 0n) {
+          const fleetCommandersAddresses = Object.entries(protocolUsageRewards.perFleet)
+            .filter(([_, rewards]) => rewards > 0n)
+            .map(([addressKey]) => Address.createFromEthereum({ value: addressKey }))
+          LoggingService.debug(
+            'Claiming only for the fleets with rewards:',
+            fleetCommandersAddresses.map((a) => a.value),
+          )
 
-            return this.getClaimProtocolUsageRewardsTx({
-              chainInfo: params.chainInfo,
-              user: params.user,
-              fleetCommandersAddresses,
-              rewardToken: fleetRewardToken,
-            }).then((claimFleetRewards) => {
-              multicallArgs.push(claimFleetRewards[0].transaction.calldata)
-              multicallOperations.push('fleet rewards: ' + protocolUsageRewards.total)
-            })
-          }
-        }),
-      )
-    }
+          return this.getClaimProtocolUsageRewardsTx({
+            chainInfo: params.chainInfo,
+            user: params.user,
+            fleetCommandersAddresses,
+            rewardToken: fleetRewardToken,
+          }).then((claimFleetRewards) => {
+            multicallArgs.push(claimFleetRewards[0].transaction.calldata)
+            multicallOperations.push('fleet rewards: ' + protocolUsageRewards.total)
+          })
+        }
+      }),
+    )
 
     await Promise.all(requests)
 
