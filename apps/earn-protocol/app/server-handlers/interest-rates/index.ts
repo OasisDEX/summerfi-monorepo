@@ -100,8 +100,6 @@ export async function getInterestRates({ network, arksList }: GetInterestRatesPa
           next: { revalidate: REVALIDATION_TIMES.INTEREST_RATES },
         })
 
-        // console.log('apiResponse', apiResponse)
-
         if (!apiResponse.ok) {
           throw new Error('Primary API request failed')
         }
