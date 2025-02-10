@@ -1,4 +1,4 @@
-import { NetworkNames } from '@summerfi/app-types'
+import { type NetworkNames } from '@summerfi/app-types'
 import { type NextRequest, NextResponse } from 'next/server'
 
 import { REVALIDATION_TIMES } from '@/constants/revalidations'
@@ -17,10 +17,7 @@ export async function POST(req: NextRequest) {
   }
 
   const networkName = networkQuery.toString() as NetworkNames
-  const rpcGatewayUrl =
-    networkName === NetworkNames.ethereumMainnet && process.env.TEMPORARY_MAINNET_RPC
-      ? process.env.TEMPORARY_MAINNET_RPC
-      : await getRpcGatewayUrl(networkName)
+  const rpcGatewayUrl = await getRpcGatewayUrl(networkName)
 
   if (!rpcGatewayUrl) {
     return NextResponse.json({ error: 'Invalid network or RPC Config is missing' }, { status: 400 })
