@@ -2,6 +2,7 @@
 
 import { type FC } from 'react'
 import loadable from '@loadable/component'
+import { safeBTOA } from '@summerfi/app-utils'
 
 import genericTokenIconStyles, {
   type ClassNames,
@@ -38,7 +39,7 @@ export const GenericTokenIcon: FC<GenericTokenIconProps> = ({ variant = 'smallIc
     <div className={genericTokenIconStyles[variant]}>
       <AvatarLoadingState
         size={innerSize}
-        name={btoa(symbol)}
+        name={safeBTOA(symbol)}
         variant="marble"
         colors={['#6FD9FF', '#F2FCFF', '#FFE7D8', '#FBB677']}
       />

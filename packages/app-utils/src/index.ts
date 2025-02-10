@@ -69,5 +69,6 @@ export { getRebalanceSavedTimeInHours } from './helpers/get-rebalance-saved-time
 
 export { safeParseJson } from './helpers/safe-parse-json'
 export { getServerSideCookies } from './helpers/get-server-side-cookies'
+export { safeATOB, safeBTOA } from './helpers/safe-b64'
 
 export { ADDRESS_ZERO } from './address-zero'

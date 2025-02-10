@@ -8,7 +8,7 @@ import {
   Tooltip,
   useIsIframe,
 } from '@summerfi/app-earn-ui'
-import { formatAddress } from '@summerfi/app-utils'
+import { formatAddress, safeBTOA } from '@summerfi/app-utils'
 
 import { networkSDKChainIdIconMap } from '@/constants/network-id-to-icon'
 import { useUserWallet } from '@/hooks/use-user-wallet'
@@ -94,7 +94,7 @@ export default function WalletLabel() {
           <Button variant="secondarySmall" className={walletLabelStyles.mainButtonWrapper}>
             <LoadableAvatar
               size={24}
-              name={btoa(userWalletAddress)}
+              name={safeBTOA(userWalletAddress)}
               variant="pixel"
               colors={['#B90061', '#EC58A2', '#F8A4CE', '#FFFFFF']}
             />
