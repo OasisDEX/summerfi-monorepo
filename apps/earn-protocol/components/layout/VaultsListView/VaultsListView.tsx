@@ -105,7 +105,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
   )
 
   const selectedVaultData = useMemo(
-    () => vaultsList.find((vault) => vault.id === selectedVaultId),
+    () => vaultsList.find((vault) => getUniqueVaultId(vault) === selectedVaultId),
     [vaultsList, selectedVaultId],
   )
 
@@ -114,7 +114,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
 
   const { position: positionExists, isLoading } = usePosition({
     chainId: subgraphNetworkToSDKId(vaultData.protocol.network),
-    vaultId: vaultData.id,
+    vaultId: getUniqueVaultId(vaultData),
     onlyActive: true,
   })
 
