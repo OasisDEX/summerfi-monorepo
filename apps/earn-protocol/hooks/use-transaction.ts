@@ -8,7 +8,7 @@ import {
   useSmartAccountClient,
   useUser,
 } from '@account-kit/react'
-import { getVaultPositionUrl, getVaultUrl } from '@summerfi/app-earn-ui'
+import { getVaultPositionUrl, getVaultUrl, useIsIframe } from '@summerfi/app-earn-ui'
 import {
   type EarnAllowanceTypes,
   type EarnTransactionViewStates,
@@ -35,7 +35,9 @@ import {
 } from '@/account-kit/config'
 import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
 import { getApprovalTx } from '@/helpers/get-approval-tx'
+import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { revalidateUser } from '@/helpers/revalidate-user'
+import { sendSafeTx } from '@/helpers/send-safe-tx'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
@@ -94,6 +96,7 @@ export const useTransaction = ({
   const [isTransakOpen, setIsTransakOpen] = useState(false)
   const { setChain, isSettingChain } = useChain()
   const { clientChainId } = useClientChainId()
+  const isIframe = useIsIframe()
   const [transactionType, setTransactionType] = useState<TransactionAction>(
     TransactionAction.DEPOSIT,
   )
@@ -158,27 +161,31 @@ export const useTransaction = ({
   })
 
   const sendTransaction = useCallback(
-    ({
-      target,
-      data,
-      value = 0n,
-    }: {
-      target: `0x${string}`
-      data: `0x${string}`
-      value?: bigint
-    }) => {
+    (
+      {
+        target,
+        data,
+        value = 0n,
+      }: {
+        target: `0x${string}`
+        data: `0x${string}`
+        value?: bigint
+      },
+      overrides?: { paymasterAndData: `0x${string}` },
+    ) => {
       return sendUserOperation({
         uo: {
           target,
           data,
           value,
         },
+        overrides,
       })
     },
     [sendUserOperation],
   )
 
-  const executeNextTransaction = useCallback(() => {
+  const executeNextTransaction = useCallback(async () => {
     setTxStatus('txInProgress')
 
     if (!nextTransaction) {
@@ -216,7 +223,32 @@ export const useTransaction = ({
             value: BigInt(nextTransaction.transaction.value),
           }
 
-    sendTransaction(txParams)
+    if (isIframe) {
+      await sendSafeTx({
+        txs: [
+          {
+            to: txParams.target,
+            data: txParams.data,
+            value: txParams.value.toString(),
+          },
+        ],
+        onSuccess: () => {
+          setTxStatus('txSuccess')
+        },
+        onError: () => {
+          setTxStatus('txError')
+        },
+      })
+
+      return
+    }
+
+    const resolvedOverrides = await getGasSponsorshipOverride({
+      smartAccountClient,
+      txParams,
+    })
+
+    sendTransaction(txParams, resolvedOverrides)
   }, [
     token,
     approvalCustomValue,
@@ -226,6 +258,8 @@ export const useTransaction = ({
     sendTransaction,
     setTxStatus,
     user,
+    smartAccountClient,
+    isIframe,
   ])
 
   const backToInit = useCallback(() => {

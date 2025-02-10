@@ -126,7 +126,7 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
           linkToCopy: currentUrl,
           linkToShare: getTwitterShareUrl({
             url: currentUrl,
-            text: 'Check out Lazy Summer Global Rebalance Activity!',
+            text: 'Check out how much time and money has been saved by the Lazy Summer AI Powered Agents keeping the protocol optimized!',
           }),
         }}
       />
