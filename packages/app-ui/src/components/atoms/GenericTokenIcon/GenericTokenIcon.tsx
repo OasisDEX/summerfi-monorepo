@@ -3,6 +3,8 @@
 import { type FC } from 'react'
 import loadable from '@loadable/component'
 
+import { safeBTOA } from '../../../../../app-utils/src'
+
 import genericTokenIconStyles, {
   type ClassNames,
 } from '@/components/atoms/GenericTokenIcon/GenericTokenIcon.module.scss'
@@ -38,7 +40,7 @@ export const GenericTokenIcon: FC<GenericTokenIconProps> = ({ variant = 'smallIc
     <div className={genericTokenIconStyles[variant]}>
       <AvatarLoadingState
         size={innerSize}
-        name={btoa(symbol)}
+        name={safeBTOA(symbol)}
         variant="marble"
         colors={['#6FD9FF', '#F2FCFF', '#FFE7D8', '#FBB677']}
       />

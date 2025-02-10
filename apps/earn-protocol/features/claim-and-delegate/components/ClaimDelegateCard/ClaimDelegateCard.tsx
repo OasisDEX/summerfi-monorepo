@@ -7,7 +7,7 @@ import {
   Text,
   Tooltip,
 } from '@summerfi/app-earn-ui'
-import { formatCryptoBalance, formatShorthandNumber } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatShorthandNumber, safeATOB } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -82,7 +82,7 @@ export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
             {!selfDelegate && !picture && (
               <LoadableAvatar
                 size={38}
-                name={btoa(address)}
+                name={safeATOB(address)}
                 variant="pixel"
                 colors={['#B90061', '#EC58A2', '#F8A4CE', '#FFFFFF']}
               />

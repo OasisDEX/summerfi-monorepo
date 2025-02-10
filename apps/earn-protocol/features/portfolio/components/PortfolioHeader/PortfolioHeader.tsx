@@ -2,7 +2,12 @@ import { type FC, useState } from 'react'
 import { useUser } from '@account-kit/react'
 import { Button, DataBlock, Dropdown, Icon, LoadableAvatar, Text } from '@summerfi/app-earn-ui'
 import { type DropdownRawOption } from '@summerfi/app-types'
-import { formatAddress, formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
+import {
+  formatAddress,
+  formatCryptoBalance,
+  formatFiatBalance,
+  safeATOB,
+} from '@summerfi/app-utils'
 import clsx from 'clsx'
 
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
@@ -127,7 +132,7 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
               </svg>
             }
             size={48}
-            name={btoa(walletAddress)}
+            name={safeATOB(walletAddress)}
             variant="pixel"
             colors={['#B90061', '#EC58A2', '#F8A4CE', '#FFFFFF']}
           />
