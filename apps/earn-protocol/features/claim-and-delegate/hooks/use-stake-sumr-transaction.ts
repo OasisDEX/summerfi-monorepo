@@ -3,6 +3,7 @@ import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
 import { useIsIframe } from '@summerfi/app-earn-ui'
 
 import { accountType } from '@/account-kit/config'
+import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { sendSafeTx } from '@/helpers/send-safe-tx'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 
@@ -92,12 +93,20 @@ export const useStakeSumrTransaction = ({
             })
           }
 
+          const txParams = {
+            target: tx[0].transaction.target.value,
+            data: tx[0].transaction.calldata,
+            value: BigInt(tx[0].transaction.value),
+          }
+
+          const resolvedOverrides = await getGasSponsorshipOverride({
+            smartAccountClient,
+            txParams,
+          })
+
           return await sendApproveSumrTransaction({
-            uo: {
-              target: tx[0].transaction.target.value,
-              data: tx[0].transaction.calldata,
-              value: BigInt(tx[0].transaction.value),
-            },
+            uo: txParams,
+            overrides: resolvedOverrides,
           })
         }
 
@@ -116,12 +125,20 @@ export const useStakeSumrTransaction = ({
             })
           }
 
+          const txParams = {
+            target: tx[1].transaction.target.value,
+            data: tx[1].transaction.calldata,
+            value: BigInt(tx[1].transaction.value),
+          }
+
+          const resolvedOverrides = await getGasSponsorshipOverride({
+            smartAccountClient,
+            txParams,
+          })
+
           return await sendStakeSumrTransaction({
-            uo: {
-              target: tx[1].transaction.target.value,
-              data: tx[1].transaction.calldata,
-              value: BigInt(tx[1].transaction.value),
-            },
+            uo: txParams,
+            overrides: resolvedOverrides,
           })
         }
 
@@ -143,12 +160,20 @@ export const useStakeSumrTransaction = ({
             })
           }
 
+          const txParams = {
+            target: tx[0].transaction.target.value,
+            data: tx[0].transaction.calldata,
+            value: BigInt(tx[0].transaction.value),
+          }
+
+          const resolvedOverrides = await getGasSponsorshipOverride({
+            smartAccountClient,
+            txParams,
+          })
+
           return await sendStakeSumrTransaction({
-            uo: {
-              target: tx[0].transaction.target.value,
-              data: tx[0].transaction.calldata,
-              value: BigInt(tx[0].transaction.value),
-            },
+            uo: txParams,
+            overrides: resolvedOverrides,
           })
         }
 
@@ -157,7 +182,7 @@ export const useStakeSumrTransaction = ({
     }
 
     void fetchStakeTx()
-  }, [amount, isIframe])
+  }, [amount, isIframe, smartAccountClient])
 
   return {
     stakeSumrTransaction,
