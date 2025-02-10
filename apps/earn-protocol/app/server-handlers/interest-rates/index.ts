@@ -63,6 +63,16 @@ const clients = {
   ),
 }
 
+if (!process.env.FUNCTIONS_API_URL) {
+  throw new Error('FUNCTIONS_API_URL is not set')
+}
+
+const apiUrls = {
+  [SDKNetwork.Mainnet]: `${process.env.FUNCTIONS_API_URL}/api/historicalRates/1`,
+  [SDKNetwork.Base]: `${process.env.FUNCTIONS_API_URL}/api/historicalRates/8453`,
+  [SDKNetwork.ArbitrumOne]: `${process.env.FUNCTIONS_API_URL}/api/historicalRates/42161`,
+}
+
 const isProperNetwork = (network: string): network is keyof typeof clients => network in clients
 
 export async function getInterestRates({ network, arksList }: GetInterestRatesParams) {
@@ -74,23 +84,42 @@ export async function getInterestRates({ network, arksList }: GetInterestRatesPa
     ark.name ? ark.name : getArkProductId(ark) || 'NOT FOUND',
   )
 
-  const networkGraphQlClient = clients[network as keyof typeof clients]
-  // networkGraphQlClient.batchRequests DOES NOT WORK on subgraphs we use
-  // TODO: create a single gql`` query with multiple queries inside and dynamically rename variables
   const response = await Promise.all(
-    arksList.map((ark) => {
-      if (getArkProductId(ark) === false) {
-        return Promise.resolve<GetInterestRatesQuery>(noInterestRates)
+    arksList.map(async (ark) => {
+      const productId = getArkProductId(ark)
+
+      if (productId === false) {
+        return noInterestRates
       }
 
-      return networkGraphQlClient.request<GetInterestRatesQuery>(GetInterestRatesDocument, {
-        productId: getArkProductId(ark),
-      })
+      try {
+        // Try primary source first
+        const apiUrl = `${apiUrls[network]}?productId=${productId}`
+
+        const apiResponse = await fetch(apiUrl, {
+          next: { revalidate: REVALIDATION_TIMES.INTEREST_RATES },
+        })
+
+        if (!apiResponse.ok) {
+          throw new Error('Primary API request failed')
+        }
+
+        const data = await apiResponse.json()
+
+        return data
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.warn(`Falling back to subgraph for ${productId}:`, error)
+        const networkGraphQlClient = clients[network]
+
+        return networkGraphQlClient.request<GetInterestRatesQuery>(GetInterestRatesDocument, {
+          productId,
+        })
+      }
     }),
   )
 
   return arkNamesList.reduce<{
-    // key in this case is the ark name
     [key: string]: GetInterestRatesQuery
   }>((acc, arkName, index) => {
     acc[arkName] = response[index]

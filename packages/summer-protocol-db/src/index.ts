@@ -12,7 +12,7 @@ export interface SummerProtocolDB {
 }
 
 export * from './database-types'
-
+export { mapDbNetworkToChainId, mapChainIdToDbNetwork } from './helpers'
 export const getSummerProtocolDB = async (
   config: PgSummerProtocolDbConfig,
 ): Promise<SummerProtocolDB> => {
