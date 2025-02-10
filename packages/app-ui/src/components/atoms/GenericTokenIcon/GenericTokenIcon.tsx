@@ -2,8 +2,7 @@
 
 import { type FC } from 'react'
 import loadable from '@loadable/component'
-
-import { safeBTOA } from '../../../../../app-utils/src'
+import { safeBTOA } from '@summerfi/app-utils'
 
 import genericTokenIconStyles, {
   type ClassNames,

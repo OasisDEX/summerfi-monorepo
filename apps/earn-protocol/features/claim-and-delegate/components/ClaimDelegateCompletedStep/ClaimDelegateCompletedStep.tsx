@@ -17,6 +17,7 @@ import {
   formatCryptoBalance,
   formatDecimalAsPercent,
   formatFiatBalance,
+  safeBTOA,
 } from '@summerfi/app-utils'
 import { useParams } from 'next/navigation'
 
