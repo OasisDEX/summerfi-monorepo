@@ -20,9 +20,9 @@ import { supportedChains } from '@summerfi/summer-earn-protocol-subgraph'
 import { fleetRewardsManagerAbi } from './abis/fleetRewardsManager'
 
 const rewardTokenPerChain: Partial<Record<ChainId, Address>> = {
-  [ChainId.MAINNET]: '0x887482d43792330Bf42C20154d11B0c308aFb4bc',
-  [ChainId.ARBITRUM]: '0x8c977a41aDCd7537498a3bC3a0cB30Fb210A247A',
-  [ChainId.BASE]: '0x932CCb7D2A6F1821a1Ecee9e1279aC30E0d4db32',
+  [ChainId.MAINNET]: '0x194f360D130F2393a5E9F3117A6a1B78aBEa1624',
+  [ChainId.ARBITRUM]: '0x194f360D130F2393a5E9F3117A6a1B78aBEa1624',
+  [ChainId.BASE]: '0x194f360D130F2393a5E9F3117A6a1B78aBEa1624',
 }
 
 const logger = new Logger({ serviceName: 'get-protocol-info-function' })
