@@ -49,6 +49,23 @@ const nextConfig = {
       },
     ]
   },
+  redirects() {
+    const redirectToProSummer = (pathname) => ({
+      source: pathname,
+      destination: `https://pro.summer.fi/${pathname}`,
+      basePath: false,
+      permanent: true,
+    })
+
+    return [
+      // product redirects
+      redirectToProSummer('/multiply'),
+      redirectToProSummer('/borrow'),
+      // maker position redirects
+      // matches to `/{number}`
+      redirectToProSummer('/:makerPosition(\\d{1,})'),
+    ]
+  },
   images: {
     remotePatterns: [
       {
