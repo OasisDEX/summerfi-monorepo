@@ -285,6 +285,7 @@ export const icons = {
   usdt_circle_color: customLazy(() => import('./icons/usdt_circle_color.svg?react')),
   usdt_color: customLazy(() => import('./icons/usdt_color.svg?react')),
   usdt: customLazy(() => import('./icons/usdt.svg?react')),
+  'usd₮0_circle_color': customLazy(() => import('./icons/usd₮0_circle_color.svg?react')),
   user: customLazy(() => import('./icons/user.svg?react')),
   wbtc_circle_color: customLazy(() => import('./icons/wbtc_circle_color.svg?react')),
   wbtc_color: customLazy(() => import('./icons/wbtc_color.svg?react')),

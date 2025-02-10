@@ -169,6 +169,7 @@ export type IconNamesList =
   | 'usde'
   | 'usdp_circle_color'
   | 'usds'
+  | 'usd₮0_circle_color'
   | 'usdt_circle_color'
   | 'usdt_color'
   | 'usdt'
@@ -417,6 +418,7 @@ export type TokenSymbolsList =
   | 'ZRX'
   | 'WUSDL'
   | 'MBASIS'
+  | 'USD₮0'
   // deprecated ones
   | 'CRVV1ETHSTETH'
   | 'UNIV2AAVEETH'
