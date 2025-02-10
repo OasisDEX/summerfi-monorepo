@@ -1,12 +1,5 @@
 import { TableHeadWithTooltip } from '@summerfi/app-earn-ui'
 
-const vaultTypeTooltipContent = [
-  { title: 'Isolated Lending', description: 'Text for what isolated lending is' },
-  { title: 'Basic Trading', description: 'Text for what isolated lending is' },
-  { title: 'Fixed Yield', description: 'Text for what isolated lending is' },
-  { title: 'Lending', description: 'Text for what isolated lending is' },
-]
-
 export const vaultExposureColumns = [
   {
     title: 'Strategy',
