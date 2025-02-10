@@ -21,20 +21,27 @@ export const vaultExposureMapper = (
   sortConfig?: TableSortedColumn<string>,
 ) => {
   const vaultInputToken = vault.inputTokenBalance
-
   const sortedArks = rebalanceActivitySorter({ vault, sortConfig })
 
   return sortedArks.map((item) => {
     const allocationRaw = new BigNumber(item.inputTokenBalance.toString()).shiftedBy(
       -vault.inputToken.decimals,
     )
-    const allocation = new BigNumber(item.inputTokenBalance.toString()).div(
-      vaultInputToken.toString(),
-    )
+    const allocation =
+      vaultInputToken.toString() !== '0'
+        ? new BigNumber(item.inputTokenBalance.toString()).div(vaultInputToken.toString())
+        : '0'
 
-    const apr = new BigNumber(
-      vault.customFields?.arksInterestRates?.[item.name as string] ?? 0,
-    ).div(100)
+    const arkInterestRate = vault.customFields?.arksInterestRates?.[item.name as string]
+
+    const apr = isNaN(Number(arkInterestRate))
+      ? new BigNumber(0)
+      : new BigNumber(arkInterestRate ?? 0).div(100)
+
+    const cap =
+      item.depositLimit.toString() !== '0'
+        ? new BigNumber(item.inputTokenBalance.toString()).div(item.depositLimit.toString())
+        : '0'
 
     const protocol = item.name?.split('-') ?? ['n/a']
     const protocolLabel = getProtocolLabel(protocol)
@@ -51,7 +58,7 @@ export const vaultExposureMapper = (
         allocation: <TableCellText>{formatDecimalAsPercent(allocation)}</TableCellText>,
         currentApy: <TableCellText>{formatDecimalAsPercent(apr)}</TableCellText>,
         liquidity: <TableCellText>{formatCryptoBalance(allocationRaw)}</TableCellText>,
-        type: <TableCellText>TBD</TableCellText>,
+        cap: <TableCellText>{formatDecimalAsPercent(cap)}</TableCellText>,
       },
       details: (
         <div

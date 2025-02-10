@@ -1,5 +1,4 @@
-import { Fragment } from 'react'
-import { TableHeadWithTooltip, Text } from '@summerfi/app-earn-ui'
+import { TableHeadWithTooltip } from '@summerfi/app-earn-ui'
 
 const vaultTypeTooltipContent = [
   { title: 'Isolated Lending', description: 'Text for what isolated lending is' },
@@ -32,44 +31,14 @@ export const vaultExposureColumns = [
   {
     title: (
       <TableHeadWithTooltip
-        minWidth="261px"
-        title="Type"
-        tooltip={
-          <div style={{ display: 'flex', flexDirection: 'column', width: 'fit-content' }}>
-            {vaultTypeTooltipContent.map((item, idx) => (
-              <Fragment key={item.title}>
-                <Text
-                  as="p"
-                  variant="p3semi"
-                  style={{
-                    color: 'var(--earn-protocol-secondary-100)',
-                    marginBottom: 'var(--spacing-space-2x-small)',
-                  }}
-                >
-                  {item.title}
-                </Text>
-                <Text
-                  as="p"
-                  variant="p3"
-                  style={{
-                    color: 'var(--earn-protocol-secondary-60)',
-                    marginBottom:
-                      vaultTypeTooltipContent.length - 1 === idx
-                        ? '0'
-                        : 'var(--spacing-space-large)',
-                  }}
-                >
-                  {item.description}
-                </Text>
-              </Fragment>
-            ))}
-          </div>
-        }
+        minWidth="247px"
+        title="Cap"
+        tooltip="This is the maximum allocation the pool or market can be exposed to, managed by the Risk Manager."
       />
     ),
-    key: 'type',
-    sortable: false,
+    key: 'cap',
+    sortable: true,
   },
 ]
 
-export const vaultExposureColumnsHiddenOnMobile = ['liquidity', 'type', 'currentApy']
+export const vaultExposureColumnsHiddenOnMobile = ['liquidity', 'cap', 'currentApy']
