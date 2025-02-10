@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react'
 import {
   DataBlock,
+  getUniqueVaultId,
   SimpleGrid,
   SUMR_CAP,
   Text,
@@ -62,17 +63,23 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
   const {
     state: { sumrNetApyConfig, slippageConfig },
   } = useLocalConfig()
-  const networkFilteredVaults = useMemo(
-    () =>
+
+  const networkFilteredVaults = useMemo(() => {
+    const properVaultsList =
       localVaultNetwork && localVaultNetwork !== 'all-networks'
         ? vaultsList.filter(({ protocol }) => protocol.network === localVaultNetwork)
-        : vaultsList,
-    [localVaultNetwork, vaultsList],
-  )
+        : vaultsList
+
+    return properVaultsList.sort((a, b) => {
+      return Number(a.calculatedApr) > Number(b.calculatedApr) ? -1 : 1
+    })
+  }, [localVaultNetwork, vaultsList])
   const sdk = useAppSDK()
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
-  const [vaultId, setVaultId] = useState<string | undefined>(networkFilteredVaults[0].id)
+  const [selectedVaultId, setSelectedVaultId] = useState<string | undefined>(
+    getUniqueVaultId(networkFilteredVaults[0]),
+  )
 
   const selectedNetworkOption = useMemo(
     () =>
@@ -98,8 +105,8 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
   )
 
   const selectedVaultData = useMemo(
-    () => vaultsList.find((vault) => vault.id === vaultId),
-    [vaultsList, vaultId],
+    () => vaultsList.find((vault) => getUniqueVaultId(vault) === selectedVaultId),
+    [vaultsList, selectedVaultId],
   )
 
   const vaultData = selectedVaultData ?? networkFilteredVaults[0]
@@ -107,7 +114,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
 
   const { position: positionExists, isLoading } = usePosition({
     chainId: subgraphNetworkToSDKId(vaultData.protocol.network),
-    vaultId: vaultData.id,
+    vaultId: getUniqueVaultId(vaultData),
     onlyActive: true,
   })
 
@@ -132,7 +139,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
 
       default:
         if (selectedVaultData && selectedVaultData.protocol.network !== selected.value) {
-          setVaultId(undefined)
+          setSelectedVaultId(undefined)
         }
         softRouterPush(`/earn/${sdkNetworkToHumanNetwork(selected.value as SDKNetwork)}`)
 
@@ -140,8 +147,8 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
     }
   }
 
-  const handleChangeVault = (nextVaultId: string) => {
-    setVaultId(nextVaultId)
+  const handleChangeVault = (nextselectedVaultId: string) => {
+    setSelectedVaultId(nextselectedVaultId)
   }
 
   const formattedTotalLiquidity = useMemo(() => {
@@ -260,7 +267,10 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
               key={vault.id}
               {...vault}
               withHover
-              selected={vaultId === vault.id || (!vaultId && vaultIndex === 0)}
+              selected={
+                selectedVaultId === getUniqueVaultId(vault) ||
+                (!selectedVaultId && vaultIndex === 0)
+              }
               onClick={handleChangeVault}
               withTokenBonus={sumrNetApyConfig.withSumr}
               sumrPrice={estimatedSumrPrice}

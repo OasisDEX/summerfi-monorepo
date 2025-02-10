@@ -129,6 +129,7 @@ export {
   type EarningsEstimationsMap,
   getEarningsEstimationsMap,
 } from './helpers/get-earnings-estimations-map'
+export { getUniqueVaultId } from './helpers/get-unique-vault-id'
 
 export { INTERNAL_LINKS, EXTERNAL_LINKS } from './helpers/application-links'
 

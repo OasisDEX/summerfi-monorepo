@@ -11,6 +11,7 @@ import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
 import { GradientBox } from '@/components/molecules/GradientBox/GradientBox'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
 import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
+import { getUniqueVaultId } from '@/helpers/get-unique-vault-id'
 
 import vaultCardStyles from './VaultCard.module.scss'
 
@@ -53,7 +54,12 @@ export const VaultCard = ({
 
   const handleVaultClick = () => {
     if (onClick) {
-      onClick(id)
+      onClick(
+        getUniqueVaultId({
+          id,
+          protocol,
+        } as SDKVaultishType),
+      )
     }
   }
 
