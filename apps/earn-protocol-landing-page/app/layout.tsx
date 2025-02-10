@@ -1,5 +1,7 @@
 import {
+  EXTERNAL_LINKS,
   GlobalStyles,
+  HeaderDisclaimer,
   LocalConfigContextProvider,
   slippageConfigCookieName,
   sumrNetApyConfigCookieName,
@@ -7,6 +9,7 @@ import {
 import { getServerSideCookies, safeParseJson } from '@summerfi/app-utils'
 import type { Metadata } from 'next'
 import { cookies } from 'next/headers'
+import Link from 'next/link'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
 
@@ -28,6 +31,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
   const slippageConfig = safeParseJson(getServerSideCookies(slippageConfigCookieName, cookie))
+  const country = getServerSideCookies('country', cookie)
+
+  const isGB = country === 'GB'
 
   return (
     <html lang={locale}>
@@ -37,6 +43,24 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className={` ${fontInter.variable}`}>
         <NextIntlClientProvider messages={messages}>
           <LocalConfigContextProvider value={{ sumrNetApyConfig, slippageConfig }}>
+            {isGB && (
+              <HeaderDisclaimer>
+                UK disclaimer: This web application is provided as a tool for users to interact with
+                third party DeFi protocols on their own initiative, with no endorsement or
+                recommendation of ...
+                <Link
+                  href={`${EXTERNAL_LINKS.KB.HELP}/legal/uk-disclaimer`}
+                  style={{
+                    color: 'var(--earn-protocol-primary-100)',
+                    paddingLeft: 'var(--general-space-4)',
+                    fontWeight: '500',
+                  }}
+                  target="_blank"
+                >
+                  Read more
+                </Link>
+              </HeaderDisclaimer>
+            )}
             <LandingMasterPage>{children}</LandingMasterPage>
           </LocalConfigContextProvider>
         </NextIntlClientProvider>

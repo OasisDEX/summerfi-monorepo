@@ -1,0 +1,13 @@
+.headerDisclaimerWrapper {
+  position: relative;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 50px;
+  padding: var(--general-space-16) var(--general-space-24);
+  font-size: 14px;
+  background-color: var(--earn-protocol-neutral-90);
+  flex-wrap: wrap;
+}
