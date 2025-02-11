@@ -132,8 +132,8 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
             Position
             <div
               onClick={handleUserRefresh}
-              className={clsx(vaultManageGridStyles.refreshWrapper, {
-                [vaultManageGridStyles.refreshing]: isRefreshing,
+              className={clsx(vaultManageGridStyles.refreshManageWrapper, {
+                [vaultManageGridStyles.refreshingManage]: isRefreshing,
               })}
             >
               <Icon iconName="refresh" size={16} />
