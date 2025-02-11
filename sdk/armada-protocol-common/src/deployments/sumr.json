@@ -8,6 +8,9 @@
         "summerToken": {
           "address": "0x194f360D130F2393a5E9F3117A6a1B78aBEa1624"
         },
+        "rewardsManager": {
+          "address": "0xDe61A0a49f48e108079bdE73caeA56E87FfeEF92"
+        },
         "timelock": {
           "address": "0x447BF9d1485ABDc4C1778025DfdfbE8b894C3796"
         },
@@ -16,9 +19,6 @@
         },
         "rewardsRedeemer": {
           "address": "0x54a2ea2B8f57D62c149ace01d7Ac1fd9A880B8dd"
-        },
-        "rewardsManager": {
-          "address": "0xDe61A0a49f48e108079bdE73caeA56E87FfeEF92"
         }
       },
       "buyAndBurn": {
