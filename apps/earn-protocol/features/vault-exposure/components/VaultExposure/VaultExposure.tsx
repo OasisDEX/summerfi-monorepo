@@ -40,6 +40,7 @@ const VaultExposureTableSection: FC<VaultExposureTableSectionProps> = ({
           allocationType,
         })}
         rowsToDisplay={resolvedRowsToDisplay}
+        hiddenColumns={['cap']}
       />
       {filteredVault.arks.length > 5 && (
         <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
