@@ -49,13 +49,13 @@ export const getNavigationItems = ({
         description: 'Vault optimizations performed by AI-powered keepers',
         icon: 'earn_rebalance_activities',
       },
-      {
-        url: '/yield-trend',
-        id: 'yield-trend',
-        title: 'Yield Trend',
-        description: 'Compare median DeFi yield to Lazy Summer AI-Optimized Yield',
-        icon: 'earn_yield_trend',
-      },
+      // {
+      //   url: '/yield-trend',
+      //   id: 'yield-trend',
+      //   title: 'Yield Trend',
+      //   description: 'Compare median DeFi yield to Lazy Summer AI-Optimized Yield',
+      //   icon: 'earn_yield_trend',
+      // },
     ],
   },
   // hide for now until we provide all the necessary channels of support
