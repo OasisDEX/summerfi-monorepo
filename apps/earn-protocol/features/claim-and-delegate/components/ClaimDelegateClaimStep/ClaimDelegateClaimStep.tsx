@@ -123,7 +123,8 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     })
   }
 
-  const sumrToClaim = externalData.sumrToClaim.perChain[claimOnChainId] ?? 0
+  const sumrToClaim =
+    externalData.sumrToClaim.claimableAggregatedRewards.perChain[claimOnChainId] ?? 0
 
   const hideButtonArrow = state.claimStatus === ClaimDelegateTxStatuses.PENDING
 
@@ -133,9 +134,13 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
         <ClaimDelegateToClaim
           key={item.chainId}
           {...item}
-          earned={formatCryptoBalance(externalData.sumrToClaim.perChain[item.chainId] ?? 0)}
+          earned={formatCryptoBalance(
+            externalData.sumrToClaim.claimableAggregatedRewards.perChain[item.chainId] ?? 0,
+          )}
           earnedInUSD={formatFiatBalance(
-            Number(externalData.sumrToClaim.perChain[item.chainId] ?? 0) * estimatedSumrPrice,
+            Number(
+              externalData.sumrToClaim.claimableAggregatedRewards.perChain[item.chainId] ?? 0,
+            ) * estimatedSumrPrice,
           )}
           isActive={claimOnChainId === item.chainId}
           onClick={() => setClaimOnChainId(item.chainId)}
