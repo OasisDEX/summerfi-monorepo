@@ -13,6 +13,7 @@ import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { InputWithDropdown } from '@/components/molecules/InputWithDropdown/InputWithDropdown'
 import { ProjectedEarnings } from '@/components/molecules/ProjectedEarnings/ProjectedEarnings'
 import { ProjectedEarningsExpanded } from '@/components/molecules/ProjectedEarnings/ProjectedEarningsExpanded'
+import { getDisplayToken } from '@/helpers/get-display-token'
 import { type EarningsEstimationsMap } from '@/helpers/get-earnings-estimations-map'
 
 type ControlsDepositWithdrawProps = {
@@ -96,7 +97,7 @@ export const ControlsDepositWithdraw = ({
       <AnimateHeight id="earnings" show={isOpen}>
         <ProjectedEarnings
           earnings={estimatedEarnings}
-          symbol={vault.inputToken.symbol as TokenSymbolsList}
+          symbol={getDisplayToken(vault.inputToken.symbol) as TokenSymbolsList}
           isLoading={isLoadingForecast}
         />
       </AnimateHeight>
@@ -108,7 +109,7 @@ export const ControlsDepositWithdraw = ({
       >
         {forecastSummaryMap && (
           <ProjectedEarningsExpanded
-            symbol={vault.inputToken.symbol as TokenSymbolsList}
+            symbol={getDisplayToken(vault.inputToken.symbol) as TokenSymbolsList}
             forecastSummaryMap={forecastSummaryMap}
             isLoading={isLoadingForecast}
           />

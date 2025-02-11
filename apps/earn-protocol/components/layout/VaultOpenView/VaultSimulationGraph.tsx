@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { Card, SkeletonLine, Text } from '@summerfi/app-earn-ui'
+import { Card, getDisplayToken, SkeletonLine, Text } from '@summerfi/app-earn-ui'
 import { type ForecastData, type SDKVaultishType, type TimeframesType } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import type BigNumber from 'bignumber.js'
@@ -114,7 +114,7 @@ export const VaultSimulationGraph = ({
         }}
       >
         {maxEarnInTimeframeToken ? (
-          `${formatCryptoBalance(maxEarnInTimeframeToken)} ${vault.inputToken.symbol}`
+          `${formatCryptoBalance(maxEarnInTimeframeToken)} ${getDisplayToken(vault.inputToken.symbol)}`
         ) : (
           <SkeletonLine style={{ display: 'inline-block' }} width={150} height={20} />
         )}

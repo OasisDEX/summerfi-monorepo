@@ -1,4 +1,5 @@
 import {
+  getDisplayToken,
   Icon,
   TableCellNodes,
   TableCellText,
@@ -67,7 +68,10 @@ export const vaultExposureMapper = (
         vault: (
           <TableCellNodes>
             <TableRowAccent backgroundColor={getColor(protocolLabel)} />
-            <Icon tokenName={item.inputToken.symbol as TokenSymbolsList} variant="s" />
+            <Icon
+              tokenName={getDisplayToken(item.inputToken.symbol) as TokenSymbolsList}
+              variant="s"
+            />
             <TableCellText>{protocolLabel}</TableCellText>
           </TableCellNodes>
         ),

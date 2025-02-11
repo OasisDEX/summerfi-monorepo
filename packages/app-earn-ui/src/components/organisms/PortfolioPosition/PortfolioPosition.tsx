@@ -10,6 +10,7 @@ import { Card } from '@/components/atoms/Card/Card'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
+import { getDisplayToken } from '@/helpers/get-display-token'
 import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getVaultPositionUrl } from '@/helpers/get-vault-url'
 
@@ -90,7 +91,7 @@ export const PortfolioPosition = ({
         <div className={portfolioPositionStyles.basicInfoWrapper}>
           <div style={{ width: '100%' }}>
             <VaultTitleWithRisk
-              symbol={inputToken.symbol}
+              symbol={getDisplayToken(inputToken.symbol)}
               risk={customFields?.risk ?? 'medium'}
               networkName={protocol.network}
               titleVariant="h3"

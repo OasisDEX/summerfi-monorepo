@@ -17,6 +17,7 @@ import { SimpleGrid } from '@/components/molecules/Grid/SimpleGrid'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { VaultTitleDropdownContent } from '@/components/molecules/VaultTitleDropdownContent/VaultTitleDropdownContent'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
+import { getDisplayToken } from '@/helpers/get-display-token'
 import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 
@@ -115,7 +116,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
               }}
             >
               <VaultTitleWithRisk
-                symbol={vault.inputToken.symbol}
+                symbol={getDisplayToken(vault.inputToken.symbol)}
                 // TODO: fill data
                 risk={vault.customFields?.risk ?? 'medium'}
                 networkName={vault.protocol.network}
@@ -188,7 +189,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 size="large"
                 titleSize="small"
                 title="Assets in vault"
-                value={`${totalValueLockedTokenParsed} ${vault.inputToken.symbol}`}
+                value={`${totalValueLockedTokenParsed} ${getDisplayToken(vault.inputToken.symbol)}`}
                 subValue={`$${totalValueLockedUSDParsed}`}
                 subValueSize="medium"
               />

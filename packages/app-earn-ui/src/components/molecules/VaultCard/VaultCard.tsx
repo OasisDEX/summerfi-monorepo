@@ -10,6 +10,7 @@ import { Text } from '@/components/atoms/Text/Text'
 import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
 import { GradientBox } from '@/components/molecules/GradientBox/GradientBox'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
+import { getDisplayToken } from '@/helpers/get-display-token'
 import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getUniqueVaultId } from '@/helpers/get-unique-vault-id'
 
@@ -85,7 +86,7 @@ export const VaultCard = ({
       >
         <div className={vaultCardStyles.vaultCardHeaderWrapper}>
           <VaultTitleWithRisk
-            symbol={inputToken.symbol}
+            symbol={getDisplayToken(inputToken.symbol)}
             risk={customFields?.risk ?? 'medium'}
             networkName={protocol.network}
             selected={selected}
@@ -105,7 +106,7 @@ export const VaultCard = ({
               Total assets
             </Text>
             <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-              {parsedTotalValueLocked}&nbsp;{inputToken.symbol}
+              {parsedTotalValueLocked}&nbsp;{getDisplayToken(inputToken.symbol)}
             </Text>
             <Text variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
               ${parsedTotalValueLockedUSD}

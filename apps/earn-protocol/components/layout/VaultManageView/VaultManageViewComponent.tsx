@@ -4,6 +4,7 @@ import {
   Card,
   ControlsDepositWithdraw,
   Expander,
+  getDisplayToken,
   getPositionValues,
   NonOwnerPositionBanner,
   Sidebar,
@@ -281,7 +282,7 @@ export const VaultManageViewComponent = ({
       tokenSymbol={
         {
           [TransactionAction.DEPOSIT]: selectedTokenOption.value,
-          [TransactionAction.WITHDRAW]: vault.inputToken.symbol,
+          [TransactionAction.WITHDRAW]: getDisplayToken(vault.inputToken.symbol),
         }[transactionType]
       }
       tokenBalance={
@@ -392,7 +393,7 @@ export const VaultManageViewComponent = ({
             >
               <PositionPerformanceChart
                 chartData={vault.customFields?.performanceChartData}
-                inputToken={vault.inputToken.symbol}
+                inputToken={getDisplayToken(vault.inputToken.symbol)}
               />
             </Expander>
           </div>,

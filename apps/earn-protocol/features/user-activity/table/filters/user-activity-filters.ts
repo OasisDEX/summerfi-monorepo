@@ -1,3 +1,4 @@
+import { getDisplayToken } from '@summerfi/app-earn-ui'
 import { type UserActivity, type UsersActivity } from '@summerfi/app-types'
 
 const userActivityFilterStrategies = ({
@@ -14,7 +15,8 @@ const userActivityFilterTokens = ({
 }: {
   tokenFilter: string[]
   userActivity: UserActivity
-}) => !tokenFilter.length || tokenFilter.includes(userActivity.vault.inputToken.symbol)
+}) =>
+  !tokenFilter.length || tokenFilter.includes(getDisplayToken(userActivity.vault.inputToken.symbol))
 
 export const userActivityFilter = ({
   userActivityList,

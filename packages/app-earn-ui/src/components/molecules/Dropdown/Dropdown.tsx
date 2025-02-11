@@ -51,12 +51,13 @@ export const Dropdown: FC<DropdownProps> = ({
   const [inputValue, setInputValue] = useState('')
 
   useEffect(() => {
-    if (!onChange) {
-      // if there is no onChange prop, set the selected option to
-      // the dropdownValue as controlled component behavior
+    if (dropdownValue !== selectedOption) {
+      // removed the check for onChange
+      // we need both dropdownValue and selectedOption to
+      // be in sync (always, regardless of onChange)
       setSelectedOption(dropdownValue)
     }
-  }, [onChange, dropdownValue])
+  }, [dropdownValue, selectedOption])
 
   const handleSelectOption = (option: DropdownRawOption) => {
     if (onChange) {

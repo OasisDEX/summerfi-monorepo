@@ -16,6 +16,7 @@ import { SidebarMobileHeader } from '@/components/molecules/SidebarMobileHeader/
 import { ControlsDepositWithdraw } from '@/components/organisms/ControlsDepositWithdraw/ControlsDepositWithdraw'
 import { Sidebar } from '@/components/organisms/Sidebar/Sidebar'
 import { useForecast } from '@/features/forecast/use-forecast'
+import { getDisplayToken } from '@/helpers/get-display-token'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 import { useLocalStorageOnce } from '@/hooks/use-local-storage-once'
 
@@ -108,7 +109,7 @@ export const VaultSimulationForm = ({
       <Sidebar
         {...{
           title: isEarnApp
-            ? `2. Deposit into ${vaultData.inputToken.symbol} on ${capitalize(sdkNetworkToHumanNetwork(vaultData.protocol.network))}`
+            ? `2. Deposit into ${getDisplayToken(vaultData.inputToken.symbol)} on ${capitalize(sdkNetworkToHumanNetwork(vaultData.protocol.network))}`
             : 'Deposit',
           content: (
             <ControlsDepositWithdraw
@@ -136,7 +137,7 @@ export const VaultSimulationForm = ({
               <SidebarMobileHeader
                 type="open"
                 amount={estimatedEarnings}
-                token={vaultData.inputToken.symbol}
+                token={getDisplayToken(vaultData.inputToken.symbol)}
                 isLoadingForecast={isLoadingForecast}
               />
             ) : undefined,

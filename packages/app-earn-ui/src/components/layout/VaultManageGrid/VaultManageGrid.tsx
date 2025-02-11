@@ -17,6 +17,7 @@ import { Dropdown } from '@/components/molecules/Dropdown/Dropdown'
 import { SimpleGrid } from '@/components/molecules/Grid/SimpleGrid'
 import { VaultTitleDropdownContent } from '@/components/molecules/VaultTitleDropdownContent/VaultTitleDropdownContent'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
+import { getDisplayToken } from '@/helpers/get-display-token'
 import { getPositionValues } from '@/helpers/get-position-values'
 import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getVaultUrl } from '@/helpers/get-vault-url'
@@ -130,7 +131,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
               }}
             >
               <VaultTitleWithRisk
-                symbol={vault.inputToken.symbol}
+                symbol={getDisplayToken(vault.inputToken.symbol)}
                 risk={vault.customFields?.risk ?? 'medium'}
                 networkName={vault.protocol.network}
               />
@@ -157,14 +158,14 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 title="Market Value"
                 value={
                   <>
-                    {formatCryptoBalance(netValue)}&nbsp;{vault.inputToken.symbol}
+                    {formatCryptoBalance(netValue)}&nbsp;{getDisplayToken(vault.inputToken.symbol)}
                   </>
                 }
                 subValue={
                   <>
                     Earned:&nbsp;
                     {formatCryptoBalance(netEarnings)}&nbsp;
-                    {vault.inputToken.symbol}
+                    {getDisplayToken(vault.inputToken.symbol)}
                   </>
                 }
                 subValueType={netEarnings.isPositive() ? 'positive' : 'negative'}
@@ -179,7 +180,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 value={
                   <>
                     {formatCryptoBalance(netDeposited)}&nbsp;
-                    {vault.inputToken.symbol}
+                    {getDisplayToken(vault.inputToken.symbol)}
                   </>
                 }
                 subValue={`# of Deposits: ${noOfDeposits}`}

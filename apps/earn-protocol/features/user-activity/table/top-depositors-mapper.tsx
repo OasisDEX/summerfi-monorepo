@@ -1,4 +1,5 @@
 import {
+  getDisplayToken,
   getVaultPositionUrl,
   Icon,
   TableCellText,
@@ -41,7 +42,7 @@ export const topDepositorsMapper = (
 
   return sorted.map((item) => {
     const { decimals } = item.vault.inputToken
-    const asset = item.vault.inputToken.symbol as TokenSymbolsList
+    const asset = getDisplayToken(item.vault.inputToken.symbol) as TokenSymbolsList
     const balance = new BigNumber(item.inputTokenBalance.toString()).shiftedBy(-decimals)
 
     const change7days = calculateTopDepositors7daysChange(item)
