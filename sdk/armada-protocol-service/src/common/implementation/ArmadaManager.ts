@@ -45,10 +45,11 @@ import { parseGetUserPositionQuery } from './extensions/parseGetUserPositionQuer
 import { parseGetUserPositionsQuery } from './extensions/parseGetUserPositionsQuery'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import type { ISwapManager } from '@summerfi/swap-common'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'bignumber.js'
 import type { IOracleManager } from '@summerfi/oracle-common'
 import { ArmadaManagerClaims } from './ArmadaManagerClaims'
 import { ArmadaManagerGovernance } from './ArmadaManagerGovernance'
+import { parseVault, parseVaults } from './extensions/parseVaults'
 
 /**
  * @name ArmadaManager
@@ -149,15 +150,19 @@ export class ArmadaManager implements IArmadaManager {
 
   /** @see IArmadaManager.getVaultsRaw */
   async getVaultsRaw(params: Parameters<IArmadaManager['getVaultsRaw']>[0]) {
-    return await this._subgraphManager.getVaults({ chainId: params.chainInfo.chainId })
+    return await this._subgraphManager
+      .getVaults({ chainId: params.chainInfo.chainId })
+      .then((vaults) => parseVaults(vaults))
   }
 
   /** @see IArmadaManager.getVaultRaw */
   async getVaultRaw(params: Parameters<IArmadaManager['getVaultRaw']>[0]) {
-    return this._subgraphManager.getVault({
-      chainId: params.vaultId.chainInfo.chainId,
-      vaultId: params.vaultId.fleetAddress.value,
-    })
+    return this._subgraphManager
+      .getVault({
+        chainId: params.vaultId.chainInfo.chainId,
+        vaultId: params.vaultId.fleetAddress.value,
+      })
+      .then((vault) => parseVault(vault))
   }
 
   /** @see IArmadaManager.getGlobalRebalancesRaw */
