@@ -39,7 +39,7 @@ interface ClaimedCardProps {
 }
 
 const ClaimedCard: FC<ClaimedCardProps> = ({ externalData, chainId, estimatedSumrPrice }) => {
-  const claimedSumrRaw = externalData.sumrToClaim.perChain[chainId] ?? 0
+  const claimedSumrRaw = externalData.sumrToClaim.claimableAggregatedRewards.perChain[chainId] ?? 0
 
   const claimedSumr = (
     <>
@@ -167,7 +167,7 @@ export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = (
 
   const sumrClaimedStepBefore =
     state.claimStatus === ClaimDelegateTxStatuses.COMPLETED
-      ? externalData.sumrToClaim.perChain[SDKChainId.BASE] ?? 0
+      ? externalData.sumrToClaim.claimableAggregatedRewards.perChain[SDKChainId.BASE] ?? 0
       : 0
 
   const externalDataSumrDelegated = externalData.sumrStakeDelegate.sumrDelegated

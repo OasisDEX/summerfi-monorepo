@@ -279,7 +279,8 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
     </Text>
   )
 
-  const sumrToClaim = externalData.sumrToClaim.perChain[SDKChainId.BASE] ?? 0
+  const sumrToClaim =
+    externalData.sumrToClaim.claimableAggregatedRewards.perChain[SDKChainId.BASE] ?? 0
 
   const sumrPerYear = `*${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(sumrToClaim)) * Number(externalData.sumrStakingInfo.sumrStakingApy * (decayFactor ?? 1)))} $SUMR / Year`
 

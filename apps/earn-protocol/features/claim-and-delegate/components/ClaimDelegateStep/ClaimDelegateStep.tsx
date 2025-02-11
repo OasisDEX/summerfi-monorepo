@@ -164,7 +164,8 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
     setSearchValue(e.target.value)
   }
 
-  const sumrToClaim = externalData.sumrToClaim.perChain[SDKChainId.BASE] ?? 0
+  const sumrToClaim =
+    externalData.sumrToClaim.claimableAggregatedRewards.perChain[SDKChainId.BASE] ?? 0
 
   const apy = (
     <Text as="h5" variant="h5">
