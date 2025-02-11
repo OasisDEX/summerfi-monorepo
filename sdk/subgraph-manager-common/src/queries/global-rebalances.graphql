@@ -42,6 +42,9 @@ query GetGlobalRebalances {
         id
         symbol
       }
+      protocol {
+        network
+      }
     }
   }
 }
