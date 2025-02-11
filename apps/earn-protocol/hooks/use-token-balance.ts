@@ -78,6 +78,8 @@ export const useTokenBalance = ({
         IToken | undefined,
       ]
 
+      setVaultToken(fetchedVaultToken)
+
       if (tokenSymbol === 'ETH') {
         setToken(fetchedToken)
 
@@ -89,7 +91,6 @@ export const useTokenBalance = ({
             if (skip) {
               return
             }
-            setVaultToken(fetchedVaultToken)
             setTokenBalanceLoading(false)
             setTokenBalance(new BigNumber(val.toString()).div(new BigNumber(ten).pow(18)))
           })
