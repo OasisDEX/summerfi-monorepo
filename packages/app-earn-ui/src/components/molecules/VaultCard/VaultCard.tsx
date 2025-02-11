@@ -87,7 +87,7 @@ export const VaultCard = ({
         <div className={vaultCardStyles.vaultCardHeaderWrapper}>
           <VaultTitleWithRisk
             symbol={getDisplayToken(inputToken.symbol)}
-            risk={customFields?.risk ?? 'medium'}
+            risk={customFields?.risk ?? 'lower'}
             networkName={protocol.network}
             selected={selected}
           />
