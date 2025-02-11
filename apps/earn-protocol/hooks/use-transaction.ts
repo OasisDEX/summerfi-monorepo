@@ -8,7 +8,7 @@ import {
   useSmartAccountClient,
   useUser,
 } from '@account-kit/react'
-import { getVaultPositionUrl, getVaultUrl } from '@summerfi/app-earn-ui'
+import { getVaultPositionUrl, getVaultUrl, useIsIframe } from '@summerfi/app-earn-ui'
 import {
   type EarnAllowanceTypes,
   type EarnTransactionViewStates,
@@ -31,12 +31,13 @@ import { useRouter } from 'next/navigation'
 import {
   type AccountKitSupportedNetworks,
   accountType,
-  overridesGasSponsorship,
   SDKChainIdToAAChainMap,
 } from '@/account-kit/config'
 import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
 import { getApprovalTx } from '@/helpers/get-approval-tx'
+import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { revalidateUser } from '@/helpers/revalidate-user'
+import { sendSafeTx } from '@/helpers/send-safe-tx'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
@@ -95,6 +96,7 @@ export const useTransaction = ({
   const [isTransakOpen, setIsTransakOpen] = useState(false)
   const { setChain, isSettingChain } = useChain()
   const { clientChainId } = useClientChainId()
+  const isIframe = useIsIframe()
   const [transactionType, setTransactionType] = useState<TransactionAction>(
     TransactionAction.DEPOSIT,
   )
@@ -221,12 +223,30 @@ export const useTransaction = ({
             value: BigInt(nextTransaction.transaction.value),
           }
 
-    const eligibilityData = await smartAccountClient?.checkGasSponsorshipEligibility({
-      uo: txParams,
-    })
+    if (isIframe) {
+      await sendSafeTx({
+        txs: [
+          {
+            to: txParams.target,
+            data: txParams.data,
+            value: txParams.value.toString(),
+          },
+        ],
+        onSuccess: () => {
+          setTxStatus('txSuccess')
+        },
+        onError: () => {
+          setTxStatus('txError')
+        },
+      })
 
-    const resolvedOverrides =
-      eligibilityData?.eligible === false ? overridesGasSponsorship : undefined
+      return
+    }
+
+    const resolvedOverrides = await getGasSponsorshipOverride({
+      smartAccountClient,
+      txParams,
+    })
 
     sendTransaction(txParams, resolvedOverrides)
   }, [
@@ -239,6 +259,7 @@ export const useTransaction = ({
     setTxStatus,
     user,
     smartAccountClient,
+    isIframe,
   ])
 
   const backToInit = useCallback(() => {

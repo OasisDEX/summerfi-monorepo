@@ -373,7 +373,7 @@ const YourRays: FC<YourRaysProps> = ({ totalRays }) => {
         valueSize: 'large',
       }}
       actionable={
-        <Link href="https://summer.fi/rays/leaderboard" target="_blank">
+        <Link href="https://pro.summer.fi/rays/leaderboard" target="_blank">
           <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
             Rays Leaderboard
           </Text>

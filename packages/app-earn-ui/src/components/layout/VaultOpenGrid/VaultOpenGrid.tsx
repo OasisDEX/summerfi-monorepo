@@ -106,11 +106,11 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
           <div className={vaultOpenGridStyles.vaultOpenGridTopLeftWrapper}>
             <Dropdown
               options={vaults.map((item) => ({
-                value: item.id,
+                value: getVaultUrl(item),
                 content: <VaultTitleDropdownContent vault={item} link={getVaultUrl(item)} />,
               }))}
               dropdownValue={{
-                value: vault.id,
+                value: getVaultUrl(vault),
                 content: <VaultTitleDropdownContent vault={vault} link={getVaultUrl(vault)} />,
               }}
             >

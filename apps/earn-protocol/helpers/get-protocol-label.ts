@@ -16,7 +16,7 @@ export const getProtocolLabel = (nameParts: string[]) => {
   } else if (baseName === 'ERC4626') {
     const [secondPart] = remainingParts
 
-    return secondPart.charAt(0).toUpperCase() + secondPart.slice(1)
+    return secondPart.charAt(0).toUpperCase() + secondPart.slice(1).replaceAll('_', ' ')
   }
 
   return arkNameMap[baseName] ?? baseName

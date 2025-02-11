@@ -43,8 +43,8 @@ const TransakTrigger = ({
 
 interface PortfolioHeaderProps {
   walletAddress: string
-  totalSumr: number
-  totalWalletValue: number
+  totalSumr?: number
+  totalWalletValue?: number
 }
 
 export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
@@ -152,14 +152,14 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
         >
           <DataBlock
             title="Total $SUMR"
-            value={formatCryptoBalance(totalSumr)}
+            value={totalSumr ? formatCryptoBalance(totalSumr) : '-'}
             titleSize="large"
             valueSize="large"
             valueStyle={{ textAlign: 'right' }}
           />
           <DataBlock
             title="Total Wallet Value"
-            value={`$${formatFiatBalance(totalWalletValue)}`}
+            value={totalWalletValue ? `$${formatFiatBalance(totalWalletValue)}` : '-'}
             titleSize="large"
             valueSize="large"
             valueStyle={{ textAlign: 'right' }}

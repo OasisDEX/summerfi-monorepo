@@ -7,7 +7,7 @@ import {
   Text,
   WithArrow,
 } from '@summerfi/app-earn-ui'
-import { type SDKVaultType, type TokenSymbolsList } from '@summerfi/app-types'
+import { type SDKNetwork, type SDKVaultType, type TokenSymbolsList } from '@summerfi/app-types'
 import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
@@ -16,12 +16,19 @@ import { rebalanceActivitySorter } from '@/features/vault-exposure/table/sorter'
 import { getColor } from '@/helpers/get-color'
 import { getProtocolLabel } from '@/helpers/get-protocol-label'
 
+import { arkDetailsMap } from './ark-details'
+
 export const vaultExposureMapper = (
   vault: SDKVaultType,
   sortConfig?: TableSortedColumn<string>,
 ) => {
   const vaultInputToken = vault.inputTokenBalance
   const sortedArks = rebalanceActivitySorter({ vault, sortConfig })
+
+  const vaultNetwork = vault.protocol.network as
+    | SDKNetwork.Mainnet
+    | SDKNetwork.ArbitrumOne
+    | SDKNetwork.Base
 
   return sortedArks.map((item) => {
     const allocationRaw = new BigNumber(item.inputTokenBalance.toString()).shiftedBy(
@@ -46,6 +53,15 @@ export const vaultExposureMapper = (
     const protocol = item.name?.split('-') ?? ['n/a']
     const protocolLabel = getProtocolLabel(protocol)
 
+    let arkDetails
+
+    try {
+      arkDetails = arkDetailsMap[vaultNetwork][item.id]
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(`Error fetching ark details for ${item.id} on ${vaultNetwork}`, error)
+    }
+
     return {
       content: {
         vault: (
@@ -60,7 +76,7 @@ export const vaultExposureMapper = (
         liquidity: <TableCellText>{formatCryptoBalance(allocationRaw)}</TableCellText>,
         cap: <TableCellText>{formatDecimalAsPercent(cap)}</TableCellText>,
       },
-      details: (
+      details: arkDetails ? (
         <div
           style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-space-medium)' }}
         >
@@ -72,18 +88,25 @@ export const vaultExposureMapper = (
             variant="p3"
             style={{ color: 'var(--earn-protocol-secondary-100)', fontWeight: '500' }}
           >
-            MetaMorpho Gauntlet MKR Blended was chosen for it’s performance track record, risk
-            approach and asset exposure.
+            {arkDetails.description}
           </Text>
-          <Link href="/apps/earn-protocol/public">
-            <WithArrow
-              as="p"
-              variant="p4semi"
-              style={{ color: 'var(--earn-protocol-primary-100)' }}
-            >
-              Learn more
-            </WithArrow>
-          </Link>
+          {arkDetails.link && (
+            <Link href={arkDetails.link} target="_blank" rel="noreferrer">
+              <WithArrow
+                as="p"
+                variant="p4semi"
+                style={{ color: 'var(--earn-protocol-primary-100)' }}
+              >
+                Learn more
+              </WithArrow>
+            </Link>
+          )}
+        </div>
+      ) : (
+        <div
+          style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-space-medium)' }}
+        >
+          No data available
         </div>
       ),
     }
