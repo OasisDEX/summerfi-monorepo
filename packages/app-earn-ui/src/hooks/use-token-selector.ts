@@ -20,7 +20,7 @@ const testTokens: { [key: number]: TokenSymbolsList[] | undefined } = {
   // arbitrum
   [SDKChainId.ARBITRUM]: ['USDC', 'WBTC', 'WSTETH', 'ETH'],
   // mainnet
-  [SDKChainId.MAINNET]: ['ETH'],
+  [SDKChainId.MAINNET]: ['ETH', 'USDC', 'WBTC', 'WSTETH'],
 }
 
 /**
