@@ -3,6 +3,7 @@ import {
   ControlsDepositWithdraw,
   Expander,
   getDisplayToken,
+  getUniqueVaultId,
   Sidebar,
   SidebarFootnote,
   sidebarFootnote,
@@ -392,7 +393,7 @@ export const VaultOpenViewComponent = ({
           >
             <RebalancingActivity
               rebalancesList={rebalancesList}
-              vaultId={vault.id}
+              vaultId={getUniqueVaultId(vault)}
               totalRebalances={Number(vault.rebalanceCount)}
               vaultsList={vaults}
             />
@@ -408,7 +409,7 @@ export const VaultOpenViewComponent = ({
             <UserActivity
               userActivity={userActivity}
               topDepositors={topDepositors}
-              vaultId={vault.id}
+              vaultId={getUniqueVaultId(vault)}
               page="open"
             />
           </Expander>

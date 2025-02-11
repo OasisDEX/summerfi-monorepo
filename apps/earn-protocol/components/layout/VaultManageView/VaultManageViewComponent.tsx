@@ -6,6 +6,7 @@ import {
   Expander,
   getDisplayToken,
   getPositionValues,
+  getUniqueVaultId,
   NonOwnerPositionBanner,
   Sidebar,
   SidebarFootnote,
@@ -480,7 +481,7 @@ export const VaultManageViewComponent = ({
             >
               <RebalancingActivity
                 rebalancesList={rebalancesList}
-                vaultId={vault.id}
+                vaultId={getUniqueVaultId(vault)}
                 totalRebalances={Number(vault.rebalanceCount)}
                 vaultsList={vaults}
               />
@@ -495,7 +496,7 @@ export const VaultManageViewComponent = ({
               <UserActivity
                 userActivity={userActivity}
                 topDepositors={topDepositors}
-                vaultId={vault.id}
+                vaultId={getUniqueVaultId(vault)}
                 page="manage"
               />
             </Expander>
