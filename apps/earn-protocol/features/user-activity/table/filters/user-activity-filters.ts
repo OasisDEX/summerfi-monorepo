@@ -1,5 +1,5 @@
-import { getDisplayToken } from '@summerfi/app-earn-ui'
-import { type UserActivity, type UsersActivity } from '@summerfi/app-types'
+import { getDisplayToken, getUniqueVaultId } from '@summerfi/app-earn-ui'
+import { type SDKVaultishType, type UserActivity, type UsersActivity } from '@summerfi/app-types'
 
 const userActivityFilterStrategies = ({
   strategyFilter,
@@ -7,7 +7,9 @@ const userActivityFilterStrategies = ({
 }: {
   strategyFilter: string[]
   userActivity: UserActivity
-}) => !strategyFilter.length || strategyFilter.includes(userActivity.vault.id)
+}) =>
+  !strategyFilter.length ||
+  strategyFilter.includes(getUniqueVaultId(userActivity.vault as SDKVaultishType))
 
 const userActivityFilterTokens = ({
   tokenFilter,

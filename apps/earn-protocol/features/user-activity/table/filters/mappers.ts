@@ -1,4 +1,8 @@
-import { type GenericMultiselectOption, getDisplayToken } from '@summerfi/app-earn-ui'
+import {
+  type GenericMultiselectOption,
+  getDisplayToken,
+  getUniqueVaultId,
+} from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType, type TokenSymbolsList } from '@summerfi/app-types'
 
 import { networkIconByNetworkName } from '@/constants/networkIcons'
@@ -10,7 +14,7 @@ const mapStrategiesToMultiselectOptions = (
     label: getDisplayToken(vault.inputToken.symbol),
     token: getDisplayToken(vault.inputToken.symbol) as TokenSymbolsList,
     networkIcon: networkIconByNetworkName[vault.protocol.network],
-    value: vault.id,
+    value: getUniqueVaultId(vault),
   }))
 
 const mapTokensToMultiselectOptions = (
