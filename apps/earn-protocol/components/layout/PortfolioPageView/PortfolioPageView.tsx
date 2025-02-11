@@ -79,7 +79,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     Number(rewardsData.sumrBalances.total) +
     Number(rewardsData.sumrBalances.vested) +
     Number(rewardsData.sumrStakeDelegate.stakedAmount) +
-    Number(rewardsData.sumrToClaim.total)
+    Number(rewardsData.sumrToClaim.aggregatedRewards.total)
 
   const tabs = [
     ...(isPreLaunchVersion
@@ -92,7 +92,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
               <PortfolioOverview
                 positions={positions}
                 vaultsList={vaultsList}
-                sumrTokenRewards={rewardsData.sumrToClaim.total}
+                sumrTokenRewards={rewardsData.sumrToClaim.aggregatedRewards.total}
               />
             ),
           },
