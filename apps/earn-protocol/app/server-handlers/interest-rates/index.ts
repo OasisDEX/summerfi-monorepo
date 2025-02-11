@@ -96,9 +96,7 @@ export async function getInterestRates({ network, arksList }: GetInterestRatesPa
         // Try primary source first
         const apiUrl = `${apiUrls[network]}?productId=${productId}`
 
-        const apiResponse = await fetch(apiUrl, {
-          next: { revalidate: REVALIDATION_TIMES.INTEREST_RATES },
-        })
+        const apiResponse = await fetch(apiUrl)
 
         if (!apiResponse.ok) {
           throw new Error('Primary API request failed')

@@ -17,13 +17,13 @@ interface PortfolioPageViewLoadingStateProps {
 const SimplePortfolioSkeleton = (
   <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
     <div style={{ display: 'flex', gap: '2%' }}>
-      <SkeletonLine height={140} />
-      <SkeletonLine height={140} />
-      <SkeletonLine height={140} />
+      <SkeletonLine height={140} radius="var(--radius-roundish)" />
+      <SkeletonLine height={140} radius="var(--radius-roundish)" />
+      <SkeletonLine height={140} radius="var(--radius-roundish)" />
     </div>
-    <SkeletonLine height={340} />
-    <SkeletonLine height={340} />
-    <SkeletonLine height={340} />
+    <SkeletonLine height={340} radius="var(--radius-roundish)" />
+    <SkeletonLine height={340} radius="var(--radius-roundish)" />
+    <SkeletonLine height={340} radius="var(--radius-roundish)" />
   </div>
 )
 
@@ -74,7 +74,7 @@ export const PortfolioPageViewLoadingState: FC<PortfolioPageViewLoadingStateProp
     <>
       <NonOwnerPortfolioBanner isOwner walletStateLoaded />
       <div className={classNames.portfolioPageViewLoadingStateWrapper}>
-        <PortfolioHeader walletAddress={walletAddress} />
+        <PortfolioHeader walletAddress={walletAddress} isLoading />
         <TabBar
           tabs={tabs}
           defaultIndex={tabs.findIndex((item) => item.id === activeTab)}
