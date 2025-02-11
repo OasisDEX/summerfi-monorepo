@@ -29,6 +29,7 @@ import {
   type UsersActivity,
 } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
+import { type GetGlobalRebalancesQuery } from '@summerfi/sdk-client'
 import { type IToken, TransactionType } from '@summerfi/sdk-common'
 
 import { detailsLinks } from '@/components/layout/VaultOpenView/mocks'
@@ -333,7 +334,8 @@ export const VaultOpenViewComponent = ({
       : sidebarProps
 
   // needed due to type duality
-  const rebalancesList = `rebalances` in vault ? vault.rebalances : []
+  const rebalancesList =
+    `rebalances` in vault ? (vault.rebalances as GetGlobalRebalancesQuery['rebalances']) : []
 
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
