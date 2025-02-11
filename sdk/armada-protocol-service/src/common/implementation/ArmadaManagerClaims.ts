@@ -527,17 +527,17 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     //   }),
     // )
 
-    // await Promise.all(requests)
+    await Promise.all(requests)
+
+    if (multicallArgs.length === 0) {
+      return undefined
+    }
 
     const admiralsQuartersAddress = getDeployedContractAddress({
       chainInfo: params.chainInfo,
       contractCategory: 'core',
       contractName: 'admiralsQuarters',
     })
-
-    if (multicallArgs.length === 0) {
-      return undefined
-    }
 
     const multicallCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
