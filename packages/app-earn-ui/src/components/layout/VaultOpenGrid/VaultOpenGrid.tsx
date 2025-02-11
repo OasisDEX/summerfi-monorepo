@@ -118,7 +118,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
               <VaultTitleWithRisk
                 symbol={getDisplayToken(vault.inputToken.symbol)}
                 // TODO: fill data
-                risk={vault.customFields?.risk ?? 'medium'}
+                risk={vault.customFields?.risk ?? 'lower'}
                 networkName={vault.protocol.network}
               />
             </Dropdown>

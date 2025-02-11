@@ -92,7 +92,7 @@ export const PortfolioPosition = ({
           <div style={{ width: '100%' }}>
             <VaultTitleWithRisk
               symbol={getDisplayToken(inputToken.symbol)}
-              risk={customFields?.risk ?? 'medium'}
+              risk={customFields?.risk ?? 'lower'}
               networkName={protocol.network}
               titleVariant="h3"
             />

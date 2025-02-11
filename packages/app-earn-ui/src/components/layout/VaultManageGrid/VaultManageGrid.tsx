@@ -132,7 +132,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
             >
               <VaultTitleWithRisk
                 symbol={getDisplayToken(vault.inputToken.symbol)}
-                risk={vault.customFields?.risk ?? 'medium'}
+                risk={vault.customFields?.risk ?? 'lower'}
                 networkName={vault.protocol.network}
               />
             </Dropdown>

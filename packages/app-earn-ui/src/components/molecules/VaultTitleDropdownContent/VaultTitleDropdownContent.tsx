@@ -39,9 +39,9 @@ export const VaultTitleDropdownContent: FC<VaultDropdownContentProps> = ({ vault
       <Text
         as="p"
         variant="p4semi"
-        style={{ color: riskColors[vault.customFields?.risk ?? 'medium'] }}
+        style={{ color: riskColors[vault.customFields?.risk ?? 'lower'] }}
       >
-        {capitalize(vault.customFields?.risk ?? 'medium')} risk
+        {capitalize(vault.customFields?.risk ?? 'lower')} risk
       </Text>
     </div>
   </Link>
