@@ -51,6 +51,7 @@ import { RebalancingActivity } from '@/features/rebalance-activity/components/Re
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
+import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
@@ -366,6 +367,7 @@ export const VaultManageViewComponent = ({
         vault={vault}
         vaults={vaults}
         position={position}
+        onRefresh={revalidatePositionData}
         viewWalletAddress={viewWalletAddress}
         connectedWalletAddress={user?.address}
         displaySimulationGraph={displaySimulationGraph}

@@ -2,13 +2,20 @@
 
 import { type FC, type ReactNode, useEffect, useState } from 'react'
 import { type SDKVaultishType, type SDKVaultsListType } from '@summerfi/app-types'
-import { formatCryptoBalance, formatDecimalAsPercent, ten } from '@summerfi/app-utils'
+import {
+  formatCryptoBalance,
+  formatDecimalAsPercent,
+  sdkNetworkToHumanNetwork,
+  ten,
+} from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
+import clsx from 'clsx'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 
 import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
 import { Box } from '@/components/atoms/Box/Box'
+import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
 import { DataBlock } from '@/components/molecules/DataBlock/DataBlock'
@@ -33,6 +40,7 @@ interface VaultOpenGridProps {
   isMobile?: boolean
   medianDefiYield?: number
   sumrPrice?: number
+  onRefresh?: (chainName?: string, vaultId?: string, walletAddress?: string) => void
 }
 
 export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
@@ -45,7 +53,9 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   isMobile,
   medianDefiYield,
   sumrPrice,
+  onRefresh,
 }) => {
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const [displaySimulationGraphStaggered, setDisplaySimulationGraphStaggered] =
     useState(displaySimulationGraph)
 
@@ -88,6 +98,14 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
     vault.totalValueLockedUSD,
   )
 
+  const handleUserRefresh = () => {
+    onRefresh?.(sdkNetworkToHumanNetwork(vault.protocol.network), vault.id)
+    setIsRefreshing(true)
+    setTimeout(() => {
+      setIsRefreshing(false)
+    }, 5000)
+  }
+
   return (
     <>
       <div className={vaultOpenGridStyles.vaultOpenGridBreadcrumbsWrapper}>
@@ -100,6 +118,14 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
           <Text as="span" variant="p3" color="white">
             {vault.customFields?.name ?? vault.id}
           </Text>
+          <div
+            onClick={handleUserRefresh}
+            className={clsx(vaultOpenGridStyles.refreshWrapper, {
+              [vaultOpenGridStyles.refreshing]: isRefreshing,
+            })}
+          >
+            <Icon iconName="refresh" size={16} />
+          </div>
         </div>
       </div>
       <div className={vaultOpenGridStyles.vaultOpenGridPositionWrapper}>

@@ -35,6 +35,7 @@ import { capitalize } from 'lodash-es'
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
+import { revalidateVaultsListData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { usePosition } from '@/hooks/use-position'
 import { useTokenBalances } from '@/hooks/use-tokens-balances'
@@ -114,7 +115,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
 
   const { position: positionExists, isLoading } = usePosition({
     chainId: subgraphNetworkToSDKId(vaultData.protocol.network),
-    vaultId: getUniqueVaultId(vaultData),
+    vaultId: vaultData.id,
     onlyActive: true,
   })
 
@@ -260,6 +261,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
       networksList={vaultsNetworksList}
       selectedNetwork={selectedNetworkOption}
       onChangeNetwork={handleChangeNetwork}
+      onRefresh={revalidateVaultsListData}
       topContent={
         <SimpleGrid
           columns={isMobile ? 1 : 3}

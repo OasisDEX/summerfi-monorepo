@@ -21,7 +21,7 @@ import clsx from 'clsx'
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
 import { transakNetworkOptions } from '@/features/transak/consts'
 import { type TransakNetworkOption } from '@/features/transak/types'
-import { revalidateUser } from '@/helpers/revalidate-user'
+import { revalidateUser } from '@/helpers/revalidation-handlers'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './PortfolioHeader.module.scss'

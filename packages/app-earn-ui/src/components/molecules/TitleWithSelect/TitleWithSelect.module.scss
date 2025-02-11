@@ -1,10 +1,29 @@
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .titleWithSelectWrapper {
   display: flex;
   flex-direction: column;
+
   .titleLine {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+  }
+}
+
+.refreshing {
+  svg {
+    opacity: 1;
+    animation: rotate 1s linear infinite;
+    color: var(--earn-protocol-primary-100);
   }
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { type ReactNode } from 'react'
+import { type ReactNode, useState } from 'react'
 import { type DropdownOption, type DropdownRawOption } from '@summerfi/app-types'
 import Link from 'next/link'
 
@@ -20,6 +20,7 @@ type VaultGridProps = {
   onChangeNetwork: (selected: DropdownRawOption) => void
   selectedNetwork?: DropdownOption
   isMobile?: boolean
+  onRefresh?: () => void
 }
 
 export const VaultGrid = ({
@@ -30,7 +31,17 @@ export const VaultGrid = ({
   selectedNetwork,
   onChangeNetwork,
   isMobile,
+  onRefresh,
 }: VaultGridProps) => {
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  const handleUserRefresh = () => {
+    onRefresh?.()
+    setIsRefreshing(true)
+    setTimeout(() => {
+      setIsRefreshing(false)
+    }, 5000)
+  }
+
   return (
     <div className={vaultGridStyles.vaultGridWrapper}>
       <div className={vaultGridStyles.vaultGridHeaderWrapper}>
@@ -39,6 +50,8 @@ export const VaultGrid = ({
           options={networksList}
           onChangeNetwork={onChangeNetwork}
           selected={selectedNetwork}
+          onRefresh={handleUserRefresh}
+          isRefreshing={isRefreshing}
         />
         <Link
           href="https://blog.summer.fi/say-hello-to-the-lazy-summer-protocol"
