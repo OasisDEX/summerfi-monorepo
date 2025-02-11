@@ -118,10 +118,10 @@ export const HistoricalChart = ({
             scale="linear"
             domain={[
               (dataMin: number) => {
-                return Math.max(dataMin - 5, 0)
+                return Math.max(dataMin - 2, 0)
               },
               (dataMax: number) => {
-                return Math.min(dataMax + 5, dataMax * 2)
+                return Math.min(dataMax + 2, dataMax * 2)
               },
             ]}
             hide={chartHidden}
