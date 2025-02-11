@@ -298,9 +298,9 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     }
   }
 
-  async getClaimableAggregateRewards(
-    params: Parameters<IArmadaManagerClaims['getClaimableAggregateRewards']>[0],
-  ): ReturnType<IArmadaManagerClaims['getClaimableAggregateRewards']> {
+  async getClaimableAggregatedRewards(
+    params: Parameters<IArmadaManagerClaims['getClaimableAggregatedRewards']>[0],
+  ): ReturnType<IArmadaManagerClaims['getClaimableAggregatedRewards']> {
     const [merkleDistributionRewards, voteDelegationRewards] = await Promise.all([
       this.getMerkleDistributionRewards(params.user),
       this.getVoteDelegationRewards(params.user),
