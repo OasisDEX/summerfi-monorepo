@@ -1,13 +1,13 @@
-import { Text } from '@summerfi/app-earn-ui'
+import { Text } from '@/components/atoms/Text/Text'
 
-export const SumrPageFootnote = () => {
+export const HighestQualityYieldsDisclaimer = () => {
   return (
     <Text
       variant="p2"
       style={{
         color: 'var(--earn-protocol-secondary-70)',
-        marginTop: 'var(--general-space-64)',
         textAlign: 'center',
+        marginBottom: 'var(--general-space-128)',
       }}
     >
       <span style={{ position: 'relative' }}>

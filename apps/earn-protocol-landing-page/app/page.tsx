@@ -1,4 +1,4 @@
-import { BigGradientBox } from '@summerfi/app-earn-ui'
+import { BigGradientBox, HighestQualityYieldsDisclaimer } from '@summerfi/app-earn-ui'
 import { type IconNamesList } from '@summerfi/app-types'
 import { parseServerResponseToClient } from '@summerfi/app-utils'
 
@@ -157,6 +157,7 @@ export default async function HomePage() {
         <Audits />
         <BuildBySummerFi />
         <LandingFaqSection />
+        <HighestQualityYieldsDisclaimer />
       </MarketingPoints>
     </div>
   )
