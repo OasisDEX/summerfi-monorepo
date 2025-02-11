@@ -29,7 +29,7 @@ export const BuildBySummerFi = () => {
       </div>
       <div className={buildBySummerFiStyles.buildBySummerFiDescription}>
         <Text variant="p1" as="p">
-          With Summer, effortlessly earn the best yields and grow your capital faster. We
+          With Summer.fi, effortlessly earn the best yields and grow your capital faster. We
           automatically rebalance your assets to top protocols, maximizing your returns.
         </Text>
       </div>
