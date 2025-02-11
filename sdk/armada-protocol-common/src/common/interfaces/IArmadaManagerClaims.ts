@@ -31,12 +31,24 @@ export interface IArmadaManagerClaims {
 
   /**
    * @name getAggregatedRewards
-   * @description Returns the amount a user is eligible to claim cross-chain
+   * @description Returns the total amount a user is eligible to claim cross-chain
    * @param params.user The user
    * @returns Promise<number>
    * @throws Error
    */
   getAggregatedRewards: (params: { user: IUser }) => Promise<{
+    total: bigint
+    perChain: Record<number, bigint>
+  }>
+
+  /**
+   * @name getClaimableAggregateRewards
+   * @description Returns the claimable amount a user is eligible to claim cross-chain
+   * @param params.user The user
+   * @returns Promise<number>
+   * @throws Error
+   */
+  getClaimableAggregateRewards: (params: { user: IUser }) => Promise<{
     total: bigint
     perChain: Record<number, bigint>
   }>
