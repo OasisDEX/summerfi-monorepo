@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import {
   ControlsDepositWithdraw,
   Expander,
+  getDisplayToken,
   Sidebar,
   SidebarFootnote,
   sidebarFootnote,
@@ -291,7 +292,7 @@ export const VaultOpenViewComponent = ({
         <SidebarMobileHeader
           type="open"
           amount={estimatedEarnings}
-          token={vault.inputToken.symbol}
+          token={getDisplayToken(vault.inputToken.symbol)}
           isLoadingForecast={isLoadingForecast}
         />
       ) : undefined,

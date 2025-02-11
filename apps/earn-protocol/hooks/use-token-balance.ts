@@ -62,9 +62,9 @@ export const useTokenBalance = ({
           }),
     [sdk, chainId],
   )
-
-  useEffect(() => {
-    const fetchTokenBalance = async (address: string) => {
+  const fetchTokenBalance = useCallback(
+    async (address: string) => {
+      setTokenBalance(undefined)
       setTokenBalanceLoading(true)
 
       const tokenRequests: Promise<IToken | undefined>[] = [getTokenRequest(vaultTokenSymbol)]
@@ -78,8 +78,6 @@ export const useTokenBalance = ({
         IToken | undefined,
       ]
 
-      setVaultToken(fetchedVaultToken)
-
       if (tokenSymbol === 'ETH') {
         setToken(fetchedToken)
 
@@ -88,6 +86,10 @@ export const useTokenBalance = ({
             address: address as HexData,
           })
           .then((val) => {
+            if (skip) {
+              return
+            }
+            setVaultToken(fetchedVaultToken)
             setTokenBalanceLoading(false)
             setTokenBalance(new BigNumber(val.toString()).div(new BigNumber(ten).pow(18)))
           })
@@ -109,12 +111,15 @@ export const useTokenBalance = ({
             args: [address as HexData],
           })
           .then((val) => {
-            setTokenBalanceLoading(false)
+            if (skip) {
+              return
+            }
             setTokenBalance(
               new BigNumber(val.toString()).div(
                 new BigNumber(ten).pow(fetchedOrVaultToken.decimals),
               ),
             )
+            setTokenBalanceLoading(false)
           })
           .catch((err) => {
             setTokenBalanceLoading(false)
@@ -122,8 +127,11 @@ export const useTokenBalance = ({
             console.error('Error reading token balance', err)
           })
       }
-    }
+    },
+    [skip, getTokenRequest, vaultTokenSymbol, tokenSymbol, publicClient],
+  )
 
+  useEffect(() => {
     if (!skip && walletAddress) {
       fetchTokenBalance(walletAddress).catch((err) => {
         // eslint-disable-next-line no-console
@@ -134,7 +142,16 @@ export const useTokenBalance = ({
     } else {
       setTokenBalanceLoading(false)
     }
-  }, [sdk, walletAddress, tokenSymbol, vaultTokenSymbol, publicClient, skip, chainId])
+  }, [
+    sdk,
+    walletAddress,
+    tokenSymbol,
+    vaultTokenSymbol,
+    publicClient,
+    skip,
+    chainId,
+    fetchTokenBalance,
+  ])
 
   return {
     vaultToken,

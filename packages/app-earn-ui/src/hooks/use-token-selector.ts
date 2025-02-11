@@ -8,6 +8,8 @@ import {
   type TokenSymbolsList,
 } from '@summerfi/app-types'
 
+import { getDisplayToken } from '@/helpers/get-display-token'
+
 type TokenSelectorProps = {
   vault: SDKVaultishType
   chainId: number
@@ -65,20 +67,26 @@ export const useTokenSelector = ({ vault, chainId }: TokenSelectorProps) => {
     }
 
     return (
-      tokenOptions.find((option) => option.value === vault.inputToken.symbol) ?? tokenOptions[0]
+      tokenOptions.find((option) => option.value === getDisplayToken(vault.inputToken.symbol)) ??
+      tokenOptions[0]
     )
   })
 
   // when changing tokenOptions validate the selected token
   useEffect(() => {
     setSelectedTokenOption((selectedOption) => {
-      return tokenOptions.find((option) => option.value === selectedOption.value) ?? tokenOptions[0]
+      return (
+        tokenOptions.find((option) => option.value === getDisplayToken(selectedOption.value)) ??
+        tokenOptions[0]
+      )
     })
-  }, [tokenOptions, vault.inputToken.symbol])
+  }, [tokenOptions])
 
   // when changing vaults on the vaults list update the token
   useEffect(() => {
-    const nextVaultToken = tokenOptions.find((option) => option.value === vault.inputToken.symbol)
+    const nextVaultToken = tokenOptions.find(
+      (option) => option.value === getDisplayToken(vault.inputToken.symbol),
+    )
 
     if (nextVaultToken) {
       setSelectedTokenOption(nextVaultToken)

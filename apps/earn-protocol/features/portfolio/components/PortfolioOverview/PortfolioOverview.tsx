@@ -2,6 +2,7 @@ import {
   Button,
   Card,
   DataBlock,
+  getDisplayToken,
   getPositionValues,
   PortfolioPosition,
   SUMR_CAP,
@@ -137,7 +138,9 @@ export const PortfolioOverview = ({
                   <PositionHistoricalChart
                     chartData={position.vaultData.customFields?.historyChartData}
                     position={position}
-                    tokenSymbol={position.vaultData.inputToken.symbol as TokenSymbolsList}
+                    tokenSymbol={
+                      getDisplayToken(position.vaultData.inputToken.symbol) as TokenSymbolsList
+                    }
                   />
                 }
                 sumrPrice={estimatedSumrPrice}
