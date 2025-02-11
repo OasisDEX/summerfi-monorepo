@@ -3,24 +3,15 @@ import { useEffect, useMemo, useState } from 'react'
 import {
   type DropdownOption,
   type DropdownRawOption,
-  SDKChainId,
   type SDKVaultishType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
 
+import { getSwapTokens } from '@/constants/swap-tokens'
+
 type TokenSelectorProps = {
   vault: SDKVaultishType
   chainId: number
-}
-
-// For swap testing purposes only adding testToken to dropdown
-const testTokens: { [key: number]: TokenSymbolsList[] | undefined } = {
-  // base
-  [SDKChainId.BASE]: ['USDC', 'USDBC', 'WSTETH', 'ETH'],
-  // arbitrum
-  [SDKChainId.ARBITRUM]: ['USDC', 'WBTC', 'WSTETH', 'ETH'],
-  // mainnet
-  [SDKChainId.MAINNET]: ['ETH', 'USDC', 'WBTC', 'WSTETH'],
 }
 
 /**
@@ -44,7 +35,7 @@ export const useTokenSelector = ({ vault, chainId }: TokenSelectorProps) => {
       })),
     ]
 
-    const tokens = testTokens[chainId] ?? []
+    const tokens = getSwapTokens(chainId)
 
     tokens.forEach((token) => {
       if (token !== vault.inputToken.symbol) {
