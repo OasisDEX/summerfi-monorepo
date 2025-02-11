@@ -1080,7 +1080,9 @@ export class ArmadaManager implements IArmadaManager {
   }): Promise<{
     calldata: HexData
   }> {
-    const claimRewards = params.claimRewards ?? true
+    // const claimRewards = params.claimRewards ?? true
+    // FIXME: hardcoded to false because fleet rewards manager was not whitleilsted
+    const claimRewards = false
 
     const calldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
