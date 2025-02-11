@@ -879,7 +879,7 @@ export class ArmadaManager implements IArmadaManager {
           owner: params.user.wallet.address,
         })
 
-        const withdrawAmount = await this._previewRedeem({
+        const fleetAssetsWithdrawAmount = await this._previewRedeem({
           vaultId: params.vaultId,
           shares: beforeFleetShares,
         })
@@ -904,20 +904,23 @@ export class ArmadaManager implements IArmadaManager {
           reminderShares: reminderShares.toString(),
         })
         LoggingService.debug('total shares to withdraw', {
-          fleetAssets: withdrawAmount.toString(),
+          fleetAssets: fleetAssetsWithdrawAmount.toString(),
           reminderAssets: reminderAssets.toString(),
-          totalAssets: withdrawAmount.add(reminderAssets).toString(),
+          totalAssets: fleetAssetsWithdrawAmount.add(reminderAssets).toString(),
+          withdrawAmount: withdrawAmount.toString(),
         })
 
         const [exitWithdrawMulticall, unstakeAndWithdrawCall, priceImpact] = await Promise.all([
           this._getExitWithdrawMulticall({
             vaultId: params.vaultId,
             slippage: params.slippage,
-            amount: withdrawAmount,
+            amount: fleetAssetsWithdrawAmount,
             // if withdraw is WETH and unwrapping to ETH,
             // we need to withdraw WETH for later deposit & unwrap operation
             swapToToken:
-              withdrawAmount.token.symbol === 'WETH' && toEth ? withdrawAmount.token : swapToToken,
+              fleetAssetsWithdrawAmount.token.symbol === 'WETH' && toEth
+                ? fleetAssetsWithdrawAmount.token
+                : swapToToken,
             shouldSwap,
             toEth,
           }),
