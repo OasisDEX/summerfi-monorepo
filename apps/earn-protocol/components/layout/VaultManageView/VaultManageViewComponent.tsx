@@ -54,7 +54,6 @@ import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
-import { useRedirectToPositionView } from '@/hooks/use-redirect-to-position'
 import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
 import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
 import { useTokenBalance } from '@/hooks/use-token-balance'
@@ -171,8 +170,6 @@ export const VaultManageViewComponent = ({
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-
-  useRedirectToPositionView({ vault, position })
 
   const { amountDisplayUSDWithSwap, rawToTokenAmount } = useAmountWithSwap({
     vault,
