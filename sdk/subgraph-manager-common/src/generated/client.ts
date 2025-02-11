@@ -7496,6 +7496,7 @@ export type Vault = {
   aprValues: Array<Scalars['BigDecimal']['output']>;
   arks: Array<Ark>;
   arksArray: Array<Ark>;
+  bufferArk?: Maybe<Ark>;
   /**  APR based on revenue between last two snapshots  */
   calculatedApr: Scalars['BigDecimal']['output'];
   /**  Creation block number  */
@@ -8928,6 +8929,27 @@ export type Vault_Filter = {
   arksArray_not_contains?: InputMaybe<Array<Scalars['String']['input']>>;
   arksArray_not_contains_nocase?: InputMaybe<Array<Scalars['String']['input']>>;
   arks_?: InputMaybe<Ark_Filter>;
+  bufferArk?: InputMaybe<Scalars['String']['input']>;
+  bufferArk_?: InputMaybe<Ark_Filter>;
+  bufferArk_contains?: InputMaybe<Scalars['String']['input']>;
+  bufferArk_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  bufferArk_ends_with?: InputMaybe<Scalars['String']['input']>;
+  bufferArk_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  bufferArk_gt?: InputMaybe<Scalars['String']['input']>;
+  bufferArk_gte?: InputMaybe<Scalars['String']['input']>;
+  bufferArk_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  bufferArk_lt?: InputMaybe<Scalars['String']['input']>;
+  bufferArk_lte?: InputMaybe<Scalars['String']['input']>;
+  bufferArk_not?: InputMaybe<Scalars['String']['input']>;
+  bufferArk_not_contains?: InputMaybe<Scalars['String']['input']>;
+  bufferArk_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  bufferArk_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  bufferArk_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  bufferArk_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  bufferArk_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  bufferArk_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  bufferArk_starts_with?: InputMaybe<Scalars['String']['input']>;
+  bufferArk_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   calculatedApr?: InputMaybe<Scalars['BigDecimal']['input']>;
   calculatedApr_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   calculatedApr_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -9315,6 +9337,29 @@ export enum Vault_OrderBy {
   AprValues = 'aprValues',
   Arks = 'arks',
   ArksArray = 'arksArray',
+  BufferArk = 'bufferArk',
+  BufferArkCumulativeDeposits = 'bufferArk___cumulativeDeposits',
+  BufferArkCumulativeWithdrawals = 'bufferArk___cumulativeWithdrawals',
+  BufferArkLastUpdateInputTokenBalance = 'bufferArk___lastUpdateInputTokenBalance',
+  BufferArkCalculatedApr = 'bufferArk__calculatedApr',
+  BufferArkCreatedBlockNumber = 'bufferArk__createdBlockNumber',
+  BufferArkCreatedTimestamp = 'bufferArk__createdTimestamp',
+  BufferArkCumulativeEarnings = 'bufferArk__cumulativeEarnings',
+  BufferArkCumulativeProtocolSideRevenueUsd = 'bufferArk__cumulativeProtocolSideRevenueUSD',
+  BufferArkCumulativeSupplySideRevenueUsd = 'bufferArk__cumulativeSupplySideRevenueUSD',
+  BufferArkCumulativeTotalRevenueUsd = 'bufferArk__cumulativeTotalRevenueUSD',
+  BufferArkDepositCap = 'bufferArk__depositCap',
+  BufferArkDepositLimit = 'bufferArk__depositLimit',
+  BufferArkDetails = 'bufferArk__details',
+  BufferArkId = 'bufferArk__id',
+  BufferArkInputTokenBalance = 'bufferArk__inputTokenBalance',
+  BufferArkLastUpdateTimestamp = 'bufferArk__lastUpdateTimestamp',
+  BufferArkMaxDepositPercentageOfTvl = 'bufferArk__maxDepositPercentageOfTVL',
+  BufferArkMaxRebalanceInflow = 'bufferArk__maxRebalanceInflow',
+  BufferArkMaxRebalanceOutflow = 'bufferArk__maxRebalanceOutflow',
+  BufferArkName = 'bufferArk__name',
+  BufferArkRequiresKeeperData = 'bufferArk__requiresKeeperData',
+  BufferArkTotalValueLockedUsd = 'bufferArk__totalValueLockedUSD',
   CalculatedApr = 'calculatedApr',
   CreatedBlockNumber = 'createdBlockNumber',
   CreatedTimestamp = 'createdTimestamp',
