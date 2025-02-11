@@ -229,14 +229,14 @@ export interface IArmadaManagerUsersClient {
   }>
 
   /**
-   * @method getClaimableAggregateRewards
+   * @method getClaimableAggregatedRewards
    * @description Returns the claimable aggregated rewards of a user in a Fleet
    *
    * @param user Address of the user to check the rewards for
    *
    * @returns The claimable aggregated rewards of the user in the Fleet
    */
-  getClaimableAggregateRewards(params: { user: IUser }): Promise<{
+  getClaimableAggregatedRewards(params: { user: IUser }): Promise<{
     total: bigint
     perChain: Record<number, bigint>
   }>

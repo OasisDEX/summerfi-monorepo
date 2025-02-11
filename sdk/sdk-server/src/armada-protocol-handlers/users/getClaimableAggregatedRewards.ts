@@ -9,5 +9,5 @@ export const getClaimableAggregatedRewards = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.claims.getClaimableAggregateRewards(opts.input)
+    return opts.ctx.armadaManager.claims.getClaimableAggregatedRewards(opts.input)
   })

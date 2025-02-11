@@ -126,9 +126,9 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getAggregatedRewards.query(params)
   }
 
-  async getClaimableAggregateRewards(
-    params: Parameters<IArmadaManagerUsersClient['getClaimableAggregateRewards']>[0],
-  ): ReturnType<IArmadaManagerUsersClient['getClaimableAggregateRewards']> {
+  async getClaimableAggregatedRewards(
+    params: Parameters<IArmadaManagerUsersClient['getClaimableAggregatedRewards']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getClaimableAggregatedRewards']> {
     return this.rpcClient.armada.users.getClaimableAggregatedRewards.query(params)
   }
 
