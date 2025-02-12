@@ -1,6 +1,6 @@
 import { type FC } from 'react'
 import { parseQueryStringServerSide } from '@summerfi/app-utils'
-import { type ReadonlyURLSearchParams, redirect } from 'next/navigation'
+import { type ReadonlyURLSearchParams } from 'next/navigation'
 
 import { getUsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'

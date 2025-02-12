@@ -1,6 +1,5 @@
 import { type SDKNetwork } from '@summerfi/app-types'
 import { humanNetworktoSDKNetwork, parseServerResponseToClient } from '@summerfi/app-utils'
-import { redirect } from 'next/navigation'
 
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
