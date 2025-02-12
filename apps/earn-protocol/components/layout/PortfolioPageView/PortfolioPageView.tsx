@@ -10,7 +10,6 @@ import {
 
 import { type PortfolioPositionsList } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
-import { isPreLaunchVersion } from '@/constants/is-pre-launch-version'
 import { claimDelegateReducer, claimDelegateState } from '@/features/claim-and-delegate/state'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { PortfolioHeader } from '@/features/portfolio/components/PortfolioHeader/PortfolioHeader'
@@ -52,7 +51,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   const ownerView = walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
   const [activeTab, updateTab] = useTabStateQuery({
     tabs: PortfolioTabs,
-    defaultTab: isPreLaunchVersion ? PortfolioTabs.REWARDS : PortfolioTabs.OVERVIEW,
+    defaultTab: PortfolioTabs.OVERVIEW,
   })
   const [state, dispatch] = useReducer(claimDelegateReducer, {
     ...claimDelegateState,
@@ -79,47 +78,43 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   const overallSumr = calculateOverallSumr(rewardsData)
 
   const tabs = [
-    ...(isPreLaunchVersion
-      ? []
-      : [
-          {
-            id: PortfolioTabs.OVERVIEW,
-            label: 'Overview',
-            content: (
-              <PortfolioOverview
-                positions={positions}
-                vaultsList={vaultsList}
-                rewardsData={rewardsData}
-              />
-            ),
-          },
-        ]),
+    ...[
+      {
+        id: PortfolioTabs.OVERVIEW,
+        label: 'Overview',
+        content: (
+          <PortfolioOverview
+            positions={positions}
+            vaultsList={vaultsList}
+            rewardsData={rewardsData}
+          />
+        ),
+      },
+    ],
     {
       id: PortfolioTabs.WALLET,
       label: 'Wallet',
       content: <PortfolioWallet walletData={walletData} vaultsList={vaultsList} />,
     },
-    ...(isPreLaunchVersion
-      ? []
-      : [
-          {
-            id: PortfolioTabs.YOUR_ACTIVITY,
-            label: 'Your Activity',
-            content: <PortfolioYourActivity userActivity={userActivity} />,
-          },
-          {
-            id: PortfolioTabs.REBALANCE_ACTIVITY,
-            label: 'Rebalance Activity',
-            content: (
-              <PortfolioRebalanceActivity
-                rebalancesList={rebalancesList}
-                walletAddress={walletAddress}
-                totalRebalances={totalRebalances}
-                vaultsList={vaultsList}
-              />
-            ),
-          },
-        ]),
+    ...[
+      {
+        id: PortfolioTabs.YOUR_ACTIVITY,
+        label: 'Your Activity',
+        content: <PortfolioYourActivity userActivity={userActivity} />,
+      },
+      {
+        id: PortfolioTabs.REBALANCE_ACTIVITY,
+        label: 'Rebalance Activity',
+        content: (
+          <PortfolioRebalanceActivity
+            rebalancesList={rebalancesList}
+            walletAddress={walletAddress}
+            totalRebalances={totalRebalances}
+            vaultsList={vaultsList}
+          />
+        ),
+      },
+    ],
     {
       id: PortfolioTabs.REWARDS,
       label: 'SUMR Rewards',

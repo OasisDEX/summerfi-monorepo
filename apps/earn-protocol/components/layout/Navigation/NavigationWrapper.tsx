@@ -17,7 +17,7 @@ const WalletLabel = dynamic(() => import('../../molecules/WalletLabel/WalletLabe
   ),
 })
 
-export const NavigationWrapper: FC<{ isPreLaunchVersion?: boolean }> = ({ isPreLaunchVersion }) => {
+export const NavigationWrapper: FC = () => {
   const currentPath = usePathname()
   const { userWalletAddress } = useUserWallet()
 
@@ -29,18 +29,13 @@ export const NavigationWrapper: FC<{ isPreLaunchVersion?: boolean }> = ({ isPreL
       links={getNavigationItems({
         userWalletAddress,
         isEarnApp: true,
-        isPreLaunchVersion,
       })}
       walletConnectionComponent={<WalletLabel />}
       configComponent={<NavConfig />}
-      onLogoClick={
-        !isPreLaunchVersion
-          ? () => {
-              // because router will use base path...
-              window.location.replace('/')
-            }
-          : undefined
-      }
+      onLogoClick={() => {
+        // because router will use base path...
+        window.location.replace('/')
+      }}
     />
   )
 }
