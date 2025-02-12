@@ -83,7 +83,7 @@ export const InputWithDropdown: FC<InputWithDropdownProps> = ({
         <Dropdown
           options={options.map((item) => ({
             value: item.value,
-            content: <Content option={item} />,
+            content: <Content key={item.label} option={item} />,
           }))}
           dropdownValue={{
             value: dropdownValue.value,

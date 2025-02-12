@@ -40,7 +40,7 @@ export async function getPositionHistory({ network, address, vault }: GetPositio
     throw new Error(`getPositionHistory: No endpoint found for network: ${network}`)
   }
 
-  const networkGraphQlClient = new GraphQLClient(subgraphsMap[SDKNetwork.ArbitrumOne], {
+  const networkGraphQlClient = new GraphQLClient(subgraphsMap[network], {
     fetch: customFetchCache,
   })
   const request = await networkGraphQlClient.request<GetPositionHistoryQuery>(

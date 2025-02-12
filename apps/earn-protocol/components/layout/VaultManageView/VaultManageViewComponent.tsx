@@ -4,7 +4,9 @@ import {
   Card,
   ControlsDepositWithdraw,
   Expander,
+  getDisplayToken,
   getPositionValues,
+  getUniqueVaultId,
   NonOwnerPositionBanner,
   Sidebar,
   SidebarFootnote,
@@ -32,7 +34,7 @@ import {
   type UsersActivity,
 } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
-import { type IArmadaPosition } from '@summerfi/sdk-client'
+import { type GetGlobalRebalancesQuery, type IArmadaPosition } from '@summerfi/sdk-client'
 import { TransactionType } from '@summerfi/sdk-common'
 
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
@@ -50,10 +52,10 @@ import { RebalancingActivity } from '@/features/rebalance-activity/components/Re
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
+import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
-import { useRedirectToPositionView } from '@/hooks/use-redirect-to-position'
 import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
 import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
 import { useTokenBalance } from '@/hooks/use-token-balance'
@@ -171,8 +173,6 @@ export const VaultManageViewComponent = ({
   const { isMobile } = useMobileCheck(deviceType)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
-  useRedirectToPositionView({ vault, position })
-
   const { amountDisplayUSDWithSwap, rawToTokenAmount } = useAmountWithSwap({
     vault,
     vaultChainId,
@@ -281,7 +281,7 @@ export const VaultManageViewComponent = ({
       tokenSymbol={
         {
           [TransactionAction.DEPOSIT]: selectedTokenOption.value,
-          [TransactionAction.WITHDRAW]: vault.inputToken.symbol,
+          [TransactionAction.WITHDRAW]: getDisplayToken(vault.inputToken.symbol),
         }[transactionType]
       }
       tokenBalance={
@@ -357,7 +357,8 @@ export const VaultManageViewComponent = ({
       : sidebarProps
 
   // needed due to type duality
-  const rebalancesList = `rebalances` in vault ? vault.rebalances : []
+  const rebalancesList =
+    `rebalances` in vault ? (vault.rebalances as GetGlobalRebalancesQuery['rebalances']) : []
 
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
@@ -368,6 +369,7 @@ export const VaultManageViewComponent = ({
         vault={vault}
         vaults={vaults}
         position={position}
+        onRefresh={revalidatePositionData}
         viewWalletAddress={viewWalletAddress}
         connectedWalletAddress={user?.address}
         displaySimulationGraph={displaySimulationGraph}
@@ -392,7 +394,7 @@ export const VaultManageViewComponent = ({
             >
               <PositionPerformanceChart
                 chartData={vault.customFields?.performanceChartData}
-                inputToken={vault.inputToken.symbol}
+                inputToken={getDisplayToken(vault.inputToken.symbol)}
               />
             </Expander>
           </div>,
@@ -479,7 +481,7 @@ export const VaultManageViewComponent = ({
             >
               <RebalancingActivity
                 rebalancesList={rebalancesList}
-                vaultId={vault.id}
+                vaultId={getUniqueVaultId(vault)}
                 totalRebalances={Number(vault.rebalanceCount)}
                 vaultsList={vaults}
               />
@@ -494,7 +496,7 @@ export const VaultManageViewComponent = ({
               <UserActivity
                 userActivity={userActivity}
                 topDepositors={topDepositors}
-                vaultId={vault.id}
+                vaultId={getUniqueVaultId(vault)}
                 page="manage"
               />
             </Expander>

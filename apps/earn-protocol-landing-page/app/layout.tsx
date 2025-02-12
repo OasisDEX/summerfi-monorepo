@@ -17,9 +17,9 @@ import { LandingMasterPage } from '@/components/layout/LandingMasterPage/Landing
 import { fontInter } from '@/helpers/fonts'
 
 export const metadata: Metadata = {
-  title: 'Summer.fi - The home of $SUMR and curated DeFi Yields',
+  title: 'The home of the Lazy Summer Protocol',
   description:
-    'Claim, Delegate and Stake your $SUMR, the governance token for Lazy Summer Protocol.',
+    'Get effortless access to crypto’s best DeFi yields. Continually rebalanced by AI powered Keepers to earn you more while saving you time and reducing costs.',
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

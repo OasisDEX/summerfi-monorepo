@@ -8,8 +8,14 @@ import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 import { REVALIDATION_TIMES } from '@/constants/revalidations'
 
 export interface SumrToClaimData {
-  total: number
-  perChain: { [key: number]: number }
+  aggregatedRewards: {
+    total: number
+    perChain: { [key: number]: number }
+  }
+  claimableAggregatedRewards: {
+    total: number
+    perChain: { [key: number]: number }
+  }
 }
 
 /**
@@ -34,14 +40,30 @@ export const getSumrToClaim = async ({
         user,
       })
 
+      const claimableAggregatedRewards =
+        await backendSDK.armada.users.getClaimableAggregatedRewards({
+          user,
+        })
+
       return {
-        total: Number(aggregatedRewards.total) / 10 ** 18,
-        perChain: Object.fromEntries(
-          Object.entries(aggregatedRewards.perChain).map(([chainId, amount]) => [
-            chainId,
-            Number(amount) / 10 ** 18,
-          ]),
-        ),
+        aggregatedRewards: {
+          total: Number(aggregatedRewards.total) / 10 ** 18,
+          perChain: Object.fromEntries(
+            Object.entries(aggregatedRewards.perChain).map(([chainId, amount]) => [
+              chainId,
+              Number(amount) / 10 ** 18,
+            ]),
+          ),
+        },
+        claimableAggregatedRewards: {
+          total: Number(claimableAggregatedRewards.total) / 10 ** 18,
+          perChain: Object.fromEntries(
+            Object.entries(claimableAggregatedRewards.perChain).map(([chainId, amount]) => [
+              chainId,
+              Number(amount) / 10 ** 18,
+            ]),
+          ),
+        },
       }
     },
     [walletAddress],

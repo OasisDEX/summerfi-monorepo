@@ -7,7 +7,7 @@ export const configFetcher = async function (): Promise<Partial<EarnAppConfigTyp
       headers: {
         'Content-Type': 'application/json',
       },
-      next: { tags: ['config'], revalidate: 60 },
+      next: { revalidate: 60 },
     })
     const data = await response.json()
 

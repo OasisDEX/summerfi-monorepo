@@ -2,6 +2,7 @@ import {
   Button,
   Card,
   DataBlock,
+  getDisplayToken,
   getPositionValues,
   PortfolioPosition,
   SUMR_CAP,
@@ -15,7 +16,9 @@ import Link from 'next/link'
 import { type PortfolioPositionsList } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
 import { PositionHistoricalChart } from '@/components/organisms/Charts/PositionHistoricalChart'
 import { isPreLaunchVersion } from '@/constants/is-pre-launch-version'
+import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
+import { calculateOverallSumr } from '@/helpers/calculate-overall-sumr'
 
 import portfolioOverviewStyles from './PortfolioOverview.module.scss'
 
@@ -44,10 +47,10 @@ import portfolioOverviewStyles from './PortfolioOverview.module.scss'
 
 const getDatablocks = ({
   totalSummerPortfolioUSD,
-  sumrTokenRewards,
+  overallSumr,
 }: {
   totalSummerPortfolioUSD: number
-  sumrTokenRewards: number
+  overallSumr: number
 }) => [
   {
     title: 'Total Summer.fi Portfolio',
@@ -57,7 +60,7 @@ const getDatablocks = ({
   },
   {
     title: 'SUMR Token Rewards',
-    value: `${formatCryptoBalance(sumrTokenRewards)} $SUMR`,
+    value: `${formatCryptoBalance(overallSumr)} $SUMR`,
   },
   {
     title: 'Available to Migrate',
@@ -75,13 +78,13 @@ const getDatablocks = ({
 type PortfolioOverviewProps = {
   vaultsList: SDKVaultsListType
   positions: PortfolioPositionsList[]
-  sumrTokenRewards: number
+  rewardsData: ClaimDelegateExternalData
 }
 
 export const PortfolioOverview = ({
   vaultsList,
   positions,
-  sumrTokenRewards,
+  rewardsData,
 }: PortfolioOverviewProps) => {
   const {
     state: { sumrNetApyConfig },
@@ -99,6 +102,8 @@ export const PortfolioOverview = ({
     0,
   )
 
+  const overallSumr = calculateOverallSumr(rewardsData)
+
   return (
     <div>
       <div
@@ -109,7 +114,7 @@ export const PortfolioOverview = ({
           flexWrap: 'wrap',
         }}
       >
-        {getDatablocks({ totalSummerPortfolioUSD, sumrTokenRewards }).map((item) => (
+        {getDatablocks({ totalSummerPortfolioUSD, overallSumr }).map((item) => (
           <Card
             key={item.title}
             style={{ flex: 1, background: item.gradient, minHeight: '142px' }}
@@ -137,7 +142,9 @@ export const PortfolioOverview = ({
                   <PositionHistoricalChart
                     chartData={position.vaultData.customFields?.historyChartData}
                     position={position}
-                    tokenSymbol={position.vaultData.inputToken.symbol as TokenSymbolsList}
+                    tokenSymbol={
+                      getDisplayToken(position.vaultData.inputToken.symbol) as TokenSymbolsList
+                    }
                   />
                 }
                 sumrPrice={estimatedSumrPrice}

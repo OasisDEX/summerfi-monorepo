@@ -43,7 +43,7 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
   const [sumrNetApyConfig] = useSumrNetApyConfig()
   const { openAuthModal } = useAuthModal()
   const assumedSumrPriceRaw = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
-  const rawSumr = Number(rewardsData.sumrToClaim.total)
+  const rawSumr = Number(rewardsData.sumrToClaim.claimableAggregatedRewards.total)
   const rawSumrUSD = rawSumr * assumedSumrPriceRaw
   const sumrAmount = formatCryptoBalance(rawSumr)
   const sumrAmountUSD = `$${formatFiatBalance(rawSumrUSD)}`
@@ -209,7 +209,7 @@ const YourTotalSumr: FC<YourTotalSumrProps> = ({ rewardsData }) => {
     Number(rewardsData.sumrBalances.total) +
     Number(rewardsData.sumrBalances.vested) +
     Number(rewardsData.sumrStakeDelegate.stakedAmount) +
-    Number(rewardsData.sumrToClaim.total)
+    Number(rewardsData.sumrToClaim.aggregatedRewards.total)
 
   const rawTotalSumrUSD = rawTotalSumr * assumedSumrPriceRaw
 
@@ -373,7 +373,7 @@ const YourRays: FC<YourRaysProps> = ({ totalRays }) => {
         valueSize: 'large',
       }}
       actionable={
-        <Link href="https://summer.fi/rays/leaderboard" target="_blank">
+        <Link href="https://pro.summer.fi/rays/leaderboard" target="_blank">
           <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
             Rays Leaderboard
           </Text>

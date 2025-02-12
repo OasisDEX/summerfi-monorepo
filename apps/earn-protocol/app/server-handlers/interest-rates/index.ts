@@ -80,12 +80,14 @@ export async function getInterestRates({ network, arksList }: GetInterestRatesPa
     throw new Error(`getInterestRates: No endpoint found for network: ${network}`)
   }
 
-  const arkNamesList = arksList.map((ark) =>
+  const filteredArksWithCapHigherThanZero = arksList.filter((ark) => Number(ark.depositCap) > 0)
+
+  const arkNamesList = filteredArksWithCapHigherThanZero.map((ark) =>
     ark.name ? ark.name : getArkProductId(ark) || 'NOT FOUND',
   )
 
   const response = await Promise.all(
-    arksList.map(async (ark) => {
+    filteredArksWithCapHigherThanZero.map(async (ark) => {
       const productId = getArkProductId(ark)
 
       if (productId === false) {
@@ -96,9 +98,7 @@ export async function getInterestRates({ network, arksList }: GetInterestRatesPa
         // Try primary source first
         const apiUrl = `${apiUrls[network]}?productId=${productId}`
 
-        const apiResponse = await fetch(apiUrl, {
-          next: { revalidate: REVALIDATION_TIMES.INTEREST_RATES },
-        })
+        const apiResponse = await fetch(apiUrl)
 
         if (!apiResponse.ok) {
           throw new Error('Primary API request failed')

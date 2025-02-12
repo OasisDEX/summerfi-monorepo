@@ -86,6 +86,7 @@ export { IconWithBackground } from './components/molecules/IconWithBackground/Ic
 export { FaqSection } from './components/molecules/FaqSection/FaqSection'
 export { DataModule } from './components/molecules/DataModule/DataModule'
 export { Badge } from './components/molecules/Badge/Badge'
+export { HighestQualityYieldsDisclaimer } from './components/molecules/HighestQualityYeildsDisclaimer/HighestQualityYieldsDisclaimer'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'
@@ -130,6 +131,7 @@ export {
   getEarningsEstimationsMap,
 } from './helpers/get-earnings-estimations-map'
 export { getUniqueVaultId } from './helpers/get-unique-vault-id'
+export { getDisplayToken } from './helpers/get-display-token'
 
 export { INTERNAL_LINKS, EXTERNAL_LINKS } from './helpers/application-links'
 
@@ -159,3 +161,4 @@ export {
 
 // constants
 export { SUMR_CAP, RAYS_TO_SUMR_CONVERSION_RATE } from './constants/earn-protocol'
+export { REVALIDATION_TIMES, REVALIDATION_TAGS } from './constants/revalidation'

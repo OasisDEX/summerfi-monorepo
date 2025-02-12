@@ -1,4 +1,5 @@
 import {
+  getDisplayToken,
   getScannerUrl,
   Icon,
   TableCellText,
@@ -30,7 +31,7 @@ export const userActivityMapper = (
   const sorted = userActivitySorter({ data: rawData, sortConfig })
 
   return sorted.map((item) => {
-    const asset = item.vault.inputToken.symbol as TokenSymbolsList
+    const asset = getDisplayToken(item.vault.inputToken.symbol) as TokenSymbolsList
     const amount = new BigNumber(item.amount.toString()).shiftedBy(-item.vault.inputToken.decimals)
     const balance = new BigNumber(item.balance.toString()).shiftedBy(
       -item.vault.inputToken.decimals,
