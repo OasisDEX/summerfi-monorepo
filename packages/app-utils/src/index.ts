@@ -80,3 +80,5 @@ export {
   getArkProductIdList,
   getArkByProductId,
 } from './helpers/get-ark-product-id'
+
+export { aggregateArksPerNetwork } from './helpers/aggregate-arks-per-network'
