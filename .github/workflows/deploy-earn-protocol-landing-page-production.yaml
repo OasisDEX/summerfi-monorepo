@@ -29,6 +29,7 @@ jobs:
               - 'packages/serverless-shared/**'
               - 'sdk/sdk-client/**'
               - 'sdk/sdk-client-react/**'
+              - '.github/workflows/deploy-earn-protocol-landing-page-production.yaml'
   build-earn-protocol-landing-page:
     name: Build and deploy Earn Protocol App
     runs-on: ubuntu-22.04

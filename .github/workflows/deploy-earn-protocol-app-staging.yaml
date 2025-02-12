@@ -26,7 +26,7 @@ jobs:
               - 'packages/app-types/**'
               - 'packages/app-earn-ui/**'
               - 'packages/app-icons/**'
-              - '.github/workflows/build-push-deploy-summerfi-earn-dev.yaml'
+              - '.github/workflows/deploy-earn-protocol-app-staging.yaml'
               - 'sdk/sdk-client/**'
               - 'sdk/sdk-client-react/**'
 
