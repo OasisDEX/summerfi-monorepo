@@ -5,6 +5,7 @@ import { type SDKVaultishType, type SDKVaultsListType } from '@summerfi/app-type
 import {
   formatCryptoBalance,
   formatDecimalAsPercent,
+  getArksWeightedApy,
   sdkNetworkToHumanNetwork,
 } from '@summerfi/app-utils'
 import { type IArmadaPositionStandalone as IArmadaPosition } from '@summerfi/armada-protocol-common'
@@ -68,7 +69,8 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
     : false
 
   const apr30d = formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
-  const aprCurrent = formatDecimalAsPercent(new BigNumber(vault.calculatedApr).div(100))
+  const aprCurrent = formatDecimalAsPercent(getArksWeightedApy(vault))
+
   const noOfDeposits = position.deposits.length.toString()
 
   useEffect(() => {
