@@ -67,16 +67,18 @@ export const TitleWithSelect = ({
 
   return (
     <div className={titleWithSelectStyles.titleWithSelectWrapper}>
-      <div
-        className={clsx(titleWithSelectStyles.titleLine, {
-          [titleWithSelectStyles.refreshing]: isRefreshing,
-        })}
-      >
+      <div className={clsx(titleWithSelectStyles.titleLine)}>
         <div style={{ display: 'flex', gap: '10px' }}>
           <Text as="h2" variant="h2">
             {title}
           </Text>
-          <div onClick={onRefresh} style={{ marginTop: '20px', cursor: 'pointer' }}>
+          <div
+            onClick={onRefresh}
+            className={clsx({
+              [titleWithSelectStyles.refreshing]: isRefreshing,
+            })}
+            style={{ marginTop: '20px', cursor: 'pointer' }}
+          >
             <Icon iconName="refresh" size={16} />
           </div>
         </div>
