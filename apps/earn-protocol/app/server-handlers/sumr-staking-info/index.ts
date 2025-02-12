@@ -3,13 +3,11 @@ import { SECONDS_PER_DAY } from '@summerfi/app-utils'
 import { GovernanceRewardsManagerAbi, SummerTokenAbi } from '@summerfi/armada-protocol-abis'
 import { getChainInfoByChainId } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
-import { unstable_cache as unstableCache } from 'next/cache'
 import { createPublicClient, http } from 'viem'
 import { base } from 'viem/chains'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 import { GOVERNANCE_REWARDS_MANAGER_ADDRESS } from '@/constants/addresses'
-import { REVALIDATION_TIMES } from '@/constants/revalidations'
 import { SDKChainIdToSSRRpcGatewayMap } from '@/helpers/rpc-gateway-ssr'
 
 export interface SumrStakingInfoData {
@@ -26,93 +24,87 @@ export interface SumrStakingInfoData {
  *  - sumrStakingApy: Annual percentage yield for SUMR staking
  * @throws {Error} Various errors related to contract interactions or data fetching
  */
-export const getSumrStakingInfo = unstableCache(
-  async (): Promise<SumrStakingInfoData> => {
-    try {
-      const publicClient = createPublicClient({
-        chain: base,
-        transport: http(await SDKChainIdToSSRRpcGatewayMap[SDKChainId.BASE]),
+export const getSumrStakingInfo = async (): Promise<SumrStakingInfoData> => {
+  try {
+    const publicClient = createPublicClient({
+      chain: base,
+      transport: http(await SDKChainIdToSSRRpcGatewayMap[SDKChainId.BASE]),
+    })
+
+    const sumrToken = await backendSDK.armada.users
+      .getSummerToken({
+        chainInfo: getChainInfoByChainId(SDKChainId.BASE),
+      })
+      .catch((error) => {
+        throw new Error(`Failed to get SUMMER token: ${error.message}`)
       })
 
-      const sumrToken = await backendSDK.armada.users
-        .getSummerToken({
-          chainInfo: getChainInfoByChainId(SDKChainId.BASE),
-        })
-        .catch((error) => {
-          throw new Error(`Failed to get SUMMER token: ${error.message}`)
-        })
+    const [wrappedStakingTokenResult, rewardDataResult] = await publicClient
+      .multicall({
+        contracts: [
+          {
+            address: GOVERNANCE_REWARDS_MANAGER_ADDRESS,
+            abi: GovernanceRewardsManagerAbi,
+            functionName: 'wrappedStakingToken',
+          },
+          {
+            address: GOVERNANCE_REWARDS_MANAGER_ADDRESS,
+            abi: GovernanceRewardsManagerAbi,
+            functionName: 'rewardData',
+            args: [sumrToken.address.value],
+          },
+        ],
+      })
+      .catch((error) => {
+        throw new Error(`Failed to fetch staking data: ${error.message}`)
+      })
 
-      const [wrappedStakingTokenResult, rewardDataResult] = await publicClient
-        .multicall({
-          contracts: [
-            {
-              address: GOVERNANCE_REWARDS_MANAGER_ADDRESS,
-              abi: GovernanceRewardsManagerAbi,
-              functionName: 'wrappedStakingToken',
-            },
-            {
-              address: GOVERNANCE_REWARDS_MANAGER_ADDRESS,
-              abi: GovernanceRewardsManagerAbi,
-              functionName: 'rewardData',
-              args: [sumrToken.address.value],
-            },
-          ],
-        })
-        .catch((error) => {
-          throw new Error(`Failed to fetch staking data: ${error.message}`)
-        })
+    const wrappedStakingToken = wrappedStakingTokenResult.result
+    const rewardData = rewardDataResult.result
 
-      const wrappedStakingToken = wrappedStakingTokenResult.result
-      const rewardData = rewardDataResult.result
-
-      if (wrappedStakingToken === undefined) {
-        throw new Error(
-          `Failed to fetch wrapped staking token: ${wrappedStakingTokenResult.error.message}`,
-        )
-      }
-
-      if (rewardData === undefined) {
-        throw new Error(`Failed to fetch reward data: ${rewardDataResult.error.message}`)
-      }
-
-      const [, rewardRate] = rewardData
-      // eslint-disable-next-line no-mixed-operators
-      const sumrTokenDailyEmissionAmount = new BigNumber(Number(rewardRate))
-        .shiftedBy(-sumrToken.decimals * 2)
-        .multipliedBy(SECONDS_PER_DAY)
-        .toNumber()
-
-      const _sumrTokenWrappedStakedAmount = await publicClient
-        .readContract({
-          address: wrappedStakingToken,
-          abi: SummerTokenAbi,
-          functionName: 'balanceOf',
-          args: [GOVERNANCE_REWARDS_MANAGER_ADDRESS],
-        })
-        .catch((error) => {
-          throw new Error(`Failed to read wrapped staked SUMR balance: ${error.message}`)
-        })
-
-      const sumrTokenWrappedStakedAmount = new BigNumber(_sumrTokenWrappedStakedAmount.toString())
-        .shiftedBy(-sumrToken.decimals)
-        .toNumber()
-
-      const sumrStakingApy =
-        sumrTokenWrappedStakedAmount > 0
-          ? (sumrTokenDailyEmissionAmount * 365) / sumrTokenWrappedStakedAmount
-          : 0
-
-      return { sumrTokenWrappedStakedAmount, sumrTokenDailyEmissionAmount, sumrStakingApy }
-    } catch (error) {
-      // Error logging is necessary here for monitoring and debugging
-      // eslint-disable-next-line no-console
-      console.error('Error in getSumrStakingInfo:', error)
-
-      return { sumrTokenWrappedStakedAmount: 0, sumrTokenDailyEmissionAmount: 0, sumrStakingApy: 0 }
+    if (wrappedStakingToken === undefined) {
+      throw new Error(
+        `Failed to fetch wrapped staking token: ${wrappedStakingTokenResult.error.message}`,
+      )
     }
-  },
-  [],
-  {
-    revalidate: REVALIDATION_TIMES.PORTFOLIO_DATA,
-  },
-)
+
+    if (rewardData === undefined) {
+      throw new Error(`Failed to fetch reward data: ${rewardDataResult.error.message}`)
+    }
+
+    const [, rewardRate] = rewardData
+    // eslint-disable-next-line no-mixed-operators
+    const sumrTokenDailyEmissionAmount = new BigNumber(Number(rewardRate))
+      .shiftedBy(-sumrToken.decimals * 2)
+      .multipliedBy(SECONDS_PER_DAY)
+      .toNumber()
+
+    const _sumrTokenWrappedStakedAmount = await publicClient
+      .readContract({
+        address: wrappedStakingToken,
+        abi: SummerTokenAbi,
+        functionName: 'balanceOf',
+        args: [GOVERNANCE_REWARDS_MANAGER_ADDRESS],
+      })
+      .catch((error) => {
+        throw new Error(`Failed to read wrapped staked SUMR balance: ${error.message}`)
+      })
+
+    const sumrTokenWrappedStakedAmount = new BigNumber(_sumrTokenWrappedStakedAmount.toString())
+      .shiftedBy(-sumrToken.decimals)
+      .toNumber()
+
+    const sumrStakingApy =
+      sumrTokenWrappedStakedAmount > 0
+        ? (sumrTokenDailyEmissionAmount * 365) / sumrTokenWrappedStakedAmount
+        : 0
+
+    return { sumrTokenWrappedStakedAmount, sumrTokenDailyEmissionAmount, sumrStakingApy }
+  } catch (error) {
+    // Error logging is necessary here for monitoring and debugging
+    // eslint-disable-next-line no-console
+    console.error('Error in getSumrStakingInfo:', error)
+
+    return { sumrTokenWrappedStakedAmount: 0, sumrTokenDailyEmissionAmount: 0, sumrStakingApy: 0 }
+  }
+}
