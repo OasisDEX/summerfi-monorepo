@@ -2,6 +2,7 @@
 .primaryMedium,
 .primarySmall,
 .secondaryLarge,
+.secondaryMedium,
 .secondarySmall,
 .neutralLarge,
 .neutralSmall,
@@ -30,9 +31,10 @@
   border-radius: var(--radius-circle);
 }
 
-.primaryMedium {
+.primaryMedium,
+.secondaryMedium {
   height: 38px;
-  font-size: 14px;
+  font-size: var(--font-size-p3);
   border-radius: var(--radius-circle);
   padding: 0 var(--general-space-16);
 }
@@ -64,6 +66,7 @@
 }
 
 .secondaryLarge,
+.secondaryMedium,
 .secondarySmall {
   color: var(--color-text-secondary);
   background-color: var(--color-background-secondary);

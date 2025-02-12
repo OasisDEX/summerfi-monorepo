@@ -1,6 +1,8 @@
 'use client'
-import React, { useEffect, useState } from 'react'
-import { InputWithDropdown, Text } from '@summerfi/app-earn-ui'
+import { useEffect, useState } from 'react'
+import { InputWithDropdown } from '@summerfi/app-earn-ui'
+
+import { QuickActionTags } from '@/features/bridge/components/QuickActionTags/QuickActionTags'
 
 // Define the props for AmountInput.
 export interface AmountInputProps {
@@ -36,6 +38,13 @@ export const AmountInput: React.FC<AmountInputProps> = ({
       {/* Reuse InputWithDropdown; the dropdown is preset and not meant to be changed */}
       <InputWithDropdown
         value={value}
+        heading={{
+          label: 'Balance',
+          value: '100,000 SUMR',
+          action: () => {
+            console.log('heading action')
+          },
+        }}
         secondaryValue={`$${usdValue}`}
         handleChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
         handleDropdownChange={() => {}}
@@ -43,6 +52,13 @@ export const AmountInput: React.FC<AmountInputProps> = ({
         dropdownValue={defaultOption}
         selectAllOnFocus
         placeholder={placeholder}
+        tagsRow={
+          <QuickActionTags
+            onSelect={(percentage) => {
+              // handle percentage selection
+            }}
+          />
+        }
       />
     </div>
   )

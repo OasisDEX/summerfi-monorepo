@@ -17,7 +17,9 @@ const WalletLabel = dynamic(() => import('../../molecules/WalletLabel/WalletLabe
   ),
 })
 
-export const NavigationWrapper: FC<{ isPreLaunchVersion?: boolean }> = ({ isPreLaunchVersion }) => {
+export const NavigationWrapper: FC<{
+  isPreLaunchVersion?: boolean
+}> = ({ isPreLaunchVersion }) => {
   const currentPath = usePathname()
   const { userWalletAddress } = useUserWallet()
 

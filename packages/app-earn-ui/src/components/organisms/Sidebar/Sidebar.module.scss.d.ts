@@ -1,4 +1,5 @@
 export type Styles = {
+  centered: string
   centerTitle: string
   goBackButton: string
   goBackButtonFillFLex: string

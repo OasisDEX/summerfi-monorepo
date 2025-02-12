@@ -17,11 +17,11 @@
     position: absolute;
     top: 100%;
     left: 0;
-    background-color: #333333;
+    background-color: var(--earn-protocol-neutral-80);
     color: #fff;
     width: max-content;
     border-radius: var(--general-radius-16);
-    margin-top: 5px;
+    margin-top: var(--general-space-4);
     z-index: 10;
     padding: var(--general-space-8);
 
@@ -47,10 +47,10 @@
   &Option {
     display: flex;
     align-items: center;
-    padding: 10px 10px;
+    padding: 9px 9px;
     transition: background-color 0.3s ease;
     cursor: pointer;
-    border-radius: 16px;
+    border-radius: 12px;
     margin-bottom: 2px;
     gap: 8px;
 
@@ -60,7 +60,7 @@
   }
 
   &Option.selected {
-    background-color: #444;
+    background-color: var(--earn-protocol-neutral-60);
   }
 
   .mobileContentWrapper {

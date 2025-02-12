@@ -1,5 +1,66 @@
 .bridgeForm {
-  /* Basic styling for the bridge form container */
-  padding: 1rem;
-  /* Add any additional styles here as needed */
+  display: flex;
+  flex-direction: column;
+  max-width: 455px; // From the design
+  width: 100%;
+  margin: 0 auto; // Center the form
+  padding: var(--general-space-20);
+  gap: var(--general-space-16);
+}
+
+.header {
+  margin-bottom: var(--general-space-24);
+}
+
+.networkSelectors {
+  margin-top: var(--general-space-24);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.networkSelector {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-4);
+}
+
+.arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--earn-protocol-secondary-60);
+  background-color: var(--earn-protocol-neutral-80);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  margin: 0 auto;
+  margin-bottom: var(--general-space-3);
+  align-self: end;
+}
+
+.inputSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-12);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-8);
+  margin-top: var(--general-space-16);
 } 
+
+.spacer {
+  height: 1px;
+  border-bottom: 1px solid var(--earn-protocol-neutral-100);
+  margin: var(--general-space-24) 0 var(--general-space-0) 0;
+}
+
+.infoBox {
+  margin-bottom: var(--general-space-32);
+}

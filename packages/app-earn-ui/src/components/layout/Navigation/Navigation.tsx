@@ -32,6 +32,7 @@ export interface EarnNavigationProps {
   configComponent?: ReactNode
   signupComponent?: ReactNode
   onLogoClick?: () => void
+  noNavMargin?: boolean
 }
 
 export const Navigation: FC<EarnNavigationProps> = ({
@@ -69,7 +70,7 @@ export const Navigation: FC<EarnNavigationProps> = ({
   }, [currentPath, tempCurrentPath])
 
   return (
-    <div className={navigationStyles.wrapper}>
+    <div className={`${navigationStyles.wrapper}`}>
       <header className={navigationStyles.container}>
         <NavigationBranding logo={logo} logoSmall={logoSmall} onLogoClick={onLogoClick} />
         <NavigationMenu links={links} currentPath={currentPath} />

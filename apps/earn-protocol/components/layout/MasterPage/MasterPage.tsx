@@ -9,6 +9,7 @@ import masterPageStyles from './MasterPage.module.scss'
 
 interface MasterPageProps {
   skipNavigation?: boolean
+  noNavMargin?: boolean
 }
 
 export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({

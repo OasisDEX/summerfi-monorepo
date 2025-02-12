@@ -55,6 +55,7 @@ export interface SidebarProps {
   customHeaderStyles?: CSSProperties
   handleIsDrawerOpen?: (flag: boolean) => void
   hiddenHeaderChevron?: boolean
+  centered?: boolean
 }
 
 export const Sidebar: FC<SidebarProps> = ({
@@ -74,6 +75,7 @@ export const Sidebar: FC<SidebarProps> = ({
   customHeaderStyles,
   handleIsDrawerOpen,
   hiddenHeaderChevron = false,
+  centered,
 }) => {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -82,7 +84,12 @@ export const Sidebar: FC<SidebarProps> = ({
   const labelElement = primaryButton.loading ? <LoadingSpinner size={28} /> : primaryButton.label
 
   const sidebarWrapped = (
-    <Card className={sidebarClassNames.sidebarWrapper} variant="cardSecondary">
+    <Card
+      className={clsx(sidebarClassNames.sidebarWrapper, {
+        [sidebarClassNames.centered]: centered,
+      })}
+      variant="cardSecondary"
+    >
       <div
         className={clsx(sidebarClassNames.sidebarHeaderWrapper, {
           [sidebarClassNames.centerTitle]: !titleTabs && !!goBackAction,
@@ -192,6 +199,7 @@ export const Sidebar: FC<SidebarProps> = ({
       <div
         style={{
           width: '100%',
+          marginTop: error ?? footnote ? 'var(--general-space-20)' : undefined,
         }}
       >
         <AnimateHeight show={!!error} id="sidebar-error">

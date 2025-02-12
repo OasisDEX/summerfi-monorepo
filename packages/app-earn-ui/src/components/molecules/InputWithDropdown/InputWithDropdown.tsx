@@ -37,6 +37,7 @@ interface InputWithDropdownProps {
   onFocus?: () => void
   onBlur?: () => void
   disabled?: boolean
+  tagsRow?: ReactNode
 }
 
 export const InputWithDropdown: FC<InputWithDropdownProps> = ({
@@ -51,6 +52,7 @@ export const InputWithDropdown: FC<InputWithDropdownProps> = ({
   onBlur,
   selectAllOnFocus,
   disabled,
+  tagsRow,
 }) => {
   const handleFocus = (ev: React.FocusEvent<HTMLInputElement>) => {
     if (selectAllOnFocus) {
@@ -64,7 +66,7 @@ export const InputWithDropdown: FC<InputWithDropdownProps> = ({
     <div className={classNames.wrapper}>
       {heading && (
         <div className={classNames.headingWrapper}>
-          <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+          <Text as="p" variant="p3semi" style={{ color: 'var(--color-text-primary-disabled)' }}>
             {heading.label}
           </Text>
           <Text
@@ -79,31 +81,34 @@ export const InputWithDropdown: FC<InputWithDropdownProps> = ({
           </Text>
         </div>
       )}
-      <div className={classNames.inputWrapper}>
-        <Dropdown
-          options={options.map((item) => ({
-            value: item.value,
-            content: <Content key={item.label} option={item} />,
-          }))}
-          dropdownValue={{
-            value: dropdownValue.value,
-            content: <Content option={dropdownValue} />,
-          }}
-          asPill
-          onChange={handleDropdownChange}
-          isDisabled={disabled}
-        >
-          <Content option={dropdownValue} />
-        </Dropdown>
-        <Input
-          placeholder="0"
-          value={value}
-          onChange={handleChange}
-          secondaryValue={secondaryValue}
-          onFocus={handleFocus}
-          onBlur={onBlur}
-          disabled={disabled}
-        />
+      <div>
+        <div className={classNames.inputWrapper}>
+          <Dropdown
+            options={options.map((item) => ({
+              value: item.value,
+              content: <Content key={item.label} option={item} />,
+            }))}
+            dropdownValue={{
+              value: dropdownValue.value,
+              content: <Content option={dropdownValue} />,
+            }}
+            asPill
+            onChange={handleDropdownChange}
+            isDisabled={disabled}
+          >
+            <Content option={dropdownValue} />
+          </Dropdown>
+          <Input
+            placeholder="0"
+            value={value}
+            onChange={handleChange}
+            secondaryValue={secondaryValue}
+            onFocus={handleFocus}
+            onBlur={onBlur}
+            disabled={disabled}
+          />
+        </div>
+        {tagsRow && <div className={classNames.tagsWrapper}>{tagsRow}</div>}
       </div>
     </div>
   )

@@ -111,9 +111,10 @@ export const Dropdown: FC<DropdownProps> = ({
         style={
           asPill
             ? {
-                padding: '5px 8px 5px 5px',
+                padding: '8px 14px 8px 10px',
                 backgroundColor: 'var(--earn-protocol-neutral-80)',
                 borderRadius: 'var(--general-radius-24)',
+                fontWeight: '600',
                 ...dropdownChildrenStyle,
               }
             : {}

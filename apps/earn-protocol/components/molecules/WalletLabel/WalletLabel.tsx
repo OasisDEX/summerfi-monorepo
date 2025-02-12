@@ -133,7 +133,7 @@ export default function WalletLabel() {
   }
 
   return (
-    <Button variant="secondarySmall" onClick={openAuthModal} className={walletLabelStyles.wrapper}>
+    <Button variant="secondaryMedium" onClick={openAuthModal} className={walletLabelStyles.wrapper}>
       Log in
     </Button>
   )

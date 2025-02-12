@@ -16,7 +16,11 @@ const EarnAllVaultsPage = async () => {
   const { config: systemConfig } = parseServerResponseToClient(configRaw)
   const vaultsDecorated = decorateCustomVaultFields({ vaults, systemConfig })
 
-  return <VaultListViewComponent vaultsList={vaultsDecorated} />
+  return (
+    <div style={{ marginTop: '55px' }}>
+      <VaultListViewComponent vaultsList={vaultsDecorated} />
+    </div>
+  )
 }
 
 export default EarnAllVaultsPage

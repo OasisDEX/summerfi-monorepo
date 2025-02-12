@@ -1,0 +1,22 @@
+.infoBox {
+  border: 1px solid var(--color-interactive-100);
+  border-radius: var(--radius-large);
+  background: var(--color-surface-subtler);
+  overflow: hidden;
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 16px;
+}
+
+.title {
+  color: var(--color-text-primary-disabled);
+}
+
+.content {
+  padding: 0 16px 16px;
+  color: var(--color-text-secondary);
+} 
