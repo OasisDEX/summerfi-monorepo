@@ -1,4 +1,5 @@
-import { parseServerResponseToClient } from '@summerfi/app-utils'
+import { type SDKNetwork } from '@summerfi/app-types'
+import { aggregateArksPerNetwork, parseServerResponseToClient } from '@summerfi/app-utils'
 import { redirect } from 'next/navigation'
 
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
@@ -17,11 +18,14 @@ const EarnAllVaultsPage = async () => {
   const [{ vaults }, configRaw] = await Promise.all([getVaultsList(), systemConfigHandler()])
   const { config: systemConfig } = parseServerResponseToClient(configRaw)
 
-  const interestRatesPromises = vaults.map((vault) =>
-    getInterestRates({
-      network: vault.protocol.network,
-      arksList: vault.arks,
-    }),
+  const aggregatedArksPerNetwork = aggregateArksPerNetwork(vaults)
+
+  const interestRatesPromises = Object.entries(aggregatedArksPerNetwork).map(
+    ([network, { arks }]) =>
+      getInterestRates({
+        network: network as SDKNetwork,
+        arksList: arks,
+      }),
   )
 
   const interestRatesResults = await Promise.all(interestRatesPromises)
