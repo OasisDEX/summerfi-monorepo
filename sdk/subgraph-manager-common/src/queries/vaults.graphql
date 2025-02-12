@@ -20,6 +20,8 @@ query GetVaults {
       id
       name
       details
+      depositLimit
+      depositCap
       inputToken {
         id
         name
@@ -153,6 +155,7 @@ query GetVault($id: ID!) {
       name
       details
       depositLimit
+      depositCap
       cumulativeEarnings
       inputTokenBalance
       inputToken {
