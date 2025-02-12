@@ -36,7 +36,7 @@ const customFetchCache = async (url: RequestInfo | URL, params?: RequestInit) =>
     return await fetch(url, { ...params, next: { revalidate: REVALIDATION_TIMES.INTEREST_RATES } })
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('customFetchCache error', error)
+    console.error('customFetchCache error:', error)
 
     throw error
   }
