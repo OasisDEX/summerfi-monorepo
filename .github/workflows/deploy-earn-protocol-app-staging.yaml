@@ -9,9 +9,9 @@ jobs:
   changes:
     name: Check for earn protocol changes
     runs-on: ubuntu-22.04
+    if: ${{ github.event_name == 'push' }}
     permissions:
       pull-requests: read
-    if: ${{ github.event_name == 'push' }}
     outputs:
       build-earn-protocol: ${{ steps.filter.outputs.build-earn-protocol }}
     steps:
