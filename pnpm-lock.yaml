@@ -346,6 +346,12 @@ importers:
       dayjs:
         specifier: ^1.11.12
         version: 1.11.12
+      graphql-request:
+        specifier: ^6.1.0
+        version: 6.1.0(graphql@16.8.2)
+      graphql-tag:
+        specifier: ^2.12.6
+        version: 2.12.6(graphql@16.8.2)
       include-media:
         specifier: 2.0.0
         version: 2.0.0
@@ -377,6 +383,9 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0(react@18.3.1)
     devDependencies:
+      '@graphql-codegen/cli':
+        specifier: ^5.0.2
+        version: 5.0.2(@types/node@20.14.2)(graphql@16.8.2)(typescript@5.6.2)
       '@summerfi/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
@@ -407,6 +416,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.0
+      graphql:
+        specifier: ^16.8.1
+        version: 16.8.2
       json-to-ts:
         specifier: ^1.7.0
         version: 1.7.0
@@ -11448,9 +11460,9 @@ packages:
       '@types/ws': 8.5.10
       graphql: 16.8.2
       graphql-ws: 5.16.0(graphql@16.8.2)
-      isomorphic-ws: 5.0.0(ws@8.17.1)
+      isomorphic-ws: 5.0.0(ws@8.18.0)
       tslib: 2.2.0
-      ws: 8.17.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ws: 8.18.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -11501,9 +11513,9 @@ packages:
       '@graphql-tools/utils': 10.3.2(graphql@16.8.2)
       '@types/ws': 8.5.10
       graphql: 16.8.2
-      isomorphic-ws: 5.0.0(ws@8.17.1)
+      isomorphic-ws: 5.0.0(ws@8.18.0)
       tslib: 2.2.0
-      ws: 8.17.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ws: 8.18.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -28416,14 +28428,6 @@ packages:
       ws: '*'
     dependencies:
       ws: 8.18.0
-    dev: true
-
-  /isomorphic-ws@5.0.0(ws@8.17.1):
-    resolution: {integrity: sha512-muId7Zzn9ywDsyXgTIafTry2sV3nySZeUDe6YedVd1Hvuuep5AsIlqK+XefWpYTyJG5e503F2xIuT2lcU6rCSw==}
-    peerDependencies:
-      ws: '*'
-    dependencies:
-      ws: 8.17.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     dev: true
 
   /isomorphic-ws@5.0.0(ws@8.18.0):

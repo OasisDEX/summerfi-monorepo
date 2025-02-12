@@ -24,6 +24,8 @@ import { SummerFiProSection } from '@/components/layout/LandingPageContent/conte
 import { SumrToken } from '@/components/layout/LandingPageContent/content/SumrToken'
 import { decorateCustomVaultFields } from '@/helpers/vault-custom-value-helpers'
 
+import { getInterestRates } from './server-handlers/interest-rates'
+
 export const revalidate = 60
 
 type SupportedTvlProtocols =
@@ -125,7 +127,25 @@ export default async function HomePage() {
   }>((acc, curr) => ({ ...acc, ...curr }), emptyTvls)
 
   const { config } = parseServerResponseToClient(systemConfig)
-  const vaultsDecorated = decorateCustomVaultFields(vaults, config)
+
+  const interestRatesPromises = vaults.map((vault) =>
+    getInterestRates({
+      network: vault.protocol.network,
+      arksList: vault.arks,
+    }),
+  )
+
+  const interestRatesResults = await Promise.all(interestRatesPromises)
+
+  const vaultsDecorated = decorateCustomVaultFields({
+    vaults,
+    systemConfig: config,
+    decorators: {
+      arkInterestRatesMap: interestRatesResults.reduce((acc, curr) => {
+        return { ...acc, ...curr }
+      }, {}),
+    },
+  })
 
   return (
     <div style={{ display: 'flex', gap: '8px', flexDirection: 'column', alignItems: 'center' }}>

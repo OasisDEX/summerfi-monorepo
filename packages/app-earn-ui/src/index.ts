@@ -161,3 +161,4 @@ export {
 
 // constants
 export { SUMR_CAP, RAYS_TO_SUMR_CONVERSION_RATE } from './constants/earn-protocol'
+export { REVALIDATION_TIMES, REVALIDATION_TAGS } from './constants/revalidation'
