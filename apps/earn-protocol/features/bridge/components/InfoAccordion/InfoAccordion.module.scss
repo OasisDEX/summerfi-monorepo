@@ -1,0 +1,15 @@
+.infoAccordion {
+  border: 1px solid var(--earn-protocol-neutral-80);
+  border-radius: var(--general-radius-8);
+  padding: var(--general-space-12);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.content {
+  margin-top: var(--general-space-8);
+} 

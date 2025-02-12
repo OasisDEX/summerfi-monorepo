@@ -2,11 +2,11 @@
 import React, { useState } from 'react'
 import { Button, Card, Text } from '@summerfi/app-earn-ui'
 
-import AmountInput from '@/components/AmountInput' // Numeric input with USD conversion display
-import ChainSelector from '@/components/ChainSelector' // Chain selector with chain icon and name
-import InfoAccordion from '@/components/InfoAccordion' // Collapsible section for important info
-import QuickActionButtons from '@/components/QuickActionButtons' // Buttons like 25%, 50%, Max
-import TokenSelector from '@/components/TokenSelector' // Token selector preset to SUMR
+import AmountInput from '@/features/bridge/components/AmountInput/AmountInput'
+import ChainSelector from '@/features/bridge/components/ChainSelector/ChainSelector' // Chain selector with chain icon and name
+import InfoAccordion from '@/features/bridge/components/InfoAccordion/InfoAccordion' // Collapsible section for important info
+import QuickActionButtons from '@/features/bridge/components/QuickActionButtons/QuickActionButtons' // Buttons like 25%, 50%, Max
+import TokenSelector from '@/features/bridge/components/TokenSelector/TokenSelector' // Token selector preset to SUMR
 
 import styles from './BridgeForm.module.scss'
 

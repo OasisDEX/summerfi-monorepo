@@ -1,0 +1,11 @@
+.chainSelector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.select {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: var(--general-radius-8);
+} 
