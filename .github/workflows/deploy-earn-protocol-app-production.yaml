@@ -1,17 +1,17 @@
-name: Deploy Earn Protocol App Dev
+name: Deploy Earn Protocol App Production
 on:
   workflow_dispatch:
   push:
     branches:
-      - dev
+      - main
 
 jobs:
   changes:
     name: Check for earn protocol changes
     runs-on: ubuntu-22.04
+    if: ${{ github.event_name == 'push' }}
     permissions:
       pull-requests: read
-    if: ${{ github.event_name == 'push' }}
     outputs:
       build-earn-protocol: ${{ steps.filter.outputs.build-earn-protocol }}
     steps:
@@ -26,23 +26,21 @@ jobs:
               - 'packages/app-types/**'
               - 'packages/app-earn-ui/**'
               - 'packages/app-icons/**'
-              - '.github/workflows/build-push-deploy-summerfi-earn-dev.yaml'
+              - '.github/workflows/deploy-earn-protocol-app-production.yaml'
               - 'sdk/sdk-client/**'
               - 'sdk/sdk-client-react/**'
 
   build-earn-protocol:
     name: Build and deploy Earn Protocol App
     runs-on: ubuntu-22.04
-    permissions:
-      id-token: write
     environment: staging
     needs: changes
     if: ${{ needs.changes.outputs.build-earn-protocol == 'true' }}
     env:
-      AWS_REGION: eu-central-1
-      ENVIRONMENT_TAG: dev
-      SERVICE_NAME: summer-fi-earn-service-dev
-      CLUSTER_NAME: summer-fi-earn-dev
+      AWS_REGION: us-east-1
+      ENVIRONMENT_TAG: staging
+      SERVICE_NAME: summer-fi-earn-protocol-staging
+      CLUSTER_NAME: summer-fi-earn-protocol-staging
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
       CONFIG_URL_EARN: ${{ secrets.CONFIG_URL_EARN }}
       CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
@@ -57,11 +55,10 @@ jobs:
       ACCOUNT_KIT_API_KEY: ${{ secrets.ACCOUNT_KIT_API_KEY }}
       FORECAST_API_URL: ${{ secrets.FORECAST_API_URL }}
       NEXT_PUBLIC_TRANSAK_API_KEY: ${{ secrets.NEXT_PUBLIC_TRANSAK_API_KEY }}
-      NEXT_PUBLIC_IS_PRE_LAUNCH_VERSION: true
       NEXT_PUBLIC_TRANSAK_ENVIRONMENT: ${{ secrets.NEXT_PUBLIC_TRANSAK_ENVIRONMENT }}
       TRANSAK_SECRET: ${{ secrets.TRANSAK_SECRET }}
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
-      SDK_API_URL: ${{ secrets.LAZY_SDK_API_URL }}
+      SDK_API_URL: ${{ secrets.SDK_API_URL_PROD }}
       EARN_PROTOCOL_JWT_SECRET: ${{ secrets.EARN_PROTOCOL_JWT_SECRET }}
       EARN_PROTOCOL_JWT_CHALLENGE_SECRET: ${{ secrets.EARN_PROTOCOL_JWT_CHALLENGE_SECRET }}
       RPC_GATEWAY: ${{ secrets.RPC_GATEWAY }}
@@ -71,7 +68,7 @@ jobs:
       NEWSLETTER_PUBLICATION_ID: ${{ secrets.NEWSLETTER_PUBLICATION_ID }}
       NEWSLETTER_ENDPOINT: ${{ secrets.NEWSLETTER_ENDPOINT }}
       NEXT_TELEMETRY_DISABLED: ${{ secrets.NEXT_TELEMETRY_DISABLED }}
-      SUMMER_DEPLOYMENT_CONFIG: ${{ secrets.SUMMER_DEPLOYMENT_CONFIG }}
+      SUMMER_DEPLOYMENT_CONFIG: ${{ vars.SUMMER_DEPLOYMENT_CONFIG_PROD }}
 
     steps:
       - name: Check out code
@@ -147,9 +144,10 @@ jobs:
         run: pnpm build-earn-frontend
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: ${{ secrets.BUILD_DEPLOY_OIDC_ROLE_STAGING }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY_ID_DEV }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
@@ -160,7 +158,7 @@ jobs:
         id: build-image
         env:
           LATEST_TAG: latest
-          ECR_REPO_NAME: summer-fi-earn-dev
+          ECR_REPO_NAME: summer-fi-earn-protocol-staging
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           SHA_TAG: ${{ steps.vars.outputs.sha_short }}
         run: |
@@ -182,7 +180,6 @@ jobs:
                        --build-arg ACCOUNT_KIT_API_KEY=${{ secrets.ACCOUNT_KIT_API_KEY }} \
                        --build-arg FORECAST_API_URL=${{ secrets.FORECAST_API_URL }} \
                        --build-arg NEXT_PUBLIC_TRANSAK_API_KEY=${{ secrets.NEXT_PUBLIC_TRANSAK_API_KEY }} \
-                       --build-arg NEXT_PUBLIC_IS_PRE_LAUNCH_VERSION=true \
                        --build-arg TRANSAK_SECRET=${{ secrets.TRANSAK_SECRET }} \
                        --build-arg EARN_PROTOCOL_JWT_SECRET=${{ secrets.EARN_PROTOCOL_JWT_SECRET }} \
                        --build-arg EARN_PROTOCOL_JWT_CHALLENGE_SECRET=${{ secrets.EARN_PROTOCOL_JWT_CHALLENGE_SECRET }} \
@@ -194,7 +191,7 @@ jobs:
                        --build-arg NEWSLETTER_PUBLICATION_ID=${{ secrets.NEWSLETTER_PUBLICATION_ID }} \
                        --build-arg NEWSLETTER_ENDPOINT=${{ secrets.NEWSLETTER_ENDPOINT }} \
                        --build-arg NEXT_TELEMETRY_DISABLED=${{ secrets.NEXT_TELEMETRY_DISABLED }} \
-                       --build-arg SDK_API_URL=${{ secrets.LAZY_SDK_API_URL }} \
+                       --build-arg SDK_API_URL=${{ secrets.SDK_API_URL_PROD }} \
                        --cache-from type=registry,ref=189194422115.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/buildkit-test:cache \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$SHA_TAG \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$LATEST_TAG \
@@ -207,6 +204,8 @@ jobs:
         run: |
           aws ecs update-service --cluster $CLUSTER_NAME --service ${{ env.SERVICE_NAME }} --force-new-deployment --region $AWS_REGION
 
-      - name: Invalidate CloudFront
-        run: |
-          AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.EARN_CF_DIST_ID }} --paths "/*"
+      - name: Wait for all services to become stable
+        uses: oryanmoshe/ecs-wait-action@v1.3
+        with:
+          ecs-cluster: ${{ env.CLUSTER_NAME }}
+          ecs-services: '["${{ env.SERVICE_NAME }}"]'

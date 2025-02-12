@@ -8,7 +8,7 @@ on:
 jobs:
   changes:
     name: Check for earn protocol changes
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: ${{ github.event_name == 'push' }}
     permissions:
       pull-requests: read
@@ -26,21 +26,23 @@ jobs:
               - 'packages/app-types/**'
               - 'packages/app-earn-ui/**'
               - 'packages/app-icons/**'
-              - '.github/workflows/deploy-earn-protocol-staging.yaml'
+              - '.github/workflows/deploy-earn-protocol-app-staging.yaml'
               - 'sdk/sdk-client/**'
               - 'sdk/sdk-client-react/**'
 
   build-earn-protocol:
     name: Build and deploy Earn Protocol App
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+    permissions:
+      id-token: write
     environment: staging
     needs: changes
     if: ${{ needs.changes.outputs.build-earn-protocol == 'true' }}
     env:
-      AWS_REGION: us-east-1
-      ENVIRONMENT_TAG: staging
-      SERVICE_NAME: summer-fi-earn-protocol-staging
-      CLUSTER_NAME: summer-fi-earn-protocol-staging
+      AWS_REGION: eu-central-1
+      ENVIRONMENT_TAG: dev
+      SERVICE_NAME: summer-fi-earn-service-dev
+      CLUSTER_NAME: summer-fi-earn-dev
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
       CONFIG_URL_EARN: ${{ secrets.CONFIG_URL_EARN }}
       CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
@@ -68,7 +70,7 @@ jobs:
       NEWSLETTER_PUBLICATION_ID: ${{ secrets.NEWSLETTER_PUBLICATION_ID }}
       NEWSLETTER_ENDPOINT: ${{ secrets.NEWSLETTER_ENDPOINT }}
       NEXT_TELEMETRY_DISABLED: ${{ secrets.NEXT_TELEMETRY_DISABLED }}
-      SUMMER_DEPLOYMENT_CONFIG: ${{ secrets.SUMMER_DEPLOYMENT_CONFIG }}
+      SUMMER_DEPLOYMENT_CONFIG: ${{ vars.SUMMER_DEPLOYMENT_CONFIG }}
 
     steps:
       - name: Check out code
@@ -144,10 +146,9 @@ jobs:
         run: pnpm build-earn-frontend
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY_ID_DEV }}
+          role-to-assume: ${{ secrets.BUILD_DEPLOY_OIDC_ROLE_STAGING }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
@@ -158,7 +159,7 @@ jobs:
         id: build-image
         env:
           LATEST_TAG: latest
-          ECR_REPO_NAME: summer-fi-earn-protocol-staging
+          ECR_REPO_NAME: summer-fi-earn-dev
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           SHA_TAG: ${{ steps.vars.outputs.sha_short }}
         run: |
@@ -204,8 +205,6 @@ jobs:
         run: |
           aws ecs update-service --cluster $CLUSTER_NAME --service ${{ env.SERVICE_NAME }} --force-new-deployment --region $AWS_REGION
 
-      - name: Wait for all services to become stable
-        uses: oryanmoshe/ecs-wait-action@v1.3
-        with:
-          ecs-cluster: ${{ env.CLUSTER_NAME }}
-          ecs-services: '["${{ env.SERVICE_NAME }}"]'
+      - name: Invalidate CloudFront
+        run: |
+          AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.EARN_CF_DIST_ID }} --paths "/*"

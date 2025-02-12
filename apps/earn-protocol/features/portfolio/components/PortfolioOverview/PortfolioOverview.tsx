@@ -15,7 +15,6 @@ import Link from 'next/link'
 
 import { type PortfolioPositionsList } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
 import { PositionHistoricalChart } from '@/components/organisms/Charts/PositionHistoricalChart'
-import { isPreLaunchVersion } from '@/constants/is-pre-launch-version'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
 import { calculateOverallSumr } from '@/helpers/calculate-overall-sumr'
@@ -165,13 +164,10 @@ export const PortfolioOverview = ({
               </Link>
             </div>
           )}
-          {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
-          {!isPreLaunchVersion ? (
-            <PortfolioVaultsCarousel
-              vaultsList={vaultsList}
-              style={{ marginTop: 'var(--general-space-24)' }}
-            />
-          ) : null}
+          <PortfolioVaultsCarousel
+            vaultsList={vaultsList}
+            style={{ marginTop: 'var(--general-space-24)' }}
+          />
         </Card>
         {/* <NewsAndUpdates items={dummyNewsAndUpdatesItems} /> */}
         {/* <CryptoUtilities /> */}
