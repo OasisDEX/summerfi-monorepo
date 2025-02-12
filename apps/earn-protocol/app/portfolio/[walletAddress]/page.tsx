@@ -99,7 +99,6 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
 
   const sumrDecayFactors = await getSumrDecayFactor(
     sumrDelegates.map((delegate) => delegate.account.address),
-    walletAddress,
   )
 
   const rewardsData: ClaimDelegateExternalData = {

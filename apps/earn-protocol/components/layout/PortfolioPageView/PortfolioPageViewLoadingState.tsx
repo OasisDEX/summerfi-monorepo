@@ -10,10 +10,6 @@ import { useTabStateQuery } from '@/hooks/use-tab-state'
 
 import classNames from './PortfolioPageView.module.scss'
 
-interface PortfolioPageViewLoadingStateProps {
-  walletAddress: string
-}
-
 const SimplePortfolioSkeleton = (
   <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
     <div style={{ display: 'flex', gap: '2%' }}>
@@ -27,9 +23,7 @@ const SimplePortfolioSkeleton = (
   </div>
 )
 
-export const PortfolioPageViewLoadingState: FC<PortfolioPageViewLoadingStateProps> = ({
-  walletAddress,
-}) => {
+export const PortfolioPageViewLoadingState: FC = () => {
   const [activeTab, updateTab] = useTabStateQuery({
     tabs: PortfolioTabs,
     defaultTab: isPreLaunchVersion ? PortfolioTabs.REWARDS : PortfolioTabs.OVERVIEW,
@@ -74,7 +68,7 @@ export const PortfolioPageViewLoadingState: FC<PortfolioPageViewLoadingStateProp
     <>
       <NonOwnerPortfolioBanner isOwner walletStateLoaded />
       <div className={classNames.portfolioPageViewLoadingStateWrapper}>
-        <PortfolioHeader walletAddress={walletAddress} isLoading />
+        <PortfolioHeader walletAddress="" isLoading />
         <TabBar
           tabs={tabs}
           defaultIndex={tabs.findIndex((item) => item.id === activeTab)}
