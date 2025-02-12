@@ -1,4 +1,5 @@
-import { parseServerResponseToClient } from '@summerfi/app-utils'
+import { type SDKNetwork } from '@summerfi/app-types'
+import { aggregateArksPerNetwork, parseServerResponseToClient } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
 
 import { getInterestRates } from '@/app/server-handlers/interest-rates'
@@ -62,11 +63,14 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   const { vaults } = vaultsData
   const { rebalances } = rebalancesData
 
-  const interestRatesPromises = vaults.map((vault) =>
-    getInterestRates({
-      network: vault.protocol.network,
-      arksList: vault.arks,
-    }),
+  const aggregatedArksPerNetwork = aggregateArksPerNetwork(vaults)
+
+  const interestRatesPromises = Object.entries(aggregatedArksPerNetwork).map(
+    ([network, { arks }]) =>
+      getInterestRates({
+        network: network as SDKNetwork,
+        arksList: arks,
+      }),
   )
 
   const interestRatesResults = await Promise.all(interestRatesPromises)
