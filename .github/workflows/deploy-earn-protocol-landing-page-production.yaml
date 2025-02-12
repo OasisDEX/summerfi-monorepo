@@ -31,7 +31,7 @@ jobs:
               - 'sdk/sdk-client-react/**'
   build-earn-protocol-landing-page:
     name: Build and deploy Earn Protocol App
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     environment: staging
     needs: changes
     if: ${{ needs.changes.outputs.build-earn-protocol-landing-page == 'true' }}
