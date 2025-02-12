@@ -20,6 +20,7 @@ import { PortfolioRewards } from '@/features/portfolio/components/PortfolioRewar
 import { PortfolioWallet } from '@/features/portfolio/components/PortfolioWallet/PortfolioWallet'
 import { PortfolioYourActivity } from '@/features/portfolio/components/PortfolioYourActivity/PotfolioYourActivity'
 import { PortfolioTabs } from '@/features/portfolio/types'
+import { calculateOverallSumr } from '@/helpers/calculate-overall-sumr'
 import { trackButtonClick } from '@/helpers/mixpanel'
 import { useTabStateQuery } from '@/hooks/use-tab-state'
 import { useUserWallet } from '@/hooks/use-user-wallet'
@@ -75,11 +76,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     0,
   )
 
-  const totalSumr =
-    Number(rewardsData.sumrBalances.total) +
-    Number(rewardsData.sumrBalances.vested) +
-    Number(rewardsData.sumrStakeDelegate.stakedAmount) +
-    Number(rewardsData.sumrToClaim.aggregatedRewards.total)
+  const overallSumr = calculateOverallSumr(rewardsData)
 
   const tabs = [
     ...(isPreLaunchVersion
@@ -92,7 +89,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
               <PortfolioOverview
                 positions={positions}
                 vaultsList={vaultsList}
-                sumrTokenRewards={rewardsData.sumrToClaim.aggregatedRewards.total}
+                rewardsData={rewardsData}
               />
             ),
           },
@@ -155,7 +152,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
       <div className={classNames.portfolioPageViewWrapper}>
         <PortfolioHeader
           walletAddress={walletAddress}
-          totalSumr={totalSumr}
+          totalSumr={overallSumr}
           totalWalletValue={totalWalletValue}
         />
         <TabBar
