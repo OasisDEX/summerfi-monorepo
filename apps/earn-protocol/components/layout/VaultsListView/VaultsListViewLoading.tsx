@@ -77,7 +77,7 @@ export const VaultsListViewLoading = () => {
               </div>
             }
             primaryButton={{
-              label: 'asd',
+              label: '',
               action: () => null,
               loading: true,
             }}
