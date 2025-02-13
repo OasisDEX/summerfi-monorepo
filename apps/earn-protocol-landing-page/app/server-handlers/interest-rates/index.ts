@@ -121,6 +121,11 @@ export async function getInterestRates({
         const data = await apiResponse.json()
 
         if (justLatestRates) {
+          if (!data.interestRates?.length) {
+            return noInterestRates
+          }
+
+          // map response from rates endpoint to match the expected format
           return {
             ...noInterestRates,
             latestInterestRate: [{ rate: [data.interestRates[0]] }],
