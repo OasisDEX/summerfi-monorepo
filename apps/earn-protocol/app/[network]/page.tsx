@@ -12,9 +12,9 @@ type EarnNetworkVaultsPageProps = {
   }>
 }
 
-const EarnNetworkVaultsPage = async (props: EarnNetworkVaultsPageProps) => {
-  const params = await props.params;
-  const parsedNetwork = humanNetworktoSDKNetwork(params.network)
+const EarnNetworkVaultsPage = async ({ params }: EarnNetworkVaultsPageProps) => {
+  const { network } = await params
+  const parsedNetwork = humanNetworktoSDKNetwork(network)
   const [{ vaults }, configRaw] = await Promise.all([getVaultsList(), systemConfigHandler()])
   const { config: systemConfig } = parseServerResponseToClient(configRaw)
   const vaultsDecorated = decorateCustomVaultFields({ vaults, systemConfig })

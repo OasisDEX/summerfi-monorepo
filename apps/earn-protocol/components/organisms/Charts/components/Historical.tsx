@@ -66,6 +66,8 @@ export const HistoricalChart = ({
         />
       )}
       <ResponsiveContainer
+        minHeight={300}
+        minWidth={100}
         width={chartHidden ? '30%' : '100%'}
         height="100%"
         style={

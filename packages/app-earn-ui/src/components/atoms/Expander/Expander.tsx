@@ -21,9 +21,16 @@ export const Expander: FC<ExpanderProps> = ({
   expanderButtonStyles = {},
   disabled = false,
 }) => {
+  const [isAnimating, setIsAnimating] = useState(false)
   const [isExpanded, setIsExpanded] = useState(defaultExpanded)
 
   const toggleExpand = useCallback(() => {
+    if (isExpanded) {
+      setIsAnimating(true)
+      setTimeout(() => {
+        setIsAnimating(false)
+      }, 600) // based on AnimateHeight animationTime
+    }
     setIsExpanded(!isExpanded)
   }, [isExpanded])
 
@@ -45,7 +52,7 @@ export const Expander: FC<ExpanderProps> = ({
         </div>
       </button>
       <AnimateHeight id={`Expander_${typeof title === 'string' ? title : ''}`} show={isExpanded}>
-        {children}
+        {isExpanded || isAnimating ? children : null}
       </AnimateHeight>
     </div>
   )

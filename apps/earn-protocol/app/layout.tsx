@@ -39,7 +39,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   if (config.maintenance && process.env.NODE_ENV !== 'development') {
     return (
-      <html lang={locale} style={{ backgroundColor: '#1c1c1c' }}>
+      <html lang={locale} suppressHydrationWarning style={{ backgroundColor: '#1c1c1c' }}>
         <head>
           <GlobalStyles />
         </head>
@@ -78,7 +78,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   // the style on the html tag is needed to prevent a flash of white background on page load
   return (
-    <html lang={locale} style={{ backgroundColor: '#1c1c1c' }}>
+    <html lang={locale} suppressHydrationWarning style={{ backgroundColor: '#1c1c1c' }}>
       <head>
         <GlobalStyles />
       </head>

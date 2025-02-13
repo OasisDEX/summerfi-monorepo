@@ -80,7 +80,7 @@ export const SumrSupplySchedule = () => {
           Circulating Supply
         </Text>
         <RechartResponsiveWrapper>
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" minHeight={300} minWidth={100}>
             <ComposedChart
               data={sumrSupplyScheduleData}
               margin={{

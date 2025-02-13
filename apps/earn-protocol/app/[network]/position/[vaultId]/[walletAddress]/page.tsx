@@ -34,15 +34,15 @@ type EarnVaultManagePageProps = {
   }>
 }
 
-const EarnVaultManagePage = async (props: EarnVaultManagePageProps) => {
-  const params = await props.params;
-  const parsedNetwork = humanNetworktoSDKNetwork(params.network)
+const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
+  const { network, vaultId, walletAddress } = await params
+  const parsedNetwork = humanNetworktoSDKNetwork(network)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
   const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
 
-  const parsedVaultId = isAddress(params.vaultId)
-    ? params.vaultId
-    : getVaultIdByVaultCustomName(params.vaultId, String(parsedNetworkId), systemConfig)
+  const parsedVaultId = isAddress(vaultId)
+    ? vaultId
+    : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
   const [vault, { vaults }, position, { userActivity, topDepositors }] = await Promise.all([
     getVaultDetails({
@@ -53,19 +53,19 @@ const EarnVaultManagePage = async (props: EarnVaultManagePageProps) => {
     getUserPosition({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
-      walletAddress: params.walletAddress,
+      walletAddress,
     }),
     getUserActivity({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
-      walletAddress: params.walletAddress,
+      walletAddress,
     }),
   ])
 
   if (!vault) {
     return (
       <Text>
-        No vault found with the id {params.vaultId} on the network {parsedNetwork}
+        No vault found with the id {vaultId} on the network {parsedNetwork}
       </Text>
     )
   }
@@ -73,7 +73,7 @@ const EarnVaultManagePage = async (props: EarnVaultManagePageProps) => {
   if (!position) {
     return (
       <Text>
-        No position found on {params.walletAddress} on the network {parsedNetwork}
+        No position found on {walletAddress} on the network {parsedNetwork}
       </Text>
     )
   }
@@ -91,7 +91,7 @@ const EarnVaultManagePage = async (props: EarnVaultManagePageProps) => {
   const [positionHistory, positionForecastResponse] = await Promise.all([
     await getPositionHistory({
       network: parsedNetwork,
-      address: params.walletAddress.toLowerCase(),
+      address: walletAddress.toLowerCase(),
       vault,
     }),
     await fetchForecastData({
@@ -127,7 +127,7 @@ const EarnVaultManagePage = async (props: EarnVaultManagePageProps) => {
       vault={vaultDecorated}
       vaults={vaultsDecorated}
       position={positionJsonSafe}
-      viewWalletAddress={params.walletAddress}
+      viewWalletAddress={walletAddress}
       userActivity={userActivity}
       topDepositors={topDepositors}
     />

@@ -27,9 +27,8 @@ type PortfolioPageProps = {
   }>
 }
 
-const PortfolioPage = async (props: PortfolioPageProps) => {
-  const params = await props.params;
-  const { walletAddress: walletAddressRaw } = params
+const PortfolioPage = async ({ params }: PortfolioPageProps) => {
+  const { walletAddress: walletAddressRaw } = await params
 
   const walletAddress = walletAddressRaw.toLowerCase()
 

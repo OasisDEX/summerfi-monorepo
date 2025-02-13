@@ -22,7 +22,7 @@ type ComparisonChartProps = {
 export const ComparisonChart = ({ data, dataNames, colors, compare }: ComparisonChartProps) => {
   return (
     <RechartResponsiveWrapper>
-      <ResponsiveContainer width="100%" height="90%">
+      <ResponsiveContainer width="100%" height="90%" minHeight={300} minWidth={100}>
         <ComposedChart
           data={data}
           margin={{

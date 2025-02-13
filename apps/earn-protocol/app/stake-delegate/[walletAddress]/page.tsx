@@ -16,9 +16,8 @@ type StakeDelegatePageProps = {
   }>
 }
 
-const StakeDelegatePage = async (props: StakeDelegatePageProps) => {
-  const params = await props.params;
-  const { walletAddress } = params
+const StakeDelegatePage = async ({ params }: StakeDelegatePageProps) => {
+  const { walletAddress } = await params
 
   if (!isValidAddress(walletAddress)) {
     redirect(`/`)

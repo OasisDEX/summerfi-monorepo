@@ -17,9 +17,12 @@ const cache = {} as {
 }
 const CACHE_TTL = 30 * 1000 // half a minute
 
-export async function GET(req: Request, props: { params: Promise<{ forecastParams: string[] }> }) {
-  const params = await props.params;
-  const [fleetAddress, chainId, amount] = params.forecastParams
+export async function GET(
+  req: Request,
+  { params }: { params: Promise<{ forecastParams: string[] }> },
+) {
+  const { forecastParams } = await params
+  const [fleetAddress, chainId, amount] = forecastParams
 
   if (!fleetAddress || !chainId || !amount) {
     return NextResponse.json({ error: 'Invalid forecast params' }, { status: 400 })

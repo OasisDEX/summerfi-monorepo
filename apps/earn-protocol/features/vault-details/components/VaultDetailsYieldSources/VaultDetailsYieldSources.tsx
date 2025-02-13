@@ -60,7 +60,7 @@ export const VaultDetailsYieldSources = () => {
       </Text>
       <div className={classNames.chartSection}>
         <RechartResponsiveWrapper>
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" minHeight={300} minWidth={100}>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <PieChart width={390} height={390}>
                 <Pie

@@ -26,15 +26,15 @@ type EarnVaultOpenPageProps = {
   }>
 }
 
-const EarnVaultOpenPage = async (props: EarnVaultOpenPageProps) => {
-  const params = await props.params;
-  const parsedNetwork = humanNetworktoSDKNetwork(params.network)
+const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
+  const { network, vaultId } = await params
+  const parsedNetwork = humanNetworktoSDKNetwork(network)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
   const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
 
-  const parsedVaultId = isAddress(params.vaultId)
-    ? params.vaultId
-    : getVaultIdByVaultCustomName(params.vaultId, String(parsedNetworkId), systemConfig)
+  const parsedVaultId = isAddress(vaultId)
+    ? vaultId
+    : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
   const [vault, { vaults }, { userActivity, topDepositors }, medianDefiYield] = await Promise.all([
     getVaultDetails({

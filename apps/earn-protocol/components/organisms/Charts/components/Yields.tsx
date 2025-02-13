@@ -28,7 +28,7 @@ export const YieldsChart = ({ data, dataNames, colors, summerVaultName }: Yields
 
   return (
     <RechartResponsiveWrapper>
-      <ResponsiveContainer width="100%" height="90%">
+      <ResponsiveContainer width="100%" height="90%" minHeight={300} minWidth={100}>
         <ComposedChart
           data={data}
           margin={{

@@ -16,9 +16,8 @@ type ClaimPageProps = {
   }>
 }
 
-const ClaimPage = async (props: ClaimPageProps) => {
-  const params = await props.params;
-  const { walletAddress } = params
+const ClaimPage = async ({ params }: ClaimPageProps) => {
+  const { walletAddress } = await params
 
   if (!isValidAddress(walletAddress)) {
     redirect(`/`)
