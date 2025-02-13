@@ -70,6 +70,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       getInterestRates({
         network: network as SDKNetwork,
         arksList: arks,
+        justLatestRates: true,
       }),
   )
 
