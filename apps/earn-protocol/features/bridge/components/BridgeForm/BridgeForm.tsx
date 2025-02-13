@@ -2,7 +2,9 @@
 import { type FC, useState } from 'react'
 import { useChain } from '@account-kit/react'
 import { Sidebar } from '@summerfi/app-earn-ui'
-import { arbitrum, type Chain } from 'viem/chains'
+import { type SDKNetwork } from '@summerfi/app-types'
+import { sdkNetworkToChain } from '@summerfi/app-utils'
+import { base, type Chain } from 'viem/chains'
 
 import { TermsOfServiceCookiePrefix } from '@/constants/terms-of-service'
 import { BridgeFormTitle } from '@/features/bridge/components/BridgeFormTitle/BridgeFormTitle'
@@ -20,8 +22,10 @@ interface BridgeFormProps {
 }
 
 export const BridgeForm: FC<BridgeFormProps> = ({ walletAddress, externalData }) => {
-  const { chain: sourceChain, setChain: setSourceChain } = useChain()
-  const [destinationChain, setDestinationChain] = useState<Chain>(arbitrum)
+  const { chain: sourceChain, setChain: setSourceChain, isSettingChain } = useChain()
+  console.log('sourceChain', sourceChain)
+  console.log('isSettingChain', isSettingChain)
+  const [destinationChain, setDestinationChain] = useState<Chain>(base)
   const [amount, setAmount] = useState<string>('')
 
   // const {
@@ -80,8 +84,16 @@ export const BridgeForm: FC<BridgeFormProps> = ({ walletAddress, externalData })
     // await executeBridgeTransaction()
   }
 
-  const handleDestinationChainChange = ({ chain }: { chain: Chain }) => {
-    setDestinationChain(chain)
+  const handleDestinationChainChange = (network: SDKNetwork) => {
+    setDestinationChain(sdkNetworkToChain(network))
+  }
+
+  const handleSourceChainChange = (network: SDKNetwork) => {
+    console.log('changing source chain to', network)
+
+    const nextSourceChain = sdkNetworkToChain(network)
+    console.log('nextSourceChain', nextSourceChain)
+    setSourceChain({ chain: nextSourceChain })
   }
 
   return (
@@ -94,7 +106,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({ walletAddress, externalData })
           <ChainSelectors
             sourceChain={sourceChain}
             destinationChain={destinationChain}
-            onSourceChainChange={setSourceChain}
+            onSourceChainChange={handleSourceChainChange}
             onDestinationChainChange={handleDestinationChainChange}
           />
           <Spacer />

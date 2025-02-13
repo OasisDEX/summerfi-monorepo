@@ -24,6 +24,7 @@
     margin-top: var(--general-space-4);
     z-index: 10;
     padding: var(--general-space-8);
+    font-size: var(--font-size-14);
 
     max-height: 0;
     opacity: 0;
@@ -69,6 +70,12 @@
     overflow-y: auto;
     max-height: 40vh;
   }
+}
+
+.dropdownOption > span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .disabled {

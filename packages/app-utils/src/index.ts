@@ -60,6 +60,7 @@ export {
   subgraphNetworkToId,
   subgraphNetworkToSDKId,
   chainIdToSDKNetwork,
+  sdkNetworkToChain,
 } from './helpers/earn-network-tools'
 export { setCookie, getCookie } from './helpers/cookies'
 export { verifyAccessToken } from './helpers/verify-access-token'

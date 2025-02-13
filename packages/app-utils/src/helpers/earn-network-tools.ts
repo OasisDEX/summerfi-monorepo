@@ -6,7 +6,9 @@ import {
   type SDKSupportedChain,
   sdkSupportedChains,
   type SDKSupportedNetwork,
+  sdkSupportedNetworks,
 } from '@summerfi/app-types'
+import { arbitrum, base, type Chain, mainnet } from 'viem/chains'
 
 export const isSupportedSDKChain = (
   chainId: unknown,
@@ -86,4 +88,18 @@ export const subgraphNetworkToSDKId = (network: SDKNetwork) => {
     [SDKNetwork.Base.toLowerCase()]: SDKChainId.BASE,
     [SDKNetwork.Mainnet.toLowerCase()]: SDKChainId.MAINNET,
   }[network.toLowerCase()] as SDKSupportedChain
+}
+
+export const sdkNetworkToChain = (network: SDKNetwork): Chain => {
+  if (!sdkSupportedNetworks.includes(network as SDKSupportedNetwork)) {
+    throw new Error(`Unsupported network: ${network}`)
+  }
+
+  const chainMap: { [K in SDKSupportedNetwork]: Chain } = {
+    [SDKNetwork.ArbitrumOne]: arbitrum,
+    [SDKNetwork.Base]: base,
+    [SDKNetwork.Mainnet]: mainnet,
+  }
+
+  return chainMap[network as SDKSupportedNetwork]
 }

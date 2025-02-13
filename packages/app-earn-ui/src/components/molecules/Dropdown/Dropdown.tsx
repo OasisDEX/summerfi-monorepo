@@ -6,6 +6,7 @@ import clsx from 'clsx'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Input } from '@/components/atoms/Input/Input.tsx'
+import { Text } from '@/components/atoms/Text/Text'
 import {
   MobileDrawer,
   MobileDrawerDefaultWrapper,
@@ -97,7 +98,7 @@ export const Dropdown: FC<DropdownProps> = ({
         className={`${dropdownStyles.dropdownOption} ${option.value === selectedOption.value ? dropdownStyles.selected : ''}`}
         onClick={() => handleSelectOption(option)}
       >
-        {option.content}
+        <Text variant="p3semi">{option.content}</Text>
       </div>
     ))
 
@@ -113,7 +114,7 @@ export const Dropdown: FC<DropdownProps> = ({
         style={
           asPill
             ? {
-                padding: '8px 14px 8px 10px',
+                padding: '8px 16px 8px 10px',
                 backgroundColor: 'var(--earn-protocol-neutral-80)',
                 borderRadius: 'var(--general-radius-24)',
                 fontWeight: '600',
@@ -129,6 +130,7 @@ export const Dropdown: FC<DropdownProps> = ({
             iconName={isOpen ? 'chevron_up' : 'chevron_down'}
             size={11}
             color="rgba(119, 117, 118, 1)"
+            style={{ marginLeft: 'var(--spacing-space-3x-small)' }}
           />
         )}
       </div>

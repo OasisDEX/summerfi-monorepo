@@ -2,11 +2,11 @@ import { type FC, type PropsWithChildren } from 'react'
 import { Footer, NewsletterWrapper, Text } from '@summerfi/app-earn-ui'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
+import { OffsetLayout } from '@/components/layout/OffsetLayout/OffsetLayout'
 import { isPreLaunchVersion } from '@/constants/is-pre-launch-version'
 
 import './global.css'
 import masterPageStyles from './MasterPage.module.scss'
-import { OffsetLayout } from '../OffsetLayout/OffsetLayout'
 
 interface MasterPageProps {
   skipNavigation?: boolean

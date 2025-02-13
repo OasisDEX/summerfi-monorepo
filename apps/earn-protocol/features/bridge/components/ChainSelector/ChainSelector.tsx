@@ -16,7 +16,7 @@ const networkOptions = Object.entries(networkIconByNetworkName)
     iconName,
   }))
   .filter(({ value }) =>
-    [SDKNetwork.ArbitrumOne, SDKNetwork.Base, SDKNetwork.Mainnet].includes(value),
+    [SDKNetwork.ArbitrumOne, SDKNetwork.Base, SDKNetwork.Mainnet].includes(value as SDKNetwork),
   )
 
 const NetworkContent: React.FC<{ option: DropdownOption }> = ({ option }) => (
@@ -30,12 +30,13 @@ const NetworkContent: React.FC<{ option: DropdownOption }> = ({ option }) => (
 interface ChainSelectorProps {
   label: string
   chainId: Chain['id']
-  onChange: ({ chain }: { chain: Chain }) => void
+  onChange: (network: SDKNetwork) => void
 }
 
 export const ChainSelector: React.FC<ChainSelectorProps> = ({ label, chainId, onChange }) => {
+  console.log('chainId', chainId)
   const selectedNetwork =
-    networkOptions.find((opt) => opt.value === chainIdToSDKNetwork(chainId)) || networkOptions[0]
+    networkOptions.find((opt) => opt.value === chainIdToSDKNetwork(chainId)) ?? networkOptions[0]
 
   return (
     <div className={styles.chainSelector}>
@@ -51,7 +52,7 @@ export const ChainSelector: React.FC<ChainSelectorProps> = ({ label, chainId, on
           value: option.value,
           content: <NetworkContent option={option} />,
         }))}
-        onChange={(selected: DropdownRawOption) => onChange(selected.value)}
+        onChange={(selected: DropdownRawOption) => onChange(selected.value as SDKNetwork)}
         asPill
         // className={styles.dropdown}
       >

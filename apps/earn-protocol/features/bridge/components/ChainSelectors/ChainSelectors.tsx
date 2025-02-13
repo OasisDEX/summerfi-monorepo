@@ -1,5 +1,6 @@
 'use client'
 import { Icon } from '@summerfi/app-earn-ui'
+import { type SDKNetwork } from '@summerfi/app-types'
 import { type Chain } from 'viem'
 
 import { ChainSelector } from '@/features/bridge/components/ChainSelector/ChainSelector'
@@ -9,8 +10,8 @@ import styles from './ChainSelectors.module.scss'
 interface ChainSelectorsProps {
   sourceChain: Chain
   destinationChain: Chain
-  onSourceChainChange: ({ chain }: { chain: Chain }) => void
-  onDestinationChainChange: ({ chain }: { chain: Chain }) => void
+  onSourceChainChange: (network: SDKNetwork) => void
+  onDestinationChainChange: (network: SDKNetwork) => void
 }
 
 export const ChainSelectors = ({

@@ -26,15 +26,17 @@ export const getNavigationItems = ({
       ]
     : []),
   {
-    label: '$SUMR',
-    id: 'sumr',
-    link: `${!isEarnApp ? `/earn` : ``}/sumr`,
-  },
-  {
     label: 'Explore',
     id: 'explore',
     disabled: isPreLaunchVersion,
     itemsList: [
+      {
+        title: '$SUMR token',
+        id: 'sumr',
+        description: 'Claim your $SUMR tokens',
+        url: `${!isEarnApp ? `/earn` : ``}/sumr`,
+        icon: 'sumr',
+      },
       {
         url: `${!isEarnApp ? `/earn` : ``}/user-activity`,
         id: 'user-activity',
