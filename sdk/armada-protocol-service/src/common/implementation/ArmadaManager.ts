@@ -1094,8 +1094,7 @@ export class ArmadaManager implements IArmadaManager {
     // FIXME: hardcoded to false because fleet rewards manager was not whitleilsted
     const claimRewards = false
 
-    // if the reques
-    // ted amount is close to all staked shares, we should withdraw all
+    // if the requested amount is close to all staked shares, we make assumption to withdraw all
     // threshold is set to 0.99999 to avoid rounding errors
     const withdrawThreshold = 0.9999
     const shouldWithdrawAll =
