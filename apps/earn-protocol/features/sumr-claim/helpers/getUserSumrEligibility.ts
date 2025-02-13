@@ -1,6 +1,5 @@
+import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { type LeaderboardItem, type LeaderboardResponse } from '@summerfi/app-types'
-
-import { REVALIDATION_TIMES } from '@/constants/revalidations'
 
 /**
  * Fetches the SUMR eligibility for a given user address.

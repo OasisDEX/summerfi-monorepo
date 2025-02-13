@@ -1,4 +1,4 @@
-import { REVALIDATION_TIMES } from '@/constants/revalidations'
+import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 
 export interface SumrDelegates {
   id: string

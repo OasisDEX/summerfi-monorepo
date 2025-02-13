@@ -1,8 +1,7 @@
 'use server'
 
+import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { type LeaderboardResponse } from '@summerfi/app-types'
-
-import { REVALIDATION_TIMES } from '@/constants/revalidations'
 
 export const fetchRaysLeaderboard = async (
   query:
