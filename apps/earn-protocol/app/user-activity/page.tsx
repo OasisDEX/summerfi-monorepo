@@ -14,7 +14,7 @@ const UserActivityPage: FC<UserActivityPageProps> = async props => {
   const searchParams = await props.searchParams;
   const [{ vaults }, { usersActivity, totalUsers, topDepositors }] = await Promise.all([
     getVaultsList(),
-    getUsersActivity(),
+    getUsersActivity({ filterTestingWallets: true }),
   ])
 
   return (

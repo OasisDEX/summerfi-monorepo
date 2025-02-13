@@ -57,7 +57,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     getSumrStakingInfo(),
     getSumrDelegates(),
     getSumrToClaim({ walletAddress }),
-    getUsersActivity(),
+    getUsersActivity({ filterTestingWallets: false }),
   ])
 
   const { vaults } = vaultsData
