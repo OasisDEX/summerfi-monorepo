@@ -135,6 +135,7 @@ export default async function HomePage() {
       getInterestRates({
         network: network as SDKNetwork,
         arksList: arks,
+        justLatestRates: true,
       }),
   )
 

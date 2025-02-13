@@ -19,6 +19,7 @@ const EarnAllVaultsPage = async () => {
       getInterestRates({
         network: network as SDKNetwork,
         arksList: arks,
+        justLatestRates: true,
       }),
   )
 
