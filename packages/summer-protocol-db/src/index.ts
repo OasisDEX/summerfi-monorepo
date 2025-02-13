@@ -3,8 +3,14 @@ import { CamelCasePlugin, Kysely } from 'kysely'
 import { PostgresJSDialect } from 'kysely-postgres-js'
 import postgres from 'postgres'
 
-interface PgSummerProtocolDbConfig {
+export interface PgSummerProtocolDbConfig {
   connectionString: string
+  pool?: {
+    min?: number
+    max?: number
+    idleTimeoutMillis?: number
+    acquireTimeoutMillis?: number
+  }
 }
 
 export interface SummerProtocolDB {
@@ -16,7 +22,12 @@ export { mapDbNetworkToChainId, mapChainIdToDbNetwork } from './helpers'
 export const getSummerProtocolDB = async (
   config: PgSummerProtocolDbConfig,
 ): Promise<SummerProtocolDB> => {
-  const pg = postgres(config.connectionString)
+  const pg = postgres(config.connectionString, {
+    max: config.pool?.max ?? 10,
+    idle_timeout: config.pool?.idleTimeoutMillis ?? 0,
+    connect_timeout: config.pool?.acquireTimeoutMillis ?? 30000,
+  })
+
   const db = new Kysely<Database>({
     dialect: new PostgresJSDialect({
       postgres: pg,
