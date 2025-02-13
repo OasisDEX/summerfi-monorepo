@@ -2,6 +2,7 @@ import {
   getSummerProtocolDB,
   mapChainIdToDbNetwork,
   SummerProtocolDB,
+  PgSummerProtocolDbConfig,
 } from '@summerfi/summer-protocol-db'
 import { Logger } from '@aws-lambda-powertools/logger'
 
@@ -36,22 +37,80 @@ export interface DBHistoricalRates {
 }
 
 export class RatesService {
+  private static instance: RatesService | null = null
   private db: SummerProtocolDB | null = null
+  private isInitializing = false
+  private initPromise: Promise<void> | null = null
+
+  static getInstance(): RatesService {
+    if (!RatesService.instance) {
+      RatesService.instance = new RatesService()
+    }
+    return RatesService.instance
+  }
+
+  private constructor() {}
 
   async init() {
+    // If already initialized, return immediately
+    if (this.db) {
+      return
+    }
+
+    // If initialization is in progress, wait for it
+    if (this.initPromise) {
+      await this.initPromise
+      return
+    }
+
+    // Start new initialization
+    this.isInitializing = true
+    this.initPromise = this.initializeDB()
+
+    try {
+      await this.initPromise
+    } finally {
+      this.isInitializing = false
+      this.initPromise = null
+    }
+  }
+
+  private async initializeDB() {
     if (!process.env.EARN_PROTOCOL_DB_CONNECTION_STRING) {
       logger.warn('Database connection string not provided')
       return
     }
 
-    this.db = await getSummerProtocolDB({
-      connectionString: process.env.EARN_PROTOCOL_DB_CONNECTION_STRING,
-    })
+    try {
+      const config: PgSummerProtocolDbConfig = {
+        connectionString: process.env.EARN_PROTOCOL_DB_CONNECTION_STRING,
+        pool: {
+          max: 1,
+          idleTimeoutMillis: 5000,
+          acquireTimeoutMillis: 3000,
+        },
+      }
+
+      this.db = await getSummerProtocolDB(config)
+      logger.info('Database connection initialized successfully')
+    } catch (error) {
+      logger.error('Failed to initialize database connection', {
+        error,
+        connectionString: process.env.EARN_PROTOCOL_DB_CONNECTION_STRING?.substring(0, 10) + '...',
+      })
+      throw new Error('Database initialization failed')
+    }
   }
 
   async getLatestRates(chainId: string, productId: string): Promise<DBRate[]> {
-    if (!this.db) return []
+    if (!this.db) {
+      logger.error('Database connection not initialized')
+      return []
+    }
+
     const network = mapChainIdToDbNetwork(chainId)
+    logger.info('Fetching latest rates', { chainId, network, productId })
+
     try {
       const rates = await this.db.db
         .selectFrom('rewardRate')
@@ -69,17 +128,27 @@ export class RatesService {
         productId: rate.productId,
       }))
     } catch (error) {
-      logger.error('Error fetching latest rates from DB', { error, chainId, productId })
+      logger.error('Error fetching latest rates from DB', {
+        error,
+        chainId,
+        network,
+        productId,
+        errorDetails: error instanceof Error ? error.stack : undefined,
+      })
       return []
     }
   }
 
   async getHistoricalRates(chainId: string, productId: string): Promise<DBHistoricalRates | null> {
-    if (!this.db) return null
+    if (!this.db) {
+      logger.error('Database connection not initialized')
+      return null
+    }
+
+    const network = mapChainIdToDbNetwork(chainId)
+    logger.info('Fetching historical rates', { chainId, network, productId })
 
     try {
-      const network = mapChainIdToDbNetwork(chainId)
-
       const [dailyRates, hourlyRates, weeklyRates, latestRate] = await Promise.all([
         this.db.db
           .selectFrom('dailyRewardRate')
@@ -150,7 +219,13 @@ export class RatesService {
             : [],
       }
     } catch (error) {
-      logger.error('Error fetching historical rates from DB', { error, chainId, productId })
+      logger.error('Error fetching historical rates from DB', {
+        error,
+        chainId,
+        network,
+        productId,
+        errorDetails: error instanceof Error ? error.stack : undefined,
+      })
       return null
     }
   }
