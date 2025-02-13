@@ -1,8 +1,11 @@
 export type Styles = {
   leftBlock: string
+  refreshingManage: string
+  refreshManageWrapper: string
   rightBlock: string
   rightBlockMobile: string
   rightBlockWrapper: string
+  rotate: string
   vaultManageGridBreadcrumbsWrapper: string
   vaultManageGridPositionWrapper: string
   vaultManageGridTopLeftWrapper: string

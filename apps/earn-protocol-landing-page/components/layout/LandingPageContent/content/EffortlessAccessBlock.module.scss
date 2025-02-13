@@ -21,7 +21,7 @@
 
 .uiImage {
   padding: 0 var(--general-space-40);
-  margin-left: 50px; // image shadow makes it not centered, adding this to center it
+  margin-left: 30px; // image shadow makes it not centered, adding this to center it
 
   @include media('<=s') {
     padding: 0 var(--general-space-4);

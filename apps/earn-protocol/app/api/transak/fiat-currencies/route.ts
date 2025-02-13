@@ -1,3 +1,4 @@
+import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { type NextRequest, NextResponse } from 'next/server'
 
 import { getTransakUrl } from '@/features/transak/helpers/get-transak-url'
@@ -20,10 +21,15 @@ export async function GET(req: ExtendedApiRequest) {
   }
 
   const requestUrl = `${transakApiUrl}/api/v2/currencies/fiat-currencies?apiKey=${partnerApiKey}`
-  const options = { method: 'GET', headers: { accept: 'application/json' } }
 
   try {
-    const data = await fetch(requestUrl, options)
+    const data = await fetch(requestUrl, {
+      method: 'GET',
+      headers: { accept: 'application/json' },
+      next: {
+        revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
+      },
+    })
 
     if (!data.ok) {
       throw new Error(`Fiat currencies API returned ${data.status}`)

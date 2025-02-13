@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { ten } from '@summerfi/app-utils'
-import { type HexData, type IToken } from '@summerfi/sdk-common'
+import { getChainInfoByChainId, type HexData, type IToken } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import { erc20Abi } from 'viem'
 
@@ -16,18 +16,30 @@ export interface TokenBalanceData {
   tokenBalanceLoading: boolean
 }
 
+/**
+ * Hook to fetch token balances for vault tokens and their underlying assets
+ * @param publicClient - Viem public client for blockchain interactions
+ * @param vaultTokenSymbol - Symbol of the vault token (e.g., "STETH")
+ * @param tokenSymbol - Symbol of the underlying token (e.g., "USDC")
+ * @param chainId - Network chain ID
+ * @param skip - Optional flag to skip balance fetching
+ * @param overwriteWalletAddress - Optional address to override the connected wallet
+ * @returns TokenBalanceData containing vault token, underlying token, balance, and loading state
+ */
 export const useTokenBalance = ({
   publicClient,
   vaultTokenSymbol,
   tokenSymbol,
   chainId,
   skip, // to be used when we there are multiple calls of this hook within single component
+  overwriteWalletAddress,
 }: {
   publicClient: ReturnType<typeof useNetworkAlignedClient>['publicClient']
   vaultTokenSymbol: string
   tokenSymbol: string
   chainId: number
   skip?: boolean
+  overwriteWalletAddress?: string
 }): TokenBalanceData => {
   const [vaultToken, setVaultToken] = useState<IToken>()
   const [token, setToken] = useState<IToken>()
@@ -35,25 +47,30 @@ export const useTokenBalance = ({
   const [tokenBalanceLoading, setTokenBalanceLoading] = useState(true)
   const { userWalletAddress } = useUserWallet()
 
-  const sdk = useAppSDK()
+  const walletAddress = overwriteWalletAddress ?? userWalletAddress
 
-  useEffect(() => {
-    const fetchTokenBalance = async (address: string) => {
+  const sdk = useAppSDK()
+  const getTokenRequest = useCallback(
+    (symbol: string) =>
+      symbol === 'SUMMER'
+        ? sdk.getSummerToken({
+            chainInfo: getChainInfoByChainId(chainId),
+          })
+        : sdk.getTokenBySymbol({
+            chainId,
+            symbol,
+          }),
+    [sdk, chainId],
+  )
+  const fetchTokenBalance = useCallback(
+    async (address: string) => {
+      setTokenBalance(undefined)
       setTokenBalanceLoading(true)
-      const tokenRequests: Promise<IToken | undefined>[] = [
-        sdk.getTokenBySymbol({
-          chainId,
-          symbol: vaultTokenSymbol,
-        }),
-      ]
+
+      const tokenRequests: Promise<IToken | undefined>[] = [getTokenRequest(vaultTokenSymbol)]
 
       if (tokenSymbol !== vaultTokenSymbol) {
-        tokenRequests.push(
-          sdk.getTokenBySymbol({
-            chainId,
-            symbol: tokenSymbol,
-          }),
-        )
+        tokenRequests.push(getTokenRequest(tokenSymbol))
       }
 
       const [fetchedVaultToken, fetchedToken] = (await Promise.all(tokenRequests)) as [
@@ -71,6 +88,9 @@ export const useTokenBalance = ({
             address: address as HexData,
           })
           .then((val) => {
+            if (skip) {
+              return
+            }
             setTokenBalanceLoading(false)
             setTokenBalance(new BigNumber(val.toString()).div(new BigNumber(ten).pow(18)))
           })
@@ -92,12 +112,15 @@ export const useTokenBalance = ({
             args: [address as HexData],
           })
           .then((val) => {
-            setTokenBalanceLoading(false)
+            if (skip) {
+              return
+            }
             setTokenBalance(
               new BigNumber(val.toString()).div(
                 new BigNumber(ten).pow(fetchedOrVaultToken.decimals),
               ),
             )
+            setTokenBalanceLoading(false)
           })
           .catch((err) => {
             setTokenBalanceLoading(false)
@@ -105,10 +128,13 @@ export const useTokenBalance = ({
             console.error('Error reading token balance', err)
           })
       }
-    }
+    },
+    [skip, getTokenRequest, vaultTokenSymbol, tokenSymbol, publicClient],
+  )
 
-    if (!skip && userWalletAddress) {
-      fetchTokenBalance(userWalletAddress).catch((err) => {
+  useEffect(() => {
+    if (!skip && walletAddress) {
+      fetchTokenBalance(walletAddress).catch((err) => {
         // eslint-disable-next-line no-console
         console.error('Error fetching token balance', err)
         setTokenBalance(undefined)
@@ -117,7 +143,16 @@ export const useTokenBalance = ({
     } else {
       setTokenBalanceLoading(false)
     }
-  }, [sdk, userWalletAddress, tokenSymbol, vaultTokenSymbol, publicClient, skip, chainId])
+  }, [
+    sdk,
+    walletAddress,
+    tokenSymbol,
+    vaultTokenSymbol,
+    publicClient,
+    skip,
+    chainId,
+    fetchTokenBalance,
+  ])
 
   return {
     vaultToken,

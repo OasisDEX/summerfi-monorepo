@@ -51,5 +51,6 @@ export interface RiskResponse {
 export interface UseRiskInput {
   chainId: number
   walletAddress?: string
+  cookiePrefix: string
   host?: string
 }

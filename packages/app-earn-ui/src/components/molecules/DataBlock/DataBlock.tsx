@@ -1,4 +1,5 @@
 import { type CSSProperties, type ReactNode } from 'react'
+import { type IconNamesList } from '@summerfi/app-types'
 import clsx from 'clsx'
 
 import { Text } from '@/components/atoms/Text/Text'
@@ -12,6 +13,7 @@ export type DataBlockProps = {
   size?: 'small' | 'large'
   titleSize?: 'small' | 'medium' | 'large'
   titleStyle?: CSSProperties
+  titleWrapperStyles?: CSSProperties
   subValueSize?: 'small' | 'medium' | 'large'
   valueSize?: 'small' | 'large' | 'largeColorful'
   valueStyle?: CSSProperties
@@ -21,6 +23,7 @@ export type DataBlockProps = {
   centered?: boolean
   subValueStyle?: CSSProperties
   accent?: string
+  tooltipIconName?: IconNamesList
 }
 
 export const DataBlock = ({
@@ -28,6 +31,7 @@ export const DataBlock = ({
   titleTooltip,
   titleSize,
   titleStyle,
+  titleWrapperStyles,
   size = 'small',
   value,
   valueSize,
@@ -38,6 +42,7 @@ export const DataBlock = ({
   subValueSize,
   subValueStyle,
   accent,
+  tooltipIconName,
 }: DataBlockProps) => {
   const titleVariant = {
     small: 'p3semi' as const,
@@ -64,15 +69,16 @@ export const DataBlock = ({
         [dataBlockStyles.hasAccent]: accent,
       })}
     >
-      <div className={dataBlockStyles.titleWrapper}>
+      <div className={dataBlockStyles.titleWrapper} style={titleWrapperStyles}>
         {accent && <div className={dataBlockStyles.accent} style={{ backgroundColor: accent }} />}
         <TitleWithIcon
           titleVariant={titleVariant}
           title={title}
-          iconName={titleTooltip ? 'question_o' : undefined}
+          iconName={titleTooltip ? tooltipIconName ?? 'question_o' : undefined}
           tooltip={titleTooltip}
           color="rgb(119, 117, 118)"
           titleStyle={titleStyle}
+          tooltipWrapperStyles={{ minWidth: '230px', left: '-120px' }}
         />
       </div>
       <Text variant={valueVariant} style={valueStyle}>

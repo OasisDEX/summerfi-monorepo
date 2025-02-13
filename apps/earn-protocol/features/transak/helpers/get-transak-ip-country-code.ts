@@ -1,3 +1,5 @@
+import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
+
 import { getCookies } from '@/constants/get-cookies'
 import { transakProductionUrl } from '@/features/transak/consts'
 import { type TransakIpCountryCodeResponse } from '@/features/transak/types'
@@ -18,7 +20,13 @@ export const getTransakIpCountryCode = async (): Promise<
       return { ipCountryCode: country }
     }
 
-    const options = { method: 'GET', headers: { accept: 'application/json' } }
+    const options = {
+      method: 'GET',
+      headers: { accept: 'application/json' },
+      next: {
+        revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
+      },
+    }
 
     const response = await fetch(`${transakProductionUrl}/fiat/public/v1/get/country`, options)
 

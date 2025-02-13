@@ -18,7 +18,6 @@
     "watch": "tsc -w",
     "e2e": "jest e2e/",
     "testw": "jest --watch",
-    "build": "tsc -b --preserveWatchOutput tsconfig.build.json",
     "prebuild": "tsc -b --preserveWatchOutput tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

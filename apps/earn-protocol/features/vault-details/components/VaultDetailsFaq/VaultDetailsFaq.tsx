@@ -1,23 +1,6 @@
 import { Card, Expander, Text } from '@summerfi/app-earn-ui'
 
-const faqExpanders = [
-  {
-    title: 'Why should I trust your platform?',
-    content: 'TBD',
-  },
-  {
-    title: 'How does the strategy work?',
-    content: 'TBD',
-  },
-  {
-    title: 'Where does the yield come from?',
-    content: 'TBD',
-  },
-  {
-    title: 'What’s the platform of Summer.fi?',
-    content: 'TBD',
-  },
-]
+import { vaultFaqData } from './vault-faq-data'
 
 export const VaultDetailsFaq = () => {
   return (
@@ -34,7 +17,7 @@ export const VaultDetailsFaq = () => {
         <Text as="h5" variant="h5" style={{ marginBottom: 'var(--spacing-space-medium)' }}>
           FAQ
         </Text>
-        {faqExpanders.map((item) => (
+        {vaultFaqData.map((item) => (
           <div
             key={item.title}
             style={{

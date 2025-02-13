@@ -4,7 +4,7 @@ import { getChainInfoByChainId } from '@summerfi/sdk-common'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 
-export async function getGlobalRebalances() {
+export const getGlobalRebalances = async () => {
   const rebalancesByNetwork = await Promise.all(
     sdkSupportedChains.map((networkId) => {
       const chainInfo = getChainInfoByChainId(networkId)

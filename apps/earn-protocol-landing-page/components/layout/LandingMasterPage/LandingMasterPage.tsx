@@ -63,7 +63,7 @@ export const LandingMasterPage: FC<PropsWithChildren<LandingMasterPageProps>> = 
                   marginBottom: 'var(--spacing-space-medium)',
                 }}
               >
-                Subscribe to the newsletter for Oasis updates
+                Subscribe to the newsletter for Summer.fi updates
               </Text>
               <div
                 style={{

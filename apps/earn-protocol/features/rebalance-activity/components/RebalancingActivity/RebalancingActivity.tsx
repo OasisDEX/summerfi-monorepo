@@ -1,17 +1,20 @@
 import { type FC, useMemo } from 'react'
-import { Card, DataBlock, Text, WithArrow } from '@summerfi/app-earn-ui'
-import { type SDKGlobalRebalancesType } from '@summerfi/app-types'
-import { formatFiatBalance } from '@summerfi/app-utils'
+import { Card, DataBlock, Icon, Text, Tooltip, WithArrow } from '@summerfi/app-earn-ui'
+import { type SDKGlobalRebalancesType, type SDKVaultsListType } from '@summerfi/app-types'
+import {
+  formatFiatBalance,
+  getRebalanceSavedGasCost,
+  getRebalanceSavedTimeInHours,
+} from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import { RebalanceActivityTable } from '@/features/rebalance-activity/components/RebalanceActivityTable/RebalanceActivityTable'
-import { getRebalanceSavedGasCost } from '@/features/rebalance-activity/helpers/get-saved-gas-cost'
-import { getRebalanceSavedTimeInHours } from '@/features/rebalance-activity/helpers/get-saved-time-in-hours'
 
 interface RebalancingActivityProps {
   rebalancesList: SDKGlobalRebalancesType
   vaultId: string
   totalRebalances: number
+  vaultsList: SDKVaultsListType
 }
 
 const rowsToDisplay = 4
@@ -20,12 +23,13 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({
   rebalancesList,
   vaultId,
   totalRebalances,
+  vaultsList,
 }) => {
   const savedTimeInHours = useMemo(
     () => getRebalanceSavedTimeInHours(totalRebalances),
     [totalRebalances],
   )
-  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(totalRebalances), [totalRebalances])
+  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(vaultsList), [vaultsList])
 
   return (
     <Card style={{ marginTop: 'var(--spacing-space-medium)' }}>
@@ -42,9 +46,33 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({
           }}
         >
           <DataBlock title="Rebalance actions" size="small" value={`${totalRebalances}`} />
-          <DataBlock title="User saved time" size="small" value={`${savedTimeInHours} Hours`} />
           <DataBlock
-            title="Gas cost savings"
+            title={
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
+                User saved time
+                <Tooltip
+                  tooltip="Time users have saved by relying on our AI-Powered keeper network to optimize positions"
+                  tooltipWrapperStyles={{ minWidth: '230px' }}
+                >
+                  <Icon iconName="info" size={18} />
+                </Tooltip>
+              </div>
+            }
+            size="small"
+            value={`${savedTimeInHours} Hours`}
+          />
+          <DataBlock
+            title={
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
+                Gas cost savings
+                <Tooltip
+                  tooltip="Gas cost savings achieved by users relying on our AI-Powered keeper network to optimize their positions, instead of manual management."
+                  tooltipWrapperStyles={{ minWidth: '230px' }}
+                >
+                  <Icon iconName="info" size={18} />
+                </Tooltip>
+              </div>
+            }
             size="small"
             value={`$${formatFiatBalance(savedGasCost)}`}
           />
@@ -57,9 +85,10 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({
             marginBottom: 'var(--spacing-space-large)',
           }}
         >
-          Rebalancing crucial in attaining the best possible yield for a Strategy, It is responsible
-          for reallocating assets from lower performing strategies to higher performing ones, within
-          a threshold of risk.
+          Continuous monitoring and rebalancing is crucial in attaining the best possible yield for
+          any strategy. It is responsible for reallocating assets from lower performing protocols
+          and markets to higher performing ones; strict risk thresholds are set by an independant
+          Risk Manager.
         </Text>
         <RebalanceActivityTable
           rebalancesList={rebalancesList}

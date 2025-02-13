@@ -8,6 +8,7 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "moduleResolution": "bundler",
+    "declarationMap": true,
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": false,

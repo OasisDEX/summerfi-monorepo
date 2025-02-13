@@ -1,8 +1,10 @@
+'use client'
 import { type FC } from 'react'
 import { BigGradientBox, Text, WithArrow } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 import Link from 'next/link'
 
+import { useUserWallet } from '@/hooks/use-user-wallet'
 import pillars from '@/public/img/sumr/pillars.svg'
 import rewardingUsage from '@/public/img/sumr/rewarding_usage.svg'
 
@@ -38,6 +40,8 @@ const SumrFundamentalTextualContent: FC<SumrFundamentalTextualContentProps> = ({
 }
 
 export const SumrFundamentalUtility = () => {
+  const { userWalletAddress } = useUserWallet()
+
   return (
     <div className={classNames.sumrFundamentalUtilityWrapper}>
       <Text as="h2" variant="h2">
@@ -49,7 +53,9 @@ export const SumrFundamentalUtility = () => {
             title="The core pillar of protocol governance"
             description="With Summer, effortlessly earn the best yields and grow your capital faster. We automatically rebalance your assets to top protocols, maximizing your returns."
             link={{
-              href: '/earn/portfolio',
+              href: userWalletAddress
+                ? `/portfolio/${userWalletAddress}?tab=rewards`
+                : '/sumr#claim',
               label: 'Claim $SUMR',
             }}
           />
@@ -60,7 +66,7 @@ export const SumrFundamentalUtility = () => {
             title="Rewarding sustained protocol usage"
             description="Lazy Summer requires 0 management from users. Only your own deposits, all risk management, yield optimizing and strategy rebalancing is handled automatically."
             link={{
-              href: '/earn/portfolio',
+              href: '/',
               label: 'Earn $SUMR',
             }}
           />

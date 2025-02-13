@@ -29,17 +29,19 @@
     "sst:dev:sdk": "sst dev --app sdk",
     "sst:build:sdk": "sst build --app sdk",
     "sst:deploy:sdk:staging": "sst deploy --stage staging --app sdk",
-    "sst:deploy:sdk:prod": "sst deploy --stage production --app sdk",
+    "sst:deploy:sdk:armada-prod": "sst deploy --stage armada-prod --app sdk",
+    "sst:deploy:sdk:oasis-borrow": "sst deploy --stage production --app sdk",
     "remove": "sst remove",
     "console": "sst console",
     "format": "prettier --check \"./**/*.{ts,tsx,js,jsx,json}\"",
     "format:fix": "prettier --write \"./**/*.{ts,tsx,js,jsx,json}\"",
     "coverage:total": "node scripts/coverage-report/GenerateCoverageReport.js",
     "armada:install": "git submodule update --init armada-protocol/contracts && cd armada-protocol/contracts && pnpm i",
-    "armada:build": "cd armada-protocol/contracts && pnpm build && cp -r packages/core-contracts/out/*.sol ../abis/src && cd ../.. && tsx ./scripts/transform-json-to-viem-abi.ts && cd armada-protocol/abis && pnpm genindex && pnpm build",
-    "armada:upconfig": "cd armada-protocol/contracts/packages/deployment/config && cp index.json ../../../../../sdk/armada-protocol-common/src/config"
+    "armada:generate": "zx bin/generate.mjs",
+    "armada:upconfig": "cd armada-protocol/contracts/packages/deployment/config && cp -r index.json ../../../../../sdk/armada-protocol-common/src/deployments/config.json"
   },
   "devDependencies": {
+    "@aws-sdk/client-s3": "^3.732.0",
     "@graphql-codegen/add": "^5.0.2",
     "@graphql-codegen/cli": "^5.0.2",
     "@graphql-codegen/typed-document-node": "^5.0.6",
@@ -72,7 +74,7 @@
     "tsx": "^4.16.5",
     "turbo": "^2.1.2",
     "typescript": "^5.6.2",
-    "zx": "^8.0.1"
+    "zx": "^8.3.0"
   },
   "name": "summerfi-monorepo",
   "packageManager": "pnpm@8.15.4",
@@ -81,7 +83,6 @@
   },
   "dependencies": {
     "bignumber.js": "^9.1.2",
-    "kysely": "^0.27.3",
     "viem": "2.21.55",
     "zod": "^3.22.4"
   },

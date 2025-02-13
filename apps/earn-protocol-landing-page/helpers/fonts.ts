@@ -3,10 +3,10 @@ import localFont from 'next/font/local'
 export const fontInter = localFont({
   src: [
     {
-      path: '../public/fonts/inter-variable.ttf',
+      path: '../public/fonts/inter.woff2',
     },
   ],
-  display: 'block',
+  display: 'swap',
   variable: '--font-inter',
   preload: true,
 })

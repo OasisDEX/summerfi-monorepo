@@ -34,8 +34,6 @@ type EarnVaultManagePageProps = {
   }
 }
 
-export const revalidate = 60
-
 const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   const parsedNetwork = humanNetworktoSDKNetwork(params.network)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
@@ -84,7 +82,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     arksList: vault.arks,
   })
 
-  const { netEarnings } = getPositionValues({
+  const { netValue } = getPositionValues({
     positionData: position,
     vaultData: vault,
   })
@@ -98,7 +96,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     await fetchForecastData({
       fleetAddress: vault.id as `0x${string}`,
       chainId: Number(parsedNetworkId),
-      amount: Number(netEarnings.toFixed(position.amount.token.decimals)),
+      amount: Number(netValue.toFixed(position.amount.token.decimals)),
     }),
   ])
 

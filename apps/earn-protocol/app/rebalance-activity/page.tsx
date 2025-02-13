@@ -6,8 +6,6 @@ import { getGlobalRebalances } from '@/app/server-handlers/sdk/get-global-rebala
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { RebalanceActivityView } from '@/features/rebalance-activity/components/RebalanceActivityView/RebalanceActivityView'
 
-export const revalidate = 60
-
 interface RebalanceActivityPageProps {
   searchParams: ReadonlyURLSearchParams
 }

@@ -1,7 +1,8 @@
 'use client'
 
-import type { FC } from 'react'
+import type { FC, ReactNode } from 'react'
 import { type DropdownOption, type DropdownRawOption } from '@summerfi/app-types'
+import clsx from 'clsx'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
@@ -23,18 +24,22 @@ const Content: FC<ContentProps> = ({ option }) => (
 
 type TitleWithSelectProps =
   | {
-      title: string
+      title: ReactNode
       options?: DropdownOption[]
       onChangeNetwork?: (selected: DropdownRawOption) => void
       selected?: DropdownOption
       tooltip?: string
+      onRefresh?: () => void
+      isRefreshing?: boolean
     }
   | {
-      title: string
+      title: ReactNode
       options: DropdownOption[]
       onChangeNetwork: (selected: DropdownRawOption) => void
       selected: DropdownOption
       tooltip?: string
+      onRefresh?: () => void
+      isRefreshing?: boolean
     }
 
 export const TitleWithSelect = ({
@@ -43,6 +48,8 @@ export const TitleWithSelect = ({
   onChangeNetwork,
   selected,
   tooltip,
+  isRefreshing,
+  onRefresh,
 }: TitleWithSelectProps) => {
   const tooltipContent = selected && options && onChangeNetwork && (
     <Dropdown
@@ -60,10 +67,21 @@ export const TitleWithSelect = ({
 
   return (
     <div className={titleWithSelectStyles.titleWithSelectWrapper}>
-      <div className={titleWithSelectStyles.titleLine}>
-        <Text as="h2" variant="h2">
-          {title}
-        </Text>
+      <div className={clsx(titleWithSelectStyles.titleLine)}>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <Text as="h2" variant="h2">
+            {title}
+          </Text>
+          <div
+            onClick={onRefresh}
+            className={clsx({
+              [titleWithSelectStyles.refreshing]: isRefreshing,
+            })}
+            style={{ marginTop: '20px', cursor: 'pointer' }}
+          >
+            <Icon iconName="refresh" size={16} />
+          </div>
+        </div>
         {tooltip ? (
           <Tooltip
             tooltip={tooltip}

@@ -53,7 +53,12 @@ export const LandingPageVaultPicker = ({ vault }: { vault: SDKVaultishType }) =>
     handleAmountChange,
     onBlur,
     onFocus,
-  } = useAmount({ vault, selectedToken: token, initialAmount: '1000' })
+  } = useAmount({
+    tokenDecimals: vault.inputToken.decimals,
+    tokenPrice: vault.inputTokenPriceUSD,
+    selectedToken: token,
+    initialAmount: '1000',
+  })
 
   const { amountDisplayUSDWithSwap, rawToTokenAmount } = useAmountWithSwap({
     vault,
@@ -78,6 +83,7 @@ export const LandingPageVaultPicker = ({ vault }: { vault: SDKVaultishType }) =>
         secondary
         withTokenBonus={sumrNetApyConfig.withSumr}
         sumrPrice={estimatedSumrPrice}
+        showCombinedBonus
       />
       <VaultSimulationForm
         vaultData={vault}

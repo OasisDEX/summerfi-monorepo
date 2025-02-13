@@ -1,4 +1,4 @@
-import { UserPositionsQuery, getSdk } from '../generated/client'
+import { UserPositionsQuery as UserPositionsQueryType, getSdk } from '../generated/client'
 import { createClient } from '../createClient'
 import { SubgraphClientConfig } from '../types'
 
@@ -25,3 +25,5 @@ async function getUserPositionsInternal(
 ): Promise<UserPositionsQuery> {
   return await client.UserPositions({ userAddress: params.userAddress })
 }
+
+export type UserPositionsQuery = UserPositionsQueryType

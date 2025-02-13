@@ -1,7 +1,10 @@
+'use client'
 import type { FC } from 'react'
 import { BigGradientBox, Text, WithArrow } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 import Link from 'next/link'
+
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './SumrMultipleWaysToEarn.module.scss'
 
@@ -31,13 +34,15 @@ const SumrMultipleWaysToEarnTextualContent: FC<SumrMultipleWaysToEarnTextualCont
         {description}
       </Text>
       <Link href={link.href}>
-        <WithArrow>{link.label}</WithArrow>
+        <WithArrow variant="p3semi">{link.label}</WithArrow>
       </Link>
     </div>
   )
 }
 
 export const SumrMultipleWaysToEarn = () => {
+  const { userWalletAddress } = useUserWallet()
+
   return (
     <div className={classNames.sumrMultipleWaysToEarnWrapper}>
       <Text as="h2" variant="h2">
@@ -47,15 +52,17 @@ export const SumrMultipleWaysToEarn = () => {
         <BigGradientBox className={classNames.bottomBoxLeftGradient}>
           <Image
             src={rebalanceActivity}
-            alt="Stake & Delegate to earn $SUMR"
+            alt="Delegate & Stake to earn $SUMR"
             placeholder="blur"
             quality={100}
           />
           <SumrMultipleWaysToEarnTextualContent
-            title="Stake & Delegate to earn $SUMR"
-            description="Lazy Summer requires 0 management from users. Apart from your own deposits, all risk management, yield optimizing and strategy rebalancing is handled automatically. "
+            title="Delegate & Stake to earn $SUMR"
+            description="Put your $SUMR to work by staking and delegating. Earn passive rewards while contributing to protocol governance. Shape the future of Lazy Summer and grow your holdings effortlessly."
             link={{
-              href: '/earn/portfolio',
+              href: userWalletAddress
+                ? `/portfolio/${userWalletAddress}?tab=rewards`
+                : '/sumr#claim',
               label: 'Stake & Earn',
             }}
           />
@@ -64,9 +71,9 @@ export const SumrMultipleWaysToEarn = () => {
           <Image src={earnSumr} alt="Deposit to earn $SUMR" placeholder="blur" quality={100} />
           <SumrMultipleWaysToEarnTextualContent
             title="Deposit to earn $SUMR"
-            description="Lazy Summer requires 0 management from users. Apart from your own deposits, all risk management, yield optimizing and strategy rebalancing is handled automatically. "
+            description="Earn $SUMR as a reward for using the protocol and grow your portfolio by simply depositing into Lazy Summer. Gaining both yields optimized by AI and governance power in one seamless experience."
             link={{
-              href: '/earn/portfolio',
+              href: '/',
               label: 'Sign up',
             }}
           />

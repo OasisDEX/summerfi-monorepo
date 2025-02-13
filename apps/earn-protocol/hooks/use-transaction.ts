@@ -8,6 +8,7 @@ import {
   useSmartAccountClient,
   useUser,
 } from '@account-kit/react'
+import { getVaultPositionUrl, getVaultUrl, useIsIframe } from '@summerfi/app-earn-ui'
 import {
   type EarnAllowanceTypes,
   type EarnTransactionViewStates,
@@ -34,10 +35,15 @@ import {
 } from '@/account-kit/config'
 import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
 import { getApprovalTx } from '@/helpers/get-approval-tx'
+import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
+import { revalidateUser } from '@/helpers/revalidation-handlers'
+import { sendSafeTx } from '@/helpers/send-safe-tx'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { type useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
+
+import { useUserWallet } from './use-user-wallet'
 
 type UseTransactionParams = {
   vault: SDKVaultishType
@@ -53,6 +59,7 @@ type UseTransactionParams = {
   ownerView?: boolean
   positionAmount?: BigNumber
   approvalCustomValue?: BigNumber
+  approvalTokenSymbol?: string
 }
 
 const errorsMap = {
@@ -80,14 +87,16 @@ export const useTransaction = ({
   positionAmount,
   approvalCustomValue,
 }: UseTransactionParams) => {
+  const { refresh: refreshView, push } = useRouter()
   const [slippageConfig] = useSlippageConfig()
-  const { refresh: refreshView } = useRouter()
   const user = useUser()
+  const { userWalletAddress } = useUserWallet()
   const { getDepositTX, getWithdrawTX } = useAppSDK()
   const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
   const [isTransakOpen, setIsTransakOpen] = useState(false)
   const { setChain, isSettingChain } = useChain()
   const { clientChainId } = useClientChainId()
+  const isIframe = useIsIframe()
   const [transactionType, setTransactionType] = useState<TransactionAction>(
     TransactionAction.DEPOSIT,
   )
@@ -110,6 +119,12 @@ export const useTransaction = ({
 
     return transactions[0]
   }, [transactions])
+
+  const approvalTokenSymbol = useMemo(() => {
+    return nextTransaction?.type === TransactionType.Approve
+      ? nextTransaction.metadata.approvalAmount.token.symbol
+      : ''
+  }, [nextTransaction?.metadata, nextTransaction?.type])
 
   // Configure User Operation (transaction) sender, passing client which can be undefined
   const {
@@ -146,27 +161,31 @@ export const useTransaction = ({
   })
 
   const sendTransaction = useCallback(
-    ({
-      target,
-      data,
-      value = 0n,
-    }: {
-      target: `0x${string}`
-      data: `0x${string}`
-      value?: bigint
-    }) => {
+    (
+      {
+        target,
+        data,
+        value = 0n,
+      }: {
+        target: `0x${string}`
+        data: `0x${string}`
+        value?: bigint
+      },
+      overrides?: { paymasterAndData: `0x${string}` },
+    ) => {
       return sendUserOperation({
         uo: {
           target,
           data,
           value,
         },
+        overrides,
       })
     },
     [sendUserOperation],
   )
 
-  const executeNextTransaction = useCallback(() => {
+  const executeNextTransaction = useCallback(async () => {
     setTxStatus('txInProgress')
 
     if (!nextTransaction) {
@@ -189,16 +208,47 @@ export const useTransaction = ({
         ? {
             target: nextTransaction.transaction.target.value,
             data: getApprovalTx(
-              user.address,
-              BigInt(approvalCustomValue.times(ten.pow(token.decimals)).toString()),
+              nextTransaction.metadata.approvalSpender.value,
+              BigInt(
+                approvalCustomValue
+                  .times(ten.pow(nextTransaction.metadata.approvalAmount.token.decimals))
+                  .toString(),
+              ),
             ),
+            value: BigInt(nextTransaction.transaction.value),
           }
         : {
             target: nextTransaction.transaction.target.value,
             data: nextTransaction.transaction.calldata,
+            value: BigInt(nextTransaction.transaction.value),
           }
 
-    sendTransaction(txParams)
+    if (isIframe) {
+      await sendSafeTx({
+        txs: [
+          {
+            to: txParams.target,
+            data: txParams.data,
+            value: txParams.value.toString(),
+          },
+        ],
+        onSuccess: () => {
+          setTxStatus('txSuccess')
+        },
+        onError: () => {
+          setTxStatus('txError')
+        },
+      })
+
+      return
+    }
+
+    const resolvedOverrides = await getGasSponsorshipOverride({
+      smartAccountClient,
+      txParams,
+    })
+
+    sendTransaction(txParams, resolvedOverrides)
   }, [
     token,
     approvalCustomValue,
@@ -208,6 +258,8 @@ export const useTransaction = ({
     sendTransaction,
     setTxStatus,
     user,
+    smartAccountClient,
+    isIframe,
   ])
 
   const backToInit = useCallback(() => {
@@ -312,11 +364,13 @@ export const useTransaction = ({
       }
     }
     if (!isProperChainSelected || isSettingChain) {
+      const nextChain = SDKChainIdToAAChainMap[vaultChainId]
+
       return {
-        label: `Change network to ${vaultChainId}`,
+        label: `Change network to ${nextChain.name}`,
         action: () => {
           setChain({
-            chain: SDKChainIdToAAChainMap[vaultChainId],
+            chain: nextChain,
           })
         },
         disabled: isSettingChain,
@@ -395,7 +449,7 @@ export const useTransaction = ({
     if (nextTransaction?.type) {
       return {
         label: {
-          [TransactionType.Approve]: `Approve ${token.symbol}`,
+          [TransactionType.Approve]: `Approve ${approvalTokenSymbol}`,
           [TransactionType.Deposit]: 'Deposit',
           [TransactionType.Withdraw]: 'Withdraw',
         }[nextTransaction.type],
@@ -438,6 +492,7 @@ export const useTransaction = ({
     setChain,
     executeNextTransaction,
     positionAmount,
+    approvalTokenSymbol,
   ])
 
   const sidebarTitle = useMemo(() => {
@@ -458,10 +513,50 @@ export const useTransaction = ({
       transactions?.length === 0 &&
       !waitingForTx
     ) {
-      refreshView()
       reset()
+      if (userWalletAddress) {
+        // refreshes the view
+        refreshView()
+        // revalidates users wallet data (all of fetches with wallet tagged in it)
+        revalidateUser(userWalletAddress)
+
+        // makes sure the user is redirected to the correct page
+        // after closing or opening
+        const isOpening = transactionType === TransactionAction.DEPOSIT && flow === 'open'
+        const isClosing =
+          transactionType === TransactionAction.WITHDRAW &&
+          positionAmount &&
+          flow === 'manage' &&
+          amount?.eq(positionAmount)
+
+        if (isOpening || isClosing) {
+          push(
+            isOpening
+              ? getVaultPositionUrl({
+                  network: vault.protocol.network,
+                  vaultId: vault.customFields?.slug ?? vault.id,
+                  walletAddress: userWalletAddress,
+                })
+              : getVaultUrl(vault),
+          )
+        }
+      }
     }
-  }, [refreshView, reset, waitingForTx, transactions?.length, txStatus, isSendingUserOperation])
+  }, [
+    refreshView,
+    amount,
+    flow,
+    isSendingUserOperation,
+    positionAmount,
+    push,
+    reset,
+    transactionType,
+    transactions?.length,
+    txStatus,
+    vault,
+    waitingForTx,
+    userWalletAddress,
+  ])
 
   // watch for sendUserOperationError
   useEffect(() => {
@@ -539,6 +634,7 @@ export const useTransaction = ({
     reset,
     backToInit,
     user,
+    approvalTokenSymbol,
     setTransactionType,
     transactionType,
     approvalType,

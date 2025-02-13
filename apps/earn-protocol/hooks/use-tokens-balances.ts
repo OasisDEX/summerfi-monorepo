@@ -1,5 +1,4 @@
-import { useMemo } from 'react'
-import { arbitrum, base } from '@account-kit/infra'
+import { arbitrum, base, mainnet } from '@account-kit/infra'
 import { SDKChainId, SDKNetwork } from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
 import { createPublicClient, http } from 'viem'
@@ -8,6 +7,24 @@ import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
 import { supportedNetworkGuard } from '@/helpers/supported-network-guard'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useUserWallet } from '@/hooks/use-user-wallet'
+
+/**
+ * Public client instances for interacting with different networks
+ */
+const arbitrumPublicClient = createPublicClient({
+  chain: arbitrum,
+  transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.ARBITRUM]),
+})
+
+const basePublicClient = createPublicClient({
+  chain: base,
+  transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.BASE]),
+})
+
+const mainnetPublicClient = createPublicClient({
+  chain: mainnet,
+  transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.MAINNET]),
+})
 
 /**
  * Hook to fetch token and vault token balances for a specific network
@@ -36,24 +53,6 @@ export const useTokenBalances = ({
   }
   const { userWalletAddress } = useUserWallet()
 
-  /**
-   * Public client instances for interacting with different networks
-   * Memoized to prevent unnecessary re-creation
-   */
-  const arbitrumPublicClient = useMemo(() => {
-    return createPublicClient({
-      chain: arbitrum,
-      transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.ARBITRUM]),
-    })
-  }, [])
-
-  const basePublicClient = useMemo(() => {
-    return createPublicClient({
-      chain: base,
-      transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.BASE]),
-    })
-  }, [])
-
   const arbitrumTokenBalance = useTokenBalance({
     tokenSymbol,
     vaultTokenSymbol,
@@ -68,10 +67,18 @@ export const useTokenBalances = ({
     chainId: SDKChainId.BASE,
     skip: network !== SDKNetwork.Base,
   })
+  const mainnetTokenBalance = useTokenBalance({
+    tokenSymbol,
+    vaultTokenSymbol,
+    publicClient: mainnetPublicClient,
+    chainId: SDKChainId.MAINNET,
+    skip: network !== SDKNetwork.Mainnet,
+  })
 
   const balance = {
     [SDKNetwork.ArbitrumOne]: arbitrumTokenBalance,
     [SDKNetwork.Base]: baseTokenBalance,
+    [SDKNetwork.Mainnet]: mainnetTokenBalance,
   }[network]
 
   /**

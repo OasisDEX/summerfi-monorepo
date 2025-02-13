@@ -83,9 +83,9 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
   const totalAssetsUsdValue = preparedTokenData.reduce((acc, { balanceUSD }) => acc + balanceUSD, 0)
 
   const walletAssetsResponse: PortfolioAssetsResponse = {
-    totalAssetsUsdValue,
+    totalAssetsUsdValue: totalAssetsUsdValue ?? 0,
     totalAssetsPercentageChange: 0,
-    assets: preparedTokenData,
+    assets: preparedTokenData ?? [],
   }
 
   return ResponseOk({ body: walletAssetsResponse })

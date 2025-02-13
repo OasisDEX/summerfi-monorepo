@@ -38,26 +38,38 @@ export async function getUsersActivity(): Promise<{
     ),
   ].length
 
-  const usersActivityList = usersActivityListRaw.flatMap((position) => [
-    ...position.deposits.map((deposit) => ({
-      ...deposit,
-      balance: position.inputTokenBalance,
-      vault: position.vault,
-      account: position.account.id,
-      activity: UserActivityType.DEPOSIT,
-    })),
-    ...position.withdrawals.map((deposit) => ({
-      ...deposit,
-      balance: position.inputTokenBalance,
-      vault: position.vault,
-      account: position.account.id,
-      activity: UserActivityType.WITHDRAW,
-    })),
-  ])
+  const usersActivityList = usersActivityListRaw
+    .flatMap((position) => [
+      ...position.deposits.map((deposit) => ({
+        ...deposit,
+        balance: position.inputTokenBalance,
+        vault: position.vault,
+        account: position.account.id,
+        activity: UserActivityType.DEPOSIT,
+      })),
+      ...position.withdrawals.map((deposit) => ({
+        ...deposit,
+        balance: position.inputTokenBalance,
+        vault: position.vault,
+        account: position.account.id,
+        activity: UserActivityType.WITHDRAW,
+      })),
+    ])
+    .sort((a, b) =>
+      simpleSort({
+        a: a.timestamp,
+        b: b.timestamp,
+        direction: SortDirection.DESC,
+      }),
+    )
 
   const topDepositors = usersActivityListRaw
     .sort((a, b) =>
-      simpleSort({ a: a.inputTokenBalance, b: b.inputTokenBalance, direction: SortDirection.DESC }),
+      simpleSort({
+        a: a.inputTokenBalance,
+        b: b.inputTokenBalance,
+        direction: SortDirection.DESC,
+      }),
     )
     .filter((item) => item.deposits.length > 0)
 

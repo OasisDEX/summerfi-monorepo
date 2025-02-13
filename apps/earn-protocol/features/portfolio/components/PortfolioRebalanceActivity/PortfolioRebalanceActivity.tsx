@@ -1,12 +1,15 @@
 import { type FC, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
-import { Card, DataBlock, Text } from '@summerfi/app-earn-ui'
-import { type SDKGlobalRebalancesType } from '@summerfi/app-types'
-import { formatFiatBalance, formatShorthandNumber } from '@summerfi/app-utils'
+import { Card, DataBlock, Icon, Text, Tooltip } from '@summerfi/app-earn-ui'
+import { type SDKGlobalRebalancesType, type SDKVaultsListType } from '@summerfi/app-types'
+import {
+  formatFiatBalance,
+  formatShorthandNumber,
+  getRebalanceSavedGasCost,
+  getRebalanceSavedTimeInHours,
+} from '@summerfi/app-utils'
 
 import { PortfolioRebalanceActivityList } from '@/features/portfolio/components/PortfolioRebalanceActivityList/PortfolioRebalanceActivityList'
-import { getRebalanceSavedGasCost } from '@/features/rebalance-activity/helpers/get-saved-gas-cost'
-import { getRebalanceSavedTimeInHours } from '@/features/rebalance-activity/helpers/get-saved-time-in-hours'
 
 import classNames from './PortfolioRebalanceActivity.module.scss'
 
@@ -14,6 +17,7 @@ interface PortfolioRebalanceActivityProps {
   rebalancesList: SDKGlobalRebalancesType
   walletAddress: string
   totalRebalances: number
+  vaultsList: SDKVaultsListType
 }
 
 const initialRows = 10
@@ -22,12 +26,13 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
   rebalancesList,
   walletAddress,
   totalRebalances,
+  vaultsList,
 }) => {
   const savedTimeInHours = useMemo(
     () => getRebalanceSavedTimeInHours(totalRebalances),
     [totalRebalances],
   )
-  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(totalRebalances), [totalRebalances])
+  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(vaultsList), [vaultsList])
 
   const [current, setCurrent] = useState(initialRows)
 
@@ -49,11 +54,31 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
       value: formatShorthandNumber(totalRebalances, { precision: 0 }),
     },
     {
-      title: 'User saved time',
-      value: `${formatShorthandNumber(savedTimeInHours, { precision: 1 })} hours`,
+      title: (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
+          User saved time
+          <Tooltip
+            tooltip="Time users have saved by relying on our AI-Powered keeper network to optimize positions"
+            tooltipWrapperStyles={{ minWidth: '230px' }}
+          >
+            <Icon iconName="info" size={18} />
+          </Tooltip>
+        </div>
+      ),
+      value: `${savedTimeInHours} hours`,
     },
     {
-      title: 'Gas cost saving',
+      title: (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
+          Gas cost savings
+          <Tooltip
+            tooltip="Gas cost savings achieved by users relying on our AI-Powered keeper network to optimize their positions, instead of manual management."
+            tooltipWrapperStyles={{ minWidth: '230px' }}
+          >
+            <Icon iconName="info" size={18} />
+          </Tooltip>
+        </div>
+      ),
       value: `$${formatFiatBalance(savedGasCost)}`,
     },
   ]
@@ -66,7 +91,7 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
       <div className={classNames.blocksWrapper}>
         {blocks.map((block) => (
           <DataBlock
-            key={block.title}
+            key={block.value}
             title={block.title}
             value={block.value}
             titleSize="large"

@@ -45,7 +45,7 @@
 
 .newsletterSuccessWrapper {
   text-align: center;
-  margin-top: var(--space-m);
+  margin-top: var(--general-space-8);
 }
 .newsletterSuccessBackground {
   display: inline-flex;
@@ -53,6 +53,7 @@
   border-radius: var(--radius-50);
   padding: var(--space-m) var(--space-l);
   align-items: center;
+  gap: var(--general-space-4);
 }
 .newsletterSuccessIcon {
   display: flex;

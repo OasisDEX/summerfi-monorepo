@@ -1,3 +1,4 @@
+import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { type NextRequest, NextResponse } from 'next/server'
 
 import { getTransakUrl } from '@/features/transak/helpers/get-transak-url'
@@ -21,16 +22,17 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Not authorized' }, { status: 401 })
   }
 
-  const options = {
-    method: 'GET',
-    headers: {
-      accept: 'application/json',
-      'access-token': accessToken.value,
-    },
-  }
-
   try {
-    const response = await fetch(requestUrl, options)
+    const response = await fetch(requestUrl, {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        'access-token': accessToken.value,
+      },
+      next: {
+        revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
+      },
+    })
 
     if (!response.ok) {
       return NextResponse.json(

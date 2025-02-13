@@ -26,11 +26,14 @@ export class AaveV3DepositBorrowActionBuilder extends BaseActionBuilder<steps.De
       throw new Error('Invalid AaveV3 lending pool')
     }
 
-    const aaveV3LendingPoolAddress = await getContractAddress({
-      addressBookManager,
-      chainInfo: user.chainInfo,
-      contractName: 'AavePool',
-    })
+    const [aaveV3LendingPoolAddress, borrowTo] = await Promise.all([
+      getContractAddress({
+        addressBookManager,
+        chainInfo: user.chainInfo,
+        contractName: 'AavePool',
+      }),
+      this._getBorrowTargetAddress(params),
+    ])
 
     context.addActionCall({
       step: step,
@@ -67,8 +70,8 @@ export class AaveV3DepositBorrowActionBuilder extends BaseActionBuilder<steps.De
       step: step,
       action: new AaveV3BorrowAction(),
       arguments: {
-        borrowAmount: borrowAmount,
-        borrowTo: await this._getBorrowTargetAddress(params),
+        borrowAmount,
+        borrowTo,
       },
       connectedInputs: {},
       connectedOutputs: {

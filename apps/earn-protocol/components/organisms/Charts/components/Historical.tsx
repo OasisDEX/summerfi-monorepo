@@ -6,7 +6,7 @@ import {
   type TimeframesType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
-import { formatCryptoBalance } from '@summerfi/app-utils'
+import { formatFiatBalance } from '@summerfi/app-utils'
 import {
   ComposedChart,
   Customized,
@@ -40,11 +40,12 @@ export const HistoricalChart = ({
   position,
   timeframe,
 }: HistoricalChartProps) => {
-  const { netDeposited, netEarnings } = getPositionValues(position)
+  const { netValueUSD, netDepositedUSD, netEarningsUSD } = getPositionValues(position)
+
   const legendBaseData = {
-    netValue: `$${formatCryptoBalance(netEarnings)}`,
-    depositedValue: `$${formatCryptoBalance(netDeposited)}`,
-    earnings: `$${formatCryptoBalance(netEarnings.minus(netDeposited))}`,
+    netValue: `$${formatFiatBalance(netValueUSD)}`,
+    depositedValue: `$${formatFiatBalance(netDepositedUSD)}`,
+    earnings: `$${formatFiatBalance(netEarningsUSD)}`,
     sumrEarned: `TBD `,
   }
   const [highlightedData, setHighlightedData] = useState<{
@@ -90,7 +91,7 @@ export const HistoricalChart = ({
                 ...activePayload.reduce(
                   (acc, { dataKey, value }) => ({
                     ...acc,
-                    [dataKey]: `$${formatCryptoBalance(value)}`,
+                    [dataKey]: `$${formatFiatBalance(value)}`,
                   }),
                   {},
                 ),
@@ -113,7 +114,16 @@ export const HistoricalChart = ({
           <YAxis
             strokeWidth={0}
             tickFormatter={(label: string) => `${formatChartCryptoValue(Number(label))}`}
-            domain={['dataMin', 'dataMax + 5']}
+            interval="preserveStartEnd"
+            scale="linear"
+            domain={[
+              (dataMin: number) => {
+                return Math.max(dataMin - 2, 0)
+              },
+              (dataMax: number) => {
+                return Math.min(dataMax + 2, dataMax * 2)
+              },
+            ]}
             hide={chartHidden}
           />
           {/* Cursor is needed for the chart cross to work */}

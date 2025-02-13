@@ -8,7 +8,13 @@ describe('Blockchain Provider', () => {
 
   beforeEach(() => {
     const configProvider = {
-      getConfigurationItem: jest.fn().mockReturnValue('https://rpc-gateway-url.com'),
+      getConfigurationItem: (params: { name: string }) => {
+        if (params.name === 'SDK_RPC_GATEWAY') {
+          return 'https://rpc-gateway-url.com'
+        }
+
+        return undefined
+      },
     } as unknown as IConfigurationProvider
 
     blockchainClientProvider = new BlockchainClientProvider({ configProvider })

@@ -4,6 +4,10 @@ import { type ForecastData, type SDKChainId } from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
 import debounce from 'lodash-es/debounce'
 
+import {
+  type EarningsEstimationsMap,
+  getEarningsEstimationsMap,
+} from '@/helpers/get-earnings-estimations-map'
 import { getOneYearEarnings } from '@/helpers/get-one-year-earnings'
 
 type UseForecastProps = {
@@ -23,6 +27,7 @@ export const useForecast = ({
 }: UseForecastProps) => {
   const [isLoadingForecast, setIsLoadingForecast] = useState(true)
   const [forecast, setForecast] = useState<ForecastData | undefined>()
+  const [forecastSummaryMap, setForecastSummaryMap] = useState<EarningsEstimationsMap | undefined>()
   const [oneYearEarningsForecast, setOneYearEarningsForecast] = useState<string | undefined>()
 
   useEffect(() => {
@@ -34,6 +39,7 @@ export const useForecast = ({
       if (
         new BigNumber(amount).isZero() // Don't fetch forecast for zero amounts
       ) {
+        setForecastSummaryMap(undefined)
         setOneYearEarningsForecast(undefined)
         setIsLoadingForecast(false)
 
@@ -49,6 +55,12 @@ export const useForecast = ({
           setForecast(data)
           setOneYearEarningsForecast(
             getOneYearEarnings({
+              forecast: data,
+              inputValue: amount,
+            }),
+          )
+          setForecastSummaryMap(
+            getEarningsEstimationsMap({
               forecast: data,
               inputValue: amount,
             }),
@@ -75,7 +87,7 @@ export const useForecast = ({
     return () => {
       fetchForecast.cancel()
     }
-  }, [fleetAddress, chainId, amount, disabled])
+  }, [fleetAddress, chainId, amount, disabled, isEarnApp])
 
-  return { forecast, isLoadingForecast, oneYearEarningsForecast }
+  return { forecast, isLoadingForecast, oneYearEarningsForecast, forecastSummaryMap }
 }

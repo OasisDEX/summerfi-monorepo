@@ -12,8 +12,6 @@ type EarnNetworkVaultsPageProps = {
   }
 }
 
-export const revalidate = 60
-
 const EarnNetworkVaultsPage = async ({ params }: EarnNetworkVaultsPageProps) => {
   const parsedNetwork = humanNetworktoSDKNetwork(params.network)
   const [{ vaults }, configRaw] = await Promise.all([getVaultsList(), systemConfigHandler()])

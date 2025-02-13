@@ -20,6 +20,7 @@ export { Timeframes } from './components/atoms/Timeframes/Timeframes'
 export { LoadableAvatar } from './components/atoms/LoadableAvatar/LoadableAvatar'
 export { AnimateHeight } from './components/atoms/AnimateHeight/AnimateHeight'
 export { RechartResponsiveWrapper } from './components/atoms/RechartResponsiveWrapper/RechartResponsiveWrapper'
+export { HeaderDisclaimer } from './components/molecules/HeaderDisclaimer/HeaderDisclaimer'
 
 export { Footer } from './components/layout/Footer/Footer'
 
@@ -66,6 +67,7 @@ export {
 export { PillSelector } from './components/molecules/PillSelector/PillSelector'
 export { BonusLabel } from './components/molecules/BonusLabel/BonusLabel'
 export { ProjectedEarnings } from './components/molecules/ProjectedEarnings/ProjectedEarnings'
+export { ProjectedEarningsExpanded } from './components/molecules/ProjectedEarnings/ProjectedEarningsExpanded'
 export { HeadingWithCards } from './components/molecules/HeadingWithCards/HeadingWithCards'
 export { TableCarousel } from './components/molecules/TableCarousel/TableCarousel'
 export {
@@ -83,7 +85,8 @@ export { Emphasis } from './components/molecules/Emphasis/Emphasis'
 export { IconWithBackground } from './components/molecules/IconWithBackground/IconWithBackground'
 export { FaqSection } from './components/molecules/FaqSection/FaqSection'
 export { DataModule } from './components/molecules/DataModule/DataModule'
-export { PercentageBadge } from './components/molecules/PercentageBadge/PercentageBadge'
+export { Badge } from './components/molecules/Badge/Badge'
+export { HighestQualityYieldsDisclaimer } from './components/molecules/HighestQualityYeildsDisclaimer/HighestQualityYieldsDisclaimer'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'
@@ -111,6 +114,7 @@ export { useTokenSelector } from './hooks/use-token-selector'
 export { useAmount } from './hooks/use-amount'
 export { useAmountWithSwap } from './hooks/use-amount-with-swap'
 export { useForecast } from './features/forecast/use-forecast.ts'
+export { useIsIframe } from './hooks/use-is-iframe'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
 export { getVaultUrl, getVaultDetailsUrl, getVaultPositionUrl } from './helpers/get-vault-url'
@@ -121,6 +125,13 @@ export { getOneYearEarnings } from './helpers/get-one-year-earnings'
 export { getPositionValues } from './helpers/get-position-values'
 export { getSumrTokenBonus } from './helpers/get-sumr-token-bonus'
 export { getResolvedForecastAmountParsed } from './helpers/get-resolved-forecast-amount-parsed'
+export { getVotingPowerColor } from './helpers/get-voting-power-color'
+export {
+  type EarningsEstimationsMap,
+  getEarningsEstimationsMap,
+} from './helpers/get-earnings-estimations-map'
+export { getUniqueVaultId } from './helpers/get-unique-vault-id'
+export { getDisplayToken } from './helpers/get-display-token'
 
 export { INTERNAL_LINKS, EXTERNAL_LINKS } from './helpers/application-links'
 
@@ -128,6 +139,9 @@ export { INTERNAL_LINKS, EXTERNAL_LINKS } from './helpers/application-links'
 export { parseForecastDatapoints } from './features/forecast/parse-forecast-datapoints'
 export { fetchForecastData } from './features/forecast/fetch-forecast-data'
 export { chartTimestampFormat } from './features/forecast/chart-formatters'
+
+// newsletter stuff
+export { handleNewsletterSubscription } from './features/newsletter'
 
 // contexts
 export {
@@ -147,3 +161,4 @@ export {
 
 // constants
 export { SUMR_CAP, RAYS_TO_SUMR_CONVERSION_RATE } from './constants/earn-protocol'
+export { REVALIDATION_TIMES, REVALIDATION_TAGS } from './constants/revalidation'

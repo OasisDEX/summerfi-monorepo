@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type ReactNode, useEffect, useRef, useState } from 'react'
+import { type CSSProperties, type FC, type ReactNode, useEffect, useRef, useState } from 'react'
 import { type DropdownRawOption } from '@summerfi/app-types'
 import clsx from 'clsx'
 
@@ -26,6 +26,8 @@ export interface DropdownProps {
   inputPlaceholder?: string
   trigger?: (props: TriggerProps) => ReactNode
   isDisabled?: boolean
+  dropdownOptionsStyle?: CSSProperties
+  dropdownChildrenStyle?: CSSProperties
 }
 
 export const Dropdown: FC<DropdownProps> = ({
@@ -38,6 +40,8 @@ export const Dropdown: FC<DropdownProps> = ({
   inputPlaceholder,
   trigger,
   isDisabled,
+  dropdownOptionsStyle,
+  dropdownChildrenStyle,
 }) => {
   const [selectedOption, setSelectedOption] = useState<DropdownRawOption>(dropdownValue)
   const [isOpen, setIsOpen] = useState(false) // To manage dropdown open/close state
@@ -47,12 +51,13 @@ export const Dropdown: FC<DropdownProps> = ({
   const [inputValue, setInputValue] = useState('')
 
   useEffect(() => {
-    if (!onChange) {
-      // if there is no onChange prop, set the selected option to
-      // the dropdownValue as controlled component behavior
+    if (dropdownValue !== selectedOption) {
+      // removed the check for onChange
+      // we need both dropdownValue and selectedOption to
+      // be in sync (always, regardless of onChange)
       setSelectedOption(dropdownValue)
     }
-  }, [onChange, dropdownValue])
+  }, [dropdownValue, selectedOption])
 
   const handleSelectOption = (option: DropdownRawOption) => {
     if (onChange) {
@@ -109,6 +114,7 @@ export const Dropdown: FC<DropdownProps> = ({
                 padding: '5px 8px 5px 5px',
                 backgroundColor: 'var(--earn-protocol-neutral-80)',
                 borderRadius: 'var(--general-radius-24)',
+                ...dropdownChildrenStyle,
               }
             : {}
         }
@@ -149,6 +155,7 @@ export const Dropdown: FC<DropdownProps> = ({
         <div
           className={`${dropdownStyles.dropdownOptions} ${isOpen ? dropdownStyles.dropdownShow : ''}`}
           aria-hidden={!isOpen} // For accessibility
+          style={dropdownOptionsStyle}
         >
           {withSearch && (
             <Input

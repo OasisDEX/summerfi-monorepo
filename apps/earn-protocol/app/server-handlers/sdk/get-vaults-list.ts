@@ -3,7 +3,7 @@ import { getChainInfoByChainId } from '@summerfi/sdk-common'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 
-export async function getVaultsList() {
+export const getVaultsList = async () => {
   const vaultsListByNetwork = await Promise.all(
     sdkSupportedChains.map((networkId) => {
       const chainInfo = getChainInfoByChainId(networkId)

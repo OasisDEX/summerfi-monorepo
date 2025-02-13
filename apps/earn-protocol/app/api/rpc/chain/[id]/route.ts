@@ -1,3 +1,4 @@
+import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import type { Chain } from 'viem'
 
 import { type AccountKitSupportedNetworks, SDKChainIdToAAChainMap } from '@/account-kit/config'
@@ -33,6 +34,9 @@ export async function POST(req: Request) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
+      next: {
+        revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
+      },
     })
 
     if (!apiResponse.ok) {

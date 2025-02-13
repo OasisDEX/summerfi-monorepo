@@ -1,4 +1,4 @@
-import { alchemy, arbitrum, base, mainnet } from '@account-kit/infra'
+import { alchemy, arbitrum, base, mainnet, optimism } from '@account-kit/infra'
 import { type AlchemyAccountsUIConfig, cookieStorage, createConfig } from '@account-kit/react'
 import { SDKChainId, SDKSupportedNetworkIdsEnum } from '@summerfi/app-types'
 import { QueryClient } from '@tanstack/react-query'
@@ -6,18 +6,26 @@ import { type Chain } from 'viem'
 
 export const queryClient = new QueryClient()
 
-export type AccountKitSupportedNetworks = SDKChainId.BASE | SDKChainId.ARBITRUM | SDKChainId.MAINNET
+export type AccountKitSupportedNetworks =
+  | SDKChainId.BASE
+  | SDKChainId.ARBITRUM
+  | SDKChainId.MAINNET
+  | SDKChainId.OPTIMISM
 
-export const SDKChainIdToAAChainMap = {
+export const SDKChainIdToAAChainMap: {
+  [key in AccountKitSupportedNetworks]: Chain
+} = {
   [SDKChainId.ARBITRUM]: arbitrum,
   [SDKChainId.BASE]: base,
   [SDKChainId.MAINNET]: mainnet,
+  [SDKChainId.OPTIMISM]: optimism,
 }
 
 export const GasSponsorshipIdMap = {
-  [SDKChainId.ARBITRUM]: undefined,
+  [SDKChainId.ARBITRUM]: '99eeab13-6d37-4f9e-adf6-d59cd8060d7f',
   [SDKChainId.BASE]: '7d552463-eba5-4eac-a940-56f0515243f2',
   [SDKChainId.MAINNET]: undefined,
+  [SDKChainId.OPTIMISM]: undefined,
 }
 
 const uiConfig: AlchemyAccountsUIConfig = {
@@ -52,9 +60,6 @@ export const getAccountKitConfig = ({
 }) => {
   return createConfig(
     {
-      transport: alchemy({
-        rpcUrl: forkRpcUrl ?? `/earn/api/rpc/chain/${chainId ?? defaultChain.id}`,
-      }),
       signerConnection: {
         // this is for Alchemy Signer requests
         rpcUrl: '/earn/api/rpc',
@@ -63,16 +68,28 @@ export const getAccountKitConfig = ({
         [SDKSupportedNetworkIdsEnum.ARBITRUM]: arbitrum,
         [SDKSupportedNetworkIdsEnum.BASE]: base,
         [SDKSupportedNetworkIdsEnum.MAINNET]: mainnet,
+        [SDKSupportedNetworkIdsEnum.OPTIMISM]: optimism,
       }[chainId ?? defaultChain.id] as Chain,
       chains: Object.values(SDKChainIdToAAChainMap).map((chain) => ({
         chain,
         policyId: GasSponsorshipIdMap[chain.id as SDKChainId.ARBITRUM | SDKChainId.BASE],
+        transport: alchemy({
+          rpcUrl: forkRpcUrl ?? `/earn/api/rpc/chain/${chain.id}`,
+        }),
       })),
       ssr: true,
       storage: cookieStorage,
+      sessionConfig: {
+        expirationTimeMs: 1000 * 60 * 90, // 90 minutes,
+      },
     },
     uiConfig,
   )
 }
 
 export const accountType = 'MultiOwnerModularAccount'
+
+// to be used for cases when user is logged in using smart account and is no longer eligible for gas sponsorship
+export const overridesGasSponsorship: { paymasterAndData: `0x${string}` } = {
+  paymasterAndData: '0x',
+}

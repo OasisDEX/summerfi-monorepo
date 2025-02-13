@@ -1,0 +1,279 @@
+import { SDKNetwork } from '@summerfi/app-types'
+
+export const arkDetailsMap: {
+  [key in SDKNetwork.ArbitrumOne | SDKNetwork.Base | SDKNetwork.Mainnet]: {
+    [key: string]: { description: string; link?: string }
+  }
+} = {
+  [SDKNetwork.Mainnet]: {
+    // ETH Strategies
+    '0x1a91e4bc8b5dc910bc58c3ddf35405edb9c2022e': {
+      description:
+        'Built on time-tested infrastructure, delivering efficient ETH yield optimization with a strong track record of reliability and security.',
+      link: 'https://app.aave.com/reserve-overview/?underlyingAsset=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&marketName=proto_mainnet_v3',
+    },
+    '0x4bd07e9d2ad23a68d232a20f1c8555e0c1573a4b': {
+      description:
+        'A strategy designed to maximize ETH efficiency while maintaining strict risk controls and prioritizing sustainability.',
+      link: 'https://app.morpho.org/ethereum/vault/0xBEEf050ecd6a16c4e7bfFbB52Ebba7846C4b8cD4/steakhouse-eth',
+    },
+    '0x5093dae3bdcaf136d4dfd684e1fba87a86c21c14': {
+      description:
+        'A dynamically managed ETH strategy, designed to adapt to market conditions and optimize capital deployment without unnecessary complexity.',
+      link: 'https://fluid.instadapp.io/lending/1',
+    },
+    '0x570957bc84b5607e2412de72461fbbd02844b042': {
+      description:
+        'A protocol-native ETH strategy with transparent mechanics, deep liquidity, and a structured approach to capital efficiency.',
+      link: 'https://app.spark.fi/markets/1/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+    },
+    '0x5f32a2eef8e96adf4a9199527255a69ea457c0e9': {
+      description:
+        'A highly vetted ETH strategy built for resilient yield performance with intelligent allocation and rigorous risk assessment.',
+      link: 'https://app.morpho.org/ethereum/vault/0x2371e134e3455e0593363cBF89d3b6cf53740618/gauntlet-weth-prime',
+    },
+    '0x6d3ef0c74050ba40cef2d2fff34b869aa1e2668f': {
+      description:
+        'A strategy designed to optimize ETH exposure while prioritizing security, efficiency, and predictable returns.',
+      link: 'https://app.gearbox.fi/pools/0xda0002859b2d05f66a753d8241fcde8623f26f4f',
+    },
+    '0x78bfc6c846ff91f6029f0d94db1c455afbe27d78': {
+      description:
+        'Engineered for efficient ETH deployment, minimizing unnecessary risks while ensuring capital remains productive.',
+      link: 'https://app.euler.finance/vault/0xD8b27CF359b7D15710a5BE299AF6e7Bf904984C2?network=ethereum',
+    },
+    '0xc991f9dec95e33389132a4d91f71cfe6235acaaf': {
+      description:
+        'An advanced ETH strategy, built with algorithmic optimization to enhance performance while maintaining risk-adjusted stability.',
+      link: 'https://app.morpho.org/ethereum/vault/0x78Fc2c2eD1A4cDb5402365934aE5648aDAd094d0/re7-weth',
+    },
+    '0xcc9691be0b06f98803585c308d20aa0497dac88c': {
+      description:
+        'A streamlined ETH strategy, focused on maximizing efficiency with minimal exposure to volatility and structural inefficiencies.',
+      link: 'https://app.compound.finance/?market=usdc-mainnet',
+    },
+    '0xde1f07a76da86e9480c65b0344d978ee85c778f0': {
+      description:
+        'The buffer is a portion of a vault that is not held in any one particular strategy and stands ready to be deployed to capitalize on any new strategies that may arise.',
+    },
+
+    // USDT Strategies
+    '0x26c50781f592cf4c7389615a38dc927c81f8a0a4': {
+      description:
+        'A strategy designed to ensure capital efficiency while reducing unnecessary exposure to volatility or structural risks.',
+      link: 'https://app.morpho.org/ethereum/vault/0xA0804346780b4c2e3bE118ac957D1DB82F9d7484/smokehouse-usdt',
+    },
+    '0x2d0afbf4f6bb188638e281c430eded5610f0af14': {
+      description:
+        'A USDT strategy focused on efficient capital deployment, maintaining strong security while optimizing returns.',
+      link: 'https://app.euler.finance/vault/0x313603FA690301b0CaeEf8069c065862f9162162?network=ethereum',
+    },
+    '0x4b7752b3ee55c792784b5431c98d4bdb25d49728': {
+      description:
+        'An optimized USDT strategy that prioritizes efficient capital utilization while avoiding unnecessary complexity.',
+      link: 'https://app.gearbox.fi/pools/0x05a811275fe9b4de503b3311f51edf6a856d936e',
+    },
+    '0x593f7246c38a6f1ad34add932d6274b846f367e6': {
+      description:
+        'A structured USDT strategy, ensuring measured risk exposure while delivering consistent yield performance.',
+      link: 'https://app.compound.finance/markets/usdt-mainnet',
+    },
+    '0x5da1c579175dd284106ccac84d0f4e614a93cb66': {
+      description:
+        'A USDT strategy designed to optimize returns with transparent mechanics and a focus on long-term efficiency.',
+      link: 'https://app.euler.finance/vault/0x7c280DBDEf569e96c7919251bD2B0edF0734C5A8?network=ethereum',
+    },
+    '0x650012ba5369d051e381435e8161454c1a0fcbdc': {
+      description:
+        'A capital-efficient USDT strategy, ensuring optimal exposure while maintaining a strict focus on sustainability.',
+      link: 'https://app.morpho.org/ethereum/vault/0xA0804346780b4c2e3bE118ac957D1DB82F9d7484/smokehouse-usdt',
+    },
+    '0x66d635171b5760fd28e41a2f8e4b926c64720542': {
+      description:
+        'A top-tier USDT strategy, built for efficiency, long-term resilience, and reduced exposure to unnecessary risks.',
+      link: 'https://app.morpho.org/ethereum/vault/0x2C25f6C25770fFEC5959D34B94Bf898865e5D6b1/flagship-usdt',
+    },
+    '0x6a60336bc45ae0c9aabae13acc4bcc0cbd962e44': {
+      description:
+        'An adaptive USDT strategy, designed to ensure consistent performance without unnecessary complexity.',
+      link: 'https://fluid.instadapp.io/lending/1',
+    },
+    '0xa4a6bd19fff5d7b9772e1967b2f53f94924e6c1c': {
+      description:
+        'A widely adopted USDT strategy, known for its transparent mechanics, strong infrastructure, and efficient capital deployment.',
+      link: 'https://app.aave.com/reserve-overview/?underlyingAsset=0xdac17f958d2ee523a2206206994597c13d831ec7&marketName=proto_mainnet_v3',
+    },
+    '0xf2425751c945c3ac0fcde9e638ed5a30829c9294': {
+      description:
+        'An advanced USDT strategy, leveraging algorithmic efficiency to enhance returns while maintaining risk-conscious exposure.',
+      link: 'https://app.morpho.org/ethereum/vault/0x95EeF579155cd2C5510F312c8fA39208c3Be01a8/re7-usdt',
+    },
+    '0xf28b3262e2bb0f11ed25a4c4dc87f7f33dd1b5c5': {
+      description:
+        'A transparent, protocol-native USDT strategy, offering structured exposure to sustainable, long-term performance.',
+      link: 'https://app.spark.fi/markets/1/0xdAC17F958D2ee523a2206206994597C13D831ec7',
+    },
+    '0xfa1f432b93b71a8c3cdc0ac32d18f64c80d0f882': {
+      description:
+        'A premium USDT strategy built for long-term sustainability, rigorous risk assessment, and intelligent capital allocation.',
+      link: 'https://app.morpho.org/ethereum/vault/0xdd0f28e19C1780eb6396170735D45153D261490d/gauntlet-usdc-prime',
+    },
+    '0x8b43a590cc7f0ffd3593131920b226112d329b0e': {
+      description:
+        'The buffer is a portion of a vault that is not held in any one particular strategy and stands ready to be deployed to capitalize on any new strategies that may arise.',
+    },
+
+    // USDC Strategies
+    '0x165d1accc5c6326e7ee4deef75ac3ffc8ce4d79b': {
+      description:
+        'A structured USDC strategy, optimized for long-term stability and avoiding unnecessary market inefficiencies.',
+      link: 'https://app.euler.finance/vault/0xe0a80d35bB6618CBA260120b279d357978c42BCE?network=ethereum',
+    },
+    '0x1ae10e9425653177282e6054a5c828391a533ac7': {
+      description:
+        'A capital-efficient USDC strategy, prioritizing structured, risk-adjusted returns over speculative exposure.',
+      link: 'https://app.morpho.org/ethereum/vault/0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB/steakhouse-usdc',
+    },
+    '0x36d0501d07619274a398aff16007337041873a6f': {
+      description:
+        'An optimized USDC strategy, ensuring efficient capital allocation while reducing unnecessary complexity.',
+      link: 'https://app.gearbox.fi/pools/0xda00000035fef4082f78def6a8903bee419fbf8e',
+    },
+    '0x78f466314b2a69685e464431edf7688cb77de131': {
+      description:
+        'A core USDC strategy designed for sustainable capital efficiency, structured to avoid unnecessary market risks.',
+      link: 'https://app.morpho.org/ethereum/vault/0x8eB67A509616cd6A7c1B3c8C21D48FF57df3d458/gauntlet-usdc-core',
+    },
+    '0x8948a5f3d24f7a6d50ff36064e8cff33b2af062f': {
+      description:
+        'A MakerDAO-powered USDC strategy, built for long-term sustainability with a focus on efficiency and resilience.',
+      link: 'https://app.spark.fi/markets/1/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+    },
+    '0x9890c99f504337c3500ac05c267c38dfcd41c3e2': {
+      description:
+        'A synthetic USDC strategy, engineered for optimized returns while maintaining a structured, risk-conscious approach.',
+      link: 'https://app.sky.money/?network=ethereum&widget=savings',
+    },
+    '0x99d21c9c1d68ce0e9bbf77ae0c965daa3ab02c7e': {
+      description:
+        'A high-efficiency USDC strategy, designed for stable, long-term performance with proven mechanics.',
+      link: 'https://app.morpho.org/ethereum/vault/0x186514400e52270cef3D80e1c6F8d10A75d47344/flagship-usdc',
+    },
+    '0xb10c29b85e388f3ec1189f8ebc78b3f71408cd34': {
+      description:
+        'A well-structured USDC strategy that leverages intelligent capital allocation to optimize returns sustainably.',
+      link: 'https://app.morpho.org/ethereum/vault/0xdd0f28e19C1780eb6396170735D45153D261490d/gauntlet-usdc-prime',
+    },
+    '0xb5e9c7ad5bb1e21b12ad62066ff1fb388ebdeb37': {
+      description:
+        'An advanced USDC strategy, blending algorithmic optimization with risk-adjusted efficiency for long-term stability.',
+      link: 'https://app.morpho.org/ethereum/vault/0x60d715515d4411f7F43e4206dc5d4a3677f0eC78/re7-usdc',
+    },
+    '0xc9dd080c9eccfcdbf379714d84cdc8bd01046ae1': {
+      description:
+        'A widely adopted USDC strategy, built for consistent returns and structured to minimize inefficiencies.',
+      link: 'https://app.aave.com/reserve-overview/?underlyingAsset=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&marketName=proto_mainnet_v3',
+    },
+    '0xca75e855a33acc44dda9d48578df5df7602b5c35': {
+      description:
+        'A capital-efficient USDC strategy, focused on structured, risk-adjusted returns with long-term sustainability.',
+      link: 'https://app.euler.finance/vault/0xce45EF0414dE3516cAF1BCf937bF7F2Cf67873De?network=ethereum',
+    },
+    '0xccbd61b6c2fb58da5bbd8937ca25164ef29c1cc4': {
+      description:
+        'A structured USDC strategy, designed for stable, long-term performance with an emphasis on capital efficiency.',
+      link: 'https://app.euler.finance/vault/0x797DD80692c3b2dAdabCe8e30C07fDE5307D48a9?network=ethereum',
+    },
+    '0xdb6d68d571fbef7d67827844dd800884ea9cc02e': {
+      description:
+        'A dynamically managed USDC strategy, designed for real-time market optimization while avoiding unnecessary exposure.',
+      link: 'https://fluid.instadapp.io/lending/1',
+    },
+    '0xedc6a603b31391b7d13fba6a721fd4dda401f9ea': {
+      description:
+        'A streamlined USDC strategy, focused on maximizing efficiency while reducing unnecessary market exposure.',
+      link: 'https://app.compound.finance/markets/usdc-mainnet',
+    },
+    '0xf8db64d39d1c7382fe47de8b72435c7e9dfb2894': {
+      description:
+        'A sustainable USDC strategy, prioritizing structured exposure and long-term capital efficiency.',
+      link: 'https://app.morpho.org/ethereum/vault/0xBEeFFF209270748ddd194831b3fa287a5386f5bC/smokehouse-usdc',
+    },
+    '0x106cbb1f445f0bffa7894f4199ee940bf7f6dd2b': {
+      description:
+        'The buffer is a portion of a vault that is not held in any one particular strategy and stands ready to be deployed to capitalize on any new strategies that may arise.',
+    },
+  },
+  [SDKNetwork.ArbitrumOne]: {
+    '0xc9dd080c9eccfcdbf379714d84cdc8bd01046ae1': {
+      description:
+        'A stable and transparent USDT strategy, built for efficiency and optimized to deliver long-term, sustainable yield.',
+      link: 'https://app.aave.com/reserve-overview/?underlyingAsset=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&marketName=proto_mainnet_v3',
+    },
+    '0xdb6d68d571fbef7d67827844dd800884ea9cc02e': {
+      description:
+        'A liquidity-optimized USDT strategy, ensuring capital efficiency without introducing unnecessary complexity or exposure.',
+      link: 'https://fluid.instadapp.io/lending/1',
+    },
+    '0xedc6a603b31391b7d13fba6a721fd4dda401f9ea': {
+      description:
+        'A structured USDT strategy, designed for stability, capital preservation, and optimized yield distribution.',
+      link: 'https://app.compound.finance/markets/usdt-mainnet',
+    },
+    '0x106cbb1f445f0bffa7894f4199ee940bf7f6dd2b': {
+      description:
+        'The buffer is a portion of a vault that is not held in any one particular strategy and stands ready to be deployed to capitalize on any new strategies that may arise.',
+    },
+  },
+  [SDKNetwork.Base]: {
+    '0x165d1accc5c6326e7ee4deef75ac3ffc8ce4d79b': {
+      description:
+        'A high-efficiency USDC strategy, leveraging tested methodologies to maximize yield while minimizing inefficiencies.',
+      link: 'https://app.morpho.org/base/vault/0xeE8F4eC5672F09119b96Ab6fB59C27E1b7e44b61/gauntlet-usdc-prime',
+    },
+    '0x36d0501d07619274a398aff16007337041873a6f': {
+      description:
+        'A structured approach to USDC optimization, ensuring transparent exposure to sustainable, risk-adjusted returns.',
+      link: 'https://app.sky.money/?network=ethereum&widget=savings',
+    },
+    '0x78f466314b2a69685e464431edf7688cb77de131': {
+      description:
+        'A next-generation USDC strategy, using real-time data insights to improve capital efficiency while avoiding unnecessary complexity.',
+      link: 'https://app.morpho.org/base/vault/0x12AFDeFb2237a5963e7BAb3e2D46ad0eee70406e/re7-usdc',
+    },
+    '0x8948a5f3d24f7a6d50ff36064e8cff33b2af062f': {
+      description:
+        'A protocol-driven USDC strategy, designed for resilience and long-term capital performance with clear mechanics.',
+      link: 'https://app.morpho.org/base/vault/0x7BfA7C4f149E7415b73bdeDfe609237e29CBF34A/spark-usdc-vault',
+    },
+    '0xc9dd080c9eccfcdbf379714d84cdc8bd01046ae1': {
+      description:
+        'A proven USDC strategy, engineered for consistent performance and structured to reduce exposure to inefficiencies.',
+      link: 'https://app.aave.com/reserve-overview/?underlyingAsset=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&marketName=proto_mainnet_v3',
+    },
+    '0xca75e855a33acc44dda9d48578df5df7602b5c35': {
+      description:
+        'A strategy that prioritizes high-efficiency deployment of USDC while ensuring long-term sustainability and risk management.',
+      link: 'https://app.morpho.org/base/vault/0xbeeF010f9cb27031ad51e3333f9aF9C6B1228183/steakhouse-usdc',
+    },
+    '0xccbd61b6c2fb58da5bbd8937ca25164ef29c1cc4': {
+      description:
+        'A core USDC strategy, optimized for efficiency and designed to provide sustainable, long-term yield without excessive risk.',
+      link: 'https://app.morpho.org/base/vault/0xc0c5689e6f4D256E861F65465b691aeEcC0dEb12/gauntlet-usdc-core',
+    },
+    '0xdb6d68d571fbef7d67827844dd800884ea9cc02e': {
+      description:
+        'A dynamically managed USDC strategy, adjusting to market conditions in real time to ensure optimal capital performance.',
+      link: 'https://fluid.instadapp.io/lending/1',
+    },
+    '0xedc6a603b31391b7d13fba6a721fd4dda401f9ea': {
+      description:
+        'A structurally efficient USDC strategy, minimizing inefficiencies and optimizing returns through a measured, risk-conscious approach.',
+      link: 'https://app.compound.finance/markets/usdc-basemainnet',
+    },
+    '0x106cbb1f445f0bffa7894f4199ee940bf7f6dd2b': {
+      description:
+        'The buffer is a portion of a vault that is not held in any one particular strategy and stands ready to be deployed to capitalize on any new strategies that may arise.',
+    },
+  },
+}

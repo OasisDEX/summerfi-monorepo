@@ -1,6 +1,6 @@
 import { IArmadaVaultInfo, IArmadaPosition } from '@summerfi/armada-protocol-common'
 
-import { ITokenAmount, TransactionInfo } from '@summerfi/sdk-common'
+import { ITokenAmount, type IUser } from '@summerfi/sdk-common'
 import { IArmadaManagerUsersClient } from '../../interfaces/ArmadaManager/IArmadaManagerUsersClient'
 import { IRPCClient } from '../../interfaces/IRPCClient'
 import { RPCMainClientType } from '../../rpc/SDKMainClient'
@@ -12,6 +12,11 @@ import { RPCMainClientType } from '../../rpc/SDKMainClient'
 export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManagerUsersClient {
   constructor(params: { rpcClient: RPCMainClientType }) {
     super(params)
+  }
+
+  /** @see IArmadaManagerUsersClient.getSummerToken */
+  async getSummerToken(params: Parameters<IArmadaManagerUsersClient['getSummerToken']>[0]) {
+    return this.rpcClient.armada.users.getSummerToken.query(params)
   }
 
   /** @see IArmadaManagerUsersClient.getVaultsRaw */
@@ -113,5 +118,81 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     assets: ITokenAmount
   }> {
     return this.rpcClient.armada.users.getTotalBalance.query(params)
+  }
+
+  async getAggregatedRewards(
+    params: Parameters<IArmadaManagerUsersClient['getAggregatedRewards']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getAggregatedRewards']> {
+    return this.rpcClient.armada.users.getAggregatedRewards.query(params)
+  }
+
+  async getClaimableAggregatedRewards(
+    params: Parameters<IArmadaManagerUsersClient['getClaimableAggregatedRewards']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getClaimableAggregatedRewards']> {
+    return this.rpcClient.armada.users.getClaimableAggregatedRewards.query(params)
+  }
+
+  async getAggregatedClaimsForChainTX(
+    params: Parameters<IArmadaManagerUsersClient['getAggregatedClaimsForChainTX']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getAggregatedClaimsForChainTX']> {
+    return this.rpcClient.armada.users.getAggregatedClaimsForChainTX.query(params)
+  }
+
+  async getUserDelegatee(
+    params: Parameters<IArmadaManagerUsersClient['getUserDelegatee']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getUserDelegatee']> {
+    return this.rpcClient.armada.users.getUserDelegatee.query(params)
+  }
+
+  async getDelegateTx(
+    params: Parameters<IArmadaManagerUsersClient['getDelegateTx']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getDelegateTx']> {
+    return this.rpcClient.armada.users.getDelegateTX.query(params)
+  }
+
+  async getUndelegateTx(): ReturnType<IArmadaManagerUsersClient['getUndelegateTx']> {
+    return this.rpcClient.armada.users.getUndelegateTx.query()
+  }
+
+  async getUserVotes(
+    params: Parameters<IArmadaManagerUsersClient['getUserVotes']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getUserVotes']> {
+    return this.rpcClient.armada.users.getUserVotes.query(params)
+  }
+
+  async getUserBalance(
+    params: Parameters<IArmadaManagerUsersClient['getUserBalance']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getUserBalance']> {
+    return this.rpcClient.armada.users.getUserBalance.query(params)
+  }
+
+  async getUserStakedBalance(
+    params: Parameters<IArmadaManagerUsersClient['getUserStakedBalance']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getUserStakedBalance']> {
+    return this.rpcClient.armada.users.getUserStakedBalance.query(params)
+  }
+
+  async getUserEarnedRewards(
+    params: Parameters<IArmadaManagerUsersClient['getUserEarnedRewards']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getUserEarnedRewards']> {
+    return this.rpcClient.armada.users.getUserEarnedRewards.query(params)
+  }
+
+  async getStakeTx(
+    params: Parameters<IArmadaManagerUsersClient['getStakeTx']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getStakeTx']> {
+    return this.rpcClient.armada.users.getStakeTX.query(params)
+  }
+
+  async getUnstakeTx(
+    params: Parameters<IArmadaManagerUsersClient['getUnstakeTx']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getUnstakeTx']> {
+    return this.rpcClient.armada.users.getUnstakeTX.query(params)
+  }
+
+  async getDelegationChainLength(
+    params: Parameters<IArmadaManagerUsersClient['getDelegationChainLength']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getDelegationChainLength']> {
+    return this.rpcClient.armada.users.getDelegationChainLength.query(params)
   }
 }

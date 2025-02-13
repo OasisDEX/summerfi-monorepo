@@ -45,12 +45,12 @@ export const Audits = () => {
       </div>
       <div className={auditsStyles.auditsBlockWrapper}>
         <AuditBlock
-          auditUrl="#"
+          auditUrl="https://www.chainsecurity.com/smart-contract-audit-reports"
           image={chainSecurityLogo}
           description="ChainSecurity works with top-tier DeFi protocols, research institutions, central banks, and large organizations."
         />
         <AuditBlock
-          auditUrl="#"
+          auditUrl="https://www.prototechlabs.dev/"
           image={prototechLabsLogo}
           description="Prototech Labs is a DeFi & Web3 professional services consultancy helping businesses, DAOs, and protocols implement innovative blockchain solutions."
         />

@@ -13,11 +13,16 @@ import {
   ITokenAmount,
   IUser,
   TransactionInfo,
+  type ApproveTransactionInfo,
   type ChainInfo,
+  type ClaimTransactionInfo,
+  type DelegateTransactionInfo,
   type ExtendedTransactionInfo,
   type IAddress,
   type IPercentage,
   type IToken,
+  type StakeTransactionInfo,
+  type UnstakeTransactionInfo,
 } from '@summerfi/sdk-common'
 
 /**
@@ -26,6 +31,16 @@ import {
  *              FleetCommanders to interact with them
  */
 export interface IArmadaManagerUsersClient {
+  /**
+   * @method getSummerToken
+   * @description Retrieves the Summer token for a given chain
+   *
+   * @param chainInfo Chain information
+   *
+   * @returns The Summer token for the given chain
+   */
+  getSummerToken(params: { chainInfo: ChainInfo }): Promise<IToken>
+
   /**
    * @method getVaultsRaw
    * @description Retrieves all protocol vaults
@@ -199,4 +214,145 @@ export interface IArmadaManagerUsersClient {
     shares: ITokenAmount
     assets: ITokenAmount
   }>
+
+  /**
+   * @method getAggregatedRewards
+   * @description Returns the total aggregated rewards of a user in a Fleet
+   *
+   * @param user Address of the user to check the rewards for
+   *
+   * @returns The aggregated rewards of the user in the Fleet
+   */
+  getAggregatedRewards(params: { user: IUser }): Promise<{
+    total: bigint
+    perChain: Record<number, bigint>
+  }>
+
+  /**
+   * @method getClaimableAggregatedRewards
+   * @description Returns the claimable aggregated rewards of a user in a Fleet
+   *
+   * @param user Address of the user to check the rewards for
+   *
+   * @returns The claimable aggregated rewards of the user in the Fleet
+   */
+  getClaimableAggregatedRewards(params: { user: IUser }): Promise<{
+    total: bigint
+    perChain: Record<number, bigint>
+  }>
+
+  /**
+   * @method getAggregatedClaimsForChainTX
+   * @description Returns the multicall transaction needed to claim rewards from the Fleet
+   * @param chainInfo Chain information
+   * @param user Address of the user to claim rewards for
+   *
+   * @returns The transaction needed to claim the rewards
+   */
+  getAggregatedClaimsForChainTX(params: {
+    chainInfo: ChainInfo
+    user: IUser
+  }): Promise<[ClaimTransactionInfo] | undefined>
+
+  /**
+   * @method getUserDelegatee
+   * @description Returns delegatee that the account has chosen
+   *
+   * @param user The user
+   *
+   * @returns The delegatee address
+   */
+  getUserDelegatee(params: { user: IUser }): Promise<IAddress>
+
+  /**
+   * @method getDelegateTx
+   * @description Delegates votes from the sender to delegatee
+   *
+   * @param user The user
+   *
+   * @returns The transaction information
+   */
+  getDelegateTx(params: { user: IUser }): Promise<[DelegateTransactionInfo]>
+
+  /**
+   * @method getUndelegateTx
+   * @description Undelegates votes from the sender
+   *
+   * @returns The transaction information
+   */
+  getUndelegateTx(): Promise<[DelegateTransactionInfo]>
+
+  /**
+   * @method getUserVotes
+   * @description Returns the number of votes the user has
+   *
+   * @param user The user
+   *
+   * @returns The number of votes
+   */
+  getUserVotes(params: { user: IUser }): Promise<bigint>
+
+  /**
+   * @method getUserBalance
+   * @description Returns the balance of the user
+   *
+   * @param user The user
+   *
+   * @returns The balance
+   */
+  getUserBalance(params: { user: IUser }): Promise<bigint>
+
+  /**
+   * @method getUserStakedBalance
+   * @description Returns the staked balance of the user
+   *
+   * @param user The user
+   *
+   * @returns The staked balance
+   */
+  getUserStakedBalance(params: { user: IUser }): Promise<bigint>
+
+  /**
+   * @method getUserEarnedRewards
+   * @description Returns the rewards the user has earned
+   *
+   * @param user The user
+   *
+   * @returns The rewards earned
+   */
+  getUserEarnedRewards(params: { user: IUser }): Promise<bigint>
+
+  /**
+   * @method getStakeTx
+   * @description Returns the transaction to stake tokens
+   *
+   * @param user The user
+   * @param amount The amount to stake
+   *
+   * @returns The transaction information
+   */
+  getStakeTx(params: {
+    user: IUser
+    amount: bigint
+  }): Promise<[ApproveTransactionInfo, StakeTransactionInfo] | [StakeTransactionInfo]>
+
+  /**
+   * @method getUnstakeTx
+   * @description Returns the transaction to unstake tokens
+   *
+   * @param amount The amount to unstake
+   *
+   * @returns The transaction information
+   */
+  getUnstakeTx(params: { amount: bigint }): Promise<[UnstakeTransactionInfo]>
+
+  /**
+   * @method getDelegationChainLength
+   * @description Returns the length of the delegation chain
+   *
+   * @param user The user
+   *
+   * @returns The length of the delegation
+   */
+  getDelegationChainLength: (params: { user: IUser }) => Promise<number>
 }

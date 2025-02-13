@@ -186,6 +186,7 @@ describe.skip('Refinance Morpho Spark | SDK', () => {
     if (config.sendTransactionEnabled) {
       const privateKey = process.env.DEPLOYER_PRIVATE_KEY as Hex
       const transactionUtils = new TransactionUtils({
+        chainInfo: chain.chainInfo,
         rpcUrl: config.TenderlyForkUrl,
         walletPrivateKey: privateKey,
       })

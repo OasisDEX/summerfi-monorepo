@@ -8,12 +8,14 @@ import { type RiskResponse, type UseRiskInput } from '@/types'
  *
  * @param chainId - The ID of the blockchain network.
  * @param walletAddress - The wallet address to check the risk status for.
+ * @param cookiePrefix - The prefix for the cookie.
  * @param host - The API host URL (optional).
  * @returns A promise that resolves to the risk response.
  */
 export const fetchRisk = async ({
   chainId,
   walletAddress,
+  cookiePrefix,
   host = '',
 }: UseRiskInput): Promise<RiskResponse> => {
   try {
@@ -22,7 +24,7 @@ export const fetchRisk = async ({
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ chainId, walletAddress }),
+      body: JSON.stringify({ chainId, walletAddress, cookiePrefix }),
       credentials: 'include',
     }).then((resp) => resp.json())
   } catch (error) {

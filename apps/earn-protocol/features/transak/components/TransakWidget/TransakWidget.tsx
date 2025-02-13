@@ -143,7 +143,7 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
           fiatAmount,
           fiatCurrency,
           paymentMethod,
-          cryptoCurrencyCode: cryptoCurrency,
+          cryptoCurrencyCode: state.cryptoCurrency,
           productsAvailed: TransakAction.BUY,
         }),
       },

@@ -7,9 +7,10 @@ const nextConfig = {
   output: 'standalone',
   reactStrictMode: false,
   webpack: (config) => {
-    config.externals.push('pino-pretty', 'encoding')
-
-    return config
+    return {
+      ...config,
+      externals: [...config.externals, 'pino-pretty', 'encoding'],
+    }
   },
   sassOptions: {
     prependData: `
@@ -21,6 +22,28 @@ const nextConfig = {
           xl: 1279px,
         );
         `,
+  },
+  redirects() {
+    const redirectToProSummer = (pathname) => ({
+      source: pathname,
+      destination: `https://pro.summer.fi/${pathname}`,
+      basePath: false,
+      permanent: true,
+    })
+
+    return [
+      // product redirects
+      redirectToProSummer('/multiply'),
+      redirectToProSummer('/borrow'),
+      // network + position (or others) redirects
+      redirectToProSummer('/ethereum/:otherPosition*'),
+      redirectToProSummer('/base/:otherPosition*'),
+      redirectToProSummer('/optimism/:otherPosition*'),
+      redirectToProSummer('/arbitrum/:otherPosition*'),
+      // maker position redirects
+      // matches to `/{number}`
+      redirectToProSummer('/:makerPosition(\\d{1,})'),
+    ]
   },
 }
 

@@ -2,19 +2,31 @@
 
 import { type FC, type ReactNode, useEffect, useState } from 'react'
 import { type SDKVaultishType, type SDKVaultsListType } from '@summerfi/app-types'
-import { formatCryptoBalance, formatDecimalAsPercent, ten } from '@summerfi/app-utils'
+import {
+  formatCryptoBalance,
+  formatDecimalAsPercent,
+  getArksWeightedApy,
+  sdkNetworkToHumanNetwork,
+  ten,
+} from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
+import clsx from 'clsx'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 
 import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
 import { Box } from '@/components/atoms/Box/Box'
+import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
 import { DataBlock } from '@/components/molecules/DataBlock/DataBlock'
 import { Dropdown } from '@/components/molecules/Dropdown/Dropdown'
 import { SimpleGrid } from '@/components/molecules/Grid/SimpleGrid'
+import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { VaultTitleDropdownContent } from '@/components/molecules/VaultTitleDropdownContent/VaultTitleDropdownContent'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
+import { getDisplayToken } from '@/helpers/get-display-token'
+import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 
 import vaultOpenGridStyles from './VaultOpenGrid.module.scss'
@@ -22,50 +34,84 @@ import vaultOpenGridStyles from './VaultOpenGrid.module.scss'
 interface VaultOpenGridProps {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
-  displayGraph?: boolean
+  displaySimulationGraph?: boolean
   simulationGraph: ReactNode
   detailsContent: ReactNode
   sidebarContent: ReactNode
   isMobile?: boolean
+  medianDefiYield?: number
+  sumrPrice?: number
+  onRefresh?: (chainName?: string, vaultId?: string, walletAddress?: string) => void
 }
 
 export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   vault,
   vaults,
-  displayGraph,
+  displaySimulationGraph,
   simulationGraph,
   detailsContent,
   sidebarContent,
   isMobile,
+  medianDefiYield,
+  sumrPrice,
+  onRefresh,
 }) => {
-  const [displayGraphStaggered, setDisplayGraphStaggered] = useState(displayGraph)
-  const apr30d = formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
-  const aprCurrent = formatDecimalAsPercent(new BigNumber(vault.calculatedApr).div(100))
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  const [displaySimulationGraphStaggered, setDisplaySimulationGraphStaggered] =
+    useState(displaySimulationGraph)
+
+  const isVaultAtLeast30dOld = vault.createdTimestamp
+    ? dayjs().diff(dayjs(Number(vault.createdTimestamp) * 1000), 'day') > 30
+    : false
+  const apr30d = isVaultAtLeast30dOld
+    ? formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
+    : 'New strategy'
+  const aprCurrent = formatDecimalAsPercent(getArksWeightedApy(vault))
   const totalValueLockedUSDParsed = formatCryptoBalance(new BigNumber(vault.totalValueLockedUSD))
   const totalValueLockedTokenParsed = formatCryptoBalance(
     new BigNumber(vault.inputTokenBalance.toString()).div(ten.pow(vault.inputToken.decimals)),
   )
 
+  const medianBN = medianDefiYield ? new BigNumber(medianDefiYield) : null
+  const medianDefiYieldDifference = medianBN
+    ? new BigNumber(vault.calculatedApr).minus(medianBN)
+    : null
+
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDisplayGraphStaggered(false)
+      setDisplaySimulationGraphStaggered(false)
     }, 1000)
 
-    if (displayGraph) {
+    if (displaySimulationGraph) {
       clearInterval(timer)
-      setDisplayGraphStaggered(true)
+      setDisplaySimulationGraphStaggered(true)
     }
 
     return () => {
       clearInterval(timer)
     }
-  }, [displayGraph])
+  }, [displaySimulationGraph])
+
+  const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus(
+    vault.rewardTokens,
+    vault.rewardTokenEmissionsAmount,
+    sumrPrice,
+    vault.totalValueLockedUSD,
+  )
+
+  const handleUserRefresh = () => {
+    onRefresh?.(sdkNetworkToHumanNetwork(vault.protocol.network), vault.id)
+    setIsRefreshing(true)
+    setTimeout(() => {
+      setIsRefreshing(false)
+    }, 5000)
+  }
 
   return (
     <>
       <div className={vaultOpenGridStyles.vaultOpenGridBreadcrumbsWrapper}>
         <div style={{ display: 'inline-block' }}>
-          <Link href="/earn">
+          <Link href="/">
             <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
               Earn / &nbsp;
             </Text>
@@ -73,6 +119,14 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
           <Text as="span" variant="p3" color="white">
             {vault.customFields?.name ?? vault.id}
           </Text>
+          <div
+            onClick={handleUserRefresh}
+            className={clsx(vaultOpenGridStyles.refreshWrapper, {
+              [vaultOpenGridStyles.refreshing]: isRefreshing,
+            })}
+          >
+            <Icon iconName="refresh" size={16} />
+          </div>
         </div>
       </div>
       <div className={vaultOpenGridStyles.vaultOpenGridPositionWrapper}>
@@ -80,26 +134,28 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
           <div className={vaultOpenGridStyles.vaultOpenGridTopLeftWrapper}>
             <Dropdown
               options={vaults.map((item) => ({
-                value: item.id,
+                value: getVaultUrl(item),
                 content: <VaultTitleDropdownContent vault={item} link={getVaultUrl(item)} />,
               }))}
               dropdownValue={{
-                value: vault.id,
+                value: getVaultUrl(vault),
                 content: <VaultTitleDropdownContent vault={vault} link={getVaultUrl(vault)} />,
               }}
             >
               <VaultTitleWithRisk
-                symbol={vault.inputToken.symbol}
+                symbol={getDisplayToken(vault.inputToken.symbol)}
                 // TODO: fill data
-                risk={vault.customFields?.risk ?? 'medium'}
+                risk={vault.customFields?.risk ?? 'lower'}
                 networkName={vault.protocol.network}
               />
             </Dropdown>
-            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-              <BonusLabel rays="1,111" />
-            </Text>
+            {Number(rawSumrTokenBonus) > 0 && (
+              <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+                <BonusLabel tokenBonus={sumrTokenBonus} withTokenBonus />
+              </Text>
+            )}
           </div>
-          <AnimateHeight id="simulation-graph" scale show={displayGraphStaggered}>
+          <AnimateHeight id="simulation-graph" scale show={displaySimulationGraphStaggered}>
             {simulationGraph}
           </AnimateHeight>
           <SimpleGrid
@@ -114,8 +170,10 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 titleSize="small"
                 title="30d APY"
                 value={apr30d}
-                subValue="+2.1% Median DeFi Yield"
-                subValueType="positive"
+                subValue={
+                  isVaultAtLeast30dOld ? `Current APY: ${aprCurrent}` : 'Requires more data'
+                }
+                subValueType={isVaultAtLeast30dOld ? 'neutral' : 'positive'}
                 subValueSize="medium"
               />
             </Box>
@@ -125,8 +183,27 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 titleSize="small"
                 title="Current APY"
                 value={aprCurrent}
-                subValue="+1.7% Median DeFi Yield"
-                subValueType="positive"
+                subValue={
+                  medianBN ? (
+                    <Tooltip
+                      tooltip={
+                        <>
+                          Median&nbsp;DeFi&nbsp;Yield:&nbsp;$
+                          {formatDecimalAsPercent(medianBN.div(100))}
+                        </>
+                      }
+                    >
+                      <div>
+                        {medianDefiYieldDifference
+                          ? `${medianDefiYieldDifference.gt(0) ? '+' : ''}${formatDecimalAsPercent(
+                              medianDefiYieldDifference.div(100),
+                            )} Median DeFi Yield`
+                          : ''}
+                      </div>
+                    </Tooltip>
+                  ) : null
+                }
+                subValueType={medianDefiYieldDifference?.gt(0) ? 'positive' : 'neutral'}
                 subValueSize="medium"
               />
             </Box>
@@ -139,7 +216,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 size="large"
                 titleSize="small"
                 title="Assets in vault"
-                value={`${totalValueLockedTokenParsed} ${vault.inputToken.symbol}`}
+                value={`${totalValueLockedTokenParsed} ${getDisplayToken(vault.inputToken.symbol)}`}
                 subValue={`$${totalValueLockedUSDParsed}`}
                 subValueSize="medium"
               />

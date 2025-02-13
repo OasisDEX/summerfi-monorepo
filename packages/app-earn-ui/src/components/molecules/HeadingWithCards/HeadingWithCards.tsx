@@ -1,5 +1,5 @@
 'use client'
-import { type FC } from 'react'
+import { type FC, type ReactNode } from 'react'
 import Link from 'next/link'
 
 import { Card } from '@/components/atoms/Card/Card'
@@ -13,7 +13,7 @@ import classNames from './HeadingWithCards.module.scss'
 interface HeadingWithSocialAndCardsProps {
   title: string
   description: string
-  cards: { title: string; value: string; description: string }[]
+  cards: { title: ReactNode; value: string; description: string }[]
   social: {
     linkToCopy: string
     linkToShare: string
@@ -50,7 +50,7 @@ export const HeadingWithCards: FC<HeadingWithSocialAndCardsProps> = ({
       </Text>
       <div className={classNames.cardsWrapper}>
         {cards.map((card) => (
-          <Card key={card.title} className={classNames.card}>
+          <Card key={card.value} className={classNames.card}>
             <DataBlock
               title={card.title}
               titleSize="medium"

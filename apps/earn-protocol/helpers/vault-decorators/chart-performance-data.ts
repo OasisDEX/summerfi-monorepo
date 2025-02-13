@@ -53,7 +53,7 @@ const mergePositionHistoryAndForecast = (
     weekly: 52,
   }
 
-  const pointsNeededToDisplayAnyGraph = 3 // 3 hours
+  const pointsNeededToDisplayAnyGraph = 1 // 1 hours
   const inputTokenDecimals = position?.amount.token.decimals ?? 2
 
   const positionValues =
@@ -82,7 +82,7 @@ const mergePositionHistoryAndForecast = (
 
     const pointNetValue =
       isSameHour && positionValues
-        ? Number(positionValues.netEarnings.toFixed(inputTokenDecimals))
+        ? Number(positionValues.netValue.toFixed(inputTokenDecimals))
         : point.netValue
     const pointDepositedValue =
       isSameHour && positionValues
@@ -113,7 +113,7 @@ const mergePositionHistoryAndForecast = (
 
     const pointNetValue =
       isSameDay && positionValues
-        ? Number(positionValues.netEarnings.toFixed(inputTokenDecimals))
+        ? Number(positionValues.netValue.toFixed(inputTokenDecimals))
         : point.netValue
     const pointDepositedValue =
       isSameDay && positionValues
@@ -147,7 +147,7 @@ const mergePositionHistoryAndForecast = (
 
     const pointNetValue =
       isSameWeek && positionValues
-        ? Number(positionValues.netEarnings.toFixed(inputTokenDecimals))
+        ? Number(positionValues.netValue.toFixed(inputTokenDecimals))
         : point.netValue
     const pointDepositedValue =
       isSameWeek && positionValues

@@ -5,6 +5,7 @@ import { ContractWrapper } from './ContractWrapper'
 
 import { Erc4626Contract } from './Erc4626Contract/Erc4626Contract'
 import type { ContractAbi } from '@summerfi/abi-provider-common'
+import type { ITokensManager } from '@summerfi/tokens-common'
 
 /**
  * @name GenericContractWrapper
@@ -30,6 +31,7 @@ export class GenericContractWrapper<
     TAbi extends ContractAbi,
   >(params: {
     blockchainClient: TClient
+    tokensManager: ITokensManager
     chainInfo: IChainInfo
     address: TAddress
     abi: TAbi

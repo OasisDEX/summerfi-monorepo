@@ -9,10 +9,14 @@ import path from 'node:path'
 dotenv.config({ path: path.join(__dirname, '../../.env') })
 
 async function migrateUp() {
+  console.info('Starting migration process...')
+
   const { migrator, db } = getMigrator()
+  console.debug('Migrator and database instance retrieved.')
 
   console.info(`Trying to migrate up`)
   const { error, results } = await migrator.migrateUp()
+  console.debug('Migration results received:', results)
 
   results?.forEach((it) => {
     if (it.status === 'Success') {
@@ -29,12 +33,11 @@ async function migrateUp() {
   }
 
   console.info('Generating types from DB')
-
   await generateTypes(db)
-
   console.info('Types generated')
 
   await db.destroy()
+  console.info('Database connection closed.')
 }
 
 migrateUp()

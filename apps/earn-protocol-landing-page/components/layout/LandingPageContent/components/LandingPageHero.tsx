@@ -34,7 +34,17 @@ export const LandingPageHero = ({ vaultsList }: { vaultsList: SDKVaultishType[] 
               fontWeight: '600',
             }}
           >
-            Highest Quality Yield
+            Highest Quality{' '}
+            <span style={{ position: 'relative' }}>
+              Yield
+              <Text
+                as="span"
+                variant="p2"
+                style={{ position: 'absolute', top: '-6px', right: '-8px' }}
+              >
+                1
+              </Text>
+            </span>
           </Text>
         </div>
         <Carousel

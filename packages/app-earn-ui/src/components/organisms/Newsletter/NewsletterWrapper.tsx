@@ -18,6 +18,7 @@ interface NewsletterWrapperProps {
   inputWrapperClassName?: string
   inputWrapperStyles?: CSSProperties
   inputBtnLabel?: string
+  isEarnApp?: boolean
 }
 
 export const NewsletterWrapper: FC<NewsletterWrapperProps> = ({
@@ -25,6 +26,7 @@ export const NewsletterWrapper: FC<NewsletterWrapperProps> = ({
   inputWrapperStyles,
   inputWrapperClassName,
   inputBtnLabel,
+  isEarnApp = false,
 }) => {
   const [email, setEmail] = useState('')
   const [newsletterStatus, setNewsletterStatus] =
@@ -43,7 +45,7 @@ export const NewsletterWrapper: FC<NewsletterWrapperProps> = ({
     }
     // no base path, this is a call to oasis-borrow
     try {
-      const response = await fetch('/api/newsletter-subscribe', {
+      const response = await fetch(`${isEarnApp ? '/earn' : ''}/api/newsletter-subscribe`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

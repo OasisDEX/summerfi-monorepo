@@ -25,11 +25,18 @@ export class MorphoDepositBorrowActionBuilder extends BaseActionBuilder<steps.De
       throw new Error('Invalid Morpho lending pool id')
     }
 
-    const morphoBlueAddress = await this._getContractAddress({
-      addressBookManager,
-      chainInfo: user.chainInfo,
-      contractName: 'MorphoBlue',
-    })
+    const [morphoBlueAddress, operationExecutorAddress] = await Promise.all([
+      this._getContractAddress({
+        addressBookManager,
+        chainInfo: user.chainInfo,
+        contractName: 'MorphoBlue',
+      }),
+      this._getContractAddress({
+        addressBookManager,
+        chainInfo: user.chainInfo,
+        contractName: 'OperationExecutor',
+      }),
+    ])
 
     context.addActionCall({
       step: step,
@@ -79,12 +86,6 @@ export class MorphoDepositBorrowActionBuilder extends BaseActionBuilder<steps.De
 
     const isBorrowTargetPositionsManager =
       step.inputs.borrowTargetType === TokenTransferTargetType.PositionsManager
-
-    const operationExecutorAddress = await this._getContractAddress({
-      addressBookManager,
-      chainInfo: user.chainInfo,
-      contractName: 'OperationExecutor',
-    })
 
     context.addActionCall({
       step: step,

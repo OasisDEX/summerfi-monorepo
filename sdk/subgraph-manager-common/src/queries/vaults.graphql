@@ -20,16 +20,14 @@ query GetVaults {
       id
       name
       details
+      depositLimit
+      depositCap
+      inputTokenBalance
       inputToken {
         id
         name
         symbol
         decimals
-      }
-      fees {
-        id
-        feePercentage
-        feeType
       }
       createdTimestamp
       lastUpdateTimestamp
@@ -158,6 +156,7 @@ query GetVault($id: ID!) {
       name
       details
       depositLimit
+      depositCap
       cumulativeEarnings
       inputTokenBalance
       inputToken {
@@ -177,11 +176,6 @@ query GetVault($id: ID!) {
         calculatedApr
         totalValueLockedUSD
         inputTokenBalance
-      }
-      fees {
-        id
-        feePercentage
-        feeType
       }
       calculatedApr
       createdTimestamp

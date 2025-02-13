@@ -6,8 +6,6 @@ import { getUsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { UserActivityView } from '@/features/user-activity/components/UserActivityView/UserActivityView'
 
-export const revalidate = 60
-
 interface UserActivityPageProps {
   searchParams: ReadonlyURLSearchParams
 }

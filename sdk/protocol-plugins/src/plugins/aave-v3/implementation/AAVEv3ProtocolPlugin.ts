@@ -114,16 +114,18 @@ export class AaveV3ProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
 
     const emode = aaveV3EmodeCategoryMap[aaveV3PoolId.emodeType]
 
-    const collateralInfo = await this._getCollateralInfo({
-      token: aaveV3PoolId.collateralToken,
-      emode: emode,
-      poolBaseCurrencyToken: FiatCurrency.USD,
-    })
+    const [collateralInfo, debtInfo] = await Promise.all([
+      this._getCollateralInfo({
+        token: aaveV3PoolId.collateralToken,
+        emode: emode,
+        poolBaseCurrencyToken: FiatCurrency.USD,
+      }),
+      this._getDebtInfo(aaveV3PoolId.debtToken, emode, FiatCurrency.USD),
+    ])
+
     if (!collateralInfo) {
       throw new Error(`Collateral info not found for ${aaveV3PoolId.collateralToken}`)
     }
-
-    const debtInfo = await this._getDebtInfo(aaveV3PoolId.debtToken, emode, FiatCurrency.USD)
     if (!debtInfo) {
       throw new Error(`Debt info not found for ${aaveV3PoolId.debtToken}`)
     }

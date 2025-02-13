@@ -1,4 +1,4 @@
-import { Card, Icon, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { Card, Icon, INTERNAL_LINKS, Text, WithArrow } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
 import { Emphasis } from '@/components/layout/LandingPageContent/components/Emphasis'
@@ -35,7 +35,7 @@ export const SummerFiProSectionBlock = ({
         </div>
       </div>
       <div className={summerFiProSectionStyles.summerFiProSectionCardCta}>
-        <Link href={ctaUrl}>
+        <Link href={ctaUrl} target="_blank">
           <WithArrow>
             <Text variant="p3semi">{ctaLabel}</Text>
           </WithArrow>
@@ -60,25 +60,25 @@ export const SummerFiProSection = () => {
           title="The easiest way to Amplify Exposure (and your profits)"
           pointsList={['Automation', 'Position swap', '$RAYS']}
           ctaLabel="Multiply"
-          ctaUrl="#"
+          ctaUrl={`${INTERNAL_LINKS.summerPro}/multiply`}
         />
         <SummerFiProSectionBlock
           tag="Borrow"
           title="Unlock liquidity from your favorite crypto assets with best protocols."
           pointsList={['Automation', 'Position swap', '$RAYS']}
           ctaLabel="Borrow"
-          ctaUrl="#"
+          ctaUrl={`${INTERNAL_LINKS.summerPro}/borrow`}
         />
         <SummerFiProSectionBlock
           tag="Yield Loops"
           title="Unlock liquidity from your favorite crypto assets with best protocols."
           pointsList={['$RAYS']}
           ctaLabel="Earn"
-          ctaUrl="#"
+          ctaUrl={`${INTERNAL_LINKS.summerPro}/earn`}
         />
       </div>
       <div className={summerFiProSectionStyles.summerFiProSectionBottomLink}>
-        <Link href="#">
+        <Link href={INTERNAL_LINKS.summerPro} target="_blank">
           <WithArrow>
             <Text variant="p2semi">Go to Summer.fi Pro</Text>
           </WithArrow>

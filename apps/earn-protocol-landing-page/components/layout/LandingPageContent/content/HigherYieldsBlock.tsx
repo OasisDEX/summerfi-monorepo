@@ -1,7 +1,14 @@
 'use client'
 
-import { useCallback, useState } from 'react'
+import { type FC, useCallback, useMemo, useState } from 'react'
 import { Button, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { type SDKVaultsListType } from '@summerfi/app-types'
+import {
+  formatFiatBalance,
+  formatShorthandNumber,
+  getRebalanceSavedGasCost,
+  getRebalanceSavedTimeInHours,
+} from '@summerfi/app-utils'
 import clsx from 'clsx'
 import Image, { type StaticImageData } from 'next/image'
 import Link from 'next/link'
@@ -25,6 +32,16 @@ type HigherYieldsSectionProps = {
     description: string
     colorful?: boolean
   }[]
+}
+
+type HigherYieldsSectionContentProps = {
+  savedGasCost: number
+  savedTimeInHours: number
+  totalRebalancesCount: number
+  totalVaultsCount: number
+  totalAssets: number
+  totalLiquidity: number
+  supportedProtocolsCount: number
 }
 
 const HigherYieldsSection = ({
@@ -61,7 +78,7 @@ const HigherYieldsSection = ({
       <Image src={imageSrc} alt={title} placeholder="blur" unoptimized />
       <div className={higherYieldsBlockStyles.higherYieldsSectionStatsWrapper}>
         {statsList.map((item) => (
-          <div key={item.title} className={higherYieldsBlockStyles.higherYieldsSectionStats}>
+          <div key={item.description} className={higherYieldsBlockStyles.higherYieldsSectionStats}>
             <Text variant={item.colorful ? 'h4colorful' : 'h4'} as="span">
               {item.title}
             </Text>
@@ -78,26 +95,30 @@ const HigherYieldsSection = ({
 const higherYieldsBlockSections = {
   'how-you-earn-more': {
     title: 'How you earn more',
-    content: (
+    content: ({
+      totalAssets,
+      totalLiquidity,
+      supportedProtocolsCount,
+    }: HigherYieldsSectionContentProps) => (
       <HigherYieldsSection
         title="You’re earning DeFi’s highest yields, all of the time."
-        description="With Summer, your deposits are continuously monitored and reallocated across the top protocols, ensuring you are earning the best available yields."
+        description="With Lazy Summer Protocol, your deposits are continuously monitored and reallocated across the top protocols, ensuring you are earning the best available yields."
         ctaLabel="Get started"
-        ctaUrl="/"
+        ctaUrl="/earn"
         secondaryCtaLabel="View Yields"
-        secondaryCtaUrl="/"
+        secondaryCtaUrl="/earn"
         imageSrc={howYouEarnMoreImage}
         statsList={[
           {
-            title: '500m',
+            title: `$${formatFiatBalance(totalAssets)}`,
             description: 'Total Assets',
           },
           {
-            title: '20b+',
+            title: `$${formatFiatBalance(totalLiquidity)}`,
             description: 'Liquidity',
           },
           {
-            title: '6',
+            title: supportedProtocolsCount.toString(),
             description: 'Protocols Used',
           },
         ]}
@@ -106,27 +127,31 @@ const higherYieldsBlockSections = {
   },
   'how-we-use-ai': {
     title: 'How we use AI to outperform',
-    content: (
+    content: ({
+      savedTimeInHours,
+      totalRebalancesCount,
+      totalVaultsCount,
+    }: HigherYieldsSectionContentProps) => (
       <HigherYieldsSection
         title="Always optimized, zero effort."
-        description="Summer's AI-powered keeper network requires a majority of AI Agents to agree on a single strategy to automatically rebalance your portfolio. It continually optimizes rebalancing strategies to maximize long-term yields."
+        description="Summer.fi's AI-powered keeper network requires a majority of AI Agents to agree on a single strategy to automatically rebalance your portfolio. It continually optimizes rebalancing strategies to maximize long-term yields."
         ctaLabel="Get started"
-        ctaUrl="/"
+        ctaUrl="/earn"
         secondaryCtaLabel="Learn more"
-        secondaryCtaUrl="/"
+        secondaryCtaUrl="/earn"
         imageSrc={howWeUseAi}
         statsList={[
           {
-            title: '45.2K',
+            title: formatShorthandNumber(totalRebalancesCount),
             description: 'Rebalance Transactions',
           },
           {
-            title: '2,184 hours',
+            title: `${savedTimeInHours} hours`,
             colorful: true,
             description: 'User time saved',
           },
           {
-            title: '14',
+            title: totalVaultsCount.toString(),
             description: 'DeFi Strategies Optimized',
           },
         ]}
@@ -135,27 +160,31 @@ const higherYieldsBlockSections = {
   },
   'how-you-save-time-and-costs': {
     title: 'How you save time and costs',
-    content: (
+    content: ({
+      savedGasCost,
+      totalVaultsCount,
+      supportedProtocolsCount,
+    }: HigherYieldsSectionContentProps) => (
       <HigherYieldsSection
         title="Save Time, Cut Complexity and forget about Gas Costs"
-        description="With Summer, there is no need to keep a spreadsheet, check different apps and sign multiple transactions, chasing the best yields and seeing your profit disappear with gas fees. All rebalances are included in the 1% Annualized AUM Fee...sit back, relax and earn more the lazy way."
+        description="With Summer.fi, there is no need to keep a spreadsheet, check different apps and sign multiple transactions, chasing the best yields and seeing your profit disappear with gas fees. All rebalances are included in the 1% Annualized AUM Fee...sit back, relax and earn more the lazy way."
         ctaLabel="Deposit"
-        ctaUrl="/"
+        ctaUrl="/earn"
         secondaryCtaLabel="Learn more"
-        secondaryCtaUrl="/"
+        secondaryCtaUrl="/earn"
         imageSrc={howYouSaveTimeAndCostsImage}
         statsList={[
           {
-            title: '14',
+            title: totalVaultsCount.toString(),
             description: 'DeFi Strategies Optimized',
           },
           {
-            title: '$1.23M',
+            title: `$${savedGasCost}`,
             colorful: true,
             description: 'Gas Cost Savings',
           },
           {
-            title: '6',
+            title: supportedProtocolsCount.toString(),
             description: 'Protocol Used',
           },
         ]}
@@ -168,7 +197,11 @@ const higherYieldsBlockSectionsKeys = Object.keys(
   higherYieldsBlockSections,
 ) as (keyof typeof higherYieldsBlockSections)[]
 
-export const HigherYieldsBlock = () => {
+interface HigherYieldsBlockProps {
+  vaultsList: SDKVaultsListType
+}
+
+export const HigherYieldsBlock: FC<HigherYieldsBlockProps> = ({ vaultsList }) => {
   const [fadingOut, setFadingOut] = useState(false)
   const [activeSection, setActiveSection] = useState(higherYieldsBlockSectionsKeys[0])
 
@@ -183,6 +216,47 @@ export const HigherYieldsBlock = () => {
     },
     [fadingOut],
   )
+
+  const totalRebalancesCount = vaultsList.reduce(
+    (acc, vault) => acc + Number(vault.rebalanceCount),
+    0,
+  )
+
+  const totalLiquidity = vaultsList.reduce(
+    (acc, vault) => acc + Number(vault.withdrawableTotalAssetsUSD),
+    0,
+  )
+
+  const totalVaultsCount = vaultsList.length
+
+  const savedTimeInHours = useMemo(
+    () => getRebalanceSavedTimeInHours(totalRebalancesCount),
+    [totalRebalancesCount],
+  )
+  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(vaultsList), [vaultsList])
+
+  const totalAssets = vaultsList.reduce((acc, vault) => acc + Number(vault.totalValueLockedUSD), 0)
+
+  const formattedProtocolsSupportedList = useMemo(
+    () =>
+      new Set(
+        vaultsList.reduce<string[]>(
+          (acc, { arks }) => [
+            // converting a list which looks like `protocolName-token-chainId`
+            // into a unique list of protocols for all vaults
+            ...acc,
+            ...arks
+              .map((ark) => ark.name?.split('-')[0])
+              .filter((arkName): arkName is string => Boolean(arkName)),
+          ],
+          [],
+        ),
+      ),
+    [vaultsList],
+  )
+
+  // -1 because BufferArk is not a protocol
+  const supportedProtocolsCount = formattedProtocolsSupportedList.size - 1
 
   return (
     <div>
@@ -221,7 +295,15 @@ export const HigherYieldsBlock = () => {
                 display: activeSection === sectionKey ? 'block' : 'none',
               }}
             >
-              {higherYieldsBlockSections[sectionKey].content}
+              {higherYieldsBlockSections[sectionKey].content({
+                savedGasCost,
+                savedTimeInHours,
+                totalRebalancesCount,
+                totalVaultsCount,
+                totalAssets,
+                totalLiquidity,
+                supportedProtocolsCount,
+              })}
             </div>
           ))}
         </div>

@@ -1,9 +1,12 @@
+'use client'
 import { Card, Text, WithArrow } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
+import { useUserWallet } from '@/hooks/use-user-wallet'
+
 import classNames from './SumrNotTransferable.module.scss'
 
-const boxes = [
+const getBoxes = (userWalletAddress: string | undefined) => [
   {
     preTitle: 'Long Term Focus',
     title: 'Encourages Long-Term Alignment',
@@ -11,7 +14,7 @@ const boxes = [
       'Non-transferability eliminates the potential for immediate price volatility caused by speculators buying and selling the token.',
     link: {
       label: 'Get $SUMR',
-      href: '/',
+      href: userWalletAddress ? `/portfolio/${userWalletAddress}?tab=rewards` : '/sumr#claim',
     },
   },
   {
@@ -21,7 +24,7 @@ const boxes = [
       'Non-transferable tokens cannot be exploited by bots or malicious actors attempting to farm and sell tokens indiscriminately.',
     link: {
       label: 'Get $SUMR',
-      href: '/',
+      href: userWalletAddress ? `/portfolio/${userWalletAddress}?tab=rewards` : '/sumr#claim',
     },
   },
   {
@@ -31,26 +34,29 @@ const boxes = [
       'A non-transferable token allows the protocol to focus on refining its utility before introducing liquidity through transferability.',
     link: {
       label: 'Get $SUMR',
-      href: '/',
+      href: userWalletAddress ? `/portfolio/${userWalletAddress}?tab=rewards` : '/sumr#claim',
     },
   },
 ]
 
 export const SumrNotTransferable = () => {
+  const { userWalletAddress } = useUserWallet()
+
   return (
     <div className={classNames.sumrNotTransferableWrapper}>
       <div className={classNames.header}>
         <Text as="h2" variant="h2">
           Non-Transferable, A feature not a bug
         </Text>
-        <Text as="p" variant="p1">
-          For the first 6 months, $SUMR will not be able to be bought or sold, it can only be
-          earned. We believe that this is highly beneficial for our community and creates the most
-          long term value.
+        <Text as="p" variant="p1" style={{ maxWidth: '800px', margin: '0 auto' }}>
+          Until at least July 1st 2025, $SUMR will not be tradeable, it can only be earned and used
+          to govern the protocol. This is highly beneficial to both the protocol and for our
+          community because it removes distractions and immediate short term thinking, creating the
+          most long term value.
         </Text>
       </div>
       <div className={classNames.boxes}>
-        {boxes.map((box, index) => (
+        {getBoxes(userWalletAddress).map((box, index) => (
           <Card variant="cardPrimary" key={index} className={classNames.box}>
             <Text as="p" variant="p3semiColorful">
               {box.preTitle}
@@ -62,7 +68,7 @@ export const SumrNotTransferable = () => {
               {box.description}
             </Text>
             <Link href={box.link.href}>
-              <WithArrow>{box.link.label}</WithArrow>
+              <WithArrow variant="p3semi">{box.link.label}</WithArrow>
             </Link>
           </Card>
         ))}

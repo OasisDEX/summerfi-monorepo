@@ -10,6 +10,7 @@ import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
 import { Dropdown } from '@/components/molecules/Dropdown/Dropdown'
 import { VaultTitleDropdownContent } from '@/components/molecules/VaultTitleDropdownContent/VaultTitleDropdownContent'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
+import { getDisplayToken } from '@/helpers/get-display-token'
 import { getVaultDetailsUrl, getVaultUrl } from '@/helpers/get-vault-url'
 
 import vaultGridDetailsStyles from './VaultGridDetails.module.scss'
@@ -27,7 +28,7 @@ export const VaultGridDetails = ({
     <>
       <div className={vaultGridDetailsStyles.vaultGridDetailsBreadcrumbsWrapper}>
         <div style={{ display: 'inline-block' }}>
-          <Link href="/earn">
+          <Link href="/">
             <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
               Earn /
             </Text>
@@ -56,8 +57,8 @@ export const VaultGridDetails = ({
             }}
           >
             <VaultTitleWithRisk
-              symbol={vault.inputToken.symbol}
-              risk={vault.customFields?.risk ?? 'medium'}
+              symbol={getDisplayToken(vault.inputToken.symbol)}
+              risk={vault.customFields?.risk ?? 'lower'}
               networkName={vault.protocol.network}
             />
           </Dropdown>

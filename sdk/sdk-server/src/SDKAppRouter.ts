@@ -41,11 +41,29 @@ import { getUserActivityRaw } from './armada-protocol-handlers/users/getUserActi
 import { getFleetBalance } from './armada-protocol-handlers/users/getFleetBalance'
 import { getStakedBalance } from './armada-protocol-handlers/users/getStakedBalance'
 import { getTotalBalance } from './armada-protocol-handlers/users/getTotalBalance'
+import { getAggregatedRewards } from './armada-protocol-handlers/users/getAggregatedRewards'
+import { getAggregatedClaimsForChainTX } from './armada-protocol-handlers/users/getAggregatedClaimsForChainTX'
+import { getUserDelegatee } from './armada-protocol-handlers/users/getUserDelegatee'
+import { getDelegateTx } from './armada-protocol-handlers/users/getDelegateTx'
+import { getUndelegateTx } from './armada-protocol-handlers/users/getUndelegateTx'
+import { getUserVotes } from './armada-protocol-handlers/users/getUserVotes'
+import { getUserStakedBalance } from './armada-protocol-handlers/users/getUserStakedBalance'
+import { getStakeTx } from './armada-protocol-handlers/users/getStakeTx'
+import { getUnstakeTx } from './armada-protocol-handlers/users/getUnstakeTx'
+import { getUserEarnedRewards } from './armada-protocol-handlers/users/getUserEarnedRewards'
+import { getUserBalance } from './armada-protocol-handlers/users/getUserBalance'
+import { getSummerToken } from './armada-protocol-handlers/users/getSummerToken'
+import { getDelegationChainLength } from './armada-protocol-handlers/users/getDelegationChainLength'
+import { pong } from './handlers/debugPong'
+import { getClaimableAggregatedRewards } from './armada-protocol-handlers/users/getClaimableAggregatedRewards'
 
 /**
  * Server
  */
 export const sdkAppRouter = router({
+  debug: {
+    ping: pong,
+  },
   protocols: {
     getPosition: getPosition,
     getLendingPool: getLendingPool,
@@ -84,6 +102,20 @@ export const sdkAppRouter = router({
       getFleetBalance: getFleetBalance,
       getStakedBalance: getStakedBalance,
       getTotalBalance: getTotalBalance,
+      getAggregatedRewards: getAggregatedRewards,
+      getClaimableAggregatedRewards: getClaimableAggregatedRewards,
+      getAggregatedClaimsForChainTX: getAggregatedClaimsForChainTX,
+      getUserDelegatee: getUserDelegatee,
+      getDelegateTX: getDelegateTx,
+      getUndelegateTx: getUndelegateTx,
+      getUserVotes: getUserVotes,
+      getUserStakedBalance: getUserStakedBalance,
+      getUserEarnedRewards: getUserEarnedRewards,
+      getStakeTX: getStakeTx,
+      getUnstakeTX: getUnstakeTx,
+      getUserBalance: getUserBalance,
+      getSummerToken: getSummerToken,
+      getDelegationChainLength: getDelegationChainLength,
     },
     keepers: {
       rebalance: rebalance,

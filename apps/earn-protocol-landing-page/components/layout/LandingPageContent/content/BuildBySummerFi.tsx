@@ -1,4 +1,4 @@
-import { Text, WithArrow } from '@summerfi/app-earn-ui'
+import { INTERNAL_LINKS, Text, WithArrow } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
 import { Emphasis } from '@/components/layout/LandingPageContent/components/Emphasis'
@@ -29,23 +29,23 @@ export const BuildBySummerFi = () => {
       </div>
       <div className={buildBySummerFiStyles.buildBySummerFiDescription}>
         <Text variant="p1" as="p">
-          With Summer, effortlessly earn the best yields and grow your capital faster. We
+          With Summer.fi, effortlessly earn the best yields and grow your capital faster. We
           automatically rebalance your assets to top protocols, maximizing your returns.
         </Text>
       </div>
       <div className={buildBySummerFiStyles.buildBySummerFiBottomLink}>
-        <Link href="#">
+        <Link href={`${INTERNAL_LINKS.summerPro}/about`} target="_blank">
           <WithArrow>
             <Text variant="p2semi">View leadership</Text>
           </WithArrow>
         </Link>
       </div>
       <div className={buildBySummerFiStyles.buildBySummerFiStatBlockWrapper}>
-        <StatBlock title="Summer.fi TVL" value="1.2B" />
+        <StatBlock title="Summer.fi TVL" value="4.01B" />
         <div className={buildBySummerFiStyles.buildBySummerFiStatBlockDivider} />
-        <StatBlock title="Summer.fi 30D Volume" value="$643.2m" />
+        <StatBlock title="Summer.fi 30D Volume" value="$1.61B" />
         <div className={buildBySummerFiStyles.buildBySummerFiStatBlockDivider} />
-        <StatBlock title="Capital Automated" value="$259.7M" />
+        <StatBlock title="Capital Automated" value="$268.95M" />
         <div className={buildBySummerFiStyles.buildBySummerFiStatBlockDivider} />
         <StatBlock title="Time Operating" value="7 years" />
       </div>

@@ -1,3 +1,4 @@
+import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { type LeaderboardItem, type LeaderboardResponse } from '@summerfi/app-types'
 
 /**
@@ -13,6 +14,9 @@ export const getUserSumrEligibility = async (address: string): Promise<Leaderboa
   try {
     const { leaderboard }: LeaderboardResponse = await fetch(
       `/earn/api/leaderboard?page=1&limit=10&userAddress=${address.toLowerCase()}`,
+      {
+        next: { revalidate: REVALIDATION_TIMES.ALWAYS_FRESH },
+      },
     ).then((resp) => resp.json())
 
     return leaderboard

@@ -4,12 +4,9 @@ import Link from 'next/link'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
+import { isOutsideLink } from '@/helpers/is-outside-link'
 
 import supportBoxStyles from './SupportBox.module.scss'
-
-type SupportBoxProps = {
-  collapsible?: boolean
-}
 
 const SupportBoxElement = ({
   icon,
@@ -24,20 +21,26 @@ const SupportBoxElement = ({
 }) => {
   return (
     <div className={supportBoxStyles.supportBox}>
-      <Icon iconName={icon} color="white" size={20} />
+      <Icon iconName={icon} color="white" size={32} />
       <Text as="p" variant="p2semi">
         {description}
       </Text>
-      <Link href={url} style={{ marginTop: '-8px' }}>
+      <Link
+        href={url}
+        target={isOutsideLink(url) ? '_blank' : undefined}
+        style={{ marginTop: '-8px' }}
+      >
         <Text as="p" variant="p3semi">
-          <WithArrow>{urlLabel}</WithArrow>
+          <WithArrow as="span" variant="p3semi">
+            {urlLabel}
+          </WithArrow>
         </Text>
       </Link>
     </div>
   )
 }
 
-export const SupportBox = ({ collapsible = false }: SupportBoxProps) => {
+export const SupportBox = () => {
   return (
     <div className={supportBoxStyles.supportBoxWrapper}>
       <div className={supportBoxStyles.supportBoxTitleBarWrapper}>
@@ -52,22 +55,22 @@ export const SupportBox = ({ collapsible = false }: SupportBoxProps) => {
       </div>
       <div className={supportBoxStyles.supportBoxesWrapper}>
         <SupportBoxElement
-          icon="user"
+          icon="earn_1_on_1"
           description="1 on 1 guidance and onboarding"
           urlLabel="Sign up"
-          url="/"
+          url="https://cal.com/jordan-jackson-d278ib/summer.fi-support-call"
         />
         <SupportBoxElement
-          icon="question"
+          icon="earn_email"
           description="Email support tickets for all your questions"
           urlLabel="Contact us"
-          url="/"
+          url="https://docs.summer.fi/get-in-touch/contact-us"
         />
         <SupportBoxElement
-          icon="discord"
+          icon="earn_discord"
           description="Live chat for your immediate needs"
           urlLabel="Start chatting"
-          url="/"
+          url="https://chat.summer.fi"
         />
       </div>
     </div>

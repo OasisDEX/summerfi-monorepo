@@ -5,11 +5,17 @@ import { Text } from '@/components/atoms/Text/Text'
 
 import bannerStyles from './Banners.module.scss'
 
-export const NonOwnerPositionBanner = ({ isOwner }: { isOwner: boolean }) => {
+export const NonOwnerPositionBanner = ({
+  isOwner,
+  walletStateLoaded,
+}: {
+  isOwner: boolean
+  walletStateLoaded: boolean
+}) => {
   return (
     <div
       className={clsx(bannerStyles.bannerWrapper, bannerStyles.bannerWrapperWarning, {
-        [bannerStyles.bannerWrapperVisible]: !isOwner,
+        [bannerStyles.bannerWrapperVisible]: !isOwner && walletStateLoaded,
       })}
     >
       <Icon iconName="eye" />
@@ -20,11 +26,17 @@ export const NonOwnerPositionBanner = ({ isOwner }: { isOwner: boolean }) => {
   )
 }
 
-export const NonOwnerPortfolioBanner = ({ isOwner }: { isOwner: boolean }) => {
+export const NonOwnerPortfolioBanner = ({
+  isOwner,
+  walletStateLoaded,
+}: {
+  isOwner: boolean
+  walletStateLoaded: boolean
+}) => {
   return (
     <div
       className={clsx(bannerStyles.bannerWrapper, bannerStyles.bannerWrapperWarning, {
-        [bannerStyles.bannerWrapperVisible]: !isOwner,
+        [bannerStyles.bannerWrapperVisible]: !isOwner && walletStateLoaded,
       })}
     >
       <Icon iconName="eye" />

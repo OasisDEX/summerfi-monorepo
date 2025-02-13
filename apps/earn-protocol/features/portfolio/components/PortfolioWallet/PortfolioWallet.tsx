@@ -16,6 +16,7 @@ export const PortfolioWallet: FC<PortfolioWalletProps> = ({ walletData, vaultsLi
   return (
     <div className={classNames.wrapper}>
       <PortfolioAssets walletData={walletData} />
+      {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
       <PortfolioVaultsCarousel className={classNames.vaultCarousel} vaultsList={vaultsList} />
       {/* <CryptoUtilities /> */}
     </div>

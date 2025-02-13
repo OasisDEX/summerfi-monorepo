@@ -1,3 +1,4 @@
+import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import type { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 import { type NextRequest, NextResponse } from 'next/server'
 
@@ -36,6 +37,9 @@ export async function GET(req: ExtendedApiRequest) {
       'x-content-type-options': 'nosniff',
     },
     body: JSON.stringify({ apiKey: partnerApiKey }),
+    next: {
+      revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
+    },
   }
 
   try {

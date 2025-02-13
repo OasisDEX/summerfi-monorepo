@@ -1,6 +1,6 @@
 'use client'
 import { type ChangeEvent, type FC, useState } from 'react'
-import { Button, Card, Input, PercentageBadge, Text, ToggleButton } from '@summerfi/app-earn-ui'
+import { Badge, Button, Card, Icon, Input, Text, ToggleButton } from '@summerfi/app-earn-ui'
 import { mapNumericInput } from '@summerfi/app-utils'
 import Link from 'next/link'
 
@@ -9,11 +9,14 @@ import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyCo
 
 import classNames from './NavConfigContent.module.scss'
 
-interface NavConfigContentProps {}
+interface NavConfigContentProps {
+  handleOpenClose?: () => void
+}
 
 const slippageOptions = ['0.5', '1.00', '2.00', '2.50']
+const marketCapOptions = ['150000000', '250000000', '500000000', '750000000']
 
-export const NavConfigContent: FC<NavConfigContentProps> = () => {
+export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose }) => {
   const [sumrNetApyConfig, setSumrNetApyConfig] = useSumrNetApyConfig()
   const [slippageConfig, setSlippageConfig] = useSlippageConfig()
 
@@ -22,6 +25,10 @@ export const NavConfigContent: FC<NavConfigContentProps> = () => {
   const [activeSlippageOption, setActiveSlippageOption] = useState<number | undefined>(
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     slippageOptions.findIndex((item) => item === slippageConfig.slippage) ?? 1,
+  )
+  const [activeMarketCapOption, setActiveMarketCapOption] = useState<number | undefined>(
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    marketCapOptions.findIndex((item) => item === sumrNetApyConfig.dilutedValuation) ?? 1,
   )
   const [sumrToggle, setSumrToggle] = useState(sumrNetApyConfig.withSumr)
 
@@ -53,105 +60,149 @@ export const NavConfigContent: FC<NavConfigContentProps> = () => {
           Settings
         </Text>
         <div className={classNames.spacerHeader} />
-        <Text
-          as="p"
-          variant="p2semi"
-          style={{
-            marginBottom: 'var(--general-space-8)',
-          }}
-        >
-          Update Net APY
-        </Text>
-        <Text
-          as="p"
-          variant="p3"
-          style={{
-            marginBottom: 'var(--general-space-24)',
-            color: 'var(--earn-protocol-secondary-60)',
-          }}
-        >
-          Net APY is affected by rate and SUMR rewards. You can choose either include both or only
-          one of those in APY.
-        </Text>
-        <Input
-          placeholder="Enter fully diluted valuation"
-          variant="dark"
-          value={inputValue}
-          onChange={handleInputChange}
-        />
-        <div className={classNames.toggleWrapper}>
-          <ToggleButton
-            title="Include SUMR"
-            checked={sumrToggle}
-            onChange={(ev) => {
-              setSumrToggle(ev.target.checked)
+        <div className={classNames.navConfigContentScrollable}>
+          <Text
+            as="p"
+            variant="p2semi"
+            style={{
+              marginBottom: 'var(--general-space-8)',
             }}
-            titleVariant="p3semi"
-            wrapperStyle={{ width: '100%', justifyContent: 'space-between' }}
-            trackVariant="dark"
-          />
-        </div>
-        <div className={classNames.spacerContent} />
-        <Text
-          as="p"
-          variant="p2semi"
-          style={{
-            marginBottom: 'var(--general-space-8)',
-          }}
-        >
-          Max. Slippage
-        </Text>
-        <Text
-          as="p"
-          variant="p3"
-          style={{
-            marginBottom: 'var(--general-space-24)',
-            color: 'var(--earn-protocol-secondary-60)',
-          }}
-        >
-          Select the amount of slippage you would like.{' '}
-          <Link href="/apps/earn-protocol/public">
-            <span style={{ color: 'var(--earn-protocol-primary-100)' }}>Learn more</span>
-          </Link>
-        </Text>
-        <Input
-          placeholder="Enter slippage"
-          variant="dark"
-          value={slippage}
-          onChange={handleSlippageChange}
-        />
-        <div className={classNames.slippageOptionsWrapper}>
-          {slippageOptions.map((item, idx) => (
-            <PercentageBadge
-              value={item}
-              key={item}
-              onClick={() => {
-                setSlippage(mapNumericInput(item))
-                setActiveSlippageOption(idx)
+          >
+            Update $SUMR valuation
+          </Text>
+          <Text
+            as="p"
+            variant="p3"
+            style={{
+              marginBottom: 'var(--general-space-16)',
+              color: 'var(--earn-protocol-secondary-60)',
+            }}
+          >
+            Across the app, SUMR Reward APYs depend on a Fully Diluted Valuation of the SUMR token.
+            Because the token is not currently transferrable, you must choose an appropriate
+            valuation to best reflect the reward rate of the SUMR token, or alternatively, exclude
+            SUMR from any calculations.
+          </Text>
+          <div className={classNames.toggleWrapper}>
+            <ToggleButton
+              title="Include SUMR"
+              checked={sumrToggle}
+              onChange={(ev) => {
+                setSumrToggle(ev.target.checked)
               }}
-              isActive={activeSlippageOption === idx}
+              titleVariant="p3semi"
+              wrapperStyle={{ width: '100%', justifyContent: 'space-between' }}
+              trackVariant="dark"
             />
-          ))}
+          </div>
+          <Input
+            placeholder="Enter fully diluted valuation"
+            variant="dark"
+            value={inputValue}
+            onChange={handleInputChange}
+          />
+          <div className={classNames.slippageOptionsWrapper}>
+            {marketCapOptions.map((item, idx) => (
+              <Badge
+                value={`$${Number(item) / 1000000}M`}
+                key={item}
+                onClick={() => {
+                  setInputValue(mapNumericInput(item))
+                  setActiveMarketCapOption(idx)
+                }}
+                isActive={activeMarketCapOption === idx}
+              />
+            ))}
+          </div>
+
+          <div className={classNames.spacerContent} />
+          <Text
+            as="p"
+            variant="p2semi"
+            style={{
+              marginBottom: 'var(--general-space-8)',
+            }}
+          >
+            Max. Slippage
+          </Text>
+          <Text
+            as="p"
+            variant="p3"
+            style={{
+              marginBottom: 'var(--general-space-24)',
+              color: 'var(--earn-protocol-secondary-60)',
+            }}
+          >
+            Select the amount of slippage you would like.{' '}
+            <Link
+              href="http://docs.summer.fi/summer.fi-pro/products/multiply/frequently-asked-questions"
+              target="_blank"
+            >
+              <span style={{ color: 'var(--earn-protocol-primary-100)' }}>Learn more</span>
+            </Link>
+          </Text>
+          <Input
+            placeholder="Enter slippage"
+            variant="dark"
+            value={slippage}
+            onChange={handleSlippageChange}
+          />
+          <div className={classNames.slippageOptionsWrapper}>
+            {slippageOptions.map((item, idx) => (
+              <Badge
+                value={`${item}%`}
+                key={item}
+                onClick={() => {
+                  setSlippage(mapNumericInput(item))
+                  setActiveSlippageOption(idx)
+                }}
+                isActive={activeSlippageOption === idx}
+              />
+            ))}
+          </div>
         </div>
-        <Button
-          variant="primaryLarge"
-          onClick={() => {
-            setSumrNetApyConfig({
-              withSumr: sumrToggle,
-              dilutedValuation: inputValue,
-            })
-            setSlippageConfig({ slippage })
-          }}
-          disabled={
-            (sumrNetApyConfig.dilutedValuation === inputValue.replaceAll(',', '') &&
-              sumrNetApyConfig.withSumr === sumrToggle &&
-              slippageConfig.slippage === slippage.replaceAll(',', '')) ||
-            slippage === '' ||
-            slippage.endsWith('.')
+        <div
+          style={
+            handleOpenClose
+              ? {
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  flexDirection: 'row',
+                  paddingTop: 'var(--general-space-16)',
+                  backgroundColor: 'var(--earn-protocol-neutral-90)',
+                }
+              : {
+                  paddingTop: 'var(--general-space-16)',
+                  backgroundColor: 'var(--earn-protocol-neutral-90)',
+                }
           }
         >
-          Save changes
-        </Button>
+          {handleOpenClose && (
+            <Button variant="secondaryLarge" onClick={handleOpenClose}>
+              <Icon iconName="close" size={12} style={{ opacity: 0.5 }} />
+              Close
+            </Button>
+          )}
+          <Button
+            variant="primaryLarge"
+            onClick={() => {
+              setSumrNetApyConfig({
+                withSumr: sumrToggle,
+                dilutedValuation: inputValue,
+              })
+              setSlippageConfig({ slippage })
+            }}
+            disabled={
+              (sumrNetApyConfig.dilutedValuation === inputValue.replaceAll(',', '') &&
+                sumrNetApyConfig.withSumr === sumrToggle &&
+                slippageConfig.slippage === slippage.replaceAll(',', '')) ||
+              slippage === '' ||
+              slippage.endsWith('.')
+            }
+          >
+            Save changes
+          </Button>
+        </div>
       </div>
     </Card>
   )

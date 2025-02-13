@@ -1,5 +1,5 @@
 import { type Dispatch, type FC, useEffect, useState } from 'react'
-import { Icon, Text, Tooltip, useMobileCheck } from '@summerfi/app-earn-ui'
+import { Icon, REVALIDATION_TIMES, Text, Tooltip, useMobileCheck } from '@summerfi/app-earn-ui'
 import debounce from 'lodash-es/debounce'
 import { useParams } from 'next/navigation'
 
@@ -59,6 +59,11 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state, inj
             paymentMethod,
             ipCountryCode,
           }),
+          {
+            next: {
+              revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
+            },
+          },
         )
 
         if (response.status === 504) {

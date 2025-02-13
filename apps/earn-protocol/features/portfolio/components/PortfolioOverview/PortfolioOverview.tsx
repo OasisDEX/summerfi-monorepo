@@ -1,6 +1,8 @@
 import {
+  Button,
   Card,
   DataBlock,
+  getDisplayToken,
   getPositionValues,
   PortfolioPosition,
   SUMR_CAP,
@@ -9,10 +11,15 @@ import {
 } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType, type TokenSymbolsList } from '@summerfi/app-types'
 import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
+import Link from 'next/link'
 
 import { type PortfolioPositionsList } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
 import { PositionHistoricalChart } from '@/components/organisms/Charts/PositionHistoricalChart'
+import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
+import { calculateOverallSumr } from '@/helpers/calculate-overall-sumr'
+
+import portfolioOverviewStyles from './PortfolioOverview.module.scss'
 
 // const dummyNewsAndUpdatesItems = [
 //   {
@@ -39,10 +46,10 @@ import { PortfolioVaultsCarousel } from '@/features/portfolio/components/Portfol
 
 const getDatablocks = ({
   totalSummerPortfolioUSD,
-  sumrTokenRewards,
+  overallSumr,
 }: {
   totalSummerPortfolioUSD: number
-  sumrTokenRewards: number
+  overallSumr: number
 }) => [
   {
     title: 'Total Summer.fi Portfolio',
@@ -52,7 +59,7 @@ const getDatablocks = ({
   },
   {
     title: 'SUMR Token Rewards',
-    value: `${formatCryptoBalance(sumrTokenRewards)} $SUMR`,
+    value: `${formatCryptoBalance(overallSumr)} $SUMR`,
   },
   {
     title: 'Available to Migrate',
@@ -70,9 +77,14 @@ const getDatablocks = ({
 type PortfolioOverviewProps = {
   vaultsList: SDKVaultsListType
   positions: PortfolioPositionsList[]
+  rewardsData: ClaimDelegateExternalData
 }
 
-export const PortfolioOverview = ({ vaultsList, positions }: PortfolioOverviewProps) => {
+export const PortfolioOverview = ({
+  vaultsList,
+  positions,
+  rewardsData,
+}: PortfolioOverviewProps) => {
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
@@ -84,12 +96,12 @@ export const PortfolioOverview = ({ vaultsList, positions }: PortfolioOverviewPr
       getPositionValues({
         positionData: position.positionData,
         vaultData: position.vaultData,
-      }).netEarningsUSD.toNumber(),
+      }).netValueUSD.toNumber(),
 
     0,
   )
-  // TODO: get sumrTokenRewards
-  const sumrTokenRewards = 0
+
+  const overallSumr = calculateOverallSumr(rewardsData)
 
   return (
     <div>
@@ -101,7 +113,7 @@ export const PortfolioOverview = ({ vaultsList, positions }: PortfolioOverviewPr
           flexWrap: 'wrap',
         }}
       >
-        {getDatablocks({ totalSummerPortfolioUSD, sumrTokenRewards }).map((item) => (
+        {getDatablocks({ totalSummerPortfolioUSD, overallSumr }).map((item) => (
           <Card
             key={item.title}
             style={{ flex: 1, background: item.gradient, minHeight: '142px' }}
@@ -129,16 +141,28 @@ export const PortfolioOverview = ({ vaultsList, positions }: PortfolioOverviewPr
                   <PositionHistoricalChart
                     chartData={position.vaultData.customFields?.historyChartData}
                     position={position}
-                    tokenSymbol={position.vaultData.inputToken.symbol as TokenSymbolsList}
+                    tokenSymbol={
+                      getDisplayToken(position.vaultData.inputToken.symbol) as TokenSymbolsList
+                    }
                   />
                 }
                 sumrPrice={estimatedSumrPrice}
               />
             ))
           ) : (
-            <Text as="p" variant="p1semi">
-              No positions
-            </Text>
+            <div className={portfolioOverviewStyles.noPositionsWrapper}>
+              <Text as="h5" variant="h5">
+                You don’t have any positions yet
+              </Text>
+              <Text as="p" variant="p2">
+                Start earning sustainably higher yields, optimized with AI.
+                <br />
+                Earn more, save time, and reduce costs.
+              </Text>
+              <Link href="/">
+                <Button variant="primaryMedium">View strategies</Button>
+              </Link>
+            </div>
           )}
           <PortfolioVaultsCarousel
             vaultsList={vaultsList}

@@ -17,11 +17,13 @@ export const VaultOpenView = ({
   vaults,
   userActivity,
   topDepositors,
+  medianDefiYield,
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
   userActivity: UsersActivity
   topDepositors: SDKUsersActivityType
+  medianDefiYield?: number
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -30,6 +32,7 @@ export const VaultOpenView = ({
         vaults={vaults}
         userActivity={userActivity}
         topDepositors={topDepositors}
+        medianDefiYield={medianDefiYield}
       />
     </SDKContextProvider>
   )

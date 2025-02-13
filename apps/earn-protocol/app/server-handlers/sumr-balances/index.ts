@@ -1,18 +1,27 @@
 import { SDKChainId } from '@summerfi/app-types'
-import { SummerTokenAbi } from '@summerfi/armada-protocol-abis'
+import { SummerTokenAbi, SummerVestingWalletFactoryAbi } from '@summerfi/armada-protocol-abis'
 import { getChainInfoByChainId } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
-import { type Address, createPublicClient, http } from 'viem'
-import { base } from 'viem/chains'
+import { type Address, createPublicClient, http, zeroAddress } from 'viem'
+import { arbitrum, base, mainnet } from 'viem/chains'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
-import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
+import { VESTING_WALLET_FACTORY_ADDRESS } from '@/constants/addresses'
+import { SDKChainIdToSSRRpcGatewayMap } from '@/helpers/rpc-gateway-ssr'
 
 export interface SumrBalancesData {
-  ethereum: string
+  mainnet: string
   arbitrum: string
   base: string
-  total: string
+  total: string // without vesting
+  vested: string
+  raw: {
+    mainnet: string
+    arbitrum: string
+    base: string
+    total: string
+    vested: string
+  }
 }
 
 /**
@@ -31,36 +40,29 @@ export const getSumrBalances = async ({
     const resolvedWalletAddress = walletAddress as Address
 
     const chainConfigs = [
-      { chain: base, chainId: SDKChainId.BASE },
-      // TODO uncomment once SUMR token will be deploy on networks below
-      //   { chain: mainnet, chainId: SDKChainId.MAINNET },
-      //   { chain: arbitrum, chainId: SDKChainId.ARBITRUM },
-      //   { chain: optimism, chainId: SDKChainId.OPTIMISM },
+      { chain: base, chainId: SDKChainId.BASE, chainName: 'base' },
+      { chain: mainnet, chainId: SDKChainId.MAINNET, chainName: 'mainnet' },
+      { chain: arbitrum, chainId: SDKChainId.ARBITRUM, chainName: 'arbitrum' },
     ]
 
     const balances = await Promise.all(
-      chainConfigs.map(async ({ chain, chainId }) => {
+      chainConfigs.map(async ({ chain, chainId, chainName }) => {
         const publicClient = createPublicClient({
           chain,
-          transport: http(SDKChainIdToRpcGatewayMap[chainId]),
+          transport: http(await SDKChainIdToSSRRpcGatewayMap[chainId]),
         })
 
         try {
-          const chainResponse = await backendSDK.chains.getChain({
+          const sumrToken = await backendSDK.armada.users.getSummerToken({
             chainInfo: getChainInfoByChainId(chainId),
           })
 
-          const sumrToken = await chainResponse.tokens
-            .getTokenBySymbol({
-              symbol: 'SUMMER',
-            })
-            .catch(() => null)
-
-          if (!sumrToken) {
+          if (!sumrToken || sumrToken.address.value.toLowerCase() === zeroAddress.toLowerCase()) {
             // Token not available on this network
             return {
-              chain: chain.name.toLowerCase(),
+              chain: chainName,
               balance: '0',
+              rawBalance: '0',
             }
           }
 
@@ -71,18 +73,42 @@ export const getSumrBalances = async ({
             args: [resolvedWalletAddress],
           })
 
+          let vestingBalanceOnBase = 0n
+
+          if (chainId === SDKChainId.BASE) {
+            const vestingWallet = await publicClient.readContract({
+              abi: SummerVestingWalletFactoryAbi,
+              address: VESTING_WALLET_FACTORY_ADDRESS,
+              functionName: 'vestingWallets',
+              args: [resolvedWalletAddress],
+            })
+
+            vestingBalanceOnBase = await publicClient.readContract({
+              abi: SummerTokenAbi,
+              address: sumrToken.address.value,
+              functionName: 'balanceOf',
+              args: [vestingWallet],
+            })
+          }
+
           if (balanceResult === undefined) {
             return {
-              chain: chain.name.toLowerCase(),
+              chain: chainName,
               balance: '0',
+              rawBalance: '0',
             }
           }
 
           return {
-            chain: chain.name.toLowerCase(),
+            chain: chainName,
             balance: new BigNumber(balanceResult.toString())
               .shiftedBy(-sumrToken.decimals)
               .toString(),
+            rawBalance: balanceResult.toString(),
+            vestingBalance: new BigNumber(vestingBalanceOnBase.toString())
+              .shiftedBy(-sumrToken.decimals)
+              .toString(),
+            vestingRawBalance: vestingBalanceOnBase.toString(),
           }
         } catch (error) {
           // Log the error but don't throw, return 0 balance instead
@@ -90,29 +116,49 @@ export const getSumrBalances = async ({
           console.error(`Error fetching balance for ${chain.name}:`, error)
 
           return {
-            chain: chain.name.toLowerCase(),
+            chain: chainName,
             balance: '0',
+            rawBalance: '0',
           }
         }
       }),
     )
 
     const result = {
-      ethereum: '0',
+      mainnet: '0',
       arbitrum: '0',
       base: '0',
       total: '0',
+      vested: '0',
+      raw: {
+        mainnet: '0',
+        arbitrum: '0',
+        base: '0',
+        total: '0',
+        vested: '0',
+      },
     }
 
     const total = balances.reduce((acc, { balance }) => acc.plus(balance), new BigNumber(0))
+    const rawTotal = balances.reduce(
+      (acc, { rawBalance }) => acc.plus(rawBalance),
+      new BigNumber(0),
+    )
 
-    balances.forEach(({ chain, balance }) => {
-      result[chain as keyof Omit<SumrBalancesData, 'total'>] = balance
+    balances.forEach(({ chain, balance, rawBalance }) => {
+      result[chain as keyof Omit<SumrBalancesData, 'total' | 'raw'>] = balance
+      result.raw[chain as keyof Omit<typeof result.raw, 'total'>] = rawBalance
     })
 
     return {
       ...result,
       total: total.toString(),
+      vested: balances.find((b) => b.chain === 'base')?.vestingBalance ?? '0',
+      raw: {
+        ...result.raw,
+        total: rawTotal.toString(),
+        vested: balances.find((b) => b.chain === 'base')?.vestingRawBalance ?? '0',
+      },
     }
   } catch (error) {
     // eslint-disable-next-line no-console

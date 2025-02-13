@@ -8,9 +8,13 @@ import {
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import type BigNumber from 'bignumber.js'
 
+import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
 import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { InputWithDropdown } from '@/components/molecules/InputWithDropdown/InputWithDropdown'
 import { ProjectedEarnings } from '@/components/molecules/ProjectedEarnings/ProjectedEarnings'
+import { ProjectedEarningsExpanded } from '@/components/molecules/ProjectedEarnings/ProjectedEarningsExpanded'
+import { getDisplayToken } from '@/helpers/get-display-token'
+import { type EarningsEstimationsMap } from '@/helpers/get-earnings-estimations-map'
 
 type ControlsDepositWithdrawProps = {
   amountDisplay: string
@@ -29,6 +33,9 @@ type ControlsDepositWithdrawProps = {
   onBlur: () => void
   manualSetAmount: (amountParsed: string | undefined) => void
   ownerView?: boolean
+  forecastSummaryMap?: EarningsEstimationsMap
+  isSimulation?: boolean
+  isOpen?: boolean
 }
 
 export const ControlsDepositWithdraw = ({
@@ -48,6 +55,9 @@ export const ControlsDepositWithdraw = ({
   onBlur,
   manualSetAmount,
   ownerView,
+  forecastSummaryMap,
+  isSimulation = false,
+  isOpen,
 }: ControlsDepositWithdrawProps) => {
   return (
     <>
@@ -63,13 +73,17 @@ export const ControlsDepositWithdraw = ({
         disabled={!ownerView}
         selectAllOnFocus
         heading={{
-          label: 'Balance',
+          // this was used as a 'row', like 'Balance: 1000 USDC', but now is used as columns
+          // Deposit token      Balance: 10 USDC
+          // some token         deposit amount
+          // also i'm removing the `-` because its always showing up on landing page
+          label: 'Deposit token',
           value: tokenBalanceLoading ? (
             <SkeletonLine width={60} height={10} />
           ) : tokenBalance ? (
-            `${formatCryptoBalance(tokenBalance)} ${tokenSymbol}`
+            `Balance: ${formatCryptoBalance(tokenBalance)} ${tokenSymbol}`
           ) : (
-            '-'
+            ''
           ),
           action: ownerView
             ? () => {
@@ -80,13 +94,27 @@ export const ControlsDepositWithdraw = ({
             : undefined,
         }}
       />
-      {ownerView && (
+      <AnimateHeight id="earnings" show={isOpen}>
         <ProjectedEarnings
           earnings={estimatedEarnings}
-          symbol={vault.inputToken.symbol as TokenSymbolsList}
+          symbol={getDisplayToken(vault.inputToken.symbol) as TokenSymbolsList}
           isLoading={isLoadingForecast}
         />
-      )}
+      </AnimateHeight>
+      <AnimateHeight
+        id="earnings-expanded"
+        show={
+          amountDisplay !== '0' && !isOpen && ownerView && !isSimulation && !!forecastSummaryMap
+        }
+      >
+        {forecastSummaryMap && (
+          <ProjectedEarningsExpanded
+            symbol={getDisplayToken(vault.inputToken.symbol) as TokenSymbolsList}
+            forecastSummaryMap={forecastSummaryMap}
+            isLoading={isLoadingForecast}
+          />
+        )}
+      </AnimateHeight>
     </>
   )
 }

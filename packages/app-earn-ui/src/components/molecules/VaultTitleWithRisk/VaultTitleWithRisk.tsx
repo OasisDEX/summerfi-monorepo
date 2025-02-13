@@ -42,7 +42,10 @@ export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
           <Text as="p" variant="p3" style={{ color }}>
             {capitalize(risk)} Risk
           </Text>
-          <Tooltip tooltip="TBD">
+          <Tooltip
+            tooltip="Lower risk Vaults contain no exposure to peg or swap risk."
+            tooltipWrapperStyles={{ minWidth: '200px' }}
+          >
             <Icon iconName="question_o" variant="s" color={color} />
           </Tooltip>
         </>

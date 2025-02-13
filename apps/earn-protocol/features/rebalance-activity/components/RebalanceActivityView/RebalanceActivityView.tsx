@@ -11,6 +11,7 @@ import {
   useQueryParams,
 } from '@summerfi/app-earn-ui'
 import { type SDKGlobalRebalancesType, type SDKVaultsListType } from '@summerfi/app-types'
+import { getRebalanceSavedGasCost, getRebalanceSavedTimeInHours } from '@summerfi/app-utils'
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { RebalanceActivityTable } from '@/features/rebalance-activity/components/RebalanceActivityTable/RebalanceActivityTable'
@@ -19,8 +20,6 @@ import {
   rebalanceActivityHeading,
 } from '@/features/rebalance-activity/components/RebalanceActivityView/cards'
 import { rebalanceActivityTableCarouselData } from '@/features/rebalance-activity/components/RebalanceActivityView/carousel'
-import { getRebalanceSavedGasCost } from '@/features/rebalance-activity/helpers/get-saved-gas-cost'
-import { getRebalanceSavedTimeInHours } from '@/features/rebalance-activity/helpers/get-saved-time-in-hours'
 import { rebalanceActivityFilter } from '@/features/rebalance-activity/table/filters/filters'
 import { mapMultiselectOptions } from '@/features/rebalance-activity/table/filters/mappers'
 
@@ -108,8 +107,9 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
   ]
 
   const totalItems = vaultsList.reduce((acc, vault) => acc + Number(vault.rebalanceCount), 0)
+
   const savedTimeInHours = useMemo(() => getRebalanceSavedTimeInHours(totalItems), [totalItems])
-  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(totalItems), [totalItems])
+  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(vaultsList), [vaultsList])
 
   const cards = useMemo(
     () => getRebalanceActivityHeadingCards({ totalItems, savedGasCost, savedTimeInHours }),
@@ -126,7 +126,7 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
           linkToCopy: currentUrl,
           linkToShare: getTwitterShareUrl({
             url: currentUrl,
-            text: 'Check out Lazy Summer Global Rebalance Activity!',
+            text: 'Check out how much time and money has been saved by the Lazy Summer AI Powered Agents keeping the protocol optimized!',
           }),
         }}
       />

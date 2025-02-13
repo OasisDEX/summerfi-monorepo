@@ -1,3 +1,5 @@
+import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
+
 import { type TransakOrderData } from '@/features/transak/types'
 
 /**
@@ -16,6 +18,11 @@ export const getTransakOrder = async ({
   try {
     const response = await fetch(
       `/earn/api/transak/get-order?orderId=${encodeURIComponent(orderId)}`,
+      {
+        next: {
+          revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
+        },
+      },
     )
 
     return await response.json()

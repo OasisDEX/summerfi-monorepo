@@ -3,6 +3,7 @@
   align-items: center;
   margin-bottom: var(--general-space-8);
   cursor: pointer;
+  padding: var(--general-space-16);
 
   &:hover {
     background-color: var(--earn-protocol-neutral-80);
@@ -53,15 +54,29 @@
       }
     }
 
-    .social {
+    .footer {
       display: flex;
-      gap: var(--general-space-8);
+      justify-content: space-between;
       align-items: center;
-      margin-top: var(--general-space-12);
-      color: var(--earn-protocol-secondary-40);
+      width: 100%;
+      flex-wrap: wrap;
 
-      a:hover {
-        color: var(--earn-protocol-secondary-100);
+      .social {
+        display: flex;
+        gap: var(--general-space-8);
+        align-items: center;
+        margin-top: var(--general-space-12);
+        color: var(--earn-protocol-secondary-40);
+
+        a:hover {
+          color: var(--earn-protocol-secondary-100);
+        }
+      }
+
+      .votingPower {
+        display: flex;
+        align-items: center;
+        gap: var(--general-space-4);
       }
     }
   }

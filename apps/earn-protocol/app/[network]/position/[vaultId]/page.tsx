@@ -7,6 +7,7 @@ import {
 } from '@summerfi/app-utils'
 import { isAddress } from 'viem'
 
+import { getMedianDefiYield } from '@/app/server-handlers/defillama/get-median-defi-yield'
 import { getInterestRates } from '@/app/server-handlers/interest-rates'
 import { getUserActivity } from '@/app/server-handlers/sdk/get-user-activity'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
@@ -25,8 +26,6 @@ type EarnVaultOpenPageProps = {
   }
 }
 
-export const revalidate = 60
-
 const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
   const parsedNetwork = humanNetworktoSDKNetwork(params.network)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
@@ -36,13 +35,14 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     ? params.vaultId
     : getVaultIdByVaultCustomName(params.vaultId, String(parsedNetworkId), systemConfig)
 
-  const [vault, { vaults }, { userActivity, topDepositors }] = await Promise.all([
+  const [vault, { vaults }, { userActivity, topDepositors }, medianDefiYield] = await Promise.all([
     getVaultDetails({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),
     getVaultsList(),
     getUserActivity({ vaultAddress: parsedVaultId, network: parsedNetwork }),
+    getMedianDefiYield(),
   ])
 
   const interestRates = vault?.arks
@@ -77,6 +77,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       vaults={vaultsDecorated}
       userActivity={userActivity}
       topDepositors={topDepositors}
+      medianDefiYield={medianDefiYield}
     />
   )
 }

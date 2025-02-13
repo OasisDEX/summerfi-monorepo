@@ -1,13 +1,14 @@
 import { SDKChainId } from '@summerfi/app-types'
 import { SECONDS_PER_DAY } from '@summerfi/app-utils'
-import { IGovernanceRewardsManagerAbi, SummerTokenAbi } from '@summerfi/armada-protocol-abis'
+import { GovernanceRewardsManagerAbi, SummerTokenAbi } from '@summerfi/armada-protocol-abis'
 import { getChainInfoByChainId } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import { createPublicClient, http } from 'viem'
 import { base } from 'viem/chains'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
-import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
+import { GOVERNANCE_REWARDS_MANAGER_ADDRESS } from '@/constants/addresses'
+import { SDKChainIdToSSRRpcGatewayMap } from '@/helpers/rpc-gateway-ssr'
 
 export interface SumrStakingInfoData {
   sumrTokenWrappedStakedAmount: number
@@ -27,48 +28,28 @@ export const getSumrStakingInfo = async (): Promise<SumrStakingInfoData> => {
   try {
     const publicClient = createPublicClient({
       chain: base,
-      transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.BASE]),
+      transport: http(await SDKChainIdToSSRRpcGatewayMap[SDKChainId.BASE]),
     })
 
-    const chainResponse = await backendSDK.chains
-      .getChain({
+    const sumrToken = await backendSDK.armada.users
+      .getSummerToken({
         chainInfo: getChainInfoByChainId(SDKChainId.BASE),
       })
       .catch((error) => {
-        throw new Error(`Failed to get chain info: ${error.message}`)
-      })
-
-    const { tokens } = chainResponse
-
-    const sumrToken = await tokens
-      .getTokenBySymbol({
-        symbol: 'SUMMER',
-      })
-      .catch((error) => {
         throw new Error(`Failed to get SUMMER token: ${error.message}`)
-      })
-
-    const rewardsManager = await publicClient
-      .readContract({
-        address: sumrToken.address.value,
-        abi: SummerTokenAbi,
-        functionName: 'rewardsManager',
-      })
-      .catch((error) => {
-        throw new Error(`Failed to read rewardsManager: ${error.message}`)
       })
 
     const [wrappedStakingTokenResult, rewardDataResult] = await publicClient
       .multicall({
         contracts: [
           {
-            address: rewardsManager,
-            abi: IGovernanceRewardsManagerAbi,
+            address: GOVERNANCE_REWARDS_MANAGER_ADDRESS,
+            abi: GovernanceRewardsManagerAbi,
             functionName: 'wrappedStakingToken',
           },
           {
-            address: rewardsManager,
-            abi: IGovernanceRewardsManagerAbi,
+            address: GOVERNANCE_REWARDS_MANAGER_ADDRESS,
+            abi: GovernanceRewardsManagerAbi,
             functionName: 'rewardData',
             args: [sumrToken.address.value],
           },
@@ -94,7 +75,7 @@ export const getSumrStakingInfo = async (): Promise<SumrStakingInfoData> => {
     const [, rewardRate] = rewardData
     // eslint-disable-next-line no-mixed-operators
     const sumrTokenDailyEmissionAmount = new BigNumber(Number(rewardRate))
-      .shiftedBy(-sumrToken.decimals)
+      .shiftedBy(-sumrToken.decimals * 2)
       .multipliedBy(SECONDS_PER_DAY)
       .toNumber()
 
@@ -103,7 +84,7 @@ export const getSumrStakingInfo = async (): Promise<SumrStakingInfoData> => {
         address: wrappedStakingToken,
         abi: SummerTokenAbi,
         functionName: 'balanceOf',
-        args: [rewardsManager],
+        args: [GOVERNANCE_REWARDS_MANAGER_ADDRESS],
       })
       .catch((error) => {
         throw new Error(`Failed to read wrapped staked SUMR balance: ${error.message}`)

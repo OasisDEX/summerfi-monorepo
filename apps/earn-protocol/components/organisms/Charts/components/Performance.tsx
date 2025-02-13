@@ -35,7 +35,7 @@ const CustomizedCross = (props: CategoricalChartState) => {
   const meetingPoint = firstSeries.props?.points[meetingPointIndex ?? 0] ?? { x: 0, y: 0 }
   const textStyle = {
     color: '#777576',
-    fontFamily: 'Inter',
+    fontFamily: 'var(--font-inter)',
     fontSize: '12px',
     fontWeight: '600',
   }
@@ -103,7 +103,16 @@ export const PerformanceChart = ({ data, inputToken }: PerformanceChartProps) =>
           <YAxis
             strokeWidth={0}
             tickFormatter={(label: string) => `${formatChartCryptoValue(Number(label))}`}
-            domain={[0, (max: number) => Math.min(max * 1.1)]}
+            interval="preserveStartEnd"
+            scale="linear"
+            domain={[
+              (dataMin: number) => {
+                return Math.max(dataMin - 2, 0)
+              },
+              (dataMax: number) => {
+                return Math.min(dataMax + 2, dataMax * 2)
+              },
+            ]}
           />
           <Tooltip
             formatter={(val, valueName) => [

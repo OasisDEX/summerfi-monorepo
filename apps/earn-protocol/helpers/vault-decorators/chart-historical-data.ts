@@ -36,7 +36,7 @@ const mapPositionHistory = (
     '3y': [], // weekly
   }
 
-  const pointsNeededToDisplayAnyGraph = 3 // 3 hours
+  const pointsNeededToDisplayAnyGraph = 1 // 1 hours
   const inputTokenDecimals = position?.amount.token.decimals ?? 2
 
   const positionValues =
@@ -65,12 +65,12 @@ const mapPositionHistory = (
 
     const pointNetValue =
       isSameHour && positionValues
-        ? Number(positionValues.netEarnings.toFixed(inputTokenDecimals))
+        ? Number(positionValues.netValue.toFixed(inputTokenDecimals))
         : point.netValue
     const pointDepositedValue =
       isSameHour && positionValues
         ? Number(positionValues.netDeposited.toFixed(inputTokenDecimals))
-        : Math.max(point.deposits - Math.abs(point.withdrawals), 0)
+        : Math.max(Math.abs(point.deposits) - Math.abs(point.withdrawals), 0)
     const newPointData = {
       timestamp: timestampUnix,
       timestampParsed,
@@ -96,12 +96,12 @@ const mapPositionHistory = (
 
     const pointNetValue =
       isSameDay && positionValues
-        ? Number(positionValues.netEarnings.toFixed(inputTokenDecimals))
+        ? Number(positionValues.netValue.toFixed(inputTokenDecimals))
         : point.netValue
     const pointDepositedValue =
       isSameDay && positionValues
         ? Number(positionValues.netDeposited.toFixed(inputTokenDecimals))
-        : Math.max(point.deposits - Math.abs(point.withdrawals), 0)
+        : Math.max(Math.abs(point.deposits) - Math.abs(point.withdrawals), 0)
     const newPointData = {
       timestamp: timestampUnix,
       timestampParsed,
@@ -130,12 +130,12 @@ const mapPositionHistory = (
 
     const pointNetValue =
       isSameWeek && positionValues
-        ? Number(positionValues.netEarnings.toFixed(inputTokenDecimals))
+        ? Number(positionValues.netValue.toFixed(inputTokenDecimals))
         : point.netValue
     const pointDepositedValue =
       isSameWeek && positionValues
         ? Number(positionValues.netDeposited.toFixed(inputTokenDecimals))
-        : Math.max(point.deposits - Math.abs(point.withdrawals), 0)
+        : Math.max(Math.abs(point.deposits) - Math.abs(point.withdrawals), 0)
     const newPointData = {
       timestamp: timestampUnix,
       timestampParsed,

@@ -2,7 +2,10 @@ import { BigGradientBox, Text } from '@summerfi/app-earn-ui'
 import Image, { type StaticImageData } from 'next/image'
 
 import blockAnalyticaLogo from '@/public/img/landing-page/block-analytica.svg'
-import morphoBlueLogo from '@/public/img/landing-page/protocols/morpho-blue.svg' // add the others
+import aaveLogo from '@/public/img/landing-page/protocols/aave.svg'
+import morphoBlueLogo from '@/public/img/landing-page/protocols/morpho-blue.svg'
+import skyLogo from '@/public/img/landing-page/protocols/sky.svg'
+import sparkLogo from '@/public/img/landing-page/protocols/spark.svg'
 
 import enhancedRiskManagementStyles from '@/components/layout/LandingPageContent/content/EnhancedRiskManagement.module.scss'
 
@@ -37,9 +40,9 @@ export const EnhancedRiskManagement = ({ protectedCapital }: { protectedCapital:
             </Text>
             <Text variant="p2" as="p">
               Block Analitica is the Risk Curator to the Lazy Summer Protocol, who will set and
-              manage all the core risk parameters. They come to Summer with a wealth of experience,
-              using sophisticated models to simulate market conditions and their own knowledge to
-              prevent any unnecessary risks taken to the protocol.
+              manage all the core risk parameters. They come to Lazy Summer Protocol with a wealth
+              of experience, using sophisticated models to simulate market conditions and their own
+              knowledge to prevent any unnecessary risks taken to the protocol.
             </Text>
           </div>
           <div>
@@ -49,9 +52,9 @@ export const EnhancedRiskManagement = ({ protectedCapital }: { protectedCapital:
             <div className={enhancedRiskManagementStyles.smallGradientBlock}>
               <div className={enhancedRiskManagementStyles.topBlockProtocolIcons}>
                 <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
-                <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
-                <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
-                <EnhancedRiskManagementProtocolIcon protocolImage={morphoBlueLogo} />
+                <EnhancedRiskManagementProtocolIcon protocolImage={sparkLogo} />
+                <EnhancedRiskManagementProtocolIcon protocolImage={skyLogo} />
+                <EnhancedRiskManagementProtocolIcon protocolImage={aaveLogo} />
               </div>
               <div className={enhancedRiskManagementStyles.protectedCapital}>
                 <Text variant="p3semi" as="p">
@@ -90,9 +93,10 @@ export const EnhancedRiskManagement = ({ protectedCapital }: { protectedCapital:
               Automatic Diversified Exposure
             </Text>
             <Text variant="p2" as="p">
-              Summer requires no management from users after they have deposited. All risk
-              management, yield optimizing and strategy rebalancing is handled automatically within
-              the parameters set by the Risk Curator. No chance of fat fingering a trade again.
+              Lazy Summer Protocol requires no management from users after they have deposited. All
+              risk management, yield optimizing and strategy rebalancing is handled automatically
+              within the parameters set by the Risk Curator. No chance of fat fingering a trade
+              again.
             </Text>
           </div>
           <Image

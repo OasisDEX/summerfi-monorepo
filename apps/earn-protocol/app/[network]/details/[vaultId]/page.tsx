@@ -1,62 +1,48 @@
-import { Text, VaultGridDetails } from '@summerfi/app-earn-ui'
+import { type FC } from 'react'
 import { type SDKNetwork } from '@summerfi/app-types'
-import {
-  humanNetworktoSDKNetwork,
-  parseServerResponseToClient,
-  subgraphNetworkToId,
-} from '@summerfi/app-utils'
-import { isAddress } from '@summerfi/sdk-common'
+import { redirect } from 'next/navigation'
 
-import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
-import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
-import systemConfigHandler from '@/app/server-handlers/system-config'
-import { VaultDetailsView } from '@/components/layout/VaultDetailsView/VaultDetailsView'
-import {
-  decorateCustomVaultFields,
-  getVaultIdByVaultCustomName,
-} from '@/helpers/vault-custom-value-helpers'
-
-type EarnVaultDetailsPageProps = {
+interface EarnVaultDetailsPageProps {
   params: {
     network: SDKNetwork
     vaultId: string
   }
 }
 
-export const revalidate = 60
+const EarnVaultDetailsPage: FC<EarnVaultDetailsPageProps> = () => {
+  return redirect('/sumr')
 
-const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
-  const parsedNetwork = humanNetworktoSDKNetwork(params.network)
-  const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
-  const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
+  // const parsedNetwork = humanNetworktoSDKNetwork(params.network)
+  // const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
+  // const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
 
-  const parsedVaultId = isAddress(params.vaultId)
-    ? params.vaultId
-    : getVaultIdByVaultCustomName(params.vaultId, String(parsedNetworkId), systemConfig)
+  // const parsedVaultId = isAddress(params.vaultId)
+  //   ? params.vaultId
+  //   : getVaultIdByVaultCustomName(params.vaultId, String(parsedNetworkId), systemConfig)
 
-  const [vault, { vaults }] = await Promise.all([
-    getVaultDetails({
-      vaultAddress: parsedVaultId,
-      network: parsedNetwork,
-    }),
-    getVaultsList(),
-  ])
+  // const [vault, { vaults }] = await Promise.all([
+  //   getVaultDetails({
+  //     vaultAddress: parsedVaultId,
+  //     network: parsedNetwork,
+  //   }),
+  //   getVaultsList(),
+  // ])
 
-  const vaultsDecorated = decorateCustomVaultFields({ vaults, systemConfig })
+  // const vaultsDecorated = decorateCustomVaultFields({ vaults, systemConfig })
 
-  if (!vault) {
-    return (
-      <Text>
-        No vault found with the id {parsedVaultId} on the network {parsedNetwork}
-      </Text>
-    )
-  }
+  // if (!vault) {
+  //   return (
+  //     <Text>
+  //       No vault found with the id {parsedVaultId} on the network {parsedNetwork}
+  //     </Text>
+  //   )
+  // }
 
-  return (
-    <VaultGridDetails vault={vault} vaults={vaultsDecorated}>
-      <VaultDetailsView />
-    </VaultGridDetails>
-  )
+  // return (
+  //   <VaultGridDetails vault={vault} vaults={vaultsDecorated}>
+  //     <VaultDetailsView />
+  //   </VaultGridDetails>
+  // )
 }
 
 export default EarnVaultDetailsPage

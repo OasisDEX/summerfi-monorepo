@@ -6,8 +6,9 @@ import {
   type DropdownRawOption,
   type SDKVaultishType,
 } from '@summerfi/app-types'
-import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
+import { sdkNetworkToHumanNetwork, subgraphNetworkToSDKId } from '@summerfi/app-utils'
 import type BigNumber from 'bignumber.js'
+import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
 import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
@@ -15,6 +16,7 @@ import { SidebarMobileHeader } from '@/components/molecules/SidebarMobileHeader/
 import { ControlsDepositWithdraw } from '@/components/organisms/ControlsDepositWithdraw/ControlsDepositWithdraw'
 import { Sidebar } from '@/components/organisms/Sidebar/Sidebar'
 import { useForecast } from '@/features/forecast/use-forecast'
+import { getDisplayToken } from '@/helpers/get-display-token'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 import { useLocalStorageOnce } from '@/hooks/use-local-storage-once'
 
@@ -41,6 +43,9 @@ export type VaultSimulationFormProps = {
   resolvedForecastAmount: BigNumber
   amountParsed: BigNumber
   isEarnApp?: boolean
+  positionExists?: boolean
+  userWalletAddress?: string
+  isLoading?: boolean
 }
 
 export const VaultSimulationForm = ({
@@ -57,6 +62,9 @@ export const VaultSimulationForm = ({
   resolvedForecastAmount,
   amountParsed,
   isEarnApp,
+  positionExists,
+  userWalletAddress,
+  isLoading = false,
 }: VaultSimulationFormProps) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [isGradientBorder, setIsGradientBorder] = useState(false)
@@ -94,11 +102,15 @@ export const VaultSimulationForm = ({
     return oneYearEarningsForecast
   }, [oneYearEarningsForecast])
 
+  const vaultUrl = !isEarnApp ? `/earn${getVaultUrl(vaultData)}` : getVaultUrl(vaultData)
+
   return (
     <div style={{ position: 'relative', width: '100%', padding: '2px' }}>
       <Sidebar
         {...{
-          title: 'Deposit',
+          title: isEarnApp
+            ? `2. Deposit into ${getDisplayToken(vaultData.inputToken.symbol)} on ${capitalize(sdkNetworkToHumanNetwork(vaultData.protocol.network))}`
+            : 'Deposit',
           content: (
             <ControlsDepositWithdraw
               amountDisplay={amountDisplay}
@@ -110,13 +122,14 @@ export const VaultSimulationForm = ({
               onFocus={onFocus}
               onBlur={onBlur}
               tokenSymbol={selectedTokenOption.value}
-              tokenBalance={tokenBalance}
-              tokenBalanceLoading={!!isTokenBalanceLoading}
+              tokenBalance={isEarnApp ? tokenBalance : undefined}
+              tokenBalanceLoading={!!isEarnApp && !!isTokenBalanceLoading}
               manualSetAmount={manualSetAmount}
               vault={vaultData}
               estimatedEarnings={estimatedEarnings}
               isLoadingForecast={isLoadingForecast}
               ownerView
+              isSimulation
             />
           ),
           customHeader:
@@ -124,26 +137,33 @@ export const VaultSimulationForm = ({
               <SidebarMobileHeader
                 type="open"
                 amount={estimatedEarnings}
-                token={vaultData.inputToken.symbol}
+                token={getDisplayToken(vaultData.inputToken.symbol)}
                 isLoadingForecast={isLoadingForecast}
               />
             ) : undefined,
           customHeaderStyles:
             !isDrawerOpen && isMobile ? { padding: 'var(--general-space-12) 0' } : undefined,
           handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
-          primaryButton: {
-            label: 'Get Started',
-            url: getVaultUrl(vaultData),
-            action: () => {
-              setStorageOnce(amountParsed.toNumber())
-            },
-            disabled: false,
-          },
-          footnote: (
-            <Link href={getVaultUrl(vaultData)}>
+          primaryButton:
+            positionExists && userWalletAddress
+              ? {
+                  label: 'View your position',
+                  url: `${vaultUrl}/${userWalletAddress}`,
+                  disabled: isLoading,
+                }
+              : {
+                  label: 'Deposit',
+                  url: vaultUrl,
+                  action: () => {
+                    setStorageOnce(amountParsed.toNumber())
+                  },
+                  disabled: isLoading,
+                },
+          footnote: !positionExists ? (
+            <Link href={vaultUrl}>
               <WithArrow>View strategy</WithArrow>
             </Link>
-          ),
+          ) : null,
         }}
         isMobile={isMobile}
         hiddenHeaderChevron={hiddenHeaderChevron}

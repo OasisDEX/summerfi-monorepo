@@ -18,6 +18,7 @@ export type TitleWithIconProps = {
   className?: string
   color?: string
   titleStyle?: CSSProperties
+  tooltipWrapperStyles?: CSSProperties
 }
 
 export const TitleWithIcon = ({
@@ -28,18 +29,19 @@ export const TitleWithIcon = ({
   className,
   color,
   titleStyle,
+  tooltipWrapperStyles,
 }: TitleWithIconProps) => {
   // clear undefined values from style properties to avoid overwrite
   const resolvedTitleStyle = pickBy(titleStyle, identity)
 
   return (
     <div className={clsx(className, titleWithIconStyles.titleWithIcon)}>
-      <Text as="p" variant={titleVariant ?? 'p3semi'} style={{ color, ...resolvedTitleStyle }}>
+      <Text as="div" variant={titleVariant ?? 'p3semi'} style={{ color, ...resolvedTitleStyle }}>
         {title}
       </Text>
       {iconName && !tooltip && <Icon iconName={iconName} size={18} color={color} />}
       {iconName && tooltip && (
-        <Tooltip tooltip={tooltip}>
+        <Tooltip tooltip={tooltip} tooltipWrapperStyles={tooltipWrapperStyles}>
           <Icon iconName={iconName} size={18} color={color} />
         </Tooltip>
       )}
