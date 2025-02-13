@@ -1,6 +1,5 @@
 import { type Dispatch, type FC, useEffect, useState } from 'react'
-import { Icon, Text, Tooltip, useMobileCheck } from '@summerfi/app-earn-ui'
-import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
+import { Icon, REVALIDATION_TIMES, Text, Tooltip, useMobileCheck } from '@summerfi/app-earn-ui'
 import debounce from 'lodash-es/debounce'
 import { useParams } from 'next/navigation'
 
