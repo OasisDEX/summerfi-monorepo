@@ -1097,9 +1097,9 @@ export class ArmadaManager implements IArmadaManager {
     // if the requested amount is close to all staked shares, we make assumption to withdraw all
     // withdraw all assumption threshold is set to 0.9999
     const withdrawAllThreshold = 0.9999
-    const shouldWithdrawAll =
-      params.shares.toSolidityValue() / params.stakedShares.toSolidityValue() >=
-      withdrawAllThreshold
+    const shouldWithdrawAll = new BigNumber(params.shares.toSolidityValue().toString())
+      .div(params.stakedShares.toSolidityValue().toString())
+      .gte(withdrawAllThreshold)
     const withdrawSharesAmount = shouldWithdrawAll ? 0n : params.shares.toSolidityValue()
 
     const calldata = encodeFunctionData({
