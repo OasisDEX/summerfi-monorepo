@@ -1,15 +1,20 @@
 'use client'
-import React, { useState } from 'react'
-import { Icon, InfoBox, Sidebar, Text } from '@summerfi/app-earn-ui'
+import { type FC, useState } from 'react'
+import { Sidebar } from '@summerfi/app-earn-ui'
 
-import ChainSelector from '@/features/bridge/components/ChainSelector/ChainSelector'
+import { BridgeFormTitle } from '@/features/bridge/components/BridgeFormTitle/BridgeFormTitle'
+import { BridgeInput } from '@/features/bridge/components/BridgeInput/BridgeInput'
+import { ChainSelectors } from '@/features/bridge/components/ChainSelectors/ChainSelectors'
+import { Spacer } from '@/features/bridge/components/Spacer/Spacer'
+import { TransactionDetails } from '@/features/bridge/components/TransactionDetails/TransactionDetails'
+import { type BridgeExternalData } from '@/features/bridge/types'
 
-import AmountInput from '../AmountInput/AmountInput'
-import BridgeFormTitle from '../BridgeFormTitle/BridgeFormTitle'
+interface BridgeFormProps {
+  walletAddress: string
+  externalData: BridgeExternalData | null
+}
 
-import styles from './BridgeForm.module.scss'
-
-export const BridgeForm = () => {
+export const BridgeForm: FC<BridgeFormProps> = ({ walletAddress, externalData }) => {
   const [sourceChain, setSourceChain] = useState<string>('')
   const [destinationChain, setDestinationChain] = useState<string>('')
   const [amount, setAmount] = useState<string>('')
@@ -25,25 +30,15 @@ export const BridgeForm = () => {
       customHeader={<BridgeFormTitle />}
       content={
         <>
-          <div className={styles.networkSelectors}>
-            <ChainSelector label="From" value={sourceChain} onChange={setSourceChain} />
-            <div className={styles.arrow}>
-              <Icon iconName="arrow_forward" size={20} />
-            </div>
-            <ChainSelector label="To" value={destinationChain} onChange={setDestinationChain} />
-          </div>
-          <div className={styles.spacer} />
-          <div className={styles.inputSection}>
-            <AmountInput value={amount} onChange={setAmount} placeholder="Enter amount to bridge" />
-          </div>
-          <div className={styles.infoBox}>
-            <InfoBox title="Important Info">
-              <Text as="p" variant="p3">
-                Bridging fee estimates, network delays, and other vital information will be shown
-                here.
-              </Text>
-            </InfoBox>
-          </div>
+          <ChainSelectors
+            sourceChain={sourceChain}
+            destinationChain={destinationChain}
+            onSourceChainChange={setSourceChain}
+            onDestinationChainChange={setDestinationChain}
+          />
+          <Spacer />
+          <BridgeInput value={amount} onChange={setAmount} placeholder="Enter amount to bridge" />
+          <TransactionDetails />
         </>
       }
       primaryButton={{

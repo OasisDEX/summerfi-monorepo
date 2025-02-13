@@ -1,0 +1,22 @@
+.networkSelectors {
+  margin-top: var(--general-space-24);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--earn-protocol-secondary-60);
+  background-color: var(--earn-protocol-neutral-80);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  margin: 0 auto;
+  margin-bottom: var(--general-space-3);
+  align-self: end;
+} 

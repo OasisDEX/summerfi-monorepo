@@ -1,0 +1,49 @@
+.bridgePageWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--general-space-16);
+  max-width: 1072px;
+  width: 100%;
+
+  @media (min-width: 768px) {
+    padding: 0;
+  }
+}
+
+.bridgePageViewLoadingStateWrapper {
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+.skeletonTitleSpacer {
+  border-bottom: 1px solid var(--earn-protocol-neutral-100);
+  width: calc(100% + 48px);
+  margin-left: -24px;
+  margin-right: -24px;
+}
+
+.skeletonTitleWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: var(--general-space-24) 0;
+  padding-top: 0;
+}
+
+.skeletonCta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-8);
+  width: 100%;
+
+  & a,
+  & button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

@@ -4,26 +4,25 @@ import { InputWithDropdown } from '@summerfi/app-earn-ui'
 
 import { QuickActionTags } from '@/features/bridge/components/QuickActionTags/QuickActionTags'
 
-// Define the props for AmountInput.
-export interface AmountInputProps {
+import styles from './BridgeInput.module.scss'
+
+export interface BridgeInputProps {
   value: string
   onChange: (value: string) => void
   placeholder?: string
-  conversionRate?: number // USD conversion factor (e.g., USD per token)
+  conversionRate?: number
 }
 
-// Preset the dropdown option for our token (in this case, SUMR).
 const defaultOption = { label: 'SUMR', value: 'SUMR', tokenSymbol: 'SUMR' }
 
-export const AmountInput: React.FC<AmountInputProps> = ({
+export const BridgeInput = ({
   value,
   onChange,
   placeholder = 'Enter amount',
   conversionRate = 0,
-}) => {
+}: BridgeInputProps) => {
   const [usdValue, setUsdValue] = useState('0.00')
 
-  // Update the USD conversion display when value or conversionRate changes.
   useEffect(() => {
     const numericValue = parseFloat(value)
     if (!isNaN(numericValue) && conversionRate > 0) {
@@ -34,8 +33,7 @@ export const AmountInput: React.FC<AmountInputProps> = ({
   }, [value, conversionRate])
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-      {/* Reuse InputWithDropdown; the dropdown is preset and not meant to be changed */}
+    <div className={styles.inputSection}>
       <InputWithDropdown
         value={value}
         heading={{
@@ -63,5 +61,3 @@ export const AmountInput: React.FC<AmountInputProps> = ({
     </div>
   )
 }
-
-export default AmountInput
