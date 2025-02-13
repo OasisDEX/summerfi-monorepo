@@ -776,8 +776,12 @@ export class ArmadaManager implements IArmadaManager {
     let swapToAmount: ITokenAmount | undefined
     const transactions: ExtendedTransactionInfo[] = []
 
-    const [beforeFleetShares, requestedWithdrawShares] = await Promise.all([
+    const [beforeFleetShares, beforeStakedShares, requestedWithdrawShares] = await Promise.all([
       this.getFleetShares({
+        vaultId: params.vaultId,
+        user: params.user,
+      }),
+      this.getStakedShares({
         vaultId: params.vaultId,
         user: params.user,
       }),
@@ -919,6 +923,7 @@ export class ArmadaManager implements IArmadaManager {
           this._getUnstakeAndWithdrawCall({
             vaultId: params.vaultId,
             shares: reminderShares,
+            stakedShares: beforeStakedShares,
           }),
           this._getPriceImpact({
             fromAmount: withdrawAmount,
@@ -992,6 +997,7 @@ export class ArmadaManager implements IArmadaManager {
         this._getUnstakeAndWithdrawCall({
           vaultId: params.vaultId,
           shares: requestedWithdrawShares,
+          stakedShares: beforeStakedShares,
         }),
         this._getPriceImpact({
           fromAmount: withdrawAmount,
@@ -1071,6 +1077,7 @@ export class ArmadaManager implements IArmadaManager {
   private async _getUnstakeAndWithdrawCall(params: {
     vaultId: IArmadaVaultId
     shares: ITokenAmount
+    stakedShares: ITokenAmount
     claimRewards?: boolean
   }): Promise<{
     calldata: HexData
@@ -1079,10 +1086,18 @@ export class ArmadaManager implements IArmadaManager {
     // FIXME: hardcoded to false because fleet rewards manager was not whitleilsted
     const claimRewards = false
 
+    // if the requested amount is close to all staked shares, we make assumption to withdraw all
+    // withdraw all assumption threshold is set to 0.9999
+    const withdrawAllThreshold = 0.9999
+    const shouldWithdrawAll = new BigNumber(params.shares.toSolidityValue().toString())
+      .div(params.stakedShares.toSolidityValue().toString())
+      .gte(withdrawAllThreshold)
+    const withdrawSharesAmount = shouldWithdrawAll ? 0n : params.shares.toSolidityValue()
+
     const calldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'unstakeAndWithdrawAssets',
-      args: [params.vaultId.fleetAddress.value, params.shares.toSolidityValue(), claimRewards],
+      args: [params.vaultId.fleetAddress.value, withdrawSharesAmount, claimRewards],
     })
 
     return { calldata }
