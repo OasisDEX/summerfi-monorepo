@@ -1,10 +1,8 @@
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
-import { useIsIframe } from '@summerfi/app-earn-ui'
 import { Address, User, Wallet } from '@summerfi/sdk-common'
 
 import { accountType } from '@/account-kit/config'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
-import { sendSafeTx } from '@/helpers/send-safe-tx'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 
 /**
@@ -29,7 +27,6 @@ export const useSumrDelegateTransaction = ({
   error: Error | null
 } => {
   const { getDelegateTx, getChainInfo } = useAppSDK()
-  const isIframe = useIsIframe()
   const { client } = useSmartAccountClient({ type: accountType })
 
   const { sendUserOperationAsync, error, isSendingUserOperation } = useSendUserOperation({
@@ -59,20 +56,6 @@ export const useSumrDelegateTransaction = ({
 
     if (tx === undefined) {
       throw new Error('Sumr delegate tx is undefined')
-    }
-
-    if (isIframe) {
-      return await sendSafeTx({
-        txs: [
-          {
-            to: tx[0].transaction.target.value,
-            data: tx[0].transaction.calldata,
-            value: tx[0].transaction.value,
-          },
-        ],
-        onSuccess,
-        onError,
-      })
     }
 
     const txParams = {

@@ -3,6 +3,7 @@ import { type AlchemyAccountsUIConfig, cookieStorage, createConfig } from '@acco
 import { SDKChainId, SDKSupportedNetworkIdsEnum } from '@summerfi/app-types'
 import { QueryClient } from '@tanstack/react-query'
 import { type Chain } from 'viem'
+import { safe } from 'wagmi/connectors'
 
 export const queryClient = new QueryClient()
 
@@ -64,6 +65,8 @@ export const getAccountKitConfig = ({
         // this is for Alchemy Signer requests
         rpcUrl: '/earn/api/rpc',
       },
+      enablePopupOauth: true,
+      connectors: [safe()],
       chain: {
         [SDKSupportedNetworkIdsEnum.ARBITRUM]: arbitrum,
         [SDKSupportedNetworkIdsEnum.BASE]: base,
