@@ -68,3 +68,7 @@ a {
 dialog {
   color: var(--color-text-primary);
 }
+
+:where(button, input, select, textarea) {
+  border: none;
+}
