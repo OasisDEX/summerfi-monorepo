@@ -1,4 +1,4 @@
-import { useAccount, useUser } from '@account-kit/react'
+import { useAccount, useAlchemyAccountContext, useConnection, useUser } from '@account-kit/react'
 
 import { accountType } from '@/account-kit/config'
 
@@ -17,7 +17,16 @@ export const useUserWallet = (): {
   isLoadingAccount: boolean
 } => {
   const user = useUser()
-  const { account, isLoadingAccount } = useAccount({ type: accountType })
+  const { account, isLoadingAccount, address } = useAccount({ type: accountType })
+  const alchemyAccountContext = useAlchemyAccountContext()
+  const connection = useConnection()
+
+  // console.log('AA debug', {
+  //   useUser: user,
+  //   useConnection: connection,
+  //   useAccount: { account, isLoadingAccount, address },
+  //   useAlchemyAccountContext: alchemyAccountContext,
+  // })
 
   // user loads first and if sca we need to wait for account to be defined
   // to avoid ui flickering
