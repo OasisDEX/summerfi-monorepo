@@ -11,7 +11,7 @@ export const TransactionHashPill = ({
 }: {
   transactionData: {
     type: TransactionType
-    hash: string
+    hash?: string
     custom?: string
   }
   chainId: number
@@ -19,21 +19,31 @@ export const TransactionHashPill = ({
 }) => {
   return (
     <Box className={transactionsStyles.hashPill}>
-      <Link href={getScannerUrl(chainId, transactionData.hash)} target="_blank">
-        {transactionData.custom ? (
-          <Text variant="p4">{transactionData.custom}</Text>
-        ) : (
-          <Text variant="p4">
-            Click <p>here to view {transactionData.type}</p> transaction
-          </Text>
-        )}
-      </Link>
-      <div
-        className={transactionsStyles.closeIcon}
-        onClick={() => removeTxHash(transactionData.hash)}
-      >
-        <Icon iconName="close" size={10} />
-      </div>
+      {transactionData.hash ? (
+        <Link href={getScannerUrl(chainId, transactionData.hash)} target="_blank">
+          {transactionData.custom ? (
+            <Text variant="p4">{transactionData.custom}</Text>
+          ) : (
+            <Text variant="p4">
+              Click <p>here to view {transactionData.type}</p> transaction
+            </Text>
+          )}
+        </Link>
+      ) : transactionData.custom ? (
+        <Text variant="p4">{transactionData.custom}</Text>
+      ) : (
+        <Text variant="p4">
+          Click <p>here to view {transactionData.type}</p> transaction
+        </Text>
+      )}
+      {transactionData.hash && (
+        <div
+          className={transactionsStyles.closeIcon}
+          onClick={() => removeTxHash(transactionData.hash as string)}
+        >
+          <Icon iconName="close" size={10} />
+        </div>
+      )}
     </Box>
   )
 }
