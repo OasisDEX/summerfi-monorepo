@@ -197,7 +197,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                         {medianDefiYieldDifference
                           ? `${medianDefiYieldDifference.gt(0) ? '+' : ''}${formatDecimalAsPercent(
                               medianDefiYieldDifference.div(100),
-                            )} Median DeFi Yield`
+                            )} vs Median DeFi Yield`
                           : ''}
                       </div>
                     </Tooltip>
