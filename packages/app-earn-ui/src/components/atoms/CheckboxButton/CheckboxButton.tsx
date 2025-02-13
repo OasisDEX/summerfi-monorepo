@@ -13,41 +13,54 @@ export const CheckboxButton = ({
   label,
   className,
   style,
+  iconSize = 18,
 }: {
   name: string
   checked: boolean
   onChange: (value: string) => void
-  label: React.ReactNode
+  label?: React.ReactNode
   className?: string
   style?: React.CSSProperties
+  iconSize?: number
 }) => {
   return (
     <div className={clsx(checkboxButtonStyles.checkboxSectionWrapper, className)} style={style}>
       <div
         className={checkboxButtonStyles.checkmarkWrapper}
         style={{
-          backgroundColor: checked ? 'var(--color-success-10)' : 'var(--color-text-primary)',
+          borderColor: checked
+            ? 'var(--earn-protocol-success-100)'
+            : 'var(--earn-protocol-neutral-70)',
+          backgroundColor: checked ? 'var(--earn-protocol-success-10)' : 'unset',
         }}
       >
-        {checked ? <Icon iconName="checkmark" size={18} /> : null}
+        {checked ? (
+          <Icon
+            iconName="checkmark"
+            size={iconSize}
+            style={{ color: 'var(--earn-protocol-success-100)' }}
+          />
+        ) : null}
+        <input
+          type="checkbox"
+          id={name}
+          name={name}
+          checked={checked}
+          onChange={(e) => onChange(e.target.value)}
+          className={checkboxButtonStyles.input}
+        />
       </div>
-      <input
-        type="checkbox"
-        id={name}
-        name={name}
-        checked={checked}
-        onChange={(e) => onChange(e.target.value)}
-        className={checkboxButtonStyles.input}
-      />
-      <label htmlFor={name} className={checkboxButtonStyles.label}>
-        {typeof label === 'string' ? (
-          <Text as="p" variant="p3semi">
-            {label}
-          </Text>
-        ) : (
-          label
-        )}
-      </label>
+      {label && (
+        <label htmlFor={name} className={checkboxButtonStyles.label}>
+          {typeof label === 'string' ? (
+            <Text as="p" variant="p3semi">
+              {label}
+            </Text>
+          ) : (
+            label
+          )}
+        </label>
+      )}
     </div>
   )
 }

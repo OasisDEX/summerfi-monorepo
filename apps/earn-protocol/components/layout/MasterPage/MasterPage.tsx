@@ -1,19 +1,32 @@
+'use client'
 import { type FC, type PropsWithChildren } from 'react'
-import { Footer, NewsletterWrapper, Text } from '@summerfi/app-earn-ui'
+import {
+  CookieBanner,
+  Footer,
+  NewsletterWrapper,
+  type SavedAnalyticsCookiesSettings,
+  Text,
+  useAnalyticsCookies,
+} from '@summerfi/app-earn-ui'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
+import { manageAnalyticsCookies } from '@/features/manage-analytics-cookies/manage-analytics-cookies'
 
 import './global.css'
 import masterPageStyles from './MasterPage.module.scss'
 
 interface MasterPageProps {
   skipNavigation?: boolean
+  analyticsCookie: SavedAnalyticsCookiesSettings | null
 }
 
 export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
   children,
   skipNavigation = false,
+  analyticsCookie,
 }) => {
+  const [cookieSettings, setCookieSettings] = useAnalyticsCookies(analyticsCookie)
+
   return (
     <div className={masterPageStyles.mainContainer}>
       {!skipNavigation && <NavigationWrapper />}
@@ -63,6 +76,11 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
           }
         />
       </div>
+      <CookieBanner
+        value={cookieSettings}
+        setValue={setCookieSettings}
+        manageCookie={manageAnalyticsCookies}
+      />
     </div>
   )
 }
