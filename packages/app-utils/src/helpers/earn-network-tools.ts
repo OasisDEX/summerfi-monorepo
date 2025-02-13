@@ -10,7 +10,7 @@ import {
 
 export const isSupportedSDKChain = (
   chainId: unknown,
-): chainId is SDKChainId.ARBITRUM | SDKChainId.BASE =>
+): chainId is SDKChainId.ARBITRUM | SDKChainId.BASE | SDKChainId.MAINNET =>
   typeof chainId === 'number' && sdkSupportedChains.includes(chainId)
 
 const humanReadableNetworkMap = {
@@ -51,6 +51,16 @@ export const humanNetworktoSDKNetwork = (network: string): SDKNetwork => {
   }
 
   return sdkNetworkMap[network.toLowerCase() as keyof typeof sdkNetworkMap]
+}
+
+export const chainIdToSDKNetwork = (chainId: SDKChainId) => {
+  return {
+    [SDKChainId.ARBITRUM]: SDKNetwork.ArbitrumOne,
+    [SDKChainId.BASE]: SDKNetwork.Base,
+    [SDKChainId.MAINNET]: SDKNetwork.Mainnet,
+    [SDKChainId.OPTIMISM]: SDKNetwork.Optimism,
+    [SDKChainId.SEPOLIA]: SDKNetwork.Sepolia,
+  }[chainId]
 }
 
 export const networkNameToSDKNetwork = (network: NetworkNames) => {

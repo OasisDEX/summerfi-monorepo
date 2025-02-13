@@ -1,17 +1,24 @@
 'use client'
 import { useCallback, useEffect, useState } from 'react'
+import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
 import { addressToBytes32, Options } from '@layerzerolabs/lz-v2-utilities'
+import { useIsIframe } from '@summerfi/app-earn-ui'
 import {
   type Address,
+  type Chain,
+  encodeFunctionData,
   formatEther,
   formatGwei,
   parseEther,
   type PublicClient,
-  type WalletClient,
 } from 'viem'
 
+import { accountType } from '@/account-kit/config'
 import { OFT_ABI } from '@/features/bridge/constants/abi'
-import { type Fee, type SendParam, type SimulatedTransactionDetails } from '@/features/bridge/types'
+import { type Fee, type SendParam } from '@/features/bridge/types'
+import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
+import { useIsIframe } from '@summerfi/app-earn-ui'
+import { sendSafeTx } from '@/helpers/send-safe-tx'
 
 // Helper functions
 function handleSimulationError(error: any) {
@@ -33,75 +40,60 @@ function handleSimulationError(error: any) {
   // setDetails((prev) => ({ ...prev, isReady: false }))
 }
 
-async function switchNetworkIfNeeded(wallet: WalletClient) {
-  const currentChainId = await window.ethereum.request({ method: 'eth_chainId' })
-
-  if (parseInt(currentChainId, 16) !== wallet.chain.id) {
-    try {
-      await window.ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: `0x${wallet.chain.id.toString(16)}` }],
-      })
-    } catch (switchError: any) {
-      if (switchError.code === 4902) {
-        await window.ethereum.request({
-          method: 'wallet_addEthereumChain',
-          params: [
-            {
-              chainId: `0x${wallet.chain.id.toString(16)}`,
-              chainName: wallet.chain.name,
-              nativeCurrency: wallet.chain.nativeCurrency,
-              rpcUrls: wallet.chain.rpcUrls.default.http,
-            },
-          ],
-        })
-      } else {
-        throw switchError
-      }
-    }
-  }
+interface BridgeTransactionParams {
+  amount: string
+  sourceChain: Chain
+  destinationChain: Chain
+  recipient: Address
+  externalData: any
+  onSuccess?: () => void
+  onError?: () => void
 }
 
-interface BridgeTransactionReturn {
-  gasOnDestination: string
-  amountReceived: string
-  fee: string
-  isReady: boolean
-  executeTransaction: () => Promise<`0x${string}`>
-  simulationError: string | null
-  simulateTransaction: () => Promise<void>
-  setSourceWallet: (wallet: WalletClient | undefined) => void
-  setSourcePublicClient: (client: PublicClient | undefined) => void
-}
-
-export function useBridgeTransaction(
-  amount: string,
-  initialSourceWallet: WalletClient | undefined,
-  initialSourcePublicClient: PublicClient | undefined,
-  recipient: Address,
-  oftAddress: Address,
-  dstEid: number,
-): BridgeTransactionReturn {
-  const [details, setDetails] = useState<SimulatedTransactionDetails>({
+export function useBridgeTransaction({
+  amount,
+  sourceChain,
+  destinationChain,
+  recipient,
+  externalData,
+  onSuccess,
+  onError,
+}: BridgeTransactionParams) {
+  const [details, setDetails] = useState({
     gasOnDestination: '--',
     amountReceived: '--',
     fee: '--',
     isReady: false,
   })
-
   const [sendParam, setSendParam] = useState<SendParam | null>(null)
   const [fee, setFee] = useState<Fee | null>(null)
   const [simulationError, setSimulationError] = useState<string | null>(null)
+  const [oftAddress, setOftAddress] = useState<Address>()
+  const [dstEid, setDstEid] = useState<number>()
 
-  const [sourceWallet, setSourceWallet] = useState<WalletClient | undefined>(initialSourceWallet)
-  const [sourcePublicClient, setSourcePublicClient] = useState<PublicClient | undefined>(
-    initialSourcePublicClient,
-  )
+  const isIframe = useIsIframe()
+  const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
 
+  // Set up OFT address and destination EID based on chains
   useEffect(() => {
-    setSourceWallet(initialSourceWallet)
-    setSourcePublicClient(initialSourcePublicClient)
-  }, [initialSourceWallet, initialSourcePublicClient])
+    if (sourceChain && destinationChain) {
+      // Get OFT address for source chain
+      const oftAddress = externalData?.oftAddresses?.[sourceChain.id]
+      setOftAddress(oftAddress)
+
+      // Get destination endpoint ID for LayerZero
+      const dstEid = externalData?.chainToEid?.[destinationChain.id]
+      setDstEid(dstEid)
+    }
+  }, [sourceChain, destinationChain, externalData])
+
+  const { sendUserOperationAsync: sendBridgeTransaction, isSendingUserOperation: isSending } =
+    useSendUserOperation({
+      client: smartAccountClient,
+      waitForTxn: true,
+      onSuccess,
+      onError,
+    })
 
   const simulateTransaction = useCallback(async () => {
     if (!amount) {
@@ -110,14 +102,14 @@ export function useBridgeTransaction(
       return
     }
 
-    if (!sourceWallet?.account || !sourcePublicClient) {
-      setSimulationError('Wallet not connected')
+    if (!recipient) {
+      setSimulationError('Recipient address is required')
       setDetails((prev) => ({ ...prev, isReady: false }))
       return
     }
 
-    if (!recipient) {
-      setSimulationError('Recipient address is required')
+    if (!oftAddress || !dstEid) {
+      setSimulationError('Bridge configuration not ready')
       setDetails((prev) => ({ ...prev, isReady: false }))
       return
     }
@@ -129,6 +121,22 @@ export function useBridgeTransaction(
       const recipientHex =
         `0x${Buffer.from(addressToBytes32(recipient)).toString('hex')}` as `0x${string}`
 
+      // Quote the fee for the cross-chain transaction
+      const quotedFee = await smartAccountClient.readContract({
+        address: oftAddress,
+        abi: OFT_ABI,
+        functionName: 'quoteSendFee',
+        args: [dstEid, recipientHex, amountBigInt, false, optionsHex],
+      })
+
+      // Estimate gas on destination chain
+      const gasEstimate = await smartAccountClient.readContract({
+        address: oftAddress,
+        abi: OFT_ABI,
+        functionName: 'estimateGas',
+        args: [dstEid, recipientHex, amountBigInt, false, optionsHex],
+      })
+
       const param: SendParam = {
         dstEid,
         to: recipientHex,
@@ -139,88 +147,89 @@ export function useBridgeTransaction(
         oftCmd: '0x',
       }
 
-      const quotedFee = await sourcePublicClient.readContract({
-        address: oftAddress,
-        abi: OFT_ABI,
-        functionName: 'quoteSend',
-        args: [param, false],
-      })
-
-      const gasEstimate = await sourcePublicClient.estimateContractGas({
-        address: oftAddress,
-        abi: OFT_ABI,
-        functionName: 'send',
-        args: [
-          param,
-          { nativeFee: quotedFee[0], lzTokenFee: quotedFee[1] },
-          sourceWallet.account.address,
-        ],
-        value: quotedFee[0],
-        account: sourceWallet.account,
-      })
-
-      const gasPrice = await sourcePublicClient.getGasPrice()
-      const sourceChainGasCost = gasEstimate * gasPrice
-
-      setDetails({
-        gasOnDestination: formatGwei(quotedFee[0]),
-        amountReceived: formatEther(param.minAmountLD),
-        fee: formatGwei(quotedFee[0] + sourceChainGasCost),
-        isReady: true,
-      })
+      const simulatedFee = {
+        nativeFee: quotedFee[0],
+        zroFee: quotedFee[1],
+      }
 
       setSendParam(param)
-      setFee({
-        nativeFee: quotedFee[0],
-        lzTokenFee: quotedFee[1],
-      })
-
+      setFee(simulatedFee)
       setSimulationError(null)
+      setDetails({
+        gasOnDestination: formatGwei(gasEstimate),
+        amountReceived: formatEther(param.minAmountLD),
+        fee: formatEther(simulatedFee.nativeFee),
+        isReady: true,
+      })
     } catch (error) {
       console.error('Simulation failed:', error)
       handleSimulationError(error)
     }
-  }, [amount, sourceWallet, sourcePublicClient, recipient, oftAddress, dstEid])
+  }, [amount, recipient, dstEid, oftAddress, smartAccountClient])
 
-  const executeTransaction = async () => {
-    if (!sourceWallet?.account || !sourcePublicClient) {
-      throw new Error('Wallet not connected')
-    }
-
-    if (!sendParam || !fee) {
+  const executeBridgeTransaction = async () => {
+    if (!sendParam || !fee || !oftAddress) {
       throw new Error('Transaction must be simulated before executing')
     }
 
     try {
-      await switchNetworkIfNeeded(sourceWallet)
-
-      const { request } = await sourcePublicClient.simulateContract({
-        account: sourceWallet.account,
-        address: oftAddress,
+      const encodedData = encodeFunctionData({
         abi: OFT_ABI,
-        functionName: 'send',
-        args: [sendParam, fee, sourceWallet.account.address],
-        value: fee.nativeFee,
+        functionName: 'sendFrom',
+        args: [
+          recipient,
+          sendParam.dstEid,
+          sendParam.to,
+          sendParam.amountLD,
+          sendParam.minAmountLD,
+          {
+            extraOptions: sendParam.extraOptions,
+            composeMsg: sendParam.composeMsg,
+            oftCmd: sendParam.oftCmd,
+          },
+        ],
       })
 
-      return await sourceWallet.writeContract(request)
-    } catch (error) {
-      console.error('Transaction failed:', {
-        error,
-        wallet: sourceWallet.account,
-        params: sendParam,
-        fee,
+      if (isIframe) {
+        return await sendSafeTx({
+          txs: [
+            {
+              to: oftAddress,
+              data: encodedData,
+              value: fee.nativeFee,
+            },
+          ],
+          onSuccess,
+          onError,
+        })
+      }
+
+      const txParams = {
+        target: oftAddress,
+        data: encodedData,
+        value: fee.nativeFee,
+      }
+
+      const resolvedOverrides = await getGasSponsorshipOverride({
+        smartAccountClient,
+        txParams,
       })
+
+      return await sendBridgeTransaction({
+        uo: txParams,
+        overrides: resolvedOverrides,
+      })
+    } catch (error) {
+      console.error('Transaction failed:', error)
       throw error
     }
   }
 
   return {
     ...details,
-    executeTransaction,
     simulationError,
+    isLoading: isSending,
     simulateTransaction,
-    setSourceWallet,
-    setSourcePublicClient,
+    executeBridgeTransaction,
   }
 }

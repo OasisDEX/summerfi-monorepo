@@ -1,13 +1,18 @@
 'use client'
 import { type FC, useState } from 'react'
+import { useChain } from '@account-kit/react'
 import { Sidebar } from '@summerfi/app-earn-ui'
+import { arbitrum, type Chain } from 'viem/chains'
 
+import { TermsOfServiceCookiePrefix } from '@/constants/terms-of-service'
 import { BridgeFormTitle } from '@/features/bridge/components/BridgeFormTitle/BridgeFormTitle'
 import { BridgeInput } from '@/features/bridge/components/BridgeInput/BridgeInput'
 import { ChainSelectors } from '@/features/bridge/components/ChainSelectors/ChainSelectors'
 import { Spacer } from '@/features/bridge/components/Spacer/Spacer'
 import { TransactionDetails } from '@/features/bridge/components/TransactionDetails/TransactionDetails'
+import { useBridgeTransaction } from '@/features/bridge/hooks/use-bridge-transaction'
 import { type BridgeExternalData } from '@/features/bridge/types'
+import { useRiskVerification } from '@/hooks/use-risk-verification'
 
 interface BridgeFormProps {
   walletAddress: string
@@ -15,12 +20,67 @@ interface BridgeFormProps {
 }
 
 export const BridgeForm: FC<BridgeFormProps> = ({ walletAddress, externalData }) => {
-  const [sourceChain, setSourceChain] = useState<string>('')
-  const [destinationChain, setDestinationChain] = useState<string>('')
+  const { chain: sourceChain, setChain: setSourceChain } = useChain()
+  const [destinationChain, setDestinationChain] = useState<Chain>(arbitrum)
   const [amount, setAmount] = useState<string>('')
 
-  const handleBridge = () => {
-    console.log('Bridging:', { sourceChain, destinationChain, amount })
+  // const {
+  //   amountRaw: amountRawStake,
+  //   amountParsed: amountParsedStake,
+  //   manualSetAmount: manualSetAmountStake,
+  //   amountDisplay: amountDisplayStake,
+  //   amountDisplayUSD: amountDisplayUSDStake,
+  //   handleAmountChange: handleAmountChangeStake,
+  //   onBlur: onBlurStake,
+  //   onFocus: onFocusStake,
+  // } = useAmount({
+  //   tokenDecimals: 18,
+  //   tokenPrice: estimatedSumrPrice.toString(),
+  //   selectedToken: sumrToken,
+  // })
+
+  const { checkRisk } = useRiskVerification({
+    cookiePrefix: TermsOfServiceCookiePrefix.SUMR_CLAIM_TOKEN,
+  })
+
+  const {
+    gasOnDestination,
+    amountReceived,
+    fee,
+    isReady,
+    simulationError,
+    executeBridgeTransaction,
+    simulateTransaction,
+  } = useBridgeTransaction({
+    amount,
+    sourceChain,
+    destinationChain,
+    recipient: walletAddress as `0x${string}`,
+    externalData,
+    onSuccess: () => {
+      // Handle success
+      console.log('Bridge successful')
+    },
+    onError: () => {
+      // Handle error
+      console.log('Bridge failed')
+    },
+  })
+
+  const handleBridge = async () => {
+    const risk = await checkRisk()
+    if (risk.isRisky) return
+
+    console.log('Bridging:', {
+      sourceChain: sourceChain.id,
+      destinationChain: destinationChain.id,
+      amount,
+    })
+    // await executeBridgeTransaction()
+  }
+
+  const handleDestinationChainChange = ({ chain }: { chain: Chain }) => {
+    setDestinationChain(chain)
   }
 
   return (
@@ -34,16 +94,29 @@ export const BridgeForm: FC<BridgeFormProps> = ({ walletAddress, externalData })
             sourceChain={sourceChain}
             destinationChain={destinationChain}
             onSourceChainChange={setSourceChain}
-            onDestinationChainChange={setDestinationChain}
+            onDestinationChainChange={handleDestinationChainChange}
           />
           <Spacer />
-          <BridgeInput value={amount} onChange={setAmount} placeholder="Enter amount to bridge" />
-          <TransactionDetails />
+          <BridgeInput
+            value={amount}
+            onChange={(value) => {
+              setAmount(value)
+              simulateTransaction()
+            }}
+            placeholder="Enter amount to bridge"
+          />
+          <TransactionDetails
+            gasOnDestination={gasOnDestination}
+            amountReceived={amountReceived}
+            fee={fee}
+            error={simulationError}
+          />
         </>
       }
       primaryButton={{
         label: 'Bridge',
         action: handleBridge,
+        disabled: !isReady,
       }}
       secondaryButton={{
         label: 'Cancel',

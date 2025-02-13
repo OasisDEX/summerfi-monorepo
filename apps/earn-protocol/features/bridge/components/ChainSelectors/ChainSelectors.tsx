@@ -1,13 +1,16 @@
 'use client'
 import { Icon } from '@summerfi/app-earn-ui'
+import { type Chain } from 'viem'
+
 import { ChainSelector } from '@/features/bridge/components/ChainSelector/ChainSelector'
+
 import styles from './ChainSelectors.module.scss'
 
 interface ChainSelectorsProps {
-  sourceChain: string
-  destinationChain: string
-  onSourceChainChange: (value: string) => void
-  onDestinationChainChange: (value: string) => void
+  sourceChain: Chain
+  destinationChain: Chain
+  onSourceChainChange: ({ chain }: { chain: Chain }) => void
+  onDestinationChainChange: ({ chain }: { chain: Chain }) => void
 }
 
 export const ChainSelectors = ({
@@ -18,11 +21,11 @@ export const ChainSelectors = ({
 }: ChainSelectorsProps) => {
   return (
     <div className={styles.networkSelectors}>
-      <ChainSelector label="From" value={sourceChain} onChange={onSourceChainChange} />
+      <ChainSelector label="From" chainId={sourceChain.id} onChange={onSourceChainChange} />
       <div className={styles.arrow}>
         <Icon iconName="arrow_forward" size={20} />
       </div>
-      <ChainSelector label="To" value={destinationChain} onChange={onDestinationChainChange} />
+      <ChainSelector label="To" chainId={destinationChain.id} onChange={onDestinationChainChange} />
     </div>
   )
 }

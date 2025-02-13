@@ -35,11 +35,9 @@ function SimpleBridgeSkeleton() {
           gap: 'var(--general-space-24)',
         }}
       >
-        <SkeletonLine height={120} radius="var(--radius-roundish)" />
+        <SkeletonLine height={100} radius="var(--radius-roundish)" />
         <Spacer />
-        <SkeletonLine height={120} radius="var(--radius-roundish)" />
-        <Spacer />
-        <SkeletonLine height={120} radius="var(--radius-roundish)" />
+        <SkeletonLine height={220} radius="var(--radius-roundish)" />
 
         <div className={classNames.skeletonCta}>
           <Button variant="primaryLarge" onClick={() => {}} disabled>

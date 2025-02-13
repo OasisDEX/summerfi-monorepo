@@ -21,7 +21,6 @@ const BridgePage = async ({ params }: BridgePageProps) => {
     getSumrBalances({
       walletAddress,
     }),
-    new Promise((resolve) => setTimeout(resolve, 10000)),
   ])
 
   // TODO: Uodate to simply SUMR balance

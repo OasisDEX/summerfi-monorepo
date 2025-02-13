@@ -1,8 +1,9 @@
 'use client'
 import { Dropdown, Icon, Text } from '@summerfi/app-earn-ui'
 import { type DropdownOption, type DropdownRawOption, SDKNetwork } from '@summerfi/app-types'
-import { sdkNetworkToHumanNetwork } from '@summerfi/app-utils'
+import { chainIdToSDKNetwork, sdkNetworkToHumanNetwork } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
+import { type Chain } from 'viem'
 
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 
@@ -28,12 +29,13 @@ const NetworkContent: React.FC<{ option: DropdownOption }> = ({ option }) => (
 
 interface ChainSelectorProps {
   label: string
-  value: string
-  onChange: (value: string) => void
+  chainId: Chain['id']
+  onChange: ({ chain }: { chain: Chain }) => void
 }
 
-export const ChainSelector: React.FC<ChainSelectorProps> = ({ label, value, onChange }) => {
-  const selectedNetwork = networkOptions.find((opt) => opt.value === value) || networkOptions[0]
+export const ChainSelector: React.FC<ChainSelectorProps> = ({ label, chainId, onChange }) => {
+  const selectedNetwork =
+    networkOptions.find((opt) => opt.value === chainIdToSDKNetwork(chainId)) || networkOptions[0]
 
   return (
     <div className={styles.chainSelector}>
