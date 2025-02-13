@@ -16,6 +16,7 @@ type GetInterestRatesParams = {
   hourlyCount?: number
   weeklyCount?: number
   arksList: SDKVaultishType['arks'] | SDKVaultType['arks']
+  justLatestRates?: boolean
 }
 
 const noInterestRates: GetInterestRatesQuery = {
@@ -67,15 +68,25 @@ if (!process.env.FUNCTIONS_API_URL) {
   throw new Error('FUNCTIONS_API_URL is not set')
 }
 
-const apiUrls = {
+const apiHistoricalRatesUrls = {
   [SDKNetwork.Mainnet]: `${process.env.FUNCTIONS_API_URL}/api/historicalRates/1`,
   [SDKNetwork.Base]: `${process.env.FUNCTIONS_API_URL}/api/historicalRates/8453`,
   [SDKNetwork.ArbitrumOne]: `${process.env.FUNCTIONS_API_URL}/api/historicalRates/42161`,
 }
 
+const apiRatesUrls = {
+  [SDKNetwork.Mainnet]: `${process.env.FUNCTIONS_API_URL}/api/rates/1`,
+  [SDKNetwork.Base]: `${process.env.FUNCTIONS_API_URL}/api/rates/8453`,
+  [SDKNetwork.ArbitrumOne]: `${process.env.FUNCTIONS_API_URL}/api/rates/42161`,
+}
+
 const isProperNetwork = (network: string): network is keyof typeof clients => network in clients
 
-export async function getInterestRates({ network, arksList }: GetInterestRatesParams) {
+export async function getInterestRates({
+  network,
+  arksList,
+  justLatestRates = false,
+}: GetInterestRatesParams) {
   if (!isProperNetwork(network)) {
     throw new Error(`getInterestRates: No endpoint found for network: ${network}`)
   }
@@ -95,9 +106,12 @@ export async function getInterestRates({ network, arksList }: GetInterestRatesPa
       }
 
       try {
-        // Try primary source first
-        const apiUrl = `${apiUrls[network]}?productId=${productId}`
+        const resolvedUrl = justLatestRates
+          ? apiRatesUrls[network]
+          : apiHistoricalRatesUrls[network]
 
+        // Try primary source first
+        const apiUrl = `${resolvedUrl}?productId=${productId}`
         const apiResponse = await fetch(apiUrl)
 
         if (!apiResponse.ok) {
@@ -105,6 +119,13 @@ export async function getInterestRates({ network, arksList }: GetInterestRatesPa
         }
 
         const data = await apiResponse.json()
+
+        if (justLatestRates) {
+          return {
+            ...noInterestRates,
+            latestInterestRate: [{ rate: [data.interestRates[0]] }],
+          }
+        }
 
         return data
       } catch (error) {
