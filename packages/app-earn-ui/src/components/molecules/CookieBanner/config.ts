@@ -1,4 +1,4 @@
-export const analyticsCookieName = 'analyticsCookieName'
+export const analyticsCookieName = 'analyticsCookie'
 
 export enum AnalyticsCookieNames {
   MARKETING = 'marketing',
