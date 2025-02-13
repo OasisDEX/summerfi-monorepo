@@ -9,7 +9,19 @@ import { getChainInfoByChainId } from '@summerfi/sdk-common'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 
-export async function getUsersActivity(): Promise<{
+// filter out testing wallets
+const addresesToFilterOut = [
+  '0xaf2227f40445982959c56e1421a0855209f6470e',
+  '0xddc68f9de415ba2fe2fd84bc62be2d2cff1098da',
+  '0xbef4befb4f230f43905313077e3824d7386e09f8',
+  '0x10649c79428d718621821cf6299e91920284743f',
+]
+
+export async function getUsersActivity({
+  filterTestingWallets = false,
+}: {
+  filterTestingWallets?: boolean
+}): Promise<{
   usersActivity: UsersActivity
   topDepositors: SDKUsersActivityType
   totalUsers: number
@@ -39,6 +51,10 @@ export async function getUsersActivity(): Promise<{
   ].length
 
   const usersActivityList = usersActivityListRaw
+    .filter(
+      (position) =>
+        !filterTestingWallets || !addresesToFilterOut.includes(position.account.id.toLowerCase()),
+    )
     .flatMap((position) => [
       ...position.deposits.map((deposit) => ({
         ...deposit,

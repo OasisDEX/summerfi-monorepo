@@ -13,7 +13,7 @@ interface UserActivityPageProps {
 const UserActivityPage: FC<UserActivityPageProps> = async ({ searchParams }) => {
   const [{ vaults }, { usersActivity, totalUsers, topDepositors }] = await Promise.all([
     getVaultsList(),
-    getUsersActivity(),
+    getUsersActivity({ filterTestingWallets: true }),
   ])
 
   return (
