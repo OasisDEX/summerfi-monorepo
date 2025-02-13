@@ -12,6 +12,7 @@ export const TransactionHashPill = ({
   transactionData: {
     type: TransactionType
     hash: string
+    custom?: string
   }
   chainId: number
   removeTxHash: (txHash: string) => void
@@ -19,9 +20,13 @@ export const TransactionHashPill = ({
   return (
     <Box className={transactionsStyles.hashPill}>
       <Link href={getScannerUrl(chainId, transactionData.hash)} target="_blank">
-        <Text variant="p4">
-          Click <p>here to view {transactionData.type}</p> transaction
-        </Text>
+        {transactionData.custom ? (
+          <Text variant="p4">{transactionData.custom}</Text>
+        ) : (
+          <Text variant="p4">
+            Click <p>here to view {transactionData.type}</p> transaction
+          </Text>
+        )}
       </Link>
       <div
         className={transactionsStyles.closeIcon}
