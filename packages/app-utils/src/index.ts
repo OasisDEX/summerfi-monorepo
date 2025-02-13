@@ -66,9 +66,19 @@ export { getRandomString } from './helpers/get-random-string'
 export { isValidLink } from './helpers/is-valid-link'
 export { getRebalanceSavedGasCost } from './helpers/get-rebalance-saved-gas-cost'
 export { getRebalanceSavedTimeInHours } from './helpers/get-rebalance-saved-time-in-hours'
+export { getArksWeightedApy } from './helpers/get-arks-weighted-apy'
 
 export { safeParseJson } from './helpers/safe-parse-json'
 export { getServerSideCookies } from './helpers/get-server-side-cookies'
 export { safeATOB, safeBTOA } from './helpers/safe-b64'
 
 export { ADDRESS_ZERO } from './address-zero'
+
+export { decorateWithFleetConfig } from './decorators/decorateWithFleetConfig'
+export {
+  getArkProductId,
+  getArkProductIdList,
+  getArkByProductId,
+} from './helpers/get-ark-product-id'
+
+export { aggregateArksPerNetwork } from './helpers/aggregate-arks-per-network'

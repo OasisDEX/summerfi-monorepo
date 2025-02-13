@@ -1,6 +1,14 @@
 import { type FC, useState } from 'react'
 import { useUser } from '@account-kit/react'
-import { Button, DataBlock, Dropdown, Icon, LoadableAvatar, Text } from '@summerfi/app-earn-ui'
+import {
+  Button,
+  DataBlock,
+  Dropdown,
+  Icon,
+  LoadableAvatar,
+  SkeletonLine,
+  Text,
+} from '@summerfi/app-earn-ui'
 import { type DropdownRawOption } from '@summerfi/app-types'
 import {
   formatAddress,
@@ -13,7 +21,7 @@ import clsx from 'clsx'
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
 import { transakNetworkOptions } from '@/features/transak/consts'
 import { type TransakNetworkOption } from '@/features/transak/types'
-import { revalidateUser } from '@/helpers/revalidate-user'
+import { revalidateUser } from '@/helpers/revalidation-handlers'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './PortfolioHeader.module.scss'
@@ -45,12 +53,14 @@ interface PortfolioHeaderProps {
   walletAddress: string
   totalSumr?: number
   totalWalletValue?: number
+  isLoading?: boolean
 }
 
 export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
   walletAddress,
   totalSumr,
   totalWalletValue,
+  isLoading = false,
 }) => {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const { userWalletAddress } = useUserWallet()
@@ -137,7 +147,11 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
             colors={['#B90061', '#EC58A2', '#F8A4CE', '#FFFFFF']}
           />
           <Text as="p" variant="p1semi">
-            {formatAddress(walletAddress, { first: 6 })}
+            {!isLoading ? (
+              formatAddress(walletAddress, { first: 6 })
+            ) : (
+              <SkeletonLine width={220} height={20} />
+            )}
           </Text>
           {/* <Icon iconName="edit" color="rgba(255, 73, 164, 1)" variant="s" /> */}
         </div>

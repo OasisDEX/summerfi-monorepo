@@ -1,6 +1,6 @@
 import { BigGradientBox, HighestQualityYieldsDisclaimer } from '@summerfi/app-earn-ui'
-import { type IconNamesList } from '@summerfi/app-types'
-import { parseServerResponseToClient } from '@summerfi/app-utils'
+import { type IconNamesList, type SDKNetwork } from '@summerfi/app-types'
+import { aggregateArksPerNetwork, parseServerResponseToClient } from '@summerfi/app-utils'
 
 import { getProtocolTvl } from '@/app/server-handlers/defillama/get-protocol-tvl'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
@@ -23,6 +23,8 @@ import { StartEarningNow } from '@/components/layout/LandingPageContent/content/
 import { SummerFiProSection } from '@/components/layout/LandingPageContent/content/SummerFiProSection'
 import { SumrToken } from '@/components/layout/LandingPageContent/content/SumrToken'
 import { decorateCustomVaultFields } from '@/helpers/vault-custom-value-helpers'
+
+import { getInterestRates } from './server-handlers/interest-rates'
 
 export const revalidate = 60
 
@@ -125,7 +127,28 @@ export default async function HomePage() {
   }>((acc, curr) => ({ ...acc, ...curr }), emptyTvls)
 
   const { config } = parseServerResponseToClient(systemConfig)
-  const vaultsDecorated = decorateCustomVaultFields(vaults, config)
+
+  const aggregatedArksPerNetwork = aggregateArksPerNetwork(vaults)
+
+  const interestRatesPromises = Object.entries(aggregatedArksPerNetwork).map(
+    ([network, { arks }]) =>
+      getInterestRates({
+        network: network as SDKNetwork,
+        arksList: arks,
+      }),
+  )
+
+  const interestRatesResults = await Promise.all(interestRatesPromises)
+
+  const vaultsDecorated = decorateCustomVaultFields({
+    vaults,
+    systemConfig: config,
+    decorators: {
+      arkInterestRatesMap: interestRatesResults.reduce((acc, curr) => {
+        return { ...acc, ...curr }
+      }, {}),
+    },
+  })
 
   return (
     <div style={{ display: 'flex', gap: '8px', flexDirection: 'column', alignItems: 'center' }}>

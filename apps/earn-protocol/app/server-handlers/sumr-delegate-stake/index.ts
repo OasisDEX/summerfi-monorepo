@@ -2,7 +2,6 @@ import { SDKChainId } from '@summerfi/app-types'
 import { SummerTokenAbi, SummerVestingWalletFactoryAbi } from '@summerfi/armada-protocol-abis'
 import { getChainInfoByChainId } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
-import { unstable_cache as unstableCache } from 'next/cache'
 import { type Address, createPublicClient, http } from 'viem'
 import { base } from 'viem/chains'
 
@@ -11,7 +10,6 @@ import {
   GOVERNANCE_REWARDS_MANAGER_ADDRESS,
   VESTING_WALLET_FACTORY_ADDRESS,
 } from '@/constants/addresses'
-import { REVALIDATION_TIMES } from '@/constants/revalidations'
 import { SDKChainIdToSSRRpcGatewayMap } from '@/helpers/rpc-gateway-ssr'
 
 export interface SumrDelegateStakeData {
@@ -48,17 +46,9 @@ export const getSumrDelegateStake = async ({
     let sumrToken
 
     try {
-      sumrToken = await unstableCache(
-        async () =>
-          await backendSDK.armada.users.getSummerToken({
-            chainInfo: getChainInfoByChainId(SDKChainId.BASE),
-          }),
-        [walletAddress],
-        {
-          revalidate: REVALIDATION_TIMES.PORTFOLIO_DATA,
-          tags: [walletAddress.toLowerCase()],
-        },
-      )()
+      sumrToken = await backendSDK.armada.users.getSummerToken({
+        chainInfo: getChainInfoByChainId(SDKChainId.BASE),
+      })
     } catch (error) {
       throw new Error(
         `Failed to fetch SUMMER token data: ${error instanceof Error ? error.message : 'Unknown error'}`,
@@ -66,119 +56,108 @@ export const getSumrDelegateStake = async ({
     }
 
     try {
-      const sumrDelegateStake = await unstableCache(
-        async () => {
-          const [sumrAmountResult, delegatedToResult] = await publicClient.multicall({
-            contracts: [
-              {
-                abi: SummerTokenAbi,
-                address: sumrToken.address.value,
-                functionName: 'balanceOf',
-                args: [resolvedWalletAddress],
-              },
-              {
-                abi: SummerTokenAbi,
-                address: sumrToken.address.value,
-                functionName: 'delegates',
-                args: [resolvedWalletAddress],
-              },
-            ],
-          })
+      const [sumrAmountResult, delegatedToResult] = await publicClient.multicall({
+        contracts: [
+          {
+            abi: SummerTokenAbi,
+            address: sumrToken.address.value,
+            functionName: 'balanceOf',
+            args: [resolvedWalletAddress],
+          },
+          {
+            abi: SummerTokenAbi,
+            address: sumrToken.address.value,
+            functionName: 'delegates',
+            args: [resolvedWalletAddress],
+          },
+        ],
+      })
 
-          const _sumrAmount = sumrAmountResult.result
-          const delegatedTo = delegatedToResult.result
+      const _sumrAmount = sumrAmountResult.result
+      const delegatedTo = delegatedToResult.result
 
-          if (!delegatedTo) {
-            throw new Error('Failed to fetch vesting or staking data or delegated to data')
-          }
+      if (!delegatedTo) {
+        throw new Error('Failed to fetch vesting or staking data or delegated to data')
+      }
 
-          // Second multicall
-          const [vestingWalletsResult, stakedAmountResult, decayFactorResult] =
-            await publicClient.multicall({
-              contracts: [
-                {
-                  abi: SummerVestingWalletFactoryAbi,
-                  address: VESTING_WALLET_FACTORY_ADDRESS,
-                  functionName: 'vestingWallets',
-                  args: [resolvedWalletAddress],
-                },
-                {
-                  abi: SummerTokenAbi,
-                  address: GOVERNANCE_REWARDS_MANAGER_ADDRESS,
-                  functionName: 'balanceOf',
-                  args: [resolvedWalletAddress],
-                },
-                {
-                  abi: SummerTokenAbi,
-                  address: sumrToken.address.value,
-                  functionName: 'getDecayFactor',
-                  args: [delegatedTo],
-                },
-              ],
-            })
+      // Second multicall
+      const [vestingWalletsResult, stakedAmountResult, decayFactorResult] =
+        await publicClient.multicall({
+          contracts: [
+            {
+              abi: SummerVestingWalletFactoryAbi,
+              address: VESTING_WALLET_FACTORY_ADDRESS,
+              functionName: 'vestingWallets',
+              args: [resolvedWalletAddress],
+            },
+            {
+              abi: SummerTokenAbi,
+              address: GOVERNANCE_REWARDS_MANAGER_ADDRESS,
+              functionName: 'balanceOf',
+              args: [resolvedWalletAddress],
+            },
+            {
+              abi: SummerTokenAbi,
+              address: sumrToken.address.value,
+              functionName: 'getDecayFactor',
+              args: [delegatedTo],
+            },
+          ],
+        })
 
-          const vestingWallets = vestingWalletsResult.result
-          const _stakedAmount = stakedAmountResult.result
-          const decayFactor = decayFactorResult.result
+      const vestingWallets = vestingWalletsResult.result
+      const _stakedAmount = stakedAmountResult.result
+      const decayFactor = decayFactorResult.result
 
-          if (!vestingWallets) {
-            throw new Error('Failed to fetch vesting wallets')
-          }
-          if (decayFactor === undefined) {
-            throw new Error('Failed to fetch decay factor')
-          }
+      if (!vestingWallets) {
+        throw new Error('Failed to fetch vesting wallets')
+      }
+      if (decayFactor === undefined) {
+        throw new Error('Failed to fetch decay factor')
+      }
 
-          const delegatedToDecayFactor = new BigNumber(decayFactor.toString())
-            .shiftedBy(-sumrToken.decimals)
-            .toNumber()
+      const delegatedToDecayFactor = new BigNumber(decayFactor.toString())
+        .shiftedBy(-sumrToken.decimals)
+        .toNumber()
 
-          // Third multicall
-          const [vestedSumrAmountResult] = await publicClient.multicall({
-            contracts: [
-              {
-                abi: SummerTokenAbi,
-                address: sumrToken.address.value,
-                functionName: 'balanceOf',
-                args: [vestingWallets],
-              },
-            ],
-          })
+      // Third multicall
+      const [vestedSumrAmountResult] = await publicClient.multicall({
+        contracts: [
+          {
+            abi: SummerTokenAbi,
+            address: sumrToken.address.value,
+            functionName: 'balanceOf',
+            args: [vestingWallets],
+          },
+        ],
+      })
 
-          const _vestedSumrAmount = vestedSumrAmountResult.result
+      const _vestedSumrAmount = vestedSumrAmountResult.result
 
-          if (
-            _sumrAmount === undefined ||
-            _stakedAmount === undefined ||
-            _vestedSumrAmount === undefined
-          ) {
-            throw new Error('Failed to fetch vesting and staking data')
-          }
+      if (
+        _sumrAmount === undefined ||
+        _stakedAmount === undefined ||
+        _vestedSumrAmount === undefined
+      ) {
+        throw new Error('Failed to fetch vesting and staking data')
+      }
 
-          const sumrDelegated = new BigNumber(
-            (_sumrAmount + _stakedAmount + _vestedSumrAmount).toString(),
-          )
-            .shiftedBy(-sumrToken.decimals)
-            .toString()
+      const sumrDelegated = new BigNumber(
+        (_sumrAmount + _stakedAmount + _vestedSumrAmount).toString(),
+      )
+        .shiftedBy(-sumrToken.decimals)
+        .toString()
 
-          const stakedAmount = new BigNumber(_stakedAmount.toString())
-            .shiftedBy(-sumrToken.decimals)
-            .toString()
+      const stakedAmount = new BigNumber(_stakedAmount.toString())
+        .shiftedBy(-sumrToken.decimals)
+        .toString()
 
-          return {
-            delegatedTo,
-            delegatedToDecayFactor,
-            sumrDelegated,
-            stakedAmount,
-          }
-        },
-        [walletAddress],
-        {
-          revalidate: REVALIDATION_TIMES.PORTFOLIO_DATA,
-          tags: [walletAddress.toLowerCase()],
-        },
-      )()
-
-      return sumrDelegateStake
+      return {
+        delegatedTo,
+        delegatedToDecayFactor,
+        sumrDelegated,
+        stakedAmount,
+      }
     } catch (error) {
       throw new Error(
         `Failed to fetch contract data: ${error instanceof Error ? error.message : 'Unknown error'}`,

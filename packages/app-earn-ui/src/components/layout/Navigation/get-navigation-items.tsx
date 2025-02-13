@@ -4,17 +4,14 @@ import { SupportBox } from '@/components/layout/Navigation/SupportBox'
 export const getNavigationItems = ({
   userWalletAddress,
   isEarnApp,
-  isPreLaunchVersion,
 }: {
   userWalletAddress?: string
   isEarnApp?: boolean
-  isPreLaunchVersion?: boolean
 }): EarnNavigationProps['links'] => [
   {
     label: 'Earn',
     id: 'earn',
     link: !isEarnApp ? `/earn` : `/`,
-    disabled: isPreLaunchVersion,
   },
   ...(userWalletAddress
     ? [
@@ -33,7 +30,6 @@ export const getNavigationItems = ({
   {
     label: 'Explore',
     id: 'explore',
-    disabled: isPreLaunchVersion,
     itemsList: [
       {
         url: `${!isEarnApp ? `/earn` : ``}/user-activity`,
@@ -49,23 +45,21 @@ export const getNavigationItems = ({
         description: 'Vault optimizations performed by AI-powered keepers',
         icon: 'earn_rebalance_activities',
       },
-      {
-        url: '/yield-trend',
-        id: 'yield-trend',
-        title: 'Yield Trend',
-        description: 'Compare median DeFi yield to Lazy Summer AI-Optimized Yield',
-        icon: 'earn_yield_trend',
-      },
+      // {
+      //   url: '/yield-trend',
+      //   id: 'yield-trend',
+      //   title: 'Yield Trend',
+      //   description: 'Compare median DeFi yield to Lazy Summer AI-Optimized Yield',
+      //   icon: 'earn_yield_trend',
+      // },
     ],
   },
   // hide for now until we provide all the necessary channels of support
-  ...(isPreLaunchVersion
-    ? []
-    : [
-        {
-          label: 'Support',
-          id: 'support',
-          dropdownContent: <SupportBox />,
-        },
-      ]),
+  ...[
+    {
+      label: 'Support',
+      id: 'support',
+      dropdownContent: <SupportBox />,
+    },
+  ],
 ]

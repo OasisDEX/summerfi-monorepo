@@ -45,15 +45,23 @@ const baseParamsSchema = z
   .optional()
   .transform((val) => val ?? {})
 
-const userParamsSchema = z
-  .object({
+const userParamsSchema = z.union([
+  // GET query params schema
+  z.object({
     addresses: addressesSchema,
     chainId: chainIdSchema.optional(),
-  })
-  .transform((val) => ({
-    addresses: val.addresses,
-    chainId: val.chainId,
-  }))
+  }),
+  // POST body schema
+  z.object({
+    addresses: z
+      .array(z.string())
+      .refine((addresses) => addresses.every((address) => isValidAddress(address)), {
+        message: 'Invalid format of addresses',
+      })
+      .transform((addresses) => addresses.map((address) => address as Address)),
+    chainId: chainIdSchema.optional(),
+  }),
+])
 
 const paginationParamsSchema = z
   .object({
@@ -417,7 +425,20 @@ export const handler = async (
         return ResponseOk({ body: response })
       }
       case isUsersRoute: {
-        const parseResult = userParamsSchema.safeParse(event.queryStringParameters)
+        let parseResult
+        const method = event.requestContext.http.method
+
+        if (method === 'POST') {
+          const body = event.body ? JSON.parse(event.body) : {}
+          parseResult = userParamsSchema.safeParse(body)
+        } else if (method === 'GET') {
+          // Log deprecation warning
+          logger.warn('GET method is deprecated for /users route. Please use POST instead.')
+          parseResult = userParamsSchema.safeParse(event.queryStringParameters)
+        } else {
+          return ResponseBadRequest({ message: 'Method not allowed. Use POST or GET.' })
+        }
+
         if (!parseResult.success) {
           logger.warn('Validation errors occurred', { errors: parseResult.error.errors })
           return ResponseBadRequest({
@@ -425,6 +446,7 @@ export const handler = async (
             errors: parseResult.error.errors,
           })
         }
+
         const response = await handleUsersRoute(parseResult.data, SUBGRAPH_BASE)
         return ResponseOk({ body: response })
       }

@@ -1,6 +1,8 @@
-import { parseServerResponseToClient } from '@summerfi/app-utils'
+import { type SDKNetwork } from '@summerfi/app-types'
+import { aggregateArksPerNetwork, parseServerResponseToClient } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
 
+import { getInterestRates } from '@/app/server-handlers/interest-rates'
 import { fetchRaysLeaderboard } from '@/app/server-handlers/leaderboard'
 import { portfolioPositionsHandler } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
 import { portfolioWalletAssetsHandler } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
@@ -61,6 +63,18 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   const { vaults } = vaultsData
   const { rebalances } = rebalancesData
 
+  const aggregatedArksPerNetwork = aggregateArksPerNetwork(vaults)
+
+  const interestRatesPromises = Object.entries(aggregatedArksPerNetwork).map(
+    ([network, { arks }]) =>
+      getInterestRates({
+        network: network as SDKNetwork,
+        arksList: arks,
+      }),
+  )
+
+  const interestRatesResults = await Promise.all(interestRatesPromises)
+
   const positionsJsonSafe = positions
     ? parseServerResponseToClient<IArmadaPosition[]>(positions)
     : []
@@ -72,7 +86,15 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       portfolioPositionsHandler({ position, vaultsList: vaults, config, walletAddress }),
     ),
   )
-  const vaultsDecorated = decorateCustomVaultFields({ vaults, systemConfig: config })
+  const vaultsDecorated = decorateCustomVaultFields({
+    vaults,
+    systemConfig: config,
+    decorators: {
+      arkInterestRatesMap: interestRatesResults.reduce((acc, curr) => {
+        return { ...acc, ...curr }
+      }, {}),
+    },
+  })
 
   const userVaultsIds = positionsList.map((position) => position.vaultData.id.toLowerCase())
   const userRebalances = rebalances.filter((rebalance) =>
@@ -81,7 +103,6 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
 
   const sumrDecayFactors = await getSumrDecayFactor(
     sumrDelegates.map((delegate) => delegate.account.address),
-    walletAddress,
   )
 
   const rewardsData: ClaimDelegateExternalData = {
