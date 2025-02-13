@@ -2,6 +2,7 @@ import { ToastContainer } from 'react-toastify'
 import { cookieToInitialState } from '@account-kit/core'
 import {
   GlobalStyles,
+  GoogleTagManager,
   LocalConfigContextProvider,
   slippageConfigCookieName,
   sumrNetApyConfigCookieName,
@@ -44,6 +45,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <GlobalStyles />
         </head>
         <body className={`${fontInter.variable}`}>
+          <GoogleTagManager />
           <MasterPage skipNavigation>
             <Image src={logoMaintenance} alt="Summer.fi" width={200} style={{ margin: '4rem' }} />
             <Text as="h1" variant="h1" style={{ margin: '3rem 0 1rem', fontWeight: 700 }}>
@@ -83,6 +85,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <GlobalStyles />
       </head>
       <body className={`${fontInter.variable}`}>
+        <GoogleTagManager />
         <AlchemyAccountsProvider initialState={accountKitInitializedState}>
           <GlobalEventTracker />
           <NextIntlClientProvider messages={messages}>

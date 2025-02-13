@@ -1,6 +1,7 @@
 import {
   EXTERNAL_LINKS,
   GlobalStyles,
+  GoogleTagManager,
   HeaderDisclaimer,
   LocalConfigContextProvider,
   slippageConfigCookieName,
@@ -41,6 +42,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <GlobalStyles />
       </head>
       <body className={` ${fontInter.variable}`}>
+        <GoogleTagManager />
         <NextIntlClientProvider messages={messages}>
           <LocalConfigContextProvider value={{ sumrNetApyConfig, slippageConfig }}>
             {isGB && (

@@ -143,6 +143,9 @@ export { chartTimestampFormat } from './features/forecast/chart-formatters'
 // newsletter stuff
 export { handleNewsletterSubscription } from './features/newsletter'
 
+// google tag manager
+export { GoogleTagManager } from './features/google-tag-manager/GoogleTagManager'
+
 // contexts
 export {
   LocalConfigContextProvider,
