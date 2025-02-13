@@ -41,7 +41,9 @@ export const CookieBanner: FC<AnalyticsCookieBannerProps> = ({ value, setValue, 
   const [selectedCookies, setSelectedCookies] = useState(initSelectedCookies(false))
   const [settingsAreSaved, setSettingsAreSaved] = useState(false)
 
-  if (settingsAreSaved || value?.version === analyticsCookieVersion) {
+  // TO TEST LOCALLY REMOVE TURBOPACK CONDITION
+  // eslint-disable-next-line turbo/no-undeclared-env-vars
+  if (settingsAreSaved || value?.version === analyticsCookieVersion || process.env.TURBOPACK) {
     return null
   }
 
