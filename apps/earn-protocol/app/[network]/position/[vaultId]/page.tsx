@@ -20,13 +20,14 @@ import {
 } from '@/helpers/vault-custom-value-helpers'
 
 type EarnVaultOpenPageProps = {
-  params: {
+  params: Promise<{
     vaultId: string // could be vault address or the vault name
     network: SDKNetwork
-  }
+  }>
 }
 
-const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
+const EarnVaultOpenPage = async (props: EarnVaultOpenPageProps) => {
+  const params = await props.params;
   const parsedNetwork = humanNetworktoSDKNetwork(params.network)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
   const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())

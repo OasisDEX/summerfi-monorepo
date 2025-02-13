@@ -17,7 +17,8 @@ const cache = {} as {
 }
 const CACHE_TTL = 30 * 1000 // half a minute
 
-export async function GET(req: Request, { params }: { params: { forecastParams: string[] } }) {
+export async function GET(req: Request, props: { params: Promise<{ forecastParams: string[] }> }) {
+  const params = await props.params;
   const [fleetAddress, chainId, amount] = params.forecastParams
 
   if (!fleetAddress || !chainId || !amount) {

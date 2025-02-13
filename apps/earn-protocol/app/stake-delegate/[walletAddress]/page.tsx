@@ -11,12 +11,13 @@ import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/ty
 import { isValidAddress } from '@/helpers/is-valid-address'
 
 type StakeDelegatePageProps = {
-  params: {
+  params: Promise<{
     walletAddress: string
-  }
+  }>
 }
 
-const StakeDelegatePage = async ({ params }: StakeDelegatePageProps) => {
+const StakeDelegatePage = async (props: StakeDelegatePageProps) => {
+  const params = await props.params;
   const { walletAddress } = params
 
   if (!isValidAddress(walletAddress)) {

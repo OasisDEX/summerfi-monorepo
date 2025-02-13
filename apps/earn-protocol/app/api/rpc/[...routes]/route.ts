@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 
-export async function POST(req: Request, { params }: { params: { routes: string[] } }) {
+export async function POST(req: Request, props: { params: Promise<{ routes: string[] }> }) {
+  const params = await props.params;
   const apiUrl = 'https://api.g.alchemy.com'
   const apiKey = process.env.ACCOUNT_KIT_API_KEY
 

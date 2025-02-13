@@ -22,12 +22,13 @@ import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/ty
 import { decorateCustomVaultFields } from '@/helpers/vault-custom-value-helpers'
 
 type PortfolioPageProps = {
-  params: {
+  params: Promise<{
     walletAddress: string
-  }
+  }>
 }
 
-const PortfolioPage = async ({ params }: PortfolioPageProps) => {
+const PortfolioPage = async (props: PortfolioPageProps) => {
+  const params = await props.params;
   const { walletAddress: walletAddressRaw } = params
 
   const walletAddress = walletAddressRaw.toLowerCase()

@@ -73,7 +73,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   const accountKitInitializedState = cookieToInitialState(
     getAccountKitConfig({ forkRpcUrl, chainId }),
-    headers().get('cookie') ?? undefined,
+    (await headers()).get('cookie') ?? undefined,
   )
 
   // the style on the html tag is needed to prevent a flash of white background on page load

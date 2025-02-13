@@ -135,7 +135,7 @@ export const PortfolioOverview = ({
           {positions.length > 0 ? (
             positions.map((position) => (
               <PortfolioPosition
-                key={`Position_${position.positionData.id.id}`}
+                key={`Position_${position.positionData.id.id}_${position.vaultData.protocol.network}`}
                 position={position}
                 positionGraph={
                   <PositionHistoricalChart

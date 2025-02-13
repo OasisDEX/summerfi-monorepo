@@ -261,6 +261,9 @@ importers:
       wagmi:
         specifier: ^2.10.9
         version: 2.10.9(@tanstack/react-query@5.51.1)(@types/react@19.0.8)(immer@9.0.21)(react-dom@19.0.0)(react-native@0.74.3)(react@19.0.0)(typescript@5.6.2)(viem@2.20.0)(zod@3.22.4)
+      websocket:
+        specifier: ^1.0.35
+        version: 1.0.35
     devDependencies:
       '@graphql-codegen/cli':
         specifier: ^5.0.2
@@ -37381,7 +37384,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: false
-    optional: true
 
   /whatwg-fetch@3.6.20:
     resolution: {integrity: sha512-EqhiFU6daOA8kpjOWTL0olhVOF3i7OrFzSYiGsEMB8GcXS+RrzauAERX65xMeNWVqxA6HXH2m69Z9LaKKdisfg==}
@@ -37741,7 +37743,6 @@ packages:
     engines: {node: '>=0.10.32'}
     requiresBuild: true
     dev: false
-    optional: true
 
   /yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
