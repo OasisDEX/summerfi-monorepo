@@ -166,6 +166,8 @@ export type Ark = {
   maxRebalanceOutflow: Scalars['BigInt']['output'];
   /**  Name of liquidity pool (e.g. Curve.fi DAI/USDC/USDT)  */
   name?: Maybe<Scalars['String']['output']>;
+  /**  Product ID of the ark  */
+  productId: Scalars['String']['output'];
   rebalancesFrom: Array<Rebalance>;
   rebalancesTo: Array<Rebalance>;
   /**  Arks require keeper data to board/disembark if true  */
@@ -417,6 +419,7 @@ export enum ArkDailySnapshot_OrderBy {
   ark__maxRebalanceInflow = 'ark__maxRebalanceInflow',
   ark__maxRebalanceOutflow = 'ark__maxRebalanceOutflow',
   ark__name = 'ark__name',
+  ark__productId = 'ark__productId',
   ark__requiresKeeperData = 'ark__requiresKeeperData',
   ark__totalValueLockedUSD = 'ark__totalValueLockedUSD',
   blockNumber = 'blockNumber',
@@ -641,6 +644,7 @@ export enum ArkHourlySnapshot_OrderBy {
   ark__maxRebalanceInflow = 'ark__maxRebalanceInflow',
   ark__maxRebalanceOutflow = 'ark__maxRebalanceOutflow',
   ark__name = 'ark__name',
+  ark__productId = 'ark__productId',
   ark__requiresKeeperData = 'ark__requiresKeeperData',
   ark__totalValueLockedUSD = 'ark__totalValueLockedUSD',
   blockNumber = 'blockNumber',
@@ -919,6 +923,26 @@ export type Ark_Filter = {
   name_starts_with?: InputMaybe<Scalars['String']['input']>;
   name_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   or?: InputMaybe<Array<InputMaybe<Ark_Filter>>>;
+  productId?: InputMaybe<Scalars['String']['input']>;
+  productId_contains?: InputMaybe<Scalars['String']['input']>;
+  productId_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  productId_ends_with?: InputMaybe<Scalars['String']['input']>;
+  productId_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  productId_gt?: InputMaybe<Scalars['String']['input']>;
+  productId_gte?: InputMaybe<Scalars['String']['input']>;
+  productId_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  productId_lt?: InputMaybe<Scalars['String']['input']>;
+  productId_lte?: InputMaybe<Scalars['String']['input']>;
+  productId_not?: InputMaybe<Scalars['String']['input']>;
+  productId_not_contains?: InputMaybe<Scalars['String']['input']>;
+  productId_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  productId_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  productId_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  productId_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  productId_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  productId_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  productId_starts_with?: InputMaybe<Scalars['String']['input']>;
+  productId_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   rebalancesFrom_?: InputMaybe<Rebalance_Filter>;
   rebalancesTo_?: InputMaybe<Rebalance_Filter>;
   requiresKeeperData?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1008,6 +1032,7 @@ export enum Ark_OrderBy {
   maxRebalanceInflow = 'maxRebalanceInflow',
   maxRebalanceOutflow = 'maxRebalanceOutflow',
   name = 'name',
+  productId = 'productId',
   rebalancesFrom = 'rebalancesFrom',
   rebalancesTo = 'rebalancesTo',
   requiresKeeperData = 'requiresKeeperData',
@@ -1313,6 +1338,7 @@ export enum Board_OrderBy {
   ark__maxRebalanceInflow = 'ark__maxRebalanceInflow',
   ark__maxRebalanceOutflow = 'ark__maxRebalanceOutflow',
   ark__name = 'ark__name',
+  ark__productId = 'ark__productId',
   ark__requiresKeeperData = 'ark__requiresKeeperData',
   ark__totalValueLockedUSD = 'ark__totalValueLockedUSD',
   asset = 'asset',
@@ -2101,6 +2127,7 @@ export enum Disembark_OrderBy {
   ark__maxRebalanceInflow = 'ark__maxRebalanceInflow',
   ark__maxRebalanceOutflow = 'ark__maxRebalanceOutflow',
   ark__name = 'ark__name',
+  ark__productId = 'ark__productId',
   ark__requiresKeeperData = 'ark__requiresKeeperData',
   ark__totalValueLockedUSD = 'ark__totalValueLockedUSD',
   asset = 'asset',
@@ -3735,6 +3762,7 @@ export enum PostActionArkSnapshot_OrderBy {
   ark__maxRebalanceInflow = 'ark__maxRebalanceInflow',
   ark__maxRebalanceOutflow = 'ark__maxRebalanceOutflow',
   ark__name = 'ark__name',
+  ark__productId = 'ark__productId',
   ark__requiresKeeperData = 'ark__requiresKeeperData',
   ark__totalValueLockedUSD = 'ark__totalValueLockedUSD',
   blockNumber = 'blockNumber',
@@ -3808,6 +3836,8 @@ export type PostActionVaultSnapshot = {
   id: Scalars['ID']['output'];
   /**  Amount of input token in the pool  */
   inputTokenBalance: Scalars['BigInt']['output'];
+  /**  Amount of input token in the pool normalized  */
+  inputTokenBalanceNormalized: Scalars['BigDecimal']['output'];
   /**  Price of input token in USD  */
   inputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   /**  Price per share of output token in USD  */
@@ -3855,6 +3885,14 @@ export type PostActionVaultSnapshot_Filter = {
   id_not?: InputMaybe<Scalars['ID']['input']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
   inputTokenBalance?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalanceNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalanceNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   inputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
@@ -3960,6 +3998,7 @@ export enum PostActionVaultSnapshot_OrderBy {
   blockNumber = 'blockNumber',
   id = 'id',
   inputTokenBalance = 'inputTokenBalance',
+  inputTokenBalanceNormalized = 'inputTokenBalanceNormalized',
   inputTokenPriceUSD = 'inputTokenPriceUSD',
   outputTokenPriceUSD = 'outputTokenPriceUSD',
   outputTokenSupply = 'outputTokenSupply',
@@ -5323,6 +5362,7 @@ export enum Rebalance_OrderBy {
   from__maxRebalanceInflow = 'from__maxRebalanceInflow',
   from__maxRebalanceOutflow = 'from__maxRebalanceOutflow',
   from__name = 'from__name',
+  from__productId = 'from__productId',
   from__requiresKeeperData = 'from__requiresKeeperData',
   from__totalValueLockedUSD = 'from__totalValueLockedUSD',
   hash = 'hash',
@@ -5377,6 +5417,7 @@ export enum Rebalance_OrderBy {
   to__maxRebalanceInflow = 'to__maxRebalanceInflow',
   to__maxRebalanceOutflow = 'to__maxRebalanceOutflow',
   to__name = 'to__name',
+  to__productId = 'to__productId',
   to__requiresKeeperData = 'to__requiresKeeperData',
   to__totalValueLockedUSD = 'to__totalValueLockedUSD',
   vault = 'vault',
@@ -7742,6 +7783,8 @@ export type VaultDailySnapshot = {
   id: Scalars['ID']['output'];
   /**  Amount of input token in the pool  */
   inputTokenBalance: Scalars['BigInt']['output'];
+  /**  Amount of input token in the pool normalized  */
+  inputTokenBalanceNormalized: Scalars['BigDecimal']['output'];
   /**  Price of input token in USD  */
   inputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   /**  Price per share of output token in USD  */
@@ -7843,6 +7886,14 @@ export type VaultDailySnapshot_Filter = {
   id_not?: InputMaybe<Scalars['ID']['input']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
   inputTokenBalance?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalanceNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalanceNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   inputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
@@ -7974,6 +8025,7 @@ export enum VaultDailySnapshot_OrderBy {
   dailyTotalRevenueUSD = 'dailyTotalRevenueUSD',
   id = 'id',
   inputTokenBalance = 'inputTokenBalance',
+  inputTokenBalanceNormalized = 'inputTokenBalanceNormalized',
   inputTokenPriceUSD = 'inputTokenPriceUSD',
   outputTokenPriceUSD = 'outputTokenPriceUSD',
   outputTokenSupply = 'outputTokenSupply',
@@ -8256,6 +8308,8 @@ export type VaultHourlySnapshot = {
   id: Scalars['ID']['output'];
   /**  Amount of input token in the pool  */
   inputTokenBalance: Scalars['BigInt']['output'];
+  /**  Amount of input token in the position normalized  */
+  inputTokenBalanceNormalized: Scalars['BigDecimal']['output'];
   /**  Price of input token in USD  */
   inputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   /**  Price per share of output token in USD  */
@@ -8357,6 +8411,14 @@ export type VaultHourlySnapshot_Filter = {
   id_not?: InputMaybe<Scalars['ID']['input']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
   inputTokenBalance?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalanceNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalanceNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   inputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
@@ -8488,6 +8550,7 @@ export enum VaultHourlySnapshot_OrderBy {
   hourlyTotalRevenueUSD = 'hourlyTotalRevenueUSD',
   id = 'id',
   inputTokenBalance = 'inputTokenBalance',
+  inputTokenBalanceNormalized = 'inputTokenBalanceNormalized',
   inputTokenPriceUSD = 'inputTokenPriceUSD',
   outputTokenPriceUSD = 'outputTokenPriceUSD',
   outputTokenSupply = 'outputTokenSupply',
@@ -8568,6 +8631,8 @@ export type VaultWeeklySnapshot = {
   id: Scalars['ID']['output'];
   /**  Amount of input token in the pool  */
   inputTokenBalance: Scalars['BigInt']['output'];
+  /**  Amount of input token in the pool normalized  */
+  inputTokenBalanceNormalized: Scalars['BigDecimal']['output'];
   /**  Price of input token in USD  */
   inputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   /**  Price per share of output token in USD  */
@@ -8651,6 +8716,14 @@ export type VaultWeeklySnapshot_Filter = {
   id_not?: InputMaybe<Scalars['ID']['input']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
   inputTokenBalance?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalanceNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalanceNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   inputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
@@ -8803,6 +8876,7 @@ export enum VaultWeeklySnapshot_OrderBy {
   cumulativeTotalRevenueUSD = 'cumulativeTotalRevenueUSD',
   id = 'id',
   inputTokenBalance = 'inputTokenBalance',
+  inputTokenBalanceNormalized = 'inputTokenBalanceNormalized',
   inputTokenPriceUSD = 'inputTokenPriceUSD',
   outputTokenPriceUSD = 'outputTokenPriceUSD',
   outputTokenSupply = 'outputTokenSupply',
@@ -9358,6 +9432,7 @@ export enum Vault_OrderBy {
   bufferArk__maxRebalanceInflow = 'bufferArk__maxRebalanceInflow',
   bufferArk__maxRebalanceOutflow = 'bufferArk__maxRebalanceOutflow',
   bufferArk__name = 'bufferArk__name',
+  bufferArk__productId = 'bufferArk__productId',
   bufferArk__requiresKeeperData = 'bufferArk__requiresKeeperData',
   bufferArk__totalValueLockedUSD = 'bufferArk__totalValueLockedUSD',
   calculatedApr = 'calculatedApr',

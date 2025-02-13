@@ -1,3 +1,4 @@
+import { arbitrum, base, mainnet } from '@account-kit/infra'
 import {
   NetworkIds,
   NetworkNames,
@@ -8,7 +9,7 @@ import {
   type SDKSupportedNetwork,
   sdkSupportedNetworks,
 } from '@summerfi/app-types'
-import { arbitrum, base, type Chain, mainnet } from 'viem/chains'
+import { type Chain } from 'viem/chains'
 
 export const isSupportedSDKChain = (
   chainId: unknown,
@@ -56,12 +57,14 @@ export const humanNetworktoSDKNetwork = (network: string): SDKNetwork => {
 }
 
 export const chainIdToSDKNetwork = (chainId: SDKChainId) => {
+  if (chainId === SDKChainId.SEPOLIA || chainId === SDKChainId.OPTIMISM) {
+    throw new Error('Sepolia is not supported [chainIdToSDKNetwork]')
+  }
+
   return {
     [SDKChainId.ARBITRUM]: SDKNetwork.ArbitrumOne,
     [SDKChainId.BASE]: SDKNetwork.Base,
     [SDKChainId.MAINNET]: SDKNetwork.Mainnet,
-    [SDKChainId.OPTIMISM]: SDKNetwork.Optimism,
-    [SDKChainId.SEPOLIA]: SDKNetwork.Sepolia,
   }[chainId]
 }
 

@@ -34,7 +34,6 @@ interface ChainSelectorProps {
 }
 
 export const ChainSelector: React.FC<ChainSelectorProps> = ({ label, chainId, onChange }) => {
-  console.log('chainId', chainId)
   const selectedNetwork =
     networkOptions.find((opt) => opt.value === chainIdToSDKNetwork(chainId)) ?? networkOptions[0]
 

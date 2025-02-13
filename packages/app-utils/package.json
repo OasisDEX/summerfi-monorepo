@@ -50,6 +50,7 @@
     "jsonwebtoken": "^9.0.0"
   },
   "dependencies": {
+    "@account-kit/infra": "^4.11.0",
     "rollup-preserve-directives": "^1.1.1",
     "vite-tsconfig-paths": "^4.3.2"
   }
