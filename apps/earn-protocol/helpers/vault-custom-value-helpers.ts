@@ -5,6 +5,7 @@ import {
   type IArmadaPosition,
   type SDKVaultishType,
 } from '@summerfi/app-types'
+import { decorateWithFleetConfig } from '@summerfi/app-utils'
 
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { type GetPositionHistoryReturnType } from '@/app/server-handlers/position-history'
@@ -12,7 +13,6 @@ import { decorateWithArkInterestRatesData } from '@/helpers/vault-decorators/ark
 import { decorateWithArkHistoricalChartsData } from '@/helpers/vault-decorators/chart-ark-historical-data'
 import { decorateWithHistoryChartData } from '@/helpers/vault-decorators/chart-historical-data'
 import { decorateWithPerformanceChartData } from '@/helpers/vault-decorators/chart-performance-data'
-import { decorateWithFleetConfig } from '@/helpers/vault-decorators/fleet-config'
 
 type VaultDecoratorsType = {
   // vaults will be a list of vaults if its just config, or a single vault if its decorators
