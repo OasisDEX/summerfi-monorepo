@@ -86,6 +86,8 @@ export class OneInchSwapProvider
       slippage: params.slippage,
     })
 
+    LoggingService.debug('OneInchSwapUrl', swapUrl)
+
     const authHeader = this._getOneInchAuthHeader()
 
     const response = await fetch(swapUrl, {
@@ -219,8 +221,12 @@ export class OneInchSwapProvider
       this._excludedSwapProtocols.length > 0
         ? '&excludedProtocols=' + this._excludedSwapProtocols.join(',')
         : ''
+    const excludeProtocolsParam =
+      this._excludedSwapProtocols.length > 0
+        ? '&excludeProtocols=' + this._excludedSwapProtocols.join(',')
+        : ''
 
-    return `${this._apiUrl}/swap/${this._version}/${chainId}/swap?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&fromAddress=${recipient}&slippage=${params.slippage.value}&disableEstimate=${disableEstimate}&allowPartialFill=${allowPartialFill}${protocolsParam}${excludedProtocolsParam}`
+    return `${this._apiUrl}/swap/${this._version}/${chainId}/swap?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&fromAddress=${recipient}&slippage=${params.slippage.value}&disableEstimate=${disableEstimate}&allowPartialFill=${allowPartialFill}${protocolsParam}${excludedProtocolsParam}${excludeProtocolsParam}`
   }
 
   /**

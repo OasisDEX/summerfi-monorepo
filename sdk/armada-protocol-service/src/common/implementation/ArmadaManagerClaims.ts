@@ -254,8 +254,6 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
         )
       })
 
-    LoggingService.debug(`Read protocol rewards on ` + chainInfo.toString(), perFleet)
-
     return {
       total: Object.values(perFleet).reduce((acc, rewards) => acc + rewards, 0n),
       perFleet: perFleet,
