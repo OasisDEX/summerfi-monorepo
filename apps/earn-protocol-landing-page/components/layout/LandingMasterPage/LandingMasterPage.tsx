@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type PropsWithChildren, useEffect, useState } from 'react'
+import { type PropsWithChildren, useEffect, useState } from 'react'
 import { Footer, NewsletterWrapper, Text } from '@summerfi/app-earn-ui'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
@@ -9,7 +9,9 @@ import landingMasterPageStyles from '@/components/layout/LandingMasterPage/landi
 
 interface LandingMasterPageProps {}
 
-export const LandingMasterPage: FC<PropsWithChildren<LandingMasterPageProps>> = ({ children }) => {
+export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProps>> = ({
+  children,
+}) => {
   const [scrolledAmount, setScrolledAmount] = useState(0)
 
   useEffect(() => {
