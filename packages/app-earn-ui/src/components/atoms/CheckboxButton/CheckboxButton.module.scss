@@ -3,11 +3,9 @@
   position: relative;
   align-items: center;
   margin-right: 10px;
-  width: 100%;
-  border-radius: var(--radius-12);
+  border-radius: var(--general-radius-4);
   background-color: var(--color-neutral-30);
   box-shadow: none;
-  padding: var(--general-space-24) var(--general-space-8) var(--general-space-24) var(--general-space-16);
   user-select: none;
 }
 
@@ -15,14 +13,23 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid var(--color-success-100);
+  border: 1px solid;
   height: 25px;
   width: 25px;
-  border-radius: var(--radius-8);
+  border-radius: var(--general-radius-4);
+
+  transition:
+    background-color 100ms,
+    border-color 100ms;
 }
 
 .input {
-  display: none;
+  display: block;
+  position: absolute;
+  height: 25px;
+  width: 25px;
+  opacity: 0;
+  cursor: pointer;
 }
 
 .label {

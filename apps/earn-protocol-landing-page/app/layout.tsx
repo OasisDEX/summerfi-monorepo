@@ -1,6 +1,8 @@
 import {
+  analyticsCookieName,
   EXTERNAL_LINKS,
   GlobalStyles,
+  GoogleTagManager,
   HeaderDisclaimer,
   LocalConfigContextProvider,
   slippageConfigCookieName,
@@ -28,6 +30,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
   const slippageConfig = safeParseJson(getServerSideCookies(slippageConfigCookieName, cookie))
+  const analyticsCookie = safeParseJson(getServerSideCookies(analyticsCookieName, cookie))
   const country = getServerSideCookies('country', cookie)
 
   const isGB = country === 'GB'
@@ -38,6 +41,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <GlobalStyles />
       </head>
       <body className={` ${fontInter.variable}`}>
+        <GoogleTagManager />
         <LocalConfigContextProvider value={{ sumrNetApyConfig, slippageConfig }}>
           {isGB && (
             <HeaderDisclaimer>
@@ -57,7 +61,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               </Link>
             </HeaderDisclaimer>
           )}
-          <LandingMasterPage>{children}</LandingMasterPage>
+          <LandingMasterPage analyticsCookie={analyticsCookie}>{children}</LandingMasterPage>
         </LocalConfigContextProvider>
         <div id="portal" style={{ position: 'absolute' }} />
       </body>
