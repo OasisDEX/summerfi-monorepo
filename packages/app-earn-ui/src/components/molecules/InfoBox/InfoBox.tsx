@@ -7,21 +7,50 @@ import { Text } from '@/components/atoms/Text/Text'
 
 import styles from './InfoBox.module.scss'
 
-interface InfoBoxProps {
-  title?: string
-  children: ReactNode
-  className?: string
+interface InfoBoxRow {
+  label: string | ReactNode
+  value: ReactNode | string | number
 }
 
-export const InfoBox = ({ title = 'Important info', children, className }: InfoBoxProps) => {
+interface InfoBoxProps {
+  title: string
+  rows?: InfoBoxRow[]
+  children?: ReactNode
+  className?: string
+  error?: string
+}
+
+export const InfoBox = ({ title, rows, children, className, error }: InfoBoxProps) => {
   return (
     <div className={clsx(styles.infoBox, className)}>
       <div className={styles.header}>
-        <Text as="h3" variant="p2semi" className={styles.title}>
+        <Text as="p" variant="p3semi" className={styles.title}>
           {title}
         </Text>
       </div>
-      <div className={styles.content}>{children}</div>
+      <div className={styles.content}>
+        {rows ? (
+          <div className={styles.rows}>
+            {rows.map((row, index) => (
+              <div key={index} className={styles.row}>
+                <Text as="span" variant="p3semi">
+                  {row.label}
+                </Text>
+                <Text as="span" variant="p3semi">
+                  {row.value}
+                </Text>
+              </div>
+            ))}
+          </div>
+        ) : (
+          children
+        )}
+        {error && (
+          <Text as="p" variant="p3" className={styles.error}>
+            {error}
+          </Text>
+        )}
+      </div>
     </div>
   )
 }

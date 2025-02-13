@@ -1,15 +1,45 @@
 'use client'
 import { InfoBox, Text } from '@summerfi/app-earn-ui'
+import { chainIdToSDKNetwork, sdkNetworkToHumanNetwork } from '@summerfi/app-utils'
+import { capitalize } from 'lodash-es'
+import { type Chain } from 'viem'
+
 import styles from './TransactionDetails.module.scss'
 
-export const TransactionDetails = () => {
+interface TransactionDetailsProps {
+  gasOnSource: number
+  amountReceived: number
+  lzFee: number
+  destinationChain: Chain
+  error: string | null
+}
+
+export const TransactionDetails = ({
+  gasOnSource,
+  amountReceived,
+  destinationChain,
+  lzFee,
+  error,
+}: TransactionDetailsProps) => {
+  const rows = [
+    {
+      label: (
+        <>
+          Amount to receive on{' '}
+          <Text variant="p3semiColorful">
+            {capitalize(sdkNetworkToHumanNetwork(chainIdToSDKNetwork(destinationChain.id)))}
+          </Text>
+        </>
+      ),
+      value: amountReceived,
+    },
+    { label: 'Estimated Gas', value: gasOnSource },
+    { label: 'LayerZero fee', value: lzFee },
+  ]
+
   return (
     <div className={styles.infoBox}>
-      <InfoBox title="Important Info">
-        <Text as="p" variant="p3">
-          Bridging fee estimates, network delays, and other vital information will be shown here.
-        </Text>
-      </InfoBox>
+      <InfoBox title="Important Info" rows={rows} error={error ?? undefined} />
     </div>
   )
 }

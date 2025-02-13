@@ -15,8 +15,8 @@ interface ContentProps {
 
 const Content: FC<ContentProps> = ({ option }) => (
   <>
-    {'tokenSymbol' in option && <Icon tokenName={option.tokenSymbol} />}
-    {'iconName' in option && <Icon iconName={option.iconName} />}
+    {'tokenSymbol' in option && <Icon size={20} tokenName={option.tokenSymbol} />}
+    {'iconName' in option && <Icon size={20} iconName={option.iconName} />}
     <span>{option.label}</span>
   </>
 )

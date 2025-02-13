@@ -17,7 +17,6 @@ import { accountType } from '@/account-kit/config'
 import { OFT_ABI } from '@/features/bridge/constants/abi'
 import { type Fee, type SendParam } from '@/features/bridge/types'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
-import { useIsIframe } from '@summerfi/app-earn-ui'
 import { sendSafeTx } from '@/helpers/send-safe-tx'
 
 // Helper functions
@@ -60,9 +59,9 @@ export function useBridgeTransaction({
   onError,
 }: BridgeTransactionParams) {
   const [details, setDetails] = useState({
-    gasOnDestination: '--',
+    gasOnSource: '--',
     amountReceived: '--',
-    fee: '--',
+    lzFee: '--',
     isReady: false,
   })
   const [sendParam, setSendParam] = useState<SendParam | null>(null)
@@ -149,16 +148,16 @@ export function useBridgeTransaction({
 
       const simulatedFee = {
         nativeFee: quotedFee[0],
-        zroFee: quotedFee[1],
+        lzTokenFee: quotedFee[1],
       }
 
       setSendParam(param)
       setFee(simulatedFee)
       setSimulationError(null)
       setDetails({
-        gasOnDestination: formatGwei(gasEstimate),
+        gasOnSource: formatGwei(gasEstimate),
         amountReceived: formatEther(param.minAmountLD),
-        fee: formatEther(simulatedFee.nativeFee),
+        lzFee: formatEther(simulatedFee.nativeFee),
         isReady: true,
       })
     } catch (error) {

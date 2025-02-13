@@ -101,13 +101,15 @@ export const Dropdown: FC<DropdownProps> = ({
       </div>
     ))
 
+  const hasMultipleOptions = optionsMapped.length > 1
+
   return (
     <div className={dropdownStyles.dropdown} ref={dropdownRef}>
       <div
         className={clsx(dropdownStyles.dropdownSelected, {
           [dropdownStyles.disabled]: isDisabled,
         })}
-        onClick={toggleDropdown}
+        onClick={hasMultipleOptions ? toggleDropdown : undefined}
         style={
           asPill
             ? {
@@ -115,13 +117,14 @@ export const Dropdown: FC<DropdownProps> = ({
                 backgroundColor: 'var(--earn-protocol-neutral-80)',
                 borderRadius: 'var(--general-radius-24)',
                 fontWeight: '600',
+                cursor: hasMultipleOptions ? 'pointer' : 'default',
                 ...dropdownChildrenStyle,
               }
             : {}
         }
       >
         {trigger ? trigger({ isOpen, isDisabled }) : children}
-        {!trigger && (
+        {!trigger && hasMultipleOptions && (
           <Icon
             iconName={isOpen ? 'chevron_up' : 'chevron_down'}
             size={11}

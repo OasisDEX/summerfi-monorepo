@@ -23,7 +23,7 @@ export const ChainSelectors = ({
     <div className={styles.networkSelectors}>
       <ChainSelector label="From" chainId={sourceChain.id} onChange={onSourceChainChange} />
       <div className={styles.arrow}>
-        <Icon iconName="arrow_forward" size={20} />
+        <Icon iconName="arrow_forward" size={20} color="var(--earn-protocol-neutral-10)" />
       </div>
       <ChainSelector label="To" chainId={destinationChain.id} onChange={onDestinationChainChange} />
     </div>

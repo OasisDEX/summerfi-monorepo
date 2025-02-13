@@ -44,9 +44,9 @@ export const BridgeForm: FC<BridgeFormProps> = ({ walletAddress, externalData })
   })
 
   const {
-    gasOnDestination,
+    gasOnSource,
     amountReceived,
-    fee,
+    lzFee,
     isReady,
     simulationError,
     executeBridgeTransaction,
@@ -69,6 +69,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({ walletAddress, externalData })
 
   const handleBridge = async () => {
     const risk = await checkRisk()
+
     if (risk.isRisky) return
 
     console.log('Bridging:', {
@@ -106,9 +107,10 @@ export const BridgeForm: FC<BridgeFormProps> = ({ walletAddress, externalData })
             placeholder="Enter amount to bridge"
           />
           <TransactionDetails
-            gasOnDestination={gasOnDestination}
-            amountReceived={amountReceived}
-            fee={fee}
+            gasOnSource={Number(gasOnSource)}
+            destinationChain={destinationChain}
+            amountReceived={Number(amountReceived)}
+            lzFee={Number(lzFee)}
             error={simulationError}
           />
         </>

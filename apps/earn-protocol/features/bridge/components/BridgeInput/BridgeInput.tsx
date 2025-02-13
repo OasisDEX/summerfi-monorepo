@@ -39,9 +39,6 @@ export const BridgeInput = ({
         heading={{
           label: 'Balance',
           value: '100,000 SUMR',
-          action: () => {
-            console.log('heading action')
-          },
         }}
         secondaryValue={`$${usdValue}`}
         handleChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}

@@ -8,9 +8,7 @@ import { Spacer } from '@/features/bridge/components/Spacer/Spacer'
 
 import classNames from './BridgePageView.module.scss'
 
-interface BridgePageViewLoadingStateProps {
-  walletAddress: string
-}
+interface BridgePageViewLoadingStateProps {}
 
 function SimpleBridgeSkeleton() {
   return (
@@ -52,9 +50,7 @@ function SimpleBridgeSkeleton() {
   )
 }
 
-export const BridgePageViewLoadingState: FC<BridgePageViewLoadingStateProps> = ({
-  walletAddress,
-}) => {
+export const BridgePageViewLoadingState: FC<BridgePageViewLoadingStateProps> = () => {
   return (
     <div className={classNames.bridgePageViewLoadingStateWrapper}>
       <SimpleBridgeSkeleton />

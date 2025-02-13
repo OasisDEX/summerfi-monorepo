@@ -19,4 +19,21 @@
 .content {
   padding: 0 16px 16px;
   color: var(--color-text-secondary);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.error {
+  color: var(--color-critical);
+  margin-top: 8px;
 } 
