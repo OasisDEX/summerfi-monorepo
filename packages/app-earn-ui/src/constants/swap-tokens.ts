@@ -15,11 +15,9 @@ const swapTokens: { [key: number]: TokenSymbolsList[] | undefined } = {
     'RETH',
     'WSTETH',
     'UNI',
-    'SUSDE',
     'CBBTC',
     'MORPHO',
     'USDS',
-    'SUSDS',
   ],
   // arbitrum
   // AAVE rETH USDC WstETH USDs UNI USDT USDC.e WBTC WETH DAI LDO LINK MKR ETH COMP ARB weETH USDe cbBTC
@@ -52,7 +50,6 @@ const swapTokens: { [key: number]: TokenSymbolsList[] | undefined } = {
     'LDO',
     'WBTC',
     'LINK',
-    'MKR',
     'USDC',
     'COMP',
     'WETH',
