@@ -1,4 +1,5 @@
-import { REVALIDATION_TIMES } from '@/constants/revalidations'
+import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
+
 import { transakPublicApiKey } from '@/features/transak/consts'
 import { type TransakRefreshTokenResponse } from '@/features/transak/types'
 

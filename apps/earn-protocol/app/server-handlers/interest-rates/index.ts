@@ -1,23 +1,14 @@
 'use server'
 
 import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
-import { SDKNetwork, type SDKVaultishType, type SDKVaultType } from '@summerfi/app-types'
-import { getArkProductId } from '@summerfi/app-utils'
+import { type GetInterestRatesParams, SDKNetwork } from '@summerfi/app-types'
+import { getArkHistoricalRatesUrl, getArkProductId, getArkRatesUrl } from '@summerfi/app-utils'
 import { GraphQLClient } from 'graphql-request'
 
 import {
   GetInterestRatesDocument,
   type GetInterestRatesQuery,
 } from '@/graphql/clients/rates/client'
-
-type GetInterestRatesParams = {
-  network: SDKNetwork
-  dailyCount?: number
-  hourlyCount?: number
-  weeklyCount?: number
-  arksList: SDKVaultishType['arks'] | SDKVaultType['arks']
-  justLatestRates?: boolean
-}
 
 const noInterestRates: GetInterestRatesQuery = {
   dailyInterestRates: [{ averageRate: 0, date: 0, __typename: 'DailyInterestRate' }],
@@ -68,20 +59,9 @@ if (!process.env.FUNCTIONS_API_URL) {
   throw new Error('FUNCTIONS_API_URL is not set')
 }
 
-const apiHistoricalRatesUrls = {
-  [SDKNetwork.Mainnet]: `${process.env.FUNCTIONS_API_URL}/api/historicalRates/1`,
-  [SDKNetwork.Base]: `${process.env.FUNCTIONS_API_URL}/api/historicalRates/8453`,
-  [SDKNetwork.ArbitrumOne]: `${process.env.FUNCTIONS_API_URL}/api/historicalRates/42161`,
-}
-
-const apiRatesUrls = {
-  [SDKNetwork.Mainnet]: `${process.env.FUNCTIONS_API_URL}/api/rates/1`,
-  [SDKNetwork.Base]: `${process.env.FUNCTIONS_API_URL}/api/rates/8453`,
-  [SDKNetwork.ArbitrumOne]: `${process.env.FUNCTIONS_API_URL}/api/rates/42161`,
-}
-
 const isProperNetwork = (network: string): network is keyof typeof clients => network in clients
 
+// CAUTION - IF SOMETHING IS UPDATED HERE UPDATE IT ALSO IN EARN LANDING APP
 export async function getInterestRates({
   network,
   arksList,
@@ -106,9 +86,21 @@ export async function getInterestRates({
       }
 
       try {
+        const functionsApiUrl = process.env.FUNCTIONS_API_URL
+
+        if (!functionsApiUrl) {
+          throw new Error('FUNCTIONS_API_URL is not set')
+        }
+
         const resolvedUrl = justLatestRates
-          ? apiRatesUrls[network]
-          : apiHistoricalRatesUrls[network]
+          ? getArkRatesUrl({
+              network,
+              apiUrl: functionsApiUrl,
+            })
+          : getArkHistoricalRatesUrl({
+              network,
+              apiUrl: functionsApiUrl,
+            })
 
         // Try primary source first
         const apiUrl = `${resolvedUrl}?productId=${productId}`

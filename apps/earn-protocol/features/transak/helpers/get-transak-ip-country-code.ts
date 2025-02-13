@@ -1,5 +1,6 @@
+import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
+
 import { getCookies } from '@/constants/get-cookies'
-import { REVALIDATION_TIMES } from '@/constants/revalidations'
 import { transakProductionUrl } from '@/features/transak/consts'
 import { type TransakIpCountryCodeResponse } from '@/features/transak/types'
 

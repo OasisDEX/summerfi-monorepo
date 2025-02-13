@@ -1,7 +1,7 @@
+import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import type { Chain } from 'viem'
 
 import { type AccountKitSupportedNetworks, SDKChainIdToAAChainMap } from '@/account-kit/config'
-import { REVALIDATION_TIMES } from '@/constants/revalidations'
 
 export async function POST(req: Request) {
   const id = req.url.split('/').pop()
