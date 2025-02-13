@@ -166,6 +166,8 @@ export type Ark = {
   maxRebalanceOutflow: Scalars['BigInt']['output'];
   /**  Name of liquidity pool (e.g. Curve.fi DAI/USDC/USDT)  */
   name?: Maybe<Scalars['String']['output']>;
+  /**  Product ID of the ark  */
+  productId: Scalars['String']['output'];
   rebalancesFrom: Array<Rebalance>;
   rebalancesTo: Array<Rebalance>;
   /**  Arks require keeper data to board/disembark if true  */
@@ -417,6 +419,7 @@ export enum ArkDailySnapshot_OrderBy {
   ArkMaxRebalanceInflow = 'ark__maxRebalanceInflow',
   ArkMaxRebalanceOutflow = 'ark__maxRebalanceOutflow',
   ArkName = 'ark__name',
+  ArkProductId = 'ark__productId',
   ArkRequiresKeeperData = 'ark__requiresKeeperData',
   ArkTotalValueLockedUsd = 'ark__totalValueLockedUSD',
   BlockNumber = 'blockNumber',
@@ -641,6 +644,7 @@ export enum ArkHourlySnapshot_OrderBy {
   ArkMaxRebalanceInflow = 'ark__maxRebalanceInflow',
   ArkMaxRebalanceOutflow = 'ark__maxRebalanceOutflow',
   ArkName = 'ark__name',
+  ArkProductId = 'ark__productId',
   ArkRequiresKeeperData = 'ark__requiresKeeperData',
   ArkTotalValueLockedUsd = 'ark__totalValueLockedUSD',
   BlockNumber = 'blockNumber',
@@ -919,6 +923,26 @@ export type Ark_Filter = {
   name_starts_with?: InputMaybe<Scalars['String']['input']>;
   name_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   or?: InputMaybe<Array<InputMaybe<Ark_Filter>>>;
+  productId?: InputMaybe<Scalars['String']['input']>;
+  productId_contains?: InputMaybe<Scalars['String']['input']>;
+  productId_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  productId_ends_with?: InputMaybe<Scalars['String']['input']>;
+  productId_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  productId_gt?: InputMaybe<Scalars['String']['input']>;
+  productId_gte?: InputMaybe<Scalars['String']['input']>;
+  productId_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  productId_lt?: InputMaybe<Scalars['String']['input']>;
+  productId_lte?: InputMaybe<Scalars['String']['input']>;
+  productId_not?: InputMaybe<Scalars['String']['input']>;
+  productId_not_contains?: InputMaybe<Scalars['String']['input']>;
+  productId_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  productId_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  productId_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  productId_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  productId_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  productId_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  productId_starts_with?: InputMaybe<Scalars['String']['input']>;
+  productId_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   rebalancesFrom_?: InputMaybe<Rebalance_Filter>;
   rebalancesTo_?: InputMaybe<Rebalance_Filter>;
   requiresKeeperData?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1008,6 +1032,7 @@ export enum Ark_OrderBy {
   MaxRebalanceInflow = 'maxRebalanceInflow',
   MaxRebalanceOutflow = 'maxRebalanceOutflow',
   Name = 'name',
+  ProductId = 'productId',
   RebalancesFrom = 'rebalancesFrom',
   RebalancesTo = 'rebalancesTo',
   RequiresKeeperData = 'requiresKeeperData',
@@ -1313,6 +1338,7 @@ export enum Board_OrderBy {
   ArkMaxRebalanceInflow = 'ark__maxRebalanceInflow',
   ArkMaxRebalanceOutflow = 'ark__maxRebalanceOutflow',
   ArkName = 'ark__name',
+  ArkProductId = 'ark__productId',
   ArkRequiresKeeperData = 'ark__requiresKeeperData',
   ArkTotalValueLockedUsd = 'ark__totalValueLockedUSD',
   Asset = 'asset',
@@ -2101,6 +2127,7 @@ export enum Disembark_OrderBy {
   ArkMaxRebalanceInflow = 'ark__maxRebalanceInflow',
   ArkMaxRebalanceOutflow = 'ark__maxRebalanceOutflow',
   ArkName = 'ark__name',
+  ArkProductId = 'ark__productId',
   ArkRequiresKeeperData = 'ark__requiresKeeperData',
   ArkTotalValueLockedUsd = 'ark__totalValueLockedUSD',
   Asset = 'asset',
@@ -3735,6 +3762,7 @@ export enum PostActionArkSnapshot_OrderBy {
   ArkMaxRebalanceInflow = 'ark__maxRebalanceInflow',
   ArkMaxRebalanceOutflow = 'ark__maxRebalanceOutflow',
   ArkName = 'ark__name',
+  ArkProductId = 'ark__productId',
   ArkRequiresKeeperData = 'ark__requiresKeeperData',
   ArkTotalValueLockedUsd = 'ark__totalValueLockedUSD',
   BlockNumber = 'blockNumber',
@@ -5334,6 +5362,7 @@ export enum Rebalance_OrderBy {
   FromMaxRebalanceInflow = 'from__maxRebalanceInflow',
   FromMaxRebalanceOutflow = 'from__maxRebalanceOutflow',
   FromName = 'from__name',
+  FromProductId = 'from__productId',
   FromRequiresKeeperData = 'from__requiresKeeperData',
   FromTotalValueLockedUsd = 'from__totalValueLockedUSD',
   Hash = 'hash',
@@ -5388,6 +5417,7 @@ export enum Rebalance_OrderBy {
   ToMaxRebalanceInflow = 'to__maxRebalanceInflow',
   ToMaxRebalanceOutflow = 'to__maxRebalanceOutflow',
   ToName = 'to__name',
+  ToProductId = 'to__productId',
   ToRequiresKeeperData = 'to__requiresKeeperData',
   ToTotalValueLockedUsd = 'to__totalValueLockedUSD',
   Vault = 'vault',
@@ -9402,6 +9432,7 @@ export enum Vault_OrderBy {
   BufferArkMaxRebalanceInflow = 'bufferArk__maxRebalanceInflow',
   BufferArkMaxRebalanceOutflow = 'bufferArk__maxRebalanceOutflow',
   BufferArkName = 'bufferArk__name',
+  BufferArkProductId = 'bufferArk__productId',
   BufferArkRequiresKeeperData = 'bufferArk__requiresKeeperData',
   BufferArkTotalValueLockedUsd = 'bufferArk__totalValueLockedUSD',
   CalculatedApr = 'calculatedApr',
