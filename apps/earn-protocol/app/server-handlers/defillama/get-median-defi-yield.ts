@@ -1,4 +1,4 @@
-import { REVALIDATION_TIMES } from '@/constants/revalidations'
+import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 
 type MedianDefiYieldResponse = {
   timestamp: string
