@@ -32,6 +32,8 @@ const nextConfig = {
     })
 
     return [
+      // portfolio redirect
+      redirectToProSummer('/portfolio/:otherPosition'),
       // product redirects
       redirectToProSummer('/multiply'),
       redirectToProSummer('/borrow'),
