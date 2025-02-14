@@ -1,7 +1,6 @@
 import { Address, ChainFamilyMap, PoolType } from '@summerfi/sdk-common'
 import { ArmadaVault } from '../src/common/implementation/ArmadaVault'
 import { ArmadaVaultId } from '../src/common/implementation/ArmadaVaultId'
-import { ArmadaProtocol } from '../src/common/implementation/ArmadaProtocol'
 
 describe('SDK Common | Armada | ArmadaPool', () => {
   const chainInfo = ChainFamilyMap.Base.Base
