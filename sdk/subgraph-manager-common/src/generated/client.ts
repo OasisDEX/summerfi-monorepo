@@ -10348,7 +10348,12 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny'
 }
 
-export type GetGlobalRebalancesQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetGlobalRebalancesQueryVariables = Exact<{
+  first?: Scalars['Int']['input'];
+  skip?: Scalars['Int']['input'];
+  orderBy?: Rebalance_OrderBy;
+  orderDirection?: OrderDirection;
+}>;
 
 
 export type GetGlobalRebalancesQuery = { __typename?: 'Query', rebalances: Array<{ __typename?: 'Rebalance', id: string, amount: bigint, amountUSD: string, timestamp: bigint, asset: { __typename?: 'Token', id: string, symbol: string, decimals: number }, from: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, to: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, toPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, fromPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, protocol: { __typename?: 'YieldAggregator', name: string, network: Network }, vault: { __typename?: 'Vault', outputTokenPriceUSD?: string | null, inputTokenPriceUSD?: string | null, id: string, name?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string }, protocol: { __typename?: 'YieldAggregator', network: Network } } }> };
@@ -10394,8 +10399,13 @@ export type GetVaultQuery = { __typename?: 'Query', vault?: { __typename?: 'Vaul
 
 
 export const GetGlobalRebalancesDocument = gql`
-    query GetGlobalRebalances {
-  rebalances(orderBy: timestamp, orderDirection: desc) {
+    query GetGlobalRebalances($first: Int! = 10, $skip: Int! = 0, $orderBy: Rebalance_orderBy! = timestamp, $orderDirection: OrderDirection! = desc) {
+  rebalances(
+    orderBy: $orderBy
+    orderDirection: $orderDirection
+    first: $first
+    skip: $skip
+  ) {
     id
     amount
     amountUSD

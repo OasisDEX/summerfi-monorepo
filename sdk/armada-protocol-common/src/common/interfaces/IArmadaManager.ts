@@ -17,6 +17,8 @@ import type {
   GetVaultsQuery,
   GetUsersActivityQuery,
   GetUserActivityQuery,
+  Rebalance_OrderBy,
+  OrderDirection,
 } from '@summerfi/subgraph-manager-common'
 import type { IRebalanceData } from '@summerfi/contracts-provider-common'
 import type { IArmadaManagerClaims } from './IArmadaManagerClaims'
@@ -104,7 +106,13 @@ export interface IArmadaManager {
    *
    * @returns GerRebalancesQuery
    */
-  getGlobalRebalancesRaw(params: { chainInfo: IChainInfo }): Promise<GetGlobalRebalancesQuery>
+  getGlobalRebalancesRaw(params: {
+    chainInfo: IChainInfo
+    first?: number
+    skip?: number
+    orderBy?: Rebalance_OrderBy
+    orderDirection?: OrderDirection
+  }): Promise<GetGlobalRebalancesQuery>
 
   /**
    * @name getUsersActivityRaw

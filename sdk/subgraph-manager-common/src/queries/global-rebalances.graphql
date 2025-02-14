@@ -1,5 +1,10 @@
-query GetGlobalRebalances {
-  rebalances(orderBy: timestamp, orderDirection: desc) {
+query GetGlobalRebalances(
+  $first: Int! = 10
+  $skip: Int! = 0
+  $orderBy: Rebalance_orderBy! = timestamp
+  $orderDirection: OrderDirection! = desc
+) {
+  rebalances(orderBy: $orderBy, orderDirection: $orderDirection, first: $first, skip: $skip) {
     id
     amount
     amountUSD
