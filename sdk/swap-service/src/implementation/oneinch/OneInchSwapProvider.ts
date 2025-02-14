@@ -28,6 +28,7 @@ import {
   OneInchSwapResponse,
   OneInchSwapRoute,
 } from './types'
+import { LoggingService } from '@summerfi/sdk-common'
 
 export class OneInchSwapProvider
   extends ManagerProviderBase<SwapProviderType>
