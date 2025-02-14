@@ -41,22 +41,24 @@ jobs:
 
       - name: Make an earn-apps release
         working-directory: ./apps/earn-protocol
-        run: npx release-it -- ${{ env.RELEASE_TYPE }} --ci
+        run:
+          npx release-it --ci --no-npm --dry-run --git.tagName="Earn App" -- ${{ env.RELEASE_TYPE }}
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
 
       - name: Make an earn-apps-lp release
         working-directory: ./apps/earn-protocol-landing-page
-        run: npx release-it -- ${{ env.RELEASE_TYPE }} --ci
+        run:
+          npx release-it --ci --no-npm --dry-run --git.tagName="Earn LP" -- ${{ env.RELEASE_TYPE }}
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
 
-      - name: Merge dev -> main
-        run: |
-          git status
-          git pull
-          git fetch
-          git checkout main
-          git rebase dev
-          git push origin main
-          git status
+      # - name: Merge dev -> main
+      #   run: |
+      #     git status
+      #     git pull
+      #     git fetch
+      #     git checkout main
+      #     git rebase dev
+      #     git push origin main
+      #     git status
