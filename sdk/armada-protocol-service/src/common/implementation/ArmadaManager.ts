@@ -616,8 +616,8 @@ export class ArmadaManager implements IArmadaManager {
     const fleetToken = await fleetCommander.asErc4626().asset()
 
     const inAmount = params.amount
-    const isEth = inAmount.token.symbol === 'ETH'
-    const swapFromAmount = isEth
+    const fromEth = inAmount.token.symbol === 'ETH'
+    const swapFromAmount = fromEth
       ? // if the deposit is in ETH, we need to wrap it to WETH for the swap
         TokenAmount.createFrom({
           amount: inAmount.amount,
@@ -637,7 +637,7 @@ export class ArmadaManager implements IArmadaManager {
     LoggingService.debug('getDepositTX', {
       inAmount: inAmount.toString(),
       shouldSwap,
-      isEth,
+      isEth: fromEth,
       swapFromAmount: swapFromAmount.toString(),
       shouldStake,
     })
@@ -649,7 +649,7 @@ export class ArmadaManager implements IArmadaManager {
     })
 
     // Approval
-    if (!isEth) {
+    if (!fromEth) {
       const approvalTransaction = await this._allowanceManager.getApproval({
         chainInfo: params.vaultId.chainInfo,
         spender: admiralsQuartersAddress,
@@ -725,7 +725,7 @@ export class ArmadaManager implements IArmadaManager {
         target: admiralsQuartersAddress,
         calldata: multicallCalldata,
         description: 'Deposit Operations: ' + multicallOperations.join(', '),
-        value: isEth ? inAmount.toSolidityValue() : undefined,
+        value: fromEth ? inAmount.toSolidityValue() : undefined,
         metadata: {
           fromAmount: inAmount,
           toAmount: swapToAmount,
@@ -767,31 +767,35 @@ export class ArmadaManager implements IArmadaManager {
     slippage: IPercentage
     toToken: IToken
   }): Promise<ExtendedTransactionInfo[]> {
-    const outAmount = params.amount
-    const isEth = params.toToken.symbol === 'ETH'
+    const withdrawAmount = params.amount
+    const toEth = params.toToken.symbol === 'ETH'
     const swapToToken = params.toToken
-    const shouldSwap = !swapToToken.equals(outAmount.token)
+    const shouldSwap = !swapToToken.equals(withdrawAmount.token)
 
-    let swapMinAmount: ITokenAmount | undefined
+    // let swapMinAmount: ITokenAmount | undefined
     let swapToAmount: ITokenAmount | undefined
     const transactions: ExtendedTransactionInfo[] = []
 
-    const [fleetShares, outShares] = await Promise.all([
+    const [beforeFleetShares, beforeStakedShares, requestedWithdrawShares] = await Promise.all([
       this.getFleetShares({
+        vaultId: params.vaultId,
+        user: params.user,
+      }),
+      this.getStakedShares({
         vaultId: params.vaultId,
         user: params.user,
       }),
       this._previewWithdraw({
         vaultId: params.vaultId,
-        assets: outAmount,
+        assets: withdrawAmount,
       }),
     ])
 
     LoggingService.debug('getWithdrawTX', {
-      outAmount: outAmount.toString(),
-      outShares: outShares.toString(),
+      withdrawAmount: withdrawAmount.toString(),
+      withdrawShares: requestedWithdrawShares.toString(),
       shouldSwap,
-      isEth,
+      isEth: toEth,
       swapToToken: swapToToken.toString(),
     })
 
@@ -801,12 +805,12 @@ export class ArmadaManager implements IArmadaManager {
       contractName: 'admiralsQuarters',
     })
 
-    // are unstaked tokens available?
-    if (fleetShares.toSolidityValue() > 0) {
+    // are unstaked tokens available greater than dust
+    if (beforeFleetShares.toSolidityValue() > 0) {
       // Yes. is the unstaked amount sufficient to meet the withdrawal?
-      if (fleetShares.toSolidityValue() >= outShares.toSolidityValue()) {
+      if (beforeFleetShares.toSolidityValue() >= requestedWithdrawShares.toSolidityValue()) {
         LoggingService.debug('fleet shares is enough for requested amount', {
-          fleetShares: fleetShares.toString(),
+          fleetShares: beforeFleetShares.toString(),
         })
 
         // TODO: when withdraw from fleetShares and no swap, we can skip approval and multicall and withdraw directly from fleet
@@ -817,19 +821,24 @@ export class ArmadaManager implements IArmadaManager {
             this._allowanceManager.getApproval({
               chainInfo: params.vaultId.chainInfo,
               spender: admiralsQuartersAddress,
-              amount: outShares,
+              amount: requestedWithdrawShares,
               owner: params.user.wallet.address,
             }),
             this._getExitWithdrawMulticall({
               vaultId: params.vaultId,
               slippage: params.slippage,
-              amount: outAmount,
-              swapToToken,
+              amount: withdrawAmount,
+              // if withdraw is WETH and unwrapping to ETH,
+              // we need to withdraw WETH for later deposit & unwrap operation
+              swapToToken:
+                withdrawAmount.token.symbol === 'WETH' && toEth
+                  ? withdrawAmount.token
+                  : swapToToken,
               shouldSwap,
-              isEth,
+              toEth,
             }),
             this._getPriceImpact({
-              fromAmount: outAmount,
+              fromAmount: withdrawAmount,
               toAmount: swapToAmount,
             }),
           ],
@@ -838,7 +847,7 @@ export class ArmadaManager implements IArmadaManager {
         if (approveToTakeSharesOnBehalf) {
           transactions.push(approveToTakeSharesOnBehalf)
           LoggingService.debug('approveToTakeSharesOnBehalf', {
-            sharesToWithdraw: outShares.toString(),
+            sharesToWithdraw: requestedWithdrawShares.toString(),
           })
         }
         const multicallCalldata = encodeFunctionData({
@@ -853,7 +862,7 @@ export class ArmadaManager implements IArmadaManager {
             description:
               'Withdraw Operations: ' + exitWithdrawMulticall.multicallOperations.join(', '),
             metadata: {
-              fromAmount: outAmount,
+              fromAmount: withdrawAmount,
               toAmount: swapToAmount,
               slippage: params.slippage,
               priceImpact,
@@ -862,35 +871,38 @@ export class ArmadaManager implements IArmadaManager {
         )
       } else {
         // Request withdrawal of all unstaked tokens and the rest from staked tokens
-        LoggingService.debug('fleet shares is not enough, take all fleet shares...', {
-          fleetShares: fleetShares.toString(),
+        LoggingService.debug('fleet shares is not enough', {
+          fleetShares: beforeFleetShares.toString(),
+        })
+        const [fleetAssetsWithdrawAmount, approveToTakeSharesOnBehalf] = await Promise.all([
+          this._previewRedeem({
+            vaultId: params.vaultId,
+            shares: beforeFleetShares,
+          }),
+          this._allowanceManager.getApproval({
+            chainInfo: params.vaultId.chainInfo,
+            spender: admiralsQuartersAddress,
+            amount: beforeFleetShares,
+            owner: params.user.wallet.address,
+          }),
+        ])
+
+        LoggingService.debug('- first take all fleet shares', {
+          fleetAssetsWithdrawAmount: fleetAssetsWithdrawAmount.toString(),
         })
 
-        // approve all fleet balance tx
-        const approveToTakeSharesOnBehalf = await this._allowanceManager.getApproval({
-          chainInfo: params.vaultId.chainInfo,
-          spender: admiralsQuartersAddress,
-          amount: fleetShares,
-          owner: params.user.wallet.address,
-        })
-
-        const fleetAssets = await this._previewRedeem({
-          vaultId: params.vaultId,
-          shares: fleetShares,
-        })
         if (approveToTakeSharesOnBehalf) {
           transactions.push(approveToTakeSharesOnBehalf)
           LoggingService.debug('approveToTakeSharesOnBehalf', {
-            sharesToWithdraw: fleetShares.toString(),
+            sharesToWithdraw: beforeFleetShares.toString(),
           })
         }
 
         const multicallArgs: HexData[] = []
         const multicallOperations: string[] = []
 
-        const reminderShares = outShares.subtract(fleetShares)
-
-        LoggingService.debug('and reminder from staked shares', {
+        const reminderShares = requestedWithdrawShares.subtract(beforeFleetShares)
+        LoggingService.debug('- then reminder from staked shares', {
           reminderShares: reminderShares.toString(),
         })
 
@@ -898,17 +910,23 @@ export class ArmadaManager implements IArmadaManager {
           this._getExitWithdrawMulticall({
             vaultId: params.vaultId,
             slippage: params.slippage,
-            amount: fleetAssets,
-            swapToToken,
+            amount: fleetAssetsWithdrawAmount,
+            // if withdraw is WETH and unwrapping to ETH,
+            // we need to withdraw WETH for later deposit & unwrap operation
+            swapToToken:
+              fleetAssetsWithdrawAmount.token.symbol === 'WETH' && toEth
+                ? fleetAssetsWithdrawAmount.token
+                : swapToToken,
             shouldSwap,
-            isEth,
+            toEth,
           }),
           this._getUnstakeAndWithdrawCall({
             vaultId: params.vaultId,
             shares: reminderShares,
+            stakedShares: beforeStakedShares,
           }),
           this._getPriceImpact({
-            fromAmount: outAmount,
+            fromAmount: withdrawAmount,
             toAmount: swapToAmount,
           }),
         ])
@@ -924,21 +942,21 @@ export class ArmadaManager implements IArmadaManager {
             this._allowanceManager.getApproval({
               chainInfo: params.vaultId.chainInfo,
               spender: admiralsQuartersAddress,
-              amount: outAmount,
+              amount: withdrawAmount,
               owner: params.user.wallet.address,
             }),
             this._getDepositSwapWithdrawMulticall({
               vaultId: params.vaultId,
               slippage: params.slippage,
-              fromAmount: outAmount,
+              fromAmount: withdrawAmount,
               toToken: swapToToken,
-              isEth,
+              toEth,
             }),
           ])
           if (approveToSwapForUser) {
             transactions.push(approveToSwapForUser)
             LoggingService.debug('approveToSwapForUser', {
-              outAmount: outAmount.toString(),
+              outAmount: withdrawAmount.toString(),
             })
           }
           multicallArgs.push(...depositSwapWithdrawMulticall.multicallArgs)
@@ -957,7 +975,7 @@ export class ArmadaManager implements IArmadaManager {
             calldata: multicallCalldata,
             description: 'Withdraw Operations: ' + multicallOperations.join(', '),
             metadata: {
-              fromAmount: outAmount,
+              fromAmount: withdrawAmount,
               toAmount: swapToAmount,
               slippage: params.slippage,
               priceImpact,
@@ -971,22 +989,23 @@ export class ArmadaManager implements IArmadaManager {
       const multicallOperations: string[] = []
 
       LoggingService.debug('fleet shares is 0, take all from staked shares', {
-        outShares: outShares.toString(),
+        outShares: requestedWithdrawShares.toString(),
       })
 
       // withdraw all from staked tokens
       const [unstakeAndWithdrawCall, priceImpact] = await Promise.all([
         this._getUnstakeAndWithdrawCall({
           vaultId: params.vaultId,
-          shares: outShares,
+          shares: requestedWithdrawShares,
+          stakedShares: beforeStakedShares,
         }),
         this._getPriceImpact({
-          fromAmount: outAmount,
+          fromAmount: withdrawAmount,
           toAmount: swapToAmount,
         }),
       ])
       multicallArgs.push(unstakeAndWithdrawCall.calldata)
-      multicallOperations.push('unstakeAndWithdraw ' + outShares.toString())
+      multicallOperations.push('unstakeAndWithdraw ' + requestedWithdrawShares.toString())
 
       if (shouldSwap) {
         // approval to swap from user EOA
@@ -994,21 +1013,21 @@ export class ArmadaManager implements IArmadaManager {
           this._allowanceManager.getApproval({
             chainInfo: params.vaultId.chainInfo,
             spender: admiralsQuartersAddress,
-            amount: outAmount,
+            amount: withdrawAmount,
             owner: params.user.wallet.address,
           }),
           this._getDepositSwapWithdrawMulticall({
             vaultId: params.vaultId,
             slippage: params.slippage,
-            fromAmount: outAmount,
+            fromAmount: withdrawAmount,
             toToken: swapToToken,
-            isEth,
+            toEth,
           }),
         ])
         if (approveToSwapForUser) {
           transactions.push(approveToSwapForUser)
           LoggingService.debug('approveToSwapForUser', {
-            approveToSwapForUser: outAmount.toString(),
+            approveToSwapForUser: withdrawAmount.toString(),
           })
         }
 
@@ -1029,7 +1048,7 @@ export class ArmadaManager implements IArmadaManager {
           calldata: multicallCalldata,
           description: 'Withdraw Operations: ' + multicallOperations.join(', '),
           metadata: {
-            fromAmount: outAmount,
+            fromAmount: withdrawAmount,
             toAmount: swapToAmount,
             slippage: params.slippage,
             priceImpact,
@@ -1050,75 +1069,6 @@ export class ArmadaManager implements IArmadaManager {
   }
 
   /**
-   * Internal utility method to generate a withdraw TX
-   * @param params The parameters for the withdraw
-   *
-   * @returns The transactions needed to withdraw the tokens
-   */
-  private async _getExitWithdrawMulticall(params: {
-    vaultId: IArmadaVaultId
-    amount: ITokenAmount
-    slippage: IPercentage
-    swapToToken: IToken
-    shouldSwap: boolean
-    isEth: boolean
-  }): Promise<{
-    multicallArgs: HexData[]
-    multicallOperations: string[]
-  }> {
-    const multicallArgs: HexData[] = []
-    const multicallOperations: string[] = []
-
-    let outAmount = params.amount
-
-    const exitFleetCalldata = encodeFunctionData({
-      abi: AdmiralsQuartersAbi,
-      functionName: 'exitFleet',
-      args: [params.vaultId.fleetAddress.value, outAmount.toSolidityValue()],
-    })
-    multicallArgs.push(exitFleetCalldata)
-    multicallOperations.push('exitFleet ' + outAmount.toString())
-
-    let outToken = params.swapToToken
-    // if the out token is ETH, we need to use wrapped ETH to withdraw
-    if (params.isEth) {
-      outToken = await this._tokensManager.getTokenBySymbol({
-        chainInfo: params.vaultId.chainInfo,
-        symbol: 'WETH',
-      })
-    }
-
-    // should swap
-    if (params.shouldSwap) {
-      const swapCall = await this._getSwapCall({
-        vaultId: params.vaultId,
-        fromAmount: outAmount,
-        toToken: outToken,
-        slippage: params.slippage,
-      })
-      multicallArgs.push(swapCall.calldata)
-      multicallOperations.push(
-        `swap ${outAmount.toString()} to min ${swapCall.minAmount.toString()}`,
-      )
-    }
-
-    outAmount = TokenAmount.createFromBaseUnit({
-      token: params.swapToToken,
-      amount: '0', // all
-    })
-
-    const withdrawTokensCalldata = encodeFunctionData({
-      abi: AdmiralsQuartersAbi,
-      functionName: 'withdrawTokens',
-      args: [outAmount.token.address.value, outAmount.toSolidityValue()],
-    })
-    multicallArgs.push(withdrawTokensCalldata)
-    multicallOperations.push('withdrawTokens ' + outAmount.toString())
-
-    return { multicallArgs, multicallOperations }
-  }
-
-  /**
    * Internal utility method to generate a withdraw+unstake TX
    * @param params The parameters for the withdraw+unstake
    *
@@ -1127,19 +1077,192 @@ export class ArmadaManager implements IArmadaManager {
   private async _getUnstakeAndWithdrawCall(params: {
     vaultId: IArmadaVaultId
     shares: ITokenAmount
+    stakedShares: ITokenAmount
     claimRewards?: boolean
   }): Promise<{
     calldata: HexData
   }> {
-    const claimRewards = params.claimRewards ?? true
+    // const claimRewards = params.claimRewards ?? true
+    // FIXME: hardcoded to false because fleet rewards manager was not whitleilsted
+    const claimRewards = false
+
+    // if the requested amount is close to all staked shares, we make assumption to withdraw all
+    // withdraw all assumption threshold is set to 0.9999
+    const withdrawAllThreshold = 0.9999
+    const shouldWithdrawAll = new BigNumber(params.shares.toSolidityValue().toString())
+      .div(params.stakedShares.toSolidityValue().toString())
+      .gte(withdrawAllThreshold)
+    const withdrawSharesAmount = shouldWithdrawAll ? 0n : params.shares.toSolidityValue()
 
     const calldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'unstakeAndWithdrawAssets',
-      args: [params.vaultId.fleetAddress.value, params.shares.toSolidityValue(), claimRewards],
+      args: [params.vaultId.fleetAddress.value, withdrawSharesAmount, claimRewards],
     })
 
     return { calldata }
+  }
+
+  /**
+   * Internal utility method to generate a withdraw TX
+   * @param params The parameters for the withdraw
+   *
+   * @returns The transactions needed to withdraw the tokens
+   */
+  private async _getExitWithdrawMulticall(params: {
+    vaultId: IArmadaVaultId
+    amount: ITokenAmount
+    swapToToken: IToken
+    slippage: IPercentage
+    toEth: boolean
+    shouldSwap: boolean
+  }): Promise<{
+    multicallArgs: HexData[]
+    multicallOperations: string[]
+  }> {
+    const multicallArgs: HexData[] = []
+    const multicallOperations: string[] = []
+
+    const fromAmount = params.amount
+
+    const exitFleetCalldata = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'exitFleet',
+      args: [params.vaultId.fleetAddress.value, 0n],
+    })
+    multicallArgs.push(exitFleetCalldata)
+    multicallOperations.push('exitFleet ' + fromAmount.token.toString() + ' (all)')
+
+    let toToken = params.swapToToken
+    // if the out token is ETH, we need to use wrapped ETH to withdraw
+    if (params.toEth) {
+      toToken = await this._tokensManager.getTokenBySymbol({
+        chainInfo: params.vaultId.chainInfo,
+        symbol: 'WETH',
+      })
+    }
+
+    // do not swap from WETH to ETH
+    if (params.shouldSwap && (fromAmount.token.symbol !== 'WETH' || !params.toEth)) {
+      const compensatedFromAmount = TokenAmount.createFromBaseUnit({
+        token: fromAmount.token,
+        // we need to compensate for the tip eating exited amount
+        // by decreasing swap amount as it will be lower than read amount
+        // we are using 0.99999 multiplier and rounding down
+        amount: new BigNumber(fromAmount.toSolidityValue().toString())
+          .times(0.99999)
+          .toFixed(0, BigNumber.ROUND_DOWN),
+      })
+
+      const swapCall = await this._getSwapCall({
+        vaultId: params.vaultId,
+        fromAmount: compensatedFromAmount,
+        toToken: toToken,
+        slippage: params.slippage,
+      })
+      multicallArgs.push(swapCall.calldata)
+      multicallOperations.push(
+        `swap ${compensatedFromAmount.toString()} to min ${swapCall.minAmount.toString()}`,
+      )
+
+      const withdrawTokensCalldata = encodeFunctionData({
+        abi: AdmiralsQuartersAbi,
+        functionName: 'withdrawTokens',
+        args: [fromAmount.token.address.value, 0n],
+      })
+      multicallArgs.push(withdrawTokensCalldata)
+      multicallOperations.push('withdrawTokens ' + fromAmount.token.toString() + ' (all)')
+    }
+
+    const withdrawAmount = TokenAmount.createFromBaseUnit({
+      token: params.swapToToken,
+      amount: '0', // all
+    })
+
+    const withdrawTokensCalldata = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'withdrawTokens',
+      args: [withdrawAmount.token.address.value, withdrawAmount.toSolidityValue()],
+    })
+    multicallArgs.push(withdrawTokensCalldata)
+    multicallOperations.push('withdrawTokens ' + withdrawAmount.toString())
+
+    return { multicallArgs, multicallOperations }
+  }
+
+  private async _getDepositSwapWithdrawMulticall(params: {
+    vaultId: IArmadaVaultId
+    fromAmount: ITokenAmount
+    toToken: IToken
+    slippage: IPercentage
+    toEth: boolean
+  }): Promise<{
+    multicallArgs: HexData[]
+    multicallOperations: string[]
+    minAmount?: ITokenAmount
+    toAmount?: ITokenAmount
+  }> {
+    const multicallArgs: HexData[] = []
+    const multicallOperations: string[] = []
+
+    const depositTokensCalldata = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'depositTokens',
+      args: [params.fromAmount.token.address.value, params.fromAmount.toSolidityValue()],
+    })
+    multicallArgs.push(depositTokensCalldata)
+    multicallOperations.push('depositTokens ' + params.fromAmount.toString())
+
+    let outToken = params.toToken
+    // if the out token is ETH, we need to use wrapped ETH to withdraw
+    if (params.toEth) {
+      outToken = await this._tokensManager.getTokenBySymbol({
+        chainInfo: params.vaultId.chainInfo,
+        symbol: 'WETH',
+      })
+    }
+
+    let swapCall:
+      | undefined
+      | {
+          calldata: HexData
+          minAmount: ITokenAmount
+          toAmount: ITokenAmount
+        }
+
+    // do not swap from WETH to ETH
+    if (params.fromAmount.token.symbol !== 'WETH' || !params.toEth) {
+      swapCall = await this._getSwapCall({
+        vaultId: params.vaultId,
+        fromAmount: params.fromAmount,
+        toToken: outToken,
+        slippage: params.slippage,
+      })
+      multicallArgs.push(swapCall.calldata)
+      multicallOperations.push(
+        `swap ${params.fromAmount.toString()} to min ${swapCall.minAmount.toString()}`,
+      )
+    }
+
+    const outAmount = TokenAmount.createFromBaseUnit({
+      token: params.toToken,
+      amount: '0', // all tokens
+    })
+    // withdraw swapped assets
+    const withdrawTokensCalldata = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'withdrawTokens',
+      args: [outAmount.token.address.value, outAmount.toSolidityValue()],
+    })
+    multicallArgs.push(withdrawTokensCalldata)
+    multicallOperations.push('withdrawTokens ' + outAmount.toString())
+
+    return {
+      multicallArgs: multicallArgs,
+      multicallOperations: multicallOperations,
+      minAmount: swapCall?.minAmount,
+      toAmount: swapCall?.toAmount,
+    }
   }
 
   private async _getSwapCall(params: {
@@ -1204,71 +1327,6 @@ export class ArmadaManager implements IArmadaManager {
       calldata,
       minAmount,
       toAmount: swapData.toTokenAmount,
-    }
-  }
-
-  private async _getDepositSwapWithdrawMulticall(params: {
-    vaultId: IArmadaVaultId
-    fromAmount: ITokenAmount
-    toToken: IToken
-    slippage: IPercentage
-    isEth: boolean
-  }): Promise<{
-    multicallArgs: HexData[]
-    multicallOperations: string[]
-    minAmount: ITokenAmount
-    toAmount: ITokenAmount
-  }> {
-    const multicallArgs: HexData[] = []
-    const multicallOperations: string[] = []
-
-    const depositTokensCalldata = encodeFunctionData({
-      abi: AdmiralsQuartersAbi,
-      functionName: 'depositTokens',
-      args: [params.fromAmount.token.address.value, params.fromAmount.toSolidityValue()],
-    })
-    multicallArgs.push(depositTokensCalldata)
-    multicallOperations.push('depositTokens ' + params.fromAmount.toString())
-
-    let outToken = params.toToken
-    // if the out token is ETH, we need to use wrapped ETH to withdraw
-    if (params.isEth) {
-      outToken = await this._tokensManager.getTokenBySymbol({
-        chainInfo: params.vaultId.chainInfo,
-        symbol: 'WETH',
-      })
-    }
-
-    // swap
-    const swapCall = await this._getSwapCall({
-      vaultId: params.vaultId,
-      fromAmount: params.fromAmount,
-      toToken: outToken,
-      slippage: params.slippage,
-    })
-    multicallArgs.push(swapCall.calldata)
-    multicallOperations.push(
-      `swap ${params.fromAmount.toString()} to min ${swapCall.minAmount.toString()}`,
-    )
-
-    const outAmount = TokenAmount.createFromBaseUnit({
-      token: params.toToken,
-      amount: '0', // all tokens
-    })
-    // withdraw swapped assets
-    const withdrawTokensCalldata = encodeFunctionData({
-      abi: AdmiralsQuartersAbi,
-      functionName: 'withdrawTokens',
-      args: [outAmount.token.address.value, outAmount.toSolidityValue()],
-    })
-    multicallArgs.push(withdrawTokensCalldata)
-    multicallOperations.push('withdrawTokens ' + outAmount.toString())
-
-    return {
-      multicallArgs: multicallArgs,
-      multicallOperations: multicallOperations,
-      minAmount: swapCall.minAmount,
-      toAmount: swapCall.toAmount,
     }
   }
 

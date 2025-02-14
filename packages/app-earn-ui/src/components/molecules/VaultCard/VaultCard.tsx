@@ -1,7 +1,13 @@
 'use client'
 
+import { type FC } from 'react'
 import { type SDKVaultishType } from '@summerfi/app-types'
-import { formatCryptoBalance, formatDecimalAsPercent, ten } from '@summerfi/app-utils'
+import {
+  formatCryptoBalance,
+  formatDecimalAsPercent,
+  getArksWeightedApy,
+  ten,
+} from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 
@@ -10,7 +16,9 @@ import { Text } from '@/components/atoms/Text/Text'
 import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
 import { GradientBox } from '@/components/molecules/GradientBox/GradientBox'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
+import { getDisplayToken } from '@/helpers/get-display-token'
 import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
+import { getUniqueVaultId } from '@/helpers/get-unique-vault-id'
 
 import vaultCardStyles from './VaultCard.module.scss'
 
@@ -26,24 +34,25 @@ type VaultCardProps = SDKVaultishType & {
   showCombinedBonus?: boolean
 }
 
-export const VaultCard = ({
-  id,
-  protocol,
-  inputToken,
-  totalValueLockedUSD,
-  inputTokenBalance,
-  withHover,
-  secondary = false,
-  selected = false,
-  onClick,
-  calculatedApr,
-  customFields,
-  rewardTokenEmissionsAmount,
-  rewardTokens,
-  withTokenBonus,
-  sumrPrice,
-  showCombinedBonus = false,
-}: VaultCardProps) => {
+export const VaultCard: FC<VaultCardProps> = (props) => {
+  const {
+    id,
+    protocol,
+    inputToken,
+    totalValueLockedUSD,
+    inputTokenBalance,
+    withHover,
+    secondary = false,
+    selected = false,
+    onClick,
+    customFields,
+    rewardTokenEmissionsAmount,
+    rewardTokens,
+    withTokenBonus,
+    sumrPrice,
+    showCombinedBonus = false,
+  } = props
+
   const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus(
     rewardTokens,
     rewardTokenEmissionsAmount,
@@ -53,11 +62,16 @@ export const VaultCard = ({
 
   const handleVaultClick = () => {
     if (onClick) {
-      onClick(id)
+      onClick(
+        getUniqueVaultId({
+          id,
+          protocol,
+        } as SDKVaultishType),
+      )
     }
   }
 
-  const rawApr = new BigNumber(calculatedApr).div(100)
+  const rawApr = getArksWeightedApy(props)
 
   const parsedApr = formatDecimalAsPercent(rawApr)
   const parsedTotalValueLocked = formatCryptoBalance(
@@ -79,8 +93,8 @@ export const VaultCard = ({
       >
         <div className={vaultCardStyles.vaultCardHeaderWrapper}>
           <VaultTitleWithRisk
-            symbol={inputToken.symbol}
-            risk={customFields?.risk ?? 'medium'}
+            symbol={getDisplayToken(inputToken.symbol)}
+            risk={customFields?.risk ?? 'lower'}
             networkName={protocol.network}
             selected={selected}
           />
@@ -99,7 +113,7 @@ export const VaultCard = ({
               Total assets
             </Text>
             <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-              {parsedTotalValueLocked}&nbsp;{inputToken.symbol}
+              {parsedTotalValueLocked}&nbsp;{getDisplayToken(inputToken.symbol)}
             </Text>
             <Text variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
               ${parsedTotalValueLockedUSD}

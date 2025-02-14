@@ -20,6 +20,7 @@ export { Timeframes } from './components/atoms/Timeframes/Timeframes'
 export { LoadableAvatar } from './components/atoms/LoadableAvatar/LoadableAvatar'
 export { AnimateHeight } from './components/atoms/AnimateHeight/AnimateHeight'
 export { RechartResponsiveWrapper } from './components/atoms/RechartResponsiveWrapper/RechartResponsiveWrapper'
+export { HeaderDisclaimer } from './components/molecules/HeaderDisclaimer/HeaderDisclaimer'
 
 export { Footer } from './components/layout/Footer/Footer'
 
@@ -85,7 +86,8 @@ export { IconWithBackground } from './components/molecules/IconWithBackground/Ic
 export { FaqSection } from './components/molecules/FaqSection/FaqSection'
 export { DataModule } from './components/molecules/DataModule/DataModule'
 export { Badge } from './components/molecules/Badge/Badge'
-
+export { HighestQualityYieldsDisclaimer } from './components/molecules/HighestQualityYeildsDisclaimer/HighestQualityYieldsDisclaimer'
+export { CookieBanner } from './components/molecules/CookieBanner/CookieBanner'
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'
 export { Table, type TableSortedColumn } from './components/organisms/Table/Table'
@@ -113,6 +115,7 @@ export { useAmount } from './hooks/use-amount'
 export { useAmountWithSwap } from './hooks/use-amount-with-swap'
 export { useForecast } from './features/forecast/use-forecast.ts'
 export { useIsIframe } from './hooks/use-is-iframe'
+export { useAnalyticsCookies } from './hooks/use-analytics-cookies'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
 export { getVaultUrl, getVaultDetailsUrl, getVaultPositionUrl } from './helpers/get-vault-url'
@@ -128,6 +131,8 @@ export {
   type EarningsEstimationsMap,
   getEarningsEstimationsMap,
 } from './helpers/get-earnings-estimations-map'
+export { getUniqueVaultId } from './helpers/get-unique-vault-id'
+export { getDisplayToken } from './helpers/get-display-token'
 
 export { INTERNAL_LINKS, EXTERNAL_LINKS } from './helpers/application-links'
 
@@ -138,6 +143,9 @@ export { chartTimestampFormat } from './features/forecast/chart-formatters'
 
 // newsletter stuff
 export { handleNewsletterSubscription } from './features/newsletter'
+
+// google tag manager
+export { GoogleTagManager } from './features/google-tag-manager/GoogleTagManager'
 
 // contexts
 export {
@@ -157,3 +165,12 @@ export {
 
 // constants
 export { SUMR_CAP, RAYS_TO_SUMR_CONVERSION_RATE } from './constants/earn-protocol'
+export { REVALIDATION_TIMES, REVALIDATION_TAGS } from './constants/revalidation'
+
+export {
+  analyticsCookieVersion,
+  analyticsCookieName,
+  type AnalyticsCookieName,
+  type SelectedAnalyticsCookies,
+  type SavedAnalyticsCookiesSettings,
+} from './components/molecules/CookieBanner/config'

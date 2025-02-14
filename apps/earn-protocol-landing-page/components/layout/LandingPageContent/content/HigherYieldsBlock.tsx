@@ -102,7 +102,7 @@ const higherYieldsBlockSections = {
     }: HigherYieldsSectionContentProps) => (
       <HigherYieldsSection
         title="You’re earning DeFi’s highest yields, all of the time."
-        description="With Summer, your deposits are continuously monitored and reallocated across the top protocols, ensuring you are earning the best available yields."
+        description="With Lazy Summer Protocol, your deposits are continuously monitored and reallocated across the top protocols, ensuring you are earning the best available yields."
         ctaLabel="Get started"
         ctaUrl="/earn"
         secondaryCtaLabel="View Yields"
@@ -134,7 +134,7 @@ const higherYieldsBlockSections = {
     }: HigherYieldsSectionContentProps) => (
       <HigherYieldsSection
         title="Always optimized, zero effort."
-        description="Summer's AI-powered keeper network requires a majority of AI Agents to agree on a single strategy to automatically rebalance your portfolio. It continually optimizes rebalancing strategies to maximize long-term yields."
+        description="Summer.fi's AI-powered keeper network requires a majority of AI Agents to agree on a single strategy to automatically rebalance your portfolio. It continually optimizes rebalancing strategies to maximize long-term yields."
         ctaLabel="Get started"
         ctaUrl="/earn"
         secondaryCtaLabel="Learn more"
@@ -167,7 +167,7 @@ const higherYieldsBlockSections = {
     }: HigherYieldsSectionContentProps) => (
       <HigherYieldsSection
         title="Save Time, Cut Complexity and forget about Gas Costs"
-        description="With Summer, there is no need to keep a spreadsheet, check different apps and sign multiple transactions, chasing the best yields and seeing your profit disappear with gas fees. All rebalances are included in the 1% Annualized AUM Fee...sit back, relax and earn more the lazy way."
+        description="With Summer.fi, there is no need to keep a spreadsheet, check different apps and sign multiple transactions, chasing the best yields and seeing your profit disappear with gas fees. All rebalances are included in the 1% Annualized AUM Fee...sit back, relax and earn more the lazy way."
         ctaLabel="Deposit"
         ctaUrl="/earn"
         secondaryCtaLabel="Learn more"

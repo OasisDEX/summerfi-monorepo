@@ -14,7 +14,7 @@ export const trackEventHandler = (eventName: string, eventBody: { [key: string]:
 
   if (env !== 'production' && env !== 'staging' && loggingEnabled) {
     // eslint-disable-next-line no-console
-    console.info('\n✨ Mixpanel Event:', eventName, eventBody, '\n')
+    console.info('\n✨ Mixpanel Event: ', eventName, eventBody, '\n')
 
     return null
   }

@@ -19,7 +19,7 @@ export const getPositionValues = (position: {
 
   const netDeposited = depositsSum.plus(withdrawalsSum)
   const netEarnings = netValue.minus(netDeposited)
-  const inputTokenPrice = new BigNumber(position.vaultData.inputTokenPriceUSD as string)
+  const inputTokenPrice = new BigNumber(position.vaultData.inputTokenPriceUSD ?? 0)
 
   return {
     netValue,

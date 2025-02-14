@@ -1,8 +1,7 @@
 'use client'
 
-import { type ReactNode } from 'react'
+import { type ReactNode, useState } from 'react'
 import { type DropdownOption, type DropdownRawOption } from '@summerfi/app-types'
-import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
 import { Box } from '@/components/atoms/Box/Box'
@@ -21,6 +20,7 @@ type VaultGridProps = {
   onChangeNetwork: (selected: DropdownRawOption) => void
   selectedNetwork?: DropdownOption
   isMobile?: boolean
+  onRefresh?: () => void
 }
 
 export const VaultGrid = ({
@@ -31,7 +31,17 @@ export const VaultGrid = ({
   selectedNetwork,
   onChangeNetwork,
   isMobile,
+  onRefresh,
 }: VaultGridProps) => {
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  const handleUserRefresh = () => {
+    onRefresh?.()
+    setIsRefreshing(true)
+    setTimeout(() => {
+      setIsRefreshing(false)
+    }, 5000)
+  }
+
   return (
     <div className={vaultGridStyles.vaultGridWrapper}>
       <div className={vaultGridStyles.vaultGridHeaderWrapper}>
@@ -40,15 +50,15 @@ export const VaultGrid = ({
           options={networksList}
           onChangeNetwork={onChangeNetwork}
           selected={selectedNetwork}
-          tooltip={
-            selectedNetwork && selectedNetwork.label !== 'All Networks'
-              ? `You can deposit your assets into the strategies on ${capitalize(selectedNetwork.label)} network`
-              : undefined
-          }
+          onRefresh={handleUserRefresh}
+          isRefreshing={isRefreshing}
         />
-        <Link href="/" style={{ display: 'block', width: 'min-content', whiteSpace: 'pre' }}>
+        <Link
+          href="https://blog.summer.fi/say-hello-to-the-lazy-summer-protocol"
+          style={{ display: 'block', width: 'min-content', whiteSpace: 'pre' }}
+        >
           <Text as="p" variant="p3semi" style={{ display: 'inline' }}>
-            <WithArrow style={{ display: 'inline' }}>What is Earn protocol</WithArrow>
+            <WithArrow style={{ display: 'inline' }}>What is the Lazy Summer Protocol</WithArrow>
           </Text>
         </Link>
       </div>

@@ -17,6 +17,7 @@ import {
   formatCryptoBalance,
   formatDecimalAsPercent,
   formatFiatBalance,
+  safeBTOA,
 } from '@summerfi/app-utils'
 import { useParams } from 'next/navigation'
 
@@ -38,7 +39,7 @@ interface ClaimedCardProps {
 }
 
 const ClaimedCard: FC<ClaimedCardProps> = ({ externalData, chainId, estimatedSumrPrice }) => {
-  const claimedSumrRaw = externalData.sumrToClaim.perChain[chainId] ?? 0
+  const claimedSumrRaw = externalData.sumrToClaim.claimableAggregatedRewards.perChain[chainId] ?? 0
 
   const claimedSumr = (
     <>
@@ -166,7 +167,7 @@ export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = (
 
   const sumrClaimedStepBefore =
     state.claimStatus === ClaimDelegateTxStatuses.COMPLETED
-      ? externalData.sumrToClaim.perChain[SDKChainId.BASE] ?? 0
+      ? externalData.sumrToClaim.claimableAggregatedRewards.perChain[SDKChainId.BASE] ?? 0
       : 0
 
   const externalDataSumrDelegated = externalData.sumrStakeDelegate.sumrDelegated
@@ -244,7 +245,7 @@ export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = (
             <div className={classNames.withIcon}>
               <LoadableAvatar
                 size={38}
-                name={btoa(delegateeName)}
+                name={safeBTOA(delegateeName)}
                 variant="pixel"
                 colors={['#B90061', '#EC58A2', '#F8A4CE', '#FFFFFF']}
               />

@@ -1,4 +1,6 @@
 export type Styles = {
+  refreshing: string
+  rotate: string
   titleLine: string
   titleWithSelectWrapper: string
 }

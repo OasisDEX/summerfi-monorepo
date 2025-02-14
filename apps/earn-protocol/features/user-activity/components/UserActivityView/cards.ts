@@ -18,7 +18,7 @@ export const getUserActivityHeadingCards = ({
   {
     title: 'Total deposits',
     value: formatShorthandNumber(totalItems, { precision: 0 }),
-    description: 'The total USD value of all deposits across all strategies and users. ',
+    description: 'The total number of deposits across all strategies and users.',
   },
   {
     title: '# of users',

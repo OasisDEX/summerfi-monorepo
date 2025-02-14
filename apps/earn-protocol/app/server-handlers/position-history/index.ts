@@ -1,9 +1,9 @@
 'use server'
 
+import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { SDKNetwork, type SDKVaultishType, type SDKVaultType } from '@summerfi/app-types'
 import { GraphQLClient } from 'graphql-request'
 
-import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@/constants/revalidations'
 import {
   GetPositionHistoryDocument,
   type GetPositionHistoryQuery,
@@ -28,33 +28,21 @@ export async function getPositionHistory({ network, address, vault }: GetPositio
       },
     })
 
-  const clients = {
-    [SDKNetwork.Mainnet]: new GraphQLClient(
-      process.env.TEMPORARY_MAINNET_SUBGRAPH
-        ? process.env.TEMPORARY_MAINNET_SUBGRAPH
-        : `${process.env.SUBGRAPH_BASE}/summer-protocol`,
-      {
-        fetch: customFetchCache,
-      },
-    ),
-    [SDKNetwork.Base]: new GraphQLClient(`${process.env.SUBGRAPH_BASE}/summer-protocol-base`, {
-      fetch: customFetchCache,
-    }),
-    [SDKNetwork.ArbitrumOne]: new GraphQLClient(
-      `${process.env.SUBGRAPH_BASE}/summer-protocol-arbitrum`,
-      {
-        fetch: customFetchCache,
-      },
-    ),
+  const subgraphsMap = {
+    [SDKNetwork.Mainnet]: `${process.env.SUBGRAPH_BASE}/summer-protocol`,
+    [SDKNetwork.Base]: `${process.env.SUBGRAPH_BASE}/summer-protocol-base`,
+    [SDKNetwork.ArbitrumOne]: `${process.env.SUBGRAPH_BASE}/summer-protocol-arbitrum`,
   }
 
-  const isProperNetwork = (net: string): net is keyof typeof clients => net in clients
+  const isProperNetwork = (net: string): net is keyof typeof subgraphsMap => net in subgraphsMap
 
   if (!isProperNetwork(network)) {
     throw new Error(`getPositionHistory: No endpoint found for network: ${network}`)
   }
 
-  const networkGraphQlClient = clients[network as keyof typeof clients]
+  const networkGraphQlClient = new GraphQLClient(subgraphsMap[network], {
+    fetch: customFetchCache,
+  })
   const request = await networkGraphQlClient.request<GetPositionHistoryQuery>(
     GetPositionHistoryDocument,
     {

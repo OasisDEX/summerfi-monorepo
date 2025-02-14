@@ -1,6 +1,7 @@
 'use client'
 
 import { type FC } from 'react'
+import { safeBTOA } from '@summerfi/app-utils'
 
 import { LoadableAvatar } from '@/components/atoms/LoadableAvatar/LoadableAvatar'
 
@@ -36,7 +37,7 @@ export const GenericTokenIcon: FC<GenericTokenIconProps> = ({
     <div className={genericTokenIconStyles[variant]} style={customSize ? customSizeStyle : {}}>
       <LoadableAvatar
         size={innerSize}
-        name={btoa(symbol)}
+        name={safeBTOA(symbol)}
         variant="marble"
         colors={['#6FD9FF', '#FBB677']}
       />

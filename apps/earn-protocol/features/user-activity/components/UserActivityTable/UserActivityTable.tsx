@@ -1,6 +1,6 @@
 'use client'
 import { type FC, type ReactNode, useMemo, useState } from 'react'
-import { Table, type TableSortedColumn, useMobileCheck } from '@summerfi/app-earn-ui'
+import { Table, type TableSortedColumn, Text, useMobileCheck } from '@summerfi/app-earn-ui'
 import { type UsersActivity } from '@summerfi/app-types'
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
@@ -38,12 +38,27 @@ export const UserActivityTable: FC<UserActivityTableProps> = ({
   const resolvedHiddenColumns = isMobile ? userActivityColumnsHiddenOnMobile : hiddenColumns
 
   return (
-    <Table
-      rows={rows.slice(0, rowsToDisplay)}
-      columns={userActivityColumns}
-      customRow={customRow}
-      handleSort={(_sortConfig) => setSortConfig(_sortConfig)}
-      hiddenColumns={resolvedHiddenColumns}
-    />
+    <>
+      <Table
+        rows={rows.slice(0, rowsToDisplay)}
+        columns={userActivityColumns}
+        customRow={customRow}
+        handleSort={(_sortConfig) => setSortConfig(_sortConfig)}
+        hiddenColumns={resolvedHiddenColumns}
+      />
+      {rows.length === 0 && (
+        <Text
+          as="p"
+          variant="p3semi"
+          style={{
+            textAlign: 'center',
+            marginTop: 'var(--general-space-24)',
+            color: 'var(--color-text-secondary)',
+          }}
+        >
+          No activity available to display
+        </Text>
+      )}
+    </>
   )
 }

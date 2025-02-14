@@ -6,8 +6,10 @@ import { getTokenGuarded } from '@/tokens/helpers'
 
 export type IconNamesList = keyof typeof icons
 
+export type IconVariant = 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl'
+
 export interface IconPropsBase {
-  variant?: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl'
+  variant?: IconVariant
   size?: number
   role?: 'presentation'
   focusable?: boolean

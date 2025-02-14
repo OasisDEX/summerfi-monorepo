@@ -1,6 +1,5 @@
+import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { type NetworkNames, type TokenSymbolsList } from '@summerfi/app-types'
-
-import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@/constants/revalidations'
 
 export type PortfolioWalletAsset = {
   name: string

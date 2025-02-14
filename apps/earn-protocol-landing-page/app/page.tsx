@@ -1,6 +1,6 @@
-import { BigGradientBox } from '@summerfi/app-earn-ui'
-import { type IconNamesList } from '@summerfi/app-types'
-import { parseServerResponseToClient } from '@summerfi/app-utils'
+import { BigGradientBox, HighestQualityYieldsDisclaimer } from '@summerfi/app-earn-ui'
+import { type IconNamesList, type SDKNetwork } from '@summerfi/app-types'
+import { aggregateArksPerNetwork, parseServerResponseToClient } from '@summerfi/app-utils'
 
 import { getProtocolTvl } from '@/app/server-handlers/defillama/get-protocol-tvl'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
@@ -24,7 +24,8 @@ import { SummerFiProSection } from '@/components/layout/LandingPageContent/conte
 import { SumrToken } from '@/components/layout/LandingPageContent/content/SumrToken'
 import { decorateCustomVaultFields } from '@/helpers/vault-custom-value-helpers'
 
-export const dynamic = 'force-static'
+import { getInterestRates } from './server-handlers/interest-rates'
+
 export const revalidate = 60
 
 type SupportedTvlProtocols =
@@ -126,7 +127,29 @@ export default async function HomePage() {
   }>((acc, curr) => ({ ...acc, ...curr }), emptyTvls)
 
   const { config } = parseServerResponseToClient(systemConfig)
-  const vaultsDecorated = decorateCustomVaultFields(vaults, config)
+
+  const aggregatedArksPerNetwork = aggregateArksPerNetwork(vaults)
+
+  const interestRatesPromises = Object.entries(aggregatedArksPerNetwork).map(
+    ([network, { arks }]) =>
+      getInterestRates({
+        network: network as SDKNetwork,
+        arksList: arks,
+        justLatestRates: true,
+      }),
+  )
+
+  const interestRatesResults = await Promise.all(interestRatesPromises)
+
+  const vaultsDecorated = decorateCustomVaultFields({
+    vaults,
+    systemConfig: config,
+    decorators: {
+      arkInterestRatesMap: interestRatesResults.reduce((acc, curr) => {
+        return { ...acc, ...curr }
+      }, {}),
+    },
+  })
 
   return (
     <div style={{ display: 'flex', gap: '8px', flexDirection: 'column', alignItems: 'center' }}>
@@ -158,6 +181,7 @@ export default async function HomePage() {
         <Audits />
         <BuildBySummerFi />
         <LandingFaqSection />
+        <HighestQualityYieldsDisclaimer />
       </MarketingPoints>
     </div>
   )

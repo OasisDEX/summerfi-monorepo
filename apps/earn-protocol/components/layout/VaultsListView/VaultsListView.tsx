@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react'
 import {
   DataBlock,
+  getUniqueVaultId,
   SimpleGrid,
   SUMR_CAP,
   Text,
@@ -34,6 +35,7 @@ import { capitalize } from 'lodash-es'
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
+import { revalidateVaultsListData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { usePosition } from '@/hooks/use-position'
 import { useTokenBalances } from '@/hooks/use-tokens-balances'
@@ -62,17 +64,23 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
   const {
     state: { sumrNetApyConfig, slippageConfig },
   } = useLocalConfig()
-  const networkFilteredVaults = useMemo(
-    () =>
+
+  const networkFilteredVaults = useMemo(() => {
+    const properVaultsList =
       localVaultNetwork && localVaultNetwork !== 'all-networks'
         ? vaultsList.filter(({ protocol }) => protocol.network === localVaultNetwork)
-        : vaultsList,
-    [localVaultNetwork, vaultsList],
-  )
+        : vaultsList
+
+    return properVaultsList.sort((a, b) => {
+      return Number(a.calculatedApr) > Number(b.calculatedApr) ? -1 : 1
+    })
+  }, [localVaultNetwork, vaultsList])
   const sdk = useAppSDK()
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
-  const [vaultId, setVaultId] = useState<string | undefined>(networkFilteredVaults[0].id)
+  const [selectedVaultId, setSelectedVaultId] = useState<string | undefined>(
+    getUniqueVaultId(networkFilteredVaults[0]),
+  )
 
   const selectedNetworkOption = useMemo(
     () =>
@@ -98,14 +106,14 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
   )
 
   const selectedVaultData = useMemo(
-    () => vaultsList.find((vault) => vault.id === vaultId),
-    [vaultsList, vaultId],
+    () => vaultsList.find((vault) => getUniqueVaultId(vault) === selectedVaultId),
+    [vaultsList, selectedVaultId],
   )
 
   const vaultData = selectedVaultData ?? networkFilteredVaults[0]
   const { userWalletAddress } = useUserWallet()
 
-  const positionExists = usePosition({
+  const { position: positionExists, isLoading } = usePosition({
     chainId: subgraphNetworkToSDKId(vaultData.protocol.network),
     vaultId: vaultData.id,
     onlyActive: true,
@@ -132,7 +140,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
 
       default:
         if (selectedVaultData && selectedVaultData.protocol.network !== selected.value) {
-          setVaultId(undefined)
+          setSelectedVaultId(undefined)
         }
         softRouterPush(`/earn/${sdkNetworkToHumanNetwork(selected.value as SDKNetwork)}`)
 
@@ -140,8 +148,8 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
     }
   }
 
-  const handleChangeVault = (nextVaultId: string) => {
-    setVaultId(nextVaultId)
+  const handleChangeVault = (nextselectedVaultId: string) => {
+    setSelectedVaultId(nextselectedVaultId)
   }
 
   const formattedTotalLiquidity = useMemo(() => {
@@ -157,25 +165,61 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
   }, [vaultsList])
 
   const formattedProtocolsSupportedList = useMemo(
-    () =>
-      new Set(
+    () => [
+      ...new Set(
         vaultsList.reduce<string[]>(
           (acc, { arks }) => [
             // converting a list which looks like `protocolName-token-chainId`
             // into a unique list of protocols for all vaults
             ...acc,
             ...arks
-              .map((ark) => ark.name?.split('-')[0])
+              .map((ark) => {
+                if (ark.name === 'BufferArk' || !ark.name) {
+                  return null
+                }
+
+                const arkNameArray = ark.name.split('-')
+
+                // special case for ERC4626
+                if (ark.name.startsWith('ERC4626')) {
+                  // examples
+                  // ERC4626-Euler_Prime-usdc-1
+                  // ERC4626-Gearbox-weth-1
+                  return `${arkNameArray[1]}`.replaceAll(/_+/gu, ' ')
+                }
+                // special case for MorphoVault
+                if (ark.name.startsWith('MorphoVault')) {
+                  // examples
+                  // MorphoVault-usdc-Flagship_USDC-1
+                  // MorphoVault-weth-Steakhouse_WETH-1
+                  const morphoArkName = `Morpho ${arkNameArray[2].split('_')[0]}`
+
+                  if (
+                    acc.filter((item) => item.toLowerCase() === morphoArkName.toLowerCase())
+                      .length > 0
+                  ) {
+                    return false
+                  }
+
+                  return morphoArkName
+                }
+
+                // the rest should be like this:
+                // AaveV3-usdc-1
+                // CompoundV3-usdt-1
+                // Spark-weth-1
+                return arkNameArray[0]
+              })
               .filter((arkName): arkName is string => Boolean(arkName)),
           ],
           [],
         ),
       ),
+    ],
     [vaultsList],
   )
 
-  // -1 because BufferArk is not a protocol
-  const formattedProtocolsSupportedCount = formattedProtocolsSupportedList.size - 1
+  const formattedProtocolsSupportedCount = formattedProtocolsSupportedList.length
 
   const {
     amountParsed,
@@ -217,6 +261,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
       networksList={vaultsNetworksList}
       selectedNetwork={selectedNetworkOption}
       onChangeNetwork={handleChangeNetwork}
+      onRefresh={revalidateVaultsListData}
       topContent={
         <SimpleGrid
           columns={isMobile ? 1 : 3}
@@ -257,10 +302,13 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
           </div>
           {networkFilteredVaults.map((vault, vaultIndex) => (
             <VaultCard
-              key={vault.id}
+              key={getUniqueVaultId(vault)}
               {...vault}
               withHover
-              selected={vaultId === vault.id || (!vaultId && vaultIndex === 0)}
+              selected={
+                selectedVaultId === getUniqueVaultId(vault) ||
+                (!selectedVaultId && vaultIndex === 0)
+              }
               onClick={handleChangeVault}
               withTokenBonus={sumrNetApyConfig.withSumr}
               sumrPrice={estimatedSumrPrice}
@@ -290,6 +338,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
           isEarnApp
           positionExists={Boolean(positionExists)}
           userWalletAddress={userWalletAddress}
+          isLoading={isLoading}
         />
       }
     />

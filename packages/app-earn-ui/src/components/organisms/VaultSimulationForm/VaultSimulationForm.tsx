@@ -16,6 +16,7 @@ import { SidebarMobileHeader } from '@/components/molecules/SidebarMobileHeader/
 import { ControlsDepositWithdraw } from '@/components/organisms/ControlsDepositWithdraw/ControlsDepositWithdraw'
 import { Sidebar } from '@/components/organisms/Sidebar/Sidebar'
 import { useForecast } from '@/features/forecast/use-forecast'
+import { getDisplayToken } from '@/helpers/get-display-token'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 import { useLocalStorageOnce } from '@/hooks/use-local-storage-once'
 
@@ -44,6 +45,7 @@ export type VaultSimulationFormProps = {
   isEarnApp?: boolean
   positionExists?: boolean
   userWalletAddress?: string
+  isLoading?: boolean
 }
 
 export const VaultSimulationForm = ({
@@ -62,6 +64,7 @@ export const VaultSimulationForm = ({
   isEarnApp,
   positionExists,
   userWalletAddress,
+  isLoading = false,
 }: VaultSimulationFormProps) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [isGradientBorder, setIsGradientBorder] = useState(false)
@@ -106,7 +109,7 @@ export const VaultSimulationForm = ({
       <Sidebar
         {...{
           title: isEarnApp
-            ? `2. Deposit into ${vaultData.inputToken.symbol} on ${capitalize(sdkNetworkToHumanNetwork(vaultData.protocol.network))}`
+            ? `2. Deposit into ${getDisplayToken(vaultData.inputToken.symbol)} on ${capitalize(sdkNetworkToHumanNetwork(vaultData.protocol.network))}`
             : 'Deposit',
           content: (
             <ControlsDepositWithdraw
@@ -134,7 +137,7 @@ export const VaultSimulationForm = ({
               <SidebarMobileHeader
                 type="open"
                 amount={estimatedEarnings}
-                token={vaultData.inputToken.symbol}
+                token={getDisplayToken(vaultData.inputToken.symbol)}
                 isLoadingForecast={isLoadingForecast}
               />
             ) : undefined,
@@ -146,7 +149,7 @@ export const VaultSimulationForm = ({
               ? {
                   label: 'View your position',
                   url: `${vaultUrl}/${userWalletAddress}`,
-                  disabled: false,
+                  disabled: isLoading,
                 }
               : {
                   label: 'Deposit',
@@ -154,7 +157,7 @@ export const VaultSimulationForm = ({
                   action: () => {
                     setStorageOnce(amountParsed.toNumber())
                   },
-                  disabled: false,
+                  disabled: isLoading,
                 },
           footnote: !positionExists ? (
             <Link href={vaultUrl}>

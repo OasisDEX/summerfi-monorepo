@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react'
 import { type IArmadaPosition, type SDKVaultishType } from '@summerfi/app-types'
-import { formatDecimalAsPercent } from '@summerfi/app-utils'
+import { formatDecimalAsPercent, getArksWeightedApy } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
 import Link from 'next/link'
@@ -10,6 +10,7 @@ import { Card } from '@/components/atoms/Card/Card'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
+import { getDisplayToken } from '@/helpers/get-display-token'
 import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getVaultPositionUrl } from '@/helpers/get-vault-url'
 
@@ -52,7 +53,6 @@ export const PortfolioPosition = ({
     inputToken,
     protocol,
     apr30d,
-    calculatedApr,
     totalValueLockedUSD,
     id: vaultId,
     customFields,
@@ -72,7 +72,7 @@ export const PortfolioPosition = ({
   const isVaultAtLeast30dOld = createdTimestamp
     ? dayjs().diff(dayjs(Number(createdTimestamp) * 1000), 'day') > 30
     : false
-  const currentApr = formatDecimalAsPercent(new BigNumber(calculatedApr).div(100))
+  const currentApr = formatDecimalAsPercent(getArksWeightedApy(position.vaultData))
   const apr30dParsed = isVaultAtLeast30dOld
     ? formatDecimalAsPercent(new BigNumber(apr30d).div(100))
     : 'New Strategy'
@@ -90,8 +90,8 @@ export const PortfolioPosition = ({
         <div className={portfolioPositionStyles.basicInfoWrapper}>
           <div style={{ width: '100%' }}>
             <VaultTitleWithRisk
-              symbol={inputToken.symbol}
-              risk={customFields?.risk ?? 'medium'}
+              symbol={getDisplayToken(inputToken.symbol)}
+              risk={customFields?.risk ?? 'lower'}
               networkName={protocol.network}
               titleVariant="h3"
             />

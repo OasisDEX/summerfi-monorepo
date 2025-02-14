@@ -3,24 +3,16 @@ import { useEffect, useMemo, useState } from 'react'
 import {
   type DropdownOption,
   type DropdownRawOption,
-  SDKChainId,
   type SDKVaultishType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
 
+import { getSwapTokens } from '@/constants/swap-tokens'
+import { getDisplayToken } from '@/helpers/get-display-token'
+
 type TokenSelectorProps = {
   vault: SDKVaultishType
   chainId: number
-}
-
-// For swap testing purposes only adding testToken to dropdown
-const testTokens: { [key: number]: TokenSymbolsList[] | undefined } = {
-  // base
-  [SDKChainId.BASE]: ['USDC', 'USDBC', 'WSTETH', 'ETH'],
-  // arbitrum
-  [SDKChainId.ARBITRUM]: ['USDC', 'WBTC', 'WSTETH', 'ETH'],
-  // mainnet
-  [SDKChainId.MAINNET]: ['ETH'],
 }
 
 /**
@@ -44,7 +36,7 @@ export const useTokenSelector = ({ vault, chainId }: TokenSelectorProps) => {
       })),
     ]
 
-    const tokens = testTokens[chainId] ?? []
+    const tokens = getSwapTokens(chainId)
 
     tokens.forEach((token) => {
       if (token !== vault.inputToken.symbol) {
@@ -65,20 +57,26 @@ export const useTokenSelector = ({ vault, chainId }: TokenSelectorProps) => {
     }
 
     return (
-      tokenOptions.find((option) => option.value === vault.inputToken.symbol) ?? tokenOptions[0]
+      tokenOptions.find((option) => option.value === getDisplayToken(vault.inputToken.symbol)) ??
+      tokenOptions[0]
     )
   })
 
   // when changing tokenOptions validate the selected token
   useEffect(() => {
     setSelectedTokenOption((selectedOption) => {
-      return tokenOptions.find((option) => option.value === selectedOption.value) ?? tokenOptions[0]
+      return (
+        tokenOptions.find((option) => option.value === getDisplayToken(selectedOption.value)) ??
+        tokenOptions[0]
+      )
     })
-  }, [tokenOptions, vault.inputToken.symbol])
+  }, [tokenOptions])
 
   // when changing vaults on the vaults list update the token
   useEffect(() => {
-    const nextVaultToken = tokenOptions.find((option) => option.value === vault.inputToken.symbol)
+    const nextVaultToken = tokenOptions.find(
+      (option) => option.value === getDisplayToken(vault.inputToken.symbol),
+    )
 
     if (nextVaultToken) {
       setSelectedTokenOption(nextVaultToken)

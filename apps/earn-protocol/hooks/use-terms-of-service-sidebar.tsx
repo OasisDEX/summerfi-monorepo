@@ -1,5 +1,11 @@
 import { useEffect } from 'react'
-import { type SidebarProps, Text, useMobileCheck, WithArrow } from '@summerfi/app-earn-ui'
+import {
+  INTERNAL_LINKS,
+  type SidebarProps,
+  Text,
+  useMobileCheck,
+  WithArrow,
+} from '@summerfi/app-earn-ui'
 import { type TOSState, TOSStatus } from '@summerfi/app-types'
 import Link from 'next/link'
 
@@ -70,7 +76,7 @@ export const useTermsOfServiceSidebar = ({
           requirements. Agreement is mandatory for access and use.
         </Text>
         <Link
-          href="/terms-and-conditions"
+          href={`${INTERNAL_LINKS.summerPro}/terms`}
           target="_blank"
           style={{ marginBottom: 'var(--general-space-16)' }}
         >

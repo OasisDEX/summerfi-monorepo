@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import {
   ControlsDepositWithdraw,
   Expander,
+  getDisplayToken,
+  getUniqueVaultId,
   Sidebar,
   SidebarFootnote,
   sidebarFootnote,
@@ -28,6 +30,7 @@ import {
   type UsersActivity,
 } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
+import { type GetGlobalRebalancesQuery } from '@summerfi/sdk-client'
 import { type IToken, TransactionType } from '@summerfi/sdk-common'
 
 import { detailsLinks } from '@/components/layout/VaultOpenView/mocks'
@@ -43,6 +46,7 @@ import { TransakWidget } from '@/features/transak/components/TransakWidget/Trans
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
+import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
@@ -165,7 +169,7 @@ export const VaultOpenViewComponent = ({
     approvalCustomValue: approvalAmountParsed,
   })
 
-  const position = usePosition({
+  const { position } = usePosition({
     chainId: vaultChainId,
     vaultId: vault.id,
   })
@@ -291,7 +295,7 @@ export const VaultOpenViewComponent = ({
         <SidebarMobileHeader
           type="open"
           amount={estimatedEarnings}
-          token={vault.inputToken.symbol}
+          token={getDisplayToken(vault.inputToken.symbol)}
           isLoadingForecast={isLoadingForecast}
         />
       ) : undefined,
@@ -331,7 +335,8 @@ export const VaultOpenViewComponent = ({
       : sidebarProps
 
   // needed due to type duality
-  const rebalancesList = `rebalances` in vault ? vault.rebalances : []
+  const rebalancesList =
+    `rebalances` in vault ? (vault.rebalances as GetGlobalRebalancesQuery['rebalances']) : []
 
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
@@ -343,6 +348,7 @@ export const VaultOpenViewComponent = ({
       medianDefiYield={medianDefiYield}
       displaySimulationGraph={displaySimulationGraph}
       sumrPrice={estimatedSumrPrice}
+      onRefresh={revalidatePositionData}
       simulationGraph={
         <VaultSimulationGraph
           vault={vault}
@@ -387,7 +393,7 @@ export const VaultOpenViewComponent = ({
           >
             <RebalancingActivity
               rebalancesList={rebalancesList}
-              vaultId={vault.id}
+              vaultId={getUniqueVaultId(vault)}
               totalRebalances={Number(vault.rebalanceCount)}
               vaultsList={vaults}
             />
@@ -403,7 +409,7 @@ export const VaultOpenViewComponent = ({
             <UserActivity
               userActivity={userActivity}
               topDepositors={topDepositors}
-              vaultId={vault.id}
+              vaultId={getUniqueVaultId(vault)}
               page="open"
             />
           </Expander>

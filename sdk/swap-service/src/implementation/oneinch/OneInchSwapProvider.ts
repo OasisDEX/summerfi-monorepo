@@ -49,6 +49,7 @@ export class OneInchSwapProvider
   private readonly _version: string
 
   private readonly _allowedSwapProtocols: string[]
+  private readonly _excludedSwapProtocols: string[]
   private readonly _supportedChainIds: ChainId[]
 
   /** CONSTRUCTOR */
@@ -63,6 +64,7 @@ export class OneInchSwapProvider
     this._version = config.version
 
     this._allowedSwapProtocols = config.allowedSwapProtocols
+    this._excludedSwapProtocols = config.excludedSwapProtocols
     this._supportedChainIds = chainIds
   }
 
@@ -82,6 +84,8 @@ export class OneInchSwapProvider
       recipient: params.recipient,
       slippage: params.slippage,
     })
+
+    LoggingService.debug('OneInchSwapUrl', swapUrl)
 
     const authHeader = this._getOneInchAuthHeader()
 
@@ -212,8 +216,16 @@ export class OneInchSwapProvider
       this._allowedSwapProtocols.length > 0
         ? '&protocols=' + this._allowedSwapProtocols.join(',')
         : ''
+    const excludedProtocolsParam =
+      this._excludedSwapProtocols.length > 0
+        ? '&excludedProtocols=' + this._excludedSwapProtocols.join(',')
+        : ''
+    const excludeProtocolsParam =
+      this._excludedSwapProtocols.length > 0
+        ? '&excludeProtocols=' + this._excludedSwapProtocols.join(',')
+        : ''
 
-    return `${this._apiUrl}/swap/${this._version}/${chainId}/swap?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&fromAddress=${recipient}&slippage=${params.slippage.value}&disableEstimate=${disableEstimate}&allowPartialFill=${allowPartialFill}${protocolsParam}`
+    return `${this._apiUrl}/swap/${this._version}/${chainId}/swap?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&fromAddress=${recipient}&slippage=${params.slippage.value}&disableEstimate=${disableEstimate}&allowPartialFill=${allowPartialFill}${protocolsParam}${excludedProtocolsParam}${excludeProtocolsParam}`
   }
 
   /**
@@ -237,8 +249,12 @@ export class OneInchSwapProvider
       this._allowedSwapProtocols.length > 0
         ? '&protocols=' + this._allowedSwapProtocols.join(',')
         : ''
+    const excludedProtocolsParam =
+      this._excludedSwapProtocols.length > 0
+        ? '&excludedProtocols=' + this._excludedSwapProtocols.join(',')
+        : ''
 
-    return `${this._apiUrl}/swap/${this._version}/${chainId}/quote?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}${protocolsParam}`
+    return `${this._apiUrl}/swap/${this._version}/${chainId}/quote?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}${protocolsParam}${excludedProtocolsParam}`
   }
 
   /**
@@ -278,6 +294,9 @@ export class OneInchSwapProvider
     const ONE_INCH_ALLOWED_SWAP_PROTOCOLS = this.configProvider.getConfigurationItem({
       name: 'ONE_INCH_ALLOWED_SWAP_PROTOCOLS',
     })
+    const ONE_INCH_EXCLUDED_SWAP_PROTOCOLS = this.configProvider.getConfigurationItem({
+      name: 'ONE_INCH_EXCLUDED_SWAP_PROTOCOLS',
+    })
     const ONE_INCH_SWAP_CHAIN_IDS = this.configProvider.getConfigurationItem({
       name: 'ONE_INCH_SWAP_CHAIN_IDS',
     })
@@ -313,6 +332,9 @@ export class OneInchSwapProvider
         allowedSwapProtocols: !ONE_INCH_ALLOWED_SWAP_PROTOCOLS
           ? []
           : ONE_INCH_ALLOWED_SWAP_PROTOCOLS.split(','),
+        excludedSwapProtocols: !ONE_INCH_EXCLUDED_SWAP_PROTOCOLS
+          ? []
+          : ONE_INCH_EXCLUDED_SWAP_PROTOCOLS.split(','),
       },
       chainIds: ONE_INCH_SWAP_CHAIN_IDS.split(',').map((id: string) => parseInt(id)),
     }

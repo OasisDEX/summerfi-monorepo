@@ -22,6 +22,7 @@ import { getUserDelegateeHandler } from '../handlers/getUserDelegateeHandler'
 import { getUserStakedBalanceHandler } from '../handlers/getUserStakedBalanceHandler'
 import { getUserVotesHandler } from '../handlers/getUserVotesHandler'
 import { getSummerTokenHandler } from '../handlers/getSummerTokenHandler'
+import { getClaimableAggregatedRewardsHandler } from '../handlers/getClaimableAggregatedRewardsHandler'
 
 type UseSdk = {
   walletAddress?: string
@@ -62,6 +63,10 @@ export const useSDK = (params: UseSdk) => {
 
   // CLAIMS
   const getAggregatedRewards = useMemo(() => getAggregatedRewardsHandler(sdk), [sdk])
+  const getClaimableAggregatedRewards = useMemo(
+    () => getClaimableAggregatedRewardsHandler(sdk),
+    [sdk],
+  )
   const getAggregatedClaimsForChainTX = useMemo(
     () => getAggregatedClaimsForChainTXHandler(sdk),
     [sdk],
@@ -89,6 +94,7 @@ export const useSDK = (params: UseSdk) => {
       getUserPosition,
       getSwapQuote,
       getAggregatedRewards,
+      getClaimableAggregatedRewards,
       getAggregatedClaimsForChainTX,
       getDelegateTx,
       getStakeTx,
@@ -111,6 +117,7 @@ export const useSDK = (params: UseSdk) => {
       getUserPosition,
       getSwapQuote,
       getAggregatedRewards,
+      getClaimableAggregatedRewards,
       getAggregatedClaimsForChainTX,
       getDelegateTx,
       getStakeTx,

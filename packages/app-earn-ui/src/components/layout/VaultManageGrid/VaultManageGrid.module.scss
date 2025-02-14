@@ -53,3 +53,29 @@
   justify-content: space-between;
   margin-bottom: var(--general-space-16);
 }
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.refreshManageWrapper {
+  display: inline-block;
+  bottom: -3px;
+  margin-left: 10px;
+  position: relative;
+  cursor: pointer;
+}
+
+.refreshingManage {
+  svg {
+    opacity: 1;
+    animation: rotate 1s linear infinite;
+    color: var(--earn-protocol-primary-100);
+  }
+}

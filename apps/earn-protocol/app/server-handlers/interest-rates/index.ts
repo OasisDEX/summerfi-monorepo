@@ -1,22 +1,14 @@
 'use server'
 
-import { SDKNetwork, type SDKVaultishType, type SDKVaultType } from '@summerfi/app-types'
+import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
+import { type GetInterestRatesParams, SDKNetwork } from '@summerfi/app-types'
+import { getArkHistoricalRatesUrl, getArkProductId, getArkRatesUrl } from '@summerfi/app-utils'
 import { GraphQLClient } from 'graphql-request'
 
-import { REVALIDATION_TIMES } from '@/constants/revalidations'
 import {
   GetInterestRatesDocument,
   type GetInterestRatesQuery,
 } from '@/graphql/clients/rates/client'
-import { getArkProductId } from '@/helpers/prepare-product-id'
-
-type GetInterestRatesParams = {
-  network: SDKNetwork
-  dailyCount?: number
-  hourlyCount?: number
-  weeklyCount?: number
-  arksList: SDKVaultishType['arks'] | SDKVaultType['arks']
-}
 
 const noInterestRates: GetInterestRatesQuery = {
   dailyInterestRates: [{ averageRate: 0, date: 0, __typename: 'DailyInterestRate' }],
@@ -63,34 +55,89 @@ const clients = {
   ),
 }
 
+if (!process.env.FUNCTIONS_API_URL) {
+  throw new Error('FUNCTIONS_API_URL is not set')
+}
+
 const isProperNetwork = (network: string): network is keyof typeof clients => network in clients
 
-export async function getInterestRates({ network, arksList }: GetInterestRatesParams) {
+// CAUTION - IF SOMETHING IS UPDATED HERE UPDATE IT ALSO IN EARN LANDING APP
+export async function getInterestRates({
+  network,
+  arksList,
+  justLatestRates = false,
+}: GetInterestRatesParams) {
   if (!isProperNetwork(network)) {
     throw new Error(`getInterestRates: No endpoint found for network: ${network}`)
   }
 
-  const arkNamesList = arksList.map((ark) =>
+  const filteredArksWithCapHigherThanZero = arksList.filter((ark) => Number(ark.depositCap) > 0)
+
+  const arkNamesList = filteredArksWithCapHigherThanZero.map((ark) =>
     ark.name ? ark.name : getArkProductId(ark) || 'NOT FOUND',
   )
 
-  const networkGraphQlClient = clients[network as keyof typeof clients]
-  // networkGraphQlClient.batchRequests DOES NOT WORK on subgraphs we use
-  // TODO: create a single gql`` query with multiple queries inside and dynamically rename variables
   const response = await Promise.all(
-    arksList.map((ark) => {
-      if (getArkProductId(ark) === false) {
-        return Promise.resolve<GetInterestRatesQuery>(noInterestRates)
+    filteredArksWithCapHigherThanZero.map(async (ark) => {
+      const productId = getArkProductId(ark)
+
+      if (productId === false) {
+        return noInterestRates
       }
 
-      return networkGraphQlClient.request<GetInterestRatesQuery>(GetInterestRatesDocument, {
-        productId: getArkProductId(ark),
-      })
+      try {
+        const functionsApiUrl = process.env.FUNCTIONS_API_URL
+
+        if (!functionsApiUrl) {
+          throw new Error('FUNCTIONS_API_URL is not set')
+        }
+
+        const resolvedUrl = justLatestRates
+          ? getArkRatesUrl({
+              network,
+              apiUrl: functionsApiUrl,
+            })
+          : getArkHistoricalRatesUrl({
+              network,
+              apiUrl: functionsApiUrl,
+            })
+
+        // Try primary source first
+        const apiUrl = `${resolvedUrl}?productId=${productId}`
+        const apiResponse = await fetch(apiUrl)
+
+        if (!apiResponse.ok) {
+          throw new Error('Primary API request failed')
+        }
+
+        const data = await apiResponse.json()
+
+        if (justLatestRates) {
+          if (!data.interestRates?.length) {
+            return noInterestRates
+          }
+
+          // map response from rates endpoint to match the expected format
+          return {
+            ...noInterestRates,
+            latestInterestRate: [{ rate: [data.interestRates[0]] }],
+          }
+        }
+
+        return data
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.warn(`Falling back to subgraph for ${productId}:`, error)
+        const networkGraphQlClient = clients[network]
+
+        return networkGraphQlClient.request<GetInterestRatesQuery>(GetInterestRatesDocument, {
+          productId,
+        })
+      }
     }),
   )
 
   return arkNamesList.reduce<{
-    // key in this case is the ark name
     [key: string]: GetInterestRatesQuery
   }>((acc, arkName, index) => {
     acc[arkName] = response[index]

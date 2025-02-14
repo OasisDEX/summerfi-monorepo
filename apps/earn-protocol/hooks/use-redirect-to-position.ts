@@ -30,7 +30,10 @@ export const useRedirectToPositionView = ({
     if (!position || !userWalletAddress) {
       return
     }
-    const emptyPosition = new BigNumber(position.amount.amount).lt(minAmount)
+    const positionUsdValue =
+      vault.inputTokenPriceUSD &&
+      new BigNumber(position.amount.amount).times(vault.inputTokenPriceUSD)
+    const emptyPosition = positionUsdValue ? positionUsdValue.lt(minAmount) : true
 
     const vaultUrl = getVaultUrl(vault)
     const vaultPositionUrl = getVaultPositionUrl({

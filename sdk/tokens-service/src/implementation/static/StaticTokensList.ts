@@ -410,9 +410,9 @@ export const StaticTokensData: TokenListData = {
       logoURI: 'https://tokens.1inch.io/0xdac17f958d2ee523a2206206994597c13d831ec7.png',
     },
     {
-      name: 'Tether USD Stablecoin',
+      name: 'USD₮0',
       address: '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9',
-      symbol: 'USDT',
+      symbol: 'USD₮0',
       decimals: 6,
       chainId: 42161,
       logoURI: 'https://tokens.1inch.io/0xdac17f958d2ee523a2206206994597c13d831ec7.png',
@@ -776,6 +776,283 @@ export const StaticTokensData: TokenListData = {
       address: '0x2a8c22E3b10036f3AEF5875d04f8441d4188b656',
       decimals: 18,
       logoURI: '',
+    },
+
+    // add new tokens same format as above
+    // 0x13ad51ed4f1b7e9dc168d8a00cb3f4ddd85efa60	42161	18	LDO	Lido DAO Token	https://tokens.1inch.io/0x13ad51ed4f1b7e9dc168d8a00cb3f4ddd85efa60.png
+    {
+      name: 'Lido DAO Token',
+      address: '0x13ad51ed4f1b7e9dc168d8a00cb3f4ddd85efa60',
+      symbol: 'LDO',
+      decimals: 18,
+      chainId: 42161,
+      logoURI: 'https://tokens.1inch.io/0x13ad51ed4f1b7e9dc168d8a00cb3f4ddd85efa60.png',
+    },
+    // 0x2e9a6df78e42a30712c10a9dc4b1c8656f8f2879	42161	18	MKR	Maker	https://tokens.1inch.io/0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2.png
+    {
+      name: 'Maker',
+      address: '0x2e9a6df78e42a30712c10a9dc4b1c8656f8f2879',
+      symbol: 'MKR',
+      decimals: 18,
+      chainId: 42161,
+      logoURI: 'https://tokens.1inch.io/0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2.png',
+    },
+    // 0x354a6da3fcde098f8389cad84b0182725c6c91de	42161	18	COMP	Compound	https://tokens.1inch.io/0xc00e94cb662c3520282e6f5717214004a7f26888.png
+    {
+      name: 'Compound',
+      address: '0x354a6da3fcde098f8389cad84b0182725c6c91de',
+      symbol: 'COMP',
+      decimals: 18,
+      chainId: 42161,
+      logoURI: 'https://tokens.1inch.io/0xc00e94cb662c3520282e6f5717214004a7f26888.png',
+    },
+    // 0x35751007a407ca6feffe80b3cb397736d2cf4dbe	42161	18	weETH	Wrapped eETH	https://tokens-data.1inch.io/images/42161/0x35751007a407ca6feffe80b3cb397736d2cf4dbe_0xc9299da210e6d68839b21e6e218dd397395eafaa6b2b11b3e9035b49418be043.png
+    {
+      name: 'Wrapped eETH',
+      address: '0x35751007a407ca6feffe80b3cb397736d2cf4dbe',
+      symbol: 'weETH',
+      decimals: 18,
+      chainId: 42161,
+      logoURI:
+        'https://tokens-data.1inch.io/images/42161/0x35751007a407ca6feffe80b3cb397736d2cf4dbe_0xc9299da210e6d68839b21e6e218dd397395eafaa6b2b11b3e9035b49418be043.png',
+    },
+    //  0x5d3a1ff2b6bab83b63cd9ad0787074081a52ef34	42161	18	USDe	USDe	https://tokens-data.1inch.io/images/42161/0x5d3a1ff2b6bab83b63cd9ad0787074081a52ef34.webp
+    {
+      name: 'USDe',
+      address: '0x5d3a1ff2b6bab83b63cd9ad0787074081a52ef34',
+      symbol: 'USDe',
+      decimals: 18,
+      chainId: 42161,
+      logoURI:
+        'https://tokens-data.1inch.io/images/42161/0x5d3a1ff2b6bab83b63cd9ad0787074081a52ef34.webp',
+    },
+    // 0x912ce59144191c1204e64559fe8253a0e49e6548	42161	18	ARB	Arbitrum	https://tokens.1inch.io/0x912ce59144191c1204e64559fe8253a0e49e6548.png
+    {
+      name: 'Arbitrum',
+      address: '0x912ce59144191c1204e64559fe8253a0e49e6548',
+      symbol: 'ARB',
+      decimals: 18,
+      chainId: 42161,
+      logoURI: 'https://tokens.1inch.io/0x912ce59144191c1204e64559fe8253a0e49e6548.png',
+    },
+    // 0xba5ddd1f9d7f570dc94a51479a000e3bce967196	42161	18	AAVE	Aave	https://tokens-data.1inch.io/images/42161/0xba5ddd1f9d7f570dc94a51479a000e3bce967196.webp
+    {
+      name: 'Aave',
+      address: '0xba5ddd1f9d7f570dc94a51479a000e3bce967196',
+      symbol: 'AAVE',
+      decimals: 18,
+      chainId: 42161,
+      logoURI:
+        'https://tokens-data.1inch.io/images/42161/0xba5ddd1f9d7f570dc94a51479a000e3bce967196.webp',
+    },
+    // 0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf	42161	8	cbBTC	Coinbase Wrapped BTC	https://tokens-data.1inch.io/images/42161/0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf.webp
+    {
+      name: 'Coinbase Wrapped BTC',
+      address: '0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf',
+      symbol: 'cbBTC',
+      decimals: 8,
+      chainId: 42161,
+      logoURI:
+        'https://tokens-data.1inch.io/images/42161/0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf.webp',
+    },
+    // 0xd74f5255d557944cf7dd0e45ff521520002d5748	42161	18	USDs	Sperax USD	https://tokens.1inch.io/0xd74f5255d557944cf7dd0e45ff521520002d5748.png
+    {
+      name: 'Sperax USD',
+      address: '0xd74f5255d557944cf7dd0e45ff521520002d5748',
+      symbol: 'USDs',
+      decimals: 18,
+      chainId: 42161,
+      logoURI: 'https://tokens.1inch.io/0xd74f5255d557944cf7dd0e45ff521520002d5748.png',
+    },
+    // 0xda10009cbd5d07dd0cecc66161fc93d7c9000da1	42161	18	DAI	Dai Stablecoin	https://tokens.1inch.io/0x6b175474e89094c44da98b954eedeac495271d0f.png
+    {
+      name: 'Dai Stablecoin',
+      address: '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1',
+      symbol: 'DAI',
+      decimals: 18,
+      chainId: 42161,
+      logoURI: 'https://tokens.1inch.io/0x6b175474e89094c44da98b954eedeac495271d0f.png',
+    },
+    // 0xec70dcb4a1efa46b8f2d97c310c9c4790ba5ffa8	42161	18	rETH	Rocket Pool ETH	https://tokens.1inch.io/0xec70dcb4a1efa46b8f2d97c310c9c4790ba5ffa8.png
+    {
+      name: 'Rocket Pool ETH',
+      address: '0xec70dcb4a1efa46b8f2d97c310c9c4790ba5ffa8',
+      symbol: 'rETH',
+      decimals: 18,
+      chainId: 42161,
+      logoURI: 'https://tokens.1inch.io/0xec70dcb4a1efa46b8f2d97c310c9c4790ba5ffa8.png',
+    },
+    // 0xf97f4df75117a78c1a5a0dbb814af92458539fb4	42161	18	LINK	ChainLink Token	https://tokens.1inch.io/0x514910771af9ca656af840dff83e8264ecf986ca.png
+    {
+      name: 'ChainLink Token',
+      address: '0xf97f4df75117a78c1a5a0dbb814af92458539fb4',
+      symbol: 'LINK',
+      decimals: 18,
+      chainId: 42161,
+      logoURI: 'https://tokens.1inch.io/0x514910771af9ca656af840dff83e8264ecf986ca.png',
+    },
+    // 0xfa7f8980b0f1e64a2062791cc3b0871572f1f7f0	42161	18	UNI	Uniswap	https://tokens.1inch.io/0x1f9840a85d5af5bf1d1762f925bdaddc4201f984.png
+    {
+      name: 'Uniswap',
+      address: '0xfa7f8980b0f1e64a2062791cc3b0871572f1f7f0',
+      symbol: 'UNI',
+      decimals: 18,
+      chainId: 42161,
+      logoURI: 'https://tokens.1inch.io/0x1f9840a85d5af5bf1d1762f925bdaddc4201f984.png',
+    },
+    // 0x211cc4dd073734da055fbf44a2b4667d5e5fe5d2	8453	18	sUSDe	Staked USDe
+    {
+      name: 'Staked USDe',
+      address: '0x211cc4dd073734da055fbf44a2b4667d5e5fe5d2',
+      symbol: 'sUSDe',
+      decimals: 18,
+      chainId: 8453,
+      logoURI: '',
+    },
+    // 0x236aa50979d5f3de3bd1eeb40e81137f22ab794b	8453	18	tBTC	tBTC	https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0x18084fbA666a33d37592fA2633fD49a74DD93a88/logo.png
+    {
+      name: 'tBTC',
+      address: '0x236aa50979d5f3de3bd1eeb40e81137f22ab794b',
+      symbol: 'tBTC',
+      decimals: 18,
+      chainId: 8453,
+      logoURI:
+        'https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0x18084fbA666a33d37592fA2633fD49a74DD93a88/logo.png',
+    },
+    // 0x820c137fa70c8691f0e44dc420a5e53c168921dc	8453	18	USDS	USDS Stablecoin	https://tokens-data.1inch.io/images/8453/0x820c137fa70c8691f0e44dc420a5e53c168921dc_0x51a2f77153cdea2e4aa8bc8ab5469e949f765df8b1daa448f1ce29d29faaf0e7.png
+    {
+      name: 'USDS Stablecoin',
+      address: '0x820c137fa70c8691f0e44dc420a5e53c168921dc',
+      symbol: 'USDS',
+      decimals: 18,
+      chainId: 8453,
+      logoURI:
+        'https://tokens-data.1inch.io/images/8453/0x820c137fa70c8691f0e44dc420a5e53c168921dc_0x51a2f77153cdea2e4aa8bc8ab5469e949f765df8b1daa448f1ce29d29faaf0e7.png',
+    },
+    // 0x982f2df63fe38ab8d55f4b1464e8cfdc8ea5dec8	8453	18	sUSDS	Savings USDS	https://tokens-data.1inch.io/images/8453/0x982f2df63fe38ab8d55f4b1464e8cfdc8ea5dec8_0xc96b3b4c269e226d404e04a3538ab98af6a88a4db8ca856eb650e765973db6e7.svg
+    {
+      name: 'Savings USDS',
+      address: '0x982f2df63fe38ab8d55f4b1464e8cfdc8ea5dec8',
+      symbol: 'sUSDS',
+      decimals: 18,
+      chainId: 8453,
+      logoURI:
+        'https://tokens-data.1inch.io/images/8453/0x982f2df63fe38ab8d55f4b1464e8cfdc8ea5dec8_0xc96b3b4c269e226d404e04a3538ab98af6a88a4db8ca856eb650e765973db6e7.svg',
+    },
+    // 0x9e1028f5f1d5ede59748ffcee5532509976840e0	8453	18	COMP	Compound	https://ethereum-optimism.github.io/data/COMP/logo.svg
+    {
+      name: 'Compound',
+      address: '0x9e1028f5f1d5ede59748ffcee5532509976840e0',
+      symbol: 'COMP',
+      decimals: 18,
+      chainId: 8453,
+      logoURI: 'https://ethereum-optimism.github.io/data/COMP/logo.svg',
+    },
+    // 0xbaa5cc21fd487b8fcc2f632f3f4e8d37262a0842	8453	18	MORPHO	Morpho Token	https://tokens-data.1inch.io/images/8453/0xbaa5cc21fd487b8fcc2f632f3f4e8d37262a0842_0xd18e9e5389702605395fffb94abd4f826aea2adbdc440bd890b21ef529e73df0.png
+    {
+      name: 'Morpho Token',
+      address: '0xbaa5cc21fd487b8fcc2f632f3f4e8d37262a0842',
+      symbol: 'MORPHO',
+      decimals: 18,
+      chainId: 8453,
+      logoURI:
+        'https://tokens-data.1inch.io/images/8453/0xbaa5cc21fd487b8fcc2f632f3f4e8d37262a0842_0xd18e9e5389702605395fffb94abd4f826aea2adbdc440bd890b21ef529e73df0.png',
+    },
+    // 0xc3de830ea07524a0761646a6a4e4be0e114a3c83	8453	18	UNI	Uniswap	https://tokens-data.1inch.io/images/8453/0xc3de830ea07524a0761646a6a4e4be0e114a3c83_0x35e495b3fdd8ca6b2250efb5826bed8c9a9c0a4cb8c614277e2c8f421488631b.webp
+    {
+      name: 'Uniswap',
+      address: '0xc3de830ea07524a0761646a6a4e4be0e114a3c83',
+      symbol: 'UNI',
+      decimals: 18,
+      chainId: 8453,
+      logoURI:
+        'https://tokens-data.1inch.io/images/8453/0xc3de830ea07524a0761646a6a4e4be0e114a3c83_0x35e495b3fdd8ca6b2250efb5826bed8c9a9c0a4cb8c614277e2c8f421488631b.webp',
+    },
+    // 0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf	8453	8	cbBTC	Coinbase Wrapped BTC	https://tokens-data.1inch.io/images/8453/0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf.webp
+    {
+      name: 'Coinbase Wrapped BTC',
+      address: '0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf',
+      symbol: 'cbBTC',
+      decimals: 8,
+      chainId: 8453,
+      logoURI:
+        'https://tokens-data.1inch.io/images/8453/0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf.webp',
+    },
+    // Chain 1: 0x35d8949372d46b7a3d5a56006ae77b215fc69bc0	1	18	USD0++	USD0 Liquid Bond	https://tokens-data.1inch.io/images/1/0x35d8949372d46b7a3d5a56006ae77b215fc69bc0_0x2ad133adf158a931068460691a739b4c793ef1560db6496cc1222091dbb255e3.png
+    {
+      name: 'USD0 Liquid Bond',
+      address: '0x35d8949372d46b7a3d5a56006ae77b215fc69bc0',
+      symbol: 'USD0++',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://tokens-data.1inch.io/images/1/0x35d8949372d46b7a3d5a56006ae77b215fc69bc0_0x2ad133adf158a931068460691a739b4c793ef1560db6496cc1222091dbb255e3.png',
+    },
+    // Chain 1: 0x56072c95faa701256059aa122697b133aded9279	1	18	SKY	SKY Governance Token	https://tokens-data.1inch.io/images/1/0x56072c95faa701256059aa122697b133aded9279.png
+    {
+      name: 'SKY Governance Token',
+      address: '0x56072c95faa701256059aa122697b133aded9279',
+      symbol: 'SKY',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://tokens-data.1inch.io/images/1/0x56072c95faa701256059aa122697b133aded9279.png',
+    },
+    // Chain 1: 0x57e114b691db790c35207b2e685d4a43181e6061	1	18	ENA	ENA	https://tokens.1inch.io/0x57e114b691db790c35207b2e685d4a43181e6061.png
+    {
+      name: 'ENA',
+      address: '0x57e114b691db790c35207b2e685d4a43181e6061',
+      symbol: 'ENA',
+      decimals: 18,
+      chainId: 1,
+      logoURI: 'https://tokens.1inch.io/0x57e114b691db790c35207b2e685d4a43181e6061.png',
+    },
+    // Chain 1: 0x58d97b57bb95320f9a05dc918aef65434969c2b2	1	18	MORPHO	Morpho Token	https://tokens-data.1inch.io/images/1/0x58d97b57bb95320f9a05dc918aef65434969c2b2.png
+    {
+      name: 'Morpho Token',
+      address: '0x58d97b57bb95320f9a05dc918aef65434969c2b2',
+      symbol: 'MORPHO',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://tokens-data.1inch.io/images/1/0x58d97b57bb95320f9a05dc918aef65434969c2b2.png',
+    },
+    // Chain 1: 0x6982508145454ce325ddbe47a25d4ec3d2311933	1	18	PEPE	Pepe	https://tokens.1inch.io/0x6982508145454ce325ddbe47a25d4ec3d2311933.png
+    {
+      name: 'Pepe',
+      address: '0x6982508145454ce325ddbe47a25d4ec3d2311933',
+      symbol: 'PEPE',
+      decimals: 18,
+      chainId: 1,
+      logoURI: 'https://tokens.1inch.io/0x6982508145454ce325ddbe47a25d4ec3d2311933.png',
+    },
+    // Chain 1: 0x73a15fed60bf67631dc6cd7bc5b6e8da8190acf5	1	18	USD0	Usual USD	https://tokens-data.1inch.io/images/1/0x73a15fed60bf67631dc6cd7bc5b6e8da8190acf5_0xf5e73a54247dc9aeb70a9faf2f1ec9989c161245c2913132c2c0ad2900d05a13.png
+    {
+      name: 'Usual USD',
+      address: '0x73a15fed60bf67631dc6cd7bc5b6e8da8190acf5',
+      symbol: 'USD0',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://tokens-data.1inch.io/images/1/0x73a15fed60bf67631dc6cd7bc5b6e8da8190acf5_0xf5e73a54247dc9aeb70a9faf2f1ec9989c161245c2913132c2c0ad2900d05a13.png',
+    },
+    // Chain 1: 0xb50721bcf8d664c30412cfbc6cf7a15145234ad1	1	18	ARB	Arbitrum	https://tokens.1inch.io/0xb50721bcf8d664c30412cfbc6cf7a15145234ad1.png
+    {
+      name: 'Arbitrum',
+      address: '0xb50721bcf8d664c30412cfbc6cf7a15145234ad1',
+      symbol: 'ARB',
+      decimals: 18,
+      chainId: 1,
+      logoURI: 'https://tokens.1inch.io/0xb50721bcf8d664c30412cfbc6cf7a15145234ad1.png',
+    },
+    // Chain 1: 0xc00e94cb662c3520282e6f5717214004a7f26888	1	18	COMP	Compound	https://tokens.1inch.io/0xc00e94cb662c3520282e6f5717214004a7f26888.png
+    {
+      name: 'Compound',
+      address: '0xc00e94cb662c3520282e6f5717214004a7f26888',
+      symbol: 'COMP',
+      decimals: 18,
+      chainId: 1,
+      logoURI: 'https://tokens.1inch.io/0xc00e94cb662c3520282e6f5717214004a7f26888.png',
     },
   ],
 }

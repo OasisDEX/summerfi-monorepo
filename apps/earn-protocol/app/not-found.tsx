@@ -6,8 +6,8 @@ export default () => {
     <div
       style={{
         display: 'flex',
-        flexDirection: 'column',
         alignItems: 'center',
+        flexDirection: 'column',
         marginBottom: 'var(--space-xxxxl)',
         marginTop: 'var(--space-xxl)',
       }}

@@ -1,9 +1,8 @@
 'use client'
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
-import { useIsIframe } from '@summerfi/app-earn-ui'
 
 import { accountType } from '@/account-kit/config'
-import { sendSafeTx } from '@/helpers/send-safe-tx'
+import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 
 /**
@@ -29,8 +28,6 @@ export const useClaimSumrTransaction = ({
 } => {
   const { getAggregatedClaimsForChainTX, getCurrentUser, getChainInfo } = useAppSDK()
 
-  const isIframe = useIsIframe()
-
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
 
   const {
@@ -54,26 +51,20 @@ export const useClaimSumrTransaction = ({
       throw new Error('aggregated claims tx is undefined')
     }
 
-    if (isIframe) {
-      return await sendSafeTx({
-        txs: [
-          {
-            to: tx[0].transaction.target.value,
-            data: tx[0].transaction.calldata,
-            value: tx[0].transaction.value,
-          },
-        ],
-        onSuccess,
-        onError,
-      })
+    const txParams = {
+      target: tx[0].transaction.target.value,
+      data: tx[0].transaction.calldata,
+      value: BigInt(tx[0].transaction.value),
     }
 
+    const resolvedOverrides = await getGasSponsorshipOverride({
+      smartAccountClient,
+      txParams,
+    })
+
     return await sendUserOperationAsync({
-      uo: {
-        target: tx[0].transaction.target.value,
-        data: tx[0].transaction.calldata,
-        value: BigInt(tx[0].transaction.value),
-      },
+      uo: txParams,
+      overrides: resolvedOverrides,
     })
   }
 

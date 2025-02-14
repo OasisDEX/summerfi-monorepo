@@ -5,6 +5,7 @@ import Link from 'next/link'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
+import { getDisplayToken } from '@/helpers/get-display-token'
 import { riskColors } from '@/helpers/risk-colors'
 
 import classNames from './VaultTitleDropdownContent.module.scss'
@@ -24,20 +25,23 @@ export const VaultTitleDropdownContent: FC<VaultDropdownContentProps> = ({ vault
   <Link href={link}>
     <div className={classNames.wrapper}>
       <div className={classNames.iconWithSymbolWrapper}>
-        <Icon tokenName={vault.inputToken.symbol as TokenSymbolsList} variant="m" />
+        <Icon
+          tokenName={getDisplayToken(vault.inputToken.symbol) as TokenSymbolsList}
+          variant="m"
+        />
         <div className={classNames.networkIconWrapper}>
           {networkNameIconMap[vault.protocol.network]}
         </div>
         <Text as="p" variant="p1semi">
-          {vault.inputToken.symbol}
+          {getDisplayToken(vault.inputToken.symbol)}
         </Text>
       </div>
       <Text
         as="p"
         variant="p4semi"
-        style={{ color: riskColors[vault.customFields?.risk ?? 'medium'] }}
+        style={{ color: riskColors[vault.customFields?.risk ?? 'lower'] }}
       >
-        {capitalize(vault.customFields?.risk ?? 'medium')} risk
+        {capitalize(vault.customFields?.risk ?? 'lower')} risk
       </Text>
     </div>
   </Link>

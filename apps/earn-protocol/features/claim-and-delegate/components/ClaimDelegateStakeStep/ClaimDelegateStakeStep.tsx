@@ -42,7 +42,7 @@ import {
   ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
 import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
-import { revalidateUser } from '@/helpers/revalidate-user'
+import { revalidateUser } from '@/helpers/revalidation-handlers'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { usePublicClient } from '@/hooks/use-public-client'
 import { useTokenBalance } from '@/hooks/use-token-balance'
@@ -279,7 +279,8 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
     </Text>
   )
 
-  const sumrToClaim = externalData.sumrToClaim.perChain[SDKChainId.BASE] ?? 0
+  const sumrToClaim =
+    externalData.sumrToClaim.claimableAggregatedRewards.perChain[SDKChainId.BASE] ?? 0
 
   const sumrPerYear = `*${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(sumrToClaim)) * Number(externalData.sumrStakingInfo.sumrStakingApy * (decayFactor ?? 1)))} $SUMR / Year`
 

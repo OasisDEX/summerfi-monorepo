@@ -8,7 +8,7 @@ import {
   useSmartAccountClient,
   useUser,
 } from '@account-kit/react'
-import { getVaultPositionUrl, getVaultUrl } from '@summerfi/app-earn-ui'
+import { getVaultPositionUrl, getVaultUrl, useIsIframe } from '@summerfi/app-earn-ui'
 import {
   type EarnAllowanceTypes,
   type EarnTransactionViewStates,
@@ -35,7 +35,9 @@ import {
 } from '@/account-kit/config'
 import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
 import { getApprovalTx } from '@/helpers/get-approval-tx'
-import { revalidateUser } from '@/helpers/revalidate-user'
+import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
+import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
+import { revalidateUser } from '@/helpers/revalidation-handlers'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
@@ -99,11 +101,14 @@ export const useTransaction = ({
   )
   const [waitingForTx, setWaitingForTx] = useState<`0x${string}`>()
   const [approvalType, setApprovalType] = useState<EarnAllowanceTypes>('deposit')
-  const [txHashes, setTxHashes] = useState<{ type: TransactionType; hash: string }[]>([])
+  const [txHashes, setTxHashes] = useState<
+    { type: TransactionType; hash?: string; custom?: string }[]
+  >([])
   const [txStatus, setTxStatus] = useState<EarnTransactionViewStates>('idle')
   const [transactions, setTransactions] = useState<ExtendedTransactionInfo[]>()
   const [sidebarTransactionError, setSidebarTransactionError] = useState<string>()
   const [sidebarValidationError, setSidebarValidationError] = useState<string>()
+  const isIframe = useIsIframe()
 
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
 
@@ -132,15 +137,52 @@ export const useTransaction = ({
     client: smartAccountClient,
     waitForTxn: true,
     onSuccess: ({ hash }) => {
-      setWaitingForTx(hash)
-      if (nextTransaction) {
-        setTxHashes((prev) => [
-          ...prev,
-          {
-            type: nextTransaction.type,
-            hash,
-          },
-        ])
+      if (isIframe) {
+        getSafeTxHash(hash, vault.protocol.network)
+          .then((safeTransactionData) => {
+            if (safeTransactionData.transactionHash) {
+              setWaitingForTx(safeTransactionData.transactionHash)
+            }
+            if (nextTransaction) {
+              setTxHashes((prev) => {
+                const nextHashes = [
+                  ...prev,
+                  {
+                    type: nextTransaction.type,
+                    hash: safeTransactionData.transactionHash,
+                  },
+                ]
+
+                if (
+                  safeTransactionData.confirmations.length >
+                  safeTransactionData.confirmationsRequired
+                ) {
+                  nextHashes.push({
+                    type: nextTransaction.type,
+                    custom:
+                      'Multisig transaction detected. After all confirmations are done, the position will be ready.',
+                  })
+                }
+
+                return nextHashes
+              })
+            }
+          })
+          .catch((err) => {
+            // eslint-disable-next-line no-console
+            console.error('Error getting the safe tx hash:', err)
+          })
+      } else {
+        setWaitingForTx(hash)
+        if (nextTransaction) {
+          setTxHashes((prev) => [
+            ...prev,
+            {
+              type: nextTransaction.type,
+              hash,
+            },
+          ])
+        }
       }
     },
     onError: (err) => {
@@ -158,27 +200,31 @@ export const useTransaction = ({
   })
 
   const sendTransaction = useCallback(
-    ({
-      target,
-      data,
-      value = 0n,
-    }: {
-      target: `0x${string}`
-      data: `0x${string}`
-      value?: bigint
-    }) => {
+    (
+      {
+        target,
+        data,
+        value = 0n,
+      }: {
+        target: `0x${string}`
+        data: `0x${string}`
+        value?: bigint
+      },
+      overrides?: { paymasterAndData: `0x${string}` },
+    ) => {
       return sendUserOperation({
         uo: {
           target,
           data,
           value,
         },
+        overrides,
       })
     },
     [sendUserOperation],
   )
 
-  const executeNextTransaction = useCallback(() => {
+  const executeNextTransaction = useCallback(async () => {
     setTxStatus('txInProgress')
 
     if (!nextTransaction) {
@@ -216,7 +262,12 @@ export const useTransaction = ({
             value: BigInt(nextTransaction.transaction.value),
           }
 
-    sendTransaction(txParams)
+    const resolvedOverrides = await getGasSponsorshipOverride({
+      smartAccountClient,
+      txParams,
+    })
+
+    sendTransaction(txParams, resolvedOverrides)
   }, [
     token,
     approvalCustomValue,
@@ -226,6 +277,7 @@ export const useTransaction = ({
     sendTransaction,
     setTxStatus,
     user,
+    smartAccountClient,
   ])
 
   const backToInit = useCallback(() => {

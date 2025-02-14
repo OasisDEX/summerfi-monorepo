@@ -69,17 +69,25 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
     topDepositors.slice(0, initialRows),
   )
 
+  const [noMoreUserActivityItems, setNoMoreUserActivityItems] = useState(false)
+
   const { strategiesOptions, tokensOptions } = useMemo(
     () => mapMultiselectOptions(vaultsList),
     [vaultsList],
   )
 
   const handleMoreUserActivityItems = () => {
-    setLoadedUserActivityList((prev) => [
-      ...prev,
-      ...usersActivity.slice(currentUserActivityIdx, currentUserActivityIdx + initialRows),
-    ])
-    setCurrentUserActivityIdx(currentUserActivityIdx + initialRows)
+    try {
+      setLoadedUserActivityList((prev) => [
+        ...prev,
+        ...usersActivity.slice(currentUserActivityIdx, currentUserActivityIdx + initialRows),
+      ])
+      setCurrentUserActivityIdx(currentUserActivityIdx + initialRows)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.info('No more users activity items to load')
+      setNoMoreUserActivityItems(true)
+    }
   }
 
   const handleMoreTopDepositorsItems = () => {
@@ -186,10 +194,7 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
       id: UserActivityTab.LATEST_ACTIVITY,
       label: 'Latest activity',
       content: (
-        <InfiniteScroll
-          loadMore={handleMoreUserActivityItems}
-          hasMore={totalUserActivityItems > loadedUserActivityList.length}
-        >
+        <InfiniteScroll loadMore={handleMoreUserActivityItems} hasMore={!noMoreUserActivityItems}>
           {filters}
           <UserActivityTable
             userActivityList={userActivityFilteredList}

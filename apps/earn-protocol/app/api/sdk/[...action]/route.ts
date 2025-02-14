@@ -1,6 +1,5 @@
+import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { type NextRequest, NextResponse } from 'next/server'
-
-import { REVALIDATION_TIMES } from '@/constants/revalidations'
 
 export async function POST(req: NextRequest) {
   const sdkApiUrl = process.env.SDK_API_URL

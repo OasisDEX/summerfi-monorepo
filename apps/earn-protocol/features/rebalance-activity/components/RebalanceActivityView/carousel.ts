@@ -11,7 +11,7 @@ export const rebalanceActivityTableCarouselData = [
   {
     title: 'Optimized Yield',
     description:
-      'With Summer, your deposits are continuously monitored and reallocated across the top protocols, ensuring you are earning the best available yields.',
+      'With Summer.fi, your deposits are continuously monitored and reallocated across the top protocols, ensuring you are earning the best available yields.',
     link: {
       label: 'Start Earning',
       href: '/',
@@ -20,7 +20,7 @@ export const rebalanceActivityTableCarouselData = [
   {
     title: 'Saved Time',
     description:
-      'With Summer, there is no need to keep a spreadsheet, check different apps and sign multiple transactions chasing the best yields and seeing your profit disappear with gas fees. ',
+      'With Summer.fi, there is no need to keep a spreadsheet, check different apps and sign multiple transactions chasing the best yields and seeing your profit disappear with gas fees. ',
     link: {
       label: 'Start Earning',
       href: '/',

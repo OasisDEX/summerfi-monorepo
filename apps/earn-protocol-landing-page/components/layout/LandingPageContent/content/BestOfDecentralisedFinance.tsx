@@ -51,7 +51,7 @@ export const BestOfDecentralizedFinance = () => {
           <BestOfDecentralizedFinanceBlock
             tag="Transparent by Design"
             title="Never second guess the source of your yield "
-            description="Summer ensures you never second guess the source of your yield. With our automated rebalances, every decision is fully traceable and optimized transparently."
+            description="Summer.fi ensures you never second guess the source of your yield. With our automated rebalances, every decision is fully traceable and optimized transparently."
             content={
               <div className={bestOfDecentralizedFinanceStyles.chart}>
                 <Image
@@ -71,7 +71,7 @@ export const BestOfDecentralizedFinance = () => {
           <BestOfDecentralizedFinanceBlock
             tag="Instant Liquidity"
             title="Exit anytime, no lockups or withdrawal delays"
-            description="With Summer, you can withdraw from your position at anytime as long as the capital is available from the underlying protocols (which is almost always). No queues or waiting for withdrawals to be processed."
+            description="With Summer.fi, you can withdraw from your position at anytime as long as the capital is available from the underlying protocols (which is almost always). No queues or waiting for withdrawals to be processed."
             content={
               <div className={bestOfDecentralizedFinanceStyles.ui}>
                 <Image
@@ -86,7 +86,7 @@ export const BestOfDecentralizedFinance = () => {
           <BestOfDecentralizedFinanceBlock
             tag="Permissionless"
             title="Always Non-Custodial, Always in Your Control"
-            description="Built entirely on-chain, Summer gives you unrestricted access and complete control over your assets—no middle-men and no opaque third parties with control over your capital."
+            description="Built entirely on-chain, Summer.fi gives you unrestricted access and complete control over your assets—no middle-men and no opaque third parties with control over your capital."
             content={
               <div className={bestOfDecentralizedFinanceStyles.protocols}>
                 <Image

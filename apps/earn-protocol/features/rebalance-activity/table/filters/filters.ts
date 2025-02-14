@@ -1,4 +1,9 @@
-import type { SDKGlobalRebalancesType, SDKGlobalRebalanceType } from '@summerfi/app-types'
+import { getDisplayToken, getUniqueVaultId } from '@summerfi/app-earn-ui'
+import type {
+  SDKGlobalRebalancesType,
+  SDKGlobalRebalanceType,
+  SDKVaultishType,
+} from '@summerfi/app-types'
 
 import { getProtocolLabel } from '@/helpers/get-protocol-label'
 
@@ -25,7 +30,11 @@ const rebalanceFilterStrategies = ({
 }: {
   strategyFilter: string[]
   rebalance: SDKGlobalRebalanceType
-}) => !strategyFilter.length || strategyFilter.includes(rebalance.vault.id)
+}) =>
+  !strategyFilter.length ||
+  // type casting is slightly hacky here since rebalance.vault doesn't contain
+  // all info from SDKVaultishType, but contains enough to get the unique vault id
+  strategyFilter.includes(getUniqueVaultId(rebalance.vault as SDKVaultishType))
 
 const rebalanceFilterTokens = ({
   tokenFilter,
@@ -33,7 +42,8 @@ const rebalanceFilterTokens = ({
 }: {
   tokenFilter: string[]
   rebalance: SDKGlobalRebalanceType
-}) => !tokenFilter.length || tokenFilter.includes(rebalance.vault.inputToken.symbol)
+}) =>
+  !tokenFilter.length || tokenFilter.includes(getDisplayToken(rebalance.vault.inputToken.symbol))
 
 export const rebalanceActivityFilter = ({
   rebalancesList,

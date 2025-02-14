@@ -1,4 +1,5 @@
 import { type EarnAppConfigType, type SDKVaultsListType } from '@summerfi/app-types'
+import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
 
 import { getInterestRates } from '@/app/server-handlers/interest-rates'
@@ -20,7 +21,11 @@ export const portfolioPositionsHandler = async ({
   config,
   walletAddress,
 }: PortfolioPositionsDataParams) => {
-  const vaultData = vaultsList.find((vault) => vault.id === position.pool.id.fleetAddress.value)
+  const vaultData = vaultsList.find(
+    (vault) =>
+      vault.id === position.pool.id.fleetAddress.value &&
+      subgraphNetworkToSDKId(vault.protocol.network) === position.id.user.chainInfo.chainId,
+  )
 
   if (!vaultData) {
     throw new Error(`Vault not found for position ${position.pool.id.fleetAddress.value}`)

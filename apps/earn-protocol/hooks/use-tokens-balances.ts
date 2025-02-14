@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import { arbitrum, base, mainnet } from '@account-kit/infra'
 import { SDKChainId, SDKNetwork } from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
@@ -8,6 +7,24 @@ import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
 import { supportedNetworkGuard } from '@/helpers/supported-network-guard'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useUserWallet } from '@/hooks/use-user-wallet'
+
+/**
+ * Public client instances for interacting with different networks
+ */
+const arbitrumPublicClient = createPublicClient({
+  chain: arbitrum,
+  transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.ARBITRUM]),
+})
+
+const basePublicClient = createPublicClient({
+  chain: base,
+  transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.BASE]),
+})
+
+const mainnetPublicClient = createPublicClient({
+  chain: mainnet,
+  transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.MAINNET]),
+})
 
 /**
  * Hook to fetch token and vault token balances for a specific network
@@ -35,31 +52,6 @@ export const useTokenBalances = ({
     throw new Error(`Unsupported network: ${network}`)
   }
   const { userWalletAddress } = useUserWallet()
-
-  /**
-   * Public client instances for interacting with different networks
-   * Memoized to prevent unnecessary re-creation
-   */
-  const arbitrumPublicClient = useMemo(() => {
-    return createPublicClient({
-      chain: arbitrum,
-      transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.ARBITRUM]),
-    })
-  }, [])
-
-  const basePublicClient = useMemo(() => {
-    return createPublicClient({
-      chain: base,
-      transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.BASE]),
-    })
-  }, [])
-
-  const mainnetPublicClient = useMemo(() => {
-    return createPublicClient({
-      chain: mainnet,
-      transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.MAINNET]),
-    })
-  }, [])
 
   const arbitrumTokenBalance = useTokenBalance({
     tokenSymbol,
