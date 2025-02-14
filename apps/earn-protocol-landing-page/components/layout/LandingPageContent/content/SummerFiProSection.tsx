@@ -73,7 +73,7 @@ export const SummerFiProSection = () => {
           tag="Yield Loops"
           title="Unlock liquidity from your favorite crypto assets with best protocols."
           pointsList={['$RAYS']}
-          ctaLabel="Earn"
+          ctaLabel="Yield Loops"
           ctaUrl={`${INTERNAL_LINKS.summerPro}/earn`}
         />
       </div>
