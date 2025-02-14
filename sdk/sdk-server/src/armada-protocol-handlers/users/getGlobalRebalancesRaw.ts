@@ -11,6 +11,15 @@ export const getGlobalRebalancesRaw = publicProcedure
       skip: z.number().optional(),
       orderBy: z.nativeEnum(Rebalance_OrderBy).optional(),
       orderDirection: z.nativeEnum(OrderDirection).optional(),
+      where: z
+        .object({
+          asset_: z
+            .object({
+              symbol_in: z.array(z.string()),
+            })
+            .optional(),
+        })
+        .optional(),
     }),
   )
   .query(async (opts) => {

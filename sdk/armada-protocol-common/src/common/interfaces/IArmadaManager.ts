@@ -19,6 +19,7 @@ import type {
   GetUserActivityQuery,
   Rebalance_OrderBy,
   OrderDirection,
+  Rebalance_Filter,
 } from '@summerfi/subgraph-manager-common'
 import type { IRebalanceData } from '@summerfi/contracts-provider-common'
 import type { IArmadaManagerClaims } from './IArmadaManagerClaims'
@@ -112,6 +113,7 @@ export interface IArmadaManager {
     skip?: number
     orderBy?: Rebalance_OrderBy
     orderDirection?: OrderDirection
+    where?: Rebalance_Filter
   }): Promise<GetGlobalRebalancesQuery>
 
   /**

@@ -10353,6 +10353,7 @@ export type GetGlobalRebalancesQueryVariables = Exact<{
   skip?: Scalars['Int']['input'];
   orderBy?: Rebalance_OrderBy;
   orderDirection?: OrderDirection;
+  where?: InputMaybe<Rebalance_Filter>;
 }>;
 
 
@@ -10399,12 +10400,13 @@ export type GetVaultQuery = { __typename?: 'Query', vault?: { __typename?: 'Vaul
 
 
 export const GetGlobalRebalancesDocument = gql`
-    query GetGlobalRebalances($first: Int! = 10, $skip: Int! = 0, $orderBy: Rebalance_orderBy! = timestamp, $orderDirection: OrderDirection! = desc) {
+    query GetGlobalRebalances($first: Int! = 10, $skip: Int! = 0, $orderBy: Rebalance_orderBy! = timestamp, $orderDirection: OrderDirection! = desc, $where: Rebalance_filter) {
   rebalances(
     orderBy: $orderBy
     orderDirection: $orderDirection
     first: $first
     skip: $skip
+    where: $where
   ) {
     id
     amount

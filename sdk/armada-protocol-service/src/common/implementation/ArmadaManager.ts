@@ -168,6 +168,7 @@ export class ArmadaManager implements IArmadaManager {
       skip: params.skip,
       orderBy: params.orderBy,
       orderDirection: params.orderDirection,
+      where: params.where,
     })
   }
 

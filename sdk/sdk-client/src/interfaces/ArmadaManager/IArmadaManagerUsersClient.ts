@@ -23,7 +23,11 @@ import {
   type StakeTransactionInfo,
   type UnstakeTransactionInfo,
 } from '@summerfi/sdk-common'
-import { OrderDirection, Rebalance_OrderBy } from '@summerfi/subgraph-manager-common'
+import {
+  OrderDirection,
+  Rebalance_Filter,
+  Rebalance_OrderBy,
+} from '@summerfi/subgraph-manager-common'
 
 /**
  * @interface IArmadaManagerUsersClient
@@ -75,6 +79,7 @@ export interface IArmadaManagerUsersClient {
     skip?: number
     orderBy?: Rebalance_OrderBy
     orderDirection?: OrderDirection
+    where?: Rebalance_Filter
   }): Promise<GetGlobalRebalancesQuery>
 
   /**

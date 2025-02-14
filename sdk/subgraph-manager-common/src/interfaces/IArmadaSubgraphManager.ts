@@ -8,6 +8,7 @@ import type {
   GetUsersActivityQuery,
   GetUserActivityQuery,
   Rebalance_OrderBy,
+  Rebalance_Filter,
   OrderDirection,
 } from '../generated/client'
 
@@ -57,6 +58,7 @@ export interface IArmadaSubgraphManager {
     skip?: number
     orderBy?: Rebalance_OrderBy
     orderDirection?: OrderDirection
+    where?: Rebalance_Filter
   }): Promise<GetGlobalRebalancesQuery>
 
   /**

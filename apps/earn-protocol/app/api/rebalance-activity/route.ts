@@ -9,6 +9,10 @@ const querySchema = z.object({
   skip: z.string().optional(),
   orderBy: z.nativeEnum(OrderBy).optional(),
   orderDirection: z.nativeEnum(OrderDirection).optional(),
+  tokenSymbols: z
+    .string()
+    .optional()
+    .transform((str) => (str ? str.split(',') : undefined)),
 })
 
 export async function GET(request: NextRequest) {
@@ -34,6 +38,7 @@ export async function GET(request: NextRequest) {
       skip: validatedParams.skip ? Number(validatedParams.skip) : undefined,
       orderBy: validatedParams.orderBy,
       orderDirection: validatedParams.orderDirection,
+      tokenSymbols: validatedParams.tokenSymbols,
     })
 
     return Response.json(rebalanceData)

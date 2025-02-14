@@ -1,9 +1,10 @@
 'use client'
-import { type FC, type ReactNode, useMemo, useState } from 'react'
+import { type FC, type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import {
   LoadingSpinner,
   Table,
+  TableSkeleton,
   type TableSortedColumn,
   Text,
   useMobileCheck,
@@ -15,6 +16,7 @@ import {
   rebalancingActivityColumns,
   rebalancingActivityColumnsHiddenOnMobile,
 } from '@/features/rebalance-activity/table/columns'
+import { fetchRebalances } from '@/features/rebalance-activity/table/fetcher'
 import { rebalanceActivityFilter } from '@/features/rebalance-activity/table/filters/filters'
 import { rebalancingActivityMapper } from '@/features/rebalance-activity/table/mapper'
 
@@ -72,17 +74,13 @@ export const RebalanceActivityTable: FC<RebalanceActivityTableProps> = ({
 
     try {
       setIsLoading(true)
-      const skip = currentPage * ITEMS_PER_PAGE
 
-      const response = await fetch(
-        `/earn/api/rebalance-activity?first=${ITEMS_PER_PAGE}&skip=${skip}&orderBy=${sortConfig?.key ?? 'timestamp'}&orderDirection=${sortConfig?.direction.toLowerCase() ?? 'desc'}`,
-      )
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch rebalances')
-      }
-
-      const newRebalances = await response.json()
+      const newRebalances = await fetchRebalances({
+        currentPage,
+        sortConfig,
+        tokenFilter: filters.tokenFilter,
+        itemsPerPage: ITEMS_PER_PAGE,
+      })
 
       if (newRebalances.rebalances.length < ITEMS_PER_PAGE) {
         setHasMore(false)
@@ -106,15 +104,12 @@ export const RebalanceActivityTable: FC<RebalanceActivityTableProps> = ({
       setCurrentPage(1)
       setRebalancesList([])
 
-      const response = await fetch(
-        `/earn/api/rebalance-activity?first=${ITEMS_PER_PAGE}&skip=0&orderBy=${sortConfig?.key ?? 'timestamp'}&orderDirection=${sortConfig?.direction.toLowerCase() ?? 'desc'}`,
-      )
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch rebalances')
-      }
-
-      const newRebalances = await response.json()
+      const newRebalances = await fetchRebalances({
+        currentPage,
+        sortConfig: _sortConfig,
+        tokenFilter: filters.tokenFilter,
+        itemsPerPage: ITEMS_PER_PAGE,
+      })
 
       setRebalancesList(newRebalances.rebalances)
       setHasMore(newRebalances.rebalances.length >= ITEMS_PER_PAGE)
@@ -125,6 +120,41 @@ export const RebalanceActivityTable: FC<RebalanceActivityTableProps> = ({
       setIsLoading(false)
     }
   }
+
+  const handleFiltersChange = async () => {
+    try {
+      setIsLoading(true)
+      setCurrentPage(1)
+      setRebalancesList([])
+
+      const newRebalances = await fetchRebalances({
+        currentPage,
+        sortConfig,
+        tokenFilter: filters.tokenFilter,
+        itemsPerPage: ITEMS_PER_PAGE,
+      })
+
+      setRebalancesList(newRebalances.rebalances)
+      setHasMore(newRebalances.rebalances.length >= ITEMS_PER_PAGE)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error loading rebalances:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const isFirstRender = useRef(true)
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+
+      return
+    }
+
+    handleFiltersChange()
+  }, [JSON.stringify(filters)])
 
   return (
     <>
@@ -145,7 +175,8 @@ export const RebalanceActivityTable: FC<RebalanceActivityTableProps> = ({
           sortConfig={sortConfig}
         />
       </InfiniteScroll>
-      {isLoading && (
+      {isLoading && rows.length === 0 && <TableSkeleton />}
+      {isLoading && rows.length > 0 && (
         <div
           style={{
             display: 'flex',

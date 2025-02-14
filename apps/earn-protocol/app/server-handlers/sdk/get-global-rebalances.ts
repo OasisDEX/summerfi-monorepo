@@ -10,11 +10,13 @@ export const getGlobalRebalances = async ({
   skip = 0,
   orderBy = OrderBy.Timestamp,
   orderDirection = OrderDirection.Desc,
+  tokenSymbols,
 }: {
   first?: number
   skip?: number
   orderBy?: OrderBy
   orderDirection?: OrderDirection
+  tokenSymbols?: string[]
 }) => {
   const rebalancesByNetwork = await Promise.all(
     sdkSupportedChains.map((networkId) => {
@@ -26,6 +28,8 @@ export const getGlobalRebalances = async ({
         skip,
         orderBy,
         orderDirection,
+        // eslint-disable-next-line camelcase
+        where: tokenSymbols ? { asset_: { symbol_in: tokenSymbols } } : {},
       })
     }),
   )
