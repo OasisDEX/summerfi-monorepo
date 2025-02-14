@@ -54,6 +54,12 @@ export function addApyConfig({ stack, api, vpc, cache }: SummerStackContext) {
     createFunctionConfig('summerfi-api/get-rates-function/src/index.handler'),
   )
 
+  const getVaultRatesFunction = new SSTFunction(
+    stack,
+    'get-vault-rates-function',
+    createFunctionConfig('summerfi-api/get-vault-rates-function/src/index.handler'),
+  )
+
   const configureCacheForFunction = (fn: SSTFunction) => {
     if (cache) {
       fn.addToRolePolicy(cache.policyStatement)
@@ -73,10 +79,13 @@ export function addApyConfig({ stack, api, vpc, cache }: SummerStackContext) {
 
   configureCacheForFunction(getApyFunction)
   configureCacheForFunction(getRatesFunction)
+  configureCacheForFunction(getVaultRatesFunction)
 
   api.addRoutes(stack, {
     'GET /api/apy/{chainId}/{protocol}': getApyFunction,
     'GET /api/rates/{chainId}': getRatesFunction,
     'GET /api/historicalRates/{chainId}': getRatesFunction,
+    'POST /api/vault/rates': getVaultRatesFunction,
+    'POST /api/vault/historicalRates': getVaultRatesFunction,
   })
 }

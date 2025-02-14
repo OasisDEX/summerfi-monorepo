@@ -625,6 +625,9 @@ importers:
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../packages/serverless-shared
+      '@summerfi/summer-earn-protocol-subgraph':
+        specifier: workspace:*
+        version: link:../../packages/summer-earn-protocol-subgraph
       '@summerfi/summer-earn-rates-subgraph':
         specifier: workspace:*
         version: link:../../packages/summer-earn-rates-subgraph
@@ -2937,7 +2940,7 @@ importers:
     dependencies:
       '@aws-lambda-powertools/logger':
         specifier: ^1.18.1
-        version: 1.18.1
+        version: 1.18.1(@middy/core@6.0.0)
       '@aws-lambda-powertools/metrics':
         specifier: ^1.18.1
         version: 1.18.1
@@ -2968,7 +2971,7 @@ importers:
     dependencies:
       '@aws-lambda-powertools/logger':
         specifier: ^1.18.1
-        version: 1.18.1
+        version: 1.18.1(@middy/core@6.0.0)
       '@aws-lambda-powertools/metrics':
         specifier: ^1.18.1
         version: 1.18.1
@@ -3744,7 +3747,10 @@ importers:
     dependencies:
       '@aws-lambda-powertools/logger':
         specifier: ^1.12.1
-        version: 1.18.1
+        version: 1.18.1(@middy/core@6.0.0)
+      '@middy/core':
+        specifier: ^6.0.0
+        version: 6.0.0
       '@summerfi/summer-earn-rates-subgraph':
         specifier: workspace:*
         version: link:../../packages/summer-earn-rates-subgraph
@@ -3960,6 +3966,28 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.12.7)
+
+  summerfi-api/get-vault-rates-function:
+    dependencies:
+      '@aws-lambda-powertools/logger':
+        specifier: ^1.12.1
+        version: 1.18.1(@middy/core@6.0.0)
+      '@summerfi/summer-protocol-db':
+        specifier: workspace:*
+        version: link:../../packages/summer-protocol-db
+    devDependencies:
+      '@types/aws-lambda':
+        specifier: ^8.10.119
+        version: 8.10.137
+      '@types/node':
+        specifier: ^20.5.0
+        version: 20.14.2
+      sst:
+        specifier: ^2.24.22
+        version: 2.41.5
+      vitest:
+        specifier: ^0.34.1
+        version: 0.34.6
 
   summerfi-api/portfolio-assets-function:
     dependencies:
@@ -4625,8 +4653,9 @@ packages:
     resolution: {integrity: sha512-6tH27airGDbK+hNltrb33qdsbbrql34KcSBLmKnZYGZam7nWc5giTEtDh1Zyw2N3bQ0BnZ6SahgO9eY46WaiRA==}
     dev: false
 
-  /@aws-lambda-powertools/logger@1.18.1:
+  /@aws-lambda-powertools/logger@1.18.1(@middy/core@6.0.0):
     resolution: {integrity: sha512-GsSMqaFXCSz+llSOn2CVNMoN+j/jNsS6JP2Opy9myU0tvg7PeuU3+rN24vKyibUwpxM466IzWFBSJkYdm0bqVw==}
+    deprecated: 'Version 1.x has reached End-of-Life, please upgrade to 2.x, more info here: https://s12d.com/upgrade-v2'
     peerDependencies:
       '@middy/core': '>=3.x'
     peerDependenciesMeta:
@@ -4634,6 +4663,7 @@ packages:
         optional: true
     dependencies:
       '@aws-lambda-powertools/commons': 1.18.1
+      '@middy/core': 6.0.0
       lodash.merge: 4.6.2
     dev: false
 
@@ -13329,6 +13359,11 @@ packages:
 
   /@microsoft/tsdoc@0.15.0:
     resolution: {integrity: sha512-HZpPoABogPvjeJOdzCOSJsXeL/SMCBgBZMVC3X3d7YYp2gf31MfxhUoYUNwf1ERPJOnQc0wkFn9trqI6ZEdZuA==}
+
+  /@middy/core@6.0.0:
+    resolution: {integrity: sha512-EFsvMkyFfaIu3Uzye26w2NzycwMAbh/99XlhRH9p240y/YKA0nlQ7itE8y7lBJOJ/clj1qu9evQeLfaiWhJAFg==}
+    engines: {node: '>=20'}
+    dev: false
 
   /@mobily/ts-belt@3.13.1:
     resolution: {integrity: sha512-K5KqIhPI/EoCTbA6CGbrenM9s41OouyK8A03fGJJcla/zKucsgLbz8HNbeseoLarRPgyWJsUyCYqFhI7t3Ra9Q==}

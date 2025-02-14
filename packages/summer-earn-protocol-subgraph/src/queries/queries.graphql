@@ -44,6 +44,16 @@ query Vaults {
     rewardsManager {
       id
     }
+    arks {
+      id
+      name
+      details
+      productId
+      totalValueLockedUSD
+      vault {
+        id
+      }
+    }
   }
 }
 
@@ -51,5 +61,26 @@ query Users($first: Int, $skip: Int) {
   accounts(first: $first, skip: $skip, orderBy: id, orderDirection: asc) {
     id
     claimedSummerTokenNormalized
+  }
+}
+
+query HistoricalVaults($blockNumber: Int!) {
+  vaults(block: { number: $blockNumber }, first: 1000) {
+    id
+    name
+    totalValueLockedUSD
+    rewardsManager {
+      id
+    }
+    arks {
+      id
+      name
+      details
+      productId
+      totalValueLockedUSD
+      vault {
+        id
+      }
+    }
   }
 }

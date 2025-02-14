@@ -78,3 +78,41 @@ query GetArkRates($productId: String!) {
     }
   }
 }
+
+query GetArksRates($productIds: [ID!]!) {
+  products(where: { id_in: $productIds }) {
+    id
+    interestRates(orderBy: timestamp, orderDirection: desc, first: 1) {
+      timestamp
+      rate
+      productId
+      protocol
+      token {
+        symbol
+        address
+      }
+    }
+  }
+}
+
+query GetHistoricalArksRates($productIds: [ID!]!, $timestamp: BigInt!) {
+  products(where: { id_in: $productIds }) {
+    id
+    interestRates(
+      where: { timestamp_gte: $timestamp }
+      orderBy: timestamp
+      orderDirection: asc
+      first: 5000
+    ) {
+      timestamp
+      blockNumber
+      rate
+      productId
+      protocol
+      token {
+        symbol
+        address
+      }
+    }
+  }
+}
