@@ -30,7 +30,7 @@ export const defaultLocalConfig: LocalConfigState = {
   },
 }
 
-const DeviceContext = createContext<LocalConfigType>({
+const LocalConfigContext = createContext<LocalConfigType>({
   state: defaultLocalConfig,
   dispatch: () => {},
 })
@@ -55,9 +55,13 @@ export const LocalConfigContextProvider: FC<{
   }
   const [state, dispatch] = useReducer(localConfigReducer, resolvedInitialState)
 
-  return <DeviceContext.Provider value={{ state, dispatch }}>{children}</DeviceContext.Provider>
+  return (
+    <LocalConfigContext.Provider value={{ state, dispatch }}>
+      {children}
+    </LocalConfigContext.Provider>
+  )
 }
 
 export const useLocalConfig = () => {
-  return useContext(DeviceContext)
+  return useContext(LocalConfigContext)
 }
