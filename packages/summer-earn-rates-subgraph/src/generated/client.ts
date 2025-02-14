@@ -1475,7 +1475,7 @@ export type GetHistoricalArksRatesQueryVariables = Exact<{
 export type GetHistoricalArksRatesQuery = { products: Array<{ id: string, interestRates: Array<{ timestamp: string, blockNumber: string, rate: number, productId: string, protocol: string, token: { symbol: string, address: string } }> }> };
 
 
-export const GetProductsDocument = gql`
+export const GetProductsDocument: DocumentNode = gql`
     query GetProducts($protocols: [String!], $first: Int = 1000) {
   products(first: $first, where: {protocol_in: $protocols}) {
     id
@@ -1492,7 +1492,7 @@ export const GetProductsDocument = gql`
   }
 }
     `;
-export const GetInterestRatesDocument = gql`
+export const GetInterestRatesDocument: DocumentNode = gql`
     query GetInterestRates($productId: String!) {
   dailyInterestRates(
     where: {productId: $productId}
@@ -1538,7 +1538,7 @@ export const GetInterestRatesDocument = gql`
   }
 }
     `;
-export const GetArkRatesDocument = gql`
+export const GetArkRatesDocument: DocumentNode = gql`
     query GetArkRates($productId: String!) {
   interestRates(
     where: {productId: $productId}
@@ -1557,7 +1557,7 @@ export const GetArkRatesDocument = gql`
   }
 }
     `;
-export const GetArksRatesDocument = gql`
+export const GetArksRatesDocument: DocumentNode = gql`
     query GetArksRates($productIds: [ID!]!) {
   products(where: {id_in: $productIds}) {
     id
@@ -1574,7 +1574,7 @@ export const GetArksRatesDocument = gql`
   }
 }
     `;
-export const GetHistoricalArksRatesDocument = gql`
+export const GetHistoricalArksRatesDocument: DocumentNode = gql`
     query GetHistoricalArksRates($productIds: [ID!]!, $timestamp: BigInt!) {
   products(where: {id_in: $productIds}) {
     id
