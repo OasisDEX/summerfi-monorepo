@@ -1,4 +1,4 @@
-name: Release the Earn Kraken! 🐙
+name: Release Earn apps! 🐙
 
 on:
   workflow_dispatch:
@@ -39,10 +39,18 @@ jobs:
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
 
-      - name: release version
+      - name: Make an earn-apps release
+        working-directory: ./apps/earn-protocol
         run: npx release-it -- ${{ env.RELEASE_TYPE }} --ci
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
+
+      - name: Make an earn-apps-lp release
+        working-directory: ./apps/earn-protocol-landing-page
+        run: npx release-it -- ${{ env.RELEASE_TYPE }} --ci
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+
       - name: Merge dev -> main
         run: |
           git status
