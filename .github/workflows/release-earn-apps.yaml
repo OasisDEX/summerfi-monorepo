@@ -42,7 +42,7 @@ jobs:
       - name: Make an earn-apps release
         working-directory: ./apps/earn-protocol
         run:
-          npx release-it --ci --no-npm --dry-run --git.commitMessage='Release Earn App ${version}'
+          npx release-it --ci --no-npm --git.commitMessage='Release Earn App ${version}'
           --git.tagAnnotation='Earn App' -- ${{ env.RELEASE_TYPE }}
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
@@ -50,7 +50,7 @@ jobs:
       - name: Make an earn-apps-lp release
         working-directory: ./apps/earn-protocol-landing-page
         run:
-          npx release-it --ci --no-npm --dry-run --git.commitMessage='Release Earn LP ${version}'
+          npx release-it --ci --no-npm --git.commitMessage='Release Earn LP ${version}'
           --git.tagAnnotation='Earn LP' -- ${{ env.RELEASE_TYPE }}
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
