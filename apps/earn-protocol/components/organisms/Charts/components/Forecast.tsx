@@ -26,7 +26,7 @@ type ForecastChartProps = {
 export const ForecastChart = ({ data, isLoading, tokenPrice }: ForecastChartProps) => {
   return (
     <RechartResponsiveWrapper>
-      <ResponsiveContainer width="100%" height="90%">
+      <ResponsiveContainer width="100%" height="90%" minHeight={300} minWidth={100}>
         <ComposedChart data={data} style={{ opacity: isLoading ? 0.5 : 1 }}>
           <XAxis
             dataKey="timestamp"

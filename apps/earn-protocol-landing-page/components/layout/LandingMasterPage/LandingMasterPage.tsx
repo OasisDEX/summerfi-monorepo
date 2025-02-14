@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type PropsWithChildren, useEffect, useState } from 'react'
+import { type PropsWithChildren, useEffect, useState } from 'react'
 import {
   CookieBanner,
   Footer,
@@ -19,7 +19,7 @@ interface LandingMasterPageProps {
   analyticsCookie: SavedAnalyticsCookiesSettings | null
 }
 
-export const LandingMasterPage: FC<PropsWithChildren<LandingMasterPageProps>> = ({
+export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProps>> = ({
   children,
   analyticsCookie,
 }) => {

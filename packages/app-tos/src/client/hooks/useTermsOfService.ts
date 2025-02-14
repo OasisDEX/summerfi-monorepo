@@ -54,14 +54,14 @@ export const useTermsOfService = ({
   const memoizedSignMessage = signMessage
 
   useEffect(() => {
-    const request = async (walletAddress: string) => {
+    const request = async (address: string) => {
       // smart account could be the one from account kit
       // which handles signatures well
       // condition below is for safe specific case
       const bytecodeOfPotentialContract = !isSmartAccount
         ? await publicClient
             .getBytecode({
-              address: walletAddress as `0x${string}`,
+              address: address as `0x${string}`,
             })
             .catch((error) => {
               // eslint-disable-next-line no-console
@@ -77,7 +77,7 @@ export const useTermsOfService = ({
          Initial step - fetch info about user acceptance from database.
          */
       const termsOfServiceAcceptance = await verifyTermsOfServiceAcceptance({
-        walletAddress,
+        walletAddress: address,
         version,
         cookiePrefix,
         host,
@@ -113,7 +113,7 @@ export const useTermsOfService = ({
         acceptanceStep({
           setTos,
           termsOfServiceAcceptance,
-          walletAddress,
+          walletAddress: address,
           version,
           cookiePrefix,
           host,
@@ -129,7 +129,7 @@ export const useTermsOfService = ({
           termsOfServiceAcceptance,
           host,
           version,
-          walletAddress,
+          walletAddress: address,
           isGnosisSafe,
           chainId,
           signMessage: memoizedSignMessage,

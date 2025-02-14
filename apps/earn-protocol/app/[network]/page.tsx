@@ -7,13 +7,14 @@ import { VaultListViewComponent } from '@/components/layout/VaultsListView/Vault
 import { decorateCustomVaultFields } from '@/helpers/vault-custom-value-helpers'
 
 type EarnNetworkVaultsPageProps = {
-  params: {
+  params: Promise<{
     network: SDKNetwork | 'all-networks'
-  }
+  }>
 }
 
 const EarnNetworkVaultsPage = async ({ params }: EarnNetworkVaultsPageProps) => {
-  const parsedNetwork = humanNetworktoSDKNetwork(params.network)
+  const { network } = await params
+  const parsedNetwork = humanNetworktoSDKNetwork(network)
   const [{ vaults }, configRaw] = await Promise.all([getVaultsList(), systemConfigHandler()])
   const { config: systemConfig } = parseServerResponseToClient(configRaw)
   const vaultsDecorated = decorateCustomVaultFields({ vaults, systemConfig })

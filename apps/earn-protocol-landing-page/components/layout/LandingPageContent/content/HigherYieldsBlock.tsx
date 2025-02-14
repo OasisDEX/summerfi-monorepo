@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Button, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
 import {
@@ -201,7 +201,7 @@ interface HigherYieldsBlockProps {
   vaultsList: SDKVaultsListType
 }
 
-export const HigherYieldsBlock: FC<HigherYieldsBlockProps> = ({ vaultsList }) => {
+export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({ vaultsList }) => {
   const [fadingOut, setFadingOut] = useState(false)
   const [activeSection, setActiveSection] = useState(higherYieldsBlockSectionsKeys[0])
 

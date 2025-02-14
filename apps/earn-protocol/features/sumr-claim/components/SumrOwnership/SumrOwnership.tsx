@@ -92,7 +92,7 @@ export const SumrOwnership = () => {
       <div className={classNames.chartSection}>
         <div className={classNames.customChartWrapper}>
           <RechartResponsiveWrapper height="265px">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minHeight={300} minWidth={100}>
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <PieChart width={265} height={265}>
                   <Pie

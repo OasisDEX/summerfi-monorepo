@@ -1,13 +1,12 @@
 'use client'
 
-import { type FC } from 'react'
 import { Button, getNavigationItems, Navigation } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 import navigationWrapperStyles from './NavigationWrapper.module.scss'
 
-export const NavigationWrapper: FC = () => {
+export const NavigationWrapper: React.FC = () => {
   const currentPath = usePathname()
 
   return (
