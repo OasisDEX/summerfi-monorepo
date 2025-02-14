@@ -47,14 +47,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
 
-      - name: Make an earn-apps-lp release
-        working-directory: ./apps/earn-protocol-landing-page
-        run:
-          npx release-it --ci --no-npm --git.commitMessage='Release Earn LP ${version}'
-          --git.tagAnnotation='Earn LP' -- ${{ env.RELEASE_TYPE }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
-
       - name: Merge dev -> main
         run: |
           git status
