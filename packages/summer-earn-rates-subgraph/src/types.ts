@@ -5,6 +5,7 @@ import {
   GetProductsQuery as GetProductsQueryType,
   GetInterestRatesQuery as GetInterestRatesQueryType,
   GetArkRatesQuery as GetArkRatesQueryType,
+  GetHistoricalArksRatesQuery as GetHistoricalArksRatesQueryType,
 } from './generated/client'
 export interface SubgraphClientConfig {
   chainId: ChainId
@@ -15,6 +16,8 @@ export type SubgraphClient = ReturnType<typeof getSdk>
 
 export type GetInterestRatesQuery = GetInterestRatesQueryType
 export type GetArkRatesQuery = GetArkRatesQueryType
+
+export type GetHistoricalArksRatesQuery = GetHistoricalArksRatesQueryType
 
 export type InterestRate = InterestRateType
 export type Products = GetProductsQueryType['products']

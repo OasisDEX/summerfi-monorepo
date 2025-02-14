@@ -15,6 +15,13 @@ export interface DBRate {
   productId: string
 }
 
+export interface DBFleetRate {
+  id: string
+  rate: string
+  timestamp: number
+  fleetAddress: string
+}
+
 export interface DBAggregatedRate {
   id: string
   averageRate: string
@@ -227,6 +234,43 @@ export class RatesService {
         errorDetails: error instanceof Error ? error.stack : undefined,
       })
       return null
+    }
+  }
+
+  async getFleetRates(chainId: string, fleetAddress: string): Promise<DBFleetRate[]> {
+    if (!this.db) {
+      logger.error('Database connection not initialized')
+      return []
+    }
+
+    const network = mapChainIdToDbNetwork(chainId)
+    logger.info('Fetching fleet rates', { chainId, network, fleetAddress })
+
+    try {
+      const rates = await this.db.db
+        .selectFrom('fleetInterestRate')
+        .select(['id', 'rate', 'timestamp', 'fleetAddress'])
+        .where('network', '=', network)
+        .where('fleetAddress', '=', fleetAddress)
+        .orderBy('timestamp', 'desc')
+        .limit(1)
+        .execute()
+
+      return rates.map((rate) => ({
+        id: rate.id,
+        rate: rate.rate.toString(),
+        timestamp: Number(rate.timestamp),
+        fleetAddress: rate.fleetAddress,
+      }))
+    } catch (error) {
+      logger.error('Error fetching fleet rates from DB', {
+        error,
+        chainId,
+        network,
+        fleetAddress,
+        errorDetails: error instanceof Error ? error.stack : undefined,
+      })
+      return []
     }
   }
 }

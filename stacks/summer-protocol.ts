@@ -37,7 +37,7 @@ export function addSummerProtocolConfig({ stack, vpc, app }: SummerStackContext)
   )
 
   new Cron(stack, 'update-earn-rewards-apr-cron', {
-    schedule: 'rate(10 minutes)',
+    schedule: 'rate(1 minute)',
     enabled: true,
     job: updateEarnRewardsAprCronFunction,
   })
