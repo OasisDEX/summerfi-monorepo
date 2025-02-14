@@ -166,15 +166,7 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
           />
         ))}
       </div>
-      <InfiniteScroll
-        loadMore={loadMoreRebalances}
-        hasMore={hasMore && !isLoading}
-        loader={
-          <div key="loader">
-            <LoadingSpinner />
-          </div>
-        }
-      >
+      <InfiniteScroll loadMore={loadMoreRebalances} hasMore={hasMore && !isLoading}>
         <RebalanceActivityTable
           rebalancesList={filteredList}
           customRow={{
@@ -182,6 +174,9 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
             content: <TableCarousel carouselData={rebalanceActivityTableCarouselData} />,
           }}
         />
+        <div className={classNames.loader}>
+          <LoadingSpinner />
+        </div>
       </InfiniteScroll>
     </div>
   )
