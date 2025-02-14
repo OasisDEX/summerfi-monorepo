@@ -8,18 +8,17 @@ import {
   Products,
   Product,
 } from '@summerfi/summer-earn-rates-subgraph'
-import { getAllClients as getAllProtocolSubgraphClients } from '@summerfi/summer-earn-protocol-subgraph'
+import {
+  getAllClients as getAllProtocolSubgraphClients,
+  VaultsQuery,
+} from '@summerfi/summer-earn-protocol-subgraph'
 
 import { RewardsService } from './rewards-service'
 import { Transaction } from 'kysely'
 import { Database, mapDbNetworkToChainId } from '@summerfi/summer-protocol-db'
 import { ChainId } from '@summerfi/serverless-shared'
-import { VaultsQuery } from '../../../packages/summer-earn-protocol-subgraph/src/generated/client'
-import {
-  GetArksRatesQuery,
-  GetProductsQuery,
-} from '../../../packages/summer-earn-rates-subgraph/src/generated/client'
-// import { backfillFleetRates } from './scripts/backfill'
+
+import { GetArksRatesQuery, GetProductsQuery } from '@summerfi/summer-earn-rates-subgraph'
 
 const logger = new Logger({ serviceName: 'update-summer-earn-rewards-apr' })
 
