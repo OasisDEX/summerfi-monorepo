@@ -45,8 +45,8 @@ export const LandingMasterPage: FC<PropsWithChildren<LandingMasterPageProps>> = 
         <video
           width="100%"
           autoPlay
-          loop
           muted
+          loop
           playsInline
           className={landingMasterPageStyles.video}
         >
