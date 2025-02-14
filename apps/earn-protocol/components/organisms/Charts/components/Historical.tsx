@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { getPositionValues, RechartResponsiveWrapper } from '@summerfi/app-earn-ui'
+import { getDisplayToken, getPositionValues, RechartResponsiveWrapper } from '@summerfi/app-earn-ui'
 import {
   type IArmadaPosition,
   type SDKVaultishType,
   type TimeframesType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
-import { formatFiatBalance } from '@summerfi/app-utils'
+import { formatCryptoBalance } from '@summerfi/app-utils'
 import {
   ComposedChart,
   Customized,
@@ -40,13 +40,14 @@ export const HistoricalChart = ({
   position,
   timeframe,
 }: HistoricalChartProps) => {
-  const { netValueUSD, netDepositedUSD, netEarningsUSD } = getPositionValues(position)
+  const { netValue, netDeposited, netEarnings } = getPositionValues(position)
+  const positionToken = getDisplayToken(position.vaultData.inputToken.symbol)
 
   const legendBaseData = {
-    netValue: `$${formatFiatBalance(netValueUSD)}`,
-    depositedValue: `$${formatFiatBalance(netDepositedUSD)}`,
-    earnings: `$${formatFiatBalance(netEarningsUSD)}`,
-    sumrEarned: `TBD `,
+    netValue: `${formatCryptoBalance(netValue)} ${positionToken}`,
+    depositedValue: `${formatCryptoBalance(netDeposited)} ${positionToken}`,
+    earnings: `${formatCryptoBalance(netEarnings)} ${positionToken}`,
+    // sumrEarned: `TBD `,
   }
   const [highlightedData, setHighlightedData] = useState<{
     [key: string]: string | number
@@ -91,7 +92,7 @@ export const HistoricalChart = ({
                 ...activePayload.reduce(
                   (acc, { dataKey, value }) => ({
                     ...acc,
-                    [dataKey]: `$${formatFiatBalance(value)}`,
+                    [dataKey]: `${formatCryptoBalance(value)} ${positionToken}`,
                   }),
                   {},
                 ),

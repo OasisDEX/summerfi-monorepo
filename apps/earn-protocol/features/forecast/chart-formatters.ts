@@ -32,7 +32,7 @@ export const formatChartPercentageValue = (amount: number, detailed: boolean = f
   }
 
   if (amount > PERCENTAGE_SHORTHAND_THRESHOLD) {
-    return `${formatAsShorthandNumbers(amount)}%`
+    return `${formatAsShorthandNumbers(amount, { precision: 3 })}%`
   }
 
   return `${new BigNumber(amount).toFixed(detailed ? 2 : 0)}%`
