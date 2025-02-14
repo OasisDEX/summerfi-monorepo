@@ -50,9 +50,12 @@ export class RatesService {
   private initPromise: Promise<void> | null = null
 
   static getInstance(): RatesService {
+    logger.info('Getting rates service instance')
     if (!RatesService.instance) {
+      logger.info('Creating new rates service instance')
       RatesService.instance = new RatesService()
     }
+    logger.info('Returning existing rates service instance')
     return RatesService.instance
   }
 
@@ -87,14 +90,17 @@ export class RatesService {
       logger.warn('Database connection string not provided')
       return
     }
+    logger.info('Initializing database connection', {
+      connectionString: process.env.EARN_PROTOCOL_DB_CONNECTION_STRING.substring(0, 30) + '...',
+    })
 
     try {
       const config: PgSummerProtocolDbConfig = {
         connectionString: process.env.EARN_PROTOCOL_DB_CONNECTION_STRING,
         pool: {
           max: 1,
-          idleTimeoutMillis: 1000,
-          acquireTimeoutMillis: 1000,
+          idleTimeoutMillis: 10000,
+          acquireTimeoutMillis: 10000,
         },
       }
 

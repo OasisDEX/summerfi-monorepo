@@ -84,8 +84,8 @@ export class VaultRatesService {
         connectionString: process.env.EARN_PROTOCOL_DB_CONNECTION_STRING,
         pool: {
           max: 1,
-          idleTimeoutMillis: 1000,
-          acquireTimeoutMillis: 1000,
+          idleTimeoutMillis: 10000,
+          acquireTimeoutMillis: 10000,
         },
       }
 
