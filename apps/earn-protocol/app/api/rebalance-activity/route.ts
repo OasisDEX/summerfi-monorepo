@@ -1,17 +1,14 @@
-import type {
-  OrderDirection,
-  Rebalance_OrderBy as OrderBy,
-} from '@summerfi/subgraph-manager-common'
+import { OrderDirection, Rebalance_OrderBy as OrderBy } from '@summerfi/subgraph-manager-common'
 import { type NextRequest } from 'next/server'
 import { z } from 'zod'
 
 import { getGlobalRebalances } from '@/app/server-handlers/sdk/get-global-rebalances'
 
 const querySchema = z.object({
-  first: z.coerce.number().int().min(1).max(100).default(10),
-  skip: z.coerce.number().int().min(0).default(0),
-  orderBy: z.enum(['timestamp', 'id']).default('timestamp') as z.ZodType<OrderBy>,
-  orderDirection: z.enum(['asc', 'desc']).default('desc') as z.ZodType<OrderDirection>,
+  first: z.string(),
+  skip: z.string().optional(),
+  orderBy: z.nativeEnum(OrderBy).optional(),
+  orderDirection: z.nativeEnum(OrderDirection).optional(),
 })
 
 export async function GET(request: NextRequest) {
@@ -33,8 +30,8 @@ export async function GET(request: NextRequest) {
     const validatedParams = result.data
 
     const rebalanceData = await getGlobalRebalances({
-      first: validatedParams.first,
-      skip: validatedParams.skip,
+      first: Number(validatedParams.first),
+      skip: validatedParams.skip ? Number(validatedParams.skip) : undefined,
       orderBy: validatedParams.orderBy,
       orderDirection: validatedParams.orderDirection,
     })
