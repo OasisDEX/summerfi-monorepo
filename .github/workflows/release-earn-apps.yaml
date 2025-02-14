@@ -55,12 +55,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
 
-      # - name: Merge dev -> main
-      #   run: |
-      #     git status
-      #     git pull
-      #     git fetch
-      #     git checkout main
-      #     git rebase dev
-      #     git push origin main
-      #     git status
+      - name: Merge dev -> main
+        run: |
+          git status
+          git pull
+          git fetch
+          git checkout main
+          git rebase dev
+          git push origin main
+          git status
