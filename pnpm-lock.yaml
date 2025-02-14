@@ -3781,9 +3781,6 @@ importers:
       graphql-request:
         specifier: ^6.1.0
         version: 6.1.0(graphql@16.8.2)
-      middleware:
-        specifier: link:@aws-lambda-powertools/logger/middleware
-        version: link:@aws-lambda-powertools/logger/middleware
     devDependencies:
       '@types/aws-lambda':
         specifier: ^8.10.119
