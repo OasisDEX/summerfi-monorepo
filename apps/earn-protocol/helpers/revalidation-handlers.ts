@@ -1,5 +1,6 @@
 'use server'
 
+import { REVALIDATION_TAGS } from '@summerfi/app-earn-ui'
 import { revalidatePath, revalidateTag } from 'next/cache'
 
 export const revalidateUser = (walletAddress?: string) => {
@@ -12,6 +13,7 @@ export const revalidateUser = (walletAddress?: string) => {
 export const revalidateVaultsListData = () => {
   // clears the cache and revalidates the vaults list data
   revalidatePath('/earn')
+  revalidateTag(REVALIDATION_TAGS.INTEREST_RATES)
 }
 
 export const revalidatePositionData = (
