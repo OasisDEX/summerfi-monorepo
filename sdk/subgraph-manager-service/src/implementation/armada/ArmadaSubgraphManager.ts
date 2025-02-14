@@ -43,8 +43,19 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     })
   }
 
-  getGlobalRebalances({ chainId }: Parameters<IArmadaSubgraphManager['getGlobalRebalances']>[0]) {
-    return this._getClient(chainId).GetGlobalRebalances()
+  getGlobalRebalances({
+    chainId,
+    first,
+    skip,
+    orderBy,
+    orderDirection,
+  }: Parameters<IArmadaSubgraphManager['getGlobalRebalances']>[0]) {
+    return this._getClient(chainId).GetGlobalRebalances({
+      first,
+      skip,
+      orderBy,
+      orderDirection,
+    })
   }
 
   getUsersActivity({ chainId }: Parameters<IArmadaSubgraphManager['getUsersActivity']>[0]) {
