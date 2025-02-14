@@ -11,7 +11,7 @@ import { RatesService, DBRate, DBAggregatedRate, DBHistoricalRates } from './db-
 
 const logger = new Logger({ serviceName: 'get-rates-function' })
 const clients = getAllClients(process.env.SUBGRAPH_BASE || '')
-const ratesService = new RatesService()
+const ratesService = RatesService.getInstance()
 
 const TEN_MINUTES_IN_MS = 10 * 60 * 1000
 

@@ -19,6 +19,7 @@ import {
   GetArksRatesQuery,
   GetProductsQuery,
 } from '../../../packages/summer-earn-rates-subgraph/src/generated/client'
+// import { backfillFleetRates } from './scripts/backfill'
 
 const logger = new Logger({ serviceName: 'update-summer-earn-rewards-apr' })
 
@@ -646,6 +647,8 @@ export const handler = async (
     connectionString: EARN_PROTOCOL_DB_CONNECTION_STRING,
     logger,
   }
+
+  // await backfillFleetRates()
   const { db } = await getSummerProtocolDB(dbConfig)
 
   const ratesSubgraphClients = getAllRatesSubgraphClients(SUBGRAPH_BASE)

@@ -93,8 +93,8 @@ export class RatesService {
         connectionString: process.env.EARN_PROTOCOL_DB_CONNECTION_STRING,
         pool: {
           max: 1,
-          idleTimeoutMillis: 5000,
-          acquireTimeoutMillis: 3000,
+          idleTimeoutMillis: 1000,
+          acquireTimeoutMillis: 1000,
         },
       }
 
