@@ -1,5 +1,5 @@
 import { Logger } from '@aws-lambda-powertools/logger'
-import { getSummerProtocolDB, mapDbNetworkToChainId, Network } from '@summerfi/summer-protocol-db'
+import { getSummerProtocolDB, mapDbNetworkToChainId } from '@summerfi/summer-protocol-db'
 import {
   getAllClients as getAllRatesSubgraphClients,
   GetHistoricalArksRatesQuery,
@@ -7,10 +7,15 @@ import {
 
 import { Database } from '@summerfi/summer-protocol-db'
 import { HistoricalVaultsQuery } from '@summerfi/summer-earn-protocol-subgraph'
-import { Kysely, Transaction } from 'kysely'
-// import { retrySubgraphQuery, updateHourlyVaultApr, updateDailyVaultApr, updateWeeklyVaultApr } from '..'
-// import { HOUR_IN_SECONDS, DAY_IN_SECONDS, WEEK_IN_SECONDS, EPOCH_WEEK_OFFSET } from '..'
-// import { NetworkStatus } from '..'
+import { Transaction } from 'kysely'
+import {
+  retrySubgraphQuery,
+  updateHourlyVaultApr,
+  updateDailyVaultApr,
+  updateWeeklyVaultApr,
+} from '..'
+import { HOUR_IN_SECONDS, DAY_IN_SECONDS, WEEK_IN_SECONDS, EPOCH_WEEK_OFFSET } from '..'
+import { NetworkStatus } from '..'
 import {
   SubgraphClient as ProtocolSubgraphClient,
   VaultsQuery,
@@ -18,76 +23,9 @@ import {
 } from '@summerfi/summer-earn-protocol-subgraph'
 const logger = new Logger({ serviceName: 'backfill-fleet-rates' })
 
-export interface NetworkStatus {
-  network: Network
-  isUpdating: boolean
-  lastUpdatedAt: string
-  lastBlockNumber: string
-}
+const START_BACKFILL_TIMESTAMP = 1739228400
 
-export const HOUR_IN_SECONDS = 3600
-export const DAY_IN_SECONDS = 86400
-export const WEEK_IN_SECONDS = 604800
-export const EPOCH_WEEK_OFFSET = 345600 // 4 days
 export const MIN_UPDATE_INTERVAL = 10 * 60 // 10 minutes in seconds
-export async function retrySubgraphQuery<TResponse>(
-  operation: () => Promise<TResponse>,
-  options: {
-    retries?: number
-    initialDelay?: number
-    logger: Logger
-    context: {
-      operation: string
-      network: Network
-      [key: string]: string | number | string[]
-    }
-  },
-): Promise<TResponse> {
-  const { retries = 5, initialDelay = 1000, logger, context } = options
-
-  let currentRetry = retries
-  let delay = initialDelay
-
-  while (currentRetry > 0) {
-    try {
-      const result = await operation()
-      return result
-    } catch (error) {
-      if (currentRetry === 1 || !(error instanceof Error) || !error.message.includes('429')) {
-        logger.error(`Error in ${context.operation}:`, {
-          ...context,
-          error: error instanceof Error ? error : String(error),
-        })
-        throw error
-      }
-
-      currentRetry--
-      logger.debug(`Rate limited, retrying ${context.operation}...`, {
-        ...context,
-        retriesLeft: currentRetry,
-        delay,
-      })
-      await new Promise((resolve) => setTimeout(resolve, delay))
-      delay *= 2 // Exponential backoff
-    }
-  }
-
-  throw new Error(`Failed to complete ${context.operation} after all retries`)
-}
-
-// async function getEarliestRewardTimestamp(db: Kysely<Database>): Promise<number> {
-//   const result = await db
-//     .selectFrom('rewardRate')
-//     .select('timestamp')
-//     .orderBy('timestamp', 'asc')
-//     .limit(1)
-//     .executeTakeFirst()
-
-//   if (!result?.timestamp) {
-//     throw new Error('No reward rates found in database')
-//   }
-//   return +result.timestamp
-// }
 
 async function getHistoricalVaultData(
   protocolSubgraphClient: ProtocolSubgraphClient,
@@ -118,13 +56,8 @@ async function calculateAndStoreFleetRates(
 ) {
   for (const vault of vaultData.vaults) {
     logger.info('Vault', { network: network.network, vaultId: vault.id, arks: vault.arks })
-    const bufferArk = vault.arks.find(
-      (ark) => ark.name === 'BufferArk' && ark.vault.id === vault.id,
-    )
-    logger.info('Buffer ark', { network: network.network, vaultId: vault.id, bufferArk })
-    const arksWithTvl = vault.arks
-      .filter((ark) => +ark.totalValueLockedUSD > 0)
-      .concat(bufferArk ? [bufferArk] : [])
+    logger.info('Buffer ark', { network: network.network, vaultId: vault.id })
+    const arksWithTvl = vault.arks.filter((ark) => +ark.totalValueLockedUSD > 0)
     logger.info('Arks with tvl', { network: network.network, vaultId: vault.id, arksWithTvl })
     const fleetTvl = arksWithTvl.reduce((acc, ark) => acc + +ark.totalValueLockedUSD, 0)
     let weightedFleetRate = 0
@@ -212,140 +145,7 @@ async function calculateAndStoreFleetRates(
     await updateWeeklyVaultApr(trx, network, weightedFleetRate.toString(), weekTimestamp, vault.id)
   }
 }
-export async function updateHourlyVaultApr(
-  trx: Transaction<Database>,
-  network: NetworkStatus,
-  newRate: string,
-  hourTimestamp: number,
-  fleetAddress: string,
-) {
-  const hourlyRateId = `${network.network}-${fleetAddress}-${hourTimestamp}`
 
-  const hourlyRate = await trx
-    .selectFrom('hourlyFleetInterestRate')
-    .where('id', '=', hourlyRateId)
-    .selectAll()
-    .executeTakeFirst()
-
-  if (!hourlyRate) {
-    await trx
-      .insertInto('hourlyFleetInterestRate')
-      .values({
-        id: hourlyRateId,
-        date: hourTimestamp,
-        sumRates: newRate,
-        updateCount: 1,
-        averageRate: newRate,
-        network: network.network,
-        fleetAddress,
-      })
-      .execute()
-  } else {
-    const newSum = (parseFloat(hourlyRate.sumRates) + parseFloat(newRate)).toString()
-    const newCount = +hourlyRate.updateCount + 1
-    const newAverage = (parseFloat(newSum) / newCount).toString()
-
-    await trx
-      .updateTable('hourlyFleetInterestRate')
-      .set({
-        sumRates: newSum,
-        updateCount: newCount,
-        averageRate: newAverage,
-      })
-      .where('id', '=', hourlyRateId)
-      .execute()
-  }
-}
-
-export async function updateDailyVaultApr(
-  trx: Transaction<Database>,
-  network: NetworkStatus,
-  newRate: string,
-  dayTimestamp: number,
-  fleetAddress: string,
-) {
-  const dailyRateId = `${network.network}-${fleetAddress}-${dayTimestamp}`
-
-  const dailyRate = await trx
-    .selectFrom('dailyFleetInterestRate')
-    .where('id', '=', dailyRateId)
-    .selectAll()
-    .executeTakeFirst()
-
-  if (!dailyRate) {
-    await trx
-      .insertInto('dailyFleetInterestRate')
-      .values({
-        id: dailyRateId,
-        date: dayTimestamp,
-        sumRates: newRate,
-        updateCount: 1,
-        averageRate: newRate,
-        network: network.network,
-        fleetAddress,
-      })
-      .execute()
-  } else {
-    const newSum = (parseFloat(dailyRate.sumRates) + parseFloat(newRate)).toString()
-    const newCount = +dailyRate.updateCount + 1
-    const newAverage = (parseFloat(newSum) / newCount).toString()
-
-    await trx
-      .updateTable('dailyFleetInterestRate')
-      .set({
-        sumRates: newSum,
-        updateCount: newCount,
-        averageRate: newAverage,
-      })
-      .where('id', '=', dailyRateId)
-      .execute()
-  }
-}
-
-export async function updateWeeklyVaultApr(
-  trx: Transaction<Database>,
-  network: NetworkStatus,
-  newRate: string,
-  weekTimestamp: number,
-  fleetAddress: string,
-) {
-  const weeklyRateId = `${network.network}-${fleetAddress}-${weekTimestamp}`
-
-  const weeklyRate = await trx
-    .selectFrom('weeklyFleetInterestRate')
-    .where('id', '=', weeklyRateId)
-    .selectAll()
-    .executeTakeFirst()
-
-  if (!weeklyRate) {
-    await trx
-      .insertInto('weeklyFleetInterestRate')
-      .values({
-        id: weeklyRateId,
-        weekTimestamp,
-        sumRates: newRate,
-        updateCount: 1,
-        averageRate: newRate,
-        network: network.network,
-        fleetAddress,
-      })
-      .execute()
-  } else {
-    const newSum = (parseFloat(weeklyRate.sumRates) + parseFloat(newRate)).toString()
-    const newCount = +weeklyRate.updateCount + 1
-    const newAverage = (parseFloat(newSum) / newCount).toString()
-
-    await trx
-      .updateTable('weeklyFleetInterestRate')
-      .set({
-        sumRates: newSum,
-        updateCount: newCount,
-        averageRate: newAverage,
-      })
-      .where('id', '=', weeklyRateId)
-      .execute()
-  }
-}
 export async function backfillFleetRates() {
   const { SUBGRAPH_BASE, EARN_PROTOCOL_DB_CONNECTION_STRING } = process.env
 
@@ -357,7 +157,7 @@ export async function backfillFleetRates() {
     connectionString: EARN_PROTOCOL_DB_CONNECTION_STRING,
   })
 
-  const startTimestamp = 1739228400
+  const startTimestamp = START_BACKFILL_TIMESTAMP
   const endTimestamp = Math.floor(Date.now() / 1000)
 
   logger.info('Starting backfill', { startTimestamp, endTimestamp })

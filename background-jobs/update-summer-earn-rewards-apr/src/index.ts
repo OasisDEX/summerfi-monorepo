@@ -116,20 +116,7 @@ export async function updateVaultAprs(
   })
 
   for (const vault of vaults.vaults) {
-    const bufferArk = vaults.vaults
-      .flatMap((vault) =>
-        vault.arks.find((ark) => ark.name === 'BufferArk' && ark.vault.id === vault.id),
-      )
-      .filter((ark): ark is NonNullable<typeof ark> => ark !== undefined)
-    logger.debug('Found buffer arks', {
-      network: network.network,
-      bufferArkCount: bufferArk.length,
-      bufferArks: bufferArk.map((ark) => ({ id: ark.id, tvl: ark.totalValueLockedUSD })),
-    })
-
-    const fleetArksWithTvl = arksWithTvl
-      .filter((ark) => ark.vault.id === vault.id)
-      .concat(bufferArk)
+    const fleetArksWithTvl = arksWithTvl.filter((ark) => ark.vault.id === vault.id)
     const fleetTvl = fleetArksWithTvl.reduce((acc, ark) => acc + +ark.totalValueLockedUSD, 0)
     logger.debug('Calculated fleet TVL', { network: network.network, fleetTvl })
 
@@ -229,6 +216,7 @@ export async function updateVaultAprs(
         productId: product.id,
         rate: product.interestRates[0].rate,
         ratio: ark!.ratio,
+        totalValueLockedUSD: ark!.totalValueLockedUSD,
         contribution,
         accumulatedTotal: acc + contribution,
       })
