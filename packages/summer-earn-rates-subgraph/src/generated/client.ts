@@ -1459,6 +1459,21 @@ export type GetArkRatesQueryVariables = Exact<{
 
 export type GetArkRatesQuery = { interestRates: Array<{ timestamp: string, rate: number, productId: string, protocol: string, token: { symbol: string, address: string } }> };
 
+export type GetArksRatesQueryVariables = Exact<{
+  productIds: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+}>;
+
+
+export type GetArksRatesQuery = { products: Array<{ id: string, interestRates: Array<{ timestamp: string, rate: number, productId: string, protocol: string, token: { symbol: string, address: string } }> }> };
+
+export type GetHistoricalArksRatesQueryVariables = Exact<{
+  productIds: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  timestamp: Scalars['BigInt']['input'];
+}>;
+
+
+export type GetHistoricalArksRatesQuery = { products: Array<{ id: string, interestRates: Array<{ timestamp: string, blockNumber: string, rate: number, productId: string, protocol: string, token: { symbol: string, address: string } }> }> };
+
 
 export const GetProductsDocument: DocumentNode = gql`
     query GetProducts($protocols: [String!], $first: Int = 1000) {
@@ -1542,6 +1557,46 @@ export const GetArkRatesDocument: DocumentNode = gql`
   }
 }
     `;
+export const GetArksRatesDocument: DocumentNode = gql`
+    query GetArksRates($productIds: [ID!]!) {
+  products(where: {id_in: $productIds}) {
+    id
+    interestRates(orderBy: timestamp, orderDirection: desc, first: 1) {
+      timestamp
+      rate
+      productId
+      protocol
+      token {
+        symbol
+        address
+      }
+    }
+  }
+}
+    `;
+export const GetHistoricalArksRatesDocument: DocumentNode = gql`
+    query GetHistoricalArksRates($productIds: [ID!]!, $timestamp: BigInt!) {
+  products(where: {id_in: $productIds}) {
+    id
+    interestRates(
+      where: {timestamp_gte: $timestamp}
+      orderBy: timestamp
+      orderDirection: asc
+      first: 5000
+    ) {
+      timestamp
+      blockNumber
+      rate
+      productId
+      protocol
+      token {
+        symbol
+        address
+      }
+    }
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string, variables?: any) => Promise<T>;
 
@@ -1558,6 +1613,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetArkRates(variables: GetArkRatesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetArkRatesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetArkRatesQuery>(GetArkRatesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetArkRates', 'query', variables);
+    },
+    GetArksRates(variables: GetArksRatesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetArksRatesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetArksRatesQuery>(GetArksRatesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetArksRates', 'query', variables);
+    },
+    GetHistoricalArksRates(variables: GetHistoricalArksRatesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetHistoricalArksRatesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetHistoricalArksRatesQuery>(GetHistoricalArksRatesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetHistoricalArksRates', 'query', variables);
     }
   };
 }

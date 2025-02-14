@@ -15,6 +15,13 @@ export interface DBRate {
   productId: string
 }
 
+export interface DBFleetRate {
+  id: string
+  rate: string
+  timestamp: number
+  fleetAddress: string
+}
+
 export interface DBAggregatedRate {
   id: string
   averageRate: string
@@ -43,9 +50,12 @@ export class RatesService {
   private initPromise: Promise<void> | null = null
 
   static getInstance(): RatesService {
+    logger.info('Getting rates service instance')
     if (!RatesService.instance) {
+      logger.info('Creating new rates service instance')
       RatesService.instance = new RatesService()
     }
+    logger.info('Returning existing rates service instance')
     return RatesService.instance
   }
 
@@ -80,14 +90,17 @@ export class RatesService {
       logger.warn('Database connection string not provided')
       return
     }
+    logger.info('Initializing database connection', {
+      connectionString: process.env.EARN_PROTOCOL_DB_CONNECTION_STRING.substring(0, 30) + '...',
+    })
 
     try {
       const config: PgSummerProtocolDbConfig = {
         connectionString: process.env.EARN_PROTOCOL_DB_CONNECTION_STRING,
         pool: {
           max: 1,
-          idleTimeoutMillis: 5000,
-          acquireTimeoutMillis: 3000,
+          idleTimeoutMillis: 10000,
+          acquireTimeoutMillis: 10000,
         },
       }
 
@@ -227,6 +240,43 @@ export class RatesService {
         errorDetails: error instanceof Error ? error.stack : undefined,
       })
       return null
+    }
+  }
+
+  async getFleetRates(chainId: string, fleetAddress: string): Promise<DBFleetRate[]> {
+    if (!this.db) {
+      logger.error('Database connection not initialized')
+      return []
+    }
+
+    const network = mapChainIdToDbNetwork(chainId)
+    logger.info('Fetching fleet rates', { chainId, network, fleetAddress })
+
+    try {
+      const rates = await this.db.db
+        .selectFrom('fleetInterestRate')
+        .select(['id', 'rate', 'timestamp', 'fleetAddress'])
+        .where('network', '=', network)
+        .where('fleetAddress', '=', fleetAddress)
+        .orderBy('timestamp', 'desc')
+        .limit(1)
+        .execute()
+
+      return rates.map((rate) => ({
+        id: rate.id,
+        rate: rate.rate.toString(),
+        timestamp: Number(rate.timestamp),
+        fleetAddress: rate.fleetAddress,
+      }))
+    } catch (error) {
+      logger.error('Error fetching fleet rates from DB', {
+        error,
+        chainId,
+        network,
+        fleetAddress,
+        errorDetails: error instanceof Error ? error.stack : undefined,
+      })
+      return []
     }
   }
 }
