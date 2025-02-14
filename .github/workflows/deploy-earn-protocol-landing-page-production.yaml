@@ -6,23 +6,10 @@ on:
       - main
 
 jobs:
-  changes:
-    name: Check for earn protocol changes
-    runs-on: ubuntu-22.04
-    if: ${{ github.event_name == 'push' }}
-    permissions:
-      pull-requests: read
-    outputs:
-      build-earn-protocol-landing-page: ${{ steps.filter.outputs.build-earn-protocol-landing-page }}
-    steps:
-      - uses: actions/checkout@v4
-
   build-earn-protocol-landing-page:
     name: Build and deploy Earn Protocol App
     runs-on: ubuntu-22.04
     environment: staging
-    needs: changes
-    if: ${{ needs.changes.outputs.build-earn-protocol-landing-page == 'true' }}
     env:
       AWS_REGION: us-east-1
       ENVIRONMENT_TAG: staging
