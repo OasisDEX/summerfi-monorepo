@@ -1,6 +1,6 @@
 'use server'
 
-import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
+import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { type GetInterestRatesParams, SDKNetwork } from '@summerfi/app-types'
 import { getArkHistoricalRatesUrl, getArkProductId, getArkRatesUrl } from '@summerfi/app-utils'
 import { GraphQLClient } from 'graphql-request'
@@ -25,7 +25,13 @@ const noInterestRates: GetInterestRatesQuery = {
 // passing next.js fetcher with cache duration
 const customFetchCache = async (url: RequestInfo | URL, params?: RequestInit) => {
   try {
-    return await fetch(url, { ...params, next: { revalidate: REVALIDATION_TIMES.INTEREST_RATES } })
+    return await fetch(url, {
+      ...params,
+      next: {
+        revalidate: REVALIDATION_TIMES.INTEREST_RATES,
+        tags: [REVALIDATION_TAGS.INTEREST_RATES],
+      },
+    })
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('customFetchCache error:', error)
@@ -104,7 +110,12 @@ export async function getInterestRates({
 
         // Try primary source first
         const apiUrl = `${resolvedUrl}?productId=${productId}`
-        const apiResponse = await fetch(apiUrl)
+        const apiResponse = await fetch(apiUrl, {
+          next: {
+            revalidate: REVALIDATION_TIMES.INTEREST_RATES,
+            tags: [REVALIDATION_TAGS.INTEREST_RATES],
+          },
+        })
 
         if (!apiResponse.ok) {
           throw new Error('Primary API request failed')
