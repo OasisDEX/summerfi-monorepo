@@ -12,7 +12,6 @@ import {
 import {
   ITokenAmount,
   IUser,
-  TransactionInfo,
   type ApproveTransactionInfo,
   type ChainInfo,
   type ClaimTransactionInfo,
@@ -24,6 +23,7 @@ import {
   type StakeTransactionInfo,
   type UnstakeTransactionInfo,
 } from '@summerfi/sdk-common'
+import { OrderDirection, Rebalance_OrderBy } from '@summerfi/subgraph-manager-common'
 
 /**
  * @interface IArmadaManagerUsersClient
@@ -69,7 +69,13 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns GerRebalancesQuery
    */
-  getGlobalRebalancesRaw(params: { chainInfo: ChainInfo }): Promise<GetGlobalRebalancesQuery>
+  getGlobalRebalancesRaw(params: {
+    chainInfo: ChainInfo
+    first?: number
+    skip?: number
+    orderBy?: Rebalance_OrderBy
+    orderDirection?: OrderDirection
+  }): Promise<GetGlobalRebalancesQuery>
 
   /**
    * @name getUsersActivityRaw

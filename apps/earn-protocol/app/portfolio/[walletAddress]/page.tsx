@@ -50,7 +50,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     getVaultsList(),
     getUserPositions({ walletAddress }),
     systemConfigHandler(),
-    getGlobalRebalances(),
+    getGlobalRebalances({ first: 10 }),
     getSumrDelegateStake({ walletAddress }),
     fetchRaysLeaderboard({ userAddress: walletAddress, page: '1', limit: '1' }),
     getSumrBalances({ walletAddress }),

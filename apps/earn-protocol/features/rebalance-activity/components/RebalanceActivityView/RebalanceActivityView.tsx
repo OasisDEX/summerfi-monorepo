@@ -5,6 +5,7 @@ import {
   GenericMultiselect,
   getTwitterShareUrl,
   HeadingWithCards,
+  LoadingSpinner,
   TableCarousel,
   useCurrentUrl,
   useMobileCheck,
@@ -31,11 +32,11 @@ interface RebalanceActivityViewProps {
   searchParams?: { [key: string]: string[] }
 }
 
-const initialRows = 10
+const ITEMS_PER_PAGE = 10
 
 export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
   vaultsList,
-  rebalancesList,
+  rebalancesList: initialRebalancesList,
   searchParams,
 }) => {
   const { setQueryParams } = useQueryParams()
@@ -46,42 +47,57 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
 
-  const [current, setCurrent] = useState(initialRows)
-
-  const [currentlyLoadedList, setCurrentlyLoadedList] = useState(
-    rebalancesList.slice(0, initialRows),
-  )
-
-  const [noMoreItems, setNoMoreItems] = useState(false)
+  const [rebalancesList, setRebalancesList] = useState(initialRebalancesList)
+  const [isLoading, setIsLoading] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [hasMore, setHasMore] = useState(true)
 
   const { strategiesOptions, tokensOptions, protocolsOptions } = useMemo(
     () => mapMultiselectOptions(vaultsList),
     [vaultsList],
   )
 
-  const handleMoreItems = () => {
+  const loadMoreRebalances = async () => {
+    if (isLoading) return
+
     try {
-      setCurrentlyLoadedList((prev) => [
-        ...prev,
-        ...rebalancesList.slice(current, current + initialRows),
-      ])
-      setCurrent(current + initialRows)
+      setIsLoading(true)
+      const skip = currentPage * ITEMS_PER_PAGE
+
+      const response = await fetch(
+        `/earn/api/rebalance-activity?first=${ITEMS_PER_PAGE}&skip=${skip}&orderBy=timestamp&orderDirection=desc`,
+      )
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch rebalances')
+      }
+
+      const newRebalances = await response.json()
+
+      if (newRebalances.rebalances.length < ITEMS_PER_PAGE) {
+        setHasMore(false)
+      }
+
+      setRebalancesList((prev) => [...prev, ...newRebalances.rebalances])
+      setCurrentPage((prev) => prev + 1)
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.info('No more rebalance activity items to load')
-      setNoMoreItems(true)
+      console.error('Error loading more rebalances:', error)
+      setHasMore(false)
+    } finally {
+      setIsLoading(false)
     }
   }
 
   const filteredList = useMemo(
     () =>
       rebalanceActivityFilter({
-        rebalancesList: currentlyLoadedList,
+        rebalancesList,
         strategyFilter,
         tokenFilter,
         protocolFilter,
       }),
-    [currentlyLoadedList, strategyFilter, tokenFilter, protocolFilter],
+    [rebalancesList, strategyFilter, tokenFilter, protocolFilter],
   )
 
   const genericMultiSelectFilters = [
@@ -150,7 +166,15 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
           />
         ))}
       </div>
-      <InfiniteScroll loadMore={handleMoreItems} hasMore={!noMoreItems}>
+      <InfiniteScroll
+        loadMore={loadMoreRebalances}
+        hasMore={hasMore && !isLoading}
+        loader={
+          <div key="loader">
+            <LoadingSpinner />
+          </div>
+        }
+      >
         <RebalanceActivityTable
           rebalancesList={filteredList}
           customRow={{

@@ -1,6 +1,6 @@
 import { IArmadaVaultInfo, IArmadaPosition } from '@summerfi/armada-protocol-common'
 
-import { ITokenAmount, type IUser } from '@summerfi/sdk-common'
+import { ITokenAmount } from '@summerfi/sdk-common'
 import { IArmadaManagerUsersClient } from '../../interfaces/ArmadaManager/IArmadaManagerUsersClient'
 import { IRPCClient } from '../../interfaces/IRPCClient'
 import { RPCMainClientType } from '../../rpc/SDKMainClient'

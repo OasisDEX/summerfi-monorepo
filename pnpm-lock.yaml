@@ -186,6 +186,9 @@ importers:
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../../sdk/sdk-common
+      '@summerfi/subgraph-manager-common':
+        specifier: workspace:*
+        version: link:../../sdk/subgraph-manager-common
       '@summerfi/summer-protocol-db':
         specifier: workspace:*
         version: link:../../packages/summer-protocol-db
@@ -2800,6 +2803,9 @@ importers:
       '@summerfi/sdk-server':
         specifier: workspace:*
         version: link:../sdk-server
+      '@summerfi/subgraph-manager-common':
+        specifier: workspace:*
+        version: link:../subgraph-manager-common
       '@trpc/client':
         specifier: 11.0.0-rc.502
         version: 11.0.0-rc.502(@trpc/server@11.0.0-rc.502)
@@ -3080,6 +3086,9 @@ importers:
       '@summerfi/simulator-service':
         specifier: workspace:^
         version: link:../simulator-service
+      '@summerfi/subgraph-manager-common':
+        specifier: workspace:*
+        version: link:../subgraph-manager-common
       '@summerfi/subgraph-manager-service':
         specifier: workspace:*
         version: link:../subgraph-manager-service

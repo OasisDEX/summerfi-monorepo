@@ -55,6 +55,7 @@
     "@summerfi/contracts-provider-common": "workspace:*",
     "@summerfi/contracts-provider-service": "workspace:*",
     "@summerfi/subgraph-manager-service": "workspace:*",
+    "@summerfi/subgraph-manager-common": "workspace:*",
     "@trpc/server": "11.0.0-rc.502",
     "superjson": "^1.13.3"
   },
