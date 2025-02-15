@@ -11,9 +11,8 @@ import { getUserPositions } from '@/app/server-handlers/sdk/get-user-positions'
 import { getUsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
-import { getSumrDecayFactor } from '@/app/server-handlers/sumr-decay-factor'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
-import { getSumrDelegates } from '@/app/server-handlers/sumr-delegates'
+import { getSumrDelegatesWithDecayFactor } from '@/app/server-handlers/sumr-delegates-with-decay-factor'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
 import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
 import systemConfigHandler from '@/app/server-handlers/system-config'
@@ -42,7 +41,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     sumrEligibility,
     sumrBalances,
     sumrStakingInfo,
-    sumrDelegates,
+    { sumrDelegates, sumrDecayFactors },
     sumrToClaim,
     usersActivity,
   ] = await Promise.all([
@@ -55,7 +54,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     fetchRaysLeaderboard({ userAddress: walletAddress, page: '1', limit: '1' }),
     getSumrBalances({ walletAddress }),
     getSumrStakingInfo(),
-    getSumrDelegates(),
+    getSumrDelegatesWithDecayFactor(),
     getSumrToClaim({ walletAddress }),
     getUsersActivity({ filterTestingWallets: false }),
   ])
@@ -100,10 +99,6 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   const userVaultsIds = positionsList.map((position) => position.vaultData.id.toLowerCase())
   const userRebalances = rebalances.filter((rebalance) =>
     userVaultsIds.includes(rebalance.vault.id.toLowerCase()),
-  )
-
-  const sumrDecayFactors = await getSumrDecayFactor(
-    sumrDelegates.map((delegate) => delegate.account.address),
   )
 
   const rewardsData: ClaimDelegateExternalData = {
