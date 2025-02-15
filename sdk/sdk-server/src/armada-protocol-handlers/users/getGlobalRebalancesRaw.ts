@@ -18,6 +18,27 @@ export const getGlobalRebalancesRaw = publicProcedure
               symbol_in: z.array(z.string()),
             })
             .optional(),
+          vault_: z
+            .object({
+              id_in: z.array(z.string()),
+            })
+            .optional(),
+          or: z
+            .array(
+              z.object({
+                from_: z
+                  .object({
+                    name_in: z.array(z.string()),
+                  })
+                  .optional(),
+                to_: z
+                  .object({
+                    name_in: z.array(z.string()),
+                  })
+                  .optional(),
+              }),
+            )
+            .optional(),
         })
         .optional(),
     }),

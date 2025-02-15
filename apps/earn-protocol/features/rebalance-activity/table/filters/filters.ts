@@ -5,8 +5,6 @@ import type {
   SDKVaultishType,
 } from '@summerfi/app-types'
 
-import { getProtocolLabel } from '@/helpers/get-protocol-label'
-
 const rebalanceFilterProtocols = ({
   protocolFilter,
   rebalance,
@@ -14,8 +12,8 @@ const rebalanceFilterProtocols = ({
   protocolFilter: string[]
   rebalance: SDKGlobalRebalanceType
 }) => {
-  const fromProtocol = getProtocolLabel(rebalance.from.name?.split('-') ?? ['n/a'])
-  const toProtocol = getProtocolLabel(rebalance.to.name?.split('-') ?? ['n/a'])
+  const fromProtocol = rebalance.from.name?.replace(/-\d+$/u, '') ?? ''
+  const toProtocol = rebalance.to.name?.replace(/-\d+$/u, '') ?? ''
 
   return (
     !protocolFilter.length ||

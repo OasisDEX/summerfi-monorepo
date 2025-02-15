@@ -79,6 +79,8 @@ export const RebalanceActivityTable: FC<RebalanceActivityTableProps> = ({
         currentPage,
         sortConfig,
         tokenFilter: filters.tokenFilter,
+        strategyFilter: filters.strategyFilter,
+        protocolFilter: filters.protocolFilter,
         itemsPerPage: ITEMS_PER_PAGE,
       })
 
@@ -108,6 +110,8 @@ export const RebalanceActivityTable: FC<RebalanceActivityTableProps> = ({
         currentPage,
         sortConfig: _sortConfig,
         tokenFilter: filters.tokenFilter,
+        strategyFilter: filters.strategyFilter,
+        protocolFilter: filters.protocolFilter,
         itemsPerPage: ITEMS_PER_PAGE,
       })
 
@@ -131,6 +135,8 @@ export const RebalanceActivityTable: FC<RebalanceActivityTableProps> = ({
         currentPage,
         sortConfig,
         tokenFilter: filters.tokenFilter,
+        strategyFilter: filters.strategyFilter,
+        protocolFilter: filters.protocolFilter,
         itemsPerPage: ITEMS_PER_PAGE,
       })
 

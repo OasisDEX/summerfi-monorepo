@@ -74,22 +74,22 @@ const mapTokensToMultiselectOptions = (
 const mapProtocolsToMultiselectOptions = (
   vaultsList: SDKVaultsListType,
 ): GenericMultiselectOption[] => {
-  const uniqueProtocolsList = [
-    ...new Set(
-      vaultsList.flatMap((vault) =>
-        vault.arks.map((ark) => {
-          const protocol = ark.name?.split('-') ?? ['n/a']
+  const protocolsMap = new Map<string, { label: string; value: string }>()
 
-          return getProtocolLabel(protocol)
-        }),
-      ),
-    ),
-  ]
+  vaultsList.forEach((vault) => {
+    vault.arks.forEach((ark) => {
+      const protocol = ark.name?.split('-') ?? ['n/a']
+      const label = getProtocolLabel(protocol)
+      const value = ark.name ?? ''
 
-  return uniqueProtocolsList.map((protocol) => ({
-    label: protocol,
-    icon: getProtocolIcon(protocol),
-    value: protocol,
+      protocolsMap.set(label, { label, value }) // Changed key to label instead of value
+    })
+  })
+
+  return Array.from(protocolsMap.values()).map((item) => ({
+    label: item.label,
+    icon: getProtocolIcon(item.label),
+    value: item.value.replace(/-\d+$/u, ''),
   }))
 }
 

@@ -13,6 +13,14 @@ const querySchema = z.object({
     .string()
     .optional()
     .transform((str) => (str ? str.split(',') : undefined)),
+  strategy: z
+    .string()
+    .optional()
+    .transform((str) => (str ? str.split(',') : undefined)),
+  protocol: z
+    .string()
+    .optional()
+    .transform((str) => (str ? str.split(',') : undefined)),
 })
 
 export async function GET(request: NextRequest) {
@@ -33,12 +41,21 @@ export async function GET(request: NextRequest) {
 
     const validatedParams = result.data
 
+    const resolvedOrderBy = {
+      [OrderBy.Amount]: OrderBy.AmountUsd,
+      [OrderBy.Timestamp]: OrderBy.Timestamp,
+    }[validatedParams.orderBy as OrderBy.Amount | OrderBy.Timestamp] as
+      | OrderBy.AmountUsd
+      | OrderBy.Timestamp
+
     const rebalanceData = await getGlobalRebalances({
       first: Number(validatedParams.first),
       skip: validatedParams.skip ? Number(validatedParams.skip) : undefined,
-      orderBy: validatedParams.orderBy,
+      orderBy: resolvedOrderBy,
       orderDirection: validatedParams.orderDirection,
       tokenSymbols: validatedParams.tokenSymbols,
+      strategy: validatedParams.strategy,
+      protocol: validatedParams.protocol,
     })
 
     return Response.json(rebalanceData)
