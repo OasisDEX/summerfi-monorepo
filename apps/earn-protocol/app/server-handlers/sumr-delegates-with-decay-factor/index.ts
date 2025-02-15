@@ -5,10 +5,16 @@ import { getSumrDelegates } from '@/app/server-handlers/sumr-delegates'
  * Retrieves SUMR delegates with their associated decay factors.
  *
  * A decay factor is applied to delegate voting power based on time elapsed,
- * reducing influence over time according to protocol rules.
+ * reducing influence over time according to protocol rules. The decay factor
+ * is a multiplier between 0 and 1 that decreases as time passes.
  *
- * @returns {Promise<any>} A promise that resolves to the delegates data with decay factors
- * @throws {Error} If there's an error fetching or processing the delegates data
+ * @returns {Promise<{
+ *   sumrDelegates: SumrDelegates[];
+ *   sumrDecayFactors: SumrDecayFactorData[];
+ * }>} Object containing:
+ *   - sumrDelegates: Array of delegate information including account details
+ *   - sumrDecayFactors: Array of decay factors corresponding to each delegate
+ * @throws Will return empty arrays for both properties if either fetch operation fails
  */
 export const getSumrDelegatesWithDecayFactor = async () => {
   try {
