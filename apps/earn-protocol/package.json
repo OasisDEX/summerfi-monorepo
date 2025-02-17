@@ -17,7 +17,6 @@
     "@account-kit/infra": "^4.11.0",
     "@account-kit/react": "^4.11.0",
     "@account-kit/signer": "^4.11.0",
-    "@layerzerolabs/lz-v2-utilities": "^3.0.67",
     "@loadable/component": "^5.16.4",
     "@safe-global/safe-apps-sdk": "^9.0.0",
     "@summerfi/app-earn-ui": "workspace:*",

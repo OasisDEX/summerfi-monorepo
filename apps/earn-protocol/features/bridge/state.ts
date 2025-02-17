@@ -1,14 +1,24 @@
+import { base } from 'viem/chains'
+
 import {
   type BridgeReducerAction,
-  BridgeStakeType,
   type BridgeState,
-  BridgeSteps,
+  BridgeTxStatuses,
 } from '@/features/bridge/types'
 
 export const bridgeState: BridgeState = {
-  step: BridgeSteps.TERMS,
+  bridgeStatus: BridgeTxStatuses.NOT_STARTED,
   amount: 0,
-  walletAddress: '0x0', // dummy, invalid address for init
+  recipient: undefined,
+  walletAddress: '0x0', // dummy, invalid address for initial state
+  destinationChain: base,
+  sumrBalances: {
+    mainnet: '0',
+    arbitrum: '0',
+    base: '0',
+    total: '0',
+    vested: '0',
+  },
 }
 
 export const bridgeReducer = (prevState: BridgeState, action: BridgeReducerAction) => {
@@ -18,41 +28,26 @@ export const bridgeReducer = (prevState: BridgeState, action: BridgeReducerActio
         ...prevState,
         amount: action.payload,
       }
-    // case 'update-delegatee':
-    //   return {
-    //     ...prevState,
-    //     delegatee: action.payload,
-    //   }
-    // case 'update-claim-status':
-    //   return {
-    //     ...prevState,
-    //     claimStatus: action.payload,
-    //   }
-    // case 'update-delegate-status':
-    //   return {
-    //     ...prevState,
-    //     delegateStatus: action.payload,
-    //   }
-    // case 'update-staking-approve-status':
-    //   return {
-    //     ...prevState,
-    //     stakingApproveStatus: action.payload,
-    //   }
-    // case 'update-staking-status':
-    //   return {
-    //     ...prevState,
-    //     stakingStatus: action.payload,
-    //   }
-    // case 'update-stake-type':
-    //   return {
-    //     ...prevState,
-    //     stakeType: action.payload,
-    //   }
-    // case 'update-stake-change-amount':
-    //   return {
-    //     ...prevState,
-    //     stakeChangeAmount: action.payload,
-    //   }
+    case 'update-bridge-status':
+      return {
+        ...prevState,
+        bridgeStatus: action.payload,
+      }
+    case 'update-recipient':
+      return {
+        ...prevState,
+        recipient: action.payload,
+      }
+    case 'update-wallet-address':
+      return {
+        ...prevState,
+        walletAddress: action.payload,
+      }
+    case 'update-destination-chain':
+      return {
+        ...prevState,
+        destinationChain: action.payload,
+      }
     default:
       return prevState
   }

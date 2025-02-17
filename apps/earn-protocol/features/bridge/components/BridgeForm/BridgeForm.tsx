@@ -1,17 +1,22 @@
-'use client'
-import { type FC, useState } from 'react'
+import { type Dispatch, type FC } from 'react'
 import { useChain } from '@account-kit/react'
 import {
   InputWithDropdown,
   Sidebar,
-  SkeletonLine,
   SUMR_CAP,
   useAmount,
   useLocalConfig,
 } from '@summerfi/app-earn-ui'
 import { type SDKNetwork } from '@summerfi/app-types'
-import { formatCryptoBalance, sdkNetworkToChain } from '@summerfi/app-utils'
-import { base, type Chain } from 'viem/chains'
+import {
+  chainIdToSDKNetwork,
+  formatCryptoBalance,
+  formatToBigNumber,
+  isSupportedHumanNetwork,
+  sdkNetworkToChain,
+  sdkNetworkToHumanNetwork,
+} from '@summerfi/app-utils'
+import BigNumber from 'bignumber.js'
 
 import { TermsOfServiceCookiePrefix } from '@/constants/terms-of-service'
 import { BridgeFormTitle } from '@/features/bridge/components/BridgeFormTitle/BridgeFormTitle'
@@ -20,34 +25,29 @@ import { ChainSelectors } from '@/features/bridge/components/ChainSelectors/Chai
 import { QuickActionTags } from '@/features/bridge/components/QuickActionTags/QuickActionTags'
 import { Spacer } from '@/features/bridge/components/Spacer/Spacer'
 import { TransactionDetails } from '@/features/bridge/components/TransactionDetails/TransactionDetails'
+import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import { useBridgeTransaction } from '@/features/bridge/hooks/use-bridge-transaction'
-import { type BridgeExternalData } from '@/features/bridge/types'
-import { usePublicClient } from '@/hooks/use-public-client'
+import {
+  type BridgeExternalData,
+  type BridgeReducerAction,
+  type BridgeState,
+} from '@/features/bridge/types'
 import { useRiskVerification } from '@/hooks/use-risk-verification'
-import { useTokenBalance } from '@/hooks/use-token-balance'
+import { useToken } from '@/hooks/use-token'
 
 interface BridgeFormProps {
-  walletAddress: string
-  externalData: BridgeExternalData | null
+  dispatch: Dispatch<BridgeReducerAction>
+  state: BridgeState
+  externalData: BridgeExternalData
 }
 
-export const BridgeForm: FC<BridgeFormProps> = ({ walletAddress, externalData }) => {
+export const BridgeForm: FC<BridgeFormProps> = ({ state, dispatch, externalData }) => {
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
   const { chain: sourceChain, setChain: setSourceChain } = useChain()
 
-  const [destinationChain, setDestinationChain] = useState<Chain>(base)
-
-  const { publicClient } = usePublicClient({ chain: sourceChain })
-
-  const {
-    token: sumrToken,
-    tokenBalance: sumrBalance,
-    tokenBalanceLoading: isSumrBalanceLoading,
-  } = useTokenBalance({
-    publicClient,
-    vaultTokenSymbol: 'SUMMER',
+  const { token: sumrToken } = useToken({
     tokenSymbol: 'SUMMER',
     chainId: sourceChain.id,
   })
@@ -63,7 +63,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({ walletAddress, externalData })
     onBlur,
     onFocus,
   } = useAmount({
-    tokenDecimals: 18,
+    tokenDecimals: SUMR_DECIMALS,
     tokenPrice: estimatedSumrPrice.toString(),
     selectedToken: sumrToken,
   })
@@ -83,8 +83,8 @@ export const BridgeForm: FC<BridgeFormProps> = ({ walletAddress, externalData })
   } = useBridgeTransaction({
     amount: amountRaw ?? '0',
     sourceChain,
-    destinationChain,
-    recipient: walletAddress as `0x${string}`,
+    destinationChain: state.destinationChain,
+    recipient: state.walletAddress as `0x${string}`,
     externalData,
     onSuccess: () => {
       // Handle success
@@ -102,34 +102,35 @@ export const BridgeForm: FC<BridgeFormProps> = ({ walletAddress, externalData })
     if (risk.isRisky) return
 
     console.log('Bridging:', {
-      sourceChain: sourceChain.id,
-      destinationChain: destinationChain.id,
+      sourceChain,
+      destinationChain: state.destinationChain,
       amountRaw,
     })
     // await executeBridgeTransaction()
   }
 
-  const handleCancel = () => {
-    manualSetAmount('')
-    simulateTransaction()
-  }
-
-  const handleDestinationChainChange = (network: SDKNetwork) => {
-    setDestinationChain(sdkNetworkToChain(network))
+  const handleDestinationChainChange = (newDestination: SDKNetwork) => {
+    dispatch({ type: 'update-destination-chain', payload: sdkNetworkToChain(newDestination) })
   }
 
   const handleSourceChainChange = (network: SDKNetwork) => {
-    console.log('changing source chain to', network)
-
     const nextSourceChain = sdkNetworkToChain(network)
-    console.log('nextSourceChain', nextSourceChain)
+
     setSourceChain({ chain: nextSourceChain })
   }
 
-  console.log('amountRaw', amountRaw)
-  console.log('amountParsed', amountParsed)
-  console.log('amountDisplay', amountDisplay)
-  console.log('amountDisplayUSD', amountDisplayUSD)
+  console.log('Current BridgeForm state:', state)
+
+  const sourceNetwork = chainIdToSDKNetwork(sourceChain.id)
+
+  const humanNetworkName = sdkNetworkToHumanNetwork(sourceNetwork)
+
+  if (!isSupportedHumanNetwork(humanNetworkName)) {
+    throw new Error('Invalid source chain')
+  }
+
+  const sumrBalanceOnSourceChain = formatToBigNumber(state.sumrBalances[humanNetworkName])
+  const isAmountGreaterThanBalance = amountParsed.gt(sumrBalanceOnSourceChain)
 
   return (
     <Sidebar
@@ -140,7 +141,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({ walletAddress, externalData })
         <>
           <ChainSelectors
             sourceChain={sourceChain}
-            destinationChain={destinationChain}
+            destinationChain={state.destinationChain}
             onSourceChainChange={handleSourceChainChange}
             onDestinationChainChange={handleDestinationChainChange}
           />
@@ -150,13 +151,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({ walletAddress, externalData })
               value={amountDisplay}
               heading={{
                 label: 'Balance',
-                value: isSumrBalanceLoading ? (
-                  <SkeletonLine width={60} height={10} />
-                ) : sumrBalance ? (
-                  `${formatCryptoBalance(sumrBalance)} SUMR`
-                ) : (
-                  '-'
-                ),
+                value: `${formatCryptoBalance(sumrBalanceOnSourceChain)} SUMR`,
               }}
               secondaryValue={amountDisplayUSD}
               handleChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -172,9 +167,11 @@ export const BridgeForm: FC<BridgeFormProps> = ({ walletAddress, externalData })
               tagsRow={
                 <QuickActionTags
                   onSelect={(percentage) => {
-                    const newAmount = sumrBalance ? sumrBalance.times(percentage).toFixed(2) : '0'
+                    const newAmount = sumrBalanceOnSourceChain
+                      .times(percentage)
+                      .toFormat(2, BigNumber.ROUND_DOWN)
 
-                    manualSetAmount(newAmount)
+                    manualSetAmount(newAmount.toString())
                     simulateTransaction()
                   }}
                 />
@@ -183,21 +180,18 @@ export const BridgeForm: FC<BridgeFormProps> = ({ walletAddress, externalData })
           </BridgeInput>
           <TransactionDetails
             gasOnSource={Number(gasOnSource)}
-            destinationChain={destinationChain}
+            destinationChain={state.destinationChain}
             amountReceived={Number(amountReceived)}
             lzFee={Number(lzFee)}
             error={simulationError}
           />
         </>
       }
+      // error={isAmountGreaterThanBalance ? 'Insufficient balance' : undefined}
       primaryButton={{
         label: 'Bridge',
         action: handleBridge,
-        disabled: !isReady,
-      }}
-      secondaryButton={{
-        label: 'Cancel',
-        action: handleCancel,
+        disabled: !isReady || isAmountGreaterThanBalance,
       }}
     />
   )

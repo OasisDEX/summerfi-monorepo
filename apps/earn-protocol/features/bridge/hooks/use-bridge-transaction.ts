@@ -78,10 +78,12 @@ export function useBridgeTransaction({
     if (sourceChain && destinationChain) {
       // Get OFT address for source chain
       const oftAddress = externalData?.oftAddresses?.[sourceChain.id]
+
       setOftAddress(oftAddress)
 
       // Get destination endpoint ID for LayerZero
       const dstEid = externalData?.chainToEid?.[destinationChain.id]
+
       setDstEid(dstEid)
     }
   }, [sourceChain, destinationChain, externalData])

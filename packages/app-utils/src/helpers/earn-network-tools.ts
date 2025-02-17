@@ -106,3 +106,16 @@ export const sdkNetworkToChain = (network: SDKNetwork): Chain => {
 
   return chainMap[network as SDKSupportedNetwork]
 }
+
+/**
+ * Type guard to check whether a value is a supported human network.
+ * Supported human networks are: "arbitrum", "base", and "mainnet".
+ *
+ * @param network - The value to test.
+ * @returns True if the value is a string and corresponds to a supported human network.
+ */
+export const isSupportedHumanNetwork = (
+  network: unknown,
+): network is 'arbitrum' | 'base' | 'mainnet' => {
+  return typeof network === 'string' && network.toLowerCase() in sdkNetworkMap
+}
