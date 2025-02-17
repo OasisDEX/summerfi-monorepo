@@ -7,11 +7,11 @@ import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { UserActivityView } from '@/features/user-activity/components/UserActivityView/UserActivityView'
 
 interface UserActivityPageProps {
-  searchParams: ReadonlyURLSearchParams
+  searchParams: Promise<ReadonlyURLSearchParams>
 }
 
-const UserActivityPage: FC<UserActivityPageProps> = async (props) => {
-  const { searchParams } = await props
+const UserActivityPage: FC<UserActivityPageProps> = async ({ searchParams }) => {
+  const searchParamsResolved = await searchParams
   const [{ vaults }, { usersActivity, totalUsers, topDepositors }] = await Promise.all([
     getVaultsList(),
     getUsersActivity({ filterTestingWallets: true }),
@@ -23,7 +23,7 @@ const UserActivityPage: FC<UserActivityPageProps> = async (props) => {
       usersActivity={usersActivity}
       topDepositors={topDepositors}
       totalUsers={totalUsers}
-      searchParams={parseQueryStringServerSide({ searchParams })}
+      searchParams={parseQueryStringServerSide({ searchParams: searchParamsResolved })}
     />
   )
 }
