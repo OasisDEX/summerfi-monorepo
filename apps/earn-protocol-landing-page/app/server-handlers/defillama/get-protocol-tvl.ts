@@ -15,7 +15,7 @@ export const getProtocolTvl = async (
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(
-      `Error fetching TVL for ${defillamaProtocolName} (${originalProtocolName})`,
+      `Error fetching TVL for ${defillamaProtocolName} (${originalProtocolName}) `,
       error,
     )
 
