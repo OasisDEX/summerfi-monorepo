@@ -9,10 +9,10 @@ jobs:
   build-earn-protocol:
     name: Build and deploy Earn Protocol App
     runs-on: ubuntu-22.04
-    environment: staging
+    environment: production
     env:
       AWS_REGION: us-east-1
-      ENVIRONMENT_TAG: staging
+      ENVIRONMENT_TAG: production
       SERVICE_NAME: summer-fi-earn-protocol-staging
       CLUSTER_NAME: summer-fi-earn-protocol-staging
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
