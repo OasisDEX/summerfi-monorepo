@@ -32,13 +32,14 @@ export const getSumrToClaim = async ({
     chainInfo: getChainInfoByChainId(SDKChainId.BASE),
   })
 
-  const aggregatedRewards = await backendSDK.armada.users.getAggregatedRewards({
-    user,
-  })
-
-  const claimableAggregatedRewards = await backendSDK.armada.users.getClaimableAggregatedRewards({
-    user,
-  })
+  const [aggregatedRewards, claimableAggregatedRewards] = await Promise.all([
+    backendSDK.armada.users.getAggregatedRewards({
+      user,
+    }),
+    backendSDK.armada.users.getClaimableAggregatedRewards({
+      user,
+    }),
+  ])
 
   return {
     aggregatedRewards: {

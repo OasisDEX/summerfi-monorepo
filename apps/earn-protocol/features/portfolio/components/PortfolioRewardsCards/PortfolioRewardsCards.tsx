@@ -6,7 +6,6 @@ import {
   DataModule,
   getVotingPowerColor,
   Icon,
-  RAYS_TO_SUMR_CONVERSION_RATE,
   SUMR_CAP,
   Text,
   Tooltip,
@@ -350,25 +349,13 @@ interface YourRaysProps {
 }
 
 const YourRays: FC<YourRaysProps> = ({ totalRays }) => {
-  const rawValue = RAYS_TO_SUMR_CONVERSION_RATE * totalRays
-  const value = formatCryptoBalance(rawValue)
-
   const _totalRays = formatCryptoBalance(totalRays)
 
   return (
     <DataModule
       dataBlock={{
-        title: 'Your season 2 $SUMR',
-        value,
-        subValue: (
-          <Text variant="p3semi" style={{ color: 'var(--earn-protocol-success-100)' }}>
-            Rays earned {_totalRays}
-            <span style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-              {' '}
-              • ~{RAYS_TO_SUMR_CONVERSION_RATE} $RAYS = 1 $SUMR
-            </span>
-          </Text>
-        ),
+        title: 'Your season 2 $RAYS',
+        value: _totalRays,
         titleSize: 'medium',
         valueSize: 'large',
       }}
