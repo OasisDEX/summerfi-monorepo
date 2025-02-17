@@ -153,7 +153,9 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
 
   const { decayFactor, isLoading: decayFactorLoading } = useDecayFactor(state.delegatee)
 
-  const resolvedWalletAddress = Array.isArray(walletAddress) ? walletAddress[0] : walletAddress
+  const resolvedWalletAddress = (
+    Array.isArray(walletAddress) ? walletAddress[0] : walletAddress
+  ) as string
 
   const user = useUser()
   const { userWalletAddress } = useUserWallet()

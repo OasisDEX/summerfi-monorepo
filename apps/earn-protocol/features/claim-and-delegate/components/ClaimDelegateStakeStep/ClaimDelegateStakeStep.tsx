@@ -98,7 +98,9 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
   } = useLocalConfig()
   const { userWalletAddress } = useUserWallet()
   const { walletAddress } = useParams()
-  const resolvedWalletAddress = Array.isArray(walletAddress) ? walletAddress[0] : walletAddress
+  const resolvedWalletAddress = (
+    Array.isArray(walletAddress) ? walletAddress[0] : walletAddress
+  ) as string
 
   const { setChain } = useChain()
   const { clientChainId } = useClientChainId()
