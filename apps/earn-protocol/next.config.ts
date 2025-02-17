@@ -1,9 +1,13 @@
-import createNextIntlPlugin from 'next-intl/plugin'
+import type { NextConfig, Redirect } from 'next'
 
-const withNextIntl = createNextIntlPlugin()
+const redirectToProSummer = (pathname: string) => ({
+  source: pathname,
+  destination: `https://pro.summer.fi/${pathname}`,
+  basePath: false as const, // somehow this can be only false
+  permanent: true,
+})
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig: NextConfig = {
   basePath: '/earn',
   output: 'standalone',
   reactStrictMode: false,
@@ -25,7 +29,7 @@ const nextConfig = {
         `,
   },
   headers: () => {
-    return [
+    return Promise.resolve([
       {
         source: '/manifest.json',
         headers: [
@@ -47,17 +51,10 @@ const nextConfig = {
           },
         ],
       },
-    ]
+    ])
   },
-  redirects() {
-    const redirectToProSummer = (pathname) => ({
-      source: pathname,
-      destination: `https://pro.summer.fi/${pathname}`,
-      basePath: false,
-      permanent: true,
-    })
-
-    return [
+  redirects: async () => {
+    return Promise.resolve([
       // product redirects
       redirectToProSummer('/multiply'),
       redirectToProSummer('/borrow'),
@@ -69,7 +66,7 @@ const nextConfig = {
       // maker position redirects
       // matches to `/{number}`
       redirectToProSummer('/:makerPosition(\\d{1,})'),
-    ]
+    ])
   },
   images: {
     remotePatterns: [
@@ -82,4 +79,4 @@ const nextConfig = {
   },
 }
 
-export default withNextIntl(nextConfig)
+export default nextConfig

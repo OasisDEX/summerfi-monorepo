@@ -34,6 +34,8 @@ const nextConfig: NextConfig = {
   },
   redirects: function () {
     return Promise.resolve([
+      // portfolio redirect
+      redirectToProSummer('/portfolio/:otherPosition'),
       // product redirects
       redirectToProSummer('/multiply'),
       redirectToProSummer('/borrow'),
