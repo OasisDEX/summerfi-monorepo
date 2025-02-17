@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js'
 
 import { formatAsShorthandNumbers } from '@/formatters/format-as-shorthand-numbers'
 import { formatToBigNumber } from '@/formatters/format-to-big-number'
-import { million, oneThousandth, ten, zero } from '@/numbers'
+import { hundredThousand, oneThousandth, ten, zero } from '@/numbers'
 
 /**
  * Formats a cryptocurrency balance as a human-readable string.
@@ -19,7 +19,7 @@ import { million, oneThousandth, ten, zero } from '@/numbers'
 export const formatCryptoBalance = (amount: BigNumber | string | number | bigint): string => {
   const resolvedAmount = formatToBigNumber(amount.toString())
 
-  const absAmount = resolvedAmount.absoluteValue()
+  const absAmount = resolvedAmount.abs()
 
   if (absAmount.eq(zero)) {
     return formatAsShorthandNumbers(resolvedAmount, { precision: 2 })
@@ -33,7 +33,9 @@ export const formatCryptoBalance = (amount: BigNumber | string | number | bigint
     return formatAsShorthandNumbers(resolvedAmount, { precision: 4 })
   }
 
-  if (absAmount.lt(million)) return resolvedAmount.toFormat(2, BigNumber.ROUND_DOWN)
+  if (absAmount.lt(hundredThousand)) {
+    return resolvedAmount.toFormat(2, BigNumber.ROUND_DOWN)
+  }
 
   return formatAsShorthandNumbers(resolvedAmount, { precision: 2 })
 }

@@ -2,6 +2,15 @@ import { type IArmadaPosition, type SDKVaultishType } from '@summerfi/app-types'
 import { zero } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
+export type PositionValues = {
+  netValue: BigNumber
+  netValueUSD: BigNumber
+  netDeposited: BigNumber
+  netDepositedUSD: BigNumber
+  netEarnings: BigNumber
+  netEarningsUSD: BigNumber
+}
+
 export const getPositionValues = (position: {
   positionData: IArmadaPosition
   vaultData: SDKVaultishType
@@ -28,5 +37,5 @@ export const getPositionValues = (position: {
     netDepositedUSD: netDeposited.times(inputTokenPrice),
     netEarnings,
     netEarningsUSD: netEarnings.times(inputTokenPrice),
-  }
+  } as PositionValues
 }
