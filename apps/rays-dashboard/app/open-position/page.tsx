@@ -21,9 +21,9 @@ import systemConfigHandler from '@/server-handlers/system-config'
 const firstWeekTimestamp = dayjs('2024-06-18T11:00:00+02:00')
 
 interface OpenPositionPageProps {
-  searchParams: {
+  searchParams: Promise<{
     userAddress: string
-  }
+  }>
 }
 
 const weekBoosters = [5, 4, 3.5, 3, 2.5, 2, 1.5, 1.25]
@@ -38,7 +38,7 @@ export default async function OpenPositionPage({ searchParams }: OpenPositionPag
   const currentBooster = weekBoosters[currentWeekDifference]
 
   const systemConfig = await systemConfigHandler()
-  const { userAddress } = searchParams
+  const { userAddress } = await searchParams
 
   const userRays = await fetchRays({ address: userAddress })
   const { migrationsV2, error: migrationsListError } = await fetchMigrations({
@@ -133,7 +133,7 @@ export default async function OpenPositionPage({ searchParams }: OpenPositionPag
           Explore over 50+ positions with major protocols and collateral types supports
         </WithArrow>
       </ProxyLinkComponent>
-      <PageViewHandler userAddress={searchParams.userAddress} />
+      <PageViewHandler userAddress={userAddress} />
     </div>
   )
 }

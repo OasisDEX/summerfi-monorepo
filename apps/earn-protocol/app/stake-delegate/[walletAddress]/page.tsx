@@ -10,13 +10,13 @@ import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/ty
 import { isValidAddress } from '@/helpers/is-valid-address'
 
 type StakeDelegatePageProps = {
-  params: {
+  params: Promise<{
     walletAddress: string
-  }
+  }>
 }
 
 const StakeDelegatePage = async ({ params }: StakeDelegatePageProps) => {
-  const { walletAddress } = params
+  const { walletAddress } = await params
 
   if (!isValidAddress(walletAddress)) {
     redirect(`/`)
