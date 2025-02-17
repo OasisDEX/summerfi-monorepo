@@ -61,7 +61,7 @@ const setFork =
       })
       .catch((error) => {
         // eslint-disable-next-line no-console
-        console.log('error', error)
+        console.log('error ', error)
         setUpdating((prev) => {
           prev.splice(prev.indexOf(chainId), 1)
 
