@@ -1,5 +1,6 @@
 'use server'
 
+import { REVALIDATION_TAGS } from '@summerfi/app-earn-ui'
 import { revalidatePath, revalidateTag } from 'next/cache'
 
 export const revalidateUser = async (walletAddress?: string) => {
@@ -13,6 +14,8 @@ export const revalidateUser = async (walletAddress?: string) => {
 
 export const revalidateVaultsListData = async () => {
   // clears the cache and revalidates the vaults list data
+  revalidateTag(REVALIDATION_TAGS.INTEREST_RATES)
+
   return await Promise.resolve(revalidatePath('/earn'))
 }
 
