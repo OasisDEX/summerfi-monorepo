@@ -23,6 +23,7 @@ import { getUserStakedBalanceHandler } from '../handlers/getUserStakedBalanceHan
 import { getUserVotesHandler } from '../handlers/getUserVotesHandler'
 import { getSummerTokenHandler } from '../handlers/getSummerTokenHandler'
 import { getClaimableAggregatedRewardsHandler } from '../handlers/getClaimableAggregatedRewardsHandler'
+import { getBridgeTxHandler } from '../handlers/getBridgeTxHandler'
 
 type UseSdk = {
   walletAddress?: string
@@ -72,6 +73,7 @@ export const useSDK = (params: UseSdk) => {
     [sdk],
   )
 
+  const getBridgeTx = useMemo(() => getBridgeTxHandler(sdk), [sdk])
   const getDelegateTx = useMemo(() => getDelegateTxHandler(sdk), [sdk])
   const getStakeTx = useMemo(() => getStakeTxHandler(sdk), [sdk])
   const getUndelegateTx = useMemo(() => getUndelegateTxHandler(sdk), [sdk])
@@ -96,6 +98,7 @@ export const useSDK = (params: UseSdk) => {
       getAggregatedRewards,
       getClaimableAggregatedRewards,
       getAggregatedClaimsForChainTX,
+      getBridgeTx,
       getDelegateTx,
       getStakeTx,
       getUndelegateTx,

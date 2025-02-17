@@ -72,27 +72,18 @@ export const BridgeForm: FC<BridgeFormProps> = ({ state, dispatch, externalData 
     cookiePrefix: TermsOfServiceCookiePrefix.SUMR_CLAIM_TOKEN,
   })
 
-  const {
-    gasOnSource,
-    amountReceived,
-    lzFee,
-    isReady,
-    simulationError,
-    executeBridgeTransaction,
-    simulateTransaction,
-  } = useBridgeTransaction({
+  const { executeBridgeTransaction, isLoading, error } = useBridgeTransaction({
     amount: amountRaw ?? '0',
     sourceChain,
     destinationChain: state.destinationChain,
     recipient: state.walletAddress as `0x${string}`,
-    externalData,
     onSuccess: () => {
-      // Handle success
       console.log('Bridge successful')
+      // Add any success handling like showing a notification
     },
     onError: () => {
-      // Handle error
       console.log('Bridge failed')
+      // Add any error handling like showing an error message
     },
   })
 
@@ -106,7 +97,8 @@ export const BridgeForm: FC<BridgeFormProps> = ({ state, dispatch, externalData 
       destinationChain: state.destinationChain,
       amountRaw,
     })
-    // await executeBridgeTransaction()
+
+    await executeBridgeTransaction()
   }
 
   const handleDestinationChainChange = (newDestination: SDKNetwork) => {
@@ -154,10 +146,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({ state, dispatch, externalData 
                 value: `${formatCryptoBalance(sumrBalanceOnSourceChain)} SUMR`,
               }}
               secondaryValue={amountDisplayUSD}
-              handleChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                handleAmountChange(e)
-                simulateTransaction()
-              }}
+              handleChange={handleAmountChange}
               handleDropdownChange={() => {}}
               onFocus={onFocus}
               onBlur={onBlur}
@@ -172,26 +161,24 @@ export const BridgeForm: FC<BridgeFormProps> = ({ state, dispatch, externalData 
                       .toFormat(2, BigNumber.ROUND_DOWN)
 
                     manualSetAmount(newAmount.toString())
-                    simulateTransaction()
                   }}
                 />
               }
             />
           </BridgeInput>
           <TransactionDetails
-            gasOnSource={Number(gasOnSource)}
+            gasOnSource={0} // These values will need to come from somewhere else now
             destinationChain={state.destinationChain}
-            amountReceived={Number(amountReceived)}
-            lzFee={Number(lzFee)}
-            error={simulationError}
+            amountReceived={0}
+            lzFee={0}
+            error={error?.message}
           />
         </>
       }
-      // error={isAmountGreaterThanBalance ? 'Insufficient balance' : undefined}
       primaryButton={{
-        label: 'Bridge',
+        label: isLoading ? 'Bridging...' : 'Bridge',
         action: handleBridge,
-        disabled: !isReady || isAmountGreaterThanBalance,
+        disabled: isAmountGreaterThanBalance || isLoading,
       }}
     />
   )
