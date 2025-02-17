@@ -14,7 +14,7 @@ import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { VaultTitle } from '@/components/molecules/VaultTitle/VaultTitle'
 import { riskColors } from '@/helpers/risk-colors'
 
-import vaultOpenGridStyles from './VaultManageGrid.module.scss'
+import vaultManageGridStyles from './VaultManageGrid.module.scss'
 
 interface VaultManageLoadingGridProps {
   detailsContent: ReactNode
@@ -27,7 +27,7 @@ export const VaultManageLoadingGrid: FC<VaultManageLoadingGridProps> = ({
 }) => {
   return (
     <>
-      <div className={vaultOpenGridStyles.vaultManageGridBreadcrumbsWrapper}>
+      <div className={vaultManageGridStyles.vaultManageGridBreadcrumbsWrapper}>
         <div style={{ display: 'flex' }}>
           <Text as="div" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
             Earn / &nbsp;
@@ -39,9 +39,9 @@ export const VaultManageLoadingGrid: FC<VaultManageLoadingGridProps> = ({
           <SkeletonLine height={17} width={300} style={{ marginTop: '2px' }} />
         </div>
       </div>
-      <div className={vaultOpenGridStyles.vaultManageGridPositionWrapper}>
+      <div className={vaultManageGridStyles.vaultManageGridPositionWrapper}>
         <div>
-          <div className={vaultOpenGridStyles.vaultManageGridTopLeftWrapper}>
+          <div className={vaultManageGridStyles.vaultManageGridTopLeftWrapper}>
             <Dropdown
               options={[]}
               dropdownValue={{
@@ -130,10 +130,10 @@ export const VaultManageLoadingGrid: FC<VaultManageLoadingGridProps> = ({
               />
             </Box>
           </SimpleGrid>
-          <Box className={vaultOpenGridStyles.leftBlock}>{detailsContent}</Box>
+          <Box className={vaultManageGridStyles.leftBlock}>{detailsContent}</Box>
         </div>
-        <div className={vaultOpenGridStyles.rightBlockWrapper}>
-          <div className={vaultOpenGridStyles.rightBlock}>{sidebarContent}</div>
+        <div className={vaultManageGridStyles.rightBlockWrapper}>
+          <div className={vaultManageGridStyles.rightBlock}>{sidebarContent}</div>
         </div>
       </div>
     </>
