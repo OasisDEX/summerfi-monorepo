@@ -3,7 +3,6 @@ import { Logger } from '@aws-lambda-powertools/logger'
 import { VaultRatesService, FleetWithChainId } from './db-service'
 
 const logger = new Logger({ serviceName: 'get-vault-rates-function' })
-const ratesService = VaultRatesService.getInstance()
 
 interface VaultRatesRequest {
   fleets: FleetWithChainId[]
@@ -11,6 +10,8 @@ interface VaultRatesRequest {
 }
 
 export async function handler(event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> {
+  const ratesService = new VaultRatesService()
+
   try {
     await ratesService.init()
 
@@ -84,5 +85,8 @@ export async function handler(event: APIGatewayProxyEventV2): Promise<APIGateway
       statusCode: 500,
       body: JSON.stringify({ error: 'Internal server error' }),
     }
+  } finally {
+    await ratesService.destroy()
+    logger.info('Database connection cleaned up')
   }
 }

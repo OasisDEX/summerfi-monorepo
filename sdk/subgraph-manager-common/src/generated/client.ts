@@ -1806,8 +1806,10 @@ export enum Deposit_OrderBy {
   PositionInputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
   PositionInputTokenBalanceNormalizedInUsd = 'position__inputTokenBalanceNormalizedInUSD',
   PositionInputTokenDeposits = 'position__inputTokenDeposits',
+  PositionInputTokenDepositsNormalized = 'position__inputTokenDepositsNormalized',
   PositionInputTokenDepositsNormalizedInUsd = 'position__inputTokenDepositsNormalizedInUSD',
   PositionInputTokenWithdrawals = 'position__inputTokenWithdrawals',
+  PositionInputTokenWithdrawalsNormalized = 'position__inputTokenWithdrawalsNormalized',
   PositionInputTokenWithdrawalsNormalizedInUsd = 'position__inputTokenWithdrawalsNormalizedInUSD',
   PositionOutputTokenBalance = 'position__outputTokenBalance',
   PositionStakedInputTokenBalance = 'position__stakedInputTokenBalance',
@@ -2727,10 +2729,14 @@ export type Position = {
   inputTokenBalanceNormalizedInUSD: Scalars['BigDecimal']['output'];
   /**  Sum of deposits in the position - in input token precision */
   inputTokenDeposits: Scalars['BigInt']['output'];
+  /**  Sum of deposits in the position - in input token precision normalized */
+  inputTokenDepositsNormalized: Scalars['BigDecimal']['output'];
   /**  Sum of deposits in the position - in input token precision normalized to USD */
   inputTokenDepositsNormalizedInUSD: Scalars['BigDecimal']['output'];
   /**  Sum of withdrawals in the position - in input token precision */
   inputTokenWithdrawals: Scalars['BigInt']['output'];
+  /**  Sum of withdrawals in the position - in input token precision normalized */
+  inputTokenWithdrawalsNormalized: Scalars['BigDecimal']['output'];
   /**  Sum of withdrawals in the position - in input token precision normalized to USD */
   inputTokenWithdrawalsNormalizedInUSD: Scalars['BigDecimal']['output'];
   /**  Supply of the output token for the position  */
@@ -2828,14 +2834,20 @@ export type PositionDailySnapshot = {
   id: Scalars['ID']['output'];
   /**  Amount of input token in the position  */
   inputTokenBalance: Scalars['BigInt']['output'];
+  /**  Input token balance in the position normalized */
+  inputTokenBalanceNormalized: Scalars['BigDecimal']['output'];
   /**  Amount of input token in the position normalized to USD  */
   inputTokenBalanceNormalizedInUSD: Scalars['BigDecimal']['output'];
   /**  Sum of deposits in the position - in input token precision */
   inputTokenDeposits: Scalars['BigInt']['output'];
+  /**  Sum of deposits in the position - in input token precision normalized */
+  inputTokenDepositsNormalized: Scalars['BigDecimal']['output'];
   /**  Sum of deposits in the position - in input token precision normalized to USD */
   inputTokenDepositsNormalizedInUSD: Scalars['BigDecimal']['output'];
   /**  Sum of withdrawals in the position - in input token precision */
   inputTokenWithdrawals: Scalars['BigInt']['output'];
+  /**  Sum of withdrawals in the position - in input token precision normalized */
+  inputTokenWithdrawalsNormalized: Scalars['BigDecimal']['output'];
   /**  Sum of withdrawals in the position - in input token precision normalized to USD */
   inputTokenWithdrawalsNormalizedInUSD: Scalars['BigDecimal']['output'];
   /**  Amount of output token in the position  */
@@ -2859,6 +2871,7 @@ export type PositionDailySnapshot_Filter = {
   id_not?: InputMaybe<Scalars['ID']['input']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
   inputTokenBalance?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalanceNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenBalanceNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenBalanceNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenBalanceNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -2867,6 +2880,13 @@ export type PositionDailySnapshot_Filter = {
   inputTokenBalanceNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenBalanceNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenBalanceNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalanceNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalanceNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   inputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
@@ -2875,6 +2895,7 @@ export type PositionDailySnapshot_Filter = {
   inputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   inputTokenDeposits?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDepositsNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenDepositsNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenDepositsNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenDepositsNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -2883,6 +2904,13 @@ export type PositionDailySnapshot_Filter = {
   inputTokenDepositsNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenDepositsNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenDepositsNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenDepositsNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenDepositsNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   inputTokenDeposits_gt?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenDeposits_gte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenDeposits_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
@@ -2891,6 +2919,7 @@ export type PositionDailySnapshot_Filter = {
   inputTokenDeposits_not?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenDeposits_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   inputTokenWithdrawals?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawalsNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenWithdrawalsNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenWithdrawalsNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenWithdrawalsNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -2899,6 +2928,13 @@ export type PositionDailySnapshot_Filter = {
   inputTokenWithdrawalsNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenWithdrawalsNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenWithdrawalsNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenWithdrawalsNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenWithdrawalsNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   inputTokenWithdrawals_gt?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenWithdrawals_gte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenWithdrawals_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
@@ -2949,10 +2985,13 @@ export type PositionDailySnapshot_Filter = {
 export enum PositionDailySnapshot_OrderBy {
   Id = 'id',
   InputTokenBalance = 'inputTokenBalance',
+  InputTokenBalanceNormalized = 'inputTokenBalanceNormalized',
   InputTokenBalanceNormalizedInUsd = 'inputTokenBalanceNormalizedInUSD',
   InputTokenDeposits = 'inputTokenDeposits',
+  InputTokenDepositsNormalized = 'inputTokenDepositsNormalized',
   InputTokenDepositsNormalizedInUsd = 'inputTokenDepositsNormalizedInUSD',
   InputTokenWithdrawals = 'inputTokenWithdrawals',
+  InputTokenWithdrawalsNormalized = 'inputTokenWithdrawalsNormalized',
   InputTokenWithdrawalsNormalizedInUsd = 'inputTokenWithdrawalsNormalizedInUSD',
   OutputTokenBalance = 'outputTokenBalance',
   Position = 'position',
@@ -2965,8 +3004,10 @@ export enum PositionDailySnapshot_OrderBy {
   PositionInputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
   PositionInputTokenBalanceNormalizedInUsd = 'position__inputTokenBalanceNormalizedInUSD',
   PositionInputTokenDeposits = 'position__inputTokenDeposits',
+  PositionInputTokenDepositsNormalized = 'position__inputTokenDepositsNormalized',
   PositionInputTokenDepositsNormalizedInUsd = 'position__inputTokenDepositsNormalizedInUSD',
   PositionInputTokenWithdrawals = 'position__inputTokenWithdrawals',
+  PositionInputTokenWithdrawalsNormalized = 'position__inputTokenWithdrawalsNormalized',
   PositionInputTokenWithdrawalsNormalizedInUsd = 'position__inputTokenWithdrawalsNormalizedInUSD',
   PositionOutputTokenBalance = 'position__outputTokenBalance',
   PositionStakedInputTokenBalance = 'position__stakedInputTokenBalance',
@@ -2986,14 +3027,20 @@ export type PositionHourlySnapshot = {
   id: Scalars['ID']['output'];
   /**  Amount of input token in the position  */
   inputTokenBalance: Scalars['BigInt']['output'];
+  /**  Input token balance in the position normalized */
+  inputTokenBalanceNormalized: Scalars['BigDecimal']['output'];
   /**  Amount of input token in the position normalized to USD  */
   inputTokenBalanceNormalizedInUSD: Scalars['BigDecimal']['output'];
   /**  Sum of deposits in the position - in input token precision */
   inputTokenDeposits: Scalars['BigInt']['output'];
+  /**  Sum of deposits in the position - in input token precision normalized */
+  inputTokenDepositsNormalized: Scalars['BigDecimal']['output'];
   /**  Sum of deposits in the position - in input token precision normalized to USD */
   inputTokenDepositsNormalizedInUSD: Scalars['BigDecimal']['output'];
   /**  Sum of withdrawals in the position - in input token precision */
   inputTokenWithdrawals: Scalars['BigInt']['output'];
+  /**  Sum of withdrawals in the position - in input token precision normalized */
+  inputTokenWithdrawalsNormalized: Scalars['BigDecimal']['output'];
   /**  Sum of withdrawals in the position - in input token precision normalized to USD */
   inputTokenWithdrawalsNormalizedInUSD: Scalars['BigDecimal']['output'];
   /**  Amount of output token in the position  */
@@ -3017,6 +3064,7 @@ export type PositionHourlySnapshot_Filter = {
   id_not?: InputMaybe<Scalars['ID']['input']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
   inputTokenBalance?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalanceNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenBalanceNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenBalanceNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenBalanceNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -3025,6 +3073,13 @@ export type PositionHourlySnapshot_Filter = {
   inputTokenBalanceNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenBalanceNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenBalanceNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalanceNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalanceNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   inputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
@@ -3033,6 +3088,7 @@ export type PositionHourlySnapshot_Filter = {
   inputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   inputTokenDeposits?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDepositsNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenDepositsNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenDepositsNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenDepositsNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -3041,6 +3097,13 @@ export type PositionHourlySnapshot_Filter = {
   inputTokenDepositsNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenDepositsNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenDepositsNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenDepositsNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenDepositsNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   inputTokenDeposits_gt?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenDeposits_gte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenDeposits_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
@@ -3049,6 +3112,7 @@ export type PositionHourlySnapshot_Filter = {
   inputTokenDeposits_not?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenDeposits_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   inputTokenWithdrawals?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawalsNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenWithdrawalsNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenWithdrawalsNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenWithdrawalsNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -3057,6 +3121,13 @@ export type PositionHourlySnapshot_Filter = {
   inputTokenWithdrawalsNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenWithdrawalsNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenWithdrawalsNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenWithdrawalsNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenWithdrawalsNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   inputTokenWithdrawals_gt?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenWithdrawals_gte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenWithdrawals_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
@@ -3107,10 +3178,13 @@ export type PositionHourlySnapshot_Filter = {
 export enum PositionHourlySnapshot_OrderBy {
   Id = 'id',
   InputTokenBalance = 'inputTokenBalance',
+  InputTokenBalanceNormalized = 'inputTokenBalanceNormalized',
   InputTokenBalanceNormalizedInUsd = 'inputTokenBalanceNormalizedInUSD',
   InputTokenDeposits = 'inputTokenDeposits',
+  InputTokenDepositsNormalized = 'inputTokenDepositsNormalized',
   InputTokenDepositsNormalizedInUsd = 'inputTokenDepositsNormalizedInUSD',
   InputTokenWithdrawals = 'inputTokenWithdrawals',
+  InputTokenWithdrawalsNormalized = 'inputTokenWithdrawalsNormalized',
   InputTokenWithdrawalsNormalizedInUsd = 'inputTokenWithdrawalsNormalizedInUSD',
   OutputTokenBalance = 'outputTokenBalance',
   Position = 'position',
@@ -3123,8 +3197,10 @@ export enum PositionHourlySnapshot_OrderBy {
   PositionInputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
   PositionInputTokenBalanceNormalizedInUsd = 'position__inputTokenBalanceNormalizedInUSD',
   PositionInputTokenDeposits = 'position__inputTokenDeposits',
+  PositionInputTokenDepositsNormalized = 'position__inputTokenDepositsNormalized',
   PositionInputTokenDepositsNormalizedInUsd = 'position__inputTokenDepositsNormalizedInUSD',
   PositionInputTokenWithdrawals = 'position__inputTokenWithdrawals',
+  PositionInputTokenWithdrawalsNormalized = 'position__inputTokenWithdrawalsNormalized',
   PositionInputTokenWithdrawalsNormalizedInUsd = 'position__inputTokenWithdrawalsNormalizedInUSD',
   PositionOutputTokenBalance = 'position__outputTokenBalance',
   PositionStakedInputTokenBalance = 'position__stakedInputTokenBalance',
@@ -3144,14 +3220,20 @@ export type PositionWeeklySnapshot = {
   id: Scalars['ID']['output'];
   /**  Amount of input token in the position  */
   inputTokenBalance: Scalars['BigInt']['output'];
+  /**  Input token balance in the position normalized */
+  inputTokenBalanceNormalized: Scalars['BigDecimal']['output'];
   /**  Amount of input token in the position normalized to USD  */
   inputTokenBalanceNormalizedInUSD: Scalars['BigDecimal']['output'];
   /**  Sum of deposits in the position - in input token precision */
   inputTokenDeposits: Scalars['BigInt']['output'];
+  /**  Sum of deposits in the position - in input token precision normalized */
+  inputTokenDepositsNormalized: Scalars['BigDecimal']['output'];
   /**  Sum of deposits in the position - in input token precision normalized to USD */
   inputTokenDepositsNormalizedInUSD: Scalars['BigDecimal']['output'];
   /**  Sum of withdrawals in the position - in input token precision */
   inputTokenWithdrawals: Scalars['BigInt']['output'];
+  /**  Sum of withdrawals in the position - in input token precision normalized */
+  inputTokenWithdrawalsNormalized: Scalars['BigDecimal']['output'];
   /**  Sum of withdrawals in the position - in input token precision normalized to USD */
   inputTokenWithdrawalsNormalizedInUSD: Scalars['BigDecimal']['output'];
   /**  Amount of output token in the position  */
@@ -3175,6 +3257,7 @@ export type PositionWeeklySnapshot_Filter = {
   id_not?: InputMaybe<Scalars['ID']['input']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
   inputTokenBalance?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenBalanceNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenBalanceNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenBalanceNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenBalanceNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -3183,6 +3266,13 @@ export type PositionWeeklySnapshot_Filter = {
   inputTokenBalanceNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenBalanceNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenBalanceNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalanceNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalanceNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   inputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
@@ -3191,6 +3281,7 @@ export type PositionWeeklySnapshot_Filter = {
   inputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   inputTokenDeposits?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDepositsNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenDepositsNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenDepositsNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenDepositsNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -3199,6 +3290,13 @@ export type PositionWeeklySnapshot_Filter = {
   inputTokenDepositsNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenDepositsNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenDepositsNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenDepositsNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenDepositsNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   inputTokenDeposits_gt?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenDeposits_gte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenDeposits_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
@@ -3207,6 +3305,7 @@ export type PositionWeeklySnapshot_Filter = {
   inputTokenDeposits_not?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenDeposits_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   inputTokenWithdrawals?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawalsNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenWithdrawalsNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenWithdrawalsNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenWithdrawalsNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -3215,6 +3314,13 @@ export type PositionWeeklySnapshot_Filter = {
   inputTokenWithdrawalsNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenWithdrawalsNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenWithdrawalsNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenWithdrawalsNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenWithdrawalsNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   inputTokenWithdrawals_gt?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenWithdrawals_gte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenWithdrawals_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
@@ -3265,10 +3371,13 @@ export type PositionWeeklySnapshot_Filter = {
 export enum PositionWeeklySnapshot_OrderBy {
   Id = 'id',
   InputTokenBalance = 'inputTokenBalance',
+  InputTokenBalanceNormalized = 'inputTokenBalanceNormalized',
   InputTokenBalanceNormalizedInUsd = 'inputTokenBalanceNormalizedInUSD',
   InputTokenDeposits = 'inputTokenDeposits',
+  InputTokenDepositsNormalized = 'inputTokenDepositsNormalized',
   InputTokenDepositsNormalizedInUsd = 'inputTokenDepositsNormalizedInUSD',
   InputTokenWithdrawals = 'inputTokenWithdrawals',
+  InputTokenWithdrawalsNormalized = 'inputTokenWithdrawalsNormalized',
   InputTokenWithdrawalsNormalizedInUsd = 'inputTokenWithdrawalsNormalizedInUSD',
   OutputTokenBalance = 'outputTokenBalance',
   Position = 'position',
@@ -3281,8 +3390,10 @@ export enum PositionWeeklySnapshot_OrderBy {
   PositionInputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
   PositionInputTokenBalanceNormalizedInUsd = 'position__inputTokenBalanceNormalizedInUSD',
   PositionInputTokenDeposits = 'position__inputTokenDeposits',
+  PositionInputTokenDepositsNormalized = 'position__inputTokenDepositsNormalized',
   PositionInputTokenDepositsNormalizedInUsd = 'position__inputTokenDepositsNormalizedInUSD',
   PositionInputTokenWithdrawals = 'position__inputTokenWithdrawals',
+  PositionInputTokenWithdrawalsNormalized = 'position__inputTokenWithdrawalsNormalized',
   PositionInputTokenWithdrawalsNormalizedInUsd = 'position__inputTokenWithdrawalsNormalizedInUSD',
   PositionOutputTokenBalance = 'position__outputTokenBalance',
   PositionStakedInputTokenBalance = 'position__stakedInputTokenBalance',
@@ -3389,6 +3500,7 @@ export type Position_Filter = {
   inputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   inputTokenDeposits?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenDepositsNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenDepositsNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenDepositsNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenDepositsNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -3397,6 +3509,13 @@ export type Position_Filter = {
   inputTokenDepositsNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenDepositsNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenDepositsNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenDepositsNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenDepositsNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenDepositsNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   inputTokenDeposits_gt?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenDeposits_gte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenDeposits_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
@@ -3405,6 +3524,7 @@ export type Position_Filter = {
   inputTokenDeposits_not?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenDeposits_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   inputTokenWithdrawals?: InputMaybe<Scalars['BigInt']['input']>;
+  inputTokenWithdrawalsNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenWithdrawalsNormalizedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenWithdrawalsNormalizedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenWithdrawalsNormalizedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -3413,6 +3533,13 @@ export type Position_Filter = {
   inputTokenWithdrawalsNormalizedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenWithdrawalsNormalizedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenWithdrawalsNormalizedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenWithdrawalsNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenWithdrawalsNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenWithdrawalsNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   inputTokenWithdrawals_gt?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenWithdrawals_gte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenWithdrawals_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
@@ -3537,8 +3664,10 @@ export enum Position_OrderBy {
   InputTokenBalanceNormalized = 'inputTokenBalanceNormalized',
   InputTokenBalanceNormalizedInUsd = 'inputTokenBalanceNormalizedInUSD',
   InputTokenDeposits = 'inputTokenDeposits',
+  InputTokenDepositsNormalized = 'inputTokenDepositsNormalized',
   InputTokenDepositsNormalizedInUsd = 'inputTokenDepositsNormalizedInUSD',
   InputTokenWithdrawals = 'inputTokenWithdrawals',
+  InputTokenWithdrawalsNormalized = 'inputTokenWithdrawalsNormalized',
   InputTokenWithdrawalsNormalizedInUsd = 'inputTokenWithdrawalsNormalizedInUSD',
   OutputTokenBalance = 'outputTokenBalance',
   StakedEvents = 'stakedEvents',
@@ -5881,8 +6010,10 @@ export enum Staked_OrderBy {
   PositionInputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
   PositionInputTokenBalanceNormalizedInUsd = 'position__inputTokenBalanceNormalizedInUSD',
   PositionInputTokenDeposits = 'position__inputTokenDeposits',
+  PositionInputTokenDepositsNormalized = 'position__inputTokenDepositsNormalized',
   PositionInputTokenDepositsNormalizedInUsd = 'position__inputTokenDepositsNormalizedInUSD',
   PositionInputTokenWithdrawals = 'position__inputTokenWithdrawals',
+  PositionInputTokenWithdrawalsNormalized = 'position__inputTokenWithdrawalsNormalized',
   PositionInputTokenWithdrawalsNormalizedInUsd = 'position__inputTokenWithdrawalsNormalizedInUSD',
   PositionOutputTokenBalance = 'position__outputTokenBalance',
   PositionStakedInputTokenBalance = 'position__stakedInputTokenBalance',
@@ -7158,8 +7289,10 @@ export enum Unstaked_OrderBy {
   PositionInputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
   PositionInputTokenBalanceNormalizedInUsd = 'position__inputTokenBalanceNormalizedInUSD',
   PositionInputTokenDeposits = 'position__inputTokenDeposits',
+  PositionInputTokenDepositsNormalized = 'position__inputTokenDepositsNormalized',
   PositionInputTokenDepositsNormalizedInUsd = 'position__inputTokenDepositsNormalizedInUSD',
   PositionInputTokenWithdrawals = 'position__inputTokenWithdrawals',
+  PositionInputTokenWithdrawalsNormalized = 'position__inputTokenWithdrawalsNormalized',
   PositionInputTokenWithdrawalsNormalizedInUsd = 'position__inputTokenWithdrawalsNormalizedInUSD',
   PositionOutputTokenBalance = 'position__outputTokenBalance',
   PositionStakedInputTokenBalance = 'position__stakedInputTokenBalance',
@@ -9912,8 +10045,10 @@ export enum Withdraw_OrderBy {
   PositionInputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
   PositionInputTokenBalanceNormalizedInUsd = 'position__inputTokenBalanceNormalizedInUSD',
   PositionInputTokenDeposits = 'position__inputTokenDeposits',
+  PositionInputTokenDepositsNormalized = 'position__inputTokenDepositsNormalized',
   PositionInputTokenDepositsNormalizedInUsd = 'position__inputTokenDepositsNormalizedInUSD',
   PositionInputTokenWithdrawals = 'position__inputTokenWithdrawals',
+  PositionInputTokenWithdrawalsNormalized = 'position__inputTokenWithdrawalsNormalized',
   PositionInputTokenWithdrawalsNormalizedInUsd = 'position__inputTokenWithdrawalsNormalizedInUSD',
   PositionOutputTokenBalance = 'position__outputTokenBalance',
   PositionStakedInputTokenBalance = 'position__stakedInputTokenBalance',

@@ -41,42 +41,37 @@ export interface FleetRateResult {
 }
 
 export class VaultRatesService {
-  private static instance: VaultRatesService | null = null
   private db: SummerProtocolDB | null = null
-  private isInitializing = false
-  private initPromise: Promise<void> | null = null
 
-  static getInstance(): VaultRatesService {
-    if (!VaultRatesService.instance) {
-      VaultRatesService.instance = new VaultRatesService()
-    }
-    return VaultRatesService.instance
-  }
-
-  private constructor() {}
+  constructor() {}
 
   async init() {
-    if (this.db) return
-    if (this.initPromise) {
-      await this.initPromise
-      return
-    }
-
-    this.isInitializing = true
-    this.initPromise = this.initializeDB()
-
     try {
-      await this.initPromise
-    } finally {
-      this.isInitializing = false
-      this.initPromise = null
+      logger.info('Initializing rates service')
+      await this.initializeDB()
+
+      // Verify initialization was successful
+      if (!this.db?.db) {
+        throw new Error('Database failed to initialize properly')
+      }
+
+      logger.info('Vault rates service initialization completed successfully')
+    } catch (error) {
+      logger.error('Failed to initialize vault rates service', {
+        error:
+          error instanceof Error
+            ? { message: error.message, stack: error.stack, name: error.name }
+            : error,
+      })
+      throw error
     }
   }
 
   private async initializeDB() {
+    logger.info('Initializing database connection, getting env')
     if (!process.env.EARN_PROTOCOL_DB_CONNECTION_STRING) {
-      logger.warn('Database connection string not provided')
-      return
+      logger.error('Database connection string not provided')
+      throw new Error('Database connection string not provided')
     }
 
     try {
@@ -84,16 +79,34 @@ export class VaultRatesService {
         connectionString: process.env.EARN_PROTOCOL_DB_CONNECTION_STRING,
         pool: {
           max: 1,
-          idleTimeoutMillis: 10000,
+          idleTimeoutMillis: 300000,
           acquireTimeoutMillis: 10000,
         },
       }
 
       this.db = await getSummerProtocolDB(config)
+
+      if (!this.db?.db) {
+        throw new Error('Database connection failed - db object is undefined')
+      }
+
       logger.info('Database connection initialized successfully')
     } catch (error) {
-      logger.error('Failed to initialize database connection', { error })
-      throw new Error('Database initialization failed')
+      logger.error('Failed to initialize database connection', {
+        error:
+          error instanceof Error
+            ? { message: error.message, stack: error.stack, name: error.name }
+            : error,
+      })
+      throw error
+    }
+  }
+
+  async destroy() {
+    if (this.db?.db) {
+      await this.db.db.destroy()
+      this.db = null
+      logger.info('Database connection destroyed')
     }
   }
 

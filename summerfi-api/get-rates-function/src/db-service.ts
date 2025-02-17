@@ -44,85 +44,91 @@ export interface DBHistoricalRates {
 }
 
 export class RatesService {
-  private static instance: RatesService | null = null
   private db: SummerProtocolDB | null = null
-  private isInitializing = false
-  private initPromise: Promise<void> | null = null
 
-  static getInstance(): RatesService {
-    logger.info('Getting rates service instance')
-    if (!RatesService.instance) {
-      logger.info('Creating new rates service instance')
-      RatesService.instance = new RatesService()
-    }
-    logger.info('Returning existing rates service instance')
-    return RatesService.instance
-  }
-
-  private constructor() {}
+  constructor() {}
 
   async init() {
-    // If already initialized, return immediately
-    if (this.db) {
-      return
-    }
-
-    // If initialization is in progress, wait for it
-    if (this.initPromise) {
-      await this.initPromise
-      return
-    }
-
-    // Start new initialization
-    this.isInitializing = true
-    this.initPromise = this.initializeDB()
-
     try {
-      await this.initPromise
-    } finally {
-      this.isInitializing = false
-      this.initPromise = null
+      logger.info('Initializing rates service')
+      await this.initializeDB()
+
+      // Verify initialization was successful
+      if (!this.db?.db) {
+        throw new Error('Database failed to initialize properly')
+      }
+
+      logger.info('Rates service initialization completed successfully')
+    } catch (error) {
+      logger.error('Failed to initialize rates service', {
+        error:
+          error instanceof Error
+            ? { message: error.message, stack: error.stack, name: error.name }
+            : error,
+      })
+      throw error
     }
   }
 
   private async initializeDB() {
+    logger.info('Initializing database connection, getting env')
     if (!process.env.EARN_PROTOCOL_DB_CONNECTION_STRING) {
-      logger.warn('Database connection string not provided')
-      return
+      logger.error('Database connection string not provided')
+      throw new Error('Database connection string not provided')
     }
-    logger.info('Initializing database connection', {
-      connectionString: process.env.EARN_PROTOCOL_DB_CONNECTION_STRING.substring(0, 30) + '...',
-    })
 
     try {
       const config: PgSummerProtocolDbConfig = {
         connectionString: process.env.EARN_PROTOCOL_DB_CONNECTION_STRING,
         pool: {
           max: 1,
-          idleTimeoutMillis: 10000,
+          idleTimeoutMillis: 300000,
           acquireTimeoutMillis: 10000,
         },
       }
 
       this.db = await getSummerProtocolDB(config)
+
+      if (!this.db?.db) {
+        throw new Error('Database connection failed - db object is undefined')
+      }
+
       logger.info('Database connection initialized successfully')
     } catch (error) {
       logger.error('Failed to initialize database connection', {
-        error,
-        connectionString: process.env.EARN_PROTOCOL_DB_CONNECTION_STRING?.substring(0, 10) + '...',
+        error:
+          error instanceof Error
+            ? { message: error.message, stack: error.stack, name: error.name }
+            : error,
       })
-      throw new Error('Database initialization failed')
+      throw error
+    }
+  }
+
+  async destroy() {
+    if (this.db?.db) {
+      await this.db.db.destroy()
+      this.db = null
+      logger.info('Database connection destroyed')
     }
   }
 
   async getLatestRates(chainId: string, productId: string): Promise<DBRate[]> {
-    if (!this.db) {
-      logger.error('Database connection not initialized')
-      return []
+    if (!this.db || !this.db.db) {
+      logger.error('Database connection not initialized or invalid', {
+        dbExists: !!this.db,
+        dbClientExists: !!this.db?.db,
+      })
+      throw new Error('Database connection not initialized')
     }
 
     const network = mapChainIdToDbNetwork(chainId)
-    logger.info('Fetching latest rates', { chainId, network, productId })
+    logger.info('Fetching latest rates', {
+      chainId,
+      network,
+      productId,
+      dbConnectionStatus: 'initialized',
+    })
 
     try {
       const rates = await this.db.db
