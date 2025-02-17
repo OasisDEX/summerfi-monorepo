@@ -15,7 +15,6 @@ const logger = new Logger({
   logLevel: 'INFO',
 })
 const clients = getAllClients(process.env.SUBGRAPH_BASE || '')
-const ratesService = RatesService.getInstance()
 
 const TEN_MINUTES_IN_MS = 10 * 60 * 1000
 
@@ -41,7 +40,13 @@ export async function retrySubgraphQuery<TResponse>(
       const result = await operation()
       return result
     } catch (error) {
-      if (currentRetry === 1 || !(error instanceof Error) || !error.message.includes('429')) {
+      const errorString = JSON.stringify(error)
+      const isRateLimit =
+        errorString.includes('"status":429') ||
+        errorString.includes('Code: 429') ||
+        errorString.includes('Too Many Requests')
+
+      if (currentRetry === 1 || !(error instanceof Error) || !isRateLimit) {
         logger.error(`Error in ${context.operation}:`, {
           ...context,
           error: error instanceof Error ? error : String(error),
@@ -127,7 +132,10 @@ function combineLatestRates(subgraphRate: LatestInterestRate, dbRates: DBHistori
 }
 
 async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> {
+  const ratesService = new RatesService()
+
   try {
+    logger.info('Initializing rates service')
     await ratesService.init()
 
     const path = event.requestContext.http.path
@@ -275,6 +283,9 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
       statusCode: 500,
       body: JSON.stringify({ error: 'Internal server error' }),
     }
+  } finally {
+    await ratesService.destroy()
+    logger.info('Database connection cleaned up')
   }
 }
 
