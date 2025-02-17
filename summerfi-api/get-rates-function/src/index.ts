@@ -40,28 +40,45 @@ export async function retrySubgraphQuery<TResponse>(
       const result = await operation()
       return result
     } catch (error) {
-      const errorString = JSON.stringify(error)
-      const isRateLimit =
-        errorString.includes('"status":429') ||
-        errorString.includes('Code: 429') ||
-        errorString.includes('Too Many Requests')
+      const errorMessage = error instanceof Error ? error.message : String(error)
 
-      if (currentRetry === 1 || !(error instanceof Error) || !isRateLimit) {
+      logger.debug('Caught error in retrySubgraphQuery', {
+        errorMessage,
+        errorType: error instanceof Error ? error.constructor.name : typeof error,
+        includes429: errorMessage.includes('429'),
+        currentRetry,
+        ...context,
+      })
+
+      const isRateLimitError = errorMessage.includes('429')
+
+      if (currentRetry === 1 || !isRateLimitError) {
         logger.error(`Error in ${context.operation}:`, {
           ...context,
           error: error instanceof Error ? error : String(error),
+          currentRetry,
+          isRateLimitError,
         })
         throw error
       }
 
       currentRetry--
-      logger.debug(`Rate limited, retrying ${context.operation}...`, {
+
+      // Add random jitter between -25% and +25% of the delay
+      const jitter = (delay * (0.5 - Math.random())) / 2
+      const finalDelay = Math.max(delay + jitter, 100) // Ensure minimum 100ms delay
+
+      logger.info(`Rate limited, retrying ${context.operation}...`, {
         ...context,
         retriesLeft: currentRetry,
-        delay,
+        baseDelay: delay,
+        actualDelay: finalDelay,
+        jitterMs: jitter,
+        errorMessage,
       })
-      await new Promise((resolve) => setTimeout(resolve, delay))
-      delay *= 2 // Exponential backoff
+
+      await new Promise((resolve) => setTimeout(resolve, finalDelay))
+      delay *= 2 // Exponential backoff for next iteration
     }
   }
 
