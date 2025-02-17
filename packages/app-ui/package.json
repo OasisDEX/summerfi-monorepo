@@ -63,11 +63,5 @@
     "sanitize.css": "13.0.0",
     "typed-scss-modules": "^8.0.1",
     "vite-tsconfig-paths": "^4.3.2"
-  },
-  "pnpm": {
-    "overrides": {
-      "@types/react": "19.0.8",
-      "@types/react-dom": "19.0.3"
-    }
   }
 }

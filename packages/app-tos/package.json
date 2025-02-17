@@ -16,6 +16,7 @@
     "vite-dev": "pnpm vite build -w true --mode=dev",
     "dev": "concurrently \"pnpm:vite-dev\" \"pnpm:generate-component-types-watch\" \"pnpm:resolve-tspaths-watch\"",
     "build": "pnpm vite build -w false && pnpm generate-component-types && resolve-tspaths",
+    "prebuild": "pnpm vite build -w false && pnpm generate-component-types && resolve-tspaths",
     "clean": "rm -rf dist"
   },
   "devDependencies": {
@@ -52,11 +53,5 @@
   "dependencies": {
     "rollup-preserve-directives": "^1.1.1",
     "vite-tsconfig-paths": "^4.3.2"
-  },
-  "pnpm": {
-    "overrides": {
-      "@types/react": "19.0.8",
-      "@types/react-dom": "19.0.3"
-    }
   }
 }

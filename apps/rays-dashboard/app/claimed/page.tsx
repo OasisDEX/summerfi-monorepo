@@ -76,7 +76,7 @@ export default async function ClaimedPage({ searchParams }: ClaimedPageProps) {
         Earn more $RAYS
       </Text>
       <BoostCards userAddress={userAddress} />
-      <PageViewHandler userAddress={searchParams.userAddress} />
+      <PageViewHandler userAddress={userAddress} />
     </div>
   )
 }

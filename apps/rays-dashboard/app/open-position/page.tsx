@@ -133,7 +133,7 @@ export default async function OpenPositionPage({ searchParams }: OpenPositionPag
           Explore over 50+ positions with major protocols and collateral types supports
         </WithArrow>
       </ProxyLinkComponent>
-      <PageViewHandler userAddress={searchParams.userAddress} />
+      <PageViewHandler userAddress={userAddress} />
     </div>
   )
 }
