@@ -33,6 +33,7 @@ interface TableProps<K extends string> {
     idx: number
     content: ReactNode
   }
+  sortConfig: TableSortedColumn<K> | null
 }
 
 export function Table<K extends string>({
@@ -41,8 +42,8 @@ export function Table<K extends string>({
   hiddenColumns,
   handleSort,
   customRow,
+  sortConfig,
 }: TableProps<K>) {
-  const [sortConfig, setSortConfig] = useState<TableSortedColumn<K> | null>(null)
   const [expandedRow, setExpandedRow] = useState<number | null>(null)
 
   // removing rows without mutating rows itself
@@ -71,7 +72,6 @@ export function Table<K extends string>({
 
     const update = { key: column, direction }
 
-    setSortConfig(update)
     handleSort?.(update)
   }
 

@@ -7,6 +7,9 @@ import type {
   GetGlobalRebalancesQuery,
   GetUsersActivityQuery,
   GetUserActivityQuery,
+  Rebalance_OrderBy,
+  Rebalance_Filter,
+  OrderDirection,
 } from '../generated/client'
 
 /**
@@ -49,7 +52,14 @@ export interface IArmadaSubgraphManager {
    *
    * @returns GetGlobalRebalancesQuery
    */
-  getGlobalRebalances(params: { chainId: ChainId }): Promise<GetGlobalRebalancesQuery>
+  getGlobalRebalances(params: {
+    chainId: ChainId
+    first?: number
+    skip?: number
+    orderBy?: Rebalance_OrderBy
+    orderDirection?: OrderDirection
+    where?: Rebalance_Filter
+  }): Promise<GetGlobalRebalancesQuery>
 
   /**
    * @name getUserPositions

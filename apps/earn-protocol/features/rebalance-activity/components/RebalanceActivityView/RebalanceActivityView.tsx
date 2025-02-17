@@ -1,6 +1,5 @@
 'use client'
 import { type FC, useMemo, useState } from 'react'
-import InfiniteScroll from 'react-infinite-scroller'
 import {
   GenericMultiselect,
   getTwitterShareUrl,
@@ -20,7 +19,6 @@ import {
   rebalanceActivityHeading,
 } from '@/features/rebalance-activity/components/RebalanceActivityView/cards'
 import { rebalanceActivityTableCarouselData } from '@/features/rebalance-activity/components/RebalanceActivityView/carousel'
-import { rebalanceActivityFilter } from '@/features/rebalance-activity/table/filters/filters'
 import { mapMultiselectOptions } from '@/features/rebalance-activity/table/filters/mappers'
 
 import classNames from './RebalanceActivityView.module.scss'
@@ -30,8 +28,6 @@ interface RebalanceActivityViewProps {
   rebalancesList: SDKGlobalRebalancesType
   searchParams?: { [key: string]: string[] }
 }
-
-const initialRows = 10
 
 export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
   vaultsList,
@@ -46,42 +42,9 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
 
-  const [current, setCurrent] = useState(initialRows)
-
-  const [currentlyLoadedList, setCurrentlyLoadedList] = useState(
-    rebalancesList.slice(0, initialRows),
-  )
-
-  const [noMoreItems, setNoMoreItems] = useState(false)
-
   const { strategiesOptions, tokensOptions, protocolsOptions } = useMemo(
     () => mapMultiselectOptions(vaultsList),
     [vaultsList],
-  )
-
-  const handleMoreItems = () => {
-    try {
-      setCurrentlyLoadedList((prev) => [
-        ...prev,
-        ...rebalancesList.slice(current, current + initialRows),
-      ])
-      setCurrent(current + initialRows)
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.info('No more rebalance activity items to load')
-      setNoMoreItems(true)
-    }
-  }
-
-  const filteredList = useMemo(
-    () =>
-      rebalanceActivityFilter({
-        rebalancesList: currentlyLoadedList,
-        strategyFilter,
-        tokenFilter,
-        protocolFilter,
-      }),
-    [currentlyLoadedList, strategyFilter, tokenFilter, protocolFilter],
   )
 
   const genericMultiSelectFilters = [
@@ -150,15 +113,18 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
           />
         ))}
       </div>
-      <InfiniteScroll loadMore={handleMoreItems} hasMore={!noMoreItems}>
-        <RebalanceActivityTable
-          rebalancesList={filteredList}
-          customRow={{
-            idx: 3,
-            content: <TableCarousel carouselData={rebalanceActivityTableCarouselData} />,
-          }}
-        />
-      </InfiniteScroll>
+      <RebalanceActivityTable
+        initialRebalancesList={rebalancesList}
+        customRow={{
+          idx: 3,
+          content: <TableCarousel carouselData={rebalanceActivityTableCarouselData} />,
+        }}
+        filters={{
+          strategyFilter,
+          tokenFilter,
+          protocolFilter,
+        }}
+      />
     </div>
   )
 }

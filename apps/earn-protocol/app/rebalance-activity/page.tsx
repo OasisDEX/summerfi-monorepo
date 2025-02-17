@@ -11,7 +11,10 @@ interface RebalanceActivityPageProps {
 }
 
 const RebalanceActivityPage: FC<RebalanceActivityPageProps> = async ({ searchParams }) => {
-  const [{ vaults }, { rebalances }] = await Promise.all([getVaultsList(), getGlobalRebalances()])
+  const [{ vaults }, { rebalances }] = await Promise.all([
+    getVaultsList(),
+    getGlobalRebalances({ first: 20 }),
+  ])
 
   return (
     <RebalanceActivityView

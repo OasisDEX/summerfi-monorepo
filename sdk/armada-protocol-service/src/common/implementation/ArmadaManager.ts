@@ -162,7 +162,14 @@ export class ArmadaManager implements IArmadaManager {
 
   /** @see IArmadaManager.getGlobalRebalancesRaw */
   async getGlobalRebalancesRaw(params: Parameters<IArmadaManager['getGlobalRebalancesRaw']>[0]) {
-    return this._subgraphManager.getGlobalRebalances({ chainId: params.chainInfo.chainId })
+    return this._subgraphManager.getGlobalRebalances({
+      chainId: params.chainInfo.chainId,
+      first: params.first,
+      skip: params.skip,
+      orderBy: params.orderBy,
+      orderDirection: params.orderDirection,
+      where: params.where,
+    })
   }
 
   /** @see IArmadaManager.getUsersActivityRaw */

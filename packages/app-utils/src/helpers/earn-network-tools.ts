@@ -77,3 +77,11 @@ export const subgraphNetworkToSDKId = (network: SDKNetwork) => {
     [SDKNetwork.Mainnet.toLowerCase()]: SDKChainId.MAINNET,
   }[network.toLowerCase()] as SDKSupportedChain
 }
+
+export const sdkIdToSubgraphNetwork = (chainId: SDKSupportedChain) => {
+  return {
+    [SDKChainId.ARBITRUM]: SDKNetwork.ArbitrumOne,
+    [SDKChainId.BASE]: SDKNetwork.Base,
+    [SDKChainId.MAINNET]: SDKNetwork.Mainnet,
+  }[chainId] as SDKSupportedNetwork
+}
