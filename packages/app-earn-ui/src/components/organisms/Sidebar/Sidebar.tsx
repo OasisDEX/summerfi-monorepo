@@ -156,15 +156,17 @@ export const Sidebar: FC<SidebarProps> = ({
       <div className={sidebarClassNames.sidebarHeaderSpacer} />
       <div className={sidebarClassNames.sidebarContent}>{content}</div>
       <div className={sidebarClassNames.sidebarCta}>
-        {primaryButton.action && !primaryButton.url && !primaryButton.hidden && (
-          <Button
-            variant="primaryLarge"
-            onClick={primaryButton.action}
-            disabled={primaryButton.disabled}
-          >
-            {labelElement}
-          </Button>
-        )}
+        {(primaryButton.action ?? primaryButton.loading) &&
+          !primaryButton.url &&
+          !primaryButton.hidden && (
+            <Button
+              variant="primaryLarge"
+              onClick={primaryButton.action}
+              disabled={primaryButton.disabled}
+            >
+              {labelElement}
+            </Button>
+          )}
         {primaryButton.url && (
           <Link href={primaryButton.url} onClick={primaryButton.action} prefetch>
             <Button variant="primaryLarge" disabled={primaryButton.disabled}>

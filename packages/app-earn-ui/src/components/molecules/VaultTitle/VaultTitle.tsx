@@ -8,6 +8,7 @@ import {
 
 import { GenericTokenIcon } from '@/components/atoms/GenericTokenIcon/GenericTokenIcon'
 import { Icon } from '@/components/atoms/Icon/Icon'
+import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { Text } from '@/components/atoms/Text/Text'
 import { getTokenGuarded } from '@/tokens/helpers'
 
@@ -34,6 +35,7 @@ interface VaultTitleProps {
   value?: ReactNode
   selected?: boolean
   titleVariant?: TextVariants
+  isLoading?: boolean
 }
 
 export const VaultTitle: FC<VaultTitleProps> = ({
@@ -43,13 +45,16 @@ export const VaultTitle: FC<VaultTitleProps> = ({
   networkName,
   selected,
   titleVariant = 'h4',
+  isLoading,
 }) => {
   const isIconDefined = getTokenGuarded(symbol)?.iconName
 
   return (
     <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
       <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
-        {isIconDefined ? (
+        {isLoading ? (
+          <SkeletonLine height={44} width={44} />
+        ) : isIconDefined ? (
           /* if any icon breaks, this is probably because of TokenSymbolsList vs whatever comes from the subgraph */
           <Icon tokenName={symbol as TokenSymbolsList} size={44} />
         ) : (
@@ -74,7 +79,7 @@ export const VaultTitle: FC<VaultTitleProps> = ({
             style={{ color: 'white', fontWeight: 600 }}
             data-testid="vault-token"
           >
-            {symbol}
+            {isLoading ? <SkeletonLine height={40} width={70} /> : symbol}
           </Text>
           {selected && (
             <div

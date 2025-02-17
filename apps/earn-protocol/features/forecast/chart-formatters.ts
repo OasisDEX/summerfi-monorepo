@@ -3,17 +3,11 @@ import { formatAsShorthandNumbers, formatCryptoBalance } from '@summerfi/app-uti
 import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
 
-const SHORTHAND_THRESHOLD = 10000
 const PERCENTAGE_SHORTHAND_THRESHOLD = 1000
 
 export const formatChartCryptoValue = (amount: number) => {
   if (Number.isNaN(amount) || amount < 0) {
     return '0'
-  }
-
-  // Use shorthand notation (e.g., 10.5K) for values above threshold
-  if (amount > SHORTHAND_THRESHOLD) {
-    return formatAsShorthandNumbers(amount)
   }
 
   const unformattedValue = formatCryptoBalance(amount)

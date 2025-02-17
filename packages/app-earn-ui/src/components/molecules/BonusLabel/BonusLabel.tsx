@@ -2,6 +2,7 @@ import { type ReactNode } from 'react'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Pill } from '@/components/atoms/Pill/Pill'
+import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { Text } from '@/components/atoms/Text/Text'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 
@@ -12,7 +13,9 @@ export const BonusLabel = ({
   raw,
   withTokenBonus = true,
   combinedApr,
+  isLoading,
 }: {
+  isLoading?: boolean
   tokenBonus?: string
   apy?: string
   rays?: string
@@ -40,7 +43,12 @@ export const BonusLabel = ({
       tooltipCardVariant="cardSecondarySmallPaddings"
     >
       <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-        {!!tokenBonus || !!apy || !!rays || !!raw ? (
+        {isLoading ? (
+          <Pill>
+            <Icon iconName="stars" size={24} color="white" />
+            <SkeletonLine height={20} width={90} style={{ opacity: 0.5 }} />
+          </Pill>
+        ) : !!tokenBonus || !!apy || !!rays || !!raw ? (
           <Pill>
             {tokenBonus ?? rays ? <Icon iconName="stars" size={24} color="white" /> : null}
             {combinedApr ? (
@@ -49,7 +57,7 @@ export const BonusLabel = ({
               <span style={{ fontWeight: 600 }}>
                 {apy ? `APY ${apy}` : ''}
                 {tokenBonus && withTokenBonus && apy ? <>&nbsp;+&nbsp;</> : ''}
-                {tokenBonus && withTokenBonus ? `${tokenBonus} SUMR` : ''}
+                {tokenBonus && withTokenBonus ? <>{tokenBonus}&nbsp;SUMR</> : ''}
                 {rays ? `${rays} RAYS` : ''}
                 {raw ? raw : ''}
               </span>
