@@ -21,7 +21,7 @@ import protocolScrollerStyles from '@/components/layout/LandingPageContent/compo
 
 type ProtocolScrollerTrackProps = {
   children: ReactNode
-  ref: RefObject<HTMLDivElement>
+  ref: RefObject<HTMLDivElement | null>
   style: CSSProperties
 }
 type ProtocolScrollerItemProps = {

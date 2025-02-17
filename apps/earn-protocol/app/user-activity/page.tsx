@@ -10,7 +10,8 @@ interface UserActivityPageProps {
   searchParams: ReadonlyURLSearchParams
 }
 
-const UserActivityPage: FC<UserActivityPageProps> = async ({ searchParams }) => {
+const UserActivityPage: FC<UserActivityPageProps> = async (props) => {
+  const { searchParams } = await props
   const [{ vaults }, { usersActivity, totalUsers, topDepositors }] = await Promise.all([
     getVaultsList(),
     getUsersActivity({ filterTestingWallets: true }),

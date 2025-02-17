@@ -10,7 +10,8 @@ interface RebalanceActivityPageProps {
   searchParams: ReadonlyURLSearchParams
 }
 
-const RebalanceActivityPage: FC<RebalanceActivityPageProps> = async ({ searchParams }) => {
+const RebalanceActivityPage: FC<RebalanceActivityPageProps> = async (props) => {
+  const { searchParams } = await props
   const [{ vaults }, { rebalances }] = await Promise.all([getVaultsList(), getGlobalRebalances()])
 
   return (

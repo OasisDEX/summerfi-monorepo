@@ -13,32 +13,33 @@ import { fetchRays, type FetchRaysReturnType } from '@/server-handlers/rays'
 export default async function LeaderboardPage({
   searchParams,
 }: {
-  searchParams: {
+  searchParams: Promise<{
     userAddress: string
     page?: string
     search?: string
-  }
+  }>
 }) {
+  const searchParamsAwaited = await searchParams
   const userRays = parseServerResponseToClient(
-    await fetchRays({ address: searchParams.userAddress }),
+    await fetchRays({ address: searchParamsAwaited.userAddress }),
   ) as FetchRaysReturnType
 
   const topLeaderboardResponse = parseServerResponseToClient(
     await fetchLeaderboard({
       ...wholeLeaderboardDefaults,
-      page: searchParams.page ?? wholeLeaderboardDefaults.page,
+      page: searchParamsAwaited.page ?? wholeLeaderboardDefaults.page,
     }),
   )
 
   const mappedLeaderBoard = mapLeaderboardColumns({
     leaderboardData: topLeaderboardResponse.leaderboard,
-    userWalletAddress: searchParams.userAddress,
+    userWalletAddress: searchParamsAwaited.userAddress,
     bannerEveryNth: 40,
     page: '/leaderboard',
     userRays,
   })
 
-  const previousPageAvailable = searchParams.page && Number(searchParams.page) !== 1
+  const previousPageAvailable = searchParamsAwaited.page && Number(searchParamsAwaited.page) !== 1
   const nextPageAvailable =
     topLeaderboardResponse.leaderboard.length === Number(wholeLeaderboardDefaults.limit)
 
@@ -74,11 +75,11 @@ export default async function LeaderboardPage({
               ? {
                   pathname: '/leaderboard',
                   query: {
-                    ...searchParams,
+                    ...searchParamsAwaited,
                     page:
-                      Number(searchParams.page) - 1 === 1
+                      Number(searchParamsAwaited.page) - 1 === 1
                         ? undefined
-                        : String(Number(searchParams.page) - 1),
+                        : String(Number(searchParamsAwaited.page) - 1),
                   },
                 }
               : ''
@@ -97,7 +98,10 @@ export default async function LeaderboardPage({
             nextPageAvailable
               ? {
                   pathname: '/leaderboard',
-                  query: { ...searchParams, page: String(Number(searchParams.page ?? 1) + 1) },
+                  query: {
+                    ...searchParamsAwaited,
+                    page: String(Number(searchParamsAwaited.page ?? 1) + 1),
+                  },
                 }
               : ''
           }
@@ -107,7 +111,7 @@ export default async function LeaderboardPage({
           </Button>
         </Link>
       </div>
-      <PageViewHandler userAddress={searchParams.userAddress} />
+      <PageViewHandler userAddress={searchParamsAwaited.userAddress} />
     </div>
   )
 }

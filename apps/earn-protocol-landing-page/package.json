@@ -4,7 +4,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "prebuild": "pnpm run generate",
-    "dev": "dotenv -e ../../.env -e ../../.env.local -- next dev -p 3003 --turbo",
+    "dev": "dotenv -e ../../.env -e ../../.env.local -- next dev -p 3003 --turbopack",
     "build:apps": "dotenv -e ../../.env -e ../../.env.local -- next build",
     "start": "next start -p 3003",
     "lint": "eslint .",
@@ -27,10 +27,9 @@
     "lodash-es": "^4.17.1",
     "mixpanel-browser": "^2.53.0",
     "mixpanel": "^0.18.0",
-    "next-intl": "^3.21.1",
-    "next": "^14.2.23",
-    "react-dom": "^18.3.1",
-    "react": "^18.3.1",
+    "next": "15.1.7",
+    "react-dom": "19.0.0",
+    "react": "19.0.0",
     "sharp": "^0.33.5",
     "usehooks-ts": "^3.1.0"
   },
@@ -44,11 +43,17 @@
     "@types/mixpanel-browser": "^2.49.0",
     "@types/node-fetch": "^2.6.11",
     "@types/node": "^20.14.2",
-    "@types/react-dom": "^18.3.0",
-    "@types/react": "^18.3.1",
+    "@types/react-dom": "19.0.3",
+    "@types/react": "19.0.8",
     "graphql": "^16.8.1",
     "json-to-ts": "^1.7.0",
     "node-fetch": "^2.7.0"
   },
-  "packageManager": "pnpm@8.15.4"
+  "packageManager": "pnpm@8.15.4",
+  "pnpm": {
+    "overrides": {
+      "@types/react": "19.0.8",
+      "@types/react-dom": "19.0.3"
+    }
+  }
 }

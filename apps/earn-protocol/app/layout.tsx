@@ -14,8 +14,6 @@ import { getServerSideCookies, safeParseJson } from '@summerfi/app-utils'
 import type { Metadata } from 'next'
 import { cookies, headers } from 'next/headers'
 import Image from 'next/image'
-import { NextIntlClientProvider } from 'next-intl'
-import { getLocale, getMessages } from 'next-intl/server'
 
 import { getAccountKitConfig } from '@/account-kit/config'
 import systemConfigHandler from '@/app/server-handlers/system-config'
@@ -40,13 +38,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const cookieRaw = await cookies()
   const cookie = cookieRaw.toString()
 
-  const locale = await getLocale()
+  const locale = 'en'
 
   const analyticsCookie = safeParseJson(getServerSideCookies(analyticsCookieName, cookie))
 
   if (config.maintenance && process.env.NODE_ENV !== 'development') {
     return (
-      <html lang={locale} style={{ backgroundColor: '#1c1c1c' }}>
+      <html lang={locale} suppressHydrationWarning style={{ backgroundColor: '#1c1c1c' }}>
         <head>
           <GlobalStyles />
         </head>
@@ -65,7 +63,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </html>
     )
   }
-  const messages = await getMessages()
 
   const forks = safeParseJson(getServerSideCookies(forksCookieName, cookie))
   const accountKitState = safeParseJson(getServerSideCookies(accountKitCookieStateName, cookie))
@@ -78,12 +75,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   const accountKitInitializedState = cookieToInitialState(
     getAccountKitConfig({ forkRpcUrl, chainId }),
-    headers().get('cookie') ?? undefined,
+    (await headers()).get('cookie') ?? undefined,
   )
 
   // the style on the html tag is needed to prevent a flash of white background on page load
   return (
-    <html lang={locale} style={{ backgroundColor: '#1c1c1c' }}>
+    <html lang={locale} suppressHydrationWarning style={{ backgroundColor: '#1c1c1c' }}>
       <head>
         <GlobalStyles />
       </head>
@@ -91,13 +88,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <GoogleTagManager />
         <AlchemyAccountsProvider initialState={accountKitInitializedState}>
           <GlobalEventTracker />
-          <NextIntlClientProvider messages={messages}>
-            <DeviceProvider value={deviceType}>
-              <LocalConfigContextProvider value={{ sumrNetApyConfig, slippageConfig }}>
-                <MasterPage analyticsCookie={analyticsCookie}>{children}</MasterPage>
-              </LocalConfigContextProvider>
-            </DeviceProvider>
-          </NextIntlClientProvider>
+          <DeviceProvider value={deviceType}>
+            <LocalConfigContextProvider value={{ sumrNetApyConfig, slippageConfig }}>
+              <MasterPage analyticsCookie={analyticsCookie}>{children}</MasterPage>
+            </LocalConfigContextProvider>
+          </DeviceProvider>
         </AlchemyAccountsProvider>
         <div id="portal" style={{ position: 'absolute' }} />
         {/* Separate portal for dropdown is needed to not mix up position calculation */}
