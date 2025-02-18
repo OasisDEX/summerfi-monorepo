@@ -1,22 +1,14 @@
 'use server'
 
-import { SDKNetwork, type SDKVaultishType, type SDKVaultType } from '@summerfi/app-types'
+import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
+import { type GetInterestRatesParams, SDKNetwork } from '@summerfi/app-types'
+import { getArkHistoricalRatesUrl, getArkProductId, getArkRatesUrl } from '@summerfi/app-utils'
 import { GraphQLClient } from 'graphql-request'
 
-import { REVALIDATION_TIMES } from '@/constants/revalidations'
 import {
   GetInterestRatesDocument,
   type GetInterestRatesQuery,
 } from '@/graphql/clients/rates/client'
-import { getArkProductId } from '@/helpers/prepare-product-id'
-
-type GetInterestRatesParams = {
-  network: SDKNetwork
-  dailyCount?: number
-  hourlyCount?: number
-  weeklyCount?: number
-  arksList: SDKVaultishType['arks'] | SDKVaultType['arks']
-}
 
 const noInterestRates: GetInterestRatesQuery = {
   dailyInterestRates: [{ averageRate: 0, date: 0, __typename: 'DailyInterestRate' }],
@@ -33,7 +25,13 @@ const noInterestRates: GetInterestRatesQuery = {
 // passing next.js fetcher with cache duration
 const customFetchCache = async (url: RequestInfo | URL, params?: RequestInit) => {
   try {
-    return await fetch(url, { ...params, next: { revalidate: REVALIDATION_TIMES.INTEREST_RATES } })
+    return await fetch(url, {
+      ...params,
+      next: {
+        revalidate: REVALIDATION_TIMES.INTEREST_RATES,
+        tags: [REVALIDATION_TAGS.INTEREST_RATES],
+      },
+    })
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('customFetchCache error', error)
@@ -67,15 +65,14 @@ if (!process.env.FUNCTIONS_API_URL) {
   throw new Error('FUNCTIONS_API_URL is not set')
 }
 
-const apiUrls = {
-  [SDKNetwork.Mainnet]: `${process.env.FUNCTIONS_API_URL}/api/historicalRates/1`,
-  [SDKNetwork.Base]: `${process.env.FUNCTIONS_API_URL}/api/historicalRates/8453`,
-  [SDKNetwork.ArbitrumOne]: `${process.env.FUNCTIONS_API_URL}/api/historicalRates/42161`,
-}
-
 const isProperNetwork = (network: string): network is keyof typeof clients => network in clients
 
-export async function getInterestRates({ network, arksList }: GetInterestRatesParams) {
+// CAUTION - IF SOMETHING IS UPDATED HERE UPDATE IT ALSO IN EARN LANDING APP
+export async function getInterestRates({
+  network,
+  arksList,
+  justLatestRates = false,
+}: GetInterestRatesParams) {
   if (!isProperNetwork(network)) {
     throw new Error(`getInterestRates: No endpoint found for network: ${network}`)
   }
@@ -95,16 +92,48 @@ export async function getInterestRates({ network, arksList }: GetInterestRatesPa
       }
 
       try {
-        // Try primary source first
-        const apiUrl = `${apiUrls[network]}?productId=${productId}`
+        const functionsApiUrl = process.env.FUNCTIONS_API_URL
 
-        const apiResponse = await fetch(apiUrl)
+        if (!functionsApiUrl) {
+          throw new Error('FUNCTIONS_API_URL is not set')
+        }
+
+        const resolvedUrl = justLatestRates
+          ? getArkRatesUrl({
+              network,
+              apiUrl: functionsApiUrl,
+            })
+          : getArkHistoricalRatesUrl({
+              network,
+              apiUrl: functionsApiUrl,
+            })
+
+        // Try primary source first
+        const apiUrl = `${resolvedUrl}?productId=${productId}`
+        const apiResponse = await fetch(apiUrl, {
+          next: {
+            revalidate: REVALIDATION_TIMES.INTEREST_RATES,
+            tags: [REVALIDATION_TAGS.INTEREST_RATES],
+          },
+        })
 
         if (!apiResponse.ok) {
           throw new Error('Primary API request failed')
         }
 
         const data = await apiResponse.json()
+
+        if (justLatestRates) {
+          if (!data.interestRates?.length) {
+            return noInterestRates
+          }
+
+          // map response from rates endpoint to match the expected format
+          return {
+            ...noInterestRates,
+            latestInterestRate: [{ rate: [data.interestRates[0]] }],
+          }
+        }
 
         return data
       } catch (error) {

@@ -1,21 +1,17 @@
 import { type FC } from 'react'
 import { parseQueryStringServerSide } from '@summerfi/app-utils'
-import { type ReadonlyURLSearchParams, redirect } from 'next/navigation'
+import { type ReadonlyURLSearchParams } from 'next/navigation'
 
 import { getGlobalRebalances } from '@/app/server-handlers/sdk/get-global-rebalances'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
-import { isPreLaunchVersion } from '@/constants/is-pre-launch-version'
 import { RebalanceActivityView } from '@/features/rebalance-activity/components/RebalanceActivityView/RebalanceActivityView'
 
 interface RebalanceActivityPageProps {
   searchParams: ReadonlyURLSearchParams
 }
 
-const RebalanceActivityPage: FC<RebalanceActivityPageProps> = async ({ searchParams }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (isPreLaunchVersion) {
-    return redirect('/sumr')
-  }
+const RebalanceActivityPage: FC<RebalanceActivityPageProps> = async (props) => {
+  const { searchParams } = await props
   const [{ vaults }, { rebalances }] = await Promise.all([getVaultsList(), getGlobalRebalances()])
 
   return (

@@ -17,7 +17,7 @@ const getCleanObject = <T extends object, V = ObjectLike<T>>(obj: T): V => {
   ) as V
 }
 
-function handleClearFork(clear: string, cookieStore: ReturnType<typeof cookies>) {
+function handleClearFork(clear: string, cookieStore: Awaited<ReturnType<typeof cookies>>) {
   if (Object.keys(NetworkIds).includes(clear)) {
     const currentForks = JSON.parse(
       (cookieStore.get(forksCookieName)?.value as string | undefined) ?? '{}',
@@ -32,7 +32,7 @@ function handleClearFork(clear: string, cookieStore: ReturnType<typeof cookies>)
 
   return new Response('Forks cleared', { status: 200 })
 }
-function handleSetFork(body: SetForkRequest, cookieStore: ReturnType<typeof cookies>) {
+function handleSetFork(body: SetForkRequest, cookieStore: Awaited<ReturnType<typeof cookies>>) {
   const currentForks = JSON.parse(
     (cookieStore.get(forksCookieName)?.value as string | undefined) ?? '{}',
   )
@@ -46,7 +46,7 @@ function handleSetFork(body: SetForkRequest, cookieStore: ReturnType<typeof cook
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as SetForkRequest
-    const cookieStore = cookies()
+    const cookieStore = await cookies()
 
     if (typeof body.clear !== 'undefined') {
       return handleClearFork(body.clear, cookieStore)

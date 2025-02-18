@@ -788,8 +788,12 @@ export class ArmadaManager implements IArmadaManager {
     let swapToAmount: ITokenAmount | undefined
     const transactions: ExtendedTransactionInfo[] = []
 
-    const [beforeFleetShares, requestedWithdrawShares] = await Promise.all([
+    const [beforeFleetShares, beforeStakedShares, requestedWithdrawShares] = await Promise.all([
       this.getFleetShares({
+        vaultId: params.vaultId,
+        user: params.user,
+      }),
+      this.getStakedShares({
         vaultId: params.vaultId,
         user: params.user,
       }),
@@ -800,8 +804,8 @@ export class ArmadaManager implements IArmadaManager {
     ])
 
     LoggingService.debug('getWithdrawTX', {
-      outAmount: withdrawAmount.toString(),
-      outShares: requestedWithdrawShares.toString(),
+      withdrawAmount: withdrawAmount.toString(),
+      withdrawShares: requestedWithdrawShares.toString(),
       shouldSwap,
       isEth: toEth,
       swapToToken: swapToToken.toString(),
@@ -879,21 +883,24 @@ export class ArmadaManager implements IArmadaManager {
         )
       } else {
         // Request withdrawal of all unstaked tokens and the rest from staked tokens
-        LoggingService.debug('fleet shares is not enough, first take all fleet shares...', {
+        LoggingService.debug('fleet shares is not enough', {
           fleetShares: beforeFleetShares.toString(),
         })
+        const [fleetAssetsWithdrawAmount, approveToTakeSharesOnBehalf] = await Promise.all([
+          this._previewRedeem({
+            vaultId: params.vaultId,
+            shares: beforeFleetShares,
+          }),
+          this._allowanceManager.getApproval({
+            chainInfo: params.vaultId.chainInfo,
+            spender: admiralsQuartersAddress,
+            amount: beforeFleetShares,
+            owner: params.user.wallet.address,
+          }),
+        ])
 
-        // approve all fleet balance tx
-        const approveToTakeSharesOnBehalf = await this._allowanceManager.getApproval({
-          chainInfo: params.vaultId.chainInfo,
-          spender: admiralsQuartersAddress,
-          amount: beforeFleetShares,
-          owner: params.user.wallet.address,
-        })
-
-        const fleetAssetsWithdrawAmount = await this._previewRedeem({
-          vaultId: params.vaultId,
-          shares: beforeFleetShares,
+        LoggingService.debug('- first take all fleet shares', {
+          fleetAssetsWithdrawAmount: fleetAssetsWithdrawAmount.toString(),
         })
 
         if (approveToTakeSharesOnBehalf) {
@@ -907,19 +914,8 @@ export class ArmadaManager implements IArmadaManager {
         const multicallOperations: string[] = []
 
         const reminderShares = requestedWithdrawShares.subtract(beforeFleetShares)
-        const reminderAssets = await this._previewRedeem({
-          vaultId: params.vaultId,
-          shares: reminderShares,
-        })
-
-        LoggingService.debug('and reminder from staked shares', {
+        LoggingService.debug('- then reminder from staked shares', {
           reminderShares: reminderShares.toString(),
-        })
-        LoggingService.debug('total shares to withdraw', {
-          fleetAssets: fleetAssetsWithdrawAmount.toString(),
-          reminderAssets: reminderAssets.toString(),
-          totalAssets: fleetAssetsWithdrawAmount.add(reminderAssets).toString(),
-          withdrawAmount: withdrawAmount.toString(),
         })
 
         const [exitWithdrawMulticall, unstakeAndWithdrawCall, priceImpact] = await Promise.all([
@@ -939,6 +935,7 @@ export class ArmadaManager implements IArmadaManager {
           this._getUnstakeAndWithdrawCall({
             vaultId: params.vaultId,
             shares: reminderShares,
+            stakedShares: beforeStakedShares,
           }),
           this._getPriceImpact({
             fromAmount: withdrawAmount,
@@ -1012,6 +1009,7 @@ export class ArmadaManager implements IArmadaManager {
         this._getUnstakeAndWithdrawCall({
           vaultId: params.vaultId,
           shares: requestedWithdrawShares,
+          stakedShares: beforeStakedShares,
         }),
         this._getPriceImpact({
           fromAmount: withdrawAmount,
@@ -1091,6 +1089,7 @@ export class ArmadaManager implements IArmadaManager {
   private async _getUnstakeAndWithdrawCall(params: {
     vaultId: IArmadaVaultId
     shares: ITokenAmount
+    stakedShares: ITokenAmount
     claimRewards?: boolean
   }): Promise<{
     calldata: HexData
@@ -1099,10 +1098,18 @@ export class ArmadaManager implements IArmadaManager {
     // FIXME: hardcoded to false because fleet rewards manager was not whitleilsted
     const claimRewards = false
 
+    // if the requested amount is close to all staked shares, we make assumption to withdraw all
+    // withdraw all assumption threshold is set to 0.9999
+    const withdrawAllThreshold = 0.9999
+    const shouldWithdrawAll = new BigNumber(params.shares.toSolidityValue().toString())
+      .div(params.stakedShares.toSolidityValue().toString())
+      .gte(withdrawAllThreshold)
+    const withdrawSharesAmount = shouldWithdrawAll ? 0n : params.shares.toSolidityValue()
+
     const calldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'unstakeAndWithdrawAssets',
-      args: [params.vaultId.fleetAddress.value, params.shares.toSolidityValue(), claimRewards],
+      args: [params.vaultId.fleetAddress.value, withdrawSharesAmount, claimRewards],
     })
 
     return { calldata }

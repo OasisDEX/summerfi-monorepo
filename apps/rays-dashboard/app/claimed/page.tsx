@@ -9,13 +9,13 @@ import { basePath } from '@/helpers/base-path'
 import { fetchRays } from '@/server-handlers/rays'
 
 interface ClaimedPageProps {
-  searchParams: {
+  searchParams: Promise<{
     userAddress: string
-  }
+  }>
 }
 
 export default async function ClaimedPage({ searchParams }: ClaimedPageProps) {
-  const { userAddress } = searchParams
+  const { userAddress } = await searchParams
 
   const userRays = await fetchRays({ address: userAddress })
 
@@ -76,7 +76,7 @@ export default async function ClaimedPage({ searchParams }: ClaimedPageProps) {
         Earn more $RAYS
       </Text>
       <BoostCards userAddress={userAddress} />
-      <PageViewHandler userAddress={searchParams.userAddress} />
+      <PageViewHandler userAddress={userAddress} />
     </div>
   )
 }

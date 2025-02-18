@@ -52,17 +52,25 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
     rebalancesList.slice(0, initialRows),
   )
 
+  const [noMoreItems, setNoMoreItems] = useState(false)
+
   const { strategiesOptions, tokensOptions, protocolsOptions } = useMemo(
     () => mapMultiselectOptions(vaultsList),
     [vaultsList],
   )
 
   const handleMoreItems = () => {
-    setCurrentlyLoadedList((prev) => [
-      ...prev,
-      ...rebalancesList.slice(current, current + initialRows),
-    ])
-    setCurrent(current + initialRows)
+    try {
+      setCurrentlyLoadedList((prev) => [
+        ...prev,
+        ...rebalancesList.slice(current, current + initialRows),
+      ])
+      setCurrent(current + initialRows)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.info('No more rebalance activity items to load')
+      setNoMoreItems(true)
+    }
   }
 
   const filteredList = useMemo(
@@ -142,7 +150,7 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
           />
         ))}
       </div>
-      <InfiniteScroll loadMore={handleMoreItems} hasMore={totalItems > currentlyLoadedList.length}>
+      <InfiniteScroll loadMore={handleMoreItems} hasMore={!noMoreItems}>
         <RebalanceActivityTable
           rebalancesList={filteredList}
           customRow={{

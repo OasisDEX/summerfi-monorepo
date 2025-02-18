@@ -3,7 +3,7 @@ import { Text } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType } from '@summerfi/app-types'
 
 interface VaultOpenHeaderBlockProps {
-  vault: SDKVaultishType
+  vault?: SDKVaultishType
   detailsLinks: { label: string; id: string }[]
 }
 

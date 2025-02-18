@@ -1,14 +1,15 @@
 query GetPositionHistory($positionId: ID!) {# {wallet_address}-{vault_id}
   # used in the performance and history chart
+  # all values IN TOKEN
   position(id: $positionId) {
     hourlyPositionHistory: hourlySnapshots(
       first: 480
       orderBy: timestamp
       orderDirection: desc
     ) {
-      netValue: inputTokenBalanceNormalizedInUSD
-      deposits: inputTokenDepositsNormalizedInUSD
-      withdrawals: inputTokenWithdrawalsNormalizedInUSD
+      netValue: inputTokenBalanceNormalized
+      deposits: inputTokenDepositsNormalized
+      withdrawals: inputTokenWithdrawalsNormalized
       timestamp
     }
     dailyPositionHistory: dailySnapshots(
@@ -16,9 +17,9 @@ query GetPositionHistory($positionId: ID!) {# {wallet_address}-{vault_id}
       orderBy: timestamp
       orderDirection: desc
     ) {
-      netValue: inputTokenBalanceNormalizedInUSD
-      deposits: inputTokenDepositsNormalizedInUSD
-      withdrawals: inputTokenWithdrawalsNormalizedInUSD
+      netValue: inputTokenBalanceNormalized
+      deposits: inputTokenDepositsNormalized
+      withdrawals: inputTokenWithdrawalsNormalized
       timestamp
     }
     weeklyPositionHistory: weeklySnapshots(
@@ -26,9 +27,9 @@ query GetPositionHistory($positionId: ID!) {# {wallet_address}-{vault_id}
       orderBy: timestamp
       orderDirection: desc
     ) {
-      netValue: inputTokenBalanceNormalizedInUSD
-      deposits: inputTokenDepositsNormalizedInUSD
-      withdrawals: inputTokenWithdrawalsNormalizedInUSD
+      netValue: inputTokenBalanceNormalized
+      deposits: inputTokenDepositsNormalized
+      withdrawals: inputTokenWithdrawalsNormalized
       timestamp
     }
   }

@@ -5,6 +5,7 @@ import { useAccount, useChain, useUser } from '@account-kit/react'
 import { usePathname } from 'next/navigation'
 
 import { accountType } from '@/account-kit/config'
+import { AccountKitAccountType } from '@/account-kit/types'
 import { trackAccountChange, trackPageViewTimed } from '@/helpers/mixpanel'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
@@ -43,7 +44,7 @@ export const GlobalEventTracker = () => {
       trackAccountChange({
         account: userAddress as `0x${string}`,
         network: chain.name,
-        connectionMethod: 'eoa',
+        connectionMethod: AccountKitAccountType.EOA,
       })
     }
   }, [userAddress, isLoadingAccount, account, chain, user])

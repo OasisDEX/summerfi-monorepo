@@ -13,6 +13,16 @@ export type Numeric = ColumnType<string, number | string, number | string>
 
 export type Timestamp = ColumnType<Date, Date | string, Date | string>
 
+export interface DailyFleetInterestRate {
+  averageRate: Numeric
+  date: Int8
+  fleetAddress: string
+  id: string
+  network: Network
+  sumRates: Numeric
+  updateCount: Int8
+}
+
 export interface DailyRewardRate {
   averageRate: Numeric
   date: Int8
@@ -20,6 +30,24 @@ export interface DailyRewardRate {
   network: Network
   productId: string
   protocol: string
+  sumRates: Numeric
+  updateCount: Int8
+}
+
+export interface FleetInterestRate {
+  fleetAddress: string
+  id: string
+  network: Network
+  rate: Numeric
+  timestamp: Int8
+}
+
+export interface HourlyFleetInterestRate {
+  averageRate: Numeric
+  date: Int8
+  fleetAddress: string
+  id: string
+  network: Network
   sumRates: Numeric
   updateCount: Int8
 }
@@ -74,6 +102,16 @@ export interface WalletRisk {
   lastCheck: Timestamp
 }
 
+export interface WeeklyFleetInterestRate {
+  averageRate: Numeric
+  fleetAddress: string
+  id: string
+  network: Network
+  sumRates: Numeric
+  updateCount: Int8
+  weekTimestamp: Int8
+}
+
 export interface WeeklyRewardRate {
   averageRate: Numeric
   id: string
@@ -86,12 +124,16 @@ export interface WeeklyRewardRate {
 }
 
 export interface Database {
+  dailyFleetInterestRate: DailyFleetInterestRate
   dailyRewardRate: DailyRewardRate
+  fleetInterestRate: FleetInterestRate
+  hourlyFleetInterestRate: HourlyFleetInterestRate
   hourlyRewardRate: HourlyRewardRate
   networkStatus: NetworkStatus
   rewardRate: RewardRate
   token: Token
   tosApproval: TosApproval
   walletRisk: WalletRisk
+  weeklyFleetInterestRate: WeeklyFleetInterestRate
   weeklyRewardRate: WeeklyRewardRate
 }

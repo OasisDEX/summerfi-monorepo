@@ -1,0 +1,58 @@
+name: Release Earn apps! 🐙
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Release type, major | minor | patch'
+        default: 'minor'
+        required: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.19.1
+      - name: 'Determine Release Type'
+        run: |
+          if ${{ contains(github.event.inputs.release_type, 'major') }}; then
+            echo "RELEASE_TYPE=major" >> $GITHUB_ENV
+          elif ${{ contains(github.event.inputs.release_type, 'minor') }}; then
+            echo "RELEASE_TYPE=minor" >> $GITHUB_ENV
+          elif ${{ contains(github.event.inputs.release_type, 'patch') }}; then
+            echo "RELEASE_TYPE=patch" >> $GITHUB_ENV
+          else
+            echo "NOTE: There was no release type specified in the commit message, and therefore no release will be published."
+            exit 1
+          fi
+      - name: 'Release Type'
+        run: echo ${{ env.RELEASE_TYPE }}
+      - name: git config
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Make an earn-apps release
+        working-directory: ./apps/earn-protocol
+        run:
+          npx release-it --ci --no-npm --git.commitMessage='Release Earn App ${version}'
+          --git.tagAnnotation='Earn App' -- ${{ env.RELEASE_TYPE }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+
+      - name: Merge dev -> main
+        run: |
+          git status
+          git pull
+          git fetch
+          git checkout main
+          git rebase dev
+          git push origin main
+          git status

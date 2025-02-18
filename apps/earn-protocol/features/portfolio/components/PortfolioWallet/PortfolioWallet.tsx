@@ -2,7 +2,6 @@ import { type FC } from 'react'
 import { type SDKVaultsListType } from '@summerfi/app-types'
 
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
-import { isPreLaunchVersion } from '@/constants/is-pre-launch-version'
 import { PortfolioAssets } from '@/features/portfolio/components/PortfolioAssets/PortfolioAssets'
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
 
@@ -18,9 +17,7 @@ export const PortfolioWallet: FC<PortfolioWalletProps> = ({ walletData, vaultsLi
     <div className={classNames.wrapper}>
       <PortfolioAssets walletData={walletData} />
       {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
-      {!isPreLaunchVersion ? (
-        <PortfolioVaultsCarousel className={classNames.vaultCarousel} vaultsList={vaultsList} />
-      ) : null}
+      <PortfolioVaultsCarousel className={classNames.vaultCarousel} vaultsList={vaultsList} />
       {/* <CryptoUtilities /> */}
     </div>
   )

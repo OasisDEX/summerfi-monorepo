@@ -149,3 +149,12 @@ export type ArkDetailsType = {
   pool: string
   chainId: number
 }
+
+export type GetInterestRatesParams = {
+  network: Network
+  dailyCount?: number
+  hourlyCount?: number
+  weeklyCount?: number
+  arksList: SDKVaultishType['arks'] | SDKVaultType['arks']
+  justLatestRates?: boolean
+}

@@ -1,5 +1,5 @@
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda'
-import { Logger } from '@aws-lambda-powertools/logger'
+import { Logger, injectLambdaContext } from '@aws-lambda-powertools/logger'
 import {
   getAllClients,
   type WeeklyInterestRates,
@@ -8,12 +8,82 @@ import {
   LatestInterestRate,
 } from '@summerfi/summer-earn-rates-subgraph'
 import { RatesService, DBRate, DBAggregatedRate, DBHistoricalRates } from './db-service'
+import middy from '@middy/core'
 
-const logger = new Logger({ serviceName: 'get-rates-function' })
+const logger = new Logger({
+  serviceName: 'get-rates-function',
+  logLevel: 'INFO',
+})
 const clients = getAllClients(process.env.SUBGRAPH_BASE || '')
-const ratesService = new RatesService()
 
 const TEN_MINUTES_IN_MS = 10 * 60 * 1000
+
+export async function retrySubgraphQuery<TResponse>(
+  operation: () => Promise<TResponse>,
+  options: {
+    retries?: number
+    initialDelay?: number
+    logger: Logger
+    context: {
+      operation: string
+      [key: string]: string | number | string[]
+    }
+  },
+): Promise<TResponse> {
+  const { retries = 5, initialDelay = 1000, logger, context } = options
+
+  let currentRetry = retries
+  let delay = initialDelay
+
+  while (currentRetry > 0) {
+    try {
+      const result = await operation()
+      return result
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error)
+
+      logger.debug('Caught error in retrySubgraphQuery', {
+        errorMessage,
+        errorType: error instanceof Error ? error.constructor.name : typeof error,
+        includes429: errorMessage.includes('429'),
+        currentRetry,
+        ...context,
+      })
+
+      const isRateLimitError = errorMessage.includes('429')
+
+      if (currentRetry === 1 || !isRateLimitError) {
+        logger.error(`Error in ${context.operation}:`, {
+          ...context,
+          error: error instanceof Error ? error : String(error),
+          currentRetry,
+          isRateLimitError,
+        })
+        throw error
+      }
+
+      currentRetry--
+
+      // Add random jitter between -25% and +25% of the delay
+      const jitter = (delay * (0.5 - Math.random())) / 2
+      const finalDelay = Math.max(delay + jitter, 100) // Ensure minimum 100ms delay
+
+      logger.info(`Rate limited, retrying ${context.operation}...`, {
+        ...context,
+        retriesLeft: currentRetry,
+        baseDelay: delay,
+        actualDelay: finalDelay,
+        jitterMs: jitter,
+        errorMessage,
+      })
+
+      await new Promise((resolve) => setTimeout(resolve, finalDelay))
+      delay *= 2 // Exponential backoff for next iteration
+    }
+  }
+
+  throw new Error(`Failed to complete ${context.operation} after all retries`)
+}
 
 function findMatchingDbRate(subgraphTimestamp: number, dbRates: DBRate[]) {
   return dbRates.find((dbRate) => {
@@ -78,13 +148,18 @@ function combineLatestRates(subgraphRate: LatestInterestRate, dbRates: DBHistori
   }
 }
 
-export async function handler(event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> {
+async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> {
+  const ratesService = new RatesService()
+
   try {
+    logger.info('Initializing rates service')
     await ratesService.init()
 
     const path = event.requestContext.http.path
     const productId = event.queryStringParameters?.productId
     const chainId = event.pathParameters?.chainId
+
+    logger.info(`Request received for path: ${path}, productId: ${productId}, chainId: ${chainId}`)
 
     if (!chainId) {
       return {
@@ -114,7 +189,16 @@ export async function handler(event: APIGatewayProxyEventV2): Promise<APIGateway
     if (path.includes('/rates')) {
       // Get rates from both sources
       const [subgraphRates, dbRates] = await Promise.all([
-        client.GetArkRates({ productId }),
+        retrySubgraphQuery(() => client.GetArkRates({ productId }), {
+          retries: 3,
+          initialDelay: 1000,
+          logger: logger,
+          context: {
+            operation: 'GetArkRates',
+            productId: productId,
+            chainId: chainId,
+          },
+        }),
         ratesService.getLatestRates(chainId, productId),
       ])
 
@@ -147,7 +231,16 @@ export async function handler(event: APIGatewayProxyEventV2): Promise<APIGateway
       }
     } else if (path.includes('/historicalRates')) {
       const [subgraphRates, dbRates] = await Promise.all([
-        client.GetInterestRates({ productId }),
+        retrySubgraphQuery(() => client.GetInterestRates({ productId }), {
+          retries: 3,
+          initialDelay: 1000,
+          logger: logger,
+          context: {
+            operation: 'GetInterestRates',
+            productId: productId,
+            chainId: chainId,
+          },
+        }),
         ratesService.getHistoricalRates(chainId, productId),
       ])
 
@@ -207,5 +300,11 @@ export async function handler(event: APIGatewayProxyEventV2): Promise<APIGateway
       statusCode: 500,
       body: JSON.stringify({ error: 'Internal server error' }),
     }
+  } finally {
+    await ratesService.destroy()
+    logger.info('Database connection cleaned up')
   }
 }
+
+// Export the wrapped handler
+export const handler = middy(baseHandler).use(injectLambdaContext(logger))

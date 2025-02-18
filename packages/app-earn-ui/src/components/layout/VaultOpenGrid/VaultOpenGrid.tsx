@@ -5,6 +5,7 @@ import { type SDKVaultishType, type SDKVaultsListType } from '@summerfi/app-type
 import {
   formatCryptoBalance,
   formatDecimalAsPercent,
+  getArksWeightedApy,
   sdkNetworkToHumanNetwork,
   ten,
 } from '@summerfi/app-utils'
@@ -65,7 +66,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   const apr30d = isVaultAtLeast30dOld
     ? formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
     : 'New strategy'
-  const aprCurrent = formatDecimalAsPercent(new BigNumber(vault.calculatedApr).div(100))
+  const aprCurrent = formatDecimalAsPercent(getArksWeightedApy(vault))
   const totalValueLockedUSDParsed = formatCryptoBalance(new BigNumber(vault.totalValueLockedUSD))
   const totalValueLockedTokenParsed = formatCryptoBalance(
     new BigNumber(vault.inputTokenBalance.toString()).div(ten.pow(vault.inputToken.decimals)),
@@ -196,7 +197,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                         {medianDefiYieldDifference
                           ? `${medianDefiYieldDifference.gt(0) ? '+' : ''}${formatDecimalAsPercent(
                               medianDefiYieldDifference.div(100),
-                            )} Median DeFi Yield`
+                            )} vs Median DeFi Yield`
                           : ''}
                       </div>
                     </Tooltip>

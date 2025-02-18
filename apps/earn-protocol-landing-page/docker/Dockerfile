@@ -2,7 +2,7 @@ FROM node:20-alpine
 EXPOSE 3000
 WORKDIR .
 COPY .next/standalone .next/standalone
-COPY package.json next.config.mjs .
+COPY package.json next.config.ts .
 COPY public .next/standalone/apps/earn-protocol-landing-page/public
 COPY .next/static .next/standalone/apps/earn-protocol-landing-page/.next/static
 
@@ -16,7 +16,8 @@ ARG CONFIG_URL \
     NEXT_TELEMETRY_DISABLED \
     NEWSLETTER_API_KEY \
     NEWSLETTER_PUBLICATION_ID \
-    NEWSLETTER_ENDPOINT
+    NEWSLETTER_ENDPOINT \
+    FUNCTIONS_API_URL
 
 
 ENV CONFIG_URL=$CONFIG_URL \
@@ -29,6 +30,7 @@ ENV CONFIG_URL=$CONFIG_URL \
     NEXT_TELEMETRY_DISABLED=$NEXT_TELEMETRY_DISABLED \
     NEWSLETTER_API_KEY=$NEWSLETTER_API_KEY \
     NEWSLETTER_PUBLICATION_ID=$NEWSLETTER_PUBLICATION_ID \
-    NEWSLETTER_ENDPOINT=$NEWSLETTER_ENDPOINT
+    NEWSLETTER_ENDPOINT=$NEWSLETTER_ENDPOINT \
+    FUNCTIONS_API_URL=$FUNCTIONS_API_URL
 
 CMD [ "node", ".next/standalone/apps/earn-protocol-landing-page/server.js" ]

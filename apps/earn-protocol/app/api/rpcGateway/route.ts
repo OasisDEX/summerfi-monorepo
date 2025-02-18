@@ -1,7 +1,7 @@
+import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
 import { type NextRequest, NextResponse } from 'next/server'
 
-import { REVALIDATION_TIMES } from '@/constants/revalidations'
 import { getRpcGatewayUrl } from '@/helpers/rpc-gateway'
 
 /**

@@ -11,13 +11,13 @@ import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/ty
 import { isValidAddress } from '@/helpers/is-valid-address'
 
 type ClaimPageProps = {
-  params: {
+  params: Promise<{
     walletAddress: string
-  }
+  }>
 }
 
 const ClaimPage = async ({ params }: ClaimPageProps) => {
-  const { walletAddress } = params
+  const { walletAddress } = await params
 
   if (!isValidAddress(walletAddress)) {
     redirect(`/`)
@@ -37,7 +37,6 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
 
   const sumrDecayFactors = await getSumrDecayFactor(
     sumrDelegates.map((delegate) => delegate.account.address),
-    walletAddress,
   )
 
   const externalData: ClaimDelegateExternalData = {

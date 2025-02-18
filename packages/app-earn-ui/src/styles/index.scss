@@ -116,21 +116,15 @@ body {
   --radius-circle: var(--general-radius-50);
 
   --gradient-earn-protocol-dark: linear-gradient(90deg, #ff49a4 0%, #b049ff 100%);
-  --gradient-earn-protocol-light: linear-gradient(
-    90deg,
-    rgba(255, 73, 164, 0.5) 0%,
-    rgba(176, 73, 255, 0.5) 100%
-  );
-  --gradient-earn-protocol-dark-10: linear-gradient(
-    90deg,
-    rgba(255, 73, 164, 0.1) 0%,
-    rgba(176, 73, 255, 0.1) 100%
-  );
-  --gradient-earn-protocol-light-10: linear-gradient(
-    90deg,
-    rgba(255, 73, 164, 0.1) 0%,
-    rgba(176, 73, 255, 0.1) 100%
-  );
+  --gradient-earn-protocol-light: linear-gradient(90deg,
+      rgba(255, 73, 164, 0.5) 0%,
+      rgba(176, 73, 255, 0.5) 100%);
+  --gradient-earn-protocol-dark-10: linear-gradient(90deg,
+      rgba(255, 73, 164, 0.1) 0%,
+      rgba(176, 73, 255, 0.1) 100%);
+  --gradient-earn-protocol-light-10: linear-gradient(90deg,
+      rgba(255, 73, 164, 0.1) 0%,
+      rgba(176, 73, 255, 0.1) 100%);
 
   --shadow-depth-1: 0px 0px 8px 0px #0000001a;
   --shadow-depth-2: 0px 0px 8px 8px #00000026;

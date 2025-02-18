@@ -1,7 +1,13 @@
 'use client'
 
+import { type FC } from 'react'
 import { type SDKVaultishType } from '@summerfi/app-types'
-import { formatCryptoBalance, formatDecimalAsPercent, ten } from '@summerfi/app-utils'
+import {
+  formatCryptoBalance,
+  formatDecimalAsPercent,
+  getArksWeightedApy,
+  ten,
+} from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 
@@ -28,24 +34,25 @@ type VaultCardProps = SDKVaultishType & {
   showCombinedBonus?: boolean
 }
 
-export const VaultCard = ({
-  id,
-  protocol,
-  inputToken,
-  totalValueLockedUSD,
-  inputTokenBalance,
-  withHover,
-  secondary = false,
-  selected = false,
-  onClick,
-  calculatedApr,
-  customFields,
-  rewardTokenEmissionsAmount,
-  rewardTokens,
-  withTokenBonus,
-  sumrPrice,
-  showCombinedBonus = false,
-}: VaultCardProps) => {
+export const VaultCard: FC<VaultCardProps> = (props) => {
+  const {
+    id,
+    protocol,
+    inputToken,
+    totalValueLockedUSD,
+    inputTokenBalance,
+    withHover,
+    secondary = false,
+    selected = false,
+    onClick,
+    customFields,
+    rewardTokenEmissionsAmount,
+    rewardTokens,
+    withTokenBonus,
+    sumrPrice,
+    showCombinedBonus = false,
+  } = props
+
   const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus(
     rewardTokens,
     rewardTokenEmissionsAmount,
@@ -64,7 +71,7 @@ export const VaultCard = ({
     }
   }
 
-  const rawApr = new BigNumber(calculatedApr).div(100)
+  const rawApr = getArksWeightedApy(props)
 
   const parsedApr = formatDecimalAsPercent(rawApr)
   const parsedTotalValueLocked = formatCryptoBalance(

@@ -61,7 +61,9 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   } = useLocalConfig()
   const { userWalletAddress } = useUserWallet()
   const { walletAddress } = useParams()
-  const resolvedWalletAddress = Array.isArray(walletAddress) ? walletAddress[0] : walletAddress
+  const resolvedWalletAddress = (
+    Array.isArray(walletAddress) ? walletAddress[0] : walletAddress
+  ) as string
 
   const { checkRisk } = useRiskVerification({
     cookiePrefix: TermsOfServiceCookiePrefix.SUMR_CLAIM_TOKEN,

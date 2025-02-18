@@ -3,16 +3,11 @@
 import { type FC } from 'react'
 import { NonOwnerPortfolioBanner, SkeletonLine, TabBar } from '@summerfi/app-earn-ui'
 
-import { isPreLaunchVersion } from '@/constants/is-pre-launch-version'
 import { PortfolioHeader } from '@/features/portfolio/components/PortfolioHeader/PortfolioHeader'
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { useTabStateQuery } from '@/hooks/use-tab-state'
 
 import classNames from './PortfolioPageView.module.scss'
-
-interface PortfolioPageViewLoadingStateProps {
-  walletAddress: string
-}
 
 const SimplePortfolioSkeleton = (
   <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
@@ -27,42 +22,36 @@ const SimplePortfolioSkeleton = (
   </div>
 )
 
-export const PortfolioPageViewLoadingState: FC<PortfolioPageViewLoadingStateProps> = ({
-  walletAddress,
-}) => {
+export const PortfolioPageViewLoadingState: FC = () => {
   const [activeTab, updateTab] = useTabStateQuery({
     tabs: PortfolioTabs,
-    defaultTab: isPreLaunchVersion ? PortfolioTabs.REWARDS : PortfolioTabs.OVERVIEW,
+    defaultTab: PortfolioTabs.OVERVIEW,
   })
   const tabs = [
-    ...(isPreLaunchVersion
-      ? []
-      : [
-          {
-            id: PortfolioTabs.OVERVIEW,
-            label: 'Overview',
-            content: SimplePortfolioSkeleton,
-          },
-        ]),
+    ...[
+      {
+        id: PortfolioTabs.OVERVIEW,
+        label: 'Overview',
+        content: SimplePortfolioSkeleton,
+      },
+    ],
     {
       id: PortfolioTabs.WALLET,
       label: 'Wallet',
       content: SimplePortfolioSkeleton,
     },
-    ...(isPreLaunchVersion
-      ? []
-      : [
-          {
-            id: PortfolioTabs.YOUR_ACTIVITY,
-            label: 'Your Activity',
-            content: SimplePortfolioSkeleton,
-          },
-          {
-            id: PortfolioTabs.REBALANCE_ACTIVITY,
-            label: 'Rebalance Activity',
-            content: SimplePortfolioSkeleton,
-          },
-        ]),
+    ...[
+      {
+        id: PortfolioTabs.YOUR_ACTIVITY,
+        label: 'Your Activity',
+        content: SimplePortfolioSkeleton,
+      },
+      {
+        id: PortfolioTabs.REBALANCE_ACTIVITY,
+        label: 'Rebalance Activity',
+        content: SimplePortfolioSkeleton,
+      },
+    ],
     {
       id: PortfolioTabs.REWARDS,
       label: 'SUMR Rewards',
@@ -74,7 +63,7 @@ export const PortfolioPageViewLoadingState: FC<PortfolioPageViewLoadingStateProp
     <>
       <NonOwnerPortfolioBanner isOwner walletStateLoaded />
       <div className={classNames.portfolioPageViewLoadingStateWrapper}>
-        <PortfolioHeader walletAddress={walletAddress} isLoading />
+        <PortfolioHeader walletAddress="" isLoading />
         <TabBar
           tabs={tabs}
           defaultIndex={tabs.findIndex((item) => item.id === activeTab)}

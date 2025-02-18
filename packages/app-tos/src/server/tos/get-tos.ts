@@ -35,7 +35,7 @@ export async function getTos<DB extends TOSRequiredDB>({
   jwtSecret: string
   db: Kysely<DB>
 }) {
-  const { version, walletAddress, cookiePrefix } = paramsSchema.parse(context.params)
+  const { version, walletAddress, cookiePrefix } = paramsSchema.parse(await context.params)
 
   const resolvedDB = db as unknown as Kysely<TOSRequiredDB>
 

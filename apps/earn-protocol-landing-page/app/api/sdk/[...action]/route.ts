@@ -4,7 +4,7 @@ export async function POST(req: NextRequest) {
   const sdkApiUrl = process.env.SDK_API_URL
 
   if (!sdkApiUrl) {
-    return NextResponse.json({ error: 'SDK_API_URL is not set' }, { status: 500 })
+    return NextResponse.json({ error: 'SDK_API_URL is not set ' }, { status: 500 })
   }
 
   const url = sdkApiUrl + req.nextUrl.pathname + req.nextUrl.search

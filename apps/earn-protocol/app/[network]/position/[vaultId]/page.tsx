@@ -5,7 +5,6 @@ import {
   parseServerResponseToClient,
   subgraphNetworkToId,
 } from '@summerfi/app-utils'
-import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
 import { getMedianDefiYield } from '@/app/server-handlers/defillama/get-median-defi-yield'
@@ -15,31 +14,27 @@ import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { VaultOpenView } from '@/components/layout/VaultOpenView/VaultOpenView'
-import { isPreLaunchVersion } from '@/constants/is-pre-launch-version'
 import {
   decorateCustomVaultFields,
   getVaultIdByVaultCustomName,
 } from '@/helpers/vault-custom-value-helpers'
 
 type EarnVaultOpenPageProps = {
-  params: {
+  params: Promise<{
     vaultId: string // could be vault address or the vault name
     network: SDKNetwork
-  }
+  }>
 }
 
 const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (isPreLaunchVersion) {
-    return redirect('/sumr')
-  }
-  const parsedNetwork = humanNetworktoSDKNetwork(params.network)
+  const { network, vaultId } = await params
+  const parsedNetwork = humanNetworktoSDKNetwork(network)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
   const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
 
-  const parsedVaultId = isAddress(params.vaultId)
-    ? params.vaultId
-    : getVaultIdByVaultCustomName(params.vaultId, String(parsedNetworkId), systemConfig)
+  const parsedVaultId = isAddress(vaultId)
+    ? vaultId
+    : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
   const [vault, { vaults }, { userActivity, topDepositors }, medianDefiYield] = await Promise.all([
     getVaultDetails({

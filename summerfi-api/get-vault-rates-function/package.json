@@ -1,0 +1,19 @@
+{
+  "name": "@summerfi/get-vault-rates-function",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -noEmit"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.119",
+    "@types/node": "^20.5.0",
+    "sst": "^2.24.22",
+    "vitest": "^0.34.1"
+  },
+  "dependencies": {
+    "@aws-lambda-powertools/logger": "^1.12.1",
+    "@summerfi/summer-protocol-db": "workspace:*"
+  }
+}

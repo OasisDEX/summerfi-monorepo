@@ -1,3 +1,4 @@
+'use client'
 import { useEffect, useState } from 'react'
 import { useAuthModal, useChain, useLogout, useSignerStatus } from '@account-kit/react'
 import {

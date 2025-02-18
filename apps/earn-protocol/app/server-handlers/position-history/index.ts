@@ -1,9 +1,9 @@
 'use server'
 
+import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { SDKNetwork, type SDKVaultishType, type SDKVaultType } from '@summerfi/app-types'
 import { GraphQLClient } from 'graphql-request'
 
-import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@/constants/revalidations'
 import {
   GetPositionHistoryDocument,
   type GetPositionHistoryQuery,

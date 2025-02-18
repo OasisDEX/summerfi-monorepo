@@ -1,6 +1,6 @@
+import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { type NextRequest, NextResponse } from 'next/server'
 
-import { REVALIDATION_TIMES } from '@/constants/revalidations'
 import { getTransakUrl } from '@/features/transak/helpers/get-transak-url'
 import { type TransakFiatCurrenciesResponse } from '@/features/transak/types'
 

@@ -1,4 +1,4 @@
-import { getUniqueVaultId } from '@summerfi/app-earn-ui'
+import { getDisplayToken, getUniqueVaultId } from '@summerfi/app-earn-ui'
 import type {
   SDKGlobalRebalancesType,
   SDKGlobalRebalanceType,
@@ -42,7 +42,8 @@ const rebalanceFilterTokens = ({
 }: {
   tokenFilter: string[]
   rebalance: SDKGlobalRebalanceType
-}) => !tokenFilter.length || tokenFilter.includes(rebalance.vault.inputToken.symbol)
+}) =>
+  !tokenFilter.length || tokenFilter.includes(getDisplayToken(rebalance.vault.inputToken.symbol))
 
 export const rebalanceActivityFilter = ({
   rebalancesList,

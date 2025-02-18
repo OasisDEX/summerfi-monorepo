@@ -1,7 +1,9 @@
 import { ToastContainer } from 'react-toastify'
 import { cookieToInitialState } from '@account-kit/core'
 import {
+  analyticsCookieName,
   GlobalStyles,
+  GoogleTagManager,
   LocalConfigContextProvider,
   slippageConfigCookieName,
   sumrNetApyConfigCookieName,
@@ -12,8 +14,6 @@ import { getServerSideCookies, safeParseJson } from '@summerfi/app-utils'
 import type { Metadata } from 'next'
 import { cookies, headers } from 'next/headers'
 import Image from 'next/image'
-import { NextIntlClientProvider } from 'next-intl'
-import { getLocale, getMessages } from 'next-intl/server'
 
 import { getAccountKitConfig } from '@/account-kit/config'
 import systemConfigHandler from '@/app/server-handlers/system-config'
@@ -35,16 +35,22 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const [{ config }] = await Promise.all([systemConfigHandler()])
 
-  const locale = await getLocale()
+  const cookieRaw = await cookies()
+  const cookie = cookieRaw.toString()
+
+  const locale = 'en'
+
+  const analyticsCookie = safeParseJson(getServerSideCookies(analyticsCookieName, cookie))
 
   if (config.maintenance && process.env.NODE_ENV !== 'development') {
     return (
-      <html lang={locale} style={{ backgroundColor: '#1c1c1c' }}>
+      <html lang={locale} suppressHydrationWarning style={{ backgroundColor: '#1c1c1c' }}>
         <head>
           <GlobalStyles />
         </head>
         <body className={`${fontInter.variable}`}>
-          <MasterPage skipNavigation>
+          <GoogleTagManager />
+          <MasterPage skipNavigation analyticsCookie={analyticsCookie}>
             <Image src={logoMaintenance} alt="Summer.fi" width={200} style={{ margin: '4rem' }} />
             <Text as="h1" variant="h1" style={{ margin: '3rem 0 1rem', fontWeight: 700 }}>
               Maintenance
@@ -57,10 +63,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </html>
     )
   }
-  const messages = await getMessages()
-
-  const cookieRaw = await cookies()
-  const cookie = cookieRaw.toString()
 
   const forks = safeParseJson(getServerSideCookies(forksCookieName, cookie))
   const accountKitState = safeParseJson(getServerSideCookies(accountKitCookieStateName, cookie))
@@ -73,25 +75,24 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   const accountKitInitializedState = cookieToInitialState(
     getAccountKitConfig({ forkRpcUrl, chainId }),
-    headers().get('cookie') ?? undefined,
+    (await headers()).get('cookie') ?? undefined,
   )
 
   // the style on the html tag is needed to prevent a flash of white background on page load
   return (
-    <html lang={locale} style={{ backgroundColor: '#1c1c1c' }}>
+    <html lang={locale} suppressHydrationWarning style={{ backgroundColor: '#1c1c1c' }}>
       <head>
         <GlobalStyles />
       </head>
       <body className={`${fontInter.variable}`}>
+        <GoogleTagManager />
         <AlchemyAccountsProvider initialState={accountKitInitializedState}>
           <GlobalEventTracker />
-          <NextIntlClientProvider messages={messages}>
-            <DeviceProvider value={deviceType}>
-              <LocalConfigContextProvider value={{ sumrNetApyConfig, slippageConfig }}>
-                <MasterPage>{children}</MasterPage>
-              </LocalConfigContextProvider>
-            </DeviceProvider>
-          </NextIntlClientProvider>
+          <DeviceProvider value={deviceType}>
+            <LocalConfigContextProvider value={{ sumrNetApyConfig, slippageConfig }}>
+              <MasterPage analyticsCookie={analyticsCookie}>{children}</MasterPage>
+            </LocalConfigContextProvider>
+          </DeviceProvider>
         </AlchemyAccountsProvider>
         <div id="portal" style={{ position: 'absolute' }} />
         {/* Separate portal for dropdown is needed to not mix up position calculation */}

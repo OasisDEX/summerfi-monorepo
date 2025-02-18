@@ -45,6 +45,7 @@ export function ExternalAPI(stackContext: StackContext) {
   apiForPartners.addRoutes(stack, {
     'GET /api/locked-weeth': getLockedWeEth,
     'GET /api/protocol-info/users': getProtocolInfo,
+    'POST /api/protocol-info/users': getProtocolInfo,
     'GET /api/protocol-info/protocol': getProtocolInfo,
     'GET /api/protocol-info/all-users': getProtocolInfo,
   })

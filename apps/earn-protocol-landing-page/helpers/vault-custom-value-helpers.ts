@@ -1,26 +1,30 @@
 import { type EarnAppConfigType, type SDKVaultishType } from '@summerfi/app-types'
-import { subgraphNetworkToId } from '@summerfi/app-utils'
+import { decorateWithFleetConfig } from '@summerfi/app-utils'
 
-export const decorateCustomVaultFields = (
-  vaults: SDKVaultishType[],
-  systemConfig: Partial<EarnAppConfigType>,
-) => {
+import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
+
+import { decorateWithArkInterestRatesData } from './vault-decorators/ark-interest-data'
+
+export const decorateCustomVaultFields = ({
+  vaults,
+  systemConfig,
+  decorators,
+}: {
+  vaults: SDKVaultishType[]
+  systemConfig: Partial<EarnAppConfigType>
+  decorators?: {
+    arkInterestRatesMap?: GetInterestRatesReturnType
+  }
+}) => {
   const { fleetMap } = systemConfig
 
-  if (!fleetMap) {
-    return vaults
-  }
+  const { arkInterestRatesMap } = decorators ?? {}
 
-  return vaults.map((vault) => {
-    const vaultNetworkId = subgraphNetworkToId(vault.protocol.network)
-    const vaultNetworkConfig = fleetMap[String(vaultNetworkId) as keyof typeof fleetMap]
-    const customFields = vaultNetworkConfig[vault.id.toLowerCase() as '0x']
+  const vaultsWithConfig = fleetMap ? decorateWithFleetConfig(vaults, fleetMap) : vaults
 
-    return customFields
-      ? {
-          ...vault,
-          customFields,
-        }
-      : vault
-  }) as SDKVaultishType[]
+  const vaultsWithArkInterestRates = arkInterestRatesMap
+    ? decorateWithArkInterestRatesData(vaultsWithConfig, arkInterestRatesMap)
+    : vaultsWithConfig
+
+  return vaultsWithArkInterestRates as SDKVaultishType[]
 }

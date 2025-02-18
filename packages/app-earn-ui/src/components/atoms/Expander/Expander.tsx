@@ -2,7 +2,7 @@
 import { type CSSProperties, type FC, type ReactNode, useCallback, useState } from 'react'
 
 import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
-import { Icon } from '@/components/atoms/Icon/Icon'
+import { Icon, type IconVariant } from '@/components/atoms/Icon/Icon'
 
 import styles from './Expander.module.scss'
 
@@ -12,6 +12,9 @@ interface ExpanderProps {
   children: ReactNode
   expanderButtonStyles?: CSSProperties
   disabled?: boolean
+  expanderWrapperStyles?: CSSProperties
+  iconVariant?: IconVariant
+  onExpand?: (isExpanded: boolean) => void
 }
 
 export const Expander: FC<ExpanderProps> = ({
@@ -20,15 +23,26 @@ export const Expander: FC<ExpanderProps> = ({
   children,
   expanderButtonStyles = {},
   disabled = false,
+  expanderWrapperStyles = {},
+  iconVariant = 'xs',
+  onExpand,
 }) => {
+  const [isAnimating, setIsAnimating] = useState(false)
   const [isExpanded, setIsExpanded] = useState(defaultExpanded)
 
   const toggleExpand = useCallback(() => {
+    if (isExpanded) {
+      setIsAnimating(true)
+      setTimeout(() => {
+        setIsAnimating(false)
+      }, 600) // based on AnimateHeight animationTime
+    }
     setIsExpanded(!isExpanded)
-  }, [isExpanded])
+    onExpand?.(!isExpanded)
+  }, [isExpanded, onExpand])
 
   return (
-    <div className={styles.expander}>
+    <div className={styles.expander} style={expanderWrapperStyles}>
       <button
         className={styles.expanderButton}
         onClick={toggleExpand}
@@ -39,13 +53,13 @@ export const Expander: FC<ExpanderProps> = ({
         <div className={styles.chevron}>
           <Icon
             iconName={isExpanded ? 'chevron_up' : 'chevron_down'}
-            variant="xs"
+            variant={iconVariant}
             color={disabled ? 'rgba(119, 117, 118, 0.5)' : 'rgba(119, 117, 118, 1)'}
           />
         </div>
       </button>
       <AnimateHeight id={`Expander_${typeof title === 'string' ? title : ''}`} show={isExpanded}>
-        {children}
+        {isExpanded || isAnimating ? children : null}
       </AnimateHeight>
     </div>
   )

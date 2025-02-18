@@ -22,13 +22,14 @@ import { configFetcher } from '@/server-handlers/system-config/calls/config'
 export default async function LeaderboardPage({
   searchParams,
 }: {
-  searchParams: {
+  searchParams: Promise<{
     userAddress: string
-  }
+  }>
 }) {
+  const searchParamsAwaited = await searchParams
   const [config, userRays] = await Promise.all([
     configFetcher(),
-    fetchRays({ address: searchParams.userAddress }).then(
+    fetchRays({ address: searchParamsAwaited.userAddress }).then(
       parseServerResponseToClient,
     ) as Promise<FetchRaysReturnType>,
   ])
@@ -60,8 +61,8 @@ export default async function LeaderboardPage({
     leaderboardData: topLeaderboardResponse
       ? [...topLeaderboardResponse.leaderboard, 'separator', ...userLeaderboardResponse.leaderboard]
       : userLeaderboardResponse.leaderboard,
-    userWalletAddress: searchParams.userAddress
-      ? searchParams.userAddress.toLocaleLowerCase()
+    userWalletAddress: searchParamsAwaited.userAddress
+      ? searchParamsAwaited.userAddress.toLocaleLowerCase()
       : undefined,
     skipBanner: true,
     page: '/',
@@ -77,7 +78,7 @@ export default async function LeaderboardPage({
   return (
     <div style={{ display: 'flex', gap: '8px', flexDirection: 'column', alignItems: 'center' }}>
       <ClaimRays
-        userAddress={searchParams.userAddress}
+        userAddress={searchParamsAwaited.userAddress}
         userRays={userRays}
         pointsEarnedPerYear={userYearlyRays?.details?.pointsEarnedPerYear}
         announcement={config.parameters?.announcement}
@@ -99,7 +100,7 @@ export default async function LeaderboardPage({
             href={{
               pathname: '/leaderboard',
               query: {
-                userAddress: searchParams.userAddress,
+                userAddress: searchParamsAwaited.userAddress,
               },
             }}
           >
@@ -108,15 +109,15 @@ export default async function LeaderboardPage({
         </div>
         <TopClimbersWrapper topClimbers={topClimbers} />
         <div style={{ marginTop: 'var(--space-xxl)' }}>
-          <LeaderboardBanner userWalletAddress={searchParams.userAddress} page="/" />
+          <LeaderboardBanner userWalletAddress={searchParamsAwaited.userAddress} page="/" />
         </div>
       </div>
       {/**
        * The HomepageHandler component handles the redirection after wallet is connected.
        * Now mixpanel tracking as well
        */}
-      <HomepageHandler userAddress={searchParams.userAddress} />
-      <PageViewHandler userAddress={searchParams.userAddress} />
+      <HomepageHandler userAddress={searchParamsAwaited.userAddress} />
+      <PageViewHandler userAddress={searchParamsAwaited.userAddress} />
     </div>
   )
 }

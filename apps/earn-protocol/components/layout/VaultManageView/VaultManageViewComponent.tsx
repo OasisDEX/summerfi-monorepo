@@ -37,6 +37,7 @@ import { subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
 import { type GetGlobalRebalancesQuery, type IArmadaPosition } from '@summerfi/sdk-client'
 import { TransactionType } from '@summerfi/sdk-common'
 
+import { AccountKitAccountType } from '@/account-kit/types'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import {
   ControlsApproval,
@@ -205,12 +206,11 @@ export const VaultManageViewComponent = ({
   const { signTosMessage } = useTermsOfServiceSigner()
 
   const tosState = useTermsOfService({
-    // @ts-ignore
-    publicClient, // ignored for now, we need to align viem versionon all subpackages
+    publicClient,
     signMessage: signTosMessage,
     chainId: vaultChainId,
     walletAddress: user?.address,
-    isSmartAccount: user?.type === 'sca',
+    isSmartAccount: user?.type === AccountKitAccountType.SCA,
     version: TermsOfServiceVersion.APP_VERSION,
     cookiePrefix: TermsOfServiceCookiePrefix.APP_TOKEN,
     host: '/earn',

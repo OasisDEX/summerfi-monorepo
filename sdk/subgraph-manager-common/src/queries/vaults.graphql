@@ -22,6 +22,7 @@ query GetVaults {
       details
       depositLimit
       depositCap
+      inputTokenBalance
       inputToken {
         id
         name

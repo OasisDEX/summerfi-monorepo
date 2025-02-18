@@ -193,15 +193,17 @@ export const Sidebar: FC<SidebarProps> = ({
         </AnimateHeight>
       </div>
       <div className={sidebarClassNames.sidebarCta}>
-        {primaryButton.action && !primaryButton.url && !primaryButton.hidden && (
-          <Button
-            variant="primaryLarge"
-            onClick={primaryButton.action}
-            disabled={primaryButton.disabled}
-          >
-            {labelElement}
-          </Button>
-        )}
+        {(primaryButton.action ?? primaryButton.loading) &&
+          !primaryButton.url &&
+          !primaryButton.hidden && (
+            <Button
+              variant="primaryLarge"
+              onClick={primaryButton.action}
+              disabled={primaryButton.disabled}
+            >
+              {labelElement}
+            </Button>
+          )}
         {primaryButton.url && (
           <Link
             href={primaryButton.url}

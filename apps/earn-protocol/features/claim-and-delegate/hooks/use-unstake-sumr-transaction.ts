@@ -1,9 +1,7 @@
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
-import { useIsIframe } from '@summerfi/app-earn-ui'
 
 import { accountType } from '@/account-kit/config'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
-import { sendSafeTx } from '@/helpers/send-safe-tx'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 
 /**
@@ -32,7 +30,6 @@ export const useUnstakeSumrTransaction = ({
 } => {
   const { getUnstakeTx } = useAppSDK()
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
-  const isIframe = useIsIframe()
 
   const { sendUserOperationAsync, error, isSendingUserOperation } = useSendUserOperation({
     client: smartAccountClient,
@@ -46,20 +43,6 @@ export const useUnstakeSumrTransaction = ({
 
     if (tx === undefined) {
       throw new Error('unstake tx is undefined')
-    }
-
-    if (isIframe) {
-      return await sendSafeTx({
-        txs: [
-          {
-            to: tx[0].transaction.target.value,
-            data: tx[0].transaction.calldata,
-            value: tx[0].transaction.value,
-          },
-        ],
-        onSuccess,
-        onError,
-      })
     }
 
     const txParams = {

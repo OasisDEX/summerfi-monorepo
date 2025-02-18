@@ -3,15 +3,22 @@ import { Logger } from '@aws-lambda-powertools/logger'
 import { getSummerProtocolDB, Network } from '@summerfi/summer-protocol-db'
 import process from 'node:process'
 import {
-  getAllClients,
-  SubgraphClient,
+  getAllClients as getAllRatesSubgraphClients,
+  SubgraphClient as RatesSubgraphClient,
   Products,
   Product,
 } from '@summerfi/summer-earn-rates-subgraph'
+import {
+  getAllClients as getAllProtocolSubgraphClients,
+  VaultsQuery,
+} from '@summerfi/summer-earn-protocol-subgraph'
 
 import { RewardsService } from './rewards-service'
 import { Transaction } from 'kysely'
 import { Database, mapDbNetworkToChainId } from '@summerfi/summer-protocol-db'
+import { ChainId } from '@summerfi/serverless-shared'
+
+import { GetArksRatesQuery, GetProductsQuery } from '@summerfi/summer-earn-rates-subgraph'
 
 const logger = new Logger({ serviceName: 'update-summer-earn-rewards-apr' })
 
@@ -23,18 +30,368 @@ const supportedProtocols = [Protocol.Morpho, Protocol.Euler]
 
 const rewardsService = new RewardsService(logger)
 
-interface NetworkStatus {
+export interface NetworkStatus {
   network: Network
   isUpdating: boolean
   lastUpdatedAt: string
   lastBlockNumber: string
 }
 
-const HOUR_IN_SECONDS = 3600
-const DAY_IN_SECONDS = 86400
-const WEEK_IN_SECONDS = 604800
-const EPOCH_WEEK_OFFSET = 345600 // 4 days
-const MIN_UPDATE_INTERVAL = 10 * 60 // 10 minutes in seconds
+export const HOUR_IN_SECONDS = 3600
+export const DAY_IN_SECONDS = 86400
+export const WEEK_IN_SECONDS = 604800
+export const EPOCH_WEEK_OFFSET = 345600 // 4 days
+export const MIN_UPDATE_INTERVAL = 10 * 60 // 10 minutes in seconds
+
+export async function retrySubgraphQuery<TResponse>(
+  operation: () => Promise<TResponse>,
+  options: {
+    retries?: number
+    initialDelay?: number
+    logger: Logger
+    context: {
+      operation: string
+      network: Network
+      [key: string]: string | number | string[]
+    }
+  },
+): Promise<TResponse> {
+  const { retries = 5, initialDelay = 1000, logger, context } = options
+
+  let currentRetry = retries
+  let delay = initialDelay
+
+  while (currentRetry > 0) {
+    try {
+      const result = await operation()
+      return result
+    } catch (error) {
+      if (currentRetry === 1 || !(error instanceof Error) || !error.message.includes('429')) {
+        logger.error(`Error in ${context.operation}:`, {
+          ...context,
+          error: error instanceof Error ? error : String(error),
+        })
+        throw error
+      }
+
+      currentRetry--
+      logger.debug(`Rate limited, retrying ${context.operation}...`, {
+        ...context,
+        retriesLeft: currentRetry,
+        delay,
+      })
+      await new Promise((resolve) => setTimeout(resolve, delay))
+      delay *= 2 // Exponential backoff
+    }
+  }
+
+  throw new Error(`Failed to complete ${context.operation} after all retries`)
+}
+
+export async function updateVaultAprs(
+  trx: Transaction<Database>,
+  network: NetworkStatus,
+  updateStartTimestamp: number,
+  vaults: VaultsQuery,
+  rateSubgraphClients: Record<ChainId, RatesSubgraphClient>,
+) {
+  const chainId = mapDbNetworkToChainId(network.network)
+  logger.debug('Starting updateVaultAprs', { network: network.network, chainId })
+
+  const rateSubgraphClient = rateSubgraphClients[chainId]
+
+  logger.debug('Retrieved vaults', {
+    network: network.network,
+    vaultCount: vaults.vaults.length,
+    vaults: vaults.vaults.map((v) => ({ id: v.id, arkCount: v.arks.length })),
+  })
+
+  const arksWithTvl = vaults.vaults.flatMap((vault) =>
+    vault.arks.filter((ark) => +ark.totalValueLockedUSD > 0),
+  )
+  logger.debug('Filtered arks with TVL', {
+    network: network.network,
+    arkCount: arksWithTvl.length,
+    arks: arksWithTvl.map((ark) => ({ id: ark.id, tvl: ark.totalValueLockedUSD })),
+  })
+
+  for (const vault of vaults.vaults) {
+    const fleetArksWithTvl = arksWithTvl.filter((ark) => ark.vault.id === vault.id)
+    const fleetTvl = fleetArksWithTvl.reduce((acc, ark) => acc + +ark.totalValueLockedUSD, 0)
+    logger.debug('Calculated fleet TVL', { network: network.network, fleetTvl })
+
+    const fleetArksWithRatios = fleetArksWithTvl.map((ark) => ({
+      ...ark,
+      ratio: +ark.totalValueLockedUSD / fleetTvl,
+    }))
+    logger.debug('Calculated ark ratios', {
+      network: network.network,
+      arks: fleetArksWithRatios.map((ark) => ({
+        id: ark.id,
+        tvl: ark.totalValueLockedUSD,
+        ratio: ark.ratio,
+      })),
+    })
+    // single query for all arks rates
+    // single interest rate per productId
+    const arksRates = await retrySubgraphQuery<GetArksRatesQuery>(
+      () =>
+        rateSubgraphClient.GetArksRates({
+          productIds: fleetArksWithRatios.map((ark) => ark.productId),
+        }),
+      {
+        logger,
+        context: {
+          operation: 'GetArksRates',
+          network: network.network,
+          productIds: fleetArksWithRatios.map((ark) => ark.productId),
+        },
+      },
+    )
+
+    if (!arksRates) {
+      throw new Error('No ark rates retrieved')
+    }
+
+    const fleetArksRewardsRates = await trx
+      .with('latest_timestamps', (qb) =>
+        qb
+          .selectFrom('rewardRate')
+          .select(['productId', 'network'])
+          .select((eb) => eb.fn.max('timestamp').as('maxTimestamp'))
+          .where('network', '=', network.network)
+          .where(
+            'productId',
+            'in',
+            fleetArksWithRatios.map((ark) => ark.productId),
+          )
+          .groupBy(['productId', 'network']),
+      )
+      .selectFrom('rewardRate')
+      .innerJoin('latest_timestamps', (join) =>
+        join
+          .onRef('rewardRate.productId', '=', 'latest_timestamps.productId')
+          .onRef('rewardRate.network', '=', 'latest_timestamps.network')
+          .onRef('rewardRate.timestamp', '=', 'latest_timestamps.maxTimestamp'),
+      )
+      .selectAll('rewardRate')
+      .execute()
+
+    logger.debug('Retrieved reward rates', {
+      network: network.network,
+      rewardRates: fleetArksRewardsRates.map((r) => ({
+        productId: r.productId,
+        rate: r.rate,
+      })),
+    })
+
+    const arksRewardsRatesMap = new Map(fleetArksRewardsRates.map((rate) => [rate.productId, rate]))
+
+    const fleetArksTotalRates = arksRates.products.map((product) => ({
+      ...product,
+      interestRates: product.interestRates.map((rate) => {
+        const rewardRate = parseFloat(arksRewardsRatesMap.get(rate.productId)?.rate || '0')
+        const totalRate = rewardRate + +rate.rate || +rate.rate
+        logger.debug('Calculated total rate', {
+          network: network.network,
+          productId: rate.productId,
+          baseRate: rate.rate,
+          rewardRate,
+          totalRate,
+        })
+        return {
+          ...rate,
+          rate: totalRate,
+        }
+      }),
+    }))
+
+    const weightedFleetRate = fleetArksTotalRates.reduce((acc, product) => {
+      const ark = fleetArksWithRatios.find(
+        (ark) => ark.productId === product.interestRates[0].productId,
+      )
+      const contribution = +product.interestRates[0].rate * ark!.ratio
+      logger.debug('Calculating weighted rate', {
+        network: network.network,
+        productId: product.id,
+        rate: product.interestRates[0].rate,
+        ratio: ark!.ratio,
+        totalValueLockedUSD: ark!.totalValueLockedUSD,
+        contribution,
+        accumulatedTotal: acc + contribution,
+      })
+      return acc + contribution
+    }, 0)
+
+    logger.debug('Final weighted fleet rate', {
+      network: network.network,
+      weightedFleetRate,
+      timestamp: updateStartTimestamp,
+    })
+
+    // Calculate period timestamps
+    const hourTimestamp = Math.floor(updateStartTimestamp / HOUR_IN_SECONDS) * HOUR_IN_SECONDS
+    const dayTimestamp = Math.floor(updateStartTimestamp / DAY_IN_SECONDS) * DAY_IN_SECONDS
+    const offsetTimestamp = updateStartTimestamp + EPOCH_WEEK_OFFSET
+    const weekTimestamp =
+      Math.floor(offsetTimestamp / WEEK_IN_SECONDS) * WEEK_IN_SECONDS - EPOCH_WEEK_OFFSET
+
+    await trx
+      .insertInto('fleetInterestRate')
+      .values({
+        id: `${network.network}-${vault.id}-${updateStartTimestamp}`,
+        timestamp: updateStartTimestamp,
+        rate: weightedFleetRate.toString(),
+        network: network.network,
+        fleetAddress: vault.id,
+      })
+      .execute()
+
+    // Update hourly average
+    await updateHourlyVaultApr(trx, network, weightedFleetRate.toString(), hourTimestamp, vault.id)
+
+    // Update daily average
+    await updateDailyVaultApr(trx, network, weightedFleetRate.toString(), dayTimestamp, vault.id)
+
+    // Update weekly average
+    await updateWeeklyVaultApr(trx, network, weightedFleetRate.toString(), weekTimestamp, vault.id)
+  }
+}
+
+export async function updateHourlyVaultApr(
+  trx: Transaction<Database>,
+  network: NetworkStatus,
+  newRate: string,
+  hourTimestamp: number,
+  fleetAddress: string,
+) {
+  const hourlyRateId = `${network.network}-${fleetAddress}-${hourTimestamp}`
+
+  const hourlyRate = await trx
+    .selectFrom('hourlyFleetInterestRate')
+    .where('id', '=', hourlyRateId)
+    .selectAll()
+    .executeTakeFirst()
+
+  if (!hourlyRate) {
+    await trx
+      .insertInto('hourlyFleetInterestRate')
+      .values({
+        id: hourlyRateId,
+        date: hourTimestamp,
+        sumRates: newRate,
+        updateCount: 1,
+        averageRate: newRate,
+        network: network.network,
+        fleetAddress,
+      })
+      .execute()
+  } else {
+    const newSum = (parseFloat(hourlyRate.sumRates) + parseFloat(newRate)).toString()
+    const newCount = +hourlyRate.updateCount + 1
+    const newAverage = (parseFloat(newSum) / newCount).toString()
+
+    await trx
+      .updateTable('hourlyFleetInterestRate')
+      .set({
+        sumRates: newSum,
+        updateCount: newCount,
+        averageRate: newAverage,
+      })
+      .where('id', '=', hourlyRateId)
+      .execute()
+  }
+}
+
+export async function updateDailyVaultApr(
+  trx: Transaction<Database>,
+  network: NetworkStatus,
+  newRate: string,
+  dayTimestamp: number,
+  fleetAddress: string,
+) {
+  const dailyRateId = `${network.network}-${fleetAddress}-${dayTimestamp}`
+
+  const dailyRate = await trx
+    .selectFrom('dailyFleetInterestRate')
+    .where('id', '=', dailyRateId)
+    .selectAll()
+    .executeTakeFirst()
+
+  if (!dailyRate) {
+    await trx
+      .insertInto('dailyFleetInterestRate')
+      .values({
+        id: dailyRateId,
+        date: dayTimestamp,
+        sumRates: newRate,
+        updateCount: 1,
+        averageRate: newRate,
+        network: network.network,
+        fleetAddress,
+      })
+      .execute()
+  } else {
+    const newSum = (parseFloat(dailyRate.sumRates) + parseFloat(newRate)).toString()
+    const newCount = +dailyRate.updateCount + 1
+    const newAverage = (parseFloat(newSum) / newCount).toString()
+
+    await trx
+      .updateTable('dailyFleetInterestRate')
+      .set({
+        sumRates: newSum,
+        updateCount: newCount,
+        averageRate: newAverage,
+      })
+      .where('id', '=', dailyRateId)
+      .execute()
+  }
+}
+
+export async function updateWeeklyVaultApr(
+  trx: Transaction<Database>,
+  network: NetworkStatus,
+  newRate: string,
+  weekTimestamp: number,
+  fleetAddress: string,
+) {
+  const weeklyRateId = `${network.network}-${fleetAddress}-${weekTimestamp}`
+
+  const weeklyRate = await trx
+    .selectFrom('weeklyFleetInterestRate')
+    .where('id', '=', weeklyRateId)
+    .selectAll()
+    .executeTakeFirst()
+
+  if (!weeklyRate) {
+    await trx
+      .insertInto('weeklyFleetInterestRate')
+      .values({
+        id: weeklyRateId,
+        weekTimestamp,
+        sumRates: newRate,
+        updateCount: 1,
+        averageRate: newRate,
+        network: network.network,
+        fleetAddress,
+      })
+      .execute()
+  } else {
+    const newSum = (parseFloat(weeklyRate.sumRates) + parseFloat(newRate)).toString()
+    const newCount = +weeklyRate.updateCount + 1
+    const newAverage = (parseFloat(newSum) / newCount).toString()
+
+    await trx
+      .updateTable('weeklyFleetInterestRate')
+      .set({
+        sumRates: newSum,
+        updateCount: newCount,
+        averageRate: newAverage,
+      })
+      .where('id', '=', weeklyRateId)
+      .execute()
+  }
+}
 
 async function updateRewardRates(
   trx: Transaction<Database>,
@@ -245,17 +602,21 @@ async function updateWeeklyRewardAverage(
   }
 }
 
-async function getSupportedProducts(client: SubgraphClient): Promise<Products> {
-  let products: Products = []
-  try {
-    const response = await client.GetProducts({ protocols: supportedProtocols })
-
-    products = response.products
-  } catch (error) {
-    logger.error('Error fetching products:', error instanceof Error ? error : String(error))
-  }
-
-  return products
+async function getSupportedProducts(
+  client: RatesSubgraphClient,
+  network: Network,
+): Promise<Products> {
+  const results = await retrySubgraphQuery<GetProductsQuery>(
+    () => client.GetProducts({ protocols: supportedProtocols }),
+    {
+      logger,
+      context: {
+        operation: 'GetProducts',
+        network,
+      },
+    },
+  )
+  return results.products
 }
 
 export const handler = async (
@@ -285,21 +646,27 @@ export const handler = async (
     connectionString: EARN_PROTOCOL_DB_CONNECTION_STRING,
     logger,
   }
+
+  // await backfillFleetRates()
   const { db } = await getSummerProtocolDB(dbConfig)
 
-  const clients = getAllClients(SUBGRAPH_BASE)
+  const ratesSubgraphClients = getAllRatesSubgraphClients(SUBGRAPH_BASE)
+  const protocolSubgraphClients = getAllProtocolSubgraphClients(SUBGRAPH_BASE)
+
   // rounded to full minutes
   const updateStartTimestamp = Math.floor(Date.now() / 1000 / 60) * 60
 
   // Get all potential networks
-  const allNetworks = await db.selectFrom('networkStatus').selectAll().execute()
+  const allNetworks = (await db.selectFrom('networkStatus').selectAll().execute()).filter(
+    (network) => network.network !== 'optimism',
+  )
 
   logger.debug('Starting network processing', { networkCount: allNetworks.length })
 
   for (const network of allNetworks) {
     logger.debug('Processing network', { network: network.network })
     try {
-      // Start transaction that includes both lock acquisition and processing
+      // First transaction for reward rates
       await db.transaction().execute(async (trx) => {
         // Attempt to acquire lock within transaction
         const updatedNetwork = await trx
@@ -325,16 +692,11 @@ export const handler = async (
           return
         }
 
-        logger.debug('Lock acquired for network', {
-          network: updatedNetwork.network,
-          chainId: mapDbNetworkToChainId(updatedNetwork.network),
-          timestamp: updateStartTimestamp,
-        })
-
-        // Main processing
+        // Main processing for rewards
         const chainId = mapDbNetworkToChainId(updatedNetwork.network)
-        const subgraphClient = clients[chainId]
-        const products = await getSupportedProducts(subgraphClient)
+        const ratesSubgraphClient = ratesSubgraphClients[chainId]
+        const products = await getSupportedProducts(ratesSubgraphClient, updatedNetwork.network)
+
         logger.debug('Retrieved products', {
           network: updatedNetwork.network,
           productCount: products.length,
@@ -357,17 +719,14 @@ export const handler = async (
             .execute()
 
           await updateRewardRates(trx, updatedNetwork, products, updateStartTimestamp)
+
           logger.debug('Updated reward rates', {
             network: updatedNetwork.network,
             timestamp: updateStartTimestamp,
           })
-        } else {
-          logger.debug('No products found for network', {
-            network: updatedNetwork.network,
-          })
         }
 
-        // Final update including lock release
+        // Update network status
         await trx
           .updateTable('networkStatus')
           .set({
@@ -375,13 +734,72 @@ export const handler = async (
             lastBlockNumber: updatedNetwork.lastBlockNumber,
             isUpdating: false,
           })
-          .where('network', '=', updatedNetwork.network)
+          .where('network', '=', network.network)
           .execute()
-
-        logger.debug('Network processing completed successfully', {
-          network: updatedNetwork.network,
-        })
       })
+
+      // Second transaction for vault APRs
+      try {
+        await db.transaction().execute(async (trx) => {
+          // Attempt to acquire lock within transaction
+          const updatedNetwork = await trx
+            .updateTable('networkStatus')
+            .set({ isUpdating: true })
+            .where('network', '=', network.network)
+            .where('isUpdating', '=', false)
+            .returningAll()
+            .executeTakeFirst()
+
+          if (!updatedNetwork) {
+            logger.debug('Skipping vault APR updates - lock not acquired', {
+              network: network.network,
+            })
+            return
+          }
+
+          try {
+            const protocolSubgraphClient =
+              protocolSubgraphClients[mapDbNetworkToChainId(network.network)]
+            const vaults = await retrySubgraphQuery<VaultsQuery>(
+              () => protocolSubgraphClient.Vaults(),
+              {
+                logger,
+                context: {
+                  operation: 'GetVaults',
+                  network: network.network,
+                },
+              },
+            )
+
+            if (vaults.vaults.length > 0) {
+              await updateVaultAprs(
+                trx,
+                network,
+                updateStartTimestamp,
+                vaults,
+                ratesSubgraphClients,
+              )
+              logger.debug('Updated vault APRs successfully', {
+                network: network.network,
+              })
+            }
+          } finally {
+            // Always release the lock, even if there's an error
+            await trx
+              .updateTable('networkStatus')
+              .set({ isUpdating: false })
+              .where('network', '=', network.network)
+              .execute()
+          }
+        })
+      } catch (vaultError) {
+        logger.error(`Error updating vault APRs for network ${network.network}`, {
+          error: vaultError instanceof Error ? vaultError.message : String(vaultError),
+          stack: vaultError instanceof Error ? vaultError.stack : undefined,
+          network: network.network,
+          timestamp: updateStartTimestamp,
+        })
+      }
     } catch (error) {
       logger.error(`Error processing network ${network.network}`, {
         error: error instanceof Error ? error.message : String(error),
