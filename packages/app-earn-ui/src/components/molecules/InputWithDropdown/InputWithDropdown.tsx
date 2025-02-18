@@ -81,7 +81,7 @@ export const InputWithDropdown: FC<InputWithDropdownProps> = ({
           </Text>
         </div>
       )}
-      <div>
+      <div style={{ width: '100%' }}>
         <div className={classNames.inputWrapper}>
           <Dropdown
             options={options.map((item) => ({

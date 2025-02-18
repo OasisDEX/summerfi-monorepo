@@ -23,7 +23,7 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: var(--general-space-24) 0;
+  padding: var(--general-space-20) 0;
 
   &.centerTitle {
     justify-content: center;
@@ -76,6 +76,7 @@
   align-items: center;
   width: 100%;
   text-align: center;
+  margin-top: var(--general-space-20);
 }
 
 .sidebarErrorWrapper {
