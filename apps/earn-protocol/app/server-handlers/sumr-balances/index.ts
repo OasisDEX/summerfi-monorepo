@@ -165,7 +165,7 @@ export const getSumrBalances = async ({
     console.error('Error in getSumrBalances:', error)
 
     throw new Error(
-      `Failed to get SUMR balances: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      `Failed to get $SUMR balances: ${error instanceof Error ? error.message : 'Unknown error'}`,
     )
   }
 }

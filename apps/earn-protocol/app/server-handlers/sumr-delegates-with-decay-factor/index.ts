@@ -27,13 +27,13 @@ export const getSumrDelegatesWithDecayFactor = async () => {
       return { sumrDelegates, sumrDecayFactors }
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('Error fetching SUMR decay factors:', error)
+      console.error('Error fetching $SUMR decay factors:', error)
 
       return { sumrDelegates, sumrDecayFactors: [] }
     }
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Error fetching SUMR delegates:', error)
+    console.error('Error fetching $SUMR delegates:', error)
 
     return { sumrDelegates: [], sumrDecayFactors: [] }
   }

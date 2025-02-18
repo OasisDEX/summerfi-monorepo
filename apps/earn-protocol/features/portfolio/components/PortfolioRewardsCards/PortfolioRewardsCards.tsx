@@ -74,7 +74,7 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
           <Tooltip
             tooltip={
               <Text as="p" variant="p4semi">
-                SUMR available to claim across all networks. Mainet, Base, and Arbitrum
+                $SUMR available to claim across all networks. Mainet, Base, and Arbitrum
               </Text>
             }
             tooltipWrapperStyles={{ minWidth: '240px' }}

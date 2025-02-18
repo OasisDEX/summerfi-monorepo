@@ -87,7 +87,7 @@ export const getSumrStakingInfo = async (): Promise<SumrStakingInfoData> => {
         args: [GOVERNANCE_REWARDS_MANAGER_ADDRESS],
       })
       .catch((error) => {
-        throw new Error(`Failed to read wrapped staked SUMR balance: ${error.message}`)
+        throw new Error(`Failed to read wrapped staked $SUMR balance: ${error.message}`)
       })
 
     const sumrTokenWrappedStakedAmount = new BigNumber(_sumrTokenWrappedStakedAmount.toString())
