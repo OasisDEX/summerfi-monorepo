@@ -24,6 +24,7 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
 import { SDKChainIdToAAChainMap } from '@/account-kit/config'
+import { AccountKitAccountType } from '@/account-kit/types'
 import { ClaimDelegateActionCard } from '@/features/claim-and-delegate/components/ClaimDelegateActionCard/ClaimDelegateActionCard'
 import { ClaimDelegateCard } from '@/features/claim-and-delegate/components/ClaimDelegateCard/ClaimDelegateCard'
 import {
@@ -262,7 +263,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
 
   // self delegating is available on for EOA only
   // since we use tally that doesn't support SCA
-  const isEoa = user?.type === 'eoa'
+  const isEoa = user?.type === AccountKitAccountType.EOA
 
   const sumrDelegatedTo =
     state.delegateStatus === ClaimDelegateTxStatuses.COMPLETED && state.delegatee
