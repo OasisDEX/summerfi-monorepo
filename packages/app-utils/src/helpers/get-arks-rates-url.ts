@@ -39,3 +39,11 @@ export const getArkRatesUrl = ({
     [SDKNetwork.Base]: `${apiUrl}/api/rates/${SDKChainId.BASE}`,
     [SDKNetwork.ArbitrumOne]: `${apiUrl}/api/rates/${SDKChainId.ARBITRUM}`,
   })[network]
+
+/**
+ * Generates URL for fetching current rates from Arks API based on network
+ * @param {Object} params - The parameters object
+ * @param {string} params.apiUrl - Base API URL
+ * @returns {string} The complete current rates API URL
+ */
+export const getArkRatesBatchUrl = ({ apiUrl }: { apiUrl: string }) => `${apiUrl}/api/rates`

@@ -82,4 +82,8 @@ export {
 } from './helpers/get-ark-product-id'
 
 export { aggregateArksPerNetwork } from './helpers/aggregate-arks-per-network'
-export { getArkHistoricalRatesUrl, getArkRatesUrl } from './helpers/get-arks-rates-url'
+export {
+  getArkHistoricalRatesUrl,
+  getArkRatesUrl,
+  getArkRatesBatchUrl,
+} from './helpers/get-arks-rates-url'

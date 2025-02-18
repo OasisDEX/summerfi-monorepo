@@ -87,5 +87,6 @@ export function addApyConfig({ stack, api, vpc, cache }: SummerStackContext) {
     'GET /api/historicalRates/{chainId}': getRatesFunction,
     'POST /api/vault/rates': getVaultRatesFunction,
     'POST /api/vault/historicalRates': getVaultRatesFunction,
+    'POST /api/rates': getRatesFunction,
   })
 }

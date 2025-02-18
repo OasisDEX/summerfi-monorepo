@@ -16,7 +16,7 @@ const logger = new Logger({
 })
 const clients = getAllClients(process.env.SUBGRAPH_BASE || '')
 
-const TEN_MINUTES_IN_MS = 10 * 60 * 1000
+const HOUR_IN_SECONDS = 60 * 60
 
 export async function retrySubgraphQuery<TResponse>(
   operation: () => Promise<TResponse>,
@@ -88,7 +88,7 @@ export async function retrySubgraphQuery<TResponse>(
 function findMatchingDbRate(subgraphTimestamp: number, dbRates: DBRate[]) {
   return dbRates.find((dbRate) => {
     const timeDiff = Number(subgraphTimestamp) - dbRate.timestamp
-    return timeDiff >= 0 && timeDiff <= TEN_MINUTES_IN_MS
+    return timeDiff >= 0 && timeDiff <= HOUR_IN_SECONDS
   })
 }
 
@@ -148,6 +148,25 @@ function combineLatestRates(subgraphRate: LatestInterestRate, dbRates: DBHistori
   }
 }
 
+// --- NEW: Interface for the request body ---
+interface RatesRequest {
+  productIds: string[]
+}
+
+// --- NEW: Combined Rate Type ---
+interface CombinedRate {
+  timestamp: string
+  rate: string
+  nativeRate: string
+  rewardRate: string
+  [key: string]: unknown // Allow other properties from subgraphRate
+}
+
+interface BatchRateRequest {
+  chainId: string
+  productId: string
+}
+
 async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> {
   const ratesService = new RatesService()
 
@@ -156,6 +175,111 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
     await ratesService.init()
 
     const path = event.requestContext.http.path
+    const httpMethod = event.requestContext.http.method
+
+    // --- NEW: Handle POST /rates ---
+    if (httpMethod === 'POST' && path === '/api/rates') {
+      logger.info('POST /rates')
+      if (!event.body) {
+        return {
+          statusCode: 400,
+          body: JSON.stringify({ error: 'Request body is required' }),
+        }
+      }
+
+      const requestBody: RatesRequest = JSON.parse(event.body)
+      const { productIds } = requestBody
+
+      if (!productIds || !Array.isArray(productIds) || productIds.length === 0) {
+        return {
+          statusCode: 400,
+          body: JSON.stringify({ error: 'productIds array is required in the request body' }),
+        }
+      }
+
+      // Group product IDs by chain ID
+      const productIdsByChain: Record<string, string[]> = {}
+      const batchRequests: BatchRateRequest[] = []
+
+      for (const productId of productIds) {
+        const chainId = productId.split('-').pop()
+        if (!chainId) {
+          logger.warn(`Invalid productId ${productId}. Skipping.`)
+          continue
+        }
+
+        if (!productIdsByChain[chainId]) {
+          productIdsByChain[chainId] = []
+        }
+        productIdsByChain[chainId].push(productId)
+
+        // Build batch request array
+        batchRequests.push({ chainId, productId })
+      }
+
+      logger.info('Grouped productIds by chain', { productIdsByChain })
+
+      let allCombinedRates: { [productId: string]: CombinedRate[] } = {}
+
+      // Fetch all DB rates in one batch query
+      const dbRatesByProductId = await ratesService.getLatestRatesBatch(batchRequests)
+
+      // Fetch and combine rates for each chain
+      await Promise.all(
+        Object.entries(productIdsByChain).map(async ([chainId, chainProductIds]) => {
+          const client = clients[chainId]
+          if (!client) {
+            logger.warn(`No client found for chainId ${chainId}. Skipping.`)
+            return
+          }
+
+          // Use batch query for subgraph
+          const subgraphRates = await retrySubgraphQuery(
+            () => client.GetArksRates({ productIds: chainProductIds }),
+            {
+              retries: 3,
+              initialDelay: 1000,
+              logger: logger,
+              context: {
+                operation: 'GetArkRates',
+                productIds: chainProductIds,
+                chainId: chainId,
+              },
+            },
+          )
+
+          // Process rates for each product
+          chainProductIds.forEach((productId) => {
+            const productRates =
+              subgraphRates?.products.find((product) => product.id === productId)?.interestRates ||
+              []
+            const dbRates = dbRatesByProductId[productId] || []
+
+            const combinedRates: CombinedRate[] = productRates
+              .map((subgraphRate) => {
+                const matchingDbRate = findMatchingDbRate(Number(subgraphRate.timestamp), dbRates)
+                const baseRate = Number(subgraphRate.rate)
+                const rewardRate = matchingDbRate ? Number(matchingDbRate.rate) : 0
+                return {
+                  ...subgraphRate,
+                  rate: (baseRate + rewardRate).toString(),
+                  nativeRate: baseRate.toString(),
+                  rewardRate: rewardRate.toString(),
+                }
+              })
+              .slice(0, 20)
+
+            allCombinedRates[productId] = combinedRates
+          })
+        }),
+      )
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ interestRates: allCombinedRates }),
+      }
+    }
+    // --- END NEW SECTION ---
     const productId = event.queryStringParameters?.productId
     const chainId = event.pathParameters?.chainId
 
@@ -203,7 +327,7 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
       ])
 
       // Process and combine rates
-      const combinedRates = (subgraphRates?.interestRates || [])
+      const combinedRates: CombinedRate[] = (subgraphRates?.interestRates || [])
         .map((subgraphRate) => {
           const matchingDbRate = findMatchingDbRate(Number(subgraphRate.timestamp), dbRates)
 
