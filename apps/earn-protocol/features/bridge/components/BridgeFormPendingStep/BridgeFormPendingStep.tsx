@@ -1,7 +1,7 @@
 import { type Dispatch, type FC, useCallback } from 'react'
 import { useChain } from '@account-kit/react'
 import { MessageStatus } from '@layerzerolabs/scan-client'
-import { Icon, InfoBox, LoadingSpinner, Sidebar, SkeletonLine, Text } from '@summerfi/app-earn-ui'
+import { Icon, InfoBox, LoadingSpinner, Sidebar, Text } from '@summerfi/app-earn-ui'
 import {
   chainIdToSDKNetwork,
   isSupportedHumanNetwork,
@@ -56,7 +56,7 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
     isLoading || !latestStatus ? (
       <>
         <LoadingSpinner size={28} />
-        <span style={{ color: 'var(--color-text-primary)' }}>Loading details...</span>
+        <span style={{ color: 'var(--color-text-primary)' }}>Waiting...</span>
       </>
     ) : latestStatus !== MessageStatus.INFLIGHT ? (
       <>
@@ -82,7 +82,7 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
               <Icon iconName="sumr" size={18} className={styles.sumrIcon} />
               {sourceNetworkIcon && <Icon size={52} iconName={sourceNetworkIcon} />}
             </div>
-            <div className={styles.joiner}></div>
+            <div className={styles.joiner} />
             <div className={styles.networkIcon}>
               <Icon iconName="sumr" size={18} className={styles.sumrIcon} />
               {destinationNetworkIcon && <Icon size={52} iconName={destinationNetworkIcon} />}
@@ -99,6 +99,7 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
                       className={clsx(styles.status, {
                         [styles.error]: latestStatus === MessageStatus.FAILED,
                         [styles.pending]: latestStatus === MessageStatus.INFLIGHT,
+                        [styles.submitting]: !latestStatus,
                       })}
                     >
                       {latestStatus ? (
@@ -107,7 +108,10 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
                           {capitalize(latestStatus)}
                         </>
                       ) : (
-                        <SkeletonLine width={100} height={26} />
+                        <>
+                          <LoadingSpinner size={14} style={{ marginRight: 6 }} />
+                          Submitting...
+                        </>
                       )}
                     </div>
                   ),

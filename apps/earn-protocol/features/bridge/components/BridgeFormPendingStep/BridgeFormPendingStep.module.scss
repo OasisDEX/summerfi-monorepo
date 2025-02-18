@@ -13,6 +13,12 @@
   align-items: center;  
   color: var(--earn-protocol-secondary-100);
 
+  &.submitting {
+    border-radius: var(--radius-medium);
+    padding: var(--general-space-4) var(--general-space-12);
+    background-color: var(--earn-protocol-neutral-70);  
+  }
+
   &.error {
     border-radius: var(--radius-medium);
     padding: var(--general-space-4) var(--general-space-12);
