@@ -6,6 +6,7 @@ import { useAppSDK } from './use-app-sdk'
 export interface TokenData {
   token: IToken | undefined
   tokenLoading: boolean
+  error: Error | undefined
 }
 
 /**
@@ -28,6 +29,7 @@ export const useToken = ({
 }): TokenData => {
   const [token, setToken] = useState<IToken | undefined>(undefined)
   const [tokenLoading, setTokenLoading] = useState(true)
+  const [error, setError] = useState<Error | undefined>(undefined)
   const sdk = useAppSDK()
 
   // Determine the token fetching method.
@@ -48,6 +50,7 @@ export const useToken = ({
   useEffect(() => {
     if (skip) {
       setTokenLoading(false)
+
       return
     }
     setTokenLoading(true)
@@ -56,7 +59,7 @@ export const useToken = ({
         setToken(fetchedToken)
       })
       .catch((err) => {
-        console.error('Error fetching token', err)
+        setError(err)
       })
       .finally(() => {
         setTokenLoading(false)
@@ -66,5 +69,6 @@ export const useToken = ({
   return {
     token,
     tokenLoading,
+    error,
   }
 }

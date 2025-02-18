@@ -8,13 +8,13 @@ import {
   sdkNetworkToHumanNetwork,
 } from '@summerfi/app-utils'
 import clsx from 'clsx'
+import { capitalize } from 'lodash-es'
 
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useCrossChainMessages } from '@/features/bridge/hooks/use-cross-chain-messages'
 import { type BridgeReducerAction, type BridgeState, BridgeTxStatus } from '@/features/bridge/types'
 
 import styles from './BridgeFormPendingStep.module.scss'
-import { capitalize } from 'lodash-es'
 
 interface BridgeFormPendingStepProps {
   dispatch: Dispatch<BridgeReducerAction>
@@ -102,9 +102,12 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
                       })}
                     >
                       {latestStatus ? (
-                        capitalize(latestStatus)
+                        <>
+                          <LoadingSpinner size={14} style={{ marginRight: 6 }} />
+                          {capitalize(latestStatus)}
+                        </>
                       ) : (
-                        <SkeletonLine width={100} height={20} />
+                        <SkeletonLine width={100} height={26} />
                       )}
                     </div>
                   ),

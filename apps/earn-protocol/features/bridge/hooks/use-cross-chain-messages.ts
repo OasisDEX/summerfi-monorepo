@@ -24,6 +24,7 @@ const getHighestPriorityStatus = (messages: Message[]): MessageStatus | null => 
   if (messages.some((msg) => msg.status === MessageStatus.DELIVERED)) {
     return MessageStatus.DELIVERED
   }
+
   // Otherwise return the status of the first message (presumably INFLIGHT)
   return messages[0]?.status ?? null
 }

@@ -26,7 +26,7 @@ export const useTermsOfServiceSigner = () => {
       // that is completely different from signer.signMessage
       else return await signer?.signMessage(data)
     },
-    [signer, user?.type],
+    [signMessageAsync, signer, user?.type],
   )
 
   return { signTosMessage }

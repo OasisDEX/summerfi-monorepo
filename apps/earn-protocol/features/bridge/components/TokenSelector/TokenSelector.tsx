@@ -1,6 +1,6 @@
 'use client'
-import React from 'react'
 import { Text } from '@summerfi/app-earn-ui'
+
 import styles from './TokenSelector.module.scss'
 
 interface TokenSelectorProps {

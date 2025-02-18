@@ -1,7 +1,6 @@
 import type {
   IAddress,
   IUser,
-  ExtendedTransactionInfo,
   ITokenAmount,
   ChainInfo,
   BridgeTransactionInfo,
