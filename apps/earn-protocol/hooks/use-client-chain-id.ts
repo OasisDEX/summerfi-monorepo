@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useChain, useUser } from '@account-kit/react'
+import { useIsIframe } from '@summerfi/app-earn-ui'
 
 import { AccountKitAccountType } from '@/account-kit/types'
 
@@ -19,12 +20,13 @@ export const useClientChainId = () => {
     chain: { id },
   } = useChain()
   const user = useUser()
+  const isIframe = useIsIframe()
 
   const [clientChainId, setClientChainId] = useState(id)
 
   useEffect(() => {
     const getEoaChainId = async () => {
-      if (window.ethereum && user?.type === AccountKitAccountType.EOA) {
+      if (window.ethereum && user?.type === AccountKitAccountType.EOA && !isIframe) {
         const _eoaChainId = await window.ethereum.request({ method: 'eth_chainId' })
 
         // eslint-disable-next-line no-console
@@ -37,7 +39,7 @@ export const useClientChainId = () => {
     }
 
     void getEoaChainId()
-  }, [user, id])
+  }, [user, id, isIframe])
 
   useEffect(() => {
     if (window.ethereum && user?.type === AccountKitAccountType.EOA) {
@@ -62,6 +64,7 @@ export const useClientChainId = () => {
   console.log('Client chain id info', {
     user,
     clientChainId,
+    id,
   })
 
   return { clientChainId }
