@@ -56,6 +56,7 @@ export { TableHeadWithTooltip } from './components/molecules/TableHeadWithToolti
 export { TokensGroup } from './components/molecules/TokensGroup/TokensGroup'
 export { InlineButtons } from './components/molecules/InlineButtons/InlineButtons'
 export { TabBar } from './components/molecules/TabBar/TabBar'
+export { TabBarSSR } from './components/molecules/TabBar/TabBarSSR'
 export { LoadingSpinner } from './components/molecules/LoadingSpinner/LoadingSpinner'
 export {
   SlideCarousel,

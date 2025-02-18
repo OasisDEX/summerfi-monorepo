@@ -1,3 +1,5 @@
+'use client'
+
 import { type FC, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import { Card, Text } from '@summerfi/app-earn-ui'

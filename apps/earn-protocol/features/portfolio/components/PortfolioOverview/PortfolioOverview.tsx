@@ -1,3 +1,5 @@
+'use client'
+
 import {
   Button,
   Card,
@@ -21,29 +23,6 @@ import { calculateOverallSumr } from '@/helpers/calculate-overall-sumr'
 
 import portfolioOverviewStyles from './PortfolioOverview.module.scss'
 
-// const dummyNewsAndUpdatesItems = [
-//   {
-//     title: 'SUMR Market Cap hits 10b',
-//     timestamp: 1729236816761,
-//     link: './',
-//   },
-//   {
-//     title: 'SUMR Market Cap hits 10b',
-//     timestamp: 1729236816762,
-//     link: './',
-//   },
-//   {
-//     title: 'SUMR Market Cap hits 10b',
-//     timestamp: 1729236816763,
-//     link: './',
-//   },
-//   {
-//     title: 'SUMR Market Cap hits 10b',
-//     timestamp: 1729236816764,
-//     link: './',
-//   },
-// ]
-
 const getDatablocks = ({
   totalSummerPortfolioUSD,
   overallSumr,
@@ -64,13 +43,6 @@ const getDatablocks = ({
   {
     title: 'Available to Migrate',
     value: 'Coming Soon',
-    // subValue: (
-    //   <Link href="/apps/earn-protocol/public">
-    //     <WithArrow as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-    //       Migrate
-    //     </WithArrow>
-    //   </Link>
-    // ),
   },
 ]
 

@@ -1,3 +1,5 @@
+'use client'
+
 import { type FC, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import { Card, DataBlock, Icon, Text, Tooltip } from '@summerfi/app-earn-ui'
@@ -9,6 +11,7 @@ import {
   getRebalanceSavedTimeInHours,
 } from '@summerfi/app-utils'
 
+import { type PortfolioPositionsList } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
 import { PortfolioRebalanceActivityList } from '@/features/portfolio/components/PortfolioRebalanceActivityList/PortfolioRebalanceActivityList'
 
 import classNames from './PortfolioRebalanceActivity.module.scss'
@@ -16,8 +19,8 @@ import classNames from './PortfolioRebalanceActivity.module.scss'
 interface PortfolioRebalanceActivityProps {
   rebalancesList: SDKGlobalRebalancesType
   walletAddress: string
-  totalRebalances: number
   vaultsList: SDKVaultsListType
+  positions: PortfolioPositionsList[]
 }
 
 const initialRows = 10
@@ -25,9 +28,13 @@ const initialRows = 10
 export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = ({
   rebalancesList,
   walletAddress,
-  totalRebalances,
   vaultsList,
+  positions,
 }) => {
+  const totalRebalances = positions.reduce(
+    (acc, position) => acc + Number(position.vaultData.rebalanceCount),
+    0,
+  )
   const savedTimeInHours = useMemo(
     () => getRebalanceSavedTimeInHours(totalRebalances),
     [totalRebalances],

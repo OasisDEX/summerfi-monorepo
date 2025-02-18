@@ -1,3 +1,5 @@
+'use client'
+
 import { type FC, useState } from 'react'
 import { useUser } from '@account-kit/react'
 import {

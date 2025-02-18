@@ -1,3 +1,4 @@
+import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { SDKChainId } from '@summerfi/app-types'
 import { SummerTokenAbi, SummerVestingWalletFactoryAbi } from '@summerfi/armada-protocol-abis'
 import { getChainInfoByChainId } from '@summerfi/sdk-common'
@@ -49,7 +50,14 @@ export const getSumrBalances = async ({
       chainConfigs.map(async ({ chain, chainId, chainName }) => {
         const publicClient = createPublicClient({
           chain,
-          transport: http(await SDKChainIdToSSRRpcGatewayMap[chainId]),
+          transport: http(await SDKChainIdToSSRRpcGatewayMap[chainId], {
+            fetchOptions: {
+              next: {
+                revalidate: REVALIDATION_TIMES.PORTFOLIO_ASSETS,
+                tags: [REVALIDATION_TAGS.PORTFOLIO_ASSETS, walletAddress.toLowerCase()],
+              },
+            },
+          }),
         })
 
         try {

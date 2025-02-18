@@ -1,3 +1,4 @@
+import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { SDKChainId } from '@summerfi/app-types'
 import { GovernanceRewardsManagerAbi } from '@summerfi/armada-protocol-abis'
 import BigNumber from 'bignumber.js'
@@ -28,7 +29,14 @@ export const getSumrDecayFactor = async (addresses: string[]): Promise<SumrDecay
 
     const publicClient = createPublicClient({
       chain: base,
-      transport: http(await SDKChainIdToSSRRpcGatewayMap[SDKChainId.BASE]),
+      transport: http(await SDKChainIdToSSRRpcGatewayMap[SDKChainId.BASE], {
+        fetchOptions: {
+          next: {
+            revalidate: REVALIDATION_TIMES.PORTFOLIO_ASSETS,
+            tags: [REVALIDATION_TAGS.PORTFOLIO_ASSETS],
+          },
+        },
+      }),
     })
 
     try {

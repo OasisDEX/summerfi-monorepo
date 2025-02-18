@@ -1,3 +1,4 @@
+import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { SDKChainId } from '@summerfi/app-types'
 import { SECONDS_PER_DAY } from '@summerfi/app-utils'
 import { GovernanceRewardsManagerAbi, SummerTokenAbi } from '@summerfi/armada-protocol-abis'
@@ -28,7 +29,14 @@ export const getSumrStakingInfo = async (): Promise<SumrStakingInfoData> => {
   try {
     const publicClient = createPublicClient({
       chain: base,
-      transport: http(await SDKChainIdToSSRRpcGatewayMap[SDKChainId.BASE]),
+      transport: http(await SDKChainIdToSSRRpcGatewayMap[SDKChainId.BASE], {
+        fetchOptions: {
+          next: {
+            revalidate: REVALIDATION_TIMES.PORTFOLIO_ASSETS,
+            tags: [REVALIDATION_TAGS.PORTFOLIO_ASSETS],
+          },
+        },
+      }),
     })
 
     const sumrToken = await backendSDK.armada.users

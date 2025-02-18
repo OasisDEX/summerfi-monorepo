@@ -1,3 +1,5 @@
+'use client'
+
 import { type CSSProperties, type FC } from 'react'
 import {
   getVaultUrl,

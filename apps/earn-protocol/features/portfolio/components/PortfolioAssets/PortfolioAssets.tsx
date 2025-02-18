@@ -1,3 +1,5 @@
+'use client'
+
 import { type FC, type ReactNode, useMemo, useState } from 'react'
 import { DataBlock, Icon, PillSelector } from '@summerfi/app-earn-ui'
 import { NetworkNames } from '@summerfi/app-types'
