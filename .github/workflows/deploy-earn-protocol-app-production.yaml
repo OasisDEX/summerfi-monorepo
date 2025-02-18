@@ -82,8 +82,7 @@ jobs:
           echo "${{ secrets.VPN_PASSWORD }}" >> vpn-credentials.txt
           echo 'Connecting to the VPN...'
           sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-credentials.txt --daemon
-          sleep 5
-
+          sleep 10
       - name: Check VPN connection
         env:
           BORROW_DB_READ_DB: ${{ secrets.NEW_BORROW_DB_READ_DB }}
