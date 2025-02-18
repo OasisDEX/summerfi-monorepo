@@ -15,7 +15,7 @@ export const SDKApiUrl = process.env.E2E_SDK_API_URL,
   signerAddress = process.env.E2E_USER_ADDRESS,
   signerPrivateKey = process.env.E2E_USER_PRIVATE_KEY,
   fleetOnBase = Address.createFromEthereum({
-    value: '0x0b81750655493eee7a4c1f4e7e4fdb9536041720',
+    value: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
   }),
   fleetOnArb = Address.createFromEthereum({
     value: '0x2653014Cd3AD332a98B0A80Ccf12473740DF81C2',

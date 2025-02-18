@@ -70,8 +70,9 @@ describe('Armada Protocol Migration', () => {
           })
 
           console.log(
-            'sending: ',
+            'tx list: ',
             Array.isArray(tx1) ? tx1.map((i) => i.description).join(', ') : tx1.description,
+            ', ',
             tx2?.description,
           )
 

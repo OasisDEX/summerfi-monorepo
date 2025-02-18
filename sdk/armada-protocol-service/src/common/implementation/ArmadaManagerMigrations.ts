@@ -1,4 +1,5 @@
 import {
+  Address,
   ArmadaMigrationType,
   ChainFamilyMap,
   LoggingService,
@@ -22,6 +23,7 @@ import { AdmiralsQuartersAbi } from '@summerfi/armada-protocol-abis'
 import { encodeFunctionData } from 'viem'
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
+import { Erc20Contract } from '@summerfi/contracts-provider-service'
 
 const addressesByChainId: Record<number, Record<string, AddressValue>> = {
   [ChainFamilyMap.Base.Base.chainId]: {
@@ -88,7 +90,14 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
 
     // read the users balances on provided chain for all supported tokens using multicall
     const balances = await Promise.all(
-      Object.entries(addresses).map(async ([tokenSymbol, address]) => {
+      Object.entries(addresses).map(async ([_, address]) => {
+        const erc20Contract = Erc20Contract.create({
+          blockchainClient: client,
+          tokensManager: this._tokensManager,
+          chainInfo: params.chainInfo,
+          address: Address.createFromEthereum({ value: address }),
+        })
+
         const [balance, token] = await Promise.all([
           client.readContract({
             abi: contractCommon.abi,
@@ -96,10 +105,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
             functionName: 'balanceOf',
             args: [params.user.wallet.address.value],
           }),
-          this._tokensManager.getTokenBySymbol({
-            chainInfo: params.chainInfo,
-            symbol: tokenSymbol,
-          }),
+          erc20Contract.getToken(),
         ])
 
         return TokenAmount.createFromBaseUnit({
@@ -184,14 +190,42 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     }
 
     // Approval for AQ
+    const contractCommon = {
+      abi: [
+        {
+          inputs: [
+            { internalType: 'address', name: 'manager', type: 'address' },
+            { internalType: 'bool', name: 'isAllowed_', type: 'bool' },
+          ],
+          name: 'allow',
+          outputs: [],
+          stateMutability: 'nonpayable',
+          type: 'function',
+        },
+      ] as const,
+    } as const
+
     const approvalTransactions = await Promise.all(
       params.positions.map(async (position) => {
-        return this._allowanceManager.getApproval({
-          chainInfo: params.vaultId.chainInfo,
-          spender: admiralsQuartersAddress,
-          amount: position.amount,
-          owner: params.user.wallet.address,
+        const data = await encodeFunctionData({
+          abi: contractCommon.abi,
+          functionName: 'allow',
+          args: [admiralsQuartersAddress.value, true],
         })
+        const approval: ApproveTransactionInfo = {
+          description: `Approving Admirals Quarters to move ${position.amount}`,
+          metadata: {
+            approvalSpender: admiralsQuartersAddress,
+            approvalAmount: position.amount,
+          },
+          transaction: {
+            target: position.amount.token.address,
+            calldata: data,
+            value: '0',
+          },
+          type: TransactionType.Approve,
+        }
+        return approval
       }),
     )
 
