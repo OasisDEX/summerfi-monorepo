@@ -148,18 +148,16 @@ function combineLatestRates(subgraphRate: LatestInterestRate, dbRates: DBHistori
   }
 }
 
-// --- NEW: Interface for the request body ---
 interface RatesRequest {
   productIds: string[]
 }
 
-// --- NEW: Combined Rate Type ---
 interface CombinedRate {
   timestamp: string
   rate: string
   nativeRate: string
   rewardRate: string
-  [key: string]: unknown // Allow other properties from subgraphRate
+  [key: string]: unknown
 }
 
 interface BatchRateRequest {
@@ -177,7 +175,6 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
     const path = event.requestContext.http.path
     const httpMethod = event.requestContext.http.method
 
-    // --- NEW: Handle POST /rates ---
     if (httpMethod === 'POST' && path === '/api/rates') {
       logger.info('POST /rates')
       if (!event.body) {
@@ -279,7 +276,7 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
         body: JSON.stringify({ interestRates: allCombinedRates }),
       }
     }
-    // --- END NEW SECTION ---
+
     const productId = event.queryStringParameters?.productId
     const chainId = event.pathParameters?.chainId
 
