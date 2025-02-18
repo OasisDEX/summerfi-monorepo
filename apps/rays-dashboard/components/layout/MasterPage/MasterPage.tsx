@@ -4,6 +4,7 @@ import { parseServerResponseToClient } from '@summerfi/app-utils'
 import Image from 'next/image'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
+import { OffsetLayout } from '@/components/layout/OffsetLayout/OffsetLayout'
 import { WalletInit } from '@/components/molecules/WalletInit/WalletInit'
 import { AccountChangeHandler } from '@/components/organisms/AccountChangeHandler/AccountChangeHandler'
 import { NewsletterWrapper } from '@/components/organisms/NewsletterWrapper/NewsletterWrapper'
@@ -42,14 +43,16 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({
           }[background]
         }
         <NavigationWrapper panels={systemConfig.navigation} />
-        <div className={masterPageStyles.appContainer}>
-          {children}
-          <Footer
-            logo={`${basePath}/img/branding/logo-dark.svg`}
-            languageSwitcher={<div />}
-            newsletter={<NewsletterWrapper config={systemConfig.config} />}
-          />
-        </div>
+        <OffsetLayout>
+          <div className={masterPageStyles.appContainer}>
+            {children}
+            <Footer
+              logo={`${basePath}/img/branding/logo-dark.svg`}
+              languageSwitcher={<div />}
+              newsletter={<NewsletterWrapper config={systemConfig.config} />}
+            />
+          </div>
+        </OffsetLayout>
       </div>
       <AccountChangeHandler />
     </>

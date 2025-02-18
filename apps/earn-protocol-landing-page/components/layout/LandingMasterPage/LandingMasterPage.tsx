@@ -11,6 +11,7 @@ import {
 } from '@summerfi/app-earn-ui'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
+import { OffsetLayout } from '@/components/layout/OffsetLayout/OffsetLayout'
 import { manageAnalyticsCookies } from '@/features/analytics-cookies/manage-analytics-cookies'
 
 import landingMasterPageStyles from '@/components/layout/LandingMasterPage/landingMasterPage.module.scss'
@@ -55,40 +56,42 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
       </div>
       <div className={landingMasterPageStyles.appContainer}>
         <NavigationWrapper />
-        {children}
-        <Footer
-          logo="/img/branding/logo-light.svg"
-          newsletter={
-            <div>
-              <Text
-                as="h3"
-                variant="p1semi"
-                style={{
-                  marginBottom: 'var(--general-space-16)',
-                }}
-              >
-                Stay up to date
-              </Text>
-              <Text
-                as="p"
-                variant="p2"
-                style={{
-                  color: 'var(--color-text-secondary)',
-                  marginBottom: 'var(--spacing-space-medium)',
-                }}
-              >
-                Subscribe to the newsletter for Summer.fi updates
-              </Text>
-              <div
-                style={{
-                  maxWidth: '380px',
-                }}
-              >
-                <NewsletterWrapper inputBtnLabel="Subscribe" />
+        <OffsetLayout>
+          {children}
+          <Footer
+            logo="/img/branding/logo-light.svg"
+            newsletter={
+              <div>
+                <Text
+                  as="h3"
+                  variant="p1semi"
+                  style={{
+                    marginBottom: 'var(--general-space-16)',
+                  }}
+                >
+                  Stay up to date
+                </Text>
+                <Text
+                  as="p"
+                  variant="p2"
+                  style={{
+                    color: 'var(--color-text-secondary)',
+                    marginBottom: 'var(--spacing-space-medium)',
+                  }}
+                >
+                  Subscribe to the newsletter for Summer.fi updates
+                </Text>
+                <div
+                  style={{
+                    maxWidth: '380px',
+                  }}
+                >
+                  <NewsletterWrapper inputBtnLabel="Subscribe" />
+                </div>
               </div>
-            </div>
-          }
-        />
+            }
+          />
+        </OffsetLayout>
       </div>
       <CookieBanner
         value={cookieSettings}
