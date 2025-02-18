@@ -59,10 +59,10 @@ export const Carousel: FC<CarouselProps> = ({ components, contentWidth }) => {
 
       <div className={styles.carouselButtons} style={{ gap: contentWidth + 40 }}>
         <button className={styles.buttonLeft} onClick={handlePrevious} disabled={animating}>
-          <Icon iconName="chevron_left" color="rgba(255, 251, 253, 1)" variant="xxs" />
+          <Icon iconName="chevron_left" size={16} color="var(--color-neutral-10)" variant="xxs" />
         </button>
         <button className={styles.buttonRight} onClick={handleNext} disabled={animating}>
-          <Icon iconName="chevron_right" color="rgba(255, 251, 253, 1)" variant="xxs" />
+          <Icon iconName="chevron_right" size={16} color="var(--color-neutral-10)" variant="xxs" />
         </button>
       </div>
     </div>
