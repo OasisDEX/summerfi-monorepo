@@ -27,6 +27,9 @@ export const useClientChainId = () => {
       if (window.ethereum && user?.type === AccountKitAccountType.EOA) {
         const _eoaChainId = await window.ethereum.request({ method: 'eth_chainId' })
 
+        // eslint-disable-next-line no-console
+        console.log('Eoa chain id', _eoaChainId)
+
         setClientChainId(Number(_eoaChainId))
       } else {
         setClientChainId(id)
@@ -38,7 +41,12 @@ export const useClientChainId = () => {
 
   useEffect(() => {
     if (window.ethereum && user?.type === AccountKitAccountType.EOA) {
-      const fn = (chainId: string) => setClientChainId(Number(chainId))
+      const fn = (chainId: string) => {
+        // eslint-disable-next-line no-console
+        console.log('Updating EOA client chain id', chainId)
+
+        setClientChainId(Number(chainId))
+      }
 
       window.ethereum.on('chainChanged', fn)
 
@@ -49,6 +57,12 @@ export const useClientChainId = () => {
       return () => null
     }
   }, [user, id])
+
+  // eslint-disable-next-line no-console
+  console.log('Client chain id info', {
+    user,
+    clientChainId,
+  })
 
   return { clientChainId }
 }

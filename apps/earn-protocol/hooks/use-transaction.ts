@@ -399,8 +399,8 @@ export const useTransaction = ({
             chain: nextChain,
           })
         },
-        disabled: true,
-        loading: true,
+        disabled: isSettingChain,
+        loading: isSettingChain,
       }
     }
 
