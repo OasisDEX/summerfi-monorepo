@@ -37,6 +37,23 @@ export const Carousel: FC<CarouselProps> = ({ components, contentWidth }) => {
 
   return (
     <div className={styles.carouselContainer}>
+      <div className={styles.mobilePagination}>
+        <button className={styles.mobileButton} onClick={handlePrevious} disabled={animating}>
+          <Icon iconName="chevron_left" size={16} color="var(--color-neutral-10)" variant="xxs" />
+        </button>
+        <div className={styles.pips}>
+          {components.map((_, index) => (
+            <div
+              key={index}
+              className={`${styles.pip} ${index === activeIndex ? styles.pipActive : ''}`}
+            />
+          ))}
+        </div>
+        <button className={styles.mobileButton} onClick={handleNext} disabled={animating}>
+          <Icon iconName="chevron_right" size={16} color="var(--color-neutral-10)" variant="xxs" />
+        </button>
+      </div>
+
       <div className={styles.carouselContent}>
         {components.map((component, index) => {
           let slideClass = styles.slide

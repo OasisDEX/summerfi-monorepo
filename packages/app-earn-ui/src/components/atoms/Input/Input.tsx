@@ -38,6 +38,8 @@ export const Input: FC<
   wrapperClassName,
   secondaryValue,
   button,
+  placeholder,
+  value,
   ...rest
 }) => {
   return (
@@ -58,6 +60,8 @@ export const Input: FC<
           getAtomClassList({ className, variant: inputStyles[variant] }),
         ].join(' ')}
         {...rest}
+        value={value === '0' ? '' : value}
+        placeholder={placeholder}
       />
       {button && (
         <div style={{ position: 'absolute', right: '34px', cursor: 'pointer' }}>{button}</div>

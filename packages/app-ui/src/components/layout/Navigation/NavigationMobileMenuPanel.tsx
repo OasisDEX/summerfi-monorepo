@@ -18,9 +18,9 @@ export function NavigationMobileMenuPanel({
   isOpen,
   label,
   lists,
-  onOpenNestedMenu,
   openNestedMenu,
   navigationModules,
+  onOpenNestedMenu,
 }: NavigationMobileMenuPanelProps) {
   const [isAccordionOpen, toggleIsAccordionOpen, setIsAccordionOpen] = useToggle(false)
 

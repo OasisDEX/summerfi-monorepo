@@ -48,7 +48,7 @@ export const Navigation: FC<EarnNavigationProps> = ({
 }) => {
   const [tempCurrentPath, setTempCurrentPath] = useState(currentPath)
   const [mobileMenuOpened, setMobileMenuOpened] = useState(false)
-  const { isMobile } = useMobileCheck()
+  const { isMobile, isTablet } = useMobileCheck()
 
   const toggleMobileMenu = () => {
     const nextValue = !mobileMenuOpened
@@ -76,7 +76,7 @@ export const Navigation: FC<EarnNavigationProps> = ({
     >
       <header className={navigationStyles.container}>
         <NavigationBranding logo={logo} logoSmall={logoSmall} onLogoClick={onLogoClick} />
-        <NavigationMenu links={links} currentPath={currentPath} />
+        {!(isMobile || isTablet) && <NavigationMenu links={links} currentPath={currentPath} />}
         <NavigationActions
           walletConnectionComponent={walletConnectionComponent}
           signUpComponent={signupComponent}
@@ -84,7 +84,7 @@ export const Navigation: FC<EarnNavigationProps> = ({
           configComponent={configComponent}
         />
       </header>
-      {isMobile && (
+      {(isMobile || isTablet) && (
         <MobileDrawer
           isOpen={mobileMenuOpened}
           onClose={() => setMobileMenuOpened(false)}

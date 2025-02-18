@@ -93,10 +93,12 @@ export const NavigationMenuMobile = ({
                   expanderButtonStyles={{
                     justifyContent: 'flex-start',
                     color: 'var(--earn-protocol-secondary-40)',
+                    paddingLeft: 0,
                   }}
+                  iconVariant="xxs"
                   disabled={link.disabled}
                 >
-                  <div style={{ padding: 'var(--general-space-8)' }}>
+                  <div style={{ padding: 0 }}>
                     {link.itemsList && (
                       <NavigationItems currentPath={currentPath} items={link.itemsList} />
                     )}

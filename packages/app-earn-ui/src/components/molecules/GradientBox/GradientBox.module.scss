@@ -23,8 +23,12 @@
       left: 0;
       margin: -1px;
       transition: all 0.2s ease;
-      border-radius: var(--radius-roundish);
+      border-radius: var(--radius-large);
       background: var(--gradient-earn-protocol-light);
+
+      @include media('>=s') {
+        border-radius: var(--radius-roundish);
+      }
     }
   }
 

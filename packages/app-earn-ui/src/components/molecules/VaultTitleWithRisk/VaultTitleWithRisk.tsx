@@ -25,7 +25,7 @@ export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
   networkId,
   networkName,
   selected,
-  titleVariant = 'h4',
+  titleVariant = 'h4semi',
 }) => {
   const color = riskColors[risk]
 

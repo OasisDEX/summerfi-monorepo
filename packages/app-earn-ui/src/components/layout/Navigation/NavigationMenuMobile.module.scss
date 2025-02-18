@@ -59,6 +59,7 @@
     cursor: pointer;
     text-align: left;
     width: 100%;
+    padding-left: 0;
 
     &:last-child {
       border-bottom: none;
@@ -72,4 +73,5 @@
 
 .buttonWrapper {
   width: 100%;
+  margin-top: var(--general-space-20);
 }
