@@ -1,5 +1,5 @@
-import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
-import { User, Wallet } from '@summerfi/sdk-common'
+import { ArmadaVaultId, makeSDK, type SDKManager } from '@summerfi/sdk-client'
+import { ArmadaMigrationType, User, Wallet } from '@summerfi/sdk-common'
 
 import { SDKApiUrl, signerPrivateKey, testConfig } from './utils/testConfig'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
@@ -12,7 +12,7 @@ describe.skip('Armada Protocol Claim', () => {
     apiURL: SDKApiUrl,
   })
 
-  for (const { chainInfo, rpcUrl, userAddress } of testConfig) {
+  for (const { chainInfo, rpcUrl, userAddress, fleetAddress } of testConfig) {
     if (!rpcUrl) {
       throw new Error('Missing fork url')
     }
@@ -27,41 +27,42 @@ describe.skip('Armada Protocol Claim', () => {
 
       describe(`getMigratablePositions`, () => {
         it(`should get available migratable positions`, async () => {
-          const rewards = await sdk.armada.users({
+          const positions = await sdk.armada.users.getMigratablePositions({
+            chainInfo,
             user,
+            migrationType: ArmadaMigrationType.Compound,
           })
-          console.log(rewards)
-          expect(rewards.total).toBeGreaterThan(0n)
-          // expect(rewards.perChain[ChainFamilyMap.Base.Base.chainId]).toBeGreaterThan(0n)
-          // expect(rewards.perChain[ChainFamilyMap.Arbitrum.ArbitrumOne.chainId]).toBe(0n)
+          console.log(positions)
+          expect(positions.length).toBeGreaterThan(0)
+          expect(positions[0].amount.toSolidityValue()).toBeGreaterThan(0n)
         })
       })
 
-      describe.skip(`claimRewards`, () => {
-        it(`should claim rewards`, async () => {
-          const rewards = await sdk.armada.users.getAggregatedRewards({
-            user,
-          })
-
-          assert(rewards.total > 0n, 'Rewards should be greater than 0')
-
-          const tx = await sdk.armada.users.getAggregatedClaimsForChainTX({
+      describe.skip(`migrate first migratable position`, () => {
+        it(`should migrate first migratable position`, async () => {
+          const positionsBefore = await sdk.armada.users.getMigratablePositions({
             chainInfo,
             user,
+            migrationType: ArmadaMigrationType.Compound,
           })
-          if (!tx) {
-            throw new Error('No claims')
-          }
+          assert(positionsBefore.length > 0, 'No migratable positions found')
 
-          const rewardsBefore = await sdk.armada.users.getAggregatedRewards({
-            user,
+          const vaultId = ArmadaVaultId.createFrom({
+            chainInfo,
+            fleetAddress,
           })
-          const toClaimBefore = rewardsBefore.total
-          console.log('before', toClaimBefore)
+
+          const TXs = await sdk.armada.users.getMigrationTX({
+            vaultId,
+            user,
+            ...positionsBefore[0],
+          })
+
+          console.log('before', positionsBefore)
 
           const { statuses } = await sendAndLogTransactions({
             chainInfo,
-            transactions: tx,
+            transactions: TXs,
             rpcUrl: rpcUrl,
             privateKey: signerPrivateKey,
           })
@@ -69,11 +70,15 @@ describe.skip('Armada Protocol Claim', () => {
             expect(status).toBe('success')
           })
 
-          const rewardsAfter = await sdk.armada.users.getAggregatedRewards({
+          const positionsAfter = await sdk.armada.users.getMigratablePositions({
+            chainInfo,
             user,
+            migrationType: ArmadaMigrationType.Compound,
           })
-          const toClaimAfter = rewardsAfter.total
-          console.log('after', toClaimAfter)
+
+          console.log('after', positionsAfter)
+
+          expect(positionsAfter.length).toBeLessThan(positionsBefore.length)
         })
       })
     })
