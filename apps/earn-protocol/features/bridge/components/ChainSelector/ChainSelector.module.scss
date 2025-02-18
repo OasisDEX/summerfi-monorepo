@@ -25,11 +25,4 @@
   background: var(--earn-protocol-neutral-90);
   border: 1px solid var(--earn-protocol-neutral-80);
   border-radius: var(--general-radius-8);
-  
-  :global {
-    // Override dropdown styles to match design
-    .dropdown-toggle {
-      padding: var(--general-space-8) var(--general-space-12);
-    }
-  }
 } 

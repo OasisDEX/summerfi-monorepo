@@ -9,7 +9,8 @@
 
   @include media('>s') {
     flex-direction: row;
-    gap: var(--general-space-12);
+    padding: 0;
+    gap: var(--general-space-32);
   }
 }
 

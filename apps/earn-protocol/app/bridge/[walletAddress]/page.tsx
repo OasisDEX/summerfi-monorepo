@@ -12,7 +12,7 @@ type BridgePageProps = {
 }
 
 const BridgePage = async ({ params }: BridgePageProps) => {
-  const { walletAddress } = params
+  const { walletAddress } = await params
 
   if (!isValidAddress(walletAddress)) {
     redirect(`/`)

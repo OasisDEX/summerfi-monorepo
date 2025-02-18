@@ -12,9 +12,6 @@ export const BridgeFormTitle = () => {
           $SUMR
         </Text>
       </Text>
-      {/* <Text variant="p3semi" className={styles.subtitle}>
-        Transfer $SUMR between networks
-      </Text> */}
     </div>
   )
 }

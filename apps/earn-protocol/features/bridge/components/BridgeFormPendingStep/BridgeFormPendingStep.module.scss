@@ -18,6 +18,12 @@
     padding: var(--general-space-4) var(--general-space-12);
     background-color: var(--earn-protocol-critical-100);
   }
+
+  &.pending {
+    border-radius: var(--radius-medium);
+    padding: var(--general-space-4) var(--general-space-12);
+    background-color: var(--earn-protocol-warning-50);
+  }
 }
 
 .footnote {

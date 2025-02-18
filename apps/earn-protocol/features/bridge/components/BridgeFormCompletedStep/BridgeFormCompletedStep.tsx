@@ -56,7 +56,7 @@ export const BridgeFormCompletedStep: FC<BridgeFormCompletedStepProps> = ({ stat
         </div>
       }
       primaryButton={{
-        label: 'New trade',
+        label: 'Create new transaction',
         action: () => {
           dispatch({
             type: 'reset',

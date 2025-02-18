@@ -5,14 +5,12 @@ import {
   useSendUserOperation,
   useSmartAccountClient,
 } from '@account-kit/react'
-import { useIsIframe } from '@summerfi/app-earn-ui'
 import { type BridgeTransactionInfo, type IAddress, TokenAmount } from '@summerfi/sdk-common'
 import { type Chain, formatEther } from 'viem'
 
 import { accountType } from '@/account-kit/config'
 import { ETH_DECIMALS } from '@/features/bridge/constants/decimals'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
-import { sendSafeTx } from '@/helpers/send-safe-tx'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 
 interface BridgeTransactionParams {
@@ -43,7 +41,6 @@ export function useBridgeTransaction({
   amount,
   destinationChain,
   recipient,
-  onSafeTxSuccess,
   onSuccess,
   onError,
 }: BridgeTransactionParams): BridgeTransactionDetails {
@@ -53,7 +50,6 @@ export function useBridgeTransaction({
   const [error, setError] = useState<Error | null>(null)
   const [transaction, setTransaction] = useState<BridgeTransactionInfoWithLzFeeUsd | undefined>()
 
-  const isIframe = useIsIframe()
   const { getBridgeTx, getCurrentUser, getChainInfo, getTargetChainInfo, getSummerToken } =
     useAppSDK()
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
@@ -153,20 +149,6 @@ export function useBridgeTransaction({
     try {
       setIsLoading(true)
 
-      if (isIframe) {
-        return await sendSafeTx({
-          txs: [
-            {
-              to: transaction.transaction.target.value,
-              data: transaction.transaction.calldata,
-              value: transaction.transaction.value,
-            },
-          ],
-          onSuccess: onSafeTxSuccess,
-          onError,
-        })
-      }
-
       const txParams = {
         target: transaction.transaction.target.value,
         data: transaction.transaction.calldata,
@@ -190,7 +172,7 @@ export function useBridgeTransaction({
     } finally {
       setIsLoading(false)
     }
-  }, [transaction, smartAccountClient, sendUserOperationAsync, isIframe, onSuccess, onError])
+  }, [transaction, smartAccountClient, sendUserOperationAsync, onError])
 
   return {
     prepareTransaction,

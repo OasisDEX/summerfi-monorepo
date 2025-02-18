@@ -1,7 +1,7 @@
 import { type Dispatch, type FC, useCallback } from 'react'
 import { useChain } from '@account-kit/react'
 import { MessageStatus } from '@layerzerolabs/scan-client'
-import { Icon, InfoBox, LoadingSpinner, Sidebar, Text } from '@summerfi/app-earn-ui'
+import { Icon, InfoBox, LoadingSpinner, Sidebar, SkeletonLine, Text } from '@summerfi/app-earn-ui'
 import {
   chainIdToSDKNetwork,
   isSupportedHumanNetwork,
@@ -14,6 +14,7 @@ import { useCrossChainMessages } from '@/features/bridge/hooks/use-cross-chain-m
 import { type BridgeReducerAction, type BridgeState, BridgeTxStatus } from '@/features/bridge/types'
 
 import styles from './BridgeFormPendingStep.module.scss'
+import { capitalize } from 'lodash-es'
 
 interface BridgeFormPendingStepProps {
   dispatch: Dispatch<BridgeReducerAction>
@@ -57,7 +58,7 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
         <LoadingSpinner size={28} />
         <span style={{ color: 'var(--color-text-primary)' }}>Loading details...</span>
       </>
-    ) : latestStatus === MessageStatus.INFLIGHT ? (
+    ) : latestStatus !== MessageStatus.INFLIGHT ? (
       <>
         <LoadingSpinner size={28} />
         <span style={{ color: 'var(--color-text-primary)' }}>Updating details...</span>
@@ -97,9 +98,14 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
                     <div
                       className={clsx(styles.status, {
                         [styles.error]: latestStatus === MessageStatus.FAILED,
+                        [styles.pending]: latestStatus === MessageStatus.INFLIGHT,
                       })}
                     >
-                      {latestStatus ?? '...waiting'}
+                      {latestStatus ? (
+                        capitalize(latestStatus)
+                      ) : (
+                        <SkeletonLine width={100} height={20} />
+                      )}
                     </div>
                   ),
                   type: 'entry',
@@ -118,7 +124,7 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
         </div>
       }
       primaryButton={{
-        label: 'New trade',
+        label: 'Create new transaction',
         action: () => {
           dispatch({
             type: 'reset',

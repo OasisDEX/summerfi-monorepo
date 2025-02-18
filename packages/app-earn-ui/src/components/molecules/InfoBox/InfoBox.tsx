@@ -53,7 +53,11 @@ export const InfoBox = ({ title, rows, children, className, error }: InfoBoxProp
                       <Text as="span" variant="p3semi">
                         {row.label}
                       </Text>
-                      <Text as="span" variant="p3semi" color="var(--color-text-primary)">
+                      <Text
+                        as="span"
+                        variant="p3semi"
+                        style={{ color: 'var(--color-text-primary)' }}
+                      >
                         {row.value}
                       </Text>
                     </>

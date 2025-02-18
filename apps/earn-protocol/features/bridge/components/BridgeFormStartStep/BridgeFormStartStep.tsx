@@ -152,14 +152,18 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
 
   const handleDestinationChainChange = (newDestination: SDKNetwork) => {
     dispatch({ type: 'update-destination-chain', payload: sdkNetworkToChain(newDestination) })
-    clearTransaction()
+    if (amountParsed.gt(0)) {
+      prepareTransaction()
+    }
   }
 
   const handleSourceChainChange = (network: SDKNetwork) => {
     const nextSourceChain = sdkNetworkToChain(network)
 
     setSourceChain({ chain: nextSourceChain })
-    clearTransaction()
+    if (amountParsed.gt(0)) {
+      prepareTransaction()
+    }
   }
 
   const gasOnSource = transaction ? gasEstimate ?? '0' : '0'

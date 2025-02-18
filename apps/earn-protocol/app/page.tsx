@@ -35,11 +35,7 @@ const EarnAllVaultsPage = async () => {
     },
   })
 
-  return (
-    <div style={{ marginTop: '55px' }}>
-      <VaultListViewComponent vaultsList={vaultsDecorated} />
-    </div>
-  )
+  return <VaultListViewComponent vaultsList={vaultsDecorated} />
 }
 
 export default EarnAllVaultsPage

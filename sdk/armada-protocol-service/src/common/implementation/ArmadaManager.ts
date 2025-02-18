@@ -25,12 +25,10 @@ import {
   ITokenAmount,
   IUser,
   LoggingService,
-  Percentage,
   Price,
   Token,
   TokenAmount,
   TransactionInfo,
-  TransactionType,
   type ChainInfo,
   type ExtendedTransactionInfo,
   type HexData,
@@ -52,6 +50,7 @@ import type { IOracleManager } from '@summerfi/oracle-common'
 import { ArmadaManagerClaims } from './ArmadaManagerClaims'
 import { ArmadaManagerGovernance } from './ArmadaManagerGovernance'
 import { ArmadaManagerBridge } from './ArmadaManagerBridge'
+import BigNumber from 'bignumber.js'
 
 /**
  * @name ArmadaManager
