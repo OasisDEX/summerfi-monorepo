@@ -117,7 +117,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     ],
     {
       id: PortfolioTabs.REWARDS,
-      label: 'SUMR Rewards',
+      label: '$SUMR Rewards',
       content: (
         <PortfolioRewards
           rewardsData={rewardsData}

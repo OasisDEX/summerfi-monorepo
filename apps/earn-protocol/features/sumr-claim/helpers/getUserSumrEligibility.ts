@@ -22,7 +22,7 @@ export const getUserSumrEligibility = async (address: string): Promise<Leaderboa
     return leaderboard
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Error fetching user SUMR eligibility:', error)
+    console.error('Error fetching user $SUMR eligibility:', error)
 
     throw error
   }

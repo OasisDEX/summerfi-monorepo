@@ -63,7 +63,7 @@ export const sumrFaqData = [
           <li>
             <Text variant="p2" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
               <strong>Allocate Protocol Capital</strong> by Deciding on how to spend revenue,
-              allocate SUMR token rewards and issue grants to balance growth with long term
+              allocate $SUMR token rewards and issue grants to balance growth with long term
               sustainability.
             </Text>
           </li>

@@ -54,7 +54,7 @@ export const PortfolioPageViewLoadingState: FC = () => {
     ],
     {
       id: PortfolioTabs.REWARDS,
-      label: 'SUMR Rewards',
+      label: '$SUMR Rewards',
       content: SimplePortfolioSkeleton,
     },
   ]

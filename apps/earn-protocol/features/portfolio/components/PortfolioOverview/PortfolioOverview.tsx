@@ -58,7 +58,7 @@ const getDatablocks = ({
     titleColor: 'var(--earn-protocol-secondary-60)',
   },
   {
-    title: 'SUMR Token Rewards',
+    title: '$SUMR Token Rewards',
     value: `${formatCryptoBalance(overallSumr)} $SUMR`,
   },
   {
