@@ -1,20 +1,36 @@
-import type { IChainInfo, IUser, MigrationTransactionInfo } from '@summerfi/sdk-common'
-import type { ITokenAmount } from 'node_modules/@summerfi/sdk-common/dist'
+import type {
+  IChainInfo,
+  IUser,
+  MigrationTransactionInfo,
+  ITokenAmount,
+  ArmadaMigrationType,
+  ApproveTransactionInfo,
+} from '@summerfi/sdk-common'
+import type { IArmadaVaultId } from './IArmadaVaultId'
 
 /**
  * @name IArmadaManagerMigrations
  * @description Interface for the Armada Manager Migrations which handles generating transactions for migrations
  */
 export interface IArmadaManagerMigrations {
-  getMigratablePositions(params: { chainInfo: IChainInfo; user: IUser }): Promise<
+  getMigratablePositions(params: {
+    chainInfo: IChainInfo
+    user: IUser
+    migrationType: ArmadaMigrationType
+  }): Promise<
     {
       chainInfo: IChainInfo
       tokenAmount: ITokenAmount
+      migrationType: ArmadaMigrationType
     }[]
   >
 
   getMigrationTX(params: {
+    user: IUser
+    vaultId: IArmadaVaultId
     chainInfo: IChainInfo
     tokenAmount: ITokenAmount
-  }): Promise<[MigrationTransactionInfo] | undefined>
+    migrationType: ArmadaMigrationType
+    shouldStake?: boolean
+  }): Promise<[ApproveTransactionInfo, MigrationTransactionInfo] | [MigrationTransactionInfo]>
 }

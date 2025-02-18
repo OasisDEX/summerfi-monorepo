@@ -14,6 +14,7 @@ import {
   getDeployedRewardsRedeemerAddress,
   isTestDeployment,
   setTestDeployment,
+  type IArmadaManagerMigrations,
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
@@ -49,6 +50,7 @@ import BigNumber from 'bignumber.js'
 import type { IOracleManager } from '@summerfi/oracle-common'
 import { ArmadaManagerClaims } from './ArmadaManagerClaims'
 import { ArmadaManagerGovernance } from './ArmadaManagerGovernance'
+import { ArmadaManagerMigrations } from './ArmadaManagerMigrations'
 
 /**
  * @name ArmadaManager
@@ -57,6 +59,7 @@ import { ArmadaManagerGovernance } from './ArmadaManagerGovernance'
 export class ArmadaManager implements IArmadaManager {
   claims: IArmadaManagerClaims
   governance: IArmadaManagerGovernance
+  migrations: IArmadaManagerMigrations
 
   private _supportedChains: ChainInfo[]
   private _rewardsRedeemerAddress: IAddress
@@ -124,6 +127,11 @@ export class ArmadaManager implements IArmadaManager {
       ...params,
       hubChainInfo: this._hubChainInfo,
       getSummerToken: this.getSummerToken.bind(this),
+    })
+    this.migrations = new ArmadaManagerMigrations({
+      ...params,
+      hubChainInfo: this._hubChainInfo,
+      supportedChains: this._supportedChains,
     })
   }
 
@@ -648,7 +656,7 @@ export class ArmadaManager implements IArmadaManager {
       contractName: 'admiralsQuarters',
     })
 
-    // Approval
+    // Approval for AQ
     if (!fromEth) {
       const approvalTransaction = await this._allowanceManager.getApproval({
         chainInfo: params.vaultId.chainInfo,
