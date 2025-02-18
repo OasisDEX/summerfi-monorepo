@@ -147,11 +147,11 @@ export default async function HomePage() {
       }}
     >
       <LandingPageHero vaultsList={vaultsDecorated} />
-      {/* <BigGradientBox>
+      <BigGradientBox>
         <EffortlessAccessBlock />
         <SupportedNetworksList />
       </BigGradientBox>
-      <ProtocolScroller
+      {/* <<ProtocolScroller
         protocolsList={supportedProtocols.map((protocol) => {
           const protocolConfig = supportedProtocolsConfig[protocol]
 
