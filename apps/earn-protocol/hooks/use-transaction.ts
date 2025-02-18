@@ -114,6 +114,14 @@ export const useTransaction = ({
 
   const isProperChainSelected = clientChainId === vaultChainId
 
+  // eslint-disable-next-line no-console
+  console.log('Transaction networks info', {
+    clientChainId,
+    vaultChainId,
+    isProperChainSelected,
+    isSettingChain,
+  })
+
   const nextTransaction = useMemo(() => {
     if (!transactions || transactions.length === 0) {
       return undefined
@@ -391,8 +399,8 @@ export const useTransaction = ({
             chain: nextChain,
           })
         },
-        disabled: isSettingChain,
-        loading: isSettingChain,
+        disabled: true,
+        loading: true,
       }
     }
 
