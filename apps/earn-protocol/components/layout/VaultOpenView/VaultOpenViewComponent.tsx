@@ -33,6 +33,7 @@ import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
 import { type GetGlobalRebalancesQuery } from '@summerfi/sdk-client'
 import { type IToken, TransactionType } from '@summerfi/sdk-common'
 
+import { AccountKitAccountType } from '@/account-kit/types'
 import { detailsLinks } from '@/components/layout/VaultOpenView/mocks'
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
@@ -200,12 +201,11 @@ export const VaultOpenViewComponent = ({
   const { signTosMessage } = useTermsOfServiceSigner()
 
   const tosState = useTermsOfService({
-    // @ts-ignore
-    publicClient, // ignored for now, we need to align viem versionon all subpackages
+    publicClient,
     signMessage: signTosMessage,
     chainId: vaultChainId,
     walletAddress: user?.address,
-    isSmartAccount: user?.type === 'sca',
+    isSmartAccount: user?.type === AccountKitAccountType.SCA,
     version: TermsOfServiceVersion.APP_VERSION,
     cookiePrefix: TermsOfServiceCookiePrefix.APP_TOKEN,
     host: '/earn',
