@@ -17,7 +17,6 @@ import {
   VaultSimulationForm,
 } from '@summerfi/app-earn-ui'
 import {
-  DeviceType,
   type DropdownRawOption,
   type IconNamesList,
   type IToken,

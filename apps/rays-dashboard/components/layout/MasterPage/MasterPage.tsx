@@ -43,16 +43,15 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({
           }[background]
         }
         <NavigationWrapper panels={systemConfig.navigation} />
-        <OffsetLayout>
-          <div className={masterPageStyles.appContainer}>
-            {children}
-            <Footer
-              logo={`${basePath}/img/branding/logo-dark.svg`}
-              languageSwitcher={<div />}
-              newsletter={<NewsletterWrapper config={systemConfig.config} />}
-            />
-          </div>
-        </OffsetLayout>
+
+        <div className={masterPageStyles.appContainer}>
+          {children}
+          <Footer
+            logo={`${basePath}/img/branding/logo-dark.svg`}
+            languageSwitcher={<div />}
+            newsletter={<NewsletterWrapper config={systemConfig.config} />}
+          />
+        </div>
       </div>
       <AccountChangeHandler />
     </>
