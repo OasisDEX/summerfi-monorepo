@@ -5,14 +5,15 @@
   width: 100%;
   perspective: 600px;
   overflow: hidden;
-  height: 700px;
+  height: 100%;
 }
 
 .carouselContent {
   display: flex;
   position: relative;
   width: 100%;
-  height: 650px;
+  height: 550px;
+  // height: 100%;
   align-items: center;
   justify-content: center;
   transform-style: preserve-3d;
@@ -28,7 +29,7 @@
   height: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: baseline;
   opacity: 0;
   backface-visibility: hidden;
   transition:
@@ -55,7 +56,7 @@
 
 .carouselButtons {
   position: absolute;
-  top: 50%;
+  top: 15%;
   display: flex;
   justify-content: space-between;
   transform: translateY(-50%);

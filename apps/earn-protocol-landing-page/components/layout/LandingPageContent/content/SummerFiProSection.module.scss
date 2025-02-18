@@ -21,6 +21,7 @@
   gap: var(--spacing-space-medium);
   padding: 0 var(--spacing-space-3x-large);
   margin-top: 48px;
+  border-radius: var(--radius-roundish);
 
   @include media('<=s') {
     padding: 0 var(--spacing-space-medium);
