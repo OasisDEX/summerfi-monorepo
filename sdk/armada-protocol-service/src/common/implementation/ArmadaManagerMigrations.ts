@@ -5,8 +5,10 @@ import {
   TokenAmount,
   TransactionType,
   type AddressValue,
+  type ApproveTransactionInfo,
   type HexData,
   type IChainInfo,
+  type ITokenAmount,
   type MigrationTransactionInfo,
 } from '@summerfi/sdk-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
@@ -112,11 +114,13 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       (tokenAmount) => tokenAmount.toSolidityValue() > 0n,
     )
 
-    return migratableTokenAmount.map((tokenAmount) => ({
-      migrationType: params.migrationType,
+    return {
       chainInfo: params.chainInfo,
-      amount: tokenAmount,
-    }))
+      positions: migratableTokenAmount.map((tokenAmount) => ({
+        migrationType: params.migrationType,
+        amount: tokenAmount,
+      })),
+    }
   }
 
   async getMigrationTX(
@@ -134,40 +138,9 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     })
 
     // get the migration transaction info from params
-    switch (params.migrationType) {
-      case ArmadaMigrationType.Compound: {
-        const moveAssetsCall = encodeFunctionData({
-          abi: AdmiralsQuartersAbi,
-          functionName: 'moveFromCompoundToAdmiralsQuarters',
-          args: [params.amount.token.address.value, params.amount.toSolidityValue()],
-        })
-        multicallArgs.push(moveAssetsCall)
-        multicallOperations.push('moveFromCompoundToAdmiralsQuarters')
-        break
-      }
-      case ArmadaMigrationType.AaveV3: {
-        const moveAssetsCall = encodeFunctionData({
-          abi: AdmiralsQuartersAbi,
-          functionName: 'moveFromAaveToAdmiralsQuarters',
-          args: [params.amount.token.address.value, params.amount.toSolidityValue()],
-        })
-        multicallArgs.push(moveAssetsCall)
-        multicallOperations.push('moveFromAaveToAdmiralsQuarters')
-        break
-      }
-      case ArmadaMigrationType.Erc4626: {
-        const moveAssetsCall = encodeFunctionData({
-          abi: AdmiralsQuartersAbi,
-          functionName: 'moveFromERC4626ToAdmiralsQuarters',
-          args: [params.amount.token.address.value, params.amount.toSolidityValue()],
-        })
-        multicallArgs.push(moveAssetsCall)
-        multicallOperations.push('moveFromERC4626ToAdmiralsQuarters')
-        break
-      }
-      default:
-        throw new Error('Unsupported migration type: ' + params.migrationType)
-    }
+    const moveCalls = params.positions.map((position) => this._getMoveCall({ ...position }))
+    multicallArgs.push(...moveCalls.map((call) => call.call))
+    multicallOperations.push(...moveCalls.map((call) => call.operation))
 
     // when staking admirals quarters will receive LV tokens, otherwise the user
     const fleetTokenReceiver = shouldStake
@@ -206,26 +179,73 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
         value: '0',
       },
       metadata: {
-        migrationType: params.migrationType,
+        positions: params.positions,
       },
     }
 
     // Approval for AQ
-    const approvalTransaction = await this._allowanceManager.getApproval({
-      chainInfo: params.vaultId.chainInfo,
-      spender: admiralsQuartersAddress,
-      amount: params.amount,
-      owner: params.user.wallet.address,
-    })
+    const approvalTransactions = (
+      await Promise.all(
+        params.positions.map(async (position) => {
+          return this._allowanceManager.getApproval({
+            chainInfo: params.vaultId.chainInfo,
+            spender: admiralsQuartersAddress,
+            amount: position.amount,
+            owner: params.user.wallet.address,
+          })
+        }),
+      )
+    ).filter(Boolean) as ApproveTransactionInfo[]
 
-    if (approvalTransaction) {
-      LoggingService.debug('approvalTransaction', {
-        amount: approvalTransaction.metadata.approvalAmount.toString(),
-      })
+    if (approvalTransactions.length > 0) {
+      LoggingService.debug(
+        'approvalTransactions: ',
+        approvalTransactions.map((tx) => tx?.metadata.approvalAmount.toString()),
+      )
     }
 
-    return approvalTransaction
-      ? [approvalTransaction, multicallTransaction]
+    return approvalTransactions.length > 0
+      ? [approvalTransactions, multicallTransaction]
       : [multicallTransaction]
+  }
+
+  private _getMoveCall(params: { amount: ITokenAmount; migrationType: ArmadaMigrationType }) {
+    switch (params.migrationType) {
+      case ArmadaMigrationType.Compound: {
+        const moveAssetsCall = encodeFunctionData({
+          abi: AdmiralsQuartersAbi,
+          functionName: 'moveFromCompoundToAdmiralsQuarters',
+          args: [params.amount.token.address.value, params.amount.toSolidityValue()],
+        })
+        return {
+          call: moveAssetsCall,
+          operation: 'moveFromCompoundToAdmiralsQuarters',
+        }
+      }
+      case ArmadaMigrationType.AaveV3: {
+        const moveAssetsCall = encodeFunctionData({
+          abi: AdmiralsQuartersAbi,
+          functionName: 'moveFromAaveToAdmiralsQuarters',
+          args: [params.amount.token.address.value, params.amount.toSolidityValue()],
+        })
+        return {
+          call: moveAssetsCall,
+          operation: 'moveFromAaveToAdmiralsQuarters',
+        }
+      }
+      case ArmadaMigrationType.Erc4626: {
+        const moveAssetsCall = encodeFunctionData({
+          abi: AdmiralsQuartersAbi,
+          functionName: 'moveFromERC4626ToAdmiralsQuarters',
+          args: [params.amount.token.address.value, params.amount.toSolidityValue()],
+        })
+        return {
+          call: moveAssetsCall,
+          operation: 'moveFromERC4626ToAdmiralsQuarters',
+        }
+      }
+      default:
+        throw new Error('Unsupported migration type: ' + params.migrationType)
+    }
   }
 }

@@ -12,7 +12,6 @@ import {
 import {
   ITokenAmount,
   IUser,
-  TransactionInfo,
   type ApproveTransactionInfo,
   type ArmadaMigrationType,
   type ChainInfo,
@@ -20,8 +19,10 @@ import {
   type DelegateTransactionInfo,
   type ExtendedTransactionInfo,
   type IAddress,
+  type IChainInfo,
   type IPercentage,
   type IToken,
+  type MigrationTransactionInfo,
   type StakeTransactionInfo,
   type UnstakeTransactionInfo,
 } from '@summerfi/sdk-common'
@@ -369,16 +370,16 @@ export interface IArmadaManagerUsersClient {
    * @throws Error if the migration type is not supported
    */
   getMigratablePositions(params: {
-    chainInfo: ChainInfo
+    chainInfo: IChainInfo
     user: IUser
     migrationType: ArmadaMigrationType
-  }): Promise<
-    {
-      chainInfo: ChainInfo
+  }): Promise<{
+    chainInfo: IChainInfo
+    positions: {
       amount: ITokenAmount
       migrationType: ArmadaMigrationType
     }[]
-  >
+  }>
 
   /**
    * @method getMigrationTX
@@ -395,11 +396,13 @@ export interface IArmadaManagerUsersClient {
    * @throws Error if the migration type is not supported
    */
   getMigrationTX(params: {
+    chainInfo: IChainInfo
     user: IUser
     vaultId: IArmadaVaultId
-    chainInfo: ChainInfo
-    amount: ITokenAmount
-    migrationType: ArmadaMigrationType
     shouldStake?: boolean
-  }): Promise<[ApproveTransactionInfo, TransactionInfo] | [TransactionInfo]>
+    positions: {
+      amount: ITokenAmount
+      migrationType: ArmadaMigrationType
+    }[]
+  }): Promise<[ApproveTransactionInfo[], MigrationTransactionInfo] | [MigrationTransactionInfo]>
 }

@@ -28,34 +28,35 @@ export interface IArmadaManagerMigrations {
     chainInfo: IChainInfo
     user: IUser
     migrationType: ArmadaMigrationType
-  }): Promise<
-    {
-      chainInfo: IChainInfo
+  }): Promise<{
+    chainInfo: IChainInfo
+    positions: {
       amount: ITokenAmount
       migrationType: ArmadaMigrationType
     }[]
-  >
+  }>
 
   /**
    * @method getMigrationTX
    * @description Returns the transaction for the migration
    *
+   * @param chainInfo Chain information
    * @param user The user
    * @param vaultId The vault id
-   * @param chainInfo Chain information
-   * @param amount The token amount
-   * @param migrationType The type of migration
    * @param shouldStake Should stake
+   * @param positions The positions to migrate
    *
    * @returns The transaction for the migration
    * @throws Error if the migration type is not supported
    */
   getMigrationTX(params: {
+    chainInfo: IChainInfo
     user: IUser
     vaultId: IArmadaVaultId
-    chainInfo: IChainInfo
-    amount: ITokenAmount
-    migrationType: ArmadaMigrationType
     shouldStake?: boolean
-  }): Promise<[ApproveTransactionInfo, MigrationTransactionInfo] | [MigrationTransactionInfo]>
+    positions: {
+      amount: ITokenAmount
+      migrationType: ArmadaMigrationType
+    }[]
+  }): Promise<[ApproveTransactionInfo[], MigrationTransactionInfo] | [MigrationTransactionInfo]>
 }

@@ -92,6 +92,9 @@ export type UnstakeTransactionInfo = TransactionInfo & {
 export type MigrationTransactionInfo = TransactionInfo & {
   type: TransactionType.Migration
   metadata: {
-    migrationType: ArmadaMigrationType
+    positions: {
+      amount: ITokenAmount
+      migrationType: ArmadaMigrationType
+    }[]
   }
 }

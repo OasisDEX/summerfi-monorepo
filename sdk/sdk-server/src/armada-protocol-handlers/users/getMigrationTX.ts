@@ -15,12 +15,16 @@ import { publicProcedure } from '../../SDKTRPC'
 export const getMigrationTX = publicProcedure
   .input(
     z.object({
+      chainInfo: z.custom<IChainInfo>(isChainInfo),
       vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
       user: z.custom<IUser>(isUser),
-      chainInfo: z.custom<IChainInfo>(isChainInfo),
-      amount: z.custom<ITokenAmount>(isTokenAmount),
-      migrationType: z.custom<ArmadaMigrationType>(isArmadaMigrationType),
       shouldStake: z.boolean().optional(),
+      positions: z.array(
+        z.object({
+          amount: z.custom<ITokenAmount>(isTokenAmount),
+          migrationType: z.custom<ArmadaMigrationType>(isArmadaMigrationType),
+        }),
+      ),
     }),
   )
   .query(async (opts) => {

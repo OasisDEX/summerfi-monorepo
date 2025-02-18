@@ -15,7 +15,7 @@ export const SDKApiUrl = process.env.E2E_SDK_API_URL,
   signerAddress = process.env.E2E_USER_ADDRESS,
   signerPrivateKey = process.env.E2E_USER_PRIVATE_KEY,
   fleetOnBase = Address.createFromEthereum({
-    value: '0xEb201f4915b6CbFf5a01aBd866Fe6c6A026F224d',
+    value: '0x0b81750655493eee7a4c1f4e7e4fdb9536041720',
   }),
   fleetOnArb = Address.createFromEthereum({
     value: '0x2653014Cd3AD332a98B0A80Ccf12473740DF81C2',
@@ -37,14 +37,14 @@ export const SDKApiUrl = process.env.E2E_SDK_API_URL,
   forkOnMainnet = process.env.E2E_SDK_FORK_URL_MAINNET
 
 export const testConfig = [
-  // {
-  //   chainInfo: ChainFamilyMap.Base.Base,
-  //   symbol: 'USDC',
-  //   swapSymbol: 'DAI',
-  //   fleetAddress: fleetOnBase,
-  //   rpcUrl: forkOnBase,
-  //   userAddress: userOnBase,
-  // },
+  {
+    chainInfo: ChainFamilyMap.Base.Base,
+    symbol: 'USDC',
+    swapSymbol: 'DAI',
+    fleetAddress: fleetOnBase,
+    rpcUrl: forkOnBase,
+    userAddress: userOnBase,
+  },
   // {
   //   chainInfo: ChainFamilyMap.Arbitrum.ArbitrumOne,
   //   symbol: 'USDC.e',
@@ -52,12 +52,12 @@ export const testConfig = [
   //   rpcUrl: forkOnArb,
   //   userAddress: userOnArb,
   // },
-  {
-    chainInfo: ChainFamilyMap.Ethereum.Mainnet,
-    symbol: 'USDT',
-    swapSymbol: 'USDT',
-    fleetAddress: fleetOnMainnet,
-    rpcUrl: forkOnMainnet,
-    userAddress: userOnMainnet,
-  },
+  // {
+  //   chainInfo: ChainFamilyMap.Ethereum.Mainnet,
+  //   symbol: 'USDT',
+  //   swapSymbol: 'USDT',
+  //   fleetAddress: fleetOnMainnet,
+  //   rpcUrl: forkOnMainnet,
+  //   userAddress: userOnMainnet,
+  // },
 ]

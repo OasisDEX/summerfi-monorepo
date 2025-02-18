@@ -7,7 +7,7 @@ import assert from 'assert'
 
 jest.setTimeout(300000)
 
-describe.skip('Armada Protocol Claim', () => {
+describe('Armada Protocol Migration', () => {
   const sdk: SDKManager = makeSDK({
     apiURL: SDKApiUrl,
   })
@@ -27,42 +27,48 @@ describe.skip('Armada Protocol Claim', () => {
 
       describe(`getMigratablePositions`, () => {
         it(`should get available migratable positions`, async () => {
-          const positions = await sdk.armada.users.getMigratablePositions({
+          const res = await sdk.armada.users.getMigratablePositions({
             chainInfo,
             user,
             migrationType: ArmadaMigrationType.Compound,
           })
-          console.log(positions)
-          expect(positions.length).toBeGreaterThan(0)
-          expect(positions[0].amount.toSolidityValue()).toBeGreaterThan(0n)
+          console.log(res.positions.map((p) => ({ ...p, amount: p.amount.toString() })))
+          expect(res.positions.length).toBeGreaterThan(0)
         })
       })
 
-      describe.skip(`migrate first migratable position`, () => {
+      describe(`migrate first migratable position`, () => {
         it(`should migrate first migratable position`, async () => {
           const positionsBefore = await sdk.armada.users.getMigratablePositions({
             chainInfo,
             user,
             migrationType: ArmadaMigrationType.Compound,
           })
-          assert(positionsBefore.length > 0, 'No migratable positions found')
+          assert(positionsBefore.positions.length > 1, 'No multiple migratable positions found')
+
+          console.log(
+            'before',
+            positionsBefore.positions.map((p) => ({ ...p, amount: p.amount.toString() })),
+          )
 
           const vaultId = ArmadaVaultId.createFrom({
             chainInfo,
             fleetAddress,
           })
 
-          const TXs = await sdk.armada.users.getMigrationTX({
+          const positionsToMigrate = positionsBefore.positions.slice(0, 1)
+          console.log('migrating position', positionsToMigrate.pop()?.amount.toString())
+
+          const [tx1, tx2] = await sdk.armada.users.getMigrationTX({
             vaultId,
             user,
-            ...positionsBefore[0],
+            chainInfo: positionsBefore.chainInfo,
+            positions: positionsToMigrate,
           })
-
-          console.log('before', positionsBefore)
 
           const { statuses } = await sendAndLogTransactions({
             chainInfo,
-            transactions: TXs,
+            transactions: [...(Array.isArray(tx1) ? tx1 : [tx1]), ...(tx2 != null ? [tx2] : [])],
             rpcUrl: rpcUrl,
             privateKey: signerPrivateKey,
           })
@@ -76,9 +82,62 @@ describe.skip('Armada Protocol Claim', () => {
             migrationType: ArmadaMigrationType.Compound,
           })
 
-          console.log('after', positionsAfter)
+          console.log(
+            'after',
+            positionsAfter.positions.map((p) => ({ ...p, amount: p.amount.toString() })),
+          ),
+            expect(positionsAfter.positions.length).toBeLessThan(positionsBefore.positions.length)
+        })
 
-          expect(positionsAfter.length).toBeLessThan(positionsBefore.length)
+        it.skip(`should migrate multiple migratable positions`, async () => {
+          const positionsBefore = await sdk.armada.users.getMigratablePositions({
+            chainInfo,
+            user,
+            migrationType: ArmadaMigrationType.Compound,
+          })
+          assert(positionsBefore.positions.length > 1, 'No multiple migratable positions found')
+
+          console.log(
+            'before',
+            positionsBefore.positions.map((p) => ({ ...p, amount: p.amount.toString() })),
+          )
+
+          const vaultId = ArmadaVaultId.createFrom({
+            chainInfo,
+            fleetAddress,
+          })
+
+          const positionsToMigrate = positionsBefore.positions.slice(0, 2)
+          console.log('migrating position', positionsToMigrate.pop()?.amount.toString())
+
+          const [tx1, tx2] = await sdk.armada.users.getMigrationTX({
+            vaultId,
+            user,
+            chainInfo: positionsBefore.chainInfo,
+            positions: positionsToMigrate,
+          })
+
+          const { statuses } = await sendAndLogTransactions({
+            chainInfo,
+            transactions: [...(Array.isArray(tx1) ? tx1 : [tx1]), ...(tx2 != null ? [tx2] : [])],
+            rpcUrl: rpcUrl,
+            privateKey: signerPrivateKey,
+          })
+          statuses.forEach((status) => {
+            expect(status).toBe('success')
+          })
+
+          const positionsAfter = await sdk.armada.users.getMigratablePositions({
+            chainInfo,
+            user,
+            migrationType: ArmadaMigrationType.Compound,
+          })
+
+          console.log(
+            'after',
+            positionsAfter.positions.map((p) => ({ ...p, amount: p.amount.toString() })),
+          ),
+            expect(positionsAfter.positions.length).toBeLessThan(positionsBefore.positions.length)
         })
       })
     })
