@@ -1,5 +1,7 @@
+import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { type SDKNetwork } from '@summerfi/app-types'
 import { humanNetworktoSDKNetwork, parseServerResponseToClient } from '@summerfi/app-utils'
+import { unstable_cache as unstableCache } from 'next/cache'
 
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
@@ -15,7 +17,13 @@ type EarnNetworkVaultsPageProps = {
 const EarnNetworkVaultsPage = async ({ params }: EarnNetworkVaultsPageProps) => {
   const { network } = await params
   const parsedNetwork = humanNetworktoSDKNetwork(network)
-  const [{ vaults }, configRaw] = await Promise.all([getVaultsList(), systemConfigHandler()])
+  const [{ vaults }, configRaw] = await Promise.all([
+    unstableCache(getVaultsList, [network], {
+      tags: [REVALIDATION_TAGS.VAULTS_LIST, `Vaults_list_${network}`],
+      revalidate: REVALIDATION_TIMES.VAULTS_LIST,
+    })(),
+    systemConfigHandler(),
+  ])
   const { config: systemConfig } = parseServerResponseToClient(configRaw)
   const vaultsDecorated = decorateCustomVaultFields({ vaults, systemConfig })
 

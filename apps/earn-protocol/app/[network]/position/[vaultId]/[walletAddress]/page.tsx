@@ -2,6 +2,8 @@ import {
   fetchForecastData,
   getPositionValues,
   parseForecastDatapoints,
+  REVALIDATION_TAGS,
+  REVALIDATION_TIMES,
   Text,
 } from '@summerfi/app-earn-ui'
 import { type PositionForecastAPIResponse, type SDKNetwork } from '@summerfi/app-types'
@@ -11,6 +13,7 @@ import {
   subgraphNetworkToId,
 } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
+import { unstable_cache as unstableCache } from 'next/cache'
 import { isAddress } from 'viem'
 
 import { getInterestRates } from '@/app/server-handlers/interest-rates'
@@ -44,18 +47,39 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     ? vaultId
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
+  const cacheParams = [walletAddress, network, vaultId]
+  const cacheConfig = {
+    revalidate: REVALIDATION_TIMES.POSITION_DATA,
+    tags: [
+      REVALIDATION_TAGS.POSITION_DATA,
+      `Vault_Position_${vaultId}_${network}_${walletAddress}`,
+    ],
+  }
+
   const [vault, { vaults }, position, { userActivity, topDepositors }] = await Promise.all([
-    getVaultDetails({
+    unstableCache(
+      getVaultDetails,
+      cacheParams,
+      cacheConfig,
+    )({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),
-    getVaultsList(),
-    getUserPosition({
+    unstableCache(getVaultsList, cacheParams, cacheConfig)(),
+    unstableCache(
+      getUserPosition,
+      cacheParams,
+      cacheConfig,
+    )({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
       walletAddress,
     }),
-    getUserActivity({
+    unstableCache(
+      getUserActivity,
+      cacheParams,
+      cacheConfig,
+    )({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
       walletAddress,
@@ -78,7 +102,11 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     )
   }
 
-  const interestRates = await getInterestRates({
+  const interestRates = await unstableCache(
+    getInterestRates,
+    cacheParams,
+    cacheConfig,
+  )({
     network: parsedNetwork,
     arksList: vault.arks,
   })
@@ -89,7 +117,11 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   })
 
   const [positionHistory, positionForecastResponse] = await Promise.all([
-    await getPositionHistory({
+    await unstableCache(
+      getPositionHistory,
+      cacheParams,
+      cacheConfig,
+    )({
       network: parsedNetwork,
       address: walletAddress.toLowerCase(),
       vault,

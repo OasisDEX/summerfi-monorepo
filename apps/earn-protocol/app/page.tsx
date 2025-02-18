@@ -1,5 +1,7 @@
+import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { type SDKNetwork } from '@summerfi/app-types'
 import { aggregateArksPerNetwork, parseServerResponseToClient } from '@summerfi/app-utils'
+import { unstable_cache as unstableCache } from 'next/cache'
 
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
@@ -9,14 +11,23 @@ import { decorateCustomVaultFields } from '@/helpers/vault-custom-value-helpers'
 import { getInterestRates } from './server-handlers/interest-rates'
 
 const EarnAllVaultsPage = async () => {
-  const [{ vaults }, configRaw] = await Promise.all([getVaultsList(), systemConfigHandler()])
+  const [{ vaults }, configRaw] = await Promise.all([
+    unstableCache(getVaultsList, [], {
+      tags: [REVALIDATION_TAGS.VAULTS_LIST],
+      revalidate: REVALIDATION_TIMES.VAULTS_LIST,
+    })(),
+    systemConfigHandler(),
+  ])
   const { config: systemConfig } = parseServerResponseToClient(configRaw)
 
   const aggregatedArksPerNetwork = aggregateArksPerNetwork(vaults)
 
   const interestRatesPromises = Object.entries(aggregatedArksPerNetwork).map(
     ([network, { arks }]) =>
-      getInterestRates({
+      unstableCache(getInterestRates, [network], {
+        tags: [REVALIDATION_TAGS.VAULTS_LIST],
+        revalidate: REVALIDATION_TIMES.VAULTS_LIST,
+      })({
         network: network as SDKNetwork,
         arksList: arks,
         justLatestRates: true,

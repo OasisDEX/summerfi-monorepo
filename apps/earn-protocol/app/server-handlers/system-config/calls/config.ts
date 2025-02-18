@@ -1,4 +1,4 @@
-import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
+import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { type AppConfigType, type EarnAppConfigType } from '@summerfi/app-types'
 
 export const configFetcher = async function (): Promise<Partial<EarnAppConfigType>> {
@@ -8,7 +8,7 @@ export const configFetcher = async function (): Promise<Partial<EarnAppConfigTyp
       headers: {
         'Content-Type': 'application/json',
       },
-      next: { revalidate: REVALIDATION_TIMES.CONFIG },
+      next: { revalidate: REVALIDATION_TIMES.CONFIG, tags: ['config', REVALIDATION_TAGS.CONFIG] },
     })
     const data = await response.json()
 

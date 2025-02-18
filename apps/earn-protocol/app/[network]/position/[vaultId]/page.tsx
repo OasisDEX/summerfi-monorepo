@@ -1,10 +1,11 @@
-import { Text } from '@summerfi/app-earn-ui'
+import { REVALIDATION_TAGS, REVALIDATION_TIMES, Text } from '@summerfi/app-earn-ui'
 import { type SDKNetwork } from '@summerfi/app-types'
 import {
   humanNetworktoSDKNetwork,
   parseServerResponseToClient,
   subgraphNetworkToId,
 } from '@summerfi/app-utils'
+import { unstable_cache as unstableCache } from 'next/cache'
 import { isAddress } from 'viem'
 
 import { getMedianDefiYield } from '@/app/server-handlers/defillama/get-median-defi-yield'
@@ -36,18 +37,36 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     ? vaultId
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
+  const cacheParams = [network, vaultId]
+  const cacheConfig = {
+    revalidate: REVALIDATION_TIMES.VAULTS_LIST,
+    tags: [REVALIDATION_TAGS.VAULTS_LIST, `Vault_${vaultId}_${network}`],
+  }
+
   const [vault, { vaults }, { userActivity, topDepositors }, medianDefiYield] = await Promise.all([
-    getVaultDetails({
+    unstableCache(
+      getVaultDetails,
+      cacheParams,
+      cacheConfig,
+    )({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),
-    getVaultsList(),
-    getUserActivity({ vaultAddress: parsedVaultId, network: parsedNetwork }),
-    getMedianDefiYield(),
+    unstableCache(getVaultsList, cacheParams, cacheConfig)(),
+    unstableCache(
+      getUserActivity,
+      cacheParams,
+      cacheConfig,
+    )({ vaultAddress: parsedVaultId, network: parsedNetwork }),
+    unstableCache(getMedianDefiYield, cacheParams, cacheConfig)(),
   ])
 
   const interestRates = vault?.arks
-    ? await getInterestRates({
+    ? await unstableCache(
+        getInterestRates,
+        cacheParams,
+        cacheConfig,
+      )({
         network: parsedNetwork,
         arksList: vault.arks,
       })

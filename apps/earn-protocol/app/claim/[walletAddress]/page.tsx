@@ -1,3 +1,5 @@
+import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
+import { unstable_cache as unstableCache } from 'next/cache'
 import { redirect } from 'next/navigation'
 
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
@@ -22,17 +24,32 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
   if (!isValidAddress(walletAddress)) {
     redirect(`/`)
   }
+
+  const cacheParams = [walletAddress]
+  const cacheConfig = {
+    revalidate: REVALIDATION_TIMES.PORTFOLIO_ASSETS,
+    tags: [REVALIDATION_TAGS.PORTFOLIO_ASSETS, `Claim_data_${walletAddress}`],
+  }
+
   const [sumrStakeDelegate, sumrBalances, sumrStakingInfo, sumrDelegates, sumrToClaim] =
     await Promise.all([
-      getSumrDelegateStake({
+      unstableCache(
+        getSumrDelegateStake,
+        cacheParams,
+        cacheConfig,
+      )({
         walletAddress,
       }),
-      getSumrBalances({
+      unstableCache(
+        getSumrBalances,
+        cacheParams,
+        cacheConfig,
+      )({
         walletAddress,
       }),
-      getSumrStakingInfo(),
-      getSumrDelegates(),
-      getSumrToClaim({ walletAddress }),
+      unstableCache(getSumrStakingInfo, cacheParams, cacheConfig)(),
+      unstableCache(getSumrDelegates, cacheParams, cacheConfig)(),
+      unstableCache(getSumrToClaim, cacheParams, cacheConfig)({ walletAddress }),
     ])
 
   const sumrDecayFactors = await getSumrDecayFactor(

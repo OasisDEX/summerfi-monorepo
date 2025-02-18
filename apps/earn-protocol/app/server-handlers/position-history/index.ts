@@ -23,8 +23,8 @@ export async function getPositionHistory({ network, address, vault }: GetPositio
     await fetch(url, {
       ...params,
       next: {
-        revalidate: REVALIDATION_TIMES.POSITION_HISTORY,
-        tags: [REVALIDATION_TAGS.POSITION_HISTORY, address.toLowerCase()],
+        revalidate: REVALIDATION_TIMES.POSITION_DATA,
+        tags: [REVALIDATION_TAGS.POSITION_DATA, address.toLowerCase()],
       },
     })
 

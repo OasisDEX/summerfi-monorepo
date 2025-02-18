@@ -2,7 +2,7 @@ export const REVALIDATION_TIMES = {
   // values are seconds
   PORTFOLIO_ASSETS: 60,
   PORTFOLIO_DATA: 300,
-  POSITION_HISTORY: 120,
+  POSITION_DATA: 120,
   INTEREST_RATES: 600,
   RAYS_LEADERBOARD: 60,
   SUMR_DELEGATES: 60,
@@ -15,6 +15,7 @@ export const REVALIDATION_TIMES = {
 export const REVALIDATION_TAGS = {
   INTEREST_RATES: 'interest-rates',
   PORTFOLIO_ASSETS: 'portfolio-assets',
-  POSITION_HISTORY: 'position-history',
+  POSITION_DATA: 'position-data',
+  VAULTS_LIST: 'vaults-list',
   CONFIG: 'config',
 }
