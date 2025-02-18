@@ -62,7 +62,7 @@ export const getSumrDecayFactor = async (addresses: string[]): Promise<SumrDecay
     console.error('Error in getSumrDecayFactor:', error)
 
     throw new Error(
-      `Failed to get SUMR decay factors: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      `Failed to get $SUMR decay factors: ${error instanceof Error ? error.message : 'Unknown error'}`,
     )
   }
 }
