@@ -17,6 +17,7 @@ import {
   VaultSimulationForm,
 } from '@summerfi/app-earn-ui'
 import {
+  DeviceType,
   type DropdownRawOption,
   type IconNamesList,
   type IToken,
@@ -58,7 +59,8 @@ const softRouterPush = (url: string) => {
 
 export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewProps) => {
   const { deviceType } = useDeviceType()
-  const { isMobile } = useMobileCheck(deviceType)
+  const { isMobile, isTablet } = useMobileCheck(deviceType)
+
   const [localVaultNetwork, setLocalVaultNetwork] =
     useState<VaultsListViewProps['selectedNetwork']>(selectedNetwork)
   const {
@@ -267,7 +269,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
           columns={isMobile ? 1 : 3}
           rows={isMobile ? 3 : 1}
           style={{ justifyItems: 'stretch' }}
-          gap={isMobile ? 16 : 170}
+          gap={isMobile ? 16 : isTablet ? 64 : 170}
         >
           <DataBlock
             title="Protocol TVL"
