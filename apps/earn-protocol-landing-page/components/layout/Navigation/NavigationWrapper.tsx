@@ -19,7 +19,7 @@ export const NavigationWrapper: FC = () => {
       walletConnectionComponent={
         <Link href="/earn">
           <Button
-            variant="primarySmall"
+            variant="primaryMedium"
             onClick={() => {}}
             className={(navigationWrapperStyles.actionButton, navigationWrapperStyles.gradient)}
           >

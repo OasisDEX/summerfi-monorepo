@@ -15,6 +15,10 @@
     background-color: transparent;
     transition: background-color 0.2s;
 
+    &:last-child {
+      margin-bottom: 0;
+    }
+
     @include media("<=l") {
       width: 100%;
     }

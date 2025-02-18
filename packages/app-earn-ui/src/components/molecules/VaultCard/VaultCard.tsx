@@ -107,7 +107,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
             <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
               Total assets
             </Text>
-            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+            <Text variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
               {parsedTotalValueLocked}&nbsp;{getDisplayToken(inputToken.symbol)}
             </Text>
             <Text variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
@@ -118,7 +118,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
             <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
               Best for
             </Text>
-            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+            <Text variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
               {customFields?.bestFor ?? 'Optimized lending yield'}
             </Text>
           </div>

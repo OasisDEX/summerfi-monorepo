@@ -16,3 +16,15 @@
   justify-content: center;
   margin-bottom: 74px;
 }
+
+.heroHeaderMobile {
+  text-align: center;
+
+  > h1 {
+    display: inline;
+  }
+
+  > h1:last-child {
+    margin-left: 6px;
+  }
+}

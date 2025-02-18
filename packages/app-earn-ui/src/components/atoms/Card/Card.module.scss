@@ -10,7 +10,11 @@
 .cardSecondarySmallPaddings {
   display: flex;
   width: 100%;
-  border-radius: var(--radius-roundish);
+  border-radius: var(--radius-large);
+
+  @include media('>=s') {
+    border-radius: var(--radius-roundish);
+  }
 }
 
 .cardPrimary,

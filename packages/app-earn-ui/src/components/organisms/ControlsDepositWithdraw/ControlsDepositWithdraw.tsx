@@ -51,20 +51,21 @@ export const ControlsDepositWithdraw = ({
   vault,
   estimatedEarnings,
   isLoadingForecast,
+  ownerView,
+  forecastSummaryMap,
+  isSimulation = false,
+  isOpen,
   handleAmountChange,
   handleDropdownChange,
   onFocus,
   onBlur,
   manualSetAmount,
-  ownerView,
-  forecastSummaryMap,
-  isSimulation = false,
-  isOpen,
 }: ControlsDepositWithdrawProps) => {
   return (
     <div className={styles.depositViewWrapper}>
       <InputWithDropdown
         value={amountDisplay}
+        placeholder="10,000.00"
         secondaryValue={amountDisplayUSD}
         handleChange={handleAmountChange}
         handleDropdownChange={handleDropdownChange}

@@ -15,13 +15,18 @@
 .default {
   padding: unset;
   padding-bottom: var(--general-space-16);
-  font-weight: 500;
-  font-size: 28px;
+  font-weight: 600;
+  font-size: var(--font-size-h5);
   width: 100%;
   color: var(--color-text-primary);
+  letter-spacing: 0.03em;
   text-align: right;
   border: unset;
   outline: none;
+
+  @include media('>=s') {
+    font-size: var(--font-size-h4);
+  }
 
   &:hover {
     border-color: var(--color-neutral-70);

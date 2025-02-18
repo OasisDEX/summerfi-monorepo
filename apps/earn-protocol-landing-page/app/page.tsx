@@ -137,12 +137,17 @@ export default async function HomePage() {
   })
 
   return (
-    <div style={{ display: 'flex', gap: '8px', flexDirection: 'column', alignItems: 'center' }}>
-      <LandingPageHero
-        vaultsList={vaultsWithConfig}
-        vaultsApyByNetworkMap={vaultsApyByNetworkMap}
-      />
-      <BigGradientBox>
+    <div
+      style={{
+        display: 'flex',
+        gap: '8px',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: '0 24px',
+      }}
+    >
+      <LandingPageHero vaultsList={vaultsDecorated} />
+      {/* <BigGradientBox>
         <EffortlessAccessBlock />
         <SupportedNetworksList />
       </BigGradientBox>
@@ -170,7 +175,7 @@ export default async function HomePage() {
         <BuildBySummerFi />
         <LandingFaqSection />
         <HighestQualityYieldsDisclaimer />
-      </MarketingPoints>
+      </MarketingPoints> */}
     </div>
   )
 }
