@@ -4,7 +4,6 @@ import { parseServerResponseToClient } from '@summerfi/app-utils'
 import Image from 'next/image'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
-import { OffsetLayout } from '@/components/layout/OffsetLayout/OffsetLayout'
 import { WalletInit } from '@/components/molecules/WalletInit/WalletInit'
 import { AccountChangeHandler } from '@/components/organisms/AccountChangeHandler/AccountChangeHandler'
 import { NewsletterWrapper } from '@/components/organisms/NewsletterWrapper/NewsletterWrapper'
