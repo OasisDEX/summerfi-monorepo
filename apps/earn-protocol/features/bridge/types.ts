@@ -38,7 +38,7 @@ export enum BridgeTxStatus {
 export type BridgeState = {
   amount: string | undefined
   sumrBalances: Omit<BridgeExternalData['sumrBalances'], 'raw'>
-  bridgeStatus: BridgeTxStatus | undefined
+  bridgeStatus: BridgeTxStatus
   recipient: string | undefined
   walletAddress: string
   destinationChain: Chain
@@ -55,7 +55,7 @@ export type BridgeReducerAction =
     }
   | {
       type: 'update-bridge-status'
-      payload: BridgeTxStatus | undefined
+      payload: BridgeTxStatus
     }
   | {
       type: 'update-recipient'

@@ -19,47 +19,70 @@ export const bridgeState: BridgeState = {
 }
 
 export const bridgeReducer = (prevState: BridgeState, action: BridgeReducerAction) => {
-  switch (action.type) {
-    case 'bridge-transaction-created':
-      return {
-        ...prevState,
-        bridgeStatus: BridgeTxStatus.PENDING,
-        transactionHash: action.payload.hash,
-        amount: action.payload.amount,
-      }
-    case 'update-bridge-status':
-      return {
-        ...prevState,
-        bridgeStatus: action.payload,
-      }
-    case 'update-recipient':
-      return {
-        ...prevState,
-        recipient: action.payload,
-      }
-    case 'update-wallet-address':
-      return {
-        ...prevState,
-        walletAddress: action.payload,
-      }
-    case 'update-destination-chain':
-      return {
-        ...prevState,
-        destinationChain: action.payload,
-      }
-    case 'update-transaction-hash':
-      return {
-        ...prevState,
-        transactionHash: action.payload,
-      }
-    case 'reset':
-      return {
-        ...bridgeState,
-        bridgeStatus: BridgeTxStatus.NOT_STARTED,
-        walletAddress: prevState.walletAddress,
-        sumrBalances: prevState.sumrBalances,
-      }
-    default:
-      return prevState
+  const validateTransition = (from: BridgeTxStatus, to: BridgeTxStatus) => {
+    const validTransitions = {
+      [BridgeTxStatus.NOT_STARTED]: [BridgeTxStatus.PENDING],
+      [BridgeTxStatus.PENDING]: [BridgeTxStatus.COMPLETED, BridgeTxStatus.FAILED],
+      [BridgeTxStatus.COMPLETED]: [BridgeTxStatus.NOT_STARTED],
+      [BridgeTxStatus.FAILED]: [BridgeTxStatus.NOT_STARTED],
+    }
+
+    if (!validTransitions[from].includes(to)) {
+      throw new Error(`Invalid transition from ${from} to ${to}`)
+    }
+  }
+
+  try {
+    switch (action.type) {
+      case 'bridge-transaction-created':
+        validateTransition(prevState.bridgeStatus, BridgeTxStatus.PENDING)
+
+        return {
+          ...prevState,
+          bridgeStatus: BridgeTxStatus.PENDING,
+          transactionHash: action.payload.hash,
+          amount: action.payload.amount,
+        }
+      case 'update-bridge-status':
+        validateTransition(prevState.bridgeStatus, action.payload)
+
+        return {
+          ...prevState,
+          bridgeStatus: action.payload,
+        }
+      case 'update-recipient':
+        return {
+          ...prevState,
+          recipient: action.payload,
+        }
+      case 'update-wallet-address':
+        return {
+          ...prevState,
+          walletAddress: action.payload,
+        }
+      case 'update-destination-chain':
+        return {
+          ...prevState,
+          destinationChain: action.payload,
+        }
+      case 'update-transaction-hash':
+        return {
+          ...prevState,
+          transactionHash: action.payload,
+        }
+      case 'reset':
+        validateTransition(prevState.bridgeStatus, BridgeTxStatus.NOT_STARTED)
+
+        return {
+          ...bridgeState,
+          bridgeStatus: BridgeTxStatus.NOT_STARTED,
+          walletAddress: prevState.walletAddress,
+          sumrBalances: prevState.sumrBalances,
+        }
+      default:
+        return prevState
+    }
+  } catch (error) {
+    return prevState
   }
 }
