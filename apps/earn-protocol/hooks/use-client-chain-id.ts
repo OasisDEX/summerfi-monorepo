@@ -28,11 +28,17 @@ export const useClientChainId = () => {
     const getEoaChainId = async () => {
       if (window.ethereum && user?.type === AccountKitAccountType.EOA && !isIframe) {
         const _eoaChainId = await window.ethereum.request({ method: 'eth_chainId' })
+        const accounts: string[] = await window.ethereum.request({
+          method: 'eth_requestAccounts',
+        })
 
-        // eslint-disable-next-line no-console
-        console.log('Eoa chain id', _eoaChainId)
-
-        setClientChainId(Number(_eoaChainId))
+        if (accounts.map((a) => a.toLowerCase()).includes(user.address.toLowerCase())) {
+          // eslint-disable-next-line no-console
+          console.log('Eoa chain id', _eoaChainId)
+          setClientChainId(Number(_eoaChainId))
+        } else {
+          setClientChainId(id)
+        }
       } else {
         setClientChainId(id)
       }
@@ -65,6 +71,7 @@ export const useClientChainId = () => {
     user,
     clientChainId,
     id,
+    isIframe,
   })
 
   return { clientChainId }
