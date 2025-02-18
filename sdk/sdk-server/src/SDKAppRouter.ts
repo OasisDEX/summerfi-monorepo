@@ -116,6 +116,8 @@ export const sdkAppRouter = router({
       getUserBalance: getUserBalance,
       getSummerToken: getSummerToken,
       getDelegationChainLength: getDelegationChainLength,
+      getMigratablePositions: getMigratablePositions,
+      getMigrationTX: getMigrationTX,
     },
     keepers: {
       rebalance: rebalance,

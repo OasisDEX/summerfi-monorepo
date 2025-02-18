@@ -14,6 +14,7 @@ import {
   IUser,
   TransactionInfo,
   type ApproveTransactionInfo,
+  type ArmadaMigrationType,
   type ChainInfo,
   type ClaimTransactionInfo,
   type DelegateTransactionInfo,
@@ -355,4 +356,50 @@ export interface IArmadaManagerUsersClient {
    * @returns The length of the delegation
    */
   getDelegationChainLength: (params: { user: IUser }) => Promise<number>
+
+  /**
+   * @method getMigratablePositions
+   * @description Returns the positions that can be migrated
+   *
+   * @param chainInfo Chain information
+   * @param user The user
+   * @param migrationType The type of migration
+   *
+   * @returns The positions that can be migrated
+   * @throws Error if the migration type is not supported
+   */
+  getMigratablePositions(params: {
+    chainInfo: ChainInfo
+    user: IUser
+    migrationType: ArmadaMigrationType
+  }): Promise<
+    {
+      chainInfo: ChainInfo
+      amount: ITokenAmount
+      migrationType: ArmadaMigrationType
+    }[]
+  >
+
+  /**
+   * @method getMigrationTX
+   * @description Returns the transaction for the migration
+   *
+   * @param user The user
+   * @param vaultId The vault id
+   * @param chainInfo Chain information
+   * @param amount The token amount
+   * @param migrationType The type of migration
+   * @param shouldStake Should stake
+   *
+   * @returns The transaction for the migration
+   * @throws Error if the migration type is not supported
+   */
+  getMigrationTX(params: {
+    user: IUser
+    vaultId: IArmadaVaultId
+    chainInfo: ChainInfo
+    amount: ITokenAmount
+    migrationType: ArmadaMigrationType
+    shouldStake?: boolean
+  }): Promise<[ApproveTransactionInfo, TransactionInfo] | [TransactionInfo]>
 }

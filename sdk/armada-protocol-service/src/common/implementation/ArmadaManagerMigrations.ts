@@ -5,7 +5,6 @@ import {
   TokenAmount,
   TransactionType,
   type AddressValue,
-  type ApproveTransactionInfo,
   type HexData,
   type IChainInfo,
   type MigrationTransactionInfo,
@@ -116,7 +115,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     return migratableTokenAmount.map((tokenAmount) => ({
       migrationType: params.migrationType,
       chainInfo: params.chainInfo,
-      tokenAmount: tokenAmount,
+      amount: tokenAmount,
     }))
   }
 
@@ -140,7 +139,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
         const moveAssetsCall = encodeFunctionData({
           abi: AdmiralsQuartersAbi,
           functionName: 'moveFromCompoundToAdmiralsQuarters',
-          args: [params.tokenAmount.token.address.value, params.tokenAmount.toSolidityValue()],
+          args: [params.amount.token.address.value, params.amount.toSolidityValue()],
         })
         multicallArgs.push(moveAssetsCall)
         multicallOperations.push('moveFromCompoundToAdmiralsQuarters')
@@ -150,7 +149,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
         const moveAssetsCall = encodeFunctionData({
           abi: AdmiralsQuartersAbi,
           functionName: 'moveFromAaveToAdmiralsQuarters',
-          args: [params.tokenAmount.token.address.value, params.tokenAmount.toSolidityValue()],
+          args: [params.amount.token.address.value, params.amount.toSolidityValue()],
         })
         multicallArgs.push(moveAssetsCall)
         multicallOperations.push('moveFromAaveToAdmiralsQuarters')
@@ -160,7 +159,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
         const moveAssetsCall = encodeFunctionData({
           abi: AdmiralsQuartersAbi,
           functionName: 'moveFromERC4626ToAdmiralsQuarters',
-          args: [params.tokenAmount.token.address.value, params.tokenAmount.toSolidityValue()],
+          args: [params.amount.token.address.value, params.amount.toSolidityValue()],
         })
         multicallArgs.push(moveAssetsCall)
         multicallOperations.push('moveFromERC4626ToAdmiralsQuarters')
@@ -215,7 +214,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     const approvalTransaction = await this._allowanceManager.getApproval({
       chainInfo: params.vaultId.chainInfo,
       spender: admiralsQuartersAddress,
-      amount: params.tokenAmount,
+      amount: params.amount,
       owner: params.user.wallet.address,
     })
 

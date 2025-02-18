@@ -1,7 +1,6 @@
 export * from './common'
 export * from './orders'
 export * from './simulator'
-export * from './types'
 export * from './utils'
 export * from './deployments'
 export * from './distributions'

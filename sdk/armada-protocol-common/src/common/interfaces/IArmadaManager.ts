@@ -21,6 +21,7 @@ import type {
 import type { IRebalanceData } from '@summerfi/contracts-provider-common'
 import type { IArmadaManagerClaims } from './IArmadaManagerClaims'
 import type { IArmadaManagerGovernance } from './IArmadaManagerGovernance'
+import type { IArmadaManagerMigrations } from './IArmadaManagerMigrations'
 
 /**
  * @name IArmadaManager
@@ -29,6 +30,7 @@ import type { IArmadaManagerGovernance } from './IArmadaManagerGovernance'
 export interface IArmadaManager {
   claims: IArmadaManagerClaims
   governance: IArmadaManagerGovernance
+  migrations: IArmadaManagerMigrations
 
   /**
    * @method getSummerToken
