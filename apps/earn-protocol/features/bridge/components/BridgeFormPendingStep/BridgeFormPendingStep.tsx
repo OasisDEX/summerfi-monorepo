@@ -52,23 +52,24 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
     onSuccess: handleSuccess,
   })
 
-  const resolvedSecondaryButtonLabel =
-    isLoading || !latestStatus ? (
-      <>
-        <LoadingSpinner size={28} />
-        <span style={{ color: 'var(--color-text-primary)' }}>Waiting...</span>
-      </>
-    ) : latestStatus !== MessageStatus.INFLIGHT ? (
-      <>
-        <LoadingSpinner size={28} />
-        <span style={{ color: 'var(--color-text-primary)' }}>Updating details...</span>
-      </>
-    ) : (
-      <>
-        See details
-        <Icon iconName="sign_out" size={20} />
-      </>
-    )
+  const initialLoading = !latestStatus
+  const updatingDetails = isLoading && latestStatus === MessageStatus.INFLIGHT
+  const resolvedSecondaryButtonLabel = initialLoading ? (
+    <>
+      <LoadingSpinner size={24} color="var(--color-text-primary-disabled)" />
+      <span>Waiting...</span>
+    </>
+  ) : updatingDetails ? (
+    <>
+      <LoadingSpinner size={28} />
+      <span style={{ color: '#777576' }}>Updating details...</span>
+    </>
+  ) : (
+    <>
+      See details
+      <Icon iconName="sign_out" size={20} />
+    </>
+  )
 
   return (
     <Sidebar
@@ -142,6 +143,7 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
         label: resolvedSecondaryButtonLabel,
         target: '_blank',
         loading: isLoading || !latestStatus,
+        disabled: isLoading || !latestStatus,
         url: `https://layerzeroscan.com/tx/${state.transactionHash}`,
       }}
       footnote={
