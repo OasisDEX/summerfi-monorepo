@@ -53,7 +53,6 @@ export const ChainSelector: React.FC<ChainSelectorProps> = ({ label, chainId, on
         }))}
         onChange={(selected: DropdownRawOption) => onChange(selected.value as SDKNetwork)}
         asPill
-        // className={styles.dropdown}
       >
         <NetworkContent option={selectedNetwork} />
       </Dropdown>

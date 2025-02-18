@@ -1,7 +1,7 @@
 'use client'
 import { type FC, useReducer } from 'react'
 
-import { BridgeForm } from '@/features/bridge/components/BridgeForm/BridgeForm'
+import { BridgeFormContent } from '@/features/bridge/components/BridgeFormContent/BridgeFormContent'
 import { bridgeReducer, bridgeState } from '@/features/bridge/state'
 import { type BridgeExternalData } from '@/features/bridge/types'
 
@@ -21,7 +21,7 @@ export const BridgePageView: FC<BridgePageViewProps> = ({ walletAddress, externa
 
   return (
     <div className={classNames.bridgePageWrapper}>
-      <BridgeForm state={state} dispatch={dispatch} externalData={externalData} />
+      <BridgeFormContent state={state} dispatch={dispatch} />
     </div>
   )
 }

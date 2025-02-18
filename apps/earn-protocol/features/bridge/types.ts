@@ -28,25 +28,33 @@ export type BridgeExternalData = {
   sumrBalances: SumrBalancesData
 }
 
-export enum BridgeTxStatuses {
+export enum BridgeTxStatus {
   NOT_STARTED = 'not-started',
   PENDING = 'pending',
   COMPLETED = 'completed',
-  FAILED = 'failed',
 }
 
 export type BridgeState = {
+  amount: string | undefined
   sumrBalances: Omit<BridgeExternalData['sumrBalances'], 'raw'>
-  bridgeStatus: BridgeTxStatuses | undefined
+  bridgeStatus: BridgeTxStatus | undefined
   recipient: string | undefined
   walletAddress: string
   destinationChain: Chain
+  transactionHash: string | undefined
 }
 
 export type BridgeReducerAction =
   | {
+      type: 'bridge-transaction-created'
+      payload: {
+        hash: string
+        amount: string
+      }
+    }
+  | {
       type: 'update-bridge-status'
-      payload: BridgeTxStatuses | undefined
+      payload: BridgeTxStatus | undefined
     }
   | {
       type: 'update-recipient'
@@ -59,4 +67,11 @@ export type BridgeReducerAction =
   | {
       type: 'update-destination-chain'
       payload: Chain
+    }
+  | {
+      type: 'update-transaction-hash'
+      payload: string
+    }
+  | {
+      type: 'reset'
     }

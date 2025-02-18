@@ -7,8 +7,14 @@
 
   &.centered {
     margin: 0 auto;
-    max-width: 455px;
-    max-height: unset
+    max-width: 100%;
+    max-height: unset;
+    width: 100%;
+
+    @include media('>s') {
+      max-width: 455px;
+      width: 455px;
+    }
   }
 }
 
@@ -74,13 +80,18 @@
 
 .sidebarErrorWrapper {
   width: 100%;
-  padding: var(--general-space-12);
+  padding: var(--general-space-16);
   border-radius: var(--general-radius-8);
   margin-bottom: var(--general-space-24);
   background: var(--earn-protocol-critical-10);
-  color: var(--earn-protocol-critical-100);
+  color: var(--earn-protocol-primary);
   text-align: center;
   display: inline-block;
+}
+
+.sidebarErrorContent {
+  display: flex;
+  align-items: center;
 }
 
 .sidebarCta {

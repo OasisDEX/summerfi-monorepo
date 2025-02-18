@@ -19,7 +19,7 @@ export const sendSafeTx = async ({
     data: string
     value: string
   }[]
-  onSuccess: () => void
+  onSuccess: (txHash: string) => void
   onError: () => void
 }) => {
   const sdk = new SafeAppsSDK()
@@ -39,7 +39,7 @@ export const sendSafeTx = async ({
       console.log('txInfo', txInfo)
 
       if (txInfo.txStatus === TransactionStatus.SUCCESS) {
-        onSuccess()
+        onSuccess(txInfo.txHash ?? '')
 
         return
       }

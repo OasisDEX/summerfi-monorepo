@@ -5,6 +5,7 @@ export type Styles = {
   goBackButtonFillFLex: string
   sidebarContent: string
   sidebarCta: string
+  sidebarErrorContent: string
   sidebarErrorWrapper: string
   sidebarFootnoteWrapper: string
   sidebarHeaderActionButtonsWrapper: string

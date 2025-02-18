@@ -7,6 +7,7 @@ import { useUpdateAANetwork } from '@/hooks/use-update-aa-network'
 
 type UseClientProps = {
   chainId?: SDKChainId.ARBITRUM | SDKChainId.BASE | SDKChainId.MAINNET
+  overrideNetwork?: string
 }
 
 /**
@@ -15,7 +16,8 @@ type UseClientProps = {
  * client network to the one from url.
  */
 export const useNetworkAlignedClient = (params?: UseClientProps) => {
-  const { appChain } = useUpdateAANetwork()
+  const { appChain } = useUpdateAANetwork(params?.overrideNetwork)
+
   const _chainId: SDKChainId.ARBITRUM | SDKChainId.BASE | SDKChainId.MAINNET =
     params?.chainId ?? (appChain.id as SDKChainId.ARBITRUM | SDKChainId.BASE | SDKChainId.MAINNET)
 

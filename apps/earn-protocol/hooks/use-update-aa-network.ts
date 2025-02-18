@@ -14,12 +14,20 @@ export const networkIdsToAccountKitChainsMap = {
   [NetworkIds.MAINNET]: mainnet,
 }
 
-// Update account kit network based on app network derived from currently displayed strategy
-// To avoid forced EOA popups to change network, trigger it only when EOA wallet network and app network are already aligned
-export const useUpdateAANetwork = () => {
+/**
+ * Hook to update the Account Kit network.
+ *
+ * @param overrideNetwork - Optionally pass a network string to override the one from URL params.
+ *
+ * When provided, this hook will use the `overrideNetwork` value rather than pulling it from
+ * the `useParams()` hook.
+ */
+export const useUpdateAANetwork = (overrideNetwork?: string) => {
   const { clientChainId } = useClientChainId()
   const params = useParams()
-  const { network } = params
+
+  // Use the passed in network, if provided, otherwise fall back to URL params.
+  const network = overrideNetwork ?? params.network
 
   const { setChain } = useChain()
 
@@ -27,6 +35,7 @@ export const useUpdateAANetwork = () => {
   const appChainId = subgraphNetworkToId(sdkNetwork) as
     | NetworkIds.BASEMAINNET
     | NetworkIds.ARBITRUMMAINNET
+    | NetworkIds.MAINNET
 
   const appChain = networkIdsToAccountKitChainsMap[appChainId]
 

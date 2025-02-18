@@ -26,9 +26,13 @@
 .secondaryLarge,
 .neutralLarge {
   height: 48px;
-  min-width: 320px;
+  min-width: 100%;
   font-size: 16px;
   border-radius: var(--radius-circle);
+
+  @include media('>s') {
+    min-width: 320px;
+  }
 }
 
 .primaryMedium,

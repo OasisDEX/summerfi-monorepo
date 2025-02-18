@@ -17,7 +17,7 @@ function SimpleBridgeSkeleton() {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        width: '455px',
+        width: '100%',
       }}
     >
       <div className={classNames.skeletonTitleWrapper}>
@@ -35,14 +35,12 @@ function SimpleBridgeSkeleton() {
       >
         <SkeletonLine height={100} radius="var(--radius-roundish)" />
         <Spacer />
-        <SkeletonLine height={220} radius="var(--radius-roundish)" />
+        <SkeletonLine height={120} radius="var(--radius-roundish)" />
+        <SkeletonLine height={200} radius="var(--radius-roundish)" />
 
         <div className={classNames.skeletonCta}>
           <Button variant="primaryLarge" onClick={() => {}} disabled>
             Bridge
-          </Button>
-          <Button variant="secondaryLarge" onClick={() => {}} disabled>
-            Cancel
           </Button>
         </div>
       </div>

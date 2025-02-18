@@ -3,8 +3,10 @@ export type Styles = {
   error: string
   header: string
   infoBox: string
+  noTitle: string
   row: string
   rows: string
+  separator: string
   title: string
 }
 

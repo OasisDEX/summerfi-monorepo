@@ -153,6 +153,9 @@ importers:
       '@account-kit/signer':
         specifier: ^4.11.0
         version: 4.11.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(react@18.3.1)(typescript@5.6.2)(viem@2.21.55)
+      '@layerzerolabs/scan-client':
+        specifier: ^0.0.8
+        version: 0.0.8(axios@1.7.7)
       '@loadable/component':
         specifier: ^5.16.4
         version: 5.16.4(react@18.3.1)
@@ -12681,6 +12684,14 @@ packages:
       '@ethersproject/solidity': 5.7.0
       bs58: 5.0.0
       tiny-invariant: 1.3.3
+    dev: false
+
+  /@layerzerolabs/scan-client@0.0.8(axios@1.7.7):
+    resolution: {integrity: sha512-V9vvt9GW0+AHoWXfOSNmZ9WUa28fVBmC93J/f9RLeDMEy5VR8srW2Du5pf1mMAg6ncEL0kQ1xkVCu+X6ARFBtQ==}
+    peerDependencies:
+      axios: '*'
+    dependencies:
+      axios: 1.7.7
     dev: false
 
   /@ledgerhq/connect-kit@1.1.12(rollup@3.29.4):

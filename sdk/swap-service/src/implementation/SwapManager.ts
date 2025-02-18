@@ -55,6 +55,7 @@ export class SwapManager
     toToken: IToken
     forceUseProvider?: SwapProviderType
   }): Promise<QuoteData> {
+    console.log('GET SWAP QUOTE EXACT INPUT [SERVER]', params)
     const provider: Maybe<ISwapProvider> = this._getBestProvider({
       chainInfo: params.fromAmount.token.chainInfo,
       forceUseProvider: params.forceUseProvider,

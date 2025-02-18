@@ -155,7 +155,7 @@ export class OneInchSwapProvider
     }
 
     const responseData = (await response.json()) as OneInchQuoteResponse
-
+    // LoggingService.debug('OneInchQuoteResponse', swapUrl, responseData)
     return {
       provider: SwapProviderType.OneInch,
       fromTokenAmount: params.fromAmount,

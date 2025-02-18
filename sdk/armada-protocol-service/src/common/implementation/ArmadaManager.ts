@@ -135,6 +135,7 @@ export class ArmadaManager implements IArmadaManager {
       hubChainInfo: this._hubChainInfo,
       blockchainClientProvider: this._blockchainClientProvider,
       configProvider: this._configProvider,
+      tokensManager: this._tokensManager,
     })
   }
 

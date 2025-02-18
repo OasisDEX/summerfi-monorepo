@@ -1,5 +1,5 @@
 import { makeSDK } from '@summerfi/sdk-client'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { getDepositTXHandler } from '../handlers/getDepositTXHandler'
 import { getTokenBySymbolHandler } from '../handlers/getTokenBySymbolHandler'
 import { getUserPositionsHandler } from '../handlers/getUserPositionsHandler'
@@ -37,6 +37,10 @@ export const useSDK = (params: UseSdk) => {
   const { chainId, walletAddress: walletAddressString } = params
 
   const getChainInfo = useMemo(() => getChainInfoHandler(chainId), [chainId])
+  const getTargetChainInfo = useCallback((specificChainId: number) => {
+    const chainInfoFn = getChainInfoHandler(specificChainId)
+    return chainInfoFn()
+  }, [])
 
   const getWalletAddress = useMemo(
     () => getWalletAddressHandler(walletAddressString),
@@ -88,6 +92,7 @@ export const useSDK = (params: UseSdk) => {
       getCurrentUser,
       getWalletAddress,
       getChainInfo,
+      getTargetChainInfo,
       getChain,
       getTokenBySymbol,
       getDepositTX,
@@ -112,6 +117,7 @@ export const useSDK = (params: UseSdk) => {
       getCurrentUser,
       getWalletAddress,
       getChainInfo,
+      getTargetChainInfo,
       getChain,
       getTokenBySymbol,
       getDepositTX,
@@ -123,6 +129,7 @@ export const useSDK = (params: UseSdk) => {
       getClaimableAggregatedRewards,
       getAggregatedClaimsForChainTX,
       getDelegateTx,
+      getBridgeTx,
       getStakeTx,
       getUndelegateTx,
       getUnstakeTx,

@@ -1,17 +1,26 @@
 'use client'
-import { InfoBox, Text } from '@summerfi/app-earn-ui'
-import { chainIdToSDKNetwork, sdkNetworkToHumanNetwork } from '@summerfi/app-utils'
+import { InfoBox, SkeletonLine, Text } from '@summerfi/app-earn-ui'
+import {
+  chainIdToSDKNetwork,
+  formatCryptoBalance,
+  sdkNetworkToHumanNetwork,
+} from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
 import { type Chain } from 'viem'
 
 import styles from './TransactionDetails.module.scss'
 
 interface TransactionDetailsProps {
-  gasOnSource: number
-  amountReceived: number
-  lzFee: number
+  loading: boolean
+  gasOnSource: string
+  gasOnSourceRaw: string
+  amountReceived: string
+  lzFee: string
+  lzFeeRaw: string
+  totalFee: string
+  totalFeeRaw: string
   destinationChain: Chain
-  error: string | null
+  error?: string | null
 }
 
 export const TransactionDetails = ({
@@ -19,27 +28,71 @@ export const TransactionDetails = ({
   amountReceived,
   destinationChain,
   lzFee,
+  totalFee,
   error,
+  loading,
 }: TransactionDetailsProps) => {
-  const rows = [
+  const rowsA = [
+    {
+      label: 'Gas cost',
+      value: loading ? (
+        <SkeletonLine width={100} height={20} />
+      ) : (
+        `$${formatCryptoBalance(gasOnSource)}`
+      ),
+      type: 'entry' as const,
+    },
+    {
+      label: 'Messaging fee',
+      value: loading ? <SkeletonLine width={100} height={20} /> : `$${formatCryptoBalance(lzFee)}`,
+      type: 'entry' as const,
+    },
+    {
+      type: 'separator' as const,
+    },
+    {
+      label: 'Total fee',
+      value: loading ? (
+        <SkeletonLine width={100} height={20} />
+      ) : (
+        `$${formatCryptoBalance(totalFee)}`
+      ),
+      type: 'entry' as const,
+    },
+  ]
+
+  const rowsB = [
     {
       label: (
         <>
-          Amount to receive on{' '}
+          You receive{' '}
           <Text variant="p3semiColorful">
-            {capitalize(sdkNetworkToHumanNetwork(chainIdToSDKNetwork(destinationChain.id)))}
+            ({capitalize(sdkNetworkToHumanNetwork(chainIdToSDKNetwork(destinationChain.id)))})
           </Text>
         </>
       ),
-      value: amountReceived,
+      value: loading ? (
+        <SkeletonLine width={100} height={20} />
+      ) : (
+        formatCryptoBalance(amountReceived)
+      ),
+      type: 'entry' as const,
     },
-    { label: 'Estimated Gas', value: gasOnSource },
-    { label: 'LayerZero fee', value: lzFee },
+    {
+      label: 'Estimated time',
+      value: loading ? <SkeletonLine width={100} height={20} /> : '~2 mins',
+      type: 'entry' as const,
+    },
   ]
 
   return (
-    <div className={styles.infoBox}>
-      <InfoBox title="Important Info" rows={rows} error={error ?? undefined} />
+    <div className={styles.container}>
+      <div>
+        <InfoBox title="Fees" rows={rowsA} error={error ?? undefined} />
+      </div>
+      <div>
+        <InfoBox rows={rowsB} />
+      </div>
     </div>
   )
 }

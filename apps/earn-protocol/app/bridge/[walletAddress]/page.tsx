@@ -23,7 +23,6 @@ const BridgePage = async ({ params }: BridgePageProps) => {
     }),
   ])
 
-  // TODO: Uodate to simply SUMR balance
   const externalData: BridgeExternalData = {
     sumrBalances,
   }

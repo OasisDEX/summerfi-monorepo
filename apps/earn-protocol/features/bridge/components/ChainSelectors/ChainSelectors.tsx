@@ -1,8 +1,8 @@
 'use client'
-import { Icon } from '@summerfi/app-earn-ui'
 import { type SDKNetwork } from '@summerfi/app-types'
 import { type Chain } from 'viem'
 
+import { ArrowSplitter } from '@/features/bridge/components/ArrowSplitter/ArrowSplitter'
 import { ChainSelector } from '@/features/bridge/components/ChainSelector/ChainSelector'
 
 import styles from './ChainSelectors.module.scss'
@@ -23,9 +23,7 @@ export const ChainSelectors = ({
   return (
     <div className={styles.networkSelectors}>
       <ChainSelector label="From" chainId={sourceChain.id} onChange={onSourceChainChange} />
-      <div className={styles.arrow}>
-        <Icon iconName="arrow_forward" size={20} color="var(--earn-protocol-neutral-10)" />
-      </div>
+      <ArrowSplitter />
       <ChainSelector label="To" chainId={destinationChain.id} onChange={onDestinationChainChange} />
     </div>
   )
