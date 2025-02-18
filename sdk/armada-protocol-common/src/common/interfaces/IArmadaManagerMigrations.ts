@@ -40,7 +40,6 @@ export interface IArmadaManagerMigrations {
    * @method getMigrationTX
    * @description Returns the transaction for the migration
    *
-   * @param chainInfo Chain information
    * @param user The user
    * @param vaultId The vault id
    * @param shouldStake Should stake
@@ -50,7 +49,6 @@ export interface IArmadaManagerMigrations {
    * @throws Error if the migration type is not supported
    */
   getMigrationTX(params: {
-    chainInfo: IChainInfo
     user: IUser
     vaultId: IArmadaVaultId
     shouldStake?: boolean

@@ -132,7 +132,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     const multicallOperations: string[] = []
 
     const admiralsQuartersAddress = getDeployedContractAddress({
-      chainInfo: params.chainInfo,
+      chainInfo: params.vaultId.chainInfo,
       contractCategory: 'core',
       contractName: 'admiralsQuarters',
     })
@@ -184,28 +184,35 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     }
 
     // Approval for AQ
-    const approvalTransactions = (
-      await Promise.all(
-        params.positions.map(async (position) => {
-          return this._allowanceManager.getApproval({
-            chainInfo: params.vaultId.chainInfo,
-            spender: admiralsQuartersAddress,
-            amount: position.amount,
-            owner: params.user.wallet.address,
-          })
-        }),
-      )
-    ).filter(Boolean) as ApproveTransactionInfo[]
+    const approvalTransactions = await Promise.all(
+      params.positions.map(async (position) => {
+        return this._allowanceManager.getApproval({
+          chainInfo: params.vaultId.chainInfo,
+          spender: admiralsQuartersAddress,
+          amount: position.amount,
+          owner: params.user.wallet.address,
+        })
+      }),
+    )
 
-    if (approvalTransactions.length > 0) {
+    const filteredApprovals = approvalTransactions.filter(
+      (approval) => approval !== undefined,
+    ) as ApproveTransactionInfo[]
+
+    console.log('approvals: ', {
+      approvalTransactions,
+      filteredApprovals,
+    })
+
+    if (filteredApprovals.length > 0) {
       LoggingService.debug(
         'approvalTransactions: ',
-        approvalTransactions.map((tx) => tx?.metadata.approvalAmount.toString()),
+        filteredApprovals.map((tx) => tx.metadata.approvalAmount.toString()),
       )
     }
 
-    return approvalTransactions.length > 0
-      ? [approvalTransactions, multicallTransaction]
+    return filteredApprovals.length > 0
+      ? [filteredApprovals, multicallTransaction]
       : [multicallTransaction]
   }
 

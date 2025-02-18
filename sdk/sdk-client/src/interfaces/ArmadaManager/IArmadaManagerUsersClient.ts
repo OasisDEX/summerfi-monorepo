@@ -387,7 +387,6 @@ export interface IArmadaManagerUsersClient {
    *
    * @param user The user
    * @param vaultId The vault id
-   * @param chainInfo Chain information
    * @param amount The token amount
    * @param migrationType The type of migration
    * @param shouldStake Should stake
@@ -396,7 +395,6 @@ export interface IArmadaManagerUsersClient {
    * @throws Error if the migration type is not supported
    */
   getMigrationTX(params: {
-    chainInfo: IChainInfo
     user: IUser
     vaultId: IArmadaVaultId
     shouldStake?: boolean
