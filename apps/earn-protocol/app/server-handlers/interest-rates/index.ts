@@ -73,13 +73,13 @@ if (!process.env.FUNCTIONS_API_URL) {
 const isProperNetwork = (network: string): network is keyof typeof clients => network in clients
 
 // CAUTION - IF SOMETHING IS UPDATED HERE UPDATE IT ALSO IN EARN LANDING APP
-export async function getArkInterestRates({
+export async function getInterestRates({
   network,
   arksList,
   justLatestRates = false,
 }: GetInterestRatesParams) {
   if (!isProperNetwork(network)) {
-    throw new Error(`getArkInterestRates: No endpoint found for network: ${network}`)
+    throw new Error(`getInterestRates: No endpoint found for network: ${network}`)
   }
 
   const filteredArksWithCapHigherThanZero = arksList.filter((ark) => Number(ark.depositCap) > 0)
@@ -275,4 +275,4 @@ export async function getArkInterestRates({
   }, {})
 }
 
-export type GetInterestRatesReturnType = Awaited<ReturnType<typeof getArkInterestRates>>
+export type GetInterestRatesReturnType = Awaited<ReturnType<typeof getInterestRates>>
