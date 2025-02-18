@@ -97,7 +97,7 @@ const getDelegateSortOptions = (sortBy: DelegateSortOptions) => [
                 : 'var(--earn-protocol-secondary-100)',
           }}
         >
-          Highest SUMR voting weight
+          Highest $SUMR voting weight
         </Text>
         {sortBy === DelegateSortOptions.HIGHEST_VOTING_WEIGHT && (
           <Icon
@@ -241,7 +241,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
     await sumrDelegateTransaction(updateDelegatee)
       .catch((err) => {
         // eslint-disable-next-line no-console
-        console.error('Error delegating SUMR:', err)
+        console.error('Error delegating $SUMR:', err)
       })
       .finally(() => {
         revalidateUser(userWalletAddress)

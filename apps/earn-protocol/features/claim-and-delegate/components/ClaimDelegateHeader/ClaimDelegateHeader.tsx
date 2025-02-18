@@ -24,7 +24,7 @@ export const ClaimDelegateHeader: FC<ClaimDelegateHeaderProps> = ({ state }) => 
               marginBottom: 'var(--general-space-12)',
             }}
           >
-            {'<-'} SUMR Rewards
+            {'<-'} $SUMR Rewards
           </Text>
         </Link>
       )}

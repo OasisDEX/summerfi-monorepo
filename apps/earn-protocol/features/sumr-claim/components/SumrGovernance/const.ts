@@ -23,7 +23,7 @@ export const sumrGovernLazySummerData: SumrGovernListData = [
     iconName: 'migrate_colorful',
     title: 'Allocate Protocol Captial',
     description:
-      'Decide on how to spend revenue, allocate SUMR token rewards and issue grants to balance growth with long term sustainability.',
+      'Decide on how to spend revenue, allocate $SUMR token rewards and issue grants to balance growth with long term sustainability.',
   },
 ]
 
@@ -32,7 +32,7 @@ export const sumrStakeToDelegate: SumrGovernListData = [
     iconName: 'plant_colorful',
     title: 'Stake, Delegate and Earn on your $SUMR',
     description:
-      'When you stake and delegate your SUMR, you won’t only be protecting the Lazy Summer Protocol, you will be earning additional $SUMR.',
+      'When you stake and delegate your $SUMR, you won’t only be protecting the Lazy Summer Protocol, you will be earning additional $SUMR.',
   },
   {
     iconName: 'checkmark_cookie_colorful',

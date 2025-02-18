@@ -156,7 +156,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
       dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.COMPLETED })
       dispatch({ type: 'update-step', payload: ClaimDelegateSteps.COMPLETED })
 
-      toast.success('Staked SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
+      toast.success('Staked $SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
     },
     onApproveSuccess: () => {
       dispatch({
@@ -164,17 +164,17 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
         payload: ClaimDelegateTxStatuses.COMPLETED,
       })
 
-      toast.success('Approved staking SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
+      toast.success('Approved staking $SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
     },
     onStakeError: () => {
       dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.FAILED })
 
-      toast.error('Failed to stake SUMR tokens', ERROR_TOAST_CONFIG)
+      toast.error('Failed to stake $SUMR tokens', ERROR_TOAST_CONFIG)
     },
     onApproveError: () => {
       dispatch({ type: 'update-staking-approve-status', payload: ClaimDelegateTxStatuses.FAILED })
 
-      toast.error('Failed to approve staking SUMR tokens', ERROR_TOAST_CONFIG)
+      toast.error('Failed to approve staking $SUMR tokens', ERROR_TOAST_CONFIG)
     },
   })
 
@@ -184,12 +184,12 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
       dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.COMPLETED })
       dispatch({ type: 'update-step', payload: ClaimDelegateSteps.COMPLETED })
 
-      toast.success('Unstaked SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
+      toast.success('Unstaked $SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
     },
     onError: () => {
       dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.FAILED })
 
-      toast.error('Failed to unstake SUMR tokens', ERROR_TOAST_CONFIG)
+      toast.error('Failed to unstake $SUMR tokens', ERROR_TOAST_CONFIG)
     },
   })
 
@@ -220,7 +220,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
 
       await approveSumrTransaction().catch((err) => {
         // eslint-disable-next-line no-console
-        console.error('Error approving staking SUMR:', err)
+        console.error('Error approving staking $SUMR:', err)
       })
 
       return
@@ -232,7 +232,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
       await stakeSumrTransaction()
         .catch((err) => {
           // eslint-disable-next-line no-console
-          console.error('Error staking SUMR:', err)
+          console.error('Error staking $SUMR:', err)
         })
         .finally(() => {
           revalidateUser(userWalletAddress)
@@ -260,7 +260,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
       await unstakeSumrTransaction()
         .catch((err) => {
           // eslint-disable-next-line no-console
-          console.error('Error unstaking SUMR:', err)
+          console.error('Error unstaking $SUMR:', err)
         })
         .finally(() => {
           revalidateUser(userWalletAddress)
@@ -388,7 +388,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
       <div className={classNames.rightContent}>
         {hasNoDelegatee ? (
           <ClaimDelegateActionCard
-            title="Unable to add or remove staked SUMR"
+            title="Unable to add or remove staked $SUMR"
             description="You will need to delegate to continue"
             actionLabel="Choose delegate"
             action={() => {

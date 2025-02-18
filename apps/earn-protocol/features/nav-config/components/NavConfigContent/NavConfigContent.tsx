@@ -78,14 +78,14 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
               color: 'var(--earn-protocol-secondary-60)',
             }}
           >
-            Across the app, SUMR Reward APYs depend on a Fully Diluted Valuation of the SUMR token.
-            Because the token is not currently transferrable, you must choose an appropriate
-            valuation to best reflect the reward rate of the SUMR token, or alternatively, exclude
-            SUMR from any calculations.
+            Across the app, $SUMR Reward APYs depend on a Fully Diluted Valuation of the $SUMR
+            token. Because the token is not currently transferrable, you must choose an appropriate
+            valuation to best reflect the reward rate of the $SUMR token, or alternatively, exclude
+            $SUMR from any calculations.
           </Text>
           <div className={classNames.toggleWrapper}>
             <ToggleButton
-              title="Include SUMR"
+              title="Include $SUMR"
               checked={sumrToggle}
               onChange={(ev) => {
                 setSumrToggle(ev.target.checked)

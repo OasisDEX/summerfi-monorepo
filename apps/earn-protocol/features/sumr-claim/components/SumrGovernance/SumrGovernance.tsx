@@ -79,7 +79,7 @@ const SumrGovernanceContent: FC<SumrGovernanceContentProps> = ({
           </Link>
         )}
         {showLink && (
-          <Link href={link.href}>
+          <Link href={link.href} target={isOutsideLink(link.href) ? '_blank' : undefined}>
             <WithArrow variant="p3semi">{link.label}</WithArrow>
           </Link>
         )}
@@ -154,7 +154,7 @@ const getData = (userWalletAddress: string | undefined) => ({
           href: userWalletAddress ? `/portfolio/${userWalletAddress}?tab=rewards` : '/sumr#claim',
         }}
         link={{
-          label: 'See SUMR Vesting Conditions',
+          label: 'See $SUMR Vesting Conditions',
           href: `${EXTERNAL_LINKS.BLOG.INTRODUCING_SUMR_TOKEN}`,
         }}
       >

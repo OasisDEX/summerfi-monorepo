@@ -11,7 +11,7 @@ const data = [
     description: '*Season 1 $RAYS',
   },
   {
-    title: 'Maximum supply of SUMR',
+    title: 'Maximum supply of $SUMR',
     value: `1,000,000,000`,
   },
 ]
