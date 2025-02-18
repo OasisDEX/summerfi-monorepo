@@ -32,6 +32,7 @@ export enum BridgeTxStatus {
   NOT_STARTED = 'not-started',
   PENDING = 'pending',
   COMPLETED = 'completed',
+  FAILED = 'failed',
 }
 
 export type BridgeState = {

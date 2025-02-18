@@ -1,5 +1,11 @@
 import styles from './Spacer.module.scss'
 
-export function Spacer() {
-  return <div className={styles.spacer} />
+interface SpacerProps {
+  className?: string
+}
+
+export function Spacer({ className }: SpacerProps) {
+  return (
+    <div className={`${styles.spacer} ${className ?? ''}`} role="separator" aria-hidden="true" />
+  )
 }

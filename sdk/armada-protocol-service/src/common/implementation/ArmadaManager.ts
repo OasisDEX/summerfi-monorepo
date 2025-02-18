@@ -130,11 +130,11 @@ export class ArmadaManager implements IArmadaManager {
     })
 
     this.bridge = new ArmadaManagerBridge({
-      ...params,
       hubChainInfo: this._hubChainInfo,
       blockchainClientProvider: this._blockchainClientProvider,
       configProvider: this._configProvider,
       tokensManager: this._tokensManager,
+      bridgeContractAddress: this.getSummerToken({ chainInfo: this._hubChainInfo }).address,
     })
   }
 

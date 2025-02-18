@@ -1,7 +1,8 @@
 import { encodeFunctionData } from 'viem'
 import { SummerTokenAbi as BridgeAbi } from '@summerfi/armada-protocol-abis'
-import { getBridgeContractAddress, getLayerZeroConfig } from '@summerfi/armada-protocol-common'
+import { getLayerZeroConfig } from '@summerfi/armada-protocol-common'
 import {
+  Address,
   type ChainInfo,
   type ITokenAmount,
   type IAddress,
@@ -31,27 +32,26 @@ export class ArmadaManagerBridge implements IArmadaManagerBridge {
   private _blockchainClientProvider: IBlockchainClientProvider
   private _hubChainInfo: IChainInfo
   private _tokensManager: ITokensManager
+  private _bridgeContractAddress: Address
 
   constructor(params: {
     blockchainClientProvider: IBlockchainClientProvider
     configProvider: IConfigurationProvider
     hubChainInfo: IChainInfo
     tokensManager: ITokensManager
+    bridgeContractAddress: Address
   }) {
     this._configProvider = params.configProvider
     this._blockchainClientProvider = params.blockchainClientProvider
     this._hubChainInfo = params.hubChainInfo
     this._tokensManager = params.tokensManager
+    this._bridgeContractAddress = params.bridgeContractAddress
   }
 
   async getBridgeTx(params: BridgeTxParams): Promise<BridgeTransactionInfo[]> {
     const client = this._blockchainClientProvider.getBlockchainClient({
       chainInfo: this._hubChainInfo,
     })
-    // Retrieve the appropriate bridge contract address based on the source and target chains.
-    // This helper should resolve the correct bridge contract configured for these chains.
-    const bridgeAddress = getBridgeContractAddress(params.sourceChain)
-
     const destinationChainLzConfig = getLayerZeroConfig(params.targetChain)
 
     const options = Options.newOptions().addExecutorLzReceiveOption(300000, 0).toBytes()
@@ -74,7 +74,7 @@ export class ArmadaManagerBridge implements IArmadaManagerBridge {
     }
 
     const quotedFee = await client.readContract({
-      address: bridgeAddress.value,
+      address: this._bridgeContractAddress.value,
       abi: BridgeAbi,
       functionName: 'quoteSend',
       args: [param, false] as const,
@@ -104,7 +104,7 @@ export class ArmadaManagerBridge implements IArmadaManagerBridge {
     const transaction: BridgeTransactionInfo = {
       description,
       transaction: {
-        target: bridgeAddress,
+        target: this._bridgeContractAddress,
         value: quotedFee.nativeFee.toString(),
         calldata,
       },

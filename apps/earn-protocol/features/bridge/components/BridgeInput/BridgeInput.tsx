@@ -7,5 +7,9 @@ export interface BridgeInputProps {
 import styles from './BridgeInput.module.scss'
 
 export const BridgeInput = ({ children }: BridgeInputProps) => {
-  return <div className={styles.inputSection}>{children}</div>
+  return (
+    <div role="group" aria-label="Bridge Input Section" className={styles.inputSection}>
+      {children}
+    </div>
+  )
 }

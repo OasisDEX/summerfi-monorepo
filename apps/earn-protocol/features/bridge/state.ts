@@ -3,7 +3,7 @@ import { base } from 'viem/chains'
 import { type BridgeReducerAction, type BridgeState, BridgeTxStatus } from '@/features/bridge/types'
 
 export const bridgeState: BridgeState = {
-  bridgeStatus: BridgeTxStatus.PENDING,
+  bridgeStatus: BridgeTxStatus.NOT_STARTED,
   recipient: undefined,
   walletAddress: '0x0',
   destinationChain: base,
