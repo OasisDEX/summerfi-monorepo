@@ -72,7 +72,7 @@ if (!process.env.FUNCTIONS_API_URL) {
 
 const isProperNetwork = (network: string): network is keyof typeof clients => network in clients
 
-// CAUTION - IF SOMETHING IS UPDATED HERE UPDATE IT ALSO IN EARN LANDING APP
+// CAUTION - IF SOMETHING IS UPDATED HERE UPDATE IT ALSO IN EARN PROTOCOL APP
 export async function getInterestRates({
   network,
   arksList,
