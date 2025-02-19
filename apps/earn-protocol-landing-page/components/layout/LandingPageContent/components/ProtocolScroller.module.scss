@@ -10,13 +10,11 @@
   font-weight: 600;
   text-align: center;
   padding: 0 var(--spacing-space-medium);
+  max-width: 1057px;
+  margin: 0 auto;
 
   @include media('>s') {
     padding: 0 var(--spacing-space-2x-large);
-  }
-
-  @include media('>l') {
-    padding: 0 var(--spacing-space-4x-large);
   }
 
   &>span>span {
