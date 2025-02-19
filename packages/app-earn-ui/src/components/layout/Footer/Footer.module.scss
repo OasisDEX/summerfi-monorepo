@@ -26,15 +26,43 @@
   }
 
   @include media('>s') {
-    grid-template-columns: auto auto;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-areas: 
+      "top top"
+      "left-1 right-1"
+      "left-2 right-2";
+
+    > div:nth-child(1) { grid-area: top; }
+    > div:nth-child(2) { grid-area: left-1; }
+    > div:nth-child(3) { grid-area: right-1; }
+    > div:nth-child(4) { grid-area: left-2; }
+    > div:nth-child(5) { grid-area: right-2; }
   }
 
   @include media('>l') {
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-areas: 
+      "one two three four"
+      "full full full full";
+
+    > div:nth-child(1) { grid-area: one; }
+    > div:nth-child(2) { grid-area: two; }
+    > div:nth-child(3) { grid-area: three; }
+    > div:nth-child(4) { grid-area: four; }
+    > div:nth-child(5) { grid-area: full; margin-top: var(--general-space-64); }
   }
 
   @include media('>xl') {
-    grid-template-columns: 1fr 1fr 1fr 1fr 2.2fr;
+    grid-template-columns: repeat(4, 1fr) auto;
+    grid-template-areas: "one two three four five";
+    max-width: 1400px;
+    margin: 0 auto;
+
+    > div:nth-child(1) { grid-area: one; }
+    > div:nth-child(2) { grid-area: two; }
+    > div:nth-child(3) { grid-area: three; }
+    > div:nth-child(4) { grid-area: four; }
+    > div:nth-child(5) { grid-area: five; margin-top: 0; }
   }
 }
 

@@ -107,12 +107,21 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
             <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
               Total assets
             </Text>
-            <Text variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-              {parsedTotalValueLocked}&nbsp;{getDisplayToken(inputToken.symbol)}
-            </Text>
-            <Text variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-              ${parsedTotalValueLockedUSD}
-            </Text>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: '10px',
+                alignItems: 'end',
+              }}
+            >
+              <Text variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+                {parsedTotalValueLocked}&nbsp;{getDisplayToken(inputToken.symbol)}
+              </Text>
+              <Text variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+                (${parsedTotalValueLockedUSD})
+              </Text>
+            </div>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>

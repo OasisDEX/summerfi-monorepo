@@ -14,6 +14,12 @@
 .h1,
 .h2,
 .h3,
+.h1colorful,
+.h2colorful,
+.h3colorful {
+  font-weight: 600;
+}
+
 .h4,
 .h5,
 .h1colorful,
@@ -75,64 +81,42 @@
 .h5,
 .h5colorful,
 .h5semi {
-  font-size: 18px;
-  line-height: 24px;
-
-  @include media('>=s') {
-    font-size: 22px;
-    line-height: 32px;
-  }
+  font-size: 20px;
+  line-height: 32px;
 }
 
 .p1,
 .p1semi,
 .p1colorful,
 .p1semiColorful {
-  font-size: 16px;
-  line-height: 24px;
-
-  @include media('>=s') {
-    font-size: 18px;
-    line-height: 28px;
-  }
+  font-size: 18px;
+  line-height: 28px;
 }
 
 .p2,
-.p2colorful,
-.p2semiColorful {
-  font-weight: 500;
+.p2colorful {
+  font-weight: 400;
 }
 
 .p2,
 .p2semi,
 .p2colorful,
 .p2semiColorful {
-  font-size: 14px;
-  line-height: 22px;
-
-  @include media('>=s') {
-    font-size: 16px;
-    line-height: 24px;
-  }
+  font-size: 16px;
+  line-height: 24px;
 }
 
 .p3,
-.p3colorful,
-.p3semiColorful {
-  font-weight: 500;
+.p3colorful {
+  font-weight: 400;
 }
 
 .p3,
 .p3semi,
 .p3colorful,
 .p3semiColorful {
-  font-size: 12px;
-  line-height: 20px;
-
-  @include media('>=s') {
-    font-size: 14px;
-    line-height: 22px;
-  }
+  font-size: 14px;
+  line-height: 22px;
 }
 
 .p4,

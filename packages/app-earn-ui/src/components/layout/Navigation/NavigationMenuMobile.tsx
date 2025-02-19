@@ -43,6 +43,7 @@ export const NavigationMenuMobile = ({
           <Icon iconName="close" size={11} color="var(--earn-protocol-secondary-70)" />
         </Button>
       </div>
+      <div className={navigationMenuMobileStyles.spacer} />
       <div className={navigationMenuMobileStyles.linksListWrapper}>
         <div className={navigationMenuMobileStyles.linksList}>
           <Link href={INTERNAL_LINKS.summerPro} target="_blank">

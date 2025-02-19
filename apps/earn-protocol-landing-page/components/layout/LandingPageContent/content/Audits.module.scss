@@ -1,13 +1,14 @@
 .auditsHeaderWrapper {
-  padding: 0 var(--spacing-space-3x-large);
+  padding: 0 var(--spacing-space-small);
   margin-bottom: var(--spacing-space-2x-large);
 
   >p {
     margin-bottom: var(--spacing-space-x-small)
   }
 
-  @include media('<=s') {
-    padding: 0 var(--spacing-space-large);
+  @include media('>s') {
+    padding: 0 var(--spacing-space-3x-large);
+  
   }
 }
 
@@ -18,17 +19,17 @@
 .auditBlock {
   display: flex;
   flex-direction: column;
-  padding: 0 var(--spacing-space-3x-large);
-  padding-bottom: var(--spacing-space-medium);
+  padding: var(--spacing-space-large) var(--spacing-space-small);
 
-  @include media('<=s') {
-    padding: 0 var(--spacing-space-large);
+  @include media('>s') {
+    padding: 0 var(--spacing-space-3x-large);
+    padding-bottom: var(--spacing-space-medium);
   }
 
   hr {
     width: 100%;
     border: none;
-    border-bottom: 1px solid rgba(61, 61, 61, 1);
+    border-bottom: 1px solid #3D3D3D;
   }
 
   .auditBlockImage {

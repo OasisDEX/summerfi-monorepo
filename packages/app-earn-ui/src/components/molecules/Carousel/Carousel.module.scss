@@ -8,7 +8,7 @@
   height: 100%;
   flex-direction: column;
 
-  @include media('>=m') {
+  @include media('>l') {
     flex-direction: row;
   }
 }
@@ -107,6 +107,7 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
+  margin-bottom: var(--general-space-20);
 
   @media (max-width: 768px) {
     display: flex;

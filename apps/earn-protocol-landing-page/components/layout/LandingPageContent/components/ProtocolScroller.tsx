@@ -167,11 +167,14 @@ export const ProtocolScroller = ({
 
   return (
     <div className={protocolScrollerStyles.protocolScrollerWrapper}>
-      <Text variant="h3" as="p" className={protocolScrollerStyles.protocolScrollerHeader}>
-        Automated access to <Emphasis variant="h3colorful">DeFi&apos;s best protocols</Emphasis>,
-        <br />
-        with over <span title={`$${totalLiquidityInfo}`}>${totalLiquidityDisplay}</span> of total
-        liquidity
+      <Text variant="h3" as="h3" className={protocolScrollerStyles.protocolScrollerHeader}>
+        <span className={protocolScrollerStyles.headerLine}>
+          Automated access to <Emphasis variant="h3colorful">DeFi&apos;s best protocols</Emphasis>
+        </span>
+        <span className={protocolScrollerStyles.headerLine}>
+          with over <span title={`$${totalLiquidityInfo}`}>${totalLiquidityDisplay}</span> of total
+          liquidity
+        </span>
       </Text>
       <ProtocolScrollerTrack
         ref={trackRef}

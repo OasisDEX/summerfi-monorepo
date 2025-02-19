@@ -9,15 +9,27 @@
 .protocolScrollerHeader {
   font-weight: 600;
   text-align: center;
-  padding: 0 var(--spacing-space-4x-large);
+  padding: 0 var(--spacing-space-medium);
 
-  @include media('<=s') {
-    padding: 0 var(--spacing-space-medium);
+  @include media('>s') {
+    padding: 0 var(--spacing-space-2x-large);
   }
 
-  &>span {
+  @include media('>l') {
+    padding: 0 var(--spacing-space-4x-large);
+  }
+
+  &>span>span {
     font-weight: 600;
   }
+}
+
+.headerLine {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem;
 }
 
 .protocolScrollerTrackWrapper {
@@ -47,11 +59,16 @@
   width: 100vw;
   overflow: hidden;
   margin-top: var(--spacing-space-2x-large);
-  margin-bottom: var(--spacing-space-4x-large);
+  margin-bottom: var(--spacing-space-3x-large);
 
-  @include media('<=s') {
+  @include media('>s') {
     margin-top: var(--spacing-space-2x-large);
     margin-bottom: var(--spacing-space-3x-large);
+  }
+
+  @include media('>l') {
+    margin-top: var(--spacing-space-2x-large);
+    margin-bottom: var(--spacing-space-4x-large);
   }
 }
 

@@ -64,7 +64,7 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
                 as="h3"
                 variant="p1semi"
                 style={{
-                  marginBottom: 'var(--general-space-16)',
+                  marginBottom: 'var(--general-space-8)',
                 }}
               >
                 Stay up to date
