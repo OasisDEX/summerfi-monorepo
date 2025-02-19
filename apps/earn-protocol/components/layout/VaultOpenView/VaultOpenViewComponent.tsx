@@ -354,6 +354,7 @@ export const VaultOpenViewComponent = ({
       displaySimulationGraph={displaySimulationGraph}
       sumrPrice={estimatedSumrPrice}
       onRefresh={revalidatePositionData}
+      arksInterestRates={arksInterestRates}
       simulationGraph={
         <VaultSimulationGraph
           vault={vault}
