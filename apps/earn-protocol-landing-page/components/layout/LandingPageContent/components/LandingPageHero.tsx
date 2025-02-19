@@ -6,9 +6,9 @@ import { SDKContextProvider } from '@summerfi/sdk-client-react'
 import { SummerFiProBox } from '@/components/layout/LandingPageContent'
 import { LandingPageVaultPicker } from '@/components/organisms/LandingPageVaultPicker/LandingPageVaultPicker'
 import { sdkApiUrl } from '@/constants/sdk'
+import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 
 import landingPageHeroStyles from '@/components/layout/LandingPageContent/components/LandingPageHero.module.scss'
-import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 
 export const LandingPageHero = ({ vaultsList }: { vaultsList: SDKVaultishType[] }) => {
   const { deviceType } = useDeviceType()
@@ -48,11 +48,13 @@ export const LandingPageHero = ({ vaultsList }: { vaultsList: SDKVaultishType[] 
     </Text>
   )
 
+  const isMobileOrTablet = isMobile || isTablet
+
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
       <div className={landingPageHeroStyles.landingPageHeroWrapper}>
         <div className={landingPageHeroStyles.heroHeader}>
-          {isMobile || isTablet ? (
+          {isMobileOrTablet ? (
             <div className={landingPageHeroStyles.heroHeaderMobile}>
               {headerPartA}
               {headerPartB}
@@ -60,7 +62,7 @@ export const LandingPageHero = ({ vaultsList }: { vaultsList: SDKVaultishType[] 
           ) : (
             headerPartA
           )}
-          {isMobile || isTablet ? null : headerPartB}
+          {!isMobileOrTablet && headerPartB}
         </div>
         <Carousel
           components={vaultsList.map((vault) => (

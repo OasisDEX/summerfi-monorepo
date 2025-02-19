@@ -96,6 +96,7 @@ const TooltipWrapper: FC<TooltipWrapperProps> = ({
         style={{
           backgroundColor: 'var(--earn-protocol-neutral-80)',
           boxShadow: '0px 0px 8px 0px rgba(0, 0, 0, 0.1)',
+          borderRadius: '8px',
         }}
       >
         {children}
@@ -117,6 +118,7 @@ interface StatefulTooltipProps {
   persistWhenOpened?: boolean
   withinDialog?: boolean
   tooltipId?: string
+  hideDrawerOnMobile?: boolean
 }
 
 const childrenTypeGuard = (children: ReactNode | ChildrenCallback): children is ReactNode =>
@@ -136,6 +138,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
   persistWhenOpened = false,
   withinDialog,
   tooltipId,
+  hideDrawerOnMobile = false,
 }) => {
   const generatedId = useRef(tooltipId ?? generateUniqueId()).current
 
@@ -169,7 +172,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
     if (element) {
       setPortalElement(element)
     }
-  }, [withinDialog])
+  }, [persistWhenOpened, withinDialog])
 
   useEffect(() => {
     if (portalElement && tooltipRefRect && tooltipOpen) {
@@ -183,12 +186,12 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
 
   const handleMouseEnter = useMemo(
     () => (!isTouchDevice && !triggerOnClick ? () => setTooltipOpen(true) : undefined),
-    [isTouchDevice, triggerOnClick],
+    [setTooltipOpen, triggerOnClick],
   )
 
   const handleMouseLeave = useMemo(
     () => (!isTouchDevice && !triggerOnClick ? () => setTooltipOpen(false) : undefined),
-    [isTouchDevice, triggerOnClick],
+    [setTooltipOpen, triggerOnClick],
   )
 
   const handleClick = useCallback(() => {
@@ -245,7 +248,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
       className={tooltipStyles.tooltipWrapper}
       style={style}
     >
-      {isMobile ? (
+      {isMobile && !hideDrawerOnMobile ? (
         <MobileDrawer
           isOpen={tooltipOpen}
           slideFrom="bottom"

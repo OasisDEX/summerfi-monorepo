@@ -93,6 +93,16 @@
   }
 }
 
+.buttonLeft {
+  position: relative;
+  left: -2px;
+}
+
+.buttonRight {
+  position: relative;
+  right: -2px;
+}
+
 .buttonLeft:hover,
 .buttonRight:hover {
   background-color: #555;
@@ -103,14 +113,14 @@
 }
 
 .mobilePagination {
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
   gap: 16px;
   margin-bottom: var(--general-space-20);
 
-  @media (max-width: 768px) {
-    display: flex;
+  @include media('>l') {
+    display: none;
   }
 }
 
@@ -147,7 +157,8 @@
 }
 
 .carouselButtons {
-  @media (max-width: 768px) {
-    display: none;
+  display: none;
+  @include media('>l') {
+    display: flex;
   }
 }
