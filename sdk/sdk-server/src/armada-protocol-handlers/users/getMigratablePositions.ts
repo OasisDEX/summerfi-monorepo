@@ -15,7 +15,7 @@ export const getMigratablePositions = publicProcedure
     z.object({
       user: z.custom<IUser>(isUser),
       chainInfo: z.custom<IChainInfo>(isChainInfo),
-      migrationType: z.custom<ArmadaMigrationType>(isArmadaMigrationType),
+      migrationType: z.custom<ArmadaMigrationType>(isArmadaMigrationType).optional(),
     }),
   )
   .query(async (opts) => {

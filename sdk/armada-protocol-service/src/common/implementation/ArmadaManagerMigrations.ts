@@ -1,15 +1,16 @@
 import {
   Address,
   ArmadaMigrationType,
-  ChainFamilyMap,
   LoggingService,
   TokenAmount,
   TransactionType,
   type AddressValue,
   type ApproveTransactionInfo,
   type HexData,
+  type IAddress,
   type IChainInfo,
   type ITokenAmount,
+  type IUser,
   type MigrationTransactionInfo,
 } from '@summerfi/sdk-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
@@ -24,15 +25,9 @@ import { encodeFunctionData } from 'viem'
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import { Erc20Contract } from '@summerfi/contracts-provider-service'
-
-const addressesByChainId: Record<number, Record<string, AddressValue>> = {
-  [ChainFamilyMap.Base.Base.chainId]: {
-    usdc: '0xb125E6687d4313864e53df431d5425969c15Eb2F',
-    usdbc: '0x9c4ec768c28520B50860ea7a15bd7213a9fF58bf',
-    weth: '0x46e6b214b524310239732D51387075E0e70970bf',
-    aero: '0x784efeB622244d2348d4F2522f8860B96fbEcE89',
-  },
-}
+import { compoundAddressesByChainId } from './token-config/compound'
+import { aaveV3AddressesByChainId } from './token-config/aaveV3'
+import { erc4626AddressesByChainId } from './token-config/erc4626'
 
 /**
  * @name ArmadaManagerMigrations
@@ -70,26 +65,82 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
   async getMigratablePositions(
     params: Parameters<IArmadaManagerMigrations['getMigratablePositions']>[0],
   ): ReturnType<IArmadaManagerMigrations['getMigratablePositions']> {
+    // read the users balances on provided chain/source for all supported tokens using multicall
+    let positions: {
+      amount: ITokenAmount
+      migrationType: ArmadaMigrationType
+    }[] = []
+
+    if (params.migrationType) {
+      positions = await this._getPositions({
+        chainInfo: params.chainInfo,
+        user: params.user,
+        migrationType: params.migrationType,
+      })
+    } else {
+      const allMigrationTypes = Object.values(ArmadaMigrationType)
+      const positionsPromises = allMigrationTypes.map((migrationType) =>
+        this._getPositions({
+          chainInfo: params.chainInfo,
+          user: params.user,
+          migrationType: migrationType as ArmadaMigrationType,
+        }),
+      )
+      const positionsArrays = await Promise.all(positionsPromises)
+      positions = positionsArrays.flat()
+    }
+
+    // filter the tokens that have balance > 0
+    const nonEmptyPositions = positions.filter((position) => position.amount.toSolidityValue() > 0n)
+
+    return {
+      chainInfo: params.chainInfo,
+      positions: nonEmptyPositions,
+    }
+  }
+
+  // private async getTotalMigratableAmount
+
+  private async _getPositions(params: {
+    chainInfo: IChainInfo
+    user: IUser
+    migrationType: ArmadaMigrationType
+  }): Promise<
+    {
+      amount: ITokenAmount
+      migrationType: ArmadaMigrationType
+    }[]
+  > {
+    const mappingByType: Record<
+      ArmadaMigrationType,
+      Record<number, Record<string, AddressValue>>
+    > = {
+      [ArmadaMigrationType.Compound]: compoundAddressesByChainId,
+      [ArmadaMigrationType.AaveV3]: aaveV3AddressesByChainId,
+      [ArmadaMigrationType.Erc4626]: erc4626AddressesByChainId,
+    }
+
+    const addressesMap = mappingByType[params.migrationType]
+    if (!addressesMap) {
+      throw new Error('Unsupported migration type: ' + params.migrationType)
+    }
+    const addresses = addressesMap[params.chainInfo.chainId]
+    if (!addresses) {
+      throw new Error('No addresses mapping found for chain ' + params.chainInfo.chainId)
+    }
+
+    // no addresses for this chain
+    if (Object.values(addresses).length === 0) {
+      return []
+    }
+
     // get the blockchain client for the provided chain
     const client = await this._blockchainClientProvider.getBlockchainClient({
       chainInfo: params.chainInfo,
     })
     // get supported tokens from compound protocol
-    const contractCommon = {
-      abi: [
-        {
-          inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
-          name: 'balanceOf',
-          outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-          stateMutability: 'view',
-          type: 'function',
-        },
-      ] as const,
-    } as const
-    const addresses = addressesByChainId[params.chainInfo.chainId]
-
-    // read the users balances on provided chain for all supported tokens using multicall
-    const balances = await Promise.all(
+    // ...existing code...
+    return Promise.all(
       Object.entries(addresses).map(async ([_, address]) => {
         const erc20Contract = Erc20Contract.create({
           blockchainClient: client,
@@ -100,7 +151,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
 
         const [balance, token] = await Promise.all([
           client.readContract({
-            abi: contractCommon.abi,
+            abi: abiBalanceOf,
             address: address,
             functionName: 'balanceOf',
             args: [params.user.wallet.address.value],
@@ -108,25 +159,15 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
           erc20Contract.getToken(),
         ])
 
-        return TokenAmount.createFromBaseUnit({
-          token: token,
-          amount: balance.toString(),
-        })
+        return {
+          migrationType: params.migrationType,
+          amount: TokenAmount.createFromBaseUnit({
+            token: token,
+            amount: balance.toString(),
+          }),
+        }
       }),
     )
-
-    // filter the tokens that have balance > 0
-    const migratableTokenAmount = balances.filter(
-      (tokenAmount) => tokenAmount.toSolidityValue() > 0n,
-    )
-
-    return {
-      chainInfo: params.chainInfo,
-      positions: migratableTokenAmount.map((tokenAmount) => ({
-        migrationType: params.migrationType,
-        amount: tokenAmount,
-      })),
-    }
   }
 
   async getMigrationTX(
@@ -189,43 +230,9 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       },
     }
 
-    // Approval for AQ
-    const contractCommon = {
-      abi: [
-        {
-          inputs: [
-            { internalType: 'address', name: 'manager', type: 'address' },
-            { internalType: 'bool', name: 'isAllowed_', type: 'bool' },
-          ],
-          name: 'allow',
-          outputs: [],
-          stateMutability: 'nonpayable',
-          type: 'function',
-        },
-      ] as const,
-    } as const
-
     const approvalTransactions = await Promise.all(
       params.positions.map(async (position) => {
-        const data = await encodeFunctionData({
-          abi: contractCommon.abi,
-          functionName: 'allow',
-          args: [admiralsQuartersAddress.value, true],
-        })
-        const approval: ApproveTransactionInfo = {
-          description: `Approving Admirals Quarters to move ${position.amount}`,
-          metadata: {
-            approvalSpender: admiralsQuartersAddress,
-            approvalAmount: position.amount,
-          },
-          transaction: {
-            target: position.amount.token.address,
-            calldata: data,
-            value: '0',
-          },
-          type: TransactionType.Approve,
-        }
-        return approval
+        return await this._getMigrationApproval(admiralsQuartersAddress, position)
       }),
     )
 
@@ -250,43 +257,161 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       : [multicallTransaction]
   }
 
-  private _getMoveCall(params: { amount: ITokenAmount; migrationType: ArmadaMigrationType }) {
-    switch (params.migrationType) {
+  private async _getMigrationApproval(
+    spender: IAddress,
+    position: { amount: ITokenAmount; migrationType: ArmadaMigrationType },
+  ) {
+    switch (position.migrationType) {
+      case ArmadaMigrationType.Compound:
+        return this._getMigrationCompoundApproval(spender, position)
+      case ArmadaMigrationType.AaveV3:
+      case ArmadaMigrationType.Erc4626:
+        return this._getMigrationErc20Approval(spender, position)
+      default:
+        throw new Error('Unsupported migration type: ' + position.migrationType)
+    }
+  }
+
+  private async _getMigrationCompoundApproval(
+    spender: IAddress,
+    position: { amount: ITokenAmount; migrationType: ArmadaMigrationType },
+  ) {
+    // Approval for AQ
+    const data = await encodeFunctionData({
+      abi: abiAllow,
+      functionName: 'allow',
+      args: [spender.value, true],
+    })
+    const approval: ApproveTransactionInfo = {
+      description: `Approving Admirals Quarters to move ${position.amount} from ${position.migrationType}`,
+      metadata: {
+        approvalSpender: spender,
+        approvalAmount: position.amount,
+      },
+      transaction: {
+        target: position.amount.token.address,
+        calldata: data,
+        value: '0',
+      },
+      type: TransactionType.Approve,
+    }
+    return approval
+  }
+
+  private async _getMigrationErc20Approval(
+    spender: IAddress,
+    position: { amount: ITokenAmount; migrationType: ArmadaMigrationType },
+  ) {
+    // Approval for AQ
+
+    const data = await encodeFunctionData({
+      abi: abiApprove,
+      functionName: 'approve',
+      args: [spender.value, position.amount.toSolidityValue()],
+    })
+    const approval: ApproveTransactionInfo = {
+      description: `Approving Admirals Quarters to move ${position.amount} from ${position.migrationType}`,
+      metadata: {
+        approvalSpender: spender,
+        approvalAmount: position.amount,
+      },
+      transaction: {
+        target: position.amount.token.address,
+        calldata: data,
+        value: '0',
+      },
+      type: TransactionType.Approve,
+    }
+    return approval
+  }
+
+  private _getMoveCall(position: { amount: ITokenAmount; migrationType: ArmadaMigrationType }) {
+    switch (position.migrationType) {
       case ArmadaMigrationType.Compound: {
         const moveAssetsCall = encodeFunctionData({
           abi: AdmiralsQuartersAbi,
           functionName: 'moveFromCompoundToAdmiralsQuarters',
-          args: [params.amount.token.address.value, params.amount.toSolidityValue()],
+          // args: [position.amount.token.address.value, 0n],
+          args: [position.amount.token.address.value, position.amount.toSolidityValue()],
         })
         return {
           call: moveAssetsCall,
-          operation: 'moveFromCompoundToAdmiralsQuarters',
+          operation: 'moveFromCompoundToAdmiralsQuarters (0)',
         }
       }
       case ArmadaMigrationType.AaveV3: {
         const moveAssetsCall = encodeFunctionData({
           abi: AdmiralsQuartersAbi,
           functionName: 'moveFromAaveToAdmiralsQuarters',
-          args: [params.amount.token.address.value, params.amount.toSolidityValue()],
+          args: [position.amount.token.address.value, position.amount.toSolidityValue()],
         })
         return {
           call: moveAssetsCall,
-          operation: 'moveFromAaveToAdmiralsQuarters',
+          operation: 'moveFromAaveToAdmiralsQuarters (0)',
         }
       }
       case ArmadaMigrationType.Erc4626: {
         const moveAssetsCall = encodeFunctionData({
           abi: AdmiralsQuartersAbi,
           functionName: 'moveFromERC4626ToAdmiralsQuarters',
-          args: [params.amount.token.address.value, params.amount.toSolidityValue()],
+          args: [position.amount.token.address.value, position.amount.toSolidityValue()],
         })
         return {
           call: moveAssetsCall,
-          operation: 'moveFromERC4626ToAdmiralsQuarters',
+          operation: 'moveFromERC4626ToAdmiralsQuarters (0)',
         }
       }
       default:
-        throw new Error('Unsupported migration type: ' + params.migrationType)
+        throw new Error('Unsupported migration type: ' + position.migrationType)
     }
   }
 }
+
+const abiBalanceOf = [
+  {
+    inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
+    name: 'balanceOf',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+] as const
+
+const abiApprove = [
+  {
+    constant: false,
+    inputs: [
+      {
+        name: '_spender',
+        type: 'address',
+      },
+      {
+        name: '_value',
+        type: 'uint256',
+      },
+    ],
+    name: 'approve',
+    outputs: [
+      {
+        name: '',
+        type: 'bool',
+      },
+    ],
+    payable: false,
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+] as const
+
+const abiAllow = [
+  {
+    inputs: [
+      { internalType: 'address', name: 'manager', type: 'address' },
+      { internalType: 'bool', name: 'isAllowed_', type: 'bool' },
+    ],
+    name: 'allow',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+] as const

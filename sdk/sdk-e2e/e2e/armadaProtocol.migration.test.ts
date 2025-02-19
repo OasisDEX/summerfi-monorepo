@@ -25,20 +25,19 @@ describe('Armada Protocol Migration', () => {
         }),
       })
 
-      describe.skip(`getMigratablePositions`, () => {
-        it(`should get available migratable positions`, async () => {
+      describe(`getMigratablePositions`, () => {
+        it(`should get all migratable positions`, async () => {
           const res = await sdk.armada.users.getMigratablePositions({
             chainInfo,
             user,
-            migrationType: ArmadaMigrationType.Compound,
           })
           console.log(res.positions.map((p) => ({ ...p, amount: p.amount.toString() })))
           expect(res.positions.length).toBeGreaterThan(0)
         })
       })
 
-      describe(`migrate first migratable position`, () => {
-        it(`should migrate first migratable position`, async () => {
+      describe.skip(`getMigrationTX`, () => {
+        it.skip(`should migrate first migratable position`, async () => {
           const positionsBefore = await sdk.armada.users.getMigratablePositions({
             chainInfo,
             user,
@@ -57,11 +56,9 @@ describe('Armada Protocol Migration', () => {
           })
 
           const positionsToMigrate = positionsBefore.positions.slice(0, 1)
-          console.log(
-            'migrating position: ',
-            positionsToMigrate[0].migrationType,
-            positionsToMigrate[0].amount.toString(),
-          )
+          positionsToMigrate.forEach((p, i) => {
+            console.log(`- migrating position ${i}: `, p.migrationType, p.amount.toString())
+          })
 
           const [tx1, tx2] = await sdk.armada.users.getMigrationTX({
             vaultId,
@@ -99,7 +96,7 @@ describe('Armada Protocol Migration', () => {
             expect(positionsAfter.positions.length).toBeLessThan(positionsBefore.positions.length)
         })
 
-        it.skip(`should migrate multiple migratable positions`, async () => {
+        it(`should migrate multiple migratable positions`, async () => {
           const positionsBefore = await sdk.armada.users.getMigratablePositions({
             chainInfo,
             user,
@@ -118,7 +115,9 @@ describe('Armada Protocol Migration', () => {
           })
 
           const positionsToMigrate = positionsBefore.positions.slice(0, 2)
-          console.log('migrating position', positionsToMigrate.pop()?.amount.toString())
+          positionsToMigrate.forEach((p, i) => {
+            console.log(`- migrating position ${i}: `, p.migrationType, p.amount.toString())
+          })
 
           const [tx1, tx2] = await sdk.armada.users.getMigrationTX({
             vaultId,

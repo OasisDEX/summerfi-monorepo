@@ -372,7 +372,7 @@ export interface IArmadaManagerUsersClient {
   getMigratablePositions(params: {
     chainInfo: IChainInfo
     user: IUser
-    migrationType: ArmadaMigrationType
+    migrationType?: ArmadaMigrationType
   }): Promise<{
     chainInfo: IChainInfo
     positions: {
