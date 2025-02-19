@@ -2,6 +2,7 @@
 import { type IArmadaPosition, type SDKNetwork } from '@summerfi/app-types'
 import { aggregateArksPerNetwork, parseServerResponseToClient } from '@summerfi/app-utils'
 
+import { getFleetRates, type HistoricalFleetRateResult } from '@/app/server-handlers/fleet-rates'
 import { getInterestRates } from '@/app/server-handlers/interest-rates'
 import { portfolioPositionsHandler } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
 import { getUserPositions } from '@/app/server-handlers/sdk/get-user-positions'
@@ -69,6 +70,18 @@ export const portfolioBulkRequest = async ({ walletAddress }: { walletAddress: s
       }),
     )
 
+    const fleetRatePromises = positionsJsonSafe.map((position) =>
+      getFleetRates({
+        fleetsWithChainId: [
+          {
+            chainId: position.id.user.chainInfo.chainId,
+            address: position.pool.id.fleetAddress.value,
+          },
+        ],
+        historical: true,
+      }),
+    )
+
     const allResults = await Promise.all([
       Promise.all(positionsPromises).catch((error) => {
         console.error('Failed to fetch positions:', error)
@@ -80,14 +93,27 @@ export const portfolioBulkRequest = async ({ walletAddress }: { walletAddress: s
 
         return []
       }),
+      Promise.all(fleetRatePromises).catch((error) => {
+        console.error('Failed to fetch fleet rates:', error)
+
+        return []
+      }),
     ])
 
-    const [positionsList, interestRatesResults] = allResults
+    const [positionsList, interestRatesResults, fleetRateResults] = allResults
 
     const { config } = parseServerResponseToClient(systemConfig)
 
+    const modifiedVaults = vaultsList.vaults.map((vault) => {
+      const fleetRate = (fleetRateResults as HistoricalFleetRateResult[]).find(
+        (result) => result.fleetAddress.toLowerCase() === vault.id.toLowerCase(),
+      )
+
+      return { ...vault, rates: fleetRate?.rates }
+    })
+
     const vaultsDecorated = decorateCustomVaultFields({
-      vaults: vaultsList.vaults,
+      vaults: modifiedVaults,
       systemConfig: config,
       decorators: {
         arkInterestRatesMap: interestRatesResults.reduce((acc, curr) => {

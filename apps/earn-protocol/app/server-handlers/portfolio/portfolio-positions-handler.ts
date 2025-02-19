@@ -1,7 +1,9 @@
 import { type EarnAppConfigType, type SDKVaultsListType } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
+import { type ChainId } from '@summerfi/sdk-common'
 
+import { getFleetRates, type HistoricalFleetRateResult } from '@/app/server-handlers/fleet-rates'
 import { getInterestRates } from '@/app/server-handlers/interest-rates'
 import { getPositionHistory } from '@/app/server-handlers/position-history'
 import { decorateCustomVaultFields } from '@/helpers/vault-custom-value-helpers'
@@ -27,23 +29,42 @@ export const portfolioPositionsHandler = async ({
       subgraphNetworkToSDKId(vault.protocol.network) === position.id.user.chainInfo.chainId,
   )
 
+  const chainId = position.id.user.chainInfo.chainId as ChainId
+
   if (!vaultData) {
     throw new Error(`Vault not found for position ${position.pool.id.fleetAddress.value}`)
   }
-  const [interestRates, positionHistory] = await Promise.all([
-    await getInterestRates({
+  const [interestRates, positionHistory, vaultHistory] = await Promise.all([
+    getInterestRates({
       network: vaultData.protocol.network,
       arksList: vaultData.arks,
     }),
-    await getPositionHistory({
+    getPositionHistory({
       network: vaultData.protocol.network,
       address: walletAddress.toLowerCase(),
       vault: vaultData,
     }),
+    getFleetRates({
+      fleetsWithChainId: [
+        {
+          chainId,
+          address: vaultData.id,
+        },
+      ],
+      historical: true,
+    }),
   ])
+  const modifiedVaultData = {
+    ...vaultData,
+    rates: (vaultHistory as HistoricalFleetRateResult[]).find(
+      (result) =>
+        Number(result.chainId) === chainId &&
+        result.fleetAddress.toLowerCase() === vaultData.id.toLowerCase(),
+    )?.rates,
+  }
 
   const [vaultWithInterestRates] = decorateCustomVaultFields({
-    vaults: [vaultData],
+    vaults: [modifiedVaultData],
     systemConfig: config,
     position,
     decorators: {
