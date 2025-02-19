@@ -8,18 +8,28 @@ import { Logger } from '@aws-lambda-powertools/logger'
 
 const logger = new Logger({ serviceName: 'vault-rates-db-service' })
 
+export interface AggregatedFleetRate {
+  id: string
+  averageRate: string
+  date: string
+  fleetAddress: string
+}
+
+export interface FleetWithChainId {
+  chainId: string
+  fleetAddress: string
+}
+
 export interface FleetRate {
   id: string
   rate: string
   timestamp: number
   fleetAddress: string
 }
-
-export interface AggregatedFleetRate {
-  id: string
-  averageRate: string
-  date: string
+export interface FleetRateResult {
+  chainId: string
   fleetAddress: string
+  rates: FleetRate[]
 }
 
 export interface HistoricalFleetRates {
@@ -29,15 +39,10 @@ export interface HistoricalFleetRates {
   latestRate: FleetRate[]
 }
 
-export interface FleetWithChainId {
+export interface HistoricalFleetRateResult {
   chainId: string
   fleetAddress: string
-}
-
-export interface FleetRateResult {
-  chainId: string
-  fleetAddress: string
-  rates: FleetRate[]
+  rates: HistoricalFleetRates
 }
 
 export class VaultRatesService {
@@ -180,12 +185,10 @@ export class VaultRatesService {
     }
   }
 
-  async getHistoricalRates(
-    pairs: FleetWithChainId[],
-  ): Promise<Record<string, HistoricalFleetRates>> {
+  async getHistoricalRates(pairs: FleetWithChainId[]): Promise<HistoricalFleetRateResult[]> {
     if (!this.db) {
       logger.error('Database connection not initialized')
-      return {}
+      return []
     }
 
     logger.info('Fetching historical fleet rates', { pairs })
@@ -245,49 +248,56 @@ export class VaultRatesService {
               .execute(),
           ])
 
-          return {
+          // return needs to be a list, one per fleet address.
+          return fleetAddressesArray.map((fleetAddress) => ({
             chainId,
+            fleetAddress,
             data: {
-              dailyRates: dailyRates.map((rate) => ({
-                id: rate.id,
-                averageRate: rate.averageRate.toString(),
-                date: rate.date.toString(),
-                fleetAddress: rate.fleetAddress,
-              })),
-              hourlyRates: hourlyRates.map((rate) => ({
-                id: rate.id,
-                averageRate: rate.averageRate.toString(),
-                date: rate.date.toString(),
-                fleetAddress: rate.fleetAddress,
-              })),
-              weeklyRates: weeklyRates.map((rate) => ({
-                id: rate.id,
-                averageRate: rate.averageRate.toString(),
-                date: rate.date.toString(),
-                fleetAddress: rate.fleetAddress,
-              })),
-              latestRate: latestRates.map((rate) => ({
-                id: rate.id,
-                rate: rate.rate.toString(),
-                timestamp: Number(rate.timestamp),
-                fleetAddress: rate.fleetAddress,
-              })),
+              dailyRates: dailyRates
+                .filter((rate) => rate.fleetAddress === fleetAddress)
+                .map((rate) => ({
+                  id: rate.id,
+                  averageRate: rate.averageRate.toString(),
+                  date: rate.date.toString(),
+                  fleetAddress: rate.fleetAddress,
+                })),
+              hourlyRates: hourlyRates
+                .filter((rate) => rate.fleetAddress === fleetAddress)
+                .map((rate) => ({
+                  id: rate.id,
+                  averageRate: rate.averageRate.toString(),
+                  date: rate.date.toString(),
+                  fleetAddress: rate.fleetAddress,
+                })),
+              weeklyRates: weeklyRates
+                .filter((rate) => rate.fleetAddress === fleetAddress)
+                .map((rate) => ({
+                  id: rate.id,
+                  averageRate: rate.averageRate.toString(),
+                  date: rate.date.toString(),
+                  fleetAddress: rate.fleetAddress,
+                })),
+              latestRate: latestRates
+                .filter((rate) => rate.fleetAddress === fleetAddress)
+                .map((rate) => ({
+                  id: rate.id,
+                  rate: rate.rate.toString(),
+                  timestamp: Number(rate.timestamp),
+                  fleetAddress: rate.fleetAddress,
+                })),
             },
-          }
+          }))
         }),
       )
-
-      // Convert results to record
-      return results.reduce(
-        (acc, { chainId, data }) => {
-          acc[chainId] = data
-          return acc
-        },
-        {} as Record<string, HistoricalFleetRates>,
-      )
+      // Reduce the results array into a single object.
+      return results.flat().map((result) => ({
+        chainId: result.chainId,
+        fleetAddress: result.fleetAddress,
+        rates: result.data,
+      }))
     } catch (error) {
       logger.error('Error fetching historical fleet rates from DB', { error, pairs })
-      return {}
+      return []
     }
   }
 }
