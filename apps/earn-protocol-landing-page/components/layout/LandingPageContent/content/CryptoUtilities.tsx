@@ -19,7 +19,8 @@ export const CryptoUtilities = () => {
           Crypto Utilities
         </Text>
         <Text variant="h2" className={cryptoUtilitiesStyles.cryptoUtilitiesHeader}>
-          Send, swap, bridge, buy and cash out, all in one app.
+          Send, swap, bridge, buy and cash out,
+          <br className={cryptoUtilitiesStyles.lineBreak} /> all in one app.
         </Text>
       </div>
       <div className={cryptoUtilitiesStyles.cryptoUtilitiesBlockWrapper}>

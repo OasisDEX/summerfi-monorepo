@@ -7,10 +7,8 @@
   flex-direction: column;
   padding: 0 var(--spacing-space-small);
   width: 100%;
-  // padding: 0;
 
   @include media('>s') {
-    // padding: 0 var(--spacing-space-x-large);
     padding: 0;
     flex-direction: column;
     max-width: 80%;
@@ -21,6 +19,7 @@
     padding: 0;
     max-width: 80%;
     margin: 0 auto;
+    gap: var(--spacing-space-2x-large);
   }
 
   @include media('>l') {

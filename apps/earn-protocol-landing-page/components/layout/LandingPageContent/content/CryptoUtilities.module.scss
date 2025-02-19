@@ -68,3 +68,15 @@
     color: var(--color-text-secondary);
   }
 }
+
+.lineBreak {
+  display: none;
+
+  @include media('>l') {
+    display: block;
+  }
+
+  @include media('>xl') {
+    display: none;
+  }
+}
