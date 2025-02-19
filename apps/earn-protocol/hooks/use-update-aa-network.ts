@@ -14,6 +14,10 @@ export const networkIdsToAccountKitChainsMap = {
   [NetworkIds.MAINNET]: mainnet,
 }
 
+// Update account kit network based on app network derived from currently displayed strategy
+// To avoid forced EOA popups to change network, trigger it only when EOA wallet network and app network are already aligned
+// Unless overridden by the `overrideNetwork` parameter
+
 /**
  * Hook to update the Account Kit network.
  *

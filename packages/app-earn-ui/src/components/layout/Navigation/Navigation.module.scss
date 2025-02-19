@@ -1,9 +1,14 @@
 .wrapper {
   padding: 0 var(--general-space-32);
+  margin-bottom: 55px;
 
   @include media('>xl') {
     padding: 0 var(--general-space-64);
   }
+}
+
+.noNavMargin {
+  margin-bottom: 0;
 }
 
 .container {

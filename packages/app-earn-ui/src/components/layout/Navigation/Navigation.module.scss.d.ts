@@ -3,6 +3,7 @@ export type Styles = {
   logo: string
   logoSmall: string
   logoWrapper: string
+  noNavMargin: string
   wrapper: string
 }
 

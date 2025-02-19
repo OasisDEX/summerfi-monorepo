@@ -6,33 +6,19 @@ import { Button, Card, SkeletonLine } from '@summerfi/app-earn-ui'
 import BridgeFormTitle from '@/features/bridge/components/BridgeFormTitle/BridgeFormTitle'
 import { Spacer } from '@/features/bridge/components/Spacer/Spacer'
 
-import classNames from './BridgePageView.module.scss'
+import classNames from './BridgePageViewLoadingState.module.scss'
 
 interface BridgePageViewLoadingStateProps {}
 
 function SimpleBridgeSkeleton() {
   return (
-    <Card
-      variant="cardSecondary"
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        width: '100%',
-      }}
-    >
+    <Card variant="cardSecondary" className={classNames.skeletonCard}>
       <div className={classNames.skeletonTitleWrapper}>
         <BridgeFormTitle />
       </div>
       <div className={classNames.skeletonTitleSpacer} />
 
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          marginTop: 'var(--general-space-24)',
-          gap: 'var(--general-space-24)',
-        }}
-      >
+      <div className={classNames.skeletonContent}>
         <SkeletonLine height={100} radius="var(--radius-roundish)" />
         <Spacer />
         <SkeletonLine height={120} radius="var(--radius-roundish)" />

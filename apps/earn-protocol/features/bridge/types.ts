@@ -1,3 +1,4 @@
+import type { Address } from 'viem'
 import type { Chain } from 'viem/chains'
 
 import type { SumrBalancesData } from '@/app/server-handlers/sumr-balances'
@@ -11,12 +12,12 @@ export interface SimulatedTransactionDetails {
 
 export interface SendParam {
   dstEid: number
-  to: `0x${string}`
+  to: Address
   amountLD: bigint
   minAmountLD: bigint
-  extraOptions: `0x${string}`
-  composeMsg: `0x${string}`
-  oftCmd: `0x${string}`
+  extraOptions: Address
+  composeMsg: Address
+  oftCmd: Address
 }
 
 export interface Fee {

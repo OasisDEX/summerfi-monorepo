@@ -31,8 +31,8 @@ export interface EarnNavigationProps {
   walletConnectionComponent?: ReactNode
   configComponent?: ReactNode
   signupComponent?: ReactNode
-  onLogoClick?: () => void
   noNavMargin?: boolean
+  onLogoClick?: () => void
 }
 
 export const Navigation: FC<EarnNavigationProps> = ({
@@ -42,8 +42,9 @@ export const Navigation: FC<EarnNavigationProps> = ({
   currentPath,
   walletConnectionComponent,
   configComponent,
-  onLogoClick,
   signupComponent,
+  noNavMargin = false,
+  onLogoClick,
 }) => {
   const [tempCurrentPath, setTempCurrentPath] = useState(currentPath)
   const [mobileMenuOpened, setMobileMenuOpened] = useState(false)
@@ -70,7 +71,9 @@ export const Navigation: FC<EarnNavigationProps> = ({
   }, [currentPath, tempCurrentPath])
 
   return (
-    <div className={`${navigationStyles.wrapper}`}>
+    <div
+      className={`${navigationStyles.wrapper} ${noNavMargin ? navigationStyles.noNavMargin : ''}`}
+    >
       <header className={navigationStyles.container}>
         <NavigationBranding logo={logo} logoSmall={logoSmall} onLogoClick={onLogoClick} />
         <NavigationMenu links={links} currentPath={currentPath} />
