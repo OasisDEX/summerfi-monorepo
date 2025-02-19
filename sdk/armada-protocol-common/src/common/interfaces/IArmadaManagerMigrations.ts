@@ -57,4 +57,19 @@ export interface IArmadaManagerMigrations {
       migrationType: ArmadaMigrationType
     }[]
   }): Promise<[ApproveTransactionInfo[], MigrationTransactionInfo] | [MigrationTransactionInfo]>
+
+  /**
+   * @method calculateTotal
+   * @description Returns the total value of positions in USD
+   *
+   * @param positions List of positions to calculate total for
+   *
+   * @returns The total value in USD
+   */
+  calculateTotal(params: {
+    positions: {
+      amount: ITokenAmount
+      migrationType: ArmadaMigrationType
+    }[]
+  }): Promise<{ totalUsd: string }>
 }

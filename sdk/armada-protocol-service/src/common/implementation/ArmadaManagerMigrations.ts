@@ -25,9 +25,21 @@ import { encodeFunctionData } from 'viem'
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import { Erc20Contract } from '@summerfi/contracts-provider-service'
-import { compoundAddressesByChainId } from './token-config/compound'
-import { aaveV3AddressesByChainId } from './token-config/aaveV3'
-import { erc4626AddressesByChainId } from './token-config/erc4626'
+import { compoundAddressesByChainId } from './token-config/compound-config'
+import { aaveV3AddressesByChainId } from './token-config/aaveV3-config'
+import { erc4626AddressesByChainId } from './token-config/erc4626-config'
+import type { IOracleManager } from '@summerfi/oracle-common'
+import BigNumber from 'bignumber.js'
+import {
+  abiBalanceOf,
+  abiIsAllowed,
+  abiAllow,
+  abiAllowance,
+  abiApprove,
+  abiExchangeRateCurrent,
+  abiATokenRate,
+  abiConvertToAssets,
+} from './abi'
 
 /**
  * @name ArmadaManagerMigrations
@@ -39,6 +51,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
   private _configProvider: IConfigurationProvider
   private _allowanceManager: IAllowanceManager
   private _tokensManager: ITokensManager
+  private _oracleManager: IOracleManager
 
   private _supportedChains: IChainInfo[]
   private _hubChainInfo: IChainInfo
@@ -52,6 +65,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     tokensManager: ITokensManager
     supportedChains: IChainInfo[]
     hubChainInfo: IChainInfo
+    oracleManager: IOracleManager
   }) {
     this._blockchainClientProvider = params.blockchainClientProvider
     this._contractsProvider = params.contractsProvider
@@ -60,6 +74,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     this._tokensManager = params.tokensManager
     this._supportedChains = params.supportedChains
     this._hubChainInfo = params.hubChainInfo
+    this._oracleManager = params.oracleManager
   }
 
   async getMigratablePositions(
@@ -232,7 +247,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
 
     const approvalTransactions = await Promise.all(
       params.positions.map(async (position) => {
-        return await this._getMigrationApproval(admiralsQuartersAddress, position)
+        return await this._getMigrationApproval(params.user, admiralsQuartersAddress, position)
       }),
     )
 
@@ -258,26 +273,44 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
   }
 
   private async _getMigrationApproval(
+    user: IUser,
     spender: IAddress,
     position: { amount: ITokenAmount; migrationType: ArmadaMigrationType },
   ) {
     switch (position.migrationType) {
       case ArmadaMigrationType.Compound:
-        return this._getMigrationCompoundApproval(spender, position)
+        return this._getMigrationCompoundApproval(user, spender, position)
       case ArmadaMigrationType.AaveV3:
       case ArmadaMigrationType.Erc4626:
-        return this._getMigrationErc20Approval(spender, position)
+        return this._getMigrationErc20Approval(user, spender, position)
       default:
         throw new Error('Unsupported migration type: ' + position.migrationType)
     }
   }
 
   private async _getMigrationCompoundApproval(
+    user: IUser,
     spender: IAddress,
     position: { amount: ITokenAmount; migrationType: ArmadaMigrationType },
-  ) {
+  ): Promise<ApproveTransactionInfo | undefined> {
+    const client = await this._blockchainClientProvider.getBlockchainClient({
+      chainInfo: user.chainInfo,
+    })
+
+    // check if allowance is needed
+    const isAllowed = await client.readContract({
+      abi: abiIsAllowed,
+      address: position.amount.token.address.value,
+      functionName: 'isAllowed',
+      args: [user.wallet.address.value, spender.value],
+    })
+
+    if (isAllowed) {
+      return
+    }
+
     // Approval for AQ
-    const data = await encodeFunctionData({
+    const data = encodeFunctionData({
       abi: abiAllow,
       functionName: 'allow',
       args: [spender.value, true],
@@ -299,12 +332,27 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
   }
 
   private async _getMigrationErc20Approval(
+    user: IUser,
     spender: IAddress,
     position: { amount: ITokenAmount; migrationType: ArmadaMigrationType },
-  ) {
-    // Approval for AQ
+  ): Promise<ApproveTransactionInfo | undefined> {
+    // check if allowance is needed
+    const client = await this._blockchainClientProvider.getBlockchainClient({
+      chainInfo: user.chainInfo,
+    })
+    const allowance = await client.readContract({
+      abi: abiAllowance,
+      address: position.amount.token.address.value,
+      functionName: 'allowance',
+      args: [user.wallet.address.value, spender.value],
+    })
 
-    const data = await encodeFunctionData({
+    if (allowance >= position.amount.toSolidityValue()) {
+      return
+    }
+
+    // Approval for AQ
+    const data = encodeFunctionData({
       abi: abiApprove,
       functionName: 'approve',
       args: [spender.value, position.amount.toSolidityValue()],
@@ -365,53 +413,98 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
         throw new Error('Unsupported migration type: ' + position.migrationType)
     }
   }
+
+  async calculateTotal(params: {
+    positions: {
+      amount: ITokenAmount
+      migrationType: ArmadaMigrationType
+    }[]
+  }): Promise<{ totalUsd: string }> {
+    // Get ETH price from oracle manager
+    const ethPrice = await this._oracleManager.getSpotPrice({
+      baseToken: await this._tokensManager.getTokenBySymbol({
+        chainInfo: this._hubChainInfo,
+        symbol: 'ETH',
+      }),
+      quoteToken: await this._tokensManager.getTokenBySymbol({
+        chainInfo: this._hubChainInfo,
+        symbol: 'USDC',
+      }),
+    })
+
+    let totalInETH = 0n
+
+    for (const position of params.positions) {
+      const rate = await this._getPositionRate(position)
+      const amountInETH = (position.amount.toSolidityValue() * rate) / BigInt(1e18)
+      totalInETH += amountInETH
+    }
+
+    // Convert total ETH to USD using ETH price
+    const totalUsd = new BigNumber(totalInETH.toString())
+      .multipliedBy(ethPrice.price.value)
+      .dividedBy(1e18)
+      .toString()
+
+    return { totalUsd }
+  }
+
+  private async _getPositionRate(position: {
+    amount: ITokenAmount
+    migrationType: ArmadaMigrationType
+  }): Promise<bigint> {
+    switch (position.migrationType) {
+      case ArmadaMigrationType.Compound:
+        return this._getCompoundRate(position.amount)
+      case ArmadaMigrationType.AaveV3:
+        return this._getAaveV3Rate(position.amount)
+      case ArmadaMigrationType.Erc4626:
+        return this._getErc4626Rate(position.amount)
+      default:
+        throw new Error('Unsupported migration type: ' + position.migrationType)
+    }
+  }
+
+  private async _getCompoundRate(amount: ITokenAmount): Promise<bigint> {
+    const client = await this._blockchainClientProvider.getBlockchainClient({
+      chainInfo: amount.token.chainInfo,
+    })
+
+    const exchangeRate = await client.readContract({
+      abi: abiExchangeRateCurrent,
+      address: amount.token.address.value,
+      functionName: 'exchangeRateCurrent',
+    })
+
+    return exchangeRate
+  }
+
+  private async _getAaveV3Rate(amount: ITokenAmount): Promise<bigint> {
+    const client = await this._blockchainClientProvider.getBlockchainClient({
+      chainInfo: amount.token.chainInfo,
+    })
+
+    const rate = await client.readContract({
+      abi: abiATokenRate,
+      address: amount.token.address.value,
+      functionName: 'ATOKEN_REVISION',
+    })
+
+    return rate
+  }
+
+  private async _getErc4626Rate(amount: ITokenAmount): Promise<bigint> {
+    const client = await this._blockchainClientProvider.getBlockchainClient({
+      chainInfo: amount.token.chainInfo,
+    })
+
+    const rate = await client.readContract({
+      abi: abiConvertToAssets,
+      address: amount.token.address.value,
+      functionName: 'convertToAssets',
+      args: [BigInt(1e18)],
+    })
+
+    return rate
+  }
 }
-
-const abiBalanceOf = [
-  {
-    inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
-    name: 'balanceOf',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-] as const
-
-const abiApprove = [
-  {
-    constant: false,
-    inputs: [
-      {
-        name: '_spender',
-        type: 'address',
-      },
-      {
-        name: '_value',
-        type: 'uint256',
-      },
-    ],
-    name: 'approve',
-    outputs: [
-      {
-        name: '',
-        type: 'bool',
-      },
-    ],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-] as const
-
-const abiAllow = [
-  {
-    inputs: [
-      { internalType: 'address', name: 'manager', type: 'address' },
-      { internalType: 'bool', name: 'isAllowed_', type: 'bool' },
-    ],
-    name: 'allow',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-] as const
