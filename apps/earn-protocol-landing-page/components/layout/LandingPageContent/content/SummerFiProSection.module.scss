@@ -7,7 +7,12 @@
   }
 
   @include media('>l') {
-    padding: 0 var(--spacing-space-4x-large);
+    padding: 0 var(--spacing-space-3x-large);
+  }
+
+  @include media('>xl') {
+    max-width: 1000px;
+    margin: 0 auto;
   }
 }
 
@@ -27,11 +32,14 @@
   margin: 0 auto;
   margin-top: 48px;
   border-radius: var(--radius-roundish);
-  max-width: 1000px;
-
+  max-width: 1057px;
 
   @include media('>s') {
     padding: 0 var(--spacing-space-2x-large);
+  }
+
+  @include media('>xl') {
+    padding: 0;
   }
 }
 

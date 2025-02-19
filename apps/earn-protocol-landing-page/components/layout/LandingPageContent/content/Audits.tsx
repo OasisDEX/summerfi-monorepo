@@ -43,7 +43,7 @@ export const Audits = () => {
           Top tier security & audits
         </Text>
       </div>
-      <div className={auditsStyles.auditsBlockWrapper}>
+      <div className={auditsStyles.auditBlocksWrapper}>
         <AuditBlock
           auditUrl="https://www.chainsecurity.com/smart-contract-audit-reports"
           image={chainSecurityLogo}
