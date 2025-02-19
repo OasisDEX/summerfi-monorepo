@@ -89,8 +89,8 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   }, [displaySimulationGraph])
 
   const { netDeposited, netEarnings, netValue } = getPositionValues({
-    positionData: position,
-    vaultData: vault,
+    position,
+    vault,
   })
 
   const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus(

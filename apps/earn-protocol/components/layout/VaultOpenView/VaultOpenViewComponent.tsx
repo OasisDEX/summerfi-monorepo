@@ -21,6 +21,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import { useTermsOfService } from '@summerfi/app-tos'
 import {
+  type ArksHistoricalChartData,
   type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
@@ -67,6 +68,8 @@ type VaultOpenViewComponentProps = {
   userActivity: UsersActivity
   topDepositors: SDKUsersActivityType
   medianDefiYield?: number
+  arksHistoricalChartData: ArksHistoricalChartData
+  arksInterestRates?: { [key: string]: number }
 }
 
 export const VaultOpenViewComponent = ({
@@ -75,6 +78,8 @@ export const VaultOpenViewComponent = ({
   userActivity,
   topDepositors,
   medianDefiYield,
+  arksHistoricalChartData,
+  arksInterestRates,
 }: VaultOpenViewComponentProps) => {
   const { getStorageOnce } = useLocalStorageOnce<string>({
     key: `${vault.id}-amount`,
@@ -369,7 +374,7 @@ export const VaultOpenViewComponent = ({
             defaultExpanded
           >
             <ArkHistoricalYieldChart
-              chartData={vault.customFields?.arksHistoricalChartData}
+              chartData={arksHistoricalChartData}
               summerVaultName={summerVaultName}
             />
           </Expander>
@@ -381,7 +386,7 @@ export const VaultOpenViewComponent = ({
             }
             defaultExpanded
           >
-            <VaultExposure vault={vault} />
+            <VaultExposure vault={vault} arksInterestRates={arksInterestRates} />
           </Expander>
           <Expander
             title={

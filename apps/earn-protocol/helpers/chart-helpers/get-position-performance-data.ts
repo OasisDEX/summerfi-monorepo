@@ -3,8 +3,8 @@ import {
   type ChartsDataTimeframes,
   type ForecastData,
   type IArmadaPosition,
+  type PerformanceChartData,
   type SDKVaultishType,
-  type VaultWithChartsData,
 } from '@summerfi/app-types'
 import dayjs from 'dayjs'
 
@@ -16,7 +16,7 @@ const mergePositionHistoryAndForecast = (
   positionForecast: ForecastData,
   position?: IArmadaPosition,
   vault?: SDKVaultishType,
-): VaultWithChartsData['performanceChartData'] => {
+): PerformanceChartData => {
   const now = dayjs()
   const nowStartOfHour = now.startOf('hour')
   const nowStartOfDay = now.startOf('day')
@@ -59,21 +59,21 @@ const mergePositionHistoryAndForecast = (
   const positionValues =
     position && vault
       ? getPositionValues({
-          positionData: position,
-          vaultData: vault,
+          position,
+          vault,
         })
       : false
+  const { dailyPositionHistory, hourlyPositionHistory, weeklyPositionHistory } =
+    positionHistory.positionHistory.position ?? {}
 
-  if (
-    (positionHistory.position?.hourlyPositionHistory.length ?? 0) < pointsNeededToDisplayAnyGraph
-  ) {
+  if ((hourlyPositionHistory?.length ?? 0) < pointsNeededToDisplayAnyGraph) {
     return {
       data: chartBaseData,
     }
   }
 
   // history hourly points
-  positionHistory.position?.hourlyPositionHistory.reverse().forEach((point) => {
+  hourlyPositionHistory?.reverse().forEach((point) => {
     const timestamp = dayjs(point.timestamp * 1000).startOf('hour')
     const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT)
     const timestampUnix = timestamp.unix()
@@ -104,7 +104,7 @@ const mergePositionHistoryAndForecast = (
   })
 
   // history daily points
-  positionHistory.position?.dailyPositionHistory.reverse().forEach((point) => {
+  dailyPositionHistory?.reverse().forEach((point) => {
     const timestamp = dayjs(point.timestamp * 1000).startOf('day')
     const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT)
     const timestampUnix = timestamp.unix()
@@ -138,7 +138,7 @@ const mergePositionHistoryAndForecast = (
   })
 
   // history weekly points
-  positionHistory.position?.weeklyPositionHistory.reverse().forEach((point) => {
+  weeklyPositionHistory?.reverse().forEach((point) => {
     const timestamp = dayjs(point.timestamp * 1000).startOf('week')
     const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT)
     const timestampUnix = timestamp.unix()
@@ -302,26 +302,16 @@ const mergePositionHistoryAndForecast = (
   }
 }
 
-export const decorateWithPerformanceChartData = (
-  vaults: SDKVaultishType[],
-  vaultData: {
-    position?: IArmadaPosition
-    positionHistory: GetPositionHistoryReturnType
-    positionForecast: ForecastData
-  },
-) => {
-  const { positionHistory, positionForecast, position } = vaultData
-
-  return vaults.map((vault) => ({
-    ...vault,
-    customFields: {
-      ...vault.customFields,
-      performanceChartData: mergePositionHistoryAndForecast(
-        positionHistory,
-        positionForecast,
-        position,
-        vault,
-      ),
-    },
-  })) as SDKVaultishType[]
+export const getPositionPerformanceData = ({
+  vault,
+  positionForecast,
+  positionHistory,
+  position,
+}: {
+  vault: SDKVaultishType
+  positionHistory: GetPositionHistoryReturnType
+  positionForecast: ForecastData
+  position?: IArmadaPosition
+}) => {
+  return mergePositionHistoryAndForecast(positionHistory, positionForecast, position, vault)
 }

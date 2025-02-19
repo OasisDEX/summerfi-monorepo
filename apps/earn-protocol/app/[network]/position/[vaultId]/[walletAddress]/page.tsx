@@ -21,8 +21,11 @@ import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { VaultManageView } from '@/components/layout/VaultManageView/VaultManageView'
+import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
+import { getPositionPerformanceData } from '@/helpers/chart-helpers/get-position-performance-data'
+import { mapArkLatestInterestRates } from '@/helpers/map-ark-interest-rates'
 import {
-  decorateCustomVaultFields,
+  decorateVaultsWithConfig,
   getVaultIdByVaultCustomName,
 } from '@/helpers/vault-custom-value-helpers'
 
@@ -84,8 +87,8 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   })
 
   const { netValue } = getPositionValues({
-    positionData: position,
-    vaultData: vault,
+    position,
+    vault,
   })
 
   const [positionHistory, positionForecastResponse] = await Promise.all([
@@ -107,29 +110,40 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   const forecastData = (await positionForecastResponse.json()) as PositionForecastAPIResponse
   const positionForecast = parseForecastDatapoints(forecastData)
 
-  const [vaultDecorated] = decorateCustomVaultFields({
+  const [vaultWithConfig] = decorateVaultsWithConfig({
     vaults: [vault],
     systemConfig,
-    position,
-    decorators: {
-      arkInterestRatesMap: interestRates,
-      positionHistory,
-      positionForecast,
-    },
   })
 
-  const vaultsDecorated = decorateCustomVaultFields({ vaults, systemConfig })
+  const allVaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })
 
   const positionJsonSafe = parseServerResponseToClient<IArmadaPosition>(position)
 
+  const performanceChartData = getPositionPerformanceData({
+    vault: vaultWithConfig,
+    position: positionJsonSafe,
+    positionHistory,
+    positionForecast,
+  })
+
+  const arksHistoricalChartData = getArkHistoricalChartData({
+    vault: vaultWithConfig,
+    arkInterestRatesMap: interestRates,
+  })
+
+  const arksInterestRates = mapArkLatestInterestRates(interestRates)
+
   return (
     <VaultManageView
-      vault={vaultDecorated}
-      vaults={vaultsDecorated}
+      vault={vaultWithConfig}
+      vaults={allVaultsWithConfig}
       position={positionJsonSafe}
       viewWalletAddress={walletAddress}
       userActivity={userActivity}
       topDepositors={topDepositors}
+      performanceChartData={performanceChartData}
+      arksHistoricalChartData={arksHistoricalChartData}
+      arksInterestRates={arksInterestRates}
     />
   )
 }

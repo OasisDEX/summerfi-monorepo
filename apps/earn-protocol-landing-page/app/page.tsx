@@ -22,7 +22,7 @@ import { LandingFaqSection } from '@/components/layout/LandingPageContent/conten
 import { StartEarningNow } from '@/components/layout/LandingPageContent/content/StartEarningNow'
 import { SummerFiProSection } from '@/components/layout/LandingPageContent/content/SummerFiProSection'
 import { SumrToken } from '@/components/layout/LandingPageContent/content/SumrToken'
-import { decorateCustomVaultFields } from '@/helpers/vault-custom-value-helpers'
+import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 import { getInterestRates } from './server-handlers/interest-rates'
 
@@ -141,7 +141,7 @@ export default async function HomePage() {
 
   const interestRatesResults = await Promise.all(interestRatesPromises)
 
-  const vaultsDecorated = decorateCustomVaultFields({
+  const vaultsDecorated = decorateVaultsWithConfig({
     vaults,
     systemConfig: config,
     decorators: {
