@@ -13,16 +13,30 @@
 
 .bestOfDecentralizedFinanceBlockWrapper {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   gap: var(--spacing-space-medium);
-  margin-top: 48px;
+  margin-top: 0;
 
-  @include media('<=s') {
+  @include media('>s') {
     grid-template-columns: repeat(1, 1fr);
+    padding: var(--spacing-space-2x-large) var(--spacing-space-2x-large) 0;
+  }
+
+  @include media('>l') {
+    grid-template-columns: repeat(3, 1fr);
+    // margin-top: var(--general-space-32);
   }
 
   .bestOfDecentralizedFinanceBlock {
-    padding: var(--spacing-space-x-large) var(--spacing-space-x-large) 0;
+    padding: var(--spacing-space-large) var(--spacing-space-large) 0;
+
+    @include media('>s') {
+      padding: var(--spacing-space-x-large) var(--spacing-space-x-large) 0;
+    }
+
+    @include media('>l') {
+      padding: var(--spacing-space-x-large) var(--spacing-space-x-large) 0;
+    }
   }
 
   .bestOfDecentralizedFinanceBlockDescription {
@@ -39,6 +53,12 @@
     display: flex;
     gap: 20px;
     margin: 49px 0;
+
+    @include media('<=s') {
+      img {
+        width: 55%;
+      }
+    }
   }
 
   .ui {

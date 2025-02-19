@@ -16,16 +16,21 @@
 }
 
 .cryptoUtilitiesBlockWrapper {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   justify-content: center;
   gap: var(--spacing-space-medium);
-  padding: 0 var(--spacing-space-3x-large);
+  padding: 0 var(--spacing-space-x-large);
   margin-top: var(--spacing-space-x-large);
+  flex-wrap: wrap;
 
-  @include media('<=s') {
-    flex-wrap: wrap;
-    padding: 0 var(--spacing-space-x-large);
+  @include media('>s') {
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0 var(--spacing-space-3x-large);
+  }
+
+  @include media('>l') {
+    grid-template-columns: repeat(5, 1fr);
   }
 }
 

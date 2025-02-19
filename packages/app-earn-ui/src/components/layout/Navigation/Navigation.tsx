@@ -76,7 +76,7 @@ export const Navigation: FC<EarnNavigationProps> = ({
     >
       <header className={navigationStyles.container}>
         <NavigationBranding logo={logo} logoSmall={logoSmall} onLogoClick={onLogoClick} />
-        {!(isMobile || isTablet) && <NavigationMenu links={links} currentPath={currentPath} />}
+        {!isMobile && <NavigationMenu links={links} currentPath={currentPath} />}
         <NavigationActions
           walletConnectionComponent={walletConnectionComponent}
           signUpComponent={signupComponent}
@@ -92,7 +92,6 @@ export const Navigation: FC<EarnNavigationProps> = ({
           height="auto"
           variant="default"
           zIndex={1001}
-          style={{ backgroundColor: 'unset' }}
         >
           <MobileDrawerDefaultWrapper slideFrom="top">
             <NavigationMenuMobile

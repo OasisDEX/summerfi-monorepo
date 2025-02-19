@@ -1,8 +1,8 @@
 .enhancedRiskManagementWrapper {
-  padding: 0 var(--spacing-space-2x-large);
+  padding: 0 0;
 
-  @include media('<=s') {
-    padding: 0 var(--spacing-space-medium);
+  @include media('>s') {
+    padding: 0 var(--spacing-space-2x-large);
   }
 }
 
@@ -16,16 +16,23 @@
 
 .topBlock {
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-space-3x-large) var(--spacing-space-2x-large);
-  gap: 240px;
+  gap: var(--spacing-space-large);
+  padding: var(--spacing-space-large) var(--spacing-space-medium);
+  flex-direction: row;
+  flex-direction: column;
 
-  @include media('<=s') {
-    gap: var(--spacing-space-large);
-    padding: var(--spacing-space-large) var(--spacing-space-medium);
+  @include media('>s') {
+    gap: 120px;
+    padding: var(--spacing-space-x-large) var(--spacing-space-large);
     flex-direction: column;
+  }
+
+  @include media('>l') {
+    gap: 240px;
+    padding: var(--spacing-space-3x-large) var(--spacing-space-2x-large);
+    flex-direction: row;
   }
 
   h5 {
@@ -37,10 +44,14 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-space-medium);
-  width: 50%;
+  width: 100%;
 
-  @include media('<=s') {
-    width: 100%;
+  @include media('>s') {
+    width: 80%;
+  }
+
+  @include media('>l') {
+    width: 50%;
   }
 
   p {
@@ -110,12 +121,17 @@
 
 .bottomBoxes {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   margin-top: var(--spacing-space-medium);
-  gap: var(--spacing-space-medium);
+  gap: var(--spacing-space-large);
 
-  @include media('<=s') {
+  @include media('>s') {
     flex-direction: column;
+    gap: var(--spacing-space-large);
+  }
+
+  @include media('>l') {
+    flex-direction: row;
   }
 
   img {

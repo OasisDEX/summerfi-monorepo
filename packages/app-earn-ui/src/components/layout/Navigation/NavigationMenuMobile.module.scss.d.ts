@@ -6,6 +6,7 @@ export type Styles = {
   linksList: string
   linksListWrapper: string
   logoSmall: string
+  spacer: string
   topBar: string
 }
 

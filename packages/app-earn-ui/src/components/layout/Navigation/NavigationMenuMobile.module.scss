@@ -5,7 +5,6 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  border-bottom: 1px solid var(--color-surface-lighter);
   padding-bottom: var(--general-space-24);
 
   .logoSmall {
@@ -36,9 +35,17 @@
   }
 }
 
+.spacer {
+  height: 1px;
+  width: calc(100% + 64px);
+  background-color: var(--earn-protocol-neutral-80);
+  margin: 0 -32px;
+}
+
 .linksListWrapper {
   overflow-y: auto;
   max-height: 70vh;
+  margin-top: var(--general-space-12);
 }
 
 .linksList {

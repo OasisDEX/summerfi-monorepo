@@ -166,7 +166,7 @@ export default async function HomePage() {
         <EffortlessAccessBlock />
         <SupportedNetworksList />
       </BigGradientBox>
-      {/* <<ProtocolScroller
+      <ProtocolScroller
         protocolsList={supportedProtocols.map((protocol) => {
           const protocolConfig = supportedProtocolsConfig[protocol]
 
@@ -190,7 +190,7 @@ export default async function HomePage() {
         <BuildBySummerFi />
         <LandingFaqSection />
         <HighestQualityYieldsDisclaimer />
-      </MarketingPoints> */}
+      </MarketingPoints>
     </div>
   )
 }

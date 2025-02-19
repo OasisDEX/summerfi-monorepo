@@ -1,15 +1,10 @@
 import { Text } from '@/components/atoms/Text/Text'
 
+import styles from './HighestQualityYieldsDisclaimer.module.scss'
+
 export const HighestQualityYieldsDisclaimer = () => {
   return (
-    <Text
-      variant="p2"
-      style={{
-        color: 'var(--earn-protocol-secondary-70)',
-        textAlign: 'center',
-        marginBottom: 'var(--general-space-128)',
-      }}
-    >
+    <Text variant="p2" className={styles.disclaimer}>
       <span style={{ position: 'relative' }}>
         Highest{' '}
         <Text

@@ -4,7 +4,7 @@ import classNames from './LandingFaqSection.module.scss'
 
 export const vaultFaqData = [
   {
-    title: 'Why should you trust Summer.fi with your funds?',
+    title: 'Why trust Summer.fi with your funds?',
     content: (
       <>
         <Text
