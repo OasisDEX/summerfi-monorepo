@@ -20,6 +20,10 @@
   @include media('>s') {
     display: block;
   }
+
+  @include media('>l') {
+    display: none;
+  }
 }
 
 .lineBreak2 {

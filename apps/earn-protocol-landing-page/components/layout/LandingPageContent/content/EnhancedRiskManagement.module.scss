@@ -2,7 +2,7 @@
   padding: 0 0;
 
   @include media('>s') {
-    padding: 0 var(--spacing-space-2x-large);
+    padding: 0 var(--spacing-space-x-large);
   }
 }
 
@@ -30,9 +30,13 @@
   }
 
   @include media('>l') {
-    gap: 240px;
+    // gap: 160px;
     padding: var(--spacing-space-3x-large) var(--spacing-space-2x-large);
     flex-direction: row;
+  }
+
+  @include media('>xl') {
+   gap: 180px;
   }
 
   h5 {

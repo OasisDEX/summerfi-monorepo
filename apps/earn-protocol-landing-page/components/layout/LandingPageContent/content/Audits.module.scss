@@ -1,29 +1,47 @@
 .auditsHeaderWrapper {
   padding: 0 var(--spacing-space-small);
-  margin-bottom: var(--spacing-space-2x-large);
+  max-width: 1057px;
+  margin: 0 auto var(--spacing-space-2x-large) auto;
 
   >p {
     margin-bottom: var(--spacing-space-x-small)
   }
 
   @include media('>s') {
-    padding: 0 var(--spacing-space-3x-large);
-  
+    padding: 0 var(--spacing-space-2x-large);
+  }
+
+  @include media('>xl') {
+    padding: 0;
   }
 }
 
 .auditsHeader {
   font-weight: 600;
+
+}
+
+.auditBlocksWrapper {
+  padding: var(--spacing-space-large) var(--spacing-space-small);
+  max-width: 1057px;
+  margin: 0 auto;
+
+  @include media('>s') {
+    padding: 0 var(--spacing-space-2x-large);
+  }
+
+  @include media('>xl') {
+    padding: 0;
+  }
 }
 
 .auditBlock {
   display: flex;
   flex-direction: column;
-  padding: var(--spacing-space-large) var(--spacing-space-small);
 
   @include media('>s') {
-    padding: 0 var(--spacing-space-3x-large);
     padding-bottom: var(--spacing-space-medium);
+
   }
 
   hr {
