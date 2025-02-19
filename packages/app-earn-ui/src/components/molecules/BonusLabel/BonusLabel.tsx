@@ -25,6 +25,7 @@ export const BonusLabel = ({
 }) => {
   return (
     <Tooltip
+      hideDrawerOnMobile
       tooltip={
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           {apy && (

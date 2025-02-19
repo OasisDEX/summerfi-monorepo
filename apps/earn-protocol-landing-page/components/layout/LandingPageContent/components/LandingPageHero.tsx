@@ -56,11 +56,13 @@ export const LandingPageHero = ({
     </Text>
   )
 
+  const isMobileOrTablet = isMobile || isTablet
+
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
       <div className={landingPageHeroStyles.landingPageHeroWrapper}>
         <div className={landingPageHeroStyles.heroHeader}>
-          {isMobile || isTablet ? (
+          {isMobileOrTablet ? (
             <div className={landingPageHeroStyles.heroHeaderMobile}>
               {headerPartA}
               {headerPartB}
@@ -68,7 +70,7 @@ export const LandingPageHero = ({
           ) : (
             headerPartA
           )}
-          {isMobile || isTablet ? null : headerPartB}
+          {!isMobileOrTablet && headerPartB}
         </div>
         <Carousel
           components={vaultsList.map((vault) => (
