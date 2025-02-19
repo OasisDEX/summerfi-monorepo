@@ -289,7 +289,6 @@ export class VaultRatesService {
           }))
         }),
       )
-      // Reduce the results array into a single object.
       return results.flat().map((result) => ({
         chainId: result.chainId,
         fleetAddress: result.fleetAddress,
