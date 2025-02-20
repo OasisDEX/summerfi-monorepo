@@ -1,4 +1,4 @@
-import { type Dispatch, type FC, useEffect } from 'react'
+import { type Dispatch, type FC, useEffect, useState } from 'react'
 import { useChain } from '@account-kit/react'
 import {
   InputWithDropdown,
@@ -128,6 +128,8 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
     overrideNetwork: sourceNetwork,
   })
 
+  const [selectedPercentage, setSelectedPercentage] = useState<number | null>(null)
+
   useEffect(() => {
     if (userWalletAddress !== state.walletAddress) {
       redirect(`/bridge/${userWalletAddress}`)
@@ -180,6 +182,11 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
   const gasOnSource = transaction ? gasEstimate ?? '0' : '0'
   const gasOnSourceRaw = transaction ? rawGasEstimate ?? '0' : '0'
 
+  const handleAmountChangeWithPercentage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedPercentage(null)
+    handleAmountChange(e)
+  }
+
   return (
     <Sidebar
       centered
@@ -203,7 +210,7 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
                 value: `${formatCryptoBalance(sumrBalanceOnSourceChain)} SUMR`,
               }}
               secondaryValue={amountDisplayUSD}
-              handleChange={handleAmountChange}
+              handleChange={handleAmountChangeWithPercentage}
               handleDropdownChange={() => {}}
               onBlur={() => {
                 defaultOnBlur()
@@ -218,9 +225,12 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
               selectAllOnFocus
               tagsRow={
                 <QuickActionTags
+                  selectedValue={selectedPercentage}
                   onSelect={(percentage) => {
+                    setSelectedPercentage(percentage)
                     const newAmount = sumrBalanceOnSourceChain
                       .times(percentage)
+                      .div(100)
                       .toFormat(2, BigNumber.ROUND_DOWN)
 
                     clearTransaction()
