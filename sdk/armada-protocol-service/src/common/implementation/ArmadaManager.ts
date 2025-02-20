@@ -167,7 +167,10 @@ export class ArmadaManager implements IArmadaManager {
 
   /** @see IArmadaManager.getUsersActivityRaw */
   async getUsersActivityRaw(params: Parameters<IArmadaManager['getUsersActivityRaw']>[0]) {
-    return this._subgraphManager.getUsersActivity({ chainId: params.chainInfo.chainId })
+    return this._subgraphManager.getUsersActivity({
+      chainId: params.chainInfo.chainId,
+      where: params.where,
+    })
   }
 
   /** @see IArmadaManager.getUserActivityRaw */
@@ -175,6 +178,7 @@ export class ArmadaManager implements IArmadaManager {
     return this._subgraphManager.getUserActivity({
       chainId: params.vaultId.chainInfo.chainId,
       vaultId: params.vaultId.fleetAddress.value,
+      accountAddress: params.accountAddress,
     })
   }
 

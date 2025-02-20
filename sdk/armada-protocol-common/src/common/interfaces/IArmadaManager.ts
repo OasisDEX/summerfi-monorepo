@@ -17,6 +17,7 @@ import type {
   GetVaultsQuery,
   GetUsersActivityQuery,
   GetUserActivityQuery,
+  Position_Filter,
 } from '@summerfi/subgraph-manager-common'
 import type { IRebalanceData } from '@summerfi/contracts-provider-common'
 import type { IArmadaManagerClaims } from './IArmadaManagerClaims'
@@ -114,7 +115,10 @@ export interface IArmadaManager {
    *
    * @returns GerUsersActivityQuery
    */
-  getUsersActivityRaw(params: { chainInfo: IChainInfo }): Promise<GetUsersActivityQuery>
+  getUsersActivityRaw(params: {
+    chainInfo: IChainInfo
+    where?: Position_Filter
+  }): Promise<GetUsersActivityQuery>
 
   /**
    * @name getUserActivityRaw
@@ -124,7 +128,10 @@ export interface IArmadaManager {
    *
    * @returns GerUsersActivityQuery
    */
-  getUserActivityRaw(params: { vaultId: IArmadaVaultId }): Promise<GetUserActivityQuery>
+  getUserActivityRaw(params: {
+    vaultId: IArmadaVaultId
+    accountAddress: string
+  }): Promise<GetUserActivityQuery>
 
   /**
    * @name getVaultInfo
