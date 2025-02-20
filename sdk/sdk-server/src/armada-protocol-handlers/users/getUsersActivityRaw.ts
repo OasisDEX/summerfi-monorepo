@@ -6,17 +6,7 @@ export const getUsersActivityRaw = publicProcedure
   .input(
     z.object({
       chainInfo: z.custom<ChainInfo>(isChainInfo),
-      where: z
-        .object({
-          vault_: z
-            .object({
-              id_in: z.array(z.string()).optional(),
-              id: z.string().optional(),
-            })
-            .optional(),
-          account: z.string().optional(),
-        })
-        .optional(),
+      where: z.record(z.any()).optional(), // not ideal, but it's strong typed in the client
     }),
   )
   .query(async (opts) => {
