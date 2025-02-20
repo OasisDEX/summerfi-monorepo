@@ -16,6 +16,7 @@ export const REVALIDATION_TAGS = {
   VAULTS_LIST: 'vaults-list',
   INTEREST_RATES: 'interest-rates',
   PORTFOLIO_ASSETS: 'portfolio-assets',
+  PORTFOLIO_DATA: 'portfolio-data',
   POSITION_HISTORY: 'position-history',
   CONFIG: 'config',
 }

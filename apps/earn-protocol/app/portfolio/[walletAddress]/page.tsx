@@ -1,10 +1,11 @@
-import { getUniqueVaultId } from '@summerfi/app-earn-ui'
+import { getUniqueVaultId, REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import {
   type HistoryChartData,
   type IArmadaPosition,
   type SDKVaultishType,
 } from '@summerfi/app-types'
 import { parseServerResponseToClient, subgraphNetworkToId } from '@summerfi/app-utils'
+import { unstable_cache as unstableCache } from 'next/cache'
 
 import { fetchRaysLeaderboard } from '@/app/server-handlers/leaderboard'
 import { portfolioWalletAssetsHandler } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
@@ -33,11 +34,11 @@ type PortfolioPageProps = {
   }>
 }
 
-const PortfolioPage = async ({ params }: PortfolioPageProps) => {
-  const { walletAddress: walletAddressRaw } = await params
-
-  const walletAddress = walletAddressRaw.toLowerCase()
-
+const portfolioCallsHandler = async (walletAddress: string) => {
+  const cacheConfig = {
+    revalidate: REVALIDATION_TIMES.PORTFOLIO_DATA,
+    tags: [REVALIDATION_TAGS.PORTFOLIO_DATA, walletAddress.toLowerCase()],
+  }
   const [
     walletData,
     { rebalances },
@@ -53,18 +54,72 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     systemConfig,
   ] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
-    getGlobalRebalances(),
-    getSumrDelegateStake({ walletAddress }),
+    unstableCache(getGlobalRebalances, [walletAddress], cacheConfig)(),
+    unstableCache(getSumrDelegateStake, [walletAddress], cacheConfig)({ walletAddress }),
     fetchRaysLeaderboard({ userAddress: walletAddress, page: '1', limit: '1' }),
-    getSumrBalances({ walletAddress }),
-    getSumrStakingInfo(),
-    getSumrDelegatesWithDecayFactor(),
-    getSumrToClaim({ walletAddress }),
-    getUsersActivity({ filterTestingWallets: false, walletAddress }),
-    getUserPositions({ walletAddress }),
+    unstableCache(getSumrBalances, [walletAddress], cacheConfig)({ walletAddress }),
+    unstableCache(getSumrStakingInfo, [walletAddress], cacheConfig)(),
+    unstableCache(getSumrDelegatesWithDecayFactor, [walletAddress], cacheConfig)(),
+    unstableCache(getSumrToClaim, [walletAddress], cacheConfig)({ walletAddress }),
+    unstableCache(
+      getUsersActivity,
+      [walletAddress],
+      cacheConfig,
+    )({ filterTestingWallets: false, walletAddress }),
+    unstableCache(getUserPositions, [walletAddress], cacheConfig)({ walletAddress }),
     getVaultsList(),
     systemConfigHandler(),
   ])
+
+  return {
+    walletData,
+    rebalances,
+    sumrStakeDelegate,
+    sumrEligibility,
+    sumrBalances,
+    sumrStakingInfo,
+    sumrDelegates,
+    sumrDecayFactors,
+    sumrToClaim,
+    usersActivity,
+    userPositions,
+    vaultsList,
+    systemConfig,
+  }
+}
+
+const mapPortfolioVaultsApy = (
+  responses: { positionHistory: GetPositionHistoryQuery; vault: SDKVaultishType }[],
+) =>
+  responses.reduce<{
+    [key: string]: GetPositionHistoryQuery
+  }>((acc, { positionHistory, vault }) => {
+    return {
+      ...acc,
+      [getUniqueVaultId(vault)]: parseServerResponseToClient(positionHistory),
+    }
+  }, {})
+
+const PortfolioPage = async ({ params }: PortfolioPageProps) => {
+  const { walletAddress: walletAddressRaw } = await params
+
+  const walletAddress = walletAddressRaw.toLowerCase()
+
+  const {
+    walletData,
+    rebalances,
+    sumrStakeDelegate,
+    sumrEligibility,
+    sumrBalances,
+    sumrStakingInfo,
+    sumrDelegates,
+    sumrDecayFactors,
+    sumrToClaim,
+    usersActivity,
+    userPositions,
+    vaultsList,
+    systemConfig,
+  } = await portfolioCallsHandler(walletAddress)
 
   const vaultsWithConfig = decorateVaultsWithConfig({
     vaults: vaultsList.vaults,
@@ -91,16 +146,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
           vault,
         }),
       ),
-    ).then((responses: { positionHistory: GetPositionHistoryQuery; vault: SDKVaultishType }[]) =>
-      responses.reduce<{
-        [key: string]: GetPositionHistoryQuery
-      }>((acc, { positionHistory, vault }) => {
-        return {
-          ...acc,
-          [getUniqueVaultId(vault)]: parseServerResponseToClient(positionHistory),
-        }
-      }, {}),
-    ),
+    ).then(mapPortfolioVaultsApy),
     getVaultsApy({
       fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
         fleetAddress: id,

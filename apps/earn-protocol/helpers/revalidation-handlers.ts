@@ -6,6 +6,7 @@ import { revalidatePath, revalidateTag } from 'next/cache'
 export const revalidateUser = async (walletAddress?: string) => {
   // clears the cache and revalidates all data with the users wallet tag
   revalidateTag(REVALIDATION_TAGS.INTEREST_RATES)
+  revalidateTag(REVALIDATION_TAGS.PORTFOLIO_DATA)
   if (walletAddress) {
     return await Promise.resolve(revalidateTag(walletAddress.toLowerCase()))
   }

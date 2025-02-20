@@ -78,7 +78,10 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab])
 
-  const totalRebalances = positions.reduce((acc, position) => acc + Number(position.vault), 0)
+  const totalRebalances = positions.reduce(
+    (acc, position) => acc + Number(position.vault.rebalanceCount),
+    0,
+  )
 
   const overallSumr = calculateOverallSumr(rewardsData)
 
