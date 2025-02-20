@@ -45,7 +45,8 @@ interface BridgeTransactionDetails {
   /** Prepares the bridge transaction with optional override amount */
   prepareTransaction: (overrideAmount?: string) => void
   /** Executes the prepared bridge transaction */
-  executeBridgeTransaction: () => Promise<SendUserOperationWithEOA<unknown> | undefined>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  executeBridgeTransaction: () => Promise<SendUserOperationWithEOA<any> | undefined>
   /** Clears the current transaction state */
   clearTransaction: () => void
   /** Current transaction details */
