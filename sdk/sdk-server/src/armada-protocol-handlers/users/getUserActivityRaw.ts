@@ -6,6 +6,7 @@ export const getUserActivityRaw = publicProcedure
   .input(
     z.object({
       vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
+      accountAddress: z.string(),
     }),
   )
   .query(async (opts) => {

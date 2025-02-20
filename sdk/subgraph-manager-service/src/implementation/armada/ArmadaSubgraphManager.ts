@@ -47,12 +47,16 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     return this._getClient(chainId).GetGlobalRebalances()
   }
 
-  getUsersActivity({ chainId }: Parameters<IArmadaSubgraphManager['getUsersActivity']>[0]) {
-    return this._getClient(chainId).GetUsersActivity()
+  getUsersActivity({ chainId, where }: Parameters<IArmadaSubgraphManager['getUsersActivity']>[0]) {
+    return this._getClient(chainId).GetUsersActivity({ where })
   }
 
-  getUserActivity({ chainId, vaultId }: Parameters<IArmadaSubgraphManager['getUserActivity']>[0]) {
-    return this._getClient(chainId).GetUserActivity({ id: vaultId })
+  getUserActivity({
+    chainId,
+    vaultId,
+    accountAddress,
+  }: Parameters<IArmadaSubgraphManager['getUserActivity']>[0]) {
+    return this._getClient(chainId).GetUserActivity({ id: vaultId, accountId: accountAddress })
   }
 
   getUserPositions({ user }: Parameters<IArmadaSubgraphManager['getUserPositions']>[0]) {
