@@ -25,6 +25,10 @@ export const NetworkBalances = ({
 }: NetworkBalancesProps) => {
   const { chain: sourceChain } = useChain()
 
+  if (!amount || new BigNumber(amount).isNaN() || new BigNumber(amount).isLessThan(0)) {
+    return '0'
+  }
+
   return (
     <div className={styles.networkBalancesWrapper}>
       <NetworkDisplay

@@ -21,6 +21,7 @@ import BigNumber from 'bignumber.js'
 import { redirect } from 'next/navigation'
 
 import { TermsOfServiceCookiePrefix } from '@/constants/terms-of-service'
+import { BridgeFormStepFallback } from '@/features/bridge/components/BridgeFormFallbackStep/BridgeFormStepFallback'
 import { BridgeFormTitle } from '@/features/bridge/components/BridgeFormTitle/BridgeFormTitle'
 import { BridgeInput } from '@/features/bridge/components/BridgeInput/BridgeInput'
 import { ChainSelectors } from '@/features/bridge/components/ChainSelectors/ChainSelectors'
@@ -29,7 +30,7 @@ import { Spacer } from '@/features/bridge/components/Spacer/Spacer'
 import { TransactionDetails } from '@/features/bridge/components/TransactionDetails/TransactionDetails'
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import { useBridgeTransaction } from '@/features/bridge/hooks/use-bridge-transaction'
-import { type BridgeReducerAction, type BridgeState } from '@/features/bridge/types'
+import { type BridgeReducerAction, type BridgeState, BridgeTxStatus } from '@/features/bridge/types'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useRiskVerification } from '@/hooks/use-risk-verification'
 import { useToken } from '@/hooks/use-token'
@@ -50,6 +51,11 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
   const humanNetworkName = sdkNetworkToHumanNetwork(sourceNetwork)
 
   if (!isSupportedHumanNetwork(humanNetworkName)) {
+    dispatch({
+      type: 'error',
+      payload: 'Invalid source chain',
+    })
+
     throw new Error('Invalid source chain')
   }
 
@@ -91,19 +97,16 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
     isReady,
   } = useBridgeTransaction({
     amount: amountRaw ?? '0',
+    sourceChain,
     destinationChain: state.destinationChain,
     recipient: Address.createFromEthereum({ value: state.walletAddress }),
-    onSafeTxSuccess: (txHash: string) => {
+    onSuccess: () => {},
+    onError: () => {
       dispatch({
-        type: 'bridge-transaction-created',
-        payload: {
-          hash: txHash,
-          amount: amountDisplay,
-        },
+        type: 'error',
+        payload: 'Failed to create transaction',
       })
     },
-    onSuccess: () => {},
-    onError: () => {},
   })
 
   const isSourceMatchingDestination = sourceChain.id === state.destinationChain.id
@@ -139,7 +142,16 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
 
     const tx = await executeBridgeTransaction()
 
-    if (!tx) return
+    if (!tx) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to create transaction', error)
+      dispatch({
+        type: 'error',
+        payload: 'Failed to create transaction',
+      })
+
+      return
+    }
 
     dispatch({
       type: 'bridge-transaction-created',

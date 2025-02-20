@@ -3,17 +3,14 @@ import { InfoBox, Sidebar, Text } from '@summerfi/app-earn-ui'
 
 import { type BridgeReducerAction } from '@/features/bridge/types'
 
-import styles from './BridgeFormPendingStep.module.scss'
+import styles from './BridgeFormStepFallback.module.scss'
 
-interface BridgeFormPendingStepFallbackProps {
+interface BridgeFormStepFallbackProps {
   dispatch: Dispatch<BridgeReducerAction>
-  error: string
+  error: string | undefined
 }
 
-export const BridgeFormPendingStepFallback: FC<BridgeFormPendingStepFallbackProps> = ({
-  dispatch,
-  error,
-}) => {
+export const BridgeFormStepFallback: FC<BridgeFormStepFallbackProps> = ({ dispatch, error }) => {
   return (
     <Sidebar
       centered
@@ -27,9 +24,7 @@ export const BridgeFormPendingStepFallback: FC<BridgeFormPendingStepFallbackProp
               rows={[
                 {
                   label: 'Status',
-                  value: (
-                    <div className={styles.error}>Our app detected an unsupported network.</div>
-                  ),
+                  value: <div className={styles.error}>{error}</div>,
                   type: 'entry',
                 },
               ]}

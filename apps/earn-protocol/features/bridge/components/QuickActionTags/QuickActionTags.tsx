@@ -16,7 +16,7 @@ const quickActionOptions: TagOption[] = [
 export const QuickActionTags: React.FC<QuickActionTagsProps> = ({ onSelect }) => {
   return (
     <div className={styles.quickActionTags}>
-      <TagRow options={quickActionOptions} onChange={(value) => onSelect(value as number)} />
+      <TagRow options={quickActionOptions} onChange={(value) => onSelect(Number(value))} />
     </div>
   )
 }

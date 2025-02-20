@@ -19,13 +19,15 @@ interface TagRowProps {
 
 export const TagRow = ({ options, selectedValue, onChange, className }: TagRowProps) => {
   return (
-    <div className={clsx(styles.tagRow, className)}>
+    <div className={clsx(styles.tagRow, className)} role="radiogroup" aria-label="Filter options">
       {options.map((option) => (
         <button
           key={option.value}
           className={clsx(styles.tag, {
             [styles.selected]: option.value === selectedValue,
           })}
+          role="radio"
+          aria-checked={option.value === selectedValue}
           onClick={() => onChange(option.value)}
           type="button"
         >

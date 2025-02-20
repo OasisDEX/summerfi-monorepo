@@ -13,32 +13,66 @@ import { ETH_DECIMALS } from '@/features/bridge/constants/decimals'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 
+/**
+ * Parameters required for executing a bridge transaction
+ */
 interface BridgeTransactionParams {
+  /** Amount to bridge in string format */
   amount: string
+  /** Source blockchain network */
+  sourceChain: Chain
+  /** Destination blockchain network */
   destinationChain: Chain
+  /** Recipient address on the destination chain */
   recipient: IAddress
-  onSafeTxSuccess: (txHash: string) => void
+  /** Callback function called on successful bridge transaction */
   onSuccess: () => void
+  /** Callback function called when an error occurs */
   onError: () => void
 }
 
+/**
+ * Extends BridgeTransactionInfo to include LayerZero fee in USD
+ */
 type BridgeTransactionInfoWithLzFeeUsd = BridgeTransactionInfo & {
   metadata: { lzFeeUsd: string }
 }
 
+/**
+ * Return type for the useBridgeTransaction hook
+ */
 interface BridgeTransactionDetails {
+  /** Prepares the bridge transaction with optional override amount */
   prepareTransaction: (overrideAmount?: string) => void
+  /** Executes the prepared bridge transaction */
   executeBridgeTransaction: () => void | SendUserOperationWithEOA<unknown>
+  /** Clears the current transaction state */
   clearTransaction: () => void
+  /** Current transaction details */
   transaction: BridgeTransactionInfoWithLzFeeUsd | undefined
+  /** Flag indicating if transaction is being prepared */
   isPreparing: boolean
+  /** Flag indicating if transaction is being processed */
   isLoading: boolean
+  /** Current error state */
   error: Error | null
+  /** Flag indicating if transaction is ready to execute */
   isReady: boolean
 }
 
+/**
+ * Hook for managing cross-chain bridge transactions
+ *
+ * This hook handles the preparation and execution of bridge transactions between
+ * different blockchain networks. It manages the transaction state, fee calculations,
+ * and error handling throughout the bridging process.
+ *
+ * @param params - Bridge transaction parameters
+ * @returns Object containing transaction state and control functions
+ */
 export function useBridgeTransaction({
   amount,
+  sourceChain,
   destinationChain,
   recipient,
   onSuccess,
@@ -50,8 +84,7 @@ export function useBridgeTransaction({
   const [error, setError] = useState<Error | null>(null)
   const [transaction, setTransaction] = useState<BridgeTransactionInfoWithLzFeeUsd | undefined>()
 
-  const { getBridgeTx, getCurrentUser, getChainInfo, getTargetChainInfo, getSummerToken } =
-    useAppSDK()
+  const { getBridgeTx, getCurrentUser, getTargetChainInfo, getSummerToken } = useAppSDK()
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
 
   const { sendUserOperationAsync, isSendingUserOperation } = useSendUserOperation({
@@ -73,7 +106,7 @@ export function useBridgeTransaction({
         setError(null)
 
         const user = getCurrentUser()
-        const sourceChainInfo = getChainInfo()
+        const sourceChainInfo = getTargetChainInfo(sourceChain.id)
         const targetChainInfo = getTargetChainInfo(destinationChain.id)
         const summerToken = await getSummerToken({ chainInfo: sourceChainInfo })
 
@@ -128,8 +161,8 @@ export function useBridgeTransaction({
     },
     [
       getCurrentUser,
-      getChainInfo,
       getTargetChainInfo,
+      sourceChain.id,
       destinationChain.id,
       getSummerToken,
       getBridgeTx,

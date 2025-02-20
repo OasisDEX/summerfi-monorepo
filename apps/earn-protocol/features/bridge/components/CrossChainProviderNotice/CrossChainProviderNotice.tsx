@@ -6,7 +6,7 @@ import styles from './CrossChainProviderNotice.module.scss'
 
 export const CrossChainProviderNotice: FC = () => {
   return (
-    <Link href="https://layerzero.network/" target="_blank">
+    <Link href="https://layerzero.network/" target="_blank" rel="noopener noreferrer">
       <div className={styles.container}>
         <div className={styles.content}>
           <div className={styles.logoSection}>

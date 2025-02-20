@@ -7,6 +7,7 @@ import {
   sdkNetworkToHumanNetwork,
 } from '@summerfi/app-utils'
 
+import { BridgeFormStepFallback } from '@/features/bridge/components/BridgeFormFallbackStep/BridgeFormStepFallback'
 import { NetworkBalances } from '@/features/bridge/components/NetworkBalances/NetworkBalances'
 import { type BridgeReducerAction, type BridgeState } from '@/features/bridge/types'
 
@@ -26,11 +27,25 @@ export const BridgeFormCompletedStep: FC<BridgeFormCompletedStepProps> = ({ stat
   const destinationHumanNetworkName = sdkNetworkToHumanNetwork(destinationNetwork)
 
   if (!isSupportedHumanNetwork(sourceHumanNetworkName)) {
-    throw new Error('Invalid source chain')
+    const errorMessage = `Invalid source chain: ${sourceHumanNetworkName}`
+
+    dispatch({
+      type: 'error',
+      payload: errorMessage,
+    })
+
+    return <BridgeFormStepFallback dispatch={dispatch} error={errorMessage} />
   }
 
   if (!isSupportedHumanNetwork(destinationHumanNetworkName)) {
-    throw new Error('Invalid destination chain')
+    const errorMessage = `Invalid destination chain: ${destinationHumanNetworkName}`
+
+    dispatch({
+      type: 'error',
+      payload: errorMessage,
+    })
+
+    return <BridgeFormStepFallback dispatch={dispatch} error={errorMessage} />
   }
 
   return (

@@ -25,7 +25,7 @@ function SimpleBridgeSkeleton() {
         <SkeletonLine height={200} radius="var(--radius-roundish)" />
 
         <div className={classNames.skeletonCta}>
-          <Button variant="primaryLarge" onClick={() => {}} disabled>
+          <Button variant="primaryLarge" disabled>
             Bridge
           </Button>
         </div>

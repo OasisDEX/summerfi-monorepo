@@ -47,10 +47,10 @@
     "dayjs": "^1.11.12",
     "lodash-es": "^4.17.1",
     "next": "15.1.7",
-    "jsonwebtoken": "^9.0.0"
+    "jsonwebtoken": "^9.0.0",
+    "@account-kit/infra": "^4.11.0"
   },
   "dependencies": {
-    "@account-kit/infra": "^4.11.0",
     "rollup-preserve-directives": "^1.1.1",
     "vite-tsconfig-paths": "^4.3.2"
   }

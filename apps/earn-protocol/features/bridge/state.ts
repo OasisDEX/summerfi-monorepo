@@ -9,6 +9,7 @@ export const bridgeState: BridgeState = {
   destinationChain: base,
   transactionHash: undefined,
   amount: '0',
+  error: undefined,
   sumrBalances: {
     mainnet: '0',
     arbitrum: '0',
@@ -37,11 +38,25 @@ export const bridgeReducer = (prevState: BridgeState, action: BridgeReducerActio
       case 'bridge-transaction-created':
         validateTransition(prevState.bridgeStatus, BridgeTxStatus.PENDING)
 
+        if (isNaN(Number(action.payload.amount)) || Number(action.payload.amount) <= 0) {
+          return {
+            ...prevState,
+            bridgeStatus: BridgeTxStatus.FAILED,
+            error: 'Invalid amount',
+          }
+        }
+
         return {
           ...prevState,
           bridgeStatus: BridgeTxStatus.PENDING,
           transactionHash: action.payload.hash,
           amount: action.payload.amount,
+        }
+      case 'error':
+        return {
+          ...prevState,
+          bridgeStatus: BridgeTxStatus.FAILED,
+          error: action.payload,
         }
       case 'update-bridge-status':
         validateTransition(prevState.bridgeStatus, action.payload)
@@ -83,6 +98,9 @@ export const bridgeReducer = (prevState: BridgeState, action: BridgeReducerActio
         return prevState
     }
   } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Bridge reducer error', error)
+
     return prevState
   }
 }

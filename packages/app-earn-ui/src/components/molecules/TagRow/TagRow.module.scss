@@ -1,6 +1,6 @@
 .tagRow {
   display: flex;
-  gap: 8px;
+  gap: 8;
   padding: 4px 0;
   background: var(--earn-protocol-surface-02);
   border-radius: 12px;
@@ -20,11 +20,11 @@
 
   &:hover:not(.selected) {
     background-color: var(--color-background-primary);
-    color: var(--color-neutral-10);
+    color: var(--earn-protocol-secondary-100);
   }
 
   &.selected {
     background-color: var(--color-background-primary);
-    color: var(--color-neutral-10);
+    color: var(--earn-protocol-secondary-100);
   }
 } 

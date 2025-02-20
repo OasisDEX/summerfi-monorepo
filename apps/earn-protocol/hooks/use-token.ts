@@ -47,16 +47,37 @@ export const useToken = ({
     })
   }, [sdk, tokenSymbol, chainId])
 
+  const tokenCacheKey = `${tokenSymbol}-${chainId}`
+  const [cachedToken, setCachedToken] = useState<string | null>(null)
+
+  // Initialize cached token on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setCachedToken(sessionStorage.getItem(tokenCacheKey))
+    }
+  }, [tokenCacheKey])
+
   useEffect(() => {
     if (skip) {
       setTokenLoading(false)
 
       return
     }
+
+    if (cachedToken) {
+      setToken(JSON.parse(cachedToken))
+      setTokenLoading(false)
+
+      return
+    }
+
     setTokenLoading(true)
     getTokenRequest()
       .then((fetchedToken) => {
         setToken(fetchedToken)
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem(tokenCacheKey, JSON.stringify(fetchedToken))
+        }
       })
       .catch((err) => {
         setError(err)
@@ -64,7 +85,7 @@ export const useToken = ({
       .finally(() => {
         setTokenLoading(false)
       })
-  }, [getTokenRequest, skip])
+  }, [getTokenRequest, skip, cachedToken, tokenCacheKey])
 
   return {
     token,

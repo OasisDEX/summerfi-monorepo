@@ -11,10 +11,9 @@ import clsx from 'clsx'
 import { capitalize } from 'lodash-es'
 
 import { networkIconByNetworkName } from '@/constants/networkIcons'
+import { BridgeFormStepFallback } from '@/features/bridge/components/BridgeFormFallbackStep/BridgeFormStepFallback'
 import { useCrossChainMessages } from '@/features/bridge/hooks/use-cross-chain-messages'
 import { type BridgeReducerAction, type BridgeState, BridgeTxStatus } from '@/features/bridge/types'
-
-import { BridgeFormPendingStepFallback } from './BridgeFormPendingStepFallback'
 
 import styles from './BridgeFormPendingStep.module.scss'
 
@@ -34,14 +33,6 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
   const sourceNetworkIcon = networkIconByNetworkName[sourceNetwork]
   const destinationNetworkIcon = networkIconByNetworkName[destinationNetwork]
 
-  if (!isSupportedHumanNetwork(sourceHumanNetworkName)) {
-    return <BridgeFormPendingStepFallback dispatch={dispatch} error="Invalid source chain" />
-  }
-
-  if (!isSupportedHumanNetwork(destinationHumanNetworkName)) {
-    return <BridgeFormPendingStepFallback dispatch={dispatch} error="Invalid destination chain" />
-  }
-
   const handleSuccess = useCallback(() => {
     dispatch({
       type: 'update-bridge-status',
@@ -53,6 +44,28 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
     srcTxHash: state.transactionHash,
     onSuccess: handleSuccess,
   })
+
+  if (!isSupportedHumanNetwork(sourceHumanNetworkName)) {
+    const errorMessage = `Invalid source chain: ${sourceHumanNetworkName}`
+
+    dispatch({
+      type: 'error',
+      payload: errorMessage,
+    })
+
+    return <BridgeFormStepFallback dispatch={dispatch} error={errorMessage} />
+  }
+
+  if (!isSupportedHumanNetwork(destinationHumanNetworkName)) {
+    const errorMessage = `Invalid destination chain: ${destinationHumanNetworkName}`
+
+    dispatch({
+      type: 'error',
+      payload: errorMessage,
+    })
+
+    return <BridgeFormStepFallback dispatch={dispatch} error={errorMessage} />
+  }
 
   const initialLoading = !latestStatus
   const updatingDetails = isLoading && latestStatus === MessageStatus.INFLIGHT

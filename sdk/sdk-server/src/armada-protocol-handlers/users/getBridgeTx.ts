@@ -26,9 +26,12 @@ export const getBridgeTx = publicProcedure
     try {
       return await opts.ctx.armadaManager.bridge.getBridgeTx(opts.input)
     } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to call getBridgeTx', error)
+
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
-        message: 'Failed to call getBridgeTx',
+        message: `Failed to call getBridgeTx`,
         cause: error,
       })
     }

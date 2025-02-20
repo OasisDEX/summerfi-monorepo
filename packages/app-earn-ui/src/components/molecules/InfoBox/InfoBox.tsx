@@ -1,6 +1,6 @@
 'use client'
 
-import { type ReactNode } from 'react'
+import { type FC, type ReactNode } from 'react'
 import clsx from 'clsx'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
@@ -9,8 +9,8 @@ import { Text } from '@/components/atoms/Text/Text'
 import styles from './InfoBox.module.scss'
 
 interface InfoBoxRow {
-  label?: string | ReactNode
-  value?: ReactNode | string | number
+  label?: ReactNode
+  value?: ReactNode
   type: 'entry' | 'separator'
 }
 
@@ -22,7 +22,7 @@ interface InfoBoxProps {
   error?: string
 }
 
-export const InfoBox = ({ title, rows, children, className, error }: InfoBoxProps) => {
+export const InfoBox: FC<InfoBoxProps> = ({ title, rows, children, className, error }) => {
   return (
     <>
       {error && (

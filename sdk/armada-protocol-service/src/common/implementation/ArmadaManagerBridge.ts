@@ -30,27 +30,33 @@ export interface BridgeTxParams {
 export class ArmadaManagerBridge implements IArmadaManagerBridge {
   private _configProvider: IConfigurationProvider
   private _blockchainClientProvider: IBlockchainClientProvider
-  private _hubChainInfo: IChainInfo
+  private _supportedChains: IChainInfo[]
   private _tokensManager: ITokensManager
   private _bridgeContractAddress: Address
 
   constructor(params: {
     blockchainClientProvider: IBlockchainClientProvider
     configProvider: IConfigurationProvider
-    hubChainInfo: IChainInfo
+    supportedChains: IChainInfo[]
     tokensManager: ITokensManager
     bridgeContractAddress: Address
   }) {
     this._configProvider = params.configProvider
     this._blockchainClientProvider = params.blockchainClientProvider
-    this._hubChainInfo = params.hubChainInfo
+    this._supportedChains = params.supportedChains
     this._tokensManager = params.tokensManager
     this._bridgeContractAddress = params.bridgeContractAddress
   }
 
   async getBridgeTx(params: BridgeTxParams): Promise<BridgeTransactionInfo[]> {
+    const chainInfo = this._supportedChains.find(
+      (chain) => chain.chainId === params.sourceChain.chainId,
+    )
+    if (!chainInfo) {
+      throw new Error('Chain not supported')
+    }
     const client = this._blockchainClientProvider.getBlockchainClient({
-      chainInfo: this._hubChainInfo,
+      chainInfo: chainInfo,
     })
     const destinationChainLzConfig = getLayerZeroConfig(params.targetChain)
 

@@ -44,6 +44,7 @@ export type BridgeState = {
   walletAddress: string
   destinationChain: Chain
   transactionHash: string | undefined
+  error: string | undefined
 }
 
 export type BridgeReducerAction =
@@ -57,6 +58,10 @@ export type BridgeReducerAction =
   | {
       type: 'update-bridge-status'
       payload: BridgeTxStatus
+    }
+  | {
+      type: 'error'
+      payload: string
     }
   | {
       type: 'update-recipient'

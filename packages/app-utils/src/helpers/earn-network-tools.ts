@@ -58,7 +58,7 @@ export const humanNetworktoSDKNetwork = (network: string): SDKNetwork => {
 
 export const chainIdToSDKNetwork = (chainId: SDKChainId) => {
   if (chainId === SDKChainId.SEPOLIA || chainId === SDKChainId.OPTIMISM) {
-    throw new Error('Sepolia is not supported [chainIdToSDKNetwork]')
+    throw new Error('Sepolia and Optimism are not supported [chainIdToSDKNetwork]')
   }
 
   return {
