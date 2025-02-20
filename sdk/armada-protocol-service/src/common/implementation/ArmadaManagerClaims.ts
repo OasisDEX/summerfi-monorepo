@@ -312,10 +312,8 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       this._supportedChains
         .filter((chainInfo) => chainInfo.chainId === this._hubChainInfo.chainId)
         .map(async (chainInfo) => {
-          // const rewards = await this.getProtocolUsageRewards(params.user, chainInfo)
-          // FIXME: disabled protocol usage rewards
-          // because fleet rewards manager was not whitleilsted
-          const rewards = { total: 0n }
+          const rewards = await this.getProtocolUsageRewards(params.user, chainInfo)
+
           if (chainInfo.chainId === this._hubChainInfo.chainId) {
             // on hubchain we add delegation and distribution rewards
             perChain[chainInfo.chainId] =
@@ -494,36 +492,35 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       )
     }
 
-    // FIXME: disabled because fleet rewards manager was not whitleilsted
-    // const fleetRewardToken = getDeployedContractAddress({
-    //   chainInfo: params.chainInfo,
-    //   contractCategory: 'gov',
-    //   contractName: 'summerToken',
-    // })
+    const fleetRewardToken = getDeployedContractAddress({
+      chainInfo: params.chainInfo,
+      contractCategory: 'gov',
+      contractName: 'summerToken',
+    })
 
-    // requests.push(
-    //   this.getProtocolUsageRewards(params.user, params.chainInfo).then((protocolUsageRewards) => {
-    //     if (protocolUsageRewards.total > 0n) {
-    //       const fleetCommandersAddresses = Object.entries(protocolUsageRewards.perFleet)
-    //         .filter(([_, rewards]) => rewards > 0n)
-    //         .map(([addressKey]) => Address.createFromEthereum({ value: addressKey }))
-    //       LoggingService.debug(
-    //         'Claiming only for the fleets with rewards:',
-    //         fleetCommandersAddresses.map((a) => a.value),
-    //       )
+    requests.push(
+      this.getProtocolUsageRewards(params.user, params.chainInfo).then((protocolUsageRewards) => {
+        if (protocolUsageRewards.total > 0n) {
+          const fleetCommandersAddresses = Object.entries(protocolUsageRewards.perFleet)
+            .filter(([_, rewards]) => rewards > 0n)
+            .map(([addressKey]) => Address.createFromEthereum({ value: addressKey }))
+          LoggingService.debug(
+            'Claiming only for the fleets with rewards:',
+            fleetCommandersAddresses.map((a) => a.value),
+          )
 
-    //       return this.getClaimProtocolUsageRewardsTx({
-    //         chainInfo: params.chainInfo,
-    //         user: params.user,
-    //         fleetCommandersAddresses,
-    //         rewardToken: fleetRewardToken,
-    //       }).then((claimFleetRewards) => {
-    //         multicallArgs.push(claimFleetRewards[0].transaction.calldata)
-    //         multicallOperations.push('fleet rewards: ' + protocolUsageRewards.total)
-    //       })
-    //     }
-    //   }),
-    // )
+          return this.getClaimProtocolUsageRewardsTx({
+            chainInfo: params.chainInfo,
+            user: params.user,
+            fleetCommandersAddresses,
+            rewardToken: fleetRewardToken,
+          }).then((claimFleetRewards) => {
+            multicallArgs.push(claimFleetRewards[0].transaction.calldata)
+            multicallOperations.push('fleet rewards: ' + protocolUsageRewards.total)
+          })
+        }
+      }),
+    )
 
     await Promise.all(requests)
 
