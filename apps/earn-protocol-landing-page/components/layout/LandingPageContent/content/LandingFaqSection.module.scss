@@ -1,17 +1,25 @@
 .faqSectionHeaderWrapper {
   color: var(--color-text-secondary);
-  padding: 0 var(--spacing-space-small);
+  padding: 0 var(--spacing-space-medium);
 
   @include media('>s') {
+    padding: 0 var(--spacing-space-x-large);
+  }
+
+  @include media('>l') {
     padding: 0 var(--spacing-space-3x-large);
   }
 }
 
 .faqSectionBlockWrapper {
-  padding: 0 var(--spacing-space-x-small);
   margin-top: var(--spacing-space-x-large);
+  padding: 0 var(--spacing-space-medium);
 
   @include media('>s') {
+    padding: 0 var(--spacing-space-x-large);
+  }
+
+  @include media('>l') {
     padding: 0 var(--spacing-space-3x-large);
   }
 }

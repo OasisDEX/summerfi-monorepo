@@ -28,7 +28,7 @@ export const SumrPageView: FC<SumrPageViewProps> = () => {
         <SumrTransferabilityCounter />
         <SumrWhatIsSumrToken />
         <SumrGovernance />
-        {/* <SumrFundamentalUtility />
+        <SumrFundamentalUtility />
         <SumrNotTransferable />
         <SumrMultipleWaysToEarn />
         <SumrRaysRewards />

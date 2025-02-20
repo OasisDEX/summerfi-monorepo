@@ -6,6 +6,10 @@
   gap: var(--general-space-64);
   margin-top: var(--general-space-128);
 
+  .title {
+    padding: 0 var(--general-space-16);
+  }
+
   .boxes {
     display: flex;
     flex-wrap: wrap;

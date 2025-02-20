@@ -11,7 +11,7 @@ import withArrowStyles from '@/components/atoms/WithArrow/WithArrow.module.scss'
 export function WithArrow({
   children,
   gap = 2,
-  variant = 'p3',
+  variant = 'p3semi',
   style,
   as,
   className,
