@@ -32,6 +32,7 @@ type VaultCardProps = SDKVaultishType & {
   sumrDilutedValuation?: string
   sumrPrice?: number
   showCombinedBonus?: boolean
+  wrapperStyle?: React.CSSProperties
 }
 
 export const VaultCard: FC<VaultCardProps> = (props) => {
@@ -51,6 +52,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     withTokenBonus,
     sumrPrice,
     showCombinedBonus = false,
+    wrapperStyle,
   } = props
 
   const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus(
@@ -84,7 +86,12 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     : undefined
 
   return (
-    <GradientBox withHover={withHover} selected={selected} onClick={handleVaultClick}>
+    <GradientBox
+      withHover={withHover}
+      selected={selected}
+      onClick={handleVaultClick}
+      style={wrapperStyle}
+    >
       <Card
         className={clsx(vaultCardStyles.vaultCard, {
           [vaultCardStyles.vaultCardSelected]: selected,

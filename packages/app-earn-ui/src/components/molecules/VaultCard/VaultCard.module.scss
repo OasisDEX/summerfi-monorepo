@@ -19,7 +19,14 @@
 }
 
 .vaultCardAssetsWrapper {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-direction: column;
   width: 100%;
+  flex-wrap: wrap;
+  gap: var(--general-space-24);
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
+  }
 }

@@ -90,6 +90,9 @@ export { DataModule } from './components/molecules/DataModule/DataModule'
 export { Badge } from './components/molecules/Badge/Badge'
 export { HighestQualityYieldsDisclaimer } from './components/molecules/HighestQualityYeildsDisclaimer/HighestQualityYieldsDisclaimer'
 export { CookieBanner } from './components/molecules/CookieBanner/CookieBanner'
+export { TitleWithSelect } from './components/molecules/TitleWithSelect/TitleWithSelect'
+export { IllustrationCircle } from './components/molecules/IllustrationCircle/IllustrationCircle'
+
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'
 export { Table, type TableSortedColumn } from './components/organisms/Table/Table'
@@ -135,6 +138,7 @@ export {
 } from './helpers/get-earnings-estimations-map'
 export { getUniqueVaultId } from './helpers/get-unique-vault-id'
 export { getDisplayToken } from './helpers/get-display-token'
+export { softRouterPush } from './helpers/soft-router-push'
 
 export { INTERNAL_LINKS, EXTERNAL_LINKS } from './helpers/application-links'
 
