@@ -75,7 +75,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
   const parsedTotalValueLockedUSD = formatCryptoBalance(new BigNumber(String(totalValueLockedUSD)))
 
   const combinedApr = showCombinedBonus
-    ? formatDecimalAsPercent(apy + rawSumrTokenBonus)
+    ? formatDecimalAsPercent(Number(apy) + Number(rawSumrTokenBonus))
     : undefined
 
   return (

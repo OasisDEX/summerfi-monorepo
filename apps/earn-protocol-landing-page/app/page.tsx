@@ -1,10 +1,11 @@
 import { BigGradientBox, HighestQualityYieldsDisclaimer } from '@summerfi/app-earn-ui'
-import { type IconNamesList, type SDKNetwork } from '@summerfi/app-types'
-import { aggregateArksPerNetwork, parseServerResponseToClient } from '@summerfi/app-utils'
+import { type IconNamesList } from '@summerfi/app-types'
+import { parseServerResponseToClient, subgraphNetworkToId } from '@summerfi/app-utils'
 
 import { getProtocolTvl } from '@/app/server-handlers/defillama/get-protocol-tvl'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
+import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import {
   EffortlessAccessBlock,
   EnhancedRiskManagement,
@@ -23,8 +24,6 @@ import { StartEarningNow } from '@/components/layout/LandingPageContent/content/
 import { SummerFiProSection } from '@/components/layout/LandingPageContent/content/SummerFiProSection'
 import { SumrToken } from '@/components/layout/LandingPageContent/content/SumrToken'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
-
-import { getInterestRates } from './server-handlers/interest-rates'
 
 export const revalidate = 60
 
@@ -128,32 +127,21 @@ export default async function HomePage() {
 
   const { config } = parseServerResponseToClient(systemConfig)
 
-  const aggregatedArksPerNetwork = aggregateArksPerNetwork(vaults)
+  const vaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig: config })
 
-  const interestRatesPromises = Object.entries(aggregatedArksPerNetwork).map(
-    ([network, { arks }]) =>
-      getInterestRates({
-        network: network as SDKNetwork,
-        arksList: arks,
-        justLatestRates: true,
-      }),
-  )
-
-  const interestRatesResults = await Promise.all(interestRatesPromises)
-
-  const vaultsDecorated = decorateVaultsWithConfig({
-    vaults,
-    systemConfig: config,
-    decorators: {
-      arkInterestRatesMap: interestRatesResults.reduce((acc, curr) => {
-        return { ...acc, ...curr }
-      }, {}),
-    },
+  const vaultsApyByNetworkMap = await getVaultsApy({
+    fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
+      fleetAddress: id,
+      chainId: subgraphNetworkToId(network),
+    })),
   })
 
   return (
     <div style={{ display: 'flex', gap: '8px', flexDirection: 'column', alignItems: 'center' }}>
-      <LandingPageHero vaultsList={vaultsDecorated} />
+      <LandingPageHero
+        vaultsList={vaultsWithConfig}
+        vaultsApyByNetworkMap={vaultsApyByNetworkMap}
+      />
       <BigGradientBox>
         <EffortlessAccessBlock />
         <SupportedNetworksList />
@@ -171,7 +159,7 @@ export default async function HomePage() {
         })}
       />
       <MarketingPoints>
-        <HigherYieldsBlock vaultsList={vaultsDecorated} />
+        <HigherYieldsBlock vaultsList={vaultsWithConfig} />
         <EnhancedRiskManagement protectedCapital="$10B+" />
         <BestOfDecentralizedFinance />
         <SumrToken />

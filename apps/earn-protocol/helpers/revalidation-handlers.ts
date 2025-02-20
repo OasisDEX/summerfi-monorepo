@@ -15,9 +15,10 @@ export const revalidateUser = async (walletAddress?: string) => {
 
 export const revalidateVaultsListData = async () => {
   // clears the cache and revalidates the vaults list data
+  revalidateTag(REVALIDATION_TAGS.VAULTS_LIST)
   revalidateTag(REVALIDATION_TAGS.INTEREST_RATES)
 
-  return await Promise.resolve(revalidatePath('/earn'))
+  return await Promise.resolve()
 }
 
 export const revalidatePositionData = async (

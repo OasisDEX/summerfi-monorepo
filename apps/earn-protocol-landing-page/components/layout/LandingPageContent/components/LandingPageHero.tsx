@@ -1,15 +1,23 @@
 'use client'
 import { Carousel, Text } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType } from '@summerfi/app-types'
+import { subgraphNetworkToId } from '@summerfi/app-utils'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
+import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { SummerFiProBox } from '@/components/layout/LandingPageContent'
 import { LandingPageVaultPicker } from '@/components/organisms/LandingPageVaultPicker/LandingPageVaultPicker'
 import { sdkApiUrl } from '@/constants/sdk'
 
 import landingPageHeroStyles from '@/components/layout/LandingPageContent/components/LandingPageHero.module.scss'
 
-export const LandingPageHero = ({ vaultsList }: { vaultsList: SDKVaultishType[] }) => {
+export const LandingPageHero = ({
+  vaultsList,
+  vaultsApyByNetworkMap,
+}: {
+  vaultsList: SDKVaultishType[]
+  vaultsApyByNetworkMap: GetVaultsApyResponse
+}) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
       <div className={landingPageHeroStyles.landingPageHeroWrapper}>
@@ -49,7 +57,13 @@ export const LandingPageHero = ({ vaultsList }: { vaultsList: SDKVaultishType[] 
         </div>
         <Carousel
           components={vaultsList.map((vault) => (
-            <LandingPageVaultPicker vault={vault} key={vault.id} />
+            <LandingPageVaultPicker
+              vault={vault}
+              key={vault.id}
+              apy={
+                vaultsApyByNetworkMap[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
+              }
+            />
           ))}
           contentWidth={515}
         />
