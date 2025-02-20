@@ -22,6 +22,7 @@ interface VaultExposureTableSectionProps {
   resolvedRowsToDisplay: number
   seeAll: boolean
   setSeeAll: Dispatch<SetStateAction<boolean>>
+  arksInterestRates?: { [key: string]: number }
 }
 
 const VaultExposureTableSection: FC<VaultExposureTableSectionProps> = ({
@@ -31,10 +32,12 @@ const VaultExposureTableSection: FC<VaultExposureTableSectionProps> = ({
   resolvedRowsToDisplay,
   seeAll,
   setSeeAll,
+  arksInterestRates,
 }) => {
   return (
     <>
       <VaultExposureTable
+        arksInterestRates={arksInterestRates}
         vault={vaultExposureFilter({
           vault: vault as SDKVaultType,
           allocationType,
@@ -73,9 +76,10 @@ const rowsToDisplay = 5
 
 interface VaultExposureProps {
   vault: SDKVaultishType
+  arksInterestRates?: { [key: string]: number }
 }
 
-export const VaultExposure: FC<VaultExposureProps> = ({ vault }) => {
+export const VaultExposure: FC<VaultExposureProps> = ({ vault, arksInterestRates }) => {
   const [seeAll, setSeeAll] = useState(false)
 
   // hard to tell how many arks will be per vault therefore limiting it for now to 20
@@ -89,6 +93,7 @@ export const VaultExposure: FC<VaultExposureProps> = ({ vault }) => {
       id: VaultExposureFilterType.ALL,
       content: (
         <VaultExposureTableSection
+          arksInterestRates={arksInterestRates}
           vault={vault}
           filteredVault={vaultExposureFilter({
             vault: vault as SDKVaultType,
@@ -106,6 +111,7 @@ export const VaultExposure: FC<VaultExposureProps> = ({ vault }) => {
       id: VaultExposureFilterType.ALLOCATED,
       content: (
         <VaultExposureTableSection
+          arksInterestRates={arksInterestRates}
           vault={vault}
           filteredVault={vaultExposureFilter({
             vault: vault as SDKVaultType,
@@ -123,6 +129,7 @@ export const VaultExposure: FC<VaultExposureProps> = ({ vault }) => {
       id: VaultExposureFilterType.UNALLOCATED,
       content: (
         <VaultExposureTableSection
+          arksInterestRates={arksInterestRates}
           vault={vault}
           filteredVault={vaultExposureFilter({
             vault: vault as SDKVaultType,

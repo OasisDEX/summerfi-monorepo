@@ -27,9 +27,9 @@ import { formatChartCryptoValue } from '@/features/forecast/chart-formatters'
 export type HistoricalChartProps = {
   data?: unknown[]
   tokenSymbol: TokenSymbolsList
-  position: {
-    positionData: IArmadaPosition
-    vaultData: SDKVaultishType
+  portfolioPosition: {
+    position: IArmadaPosition
+    vault: SDKVaultishType
   }
   timeframe: TimeframesType
 }
@@ -37,11 +37,11 @@ export type HistoricalChartProps = {
 export const HistoricalChart = ({
   data,
   tokenSymbol,
-  position,
+  portfolioPosition,
   timeframe,
 }: HistoricalChartProps) => {
-  const { netValue, netDeposited, netEarnings } = getPositionValues(position)
-  const positionToken = getDisplayToken(position.vaultData.inputToken.symbol)
+  const { netValue, netDeposited, netEarnings } = getPositionValues(portfolioPosition)
+  const positionToken = getDisplayToken(portfolioPosition.vault.inputToken.symbol)
 
   const legendBaseData = {
     netValue: `${formatCryptoBalance(netValue)} ${positionToken}`,

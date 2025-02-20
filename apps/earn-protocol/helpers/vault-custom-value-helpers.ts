@@ -1,67 +1,21 @@
 import {
   type EarnAppConfigType,
   type EarnAppFleetCustomConfigType,
-  type ForecastData,
-  type IArmadaPosition,
   type SDKVaultishType,
 } from '@summerfi/app-types'
 import { decorateWithFleetConfig } from '@summerfi/app-utils'
 
-import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
-import { type GetPositionHistoryReturnType } from '@/app/server-handlers/position-history'
-import { decorateWithArkInterestRatesData } from '@/helpers/vault-decorators/ark-interest-data'
-import { decorateWithArkHistoricalChartsData } from '@/helpers/vault-decorators/chart-ark-historical-data'
-import { decorateWithHistoryChartData } from '@/helpers/vault-decorators/chart-historical-data'
-import { decorateWithPerformanceChartData } from '@/helpers/vault-decorators/chart-performance-data'
-
-type VaultDecoratorsType = {
-  // vaults will be a list of vaults if its just config, or a single vault if its decorators
+type VaultConfigDecorator = {
   vaults: SDKVaultishType[]
-  position?: IArmadaPosition
   systemConfig: Partial<EarnAppConfigType>
-  decorators?: {
-    arkInterestRatesMap?: GetInterestRatesReturnType
-    positionHistory?: GetPositionHistoryReturnType
-    positionForecast?: ForecastData
-  }
 }
 
-export const decorateCustomVaultFields = ({
-  vaults,
-  position,
-  systemConfig,
-  decorators,
-}: VaultDecoratorsType) => {
+export const decorateVaultsWithConfig = ({ vaults, systemConfig }: VaultConfigDecorator) => {
   const { fleetMap } = systemConfig
-  const { arkInterestRatesMap, positionHistory, positionForecast } = decorators ?? {}
 
   const vaultsWithConfig = fleetMap ? decorateWithFleetConfig(vaults, fleetMap) : vaults
 
-  const vaultsWithChartsData = arkInterestRatesMap
-    ? decorateWithArkHistoricalChartsData(vaultsWithConfig, arkInterestRatesMap)
-    : vaultsWithConfig
-
-  const vaultsWithArkInterestRates = arkInterestRatesMap
-    ? decorateWithArkInterestRatesData(vaultsWithChartsData, arkInterestRatesMap)
-    : vaultsWithChartsData
-
-  const vaultsWithPerformanceChartData =
-    positionHistory && positionForecast
-      ? decorateWithPerformanceChartData(vaultsWithArkInterestRates, {
-          position,
-          positionHistory,
-          positionForecast,
-        })
-      : vaultsWithArkInterestRates
-
-  const vaultsWithHistoryChartData = positionHistory
-    ? decorateWithHistoryChartData(vaultsWithPerformanceChartData, {
-        position,
-        positionHistory,
-      })
-    : vaultsWithArkInterestRates
-
-  return vaultsWithHistoryChartData as SDKVaultishType[]
+  return vaultsWithConfig as SDKVaultishType[]
 }
 
 export const getCustomVaultConfigById = (

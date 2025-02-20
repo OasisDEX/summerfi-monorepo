@@ -11,24 +11,24 @@ export type PositionValues = {
   netEarningsUSD: BigNumber
 }
 
-export const getPositionValues = (position: {
-  positionData: IArmadaPosition
-  vaultData: SDKVaultishType
+export const getPositionValues = (portfolioPosition: {
+  position: IArmadaPosition
+  vault: SDKVaultishType
 }) => {
-  const netValue = new BigNumber(position.positionData.amount.amount)
+  const netValue = new BigNumber(portfolioPosition.position.amount.amount)
 
-  const depositsSum = position.positionData.deposits.reduce(
+  const depositsSum = portfolioPosition.position.deposits.reduce(
     (acc, { amount }) => acc.plus(amount),
     new BigNumber(0),
   )
-  const withdrawalsSum = position.positionData.withdrawals.reduce(
+  const withdrawalsSum = portfolioPosition.position.withdrawals.reduce(
     (acc, { amount }) => acc.plus(amount), // these are NEGATIVE values
     new BigNumber(0),
   )
 
   const netDeposited = depositsSum.plus(withdrawalsSum)
   const netEarnings = netValue.minus(netDeposited)
-  const inputTokenPrice = new BigNumber(position.vaultData.inputTokenPriceUSD ?? 0)
+  const inputTokenPrice = new BigNumber(portfolioPosition.vault.inputTokenPriceUSD ?? 0)
 
   return {
     netValue,

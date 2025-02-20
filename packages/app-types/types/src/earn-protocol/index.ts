@@ -23,30 +23,25 @@ export type ChartsDataTimeframes = {
   [key in TimeframesType]: ChartDataPoints[]
 }
 
-export type VaultWithChartsData = {
-  performanceChartData?: {
-    data: ChartsDataTimeframes
-  }
-  historyChartData?: {
-    data: ChartsDataTimeframes
-  }
-  arksHistoricalChartData?: {
-    data: ChartsDataTimeframes
-    dataNames: string[]
-    colors: { [key: string]: string }
-  }
+export type PerformanceChartData = {
+  data: ChartsDataTimeframes
 }
 
-export type VaultArkInterestRateMap = {
-  arksInterestRates?: {
-    [key: string]: number
-  }
+export type HistoryChartData = {
+  data: ChartsDataTimeframes
+}
+
+export type ArksHistoricalChartData = {
+  data: ChartsDataTimeframes
+  dataNames: string[]
+  colors: { [key: string]: string }
 }
 
 type VaultCustomFields = {
   // custom fields for vaults - decorated within the earn/lp apps
-  customFields?: EarnAppFleetCustomConfigType & VaultWithChartsData & VaultArkInterestRateMap
+  customFields?: EarnAppFleetCustomConfigType
 }
+
 export type SDKVaultsListType = (GetVaultsQuery['vaults'][number] & VaultCustomFields)[]
 export type SDKVaultType = Exclude<GetVaultQuery['vault'] & VaultCustomFields, null | undefined>
 export type SDKGlobalRebalancesType = GetGlobalRebalancesQuery['rebalances']

@@ -25,6 +25,8 @@ import {
 } from '@summerfi/app-earn-ui'
 import { useTermsOfService } from '@summerfi/app-tos'
 import {
+  type ArksHistoricalChartData,
+  type PerformanceChartData,
   type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
@@ -72,6 +74,9 @@ export const VaultManageViewComponent = ({
   userActivity,
   topDepositors,
   viewWalletAddress,
+  performanceChartData,
+  arksHistoricalChartData,
+  arksInterestRates,
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
@@ -79,6 +84,9 @@ export const VaultManageViewComponent = ({
   userActivity: UsersActivity
   topDepositors: SDKUsersActivityType
   viewWalletAddress: string
+  performanceChartData: PerformanceChartData
+  arksHistoricalChartData: ArksHistoricalChartData
+  arksInterestRates?: { [key: string]: number }
 }) => {
   const user = useUser()
   const { userWalletAddress, isLoadingAccount } = useUserWallet()
@@ -133,8 +141,8 @@ export const VaultManageViewComponent = ({
   })
 
   const { netValue } = getPositionValues({
-    positionData: position,
-    vaultData: vault,
+    position,
+    vault,
   })
 
   const {
@@ -393,7 +401,7 @@ export const VaultManageViewComponent = ({
               defaultExpanded
             >
               <PositionPerformanceChart
-                chartData={vault.customFields?.performanceChartData}
+                chartData={performanceChartData}
                 inputToken={getDisplayToken(vault.inputToken.symbol)}
               />
             </Expander>
@@ -428,7 +436,7 @@ export const VaultManageViewComponent = ({
               }
             >
               <ArkHistoricalYieldChart
-                chartData={vault.customFields?.arksHistoricalChartData}
+                chartData={arksHistoricalChartData}
                 summerVaultName={vault.customFields?.name ?? 'Summer Vault'}
               />
             </Expander>
@@ -439,7 +447,7 @@ export const VaultManageViewComponent = ({
                 </Text>
               }
             >
-              <VaultExposure vault={vault as SDKVaultType} />
+              <VaultExposure vault={vault as SDKVaultType} arksInterestRates={arksInterestRates} />
             </Expander>
             <Expander
               title={

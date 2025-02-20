@@ -14,8 +14,10 @@ import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { VaultOpenView } from '@/components/layout/VaultOpenView/VaultOpenView'
+import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
+import { mapArkLatestInterestRates } from '@/helpers/map-ark-interest-rates'
 import {
-  decorateCustomVaultFields,
+  decorateVaultsWithConfig,
   getVaultIdByVaultCustomName,
 } from '@/helpers/vault-custom-value-helpers'
 
@@ -56,16 +58,13 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       })
     : {}
 
-  const [vaultDecorated] = vault
-    ? decorateCustomVaultFields({
+  const [vaultWithConfig] = vault
+    ? decorateVaultsWithConfig({
         vaults: [vault],
         systemConfig,
-        decorators: {
-          arkInterestRatesMap: interestRates,
-        },
       })
     : []
-  const vaultsDecorated = decorateCustomVaultFields({ vaults, systemConfig })
+  const allVaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })
 
   if (!vault) {
     return (
@@ -75,13 +74,22 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     )
   }
 
+  const arksHistoricalChartData = getArkHistoricalChartData({
+    vault: vaultWithConfig,
+    arkInterestRatesMap: interestRates,
+  })
+
+  const arksInterestRates = mapArkLatestInterestRates(interestRates)
+
   return (
     <VaultOpenView
-      vault={vaultDecorated}
-      vaults={vaultsDecorated}
+      vault={vaultWithConfig}
+      vaults={allVaultsWithConfig}
       userActivity={usersActivity}
       topDepositors={topDepositors}
       medianDefiYield={medianDefiYield}
+      arksHistoricalChartData={arksHistoricalChartData}
+      arksInterestRates={arksInterestRates}
     />
   )
 }

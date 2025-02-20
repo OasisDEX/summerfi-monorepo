@@ -9,7 +9,10 @@ import { BigNumber } from 'bignumber.js'
  * @param vault - The vault object containing ARKs and their balances
  * @returns The weighted average APY as a BigNumber (in decimal form, not percentage)
  */
-export const getArksWeightedApy = (vault: SDKVaultType | SDKVaultishType): BigNumber => {
+export const getArksWeightedApy = (
+  vault: SDKVaultType | SDKVaultishType,
+  arksInterestRates?: { [key: string]: number },
+): BigNumber => {
   const vaultInputToken = vault.inputTokenBalance
   const nonBufferArks = vault.arks.filter((ark) => ark.name !== 'BufferArk')
 
@@ -19,7 +22,7 @@ export const getArksWeightedApy = (vault: SDKVaultType | SDKVaultishType): BigNu
         ? new BigNumber(ark.inputTokenBalance.toString()).div(vaultInputToken.toString())
         : new BigNumber(0)
 
-    const arkInterestRate = vault.customFields?.arksInterestRates?.[ark.name as string]
+    const arkInterestRate = arksInterestRates?.[ark.name as string]
     const apr = isNaN(Number(arkInterestRate))
       ? new BigNumber(0)
       : new BigNumber(arkInterestRate ?? 0).div(100)

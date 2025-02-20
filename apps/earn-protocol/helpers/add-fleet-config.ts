@@ -1,7 +1,7 @@
 import { type EarnAppConfigType, type SDKVaultishType } from '@summerfi/app-types'
 import { subgraphNetworkToId } from '@summerfi/app-utils'
 
-export const decorateWithFleetConfig = (
+export const addFleetConfig = (
   vaults: SDKVaultishType[],
   fleetMap: EarnAppConfigType['fleetMap'],
 ) =>

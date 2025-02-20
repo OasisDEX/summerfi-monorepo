@@ -111,24 +111,24 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
     [vaultsList, selectedVaultId],
   )
 
-  const vaultData = selectedVaultData ?? networkFilteredVaults[0]
+  const resolvedVaultData = selectedVaultData ?? networkFilteredVaults[0]
   const { userWalletAddress } = useUserWallet()
 
   const { position: positionExists, isLoading } = usePosition({
-    chainId: subgraphNetworkToSDKId(vaultData.protocol.network),
-    vaultId: vaultData.id,
+    chainId: subgraphNetworkToSDKId(resolvedVaultData.protocol.network),
+    vaultId: resolvedVaultData.id,
     onlyActive: true,
   })
 
   const { handleTokenSelectionChange, selectedTokenOption, tokenOptions } = useTokenSelector({
-    vault: vaultData,
-    chainId: subgraphNetworkToSDKId(vaultData.protocol.network),
+    vault: resolvedVaultData,
+    chainId: subgraphNetworkToSDKId(resolvedVaultData.protocol.network),
   })
 
   const tokenBalances = useTokenBalances({
     tokenSymbol: selectedTokenOption.value,
-    network: vaultData.protocol.network,
-    vaultTokenSymbol: vaultData.inputToken.symbol,
+    network: resolvedVaultData.protocol.network,
+    vaultTokenSymbol: resolvedVaultData.inputToken.symbol,
   })
 
   const handleChangeNetwork = (selected: DropdownRawOption) => {
@@ -231,18 +231,18 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
     onBlur,
     onFocus,
   } = useAmount({
-    tokenDecimals: vaultData.inputToken.decimals,
-    tokenPrice: vaultData.inputTokenPriceUSD,
+    tokenDecimals: resolvedVaultData.inputToken.decimals,
+    tokenPrice: resolvedVaultData.inputTokenPriceUSD,
     selectedToken:
       tokenBalances.token ??
       ({
-        decimals: vaultData.inputToken.decimals,
+        decimals: resolvedVaultData.inputToken.decimals,
       } as IToken),
   })
 
   const { amountDisplayUSDWithSwap, rawToTokenAmount } = useAmountWithSwap({
-    vault: vaultData,
-    vaultChainId: subgraphNetworkToSDKId(vaultData.protocol.network),
+    vault: resolvedVaultData,
+    vaultChainId: subgraphNetworkToSDKId(resolvedVaultData.protocol.network),
     amountDisplay,
     amountDisplayUSD,
     transactionType: TransactionAction.DEPOSIT,
@@ -319,7 +319,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
       }
       rightContent={
         <VaultSimulationForm
-          vaultData={vaultData}
+          vaultData={resolvedVaultData}
           isMobile={isMobile}
           tokenBalance={tokenBalances.tokenBalance}
           isTokenBalanceLoading={tokenBalances.tokenBalanceLoading}

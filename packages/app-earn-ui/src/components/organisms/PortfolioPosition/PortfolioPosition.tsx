@@ -17,9 +17,9 @@ import { getVaultPositionUrl } from '@/helpers/get-vault-url'
 import portfolioPositionStyles from './PortfolioPosition.module.scss'
 
 type PortfolioPositionProps = {
-  position: {
-    positionData: IArmadaPosition
-    vaultData: SDKVaultishType
+  portfolioPosition: {
+    position: IArmadaPosition
+    vault: SDKVaultishType
   }
   positionGraph: ReactNode
   sumrPrice?: number
@@ -45,7 +45,7 @@ const PortfolioPositionHeaderValue = ({
 )
 
 export const PortfolioPosition = ({
-  position,
+  portfolioPosition,
   positionGraph,
   sumrPrice,
 }: PortfolioPositionProps) => {
@@ -59,7 +59,7 @@ export const PortfolioPosition = ({
     rewardTokenEmissionsAmount,
     rewardTokens,
     createdTimestamp,
-  } = position.vaultData
+  } = portfolioPosition.vault
   const {
     id: {
       user: {
@@ -68,11 +68,11 @@ export const PortfolioPosition = ({
         },
       },
     },
-  } = position.positionData
+  } = portfolioPosition.position
   const isVaultAtLeast30dOld = createdTimestamp
     ? dayjs().diff(dayjs(Number(createdTimestamp) * 1000), 'day') > 30
     : false
-  const currentApr = formatDecimalAsPercent(getArksWeightedApy(position.vaultData))
+  const currentApr = formatDecimalAsPercent(getArksWeightedApy(portfolioPosition.vault))
   const apr30dParsed = isVaultAtLeast30dOld
     ? formatDecimalAsPercent(new BigNumber(apr30d).div(100))
     : 'New Strategy'

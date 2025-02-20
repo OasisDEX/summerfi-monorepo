@@ -3,11 +3,11 @@
 import { useMemo } from 'react'
 import { Card } from '@summerfi/app-earn-ui'
 import {
+  type HistoryChartData,
   type IArmadaPosition,
   type SDKVaultishType,
   type TimeframesType,
   type TokenSymbolsList,
-  type VaultWithChartsData,
 } from '@summerfi/app-types'
 
 import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
@@ -16,11 +16,11 @@ import { POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
 import { useTimeframes } from '@/hooks/use-timeframes'
 
 export type PositionHistoricalChartProps = {
-  chartData: VaultWithChartsData['historyChartData']
+  chartData: HistoryChartData
   tokenSymbol: TokenSymbolsList
   position: {
-    positionData: IArmadaPosition
-    vaultData: SDKVaultishType
+    position: IArmadaPosition
+    vault: SDKVaultishType
   }
 }
 
@@ -75,7 +75,7 @@ export const PositionHistoricalChart = ({
         timeframe={timeframe}
         data={parsedData}
         tokenSymbol={tokenSymbol}
-        position={position}
+        portfolioPosition={position}
       />
     </Card>
   )

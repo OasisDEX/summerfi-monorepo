@@ -44,6 +44,7 @@ interface VaultManageGridProps {
   simulationGraph: ReactNode
   sumrPrice?: number
   onRefresh?: (chainName?: string, vaultId?: string, walletAddress?: string) => void
+  arksInterestRates?: { [key: string]: number }
 }
 
 export const VaultManageGrid: FC<VaultManageGridProps> = ({
@@ -59,6 +60,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   displaySimulationGraph,
   sumrPrice,
   onRefresh,
+  arksInterestRates,
 }) => {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [displaySimulationGraphStaggered, setDisplaySimulationGraphStaggered] =
@@ -69,7 +71,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
     : false
 
   const apr30d = formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
-  const aprCurrent = formatDecimalAsPercent(getArksWeightedApy(vault))
+  const aprCurrent = formatDecimalAsPercent(getArksWeightedApy(vault, arksInterestRates))
 
   const noOfDeposits = position.deposits.length.toString()
 
@@ -89,8 +91,8 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   }, [displaySimulationGraph])
 
   const { netDeposited, netEarnings, netValue } = getPositionValues({
-    positionData: position,
-    vaultData: vault,
+    position,
+    vault,
   })
 
   const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus(

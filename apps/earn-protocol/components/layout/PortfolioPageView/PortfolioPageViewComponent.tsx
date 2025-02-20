@@ -1,16 +1,17 @@
 'use client'
 import { type FC } from 'react'
 import {
+  type HistoryChartData,
   type SDKGlobalRebalancesType,
   type SDKVaultishType,
   type UsersActivity,
 } from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
-import { type PortfolioPositionsList } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { sdkApiUrl } from '@/constants/sdk'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
+import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 
 import { PortfolioPageView } from './PortfolioPageView'
 
@@ -19,10 +20,13 @@ interface PortfolioPageViewComponentProps {
   walletData: PortfolioAssetsResponse
   rewardsData: ClaimDelegateExternalData
   vaultsList: SDKVaultishType[]
-  positions: PortfolioPositionsList[]
+  positions: PositionWithVault[]
   rebalancesList: SDKGlobalRebalancesType
   userActivity: UsersActivity
   totalRays: number
+  positionsHistoricalChartMap: {
+    [key: string]: HistoryChartData
+  }
 }
 
 export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = ({
@@ -34,6 +38,7 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
   rebalancesList,
   userActivity,
   totalRays,
+  positionsHistoricalChartMap,
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -46,6 +51,7 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
         rebalancesList={rebalancesList}
         userActivity={userActivity}
         totalRays={totalRays}
+        positionsHistoricalChartMap={positionsHistoricalChartMap}
       />
     </SDKContextProvider>
   )
