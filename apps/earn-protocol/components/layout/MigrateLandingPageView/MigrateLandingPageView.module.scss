@@ -88,13 +88,10 @@
           grid-template-columns: 1fr 1fr 1fr;
         }
       }
-    }
-  }
 
-  .floatingBoxWrapper {
-    position: fixed;
-    bottom: 22px;
-    right: 14px;
-    z-index: 2;
+      .buttonWrapper {
+        margin: var(--general-space-8) auto 0 auto;
+      }
+    }
   }
 }

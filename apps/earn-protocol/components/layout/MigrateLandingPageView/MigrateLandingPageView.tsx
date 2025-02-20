@@ -29,7 +29,6 @@ import Link from 'next/link'
 
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
-import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
 import { NavConfigContent } from '@/features/nav-config/components/NavConfigContent/NavConfigContent'
 
 import classNames from './MigrateLandingPageView.module.scss'
@@ -94,6 +93,10 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
     })
   }, [localVaultNetwork, vaultsList])
 
+  const [selectedVaultId, setSelectedVaultId] = useState<string | undefined>(undefined)
+
+  console.log('selectedVaultId', selectedVaultId)
+
   const vaultsNetworksList = useMemo(
     () => [
       ...Array.from(new Set(vaultsList.map(({ protocol }) => protocol.network)))
@@ -128,11 +131,24 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
     setIsConfigOpen((prev) => !prev)
   }
 
+  const handleChangeVault = (nextselectedVaultId: string) => {
+    setSelectedVaultId(nextselectedVaultId)
+  }
+
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
+
+  const migrateVaultUrl = useMemo(() => {
+    if (!selectedVaultId) {
+      return '/migrate'
+    }
+
+    const [vaultId, vaultNetwork] = selectedVaultId.split('-')
+
+    return `/migrate/${sdkNetworkToHumanNetwork(vaultNetwork as SDKNetwork)}/position/${vaultId}`
+  }, [selectedVaultId])
 
   return (
     <div className={classNames.migrateLandingPageViewWrapper}>
-      <MigrationBox className={classNames.floatingBoxWrapper} />
       <div className={classNames.headerWrapper}>
         <TitleWithSelect
           title="Why Migrate?"
@@ -192,16 +208,13 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
               )}
             </div>
             <div className={classNames.vaultsList}>
-              {networkFilteredVaults.map((vault, vaultIndex) => (
+              {networkFilteredVaults.map((vault) => (
                 <div key={getUniqueVaultId(vault)}>
                   <VaultCard
                     {...vault}
                     withHover
-                    // selected={
-                    //   selectedVaultId === getUniqueVaultId(vault) ||
-                    //   (!selectedVaultId && vaultIndex === 0)
-                    // }
-                    onClick={() => null}
+                    selected={selectedVaultId === getUniqueVaultId(vault)}
+                    onClick={() => handleChangeVault(getUniqueVaultId(vault))}
                     withTokenBonus={sumrNetApyConfig.withSumr}
                     sumrPrice={estimatedSumrPrice}
                     wrapperStyle={{
@@ -210,6 +223,13 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
                   />
                 </div>
               ))}
+            </div>
+            <div className={classNames.buttonWrapper}>
+              <Link href={migrateVaultUrl}>
+                <Button variant="primaryLarge" disabled={!selectedVaultId}>
+                  Migrate
+                </Button>
+              </Link>
             </div>
           </div>
         </Card>
