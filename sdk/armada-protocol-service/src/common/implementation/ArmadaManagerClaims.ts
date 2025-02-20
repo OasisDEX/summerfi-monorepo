@@ -271,24 +271,25 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     // get protocol usage rewards for each chain
     const perChain: Record<number, bigint> = {}
 
-    let protocolUsageRewards = 0n
+    let totalUsageRewards = 0n
     const perChainRewards = await Promise.all(
       this._supportedChains.map(async (chainInfo) => {
-        const rewards = await this.getProtocolUsageRewards(params.user, chainInfo)
+        const usageRewards = await this.getProtocolUsageRewards(params.user, chainInfo)
+
         if (chainInfo.chainId === this._hubChainInfo.chainId) {
           // on hubchain we add delegation and distribution rewards
           perChain[chainInfo.chainId] =
-            rewards.total + voteDelegationRewards + merkleDistributionRewards
+            usageRewards.total + voteDelegationRewards + merkleDistributionRewards
         } else {
           // on other chains we add only protocol usage rewards
-          perChain[chainInfo.chainId] = rewards.total
+          perChain[chainInfo.chainId] = usageRewards.total
         }
-        return rewards
+        return usageRewards
       }),
     )
-    protocolUsageRewards = perChainRewards.reduce((acc, rewards) => acc + rewards.total, 0n)
+    totalUsageRewards = perChainRewards.reduce((acc, rewards) => acc + rewards.total, 0n)
 
-    const total = merkleDistributionRewards + voteDelegationRewards + protocolUsageRewards
+    const total = merkleDistributionRewards + voteDelegationRewards + totalUsageRewards
 
     return {
       total,
@@ -299,40 +300,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
   async getClaimableAggregatedRewards(
     params: Parameters<IArmadaManagerClaims['getClaimableAggregatedRewards']>[0],
   ): ReturnType<IArmadaManagerClaims['getClaimableAggregatedRewards']> {
-    const [merkleDistributionRewards, voteDelegationRewards] = await Promise.all([
-      this.getMerkleDistributionRewards(params.user),
-      this.getVoteDelegationRewards(params.user),
-    ])
-
-    // get protocol usage rewards for each chain
-    const perChain: Record<number, bigint> = {}
-
-    let protocolUsageRewards = 0n
-    const perChainRewards = await Promise.all(
-      this._supportedChains
-        .filter((chainInfo) => chainInfo.chainId === this._hubChainInfo.chainId)
-        .map(async (chainInfo) => {
-          const rewards = await this.getProtocolUsageRewards(params.user, chainInfo)
-
-          if (chainInfo.chainId === this._hubChainInfo.chainId) {
-            // on hubchain we add delegation and distribution rewards
-            perChain[chainInfo.chainId] =
-              rewards.total + voteDelegationRewards + merkleDistributionRewards
-          } else {
-            // on other chains we add only protocol usage rewards
-            perChain[chainInfo.chainId] = rewards.total
-          }
-          return rewards
-        }),
-    )
-    protocolUsageRewards = perChainRewards.reduce((acc, rewards) => acc + rewards.total, 0n)
-
-    const total = merkleDistributionRewards + voteDelegationRewards + protocolUsageRewards
-
-    return {
-      total,
-      perChain,
-    }
+    return this.getAggregatedRewards(params)
   }
 
   async getClaimDistributionTx(
