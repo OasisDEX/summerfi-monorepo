@@ -2790,6 +2790,9 @@ importers:
       '@summerfi/sdk-server':
         specifier: workspace:*
         version: link:../sdk-server
+      '@summerfi/subgraph-manager-common':
+        specifier: workspace:*
+        version: link:../subgraph-manager-common
       '@trpc/client':
         specifier: 11.0.0-rc.502
         version: 11.0.0-rc.502(@trpc/server@11.0.0-rc.502)

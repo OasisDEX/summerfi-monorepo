@@ -66,13 +66,5 @@ export const useClientChainId = () => {
     }
   }, [user, id])
 
-  // eslint-disable-next-line no-console
-  console.log('Client chain id info', {
-    user,
-    clientChainId,
-    id,
-    isIframe,
-  })
-
   return { clientChainId }
 }

@@ -19,8 +19,12 @@ const addresesToFilterOut = [
 
 export async function getUsersActivity({
   filterTestingWallets = false,
+  vaultId,
+  walletAddress,
 }: {
   filterTestingWallets?: boolean
+  vaultId?: string
+  walletAddress?: string
 }): Promise<{
   usersActivity: UsersActivity
   topDepositors: SDKUsersActivityType
@@ -31,8 +35,15 @@ export async function getUsersActivity({
     sdkSupportedChains.map((networkId) => {
       const chainInfo = getChainInfoByChainId(networkId)
 
+      const resolvedWhere = {
+        // eslint-disable-next-line camelcase
+        ...(vaultId ? { vault_: { id_in: [vaultId.toLowerCase()] } } : {}),
+        ...(walletAddress ? { account: walletAddress.toLowerCase() } : {}),
+      }
+
       return backendSDK.armada.users.getUsersActivityRaw({
         chainInfo,
+        where: resolvedWhere,
       })
     }),
   )

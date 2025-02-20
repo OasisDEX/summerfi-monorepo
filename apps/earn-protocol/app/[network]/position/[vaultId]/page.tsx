@@ -9,7 +9,7 @@ import { isAddress } from 'viem'
 
 import { getMedianDefiYield } from '@/app/server-handlers/defillama/get-median-defi-yield'
 import { getInterestRates } from '@/app/server-handlers/interest-rates'
-import { getUserActivity } from '@/app/server-handlers/sdk/get-user-activity'
+import { getUsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
@@ -38,13 +38,16 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     ? vaultId
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
-  const [vault, { vaults }, { userActivity, topDepositors }, medianDefiYield] = await Promise.all([
+  const [vault, { vaults }, { usersActivity, topDepositors }, medianDefiYield] = await Promise.all([
     getVaultDetails({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),
     getVaultsList(),
-    getUserActivity({ vaultAddress: parsedVaultId, network: parsedNetwork }),
+    getUsersActivity({
+      filterTestingWallets: true,
+      vaultId,
+    }),
     getMedianDefiYield(),
   ])
 
@@ -82,7 +85,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     <VaultOpenView
       vault={vaultWithConfig}
       vaults={allVaultsWithConfig}
-      userActivity={userActivity}
+      userActivity={usersActivity}
       topDepositors={topDepositors}
       medianDefiYield={medianDefiYield}
       arksHistoricalChartData={arksHistoricalChartData}

@@ -114,14 +114,6 @@ export const useTransaction = ({
 
   const isProperChainSelected = clientChainId === vaultChainId
 
-  // eslint-disable-next-line no-console
-  console.log('Transaction networks info', {
-    clientChainId,
-    vaultChainId,
-    isProperChainSelected,
-    isSettingChain,
-  })
-
   const nextTransaction = useMemo(() => {
     if (!transactions || transactions.length === 0) {
       return undefined
@@ -524,6 +516,10 @@ export const useTransaction = ({
   const sidebarTitle = useMemo(() => {
     if (nextTransaction?.type === TransactionType.Deposit) {
       return 'Preview deposit'
+    }
+
+    if (nextTransaction?.type === TransactionType.Withdraw) {
+      return 'Preview withdraw'
     }
 
     return nextTransaction?.type
