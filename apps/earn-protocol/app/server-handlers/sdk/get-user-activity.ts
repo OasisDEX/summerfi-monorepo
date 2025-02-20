@@ -17,7 +17,7 @@ export async function getUserActivity({
 }: {
   network: SDKNetwork
   vaultAddress: string
-  walletAddress?: string
+  walletAddress: string
 }): Promise<{
   userActivity: UsersActivity
   topDepositors: SDKUsersActivityType
@@ -36,6 +36,16 @@ export async function getUserActivity({
 
   const { positions } = await backendSDK.armada.users.getUserActivityRaw({
     vaultId: poolId,
+    accountAddress: walletAddress.toLowerCase(),
+  })
+
+  const { positions: allPositions } = await backendSDK.armada.users.getUsersActivityRaw({
+    chainInfo,
+    where: {
+      vault_: {
+        id: vaultAddress.toLowerCase(),
+      },
+    },
   })
 
   const userActivityList = positions
@@ -59,7 +69,7 @@ export async function getUserActivity({
       })),
     ])
 
-  const topDepositors = positions
+  const topDepositors = allPositions
     .sort((a, b) =>
       simpleSort({ a: a.inputTokenBalance, b: b.inputTokenBalance, direction: SortDirection.DESC }),
     )

@@ -7,6 +7,7 @@ import type {
   GetGlobalRebalancesQuery,
   GetUsersActivityQuery,
   GetUserActivityQuery,
+  Position_Filter,
 } from '../generated/client'
 
 /**
@@ -85,7 +86,10 @@ export interface IArmadaSubgraphManager {
    *
    * @returns GetUsersActivityQuery
    */
-  getUsersActivity(params: { chainId: ChainId }): Promise<GetUsersActivityQuery>
+  getUsersActivity(params: {
+    chainId: ChainId
+    where?: Position_Filter
+  }): Promise<GetUsersActivityQuery>
 
   /**
    * @name getUserActivity
@@ -95,5 +99,9 @@ export interface IArmadaSubgraphManager {
    *
    * @returns GetUserActivityQuery
    */
-  getUserActivity(params: { chainId: ChainId; vaultId: string }): Promise<GetUserActivityQuery>
+  getUserActivity(params: {
+    chainId: ChainId
+    vaultId: string
+    accountAddress: string
+  }): Promise<GetUserActivityQuery>
 }

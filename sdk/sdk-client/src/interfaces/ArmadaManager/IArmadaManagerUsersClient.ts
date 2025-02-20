@@ -9,6 +9,7 @@ import {
   type GetUsersActivityQuery,
   type GetUserActivityQuery,
 } from '@summerfi/armada-protocol-common'
+import type { Position_Filter } from '@summerfi/subgraph-manager-common'
 import {
   ITokenAmount,
   IUser,
@@ -79,7 +80,10 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns GerUsersActivityQuery
    */
-  getUsersActivityRaw(params: { chainInfo: ChainInfo }): Promise<GetUsersActivityQuery>
+  getUsersActivityRaw(params: {
+    chainInfo: ChainInfo
+    where?: Position_Filter
+  }): Promise<GetUsersActivityQuery>
 
   /**
    * @name getUserActivityRaw
@@ -89,7 +93,10 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns GerUserActivityQuery
    */
-  getUserActivityRaw(params: { vaultId: IArmadaVaultId }): Promise<GetUserActivityQuery>
+  getUserActivityRaw(params: {
+    vaultId: IArmadaVaultId
+    accountAddress: string
+  }): Promise<GetUserActivityQuery>
 
   /**
    * @method getVaultInfo
