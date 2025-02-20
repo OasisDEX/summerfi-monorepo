@@ -20,12 +20,12 @@ export const NavigationMenuDropdownContentList = ({
   header,
   items,
   link,
-  onClick,
-  onSelect,
   parentIndex,
   selected,
   tight,
   navigationModules,
+  onClick,
+  onSelect,
 }: NavigationMenuDropdownContentListProps) => (
   <>
     {header && (

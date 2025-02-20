@@ -1,12 +1,18 @@
 .cryptoUtilitiesHeaderWrapper {
-  padding: 0 var(--spacing-space-3x-large);
+  padding: 0 var(--spacing-space-large);
+  max-width: 1057px;
+  margin: 0 auto;
 
   >p {
     margin-bottom: var(--spacing-space-x-small)
   }
 
-  @include media('<=s') {
-    padding: 0 var(--spacing-space-large);
+  @include media('>s') {
+    padding: 0 var(--spacing-space-2x-large);
+  }
+
+  @include media('>xl') {
+    padding: 0;
   }
 }
 
@@ -16,16 +22,27 @@
 }
 
 .cryptoUtilitiesBlockWrapper {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   justify-content: center;
   gap: var(--spacing-space-medium);
-  padding: 0 var(--spacing-space-3x-large);
+  padding: 0 var(--spacing-space-x-large);
+  margin: 0 auto;
   margin-top: var(--spacing-space-x-large);
+  flex-wrap: wrap;
+  max-width: 1057px;
 
-  @include media('<=s') {
-    flex-wrap: wrap;
-    padding: 0 var(--spacing-space-x-large);
+  @include media('>s') {
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0 var(--spacing-space-2x-large);
+  }
+
+  @include media('>l') {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  @include media('>xl') {
+    padding: 0;
   }
 }
 
@@ -49,5 +66,17 @@
 
   >span {
     color: var(--color-text-secondary);
+  }
+}
+
+.lineBreak {
+  display: none;
+
+  @include media('>l') {
+    display: block;
+  }
+
+  @include media('>xl') {
+    display: none;
   }
 }

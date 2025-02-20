@@ -4,6 +4,11 @@ export type Styles = {
   carouselButtons: string
   carouselContainer: string
   carouselContent: string
+  mobileButton: string
+  mobilePagination: string
+  pip: string
+  pipActive: string
+  pips: string
   slide: string
   slideActive: string
   slideLeft: string

@@ -26,6 +26,7 @@ interface InputWithDropdownProps {
   dropdownValue: DropdownOption
   value: string
   secondaryValue?: string
+  placeholder?: string
   handleChange: ChangeEventHandler<HTMLInputElement>
   handleDropdownChange?: (option: DropdownRawOption) => void
   selectAllOnFocus?: boolean
@@ -45,6 +46,7 @@ export const InputWithDropdown: FC<InputWithDropdownProps> = ({
   dropdownValue,
   value,
   secondaryValue,
+  placeholder,
   handleChange,
   handleDropdownChange,
   heading,
@@ -99,7 +101,7 @@ export const InputWithDropdown: FC<InputWithDropdownProps> = ({
             <Content option={dropdownValue} />
           </Dropdown>
           <Input
-            placeholder="0"
+            placeholder={placeholder}
             value={value}
             onChange={handleChange}
             secondaryValue={secondaryValue}

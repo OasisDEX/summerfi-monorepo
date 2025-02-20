@@ -38,7 +38,7 @@ export const SumrToken = () => {
           <Button variant="secondarySmall">Get $SUMR</Button>
         </Link>
       </div>
-      <div>
+      <div className={sumrTokenStyles.sumrImage}>
         <Image src={sumrTokenBubbles} alt="$SUMR Token Bubbles" />
       </div>
     </div>

@@ -1,9 +1,18 @@
 .summerFiProSectionHeaderWrapper {
   text-align: center;
-  padding: 0 var(--spacing-space-4x-large);
+  padding: 0 var(--spacing-space-small);
 
-  @include media('<=s') {
-    padding: 0 var(--spacing-space-large);
+  @include media('>s') {
+    padding: 0 var(--spacing-space-2x-large);
+  }
+
+  @include media('>l') {
+    padding: 0 var(--spacing-space-3x-large);
+  }
+
+  @include media('>xl') {
+    max-width: 1000px;
+    margin: 0 auto;
   }
 }
 
@@ -19,22 +28,31 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-space-medium);
-  padding: 0 var(--spacing-space-3x-large);
+  padding: 0;
+  margin: 0 auto;
   margin-top: 48px;
+  border-radius: var(--radius-roundish);
+  max-width: 1057px;
 
-  @include media('<=s') {
-    padding: 0 var(--spacing-space-medium);
+  @include media('>s') {
+    padding: 0 var(--spacing-space-2x-large);
+  }
+
+  @include media('>xl') {
+    padding: 0;
   }
 }
 
 .summerFiProSectionCard {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   padding: var(--spacing-space-x-large);
+  gap: var(--spacing-space-x-large);
 
-  @include media('<=s') {
-    flex-direction: column;
+  @include media('>s') {
+    flex-direction: row;
+    gap: var(--spacing-space-2x-large);
   }
 
   .summerFiProSectionCardDetails {
@@ -50,13 +68,12 @@
 
   .summerFiProSectionCardDetailsList {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: var(--spacing-space-large);
-    margin-top: var(--spacing-space-x-small);
+    margin-top: var(--spacing-space-small);
 
-    @include media('<=s') {
-      margin-bottom: var(--spacing-space-x-large);
-      flex-direction: column;
+    @include media('>s') {
+      flex-direction: row;
     }
 
     >span {
@@ -66,11 +83,13 @@
       font-size: 15px;
       color: var(--color-text-secondary);
       gap: var(--spacing-space-x-small);
+      white-space:nowrap;
     }
   }
 
   .summerFiProSectionCardCta {
     margin-right: 15px;
+    white-space:nowrap;
 
     a {
       color: var(--earn-protocol-primary-100);

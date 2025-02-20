@@ -1,30 +1,49 @@
 .sumrTokenWrapper {
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  width: 1184px;
   margin: 0 auto;
   gap: var(--spacing-space-x-large);
+  flex-direction: column;
+  padding: 0 var(--spacing-space-small);
+  width: 100%;
 
-  @include media('<=s') {
+  @include media('>s') {
+    padding: 0;
     flex-direction: column;
-    width: 100%;
+    max-width: 80%;
+    margin: 0 auto;
+  }
+
+  @include media('>m') {
+    padding: 0;
+    max-width: 80%;
+    margin: 0 auto;
+    gap: var(--spacing-space-2x-large);
+  }
+
+  @include media('>l') {
+    flex-direction: row;
+    max-width: 80%;
+  }
+
+  @include media('>xl') {
+    width: 1184px;
   }
 
   >div {
-    width: 50%;
+    width: 100%;
 
-    @include media('<=s') {
-      padding: 0 var(--spacing-space-medium);
-      width: 100%;
+    @include media('>l') {
+      width: 50%;
     }
   }
 }
 
 .sumrTokenDescription {
   @include media('<=s') {
-    padding: 0 var(--spacing-space-medium);
+    padding: 0 var(--spacing-space-small);
+    // padding: 0;
   }
 
   h2 {
@@ -42,5 +61,11 @@
   p {
     margin-bottom: var(--spacing-space-x-large);
     color: var(--color-text-secondary);
+  }
+}
+
+.sumrImage {
+  > img {
+    width: 100%;
   }
 }

@@ -14,6 +14,35 @@ type CarouselProps = {
 export const Carousel: FC<CarouselProps> = ({ components, contentWidth }) => {
   const [activeIndex, setActiveIndex] = useState(0)
   const [animating, setAnimating] = useState(false)
+  const [touchStart, setTouchStart] = useState<number | null>(null)
+  const [touchEnd, setTouchEnd] = useState<number | null>(null)
+
+  // Required minimum distance between touch start and end to be detected as swipe
+  const minSwipeDistance = 50
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null)
+    setTouchStart(e.targetTouches[0].clientX)
+  }
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX)
+  }
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return
+
+    const distance = touchStart - touchEnd
+    const isLeftSwipe = distance > minSwipeDistance
+    const isRightSwipe = distance < -minSwipeDistance
+
+    if (isLeftSwipe) {
+      handleNext()
+    }
+    if (isRightSwipe) {
+      handlePrevious()
+    }
+  }
 
   const handleNext = () => {
     if (animating) return // Prevent multiple clicks during animation
@@ -37,7 +66,29 @@ export const Carousel: FC<CarouselProps> = ({ components, contentWidth }) => {
 
   return (
     <div className={styles.carouselContainer}>
-      <div className={styles.carouselContent}>
+      <div className={styles.mobilePagination}>
+        <button className={styles.mobileButton} onClick={handlePrevious} disabled={animating}>
+          <Icon iconName="chevron_left" size={16} color="var(--color-neutral-10)" variant="xxs" />
+        </button>
+        <div className={styles.pips}>
+          {components.map((_, index) => (
+            <div
+              key={index}
+              className={`${styles.pip} ${index === activeIndex ? styles.pipActive : ''}`}
+            />
+          ))}
+        </div>
+        <button className={styles.mobileButton} onClick={handleNext} disabled={animating}>
+          <Icon iconName="chevron_right" size={16} color="var(--color-neutral-10)" variant="xxs" />
+        </button>
+      </div>
+
+      <div
+        className={styles.carouselContent}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
         {components.map((component, index) => {
           let slideClass = styles.slide
 
@@ -59,10 +110,10 @@ export const Carousel: FC<CarouselProps> = ({ components, contentWidth }) => {
 
       <div className={styles.carouselButtons} style={{ gap: contentWidth + 40 }}>
         <button className={styles.buttonLeft} onClick={handlePrevious} disabled={animating}>
-          <Icon iconName="chevron_left" color="rgba(255, 251, 253, 1)" variant="xxs" />
+          <Icon iconName="chevron_left" size={16} color="var(--color-neutral-10)" variant="xxs" />
         </button>
         <button className={styles.buttonRight} onClick={handleNext} disabled={animating}>
-          <Icon iconName="chevron_right" color="rgba(255, 251, 253, 1)" variant="xxs" />
+          <Icon iconName="chevron_right" size={16} color="var(--color-neutral-10)" variant="xxs" />
         </button>
       </div>
     </div>

@@ -1,23 +1,31 @@
 .summerProInfoBox {
-  width: 515px !important; // should match the carousel element width
+  width: 100%;
   background-color: var(--earn-protocol-neutral-100);
   margin-top: var(--spacing-space-medium);
 
-  @include media('<=s') {
+  @include media('>=s') {
     margin-top: var(--spacing-space-2x-large);
-    width: 90% !important; // should match the carousel element width
+    width: 515px;
   }
 
   &>div {
-    padding: var(--spacing-space-large) var(--spacing-space-x-large);
+    padding: var(--spacing-space-medium) var(--spacing-space-large);
+
+    @include media('>=s') {
+      padding: var(--spacing-space-large) var(--spacing-space-x-large);
+    }
   }
 
   & span {
     margin-bottom: var(--general-space-4);
   }
 
+  & span:last-child {
+    margin-bottom: 0;
+  }
+
   .summerProInfoBoxLinks,
   .summerProInfoBoxLinks>* {
-    color: var(--color-text-link)
+    color: var(--color-text-link-hover)
   }
 }

@@ -43,6 +43,7 @@ export const NavigationMenuMobile = ({
           <Icon iconName="close" size={11} color="var(--earn-protocol-secondary-70)" />
         </Button>
       </div>
+      <div className={navigationMenuMobileStyles.spacer} />
       <div className={navigationMenuMobileStyles.linksListWrapper}>
         <div className={navigationMenuMobileStyles.linksList}>
           <Link href={INTERNAL_LINKS.summerPro} target="_blank">
@@ -93,10 +94,12 @@ export const NavigationMenuMobile = ({
                   expanderButtonStyles={{
                     justifyContent: 'flex-start',
                     color: 'var(--earn-protocol-secondary-40)',
+                    paddingLeft: 0,
                   }}
+                  iconVariant="xxs"
                   disabled={link.disabled}
                 >
-                  <div style={{ padding: 'var(--general-space-8)' }}>
+                  <div style={{ padding: 0 }}>
                     {link.itemsList && (
                       <NavigationItems currentPath={currentPath} items={link.itemsList} />
                     )}

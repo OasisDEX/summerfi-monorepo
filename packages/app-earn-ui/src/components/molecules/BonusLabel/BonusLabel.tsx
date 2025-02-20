@@ -25,6 +25,7 @@ export const BonusLabel = ({
 }) => {
   return (
     <Tooltip
+      hideDrawerOnMobile
       tooltip={
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           {apy && (
@@ -52,7 +53,9 @@ export const BonusLabel = ({
           <Pill>
             {tokenBonus ?? rays ? <Icon iconName="stars" size={24} color="white" /> : null}
             {combinedApr ? (
-              <span style={{ fontWeight: 600, fontSize: '16px' }}>{combinedApr} APY</span>
+              <Text variant="p3semi" as="span">
+                {combinedApr} APY
+              </Text>
             ) : (
               <span style={{ fontWeight: 600 }}>
                 {apy ? `APY ${apy}` : ''}
