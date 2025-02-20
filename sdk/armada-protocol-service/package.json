@@ -18,6 +18,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@layerzerolabs/lz-v2-utilities": "^3.0.67",
     "@summerfi/allowance-manager-common": "workspace:^",
     "@summerfi/allowance-manager-service": "workspace:*",
     "@summerfi/armada-protocol-abis": "workspace:*",

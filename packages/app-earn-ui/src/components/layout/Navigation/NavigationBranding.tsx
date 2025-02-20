@@ -20,6 +20,8 @@ export const NavigationBranding: FC<NavigationBrandingProps> = ({
       onClick={onLogoClick}
       style={{
         cursor: onLogoClick ? 'pointer' : 'default',
+        position: 'relative',
+        top: '-2px',
       }}
     >
       <img src={logo} alt="Summer.fi" className={navigationStyles.logo} />

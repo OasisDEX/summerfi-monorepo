@@ -16,6 +16,7 @@ export enum TransactionType {
   Delegate = 'Delegate',
   Stake = 'Stake',
   Unstake = 'Unstake',
+  Bridge = 'Bridge',
 }
 
 export type TransactionMetadataApproval = {
@@ -42,6 +43,13 @@ export type TransactionMetadataWithdraw = {
   slippage: IPercentage
 }
 
+export type TransactionMetadataBridge = {
+  fromAmount: ITokenAmount
+  toAmount: ITokenAmount
+  slippage: IPercentage
+  lzFee: ITokenAmount
+}
+
 type TransactionInfo = {
   transaction: Transaction
   description: string
@@ -60,6 +68,11 @@ export type DepositTransactionInfo = TransactionInfo & {
 export type WithdrawTransactionInfo = TransactionInfo & {
   type: TransactionType.Withdraw
   metadata: TransactionMetadataWithdraw
+}
+
+export type BridgeTransactionInfo = TransactionInfo & {
+  type: TransactionType.Bridge
+  metadata: TransactionMetadataBridge
 }
 
 /**

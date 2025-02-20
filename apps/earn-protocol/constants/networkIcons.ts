@@ -5,5 +5,5 @@ export const networkIconByNetworkName: Partial<{ [key in SDKNetwork]: IconNamesL
   [SDKNetwork.Base]: 'earn_network_base',
   // [SDKNetwork.Blast]: 'earn_network_blast',
   [SDKNetwork.Mainnet]: 'earn_network_ethereum',
-  [SDKNetwork.Optimism]: 'earn_network_optimism',
+  // [SDKNetwork.Optimism]: 'earn_network_optimism',
 }

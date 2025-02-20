@@ -22,7 +22,7 @@ import type {
 import type { IRebalanceData } from '@summerfi/contracts-provider-common'
 import type { IArmadaManagerClaims } from './IArmadaManagerClaims'
 import type { IArmadaManagerGovernance } from './IArmadaManagerGovernance'
-
+import type { IArmadaManagerBridge } from './IArmadaManagerBridge'
 /**
  * @name IArmadaManager
  * @description Interface for the Armada Protocol Manager which handles generating transactions for a Fleet
@@ -30,6 +30,7 @@ import type { IArmadaManagerGovernance } from './IArmadaManagerGovernance'
 export interface IArmadaManager {
   claims: IArmadaManagerClaims
   governance: IArmadaManagerGovernance
+  bridge: IArmadaManagerBridge
 
   /**
    * @method getSummerToken

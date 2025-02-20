@@ -26,7 +26,7 @@ export const NavigationActions = ({
     <div>
       <div className={navigationActionsStyles.navigationActionsWrapper}>
         <Link href={INTERNAL_LINKS.summerPro} target="_blank">
-          <Text as="p" variant="p3semi" className={clsx(navigationActionsStyles.summerProButton)}>
+          <Text as="p" variant="p2semi" className={clsx(navigationActionsStyles.summerProButton)}>
             Summer.fi Pro
           </Text>
         </Link>
@@ -36,7 +36,7 @@ export const NavigationActions = ({
       </div>
       <div className={navigationActionsStyles.mobileMenuButton}>
         <Button
-          variant="secondarySmall"
+          variant="secondaryMedium"
           onClick={toggleMobileMenu}
           className={navigationActionsStyles.gradientOuterCircle}
         >
