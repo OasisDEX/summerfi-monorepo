@@ -14,6 +14,35 @@ type CarouselProps = {
 export const Carousel: FC<CarouselProps> = ({ components, contentWidth }) => {
   const [activeIndex, setActiveIndex] = useState(0)
   const [animating, setAnimating] = useState(false)
+  const [touchStart, setTouchStart] = useState<number | null>(null)
+  const [touchEnd, setTouchEnd] = useState<number | null>(null)
+
+  // Required minimum distance between touch start and end to be detected as swipe
+  const minSwipeDistance = 50
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null)
+    setTouchStart(e.targetTouches[0].clientX)
+  }
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX)
+  }
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return
+
+    const distance = touchStart - touchEnd
+    const isLeftSwipe = distance > minSwipeDistance
+    const isRightSwipe = distance < -minSwipeDistance
+
+    if (isLeftSwipe) {
+      handleNext()
+    }
+    if (isRightSwipe) {
+      handlePrevious()
+    }
+  }
 
   const handleNext = () => {
     if (animating) return // Prevent multiple clicks during animation
@@ -54,7 +83,12 @@ export const Carousel: FC<CarouselProps> = ({ components, contentWidth }) => {
         </button>
       </div>
 
-      <div className={styles.carouselContent}>
+      <div
+        className={styles.carouselContent}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
         {components.map((component, index) => {
           let slideClass = styles.slide
 

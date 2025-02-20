@@ -21,6 +21,7 @@
   align-items: center;
   justify-content: center;
   transform-style: preserve-3d;
+  touch-action: pan-y pinch-zoom;
 
   @include media('<=s') {
     height: 675px;
@@ -40,6 +41,10 @@
     transform 1s ease-in-out,
     opacity 1s ease-in-out;
   transform-style: preserve-3d;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .slideActive {

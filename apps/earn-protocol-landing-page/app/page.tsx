@@ -146,7 +146,10 @@ export default async function HomePage() {
         padding: '0 24px',
       }}
     >
-      <LandingPageHero vaultsList={vaultsDecorated} />
+      <LandingPageHero
+        vaultsList={vaultsWithConfig}
+        vaultsApyByNetworkMap={vaultsApyByNetworkMap}
+      />
       <BigGradientBox>
         <EffortlessAccessBlock />
         <SupportedNetworksList />
