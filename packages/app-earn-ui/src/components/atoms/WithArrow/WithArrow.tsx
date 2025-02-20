@@ -88,7 +88,7 @@ export function WithArrow({
         )}
       </Text>
       {withStatic && (
-        <Icon iconName="arrow_increase" color="var(--earn-protocol-primary-100)" variant="xs" />
+        <Icon iconName="share" variant="xs" style={{ marginLeft: 'var(--general-space-4)' }} />
       )}
     </span>
   )

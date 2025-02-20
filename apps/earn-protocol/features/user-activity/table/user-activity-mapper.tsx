@@ -7,7 +7,12 @@ import {
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { type TokenSymbolsList, UserActivityType, type UsersActivity } from '@summerfi/app-types'
-import { formatCryptoBalance, subgraphNetworkToSDKId, timeAgo } from '@summerfi/app-utils'
+import {
+  formatCryptoBalance,
+  getHumanReadableFleetName,
+  subgraphNetworkToSDKId,
+  timeAgo,
+} from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
@@ -73,7 +78,11 @@ export const userActivityMapper = (
             <TableCellText>{formatCryptoBalance(amount)}</TableCellText>
           </div>
         ),
-        strategy: <TableCellText>{item.vault.name}</TableCellText>,
+        strategy: (
+          <TableCellText>
+            {getHumanReadableFleetName(item.vault.protocol.network, item.vault.name)}
+          </TableCellText>
+        ),
         timestamp: (
           <TableCellText suppressHydrationWarning>
             {timeAgo({ from: new Date(), to: new Date(Number(item.timestamp) * 1000) })}
@@ -96,12 +105,7 @@ export const userActivityMapper = (
             href={getScannerUrl(subgraphNetworkToSDKId(item.vault.protocol.network), item.hash)}
             target="_blank"
           >
-            <WithArrow
-              as="p"
-              variant="p4semi"
-              style={{ color: 'var(--earn-protocol-primary-100)' }}
-              withStatic
-            >
+            <WithArrow as="p" variant="p3semi" withStatic>
               View
             </WithArrow>
           </Link>

@@ -107,6 +107,7 @@ export const topDepositorsMapper = (
               display: 'flex',
               alignItems: 'center',
               gap: 'var(--spacing-space-2x-small)',
+              fontWeight: 600,
             }}
           >
             <Icon tokenName={asset} variant="s" />
@@ -125,12 +126,7 @@ export const topDepositorsMapper = (
               walletAddress: item.account.id,
             })}
           >
-            <WithArrow
-              as="p"
-              variant="p4semi"
-              style={{ color: 'var(--earn-protocol-primary-100)' }}
-              withStatic
-            >
+            <WithArrow as="p" variant="p3semi" withStatic>
               View
             </WithArrow>
           </Link>

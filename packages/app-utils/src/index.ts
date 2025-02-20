@@ -36,6 +36,8 @@ export { formatToBigNumber } from './formatters/format-to-big-number'
 export { formatDateDifference } from './formatters/format-time-difference'
 export { formatDecimalToBigInt } from './formatters/format-decimal-to-bigint'
 export { cleanAmount } from './formatters/clean-amount'
+
+export { getHumanReadableFleetName } from './helpers/human-readable-fleet-names'
 export { timeUntil } from './helpers/time-until'
 export { isValidUrl } from './helpers/is-valid-url'
 export { mapNumericInput } from './helpers/map-numeric-input'
