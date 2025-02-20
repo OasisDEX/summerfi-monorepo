@@ -14,6 +14,8 @@ import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useCrossChainMessages } from '@/features/bridge/hooks/use-cross-chain-messages'
 import { type BridgeReducerAction, type BridgeState, BridgeTxStatus } from '@/features/bridge/types'
 
+import { BridgeFormPendingStepFallback } from './BridgeFormPendingStepFallback'
+
 import styles from './BridgeFormPendingStep.module.scss'
 
 interface BridgeFormPendingStepProps {
@@ -33,11 +35,11 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
   const destinationNetworkIcon = networkIconByNetworkName[destinationNetwork]
 
   if (!isSupportedHumanNetwork(sourceHumanNetworkName)) {
-    throw new Error('Invalid source chain')
+    return <BridgeFormPendingStepFallback dispatch={dispatch} error="Invalid source chain" />
   }
 
   if (!isSupportedHumanNetwork(destinationHumanNetworkName)) {
-    throw new Error('Invalid destination chain')
+    return <BridgeFormPendingStepFallback dispatch={dispatch} error="Invalid destination chain" />
   }
 
   const handleSuccess = useCallback(() => {
