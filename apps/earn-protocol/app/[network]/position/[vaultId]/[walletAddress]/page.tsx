@@ -20,6 +20,7 @@ import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
+import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
 import { VaultManageView } from '@/components/layout/VaultManageView/VaultManageView'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import { getPositionPerformanceData } from '@/helpers/chart-helpers/get-position-performance-data'
@@ -38,8 +39,8 @@ type EarnVaultManagePageProps = {
 }
 
 const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
-  const { network, vaultId, walletAddress } = await params
-  const parsedNetwork = humanNetworktoSDKNetwork(network)
+  const { network: paramsNetwork, vaultId, walletAddress } = await params
+  const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
   const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
 
@@ -81,10 +82,26 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     )
   }
 
-  const interestRates = await getInterestRates({
-    network: parsedNetwork,
-    arksList: vault.arks,
+  const [vaultWithConfig] = decorateVaultsWithConfig({
+    vaults: [vault],
+    systemConfig,
   })
+
+  const allVaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })
+
+  const [arkInterestRatesMap, vaultInterestRates] = await Promise.all([
+    getInterestRates({
+      network: parsedNetwork,
+      arksList: vault.arks,
+    }),
+    getVaultsHistoricalApy({
+      // just the vault displayed
+      fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
+        fleetAddress: id,
+        chainId: subgraphNetworkToId(network),
+      })),
+    }),
+  ])
 
   const { netValue } = getPositionValues({
     position,
@@ -110,13 +127,6 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   const forecastData = (await positionForecastResponse.json()) as PositionForecastAPIResponse
   const positionForecast = parseForecastDatapoints(forecastData)
 
-  const [vaultWithConfig] = decorateVaultsWithConfig({
-    vaults: [vault],
-    systemConfig,
-  })
-
-  const allVaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })
-
   const positionJsonSafe = parseServerResponseToClient<IArmadaPosition>(position)
 
   const performanceChartData = getPositionPerformanceData({
@@ -128,10 +138,11 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
 
   const arksHistoricalChartData = getArkHistoricalChartData({
     vault: vaultWithConfig,
-    arkInterestRatesMap: interestRates,
+    arkInterestRatesMap,
+    vaultInterestRates,
   })
 
-  const arksInterestRates = mapArkLatestInterestRates(interestRates)
+  const arksInterestRates = mapArkLatestInterestRates(arkInterestRatesMap)
 
   return (
     <VaultManageView

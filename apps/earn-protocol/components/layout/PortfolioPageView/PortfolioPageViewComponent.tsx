@@ -9,6 +9,7 @@ import {
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
+import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { sdkApiUrl } from '@/constants/sdk'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
@@ -27,6 +28,7 @@ interface PortfolioPageViewComponentProps {
   positionsHistoricalChartMap: {
     [key: string]: HistoryChartData
   }
+  vaultsApyByNetworkMap: GetVaultsApyResponse
 }
 
 export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = ({
@@ -39,6 +41,7 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
   userActivity,
   totalRays,
   positionsHistoricalChartMap,
+  vaultsApyByNetworkMap,
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -52,6 +55,7 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
         userActivity={userActivity}
         totalRays={totalRays}
         positionsHistoricalChartMap={positionsHistoricalChartMap}
+        vaultsApyByNetworkMap={vaultsApyByNetworkMap}
       />
     </SDKContextProvider>
   )

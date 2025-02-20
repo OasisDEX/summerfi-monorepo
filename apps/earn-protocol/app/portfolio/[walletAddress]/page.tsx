@@ -1,13 +1,14 @@
 import { getUniqueVaultId } from '@summerfi/app-earn-ui'
-import { type HistoryChartData, type IArmadaPosition } from '@summerfi/app-types'
-import { parseServerResponseToClient } from '@summerfi/app-utils'
+import {
+  type HistoryChartData,
+  type IArmadaPosition,
+  type SDKVaultishType,
+} from '@summerfi/app-types'
+import { parseServerResponseToClient, subgraphNetworkToId } from '@summerfi/app-utils'
 
 import { fetchRaysLeaderboard } from '@/app/server-handlers/leaderboard'
 import { portfolioWalletAssetsHandler } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
-import {
-  getPositionHistory,
-  type GetPositionHistoryReturnType,
-} from '@/app/server-handlers/position-history'
+import { getPositionHistory } from '@/app/server-handlers/position-history'
 import { getGlobalRebalances } from '@/app/server-handlers/sdk/get-global-rebalances'
 import { getUserPositions } from '@/app/server-handlers/sdk/get-user-positions'
 import { getUsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
@@ -18,9 +19,11 @@ import { getSumrDelegatesWithDecayFactor } from '@/app/server-handlers/sumr-dele
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
 import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
 import systemConfigHandler from '@/app/server-handlers/system-config'
+import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { PortfolioPageViewComponent } from '@/components/layout/PortfolioPageView/PortfolioPageViewComponent'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { mergePositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
+import { type GetPositionHistoryQuery } from '@/graphql/clients/position-history/client'
 import { getPositionHistoricalData } from '@/helpers/chart-helpers/get-position-historical-data'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
@@ -79,25 +82,32 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     })
   })
 
-  const positionHistoryMap = await Promise.all(
-    vaultsWithConfig.map(
-      async (vault) =>
-        await getPositionHistory({
+  const [positionHistoryMap, vaultsApyByNetworkMap] = await Promise.all([
+    Promise.all(
+      vaultsWithConfig.map((vault) =>
+        getPositionHistory({
           network: vault.protocol.network,
           address: walletAddress.toLowerCase(),
           vault,
         }),
+      ),
+    ).then((responses: { positionHistory: GetPositionHistoryQuery; vault: SDKVaultishType }[]) =>
+      responses.reduce<{
+        [key: string]: GetPositionHistoryQuery
+      }>((acc, { positionHistory, vault }) => {
+        return {
+          ...acc,
+          [getUniqueVaultId(vault)]: parseServerResponseToClient(positionHistory),
+        }
+      }, {}),
     ),
-  ).then((responses) =>
-    responses.reduce<{
-      [key: string]: GetPositionHistoryReturnType['positionHistory']
-    }>((acc, { positionHistory, vault }) => {
-      return {
-        ...acc,
-        [getUniqueVaultId(vault)]: parseServerResponseToClient(positionHistory),
-      }
-    }, {}),
-  )
+    getVaultsApy({
+      fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
+        fleetAddress: id,
+        chainId: subgraphNetworkToId(network),
+      })),
+    }),
+  ])
 
   const userVaultsIds = positionsWithVault.map((position) => position.vault.id.toLowerCase())
   const userRebalances = rebalances.filter((rebalance) =>
@@ -147,6 +157,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       totalRays={totalRays}
       userActivity={userActivity}
       positionsHistoricalChartMap={positionsHistoricalChartMap}
+      vaultsApyByNetworkMap={vaultsApyByNetworkMap}
     />
   )
 }

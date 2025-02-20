@@ -27,11 +27,13 @@ import {
 import {
   formatCryptoBalance,
   sdkNetworkToHumanNetwork,
+  subgraphNetworkToId,
   subgraphNetworkToSDKId,
   zero,
 } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
 
+import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
@@ -44,6 +46,7 @@ import { useUserWallet } from '@/hooks/use-user-wallet'
 type VaultsListViewProps = {
   vaultsList: SDKVaultsListType
   selectedNetwork?: SDKNetwork | 'all-networks'
+  vaultsApyByNetworkMap: GetVaultsApyResponse
 }
 
 const allNetworksOption = {
@@ -56,7 +59,11 @@ const softRouterPush = (url: string) => {
   window.history.pushState(null, '', url)
 }
 
-export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewProps) => {
+export const VaultsListView = ({
+  selectedNetwork,
+  vaultsList,
+  vaultsApyByNetworkMap,
+}: VaultsListViewProps) => {
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
   const [localVaultNetwork, setLocalVaultNetwork] =
@@ -312,6 +319,9 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
               onClick={handleChangeVault}
               withTokenBonus={sumrNetApyConfig.withSumr}
               sumrPrice={estimatedSumrPrice}
+              apy={
+                vaultsApyByNetworkMap[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
+              }
             />
           ))}
         </>

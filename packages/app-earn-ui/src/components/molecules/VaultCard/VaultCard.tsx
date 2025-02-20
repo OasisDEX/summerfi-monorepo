@@ -2,12 +2,7 @@
 
 import { type FC } from 'react'
 import { type SDKVaultishType } from '@summerfi/app-types'
-import {
-  formatCryptoBalance,
-  formatDecimalAsPercent,
-  getArksWeightedApy,
-  ten,
-} from '@summerfi/app-utils'
+import { formatCryptoBalance, formatDecimalAsPercent, ten } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 
@@ -32,6 +27,7 @@ type VaultCardProps = SDKVaultishType & {
   sumrDilutedValuation?: string
   sumrPrice?: number
   showCombinedBonus?: boolean
+  apy: number
 }
 
 export const VaultCard: FC<VaultCardProps> = (props) => {
@@ -51,6 +47,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     withTokenBonus,
     sumrPrice,
     showCombinedBonus = false,
+    apy,
   } = props
 
   const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus(
@@ -71,16 +68,14 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     }
   }
 
-  const rawApr = getArksWeightedApy(props)
-
-  const parsedApr = formatDecimalAsPercent(rawApr)
+  const parsedApr = formatDecimalAsPercent(apy)
   const parsedTotalValueLocked = formatCryptoBalance(
     new BigNumber(String(inputTokenBalance)).div(ten.pow(inputToken.decimals)),
   )
   const parsedTotalValueLockedUSD = formatCryptoBalance(new BigNumber(String(totalValueLockedUSD)))
 
   const combinedApr = showCombinedBonus
-    ? formatDecimalAsPercent(rawApr.plus(rawSumrTokenBonus))
+    ? formatDecimalAsPercent(apy + rawSumrTokenBonus)
     : undefined
 
   return (

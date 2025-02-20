@@ -18,6 +18,7 @@ import {
 import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
 
+import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { PositionHistoricalChart } from '@/components/organisms/Charts/PositionHistoricalChart'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
@@ -86,6 +87,7 @@ type PortfolioOverviewProps = {
   positionsHistoricalChartMap: {
     [key: string]: HistoryChartData
   }
+  vaultsApyByNetworkMap: GetVaultsApyResponse
 }
 
 export const PortfolioOverview = ({
@@ -93,6 +95,7 @@ export const PortfolioOverview = ({
   positions,
   rewardsData,
   positionsHistoricalChartMap,
+  vaultsApyByNetworkMap,
 }: PortfolioOverviewProps) => {
   const {
     state: { sumrNetApyConfig },
@@ -170,6 +173,7 @@ export const PortfolioOverview = ({
           )}
           <PortfolioVaultsCarousel
             vaultsList={vaultsList}
+            vaultsApyByNetworkMap={vaultsApyByNetworkMap}
             style={{ marginTop: 'var(--general-space-24)' }}
           />
         </Card>

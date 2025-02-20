@@ -35,7 +35,7 @@ export const getCustomVaultConfigById = (
 
   if (!customFields?.name) {
     // eslint-disable-next-line no-console
-    console.log(`No vault found with the ud ${vaultId} on the network ${networkId}`)
+    console.log(`No vault found with the id ${vaultId} on the network ${networkId}`)
 
     return ''
   }

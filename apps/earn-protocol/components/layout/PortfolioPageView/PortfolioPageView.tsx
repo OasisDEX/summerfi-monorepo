@@ -10,6 +10,7 @@ import {
 } from '@summerfi/app-types'
 
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
+import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { claimDelegateReducer, claimDelegateState } from '@/features/claim-and-delegate/state'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { PortfolioHeader } from '@/features/portfolio/components/PortfolioHeader/PortfolioHeader'
@@ -39,6 +40,7 @@ interface PortfolioPageViewProps {
   positionsHistoricalChartMap: {
     [key: string]: HistoryChartData
   }
+  vaultsApyByNetworkMap: GetVaultsApyResponse
 }
 
 export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
@@ -51,6 +53,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   userActivity,
   totalRays,
   positionsHistoricalChartMap,
+  vaultsApyByNetworkMap,
 }) => {
   const { userWalletAddress, isLoadingAccount } = useUserWallet()
   const ownerView = walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
@@ -90,6 +93,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
             vaultsList={vaultsList}
             rewardsData={rewardsData}
             positionsHistoricalChartMap={positionsHistoricalChartMap}
+            vaultsApyByNetworkMap={vaultsApyByNetworkMap}
           />
         ),
       },
@@ -97,7 +101,13 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     {
       id: PortfolioTabs.WALLET,
       label: 'Wallet',
-      content: <PortfolioWallet walletData={walletData} vaultsList={vaultsList} />,
+      content: (
+        <PortfolioWallet
+          walletData={walletData}
+          vaultsList={vaultsList}
+          vaultsApyByNetworkMap={vaultsApyByNetworkMap}
+        />
+      ),
     },
     ...[
       {

@@ -219,7 +219,7 @@ export const VaultOpenViewComponent = ({
 
   const { tosSidebarProps } = useTermsOfServiceSidebar({ tosState, handleGoBack: backToInit })
 
-  const summerVaultName = vault.customFields?.name ?? 'Summer Vault'
+  const summerVaultName = vault.customFields?.name ?? `Summer ${vault.inputToken.symbol} Vault`
 
   useEffect(() => {
     const savedAmount = getStorageOnce()

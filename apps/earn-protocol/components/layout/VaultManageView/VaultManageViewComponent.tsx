@@ -381,6 +381,7 @@ export const VaultManageViewComponent = ({
         viewWalletAddress={viewWalletAddress}
         connectedWalletAddress={user?.address}
         displaySimulationGraph={displaySimulationGraph}
+        arksInterestRates={arksInterestRates}
         simulationGraph={
           <VaultSimulationGraph
             vault={vault}
@@ -437,7 +438,9 @@ export const VaultManageViewComponent = ({
             >
               <ArkHistoricalYieldChart
                 chartData={arksHistoricalChartData}
-                summerVaultName={vault.customFields?.name ?? 'Summer Vault'}
+                summerVaultName={
+                  vault.customFields?.name ?? `Summer ${vault.inputToken.symbol} Vault`
+                }
               />
             </Expander>
             <Expander

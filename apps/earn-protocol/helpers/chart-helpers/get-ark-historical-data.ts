@@ -5,10 +5,12 @@ import {
   type SDKVaultType,
   type TimeframesType,
 } from '@summerfi/app-types'
+import { subgraphNetworkToId } from '@summerfi/app-utils'
 import dayjs from 'dayjs'
 import { memoize } from 'lodash-es'
 
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
+import { type GetVaultsHistoricalApyResponse } from '@/app/server-handlers/vault-historical-apy'
 import { CHART_TIMESTAMP_FORMAT } from '@/constants/charts'
 import { getColor } from '@/helpers/get-color'
 import { getProtocolLabel } from '@/helpers/get-protocol-label'
@@ -75,12 +77,17 @@ const getBaseHistoricalChartsData = memoize(
 export const getArkHistoricalChartData = ({
   vault,
   arkInterestRatesMap,
+  vaultInterestRates,
 }: {
   vault: SDKVaultishType
   arkInterestRatesMap: GetInterestRatesReturnType
+  vaultInterestRates: GetVaultsHistoricalApyResponse
 }) => {
   const castedVault = vault as SDKVaultType
-  const vaultName = castedVault.customFields?.name ?? 'Summer Vault'
+  const vaultsInterestRates =
+    vaultInterestRates[`${castedVault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
+  const vaultName =
+    castedVault.customFields?.name ?? `Summer ${castedVault.inputToken.symbol} Vault`
   const today = dayjs()
   const threshold7d = today.startOf('hour').subtract(7, 'day').unix()
   const threshold30d = today.startOf('hour').subtract(30, 'day').unix()
@@ -99,8 +106,23 @@ export const getArkHistoricalChartData = ({
     (arkName) => !arkName.toLowerCase().includes('buffer'),
   ) as string[]
 
+  if (vaultsInterestRates.latestInterestRate.length !== 0) {
+    const timestamp = dayjs(vaultsInterestRates.latestInterestRate[0].date * 1000).format(
+      CHART_TIMESTAMP_FORMAT,
+    )
+
+    chartsDataRaw['7d'][timestamp] = {
+      timestamp,
+      [vaultName]: Number(vaultsInterestRates.latestInterestRate[0].averageRate),
+    }
+    chartsDataRaw['30d'][timestamp] = {
+      timestamp,
+      [vaultName]: Number(vaultsInterestRates.latestInterestRate[0].averageRate),
+    }
+  }
+
   // mapping the interest rates for the vault itself
-  for (const vaultHourlyInterestRate of castedVault.hourlyInterestRates) {
+  for (const vaultHourlyInterestRate of vaultsInterestRates.hourlyInterestRates) {
     const timestamp = dayjs(Number(vaultHourlyInterestRate.date) * 1000).startOf('hour')
     const timestampFormatted = timestamp.format(CHART_TIMESTAMP_FORMAT)
 
@@ -123,7 +145,7 @@ export const getArkHistoricalChartData = ({
       }
     }
   }
-  for (const vaultDailyInterestRate of castedVault.dailyInterestRates) {
+  for (const vaultDailyInterestRate of vaultsInterestRates.dailyInterestRates) {
     const timestamp = dayjs(Number(vaultDailyInterestRate.date) * 1000).startOf('day')
     const timestampFormatted = timestamp.format(CHART_TIMESTAMP_FORMAT)
 
@@ -151,7 +173,7 @@ export const getArkHistoricalChartData = ({
       }
     }
   }
-  for (const vaultWeeklyInterestRate of castedVault.weeklyInterestRates) {
+  for (const vaultWeeklyInterestRate of vaultsInterestRates.weeklyInterestRates) {
     const timestamp = dayjs(Number(vaultWeeklyInterestRate.date) * 1000).startOf('week')
     const timestampFormatted = timestamp.format(CHART_TIMESTAMP_FORMAT)
 
