@@ -72,15 +72,17 @@ export const TitleWithSelect = ({
           <Text as="h2" variant="h2">
             {title}
           </Text>
-          <div
-            onClick={onRefresh}
-            className={clsx({
-              [titleWithSelectStyles.refreshing]: isRefreshing,
-            })}
-            style={{ marginTop: '20px', cursor: 'pointer' }}
-          >
-            <Icon iconName="refresh" size={16} />
-          </div>
+          {onRefresh && (
+            <div
+              onClick={onRefresh}
+              className={clsx({
+                [titleWithSelectStyles.refreshing]: isRefreshing,
+              })}
+              style={{ marginTop: '20px', cursor: 'pointer' }}
+            >
+              <Icon iconName="refresh" size={16} />
+            </div>
+          )}
         </div>
         {tooltip ? (
           <Tooltip

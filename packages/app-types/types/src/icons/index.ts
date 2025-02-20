@@ -300,6 +300,10 @@ export type IconNamesList =
   | 'earn_rebalance_activities'
   | 'earn_user_activities'
   | 'earn_yield_trend'
+  | 'eye'
+  | 'refresh'
+  | 'summer_light'
+  | 'wsuperoethb'
 
 export type TokenSymbolsList =
   | 'AAVE'

@@ -1,0 +1,71 @@
+.firstLayerCircle,
+.secondLayerCircle,
+.thirdLayerCircle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+// Large size (64x64)
+.sizeLarge {
+  .firstLayerCircle {
+    width: 64px;
+    height: 64px;
+    background-color: var(--earn-protocol-neutral-85);
+  }
+
+  .secondLayerCircle {
+    width: 48px;
+    height: 48px;
+    background-image: var(--gradient-earn-protocol-dark-10);
+  }
+
+  .thirdLayerCircle {
+    width: 32px;
+    height: 32px;
+    background-image: var(--gradient-earn-protocol-dark);
+  }
+}
+
+// Medium size (44x44)
+.sizeMedium {
+  .firstLayerCircle {
+    width: 44px;
+    height: 44px;
+    background-color: var(--earn-protocol-neutral-85);
+  }
+
+  .secondLayerCircle {
+    width: 32px;
+    height: 32px;
+    background-image: var(--gradient-earn-protocol-dark-10);
+  }
+
+  .thirdLayerCircle {
+    width: 24px;
+    height: 24px;
+    background-image: var(--gradient-earn-protocol-dark);
+  }
+}
+
+// Small size (32x32)
+.sizeSmall {
+  .firstLayerCircle {
+    width: 32px;
+    height: 32px;
+    background-color: var(--earn-protocol-neutral-85);
+  }
+
+  .secondLayerCircle {
+    width: 24px;
+    height: 24px;
+    background-image: var(--gradient-earn-protocol-dark-10);
+  }
+
+  .thirdLayerCircle {
+    width: 16px;
+    height: 16px;
+    background-image: var(--gradient-earn-protocol-dark);
+  }
+}

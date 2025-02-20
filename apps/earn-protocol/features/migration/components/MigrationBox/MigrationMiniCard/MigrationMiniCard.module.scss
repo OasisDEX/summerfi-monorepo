@@ -1,0 +1,42 @@
+.miniCardWrapper {
+  display: flex;
+  flex-direction: column;
+
+  .heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .iconWrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .networkIcon {
+        position: absolute;
+        top: 5;
+      }
+    }
+  }
+
+  .divider {
+    width: calc(100% + 32px);
+    height: 1px;
+    margin: var(--general-space-16) 0 var(--general-space-16) -16px;
+  }
+
+  .footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
