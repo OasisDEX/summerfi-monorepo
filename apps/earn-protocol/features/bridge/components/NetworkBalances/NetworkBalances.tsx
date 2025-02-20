@@ -26,7 +26,15 @@ export const NetworkBalances = ({
   const { chain: sourceChain } = useChain()
 
   if (!amount || new BigNumber(amount).isNaN() || new BigNumber(amount).isLessThan(0)) {
-    return '0'
+    return (
+      <div className={styles.networkBalancesWrapper}>
+        <NetworkDisplay chainId={sourceChain.id} amount="0" />
+        <div className={styles.arrowSplitterWrapper}>
+          <ArrowSplitter />
+        </div>
+        <NetworkDisplay chainId={destinationChainId} amount="0" />
+      </div>
+    )
   }
 
   return (

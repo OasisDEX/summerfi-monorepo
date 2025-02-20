@@ -45,7 +45,7 @@ interface BridgeTransactionDetails {
   /** Prepares the bridge transaction with optional override amount */
   prepareTransaction: (overrideAmount?: string) => void
   /** Executes the prepared bridge transaction */
-  executeBridgeTransaction: () => void | SendUserOperationWithEOA<unknown>
+  executeBridgeTransaction: () => Promise<SendUserOperationWithEOA<unknown> | undefined>
   /** Clears the current transaction state */
   clearTransaction: () => void
   /** Current transaction details */
@@ -200,8 +200,6 @@ export function useBridgeTransaction({
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Unknown error occurred'))
       onError()
-
-      throw err
     } finally {
       setIsLoading(false)
     }

@@ -24,7 +24,7 @@ export const BridgeFormStepFallback: FC<BridgeFormStepFallbackProps> = ({ dispat
               rows={[
                 {
                   label: 'Status',
-                  value: <div className={styles.error}>{error}</div>,
+                  value: <div className={styles.error}>Failed</div>,
                   type: 'entry',
                 },
               ]}

@@ -101,6 +101,10 @@ export const bridgeReducer = (prevState: BridgeState, action: BridgeReducerActio
     // eslint-disable-next-line no-console
     console.error('Bridge reducer error', error)
 
-    return prevState
+    return {
+      ...prevState,
+      bridgeStatus: BridgeTxStatus.FAILED,
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
+    }
   }
 }

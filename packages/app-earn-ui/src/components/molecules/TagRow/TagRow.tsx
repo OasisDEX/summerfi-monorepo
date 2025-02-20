@@ -30,6 +30,22 @@ export const TagRow = ({ options, selectedValue, onChange, className }: TagRowPr
           aria-checked={option.value === selectedValue}
           onClick={() => onChange(option.value)}
           type="button"
+          tabIndex={option.value === selectedValue ? 0 : -1}
+          onKeyDown={(e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+              const nextIndex =
+                (options.findIndex((o) => o.value === selectedValue) + 1) % options.length
+
+              onChange(options[nextIndex].value)
+            }
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+              const nextIndex =
+                (options.findIndex((o) => o.value === selectedValue) - 1 + options.length) %
+                options.length
+
+              onChange(options[nextIndex].value)
+            }
+          }}
         >
           {option.label}
         </button>
