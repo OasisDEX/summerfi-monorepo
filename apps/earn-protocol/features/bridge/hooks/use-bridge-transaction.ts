@@ -175,6 +175,10 @@ export function useBridgeTransaction({
 
   // Execute prepared transaction
   const executeBridgeTransaction = useCallback(async () => {
+    if (isLoading) {
+      throw new Error('Transaction is already in progress')
+    }
+
     if (!transaction) {
       throw new Error('Transaction must be prepared before executing')
     }
