@@ -1,0 +1,75 @@
+import { type FC } from 'react'
+import { Card, type CardVariant, Icon, Text } from '@summerfi/app-earn-ui'
+import { type TokenSymbolsList } from '@summerfi/app-types'
+import { capitalize } from 'lodash-es'
+
+import classNames from './MigrationMiniCard.module.scss'
+
+interface MigrationMiniCardProps {
+  description: string
+  amount: string
+  change: string
+  token: TokenSymbolsList
+  network: string
+  type: 'from' | 'to'
+}
+
+const variantMap: { [key in MigrationMiniCardProps['type']]: CardVariant } = {
+  from: 'cardPrimarySmallPaddings',
+  to: 'cardSecondarySmallPaddingsColorfulBorder',
+}
+
+export const MigrationMiniCard: FC<MigrationMiniCardProps> = ({
+  description,
+  amount,
+  change,
+  token,
+  type,
+}) => {
+  return (
+    <Card
+      variant={variantMap[type]}
+      className={classNames.miniCardWrapper}
+      style={{ padding: 'var(--general-space-16)' }}
+    >
+      <div className={classNames.heading}>
+        <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+          {capitalize(type)}
+        </Text>
+        <Icon iconName="base" />
+      </div>
+      <div className={classNames.content}>
+        <div className={classNames.iconWrapper}>
+          <Icon tokenName={token} size={44} />
+          <Icon iconName="base" className={classNames.networkIcon} size={16} />
+        </div>
+        <Text as="h5" variant="h5">
+          {token}
+        </Text>
+        <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+          {description}
+        </Text>
+      </div>
+      <div
+        className={classNames.divider}
+        style={{
+          backgroundColor:
+            type === 'from'
+              ? 'var(--earn-protocol-neutral-90)'
+              : 'var(--earn-protocol-neutral-100)',
+        }}
+      />
+      <div className={classNames.footer}>
+        <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+          Projected Earnings
+        </Text>
+        <Text as="p" variant="p1semi">
+          {amount}{' '}
+          <Text as="span" variant="p4semi" style={{ color: 'var(--earn-protocol-success-100)' }}>
+            {change}
+          </Text>
+        </Text>
+      </div>
+    </Card>
+  )
+}

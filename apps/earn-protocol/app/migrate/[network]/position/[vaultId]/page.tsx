@@ -9,10 +9,11 @@ import { isAddress } from 'viem'
 
 import { getMedianDefiYield } from '@/app/server-handlers/defillama/get-median-defi-yield'
 import { getInterestRates } from '@/app/server-handlers/interest-rates'
-import { getUserActivity } from '@/app/server-handlers/sdk/get-user-activity'
+import { getUsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
+import { MigrateVaultPageView } from '@/components/layout/MigrateVaultPageView/MigrateVaultPageView'
 import {
   decorateCustomVaultFields,
   getVaultIdByVaultCustomName,
@@ -35,13 +36,16 @@ const MigrateVaultPage = async ({ params }: MigrateVaultPageProps) => {
     ? vaultId
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
-  const [vault, { vaults }, { userActivity, topDepositors }, medianDefiYield] = await Promise.all([
+  const [vault, { vaults }, { usersActivity, topDepositors }, medianDefiYield] = await Promise.all([
     getVaultDetails({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),
     getVaultsList(),
-    getUserActivity({ vaultAddress: parsedVaultId, network: parsedNetwork }),
+    getUsersActivity({
+      filterTestingWallets: true,
+      vaultId,
+    }),
     getMedianDefiYield(),
   ])
 
@@ -72,7 +76,15 @@ const MigrateVaultPage = async ({ params }: MigrateVaultPageProps) => {
     )
   }
 
-  return <div>MigrateVaultPage</div>
+  return (
+    <MigrateVaultPageView
+      vault={vaultDecorated}
+      vaults={vaultsDecorated}
+      userActivity={usersActivity}
+      topDepositors={topDepositors}
+      medianDefiYield={medianDefiYield}
+    />
+  )
 }
 
 export default MigrateVaultPage
