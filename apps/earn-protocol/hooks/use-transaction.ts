@@ -526,6 +526,10 @@ export const useTransaction = ({
       return 'Preview deposit'
     }
 
+    if (nextTransaction?.type === TransactionType.Withdraw) {
+      return 'Preview withdraw'
+    }
+
     return nextTransaction?.type
       ? capitalize(nextTransaction.type)
       : capitalize(TransactionAction.DEPOSIT)
