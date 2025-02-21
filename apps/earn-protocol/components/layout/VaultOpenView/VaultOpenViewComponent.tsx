@@ -203,7 +203,7 @@ export const VaultOpenViewComponent = ({
     isEarnApp: true,
   })
 
-  const { signTosMessage } = useTermsOfServiceSigner()
+  const signTosMessage = useTermsOfServiceSigner()
 
   const tosState = useTermsOfService({
     publicClient,

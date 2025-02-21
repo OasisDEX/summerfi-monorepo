@@ -40,7 +40,7 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
   const { activeParagraph, paragraphRefs } = useVisibleParagraph()
   const { clientChainId } = useClientChainId()
 
-  const { signTosMessage } = useTermsOfServiceSigner()
+  const signTosMessage = useTermsOfServiceSigner()
 
   const { publicClient } = usePublicClient({
     chain: SDKChainIdToAAChainMap[clientChainId as AccountKitSupportedNetworks],
