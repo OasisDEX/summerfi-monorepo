@@ -120,20 +120,22 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
         }}
       >
         <MigrationMiniCard
-          description="Migrate"
+          description="Passive Lending"
           amount={`$${formatFiatBalance(estimatedEarnings)}`}
           change={formatDecimalAsPercent(estimatedEarnings, { plus: true })}
           token={vault.inputToken.symbol as TokenSymbolsList}
           type="from"
           network={vault.protocol.network}
+          platformLogo="aave"
         />
         <MigrationMiniCard
-          description="Migrate"
+          description="Lazy Summer"
           amount={`$${formatFiatBalance(estimatedEarnings)}`}
           change={formatDecimalAsPercent(estimatedEarnings, { plus: true })}
           token={vault.inputToken.symbol as TokenSymbolsList}
           type="to"
           network={vault.protocol.network}
+          platformLogo="summer"
         />
       </div>
       <div

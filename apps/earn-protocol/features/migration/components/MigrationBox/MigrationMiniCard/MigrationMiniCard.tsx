@@ -1,7 +1,13 @@
 import { type FC } from 'react'
-import { Card, type CardVariant, Icon, Text, TokenWithNetworkIcon } from '@summerfi/app-earn-ui'
+import { Card, type CardVariant, Text, TokenWithNetworkIcon } from '@summerfi/app-earn-ui'
 import { type TokenSymbolsList } from '@summerfi/app-types'
 import { capitalize } from 'lodash-es'
+import Image from 'next/image'
+
+import aaveLogo from '@/public/img/platform_icons/platform_logo_aave.svg'
+import morphoLogo from '@/public/img/platform_icons/platform_logo_morpho.svg'
+import sparkLogo from '@/public/img/platform_icons/platform_logo_spark.svg'
+import summerLogo from '@/public/img/platform_icons/platform_logo_summerfi.svg'
 
 import classNames from './MigrationMiniCard.module.scss'
 
@@ -12,11 +18,19 @@ interface MigrationMiniCardProps {
   token: TokenSymbolsList
   network: string
   type: 'from' | 'to'
+  platformLogo: 'aave' | 'morpho' | 'spark' | 'summer'
 }
 
 const variantMap: { [key in MigrationMiniCardProps['type']]: CardVariant } = {
   from: 'cardPrimarySmallPaddings',
   to: 'cardSecondarySmallPaddingsColorfulBorder',
+}
+
+const platformLogoMap = {
+  aave: aaveLogo,
+  morpho: morphoLogo,
+  spark: sparkLogo,
+  summer: summerLogo,
 }
 
 export const MigrationMiniCard: FC<MigrationMiniCardProps> = ({
@@ -25,6 +39,7 @@ export const MigrationMiniCard: FC<MigrationMiniCardProps> = ({
   change,
   token,
   type,
+  platformLogo,
 }) => {
   return (
     <Card
@@ -36,7 +51,7 @@ export const MigrationMiniCard: FC<MigrationMiniCardProps> = ({
         <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
           {capitalize(type)}
         </Text>
-        <Icon iconName="base" />
+        <Image src={platformLogoMap[platformLogo]} alt={platformLogo} height={17} />
       </div>
       <div className={classNames.content}>
         <div className={classNames.iconWrapper}>
