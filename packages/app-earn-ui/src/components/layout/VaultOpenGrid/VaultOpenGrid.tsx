@@ -5,7 +5,6 @@ import { type SDKVaultishType, type SDKVaultsListType } from '@summerfi/app-type
 import {
   formatCryptoBalance,
   formatDecimalAsPercent,
-  getArksWeightedApy,
   sdkNetworkToHumanNetwork,
   ten,
 } from '@summerfi/app-utils'
@@ -42,7 +41,7 @@ interface VaultOpenGridProps {
   medianDefiYield?: number
   sumrPrice?: number
   onRefresh?: (chainName?: string, vaultId?: string, walletAddress?: string) => void
-  arksInterestRates?: { [key: string]: number }
+  vaultApy?: number
 }
 
 export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
@@ -56,7 +55,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   medianDefiYield,
   sumrPrice,
   onRefresh,
-  arksInterestRates,
+  vaultApy,
 }) => {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [displaySimulationGraphStaggered, setDisplaySimulationGraphStaggered] =
@@ -68,7 +67,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   const apr30d = isVaultAtLeast30dOld
     ? formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
     : 'New strategy'
-  const aprCurrent = formatDecimalAsPercent(getArksWeightedApy(vault, arksInterestRates))
+  const aprCurrent = formatDecimalAsPercent(vaultApy ?? 0)
   const totalValueLockedUSDParsed = formatCryptoBalance(new BigNumber(vault.totalValueLockedUSD))
   const totalValueLockedTokenParsed = formatCryptoBalance(
     new BigNumber(vault.inputTokenBalance.toString()).div(ten.pow(vault.inputToken.decimals)),

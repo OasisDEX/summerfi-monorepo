@@ -70,6 +70,7 @@ type VaultOpenViewComponentProps = {
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
+  vaultApy?: number
 }
 
 export const VaultOpenViewComponent = ({
@@ -80,6 +81,7 @@ export const VaultOpenViewComponent = ({
   medianDefiYield,
   arksHistoricalChartData,
   arksInterestRates,
+  vaultApy,
 }: VaultOpenViewComponentProps) => {
   const { getStorageOnce } = useLocalStorageOnce<string>({
     key: `${vault.id}-amount`,
@@ -354,7 +356,7 @@ export const VaultOpenViewComponent = ({
       displaySimulationGraph={displaySimulationGraph}
       sumrPrice={estimatedSumrPrice}
       onRefresh={revalidatePositionData}
-      arksInterestRates={arksInterestRates}
+      vaultApy={vaultApy}
       simulationGraph={
         <VaultSimulationGraph
           vault={vault}

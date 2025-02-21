@@ -109,7 +109,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     vault,
   })
 
-  const [positionHistory, positionForecastResponse, vaultsApyList] = await Promise.all([
+  const [positionHistory, positionForecastResponse, vaultApyRaw] = await Promise.all([
     getPositionHistory({
       network: parsedNetwork,
       address: walletAddress.toLowerCase(),
@@ -129,7 +129,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   ])
 
   const vaultApy =
-    vaultsApyList[`${vaultWithConfig.id}-${subgraphNetworkToId(vaultWithConfig.protocol.network)}`]
+    vaultApyRaw[`${vaultWithConfig.id}-${subgraphNetworkToId(vaultWithConfig.protocol.network)}`]
 
   if (!positionForecastResponse.ok) {
     throw new Error('Failed to fetch forecast data')
