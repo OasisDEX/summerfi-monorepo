@@ -493,74 +493,75 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
 
         {hasStake && action === ClaimDelegateAction.REMOVE ? null : (
           <div className={classNames.buttonsWrapper}>
+            <div className={classNames.buttonsGroup}>
+              {hasDelegatee ? (
+                !isBase ? null : (
+                  <Button
+                    variant="secondarySmall"
+                    disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
+                    onClick={() => handleDelegate(ADDRESS_ZERO)}
+                  >
+                    <Text variant="p3semi" as="p">
+                      {getRemoveDelegateButtonLabel({
+                        state,
+                        action,
+                        isBase,
+                      })}
+                    </Text>
+                  </Button>
+                )
+              ) : (
+                <Link href={`/portfolio/${walletAddress}?tab=${PortfolioTabs.REWARDS}`}>
+                  <Button
+                    variant="secondarySmall"
+                    disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
+                  >
+                    <Text variant="p3semi" as="p">
+                      Claim & Forfeit staking yield
+                    </Text>
+                  </Button>
+                </Link>
+              )}
+              <Button
+                variant="primarySmall"
+                style={{ paddingRight: 'var(--general-space-32)' }}
+                onClick={() => handleDelegate(state.delegatee)}
+                disabled={
+                  isChangeDelegateLoading ||
+                  isRemoveDelegateLoading ||
+                  !state.delegatee ||
+                  (state.delegatee === ADDRESS_ZERO &&
+                    externalData.sumrStakeDelegate.delegatedTo === ADDRESS_ZERO) ||
+                  userWalletAddress?.toLowerCase() !== resolvedWalletAddress.toLowerCase()
+                }
+              >
+                <WithArrow
+                  style={{ color: 'var(--earn-protocol-secondary-100)' }}
+                  variant="p3semi"
+                  as="p"
+                  isLoading={isChangeDelegateLoading}
+                >
+                  {getChangeDelegateButtonLabel({
+                    state,
+                    action,
+                    isBase,
+                  })}
+                </WithArrow>
+              </Button>
+            </div>
             {hasDelegatee && (
               <Button
-                variant="secondarySmall"
+                variant="textMedium"
                 disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
                 onClick={() => {
                   dispatch({ type: 'update-step', payload: ClaimDelegateSteps.STAKE })
                 }}
               >
-                <Text variant="p3semi" as="p">
+                <WithArrow variant="p3semi" as="p">
                   Skip
-                </Text>
+                </WithArrow>
               </Button>
             )}
-            {hasDelegatee ? (
-              !isBase ? null : (
-                <Button
-                  variant="secondarySmall"
-                  disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
-                  onClick={() => handleDelegate(ADDRESS_ZERO)}
-                >
-                  <Text variant="p3semi" as="p">
-                    {getRemoveDelegateButtonLabel({
-                      state,
-                      action,
-                      isBase,
-                    })}
-                  </Text>
-                </Button>
-              )
-            ) : (
-              <Link href={`/portfolio/${walletAddress}?tab=${PortfolioTabs.REWARDS}`}>
-                <Button
-                  variant="secondarySmall"
-                  disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
-                >
-                  <Text variant="p3semi" as="p">
-                    Claim & Forfeit staking yield
-                  </Text>
-                </Button>
-              </Link>
-            )}
-
-            <Button
-              variant="primarySmall"
-              style={{ paddingRight: 'var(--general-space-32)' }}
-              onClick={() => handleDelegate(state.delegatee)}
-              disabled={
-                isChangeDelegateLoading ||
-                isRemoveDelegateLoading ||
-                !state.delegatee ||
-                (state.delegatee === ADDRESS_ZERO &&
-                  externalData.sumrStakeDelegate.delegatedTo === ADDRESS_ZERO) ||
-                userWalletAddress?.toLowerCase() !== resolvedWalletAddress.toLowerCase()
-              }
-            >
-              <WithArrow
-                style={{ color: 'var(--earn-protocol-secondary-100)' }}
-                variant="p3semi"
-                as="p"
-                isLoading={isChangeDelegateLoading}
-              >
-                {getChangeDelegateButtonLabel({
-                  state,
-                  action,
-                  isBase,
-                })}
-              </WithArrow>
-            </Button>
           </div>
         )}
       </div>

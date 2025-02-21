@@ -2,7 +2,12 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+
   align-items: center;
+
+  > div {
+    max-width: 529px;
+  }
 
   .cardWrapper {
     position: relative;
@@ -53,9 +58,16 @@
 
   .footerWrapper {
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
     gap: var(--general-space-16);
-    margin-top: var(--general-space-8);
+    margin-top: var(--general-space-24);
+  }
+
+  .mainActionsGroup {
+    display: flex;
+    gap: var(--general-space-16);
   }
 
   .bridgeWrapper {
@@ -63,7 +75,7 @@
     color: var(--earn-protocol-secondary-60);
     width: 100%;
     max-width: 560px;
-    justify-content: flex-start;
+    justify-content: center;
     padding: var(--general-space-16) 0;
   }
 

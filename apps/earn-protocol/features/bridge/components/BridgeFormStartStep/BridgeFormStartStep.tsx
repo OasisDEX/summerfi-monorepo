@@ -1,4 +1,5 @@
 import { type Dispatch, type FC, useEffect, useRef, useState } from 'react'
+import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
 import {
   InputWithDropdown,
@@ -31,6 +32,7 @@ import { TransactionDetails } from '@/features/bridge/components/TransactionDeta
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import { useBridgeTransaction } from '@/features/bridge/hooks/use-bridge-transaction'
 import { type BridgeReducerAction, type BridgeState } from '@/features/bridge/types'
+import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useRiskVerification } from '@/hooks/use-risk-verification'
 import { useToken } from '@/hooks/use-token'
@@ -45,7 +47,7 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
-  const { chain: sourceChain, setChain: setSourceChain } = useChain()
+  const { chain: sourceChain, setChain: setSourceChain, isSettingChain } = useChain()
   const { userWalletAddress } = useUserWallet()
   const sourceNetwork = chainIdToSDKNetwork(sourceChain.id)
   const humanNetworkName = sdkNetworkToHumanNetwork(sourceNetwork)
@@ -154,7 +156,7 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
     if (userWalletAddress !== state.walletAddress) {
       redirect(`/bridge/${userWalletAddress}`)
     }
-  }, [userWalletAddress, state.walletAddress])
+  }, [userWalletAddress, state.walletAddress, dispatch])
 
   useEffect(() => {
     const switchChain = async () => {
@@ -166,11 +168,17 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
           const nextSourceChain = sdkNetworkToChain(network)
 
           try {
-            await setSourceChain({ chain: nextSourceChain })
+            // Add a check to prevent unnecessary switching
+            if (sourceChain.id !== nextSourceChain.id) {
+              await setSourceChain({ chain: nextSourceChain })
+            }
           } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error('Failed to switch chain:', error)
+
             dispatch({
               type: 'error',
-              payload: error as string,
+              payload: error instanceof Error ? error.message : 'Failed to switch chain',
             })
           }
         }
@@ -178,7 +186,7 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
     }
 
     switchChain()
-  }, [sourceChainFromParams, setSourceChain, dispatch])
+  }, [sourceChainFromParams, setSourceChain, dispatch, sourceChain.id])
 
   useEffect(() => {
     if (amountFromParams && !initializedRef.current) {
@@ -205,7 +213,7 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
         type: 'error',
         payload: 'Failed to create transaction',
       })
-
+      toast.error('Failed to create bridge transaction', ERROR_TOAST_CONFIG)
       return
     }
 
@@ -216,6 +224,7 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
         amount: amountDisplay,
       },
     })
+    toast.success('Bridge transaction submitted successfully', SUCCESS_TOAST_CONFIG)
   }
 
   const handleDestinationChainChange = (newDestination: SDKNetwork) => {
@@ -322,13 +331,18 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
             amountReceived={transaction?.metadata.toAmount.toBigNumber().toString() ?? '0'}
             lzFee={transaction?.metadata.lzFeeUsd ?? '0'}
             destinationChain={state.destinationChain}
-            error={validationError}
+            error={!isSettingChain ? validationError : ''}
           />
         </>
       }
       primaryButton={{
-        label: isEstimatingGas || isPreparing ? 'Estimating...' : 'Bridge',
-        loading: isEstimatingGas || isPreparing,
+        label:
+          isEstimatingGas || isPreparing
+            ? 'Estimating...'
+            : isSettingChain
+              ? 'Switching chain...'
+              : 'Bridge',
+        loading: isEstimatingGas || isPreparing || isSettingChain,
         action: handleBridge,
         disabled:
           isEstimatingGas ||
@@ -336,7 +350,8 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
           isAmountGreaterThanBalance ||
           isLoading ||
           !isReady ||
-          isSourceMatchingDestination,
+          isSourceMatchingDestination ||
+          isSettingChain,
       }}
       secondaryButton={
         secondaryButtonConfig[viaParam as keyof typeof secondaryButtonConfig] ??

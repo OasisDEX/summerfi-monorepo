@@ -1,13 +1,5 @@
 'use client'
-import {
-  type CSSProperties,
-  type FC,
-  type ReactNode,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
+import { type CSSProperties, type FC, type ReactNode, useRef, useState } from 'react'
 
 import { Text } from '@/components/atoms/Text/Text'
 
@@ -41,10 +33,6 @@ export const TabBar: FC<TabBarProps> = ({
   handleTabChange,
 }) => {
   const [activeIndex, setActiveIndex] = useState(defaultIndex)
-  const [underlineStyle, setUnderlineStyle] = useState<{ left: number; width: number }>({
-    left: 0,
-    width: 0,
-  })
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([])
   const tabHeadersRef = useRef<HTMLDivElement | null>(null)
 
@@ -66,34 +54,6 @@ export const TabBar: FC<TabBarProps> = ({
     setActiveIndex(idx)
     handleTabChange?.(tab)
   }
-
-  const updateUnderlinePosition = useCallback(() => {
-    const activeTab = tabRefs.current[resolvedActiveIndex]
-    const tabHeaders = tabHeadersRef.current
-
-    if (activeTab && tabHeaders) {
-      const { scrollLeft } = tabHeaders
-
-      setUnderlineStyle({
-        left: activeTab.offsetLeft - scrollLeft,
-        width: activeTab.offsetWidth,
-      })
-    }
-  }, [resolvedActiveIndex])
-
-  useEffect(() => {
-    updateUnderlinePosition()
-
-    const tabHeaders = tabHeadersRef.current
-
-    if (tabHeaders) {
-      tabHeaders.addEventListener('scroll', updateUnderlinePosition)
-
-      return () => tabHeaders.removeEventListener('scroll', updateUnderlinePosition)
-    }
-
-    return () => null
-  }, [resolvedActiveIndex, updateUnderlinePosition])
 
   return (
     <div className={styles.tabBar}>

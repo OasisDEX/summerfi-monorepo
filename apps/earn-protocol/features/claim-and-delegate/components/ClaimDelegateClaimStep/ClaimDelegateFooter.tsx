@@ -56,9 +56,13 @@ const ClaimButton = ({
 }) => (
   <Button
     variant="primarySmall"
-    style={{
-      paddingRight: hideButtonArrow ? 'var(--general-space-24)' : 'var(--general-space-32)',
-    }}
+    style={
+      !hideButtonArrow
+        ? {
+            paddingRight: 'var(--general-space-32)',
+          }
+        : {}
+    }
     onClick={onAccept}
     disabled={disabled}
   >
@@ -114,27 +118,30 @@ export const ClaimDelegateFooter: FC<ClaimDelegateFooterProps> = ({
         />
       )}
 
-      {hasSumrOnSatelliteChains && claimStatus === ClaimDelegateTxStatuses.COMPLETED && (
-        <div className={classNames.bridgeButtonWrapper}>
-          <Button variant="secondaryMedium" onClick={onAccept}>
-            <Text variant="p3semi" as="p">
-              <WithArrow
-                variant="p3semi"
-                as="span"
-                reserveSpace
-                style={{ color: 'var(--earn-protocol-secondary-60)' }}
-              >
-                Skip
-              </WithArrow>
-            </Text>
-          </Button>
+      <div className={classNames.bridgeButtonWrapper}>
+        <Button variant="secondaryMedium" onClick={onAccept}>
+          <Text variant="p3semi" as="p">
+            <WithArrow
+              variant="p3semi"
+              as="span"
+              reserveSpace
+              style={{ color: 'var(--earn-protocol-secondary-60)' }}
+            >
+              Skip
+            </WithArrow>
+          </Text>
+        </Button>
+        {hasSumrOnSatelliteChains && claimStatus === ClaimDelegateTxStatuses.COMPLETED && (
           <Link href={`/bridge/${resolvedWalletAddress}?via=claim&source_chain=${claimOnChainId}`}>
             <Button variant="primaryMedium" disabled={disableBridgeButton}>
               Bridge
             </Button>
           </Link>
-        </div>
-      )}
+        )}
+      </div>
+      <Text variant="p3semi" as="p">
+        <WithArrow>Bridge</WithArrow>
+      </Text>
     </div>
   )
 }

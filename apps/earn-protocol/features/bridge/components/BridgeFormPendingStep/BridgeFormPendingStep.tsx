@@ -1,4 +1,5 @@
-import { type Dispatch, type FC, useCallback } from 'react'
+import { type Dispatch, type FC, useCallback, useEffect } from 'react'
+import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
 import { MessageStatus } from '@layerzerolabs/scan-client'
 import { Icon, InfoBox, LoadingSpinner, Sidebar, Text } from '@summerfi/app-earn-ui'
@@ -15,6 +16,7 @@ import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { BridgeFormStepFallback } from '@/features/bridge/components/BridgeFormFallbackStep/BridgeFormStepFallback'
 import { useCrossChainMessages } from '@/features/bridge/hooks/use-cross-chain-messages'
 import { type BridgeReducerAction, type BridgeState, BridgeTxStatus } from '@/features/bridge/types'
+import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 
 import styles from './BridgeFormPendingStep.module.scss'
 
@@ -41,12 +43,20 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
       type: 'update-bridge-status',
       payload: BridgeTxStatus.COMPLETED,
     })
+    toast.success('Bridge transaction completed successfully', SUCCESS_TOAST_CONFIG)
   }, [dispatch])
 
   const { isLoading, error, latestStatus } = useCrossChainMessages({
     srcTxHash: state.transactionHash,
     onSuccess: handleSuccess,
   })
+
+  // If there's an error, show error toast
+  useEffect(() => {
+    if (error?.message) {
+      toast.error(`Bridge transaction failed: ${error.message}`, ERROR_TOAST_CONFIG)
+    }
+  }, [error])
 
   if (!isSupportedHumanNetwork(sourceHumanNetworkName)) {
     const errorMessage = `Invalid source chain: ${sourceHumanNetworkName}`

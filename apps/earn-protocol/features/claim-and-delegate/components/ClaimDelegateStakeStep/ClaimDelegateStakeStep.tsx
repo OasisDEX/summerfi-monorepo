@@ -525,6 +525,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
                 style={{ paddingRight: 'var(--general-space-32)' }}
                 onClick={resolvedButtonAction}
                 disabled={
+                  !isBase ||
                   isLoading ||
                   userWalletAddress?.toLowerCase() !== resolvedWalletAddress.toLowerCase() ||
                   (state.stakeType === ClaimDelegateStakeType.REMOVE_STAKE &&

@@ -118,9 +118,19 @@
     .buttonsWrapper {
       margin-top: var(--general-space-32);
       display: flex;
+      flex-direction: column;
       justify-content: center;
+      align-items: center;
       flex-wrap: wrap;
       gap: var(--general-space-16);
+
+      .buttonsGroup {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: var(--general-space-16);
+      }
     }
   }
 }

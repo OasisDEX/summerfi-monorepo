@@ -6,7 +6,7 @@ import {
 } from '@/features/claim-and-delegate/types'
 
 export const claimDelegateState: ClaimDelegateState = {
-  step: ClaimDelegateSteps.TERMS,
+  step: ClaimDelegateSteps.STAKE,
   delegatee: undefined,
   claimStatus: undefined,
   delegateStatus: undefined,
