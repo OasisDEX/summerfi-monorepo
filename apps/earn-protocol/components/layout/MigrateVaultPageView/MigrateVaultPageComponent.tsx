@@ -16,6 +16,7 @@ import {
   VaultOpenGrid,
 } from '@summerfi/app-earn-ui'
 import {
+  type ArksHistoricalChartData,
   type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
@@ -50,6 +51,8 @@ type MigrateVaultPageComponentProps = {
   userActivity: UsersActivity
   topDepositors: SDKUsersActivityType
   medianDefiYield?: number
+  arksHistoricalChartData: ArksHistoricalChartData
+  arksInterestRates?: { [key: string]: number }
 }
 
 export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
@@ -58,6 +61,8 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
   userActivity,
   topDepositors,
   medianDefiYield,
+  arksHistoricalChartData,
+  arksInterestRates,
 }) => {
   const { publicClient } = useNetworkAlignedClient()
   const { deviceType } = useDeviceType()
@@ -203,6 +208,7 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
       displaySimulationGraph={displaySimulationGraph}
       sumrPrice={estimatedSumrPrice}
       onRefresh={revalidatePositionData}
+      arksInterestRates={arksInterestRates}
       simulationGraph={
         <VaultSimulationGraph
           vault={vault}
@@ -230,7 +236,7 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
             defaultExpanded
           >
             <ArkHistoricalYieldChart
-              chartData={vault.customFields?.arksHistoricalChartData}
+              chartData={arksHistoricalChartData}
               summerVaultName={summerVaultName}
             />
           </Expander>
@@ -242,7 +248,7 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
             }
             defaultExpanded
           >
-            <VaultExposure vault={vault} />
+            <VaultExposure vault={vault} arksInterestRates={arksInterestRates} />
           </Expander>
           <Expander
             title={

@@ -1,6 +1,7 @@
 'use client'
 import { type FC } from 'react'
 import {
+  type ArksHistoricalChartData,
   type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
@@ -19,6 +20,8 @@ type MigrateVaultPageViewProps = {
   userActivity: UsersActivity
   topDepositors: SDKUsersActivityType
   medianDefiYield?: number
+  arksHistoricalChartData: ArksHistoricalChartData
+  arksInterestRates?: { [key: string]: number }
 }
 
 export const MigrateVaultPageView: FC<MigrateVaultPageViewProps> = ({
@@ -27,6 +30,8 @@ export const MigrateVaultPageView: FC<MigrateVaultPageViewProps> = ({
   userActivity,
   topDepositors,
   medianDefiYield,
+  arksHistoricalChartData,
+  arksInterestRates,
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -36,6 +41,8 @@ export const MigrateVaultPageView: FC<MigrateVaultPageViewProps> = ({
         userActivity={userActivity}
         topDepositors={topDepositors}
         medianDefiYield={medianDefiYield}
+        arksHistoricalChartData={arksHistoricalChartData}
+        arksInterestRates={arksInterestRates}
       />
     </SDKContextProvider>
   )

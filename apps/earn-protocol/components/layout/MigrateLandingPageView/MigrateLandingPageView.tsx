@@ -23,10 +23,11 @@ import {
   type SDKNetwork,
   type SDKVaultsListType,
 } from '@summerfi/app-types'
-import { sdkNetworkToHumanNetwork } from '@summerfi/app-utils'
+import { sdkNetworkToHumanNetwork, subgraphNetworkToId } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
+import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { NavConfigContent } from '@/features/nav-config/components/NavConfigContent/NavConfigContent'
@@ -67,11 +68,13 @@ const allNetworksOption: DropdownOption = {
 interface MigrateLandingPageViewProps {
   vaultsList: SDKVaultsListType
   selectedNetwork?: SDKNetwork | 'all-networks'
+  vaultsApyByNetworkMap: GetVaultsApyResponse
 }
 
 export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
   vaultsList,
   selectedNetwork = 'all-networks',
+  vaultsApyByNetworkMap,
 }: MigrateLandingPageViewProps) => {
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
@@ -94,8 +97,6 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
   }, [localVaultNetwork, vaultsList])
 
   const [selectedVaultId, setSelectedVaultId] = useState<string | undefined>(undefined)
-
-  console.log('selectedVaultId', selectedVaultId)
 
   const vaultsNetworksList = useMemo(
     () => [
@@ -220,6 +221,11 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
                     wrapperStyle={{
                       minWidth: '300px',
                     }}
+                    apy={
+                      vaultsApyByNetworkMap[
+                        `${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`
+                      ]
+                    }
                   />
                 </div>
               ))}
