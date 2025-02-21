@@ -4,4 +4,8 @@
   flex-direction: column;
   padding: unset;
   width: 100%;
+
+  @media (min-width: 768px) {
+    padding: 0 64px;
+  }
 }
