@@ -4,10 +4,7 @@ import { type TokenSymbolsList } from '@summerfi/app-types'
 import { capitalize } from 'lodash-es'
 import Image from 'next/image'
 
-import aaveLogo from '@/public/img/platform_icons/platform_logo_aave.svg'
-import morphoLogo from '@/public/img/platform_icons/platform_logo_morpho.svg'
-import sparkLogo from '@/public/img/platform_icons/platform_logo_spark.svg'
-import summerLogo from '@/public/img/platform_icons/platform_logo_summerfi.svg'
+import { type PlatformLogoMap, platformLogoMap } from '@/helpers/platform-logo-map'
 
 import classNames from './MigrationMiniCard.module.scss'
 
@@ -18,19 +15,12 @@ interface MigrationMiniCardProps {
   token: TokenSymbolsList
   network: string
   type: 'from' | 'to'
-  platformLogo: 'aave' | 'morpho' | 'spark' | 'summer'
+  platformLogo: PlatformLogoMap
 }
 
 const variantMap: { [key in MigrationMiniCardProps['type']]: CardVariant } = {
   from: 'cardPrimarySmallPaddings',
   to: 'cardSecondarySmallPaddingsColorfulBorder',
-}
-
-const platformLogoMap = {
-  aave: aaveLogo,
-  morpho: morphoLogo,
-  spark: sparkLogo,
-  summer: summerLogo,
 }
 
 export const MigrationMiniCard: FC<MigrationMiniCardProps> = ({

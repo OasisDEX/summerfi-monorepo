@@ -1,0 +1,40 @@
+.migrationCardWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-16);
+
+  .migrationCardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .migrationSubHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .divider {
+    width: 100%;
+    height: 1px;
+    background-color: var(--earn-protocol-secondary-40);
+  }
+
+  .migrationContent {
+    display: flex;
+    flex-direction: column;
+    gap: var(--general-space-16);
+
+    .migrationContentRow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+  
+  .migrationCardBanner {
+    display: flex;
+    justify-content: center;
+  }
+}

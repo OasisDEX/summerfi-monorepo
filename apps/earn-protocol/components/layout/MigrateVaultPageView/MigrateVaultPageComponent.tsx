@@ -37,7 +37,7 @@ import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpe
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
-import { MigrationMiniCard } from '@/features/migration/components/MigrationBox/MigrationMiniCard/MigrationMiniCard'
+import { MigrationMiniCard } from '@/features/migration/components/MigrationMiniCard/MigrationMiniCard'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
