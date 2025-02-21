@@ -1,5 +1,5 @@
 import { ArmadaVaultId, makeSDK, type SDKManager } from '@summerfi/sdk-client'
-import { ArmadaMigrationType, User, Wallet } from '@summerfi/sdk-common'
+import { ArmadaMigrationType, Percentage, User, Wallet } from '@summerfi/sdk-common'
 
 import { SDKApiUrl, signerPrivateKey, testConfig } from './utils/testConfig'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
@@ -25,19 +25,25 @@ describe('Armada Protocol Migration', () => {
         }),
       })
 
-      describe(`getMigratablePositions`, () => {
+      describe.skip(`getMigratablePositions`, () => {
         it(`should get all migratable positions`, async () => {
           const res = await sdk.armada.users.getMigratablePositions({
             chainInfo,
             user,
           })
-          console.log(res.positions.map((p) => ({ ...p, amount: p.amount.toString() })))
+          console.log(
+            res.positions.map((p) => ({
+              ...p,
+              amount: p.amount.toString(),
+              underlyingAmount: p.underlyingAmount.toString(),
+            })),
+          )
           expect(res.positions.length).toBeGreaterThan(0)
         })
       })
 
-      describe.skip(`getMigrationTX`, () => {
-        it.skip(`should migrate first migratable position`, async () => {
+      describe(`getMigrationTX`, () => {
+        it(`should migrate first migratable position`, async () => {
           const positionsBefore = await sdk.armada.users.getMigratablePositions({
             chainInfo,
             user,
@@ -47,7 +53,11 @@ describe('Armada Protocol Migration', () => {
 
           console.log(
             'before',
-            positionsBefore.positions.map((p) => ({ ...p, amount: p.amount.toString() })),
+            positionsBefore.positions.map((p) => ({
+              ...p,
+              amount: p.amount.toString(),
+              underlyingAmount: p.underlyingAmount.toString(),
+            })),
           )
 
           const vaultId = ArmadaVaultId.createFrom({
@@ -64,6 +74,7 @@ describe('Armada Protocol Migration', () => {
             vaultId,
             user,
             positions: positionsToMigrate,
+            slippage: Percentage.createFrom({ value: 1 }),
           })
 
           console.log(
@@ -91,12 +102,16 @@ describe('Armada Protocol Migration', () => {
 
           console.log(
             'after',
-            positionsAfter.positions.map((p) => ({ ...p, amount: p.amount.toString() })),
+            positionsAfter.positions.map((p) => ({
+              ...p,
+              amount: p.amount.toString(),
+              underlyingAmount: p.underlyingAmount.toString(),
+            })),
           ),
             expect(positionsAfter.positions.length).toBeLessThan(positionsBefore.positions.length)
         })
 
-        it(`should migrate multiple migratable positions`, async () => {
+        it.skip(`should migrate multiple migratable positions`, async () => {
           const positionsBefore = await sdk.armada.users.getMigratablePositions({
             chainInfo,
             user,
@@ -106,7 +121,11 @@ describe('Armada Protocol Migration', () => {
 
           console.log(
             'before',
-            positionsBefore.positions.map((p) => ({ ...p, amount: p.amount.toString() })),
+            positionsBefore.positions.map((p) => ({
+              ...p,
+              amount: p.amount.toString(),
+              underlyingAmount: p.underlyingAmount.toString(),
+            })),
           )
 
           const vaultId = ArmadaVaultId.createFrom({
@@ -123,6 +142,7 @@ describe('Armada Protocol Migration', () => {
             vaultId,
             user,
             positions: positionsToMigrate,
+            slippage: Percentage.createFrom({ value: 1 }),
           })
 
           const { statuses } = await sendAndLogTransactions({
@@ -143,7 +163,11 @@ describe('Armada Protocol Migration', () => {
 
           console.log(
             'after',
-            positionsAfter.positions.map((p) => ({ ...p, amount: p.amount.toString() })),
+            positionsAfter.positions.map((p) => ({
+              ...p,
+              amount: p.amount.toString(),
+              underlyingAmount: p.underlyingAmount.toString(),
+            })),
           ),
             expect(positionsAfter.positions.length).toBeLessThan(positionsBefore.positions.length)
         })

@@ -376,8 +376,9 @@ export interface IArmadaManagerUsersClient {
   }): Promise<{
     chainInfo: IChainInfo
     positions: {
-      amount: ITokenAmount
       migrationType: ArmadaMigrationType
+      amount: ITokenAmount
+      underlyingAmount: ITokenAmount
     }[]
   }>
 
@@ -387,9 +388,9 @@ export interface IArmadaManagerUsersClient {
    *
    * @param user The user
    * @param vaultId The vault id
-   * @param amount The token amount
-   * @param migrationType The type of migration
    * @param shouldStake Should stake
+   * @param slippage The slippage
+   * @param positions The positions to migrate
    *
    * @returns The transaction for the migration
    * @throws Error if the migration type is not supported
@@ -398,9 +399,11 @@ export interface IArmadaManagerUsersClient {
     user: IUser
     vaultId: IArmadaVaultId
     shouldStake?: boolean
+    slippage: IPercentage
     positions: {
-      amount: ITokenAmount
       migrationType: ArmadaMigrationType
+      amount: ITokenAmount
+      underlyingAmount: ITokenAmount
     }[]
   }): Promise<[ApproveTransactionInfo[], MigrationTransactionInfo] | [MigrationTransactionInfo]>
 }

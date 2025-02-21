@@ -2,9 +2,11 @@ import { IArmadaVaultId, isArmadaVaultId } from '@summerfi/armada-protocol-commo
 import {
   IUser,
   isArmadaMigrationType,
+  isPercentage,
   isTokenAmount,
   isUser,
   type ArmadaMigrationType,
+  type IPercentage,
   type ITokenAmount,
 } from '@summerfi/sdk-common'
 import { z } from 'zod'
@@ -16,10 +18,12 @@ export const getMigrationTX = publicProcedure
       vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
       user: z.custom<IUser>(isUser),
       shouldStake: z.boolean().optional(),
+      slippage: z.custom<IPercentage>(isPercentage),
       positions: z.array(
         z.object({
-          amount: z.custom<ITokenAmount>(isTokenAmount),
           migrationType: z.custom<ArmadaMigrationType>(isArmadaMigrationType),
+          amount: z.custom<ITokenAmount>(isTokenAmount),
+          underlyingAmount: z.custom<ITokenAmount>(isTokenAmount),
         }),
       ),
     }),

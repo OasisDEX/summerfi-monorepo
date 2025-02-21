@@ -4,11 +4,12 @@ import {
   LoggingService,
   TokenAmount,
   TransactionType,
-  type AddressValue,
   type ApproveTransactionInfo,
   type HexData,
   type IAddress,
   type IChainInfo,
+  type IPercentage,
+  type IToken,
   type ITokenAmount,
   type IUser,
   type MigrationTransactionInfo,
@@ -19,15 +20,16 @@ import type { IConfigurationProvider } from '@summerfi/configuration-provider-co
 import {
   getDeployedContractAddress,
   type IArmadaManagerMigrations,
+  type IArmadaVaultId,
 } from '@summerfi/armada-protocol-common'
 import { AdmiralsQuartersAbi } from '@summerfi/armada-protocol-abis'
 import { encodeFunctionData } from 'viem'
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import { Erc20Contract } from '@summerfi/contracts-provider-service'
-import { compoundAddressesByChainId } from './token-config/compound-config'
-import { aaveV3AddressesByChainId } from './token-config/aaveV3-config'
-import { erc4626AddressesByChainId } from './token-config/erc4626-config'
+import { compoundConfigsByChainId } from './token-config/compound-config'
+import { aaveV3ConfigsByChainId } from './token-config/aaveV3-config'
+import { erc4626ConfigsByChainId } from './token-config/erc4626-config'
 import type { IOracleManager } from '@summerfi/oracle-common'
 import BigNumber from 'bignumber.js'
 import {
@@ -40,6 +42,7 @@ import {
   abiATokenRate,
   abiConvertToAssets,
 } from './abi'
+import type { ArmadaMigrationConfig } from './token-config/types'
 
 /**
  * @name ArmadaManagerMigrations
@@ -52,6 +55,16 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
   private _allowanceManager: IAllowanceManager
   private _tokensManager: ITokensManager
   private _oracleManager: IOracleManager
+  private _getSwapCall: (params: {
+    vaultId: IArmadaVaultId
+    fromAmount: ITokenAmount
+    toToken: IToken
+    slippage: IPercentage
+  }) => Promise<{
+    calldata: HexData
+    minAmount: ITokenAmount
+    toAmount: ITokenAmount
+  }>
 
   private _supportedChains: IChainInfo[]
   private _hubChainInfo: IChainInfo
@@ -66,6 +79,16 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     supportedChains: IChainInfo[]
     hubChainInfo: IChainInfo
     oracleManager: IOracleManager
+    getSwapCall: (params: {
+      vaultId: IArmadaVaultId
+      fromAmount: ITokenAmount
+      toToken: IToken
+      slippage: IPercentage
+    }) => Promise<{
+      calldata: HexData
+      minAmount: ITokenAmount
+      toAmount: ITokenAmount
+    }>
   }) {
     this._blockchainClientProvider = params.blockchainClientProvider
     this._contractsProvider = params.contractsProvider
@@ -75,6 +98,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     this._supportedChains = params.supportedChains
     this._hubChainInfo = params.hubChainInfo
     this._oracleManager = params.oracleManager
+    this._getSwapCall = params.getSwapCall
   }
 
   async getMigratablePositions(
@@ -82,8 +106,9 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
   ): ReturnType<IArmadaManagerMigrations['getMigratablePositions']> {
     // read the users balances on provided chain/source for all supported tokens using multicall
     let positions: {
-      amount: ITokenAmount
       migrationType: ArmadaMigrationType
+      amount: ITokenAmount
+      underlyingAmount: ITokenAmount
     }[] = []
 
     if (params.migrationType) {
@@ -123,29 +148,30 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
   }): Promise<
     {
       amount: ITokenAmount
+      underlyingAmount: ITokenAmount
       migrationType: ArmadaMigrationType
     }[]
   > {
-    const mappingByType: Record<
+    const configMapsPerType: Record<
       ArmadaMigrationType,
-      Record<number, Record<string, AddressValue>>
+      Record<number, Record<string, ArmadaMigrationConfig>>
     > = {
-      [ArmadaMigrationType.Compound]: compoundAddressesByChainId,
-      [ArmadaMigrationType.AaveV3]: aaveV3AddressesByChainId,
-      [ArmadaMigrationType.Erc4626]: erc4626AddressesByChainId,
+      [ArmadaMigrationType.Compound]: compoundConfigsByChainId,
+      [ArmadaMigrationType.AaveV3]: aaveV3ConfigsByChainId,
+      [ArmadaMigrationType.Erc4626]: erc4626ConfigsByChainId,
     }
 
-    const addressesMap = mappingByType[params.migrationType]
-    if (!addressesMap) {
+    const configMapsPerChain = configMapsPerType[params.migrationType]
+    if (!configMapsPerChain) {
       throw new Error('Unsupported migration type: ' + params.migrationType)
     }
-    const addresses = addressesMap[params.chainInfo.chainId]
-    if (!addresses) {
+    const configMaps = configMapsPerChain[params.chainInfo.chainId]
+    if (!configMaps) {
       throw new Error('No addresses mapping found for chain ' + params.chainInfo.chainId)
     }
 
-    // no addresses for this chain
-    if (Object.values(addresses).length === 0) {
+    // no configs for this chain
+    if (Object.values(configMaps).length === 0) {
       return []
     }
 
@@ -153,26 +179,36 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     const client = await this._blockchainClientProvider.getBlockchainClient({
       chainInfo: params.chainInfo,
     })
-    // get supported tokens from compound protocol
-    // ...existing code...
+    // read the balances for all supported tokens
     return Promise.all(
-      Object.entries(addresses).map(async ([_, address]) => {
+      Object.entries(configMaps).map(async ([_, config]) => {
         const erc20Contract = Erc20Contract.create({
           blockchainClient: client,
           tokensManager: this._tokensManager,
           chainInfo: params.chainInfo,
-          address: Address.createFromEthereum({ value: address }),
+          address: Address.createFromEthereum({ value: config.sourceContract }),
         })
 
-        const [balance, token] = await Promise.all([
+        const [balance, token, underlyingToken] = await Promise.all([
           client.readContract({
             abi: abiBalanceOf,
-            address: address,
+            address: config.sourceContract,
             functionName: 'balanceOf',
             args: [params.user.wallet.address.value],
           }),
           erc20Contract.getToken(),
+          this._tokensManager.getTokenByAddress({
+            chainInfo: params.chainInfo,
+            address: Address.createFromEthereum({ value: config.underlyingToken }),
+          }),
         ])
+
+        const underlyingAmount = await this._getUnderlyingAmount({
+          balance: balance.toString(),
+          type: params.migrationType,
+          token: token,
+          underlyingToken,
+        })
 
         return {
           migrationType: params.migrationType,
@@ -180,9 +216,48 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
             token: token,
             amount: balance.toString(),
           }),
+          underlyingAmount,
         }
       }),
     )
+  }
+
+  private async _getUnderlyingAmount(params: {
+    balance: string
+    type: ArmadaMigrationType
+    token: IToken
+    underlyingToken: IToken
+  }) {
+    switch (params.type) {
+      case ArmadaMigrationType.Compound:
+        return TokenAmount.createFromBaseUnit({
+          token: params.underlyingToken,
+          amount: params.balance,
+        })
+      case ArmadaMigrationType.AaveV3:
+        return TokenAmount.createFromBaseUnit({
+          token: params.underlyingToken,
+          amount: params.balance,
+        })
+      case ArmadaMigrationType.Erc4626: {
+        const client = await this._blockchainClientProvider.getBlockchainClient({
+          chainInfo: params.token.chainInfo,
+        })
+        const convertedBalance = await client.readContract({
+          abi: abiConvertToAssets,
+          address: params.token.address.value,
+          functionName: 'convertToAssets',
+          args: [BigInt(params.balance)],
+        })
+
+        return TokenAmount.createFromBaseUnit({
+          token: params.underlyingToken,
+          amount: convertedBalance.toString(),
+        })
+      }
+      default:
+        throw new Error('Unsupported migration type: ' + params.type)
+    }
   }
 
   async getMigrationTX(
@@ -203,6 +278,29 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     const moveCalls = params.positions.map((position) => this._getMoveCall({ ...position }))
     multicallArgs.push(...moveCalls.map((call) => call.call))
     multicallOperations.push(...moveCalls.map((call) => call.operation))
+
+    // check and swap migrated tokens to fleet token
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+    const fleetToken = await fleetContract.asErc4626().asset()
+
+    for (const position of params.positions) {
+      // We need to swap position when token is not a fleet token
+      if (!position.underlyingAmount.token.equals(fleetToken)) {
+        const swapCall = await this._getSwapCall({
+          vaultId: params.vaultId,
+          fromAmount: position.underlyingAmount,
+          toToken: fleetToken,
+          slippage: params.slippage,
+        })
+        multicallArgs.push(swapCall.calldata)
+        multicallOperations.push(
+          `swap ${position.underlyingAmount.toString()} to ${swapCall.toAmount.toString()} (min ${swapCall.minAmount.toString()})`,
+        )
+      }
+    }
 
     // when staking admirals quarters will receive LV tokens, otherwise the user
     const fleetTokenReceiver = shouldStake
@@ -379,12 +477,11 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
         const moveAssetsCall = encodeFunctionData({
           abi: AdmiralsQuartersAbi,
           functionName: 'moveFromCompoundToAdmiralsQuarters',
-          // args: [position.amount.token.address.value, 0n],
           args: [position.amount.token.address.value, position.amount.toSolidityValue()],
         })
         return {
           call: moveAssetsCall,
-          operation: 'moveFromCompoundToAdmiralsQuarters (0)',
+          operation: 'moveFromCompoundToAdmiralsQuarters: ' + position.amount.toString(),
         }
       }
       case ArmadaMigrationType.AaveV3: {

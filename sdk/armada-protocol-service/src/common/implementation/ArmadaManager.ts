@@ -132,6 +132,7 @@ export class ArmadaManager implements IArmadaManager {
       ...params,
       hubChainInfo: this._hubChainInfo,
       supportedChains: this._supportedChains,
+      getSwapCall: this._getSwapCall.bind(this),
     })
   }
 
