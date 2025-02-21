@@ -7,6 +7,8 @@ export type Styles = {
   primarySmall: string
   secondaryLarge: string
   secondaryLargeActive: string
+  secondaryMedium: string
+  secondaryMediumActive: string
   secondarySmall: string
   secondarySmallActive: string
   unstyled: string

@@ -1,5 +1,5 @@
 import { makeSDK } from '@summerfi/sdk-client'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { getDepositTXHandler } from '../handlers/getDepositTXHandler'
 import { getTokenBySymbolHandler } from '../handlers/getTokenBySymbolHandler'
 import { getUserPositionsHandler } from '../handlers/getUserPositionsHandler'
@@ -23,6 +23,7 @@ import { getUserStakedBalanceHandler } from '../handlers/getUserStakedBalanceHan
 import { getUserVotesHandler } from '../handlers/getUserVotesHandler'
 import { getSummerTokenHandler } from '../handlers/getSummerTokenHandler'
 import { getClaimableAggregatedRewardsHandler } from '../handlers/getClaimableAggregatedRewardsHandler'
+import { getBridgeTxHandler } from '../handlers/getBridgeTxHandler'
 
 type UseSdk = {
   walletAddress?: string
@@ -36,6 +37,10 @@ export const useSDK = (params: UseSdk) => {
   const { chainId, walletAddress: walletAddressString } = params
 
   const getChainInfo = useMemo(() => getChainInfoHandler(chainId), [chainId])
+  const getTargetChainInfo = useCallback((specificChainId: number) => {
+    const chainInfoFn = getChainInfoHandler(specificChainId)
+    return chainInfoFn()
+  }, [])
 
   const getWalletAddress = useMemo(
     () => getWalletAddressHandler(walletAddressString),
@@ -72,6 +77,7 @@ export const useSDK = (params: UseSdk) => {
     [sdk],
   )
 
+  const getBridgeTx = useMemo(() => getBridgeTxHandler(sdk), [sdk])
   const getDelegateTx = useMemo(() => getDelegateTxHandler(sdk), [sdk])
   const getStakeTx = useMemo(() => getStakeTxHandler(sdk), [sdk])
   const getUndelegateTx = useMemo(() => getUndelegateTxHandler(sdk), [sdk])
@@ -86,6 +92,7 @@ export const useSDK = (params: UseSdk) => {
       getCurrentUser,
       getWalletAddress,
       getChainInfo,
+      getTargetChainInfo,
       getChain,
       getTokenBySymbol,
       getDepositTX,
@@ -96,6 +103,7 @@ export const useSDK = (params: UseSdk) => {
       getAggregatedRewards,
       getClaimableAggregatedRewards,
       getAggregatedClaimsForChainTX,
+      getBridgeTx,
       getDelegateTx,
       getStakeTx,
       getUndelegateTx,
@@ -109,6 +117,7 @@ export const useSDK = (params: UseSdk) => {
       getCurrentUser,
       getWalletAddress,
       getChainInfo,
+      getTargetChainInfo,
       getChain,
       getTokenBySymbol,
       getDepositTX,
@@ -120,6 +129,7 @@ export const useSDK = (params: UseSdk) => {
       getClaimableAggregatedRewards,
       getAggregatedClaimsForChainTX,
       getDelegateTx,
+      getBridgeTx,
       getStakeTx,
       getUndelegateTx,
       getUnstakeTx,

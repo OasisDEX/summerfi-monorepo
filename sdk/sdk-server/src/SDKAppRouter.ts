@@ -56,6 +56,7 @@ import { getSummerToken } from './armada-protocol-handlers/users/getSummerToken'
 import { getDelegationChainLength } from './armada-protocol-handlers/users/getDelegationChainLength'
 import { pong } from './handlers/debugPong'
 import { getClaimableAggregatedRewards } from './armada-protocol-handlers/users/getClaimableAggregatedRewards'
+import { getBridgeTx } from './armada-protocol-handlers/users/getBridgeTx'
 
 /**
  * Server
@@ -102,6 +103,7 @@ export const sdkAppRouter = router({
       getFleetBalance: getFleetBalance,
       getStakedBalance: getStakedBalance,
       getTotalBalance: getTotalBalance,
+      getBridgeTx: getBridgeTx,
       getAggregatedRewards: getAggregatedRewards,
       getClaimableAggregatedRewards: getClaimableAggregatedRewards,
       getAggregatedClaimsForChainTX: getAggregatedClaimsForChainTX,

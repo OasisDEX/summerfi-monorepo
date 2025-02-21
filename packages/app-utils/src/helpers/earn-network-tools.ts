@@ -1,3 +1,4 @@
+import { arbitrum, base, mainnet } from '@account-kit/infra'
 import {
   NetworkIds,
   NetworkNames,
@@ -6,11 +7,13 @@ import {
   type SDKSupportedChain,
   sdkSupportedChains,
   type SDKSupportedNetwork,
+  sdkSupportedNetworks,
 } from '@summerfi/app-types'
+import { type Chain } from 'viem/chains'
 
 export const isSupportedSDKChain = (
   chainId: unknown,
-): chainId is SDKChainId.ARBITRUM | SDKChainId.BASE =>
+): chainId is SDKChainId.ARBITRUM | SDKChainId.BASE | SDKChainId.MAINNET =>
   typeof chainId === 'number' && sdkSupportedChains.includes(chainId)
 
 const humanReadableNetworkMap = {
@@ -53,6 +56,18 @@ export const humanNetworktoSDKNetwork = (network: string): SDKNetwork => {
   return sdkNetworkMap[network.toLowerCase() as keyof typeof sdkNetworkMap]
 }
 
+export const chainIdToSDKNetwork = (chainId: SDKChainId) => {
+  if (chainId === SDKChainId.SEPOLIA || chainId === SDKChainId.OPTIMISM) {
+    throw new Error('Sepolia and Optimism are not supported [chainIdToSDKNetwork]')
+  }
+
+  return {
+    [SDKChainId.ARBITRUM]: SDKNetwork.ArbitrumOne,
+    [SDKChainId.BASE]: SDKNetwork.Base,
+    [SDKChainId.MAINNET]: SDKNetwork.Mainnet,
+  }[chainId]
+}
+
 export const networkNameToSDKNetwork = (network: NetworkNames) => {
   return {
     [NetworkNames.arbitrumMainnet.toLowerCase()]: SDKNetwork.ArbitrumOne,
@@ -76,4 +91,31 @@ export const subgraphNetworkToSDKId = (network: SDKNetwork) => {
     [SDKNetwork.Base.toLowerCase()]: SDKChainId.BASE,
     [SDKNetwork.Mainnet.toLowerCase()]: SDKChainId.MAINNET,
   }[network.toLowerCase()] as SDKSupportedChain
+}
+
+export const sdkNetworkToChain = (network: SDKNetwork): Chain => {
+  if (!sdkSupportedNetworks.includes(network as SDKSupportedNetwork)) {
+    throw new Error(`Unsupported network: ${network}`)
+  }
+
+  const chainMap: { [K in SDKSupportedNetwork]: Chain } = {
+    [SDKNetwork.ArbitrumOne]: arbitrum,
+    [SDKNetwork.Base]: base,
+    [SDKNetwork.Mainnet]: mainnet,
+  }
+
+  return chainMap[network as SDKSupportedNetwork]
+}
+
+/**
+ * Type guard to check whether a value is a supported human network.
+ * Supported human networks are: "arbitrum", "base", and "mainnet".
+ *
+ * @param network - The value to test.
+ * @returns True if the value is a string and corresponds to a supported human network.
+ */
+export const isSupportedHumanNetwork = (
+  network: unknown,
+): network is 'arbitrum' | 'base' | 'mainnet' => {
+  return typeof network === 'string' && network.toLowerCase() in sdkNetworkMap
 }

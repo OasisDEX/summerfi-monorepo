@@ -3,7 +3,11 @@
   grid-template-columns: 1fr;
   column-gap: var(--spacing-space-x-large);
   row-gap: var(--general-space-32);
-  padding: var(--general-space-64) var(--general-space-64);
+  padding: var(--general-space-64) var(--general-space-40);
+
+  @include media('>s') {
+    padding: var(--general-space-64) var(--general-space-64);
+  }
 
   >div {
     min-width: 180px;

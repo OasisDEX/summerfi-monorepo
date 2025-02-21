@@ -42,6 +42,7 @@ interface VaultOpenGridProps {
   medianDefiYield?: number
   sumrPrice?: number
   onRefresh?: (chainName?: string, vaultId?: string, walletAddress?: string) => void
+  arksInterestRates?: { [key: string]: number }
 }
 
 export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
@@ -55,6 +56,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   medianDefiYield,
   sumrPrice,
   onRefresh,
+  arksInterestRates,
 }) => {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [displaySimulationGraphStaggered, setDisplaySimulationGraphStaggered] =
@@ -66,7 +68,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   const apr30d = isVaultAtLeast30dOld
     ? formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
     : 'New strategy'
-  const aprCurrent = formatDecimalAsPercent(getArksWeightedApy(vault))
+  const aprCurrent = formatDecimalAsPercent(getArksWeightedApy(vault, arksInterestRates))
   const totalValueLockedUSDParsed = formatCryptoBalance(new BigNumber(vault.totalValueLockedUSD))
   const totalValueLockedTokenParsed = formatCryptoBalance(
     new BigNumber(vault.inputTokenBalance.toString()).div(ten.pow(vault.inputToken.decimals)),

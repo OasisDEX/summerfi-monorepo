@@ -18,6 +18,7 @@ interface VaultExposureTableProps {
   }
   hiddenColumns?: string[]
   rowsToDisplay?: number
+  arksInterestRates?: { [key: string]: number }
 }
 
 export const VaultExposureTable: FC<VaultExposureTableProps> = ({
@@ -25,12 +26,16 @@ export const VaultExposureTable: FC<VaultExposureTableProps> = ({
   customRow,
   hiddenColumns,
   rowsToDisplay,
+  arksInterestRates,
 }) => {
   const [sortConfig, setSortConfig] = useState<TableSortedColumn<string>>()
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
 
-  const rows = useMemo(() => vaultExposureMapper(vault, sortConfig), [vault, sortConfig])
+  const rows = useMemo(
+    () => vaultExposureMapper(vault, arksInterestRates, sortConfig),
+    [vault, arksInterestRates, sortConfig],
+  )
 
   const resolvedHiddenColumns = isMobile ? vaultExposureColumnsHiddenOnMobile : hiddenColumns
 

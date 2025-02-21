@@ -4,6 +4,7 @@ import { DeviceType } from '@summerfi/app-types'
 
 interface ScreenInfo {
   isMobile: boolean
+  isTablet: boolean
   width: number
   height: number
 }
@@ -33,6 +34,7 @@ export const useMobileCheck = (deviceType?: DeviceType): ScreenInfo => {
   // Initialize with default values that assume a non-mobile, zero-width/height screen
   const [screenInfo, setScreenInfo] = useState<ScreenInfo>({
     isMobile: deviceType === DeviceType.MOBILE,
+    isTablet: deviceType === DeviceType.TABLET,
     width: 0,
     height: 0,
   })
@@ -44,6 +46,7 @@ export const useMobileCheck = (deviceType?: DeviceType): ScreenInfo => {
     const handleResize = () => {
       setScreenInfo({
         isMobile: screen.width <= 768,
+        isTablet: screen.width > 768 && screen.width <= 1024,
         width: screen.width,
         height: screen.height,
       })

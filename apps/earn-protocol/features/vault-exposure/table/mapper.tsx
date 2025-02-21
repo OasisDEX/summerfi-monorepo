@@ -21,6 +21,7 @@ import { arkDetailsMap } from './ark-details'
 
 export const vaultExposureMapper = (
   vault: SDKVaultType,
+  arksInterestRates?: { [key: string]: number },
   sortConfig?: TableSortedColumn<string>,
 ) => {
   const vaultInputToken = vault.inputTokenBalance
@@ -40,7 +41,7 @@ export const vaultExposureMapper = (
         ? new BigNumber(item.inputTokenBalance.toString()).div(vaultInputToken.toString())
         : '0'
 
-    const arkInterestRate = vault.customFields?.arksInterestRates?.[item.name as string]
+    const arkInterestRate = arksInterestRates?.[item.name as string]
 
     const apr = isNaN(Number(arkInterestRate))
       ? new BigNumber(0)
