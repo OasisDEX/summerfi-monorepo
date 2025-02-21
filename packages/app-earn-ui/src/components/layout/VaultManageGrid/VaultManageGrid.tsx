@@ -5,7 +5,6 @@ import { type SDKVaultishType, type SDKVaultsListType } from '@summerfi/app-type
 import {
   formatCryptoBalance,
   formatDecimalAsPercent,
-  getArksWeightedApy,
   sdkNetworkToHumanNetwork,
 } from '@summerfi/app-utils'
 import { type IArmadaPositionStandalone as IArmadaPosition } from '@summerfi/armada-protocol-common'
@@ -44,11 +43,12 @@ interface VaultManageGridProps {
   simulationGraph: ReactNode
   sumrPrice?: number
   onRefresh?: (chainName?: string, vaultId?: string, walletAddress?: string) => void
-  arksInterestRates?: { [key: string]: number }
+  vaultApy?: number
 }
 
 export const VaultManageGrid: FC<VaultManageGridProps> = ({
   vault,
+  vaultApy,
   vaults,
   detailsContent,
   sidebarContent,
@@ -60,7 +60,6 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   displaySimulationGraph,
   sumrPrice,
   onRefresh,
-  arksInterestRates,
 }) => {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [displaySimulationGraphStaggered, setDisplaySimulationGraphStaggered] =
@@ -71,7 +70,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
     : false
 
   const apr30d = formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
-  const aprCurrent = formatDecimalAsPercent(getArksWeightedApy(vault, arksInterestRates))
+  const aprCurrent = formatDecimalAsPercent(vaultApy ?? 0)
 
   const noOfDeposits = position.deposits.length.toString()
 
