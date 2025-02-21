@@ -80,9 +80,12 @@ export const VaultsListView = ({
         : vaultsList
 
     return properVaultsList.sort((a, b) => {
-      return Number(a.calculatedApr) > Number(b.calculatedApr) ? -1 : 1
+      const aApy = vaultsApyByNetworkMap[`${a.id}-${subgraphNetworkToId(a.protocol.network)}`]
+      const bApy = vaultsApyByNetworkMap[`${b.id}-${subgraphNetworkToId(b.protocol.network)}`]
+
+      return Number(aApy) > Number(bApy) ? -1 : 1
     })
-  }, [localVaultNetwork, vaultsList])
+  }, [localVaultNetwork, vaultsList, vaultsApyByNetworkMap])
   const sdk = useAppSDK()
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
