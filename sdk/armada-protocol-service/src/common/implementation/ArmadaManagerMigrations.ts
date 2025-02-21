@@ -244,7 +244,18 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       } as ArmadaMigratablePosition
     })
 
-    return positionsWithPrices
+    // sort by usd value
+    const sortedPositions = positionsWithPrices.sort((a, b) => {
+      if (b.usdValue.toSolidityValue() > a.usdValue.toSolidityValue()) {
+        return 1
+      }
+      if (b.usdValue.toSolidityValue() < a.usdValue.toSolidityValue()) {
+        return -1
+      }
+      return 0
+    })
+
+    return sortedPositions
   }
 
   private async _getUnderlyingAmount(params: {
