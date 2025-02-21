@@ -1,5 +1,5 @@
 import { ArmadaVaultId, makeSDK, type SDKManager } from '@summerfi/sdk-client'
-import { ArmadaMigrationType, Percentage, TokenAmount, User, Wallet } from '@summerfi/sdk-common'
+import { ArmadaMigrationType, Percentage, User, Wallet } from '@summerfi/sdk-common'
 
 import { SDKApiUrl, signerPrivateKey, testConfig } from './utils/testConfig'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
@@ -26,10 +26,13 @@ describe('Armada Protocol Migration', () => {
       })
 
       describe.skip(`getMigratablePositions`, () => {
+        const migrationType = ArmadaMigrationType.AaveV3
+
         it(`should get all migratable positions`, async () => {
           const res = await sdk.armada.users.getMigratablePositions({
             chainInfo,
             user,
+            migrationType,
           })
           console.log(
             res.positions.map((p) => ({
@@ -44,11 +47,13 @@ describe('Armada Protocol Migration', () => {
       })
 
       describe(`getMigrationTX`, () => {
+        const migrationType = ArmadaMigrationType.AaveV3
+
         it(`should migrate first migratable position`, async () => {
           const positionsBefore = await sdk.armada.users.getMigratablePositions({
             chainInfo,
             user,
-            migrationType: ArmadaMigrationType.Compound,
+            migrationType,
           })
           assert(positionsBefore.positions.length > 1, 'No multiple migratable positions found')
 
@@ -99,7 +104,7 @@ describe('Armada Protocol Migration', () => {
           const positionsAfter = await sdk.armada.users.getMigratablePositions({
             chainInfo,
             user,
-            migrationType: ArmadaMigrationType.Compound,
+            migrationType,
           })
 
           console.log(
@@ -118,7 +123,7 @@ describe('Armada Protocol Migration', () => {
           const positionsBefore = await sdk.armada.users.getMigratablePositions({
             chainInfo,
             user,
-            migrationType: ArmadaMigrationType.Compound,
+            migrationType,
           })
           assert(positionsBefore.positions.length > 1, 'No multiple migratable positions found')
 
@@ -162,7 +167,7 @@ describe('Armada Protocol Migration', () => {
           const positionsAfter = await sdk.armada.users.getMigratablePositions({
             chainInfo,
             user,
-            migrationType: ArmadaMigrationType.Compound,
+            migrationType,
           })
 
           console.log(
