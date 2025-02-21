@@ -1,5 +1,5 @@
-import type { IToken, Denomination } from '@summerfi/sdk-common/common'
-import type { OracleProviderType, SpotPriceInfo } from '@summerfi/sdk-common/oracle'
+import type { IToken, Denomination, IChainInfo, FiatCurrency } from '@summerfi/sdk-common/common'
+import type { OracleProviderType, SpotPriceInfo, SpotPricesInfo } from '@summerfi/sdk-common/oracle'
 import { IOracleProvider } from './IOracleProvider'
 import { IManagerWithProviders } from '@summerfi/sdk-server-common'
 /**
@@ -15,4 +15,17 @@ export interface IOracleManager extends IManagerWithProviders<OracleProviderType
    * @param quoteToken Token in which the price is being requested, defaults to USD
    */
   getSpotPrice(params: { baseToken: IToken; quoteToken?: Denomination }): Promise<SpotPriceInfo>
+
+  /**
+   * @name getSpotPrices
+   * @description Returns the prevailing market price for a given asset
+   *              in terms of a base currency
+   * @param baseToken A price request for baseToken
+   * @param quoteTokens A price request for multiple quoteTokens
+   */
+  getSpotPrices(params: {
+    chainInfo: IChainInfo
+    baseTokens: IToken[]
+    quote: FiatCurrency
+  }): Promise<SpotPricesInfo>
 }

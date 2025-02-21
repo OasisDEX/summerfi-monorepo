@@ -2,10 +2,10 @@ import type {
   IChainInfo,
   IUser,
   MigrationTransactionInfo,
-  ITokenAmount,
   ArmadaMigrationType,
   ApproveTransactionInfo,
   IPercentage,
+  ArmadaMigratablePosition,
 } from '@summerfi/sdk-common'
 import type { IArmadaVaultId } from './IArmadaVaultId'
 
@@ -31,11 +31,7 @@ export interface IArmadaManagerMigrations {
     migrationType?: ArmadaMigrationType
   }): Promise<{
     chainInfo: IChainInfo
-    positions: {
-      migrationType: ArmadaMigrationType
-      amount: ITokenAmount
-      underlyingAmount: ITokenAmount
-    }[]
+    positions: ArmadaMigratablePosition[]
   }>
 
   /**
@@ -56,26 +52,6 @@ export interface IArmadaManagerMigrations {
     vaultId: IArmadaVaultId
     shouldStake?: boolean
     slippage: IPercentage
-    positions: {
-      migrationType: ArmadaMigrationType
-      amount: ITokenAmount
-      underlyingAmount: ITokenAmount
-    }[]
+    positions: ArmadaMigratablePosition[]
   }): Promise<[ApproveTransactionInfo[], MigrationTransactionInfo] | [MigrationTransactionInfo]>
-
-  /**
-   * @method calculateTotal
-   * @description Returns the total value of positions in USD
-   *
-   * @param positions List of positions to calculate total for
-   *
-   * @returns The total value in USD
-   */
-  calculateTotal(params: {
-    positions: {
-      migrationType: ArmadaMigrationType
-      amount: ITokenAmount
-      underlyingAmount: ITokenAmount
-    }[]
-  }): Promise<{ totalUsd: string }>
 }

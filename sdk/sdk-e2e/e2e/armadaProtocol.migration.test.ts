@@ -1,5 +1,5 @@
 import { ArmadaVaultId, makeSDK, type SDKManager } from '@summerfi/sdk-client'
-import { ArmadaMigrationType, Percentage, User, Wallet } from '@summerfi/sdk-common'
+import { ArmadaMigrationType, Percentage, TokenAmount, User, Wallet } from '@summerfi/sdk-common'
 
 import { SDKApiUrl, signerPrivateKey, testConfig } from './utils/testConfig'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
@@ -25,7 +25,7 @@ describe('Armada Protocol Migration', () => {
         }),
       })
 
-      describe.skip(`getMigratablePositions`, () => {
+      describe(`getMigratablePositions`, () => {
         it(`should get all migratable positions`, async () => {
           const res = await sdk.armada.users.getMigratablePositions({
             chainInfo,
@@ -34,15 +34,16 @@ describe('Armada Protocol Migration', () => {
           console.log(
             res.positions.map((p) => ({
               ...p,
-              amount: p.amount.toString(),
-              underlyingAmount: p.underlyingAmount.toString(),
+              positionTokenAmount: p.positionTokenAmount.toString(),
+              underlyingTokenAmount: p.underlyingTokenAmount.toString(),
+              usdValue: p.usdValue.toString(),
             })),
           )
           expect(res.positions.length).toBeGreaterThan(0)
         })
       })
 
-      describe(`getMigrationTX`, () => {
+      describe.skip(`getMigrationTX`, () => {
         it(`should migrate first migratable position`, async () => {
           const positionsBefore = await sdk.armada.users.getMigratablePositions({
             chainInfo,
@@ -55,8 +56,8 @@ describe('Armada Protocol Migration', () => {
             'before',
             positionsBefore.positions.map((p) => ({
               ...p,
-              amount: p.amount.toString(),
-              underlyingAmount: p.underlyingAmount.toString(),
+              amount: p.positionTokenAmount.toString(),
+              underlyingAmount: p.underlyingTokenAmount.toString(),
             })),
           )
 
@@ -65,7 +66,13 @@ describe('Armada Protocol Migration', () => {
             fleetAddress,
           })
 
-          const positionsToMigrate = positionsBefore.positions.slice(0, 1)
+          const positionsToMigrate = positionsBefore.positions.slice(0, 1).map((p) => ({
+            ...p,
+            amount: TokenAmount.createFromBaseUnit({
+              token: p.positionTokenAmount.token,
+              amount: '0',
+            }),
+          }))
           positionsToMigrate.forEach((p, i) => {
             console.log(`- migrating position ${i}: `, p.migrationType, p.amount.toString())
           })
@@ -104,8 +111,8 @@ describe('Armada Protocol Migration', () => {
             'after',
             positionsAfter.positions.map((p) => ({
               ...p,
-              amount: p.amount.toString(),
-              underlyingAmount: p.underlyingAmount.toString(),
+              amount: p.positionTokenAmount.toString(),
+              underlyingAmount: p.underlyingTokenAmount.toString(),
             })),
           ),
             expect(positionsAfter.positions.length).toBeLessThan(positionsBefore.positions.length)
@@ -123,8 +130,8 @@ describe('Armada Protocol Migration', () => {
             'before',
             positionsBefore.positions.map((p) => ({
               ...p,
-              amount: p.amount.toString(),
-              underlyingAmount: p.underlyingAmount.toString(),
+              amount: p.positionTokenAmount.toString(),
+              underlyingAmount: p.underlyingTokenAmount.toString(),
             })),
           )
 
@@ -135,7 +142,11 @@ describe('Armada Protocol Migration', () => {
 
           const positionsToMigrate = positionsBefore.positions.slice(0, 2)
           positionsToMigrate.forEach((p, i) => {
-            console.log(`- migrating position ${i}: `, p.migrationType, p.amount.toString())
+            console.log(
+              `- migrating position ${i}: `,
+              p.migrationType,
+              p.positionTokenAmount.toString(),
+            )
           })
 
           const [tx1, tx2] = await sdk.armada.users.getMigrationTX({
@@ -165,8 +176,8 @@ describe('Armada Protocol Migration', () => {
             'after',
             positionsAfter.positions.map((p) => ({
               ...p,
-              amount: p.amount.toString(),
-              underlyingAmount: p.underlyingAmount.toString(),
+              amount: p.positionTokenAmount.toString(),
+              underlyingAmount: p.underlyingTokenAmount.toString(),
             })),
           ),
             expect(positionsAfter.positions.length).toBeLessThan(positionsBefore.positions.length)

@@ -12,10 +12,10 @@ import {
 import type { Position_Filter } from '@summerfi/subgraph-manager-common'
 import {
   BridgeTransactionInfo,
-  IChainInfo,
   ITokenAmount,
   IUser,
   type ApproveTransactionInfo,
+  type ArmadaMigratablePosition,
   type ArmadaMigrationType,
   type ChainInfo,
   type ClaimTransactionInfo,
@@ -404,11 +404,7 @@ export interface IArmadaManagerUsersClient {
     migrationType?: ArmadaMigrationType
   }): Promise<{
     chainInfo: IChainInfo
-    positions: {
-      migrationType: ArmadaMigrationType
-      amount: ITokenAmount
-      underlyingAmount: ITokenAmount
-    }[]
+    positions: ArmadaMigratablePosition[]
   }>
 
   /**
@@ -429,10 +425,6 @@ export interface IArmadaManagerUsersClient {
     vaultId: IArmadaVaultId
     shouldStake?: boolean
     slippage: IPercentage
-    positions: {
-      migrationType: ArmadaMigrationType
-      amount: ITokenAmount
-      underlyingAmount: ITokenAmount
-    }[]
+    positions: ArmadaMigratablePosition[]
   }): Promise<[ApproveTransactionInfo[], MigrationTransactionInfo] | [MigrationTransactionInfo]>
 }
