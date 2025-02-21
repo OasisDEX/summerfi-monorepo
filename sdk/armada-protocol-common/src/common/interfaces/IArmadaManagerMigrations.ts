@@ -6,6 +6,7 @@ import type {
   ApproveTransactionInfo,
   IPercentage,
   ArmadaMigratablePosition,
+  AddressValue,
 } from '@summerfi/sdk-common'
 import type { IArmadaVaultId } from './IArmadaVaultId'
 
@@ -52,6 +53,6 @@ export interface IArmadaManagerMigrations {
     vaultId: IArmadaVaultId
     shouldStake?: boolean
     slippage: IPercentage
-    positions: ArmadaMigratablePosition[]
+    positionIds: AddressValue[]
   }): Promise<[ApproveTransactionInfo[], MigrationTransactionInfo] | [MigrationTransactionInfo]>
 }

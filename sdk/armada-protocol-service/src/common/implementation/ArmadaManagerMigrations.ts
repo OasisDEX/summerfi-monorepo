@@ -138,8 +138,6 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     }
   }
 
-  // private async getTotalMigratableAmount
-
   private async _getPositions(params: {
     chainInfo: IChainInfo
     user: IUser
@@ -301,8 +299,17 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       contractName: 'admiralsQuarters',
     })
 
+    const positionsResponse = await this.getMigratablePositions({
+      chainInfo: params.vaultId.chainInfo,
+      user: params.user,
+    })
+
+    const filteredPositions = positionsResponse.positions.filter((position) =>
+      params.positionIds.some((id) => id === position.id),
+    )
+
     // get the migration transaction info from params
-    const moveCalls = params.positions.map((position) => this._getMoveCall({ ...position }))
+    const moveCalls = filteredPositions.map((position) => this._getMoveCall({ ...position }))
     multicallArgs.push(...moveCalls.map((call) => call.call))
     multicallOperations.push(...moveCalls.map((call) => call.operation))
 
@@ -314,7 +321,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     const fleetToken = await fleetContract.asErc4626().asset()
 
     const swapAmountByPositionId: Record<string, ITokenAmount> = {}
-    for (const position of params.positions) {
+    for (const position of filteredPositions) {
       // We need to swap position when token is not a fleet token
       if (!position.underlyingTokenAmount.token.equals(fleetToken)) {
         const swapCall = await this._getSwapCall({
@@ -373,7 +380,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     }
 
     const approvalTransactions = await Promise.all(
-      params.positions.map(async (position) => {
+      filteredPositions.map(async (position) => {
         return await this._getMigrationApproval(params.user, admiralsQuartersAddress, position)
       }),
     )
@@ -501,48 +508,40 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
   }
 
   private _getMoveCall(position: ArmadaMigratablePosition) {
+    const migrationAmount = 0n
+
     switch (position.migrationType) {
       case ArmadaMigrationType.Compound: {
         const moveAssetsCall = encodeFunctionData({
           abi: AdmiralsQuartersAbi,
           functionName: 'moveFromCompoundToAdmiralsQuarters',
-          args: [
-            position.positionTokenAmount.token.address.value,
-            position.positionTokenAmount.toSolidityValue(),
-          ],
+          args: [position.positionTokenAmount.token.address.value, migrationAmount],
         })
         return {
           call: moveAssetsCall,
-          operation:
-            'moveFromCompoundToAdmiralsQuarters: ' + position.positionTokenAmount.toString(),
+          operation: 'moveFromCompoundToAdmiralsQuarters: ' + migrationAmount,
         }
       }
       case ArmadaMigrationType.AaveV3: {
         const moveAssetsCall = encodeFunctionData({
           abi: AdmiralsQuartersAbi,
           functionName: 'moveFromAaveToAdmiralsQuarters',
-          args: [
-            position.positionTokenAmount.token.address.value,
-            position.positionTokenAmount.toSolidityValue(),
-          ],
+          args: [position.positionTokenAmount.token.address.value, migrationAmount],
         })
         return {
           call: moveAssetsCall,
-          operation: 'moveFromAaveToAdmiralsQuarters (0)',
+          operation: 'moveFromAaveToAdmiralsQuarters: ' + migrationAmount,
         }
       }
       case ArmadaMigrationType.Erc4626: {
         const moveAssetsCall = encodeFunctionData({
           abi: AdmiralsQuartersAbi,
           functionName: 'moveFromERC4626ToAdmiralsQuarters',
-          args: [
-            position.positionTokenAmount.token.address.value,
-            position.positionTokenAmount.toSolidityValue(),
-          ],
+          args: [position.positionTokenAmount.token.address.value, migrationAmount],
         })
         return {
           call: moveAssetsCall,
-          operation: 'moveFromERC4626ToAdmiralsQuarters (0)',
+          operation: 'moveFromERC4626ToAdmiralsQuarters: ' + migrationAmount,
         }
       }
       default:

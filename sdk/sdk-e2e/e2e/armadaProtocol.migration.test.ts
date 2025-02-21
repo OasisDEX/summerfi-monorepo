@@ -25,7 +25,7 @@ describe('Armada Protocol Migration', () => {
         }),
       })
 
-      describe(`getMigratablePositions`, () => {
+      describe.skip(`getMigratablePositions`, () => {
         it(`should get all migratable positions`, async () => {
           const res = await sdk.armada.users.getMigratablePositions({
             chainInfo,
@@ -43,7 +43,7 @@ describe('Armada Protocol Migration', () => {
         })
       })
 
-      describe.skip(`getMigrationTX`, () => {
+      describe(`getMigrationTX`, () => {
         it(`should migrate first migratable position`, async () => {
           const positionsBefore = await sdk.armada.users.getMigratablePositions({
             chainInfo,
@@ -56,8 +56,9 @@ describe('Armada Protocol Migration', () => {
             'before',
             positionsBefore.positions.map((p) => ({
               ...p,
-              amount: p.positionTokenAmount.toString(),
-              underlyingAmount: p.underlyingTokenAmount.toString(),
+              positionTokenAmount: p.positionTokenAmount.toString(),
+              underlyingTokenAmount: p.underlyingTokenAmount.toString(),
+              usdValue: p.usdValue.toString(),
             })),
           )
 
@@ -66,21 +67,15 @@ describe('Armada Protocol Migration', () => {
             fleetAddress,
           })
 
-          const positionsToMigrate = positionsBefore.positions.slice(0, 1).map((p) => ({
-            ...p,
-            amount: TokenAmount.createFromBaseUnit({
-              token: p.positionTokenAmount.token,
-              amount: '0',
-            }),
-          }))
-          positionsToMigrate.forEach((p, i) => {
-            console.log(`- migrating position ${i}: `, p.migrationType, p.amount.toString())
+          const positionIdsToMigrate = positionsBefore.positions.slice(0, 1).map((p) => p.id)
+          positionIdsToMigrate.forEach((id, i) => {
+            console.log(`- migrating position ${i}: `, id)
           })
 
           const [tx1, tx2] = await sdk.armada.users.getMigrationTX({
             vaultId,
             user,
-            positions: positionsToMigrate,
+            positionIds: positionIdsToMigrate,
             slippage: Percentage.createFrom({ value: 1 }),
           })
 
@@ -111,8 +106,9 @@ describe('Armada Protocol Migration', () => {
             'after',
             positionsAfter.positions.map((p) => ({
               ...p,
-              amount: p.positionTokenAmount.toString(),
-              underlyingAmount: p.underlyingTokenAmount.toString(),
+              positionTokenAmount: p.positionTokenAmount.toString(),
+              underlyingTokenAmount: p.underlyingTokenAmount.toString(),
+              usdValue: p.usdValue.toString(),
             })),
           ),
             expect(positionsAfter.positions.length).toBeLessThan(positionsBefore.positions.length)
@@ -130,8 +126,9 @@ describe('Armada Protocol Migration', () => {
             'before',
             positionsBefore.positions.map((p) => ({
               ...p,
-              amount: p.positionTokenAmount.toString(),
-              underlyingAmount: p.underlyingTokenAmount.toString(),
+              positionTokenAmount: p.positionTokenAmount.toString(),
+              underlyingTokenAmount: p.underlyingTokenAmount.toString(),
+              usdValue: p.usdValue.toString(),
             })),
           )
 
@@ -140,19 +137,15 @@ describe('Armada Protocol Migration', () => {
             fleetAddress,
           })
 
-          const positionsToMigrate = positionsBefore.positions.slice(0, 2)
-          positionsToMigrate.forEach((p, i) => {
-            console.log(
-              `- migrating position ${i}: `,
-              p.migrationType,
-              p.positionTokenAmount.toString(),
-            )
+          const positionIdsToMigrate = positionsBefore.positions.slice(0, 2).map((p) => p.id)
+          positionIdsToMigrate.forEach((id, i) => {
+            console.log(`- migrating position ${i}: `, id)
           })
 
           const [tx1, tx2] = await sdk.armada.users.getMigrationTX({
             vaultId,
             user,
-            positions: positionsToMigrate,
+            positionIds: positionIdsToMigrate,
             slippage: Percentage.createFrom({ value: 1 }),
           })
 
@@ -176,8 +169,9 @@ describe('Armada Protocol Migration', () => {
             'after',
             positionsAfter.positions.map((p) => ({
               ...p,
-              amount: p.positionTokenAmount.toString(),
-              underlyingAmount: p.underlyingTokenAmount.toString(),
+              positionTokenAmount: p.positionTokenAmount.toString(),
+              underlyingTokenAmount: p.underlyingTokenAmount.toString(),
+              usdValue: p.usdValue.toString(),
             })),
           ),
             expect(positionsAfter.positions.length).toBeLessThan(positionsBefore.positions.length)

@@ -14,6 +14,7 @@ import {
   BridgeTransactionInfo,
   ITokenAmount,
   IUser,
+  type AddressValue,
   type ApproveTransactionInfo,
   type ArmadaMigratablePosition,
   type ArmadaMigrationType,
@@ -425,6 +426,6 @@ export interface IArmadaManagerUsersClient {
     vaultId: IArmadaVaultId
     shouldStake?: boolean
     slippage: IPercentage
-    positions: ArmadaMigratablePosition[]
+    positionIds: AddressValue[]
   }): Promise<[ApproveTransactionInfo[], MigrationTransactionInfo] | [MigrationTransactionInfo]>
 }
