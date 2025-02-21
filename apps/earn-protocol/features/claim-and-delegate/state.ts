@@ -3,13 +3,12 @@ import {
   ClaimDelegateStakeType,
   type ClaimDelegateState,
   ClaimDelegateSteps,
-  ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
 
 export const claimDelegateState: ClaimDelegateState = {
-  step: ClaimDelegateSteps.CLAIM,
+  step: ClaimDelegateSteps.TERMS,
   delegatee: undefined,
-  claimStatus: ClaimDelegateTxStatuses.COMPLETED,
+  claimStatus: undefined,
   delegateStatus: undefined,
   stakingStatus: undefined,
   stakingApproveStatus: undefined,

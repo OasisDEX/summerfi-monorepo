@@ -26,8 +26,10 @@ export const useTermsOfServiceSigner = () => {
       // that is completely different from signer.signMessage
       else return await signer?.signMessage(data)
     },
-    [signMessageAsync, signer, user?.type],
+    // skipped signMessageAsync on purpose
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [signer, user?.type],
   )
 
-  return { signTosMessage }
+  return signTosMessage
 }

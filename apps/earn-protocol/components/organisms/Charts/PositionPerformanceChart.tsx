@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react'
 import { Card } from '@summerfi/app-earn-ui'
-import { type TimeframesType, type VaultWithChartsData } from '@summerfi/app-types'
+import { type PerformanceChartData, type TimeframesType } from '@summerfi/app-types'
 
 import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
 import { PerformanceChart } from '@/components/organisms/Charts/components/Performance'
@@ -10,7 +10,7 @@ import { POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
 import { useTimeframes } from '@/hooks/use-timeframes'
 
 export type PositionPerformanceChartProps = {
-  chartData: VaultWithChartsData['performanceChartData']
+  chartData: PerformanceChartData
   inputToken: string
 }
 

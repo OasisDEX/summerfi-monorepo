@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { Card } from '@summerfi/app-earn-ui'
-import { type TimeframesType, type VaultWithChartsData } from '@summerfi/app-types'
+import { type ArksHistoricalChartData, type TimeframesType } from '@summerfi/app-types'
 
 import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
 import { NotEnoughData } from '@/components/organisms/Charts/components/NotEnoughData'
@@ -11,7 +11,7 @@ import { DAYS_TO_WAIT_FOR_CHART, POINTS_REQUIRED_FOR_CHART } from '@/constants/c
 import { useTimeframes } from '@/hooks/use-timeframes'
 
 type ArkHistoricalYieldChartProps = {
-  chartData: VaultWithChartsData['arksHistoricalChartData']
+  chartData: ArksHistoricalChartData
   summerVaultName: string
 }
 
