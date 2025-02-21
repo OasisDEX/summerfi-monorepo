@@ -113,6 +113,7 @@ export const mockRefinanceContext = {
   },
   oracleManager: {
     getSpotPrice,
+    getSpotPrices: jest.fn(),
   },
 }
 
