@@ -3,13 +3,14 @@
 import { type FC, useEffect, useReducer } from 'react'
 import { getPositionValues, NonOwnerPortfolioBanner, TabBar } from '@summerfi/app-earn-ui'
 import {
+  type HistoryChartData,
   type SDKGlobalRebalancesType,
   type SDKVaultishType,
   type UsersActivity,
 } from '@summerfi/app-types'
 
-import { type PortfolioPositionsList } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
+import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { claimDelegateReducer, claimDelegateState } from '@/features/claim-and-delegate/state'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { PortfolioHeader } from '@/features/portfolio/components/PortfolioHeader/PortfolioHeader'
@@ -18,6 +19,7 @@ import { PortfolioRebalanceActivity } from '@/features/portfolio/components/Port
 import { PortfolioRewards } from '@/features/portfolio/components/PortfolioRewards/PortfolioRewards'
 import { PortfolioWallet } from '@/features/portfolio/components/PortfolioWallet/PortfolioWallet'
 import { PortfolioYourActivity } from '@/features/portfolio/components/PortfolioYourActivity/PotfolioYourActivity'
+import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { calculateOverallSumr } from '@/helpers/calculate-overall-sumr'
 import { trackButtonClick } from '@/helpers/mixpanel'
@@ -31,10 +33,14 @@ interface PortfolioPageViewProps {
   walletData: PortfolioAssetsResponse
   rewardsData: ClaimDelegateExternalData
   vaultsList: SDKVaultishType[]
-  positions: PortfolioPositionsList[]
+  positions: PositionWithVault[]
   rebalancesList: SDKGlobalRebalancesType
   userActivity: UsersActivity
   totalRays: number
+  positionsHistoricalChartMap: {
+    [key: string]: HistoryChartData
+  }
+  vaultsApyByNetworkMap: GetVaultsApyResponse
 }
 
 export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
@@ -46,6 +52,8 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   rebalancesList,
   userActivity,
   totalRays,
+  positionsHistoricalChartMap,
+  vaultsApyByNetworkMap,
 }) => {
   const { userWalletAddress, isLoadingAccount } = useUserWallet()
   const ownerView = walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
@@ -71,7 +79,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   }, [activeTab])
 
   const totalRebalances = positions.reduce(
-    (acc, position) => acc + Number(position.vaultData.rebalanceCount),
+    (acc, position) => acc + Number(position.vault.rebalanceCount),
     0,
   )
 
@@ -87,6 +95,8 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
             positions={positions}
             vaultsList={vaultsList}
             rewardsData={rewardsData}
+            positionsHistoricalChartMap={positionsHistoricalChartMap}
+            vaultsApyByNetworkMap={vaultsApyByNetworkMap}
           />
         ),
       },
@@ -94,7 +104,13 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     {
       id: PortfolioTabs.WALLET,
       label: 'Wallet',
-      content: <PortfolioWallet walletData={walletData} vaultsList={vaultsList} />,
+      content: (
+        <PortfolioWallet
+          walletData={walletData}
+          vaultsList={vaultsList}
+          vaultsApyByNetworkMap={vaultsApyByNetworkMap}
+        />
+      ),
     },
     ...[
       {
@@ -117,7 +133,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     ],
     {
       id: PortfolioTabs.REWARDS,
-      label: 'SUMR Rewards',
+      label: '$SUMR Rewards',
       content: (
         <PortfolioRewards
           rewardsData={rewardsData}
@@ -131,12 +147,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
 
   const totalWalletValue =
     positions.reduce(
-      (acc, position) =>
-        acc +
-        getPositionValues({
-          positionData: position.positionData,
-          vaultData: position.vaultData,
-        }).netEarningsUSD.toNumber(),
+      (acc, position) => acc + getPositionValues(position).netEarningsUSD.toNumber(),
 
       0,
     ) + walletData.totalAssetsUsdValue

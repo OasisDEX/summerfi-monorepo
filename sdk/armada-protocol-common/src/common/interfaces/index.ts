@@ -2,6 +2,7 @@ export type { IArmadaManager } from './IArmadaManager'
 export type { IArmadaManagerClaims } from './IArmadaManagerClaims'
 export type { IArmadaManagerGovernance } from './IArmadaManagerGovernance'
 export type { IArmadaManagerMigrations } from './IArmadaManagerMigrations'
+export type { IArmadaManagerBridge } from './IArmadaManagerBridge'
 
 export {
   ArmadaVaultDataSchema as ArmadaVaultDataSchema,

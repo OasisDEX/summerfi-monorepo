@@ -51,6 +51,7 @@ export const useTermsOfService = ({
     )
   }
 
+  // this should be memoized when passed as parameter
   const memoizedSignMessage = signMessage
 
   useEffect(() => {

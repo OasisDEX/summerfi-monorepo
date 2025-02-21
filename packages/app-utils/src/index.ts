@@ -59,6 +59,9 @@ export {
   networkNameToSDKNetwork,
   subgraphNetworkToId,
   subgraphNetworkToSDKId,
+  chainIdToSDKNetwork,
+  sdkNetworkToChain,
+  isSupportedHumanNetwork,
 } from './helpers/earn-network-tools'
 export { setCookie, getCookie } from './helpers/cookies'
 export { verifyAccessToken } from './helpers/verify-access-token'
@@ -82,4 +85,8 @@ export {
 } from './helpers/get-ark-product-id'
 
 export { aggregateArksPerNetwork } from './helpers/aggregate-arks-per-network'
-export { getArkHistoricalRatesUrl, getArkRatesUrl } from './helpers/get-arks-rates-url'
+export {
+  getArkHistoricalRatesUrl,
+  getArkRatesUrl,
+  getArkRatesBatchUrl,
+} from './helpers/get-arks-rates-url'

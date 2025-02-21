@@ -54,10 +54,10 @@ const SumrRaysRewardsContent: FC<SumrRaysRewardsContentProps> = ({
         </Text>
       </Card>
       <div className={classNames.actionableWrapper}>
-        <Link href={button.href} target={isOutsideLink(button.href) ? '_blank' : undefined}>
+        <Link href={button.href} target="_blank">
           <Button variant="primaryLarge">{button.label}</Button>
         </Link>
-        <Link href={link.href}>
+        <Link href={link.href} target={isOutsideLink(link.href) ? '_blank' : undefined}>
           <WithArrow variant="p3semi">{link.label}</WithArrow>
         </Link>
       </div>
@@ -97,7 +97,7 @@ const data = {
         icon={{ iconName: 'plant_colorful' }}
         title="Yield loop for Rays"
         description="Enhance your yield up to 7x in a single transaction."
-        button={{ label: 'Multiply', href: `${INTERNAL_LINKS.summerPro}/earn` }}
+        button={{ label: 'Yield Loop', href: `${INTERNAL_LINKS.summerPro}/earn` }}
         link={{ label: 'Learn more', href: EXTERNAL_LINKS.KB.HELP }}
       />
     ),

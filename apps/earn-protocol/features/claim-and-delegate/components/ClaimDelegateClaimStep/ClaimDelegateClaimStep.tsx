@@ -80,13 +80,13 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
       setTimeout(() => {
         dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.COMPLETED })
 
-        toast.success('Claimed SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
+        toast.success('Claimed $SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
       }, delayPerNetwork[claimOnChainId])
     },
     onError: () => {
       dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.FAILED })
 
-      toast.error('Failed to claim SUMR tokens', ERROR_TOAST_CONFIG)
+      toast.error('Failed to claim $SUMR tokens', ERROR_TOAST_CONFIG)
     },
   })
 
@@ -121,7 +121,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
 
     await claimSumrTransaction().catch((err) => {
       // eslint-disable-next-line no-console
-      console.error('Error claiming SUMR:', err)
+      console.error('Error claiming $SUMR:', err)
     })
   }
 

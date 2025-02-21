@@ -124,6 +124,28 @@ const getChainConfig = (chainId: ChainId) => {
   }
 }
 
+function getRpcUrl(chainId: ChainId): string {
+  const baseUrl = process.env.RPC_GATEWAY
+  if (!baseUrl) {
+    logger.error('RPC_GATEWAY is not set')
+    throw new Error('RPC_GATEWAY is not set')
+  }
+
+  const networkName = {
+    [ChainId.MAINNET]: 'mainnet',
+    [ChainId.OPTIMISM]: 'optimism',
+    [ChainId.ARBITRUM]: 'arbitrum',
+    [ChainId.BASE]: 'base',
+    [ChainId.SEPOLIA]: 'sepolia',
+  }[chainId]
+
+  if (!networkName) {
+    throw new Error(`Unsupported chain ID: ${chainId}`)
+  }
+
+  return `${baseUrl}?network=${networkName}`
+}
+
 async function fetchRewards(
   userChainRewards: UserChainRewards[],
   allPositions: {
@@ -146,9 +168,11 @@ async function fetchRewards(
         // Fetch current (unclaimed) rewards
         const client = createPublicClient({
           chain: getChainConfig(chainId),
-          transport: http(),
+          transport: http(getRpcUrl(chainId)),
         })
-
+        logger.info(
+          `xxx Rewards manager addresses: ${JSON.stringify(rewardsManagerAddresses)} on chain ${chainId} for user ${address} for token ${rewardTokenPerChain[chainId]}`,
+        )
         const rewardsResult = await client.multicall({
           contracts: rewardsManagerAddresses.map((managerAddress) => ({
             abi: fleetRewardsManagerAbi,
@@ -157,7 +181,7 @@ async function fetchRewards(
             args: [address, rewardTokenPerChain[chainId]],
           })),
         })
-
+        // logger.info(`xxx Rewards result: ${JSON.stringify(rewardsResult)}`)
         const currentRewards = rewardsResult
           .map((result) => result.result)
           .filter((result): result is bigint => typeof result === 'bigint')
@@ -192,6 +216,7 @@ async function fetchRewards(
           `Error fetching rewards for address ${address} on chain ${chainId}:`,
           error instanceof Error ? error : String(error),
         )
+        throw error
       }
     }),
   )
@@ -283,10 +308,11 @@ async function handleUsersRoute(
 
   // Fetch rewards in parallel for all users across all chains
   const rewardsByUser = await fetchRewards(userChainRewards, allPositions)
-
+  logger.info(`Rewards by user: ${JSON.stringify(rewardsByUser)}`)
   // Combine positions and rewards data
   const users = Array.from(positionsByAddress.entries()).map(([address, data]) => {
     const rewardsInfo = rewardsByUser.get(address) ?? { unclaimed: 0, claimed: 0, total: 0 }
+    logger.info(`Rewards info for address ${address}: ${JSON.stringify(rewardsInfo)}`)
     return {
       address,
       totalValueLockedUSD: data.totalValueLockedUSD,
@@ -467,7 +493,7 @@ export const handler = async (
     }
   } catch (error) {
     logger.error('Error processing request:', error instanceof Error ? error : String(error))
-    return ResponseInternalServerError('Failed to process request')
+    return ResponseInternalServerError('Failed to process request - please contact support')
   }
 }
 

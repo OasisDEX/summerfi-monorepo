@@ -90,7 +90,7 @@ export const SumrClaimSearch = () => {
       return
     }
     // eslint-disable-next-line no-console
-    console.warn('No SUMR button action defined')
+    console.warn('No $SUMR button action defined')
   }
 
   useEffect(() => {
@@ -249,7 +249,7 @@ export const SumrClaimSearch = () => {
             Get notified when The Lazy Summer protocol launches
           </Text>
           <Text variant="p3" style={{ marginBottom: 'var(--general-space-16)' }}>
-            The best way to earn SUMR is by depositing into the protocol when its live.
+            The best way to earn $SUMR is by depositing into the protocol when its live.
           </Text>
           <NewsletterWrapper inputWrapperStyles={{ maxWidth: '366px' }} isEarnApp />
         </Card>

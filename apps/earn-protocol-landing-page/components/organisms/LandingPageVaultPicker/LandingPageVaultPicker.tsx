@@ -17,7 +17,7 @@ import { type IToken } from '@summerfi/sdk-common'
 
 import landingPageVaultPickerStyles from '@/components/organisms/LandingPageVaultPicker/LandingPageVaultPicker.module.scss'
 
-export const LandingPageVaultPicker = ({ vault }: { vault: SDKVaultishType }) => {
+export const LandingPageVaultPicker = ({ vault, apy }: { vault: SDKVaultishType; apy: number }) => {
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
   const {
     state: { sumrNetApyConfig, slippageConfig },
@@ -84,6 +84,7 @@ export const LandingPageVaultPicker = ({ vault }: { vault: SDKVaultishType }) =>
         withTokenBonus={sumrNetApyConfig.withSumr}
         sumrPrice={estimatedSumrPrice}
         showCombinedBonus
+        apy={apy}
       />
       <VaultSimulationForm
         vaultData={vault}

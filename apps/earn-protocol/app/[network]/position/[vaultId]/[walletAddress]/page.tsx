@@ -20,9 +20,13 @@ import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
+import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
 import { VaultManageView } from '@/components/layout/VaultManageView/VaultManageView'
+import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
+import { getPositionPerformanceData } from '@/helpers/chart-helpers/get-position-performance-data'
+import { mapArkLatestInterestRates } from '@/helpers/map-ark-interest-rates'
 import {
-  decorateCustomVaultFields,
+  decorateVaultsWithConfig,
   getVaultIdByVaultCustomName,
 } from '@/helpers/vault-custom-value-helpers'
 
@@ -35,8 +39,8 @@ type EarnVaultManagePageProps = {
 }
 
 const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
-  const { network, vaultId, walletAddress } = await params
-  const parsedNetwork = humanNetworktoSDKNetwork(network)
+  const { network: paramsNetwork, vaultId, walletAddress } = await params
+  const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
   const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
 
@@ -78,14 +82,30 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     )
   }
 
-  const interestRates = await getInterestRates({
-    network: parsedNetwork,
-    arksList: vault.arks,
+  const [vaultWithConfig] = decorateVaultsWithConfig({
+    vaults: [vault],
+    systemConfig,
   })
 
+  const allVaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })
+
+  const [arkInterestRatesMap, vaultInterestRates] = await Promise.all([
+    getInterestRates({
+      network: parsedNetwork,
+      arksList: vault.arks,
+    }),
+    getVaultsHistoricalApy({
+      // just the vault displayed
+      fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
+        fleetAddress: id,
+        chainId: subgraphNetworkToId(network),
+      })),
+    }),
+  ])
+
   const { netValue } = getPositionValues({
-    positionData: position,
-    vaultData: vault,
+    position,
+    vault,
   })
 
   const [positionHistory, positionForecastResponse] = await Promise.all([
@@ -107,29 +127,34 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   const forecastData = (await positionForecastResponse.json()) as PositionForecastAPIResponse
   const positionForecast = parseForecastDatapoints(forecastData)
 
-  const [vaultDecorated] = decorateCustomVaultFields({
-    vaults: [vault],
-    systemConfig,
-    position,
-    decorators: {
-      arkInterestRatesMap: interestRates,
-      positionHistory,
-      positionForecast,
-    },
+  const positionJsonSafe = parseServerResponseToClient<IArmadaPosition>(position)
+
+  const performanceChartData = getPositionPerformanceData({
+    vault: vaultWithConfig,
+    position: positionJsonSafe,
+    positionHistory,
+    positionForecast,
   })
 
-  const vaultsDecorated = decorateCustomVaultFields({ vaults, systemConfig })
+  const arksHistoricalChartData = getArkHistoricalChartData({
+    vault: vaultWithConfig,
+    arkInterestRatesMap,
+    vaultInterestRates,
+  })
 
-  const positionJsonSafe = parseServerResponseToClient<IArmadaPosition>(position)
+  const arksInterestRates = mapArkLatestInterestRates(arkInterestRatesMap)
 
   return (
     <VaultManageView
-      vault={vaultDecorated}
-      vaults={vaultsDecorated}
+      vault={vaultWithConfig}
+      vaults={allVaultsWithConfig}
       position={positionJsonSafe}
       viewWalletAddress={walletAddress}
       userActivity={userActivity}
       topDepositors={topDepositors}
+      performanceChartData={performanceChartData}
+      arksHistoricalChartData={arksHistoricalChartData}
+      arksInterestRates={arksInterestRates}
     />
   )
 }

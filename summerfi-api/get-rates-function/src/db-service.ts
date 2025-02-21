@@ -3,6 +3,7 @@ import {
   mapChainIdToDbNetwork,
   SummerProtocolDB,
   PgSummerProtocolDbConfig,
+  DbNetworks,
 } from '@summerfi/summer-protocol-db'
 import { Logger } from '@aws-lambda-powertools/logger'
 
@@ -41,6 +42,11 @@ export interface DBHistoricalRates {
   hourlyRates: DBAggregatedRate[]
   weeklyRates: DBAggregatedRate[]
   latestRate: DBLatestRate[]
+}
+
+interface BatchRateRequest {
+  chainId: string
+  productId: string
 }
 
 export class RatesService {
@@ -283,6 +289,76 @@ export class RatesService {
         errorDetails: error instanceof Error ? error.stack : undefined,
       })
       return []
+    }
+  }
+
+  async getLatestRatesBatch(requests: BatchRateRequest[]): Promise<Record<string, DBRate[]>> {
+    if (!this.db || !this.db.db) {
+      logger.error('Database connection not initialized or invalid')
+      throw new Error('Database connection not initialized')
+    }
+
+    const results: Record<string, DBRate[]> = {}
+
+    // Group requests by network to minimize DB queries
+    const requestsByNetwork: Record<DbNetworks, string[]> = {
+      arbitrum: [],
+      optimism: [],
+      base: [],
+      mainnet: [],
+    }
+    requests.forEach(({ chainId, productId }) => {
+      const network = mapChainIdToDbNetwork(chainId)
+      requestsByNetwork[network].push(productId)
+    })
+
+    logger.info('Fetching batch latest rates', {
+      requestCount: requests.length,
+      networks: Object.keys(requestsByNetwork).filter(
+        (n) => requestsByNetwork[n as DbNetworks].length > 0,
+      ),
+    })
+
+    try {
+      // Execute one query per network for all product IDs in that network
+      await Promise.all(
+        Object.entries(requestsByNetwork).map(async ([network, productIds]) => {
+          // Skip if no product IDs for this network
+          if (productIds.length === 0) {
+            return
+          }
+
+          const rates = await this.db!.db.selectFrom('rewardRate')
+            .select(['id', 'rate', 'timestamp', 'productId'])
+            .where('network', '=', network as DbNetworks)
+            .where('productId', 'in', productIds)
+            .orderBy('timestamp', 'desc')
+            .execute()
+
+          // Group rates by productId
+          rates.forEach((rate) => {
+            const key = rate.productId
+            if (!results[key]) {
+              results[key] = []
+            }
+            results[key].push({
+              id: rate.id,
+              rate: rate.rate.toString(),
+              timestamp: Number(rate.timestamp),
+              productId: rate.productId,
+            })
+          })
+        }),
+      )
+
+      return results
+    } catch (error) {
+      logger.error('Error fetching batch latest rates from DB', {
+        error,
+        requestCount: requests.length,
+        errorDetails: error instanceof Error ? error.stack : undefined,
+      })
+      return {}
     }
   }
 }

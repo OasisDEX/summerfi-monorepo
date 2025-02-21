@@ -9,10 +9,10 @@ jobs:
   build-earn-protocol:
     name: Build and deploy Earn Protocol App
     runs-on: ubuntu-22.04
-    environment: staging
+    environment: production
     env:
       AWS_REGION: us-east-1
-      ENVIRONMENT_TAG: staging
+      ENVIRONMENT_TAG: production
       SERVICE_NAME: summer-fi-earn-protocol-staging
       CLUSTER_NAME: summer-fi-earn-protocol-staging
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
@@ -32,7 +32,7 @@ jobs:
       NEXT_PUBLIC_TRANSAK_ENVIRONMENT: ${{ secrets.NEXT_PUBLIC_TRANSAK_ENVIRONMENT }}
       TRANSAK_SECRET: ${{ secrets.TRANSAK_SECRET }}
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
-      SDK_API_URL: ${{ secrets.SDK_API_URL_PROD }}
+      SDK_API_URL: ${{ secrets.SDK_API_URL }}
       EARN_PROTOCOL_JWT_SECRET: ${{ secrets.EARN_PROTOCOL_JWT_SECRET }}
       EARN_PROTOCOL_JWT_CHALLENGE_SECRET: ${{ secrets.EARN_PROTOCOL_JWT_CHALLENGE_SECRET }}
       RPC_GATEWAY: ${{ secrets.RPC_GATEWAY }}
@@ -77,9 +77,9 @@ jobs:
           sudo apt update
           sudo apt install -y openvpn openvpn-systemd-resolved
           echo 'Configuring the VPN...'
-          echo "${{ secrets.NEW_VPN_CONFIG }}" > vpn-config.ovpn
-          echo "${{ secrets.NEW_VPN_USERNAME }}" > vpn-credentials.txt
-          echo "${{ secrets.NEW_VPN_PASSWORD }}" >> vpn-credentials.txt
+          echo "${{ secrets.VPN_CONFIG }}" > vpn-config.ovpn
+          echo "${{ secrets.VPN_USERNAME }}" > vpn-credentials.txt
+          echo "${{ secrets.VPN_PASSWORD }}" >> vpn-credentials.txt
           echo 'Connecting to the VPN...'
           sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-credentials.txt --daemon
           sleep 5
@@ -90,7 +90,7 @@ jobs:
           BORROW_DB_READ_HOST: ${{ secrets.NEW_BORROW_DB_READ_HOST }}
           BORROW_DB_READ_USER: ${{ secrets.NEW_BORROW_DB_READ_USER }}
           BORROW_DB_READ_PASSWORD: ${{ secrets.NEW_BORROW_DB_READ_PASSWORD }}
-          PGCONNECT_TIMEOUT: 5
+          PGCONNECT_TIMEOUT: 10
         run: |
           echo 'Checking the VPN connection...'
           sudo systemctl start postgresql.service
@@ -165,7 +165,7 @@ jobs:
                        --build-arg NEWSLETTER_PUBLICATION_ID=${{ secrets.NEWSLETTER_PUBLICATION_ID }} \
                        --build-arg NEWSLETTER_ENDPOINT=${{ secrets.NEWSLETTER_ENDPOINT }} \
                        --build-arg NEXT_TELEMETRY_DISABLED=${{ secrets.NEXT_TELEMETRY_DISABLED }} \
-                       --build-arg SDK_API_URL=${{ secrets.SDK_API_URL_PROD }} \
+                       --build-arg SDK_API_URL=${{ secrets.SDK_API_URL }} \
                        --cache-from type=registry,ref=189194422115.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/buildkit-test:cache \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$SHA_TAG \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$LATEST_TAG \

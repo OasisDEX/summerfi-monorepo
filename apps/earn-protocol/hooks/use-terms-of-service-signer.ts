@@ -3,6 +3,7 @@ import { useSigner, useSignMessage, useSmartAccountClient, useUser } from '@acco
 import { type TOSSignMessage } from '@summerfi/app-tos'
 
 import { accountType } from '@/account-kit/config'
+import { AccountKitAccountType } from '@/account-kit/types'
 
 /**
  * Hook to handle signing Terms of Service messages for both EOA and Smart Contract accounts
@@ -18,15 +19,17 @@ export const useTermsOfServiceSigner = () => {
 
   const signTosMessage: TOSSignMessage = useCallback(
     async (data: string) => {
-      if (user?.type === 'eoa') {
+      if (user?.type === AccountKitAccountType.EOA) {
         return await signMessageAsync({ message: data })
       }
       // different handling for SCA, since signMessageAsync returns signature string
       // that is completely different from signer.signMessage
       else return await signer?.signMessage(data)
     },
+    // skipped signMessageAsync on purpose
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [signer, user?.type],
   )
 
-  return { signTosMessage }
+  return signTosMessage
 }

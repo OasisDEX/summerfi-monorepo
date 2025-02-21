@@ -1,9 +1,13 @@
 .navigationMenu {
   display: flex;
   flex-direction: column;
-  padding-left: var(--general-space-32);
+  padding-left: var(--general-space-20);
   justify-content: center;
   width: 100%;
+
+  @include media('>=xl') {
+    padding-left: var(--general-space-32);
+  }
 
   @include media('<=l') {
     display: none;
@@ -18,7 +22,11 @@
   li {
     position: relative;
     cursor: pointer;
-    margin: 0 var(--general-space-32);
+    margin: 0 var(--general-space-20);
+
+    @include media('>=xl') {
+      margin: 0 var(--general-space-32);
+    }
 
     >span {
       padding: var(--general-space-16) 0;

@@ -34,7 +34,7 @@ export const BonusLabel = ({
           )}
           {tokenBonus && withTokenBonus && (
             <Text as="p" variant="p4semi">
-              SUMR Rewards: {tokenBonus}
+              $SUMR Rewards: {tokenBonus}
             </Text>
           )}
         </div>

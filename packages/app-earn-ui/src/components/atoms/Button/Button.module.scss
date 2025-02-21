@@ -2,6 +2,7 @@
 .primaryMedium,
 .primarySmall,
 .secondaryLarge,
+.secondaryMedium,
 .secondarySmall,
 .neutralLarge,
 .neutralSmall,
@@ -25,12 +26,17 @@
 .secondaryLarge,
 .neutralLarge {
   height: 48px;
-  min-width: 320px;
+  min-width: 100%;
   font-size: 16px;
   border-radius: var(--radius-circle);
+
+  @include media('>s') {
+    min-width: 320px;
+  }
 }
 
-.primaryMedium {
+.primaryMedium,
+.secondaryMedium {
   height: 38px;
   font-size: 14px;
   border-radius: var(--radius-circle);
@@ -64,6 +70,7 @@
 }
 
 .secondaryLarge,
+.secondaryMedium,
 .secondarySmall {
   color: var(--color-text-secondary);
   background-color: var(--color-background-secondary);

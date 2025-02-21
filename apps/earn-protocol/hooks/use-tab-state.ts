@@ -49,7 +49,7 @@ export function useTabStateQuery<T extends string>({
     } else {
       setActiveTab(tabValues[0])
     }
-  }, [searchParams, tabValues, defaultTab])
+  }, [searchParams, tabValues, defaultTab, queryParam])
 
   const updateTab = (tab: T) => {
     const query = new URLSearchParams(searchParams)

@@ -21,6 +21,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import { useTermsOfService } from '@summerfi/app-tos'
 import {
+  type ArksHistoricalChartData,
   type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
@@ -33,6 +34,7 @@ import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
 import { type GetGlobalRebalancesQuery } from '@summerfi/sdk-client'
 import { type IToken, TransactionType } from '@summerfi/sdk-common'
 
+import { AccountKitAccountType } from '@/account-kit/types'
 import { detailsLinks } from '@/components/layout/VaultOpenView/mocks'
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
@@ -66,6 +68,8 @@ type VaultOpenViewComponentProps = {
   userActivity: UsersActivity
   topDepositors: SDKUsersActivityType
   medianDefiYield?: number
+  arksHistoricalChartData: ArksHistoricalChartData
+  arksInterestRates?: { [key: string]: number }
 }
 
 export const VaultOpenViewComponent = ({
@@ -74,6 +78,8 @@ export const VaultOpenViewComponent = ({
   userActivity,
   topDepositors,
   medianDefiYield,
+  arksHistoricalChartData,
+  arksInterestRates,
 }: VaultOpenViewComponentProps) => {
   const { getStorageOnce } = useLocalStorageOnce<string>({
     key: `${vault.id}-amount`,
@@ -197,15 +203,14 @@ export const VaultOpenViewComponent = ({
     isEarnApp: true,
   })
 
-  const { signTosMessage } = useTermsOfServiceSigner()
+  const signTosMessage = useTermsOfServiceSigner()
 
   const tosState = useTermsOfService({
-    // @ts-ignore
-    publicClient, // ignored for now, we need to align viem versionon all subpackages
+    publicClient,
     signMessage: signTosMessage,
     chainId: vaultChainId,
     walletAddress: user?.address,
-    isSmartAccount: user?.type === 'sca',
+    isSmartAccount: user?.type === AccountKitAccountType.SCA,
     version: TermsOfServiceVersion.APP_VERSION,
     cookiePrefix: TermsOfServiceCookiePrefix.APP_TOKEN,
     host: '/earn',
@@ -214,7 +219,7 @@ export const VaultOpenViewComponent = ({
 
   const { tosSidebarProps } = useTermsOfServiceSidebar({ tosState, handleGoBack: backToInit })
 
-  const summerVaultName = vault.customFields?.name ?? 'Summer Vault'
+  const summerVaultName = vault.customFields?.name ?? `Summer ${vault.inputToken.symbol} Vault`
 
   useEffect(() => {
     const savedAmount = getStorageOnce()
@@ -349,6 +354,7 @@ export const VaultOpenViewComponent = ({
       displaySimulationGraph={displaySimulationGraph}
       sumrPrice={estimatedSumrPrice}
       onRefresh={revalidatePositionData}
+      arksInterestRates={arksInterestRates}
       simulationGraph={
         <VaultSimulationGraph
           vault={vault}
@@ -369,7 +375,7 @@ export const VaultOpenViewComponent = ({
             defaultExpanded
           >
             <ArkHistoricalYieldChart
-              chartData={vault.customFields?.arksHistoricalChartData}
+              chartData={arksHistoricalChartData}
               summerVaultName={summerVaultName}
             />
           </Expander>
@@ -381,7 +387,7 @@ export const VaultOpenViewComponent = ({
             }
             defaultExpanded
           >
-            <VaultExposure vault={vault} />
+            <VaultExposure vault={vault} arksInterestRates={arksInterestRates} />
           </Expander>
           <Expander
             title={

@@ -114,3 +114,38 @@ export const getDeployedGovRewardsManagerAddress = () => {
   }
   return Address.createFromEthereum({ value: maybeAddress })
 }
+
+/**
+ * Returns the layer zero configuration for the specified chain.
+ * This returns the contents of the "layerZero" key from the deployment configuration.
+ *
+ * @param chainInfo Chain information used to determine the config key
+ * @returns The layer zero configuration object for the given chain.
+ * @throws Error if the layer zero field is not defined for this chain.
+ */
+export const getLayerZeroConfig = (
+  chainInfo: ChainInfo,
+): {
+  lzEndpoint: IAddress
+  eID: number
+} => {
+  const config = getConfig()
+  const key = getConfigKey(chainInfo.name)
+  if (!config[key].common) {
+    throw new Error(`Common configuration not found for chain: ${chainInfo.name}`)
+  }
+  if (!config[key].common.layerZero) {
+    throw new Error(`LayerZero configuration not found for chain: ${chainInfo.name}`)
+  }
+  const { lzEndpoint, eID } = config[key].common.layerZero
+  if (!lzEndpoint) {
+    throw new Error(`LayerZero endpoint address not found for chain: ${chainInfo.name}`)
+  }
+  if (!eID) {
+    throw new Error(`LayerZero endpoint ID not found for chain: ${chainInfo.name}`)
+  }
+  return {
+    lzEndpoint: Address.createFromEthereum({ value: lzEndpoint }),
+    eID: parseInt(eID),
+  }
+}

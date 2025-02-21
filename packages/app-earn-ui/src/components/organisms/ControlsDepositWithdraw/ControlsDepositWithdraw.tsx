@@ -16,6 +16,8 @@ import { ProjectedEarningsExpanded } from '@/components/molecules/ProjectedEarni
 import { getDisplayToken } from '@/helpers/get-display-token'
 import { type EarningsEstimationsMap } from '@/helpers/get-earnings-estimations-map'
 
+import styles from './ControlsDepositWithdraw.module.scss'
+
 type ControlsDepositWithdrawProps = {
   amountDisplay: string
   amountDisplayUSD: string
@@ -60,7 +62,7 @@ export const ControlsDepositWithdraw = ({
   isOpen,
 }: ControlsDepositWithdrawProps) => {
   return (
-    <>
+    <div className={styles.depositViewWrapper}>
       <InputWithDropdown
         value={amountDisplay}
         secondaryValue={amountDisplayUSD}
@@ -115,6 +117,6 @@ export const ControlsDepositWithdraw = ({
           />
         )}
       </AnimateHeight>
-    </>
+    </div>
   )
 }

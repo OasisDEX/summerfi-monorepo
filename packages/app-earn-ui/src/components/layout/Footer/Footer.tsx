@@ -65,7 +65,7 @@ const linksList = [
         url: EXTERNAL_LINKS.BUG_BOUNTY,
       },
       {
-        label: 'SUMR Governance',
+        label: '$SUMR Governance',
         url: EXTERNAL_LINKS.EARN.GOVERNANCE,
       },
       {
@@ -86,7 +86,7 @@ const linksList = [
         url: INTERNAL_LINKS.summerPro,
       },
       {
-        label: 'SUMR',
+        label: '$SUMR',
         url: INTERNAL_LINKS.tempSumr,
       },
     ],

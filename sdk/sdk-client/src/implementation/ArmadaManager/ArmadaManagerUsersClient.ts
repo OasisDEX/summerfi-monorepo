@@ -1,6 +1,6 @@
 import { IArmadaVaultInfo, IArmadaPosition } from '@summerfi/armada-protocol-common'
 
-import { ITokenAmount, type IUser } from '@summerfi/sdk-common'
+import { BridgeTransactionInfo, ITokenAmount, type IUser } from '@summerfi/sdk-common'
 import { IArmadaManagerUsersClient } from '../../interfaces/ArmadaManager/IArmadaManagerUsersClient'
 import { IRPCClient } from '../../interfaces/IRPCClient'
 import { RPCMainClientType } from '../../rpc/SDKMainClient'
@@ -109,6 +109,13 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     assets: ITokenAmount
   }> {
     return this.rpcClient.armada.users.getFleetBalance.query(params)
+  }
+
+  /** @see IArmadaManagerUsersClient.getBridgeTx */
+  async getBridgeTx(
+    params: Parameters<IArmadaManagerUsersClient['getBridgeTx']>[0],
+  ): Promise<BridgeTransactionInfo[]> {
+    return this.rpcClient.armada.users.getBridgeTx.query(params)
   }
 
   async getTotalBalance(

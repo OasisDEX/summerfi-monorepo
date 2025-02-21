@@ -10505,12 +10505,15 @@ export type GetUserPositionQuery = { __typename?: 'Query', positions: Array<{ __
 
 export type GetUserActivityQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  accountId: Scalars['ID']['input'];
 }>;
 
 
 export type GetUserActivityQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', inputTokenBalance: bigint, outputTokenBalance: bigint, account: { __typename?: 'Account', id: string }, deposits: Array<{ __typename?: 'Deposit', timestamp: bigint, amount: bigint, hash: string, inputTokenBalance: bigint }>, withdrawals: Array<{ __typename?: 'Withdraw', timestamp: bigint, amount: bigint, hash: string, inputTokenBalance: bigint }>, vault: { __typename?: 'Vault', id: string, name?: string | null, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, apr365d: string, inputToken: { __typename?: 'Token', id: string, symbol: string, decimals: number }, protocol: { __typename?: 'YieldAggregator', network: Network } } }> };
 
-export type GetUsersActivityQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetUsersActivityQueryVariables = Exact<{
+  where?: InputMaybe<Position_Filter>;
+}>;
 
 
 export type GetUsersActivityQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', inputTokenBalance: bigint, account: { __typename?: 'Account', id: string }, deposits: Array<{ __typename?: 'Deposit', timestamp: bigint, amount: bigint, hash: string, inputTokenBalance: bigint }>, withdrawals: Array<{ __typename?: 'Withdraw', timestamp: bigint, amount: bigint, hash: string, inputTokenBalance: bigint }>, vault: { __typename?: 'Vault', id: string, name?: string | null, outputTokenPriceUSD?: string | null, inputTokenPriceUSD?: string | null, apr365d: string, inputToken: { __typename?: 'Token', id: string, symbol: string, decimals: number }, protocol: { __typename?: 'YieldAggregator', network: Network } } }> };
@@ -10674,8 +10677,8 @@ export const GetUserPositionDocument = gql`
 }
     `;
 export const GetUserActivityDocument = gql`
-    query GetUserActivity($id: ID!) {
-  positions(where: {vault_: {id: $id}}) {
+    query GetUserActivity($id: ID!, $accountId: ID!) {
+  positions(where: {vault_: {id: $id}, account_: {id: $accountId}}) {
     account {
       id
     }
@@ -10713,8 +10716,8 @@ export const GetUserActivityDocument = gql`
 }
     `;
 export const GetUsersActivityDocument = gql`
-    query GetUsersActivity {
-  positions {
+    query GetUsersActivity($where: Position_filter) {
+  positions(where: $where) {
     account {
       id
     }

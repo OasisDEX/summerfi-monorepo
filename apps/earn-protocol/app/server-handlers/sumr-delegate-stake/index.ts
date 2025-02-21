@@ -168,7 +168,7 @@ export const getSumrDelegateStake = async ({
     console.error('Error in getSumrDelegateStake:', error)
 
     throw new Error(
-      `Failed to get SUMR delegate stake: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      `Failed to get $SUMR delegate stake: ${error instanceof Error ? error.message : 'Unknown error'}`,
     )
   }
 }

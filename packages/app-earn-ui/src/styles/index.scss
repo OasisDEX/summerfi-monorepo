@@ -23,6 +23,7 @@ body {
   --general-space-256: 256px;
   --general-space-128: 128px;
   --general-space-64: 64px;
+  --general-space-56: 56px;
   --general-space-40: 40px;
   --general-space-32: 32px;
   --general-space-24: 24px;
@@ -96,6 +97,7 @@ body {
   --color-icon-subtle: var(--earn-protocol-secondary-70);
   --color-icon: var(--earn-protocol-secondary-40);
   --color-icon-inverse: var(--earn-protocol-secondary-100);
+  --spacing-space-3x-small: var(--general-space-2);
   --spacing-space-2x-small: var(--general-space-4);
   --spacing-space-x-small: var(--general-space-8);
   --spacing-space-small: var(--general-space-12);

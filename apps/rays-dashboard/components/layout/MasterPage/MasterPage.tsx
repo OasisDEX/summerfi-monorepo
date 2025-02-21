@@ -42,6 +42,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({
           }[background]
         }
         <NavigationWrapper panels={systemConfig.navigation} />
+
         <div className={masterPageStyles.appContainer}>
           {children}
           <Footer

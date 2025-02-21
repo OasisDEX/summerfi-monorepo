@@ -15,7 +15,7 @@ import {
   type SDKVaultishType,
   TransactionAction,
 } from '@summerfi/app-types'
-import { ten } from '@summerfi/app-utils'
+import { sdkNetworkToHumanNetwork, ten } from '@summerfi/app-utils'
 import {
   Address,
   type ExtendedTransactionInfo,
@@ -37,7 +37,7 @@ import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig
 import { getApprovalTx } from '@/helpers/get-approval-tx'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
-import { revalidateUser } from '@/helpers/revalidation-handlers'
+import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
@@ -518,6 +518,10 @@ export const useTransaction = ({
       return 'Preview deposit'
     }
 
+    if (nextTransaction?.type === TransactionType.Withdraw) {
+      return 'Preview withdraw'
+    }
+
     return nextTransaction?.type
       ? capitalize(nextTransaction.type)
       : capitalize(TransactionAction.DEPOSIT)
@@ -536,7 +540,11 @@ export const useTransaction = ({
         // refreshes the view
         refreshView()
         // revalidates users wallet data (all of fetches with wallet tagged in it)
-        revalidateUser(userWalletAddress)
+        revalidatePositionData(
+          sdkNetworkToHumanNetwork(vault.protocol.network),
+          vault.id,
+          userWalletAddress,
+        )
 
         // makes sure the user is redirected to the correct page
         // after closing or opening
