@@ -94,6 +94,7 @@ export { CookieBanner } from './components/molecules/CookieBanner/CookieBanner'
 export { TitleWithSelect } from './components/molecules/TitleWithSelect/TitleWithSelect'
 export { IllustrationCircle } from './components/molecules/IllustrationCircle/IllustrationCircle'
 export { TokenWithNetworkIcon } from './components/molecules/TokenWithNetworkIcon/TokenWithNetworkIcon'
+export { OrderInformation } from './components/molecules/OrderInformation/OrderInformation'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'

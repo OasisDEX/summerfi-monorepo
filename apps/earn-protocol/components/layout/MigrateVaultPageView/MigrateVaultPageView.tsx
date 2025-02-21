@@ -22,6 +22,7 @@ type MigrateVaultPageViewProps = {
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
+  vaultApy?: number
 }
 
 export const MigrateVaultPageView: FC<MigrateVaultPageViewProps> = ({
@@ -32,6 +33,7 @@ export const MigrateVaultPageView: FC<MigrateVaultPageViewProps> = ({
   medianDefiYield,
   arksHistoricalChartData,
   arksInterestRates,
+  vaultApy,
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -43,6 +45,7 @@ export const MigrateVaultPageView: FC<MigrateVaultPageViewProps> = ({
         medianDefiYield={medianDefiYield}
         arksHistoricalChartData={arksHistoricalChartData}
         arksInterestRates={arksInterestRates}
+        vaultApy={vaultApy}
       />
     </SDKContextProvider>
   )

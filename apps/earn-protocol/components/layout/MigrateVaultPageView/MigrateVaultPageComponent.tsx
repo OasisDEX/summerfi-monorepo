@@ -6,6 +6,7 @@ import {
   getDisplayToken,
   getResolvedForecastAmountParsed,
   getUniqueVaultId,
+  OrderInformation,
   Sidebar,
   SidebarMobileHeader,
   SUMR_CAP,
@@ -53,6 +54,7 @@ type MigrateVaultPageComponentProps = {
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
+  vaultApy?: number
 }
 
 export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
@@ -63,6 +65,7 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
   medianDefiYield,
   arksHistoricalChartData,
   arksInterestRates,
+  vaultApy,
 }) => {
   const { publicClient } = useNetworkAlignedClient()
   const { deviceType } = useDeviceType()
@@ -109,6 +112,17 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
     return oneYearEarningsForecast
   }, [oneYearEarningsForecast])
 
+  const mockedData = {
+    '30dApy': '0.05',
+    currentyApy: '0.05',
+    protocol: 'Lazy Summer',
+    swap: {
+      priceImpact: '0.05',
+      slippage: '0.05',
+    },
+    transactionFee: '0.05',
+  }
+
   const sidebarContent = (
     <div>
       <div
@@ -154,6 +168,36 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
             $100,000 USDC
           </Text>
         </Card>
+        <OrderInformation
+          title="What's changing"
+          items={[
+            { label: '30d APY', value: formatDecimalAsPercent(mockedData['30dApy']) },
+            { label: 'Currenty APY', value: formatDecimalAsPercent(mockedData.currentyApy) },
+            { label: 'Protocol', value: mockedData.protocol },
+          ]}
+        />
+        <OrderInformation
+          items={[
+            {
+              label: 'Swap',
+              items: [
+                {
+                  label: 'Price impact',
+                  value: formatDecimalAsPercent(mockedData.swap.priceImpact),
+                },
+                {
+                  label: 'Slippage',
+                  value: formatDecimalAsPercent(Number(slippageConfig.slippage) / 100),
+                },
+              ],
+            },
+            {
+              label: 'Transaction fee',
+              value: `$${formatFiatBalance(mockedData.transactionFee)}`,
+              tooltip: 'Transaction fee',
+            },
+          ]}
+        />
       </div>
     </div>
   )
@@ -210,7 +254,7 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
       displaySimulationGraph={displaySimulationGraph}
       sumrPrice={estimatedSumrPrice}
       onRefresh={revalidatePositionData}
-      arksInterestRates={arksInterestRates}
+      vaultApy={vaultApy}
       simulationGraph={
         <VaultSimulationGraph
           vault={vault}
