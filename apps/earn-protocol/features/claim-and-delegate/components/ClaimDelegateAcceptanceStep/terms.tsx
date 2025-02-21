@@ -255,7 +255,7 @@ export const claimDelegateTerms = [
       <Wrapper>
         <Heading>II.INTRODUCTION</Heading>
         <Paragraph>
-          These Terms govern your participation in and receipt of the Tokens through the Airdrop
+          {`These Terms govern your participation in and receipt of the Tokens through the Airdrop
           organized by Lazy Summer Management Corp, a British Virgin Islands company ("Company",
           together with the Affiliates "we," or "us"). By accessing, browsing or otherwise using the
           Airdrop Website or participating in the Airdrop, you ("Participant" or "you") acknowledge
@@ -285,7 +285,7 @@ export const claimDelegateTerms = [
           the Terms by visiting the Terms' link on the Airdrop Website. For the avoidance of doubt,
           the Company is not obligated to notify you of any changes to these Terms. It is your
           responsibility to periodically review the Terms by visiting the designated link on the
-          Airdrop Website to stay informed of any updates.
+          Airdrop Website to stay informed of any updates.`}
         </Paragraph>
       </Wrapper>
     ),
@@ -294,7 +294,7 @@ export const claimDelegateTerms = [
     label: "Participant's Representations, Warranties and Undertaking",
     content: (
       <Wrapper>
-        <Heading>III. PARTICIPANT'S REPRESENTATIONS, WARRANTIES AND UNDERTAKING</Heading>
+        <Heading>III. PARTICIPANT&apos;S REPRESENTATIONS, WARRANTIES AND UNDERTAKING</Heading>
         <Paragraph>
           In addition to other representations, warranties and undertakings elsewhere in these
           Terms, you represent and warrant and/or undertake to the Company and Affiliates as
@@ -318,12 +318,12 @@ export const claimDelegateTerms = [
       <Wrapper>
         <Heading>IV. ELIGIBILITY</Heading>
         <Paragraph>
-          UNTIL FURTHER NOTICE, THE DISTRIBUTION OR TRANSFER OF THE TOKENS TO U.S. PERSONS IS
+          {`UNTIL FURTHER NOTICE, THE DISTRIBUTION OR TRANSFER OF THE TOKENS TO U.S. PERSONS IS
           STRICTLY PROHIBITED BY THE COMPANY. U.S. CITIZENS, U.S. RESIDENTS (TAX OR OTHERWISE),
           GREEN CARD HOLDERS, OR CORPORATE ENTITIES WITH A MAJORITY OF U.S. OWNERSHIP OR A PRINCIPAL
           PLACE OF BUSINESS OR REGISTERED OFFICE IN THE UNITED STATES OF AMERICA (COLLECTIVELY, A
           "U.S. PERSON"), AND WHO ARE NOT ACTING FOR THE ACCOUNT OR BENEFIT OF ANY U.S. PERSONS, ARE
-          NOT ELIGIBLE TO USE THE SERVICES AND PARTICIPATE IN THE AIRDROP.
+          NOT ELIGIBLE TO USE THE SERVICES AND PARTICIPATE IN THE AIRDROP.`}
         </Paragraph>
         <Paragraph>
           Further, the Services, including the Airdrop, may not be accessed or used as follows:
@@ -358,7 +358,7 @@ export const claimDelegateTerms = [
           THERE IS ONLY ONE WEBSITE FOR TOKEN CLAIMS, WHICH IS THE AIRDROP WEBSITE.
         </Paragraph>
         <Paragraph>
-          The Company has implemented a risk-based program applicable to the Airdrop and any related
+          {`The Company has implemented a risk-based program applicable to the Airdrop and any related
           participation or claims through the Airdrop Website and any subdomains (collectively,
           "Token Claims"). This program screens Token Claims using data and tools provided by an
           independent blockchain analytics provider ("Screening Service Provider"), applying
@@ -366,7 +366,7 @@ export const claimDelegateTerms = [
           also are subject to geo-location and proxy detection controls to prevent access by users
           that may be Prohibited Persons or located in a Prohibited Jurisdiction. The Company
           reserves the right to take such additional steps as it deems necessary or appropriate, in
-          its sole discretion, to verify the identity and eligibility of any person.
+          its sole discretion, to verify the identity and eligibility of any person.`}
         </Paragraph>
         <Paragraph>
           Use of the website for Token Claims is at the risk of the Participant. By using the
@@ -388,9 +388,9 @@ export const claimDelegateTerms = [
         </Paragraph>
         <List items={prohibitedActivitiesList} />
         <Paragraph>
-          The Company reserves the right to investigate directly or through an Affiliate and take
+          {`The Company reserves the right to investigate directly or through an Affiliate and take
           appropriate legal action against anyone who, in the Company's sole discretion, violates
-          this provision, including reporting the violator to law enforcement authorities.
+          this provision, including reporting the violator to law enforcement authorities.`}
         </Paragraph>
       </Wrapper>
     ),
@@ -535,7 +535,7 @@ export const claimDelegateTerms = [
       <Wrapper>
         <Heading>XV. AMENDMENTST</Heading>
         <Paragraph>
-          We may modify these Terms for any reason, at our sole discretion, from time to time in
+          {`We may modify these Terms for any reason, at our sole discretion, from time to time in
           which case we will update the "Last Revised" date at the top of these Terms. The updated
           Terms will be effective as of the time of posting, or such later date as may be specified
           in the updated Terms. Your use of the Services or participation in the Airdrop after the
@@ -543,7 +543,7 @@ export const claimDelegateTerms = [
           you do not agree with the Terms, you will not access, browse, or use or continue to
           access, browse, or use the Airdrop Website or the Services. You agree that the Company and
           its Affiliates shall not be liable to you or any third-party as a result of any losses
-          suffered by or modification or amendment to these Terms.
+          suffered by or modification or amendment to these Terms.`}
         </Paragraph>
       </Wrapper>
     ),

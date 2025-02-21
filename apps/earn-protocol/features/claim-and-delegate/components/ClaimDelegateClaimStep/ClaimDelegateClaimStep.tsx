@@ -170,9 +170,6 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     )
   }
 
-  console.log('hasSumrOnHubChain', hasSumrOnHubChain)
-  console.log('hasSumrOnSatelliteChains', hasSumrOnSatelliteChains)
-
   const disableBridgeButton =
     externalData.sumrToClaim.aggregatedRewards.perChain[claimOnChainId] === 0 &&
     Number(externalData.sumrBalances[humanNetwork]) === 0

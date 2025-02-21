@@ -236,7 +236,7 @@ export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = (
             </div>
           </div>
           <div className={classNames.arrow}>
-            <Icon iconName="arrow_forward" size={20} color="var(--earn-protocol-neutral-10)" />
+            <Icon iconName="arrow_forward" size={20} />
           </div>
           <div className={classNames.block}>
             <Text as="p" variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>

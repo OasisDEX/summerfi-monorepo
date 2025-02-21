@@ -17,6 +17,7 @@ import {
   safeBTOA,
 } from '@summerfi/app-utils'
 import clsx from 'clsx'
+import Link from 'next/link'
 
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
 import { transakNetworkOptions } from '@/features/transak/consts'
@@ -25,7 +26,6 @@ import { revalidateUser } from '@/helpers/revalidation-handlers'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './PortfolioHeader.module.scss'
-import Link from 'next/link'
 
 const TransakTrigger = ({
   isOpen,
