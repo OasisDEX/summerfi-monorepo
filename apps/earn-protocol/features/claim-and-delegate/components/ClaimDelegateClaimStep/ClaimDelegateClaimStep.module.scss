@@ -14,10 +14,21 @@
     cursor: pointer;
     border: 1px solid transparent;
 
+    .chainLabel {
+      color: var(--earn-protocol-secondary-60);
+    }
+
     .valueWithIcon {
       display: flex;
       align-items: center;
       gap: var(--general-space-16);
+
+      .container {
+        display: flex;
+        align-items: center;
+        gap: var(--general-space-4);
+        position: relative;
+      }
 
       .usdValue {
         display: none;
@@ -44,6 +55,7 @@
     display: flex;
     justify-content: center;
     gap: var(--general-space-16);
+    margin-top: var(--general-space-8);
   }
 
   .bridgeWrapper {

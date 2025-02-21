@@ -98,10 +98,6 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
           </div>
         </Text>
         <div style={{ display: 'flex', gap: 'var(--spacing-space-x-small)' }}>
-          {/* <Button variant="secondaryLarge" style={{ minWidth: 'unset' }}>
-            Send
-          </Button>
-          */}
           <Link href={`/bridge/${walletAddress}?via=portfolio`}>
             <Button variant="secondaryMedium" style={{ minWidth: 'unset' }}>
               Bridge

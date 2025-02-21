@@ -1,24 +1,13 @@
 import { type Dispatch, type FC, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
-import {
-  Button,
-  Card,
-  Icon,
-  SUMR_CAP,
-  Text,
-  useLocalConfig,
-  WithArrow,
-} from '@summerfi/app-earn-ui'
+import { SUMR_CAP, useLocalConfig } from '@summerfi/app-earn-ui'
 import { SDKChainId } from '@summerfi/app-types'
 import {
   chainIdToSDKNetwork,
-  formatCryptoBalance,
-  formatFiatBalance,
   isSupportedHumanNetwork,
   sdkNetworkToHumanNetwork,
 } from '@summerfi/app-utils'
-import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
 import { SDKChainIdToAAChainMap } from '@/account-kit/config'
@@ -36,9 +25,10 @@ import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { useRiskVerification } from '@/hooks/use-risk-verification'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
+import { ClaimDelegateBridgeStep } from './ClaimDelegateBridgeSubStep'
+import { ClaimDelegateClaimSubStep } from './ClaimDelegateClaimSubStep'
 import { ClaimDelegateError } from './ClaimDelegateError'
-import { ClaimDelegateToBridge } from './ClaimDelegateToBridge'
-import { ClaimDelegateToClaim } from './ClaimDelegateToClaim'
+import { ClaimDelegateFooter } from './ClaimDelegateFooter'
 
 import classNames from './ClaimDelegateClaimStep.module.scss'
 
@@ -171,158 +161,44 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   }
 
   const disableBridgeButton =
-    externalData.sumrToClaim.aggregatedRewards.perChain[claimOnChainId] === 0 &&
-    Number(externalData.sumrBalances[humanNetwork]) === 0
+    (externalData.sumrToClaim.aggregatedRewards.perChain[claimOnChainId] === 0 &&
+      Number(externalData.sumrBalances[humanNetwork]) === 0) ||
+    claimOnChainId === SDKChainId.BASE
 
   return (
     <div className={classNames.claimDelegateClaimStepWrapper}>
       {state.claimStatus === ClaimDelegateTxStatuses.COMPLETED ? (
-        // Show bridge components when claimed
-        <>
-          <div className={classNames.bridgeWrapper}>
-            <Text as="p" variant="p3semi">
-              Bridge SUMR to Base
-            </Text>
-          </div>
-          {hasSumrOnSatelliteChains ? (
-            satelliteClaimItems.map((item) => {
-              const network = sdkNetworkToHumanNetwork(chainIdToSDKNetwork(item.chainId))
-
-              if (!isSupportedHumanNetwork(network)) return null
-
-              const balance = externalData.sumrBalances[network]
-              const claimableRewards =
-                externalData.sumrToClaim.claimableAggregatedRewards.perChain[item.chainId] ?? 0
-              const total = Number(balance) + claimableRewards
-
-              return (
-                <ClaimDelegateToBridge
-                  key={item.chainId}
-                  {...item}
-                  balance={formatCryptoBalance(total)}
-                  balanceInUSD={formatFiatBalance(total * estimatedSumrPrice)}
-                  isActive={claimOnChainId === item.chainId}
-                  onClick={() => setClaimOnChainId(item.chainId)}
-                />
-              )
-            })
-          ) : (
-            <Card
-              className={classNames.cardWrapper}
-              style={{ marginBottom: 'var(--general-space-24)' }}
-            >
-              <Icon iconName="info" size={24} />
-              <Text variant="p3semi" as="p">
-                No SUMR to bridge
-              </Text>
-            </Card>
-          )}
-        </>
+        <ClaimDelegateBridgeStep
+          externalData={externalData}
+          claimOnChainId={claimOnChainId}
+          setClaimOnChainId={setClaimOnChainId}
+          satelliteClaimItems={satelliteClaimItems}
+          hasSumrOnSatelliteChains={hasSumrOnSatelliteChains}
+        />
       ) : (
-        // Show claim components when not yet claimed
-        <>
-          {hubClaimItem && (
-            <ClaimDelegateToClaim
-              {...hubClaimItem}
-              earned={formatCryptoBalance(
-                externalData.sumrToClaim.claimableAggregatedRewards.perChain[
-                  hubClaimItem.chainId
-                ] ?? 0,
-              )}
-              earnedInUSD={formatFiatBalance(
-                Number(
-                  externalData.sumrToClaim.claimableAggregatedRewards.perChain[
-                    hubClaimItem.chainId
-                  ] ?? 0,
-                ) * estimatedSumrPrice,
-              )}
-              isActive={claimOnChainId === hubClaimItem.chainId}
-              onClick={() => setClaimOnChainId(hubClaimItem.chainId)}
-            />
-          )}
-          {satelliteClaimItems.map((item) => (
-            <ClaimDelegateToClaim
-              key={item.chainId}
-              {...item}
-              earned={formatCryptoBalance(
-                externalData.sumrToClaim.claimableAggregatedRewards.perChain[item.chainId] ?? 0,
-              )}
-              earnedInUSD={formatFiatBalance(
-                Number(
-                  externalData.sumrToClaim.claimableAggregatedRewards.perChain[item.chainId] ?? 0,
-                ) * estimatedSumrPrice,
-              )}
-              isActive={claimOnChainId === item.chainId}
-              onClick={() => setClaimOnChainId(item.chainId)}
-            />
-          ))}
-        </>
+        <ClaimDelegateClaimSubStep
+          hubClaimItem={hubClaimItem}
+          satelliteClaimItems={satelliteClaimItems}
+          claimOnChainId={claimOnChainId}
+          setClaimOnChainId={setClaimOnChainId}
+          externalData={externalData}
+          estimatedSumrPrice={estimatedSumrPrice}
+        />
       )}
-      <div className={classNames.footerWrapper}>
-        <Button variant="secondaryMedium" onClick={handleBack}>
-          <Text variant="p3semi" as="p">
-            Back
-          </Text>
-        </Button>
-        {(state.claimStatus !== ClaimDelegateTxStatuses.COMPLETED ||
-          (!hasSumrOnSatelliteChains &&
-            state.claimStatus === ClaimDelegateTxStatuses.COMPLETED)) && (
-          <Button
-            variant="primarySmall"
-            style={{
-              paddingRight: hideButtonArrow ? 'var(--general-space-24)' : 'var(--general-space-32)',
-            }}
-            onClick={handleAccept}
-            disabled={
-              state.claimStatus === ClaimDelegateTxStatuses.PENDING ||
-              (sumrToClaim === 0 && state.claimStatus !== ClaimDelegateTxStatuses.COMPLETED) ||
-              (!hasSumrOnHubChain && state.claimStatus === ClaimDelegateTxStatuses.COMPLETED) ||
-              userWalletAddress?.toLowerCase() !== resolvedWalletAddress.toLowerCase()
-            }
-          >
-            <WithArrow
-              style={{ color: 'var(--earn-protocol-secondary-100)' }}
-              variant="p3semi"
-              as="p"
-              hideArrow={hideButtonArrow}
-              isLoading={state.claimStatus === ClaimDelegateTxStatuses.PENDING}
-            >
-              {state.claimStatus === ClaimDelegateTxStatuses.PENDING && 'Claiming...'}
-              {state.claimStatus === ClaimDelegateTxStatuses.COMPLETED && 'Continue'}
-              {state.claimStatus === ClaimDelegateTxStatuses.COMPLETED &&
-                hasSumrOnSatelliteChains &&
-                'Bridge'}
-              {state.claimStatus === ClaimDelegateTxStatuses.FAILED &&
-                (claimOnChainId !== clientChainId ? 'Switch Network' : 'Retry')}
-              {state.claimStatus === undefined &&
-                (claimOnChainId !== clientChainId ? 'Switch Network' : 'Claim')}
-            </WithArrow>
-          </Button>
-        )}
-        {hasSumrOnSatelliteChains && state.claimStatus === ClaimDelegateTxStatuses.COMPLETED && (
-          <div className={classNames.bridgeButtonWrapper}>
-            <Button variant="secondaryMedium" onClick={handleAccept}>
-              <Text variant="p3semi" as="p">
-                <WithArrow
-                  variant="p3semi"
-                  as="span"
-                  reserveSpace
-                  style={{ color: 'var(--earn-protocol-secondary-60)' }}
-                >
-                  Skip
-                </WithArrow>
-              </Text>
-            </Button>
-            <Link
-              href={`/bridge/${resolvedWalletAddress}?via=claim&source_chain=${claimOnChainId}`}
-            >
-              <Button variant="primaryMedium" disabled={disableBridgeButton}>
-                Bridge
-              </Button>
-            </Link>
-          </div>
-        )}
-      </div>
+      <ClaimDelegateFooter
+        claimStatus={state.claimStatus}
+        hasSumrOnSatelliteChains={hasSumrOnSatelliteChains}
+        hasSumrOnHubChain={hasSumrOnHubChain}
+        hideButtonArrow={hideButtonArrow}
+        sumrToClaim={sumrToClaim}
+        claimOnChainId={claimOnChainId}
+        clientChainId={clientChainId}
+        disableBridgeButton={disableBridgeButton}
+        resolvedWalletAddress={resolvedWalletAddress}
+        userWalletAddress={userWalletAddress}
+        onBack={handleBack}
+        onAccept={handleAccept}
+      />
     </div>
   )
 }

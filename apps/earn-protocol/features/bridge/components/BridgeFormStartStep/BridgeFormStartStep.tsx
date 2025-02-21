@@ -141,7 +141,14 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
 
   useEffect(() => {
     if (!userWalletAddress) {
-      redirect('/earn')
+      try {
+        redirect('/earn')
+      } catch (error) {
+        dispatch({
+          type: 'error',
+          payload: 'Failed to redirect. Please try again.',
+        })
+      }
     }
 
     if (userWalletAddress !== state.walletAddress) {

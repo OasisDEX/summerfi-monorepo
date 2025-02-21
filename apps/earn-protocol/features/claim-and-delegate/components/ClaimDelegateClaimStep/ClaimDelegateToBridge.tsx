@@ -44,14 +44,7 @@ export const ClaimDelegateToBridge: FC<ClaimDelegateToBridgeProps> = ({
         Available to bridge
       </Text>
       <div className={classNames.valueWithIcon}>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 'var(--general-space-4)',
-            position: 'relative',
-          }}
-        >
+        <div className={classNames.container}>
           <Icon tokenName="SUMR" size={36} />
           <div style={{ position: 'absolute', top: '-4px', right: '-4px' }}>
             {networkSDKChainIdIconMap(chainId)}
@@ -66,8 +59,7 @@ export const ClaimDelegateToBridge: FC<ClaimDelegateToBridgeProps> = ({
           </Text>
         </div>
       </div>
-
-      <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+      <Text as="p" variant="p3semi" className={classNames.chainLabel}>
         {humanReadableChainToLabelMap[chainId]}
       </Text>
     </Card>

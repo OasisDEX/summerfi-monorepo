@@ -37,7 +37,6 @@ export const humanReadableNetworkMap = {
  */
 export const humanReadableChainToLabelMap = {
   [SDKChainId.BASE]: 'Base',
-  [SDKChainId.OPTIMISM]: 'Optimism',
   [SDKChainId.ARBITRUM]: 'Arbitrum',
   [SDKChainId.MAINNET]: 'Ethereum',
 } as const
