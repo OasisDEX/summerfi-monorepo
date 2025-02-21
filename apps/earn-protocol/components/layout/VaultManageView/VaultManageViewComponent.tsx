@@ -213,7 +213,7 @@ export const VaultManageViewComponent = ({
     isEarnApp: true,
   })
 
-  const { signTosMessage } = useTermsOfServiceSigner()
+  const signTosMessage = useTermsOfServiceSigner()
 
   const tosState = useTermsOfService({
     publicClient,
