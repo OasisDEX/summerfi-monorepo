@@ -25,6 +25,7 @@ import { revalidateUser } from '@/helpers/revalidation-handlers'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './PortfolioHeader.module.scss'
+import Link from 'next/link'
 
 const TransakTrigger = ({
   isOpen,
@@ -100,9 +101,12 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
           {/* <Button variant="secondaryLarge" style={{ minWidth: 'unset' }}>
             Send
           </Button>
-          <Button variant="secondaryLarge" style={{ minWidth: 'unset' }}>
-            Swap
-          </Button> */}
+          */}
+          <Link href={`/bridge/${walletAddress}?via=portfolio`}>
+            <Button variant="secondaryMedium" style={{ minWidth: 'unset' }}>
+              Bridge
+            </Button>
+          </Link>
           <Dropdown
             dropdownValue={{ value: transakNetwork?.value ?? '', content: null }}
             trigger={TransakTrigger}

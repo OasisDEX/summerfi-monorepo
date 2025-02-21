@@ -54,7 +54,10 @@ export function WithArrow({
           <>
             {/* This one won't be displayed, it's just to reserve space for actual arrow. */}
             {reserveSpace && (
-              <span className="arrow" style={{ color: 'transparent' }}>
+              <span
+                className="arrow"
+                style={{ color: 'transparent', padding: '0 var(--general-space-4)' }}
+              >
                 →
               </span>
             )}

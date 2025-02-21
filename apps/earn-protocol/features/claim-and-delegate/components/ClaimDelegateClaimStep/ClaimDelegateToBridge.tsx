@@ -8,17 +8,17 @@ import { networkSDKChainIdIconMap } from '@/constants/network-id-to-icon'
 
 import classNames from './ClaimDelegateClaimStep.module.scss'
 
-interface ClaimDelegateToClaimProps {
-  earned: string
-  earnedInUSD: string
+interface ClaimDelegateToBridgeProps {
+  balance: string
+  balanceInUSD: string
   chainId: SDKChainId.BASE | SDKChainId.MAINNET | SDKChainId.ARBITRUM
   isActive: boolean
   onClick: () => void
 }
 
-export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
-  earned,
-  earnedInUSD,
+export const ClaimDelegateToBridge: FC<ClaimDelegateToBridgeProps> = ({
+  balance,
+  balanceInUSD,
   chainId,
   isActive,
   onClick,
@@ -41,7 +41,7 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
         </div>
       )}
       <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-        You have earned
+        Available to bridge
       </Text>
       <div className={classNames.valueWithIcon}>
         <div
@@ -59,15 +59,15 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
         </div>
         <div className={classNames.valueWrapper}>
           <Text as="h2" variant="h2">
-            {earned}
+            {balance}
           </Text>
-          <Text as="p" variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-            ${earnedInUSD}
+          <Text as="p" variant="p2semi" className={classNames.usdValue}>
+            ${balanceInUSD}
           </Text>
         </div>
       </div>
 
-      <Text as="p" variant="p3semi" className={classNames.usdValue}>
+      <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
         {humanReadableChainToLabelMap[chainId]}
       </Text>
     </Card>

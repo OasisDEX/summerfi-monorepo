@@ -147,7 +147,7 @@ export const Sidebar: FC<SidebarProps> = ({
                   </Text>
                 ))
               ) : (
-                <Text as="h5" variant="h5semi" className={sidebarClassNames.sidebarTitle}>
+                <Text as="h5" variant="h5" className={sidebarClassNames.sidebarTitle}>
                   {title}
                 </Text>
               )}

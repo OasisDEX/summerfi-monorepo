@@ -236,7 +236,7 @@ const assumptionOfRisks = [
 
 export const claimDelegateTerms = [
   {
-    label: 'DEFINED TERMS',
+    label: 'Defined Terms',
     content: (
       <Wrapper>
         <Heading>I. DEFINED TERMS</Heading>
@@ -250,22 +250,22 @@ export const claimDelegateTerms = [
     ),
   },
   {
-    label: 'INTRODUCTION​',
+    label: 'Introduction',
     content: (
       <Wrapper>
         <Heading>II.INTRODUCTION</Heading>
         <Paragraph>
           These Terms govern your participation in and receipt of the Tokens through the Airdrop
-          organized by Lazy Summer Management Corp, a British Virgin Islands company (“Company”,
-          together with the Affiliates “we,” or “us”). By accessing, browsing or otherwise using the
-          Airdrop Website or participating in the Airdrop, you (“Participant” or “you”) acknowledge
+          organized by Lazy Summer Management Corp, a British Virgin Islands company ("Company",
+          together with the Affiliates "we," or "us"). By accessing, browsing or otherwise using the
+          Airdrop Website or participating in the Airdrop, you ("Participant" or "you") acknowledge
           that you have read, understood, and expressly agree to be bound by these Terms. These
           Terms apply to your access to and the use of the Services, including the Airdrop. Please
-          note that the front-end interface (the “App”) that displays data that facilitates users
+          note that the front-end interface (the "App") that displays data that facilitates users
           interfacing with a set of decentralized smart contracts that allow for certain
           transactions of digital assets is provided by a third-party, which is subject to their own
-          terms and conditions. These underlying smart contracts are referred to herein as the “Lazy
-          Summer Protocol.” The Protocol itself may include or integrate various other third-party
+          terms and conditions. These underlying smart contracts are referred to herein as the "Lazy
+          Summer Protocol." The Protocol itself may include or integrate various other third-party
           software and services. The Services may also reference or provide an App or APIs related
           to smart contracts that provide a data availability service. The Protocol is not part of
           the Services, and your use of the Protocol is entirely at your own risk. Additionally, the
@@ -282,7 +282,7 @@ export const claimDelegateTerms = [
           The Company reserves its right to change these Terms at any time at our sole discretion.
           If we do this, we will publicly post the updated Terms on the Airdrop Website and will
           indicate the date these Terms were last revised. You may read a current effective copy of
-          the Terms by visiting the Terms’ link on the Airdrop Website. For the avoidance of doubt,
+          the Terms by visiting the Terms' link on the Airdrop Website. For the avoidance of doubt,
           the Company is not obligated to notify you of any changes to these Terms. It is your
           responsibility to periodically review the Terms by visiting the designated link on the
           Airdrop Website to stay informed of any updates.
@@ -291,10 +291,10 @@ export const claimDelegateTerms = [
     ),
   },
   {
-    label: 'PARTICIPANT’S REPRESENTATIONS, WARRANTIES AND UNDERTAKING',
+    label: "Participant's Representations, Warranties and Undertaking",
     content: (
       <Wrapper>
-        <Heading>III. PARTICIPANT’S REPRESENTATIONS, WARRANTIES AND UNDERTAKING</Heading>
+        <Heading>III. PARTICIPANT'S REPRESENTATIONS, WARRANTIES AND UNDERTAKING</Heading>
         <Paragraph>
           In addition to other representations, warranties and undertakings elsewhere in these
           Terms, you represent and warrant and/or undertake to the Company and Affiliates as
@@ -313,7 +313,7 @@ export const claimDelegateTerms = [
     ),
   },
   {
-    label: 'ELIGIBILITY​',
+    label: 'Eligibility',
     content: (
       <Wrapper>
         <Heading>IV. ELIGIBILITY</Heading>
@@ -322,7 +322,7 @@ export const claimDelegateTerms = [
           STRICTLY PROHIBITED BY THE COMPANY. U.S. CITIZENS, U.S. RESIDENTS (TAX OR OTHERWISE),
           GREEN CARD HOLDERS, OR CORPORATE ENTITIES WITH A MAJORITY OF U.S. OWNERSHIP OR A PRINCIPAL
           PLACE OF BUSINESS OR REGISTERED OFFICE IN THE UNITED STATES OF AMERICA (COLLECTIVELY, A
-          “U.S. PERSON”), AND WHO ARE NOT ACTING FOR THE ACCOUNT OR BENEFIT OF ANY U.S. PERSONS, ARE
+          "U.S. PERSON"), AND WHO ARE NOT ACTING FOR THE ACCOUNT OR BENEFIT OF ANY U.S. PERSONS, ARE
           NOT ELIGIBLE TO USE THE SERVICES AND PARTICIPATE IN THE AIRDROP.
         </Paragraph>
         <Paragraph>
@@ -350,7 +350,7 @@ export const claimDelegateTerms = [
     ),
   },
   {
-    label: 'TOKEN CLAIMS',
+    label: 'Token Claims',
     content: (
       <Wrapper>
         <Heading>V. TOKEN CLAIMS</Heading>
@@ -360,8 +360,8 @@ export const claimDelegateTerms = [
         <Paragraph>
           The Company has implemented a risk-based program applicable to the Airdrop and any related
           participation or claims through the Airdrop Website and any subdomains (collectively,
-          “Token Claims”). This program screens Token Claims using data and tools provided by an
-          independent blockchain analytics provider (“Screening Service Provider”), applying
+          "Token Claims"). This program screens Token Claims using data and tools provided by an
+          independent blockchain analytics provider ("Screening Service Provider"), applying
           screening criteria that may extend beyond the requirements of applicable law. Token Claims
           also are subject to geo-location and proxy detection controls to prevent access by users
           that may be Prohibited Persons or located in a Prohibited Jurisdiction. The Company
@@ -377,7 +377,7 @@ export const claimDelegateTerms = [
     ),
   },
   {
-    label: 'PROHIBITED ACTIVITIES',
+    label: 'Prohibited Activities',
     content: (
       <Wrapper>
         <Heading>VI. PROHIBITED ACTIVITIES</Heading>
@@ -389,14 +389,14 @@ export const claimDelegateTerms = [
         <List items={prohibitedActivitiesList} />
         <Paragraph>
           The Company reserves the right to investigate directly or through an Affiliate and take
-          appropriate legal action against anyone who, in the Company’s sole discretion, violates
+          appropriate legal action against anyone who, in the Company's sole discretion, violates
           this provision, including reporting the violator to law enforcement authorities.
         </Paragraph>
       </Wrapper>
     ),
   },
   {
-    label: 'NO PROFESSIONAL ADVICE AND NO FIDUCIARY DUTIES​',
+    label: 'No Professional Advice and No Fiduciary Duties',
     content: (
       <Wrapper>
         <Heading>VII. NO PROFESSIONAL ADVICE AND NO FIDUCIARY DUTIES</Heading>
@@ -405,7 +405,7 @@ export const claimDelegateTerms = [
     ),
   },
   {
-    label: 'DISCLAIMERS, LIMITATION OF LIABILITY AND INDEMNIFICATION​​',
+    label: 'Disclaimers, Limitation of Liability and Indemnification',
     content: (
       <Wrapper>
         <Heading>VIII. DISCLAIMERS, LIMITATION OF LIABILITY AND INDEMNIFICATION</Heading>
@@ -429,7 +429,7 @@ export const claimDelegateTerms = [
     ),
   },
   {
-    label: 'WAIVER AND RELEASE​​',
+    label: 'Waiver and Release',
     content: (
       <Wrapper>
         <Heading>IX. WAIVER AND RELEASE</Heading>
@@ -443,7 +443,7 @@ export const claimDelegateTerms = [
     ),
   },
   {
-    label: 'THIRD-PARTY BENEFICIARIES​​',
+    label: 'Third-Party Beneficiaries',
     content: (
       <Wrapper>
         <Heading>X. THIRD-PARTY BENEFICIARIES</Heading>
@@ -455,7 +455,7 @@ export const claimDelegateTerms = [
     ),
   },
   {
-    label: 'THIRD-PARTY SERVICES​​',
+    label: 'Third-Party Services',
     content: (
       <Wrapper>
         <Heading>XI. THIRD-PARTY SERVICES</Heading>
@@ -480,7 +480,7 @@ export const claimDelegateTerms = [
     ),
   },
   {
-    label: 'USER CONTENT​​',
+    label: 'User Content',
     content: (
       <Wrapper>
         <Heading>XII. USER CONTENT</Heading>
@@ -501,7 +501,7 @@ export const claimDelegateTerms = [
     ),
   },
   {
-    label: 'ASSIGNMENT​​',
+    label: 'Assignment',
     content: (
       <Wrapper>
         <Heading>XIII. ASSIGNMENT</Heading>
@@ -516,7 +516,7 @@ export const claimDelegateTerms = [
     ),
   },
   {
-    label: 'ENTIRE AGREEMENT​',
+    label: 'Entire Agreement',
     content: (
       <Wrapper>
         <Heading>XIV. ENTIRE AGREEMENT</Heading>
@@ -530,13 +530,13 @@ export const claimDelegateTerms = [
     ),
   },
   {
-    label: 'AMENDMENTST​',
+    label: 'Amendments',
     content: (
       <Wrapper>
         <Heading>XV. AMENDMENTST</Heading>
         <Paragraph>
           We may modify these Terms for any reason, at our sole discretion, from time to time in
-          which case we will update the “Last Revised” date at the top of these Terms. The updated
+          which case we will update the "Last Revised" date at the top of these Terms. The updated
           Terms will be effective as of the time of posting, or such later date as may be specified
           in the updated Terms. Your use of the Services or participation in the Airdrop after the
           modifications have become effective will be deemed your acceptance of the new Terms. If
@@ -549,7 +549,7 @@ export const claimDelegateTerms = [
     ),
   },
   {
-    label: 'SEVERABILITY​',
+    label: 'Severability',
     content: (
       <Wrapper>
         <Heading>XVI. SEVERABILITY</Heading>
@@ -567,7 +567,7 @@ export const claimDelegateTerms = [
     ),
   },
   {
-    label: 'RISK FACTORS​',
+    label: 'Risk Factors',
     content: (
       <Wrapper>
         <Heading>XVII. RISK FACTORS</Heading>
@@ -611,7 +611,7 @@ export const claimDelegateTerms = [
     ),
   },
   {
-    label: 'CONTACT INFORMATION​​',
+    label: 'Contact Information',
     content: (
       <Wrapper>
         <Heading>XVIII. CONTACT INFORMATION</Heading>

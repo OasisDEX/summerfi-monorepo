@@ -318,71 +318,75 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
             </Text>
           )}
         </Card>
-        <Text as="p" variant="p2semi" style={{ marginBottom: 'var(--general-space-4)' }}>
-          Lazy Summer Governance Objectives
-        </Text>
-        <Text
-          as="p"
-          variant="p3"
-          style={{
-            color: 'var(--earn-protocol-secondary-40)',
-            marginBottom: 'var(--general-space-4)',
-          }}
-        >
-          Each delegate has their own values, intentions and visions for the Lazy Summer Protocol.
-          Delegate your voting power to those who best align with your values.
-        </Text>
-        <Link href="https://forum.summer.fi/c/delegates/19" target="_blank">
-          <WithArrow as="p" variant="p3">
-            Learn more about Governance
-          </WithArrow>
-        </Link>
-        <div className={classNames.spacer} />
-        <DataBlock
-          title="Staking Rewards"
-          titleStyle={{
-            color: 'var(--earn-protocol-secondary-100)',
-            marginBottom: 'var(--general-space-8)',
-          }}
-          titleSize="medium"
-          value={
-            decayFactorLoading ? (
-              <div style={{ marginTop: '9px', marginBottom: '7px)' }}>
-                <SkeletonLine height="18px" width="60px" />
-              </div>
-            ) : (
-              apy
-            )
-          }
-          valueStyle={{
-            color: 'var(--earn-protocol-success-100)',
-            marginBottom: 'var(--general-space-8)',
-          }}
-          valueSize="small"
-          subValue={
-            decayFactorLoading ? (
-              <div style={{ marginTop: '9px', marginBottom: '7px)' }}>
-                <SkeletonLine
-                  height="12px"
-                  width="80px"
-                  style={{
-                    marginTop: '6px',
-                    marginBottom: 'var(--general-space-4)',
-                  }}
-                />
-              </div>
-            ) : (
-              sumrPerYear
-            )
-          }
-          subValueStyle={{
-            color: 'var(--earn-protocol-primary-100)',
-            marginBottom: 'var(--general-space-8)',
-          }}
-        />
-        <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-          Earn $SUMR rewards for staking and delegating your tokens.
-        </Text>
+        <div>
+          <Text as="p" variant="p2semi" style={{ marginBottom: 'var(--general-space-4)' }}>
+            Lazy Summer Governance Objectives
+          </Text>
+          <Text
+            as="p"
+            variant="p3"
+            style={{
+              color: 'var(--earn-protocol-secondary-40)',
+              marginBottom: 'var(--general-space-4)',
+            }}
+          >
+            Each delegate has their own values, intentions and visions for the Lazy Summer Protocol.
+            Delegate your voting power to those who best align with your values.
+          </Text>
+          <Link href="https://forum.summer.fi/c/delegates/19" target="_blank">
+            <WithArrow as="p" variant="p3">
+              Learn more about Governance
+            </WithArrow>
+          </Link>
+          <div className={classNames.spacer} />
+        </div>
+        <div>
+          <DataBlock
+            title="Staking Rewards"
+            titleStyle={{
+              color: 'var(--earn-protocol-secondary-100)',
+              marginBottom: 'var(--general-space-8)',
+            }}
+            titleSize="medium"
+            value={
+              decayFactorLoading ? (
+                <div style={{ marginTop: '9px', marginBottom: '7px)' }}>
+                  <SkeletonLine height="18px" width="60px" />
+                </div>
+              ) : (
+                apy
+              )
+            }
+            valueStyle={{
+              color: 'var(--earn-protocol-success-100)',
+              marginBottom: 'var(--general-space-8)',
+            }}
+            valueSize="small"
+            subValue={
+              decayFactorLoading ? (
+                <div style={{ marginTop: '9px', marginBottom: '7px)' }}>
+                  <SkeletonLine
+                    height="12px"
+                    width="80px"
+                    style={{
+                      marginTop: '6px',
+                      marginBottom: 'var(--general-space-4)',
+                    }}
+                  />
+                </div>
+              ) : (
+                sumrPerYear
+              )
+            }
+            subValueStyle={{
+              color: 'var(--earn-protocol-primary-100)',
+              marginBottom: 'var(--general-space-8)',
+            }}
+          />
+          <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+            Earn $SUMR rewards for staking and delegating your tokens.
+          </Text>
+        </div>
         {isEoa && (
           <div className={classNames.selfDelegateCard}>
             <ClaimDelegateCard

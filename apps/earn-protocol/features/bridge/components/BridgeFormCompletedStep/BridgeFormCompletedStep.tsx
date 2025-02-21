@@ -6,6 +6,7 @@ import {
   isSupportedHumanNetwork,
   sdkNetworkToHumanNetwork,
 } from '@summerfi/app-utils'
+import { useSearchParams } from 'next/navigation'
 
 import { BridgeFormStepFallback } from '@/features/bridge/components/BridgeFormFallbackStep/BridgeFormStepFallback'
 import { NetworkBalances } from '@/features/bridge/components/NetworkBalances/NetworkBalances'
@@ -20,6 +21,8 @@ interface BridgeFormCompletedStepProps {
 
 export const BridgeFormCompletedStep: FC<BridgeFormCompletedStepProps> = ({ state, dispatch }) => {
   const { chain: sourceChain } = useChain()
+  const searchParams = useSearchParams()
+  const viaParam = searchParams.get('via')
 
   const sourceNetwork = chainIdToSDKNetwork(sourceChain.id)
   const destinationNetwork = chainIdToSDKNetwork(state.destinationChain.id)
@@ -70,14 +73,21 @@ export const BridgeFormCompletedStep: FC<BridgeFormCompletedStepProps> = ({ stat
           />
         </div>
       }
-      primaryButton={{
-        label: 'Create new transaction',
-        action: () => {
-          dispatch({
-            type: 'reset',
-          })
-        },
-      }}
+      primaryButton={
+        viaParam === 'claim'
+          ? {
+              url: `/claim/${state.walletAddress}?via=bridge`,
+              label: 'Return to claim',
+            }
+          : {
+              label: 'Create new transaction',
+              action: () => {
+                dispatch({
+                  type: 'reset',
+                })
+              },
+            }
+      }
       secondaryButton={{
         label: (
           <>

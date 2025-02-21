@@ -9,6 +9,7 @@ import {
 } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import { capitalize } from 'lodash-es'
+import { useSearchParams } from 'next/navigation'
 
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { BridgeFormStepFallback } from '@/features/bridge/components/BridgeFormFallbackStep/BridgeFormStepFallback'
@@ -24,6 +25,8 @@ interface BridgeFormPendingStepProps {
 
 export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, dispatch }) => {
   const { chain: sourceChain } = useChain()
+  const searchParams = useSearchParams()
+  const viaParam = searchParams.get('via')
 
   const sourceNetwork = chainIdToSDKNetwork(sourceChain.id)
   const destinationNetwork = chainIdToSDKNetwork(state.destinationChain.id)
@@ -146,14 +149,21 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
           </div>
         </div>
       }
-      primaryButton={{
-        label: 'Create new transaction',
-        action: () => {
-          dispatch({
-            type: 'reset',
-          })
-        },
-      }}
+      primaryButton={
+        viaParam === 'claim'
+          ? {
+              url: `/claim/${state.walletAddress}?via=bridge`,
+              label: 'Return to claim',
+            }
+          : {
+              label: 'Create new transaction',
+              action: () => {
+                dispatch({
+                  type: 'reset',
+                })
+              },
+            }
+      }
       secondaryButton={{
         label: resolvedSecondaryButtonLabel,
         target: '_blank',

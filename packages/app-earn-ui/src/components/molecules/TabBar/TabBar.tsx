@@ -116,13 +116,6 @@ export const TabBar: FC<TabBarProps> = ({
             </button>
           ))}
         </div>
-        <div
-          className={styles.underline}
-          style={{
-            left: `${underlineStyle.left}px`,
-            width: `${underlineStyle.width}px`,
-          }}
-        />
       </div>
       <div className={styles.tabContent}>{tabs[resolvedActiveIndex].content}</div>
     </div>

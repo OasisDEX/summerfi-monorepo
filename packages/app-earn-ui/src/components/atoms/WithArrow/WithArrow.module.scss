@@ -1,6 +1,7 @@
 .withArrow {
   display: block;
   position: relative;
+  
   & :global .arrow {
     font-weight: 600;
     padding-left: 5px;

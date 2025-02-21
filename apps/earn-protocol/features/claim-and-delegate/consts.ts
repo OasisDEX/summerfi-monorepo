@@ -2,6 +2,7 @@ import { formatAddress, isValidLink } from '@summerfi/app-utils'
 
 import { type SumrDecayFactorData } from '@/app/server-handlers/sumr-decay-factor'
 import { type SumrDelegates } from '@/app/server-handlers/sumr-delegates'
+import { SDKChainId } from '@summerfi/app-types'
 
 export interface SumrDelegate {
   sumrAmount: number
