@@ -1,9 +1,9 @@
 import { getPositionValues } from '@summerfi/app-earn-ui'
 import {
   type ChartsDataTimeframes,
+  type HistoryChartData,
   type IArmadaPosition,
   type SDKVaultishType,
-  type VaultWithChartsData,
 } from '@summerfi/app-types'
 import dayjs from 'dayjs'
 
@@ -11,10 +11,10 @@ import { type GetPositionHistoryReturnType } from '@/app/server-handlers/positio
 import { CHART_TIMESTAMP_FORMAT } from '@/constants/charts'
 
 const mapPositionHistory = (
-  positionHistory: GetPositionHistoryReturnType,
+  positionHistory: GetPositionHistoryReturnType['positionHistory'],
   position?: IArmadaPosition,
   vault?: SDKVaultishType,
-): VaultWithChartsData['historyChartData'] => {
+): HistoryChartData => {
   const now = dayjs()
   const nowStartOfHour = now.startOf('hour')
   const nowStartOfDay = now.startOf('day')
@@ -42,8 +42,8 @@ const mapPositionHistory = (
   const positionValues =
     position && vault
       ? getPositionValues({
-          positionData: position,
-          vaultData: vault,
+          position,
+          vault,
         })
       : false
 
@@ -153,20 +153,14 @@ const mapPositionHistory = (
   }
 }
 
-export const decorateWithHistoryChartData = (
-  vaults: SDKVaultishType[],
-  vaultData: {
-    position?: IArmadaPosition
-    positionHistory: GetPositionHistoryReturnType
-  },
-) => {
-  const { positionHistory, position } = vaultData
-
-  return vaults.map((vault) => ({
-    ...vault,
-    customFields: {
-      ...vault.customFields,
-      historyChartData: mapPositionHistory(positionHistory, position, vault),
-    },
-  })) as SDKVaultishType[]
+export const getPositionHistoricalData = ({
+  positionHistory,
+  vault,
+  position,
+}: {
+  vault: SDKVaultishType
+  position?: IArmadaPosition
+  positionHistory: GetPositionHistoryReturnType['positionHistory']
+}) => {
+  return mapPositionHistory(positionHistory, position, vault)
 }
