@@ -90,7 +90,18 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
 
   const allVaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })
 
-  const [arkInterestRatesMap, vaultInterestRates] = await Promise.all([
+  const { netValue } = getPositionValues({
+    position,
+    vault,
+  })
+
+  const [
+    arkInterestRatesMap,
+    vaultInterestRates,
+    positionHistory,
+    positionForecastResponse,
+    vaultApyRaw,
+  ] = await Promise.all([
     getInterestRates({
       network: parsedNetwork,
       arksList: vault.arks,
@@ -102,14 +113,6 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
         chainId: subgraphNetworkToId(network),
       })),
     }),
-  ])
-
-  const { netValue } = getPositionValues({
-    position,
-    vault,
-  })
-
-  const [positionHistory, positionForecastResponse, vaultApyRaw] = await Promise.all([
     getPositionHistory({
       network: parsedNetwork,
       address: walletAddress.toLowerCase(),
