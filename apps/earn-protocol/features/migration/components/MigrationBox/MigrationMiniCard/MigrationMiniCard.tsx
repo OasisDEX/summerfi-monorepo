@@ -1,5 +1,5 @@
 import { type FC } from 'react'
-import { Card, type CardVariant, Icon, Text } from '@summerfi/app-earn-ui'
+import { Card, type CardVariant, Icon, Text, TokenWithNetworkIcon } from '@summerfi/app-earn-ui'
 import { type TokenSymbolsList } from '@summerfi/app-types'
 import { capitalize } from 'lodash-es'
 
@@ -40,8 +40,7 @@ export const MigrationMiniCard: FC<MigrationMiniCardProps> = ({
       </div>
       <div className={classNames.content}>
         <div className={classNames.iconWrapper}>
-          <Icon tokenName={token} size={44} />
-          <Icon iconName="base" className={classNames.networkIcon} size={16} />
+          <TokenWithNetworkIcon tokenName={token} chainId={1} />
         </div>
         <Text as="h5" variant="h5">
           {token}

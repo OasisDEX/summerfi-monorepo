@@ -15,15 +15,9 @@
     align-items: center;
 
     .iconWrapper {
-      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
-
-      .networkIcon {
-        position: absolute;
-        top: 5;
-      }
     }
   }
 
