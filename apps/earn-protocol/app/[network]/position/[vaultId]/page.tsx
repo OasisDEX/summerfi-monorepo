@@ -14,6 +14,7 @@ import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
+import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { VaultOpenView } from '@/components/layout/VaultOpenView/VaultOpenView'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import { mapArkLatestInterestRates } from '@/helpers/map-ark-interest-rates'
@@ -59,7 +60,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       })
     : []
 
-  const [arkInterestRatesMap, vaultInterestRates] = await Promise.all([
+  const [arkInterestRatesMap, vaultInterestRates, vaultApyRaw] = await Promise.all([
     vault?.arks
       ? getInterestRates({
           network: parsedNetwork,
@@ -68,6 +69,12 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       : Promise.resolve({}),
     getVaultsHistoricalApy({
       // just the vault displayed
+      fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
+        fleetAddress: id,
+        chainId: subgraphNetworkToId(network),
+      })),
+    }),
+    getVaultsApy({
       fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
         chainId: subgraphNetworkToId(network),
@@ -92,6 +99,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
   })
 
   const arksInterestRates = mapArkLatestInterestRates(arkInterestRatesMap)
+  const vaultApy = vaultApyRaw[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
 
   return (
     <VaultOpenView
@@ -102,6 +110,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       medianDefiYield={medianDefiYield}
       arksHistoricalChartData={arksHistoricalChartData}
       arksInterestRates={arksInterestRates}
+      vaultApy={vaultApy}
     />
   )
 }
