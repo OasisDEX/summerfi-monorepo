@@ -21,6 +21,7 @@ import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
+import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { VaultManageView } from '@/components/layout/VaultManageView/VaultManageView'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import { getPositionPerformanceData } from '@/helpers/chart-helpers/get-position-performance-data'
@@ -108,18 +109,27 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     vault,
   })
 
-  const [positionHistory, positionForecastResponse] = await Promise.all([
-    await getPositionHistory({
+  const [positionHistory, positionForecastResponse, vaultsApyList] = await Promise.all([
+    getPositionHistory({
       network: parsedNetwork,
       address: walletAddress.toLowerCase(),
       vault,
     }),
-    await fetchForecastData({
+    fetchForecastData({
       fleetAddress: vault.id as `0x${string}`,
       chainId: Number(parsedNetworkId),
       amount: Number(netValue.toFixed(position.amount.token.decimals)),
     }),
+    getVaultsApy({
+      fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
+        fleetAddress: id,
+        chainId: subgraphNetworkToId(network),
+      })),
+    }),
   ])
+
+  const vaultApy =
+    vaultsApyList[`${vaultWithConfig.id}-${subgraphNetworkToId(vaultWithConfig.protocol.network)}`]
 
   if (!positionForecastResponse.ok) {
     throw new Error('Failed to fetch forecast data')
@@ -147,6 +157,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   return (
     <VaultManageView
       vault={vaultWithConfig}
+      vaultApy={vaultApy}
       vaults={allVaultsWithConfig}
       position={positionJsonSafe}
       viewWalletAddress={walletAddress}
