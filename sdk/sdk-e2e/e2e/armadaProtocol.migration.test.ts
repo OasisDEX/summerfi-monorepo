@@ -25,7 +25,7 @@ describe('Armada Protocol Migration', () => {
         }),
       })
 
-      describe.skip(`getMigratablePositions`, () => {
+      describe(`getMigratablePositions`, () => {
         const migrationType = ArmadaMigrationType.AaveV3
 
         it(`should get all migratable positions`, async () => {
@@ -46,7 +46,7 @@ describe('Armada Protocol Migration', () => {
         })
       })
 
-      describe(`getMigrationTX`, () => {
+      describe.skip(`getMigrationTX`, () => {
         const migrationType = ArmadaMigrationType.AaveV3
 
         it(`should migrate first migratable position`, async () => {
