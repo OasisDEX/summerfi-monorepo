@@ -32,9 +32,11 @@ export const useClientChainId = () => {
           method: 'eth_requestAccounts',
         })
 
+        // Additonal check to ensure that the injected ethereum account is the same as user address
+        // It's crucial for safe where window.ethereum returns signer account instead of connected account
         if (accounts.map((a) => a.toLowerCase()).includes(user.address.toLowerCase())) {
           // eslint-disable-next-line no-console
-          console.log('Eoa chain id', _eoaChainId)
+          console.log('Updated EOA client chain id to:', _eoaChainId)
           setClientChainId(Number(_eoaChainId))
         } else {
           setClientChainId(id)
@@ -51,7 +53,7 @@ export const useClientChainId = () => {
     if (window.ethereum && user?.type === AccountKitAccountType.EOA) {
       const fn = (chainId: string) => {
         // eslint-disable-next-line no-console
-        console.log('Updating EOA client chain id', chainId)
+        console.log('EOA client chain id changed to:', chainId)
 
         setClientChainId(Number(chainId))
       }
