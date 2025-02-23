@@ -214,6 +214,7 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
         payload: 'Failed to create transaction',
       })
       toast.error('Failed to create bridge transaction', ERROR_TOAST_CONFIG)
+
       return
     }
 

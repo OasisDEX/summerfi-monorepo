@@ -1,5 +1,5 @@
 import { type FC } from 'react'
-import { Card, Icon, Text } from '@summerfi/app-earn-ui'
+import { Button, Card, Icon, LoadingSpinner, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { type SDKChainId } from '@summerfi/app-types'
 import { humanReadableChainToLabelMap } from '@summerfi/app-utils'
 import clsx from 'clsx'
@@ -12,36 +12,30 @@ interface ClaimDelegateToClaimProps {
   earned: string
   earnedInUSD: string
   chainId: SDKChainId.BASE | SDKChainId.MAINNET | SDKChainId.ARBITRUM
-  isActive: boolean
-  onClick: () => void
+  onClaim: () => void
+  isLoading?: boolean
+  canClaim: boolean
 }
 
 export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
   earned,
   earnedInUSD,
   chainId,
-  isActive,
-  onClick,
+  onClaim,
+  isLoading,
+  canClaim,
 }) => {
   return (
-    <Card
-      className={clsx(classNames.cardWrapper, {
-        [classNames.cardWrapperActive]: isActive,
-      })}
-      onClick={onClick}
-    >
-      {isActive && (
-        <div className={classNames.selectedWrapper}>
-          <Text as="p" variant="p4semi" className={classNames.selectedLabel}>
-            Selected
+    <Card className={classNames.cardWrapper + (canClaim ? '' : ` ${classNames.disabled}`)}>
+      {canClaim && (
+        <div className={clsx(classNames.tagWrapper, classNames.claim)}>
+          <Text as="p" variant="p4semi" className={classNames.tabLabel}>
+            Available to claim
           </Text>
-          <div className={classNames.checkmarkWrapper}>
-            <Icon iconName="checkmark" size={12} />
-          </div>
         </div>
       )}
       <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-        You have earned
+        On {humanReadableChainToLabelMap[chainId]}
       </Text>
       <div className={classNames.valueWithIcon}>
         <div
@@ -66,10 +60,32 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
           </Text>
         </div>
       </div>
-
-      <Text as="p" variant="p3semi" className={classNames.usdValue}>
-        {humanReadableChainToLabelMap[chainId]}
-      </Text>
+      <Button
+        variant="neutralSmall"
+        onClick={(e) => {
+          e.stopPropagation()
+          onClaim()
+        }}
+        disabled={!canClaim || isLoading}
+      >
+        {isLoading ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
+            <LoadingSpinner size={16} color="var(--earn-protocol-secondary-40)" />
+            <span>Claiming...</span>
+          </div>
+        ) : (
+          <WithArrow
+            reserveSpace
+            variant="p4semi"
+            as="p"
+            style={{
+              color: 'inherit',
+            }}
+          >
+            Claim
+          </WithArrow>
+        )}
+      </Button>
     </Card>
   )
 }

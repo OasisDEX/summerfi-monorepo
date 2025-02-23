@@ -1,8 +1,9 @@
 import { type FC } from 'react'
-import { Card, Icon, Text } from '@summerfi/app-earn-ui'
+import { Button, Card, Icon, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { type SDKChainId } from '@summerfi/app-types'
 import { humanReadableChainToLabelMap } from '@summerfi/app-utils'
 import clsx from 'clsx'
+import Link from 'next/link'
 
 import { networkSDKChainIdIconMap } from '@/constants/network-id-to-icon'
 
@@ -12,36 +13,24 @@ interface ClaimDelegateToBridgeProps {
   balance: string
   balanceInUSD: string
   chainId: SDKChainId.BASE | SDKChainId.MAINNET | SDKChainId.ARBITRUM
-  isActive: boolean
-  onClick: () => void
+  walletAddress: string
 }
 
 export const ClaimDelegateToBridge: FC<ClaimDelegateToBridgeProps> = ({
   balance,
   balanceInUSD,
   chainId,
-  isActive,
-  onClick,
+  walletAddress,
 }) => {
   return (
-    <Card
-      className={clsx(classNames.cardWrapper, {
-        [classNames.cardWrapperActive]: isActive,
-      })}
-      onClick={onClick}
-    >
-      {isActive && (
-        <div className={classNames.selectedWrapper}>
-          <Text as="p" variant="p4semi" className={classNames.selectedLabel}>
-            Selected
-          </Text>
-          <div className={classNames.checkmarkWrapper}>
-            <Icon iconName="checkmark" size={12} />
-          </div>
-        </div>
-      )}
+    <Card className={classNames.cardWrapper}>
+      <div className={clsx(classNames.tagWrapper, classNames.bridge)}>
+        <Text as="p" variant="p4semi" className={classNames.tabLabel}>
+          Ready to bridge
+        </Text>
+      </div>
       <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-        Available to bridge
+        On {humanReadableChainToLabelMap[chainId]}
       </Text>
       <div className={classNames.valueWithIcon}>
         <div className={classNames.container}>
@@ -59,9 +48,18 @@ export const ClaimDelegateToBridge: FC<ClaimDelegateToBridgeProps> = ({
           </Text>
         </div>
       </div>
-      <Text as="p" variant="p3semi" className={classNames.chainLabel}>
-        {humanReadableChainToLabelMap[chainId]}
-      </Text>
+      <Link href={`/bridge/${walletAddress}?via=claim&source_chain=${chainId}`}>
+        <Button variant="neutralSmall">
+          <WithArrow
+            variant="p4semi"
+            as="p"
+            reserveSpace
+            style={{ color: 'var(--earn-protocol-secondary-100)' }}
+          >
+            Bridge
+          </WithArrow>
+        </Button>
+      </Link>
     </Card>
   )
 }

@@ -19,7 +19,7 @@ export const ClaimDelegateError: FC<ClaimDelegateErrorProps> = ({ error, onBack 
               {error}
             </Text>
             <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-              Please go back and try again.
+              Please try again.
             </Text>
           </div>
         </div>

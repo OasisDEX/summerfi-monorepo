@@ -1,6 +1,5 @@
-import { type Dispatch, type FC } from 'react'
+import { type Dispatch, type FC, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
 
 import { ClaimDelegateAcceptanceStep } from '@/features/claim-and-delegate/components/ClaimDelegateAcceptanceStep/ClaimDelegateAcceptanceStep'
 import { ClaimDelegateClaimStep } from '@/features/claim-and-delegate/components/ClaimDelegateClaimStep/ClaimDelegateClaimStep'

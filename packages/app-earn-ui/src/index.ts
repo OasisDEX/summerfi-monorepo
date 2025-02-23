@@ -21,6 +21,7 @@ export { LoadableAvatar } from './components/atoms/LoadableAvatar/LoadableAvatar
 export { AnimateHeight } from './components/atoms/AnimateHeight/AnimateHeight'
 export { RechartResponsiveWrapper } from './components/atoms/RechartResponsiveWrapper/RechartResponsiveWrapper'
 export { HeaderDisclaimer } from './components/molecules/HeaderDisclaimer/HeaderDisclaimer'
+export { ErrorMessage } from './components/molecules/ErrorMessage/ErrorMessage'
 export { TagRow, type TagOption } from './components/molecules/TagRow/TagRow'
 export { InfoBox } from './components/molecules/InfoBox/InfoBox'
 export { Footer } from './components/layout/Footer/Footer'

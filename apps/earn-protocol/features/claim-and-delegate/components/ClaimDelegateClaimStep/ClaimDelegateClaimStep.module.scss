@@ -2,11 +2,11 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-
   align-items: center;
 
-  > div {
-    max-width: 529px;
+  .errorMessageWrapper {
+    width: 100%;
+    max-width: 560px;
   }
 
   .cardWrapper {
@@ -18,6 +18,15 @@
     margin-bottom: var(--general-space-16);
     cursor: pointer;
     border: 1px solid transparent;
+
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+
+      &:hover {
+        background-color: var(--earn-protocol-neutral-85);
+      }
+    }
 
     .chainLabel {
       color: var(--earn-protocol-secondary-60);
@@ -45,11 +54,6 @@
       }
     }
 
-    &Active {
-      border: 1px solid var(--earn-protocol-success-50);
-      background-color: var(--earn-protocol-neutral-80);
-    }
-
     &:hover {
       background-color: var(--earn-protocol-neutral-80);
       transition: background-color 0.3s ease;
@@ -58,7 +62,7 @@
 
   .footerWrapper {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     gap: var(--general-space-16);
@@ -86,32 +90,34 @@
     align-items: baseline;
   }
 
-  .selectedWrapper {
+  .tagWrapper {
     position: absolute;
     top: var(--general-space-12);
     right: var(--general-space-16);
     color: var(--earn-protocol-success-100);
-    padding: var(--general-space-4);
+    padding: var(--general-space-4) var(--general-space-8);
     display: flex;
     align-items: center;
     gap: var(--general-space-8);
+    border-radius: var(--radius-small);
 
-    .selectedLabel {
-      color: var(--color-text-success);
+    &.bridge {
+      background-color: var(--earn-protocol-primary-10);
+      color: var(--earn-protocol-primary-100);
+    }
+
+    &.claim {
+      background-color: var(--earn-protocol-success-10);
+      color: var(--earn-protocol-success-100);
+    }
+
+    .tabLabel {
       display: none;
 
       @include media('>l') {
         display: block;
       }
     }
-  }
-
-  .checkmarkWrapper {
-    display: flex;
-    align-items: center;
-    background-color: var(--color-background-success);
-    padding: var(--general-space-4);
-    border-radius: 50%;
   }
 
   .bridgeButtonWrapper {

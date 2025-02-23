@@ -1,0 +1,22 @@
+.errorMessageWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-space-medium);
+    width: 100%;
+    padding: var(--spacing-space-medium);
+    margin-bottom: var(--spacing-space-medium);
+    background: var(--color-surface-subtle);
+    border-radius: var(--radius-medium);
+  }
+  
+  .content {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    align-items: center;
+    gap: var(--spacing-space-medium);
+  }
+  
+  .errorText {
+    color: var(--earn-protocol-error-50);
+  }

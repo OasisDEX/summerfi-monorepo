@@ -527,12 +527,13 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
                 style={{ paddingRight: 'var(--general-space-32)' }}
                 onClick={() => handleDelegate(state.delegatee)}
                 disabled={
-                  isChangeDelegateLoading ||
-                  isRemoveDelegateLoading ||
-                  !state.delegatee ||
-                  (state.delegatee === ADDRESS_ZERO &&
-                    externalData.sumrStakeDelegate.delegatedTo === ADDRESS_ZERO) ||
-                  userWalletAddress?.toLowerCase() !== resolvedWalletAddress.toLowerCase()
+                  isBase &&
+                  (isChangeDelegateLoading ||
+                    isRemoveDelegateLoading ||
+                    !state.delegatee ||
+                    (state.delegatee === ADDRESS_ZERO &&
+                      externalData.sumrStakeDelegate.delegatedTo === ADDRESS_ZERO) ||
+                    userWalletAddress?.toLowerCase() !== resolvedWalletAddress.toLowerCase())
                 }
               >
                 <WithArrow
@@ -551,7 +552,6 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
             </div>
             {hasDelegatee && (
               <Button
-                variant="textMedium"
                 disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
                 onClick={() => {
                   dispatch({ type: 'update-step', payload: ClaimDelegateSteps.STAKE })

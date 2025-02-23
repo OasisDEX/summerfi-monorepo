@@ -525,17 +525,17 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
                 style={{ paddingRight: 'var(--general-space-32)' }}
                 onClick={resolvedButtonAction}
                 disabled={
-                  !isBase ||
-                  isLoading ||
-                  userWalletAddress?.toLowerCase() !== resolvedWalletAddress.toLowerCase() ||
-                  (state.stakeType === ClaimDelegateStakeType.REMOVE_STAKE &&
-                    amountParsedUnstake.isZero()) ||
-                  (state.stakeType === ClaimDelegateStakeType.ADD_STAKE &&
-                    amountParsedStake.isZero()) ||
-                  (state.stakeType === ClaimDelegateStakeType.REMOVE_STAKE &&
-                    amountParsedUnstake.toNumber() > Number(stakedAmount)) ||
-                  (state.stakeType === ClaimDelegateStakeType.ADD_STAKE &&
-                    amountParsedStake.toNumber() > Number(sumrBalance))
+                  isBase &&
+                  (isLoading ||
+                    userWalletAddress?.toLowerCase() !== resolvedWalletAddress.toLowerCase() ||
+                    (state.stakeType === ClaimDelegateStakeType.REMOVE_STAKE &&
+                      amountParsedUnstake.isZero()) ||
+                    (state.stakeType === ClaimDelegateStakeType.ADD_STAKE &&
+                      amountParsedStake.isZero()) ||
+                    (state.stakeType === ClaimDelegateStakeType.REMOVE_STAKE &&
+                      amountParsedUnstake.toNumber() > Number(stakedAmount)) ||
+                    (state.stakeType === ClaimDelegateStakeType.ADD_STAKE &&
+                      amountParsedStake.toNumber() > Number(sumrBalance)))
                 }
               >
                 <WithArrow
