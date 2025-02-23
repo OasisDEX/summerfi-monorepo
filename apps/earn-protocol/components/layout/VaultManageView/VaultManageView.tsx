@@ -1,6 +1,8 @@
 'use client'
 
 import {
+  type ArksHistoricalChartData,
+  type PerformanceChartData,
   type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
@@ -20,6 +22,10 @@ export const VaultManageView = ({
   userActivity,
   topDepositors,
   viewWalletAddress,
+  performanceChartData,
+  arksHistoricalChartData,
+  arksInterestRates,
+  vaultApy,
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
@@ -27,16 +33,24 @@ export const VaultManageView = ({
   userActivity: UsersActivity
   topDepositors: SDKUsersActivityType
   viewWalletAddress: string
+  performanceChartData: PerformanceChartData
+  arksHistoricalChartData: ArksHistoricalChartData
+  arksInterestRates?: { [key: string]: number }
+  vaultApy?: number
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
       <VaultManageViewComponent
         vault={vault}
+        vaultApy={vaultApy}
         vaults={vaults}
         position={position}
         userActivity={userActivity}
         topDepositors={topDepositors}
         viewWalletAddress={viewWalletAddress}
+        performanceChartData={performanceChartData}
+        arksHistoricalChartData={arksHistoricalChartData}
+        arksInterestRates={arksInterestRates}
       />
     </SDKContextProvider>
   )

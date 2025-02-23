@@ -9,13 +9,17 @@ import { isAddress } from 'viem'
 
 import { getMedianDefiYield } from '@/app/server-handlers/defillama/get-median-defi-yield'
 import { getInterestRates } from '@/app/server-handlers/interest-rates'
-import { getUserActivity } from '@/app/server-handlers/sdk/get-user-activity'
+import { getUsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
+import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
+import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { VaultOpenView } from '@/components/layout/VaultOpenView/VaultOpenView'
+import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
+import { mapArkLatestInterestRates } from '@/helpers/map-ark-interest-rates'
 import {
-  decorateCustomVaultFields,
+  decorateVaultsWithConfig,
   getVaultIdByVaultCustomName,
 } from '@/helpers/vault-custom-value-helpers'
 
@@ -27,8 +31,8 @@ type EarnVaultOpenPageProps = {
 }
 
 const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
-  const { network, vaultId } = await params
-  const parsedNetwork = humanNetworktoSDKNetwork(network)
+  const { network: paramsNetwork, vaultId } = await params
+  const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
   const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
 
@@ -36,33 +40,49 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     ? vaultId
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
-  const [vault, { vaults }, { userActivity, topDepositors }, medianDefiYield] = await Promise.all([
+  const [vault, { vaults }, { usersActivity, topDepositors }, medianDefiYield] = await Promise.all([
     getVaultDetails({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),
     getVaultsList(),
-    getUserActivity({ vaultAddress: parsedVaultId, network: parsedNetwork }),
+    getUsersActivity({
+      filterTestingWallets: true,
+      vaultId,
+    }),
     getMedianDefiYield(),
   ])
 
-  const interestRates = vault?.arks
-    ? await getInterestRates({
-        network: parsedNetwork,
-        arksList: vault.arks,
-      })
-    : {}
-
-  const [vaultDecorated] = vault
-    ? decorateCustomVaultFields({
+  const [vaultWithConfig] = vault
+    ? decorateVaultsWithConfig({
         vaults: [vault],
         systemConfig,
-        decorators: {
-          arkInterestRatesMap: interestRates,
-        },
       })
     : []
-  const vaultsDecorated = decorateCustomVaultFields({ vaults, systemConfig })
+
+  const [arkInterestRatesMap, vaultInterestRates, vaultApyRaw] = await Promise.all([
+    vault?.arks
+      ? getInterestRates({
+          network: parsedNetwork,
+          arksList: vault.arks,
+        })
+      : Promise.resolve({}),
+    getVaultsHistoricalApy({
+      // just the vault displayed
+      fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
+        fleetAddress: id,
+        chainId: subgraphNetworkToId(network),
+      })),
+    }),
+    getVaultsApy({
+      fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
+        fleetAddress: id,
+        chainId: subgraphNetworkToId(network),
+      })),
+    }),
+  ])
+
+  const allVaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })
 
   if (!vault) {
     return (
@@ -72,13 +92,25 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     )
   }
 
+  const arksHistoricalChartData = getArkHistoricalChartData({
+    vault: vaultWithConfig,
+    arkInterestRatesMap,
+    vaultInterestRates,
+  })
+
+  const arksInterestRates = mapArkLatestInterestRates(arkInterestRatesMap)
+  const vaultApy = vaultApyRaw[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
+
   return (
     <VaultOpenView
-      vault={vaultDecorated}
-      vaults={vaultsDecorated}
-      userActivity={userActivity}
+      vault={vaultWithConfig}
+      vaults={allVaultsWithConfig}
+      userActivity={usersActivity}
       topDepositors={topDepositors}
       medianDefiYield={medianDefiYield}
+      arksHistoricalChartData={arksHistoricalChartData}
+      arksInterestRates={arksInterestRates}
+      vaultApy={vaultApy}
     />
   )
 }

@@ -14,6 +14,7 @@ import {
   getDeployedRewardsRedeemerAddress,
   isTestDeployment,
   setTestDeployment,
+  IArmadaManagerBridge,
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
@@ -45,10 +46,11 @@ import { parseGetUserPositionQuery } from './extensions/parseGetUserPositionQuer
 import { parseGetUserPositionsQuery } from './extensions/parseGetUserPositionsQuery'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import type { ISwapManager } from '@summerfi/swap-common'
-import BigNumber from 'bignumber.js'
 import type { IOracleManager } from '@summerfi/oracle-common'
 import { ArmadaManagerClaims } from './ArmadaManagerClaims'
 import { ArmadaManagerGovernance } from './ArmadaManagerGovernance'
+import { ArmadaManagerBridge } from './ArmadaManagerBridge'
+import { BigNumber } from 'bignumber.js'
 
 /**
  * @name ArmadaManager
@@ -57,6 +59,7 @@ import { ArmadaManagerGovernance } from './ArmadaManagerGovernance'
 export class ArmadaManager implements IArmadaManager {
   claims: IArmadaManagerClaims
   governance: IArmadaManagerGovernance
+  bridge: IArmadaManagerBridge
 
   private _supportedChains: ChainInfo[]
   private _rewardsRedeemerAddress: IAddress
@@ -125,6 +128,14 @@ export class ArmadaManager implements IArmadaManager {
       hubChainInfo: this._hubChainInfo,
       getSummerToken: this.getSummerToken.bind(this),
     })
+
+    this.bridge = new ArmadaManagerBridge({
+      supportedChains: this._supportedChains,
+      blockchainClientProvider: this._blockchainClientProvider,
+      configProvider: this._configProvider,
+      tokensManager: this._tokensManager,
+      bridgeContractAddress: this.getSummerToken({ chainInfo: this._hubChainInfo }).address,
+    })
   }
 
   getSummerToken(
@@ -167,7 +178,10 @@ export class ArmadaManager implements IArmadaManager {
 
   /** @see IArmadaManager.getUsersActivityRaw */
   async getUsersActivityRaw(params: Parameters<IArmadaManager['getUsersActivityRaw']>[0]) {
-    return this._subgraphManager.getUsersActivity({ chainId: params.chainInfo.chainId })
+    return this._subgraphManager.getUsersActivity({
+      chainId: params.chainInfo.chainId,
+      where: params.where,
+    })
   }
 
   /** @see IArmadaManager.getUserActivityRaw */
@@ -175,6 +189,7 @@ export class ArmadaManager implements IArmadaManager {
     return this._subgraphManager.getUserActivity({
       chainId: params.vaultId.chainInfo.chainId,
       vaultId: params.vaultId.fleetAddress.value,
+      accountAddress: params.accountAddress,
     })
   }
 

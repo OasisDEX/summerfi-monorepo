@@ -17,6 +17,7 @@ import masterPageStyles from './MasterPage.module.scss'
 
 interface MasterPageProps {
   skipNavigation?: boolean
+  noNavMargin?: boolean
   analyticsCookie: SavedAnalyticsCookiesSettings | null
 }
 

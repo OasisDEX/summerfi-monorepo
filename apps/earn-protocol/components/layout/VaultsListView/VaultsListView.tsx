@@ -27,11 +27,13 @@ import {
 import {
   formatCryptoBalance,
   sdkNetworkToHumanNetwork,
+  subgraphNetworkToId,
   subgraphNetworkToSDKId,
   zero,
 } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
 
+import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
@@ -44,6 +46,7 @@ import { useUserWallet } from '@/hooks/use-user-wallet'
 type VaultsListViewProps = {
   vaultsList: SDKVaultsListType
   selectedNetwork?: SDKNetwork | 'all-networks'
+  vaultsApyByNetworkMap: GetVaultsApyResponse
 }
 
 const allNetworksOption = {
@@ -56,9 +59,14 @@ const softRouterPush = (url: string) => {
   window.history.pushState(null, '', url)
 }
 
-export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewProps) => {
+export const VaultsListView = ({
+  selectedNetwork,
+  vaultsList,
+  vaultsApyByNetworkMap,
+}: VaultsListViewProps) => {
   const { deviceType } = useDeviceType()
-  const { isMobile } = useMobileCheck(deviceType)
+  const { isMobile, isTablet } = useMobileCheck(deviceType)
+
   const [localVaultNetwork, setLocalVaultNetwork] =
     useState<VaultsListViewProps['selectedNetwork']>(selectedNetwork)
   const {
@@ -72,9 +80,12 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
         : vaultsList
 
     return properVaultsList.sort((a, b) => {
-      return Number(a.calculatedApr) > Number(b.calculatedApr) ? -1 : 1
+      const aApy = vaultsApyByNetworkMap[`${a.id}-${subgraphNetworkToId(a.protocol.network)}`]
+      const bApy = vaultsApyByNetworkMap[`${b.id}-${subgraphNetworkToId(b.protocol.network)}`]
+
+      return Number(aApy) > Number(bApy) ? -1 : 1
     })
-  }, [localVaultNetwork, vaultsList])
+  }, [localVaultNetwork, vaultsList, vaultsApyByNetworkMap])
   const sdk = useAppSDK()
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
@@ -110,24 +121,24 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
     [vaultsList, selectedVaultId],
   )
 
-  const vaultData = selectedVaultData ?? networkFilteredVaults[0]
+  const resolvedVaultData = selectedVaultData ?? networkFilteredVaults[0]
   const { userWalletAddress } = useUserWallet()
 
   const { position: positionExists, isLoading } = usePosition({
-    chainId: subgraphNetworkToSDKId(vaultData.protocol.network),
-    vaultId: vaultData.id,
+    chainId: subgraphNetworkToSDKId(resolvedVaultData.protocol.network),
+    vaultId: resolvedVaultData.id,
     onlyActive: true,
   })
 
   const { handleTokenSelectionChange, selectedTokenOption, tokenOptions } = useTokenSelector({
-    vault: vaultData,
-    chainId: subgraphNetworkToSDKId(vaultData.protocol.network),
+    vault: resolvedVaultData,
+    chainId: subgraphNetworkToSDKId(resolvedVaultData.protocol.network),
   })
 
   const tokenBalances = useTokenBalances({
     tokenSymbol: selectedTokenOption.value,
-    network: vaultData.protocol.network,
-    vaultTokenSymbol: vaultData.inputToken.symbol,
+    network: resolvedVaultData.protocol.network,
+    vaultTokenSymbol: resolvedVaultData.inputToken.symbol,
   })
 
   const handleChangeNetwork = (selected: DropdownRawOption) => {
@@ -230,18 +241,18 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
     onBlur,
     onFocus,
   } = useAmount({
-    tokenDecimals: vaultData.inputToken.decimals,
-    tokenPrice: vaultData.inputTokenPriceUSD,
+    tokenDecimals: resolvedVaultData.inputToken.decimals,
+    tokenPrice: resolvedVaultData.inputTokenPriceUSD,
     selectedToken:
       tokenBalances.token ??
       ({
-        decimals: vaultData.inputToken.decimals,
+        decimals: resolvedVaultData.inputToken.decimals,
       } as IToken),
   })
 
   const { amountDisplayUSDWithSwap, rawToTokenAmount } = useAmountWithSwap({
-    vault: vaultData,
-    vaultChainId: subgraphNetworkToSDKId(vaultData.protocol.network),
+    vault: resolvedVaultData,
+    vaultChainId: subgraphNetworkToSDKId(resolvedVaultData.protocol.network),
     amountDisplay,
     amountDisplayUSD,
     transactionType: TransactionAction.DEPOSIT,
@@ -267,7 +278,7 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
           columns={isMobile ? 1 : 3}
           rows={isMobile ? 3 : 1}
           style={{ justifyItems: 'stretch' }}
-          gap={isMobile ? 16 : 170}
+          gap={isMobile ? 16 : isTablet ? 64 : 170}
         >
           <DataBlock
             title="Protocol TVL"
@@ -312,13 +323,16 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
               onClick={handleChangeVault}
               withTokenBonus={sumrNetApyConfig.withSumr}
               sumrPrice={estimatedSumrPrice}
+              apy={
+                vaultsApyByNetworkMap[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
+              }
             />
           ))}
         </>
       }
       rightContent={
         <VaultSimulationForm
-          vaultData={vaultData}
+          vaultData={resolvedVaultData}
           isMobile={isMobile}
           tokenBalance={tokenBalances.tokenBalance}
           isTokenBalanceLoading={tokenBalances.tokenBalanceLoading}

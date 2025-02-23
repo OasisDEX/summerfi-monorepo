@@ -140,6 +140,9 @@ importers:
       '@account-kit/signer':
         specifier: ^4.11.0
         version: 4.11.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(react@19.0.0)(typescript@5.6.2)(viem@2.21.55)
+      '@layerzerolabs/scan-client':
+        specifier: ^0.0.8
+        version: 0.0.8(axios@1.7.7)
       '@loadable/component':
         specifier: ^5.16.4
         version: 5.16.4(react@19.0.0)
@@ -1314,6 +1317,9 @@ importers:
 
   packages/app-utils:
     dependencies:
+      '@account-kit/infra':
+        specifier: ^4.11.0
+        version: 4.11.0(typescript@5.6.2)(viem@2.21.55)
       bignumber.js:
         specifier: ^9.1.2
         version: 9.1.2
@@ -2208,6 +2214,9 @@ importers:
 
   sdk/armada-protocol-service:
     dependencies:
+      '@layerzerolabs/lz-v2-utilities':
+        specifier: ^3.0.67
+        version: 3.0.67
       '@summerfi/allowance-manager-common':
         specifier: workspace:^
         version: link:../allowance-manager-common
@@ -2790,6 +2799,9 @@ importers:
       '@summerfi/sdk-server':
         specifier: workspace:*
         version: link:../sdk-server
+      '@summerfi/subgraph-manager-common':
+        specifier: workspace:*
+        version: link:../subgraph-manager-common
       '@trpc/client':
         specifier: 11.0.0-rc.502
         version: 11.0.0-rc.502(@trpc/server@11.0.0-rc.502)
@@ -2859,8 +2871,8 @@ importers:
         specifier: ^1.13.3
         version: 1.13.3
       viem:
-        specifier: 2.9.19
-        version: 2.9.19(typescript@5.6.2)(zod@3.22.4)
+        specifier: 2.21.55
+        version: 2.21.55(typescript@5.6.2)(zod@3.22.4)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -10582,7 +10594,7 @@ packages:
       chalk: 4.1.2
       ci-info: 3.9.0
       connect: 3.7.0
-      debug: 4.4.0
+      debug: 4.3.4(supports-color@8.1.1)
       env-editor: 0.4.2
       fast-glob: 3.3.2
       find-yarn-workspace-root: 2.0.0
@@ -12738,6 +12750,27 @@ packages:
   /@kamilkisiela/fast-url-parser@1.1.4:
     resolution: {integrity: sha512-gbkePEBupNydxCelHCESvFSFM8XPh1Zs/OAVRW/rKpEqPAl5PbOM90Si8mv9bvnR53uPD2s/FiRxdvSejpRJew==}
     dev: true
+
+  /@layerzerolabs/lz-v2-utilities@3.0.67:
+    resolution: {integrity: sha512-Nl1wsbgnj/SeHiR+nKf86DlwDd6Q2biVCpzIuXuVlLXB9PgJDOQXHKWU1sFjSrPAydI4pJFh6dGItRN3+QM69A==}
+    dependencies:
+      '@ethersproject/abi': 5.7.0
+      '@ethersproject/address': 5.7.0
+      '@ethersproject/bignumber': 5.7.0
+      '@ethersproject/bytes': 5.7.0
+      '@ethersproject/keccak256': 5.7.0
+      '@ethersproject/solidity': 5.7.0
+      bs58: 5.0.0
+      tiny-invariant: 1.3.3
+    dev: false
+
+  /@layerzerolabs/scan-client@0.0.8(axios@1.7.7):
+    resolution: {integrity: sha512-V9vvt9GW0+AHoWXfOSNmZ9WUa28fVBmC93J/f9RLeDMEy5VR8srW2Du5pf1mMAg6ncEL0kQ1xkVCu+X6ARFBtQ==}
+    peerDependencies:
+      axios: '*'
+    dependencies:
+      axios: 1.7.7
+    dev: false
 
   /@ledgerhq/connect-kit@1.1.12(rollup@3.29.4):
     resolution: {integrity: sha512-dmnG2BGBckzaUaqXmkoDxy1+Yvk/simH8NNaZOQaOFk2EfFNsaw5Q3EKrw9tzqjSXmg6t6eGUNPxE0ji9uZprw==}
@@ -17057,8 +17090,8 @@ packages:
     resolution: {integrity: sha512-USa6OS1jbh8zOapRJ/CBZImZ8Xb7AJjROZl5adql9TpOoBN9BUzyyouS5oPuZHft7S7eB8uJPuXWYjMi6BHgOw==}
     dependencies:
       '@babel/runtime': 7.24.7
-      '@noble/curves': 1.4.0
-      '@noble/hashes': 1.4.0
+      '@noble/curves': 1.7.0
+      '@noble/hashes': 1.6.1
       '@solana/buffer-layout': 4.0.1
       agentkeepalive: 4.5.0
       bigint-buffer: 1.1.5
@@ -37809,29 +37842,6 @@ packages:
       typescript: 5.6.2
       webauthn-p256: 0.0.10
       ws: 8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-      - zod
-    dev: false
-
-  /viem@2.9.19(typescript@5.6.2)(zod@3.22.4):
-    resolution: {integrity: sha512-1txsVoTz9+XGQpuN62wcDXasNtalW52UR41KnzwWTwHtV2cDcGuVuS/j/hcuQdZ7pU8X8jtq2IrwwR4jjKpy9Q==}
-    peerDependencies:
-      typescript: '>=5.0.4'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
-      '@adraffy/ens-normalize': 1.10.0
-      '@noble/curves': 1.2.0
-      '@noble/hashes': 1.3.2
-      '@scure/bip32': 1.3.2
-      '@scure/bip39': 1.2.1
-      abitype: 1.0.0(typescript@5.6.2)(zod@3.22.4)
-      isows: 1.0.3(ws@8.13.0)
-      typescript: 5.6.2
-      ws: 8.13.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate

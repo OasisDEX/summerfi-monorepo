@@ -80,6 +80,7 @@ export default defineConfig(({ mode }) => {
           'next',
           'next/navigation',
           'jsonwebtoken',
+          '@account-kit/infra',
         ],
         output: {
           assetFileNames: 'assets/[name][extname]',

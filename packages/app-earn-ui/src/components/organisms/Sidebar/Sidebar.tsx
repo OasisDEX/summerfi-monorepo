@@ -24,14 +24,16 @@ export interface SidebarProps {
     label: string
     action?: () => void
     url?: string
+    target?: string
     disabled?: boolean
     loading?: boolean
     hidden?: boolean
   }
   secondaryButton?: {
-    label: string
+    label: string | ReactNode
     action?: () => void
     url?: string
+    target?: string
     disabled?: boolean
     loading?: boolean
     hidden?: boolean
@@ -55,6 +57,7 @@ export interface SidebarProps {
   customHeaderStyles?: CSSProperties
   handleIsDrawerOpen?: (flag: boolean) => void
   hiddenHeaderChevron?: boolean
+  centered?: boolean
 }
 
 export const Sidebar: FC<SidebarProps> = ({
@@ -65,24 +68,37 @@ export const Sidebar: FC<SidebarProps> = ({
   secondaryButton,
   footnote,
   error,
-  onTitleTabChange,
   asDesktopOnly = false,
-  goBackAction,
   isMobile,
   drawerOptions = { slideFrom: 'bottom' },
   customHeader,
   customHeaderStyles,
-  handleIsDrawerOpen,
   hiddenHeaderChevron = false,
+  centered,
+  onTitleTabChange,
+  goBackAction,
+  handleIsDrawerOpen,
 }) => {
   const [isOpen, setIsOpen] = useState(false)
 
   const isOpenResolved = drawerOptions.forceMobileOpen ?? isOpen
 
-  const labelElement = primaryButton.loading ? <LoadingSpinner size={28} /> : primaryButton.label
+  const labelElement = primaryButton.loading ? (
+    <>
+      <LoadingSpinner size={28} />
+      <span style={{ color: 'var(--color-text-primary)' }}>{primaryButton.label}</span>
+    </>
+  ) : (
+    primaryButton.label
+  )
 
   const sidebarWrapped = (
-    <Card className={sidebarClassNames.sidebarWrapper} variant="cardSecondary">
+    <Card
+      className={clsx(sidebarClassNames.sidebarWrapper, {
+        [sidebarClassNames.centered]: centered,
+      })}
+      variant="cardSecondary"
+    >
       <div
         className={clsx(sidebarClassNames.sidebarHeaderWrapper, {
           [sidebarClassNames.centerTitle]: !titleTabs && !!goBackAction,
@@ -131,7 +147,7 @@ export const Sidebar: FC<SidebarProps> = ({
                   </Text>
                 ))
               ) : (
-                <Text as="h5" variant="h5" className={sidebarClassNames.sidebarTitle}>
+                <Text as="h5" variant="h5semi" className={sidebarClassNames.sidebarTitle}>
                   {title}
                 </Text>
               )}
@@ -155,6 +171,27 @@ export const Sidebar: FC<SidebarProps> = ({
 
       <div className={sidebarClassNames.sidebarHeaderSpacer} />
       <div className={sidebarClassNames.sidebarContent}>{content}</div>
+      <div
+        style={{
+          width: '100%',
+          marginTop: error ?? footnote ? 'var(--general-space-20)' : undefined,
+        }}
+      >
+        <AnimateHeight show={!!error} id="sidebar-error">
+          <Box className={sidebarClassNames.sidebarErrorWrapper}>
+            {typeof error === 'string' ? (
+              <div className={sidebarClassNames.sidebarErrorContent}>
+                <Icon iconName="warning" color="var(--earn-protocol-primary)" size={20} />
+                <Text variant="p3" style={{ marginLeft: 'var(--general-space-12)' }}>
+                  {error}
+                </Text>
+              </div>
+            ) : (
+              error
+            )}
+          </Box>
+        </AnimateHeight>
+      </div>
       <div className={sidebarClassNames.sidebarCta}>
         {(primaryButton.action ?? primaryButton.loading) &&
           !primaryButton.url &&
@@ -168,7 +205,12 @@ export const Sidebar: FC<SidebarProps> = ({
             </Button>
           )}
         {primaryButton.url && (
-          <Link href={primaryButton.url} onClick={primaryButton.action} prefetch>
+          <Link
+            href={primaryButton.url}
+            target={primaryButton.target}
+            onClick={primaryButton.action}
+            prefetch
+          >
             <Button variant="primaryLarge" disabled={primaryButton.disabled}>
               {labelElement}
             </Button>
@@ -184,30 +226,19 @@ export const Sidebar: FC<SidebarProps> = ({
           </Button>
         )}
         {secondaryButton?.url && (
-          <Link href={secondaryButton.url} onClick={secondaryButton.action} prefetch>
+          <Link
+            href={secondaryButton.url}
+            target={secondaryButton.target}
+            onClick={secondaryButton.action}
+            prefetch
+          >
             <Button variant="secondaryLarge" disabled={secondaryButton.disabled}>
               {secondaryButton.label}
             </Button>
           </Link>
         )}
       </div>
-      <div
-        style={{
-          width: '100%',
-        }}
-      >
-        <AnimateHeight show={!!error} id="sidebar-error">
-          <Box className={sidebarClassNames.sidebarErrorWrapper}>
-            {typeof error === 'string' ? (
-              <Text variant="p4" style={{ textAlign: 'center' }}>
-                {error}
-              </Text>
-            ) : (
-              error
-            )}
-          </Box>
-        </AnimateHeight>
-      </div>
+
       {footnote && <div className={sidebarClassNames.sidebarFootnoteWrapper}>{footnote}</div>}
     </Card>
   )

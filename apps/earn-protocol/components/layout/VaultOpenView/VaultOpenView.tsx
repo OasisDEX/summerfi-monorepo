@@ -1,6 +1,7 @@
 'use client'
 
 import {
+  type ArksHistoricalChartData,
   type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
@@ -18,12 +19,18 @@ export const VaultOpenView = ({
   userActivity,
   topDepositors,
   medianDefiYield,
+  arksHistoricalChartData,
+  arksInterestRates,
+  vaultApy,
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
   userActivity: UsersActivity
   topDepositors: SDKUsersActivityType
   medianDefiYield?: number
+  arksHistoricalChartData: ArksHistoricalChartData
+  arksInterestRates?: { [key: string]: number }
+  vaultApy?: number
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -33,6 +40,9 @@ export const VaultOpenView = ({
         userActivity={userActivity}
         topDepositors={topDepositors}
         medianDefiYield={medianDefiYield}
+        arksHistoricalChartData={arksHistoricalChartData}
+        arksInterestRates={arksInterestRates}
+        vaultApy={vaultApy}
       />
     </SDKContextProvider>
   )

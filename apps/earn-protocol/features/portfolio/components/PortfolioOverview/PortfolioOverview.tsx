@@ -4,19 +4,25 @@ import {
   DataBlock,
   getDisplayToken,
   getPositionValues,
+  getUniqueVaultId,
   PortfolioPosition,
   SUMR_CAP,
   Text,
   useLocalConfig,
 } from '@summerfi/app-earn-ui'
-import { type SDKVaultsListType, type TokenSymbolsList } from '@summerfi/app-types'
-import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
+import {
+  type HistoryChartData,
+  type SDKVaultsListType,
+  type TokenSymbolsList,
+} from '@summerfi/app-types'
+import { formatCryptoBalance, formatFiatBalance, subgraphNetworkToId } from '@summerfi/app-utils'
 import Link from 'next/link'
 
-import { type PortfolioPositionsList } from '@/app/server-handlers/portfolio/portfolio-positions-handler'
+import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { PositionHistoricalChart } from '@/components/organisms/Charts/PositionHistoricalChart'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
+import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 import { calculateOverallSumr } from '@/helpers/calculate-overall-sumr'
 
 import portfolioOverviewStyles from './PortfolioOverview.module.scss'
@@ -76,14 +82,20 @@ const getDatablocks = ({
 
 type PortfolioOverviewProps = {
   vaultsList: SDKVaultsListType
-  positions: PortfolioPositionsList[]
+  positions: PositionWithVault[]
   rewardsData: ClaimDelegateExternalData
+  positionsHistoricalChartMap: {
+    [key: string]: HistoryChartData
+  }
+  vaultsApyByNetworkMap: GetVaultsApyResponse
 }
 
 export const PortfolioOverview = ({
   vaultsList,
   positions,
   rewardsData,
+  positionsHistoricalChartMap,
+  vaultsApyByNetworkMap,
 }: PortfolioOverviewProps) => {
   const {
     state: { sumrNetApyConfig },
@@ -91,12 +103,7 @@ export const PortfolioOverview = ({
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   const totalSummerPortfolioUSD = positions.reduce(
-    (acc, position) =>
-      acc +
-      getPositionValues({
-        positionData: position.positionData,
-        vaultData: position.vaultData,
-      }).netValueUSD.toNumber(),
+    (acc, position) => acc + getPositionValues(position).netValueUSD.toNumber(),
 
     0,
   )
@@ -135,16 +142,21 @@ export const PortfolioOverview = ({
           {positions.length > 0 ? (
             positions.map((position) => (
               <PortfolioPosition
-                key={`Position_${position.positionData.id.id}_${position.vaultData.protocol.network}`}
-                position={position}
+                key={`Position_${position.position.id.id}_${position.vault.protocol.network}`}
+                portfolioPosition={position}
                 positionGraph={
                   <PositionHistoricalChart
-                    chartData={position.vaultData.customFields?.historyChartData}
+                    chartData={positionsHistoricalChartMap[getUniqueVaultId(position.vault)]}
                     position={position}
                     tokenSymbol={
-                      getDisplayToken(position.vaultData.inputToken.symbol) as TokenSymbolsList
+                      getDisplayToken(position.vault.inputToken.symbol) as TokenSymbolsList
                     }
                   />
+                }
+                apy={
+                  vaultsApyByNetworkMap[
+                    `${position.vault.id}-${subgraphNetworkToId(position.vault.protocol.network)}`
+                  ]
                 }
                 sumrPrice={estimatedSumrPrice}
               />
@@ -166,6 +178,7 @@ export const PortfolioOverview = ({
           )}
           <PortfolioVaultsCarousel
             vaultsList={vaultsList}
+            vaultsApyByNetworkMap={vaultsApyByNetworkMap}
             style={{ marginTop: 'var(--general-space-24)' }}
           />
         </Card>

@@ -6,6 +6,7 @@ import clsx from 'clsx'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Input } from '@/components/atoms/Input/Input.tsx'
+import { Text } from '@/components/atoms/Text/Text'
 import {
   MobileDrawer,
   MobileDrawerDefaultWrapper,
@@ -97,9 +98,11 @@ export const Dropdown: FC<DropdownProps> = ({
         className={`${dropdownStyles.dropdownOption} ${option.value === selectedOption.value ? dropdownStyles.selected : ''}`}
         onClick={() => handleSelectOption(option)}
       >
-        {option.content}
+        <Text variant="p3semi">{option.content}</Text>
       </div>
     ))
+
+  const hasMultipleOptions = optionsMapped.length > 1
 
   return (
     <div className={dropdownStyles.dropdown} ref={dropdownRef}>
@@ -107,24 +110,27 @@ export const Dropdown: FC<DropdownProps> = ({
         className={clsx(dropdownStyles.dropdownSelected, {
           [dropdownStyles.disabled]: isDisabled,
         })}
-        onClick={toggleDropdown}
+        onClick={hasMultipleOptions ? toggleDropdown : undefined}
         style={
           asPill
             ? {
-                padding: '5px 8px 5px 5px',
+                padding: '8px 16px 8px 10px',
                 backgroundColor: 'var(--earn-protocol-neutral-80)',
                 borderRadius: 'var(--general-radius-24)',
+                fontWeight: '600',
+                cursor: hasMultipleOptions ? 'pointer' : 'default',
                 ...dropdownChildrenStyle,
               }
             : {}
         }
       >
         {trigger ? trigger({ isOpen, isDisabled }) : children}
-        {!trigger && (
+        {!trigger && hasMultipleOptions && (
           <Icon
             iconName={isOpen ? 'chevron_up' : 'chevron_down'}
             size={11}
             color="rgba(119, 117, 118, 1)"
+            style={{ marginLeft: 'var(--spacing-space-3x-small)' }}
           />
         )}
       </div>

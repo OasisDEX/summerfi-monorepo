@@ -21,6 +21,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import { useTermsOfService } from '@summerfi/app-tos'
 import {
+  type ArksHistoricalChartData,
   type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
@@ -67,6 +68,9 @@ type VaultOpenViewComponentProps = {
   userActivity: UsersActivity
   topDepositors: SDKUsersActivityType
   medianDefiYield?: number
+  arksHistoricalChartData: ArksHistoricalChartData
+  arksInterestRates?: { [key: string]: number }
+  vaultApy?: number
 }
 
 export const VaultOpenViewComponent = ({
@@ -75,6 +79,9 @@ export const VaultOpenViewComponent = ({
   userActivity,
   topDepositors,
   medianDefiYield,
+  arksHistoricalChartData,
+  arksInterestRates,
+  vaultApy,
 }: VaultOpenViewComponentProps) => {
   const { getStorageOnce } = useLocalStorageOnce<string>({
     key: `${vault.id}-amount`,
@@ -198,7 +205,7 @@ export const VaultOpenViewComponent = ({
     isEarnApp: true,
   })
 
-  const { signTosMessage } = useTermsOfServiceSigner()
+  const signTosMessage = useTermsOfServiceSigner()
 
   const tosState = useTermsOfService({
     publicClient,
@@ -214,7 +221,7 @@ export const VaultOpenViewComponent = ({
 
   const { tosSidebarProps } = useTermsOfServiceSidebar({ tosState, handleGoBack: backToInit })
 
-  const summerVaultName = vault.customFields?.name ?? 'Summer Vault'
+  const summerVaultName = vault.customFields?.name ?? `Summer ${vault.inputToken.symbol} Vault`
 
   useEffect(() => {
     const savedAmount = getStorageOnce()
@@ -349,6 +356,7 @@ export const VaultOpenViewComponent = ({
       displaySimulationGraph={displaySimulationGraph}
       sumrPrice={estimatedSumrPrice}
       onRefresh={revalidatePositionData}
+      vaultApy={vaultApy}
       simulationGraph={
         <VaultSimulationGraph
           vault={vault}
@@ -369,7 +377,7 @@ export const VaultOpenViewComponent = ({
             defaultExpanded
           >
             <ArkHistoricalYieldChart
-              chartData={vault.customFields?.arksHistoricalChartData}
+              chartData={arksHistoricalChartData}
               summerVaultName={summerVaultName}
             />
           </Expander>
@@ -381,7 +389,7 @@ export const VaultOpenViewComponent = ({
             }
             defaultExpanded
           >
-            <VaultExposure vault={vault} />
+            <VaultExposure vault={vault} arksInterestRates={arksInterestRates} />
           </Expander>
           <Expander
             title={

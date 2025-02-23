@@ -9,7 +9,10 @@ import {
   type GetUsersActivityQuery,
   type GetUserActivityQuery,
 } from '@summerfi/armada-protocol-common'
+import type { Position_Filter } from '@summerfi/subgraph-manager-common'
 import {
+  BridgeTransactionInfo,
+  IChainInfo,
   ITokenAmount,
   IUser,
   TransactionInfo,
@@ -79,7 +82,10 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns GerUsersActivityQuery
    */
-  getUsersActivityRaw(params: { chainInfo: ChainInfo }): Promise<GetUsersActivityQuery>
+  getUsersActivityRaw(params: {
+    chainInfo: ChainInfo
+    where?: Position_Filter
+  }): Promise<GetUsersActivityQuery>
 
   /**
    * @name getUserActivityRaw
@@ -89,7 +95,10 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns GerUserActivityQuery
    */
-  getUserActivityRaw(params: { vaultId: IArmadaVaultId }): Promise<GetUserActivityQuery>
+  getUserActivityRaw(params: {
+    vaultId: IArmadaVaultId
+    accountAddress: string
+  }): Promise<GetUserActivityQuery>
 
   /**
    * @method getVaultInfo
@@ -240,6 +249,26 @@ export interface IArmadaManagerUsersClient {
     total: bigint
     perChain: Record<number, bigint>
   }>
+
+  /**
+   * @method getBridgeTx
+   * @description Returns the bridge transaction needed to bridge tokens between chains
+   *
+   * @param user The user
+   * @param recipient The recipient address
+   * @param sourceChain The source chain
+   * @param targetChain The target chain
+   * @param amount The amount to bridge
+   *
+   * @returns The bridge transaction needed to bridge the tokens
+   */
+  getBridgeTx(params: {
+    user: IUser
+    recipient: IAddress
+    sourceChain: IChainInfo
+    targetChain: IChainInfo
+    amount: ITokenAmount
+  }): Promise<BridgeTransactionInfo[]>
 
   /**
    * @method getAggregatedClaimsForChainTX

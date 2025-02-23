@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react'
-import { type ExtendedTransactionInfo, type HexData, TransactionType } from '@summerfi/sdk-common'
+import {
+  type BridgeTransactionInfo,
+  type ExtendedTransactionInfo,
+  type HexData,
+  TransactionType,
+} from '@summerfi/sdk-common'
 import { formatEther } from 'viem'
 
 import { useAppSDK } from './use-app-sdk'
@@ -7,24 +12,27 @@ import { useNetworkAlignedClient } from './use-network-aligned-client'
 
 type UseGasEstimationProps = {
   chainId: number
-  transaction: ExtendedTransactionInfo | undefined
+  transaction: ExtendedTransactionInfo | BridgeTransactionInfo | undefined
   walletAddress: HexData | undefined
+  overrideNetwork?: string
 }
 
 export const useGasEstimation = ({
   chainId,
   transaction,
   walletAddress,
+  overrideNetwork,
 }: UseGasEstimationProps) => {
-  const { publicClient } = useNetworkAlignedClient({ chainId })
+  const { publicClient } = useNetworkAlignedClient({ chainId, overrideNetwork })
   const { getSwapQuote, getTokenBySymbol } = useAppSDK()
 
   const [loading, setLoading] = useState<boolean>(false)
   const [transactionFee, setTransactionFee] = useState<string | undefined>(undefined)
+  const [rawTransactionFee, setRawTransactionFee] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     const fetchGasEstimation = async (
-      _transaction: ExtendedTransactionInfo,
+      _transaction: ExtendedTransactionInfo | BridgeTransactionInfo,
       _walletAddress: HexData,
     ) => {
       setLoading(true)
@@ -66,6 +74,7 @@ export const useGasEstimation = ({
         })
 
         setTransactionFee(fetchedTransactionFee.toTokenAmount.amount)
+        setRawTransactionFee(fetchedTransactionFee.fromTokenAmount.amount)
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error('Gas Estimation failed', e)
@@ -85,5 +94,6 @@ export const useGasEstimation = ({
   return {
     loading,
     transactionFee,
+    rawTransactionFee,
   }
 }
