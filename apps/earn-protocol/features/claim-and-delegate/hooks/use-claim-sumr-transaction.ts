@@ -35,6 +35,7 @@ export const useClaimSumrTransaction = ({
     sendUserOperationAsync,
     error: sendUserOperationError,
     isSendingUserOperation,
+    reset: resetSendUserOperation,
   } = useSendUserOperation({
     client: smartAccountClient,
     waitForTxn: true,
@@ -80,9 +81,7 @@ export const useClaimSumrTransaction = ({
     isLoading: isSendingUserOperation,
     error: sendUserOperationError,
     reset: () => {
-      if (!sendUserOperationError) return
       onError()
-      sendUserOperationError = null
     },
   }
 }
