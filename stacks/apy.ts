@@ -83,10 +83,11 @@ export function addApyConfig({ stack, api, vpc, cache }: SummerStackContext) {
 
   api.addRoutes(stack, {
     'GET /api/apy/{chainId}/{protocol}': getApyFunction,
-    'GET /api/rates/{chainId}': getRatesFunction,
-    'GET /api/historicalRates/{chainId}': getRatesFunction,
-    'POST /api/vault/rates': getVaultRatesFunction,
-    'POST /api/vault/historicalRates': getVaultRatesFunction,
-    'POST /api/rates': getRatesFunction,
+    // TODO: Uncomment these once the mess has been cleaned up
+    // 'GET /api/rates/{chainId}': getRatesFunction,
+    // 'GET /api/historicalRates/{chainId}': getRatesFunction,
+    // 'POST /api/vault/rates': getVaultRatesFunction,
+    // 'POST /api/vault/historicalRates': getVaultRatesFunction,
+    // 'POST /api/rates': getRatesFunction,
   })
 }
