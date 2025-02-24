@@ -14,6 +14,7 @@ interface ClaimDelegateToClaimProps {
   chainId: SDKChainId.BASE | SDKChainId.MAINNET | SDKChainId.ARBITRUM
   onClaim: () => void
   isLoading?: boolean
+  isChangingNetwork?: boolean
   canClaim: boolean
 }
 
@@ -23,8 +24,20 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
   chainId,
   onClaim,
   isLoading,
+  isChangingNetwork,
   canClaim,
 }) => {
+  const getButtonLabel = () => {
+    if (isChangingNetwork) {
+      return 'Switching network...'
+    }
+    if (isLoading) {
+      return 'Claiming...'
+    }
+
+    return 'Claim'
+  }
+
   return (
     <Card className={classNames.cardWrapper + (canClaim ? '' : ` ${classNames.disabled}`)}>
       {canClaim && (
@@ -66,12 +79,12 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
           e.stopPropagation()
           onClaim()
         }}
-        disabled={!canClaim || isLoading}
+        disabled={!canClaim || isLoading || isChangingNetwork}
       >
-        {isLoading ? (
+        {isLoading || isChangingNetwork ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
             <LoadingSpinner size={16} color="var(--earn-protocol-secondary-40)" />
-            <span>Claiming...</span>
+            <span>{getButtonLabel()}</span>
           </div>
         ) : (
           <WithArrow
@@ -82,7 +95,7 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
               color: 'inherit',
             }}
           >
-            Claim
+            {getButtonLabel()}
           </WithArrow>
         )}
       </Button>
