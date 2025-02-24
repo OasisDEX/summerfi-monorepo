@@ -48,7 +48,7 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
     state: { sumrNetApyConfig },
   } = useLocalConfig()
   const { chain: sourceChain, setChain: setSourceChain, isSettingChain } = useChain()
-  const { userWalletAddress } = useUserWallet()
+  const { userWalletAddress, isLoadingAccount: isUserWalletLoading } = useUserWallet()
   const sourceNetwork = chainIdToSDKNetwork(sourceChain.id)
   const humanNetworkName = sdkNetworkToHumanNetwork(sourceNetwork)
   const searchParams = useSearchParams()
@@ -142,7 +142,7 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
   const [selectedPercentage, setSelectedPercentage] = useState<number | null>(null)
 
   useEffect(() => {
-    if (!userWalletAddress) {
+    if (!userWalletAddress && !isUserWalletLoading) {
       try {
         redirect('/earn')
       } catch (error) {
@@ -153,10 +153,15 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
       }
     }
 
-    if (userWalletAddress !== state.walletAddress) {
+    console.log('userWalletAddress', userWalletAddress)
+    console.log('state.walletAddress', state.walletAddress)
+    if (
+      !isUserWalletLoading &&
+      userWalletAddress?.toLowerCase() !== state.walletAddress.toLowerCase()
+    ) {
       redirect(`/bridge/${userWalletAddress}`)
     }
-  }, [userWalletAddress, state.walletAddress, dispatch])
+  }, [userWalletAddress, state.walletAddress, dispatch, isUserWalletLoading])
 
   useEffect(() => {
     const switchChain = async () => {

@@ -9,7 +9,7 @@ import {
   sdkNetworkToHumanNetwork,
   sdkNetworkToHumanNetworkStrict,
 } from '@summerfi/app-utils'
-import { useParams, useSearchParams } from 'next/navigation'
+import { redirect, useParams, useSearchParams } from 'next/navigation'
 
 import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { TermsOfServiceCookiePrefix } from '@/constants/terms-of-service'
@@ -84,11 +84,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     clientChainId: SDKChainId.BASE | SDKChainId.ARBITRUM | SDKChainId.MAINNET
   }
 
-  const handleBack = () => {
-    dispatch({ type: 'update-step', payload: ClaimDelegateSteps.TERMS })
-  }
-
-  const { claimSumrTransaction } = useClaimSumrTransaction({
+  const { claimSumrTransaction, reset: resetClaimTransaction } = useClaimSumrTransaction({
     onSuccess: () => {
       setTimeout(() => {
         // Zero out the claimed amount and update balances
@@ -124,6 +120,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     },
     onError: () => {
       dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.FAILED })
+      dispatch({ type: 'set-pending-claim', payload: undefined })
       toast.error('Failed to claim $SUMR tokens', ERROR_TOAST_CONFIG)
     },
   })
@@ -136,6 +133,10 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     const risk = await checkRisk()
 
     if (risk.isRisky) {
+      dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.FAILED })
+      dispatch({ type: 'set-pending-claim', payload: undefined })
+      toast.error('Failed to claim $SUMR tokens', ERROR_TOAST_CONFIG)
+
       return
     }
 
@@ -144,6 +145,13 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
       console.error('Error claiming $SUMR:', err)
     })
   }, [dispatch, checkRisk, claimSumrTransaction])
+
+  // Reset claim transaction when unmounting or when claim status changes to failed
+  useEffect(() => {
+    if (state.claimStatus === ClaimDelegateTxStatuses.FAILED) {
+      resetClaimTransaction()
+    }
+  }, [state.claimStatus, resetClaimTransaction])
 
   // Watch for chain changes and trigger claim if pending
   useEffect(() => {
@@ -228,9 +236,13 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   }
 
   if (!isSupportedHumanNetwork(sdkNetworkToHumanNetwork(chainIdToSDKNetwork(clientChainId)))) {
+    const handleBackToPortfolio = () => {
+      redirect(`/earn/portfolio/${resolvedWalletAddress}`)
+    }
+
     return (
       <div className={classNames.claimDelegateClaimStepWrapper}>
-        <ClaimDelegateError error="Unsupported network" onBack={handleBack} />
+        <ClaimDelegateError error="Unsupported network" onBack={handleBackToPortfolio} />
       </div>
     )
   }
@@ -252,6 +264,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
           (state.pendingClaimChainId === SDKChainId.BASE || clientChainId === SDKChainId.BASE)
         }
         isChangingNetwork={isSettingChain || state.pendingClaimChainId === SDKChainId.BASE}
+        isOnlyStep
       />
 
       {/* Satellite network cards */}
@@ -289,11 +302,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
         />
       </div>
 
-      <ClaimDelegateFooter
-        canContinue={canContinue}
-        onBack={handleBack}
-        onContinue={handleAccept}
-      />
+      <ClaimDelegateFooter canContinue={canContinue} onContinue={handleAccept} />
     </div>
   )
 }

@@ -29,37 +29,41 @@ export const ClaimDelegateToBridge: FC<ClaimDelegateToBridgeProps> = ({
           Ready to bridge
         </Text>
       </div>
-      <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-        On {humanReadableChainToLabelMap[chainId]}
-      </Text>
+      <div className={classNames.networkWrapper}>
+        {networkSDKChainIdIconMap(chainId)}
+        <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+          {humanReadableChainToLabelMap[chainId]}
+        </Text>
+      </div>
       <div className={classNames.valueWithIcon}>
         <div className={classNames.container}>
           <Icon tokenName="SUMR" size={36} />
-          <div style={{ position: 'absolute', top: '-4px', right: '-4px' }}>
-            {networkSDKChainIdIconMap(chainId)}
-          </div>
         </div>
         <div className={classNames.valueWrapper}>
           <Text as="h2" variant="h2">
             {balance}
           </Text>
-          <Text as="p" variant="p2semi" className={classNames.usdValue}>
-            ${balanceInUSD}
-          </Text>
         </div>
       </div>
-      <Link href={`/bridge/${walletAddress}?via=claim&source_chain=${chainId}`}>
-        <Button variant="neutralSmall">
-          <WithArrow
-            variant="p4semi"
-            as="p"
-            reserveSpace
-            style={{ color: 'var(--earn-protocol-secondary-100)' }}
-          >
-            Bridge
-          </WithArrow>
-        </Button>
-      </Link>
+      <div className={classNames.walletBalanceWrapper}>
+        <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+          {balance} in wallet
+        </Text>
+      </div>
+      <div className={classNames.ctaWrapper}>
+        <Link href={`/bridge/${walletAddress}?via=claim&source_chain=${chainId}`}>
+          <Button variant="neutralSmall">
+            <WithArrow
+              variant="p4semi"
+              as="p"
+              reserveSpace
+              style={{ color: 'var(--earn-protocol-secondary-100)' }}
+            >
+              Bridge 2/2
+            </WithArrow>
+          </Button>
+        </Link>
+      </div>
     </Card>
   )
 }

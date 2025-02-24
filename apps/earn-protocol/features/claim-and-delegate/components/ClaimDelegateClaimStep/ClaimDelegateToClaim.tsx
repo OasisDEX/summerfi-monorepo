@@ -11,19 +11,23 @@ import classNames from './ClaimDelegateClaimStep.module.scss'
 interface ClaimDelegateToClaimProps {
   earned: string
   earnedInUSD: string
+  balance: string
   chainId: SDKChainId.BASE | SDKChainId.MAINNET | SDKChainId.ARBITRUM
   onClaim: () => void
   isLoading?: boolean
   isChangingNetwork?: boolean
   canClaim: boolean
+  isOnlyStep?: boolean
 }
 
 export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
   earned,
   earnedInUSD,
+  balance,
   chainId,
   onClaim,
   isLoading,
+  isOnlyStep,
   isChangingNetwork,
   canClaim,
 }) => {
@@ -35,21 +39,29 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
       return 'Claiming...'
     }
 
-    return 'Claim'
+    return isOnlyStep ? 'Claim 1/1' : 'Claim 1/2'
   }
 
   return (
     <Card className={classNames.cardWrapper + (canClaim ? '' : ` ${classNames.disabled}`)}>
       {canClaim && (
-        <div className={clsx(classNames.tagWrapper, classNames.claim)}>
+        <div
+          className={clsx(classNames.tagWrapper, classNames.claim, {
+            [classNames.onlyStep]: isOnlyStep,
+          })}
+        >
           <Text as="p" variant="p4semi" className={classNames.tabLabel}>
             Available to claim
           </Text>
         </div>
       )}
-      <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-        On {humanReadableChainToLabelMap[chainId]}
-      </Text>
+
+      <div className={classNames.networkWrapper}>
+        {networkSDKChainIdIconMap(chainId)}
+        <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+          {humanReadableChainToLabelMap[chainId]}
+        </Text>
+      </div>
       <div className={classNames.valueWithIcon}>
         <div
           style={{
@@ -60,45 +72,46 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
           }}
         >
           <Icon tokenName="SUMR" size={36} />
-          <div style={{ position: 'absolute', top: '-4px', right: '-4px' }}>
-            {networkSDKChainIdIconMap(chainId)}
-          </div>
         </div>
         <div className={classNames.valueWrapper}>
           <Text as="h2" variant="h2">
             {earned}
           </Text>
-          <Text as="p" variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-            ${earnedInUSD}
-          </Text>
         </div>
       </div>
-      <Button
-        variant="neutralSmall"
-        onClick={(e) => {
-          e.stopPropagation()
-          onClaim()
-        }}
-        disabled={!canClaim || isLoading || isChangingNetwork}
-      >
-        {isLoading || isChangingNetwork ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
-            <LoadingSpinner size={16} color="var(--earn-protocol-secondary-40)" />
-            <span>{getButtonLabel()}</span>
-          </div>
-        ) : (
-          <WithArrow
-            reserveSpace
-            variant="p4semi"
-            as="p"
-            style={{
-              color: 'inherit',
-            }}
-          >
-            {getButtonLabel()}
-          </WithArrow>
-        )}
-      </Button>
+      <div className={classNames.walletBalanceWrapper}>
+        <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+          {balance} in wallet
+        </Text>
+      </div>
+      <div className={classNames.ctaWrapper}>
+        <Button
+          variant="neutralSmall"
+          onClick={(e) => {
+            e.stopPropagation()
+            onClaim()
+          }}
+          disabled={!canClaim || isLoading || isChangingNetwork}
+        >
+          {isLoading || isChangingNetwork ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
+              <LoadingSpinner size={16} color="var(--earn-protocol-secondary-40)" />
+              <span>{getButtonLabel()}</span>
+            </div>
+          ) : (
+            <WithArrow
+              reserveSpace
+              variant="p4semi"
+              as="p"
+              style={{
+                color: 'inherit',
+              }}
+            >
+              {getButtonLabel()}
+            </WithArrow>
+          )}
+        </Button>
+      </div>
     </Card>
   )
 }
