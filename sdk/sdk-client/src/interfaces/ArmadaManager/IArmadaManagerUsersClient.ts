@@ -12,18 +12,21 @@ import {
 import type { Position_Filter } from '@summerfi/subgraph-manager-common'
 import {
   BridgeTransactionInfo,
-  IChainInfo,
   ITokenAmount,
   IUser,
-  TransactionInfo,
+  type AddressValue,
   type ApproveTransactionInfo,
+  type ArmadaMigratablePosition,
+  type ArmadaMigrationType,
   type ChainInfo,
   type ClaimTransactionInfo,
   type DelegateTransactionInfo,
   type ExtendedTransactionInfo,
   type IAddress,
+  type IChainInfo,
   type IPercentage,
   type IToken,
+  type MigrationTransactionInfo,
   type StakeTransactionInfo,
   type UnstakeTransactionInfo,
 } from '@summerfi/sdk-common'
@@ -384,4 +387,45 @@ export interface IArmadaManagerUsersClient {
    * @returns The length of the delegation
    */
   getDelegationChainLength: (params: { user: IUser }) => Promise<number>
+
+  /**
+   * @method getMigratablePositions
+   * @description Returns the positions that can be migrated
+   *
+   * @param chainInfo Chain information
+   * @param user The user
+   * @param migrationType The type of migration
+   *
+   * @returns The positions that can be migrated
+   * @throws Error if the migration type is not supported
+   */
+  getMigratablePositions(params: {
+    chainInfo: IChainInfo
+    user: IUser
+    migrationType?: ArmadaMigrationType
+  }): Promise<{
+    chainInfo: IChainInfo
+    positions: ArmadaMigratablePosition[]
+  }>
+
+  /**
+   * @method getMigrationTX
+   * @description Returns the transaction for the migration
+   *
+   * @param user The user
+   * @param vaultId The vault id
+   * @param shouldStake Should stake
+   * @param slippage The slippage
+   * @param positions The positions to migrate
+   *
+   * @returns The transaction for the migration
+   * @throws Error if the migration type is not supported
+   */
+  getMigrationTX(params: {
+    user: IUser
+    vaultId: IArmadaVaultId
+    shouldStake?: boolean
+    slippage: IPercentage
+    positionIds: AddressValue[]
+  }): Promise<[ApproveTransactionInfo[], MigrationTransactionInfo] | [MigrationTransactionInfo]>
 }

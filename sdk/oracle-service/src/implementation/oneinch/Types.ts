@@ -4,6 +4,7 @@ export const OneInchSpotAuthHeaderKey = 'Authorization'
 /** 1Inch authorization header format */
 export type OneInchSpotAuthHeader = {
   [OneInchSpotAuthHeaderKey]: string
+  'Content-Type'?: string
 }
 
 /** 1Inch Oracle provider configuration */
