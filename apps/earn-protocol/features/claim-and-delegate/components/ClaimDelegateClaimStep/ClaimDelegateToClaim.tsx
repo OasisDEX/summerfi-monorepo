@@ -39,7 +39,7 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
       return 'Claiming...'
     }
 
-    return isOnlyStep ? 'Claim 1/1' : 'Claim 1/2'
+    return isOnlyStep ? 'Claim' : 'Claim 1/2'
   }
 
   return (
