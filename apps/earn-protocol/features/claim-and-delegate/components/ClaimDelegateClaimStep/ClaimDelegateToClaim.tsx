@@ -22,7 +22,6 @@ interface ClaimDelegateToClaimProps {
 
 export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
   earned,
-  earnedInUSD,
   balance,
   chainId,
   onClaim,

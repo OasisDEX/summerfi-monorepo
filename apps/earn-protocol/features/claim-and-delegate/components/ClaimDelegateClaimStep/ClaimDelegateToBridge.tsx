@@ -18,7 +18,6 @@ interface ClaimDelegateToBridgeProps {
 
 export const ClaimDelegateToBridge: FC<ClaimDelegateToBridgeProps> = ({
   balance,
-  balanceInUSD,
   chainId,
   walletAddress,
 }) => {

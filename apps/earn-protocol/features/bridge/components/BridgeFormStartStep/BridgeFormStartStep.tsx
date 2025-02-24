@@ -20,8 +20,7 @@ import {
 } from '@summerfi/app-utils'
 import { Address } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
-import { useRouter } from 'next/navigation'
-import { redirect, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import { TermsOfServiceCookiePrefix } from '@/constants/terms-of-service'
 import { BridgeFormTitle } from '@/features/bridge/components/BridgeFormTitle/BridgeFormTitle'
