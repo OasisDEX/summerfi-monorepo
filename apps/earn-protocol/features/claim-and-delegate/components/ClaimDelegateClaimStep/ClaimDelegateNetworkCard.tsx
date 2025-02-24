@@ -14,6 +14,7 @@ interface ClaimDelegateNetworkCardProps {
   onClaim: () => void
   isLoading?: boolean
   isChangingNetwork?: boolean
+  isChangingNetworkTo?: SDKChainId
   isOnlyStep?: boolean
 }
 
@@ -26,6 +27,7 @@ export const ClaimDelegateNetworkCard: FC<ClaimDelegateNetworkCardProps> = ({
   onClaim,
   isLoading,
   isChangingNetwork,
+  isChangingNetworkTo,
   isOnlyStep,
 }) => {
   const isReadyToBridge = claimableAmount === 0 && balance > 0 && chainId !== SDKChainId.BASE
@@ -52,7 +54,7 @@ export const ClaimDelegateNetworkCard: FC<ClaimDelegateNetworkCardProps> = ({
       earnedInUSD={formatFiatBalance(claimableAmount * estimatedSumrPrice)}
       onClaim={onClaim}
       isLoading={isLoading}
-      isChangingNetwork={isChangingNetwork}
+      isChangingNetwork={isChangingNetworkTo === chainId && isChangingNetwork}
       canClaim={canClaim}
       isOnlyStep={isOnlyStep}
     />

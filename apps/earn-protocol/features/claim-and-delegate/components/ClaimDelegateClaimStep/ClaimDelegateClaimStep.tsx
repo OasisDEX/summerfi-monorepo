@@ -90,7 +90,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     toast.error('Failed to claim $SUMR tokens', ERROR_TOAST_CONFIG)
   }, [dispatch])
 
-  const { claimSumrTransaction, reset: resetClaimTransaction } = useClaimSumrTransaction({
+  const { claimSumrTransaction } = useClaimSumrTransaction({
     onSuccess: () => {
       setTimeout(() => {
         // Zero out the claimed amount and update balances
@@ -148,13 +148,6 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     })
   }, [dispatch, checkRisk, claimSumrTransaction, handleClaimError])
 
-  // Reset claim transaction when unmounting or when claim status changes to failed
-  useEffect(() => {
-    if (state.claimStatus === ClaimDelegateTxStatuses.FAILED) {
-      resetClaimTransaction()
-    }
-  }, [state.claimStatus, resetClaimTransaction])
-
   // Watch for chain changes and trigger claim if pending
   useEffect(() => {
     let isMounted = true
@@ -163,13 +156,19 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
       state.pendingClaimChainId &&
       clientChainId === state.pendingClaimChainId &&
       !isSettingChain &&
-      state.claimStatus !== ClaimDelegateTxStatuses.PENDING
+      !state.claimStatus
     ) {
-      handleClaim().then(() => {
-        if (isMounted) {
+      handleClaim()
+        .then(() => {
+          if (isMounted) {
+            dispatch({ type: 'set-pending-claim', payload: undefined })
+          }
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error('Error claiming $SUMR:', err)
           dispatch({ type: 'set-pending-claim', payload: undefined })
-        }
-      })
+        })
     }
 
     return () => {
@@ -262,10 +261,11 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
         walletAddress={resolvedWalletAddress}
         onClaim={() => handleClaimClick(SDKChainId.BASE)}
         isLoading={
-          (state.claimStatus === ClaimDelegateTxStatuses.PENDING || isSettingChain) &&
+          state.claimStatus === ClaimDelegateTxStatuses.PENDING &&
           (state.pendingClaimChainId === SDKChainId.BASE || clientChainId === SDKChainId.BASE)
         }
-        isChangingNetwork={isSettingChain || state.pendingClaimChainId === SDKChainId.BASE}
+        isChangingNetwork={isSettingChain && state.pendingClaimChainId === SDKChainId.BASE}
+        isChangingNetworkTo={state.pendingClaimChainId}
         isOnlyStep
       />
 
@@ -296,10 +296,11 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
             walletAddress={resolvedWalletAddress}
             onClaim={() => handleClaimClick(item.chainId)}
             isLoading={
-              (state.claimStatus === ClaimDelegateTxStatuses.PENDING || isSettingChain) &&
+              state.claimStatus === ClaimDelegateTxStatuses.PENDING &&
               (state.pendingClaimChainId === item.chainId || clientChainId === item.chainId)
             }
-            isChangingNetwork={isSettingChain || state.pendingClaimChainId === item.chainId}
+            isChangingNetwork={isSettingChain && state.pendingClaimChainId === item.chainId}
+            isChangingNetworkTo={state.pendingClaimChainId}
           />
         )
       })}
