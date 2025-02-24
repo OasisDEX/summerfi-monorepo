@@ -137,6 +137,7 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
 
   const handleChangeNetwork = (selected: DropdownRawOption) => {
     setLocalVaultNetwork(selected.value as MigrateLandingPageViewProps['selectedNetwork'])
+    setSelectedVaultId(undefined)
   }
 
   const selectedNetworkOption = useMemo(
