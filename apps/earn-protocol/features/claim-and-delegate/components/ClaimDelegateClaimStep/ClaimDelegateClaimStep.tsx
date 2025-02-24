@@ -221,7 +221,8 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     !hasClaimableBalance &&
     !hasBridgeableBalance &&
     !hasReturnedToClaimStep &&
-    !hasClaimedAtLeastOneChain
+    !hasClaimedAtLeastOneChain &&
+    state.claimStatus !== ClaimDelegateTxStatuses.PENDING
   ) {
     return <ClaimDelegateNoBalances onContinue={handleAccept} />
   }
