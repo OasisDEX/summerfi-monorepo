@@ -11,7 +11,6 @@ import {
   type HexData,
   type IAddress,
   type IChainInfo,
-  type IFiatCurrencyAmount,
   type IPercentage,
   type IToken,
   type ITokenAmount,
@@ -44,6 +43,7 @@ import {
   abiConvertToAssets,
 } from './abi'
 import type { ArmadaMigrationConfig } from './token-config/types'
+import BigNumber from 'bignumber.js'
 
 /**
  * @name ArmadaManagerMigrations
@@ -426,6 +426,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       case ArmadaMigrationType.Compound:
         return this._getMigrationCompoundApproval(user, spender, position)
       case ArmadaMigrationType.AaveV3:
+        return this._getMigrationErc20Approval(user, spender, position, true)
       case ArmadaMigrationType.Erc4626:
         return this._getMigrationErc20Approval(user, spender, position)
       default:
@@ -480,7 +481,18 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     user: IUser,
     spender: IAddress,
     position: ArmadaMigratablePosition,
+    isRebasing: boolean = false,
   ): Promise<ApproveTransactionInfo | undefined> {
+    let requestedAmount = position.positionTokenAmount.toSolidityValue()
+
+    if (isRebasing) {
+      // when rebasing we need to slightly increase the amount to avoid failing transactions
+      const compensatedAmount = new BigNumber(requestedAmount.toString())
+        .multipliedBy(1.001)
+        .toFixed(0)
+      requestedAmount = BigInt(compensatedAmount)
+    }
+
     // check if allowance is needed
     const client = await this._blockchainClientProvider.getBlockchainClient({
       chainInfo: user.chainInfo,
@@ -492,7 +504,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       args: [user.wallet.address.value, spender.value],
     })
 
-    if (allowance >= position.positionTokenAmount.toSolidityValue()) {
+    if (allowance >= requestedAmount) {
       return
     }
 
@@ -500,7 +512,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     const data = encodeFunctionData({
       abi: abiApprove,
       functionName: 'approve',
-      args: [spender.value, position.positionTokenAmount.toSolidityValue()],
+      args: [spender.value, requestedAmount],
     })
     const approval: ApproveTransactionInfo = {
       description: `Approving Admirals Quarters to move ${position.positionTokenAmount} from ${position.migrationType}`,
