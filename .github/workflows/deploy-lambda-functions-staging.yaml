@@ -1,9 +1,11 @@
-name: 'Deploy Lambdas Staging'
+name: 'Deploy Lambda Functions Staging'
 concurrency: staging
 on:
   push:
     branches:
       - dev
+      - marcinciarka/debug-functions
+
 permissions:
   id-token: write # This is required for requesting the JWT
   contents: read # This is required for actions/checkout
@@ -46,6 +48,14 @@ jobs:
       EARN_PROTOCOL_DB_CONNECTION_STRING: ${{ secrets.EARN_PROTOCOL_DB_CONNECTION_STRING }}
 
     steps:
+      - name: Setup upterm session
+        uses: lhotari/action-upterm@v1
+        with:
+          ## limits ssh access and adds the ssh public key for the user which triggered the workflow
+          limit-access-to-actor: true
+          ## If no one connects after 5 minutes, shut down server.
+          wait-timeout-minutes: 5
+
       - name: Git clone the repository
         uses: actions/checkout@v3
 
