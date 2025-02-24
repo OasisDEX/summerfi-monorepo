@@ -66,7 +66,7 @@ export const claimDelegateReducer = (
     case 'set-pending-claim':
       return {
         ...prevState,
-        pendingClaimChainId: action.payload,
+        pendingClaimChainId: action.payload ?? undefined,
       }
     default:
       return prevState

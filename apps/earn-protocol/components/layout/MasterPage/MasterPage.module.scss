@@ -30,6 +30,6 @@
   }
 
   @include media('>xl') {
-    padding: 0 var(--general-space-64);
+    padding: 0;
   }
 }

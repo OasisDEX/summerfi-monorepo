@@ -188,7 +188,10 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
       const humanNetwork = sdkNetworkToHumanNetworkStrict(chainIdToSDKNetwork(item.chainId))
 
       return Number(externalData.sumrBalances[humanNetwork]) > 0
-    } catch {
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error checking bridgeable balance:', error)
+
       return false
     }
   })
