@@ -68,7 +68,7 @@ export const Carousel: FC<CarouselProps> = ({ components, contentWidth }) => {
     <div className={styles.carouselContainer}>
       <div className={styles.mobilePagination}>
         <button className={styles.mobileButton} onClick={handlePrevious} disabled={animating}>
-          <Icon iconName="chevron_left" size={16} color="var(--color-neutral-10)" variant="xxs" />
+          <Icon iconName="chevron_left" color="var(--color-neutral-10)" variant="s" />
         </button>
         <div className={styles.pips}>
           {components.map((_, index) => (
@@ -79,7 +79,7 @@ export const Carousel: FC<CarouselProps> = ({ components, contentWidth }) => {
           ))}
         </div>
         <button className={styles.mobileButton} onClick={handleNext} disabled={animating}>
-          <Icon iconName="chevron_right" size={16} color="var(--color-neutral-10)" variant="xxs" />
+          <Icon iconName="chevron_right" color="var(--color-neutral-10)" variant="s" />
         </button>
       </div>
 
@@ -110,10 +110,10 @@ export const Carousel: FC<CarouselProps> = ({ components, contentWidth }) => {
 
       <div className={styles.carouselButtons} style={{ gap: contentWidth + 40 }}>
         <button className={styles.buttonLeft} onClick={handlePrevious} disabled={animating}>
-          <Icon iconName="chevron_left" color="rgba(255, 251, 253, 1)" variant="xxs" />
+          <Icon iconName="chevron_left" color="var(--color-neutral-10)" variant="xs" />
         </button>
         <button className={styles.buttonRight} onClick={handleNext} disabled={animating}>
-          <Icon iconName="chevron_right" color="rgba(255, 251, 253, 1)" variant="xxs" />
+          <Icon iconName="chevron_right" color="var(--color-neutral-10)" variant="xs" />
         </button>
       </div>
     </div>

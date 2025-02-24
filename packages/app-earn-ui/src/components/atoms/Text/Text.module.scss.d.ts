@@ -1,12 +1,16 @@
 export type Styles = {
   h1: string
   h1colorful: string
+  h1semi: string
   h2: string
   h2colorful: string
+  h2semi: string
   h3: string
   h3colorful: string
+  h3semi: string
   h4: string
   h4colorful: string
+  h4semi: string
   h5: string
   h5colorful: string
   hidden: string

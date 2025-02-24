@@ -8,15 +8,15 @@ export default () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        marginTop: 'var(--space-xxl)',
-        marginBottom: 'var(--space-xxxxl)',
+        marginTop: '64px',
+        marginBottom: '64px',
       }}
     >
       <Text
         as="h3"
         variant="h3"
         style={{
-          marginBottom: 'var(--space-xxl)',
+          marginBottom: '64px',
         }}
       >
         Sorry, page not found!
