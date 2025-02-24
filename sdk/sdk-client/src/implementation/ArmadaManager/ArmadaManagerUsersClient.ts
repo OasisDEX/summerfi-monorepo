@@ -202,4 +202,16 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   ): ReturnType<IArmadaManagerUsersClient['getDelegationChainLength']> {
     return this.rpcClient.armada.users.getDelegationChainLength.query(params)
   }
+
+  async getMigratablePositions(
+    params: Parameters<IArmadaManagerUsersClient['getMigratablePositions']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getMigratablePositions']> {
+    return this.rpcClient.armada.users.getMigratablePositions.query(params)
+  }
+
+  async getMigrationTX(
+    params: Parameters<IArmadaManagerUsersClient['getMigrationTX']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getMigrationTX']> {
+    return this.rpcClient.armada.users.getMigrationTX.query(params)
+  }
 }

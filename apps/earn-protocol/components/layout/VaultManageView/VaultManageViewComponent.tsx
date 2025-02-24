@@ -77,6 +77,7 @@ export const VaultManageViewComponent = ({
   performanceChartData,
   arksHistoricalChartData,
   arksInterestRates,
+  vaultApy,
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
@@ -87,6 +88,7 @@ export const VaultManageViewComponent = ({
   performanceChartData: PerformanceChartData
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
+  vaultApy?: number
 }) => {
   const user = useUser()
   const { userWalletAddress, isLoadingAccount } = useUserWallet()
@@ -375,13 +377,13 @@ export const VaultManageViewComponent = ({
       <NonOwnerPositionBanner isOwner={ownerView} walletStateLoaded={!isLoadingAccount} />
       <VaultManageGrid
         vault={vault}
+        vaultApy={vaultApy}
         vaults={vaults}
         position={position}
         onRefresh={revalidatePositionData}
         viewWalletAddress={viewWalletAddress}
         connectedWalletAddress={user?.address}
         displaySimulationGraph={displaySimulationGraph}
-        arksInterestRates={arksInterestRates}
         simulationGraph={
           <VaultSimulationGraph
             vault={vault}

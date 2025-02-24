@@ -21,6 +21,7 @@ export const VaultOpenView = ({
   medianDefiYield,
   arksHistoricalChartData,
   arksInterestRates,
+  vaultApy,
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
@@ -29,6 +30,7 @@ export const VaultOpenView = ({
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
+  vaultApy?: number
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -40,6 +42,7 @@ export const VaultOpenView = ({
         medianDefiYield={medianDefiYield}
         arksHistoricalChartData={arksHistoricalChartData}
         arksInterestRates={arksInterestRates}
+        vaultApy={vaultApy}
       />
     </SDKContextProvider>
   )

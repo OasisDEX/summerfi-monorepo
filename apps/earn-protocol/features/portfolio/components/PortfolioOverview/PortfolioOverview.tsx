@@ -15,7 +15,7 @@ import {
   type SDKVaultsListType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
-import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatFiatBalance, subgraphNetworkToId } from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
@@ -152,6 +152,11 @@ export const PortfolioOverview = ({
                       getDisplayToken(position.vault.inputToken.symbol) as TokenSymbolsList
                     }
                   />
+                }
+                apy={
+                  vaultsApyByNetworkMap[
+                    `${position.vault.id}-${subgraphNetworkToId(position.vault.protocol.network)}`
+                  ]
                 }
                 sumrPrice={estimatedSumrPrice}
               />

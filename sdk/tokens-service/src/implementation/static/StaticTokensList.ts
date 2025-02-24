@@ -1054,5 +1054,14 @@ export const StaticTokensData: TokenListData = {
       chainId: 1,
       logoURI: 'https://tokens.1inch.io/0xc00e94cb662c3520282e6f5717214004a7f26888.png',
     },
+    // aero 0x940181a94a35a4569e4529a3cdfb74e38fd98631
+    {
+      name: 'Aerodrome Finance',
+      address: '0x940181a94a35a4569e4529a3cdfb74e38fd98631',
+      symbol: 'AERO',
+      decimals: 18,
+      chainId: 8453,
+      logoURI: 'https://tokens.1inch.io/0x940181a94a35a4569e4529a3cdfb74e38fd98631.png',
+    },
   ],
 }

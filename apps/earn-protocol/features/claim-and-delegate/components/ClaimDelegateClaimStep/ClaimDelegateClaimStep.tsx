@@ -152,7 +152,8 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     if (
       state.pendingClaimChainId &&
       clientChainId === state.pendingClaimChainId &&
-      !isSettingChain
+      !isSettingChain &&
+      state.claimStatus !== ClaimDelegateTxStatuses.PENDING
     ) {
       handleClaim().then(() => {
         if (isMounted) {
@@ -164,7 +165,14 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     return () => {
       isMounted = false
     }
-  }, [clientChainId, state.pendingClaimChainId, isSettingChain, handleClaim, dispatch])
+  }, [
+    clientChainId,
+    state.pendingClaimChainId,
+    isSettingChain,
+    handleClaim,
+    dispatch,
+    state.claimStatus,
+  ])
 
   const hasClaimedAtLeastOneChain = state.claimStatus === ClaimDelegateTxStatuses.COMPLETED
   const canContinue = hasClaimedAtLeastOneChain || hasReturnedToClaimStep
@@ -176,6 +184,11 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   const handleClaimClick = (
     chainId: SDKChainId.BASE | SDKChainId.MAINNET | SDKChainId.ARBITRUM,
   ) => {
+    // Prevent multiple simultaneous claims
+    if (state.claimStatus === ClaimDelegateTxStatuses.PENDING || isSettingChain) {
+      return
+    }
+
     if (clientChainId !== chainId) {
       dispatch({ type: 'set-pending-claim', payload: chainId })
       setChain({ chain: SDKChainIdToAAChainMap[chainId] })
@@ -204,7 +217,13 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     }
   })
 
-  if (!hasClaimableBalance && !hasBridgeableBalance) {
+  if (
+    !hasClaimableBalance &&
+    !hasBridgeableBalance &&
+    !hasReturnedToClaimStep &&
+    !hasClaimedAtLeastOneChain &&
+    state.claimStatus !== ClaimDelegateTxStatuses.PENDING
+  ) {
     return <ClaimDelegateNoBalances onContinue={handleAccept} />
   }
 
@@ -232,6 +251,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
           (state.claimStatus === ClaimDelegateTxStatuses.PENDING || isSettingChain) &&
           (state.pendingClaimChainId === SDKChainId.BASE || clientChainId === SDKChainId.BASE)
         }
+        isChangingNetwork={isSettingChain || state.pendingClaimChainId === SDKChainId.BASE}
       />
 
       {/* Satellite network cards */}
@@ -256,6 +276,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
               (state.claimStatus === ClaimDelegateTxStatuses.PENDING || isSettingChain) &&
               (state.pendingClaimChainId === item.chainId || clientChainId === item.chainId)
             }
+            isChangingNetwork={isSettingChain || state.pendingClaimChainId === item.chainId}
           />
         )
       })}

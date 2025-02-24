@@ -24,3 +24,22 @@ export const SpotPriceInfoDataSchema = z.object({
   token: TokenDataSchema,
   price: PriceDataSchema,
 })
+
+/**
+ * @name SpotPricesInfo
+ * @description Gives the current market price for a specific list of assets
+ */
+export type SpotPricesInfo = {
+  /** The oracle provider type */
+  provider: OracleProviderType
+  /** Price by addresses */
+  priceByAddress: Record<string, IPrice>
+}
+
+/**
+ * @description Zod schema for SpotPriceInfo
+ */
+export const SpotPricesInfoDataSchema = z.object({
+  provider: OracleProviderTypeSchema,
+  priceByAddress: z.record(z.string(), PriceDataSchema),
+})

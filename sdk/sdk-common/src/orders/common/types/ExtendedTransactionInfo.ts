@@ -3,6 +3,7 @@ import type { IAddress } from '../../../common/interfaces/IAddress'
 import type { IPrice } from '../../../common/interfaces/IPrice'
 import type { IPercentage } from '../../../common/interfaces/IPercentage'
 import type { Transaction } from './Transaction'
+import type { ArmadaMigrationType } from '../../../common'
 
 /**
  * @enum TransactionType
@@ -16,6 +17,7 @@ export enum TransactionType {
   Delegate = 'Delegate',
   Stake = 'Stake',
   Unstake = 'Unstake',
+  Migration = 'Migration',
   Bridge = 'Bridge',
 }
 
@@ -76,8 +78,8 @@ export type BridgeTransactionInfo = TransactionInfo & {
 }
 
 /**
- * @interface ExtendedTransactionInfo
- * @description Contains the low level transaction plus a description of what the transaction is for.
+ * @interface Deposit/Withdraw DO NOT EXTEND THIS INTERFACE
+ * @description Contains the information of a deposit or withdraw transaction.
  */
 export type ExtendedTransactionInfo =
   | ApproveTransactionInfo
@@ -98,4 +100,11 @@ export type StakeTransactionInfo = TransactionInfo & {
 
 export type UnstakeTransactionInfo = TransactionInfo & {
   type: TransactionType.Unstake
+}
+
+export type MigrationTransactionInfo = TransactionInfo & {
+  type: TransactionType.Migration
+  metadata: {
+    swapAmountByPositionId: Record<string, ITokenAmount>
+  }
 }

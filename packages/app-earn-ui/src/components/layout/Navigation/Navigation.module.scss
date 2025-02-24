@@ -10,6 +10,10 @@
     padding: 0 var(--general-space-32);
   }
 
+  @include media('>s') {
+    padding: 0 var(--general-space-32);
+  }
+
   @include media('>xl') {
     padding: 0 var(--general-space-64);
   }
