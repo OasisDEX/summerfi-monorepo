@@ -20,8 +20,10 @@ import {
   type DropdownOption,
   type DropdownRawOption,
   type IconNamesList,
+  type PlatformLogo,
   type SDKNetwork,
   type SDKVaultsListType,
+  type TokenSymbolsList,
 } from '@summerfi/app-types'
 import { sdkNetworkToHumanNetwork, subgraphNetworkToId } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
@@ -30,6 +32,7 @@ import Link from 'next/link'
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
+import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
 import { NavConfigContent } from '@/features/nav-config/components/NavConfigContent/NavConfigContent'
 
 import classNames from './MigrateLandingPageView.module.scss'
@@ -148,8 +151,49 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
     return `/migrate/${sdkNetworkToHumanNetwork(vaultNetwork as SDKNetwork)}/position/${vaultId}`
   }, [selectedVaultId])
 
+  const migratablePositions: {
+    platformLogo: PlatformLogo
+    token: TokenSymbolsList
+    depositAmount: string
+    current30dApy: string
+    lazySummer30dApy: string
+    thirtydApyDifferential: string
+    missingOutAmount: string
+    isActive?: boolean
+  }[] = [
+    {
+      platformLogo: 'aave',
+      token: 'USDC',
+      depositAmount: '100',
+      current30dApy: '0.05',
+      lazySummer30dApy: '0.05',
+      thirtydApyDifferential: '0.05',
+      missingOutAmount: '31500',
+    },
+    {
+      platformLogo: 'morpho',
+      token: 'USDT',
+      depositAmount: '100',
+      current30dApy: '0.05',
+      lazySummer30dApy: '0.05',
+      thirtydApyDifferential: '0.05',
+      missingOutAmount: '31500',
+    },
+    {
+      platformLogo: 'spark',
+      token: 'ETH',
+      depositAmount: '100',
+      current30dApy: '0.05',
+      lazySummer30dApy: '0.05',
+      thirtydApyDifferential: '0.05',
+      missingOutAmount: '31500',
+      isActive: true,
+    },
+  ]
+
   return (
     <div className={classNames.migrateLandingPageViewWrapper}>
+      <MigrationBox className={classNames.migrationBox} positions={migratablePositions} />
       <div className={classNames.headerWrapper}>
         <TitleWithSelect
           title="Why Migrate?"

@@ -9,5 +9,3 @@ export const platformLogoMap = {
   spark: sparkLogo,
   summer: summerLogo,
 }
-
-export type PlatformLogoMap = keyof typeof platformLogoMap

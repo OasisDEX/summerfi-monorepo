@@ -95,6 +95,7 @@ export { TitleWithSelect } from './components/molecules/TitleWithSelect/TitleWit
 export { IllustrationCircle } from './components/molecules/IllustrationCircle/IllustrationCircle'
 export { TokenWithNetworkIcon } from './components/molecules/TokenWithNetworkIcon/TokenWithNetworkIcon'
 export { OrderInformation } from './components/molecules/OrderInformation/OrderInformation'
+export { PositionCard } from './components/molecules/PositionCard/PositionCard'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'

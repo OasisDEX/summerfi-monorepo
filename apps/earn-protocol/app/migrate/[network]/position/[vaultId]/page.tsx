@@ -101,9 +101,6 @@ const MigrateVaultPage = async ({ params }: MigrateVaultPageProps) => {
   const arksInterestRates = mapArkLatestInterestRates(arkInterestRatesMap)
   const vaultApy = vaultApyRaw[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
 
-  console.log('vaultApy', vaultApy)
-  console.log('arkInterestRatesMap', arkInterestRatesMap)
-
   return (
     <MigrateVaultPageView
       vault={vaultWithConfig}

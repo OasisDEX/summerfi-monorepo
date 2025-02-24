@@ -1,4 +1,4 @@
-import { type FC, isValidElement, type ReactNode } from 'react'
+import { type CSSProperties, type FC, isValidElement, type ReactNode } from 'react'
 import clsx from 'clsx'
 
 import { Card } from '@/components/atoms/Card/Card'
@@ -24,11 +24,12 @@ type OrderInformationItemGroup = {
 interface OrderInformationProps {
   title?: ReactNode
   items: (OrderInformationItem | OrderInformationItemGroup)[]
+  wrapperStyles?: CSSProperties
 }
 
-export const OrderInformation: FC<OrderInformationProps> = ({ title, items }) => {
+export const OrderInformation: FC<OrderInformationProps> = ({ title, items, wrapperStyles }) => {
   return (
-    <Card className={classNames.orderInformationWrapper}>
+    <Card className={classNames.orderInformationWrapper} style={wrapperStyles}>
       {title &&
         (typeof title === 'string' ? (
           <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
