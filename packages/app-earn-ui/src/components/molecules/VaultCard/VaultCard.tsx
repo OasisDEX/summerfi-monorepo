@@ -29,6 +29,7 @@ type VaultCardProps = SDKVaultishType & {
   showCombinedBonus?: boolean
   apy: number
   wrapperStyle?: React.CSSProperties
+  disabled?: boolean
 }
 
 export const VaultCard: FC<VaultCardProps> = (props) => {
@@ -50,6 +51,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     showCombinedBonus = false,
     apy,
     wrapperStyle,
+    disabled,
   } = props
 
   const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus(
@@ -60,7 +62,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
   )
 
   const handleVaultClick = () => {
-    if (onClick) {
+    if (onClick && !disabled) {
       onClick(
         getUniqueVaultId({
           id,
@@ -92,6 +94,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
           [vaultCardStyles.vaultCardSelected]: selected,
         })}
         variant={secondary ? 'cardSecondary' : 'cardPrimary'}
+        disabled={disabled}
       >
         <div className={vaultCardStyles.vaultCardHeaderWrapper}>
           <VaultTitleWithRisk

@@ -9,6 +9,7 @@ import { isAddress } from 'viem'
 
 import { getMedianDefiYield } from '@/app/server-handlers/defillama/get-median-defi-yield'
 import { getInterestRates } from '@/app/server-handlers/interest-rates'
+import { getMigratablePositions } from '@/app/server-handlers/migration'
 import { getUsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
@@ -27,11 +28,13 @@ type MigrateVaultPageProps = {
   params: Promise<{
     vaultId: string // could be vault address or the vault name
     network: SDKNetwork
+    walletAddress: string
+    migrationPositionId: string
   }>
 }
 
 const MigrateVaultPage = async ({ params }: MigrateVaultPageProps) => {
-  const { network: paramsNetwork, vaultId } = await params
+  const { network: paramsNetwork, vaultId, walletAddress, migrationPositionId } = await params
   const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
   const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
@@ -40,7 +43,13 @@ const MigrateVaultPage = async ({ params }: MigrateVaultPageProps) => {
     ? vaultId
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
-  const [vault, { vaults }, { usersActivity, topDepositors }, medianDefiYield] = await Promise.all([
+  const [
+    vault,
+    { vaults },
+    { usersActivity, topDepositors },
+    medianDefiYield,
+    migratablePositions,
+  ] = await Promise.all([
     getVaultDetails({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
@@ -51,7 +60,16 @@ const MigrateVaultPage = async ({ params }: MigrateVaultPageProps) => {
       vaultId,
     }),
     getMedianDefiYield(),
+    getMigratablePositions({ walletAddress }),
   ])
+
+  if (
+    !migratablePositions.find(
+      (position) => position.id.toLowerCase() === migrationPositionId.toLowerCase(),
+    )
+  ) {
+    return <Text>No migration position found with the id {migrationPositionId}</Text>
+  }
 
   const [vaultWithConfig] = vault
     ? decorateVaultsWithConfig({

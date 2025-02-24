@@ -57,10 +57,7 @@ export const PositionCard: FC<PositionCardProps> = ({
         <Text variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
           {title.label}
         </Text>
-        <div className={classNames.positionSubHeaderAmount}>
-          {title.label}
-          {title.value && title.value}
-        </div>
+        <div className={classNames.positionSubHeaderAmount}>{title.value && title.value}</div>
       </div>
       <div className={classNames.divider} />
 

@@ -26,9 +26,11 @@ import {
   type TokenSymbolsList,
 } from '@summerfi/app-types'
 import { sdkNetworkToHumanNetwork, subgraphNetworkToId } from '@summerfi/app-utils'
+import { ArmadaMigrationType } from '@summerfi/sdk-common'
 import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
+import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
@@ -72,13 +74,17 @@ interface MigrateLandingPageViewProps {
   vaultsList: SDKVaultsListType
   selectedNetwork?: SDKNetwork | 'all-networks'
   vaultsApyByNetworkMap: GetVaultsApyResponse
+  migratablePositions: MigratablePosition[]
+  walletAddress: string
 }
 
 export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
   vaultsList,
   selectedNetwork = 'all-networks',
   vaultsApyByNetworkMap,
-}: MigrateLandingPageViewProps) => {
+  migratablePositions,
+  walletAddress,
+}) => {
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
   const {
@@ -87,6 +93,14 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
   const [localVaultNetwork, setLocalVaultNetwork] =
     useState<MigrateLandingPageViewProps['selectedNetwork']>(selectedNetwork)
   const [isConfigOpen, setIsConfigOpen] = useState(false)
+
+  const [selectedPosition, setSelectedPosition] = useState<string | null>(
+    migratablePositions[0]?.id ?? null,
+  )
+
+  const handleSelectPosition = (id: string) => {
+    setSelectedPosition(id)
+  }
 
   const networkFilteredVaults = useMemo(() => {
     const properVaultsList =
@@ -148,52 +162,49 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
 
     const [vaultId, vaultNetwork] = selectedVaultId.split('-')
 
-    return `/migrate/${sdkNetworkToHumanNetwork(vaultNetwork as SDKNetwork)}/position/${vaultId}`
-  }, [selectedVaultId])
+    return `/migrate/${sdkNetworkToHumanNetwork(vaultNetwork as SDKNetwork)}/position/${vaultId}/${walletAddress}/${selectedPosition}`
+  }, [selectedVaultId, walletAddress, selectedPosition])
 
-  const migratablePositions: {
+  const resovledPlatformLogo = {
+    [ArmadaMigrationType.AaveV3]: 'aave',
+    [ArmadaMigrationType.Compound]: 'morpho',
+    [ArmadaMigrationType.Erc4626]: 'spark',
+  }
+
+  const resolvedMigratablePositions: {
+    id: string
     platformLogo: PlatformLogo
     token: TokenSymbolsList
     depositAmount: string
-    current30dApy: string
-    lazySummer30dApy: string
-    thirtydApyDifferential: string
-    missingOutAmount: string
-    isActive?: boolean
-  }[] = [
-    {
-      platformLogo: 'aave',
-      token: 'USDC',
-      depositAmount: '100',
-      current30dApy: '0.05',
-      lazySummer30dApy: '0.05',
-      thirtydApyDifferential: '0.05',
-      missingOutAmount: '31500',
-    },
-    {
-      platformLogo: 'morpho',
-      token: 'USDT',
-      depositAmount: '100',
-      current30dApy: '0.05',
-      lazySummer30dApy: '0.05',
-      thirtydApyDifferential: '0.05',
-      missingOutAmount: '31500',
-    },
-    {
-      platformLogo: 'spark',
-      token: 'ETH',
-      depositAmount: '100',
-      current30dApy: '0.05',
-      lazySummer30dApy: '0.05',
-      thirtydApyDifferential: '0.05',
-      missingOutAmount: '31500',
-      isActive: true,
-    },
-  ]
+    chainId: number
+    // current30dApy: string
+    // lazySummer30dApy: string
+    // thirtydApyDifferential: string
+    // missingOutAmount: string
+  }[] = migratablePositions.map((position) => ({
+    id: position.id,
+    platformLogo: resovledPlatformLogo[position.migrationType] as PlatformLogo,
+    token: position.underlyingTokenAmount.token.symbol.toUpperCase() as TokenSymbolsList,
+    depositAmount: position.underlyingTokenAmount.amount,
+    chainId: position.chainId,
+    // current30dApy: position.current30dApy,
+    // lazySummer30dApy: position.lazySummer30dApy,
+    // thirtydApyDifferential: position.thirtydApyDifferential,
+    // missingOutAmount: position.missingOutAmount,
+  }))
+
+  const selectedPositionChainId = useMemo(() => {
+    return resolvedMigratablePositions.find((position) => position.id === selectedPosition)?.chainId
+  }, [resolvedMigratablePositions, selectedPosition])
 
   return (
     <div className={classNames.migrateLandingPageViewWrapper}>
-      <MigrationBox className={classNames.migrationBox} positions={migratablePositions} />
+      <MigrationBox
+        className={classNames.migrationBox}
+        positions={resolvedMigratablePositions}
+        selectedPosition={selectedPosition}
+        onSelectPosition={handleSelectPosition}
+      />
       <div className={classNames.headerWrapper}>
         <TitleWithSelect
           title="Why Migrate?"
@@ -269,6 +280,9 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
                       vaultsApyByNetworkMap[
                         `${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`
                       ]
+                    }
+                    disabled={
+                      selectedPositionChainId !== subgraphNetworkToId(vault.protocol.network)
                     }
                   />
                 </div>

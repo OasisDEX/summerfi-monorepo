@@ -12,5 +12,12 @@
     overflow-y: auto;
     scrollbar-color: grey transparent;
     scrollbar-width: thin;
+
+    .migrationIconWrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--general-space-4);
+    }
   }
 }
