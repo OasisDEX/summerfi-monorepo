@@ -3,7 +3,6 @@
 import { type FC, type ReactNode } from 'react'
 import clsx from 'clsx'
 
-import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { Alert } from '@/components/molecules/Alert/Alert'
 
