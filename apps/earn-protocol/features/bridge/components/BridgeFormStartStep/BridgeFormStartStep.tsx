@@ -342,8 +342,10 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
             ? 'Estimating...'
             : isSettingChain
               ? 'Switching chain...'
-              : 'Bridge',
-        loading: isEstimatingGas || isPreparing || isSettingChain,
+              : isLoading
+                ? 'Bridging...'
+                : 'Bridge',
+        loading: isLoading || isEstimatingGas || isPreparing || isSettingChain,
         action: handleBridge,
         disabled:
           isEstimatingGas ||
