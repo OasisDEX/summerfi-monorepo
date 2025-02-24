@@ -1,7 +1,7 @@
 import { type Dispatch, type FC, useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
-import { ErrorMessage, SUMR_CAP, useLocalConfig } from '@summerfi/app-earn-ui'
+import { Alert, SUMR_CAP, useLocalConfig } from '@summerfi/app-earn-ui'
 import { SDKChainId } from '@summerfi/app-types'
 import {
   chainIdToSDKNetwork,
@@ -147,14 +147,22 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
 
   // Watch for chain changes and trigger claim if pending
   useEffect(() => {
+    let isMounted = true
+
     if (
       state.pendingClaimChainId &&
       clientChainId === state.pendingClaimChainId &&
       !isSettingChain
     ) {
-      handleClaim()
-      // Clear pending claim
-      dispatch({ type: 'set-pending-claim', payload: undefined })
+      handleClaim().then(() => {
+        if (isMounted) {
+          dispatch({ type: 'set-pending-claim', payload: undefined })
+        }
+      })
+    }
+
+    return () => {
+      isMounted = false
     }
   }, [clientChainId, state.pendingClaimChainId, isSettingChain, handleClaim, dispatch])
 
@@ -252,8 +260,8 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
         )
       })}
 
-      <div className={classNames.errorMessageWrapper}>
-        <ErrorMessage
+      <div className={classNames.alertWrapper}>
+        <Alert
           variant="general"
           iconName="bridge"
           error="You'll need to bridge your SUMR to Base before you can stake it"

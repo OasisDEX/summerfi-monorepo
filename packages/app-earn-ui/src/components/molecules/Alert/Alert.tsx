@@ -4,43 +4,43 @@ import { type FC } from 'react'
 import { Icon, type IconNamesList } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 
-import styles from './ErrorMessage.module.scss'
+import styles from './Alert.module.scss'
 
-type ErrorVariant = 'general' | 'critical' | 'warning' | 'success'
+type AlertVariant = 'general' | 'critical' | 'warning' | 'success'
 
-interface ErrorMessageProps {
+interface AlertProps {
   error: string
-  variant?: ErrorVariant
+  variant?: AlertVariant
   iconName?: IconNamesList
 }
 
-const variantToIconMap: Record<ErrorVariant, IconNamesList> = {
+const variantToIconMap: Record<AlertVariant, IconNamesList> = {
   general: 'info',
   critical: 'warning',
   warning: 'warning',
   success: 'checkmark',
 }
 
-const variantToColorMap: Record<ErrorVariant, string> = {
+const variantToColorMap: Record<AlertVariant, string> = {
   general: 'var(--color-background-interactive-bold)',
   critical: 'var(--earn-protocol-critical-100)',
   warning: 'var(--earn-protocol-warning-100)',
   success: 'var(--earn-protocol-success-100)',
 }
 
-const variantToBackgroundMap: Record<ErrorVariant, string> = {
+const variantToBackgroundMap: Record<AlertVariant, string> = {
   general: 'var(--gradient-earn-protocol-dark-10)',
   critical: 'var(--earn-protocol-critical-10)',
   warning: 'var(--earn-protocol-warning-10)',
   success: 'var(--earn-protocol-success-10)',
 }
 
-export const ErrorMessage: FC<ErrorMessageProps> = ({ error, variant = 'critical', iconName }) => {
+export const Alert: FC<AlertProps> = ({ error, variant = 'critical', iconName }) => {
   const resolvedIconName = variant === 'general' && iconName ? iconName : variantToIconMap[variant]
 
   return (
     <div
-      className={styles.errorMessageWrapper}
+      className={styles.alertWrapper}
       style={{
         background: variantToBackgroundMap[variant],
         borderRadius: 'var(--radius-medium)',
@@ -48,7 +48,7 @@ export const ErrorMessage: FC<ErrorMessageProps> = ({ error, variant = 'critical
     >
       <div className={styles.content}>
         <Icon iconName={resolvedIconName} size={20} style={{ color: variantToColorMap[variant] }} />
-        <div className={styles.errorTextWrapper}>
+        <div className={styles.alertTextWrapper}>
           <Text variant="p3semi" as="p">
             {error}
           </Text>

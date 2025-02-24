@@ -1,4 +1,4 @@
-.errorMessageWrapper {
+.alertWrapper {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -18,13 +18,10 @@
     width: 100%;
   }
 
-  .errorTextWrapper {
+  .alertTextWrapper {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: var(--spacing-space-small);
   }
-  
-  .errorText {
-    color: var(--earn-protocol-error-50);
-  }
+

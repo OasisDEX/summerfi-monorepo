@@ -5,6 +5,7 @@ import clsx from 'clsx'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
+import { Alert } from '@/components/molecules/Alert/Alert'
 
 import styles from './InfoBox.module.scss'
 
@@ -27,10 +28,7 @@ export const InfoBox: FC<InfoBoxProps> = ({ title, rows, children, className, er
     <>
       {error && (
         <div className={styles.error}>
-          <Icon iconName="warning" color="var(--earn-protocol-primary)" size={20} />
-          <Text variant="p3" style={{ marginLeft: 'var(--general-space-12)' }}>
-            {error}
-          </Text>
+          <Alert error={error} />
         </div>
       )}
       <div className={clsx(styles.infoBox, className)}>

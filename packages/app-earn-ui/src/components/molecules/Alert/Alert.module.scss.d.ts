@@ -1,8 +1,7 @@
 export type Styles = {
+  alertTextWrapper: string
+  alertWrapper: string
   content: string
-  errorMessageWrapper: string
-  errorText: string
-  errorTextWrapper: string
 }
 
 export type ClassNames = keyof Styles
