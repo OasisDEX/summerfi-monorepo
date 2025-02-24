@@ -33,13 +33,31 @@ export default function GlobalErrorHandler({ error }: { error: Error & { digest?
         Something went wrong!
       </Text>
       {error.digest && (
-        <Text variant="p1semi" as="div">
+        <Text variant="p1" as="div">
           If this error persists, please contact support and
           <br />
-          provide the following error ID:&nbsp;
-          <Text variant="p1semiColorful" as="span" style={{ fontFamily: 'monospace' }}>
-            {error.digest}
-          </Text>
+          provide the following error ID:
+          <br />
+          <div
+            style={{
+              backgroundColor: 'rgba(0,0,0,0.3)',
+              padding: '10px 30px',
+              borderRadius: '5px',
+              width: 'min-content',
+              margin: '1rem auto 0',
+            }}
+          >
+            <Text
+              variant="p2colorful"
+              as="span"
+              style={{
+                fontFamily: 'monospace',
+                letterSpacing: '0.1em',
+              }}
+            >
+              {error.digest}
+            </Text>
+          </div>
         </Text>
       )}
       <Link href="/">
