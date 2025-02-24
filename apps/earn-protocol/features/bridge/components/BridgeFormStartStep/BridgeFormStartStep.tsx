@@ -20,6 +20,7 @@ import {
 } from '@summerfi/app-utils'
 import { Address } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
+import { useRouter } from 'next/navigation'
 import { redirect, useSearchParams } from 'next/navigation'
 
 import { TermsOfServiceCookiePrefix } from '@/constants/terms-of-service'
@@ -47,6 +48,7 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
+  const router = useRouter()
   const { chain: sourceChain, setChain: setSourceChain, isSettingChain } = useChain()
   const { userWalletAddress, isLoadingAccount: isUserWalletLoading } = useUserWallet()
   const sourceNetwork = chainIdToSDKNetwork(sourceChain.id)
@@ -144,7 +146,7 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
   useEffect(() => {
     if (!userWalletAddress && !isUserWalletLoading) {
       try {
-        redirect('/earn')
+        router.push('/earn')
       } catch (error) {
         dispatch({
           type: 'error',
@@ -153,15 +155,13 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
       }
     }
 
-    console.log('userWalletAddress', userWalletAddress)
-    console.log('state.walletAddress', state.walletAddress)
     if (
       !isUserWalletLoading &&
       userWalletAddress?.toLowerCase() !== state.walletAddress.toLowerCase()
     ) {
-      redirect(`/bridge/${userWalletAddress}`)
+      router.push(`/bridge/${userWalletAddress}`)
     }
-  }, [userWalletAddress, state.walletAddress, dispatch, isUserWalletLoading])
+  }, [userWalletAddress, state.walletAddress, dispatch, isUserWalletLoading, router])
 
   useEffect(() => {
     const switchChain = async () => {

@@ -84,6 +84,12 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     clientChainId: SDKChainId.BASE | SDKChainId.ARBITRUM | SDKChainId.MAINNET
   }
 
+  const handleClaimError = useCallback(() => {
+    dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.FAILED })
+    dispatch({ type: 'set-pending-claim', payload: undefined })
+    toast.error('Failed to claim $SUMR tokens', ERROR_TOAST_CONFIG)
+  }, [dispatch])
+
   const { claimSumrTransaction, reset: resetClaimTransaction } = useClaimSumrTransaction({
     onSuccess: () => {
       setTimeout(() => {
@@ -119,9 +125,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
       }, delayPerNetwork[clientChainId])
     },
     onError: () => {
-      dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.FAILED })
-      dispatch({ type: 'set-pending-claim', payload: undefined })
-      toast.error('Failed to claim $SUMR tokens', ERROR_TOAST_CONFIG)
+      handleClaimError()
     },
   })
 
@@ -133,9 +137,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     const risk = await checkRisk()
 
     if (risk.isRisky) {
-      dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.FAILED })
-      dispatch({ type: 'set-pending-claim', payload: undefined })
-      toast.error('Failed to claim $SUMR tokens', ERROR_TOAST_CONFIG)
+      handleClaimError()
 
       return
     }
@@ -144,7 +146,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
       // eslint-disable-next-line no-console
       console.error('Error claiming $SUMR:', err)
     })
-  }, [dispatch, checkRisk, claimSumrTransaction])
+  }, [dispatch, checkRisk, claimSumrTransaction, handleClaimError])
 
   // Reset claim transaction when unmounting or when claim status changes to failed
   useEffect(() => {
