@@ -7,6 +7,7 @@ import {
   OracleProviderType,
   Price,
   SpotPriceInfo,
+  type SpotPricesInfo,
 } from '@summerfi/sdk-common'
 import { IToken } from '@summerfi/sdk-common/common'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
@@ -39,5 +40,9 @@ export class MockOracleProvider
         value: '1000',
       }),
     }
+  }
+
+  async getSpotPrices(): Promise<SpotPricesInfo> {
+    return {} as SpotPricesInfo
   }
 }

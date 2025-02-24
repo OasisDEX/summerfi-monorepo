@@ -7,8 +7,13 @@ import {
 
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IOracleProvider } from '@summerfi/oracle-common'
-import { FiatCurrency, IAddress, IChainInfo, IToken, isTokenAmount } from '@summerfi/sdk-common'
 import {
+  FiatCurrency,
+  IAddress,
+  IChainInfo,
+  IToken,
+  SwapErrorType,
+  isTokenAmount,
   Address,
   ChainId,
   Denomination,
@@ -16,8 +21,9 @@ import {
   isFiatCurrencyAmount,
   isToken,
   type AddressValue,
-} from '@summerfi/sdk-common/common'
-import { OracleProviderType, SpotPriceInfo } from '@summerfi/sdk-common/oracle'
+  type IPrice,
+} from '@summerfi/sdk-common'
+import { OracleProviderType, SpotPriceInfo, type SpotPricesInfo } from '@summerfi/sdk-common/oracle'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 import fetch from 'node-fetch'
 
@@ -58,6 +64,10 @@ export class OneInchOracleProvider
     const authHeader = this._getOneInchSpotAuthHeader()
 
     if (params.quoteToken && isToken(params.quoteToken)) {
+      if (Array.isArray(params.baseToken)) {
+        throw new Error('Array of tokens is not supported for this operation')
+      }
+
       const baseTokenAddress = params.baseToken.address
       const quoteTokenAddress = params.quoteToken.address
       const quoteCurrencySymbol = FiatCurrency.USD
@@ -73,9 +83,17 @@ export class OneInchOracleProvider
         headers: authHeader,
       })
 
-      if (!(response.status === 200 && response.statusText === 'OK')) {
-        throw new Error(
-          `Error performing 1inch spot price request ${spotUrl}: ${JSON.stringify(await response.statusText)}`,
+      if (!response.ok) {
+        const errorJSON = await response.text()
+        const errorType = this._parseErrorType(errorJSON)
+
+        throw Error(
+          `Error performing 1inch spot price request: ${JSON.stringify({
+            apiQuery: spotUrl,
+            statusCode: response.status,
+            json: errorJSON,
+            subtype: errorType,
+          })}`,
         )
       }
 
@@ -130,9 +148,17 @@ export class OneInchOracleProvider
         headers: authHeader,
       })
 
-      if (!(response.status === 200 && response.statusText === 'OK')) {
-        throw new Error(
-          `Error performing 1inch spot price request ${spotUrl}: ${await response.body}`,
+      if (!response.ok) {
+        const errorJSON = await response.text()
+        const errorType = this._parseErrorType(errorJSON)
+
+        throw Error(
+          `Error performing 1inch spot price request: ${JSON.stringify({
+            apiQuery: spotUrl,
+            statusCode: response.status,
+            json: errorJSON,
+            subtype: errorType,
+          })}`,
         )
       }
 
@@ -152,12 +178,70 @@ export class OneInchOracleProvider
     }
   }
 
+  /** @see IOracleProvider.getSpotPrices */
+  async getSpotPrices(
+    params: Parameters<IOracleProvider['getSpotPrices']>[0],
+  ): ReturnType<IOracleProvider['getSpotPrices']> {
+    const authHeader = this._getOneInchSpotAuthHeader()
+
+    const spotUrl = this._formatOneInchSpotUrl({
+      chainInfo: params.chainInfo,
+      tokenAddresses: params.baseTokens.map((token) => token.address),
+      quoteCurrency: params.quote,
+    })
+
+    const response = await fetch(spotUrl, {
+      headers: authHeader,
+    })
+
+    if (!response.ok) {
+      const errorJSON = await response.text()
+      const errorType = this._parseErrorType(errorJSON)
+
+      throw Error(
+        `Error performing 1inch spot price request: ${JSON.stringify({
+          apiQuery: spotUrl,
+          statusCode: response.status,
+          json: errorJSON,
+          subtype: errorType,
+        })}`,
+      )
+    }
+
+    const responseData = (await response.json()) as OneInchSpotResponse
+
+    const priceByAddress = Object.fromEntries(
+      Object.entries(responseData).map(([address, price]) => {
+        const base = params.baseTokens.find(
+          (t) => t.address.value.toLowerCase() === address.toLowerCase(),
+        )
+        if (!base) {
+          throw new Error(
+            `Token with address ${address} not found in base tokens: ${params.baseTokens.map((t) => t.address.value)}`,
+          )
+        }
+        return [
+          address.toLowerCase(),
+          Price.createFrom({ value: price.toString(), base, quote: params.quote }),
+        ]
+      }),
+    )
+
+    return {
+      provider: OracleProviderType.OneInch,
+      priceByAddress,
+    }
+  }
+
   /**
    * Returns the authentication header for the 1inch spot price API
    * @returns  The authentication header with the API key
    */
   private _getOneInchSpotAuthHeader(): OneInchSpotAuthHeader {
-    return { [OneInchSpotAuthHeaderKey]: `Bearer ${this._apiKey}` }
+    return {
+      [OneInchSpotAuthHeaderKey]: `Bearer ${this._apiKey}`,
+      'Content-Type': 'application/json',
+    }
   }
 
   /**
@@ -171,7 +255,7 @@ export class OneInchOracleProvider
   private _formatOneInchSpotUrl(params: {
     chainInfo: IChainInfo
     tokenAddresses: IAddress[]
-    quoteCurrency: FiatCurrency
+    quoteCurrency?: FiatCurrency
   }): string {
     const chainId = params.chainInfo.chainId
     const tokenAddresses = params.tokenAddresses.map((address) => address.value.toLowerCase())
@@ -181,7 +265,10 @@ export class OneInchOracleProvider
      * EG <url>/price/v1.1
      * https://portal.1inch.dev/documentation/spot-price/swagger?method=get&path=%2Fv1.1%2F1%2F%7Baddresses%7D
      */
-    return `${this._apiUrl}/price/${this._version}/${chainId}/${tokenAddresses.join(',')}?currency=${params.quoteCurrency.toUpperCase()}`
+
+    const currency = params.quoteCurrency ? `?currency=${params.quoteCurrency.toUpperCase()}` : ''
+
+    return `${this._apiUrl}/price/${this._version}/${chainId}/${tokenAddresses.join(',')}${currency}`
   }
 
   /**
@@ -222,6 +309,23 @@ export class OneInchOracleProvider
         apiKey: ONE_INCH_API_SPOT_KEY,
         version: ONE_INCH_API_SPOT_VERSION,
       },
+    }
+  }
+
+  /**
+   * @description Tries to parse the error message from 1inch to provide a higher level error type
+   * @param errorDescription The error description from 1inch
+   * @returns The parsed error type
+   */
+  private _parseErrorType(errorDescription: unknown): SwapErrorType {
+    console.log(errorDescription)
+    if (
+      typeof errorDescription === 'string' &&
+      errorDescription.toLowerCase().includes('insufficient liquidity')
+    ) {
+      return SwapErrorType.NoLiquidity
+    } else {
+      return SwapErrorType.Unknown
     }
   }
 }

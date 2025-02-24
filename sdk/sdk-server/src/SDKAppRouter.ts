@@ -56,6 +56,8 @@ import { getSummerToken } from './armada-protocol-handlers/users/getSummerToken'
 import { getDelegationChainLength } from './armada-protocol-handlers/users/getDelegationChainLength'
 import { pong } from './handlers/debugPong'
 import { getClaimableAggregatedRewards } from './armada-protocol-handlers/users/getClaimableAggregatedRewards'
+import { getMigratablePositions } from './armada-protocol-handlers/users/getMigratablePositions'
+import { getMigrationTX } from './armada-protocol-handlers/users/getMigrationTX'
 import { getBridgeTx } from './armada-protocol-handlers/users/getBridgeTx'
 
 /**
@@ -118,6 +120,8 @@ export const sdkAppRouter = router({
       getUserBalance: getUserBalance,
       getSummerToken: getSummerToken,
       getDelegationChainLength: getDelegationChainLength,
+      getMigratablePositions: getMigratablePositions,
+      getMigrationTX: getMigrationTX,
     },
     keepers: {
       rebalance: rebalance,

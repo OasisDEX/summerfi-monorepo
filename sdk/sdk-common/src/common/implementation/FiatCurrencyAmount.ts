@@ -103,8 +103,8 @@ export class FiatCurrencyAmount implements IFiatCurrencyAmount {
   }
 
   /** @see IValueConverter.toBigNumber */
-  toSolidityValue(params: { decimals: number }): bigint {
-    const factor = new BigNumber(10).pow(params.decimals)
+  toSolidityValue(params?: { decimals: number }): bigint {
+    const factor = new BigNumber(10).pow(params?.decimals ?? 18)
     return BigInt(new BigNumber(this.amount).times(factor).toFixed(0))
   }
 

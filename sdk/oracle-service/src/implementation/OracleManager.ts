@@ -47,4 +47,26 @@ export class OracleManager
 
     return provider.getSpotPrice(params)
   }
+
+  /** @see IOracleManager.getSpotPrices */
+  async getSpotPrices(
+    params: Parameters<IOracleManager['getSpotPrices']>[0],
+  ): ReturnType<IOracleManager['getSpotPrices']> {
+    if (params.baseTokens) {
+      for (const baseToken of params.baseTokens) {
+        if (!isToken(baseToken) || !params.chainInfo.equals(baseToken.chainInfo)) {
+          throw new Error('All Base tokens must be on the same chain')
+        }
+      }
+    }
+
+    const provider: Maybe<IOracleProvider> = this._getBestProvider({
+      chainInfo: params.chainInfo,
+    })
+    if (!provider) {
+      throw new Error('No swap provider available')
+    }
+
+    return provider.getSpotPrices(params)
+  }
 }

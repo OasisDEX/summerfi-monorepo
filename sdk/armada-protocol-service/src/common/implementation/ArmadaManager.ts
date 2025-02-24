@@ -14,7 +14,8 @@ import {
   getDeployedRewardsRedeemerAddress,
   isTestDeployment,
   setTestDeployment,
-  IArmadaManagerBridge,
+  type IArmadaManagerMigrations,
+  type IArmadaManagerBridge,
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
@@ -49,6 +50,7 @@ import type { ISwapManager } from '@summerfi/swap-common'
 import type { IOracleManager } from '@summerfi/oracle-common'
 import { ArmadaManagerClaims } from './ArmadaManagerClaims'
 import { ArmadaManagerGovernance } from './ArmadaManagerGovernance'
+import { ArmadaManagerMigrations } from './ArmadaManagerMigrations'
 import { ArmadaManagerBridge } from './ArmadaManagerBridge'
 import { BigNumber } from 'bignumber.js'
 
@@ -59,6 +61,7 @@ import { BigNumber } from 'bignumber.js'
 export class ArmadaManager implements IArmadaManager {
   claims: IArmadaManagerClaims
   governance: IArmadaManagerGovernance
+  migrations: IArmadaManagerMigrations
   bridge: IArmadaManagerBridge
 
   private _supportedChains: ChainInfo[]
@@ -128,7 +131,12 @@ export class ArmadaManager implements IArmadaManager {
       hubChainInfo: this._hubChainInfo,
       getSummerToken: this.getSummerToken.bind(this),
     })
-
+    this.migrations = new ArmadaManagerMigrations({
+      ...params,
+      hubChainInfo: this._hubChainInfo,
+      supportedChains: this._supportedChains,
+      getSwapCall: this._getSwapCall.bind(this),
+    })
     this.bridge = new ArmadaManagerBridge({
       supportedChains: this._supportedChains,
       blockchainClientProvider: this._blockchainClientProvider,
@@ -663,7 +671,7 @@ export class ArmadaManager implements IArmadaManager {
       contractName: 'admiralsQuarters',
     })
 
-    // Approval
+    // Approval for AQ
     if (!fromEth) {
       const approvalTransaction = await this._allowanceManager.getApproval({
         chainInfo: params.vaultId.chainInfo,

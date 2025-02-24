@@ -33,12 +33,12 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
    *
    * @see constructor
    */
-  static async create<TClient extends IBlockchainClient, TAddress extends IAddress>(params: {
+  static create<TClient extends IBlockchainClient, TAddress extends IAddress>(params: {
     blockchainClient: TClient
     tokensManager: ITokensManager
     chainInfo: IChainInfo
     address: TAddress
-  }): Promise<IErc20Contract> {
+  }): IErc20Contract {
     return new Erc20Contract(params)
   }
 
@@ -133,7 +133,7 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
     return this._createTransaction({
       functionName: 'approve',
       args: [params.spender.value, params.amount.toSolidityValue()],
-      description: `Approve ${params.spender} to spend ${params.amount} of ${this.address}`,
+      description: `Approve ${params.spender} to spend ${params.amount} at ${this.address}`,
     })
   }
 
