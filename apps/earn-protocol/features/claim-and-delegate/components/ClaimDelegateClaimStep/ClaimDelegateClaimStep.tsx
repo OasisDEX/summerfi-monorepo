@@ -269,6 +269,14 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
         isOnlyStep
       />
 
+      <div className={classNames.alertWrapper}>
+        <Alert
+          variant="general"
+          iconName="bridge"
+          error="You'll need to bridge your SUMR to Base before you can stake it"
+        />
+      </div>
+
       {/* Satellite network cards */}
       {satelliteClaimItems.map((item) => {
         const network = sdkNetworkToHumanNetwork(chainIdToSDKNetwork(item.chainId))
@@ -295,14 +303,6 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
           />
         )
       })}
-
-      <div className={classNames.alertWrapper}>
-        <Alert
-          variant="general"
-          iconName="bridge"
-          error="You'll need to bridge your SUMR to Base before you can stake it"
-        />
-      </div>
 
       <ClaimDelegateFooter canContinue={canContinue} onContinue={handleAccept} />
     </div>

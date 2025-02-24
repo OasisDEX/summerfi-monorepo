@@ -10,6 +10,7 @@
     left: var(--general-space-16);
     color: var(--earn-protocol-success-100);
     padding: var(--general-space-4) var(--general-space-8);
+    padding-left: 0;
     display: flex;
     align-items: center;
     gap: var(--general-space-8);
@@ -19,6 +20,8 @@
   .alertWrapper {
     width: 100%;
     max-width: 560px;
+    margin-top: var(--general-space-16);
+    margin-bottom: var(--general-space-12);
   }
 
   .errorWrapper {
@@ -95,7 +98,8 @@
     justify-content: center;
     align-items: center;
     gap: var(--general-space-16);
-    margin-top: var(--general-space-24);
+    margin-top: var(--general-space-16);
+    margin-bottom: var(--general-space-8);
   }
 
   .mainActionsGroup {
