@@ -48,14 +48,6 @@ jobs:
       EARN_PROTOCOL_DB_CONNECTION_STRING: ${{ secrets.EARN_PROTOCOL_DB_CONNECTION_STRING }}
 
     steps:
-      - name: Setup upterm session
-        uses: lhotari/action-upterm@v1
-        with:
-          ## limits ssh access and adds the ssh public key for the user which triggered the workflow
-          limit-access-to-actor: true
-          ## If no one connects after 5 minutes, shut down server.
-          wait-timeout-minutes: 5
-
       - name: Git clone the repository
         uses: actions/checkout@v3
 
@@ -78,6 +70,14 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE }}
           # role-duration-seconds: 14390 #adjust as needed for your build time
           aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Setup upterm session
+        uses: lhotari/action-upterm@v1
+        with:
+          ## limits ssh access and adds the ssh public key for the user which triggered the workflow
+          limit-access-to-actor: true
+          ## If no one connects after 5 minutes, shut down server.
+          wait-timeout-minutes: 5
 
       - name: Install dependencies
         run: pnpm install
