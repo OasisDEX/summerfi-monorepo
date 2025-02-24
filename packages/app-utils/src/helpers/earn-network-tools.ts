@@ -11,21 +11,79 @@ import {
 } from '@summerfi/app-types'
 import { type Chain } from 'viem/chains'
 
+/**
+ * Type guard to check if a chain ID is a supported SDK chain.
+ * Supported chains are Arbitrum, Base, and Mainnet.
+ *
+ * @param chainId - The chain ID to check
+ * @returns True if the chain ID is supported, false otherwise
+ */
 export const isSupportedSDKChain = (
   chainId: unknown,
 ): chainId is SDKChainId.ARBITRUM | SDKChainId.BASE | SDKChainId.MAINNET =>
   typeof chainId === 'number' && sdkSupportedChains.includes(chainId)
 
-const humanReadableNetworkMap = {
+/**
+ * Maps SDK network identifiers to human readable network names.
+ */
+export const humanReadableNetworkMap = {
   [SDKNetwork.ArbitrumOne]: 'arbitrum',
   [SDKNetwork.Base]: 'base',
   [SDKNetwork.Mainnet]: 'mainnet',
-}
+} as const
 
+/**
+ * Maps chain IDs to their display labels.
+ */
+export const humanReadableChainToLabelMap = {
+  [SDKChainId.BASE]: 'Base',
+  [SDKChainId.ARBITRUM]: 'Arbitrum',
+  [SDKChainId.MAINNET]: 'Ethereum',
+} as const
+
+/**
+ * Maps human readable network names to SDK network identifiers.
+ */
 const sdkNetworkMap = {
   arbitrum: SDKNetwork.ArbitrumOne,
   base: SDKNetwork.Base,
   mainnet: SDKNetwork.Mainnet,
+}
+
+/**
+ * Type representing the human readable network names.
+ * Derived from the values in humanReadableNetworkMap.
+ */
+export type HumanReadableNetwork =
+  (typeof humanReadableNetworkMap)[keyof typeof humanReadableNetworkMap]
+
+/**
+ * Type guard to check if a network is a supported SDK network.
+ *
+ * @param network - The network to check
+ * @returns True if the network is supported, false otherwise
+ */
+export const isSupportedSDKNetwork = (network: unknown): network is SDKSupportedNetwork => {
+  return typeof network === 'string' && network in humanReadableNetworkMap
+}
+
+/**
+ * Type guard to check whether a value is a supported human network.
+ * Supported human networks are: "arbitrum", "base", and "mainnet".
+ *
+ * @param network - The value to test.
+ * @returns True if the value is a string and corresponds to a supported human network.
+ */
+export const isSupportedHumanNetwork = (network: unknown): network is HumanReadableNetwork => {
+  return typeof network === 'string' && network.toLowerCase() in sdkNetworkMap
+}
+
+export const sdkNetworkToHumanNetworkStrict = (network: SDKNetwork): HumanReadableNetwork => {
+  if (!humanReadableNetworkMap[network as SDKSupportedNetwork]) {
+    throw new Error(`Unsupported network: ${network}`)
+  }
+
+  return humanReadableNetworkMap[network as SDKSupportedNetwork]
 }
 
 export const sdkNetworkToHumanNetwork = (network: SDKNetwork): string => {
@@ -105,17 +163,4 @@ export const sdkNetworkToChain = (network: SDKNetwork): Chain => {
   }
 
   return chainMap[network as SDKSupportedNetwork]
-}
-
-/**
- * Type guard to check whether a value is a supported human network.
- * Supported human networks are: "arbitrum", "base", and "mainnet".
- *
- * @param network - The value to test.
- * @returns True if the value is a string and corresponds to a supported human network.
- */
-export const isSupportedHumanNetwork = (
-  network: unknown,
-): network is 'arbitrum' | 'base' | 'mainnet' => {
-  return typeof network === 'string' && network.toLowerCase() in sdkNetworkMap
 }

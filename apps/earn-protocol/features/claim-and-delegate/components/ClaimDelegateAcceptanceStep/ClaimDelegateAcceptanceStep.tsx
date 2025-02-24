@@ -1,6 +1,6 @@
 import { type Dispatch, type FC, useEffect } from 'react'
 import { useUser } from '@account-kit/react'
-import { Button, Card, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { Button, Card, Text, useMobileCheck, WithArrow } from '@summerfi/app-earn-ui'
 import { useTermsOfService } from '@summerfi/app-tos'
 import { TOSStatus } from '@summerfi/app-types'
 import Link from 'next/link'
@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { type AccountKitSupportedNetworks, SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { AccountKitAccountType } from '@/account-kit/types'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
+import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import {
   airdropToS,
   claimDelegateTerms,
@@ -35,6 +36,8 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
   state,
   dispatch,
 }) => {
+  const { deviceType } = useDeviceType()
+  const { isMobile } = useMobileCheck(deviceType)
   const user = useUser()
   const { userWalletAddress } = useUserWallet()
   const { activeParagraph, paragraphRefs } = useVisibleParagraph()
@@ -93,30 +96,37 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
 
   return (
     <div className={classNames.claimDelegateAcceptanceStepWrapper}>
-      <ol>
-        {claimDelegateTerms.map((item, idx) => (
-          <li
-            key={idx}
-            onClick={() => {
-              paragraphRefs.current[idx]?.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center',
-              })
-            }}
-          >
-            <Text
-              as="p"
-              variant="p3"
-              style={{
-                color: activeParagraph === idx ? 'white' : 'var(--earn-protocol-secondary-60)',
-                cursor: 'pointer',
+      <div className={classNames.tabListWrapper}>
+        <ol className={classNames.tabList}>
+          {claimDelegateTerms.map((item, idx) => (
+            <li
+              key={idx}
+              onClick={() => {
+                paragraphRefs.current[idx]?.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'center',
+                })
               }}
             >
-              {idx + 1}. {item.label}
-            </Text>
-          </li>
-        ))}
-      </ol>
+              <div className={classNames.termItem} data-active={activeParagraph === idx}>
+                <Text as="p" variant="p3semi">
+                  {idx + 1}.
+                </Text>
+                <Text
+                  as="p"
+                  variant="p3semi"
+                  className={classNames.termText}
+                  style={{
+                    color: activeParagraph === idx ? 'white' : 'var(--earn-protocol-secondary-60)',
+                  }}
+                >
+                  {item.label}
+                </Text>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
 
       <div className={classNames.mainContentWrapper}>
         <Card className={classNames.cardWrapper}>
@@ -150,7 +160,7 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
           <Link href={`/portfolio/${state.walletAddress}?tab=${PortfolioTabs.REWARDS}`}>
             <Button variant="secondarySmall">
               <Text variant="p3semi" as="p">
-                Reject terms
+                {isMobile ? 'Reject' : 'Reject terms'}
               </Text>
             </Button>
           </Link>
@@ -168,7 +178,11 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
               isLoading={isLoading || tosState.status === TOSStatus.DONE}
             >
               {/* Loading... when done to avoid button text flickering just before automatic change of step to claim  */}
-              {isLoading || tosState.status === TOSStatus.DONE ? 'Loading...' : 'Accept & Sign'}
+              {isLoading || tosState.status === TOSStatus.DONE
+                ? 'Loading...'
+                : isMobile
+                  ? 'Accept'
+                  : 'Accept & Sign'}
             </WithArrow>
           </Button>
         </div>

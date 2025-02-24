@@ -24,7 +24,12 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+
+  @include media('>s') {
+    padding: 0 var(--general-space-32);
+  }
+
   @include media('>xl') {
-    padding: 0 var(--general-space-64);
+    padding: 0;
   }
 }

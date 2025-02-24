@@ -1,10 +1,15 @@
-import { type Dispatch, type FC, useState } from 'react'
+import { type Dispatch, type FC, useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
-import { Button, SUMR_CAP, Text, useLocalConfig, WithArrow } from '@summerfi/app-earn-ui'
+import { Alert, SUMR_CAP, useLocalConfig } from '@summerfi/app-earn-ui'
 import { SDKChainId } from '@summerfi/app-types'
-import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
-import { useParams } from 'next/navigation'
+import {
+  chainIdToSDKNetwork,
+  isSupportedHumanNetwork,
+  sdkNetworkToHumanNetwork,
+  sdkNetworkToHumanNetworkStrict,
+} from '@summerfi/app-utils'
+import { useParams, useSearchParams } from 'next/navigation'
 
 import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { TermsOfServiceCookiePrefix } from '@/constants/terms-of-service'
@@ -19,9 +24,10 @@ import {
 import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { useRiskVerification } from '@/hooks/use-risk-verification'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
-import { ClaimDelegateToClaim } from './ClaimDelegateToClaim'
+import { ClaimDelegateError, ClaimDelegateNoBalances } from './ClaimDelegateError'
+import { ClaimDelegateFooter } from './ClaimDelegateFooter'
+import { ClaimDelegateNetworkCard } from './ClaimDelegateNetworkCard'
 
 import classNames from './ClaimDelegateClaimStep.module.scss'
 
@@ -29,7 +35,7 @@ const delayPerNetwork = {
   [SDKChainId.BASE]: 4000,
   [SDKChainId.ARBITRUM]: 4000,
   [SDKChainId.MAINNET]: 13000,
-}
+} as const
 
 const claimItems: {
   chainId: SDKChainId.BASE | SDKChainId.MAINNET | SDKChainId.ARBITRUM
@@ -54,63 +60,77 @@ interface ClaimDelegateClaimStepProps {
 export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   state,
   dispatch,
-  externalData,
+  externalData: initialExternalData,
 }) => {
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
-  const { userWalletAddress } = useUserWallet()
   const { walletAddress } = useParams()
   const resolvedWalletAddress = (
     Array.isArray(walletAddress) ? walletAddress[0] : walletAddress
   ) as string
+  const searchParams = useSearchParams()
+  const viaParam = searchParams.get('via')
+  const hasReturnedToClaimStep = viaParam === 'bridge'
 
   const { checkRisk } = useRiskVerification({
     cookiePrefix: TermsOfServiceCookiePrefix.SUMR_CLAIM_TOKEN,
   })
 
-  const [claimOnChainId, setClaimOnChainId] = useState<
-    SDKChainId.BASE | SDKChainId.MAINNET | SDKChainId.ARBITRUM
-  >(SDKChainId.BASE)
+  const [externalData, setExternalData] = useState(initialExternalData)
 
-  const { claimSumrTransaction } = useClaimSumrTransaction({
-    onSuccess: () => {
-      // delay complete status to make sure that in the next step
-      // when fetching sumr balance, it will be updated
-      setTimeout(() => {
-        dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.COMPLETED })
-
-        toast.success('Claimed $SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
-      }, delayPerNetwork[claimOnChainId])
-    },
-    onError: () => {
-      dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.FAILED })
-
-      toast.error('Failed to claim $SUMR tokens', ERROR_TOAST_CONFIG)
-    },
-  })
-
-  const { setChain } = useChain()
-  const { clientChainId } = useClientChainId()
-  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
+  const { setChain, isSettingChain } = useChain()
+  const { clientChainId } = useClientChainId() as {
+    clientChainId: SDKChainId.BASE | SDKChainId.ARBITRUM | SDKChainId.MAINNET
+  }
 
   const handleBack = () => {
     dispatch({ type: 'update-step', payload: ClaimDelegateSteps.TERMS })
   }
 
-  const handleAccept = async () => {
-    if (state.claimStatus === ClaimDelegateTxStatuses.COMPLETED) {
-      dispatch({ type: 'update-step', payload: ClaimDelegateSteps.DELEGATE })
+  const { claimSumrTransaction } = useClaimSumrTransaction({
+    onSuccess: () => {
+      setTimeout(() => {
+        // Zero out the claimed amount and update balances
+        const humanNetwork = sdkNetworkToHumanNetwork(chainIdToSDKNetwork(clientChainId))
 
-      return
-    }
+        if (!isSupportedHumanNetwork(humanNetwork)) {
+          throw new Error(`Unsupported network: ${humanNetwork}`)
+        }
 
-    if (clientChainId !== claimOnChainId) {
-      setChain({ chain: SDKChainIdToAAChainMap[claimOnChainId] })
+        setExternalData((prevData) => ({
+          ...prevData,
+          sumrToClaim: {
+            ...prevData.sumrToClaim,
+            claimableAggregatedRewards: {
+              ...prevData.sumrToClaim.claimableAggregatedRewards,
+              perChain: {
+                ...prevData.sumrToClaim.claimableAggregatedRewards.perChain,
+                [clientChainId]: 0,
+              },
+            },
+          },
+          sumrBalances: {
+            ...prevData.sumrBalances,
+            [humanNetwork]:
+              (Number(prevData.sumrBalances[humanNetwork]) || 0) +
+              (prevData.sumrToClaim.claimableAggregatedRewards.perChain[clientChainId] || 0),
+          },
+        }))
 
-      return
-    }
+        dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.COMPLETED })
+        toast.success('Claimed $SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
+      }, delayPerNetwork[clientChainId])
+    },
+    onError: () => {
+      dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.FAILED })
+      toast.error('Failed to claim $SUMR tokens', ERROR_TOAST_CONFIG)
+    },
+  })
 
+  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
+
+  const handleClaim = useCallback(async () => {
     dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.PENDING })
 
     const risk = await checkRisk()
@@ -123,65 +143,136 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
       // eslint-disable-next-line no-console
       console.error('Error claiming $SUMR:', err)
     })
+  }, [dispatch, checkRisk, claimSumrTransaction])
+
+  // Watch for chain changes and trigger claim if pending
+  useEffect(() => {
+    let isMounted = true
+
+    if (
+      state.pendingClaimChainId &&
+      clientChainId === state.pendingClaimChainId &&
+      !isSettingChain
+    ) {
+      handleClaim().then(() => {
+        if (isMounted) {
+          dispatch({ type: 'set-pending-claim', payload: undefined })
+        }
+      })
+    }
+
+    return () => {
+      isMounted = false
+    }
+  }, [clientChainId, state.pendingClaimChainId, isSettingChain, handleClaim, dispatch])
+
+  const hasClaimedAtLeastOneChain = state.claimStatus === ClaimDelegateTxStatuses.COMPLETED
+  const canContinue = hasClaimedAtLeastOneChain || hasReturnedToClaimStep
+
+  const handleAccept = () => {
+    dispatch({ type: 'update-step', payload: ClaimDelegateSteps.DELEGATE })
   }
 
-  const sumrToClaim =
-    externalData.sumrToClaim.claimableAggregatedRewards.perChain[claimOnChainId] ?? 0
+  const handleClaimClick = (
+    chainId: SDKChainId.BASE | SDKChainId.MAINNET | SDKChainId.ARBITRUM,
+  ) => {
+    if (clientChainId !== chainId) {
+      dispatch({ type: 'set-pending-claim', payload: chainId })
+      setChain({ chain: SDKChainIdToAAChainMap[chainId] })
 
-  const hideButtonArrow = state.claimStatus === ClaimDelegateTxStatuses.PENDING
+      return
+    }
+    handleClaim()
+  }
+
+  const satelliteClaimItems = claimItems.filter((item) => item.chainId !== SDKChainId.BASE)
+
+  const hasClaimableBalance = Object.values(
+    externalData.sumrToClaim.claimableAggregatedRewards.perChain,
+  ).some((amount) => amount > 0)
+
+  const hasBridgeableBalance = satelliteClaimItems.some((item) => {
+    try {
+      const humanNetwork = sdkNetworkToHumanNetworkStrict(chainIdToSDKNetwork(item.chainId))
+
+      return Number(externalData.sumrBalances[humanNetwork]) > 0
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error checking bridgeable balance:', error)
+
+      return false
+    }
+  })
+
+  if (!hasClaimableBalance && !hasBridgeableBalance) {
+    return <ClaimDelegateNoBalances onContinue={handleAccept} />
+  }
+
+  if (!isSupportedHumanNetwork(sdkNetworkToHumanNetwork(chainIdToSDKNetwork(clientChainId)))) {
+    return (
+      <div className={classNames.claimDelegateClaimStepWrapper}>
+        <ClaimDelegateError error="Unsupported network" onBack={handleBack} />
+      </div>
+    )
+  }
 
   return (
     <div className={classNames.claimDelegateClaimStepWrapper}>
-      {claimItems.map((item) => (
-        <ClaimDelegateToClaim
-          key={item.chainId}
-          {...item}
-          earned={formatCryptoBalance(
-            externalData.sumrToClaim.claimableAggregatedRewards.perChain[item.chainId] ?? 0,
-          )}
-          earnedInUSD={formatFiatBalance(
-            Number(
-              externalData.sumrToClaim.claimableAggregatedRewards.perChain[item.chainId] ?? 0,
-            ) * estimatedSumrPrice,
-          )}
-          isActive={claimOnChainId === item.chainId}
-          onClick={() => setClaimOnChainId(item.chainId)}
+      {/* Base network card */}
+      <ClaimDelegateNetworkCard
+        chainId={SDKChainId.BASE}
+        claimableAmount={
+          externalData.sumrToClaim.claimableAggregatedRewards.perChain[SDKChainId.BASE] ?? 0
+        }
+        balance={Number(externalData.sumrBalances.base) || 0}
+        estimatedSumrPrice={estimatedSumrPrice}
+        walletAddress={resolvedWalletAddress}
+        onClaim={() => handleClaimClick(SDKChainId.BASE)}
+        isLoading={
+          (state.claimStatus === ClaimDelegateTxStatuses.PENDING || isSettingChain) &&
+          (state.pendingClaimChainId === SDKChainId.BASE || clientChainId === SDKChainId.BASE)
+        }
+      />
+
+      {/* Satellite network cards */}
+      {satelliteClaimItems.map((item) => {
+        const network = sdkNetworkToHumanNetwork(chainIdToSDKNetwork(item.chainId))
+
+        if (!isSupportedHumanNetwork(network)) return null
+
+        const claimableAmount =
+          externalData.sumrToClaim.claimableAggregatedRewards.perChain[item.chainId] ?? 0
+
+        return (
+          <ClaimDelegateNetworkCard
+            key={item.chainId}
+            chainId={item.chainId}
+            claimableAmount={claimableAmount}
+            balance={Number(externalData.sumrBalances[network]) || 0}
+            estimatedSumrPrice={estimatedSumrPrice}
+            walletAddress={resolvedWalletAddress}
+            onClaim={() => handleClaimClick(item.chainId)}
+            isLoading={
+              (state.claimStatus === ClaimDelegateTxStatuses.PENDING || isSettingChain) &&
+              (state.pendingClaimChainId === item.chainId || clientChainId === item.chainId)
+            }
+          />
+        )
+      })}
+
+      <div className={classNames.alertWrapper}>
+        <Alert
+          variant="general"
+          iconName="bridge"
+          error="You'll need to bridge your SUMR to Base before you can stake it"
         />
-      ))}
-      <div className={classNames.footerWrapper}>
-        <Button variant="secondarySmall" onClick={handleBack}>
-          <Text variant="p3semi" as="p">
-            Back
-          </Text>
-        </Button>
-        <Button
-          variant="primarySmall"
-          style={{
-            paddingRight: hideButtonArrow ? 'var(--general-space-24)' : 'var(--general-space-32)',
-          }}
-          onClick={handleAccept}
-          disabled={
-            state.claimStatus === ClaimDelegateTxStatuses.PENDING ||
-            sumrToClaim === 0 ||
-            userWalletAddress?.toLowerCase() !== resolvedWalletAddress.toLowerCase()
-          }
-        >
-          <WithArrow
-            style={{ color: 'var(--earn-protocol-secondary-100)' }}
-            variant="p3semi"
-            as="p"
-            hideArrow={hideButtonArrow}
-            isLoading={state.claimStatus === ClaimDelegateTxStatuses.PENDING}
-          >
-            {state.claimStatus === ClaimDelegateTxStatuses.PENDING && 'Claiming...'}
-            {state.claimStatus === ClaimDelegateTxStatuses.COMPLETED && 'Continue'}
-            {state.claimStatus === ClaimDelegateTxStatuses.FAILED &&
-              (claimOnChainId !== clientChainId ? 'Switch Network' : 'Retry')}
-            {state.claimStatus === undefined &&
-              (claimOnChainId !== clientChainId ? 'Switch Network' : 'Claim')}
-          </WithArrow>
-        </Button>
       </div>
+
+      <ClaimDelegateFooter
+        canContinue={canContinue}
+        onBack={handleBack}
+        onContinue={handleAccept}
+      />
     </div>
   )
 }

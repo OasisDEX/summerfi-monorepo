@@ -63,40 +63,41 @@ export const ClaimDelegateFormHeader: FC<ClaimDelegateFormHeaderProps> = ({
 
   return (
     <div className={classNames.claimDelegateFormHeaderWrapper}>
-      {steps.map((step, idx) => (
-        <div className={classNames.step} key={step.value}>
-          <div
-            className={clsx(classNames.circle, {
-              [classNames.active]:
-                step.value === state.step && !getIsCompleted({ idx, state, steps }),
-              [classNames.completed]: getIsCompleted({ idx, state, steps }),
-            })}
-          >
-            {!getIsCompleted({ idx, state, steps }) && (
-              <Text as="p" variant="p2semi">
-                {idx + 1}
+      {steps.map(
+        (step, idx) =>
+          !(idx === steps.length - 1) && (
+            <div className={classNames.step} key={step.value}>
+              <div
+                className={clsx(classNames.circle, {
+                  [classNames.active]:
+                    step.value === state.step && !getIsCompleted({ idx, state, steps }),
+                  [classNames.completed]: getIsCompleted({ idx, state, steps }),
+                })}
+              >
+                {!getIsCompleted({ idx, state, steps }) && (
+                  <Text as="p" variant="p2semi" className={classNames.circleText}>
+                    {idx + 1}
+                  </Text>
+                )}
+                {getIsCompleted({ idx, state, steps }) && (
+                  <Icon
+                    iconName="checkmark"
+                    variant="xs"
+                    color="var(--earn-protocol-success-100)"
+                  />
+                )}
+              </div>
+              <Text as="p" variant="p2semi" className={classNames.stepLabel}>
+                {step.label}
               </Text>
-            )}
-            {getIsCompleted({ idx, state, steps }) && (
-              <Icon iconName="checkmark" variant="xs" color="var(--earn-protocol-success-100)" />
-            )}
-          </div>
-          {step.label}
-          {steps.length - 1 !== idx && (
-            <Text
-              as="p"
-              variant="p2semi"
-              style={{
-                color: 'var(--earn-protocol-secondary-40)',
-                marginLeft: 'var(--general-space-8)',
-                marginRight: 'var(--general-space-24)',
-              }}
-            >
-              {'->'}
-            </Text>
-          )}
-        </div>
-      ))}
+              {steps.length - 2 !== idx && (
+                <Text as="p" variant="p2semi" className={classNames.stepArrow}>
+                  {'->'}
+                </Text>
+              )}
+            </div>
+          ),
+      )}
     </div>
   )
 }

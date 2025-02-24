@@ -1,3 +1,5 @@
+import { type SDKChainId } from '@summerfi/app-types'
+
 import { type SumrBalancesData } from '@/app/server-handlers/sumr-balances'
 import { type SumrDecayFactorData } from '@/app/server-handlers/sumr-decay-factor'
 import { type SumrDelegateStakeData } from '@/app/server-handlers/sumr-delegate-stake'
@@ -34,6 +36,7 @@ export type ClaimDelegateState = {
   stakeType: ClaimDelegateStakeType
   stakeChangeAmount: string | undefined
   walletAddress: string
+  pendingClaimChainId: SDKChainId | undefined
 }
 
 export type ClaimDelegateReducerAction =
@@ -68,6 +71,10 @@ export type ClaimDelegateReducerAction =
   | {
       type: 'update-stake-change-amount'
       payload: string | undefined
+    }
+  | {
+      type: 'set-pending-claim'
+      payload: SDKChainId | undefined
     }
 
 export type ClaimDelegateExternalData = {

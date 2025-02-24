@@ -25,16 +25,27 @@
 }
 
 .tabButton {
-  padding: 10px 20px;
+  padding: 12px 8px;
   cursor: pointer;
   background: none;
   border: none;
-  font-size: 16px;
+  font-size: 12px;
   color: var(--earn-protocol-secondary-40);
   transition: color 0.3s ease;
   white-space: nowrap; /* Prevent text wrapping for tabs */
   flex-shrink: 0; /* Ensure buttons don't shrink when content is wide */
   position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background-color: #ff0080;
+    transition: width 0.3s ease;
+  }
 
   &:hover {
     color: var(--earn-protocol-secondary-100);
@@ -43,33 +54,24 @@
   &:focus {
     outline: none; /* Remove default focus outline */
   }
-}
 
-.active {
-  color: var(--earn-protocol-secondary-100);
-  position: relative;
-}
-
-.underline {
-  position: absolute;
-  bottom: 0; /* Same level as grey border */
-  height: 3px;
-  background-color: #ff0080; /* Pink underline */
-  z-index: 1; /* Pink border should appear on top */
-  transition:
-    left 0.3s ease,
-    width 0.3s ease; /* Smooth animation */
+  &.active {
+    color: var(--earn-protocol-secondary-100);
+    
+    &::after {
+      width: 100%;
+    }
+  }
 }
 
 .tabContent {
-  padding: var(--general-space-24) 0;
+  padding: var(--general-space-16) 0;
 }
 
-/* Mobile-specific styles */
-@media (max-width: 768px) {
+@include media('>s') {
   .tabButton {
     padding: 15px 10px;
-    font-size: 14px; /* Smaller font size for mobile */
+    font-size: 14px;
   }
 
   .tabContent {
@@ -77,13 +79,13 @@
   }
 }
 
-@media (max-width: 480px) {
+@include media('>m') {
   .tabButton {
-    padding: 12px 8px;
-    font-size: 12px; /* Further reduce font size for very small screens */
+    padding: 10px 20px;
+    font-size: 16px;
   }
 
   .tabContent {
-    padding: 10px;
+    padding: var(--general-space-24) 0;
   }
 }

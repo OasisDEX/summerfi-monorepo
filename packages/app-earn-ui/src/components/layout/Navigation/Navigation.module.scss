@@ -1,6 +1,10 @@
 .wrapper {
-  padding: 0 var(--general-space-32);
+  padding: 0 var(--general-space-24);
   margin-bottom: var(--general-space-56);
+
+  @include media('>s') {
+    padding: 0 var(--general-space-32);
+  }
 
   @include media('>xl') {
     padding: 0 var(--general-space-64);

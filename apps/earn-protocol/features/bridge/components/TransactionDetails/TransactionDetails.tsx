@@ -16,9 +16,6 @@ interface TransactionDetailsProps {
   gasOnSourceRaw: string
   amountReceived: string
   lzFee: string
-  lzFeeRaw: string
-  totalFee: string
-  totalFeeRaw: string
   destinationChain: Chain
   error?: string | null
 }
@@ -28,7 +25,6 @@ export const TransactionDetails = ({
   amountReceived,
   destinationChain,
   lzFee,
-  totalFee,
   error,
   loading,
 }: TransactionDetailsProps) => {
@@ -45,18 +41,6 @@ export const TransactionDetails = ({
     {
       label: 'Messaging fee',
       value: loading ? <SkeletonLine width={100} height={20} /> : `$${formatCryptoBalance(lzFee)}`,
-      type: 'entry' as const,
-    },
-    {
-      type: 'separator' as const,
-    },
-    {
-      label: 'Total fee',
-      value: loading ? (
-        <SkeletonLine width={100} height={20} />
-      ) : (
-        `$${formatCryptoBalance(totalFee)}`
-      ),
       type: 'entry' as const,
     },
   ]

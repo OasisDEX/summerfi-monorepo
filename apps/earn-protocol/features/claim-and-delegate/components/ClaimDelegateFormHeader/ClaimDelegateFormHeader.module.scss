@@ -1,20 +1,43 @@
 .claimDelegateFormHeaderWrapper {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   flex-wrap: wrap;
   width: 100%;
-  gap: var(--general-space-16);
+  gap: var(--general-space-32);
 
-  @media (min-width: 768px) {
-    justify-content: center;
+  @include media('>s') {
+    gap: var(--general-space-48);
+  }
+
+  @include media('>l') {
     gap: unset;
+    gap: var(--general-space-16);
   }
 
   .step {
     display: flex;
     align-items: center;
     gap: var(--general-space-16);
+
+    .stepLabel {
+      display: none;
+
+      @include media('>l') {
+        display: block;
+      }
+    }
+
+    .stepArrow {
+      display: none;
+      color: var(--earn-protocol-secondary-40);
+
+      @include media('>l') {
+        display: block;
+        margin-left: var(--general-space-8);
+        margin-right: var(--general-space-24);
+      }
+    }
 
     .circle {
       display: flex;

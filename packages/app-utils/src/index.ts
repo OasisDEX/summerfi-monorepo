@@ -56,6 +56,8 @@ export {
   isSupportedSDKChain,
   sdkNetworkToHumanNetwork,
   humanNetworktoSDKNetwork,
+  humanReadableChainToLabelMap,
+  sdkNetworkToHumanNetworkStrict,
   networkNameToSDKNetwork,
   subgraphNetworkToId,
   subgraphNetworkToSDKId,

@@ -1,4 +1,5 @@
-import { type Dispatch, type FC, useEffect, useState } from 'react'
+import { type Dispatch, type FC, useEffect, useRef, useState } from 'react'
+import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
 import {
   InputWithDropdown,
@@ -13,12 +14,13 @@ import {
   formatCryptoBalance,
   formatToBigNumber,
   isSupportedHumanNetwork,
+  isSupportedSDKChain,
   sdkNetworkToChain,
   sdkNetworkToHumanNetwork,
 } from '@summerfi/app-utils'
 import { Address } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
-import { redirect } from 'next/navigation'
+import { redirect, useSearchParams } from 'next/navigation'
 
 import { TermsOfServiceCookiePrefix } from '@/constants/terms-of-service'
 import { BridgeFormTitle } from '@/features/bridge/components/BridgeFormTitle/BridgeFormTitle'
@@ -30,6 +32,7 @@ import { TransactionDetails } from '@/features/bridge/components/TransactionDeta
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import { useBridgeTransaction } from '@/features/bridge/hooks/use-bridge-transaction'
 import { type BridgeReducerAction, type BridgeState } from '@/features/bridge/types'
+import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useRiskVerification } from '@/hooks/use-risk-verification'
 import { useToken } from '@/hooks/use-token'
@@ -44,10 +47,14 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
-  const { chain: sourceChain, setChain: setSourceChain } = useChain()
+  const { chain: sourceChain, setChain: setSourceChain, isSettingChain } = useChain()
   const { userWalletAddress } = useUserWallet()
   const sourceNetwork = chainIdToSDKNetwork(sourceChain.id)
   const humanNetworkName = sdkNetworkToHumanNetwork(sourceNetwork)
+  const searchParams = useSearchParams()
+  const sourceChainFromParams = searchParams.get('source_chain')
+  const amountFromParams = searchParams.get('amount')
+  const viaParam = searchParams.get('via')
 
   if (!isSupportedHumanNetwork(humanNetworkName)) {
     dispatch({
@@ -66,6 +73,9 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
   })
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
+  // Add a ref to track if we've already initialized from params
+  const initializedRef = useRef(false)
+
   const {
     amountRaw,
     amountParsed,
@@ -79,6 +89,7 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
     tokenDecimals: SUMR_DECIMALS,
     tokenPrice: estimatedSumrPrice.toString(),
     selectedToken: sumrToken,
+    initialAmount: amountFromParams ?? undefined,
   })
 
   const { checkRisk } = useRiskVerification({
@@ -131,10 +142,62 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
   const [selectedPercentage, setSelectedPercentage] = useState<number | null>(null)
 
   useEffect(() => {
+    if (!userWalletAddress) {
+      try {
+        redirect('/earn')
+      } catch (error) {
+        dispatch({
+          type: 'error',
+          payload: 'Failed to redirect. Please try again.',
+        })
+      }
+    }
+
     if (userWalletAddress !== state.walletAddress) {
       redirect(`/bridge/${userWalletAddress}`)
     }
-  }, [userWalletAddress, state.walletAddress])
+  }, [userWalletAddress, state.walletAddress, dispatch])
+
+  useEffect(() => {
+    const switchChain = async () => {
+      if (sourceChainFromParams) {
+        const chainId = parseInt(sourceChainFromParams, 10)
+
+        if (!isNaN(chainId) && isSupportedSDKChain(chainId)) {
+          const network = chainIdToSDKNetwork(chainId)
+          const nextSourceChain = sdkNetworkToChain(network)
+
+          try {
+            // Add a check to prevent unnecessary switching
+            if (sourceChain.id !== nextSourceChain.id) {
+              await setSourceChain({ chain: nextSourceChain })
+            }
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error('Failed to switch chain:', error)
+
+            dispatch({
+              type: 'error',
+              payload: error instanceof Error ? error.message : 'Failed to switch chain',
+            })
+          }
+        }
+      }
+    }
+
+    switchChain()
+  }, [sourceChainFromParams, setSourceChain, dispatch, sourceChain.id])
+
+  useEffect(() => {
+    if (amountFromParams && !initializedRef.current) {
+      initializedRef.current = true
+      manualSetAmount(amountFromParams)
+
+      if (!isSourceMatchingDestination) {
+        prepareTransaction(amountFromParams)
+      }
+    }
+  }, [amountFromParams, manualSetAmount, isSourceMatchingDestination, prepareTransaction])
 
   const handleBridge = async () => {
     const risk = await checkRisk()
@@ -150,6 +213,7 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
         type: 'error',
         payload: 'Failed to create transaction',
       })
+      toast.error('Failed to create bridge transaction', ERROR_TOAST_CONFIG)
 
       return
     }
@@ -161,6 +225,7 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
         amount: amountDisplay,
       },
     })
+    toast.success('Bridge transaction submitted successfully', SUCCESS_TOAST_CONFIG)
   }
 
   const handleDestinationChainChange = (newDestination: SDKNetwork) => {
@@ -185,6 +250,18 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
   const handleAmountChangeWithPercentage = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedPercentage(null)
     handleAmountChange(e)
+  }
+
+  const secondaryButtonConfig = {
+    claim: {
+      url: `/claim/${state.walletAddress}?via=bridge`,
+      label: 'Return to claim',
+    },
+    portfolio: {
+      url: `/portfolio/${state.walletAddress}?via=bridge`,
+      label: 'Return to portfolio',
+    },
+    default: undefined,
   }
 
   return (
@@ -254,21 +331,19 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
             gasOnSourceRaw={gasOnSourceRaw}
             amountReceived={transaction?.metadata.toAmount.toBigNumber().toString() ?? '0'}
             lzFee={transaction?.metadata.lzFeeUsd ?? '0'}
-            lzFeeRaw={transaction?.metadata.lzFee.toBigNumber().toString() ?? '0'}
-            totalFee={new BigNumber(gasOnSource)
-              .plus(new BigNumber(transaction?.metadata.lzFee.toBigNumber().toString() ?? '0'))
-              .toString()}
-            totalFeeRaw={new BigNumber(gasOnSourceRaw)
-              .plus(new BigNumber(transaction?.metadata.lzFee.toBigNumber().toString() ?? '0'))
-              .toString()}
             destinationChain={state.destinationChain}
-            error={validationError}
+            error={!isSettingChain ? validationError : ''}
           />
         </>
       }
       primaryButton={{
-        label: isEstimatingGas || isPreparing ? 'Estimating...' : 'Bridge',
-        loading: isEstimatingGas || isPreparing,
+        label:
+          isEstimatingGas || isPreparing
+            ? 'Estimating...'
+            : isSettingChain
+              ? 'Switching chain...'
+              : 'Bridge',
+        loading: isEstimatingGas || isPreparing || isSettingChain,
         action: handleBridge,
         disabled:
           isEstimatingGas ||
@@ -276,8 +351,13 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
           isAmountGreaterThanBalance ||
           isLoading ||
           !isReady ||
-          isSourceMatchingDestination,
+          isSourceMatchingDestination ||
+          isSettingChain,
       }}
+      secondaryButton={
+        secondaryButtonConfig[viaParam as keyof typeof secondaryButtonConfig] ??
+        secondaryButtonConfig.default
+      }
     />
   )
 }
