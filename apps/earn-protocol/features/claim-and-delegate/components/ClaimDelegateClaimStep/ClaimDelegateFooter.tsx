@@ -6,13 +6,13 @@ import classNames from './ClaimDelegateClaimStep.module.scss'
 interface ClaimDelegateFooterProps {
   canContinue: boolean
   onBack: () => void
-  onSkipOrContinue: () => void
+  onContinue: () => void
 }
 
 export const ClaimDelegateFooter: FC<ClaimDelegateFooterProps> = ({
   canContinue,
   onBack,
-  onSkipOrContinue,
+  onContinue,
 }) => {
   return (
     <div className={classNames.footerWrapper}>
@@ -22,14 +22,17 @@ export const ClaimDelegateFooter: FC<ClaimDelegateFooterProps> = ({
         </Text>
       </Button>
 
-      <Button variant="primaryMedium" onClick={onSkipOrContinue}>
+      <Button variant="primaryMedium" onClick={onContinue} disabled={!canContinue}>
         <WithArrow
           reserveSpace
           variant="p3semi"
           as="p"
-          style={{ color: 'var(--earn-protocol-secondary-100)' }}
+          disabled={!canContinue}
+          style={{
+            color: canContinue ? 'var(--earn-protocol-secondary-100)' : 'var(--color-text-inverse)',
+          }}
         >
-          {canContinue ? 'Continue' : 'Skip'}
+          Continue
         </WithArrow>
       </Button>
     </div>

@@ -7,6 +7,7 @@ import {
   chainIdToSDKNetwork,
   isSupportedHumanNetwork,
   sdkNetworkToHumanNetwork,
+  sdkNetworkToHumanNetworkStrict,
 } from '@summerfi/app-utils'
 import { useParams, useSearchParams } from 'next/navigation'
 
@@ -24,7 +25,7 @@ import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/co
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { useRiskVerification } from '@/hooks/use-risk-verification'
 
-import { ClaimDelegateError } from './ClaimDelegateError'
+import { ClaimDelegateError, ClaimDelegateNoBalances } from './ClaimDelegateError'
 import { ClaimDelegateFooter } from './ClaimDelegateFooter'
 import { ClaimDelegateNetworkCard } from './ClaimDelegateNetworkCard'
 
@@ -157,19 +158,10 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     }
   }, [clientChainId, state.pendingClaimChainId, isSettingChain, handleClaim, dispatch])
 
+  const hasClaimedAtLeastOneChain = state.claimStatus === ClaimDelegateTxStatuses.COMPLETED
+  const canContinue = hasClaimedAtLeastOneChain || hasReturnedToClaimStep
+
   const handleAccept = () => {
-    if (state.claimStatus === ClaimDelegateTxStatuses.COMPLETED) {
-      dispatch({ type: 'update-step', payload: ClaimDelegateSteps.DELEGATE })
-
-      return
-    }
-
-    if (clientChainId !== SDKChainId.BASE) {
-      setChain({ chain: SDKChainIdToAAChainMap[SDKChainId.BASE] })
-
-      return
-    }
-
     dispatch({ type: 'update-step', payload: ClaimDelegateSteps.DELEGATE })
   }
 
@@ -187,6 +179,24 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
 
   const satelliteClaimItems = claimItems.filter((item) => item.chainId !== SDKChainId.BASE)
 
+  const hasClaimableBalance = Object.values(
+    externalData.sumrToClaim.claimableAggregatedRewards.perChain,
+  ).some((amount) => amount > 0)
+
+  const hasBridgeableBalance = satelliteClaimItems.some((item) => {
+    try {
+      const humanNetwork = sdkNetworkToHumanNetworkStrict(chainIdToSDKNetwork(item.chainId))
+
+      return Number(externalData.sumrBalances[humanNetwork]) > 0
+    } catch {
+      return false
+    }
+  })
+
+  if (!hasClaimableBalance && !hasBridgeableBalance) {
+    return <ClaimDelegateNoBalances onContinue={handleAccept} />
+  }
+
   if (!isSupportedHumanNetwork(sdkNetworkToHumanNetwork(chainIdToSDKNetwork(clientChainId)))) {
     return (
       <div className={classNames.claimDelegateClaimStepWrapper}>
@@ -194,9 +204,6 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
       </div>
     )
   }
-
-  const hasClaimedAtLeastOneChain = state.claimStatus === ClaimDelegateTxStatuses.COMPLETED
-  const canContinue = hasClaimedAtLeastOneChain || hasReturnedToClaimStep
 
   return (
     <div className={classNames.claimDelegateClaimStepWrapper}>
@@ -253,7 +260,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
       <ClaimDelegateFooter
         canContinue={canContinue}
         onBack={handleBack}
-        onSkipOrContinue={handleAccept}
+        onContinue={handleAccept}
       />
     </div>
   )

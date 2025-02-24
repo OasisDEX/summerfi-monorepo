@@ -5,16 +5,24 @@
     gap: var(--spacing-space-medium);
     width: 100%;
     padding: var(--spacing-space-medium);
-    margin-bottom: var(--spacing-space-medium);
     background: var(--color-surface-subtle);
     border-radius: var(--radius-medium);
+    padding-right: var(--spacing-space-large);
   }
   
   .content {
     display: grid;
     grid-template-columns: 24px 1fr;
-    align-items: center;
+    align-items: normal;
     gap: var(--spacing-space-medium);
+    width: 100%;
+  }
+
+  .errorTextWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-space-small);
   }
   
   .errorText {

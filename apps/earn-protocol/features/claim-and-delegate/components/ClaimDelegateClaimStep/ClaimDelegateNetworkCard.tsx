@@ -2,8 +2,6 @@ import { type FC } from 'react'
 import { SDKChainId } from '@summerfi/app-types'
 import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 
-import { type ClaimDelegateTxStatuses } from '@/features/claim-and-delegate/types'
-
 import { ClaimDelegateToBridge } from './ClaimDelegateToBridge'
 import { ClaimDelegateToClaim } from './ClaimDelegateToClaim'
 

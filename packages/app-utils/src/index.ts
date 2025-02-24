@@ -57,6 +57,7 @@ export {
   sdkNetworkToHumanNetwork,
   humanNetworktoSDKNetwork,
   humanReadableChainToLabelMap,
+  sdkNetworkToHumanNetworkStrict,
   networkNameToSDKNetwork,
   subgraphNetworkToId,
   subgraphNetworkToSDKId,

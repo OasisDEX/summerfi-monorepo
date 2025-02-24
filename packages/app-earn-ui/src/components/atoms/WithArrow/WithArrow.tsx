@@ -18,6 +18,7 @@ export function WithArrow({
   reserveSpace,
   withAnimated = true,
   withStatic = false,
+  disabled = false,
   onClick,
   hideArrow = false,
   isLoading = false,
@@ -30,12 +31,20 @@ export function WithArrow({
   reserveSpace?: boolean
   withAnimated?: boolean
   withStatic?: boolean
+  disabled?: boolean
   onClick?: () => void
   hideArrow?: boolean
   isLoading?: boolean
 }>) {
   return (
-    <span style={{ display: 'flex', alignItems: isLoading ? 'unset' : 'center' }} onClick={onClick}>
+    <span
+      style={{
+        display: 'flex',
+        alignItems: isLoading ? 'unset' : 'center',
+        opacity: disabled ? 0.5 : 1,
+      }}
+      onClick={onClick}
+    >
       <Text
         variant={variant}
         className={clsx(withArrowStyles.withArrow, className)}

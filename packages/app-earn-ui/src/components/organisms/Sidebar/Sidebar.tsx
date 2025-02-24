@@ -84,10 +84,17 @@ export const Sidebar: FC<SidebarProps> = ({
   const isOpenResolved = drawerOptions.forceMobileOpen ?? isOpen
 
   const labelElement = primaryButton.loading ? (
-    <>
-      <LoadingSpinner size={28} />
-      <span style={{ color: 'var(--color-text-primary)' }}>{primaryButton.label}</span>
-    </>
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 'var(--general-space-12)',
+        opacity: 0.5,
+      }}
+    >
+      <LoadingSpinner size={24} />
+      <span style={{ color: 'var(--color-text-inverse)' }}>{primaryButton.label}</span>
+    </div>
   ) : (
     primaryButton.label
   )
