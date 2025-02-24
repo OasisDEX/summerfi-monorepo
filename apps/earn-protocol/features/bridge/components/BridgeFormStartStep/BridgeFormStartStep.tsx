@@ -20,7 +20,7 @@ import {
 } from '@summerfi/app-utils'
 import { Address } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
-import { redirect, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import { TermsOfServiceCookiePrefix } from '@/constants/terms-of-service'
 import { BridgeFormTitle } from '@/features/bridge/components/BridgeFormTitle/BridgeFormTitle'
@@ -47,8 +47,9 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
+  const router = useRouter()
   const { chain: sourceChain, setChain: setSourceChain, isSettingChain } = useChain()
-  const { userWalletAddress } = useUserWallet()
+  const { userWalletAddress, isLoadingAccount: isUserWalletLoading } = useUserWallet()
   const sourceNetwork = chainIdToSDKNetwork(sourceChain.id)
   const humanNetworkName = sdkNetworkToHumanNetwork(sourceNetwork)
   const searchParams = useSearchParams()
@@ -142,9 +143,9 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
   const [selectedPercentage, setSelectedPercentage] = useState<number | null>(null)
 
   useEffect(() => {
-    if (!userWalletAddress) {
+    if (!userWalletAddress && !isUserWalletLoading) {
       try {
-        redirect('/earn')
+        router.push('/earn')
       } catch (error) {
         dispatch({
           type: 'error',
@@ -153,10 +154,13 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
       }
     }
 
-    if (userWalletAddress !== state.walletAddress) {
-      redirect(`/bridge/${userWalletAddress}`)
+    if (
+      !isUserWalletLoading &&
+      userWalletAddress?.toLowerCase() !== state.walletAddress.toLowerCase()
+    ) {
+      router.push(`/bridge/${userWalletAddress}`)
     }
-  }, [userWalletAddress, state.walletAddress, dispatch])
+  }, [userWalletAddress, state.walletAddress, dispatch, isUserWalletLoading, router])
 
   useEffect(() => {
     const switchChain = async () => {

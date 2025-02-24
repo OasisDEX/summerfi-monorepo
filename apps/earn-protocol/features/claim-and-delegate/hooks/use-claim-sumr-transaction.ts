@@ -25,6 +25,7 @@ export const useClaimSumrTransaction = ({
   claimSumrTransaction: () => Promise<unknown>
   isLoading: boolean
   error: Error | null
+  reset: () => void
 } => {
   const { getAggregatedClaimsForChainTX, getCurrentUser, getChainInfo } = useAppSDK()
 
@@ -42,35 +43,44 @@ export const useClaimSumrTransaction = ({
   })
 
   const claimSumrTransaction = async () => {
-    const user = getCurrentUser()
-    const chainInfo = getChainInfo()
+    try {
+      const user = getCurrentUser()
+      const chainInfo = getChainInfo()
 
-    const tx = await getAggregatedClaimsForChainTX({ user, chainInfo })
+      const tx = await getAggregatedClaimsForChainTX({ user, chainInfo })
 
-    if (tx === undefined) {
-      throw new Error('aggregated claims tx is undefined')
+      if (tx === undefined) {
+        throw new Error('aggregated claims tx is undefined')
+      }
+
+      const txParams = {
+        target: tx[0].transaction.target.value,
+        data: tx[0].transaction.calldata,
+        value: BigInt(tx[0].transaction.value),
+      }
+
+      const resolvedOverrides = await getGasSponsorshipOverride({
+        smartAccountClient,
+        txParams,
+      })
+
+      return await sendUserOperationAsync({
+        uo: txParams,
+        overrides: resolvedOverrides,
+      })
+    } catch (error) {
+      onError()
+
+      throw error
     }
-
-    const txParams = {
-      target: tx[0].transaction.target.value,
-      data: tx[0].transaction.calldata,
-      value: BigInt(tx[0].transaction.value),
-    }
-
-    const resolvedOverrides = await getGasSponsorshipOverride({
-      smartAccountClient,
-      txParams,
-    })
-
-    return await sendUserOperationAsync({
-      uo: txParams,
-      overrides: resolvedOverrides,
-    })
   }
 
   return {
     claimSumrTransaction,
     isLoading: isSendingUserOperation,
     error: sendUserOperationError,
+    reset: () => {
+      onError()
+    },
   }
 }
