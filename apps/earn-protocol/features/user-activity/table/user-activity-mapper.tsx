@@ -1,4 +1,5 @@
 import {
+  Button,
   getDisplayToken,
   getScannerUrl,
   Icon,
@@ -105,9 +106,11 @@ export const userActivityMapper = (
             href={getScannerUrl(subgraphNetworkToSDKId(item.vault.protocol.network), item.hash)}
             target="_blank"
           >
-            <WithArrow as="p" variant="p3semi" withStatic>
-              View
-            </WithArrow>
+            <Button variant="textPrimaryMedium">
+              <WithArrow as="p" variant="p3semi" style={{ color: 'inherit' }} withStatic>
+                View
+              </WithArrow>
+            </Button>
           </Link>
         ),
       },
