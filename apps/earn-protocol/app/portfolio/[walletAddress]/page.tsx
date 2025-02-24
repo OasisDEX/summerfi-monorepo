@@ -8,6 +8,7 @@ import { parseServerResponseToClient, subgraphNetworkToId } from '@summerfi/app-
 import { unstable_cache as unstableCache } from 'next/cache'
 
 import { fetchRaysLeaderboard } from '@/app/server-handlers/leaderboard'
+import { getMigratablePositions } from '@/app/server-handlers/migration'
 import { portfolioWalletAssetsHandler } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { getPositionHistory } from '@/app/server-handlers/position-history'
 import { getGlobalRebalances } from '@/app/server-handlers/sdk/get-global-rebalances'
@@ -52,6 +53,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     userPositions,
     vaultsList,
     systemConfig,
+    migratablePositions,
   ] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
     unstableCache(getGlobalRebalances, [walletAddress], cacheConfig)(),
@@ -69,6 +71,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     unstableCache(getUserPositions, [walletAddress], cacheConfig)({ walletAddress }),
     getVaultsList(),
     systemConfigHandler(),
+    unstableCache(getMigratablePositions, [walletAddress], cacheConfig)({ walletAddress }),
   ])
 
   return {
@@ -85,6 +88,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     userPositions,
     vaultsList,
     systemConfig,
+    migratablePositions,
   }
 }
 
@@ -119,6 +123,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     userPositions,
     vaultsList,
     systemConfig,
+    migratablePositions,
   } = await portfolioCallsHandler(walletAddress)
 
   const vaultsWithConfig = decorateVaultsWithConfig({
@@ -204,6 +209,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       userActivity={userActivity}
       positionsHistoricalChartMap={positionsHistoricalChartMap}
       vaultsApyByNetworkMap={vaultsApyByNetworkMap}
+      migratablePositions={migratablePositions}
     />
   )
 }

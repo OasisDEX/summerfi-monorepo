@@ -20,21 +20,24 @@ import {
   type DropdownOption,
   type DropdownRawOption,
   type IconNamesList,
-  type PlatformLogo,
   type SDKNetwork,
   type SDKVaultsListType,
-  type TokenSymbolsList,
 } from '@summerfi/app-types'
-import { sdkNetworkToHumanNetwork, subgraphNetworkToId } from '@summerfi/app-utils'
-import { ArmadaMigrationType } from '@summerfi/sdk-common'
+import {
+  sdkNetworkToHumanNetwork,
+  subgraphNetworkToId,
+  subgraphNetworkToSDKId,
+} from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
+import { mapMigrationToPortfolioCard } from '@/features/migration/helpers/map-migration-to-portfolio-card'
 import { NavConfigContent } from '@/features/nav-config/components/NavConfigContent/NavConfigContent'
 
 import classNames from './MigrateLandingPageView.module.scss'
@@ -85,6 +88,7 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
   migratablePositions,
   walletAddress,
 }) => {
+  const searchParams = useSearchParams()
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
   const {
@@ -94,8 +98,10 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
     useState<MigrateLandingPageViewProps['selectedNetwork']>(selectedNetwork)
   const [isConfigOpen, setIsConfigOpen] = useState(false)
 
+  const positionId = searchParams.get('positionId')
+
   const [selectedPosition, setSelectedPosition] = useState<string | null>(
-    migratablePositions[0]?.id ?? null,
+    positionId ?? migratablePositions[0]?.id ?? null,
   )
 
   const handleSelectPosition = (id: string) => {
@@ -165,33 +171,7 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
     return `/migrate/${sdkNetworkToHumanNetwork(vaultNetwork as SDKNetwork)}/position/${vaultId}/${walletAddress}/${selectedPosition}`
   }, [selectedVaultId, walletAddress, selectedPosition])
 
-  const resovledPlatformLogo = {
-    [ArmadaMigrationType.AaveV3]: 'aave',
-    [ArmadaMigrationType.Compound]: 'morpho',
-    [ArmadaMigrationType.Erc4626]: 'spark',
-  }
-
-  const resolvedMigratablePositions: {
-    id: string
-    platformLogo: PlatformLogo
-    token: TokenSymbolsList
-    depositAmount: string
-    chainId: number
-    // current30dApy: string
-    // lazySummer30dApy: string
-    // thirtydApyDifferential: string
-    // missingOutAmount: string
-  }[] = migratablePositions.map((position) => ({
-    id: position.id,
-    platformLogo: resovledPlatformLogo[position.migrationType] as PlatformLogo,
-    token: position.underlyingTokenAmount.token.symbol.toUpperCase() as TokenSymbolsList,
-    depositAmount: position.underlyingTokenAmount.amount,
-    chainId: position.chainId,
-    // current30dApy: position.current30dApy,
-    // lazySummer30dApy: position.lazySummer30dApy,
-    // thirtydApyDifferential: position.thirtydApyDifferential,
-    // missingOutAmount: position.missingOutAmount,
-  }))
+  const resolvedMigratablePositions = mapMigrationToPortfolioCard(migratablePositions)
 
   const selectedPositionChainId = useMemo(() => {
     return resolvedMigratablePositions.find((position) => position.id === selectedPosition)?.chainId
@@ -282,7 +262,7 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
                       ]
                     }
                     disabled={
-                      selectedPositionChainId !== subgraphNetworkToId(vault.protocol.network)
+                      selectedPositionChainId !== subgraphNetworkToSDKId(vault.protocol.network)
                     }
                   />
                 </div>

@@ -60,9 +60,11 @@ export const getMigratablePositions = async ({
   const results = await Promise.all(positionsPromises)
 
   return results.flatMap(({ chainInfo, positions }) =>
-    positions.map((position) => ({
-      ...position,
-      chainId: chainInfo.chainId,
-    })),
+    positions
+      .map((position) => ({
+        ...position,
+        chainId: chainInfo.chainId,
+      }))
+      .sort((a, b) => Number(b.usdValue.amount) - Number(a.usdValue.amount)),
   )
 }

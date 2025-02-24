@@ -9,6 +9,7 @@ import {
   type UsersActivity,
 } from '@summerfi/app-types'
 
+import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { claimDelegateReducer, claimDelegateState } from '@/features/claim-and-delegate/state'
@@ -41,6 +42,7 @@ interface PortfolioPageViewProps {
     [key: string]: HistoryChartData
   }
   vaultsApyByNetworkMap: GetVaultsApyResponse
+  migratablePositions: MigratablePosition[]
 }
 
 export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
@@ -54,6 +56,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   totalRays,
   positionsHistoricalChartMap,
   vaultsApyByNetworkMap,
+  migratablePositions,
 }) => {
   const { userWalletAddress, isLoadingAccount } = useUserWallet()
   const ownerView = walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
@@ -97,6 +100,8 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
             rewardsData={rewardsData}
             positionsHistoricalChartMap={positionsHistoricalChartMap}
             vaultsApyByNetworkMap={vaultsApyByNetworkMap}
+            migratablePositions={migratablePositions}
+            walletAddress={walletAddress}
           />
         ),
       },
