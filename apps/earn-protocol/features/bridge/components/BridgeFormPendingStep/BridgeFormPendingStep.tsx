@@ -66,7 +66,7 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
       payload: errorMessage,
     })
 
-    return <BridgeFormStepFallback dispatch={dispatch} error={errorMessage} />
+    return <BridgeFormStepFallback dispatch={dispatch} error={errorMessage} state={state} />
   }
 
   if (!isSupportedHumanNetwork(destinationHumanNetworkName)) {
@@ -77,7 +77,7 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
       payload: errorMessage,
     })
 
-    return <BridgeFormStepFallback dispatch={dispatch} error={errorMessage} />
+    return <BridgeFormStepFallback dispatch={dispatch} error={errorMessage} state={state} />
   }
 
   const initialLoading = !latestStatus

@@ -33,8 +33,8 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({
               <Image
                 src={`${basePath}/img/backgrounds/bg-simple.svg`}
                 className={masterPageStyles.backgroundSimple}
-                width={0}
                 height={0}
+                width={0}
                 style={{ height: 'auto', width: '100%' }}
                 alt=""
               />
