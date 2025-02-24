@@ -37,7 +37,7 @@ export const BridgeFormCompletedStep: FC<BridgeFormCompletedStepProps> = ({ stat
       payload: errorMessage,
     })
 
-    return <BridgeFormStepFallback dispatch={dispatch} error={errorMessage} />
+    return <BridgeFormStepFallback dispatch={dispatch} error={errorMessage} state={state} />
   }
 
   if (!isSupportedHumanNetwork(destinationHumanNetworkName)) {
@@ -48,7 +48,7 @@ export const BridgeFormCompletedStep: FC<BridgeFormCompletedStepProps> = ({ stat
       payload: errorMessage,
     })
 
-    return <BridgeFormStepFallback dispatch={dispatch} error={errorMessage} />
+    return <BridgeFormStepFallback dispatch={dispatch} error={errorMessage} state={state} />
   }
 
   return (
