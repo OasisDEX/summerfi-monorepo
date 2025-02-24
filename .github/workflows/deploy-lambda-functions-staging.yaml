@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - dev
-      - marcinciarka/debug-functions
 
 permissions:
   id-token: write # This is required for requesting the JWT
