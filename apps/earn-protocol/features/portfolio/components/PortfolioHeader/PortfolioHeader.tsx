@@ -99,7 +99,11 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
         </Text>
         <div style={{ display: 'flex', gap: 'var(--spacing-space-x-small)' }}>
           <Link href={`/bridge/${walletAddress}?via=portfolio`}>
-            <Button variant="secondaryMedium" style={{ minWidth: 'unset' }}>
+            <Button
+              variant="secondaryMedium"
+              style={{ minWidth: 'unset' }}
+              disabled={userWalletAddress?.toLowerCase() !== walletAddress.toLowerCase()}
+            >
               Bridge
             </Button>
           </Link>

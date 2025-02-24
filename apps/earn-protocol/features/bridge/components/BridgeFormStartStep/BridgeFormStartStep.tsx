@@ -312,9 +312,10 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
                     const newAmount = sumrBalanceOnSourceChain
                       .times(percentage)
                       .div(100)
-                      .toFormat(2, BigNumber.ROUND_DOWN)
+                      .decimalPlaces(2, BigNumber.ROUND_DOWN)
 
                     clearTransaction()
+
                     manualSetAmount(newAmount.toString())
                     if (!isSourceMatchingDestination) {
                       prepareTransaction(newAmount.toString())
