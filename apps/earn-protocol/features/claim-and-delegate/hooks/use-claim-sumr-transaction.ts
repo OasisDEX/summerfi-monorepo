@@ -80,9 +80,9 @@ export const useClaimSumrTransaction = ({
     isLoading: isSendingUserOperation,
     error: sendUserOperationError,
     reset: () => {
-      if (sendUserOperationError) {
-        onError()
-      }
+      if (!sendUserOperationError) return
+      onError()
+      sendUserOperationError = null
     },
   }
 }
