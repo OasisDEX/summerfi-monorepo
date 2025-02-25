@@ -11,7 +11,12 @@ import {
   type SDKUsersActivityType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
-import { formatCryptoBalance, formatDateDifference, getPastTimestamp } from '@summerfi/app-utils'
+import {
+  formatAddress,
+  formatCryptoBalance,
+  formatDateDifference,
+  getPastTimestamp,
+} from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
@@ -44,6 +49,7 @@ export const topDepositorsMapper = (
     const { decimals } = item.vault.inputToken
     const asset = getDisplayToken(item.vault.inputToken.symbol) as TokenSymbolsList
     const balance = new BigNumber(item.inputTokenBalance.toString()).shiftedBy(-decimals)
+    const balanceUSD = balance.times(new BigNumber(item.vault.inputTokenPriceUSD as string))
 
     const change7days = calculateTopDepositors7daysChange(item)
     const changeSign = change7days.gt(0) ? '+' : ''
@@ -62,7 +68,9 @@ export const topDepositorsMapper = (
 
     return {
       content: {
-        user: <TableCellText>{item.account.id.slice(0, 8)}</TableCellText>,
+        user: (
+          <TableCellText>{formatAddress(item.account.id, { first: 4, last: 3 })}</TableCellText>
+        ),
         balance: (
           <div
             style={{
@@ -73,6 +81,17 @@ export const topDepositorsMapper = (
           >
             <Icon tokenName={asset} variant="s" />
             <TableCellText>{formatCryptoBalance(balance)}</TableCellText>
+          </div>
+        ),
+        balanceUSD: (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--spacing-space-2x-small)',
+            }}
+          >
+            <TableCellText>${formatCryptoBalance(balanceUSD)}</TableCellText>
           </div>
         ),
         strategy: <TableCellText>{item.vault.name}</TableCellText>,

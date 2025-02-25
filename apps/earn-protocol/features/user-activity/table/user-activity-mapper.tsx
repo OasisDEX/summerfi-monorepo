@@ -38,6 +38,7 @@ export const userActivityMapper = (
     )
 
     return {
+      id: item.account,
       content: {
         position: (
           <div

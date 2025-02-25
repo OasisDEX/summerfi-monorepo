@@ -29,6 +29,7 @@ export const UserActivityTable: FC<UserActivityTableProps> = ({
   const [sortConfig, setSortConfig] = useState<TableSortedColumn<string>>()
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
+  const [highlightedAddress, setHighlightedAddress] = useState<string | undefined>()
 
   const rows = useMemo(
     () => userActivityMapper(userActivityList, sortConfig),
@@ -45,6 +46,8 @@ export const UserActivityTable: FC<UserActivityTableProps> = ({
         customRow={customRow}
         handleSort={(_sortConfig) => setSortConfig(_sortConfig)}
         hiddenColumns={resolvedHiddenColumns}
+        onRowHover={(id?: string) => setHighlightedAddress(id)}
+        highlightedRow={highlightedAddress}
       />
       {rows.length === 0 && (
         <Text

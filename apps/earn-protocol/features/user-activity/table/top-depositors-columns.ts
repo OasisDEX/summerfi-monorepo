@@ -10,6 +10,11 @@ export const topDepositorsColumns = [
     sortable: true,
   },
   {
+    title: 'USD Value',
+    key: 'balanceUSD',
+    sortable: true,
+  },
+  {
     title: 'Strategy',
     key: 'strategy',
     sortable: false,
@@ -44,6 +49,7 @@ export const topDepositorsColumns = [
 export const topDepositorsColumnsHiddenOnMobile = [
   'strategy',
   'change7d',
+  'balanceUSD',
   'projected1yrEarnings',
   'numberOfDeposits',
   'earningsStreak',
