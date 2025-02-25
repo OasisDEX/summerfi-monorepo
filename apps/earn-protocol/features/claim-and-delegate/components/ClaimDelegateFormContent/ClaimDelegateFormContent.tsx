@@ -1,4 +1,5 @@
-import { type Dispatch, type FC } from 'react'
+import { type Dispatch, type FC, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 
 import { ClaimDelegateAcceptanceStep } from '@/features/claim-and-delegate/components/ClaimDelegateAcceptanceStep/ClaimDelegateAcceptanceStep'
 import { ClaimDelegateClaimStep } from '@/features/claim-and-delegate/components/ClaimDelegateClaimStep/ClaimDelegateClaimStep'
@@ -25,6 +26,16 @@ export const ClaimDelegateFormContent: FC<ClaimDelegateFormContentProps> = ({
   dispatch,
   externalData,
 }) => {
+  const searchParams = useSearchParams()
+  const via = searchParams.get('via')
+
+  // Handle direct navigation to CLAIM step when returning from bridge
+  useEffect(() => {
+    if (via === 'bridge' && state.step === ClaimDelegateSteps.TERMS) {
+      dispatch({ type: 'update-step', payload: ClaimDelegateSteps.CLAIM })
+    }
+  }, [via, state.step, dispatch])
+
   return (
     <div className={classNames.claimDelegateFormContentWrapper}>
       {state.step === ClaimDelegateSteps.TERMS && (

@@ -25,7 +25,7 @@ export const BridgeFormContent: FC<BridgeFormContentProps> = ({ state, dispatch 
         <BridgeFormCompletedStep state={state} dispatch={dispatch} />
       )}
       {state.bridgeStatus === BridgeTxStatus.FAILED && (
-        <BridgeFormStepFallback dispatch={dispatch} error={state.error} />
+        <BridgeFormStepFallback state={state} dispatch={dispatch} error={state.error} />
       )}
       <CrossChainProviderNotice />
     </div>

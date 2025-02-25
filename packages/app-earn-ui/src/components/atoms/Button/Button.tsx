@@ -7,7 +7,11 @@ import buttonStyles, { type ClassNames } from '@/components/atoms/Button/Button.
 
 // TODO this props handling is broken, we shouldn't need to manually type disabled prop etc.
 export const Button: FC<
-  AtomProps<'button', ClassNames> & { disabled?: boolean; active?: boolean; type?: string }
+  AtomProps<'button', ClassNames> & {
+    disabled?: boolean
+    active?: boolean
+    type?: string
+  }
 > = forwardRef(({ as = 'button', className, variant, type, active, ...props }, ref) => {
   return createElement(as, {
     ...{

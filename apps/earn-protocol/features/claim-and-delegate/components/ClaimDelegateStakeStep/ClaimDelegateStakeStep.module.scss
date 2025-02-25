@@ -1,10 +1,20 @@
 .claimDelegateStakeStepWrapper {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr;
   flex-wrap: wrap;
   gap: var(--general-space-16);
   width: 100%;
   min-height: 650px;
+
+  @include media('>s') {
+    gap: var(--general-space-32);
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @include media('>l') {
+    grid-template-columns: 359px auto;
+    gap: var(--general-space-64);
+  }
 
   .leftContent {
     display: flex;
@@ -23,6 +33,7 @@
         display: flex;
         align-items: center;
         gap: var(--general-space-16);
+        
       }
     }
 
@@ -40,7 +51,7 @@
   .rightContent {
     display: flex;
     flex-direction: column;
-    max-width: 585px;
+    align-items: flex-start;
     width: 100%;
 
     .inputWrapper {
@@ -64,9 +75,13 @@
 
     .buttonsWrapper {
       display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
+      justify-content: flex-start;
       gap: var(--general-space-16);
+      width: 100%;
+
+      @include media('>s') {
+        justify-content: center;
+      }
     }
   }
 }

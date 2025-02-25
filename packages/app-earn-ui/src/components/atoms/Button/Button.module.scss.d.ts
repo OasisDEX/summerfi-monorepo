@@ -1,6 +1,7 @@
 export type Styles = {
   colorful: string
   neutralLarge: string
+  neutralMedium: string
   neutralSmall: string
   primaryLarge: string
   primaryMedium: string

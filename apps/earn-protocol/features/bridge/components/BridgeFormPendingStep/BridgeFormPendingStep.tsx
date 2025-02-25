@@ -1,7 +1,9 @@
-import { type Dispatch, type FC, useCallback } from 'react'
+import { type Dispatch, type FC, useCallback, useEffect } from 'react'
+import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
 import { MessageStatus } from '@layerzerolabs/scan-client'
-import { Icon, InfoBox, LoadingSpinner, Sidebar, Text } from '@summerfi/app-earn-ui'
+import { Alert, Icon, InfoBox, LoadingSpinner, Sidebar, Text } from '@summerfi/app-earn-ui'
+import { SDKChainId } from '@summerfi/app-types'
 import {
   chainIdToSDKNetwork,
   isSupportedHumanNetwork,
@@ -9,11 +11,13 @@ import {
 } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import { capitalize } from 'lodash-es'
+import { useSearchParams } from 'next/navigation'
 
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { BridgeFormStepFallback } from '@/features/bridge/components/BridgeFormFallbackStep/BridgeFormStepFallback'
 import { useCrossChainMessages } from '@/features/bridge/hooks/use-cross-chain-messages'
 import { type BridgeReducerAction, type BridgeState, BridgeTxStatus } from '@/features/bridge/types'
+import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 
 import styles from './BridgeFormPendingStep.module.scss'
 
@@ -24,6 +28,8 @@ interface BridgeFormPendingStepProps {
 
 export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, dispatch }) => {
   const { chain: sourceChain } = useChain()
+  const searchParams = useSearchParams()
+  const viaParam = searchParams.get('via')
 
   const sourceNetwork = chainIdToSDKNetwork(sourceChain.id)
   const destinationNetwork = chainIdToSDKNetwork(state.destinationChain.id)
@@ -38,12 +44,20 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
       type: 'update-bridge-status',
       payload: BridgeTxStatus.COMPLETED,
     })
+    toast.success('Bridge transaction completed successfully', SUCCESS_TOAST_CONFIG)
   }, [dispatch])
 
   const { isLoading, error, latestStatus } = useCrossChainMessages({
     srcTxHash: state.transactionHash,
     onSuccess: handleSuccess,
   })
+
+  // If there's an error, show error toast
+  useEffect(() => {
+    if (error?.message) {
+      toast.error(`Bridge transaction failed: ${error.message}`, ERROR_TOAST_CONFIG)
+    }
+  }, [error])
 
   if (!isSupportedHumanNetwork(sourceHumanNetworkName)) {
     const errorMessage = `Invalid source chain: ${sourceHumanNetworkName}`
@@ -53,7 +67,7 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
       payload: errorMessage,
     })
 
-    return <BridgeFormStepFallback dispatch={dispatch} error={errorMessage} />
+    return <BridgeFormStepFallback dispatch={dispatch} error={errorMessage} state={state} />
   }
 
   if (!isSupportedHumanNetwork(destinationHumanNetworkName)) {
@@ -64,7 +78,7 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
       payload: errorMessage,
     })
 
-    return <BridgeFormStepFallback dispatch={dispatch} error={errorMessage} />
+    return <BridgeFormStepFallback dispatch={dispatch} error={errorMessage} state={state} />
   }
 
   const initialLoading = !latestStatus
@@ -85,6 +99,9 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
       <Icon iconName="sign_out" size={20} />
     </>
   )
+
+  const isClaim = viaParam === 'claim'
+  const isBridgeToBase = state.destinationChain.id === SDKChainId.BASE
 
   return (
     <Sidebar
@@ -144,16 +161,38 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
               ]}
             />
           </div>
+          {isClaim && isBridgeToBase && (
+            <Alert
+              variant="warning"
+              error="You must wait for LayerZero to complete delivery before returning to the claim page."
+            />
+          )}
+          {isClaim && !isBridgeToBase && (
+            <Alert
+              variant="warning"
+              error={`A reminder: you must have balance on Base if you wish to delegate. Your destination chain is set to ${capitalize(destinationHumanNetworkName)}.`}
+            />
+          )}
         </div>
       }
-      primaryButton={{
-        label: 'Create new transaction',
-        action: () => {
-          dispatch({
-            type: 'reset',
-          })
-        },
-      }}
+      primaryButton={
+        isClaim && isBridgeToBase
+          ? {
+              url: `/claim/${state.walletAddress}${
+                state.destinationChain.id === SDKChainId.BASE ? '?via=bridge' : ''
+              }`,
+              label: 'Return to claim',
+              disabled: true,
+            }
+          : {
+              label: 'Create new transaction',
+              action: () => {
+                dispatch({
+                  type: 'reset',
+                })
+              },
+            }
+      }
       secondaryButton={{
         label: resolvedSecondaryButtonLabel,
         target: '_blank',

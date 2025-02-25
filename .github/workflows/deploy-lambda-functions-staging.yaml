@@ -1,9 +1,10 @@
-name: 'Deploy Lambdas Staging'
+name: 'Deploy Lambda Functions Staging'
 concurrency: staging
 on:
   push:
     branches:
       - dev
+
 permissions:
   id-token: write # This is required for requesting the JWT
   contents: read # This is required for actions/checkout

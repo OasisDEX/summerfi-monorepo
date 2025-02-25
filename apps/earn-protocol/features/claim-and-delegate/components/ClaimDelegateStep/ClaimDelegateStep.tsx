@@ -318,71 +318,75 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
             </Text>
           )}
         </Card>
-        <Text as="p" variant="p2semi" style={{ marginBottom: 'var(--general-space-4)' }}>
-          Lazy Summer Governance Objectives
-        </Text>
-        <Text
-          as="p"
-          variant="p3"
-          style={{
-            color: 'var(--earn-protocol-secondary-40)',
-            marginBottom: 'var(--general-space-4)',
-          }}
-        >
-          Each delegate has their own values, intentions and visions for the Lazy Summer Protocol.
-          Delegate your voting power to those who best align with your values.
-        </Text>
-        <Link href="https://forum.summer.fi/c/delegates/19" target="_blank">
-          <WithArrow as="p" variant="p3">
-            Learn more about Governance
-          </WithArrow>
-        </Link>
-        <div className={classNames.spacer} />
-        <DataBlock
-          title="Staking Rewards"
-          titleStyle={{
-            color: 'var(--earn-protocol-secondary-100)',
-            marginBottom: 'var(--general-space-8)',
-          }}
-          titleSize="medium"
-          value={
-            decayFactorLoading ? (
-              <div style={{ marginTop: '9px', marginBottom: '7px)' }}>
-                <SkeletonLine height="18px" width="60px" />
-              </div>
-            ) : (
-              apy
-            )
-          }
-          valueStyle={{
-            color: 'var(--earn-protocol-success-100)',
-            marginBottom: 'var(--general-space-8)',
-          }}
-          valueSize="small"
-          subValue={
-            decayFactorLoading ? (
-              <div style={{ marginTop: '9px', marginBottom: '7px)' }}>
-                <SkeletonLine
-                  height="12px"
-                  width="80px"
-                  style={{
-                    marginTop: '6px',
-                    marginBottom: 'var(--general-space-4)',
-                  }}
-                />
-              </div>
-            ) : (
-              sumrPerYear
-            )
-          }
-          subValueStyle={{
-            color: 'var(--earn-protocol-primary-100)',
-            marginBottom: 'var(--general-space-8)',
-          }}
-        />
-        <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-          Earn $SUMR rewards for staking and delegating your tokens.
-        </Text>
+        <div>
+          <Text as="p" variant="p2semi" style={{ marginBottom: 'var(--general-space-4)' }}>
+            Lazy Summer Governance Objectives
+          </Text>
+          <Text
+            as="p"
+            variant="p3"
+            style={{
+              color: 'var(--earn-protocol-secondary-40)',
+              marginBottom: 'var(--general-space-4)',
+            }}
+          >
+            Each delegate has their own values, intentions and visions for the Lazy Summer Protocol.
+            Delegate your voting power to those who best align with your values.
+          </Text>
+          <Link href="https://forum.summer.fi/c/delegates/19" target="_blank">
+            <WithArrow as="p" variant="p3">
+              Learn more about Governance
+            </WithArrow>
+          </Link>
+          <div className={classNames.spacer} />
+        </div>
+        <div>
+          <DataBlock
+            title="Staking Rewards"
+            titleStyle={{
+              color: 'var(--earn-protocol-secondary-100)',
+              marginBottom: 'var(--general-space-8)',
+            }}
+            titleSize="medium"
+            value={
+              decayFactorLoading ? (
+                <div style={{ marginTop: '9px', marginBottom: '7px)' }}>
+                  <SkeletonLine height="18px" width="60px" />
+                </div>
+              ) : (
+                apy
+              )
+            }
+            valueStyle={{
+              color: 'var(--earn-protocol-success-100)',
+              marginBottom: 'var(--general-space-8)',
+            }}
+            valueSize="small"
+            subValue={
+              decayFactorLoading ? (
+                <div style={{ marginTop: '9px', marginBottom: '7px)' }}>
+                  <SkeletonLine
+                    height="12px"
+                    width="80px"
+                    style={{
+                      marginTop: '6px',
+                      marginBottom: 'var(--general-space-4)',
+                    }}
+                  />
+                </div>
+              ) : (
+                sumrPerYear
+              )
+            }
+            subValueStyle={{
+              color: 'var(--earn-protocol-primary-100)',
+              marginBottom: 'var(--general-space-8)',
+            }}
+          />
+          <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+            Earn $SUMR rewards for staking and delegating your tokens.
+          </Text>
+        </div>
         {isEoa && (
           <div className={classNames.selfDelegateCard}>
             <ClaimDelegateCard
@@ -489,74 +493,75 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
 
         {hasStake && action === ClaimDelegateAction.REMOVE ? null : (
           <div className={classNames.buttonsWrapper}>
+            <div className={classNames.buttonsGroup}>
+              {hasDelegatee ? (
+                !isBase ? null : (
+                  <Button
+                    variant="secondarySmall"
+                    disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
+                    onClick={() => handleDelegate(ADDRESS_ZERO)}
+                  >
+                    <Text variant="p3semi" as="p">
+                      {getRemoveDelegateButtonLabel({
+                        state,
+                        action,
+                        isBase,
+                      })}
+                    </Text>
+                  </Button>
+                )
+              ) : (
+                <Link href={`/portfolio/${walletAddress}?tab=${PortfolioTabs.REWARDS}`}>
+                  <Button
+                    variant="secondarySmall"
+                    disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
+                  >
+                    <Text variant="p3semi" as="p">
+                      Claim & Forfeit staking yield
+                    </Text>
+                  </Button>
+                </Link>
+              )}
+              <Button
+                variant="primarySmall"
+                style={{ paddingRight: 'var(--general-space-32)' }}
+                onClick={() => handleDelegate(state.delegatee)}
+                disabled={
+                  isBase &&
+                  (isChangeDelegateLoading ||
+                    isRemoveDelegateLoading ||
+                    !state.delegatee ||
+                    (state.delegatee === ADDRESS_ZERO &&
+                      externalData.sumrStakeDelegate.delegatedTo === ADDRESS_ZERO) ||
+                    userWalletAddress?.toLowerCase() !== resolvedWalletAddress.toLowerCase())
+                }
+              >
+                <WithArrow
+                  style={{ color: 'var(--earn-protocol-secondary-100)' }}
+                  variant="p3semi"
+                  as="p"
+                  isLoading={isChangeDelegateLoading}
+                >
+                  {getChangeDelegateButtonLabel({
+                    state,
+                    action,
+                    isBase,
+                  })}
+                </WithArrow>
+              </Button>
+            </div>
             {hasDelegatee && (
               <Button
-                variant="secondarySmall"
                 disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
                 onClick={() => {
                   dispatch({ type: 'update-step', payload: ClaimDelegateSteps.STAKE })
                 }}
               >
-                <Text variant="p3semi" as="p">
+                <WithArrow variant="p3semi" as="p">
                   Skip
-                </Text>
+                </WithArrow>
               </Button>
             )}
-            {hasDelegatee ? (
-              !isBase ? null : (
-                <Button
-                  variant="secondarySmall"
-                  disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
-                  onClick={() => handleDelegate(ADDRESS_ZERO)}
-                >
-                  <Text variant="p3semi" as="p">
-                    {getRemoveDelegateButtonLabel({
-                      state,
-                      action,
-                      isBase,
-                    })}
-                  </Text>
-                </Button>
-              )
-            ) : (
-              <Link href={`/portfolio/${walletAddress}?tab=${PortfolioTabs.REWARDS}`}>
-                <Button
-                  variant="secondarySmall"
-                  disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
-                >
-                  <Text variant="p3semi" as="p">
-                    Claim & Forfeit staking yield
-                  </Text>
-                </Button>
-              </Link>
-            )}
-
-            <Button
-              variant="primarySmall"
-              style={{ paddingRight: 'var(--general-space-32)' }}
-              onClick={() => handleDelegate(state.delegatee)}
-              disabled={
-                isChangeDelegateLoading ||
-                isRemoveDelegateLoading ||
-                !state.delegatee ||
-                (state.delegatee === ADDRESS_ZERO &&
-                  externalData.sumrStakeDelegate.delegatedTo === ADDRESS_ZERO) ||
-                userWalletAddress?.toLowerCase() !== resolvedWalletAddress.toLowerCase()
-              }
-            >
-              <WithArrow
-                style={{ color: 'var(--earn-protocol-secondary-100)' }}
-                variant="p3semi"
-                as="p"
-                isLoading={isChangeDelegateLoading}
-              >
-                {getChangeDelegateButtonLabel({
-                  state,
-                  action,
-                  isBase,
-                })}
-              </WithArrow>
-            </Button>
           </div>
         )}
       </div>

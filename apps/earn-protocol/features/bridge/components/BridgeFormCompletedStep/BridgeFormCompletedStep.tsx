@@ -1,11 +1,13 @@
 import { type Dispatch, type FC } from 'react'
 import { useChain } from '@account-kit/react'
 import { Icon, Sidebar, Text } from '@summerfi/app-earn-ui'
+import { SDKChainId } from '@summerfi/app-types'
 import {
   chainIdToSDKNetwork,
   isSupportedHumanNetwork,
   sdkNetworkToHumanNetwork,
 } from '@summerfi/app-utils'
+import { useSearchParams } from 'next/navigation'
 
 import { BridgeFormStepFallback } from '@/features/bridge/components/BridgeFormFallbackStep/BridgeFormStepFallback'
 import { NetworkBalances } from '@/features/bridge/components/NetworkBalances/NetworkBalances'
@@ -20,6 +22,10 @@ interface BridgeFormCompletedStepProps {
 
 export const BridgeFormCompletedStep: FC<BridgeFormCompletedStepProps> = ({ state, dispatch }) => {
   const { chain: sourceChain } = useChain()
+  const searchParams = useSearchParams()
+  const viaParam = searchParams.get('via')
+  const isViaPortfolio = viaParam === 'portfolio'
+  const isViaClaim = viaParam === 'claim'
 
   const sourceNetwork = chainIdToSDKNetwork(sourceChain.id)
   const destinationNetwork = chainIdToSDKNetwork(state.destinationChain.id)
@@ -34,7 +40,7 @@ export const BridgeFormCompletedStep: FC<BridgeFormCompletedStepProps> = ({ stat
       payload: errorMessage,
     })
 
-    return <BridgeFormStepFallback dispatch={dispatch} error={errorMessage} />
+    return <BridgeFormStepFallback dispatch={dispatch} error={errorMessage} state={state} />
   }
 
   if (!isSupportedHumanNetwork(destinationHumanNetworkName)) {
@@ -45,7 +51,7 @@ export const BridgeFormCompletedStep: FC<BridgeFormCompletedStepProps> = ({ stat
       payload: errorMessage,
     })
 
-    return <BridgeFormStepFallback dispatch={dispatch} error={errorMessage} />
+    return <BridgeFormStepFallback dispatch={dispatch} error={errorMessage} state={state} />
   }
 
   return (
@@ -70,14 +76,28 @@ export const BridgeFormCompletedStep: FC<BridgeFormCompletedStepProps> = ({ stat
           />
         </div>
       }
-      primaryButton={{
-        label: 'Create new transaction',
-        action: () => {
-          dispatch({
-            type: 'reset',
-          })
-        },
-      }}
+      primaryButton={
+        isViaClaim
+          ? {
+              url: `/claim/${state.walletAddress}${
+                state.destinationChain.id === SDKChainId.BASE ? '?via=bridge' : ''
+              }`,
+              label: 'Return to claim',
+            }
+          : isViaPortfolio
+            ? {
+                url: `/portfolio/${state.walletAddress}`,
+                label: 'Return to portfolio',
+              }
+            : {
+                label: 'Create new transaction',
+                action: () => {
+                  dispatch({
+                    type: 'reset',
+                  })
+                },
+              }
+      }
       secondaryButton={{
         label: (
           <>

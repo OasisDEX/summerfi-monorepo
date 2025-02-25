@@ -13,6 +13,7 @@ import {
   Text,
   useAmount,
   useLocalConfig,
+  useMobileCheck,
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { SDKChainId } from '@summerfi/app-types'
@@ -29,6 +30,7 @@ import { useParams } from 'next/navigation'
 import { base } from 'viem/chains'
 
 import { SDKChainIdToAAChainMap } from '@/account-kit/config'
+import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { ClaimDelegateActionCard } from '@/features/claim-and-delegate/components/ClaimDelegateActionCard/ClaimDelegateActionCard'
 import { useDecayFactor } from '@/features/claim-and-delegate/hooks/use-decay-factor'
 import { useStakeSumrTransaction } from '@/features/claim-and-delegate/hooks/use-stake-sumr-transaction'
@@ -96,6 +98,8 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
+  const { deviceType } = useDeviceType()
+  const { isMobile } = useMobileCheck(deviceType)
   const { userWalletAddress } = useUserWallet()
   const { walletAddress } = useParams()
   const resolvedWalletAddress = (
@@ -411,7 +415,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
                         gap: 'var(--general-space-16)',
                       }}
                     >
-                      <Card style={{ paddingTop: 0, paddingBottom: 0 }}>
+                      <Card style={{ paddingTop: 0 }}>
                         <InputWithDropdown
                           options={[{ label: 'SUMR', value: 'SUMR', tokenSymbol: 'SUMR' }]}
                           dropdownValue={{ label: 'SUMR', value: 'SUMR', tokenSymbol: 'SUMR' }}
@@ -458,7 +462,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
                         gap: 'var(--general-space-16)',
                       }}
                     >
-                      <Card style={{ paddingTop: 0, paddingBottom: 0 }}>
+                      <Card style={{ paddingTop: 0 }}>
                         <InputWithDropdown
                           options={[{ label: 'SUMR', value: 'SUMR', tokenSymbol: 'SUMR' }]}
                           dropdownValue={{ label: 'SUMR', value: 'SUMR', tokenSymbol: 'SUMR' }}
@@ -521,16 +525,17 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
                 style={{ paddingRight: 'var(--general-space-32)' }}
                 onClick={resolvedButtonAction}
                 disabled={
-                  isLoading ||
-                  userWalletAddress?.toLowerCase() !== resolvedWalletAddress.toLowerCase() ||
-                  (state.stakeType === ClaimDelegateStakeType.REMOVE_STAKE &&
-                    amountParsedUnstake.isZero()) ||
-                  (state.stakeType === ClaimDelegateStakeType.ADD_STAKE &&
-                    amountParsedStake.isZero()) ||
-                  (state.stakeType === ClaimDelegateStakeType.REMOVE_STAKE &&
-                    amountParsedUnstake.toNumber() > Number(stakedAmount)) ||
-                  (state.stakeType === ClaimDelegateStakeType.ADD_STAKE &&
-                    amountParsedStake.toNumber() > Number(sumrBalance))
+                  isBase &&
+                  (isLoading ||
+                    userWalletAddress?.toLowerCase() !== resolvedWalletAddress.toLowerCase() ||
+                    (state.stakeType === ClaimDelegateStakeType.REMOVE_STAKE &&
+                      amountParsedUnstake.isZero()) ||
+                    (state.stakeType === ClaimDelegateStakeType.ADD_STAKE &&
+                      amountParsedStake.isZero()) ||
+                    (state.stakeType === ClaimDelegateStakeType.REMOVE_STAKE &&
+                      amountParsedUnstake.toNumber() > Number(stakedAmount)) ||
+                    (state.stakeType === ClaimDelegateStakeType.ADD_STAKE &&
+                      amountParsedStake.toNumber() > Number(sumrBalance)))
                 }
               >
                 <WithArrow
@@ -543,6 +548,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
                     state,
                     withApproval,
                     isBase,
+                    isMobile,
                   })}
                 </WithArrow>
               </Button>

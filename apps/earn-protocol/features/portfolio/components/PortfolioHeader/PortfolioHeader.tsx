@@ -17,6 +17,7 @@ import {
   safeBTOA,
 } from '@summerfi/app-utils'
 import clsx from 'clsx'
+import Link from 'next/link'
 
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
 import { transakNetworkOptions } from '@/features/transak/consts'
@@ -97,12 +98,15 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
           </div>
         </Text>
         <div style={{ display: 'flex', gap: 'var(--spacing-space-x-small)' }}>
-          {/* <Button variant="secondaryLarge" style={{ minWidth: 'unset' }}>
-            Send
-          </Button>
-          <Button variant="secondaryLarge" style={{ minWidth: 'unset' }}>
-            Swap
-          </Button> */}
+          <Link href={`/bridge/${walletAddress}?via=portfolio`}>
+            <Button
+              variant="secondaryMedium"
+              style={{ minWidth: 'unset' }}
+              disabled={userWalletAddress?.toLowerCase() !== walletAddress.toLowerCase()}
+            >
+              Bridge
+            </Button>
+          </Link>
           <Dropdown
             dropdownValue={{ value: transakNetwork?.value ?? '', content: null }}
             trigger={TransakTrigger}

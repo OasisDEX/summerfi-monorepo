@@ -5,7 +5,6 @@ export type Styles = {
   tabContent: string
   tabHeaders: string
   tabHeaderWrapper: string
-  underline: string
 }
 
 export type ClassNames = keyof Styles

@@ -271,24 +271,25 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     // get protocol usage rewards for each chain
     const perChain: Record<number, bigint> = {}
 
-    let protocolUsageRewards = 0n
+    let totalUsageRewards = 0n
     const perChainRewards = await Promise.all(
       this._supportedChains.map(async (chainInfo) => {
-        const rewards = await this.getProtocolUsageRewards(params.user, chainInfo)
+        const usageRewards = await this.getProtocolUsageRewards(params.user, chainInfo)
+
         if (chainInfo.chainId === this._hubChainInfo.chainId) {
           // on hubchain we add delegation and distribution rewards
           perChain[chainInfo.chainId] =
-            rewards.total + voteDelegationRewards + merkleDistributionRewards
+            usageRewards.total + voteDelegationRewards + merkleDistributionRewards
         } else {
           // on other chains we add only protocol usage rewards
-          perChain[chainInfo.chainId] = rewards.total
+          perChain[chainInfo.chainId] = usageRewards.total
         }
-        return rewards
+        return usageRewards
       }),
     )
-    protocolUsageRewards = perChainRewards.reduce((acc, rewards) => acc + rewards.total, 0n)
+    totalUsageRewards = perChainRewards.reduce((acc, rewards) => acc + rewards.total, 0n)
 
-    const total = merkleDistributionRewards + voteDelegationRewards + protocolUsageRewards
+    const total = merkleDistributionRewards + voteDelegationRewards + totalUsageRewards
 
     return {
       total,
@@ -299,42 +300,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
   async getClaimableAggregatedRewards(
     params: Parameters<IArmadaManagerClaims['getClaimableAggregatedRewards']>[0],
   ): ReturnType<IArmadaManagerClaims['getClaimableAggregatedRewards']> {
-    const [merkleDistributionRewards, voteDelegationRewards] = await Promise.all([
-      this.getMerkleDistributionRewards(params.user),
-      this.getVoteDelegationRewards(params.user),
-    ])
-
-    // get protocol usage rewards for each chain
-    const perChain: Record<number, bigint> = {}
-
-    let protocolUsageRewards = 0n
-    const perChainRewards = await Promise.all(
-      this._supportedChains
-        .filter((chainInfo) => chainInfo.chainId === this._hubChainInfo.chainId)
-        .map(async (chainInfo) => {
-          // const rewards = await this.getProtocolUsageRewards(params.user, chainInfo)
-          // FIXME: disabled protocol usage rewards
-          // because fleet rewards manager was not whitleilsted
-          const rewards = { total: 0n }
-          if (chainInfo.chainId === this._hubChainInfo.chainId) {
-            // on hubchain we add delegation and distribution rewards
-            perChain[chainInfo.chainId] =
-              rewards.total + voteDelegationRewards + merkleDistributionRewards
-          } else {
-            // on other chains we add only protocol usage rewards
-            perChain[chainInfo.chainId] = rewards.total
-          }
-          return rewards
-        }),
-    )
-    protocolUsageRewards = perChainRewards.reduce((acc, rewards) => acc + rewards.total, 0n)
-
-    const total = merkleDistributionRewards + voteDelegationRewards + protocolUsageRewards
-
-    return {
-      total,
-      perChain,
-    }
+    return this.getAggregatedRewards(params)
   }
 
   async getClaimDistributionTx(
@@ -494,36 +460,35 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       )
     }
 
-    // FIXME: disabled because fleet rewards manager was not whitleilsted
-    // const fleetRewardToken = getDeployedContractAddress({
-    //   chainInfo: params.chainInfo,
-    //   contractCategory: 'gov',
-    //   contractName: 'summerToken',
-    // })
+    const fleetRewardToken = getDeployedContractAddress({
+      chainInfo: params.chainInfo,
+      contractCategory: 'gov',
+      contractName: 'summerToken',
+    })
 
-    // requests.push(
-    //   this.getProtocolUsageRewards(params.user, params.chainInfo).then((protocolUsageRewards) => {
-    //     if (protocolUsageRewards.total > 0n) {
-    //       const fleetCommandersAddresses = Object.entries(protocolUsageRewards.perFleet)
-    //         .filter(([_, rewards]) => rewards > 0n)
-    //         .map(([addressKey]) => Address.createFromEthereum({ value: addressKey }))
-    //       LoggingService.debug(
-    //         'Claiming only for the fleets with rewards:',
-    //         fleetCommandersAddresses.map((a) => a.value),
-    //       )
+    requests.push(
+      this.getProtocolUsageRewards(params.user, params.chainInfo).then((protocolUsageRewards) => {
+        if (protocolUsageRewards.total > 0n) {
+          const fleetCommandersAddresses = Object.entries(protocolUsageRewards.perFleet)
+            .filter(([_, rewards]) => rewards > 0n)
+            .map(([addressKey]) => Address.createFromEthereum({ value: addressKey }))
+          LoggingService.debug(
+            'Claiming only for the fleets with rewards:',
+            fleetCommandersAddresses.map((a) => a.value),
+          )
 
-    //       return this.getClaimProtocolUsageRewardsTx({
-    //         chainInfo: params.chainInfo,
-    //         user: params.user,
-    //         fleetCommandersAddresses,
-    //         rewardToken: fleetRewardToken,
-    //       }).then((claimFleetRewards) => {
-    //         multicallArgs.push(claimFleetRewards[0].transaction.calldata)
-    //         multicallOperations.push('fleet rewards: ' + protocolUsageRewards.total)
-    //       })
-    //     }
-    //   }),
-    // )
+          return this.getClaimProtocolUsageRewardsTx({
+            chainInfo: params.chainInfo,
+            user: params.user,
+            fleetCommandersAddresses,
+            rewardToken: fleetRewardToken,
+          }).then((claimFleetRewards) => {
+            multicallArgs.push(claimFleetRewards[0].transaction.calldata)
+            multicallOperations.push('fleet rewards: ' + protocolUsageRewards.total)
+          })
+        }
+      }),
+    )
 
     await Promise.all(requests)
 

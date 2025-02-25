@@ -4,7 +4,8 @@
   justify-content: center;
 
   .separator {
-    margin: var(--general-space-32) 0;
+    margin: var(--general-space-24) 0;
+    margin-bottom: var(--general-space-32);
     width: calc(100% + 48px);
     border-bottom: 1px solid var(--earn-protocol-neutral-100);
   }

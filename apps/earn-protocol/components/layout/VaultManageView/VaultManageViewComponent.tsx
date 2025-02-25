@@ -35,7 +35,7 @@ import {
   TransactionAction,
   type UsersActivity,
 } from '@summerfi/app-types'
-import { subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
+import { formatDecimalAsPercent, subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
 import { type GetGlobalRebalancesQuery, type IArmadaPosition } from '@summerfi/sdk-client'
 import { TransactionType } from '@summerfi/sdk-common'
 
@@ -372,6 +372,9 @@ export const VaultManageViewComponent = ({
 
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
+  // "It’s 1% for usd and 0.3% for eth"
+  const managementFee = vault.inputToken.symbol.includes('USD') ? 0.01 : 0.003
+
   return (
     <>
       <NonOwnerPositionBanner isOwner={ownerView} walletStateLoaded={!isLoadingAccount} />
@@ -470,7 +473,7 @@ export const VaultManageViewComponent = ({
                     marginBottom: 'var(--general-space-24)',
                   }}
                 >
-                  1% Management Fee, already included in APY
+                  {formatDecimalAsPercent(managementFee)} Management Fee, already included in APY
                 </Text>
                 <Text
                   as="p"
@@ -479,9 +482,10 @@ export const VaultManageViewComponent = ({
                     color: 'var(--color-text-secondary)',
                   }}
                 >
-                  A 1% management fee is applied to your position, but it’s already factored into
-                  the APY you see. This means the rate displayed reflects your net return - no
-                  hidden fees, just straightforward earnings.
+                  A {formatDecimalAsPercent(managementFee)} management fee is applied to your
+                  position, but it’s already factored into the APY you see. This means the rate
+                  displayed reflects your net return - no hidden fees, just straightforward
+                  earnings.
                 </Text>
               </Card>
             </Expander>

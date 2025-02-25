@@ -135,8 +135,10 @@ export async function getInterestRates({
         const productId = getArkProductId(ark)
 
         if (productId === false || !data.interestRates[productId]?.length) {
-          // eslint-disable-next-line no-console
-          console.warn(`No rates found for product ${productId} - ${ark.name ?? 'NOT FOUND'}`)
+          if (!ark.name?.includes('Buffer')) {
+            // eslint-disable-next-line no-console
+            console.warn(`No rates found for product ${productId} - ${ark.name ?? 'NOT FOUND'}`)
+          }
 
           return noInterestRates
         }

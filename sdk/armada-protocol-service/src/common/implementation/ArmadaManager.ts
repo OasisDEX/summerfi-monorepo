@@ -1105,9 +1105,7 @@ export class ArmadaManager implements IArmadaManager {
   }): Promise<{
     calldata: HexData
   }> {
-    // const claimRewards = params.claimRewards ?? true
-    // FIXME: hardcoded to false because fleet rewards manager was not whitleilsted
-    const claimRewards = false
+    const claimRewards = params.claimRewards ?? true
 
     // if the requested amount is close to all staked shares, we make assumption to withdraw all
     // withdraw all assumption threshold is set to 0.9999

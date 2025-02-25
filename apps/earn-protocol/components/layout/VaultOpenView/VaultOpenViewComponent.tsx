@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import {
+  Card,
   ControlsDepositWithdraw,
   Expander,
   getDisplayToken,
@@ -30,7 +31,7 @@ import {
   TransactionAction,
   type UsersActivity,
 } from '@summerfi/app-types'
-import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
+import { formatDecimalAsPercent, subgraphNetworkToSDKId } from '@summerfi/app-utils'
 import { type GetGlobalRebalancesQuery } from '@summerfi/sdk-client'
 import { type IToken, TransactionType } from '@summerfi/sdk-common'
 
@@ -246,6 +247,9 @@ export const VaultOpenViewComponent = ({
     walletAddress: user?.address,
   })
 
+  // "It’s 1% for usd and 0.3% for eth"
+  const managementFee = vault.inputToken.symbol.includes('USD') ? 0.01 : 0.003
+
   const sidebarContent = nextTransaction?.type ? (
     {
       [TransactionType.Approve]: (
@@ -420,6 +424,38 @@ export const VaultOpenViewComponent = ({
               vaultId={getUniqueVaultId(vault)}
               page="open"
             />
+          </Expander>
+          <Expander
+            title={
+              <Text as="p" variant="p1semi">
+                Strategy management fee
+              </Text>
+            }
+            defaultExpanded
+          >
+            <Card style={{ flexDirection: 'column', marginTop: 'var(--general-space-16)' }}>
+              <Text
+                as="p"
+                variant="p2semi"
+                style={{
+                  color: 'var(--color-text-primary)',
+                  marginBottom: 'var(--general-space-24)',
+                }}
+              >
+                {formatDecimalAsPercent(managementFee)} Management Fee, already included in APY
+              </Text>
+              <Text
+                as="p"
+                variant="p2"
+                style={{
+                  color: 'var(--color-text-secondary)',
+                }}
+              >
+                A {formatDecimalAsPercent(managementFee)} management fee is applied to your
+                position, but it’s already factored into the APY you see. This means the rate
+                displayed reflects your net return - no hidden fees, just straightforward earnings.
+              </Text>
+            </Card>
           </Expander>
         </div>
       }

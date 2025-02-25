@@ -18,7 +18,7 @@ export const ClaimDelegateHeader: FC<ClaimDelegateHeaderProps> = ({ state }) => 
         <Link href={`/portfolio/${state.walletAddress}?tab=${PortfolioTabs.REWARDS}`} prefetch>
           <Text
             as="p"
-            variant="p1"
+            variant="p2semi"
             style={{
               color: 'var(--earn-protocol-primary-100)',
               marginBottom: 'var(--general-space-12)',
@@ -31,12 +31,12 @@ export const ClaimDelegateHeader: FC<ClaimDelegateHeaderProps> = ({ state }) => 
       {state.step !== ClaimDelegateSteps.TERMS && (
         <div className={classNames.pathLinkWrapper}>
           <Link href={`/portfolio/${state.walletAddress}?tab=${PortfolioTabs.REWARDS}`} prefetch>
-            <Text as="p" variant="p1" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+            <Text as="p" variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
               $SUMR
             </Text>
           </Link>{' '}
           /{' '}
-          <Text as="p" variant="p1">
+          <Text as="p" variant="p2semi">
             Claim & Delegate
           </Text>
         </div>

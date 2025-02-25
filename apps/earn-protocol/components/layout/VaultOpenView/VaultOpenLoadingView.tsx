@@ -10,25 +10,29 @@ export const VaultOpenLoadingView = () => {
       detailsContent={
         <div className={vaultOpenViewStyles.leftContentWrapper}>
           <VaultOpenHeaderBlock detailsLinks={[]} />
-          {['Historical yield', 'Vault exposure', 'Rebalancing activity', 'Users activity'].map(
-            (expanderLabel) => (
-              <Expander
-                key={expanderLabel}
-                title={
-                  <Text as="p" variant="p1semi">
-                    {expanderLabel}
-                  </Text>
-                }
-                defaultExpanded
-              >
-                <SkeletonLine
-                  height={448}
-                  radius="var(--radius-roundish)"
-                  style={{ marginTop: 'var(--spacing-space-medium)' }}
-                />
-              </Expander>
-            ),
-          )}
+          {[
+            'Historical yield',
+            'Vault exposure',
+            'Rebalancing activity',
+            'Users activity',
+            'Strategy management fee',
+          ].map((expanderLabel) => (
+            <Expander
+              key={expanderLabel}
+              title={
+                <Text as="p" variant="p1semi">
+                  {expanderLabel}
+                </Text>
+              }
+              defaultExpanded
+            >
+              <SkeletonLine
+                height={448}
+                radius="var(--radius-roundish)"
+                style={{ marginTop: 'var(--spacing-space-medium)' }}
+              />
+            </Expander>
+          ))}
         </div>
       }
       sidebarContent={

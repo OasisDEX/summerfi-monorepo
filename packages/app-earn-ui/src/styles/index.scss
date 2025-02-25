@@ -24,6 +24,7 @@ body {
   --general-space-128: 128px;
   --general-space-64: 64px;
   --general-space-56: 56px;
+  --general-space-48: 48px;
   --general-space-40: 40px;
   --general-space-32: 32px;
   --general-space-24: 24px;
@@ -48,6 +49,7 @@ body {
   --earn-protocol-primary-100: rgba(255, 73, 164, 1);
   --earn-protocol-primary-70: rgba(255, 128, 191, 1);
   --earn-protocol-primary-40: rgba(141, 51, 96, 1);
+  --earn-protocol-primary-10: rgba(55, 40, 47, 1);
   --earn-protocol-secondary-100: rgba(255, 251, 253, 1);
   --earn-protocol-secondary-70: rgba(210, 210, 210, 1);
   --earn-protocol-secondary-60: rgba(186, 184, 185, 1);
@@ -85,8 +87,8 @@ body {
   --color-surface-lighter: var(--earn-protocol-neutral-60);
   --color-text-primary: var(--earn-protocol-secondary-100);
   --color-text-primary-hover: var(--earn-protocol-secondary-70);
-  --color-text-primary-disabled: var(--earn-protocol-secondary-40);
-  --color-text-secondary-disabled: var(--earn-protocol-secondary-40);
+  --color-text-primary-disabled: rgba(255, 251, 253, 0.5);
+  --color-text-secondary-disabled: rgba(255, 251, 253, 0.5);
   --color-text-secondary: var(--earn-protocol-secondary-60);
   --color-text-link: var(--earn-protocol-primary-100);
   --color-text-link-hover: var(--earn-protocol-primary-70);

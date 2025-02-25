@@ -15,6 +15,7 @@ export const claimDelegateState: ClaimDelegateState = {
   walletAddress: '0x0', // dummy, invalid address for init
   stakeType: ClaimDelegateStakeType.ADD_STAKE,
   stakeChangeAmount: undefined,
+  pendingClaimChainId: undefined,
 }
 
 export const claimDelegateReducer = (
@@ -61,6 +62,12 @@ export const claimDelegateReducer = (
       return {
         ...prevState,
         stakeChangeAmount: action.payload,
+      }
+    case 'set-pending-claim':
+      return {
+        ...prevState,
+        claimStatus: undefined,
+        pendingClaimChainId: action.payload ?? undefined,
       }
     default:
       return prevState
