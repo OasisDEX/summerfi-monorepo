@@ -23,7 +23,11 @@ export const bridgeReducer = (prevState: BridgeState, action: BridgeReducerActio
   const validateTransition = (from: BridgeTxStatus, to: BridgeTxStatus) => {
     const validTransitions = {
       [BridgeTxStatus.NOT_STARTED]: [BridgeTxStatus.PENDING],
-      [BridgeTxStatus.PENDING]: [BridgeTxStatus.COMPLETED, BridgeTxStatus.FAILED],
+      [BridgeTxStatus.PENDING]: [
+        BridgeTxStatus.NOT_STARTED,
+        BridgeTxStatus.COMPLETED,
+        BridgeTxStatus.FAILED,
+      ],
       [BridgeTxStatus.COMPLETED]: [BridgeTxStatus.NOT_STARTED],
       [BridgeTxStatus.FAILED]: [BridgeTxStatus.NOT_STARTED],
     }
