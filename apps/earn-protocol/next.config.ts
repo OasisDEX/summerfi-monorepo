@@ -8,6 +8,14 @@ const redirectToProSummer = (pathname: string) => ({
 })
 
 const nextConfig: NextConfig = {
+  devIndicators: {
+    buildActivity: true,
+    buildActivityPosition: 'bottom-right',
+    appIsrStatus: true,
+  },
+  experimental: {
+    turbo: {},
+  },
   basePath: '/earn',
   output: 'standalone',
   reactStrictMode: false,

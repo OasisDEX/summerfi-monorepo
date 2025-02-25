@@ -43,32 +43,42 @@ export const getVaultsApy: ({
     throw new Error('FUNCTIONS_API_URL is not set')
   }
 
-  const apiResponse = await fetch(`${functionsApiUrl}/api/vault/rates`, {
-    method: 'POST',
-    body: JSON.stringify({ fleets }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    next: {
-      revalidate: REVALIDATION_TIMES.INTEREST_RATES,
-      tags: [REVALIDATION_TAGS.INTEREST_RATES],
-    },
-  })
+  try {
+    const apiResponse = await fetch(`${functionsApiUrl}/api/vault/rates`, {
+      method: 'POST',
+      body: JSON.stringify({ fleets }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      next: {
+        revalidate: REVALIDATION_TIMES.INTEREST_RATES,
+        tags: [REVALIDATION_TAGS.INTEREST_RATES],
+      },
+    })
 
-  const rawResponse = (await apiResponse.json()) as GetVaultsApyRAWResponse
+    const rawResponse = (await apiResponse.json()) as GetVaultsApyRAWResponse
 
-  const response = rawResponse.rates.reduce<GetVaultsApyResponse>((topAcc, { rates, chainId }) => {
-    const ratesMap = rates.reduce<{ [key: string]: number }>((acc, { rate, fleetAddress }) => {
-      acc[`${fleetAddress}-${chainId}`] = Number(rate) / 100
+    const response = rawResponse.rates.reduce<GetVaultsApyResponse>(
+      (topAcc, { rates, chainId }) => {
+        const ratesMap = rates.reduce<{ [key: string]: number }>((acc, { rate, fleetAddress }) => {
+          acc[`${fleetAddress}-${chainId}`] = Number(rate) / 100
 
-      return acc
-    }, {})
+          return acc
+        }, {})
 
-    return {
-      ...topAcc,
-      ...ratesMap,
-    }
-  }, {})
+        return {
+          ...topAcc,
+          ...ratesMap,
+        }
+      },
+      {},
+    )
 
-  return response
+    return response
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('getVaultsApy: Error parsing vaults apy', error)
+
+    throw error
+  }
 }

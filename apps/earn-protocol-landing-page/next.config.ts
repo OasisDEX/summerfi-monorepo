@@ -13,6 +13,9 @@ const nextConfig: NextConfig = {
     buildActivityPosition: 'bottom-right',
     appIsrStatus: true,
   },
+  experimental: {
+    turbo: {},
+  },
   output: 'standalone',
   reactStrictMode: false,
   webpack: (config) => {
