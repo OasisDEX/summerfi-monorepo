@@ -1,6 +1,7 @@
 import { type Dispatch, type FC } from 'react'
 import { useChain } from '@account-kit/react'
 import { Icon, Sidebar, Text } from '@summerfi/app-earn-ui'
+import { SDKChainId } from '@summerfi/app-types'
 import {
   chainIdToSDKNetwork,
   isSupportedHumanNetwork,
@@ -13,7 +14,6 @@ import { NetworkBalances } from '@/features/bridge/components/NetworkBalances/Ne
 import { type BridgeReducerAction, type BridgeState } from '@/features/bridge/types'
 
 import styles from './BridgeFormCompletedStep.module.scss'
-import { SDKChainId } from '@summerfi/app-types'
 
 interface BridgeFormCompletedStepProps {
   dispatch: Dispatch<BridgeReducerAction>

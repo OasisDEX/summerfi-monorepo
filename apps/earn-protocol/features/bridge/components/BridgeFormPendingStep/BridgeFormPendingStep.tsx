@@ -3,6 +3,7 @@ import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
 import { MessageStatus } from '@layerzerolabs/scan-client'
 import { Alert, Icon, InfoBox, LoadingSpinner, Sidebar, Text } from '@summerfi/app-earn-ui'
+import { SDKChainId } from '@summerfi/app-types'
 import {
   chainIdToSDKNetwork,
   isSupportedHumanNetwork,
@@ -19,7 +20,6 @@ import { type BridgeReducerAction, type BridgeState, BridgeTxStatus } from '@/fe
 import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 
 import styles from './BridgeFormPendingStep.module.scss'
-import { SDKChainId } from '@summerfi/app-types'
 
 interface BridgeFormPendingStepProps {
   dispatch: Dispatch<BridgeReducerAction>
