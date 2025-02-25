@@ -10,6 +10,7 @@ import {
 } from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
+import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { sdkApiUrl } from '@/constants/sdk'
 
 import { MigrateVaultPageComponent } from './MigrateVaultPageComponent'
@@ -23,6 +24,7 @@ type MigrateVaultPageViewProps = {
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
   vaultApy?: number
+  migratablePosition: MigratablePosition
 }
 
 export const MigrateVaultPageView: FC<MigrateVaultPageViewProps> = ({
@@ -34,6 +36,7 @@ export const MigrateVaultPageView: FC<MigrateVaultPageViewProps> = ({
   arksHistoricalChartData,
   arksInterestRates,
   vaultApy,
+  migratablePosition,
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -46,6 +49,7 @@ export const MigrateVaultPageView: FC<MigrateVaultPageViewProps> = ({
         arksHistoricalChartData={arksHistoricalChartData}
         arksInterestRates={arksInterestRates}
         vaultApy={vaultApy}
+        migratablePosition={migratablePosition}
       />
     </SDKContextProvider>
   )

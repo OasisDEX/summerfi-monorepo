@@ -6,11 +6,14 @@ import {
   getDisplayToken,
   getResolvedForecastAmountParsed,
   getUniqueVaultId,
+  Icon,
   OrderInformation,
   Sidebar,
   SidebarMobileHeader,
+  SkeletonLine,
   SUMR_CAP,
   Text,
+  useAmountWithSwap,
   useForecast,
   useLocalConfig,
   useMobileCheck,
@@ -23,9 +26,11 @@ import {
   type SDKVaultsListType,
   type SDKVaultType,
   type TokenSymbolsList,
+  TransactionAction,
   type UsersActivity,
 } from '@summerfi/app-types'
 import {
+  formatCryptoBalance,
   formatDecimalAsPercent,
   formatFiatBalance,
   subgraphNetworkToSDKId,
@@ -33,6 +38,7 @@ import {
 import { type GetGlobalRebalancesQuery } from '@summerfi/sdk-client'
 import BigNumber from 'bignumber.js'
 
+import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { detailsLinks } from '@/components/layout/VaultOpenView/mocks'
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
@@ -55,6 +61,7 @@ type MigrateVaultPageComponentProps = {
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
   vaultApy?: number
+  migratablePosition: MigratablePosition
 }
 
 export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
@@ -66,6 +73,7 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
   arksHistoricalChartData,
   arksInterestRates,
   vaultApy,
+  migratablePosition,
 }) => {
   const { publicClient } = useNetworkAlignedClient()
   const { deviceType } = useDeviceType()
@@ -79,20 +87,22 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
   } = useLocalConfig()
   const sdk = useAppSDK()
 
-  const amountParsed = new BigNumber(0)
+  const amountParsed = new BigNumber(migratablePosition.underlyingTokenAmount.amount)
 
-  //   const { amountDisplayUSDWithSwap, rawToTokenAmount } = useAmountWithSwap({
-  //     vault,
-  //     vaultChainId,
-  //     amountDisplay,
-  //     amountDisplayUSD,
-  //     transactionType: TransactionAction.DEPOSIT,
-  //     selectedTokenOption,
-  //     sdk,
-  //     slippageConfig,
-  //   })
-
-  const rawToTokenAmount = new BigNumber(1)
+  const { amountDisplayUSDWithSwap, rawToTokenAmount } = useAmountWithSwap({
+    vault,
+    vaultChainId,
+    amountDisplay: migratablePosition.underlyingTokenAmount.amount,
+    amountDisplayUSD: migratablePosition.usdValue.amount,
+    transactionType: TransactionAction.DEPOSIT,
+    selectedTokenOption: {
+      label: migratablePosition.underlyingTokenAmount.token.symbol,
+      value: migratablePosition.underlyingTokenAmount.token.symbol,
+      icon: migratablePosition.underlyingTokenAmount.token.symbol,
+    },
+    sdk,
+    slippageConfig,
+  })
 
   const resolvedAmountParsed = getResolvedForecastAmountParsed({
     amountParsed,
@@ -131,15 +141,15 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
           gap: 'var(--general-space-8)',
           marginTop: 'var(--general-space-24)',
           marginBottom: 'var(--general-space-8)',
+          position: 'relative',
         }}
       >
         <MigrationMiniCard
           description="Passive Lending"
           amount={`$${formatFiatBalance(estimatedEarnings)}`}
-          change={formatDecimalAsPercent(estimatedEarnings, { plus: true })}
-          token={vault.inputToken.symbol as TokenSymbolsList}
+          token={migratablePosition.underlyingTokenAmount.token.symbol as TokenSymbolsList}
           type="from"
-          network={vault.protocol.network}
+          chainId={migratablePosition.chainId}
           platformLogo="aave"
         />
         <MigrationMiniCard
@@ -148,9 +158,26 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
           change={formatDecimalAsPercent(estimatedEarnings, { plus: true })}
           token={vault.inputToken.symbol as TokenSymbolsList}
           type="to"
-          network={vault.protocol.network}
+          chainId={subgraphNetworkToSDKId(vault.protocol.network)}
           platformLogo="summer"
         />
+        <div
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            width: '40px',
+            height: '40px',
+            transform: 'translate(-50%, -50%)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'var(--gradient-earn-protocol-dark)',
+            borderRadius: '50%',
+          }}
+        >
+          <Icon iconName="arrow_forward" size={20} />
+        </div>
       </div>
       <div
         style={{
@@ -164,8 +191,17 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
           <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
             Total Deposited
           </Text>
-          <Text as="p" variant="p1semi">
-            $100,000 USDC
+          <Text
+            as="p"
+            variant="p1semi"
+            style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}
+          >
+            {rawToTokenAmount ? (
+              formatCryptoBalance(rawToTokenAmount)
+            ) : (
+              <SkeletonLine width="80px" height="14px" />
+            )}{' '}
+            {vault.inputToken.symbol}
           </Text>
         </Card>
         <OrderInformation

@@ -48,7 +48,7 @@ const MigrateVaultPage = async ({ params }: MigrateVaultPageProps) => {
     { vaults },
     { usersActivity, topDepositors },
     medianDefiYield,
-    migratablePositions,
+    migratablePositionsData,
   ] = await Promise.all([
     getVaultDetails({
       vaultAddress: parsedVaultId,
@@ -63,11 +63,13 @@ const MigrateVaultPage = async ({ params }: MigrateVaultPageProps) => {
     getMigratablePositions({ walletAddress }),
   ])
 
-  if (
-    !migratablePositions.find(
-      (position) => position.id.toLowerCase() === migrationPositionId.toLowerCase(),
-    )
-  ) {
+  const migratablePositions = parseServerResponseToClient(migratablePositionsData)
+
+  const migratablePosition = migratablePositions.find(
+    (position) => position.id.toLowerCase() === migrationPositionId.toLowerCase(),
+  )
+
+  if (!migratablePosition) {
     return <Text>No migration position found with the id {migrationPositionId}</Text>
   }
 
@@ -129,6 +131,7 @@ const MigrateVaultPage = async ({ params }: MigrateVaultPageProps) => {
       arksHistoricalChartData={arksHistoricalChartData}
       arksInterestRates={arksInterestRates}
       vaultApy={vaultApy}
+      migratablePosition={migratablePosition}
     />
   )
 }

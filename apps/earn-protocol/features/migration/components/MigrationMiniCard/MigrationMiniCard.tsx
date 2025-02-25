@@ -1,21 +1,21 @@
 import { type FC } from 'react'
 import { Card, type CardVariant, Text, TokenWithNetworkIcon } from '@summerfi/app-earn-ui'
-import { type TokenSymbolsList } from '@summerfi/app-types'
+import { type PlatformLogo, type SDKChainId, type TokenSymbolsList } from '@summerfi/app-types'
 import { capitalize } from 'lodash-es'
 import Image from 'next/image'
 
-import { type PlatformLogoMap, platformLogoMap } from '@/helpers/platform-logo-map'
+import { platformLogoMap } from '@/helpers/platform-logo-map'
 
 import classNames from './MigrationMiniCard.module.scss'
 
 interface MigrationMiniCardProps {
   description: string
   amount: string
-  change: string
+  change?: string
   token: TokenSymbolsList
-  network: string
+  chainId: SDKChainId
   type: 'from' | 'to'
-  platformLogo: PlatformLogoMap
+  platformLogo: PlatformLogo
 }
 
 const variantMap: { [key in MigrationMiniCardProps['type']]: CardVariant } = {
@@ -30,6 +30,7 @@ export const MigrationMiniCard: FC<MigrationMiniCardProps> = ({
   token,
   type,
   platformLogo,
+  chainId,
 }) => {
   return (
     <Card
@@ -45,7 +46,7 @@ export const MigrationMiniCard: FC<MigrationMiniCardProps> = ({
       </div>
       <div className={classNames.content}>
         <div className={classNames.iconWrapper}>
-          <TokenWithNetworkIcon tokenName={token} chainId={1} />
+          <TokenWithNetworkIcon tokenName={token} chainId={chainId} />
         </div>
         <Text as="h5" variant="h5">
           {token}
@@ -69,9 +70,11 @@ export const MigrationMiniCard: FC<MigrationMiniCardProps> = ({
         </Text>
         <Text as="p" variant="p1semi">
           {amount}{' '}
-          <Text as="span" variant="p4semi" style={{ color: 'var(--earn-protocol-success-100)' }}>
-            {change}
-          </Text>
+          {change && (
+            <Text as="span" variant="p4semi" style={{ color: 'var(--earn-protocol-success-100)' }}>
+              {change}
+            </Text>
+          )}
         </Text>
       </div>
     </Card>
