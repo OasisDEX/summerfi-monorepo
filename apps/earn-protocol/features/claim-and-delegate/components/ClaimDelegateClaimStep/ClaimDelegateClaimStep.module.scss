@@ -21,7 +21,21 @@
     width: 100%;
     max-width: 560px;
     margin-top: var(--general-space-16);
-    margin-bottom: var(--general-space-12);
+
+    .alertContent {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+      
+
+      @include media('>m') {
+        gap: var(--general-space-32);
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
   }
 
   .errorWrapper {
@@ -141,6 +155,7 @@
     align-items: center;
     gap: var(--general-space-8);
     border-radius: var(--radius-small);
+    display: none;
 
     &.bridge {
       background-color: var(--earn-protocol-primary-10);
@@ -151,14 +166,10 @@
       background-color: var(--earn-protocol-success-10);
       color: var(--earn-protocol-success-100);
 
-    }
+    }    
 
-    .tabLabel {
-      display: none;
-
-      @include media('>l') {
-        display: block;
-      }
+    @include media('>m') {
+      display: block;
     }
   }
 

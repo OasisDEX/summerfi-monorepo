@@ -9,6 +9,7 @@ import {
   SUMR_CAP,
   Text,
   useLocalConfig,
+  WithArrow,
 } from '@summerfi/app-earn-ui'
 import { SDKChainId } from '@summerfi/app-types'
 import {
@@ -19,6 +20,7 @@ import {
   formatFiatBalance,
   safeBTOA,
 } from '@summerfi/app-utils'
+import clsx from 'clsx'
 import { useParams } from 'next/navigation'
 
 import { localSumrDelegates } from '@/features/claim-and-delegate/consts'
@@ -203,7 +205,11 @@ export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = (
 
   return (
     <div className={classNames.claimDelegateStakeDelegateCompletedSubstepWrapper}>
-      <div className={classNames.mainContent}>
+      <div
+        className={clsx(classNames.mainContent, {
+          [classNames.noClaim]: state.claimStatus !== ClaimDelegateTxStatuses.COMPLETED,
+        })}
+      >
         {state.claimStatus === ClaimDelegateTxStatuses.COMPLETED && (
           <ClaimedCard
             externalData={externalData}
@@ -261,7 +267,11 @@ export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = (
       </Card>
       {/* anchor to force full reload of portfolio page and its server fetched data */}
       <a href={`/earn/portfolio/${walletAddress}?tab=${PortfolioTabs.REWARDS}`}>
-        <Button variant="primarySmall">Go to $SUMR Overview</Button>
+        <Button variant="primaryMedium">
+          <WithArrow variant="p3semi" as="p" style={{ color: 'inherit' }} reserveSpace>
+            Go to portfolio
+          </WithArrow>
+        </Button>
       </a>
     </div>
   )

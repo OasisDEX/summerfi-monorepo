@@ -1,4 +1,5 @@
 import { type SDKChainId } from '@summerfi/app-types'
+import { HumanReadableNetwork } from '@summerfi/app-utils'
 
 import { type SumrBalancesData } from '@/app/server-handlers/sumr-balances'
 import { type SumrDecayFactorData } from '@/app/server-handlers/sumr-decay-factor'
@@ -26,6 +27,14 @@ export enum ClaimDelegateStakeType {
   REMOVE_STAKE = 'remove-stake',
 }
 
+// Define types for balance tracking
+export type ClaimableBalances = {
+  [key in SDKChainId]: number
+}
+export type WalletBalances = {
+  [key in HumanReadableNetwork]: number
+}
+
 export type ClaimDelegateState = {
   step: ClaimDelegateSteps
   delegatee: string | undefined
@@ -37,6 +46,9 @@ export type ClaimDelegateState = {
   stakeChangeAmount: string | undefined
   walletAddress: string
   pendingClaimChainId: SDKChainId | undefined
+  // Add balance tracking
+  claimableBalances: ClaimableBalances
+  walletBalances: WalletBalances
 }
 
 export type ClaimDelegateReducerAction =
@@ -75,6 +87,14 @@ export type ClaimDelegateReducerAction =
   | {
       type: 'set-pending-claim'
       payload: SDKChainId | undefined
+    }
+  | {
+      type: 'update-claimable-balances'
+      payload: ClaimableBalances
+    }
+  | {
+      type: 'update-wallet-balances'
+      payload: WalletBalances
     }
 
 export type ClaimDelegateExternalData = {

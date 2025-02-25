@@ -1,7 +1,7 @@
-import { type Dispatch, type FC, useCallback, useEffect, useState } from 'react'
+import { type Dispatch, type FC, useCallback, useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
-import { Alert, SUMR_CAP, useLocalConfig } from '@summerfi/app-earn-ui'
+import { SUMR_CAP, useLocalConfig } from '@summerfi/app-earn-ui'
 import { SDKChainId } from '@summerfi/app-types'
 import {
   chainIdToSDKNetwork,
@@ -77,8 +77,6 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     cookiePrefix: TermsOfServiceCookiePrefix.SUMR_CLAIM_TOKEN,
   })
 
-  const [externalData, setExternalData] = useState(initialExternalData)
-
   const { setChain, isSettingChain } = useChain()
   const { clientChainId } = useClientChainId() as {
     clientChainId: SDKChainId.BASE | SDKChainId.ARBITRUM | SDKChainId.MAINNET
@@ -93,32 +91,33 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   const { claimSumrTransaction } = useClaimSumrTransaction({
     onSuccess: () => {
       setTimeout(() => {
-        // Zero out the claimed amount and update balances
+        // Get the network name for the current chain
         const humanNetwork = sdkNetworkToHumanNetwork(chainIdToSDKNetwork(clientChainId))
 
         if (!isSupportedHumanNetwork(humanNetwork)) {
           throw new Error(`Unsupported network: ${humanNetwork}`)
         }
 
-        setExternalData((prevData) => ({
-          ...prevData,
-          sumrToClaim: {
-            ...prevData.sumrToClaim,
-            claimableAggregatedRewards: {
-              ...prevData.sumrToClaim.claimableAggregatedRewards,
-              perChain: {
-                ...prevData.sumrToClaim.claimableAggregatedRewards.perChain,
-                [clientChainId]: 0,
-              },
-            },
+        // Update claimable balances - set the claimed amount to 0
+        dispatch({
+          type: 'update-claimable-balances',
+          payload: {
+            ...state.claimableBalances,
+            [clientChainId]: 0,
           },
-          sumrBalances: {
-            ...prevData.sumrBalances,
-            [humanNetwork]:
-              (Number(prevData.sumrBalances[humanNetwork]) || 0) +
-              (prevData.sumrToClaim.claimableAggregatedRewards.perChain[clientChainId] || 0),
+        })
+
+        // Update wallet balances - add claimed amount to the existing balance
+        const claimedAmount =
+          initialExternalData.sumrToClaim.claimableAggregatedRewards.perChain[clientChainId] || 0
+
+        dispatch({
+          type: 'update-wallet-balances',
+          payload: {
+            ...state.walletBalances,
+            [humanNetwork]: Number(state.walletBalances[humanNetwork]) + claimedAmount,
           },
-        }))
+        })
 
         dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.COMPLETED })
         toast.success('Claimed $SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
@@ -184,9 +183,10 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   ])
 
   const hasClaimedAtLeastOneChain = state.claimStatus === ClaimDelegateTxStatuses.COMPLETED
-  const canContinue =
-    (Number(externalData.sumrBalances.base) > 0 && hasClaimedAtLeastOneChain) ||
-    hasReturnedToClaimStep
+
+  // Use the balances from the global state instead of local state
+  const baseBalance = state.walletBalances.base || 0
+  const canContinue = (baseBalance > 0 && hasClaimedAtLeastOneChain) || hasReturnedToClaimStep
 
   const handleAccept = () => {
     dispatch({ type: 'update-step', payload: ClaimDelegateSteps.DELEGATE })
@@ -211,15 +211,15 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
 
   const satelliteClaimItems = claimItems.filter((item) => item.chainId !== SDKChainId.BASE)
 
-  const hasClaimableBalance = Object.values(
-    externalData.sumrToClaim.claimableAggregatedRewards.perChain,
-  ).some((amount) => amount > 0)
+  // Check if there are any claimable balances using the global state
+  const hasClaimableBalance = Object.values(state.claimableBalances).some((amount) => amount > 0)
 
+  // Check if there are any bridgeable balances using the global state
   const hasBridgeableBalance = satelliteClaimItems.some((item) => {
     try {
       const humanNetwork = sdkNetworkToHumanNetworkStrict(chainIdToSDKNetwork(item.chainId))
 
-      return Number(externalData.sumrBalances[humanNetwork]) > 0
+      return (Number(state.walletBalances[humanNetwork]) || 0) > 0
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Error checking bridgeable balance:', error)
@@ -255,10 +255,8 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
       {/* Base network card */}
       <ClaimDelegateNetworkCard
         chainId={SDKChainId.BASE}
-        claimableAmount={
-          externalData.sumrToClaim.claimableAggregatedRewards.perChain[SDKChainId.BASE] ?? 0
-        }
-        balance={Number(externalData.sumrBalances.base) || 0}
+        claimableAmount={state.claimableBalances[SDKChainId.BASE] || 0}
+        balance={state.walletBalances.base || 0}
         estimatedSumrPrice={estimatedSumrPrice}
         walletAddress={resolvedWalletAddress}
         onClaim={() => handleClaimClick(SDKChainId.BASE)}
@@ -271,29 +269,18 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
         isOnlyStep
       />
 
-      <div className={classNames.alertWrapper}>
-        <Alert
-          variant="general"
-          iconName="bridge"
-          error="You'll need to bridge your SUMR to Base before you can stake it"
-        />
-      </div>
-
       {/* Satellite network cards */}
       {satelliteClaimItems.map((item) => {
         const network = sdkNetworkToHumanNetwork(chainIdToSDKNetwork(item.chainId))
 
         if (!isSupportedHumanNetwork(network)) return null
 
-        const claimableAmount =
-          externalData.sumrToClaim.claimableAggregatedRewards.perChain[item.chainId] ?? 0
-
         return (
           <ClaimDelegateNetworkCard
             key={item.chainId}
             chainId={item.chainId}
-            claimableAmount={claimableAmount}
-            balance={Number(externalData.sumrBalances[network]) || 0}
+            claimableAmount={state.claimableBalances[item.chainId] || 0}
+            balance={state.walletBalances[network] || 0}
             estimatedSumrPrice={estimatedSumrPrice}
             walletAddress={resolvedWalletAddress}
             onClaim={() => handleClaimClick(item.chainId)}

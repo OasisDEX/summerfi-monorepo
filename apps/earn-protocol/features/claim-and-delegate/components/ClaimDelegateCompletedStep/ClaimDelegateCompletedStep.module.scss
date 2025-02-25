@@ -9,8 +9,17 @@
     gap: var(--general-space-16);
     width: 100%;
 
+
+
     @include media('>m') {
       grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    &.noClaim {
+      grid-template-columns: 1fr;
+      @include media('>m') {
+        grid-template-columns: 1fr 1fr;
+      }
     }
 
     .cardWrapper {
