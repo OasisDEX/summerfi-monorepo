@@ -107,14 +107,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
             <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
               Total assets
             </Text>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                gap: '10px',
-                alignItems: 'end',
-              }}
-            >
+            <div className={vaultCardStyles.totalAssetsDisplay}>
               <Text variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
                 {parsedTotalValueLocked}&nbsp;{getDisplayToken(inputToken.symbol)}
               </Text>

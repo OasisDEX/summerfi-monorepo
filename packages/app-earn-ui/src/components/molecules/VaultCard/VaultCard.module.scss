@@ -27,4 +27,11 @@
   @include media('>=s') {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .totalAssetsDisplay {
+    display: flex;
+    flex-direction: row;
+    gap: var(--general-space-10);
+    align-items: end;
+  }
 }

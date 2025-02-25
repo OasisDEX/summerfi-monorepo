@@ -60,7 +60,7 @@ export const Input: FC<
           getAtomClassList({ className, variant: inputStyles[variant] }),
         ].join(' ')}
         {...rest}
-        value={value === '0' ? '' : value}
+        value={value}
         placeholder={placeholder}
       />
       {button && (

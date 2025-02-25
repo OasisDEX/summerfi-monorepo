@@ -9,7 +9,7 @@
   margin-top: var(--general-space-16);
   flex-wrap: wrap;
 
-  @include media('>s') {
+  @include media('>m') {
     flex-wrap: nowrap;
 
     > div {

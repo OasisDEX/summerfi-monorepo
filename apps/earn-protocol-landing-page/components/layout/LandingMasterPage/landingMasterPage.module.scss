@@ -61,8 +61,4 @@
   white-space: normal;
   color: var(--color-text-secondary);
   margin-bottom: var(--spacing-space-medium);
-
-  @include media('>s') {
-    white-space: wrap;
-  }
 }

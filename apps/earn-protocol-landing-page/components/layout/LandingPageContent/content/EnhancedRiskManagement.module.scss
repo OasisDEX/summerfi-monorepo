@@ -20,7 +20,6 @@
   align-items: center;
   gap: var(--spacing-space-large);
   padding: var(--spacing-space-large) var(--spacing-space-medium);
-  flex-direction: row;
   flex-direction: column;
 
   @include media('>s') {
