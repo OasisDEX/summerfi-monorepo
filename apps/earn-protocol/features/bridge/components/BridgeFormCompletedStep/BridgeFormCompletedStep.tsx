@@ -24,6 +24,8 @@ export const BridgeFormCompletedStep: FC<BridgeFormCompletedStepProps> = ({ stat
   const { chain: sourceChain } = useChain()
   const searchParams = useSearchParams()
   const viaParam = searchParams.get('via')
+  const isViaPortfolio = viaParam === 'portfolio'
+  const isViaClaim = viaParam === 'claim'
 
   const sourceNetwork = chainIdToSDKNetwork(sourceChain.id)
   const destinationNetwork = chainIdToSDKNetwork(state.destinationChain.id)
@@ -75,21 +77,26 @@ export const BridgeFormCompletedStep: FC<BridgeFormCompletedStepProps> = ({ stat
         </div>
       }
       primaryButton={
-        viaParam === 'claim'
+        isViaClaim
           ? {
               url: `/claim/${state.walletAddress}${
                 state.destinationChain.id === SDKChainId.BASE ? '?via=bridge' : ''
               }`,
               label: 'Return to claim',
             }
-          : {
-              label: 'Create new transaction',
-              action: () => {
-                dispatch({
-                  type: 'reset',
-                })
-              },
-            }
+          : isViaPortfolio
+            ? {
+                url: `/portfolio/${state.walletAddress}`,
+                label: 'Return to portfolio',
+              }
+            : {
+                label: 'Create new transaction',
+                action: () => {
+                  dispatch({
+                    type: 'reset',
+                  })
+                },
+              }
       }
       secondaryButton={{
         label: (
