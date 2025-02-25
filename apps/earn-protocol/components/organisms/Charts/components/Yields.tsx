@@ -87,6 +87,7 @@ export const YieldsChart = ({ data, dataNames, colors, summerVaultName }: Yields
                 animationDuration={300}
                 animationBegin={dataIndex * 50}
                 animationEasing="ease-out"
+                connectNulls
                 dataKey={dataName}
                 strokeWidth={highlightedProtocol === dataName ? 2 : 1}
                 stroke={colors[dataName as keyof typeof colors]}

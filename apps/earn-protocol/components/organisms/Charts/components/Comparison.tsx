@@ -65,6 +65,7 @@ export const ComparisonChart = ({ data, dataNames, colors, compare }: Comparison
                 stroke={colors[`${dataName}-color` as keyof typeof colors]}
                 fillOpacity={1}
                 fill="url(#summerYieldGradient)"
+                connectNulls
               />
             ) : (
               <Line
