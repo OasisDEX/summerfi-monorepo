@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type ReactNode, useState } from 'react'
+import { type FC, type ReactNode, useEffect, useState } from 'react'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 
@@ -20,6 +20,13 @@ export const Carousel: FC<CarouselProps> = ({ components, contentWidth }) => {
   // Required minimum distance between touch start and end to be detected as swipe
   const minSwipeDistance = 50
 
+  useEffect(() => {
+    return () => {
+      setTouchStart(null)
+      setTouchEnd(null)
+    }
+  }, [])
+
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null)
     setTouchStart(e.targetTouches[0].clientX)
@@ -27,21 +34,6 @@ export const Carousel: FC<CarouselProps> = ({ components, contentWidth }) => {
 
   const onTouchMove = (e: React.TouchEvent) => {
     setTouchEnd(e.targetTouches[0].clientX)
-  }
-
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return
-
-    const distance = touchStart - touchEnd
-    const isLeftSwipe = distance > minSwipeDistance
-    const isRightSwipe = distance < -minSwipeDistance
-
-    if (isLeftSwipe) {
-      handleNext()
-    }
-    if (isRightSwipe) {
-      handlePrevious()
-    }
   }
 
   const handleNext = () => {
@@ -62,6 +54,21 @@ export const Carousel: FC<CarouselProps> = ({ components, contentWidth }) => {
     setTimeout(() => {
       setAnimating(false)
     }, 800)
+  }
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return
+
+    const distance = touchStart - touchEnd
+    const isLeftSwipe = distance > minSwipeDistance
+    const isRightSwipe = distance < -minSwipeDistance
+
+    if (isLeftSwipe) {
+      handleNext()
+    }
+    if (isRightSwipe) {
+      handlePrevious()
+    }
   }
 
   return (
