@@ -258,7 +258,7 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
 
   const secondaryButtonConfig = {
     claim: {
-      url: `/claim/${state.walletAddress}?via=bridge`,
+      url: `/claim/${state.walletAddress}`,
       label: 'Return to claim',
     },
     portfolio: {
@@ -312,9 +312,10 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
                     const newAmount = sumrBalanceOnSourceChain
                       .times(percentage)
                       .div(100)
-                      .toFormat(2, BigNumber.ROUND_DOWN)
+                      .decimalPlaces(2, BigNumber.ROUND_DOWN)
 
                     clearTransaction()
+
                     manualSetAmount(newAmount.toString())
                     if (!isSourceMatchingDestination) {
                       prepareTransaction(newAmount.toString())

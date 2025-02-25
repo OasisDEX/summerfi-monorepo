@@ -1,6 +1,7 @@
 import { type Dispatch, type FC } from 'react'
 import { useChain } from '@account-kit/react'
 import { Icon, Sidebar, Text } from '@summerfi/app-earn-ui'
+import { SDKChainId } from '@summerfi/app-types'
 import {
   chainIdToSDKNetwork,
   isSupportedHumanNetwork,
@@ -76,7 +77,9 @@ export const BridgeFormCompletedStep: FC<BridgeFormCompletedStepProps> = ({ stat
       primaryButton={
         viaParam === 'claim'
           ? {
-              url: `/claim/${state.walletAddress}?via=bridge`,
+              url: `/claim/${state.walletAddress}${
+                state.destinationChain.id === SDKChainId.BASE ? '?via=bridge' : ''
+              }`,
               label: 'Return to claim',
             }
           : {
