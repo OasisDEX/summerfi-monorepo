@@ -46,6 +46,8 @@
 
 .mobileCopyLogoutButtons {
   display: none;
+  gap: var(--general-space-12);
+  margin-top: var(--general-space-8);
 
   @include media('<=s') {
     display: flex;

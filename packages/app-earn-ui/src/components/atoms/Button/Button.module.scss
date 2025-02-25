@@ -152,21 +152,35 @@
 
 .textPrimaryLarge,
 .textPrimaryMedium,
-.textPrimarySmall {
+.textPrimarySmall,
+.textSecondaryLarge,
+.textSecondaryMedium,
+.textSecondarySmall {
   display: flex;
   align-items: center;
   justify-content: center;
   column-gap: var(--spacing-space-x-small);
+  padding: var(--spacing-space-x-small) 0;
   font-weight: 600;
   background: transparent;
   border: none;
   cursor: pointer;
-  color: var(--earn-protocol-primary-100);
   transition:
     border-color 200ms,
     color 200ms,
     background-color 200ms,
     box-shadow 200ms;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+// Primary text variants
+.textPrimaryLarge,
+.textPrimaryMedium,
+.textPrimarySmall {
+  color: var(--earn-protocol-primary-100);
 
   &:enabled:hover {
     color: var(--color-background-primary-hover);
@@ -174,18 +188,36 @@
 
   &:disabled {
     color: var(--color-text-primary-disabled);
-    cursor: not-allowed;
   }
 }
 
-.textPrimaryLarge {
+// Secondary text variants
+.textSecondaryLarge,
+.textSecondaryMedium,
+.textSecondarySmall {
+  color: var(--earn-protocol-secondary-40);
+
+  &:enabled:hover {
+    color: var(--color-text-secondary-disabled);
+  }
+
+  &:disabled {
+    color: var(--color-text-secondary-disabled);
+  }
+}
+
+// Size variants
+.textPrimaryLarge,
+.textSecondaryLarge {
   font-size: 16px;
 }
 
-.textPrimaryMedium {
+.textPrimaryMedium,
+.textSecondaryMedium {
   font-size: 14px;
 }
 
-.textPrimarySmall {
+.textPrimarySmall,
+.textSecondarySmall {
   font-size: 12px;
 }

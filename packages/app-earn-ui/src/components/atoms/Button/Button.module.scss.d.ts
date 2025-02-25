@@ -15,6 +15,9 @@ export type Styles = {
   textPrimaryLarge: string
   textPrimaryMedium: string
   textPrimarySmall: string
+  textSecondaryLarge: string
+  textSecondaryMedium: string
+  textSecondarySmall: string
   unstyled: string
 }
 

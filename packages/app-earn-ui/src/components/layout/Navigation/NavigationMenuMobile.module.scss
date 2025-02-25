@@ -53,8 +53,8 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  row-gap: var(--general-space-24);
-  padding: var(--general-space-16) 0;
+  row-gap: var(--general-space-16);
+
 
   > a {
     color: var(--earn-protocol-secondary-40);
@@ -78,7 +78,16 @@
   }
 }
 
+.actionsWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-x-small);
+}
+
 .buttonWrapper {
   width: 100%;
+}
+
+.walletConnectionComponent {
   margin-top: var(--general-space-20);
 }

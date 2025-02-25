@@ -56,7 +56,7 @@ export default function WalletLabel() {
 
   if (userWalletAddress) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+      <div>
         <Tooltip
           persistWhenOpened
           tooltip={
@@ -117,16 +117,16 @@ export default function WalletLabel() {
           </Button>
         </Tooltip>
         <div className={walletLabelStyles.mobileCopyLogoutButtons}>
+          <Button variant="primarySmall" onClick={handleLogout}>
+            Log out
+          </Button>
           <Button
-            variant="secondarySmall"
+            variant="textSecondarySmall"
             onClick={() => {
               handleCopyAddress(userWalletAddress.toString())
             }}
           >
             Copy address
-          </Button>
-          <Button variant="primarySmall" onClick={handleLogout}>
-            Log out
           </Button>
         </div>
       </div>
