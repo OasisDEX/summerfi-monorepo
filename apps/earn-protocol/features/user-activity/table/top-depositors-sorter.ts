@@ -22,6 +22,20 @@ export const topDepositorsSorter = ({
           direction: sortConfig.direction,
         }),
       )
+    case 'balanceUSD':
+      return data.sort((a, b) => {
+        return simpleSort({
+          a: new BigNumber(a.inputTokenBalance.toString())
+            .shiftedBy(-a.vault.inputToken.decimals)
+            .times(new BigNumber(a.vault.inputTokenPriceUSD as string))
+            .toNumber(),
+          b: new BigNumber(b.inputTokenBalance.toString())
+            .shiftedBy(-b.vault.inputToken.decimals)
+            .times(new BigNumber(b.vault.inputTokenPriceUSD as string))
+            .toNumber(),
+          direction: sortConfig.direction,
+        })
+      })
     case 'change7d':
       return data.sort((a, b) =>
         simpleSort({

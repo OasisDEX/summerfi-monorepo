@@ -423,6 +423,7 @@ export const VaultOpenViewComponent = ({
               topDepositors={topDepositors}
               vaultId={getUniqueVaultId(vault)}
               page="open"
+              noHighlight
             />
           </Expander>
           <Expander
