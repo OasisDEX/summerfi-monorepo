@@ -52,10 +52,14 @@
   user-select: none;
 }
 
-.emblaControls {
+.emblaControls,
+.emblaControlsPortal {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.emblaControls {
   margin-bottom: var(--general-space-24);
 }
 

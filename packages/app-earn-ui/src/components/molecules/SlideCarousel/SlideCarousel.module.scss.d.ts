@@ -7,6 +7,7 @@ export type Styles = {
   emblaButtonsOnSidesWrapper: string
   emblaContainer: string
   emblaControls: string
+  emblaControlsPortal: string
   emblaOneSlide: string
   emblaSideButton: string
   emblaSlide: string

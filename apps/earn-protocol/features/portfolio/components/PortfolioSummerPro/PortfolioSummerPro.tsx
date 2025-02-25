@@ -1,4 +1,4 @@
-import { type FC, useState } from 'react'
+import { type FC, useEffect, useRef, useState } from 'react'
 import { Button, Card, SlideCarousel, TabBar, Text, WithArrow } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
@@ -25,18 +25,26 @@ export const PortfolioSummerPro: FC<PortfolioSummerProProps> = ({
 
   const resolvedMigratablePositions = mapMigrationToPortfolioCard(migratablePositions)
 
+  const portalElement = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const element = document.getElementById('portal-embla-buttons') as HTMLDivElement | null
+
+    if (element) {
+      portalElement.current = element
+    }
+  }, [])
+
   return (
     <Card variant="cardSecondary" className={classNames.portfolioSummerProWrapper}>
-      <Text variant="h5" as="h5">
-        Summer.fi Pro Positions
-      </Text>
+      <div className={classNames.portfolioSummerProHeader}>
+        <Text variant="h5" as="h5">
+          Summer.fi Pro Positions
+        </Text>
+        <div id="portal-embla-buttons" />
+      </div>
       <TabBar
         tabs={[
-          {
-            id: 'all',
-            label: 'All',
-            content: <div>All</div>,
-          },
           {
             id: 'migration',
             label: `Available to migrate (${migratablePositions.length})`,
@@ -51,6 +59,7 @@ export const PortfolioSummerPro: FC<PortfolioSummerProProps> = ({
                       handleSelectPosition={handleSelectPosition}
                     />
                   ))}
+                  portalElement={portalElement.current}
                   options={{ slidesToScroll: 'auto' }}
                 />
                 <div className={classNames.buttonWrapper}>
