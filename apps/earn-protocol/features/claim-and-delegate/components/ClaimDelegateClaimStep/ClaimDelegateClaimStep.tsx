@@ -184,7 +184,9 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   ])
 
   const hasClaimedAtLeastOneChain = state.claimStatus === ClaimDelegateTxStatuses.COMPLETED
-  const canContinue = hasClaimedAtLeastOneChain || hasReturnedToClaimStep
+  const canContinue =
+    (Number(externalData.sumrBalances.base) > 0 && hasClaimedAtLeastOneChain) ||
+    hasReturnedToClaimStep
 
   const handleAccept = () => {
     dispatch({ type: 'update-step', payload: ClaimDelegateSteps.DELEGATE })

@@ -13,6 +13,7 @@ import { NetworkBalances } from '@/features/bridge/components/NetworkBalances/Ne
 import { type BridgeReducerAction, type BridgeState } from '@/features/bridge/types'
 
 import styles from './BridgeFormCompletedStep.module.scss'
+import { SDKChainId } from '@summerfi/app-types'
 
 interface BridgeFormCompletedStepProps {
   dispatch: Dispatch<BridgeReducerAction>
@@ -76,7 +77,9 @@ export const BridgeFormCompletedStep: FC<BridgeFormCompletedStepProps> = ({ stat
       primaryButton={
         viaParam === 'claim'
           ? {
-              url: `/claim/${state.walletAddress}?via=bridge`,
+              url: `/claim/${state.walletAddress}${
+                state.destinationChain.id === SDKChainId.BASE ? '?via=bridge' : ''
+              }`,
               label: 'Return to claim',
             }
           : {

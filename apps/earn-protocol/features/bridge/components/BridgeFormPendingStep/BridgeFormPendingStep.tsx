@@ -2,7 +2,7 @@ import { type Dispatch, type FC, useCallback, useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
 import { MessageStatus } from '@layerzerolabs/scan-client'
-import { Icon, InfoBox, LoadingSpinner, Sidebar, Text } from '@summerfi/app-earn-ui'
+import { Alert, Icon, InfoBox, LoadingSpinner, Sidebar, Text } from '@summerfi/app-earn-ui'
 import {
   chainIdToSDKNetwork,
   isSupportedHumanNetwork,
@@ -19,6 +19,7 @@ import { type BridgeReducerAction, type BridgeState, BridgeTxStatus } from '@/fe
 import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 
 import styles from './BridgeFormPendingStep.module.scss'
+import { SDKChainId } from '@summerfi/app-types'
 
 interface BridgeFormPendingStepProps {
   dispatch: Dispatch<BridgeReducerAction>
@@ -99,6 +100,9 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
     </>
   )
 
+  const isClaim = viaParam === 'claim'
+  const isBridgeToBase = state.destinationChain.id === SDKChainId.BASE
+
   return (
     <Sidebar
       centered
@@ -157,13 +161,28 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
               ]}
             />
           </div>
+          {isClaim && isBridgeToBase && (
+            <Alert
+              variant="warning"
+              error="You must wait for LayerZero to complete delivery before returning to the claim page."
+            />
+          )}
+          {isClaim && !isBridgeToBase && (
+            <Alert
+              variant="warning"
+              error={`A reminder: you must have balance on Base if you wish to delegate. Your destination chain is set to ${capitalize(destinationHumanNetworkName)}.`}
+            />
+          )}
         </div>
       }
       primaryButton={
-        viaParam === 'claim'
+        isClaim && isBridgeToBase
           ? {
-              url: `/claim/${state.walletAddress}?via=bridge`,
+              url: `/claim/${state.walletAddress}${
+                state.destinationChain.id === SDKChainId.BASE ? '?via=bridge' : ''
+              }`,
               label: 'Return to claim',
+              disabled: true,
             }
           : {
               label: 'Create new transaction',
