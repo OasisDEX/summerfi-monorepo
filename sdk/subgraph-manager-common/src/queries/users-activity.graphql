@@ -1,5 +1,5 @@
 query GetUsersActivity($where: Position_filter) {
-  positions(where: $where) {
+  positions(where: $where, first: 1000) {
     account {
       id
     }

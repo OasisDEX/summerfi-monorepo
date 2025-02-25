@@ -10678,7 +10678,7 @@ export const GetUserPositionDocument = gql`
     `;
 export const GetUserActivityDocument = gql`
     query GetUserActivity($id: ID!, $accountId: ID!) {
-  positions(where: {vault_: {id: $id}, account_: {id: $accountId}}) {
+  positions(where: {vault_: {id: $id}, account_: {id: $accountId}}, first: 1000) {
     account {
       id
     }
@@ -10717,7 +10717,7 @@ export const GetUserActivityDocument = gql`
     `;
 export const GetUsersActivityDocument = gql`
     query GetUsersActivity($where: Position_filter) {
-  positions(where: $where) {
+  positions(where: $where, first: 1000) {
     account {
       id
     }
