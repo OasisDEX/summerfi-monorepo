@@ -35,7 +35,7 @@ export { timeAgo } from './formatters/time-ago'
 export { formatToBigNumber } from './formatters/format-to-big-number'
 export { formatDateDifference } from './formatters/format-time-difference'
 export { formatDecimalToBigInt } from './formatters/format-decimal-to-bigint'
-
+export { cleanAmount } from './formatters/clean-amount'
 export { timeUntil } from './helpers/time-until'
 export { isValidUrl } from './helpers/is-valid-url'
 export { mapNumericInput } from './helpers/map-numeric-input'
@@ -57,6 +57,7 @@ export {
   sdkNetworkToHumanNetwork,
   humanNetworktoSDKNetwork,
   humanReadableChainToLabelMap,
+  type HumanReadableNetwork,
   sdkNetworkToHumanNetworkStrict,
   networkNameToSDKNetwork,
   subgraphNetworkToId,

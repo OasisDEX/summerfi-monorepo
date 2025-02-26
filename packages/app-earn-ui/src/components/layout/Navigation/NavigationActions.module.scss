@@ -1,11 +1,11 @@
 .navigationActionsWrapper {
-  display: flex;
+  display: none;
   flex-direction: row;
   align-items: center;
   column-gap: var(--general-space-8);
 
-  @include media('<=l') {
-    display: none;
+  @include media('>=l') {
+    display: flex;
   }
 }
 

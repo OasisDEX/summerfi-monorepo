@@ -20,29 +20,29 @@ type TriggerProps = { isOpen: boolean; isDisabled?: boolean }
 export interface DropdownProps {
   options: DropdownRawOption[]
   dropdownValue: DropdownRawOption
-  onChange?: (option: DropdownRawOption) => void
   children: ReactNode
   asPill?: boolean
   withSearch?: boolean
   inputPlaceholder?: string
-  trigger?: (props: TriggerProps) => ReactNode
   isDisabled?: boolean
   dropdownOptionsStyle?: CSSProperties
   dropdownChildrenStyle?: CSSProperties
+  trigger?: (props: TriggerProps) => ReactNode
+  onChange?: (option: DropdownRawOption) => void
 }
 
 export const Dropdown: FC<DropdownProps> = ({
   options,
   dropdownValue,
-  onChange,
   children,
   asPill,
   withSearch,
   inputPlaceholder,
-  trigger,
   isDisabled,
   dropdownOptionsStyle,
   dropdownChildrenStyle,
+  onChange,
+  trigger,
 }) => {
   const [selectedOption, setSelectedOption] = useState<DropdownRawOption>(dropdownValue)
   const [isOpen, setIsOpen] = useState(false) // To manage dropdown open/close state

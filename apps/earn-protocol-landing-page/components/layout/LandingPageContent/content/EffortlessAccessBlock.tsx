@@ -10,7 +10,7 @@ import summerEarnUi from '@/public/img/landing-page/summer-earn-ui.png'
 export const EffortlessAccessBlock = () => {
   return (
     <div className={effortlessAccessBlockStyles.wrapper}>
-      <Text as="p" variant="h4" className={effortlessAccessBlockStyles.callout}>
+      <Text as="p" variant="h4semi" className={effortlessAccessBlockStyles.callout}>
         Get <Emphasis>effortless access</Emphasis> to crypto’s <Emphasis>best DeFi yields</Emphasis>
         . Continually rebalanced by <Emphasis>AI</Emphasis> powered Keepers to{' '}
         <Emphasis>earn you more</Emphasis> while{' '}

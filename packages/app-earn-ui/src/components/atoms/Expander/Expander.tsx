@@ -46,7 +46,7 @@ export const Expander: FC<ExpanderProps> = ({
       <button
         className={styles.expanderButton}
         onClick={toggleExpand}
-        style={expanderButtonStyles}
+        style={{ textAlign: 'left', ...expanderButtonStyles }}
         disabled={disabled}
       >
         {title}

@@ -1,6 +1,10 @@
 .wrapper {
   padding: 0 var(--general-space-24);
   margin-bottom: var(--general-space-56);
+  
+  @include media('>s') {
+    padding: 0 var(--general-space-32);
+  }
 
   @include media('>s') {
     padding: 0 var(--general-space-32);
@@ -22,19 +26,12 @@
   grid-template-columns: auto auto;
   justify-items: flex-end;
   max-width: 1408px;
-  padding: var(--general-space-32) 0;
+  padding: var(--general-space-24) 0;
   margin: 0 auto;
 
   @include media('>s') {
-    grid-template-columns: auto auto;
-  }
-
-  @include media('>l') {
     grid-template-columns: auto 1fr auto;
-  }
-
-  @include media('>xl') {
-    grid-template-columns: auto 1fr auto;
+    padding: var(--general-space-32) 0;
   }
 }
 

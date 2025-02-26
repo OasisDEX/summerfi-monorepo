@@ -14,7 +14,19 @@
 .cardSecondaryMediumPaddings {
   display: flex;
   width: 100%;
-  border-radius: var(--radius-roundish);
+  border-radius: var(--radius-large);
+
+  @include media('>=s') {
+    border-radius: var(--radius-roundish);
+  }
+}
+
+.cardPrimary,
+.cardPrimaryColorfulBorder,
+.cardSecondary,
+.cardSecondaryColorfulBorder,
+.cardGradientLight,
+.cardGradientDark {
   padding: var(--general-space-24);
 }
 

@@ -1,5 +1,5 @@
 import { type FC } from 'react'
-import { Button, Card, Icon, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { Alert, Button, Card, Icon, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { type SDKChainId } from '@summerfi/app-types'
 import { humanReadableChainToLabelMap } from '@summerfi/app-utils'
 import clsx from 'clsx'
@@ -62,6 +62,30 @@ export const ClaimDelegateToBridge: FC<ClaimDelegateToBridgeProps> = ({
             </WithArrow>
           </Button>
         </Link>
+      </div>
+      <div className={classNames.alertWrapper}>
+        <Alert
+          variant="general"
+          iconName="bridge"
+          error={
+            <div className={classNames.alertContent}>
+              <Text variant="p3semi" as="p">
+                Bridge your SUMR to Base to stake it
+              </Text>
+
+              <Link
+                target="_blank"
+                href="https://docs.summer.fi/lazy-summer-protocol/governance/cross-chain-governance"
+              >
+                <Button variant="unstyled" style={{ whiteSpace: 'nowrap' }}>
+                  <WithArrow variant="p4semi" as="p" reserveSpace>
+                    Here&apos;s why
+                  </WithArrow>
+                </Button>
+              </Link>
+            </div>
+          }
+        />
       </div>
     </Card>
   )

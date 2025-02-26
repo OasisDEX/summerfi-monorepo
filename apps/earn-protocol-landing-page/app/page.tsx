@@ -137,7 +137,15 @@ export default async function HomePage() {
   })
 
   return (
-    <div style={{ display: 'flex', gap: '8px', flexDirection: 'column', alignItems: 'center' }}>
+    <div
+      style={{
+        display: 'flex',
+        gap: '8px',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: '0 24px',
+      }}
+    >
       <LandingPageHero
         vaultsList={vaultsWithConfig}
         vaultsApyByNetworkMap={vaultsApyByNetworkMap}

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/consistent-indexed-object-style */
-import { type FC } from 'react'
+import { type FC, type ReactNode } from 'react'
 
 import { Icon, type IconNamesList } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
@@ -9,7 +9,7 @@ import styles from './Alert.module.scss'
 type AlertVariant = 'general' | 'critical' | 'warning' | 'success'
 
 interface AlertProps {
-  error: string
+  error: ReactNode
   variant?: AlertVariant
   iconName?: IconNamesList
 }
@@ -49,9 +49,13 @@ export const Alert: FC<AlertProps> = ({ error, variant = 'critical', iconName })
       <div className={styles.content}>
         <Icon iconName={resolvedIconName} size={20} style={{ color: variantToColorMap[variant] }} />
         <div className={styles.alertTextWrapper}>
-          <Text variant="p3semi" as="p">
-            {error}
-          </Text>
+          {typeof error === 'string' ? (
+            <Text variant="p3semi" as="p">
+              {error}
+            </Text>
+          ) : (
+            error
+          )}
         </div>
       </div>
     </div>

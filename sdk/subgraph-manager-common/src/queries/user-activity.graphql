@@ -1,5 +1,5 @@
 query GetUserActivity($id: ID!, $accountId: ID!) {
-  positions(where: { vault_: { id: $id }, account_: { id: $accountId } }) {
+  positions(where: { vault_: { id: $id }, account_: { id: $accountId } }, first: 1000) {
     account {
       id
     }

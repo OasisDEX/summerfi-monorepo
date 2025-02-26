@@ -2,22 +2,23 @@
   width: 100%;
 }
 
-.faqSectionHeader {
-  font-weight: 600;
-}
-
 .faqSectionBlockWrapper {
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin-top: var(--general-space-16);
+  flex-wrap: wrap;
 
-  @include media('<=s') {
-    flex-wrap: wrap;
+  @include media('>m') {
+    flex-wrap: nowrap;
+
+    > div {
+      padding: var(--spacing-space-large) 0;
+    }
   }
 
   > div {
-    padding: var(--spacing-space-large) 0;
+    padding: var(--spacing-space-x-small) 0;
     border-bottom: 1px solid var(--earn-protocol-neutral-70);
   }
 

@@ -23,6 +23,7 @@ export interface TableSortedColumn<K> {
 
 interface TableProps<K extends string> {
   rows: {
+    id?: string
     content: Row<K>
     details?: ReactNode
   }[]
@@ -33,6 +34,8 @@ interface TableProps<K extends string> {
     idx: number
     content: ReactNode
   }
+  onRowHover?: (address?: string) => void
+  highlightedRow?: string
 }
 
 export function Table<K extends string>({
@@ -41,6 +44,8 @@ export function Table<K extends string>({
   hiddenColumns,
   handleSort,
   customRow,
+  onRowHover,
+  highlightedRow,
 }: TableProps<K>) {
   const [sortConfig, setSortConfig] = useState<TableSortedColumn<K> | null>(null)
   const [expandedRow, setExpandedRow] = useState<number | null>(null)
@@ -128,8 +133,17 @@ export function Table<K extends string>({
           {resolvedRows.map((row, rowIndex) => (
             <Fragment key={rowIndex}>
               <tr
+                onMouseEnter={() => onRowHover?.(row.id)}
+                onMouseLeave={() => onRowHover?.(undefined)}
                 onClick={() => setExpandedRow(expandedRow === rowIndex ? null : rowIndex)}
-                style={{ cursor: row.details ? 'pointer' : 'default' }}
+                style={{
+                  cursor: row.details ? 'pointer' : 'default',
+                  ...(highlightedRow &&
+                    highlightedRow === row.id && {
+                      background:
+                        'linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%)',
+                    }),
+                }}
               >
                 {Object.values(row.content).map((item, idx) => (
                   <td key={idx}>

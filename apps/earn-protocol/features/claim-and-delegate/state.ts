@@ -1,8 +1,10 @@
 import {
+  type ClaimableBalances,
   type ClaimDelegateReducerAction,
   ClaimDelegateStakeType,
   type ClaimDelegateState,
   ClaimDelegateSteps,
+  type WalletBalances,
 } from '@/features/claim-and-delegate/types'
 
 export const claimDelegateState: ClaimDelegateState = {
@@ -16,12 +18,14 @@ export const claimDelegateState: ClaimDelegateState = {
   stakeType: ClaimDelegateStakeType.ADD_STAKE,
   stakeChangeAmount: undefined,
   pendingClaimChainId: undefined,
+  claimableBalances: {} as ClaimableBalances,
+  walletBalances: {} as WalletBalances,
 }
 
 export const claimDelegateReducer = (
   prevState: ClaimDelegateState,
   action: ClaimDelegateReducerAction,
-) => {
+): ClaimDelegateState => {
   switch (action.type) {
     case 'update-step':
       return {
@@ -68,6 +72,16 @@ export const claimDelegateReducer = (
         ...prevState,
         claimStatus: undefined,
         pendingClaimChainId: action.payload ?? undefined,
+      }
+    case 'update-claimable-balances':
+      return {
+        ...prevState,
+        claimableBalances: action.payload,
+      }
+    case 'update-wallet-balances':
+      return {
+        ...prevState,
+        walletBalances: action.payload,
       }
     default:
       return prevState

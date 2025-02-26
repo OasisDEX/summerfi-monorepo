@@ -13,13 +13,12 @@
 
 .startEarningNowBlockWrapper {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   gap: var(--spacing-space-medium);
   margin-top: 48px;
 
-  @include media('<=s') {
-    grid-template-columns: repeat(1, 1fr);
-    padding: 0 var(--spacing-space-medium);
+  @include media('>l') {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -38,7 +37,19 @@
 .startEarningNowCard {
   display: flex;
   flex-direction: column;
-  padding: var(--spacing-space-2x-large) var(--spacing-space-x-large);
+  padding: var(--spacing-space-x-large) var(--spacing-space-x-large);
+
+  @include media('>s') {
+    max-width: 60%;
+    justify-self: center;
+
+  }
+
+  @include media('>l') {
+    max-width: 100%;
+    padding: var(--spacing-space-2x-large) var(--spacing-space-x-large);
+
+  }
 
   >h5 {
     font-weight: 600;

@@ -1,7 +1,7 @@
 'use client'
 import { type ChangeEvent, useEffect, useMemo, useState } from 'react'
 import { type IToken } from '@summerfi/app-types'
-import { formatFiatBalance } from '@summerfi/app-utils'
+import { cleanAmount, formatFiatBalance } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
 type UseAmountProps = {
@@ -65,7 +65,11 @@ export const useAmount = ({
       return '$0.00'
     }
 
-    return `$${formatFiatBalance(new BigNumber(amountDisplay).times(new BigNumber(tokenPrice)))}`
+    const amountDisplayWithoutCommas = cleanAmount(amountDisplay)
+
+    return `$${formatFiatBalance(
+      new BigNumber(amountDisplayWithoutCommas).times(new BigNumber(tokenPrice)),
+    )}`
   }, [amountDisplay, amountRaw, tokenPrice])
 
   useEffect(() => {
@@ -75,11 +79,11 @@ export const useAmount = ({
   }, [editMode, amountDisplay])
 
   const amountParsed = useMemo(() => {
-    if (!amountRaw || new BigNumber(amountRaw).isNaN()) {
+    if (!amountRaw || new BigNumber(cleanAmount(amountRaw)).isNaN()) {
       return new BigNumber(0)
     }
 
-    return new BigNumber(amountRaw)
+    return new BigNumber(cleanAmount(amountRaw))
   }, [amountRaw])
 
   const handleAmountChange = (ev: ChangeEvent<HTMLInputElement>) => {

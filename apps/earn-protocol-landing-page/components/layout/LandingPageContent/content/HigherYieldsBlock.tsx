@@ -262,7 +262,9 @@ export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({ vaultsList
     <div>
       <div className={higherYieldsBlockStyles.higherYieldsHeaderWrapper}>
         <Text variant="h2" className={higherYieldsBlockStyles.higherYieldsHeader}>
-          Sustainably higher yields, optimized with AI.
+          Sustainably higher yields, <br className={higherYieldsBlockStyles.lineBreak} /> optimized{' '}
+          <br className={higherYieldsBlockStyles.lineBreak2} />
+          with AI.
         </Text>
       </div>
       <div className={higherYieldsBlockStyles.higherYieldsDetailsWrapper}>

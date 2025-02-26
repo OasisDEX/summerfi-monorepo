@@ -208,7 +208,7 @@ export function useBridgeTransaction({
     } finally {
       setIsLoading(false)
     }
-  }, [transaction, smartAccountClient, sendUserOperationAsync, onError])
+  }, [isLoading, transaction, smartAccountClient, sendUserOperationAsync, onError])
 
   return {
     prepareTransaction,

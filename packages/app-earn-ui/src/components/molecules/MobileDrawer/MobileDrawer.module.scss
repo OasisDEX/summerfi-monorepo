@@ -1,7 +1,7 @@
 .drawer {
   position: fixed;
   overflow: hidden;
-  background-color: var(--earn-protocol-neutral-90);
+  background-color: var(--earn-protocol-neutral-100);
   z-index: 1000;
   transition: transform 0.3s ease-out;
   visibility: visible;
@@ -116,6 +116,10 @@
 .content {
   height: 100%;
   overflow-y: auto;
+
+  > div {
+    padding: var(--spacing-space-x-large);
+  }
 }
 
 .overlay {

@@ -515,6 +515,7 @@ export const VaultManageViewComponent = ({
                 topDepositors={topDepositors}
                 vaultId={getUniqueVaultId(vault)}
                 page="manage"
+                noHighlight
               />
             </Expander>
           </div>,

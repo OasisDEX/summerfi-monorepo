@@ -11,9 +11,29 @@ export const SupportedNetworksList = () => {
   return (
     <div className={supportedNetworksListStyles.availableNetworksList}>
       <Text variant="p1">Available on</Text>
-      <Image src={ethereumLogo} alt="Ethereum" />
-      <Image src={baseLogo} alt="Base" />
-      <Image src={arbitrumLogo} alt="Arbitrum" />
+      <div className={supportedNetworksListStyles.networkImages}>
+        <Image
+          src={ethereumLogo}
+          alt="Ethereum"
+          className={supportedNetworksListStyles.networkLogo}
+          width={32}
+          height={32}
+        />
+        <Image
+          src={baseLogo}
+          alt="Base"
+          className={supportedNetworksListStyles.networkLogo}
+          width={32}
+          height={32}
+        />
+        <Image
+          src={arbitrumLogo}
+          alt="Arbitrum"
+          className={supportedNetworksListStyles.networkLogo}
+          width={32}
+          height={32}
+        />
+      </div>
     </div>
   )
 }

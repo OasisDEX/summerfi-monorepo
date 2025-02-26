@@ -6,14 +6,11 @@ import {
   type HistoryChartData,
   type IArmadaPosition,
   type SDKVaultishType,
-  type TimeframesType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
 
-import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
 import { HistoricalChart } from '@/components/organisms/Charts/components/Historical'
 import { POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
-import { useTimeframes } from '@/hooks/use-timeframes'
 
 export type PositionHistoricalChartProps = {
   chartData: HistoryChartData
@@ -29,19 +26,18 @@ export const PositionHistoricalChart = ({
   tokenSymbol,
   position,
 }: PositionHistoricalChartProps) => {
-  const { timeframe, setTimeframe, timeframes } = useTimeframes({
-    chartData,
-  })
+  const staticTimeframe = '7d'
 
   const parsedData = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!chartData) {
       return []
     }
 
-    return chartData.data[timeframe]
-  }, [timeframe, chartData])
+    return chartData.data[staticTimeframe]
+  }, [chartData])
 
-  const chartHidden = parsedData.length < POINTS_REQUIRED_FOR_CHART[timeframe]
+  const chartHidden = parsedData.length < POINTS_REQUIRED_FOR_CHART[staticTimeframe]
 
   return (
     <Card
@@ -57,22 +53,8 @@ export const PositionHistoricalChart = ({
         }),
       }}
     >
-      <div
-        style={{
-          marginLeft: '90px',
-          marginBottom: '10px',
-        }}
-      >
-        {!chartHidden && (
-          <ChartHeader
-            timeframes={timeframes}
-            timeframe={timeframe}
-            setTimeframe={(nextTimeFrame) => setTimeframe(nextTimeFrame as TimeframesType)}
-          />
-        )}
-      </div>
       <HistoricalChart
-        timeframe={timeframe}
+        timeframe={staticTimeframe}
         data={parsedData}
         tokenSymbol={tokenSymbol}
         portfolioPosition={position}

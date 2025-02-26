@@ -13,6 +13,7 @@ interface UserActivityProps {
   topDepositors: SDKUsersActivityType
   vaultId: string
   page: 'open' | 'manage'
+  noHighlight?: boolean
 }
 
 export const UserActivity: FC<UserActivityProps> = ({
@@ -20,6 +21,7 @@ export const UserActivity: FC<UserActivityProps> = ({
   topDepositors,
   vaultId,
   page,
+  noHighlight,
 }) => {
   const userActivityHiddenColumns = {
     open: ['strategy', 'position'],
@@ -35,6 +37,7 @@ export const UserActivity: FC<UserActivityProps> = ({
           userActivityList={userActivity}
           hiddenColumns={userActivityHiddenColumns}
           rowsToDisplay={4}
+          noHighlight={noHighlight}
         />
       ),
     },
