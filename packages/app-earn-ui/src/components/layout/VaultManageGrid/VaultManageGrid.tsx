@@ -44,6 +44,7 @@ interface VaultManageGridProps {
   sumrPrice?: number
   onRefresh?: (chainName?: string, vaultId?: string, walletAddress?: string) => void
   vaultApy?: number
+  rightExtraContent?: ReactNode
 }
 
 export const VaultManageGrid: FC<VaultManageGridProps> = ({
@@ -60,6 +61,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   displaySimulationGraph,
   sumrPrice,
   onRefresh,
+  rightExtraContent,
 }) => {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [displaySimulationGraphStaggered, setDisplaySimulationGraphStaggered] =
@@ -231,6 +233,11 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
               )}
             </Box>
           </SimpleGrid>
+          {isMobile && (
+            <div className={vaultManageGridStyles.rightExtraBlockMobileWrapper}>
+              {rightExtraContent}
+            </div>
+          )}
           {Array.isArray(detailsContent) && detailsContent.length > 0 ? (
             detailsContent.map((content, index) => (
               <Box
@@ -246,7 +253,10 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
           )}
         </div>
         <div className={vaultManageGridStyles.rightBlockWrapper}>
-          <div className={vaultManageGridStyles.rightBlock}>{sidebarContent}</div>
+          <div className={vaultManageGridStyles.rightBlock}>
+            {sidebarContent}
+            {rightExtraContent}
+          </div>
         </div>
       </div>
       {isMobile && <div className={vaultManageGridStyles.rightBlockMobile}>{sidebarContent}</div>}

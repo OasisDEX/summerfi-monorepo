@@ -37,7 +37,6 @@ import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
-import { mapMigrationToPortfolioCard } from '@/features/migration/helpers/map-migration-to-portfolio-card'
 import { NavConfigContent } from '@/features/nav-config/components/NavConfigContent/NavConfigContent'
 
 import classNames from './MigrateLandingPageView.module.scss'
@@ -172,17 +171,17 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
     return `/migrate/${sdkNetworkToHumanNetwork(vaultNetwork as SDKNetwork)}/position/${vaultId}/${walletAddress}/${selectedPosition}`
   }, [selectedVaultId, walletAddress, selectedPosition])
 
-  const resolvedMigratablePositions = mapMigrationToPortfolioCard(migratablePositions)
-
   const selectedPositionChainId = useMemo(() => {
-    return resolvedMigratablePositions.find((position) => position.id === selectedPosition)?.chainId
-  }, [resolvedMigratablePositions, selectedPosition])
+    return migratablePositions.find(
+      (position) => position.id.toLowerCase() === selectedPosition?.toLowerCase(),
+    )?.chainId
+  }, [migratablePositions, selectedPosition])
 
   return (
     <div className={classNames.migrateLandingPageViewWrapper}>
       <MigrationBox
         className={classNames.migrationBox}
-        positions={resolvedMigratablePositions}
+        migratablePositions={migratablePositions}
         selectedPosition={selectedPosition}
         onSelectPosition={handleSelectPosition}
       />

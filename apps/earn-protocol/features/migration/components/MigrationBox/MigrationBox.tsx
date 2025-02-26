@@ -1,43 +1,38 @@
 import { type FC } from 'react'
 import { Card, Expander, Text } from '@summerfi/app-earn-ui'
-import { type PlatformLogo, type TokenSymbolsList } from '@summerfi/app-types'
 import clsx from 'clsx'
 
+import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { MigrationPositionCard } from '@/features/migration/components/MigrationPositionCard/MigrationPositionCard'
+import { mapMigrationToPortfolioCard } from '@/features/migration/helpers/map-migration-to-portfolio-card'
 
 import classNames from './MigrationBox.module.scss'
 
 interface MigrationBoxProps {
+  title?: string
   className?: string
   selectedPosition: string | null
   onSelectPosition: (id: string) => void
-  positions: {
-    id: string
-    platformLogo: PlatformLogo
-    token: TokenSymbolsList
-    depositAmount: string
-    chainId: number
-    // current30dApy: string
-    // lazySummer30dApy: string
-    // thirtydApyDifferential: string
-    // missingOutAmount: string
-  }[]
+  migratablePositions: MigratablePosition[]
 }
 
 export const MigrationBox: FC<MigrationBoxProps> = ({
+  title = 'Migrate to SummerFi',
   className,
   selectedPosition,
   onSelectPosition,
-  positions,
+  migratablePositions,
 }) => {
+  const resolvedMigratablePositions = mapMigrationToPortfolioCard(migratablePositions)
+
   return (
     <Card
       variant="cardSecondaryColorfulBorder"
       className={clsx(classNames.migrationBoxWrapper, className)}
     >
-      <Expander title={<Text variant="p2semi">Migrate to SummerFi</Text>}>
+      <Expander title={<Text variant="p2semi">{title}</Text>}>
         <div className={classNames.migrationCardsWrapper}>
-          {positions.map((position) => (
+          {resolvedMigratablePositions.map((position) => (
             <MigrationPositionCard
               key={position.id}
               {...position}

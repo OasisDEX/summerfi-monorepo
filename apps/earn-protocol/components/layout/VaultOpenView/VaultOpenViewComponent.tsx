@@ -19,6 +19,7 @@ import {
 import { useTermsOfService } from '@summerfi/app-tos'
 import {
   type ArksHistoricalChartData,
+  sdkSupportedChains,
   type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
@@ -28,14 +29,17 @@ import {
   type UsersActivity,
 } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
-import { type IToken, TransactionType } from '@summerfi/sdk-common'
+import { getChainInfoByChainId, type IToken, TransactionType } from '@summerfi/sdk-common'
 
 import { AccountKitAccountType } from '@/account-kit/types'
+import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { ControlsApproval, OrderInfoDeposit } from '@/components/molecules/SidebarElements'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
+import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
+import { mapMigrationResponse } from '@/features/migration/helpers/map-migration-response'
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { revalidatePositionData } from '@/helpers/revalidation-handlers'
@@ -80,6 +84,8 @@ export const VaultOpenViewComponent = ({
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
 
+  const { userWalletAddress } = useUserWallet()
+
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
 
   const {
@@ -88,6 +94,35 @@ export const VaultOpenViewComponent = ({
   const sdk = useAppSDK()
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [migratablePositions, setMigratablePositions] = useState<MigratablePosition[]>([])
+
+  useEffect(() => {
+    const fetchMigratablePositions = async () => {
+      const promises = sdkSupportedChains.map((chainId) => {
+        const chainInfo = getChainInfoByChainId(chainId)
+
+        return sdk.getMigratablePositions({ walletAddress: userWalletAddress, chainInfo })
+      })
+
+      const positions = await Promise.all(promises)
+
+      const mappedPositions = mapMigrationResponse(positions)
+
+      setMigratablePositions(mappedPositions)
+    }
+
+    if (userWalletAddress) {
+      fetchMigratablePositions()
+    }
+  }, [userWalletAddress, sdk])
+
+  const [selectedPosition, setSelectedPosition] = useState<string | null>(
+    migratablePositions[0]?.id ?? null,
+  )
+
+  const handleSelectPosition = (id: string) => {
+    setSelectedPosition(id)
+  }
 
   const { handleTokenSelectionChange, selectedTokenOption, tokenOptions } = useTokenSelector({
     vault,
@@ -105,7 +140,6 @@ export const VaultOpenViewComponent = ({
     tokenSymbol: selectedTokenOption.value,
     chainId: vaultChainId,
   })
-  const { userWalletAddress } = useUserWallet()
 
   const {
     amountParsed,
@@ -372,6 +406,15 @@ export const VaultOpenViewComponent = ({
             />
           )}
         </>
+      }
+      rightExtraContent={
+        migratablePositions.length > 0 && (
+          <MigrationBox
+            migratablePositions={migratablePositions}
+            selectedPosition={selectedPosition}
+            onSelectPosition={handleSelectPosition}
+          />
+        )
       }
     />
   )

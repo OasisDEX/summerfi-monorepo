@@ -14,6 +14,7 @@ import { type IArmadaPosition } from '@summerfi/sdk-client'
 import { isAddress } from 'viem'
 
 import { getInterestRates } from '@/app/server-handlers/interest-rates'
+import { getMigratablePositions } from '@/app/server-handlers/migration'
 import { getPositionHistory } from '@/app/server-handlers/position-history'
 import { getUserActivity } from '@/app/server-handlers/sdk/get-user-activity'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
@@ -101,6 +102,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     positionHistory,
     positionForecastResponse,
     vaultApyRaw,
+    migratablePositionsData,
   ] = await Promise.all([
     getInterestRates({
       network: parsedNetwork,
@@ -129,6 +131,9 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
         chainId: subgraphNetworkToId(network),
       })),
     }),
+    getMigratablePositions({
+      walletAddress,
+    }),
   ])
 
   const vaultApy =
@@ -141,6 +146,8 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   const positionForecast = parseForecastDatapoints(forecastData)
 
   const positionJsonSafe = parseServerResponseToClient<IArmadaPosition>(position)
+
+  const migratablePositions = parseServerResponseToClient(migratablePositionsData)
 
   const performanceChartData = getPositionPerformanceData({
     vault: vaultWithConfig,
@@ -169,6 +176,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       performanceChartData={performanceChartData}
       arksHistoricalChartData={arksHistoricalChartData}
       arksInterestRates={arksInterestRates}
+      migratablePositions={migratablePositions}
     />
   )
 }

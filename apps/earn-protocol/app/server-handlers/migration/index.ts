@@ -6,6 +6,7 @@ import {
 } from '@summerfi/sdk-common/common'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
+import { mapMigrationResponse } from '@/features/migration/helpers/map-migration-response'
 
 export type MigratablePosition = ArmadaMigratablePosition & {
   chainId: SDKChainId
@@ -59,12 +60,5 @@ export const getMigratablePositions = async ({
 
   const results = await Promise.all(positionsPromises)
 
-  return results.flatMap(({ chainInfo, positions }) =>
-    positions
-      .map((position) => ({
-        ...position,
-        chainId: chainInfo.chainId,
-      }))
-      .sort((a, b) => Number(b.usdValue.amount) - Number(a.usdValue.amount)),
-  )
+  return mapMigrationResponse(results)
 }

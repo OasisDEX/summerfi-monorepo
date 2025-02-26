@@ -42,6 +42,7 @@ interface VaultOpenGridProps {
   sumrPrice?: number
   onRefresh?: (chainName?: string, vaultId?: string, walletAddress?: string) => void
   vaultApy?: number
+  rightExtraContent?: ReactNode
 }
 
 export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
@@ -56,6 +57,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   sumrPrice,
   onRefresh,
   vaultApy,
+  rightExtraContent,
 }) => {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [displaySimulationGraphStaggered, setDisplaySimulationGraphStaggered] =
@@ -223,10 +225,18 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
               />
             </Box>
           </SimpleGrid>
+          {isMobile && (
+            <div className={vaultOpenGridStyles.rightExtraBlockMobileWrapper}>
+              {rightExtraContent}
+            </div>
+          )}
           <Box className={vaultOpenGridStyles.leftBlock}>{detailsContent}</Box>
         </div>
         <div className={vaultOpenGridStyles.rightBlockWrapper}>
-          <div className={vaultOpenGridStyles.rightBlock}>{sidebarContent}</div>
+          <div className={vaultOpenGridStyles.rightBlock}>
+            {sidebarContent}
+            {rightExtraContent}
+          </div>
         </div>
       </div>
       {isMobile && <div className={vaultOpenGridStyles.rightBlockMobile}>{sidebarContent}</div>}
