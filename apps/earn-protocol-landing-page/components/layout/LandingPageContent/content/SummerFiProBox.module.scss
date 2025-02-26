@@ -5,7 +5,7 @@
 
   @include media('>=s') {
     margin-top: var(--spacing-space-2x-large);
-    width: 515px;
+    max-width: 515px;
   }
 
   &>div {

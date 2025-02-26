@@ -32,7 +32,7 @@ export const SidebarFootnote: FC<SidebarFootnoteProps> = ({ title, list, tooltip
         <Icon iconName="question_o" variant="xs" color="rgba(255, 73, 164, 1)" />
         <Text
           as="p"
-          variant="p4"
+          variant="p4semi"
           style={{
             color: 'var(--earn-protocol-primary-100)',
             marginLeft: 'var(--spacing-space-2x-small)',

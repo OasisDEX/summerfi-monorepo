@@ -202,7 +202,7 @@ export const Sidebar: FC<SidebarProps> = ({
             {typeof error === 'string' ? (
               <div className={sidebarClassNames.sidebarErrorContent}>
                 <Icon iconName="warning" color="var(--earn-protocol-primary)" size={20} />
-                <Text variant="p3" style={{ marginLeft: 'var(--general-space-12)' }}>
+                <Text variant="p3semi" style={{ marginLeft: 'var(--general-space-12)' }}>
                   {error}
                 </Text>
               </div>

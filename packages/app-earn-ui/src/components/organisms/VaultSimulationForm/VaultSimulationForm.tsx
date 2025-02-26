@@ -162,7 +162,7 @@ export const VaultSimulationForm = ({
                 },
           footnote: !positionExists ? (
             <Link href={vaultUrl}>
-              <WithArrow>View strategy</WithArrow>
+              <WithArrow variant="p3semi">View strategy</WithArrow>
             </Link>
           ) : null,
         }}
