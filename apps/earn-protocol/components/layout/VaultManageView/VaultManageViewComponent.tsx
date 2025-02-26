@@ -5,6 +5,7 @@ import {
   ControlsDepositWithdraw,
   Expander,
   getDisplayToken,
+  getMigrateVaultUrl,
   getPositionValues,
   getUniqueVaultId,
   NonOwnerPositionBanner,
@@ -101,8 +102,8 @@ export const VaultManageViewComponent = ({
 
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
 
-  const [selectedPosition, setSelectedPosition] = useState<string | null>(
-    migratablePositions[0]?.id ?? null,
+  const [selectedPosition, setSelectedPosition] = useState<string | undefined>(
+    migratablePositions[0]?.id,
   )
 
   const handleSelectPosition = (id: string) => {
@@ -538,6 +539,12 @@ export const VaultManageViewComponent = ({
             migratablePositions={migratablePositions}
             selectedPosition={selectedPosition}
             onSelectPosition={handleSelectPosition}
+            ctaLink={getMigrateVaultUrl({
+              network: vault.protocol.network,
+              vaultId: vault.id,
+              walletAddress: viewWalletAddress,
+              selectedPosition,
+            })}
           />
         }
         isMobile={isMobile}

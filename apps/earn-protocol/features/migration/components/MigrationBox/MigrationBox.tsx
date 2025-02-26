@@ -1,6 +1,7 @@
 import { type FC } from 'react'
-import { Card, Expander, Text } from '@summerfi/app-earn-ui'
+import { Button, Card, Expander, Text, WithArrow } from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
+import Link from 'next/link'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { MigrationPositionCard } from '@/features/migration/components/MigrationPositionCard/MigrationPositionCard'
@@ -11,9 +12,10 @@ import classNames from './MigrationBox.module.scss'
 interface MigrationBoxProps {
   title?: string
   className?: string
-  selectedPosition: string | null
+  selectedPosition: string | undefined
   onSelectPosition: (id: string) => void
   migratablePositions: MigratablePosition[]
+  ctaLink?: string
 }
 
 export const MigrationBox: FC<MigrationBoxProps> = ({
@@ -22,6 +24,7 @@ export const MigrationBox: FC<MigrationBoxProps> = ({
   selectedPosition,
   onSelectPosition,
   migratablePositions,
+  ctaLink,
 }) => {
   const resolvedMigratablePositions = mapMigrationToPortfolioCard(migratablePositions)
 
@@ -41,6 +44,15 @@ export const MigrationBox: FC<MigrationBoxProps> = ({
             />
           ))}
         </div>
+        {ctaLink && (
+          <div className={classNames.migrationBoxCta}>
+            <Link href={ctaLink} style={{ width: '100%' }}>
+              <Button variant="primaryMediumColorful" style={{ width: '100%' }}>
+                <WithArrow style={{ color: 'var(--color-text-primary)' }}>Migrate</WithArrow>
+              </Button>
+            </Link>
+          </div>
+        )}
       </Expander>
     </Card>
   )

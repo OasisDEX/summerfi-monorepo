@@ -13,4 +13,10 @@
     scrollbar-width: thin;
     padding-right: 2px;
   }
+
+  .migrationBoxCta {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--general-space-16);
+  }
 }

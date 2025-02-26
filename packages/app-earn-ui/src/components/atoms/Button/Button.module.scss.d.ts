@@ -4,8 +4,11 @@ export type Styles = {
   neutralMedium: string
   neutralSmall: string
   primaryLarge: string
+  primaryLargeColorful: string
   primaryMedium: string
+  primaryMediumColorful: string
   primarySmall: string
+  primarySmallColorful: string
   secondaryLarge: string
   secondaryLargeActive: string
   secondaryMedium: string

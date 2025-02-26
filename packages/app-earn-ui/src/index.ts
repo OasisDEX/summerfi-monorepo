@@ -128,7 +128,12 @@ export { useIsIframe } from './hooks/use-is-iframe'
 export { useAnalyticsCookies } from './hooks/use-analytics-cookies'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
-export { getVaultUrl, getVaultDetailsUrl, getVaultPositionUrl } from './helpers/get-vault-url'
+export {
+  getVaultUrl,
+  getVaultDetailsUrl,
+  getVaultPositionUrl,
+  getMigrateVaultUrl,
+} from './helpers/get-vault-url'
 export { getTwitterShareUrl } from './helpers/get-twitter-share-url'
 export { getScannerUrl } from './helpers/get-scanner-url'
 export { getMedian } from './helpers/get-median'

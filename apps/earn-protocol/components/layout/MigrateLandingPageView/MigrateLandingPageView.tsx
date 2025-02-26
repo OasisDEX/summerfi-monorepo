@@ -16,6 +16,7 @@ import {
   VaultCard,
   WithArrow,
 } from '@summerfi/app-earn-ui'
+import { getMigrateVaultUrl } from '@summerfi/app-earn-ui/dist/types/src/helpers/get-vault-url'
 import {
   type DropdownOption,
   type DropdownRawOption,
@@ -99,8 +100,8 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
 
   const positionId = searchParams.get('positionId')
 
-  const [selectedPosition, setSelectedPosition] = useState<string | null>(
-    positionId ?? migratablePositions[0]?.id ?? null,
+  const [selectedPosition, setSelectedPosition] = useState<string | undefined>(
+    positionId ?? migratablePositions[0]?.id,
   )
 
   const handleSelectPosition = (id: string) => {
@@ -162,13 +163,18 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   const migrateVaultUrl = useMemo(() => {
-    if (!selectedVaultId) {
+    if (!selectedVaultId || !selectedPosition) {
       return '/migrate'
     }
 
     const [vaultId, vaultNetwork] = selectedVaultId.split('-')
 
-    return `/migrate/${sdkNetworkToHumanNetwork(vaultNetwork as SDKNetwork)}/position/${vaultId}/${walletAddress}/${selectedPosition}`
+    return getMigrateVaultUrl({
+      network: vaultNetwork as SDKNetwork,
+      vaultId,
+      walletAddress,
+      selectedPosition,
+    })
   }, [selectedVaultId, walletAddress, selectedPosition])
 
   const selectedPositionChainId = useMemo(() => {

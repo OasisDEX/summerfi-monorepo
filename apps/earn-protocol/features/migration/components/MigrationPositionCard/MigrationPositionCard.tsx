@@ -13,7 +13,7 @@ interface MigrationPositionCardProps {
   token: TokenSymbolsList
   depositAmount: string
   chainId: number
-  selectedPosition: string | null
+  selectedPosition: string | undefined
   handleSelectPosition: (id: string) => void
 }
 

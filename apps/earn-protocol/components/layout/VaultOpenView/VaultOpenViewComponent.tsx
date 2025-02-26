@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import {
   ControlsDepositWithdraw,
   getDisplayToken,
+  getMigrateVaultUrl,
   Sidebar,
   SidebarFootnote,
   sidebarFootnote,
@@ -116,8 +117,8 @@ export const VaultOpenViewComponent = ({
     }
   }, [userWalletAddress, sdk])
 
-  const [selectedPosition, setSelectedPosition] = useState<string | null>(
-    migratablePositions[0]?.id ?? null,
+  const [selectedPosition, setSelectedPosition] = useState<string | undefined>(
+    migratablePositions[0]?.id,
   )
 
   const handleSelectPosition = (id: string) => {
@@ -413,6 +414,12 @@ export const VaultOpenViewComponent = ({
             migratablePositions={migratablePositions}
             selectedPosition={selectedPosition}
             onSelectPosition={handleSelectPosition}
+            ctaLink={getMigrateVaultUrl({
+              network: vault.protocol.network,
+              vaultId: vault.id,
+              walletAddress: userWalletAddress,
+              selectedPosition,
+            })}
           />
         )
       }
