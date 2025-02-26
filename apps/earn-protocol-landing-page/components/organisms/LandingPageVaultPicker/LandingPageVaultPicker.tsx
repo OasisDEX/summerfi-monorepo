@@ -16,7 +16,6 @@ import { useSDK } from '@summerfi/sdk-client-react'
 import { type IToken } from '@summerfi/sdk-common'
 
 import landingPageVaultPickerStyles from '@/components/organisms/LandingPageVaultPicker/LandingPageVaultPicker.module.scss'
-import clsx from 'clsx'
 
 export const LandingPageVaultPicker = ({ vault, apy }: { vault: SDKVaultishType; apy: number }) => {
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
