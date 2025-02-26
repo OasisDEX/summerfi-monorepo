@@ -132,6 +132,7 @@ const MigrateVaultPage = async ({ params }: MigrateVaultPageProps) => {
       arksInterestRates={arksInterestRates}
       vaultApy={vaultApy}
       migratablePosition={migratablePosition}
+      walletAddress={walletAddress}
     />
   )
 }

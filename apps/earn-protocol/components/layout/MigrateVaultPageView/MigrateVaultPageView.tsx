@@ -25,6 +25,7 @@ type MigrateVaultPageViewProps = {
   arksInterestRates?: { [key: string]: number }
   vaultApy?: number
   migratablePosition: MigratablePosition
+  walletAddress: string
 }
 
 export const MigrateVaultPageView: FC<MigrateVaultPageViewProps> = ({
@@ -37,6 +38,7 @@ export const MigrateVaultPageView: FC<MigrateVaultPageViewProps> = ({
   arksInterestRates,
   vaultApy,
   migratablePosition,
+  walletAddress,
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -50,6 +52,7 @@ export const MigrateVaultPageView: FC<MigrateVaultPageViewProps> = ({
         arksInterestRates={arksInterestRates}
         vaultApy={vaultApy}
         migratablePosition={migratablePosition}
+        walletAddress={walletAddress}
       />
     </SDKContextProvider>
   )

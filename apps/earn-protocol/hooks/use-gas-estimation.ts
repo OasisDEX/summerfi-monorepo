@@ -3,7 +3,7 @@ import {
   type BridgeTransactionInfo,
   type ExtendedTransactionInfo,
   type HexData,
-  TransactionType,
+  type MigrationTransactionInfo,
 } from '@summerfi/sdk-common'
 import { formatEther } from 'viem'
 
@@ -12,7 +12,11 @@ import { useNetworkAlignedClient } from './use-network-aligned-client'
 
 type UseGasEstimationProps = {
   chainId: number
-  transaction: ExtendedTransactionInfo | BridgeTransactionInfo | undefined
+  transaction:
+    | ExtendedTransactionInfo
+    | BridgeTransactionInfo
+    | MigrationTransactionInfo
+    | undefined
   walletAddress: HexData | undefined
   overrideNetwork?: string
 }
@@ -32,7 +36,7 @@ export const useGasEstimation = ({
 
   useEffect(() => {
     const fetchGasEstimation = async (
-      _transaction: ExtendedTransactionInfo | BridgeTransactionInfo,
+      _transaction: ExtendedTransactionInfo | BridgeTransactionInfo | MigrationTransactionInfo,
       _walletAddress: HexData,
     ) => {
       setLoading(true)
@@ -82,11 +86,7 @@ export const useGasEstimation = ({
       setLoading(false)
     }
 
-    if (
-      transaction !== undefined &&
-      walletAddress !== undefined &&
-      transaction.type !== TransactionType.Approve
-    ) {
+    if (transaction !== undefined && walletAddress !== undefined) {
       fetchGasEstimation(transaction, walletAddress)
     }
   }, [publicClient, getTokenBySymbol, chainId, getSwapQuote, transaction, walletAddress])

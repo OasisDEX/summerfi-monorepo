@@ -62,7 +62,10 @@ export const TokenWithNetworkIcon: FC<TokenWithNetworkIconProps> = ({
 
   return (
     <div className={classNames.iconWithNetworkWrapper}>
-      <Icon tokenName={tokenName} size={tokenIconSizeMap[variant]} />
+      <Icon
+        tokenName={tokenName.toUpperCase() as TokenSymbolsList}
+        size={tokenIconSizeMap[variant]}
+      />
       <div className={classNames.networkIcon} style={networkIconOffsetMap[variant]}>
         <Icon iconName={resolvedNetworkIcon} size={networkIconSizeMap[variant]} />
       </div>
