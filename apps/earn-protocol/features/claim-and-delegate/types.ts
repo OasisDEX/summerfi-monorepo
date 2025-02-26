@@ -1,5 +1,5 @@
 import { type SDKChainId } from '@summerfi/app-types'
-import { HumanReadableNetwork } from '@summerfi/app-utils'
+import { type HumanReadableNetwork } from '@summerfi/app-utils'
 
 import { type SumrBalancesData } from '@/app/server-handlers/sumr-balances'
 import { type SumrDecayFactorData } from '@/app/server-handlers/sumr-decay-factor'

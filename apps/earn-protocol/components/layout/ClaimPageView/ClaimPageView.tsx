@@ -1,13 +1,9 @@
+/* eslint-disable @typescript-eslint/consistent-indexed-object-style */
+/* eslint-disable @typescript-eslint/prefer-reduce-type-parameter */
 'use client'
 import { type FC, useReducer } from 'react'
 import { SDKChainId } from '@summerfi/app-types'
-import {
-  chainIdToSDKNetwork,
-  type HumanReadableNetwork,
-  isSupportedHumanNetwork,
-  isSupportedSDKChain,
-  sdkNetworkToHumanNetwork,
-} from '@summerfi/app-utils'
+import { type HumanReadableNetwork, isSupportedHumanNetwork } from '@summerfi/app-utils'
 
 import { ClaimDelegateForm } from '@/features/claim-and-delegate/components/ClaimDelegateForm/ClaimDelegateForm'
 import { ClaimDelegateHeader } from '@/features/claim-and-delegate/components/ClaimDelegateHeader/ClaimDelegateHeader'
@@ -38,18 +34,17 @@ export const ClaimPageView: FC<ClaimPageViewProps> = ({ walletAddress, externalD
           externalData.sumrToClaim.claimableAggregatedRewards.perChain[numericChainId] || 0
 
         return acc
-        // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter
       }, {} as ClaimableBalances),
-    walletBalances: Object.entries(externalData.sumrBalances).reduce<
-      // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
-      Record<HumanReadableNetwork, number>
-    >((acc, [humanReadableNetwork, balance]) => {
-      if (isSupportedHumanNetwork(humanReadableNetwork)) {
-        acc[humanReadableNetwork] = balance
-      }
+    walletBalances: Object.entries(externalData.sumrBalances).reduce(
+      (acc, [humanReadableNetwork, balance]) => {
+        if (isSupportedHumanNetwork(humanReadableNetwork)) {
+          acc[humanReadableNetwork] = balance
+        }
 
-      return acc
-    }, {}),
+        return acc
+      },
+      {} as Record<HumanReadableNetwork, number>,
+    ),
   })
 
   return (
