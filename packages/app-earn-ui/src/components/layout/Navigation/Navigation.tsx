@@ -29,6 +29,10 @@ export interface EarnNavigationProps {
     onClick?: () => void
   })[]
   walletConnectionComponent?: ReactNode
+  mobileWalletConnectionComponents?: {
+    header?: ReactNode
+    drawer?: ReactNode
+  }
   configComponent?: ReactNode
   signupComponent?: ReactNode
   noNavMargin?: boolean
@@ -41,6 +45,7 @@ export const Navigation: FC<EarnNavigationProps> = ({
   links,
   currentPath,
   walletConnectionComponent,
+  mobileWalletConnectionComponents,
   configComponent,
   signupComponent,
   noNavMargin = false,
@@ -100,6 +105,7 @@ export const Navigation: FC<EarnNavigationProps> = ({
               currentPath={currentPath}
               toggleMobileMenu={toggleMobileMenu}
               walletConnectionComponent={walletConnectionComponent}
+              secondaryWalletConnectionComponent={secondaryWalletConnectionComponent}
               signUpComponent={signupComponent}
             />
           </MobileDrawerDefaultWrapper>

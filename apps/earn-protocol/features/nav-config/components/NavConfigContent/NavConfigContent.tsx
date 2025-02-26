@@ -1,6 +1,15 @@
 'use client'
 import { type ChangeEvent, type FC, useState } from 'react'
-import { Badge, Button, Card, Icon, Input, Text, ToggleButton } from '@summerfi/app-earn-ui'
+import {
+  Badge,
+  Button,
+  Card,
+  Icon,
+  Input,
+  Text,
+  ToggleButton,
+  useMobileCheck,
+} from '@summerfi/app-earn-ui'
 import { mapNumericInput } from '@summerfi/app-utils'
 import Link from 'next/link'
 
@@ -8,6 +17,7 @@ import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
 
 import classNames from './NavConfigContent.module.scss'
+import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 
 interface NavConfigContentProps {
   handleOpenClose?: () => void
@@ -19,6 +29,8 @@ const marketCapOptions = ['150000000', '250000000', '500000000', '750000000']
 export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose }) => {
   const [sumrNetApyConfig, setSumrNetApyConfig] = useSumrNetApyConfig()
   const [slippageConfig, setSlippageConfig] = useSlippageConfig()
+  const { deviceType } = useDeviceType()
+  const { isMobile, isTablet } = useMobileCheck(deviceType)
 
   const [inputValue, setInputValue] = useState(mapNumericInput(sumrNetApyConfig.dilutedValuation))
   const [slippage, setSlippage] = useState(mapNumericInput(slippageConfig.slippage))
@@ -178,13 +190,16 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
           }
         >
           {handleOpenClose && (
-            <Button variant="secondaryLarge" onClick={handleOpenClose}>
+            <Button
+              variant={isMobile || isTablet ? 'secondaryMedium' : 'secondaryLarge'}
+              onClick={handleOpenClose}
+            >
               <Icon iconName="close" size={12} style={{ opacity: 0.5 }} />
               Close
             </Button>
           )}
           <Button
-            variant="primaryLarge"
+            variant={isMobile || isTablet ? 'primaryMedium' : 'primaryLarge'}
             onClick={() => {
               setSumrNetApyConfig({
                 withSumr: sumrToggle,

@@ -20,6 +20,7 @@ type NavigationMobileMenuType = {
   logo: string
   signUpComponent?: ReactNode
   walletConnectionComponent?: ReactNode
+  secondaryWalletConnectionComponent?: ReactNode
 }
 
 export const NavigationMenuMobile = ({
@@ -29,6 +30,7 @@ export const NavigationMenuMobile = ({
   logo,
   signUpComponent,
   walletConnectionComponent,
+  secondaryWalletConnectionComponent,
 }: NavigationMobileMenuType) => {
   return (
     <>
@@ -36,6 +38,7 @@ export const NavigationMenuMobile = ({
         <img src={logo} alt="Summer.fi" className={navigationMenuMobileStyles.logoSmall} />
         <div className={navigationMenuMobileStyles.actionsWrapper}>
           {signUpComponent}
+          {secondaryWalletConnectionComponent}
           <Button
             variant="secondarySmall"
             onClick={toggleMobileMenu}

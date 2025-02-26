@@ -1,3 +1,27 @@
+.wrapper {
+  color: var(--earn-protocol-secondary-100);
+}
+
+.addressOnlyWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.addressOnlyButton {
+  padding: var(--general-space-4) var(--general-space-8);
+  height: auto;
+  min-height: unset;
+  display: flex;
+  position: relative;
+  align-items: center;
+}
+
+.actionsOnlyWrapper {
+  display: flex;
+  gap: var(--general-space-8);
+  align-items: center;
+}
+
 .mainButtonWrapper {
   display: flex;
   position: relative;
@@ -5,11 +29,23 @@
   align-items: center;
   width: 180px;
   padding: 0 var(--general-space-12) 0 6px;
-
 }
 
-.logoutButton {
-  width: 100%;
+.mainActionsWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--general-space-12);
+}
+
+.popupWrapper {
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--general-space-8);
+  padding: var(--general-space-16);
 }
 
 .walletAddressPopup {
@@ -21,7 +57,7 @@
   justify-content: space-between;
   line-height: 24px;
 
-  &>p {
+  & > p {
     color: var(--earn-protocol-primary-100);
   }
 }
@@ -30,31 +66,31 @@
   width: 100%;
   height: 1px;
   background-color: var(--color-border);
-  margin: 15px 0 15px
+  margin: 15px 0 15px;
 }
 
-.popupWrapper {
-  width: 350px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: var(--general-space-8);
-  padding: var(--general-space-16);
-
+.logoutButton {
+  width: 100%;
 }
 
 .mobileCopyLogoutButtons {
-  display: none;
+  display: flex;
+  flex-direction: row;
   gap: var(--general-space-12);
   margin-top: var(--general-space-8);
 
-  @include media('<=s') {
-    display: flex;
-    flex-direction: row;
+  @include media('>m') {
+    display: none;
   }
 }
 
-.wrapper {
-  color: var(--earn-protocol-secondary-100);
+@include media('<=m') {
+  .addressOnlyButton {
+    font-size: 0.85rem;
+  }
+  
+  .mainButtonWrapper {
+    width: auto;
+    min-width: 140px;
+  }
 }
