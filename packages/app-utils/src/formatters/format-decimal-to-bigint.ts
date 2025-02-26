@@ -13,8 +13,8 @@ export const formatDecimalToBigInt = (
     return 0n
   }
 
-  // Remove any whitespace and validate input
-  const cleanStr = decimalStr.toString().trim()
+  // Remove any whitespace, commas, and validate input
+  const cleanStr = decimalStr.toString().trim().replace(/,/gu, '')
 
   if (!/^\d*\.?\d+$/u.test(cleanStr)) {
     throw new Error('Invalid decimal string format')

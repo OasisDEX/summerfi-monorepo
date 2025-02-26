@@ -1,4 +1,4 @@
-import { type Dispatch, type FC } from 'react'
+import { ChangeEvent, type Dispatch, type FC } from 'react'
 import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
 import {
@@ -168,32 +168,33 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
 
   const { decayFactor, isLoading: decayFactorLoading } = useDecayFactor(state.delegatee)
 
-  const { stakeSumrTransaction, approveSumrTransaction, prepareTxs } = useStakeSumrTransaction({
-    onStakeSuccess: () => {
-      dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.COMPLETED })
-      dispatch({ type: 'update-step', payload: ClaimDelegateSteps.COMPLETED })
+  const { stakeSumrTransaction, approveSumrTransaction, prepareTxs, isFetchingTx } =
+    useStakeSumrTransaction({
+      onStakeSuccess: () => {
+        dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.COMPLETED })
+        dispatch({ type: 'update-step', payload: ClaimDelegateSteps.COMPLETED })
 
-      toast.success('Staked $SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
-    },
-    onApproveSuccess: () => {
-      dispatch({
-        type: 'update-staking-approve-status',
-        payload: ClaimDelegateTxStatuses.COMPLETED,
-      })
+        toast.success('Staked $SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
+      },
+      onApproveSuccess: () => {
+        dispatch({
+          type: 'update-staking-approve-status',
+          payload: ClaimDelegateTxStatuses.COMPLETED,
+        })
 
-      toast.success('Approved staking $SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
-    },
-    onStakeError: () => {
-      dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.FAILED })
+        toast.success('Approved staking $SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
+      },
+      onStakeError: () => {
+        dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.FAILED })
 
-      toast.error('Failed to stake $SUMR tokens', ERROR_TOAST_CONFIG)
-    },
-    onApproveError: () => {
-      dispatch({ type: 'update-staking-approve-status', payload: ClaimDelegateTxStatuses.FAILED })
+        toast.error('Failed to stake $SUMR tokens', ERROR_TOAST_CONFIG)
+      },
+      onApproveError: () => {
+        dispatch({ type: 'update-staking-approve-status', payload: ClaimDelegateTxStatuses.FAILED })
 
-      toast.error('Failed to approve staking $SUMR tokens', ERROR_TOAST_CONFIG)
-    },
-  })
+        toast.error('Failed to approve staking $SUMR tokens', ERROR_TOAST_CONFIG)
+      },
+    })
 
   const { unstakeSumrTransaction } = useUnstakeSumrTransaction({
     amount: formatDecimalToBigInt(amountRawUnstake),
@@ -322,7 +323,8 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
   const isLoading =
     state.stakingStatus === ClaimDelegateTxStatuses.PENDING ||
     state.stakingApproveStatus === ClaimDelegateTxStatuses.PENDING ||
-    state.delegateStatus === ClaimDelegateTxStatuses.PENDING
+    state.delegateStatus === ClaimDelegateTxStatuses.PENDING ||
+    isFetchingTx
 
   const { stakedAmount } = externalData.sumrStakeDelegate
 
@@ -449,7 +451,10 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
                           secondaryValue={amountDisplayUSDStake}
                           onFocus={onFocusStake}
                           onBlur={onBlurStake}
-                          handleChange={handleAmountChangeStake}
+                          handleChange={(value) => {
+                            handleAmountChangeStake(value)
+                            prepareTxs(formatDecimalToBigInt(value.target.value))
+                          }}
                           handleDropdownChange={() => null}
                           heading={{
                             label: 'Balance',
@@ -474,10 +479,8 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
                       </Card>
                       <PercentageButtons
                         onSelect={(value) => {
-                          const formatted = formatCryptoBalance(value)
-
-                          manualSetAmountStake(formatted)
-                          prepareTxs(formatDecimalToBigInt(formatted))
+                          manualSetAmountStake(formatCryptoBalance(value))
+                          prepareTxs(formatDecimalToBigInt(value))
                         }}
                         max={sumrBalance?.toString()}
                       />
@@ -511,7 +514,9 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
                             value: `${formatCryptoBalance(stakedAmount)} SUMR`,
                             action: () => {
                               if (stakedAmount) {
-                                manualSetAmountUnstake(stakedAmount.toString())
+                                const formatted = formatCryptoBalance(stakedAmount)
+
+                                manualSetAmountUnstake(formatted)
                               }
                             },
                           }}
@@ -519,7 +524,9 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
                         />
                       </Card>
                       <PercentageButtons
-                        onSelect={(value) => manualSetAmountUnstake(value)}
+                        onSelect={(value) => {
+                          manualSetAmountUnstake(formatCryptoBalance(value))
+                        }}
                         max={stakedAmount}
                       />
                     </div>
