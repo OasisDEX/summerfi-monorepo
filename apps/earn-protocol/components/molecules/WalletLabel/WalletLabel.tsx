@@ -4,6 +4,7 @@ import { useAuthModal, useChain, useLogout, useSignerStatus } from '@account-kit
 import {
   Button,
   type ButtonClassNames,
+  Icon,
   LoadableAvatar,
   SkeletonLine,
   Text,
@@ -210,21 +211,34 @@ export default function WalletLabel({
   if (variant === 'addressOnly') {
     return (
       <div className={`${walletLabelStyles.addressOnlyWrapper} ${className}`}>
-        <Button variant="secondarySmall" className={walletLabelStyles.addressOnlyButton}>
-          <WalletAvatar
-            address={userWalletAddress}
-            chainId={chain.id}
-            size={16}
-            iconSize={8}
-            hideNetworkIcon={hideNetworkIcon}
-          />
-          <AddressDisplay
-            address={userWalletAddress}
-            textVariant="p4semi"
-            paddingLeft="var(--general-space-4)"
-            maxChars={maxAddressChars || 4}
-          />
-        </Button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-8)' }}>
+          <div className={walletLabelStyles.copiedNotification}>
+            <Icon iconName="checkmark" size={12} color="var(--earn-protocol-primary-100)" />
+            <Text variant="p4semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
+              Copied!
+            </Text>
+          </div>
+
+          <Button
+            variant="secondarySmall"
+            className={walletLabelStyles.addressOnlyButton}
+            onClick={() => handleCopyAddress(userWalletAddress)}
+          >
+            <WalletAvatar
+              address={userWalletAddress}
+              chainId={chain.id}
+              size={16}
+              iconSize={8}
+              hideNetworkIcon={hideNetworkIcon}
+            />
+            <AddressDisplay
+              address={userWalletAddress}
+              textVariant="p3semi"
+              paddingLeft="var(--general-space-4)"
+              maxChars={maxAddressChars ?? 4}
+            />
+          </Button>
+        </div>
       </div>
     )
   }

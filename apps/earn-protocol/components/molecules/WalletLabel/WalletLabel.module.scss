@@ -84,6 +84,26 @@
   }
 }
 
+.copiedNotification {
+  display: flex;
+  align-items: center;
+  gap: var(--general-space-2);
+  animation: fadeOut 2s forwards;
+  height: 16px;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 @include media('<=m') {
   .addressOnlyButton {
     font-size: 0.85rem;
