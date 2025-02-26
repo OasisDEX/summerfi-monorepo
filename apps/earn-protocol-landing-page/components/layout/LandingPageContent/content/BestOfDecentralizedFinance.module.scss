@@ -13,16 +13,29 @@
 
 .bestOfDecentralizedFinanceBlockWrapper {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   gap: var(--spacing-space-medium);
-  margin-top: 48px;
+  margin-top: 0;
 
-  @include media('<=s') {
+  @include media('>s') {
     grid-template-columns: repeat(1, 1fr);
+    padding: var(--spacing-space-2x-large) var(--spacing-space-2x-large) 0;
+  }
+
+  @include media('>l') {
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .bestOfDecentralizedFinanceBlock {
-    padding: var(--spacing-space-x-large) var(--spacing-space-x-large) 0;
+    padding: var(--spacing-space-large) var(--spacing-space-large) 0;
+
+    @include media('>s') {
+      padding: var(--spacing-space-x-large) var(--spacing-space-x-large) 0;
+    }
+
+    @include media('>l') {
+      padding: var(--spacing-space-x-large) var(--spacing-space-x-large) 0;
+    }
   }
 
   .bestOfDecentralizedFinanceBlockDescription {
@@ -39,6 +52,34 @@
     display: flex;
     gap: 20px;
     margin: 49px 0;
+
+    img:first-child {
+      width: 60%;
+    }
+
+    img:last-child {
+      width: 35%;
+    }
+
+    @include media('>s') {
+      img:first-child {
+        width: 60%;
+      }
+
+      img:last-child {
+        width: 35%;
+      }
+    }
+
+    @include media('>m') {
+      img:first-child {
+        width: 55%;
+      }
+
+      img:last-child {
+        width: 40%;
+      }
+    }
   }
 
   .ui {

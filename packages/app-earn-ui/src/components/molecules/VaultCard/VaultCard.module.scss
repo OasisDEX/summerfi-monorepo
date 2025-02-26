@@ -15,11 +15,23 @@
   width: 100%;
   margin-bottom: var(--general-space-24);
   flex-wrap: wrap;
-  gap: var(--general-space-8);
+  gap: var(--general-space-10);
 }
 
 .vaultCardAssetsWrapper {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(1, 1fr);
+  gap: var(--general-space-16);
   width: 100%;
+
+  @include media('>=s') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .totalAssetsDisplay {
+    display: flex;
+    flex-direction: row;
+    gap: var(--general-space-10);
+    align-items: end;
+  }
 }

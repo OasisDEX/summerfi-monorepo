@@ -1,7 +1,5 @@
 export type Styles = {
-  faqGeneralWrapper: string
-  faqSectionBlockWrapper: string
-  faqSectionExpanderContent: string
+  disclaimer: string
 }
 
 export type ClassNames = keyof Styles

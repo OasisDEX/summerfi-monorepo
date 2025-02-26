@@ -14,6 +14,12 @@
 .h1,
 .h2,
 .h3,
+.h1colorful,
+.h2colorful,
+.h3colorful {
+  font-weight: 600;
+}
+
 .h4,
 .h5,
 .h1colorful,
@@ -25,27 +31,51 @@
 }
 
 .h1,
-.h1colorful {
-  font-size: 52px;
-  line-height: 64px;
+.h1colorful,
+.h1semi {
+  font-size: 32px;
+  line-height: 44px;
+
+  @include media('>=s') {
+    font-size: 52px;
+    line-height: 64px;
+  }
 }
 
 .h2,
-.h2colorful {
-  font-size: 40px;
-  line-height: 54px;
+.h2colorful,
+.h2semi {
+  font-size: 28px;
+  line-height: 40px;
+
+  @include media('>=s') {
+    font-size: 40px;
+    line-height: 54px;
+  }
 }
 
 .h3,
-.h3colorful {
-  font-size: 32px;
-  line-height: 44px;
+.h3colorful,
+.h3semi {
+  font-size: 24px;
+  line-height: 36px;
+
+  @include media('>=s') {
+    font-size: 32px;
+    line-height: 44px;
+  }
 }
 
 .h4,
-.h4colorful {
-  font-size: 28px;
-  line-height: 40px;
+.h4colorful,
+.h4semi {
+  font-size: 20px;
+  line-height: 32px;
+
+  @include media('>=s') {
+    font-size: 28px;
+    line-height: 40px;
+  }
 }
 
 .h5,
@@ -63,9 +93,8 @@
 }
 
 .p2,
-.p2colorful,
-.p2semiColorful {
-  font-weight: 500;
+.p2colorful {
+  font-weight: 400;
 }
 
 .p2,
@@ -77,9 +106,8 @@
 }
 
 .p3,
-.p3colorful,
-.p3semiColorful {
-  font-weight: 500;
+.p3colorful {
+  font-weight: 400;
 }
 
 .p3,
@@ -94,8 +122,13 @@
 .p4semi,
 .p4colorful,
 .p4semiColorful {
-  font-size: 12px;
-  line-height: 20px;
+  font-size: 10px;
+  line-height: 18px;
+
+  @include media('>=s') {
+    font-size: 12px;
+    line-height: 20px;
+  }
 }
 
 .p1semi,

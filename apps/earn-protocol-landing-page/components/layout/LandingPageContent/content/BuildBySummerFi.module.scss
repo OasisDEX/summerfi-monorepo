@@ -1,9 +1,13 @@
 .buildBySummerFiHeaderWrapper {
   text-align: center;
-  padding: 0 var(--spacing-space-4x-large);
+  padding: 0 var(--spacing-space-large);
 
-  @include media('<=s') {
-    padding: 0 var(--spacing-space-large);
+  @include media('>s') {
+    padding: 0 var(--spacing-space-3x-large);
+  }
+
+  @include media('>l') {
+    padding: 0 var(--spacing-space-4x-large);
   }
 }
 
@@ -19,11 +23,15 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-space-medium);
-  padding: 0 var(--spacing-space-4x-large);
+  padding: 0 var(--spacing-space-medium);
   margin-top: 48px;
 
-  @include media('<=s') {
-    padding: 0 var(--spacing-space-medium);
+  @include media('>s') {
+    padding: 0 var(--spacing-space-3x-large);
+  }
+
+  @include media('>l') {
+    padding: 0 var(--spacing-space-4x-large);
   }
 
   p {
@@ -49,30 +57,60 @@
 }
 
 .buildBySummerFiStatBlockWrapper {
-  display: flex;
-  flex-direction: row;
-  padding: var(--spacing-space-x-large) var(--spacing-space-3x-large);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-space-medium);
+  padding: 0 var(--spacing-space-large);
   justify-content: space-around;
 
-  @include media('<=s') {
-    flex-direction: column;
-    padding: 0 var(--spacing-space-large);
+  @include media('>s') {
+    gap: var(--spacing-space-2x-large);
+    padding: var(--spacing-space-x-large) var(--spacing-space-3x-large);
+    grid-template-columns: 1fr 1fr;
   }
 
-  .buildBySummerFiStatBlockDivider {
-    width: 1px;
-    background-color: rgba(61, 61, 61, 1);
+  @include media('>l') {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    padding: var(--spacing-space-x-large) var(--spacing-space-2x-large);
+  }
 
-    @include media('<=s') {
-      margin-top: var(--spacing-space-large);
-      height: 1px;
-      width: 100%;
-    }
+  @include media('>xl') {
+    padding: var(--spacing-space-x-large) var(--spacing-space-3x-large);
   }
 
   .statBlock {
+    position: relative;
+    
     @include media('<=s') {
       margin-top: var(--spacing-space-large);
+      
+      &:not(:last-child) {
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -24px;
+          left: 20%;
+          right: 20%;
+          height: 1px;
+          background-color: #3D3D3D;
+        }
+      }
+    }
+
+    @include media('>l') {
+      &:nth-child(odd):not(:nth-last-child(-n+2))::after {
+        display: none;
+      }
+      
+      &:not(:last-child)::before {
+        content: '';
+        position: absolute;
+        top: 20%;
+        bottom: 20%;
+        right: -12px;
+        width: 1px;
+        background-color: #3D3D3D;
+      }
     }
 
     * {

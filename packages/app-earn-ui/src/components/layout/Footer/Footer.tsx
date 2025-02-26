@@ -141,7 +141,9 @@ export const Footer: FC<FooterProps> = ({ logo, newsletter, languageSwitcher }) 
               return (
                 <li key={j}>
                   <Link prefetch={false} href={url} target={isOutsideLink ? '_blank' : undefined}>
-                    <Text variant="p2">{label}</Text>
+                    <Text variant="p2" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+                      {label}
+                    </Text>
                   </Link>
                 </li>
               )

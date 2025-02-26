@@ -18,26 +18,26 @@ export const MobileDrawerDefaultWrapper: FC<MobileDrawerDefaultWrapperProps> = (
 }) => {
   const wrapperStyleMap = {
     bottom: {
-      backgroundColor: 'var(--earn-protocol-neutral-85)',
+      backgroundColor: 'var(--earn-protocol-neutral-100)',
       borderTopLeftRadius: 'var(--radius-large)',
       borderTopRightRadius: 'var(--radius-large)',
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 0,
     },
     top: {
-      backgroundColor: 'var(--earn-protocol-neutral-85)',
+      backgroundColor: 'var(--earn-protocol-neutral-100)',
       borderRadius: 0,
       height: '100%',
     },
     left: {
-      backgroundColor: 'var(--earn-protocol-neutral-85)',
+      backgroundColor: 'var(--earn-protocol-neutral-100)',
       borderRightLeftRadius: 'var(--radius-large)',
       borderRightRightRadius: 'var(--radius-large)',
       borderLeftLeftRadius: 0,
       borderLeftRightRadius: 0,
     },
     right: {
-      backgroundColor: 'var(--earn-protocol-neutral-85)',
+      backgroundColor: 'var(--earn-protocol-neutral-100)',
       borderLeftLeftRadius: 'var(--radius-large)',
       borderLeftRightRadius: 'var(--radius-large)',
       borderRightLeftRadius: 0,

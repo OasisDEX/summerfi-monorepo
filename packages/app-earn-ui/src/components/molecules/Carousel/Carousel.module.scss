@@ -5,20 +5,26 @@
   width: 100%;
   perspective: 600px;
   overflow: hidden;
-  height: 700px;
+  height: 100%;
+  flex-direction: column;
+
+  @include media('>l') {
+    flex-direction: row;
+  }
 }
 
 .carouselContent {
   display: flex;
   position: relative;
   width: 100%;
-  height: 650px;
+  height: 600px;
   align-items: center;
   justify-content: center;
   transform-style: preserve-3d;
+  touch-action: pan-y pinch-zoom;
 
   @include media('<=s') {
-    height: 725px;
+    height: 675px;
   }
 }
 
@@ -28,13 +34,17 @@
   height: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: baseline;
   opacity: 0;
   backface-visibility: hidden;
   transition:
     transform 1s ease-in-out,
     opacity 1s ease-in-out;
   transform-style: preserve-3d;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .slideActive {
@@ -55,7 +65,7 @@
 
 .carouselButtons {
   position: absolute;
-  top: 50%;
+  top: 15%;
   display: flex;
   justify-content: space-between;
   transform: translateY(-50%);
@@ -88,11 +98,72 @@
   }
 }
 
+.buttonLeft {
+  position: relative;
+  left: -2px;
+}
+
+.buttonRight {
+  position: relative;
+  right: -2px;
+}
+
 .buttonLeft:hover,
 .buttonRight:hover {
   background-color: #555;
 
   @include media('<=s') {
     background-color: var(--earn-protocol-neutral-90);
+  }
+}
+
+.mobilePagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: var(--general-space-20);
+
+  @include media('>l') {
+    display: none;
+  }
+}
+
+.mobileButton {
+  background: none;
+  border: none;
+  padding: 12px;
+  cursor: pointer;
+  display: flex;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.pips {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin: 0 16px;
+}
+
+.pip {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: var(--earn-protocol-neutral-70);
+  transition: background-color 0.3s ease;
+}
+
+.pipActive {
+  background-color: var(--earn-protocol-primary-100);
+}
+
+.carouselButtons {
+  display: none;
+  @include media('>l') {
+    display: flex;
   }
 }

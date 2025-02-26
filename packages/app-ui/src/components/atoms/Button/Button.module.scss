@@ -26,18 +26,29 @@
 .primaryLarge,
 .secondaryLarge,
 .neutralLarge {
-  height: 60px;
-  min-width: 320px;
-  font-size: 18px;
+  height: 48px;
+  min-width: 280px;
+  font-size: var(--font-size-p3);
   border-radius: var(--radius-50);
+
+  @include media('>=s') {
+    height: 60px;
+    min-width: 320px;
+    font-size: var(--font-size-p2);
+  }
 }
 
 .primarySmall,
 .secondarySmall,
 .neutralSmall {
-  height: 36px;
-  font-size: 12px;
+  height: 32px;
+  font-size: var(--font-size-p4);
   border-radius: var(--radius-24);
+
+  @include media('>=s') {
+    height: 36px;
+    font-size: var(--font-size-p4);
+  }
 }
 
 .primaryLarge,
@@ -88,7 +99,7 @@
 }
 
 .colorful {
-  font-size: 12px;
+  font-size: var(--font-size-p4);
   width: 100%;
   border-radius: var(--radius-8);
   background: linear-gradient(

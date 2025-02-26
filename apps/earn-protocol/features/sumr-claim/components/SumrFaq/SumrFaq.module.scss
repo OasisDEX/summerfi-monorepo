@@ -17,11 +17,11 @@
   }
 
   .faqSectionBlockWrapper {
-    padding: 0 var(--spacing-space-3x-large);
+    padding: 0 var(--spacing-space-small);
     margin-top: var(--spacing-space-x-large);
 
-    @include media('<=s') {
-      padding: 0 var(--spacing-space-x-large);
+    @include media('>s') {
+      padding: 0 var(--spacing-space-3x-large);
     }
   }
 }

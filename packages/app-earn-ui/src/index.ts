@@ -90,7 +90,7 @@ export { IconWithBackground } from './components/molecules/IconWithBackground/Ic
 export { FaqSection } from './components/molecules/FaqSection/FaqSection'
 export { DataModule } from './components/molecules/DataModule/DataModule'
 export { Badge } from './components/molecules/Badge/Badge'
-export { HighestQualityYieldsDisclaimer } from './components/molecules/HighestQualityYeildsDisclaimer/HighestQualityYieldsDisclaimer'
+export { HighestQualityYieldsDisclaimer } from './components/molecules/HighestQualityYieldsDisclaimer/HighestQualityYieldsDisclaimer.tsx'
 export { CookieBanner } from './components/molecules/CookieBanner/CookieBanner'
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'
