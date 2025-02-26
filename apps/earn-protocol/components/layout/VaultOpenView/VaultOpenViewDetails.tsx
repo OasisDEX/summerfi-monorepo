@@ -106,6 +106,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
           topDepositors={topDepositors}
           vaultId={getUniqueVaultId(vault)}
           page="open"
+          noHighlight
         />
       </Expander>
       <Expander
