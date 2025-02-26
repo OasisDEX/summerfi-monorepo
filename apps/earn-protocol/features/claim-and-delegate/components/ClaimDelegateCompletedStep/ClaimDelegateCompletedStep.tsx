@@ -20,7 +20,6 @@ import {
   formatFiatBalance,
   safeBTOA,
 } from '@summerfi/app-utils'
-import clsx from 'clsx'
 import { useParams } from 'next/navigation'
 
 import { localSumrDelegates } from '@/features/claim-and-delegate/consts'
