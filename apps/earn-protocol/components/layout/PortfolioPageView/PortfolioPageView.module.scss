@@ -4,4 +4,12 @@
   flex-direction: column;
   padding: unset;
   width: 100%;
+
+  @include media('>m') {
+    padding: 0 var(--general-space-16);
+  }
+
+  @include media('>xl') {
+    padding: 0;
+  }
 }
