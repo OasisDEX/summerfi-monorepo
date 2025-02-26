@@ -4,8 +4,8 @@
   margin-top: var(--spacing-space-medium);
 
   @include media('>=s') {
-    margin-top: var(--spacing-space-2x-large);
-    width: 515px;
+    margin-top: var(--spacing-space-large);
+    max-width: 515px;
   }
 
   &>div {

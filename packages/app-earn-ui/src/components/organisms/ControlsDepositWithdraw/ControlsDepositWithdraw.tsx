@@ -97,27 +97,29 @@ export const ControlsDepositWithdraw = ({
             : undefined,
         }}
       />
-      <AnimateHeight id="earnings" show={isOpen}>
-        <ProjectedEarnings
-          earnings={estimatedEarnings}
-          symbol={getDisplayToken(vault.inputToken.symbol) as TokenSymbolsList}
-          isLoading={isLoadingForecast}
-        />
-      </AnimateHeight>
-      <AnimateHeight
-        id="earnings-expanded"
-        show={
-          amountDisplay !== '0' && !isOpen && ownerView && !isSimulation && !!forecastSummaryMap
-        }
-      >
-        {forecastSummaryMap && (
-          <ProjectedEarningsExpanded
+      <div className={styles.projectedEarningsWrapper}>
+        <AnimateHeight id="earnings" show={isOpen}>
+          <ProjectedEarnings
+            earnings={estimatedEarnings}
             symbol={getDisplayToken(vault.inputToken.symbol) as TokenSymbolsList}
-            forecastSummaryMap={forecastSummaryMap}
             isLoading={isLoadingForecast}
           />
-        )}
-      </AnimateHeight>
+        </AnimateHeight>
+        <AnimateHeight
+          id="earnings-expanded"
+          show={
+            amountDisplay !== '0' && !isOpen && ownerView && !isSimulation && !!forecastSummaryMap
+          }
+        >
+          {forecastSummaryMap && (
+            <ProjectedEarningsExpanded
+              symbol={getDisplayToken(vault.inputToken.symbol) as TokenSymbolsList}
+              forecastSummaryMap={forecastSummaryMap}
+              isLoading={isLoadingForecast}
+            />
+          )}
+        </AnimateHeight>
+      </div>
     </div>
   )
 }

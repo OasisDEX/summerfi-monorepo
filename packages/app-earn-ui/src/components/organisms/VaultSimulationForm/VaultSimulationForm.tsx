@@ -108,9 +108,10 @@ export const VaultSimulationForm = ({
     <div style={{ position: 'relative', width: '100%', padding: '2px' }}>
       <Sidebar
         {...{
-          title: isEarnApp
-            ? `2. Deposit into ${getDisplayToken(vaultData.inputToken.symbol)} on ${capitalize(sdkNetworkToHumanNetwork(vaultData.protocol.network))}`
-            : 'Deposit',
+          title: 'Deposit',
+          subtitle: isEarnApp
+            ? `Deposit  ${getDisplayToken(vaultData.inputToken.symbol)} on ${capitalize(sdkNetworkToHumanNetwork(vaultData.protocol.network))}`
+            : undefined,
           content: (
             <ControlsDepositWithdraw
               amountDisplay={amountDisplay}
@@ -126,6 +127,7 @@ export const VaultSimulationForm = ({
               tokenBalanceLoading={!!isEarnApp && !!isTokenBalanceLoading}
               manualSetAmount={manualSetAmount}
               vault={vaultData}
+              isOpen={!!estimatedEarnings && estimatedEarnings !== '0'}
               estimatedEarnings={estimatedEarnings}
               isLoadingForecast={isLoadingForecast}
               ownerView
@@ -161,7 +163,7 @@ export const VaultSimulationForm = ({
                 },
           footnote: !positionExists ? (
             <Link href={vaultUrl}>
-              <WithArrow>View strategy</WithArrow>
+              <WithArrow variant="p3semi">View strategy</WithArrow>
             </Link>
           ) : null,
         }}

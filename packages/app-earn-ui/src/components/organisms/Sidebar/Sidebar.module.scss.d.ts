@@ -13,6 +13,7 @@ export type Styles = {
   sidebarHeaderSpacer: string
   sidebarHeaderWrapper: string
   sidebarTitle: string
+  sidebarTitleWrapper: string
   sidebarWrapper: string
 }
 

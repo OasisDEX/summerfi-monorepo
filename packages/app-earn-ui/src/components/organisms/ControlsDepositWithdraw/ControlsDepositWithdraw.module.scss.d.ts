@@ -3,6 +3,7 @@ export type Styles = {
   depositDetailsTitle: string
   depositDetailsValue: string
   depositViewWrapper: string
+  projectedEarningsWrapper: string
 }
 
 export type ClassNames = keyof Styles
