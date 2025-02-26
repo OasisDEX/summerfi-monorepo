@@ -98,7 +98,7 @@ export const ControlsDepositWithdraw = ({
         }}
       />
       <div className={styles.projectedEarningsWrapper}>
-        <AnimateHeight id="earnings" show={isOpen}>
+        <AnimateHeight id="earnings" show={true}>
           <ProjectedEarnings
             earnings={estimatedEarnings}
             symbol={getDisplayToken(vault.inputToken.symbol) as TokenSymbolsList}

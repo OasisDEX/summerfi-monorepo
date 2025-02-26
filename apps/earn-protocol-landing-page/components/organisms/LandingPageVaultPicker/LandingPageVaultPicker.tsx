@@ -16,6 +16,7 @@ import { useSDK } from '@summerfi/sdk-client-react'
 import { type IToken } from '@summerfi/sdk-common'
 
 import landingPageVaultPickerStyles from '@/components/organisms/LandingPageVaultPicker/LandingPageVaultPicker.module.scss'
+import clsx from 'clsx'
 
 export const LandingPageVaultPicker = ({ vault, apy }: { vault: SDKVaultishType; apy: number }) => {
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
@@ -57,6 +58,7 @@ export const LandingPageVaultPicker = ({ vault, apy }: { vault: SDKVaultishType;
     tokenDecimals: vault.inputToken.decimals,
     tokenPrice: vault.inputTokenPriceUSD,
     selectedToken: token,
+    initialAmount: '10000',
   })
 
   const { amountDisplayUSDWithSwap, rawToTokenAmount } = useAmountWithSwap({

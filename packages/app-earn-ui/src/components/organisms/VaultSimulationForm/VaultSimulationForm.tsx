@@ -127,6 +127,7 @@ export const VaultSimulationForm = ({
               tokenBalanceLoading={!!isEarnApp && !!isTokenBalanceLoading}
               manualSetAmount={manualSetAmount}
               vault={vaultData}
+              isOpen={!!estimatedEarnings && estimatedEarnings !== '0'}
               estimatedEarnings={estimatedEarnings}
               isLoadingForecast={isLoadingForecast}
               ownerView
