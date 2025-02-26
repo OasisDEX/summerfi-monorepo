@@ -2,6 +2,7 @@
   position: relative;
   z-index: 1;
   width: 100%;
+  padding: 0 var(--general-space-4);
 
   @include media('>m') {
     padding: 0 var(--general-space-16);

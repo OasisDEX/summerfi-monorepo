@@ -2,7 +2,8 @@
 .portfolioPageViewLoadingStateWrapper {
   display: flex;
   flex-direction: column;
-  padding: unset;
+  // padding: unset;
+  padding: 0 var(--general-space-4);
   width: 100%;
 
   @include media('>m') {

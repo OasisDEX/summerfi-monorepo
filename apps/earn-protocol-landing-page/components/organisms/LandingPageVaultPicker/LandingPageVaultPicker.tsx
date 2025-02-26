@@ -57,7 +57,7 @@ export const LandingPageVaultPicker = ({ vault, apy }: { vault: SDKVaultishType;
     tokenDecimals: vault.inputToken.decimals,
     tokenPrice: vault.inputTokenPriceUSD,
     selectedToken: token,
-    initialAmount: '10000',
+    initialAmount: '1000',
   })
 
   const { amountDisplayUSDWithSwap, rawToTokenAmount } = useAmountWithSwap({
