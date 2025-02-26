@@ -70,7 +70,21 @@ const PercentageButtons: FC<PercentageButtonsProps> = ({ onSelect, max }) => {
         <Button
           variant="secondarySmall"
           key={percentage}
-          onClick={() => onSelect(new BigNumber(max ?? 0).times(percentage).toString())}
+          onClick={() => {
+            try {
+              // Safely handle potential invalid numbers
+              const maxNum = new BigNumber(max ?? 0)
+
+              if (maxNum.isNaN()) {
+                // Handle invalid max value
+                onSelect('0')
+              } else {
+                onSelect(maxNum.times(percentage).toString())
+              }
+            } catch (error) {
+              onSelect('0')
+            }
+          }}
           style={{
             borderRadius: 'var(--general-radius-4)',
             flex: 1,
@@ -154,8 +168,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
 
   const { decayFactor, isLoading: decayFactorLoading } = useDecayFactor(state.delegatee)
 
-  const { stakeSumrTransaction, approveSumrTransaction } = useStakeSumrTransaction({
-    amount: formatDecimalToBigInt(amountRawStake),
+  const { stakeSumrTransaction, approveSumrTransaction, prepareTxs } = useStakeSumrTransaction({
     onStakeSuccess: () => {
       dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.COMPLETED })
       dispatch({ type: 'update-step', payload: ClaimDelegateSteps.COMPLETED })
@@ -202,8 +215,23 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
   const handleStake = async () => {
     // staking is only supported on base
     if (!isBase) {
-      // eslint-disable-next-line no-console
       setChain({ chain: SDKChainIdToAAChainMap[SDKChainId.BASE] })
+
+      return
+    }
+
+    // Validate amount before proceeding
+    if (amountParsedStake.isZero() || amountParsedStake.toNumber() > Number(sumrBalance)) {
+      toast.error('Invalid staking amount', ERROR_TOAST_CONFIG)
+
+      return
+    }
+
+    // First prepare the transactions
+    const prepared = await prepareTxs(formatDecimalToBigInt(amountRawStake))
+
+    if (!prepared) {
+      toast.error('Failed to prepare staking transaction', ERROR_TOAST_CONFIG)
 
       return
     }
@@ -253,23 +281,21 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
       return
     }
 
-    if (unstakeSumrTransaction) {
-      dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.PENDING })
+    dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.PENDING })
 
-      dispatch({
-        type: 'update-stake-change-amount',
-        payload: amountParsedUnstake.times(-1).toString(),
+    dispatch({
+      type: 'update-stake-change-amount',
+      payload: amountParsedUnstake.times(-1).toString(),
+    })
+
+    await unstakeSumrTransaction()
+      .catch((err) => {
+        // eslint-disable-next-line no-console
+        console.error('Error unstaking $SUMR:', err)
       })
-
-      await unstakeSumrTransaction()
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error('Error unstaking $SUMR:', err)
-        })
-        .finally(() => {
-          revalidateUser(userWalletAddress)
-        })
-    }
+      .finally(() => {
+        revalidateUser(userWalletAddress)
+      })
   }
 
   const resolvedButtonAction =
@@ -436,7 +462,10 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
                             ),
                             action: () => {
                               if (sumrBalance) {
-                                manualSetAmountStake(sumrBalance.toString())
+                                const formatted = formatCryptoBalance(sumrBalance)
+
+                                manualSetAmountStake(formatted)
+                                prepareTxs(formatDecimalToBigInt(formatted))
                               }
                             },
                           }}
@@ -444,7 +473,12 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
                         />
                       </Card>
                       <PercentageButtons
-                        onSelect={(value) => manualSetAmountStake(value)}
+                        onSelect={(value) => {
+                          const formatted = formatCryptoBalance(value)
+
+                          manualSetAmountStake(formatted)
+                          prepareTxs(formatDecimalToBigInt(formatted))
+                        }}
                         max={sumrBalance?.toString()}
                       />
                     </div>
