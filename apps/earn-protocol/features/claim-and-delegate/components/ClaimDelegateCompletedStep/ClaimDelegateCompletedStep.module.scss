@@ -15,13 +15,6 @@
       grid-template-columns: 1fr 1fr 1fr;
     }
 
-    &.noClaim {
-      grid-template-columns: 1fr;
-      @include media('>m') {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
     .cardWrapper {
       min-width: 200px;
       flex: 1;

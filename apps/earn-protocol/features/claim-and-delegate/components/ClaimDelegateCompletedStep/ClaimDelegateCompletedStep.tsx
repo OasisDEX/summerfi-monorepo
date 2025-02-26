@@ -35,13 +35,35 @@ import { PortfolioTabs } from '@/features/portfolio/types'
 import classNames from './ClaimDelegateCompletedStep.module.scss'
 
 interface ClaimedCardProps {
+  hasClaimed: boolean
   externalData: ClaimDelegateExternalData
   chainId: SDKChainId
   estimatedSumrPrice: number
 }
 
-const ClaimedCard: FC<ClaimedCardProps> = ({ externalData, chainId, estimatedSumrPrice }) => {
+const ClaimedCard: FC<ClaimedCardProps> = ({
+  hasClaimed,
+  externalData,
+  chainId,
+  estimatedSumrPrice,
+}) => {
   const claimedSumrRaw = externalData.sumrToClaim.claimableAggregatedRewards.perChain[chainId] ?? 0
+
+  if (!hasClaimed) {
+    return (
+      <Card className={classNames.cardWrapper}>
+        <DataBlock
+          title="Claimed"
+          titleSize="medium"
+          value="No rewards claimed"
+          valueSize="large"
+          subValueSize="small"
+          valueStyle={{ color: 'var(--earn-protocol-secondary-60)' }}
+          subValueStyle={{ color: 'var(--earn-protocol-secondary-40)' }}
+        />
+      </Card>
+    )
+  }
 
   const claimedSumr = (
     <>
@@ -109,7 +131,7 @@ const PotentialEarningCard: FC<PotentialEarningCardProps> = ({
         subValueSize="small"
       />
       <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-        $SUMR Earned from staking and delegating claimed tokens in Lazy Summer Governance.
+        $SUMR rewards earned by staking ($SUMR) tokens in Lazy Summer Governance.
       </Text>
     </Card>
   )
@@ -205,18 +227,14 @@ export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = (
 
   return (
     <div className={classNames.claimDelegateStakeDelegateCompletedSubstepWrapper}>
-      <div
-        className={clsx(classNames.mainContent, {
-          [classNames.noClaim]: state.claimStatus !== ClaimDelegateTxStatuses.COMPLETED,
-        })}
-      >
-        {state.claimStatus === ClaimDelegateTxStatuses.COMPLETED && (
-          <ClaimedCard
-            externalData={externalData}
-            chainId={chain.id}
-            estimatedSumrPrice={estimatedSumrPrice}
-          />
-        )}
+      <div className={classNames.mainContent}>
+        <ClaimedCard
+          hasClaimed={state.claimStatus === ClaimDelegateTxStatuses.COMPLETED}
+          externalData={externalData}
+          chainId={chain.id}
+          estimatedSumrPrice={estimatedSumrPrice}
+        />
+
         <TotalStakedCard
           externalData={externalData}
           state={state}
@@ -261,8 +279,17 @@ export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = (
             </div>
           </div>
         </div>
-        <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-          $SUMR voting power delegated to make Lazy Summer Protocol Governance decisions.
+        <Text
+          as="p"
+          variant="p4semi"
+          style={{
+            color: 'var(--earn-protocol-secondary-40)',
+            maxWidth: '440px',
+            textAlign: 'center',
+          }}
+        >
+          Total voting power lent to your chosen delegatee. Your delegatee can make decisions on
+          your behalf, as part of Lazy Summer Governance.
         </Text>
       </Card>
       {/* anchor to force full reload of portfolio page and its server fetched data */}
