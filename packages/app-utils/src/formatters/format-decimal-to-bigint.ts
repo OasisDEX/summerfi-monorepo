@@ -1,3 +1,5 @@
+import { cleanAmount } from './clean-amount'
+
 /**
  * Converts a decimal to a BigInt with specified decimal places
  * @param decimalStr - The decimal number as a string (e.g., "123.456")
@@ -14,7 +16,7 @@ export const formatDecimalToBigInt = (
   }
 
   // Remove any whitespace, commas, and validate input
-  const cleanStr = decimalStr.toString().trim().replace(/,/gu, '')
+  const cleanStr = cleanAmount(decimalStr.toString().trim())
 
   if (!/^\d*\.?\d+$/u.test(cleanStr)) {
     throw new Error('Invalid decimal string format')
