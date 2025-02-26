@@ -1,4 +1,4 @@
-import { ChangeEvent, type Dispatch, type FC } from 'react'
+import { type Dispatch, type FC } from 'react'
 import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
 import {
