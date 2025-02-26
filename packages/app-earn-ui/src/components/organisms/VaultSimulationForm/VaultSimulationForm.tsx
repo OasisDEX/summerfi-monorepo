@@ -108,9 +108,10 @@ export const VaultSimulationForm = ({
     <div style={{ position: 'relative', width: '100%', padding: '2px' }}>
       <Sidebar
         {...{
-          title: isEarnApp
-            ? `2. Deposit into ${getDisplayToken(vaultData.inputToken.symbol)} on ${capitalize(sdkNetworkToHumanNetwork(vaultData.protocol.network))}`
-            : 'Deposit',
+          title: 'Deposit',
+          subtitle: isEarnApp
+            ? `Deposit  ${getDisplayToken(vaultData.inputToken.symbol)} on ${capitalize(sdkNetworkToHumanNetwork(vaultData.protocol.network))}`
+            : undefined,
           content: (
             <ControlsDepositWithdraw
               amountDisplay={amountDisplay}

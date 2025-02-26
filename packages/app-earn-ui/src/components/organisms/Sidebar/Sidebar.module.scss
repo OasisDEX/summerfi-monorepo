@@ -18,6 +18,12 @@
   }
 }
 
+.sidebarTitleWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .sidebarHeaderWrapper {
   display: flex;
   justify-content: space-between;

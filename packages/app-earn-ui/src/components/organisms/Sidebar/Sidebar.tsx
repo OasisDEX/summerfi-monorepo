@@ -17,6 +17,7 @@ import sidebarClassNames from '@/components/organisms/Sidebar/Sidebar.module.scs
 
 export interface SidebarProps {
   title: string
+  subtitle?: string
   titleTabs?: string[]
   onTitleTabChange?: (tab: string) => void
   content: ReactNode
@@ -62,6 +63,7 @@ export interface SidebarProps {
 
 export const Sidebar: FC<SidebarProps> = ({
   title,
+  subtitle,
   titleTabs,
   content,
   primaryButton,
@@ -154,9 +156,20 @@ export const Sidebar: FC<SidebarProps> = ({
                   </Text>
                 ))
               ) : (
-                <Text as="h5" variant="h5" className={sidebarClassNames.sidebarTitle}>
-                  {title}
-                </Text>
+                <div className={sidebarClassNames.sidebarTitleWrapper}>
+                  <Text as="h5" variant="h5">
+                    {title}
+                  </Text>
+                  {subtitle && (
+                    <Text
+                      as="p"
+                      variant="p4semi"
+                      style={{ color: 'var(--earn-protocol-secondary-40)' }}
+                    >
+                      {subtitle}
+                    </Text>
+                  )}
+                </div>
               )}
             </div>
             {goBackAction && <div className={sidebarClassNames.goBackButtonFillFLex} />}

@@ -18,7 +18,7 @@
   }
 
   &.bottomSidebar {
-    transform: translateY(calc(100% - 66px));
+    transform: translateY(calc(100% - 102px));
   }
 
   /* Top sliding */
@@ -118,6 +118,11 @@
   overflow-y: auto;
 
   > div {
+    padding: var(--spacing-space-x-large);
+    padding-top: var(--spacing-space-medium);
+  }
+
+  @include media('>m') {
     padding: var(--spacing-space-x-large);
   }
 }
