@@ -19,7 +19,7 @@ const StakeDelegatePage = async ({ params }: StakeDelegatePageProps) => {
   const { walletAddress } = await params
 
   if (!isValidAddress(walletAddress)) {
-    redirect(`/`)
+    redirect('/not-found')
   }
 
   const [

@@ -6,6 +6,7 @@ import {
 } from '@summerfi/app-types'
 import { parseServerResponseToClient, subgraphNetworkToId } from '@summerfi/app-utils'
 import { unstable_cache as unstableCache } from 'next/cache'
+import { redirect } from 'next/navigation'
 
 import { fetchRaysLeaderboard } from '@/app/server-handlers/leaderboard'
 import { getMigratablePositions } from '@/app/server-handlers/migration'
@@ -27,6 +28,7 @@ import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/ty
 import { mergePositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 import { type GetPositionHistoryQuery } from '@/graphql/clients/position-history/client'
 import { getPositionHistoricalData } from '@/helpers/chart-helpers/get-position-historical-data'
+import { isValidAddress } from '@/helpers/is-valid-address'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 type PortfolioPageProps = {
@@ -108,6 +110,10 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   const { walletAddress: walletAddressRaw } = await params
 
   const walletAddress = walletAddressRaw.toLowerCase()
+
+  if (!isValidAddress(walletAddress)) {
+    redirect('/not-found')
+  }
 
   const {
     walletData,

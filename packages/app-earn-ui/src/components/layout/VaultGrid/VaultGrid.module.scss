@@ -1,11 +1,15 @@
 .vaultGridWrapper {
   position: relative;
   z-index: 1;
-  padding: 0 var(--general-space-16);
   width: 100%;
+  padding: 0 var(--general-space-4);
 
-  @media screen and (min-width: 900px) {
-    padding: unset;
+  @include media('>m') {
+    padding: 0 var(--general-space-16);
+  }
+
+  @include media('>xl') {
+    padding: 0;
   }
 }
 

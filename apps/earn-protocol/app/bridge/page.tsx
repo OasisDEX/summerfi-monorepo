@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 
 const BridgeRedirectPage = () => {
-  redirect(`/`)
+  redirect('/not-found')
 }
 
 export default BridgeRedirectPage
