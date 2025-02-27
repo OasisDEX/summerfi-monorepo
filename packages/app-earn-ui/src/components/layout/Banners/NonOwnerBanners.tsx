@@ -14,6 +14,7 @@ export const NonOwnerPositionBanner = ({
 }) => {
   return (
     <div
+      suppressHydrationWarning
       className={clsx(bannerStyles.bannerWrapper, bannerStyles.bannerWrapperWarning, {
         [bannerStyles.bannerWrapperVisible]: !isOwner && walletStateLoaded,
       })}
@@ -35,6 +36,7 @@ export const NonOwnerPortfolioBanner = ({
 }) => {
   return (
     <div
+      suppressHydrationWarning
       className={clsx(bannerStyles.bannerWrapper, bannerStyles.bannerWrapperWarning, {
         [bannerStyles.bannerWrapperVisible]: !isOwner && walletStateLoaded,
       })}
