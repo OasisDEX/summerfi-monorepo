@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 
 const ClaimRedirectPage = () => {
-  redirect(`/`)
+  redirect('/not-found')
 }
 
 export default ClaimRedirectPage

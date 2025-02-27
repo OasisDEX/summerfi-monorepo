@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 
 const StakeDelegateRedirectPage = () => {
-  redirect(`/`)
+  redirect('/not-found')
 }
 
 export default StakeDelegateRedirectPage
