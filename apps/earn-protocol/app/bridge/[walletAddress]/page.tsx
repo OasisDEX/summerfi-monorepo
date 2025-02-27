@@ -15,7 +15,7 @@ const BridgePage = async ({ params }: BridgePageProps) => {
   const { walletAddress } = await params
 
   if (!isValidAddress(walletAddress)) {
-    redirect(`/`)
+    redirect('/not-found')
   }
   const [sumrBalances] = await Promise.all([
     getSumrBalances({

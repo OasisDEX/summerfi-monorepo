@@ -11,6 +11,7 @@ import {
   subgraphNetworkToId,
 } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
+import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
 import { getInterestRates } from '@/app/server-handlers/interest-rates'
@@ -48,6 +49,13 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   const parsedVaultId = isAddress(vaultId)
     ? vaultId
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
+
+  if (!parsedVaultId && !isAddress(vaultId)) {
+    redirect('/not-found')
+  }
+  if (!isAddress(walletAddress)) {
+    redirect('/not-found')
+  }
 
   const [vault, { vaults }, position, { userActivity, topDepositors }] = await Promise.all([
     getVaultDetails({

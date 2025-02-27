@@ -5,6 +5,7 @@ import {
   parseServerResponseToClient,
   subgraphNetworkToId,
 } from '@summerfi/app-utils'
+import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
 import { getMedianDefiYield } from '@/app/server-handlers/defillama/get-median-defi-yield'
@@ -39,6 +40,10 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
   const parsedVaultId = isAddress(vaultId)
     ? vaultId
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
+
+  if (!parsedVaultId && !isAddress(vaultId)) {
+    redirect('/not-found')
+  }
 
   const [vault, { vaults }, { usersActivity, topDepositors }, medianDefiYield] = await Promise.all([
     getVaultDetails({

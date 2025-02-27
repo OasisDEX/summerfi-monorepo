@@ -5,6 +5,7 @@ import {
   subgraphNetworkToId,
 } from '@summerfi/app-utils'
 
+import NotFoundPage from '@/app/not-found'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
@@ -20,6 +21,11 @@ type EarnNetworkVaultsPageProps = {
 const EarnNetworkVaultsPage = async ({ params }: EarnNetworkVaultsPageProps) => {
   const { network: networkParam } = await params
   const parsedNetwork = humanNetworktoSDKNetwork(networkParam)
+
+  if (parsedNetwork === networkParam) {
+    return <NotFoundPage />
+  }
+
   const [{ vaults }, configRaw] = await Promise.all([getVaultsList(), systemConfigHandler()])
   const { config: systemConfig } = parseServerResponseToClient(configRaw)
   const vaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })
