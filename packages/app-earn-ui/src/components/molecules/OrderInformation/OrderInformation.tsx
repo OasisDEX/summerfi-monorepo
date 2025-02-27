@@ -55,6 +55,7 @@ export const OrderInformation: FC<OrderInformationProps> = ({ title, items, wrap
                     fontSize: '14px',
                     color: 'var(--earn-protocol-secondary-60)',
                     fontWeight: 600,
+                    padding: '0',
                   }}
                   iconVariant="xxs"
                 >
