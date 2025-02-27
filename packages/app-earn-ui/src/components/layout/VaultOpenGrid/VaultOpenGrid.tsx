@@ -10,7 +10,6 @@ import {
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
-import dayjs from 'dayjs'
 import Link from 'next/link'
 
 import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
@@ -27,6 +26,7 @@ import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/Va
 import { getDisplayToken } from '@/helpers/get-display-token'
 import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getVaultUrl } from '@/helpers/get-vault-url'
+import { isVaultAtLeastDaysOld } from '@/helpers/is-vault-at-least-days-old'
 
 import vaultOpenGridStyles from './VaultOpenGrid.module.scss'
 
@@ -63,9 +63,8 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   const [displaySimulationGraphStaggered, setDisplaySimulationGraphStaggered] =
     useState(displaySimulationGraph)
 
-  const isVaultAtLeast30dOld = vault.createdTimestamp
-    ? dayjs().diff(dayjs(Number(vault.createdTimestamp) * 1000), 'day') > 30
-    : false
+  const isVaultAtLeast30dOld = isVaultAtLeastDaysOld({ vault, days: 30 })
+
   const apr30d = isVaultAtLeast30dOld
     ? formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
     : 'New strategy'

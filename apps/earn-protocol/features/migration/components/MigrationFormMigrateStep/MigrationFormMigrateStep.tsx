@@ -2,6 +2,7 @@ import { type FC } from 'react'
 import {
   Card,
   Icon,
+  isVaultAtLeastDaysOld,
   OrderInformation,
   SkeletonLine,
   Text,
@@ -14,7 +15,7 @@ import {
   formatFiatBalance,
   subgraphNetworkToSDKId,
 } from '@summerfi/app-utils'
-import { type BigNumber } from 'bignumber.js'
+import { BigNumber } from 'bignumber.js'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { MigrationMiniCard } from '@/features/migration/components/MigrationMiniCard/MigrationMiniCard'
@@ -30,6 +31,7 @@ interface MigrationFormMigrateStepProps {
   transactionFeeLoading: boolean
   transactionFee?: string
   state: MigrationState
+  vaultApy?: number
 }
 
 export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
@@ -40,21 +42,24 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
   transactionFeeLoading,
   transactionFee,
   state,
+  vaultApy,
 }) => {
   const {
     state: { slippageConfig },
   } = useLocalConfig()
 
   const mockedData = {
-    '30dApy': '0.05',
-    currentyApy: '0.05',
-    protocol: 'Lazy Summer',
     swap: {
       priceImpact: '0.05',
       slippage: '0.05',
     },
-    transactionFee: '0.05',
   }
+
+  const isVaultAtLeast30dOld = isVaultAtLeastDaysOld({ vault, days: 30 })
+
+  const apr30d = isVaultAtLeast30dOld
+    ? formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
+    : 'New strategy'
 
   return (
     <div className={classNames.migrationFormContentWrapper}>
@@ -101,9 +106,9 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
       <OrderInformation
         title="What's changing"
         items={[
-          { label: '30d APY', value: formatDecimalAsPercent(mockedData['30dApy']) },
-          { label: 'Currenty APY', value: formatDecimalAsPercent(mockedData.currentyApy) },
-          { label: 'Protocol', value: mockedData.protocol },
+          { label: '30d APY', value: apr30d },
+          { label: 'Currenty APY', value: formatDecimalAsPercent(vaultApy ?? 0) },
+          { label: 'Protocol', value: 'Lazy Summer' },
         ]}
       />
       <OrderInformation
@@ -131,7 +136,7 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
               ) : (
                 'n/a'
               ),
-            tooltip: 'Transaction fee',
+            tooltip: 'Estimated transaction fee for this operation',
           },
         ]}
       />

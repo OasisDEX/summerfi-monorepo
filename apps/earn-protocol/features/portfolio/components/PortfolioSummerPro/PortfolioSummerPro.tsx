@@ -4,7 +4,6 @@ import Link from 'next/link'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { MigrationPositionCard } from '@/features/migration/components/MigrationPositionCard/MigrationPositionCard'
-import { mapMigrationToPortfolioCard } from '@/features/migration/helpers/map-migration-to-portfolio-card'
 
 import classNames from './PortfolioSummerPro.module.scss'
 
@@ -17,13 +16,11 @@ export const PortfolioSummerPro: FC<PortfolioSummerProProps> = ({
   walletAddress,
   migratablePositions,
 }) => {
-  const [selectedPosition, setSelectedPosition] = useState<string | null>(null)
+  const [selectedPosition, setSelectedPosition] = useState<string>()
 
   const handleSelectPosition = (id: string) => {
     setSelectedPosition(id)
   }
-
-  const resolvedMigratablePositions = mapMigrationToPortfolioCard(migratablePositions)
 
   const portalElement = useRef<HTMLDivElement>(null)
 
@@ -51,10 +48,10 @@ export const PortfolioSummerPro: FC<PortfolioSummerProProps> = ({
             content: (
               <div className={classNames.migrateTabWrapper}>
                 <SlideCarousel
-                  slides={resolvedMigratablePositions.map((position) => (
+                  slides={migratablePositions.map((position) => (
                     <MigrationPositionCard
                       key={position.id}
-                      {...position}
+                      migratablePosition={position}
                       selectedPosition={selectedPosition}
                       handleSelectPosition={handleSelectPosition}
                     />

@@ -5,7 +5,6 @@ import Link from 'next/link'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { MigrationPositionCard } from '@/features/migration/components/MigrationPositionCard/MigrationPositionCard'
-import { mapMigrationToPortfolioCard } from '@/features/migration/helpers/map-migration-to-portfolio-card'
 
 import classNames from './MigrationBox.module.scss'
 
@@ -26,8 +25,6 @@ export const MigrationBox: FC<MigrationBoxProps> = ({
   migratablePositions,
   ctaLink,
 }) => {
-  const resolvedMigratablePositions = mapMigrationToPortfolioCard(migratablePositions)
-
   return (
     <Card
       variant="cardSecondaryColorfulBorder"
@@ -35,10 +32,10 @@ export const MigrationBox: FC<MigrationBoxProps> = ({
     >
       <Expander title={<Text variant="p2semi">{title}</Text>}>
         <div className={classNames.migrationCardsWrapper}>
-          {resolvedMigratablePositions.map((position) => (
+          {migratablePositions.map((position) => (
             <MigrationPositionCard
               key={position.id}
-              {...position}
+              migratablePosition={position}
               selectedPosition={selectedPosition}
               handleSelectPosition={onSelectPosition}
             />

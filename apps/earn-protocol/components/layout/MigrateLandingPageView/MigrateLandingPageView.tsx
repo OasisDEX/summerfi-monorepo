@@ -3,6 +3,7 @@ import { type FC, useMemo, useState } from 'react'
 import {
   Button,
   Card,
+  getMigrateVaultUrl,
   getUniqueVaultId,
   Icon,
   IllustrationCircle,
@@ -16,7 +17,6 @@ import {
   VaultCard,
   WithArrow,
 } from '@summerfi/app-earn-ui'
-import { getMigrateVaultUrl } from '@summerfi/app-earn-ui/dist/types/src/helpers/get-vault-url'
 import {
   type DropdownOption,
   type DropdownRawOption,

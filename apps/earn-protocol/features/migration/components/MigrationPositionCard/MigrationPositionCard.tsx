@@ -1,31 +1,27 @@
 import { type FC } from 'react'
 import { PositionCard, Text, TokenWithNetworkIcon } from '@summerfi/app-earn-ui'
-import { type PlatformLogo, type TokenSymbolsList } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 
+import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { mapMigrationToPortfolioCard } from '@/features/migration/helpers/map-migration-to-portfolio-card'
 import { platformLogoMap } from '@/helpers/platform-logo-map'
 
 import classNames from './MigrationPositionCard.module.scss'
 
 interface MigrationPositionCardProps {
-  id: string
-  platformLogo: PlatformLogo
-  token: TokenSymbolsList
-  depositAmount: string
-  chainId: number
+  migratablePosition: MigratablePosition
   selectedPosition: string | undefined
   handleSelectPosition: (id: string) => void
 }
 
 export const MigrationPositionCard: FC<MigrationPositionCardProps> = ({
-  id,
-  platformLogo,
-  token,
-  depositAmount,
-  chainId,
+  migratablePosition,
   selectedPosition,
   handleSelectPosition,
 }) => {
+  const { id, platformLogo, token, depositAmount, chainId } =
+    mapMigrationToPortfolioCard(migratablePosition)
+
   return (
     <PositionCard
       key={id}

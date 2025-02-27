@@ -193,6 +193,7 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
         transactionFeeLoading={transactionFeeLoading}
         transactionFee={transactionFee}
         rawToTokenAmount={rawToTokenAmount}
+        vaultApy={vaultApy}
       />
     ),
     customHeader:

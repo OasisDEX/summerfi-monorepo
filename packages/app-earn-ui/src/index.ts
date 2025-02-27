@@ -149,7 +149,7 @@ export {
 export { getUniqueVaultId } from './helpers/get-unique-vault-id'
 export { getDisplayToken } from './helpers/get-display-token'
 export { softRouterPush } from './helpers/soft-router-push'
-
+export { isVaultAtLeastDaysOld } from './helpers/is-vault-at-least-days-old'
 export { INTERNAL_LINKS, EXTERNAL_LINKS } from './helpers/application-links'
 
 // forecast stuff
