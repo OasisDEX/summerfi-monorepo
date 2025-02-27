@@ -11,8 +11,8 @@ const EarnAllVaultsPage = async () => {
   const { config: systemConfig } = parseServerResponseToClient(configRaw)
 
   const vaultsWithConfig = decorateVaultsWithConfig({
-    vaults,
     systemConfig,
+    vaults,
   })
 
   const vaultsApyByNetworkMap = await getVaultsApy({
