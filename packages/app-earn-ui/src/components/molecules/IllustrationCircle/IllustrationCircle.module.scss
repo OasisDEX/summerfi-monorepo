@@ -7,6 +7,27 @@
   border-radius: 50%;
 }
 
+// Extra Large size (100x100)
+.sizeExtraLarge {
+  .firstLayerCircle {
+    width: 100px;
+    height: 100px;
+    background-color: var(--earn-protocol-neutral-85);
+  }
+
+  .secondLayerCircle {
+    width: 74px;
+    height: 74px;
+    background-image: var(--gradient-earn-protocol-dark-10);
+  }
+
+  .thirdLayerCircle {
+    width: 54px;
+    height: 54px;
+    background-image: var(--gradient-earn-protocol-dark);
+  }
+}
+
 // Large size (64x64)
 .sizeLarge {
   .firstLayerCircle {

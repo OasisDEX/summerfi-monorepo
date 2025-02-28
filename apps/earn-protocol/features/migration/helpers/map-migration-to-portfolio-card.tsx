@@ -3,6 +3,12 @@ import { ArmadaMigrationType } from '@summerfi/sdk-common'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 
+/**
+ * Maps a migratable position to a portfolio card format.
+ *
+ * @param migratablePosition - The migratable position to map
+ * @returns The mapped portfolio card data
+ */
 export const mapMigrationToPortfolioCard = (migratablePosition: MigratablePosition) => {
   const resovledPlatformLogo = {
     [ArmadaMigrationType.AaveV3]: 'aave',

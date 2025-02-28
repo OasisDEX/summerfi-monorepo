@@ -32,6 +32,7 @@ import { VaultOpenViewDetails } from '@/components/layout/VaultOpenView/VaultOpe
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { MigrationSidebarContent } from '@/features/migration/components/MigrationSidebarContent/MigrationSidebarContent'
+import { getMigrationFormTitle } from '@/features/migration/helpers/get-migration-form-title'
 import { getMigrationPrimaryBtnLabel } from '@/features/migration/helpers/get-migration-primary-btn-label'
 import { getMigrationSidebarError } from '@/features/migration/helpers/get-migration-sidebar-error'
 import { useMigrateTransaction } from '@/features/migration/hooks/use-migrate-transaction'
@@ -40,6 +41,7 @@ import { MigrationSteps, MigrationTxStatuses } from '@/features/migration/types'
 import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 type MigrateVaultPageComponentProps = {
   vault: SDKVaultType | SDKVaultishType
@@ -71,6 +73,8 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const { push } = useRouter()
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
+
+  const { userWalletAddress } = useUserWallet()
 
   const [state, dispatch] = useReducer(migrationReducer, {
     ...migrationState,
@@ -153,6 +157,9 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
     [state.approveStatus, state.migrateStatus].includes(MigrationTxStatuses.PENDING) ||
     state.step === MigrationSteps.INIT
 
+  const isPrimaryButtonDisabled =
+    isPrimaryButtonLoading || userWalletAddress?.toLowerCase() !== walletAddress.toLowerCase()
+
   const handlePrimaryButtonClick = () => {
     if (state.step === MigrationSteps.APPROVE && approveTransaction) {
       approveTransaction.tx()
@@ -183,7 +190,7 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
   }
 
   const sidebarProps = {
-    title: 'Migrate',
+    title: getMigrationFormTitle(state.step),
     content: (
       <MigrationSidebarContent
         estimatedEarnings={estimatedEarnings}
@@ -208,11 +215,10 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
     customHeaderStyles:
       !isDrawerOpen && isMobile ? { padding: 'var(--general-space-12) 0' } : undefined,
     handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
-    // goBackAction: nextTransaction?.type ? backToInit : undefined,
     primaryButton: {
       label: getMigrationPrimaryBtnLabel({ state }),
       action: handlePrimaryButtonClick,
-      disabled: isPrimaryButtonLoading,
+      disabled: isPrimaryButtonDisabled,
       loading: isPrimaryButtonLoading,
     },
     footnote: (

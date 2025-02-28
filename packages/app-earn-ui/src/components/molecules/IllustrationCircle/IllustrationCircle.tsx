@@ -2,18 +2,20 @@ import { Icon, type IconNamesList } from '@/components/atoms/Icon/Icon'
 
 import classNames from './IllustrationCircle.module.scss'
 
-type IllustrationCircleSize = 'small' | 'medium' | 'large'
+type IllustrationCircleSize = 'small' | 'medium' | 'large' | 'extraLarge'
 
 export const IllustrationCircle = ({
   icon,
   color,
   size = 'medium',
   with3rdLayer,
+  iconSize,
 }: {
   icon: IconNamesList
   color?: string
   size?: IllustrationCircleSize
   with3rdLayer?: boolean
+  iconSize?: number
 }) => {
   return (
     <div className={`${classNames[`size${size.charAt(0).toUpperCase()}${size.slice(1)}`]}`}>
@@ -24,14 +26,20 @@ export const IllustrationCircle = ({
               <Icon
                 iconName={icon}
                 color={color}
-                size={size === 'large' ? 32 : size === 'medium' ? 24 : 16}
+                size={
+                  iconSize ??
+                  (['extraLarge', 'large'].includes(size) ? 32 : size === 'medium' ? 24 : 16)
+                }
               />
             </div>
           ) : (
             <Icon
               iconName={icon}
               color={color}
-              size={size === 'large' ? 32 : size === 'medium' ? 24 : 16}
+              size={
+                iconSize ??
+                (['extraLarge', 'large'].includes(size) ? 32 : size === 'medium' ? 24 : 16)
+              }
             />
           )}
         </div>

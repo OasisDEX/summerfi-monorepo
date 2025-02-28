@@ -1,6 +1,7 @@
 export type Styles = {
   firstLayerCircle: string
   secondLayerCircle: string
+  sizeExtraLarge: string
   sizeLarge: string
   sizeMedium: string
   sizeSmall: string

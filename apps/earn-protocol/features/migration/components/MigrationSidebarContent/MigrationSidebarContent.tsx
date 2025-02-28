@@ -44,7 +44,13 @@ export const MigrationSidebarContent: FC<MigrationSidebarContentProps> = ({
           vaultApy={vaultApy}
         />
       )}
-      {state.step === MigrationSteps.COMPLETED && <MigrationFormCompleteStep />}
+      {state.step === MigrationSteps.COMPLETED && (
+        <MigrationFormCompleteStep
+          vaultApy={vaultApy}
+          vaultTokenSymbol={vault.inputToken.symbol}
+          amount={rawToTokenAmount?.toNumber()}
+        />
+      )}
     </>
   )
 }
