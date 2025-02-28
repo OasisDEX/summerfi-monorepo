@@ -65,7 +65,9 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       })
     : []
 
-  const [arkInterestRatesMap, vaultInterestRates, vaultApyRaw] = await Promise.all([
+  const vaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })
+
+  const [arkInterestRatesMap, vaultInterestRates, vaultsApyRaw] = await Promise.all([
     vault?.arks
       ? getInterestRates({
           network: parsedNetwork,
@@ -80,7 +82,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       })),
     }),
     getVaultsApy({
-      fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
+      fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
         chainId: subgraphNetworkToId(network),
       })),
@@ -104,7 +106,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
   })
 
   const arksInterestRates = mapArkLatestInterestRates(arkInterestRatesMap)
-  const vaultApy = vaultApyRaw[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
+  const vaultApy = vaultsApyRaw[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
 
   return (
     <VaultOpenView
@@ -116,6 +118,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       arksHistoricalChartData={arksHistoricalChartData}
       arksInterestRates={arksInterestRates}
       vaultApy={vaultApy}
+      vaultsApyRaw={vaultsApyRaw}
     />
   )
 }

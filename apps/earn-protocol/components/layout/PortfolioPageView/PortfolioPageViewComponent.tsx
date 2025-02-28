@@ -13,6 +13,7 @@ import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/po
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { sdkApiUrl } from '@/constants/sdk'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
+import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 
 import { PortfolioPageView } from './PortfolioPageView'
@@ -31,6 +32,7 @@ interface PortfolioPageViewComponentProps {
   }
   vaultsApyByNetworkMap: GetVaultsApyResponse
   migratablePositions: MigratablePosition[]
+  migrationBestVaultApy: MigrationEarningsDataByChainId
 }
 
 export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = ({
@@ -45,6 +47,7 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
   positionsHistoricalChartMap,
   vaultsApyByNetworkMap,
   migratablePositions,
+  migrationBestVaultApy,
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -60,6 +63,7 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
         positionsHistoricalChartMap={positionsHistoricalChartMap}
         vaultsApyByNetworkMap={vaultsApyByNetworkMap}
         migratablePositions={migratablePositions}
+        migrationBestVaultApy={migrationBestVaultApy}
       />
     </SDKContextProvider>
   )

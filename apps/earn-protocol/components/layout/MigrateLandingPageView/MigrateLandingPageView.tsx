@@ -38,6 +38,7 @@ import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
+import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { NavConfigContent } from '@/features/nav-config/components/NavConfigContent/NavConfigContent'
 
 import classNames from './MigrateLandingPageView.module.scss'
@@ -79,6 +80,7 @@ interface MigrateLandingPageViewProps {
   vaultsApyByNetworkMap: GetVaultsApyResponse
   migratablePositions: MigratablePosition[]
   walletAddress: string
+  migrationBestVaultApy: MigrationEarningsDataByChainId
 }
 
 export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
@@ -87,6 +89,7 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
   vaultsApyByNetworkMap,
   migratablePositions,
   walletAddress,
+  migrationBestVaultApy,
 }) => {
   const searchParams = useSearchParams()
   const { deviceType } = useDeviceType()
@@ -190,6 +193,7 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
         migratablePositions={migratablePositions}
         selectedPosition={selectedPosition}
         onSelectPosition={handleSelectPosition}
+        migrationBestVaultApy={migrationBestVaultApy}
       />
       <div className={classNames.headerWrapper}>
         <TitleWithSelect

@@ -54,6 +54,7 @@ import { PositionPerformanceChart } from '@/components/organisms/Charts/Position
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
+import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
@@ -82,6 +83,7 @@ export const VaultManageViewComponent = ({
   arksInterestRates,
   vaultApy,
   migratablePositions,
+  migrationBestVaultApy,
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
@@ -94,6 +96,7 @@ export const VaultManageViewComponent = ({
   arksInterestRates?: { [key: string]: number }
   vaultApy?: number
   migratablePositions: MigratablePosition[]
+  migrationBestVaultApy: MigrationEarningsDataByChainId
 }) => {
   const user = useUser()
   const { userWalletAddress, isLoadingAccount } = useUserWallet()
@@ -545,6 +548,7 @@ export const VaultManageViewComponent = ({
               walletAddress: viewWalletAddress,
               selectedPosition,
             })}
+            migrationBestVaultApy={migrationBestVaultApy}
           />
         }
         isMobile={isMobile}

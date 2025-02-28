@@ -14,6 +14,7 @@ import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/po
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { claimDelegateReducer, claimDelegateState } from '@/features/claim-and-delegate/state'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
+import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { PortfolioHeader } from '@/features/portfolio/components/PortfolioHeader/PortfolioHeader'
 import { PortfolioOverview } from '@/features/portfolio/components/PortfolioOverview/PortfolioOverview'
 import { PortfolioRebalanceActivity } from '@/features/portfolio/components/PortfolioRebalanceActivity/PortfolioRebalanceActivity'
@@ -43,6 +44,7 @@ interface PortfolioPageViewProps {
   }
   vaultsApyByNetworkMap: GetVaultsApyResponse
   migratablePositions: MigratablePosition[]
+  migrationBestVaultApy: MigrationEarningsDataByChainId
 }
 
 export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
@@ -57,6 +59,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   positionsHistoricalChartMap,
   vaultsApyByNetworkMap,
   migratablePositions,
+  migrationBestVaultApy,
 }) => {
   const { userWalletAddress, isLoadingAccount } = useUserWallet()
   const ownerView = walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
@@ -102,6 +105,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
             vaultsApyByNetworkMap={vaultsApyByNetworkMap}
             migratablePositions={migratablePositions}
             walletAddress={walletAddress}
+            migrationBestVaultApy={migrationBestVaultApy}
           />
         ),
       },

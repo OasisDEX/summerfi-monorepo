@@ -4,17 +4,20 @@ import Link from 'next/link'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { MigrationPositionCard } from '@/features/migration/components/MigrationPositionCard/MigrationPositionCard'
+import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 
 import classNames from './PortfolioSummerPro.module.scss'
 
 interface PortfolioSummerProProps {
   walletAddress: string
   migratablePositions: MigratablePosition[]
+  migrationBestVaultApy: MigrationEarningsDataByChainId
 }
 
 export const PortfolioSummerPro: FC<PortfolioSummerProProps> = ({
   walletAddress,
   migratablePositions,
+  migrationBestVaultApy,
 }) => {
   const [selectedPosition, setSelectedPosition] = useState<string>()
 
@@ -54,6 +57,7 @@ export const PortfolioSummerPro: FC<PortfolioSummerProProps> = ({
                       migratablePosition={position}
                       selectedPosition={selectedPosition}
                       handleSelectPosition={handleSelectPosition}
+                      earningsData={migrationBestVaultApy[position.chainId]}
                     />
                   ))}
                   portalElement={portalElement.current}

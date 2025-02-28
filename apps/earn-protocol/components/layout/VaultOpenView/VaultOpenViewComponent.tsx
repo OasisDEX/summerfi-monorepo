@@ -34,13 +34,16 @@ import { getChainInfoByChainId, type IToken, TransactionType } from '@summerfi/s
 
 import { AccountKitAccountType } from '@/account-kit/types'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { ControlsApproval, OrderInfoDeposit } from '@/components/molecules/SidebarElements'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
+import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { mapMigrationResponse } from '@/features/migration/helpers/map-migration-response'
+import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { revalidatePositionData } from '@/helpers/revalidation-handlers'
@@ -66,6 +69,7 @@ type VaultOpenViewComponentProps = {
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
   vaultApy?: number
+  vaultsApyRaw: GetVaultsApyResponse
 }
 
 export const VaultOpenViewComponent = ({
@@ -77,6 +81,7 @@ export const VaultOpenViewComponent = ({
   arksHistoricalChartData,
   arksInterestRates,
   vaultApy,
+  vaultsApyRaw,
 }: VaultOpenViewComponentProps) => {
   const { getStorageOnce } = useLocalStorageOnce<string>({
     key: `${vault.id}-amount`,
@@ -96,6 +101,8 @@ export const VaultOpenViewComponent = ({
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [migratablePositions, setMigratablePositions] = useState<MigratablePosition[]>([])
+  const [migrationBestVaultApy, setMigrationBestVaultApy] =
+    useState<MigrationEarningsDataByChainId>()
 
   useEffect(() => {
     const fetchMigratablePositions = async () => {
@@ -109,13 +116,20 @@ export const VaultOpenViewComponent = ({
 
       const mappedPositions = mapMigrationResponse(positions)
 
+      const mappedBestVaultApy = getMigrationBestVaultApy({
+        migratablePositions: mappedPositions,
+        vaultsWithConfig: vaults,
+        vaultsApyByNetworkMap: vaultsApyRaw,
+      })
+
       setMigratablePositions(mappedPositions)
+      setMigrationBestVaultApy(mappedBestVaultApy)
     }
 
     if (userWalletAddress) {
       fetchMigratablePositions()
     }
-  }, [userWalletAddress, sdk])
+  }, [userWalletAddress, sdk, vaults, vaultsApyRaw])
 
   const [selectedPosition, setSelectedPosition] = useState<string | undefined>(
     migratablePositions[0]?.id,
@@ -409,7 +423,8 @@ export const VaultOpenViewComponent = ({
         </>
       }
       rightExtraContent={
-        migratablePositions.length > 0 && (
+        migratablePositions.length > 0 &&
+        migrationBestVaultApy && (
           <MigrationBox
             migratablePositions={migratablePositions}
             selectedPosition={selectedPosition}
@@ -420,6 +435,7 @@ export const VaultOpenViewComponent = ({
               walletAddress: userWalletAddress,
               selectedPosition,
             })}
+            migrationBestVaultApy={migrationBestVaultApy}
           />
         )
       }

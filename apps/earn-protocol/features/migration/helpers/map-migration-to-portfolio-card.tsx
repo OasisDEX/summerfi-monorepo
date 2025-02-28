@@ -22,9 +22,5 @@ export const mapMigrationToPortfolioCard = (migratablePosition: MigratablePositi
     token: migratablePosition.underlyingTokenAmount.token.symbol.toUpperCase() as TokenSymbolsList,
     depositAmount: migratablePosition.underlyingTokenAmount.amount,
     platformLogo: resovledPlatformLogo[migratablePosition.migrationType] as PlatformLogo,
-    // current30dApy: position.current30dApy,
-    // lazySummer30dApy: position.lazySummer30dApy,
-    // thirtydApyDifferential: position.thirtydApyDifferential,
-    // missingOutAmount: position.missingOutAmount,
   }
 }

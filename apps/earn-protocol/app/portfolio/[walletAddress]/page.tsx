@@ -25,6 +25,7 @@ import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { PortfolioPageViewComponent } from '@/components/layout/PortfolioPageView/PortfolioPageViewComponent'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
+import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { mergePositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 import { type GetPositionHistoryQuery } from '@/graphql/clients/position-history/client'
 import { getPositionHistoricalData } from '@/helpers/chart-helpers/get-position-historical-data'
@@ -203,6 +204,12 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     {},
   )
 
+  const migrationBestVaultApy = getMigrationBestVaultApy({
+    migratablePositions,
+    vaultsWithConfig,
+    vaultsApyByNetworkMap,
+  })
+
   return (
     <PortfolioPageViewComponent
       positions={positionsWithVault}
@@ -216,6 +223,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       positionsHistoricalChartMap={positionsHistoricalChartMap}
       vaultsApyByNetworkMap={vaultsApyByNetworkMap}
       migratablePositions={migratablePositions}
+      migrationBestVaultApy={migrationBestVaultApy}
     />
   )
 }

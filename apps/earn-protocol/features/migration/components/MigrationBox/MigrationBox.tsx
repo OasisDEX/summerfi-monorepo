@@ -5,6 +5,7 @@ import Link from 'next/link'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { MigrationPositionCard } from '@/features/migration/components/MigrationPositionCard/MigrationPositionCard'
+import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 
 import classNames from './MigrationBox.module.scss'
 
@@ -14,6 +15,7 @@ interface MigrationBoxProps {
   selectedPosition: string | undefined
   onSelectPosition: (id: string) => void
   migratablePositions: MigratablePosition[]
+  migrationBestVaultApy: MigrationEarningsDataByChainId
   ctaLink?: string
 }
 
@@ -23,6 +25,7 @@ export const MigrationBox: FC<MigrationBoxProps> = ({
   selectedPosition,
   onSelectPosition,
   migratablePositions,
+  migrationBestVaultApy,
   ctaLink,
 }) => {
   return (
@@ -38,6 +41,7 @@ export const MigrationBox: FC<MigrationBoxProps> = ({
               migratablePosition={position}
               selectedPosition={selectedPosition}
               handleSelectPosition={onSelectPosition}
+              earningsData={migrationBestVaultApy[position.chainId]}
             />
           ))}
         </div>

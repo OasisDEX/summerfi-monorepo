@@ -23,6 +23,7 @@ import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { PositionHistoricalChart } from '@/components/organisms/Charts/PositionHistoricalChart'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
+import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { PortfolioSummerPro } from '@/features/portfolio/components/PortfolioSummerPro/PortfolioSummerPro'
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
@@ -97,6 +98,7 @@ type PortfolioOverviewProps = {
   vaultsApyByNetworkMap: GetVaultsApyResponse
   migratablePositions: MigratablePosition[]
   walletAddress: string
+  migrationBestVaultApy: MigrationEarningsDataByChainId
 }
 
 export const PortfolioOverview = ({
@@ -107,6 +109,7 @@ export const PortfolioOverview = ({
   vaultsApyByNetworkMap,
   migratablePositions,
   walletAddress,
+  migrationBestVaultApy,
 }: PortfolioOverviewProps) => {
   const {
     state: { sumrNetApyConfig },
@@ -206,6 +209,7 @@ export const PortfolioOverview = ({
         <PortfolioSummerPro
           walletAddress={walletAddress}
           migratablePositions={migratablePositions}
+          migrationBestVaultApy={migrationBestVaultApy}
         />
         {/* <NewsAndUpdates items={dummyNewsAndUpdatesItems} /> */}
         {/* <CryptoUtilities /> */}

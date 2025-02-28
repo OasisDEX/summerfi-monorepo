@@ -7,6 +7,7 @@ import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { MigrateLandingPageView } from '@/components/layout/MigrateLandingPageView/MigrateLandingPageView'
+import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 type MigrateLandingPageProps = {
@@ -44,12 +45,19 @@ const MigrateLandingPage = async ({ params }: MigrateLandingPageProps) => {
     })),
   })
 
+  const migrationBestVaultApy = getMigrationBestVaultApy({
+    migratablePositions,
+    vaultsWithConfig,
+    vaultsApyByNetworkMap,
+  })
+
   return (
     <MigrateLandingPageView
       vaultsList={vaultsWithConfig}
       vaultsApyByNetworkMap={vaultsApyByNetworkMap}
       migratablePositions={migratablePositions}
       walletAddress={walletAddress}
+      migrationBestVaultApy={migrationBestVaultApy}
     />
   )
 }

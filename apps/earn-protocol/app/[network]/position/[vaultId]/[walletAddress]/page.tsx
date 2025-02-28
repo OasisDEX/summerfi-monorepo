@@ -25,6 +25,7 @@ import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { VaultManageView } from '@/components/layout/VaultManageView/VaultManageView'
+import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import { getPositionPerformanceData } from '@/helpers/chart-helpers/get-position-performance-data'
 import { mapArkLatestInterestRates } from '@/helpers/map-ark-interest-rates'
@@ -109,7 +110,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     vaultInterestRates,
     positionHistory,
     positionForecastResponse,
-    vaultApyRaw,
+    vaultsApyRaw,
     migratablePositionsData,
   ] = await Promise.all([
     getInterestRates({
@@ -134,7 +135,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       amount: Number(netValue.toFixed(position.amount.token.decimals)),
     }),
     getVaultsApy({
-      fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
+      fleets: allVaultsWithConfig.map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
         chainId: subgraphNetworkToId(network),
       })),
@@ -145,7 +146,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   ])
 
   const vaultApy =
-    vaultApyRaw[`${vaultWithConfig.id}-${subgraphNetworkToId(vaultWithConfig.protocol.network)}`]
+    vaultsApyRaw[`${vaultWithConfig.id}-${subgraphNetworkToId(vaultWithConfig.protocol.network)}`]
 
   if (!positionForecastResponse.ok) {
     throw new Error('Failed to fetch forecast data')
@@ -172,6 +173,12 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
 
   const arksInterestRates = mapArkLatestInterestRates(arkInterestRatesMap)
 
+  const migrationBestVaultApy = getMigrationBestVaultApy({
+    migratablePositions,
+    vaultsWithConfig: allVaultsWithConfig,
+    vaultsApyByNetworkMap: vaultsApyRaw,
+  })
+
   return (
     <VaultManageView
       vault={vaultWithConfig}
@@ -185,6 +192,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       arksHistoricalChartData={arksHistoricalChartData}
       arksInterestRates={arksInterestRates}
       migratablePositions={migratablePositions}
+      migrationBestVaultApy={migrationBestVaultApy}
     />
   )
 }

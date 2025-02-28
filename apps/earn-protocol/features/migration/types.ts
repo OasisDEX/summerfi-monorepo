@@ -1,3 +1,5 @@
+import { type SDKChainId } from '@summerfi/app-types'
+
 export enum MigrationSteps {
   INIT = 'init',
   APPROVE = 'approve',
@@ -31,3 +33,14 @@ export type MigrationReducerAction =
       type: 'update-migrate-status'
       payload: MigrationTxStatuses | undefined
     }
+
+export interface MigrationEarningsData {
+  lazySummerCurrentApy: number
+  lazySummer30dApy: number
+  // thirtydApyDifferential: number
+  // missingOutAmount: number
+}
+
+export type MigrationEarningsDataByChainId = {
+  [key in SDKChainId]: MigrationEarningsData
+}
