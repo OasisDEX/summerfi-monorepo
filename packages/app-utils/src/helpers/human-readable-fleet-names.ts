@@ -16,6 +16,9 @@ export function getHumanReadableFleetName(
   // Split by underscore
   const parts = fleetName.split('_')
 
+  // Validate we have at least 2 parts
+  if (parts.length < 2) return fleetName
+
   // Assuming the last part is always the token symbol
   // and the middle part is the risk level
   const token = parts[parts.length - 1]

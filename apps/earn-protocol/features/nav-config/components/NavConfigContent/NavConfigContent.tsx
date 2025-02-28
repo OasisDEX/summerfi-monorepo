@@ -13,11 +13,11 @@ import {
 import { mapNumericInput } from '@summerfi/app-utils'
 import Link from 'next/link'
 
+import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
 
 import classNames from './NavConfigContent.module.scss'
-import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 
 interface NavConfigContentProps {
   handleOpenClose?: () => void

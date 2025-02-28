@@ -39,7 +39,6 @@ export const UserActivityTable: FC<UserActivityTableProps> = ({
     [userActivityList, sortConfig],
   )
 
-  console.log('isTablet', isTablet)
   const resolvedHiddenColumns = isTablet
     ? userActivityColumnsHiddenOnTablet
     : isMobile
