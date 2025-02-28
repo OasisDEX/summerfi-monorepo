@@ -52,7 +52,6 @@
   }
 
   .marketingDetailsCustomWrapper {
-    padding: var(--spacing-space-2x-large) 0 0 0;
 
     @include media('>s') {
       padding: var(--spacing-space-small);
