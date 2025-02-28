@@ -1,11 +1,12 @@
 'use client'
 
 import { type FC, type ReactNode, useEffect, useState } from 'react'
-import { type SDKVaultishType, type SDKVaultsListType } from '@summerfi/app-types'
+import { type SDKChainId, type SDKVaultishType, type SDKVaultsListType } from '@summerfi/app-types'
 import {
   formatCryptoBalance,
   formatDecimalAsPercent,
   sdkNetworkToHumanNetwork,
+  subgraphNetworkToSDKId,
   ten,
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
@@ -43,6 +44,12 @@ interface VaultOpenGridProps {
   onRefresh?: (chainName?: string, vaultId?: string, walletAddress?: string) => void
   vaultApy?: number
   rightExtraContent?: ReactNode
+  headerLink?: {
+    label: string
+    href: string
+  }
+  disableDropdownOptionsByChainId?: SDKChainId
+  getOptionUrl?: (option: SDKVaultishType) => string
 }
 
 export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
@@ -58,6 +65,12 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   onRefresh,
   vaultApy,
   rightExtraContent,
+  headerLink = {
+    label: 'Earn',
+    href: '/',
+  },
+  disableDropdownOptionsByChainId,
+  getOptionUrl,
 }) => {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [displaySimulationGraphStaggered, setDisplaySimulationGraphStaggered] =
@@ -113,9 +126,9 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
     <>
       <div className={vaultOpenGridStyles.vaultOpenGridBreadcrumbsWrapper}>
         <div style={{ display: 'inline-block' }}>
-          <Link href="/">
+          <Link href={headerLink.href}>
             <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
-              Earn / &nbsp;
+              {headerLink.label} / &nbsp;
             </Text>
           </Link>
           <Text as="span" variant="p3" color="white">
@@ -137,11 +150,31 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
             <Dropdown
               options={vaults.map((item) => ({
                 value: getVaultUrl(item),
-                content: <VaultTitleDropdownContent vault={item} link={getVaultUrl(item)} />,
+                content: (
+                  <VaultTitleDropdownContent
+                    vault={item}
+                    link={getOptionUrl?.(item) ?? getVaultUrl(item)}
+                    isDisabled={
+                      disableDropdownOptionsByChainId &&
+                      subgraphNetworkToSDKId(item.protocol.network) !==
+                        disableDropdownOptionsByChainId
+                    }
+                  />
+                ),
               }))}
               dropdownValue={{
                 value: getVaultUrl(vault),
-                content: <VaultTitleDropdownContent vault={vault} link={getVaultUrl(vault)} />,
+                content: (
+                  <VaultTitleDropdownContent
+                    vault={vault}
+                    link={getOptionUrl?.(vault) ?? getVaultUrl(vault)}
+                    isDisabled={
+                      disableDropdownOptionsByChainId &&
+                      subgraphNetworkToSDKId(vault.protocol.network) !==
+                        disableDropdownOptionsByChainId
+                    }
+                  />
+                ),
               }}
             >
               <VaultTitleWithRisk

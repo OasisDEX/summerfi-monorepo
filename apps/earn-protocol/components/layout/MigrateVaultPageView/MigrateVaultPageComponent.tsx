@@ -1,5 +1,5 @@
 'use client'
-import { type FC, useMemo, useReducer, useState } from 'react'
+import { type FC, useCallback, useMemo, useReducer, useState } from 'react'
 import {
   getDisplayToken,
   getResolvedForecastAmountParsed,
@@ -24,7 +24,7 @@ import {
 } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { type Address } from 'viem'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
@@ -73,6 +73,18 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const { push } = useRouter()
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
+
+  const pathname = usePathname()
+
+  const getMigrateVaultUrl = useCallback(
+    (option: SDKVaultType | SDKVaultishType) => {
+      // Create a case-insensitive regular expression
+      const regex = new RegExp(vault.id, 'iu')
+
+      return pathname.replace(regex, option.id)
+    },
+    [pathname, vault.id],
+  )
 
   const { userWalletAddress } = useUserWallet()
 
@@ -250,6 +262,12 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
       sumrPrice={estimatedSumrPrice}
       onRefresh={revalidatePositionData}
       vaultApy={vaultApy}
+      headerLink={{
+        label: 'Migrate',
+        href: `/migrate/user/${walletAddress}`,
+      }}
+      disableDropdownOptionsByChainId={migratablePosition.chainId}
+      getOptionUrl={getMigrateVaultUrl}
       simulationGraph={
         <VaultSimulationGraph
           vault={vault}

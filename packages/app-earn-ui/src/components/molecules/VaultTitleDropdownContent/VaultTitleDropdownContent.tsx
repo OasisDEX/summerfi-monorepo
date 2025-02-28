@@ -13,6 +13,7 @@ import classNames from './VaultTitleDropdownContent.module.scss'
 interface VaultDropdownContentProps {
   vault: SDKVaultishType
   link: string
+  isDisabled?: boolean
 }
 
 const networkNameIconMap = {
@@ -21,9 +22,16 @@ const networkNameIconMap = {
   [SDKNetwork.Base]: <Icon iconName="network_base" size={10} />,
 }
 
-export const VaultTitleDropdownContent: FC<VaultDropdownContentProps> = ({ vault, link }) => (
-  <Link href={link}>
-    <div className={classNames.wrapper}>
+export const VaultTitleDropdownContent: FC<VaultDropdownContentProps> = ({
+  vault,
+  link,
+  isDisabled,
+}) => {
+  const content = (
+    <div
+      className={classNames.wrapper}
+      style={{ opacity: isDisabled ? 0.5 : 1, cursor: isDisabled ? 'not-allowed' : 'pointer' }}
+    >
       <div className={classNames.iconWithSymbolWrapper}>
         <Icon
           tokenName={getDisplayToken(vault.inputToken.symbol) as TokenSymbolsList}
@@ -44,5 +52,7 @@ export const VaultTitleDropdownContent: FC<VaultDropdownContentProps> = ({ vault
         {capitalize(vault.customFields?.risk ?? 'lower')} risk
       </Text>
     </div>
-  </Link>
-)
+  )
+
+  return isDisabled ? content : <Link href={link}>{content}</Link>
+}
