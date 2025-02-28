@@ -1,6 +1,12 @@
 .sumrRaysRewadsWrapper {
   margin-top: var(--general-space-128);
 
+  > div {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
   .sumrRaysRewardsContent {
     display: flex;
     flex-direction: column;

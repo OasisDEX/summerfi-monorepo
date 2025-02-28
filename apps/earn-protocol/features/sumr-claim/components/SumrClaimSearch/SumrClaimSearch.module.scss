@@ -8,20 +8,21 @@
   .headerTextual {
     text-align: center;
     margin-bottom: var(--general-space-16);
-    display: flex;
+    display: inline;
     gap: var(--general-space-12);
     flex-direction: column;
     justify-content: center;
     flex-wrap: wrap;
     word-break: break-word;
+    max-width: 660px;
 
-    @media (min-width: 768px) {
+    @include media('>m') {
       flex-direction: row;
     }
 
     &Colored {
       color: var(--earn-protocol-primary-100);
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: var(--general-space-12);
