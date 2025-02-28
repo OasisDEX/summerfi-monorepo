@@ -27,7 +27,7 @@ interface MigrationFormMigrateStepProps {
   estimatedEarnings: string
   migratablePosition: MigratablePosition
   vault: SDKVaultType | SDKVaultishType
-  rawToTokenAmount?: BigNumber
+  amount?: BigNumber
   transactionFeeLoading: boolean
   transactionFee?: string
   state: MigrationState
@@ -38,7 +38,7 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
   estimatedEarnings,
   migratablePosition,
   vault,
-  rawToTokenAmount,
+  amount,
   transactionFeeLoading,
   transactionFee,
   state,
@@ -95,11 +95,7 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
           variant="p1semi"
           style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}
         >
-          {rawToTokenAmount ? (
-            formatCryptoBalance(rawToTokenAmount)
-          ) : (
-            <SkeletonLine width="80px" height="14px" />
-          )}{' '}
+          {amount ? formatCryptoBalance(amount) : <SkeletonLine width="80px" height="14px" />}{' '}
           {vault.inputToken.symbol}
         </Text>
       </Card>

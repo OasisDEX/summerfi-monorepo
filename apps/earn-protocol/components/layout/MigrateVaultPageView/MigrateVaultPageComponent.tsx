@@ -199,7 +199,7 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
         state={state}
         transactionFeeLoading={transactionFeeLoading}
         transactionFee={transactionFee}
-        rawToTokenAmount={rawToTokenAmount}
+        amount={resolvedAmountParsed}
         vaultApy={vaultApy}
       />
     ),

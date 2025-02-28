@@ -11,7 +11,7 @@ interface MigrationSidebarContentProps {
   estimatedEarnings: string
   migratablePosition: MigratablePosition
   vault: SDKVaultType | SDKVaultishType
-  rawToTokenAmount?: BigNumber
+  amount?: BigNumber
   state: MigrationState
   transactionFeeLoading: boolean
   transactionFee?: string
@@ -22,7 +22,7 @@ export const MigrationSidebarContent: FC<MigrationSidebarContentProps> = ({
   estimatedEarnings,
   migratablePosition,
   vault,
-  rawToTokenAmount,
+  amount,
   state,
   transactionFeeLoading,
   transactionFee,
@@ -37,7 +37,7 @@ export const MigrationSidebarContent: FC<MigrationSidebarContentProps> = ({
           estimatedEarnings={estimatedEarnings}
           migratablePosition={migratablePosition}
           vault={vault}
-          rawToTokenAmount={rawToTokenAmount}
+          amount={amount}
           state={state}
           transactionFeeLoading={transactionFeeLoading}
           transactionFee={transactionFee}
@@ -48,7 +48,7 @@ export const MigrationSidebarContent: FC<MigrationSidebarContentProps> = ({
         <MigrationFormCompleteStep
           vaultApy={vaultApy}
           vaultTokenSymbol={vault.inputToken.symbol}
-          amount={rawToTokenAmount?.toNumber()}
+          amount={amount?.toNumber()}
         />
       )}
     </>
