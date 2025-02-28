@@ -32,7 +32,7 @@ export const NavigationWrapper: FC = () => {
       })}
       walletConnectionComponent={<WalletLabel />}
       mobileWalletConnectionComponents={{
-        primary: <WalletLabel variant="actionsOnly" />,
+        primary: <WalletLabel variant="logoutOnly" />,
         secondary: <WalletLabel variant="addressOnly" />,
       }}
       configComponent={<NavConfig />}

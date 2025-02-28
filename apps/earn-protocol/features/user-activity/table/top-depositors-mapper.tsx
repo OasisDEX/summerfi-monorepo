@@ -97,7 +97,7 @@ export const topDepositorsMapper = (
           </div>
         ),
         strategy: (
-          <TableCellText>
+          <TableCellText style={{ whiteSpace: 'nowrap' }}>
             {getHumanReadableFleetName(item.vault.protocol.network, item.vault.name)}
           </TableCellText>
         ),

@@ -7,6 +7,7 @@ import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import {
   userActivityColumns,
   userActivityColumnsHiddenOnMobile,
+  userActivityColumnsHiddenOnTablet,
 } from '@/features/user-activity/table/user-activity-columns'
 import { userActivityMapper } from '@/features/user-activity/table/user-activity-mapper'
 
@@ -30,7 +31,7 @@ export const UserActivityTable: FC<UserActivityTableProps> = ({
 }) => {
   const [sortConfig, setSortConfig] = useState<TableSortedColumn<string>>()
   const { deviceType } = useDeviceType()
-  const { isMobile } = useMobileCheck(deviceType)
+  const { isMobile, isTablet } = useMobileCheck(deviceType)
   const [highlightedAddress, setHighlightedAddress] = useState<string | undefined>()
 
   const rows = useMemo(
@@ -38,7 +39,12 @@ export const UserActivityTable: FC<UserActivityTableProps> = ({
     [userActivityList, sortConfig],
   )
 
-  const resolvedHiddenColumns = isMobile ? userActivityColumnsHiddenOnMobile : hiddenColumns
+  console.log('isTablet', isTablet)
+  const resolvedHiddenColumns = isTablet
+    ? userActivityColumnsHiddenOnTablet
+    : isMobile
+      ? userActivityColumnsHiddenOnMobile
+      : hiddenColumns
 
   return (
     <>

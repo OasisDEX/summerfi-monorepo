@@ -118,8 +118,7 @@
   overflow-y: auto;
 
   > div {
-    padding: var(--spacing-space-x-large);
-    padding-top: var(--spacing-space-medium);
+    padding: var(--spacing-space-large) var(--spacing-space-x-large);
   }
 
   @include media('>m') {

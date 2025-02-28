@@ -19,7 +19,7 @@ import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import walletLabelStyles from './WalletLabel.module.scss'
 
-export type WalletLabelVariant = 'default' | 'addressOnly' | 'actionsOnly'
+export type WalletLabelVariant = 'default' | 'addressOnly' | 'logoutOnly'
 
 interface WalletLabelProps {
   variant?: WalletLabelVariant
@@ -233,15 +233,15 @@ export default function WalletLabel({
   if (variant === 'addressOnly') {
     return (
       <div className={`${walletLabelStyles.addressOnlyWrapper} ${className}`}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-8)' }}>
-          <div
-            className={`${walletLabelStyles.copiedNotification} ${addressCopied ? walletLabelStyles.visible : ''}`}
-          >
-            <Icon iconName="checkmark" size={12} color="var(--earn-protocol-primary-100)" />
-            <Text variant="p4semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-              Copied
-            </Text>
-          </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-16)' }}>
+          {addressCopied && (
+            <div className={`${walletLabelStyles.copiedNotification}`}>
+              <Icon iconName="checkmark" size={12} color="var(--earn-protocol-primary-100)" />
+              <Text variant="p4semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
+                Copied
+              </Text>
+            </div>
+          )}
 
           <Button
             variant="secondaryMedium"
@@ -268,16 +268,11 @@ export default function WalletLabel({
     )
   }
 
-  // Actions-only variant - just the logout/copy buttons without the address display
-  if (variant === 'actionsOnly') {
+  //  Logout-only variant - just the logout button without the address display
+  if (variant === 'logoutOnly') {
     return (
       <div className={`${walletLabelStyles.actionsOnlyWrapper} ${className}`}>
         <LogoutButton onLogout={handleLogout} />
-        <CopyAddressButton
-          address={userWalletAddress.toString()}
-          onCopy={handleCopyAddress}
-          copied={addressCopied}
-        />
       </div>
     )
   }

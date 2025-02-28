@@ -7,6 +7,7 @@ import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import {
   topDepositorsColumns,
   topDepositorsColumnsHiddenOnMobile,
+  topDepositorsColumnsHiddenOnTablet,
 } from '@/features/user-activity/table/top-depositors-columns'
 import { topDepositorsMapper } from '@/features/user-activity/table/top-depositors-mapper'
 
@@ -28,14 +29,18 @@ export const TopDepositorsTable: FC<TopDepositorsTableProps> = ({
 }) => {
   const [sortConfig, setSortConfig] = useState<TableSortedColumn<string>>()
   const { deviceType } = useDeviceType()
-  const { isMobile } = useMobileCheck(deviceType)
+  const { isMobile, isTablet } = useMobileCheck(deviceType)
 
   const rows = useMemo(
     () => topDepositorsMapper(topDepositorsList, sortConfig),
     [topDepositorsList, sortConfig],
   )
 
-  const resolvedHiddenColumns = isMobile ? topDepositorsColumnsHiddenOnMobile : hiddenColumns
+  const resolvedHiddenColumns = isTablet
+    ? topDepositorsColumnsHiddenOnTablet
+    : isMobile
+      ? topDepositorsColumnsHiddenOnMobile
+      : hiddenColumns
 
   return (
     <>
