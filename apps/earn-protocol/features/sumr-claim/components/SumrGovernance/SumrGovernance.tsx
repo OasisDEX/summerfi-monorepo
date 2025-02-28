@@ -70,7 +70,11 @@ const SumrGovernanceContent: FC<SumrGovernanceContentProps> = ({
       </Card>
       <div className={classNames.actionableWrapper}>
         {showButton && (
-          <Link href={button.href} target={isOutsideLink(button.href) ? '_blank' : undefined}>
+          <Link
+            href={button.href}
+            target={isOutsideLink(button.href) ? '_blank' : undefined}
+            style={{ width: '100%' }}
+          >
             <Button variant="primarySmall">
               <Text as="p" variant="p3semi">
                 {button.label}

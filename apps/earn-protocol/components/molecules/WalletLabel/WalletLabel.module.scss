@@ -69,6 +69,10 @@
   margin: 15px 0 15px;
 }
 
+.copyButton {
+  padding-bottom: 0;
+}
+
 .logoutButton {
   width: 100%;
 }
@@ -87,9 +91,16 @@
 .copiedNotification {
   display: flex;
   align-items: center;
-  gap: var(--general-space-2);
+  gap: var(--general-space-4);
   animation: fadeOut 2s forwards;
   height: 16px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  pointer-events: none;
+}
+
+.visible {
+  opacity: 1;
 }
 
 @keyframes fadeOut {

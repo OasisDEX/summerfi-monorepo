@@ -44,6 +44,11 @@
     width: 302px;
     position: relative;
 
+
+    a {
+      width: 100%;
+    }
+    
     .autoComplete,
     .autoCompleteHidden {
       display: flex;

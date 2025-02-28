@@ -113,12 +113,19 @@ const CopyAddressButton = ({
   variant = 'textSecondarySmall',
 }: CopyAddressButtonProps) => (
   <Button variant={variant} onClick={() => onCopy(address)}>
-    {copied ? 'Copied!' : 'Copy address'}
+    {copied ? (
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
+        <Icon iconName="checkmark" size={12} />
+        <span>Copied</span>
+      </div>
+    ) : (
+      'Copy address'
+    )}
   </Button>
 )
 
 // Logout button
-const LogoutButton = ({ onLogout, variant = 'primarySmall' }: LogoutButtonProps) => (
+const LogoutButton = ({ onLogout, variant = 'primaryMedium' }: LogoutButtonProps) => (
   <Button variant={variant} onClick={onLogout}>
     Log out
   </Button>
@@ -135,16 +142,31 @@ const WalletTooltipContent = ({
   <div className={walletLabelStyles.popupWrapper}>
     <div className={walletLabelStyles.walletAddressPopup}>
       <div>
-        <b>Connected on {chainName.toLowerCase()}:</b>
+        <Text variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+          Connected on {chainName.toLowerCase()}:
+        </Text>
         <br />
-        {formatAddress(address.toString(), { first: 6 })}
+        <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+          {formatAddress(address.toString(), { first: 6 })}
+        </Text>
       </div>
-      <p style={{ display: 'inline-block', cursor: 'pointer' }} onClick={() => onCopy(address)}>
-        {copied ? 'copied!' : 'copy address'}
-      </p>
+      <Button
+        variant="textPrimarySmall"
+        className={walletLabelStyles.copyButton}
+        onClick={() => onCopy(address)}
+      >
+        {copied ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
+            <Icon iconName="checkmark" size={12} />
+            <span>copied</span>
+          </div>
+        ) : (
+          'copy address'
+        )}
+      </Button>
     </div>
     <div className={walletLabelStyles.popupDivider} />
-    <Button variant="primarySmall" onClick={onLogout} className={walletLabelStyles.logoutButton}>
+    <Button variant="primaryMedium" onClick={onLogout} className={walletLabelStyles.logoutButton}>
       Log out
     </Button>
   </div>
@@ -187,7 +209,7 @@ export default function WalletLabel({
   // we are not showing the skeleton in iframe, because isSignerInitializing never goes to true
   if ((isSignerInitializing || isAuthModalOpen || isSignerAuthenticating) && !isIframe) {
     return (
-      <Button variant="secondarySmall">
+      <Button variant="secondaryMedium">
         <SkeletonLine width={100} height={10} style={{ opacity: 0.2 }} />
       </Button>
     )
@@ -212,17 +234,20 @@ export default function WalletLabel({
     return (
       <div className={`${walletLabelStyles.addressOnlyWrapper} ${className}`}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-8)' }}>
-          <div className={walletLabelStyles.copiedNotification}>
+          <div
+            className={`${walletLabelStyles.copiedNotification} ${addressCopied ? walletLabelStyles.visible : ''}`}
+          >
             <Icon iconName="checkmark" size={12} color="var(--earn-protocol-primary-100)" />
             <Text variant="p4semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-              Copied!
+              Copied
             </Text>
           </div>
 
           <Button
-            variant="secondarySmall"
+            variant="secondaryMedium"
             className={walletLabelStyles.addressOnlyButton}
             onClick={() => handleCopyAddress(userWalletAddress)}
+            style={{ height: '34px' }}
           >
             <WalletAvatar
               address={userWalletAddress}

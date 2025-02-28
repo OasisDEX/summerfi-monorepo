@@ -190,16 +190,13 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
           }
         >
           {handleOpenClose && (
-            <Button
-              variant={isMobile || isTablet ? 'secondaryMedium' : 'secondaryLarge'}
-              onClick={handleOpenClose}
-            >
+            <Button variant="secondaryMedium" onClick={handleOpenClose}>
               <Icon iconName="close" size={12} style={{ opacity: 0.5 }} />
               Close
             </Button>
           )}
           <Button
-            variant={isMobile || isTablet ? 'primaryMedium' : 'primaryLarge'}
+            variant="primaryMedium"
             onClick={() => {
               setSumrNetApyConfig({
                 withSumr: sumrToggle,
