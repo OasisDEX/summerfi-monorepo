@@ -45,9 +45,18 @@ export const SlideCarousel: FC<PropType> = ({
 }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel(options)
   const [autoSlideDirection, setAutoSlideDirection] = useState<'prev' | 'next'>('next')
+  const [selectedIndex, setSelectedIndex] = useState(0)
 
-  const { prevBtnDisabled, nextBtnDisabled, onPrevButtonClick, onNextButtonClick, currentSnap } =
+  const { prevBtnDisabled, nextBtnDisabled, onPrevButtonClick, onNextButtonClick } =
     usePrevNextButtons(emblaApi)
+
+  useEffect(() => {
+    if (emblaApi) {
+      emblaApi.on('select', () => {
+        setSelectedIndex(emblaApi.selectedScrollSnap())
+      })
+    }
+  }, [emblaApi])
 
   const sectionClassName = {
     1: classNames.emblaOneSlide,
@@ -139,7 +148,7 @@ export const SlideCarousel: FC<PropType> = ({
                 {slides.map((_, idx) => (
                   <div
                     key={idx}
-                    className={`${classNames.dot} ${idx === currentSnap ? classNames.dotActive : ''}`}
+                    className={`${classNames.dot} ${idx === selectedIndex ? classNames.dotActive : ''}`}
                   />
                 ))}
               </div>
@@ -182,7 +191,7 @@ export const SlideCarousel: FC<PropType> = ({
           {slides.map((_, idx) => (
             <div
               key={idx}
-              className={`${classNames.dot} ${idx === currentSnap ? classNames.dotActive : ''}`}
+              className={`${classNames.dot} ${idx === selectedIndex ? classNames.dotActive : ''}`}
             />
           ))}
         </div>
