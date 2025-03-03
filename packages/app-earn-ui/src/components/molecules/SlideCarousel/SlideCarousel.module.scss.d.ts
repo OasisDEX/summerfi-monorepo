@@ -2,6 +2,7 @@ export type Styles = {
   dot: string
   dotActive: string
   dots: string
+  dotsBottom: string
   embla: string
   emblaButtons: string
   emblaButtonsOnSidesWrapper: string

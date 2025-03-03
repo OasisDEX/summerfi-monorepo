@@ -29,34 +29,6 @@
       gap: var(--general-space-24);
       flex-wrap: wrap;
       margin-top: var(--general-space-8);
-
-      .card {
-        flex: 1;
-        min-width: 250px;
-        display: flex;
-        flex-direction: column;
-        gap: var(--general-space-8);
-
-        .cardIconWrapper {
-          display: flex;
-          justify-content: center;
-
-          @media (min-width: 768px) {
-            justify-content: flex-start;
-          }
-        }
-
-        .cardContentWrapper {
-          display: flex;
-          flex-direction: column;
-          gap: var(--general-space-8);
-          text-align: center;
-
-          @media (min-width: 768px) {
-            text-align: left;
-          }
-        }
-      }
     }
 
     .vaultsWrapper {
@@ -72,20 +44,16 @@
       }
 
       .vaultsList {
-        // display: flex;
-        // gap: var(--general-space-16);
-        // flex-wrap: wrap;
-
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: var(--general-space-16);
-
         @media (min-width: 768px) {
+          display: grid;
           grid-template-columns: 1fr 1fr;
+          gap: var(--general-space-16);
         }
 
         @media (min-width: 1025px) {
+          display: grid;
           grid-template-columns: 1fr 1fr 1fr;
+          gap: var(--general-space-16);
         }
       }
     }
@@ -95,6 +63,13 @@
     position: fixed;
     bottom: 22px;
     right: 14px;
-    width: 446px;
+    width: calc(100% - 28px);
+
+    @media (min-width: 768px) {
+      position: fixed;
+      bottom: 22px;
+      right: 14px;
+      width: 446px;
+    }
   }
 }

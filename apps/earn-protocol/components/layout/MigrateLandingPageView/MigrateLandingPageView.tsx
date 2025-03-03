@@ -6,9 +6,10 @@ import {
   getMigrateVaultUrl,
   getUniqueVaultId,
   Icon,
-  IllustrationCircle,
   MobileDrawer,
   Modal,
+  SlideCarousel,
+  SliderCarouselDotsPosition,
   SUMR_CAP,
   Text,
   TitleWithSelect,
@@ -38,6 +39,7 @@ import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
+import { MigrationLandingPageIlustration } from '@/features/migration/components/MigrationLandingPageIlustration/MigrationLandingPageIlustration'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { NavConfigContent } from '@/features/nav-config/components/NavConfigContent/NavConfigContent'
 
@@ -110,7 +112,6 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
   const handleSelectPosition = (id: string) => {
     setSelectedPosition(id)
   }
-
   const networkFilteredVaults = useMemo(() => {
     const properVaultsList =
       localVaultNetwork && localVaultNetwork !== 'all-networks'
@@ -217,21 +218,32 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
       </div>
       <div className={classNames.contentWrapper}>
         <Card variant="cardSecondary" className={classNames.cardsWrapper}>
-          {contentCards.map((item) => (
-            <div key={item.title} className={classNames.card}>
-              <div className={classNames.cardIconWrapper}>
-                <IllustrationCircle icon={item.iconName} size="large" />
-              </div>
-              <div className={classNames.cardContentWrapper}>
-                <Text as="p" variant="p1semi">
-                  {item.title}
-                </Text>
-                <Text as="p" variant="p3" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-                  {item.description}
-                </Text>
-              </div>
-            </div>
-          ))}
+          {isMobile ? (
+            <SlideCarousel
+              slidesPerPage={1}
+              slides={contentCards.map((item) => (
+                <MigrationLandingPageIlustration
+                  key={item.title}
+                  iconName={item.iconName}
+                  title={item.title}
+                  description={item.description}
+                />
+              ))}
+              withDots
+              dotsPosition={SliderCarouselDotsPosition.BOTTOM}
+              withAutoPlay
+              withButtons={false}
+            />
+          ) : (
+            contentCards.map((item) => (
+              <MigrationLandingPageIlustration
+                key={item.title}
+                iconName={item.iconName}
+                title={item.title}
+                description={item.description}
+              />
+            ))
+          )}
         </Card>
         <Card variant="cardSecondary">
           <div className={classNames.vaultsWrapper}>
@@ -258,9 +270,37 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
               )}
             </div>
             <div className={classNames.vaultsList}>
-              {networkFilteredVaults.map((vault) => (
-                <div key={getUniqueVaultId(vault)}>
+              {isMobile ? (
+                <SlideCarousel
+                  slidesPerPage={1}
+                  withDots
+                  dotsPosition={SliderCarouselDotsPosition.BOTTOM}
+                  withAutoPlay
+                  withButtons={false}
+                  slides={networkFilteredVaults.map((vault) => (
+                    <VaultCard
+                      key={getUniqueVaultId(vault)}
+                      {...vault}
+                      withHover
+                      selected={selectedVaultId === getUniqueVaultId(vault)}
+                      onClick={() => handleChangeVault(getUniqueVaultId(vault))}
+                      withTokenBonus={sumrNetApyConfig.withSumr}
+                      sumrPrice={estimatedSumrPrice}
+                      apy={
+                        vaultsApyByNetworkMap[
+                          `${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`
+                        ]
+                      }
+                      disabled={
+                        selectedPositionChainId !== subgraphNetworkToSDKId(vault.protocol.network)
+                      }
+                    />
+                  ))}
+                />
+              ) : (
+                networkFilteredVaults.map((vault) => (
                   <VaultCard
+                    key={getUniqueVaultId(vault)}
                     {...vault}
                     withHover
                     selected={selectedVaultId === getUniqueVaultId(vault)}
@@ -279,8 +319,8 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
                       selectedPositionChainId !== subgraphNetworkToSDKId(vault.protocol.network)
                     }
                   />
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
         </Card>

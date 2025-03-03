@@ -62,6 +62,7 @@ export { LoadingSpinner } from './components/molecules/LoadingSpinner/LoadingSpi
 export {
   SlideCarousel,
   SlideCarouselButtonPosition,
+  SliderCarouselDotsPosition,
 } from './components/molecules/SlideCarousel/SlideCarousel'
 export {
   LinkCard,

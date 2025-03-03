@@ -13,13 +13,20 @@ export enum SlideCarouselButtonPosition {
   ON_SIDES = 'ON_SIDES',
 }
 
+export enum SliderCarouselDotsPosition {
+  TOP = 'TOP',
+  BOTTOM = 'BOTTOM',
+}
+
 type PropType = {
   title?: ReactNode
   slides: ReactNode[]
   options?: EmblaOptionsType
   buttonPosition?: SlideCarouselButtonPosition
+  withButtons?: boolean
   slidesPerPage?: number
   withDots?: boolean
+  dotsPosition?: SliderCarouselDotsPosition
   withAutoPlay?: boolean
   portalElement?: HTMLDivElement | null
 }
@@ -29,8 +36,10 @@ export const SlideCarousel: FC<PropType> = ({
   options,
   title,
   buttonPosition = SlideCarouselButtonPosition.TOP,
+  withButtons = true,
   slidesPerPage = 2,
   withDots = false,
+  dotsPosition = SliderCarouselDotsPosition.TOP,
   withAutoPlay = false,
   portalElement,
 }) => {
@@ -106,7 +115,7 @@ export const SlideCarousel: FC<PropType> = ({
 
   return (
     <section className={`${classNames.embla} ${sectionClassName[slidesPerPage]}`}>
-      {buttonPosition === SlideCarouselButtonPosition.TOP && (
+      {buttonPosition === SlideCarouselButtonPosition.TOP && withButtons && (
         <div className={portalElement ? classNames.emblaControlsPortal : classNames.emblaControls}>
           {title}
           {portalElement ? createPortal(defaultControls, portalElement) : defaultControls}
@@ -114,16 +123,18 @@ export const SlideCarousel: FC<PropType> = ({
       )}
       {buttonPosition === SlideCarouselButtonPosition.ON_SIDES && (
         <div className={classNames.emblaButtonsOnSidesWrapper}>
-          <div className={classNames.emblaSideButton}>
-            <SlideCarouselButton
-              onClick={onPrevButtonClick}
-              disabled={prevBtnDisabled}
-              direction="left"
-              iconVariant="xs"
-            />
-          </div>
+          {withButtons && (
+            <div className={classNames.emblaSideButton}>
+              <SlideCarouselButton
+                onClick={onPrevButtonClick}
+                disabled={prevBtnDisabled}
+                direction="left"
+                iconVariant="xs"
+              />
+            </div>
+          )}
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {withDots && (
+            {withDots && dotsPosition === SliderCarouselDotsPosition.TOP && (
               <div className={classNames.dots}>
                 {slides.map((_, idx) => (
                   <div
@@ -143,14 +154,16 @@ export const SlideCarousel: FC<PropType> = ({
               </div>
             </div>
           </div>
-          <div className={classNames.emblaSideButton}>
-            <SlideCarouselButton
-              onClick={onNextButtonClick}
-              disabled={nextBtnDisabled}
-              direction="right"
-              iconVariant="xs"
-            />
-          </div>
+          {withButtons && (
+            <div className={classNames.emblaSideButton}>
+              <SlideCarouselButton
+                onClick={onNextButtonClick}
+                disabled={nextBtnDisabled}
+                direction="right"
+                iconVariant="xs"
+              />
+            </div>
+          )}
         </div>
       )}
       {buttonPosition === SlideCarouselButtonPosition.TOP && (
@@ -162,6 +175,16 @@ export const SlideCarousel: FC<PropType> = ({
               </div>
             ))}
           </div>
+        </div>
+      )}
+      {withDots && dotsPosition === SliderCarouselDotsPosition.BOTTOM && (
+        <div className={classNames.dotsBottom}>
+          {slides.map((_, idx) => (
+            <div
+              key={idx}
+              className={`${classNames.dot} ${idx === currentSnap ? classNames.dotActive : ''}`}
+            />
+          ))}
         </div>
       )}
     </section>
