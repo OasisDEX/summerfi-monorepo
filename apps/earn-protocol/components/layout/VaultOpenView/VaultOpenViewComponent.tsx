@@ -429,12 +429,14 @@ export const VaultOpenViewComponent = ({
             migratablePositions={migratablePositions}
             selectedPosition={selectedPosition}
             onSelectPosition={handleSelectPosition}
-            ctaLink={getMigrateVaultUrl({
-              network: vault.protocol.network,
-              vaultId: vault.id,
-              walletAddress: userWalletAddress,
-              selectedPosition,
-            })}
+            cta={{
+              link: getMigrateVaultUrl({
+                network: vault.protocol.network,
+                vaultId: vault.id,
+                walletAddress: userWalletAddress,
+                selectedPosition,
+              }),
+            }}
             migrationBestVaultApy={migrationBestVaultApy}
           />
         )

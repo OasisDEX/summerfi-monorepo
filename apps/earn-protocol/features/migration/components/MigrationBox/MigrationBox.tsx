@@ -16,7 +16,10 @@ interface MigrationBoxProps {
   onSelectPosition: (id: string) => void
   migratablePositions: MigratablePosition[]
   migrationBestVaultApy: MigrationEarningsDataByChainId
-  ctaLink?: string
+  cta?: {
+    link: string
+    disabled?: boolean
+  }
 }
 
 export const MigrationBox: FC<MigrationBoxProps> = ({
@@ -26,7 +29,7 @@ export const MigrationBox: FC<MigrationBoxProps> = ({
   onSelectPosition,
   migratablePositions,
   migrationBestVaultApy,
-  ctaLink,
+  cta,
 }) => {
   return (
     <Card
@@ -45,10 +48,14 @@ export const MigrationBox: FC<MigrationBoxProps> = ({
             />
           ))}
         </div>
-        {ctaLink && (
+        {cta && (
           <div className={classNames.migrationBoxCta}>
-            <Link href={ctaLink} style={{ width: '100%' }}>
-              <Button variant="primaryMediumColorful" style={{ width: '100%' }}>
+            <Link href={cta.link} style={{ width: '100%' }}>
+              <Button
+                variant="primaryMediumColorful"
+                style={{ width: '100%' }}
+                disabled={cta.disabled}
+              >
                 <WithArrow style={{ color: 'var(--color-text-primary)' }}>Migrate</WithArrow>
               </Button>
             </Link>

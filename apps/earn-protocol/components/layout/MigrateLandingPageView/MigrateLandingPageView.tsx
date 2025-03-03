@@ -194,6 +194,10 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
         selectedPosition={selectedPosition}
         onSelectPosition={handleSelectPosition}
         migrationBestVaultApy={migrationBestVaultApy}
+        cta={{
+          link: migrateVaultUrl,
+          disabled: !selectedVaultId,
+        }}
       />
       <div className={classNames.headerWrapper}>
         <TitleWithSelect
@@ -277,13 +281,6 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
                   />
                 </div>
               ))}
-            </div>
-            <div className={classNames.buttonWrapper}>
-              <Link href={migrateVaultUrl}>
-                <Button variant="primaryLarge" disabled={!selectedVaultId}>
-                  Migrate
-                </Button>
-              </Link>
             </div>
           </div>
         </Card>
