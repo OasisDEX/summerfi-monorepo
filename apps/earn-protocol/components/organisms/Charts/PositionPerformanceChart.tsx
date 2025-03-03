@@ -1,13 +1,12 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Card } from '@summerfi/app-earn-ui'
 import { type PerformanceChartData, type TimeframesType } from '@summerfi/app-types'
 
 import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
 import { PerformanceChart } from '@/components/organisms/Charts/components/Performance'
-import { POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
-import { useTimeframes } from '@/hooks/use-timeframes'
+import { allTimeframesAvailable, useTimeframes } from '@/hooks/use-timeframes'
 
 export type PositionPerformanceChartProps = {
   chartData: PerformanceChartData
@@ -18,37 +17,57 @@ export const PositionPerformanceChart = ({
   chartData,
   inputToken,
 }: PositionPerformanceChartProps) => {
+  const [showForecast, setShowForecast] = useState(false)
   const { timeframe, setTimeframe, timeframes } = useTimeframes({
-    chartData,
+    chartData: chartData.historic,
   })
 
   const parsedData = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!chartData) {
       return []
     }
 
-    return chartData.data[timeframe]
-  }, [timeframe, chartData])
+    if (showForecast) {
+      return chartData.forecast[timeframe]
+    }
 
-  const parsedDataWithCutoff =
-    !chartData || chartData.data['7d'].length <= POINTS_REQUIRED_FOR_CHART['7d'] ? [] : parsedData
+    return chartData.historic[timeframe]
+  }, [timeframe, chartData, showForecast])
+
+  const parsedTimeframes = useMemo(() => {
+    return showForecast ? allTimeframesAvailable : timeframes
+  }, [showForecast, timeframes])
+
+  useEffect(() => {
+    if (!parsedTimeframes[timeframe]) {
+      setTimeframe('7d')
+    }
+  }, [showForecast, parsedTimeframes, timeframe, setTimeframe])
 
   return (
     <Card
       style={{
         marginTop: 'var(--spacing-space-medium)',
         flexDirection: 'column',
-        alignItems: 'flex-end',
         paddingBottom: 0,
         position: 'relative',
       }}
     >
       <ChartHeader
-        timeframes={timeframes}
+        timeframes={parsedTimeframes}
         timeframe={timeframe}
+        checkboxValue={showForecast}
+        setCheckboxValue={(nextShowForecast) => setShowForecast(nextShowForecast)}
+        checkboxLabel="Forecast"
         setTimeframe={(nextTimeFrame) => setTimeframe(nextTimeFrame as TimeframesType)}
       />
-      <PerformanceChart timeframe={timeframe} data={parsedDataWithCutoff} inputToken={inputToken} />
+      <PerformanceChart
+        timeframe={timeframe}
+        data={parsedData}
+        inputToken={inputToken}
+        showForecast={showForecast}
+      />
     </Card>
   )
 }

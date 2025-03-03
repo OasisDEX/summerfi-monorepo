@@ -1,10 +1,9 @@
 import { RechartResponsiveWrapper } from '@summerfi/app-earn-ui'
-import { type TimeframesType } from '@summerfi/app-types'
+import { type PerformanceChartData, type TimeframesType } from '@summerfi/app-types'
 import dayjs from 'dayjs'
 import {
   Area,
   ComposedChart,
-  Customized,
   Legend,
   Line,
   ResponsiveContainer,
@@ -12,7 +11,6 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
-import { type CategoricalChartState } from 'recharts/types/chart/types'
 
 import { PerformanceLegend } from '@/components/organisms/Charts/components/PerformanceLegend'
 import { historicalPerformanceLabelMap } from '@/components/organisms/Charts/labels'
@@ -20,66 +18,15 @@ import { CHART_TIMESTAMP_FORMAT } from '@/constants/charts'
 import { formatChartCryptoValue } from '@/features/forecast/chart-formatters'
 
 export type PerformanceChartProps = {
-  data: unknown[]
+  data:
+    | PerformanceChartData['forecast'][TimeframesType]
+    | PerformanceChartData['historic'][TimeframesType]
   timeframe: TimeframesType
   inputToken: string
+  showForecast: boolean
 }
 
-const CustomizedCross = (props: CategoricalChartState) => {
-  const { formattedGraphicalItems, prevData, offset } = props
-
-  const meetingPointIndex = prevData?.findIndex(
-    (item) => 'bounds' in item && 'forecast' in item && 'netValue' in item,
-  )
-  const [firstSeries] = formattedGraphicalItems
-  const meetingPoint = firstSeries.props?.points[meetingPointIndex ?? 0] ?? { x: 0, y: 0 }
-  const textStyle = {
-    color: '#777576',
-    fontFamily: 'var(--font-inter)',
-    fontSize: '12px',
-    fontWeight: '600',
-  }
-
-  if (!meetingPoint) {
-    return null
-  }
-
-  return (
-    <>
-      {meetingPoint.x - 60 > 60 && (
-        // hides historic text if it's too close to the left edge
-        <text x={meetingPoint.x - 60} y={offset?.top ?? 5} style={textStyle}>
-          Historic
-        </text>
-      )}
-      <text x={meetingPoint.x + 15} y={offset?.top ?? 5} style={textStyle}>
-        Forecast
-      </text>
-      <line
-        // historic/forecast line
-        x1={meetingPoint.x}
-        x2={meetingPoint.x}
-        y1={(offset?.top ?? 5) - 10}
-        y2={`calc(100% - ${offset?.bottom}px)`}
-        stroke="#474747"
-        strokeWidth={2}
-        strokeDasharray="5 10"
-      />
-      <line
-        // forecast deposit line
-        x1={meetingPoint.x}
-        x2={`calc(100% - ${offset?.right}px)`}
-        y1={meetingPoint.y}
-        y2={meetingPoint.y}
-        stroke="#3D3D3D"
-        strokeWidth={2}
-        strokeDasharray="5 10"
-      />
-    </>
-  )
-}
-
-export const PerformanceChart = ({ data, inputToken }: PerformanceChartProps) => {
+export const PerformanceChart = ({ data, inputToken, showForecast }: PerformanceChartProps) => {
   return (
     <RechartResponsiveWrapper>
       <ResponsiveContainer width="100%" height="90%">
@@ -103,8 +50,8 @@ export const PerformanceChart = ({ data, inputToken }: PerformanceChartProps) =>
           <YAxis
             strokeWidth={0}
             tickFormatter={(label: string) => `${formatChartCryptoValue(Number(label))}`}
-            interval="preserveStartEnd"
             scale="linear"
+            width={80}
             domain={[
               (dataMin: number) => {
                 return Math.max(dataMin - 2, 0)
@@ -142,7 +89,6 @@ export const PerformanceChart = ({ data, inputToken }: PerformanceChartProps) =>
               letterSpacing: '-0.5px',
             }}
           />
-          <Customized component={<CustomizedCross />} />
           <Area
             type="natural"
             dataKey="bounds"
@@ -189,12 +135,12 @@ export const PerformanceChart = ({ data, inputToken }: PerformanceChartProps) =>
           />
           {data.length && (
             <Legend
-              content={<PerformanceLegend />}
+              content={<PerformanceLegend showForecast={showForecast} />}
               iconType="circle"
               iconSize={10}
               align="center"
               layout="horizontal"
-              height={60}
+              height={30}
               wrapperStyle={{ bottom: '-10px' }}
             />
           )}
