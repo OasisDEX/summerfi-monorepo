@@ -1,44 +1,82 @@
 .marketingPointsListHeaderWrapper {
   text-align: center;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: var(--spacing-space-small);
+  margin-bottom: var(--general-space-32);
 
-  @include media('<=s') {
-    padding: var(--spacing-space-small);
+  @include media('>s') {
+    max-width: 80%;
+    padding: 0;
   }
-}
 
-.marketingPointsListHeader {
-  font-weight: 600;
+  @include media('>l') {
+    max-width: 100%;
+  }
 }
 
 .marketingPointsListDetailsWrapper {
   display: grid;
-  grid-template-columns: 1fr 2fr;
   gap: var(--general-space-32);
-  padding: var(--spacing-space-2x-large) var(--spacing-space-2x-large) 0;
+  grid-template-columns: 1fr;
 
-  @include media('<=s') {
+  @include media('>s') {
     grid-template-columns: 1fr;
-    padding: var(--spacing-space-small);
+    padding: var(--spacing-space-x-large) var(--spacing-space-x-large) 0;
+  }
+
+  @include media('>xl') {
+    grid-template-columns: 1fr 2fr;
+    padding: var(--spacing-space-2x-large) var(--spacing-space-2x-large) 0;
   }
 }
 
 .marketingPointsListDetailsButtons {
   display: flex;
-  flex-direction: column;
-  justify-content: right;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @include media('>s') {
+    flex-direction: row;
+  }
+
+  @include media('>xl') {
+    flex-direction: column;
+    justify-content: right;
+    overflow-x: visible;
+  }
 }
 
 .marketingPointsListDetailsButton {
   cursor: pointer;
   border: none;
-  border-right: 1px solid #2b2b2b;
+  border-bottom: 1px solid #2b2b2b;
   padding: 20px;
   transition: border-right-color 0.2s ease;
   text-align: right;
   margin-right: 1px;
+  text-wrap: nowrap;
+  flex-shrink: 0;
 
   &:hover {
-    border-right: 1px solid #494949;
+    border-bottom: 1px solid #494949;
+  }
+
+  @include media('>xl') {
+    border-right: 1px solid #2b2b2b;
+    border-bottom: none;
+    text-wrap: initial;
+
+    &:hover {
+      border-right: 1px solid #494949;
+      border-bottom: none;
+    }
   }
 
   & > span {
@@ -47,11 +85,21 @@
 }
 
 .marketingPointsListDetailsButtonActive {
-  border-right: 2px solid #a859fa;
+  border-bottom: 2px solid #a859fa;
   margin-right: 0px;
 
   &:hover {
+    border-bottom: 2px solid #a859fa;
+  }
+
+  @include media('>xl') {
     border-right: 2px solid #a859fa;
+    border-bottom: none;
+    
+    &:hover {
+      border-right: 2px solid #a859fa;
+      border-bottom: none;
+    }
   }
 }
 

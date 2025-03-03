@@ -114,8 +114,9 @@ export const MockedLineChart = ({
           '1y': true,
           '3y': true,
         }}
-        compare={compare}
-        setCompare={setCompare}
+        checkboxValue={compare}
+        setCheckboxValue={(nextCompare) => setCompare(nextCompare)}
+        checkboxLabel="Compare to others"
         timeframe={timeframe}
         setTimeframe={(nextTimeFrame) => setTimeframe(nextTimeFrame as TimeframesType)}
       />

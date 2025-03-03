@@ -9,9 +9,7 @@ const redirectToProSummer = (pathname: string) => ({
 
 const nextConfig: NextConfig = {
   devIndicators: {
-    buildActivity: true,
-    buildActivityPosition: 'bottom-right',
-    appIsrStatus: true,
+    position: 'bottom-right',
   },
   experimental: {
     turbo: {},

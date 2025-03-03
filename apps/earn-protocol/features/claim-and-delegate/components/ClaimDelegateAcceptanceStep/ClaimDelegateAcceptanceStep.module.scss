@@ -16,7 +16,7 @@
     gap: var(--general-space-48);
   }
 
-  > ol {
+  >ol {
     li {
       margin-bottom: var(--general-space-20);
     }
@@ -62,11 +62,11 @@
     -webkit-overflow-scrolling: touch;
     margin-bottom: var(--general-space-16);
     padding-bottom: var(--general-space-8);
-    
+    scrollbar-width: none;
+
     &::-webkit-scrollbar {
       display: none;
     }
-    scrollbar-width: none;
   }
 }
 
@@ -118,7 +118,7 @@
   cursor: pointer;
   transition: color 0.2s ease;
   max-width: 200px;
-  text-overflow: ellipsis;  
+  text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }

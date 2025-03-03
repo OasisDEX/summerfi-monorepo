@@ -9,9 +9,7 @@ const redirectToProSummer = (pathname: string) => ({
 
 const nextConfig: NextConfig = {
   devIndicators: {
-    buildActivity: true,
-    buildActivityPosition: 'bottom-right',
-    appIsrStatus: true,
+    position: 'bottom-right',
   },
   experimental: {
     turbo: {},
@@ -74,6 +72,8 @@ const nextConfig: NextConfig = {
       // maker position redirects
       // matches to `/{number}`
       redirectToProSummer('/:makerPosition(\\d{1,})'),
+      // dsr position redirects
+      redirectToProSummer('/earn/dsr/:otherPosition*'),
     ])
   },
   images: {

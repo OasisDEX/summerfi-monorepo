@@ -41,7 +41,7 @@ export const NavigationActions = ({
           className={navigationActionsStyles.gradientOuterCircle}
         >
           <div className={navigationActionsStyles.gradientInnerCircle} />
-          <Icon iconName="menu" size={24} color="var(--earn-protocol-secondary-70)" />
+          <Icon iconName="menu" size={28} color="var(--earn-protocol-secondary-70)" />
         </Button>
         {configComponent}
       </div>

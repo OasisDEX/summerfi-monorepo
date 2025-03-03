@@ -24,7 +24,8 @@ export type ChartsDataTimeframes = {
 }
 
 export type PerformanceChartData = {
-  data: ChartsDataTimeframes
+  historic: ChartsDataTimeframes
+  forecast: ChartsDataTimeframes
 }
 
 export type HistoryChartData = {

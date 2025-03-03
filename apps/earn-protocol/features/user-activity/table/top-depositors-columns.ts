@@ -46,6 +46,14 @@ export const topDepositorsColumns = [
   },
 ]
 
+export const topDepositorsColumnsHiddenOnTablet = [
+  'change7d',
+  'projected1yrEarnings',
+  'numberOfDeposits',
+  'earningsStreak',
+  'balanceUSD',
+]
+
 export const topDepositorsColumnsHiddenOnMobile = [
   'strategy',
   'change7d',

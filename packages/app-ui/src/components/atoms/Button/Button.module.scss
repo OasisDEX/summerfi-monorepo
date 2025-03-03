@@ -164,3 +164,41 @@
   font-size: 12px;
   line-height: 16px;
 }
+
+.textPrimaryLarge,
+.textPrimaryMedium,
+.textPrimarySmall {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: var(--space-xs);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-primary-100);
+  transition: color 200ms;
+
+  &:enabled:hover {
+    color: var(--color-primary-60);
+  }
+
+  &:disabled {
+    color: var(--color-primary-30);
+    cursor: not-allowed;
+  }
+}
+
+.textPrimaryLarge {
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.textPrimaryMedium {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.textPrimarySmall {
+  font-size: 12px;
+  line-height: 16px;
+}

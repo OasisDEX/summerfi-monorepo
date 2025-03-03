@@ -8,8 +8,8 @@ export default () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        marginTop: 'var(--general-space-64)',
         marginBottom: 'var(--general-space-64)',
+        marginTop: 'var(--general-space-64)',
       }}
     >
       <Text

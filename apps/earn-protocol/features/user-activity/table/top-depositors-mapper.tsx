@@ -1,4 +1,5 @@
 import {
+  Button,
   getDisplayToken,
   getVaultPositionUrl,
   Icon,
@@ -15,6 +16,7 @@ import {
   formatAddress,
   formatCryptoBalance,
   formatDateDifference,
+  getHumanReadableFleetName,
   getPastTimestamp,
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
@@ -94,7 +96,11 @@ export const topDepositorsMapper = (
             <TableCellText>${formatCryptoBalance(balanceUSD)}</TableCellText>
           </div>
         ),
-        strategy: <TableCellText>{item.vault.name}</TableCellText>,
+        strategy: (
+          <TableCellText style={{ whiteSpace: 'nowrap' }}>
+            {getHumanReadableFleetName(item.vault.protocol.network, item.vault.name)}
+          </TableCellText>
+        ),
         change7d: (
           <TableCellText style={{ color: changeColor }}>
             {changeSign}
@@ -107,6 +113,7 @@ export const topDepositorsMapper = (
               display: 'flex',
               alignItems: 'center',
               gap: 'var(--spacing-space-2x-small)',
+              fontWeight: 600,
             }}
           >
             <Icon tokenName={asset} variant="s" />
@@ -125,14 +132,11 @@ export const topDepositorsMapper = (
               walletAddress: item.account.id,
             })}
           >
-            <WithArrow
-              as="p"
-              variant="p4semi"
-              style={{ color: 'var(--earn-protocol-primary-100)' }}
-              withStatic
-            >
-              View
-            </WithArrow>
+            <Button variant="textPrimaryMedium">
+              <WithArrow as="p" variant="p3semi" style={{ color: 'inherit' }} withStatic>
+                View
+              </WithArrow>
+            </Button>
           </Link>
         ),
       },

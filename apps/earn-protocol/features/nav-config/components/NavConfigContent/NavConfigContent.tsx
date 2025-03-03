@@ -178,13 +178,13 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
           }
         >
           {handleOpenClose && (
-            <Button variant="secondaryLarge" onClick={handleOpenClose}>
+            <Button variant="secondaryMedium" onClick={handleOpenClose}>
               <Icon iconName="close" size={12} style={{ opacity: 0.5 }} />
               Close
             </Button>
           )}
           <Button
-            variant="primaryLarge"
+            variant="primaryMedium"
             onClick={() => {
               setSumrNetApyConfig({
                 withSumr: sumrToggle,

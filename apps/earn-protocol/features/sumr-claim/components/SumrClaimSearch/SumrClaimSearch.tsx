@@ -149,7 +149,7 @@ export const SumrClaimSearch = () => {
     (!eligibleUser && inputValue.length > 0 && !isAddress(inputValue) && !!user)
 
   const sumrToClaim = isAggregatedRewardsLoading ? (
-    <SkeletonLine width="100px" height="30px" />
+    <SkeletonLine width="100px" height="35px" />
   ) : claimableAggregatedRewards?.total ? (
     // eslint-disable-next-line no-mixed-operators
     formatCryptoBalance(Number(claimableAggregatedRewards.total) / 10 ** 18)

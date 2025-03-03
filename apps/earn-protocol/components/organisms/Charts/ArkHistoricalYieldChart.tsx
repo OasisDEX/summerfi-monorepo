@@ -20,16 +20,16 @@ export const ArkHistoricalYieldChart = ({
   summerVaultName,
 }: ArkHistoricalYieldChartProps) => {
   const { timeframe, setTimeframe, timeframes } = useTimeframes({
-    chartData,
+    chartData: chartData.data,
   })
   const [compare, setCompare] = useState(false)
 
   const colors = {
     [`${summerVaultName}`]: '#FF49A4',
-    ...chartData?.colors,
+    ...chartData.colors,
   }
 
-  const dataNames = [summerVaultName, ...(compare ? chartData?.dataNames ?? [] : [])]
+  const dataNames = [summerVaultName, ...(compare ? chartData.dataNames ?? [] : [])]
 
   const parsedData = useMemo(() => {
     if (!chartData) {
@@ -61,8 +61,9 @@ export const ArkHistoricalYieldChart = ({
       {!parsedDataWithCutoff.length && <NotEnoughData daysToWait={DAYS_TO_WAIT_FOR_CHART} />}
       <ChartHeader
         timeframes={timeframes}
-        compare={compare}
-        setCompare={(nextCompare) => setCompare(nextCompare)}
+        checkboxValue={compare}
+        setCheckboxValue={(nextCompare) => setCompare(nextCompare)}
+        checkboxLabel="Compare to others"
         timeframe={timeframe}
         setTimeframe={(nextTimeFrame) => setTimeframe(nextTimeFrame as TimeframesType)}
       />

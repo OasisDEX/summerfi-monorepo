@@ -1,6 +1,12 @@
 .sumrRaysRewadsWrapper {
   margin-top: var(--general-space-128);
 
+  > div {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
   .sumrRaysRewardsContent {
     display: flex;
     flex-direction: column;
@@ -9,8 +15,16 @@
       display: flex;
       flex-direction: column;
       margin-bottom: var(--general-space-24);
-      padding: 52px;
+      padding: var(--general-space-32);
       width: fit-content;
+
+      @include media('>s') {
+        padding: var(--general-space-40);
+      }
+
+      @include media('>l') {
+        padding: var(--general-space-56);
+      }
 
       > h5 {
         margin-top: var(--general-space-24);

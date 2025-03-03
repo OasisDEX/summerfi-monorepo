@@ -45,7 +45,7 @@
   @include media('<=l') {
     display: flex;
     align-items: center;
-    gap: var(--general-space-8);
+    gap: var(--general-space-16);
   }
 }
 

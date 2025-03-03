@@ -5,8 +5,9 @@ import classNames from './ChartHeader.module.scss'
 
 type ChartHeaderProps = {
   title?: string
-  compare?: boolean
-  setCompare?: (value: boolean) => void
+  checkboxLabel?: string
+  checkboxValue?: boolean
+  setCheckboxValue?: (value: boolean) => void
   timeframe?: TimeframesType
   timeframes: TimeframesItem
   setTimeframe?: (timeframe: string) => void
@@ -14,20 +15,21 @@ type ChartHeaderProps = {
 
 export const ChartHeader = ({
   title,
-  compare = false,
+  checkboxLabel,
+  checkboxValue = false,
   timeframe,
-  setCompare,
+  setCheckboxValue,
   setTimeframe,
   timeframes,
 }: ChartHeaderProps) => {
   return (
     <div className={classNames.wrapper}>
       {title && <Text variant="p2semi">{title}</Text>}
-      {setCompare && (
+      {setCheckboxValue && checkboxLabel && (
         <ToggleButton
-          checked={compare}
-          title="Compare to others"
-          onChange={() => setCompare(!compare)}
+          checked={checkboxValue}
+          title={checkboxLabel}
+          onChange={() => setCheckboxValue(!checkboxValue)}
         />
       )}
       {timeframe && setTimeframe && (
