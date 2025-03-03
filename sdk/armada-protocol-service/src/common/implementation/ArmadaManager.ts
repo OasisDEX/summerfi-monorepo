@@ -628,7 +628,7 @@ export class ArmadaManager implements IArmadaManager {
       case 1: // Ethereum Mainnet
         return Address.createFromEthereum({ value: '0x275CA55c32258CE10870CA4e44c071aa14A2C836' })
       case 42161: // Arbitrum
-        return Address.createFromEthereum({ value: '0x23464155Bad85dfb9635b50CF789751E204805Ec' })
+        return Address.createFromEthereum({ value: '0x275CA55c32258CE10870CA4e44c071aa14A2C836' })
       case 8453: // Base
         return Address.createFromEthereum({ value: '0x275CA55c32258CE10870CA4e44c071aa14A2C836' })
       default:
