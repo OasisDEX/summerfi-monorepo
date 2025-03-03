@@ -20,6 +20,7 @@ import {
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import {
+  Address,
   calculatePriceImpact,
   getChainInfoByChainId,
   IAddress,
@@ -617,6 +618,30 @@ export class ArmadaManager implements IArmadaManager {
   /** PRIVATE */
 
   /**
+   * Returns the chain-specific Admirals Quarters address for unstake operations
+   * @param chainInfo The chain information
+   * @returns The appropriate Admirals Quarters address for the chain
+   */
+  private _getUnstakeAdmiralsQuartersAddress(chainInfo: ChainInfo): IAddress {
+    // Chain-specific overrides for unstake operations
+    switch (chainInfo.chainId) {
+      case 1: // Ethereum Mainnet
+        return Address.createFromEthereum({ value: '0x275CA55c32258CE10870CA4e44c071aa14A2C836' })
+      case 42161: // Arbitrum
+        return Address.createFromEthereum({ value: '0x23464155Bad85dfb9635b50CF789751E204805Ec' })
+      case 8453: // Base
+        return Address.createFromEthereum({ value: '0x275CA55c32258CE10870CA4e44c071aa14A2C836' })
+      default:
+        // For other chains, use the deployed address
+        return getDeployedContractAddress({
+          chainInfo: chainInfo,
+          contractCategory: 'core',
+          contractName: 'admiralsQuarters',
+        })
+    }
+  }
+
+  /**
    * Internal utility method to generate a deposit TX
    *
    * @param vaultId The vault for which the deposit is being made
@@ -822,7 +847,8 @@ export class ArmadaManager implements IArmadaManager {
       swapToToken: swapToToken.toString(),
     })
 
-    const admiralsQuartersAddress = getDeployedContractAddress({
+    // Default address
+    let admiralsQuartersAddress = getDeployedContractAddress({
       chainInfo: params.vaultId.chainInfo,
       contractCategory: 'core',
       contractName: 'admiralsQuarters',
@@ -929,6 +955,11 @@ export class ArmadaManager implements IArmadaManager {
           reminderShares: reminderShares.toString(),
         })
 
+        // For unstakeAndWithdraw operations, get the chain-specific address
+        const unstakeAdmiralsQuartersAddress = this._getUnstakeAdmiralsQuartersAddress(
+          params.vaultId.chainInfo,
+        )
+
         const [exitWithdrawMulticall, unstakeAndWithdrawCall, priceImpact] = await Promise.all([
           this._getExitWithdrawMulticall({
             vaultId: params.vaultId,
@@ -994,7 +1025,7 @@ export class ArmadaManager implements IArmadaManager {
         })
         transactions.push(
           createWithdrawTransaction({
-            target: admiralsQuartersAddress,
+            target: unstakeAdmiralsQuartersAddress, // Use the chain-specific address for transactions with unstakeAndWithdraw
             calldata: multicallCalldata,
             description: 'Withdraw Operations: ' + multicallOperations.join(', '),
             metadata: {
@@ -1015,6 +1046,11 @@ export class ArmadaManager implements IArmadaManager {
         outShares: requestedWithdrawShares.toString(),
       })
 
+      // Get the chain-specific address for unstakeAndWithdraw
+      const unstakeAdmiralsQuartersAddress = this._getUnstakeAdmiralsQuartersAddress(
+        params.vaultId.chainInfo,
+      )
+
       // withdraw all from staked tokens
       const [unstakeAndWithdrawCall, priceImpact] = await Promise.all([
         this._getUnstakeAndWithdrawCall({
@@ -1030,34 +1066,35 @@ export class ArmadaManager implements IArmadaManager {
       multicallArgs.push(unstakeAndWithdrawCall.calldata)
       multicallOperations.push('unstakeAndWithdraw ' + requestedWithdrawShares.toString())
 
-      if (shouldSwap) {
-        // approval to swap from user EOA
-        const [approveToSwapForUser, depositSwapWithdrawMulticall] = await Promise.all([
-          this._allowanceManager.getApproval({
-            chainInfo: params.vaultId.chainInfo,
-            spender: admiralsQuartersAddress,
-            amount: withdrawAmount,
-            owner: params.user.wallet.address,
-          }),
-          this._getDepositSwapWithdrawMulticall({
-            vaultId: params.vaultId,
-            slippage: params.slippage,
-            fromAmount: withdrawAmount,
-            toToken: swapToToken,
-            toEth,
-          }),
-        ])
-        if (approveToSwapForUser) {
-          transactions.push(approveToSwapForUser)
-          LoggingService.debug('approveToSwapForUser', {
-            approveToSwapForUser: withdrawAmount.toString(),
-          })
-        }
+      // TODO: Swap functionality disabled until dual Admirals Quarters system is removed
+      // if (shouldSwap) {
+      //   // approval to swap from user EOA
+      //   const [approveToSwapForUser, depositSwapWithdrawMulticall] = await Promise.all([
+      //     this._allowanceManager.getApproval({
+      //       chainInfo: params.vaultId.chainInfo,
+      //       spender: admiralsQuartersAddress,
+      //       amount: withdrawAmount,
+      //       owner: params.user.wallet.address,
+      //     }),
+      //     this._getDepositSwapWithdrawMulticall({
+      //       vaultId: params.vaultId,
+      //       slippage: params.slippage,
+      //       fromAmount: withdrawAmount,
+      //       toToken: swapToToken,
+      //       toEth,
+      //     }),
+      //   ])
+      //   if (approveToSwapForUser) {
+      //     transactions.push(approveToSwapForUser)
+      //     LoggingService.debug('approveToSwapForUser', {
+      //       approveToSwapForUser: withdrawAmount.toString(),
+      //     })
+      //   }
 
-        multicallArgs.push(...depositSwapWithdrawMulticall.multicallArgs)
-        multicallOperations.push(...depositSwapWithdrawMulticall.multicallOperations)
-        swapToAmount = depositSwapWithdrawMulticall.toAmount
-      }
+      //   multicallArgs.push(...depositSwapWithdrawMulticall.multicallArgs)
+      //   multicallOperations.push(...depositSwapWithdrawMulticall.multicallOperations)
+      //   swapToAmount = depositSwapWithdrawMulticall.toAmount
+      // }
       // compose multicall
       const multicallCalldata = encodeFunctionData({
         abi: AdmiralsQuartersAbi,
@@ -1067,7 +1104,7 @@ export class ArmadaManager implements IArmadaManager {
 
       transactions.push(
         createWithdrawTransaction({
-          target: admiralsQuartersAddress,
+          target: unstakeAdmiralsQuartersAddress, // Use the chain-specific address for transactions with unstakeAndWithdraw
           calldata: multicallCalldata,
           description: 'Withdraw Operations: ' + multicallOperations.join(', '),
           metadata: {
