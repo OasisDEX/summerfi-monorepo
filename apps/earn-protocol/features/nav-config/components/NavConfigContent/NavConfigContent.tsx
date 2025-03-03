@@ -1,19 +1,9 @@
 'use client'
 import { type ChangeEvent, type FC, useState } from 'react'
-import {
-  Badge,
-  Button,
-  Card,
-  Icon,
-  Input,
-  Text,
-  ToggleButton,
-  useMobileCheck,
-} from '@summerfi/app-earn-ui'
+import { Badge, Button, Card, Icon, Input, Text, ToggleButton } from '@summerfi/app-earn-ui'
 import { mapNumericInput } from '@summerfi/app-utils'
 import Link from 'next/link'
 
-import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
 
@@ -29,8 +19,6 @@ const marketCapOptions = ['150000000', '250000000', '500000000', '750000000']
 export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose }) => {
   const [sumrNetApyConfig, setSumrNetApyConfig] = useSumrNetApyConfig()
   const [slippageConfig, setSlippageConfig] = useSlippageConfig()
-  const { deviceType } = useDeviceType()
-  const { isMobile, isTablet } = useMobileCheck(deviceType)
 
   const [inputValue, setInputValue] = useState(mapNumericInput(sumrNetApyConfig.dilutedValuation))
   const [slippage, setSlippage] = useState(mapNumericInput(slippageConfig.slippage))

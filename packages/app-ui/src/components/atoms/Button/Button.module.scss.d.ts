@@ -8,6 +8,9 @@ export type Styles = {
   secondarySmall: string
   textLarge: string
   textMedium: string
+  textPrimaryLarge: string
+  textPrimaryMedium: string
+  textPrimarySmall: string
   textSmall: string
   unstyled: string
 }
