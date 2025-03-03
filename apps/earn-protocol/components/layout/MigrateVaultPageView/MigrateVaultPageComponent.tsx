@@ -134,7 +134,7 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
     walletAddress: walletAddress as Address,
   })
 
-  const { rawToTokenAmount } = useAmountWithSwap({
+  const { rawToTokenAmount, isQuoteLoading } = useAmountWithSwap({
     vault,
     vaultChainId,
     amountDisplay: migratablePosition.underlyingTokenAmount.amount,
@@ -147,6 +147,10 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
     },
     sdk,
     slippageConfig,
+    // Don't initialize quote loading as true if the vault and the position are the same token
+    defaultQuoteLoading:
+      vault.inputToken.symbol.toLowerCase() !==
+      migratablePosition.underlyingTokenAmount.token.symbol.toLowerCase(),
   })
 
   const resolvedAmountParsed = getResolvedForecastAmountParsed({
@@ -159,6 +163,7 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
     chainId: vaultChainId,
     amount: resolvedAmountParsed.toString(),
     isEarnApp: true,
+    disabled: isQuoteLoading,
   })
 
   const estimatedEarnings = useMemo(() => {
@@ -216,6 +221,7 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
         amount={resolvedAmountParsed}
         vaultApy={vaultApy}
         isLoadingForecast={isLoadingForecast}
+        isQuoteLoading={isQuoteLoading}
       />
     ),
     customHeader:

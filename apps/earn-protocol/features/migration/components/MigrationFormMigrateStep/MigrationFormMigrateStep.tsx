@@ -34,6 +34,7 @@ interface MigrationFormMigrateStepProps {
   state: MigrationState
   vaultApy?: number
   isLoadingForecast: boolean
+  isQuoteLoading: boolean
 }
 
 export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
@@ -46,6 +47,7 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
   state,
   vaultApy,
   isLoadingForecast,
+  isQuoteLoading,
 }) => {
   const {
     state: { slippageConfig },
@@ -83,6 +85,7 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
           type="from"
           chainId={migratablePosition.chainId}
           platformLogo="aave"
+          isLoading={isQuoteLoading}
         />
         <MigrationMiniCard
           description="Lazy Summer"
@@ -92,13 +95,13 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
           type="to"
           chainId={subgraphNetworkToSDKId(vault.protocol.network)}
           platformLogo="summer"
-          isLoading={isLoadingForecast}
+          isLoading={isLoadingForecast || isQuoteLoading}
         />
         <div className={classNames.migrationMiniCardIcon}>
           <Icon iconName="arrow_forward" size={20} />
         </div>
       </div>
-      {apyDiff < 0 && !isLoadingForecast && (
+      {apyDiff < 0 && !isLoadingForecast && !isQuoteLoading && (
         <Alert
           variant="warning"
           error="Although Lazy Summer current APY is lower than the previous strategy, in long term you will most likely earn more due to automated rebalancing mechanisms."
@@ -109,14 +112,18 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
         <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
           Total Deposited
         </Text>
-        <Text
-          as="p"
-          variant="p1semi"
-          style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}
-        >
-          {amount ? formatCryptoBalance(amount) : <SkeletonLine width="80px" height="14px" />}{' '}
-          {vault.inputToken.symbol}
-        </Text>
+        {isQuoteLoading ? (
+          <SkeletonLine width="80px" height="14px" />
+        ) : (
+          <Text
+            as="p"
+            variant="p1semi"
+            style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}
+          >
+            {amount ? formatCryptoBalance(amount) : <SkeletonLine width="80px" height="14px" />}{' '}
+            {vault.inputToken.symbol}
+          </Text>
+        )}
       </Card>
       <OrderInformation
         title="What's changing"
