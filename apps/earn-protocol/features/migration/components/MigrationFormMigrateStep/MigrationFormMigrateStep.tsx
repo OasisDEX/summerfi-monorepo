@@ -113,7 +113,11 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
           Total Deposited
         </Text>
         {isQuoteLoading ? (
-          <SkeletonLine width="80px" height="14px" />
+          <SkeletonLine
+            width="80px"
+            height="14px"
+            style={{ marginTop: '6px', marginBottom: 'var(--general-space-8)' }}
+          />
         ) : (
           <Text
             as="p"

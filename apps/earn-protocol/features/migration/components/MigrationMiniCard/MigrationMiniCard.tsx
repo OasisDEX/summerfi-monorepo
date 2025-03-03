@@ -77,7 +77,11 @@ export const MigrationMiniCard: FC<MigrationMiniCardProps> = ({
           Projected Earnings
         </Text>
         {isLoading ? (
-          <SkeletonLine width="80px" height="14px" style={{ marginTop: '6px' }} />
+          <SkeletonLine
+            width="80px"
+            height="14px"
+            style={{ marginTop: '6px', marginBottom: 'var(--general-space-8)' }}
+          />
         ) : (
           <Text as="p" variant="p1semi">
             {amount}{' '}
