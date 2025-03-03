@@ -73,6 +73,10 @@ export const getEarningsEstimationsMap = ({
     '30d': getPointInTime(dayjs().add(30, 'day').startOf('day')),
     '6m': getPointInTime(dayjs().add(6, 'month').startOf('day')),
     '1y': getPointInTime(dayjs().add(1, 'year').startOf('day')),
-    '3y': getPointInTime(dayjs().add(3, 'year').startOf('day')),
+    '3y': getPointInTime(
+      dayjs()
+        .add(3 * 365, 'day') // 3y in frontend is not exactly 3y in the backend...
+        .startOf('day'),
+    ),
   }
 }
