@@ -847,8 +847,7 @@ export class ArmadaManager implements IArmadaManager {
       swapToToken: swapToToken.toString(),
     })
 
-    // Default address
-    let admiralsQuartersAddress = getDeployedContractAddress({
+    const admiralsQuartersAddress = getDeployedContractAddress({
       chainInfo: params.vaultId.chainInfo,
       contractCategory: 'core',
       contractName: 'admiralsQuarters',
@@ -1066,35 +1065,34 @@ export class ArmadaManager implements IArmadaManager {
       multicallArgs.push(unstakeAndWithdrawCall.calldata)
       multicallOperations.push('unstakeAndWithdraw ' + requestedWithdrawShares.toString())
 
-      // TODO: Swap functionality disabled until dual Admirals Quarters system is removed
-      // if (shouldSwap) {
-      //   // approval to swap from user EOA
-      //   const [approveToSwapForUser, depositSwapWithdrawMulticall] = await Promise.all([
-      //     this._allowanceManager.getApproval({
-      //       chainInfo: params.vaultId.chainInfo,
-      //       spender: admiralsQuartersAddress,
-      //       amount: withdrawAmount,
-      //       owner: params.user.wallet.address,
-      //     }),
-      //     this._getDepositSwapWithdrawMulticall({
-      //       vaultId: params.vaultId,
-      //       slippage: params.slippage,
-      //       fromAmount: withdrawAmount,
-      //       toToken: swapToToken,
-      //       toEth,
-      //     }),
-      //   ])
-      //   if (approveToSwapForUser) {
-      //     transactions.push(approveToSwapForUser)
-      //     LoggingService.debug('approveToSwapForUser', {
-      //       approveToSwapForUser: withdrawAmount.toString(),
-      //     })
-      //   }
+      if (shouldSwap) {
+        // approval to swap from user EOA
+        const [approveToSwapForUser, depositSwapWithdrawMulticall] = await Promise.all([
+          this._allowanceManager.getApproval({
+            chainInfo: params.vaultId.chainInfo,
+            spender: admiralsQuartersAddress,
+            amount: withdrawAmount,
+            owner: params.user.wallet.address,
+          }),
+          this._getDepositSwapWithdrawMulticall({
+            vaultId: params.vaultId,
+            slippage: params.slippage,
+            fromAmount: withdrawAmount,
+            toToken: swapToToken,
+            toEth,
+          }),
+        ])
+        if (approveToSwapForUser) {
+          transactions.push(approveToSwapForUser)
+          LoggingService.debug('approveToSwapForUser', {
+            approveToSwapForUser: withdrawAmount.toString(),
+          })
+        }
 
-      //   multicallArgs.push(...depositSwapWithdrawMulticall.multicallArgs)
-      //   multicallOperations.push(...depositSwapWithdrawMulticall.multicallOperations)
-      //   swapToAmount = depositSwapWithdrawMulticall.toAmount
-      // }
+        multicallArgs.push(...depositSwapWithdrawMulticall.multicallArgs)
+        multicallOperations.push(...depositSwapWithdrawMulticall.multicallOperations)
+        swapToAmount = depositSwapWithdrawMulticall.toAmount
+      }
       // compose multicall
       const multicallCalldata = encodeFunctionData({
         abi: AdmiralsQuartersAbi,
