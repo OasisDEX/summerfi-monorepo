@@ -4,6 +4,7 @@ import {
   type SDKVaultishType,
   type SDKVaultType,
   type TokenSymbolsList,
+  TransactionAction,
 } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import type BigNumber from 'bignumber.js'
@@ -38,6 +39,7 @@ type ControlsDepositWithdrawProps = {
   forecastSummaryMap?: EarningsEstimationsMap
   isSimulation?: boolean
   isOpen?: boolean
+  transactionType?: TransactionAction
 }
 
 export const ControlsDepositWithdraw = ({
@@ -60,6 +62,7 @@ export const ControlsDepositWithdraw = ({
   onFocus,
   onBlur,
   manualSetAmount,
+  transactionType,
 }: ControlsDepositWithdrawProps) => {
   return (
     <div className={styles.depositViewWrapper}>
@@ -80,7 +83,7 @@ export const ControlsDepositWithdraw = ({
           // Deposit token      Balance: 10 USDC
           // some token         deposit amount
           // also i'm removing the `-` because its always showing up on landing page
-          label: 'Deposit token',
+          label: transactionType === TransactionAction.DEPOSIT ? 'Deposit token' : 'Withdraw token',
           value: tokenBalanceLoading ? (
             <SkeletonLine width={60} height={10} />
           ) : tokenBalance ? (
