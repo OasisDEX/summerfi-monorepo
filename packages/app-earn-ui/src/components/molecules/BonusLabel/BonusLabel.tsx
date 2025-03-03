@@ -6,6 +6,8 @@ import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { Text } from '@/components/atoms/Text/Text'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 
+import styles from './BonusLabel.module.scss'
+
 export const BonusLabel = ({
   tokenBonus,
   apy,
@@ -58,7 +60,13 @@ export const BonusLabel = ({
               </Text>
             ) : (
               <span style={{ fontWeight: 600 }}>
-                {apy ? `APY ${apy}` : ''}
+                {apy ? (
+                  <>
+                    <span className={styles.apyLabel}>APY</span> {apy}
+                  </>
+                ) : (
+                  ''
+                )}
                 {tokenBonus && withTokenBonus && apy ? <>&nbsp;+&nbsp;</> : ''}
                 {tokenBonus && withTokenBonus ? <>{tokenBonus}&nbsp;SUMR</> : ''}
                 {rays ? `${rays} RAYS` : ''}

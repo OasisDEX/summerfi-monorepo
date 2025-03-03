@@ -42,7 +42,7 @@ export interface SidebarProps {
   footnote?: ReactNode
   error?: string | ReactNode
   asDesktopOnly?: boolean
-  isMobile?: boolean
+  isMobileOrTablet?: boolean
   goBackAction?: () => void
   drawerOptions?:
     | {
@@ -71,7 +71,7 @@ export const Sidebar: FC<SidebarProps> = ({
   footnote,
   error,
   asDesktopOnly = false,
-  isMobile,
+  isMobileOrTablet,
   drawerOptions = { slideFrom: 'bottom' },
   customHeader,
   customHeaderStyles,
@@ -113,7 +113,7 @@ export const Sidebar: FC<SidebarProps> = ({
           [sidebarClassNames.centerTitle]: !titleTabs && !!goBackAction,
         })}
         onClick={() => {
-          if (isMobile)
+          if (isMobileOrTablet)
             setIsOpen((prev) => {
               handleIsDrawerOpen?.(!prev)
 
@@ -271,7 +271,7 @@ export const Sidebar: FC<SidebarProps> = ({
     sidebarWrapped
   ) : (
     <>
-      {isMobile ? (
+      {isMobileOrTablet ? (
         <MobileDrawer
           isOpen={isOpenResolved}
           onClose={() => setIsOpen(false)}
