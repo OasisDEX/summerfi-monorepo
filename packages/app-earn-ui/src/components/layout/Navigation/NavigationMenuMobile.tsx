@@ -20,6 +20,7 @@ type NavigationMobileMenuType = {
   logo: string
   signUpComponent?: ReactNode
   walletConnectionComponent?: ReactNode
+  secondaryWalletConnectionComponent?: ReactNode
 }
 
 export const NavigationMenuMobile = ({
@@ -29,33 +30,39 @@ export const NavigationMenuMobile = ({
   logo,
   signUpComponent,
   walletConnectionComponent,
+  secondaryWalletConnectionComponent,
 }: NavigationMobileMenuType) => {
   return (
     <>
       <div className={navigationMenuMobileStyles.topBar}>
         <img src={logo} alt="Summer.fi" className={navigationMenuMobileStyles.logoSmall} />
-        <Button
-          variant="secondarySmall"
-          onClick={toggleMobileMenu}
-          className={navigationMenuMobileStyles.gradientOuterCircle}
-        >
-          <div className={navigationMenuMobileStyles.gradientInnerCircle} />
-          <Icon iconName="close" size={11} color="var(--earn-protocol-secondary-70)" />
-        </Button>
+        <div className={navigationMenuMobileStyles.actionsWrapper}>
+          {signUpComponent}
+          {secondaryWalletConnectionComponent}
+          <Button
+            variant="secondarySmall"
+            onClick={toggleMobileMenu}
+            className={navigationMenuMobileStyles.gradientOuterCircle}
+          >
+            <div className={navigationMenuMobileStyles.gradientInnerCircle} />
+            <Icon iconName="close" size={11} color="var(--earn-protocol-secondary-70)" />
+          </Button>
+        </div>
       </div>
       <div className={navigationMenuMobileStyles.spacer} />
       <div className={navigationMenuMobileStyles.linksListWrapper}>
         <div className={navigationMenuMobileStyles.linksList}>
           <Link href={INTERNAL_LINKS.summerPro} target="_blank">
-            <Text
-              as="p"
-              variant="p2semi"
+            <Button
+              variant="textSecondaryLarge"
+              disabled={false}
+              style={{ padding: `0.25em 0.375em 0.25em 0px` }}
               className={clsx({
                 [navigationMenuMobileStyles.activeLink]: currentPath === INTERNAL_LINKS.summerPro,
               })}
             >
               Summer.fi Pro
-            </Text>
+            </Button>
           </Link>
           {links?.map((link) =>
             link.link ? (
@@ -67,19 +74,18 @@ export const NavigationMenuMobile = ({
                 })}
                 prefetch={Boolean(link.disabled)}
               >
-                <Text
-                  as="p"
-                  variant="p2semi"
-                  style={{
-                    opacity: link.disabled ? '0.5' : '1',
-                  }}
+                <Button
+                  variant="textSecondaryLarge"
+                  disabled={link.disabled}
+                  style={{ padding: `0.25em 0.375em 0.25em 0px` }}
                 >
                   {link.label}
-                </Text>
+                </Button>
               </Link>
             ) : (
               <Fragment key={`Mobile_${link.id}`}>
                 <Expander
+                  expanderWrapperStyles={{ padding: 0 }}
                   title={
                     <Text
                       as="p"
@@ -110,10 +116,12 @@ export const NavigationMenuMobile = ({
             ),
           )}
         </div>
-      </div>
-      {signUpComponent}
-      <div onClick={toggleMobileMenu} className={navigationMenuMobileStyles.buttonWrapper}>
-        {walletConnectionComponent}
+        <div
+          onClick={toggleMobileMenu}
+          className={navigationMenuMobileStyles.walletConnectionComponent}
+        >
+          {walletConnectionComponent}
+        </div>
       </div>
     </>
   )

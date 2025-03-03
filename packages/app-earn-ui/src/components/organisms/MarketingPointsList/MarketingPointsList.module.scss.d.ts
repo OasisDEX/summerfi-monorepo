@@ -7,7 +7,6 @@ export type Styles = {
   marketingPointsListDetailsContent: string
   marketingPointsListDetailsContentFadingOut: string
   marketingPointsListDetailsWrapper: string
-  marketingPointsListHeader: string
   marketingPointsListHeaderWrapper: string
 }
 

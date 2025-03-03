@@ -1,7 +1,11 @@
 .sumrGovernanceListWrapper {
   display: flex;
-  padding: var(--general-space-32);
+  padding: var(--general-space-8);
   flex-direction: column;
+
+  @include media('>l') {
+    padding: var(--general-space-64);
+  }
 
   .sumrGovernanceContentWrapper {
     display: flex;

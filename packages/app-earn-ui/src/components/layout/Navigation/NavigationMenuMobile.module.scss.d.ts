@@ -1,4 +1,5 @@
 export type Styles = {
+  actionsWrapper: string
   activeLink: string
   buttonWrapper: string
   gradientInnerCircle: string
@@ -8,6 +9,7 @@ export type Styles = {
   logoSmall: string
   spacer: string
   topBar: string
+  walletConnectionComponent: string
 }
 
 export type ClassNames = keyof Styles

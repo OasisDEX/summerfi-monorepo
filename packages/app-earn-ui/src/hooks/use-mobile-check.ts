@@ -45,8 +45,8 @@ export const useMobileCheck = (deviceType?: DeviceType): ScreenInfo => {
 
     const handleResize = () => {
       setScreenInfo({
-        isMobile: window.innerWidth <= 768,
-        isTablet: window.innerWidth > 768 && window.innerWidth <= 1024,
+        isMobile: window.innerWidth <= 720,
+        isTablet: window.innerWidth >= 721 && window.innerWidth <= 1024,
         width: window.innerWidth,
         height: window.innerHeight,
       })

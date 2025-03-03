@@ -30,20 +30,13 @@ export const FaqSection: FC<FaqSectionProps> = ({
   faqSectionClassName,
 }) => {
   return (
-    <div className={clsx(faqSectionStyles.faqGeneralWrapper, wrapperClassName)}>
+    <div className={clsx(wrapperClassName, faqSectionStyles.faqGeneralWrapper)}>
       <div className={clsx(headerClassName)}>
         <Text variant={headerVariant}>FAQ</Text>
       </div>
       <div className={clsx(faqSectionStyles.faqSectionBlockWrapper, faqSectionClassName)}>
         {data.map(({ title, content }) => (
-          <Expander
-            expanderButtonStyles={{
-              fontWeight: 600,
-              fontSize: 'var(--font-size-p1)',
-            }}
-            title={title}
-            key={title}
-          >
+          <Expander title={title} key={title}>
             <ExpanderContent>{content}</ExpanderContent>
           </Expander>
         ))}

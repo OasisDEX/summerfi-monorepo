@@ -31,6 +31,10 @@ export const NavigationWrapper: FC = () => {
         isEarnApp: true,
       })}
       walletConnectionComponent={<WalletLabel />}
+      mobileWalletConnectionComponents={{
+        primary: <WalletLabel variant="logoutOnly" />,
+        secondary: <WalletLabel variant="addressOnly" />,
+      }}
       configComponent={<NavConfig />}
       onLogoClick={() => {
         // because router will use base path...

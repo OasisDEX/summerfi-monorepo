@@ -19,7 +19,6 @@ interface DialProps {
   trackWidth?: 1 | 2 | 3 | 4
   icon?: IconNamesList
   iconSize?: number
-  formatter?: (value: number) => string
   dialContainerStyle?: CSSProperties
   dialContainerClassName?: string
   gradientRotation?: number
@@ -27,12 +26,12 @@ interface DialProps {
   // and we want to show 100% filled dial even though
   // value is 0
   showGradientWhenZeros?: boolean
+  formatter?: (value: number) => string
 }
 
 export const Dial: FC<DialProps> = ({
   rawValue,
   value,
-  formatter,
   max,
   trackWidth = 3,
   subtext,
@@ -42,6 +41,7 @@ export const Dial: FC<DialProps> = ({
   dialContainerClassName,
   gradientRotation = 0,
   showGradientWhenZeros = false,
+  formatter,
 }) => {
   const normalizedValue = Math.min(Math.max(value, 0), max)
   const progress = (normalizedValue / max) * 100

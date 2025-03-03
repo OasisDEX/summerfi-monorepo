@@ -46,7 +46,7 @@ export const SumrNotTransferable = () => {
     <div className={classNames.sumrNotTransferableWrapper}>
       <div className={classNames.header}>
         <Text as="h2" variant="h2">
-          Non-Transferable, A Feature Not a Bug
+          Non-Transferable. A feature not a bug
         </Text>
         <Text as="p" variant="p1" style={{ maxWidth: '800px', margin: '0 auto' }}>
           Until at least July 1st 2025, $SUMR will not be tradeable, it can only be earned and used

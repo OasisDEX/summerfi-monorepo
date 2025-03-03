@@ -45,7 +45,7 @@ export const SumrMultipleWaysToEarn = () => {
 
   return (
     <div className={classNames.sumrMultipleWaysToEarnWrapper}>
-      <Text as="h2" variant="h2">
+      <Text as="h2" variant="h2" className={classNames.title}>
         Multiple ways to earn $SUMR
       </Text>
       <div className={classNames.boxes}>

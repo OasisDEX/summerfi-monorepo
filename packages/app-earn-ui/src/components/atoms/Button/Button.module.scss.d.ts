@@ -12,6 +12,12 @@ export type Styles = {
   secondaryMediumActive: string
   secondarySmall: string
   secondarySmallActive: string
+  textPrimaryLarge: string
+  textPrimaryMedium: string
+  textPrimarySmall: string
+  textSecondaryLarge: string
+  textSecondaryMedium: string
+  textSecondarySmall: string
   unstyled: string
 }
 

@@ -11,7 +11,7 @@ import withArrowStyles from '@/components/atoms/WithArrow/WithArrow.module.scss'
 export function WithArrow({
   children,
   gap = 2,
-  variant = 'p3',
+  variant = 'p3semi',
   style,
   as,
   className,
@@ -88,7 +88,7 @@ export function WithArrow({
         )}
       </Text>
       {withStatic && (
-        <Icon iconName="arrow_increase" color="var(--earn-protocol-primary-100)" variant="xs" />
+        <Icon iconName="share" variant="xs" style={{ marginLeft: 'var(--general-space-4)' }} />
       )}
     </span>
   )

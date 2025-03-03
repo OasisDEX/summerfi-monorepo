@@ -201,6 +201,7 @@ export const icons = {
   sdai_circle_color: customLazy(() => import('./icons/sdai_circle_color.svg?react')),
   search_icon: customLazy(() => import('./icons/search_icon.svg?react')),
   send: customLazy(() => import('./icons/send.svg?react')),
+  share: customLazy(() => import('./icons/share_v2.svg?react')),
   sign_out: customLazy(() => import('./icons/sign_out.svg?react')),
   sky: customLazy(() => import('./icons/sky.svg?react')),
   snx: customLazy(() => import('./icons/snx.svg?react')),

@@ -44,7 +44,7 @@ export const SumrFundamentalUtility = () => {
 
   return (
     <div className={classNames.sumrFundamentalUtilityWrapper}>
-      <Text as="h2" variant="h2">
+      <Text as="h2" variant="h2" className={classNames.title}>
         Fundamental utility and Incentive aligned ecosystem{' '}
       </Text>
       <div className={classNames.boxes}>

@@ -24,7 +24,7 @@ export const Expander: FC<ExpanderProps> = ({
   expanderButtonStyles = {},
   disabled = false,
   expanderWrapperStyles = {},
-  iconVariant = 'xs',
+  iconVariant = 'xxs',
   onExpand,
 }) => {
   const [isAnimating, setIsAnimating] = useState(false)
@@ -46,7 +46,13 @@ export const Expander: FC<ExpanderProps> = ({
       <button
         className={styles.expanderButton}
         onClick={toggleExpand}
-        style={{ textAlign: 'left', ...expanderButtonStyles }}
+        style={{
+          textAlign: 'left',
+          fontWeight: 600,
+          // Used to align padding between landing and earn app
+          padding: '.25em .375em',
+          ...expanderButtonStyles,
+        }}
         disabled={disabled}
       >
         {title}

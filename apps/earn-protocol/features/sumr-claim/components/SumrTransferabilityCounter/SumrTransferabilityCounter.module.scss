@@ -7,6 +7,7 @@
 
   .heading {
     margin-bottom: var(--general-space-16);
+    text-align: center;
   }
 
   .dialsWrapper {
@@ -23,13 +24,32 @@
       justify-content: center;
 
       .dialCustomSize {
-        width: 68px;
-        height: 68px;
+        width: 50px;
+        height: 50px;
+
+        @include media('>s') {
+          width: 68px;
+          height: 68px;
+        }
       }
 
       p {
-        margin-top: var(--general-space-12);
+        margin-top: var(--general-space-8);
         color: var(--earn-protocol-secondary-60);
+        font-size: 0.75rem;
+
+        @include media('>m') {
+          margin-top: var(--general-space-12);
+          font-size: 1rem;
+        }
+      }
+
+      h5 {
+        font-size: 14px;
+
+        @include media('>s') {
+          font-size: var(--font-size-h5);
+        }
       }
     }
   }

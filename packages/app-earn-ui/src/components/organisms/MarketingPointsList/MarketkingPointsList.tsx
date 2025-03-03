@@ -40,9 +40,7 @@ export const MarketingPointsList: FC<MarketkingPointsListProps> = ({
     <div>
       {header && (
         <div className={classNames.marketingPointsListHeaderWrapper}>
-          <Text variant="h2" className={classNames.marketingPointsListHeader}>
-            {header}
-          </Text>
+          <Text variant="h2">{header}</Text>
         </div>
       )}
       <div className={clsx(classNames.marketingPointsListDetailsWrapper, detailsWrapperClassName)}>
@@ -55,7 +53,10 @@ export const MarketingPointsList: FC<MarketkingPointsListProps> = ({
                 [classNames.marketingPointsListDetailsButtonActive]: activeSection === sectionKey,
               })}
             >
-              <Text variant={activeSection === sectionKey ? 'p1semiColorful' : 'p1semi'}>
+              <Text
+                variant={activeSection === sectionKey ? 'p1semiColorful' : 'p1semi'}
+                style={{ whiteSpace: 'nowrap' }}
+              >
                 {data[sectionKey].title}
               </Text>
             </Button>

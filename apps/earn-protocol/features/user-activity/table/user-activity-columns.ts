@@ -37,3 +37,4 @@ export const userActivityColumns = [
 ]
 
 export const userActivityColumnsHiddenOnMobile = ['strategy', 'timestamp', 'balance', 'position']
+export const userActivityColumnsHiddenOnTablet = ['timestamp', 'balance']
