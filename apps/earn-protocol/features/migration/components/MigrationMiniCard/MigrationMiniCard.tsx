@@ -1,5 +1,11 @@
 import { type FC } from 'react'
-import { Card, type CardVariant, Text, TokenWithNetworkIcon } from '@summerfi/app-earn-ui'
+import {
+  Card,
+  type CardVariant,
+  SkeletonLine,
+  Text,
+  TokenWithNetworkIcon,
+} from '@summerfi/app-earn-ui'
 import { type PlatformLogo, type SDKChainId, type TokenSymbolsList } from '@summerfi/app-types'
 import { capitalize } from 'lodash-es'
 import Image from 'next/image'
@@ -16,6 +22,7 @@ interface MigrationMiniCardProps {
   chainId: SDKChainId
   type: 'from' | 'to'
   platformLogo: PlatformLogo
+  isLoading?: boolean
 }
 
 const variantMap: { [key in MigrationMiniCardProps['type']]: CardVariant } = {
@@ -31,6 +38,7 @@ export const MigrationMiniCard: FC<MigrationMiniCardProps> = ({
   type,
   platformLogo,
   chainId,
+  isLoading,
 }) => {
   return (
     <Card
@@ -68,14 +76,26 @@ export const MigrationMiniCard: FC<MigrationMiniCardProps> = ({
         <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
           Projected Earnings
         </Text>
-        <Text as="p" variant="p1semi">
-          {amount}{' '}
-          {change && (
-            <Text as="span" variant="p4semi" style={{ color: 'var(--earn-protocol-success-100)' }}>
-              {change}
-            </Text>
-          )}
-        </Text>
+        {isLoading ? (
+          <SkeletonLine width="80px" height="14px" style={{ marginTop: '6px' }} />
+        ) : (
+          <Text as="p" variant="p1semi">
+            {amount}{' '}
+            {change && (
+              <Text
+                as="span"
+                variant="p4semi"
+                style={{
+                  color: change.includes('-')
+                    ? 'var(--earn-protocol-warning-100)'
+                    : 'var(--earn-protocol-success-100)',
+                }}
+              >
+                {change}
+              </Text>
+            )}
+          </Text>
+        )}
       </div>
     </Card>
   )

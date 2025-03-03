@@ -10,6 +10,7 @@ import { mapMigrationResponse } from '@/features/migration/helpers/map-migration
 
 export type MigratablePosition = ArmadaMigratablePosition & {
   chainId: SDKChainId
+  apy: string
 }
 
 /**

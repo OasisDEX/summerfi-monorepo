@@ -26,6 +26,8 @@ export const mapMigrationResponse = (
       .map((position) => ({
         ...position,
         chainId: chainInfo.chainId,
+        // TO BE PROVIDED FROM SDK
+        apy: '0.05',
       }))
       .sort((a, b) => Number(b.usdValue.amount) - Number(a.usdValue.amount)),
   )

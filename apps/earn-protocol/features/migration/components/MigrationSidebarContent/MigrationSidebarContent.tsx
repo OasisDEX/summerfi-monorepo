@@ -16,6 +16,7 @@ interface MigrationSidebarContentProps {
   transactionFeeLoading: boolean
   transactionFee?: string
   vaultApy?: number
+  isLoadingForecast: boolean
 }
 
 export const MigrationSidebarContent: FC<MigrationSidebarContentProps> = ({
@@ -27,6 +28,7 @@ export const MigrationSidebarContent: FC<MigrationSidebarContentProps> = ({
   transactionFeeLoading,
   transactionFee,
   vaultApy,
+  isLoadingForecast,
 }) => {
   return (
     <>
@@ -42,6 +44,7 @@ export const MigrationSidebarContent: FC<MigrationSidebarContentProps> = ({
           transactionFeeLoading={transactionFeeLoading}
           transactionFee={transactionFee}
           vaultApy={vaultApy}
+          isLoadingForecast={isLoadingForecast}
         />
       )}
       {state.step === MigrationSteps.COMPLETED && (

@@ -215,6 +215,7 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
         transactionFee={transactionFee}
         amount={resolvedAmountParsed}
         vaultApy={vaultApy}
+        isLoadingForecast={isLoadingForecast}
       />
     ),
     customHeader:

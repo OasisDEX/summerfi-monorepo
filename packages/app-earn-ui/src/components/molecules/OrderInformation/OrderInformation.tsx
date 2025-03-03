@@ -57,6 +57,9 @@ export const OrderInformation: FC<OrderInformationProps> = ({ title, items, wrap
                     fontWeight: 600,
                     padding: '0',
                   }}
+                  expanderChevronStyles={{
+                    marginLeft: 'var(--general-space-8)',
+                  }}
                   iconVariant="xxs"
                 >
                   <ul

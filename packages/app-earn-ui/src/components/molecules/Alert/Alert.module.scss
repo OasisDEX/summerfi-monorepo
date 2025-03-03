@@ -1,27 +1,26 @@
 .alertWrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--spacing-space-medium);
-    width: 100%;
-    padding: var(--spacing-space-small);
-    background: var(--color-surface-subtle);
-    border-radius: var(--radius-medium);
-    padding-right: var(--spacing-space-large);
-  }
-  
-  .content {
-    display: grid;
-    grid-template-columns: 24px 1fr;
-    align-items: normal;
-    gap: var(--spacing-space-medium);
-    width: 100%;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-space-medium);
+  width: 100%;
+  padding: var(--spacing-space-small);
+  background: var(--color-surface-subtle);
+  border-radius: var(--radius-medium);
+  padding-right: var(--spacing-space-large);
+}
 
-  .alertTextWrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--spacing-space-small);
-  }
+.content {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  align-items: center;
+  gap: var(--spacing-space-medium);
+  width: 100%;
+}
 
+.alertTextWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-space-small);
+}

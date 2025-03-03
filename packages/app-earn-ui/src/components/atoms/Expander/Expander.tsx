@@ -11,6 +11,7 @@ interface ExpanderProps {
   defaultExpanded?: boolean
   children: ReactNode
   expanderButtonStyles?: CSSProperties
+  expanderChevronStyles?: CSSProperties
   disabled?: boolean
   expanderWrapperStyles?: CSSProperties
   iconVariant?: IconVariant
@@ -22,6 +23,7 @@ export const Expander: FC<ExpanderProps> = ({
   defaultExpanded = false,
   children,
   expanderButtonStyles = {},
+  expanderChevronStyles = {},
   disabled = false,
   expanderWrapperStyles = {},
   iconVariant = 'xs',
@@ -50,7 +52,7 @@ export const Expander: FC<ExpanderProps> = ({
         disabled={disabled}
       >
         {title}
-        <div className={styles.chevron}>
+        <div className={styles.chevron} style={expanderChevronStyles}>
           <Icon
             iconName={isExpanded ? 'chevron_up' : 'chevron_down'}
             variant={iconVariant}
