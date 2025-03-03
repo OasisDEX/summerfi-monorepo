@@ -11,7 +11,7 @@ import dayjs from 'dayjs'
 import { type GetPositionHistoryReturnType } from '@/app/server-handlers/position-history'
 import { CHART_TIMESTAMP_FORMAT } from '@/constants/charts'
 
-const mergePositionHistoryAndForecast = (
+const preparePositionHistoryAndForecast = (
   positionHistory: GetPositionHistoryReturnType,
   positionForecast: ForecastData,
   position?: IArmadaPosition,
@@ -22,23 +22,21 @@ const mergePositionHistoryAndForecast = (
   const nowStartOfDay = now.startOf('day')
   const nowStartOfWeek = now.startOf('week')
 
-  // should be ~2/3 of the whole timeframe
-  const thresholdHistorical7d = nowStartOfHour.subtract(Math.ceil(7 * (2 / 3)), 'day').unix()
-  const thresholdHistorical30d = nowStartOfHour.subtract(Math.ceil(30 * (2 / 3)), 'day').unix()
-  const thresholdHistorical90d = nowStartOfDay.subtract(Math.ceil(90 * (2 / 3)), 'day').unix()
-  const thresholdHistorical6m = nowStartOfDay.subtract(Math.ceil(6 * (2 / 3)), 'month').unix()
-  const thresholdHistorical1y = nowStartOfDay.subtract(Math.ceil(1 * (2 / 3)), 'year').unix()
-  const thresholdHistorical3y = nowStartOfWeek.subtract(Math.ceil(3 * (2 / 3)), 'year').unix()
+  const thresholdHistorical7d = nowStartOfHour.subtract(7, 'day').unix()
+  const thresholdHistorical30d = nowStartOfHour.subtract(30, 'day').unix()
+  const thresholdHistorical90d = nowStartOfDay.subtract(90, 'day').unix()
+  const thresholdHistorical6m = nowStartOfDay.subtract(6, 'month').unix()
+  const thresholdHistorical1y = nowStartOfDay.subtract(1, 'year').unix()
+  const thresholdHistorical3y = nowStartOfWeek.subtract(3, 'year').unix()
 
-  // should be ~1/3 of the whole timeframe
-  const thresholdForecast7d = nowStartOfHour.add(Math.ceil(7 * (1 / 3)), 'day').unix()
-  const thresholdForecast30d = nowStartOfHour.add(Math.ceil(30 * (1 / 3)), 'day').unix()
-  const thresholdForecast90d = nowStartOfDay.add(Math.ceil(90 * (1 / 3)), 'day').unix()
-  const thresholdForecast6m = nowStartOfDay.add(Math.ceil(6 * (1 / 3)), 'month').unix()
-  const thresholdForecast1y = nowStartOfDay.add(Math.ceil(1 * (1 / 3)), 'year').unix()
-  const thresholdForecast3y = nowStartOfWeek.add(Math.ceil(3 * (1 / 3)), 'year').unix()
+  const thresholdForecast7d = nowStartOfHour.add(7, 'day').unix()
+  const thresholdForecast30d = nowStartOfHour.add(30, 'day').unix()
+  const thresholdForecast90d = nowStartOfDay.add(90, 'day').unix()
+  const thresholdForecast6m = nowStartOfDay.add(6, 'month').unix()
+  const thresholdForecast1y = nowStartOfDay.add(1, 'year').unix()
+  const thresholdForecast3y = nowStartOfWeek.add(3, 'year').unix()
 
-  const chartBaseData: ChartsDataTimeframes = {
+  const chartHistoricData: ChartsDataTimeframes = {
     '7d': [], // hourly
     '30d': [], // hourly
     '90d': [], // daily
@@ -47,10 +45,13 @@ const mergePositionHistoryAndForecast = (
     '3y': [], // weekly
   }
 
-  const forecastCutoff = {
-    hourly: 240,
-    daily: 122,
-    weekly: 52,
+  const chartForecastData: ChartsDataTimeframes = {
+    '7d': [], // hourly
+    '30d': [], // hourly
+    '90d': [], // daily
+    '6m': [], // daily
+    '1y': [], // daily
+    '3y': [], // weekly
   }
 
   const pointsNeededToDisplayAnyGraph = 1 // 1 hours
@@ -63,12 +64,142 @@ const mergePositionHistoryAndForecast = (
           vault,
         })
       : false
+
   const { dailyPositionHistory, hourlyPositionHistory, weeklyPositionHistory } =
     positionHistory.positionHistory.position ?? {}
 
+  // forecast hourly points
+  positionForecast.dataPoints.hourly.forEach((point, pointIndex) => {
+    const timestamp = dayjs(point.timestamp, 'YYYY-MM-DD HH:mm:ss').startOf('hour')
+    const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT)
+
+    if (pointIndex === 0) {
+      // first point in the forecast must be merged with
+      // the last point in the history
+      const last7dPoint = chartForecastData['7d'][chartForecastData['7d'].length - 1]
+      const last30dPoint = chartForecastData['30d'][chartForecastData['30d'].length - 1]
+
+      chartForecastData['7d'][chartForecastData['7d'].length - 1] = {
+        ...last7dPoint,
+        forecast: point.forecast,
+        bounds: point.bounds,
+      }
+      chartForecastData['30d'][chartForecastData['30d'].length - 1] = {
+        ...last30dPoint,
+        forecast: point.forecast,
+        bounds: point.bounds,
+      }
+
+      return
+    }
+
+    if (timestamp.unix() <= thresholdForecast7d) {
+      chartForecastData['7d'].push({
+        timestamp: timestamp.unix(),
+        timestampParsed,
+        forecast: point.forecast,
+        bounds: point.bounds,
+      })
+    }
+    if (timestamp.unix() <= thresholdForecast30d) {
+      chartForecastData['30d'].push({
+        timestamp: timestamp.unix(),
+        timestampParsed,
+        forecast: point.forecast,
+        bounds: point.bounds,
+      })
+    }
+  })
+
+  // forecast daily points
+  positionForecast.dataPoints.daily.forEach((point, pointIndex) => {
+    const timestamp = dayjs(point.timestamp, 'YYYY-MM-DD HH:mm:ss').startOf('day')
+    const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT)
+
+    if (pointIndex === 0) {
+      // first point in the forecast must be merged with
+      // the last point in the history
+      const last90dPoint = chartForecastData['90d'][chartForecastData['90d'].length - 1]
+      const last6mPoint = chartForecastData['6m'][chartForecastData['6m'].length - 1]
+      const last1yPoint = chartForecastData['1y'][chartForecastData['1y'].length - 1]
+
+      chartForecastData['90d'][chartForecastData['90d'].length - 1] = {
+        ...last90dPoint,
+        forecast: point.forecast,
+        bounds: point.bounds,
+      }
+      chartForecastData['6m'][chartForecastData['6m'].length - 1] = {
+        ...last6mPoint,
+        forecast: point.forecast,
+        bounds: point.bounds,
+      }
+      chartForecastData['1y'][chartForecastData['1y'].length - 1] = {
+        ...last1yPoint,
+        forecast: point.forecast,
+        bounds: point.bounds,
+      }
+
+      return
+    }
+    if (timestamp.unix() <= thresholdForecast90d) {
+      chartForecastData['90d'].push({
+        timestamp: timestamp.unix(),
+        timestampParsed,
+        forecast: point.forecast,
+        bounds: point.bounds,
+      })
+    }
+    if (timestamp.unix() <= thresholdForecast6m) {
+      chartForecastData['6m'].push({
+        timestamp: timestamp.unix(),
+        timestampParsed,
+        forecast: point.forecast,
+        bounds: point.bounds,
+      })
+    }
+    if (timestamp.unix() <= thresholdForecast1y) {
+      chartForecastData['1y'].push({
+        timestamp: timestamp.unix(),
+        timestampParsed,
+        forecast: point.forecast,
+        bounds: point.bounds,
+      })
+    }
+  })
+
+  // forecast weekly points
+  positionForecast.dataPoints.weekly.forEach((point, pointIndex) => {
+    const timestamp = dayjs(point.timestamp, 'YYYY-MM-DD HH:mm:ss').startOf('week')
+    const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT)
+
+    if (pointIndex === 0) {
+      // first point in the forecast must be merged with
+      // the last point in the history
+      const last3yPoint = chartForecastData['3y'][chartForecastData['3y'].length - 1]
+
+      chartForecastData['3y'][chartForecastData['3y'].length - 1] = {
+        ...last3yPoint,
+        forecast: point.forecast,
+        bounds: point.bounds,
+      }
+
+      return
+    }
+
+    if (timestamp.unix() <= thresholdForecast3y) {
+      chartForecastData['3y'].push({
+        timestamp: timestamp.unix(),
+        timestampParsed,
+        forecast: point.forecast,
+        bounds: point.bounds,
+      })
+    }
+  })
+
   if ((hourlyPositionHistory?.length ?? 0) < pointsNeededToDisplayAnyGraph) {
     return {
-      data: chartBaseData,
+      historic: chartHistoricData,
+      forecast: chartForecastData,
     }
   }
 
@@ -96,10 +227,10 @@ const mergePositionHistoryAndForecast = (
     }
 
     if (timestampUnix >= thresholdHistorical7d) {
-      chartBaseData['7d'].push(newPointData)
+      chartHistoricData['7d'].push(newPointData)
     }
     if (timestampUnix >= thresholdHistorical30d) {
-      chartBaseData['30d'].push(newPointData)
+      chartHistoricData['30d'].push(newPointData)
     }
   })
 
@@ -127,13 +258,13 @@ const mergePositionHistoryAndForecast = (
     }
 
     if (timestampUnix >= thresholdHistorical90d) {
-      chartBaseData['90d'].push(newPointData)
+      chartHistoricData['90d'].push(newPointData)
     }
     if (timestampUnix >= thresholdHistorical6m) {
-      chartBaseData['6m'].push(newPointData)
+      chartHistoricData['6m'].push(newPointData)
     }
     if (timestampUnix >= thresholdHistorical1y) {
-      chartBaseData['1y'].push(newPointData)
+      chartHistoricData['1y'].push(newPointData)
     }
   })
 
@@ -161,144 +292,13 @@ const mergePositionHistoryAndForecast = (
     }
 
     if (timestampUnix >= thresholdHistorical3y) {
-      chartBaseData['3y'].push(newPointData)
+      chartHistoricData['3y'].push(newPointData)
     }
   })
-
-  // forecast hourly points
-  positionForecast.dataPoints.hourly
-    .slice(0, forecastCutoff.hourly)
-    .forEach((point, pointIndex) => {
-      const timestamp = dayjs(point.timestamp, 'YYYY-MM-DD HH:mm:ss').startOf('hour')
-      const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT)
-
-      if (pointIndex === 0) {
-        // first point in the forecast must be merged with
-        // the last point in the history
-        const last7dPoint = chartBaseData['7d'][chartBaseData['7d'].length - 1]
-        const last30dPoint = chartBaseData['30d'][chartBaseData['30d'].length - 1]
-
-        chartBaseData['7d'][chartBaseData['7d'].length - 1] = {
-          ...last7dPoint,
-          forecast: point.forecast,
-          bounds: point.bounds,
-        }
-        chartBaseData['30d'][chartBaseData['30d'].length - 1] = {
-          ...last30dPoint,
-          forecast: point.forecast,
-          bounds: point.bounds,
-        }
-
-        return
-      }
-
-      if (timestamp.unix() <= thresholdForecast7d) {
-        chartBaseData['7d'].push({
-          timestamp: timestamp.unix(),
-          timestampParsed,
-          forecast: point.forecast,
-          bounds: point.bounds,
-        })
-      }
-      if (timestamp.unix() <= thresholdForecast30d) {
-        chartBaseData['30d'].push({
-          timestamp: timestamp.unix(),
-          timestampParsed,
-          forecast: point.forecast,
-          bounds: point.bounds,
-        })
-      }
-    })
-
-  // forecast daily points
-  positionForecast.dataPoints.daily.slice(0, forecastCutoff.daily).forEach((point, pointIndex) => {
-    const timestamp = dayjs(point.timestamp, 'YYYY-MM-DD HH:mm:ss').startOf('day')
-    const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT)
-
-    if (pointIndex === 0) {
-      // first point in the forecast must be merged with
-      // the last point in the history
-      const last90dPoint = chartBaseData['90d'][chartBaseData['90d'].length - 1]
-      const last6mPoint = chartBaseData['6m'][chartBaseData['6m'].length - 1]
-      const last1yPoint = chartBaseData['1y'][chartBaseData['1y'].length - 1]
-
-      chartBaseData['90d'][chartBaseData['90d'].length - 1] = {
-        ...last90dPoint,
-        forecast: point.forecast,
-        bounds: point.bounds,
-      }
-      chartBaseData['6m'][chartBaseData['6m'].length - 1] = {
-        ...last6mPoint,
-        forecast: point.forecast,
-        bounds: point.bounds,
-      }
-      chartBaseData['1y'][chartBaseData['1y'].length - 1] = {
-        ...last1yPoint,
-        forecast: point.forecast,
-        bounds: point.bounds,
-      }
-
-      return
-    }
-    if (timestamp.unix() <= thresholdForecast90d) {
-      chartBaseData['90d'].push({
-        timestamp: timestamp.unix(),
-        timestampParsed,
-        forecast: point.forecast,
-        bounds: point.bounds,
-      })
-    }
-    if (timestamp.unix() <= thresholdForecast6m) {
-      chartBaseData['6m'].push({
-        timestamp: timestamp.unix(),
-        timestampParsed,
-        forecast: point.forecast,
-        bounds: point.bounds,
-      })
-    }
-    if (timestamp.unix() <= thresholdForecast1y) {
-      chartBaseData['1y'].push({
-        timestamp: timestamp.unix(),
-        timestampParsed,
-        forecast: point.forecast,
-        bounds: point.bounds,
-      })
-    }
-  })
-
-  // forecast weekly points
-  positionForecast.dataPoints.weekly
-    .slice(0, forecastCutoff.weekly)
-    .forEach((point, pointIndex) => {
-      const timestamp = dayjs(point.timestamp, 'YYYY-MM-DD HH:mm:ss').startOf('week')
-      const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT)
-
-      if (pointIndex === 0) {
-        // first point in the forecast must be merged with
-        // the last point in the history
-        const last3yPoint = chartBaseData['3y'][chartBaseData['3y'].length - 1]
-
-        chartBaseData['3y'][chartBaseData['3y'].length - 1] = {
-          ...last3yPoint,
-          forecast: point.forecast,
-          bounds: point.bounds,
-        }
-
-        return
-      }
-
-      if (timestamp.unix() <= thresholdForecast3y) {
-        chartBaseData['3y'].push({
-          timestamp: timestamp.unix(),
-          timestampParsed,
-          forecast: point.forecast,
-          bounds: point.bounds,
-        })
-      }
-    })
 
   return {
-    data: chartBaseData,
+    historic: chartHistoricData,
+    forecast: chartForecastData,
   }
 }
 
@@ -313,5 +313,5 @@ export const getPositionPerformanceData = ({
   positionForecast: ForecastData
   position?: IArmadaPosition
 }) => {
-  return mergePositionHistoryAndForecast(positionHistory, positionForecast, position, vault)
+  return preparePositionHistoryAndForecast(positionHistory, positionForecast, position, vault)
 }

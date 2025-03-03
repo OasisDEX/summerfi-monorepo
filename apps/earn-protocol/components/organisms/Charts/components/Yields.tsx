@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { RechartResponsiveWrapper } from '@summerfi/app-earn-ui'
-import { type TimeframesType } from '@summerfi/app-types'
+import { type ArksHistoricalChartData, type TimeframesType } from '@summerfi/app-types'
 import {
   Area,
   ComposedChart,
@@ -15,7 +15,7 @@ import {
 import { formatChartPercentageValue } from '@/features/forecast/chart-formatters'
 
 type YieldsChartProps = {
-  data: unknown[]
+  data: ArksHistoricalChartData['data'][TimeframesType]
   dataNames: string[]
   colors: { [key: string]: string }
   timeframe: TimeframesType

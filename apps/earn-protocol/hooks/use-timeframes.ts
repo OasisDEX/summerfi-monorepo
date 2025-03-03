@@ -7,19 +7,22 @@ import {
 
 import { POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
 
-export const useTimeframes = ({
-  chartData,
-}: {
-  chartData?: {
-    data: ChartsDataTimeframes
-  }
-}) => {
+export const allTimeframesAvailable = {
+  '7d': true,
+  '30d': true,
+  '90d': true,
+  '6m': true,
+  '1y': true,
+  '3y': true,
+}
+
+export const useTimeframes = ({ chartData }: { chartData?: ChartsDataTimeframes }) => {
   const timeframes = useMemo(() => {
     if (!chartData) {
       return {} as TimeframesItem
     }
 
-    return Object.keys(chartData.data).reduce<TimeframesItem>(
+    return Object.keys(chartData).reduce<TimeframesItem>(
       (acc, key) => {
         const keyTyped = key as keyof ChartsDataTimeframes
 
@@ -34,7 +37,7 @@ export const useTimeframes = ({
         return {
           ...acc,
           [keyTyped]:
-            chartData.data[keyTyped].filter((dataPoint) => {
+            chartData[keyTyped].filter((dataPoint) => {
               // we dont want to include forecast data
               return !dataPoint.forecast
             }).length > POINTS_REQUIRED_FOR_CHART[keyTyped],
