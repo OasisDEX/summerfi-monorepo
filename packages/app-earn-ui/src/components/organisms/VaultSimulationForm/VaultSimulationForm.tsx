@@ -143,6 +143,8 @@ export const VaultSimulationForm = ({
                 isLoadingForecast={isLoadingForecast}
               />
             ) : undefined,
+          // customHeaderStyles:
+          //   !isDrawerOpen && isMobile ? { padding: 'var(--general-space-12) 0' } : undefined,
           handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
           primaryButton:
             positionExists && userWalletAddress

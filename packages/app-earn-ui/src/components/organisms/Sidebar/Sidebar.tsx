@@ -189,7 +189,11 @@ export const Sidebar: FC<SidebarProps> = ({
         )}
       </div>
 
-      <div className={sidebarClassNames.sidebarHeaderSpacer} />
+      <div
+        className={clsx(sidebarClassNames.sidebarHeaderSpacer, {
+          [sidebarClassNames.hidden]: !isOpenResolved,
+        })}
+      />
       <div className={sidebarClassNames.sidebarContent}>{content}</div>
       <div
         style={{

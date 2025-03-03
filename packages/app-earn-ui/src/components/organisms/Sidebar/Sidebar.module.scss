@@ -29,7 +29,11 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: var(--general-space-20) 0;
+  padding: 0 0 var(--general-space-12) 0;
+
+  @include media('>s') {
+    padding: var(--general-space-20) 0;
+  }
 
   &.centerTitle {
     justify-content: center;
@@ -74,6 +78,14 @@
   width: calc(100% + 48px);
   margin-left: -24px;
   margin-right: -24px;
+
+  &.hidden {
+    visibility: hidden;
+
+    @include media('>s') {
+      visibility: visible;
+    }
+  }
 }
 
 .sidebarFootnoteWrapper {
