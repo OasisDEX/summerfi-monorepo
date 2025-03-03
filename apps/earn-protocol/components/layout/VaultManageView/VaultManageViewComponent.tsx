@@ -97,10 +97,11 @@ export const VaultManageViewComponent = ({
 
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
 
-  const { handleTokenSelectionChange, selectedTokenOption, tokenOptions } = useTokenSelector({
-    vault,
-    chainId: vaultChainId,
-  })
+  const { handleTokenSelectionChange, selectedTokenOption, tokenOptions, tokenOptionsNoSwap } =
+    useTokenSelector({
+      vault,
+      chainId: vaultChainId,
+    })
 
   const {
     vaultToken,
@@ -283,7 +284,8 @@ export const VaultManageViewComponent = ({
       amountDisplayUSD={amountDisplayUSDWithSwap}
       handleAmountChange={handleAmountChange}
       handleDropdownChange={handleTokenSelectionChange}
-      options={tokenOptions}
+      transactionType={transactionType}
+      options={transactionType === TransactionAction.WITHDRAW ? tokenOptionsNoSwap : tokenOptions}
       dropdownValue={selectedTokenOption}
       onFocus={onFocus}
       onBlur={onBlur}

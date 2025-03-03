@@ -27,7 +27,7 @@ type TokenSelectorProps = {
  * @returns {Function} return.handleTokenSelectionChange - The function to handle changes in token selection.
  */
 export const useTokenSelector = ({ vault, chainId }: TokenSelectorProps) => {
-  const tokenOptions = useMemo(() => {
+  const tokenOptionsNoSwap = useMemo(() => {
     const options: DropdownOption[] = [
       ...[vault.inputToken.symbol].map((symbol) => ({
         tokenSymbol: symbol as TokenSymbolsList,
@@ -36,6 +36,11 @@ export const useTokenSelector = ({ vault, chainId }: TokenSelectorProps) => {
       })),
     ]
 
+    return options
+  }, [vault.inputToken.symbol])
+
+  const tokenOptions = useMemo(() => {
+    const options: DropdownOption[] = [...tokenOptionsNoSwap]
     const tokens = getSwapTokens(chainId)
 
     tokens.forEach((token) => {
@@ -49,7 +54,7 @@ export const useTokenSelector = ({ vault, chainId }: TokenSelectorProps) => {
     })
 
     return options
-  }, [vault.inputToken.symbol, chainId])
+  }, [vault.inputToken.symbol, chainId, tokenOptionsNoSwap])
 
   const [selectedTokenOption, setSelectedTokenOption] = useState(() => {
     if (tokenOptions.length === 0) {
@@ -91,6 +96,7 @@ export const useTokenSelector = ({ vault, chainId }: TokenSelectorProps) => {
 
   return {
     tokenOptions,
+    tokenOptionsNoSwap,
     selectedTokenOption,
     handleTokenSelectionChange,
   }
