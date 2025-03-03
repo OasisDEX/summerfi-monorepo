@@ -30,6 +30,7 @@ import { type Address } from 'viem'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { VaultOpenViewDetails } from '@/components/layout/VaultOpenView/VaultOpenViewDetails'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
+import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { MigrationSidebarContent } from '@/features/migration/components/MigrationSidebarContent/MigrationSidebarContent'
 import { getMigrationFormTitle } from '@/features/migration/helpers/get-migration-form-title'
@@ -104,7 +105,7 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
     dispatch({ type: 'update-step', payload: initialStep })
   }
 
-  const { migrateTransaction, approveTransaction } = useMigrateTransaction({
+  const { migrateTransaction, approveTransaction, txHashes, removeTxHash } = useMigrateTransaction({
     onMigrateSuccess: () => {
       dispatch({ type: 'update-migrate-status', payload: MigrationTxStatuses.COMPLETED })
       dispatch({ type: 'update-step', payload: MigrationSteps.COMPLETED })
@@ -124,6 +125,7 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
     positionId: migratablePosition.id,
     slippage: Number(slippageConfig.slippage),
     handleInitialStep,
+    step: state.step,
   })
 
   const { transactionFee, loading: transactionFeeLoading } = useGasEstimation({
@@ -235,14 +237,14 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
     },
     footnote: (
       <>
-        {/* {txHashes.map((transactionData) => (
+        {txHashes.map((transactionData) => (
           <TransactionHashPill
             key={transactionData.hash}
             transactionData={transactionData}
             removeTxHash={removeTxHash}
             chainId={vaultChainId}
           />
-        ))} */}
+        ))}
       </>
     ),
     error: getMigrationSidebarError({ state }),
