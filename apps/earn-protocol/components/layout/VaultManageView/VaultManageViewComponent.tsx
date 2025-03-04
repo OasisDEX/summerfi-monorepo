@@ -114,10 +114,11 @@ export const VaultManageViewComponent = ({
     setSelectedPosition(id)
   }
 
-  const { handleTokenSelectionChange, selectedTokenOption, tokenOptions } = useTokenSelector({
-    vault,
-    chainId: vaultChainId,
-  })
+  const { handleTokenSelectionChange, selectedTokenOption, tokenOptions, baseTokenOptions } =
+    useTokenSelector({
+      vault,
+      chainId: vaultChainId,
+    })
 
   const {
     vaultToken,
@@ -305,7 +306,7 @@ export const VaultManageViewComponent = ({
       handleAmountChange={handleAmountChange}
       handleDropdownChange={handleTokenSelectionChange}
       transactionType={transactionType}
-      options={tokenOptions}
+      options={transactionType === TransactionAction.WITHDRAW ? baseTokenOptions : tokenOptions}
       dropdownValue={selectedTokenOption}
       onFocus={onFocus}
       onBlur={onBlur}
