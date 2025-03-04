@@ -83,7 +83,8 @@ export const ControlsDepositWithdraw = ({
           // Deposit token      Balance: 10 USDC
           // some token         deposit amount
           // also i'm removing the `-` because its always showing up on landing page
-          label: transactionType === TransactionAction.DEPOSIT ? 'Deposit token' : 'Withdraw token',
+          label:
+            transactionType === TransactionAction.WITHDRAW ? 'Withdraw token' : 'Deposit token',
           value: tokenBalanceLoading ? (
             <SkeletonLine width={60} height={10} />
           ) : tokenBalance ? (
