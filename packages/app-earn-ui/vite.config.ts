@@ -56,7 +56,7 @@ export default defineConfig(({ mode }) => {
         scss: {
           // OB breakpoints: 531, 744, 1025, 1279
           additionalData: `
-          @import './node_modules/include-media/dist/_include-media.scss';
+          @import 'include-media/dist/_include-media.scss';
           $breakpoints: (
             s: 531px,
             m: 744px,
