@@ -110,37 +110,29 @@ export const VaultOpenViewComponent = ({
     useState<MigrationEarningsDataByChainId>()
 
   useEffect(() => {
-    const fetchMigratablePositions = async () => {
-      try {
-        const promises = sdkSupportedChains.map((chainId) => {
-          const chainInfo = getChainInfoByChainId(chainId)
+    const fetchMigratablePositions = async (walletAddress: string) => {
+      const promises = sdkSupportedChains.map((chainId) => {
+        const chainInfo = getChainInfoByChainId(chainId)
 
-          return sdk.getMigratablePositions({ walletAddress: userWalletAddress, chainInfo })
-        })
+        return sdk.getMigratablePositions({ walletAddress, chainInfo })
+      })
 
-        const positions = await Promise.all(promises)
+      const positions = await Promise.all(promises)
 
-        const mappedPositions = mapMigrationResponse(positions)
+      const mappedPositions = mapMigrationResponse(positions)
 
-        const mappedBestVaultApy = getMigrationBestVaultApy({
-          migratablePositions: mappedPositions,
-          vaultsWithConfig: vaults,
-          vaultsApyByNetworkMap: vaultsApyRaw,
-        })
+      const mappedBestVaultApy = getMigrationBestVaultApy({
+        migratablePositions: mappedPositions,
+        vaultsWithConfig: vaults,
+        vaultsApyByNetworkMap: vaultsApyRaw,
+      })
 
-        setMigratablePositions(mappedPositions)
-        setMigrationBestVaultApy(mappedBestVaultApy)
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('Error fetching migratable positions:', error)
-
-        setMigratablePositions([])
-        setMigrationBestVaultApy(undefined)
-      }
+      setMigratablePositions(mappedPositions)
+      setMigrationBestVaultApy(mappedBestVaultApy)
     }
 
     if (userWalletAddress) {
-      fetchMigratablePositions()
+      fetchMigratablePositions(userWalletAddress)
     }
   }, [userWalletAddress, sdk, vaults, vaultsApyRaw])
 
