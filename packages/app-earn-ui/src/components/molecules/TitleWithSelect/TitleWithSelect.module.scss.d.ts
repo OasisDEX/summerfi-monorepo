@@ -1,4 +1,5 @@
 export type Styles = {
+  refreshButton: string
   refreshing: string
   rotate: string
   titleLine: string
