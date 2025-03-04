@@ -25,7 +25,7 @@
     "@summerfi/configuration-provider-common": "workspace:*",
     "@summerfi/testing-utils": "workspace:*",
     "@inquirer/prompts": "^4.3.3",
-    "typescript": "^5.6.2"
+    "typescript": "^5.7.3"
   },
   "devDependencies": {
     "@ethersproject/providers": "^5.7.2",
