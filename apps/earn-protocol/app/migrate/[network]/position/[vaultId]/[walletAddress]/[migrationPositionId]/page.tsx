@@ -43,7 +43,7 @@ const MigrateVaultPage = async ({ params }: MigrateVaultPageProps) => {
   const migrationsEnabled = !!systemConfig.features?.Migrations
 
   if (!migrationsEnabled) {
-    redirect(`/`)
+    redirect('/not-found')
   }
 
   const parsedVaultId = isAddress(vaultId)

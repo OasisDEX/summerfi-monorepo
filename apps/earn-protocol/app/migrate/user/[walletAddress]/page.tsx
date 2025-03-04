@@ -35,7 +35,7 @@ const MigrateLandingPage = async ({ params }: MigrateLandingPageProps) => {
   const migrationsEnabled = !!systemConfig.features?.Migrations
 
   if (!migrationsEnabled) {
-    redirect(`/`)
+    redirect('/not-found')
   }
 
   const migratablePositions = parseServerResponseToClient(migratablePositionsData)

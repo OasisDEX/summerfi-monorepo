@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 
 const MigrationRedirectPage = () => {
-  redirect(`/`)
+  redirect('/not-found')
 }
 
 export default MigrationRedirectPage
