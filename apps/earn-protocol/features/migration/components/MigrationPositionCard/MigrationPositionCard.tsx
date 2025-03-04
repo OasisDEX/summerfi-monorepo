@@ -1,6 +1,6 @@
 import { type FC } from 'react'
 import { PositionCard, Text, TokenWithNetworkIcon } from '@summerfi/app-earn-ui'
-import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { mapMigrationToPortfolioCard } from '@/features/migration/helpers/map-migration-to-portfolio-card'
@@ -22,8 +22,12 @@ export const MigrationPositionCard: FC<MigrationPositionCardProps> = ({
   handleSelectPosition,
   earningsData,
 }) => {
-  const { id, platformLogo, token, depositAmount, chainId } =
+  const { id, platformLogo, token, depositAmount, chainId, migrationType } =
     mapMigrationToPortfolioCard(migratablePosition)
+
+  const missingOutAmount =
+    Number(migratablePosition.usdValue.amount) *
+    (Number(earningsData.lazySummerCurrentApy) - Number(migratablePosition.apy))
 
   return (
     <PositionCard
@@ -41,31 +45,31 @@ export const MigrationPositionCard: FC<MigrationPositionCardProps> = ({
       }}
       list={[
         {
-          label: 'Lazy SummerCurrent APY',
+          label: `${migrationType} Current APY`,
+          value: formatDecimalAsPercent(migratablePosition.apy),
+        },
+        {
+          label: 'Lazy Summer Current APY',
           value: formatDecimalAsPercent(earningsData.lazySummerCurrentApy),
         },
         {
           label: 'Lazy Summer 30d APY',
           value: formatDecimalAsPercent(earningsData.lazySummer30dApy),
         },
-        // {
-        //   label: '30d APY Differential',
-        //   value: formatDecimalAsPercent(thirtydApyDifferential),
-        // },
       ]}
       handleClick={() => handleSelectPosition(id)}
-      // banner={
-      //   <Text variant="p3semi">
-      //     You&apos;re missing out on{' '}
-      //     <Text
-      //       as="span"
-      //       variant="p3semiColorful"
-      //       style={{ color: 'var(--earn-protocol-primary-100)' }}
-      //     >
-      //       ${formatFiatBalance(missingOutAmount)}/Year
-      //     </Text>
-      //   </Text>
-      // }
+      banner={
+        <Text variant="p3semi">
+          You&apos;re missing out on{' '}
+          <Text
+            as="span"
+            variant="p3semiColorful"
+            style={{ color: 'var(--earn-protocol-primary-100)' }}
+          >
+            ${formatFiatBalance(missingOutAmount)}/Year
+          </Text>
+        </Text>
+      }
     />
   )
 }

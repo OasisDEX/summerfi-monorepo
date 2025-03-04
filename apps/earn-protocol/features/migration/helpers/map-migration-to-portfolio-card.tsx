@@ -16,5 +16,6 @@ export const mapMigrationToPortfolioCard = (migratablePosition: MigratablePositi
     token: migratablePosition.underlyingTokenAmount.token.symbol.toUpperCase() as TokenSymbolsList,
     depositAmount: migratablePosition.underlyingTokenAmount.amount,
     platformLogo: platformLogoMapByMigrationType[migratablePosition.migrationType] as PlatformLogo,
+    migrationType: migratablePosition.migrationType,
   }
 }
