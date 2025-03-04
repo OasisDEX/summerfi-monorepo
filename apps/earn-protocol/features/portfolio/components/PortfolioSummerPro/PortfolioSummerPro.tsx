@@ -50,19 +50,26 @@ export const PortfolioSummerPro: FC<PortfolioSummerProProps> = ({
             label: `Available to migrate (${migratablePositions.length})`,
             content: (
               <div className={classNames.migrateTabWrapper}>
-                <SlideCarousel
-                  slides={migratablePositions.map((position) => (
-                    <MigrationPositionCard
-                      key={position.id}
-                      migratablePosition={position}
-                      selectedPosition={selectedPosition}
-                      handleSelectPosition={handleSelectPosition}
-                      earningsData={migrationBestVaultApy[position.chainId]}
-                    />
-                  ))}
-                  portalElement={portalElement.current}
-                  options={{ slidesToScroll: 'auto' }}
-                />
+                {migratablePositions.length === 0 && (
+                  <Text variant="p2" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+                    No positions found that can be migrated
+                  </Text>
+                )}
+                {migratablePositions.length > 0 && (
+                  <SlideCarousel
+                    slides={migratablePositions.map((position) => (
+                      <MigrationPositionCard
+                        key={position.id}
+                        migratablePosition={position}
+                        selectedPosition={selectedPosition}
+                        handleSelectPosition={handleSelectPosition}
+                        earningsData={migrationBestVaultApy[position.chainId]}
+                      />
+                    ))}
+                    portalElement={portalElement.current}
+                    options={{ slidesToScroll: 'auto' }}
+                  />
+                )}
                 <div className={classNames.buttonWrapper}>
                   <Link href={`/migrate/user/${walletAddress}?positionId=${selectedPosition}`}>
                     <Button

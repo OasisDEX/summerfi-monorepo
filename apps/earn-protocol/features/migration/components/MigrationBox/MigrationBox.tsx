@@ -38,6 +38,11 @@ export const MigrationBox: FC<MigrationBoxProps> = ({
     >
       <Expander title={<Text variant="p2semi">{title}</Text>}>
         <div className={classNames.migrationCardsWrapper}>
+          {migratablePositions.length === 0 && (
+            <Text variant="p2" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+              No positions found that can be migrated
+            </Text>
+          )}
           {migratablePositions.map((position) => (
             <MigrationPositionCard
               key={position.id}
