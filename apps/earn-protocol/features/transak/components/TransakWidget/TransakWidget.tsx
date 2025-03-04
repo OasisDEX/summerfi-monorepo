@@ -49,7 +49,7 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
 }) => {
   const { chain } = useChain()
   const { deviceType } = useDeviceType()
-  const { isMobile } = useMobileCheck(deviceType)
+  const { isMobile, isTablet } = useMobileCheck(deviceType)
   const [transakInstance, setTransakInstance] = useState<Transak | null>(null)
   const [state, dispatch] = useReducer(transakReducer, {
     ...transakInitialReducerState,
@@ -196,7 +196,7 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
       loading: getTransakIsLoading({ state }),
     },
     footnote: getTransakFootnote({ state, dispatch }),
-    isMobile,
+    isMobileOrTablet: isMobile || isTablet,
   }
 
   return isMobile ? (

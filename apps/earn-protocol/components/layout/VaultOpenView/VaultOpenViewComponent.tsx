@@ -89,7 +89,7 @@ export const VaultOpenViewComponent = ({
   })
   const { publicClient } = useNetworkAlignedClient()
   const { deviceType } = useDeviceType()
-  const { isMobile } = useMobileCheck(deviceType)
+  const { isMobile, isTablet } = useMobileCheck(deviceType)
 
   const { features } = useSystemConfig()
 
@@ -369,7 +369,7 @@ export const VaultOpenViewComponent = ({
       </>
     ),
     error: sidebar.error,
-    isMobile,
+    isMobileOrTablet: isMobile || isTablet,
   }
 
   const nextTransactionType = nextTransaction?.type

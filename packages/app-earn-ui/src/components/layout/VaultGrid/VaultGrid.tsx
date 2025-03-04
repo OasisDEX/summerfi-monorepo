@@ -19,7 +19,7 @@ type VaultGridProps = {
   networksList: DropdownOption[]
   onChangeNetwork: (selected: DropdownRawOption) => void
   selectedNetwork?: DropdownOption
-  isMobile?: boolean
+  isMobileOrTablet?: boolean
   onRefresh?: () => void
 }
 
@@ -30,7 +30,7 @@ export const VaultGrid = ({
   networksList,
   selectedNetwork,
   onChangeNetwork,
-  isMobile,
+  isMobileOrTablet,
   onRefresh,
 }: VaultGridProps) => {
   const [isRefreshing, setIsRefreshing] = useState(false)
@@ -69,7 +69,9 @@ export const VaultGrid = ({
           <div className={vaultGridStyles.rightBlock}>{rightContent}</div>
         </div>
       </div>
-      {isMobile && <div className={vaultManageGridStyles.rightBlockMobile}>{rightContent}</div>}
+      {isMobileOrTablet && (
+        <div className={vaultManageGridStyles.rightBlockMobile}>{rightContent}</div>
+      )}
     </div>
   )
 }

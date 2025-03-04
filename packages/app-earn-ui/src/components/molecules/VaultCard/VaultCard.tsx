@@ -130,7 +130,10 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
             <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
               Best for
             </Text>
-            <Text variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+            <Text
+              variant="p1semi"
+              style={{ color: 'var(--earn-protocol-secondary-100)', whiteSpace: 'nowrap' }}
+            >
               {customFields?.bestFor ?? 'Optimized lending yield'}
             </Text>
           </div>

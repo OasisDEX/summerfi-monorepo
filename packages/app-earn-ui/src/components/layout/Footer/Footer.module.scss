@@ -5,8 +5,12 @@
   row-gap: var(--general-space-32);
   padding: var(--general-space-64) var(--general-space-40);
 
-  @include media('>s') {
-    padding: var(--general-space-64) var(--general-space-64);
+  @include media('>l') {
+    padding: var(--general-space-64) var(--general-space-32);
+  }
+
+  @include media('>xl') {
+    padding: var(--general-space-64);
   }
 
   >div {

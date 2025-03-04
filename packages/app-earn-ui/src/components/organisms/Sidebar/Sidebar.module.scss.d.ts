@@ -3,6 +3,7 @@ export type Styles = {
   centerTitle: string
   goBackButton: string
   goBackButtonFillFLex: string
+  hidden: string
   sidebarContent: string
   sidebarCta: string
   sidebarErrorContent: string

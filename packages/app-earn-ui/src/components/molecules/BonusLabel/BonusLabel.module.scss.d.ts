@@ -1,9 +1,5 @@
 export type Styles = {
-  refreshButton: string
-  refreshing: string
-  rotate: string
-  titleLine: string
-  titleWithSelectWrapper: string
+  apyLabel: string
 }
 
 export type ClassNames = keyof Styles

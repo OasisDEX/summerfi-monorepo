@@ -39,7 +39,7 @@ export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
       networkName={networkName}
       value={
         <>
-          <Text as="p" variant="p3" style={{ color }}>
+          <Text as="p" variant="p3semi" style={{ color }}>
             {capitalize(risk)} Risk
           </Text>
           <Tooltip

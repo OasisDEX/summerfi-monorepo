@@ -27,7 +27,7 @@ export type VaultSimulationFormProps = {
   tokenBalance?: BigNumber
   tokenPriceUSD?: number
   isTokenBalanceLoading?: boolean
-  isMobile?: boolean
+  isMobileOrTablet?: boolean
   tokenOptions: DropdownOption[]
   selectedTokenOption: DropdownOption
   handleTokenSelectionChange: (option: DropdownRawOption) => void
@@ -52,7 +52,7 @@ export const VaultSimulationForm = ({
   vaultData,
   tokenBalance,
   isTokenBalanceLoading,
-  isMobile,
+  isMobileOrTablet,
   tokenOptions,
   selectedTokenOption,
   handleTokenSelectionChange,
@@ -135,7 +135,7 @@ export const VaultSimulationForm = ({
             />
           ),
           customHeader:
-            !isDrawerOpen && isMobile ? (
+            !isDrawerOpen && isMobileOrTablet ? (
               <SidebarMobileHeader
                 type="open"
                 amount={estimatedEarnings}
@@ -143,6 +143,8 @@ export const VaultSimulationForm = ({
                 isLoadingForecast={isLoadingForecast}
               />
             ) : undefined,
+          // customHeaderStyles:
+          //   !isDrawerOpen && isMobile ? { padding: 'var(--general-space-12) 0' } : undefined,
           handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
           primaryButton:
             positionExists && userWalletAddress
@@ -165,7 +167,7 @@ export const VaultSimulationForm = ({
             </Link>
           ) : null,
         }}
-        isMobile={isMobile}
+        isMobileOrTablet={isMobileOrTablet}
         hiddenHeaderChevron={hiddenHeaderChevron}
       />
       {isGradientBorder && <div className={classNames.cardAnimateGradientBorder} />}
