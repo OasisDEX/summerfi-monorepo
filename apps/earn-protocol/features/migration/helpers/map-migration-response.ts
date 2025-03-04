@@ -21,6 +21,10 @@ export const mapMigrationResponse = (
     positions: ArmadaMigratablePosition[]
   }[],
 ) => {
+  if (!response || response.length === 0) {
+    return []
+  }
+
   return response.flatMap(({ chainInfo, positions }) =>
     positions
       .map((position) => ({

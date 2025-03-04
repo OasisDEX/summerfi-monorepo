@@ -25,7 +25,7 @@ import { getSummerTokenHandler } from '../handlers/getSummerTokenHandler'
 import { getClaimableAggregatedRewardsHandler } from '../handlers/getClaimableAggregatedRewardsHandler'
 import { getBridgeTxHandler } from '../handlers/getBridgeTxHandler'
 import { getMigrateTxHandler } from '../handlers/getMigrateTxHandler'
-import { getMigratablePositionsHandler } from 'src/handlers/getMigratablePositionsHandler'
+import { getMigratablePositionsHandler } from '../handlers/getMigratablePositionsHandler'
 
 type UseSdk = {
   walletAddress?: string

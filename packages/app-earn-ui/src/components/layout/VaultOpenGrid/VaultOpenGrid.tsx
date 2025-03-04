@@ -257,7 +257,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
               />
             </Box>
           </SimpleGrid>
-          {isMobile && (
+          {isMobile && rightExtraContent && (
             <div className={vaultOpenGridStyles.rightExtraBlockMobileWrapper}>
               {rightExtraContent}
             </div>
@@ -267,7 +267,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
         <div className={vaultOpenGridStyles.rightBlockWrapper}>
           <div className={vaultOpenGridStyles.rightBlock}>
             {sidebarContent}
-            {rightExtraContent}
+            {rightExtraContent && rightExtraContent}
           </div>
         </div>
       </div>

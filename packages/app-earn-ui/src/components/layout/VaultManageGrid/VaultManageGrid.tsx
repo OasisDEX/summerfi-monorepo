@@ -231,7 +231,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
               )}
             </Box>
           </SimpleGrid>
-          {isMobile && (
+          {isMobile && rightExtraContent && (
             <div className={vaultManageGridStyles.rightExtraBlockMobileWrapper}>
               {rightExtraContent}
             </div>
@@ -253,7 +253,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
         <div className={vaultManageGridStyles.rightBlockWrapper}>
           <div className={vaultManageGridStyles.rightBlock}>
             {sidebarContent}
-            {rightExtraContent}
+            {rightExtraContent && rightExtraContent}
           </div>
         </div>
       </div>
