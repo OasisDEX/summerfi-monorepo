@@ -19,6 +19,7 @@ type UseAmountProps = {
   selectedTokenOption: DropdownOption
   slippageConfig: { slippage: string }
   sdk: SdkClient
+  defaultQuoteLoading?: boolean
 }
 
 /**
@@ -49,6 +50,7 @@ export const useAmountWithSwap = ({
   selectedTokenOption,
   slippageConfig,
   sdk,
+  defaultQuoteLoading,
 }: UseAmountProps) => {
   const fromTokenSymbol: string = useMemo(() => {
     return {
@@ -71,6 +73,7 @@ export const useAmountWithSwap = ({
     toTokenSymbol,
     slippage: Number(slippageConfig.slippage),
     sdk,
+    defaultQuoteLoading,
   })
 
   const amountDisplayUSDWithSwap = useMemo(() => {
@@ -96,5 +99,6 @@ export const useAmountWithSwap = ({
     amountDisplayUSDWithSwap,
     rawToTokenAmount: quote?.toTokenAmount.toBigNumber(),
     rawFromTokenAmount: quote?.fromTokenAmount.toBigNumber(),
+    isQuoteLoading: quoteLoading,
   }
 }

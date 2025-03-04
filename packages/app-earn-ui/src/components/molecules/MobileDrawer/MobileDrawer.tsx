@@ -134,7 +134,11 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
           height: slideFrom === 'bottom' || slideFrom === 'top' ? `${height}` : '100vh',
           width: slideFrom === 'left' || slideFrom === 'right' ? `${width}vw` : '100vw',
           ...(zIndex && { zIndex }),
-          ...(variant === 'sidebar' && { borderTop: '1px solid var(--earn-protocol-neutral-85)' }),
+          ...(variant === 'sidebar' && {
+            borderTop: '1px solid var(--earn-protocol-neutral-85)',
+            borderTopLeftRadius: 'var(--radius-large)',
+            borderTopRightRadius: 'var(--radius-large)',
+          }),
           ...style,
         }}
         ref={drawerRef}

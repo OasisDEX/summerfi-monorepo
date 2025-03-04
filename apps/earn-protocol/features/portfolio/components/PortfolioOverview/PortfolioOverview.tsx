@@ -9,6 +9,7 @@ import {
   SUMR_CAP,
   Text,
   useLocalConfig,
+  WithArrow,
 } from '@summerfi/app-earn-ui'
 import {
   type HistoryChartData,
@@ -18,9 +19,13 @@ import {
 import { formatCryptoBalance, formatFiatBalance, subgraphNetworkToId } from '@summerfi/app-utils'
 import Link from 'next/link'
 
+import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { PositionHistoricalChart } from '@/components/organisms/Charts/PositionHistoricalChart'
+import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
+import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
+import { PortfolioSummerPro } from '@/features/portfolio/components/PortfolioSummerPro/PortfolioSummerPro'
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 import { calculateOverallSumr } from '@/helpers/calculate-overall-sumr'
@@ -53,9 +58,13 @@ import portfolioOverviewStyles from './PortfolioOverview.module.scss'
 const getDatablocks = ({
   totalSummerPortfolioUSD,
   overallSumr,
+  availableToMigrate,
+  walletAddress,
 }: {
   totalSummerPortfolioUSD: number
   overallSumr: number
+  availableToMigrate: number
+  walletAddress: string
 }) => [
   {
     title: 'Total Summer.fi Portfolio',
@@ -69,14 +78,14 @@ const getDatablocks = ({
   },
   {
     title: 'Available to Migrate',
-    value: 'Coming Soon',
-    // subValue: (
-    //   <Link href="/apps/earn-protocol/public">
-    //     <WithArrow as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-    //       Migrate
-    //     </WithArrow>
-    //   </Link>
-    // ),
+    value: `$${formatFiatBalance(availableToMigrate)}`,
+    subValue: (
+      <Link href={`/migrate/user/${walletAddress}`}>
+        <WithArrow as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
+          Migrate
+        </WithArrow>
+      </Link>
+    ),
   },
 ]
 
@@ -88,6 +97,9 @@ type PortfolioOverviewProps = {
     [key: string]: HistoryChartData
   }
   vaultsApyByNetworkMap: GetVaultsApyResponse
+  migratablePositions: MigratablePosition[]
+  walletAddress: string
+  migrationBestVaultApy: MigrationEarningsDataByChainId
 }
 
 export const PortfolioOverview = ({
@@ -96,10 +108,17 @@ export const PortfolioOverview = ({
   rewardsData,
   positionsHistoricalChartMap,
   vaultsApyByNetworkMap,
+  migratablePositions,
+  walletAddress,
+  migrationBestVaultApy,
 }: PortfolioOverviewProps) => {
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
+
+  const { features } = useSystemConfig()
+
+  const migrationsEnabled = !!features?.Migrations
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   const totalSummerPortfolioUSD = positions.reduce(
@@ -109,6 +128,11 @@ export const PortfolioOverview = ({
   )
 
   const overallSumr = calculateOverallSumr(rewardsData)
+
+  const availableToMigrate = migratablePositions.reduce(
+    (acc, position) => acc + Number(position.usdValue.amount),
+    0,
+  )
 
   return (
     <div>
@@ -120,7 +144,12 @@ export const PortfolioOverview = ({
           flexWrap: 'wrap',
         }}
       >
-        {getDatablocks({ totalSummerPortfolioUSD, overallSumr }).map((item) => (
+        {getDatablocks({
+          totalSummerPortfolioUSD,
+          overallSumr,
+          availableToMigrate,
+          walletAddress,
+        }).map((item) => (
           <Card
             key={item.title}
             style={{ flex: 1, background: item.gradient, minHeight: '142px' }}
@@ -131,7 +160,7 @@ export const PortfolioOverview = ({
               titleStyle={{ color: item.titleColor }}
               value={item.value}
               valueSize="large"
-              // subValue={item.subValue}
+              subValue={item.subValue}
             />
           </Card>
         ))}
@@ -182,6 +211,13 @@ export const PortfolioOverview = ({
             style={{ marginTop: 'var(--general-space-24)' }}
           />
         </Card>
+        {migrationsEnabled && (
+          <PortfolioSummerPro
+            walletAddress={walletAddress}
+            migratablePositions={migratablePositions}
+            migrationBestVaultApy={migrationBestVaultApy}
+          />
+        )}
         {/* <NewsAndUpdates items={dummyNewsAndUpdatesItems} /> */}
         {/* <CryptoUtilities /> */}
       </div>

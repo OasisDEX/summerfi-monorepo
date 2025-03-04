@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useLayoutEffect, useState } from 'react'
 import { DeviceType } from '@summerfi/app-types'
 
 interface ScreenInfo {
@@ -39,16 +39,16 @@ export const useMobileCheck = (deviceType?: DeviceType): ScreenInfo => {
     height: 0,
   })
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // Check if window is defined (important for SSR)
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined' || typeof screen === 'undefined') return
 
     const handleResize = () => {
       setScreenInfo({
-        isMobile: window.innerWidth <= 720,
-        isTablet: window.innerWidth >= 721 && window.innerWidth <= 1024,
-        width: window.innerWidth,
-        height: window.innerHeight,
+        isMobile: screen.width <= 768,
+        isTablet: screen.width > 768 && screen.width <= 1024,
+        width: screen.width,
+        height: screen.height,
       })
     }
 

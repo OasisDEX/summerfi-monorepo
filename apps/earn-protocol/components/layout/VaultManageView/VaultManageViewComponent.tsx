@@ -5,6 +5,7 @@ import {
   ControlsDepositWithdraw,
   Expander,
   getDisplayToken,
+  getMigrateVaultUrl,
   getPositionValues,
   getUniqueVaultId,
   NonOwnerPositionBanner,
@@ -40,6 +41,7 @@ import { type GetGlobalRebalancesQuery, type IArmadaPosition } from '@summerfi/s
 import { TransactionType } from '@summerfi/sdk-common'
 
 import { AccountKitAccountType } from '@/account-kit/types'
+import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import {
   ControlsApproval,
@@ -51,6 +53,9 @@ import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistor
 import { PositionPerformanceChart } from '@/components/organisms/Charts/PositionPerformanceChart'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
+import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
+import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
+import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
@@ -78,6 +83,8 @@ export const VaultManageViewComponent = ({
   arksHistoricalChartData,
   arksInterestRates,
   vaultApy,
+  migratablePositions,
+  migrationBestVaultApy,
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
@@ -89,6 +96,8 @@ export const VaultManageViewComponent = ({
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
   vaultApy?: number
+  migratablePositions: MigratablePosition[]
+  migrationBestVaultApy: MigrationEarningsDataByChainId
 }) => {
   const user = useUser()
   const { userWalletAddress, isLoadingAccount } = useUserWallet()
@@ -96,6 +105,14 @@ export const VaultManageViewComponent = ({
   const { publicClient } = useNetworkAlignedClient()
 
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
+
+  const [selectedPosition, setSelectedPosition] = useState<string | undefined>(
+    migratablePositions[0]?.id,
+  )
+
+  const handleSelectPosition = (id: string) => {
+    setSelectedPosition(id)
+  }
 
   const { handleTokenSelectionChange, selectedTokenOption, tokenOptions } = useTokenSelector({
     vault,
@@ -179,6 +196,10 @@ export const VaultManageViewComponent = ({
   const {
     state: { sumrNetApyConfig, slippageConfig },
   } = useLocalConfig()
+
+  const { features } = useSystemConfig()
+
+  const migrationsEnabled = !!features?.Migrations
 
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
@@ -330,8 +351,6 @@ export const VaultManageViewComponent = ({
           setTransactionType={setTransactionType}
         />
       ) : undefined,
-    customHeaderStyles:
-      !isDrawerOpen && isMobile ? { padding: 'var(--general-space-12) 0' } : undefined,
     handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
     goBackAction: nextTransaction?.type ? backToInit : undefined,
     primaryButton: sidebar.primaryButton,
@@ -522,6 +541,25 @@ export const VaultManageViewComponent = ({
           </div>,
         ]}
         sidebarContent={<Sidebar {...resovledSidebarProps} />}
+        rightExtraContent={
+          migrationsEnabled &&
+          migratablePositions.length > 0 && (
+            <MigrationBox
+              migratablePositions={migratablePositions}
+              selectedPosition={selectedPosition}
+              onSelectPosition={handleSelectPosition}
+              cta={{
+                link: getMigrateVaultUrl({
+                  network: vault.protocol.network,
+                  vaultId: vault.id,
+                  walletAddress: viewWalletAddress,
+                  selectedPosition,
+                }),
+              }}
+              migrationBestVaultApy={migrationBestVaultApy}
+            />
+          )
+        }
         isMobile={isMobile}
       />
     </>

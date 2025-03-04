@@ -15,6 +15,7 @@ import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
 import { getInterestRates } from '@/app/server-handlers/interest-rates'
+import { getMigratablePositions } from '@/app/server-handlers/migration'
 import { getPositionHistory } from '@/app/server-handlers/position-history'
 import { getUserActivity } from '@/app/server-handlers/sdk/get-user-activity'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
@@ -24,6 +25,7 @@ import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { VaultManageView } from '@/components/layout/VaultManageView/VaultManageView'
+import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import { getPositionPerformanceData } from '@/helpers/chart-helpers/get-position-performance-data'
 import { mapArkLatestInterestRates } from '@/helpers/map-ark-interest-rates'
@@ -108,7 +110,8 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     vaultInterestRates,
     positionHistory,
     positionForecastResponse,
-    vaultApyRaw,
+    vaultsApyRaw,
+    migratablePositionsData,
   ] = await Promise.all([
     getInterestRates({
       network: parsedNetwork,
@@ -132,15 +135,18 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       amount: Number(netValue.toFixed(position.amount.token.decimals)),
     }),
     getVaultsApy({
-      fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
+      fleets: allVaultsWithConfig.map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
         chainId: subgraphNetworkToId(network),
       })),
     }),
+    getMigratablePositions({
+      walletAddress,
+    }),
   ])
 
   const vaultApy =
-    vaultApyRaw[`${vaultWithConfig.id}-${subgraphNetworkToId(vaultWithConfig.protocol.network)}`]
+    vaultsApyRaw[`${vaultWithConfig.id}-${subgraphNetworkToId(vaultWithConfig.protocol.network)}`]
 
   if (!positionForecastResponse.ok) {
     throw new Error('Failed to fetch forecast data')
@@ -149,6 +155,8 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   const positionForecast = parseForecastDatapoints(forecastData)
 
   const positionJsonSafe = parseServerResponseToClient<IArmadaPosition>(position)
+
+  const migratablePositions = parseServerResponseToClient(migratablePositionsData)
 
   const performanceChartData = getPositionPerformanceData({
     vault: vaultWithConfig,
@@ -165,6 +173,12 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
 
   const arksInterestRates = mapArkLatestInterestRates(arkInterestRatesMap)
 
+  const migrationBestVaultApy = getMigrationBestVaultApy({
+    migratablePositions,
+    vaultsWithConfig: allVaultsWithConfig,
+    vaultsApyByNetworkMap: vaultsApyRaw,
+  })
+
   return (
     <VaultManageView
       vault={vaultWithConfig}
@@ -177,6 +191,8 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       performanceChartData={performanceChartData}
       arksHistoricalChartData={arksHistoricalChartData}
       arksInterestRates={arksInterestRates}
+      migratablePositions={migratablePositions}
+      migrationBestVaultApy={migrationBestVaultApy}
     />
   )
 }

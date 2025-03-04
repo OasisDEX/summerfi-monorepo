@@ -1,16 +1,16 @@
 'use client'
 
 import { type FC, type ReactNode, useEffect, useState } from 'react'
-import { type SDKVaultishType, type SDKVaultsListType } from '@summerfi/app-types'
+import { type SDKChainId, type SDKVaultishType, type SDKVaultsListType } from '@summerfi/app-types'
 import {
   formatCryptoBalance,
   formatDecimalAsPercent,
   sdkNetworkToHumanNetwork,
+  subgraphNetworkToSDKId,
   ten,
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
-import dayjs from 'dayjs'
 import Link from 'next/link'
 
 import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
@@ -27,6 +27,7 @@ import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/Va
 import { getDisplayToken } from '@/helpers/get-display-token'
 import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getVaultUrl } from '@/helpers/get-vault-url'
+import { isVaultAtLeastDaysOld } from '@/helpers/is-vault-at-least-days-old'
 
 import vaultOpenGridStyles from './VaultOpenGrid.module.scss'
 
@@ -42,6 +43,13 @@ interface VaultOpenGridProps {
   sumrPrice?: number
   onRefresh?: (chainName?: string, vaultId?: string, walletAddress?: string) => void
   vaultApy?: number
+  rightExtraContent?: ReactNode
+  headerLink?: {
+    label: string
+    href: string
+  }
+  disableDropdownOptionsByChainId?: SDKChainId
+  getOptionUrl?: (option: SDKVaultishType) => string
 }
 
 export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
@@ -56,14 +64,20 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   sumrPrice,
   onRefresh,
   vaultApy,
+  rightExtraContent,
+  headerLink = {
+    label: 'Earn',
+    href: '/',
+  },
+  disableDropdownOptionsByChainId,
+  getOptionUrl,
 }) => {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [displaySimulationGraphStaggered, setDisplaySimulationGraphStaggered] =
     useState(displaySimulationGraph)
 
-  const isVaultAtLeast30dOld = vault.createdTimestamp
-    ? dayjs().diff(dayjs(Number(vault.createdTimestamp) * 1000), 'day') > 30
-    : false
+  const isVaultAtLeast30dOld = isVaultAtLeastDaysOld({ vault, days: 30 })
+
   const apr30d = isVaultAtLeast30dOld
     ? formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
     : 'New strategy'
@@ -112,9 +126,9 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
     <>
       <div className={vaultOpenGridStyles.vaultOpenGridBreadcrumbsWrapper}>
         <div style={{ display: 'inline-block' }}>
-          <Link href="/">
+          <Link href={headerLink.href}>
             <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
-              Earn / &nbsp;
+              {headerLink.label} / &nbsp;
             </Text>
           </Link>
           <Text as="span" variant="p3" color="white">
@@ -136,11 +150,31 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
             <Dropdown
               options={vaults.map((item) => ({
                 value: getVaultUrl(item),
-                content: <VaultTitleDropdownContent vault={item} link={getVaultUrl(item)} />,
+                content: (
+                  <VaultTitleDropdownContent
+                    vault={item}
+                    link={getOptionUrl?.(item) ?? getVaultUrl(item)}
+                    isDisabled={
+                      disableDropdownOptionsByChainId &&
+                      subgraphNetworkToSDKId(item.protocol.network) !==
+                        disableDropdownOptionsByChainId
+                    }
+                  />
+                ),
               }))}
               dropdownValue={{
                 value: getVaultUrl(vault),
-                content: <VaultTitleDropdownContent vault={vault} link={getVaultUrl(vault)} />,
+                content: (
+                  <VaultTitleDropdownContent
+                    vault={vault}
+                    link={getOptionUrl?.(vault) ?? getVaultUrl(vault)}
+                    isDisabled={
+                      disableDropdownOptionsByChainId &&
+                      subgraphNetworkToSDKId(vault.protocol.network) !==
+                        disableDropdownOptionsByChainId
+                    }
+                  />
+                ),
               }}
             >
               <VaultTitleWithRisk
@@ -223,10 +257,18 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
               />
             </Box>
           </SimpleGrid>
+          {isMobile && rightExtraContent && (
+            <div className={vaultOpenGridStyles.rightExtraBlockMobileWrapper}>
+              {rightExtraContent}
+            </div>
+          )}
           <Box className={vaultOpenGridStyles.leftBlock}>{detailsContent}</Box>
         </div>
         <div className={vaultOpenGridStyles.rightBlockWrapper}>
-          <div className={vaultOpenGridStyles.rightBlock}>{sidebarContent}</div>
+          <div className={vaultOpenGridStyles.rightBlock}>
+            {sidebarContent}
+            {rightExtraContent && rightExtraContent}
+          </div>
         </div>
       </div>
       {isMobile && <div className={vaultOpenGridStyles.rightBlockMobile}>{sidebarContent}</div>}

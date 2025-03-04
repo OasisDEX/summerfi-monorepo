@@ -32,3 +32,6 @@ export * from './src/transaction'
 
 export type { SdkClient } from './src/sdk-client-react'
 export type { IToken, QuoteData } from './src/sdk-common'
+
+export type Address = `0x${string}`
+export type TransactionHash = `0x${string}`

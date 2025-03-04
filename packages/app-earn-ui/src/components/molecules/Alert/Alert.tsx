@@ -50,7 +50,7 @@ export const Alert: FC<AlertProps> = ({ error, variant = 'critical', iconName })
         <Icon iconName={resolvedIconName} size={20} style={{ color: variantToColorMap[variant] }} />
         <div className={styles.alertTextWrapper}>
           {typeof error === 'string' ? (
-            <Text variant="p3semi" as="p">
+            <Text variant="p3semi" as="p" style={{ fontWeight: 500 }}>
               {error}
             </Text>
           ) : (

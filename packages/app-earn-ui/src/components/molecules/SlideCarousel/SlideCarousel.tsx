@@ -1,5 +1,6 @@
 'use client'
 import { type FC, type ReactNode, useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { type EmblaOptionsType } from 'embla-carousel'
 import useEmblaCarousel from 'embla-carousel-react'
 
@@ -12,14 +13,22 @@ export enum SlideCarouselButtonPosition {
   ON_SIDES = 'ON_SIDES',
 }
 
+export enum SliderCarouselDotsPosition {
+  TOP = 'TOP',
+  BOTTOM = 'BOTTOM',
+}
+
 type PropType = {
   title?: ReactNode
   slides: ReactNode[]
   options?: EmblaOptionsType
   buttonPosition?: SlideCarouselButtonPosition
+  withButtons?: boolean
   slidesPerPage?: number
   withDots?: boolean
+  dotsPosition?: SliderCarouselDotsPosition
   withAutoPlay?: boolean
+  portalElement?: HTMLDivElement | null
 }
 
 export const SlideCarousel: FC<PropType> = ({
@@ -27,15 +36,27 @@ export const SlideCarousel: FC<PropType> = ({
   options,
   title,
   buttonPosition = SlideCarouselButtonPosition.TOP,
+  withButtons = true,
   slidesPerPage = 2,
   withDots = false,
+  dotsPosition = SliderCarouselDotsPosition.TOP,
   withAutoPlay = false,
+  portalElement,
 }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel(options)
   const [autoSlideDirection, setAutoSlideDirection] = useState<'prev' | 'next'>('next')
+  const [selectedIndex, setSelectedIndex] = useState(0)
 
-  const { prevBtnDisabled, nextBtnDisabled, onPrevButtonClick, onNextButtonClick, currentSnap } =
+  const { prevBtnDisabled, nextBtnDisabled, onPrevButtonClick, onNextButtonClick } =
     usePrevNextButtons(emblaApi)
+
+  useEffect(() => {
+    if (emblaApi) {
+      emblaApi.on('select', () => {
+        setSelectedIndex(emblaApi.selectedScrollSnap())
+      })
+    }
+  }, [emblaApi])
 
   const sectionClassName = {
     1: classNames.emblaOneSlide,
@@ -81,47 +102,53 @@ export const SlideCarousel: FC<PropType> = ({
     withAutoPlay,
   ])
 
+  const defaultControls = (
+    <div
+      className={classNames.emblaButtons}
+      style={{ display: slides.length > 2 ? 'grid' : 'none' }}
+    >
+      <SlideCarouselButton
+        onClick={onPrevButtonClick}
+        disabled={prevBtnDisabled}
+        direction="left"
+        iconVariant="xxs"
+      />
+      <SlideCarouselButton
+        onClick={onNextButtonClick}
+        disabled={nextBtnDisabled}
+        direction="right"
+        iconVariant="xxs"
+      />
+    </div>
+  )
+
   return (
     <section className={`${classNames.embla} ${sectionClassName[slidesPerPage]}`}>
-      {buttonPosition === SlideCarouselButtonPosition.TOP && (
-        <div className={classNames.emblaControls}>
+      {buttonPosition === SlideCarouselButtonPosition.TOP && withButtons && (
+        <div className={portalElement ? classNames.emblaControlsPortal : classNames.emblaControls}>
           {title}
-          <div
-            className={classNames.emblaButtons}
-            style={{ display: slides.length > 2 ? 'grid' : 'none' }}
-          >
-            <SlideCarouselButton
-              onClick={onPrevButtonClick}
-              disabled={prevBtnDisabled}
-              direction="left"
-              iconVariant="xxs"
-            />
-            <SlideCarouselButton
-              onClick={onNextButtonClick}
-              disabled={nextBtnDisabled}
-              direction="right"
-              iconVariant="xxs"
-            />
-          </div>
+          {portalElement ? createPortal(defaultControls, portalElement) : defaultControls}
         </div>
       )}
       {buttonPosition === SlideCarouselButtonPosition.ON_SIDES && (
         <div className={classNames.emblaButtonsOnSidesWrapper}>
-          <div className={classNames.emblaSideButton}>
-            <SlideCarouselButton
-              onClick={onPrevButtonClick}
-              disabled={prevBtnDisabled}
-              direction="left"
-              iconVariant="xs"
-            />
-          </div>
+          {withButtons && (
+            <div className={classNames.emblaSideButton}>
+              <SlideCarouselButton
+                onClick={onPrevButtonClick}
+                disabled={prevBtnDisabled}
+                direction="left"
+                iconVariant="xs"
+              />
+            </div>
+          )}
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {withDots && (
+            {withDots && dotsPosition === SliderCarouselDotsPosition.TOP && (
               <div className={classNames.dots}>
                 {slides.map((_, idx) => (
                   <div
                     key={idx}
-                    className={`${classNames.dot} ${idx === currentSnap ? classNames.dotActive : ''}`}
+                    className={`${classNames.dot} ${idx === selectedIndex ? classNames.dotActive : ''}`}
                   />
                 ))}
               </div>
@@ -136,14 +163,16 @@ export const SlideCarousel: FC<PropType> = ({
               </div>
             </div>
           </div>
-          <div className={classNames.emblaSideButton}>
-            <SlideCarouselButton
-              onClick={onNextButtonClick}
-              disabled={nextBtnDisabled}
-              direction="right"
-              iconVariant="xs"
-            />
-          </div>
+          {withButtons && (
+            <div className={classNames.emblaSideButton}>
+              <SlideCarouselButton
+                onClick={onNextButtonClick}
+                disabled={nextBtnDisabled}
+                direction="right"
+                iconVariant="xs"
+              />
+            </div>
+          )}
         </div>
       )}
       {buttonPosition === SlideCarouselButtonPosition.TOP && (
@@ -155,6 +184,16 @@ export const SlideCarousel: FC<PropType> = ({
               </div>
             ))}
           </div>
+        </div>
+      )}
+      {withDots && dotsPosition === SliderCarouselDotsPosition.BOTTOM && (
+        <div className={classNames.dotsBottom}>
+          {slides.map((_, idx) => (
+            <div
+              key={idx}
+              className={`${classNames.dot} ${idx === selectedIndex ? classNames.dotActive : ''}`}
+            />
+          ))}
         </div>
       )}
     </section>

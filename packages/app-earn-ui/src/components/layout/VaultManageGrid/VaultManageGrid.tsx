@@ -10,7 +10,6 @@ import {
 import { type IArmadaPositionStandalone as IArmadaPosition } from '@summerfi/armada-protocol-common'
 import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
-import dayjs from 'dayjs'
 import Link from 'next/link'
 
 import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
@@ -27,6 +26,7 @@ import { getDisplayToken } from '@/helpers/get-display-token'
 import { getPositionValues } from '@/helpers/get-position-values'
 import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getVaultUrl } from '@/helpers/get-vault-url'
+import { isVaultAtLeastDaysOld } from '@/helpers/is-vault-at-least-days-old'
 
 import vaultManageGridStyles from './VaultManageGrid.module.scss'
 
@@ -44,6 +44,7 @@ interface VaultManageGridProps {
   sumrPrice?: number
   onRefresh?: (chainName?: string, vaultId?: string, walletAddress?: string) => void
   vaultApy?: number
+  rightExtraContent?: ReactNode
 }
 
 export const VaultManageGrid: FC<VaultManageGridProps> = ({
@@ -60,14 +61,13 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   displaySimulationGraph,
   sumrPrice,
   onRefresh,
+  rightExtraContent,
 }) => {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [displaySimulationGraphStaggered, setDisplaySimulationGraphStaggered] =
     useState(displaySimulationGraph)
 
-  const isVaultAtLeast30dOld = vault.createdTimestamp
-    ? dayjs().diff(dayjs(Number(vault.createdTimestamp) * 1000), 'day') > 30
-    : false
+  const isVaultAtLeast30dOld = isVaultAtLeastDaysOld({ vault, days: 30 })
 
   const apr30d = formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
   const aprCurrent = formatDecimalAsPercent(vaultApy ?? 0)
@@ -231,6 +231,11 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
               )}
             </Box>
           </SimpleGrid>
+          {isMobile && rightExtraContent && (
+            <div className={vaultManageGridStyles.rightExtraBlockMobileWrapper}>
+              {rightExtraContent}
+            </div>
+          )}
           {Array.isArray(detailsContent) && detailsContent.length > 0 ? (
             detailsContent.map((content, index) => (
               <Box
@@ -246,7 +251,10 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
           )}
         </div>
         <div className={vaultManageGridStyles.rightBlockWrapper}>
-          <div className={vaultManageGridStyles.rightBlock}>{sidebarContent}</div>
+          <div className={vaultManageGridStyles.rightBlock}>
+            {sidebarContent}
+            {rightExtraContent && rightExtraContent}
+          </div>
         </div>
       </div>
       {isMobile && <div className={vaultManageGridStyles.rightBlockMobile}>{sidebarContent}</div>}

@@ -25,7 +25,7 @@ export const Card: FC<CardProps & DetailedHTMLProps<HTMLAttributes<HTMLElement>,
     <div
       className={getAtomClassList({ className, variant: cardStyles[variant] })}
       style={{ ...(disabled ? { opacity: 0.5, cursor: 'not-allowed' } : {}), ...style }}
-      onClick={onClick}
+      onClick={disabled ? undefined : onClick}
     >
       {children}
     </div>

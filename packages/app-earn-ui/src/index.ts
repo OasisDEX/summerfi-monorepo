@@ -6,9 +6,9 @@ export { Button } from './components/atoms/Button/Button'
 export { type ClassNames as ButtonClassNames } from './components/atoms/Button/Button.module.scss'
 
 export { Text } from './components/atoms/Text/Text'
+export { Card, type CardVariant } from './components/atoms/Card/Card'
 export { type ClassNames as TextClassNames } from './components/atoms/Text/Text.module.scss'
 
-export { Card } from './components/atoms/Card/Card'
 export { Modal } from './components/atoms/Modal/Modal'
 export { Icon, type IconNamesList } from './components/atoms/Icon/Icon'
 export { CheckboxButton } from './components/atoms/CheckboxButton/CheckboxButton'
@@ -66,6 +66,7 @@ export { LoadingSpinner } from './components/molecules/LoadingSpinner/LoadingSpi
 export {
   SlideCarousel,
   SlideCarouselButtonPosition,
+  SliderCarouselDotsPosition,
 } from './components/molecules/SlideCarousel/SlideCarousel'
 export {
   LinkCard,
@@ -96,6 +97,12 @@ export { DataModule } from './components/molecules/DataModule/DataModule'
 export { Badge } from './components/molecules/Badge/Badge'
 export { HighestQualityYieldsDisclaimer } from './components/molecules/HighestQualityYieldsDisclaimer/HighestQualityYieldsDisclaimer.tsx'
 export { CookieBanner } from './components/molecules/CookieBanner/CookieBanner'
+export { TitleWithSelect } from './components/molecules/TitleWithSelect/TitleWithSelect'
+export { IllustrationCircle } from './components/molecules/IllustrationCircle/IllustrationCircle'
+export { TokenWithNetworkIcon } from './components/molecules/TokenWithNetworkIcon/TokenWithNetworkIcon'
+export { OrderInformation } from './components/molecules/OrderInformation/OrderInformation'
+export { PositionCard } from './components/molecules/PositionCard/PositionCard'
+
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'
 export { Table, type TableSortedColumn } from './components/organisms/Table/Table'
@@ -126,7 +133,12 @@ export { useIsIframe } from './hooks/use-is-iframe'
 export { useAnalyticsCookies } from './hooks/use-analytics-cookies'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
-export { getVaultUrl, getVaultDetailsUrl, getVaultPositionUrl } from './helpers/get-vault-url'
+export {
+  getVaultUrl,
+  getVaultDetailsUrl,
+  getVaultPositionUrl,
+  getMigrateVaultUrl,
+} from './helpers/get-vault-url'
 export { getTwitterShareUrl } from './helpers/get-twitter-share-url'
 export { getScannerUrl } from './helpers/get-scanner-url'
 export { getMedian } from './helpers/get-median'
@@ -141,7 +153,8 @@ export {
 } from './helpers/get-earnings-estimations-map'
 export { getUniqueVaultId } from './helpers/get-unique-vault-id'
 export { getDisplayToken } from './helpers/get-display-token'
-
+export { softRouterPush } from './helpers/soft-router-push'
+export { isVaultAtLeastDaysOld } from './helpers/is-vault-at-least-days-old'
 export { INTERNAL_LINKS, EXTERNAL_LINKS } from './helpers/application-links'
 
 // forecast stuff

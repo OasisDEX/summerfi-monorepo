@@ -22,6 +22,7 @@ import { GlobalEventTracker } from '@/components/organisms/Events/GlobalEventTra
 import { accountKitCookieStateName } from '@/constants/account-kit-cookie-state-name'
 import { forksCookieName } from '@/constants/forks-cookie-name'
 import { DeviceProvider } from '@/contexts/DeviceContext/DeviceContext'
+import { SystemConfigProvider } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { fontInter } from '@/helpers/fonts'
 import { AlchemyAccountsProvider } from '@/providers/AlchemyAccountsProvider/AlchemyAccountsProvider'
 import logoMaintenance from '@/public/img/branding/logo-dark.svg'
@@ -89,11 +90,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <GoogleTagManager />
         <AlchemyAccountsProvider initialState={accountKitInitializedState}>
           <GlobalEventTracker />
-          <DeviceProvider value={deviceType}>
-            <LocalConfigContextProvider value={{ sumrNetApyConfig, slippageConfig }}>
-              <MasterPage analyticsCookie={analyticsCookie}>{children}</MasterPage>
-            </LocalConfigContextProvider>
-          </DeviceProvider>
+          <SystemConfigProvider value={config}>
+            <DeviceProvider value={deviceType}>
+              <LocalConfigContextProvider value={{ sumrNetApyConfig, slippageConfig }}>
+                <MasterPage analyticsCookie={analyticsCookie}>{children}</MasterPage>
+              </LocalConfigContextProvider>
+            </DeviceProvider>
+          </SystemConfigProvider>
         </AlchemyAccountsProvider>
         <div id="portal" style={{ position: 'absolute' }} />
         {/* Separate portal for dropdown is needed to not mix up position calculation */}

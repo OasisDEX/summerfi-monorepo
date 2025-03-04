@@ -9,6 +9,7 @@ import { unstable_cache as unstableCache } from 'next/cache'
 import { redirect } from 'next/navigation'
 
 import { fetchRaysLeaderboard } from '@/app/server-handlers/leaderboard'
+import { getMigratablePositions } from '@/app/server-handlers/migration'
 import { portfolioWalletAssetsHandler } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { getPositionHistory } from '@/app/server-handlers/position-history'
 import { getGlobalRebalances } from '@/app/server-handlers/sdk/get-global-rebalances'
@@ -24,6 +25,7 @@ import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { PortfolioPageViewComponent } from '@/components/layout/PortfolioPageView/PortfolioPageViewComponent'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
+import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { mergePositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 import { type GetPositionHistoryQuery } from '@/graphql/clients/position-history/client'
 import { getPositionHistoricalData } from '@/helpers/chart-helpers/get-position-historical-data'
@@ -54,6 +56,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     userPositions,
     vaultsList,
     systemConfig,
+    migratablePositions,
   ] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
     unstableCache(getGlobalRebalances, [walletAddress], cacheConfig)(),
@@ -71,6 +74,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     unstableCache(getUserPositions, [walletAddress], cacheConfig)({ walletAddress }),
     getVaultsList(),
     systemConfigHandler(),
+    unstableCache(getMigratablePositions, [walletAddress], cacheConfig)({ walletAddress }),
   ])
 
   return {
@@ -87,6 +91,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     userPositions,
     vaultsList,
     systemConfig,
+    migratablePositions,
   }
 }
 
@@ -125,6 +130,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     userPositions,
     vaultsList,
     systemConfig,
+    migratablePositions,
   } = await portfolioCallsHandler(walletAddress)
 
   const vaultsWithConfig = decorateVaultsWithConfig({
@@ -135,6 +141,8 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   const userPositionsJsonSafe = userPositions
     ? parseServerResponseToClient<IArmadaPosition[]>(userPositions)
     : []
+
+  const _migratablePositions = parseServerResponseToClient(migratablePositions)
 
   const positionsWithVault = userPositionsJsonSafe.map((position) => {
     return mergePositionWithVault({
@@ -198,6 +206,12 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     {},
   )
 
+  const migrationBestVaultApy = getMigrationBestVaultApy({
+    migratablePositions: _migratablePositions,
+    vaultsWithConfig,
+    vaultsApyByNetworkMap,
+  })
+
   return (
     <PortfolioPageViewComponent
       positions={positionsWithVault}
@@ -210,6 +224,8 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       userActivity={userActivity}
       positionsHistoricalChartMap={positionsHistoricalChartMap}
       vaultsApyByNetworkMap={vaultsApyByNetworkMap}
+      migratablePositions={migratablePositions}
+      migrationBestVaultApy={migrationBestVaultApy}
     />
   )
 }

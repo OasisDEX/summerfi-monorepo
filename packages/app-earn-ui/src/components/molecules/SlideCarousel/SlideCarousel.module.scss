@@ -37,7 +37,10 @@
   transform: translate3d(0, 0, 0);
   flex: 0 0 var(--slide-size);
   min-width: 0;
-  margin-right: var(--general-space-16);
+
+  @media (min-width: 768px) {
+    margin-right: var(--general-space-16);
+  }
 }
 
 .emblaSlide:last-child {
@@ -52,10 +55,14 @@
   user-select: none;
 }
 
-.emblaControls {
+.emblaControls,
+.emblaControlsPortal {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.emblaControls {
   margin-bottom: var(--general-space-24);
 }
 
@@ -95,6 +102,26 @@
 
     &Active {
       background-color: var(--earn-protocol-secondary-70);
+    }
+  }
+}
+
+.dotsBottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--general-space-8);
+  width: 100%;
+  margin-top: var(--general-space-24);
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--earn-protocol-neutral-80);
+    border-radius: var(--radius-circle);
+
+    &Active {
+      background: var(--gradient-earn-protocol-dark);
     }
   }
 }

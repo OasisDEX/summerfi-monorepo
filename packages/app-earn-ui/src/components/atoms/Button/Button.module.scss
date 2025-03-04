@@ -7,7 +7,10 @@
 .neutralLarge,
 .neutralMedium,
 .neutralSmall,
-.colorful {
+.colorful,
+.primaryLargeColorful,
+.primaryMediumColorful,
+.primarySmallColorful {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,7 +31,8 @@
 
 .primaryLarge,
 .secondaryLarge,
-.neutralLarge {
+.neutralLarge,
+.primaryLargeColorful {
   height: 48px;
   min-width: 100%;
   font-size: 16px;
@@ -42,7 +46,8 @@
 
 .primaryMedium,
 .secondaryMedium,
-.neutralMedium {
+.neutralMedium,
+.primaryMediumColorful {
   height: 38px;
   font-size: 14px;
   border-radius: var(--radius-circle);
@@ -51,7 +56,8 @@
 
 .primarySmall,
 .secondarySmall,
-.neutralSmall {
+.neutralSmall,
+.primarySmallColorful {
   height: 36px;
   font-size: 12px;
   padding: 0 var(--general-space-16);
@@ -123,18 +129,36 @@
   font-size: 12px;
   width: 100%;
   border-radius: var(--general-radius-8);
-  background: linear-gradient(270.13deg,
-      rgba(0, 125, 163, 0.05) 0.02%,
-      rgba(231, 167, 127, 0.05) 56.92%,
-      rgba(233, 112, 71, 0.05) 98.44%);
+  background: linear-gradient(
+    270.13deg,
+    rgba(0, 125, 163, 0.05) 0.02%,
+    rgba(231, 167, 127, 0.05) 56.92%,
+    rgba(233, 112, 71, 0.05) 98.44%
+  );
 
-  >span {
+  > span {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
   @include media('>s') {
     height: 28px;
+  }
+}
+
+.primaryLargeColorful,
+.primaryMediumColorful,
+.primarySmallColorful {
+  color: var(--color-text-primary);
+  background: var(--gradient-earn-protocol-dark);
+
+  &:enabled:hover {
+    opacity: 0.9;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 

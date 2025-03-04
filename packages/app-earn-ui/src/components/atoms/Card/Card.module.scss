@@ -1,13 +1,17 @@
 .cardPrimary,
 .cardPrimaryColorfulBorder,
 .cardPrimarySmallPaddingsColorfulBorder,
+.cardPrimaryMediumPaddingsColorfulBorder,
 .cardSecondary,
 .cardSecondaryColorfulBorder,
 .cardSecondarySmallPaddingsColorfulBorder,
+.cardSecondaryMediumPaddingsColorfulBorder,
 .cardGradientLight,
 .cardGradientDark,
 .cardPrimarySmallPaddings,
-.cardSecondarySmallPaddings {
+.cardPrimaryMediumPaddings,
+.cardSecondarySmallPaddings,
+.cardSecondaryMediumPaddings {
   display: flex;
   width: 100%;
   border-radius: var(--radius-large);
@@ -47,6 +51,13 @@
   padding: var(--general-space-12);
 }
 
+.cardPrimaryMediumPaddings,
+.cardSecondaryMediumPaddings,
+.cardPrimaryMediumPaddingsColorfulBorder,
+.cardSecondaryMediumPaddingsColorfulBorder {
+  padding: var(--general-space-16);
+}
+
 .cardGradientLight {
   background: var(--earn-protocol-neutral-100) var(--gradient-earn-protocol-light-10);
 }
@@ -58,20 +69,24 @@
 .cardPrimaryColorfulBorder,
 .cardSecondaryColorfulBorder,
 .cardPrimarySmallPaddingsColorfulBorder,
-.cardSecondarySmallPaddingsColorfulBorder {
+.cardSecondarySmallPaddingsColorfulBorder,
+.cardPrimaryMediumPaddingsColorfulBorder,
+.cardSecondaryMediumPaddingsColorfulBorder {
   border: double 1.5px transparent;
   background-origin: border-box;
   background-clip: padding-box, border-box;
 }
 
 .cardPrimaryColorfulBorder,
-.cardPrimarySmallPaddingsColorfulBorder {
+.cardPrimarySmallPaddingsColorfulBorder,
+.cardPrimaryMediumPaddingsColorfulBorder {
   background-image: linear-gradient(rgba(43, 43, 43, 1), rgba(43, 43, 43, 1)),
     linear-gradient(90deg, rgba(255, 73, 164, 0.5), rgba(176, 73, 255, 0.5));
 }
 
 .cardSecondaryColorfulBorder,
-.cardSecondarySmallPaddingsColorfulBorder {
+.cardSecondarySmallPaddingsColorfulBorder,
+.cardSecondaryMediumPaddingsColorfulBorder {
   background-image: linear-gradient(rgba(35, 35, 35, 1), rgba(35, 35, 35, 1)),
     linear-gradient(90deg, rgba(255, 73, 164, 0.5), rgba(176, 73, 255, 0.5));
 }

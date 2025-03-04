@@ -20,10 +20,10 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 var(--general-space-24);
   display: flex;
   align-items: center;
   flex-direction: column;
+  padding: 0 var(--general-space-16);
 
   @include media('>s') {
     padding: 0 var(--general-space-32);

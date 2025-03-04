@@ -29,6 +29,7 @@ export const useSwapQuote = ({
   toTokenSymbol,
   slippage,
   sdk,
+  defaultQuoteLoading = false,
 }: {
   chainId: number
   fromAmount: string
@@ -36,9 +37,10 @@ export const useSwapQuote = ({
   toTokenSymbol: string
   slippage: number
   sdk: SdkClient
+  defaultQuoteLoading?: boolean
 }) => {
   const [quote, setQuote] = useState<QuoteData>()
-  const [quoteLoading, setQuoteLoading] = useState(false)
+  const [quoteLoading, setQuoteLoading] = useState(defaultQuoteLoading)
 
   useEffect(() => {
     const fetchQuote = async () => {
@@ -81,6 +83,7 @@ export const useSwapQuote = ({
       return () => clearTimeout(timeout)
     } else {
       setQuote(undefined)
+      setQuoteLoading(false)
 
       return () => null
     }

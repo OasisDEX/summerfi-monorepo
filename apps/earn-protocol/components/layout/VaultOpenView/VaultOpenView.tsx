@@ -10,6 +10,7 @@ import {
 } from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
+import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { VaultOpenViewComponent } from '@/components/layout/VaultOpenView/VaultOpenViewComponent'
 import { sdkApiUrl } from '@/constants/sdk'
 
@@ -22,6 +23,7 @@ export const VaultOpenView = ({
   arksHistoricalChartData,
   arksInterestRates,
   vaultApy,
+  vaultsApyRaw,
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
@@ -31,6 +33,7 @@ export const VaultOpenView = ({
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
   vaultApy?: number
+  vaultsApyRaw: GetVaultsApyResponse
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -43,6 +46,7 @@ export const VaultOpenView = ({
         arksHistoricalChartData={arksHistoricalChartData}
         arksInterestRates={arksInterestRates}
         vaultApy={vaultApy}
+        vaultsApyRaw={vaultsApyRaw}
       />
     </SDKContextProvider>
   )

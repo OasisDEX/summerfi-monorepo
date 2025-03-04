@@ -12,8 +12,10 @@ import {
 import { type IArmadaPosition } from '@summerfi/sdk-client'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
+import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { VaultManageViewComponent } from '@/components/layout/VaultManageView/VaultManageViewComponent'
 import { sdkApiUrl } from '@/constants/sdk'
+import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 
 export const VaultManageView = ({
   vault,
@@ -26,6 +28,8 @@ export const VaultManageView = ({
   arksHistoricalChartData,
   arksInterestRates,
   vaultApy,
+  migratablePositions,
+  migrationBestVaultApy,
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
@@ -37,6 +41,8 @@ export const VaultManageView = ({
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
   vaultApy?: number
+  migratablePositions: MigratablePosition[]
+  migrationBestVaultApy: MigrationEarningsDataByChainId
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -51,6 +57,8 @@ export const VaultManageView = ({
         performanceChartData={performanceChartData}
         arksHistoricalChartData={arksHistoricalChartData}
         arksInterestRates={arksInterestRates}
+        migratablePositions={migratablePositions}
+        migrationBestVaultApy={migrationBestVaultApy}
       />
     </SDKContextProvider>
   )

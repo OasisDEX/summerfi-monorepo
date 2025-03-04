@@ -1,16 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
 import {
-  Card,
   ControlsDepositWithdraw,
-  Expander,
   getDisplayToken,
-  getUniqueVaultId,
+  getMigrateVaultUrl,
   Sidebar,
   SidebarFootnote,
   sidebarFootnote,
   SidebarMobileHeader,
   SUMR_CAP,
-  Text,
   useAmount,
   useAmountWithSwap,
   useForecast,
@@ -23,6 +20,7 @@ import {
 import { useTermsOfService } from '@summerfi/app-tos'
 import {
   type ArksHistoricalChartData,
+  sdkSupportedChains,
   type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
@@ -31,23 +29,23 @@ import {
   TransactionAction,
   type UsersActivity,
 } from '@summerfi/app-types'
-import { formatDecimalAsPercent, subgraphNetworkToSDKId } from '@summerfi/app-utils'
-import { type GetGlobalRebalancesQuery } from '@summerfi/sdk-client'
-import { type IToken, TransactionType } from '@summerfi/sdk-common'
+import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
+import { getChainInfoByChainId, type IToken, TransactionType } from '@summerfi/sdk-common'
 
 import { AccountKitAccountType } from '@/account-kit/types'
-import { detailsLinks } from '@/components/layout/VaultOpenView/mocks'
-import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
+import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { ControlsApproval, OrderInfoDeposit } from '@/components/molecules/SidebarElements'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
-import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
-import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
+import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
+import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
+import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
+import { mapMigrationResponse } from '@/features/migration/helpers/map-migration-response'
+import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
-import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
-import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -61,7 +59,7 @@ import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useTransaction } from '@/hooks/use-transaction'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
-import vaultOpenViewStyles from './VaultOpenView.module.scss'
+import { VaultOpenViewDetails } from './VaultOpenViewDetails'
 
 type VaultOpenViewComponentProps = {
   vault: SDKVaultType | SDKVaultishType
@@ -72,6 +70,7 @@ type VaultOpenViewComponentProps = {
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
   vaultApy?: number
+  vaultsApyRaw: GetVaultsApyResponse
 }
 
 export const VaultOpenViewComponent = ({
@@ -83,6 +82,7 @@ export const VaultOpenViewComponent = ({
   arksHistoricalChartData,
   arksInterestRates,
   vaultApy,
+  vaultsApyRaw,
 }: VaultOpenViewComponentProps) => {
   const { getStorageOnce } = useLocalStorageOnce<string>({
     key: `${vault.id}-amount`,
@@ -90,6 +90,12 @@ export const VaultOpenViewComponent = ({
   const { publicClient } = useNetworkAlignedClient()
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
+
+  const { features } = useSystemConfig()
+
+  const migrationsEnabled = !!features?.Migrations
+
+  const { userWalletAddress } = useUserWallet()
 
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
 
@@ -99,6 +105,52 @@ export const VaultOpenViewComponent = ({
   const sdk = useAppSDK()
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [migratablePositions, setMigratablePositions] = useState<MigratablePosition[]>([])
+  const [migrationBestVaultApy, setMigrationBestVaultApy] =
+    useState<MigrationEarningsDataByChainId>()
+
+  useEffect(() => {
+    const fetchMigratablePositions = async () => {
+      try {
+        const promises = sdkSupportedChains.map((chainId) => {
+          const chainInfo = getChainInfoByChainId(chainId)
+
+          return sdk.getMigratablePositions({ walletAddress: userWalletAddress, chainInfo })
+        })
+
+        const positions = await Promise.all(promises)
+
+        const mappedPositions = mapMigrationResponse(positions)
+
+        const mappedBestVaultApy = getMigrationBestVaultApy({
+          migratablePositions: mappedPositions,
+          vaultsWithConfig: vaults,
+          vaultsApyByNetworkMap: vaultsApyRaw,
+        })
+
+        setMigratablePositions(mappedPositions)
+        setMigrationBestVaultApy(mappedBestVaultApy)
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Error fetching migratable positions:', error)
+
+        setMigratablePositions([])
+        setMigrationBestVaultApy(undefined)
+      }
+    }
+
+    if (userWalletAddress) {
+      fetchMigratablePositions()
+    }
+  }, [userWalletAddress, sdk, vaults, vaultsApyRaw])
+
+  const [selectedPosition, setSelectedPosition] = useState<string | undefined>(
+    migratablePositions[0]?.id,
+  )
+
+  const handleSelectPosition = (id: string) => {
+    setSelectedPosition(id)
+  }
 
   const { handleTokenSelectionChange, selectedTokenOption, tokenOptions } = useTokenSelector({
     vault,
@@ -116,7 +168,6 @@ export const VaultOpenViewComponent = ({
     tokenSymbol: selectedTokenOption.value,
     chainId: vaultChainId,
   })
-  const { userWalletAddress } = useUserWallet()
 
   const {
     amountParsed,
@@ -222,8 +273,6 @@ export const VaultOpenViewComponent = ({
 
   const { tosSidebarProps } = useTermsOfServiceSidebar({ tosState, handleGoBack: backToInit })
 
-  const summerVaultName = vault.customFields?.name ?? `Summer ${vault.inputToken.symbol} Vault`
-
   useEffect(() => {
     const savedAmount = getStorageOnce()
 
@@ -246,9 +295,6 @@ export const VaultOpenViewComponent = ({
     transaction: nextTransaction,
     walletAddress: user?.address,
   })
-
-  // "It’s 1% for usd and 0.3% for eth"
-  const managementFee = vault.inputToken.symbol.includes('USD') ? 0.01 : 0.003
 
   const sidebarContent = nextTransaction?.type ? (
     {
@@ -310,8 +356,6 @@ export const VaultOpenViewComponent = ({
           isLoadingForecast={isLoadingForecast}
         />
       ) : undefined,
-    customHeaderStyles:
-      !isDrawerOpen && isMobile ? { padding: 'var(--general-space-12) 0' } : undefined,
     handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
     goBackAction: nextTransaction?.type ? backToInit : undefined,
     primaryButton: sidebar.primaryButton,
@@ -345,10 +389,6 @@ export const VaultOpenViewComponent = ({
       ? tosSidebarProps
       : sidebarProps
 
-  // needed due to type duality
-  const rebalancesList =
-    `rebalances` in vault ? (vault.rebalances as GetGlobalRebalancesQuery['rebalances']) : []
-
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   return (
@@ -370,95 +410,14 @@ export const VaultOpenViewComponent = ({
         />
       }
       detailsContent={
-        <div className={vaultOpenViewStyles.leftContentWrapper}>
-          <VaultOpenHeaderBlock detailsLinks={detailsLinks} vault={vault} />
-          <Expander
-            title={
-              <Text as="p" variant="p1semi">
-                Historical yield
-              </Text>
-            }
-            defaultExpanded
-          >
-            <ArkHistoricalYieldChart
-              chartData={arksHistoricalChartData}
-              summerVaultName={summerVaultName}
-            />
-          </Expander>
-          <Expander
-            title={
-              <Text as="p" variant="p1semi">
-                Vault exposure
-              </Text>
-            }
-            defaultExpanded
-          >
-            <VaultExposure vault={vault} arksInterestRates={arksInterestRates} />
-          </Expander>
-          <Expander
-            title={
-              <Text as="p" variant="p1semi">
-                Rebalancing activity
-              </Text>
-            }
-            defaultExpanded
-          >
-            <RebalancingActivity
-              rebalancesList={rebalancesList}
-              vaultId={getUniqueVaultId(vault)}
-              totalRebalances={Number(vault.rebalanceCount)}
-              vaultsList={vaults}
-            />
-          </Expander>
-          <Expander
-            title={
-              <Text as="p" variant="p1semi">
-                Users activity
-              </Text>
-            }
-            defaultExpanded
-          >
-            <UserActivity
-              userActivity={userActivity}
-              topDepositors={topDepositors}
-              vaultId={getUniqueVaultId(vault)}
-              page="open"
-              noHighlight
-            />
-          </Expander>
-          <Expander
-            title={
-              <Text as="p" variant="p1semi">
-                Strategy management fee
-              </Text>
-            }
-            defaultExpanded
-          >
-            <Card style={{ flexDirection: 'column', marginTop: 'var(--general-space-16)' }}>
-              <Text
-                as="p"
-                variant="p2semi"
-                style={{
-                  color: 'var(--color-text-primary)',
-                  marginBottom: 'var(--general-space-24)',
-                }}
-              >
-                {formatDecimalAsPercent(managementFee)} Management Fee, already included in APY
-              </Text>
-              <Text
-                as="p"
-                variant="p2"
-                style={{
-                  color: 'var(--color-text-secondary)',
-                }}
-              >
-                A {formatDecimalAsPercent(managementFee)} management fee is applied to your
-                position, but it’s already factored into the APY you see. This means the rate
-                displayed reflects your net return - no hidden fees, just straightforward earnings.
-              </Text>
-            </Card>
-          </Expander>
-        </div>
+        <VaultOpenViewDetails
+          vault={vault}
+          vaults={vaults}
+          userActivity={userActivity}
+          topDepositors={topDepositors}
+          arksHistoricalChartData={arksHistoricalChartData}
+          arksInterestRates={arksInterestRates}
+        />
       }
       sidebarContent={
         <>
@@ -473,6 +432,26 @@ export const VaultOpenViewComponent = ({
             />
           )}
         </>
+      }
+      rightExtraContent={
+        migrationsEnabled &&
+        migratablePositions.length > 0 &&
+        migrationBestVaultApy && (
+          <MigrationBox
+            migratablePositions={migratablePositions}
+            selectedPosition={selectedPosition}
+            onSelectPosition={handleSelectPosition}
+            cta={{
+              link: getMigrateVaultUrl({
+                network: vault.protocol.network,
+                vaultId: vault.id,
+                walletAddress: userWalletAddress,
+                selectedPosition,
+              }),
+            }}
+            migrationBestVaultApy={migrationBestVaultApy}
+          />
+        )
       }
     />
   )
