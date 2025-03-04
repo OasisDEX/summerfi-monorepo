@@ -1031,7 +1031,7 @@ export class ArmadaManager implements IArmadaManager {
         })
         transactions.push(
           createWithdrawTransaction({
-            target: admiralsQuartersAddress, // Use the chain-specific address for transactions with unstakeAndWithdraw
+            target: admiralsQuartersAddress,
             calldata: multicallCalldata,
             description: 'Withdraw Operations: ' + multicallOperations.join(', '),
             metadata: {
