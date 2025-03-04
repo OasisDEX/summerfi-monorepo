@@ -56,7 +56,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     userPositions,
     vaultsList,
     systemConfig,
-    migratablePositions,
+    migratablePositionsData,
   ] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
     unstableCache(getGlobalRebalances, [walletAddress], cacheConfig)(),
@@ -91,7 +91,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     userPositions,
     vaultsList,
     systemConfig,
-    migratablePositions,
+    migratablePositionsData,
   }
 }
 
@@ -130,7 +130,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     userPositions,
     vaultsList,
     systemConfig,
-    migratablePositions,
+    migratablePositionsData,
   } = await portfolioCallsHandler(walletAddress)
 
   const vaultsWithConfig = decorateVaultsWithConfig({
@@ -142,7 +142,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     ? parseServerResponseToClient<IArmadaPosition[]>(userPositions)
     : []
 
-  const _migratablePositions = parseServerResponseToClient(migratablePositions)
+  const migratablePositions = parseServerResponseToClient(migratablePositionsData)
 
   const positionsWithVault = userPositionsJsonSafe.map((position) => {
     return mergePositionWithVault({
@@ -207,7 +207,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   )
 
   const migrationBestVaultApy = getMigrationBestVaultApy({
-    migratablePositions: _migratablePositions,
+    migratablePositions,
     vaultsWithConfig,
     vaultsApyByNetworkMap,
   })
