@@ -1,6 +1,7 @@
 import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { parseServerResponseToClient, subgraphNetworkToId } from '@summerfi/app-utils'
 import { unstable_cache as unstableCache } from 'next/cache'
+import { redirect } from 'next/navigation'
 
 import { getMigratablePositions } from '@/app/server-handlers/migration'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
@@ -30,6 +31,12 @@ const MigrateLandingPage = async ({ params }: MigrateLandingPageProps) => {
     unstableCache(getMigratablePositions, [walletAddress], cacheConfig)({ walletAddress }),
   ])
   const { config: systemConfig } = parseServerResponseToClient(configRaw)
+
+  const migrationsEnabled = !!systemConfig.features?.Migrations
+
+  if (!migrationsEnabled) {
+    redirect(`/`)
+  }
 
   const migratablePositions = parseServerResponseToClient(migratablePositionsData)
 

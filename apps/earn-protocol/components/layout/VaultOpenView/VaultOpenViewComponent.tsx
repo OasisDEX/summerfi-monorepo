@@ -40,6 +40,7 @@ import { ControlsApproval, OrderInfoDeposit } from '@/components/molecules/Sideb
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
+import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
 import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { mapMigrationResponse } from '@/features/migration/helpers/map-migration-response'
@@ -89,6 +90,10 @@ export const VaultOpenViewComponent = ({
   const { publicClient } = useNetworkAlignedClient()
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
+
+  const { features } = useSystemConfig()
+
+  const migrationsEnabled = !!features?.Migrations
 
   const { userWalletAddress } = useUserWallet()
 
@@ -423,6 +428,7 @@ export const VaultOpenViewComponent = ({
         </>
       }
       rightExtraContent={
+        migrationsEnabled &&
         migratablePositions.length > 0 &&
         migrationBestVaultApy && (
           <MigrationBox

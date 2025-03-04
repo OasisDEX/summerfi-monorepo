@@ -5,6 +5,7 @@ import {
   parseServerResponseToClient,
   subgraphNetworkToId,
 } from '@summerfi/app-utils'
+import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
 import { getMedianDefiYield } from '@/app/server-handlers/defillama/get-median-defi-yield'
@@ -38,6 +39,12 @@ const MigrateVaultPage = async ({ params }: MigrateVaultPageProps) => {
   const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
   const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
+
+  const migrationsEnabled = !!systemConfig.features?.Migrations
+
+  if (!migrationsEnabled) {
+    redirect(`/`)
+  }
 
   const parsedVaultId = isAddress(vaultId)
     ? vaultId

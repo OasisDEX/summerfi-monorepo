@@ -53,6 +53,7 @@ import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistor
 import { PositionPerformanceChart } from '@/components/organisms/Charts/PositionPerformanceChart'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
+import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
@@ -195,6 +196,10 @@ export const VaultManageViewComponent = ({
   const {
     state: { sumrNetApyConfig, slippageConfig },
   } = useLocalConfig()
+
+  const { features } = useSystemConfig()
+
+  const migrationsEnabled = !!features?.Migrations
 
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
@@ -539,20 +544,23 @@ export const VaultManageViewComponent = ({
         ]}
         sidebarContent={<Sidebar {...resovledSidebarProps} />}
         rightExtraContent={
-          <MigrationBox
-            migratablePositions={migratablePositions}
-            selectedPosition={selectedPosition}
-            onSelectPosition={handleSelectPosition}
-            cta={{
-              link: getMigrateVaultUrl({
-                network: vault.protocol.network,
-                vaultId: vault.id,
-                walletAddress: viewWalletAddress,
-                selectedPosition,
-              }),
-            }}
-            migrationBestVaultApy={migrationBestVaultApy}
-          />
+          migrationsEnabled &&
+          migratablePositions.length > 0 && (
+            <MigrationBox
+              migratablePositions={migratablePositions}
+              selectedPosition={selectedPosition}
+              onSelectPosition={handleSelectPosition}
+              cta={{
+                link: getMigrateVaultUrl({
+                  network: vault.protocol.network,
+                  vaultId: vault.id,
+                  walletAddress: viewWalletAddress,
+                  selectedPosition,
+                }),
+              }}
+              migrationBestVaultApy={migrationBestVaultApy}
+            />
+          )
         }
         isMobile={isMobile}
       />

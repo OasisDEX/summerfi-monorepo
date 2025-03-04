@@ -22,6 +22,7 @@ import Link from 'next/link'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { PositionHistoricalChart } from '@/components/organisms/Charts/PositionHistoricalChart'
+import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { PortfolioSummerPro } from '@/features/portfolio/components/PortfolioSummerPro/PortfolioSummerPro'
@@ -114,6 +115,10 @@ export const PortfolioOverview = ({
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
+
+  const { features } = useSystemConfig()
+
+  const migrationsEnabled = !!features?.Migrations
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   const totalSummerPortfolioUSD = positions.reduce(
@@ -206,11 +211,13 @@ export const PortfolioOverview = ({
             style={{ marginTop: 'var(--general-space-24)' }}
           />
         </Card>
-        <PortfolioSummerPro
-          walletAddress={walletAddress}
-          migratablePositions={migratablePositions}
-          migrationBestVaultApy={migrationBestVaultApy}
-        />
+        {migrationsEnabled && (
+          <PortfolioSummerPro
+            walletAddress={walletAddress}
+            migratablePositions={migratablePositions}
+            migrationBestVaultApy={migrationBestVaultApy}
+          />
+        )}
         {/* <NewsAndUpdates items={dummyNewsAndUpdatesItems} /> */}
         {/* <CryptoUtilities /> */}
       </div>
