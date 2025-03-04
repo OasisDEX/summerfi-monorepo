@@ -299,6 +299,7 @@ export const VaultManageViewComponent = ({
       amountDisplayUSD={amountDisplayUSDWithSwap}
       handleAmountChange={handleAmountChange}
       handleDropdownChange={handleTokenSelectionChange}
+      transactionType={transactionType}
       options={tokenOptions}
       dropdownValue={selectedTokenOption}
       onFocus={onFocus}

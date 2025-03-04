@@ -20,6 +20,7 @@ import {
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import {
+  Address,
   calculatePriceImpact,
   getChainInfoByChainId,
   IAddress,
@@ -617,6 +618,30 @@ export class ArmadaManager implements IArmadaManager {
   /** PRIVATE */
 
   /**
+   * Returns the chain-specific Admirals Quarters address for unstake operations
+   * @param chainInfo The chain information
+   * @returns The appropriate Admirals Quarters address for the chain
+   */
+  private _getUnstakeAdmiralsQuartersAddress(chainInfo: ChainInfo): IAddress {
+    // Chain-specific overrides for unstake operations
+    switch (chainInfo.chainId) {
+      case 1: // Ethereum Mainnet
+        return Address.createFromEthereum({ value: '0x275CA55c32258CE10870CA4e44c071aa14A2C836' })
+      case 42161: // Arbitrum
+        return Address.createFromEthereum({ value: '0x275CA55c32258CE10870CA4e44c071aa14A2C836' })
+      case 8453: // Base
+        return Address.createFromEthereum({ value: '0x275CA55c32258CE10870CA4e44c071aa14A2C836' })
+      default:
+        // For other chains, use the deployed address
+        return getDeployedContractAddress({
+          chainInfo: chainInfo,
+          contractCategory: 'core',
+          contractName: 'admiralsQuarters',
+        })
+    }
+  }
+
+  /**
    * Internal utility method to generate a deposit TX
    *
    * @param vaultId The vault for which the deposit is being made
@@ -929,6 +954,11 @@ export class ArmadaManager implements IArmadaManager {
           reminderShares: reminderShares.toString(),
         })
 
+        // For unstakeAndWithdraw operations, get the chain-specific address
+        const unstakeAdmiralsQuartersAddress = this._getUnstakeAdmiralsQuartersAddress(
+          params.vaultId.chainInfo,
+        )
+
         const [exitWithdrawMulticall, unstakeAndWithdrawCall, priceImpact] = await Promise.all([
           this._getExitWithdrawMulticall({
             vaultId: params.vaultId,
@@ -994,7 +1024,7 @@ export class ArmadaManager implements IArmadaManager {
         })
         transactions.push(
           createWithdrawTransaction({
-            target: admiralsQuartersAddress,
+            target: unstakeAdmiralsQuartersAddress, // Use the chain-specific address for transactions with unstakeAndWithdraw
             calldata: multicallCalldata,
             description: 'Withdraw Operations: ' + multicallOperations.join(', '),
             metadata: {
@@ -1014,6 +1044,11 @@ export class ArmadaManager implements IArmadaManager {
       LoggingService.debug('fleet shares is 0, take all from staked shares', {
         outShares: requestedWithdrawShares.toString(),
       })
+
+      // Get the chain-specific address for unstakeAndWithdraw
+      const unstakeAdmiralsQuartersAddress = this._getUnstakeAdmiralsQuartersAddress(
+        params.vaultId.chainInfo,
+      )
 
       // withdraw all from staked tokens
       const [unstakeAndWithdrawCall, priceImpact] = await Promise.all([
@@ -1067,7 +1102,7 @@ export class ArmadaManager implements IArmadaManager {
 
       transactions.push(
         createWithdrawTransaction({
-          target: admiralsQuartersAddress,
+          target: unstakeAdmiralsQuartersAddress, // Use the chain-specific address for transactions with unstakeAndWithdraw
           calldata: multicallCalldata,
           description: 'Withdraw Operations: ' + multicallOperations.join(', '),
           metadata: {
