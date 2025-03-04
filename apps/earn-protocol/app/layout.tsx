@@ -50,7 +50,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <GlobalStyles />
         </head>
-        <body className={`${fontInter.variable}`}>
+        <body className={`${fontInter.className} ${fontInter.variable}`}>
           <GoogleTagManager />
           <MasterPage skipNavigation analyticsCookie={analyticsCookie}>
             <Image src={logoMaintenance} alt="Summer.fi" width={200} style={{ margin: '4rem' }} />
@@ -86,7 +86,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <head>
         <GlobalStyles />
       </head>
-      <body className={`${fontInter.variable}`}>
+      <body className={`${fontInter.className} ${fontInter.variable}`}>
         <GoogleTagManager />
         <AlchemyAccountsProvider initialState={accountKitInitializedState}>
           <GlobalEventTracker />

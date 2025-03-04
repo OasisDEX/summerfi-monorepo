@@ -6,6 +6,7 @@ export const fontInter = localFont({
       path: '../public/fonts/inter.woff2',
     },
   ],
+  weight: '400 700',
   display: 'swap',
   variable: '--font-inter',
   preload: true,
