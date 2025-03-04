@@ -20,6 +20,7 @@ import { BigNumber } from 'bignumber.js'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { MigrationMiniCard } from '@/features/migration/components/MigrationMiniCard/MigrationMiniCard'
+import { mapMigrationToPortfolioCard } from '@/features/migration/helpers/map-migration-to-portfolio-card'
 import { type MigrationState, MigrationSteps } from '@/features/migration/types'
 
 import classNames from './MigrationFormMigrateStep.module.scss'
@@ -75,6 +76,8 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
     (estimatedEarningsUSD - sourcePositionEstimatedEarningsUSD) /
     (Number(amount) * Number(vault.inputTokenPriceUSD ?? 0))
 
+  const { platformLogo } = mapMigrationToPortfolioCard(migratablePosition)
+
   return (
     <div className={classNames.migrationFormContentWrapper}>
       <div className={classNames.migrationMiniCardWrapper}>
@@ -84,7 +87,7 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
           token={migratablePosition.underlyingTokenAmount.token.symbol as TokenSymbolsList}
           type="from"
           chainId={migratablePosition.chainId}
-          platformLogo="aave"
+          platformLogo={platformLogo}
           isLoading={isQuoteLoading}
         />
         <MigrationMiniCard
