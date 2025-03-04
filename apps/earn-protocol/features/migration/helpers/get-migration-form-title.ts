@@ -15,5 +15,7 @@ export const getMigrationFormTitle = (step: MigrationSteps): string => {
       return 'Migrate'
     case MigrationSteps.COMPLETED:
       return 'Migrated successfully'
+    default:
+      return 'Migrate'
   }
 }

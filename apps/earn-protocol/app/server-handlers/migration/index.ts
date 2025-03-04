@@ -51,6 +51,9 @@ export const getMigratablePositions = async ({
     } catch (error) {
       const chainInfo = getChainInfoByChainId(chainId)
 
+      // eslint-disable-next-line no-console
+      console.error(`Failed to fetch migratable positions for chain ${chainId}:`, error)
+
       // Log error but continue with empty positions for this chain
       return {
         chainInfo,

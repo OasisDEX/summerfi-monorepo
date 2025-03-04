@@ -142,6 +142,8 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     ? parseServerResponseToClient<IArmadaPosition[]>(userPositions)
     : []
 
+  const _migratablePositions = parseServerResponseToClient(migratablePositions)
+
   const positionsWithVault = userPositionsJsonSafe.map((position) => {
     return mergePositionWithVault({
       position,
@@ -205,7 +207,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   )
 
   const migrationBestVaultApy = getMigrationBestVaultApy({
-    migratablePositions,
+    migratablePositions: _migratablePositions,
     vaultsWithConfig,
     vaultsApyByNetworkMap,
   })
