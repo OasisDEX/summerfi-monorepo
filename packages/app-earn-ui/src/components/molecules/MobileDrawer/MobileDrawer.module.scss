@@ -18,7 +18,7 @@
   }
 
   &.bottomSidebar {
-    transform: translateY(calc(100% - 102px));
+    transform: translateY(calc(100% - 80px));
   }
 
   /* Top sliding */
@@ -95,7 +95,7 @@
 
 .drawerTopContentSidebar,
 .drawerBottomContentSidebar {
-  height: calc(100% - 66px);
+  height: calc(100% - 80px);
 }
 .drawerRightContentSidebar,
 .drawerLeftContentSidebar {
@@ -116,10 +116,6 @@
 .content {
   height: 100%;
   overflow-y: auto;
-
-  > div {
-    padding: var(--spacing-space-large) var(--spacing-space-x-large);
-  }
 
   @include media('>m') {
     padding: var(--spacing-space-x-large);

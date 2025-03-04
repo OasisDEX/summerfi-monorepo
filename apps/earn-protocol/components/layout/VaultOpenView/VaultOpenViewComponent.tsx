@@ -348,8 +348,6 @@ export const VaultOpenViewComponent = ({
           isLoadingForecast={isLoadingForecast}
         />
       ) : undefined,
-    customHeaderStyles:
-      !isDrawerOpen && isMobile ? { padding: 'var(--general-space-12) 0' } : undefined,
     handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
     goBackAction: nextTransaction?.type ? backToInit : undefined,
     primaryButton: sidebar.primaryButton,

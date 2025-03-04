@@ -233,8 +233,6 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
           isLoadingForecast={isLoadingForecast}
         />
       ) : undefined,
-    customHeaderStyles:
-      !isDrawerOpen && isMobile ? { padding: 'var(--general-space-12) 0' } : undefined,
     handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
     primaryButton: {
       label: getMigrationPrimaryBtnLabel({ state }),
