@@ -1,4 +1,4 @@
-import { type FC } from 'react'
+import { type FC, useCallback, useState } from 'react'
 import { Button, Card, Expander, Text, WithArrow } from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
 import Link from 'next/link'
@@ -23,7 +23,7 @@ interface MigrationBoxProps {
 }
 
 export const MigrationBox: FC<MigrationBoxProps> = ({
-  title = 'Migrate to SummerFi',
+  title,
   className,
   selectedPosition,
   onSelectPosition,
@@ -31,12 +31,24 @@ export const MigrationBox: FC<MigrationBoxProps> = ({
   migrationBestVaultApy,
   cta,
 }) => {
+  const [isExpanded, setIsExpanded] = useState(false)
+
+  const handleExpand = useCallback((flag: boolean) => {
+    setIsExpanded(flag)
+  }, [])
+
+  const resolvedTitle =
+    title ??
+    (isExpanded
+      ? 'Select a position to migrate'
+      : `${migratablePositions.length} positions available to migrate`)
+
   return (
     <Card
       variant="cardSecondaryColorfulBorder"
       className={clsx(classNames.migrationBoxWrapper, className)}
     >
-      <Expander title={<Text variant="p2semi">{title}</Text>}>
+      <Expander title={<Text variant="p2semi">{resolvedTitle}</Text>} onExpand={handleExpand}>
         <div className={classNames.migrationCardsWrapper}>
           {migratablePositions.length === 0 && (
             <Text variant="p2" style={{ color: 'var(--earn-protocol-secondary-40)' }}>

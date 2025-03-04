@@ -219,7 +219,7 @@ export const Sidebar: FC<SidebarProps> = ({
             <Button
               variant="primaryLarge"
               onClick={primaryButton.action}
-              disabled={primaryButton.disabled}
+              disabled={primaryButton.disabled ?? primaryButton.loading}
             >
               {labelElement}
             </Button>
