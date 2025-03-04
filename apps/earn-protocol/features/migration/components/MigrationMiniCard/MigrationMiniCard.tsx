@@ -2,6 +2,7 @@ import { type FC } from 'react'
 import {
   Card,
   type CardVariant,
+  getDisplayToken,
   SkeletonLine,
   Text,
   TokenWithNetworkIcon,
@@ -57,7 +58,7 @@ export const MigrationMiniCard: FC<MigrationMiniCardProps> = ({
           <TokenWithNetworkIcon tokenName={token} chainId={chainId} />
         </div>
         <Text as="h5" variant="h5">
-          {token}
+          {getDisplayToken(token)}
         </Text>
         <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
           {description}

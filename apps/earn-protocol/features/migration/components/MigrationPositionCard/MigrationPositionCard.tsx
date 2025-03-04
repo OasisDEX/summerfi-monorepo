@@ -1,5 +1,5 @@
 import { type FC } from 'react'
-import { PositionCard, Text, TokenWithNetworkIcon } from '@summerfi/app-earn-ui'
+import { getDisplayToken, PositionCard, Text, TokenWithNetworkIcon } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
@@ -35,7 +35,7 @@ export const MigrationPositionCard: FC<MigrationPositionCardProps> = ({
       isActive={selectedPosition === id}
       platformLogo={platformLogoMap[platformLogo]}
       title={{
-        label: `${token} Deposit`,
+        label: `${getDisplayToken(token)} Deposit`,
         value: (
           <div className={classNames.migrationIconWrapper}>
             <TokenWithNetworkIcon tokenName={token} variant="small" chainId={chainId} />
