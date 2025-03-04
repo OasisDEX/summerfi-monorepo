@@ -1,5 +1,5 @@
 'use client'
-import { type FC, type ReactNode, useEffect, useState } from 'react'
+import { type FC, type ReactNode, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { type EmblaOptionsType } from 'embla-carousel'
 import useEmblaCarousel from 'embla-carousel-react'
@@ -28,7 +28,7 @@ type PropType = {
   withDots?: boolean
   dotsPosition?: SliderCarouselDotsPosition
   withAutoPlay?: boolean
-  portalElement?: HTMLDivElement | null
+  portalElementId?: string
 }
 
 export const SlideCarousel: FC<PropType> = ({
@@ -41,7 +41,7 @@ export const SlideCarousel: FC<PropType> = ({
   withDots = false,
   dotsPosition = SliderCarouselDotsPosition.TOP,
   withAutoPlay = false,
-  portalElement,
+  portalElementId,
 }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel(options)
   const [autoSlideDirection, setAutoSlideDirection] = useState<'prev' | 'next'>('next')
@@ -102,6 +102,18 @@ export const SlideCarousel: FC<PropType> = ({
     withAutoPlay,
   ])
 
+  const portal = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (portal.current === null && portalElementId) {
+      const element = document.getElementById(portalElementId) as HTMLDivElement | null
+
+      if (element) {
+        portal.current = element
+      }
+    }
+  }, [portal, portalElementId])
+
   const defaultControls = (
     <div
       className={classNames.emblaButtons}
@@ -125,9 +137,9 @@ export const SlideCarousel: FC<PropType> = ({
   return (
     <section className={`${classNames.embla} ${sectionClassName[slidesPerPage]}`}>
       {buttonPosition === SlideCarouselButtonPosition.TOP && withButtons && (
-        <div className={portalElement ? classNames.emblaControlsPortal : classNames.emblaControls}>
+        <div className={portal.current ? classNames.emblaControlsPortal : classNames.emblaControls}>
           {title}
-          {portalElement ? createPortal(defaultControls, portalElement) : defaultControls}
+          {portal.current ? createPortal(defaultControls, portal.current) : defaultControls}
         </div>
       )}
       {buttonPosition === SlideCarouselButtonPosition.ON_SIDES && (

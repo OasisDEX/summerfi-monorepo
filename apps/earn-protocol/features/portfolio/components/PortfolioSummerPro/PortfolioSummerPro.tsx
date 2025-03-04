@@ -1,4 +1,4 @@
-import { type FC, useEffect, useRef, useState } from 'react'
+import { type FC, useState } from 'react'
 import { Button, Card, SlideCarousel, TabBar, Text, WithArrow } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
@@ -24,16 +24,6 @@ export const PortfolioSummerPro: FC<PortfolioSummerProProps> = ({
   const handleSelectPosition = (id: string) => {
     setSelectedPosition(id)
   }
-
-  const portalElement = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const element = document.getElementById('portal-embla-buttons') as HTMLDivElement | null
-
-    if (element) {
-      portalElement.current = element
-    }
-  }, [])
 
   return (
     <Card variant="cardSecondary" className={classNames.portfolioSummerProWrapper}>
@@ -66,7 +56,7 @@ export const PortfolioSummerPro: FC<PortfolioSummerProProps> = ({
                         earningsData={migrationBestVaultApy[position.chainId]}
                       />
                     ))}
-                    portalElement={portalElement.current}
+                    portalElementId="portal-embla-buttons"
                     options={{ slidesToScroll: 'auto' }}
                   />
                 )}
