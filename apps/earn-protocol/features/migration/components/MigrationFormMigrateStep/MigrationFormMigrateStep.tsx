@@ -78,6 +78,10 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
 
   const { platformLogo } = mapMigrationToPortfolioCard(migratablePosition)
 
+  const withSwap =
+    migratablePosition.underlyingTokenAmount.token.symbol.toUpperCase() !==
+    vault.inputToken.symbol.toUpperCase()
+
   return (
     <div className={classNames.migrationFormContentWrapper}>
       <div className={classNames.migrationMiniCardWrapper}>
@@ -142,19 +146,23 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
       />
       <OrderInformation
         items={[
-          {
-            label: 'Swap',
-            items: [
-              {
-                label: 'Price impact',
-                value: formatDecimalAsPercent(mockedData.swap.priceImpact),
-              },
-              {
-                label: 'Slippage',
-                value: formatDecimalAsPercent(Number(slippageConfig.slippage) / 100),
-              },
-            ],
-          },
+          ...(withSwap
+            ? [
+                {
+                  label: 'Swap',
+                  items: [
+                    {
+                      label: 'Price impact',
+                      value: formatDecimalAsPercent(mockedData.swap.priceImpact),
+                    },
+                    {
+                      label: 'Slippage',
+                      value: formatDecimalAsPercent(Number(slippageConfig.slippage) / 100),
+                    },
+                  ],
+                },
+              ]
+            : []),
           {
             label: 'Transaction fee',
             value:
