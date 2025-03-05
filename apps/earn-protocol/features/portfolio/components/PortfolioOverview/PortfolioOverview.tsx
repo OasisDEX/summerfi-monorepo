@@ -60,11 +60,13 @@ const getDatablocks = ({
   overallSumr,
   availableToMigrate,
   walletAddress,
+  migrationsEnabled,
 }: {
   totalSummerPortfolioUSD: number
   overallSumr: number
   availableToMigrate: number
   walletAddress: string
+  migrationsEnabled: boolean
 }) => [
   {
     title: 'Total Summer.fi Portfolio',
@@ -76,17 +78,30 @@ const getDatablocks = ({
     title: '$SUMR Token Rewards',
     value: `${formatCryptoBalance(overallSumr)} $SUMR`,
   },
-  {
-    title: 'Available to Migrate',
-    value: `$${formatFiatBalance(availableToMigrate)}`,
-    subValue: (
-      <Link href={`/migrate/user/${walletAddress}`}>
-        <WithArrow as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-          Migrate
-        </WithArrow>
-      </Link>
-    ),
-  },
+  ...(migrationsEnabled
+    ? [
+        {
+          title: 'Available to Migrate',
+          value: `$${formatFiatBalance(availableToMigrate)}`,
+          subValue: (
+            <Link href={`/migrate/user/${walletAddress}`}>
+              <WithArrow
+                as="p"
+                variant="p3semi"
+                style={{ color: 'var(--earn-protocol-primary-100)' }}
+              >
+                Migrate
+              </WithArrow>
+            </Link>
+          ),
+        },
+      ]
+    : [
+        {
+          title: 'Available to Migrate',
+          value: `Coming Soon`,
+        },
+      ]),
 ]
 
 type PortfolioOverviewProps = {
@@ -149,6 +164,7 @@ export const PortfolioOverview = ({
           overallSumr,
           availableToMigrate,
           walletAddress,
+          migrationsEnabled,
         }).map((item) => (
           <Card
             key={item.title}
