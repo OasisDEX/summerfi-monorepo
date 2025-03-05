@@ -75,10 +75,9 @@ export const TitleWithSelect = ({
           {onRefresh && (
             <div
               onClick={onRefresh}
-              className={clsx({
+              className={clsx(titleWithSelectStyles.refreshButton, {
                 [titleWithSelectStyles.refreshing]: isRefreshing,
               })}
-              style={{ marginTop: '20px', cursor: 'pointer' }}
             >
               <Icon iconName="refresh" size={16} />
             </div>

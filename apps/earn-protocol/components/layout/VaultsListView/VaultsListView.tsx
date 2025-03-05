@@ -65,7 +65,7 @@ export const VaultsListView = ({
   vaultsApyByNetworkMap,
 }: VaultsListViewProps) => {
   const { deviceType } = useDeviceType()
-  const { isMobile, isTablet } = useMobileCheck(deviceType)
+  const { isMobile, isTablet, isMobileOrTablet } = useMobileCheck(deviceType)
 
   const [localVaultNetwork, setLocalVaultNetwork] =
     useState<VaultsListViewProps['selectedNetwork']>(selectedNetwork)
@@ -268,7 +268,7 @@ export const VaultsListView = ({
 
   return (
     <VaultGrid
-      isMobile={isMobile}
+      isMobileOrTablet={isMobileOrTablet}
       networksList={vaultsNetworksList}
       selectedNetwork={selectedNetworkOption}
       onChangeNetwork={handleChangeNetwork}
@@ -333,7 +333,7 @@ export const VaultsListView = ({
       rightContent={
         <VaultSimulationForm
           vaultData={resolvedVaultData}
-          isMobile={isMobile}
+          isMobileOrTablet={isMobileOrTablet}
           tokenBalance={tokenBalances.tokenBalance}
           isTokenBalanceLoading={tokenBalances.tokenBalanceLoading}
           selectedTokenOption={selectedTokenOption}

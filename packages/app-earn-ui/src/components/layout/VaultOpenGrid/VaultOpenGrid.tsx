@@ -38,7 +38,7 @@ interface VaultOpenGridProps {
   simulationGraph: ReactNode
   detailsContent: ReactNode
   sidebarContent: ReactNode
-  isMobile?: boolean
+  isMobileOrTablet?: boolean
   medianDefiYield?: number
   sumrPrice?: number
   onRefresh?: (chainName?: string, vaultId?: string, walletAddress?: string) => void
@@ -59,7 +59,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   simulationGraph,
   detailsContent,
   sidebarContent,
-  isMobile,
+  isMobileOrTablet,
   medianDefiYield,
   sumrPrice,
   onRefresh,
@@ -257,7 +257,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
               />
             </Box>
           </SimpleGrid>
-          {isMobile && rightExtraContent && (
+          {isMobileOrTablet && rightExtraContent && (
             <div className={vaultOpenGridStyles.rightExtraBlockMobileWrapper}>
               {rightExtraContent}
             </div>
@@ -271,7 +271,9 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
           </div>
         </div>
       </div>
-      {isMobile && <div className={vaultOpenGridStyles.rightBlockMobile}>{sidebarContent}</div>}
+      {isMobileOrTablet && (
+        <div className={vaultOpenGridStyles.rightBlockMobile}>{sidebarContent}</div>
+      )}
     </>
   )
 }

@@ -1,7 +1,7 @@
 .drawer {
   position: fixed;
   overflow: hidden;
-  background-color: var(--earn-protocol-neutral-100);
+  background-color: var(--earn-protocol-neutral-90);
   z-index: 1000;
   transition: transform 0.3s ease-out;
   visibility: visible;
@@ -18,7 +18,7 @@
   }
 
   &.bottomSidebar {
-    transform: translateY(calc(100% - 80px));
+    transform: translateY(calc(100% - 87px));
   }
 
   /* Top sliding */
@@ -96,6 +96,10 @@
 .drawerTopContentSidebar,
 .drawerBottomContentSidebar {
   height: calc(100% - 80px);
+
+  @media all and (orientation: landscape) {
+    height: 100%;
+  }
 }
 .drawerRightContentSidebar,
 .drawerLeftContentSidebar {
@@ -117,7 +121,11 @@
   height: 100%;
   overflow-y: auto;
 
-  @include media('>m') {
+  > div {
+    padding: var(--spacing-space-large) var(--spacing-space-x-large);
+  }
+
+  @include media('>l') {
     padding: var(--spacing-space-x-large);
   }
 }

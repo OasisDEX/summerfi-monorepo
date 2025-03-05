@@ -89,7 +89,7 @@ export const VaultOpenViewComponent = ({
   })
   const { publicClient } = useNetworkAlignedClient()
   const { deviceType } = useDeviceType()
-  const { isMobile } = useMobileCheck(deviceType)
+  const { isMobileOrTablet } = useMobileCheck(deviceType)
 
   const { features } = useSystemConfig()
 
@@ -340,7 +340,7 @@ export const VaultOpenViewComponent = ({
     title: sidebar.title,
     content: sidebarContent,
     customHeader:
-      !isDrawerOpen && isMobile ? (
+      !isDrawerOpen && isMobileOrTablet ? (
         <SidebarMobileHeader
           type="open"
           amount={estimatedEarnings}
@@ -369,7 +369,7 @@ export const VaultOpenViewComponent = ({
       </>
     ),
     error: sidebar.error,
-    isMobile,
+    isMobileOrTablet,
   }
 
   const nextTransactionType = nextTransaction?.type
@@ -385,7 +385,7 @@ export const VaultOpenViewComponent = ({
 
   return (
     <VaultOpenGrid
-      isMobile={isMobile}
+      isMobileOrTablet={isMobileOrTablet}
       vault={vault}
       vaults={vaults}
       medianDefiYield={medianDefiYield}

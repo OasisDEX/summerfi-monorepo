@@ -6,7 +6,8 @@ import { NavConfigContent } from '@/features/nav-config/components/NavConfigCont
 
 export const NavConfig = () => {
   const { deviceType } = useDeviceType()
-  const { isMobile } = useMobileCheck(deviceType)
+  const { isMobileOrTablet } = useMobileCheck(deviceType)
+
   const [isOpen, setIsOpen] = useState(false)
 
   const handleOpenClose = () => {
@@ -22,7 +23,7 @@ export const NavConfig = () => {
       >
         <Icon iconName="cog" size={20} />
       </Button>
-      {isMobile ? (
+      {isMobileOrTablet ? (
         <MobileDrawer isOpen={isOpen} onClose={handleOpenClose} height="auto">
           <NavConfigContent handleOpenClose={handleOpenClose} />
         </MobileDrawer>
