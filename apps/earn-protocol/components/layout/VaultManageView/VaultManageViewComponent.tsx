@@ -203,8 +203,10 @@ export const VaultManageViewComponent = ({
   const migrationsEnabled = !!features?.Migrations
 
   const { deviceType } = useDeviceType()
-  const { isMobile } = useMobileCheck(deviceType)
+  const { isMobile, isTablet } = useMobileCheck(deviceType)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+
+  const isMobileOrTablet = isMobile || isTablet
 
   const { amountDisplayUSDWithSwap, rawToTokenAmount } = useAmountWithSwap({
     vault,
@@ -373,7 +375,7 @@ export const VaultManageViewComponent = ({
       </>
     ),
     error: sidebar.error,
-    isMobile,
+    isMobileOrTablet,
   }
 
   const nextTransactionType = nextTransaction?.type

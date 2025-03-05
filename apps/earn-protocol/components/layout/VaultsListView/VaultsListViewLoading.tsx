@@ -14,11 +14,13 @@ import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 
 export const VaultsListViewLoading = () => {
   const { deviceType } = useDeviceType()
-  const { isMobile } = useMobileCheck(deviceType)
+  const { isMobile, isTablet } = useMobileCheck(deviceType)
+
+  const isMobileOrTablet = isMobile || isTablet
 
   return (
     <VaultGrid
-      isMobile={isMobile}
+      isMobileOrTablet={isMobileOrTablet}
       networksList={[]}
       onChangeNetwork={() => null}
       topContent={

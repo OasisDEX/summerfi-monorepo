@@ -41,7 +41,8 @@ export const useTermsOfServiceSidebar = ({
   handleGoBack: () => void
 }) => {
   const { deviceType } = useDeviceType()
-  const { isMobile } = useMobileCheck(deviceType)
+  const { isMobile, isTablet } = useMobileCheck(deviceType)
+  const isMobileOrTablet = isMobile || isTablet
   const { checkRisk } = useRiskVerification({ cookiePrefix: TermsOfServiceCookiePrefix.APP_TOKEN })
   const tosStatus = tosState.status
   const tosAction = 'action' in tosState ? tosState.action : undefined
@@ -99,7 +100,7 @@ export const useTermsOfServiceSidebar = ({
       disabled: tosState.status === TOSStatus.LOADING,
       action: () => handleGoBack(),
     },
-    isMobile,
+    isMobileOrTablet,
   }
 
   return { tosSidebarProps }
