@@ -9,7 +9,6 @@ import { useUserWallet } from './use-user-wallet'
 
 /**
  * Hook to verify wallet risk status.
- *
  * Performs risk assessment check for the connected wallet and handles risky wallet detection.
  * If a wallet is flagged as risky, the user will be logged out and notified.
  * @param {TermsOfServiceCookiePrefix} cookiePrefix - The cookie prefix to use for the risk check
