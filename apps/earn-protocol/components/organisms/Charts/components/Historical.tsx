@@ -1,5 +1,10 @@
 import { useState } from 'react'
-import { getDisplayToken, getPositionValues, RechartResponsiveWrapper } from '@summerfi/app-earn-ui'
+import {
+  getDisplayToken,
+  getPositionValues,
+  RechartResponsiveWrapper,
+  useMobileCheck,
+} from '@summerfi/app-earn-ui'
 import {
   type IArmadaPosition,
   type SDKVaultishType,
@@ -22,6 +27,7 @@ import { ChartCross } from '@/components/organisms/Charts/components/ChartCross'
 import { HistoricalLegend } from '@/components/organisms/Charts/components/HistoricalLegend'
 import { NotEnoughData } from '@/components/organisms/Charts/components/NotEnoughData'
 import { DAYS_TO_WAIT_FOR_CHART, POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
+import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { formatChartCryptoValue } from '@/features/forecast/chart-formatters'
 
 export type HistoricalChartProps = {
@@ -40,6 +46,9 @@ export const HistoricalChart = ({
   portfolioPosition,
   timeframe,
 }: HistoricalChartProps) => {
+  const { deviceType } = useDeviceType()
+  const { isMobile } = useMobileCheck(deviceType)
+
   const { netValue, netDeposited, netEarnings } = getPositionValues(portfolioPosition)
   const positionToken = getDisplayToken(portfolioPosition.vault.inputToken.symbol)
 
@@ -74,7 +83,9 @@ export const HistoricalChart = ({
             ? {
                 marginLeft: '70%',
               }
-            : {}
+            : {
+                marginLeft: '-20px',
+              }
         }
       >
         <ComposedChart
@@ -159,8 +170,8 @@ export const HistoricalChart = ({
               }
               iconType="circle"
               iconSize={10}
-              align="right"
-              verticalAlign="top"
+              align={isMobile ? 'center' : 'right'}
+              verticalAlign={isMobile ? 'bottom' : 'top'}
               layout="vertical"
             />
           )}

@@ -9,6 +9,7 @@ import {
   SUMR_CAP,
   Text,
   useLocalConfig,
+  useMobileCheck,
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import {
@@ -22,6 +23,7 @@ import Link from 'next/link'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { PositionHistoricalChart } from '@/components/organisms/Charts/PositionHistoricalChart'
+import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
@@ -131,6 +133,9 @@ export const PortfolioOverview = ({
     state: { sumrNetApyConfig },
   } = useLocalConfig()
 
+  const { deviceType } = useDeviceType()
+  const { isMobile, isTablet } = useMobileCheck(deviceType)
+
   const { features } = useSystemConfig()
 
   const migrationsEnabled = !!features?.Migrations
@@ -187,6 +192,7 @@ export const PortfolioOverview = ({
           {positions.length > 0 ? (
             positions.map((position) => (
               <PortfolioPosition
+                isMobile={isMobile || isTablet}
                 key={`Position_${position.position.id.id}_${position.vault.protocol.network}`}
                 portfolioPosition={position}
                 positionGraph={

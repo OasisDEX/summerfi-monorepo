@@ -24,6 +24,7 @@ type PortfolioPositionProps = {
   positionGraph: ReactNode
   sumrPrice?: number
   apy?: number
+  isMobile?: boolean
 }
 
 const PortfolioPositionHeaderValue = ({
@@ -50,6 +51,7 @@ export const PortfolioPosition = ({
   positionGraph,
   sumrPrice,
   apy,
+  isMobile,
 }: PortfolioPositionProps) => {
   const {
     inputToken,
@@ -86,17 +88,32 @@ export const PortfolioPosition = ({
     totalValueLockedUSD,
   )
 
+  const linkToPosition = (
+    <Link
+      href={getVaultPositionUrl({
+        network: protocol.network,
+        vaultId: customFields?.slug ?? vaultId,
+        walletAddress,
+      })}
+    >
+      <Button variant="primarySmall" style={{ width: 'fit-content', margin: '0 auto' }}>
+        View&nbsp;position
+      </Button>
+    </Link>
+  )
+
   return (
     <Card variant="cardPrimary" style={{ marginTop: 'var(--general-space-20)' }}>
       <div className={portfolioPositionStyles.positionWrapper}>
         <div className={portfolioPositionStyles.basicInfoWrapper}>
-          <div style={{ width: '100%' }}>
+          <div className={portfolioPositionStyles.titleWithRisk}>
             <VaultTitleWithRisk
               symbol={getDisplayToken(inputToken.symbol)}
               risk={customFields?.risk ?? 'lower'}
               networkName={protocol.network}
               titleVariant="h3"
             />
+            {isMobile && linkToPosition}
           </div>
           <PortfolioPositionHeaderValue
             titleVariant="p3semiColorful"
@@ -110,17 +127,7 @@ export const PortfolioPosition = ({
           />
           <PortfolioPositionHeaderValue title="30d APY" value={apr30dParsed} />
           <PortfolioPositionHeaderValue title="Current APY" value={currentApr} />
-          <Link
-            href={getVaultPositionUrl({
-              network: protocol.network,
-              vaultId: customFields?.slug ?? vaultId,
-              walletAddress,
-            })}
-          >
-            <Button variant="primarySmall" style={{ width: 'fit-content', margin: '0 auto' }}>
-              View&nbsp;position
-            </Button>
-          </Link>
+          {!isMobile && linkToPosition}
         </div>
         <div className={portfolioPositionStyles.graphWrapper}>{positionGraph}</div>
       </div>

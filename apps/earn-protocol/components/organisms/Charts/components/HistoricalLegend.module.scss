@@ -1,5 +1,9 @@
 .historicalLegendWrapper {
-  margin-left: 80px;
+  margin-left: 0;
+
+  @media (min-width: 768px) {
+    margin-left: 80px;
+  }
 }
 
 .historicalLegendItemWrapper {

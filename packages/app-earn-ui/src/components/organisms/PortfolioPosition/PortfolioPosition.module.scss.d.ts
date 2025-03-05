@@ -4,6 +4,7 @@ export type Styles = {
   header: string
   positionWrapper: string
   strategyInfoTopWrapper: string
+  titleWithRisk: string
   value: string
 }
 

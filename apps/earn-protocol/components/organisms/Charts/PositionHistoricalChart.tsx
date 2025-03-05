@@ -21,6 +21,8 @@ export type PositionHistoricalChartProps = {
   }
 }
 
+import classNames from './PositionHistoricalChart.module.scss'
+
 export const PositionHistoricalChart = ({
   chartData,
   tokenSymbol,
@@ -52,6 +54,7 @@ export const PositionHistoricalChart = ({
           paddingLeft: 0,
         }),
       }}
+      className={classNames.positionHistoricalChartWrapper}
     >
       <HistoricalChart
         timeframe={staticTimeframe}

@@ -1,15 +1,33 @@
 .positionWrapper {
   width: 100%;
-  padding: var(--general-space-12);
+  padding: unset;
+
+  @media (min-width: 768px) {
+    padding: var(--general-space-12);
+  }
 }
 
 .basicInfoWrapper {
   display: flex;
   align-items: center;
-  gap: var(--spacing-space-2x-large);
+  gap: var(--spacing-space-medium-large);
+  flex-wrap: wrap;
+  justify-content: space-between;
 
-  @include media('<=s') {
-    flex-direction: column;
+  @media (min-width: 1279px) {
+    gap: var(--spacing-space-2x-large);
+  }
+
+  .titleWithRisk {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: var(--general-space-16);
+
+    @media (min-width: 1024px) {
+      width: 30%;
+    }
   }
 }
 
@@ -18,7 +36,7 @@
   flex-direction: column;
   text-align: center;
 
-  &>* {
+  & > * {
     white-space: nowrap;
   }
 
@@ -29,7 +47,6 @@
   .value {
     color: var(--color-text-primary);
   }
-
 }
 
 .graphWrapper {
