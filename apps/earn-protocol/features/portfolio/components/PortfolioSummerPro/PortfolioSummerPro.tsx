@@ -1,5 +1,14 @@
 import { type FC, useState } from 'react'
-import { Button, Card, SlideCarousel, TabBar, Text, WithArrow } from '@summerfi/app-earn-ui'
+import {
+  Button,
+  Card,
+  SlideCarousel,
+  SliderCarouselDotsPosition,
+  TabBar,
+  Text,
+  useMobileCheck,
+  WithArrow,
+} from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
@@ -19,6 +28,8 @@ export const PortfolioSummerPro: FC<PortfolioSummerProProps> = ({
   migratablePositions,
   migrationBestVaultApy,
 }) => {
+  const { isMobile } = useMobileCheck()
+
   const [selectedPosition, setSelectedPosition] = useState<string>()
 
   const handleSelectPosition = (id: string) => {
@@ -47,6 +58,8 @@ export const PortfolioSummerPro: FC<PortfolioSummerProProps> = ({
                 )}
                 {migratablePositions.length > 0 && (
                   <SlideCarousel
+                    withDots={isMobile}
+                    dotsPosition={SliderCarouselDotsPosition.BOTTOM}
                     slides={migratablePositions.map((position) => (
                       <MigrationPositionCard
                         key={position.id}

@@ -3,9 +3,11 @@ import {
   getVaultUrl,
   Icon,
   SlideCarousel,
+  SliderCarouselDotsPosition,
   SUMR_CAP,
   Text,
   useLocalConfig,
+  useMobileCheck,
   VaultCard,
 } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
@@ -29,6 +31,8 @@ export const PortfolioVaultsCarousel: FC<PortfolioVaultsCarouselProps> = ({
 }) => {
   const { push } = useRouter()
 
+  const { isMobile } = useMobileCheck()
+
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
@@ -38,6 +42,8 @@ export const PortfolioVaultsCarousel: FC<PortfolioVaultsCarouselProps> = ({
   return (
     <div style={{ width: '100%', ...style }} className={className}>
       <SlideCarousel
+        withDots={isMobile}
+        dotsPosition={SliderCarouselDotsPosition.BOTTOM}
         slides={vaultsList.map((vault) => (
           <VaultCard
             key={vault.id}
@@ -60,6 +66,7 @@ export const PortfolioVaultsCarousel: FC<PortfolioVaultsCarouselProps> = ({
             </Text>
           </div>
         }
+        withAutoPlay={isMobile}
       />
     </div>
   )
