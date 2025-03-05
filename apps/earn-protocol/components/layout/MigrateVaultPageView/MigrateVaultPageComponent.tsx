@@ -70,7 +70,7 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
   walletAddress,
 }) => {
   const { deviceType } = useDeviceType()
-  const { isMobile } = useMobileCheck(deviceType)
+  const { isMobile, isTablet } = useMobileCheck(deviceType)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const { push } = useRouter()
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
@@ -208,6 +208,8 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
     console.error('No action to take')
   }
 
+  const isMobileOrTablet = isMobile || isTablet
+
   const sidebarProps = {
     title: getMigrationFormTitle(state.step),
     content: (
@@ -261,7 +263,7 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
 
   return (
     <VaultOpenGrid
-      isMobile={isMobile}
+      isMobileOrTablet={isMobileOrTablet}
       vault={vault}
       vaults={vaults}
       medianDefiYield={medianDefiYield}
