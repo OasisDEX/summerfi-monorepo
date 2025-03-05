@@ -10,19 +10,9 @@ export const rebalancingActivityColumns = [
     sortable: false,
   },
   {
-    title: 'Amount',
-    key: 'amount',
-    sortable: true,
-  },
-  {
     title: 'Strategy',
     key: 'strategy',
     sortable: false,
-  },
-  {
-    title: 'Timestamp',
-    key: 'timestamp',
-    sortable: true,
   },
   {
     title: 'Transaction',
@@ -31,9 +21,4 @@ export const rebalancingActivityColumns = [
   },
 ]
 
-export const rebalancingActivityColumnsHiddenOnMobile = [
-  'amount',
-  'strategy',
-  'timestamp',
-  'transaction',
-]
+export const rebalancingActivityColumnsHiddenOnMobile = ['strategy', 'transaction']

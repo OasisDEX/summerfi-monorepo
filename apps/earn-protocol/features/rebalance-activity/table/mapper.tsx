@@ -82,35 +82,54 @@ export const rebalancingActivityMapper = (
       content: {
         purpose: (
           <TableCellNodes gap="medium">
-            {purpose.icon && (
-              <Icon
-                iconName={purpose.icon}
-                variant="xs"
-                color="var(--earn-protocol-secondary-40)"
-              />
-            )}
-            <TableCellText>{purpose.label}</TableCellText>
+            <TableCellNodes gap="medium">
+              {purpose.icon && (
+                <Icon
+                  iconName={purpose.icon}
+                  variant="xs"
+                  color="var(--earn-protocol-secondary-40)"
+                />
+              )}
+            </TableCellNodes>
+            <TableCellNodes
+              gap="small"
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
+            >
+              <TableCellNodes gap="medium">
+                <TableCellText>{purpose.label}</TableCellText>
+              </TableCellNodes>
+              <TableCellNodes gap="medium">
+                <TableCellText
+                  suppressHydrationWarning
+                  style={{ color: 'var(--earn-protocol-secondary-40)' }}
+                >
+                  {timeAgo({ from: new Date(), to: new Date(Number(item.timestamp) * 1000) })}
+                </TableCellText>
+              </TableCellNodes>
+            </TableCellNodes>
           </TableCellNodes>
         ),
         action: (
-          <TableCellNodes gap="small">
-            <TableCellText>{actionFromLabel}</TableCellText>
-            <Text style={{ color: 'var(--earn-protocol-secondary-40)', fontSize: '14px' }}>→</Text>
-            <TableCellText>{actionToLabel}</TableCellText>
-          </TableCellNodes>
-        ),
-        amount: (
-          <TableCellNodes gap="small">
-            <Icon tokenName={asset} variant="s" />
-            <TableCellText>{formatCryptoBalance(amount)}</TableCellText>
+          <TableCellNodes
+            gap="small"
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}
+          >
+            <TableCellNodes gap="small" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <TableCellText>{actionFromLabel}</TableCellText>
+              <Text style={{ color: 'var(--earn-protocol-secondary-40)', fontSize: '14px' }}>
+                →
+              </Text>
+              <TableCellText>{actionToLabel}</TableCellText>
+            </TableCellNodes>
+            <TableCellNodes gap="small">
+              <Icon tokenName={asset} variant="s" />
+              <TableCellText style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+                {formatCryptoBalance(amount)} rebalanced
+              </TableCellText>{' '}
+            </TableCellNodes>
           </TableCellNodes>
         ),
         strategy: <TableCellText>{item.vault.name}</TableCellText>,
-        timestamp: (
-          <TableCellText suppressHydrationWarning>
-            {timeAgo({ from: new Date(), to: new Date(Number(item.timestamp) * 1000) })}
-          </TableCellText>
-        ),
         transaction: (
           <Link href={scannerLink} target="_blank">
             <WithArrow

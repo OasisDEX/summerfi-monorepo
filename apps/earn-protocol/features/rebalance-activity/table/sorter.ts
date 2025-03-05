@@ -10,6 +10,8 @@ export const rebalanceActivitySorter = ({
   sortConfig?: TableSortedColumn<string>
 }) => {
   switch (sortConfig?.key) {
+    // currently amount and timestamp columns has been hidden and its content was moved to other columns
+    // without sorting functionality
     case 'amount':
       return data.sort((a, b) =>
         simpleSort({ a: a.amount, b: b.amount, direction: sortConfig.direction }),
