@@ -96,6 +96,10 @@
 .drawerTopContentSidebar,
 .drawerBottomContentSidebar {
   height: calc(100% - 80px);
+
+  @media all and (orientation: landscape) {
+    height: 100%;
+  }
 }
 .drawerRightContentSidebar,
 .drawerLeftContentSidebar {
