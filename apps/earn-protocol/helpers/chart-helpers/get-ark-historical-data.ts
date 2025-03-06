@@ -106,21 +106,6 @@ export const getArkHistoricalChartData = ({
     (arkName) => !arkName.toLowerCase().includes('buffer'),
   ) as string[]
 
-  if (vaultsInterestRates.latestInterestRate.length !== 0) {
-    const timestamp = dayjs(vaultsInterestRates.latestInterestRate[0].date * 1000).format(
-      CHART_TIMESTAMP_FORMAT,
-    )
-
-    chartsDataRaw['7d'][timestamp] = {
-      timestamp,
-      [vaultName]: Number(vaultsInterestRates.latestInterestRate[0].averageRate),
-    }
-    chartsDataRaw['30d'][timestamp] = {
-      timestamp,
-      [vaultName]: Number(vaultsInterestRates.latestInterestRate[0].averageRate),
-    }
-  }
-
   // mapping the interest rates for the vault itself
   for (const vaultHourlyInterestRate of vaultsInterestRates.hourlyInterestRates) {
     const timestamp = dayjs(Number(vaultHourlyInterestRate.date) * 1000).startOf('hour')

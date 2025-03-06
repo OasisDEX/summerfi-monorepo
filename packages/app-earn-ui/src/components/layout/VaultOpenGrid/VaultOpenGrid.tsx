@@ -223,7 +223,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                     <Tooltip
                       tooltip={
                         <>
-                          Median&nbsp;DeFi&nbsp;Yield:&nbsp;$
+                          Median&nbsp;DeFi&nbsp;Yield:&nbsp;
                           {formatDecimalAsPercent(medianBN.div(100))}
                         </>
                       }
