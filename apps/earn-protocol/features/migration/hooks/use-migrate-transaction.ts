@@ -45,22 +45,22 @@ export const useMigrateTransaction = ({
   onMigrateError,
   onApproveSuccess,
   onApproveError,
+  handleInitialStep,
   walletAddress,
   fleetAddress,
   positionId,
   slippage,
-  handleInitialStep,
   step,
 }: {
   onMigrateSuccess: () => void
   onMigrateError: () => void
   onApproveSuccess: () => void
   onApproveError: () => void
+  handleInitialStep: (initialStep: MigrationSteps) => void
   walletAddress: string
   fleetAddress: string
   positionId: Address
   slippage: number
-  handleInitialStep: (initialStep: MigrationSteps) => void
   step: MigrationSteps
 }) => {
   const { publicClient } = useNetworkAlignedClient()

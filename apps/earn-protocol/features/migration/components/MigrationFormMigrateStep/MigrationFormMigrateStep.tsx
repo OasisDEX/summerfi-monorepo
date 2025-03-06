@@ -19,7 +19,10 @@ import {
 import { BigNumber } from 'bignumber.js'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
-import { MigrationMiniCard } from '@/features/migration/components/MigrationMiniCard/MigrationMiniCard'
+import {
+  MigrationMiniCard,
+  MigrationMiniCardType,
+} from '@/features/migration/components/MigrationMiniCard/MigrationMiniCard'
 import { mapMigrationToPortfolioCard } from '@/features/migration/helpers/map-migration-to-portfolio-card'
 import { type MigrationState, MigrationSteps } from '@/features/migration/types'
 
@@ -89,7 +92,7 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
           description="Passive Lending"
           amount={`$${formatFiatBalance(sourcePositionEstimatedEarningsUSD)}`}
           token={migratablePosition.underlyingTokenAmount.token.symbol as TokenSymbolsList}
-          type="from"
+          type={MigrationMiniCardType.FROM}
           chainId={migratablePosition.chainId}
           platformLogo={platformLogo}
           isLoading={isQuoteLoading}
@@ -99,7 +102,7 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
           amount={`$${formatFiatBalance(estimatedEarningsUSD)}`}
           change={formatDecimalAsPercent(apyDiff, { plus: true })}
           token={vault.inputToken.symbol as TokenSymbolsList}
-          type="to"
+          type={MigrationMiniCardType.TO}
           chainId={subgraphNetworkToSDKId(vault.protocol.network)}
           platformLogo="summer"
           isLoading={isLoadingForecast || isQuoteLoading}

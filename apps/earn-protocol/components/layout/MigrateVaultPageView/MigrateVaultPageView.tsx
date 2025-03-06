@@ -5,7 +5,6 @@ import {
   type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
-  type SDKVaultType,
   type UsersActivity,
 } from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
@@ -16,7 +15,7 @@ import { sdkApiUrl } from '@/constants/sdk'
 import { MigrateVaultPageComponent } from './MigrateVaultPageComponent'
 
 type MigrateVaultPageViewProps = {
-  vault: SDKVaultType | SDKVaultishType
+  vault: SDKVaultishType
   vaults: SDKVaultsListType
   userActivity: UsersActivity
   topDepositors: SDKUsersActivityType

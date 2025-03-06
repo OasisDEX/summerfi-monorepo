@@ -45,7 +45,7 @@ import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
 type MigrateVaultPageComponentProps = {
-  vault: SDKVaultType | SDKVaultishType
+  vault: SDKVaultishType
   vaults: SDKVaultsListType
   userActivity: UsersActivity
   topDepositors: SDKUsersActivityType

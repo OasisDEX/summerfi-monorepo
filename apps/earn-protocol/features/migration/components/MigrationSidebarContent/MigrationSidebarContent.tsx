@@ -1,5 +1,5 @@
 import { type FC } from 'react'
-import { type SDKVaultishType, type SDKVaultType } from '@summerfi/app-types'
+import { type SDKVaultishType } from '@summerfi/app-types'
 import { type BigNumber } from 'bignumber.js'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
@@ -10,7 +10,7 @@ import { type MigrationState, MigrationSteps } from '@/features/migration/types'
 interface MigrationSidebarContentProps {
   estimatedEarnings: string
   migratablePosition: MigratablePosition
-  vault: SDKVaultType | SDKVaultishType
+  vault: SDKVaultishType
   amount?: BigNumber
   state: MigrationState
   transactionFeeLoading: boolean

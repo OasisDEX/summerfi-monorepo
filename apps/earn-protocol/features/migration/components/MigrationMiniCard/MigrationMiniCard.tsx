@@ -15,20 +15,25 @@ import { platformLogoMap } from '@/helpers/platform-logo-map'
 
 import classNames from './MigrationMiniCard.module.scss'
 
+export enum MigrationMiniCardType {
+  FROM = 'from',
+  TO = 'to',
+}
+
 interface MigrationMiniCardProps {
   description: string
   amount: string
   change?: string
   token: TokenSymbolsList
   chainId: SDKChainId
-  type: 'from' | 'to'
+  type: MigrationMiniCardType
   platformLogo: PlatformLogo
   isLoading?: boolean
 }
 
-const variantMap: { [key in MigrationMiniCardProps['type']]: CardVariant } = {
-  from: 'cardPrimarySmallPaddings',
-  to: 'cardSecondarySmallPaddingsColorfulBorder',
+const variantMap: { [key in MigrationMiniCardType]: CardVariant } = {
+  [MigrationMiniCardType.FROM]: 'cardPrimarySmallPaddings',
+  [MigrationMiniCardType.TO]: 'cardSecondarySmallPaddingsColorfulBorder',
 }
 
 export const MigrationMiniCard: FC<MigrationMiniCardProps> = ({
@@ -68,7 +73,7 @@ export const MigrationMiniCard: FC<MigrationMiniCardProps> = ({
         className={classNames.divider}
         style={{
           backgroundColor:
-            type === 'from'
+            type === MigrationMiniCardType.FROM
               ? 'var(--earn-protocol-neutral-90)'
               : 'var(--earn-protocol-neutral-100)',
         }}
