@@ -12,7 +12,7 @@ export const getMigrationSidebarError = ({ state }: { state: MigrationState }) =
     return 'Failed to approve, please try again'
   }
 
-  if (state.migrateStatus === MigrationTxStatuses.FAILED) {
+  if (state.migrationStatus === MigrationTxStatuses.FAILED) {
     return 'Failed to migrate, please try again'
   }
 

@@ -3,7 +3,7 @@ import { type FC, useMemo, useState } from 'react'
 import {
   Button,
   Card,
-  getMigrateVaultUrl,
+  getMigrationVaultUrl,
   getUniqueVaultId,
   Icon,
   MobileDrawer,
@@ -43,7 +43,7 @@ import { MigrationLandingPageIlustration } from '@/features/migration/components
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { NavConfigContent } from '@/features/nav-config/components/NavConfigContent/NavConfigContent'
 
-import classNames from './MigrateLandingPageView.module.scss'
+import classNames from './MigrationLandingPageView.module.scss'
 
 const contentCards: {
   title: string
@@ -76,7 +76,7 @@ const allNetworksOption: DropdownOption = {
   value: 'all-networks',
 }
 
-interface MigrateLandingPageViewProps {
+interface MigrationLandingPageViewProps {
   vaultsList: SDKVaultsListType
   selectedNetwork?: SDKNetwork | 'all-networks'
   vaultsApyByNetworkMap: GetVaultsApyResponse
@@ -85,7 +85,7 @@ interface MigrateLandingPageViewProps {
   migrationBestVaultApy: MigrationEarningsDataByChainId
 }
 
-export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
+export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
   vaultsList,
   selectedNetwork = 'all-networks',
   vaultsApyByNetworkMap,
@@ -100,7 +100,7 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
     state: { sumrNetApyConfig },
   } = useLocalConfig()
   const [localVaultNetwork, setLocalVaultNetwork] =
-    useState<MigrateLandingPageViewProps['selectedNetwork']>(selectedNetwork)
+    useState<MigrationLandingPageViewProps['selectedNetwork']>(selectedNetwork)
   const [isConfigOpen, setIsConfigOpen] = useState(false)
 
   const positionId = searchParams.get('positionId')
@@ -140,7 +140,7 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
   )
 
   const handleChangeNetwork = (selected: DropdownRawOption) => {
-    setLocalVaultNetwork(selected.value as MigrateLandingPageViewProps['selectedNetwork'])
+    setLocalVaultNetwork(selected.value as MigrationLandingPageViewProps['selectedNetwork'])
     setSelectedVaultId(undefined)
   }
 
@@ -166,14 +166,14 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
 
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
-  const migrateVaultUrl = useMemo(() => {
+  const migrationVaultUrl = useMemo(() => {
     if (!selectedVaultId || !selectedPosition) {
       return '/migrate'
     }
 
     const [vaultId, vaultNetwork] = selectedVaultId.split('-')
 
-    return getMigrateVaultUrl({
+    return getMigrationVaultUrl({
       network: vaultNetwork as SDKNetwork,
       vaultId,
       walletAddress,
@@ -188,7 +188,7 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
   }, [migratablePositions, selectedPosition])
 
   return (
-    <div className={classNames.migrateLandingPageViewWrapper}>
+    <div className={classNames.migrationLandingPageViewWrapper}>
       <MigrationBox
         className={classNames.migrationBox}
         migratablePositions={migratablePositions}
@@ -196,7 +196,7 @@ export const MigrateLandingPageView: FC<MigrateLandingPageViewProps> = ({
         onSelectPosition={handleSelectPosition}
         migrationBestVaultApy={migrationBestVaultApy}
         cta={{
-          link: migrateVaultUrl,
+          link: migrationVaultUrl,
           disabled: !selectedVaultId,
         }}
       />

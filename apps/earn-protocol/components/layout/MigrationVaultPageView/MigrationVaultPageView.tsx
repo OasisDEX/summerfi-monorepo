@@ -12,9 +12,9 @@ import { SDKContextProvider } from '@summerfi/sdk-client-react'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { sdkApiUrl } from '@/constants/sdk'
 
-import { MigrateVaultPageComponent } from './MigrateVaultPageComponent'
+import { MigrationVaultPageComponent } from './MigrationVaultPageComponent'
 
-type MigrateVaultPageViewProps = {
+type MigrationVaultPageViewProps = {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
   userActivity: UsersActivity
@@ -27,7 +27,7 @@ type MigrateVaultPageViewProps = {
   walletAddress: string
 }
 
-export const MigrateVaultPageView: FC<MigrateVaultPageViewProps> = ({
+export const MigrationVaultPageView: FC<MigrationVaultPageViewProps> = ({
   vault,
   vaults,
   userActivity,
@@ -41,7 +41,7 @@ export const MigrateVaultPageView: FC<MigrateVaultPageViewProps> = ({
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
-      <MigrateVaultPageComponent
+      <MigrationVaultPageComponent
         vault={vault}
         vaults={vaults}
         userActivity={userActivity}

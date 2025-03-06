@@ -36,7 +36,7 @@ import { MigrationSidebarContent } from '@/features/migration/components/Migrati
 import { getMigrationFormTitle } from '@/features/migration/helpers/get-migration-form-title'
 import { getMigrationPrimaryBtnLabel } from '@/features/migration/helpers/get-migration-primary-btn-label'
 import { getMigrationSidebarError } from '@/features/migration/helpers/get-migration-sidebar-error'
-import { useMigrateTransaction } from '@/features/migration/hooks/use-migrate-transaction'
+import { useMigrationTransaction } from '@/features/migration/hooks/use-migration-transaction'
 import { migrationReducer, migrationState } from '@/features/migration/state'
 import { MigrationSteps, MigrationTxStatuses } from '@/features/migration/types'
 import { revalidatePositionData } from '@/helpers/revalidation-handlers'
@@ -44,7 +44,7 @@ import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
-type MigrateVaultPageComponentProps = {
+type MigrationVaultPageComponentProps = {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
   userActivity: UsersActivity
@@ -57,7 +57,7 @@ type MigrateVaultPageComponentProps = {
   walletAddress: string
 }
 
-export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
+export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> = ({
   vault,
   vaults,
   userActivity,
@@ -77,7 +77,7 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
 
   const pathname = usePathname()
 
-  const getMigrateVaultUrl = useCallback(
+  const getMigrationVaultUrl = useCallback(
     (option: SDKVaultType | SDKVaultishType) => {
       // Create a case-insensitive regular expression
       const regex = new RegExp(vault.id, 'iu')
@@ -105,32 +105,33 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
     dispatch({ type: 'update-step', payload: initialStep })
   }
 
-  const { migrateTransaction, approveTransaction, txHashes, removeTxHash } = useMigrateTransaction({
-    onMigrateSuccess: () => {
-      dispatch({ type: 'update-migrate-status', payload: MigrationTxStatuses.COMPLETED })
-      dispatch({ type: 'update-step', payload: MigrationSteps.COMPLETED })
-    },
-    onMigrateError: () => {
-      dispatch({ type: 'update-migrate-status', payload: MigrationTxStatuses.FAILED })
-    },
-    onApproveSuccess: () => {
-      dispatch({ type: 'update-approve-status', payload: MigrationTxStatuses.COMPLETED })
-      dispatch({ type: 'update-step', payload: MigrationSteps.MIGRATE })
-    },
-    onApproveError: () => {
-      dispatch({ type: 'update-approve-status', payload: MigrationTxStatuses.FAILED })
-    },
-    walletAddress,
-    fleetAddress: vault.id,
-    positionId: migratablePosition.id,
-    slippage: Number(slippageConfig.slippage),
-    handleInitialStep,
-    step: state.step,
-  })
+  const { migrationTransaction, approveTransaction, txHashes, removeTxHash } =
+    useMigrationTransaction({
+      onMigrationSuccess: () => {
+        dispatch({ type: 'update-migration-status', payload: MigrationTxStatuses.COMPLETED })
+        dispatch({ type: 'update-step', payload: MigrationSteps.COMPLETED })
+      },
+      onMigrationError: () => {
+        dispatch({ type: 'update-migration-status', payload: MigrationTxStatuses.FAILED })
+      },
+      onApproveSuccess: () => {
+        dispatch({ type: 'update-approve-status', payload: MigrationTxStatuses.COMPLETED })
+        dispatch({ type: 'update-step', payload: MigrationSteps.MIGRATE })
+      },
+      onApproveError: () => {
+        dispatch({ type: 'update-approve-status', payload: MigrationTxStatuses.FAILED })
+      },
+      walletAddress,
+      fleetAddress: vault.id,
+      positionId: migratablePosition.id,
+      slippage: Number(slippageConfig.slippage),
+      handleInitialStep,
+      step: state.step,
+    })
 
   const { transactionFee, loading: transactionFeeLoading } = useGasEstimation({
     chainId: vaultChainId,
-    transaction: approveTransaction?.txData ?? migrateTransaction?.txData,
+    transaction: approveTransaction?.txData ?? migrationTransaction?.txData,
     walletAddress: walletAddress as Address,
   })
 
@@ -173,7 +174,7 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
   }, [oneYearEarningsForecast])
 
   const isPrimaryButtonLoading =
-    [state.approveStatus, state.migrateStatus].includes(MigrationTxStatuses.PENDING) ||
+    [state.approveStatus, state.migrationStatus].includes(MigrationTxStatuses.PENDING) ||
     state.step === MigrationSteps.INIT
 
   const isPrimaryButtonDisabled =
@@ -187,9 +188,9 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
       return
     }
 
-    if (state.step === MigrationSteps.MIGRATE && migrateTransaction) {
-      migrateTransaction.tx()
-      dispatch({ type: 'update-migrate-status', payload: MigrationTxStatuses.PENDING })
+    if (state.step === MigrationSteps.MIGRATE && migrationTransaction) {
+      migrationTransaction.tx()
+      dispatch({ type: 'update-migration-status', payload: MigrationTxStatuses.PENDING })
 
       return
     }
@@ -276,7 +277,7 @@ export const MigrateVaultPageComponent: FC<MigrateVaultPageComponentProps> = ({
         href: `/migrate/user/${walletAddress}`,
       }}
       disableDropdownOptionsByChainId={migratablePosition.chainId}
-      getOptionUrl={getMigrateVaultUrl}
+      getOptionUrl={getMigrationVaultUrl}
       simulationGraph={
         <VaultSimulationGraph
           vault={vault}

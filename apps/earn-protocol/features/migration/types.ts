@@ -16,7 +16,7 @@ export enum MigrationTxStatuses {
 export type MigrationState = {
   step: MigrationSteps
   approveStatus: MigrationTxStatuses | undefined
-  migrateStatus: MigrationTxStatuses | undefined
+  migrationStatus: MigrationTxStatuses | undefined
   walletAddress: string
 }
 
@@ -30,7 +30,7 @@ export type MigrationReducerAction =
       payload: MigrationTxStatuses | undefined
     }
   | {
-      type: 'update-migrate-status'
+      type: 'update-migration-status'
       payload: MigrationTxStatuses | undefined
     }
 

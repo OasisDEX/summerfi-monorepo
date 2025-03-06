@@ -5,7 +5,7 @@ import {
   ControlsDepositWithdraw,
   Expander,
   getDisplayToken,
-  getMigrateVaultUrl,
+  getMigrationVaultUrl,
   getPositionValues,
   getUniqueVaultId,
   NonOwnerPositionBanner,
@@ -552,7 +552,7 @@ export const VaultManageViewComponent = ({
               selectedPosition={selectedPosition}
               onSelectPosition={handleSelectPosition}
               cta={{
-                link: getMigrateVaultUrl({
+                link: getMigrationVaultUrl({
                   network: vault.protocol.network,
                   vaultId: vault.id,
                   walletAddress: viewWalletAddress,

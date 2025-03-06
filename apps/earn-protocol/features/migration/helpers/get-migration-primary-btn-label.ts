@@ -24,11 +24,11 @@ export const getMigrationPrimaryBtnLabel = ({ state }: { state: MigrationState }
     return 'Approving...'
   }
 
-  if (state.migrateStatus === MigrationTxStatuses.PENDING) {
+  if (state.migrationStatus === MigrationTxStatuses.PENDING) {
     return 'Migrating...'
   }
 
-  if ([state.approveStatus, state.migrateStatus].includes(MigrationTxStatuses.FAILED)) {
+  if ([state.approveStatus, state.migrationStatus].includes(MigrationTxStatuses.FAILED)) {
     return 'Retry'
   }
 

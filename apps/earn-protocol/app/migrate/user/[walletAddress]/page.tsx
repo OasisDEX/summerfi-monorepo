@@ -7,17 +7,17 @@ import { getMigratablePositions } from '@/app/server-handlers/migration'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
-import { MigrateLandingPageView } from '@/components/layout/MigrateLandingPageView/MigrateLandingPageView'
+import { MigrationLandingPageView } from '@/components/layout/MigrationLandingPageView/MigrationLandingPageView'
 import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
-type MigrateLandingPageProps = {
+type MigrationLandingPageProps = {
   params: Promise<{
     walletAddress: string
   }>
 }
 
-const MigrateLandingPage = async ({ params }: MigrateLandingPageProps) => {
+const MigrationLandingPage = async ({ params }: MigrationLandingPageProps) => {
   const { walletAddress } = await params
 
   const cacheConfig = {
@@ -59,7 +59,7 @@ const MigrateLandingPage = async ({ params }: MigrateLandingPageProps) => {
   })
 
   return (
-    <MigrateLandingPageView
+    <MigrationLandingPageView
       vaultsList={vaultsWithConfig}
       vaultsApyByNetworkMap={vaultsApyByNetworkMap}
       migratablePositions={migratablePositions}
@@ -69,4 +69,4 @@ const MigrateLandingPage = async ({ params }: MigrateLandingPageProps) => {
   )
 }
 
-export default MigrateLandingPage
+export default MigrationLandingPage

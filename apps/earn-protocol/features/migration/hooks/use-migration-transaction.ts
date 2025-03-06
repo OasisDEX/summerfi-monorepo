@@ -40,9 +40,9 @@ import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
  * @returns {TransactionHash[]} returns.txHashes - Array of transaction hashes
  * @returns {(txHash: string) => void} returns.removeTxHash - Function to remove a transaction hash from the array
  */
-export const useMigrateTransaction = ({
-  onMigrateSuccess,
-  onMigrateError,
+export const useMigrationTransaction = ({
+  onMigrationSuccess,
+  onMigrationError,
   onApproveSuccess,
   onApproveError,
   handleInitialStep,
@@ -52,8 +52,8 @@ export const useMigrateTransaction = ({
   slippage,
   step,
 }: {
-  onMigrateSuccess: () => void
-  onMigrateError: () => void
+  onMigrationSuccess: () => void
+  onMigrationError: () => void
   onApproveSuccess: () => void
   onApproveError: () => void
   handleInitialStep: (initialStep: MigrationSteps) => void
@@ -73,7 +73,7 @@ export const useMigrateTransaction = ({
     { type: TransactionType; hash?: string; custom?: string }[]
   >([])
 
-  const [migrateTransaction, setMigrateTransaction] = useState<{
+  const [migrationTransaction, setMigrationTransaction] = useState<{
     tx: () => Promise<unknown>
     txData: MigrationTransactionInfo
   }>()
@@ -164,8 +164,8 @@ export const useMigrateTransaction = ({
 
   const {
     sendUserOperationAsync: sendMigrateTransaction,
-    error: sendMigrateTransactionError,
-    isSendingUserOperation: isSendingMigrateTransaction,
+    error: sendMigrationTransactionError,
+    isSendingUserOperation: isSendingMigrationTransaction,
   } = useSendUserOperation({
     client: smartAccountClient,
     waitForTxn: true,
@@ -177,7 +177,7 @@ export const useMigrateTransaction = ({
           'Multisig transaction detected. After all confirmations are done, the position will be ready.',
       })
     },
-    onError: onMigrateError,
+    onError: onMigrationError,
   })
 
   useEffect(() => {
@@ -236,7 +236,7 @@ export const useMigrateTransaction = ({
         }
 
         setApproveTransaction({ tx: _approveTransaction, txData: tx[0][0] })
-        setMigrateTransaction({ tx: _migrateTransaction, txData: tx[1] })
+        setMigrationTransaction({ tx: _migrateTransaction, txData: tx[1] })
       } else {
         handleInitialStep(MigrationSteps.MIGRATE)
 
@@ -258,7 +258,7 @@ export const useMigrateTransaction = ({
           })
         }
 
-        setMigrateTransaction({ tx: _migrateTransaction, txData: tx[0] })
+        setMigrationTransaction({ tx: _migrateTransaction, txData: tx[0] })
       }
     }
 
@@ -280,8 +280,8 @@ export const useMigrateTransaction = ({
       waitForTransaction({ publicClient, hash: waitingForTx })
         .then(() => {
           if (step === MigrationSteps.MIGRATE) {
-            setMigrateTransaction(undefined)
-            onMigrateSuccess()
+            setMigrationTransaction(undefined)
+            onMigrationSuccess()
           } else {
             setApproveTransaction(undefined)
             onApproveSuccess()
@@ -291,7 +291,7 @@ export const useMigrateTransaction = ({
         })
         .catch((err) => {
           if (step === MigrationSteps.MIGRATE) {
-            onMigrateError()
+            onMigrationError()
           } else {
             onApproveError()
           }
@@ -304,10 +304,10 @@ export const useMigrateTransaction = ({
   }, [waitingForTx, publicClient, step])
 
   return {
-    migrateTransaction,
+    migrationTransaction,
     approveTransaction,
-    isLoading: isSendingMigrateTransaction || isSendingApproveTransaction,
-    error: sendMigrateTransactionError ?? sendApproveTransactionError,
+    isLoading: isSendingMigrationTransaction || isSendingApproveTransaction,
+    error: sendMigrationTransactionError ?? sendApproveTransactionError,
     txHashes,
     removeTxHash,
   }

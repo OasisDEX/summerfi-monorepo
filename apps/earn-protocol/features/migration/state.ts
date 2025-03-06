@@ -3,7 +3,7 @@ import { type MigrationReducerAction, type MigrationState, MigrationSteps } from
 export const migrationState: MigrationState = {
   step: MigrationSteps.INIT,
   approveStatus: undefined,
-  migrateStatus: undefined,
+  migrationStatus: undefined,
   walletAddress: '0x0', // dummy, invalid address for init
 }
 
@@ -19,10 +19,10 @@ export const migrationReducer = (prevState: MigrationState, action: MigrationRed
         ...prevState,
         approveStatus: action.payload,
       }
-    case 'update-migrate-status':
+    case 'update-migration-status':
       return {
         ...prevState,
-        migrateStatus: action.payload,
+        migrationStatus: action.payload,
       }
     default:
       return prevState

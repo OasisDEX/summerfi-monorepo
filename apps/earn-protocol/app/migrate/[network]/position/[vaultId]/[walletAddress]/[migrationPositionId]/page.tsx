@@ -17,7 +17,7 @@ import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
-import { MigrateVaultPageView } from '@/components/layout/MigrateVaultPageView/MigrateVaultPageView'
+import { MigrationVaultPageView } from '@/components/layout/MigrationVaultPageView/MigrationVaultPageView'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import { mapArkLatestInterestRates } from '@/helpers/map-ark-interest-rates'
 import {
@@ -25,7 +25,7 @@ import {
   getVaultIdByVaultCustomName,
 } from '@/helpers/vault-custom-value-helpers'
 
-type MigrateVaultPageProps = {
+type MigrationVaultPageProps = {
   params: Promise<{
     vaultId: string // could be vault address or the vault name
     network: SDKNetwork
@@ -34,7 +34,7 @@ type MigrateVaultPageProps = {
   }>
 }
 
-const MigrateVaultPage = async ({ params }: MigrateVaultPageProps) => {
+const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
   const { network: paramsNetwork, vaultId, walletAddress, migrationPositionId } = await params
   const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
@@ -129,7 +129,7 @@ const MigrateVaultPage = async ({ params }: MigrateVaultPageProps) => {
   const vaultApy = vaultApyRaw[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
 
   return (
-    <MigrateVaultPageView
+    <MigrationVaultPageView
       vault={vaultWithConfig}
       vaults={allVaultsWithConfig}
       userActivity={usersActivity}
@@ -144,4 +144,4 @@ const MigrateVaultPage = async ({ params }: MigrateVaultPageProps) => {
   )
 }
 
-export default MigrateVaultPage
+export default MigrationVaultPage

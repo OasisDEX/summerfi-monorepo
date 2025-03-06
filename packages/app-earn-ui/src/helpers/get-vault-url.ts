@@ -23,7 +23,7 @@ export const getVaultPositionUrl = ({
   walletAddress: string
 }) => `/${sdkNetworkToHumanNetwork(network)}/position/${vaultId}/${walletAddress.toLowerCase()}`
 
-export const getMigrateVaultUrl = ({
+export const getMigrationVaultUrl = ({
   network,
   vaultId,
   walletAddress,
