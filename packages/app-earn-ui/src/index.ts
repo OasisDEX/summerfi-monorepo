@@ -138,6 +138,7 @@ export {
   getVaultDetailsUrl,
   getVaultPositionUrl,
   getMigrationVaultUrl,
+  getMigrationLandingPageUrl,
 } from './helpers/get-vault-url'
 export { getTwitterShareUrl } from './helpers/get-twitter-share-url'
 export { getScannerUrl } from './helpers/get-scanner-url'

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import {
   ControlsDepositWithdraw,
   getDisplayToken,
-  getMigrationVaultUrl,
+  getMigrationLandingPageUrl,
   Sidebar,
   SidebarFootnote,
   sidebarFootnote,
@@ -434,9 +434,7 @@ export const VaultOpenViewComponent = ({
             selectedPosition={selectedPosition}
             onSelectPosition={handleSelectPosition}
             cta={{
-              link: getMigrationVaultUrl({
-                network: vault.protocol.network,
-                vaultId: vault.id,
+              link: getMigrationLandingPageUrl({
                 walletAddress: userWalletAddress,
                 selectedPosition,
               }),

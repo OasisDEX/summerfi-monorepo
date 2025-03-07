@@ -40,3 +40,17 @@ export const getMigrationVaultUrl = ({
 
   return `/migrate/${sdkNetworkToHumanNetwork(network)}/position/${vaultId}/${walletAddress.toLowerCase()}/${selectedPosition}`
 }
+
+export const getMigrationLandingPageUrl = ({
+  walletAddress,
+  selectedPosition,
+}: {
+  walletAddress?: string
+  selectedPosition?: string
+}) => {
+  if (!selectedPosition || !walletAddress) {
+    return ''
+  }
+
+  return `/migrate/user/${walletAddress.toLowerCase()}?positionId=${selectedPosition}`
+}
