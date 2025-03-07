@@ -1,6 +1,14 @@
 'use client'
 import { type CSSProperties, type FC, useState } from 'react'
-import { AnimateHeight, Card, DataBlock, Icon, Text, VaultTitle } from '@summerfi/app-earn-ui'
+import {
+  AnimateHeight,
+  Card,
+  DataBlock,
+  getDisplayToken,
+  Icon,
+  Text,
+  VaultTitle,
+} from '@summerfi/app-earn-ui'
 import {
   formatCryptoBalance,
   formatDecimalAsPercent,
@@ -77,7 +85,7 @@ const mapAssetCardItem = (item: PortfolioWalletAsset) => (
       />
       <DataBlock
         title="Token Balance"
-        value={`${formatCryptoBalance(item.balance)} ${item.symbol}`}
+        value={`${formatCryptoBalance(item.balance)} ${getDisplayToken(item.symbol)}`}
         {...dataBlocksStyles}
       />
     </div>

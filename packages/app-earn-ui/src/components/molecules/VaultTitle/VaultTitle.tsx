@@ -10,6 +10,7 @@ import { GenericTokenIcon } from '@/components/atoms/GenericTokenIcon/GenericTok
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { Text } from '@/components/atoms/Text/Text'
+import { getDisplayToken } from '@/helpers/get-display-token'
 import { getTokenGuarded } from '@/tokens/helpers'
 
 import { type ClassNames as TextVariants } from '@/components/atoms/Text/Text.module.scss'
@@ -47,7 +48,8 @@ export const VaultTitle: FC<VaultTitleProps> = ({
   titleVariant = 'h4',
   isLoading,
 }) => {
-  const isIconDefined = getTokenGuarded(symbol)?.iconName
+  const resolvedSymbol = getDisplayToken(symbol)
+  const isIconDefined = getTokenGuarded(resolvedSymbol)?.iconName
 
   return (
     <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
@@ -56,9 +58,9 @@ export const VaultTitle: FC<VaultTitleProps> = ({
           <SkeletonLine height={44} width={44} />
         ) : isIconDefined ? (
           /* if any icon breaks, this is probably because of TokenSymbolsList vs whatever comes from the subgraph */
-          <Icon tokenName={symbol as TokenSymbolsList} size={44} />
+          <Icon tokenName={resolvedSymbol as TokenSymbolsList} size={44} />
         ) : (
-          <GenericTokenIcon symbol={symbol} customSize={32} />
+          <GenericTokenIcon symbol={resolvedSymbol} customSize={32} />
         )}
         {(networkId ?? networkName) && (
           <div
@@ -79,7 +81,7 @@ export const VaultTitle: FC<VaultTitleProps> = ({
             style={{ color: 'white', fontWeight: 600 }}
             data-testid="vault-token"
           >
-            {isLoading ? <SkeletonLine height={40} width={70} /> : symbol}
+            {isLoading ? <SkeletonLine height={40} width={70} /> : resolvedSymbol}
           </Text>
           {selected && (
             <div
