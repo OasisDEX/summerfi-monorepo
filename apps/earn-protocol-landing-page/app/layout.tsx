@@ -14,7 +14,10 @@ import { cookies } from 'next/headers'
 import Link from 'next/link'
 
 import { LandingMasterPage } from '@/components/layout/LandingMasterPage/LandingMasterPage'
+import { SystemConfigProvider } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { fontInter } from '@/helpers/fonts'
+
+import systemConfigHandler from './server-handlers/system-config'
 
 export const metadata: Metadata = {
   title: 'The home of the Lazy Summer Protocol',
@@ -24,6 +27,8 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = 'en'
+
+  const { config } = await systemConfigHandler()
 
   const cookieRaw = await cookies()
   const cookie = cookieRaw.toString()
@@ -43,27 +48,29 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body className={` ${fontInter.variable}`}>
         <GoogleTagManager />
-        <LocalConfigContextProvider value={{ sumrNetApyConfig, slippageConfig }}>
-          {isGB && (
-            <HeaderDisclaimer>
-              UK disclaimer: This web application is provided as a tool for users to interact with
-              third party DeFi protocols on their own initiative, with no endorsement or
-              recommendation of ...
-              <Link
-                href={`${EXTERNAL_LINKS.KB.HELP}/legal/uk-disclaimer`}
-                style={{
-                  color: 'var(--earn-protocol-primary-100)',
-                  paddingLeft: 'var(--general-space-4)',
-                  fontWeight: '500',
-                }}
-                target="_blank"
-              >
-                Read more
-              </Link>
-            </HeaderDisclaimer>
-          )}
-          <LandingMasterPage analyticsCookie={analyticsCookie}>{children}</LandingMasterPage>
-        </LocalConfigContextProvider>
+        <SystemConfigProvider value={config}>
+          <LocalConfigContextProvider value={{ sumrNetApyConfig, slippageConfig }}>
+            {isGB && (
+              <HeaderDisclaimer>
+                UK disclaimer: This web application is provided as a tool for users to interact with
+                third party DeFi protocols on their own initiative, with no endorsement or
+                recommendation of ...
+                <Link
+                  href={`${EXTERNAL_LINKS.KB.HELP}/legal/uk-disclaimer`}
+                  style={{
+                    color: 'var(--earn-protocol-primary-100)',
+                    paddingLeft: 'var(--general-space-4)',
+                    fontWeight: '500',
+                  }}
+                  target="_blank"
+                >
+                  Read more
+                </Link>
+              </HeaderDisclaimer>
+            )}
+            <LandingMasterPage analyticsCookie={analyticsCookie}>{children}</LandingMasterPage>
+          </LocalConfigContextProvider>
+        </SystemConfigProvider>
         <div id="portal" style={{ position: 'absolute' }} />
       </body>
     </html>

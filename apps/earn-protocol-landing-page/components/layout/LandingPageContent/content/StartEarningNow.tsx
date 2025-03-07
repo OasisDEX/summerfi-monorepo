@@ -1,7 +1,10 @@
+'use client'
 import { type ReactNode } from 'react'
 import { Button, Card, Icon, Text } from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
 import Link from 'next/link'
+
+import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 
 import startEarningNowStyles from '@/components/layout/LandingPageContent/content/StartEarningNow.module.scss'
 
@@ -36,6 +39,10 @@ const StartEarningNowBlock = ({
 )
 
 export const StartEarningNow = () => {
+  const { features } = useSystemConfig()
+
+  const migrationsEnabled = !!features?.Migrations
+
   return (
     <div>
       <div className={startEarningNowStyles.startEarningNowHeaderWrapper}>
@@ -84,16 +91,24 @@ export const StartEarningNow = () => {
             'Withdraw anytime',
           ]}
           cta={
-            <Button
-              variant="secondarySmall"
-              disabled
-              className={clsx(
-                startEarningNowStyles.ctaButton,
-                startEarningNowStyles.ctaButtonDisabled,
-              )}
-            >
-              <Text variant="p3semi">Coming soon</Text>
-            </Button>
+            migrationsEnabled ? (
+              <Link href="/earn">
+                <Button variant="primarySmall" className={clsx(startEarningNowStyles.ctaButton)}>
+                  <Text variant="p3semi">Migrate</Text>
+                </Button>
+              </Link>
+            ) : (
+              <Button
+                variant="secondarySmall"
+                disabled
+                className={clsx(
+                  startEarningNowStyles.ctaButton,
+                  startEarningNowStyles.ctaButtonDisabled,
+                )}
+              >
+                <Text variant="p3semi">Coming soon</Text>
+              </Button>
+            )
           }
         />
         <StartEarningNowBlock
