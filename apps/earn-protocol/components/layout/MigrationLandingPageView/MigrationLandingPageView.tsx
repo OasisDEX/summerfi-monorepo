@@ -27,6 +27,7 @@ import {
   type SDKVaultsListType,
 } from '@summerfi/app-types'
 import {
+  chainIdToSDKNetwork,
   sdkNetworkToHumanNetwork,
   subgraphNetworkToId,
   subgraphNetworkToSDKId,
@@ -208,9 +209,13 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
     )
   }, [migratablePositions, positionId])
 
-  const filteredPositions = migratablePositions.filter(
-    (position) => position.id !== preselectedPosition?.id,
-  )
+  const filteredPositions = migratablePositions
+    .filter((position) => position.id !== preselectedPosition?.id)
+    .filter(
+      (position) =>
+        localVaultNetwork === 'all-networks' ||
+        chainIdToSDKNetwork(position.chainId) === localVaultNetwork,
+    )
 
   const withToggleButton = filteredPositions.length > 1 && !!positionId
 
@@ -226,6 +231,7 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
         <Link
           href="https://blog.summer.fi/say-hello-to-the-lazy-summer-protocol"
           style={{ display: 'block', width: 'min-content', whiteSpace: 'pre' }}
+          target="_blank"
         >
           <Text as="p" variant="p3semi" style={{ display: 'inline' }}>
             <WithArrow style={{ display: 'inline' }}>What is Migrate</WithArrow>
@@ -264,25 +270,31 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
 
         <Card variant="cardSecondary" className={classNames.mainContentWrapper}>
           <div className={classNames.mainContentHeader}>
-            <Text as="h3" variant="h3">
+            <Text as="h4" variant="h4">
               Migrate a Position
             </Text>
-            <Link href={migrationVaultUrl}>
-              <Button
-                variant="primaryLargeColorful"
-                style={{ padding: '0 var(--general-space-16)', width: '185px', minWidth: '150px' }}
-                disabled={!selectedVaultId || !selectedPosition || !isOwner}
-              >
-                <WithArrow style={{ color: 'var(--earn-protocol-secondary-100)' }} variant="p2semi">
-                  Migrate
-                </WithArrow>
-              </Button>
-            </Link>
+            <Button
+              variant="secondaryLarge"
+              style={{ padding: '0 var(--general-space-16)', width: '143px', minWidth: '120px' }}
+              onClick={handleConfigOpenClose}
+            >
+              <Icon iconName="cog" size={20} />
+              Net APY
+            </Button>
+            {isMobile ? (
+              <MobileDrawer isOpen={isConfigOpen} onClose={handleConfigOpenClose} height="auto">
+                <NavConfigContent handleOpenClose={handleConfigOpenClose} />
+              </MobileDrawer>
+            ) : (
+              <Modal openModal={isConfigOpen} closeModal={handleConfigOpenClose}>
+                <NavConfigContent />
+              </Modal>
+            )}
           </div>
           <div className={classNames.positionsWrapper}>
             <div className={classNames.positionsHeader}>
-              <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-                1. Select a position to migrate from
+              <Text as="p" variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+                Migrate from
               </Text>
             </div>
             <div className={classNames.positionsListWrapper}>
@@ -291,7 +303,11 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
                 id="migration-positions-list"
                 show={showAllPositions}
                 fade={false}
-                contentClassName={classNames.positionsList}
+                contentClassName={
+                  preselectedPosition
+                    ? classNames.positionListWithPadding
+                    : classNames.positionsList
+                }
               >
                 {filteredPositions.map(mapMigrationPositionCard)}
               </AnimateHeight>
@@ -314,26 +330,9 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
           </div>
           <div className={classNames.vaultsWrapper}>
             <div className={classNames.vaultsHeader}>
-              <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-                2. Select a position to migrate to
+              <Text as="p" variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+                Migrate to
               </Text>
-              <Button
-                variant="secondarySmall"
-                style={{ padding: '0 var(--general-space-16)' }}
-                onClick={handleConfigOpenClose}
-              >
-                <Icon iconName="cog" size={20} />
-                Net APY
-              </Button>
-              {isMobile ? (
-                <MobileDrawer isOpen={isConfigOpen} onClose={handleConfigOpenClose} height="auto">
-                  <NavConfigContent handleOpenClose={handleConfigOpenClose} />
-                </MobileDrawer>
-              ) : (
-                <Modal openModal={isConfigOpen} closeModal={handleConfigOpenClose}>
-                  <NavConfigContent />
-                </Modal>
-              )}
             </div>
             <div className={classNames.vaultsList}>
               {isMobile ? (
@@ -388,6 +387,19 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
                 ))
               )}
             </div>
+          </div>
+          <div className={classNames.migrationButton}>
+            <Link href={migrationVaultUrl} prefetch>
+              <Button
+                variant="primaryLargeColorful"
+                style={{ padding: '0 var(--general-space-16)', width: '185px', minWidth: '150px' }}
+                disabled={!selectedVaultId || !selectedPosition || !isOwner}
+              >
+                <WithArrow style={{ color: 'var(--earn-protocol-secondary-100)' }} variant="p2semi">
+                  Migrate
+                </WithArrow>
+              </Button>
+            </Link>
           </div>
         </Card>
       </div>
