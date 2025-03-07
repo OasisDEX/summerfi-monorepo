@@ -45,16 +45,21 @@ export const MigrationPositionCard: FC<MigrationPositionCardProps> = ({
       }}
       list={[
         {
-          label: `${migrationType} Current APY`,
+          label: 'Current 7d APY',
           value: formatDecimalAsPercent(migratablePosition.apy),
         },
         {
-          label: 'Lazy Summer Current APY',
-          value: formatDecimalAsPercent(earningsData.lazySummerCurrentApy),
+          label: 'Lazy Summer 7d APY',
+          value: formatDecimalAsPercent(earningsData.lazySummer7dApy),
         },
         {
-          label: 'Lazy Summer 30d APY',
-          value: formatDecimalAsPercent(earningsData.lazySummer30dApy),
+          label: '7d APY Differential',
+          value: formatDecimalAsPercent(
+            Number(earningsData.lazySummerCurrentApy) - Number(migratablePosition.apy),
+            {
+              plus: true,
+            },
+          ),
         },
       ]}
       handleClick={() => handleSelectPosition(id)}

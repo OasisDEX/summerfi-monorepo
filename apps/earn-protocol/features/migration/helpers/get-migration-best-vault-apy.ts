@@ -37,15 +37,17 @@ export const getMigrationBestVaultApy = ({
           (vault) => subgraphNetworkToSDKId(vault.protocol.network) === chainId,
         )
 
-        // Find the best current APY and 30d APY for this network
+        // Find the best current APY and 7d and 30d APY for this network
         let bestCurrentApy = 0
         let best30dApy = 0
+        let best7dApy = 0
 
         networkVaults.forEach((vault) => {
           const vaultApy =
             vaultsApyByNetworkMap[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
           const currentApy = vaultApy || 0
           const apy30d = Number(vault.apr30d) / 100 || 0
+          const apy7d = Number(vault.apr7d) / 100 || 0
 
           if (currentApy > bestCurrentApy) {
             bestCurrentApy = currentApy
@@ -54,11 +56,16 @@ export const getMigrationBestVaultApy = ({
           if (apy30d > best30dApy) {
             best30dApy = apy30d
           }
+
+          if (apy7d > best7dApy) {
+            best7dApy = apy7d
+          }
         })
 
         acc[chainId] = {
           lazySummerCurrentApy: bestCurrentApy,
           lazySummer30dApy: best30dApy,
+          lazySummer7dApy: best7dApy,
         }
       }
 

@@ -64,10 +64,10 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
     },
   }
 
-  const isVaultAtLeast30dOld = isVaultAtLeastDaysOld({ vault, days: 30 })
+  const isVaultAtLeast7dOld = isVaultAtLeastDaysOld({ vault, days: 7 })
 
-  const apr30d = isVaultAtLeast30dOld
-    ? formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
+  const apr7d = isVaultAtLeast7dOld
+    ? formatDecimalAsPercent(new BigNumber(vault.apr7d).div(100))
     : 'New strategy'
 
   const sourcePositionEstimatedEarningsUSD =
@@ -142,7 +142,7 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
       <OrderInformation
         title="What's changing"
         items={[
-          { label: '30d APY', value: apr30d },
+          { label: '7d APY', value: apr7d },
           { label: 'Currenty APY', value: formatDecimalAsPercent(vaultApy ?? 0) },
           { label: 'Protocol', value: 'Lazy Summer' },
         ]}

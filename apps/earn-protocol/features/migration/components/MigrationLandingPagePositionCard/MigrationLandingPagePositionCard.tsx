@@ -89,14 +89,19 @@ export const MigrationLandingPagePositionCard: FC<MigrationLandingPagePositionCa
         {isMobile && checkmarkComponent}
       </div>
       <div className={classNames.dataBlocksWrapper}>
-        <DataBlock title="Current APY" value={formatDecimalAsPercent(position.apy)} />
+        <DataBlock title="Current 7d APY" value={formatDecimalAsPercent(position.apy)} />
         <DataBlock
-          title="Lazy Summer Current APY"
+          title="Lazy Summer 7d APY"
           value={formatDecimalAsPercent(earningsData.lazySummerCurrentApy)}
         />
         <DataBlock
-          title="Lazy Summer 30d APY"
-          value={formatDecimalAsPercent(earningsData.lazySummer30dApy)}
+          title="7d APY Differential"
+          value={formatDecimalAsPercent(
+            Number(earningsData.lazySummerCurrentApy) - Number(position.apy),
+            {
+              plus: true,
+            },
+          )}
         />
       </div>
       {!isMobile && checkmarkComponent}
