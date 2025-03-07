@@ -1,6 +1,7 @@
 'use client'
 import { type FC, useMemo, useState } from 'react'
 import {
+  AnimateHeight,
   Button,
   Card,
   getMigrationVaultUrl,
@@ -38,8 +39,8 @@ import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
-import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
 import { MigrationLandingPageIlustration } from '@/features/migration/components/MigrationLandingPageIlustration/MigrationLandingPageIlustration'
+import { MigrationLandingPagePositionCard } from '@/features/migration/components/MigrationLandingPagePositionCard/MigrationLandingPagePositionCard'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { NavConfigContent } from '@/features/nav-config/components/NavConfigContent/NavConfigContent'
 
@@ -105,9 +106,8 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
 
   const positionId = searchParams.get('positionId')
 
-  const [selectedPosition, setSelectedPosition] = useState<string | undefined>(
-    positionId ?? migratablePositions[0]?.id,
-  )
+  const [showAllPositions, setShowAllPositions] = useState(!positionId)
+  const [selectedPosition, setSelectedPosition] = useState<string | null>(positionId)
 
   const handleSelectPosition = (id: string) => {
     setSelectedPosition(id)
@@ -187,19 +187,30 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
     )?.chainId
   }, [migratablePositions, selectedPosition])
 
+  const mapMigrationPositionCard = (position: MigratablePosition) => (
+    <MigrationLandingPagePositionCard
+      key={position.id}
+      position={position}
+      onSelectPosition={handleSelectPosition}
+      isActive={selectedPosition === position.id}
+      earningsData={migrationBestVaultApy[position.chainId]}
+    />
+  )
+
+  const preselectedPosition = useMemo(() => {
+    return migratablePositions.find(
+      (position) => position.id.toLowerCase() === positionId?.toLowerCase(),
+    )
+  }, [migratablePositions, positionId])
+
+  const filteredPositions = migratablePositions.filter(
+    (position) => position.id !== preselectedPosition?.id,
+  )
+
+  const withToggleButton = filteredPositions.length > 1 && !!positionId
+
   return (
     <div className={classNames.migrationLandingPageViewWrapper}>
-      <MigrationBox
-        className={classNames.migrationBox}
-        migratablePositions={migratablePositions}
-        selectedPosition={selectedPosition}
-        onSelectPosition={handleSelectPosition}
-        migrationBestVaultApy={migrationBestVaultApy}
-        cta={{
-          link: migrationVaultUrl,
-          disabled: !selectedVaultId,
-        }}
-      />
       <div className={classNames.headerWrapper}>
         <TitleWithSelect
           title="Why Migrate?"
@@ -245,11 +256,56 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
             ))
           )}
         </Card>
-        <Card variant="cardSecondary">
+
+        <Card variant="cardSecondary" className={classNames.mainContentWrapper}>
+          <div className={classNames.mainContentHeader}>
+            <Text as="h3" variant="h3">
+              Migrate a Position
+            </Text>
+            <Link href={migrationVaultUrl}>
+              <Button
+                variant="primaryLargeColorful"
+                style={{ padding: '0 var(--general-space-16)', width: '185px', minWidth: '150px' }}
+                disabled={!selectedVaultId || !selectedPosition}
+              >
+                <WithArrow style={{ color: 'var(--earn-protocol-secondary-100)' }} variant="p2semi">
+                  Migrate
+                </WithArrow>
+              </Button>
+            </Link>
+          </div>
+          <div className={classNames.positionsWrapper}>
+            <div className={classNames.positionsHeader}>
+              <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+                1. Select a position to migrate from
+              </Text>
+            </div>
+            <div className={classNames.positionsListWrapper}>
+              {preselectedPosition && [preselectedPosition].map(mapMigrationPositionCard)}
+              <AnimateHeight
+                id="migration-positions-list"
+                show={showAllPositions}
+                fade={false}
+                contentClassName={classNames.positionsList}
+              >
+                {filteredPositions.map(mapMigrationPositionCard)}
+              </AnimateHeight>
+            </div>
+            {withToggleButton && (
+              <div
+                className={classNames.showAllPositions}
+                onClick={() => setShowAllPositions((prev) => !prev)}
+              >
+                <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
+                  {showAllPositions ? 'Hide' : 'Show'} all positions
+                </Text>
+              </div>
+            )}
+          </div>
           <div className={classNames.vaultsWrapper}>
             <div className={classNames.vaultsHeader}>
               <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-                Migrate to
+                2. Select a position to migrate to
               </Text>
               <Button
                 variant="secondarySmall"

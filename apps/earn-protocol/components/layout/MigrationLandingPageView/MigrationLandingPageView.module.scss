@@ -26,45 +26,79 @@
       margin-top: var(--general-space-8);
     }
 
-    .vaultsWrapper {
+    .mainContentWrapper {
       display: flex;
       flex-direction: column;
-      gap: var(--general-space-16);
-      width: 100%;
+      gap: var(--general-space-32);
 
-      .vaultsHeader {
+      .mainContentHeader {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        margin-top: var(--general-space-16);
+        flex-wrap: wrap;
+        gap: var(--general-space-16);
       }
 
-      .vaultsList {
-        @media (min-width: 768px) {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
+      .positionsWrapper {
+        display: flex;
+        flex-direction: column;
+        gap: var(--general-space-16);
+        width: 100%;
+
+        .positionsHeader {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .positionsListWrapper {
+          width: 100%;
+          .positionsList {
+            display: flex;
+            flex-direction: column;
+            gap: var(--general-space-16);
+            width: 100%;
+            padding-top: var(--general-space-16);
+          }
+        }
+
+        .showAllPositions {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+        }
+      }
+
+      .vaultsWrapper {
+        display: flex;
+        flex-direction: column;
+        gap: var(--general-space-16);
+        width: 100%;
+
+        .vaultsHeader {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex-wrap: wrap;
           gap: var(--general-space-16);
         }
 
-        @media (min-width: 1025px) {
-          display: grid;
-          grid-template-columns: 1fr 1fr 1fr;
-          gap: var(--general-space-16);
+        .vaultsList {
+          @media (min-width: 768px) {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--general-space-16);
+          }
+
+          @media (min-width: 1025px) {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: var(--general-space-16);
+          }
         }
       }
-    }
-  }
-
-  .migrationBox {
-    position: fixed;
-    bottom: 22px;
-    right: 14px;
-    width: calc(100% - 28px);
-
-    @media (min-width: 768px) {
-      position: fixed;
-      bottom: 22px;
-      right: 14px;
-      width: 446px;
     }
   }
 }

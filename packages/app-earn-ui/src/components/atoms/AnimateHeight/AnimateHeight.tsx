@@ -15,6 +15,7 @@ export const AnimateHeight = ({
   fade = true,
   customHeight,
   className,
+  contentClassName,
 }: {
   id: string
   show?: boolean
@@ -23,6 +24,7 @@ export const AnimateHeight = ({
   scale?: boolean
   customHeight?: number
   className?: string
+  contentClassName?: string
 }) => {
   return (
     <OGAnimateHeight
@@ -47,6 +49,7 @@ export const AnimateHeight = ({
         staticHeightSpecific: 'rah-static--height-specific',
       }}
       className={className}
+      contentClassName={contentClassName}
     >
       {children}
     </OGAnimateHeight>
