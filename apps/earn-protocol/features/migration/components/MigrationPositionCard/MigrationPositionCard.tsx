@@ -22,7 +22,7 @@ export const MigrationPositionCard: FC<MigrationPositionCardProps> = ({
   handleSelectPosition,
   earningsData,
 }) => {
-  const { id, platformLogo, token, depositAmount, chainId, migrationType } =
+  const { id, platformLogo, token, depositAmount, chainId } =
     mapMigrationToPortfolioCard(migratablePosition)
 
   const missingOutAmount =
