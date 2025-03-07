@@ -9,9 +9,22 @@ import {
  * based on the current migration state.
  *
  * @param state - The current state of the migration process
+ * @param isCorrectNetwork - Whether the user is on the correct network
  * @returns The label text to display on the primary button
  */
-export const getMigrationPrimaryBtnLabel = ({ state }: { state: MigrationState }) => {
+export const getMigrationPrimaryBtnLabel = ({
+  state,
+  isCorrectNetwork,
+  networkName,
+}: {
+  state: MigrationState
+  isCorrectNetwork: boolean
+  networkName: string
+}) => {
+  if (!isCorrectNetwork) {
+    return `Switch Network to ${networkName}`
+  }
+
   if (state.step === MigrationSteps.INIT) {
     return 'Loading...'
   }

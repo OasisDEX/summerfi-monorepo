@@ -1,5 +1,6 @@
 'use client'
 import { type FC, useCallback, useMemo, useReducer, useState } from 'react'
+import { useChain } from '@account-kit/react'
 import {
   getDisplayToken,
   getResolvedForecastAmountParsed,
@@ -27,6 +28,7 @@ import BigNumber from 'bignumber.js'
 import { usePathname, useRouter } from 'next/navigation'
 import { type Address } from 'viem'
 
+import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { VaultOpenViewDetails } from '@/components/layout/VaultOpenView/VaultOpenViewDetails'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
@@ -41,6 +43,7 @@ import { migrationReducer, migrationState } from '@/features/migration/state'
 import { MigrationSteps, MigrationTxStatuses } from '@/features/migration/types'
 import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
+import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
@@ -74,6 +77,9 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const { push } = useRouter()
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
+  const { setChain, isSettingChain } = useChain()
+
+  const { clientChainId } = useClientChainId()
 
   const pathname = usePathname()
 
@@ -175,12 +181,23 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
 
   const isPrimaryButtonLoading =
     [state.approveStatus, state.migrationStatus].includes(MigrationTxStatuses.PENDING) ||
-    state.step === MigrationSteps.INIT
+    state.step === MigrationSteps.INIT ||
+    isSettingChain
 
   const isPrimaryButtonDisabled =
     isPrimaryButtonLoading || userWalletAddress?.toLowerCase() !== walletAddress.toLowerCase()
 
+  const isCorrectNetwork = clientChainId === vaultChainId
+
   const handlePrimaryButtonClick = () => {
+    if (!isCorrectNetwork) {
+      setChain({
+        chain: SDKChainIdToAAChainMap[vaultChainId],
+      })
+
+      return
+    }
+
     if (state.step === MigrationSteps.APPROVE && approveTransaction) {
       approveTransaction.tx()
       dispatch({ type: 'update-approve-status', payload: MigrationTxStatuses.PENDING })
@@ -211,6 +228,8 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
 
   const isMobileOrTablet = isMobile || isTablet
 
+  const networkName = SDKChainIdToAAChainMap[vaultChainId].name
+
   const sidebarProps = {
     title: getMigrationFormTitle(state.step),
     content: (
@@ -238,7 +257,11 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
       ) : undefined,
     handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
     primaryButton: {
-      label: getMigrationPrimaryBtnLabel({ state }),
+      label: getMigrationPrimaryBtnLabel({
+        state,
+        isCorrectNetwork,
+        networkName,
+      }),
       action: handlePrimaryButtonClick,
       disabled: isPrimaryButtonDisabled,
       loading: isPrimaryButtonLoading,
