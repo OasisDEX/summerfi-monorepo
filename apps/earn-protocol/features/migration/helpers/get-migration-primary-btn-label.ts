@@ -21,12 +21,12 @@ export const getMigrationPrimaryBtnLabel = ({
   isCorrectNetwork: boolean
   networkName: string
 }) => {
-  if (!isCorrectNetwork) {
-    return `Switch Network to ${networkName}`
-  }
-
   if (state.step === MigrationSteps.INIT) {
     return 'Loading...'
+  }
+
+  if (!isCorrectNetwork) {
+    return `Switch Network to ${networkName}`
   }
 
   if (state.step === MigrationSteps.COMPLETED) {
