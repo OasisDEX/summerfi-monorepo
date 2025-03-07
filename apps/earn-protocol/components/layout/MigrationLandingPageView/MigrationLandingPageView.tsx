@@ -43,6 +43,7 @@ import { MigrationLandingPageIlustration } from '@/features/migration/components
 import { MigrationLandingPagePositionCard } from '@/features/migration/components/MigrationLandingPagePositionCard/MigrationLandingPagePositionCard'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { NavConfigContent } from '@/features/nav-config/components/NavConfigContent/NavConfigContent'
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './MigrationLandingPageView.module.scss'
 
@@ -103,6 +104,10 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
   const [localVaultNetwork, setLocalVaultNetwork] =
     useState<MigrationLandingPageViewProps['selectedNetwork']>(selectedNetwork)
   const [isConfigOpen, setIsConfigOpen] = useState(false)
+
+  const { userWalletAddress } = useUserWallet()
+
+  const isOwner = walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
 
   const positionId = searchParams.get('positionId')
 
@@ -266,7 +271,7 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
               <Button
                 variant="primaryLargeColorful"
                 style={{ padding: '0 var(--general-space-16)', width: '185px', minWidth: '150px' }}
-                disabled={!selectedVaultId || !selectedPosition}
+                disabled={!selectedVaultId || !selectedPosition || !isOwner}
               >
                 <WithArrow style={{ color: 'var(--earn-protocol-secondary-100)' }} variant="p2semi">
                   Migrate
@@ -290,6 +295,11 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
               >
                 {filteredPositions.map(mapMigrationPositionCard)}
               </AnimateHeight>
+              {filteredPositions.length === 0 && !preselectedPosition && (
+                <Text as="p" variant="p2" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+                  No positions found
+                </Text>
+              )}
             </div>
             {withToggleButton && (
               <div
