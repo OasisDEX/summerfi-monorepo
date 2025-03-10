@@ -76,6 +76,12 @@ export const tokenConfigs: TokenConfig[] = [
     rootToken: 'ETH',
   },
   {
+    symbol: 'CBBTC',
+    name: 'Coinbase Wrapped BTC',
+    iconName: 'cbbtc_circle_color',
+    rootToken: 'BTC',
+  },
+  {
     symbol: 'BAT',
     name: 'Basic Attention Token',
     iconName: 'bat_circle_color',

@@ -26,6 +26,7 @@ export type IconNamesList =
   | 'cbeth_circle_color'
   | 'cbeth_eth'
   | 'cbeth_usdc'
+  | 'cbbtc_circle_color'
   | 'chai_circle_color'
   | 'chai_color'
   | 'chai'

@@ -45,6 +45,7 @@ export const icons = {
   cbeth_circle_color: customLazy(() => import('./icons/cbeth_circle_color.svg?react')),
   cbeth_eth: customLazy(() => import('./icons/cbeth_eth.svg?react')),
   cbeth_usdc: customLazy(() => import('./icons/cbeth_usdc.svg?react')),
+  cbbtc_circle_color: customLazy(() => import('./icons/cbbtc_circle_color.svg?react')),
   chai_circle_color: customLazy(() => import('./icons/chai_circle_color.svg?react')),
   chai_color: customLazy(() => import('./icons/chai_color.svg?react')),
   chai: customLazy(() => import('./icons/chai.svg?react')),
