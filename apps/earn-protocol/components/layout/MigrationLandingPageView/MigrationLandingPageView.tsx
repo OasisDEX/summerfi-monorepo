@@ -294,7 +294,7 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
           <div className={classNames.positionsWrapper}>
             <div className={classNames.positionsHeader}>
               <Text as="p" variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-                Migrate from
+                1. Select a position to migrate from
               </Text>
             </div>
             <div className={classNames.positionsListWrapper}>
@@ -331,7 +331,7 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
           <div className={classNames.vaultsWrapper}>
             <div className={classNames.vaultsHeader}>
               <Text as="p" variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-                Migrate to
+                2. Select a vault to migrate to
               </Text>
             </div>
             <div className={classNames.vaultsList}>
