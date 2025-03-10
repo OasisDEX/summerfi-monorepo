@@ -67,7 +67,7 @@ export const MigrationBox: FC<MigrationBoxProps> = ({
         </div>
         {cta && (
           <div className={classNames.migrationBoxCta}>
-            <Link href={cta.link} style={{ width: '100%' }}>
+            <Link href={cta.link} style={{ width: '100%' }} prefetch>
               <Button
                 variant="primaryMediumColorful"
                 style={{ width: '100%' }}

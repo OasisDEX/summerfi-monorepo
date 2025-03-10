@@ -66,6 +66,7 @@ export const PositionCard: FC<PositionCardProps> = ({
           items={list}
           wrapperStyles={{
             padding: 'unset',
+            backgroundColor: 'unset',
           }}
         />
       )}
