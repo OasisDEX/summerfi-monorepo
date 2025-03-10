@@ -106,5 +106,6 @@ export type MigrationTransactionInfo = TransactionInfo & {
   type: TransactionType.Migration
   metadata: {
     swapAmountByPositionId: Record<string, ITokenAmount>
+    priceImpactByPositionId: Record<string, TransactionPriceImpact>
   }
 }

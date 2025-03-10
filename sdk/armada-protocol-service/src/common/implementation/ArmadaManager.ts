@@ -137,6 +137,7 @@ export class ArmadaManager implements IArmadaManager {
       hubChainInfo: this._hubChainInfo,
       supportedChains: this._supportedChains,
       getSwapCall: this._getSwapCall.bind(this),
+      getPriceImpact: this._getPriceImpact.bind(this),
     })
     this.bridge = new ArmadaManagerBridge({
       supportedChains: this._supportedChains,
@@ -778,10 +779,12 @@ export class ArmadaManager implements IArmadaManager {
           fromAmount: inAmount,
           toAmount: swapToAmount,
           slippage: params.slippage,
-          priceImpact: await this._getPriceImpact({
-            fromAmount: inAmount,
-            toAmount: swapToAmount,
-          }),
+          priceImpact:
+            swapToAmount &&
+            (await this._getPriceImpact({
+              fromAmount: inAmount,
+              toAmount: swapToAmount,
+            })),
         },
       }),
     )
@@ -885,10 +888,11 @@ export class ArmadaManager implements IArmadaManager {
               shouldSwap,
               toEth,
             }),
-            this._getPriceImpact({
-              fromAmount: withdrawAmount,
-              toAmount: swapToAmount,
-            }),
+            swapToAmount &&
+              this._getPriceImpact({
+                fromAmount: withdrawAmount,
+                toAmount: swapToAmount,
+              }),
           ],
         )
 
@@ -980,10 +984,11 @@ export class ArmadaManager implements IArmadaManager {
             shares: reminderShares,
             stakedShares: beforeStakedShares,
           }),
-          this._getPriceImpact({
-            fromAmount: withdrawAmount,
-            toAmount: swapToAmount,
-          }),
+          swapToAmount &&
+            this._getPriceImpact({
+              fromAmount: withdrawAmount,
+              toAmount: swapToAmount,
+            }),
         ])
 
         multicallArgs.push(...exitWithdrawMulticall.multicallArgs)
@@ -1083,10 +1088,11 @@ export class ArmadaManager implements IArmadaManager {
           shares: requestedWithdrawShares,
           stakedShares: beforeStakedShares,
         }),
-        this._getPriceImpact({
-          fromAmount: withdrawAmount,
-          toAmount: swapToAmount,
-        }),
+        swapToAmount &&
+          this._getPriceImpact({
+            fromAmount: withdrawAmount,
+            toAmount: swapToAmount,
+          }),
       ])
       multicallArgs.push(unstakeAndWithdrawCall.calldata)
       multicallOperations.push('unstakeAndWithdraw ' + requestedWithdrawShares.toString())
@@ -1415,12 +1421,8 @@ export class ArmadaManager implements IArmadaManager {
 
   private async _getPriceImpact(params: {
     fromAmount: ITokenAmount
-    toAmount?: ITokenAmount
-  }): Promise<TransactionPriceImpact | undefined> {
-    if (params.toAmount === undefined) {
-      return undefined
-    }
-
+    toAmount: ITokenAmount
+  }): Promise<TransactionPriceImpact> {
     // for quote we should use optimal quote not the min quote
     const quotePrice = Price.createFrom({
       base: params.fromAmount.token,

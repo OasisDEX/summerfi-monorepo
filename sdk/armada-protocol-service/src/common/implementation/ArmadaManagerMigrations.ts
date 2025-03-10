@@ -16,6 +16,7 @@ import {
   type ITokenAmount,
   type IUser,
   type MigrationTransactionInfo,
+  type TransactionPriceImpact,
 } from '@summerfi/sdk-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import type { IContractsProvider } from '@summerfi/contracts-provider-common'
@@ -66,6 +67,10 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     minAmount: ITokenAmount
     toAmount: ITokenAmount
   }>
+  private _getPriceImpact: (params: {
+    fromAmount: ITokenAmount
+    toAmount: ITokenAmount
+  }) => Promise<TransactionPriceImpact>
 
   private _supportedChains: IChainInfo[]
   private _hubChainInfo: IChainInfo
@@ -90,6 +95,10 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       minAmount: ITokenAmount
       toAmount: ITokenAmount
     }>
+    getPriceImpact: (params: {
+      fromAmount: ITokenAmount
+      toAmount: ITokenAmount
+    }) => Promise<TransactionPriceImpact>
   }) {
     this._blockchainClientProvider = params.blockchainClientProvider
     this._contractsProvider = params.contractsProvider
@@ -100,6 +109,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     this._hubChainInfo = params.hubChainInfo
     this._oracleManager = params.oracleManager
     this._getSwapCall = params.getSwapCall
+    this._getPriceImpact = params.getPriceImpact
   }
 
   async getMigratablePositions(
@@ -149,7 +159,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     > = {
       [ArmadaMigrationType.Compound]: compoundConfigsByChainId,
       [ArmadaMigrationType.AaveV3]: aaveV3ConfigsByChainId,
-      [ArmadaMigrationType.Erc4626]: erc4626ConfigsByChainId,
+      [ArmadaMigrationType.Morpho]: erc4626ConfigsByChainId,
     }
 
     const configMapsPerChain = configMapsPerType[params.migrationType]
@@ -275,7 +285,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
           token: params.underlyingToken,
           amount: params.balance,
         })
-      case ArmadaMigrationType.Erc4626: {
+      case ArmadaMigrationType.Morpho: {
         const client = await this._blockchainClientProvider.getBlockchainClient({
           chainInfo: params.token.chainInfo,
         })
@@ -332,6 +342,8 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     const fleetToken = await fleetContract.asErc4626().asset()
 
     const swapAmountByPositionId: Record<string, ITokenAmount> = {}
+    const priceImpactByPositionId: Record<string, TransactionPriceImpact> = {}
+
     for (const position of filteredPositions) {
       // We need to swap position when token is not a fleet token
       if (!position.underlyingTokenAmount.token.equals(fleetToken)) {
@@ -346,6 +358,10 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
           `swap ${position.underlyingTokenAmount.toString()} to ${swapCall.toAmount.toString()} (min ${swapCall.minAmount.toString()})`,
         )
         swapAmountByPositionId[position.id] = swapCall.toAmount
+        priceImpactByPositionId[position.id] = await this._getPriceImpact({
+          fromAmount: position.underlyingTokenAmount,
+          toAmount: swapCall.toAmount,
+        })
       }
     }
 
@@ -387,6 +403,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       },
       metadata: {
         swapAmountByPositionId,
+        priceImpactByPositionId,
       },
     }
 
@@ -396,24 +413,22 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       }),
     )
 
-    const filteredApprovals = approvalTransactions.filter(
+    const validApprovalTransactions = approvalTransactions.filter(
       (approval) => approval !== undefined,
     ) as ApproveTransactionInfo[]
-
     console.log('approvals: ', {
       approvalTransactions,
-      filteredApprovals,
+      filteredApprovals: validApprovalTransactions,
     })
-
-    if (filteredApprovals.length > 0) {
+    if (validApprovalTransactions.length > 0) {
       LoggingService.debug(
         'approvalTransactions: ',
-        filteredApprovals.map((tx) => tx.metadata.approvalAmount.toString()),
+        validApprovalTransactions.map((tx) => tx.metadata.approvalAmount.toString()),
       )
     }
 
-    return filteredApprovals.length > 0
-      ? [filteredApprovals, multicallTransaction]
+    return validApprovalTransactions.length > 0
+      ? [validApprovalTransactions, multicallTransaction]
       : [multicallTransaction]
   }
 
@@ -427,7 +442,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
         return this._getMigrationCompoundApproval(user, spender, position)
       case ArmadaMigrationType.AaveV3:
         return this._getMigrationErc20Approval(user, spender, position, true)
-      case ArmadaMigrationType.Erc4626:
+      case ArmadaMigrationType.Morpho:
         return this._getMigrationErc20Approval(user, spender, position)
       default:
         throw new Error('Unsupported migration type: ' + position.migrationType)
@@ -556,7 +571,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
           operation: 'moveFromAaveToAdmiralsQuarters: ' + migrationAmount,
         }
       }
-      case ArmadaMigrationType.Erc4626: {
+      case ArmadaMigrationType.Morpho: {
         const moveAssetsCall = encodeFunctionData({
           abi: AdmiralsQuartersAbi,
           functionName: 'moveFromERC4626ToAdmiralsQuarters',

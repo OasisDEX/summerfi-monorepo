@@ -7,7 +7,7 @@ import { z } from 'zod'
 export enum ArmadaMigrationType {
   AaveV3 = 'AaveV3',
   Compound = 'Compound',
-  Erc4626 = 'Erc4626',
+  Morpho = 'Morpho',
 }
 
 /**
