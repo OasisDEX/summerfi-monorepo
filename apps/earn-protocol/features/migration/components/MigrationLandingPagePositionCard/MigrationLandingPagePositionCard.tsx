@@ -1,5 +1,12 @@
 import { type CSSProperties, type FC } from 'react'
-import { Card, DataBlock, Icon, Text, useMobileCheck } from '@summerfi/app-earn-ui'
+import {
+  Card,
+  DataBlock,
+  Icon,
+  Text,
+  TokenWithNetworkIcon,
+  useMobileCheck,
+} from '@summerfi/app-earn-ui'
 import { type PlatformLogo, type TokenSymbolsList } from '@summerfi/app-types'
 import { formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
 import clsx from 'clsx'
@@ -55,11 +62,13 @@ export const MigrationLandingPagePositionCard: FC<MigrationLandingPagePositionCa
     >
       <div className={classNames.iconTextualWrapper}>
         <div className={classNames.iconValueWrapper}>
-          <Icon
+          <TokenWithNetworkIcon
             tokenName={
               position.underlyingTokenAmount.token.symbol.toUpperCase() as TokenSymbolsList
             }
-            size={40}
+            variant="medium"
+            chainId={position.chainId}
+            overrideIconSize={40}
           />
           <div className={classNames.valuePlatformWrapper}>
             <Text as="h4" variant="h4">

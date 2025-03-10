@@ -40,6 +40,7 @@ const networkIconOffsetMap = {
 type BaseProps = {
   tokenName: TokenSymbolsList
   variant?: 'small' | 'medium' | 'large'
+  overrideIconSize?: number
 }
 
 type TokenWithNetworkIconProps = BaseProps &
@@ -55,17 +56,17 @@ type TokenWithNetworkIconProps = BaseProps &
 export const TokenWithNetworkIcon: FC<TokenWithNetworkIconProps> = ({
   tokenName,
   variant = 'medium',
+  overrideIconSize,
   ...rest
 }) => {
   const resolvedNetworkIcon =
     'network' in rest ? networkNameIconMap[rest.network] : chainIdIconMap[rest.chainId]
 
+  const resolvedIconSize = overrideIconSize ?? tokenIconSizeMap[variant]
+
   return (
     <div className={classNames.iconWithNetworkWrapper}>
-      <Icon
-        tokenName={tokenName.toUpperCase() as TokenSymbolsList}
-        size={tokenIconSizeMap[variant]}
-      />
+      <Icon tokenName={tokenName.toUpperCase() as TokenSymbolsList} size={resolvedIconSize} />
       <div className={classNames.networkIcon} style={networkIconOffsetMap[variant]}>
         <Icon iconName={resolvedNetworkIcon} size={networkIconSizeMap[variant]} />
       </div>
