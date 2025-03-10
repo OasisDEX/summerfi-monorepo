@@ -88,9 +88,8 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   )
 
   const medianBN = medianDefiYield ? new BigNumber(medianDefiYield) : null
-  const medianDefiYieldDifference = medianBN
-    ? new BigNumber(vault.calculatedApr).minus(medianBN)
-    : null
+  const medianDefiYieldDifference =
+    medianBN && vaultApy ? new BigNumber(vaultApy * 100).minus(medianBN) : null
 
   useEffect(() => {
     const timer = setTimeout(() => {
