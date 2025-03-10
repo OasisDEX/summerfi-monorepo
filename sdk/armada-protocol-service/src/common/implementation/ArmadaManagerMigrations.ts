@@ -501,9 +501,10 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     let requestedAmount = position.positionTokenAmount.toSolidityValue()
 
     if (isRebasing) {
+      const rebasingAllowanceBuffer = 1.01 // 1%
       // when rebasing we need to slightly increase the amount to avoid failing transactions
       const compensatedAmount = new BigNumber(requestedAmount.toString())
-        .multipliedBy(1.001)
+        .multipliedBy(rebasingAllowanceBuffer)
         .toFixed(0)
       requestedAmount = BigInt(compensatedAmount)
     }
