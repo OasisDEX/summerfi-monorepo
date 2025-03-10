@@ -105,7 +105,7 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
   const [localVaultNetwork, setLocalVaultNetwork] =
     useState<MigrationLandingPageViewProps['selectedNetwork']>(selectedNetwork)
   const [isConfigOpen, setIsConfigOpen] = useState(false)
-
+  const [isLoading, setIsLoading] = useState(false)
   const { userWalletAddress } = useUserWallet()
 
   const isOwner = walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
@@ -393,9 +393,14 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
               <Button
                 variant="primaryLargeColorful"
                 style={{ padding: '0 var(--general-space-16)', width: '185px', minWidth: '150px' }}
-                disabled={!selectedVaultId || !selectedPosition || !isOwner}
+                disabled={!selectedVaultId || !selectedPosition || !isOwner || isLoading}
+                onClick={() => setIsLoading(true)}
               >
-                <WithArrow style={{ color: 'var(--earn-protocol-secondary-100)' }} variant="p2semi">
+                <WithArrow
+                  style={{ color: 'var(--earn-protocol-secondary-100)' }}
+                  variant="p2semi"
+                  isLoading={isLoading}
+                >
                   Migrate
                 </WithArrow>
               </Button>
