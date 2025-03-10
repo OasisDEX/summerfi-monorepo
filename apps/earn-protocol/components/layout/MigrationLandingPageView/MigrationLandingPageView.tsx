@@ -229,7 +229,7 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
           selected={selectedNetworkOption}
         />
         <Link
-          href="https://blog.summer.fi/say-hello-to-the-lazy-summer-protocol"
+          href="https://blog.summer.fi/migrate-to-lazy-summer-protocol"
           style={{ display: 'block', width: 'min-content', whiteSpace: 'pre' }}
           target="_blank"
         >
