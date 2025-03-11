@@ -570,6 +570,15 @@ export const StaticTokensData: TokenListData = {
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xbf5495Efe5DB9ce00f80364C8B423567e58d2110/logo.png',
     },
     {
+      name: 'Renzo Restaked ETH',
+      address: '0x2416092f143378750bb29b79eD961ab195CcEea5',
+      symbol: 'ezETH',
+      decimals: 18,
+      chainId: ChainFamilyMap.Arbitrum.ArbitrumOne.chainId,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xbf5495Efe5DB9ce00f80364C8B423567e58d2110/logo.png',
+    },
+    {
       name: 'Wrapped eETH',
       address: '0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A',
       symbol: 'weETH',
