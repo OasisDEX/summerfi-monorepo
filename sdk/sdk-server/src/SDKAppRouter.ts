@@ -59,6 +59,7 @@ import { getClaimableAggregatedRewards } from './armada-protocol-handlers/users/
 import { getMigratablePositions } from './armada-protocol-handlers/users/getMigratablePositions'
 import { getMigrationTX } from './armada-protocol-handlers/users/getMigrationTX'
 import { getBridgeTx } from './armada-protocol-handlers/users/getBridgeTx'
+import { getMigratablePositionsApy } from './armada-protocol-handlers/users/getMigratablePositionsApy'
 
 /**
  * Server
@@ -121,6 +122,7 @@ export const sdkAppRouter = router({
       getSummerToken: getSummerToken,
       getDelegationChainLength: getDelegationChainLength,
       getMigratablePositions: getMigratablePositions,
+      getMigratablePositionsApy: getMigratablePositionsApy,
       getMigrationTX: getMigrationTX,
     },
     keepers: {

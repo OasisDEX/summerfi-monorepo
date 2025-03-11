@@ -1,6 +1,7 @@
 import type { AddressValue } from '@summerfi/sdk-common'
 
 export type ArmadaMigrationConfig = {
-  sourceContract: AddressValue
+  positionAddress: AddressValue
   underlyingToken: AddressValue
+  pool: string | undefined
 }

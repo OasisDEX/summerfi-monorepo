@@ -36,6 +36,28 @@ export interface IArmadaManagerMigrations {
   }>
 
   /**
+   * @method getMigratablePositionsApy
+   * @description Returns the APY for the positions that can be migrated
+   *
+   * @param chainInfo Chain information
+   * @param positionIds The positions to get the APY for
+   *
+   * @returns The APY for the positions that can be migrated
+   */
+  getMigratablePositionsApy(params: {
+    chainInfo: IChainInfo
+    positionIds: AddressValue[]
+  }): Promise<{
+    chainInfo: IChainInfo
+    apyByPositionId: Record<
+      string,
+      {
+        apy7d: IPercentage | null
+      }
+    >
+  }>
+
+  /**
    * @method getMigrationTX
    * @description Returns the transaction for the migration
    *
