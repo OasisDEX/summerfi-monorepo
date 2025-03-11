@@ -1,5 +1,6 @@
 import { type FC } from 'react'
 import { type SDKVaultishType } from '@summerfi/app-types'
+import { type TransactionMetadataMigration } from '@summerfi/sdk-common'
 import { type BigNumber } from 'bignumber.js'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
@@ -18,6 +19,7 @@ interface MigrationSidebarContentProps {
   vaultApy?: number
   isLoadingForecast: boolean
   isQuoteLoading: boolean
+  txMetadata?: TransactionMetadataMigration
 }
 
 export const MigrationSidebarContent: FC<MigrationSidebarContentProps> = ({
@@ -31,6 +33,7 @@ export const MigrationSidebarContent: FC<MigrationSidebarContentProps> = ({
   vaultApy,
   isLoadingForecast,
   isQuoteLoading,
+  txMetadata,
 }) => {
   return (
     <>
@@ -48,6 +51,7 @@ export const MigrationSidebarContent: FC<MigrationSidebarContentProps> = ({
           vaultApy={vaultApy}
           isLoadingForecast={isLoadingForecast}
           isQuoteLoading={isQuoteLoading}
+          txMetadata={txMetadata}
         />
       )}
       {state.step === MigrationSteps.COMPLETED && (

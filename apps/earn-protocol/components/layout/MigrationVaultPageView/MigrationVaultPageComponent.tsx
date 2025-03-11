@@ -7,6 +7,7 @@ import {
   getVaultPositionUrl,
   Sidebar,
   SidebarMobileHeader,
+  type SidebarProps,
   SUMR_CAP,
   useAmountWithSwap,
   useForecast,
@@ -230,7 +231,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
 
   const networkName = SDKChainIdToAAChainMap[vaultChainId].name
 
-  const sidebarProps = {
+  const sidebarProps: SidebarProps = {
     title: getMigrationFormTitle(state.step),
     content: (
       <MigrationSidebarContent
@@ -244,6 +245,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
         vaultApy={vaultApy}
         isLoadingForecast={isLoadingForecast}
         isQuoteLoading={isQuoteLoading}
+        txMetadata={migrationTransaction?.txData.metadata}
       />
     ),
     customHeader:
@@ -279,7 +281,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
       </>
     ),
     error: getMigrationSidebarError({ state }),
-    isMobile,
+    isMobileOrTablet,
   }
 
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP

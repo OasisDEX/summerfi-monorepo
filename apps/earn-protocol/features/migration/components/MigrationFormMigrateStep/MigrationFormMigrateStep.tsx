@@ -16,6 +16,7 @@ import {
   formatFiatBalance,
   subgraphNetworkToSDKId,
 } from '@summerfi/app-utils'
+import { type TransactionMetadataMigration } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
@@ -39,6 +40,7 @@ interface MigrationFormMigrateStepProps {
   vaultApy?: number
   isLoadingForecast: boolean
   isQuoteLoading: boolean
+  txMetadata?: TransactionMetadataMigration
 }
 
 export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
@@ -52,6 +54,7 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
   vaultApy,
   isLoadingForecast,
   isQuoteLoading,
+  txMetadata,
 }) => {
   const {
     state: { slippageConfig },
@@ -84,6 +87,11 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
   const withSwap =
     migratablePosition.underlyingTokenAmount.token.symbol.toUpperCase() !==
     vault.inputToken.symbol.toUpperCase()
+
+  const priceImpactRaw = txMetadata?.priceImpactByPositionId[migratablePosition.id]?.impact.value
+  const priceImpact = priceImpactRaw
+    ? formatDecimalAsPercent(priceImpactRaw / 100, { precision: 4 })
+    : 'n/a'
 
   return (
     <div className={classNames.migrationFormContentWrapper}>
@@ -156,7 +164,7 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
                   items: [
                     {
                       label: 'Price impact',
-                      value: formatDecimalAsPercent(mockedData.swap.priceImpact),
+                      value: priceImpact,
                     },
                     {
                       label: 'Slippage',
@@ -168,15 +176,9 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
             : []),
           {
             label: 'Transaction fee',
-            value:
-              transactionFeeLoading || state.step === MigrationSteps.INIT ? (
-                <SkeletonLine width="80px" height="14px" />
-              ) : transactionFee ? (
-                `$${formatFiatBalance(transactionFee)}`
-              ) : (
-                'n/a'
-              ),
+            value: transactionFee ? `$${formatFiatBalance(transactionFee)}` : 'n/a',
             tooltip: 'Estimated transaction fee for this operation',
+            isLoading: transactionFeeLoading || state.step === MigrationSteps.INIT,
           },
         ]}
       />

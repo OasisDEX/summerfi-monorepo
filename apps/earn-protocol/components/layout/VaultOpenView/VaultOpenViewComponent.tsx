@@ -7,6 +7,7 @@ import {
   SidebarFootnote,
   sidebarFootnote,
   SidebarMobileHeader,
+  type SidebarProps,
   SUMR_CAP,
   useAmount,
   useAmountWithSwap,
@@ -336,7 +337,7 @@ export const VaultOpenViewComponent = ({
     />
   )
 
-  const sidebarProps = {
+  const sidebarProps: SidebarProps = {
     title: sidebar.title,
     content: sidebarContent,
     customHeader:

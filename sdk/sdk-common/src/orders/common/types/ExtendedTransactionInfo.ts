@@ -52,6 +52,11 @@ export type TransactionMetadataBridge = {
   lzFee: ITokenAmount
 }
 
+export type TransactionMetadataMigration = {
+  swapAmountByPositionId: Record<string, ITokenAmount>
+  priceImpactByPositionId: Record<string, TransactionPriceImpact>
+}
+
 type TransactionInfo = {
   transaction: Transaction
   description: string
@@ -104,8 +109,5 @@ export type UnstakeTransactionInfo = TransactionInfo & {
 
 export type MigrationTransactionInfo = TransactionInfo & {
   type: TransactionType.Migration
-  metadata: {
-    swapAmountByPositionId: Record<string, ITokenAmount>
-    priceImpactByPositionId: Record<string, TransactionPriceImpact>
-  }
+  metadata: TransactionMetadataMigration
 }

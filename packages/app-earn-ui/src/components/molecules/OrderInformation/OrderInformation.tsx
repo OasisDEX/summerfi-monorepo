@@ -4,6 +4,7 @@ import clsx from 'clsx'
 import { Card } from '@/components/atoms/Card/Card'
 import { Expander } from '@/components/atoms/Expander/Expander'
 import { Icon } from '@/components/atoms/Icon/Icon'
+import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { Text } from '@/components/atoms/Text/Text'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 
@@ -13,6 +14,7 @@ type OrderInformationItem = {
   label: string
   tooltip?: string
   value: ReactNode
+  isLoading?: boolean
 }
 
 type OrderInformationItemGroup = {
@@ -77,7 +79,13 @@ export const OrderInformation: FC<OrderInformationProps> = ({ title, items, wrap
                         >
                           {nestedItem.label}
                         </Text>
-                        <Text variant="p3semi">{nestedItem.value}</Text>
+                        <Text variant="p3semi">
+                          {nestedItem.isLoading ? (
+                            <SkeletonLine width="80px" height="14px" />
+                          ) : (
+                            nestedItem.value
+                          )}
+                        </Text>
                       </li>
                     ))}
                   </ul>
@@ -100,7 +108,9 @@ export const OrderInformation: FC<OrderInformationProps> = ({ title, items, wrap
                   </Tooltip>
                 )}
               </Text>
-              <Text variant="p3semi">{item.value}</Text>
+              <Text variant="p3semi">
+                {item.isLoading ? <SkeletonLine width="80px" height="14px" /> : item.value}
+              </Text>
             </li>
           )
         })}
