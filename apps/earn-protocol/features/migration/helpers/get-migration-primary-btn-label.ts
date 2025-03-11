@@ -16,13 +16,19 @@ export const getMigrationPrimaryBtnLabel = ({
   state,
   isCorrectNetwork,
   networkName,
+  isConnected,
 }: {
   state: MigrationState
   isCorrectNetwork: boolean
   networkName: string
+  isConnected: boolean
 }) => {
   if (state.step === MigrationSteps.INIT) {
     return 'Loading...'
+  }
+
+  if (!isConnected) {
+    return 'Migrate'
   }
 
   if (!isCorrectNetwork) {

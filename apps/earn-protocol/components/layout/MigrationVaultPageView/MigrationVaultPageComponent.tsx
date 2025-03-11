@@ -134,6 +134,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
       slippage: Number(slippageConfig.slippage),
       handleInitialStep,
       step: state.step,
+      vaultChainId,
     })
 
   const { transactionFee, loading: transactionFeeLoading } = useGasEstimation({
@@ -263,6 +264,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
         state,
         isCorrectNetwork,
         networkName,
+        isConnected: !!userWalletAddress,
       }),
       action: handlePrimaryButtonClick,
       disabled: isPrimaryButtonDisabled,

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
 import { useIsIframe } from '@summerfi/app-earn-ui'
-import { type Address, type TransactionHash } from '@summerfi/app-types'
+import { type Address, type SDKChainId, type TransactionHash } from '@summerfi/app-types'
 import { chainIdToSDKNetwork } from '@summerfi/app-utils'
 import {
   type ApproveTransactionInfo,
@@ -10,14 +10,17 @@ import {
   TransactionType,
 } from '@summerfi/sdk-common'
 
-import { accountType } from '@/account-kit/config'
+import {
+  type AccountKitSupportedNetworks,
+  accountType,
+  SDKChainIdToAAChainMap,
+} from '@/account-kit/config'
 import { MigrationSteps } from '@/features/migration/types'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useAppSDK } from '@/hooks/use-app-sdk'
-import { useClientChainId } from '@/hooks/use-client-chain-id'
-import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
+import { usePublicClient } from '@/hooks/use-public-client'
 
 /**
  * Hook to handle migrating a vault through user operation transactions
@@ -51,6 +54,7 @@ export const useMigrationTransaction = ({
   positionId,
   slippage,
   step,
+  vaultChainId,
 }: {
   onMigrationSuccess: () => void
   onMigrationError: () => void
@@ -62,10 +66,12 @@ export const useMigrationTransaction = ({
   positionId: Address
   slippage: number
   step: MigrationSteps
+  vaultChainId: SDKChainId
 }) => {
-  const { publicClient } = useNetworkAlignedClient()
+  const { publicClient } = usePublicClient({
+    chain: SDKChainIdToAAChainMap[vaultChainId as AccountKitSupportedNetworks],
+  })
   const isIframe = useIsIframe()
-  const { clientChainId } = useClientChainId()
   const { getMigrateTx } = useAppSDK()
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
   const [waitingForTx, setWaitingForTx] = useState<TransactionHash>()
@@ -100,7 +106,7 @@ export const useMigrationTransaction = ({
       message: string
     }) => {
       if (isIframe) {
-        getSafeTxHash(hash, chainIdToSDKNetwork(clientChainId))
+        getSafeTxHash(hash, chainIdToSDKNetwork(vaultChainId))
           .then((safeTransactionData) => {
             if (safeTransactionData.transactionHash) {
               setWaitingForTx(safeTransactionData.transactionHash)
@@ -141,7 +147,7 @@ export const useMigrationTransaction = ({
         ])
       }
     },
-    [isIframe, clientChainId],
+    [isIframe, vaultChainId],
   )
 
   const {
@@ -182,7 +188,7 @@ export const useMigrationTransaction = ({
 
   useEffect(() => {
     const fetchMigrateTx = async () => {
-      const chainInfo = getChainInfoByChainId(clientChainId)
+      const chainInfo = getChainInfoByChainId(vaultChainId)
 
       const tx = await getMigrateTx({
         walletAddress,
@@ -272,7 +278,7 @@ export const useMigrationTransaction = ({
     fleetAddress,
     positionId,
     slippage,
-    clientChainId,
+    vaultChainId,
   ])
 
   useEffect(() => {
