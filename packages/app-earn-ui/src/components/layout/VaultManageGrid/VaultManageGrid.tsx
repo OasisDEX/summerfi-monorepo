@@ -67,7 +67,8 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   const [displaySimulationGraphStaggered, setDisplaySimulationGraphStaggered] =
     useState(displaySimulationGraph)
 
-  const isVaultAtLeast30dOld = isVaultAtLeastDaysOld({ vault, days: 30 })
+  // 9999 until we get correct value, until then new strategy string
+  const isVaultAtLeast30dOld = isVaultAtLeastDaysOld({ vault, days: 9999 })
 
   const apr30d = formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
   const aprCurrent = formatDecimalAsPercent(vaultApy ?? 0)

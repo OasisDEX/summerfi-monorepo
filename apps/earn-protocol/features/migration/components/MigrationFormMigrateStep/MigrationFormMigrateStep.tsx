@@ -66,8 +66,8 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
       slippage: '0.05',
     },
   }
-
-  const isVaultAtLeast7dOld = isVaultAtLeastDaysOld({ vault, days: 7 })
+  // 9999 until we get correct value, until then new strategy string
+  const isVaultAtLeast7dOld = isVaultAtLeastDaysOld({ vault, days: 9999 })
 
   const apr7d = isVaultAtLeast7dOld
     ? formatDecimalAsPercent(new BigNumber(vault.apr7d).div(100))
