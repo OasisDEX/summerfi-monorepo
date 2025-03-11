@@ -60,12 +60,6 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
     state: { slippageConfig },
   } = useLocalConfig()
 
-  const mockedData = {
-    swap: {
-      priceImpact: '0.05',
-      slippage: '0.05',
-    },
-  }
   // 9999 until we get correct value, until then new strategy string
   const isVaultAtLeast7dOld = isVaultAtLeastDaysOld({ vault, days: 9999 })
 
