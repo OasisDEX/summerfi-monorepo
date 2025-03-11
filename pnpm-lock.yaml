@@ -480,7 +480,7 @@ importers:
         version: 2.4.6(@types/react@19.0.8)(react@19.0.0)(typescript@5.7.3)(zod@3.22.4)
       '@web3-onboard/web3auth':
         specifier: ^2.3.1
-        version: 2.3.1(@babel/runtime@7.24.7)(@walletconnect/client@1.8.0)(@walletconnect/types@1.8.0)(react@19.0.0)(typescript@5.7.3)(zod@3.22.4)
+        version: 2.3.1(@babel/runtime@7.26.9)(@walletconnect/client@1.8.0)(@walletconnect/types@1.8.0)(react@19.0.0)(typescript@5.7.3)(zod@3.22.4)
       bignumber.js:
         specifier: ^9.1.2
         version: 9.1.2
@@ -1318,8 +1318,8 @@ importers:
   packages/app-utils:
     dependencies:
       '@account-kit/infra':
-        specifier: ^4.11.0
-        version: 4.11.0(typescript@5.7.3)(viem@2.21.55)
+        specifier: ^4.15.3
+        version: 4.15.3(typescript@5.7.3)(viem@2.23.9)
       bignumber.js:
         specifier: ^9.1.2
         version: 9.1.2
@@ -4146,10 +4146,10 @@ importers:
 
 packages:
 
-  /@aa-sdk/core@4.11.0(typescript@5.7.3)(viem@2.21.55):
-    resolution: {integrity: sha512-VMmiU9qoAaiwdXbPKxhPpcaANUMPkKxg+J7QTLoYqycpLop7jA1lx97d3fSOPtGBQIcJQix6PQIN1Maixcif1w==}
+  /@aa-sdk/core@4.15.3(typescript@5.7.3)(viem@2.21.55):
+    resolution: {integrity: sha512-wArC+TCv7pyp9LN9ijRS06qXP5i1oJK4fsrrru0Icd8ntWdvAtHL9P0RMdpwj+pcG9Yry1uSzRAVbaHynjfUkw==}
     peerDependencies:
-      viem: ^2.20.0
+      viem: ^2.22.6
     dependencies:
       abitype: 0.8.7(typescript@5.7.3)(zod@3.22.4)
       eventemitter3: 5.0.1
@@ -4159,14 +4159,14 @@ packages:
       - typescript
     dev: false
 
-  /@aa-sdk/core@4.15.3(typescript@5.7.3)(viem@2.21.55):
+  /@aa-sdk/core@4.15.3(typescript@5.7.3)(viem@2.23.9):
     resolution: {integrity: sha512-wArC+TCv7pyp9LN9ijRS06qXP5i1oJK4fsrrru0Icd8ntWdvAtHL9P0RMdpwj+pcG9Yry1uSzRAVbaHynjfUkw==}
     peerDependencies:
       viem: ^2.22.6
     dependencies:
       abitype: 0.8.7(typescript@5.7.3)(zod@3.22.4)
       eventemitter3: 5.0.1
-      viem: 2.21.55(typescript@5.7.3)(zod@3.22.4)
+      viem: 2.23.9(typescript@5.7.3)(zod@3.22.4)
       zod: 3.22.4
     transitivePeerDependencies:
       - typescript
@@ -4213,27 +4213,6 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@account-kit/infra@4.11.0(typescript@5.7.3)(viem@2.21.55):
-    resolution: {integrity: sha512-/WNDGNeIZn3bZV6knBSN5nXWbjmsKtcz7+8JHdm/I+6ivR9m/gkZIsSLisnQvH1CPjZqvpcS2+xTwpLOOecusA==}
-    peerDependencies:
-      viem: ^2.20.0
-    dependencies:
-      '@aa-sdk/core': 4.11.0(typescript@5.7.3)(viem@2.21.55)
-      '@account-kit/logging': 4.11.0
-      eventemitter3: 5.0.1
-      viem: 2.21.55(typescript@5.7.3)(zod@3.22.4)
-      zod: 3.22.4
-    optionalDependencies:
-      alchemy-sdk: 3.3.1
-    transitivePeerDependencies:
-      - bufferutil
-      - debug
-      - encoding
-      - supports-color
-      - typescript
-      - utf-8-validate
-    dev: false
-
   /@account-kit/infra@4.15.3(typescript@5.7.3)(viem@2.21.55):
     resolution: {integrity: sha512-AOAVri7/VOZOJyqOn3c0Y9FFCer5Q9CQfIIjjE17Rxe2odJuVkRt0D3uYYmcnl9oG68CHZGY4t+vAvghz5xw1A==}
     peerDependencies:
@@ -4255,13 +4234,25 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@account-kit/logging@4.11.0:
-    resolution: {integrity: sha512-O+Av1OU+5zd/B7JBiFobsPppC+qCOoUp+Fb7i04KXui6xpuxYJ5srugDtb0E0gauKbRpOh1VyVKUZUNLT8zchg==}
+  /@account-kit/infra@4.15.3(typescript@5.7.3)(viem@2.23.9):
+    resolution: {integrity: sha512-AOAVri7/VOZOJyqOn3c0Y9FFCer5Q9CQfIIjjE17Rxe2odJuVkRt0D3uYYmcnl9oG68CHZGY4t+vAvghz5xw1A==}
+    peerDependencies:
+      viem: ^2.22.6
     dependencies:
-      '@segment/analytics-next': 1.75.0
-      uuid: 11.0.3
+      '@aa-sdk/core': 4.15.3(typescript@5.7.3)(viem@2.23.9)
+      '@account-kit/logging': 4.15.3
+      eventemitter3: 5.0.1
+      viem: 2.23.9(typescript@5.7.3)(zod@3.22.4)
+      zod: 3.22.4
+    optionalDependencies:
+      alchemy-sdk: 3.3.1
     transitivePeerDependencies:
+      - bufferutil
+      - debug
       - encoding
+      - supports-color
+      - typescript
+      - utf-8-validate
     dev: false
 
   /@account-kit/logging@4.15.3:
@@ -6860,15 +6851,15 @@ packages:
     resolution: {integrity: sha512-gv7320KBUFJz1RnylIg5WWYPRXKZ884AGkYpgpWW02TH66Dl+HaC1t1CKd0z3R4b6hdYEcmrNZHUmfCP+1u3/g==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/types': 7.26.0
+      '@babel/types': 7.26.9
     dev: false
 
   /@babel/helper-builder-binary-assignment-operator-visitor@7.24.7:
     resolution: {integrity: sha512-xZeCVVdwb4MsDBkkyZ64tReWYrLRHlMN72vP7Bdm3OUOuyFZExhsHUUnuWnm2/XOlAJzR0LfPpB56WXZn0X/lA==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/traverse': 7.25.9
-      '@babel/types': 7.26.0
+      '@babel/traverse': 7.26.9
+      '@babel/types': 7.26.9
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -7015,7 +7006,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/traverse': 7.26.9
-      '@babel/types': 7.26.0
+      '@babel/types': 7.26.9
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -7083,7 +7074,7 @@ packages:
     resolution: {integrity: sha512-FIpuNaz5ow8VyrYcnXQTDRGvV6tTjkNtCK/RYNDXGSLlUD6cBuQTSw43CShGxjvfBTfcUA/r6UhUCbtYqkhcuQ==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/types': 7.26.0
+      '@babel/types': 7.26.9
     dev: false
 
   /@babel/helper-plugin-utils@7.24.7:
@@ -7189,8 +7180,8 @@ packages:
     resolution: {integrity: sha512-K4Du3BFa3gvyhzgPcntrkDgZzQaq6uozzcpGbOO1OEJaI+EJdqWIMTLgFgQf6lrfiDFo5FU+BxKepI9RmZqahA==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/traverse': 7.25.9
-      '@babel/types': 7.26.0
+      '@babel/traverse': 7.26.9
+      '@babel/types': 7.26.9
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -7252,9 +7243,9 @@ packages:
     resolution: {integrity: sha512-ETzz9UTjQSTmw39GboatdymDq4XIQbR8ySgVrylRhPOFpsd+JrKHIuF0de7GCWmem+T4uC5z7EZguod7Wj4A4g==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/template': 7.25.9
+      '@babel/template': 7.26.9
       '@babel/traverse': 7.26.9
-      '@babel/types': 7.26.0
+      '@babel/types': 7.26.9
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -7351,8 +7342,8 @@ packages:
     dependencies:
       '@babel/core': 7.26.0
       '@babel/helper-plugin-utils': 7.26.5
-      '@babel/helper-skip-transparent-expression-wrappers': 7.24.7
-      '@babel/plugin-transform-optional-chaining': 7.24.7(@babel/core@7.26.0)
+      '@babel/helper-skip-transparent-expression-wrappers': 7.25.9
+      '@babel/plugin-transform-optional-chaining': 7.25.9(@babel/core@7.26.0)
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -7402,7 +7393,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.26.0
-      '@babel/helper-create-class-features-plugin': 7.24.7(@babel/core@7.26.0)
+      '@babel/helper-create-class-features-plugin': 7.26.9(@babel/core@7.26.0)
       '@babel/helper-plugin-utils': 7.26.5
       '@babel/plugin-syntax-decorators': 7.24.7(@babel/core@7.26.0)
     transitivePeerDependencies:
@@ -7757,21 +7748,6 @@ packages:
       '@babel/core': 7.26.0
       '@babel/helper-plugin-utils': 7.24.7
 
-  /@babel/plugin-transform-async-generator-functions@7.24.7(@babel/core@7.26.0):
-    resolution: {integrity: sha512-o+iF77e3u7ZS4AoAuJvapz9Fm001PuD2V3Lp6OSE4FYQke+cSewYtnek+THqGRWyQloRCyvWL1OkyfNEl9vr/g==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-    dependencies:
-      '@babel/core': 7.26.0
-      '@babel/helper-environment-visitor': 7.24.7
-      '@babel/helper-plugin-utils': 7.26.5
-      '@babel/helper-remap-async-to-generator': 7.24.7(@babel/core@7.26.0)
-      '@babel/plugin-syntax-async-generators': 7.8.4(@babel/core@7.26.0)
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
   /@babel/plugin-transform-async-generator-functions@7.26.8(@babel/core@7.26.0):
     resolution: {integrity: sha512-He9Ej2X7tNf2zdKMAGOsmg2MrFc+hfoAhd3po4cWfo/NWjzEAKa0oQruj1ROVUdl0e6fb6/kE/G3SSxE0lRJOg==}
     engines: {node: '>=6.9.0'}
@@ -7828,19 +7804,6 @@ packages:
       '@babel/helper-plugin-utils': 7.26.5
     dev: false
 
-  /@babel/plugin-transform-class-properties@7.24.7(@babel/core@7.26.0):
-    resolution: {integrity: sha512-vKbfawVYayKcSeSR5YYzzyXvsDFWU2mD8U5TFeXtbCPLFUqe7GyCgvO6XDHzje862ODrOwy6WCPmKeWHbCFJ4w==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-    dependencies:
-      '@babel/core': 7.26.0
-      '@babel/helper-create-class-features-plugin': 7.24.7(@babel/core@7.26.0)
-      '@babel/helper-plugin-utils': 7.26.5
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
   /@babel/plugin-transform-class-properties@7.25.9(@babel/core@7.26.0):
     resolution: {integrity: sha512-bbMAII8GRSkcd0h0b4X+36GksxuheLFjP65ul9w6C3KgAamI3JqErNgSrosX6ZPj+Mpim5VvEbawXxJCyEUV3Q==}
     engines: {node: '>=6.9.0'}
@@ -7861,7 +7824,7 @@ packages:
       '@babel/core': ^7.12.0
     dependencies:
       '@babel/core': 7.26.0
-      '@babel/helper-create-class-features-plugin': 7.24.7(@babel/core@7.26.0)
+      '@babel/helper-create-class-features-plugin': 7.26.9(@babel/core@7.26.0)
       '@babel/helper-plugin-utils': 7.26.5
       '@babel/plugin-syntax-class-static-block': 7.14.5(@babel/core@7.26.0)
     transitivePeerDependencies:
@@ -7897,7 +7860,7 @@ packages:
       '@babel/helper-compilation-targets': 7.25.9
       '@babel/helper-plugin-utils': 7.26.5
       '@babel/helper-replace-supers': 7.26.5(@babel/core@7.26.0)
-      '@babel/traverse': 7.25.9
+      '@babel/traverse': 7.26.9
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -8041,7 +8004,7 @@ packages:
       '@babel/core': 7.26.0
       '@babel/helper-compilation-targets': 7.25.9
       '@babel/helper-plugin-utils': 7.26.5
-      '@babel/traverse': 7.25.9
+      '@babel/traverse': 7.26.9
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -8242,20 +8205,6 @@ packages:
       '@babel/plugin-syntax-optional-catch-binding': 7.8.3(@babel/core@7.26.0)
     dev: false
 
-  /@babel/plugin-transform-optional-chaining@7.24.7(@babel/core@7.26.0):
-    resolution: {integrity: sha512-tK+0N9yd4j+x/4hxF3F0e0fu/VdcxU18y5SevtyM/PCFlQvXbR0Zmlo2eBrKtVipGNFzpq56o8WsIIKcJFUCRQ==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-    dependencies:
-      '@babel/core': 7.26.0
-      '@babel/helper-plugin-utils': 7.26.5
-      '@babel/helper-skip-transparent-expression-wrappers': 7.24.7
-      '@babel/plugin-syntax-optional-chaining': 7.8.3(@babel/core@7.26.0)
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
   /@babel/plugin-transform-optional-chaining@7.25.9(@babel/core@7.26.0):
     resolution: {integrity: sha512-6AvV0FsLULbpnXeBjrY4dmWF8F7gf8QnvTEoO/wX/5xm/xE1Xo8oPuD3MPS+KS9f9XBEAWN7X1aWr4z9HdOr7A==}
     engines: {node: '>=6.9.0'}
@@ -8340,7 +8289,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.26.0
-      '@babel/plugin-transform-react-jsx': 7.24.7(@babel/core@7.26.0)
+      '@babel/plugin-transform-react-jsx': 7.25.9(@babel/core@7.26.0)
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -8391,7 +8340,7 @@ packages:
       '@babel/helper-module-imports': 7.25.9
       '@babel/helper-plugin-utils': 7.26.5
       '@babel/plugin-syntax-jsx': 7.25.9(@babel/core@7.26.0)
-      '@babel/types': 7.26.0
+      '@babel/types': 7.26.9
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -8403,7 +8352,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.26.0
-      '@babel/helper-annotate-as-pure': 7.24.7
+      '@babel/helper-annotate-as-pure': 7.25.9
       '@babel/helper-plugin-utils': 7.26.5
     dev: false
 
@@ -8604,28 +8553,28 @@ packages:
       '@babel/plugin-syntax-top-level-await': 7.14.5(@babel/core@7.26.0)
       '@babel/plugin-syntax-unicode-sets-regex': 7.18.6(@babel/core@7.26.0)
       '@babel/plugin-transform-arrow-functions': 7.24.7(@babel/core@7.26.0)
-      '@babel/plugin-transform-async-generator-functions': 7.24.7(@babel/core@7.26.0)
+      '@babel/plugin-transform-async-generator-functions': 7.26.8(@babel/core@7.26.0)
       '@babel/plugin-transform-async-to-generator': 7.24.7(@babel/core@7.26.0)
       '@babel/plugin-transform-block-scoped-functions': 7.24.7(@babel/core@7.26.0)
-      '@babel/plugin-transform-block-scoping': 7.24.7(@babel/core@7.26.0)
-      '@babel/plugin-transform-class-properties': 7.24.7(@babel/core@7.26.0)
+      '@babel/plugin-transform-block-scoping': 7.25.9(@babel/core@7.26.0)
+      '@babel/plugin-transform-class-properties': 7.25.9(@babel/core@7.26.0)
       '@babel/plugin-transform-class-static-block': 7.24.7(@babel/core@7.26.0)
-      '@babel/plugin-transform-classes': 7.24.7(@babel/core@7.26.0)
+      '@babel/plugin-transform-classes': 7.25.9(@babel/core@7.26.0)
       '@babel/plugin-transform-computed-properties': 7.24.7(@babel/core@7.26.0)
-      '@babel/plugin-transform-destructuring': 7.24.7(@babel/core@7.26.0)
+      '@babel/plugin-transform-destructuring': 7.25.9(@babel/core@7.26.0)
       '@babel/plugin-transform-dotall-regex': 7.24.7(@babel/core@7.26.0)
       '@babel/plugin-transform-duplicate-keys': 7.24.7(@babel/core@7.26.0)
       '@babel/plugin-transform-dynamic-import': 7.24.7(@babel/core@7.26.0)
       '@babel/plugin-transform-exponentiation-operator': 7.24.7(@babel/core@7.26.0)
       '@babel/plugin-transform-export-namespace-from': 7.24.7(@babel/core@7.26.0)
       '@babel/plugin-transform-for-of': 7.24.7(@babel/core@7.26.0)
-      '@babel/plugin-transform-function-name': 7.24.7(@babel/core@7.26.0)
+      '@babel/plugin-transform-function-name': 7.25.9(@babel/core@7.26.0)
       '@babel/plugin-transform-json-strings': 7.24.7(@babel/core@7.26.0)
-      '@babel/plugin-transform-literals': 7.24.7(@babel/core@7.26.0)
+      '@babel/plugin-transform-literals': 7.25.9(@babel/core@7.26.0)
       '@babel/plugin-transform-logical-assignment-operators': 7.24.7(@babel/core@7.26.0)
       '@babel/plugin-transform-member-expression-literals': 7.24.7(@babel/core@7.26.0)
       '@babel/plugin-transform-modules-amd': 7.24.7(@babel/core@7.26.0)
-      '@babel/plugin-transform-modules-commonjs': 7.24.7(@babel/core@7.26.0)
+      '@babel/plugin-transform-modules-commonjs': 7.26.3(@babel/core@7.26.0)
       '@babel/plugin-transform-modules-systemjs': 7.24.7(@babel/core@7.26.0)
       '@babel/plugin-transform-modules-umd': 7.24.7(@babel/core@7.26.0)
       '@babel/plugin-transform-named-capturing-groups-regex': 7.24.7(@babel/core@7.26.0)
@@ -8635,7 +8584,7 @@ packages:
       '@babel/plugin-transform-object-rest-spread': 7.24.7(@babel/core@7.26.0)
       '@babel/plugin-transform-object-super': 7.24.7(@babel/core@7.26.0)
       '@babel/plugin-transform-optional-catch-binding': 7.24.7(@babel/core@7.26.0)
-      '@babel/plugin-transform-optional-chaining': 7.24.7(@babel/core@7.26.0)
+      '@babel/plugin-transform-optional-chaining': 7.25.9(@babel/core@7.26.0)
       '@babel/plugin-transform-parameters': 7.24.7(@babel/core@7.26.0)
       '@babel/plugin-transform-private-methods': 7.24.7(@babel/core@7.26.0)
       '@babel/plugin-transform-private-property-in-object': 7.24.7(@babel/core@7.26.0)
@@ -8680,7 +8629,7 @@ packages:
     dependencies:
       '@babel/core': 7.26.0
       '@babel/helper-plugin-utils': 7.26.5
-      '@babel/types': 7.26.0
+      '@babel/types': 7.26.9
       esutils: 2.0.3
     dev: false
 
@@ -8694,7 +8643,7 @@ packages:
       '@babel/helper-plugin-utils': 7.26.5
       '@babel/helper-validator-option': 7.25.9
       '@babel/plugin-transform-react-display-name': 7.24.7(@babel/core@7.26.0)
-      '@babel/plugin-transform-react-jsx': 7.24.7(@babel/core@7.26.0)
+      '@babel/plugin-transform-react-jsx': 7.25.9(@babel/core@7.26.0)
       '@babel/plugin-transform-react-jsx-development': 7.24.7(@babel/core@7.26.0)
       '@babel/plugin-transform-react-pure-annotations': 7.24.7(@babel/core@7.26.0)
     transitivePeerDependencies:
@@ -8761,7 +8710,6 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.1
-    dev: false
 
   /@babel/template@7.24.7:
     resolution: {integrity: sha512-jYqfPrU9JTF0PmPy1tLYHW4Mp4KlgxJD9l2nP9fD6yT/ICi554DmrWBAEYpIelzjHf1msDP3PxJIRt/nFNfBig==}
@@ -11205,7 +11153,7 @@ packages:
     resolution: {integrity: sha512-8Rj18cTofpLl+7D++auMVS71KungldHbrArR44fpE8loMVAvYZA+U932lmd0K2lOYBASPhm7SVP9wzls//ESFQ==}
     hasBin: true
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.26.9
       '@expo/code-signing-certificates': 0.0.5
       '@expo/config': 9.0.1
       '@expo/config-plugins': 8.0.5
@@ -11463,9 +11411,9 @@ packages:
     resolution: {integrity: sha512-MzAyFP0fvoyj9IUc6SPnpy6/HLT23j/p5J+yWjGug2ddOpSuKNDHOOqlwWZbJp5KfZCEIVWNHeUoE+TaC/yhaQ==}
     dependencies:
       '@babel/core': 7.26.0
-      '@babel/generator': 7.26.0
-      '@babel/parser': 7.26.0
-      '@babel/types': 7.26.0
+      '@babel/generator': 7.26.9
+      '@babel/parser': 7.26.9
+      '@babel/types': 7.26.9
       '@expo/config': 9.0.1
       '@expo/env': 0.3.0
       '@expo/json-file': 8.3.3
@@ -15350,7 +15298,7 @@ packages:
     resolution: {integrity: sha512-+Sy9Uine0QAbQRxMl6kBlkzKW0qHQk8hghCoKswRWt1ZfxaMA3rezobD5mtSwt/Yhadds9cGbMFWfFJM3Tynsg==}
     engines: {node: '>=18'}
     dependencies:
-      '@babel/traverse': 7.25.9
+      '@babel/traverse': 7.26.9
       '@react-native/codegen': 0.78.0(@babel/preset-env@7.24.7)
     transitivePeerDependencies:
       - '@babel/preset-env'
@@ -15429,34 +15377,34 @@ packages:
       '@babel/plugin-proposal-optional-chaining': 7.21.0(@babel/core@7.26.0)
       '@babel/plugin-syntax-dynamic-import': 7.8.3(@babel/core@7.26.0)
       '@babel/plugin-syntax-export-default-from': 7.24.7(@babel/core@7.26.0)
-      '@babel/plugin-syntax-flow': 7.24.7(@babel/core@7.26.0)
+      '@babel/plugin-syntax-flow': 7.26.0(@babel/core@7.26.0)
       '@babel/plugin-syntax-nullish-coalescing-operator': 7.8.3(@babel/core@7.26.0)
       '@babel/plugin-syntax-optional-chaining': 7.8.3(@babel/core@7.26.0)
       '@babel/plugin-transform-arrow-functions': 7.24.7(@babel/core@7.26.0)
       '@babel/plugin-transform-async-to-generator': 7.24.7(@babel/core@7.26.0)
-      '@babel/plugin-transform-block-scoping': 7.24.7(@babel/core@7.26.0)
-      '@babel/plugin-transform-classes': 7.24.7(@babel/core@7.26.0)
+      '@babel/plugin-transform-block-scoping': 7.25.9(@babel/core@7.26.0)
+      '@babel/plugin-transform-classes': 7.25.9(@babel/core@7.26.0)
       '@babel/plugin-transform-computed-properties': 7.24.7(@babel/core@7.26.0)
-      '@babel/plugin-transform-destructuring': 7.24.7(@babel/core@7.26.0)
-      '@babel/plugin-transform-flow-strip-types': 7.24.7(@babel/core@7.26.0)
-      '@babel/plugin-transform-function-name': 7.24.7(@babel/core@7.26.0)
-      '@babel/plugin-transform-literals': 7.24.7(@babel/core@7.26.0)
-      '@babel/plugin-transform-modules-commonjs': 7.24.7(@babel/core@7.26.0)
+      '@babel/plugin-transform-destructuring': 7.25.9(@babel/core@7.26.0)
+      '@babel/plugin-transform-flow-strip-types': 7.26.5(@babel/core@7.26.0)
+      '@babel/plugin-transform-function-name': 7.25.9(@babel/core@7.26.0)
+      '@babel/plugin-transform-literals': 7.25.9(@babel/core@7.26.0)
+      '@babel/plugin-transform-modules-commonjs': 7.26.3(@babel/core@7.26.0)
       '@babel/plugin-transform-named-capturing-groups-regex': 7.24.7(@babel/core@7.26.0)
       '@babel/plugin-transform-parameters': 7.24.7(@babel/core@7.26.0)
       '@babel/plugin-transform-private-methods': 7.24.7(@babel/core@7.26.0)
       '@babel/plugin-transform-private-property-in-object': 7.24.7(@babel/core@7.26.0)
       '@babel/plugin-transform-react-display-name': 7.24.7(@babel/core@7.26.0)
-      '@babel/plugin-transform-react-jsx': 7.24.7(@babel/core@7.26.0)
+      '@babel/plugin-transform-react-jsx': 7.25.9(@babel/core@7.26.0)
       '@babel/plugin-transform-react-jsx-self': 7.25.9(@babel/core@7.26.0)
       '@babel/plugin-transform-react-jsx-source': 7.25.9(@babel/core@7.26.0)
       '@babel/plugin-transform-runtime': 7.24.7(@babel/core@7.26.0)
       '@babel/plugin-transform-shorthand-properties': 7.24.7(@babel/core@7.26.0)
       '@babel/plugin-transform-spread': 7.24.7(@babel/core@7.26.0)
       '@babel/plugin-transform-sticky-regex': 7.24.7(@babel/core@7.26.0)
-      '@babel/plugin-transform-typescript': 7.24.7(@babel/core@7.26.0)
+      '@babel/plugin-transform-typescript': 7.26.8(@babel/core@7.26.0)
       '@babel/plugin-transform-unicode-regex': 7.24.7(@babel/core@7.26.0)
-      '@babel/template': 7.25.9
+      '@babel/template': 7.26.9
       '@react-native/babel-plugin-codegen': 0.74.84(@babel/preset-env@7.24.7)
       babel-plugin-transform-flow-enums: 0.0.2(@babel/core@7.26.0)
       react-refresh: 0.14.2
@@ -15511,7 +15459,7 @@ packages:
       '@babel/plugin-transform-sticky-regex': 7.24.7(@babel/core@7.26.0)
       '@babel/plugin-transform-typescript': 7.26.8(@babel/core@7.26.0)
       '@babel/plugin-transform-unicode-regex': 7.24.7(@babel/core@7.26.0)
-      '@babel/template': 7.25.9
+      '@babel/template': 7.26.9
       '@react-native/babel-plugin-codegen': 0.78.0(@babel/preset-env@7.24.7)
       babel-plugin-syntax-hermes-parser: 0.25.1
       babel-plugin-transform-flow-enums: 0.0.2(@babel/core@7.26.0)
@@ -15545,7 +15493,7 @@ packages:
     peerDependencies:
       '@babel/preset-env': ^7.1.6
     dependencies:
-      '@babel/parser': 7.26.0
+      '@babel/parser': 7.26.9
       '@babel/preset-env': 7.24.7(@babel/core@7.26.0)
       glob: 7.2.3
       hermes-parser: 0.19.1
@@ -15563,7 +15511,7 @@ packages:
     peerDependencies:
       '@babel/preset-env': ^7.1.6
     dependencies:
-      '@babel/parser': 7.26.0
+      '@babel/parser': 7.26.9
       '@babel/preset-env': 7.24.7(@babel/core@7.26.0)
       glob: 7.2.3
       hermes-parser: 0.25.1
@@ -15680,7 +15628,7 @@ packages:
       nullthrows: 1.1.1
       open: 7.4.2
       selfsigned: 2.4.1
-      serve-static: 1.15.0
+      serve-static: 1.16.2
       temp-dir: 2.0.0
       ws: 6.2.3
     transitivePeerDependencies:
@@ -16421,6 +16369,10 @@ packages:
     resolution: {integrity: sha512-DGmGtC8Tt63J5GfHgfl5CuAXh96VF/LD8K9Hr/Gv0J2lAoRGlPOMpqMpMbCTOoOJMZCk2Xt+DskdDyn6dEFdzQ==}
     dev: false
 
+  /@scure/base@1.2.4:
+    resolution: {integrity: sha512-5Yy9czTO47mqz+/J8GM6GIId4umdCk1wc1q8rKERQulIoc8VP9pzDcghv10Tl2E7R96ZUx/PhND3ESYUQX8NuQ==}
+    dev: false
+
   /@scure/bip32@1.1.5:
     resolution: {integrity: sha512-XyNh1rB0SkEqd3tXcXMi+Xe1fvg+kUIcoRIEujP1Jgv7DqW2r9lg3Ah0NkFaCs9sTkQAQA8kw7xiRXzENi9Rtw==}
     dependencies:
@@ -16451,6 +16403,14 @@ packages:
       '@scure/base': 1.2.1
     dev: false
 
+  /@scure/bip32@1.6.2:
+    resolution: {integrity: sha512-t96EPDMbtGgtb7onKKqxRLfE5g05k7uHnHRM2xdE6BP/ZmxaLtPek4J4KfVn/90IQNrU1IOAqMgiDtUdtbe3nw==}
+    dependencies:
+      '@noble/curves': 1.8.1
+      '@noble/hashes': 1.7.1
+      '@scure/base': 1.2.4
+    dev: false
+
   /@scure/bip39@1.1.1:
     resolution: {integrity: sha512-t+wDck2rVkh65Hmv280fYdVdY25J9YeEUIgn2LG1WM6gxFkGzcksoDiUkWVpVp3Oex9xGC68JU2dSbUfwZ2jPg==}
     dependencies:
@@ -16475,6 +16435,13 @@ packages:
     dependencies:
       '@noble/hashes': 1.6.1
       '@scure/base': 1.2.1
+    dev: false
+
+  /@scure/bip39@1.5.4:
+    resolution: {integrity: sha512-TFM4ni0vKvCfBpohoh+/lY05i9gRbSwXWngAsF4CABQxoaOHijxuaZ2R6cStDQ5CHtHO9aGJTr4ksVJASRRyMA==}
+    dependencies:
+      '@noble/hashes': 1.7.1
+      '@scure/base': 1.2.4
     dev: false
 
   /@segment/analytics-core@1.8.0:
@@ -18274,16 +18241,16 @@ packages:
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
     dev: true
 
-  /@toruslabs/base-controllers@2.9.0(@babel/runtime@7.24.7):
+  /@toruslabs/base-controllers@2.9.0(@babel/runtime@7.26.9):
     resolution: {integrity: sha512-rKc+bR4QB/wdbH0CxLZC5e2PUZcIgkr9yY7TMd3oIffDklaYBnsuC5ES2/rgK1aRUDRWz+qWbTwLqsY6PlT37Q==}
     peerDependencies:
       '@babel/runtime': 7.x
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.26.9
       '@ethereumjs/util': 8.1.0
       '@toruslabs/broadcast-channel': 6.3.1
-      '@toruslabs/http-helpers': 3.4.0(@babel/runtime@7.24.7)
-      '@toruslabs/openlogin-jrpc': 4.7.2(@babel/runtime@7.24.7)
+      '@toruslabs/http-helpers': 3.4.0(@babel/runtime@7.26.9)
+      '@toruslabs/openlogin-jrpc': 4.7.2(@babel/runtime@7.26.9)
       async-mutex: 0.4.1
       bignumber.js: 9.1.2
       bowser: 2.11.0
@@ -18337,6 +18304,21 @@ packages:
       loglevel: 1.9.1
     dev: false
 
+  /@toruslabs/http-helpers@3.4.0(@babel/runtime@7.26.9):
+    resolution: {integrity: sha512-CoeJSL32mpp0gmYjxv48odu6pfjHk/rbJHDwCtYPcMHAl+qUQ/DTpVOOn9U0fGkD+fYZrQmZbRkXFgLhiT0ajQ==}
+    engines: {node: '>=14.17.0', npm: '>=6.x'}
+    peerDependencies:
+      '@babel/runtime': ^7.x
+      '@sentry/types': ^7.x
+    peerDependenciesMeta:
+      '@sentry/types':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.26.9
+      lodash.merge: 4.6.2
+      loglevel: 1.9.1
+    dev: false
+
   /@toruslabs/metadata-helpers@3.2.0(@babel/runtime@7.24.7):
     resolution: {integrity: sha512-2bCc6PNKd9y+aWfZQ1FXd47QmfyT4NmmqPGfsqk+sQS2o+MlxIyLuh9uh7deMgXo4b4qBDX+RQGbIKM1zVk56w==}
     engines: {node: '>=14.17.0', npm: '>=6.x'}
@@ -18353,23 +18335,23 @@ packages:
       - '@sentry/types'
     dev: false
 
-  /@toruslabs/openlogin-ed25519@3.2.0(@babel/runtime@7.24.7):
+  /@toruslabs/openlogin-ed25519@3.2.0(@babel/runtime@7.26.9):
     resolution: {integrity: sha512-w187Pp7YsMJCajXbcBioKuRoVKonPMl7pmHTWsoedJAOx3ydyxnp2iz+jGAkwVX/jIiiMb3gvSRMfiztwrX3Lw==}
     peerDependencies:
       '@babel/runtime': 7.x
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.26.9
       '@toruslabs/tweetnacl-js': 1.0.4
     dev: false
 
-  /@toruslabs/openlogin-jrpc@3.2.0(@babel/runtime@7.24.7):
+  /@toruslabs/openlogin-jrpc@3.2.0(@babel/runtime@7.26.9):
     resolution: {integrity: sha512-G+K0EHyVUaAEyeD4xGsnAZRpn/ner8lQ2HC2+pGKg6oGmzKI2wGMDcw2KMH6+HKlfBGVJ5/VR9AQfC/tZlLDmQ==}
     deprecated: Not supported. Pls upgrade
     peerDependencies:
       '@babel/runtime': 7.x
     dependencies:
-      '@babel/runtime': 7.24.7
-      '@toruslabs/openlogin-utils': 3.0.0(@babel/runtime@7.24.7)
+      '@babel/runtime': 7.26.9
+      '@toruslabs/openlogin-utils': 3.0.0(@babel/runtime@7.26.9)
       end-of-stream: 1.4.4
       eth-rpc-errors: 4.0.3
       events: 3.3.0
@@ -18379,15 +18361,15 @@ packages:
       readable-stream: 3.6.2
     dev: false
 
-  /@toruslabs/openlogin-jrpc@4.7.2(@babel/runtime@7.24.7):
+  /@toruslabs/openlogin-jrpc@4.7.2(@babel/runtime@7.26.9):
     resolution: {integrity: sha512-9Eb0cPc0lPuS6v2YkQlgzfbRnZ6fLez9Ike5wznoHSFA2/JVu1onwuI56EV1HwswdDrOWPPQEyzI1j9NriZ0ew==}
     engines: {node: '>=16.18.1', npm: '>=8.x'}
     peerDependencies:
       '@babel/runtime': 7.x
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.26.9
       '@metamask/rpc-errors': 5.1.1
-      '@toruslabs/openlogin-utils': 4.7.0(@babel/runtime@7.24.7)
+      '@toruslabs/openlogin-utils': 4.7.0(@babel/runtime@7.26.9)
       end-of-stream: 1.4.4
       events: 3.3.0
       fast-safe-stringify: 2.1.1
@@ -18398,56 +18380,56 @@ packages:
       - supports-color
     dev: false
 
-  /@toruslabs/openlogin-utils@3.0.0(@babel/runtime@7.24.7):
+  /@toruslabs/openlogin-utils@3.0.0(@babel/runtime@7.26.9):
     resolution: {integrity: sha512-T5t29/AIFqXc84x4OoAkZWjd0uoP2Lk6iaFndnIIMzCPu+BwwV0spX/jd/3YYNjZ8Po8D+faEnwAhiqemYeK2w==}
     deprecated: Not supported. Pls upgrade
     peerDependencies:
       '@babel/runtime': 7.x
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.26.9
       base64url: 3.0.1
       keccak: 3.0.4
       randombytes: 2.1.0
     dev: false
 
-  /@toruslabs/openlogin-utils@4.7.0(@babel/runtime@7.24.7):
+  /@toruslabs/openlogin-utils@4.7.0(@babel/runtime@7.26.9):
     resolution: {integrity: sha512-w6XkHs4WKuufsf/zzteBzs4EJuOknrUmJ+iv5FZ8HzIpMQeL/984CP8HYaFSEYkbGCP4ydAnhY4Uh0QAhpDbPg==}
     engines: {node: '>=16.18.1', npm: '>=8.x'}
     peerDependencies:
       '@babel/runtime': 7.x
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.26.9
       base64url: 3.0.1
     dev: false
 
-  /@toruslabs/openlogin@3.2.1(@babel/runtime@7.24.7):
+  /@toruslabs/openlogin@3.2.1(@babel/runtime@7.26.9):
     resolution: {integrity: sha512-yJNj2gn+H6+TjR/xn7nFMED/U05C1YbvD4u9hz7I0YhiVG/chOIeXEvvixkIiH3Om9M7PhshwcLCN/hn1cgW6A==}
     deprecated: Not supported. Pls upgrade
     peerDependencies:
       '@babel/runtime': 7.x
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.26.9
       '@toruslabs/eccrypto': 2.2.1
-      '@toruslabs/http-helpers': 3.4.0(@babel/runtime@7.24.7)
-      '@toruslabs/openlogin-jrpc': 3.2.0(@babel/runtime@7.24.7)
-      '@toruslabs/openlogin-utils': 3.0.0(@babel/runtime@7.24.7)
+      '@toruslabs/http-helpers': 3.4.0(@babel/runtime@7.26.9)
+      '@toruslabs/openlogin-jrpc': 3.2.0(@babel/runtime@7.26.9)
+      '@toruslabs/openlogin-utils': 3.0.0(@babel/runtime@7.26.9)
       loglevel: 1.9.1
       pump: 3.0.0
     transitivePeerDependencies:
       - '@sentry/types'
     dev: false
 
-  /@toruslabs/solana-embed@0.3.4(@babel/runtime@7.24.7):
+  /@toruslabs/solana-embed@0.3.4(@babel/runtime@7.26.9):
     resolution: {integrity: sha512-yj+aBJoBAneap7Jlu9/OOp7irWNuC5CqAhyhVcmb0IjWrCUFnioLdL0U7UfGaqVm/5O0leJh7/Z5Ll+3toWJBg==}
     engines: {node: '>=14.17.0', npm: '>=6.x'}
     peerDependencies:
       '@babel/runtime': 7.x
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.26.9
       '@solana/web3.js': 1.91.8
-      '@toruslabs/base-controllers': 2.9.0(@babel/runtime@7.24.7)
-      '@toruslabs/http-helpers': 3.4.0(@babel/runtime@7.24.7)
-      '@toruslabs/openlogin-jrpc': 3.2.0(@babel/runtime@7.24.7)
+      '@toruslabs/base-controllers': 2.9.0(@babel/runtime@7.26.9)
+      '@toruslabs/http-helpers': 3.4.0(@babel/runtime@7.26.9)
+      '@toruslabs/openlogin-jrpc': 3.2.0(@babel/runtime@7.26.9)
       eth-rpc-errors: 4.0.3
       fast-deep-equal: 3.1.3
       is-stream: 2.0.1
@@ -18462,17 +18444,17 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@toruslabs/torus-embed@1.41.3(@babel/runtime@7.24.7):
+  /@toruslabs/torus-embed@1.41.3(@babel/runtime@7.26.9):
     resolution: {integrity: sha512-RpSNJub99oweFASv3Jinrf4JzA9QgkqGnErnymGuAQop9WGcmV2lJoImg2lXJbWgfM9SOOK6qtakhysf02oTTw==}
     engines: {node: '>=14.17.0', npm: '>=6.x'}
     deprecated: Not supported. Pls upgrade
     peerDependencies:
       '@babel/runtime': 7.x
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.26.9
       '@metamask/obs-store': 7.0.0
-      '@toruslabs/http-helpers': 3.4.0(@babel/runtime@7.24.7)
-      '@toruslabs/openlogin-jrpc': 3.2.0(@babel/runtime@7.24.7)
+      '@toruslabs/http-helpers': 3.4.0(@babel/runtime@7.26.9)
+      '@toruslabs/openlogin-jrpc': 3.2.0(@babel/runtime@7.26.9)
       create-hash: 1.2.0
       end-of-stream: 1.4.4
       eth-rpc-errors: 4.0.3
@@ -21964,15 +21946,15 @@ packages:
       - zod
     dev: false
 
-  /@web3-onboard/web3auth@2.3.1(@babel/runtime@7.24.7)(@walletconnect/client@1.8.0)(@walletconnect/types@1.8.0)(react@19.0.0)(typescript@5.7.3)(zod@3.22.4):
+  /@web3-onboard/web3auth@2.3.1(@babel/runtime@7.26.9)(@walletconnect/client@1.8.0)(@walletconnect/types@1.8.0)(react@19.0.0)(typescript@5.7.3)(zod@3.22.4):
     resolution: {integrity: sha512-C9MBN8kss4y6JKGjnwnGC8p06hQMRntgjXf2Qdr2jYYQbHOl+R5KYF1BonquzWLR6w21mmK4PpaLKfCL9aMrKw==}
     peerDependencies:
       react: '>=18.2'
     dependencies:
       '@solana/web3.js': 1.91.8
       '@web3-onboard/common': 2.4.2(typescript@5.7.3)(zod@3.22.4)
-      '@web3auth/base': 5.2.0(@babel/runtime@7.24.7)
-      '@web3auth/modal': 5.2.1(@babel/runtime@7.24.7)(@solana/web3.js@1.91.8)(@walletconnect/client@1.8.0)(@walletconnect/types@1.8.0)(react-dom@18.3.1)(react@19.0.0)
+      '@web3auth/base': 5.2.0(@babel/runtime@7.26.9)
+      '@web3auth/modal': 5.2.1(@babel/runtime@7.26.9)(@solana/web3.js@1.91.8)(@walletconnect/client@1.8.0)(@walletconnect/types@1.8.0)(react-dom@18.3.1)(react@19.0.0)
       react: 19.0.0
       react-dom: 18.3.1(react@19.0.0)
     transitivePeerDependencies:
@@ -22007,38 +21989,38 @@ packages:
     resolution: {integrity: sha512-BEO6al7BYqcnfX15W2cnGR+Q566ACXAT9UQykORCWW80lmkpWsnEob6zJS1ZVBKsSJC8+7vJkHwlp+lXG1UCdw==}
     dev: false
 
-  /@web3auth/base-evm-adapter@5.2.0(@babel/runtime@7.24.7):
+  /@web3auth/base-evm-adapter@5.2.0(@babel/runtime@7.26.9):
     resolution: {integrity: sha512-tg43ZqsuL5ncDSOE2Ts7+3bCkZ6TfVXPC3JqIcx0D9bP1uNeYILv3jF2g1DQP5PpYXdLYaQpFwb3CYCgkTfqlA==}
     deprecated: Not supported. Pls upgrade
     peerDependencies:
       '@babel/runtime': ^7.x
     dependencies:
-      '@babel/runtime': 7.24.7
-      '@web3auth/base': 5.2.0(@babel/runtime@7.24.7)
+      '@babel/runtime': 7.26.9
+      '@web3auth/base': 5.2.0(@babel/runtime@7.26.9)
     transitivePeerDependencies:
       - '@sentry/types'
     dev: false
 
-  /@web3auth/base-plugin@5.2.0(@babel/runtime@7.24.7):
+  /@web3auth/base-plugin@5.2.0(@babel/runtime@7.26.9):
     resolution: {integrity: sha512-k6mvg0n/cVYAraUvPE7yyIvS68+sUeKg1Q9VbiW+sK+UI6Hs3vrIDONfSWBPepq1KWgRRceVRTl7FMcQjX8UYw==}
     deprecated: Not supported. Pls upgrade
     dependencies:
-      '@web3auth/base': 5.2.0(@babel/runtime@7.24.7)
+      '@web3auth/base': 5.2.0(@babel/runtime@7.26.9)
     transitivePeerDependencies:
       - '@babel/runtime'
       - '@sentry/types'
     dev: false
 
-  /@web3auth/base-provider@5.2.0(@babel/runtime@7.24.7):
+  /@web3auth/base-provider@5.2.0(@babel/runtime@7.26.9):
     resolution: {integrity: sha512-FZhaSq8+1o48ZocCGDVKENIioMSDHpQEPLv5yQLG1LgTYXQbFrl33l+/XehyZ1zrVKf2mERLUKeeDSb/qTR+yg==}
     deprecated: Not supported. Pls upgrade
     peerDependencies:
       '@babel/runtime': 7.x
     dependencies:
-      '@babel/runtime': 7.24.7
-      '@toruslabs/base-controllers': 2.9.0(@babel/runtime@7.24.7)
-      '@toruslabs/openlogin-jrpc': 3.2.0(@babel/runtime@7.24.7)
-      '@web3auth/base': 5.2.0(@babel/runtime@7.24.7)
+      '@babel/runtime': 7.26.9
+      '@toruslabs/base-controllers': 2.9.0(@babel/runtime@7.26.9)
+      '@toruslabs/openlogin-jrpc': 3.2.0(@babel/runtime@7.26.9)
+      '@web3auth/base': 5.2.0(@babel/runtime@7.26.9)
       eth-rpc-errors: 4.0.3
       json-rpc-random-id: 1.0.1
     transitivePeerDependencies:
@@ -22048,29 +22030,29 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@web3auth/base-solana-adapter@5.2.0(@babel/runtime@7.24.7):
+  /@web3auth/base-solana-adapter@5.2.0(@babel/runtime@7.26.9):
     resolution: {integrity: sha512-D/GH7CD87aSry3zXj1li2g5NWF2/0j6I+V/xf0BBWLgqaJwJ/y5UlwMMDYZHmvP84yTGylH47Bjs+g5g/Ov8tw==}
     deprecated: Not supported. Pls upgrade
     peerDependencies:
       '@babel/runtime': ^7.x
     dependencies:
-      '@babel/runtime': 7.24.7
-      '@web3auth/base': 5.2.0(@babel/runtime@7.24.7)
+      '@babel/runtime': 7.26.9
+      '@web3auth/base': 5.2.0(@babel/runtime@7.26.9)
       bs58: 4.0.1
     transitivePeerDependencies:
       - '@sentry/types'
     dev: false
 
-  /@web3auth/base@5.2.0(@babel/runtime@7.24.7):
+  /@web3auth/base@5.2.0(@babel/runtime@7.26.9):
     resolution: {integrity: sha512-ZJ2fUJBrCq6rFXXUJZOg3uMhJ07UGU8ibOKQ24HHIx+RRE2btVF3t2xYPjTUlWBrdGN+zlmu04CjSuOt3Z+qUQ==}
     deprecated: Not supported. Pls upgrade
     peerDependencies:
       '@babel/runtime': ^7.x
     dependencies:
-      '@babel/runtime': 7.24.7
-      '@toruslabs/http-helpers': 3.4.0(@babel/runtime@7.24.7)
-      '@toruslabs/openlogin': 3.2.1(@babel/runtime@7.24.7)
-      '@toruslabs/openlogin-jrpc': 3.2.0(@babel/runtime@7.24.7)
+      '@babel/runtime': 7.26.9
+      '@toruslabs/http-helpers': 3.4.0(@babel/runtime@7.26.9)
+      '@toruslabs/openlogin': 3.2.1(@babel/runtime@7.26.9)
+      '@toruslabs/openlogin-jrpc': 3.2.0(@babel/runtime@7.26.9)
       jwt-decode: 3.1.2
       loglevel: 1.9.1
       ts-custom-error: 3.3.1
@@ -22078,25 +22060,25 @@ packages:
       - '@sentry/types'
     dev: false
 
-  /@web3auth/ethereum-provider@5.2.0(@babel/runtime@7.24.7):
+  /@web3auth/ethereum-provider@5.2.0(@babel/runtime@7.26.9):
     resolution: {integrity: sha512-FzwG7R5ZB//rrKuSU/TH79GiUlH3HMgsJ34bw6/iKcumDC3KBFYyxyjJznN7hwCzzzrOHqTujsppwTvubI5DdA==}
     deprecated: Not supported. Pls upgrade
     peerDependencies:
       '@babel/runtime': 7.x
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.26.9
       '@ethereumjs/common': 3.2.0
       '@ethereumjs/tx': 4.2.0
       '@ethereumjs/util': 8.1.0
       '@metamask/eth-sig-util': 5.1.0
-      '@toruslabs/base-controllers': 2.9.0(@babel/runtime@7.24.7)
-      '@toruslabs/http-helpers': 3.4.0(@babel/runtime@7.24.7)
-      '@toruslabs/openlogin-jrpc': 3.2.0(@babel/runtime@7.24.7)
+      '@toruslabs/base-controllers': 2.9.0(@babel/runtime@7.26.9)
+      '@toruslabs/http-helpers': 3.4.0(@babel/runtime@7.26.9)
+      '@toruslabs/openlogin-jrpc': 3.2.0(@babel/runtime@7.26.9)
       '@walletconnect/legacy-types': 2.0.0
       '@walletconnect/types': 2.13.0
       '@walletconnect/utils': 2.13.0
-      '@web3auth/base': 5.2.0(@babel/runtime@7.24.7)
-      '@web3auth/base-provider': 5.2.0(@babel/runtime@7.24.7)
+      '@web3auth/base': 5.2.0(@babel/runtime@7.26.9)
+      '@web3auth/base-provider': 5.2.0(@babel/runtime@7.26.9)
       assert: 2.1.0
       bignumber.js: 9.1.2
       bn.js: 5.2.1
@@ -22123,38 +22105,38 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@web3auth/metamask-adapter@5.2.0(@babel/runtime@7.24.7):
+  /@web3auth/metamask-adapter@5.2.0(@babel/runtime@7.26.9):
     resolution: {integrity: sha512-MPYdFjw0uxaXF6ZUM0kIDEQRapGw5Dn01Swt6uxIdasbih04aDps+JERlRkt5hSsN9I0uHPnQaXHfleyknWMTw==}
     deprecated: Not supported. Pls upgrade
     peerDependencies:
       '@babel/runtime': ^7.x
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.26.9
       '@metamask/detect-provider': 2.0.0
-      '@web3auth/base': 5.2.0(@babel/runtime@7.24.7)
-      '@web3auth/base-evm-adapter': 5.2.0(@babel/runtime@7.24.7)
+      '@web3auth/base': 5.2.0(@babel/runtime@7.26.9)
+      '@web3auth/base-evm-adapter': 5.2.0(@babel/runtime@7.26.9)
     transitivePeerDependencies:
       - '@sentry/types'
     dev: false
 
-  /@web3auth/modal@5.2.1(@babel/runtime@7.24.7)(@solana/web3.js@1.91.8)(@walletconnect/client@1.8.0)(@walletconnect/types@1.8.0)(react-dom@18.3.1)(react@19.0.0):
+  /@web3auth/modal@5.2.1(@babel/runtime@7.26.9)(@solana/web3.js@1.91.8)(@walletconnect/client@1.8.0)(@walletconnect/types@1.8.0)(react-dom@18.3.1)(react@19.0.0):
     resolution: {integrity: sha512-i+HVEUUDmH5bHUJoEZrWK4FZpReZj2X9v3PKhX+W0DwxzDt/0nkkPMNJv9L7ow0bC2NfBjbqKRahr6svDqij0A==}
     deprecated: Not supported. Pls upgrade
     peerDependencies:
       '@babel/runtime': 7.x
       '@solana/web3.js': ^1.x
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.26.9
       '@solana/web3.js': 1.91.8
-      '@web3auth/base': 5.2.0(@babel/runtime@7.24.7)
-      '@web3auth/metamask-adapter': 5.2.0(@babel/runtime@7.24.7)
-      '@web3auth/no-modal': 5.2.0(@babel/runtime@7.24.7)
-      '@web3auth/openlogin-adapter': 5.2.1(@babel/runtime@7.24.7)(@solana/web3.js@1.91.8)
-      '@web3auth/phantom-adapter': 5.2.0(@babel/runtime@7.24.7)(@solana/web3.js@1.91.8)
-      '@web3auth/torus-evm-adapter': 5.2.0(@babel/runtime@7.24.7)
-      '@web3auth/torus-solana-adapter': 5.2.0(@babel/runtime@7.24.7)(@solana/web3.js@1.91.8)
-      '@web3auth/ui': 5.2.0(@babel/runtime@7.24.7)(react-dom@18.3.1)(react@19.0.0)
-      '@web3auth/wallet-connect-v1-adapter': 5.2.0(@babel/runtime@7.24.7)(@walletconnect/client@1.8.0)(@walletconnect/types@1.8.0)
+      '@web3auth/base': 5.2.0(@babel/runtime@7.26.9)
+      '@web3auth/metamask-adapter': 5.2.0(@babel/runtime@7.26.9)
+      '@web3auth/no-modal': 5.2.0(@babel/runtime@7.26.9)
+      '@web3auth/openlogin-adapter': 5.2.1(@babel/runtime@7.26.9)(@solana/web3.js@1.91.8)
+      '@web3auth/phantom-adapter': 5.2.0(@babel/runtime@7.26.9)(@solana/web3.js@1.91.8)
+      '@web3auth/torus-evm-adapter': 5.2.0(@babel/runtime@7.26.9)
+      '@web3auth/torus-solana-adapter': 5.2.0(@babel/runtime@7.26.9)(@solana/web3.js@1.91.8)
+      '@web3auth/ui': 5.2.0(@babel/runtime@7.26.9)(react-dom@18.3.1)(react@19.0.0)
+      '@web3auth/wallet-connect-v1-adapter': 5.2.0(@babel/runtime@7.26.9)(@walletconnect/client@1.8.0)(@walletconnect/types@1.8.0)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -22182,36 +22164,36 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@web3auth/no-modal@5.2.0(@babel/runtime@7.24.7):
+  /@web3auth/no-modal@5.2.0(@babel/runtime@7.26.9):
     resolution: {integrity: sha512-fBF3NTdvWeGIMKVthiYXAiq3VHWuIeWo7oeqTlFJ1Vkfvx3QiEp5kj+TRtP+jJ63lcIQeihqB7tj458g0DCnjQ==}
     deprecated: Not supported. Pls upgrade
     peerDependencies:
       '@babel/runtime': ^7.x
     dependencies:
-      '@babel/runtime': 7.24.7
-      '@toruslabs/openlogin': 3.2.1(@babel/runtime@7.24.7)
-      '@toruslabs/openlogin-jrpc': 3.2.0(@babel/runtime@7.24.7)
-      '@web3auth/base': 5.2.0(@babel/runtime@7.24.7)
-      '@web3auth/base-plugin': 5.2.0(@babel/runtime@7.24.7)
+      '@babel/runtime': 7.26.9
+      '@toruslabs/openlogin': 3.2.1(@babel/runtime@7.26.9)
+      '@toruslabs/openlogin-jrpc': 3.2.0(@babel/runtime@7.26.9)
+      '@web3auth/base': 5.2.0(@babel/runtime@7.26.9)
+      '@web3auth/base-plugin': 5.2.0(@babel/runtime@7.26.9)
     transitivePeerDependencies:
       - '@sentry/types'
     dev: false
 
-  /@web3auth/openlogin-adapter@5.2.1(@babel/runtime@7.24.7)(@solana/web3.js@1.91.8):
+  /@web3auth/openlogin-adapter@5.2.1(@babel/runtime@7.26.9)(@solana/web3.js@1.91.8):
     resolution: {integrity: sha512-y7GrVq/xaGCPoiz80F8o7vgO1kZdn2yPyuu3bKy2qRhNoFS3aF5sOiPImzeOPJ+5h3NNX6NS8OObbwtTc3iwQg==}
     deprecated: Not supported. Pls upgrade
     peerDependencies:
       '@babel/runtime': ^7.x
       '@solana/web3.js': ^1.x
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.26.9
       '@solana/web3.js': 1.91.8
-      '@toruslabs/openlogin': 3.2.1(@babel/runtime@7.24.7)
-      '@toruslabs/openlogin-ed25519': 3.2.0(@babel/runtime@7.24.7)
-      '@web3auth/base': 5.2.0(@babel/runtime@7.24.7)
-      '@web3auth/base-provider': 5.2.0(@babel/runtime@7.24.7)
-      '@web3auth/ethereum-provider': 5.2.0(@babel/runtime@7.24.7)
-      '@web3auth/solana-provider': 5.2.0(@babel/runtime@7.24.7)(@solana/web3.js@1.91.8)
+      '@toruslabs/openlogin': 3.2.1(@babel/runtime@7.26.9)
+      '@toruslabs/openlogin-ed25519': 3.2.0(@babel/runtime@7.26.9)
+      '@web3auth/base': 5.2.0(@babel/runtime@7.26.9)
+      '@web3auth/base-provider': 5.2.0(@babel/runtime@7.26.9)
+      '@web3auth/ethereum-provider': 5.2.0(@babel/runtime@7.26.9)
+      '@web3auth/solana-provider': 5.2.0(@babel/runtime@7.26.9)(@solana/web3.js@1.91.8)
       lodash.merge: 4.6.2
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -22234,19 +22216,19 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@web3auth/phantom-adapter@5.2.0(@babel/runtime@7.24.7)(@solana/web3.js@1.91.8):
+  /@web3auth/phantom-adapter@5.2.0(@babel/runtime@7.26.9)(@solana/web3.js@1.91.8):
     resolution: {integrity: sha512-suUWZH/4XbIqgizj0UxUYteiDTtndK2s/Hnsg3O3XHnAqQ5KZoaQ5ffHnto9Wmx6BzY5+nJO05UckdPI74wo0Q==}
     deprecated: Not supported. Pls upgrade
     peerDependencies:
       '@babel/runtime': ^7.x
       '@solana/web3.js': ^1.x
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.26.9
       '@solana/web3.js': 1.91.8
-      '@web3auth/base': 5.2.0(@babel/runtime@7.24.7)
-      '@web3auth/base-provider': 5.2.0(@babel/runtime@7.24.7)
-      '@web3auth/base-solana-adapter': 5.2.0(@babel/runtime@7.24.7)
-      '@web3auth/solana-provider': 5.2.0(@babel/runtime@7.24.7)(@solana/web3.js@1.91.8)
+      '@web3auth/base': 5.2.0(@babel/runtime@7.26.9)
+      '@web3auth/base-provider': 5.2.0(@babel/runtime@7.26.9)
+      '@web3auth/base-solana-adapter': 5.2.0(@babel/runtime@7.26.9)
+      '@web3auth/solana-provider': 5.2.0(@babel/runtime@7.26.9)(@solana/web3.js@1.91.8)
       bn.js: 5.2.1
     transitivePeerDependencies:
       - '@sentry/types'
@@ -22255,21 +22237,21 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@web3auth/solana-provider@5.2.0(@babel/runtime@7.24.7)(@solana/web3.js@1.91.8):
+  /@web3auth/solana-provider@5.2.0(@babel/runtime@7.26.9)(@solana/web3.js@1.91.8):
     resolution: {integrity: sha512-fDRQ5/QiYbLo0PAT5AOHH3jstACvmTBH3QfEbjxhN5jC9dKUiUKvYZWympOQJQfU7Epa2YMrokYAznh9RcHeVg==}
     deprecated: Not supported. Pls upgrade
     peerDependencies:
       '@babel/runtime': ^7.x
       '@solana/web3.js': ^1.x
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.26.9
       '@solana/web3.js': 1.91.8
-      '@toruslabs/base-controllers': 2.9.0(@babel/runtime@7.24.7)
-      '@toruslabs/openlogin-ed25519': 3.2.0(@babel/runtime@7.24.7)
-      '@toruslabs/openlogin-jrpc': 3.2.0(@babel/runtime@7.24.7)
+      '@toruslabs/base-controllers': 2.9.0(@babel/runtime@7.26.9)
+      '@toruslabs/openlogin-ed25519': 3.2.0(@babel/runtime@7.26.9)
+      '@toruslabs/openlogin-jrpc': 3.2.0(@babel/runtime@7.26.9)
       '@toruslabs/tweetnacl-js': 1.0.4
-      '@web3auth/base': 5.2.0(@babel/runtime@7.24.7)
-      '@web3auth/base-provider': 5.2.0(@babel/runtime@7.24.7)
+      '@web3auth/base': 5.2.0(@babel/runtime@7.26.9)
+      '@web3auth/base-provider': 5.2.0(@babel/runtime@7.26.9)
       bn.js: 5.2.1
       bs58: 4.0.1
       eth-rpc-errors: 4.0.3
@@ -22281,34 +22263,34 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@web3auth/torus-evm-adapter@5.2.0(@babel/runtime@7.24.7):
+  /@web3auth/torus-evm-adapter@5.2.0(@babel/runtime@7.26.9):
     resolution: {integrity: sha512-i9lPoSuQWR7B41OatmmLQkTPp6VyjBUQdIQKnCa35jjXjhQijlEnMozV6+/cy6Ct6fByXm1VJ4YvTGxzrh8trw==}
     deprecated: Not supported. Pls upgrade
     peerDependencies:
       '@babel/runtime': ^7.x
     dependencies:
-      '@babel/runtime': 7.24.7
-      '@toruslabs/torus-embed': 1.41.3(@babel/runtime@7.24.7)
-      '@web3auth/base': 5.2.0(@babel/runtime@7.24.7)
-      '@web3auth/base-evm-adapter': 5.2.0(@babel/runtime@7.24.7)
+      '@babel/runtime': 7.26.9
+      '@toruslabs/torus-embed': 1.41.3(@babel/runtime@7.26.9)
+      '@web3auth/base': 5.2.0(@babel/runtime@7.26.9)
+      '@web3auth/base-evm-adapter': 5.2.0(@babel/runtime@7.26.9)
     transitivePeerDependencies:
       - '@sentry/types'
     dev: false
 
-  /@web3auth/torus-solana-adapter@5.2.0(@babel/runtime@7.24.7)(@solana/web3.js@1.91.8):
+  /@web3auth/torus-solana-adapter@5.2.0(@babel/runtime@7.26.9)(@solana/web3.js@1.91.8):
     resolution: {integrity: sha512-Gl71lKoo+RIq9DaeUiRsc4cVSKsSsjJLCc+7iLSeSiuYnD1BouPKOutrAQngCwdC+DiLjGVNAjq44TsC7Q136Q==}
     deprecated: Not supported. Pls upgrade
     peerDependencies:
       '@babel/runtime': ^7.x
       '@solana/web3.js': ^1.x
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.26.9
       '@solana/web3.js': 1.91.8
-      '@toruslabs/solana-embed': 0.3.4(@babel/runtime@7.24.7)
-      '@web3auth/base': 5.2.0(@babel/runtime@7.24.7)
-      '@web3auth/base-provider': 5.2.0(@babel/runtime@7.24.7)
-      '@web3auth/base-solana-adapter': 5.2.0(@babel/runtime@7.24.7)
-      '@web3auth/solana-provider': 5.2.0(@babel/runtime@7.24.7)(@solana/web3.js@1.91.8)
+      '@toruslabs/solana-embed': 0.3.4(@babel/runtime@7.26.9)
+      '@web3auth/base': 5.2.0(@babel/runtime@7.26.9)
+      '@web3auth/base-provider': 5.2.0(@babel/runtime@7.26.9)
+      '@web3auth/base-solana-adapter': 5.2.0(@babel/runtime@7.26.9)
+      '@web3auth/solana-provider': 5.2.0(@babel/runtime@7.26.9)(@solana/web3.js@1.91.8)
     transitivePeerDependencies:
       - '@sentry/types'
       - bufferutil
@@ -22317,7 +22299,7 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@web3auth/ui@5.2.0(@babel/runtime@7.24.7)(react-dom@18.3.1)(react@19.0.0):
+  /@web3auth/ui@5.2.0(@babel/runtime@7.26.9)(react-dom@18.3.1)(react@19.0.0):
     resolution: {integrity: sha512-9/lv74oxVXd0wbbjnWuOg5yalte0+RsDSyzxPkxCqZ5dk6p275JQ718g2F287X15lZb5bxnjYN/zVBZMIJ7Dvw==}
     deprecated: Not supported. Pls upgrade
     peerDependencies:
@@ -22325,11 +22307,11 @@ packages:
       react: ^18.x
       react-dom: ^18.x
     dependencies:
-      '@babel/runtime': 7.24.7
-      '@toruslabs/http-helpers': 3.4.0(@babel/runtime@7.24.7)
-      '@toruslabs/openlogin': 3.2.1(@babel/runtime@7.24.7)
-      '@toruslabs/openlogin-jrpc': 3.2.0(@babel/runtime@7.24.7)
-      '@web3auth/base': 5.2.0(@babel/runtime@7.24.7)
+      '@babel/runtime': 7.26.9
+      '@toruslabs/http-helpers': 3.4.0(@babel/runtime@7.26.9)
+      '@toruslabs/openlogin': 3.2.1(@babel/runtime@7.26.9)
+      '@toruslabs/openlogin-jrpc': 3.2.0(@babel/runtime@7.26.9)
+      '@web3auth/base': 5.2.0(@babel/runtime@7.26.9)
       bowser: 2.11.0
       classnames: 2.5.1
       copy-to-clipboard: 3.3.3
@@ -22345,7 +22327,7 @@ packages:
       - react-native
     dev: false
 
-  /@web3auth/wallet-connect-v1-adapter@5.2.0(@babel/runtime@7.24.7)(@walletconnect/client@1.8.0)(@walletconnect/types@1.8.0):
+  /@web3auth/wallet-connect-v1-adapter@5.2.0(@babel/runtime@7.26.9)(@walletconnect/client@1.8.0)(@walletconnect/types@1.8.0):
     resolution: {integrity: sha512-EC9UG/qaM2bfBQFpRbyrKzCNgB8TlNeqoaUaRF+NNmEiY0KehXT5ddP6UN2RFvCEOfEVIuJo+wvsgRA8GFPnTw==}
     deprecated: wc v1 is deprecated. pls use wc v2
     peerDependencies:
@@ -22353,12 +22335,12 @@ packages:
       '@walletconnect/client': ~1.x
       '@walletconnect/types': ~1.x
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.26.9
       '@walletconnect/client': 1.8.0
       '@walletconnect/types': 1.8.0
-      '@web3auth/base': 5.2.0(@babel/runtime@7.24.7)
-      '@web3auth/base-evm-adapter': 5.2.0(@babel/runtime@7.24.7)
-      '@web3auth/ethereum-provider': 5.2.0(@babel/runtime@7.24.7)
+      '@web3auth/base': 5.2.0(@babel/runtime@7.26.9)
+      '@web3auth/base-evm-adapter': 5.2.0(@babel/runtime@7.26.9)
+      '@web3auth/ethereum-provider': 5.2.0(@babel/runtime@7.26.9)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -22561,6 +22543,21 @@ packages:
 
   /abitype@1.0.7(typescript@5.7.3)(zod@3.22.4):
     resolution: {integrity: sha512-ZfYYSktDQUwc2eduYu8C4wOs+RDPmnRYMh7zNfzeMtGGgb0U+6tLGjixUic6mXf5xKKCcgT5Qp6cv39tOARVFw==}
+    peerDependencies:
+      typescript: '>=5.0.4'
+      zod: ^3 >=3.22.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+      zod:
+        optional: true
+    dependencies:
+      typescript: 5.7.3
+      zod: 3.22.4
+    dev: false
+
+  /abitype@1.0.8(typescript@5.7.3)(zod@3.22.4):
+    resolution: {integrity: sha512-ZeiI6h3GnW06uYDLx0etQtX/p8E24UaHHBj57RSjK7YBFe7iuVn07EDpOeP451D06sF27VOz9JJPlIKJmXgkEg==}
     peerDependencies:
       typescript: '>=5.0.4'
       zod: ^3 >=3.22.0
@@ -27777,7 +27774,7 @@ packages:
     resolution: {integrity: sha512-99BAMSYBH1aq1TIEJqM03kRpsZjN8OqZXDqYHRq9/PXT67axRUOvRjwMMLprnCmqkAVM7m7FpiECNWN4U0gvLQ==}
     hasBin: true
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.26.9
       '@expo/cli': 0.18.19(expo-modules-autolinking@1.11.1)
       '@expo/config': 9.0.1
       '@expo/config-plugins': 8.0.5
@@ -30147,6 +30144,14 @@ packages:
       ws: 8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     dev: false
 
+  /isows@1.0.6(ws@8.18.1):
+    resolution: {integrity: sha512-lPHCayd40oW98/I0uvgaHKWCSvkzY27LjWLbtzOm64yQ+G3Q5npjjbdppU65iZXkK1Zt+kH9pfegli0AYfwYYw==}
+    peerDependencies:
+      ws: '*'
+    dependencies:
+      ws: 8.18.1
+    dev: false
+
   /istanbul-lib-coverage@3.2.2:
     resolution: {integrity: sha512-O8dpsF+r0WV/8MNRKfnmrtCWhuKjxrq2w+jpzBL5UZKTi2LeVWnWOmWRxFlesJONmc+wLAGvKQZEOanko0LFTg==}
     engines: {node: '>=8'}
@@ -30901,11 +30906,11 @@ packages:
         optional: true
     dependencies:
       '@babel/core': 7.26.0
-      '@babel/parser': 7.26.0
-      '@babel/plugin-transform-class-properties': 7.24.7(@babel/core@7.26.0)
-      '@babel/plugin-transform-modules-commonjs': 7.24.7(@babel/core@7.26.0)
+      '@babel/parser': 7.26.9
+      '@babel/plugin-transform-class-properties': 7.25.9(@babel/core@7.26.0)
+      '@babel/plugin-transform-modules-commonjs': 7.26.3(@babel/core@7.26.0)
       '@babel/plugin-transform-nullish-coalescing-operator': 7.24.7(@babel/core@7.26.0)
-      '@babel/plugin-transform-optional-chaining': 7.24.7(@babel/core@7.26.0)
+      '@babel/plugin-transform-optional-chaining': 7.25.9(@babel/core@7.26.0)
       '@babel/plugin-transform-private-methods': 7.24.7(@babel/core@7.26.0)
       '@babel/preset-env': 7.24.7(@babel/core@7.26.0)
       '@babel/preset-flow': 7.24.7(@babel/core@7.26.0)
@@ -31830,7 +31835,7 @@ packages:
     engines: {node: '>= 14'}
     hasBin: true
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.26.9
       complex.js: 2.1.1
       decimal.js: 10.4.3
       escape-latex: 1.2.0
@@ -32163,9 +32168,9 @@ packages:
     resolution: {integrity: sha512-BHJJurmDQRn3hCbBawh/UHzPz3duMpwpE3ofImO2DoWHYzn6nSg/D4wfCN4y14d9fFLE4e0I+BAOX1HWNP4jsw==}
     engines: {node: '>=18.18'}
     dependencies:
-      '@babel/traverse': 7.25.9
-      '@babel/traverse--for-generate-function-map': /@babel/traverse@7.25.9
-      '@babel/types': 7.26.0
+      '@babel/traverse': 7.26.9
+      '@babel/traverse--for-generate-function-map': /@babel/traverse@7.26.9
+      '@babel/types': 7.26.9
       flow-enums-runtime: 0.0.6
       invariant: 2.2.4
       metro-symbolicate: 0.81.3
@@ -32225,9 +32230,9 @@ packages:
     engines: {node: '>=18.18'}
     dependencies:
       '@babel/core': 7.26.0
-      '@babel/generator': 7.26.0
-      '@babel/template': 7.25.9
-      '@babel/traverse': 7.25.9
+      '@babel/generator': 7.26.9
+      '@babel/template': 7.26.9
+      '@babel/traverse': 7.26.9
       flow-enums-runtime: 0.0.6
       nullthrows: 1.1.1
     transitivePeerDependencies:
@@ -32262,9 +32267,9 @@ packages:
     engines: {node: '>=18.18'}
     dependencies:
       '@babel/core': 7.26.0
-      '@babel/generator': 7.26.0
-      '@babel/parser': 7.26.0
-      '@babel/types': 7.26.0
+      '@babel/generator': 7.26.9
+      '@babel/parser': 7.26.9
+      '@babel/types': 7.26.9
       flow-enums-runtime: 0.0.6
       metro: 0.81.3
       metro-babel-transformer: 0.81.3
@@ -32340,13 +32345,13 @@ packages:
     engines: {node: '>=18.18'}
     hasBin: true
     dependencies:
-      '@babel/code-frame': 7.26.0
+      '@babel/code-frame': 7.26.2
       '@babel/core': 7.26.0
-      '@babel/generator': 7.26.0
-      '@babel/parser': 7.26.0
-      '@babel/template': 7.25.9
-      '@babel/traverse': 7.25.9
-      '@babel/types': 7.26.0
+      '@babel/generator': 7.26.9
+      '@babel/parser': 7.26.9
+      '@babel/template': 7.26.9
+      '@babel/traverse': 7.26.9
+      '@babel/types': 7.26.9
       accepts: 1.3.8
       chalk: 4.1.2
       ci-info: 2.0.0
@@ -33587,6 +33592,26 @@ packages:
       '@scure/bip32': 1.6.0
       '@scure/bip39': 1.5.0
       abitype: 1.0.7(typescript@5.7.3)(zod@3.22.4)
+      eventemitter3: 5.0.1
+      typescript: 5.7.3
+    transitivePeerDependencies:
+      - zod
+    dev: false
+
+  /ox@0.6.9(typescript@5.7.3)(zod@3.22.4):
+    resolution: {integrity: sha512-wi5ShvzE4eOcTwQVsIPdFr+8ycyX+5le/96iAJutaZAvCes1J0+RvpEPg5QDPDiaR0XQQAvZVl7AwqQcINuUug==}
+    peerDependencies:
+      typescript: '>=5.4.0'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@adraffy/ens-normalize': 1.10.1
+      '@noble/curves': 1.8.1
+      '@noble/hashes': 1.7.1
+      '@scure/bip32': 1.6.2
+      '@scure/bip39': 1.5.4
+      abitype: 1.0.8(typescript@5.7.3)(zod@3.22.4)
       eventemitter3: 5.0.1
       typescript: 5.7.3
     transitivePeerDependencies:
@@ -34837,7 +34862,7 @@ packages:
     resolution: {integrity: sha512-TFo1MEnkqE6hzAbaztnyR5uLTMoz6wnEWwWBsCUzNt+sVXJycuRJdDqvL078M4/h65BI/YO5XWTaxZDWVsW0fw==}
     dependencies:
       shell-quote: 1.8.1
-      ws: 7.5.9
+      ws: 7.5.10
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -35471,7 +35496,7 @@ packages:
   /regenerator-transform@0.15.2:
     resolution: {integrity: sha512-hfMp2BoF0qOk3uc5V20ALGDS2ddjQaLrdl7xrGXvAIow7qeWRM2VA2HuCHkUKk9slq3VwEwLNK3DFBqDfPGYtg==}
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.26.9
     dev: false
 
   /regexp-tree@0.1.27:
@@ -38972,6 +38997,29 @@ packages:
       - zod
     dev: false
 
+  /viem@2.23.9(typescript@5.7.3)(zod@3.22.4):
+    resolution: {integrity: sha512-y8VLPfKukrstZKTerS9bm45ajZ22wUyStF+VquK3I2OovWLOyXSbQmJWei8syMFhp1uwhxh1tb0fAdx0WSRZWg==}
+    peerDependencies:
+      typescript: '>=5.0.4'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@noble/curves': 1.8.1
+      '@noble/hashes': 1.7.1
+      '@scure/bip32': 1.6.2
+      '@scure/bip39': 1.5.4
+      abitype: 1.0.8(typescript@5.7.3)(zod@3.22.4)
+      isows: 1.0.6(ws@8.18.1)
+      ox: 0.6.9(typescript@5.7.3)(zod@3.22.4)
+      typescript: 5.7.3
+      ws: 8.18.1
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+      - zod
+    dev: false
+
   /vite-node@0.34.6(@types/node@20.14.2):
     resolution: {integrity: sha512-nlBMJ9x6n7/Amaz6F3zJ97EBwR2FkzhBRxF5e+jE6LA3yi6Wtc2lyTij1OnDMIr34v5g/tVQtsVAzhT0jc5ygA==}
     engines: {node: '>=v14.18.0'}
@@ -39771,6 +39819,19 @@ packages:
     dependencies:
       bufferutil: 4.0.8
       utf-8-validate: 5.0.10
+
+  /ws@8.18.1:
+    resolution: {integrity: sha512-RKW2aJZMXeMxVpnZ6bck+RswznaxmzdULiBr6KY7XkTnW8uvt0iT9H5DkHUChXrc+uurzwa0rVI16n/Xzjdz1w==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+    dev: false
 
   /xcode@3.0.1:
     resolution: {integrity: sha512-kCz5k7J7XbJtjABOvkc5lJmkiDh8VhjVCGNiqdKCscmVpdVUpEAyXv1xmCLkQJ5dsHqx3IPO4XW+NTDhU/fatA==}

@@ -48,7 +48,7 @@
     "lodash-es": "^4.17.1",
     "next": "15.2.0",
     "jsonwebtoken": "^9.0.0",
-    "@account-kit/infra": "^4.11.0"
+    "@account-kit/infra": "^4.15.3"
   },
   "dependencies": {
     "rollup-preserve-directives": "^1.1.3",
