@@ -10,11 +10,7 @@ export const AlchemyAccountsProvider: FC<
     initialState?: AlchemyClientState
   }>
 > = ({ initialState, children }) => {
-  const ref = useRef<AlchemyAccountsConfigWithUI>(null)
-
-  if (!ref.current) {
-    ref.current = getAccountKitConfig({})
-  }
+  const ref = useRef<AlchemyAccountsConfigWithUI>(getAccountKitConfig({}))
 
   return (
     <QueryClientProvider client={queryClient}>
