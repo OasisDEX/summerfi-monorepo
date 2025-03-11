@@ -17,5 +17,5 @@ export const platformLogoMap = {
 export const platformLogoMapByMigrationType = {
   [ArmadaMigrationType.AaveV3]: 'aave',
   [ArmadaMigrationType.Compound]: 'compound',
-  [ArmadaMigrationType.Erc4626]: 'morpho',
+  [ArmadaMigrationType.Morpho]: 'morpho',
 }
