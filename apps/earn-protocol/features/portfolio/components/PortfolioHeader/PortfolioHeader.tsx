@@ -19,6 +19,9 @@ import {
 import clsx from 'clsx'
 import Link from 'next/link'
 
+import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
+import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
+import { SendWidget } from '@/features/send/components/SendWidget/SendWidget'
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
 import { transakNetworkOptions } from '@/features/transak/consts'
 import { type TransakNetworkOption } from '@/features/transak/types'
@@ -55,6 +58,8 @@ interface PortfolioHeaderProps {
   totalSumr?: number
   totalWalletValue?: number
   isLoading?: boolean
+  walletData?: PortfolioAssetsResponse
+  isOwner?: boolean
 }
 
 export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
@@ -62,12 +67,19 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
   totalSumr,
   totalWalletValue,
   isLoading = false,
+  walletData,
+  isOwner,
 }) => {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const { userWalletAddress } = useUserWallet()
   const [isTransakOpen, setIsTransakOpen] = useState(false)
+  const [isSendOpen, setIsSendOpen] = useState(false)
   const [transakNetwork, setTransakNetwork] = useState<TransakNetworkOption | null>(null)
   const user = useUser()
+
+  const { features } = useSystemConfig()
+
+  const sendEnabled = !!features?.Send
 
   const handleNetworkSelect = (option: DropdownRawOption) => {
     setTransakNetwork(transakNetworkOptions.find((item) => item.value === option.value) ?? null)
@@ -98,6 +110,18 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
           </div>
         </Text>
         <div style={{ display: 'flex', gap: 'var(--spacing-space-x-small)' }}>
+          {sendEnabled && (
+            <Button
+              variant="secondaryMedium"
+              style={{ minWidth: 'unset' }}
+              disabled={userWalletAddress?.toLowerCase() !== walletAddress.toLowerCase()}
+              onClick={() => {
+                setIsSendOpen(true)
+              }}
+            >
+              Send
+            </Button>
+          )}
           <Link href={`/bridge/${walletAddress}?via=portfolio`}>
             <Button
               variant="secondaryMedium"
@@ -188,6 +212,16 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
             setTransakNetwork(null)
           }}
           injectedNetwork={transakNetwork}
+        />
+      )}
+
+      {walletData && sendEnabled && (
+        <SendWidget
+          walletAddress={walletAddress}
+          isOpen={isSendOpen}
+          onClose={() => setIsSendOpen(false)}
+          walletData={walletData}
+          isOwner={isOwner}
         />
       )}
     </>

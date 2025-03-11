@@ -169,6 +169,8 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
           walletAddress={walletAddress}
           totalSumr={overallSumr}
           totalWalletValue={totalWalletValue}
+          walletData={walletData}
+          isOwner={ownerView}
         />
         <TabBar
           tabs={tabs}
