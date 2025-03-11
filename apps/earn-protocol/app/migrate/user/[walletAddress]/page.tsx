@@ -21,8 +21,8 @@ const MigrationLandingPage = async ({ params }: MigrationLandingPageProps) => {
   const { walletAddress } = await params
 
   const cacheConfig = {
-    revalidate: REVALIDATION_TIMES.PORTFOLIO_DATA,
-    tags: [REVALIDATION_TAGS.PORTFOLIO_DATA, walletAddress.toLowerCase()],
+    revalidate: REVALIDATION_TIMES.MIGRATION_DATA,
+    tags: [REVALIDATION_TAGS.MIGRATION_DATA, walletAddress.toLowerCase()],
   }
 
   const [{ vaults }, configRaw, migratablePositionsData] = await Promise.all([

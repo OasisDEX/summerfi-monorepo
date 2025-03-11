@@ -44,6 +44,7 @@ import { MigrationLandingPageIlustration } from '@/features/migration/components
 import { MigrationLandingPagePositionCard } from '@/features/migration/components/MigrationLandingPagePositionCard/MigrationLandingPagePositionCard'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { NavConfigContent } from '@/features/nav-config/components/NavConfigContent/NavConfigContent'
+import { revalidateMigrationData } from '@/helpers/revalidation-handlers'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './MigrationLandingPageView.module.scss'
@@ -107,6 +108,7 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
   const [isConfigOpen, setIsConfigOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const { userWalletAddress } = useUserWallet()
+  const [isRefreshing, setIsRefreshing] = useState(false)
 
   const isOwner = walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
 
@@ -219,6 +221,14 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
 
   const withToggleButton = filteredPositions.length > 1 && !!positionId
 
+  const handleUserRefresh = () => {
+    revalidateMigrationData(walletAddress)
+    setIsRefreshing(true)
+    setTimeout(() => {
+      setIsRefreshing(false)
+    }, 5000)
+  }
+
   return (
     <div className={classNames.migrationLandingPageViewWrapper}>
       <div className={classNames.headerWrapper}>
@@ -227,6 +237,8 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
           options={vaultsNetworksList}
           onChangeNetwork={handleChangeNetwork}
           selected={selectedNetworkOption}
+          onRefresh={handleUserRefresh}
+          isRefreshing={isRefreshing}
         />
         <Link
           href="https://blog.summer.fi/migrate-to-lazy-summer-protocol"

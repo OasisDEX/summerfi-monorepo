@@ -41,3 +41,14 @@ export const revalidatePositionData = async (
 
   return await Promise.resolve(null)
 }
+
+export const revalidateMigrationData = async (walletAddress?: string) => {
+  // clears the cache and revalidates the migration data
+  revalidateTag(REVALIDATION_TAGS.MIGRATION_DATA)
+
+  if (walletAddress) {
+    return await Promise.resolve(revalidateTag(walletAddress.toLowerCase()))
+  }
+
+  return await Promise.resolve(null)
+}

@@ -10,6 +10,7 @@ export const REVALIDATION_TIMES = {
   CONFIG: 60,
   ALWAYS_FRESH: 0,
   MEDIAN_DEFI_YIELD: 3600,
+  MIGRATION_DATA: 30,
 }
 
 export const REVALIDATION_TAGS = {
@@ -19,4 +20,5 @@ export const REVALIDATION_TAGS = {
   PORTFOLIO_DATA: 'portfolio-data',
   POSITION_HISTORY: 'position-history',
   CONFIG: 'config',
+  MIGRATION_DATA: 'migration-data',
 }
