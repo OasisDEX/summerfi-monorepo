@@ -74,7 +74,8 @@ export const PortfolioPosition = ({
     },
   } = portfolioPosition.position
   const isVaultAtLeast30dOld = createdTimestamp
-    ? dayjs().diff(dayjs(Number(createdTimestamp) * 1000), 'day') > 30
+    ? // 9999 until we get correct value, until then new strategy string
+      dayjs().diff(dayjs(Number(createdTimestamp) * 1000), 'day') > 9999
     : false
   const currentApr = formatDecimalAsPercent(apy ?? 0)
   const apr30dParsed = isVaultAtLeast30dOld
