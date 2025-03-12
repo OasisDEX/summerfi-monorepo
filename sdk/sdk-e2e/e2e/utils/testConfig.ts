@@ -52,12 +52,12 @@ export const testConfig = [
   //   rpcUrl: forkOnArb,
   //   userAddress: userOnArb,
   // },
-  // {
-  //   chainInfo: ChainFamilyMap.Ethereum.Mainnet,
-  //   symbol: 'USDT',
-  //   swapSymbol: 'USDT',
-  //   fleetAddress: fleetOnMainnet,
-  //   rpcUrl: forkOnMainnet,
-  //   userAddress: userOnMainnet,
-  // },
+  {
+    chainInfo: ChainFamilyMap.Ethereum.Mainnet,
+    symbol: 'USDT',
+    swapSymbol: 'USDT',
+    fleetAddress: fleetOnMainnet,
+    rpcUrl: forkOnMainnet,
+    userAddress: userOnMainnet,
+  },
 ]

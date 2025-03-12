@@ -25,14 +25,11 @@ describe('Armada Protocol Migration', () => {
         }),
       })
 
-      describe(`getMigratablePositions`, () => {
-        const migrationType = ArmadaMigrationType.AaveV3
-
+      describe(`getMigratablePositions and APY`, () => {
         it(`should get all migratable positions`, async () => {
           const res = await sdk.armada.users.getMigratablePositions({
             chainInfo,
             user,
-            migrationType,
           })
           console.log(
             res.positions.map((p) => ({
@@ -43,6 +40,13 @@ describe('Armada Protocol Migration', () => {
             })),
           )
           expect(res.positions.length).toBeGreaterThan(0)
+
+          const apy = await sdk.armada.users.getMigratablePositionsApy({
+            chainInfo,
+            positionIds: res.positions.map((p) => p.id),
+          })
+          console.log(JSON.stringify(apy.apyByPositionId, null, 2))
+          expect(apy.apyByPositionId).not.toBeNull()
         })
       })
 

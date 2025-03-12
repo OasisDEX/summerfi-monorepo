@@ -4,10 +4,12 @@ import {
   FiatCurrency,
   FiatCurrencyAmount,
   LoggingService,
+  Percentage,
   TokenAmount,
   TransactionType,
   type ApproveTransactionInfo,
   type ArmadaMigratablePosition,
+  type ArmadaMigratablePositionApy,
   type HexData,
   type IAddress,
   type IChainInfo,
@@ -33,7 +35,7 @@ import type { ITokensManager } from '@summerfi/tokens-common'
 import { Erc20Contract } from '@summerfi/contracts-provider-service'
 import { compoundConfigsByChainId } from './token-config/compound-config'
 import { aaveV3ConfigsByChainId } from './token-config/aaveV3-config'
-import { erc4626ConfigsByChainId } from './token-config/erc4626-config'
+import { morphoBlueConfigsByChainId } from './token-config/morpho-blue-config'
 import type { IOracleManager } from '@summerfi/oracle-common'
 import {
   abiBalanceOf,
@@ -159,7 +161,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     > = {
       [ArmadaMigrationType.Compound]: compoundConfigsByChainId,
       [ArmadaMigrationType.AaveV3]: aaveV3ConfigsByChainId,
-      [ArmadaMigrationType.Morpho]: erc4626ConfigsByChainId,
+      [ArmadaMigrationType.Morpho]: morphoBlueConfigsByChainId,
     }
 
     const configMapsPerChain = configMapsPerType[params.migrationType]
@@ -188,13 +190,13 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
           blockchainClient: client,
           tokensManager: this._tokensManager,
           chainInfo: params.chainInfo,
-          address: Address.createFromEthereum({ value: config.sourceContract }),
+          address: Address.createFromEthereum({ value: config.positionAddress }),
         })
 
         const [balance, token, underlyingToken] = await Promise.all([
           client.readContract({
             abi: abiBalanceOf,
-            address: config.sourceContract,
+            address: config.positionAddress,
             functionName: 'balanceOf',
             args: [params.user.wallet.address.value],
           }),
@@ -215,7 +217,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
         ])
 
         return {
-          id: config.sourceContract,
+          id: config.positionAddress,
           migrationType: params.migrationType,
           positionTokenAmount: TokenAmount.createFromBaseUnit({
             token: token,
@@ -304,6 +306,90 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       default:
         throw new Error('Unsupported migration type: ' + params.type)
     }
+  }
+
+  async getMigratablePositionsApy(
+    params: Parameters<IArmadaManagerMigrations['getMigratablePositionsApy']>[0],
+  ): ReturnType<IArmadaManagerMigrations['getMigratablePositionsApy']> {
+    // read apy timeseries for all position ids
+    const baseUrl = 'https://yields.llama.fi/chart/'
+    const records = await Promise.all(
+      params.positionIds.map(async (positionId) => {
+        const defillamaId = this._getDefillamaId(positionId)
+        if (!defillamaId) {
+          return Promise.resolve({
+            positionId: positionId,
+            apy: null,
+            apy7d: null,
+          } as ArmadaMigratablePositionApy)
+        }
+        const url = `${baseUrl}${defillamaId}`
+        const response = await fetch(url)
+        const json = (await response.json()) as {
+          data: {
+            apy: number
+            apyBase: number
+            apyReward: number | null
+          }[]
+        }
+        // take the last record for current apy
+        const apy = json.data[json.data.length - 1].apy
+
+        // take last 7 records for the 7 days apy
+        const last7Records = json.data.slice(-7)
+        const apy7d =
+          last7Records.reduce((acc, record) => acc + record.apy, 0) / last7Records.length
+        LoggingService.debug('apy7d for position ' + positionId, apy7d)
+
+        return {
+          positionId: positionId,
+          apy: Percentage.createFrom({ value: apy }),
+          apy7d: Percentage.createFrom({ value: apy7d }),
+        } as ArmadaMigratablePositionApy
+      }),
+    )
+
+    // return the apy in a record structure with position id as key
+    const apyByPositionId: Record<string, ArmadaMigratablePositionApy> = {}
+    records.forEach((record) => {
+      apyByPositionId[record.positionId] = record
+    })
+
+    return {
+      chainInfo: params.chainInfo,
+      apyByPositionId,
+    }
+  }
+
+  private _getDefillamaId(positionId: string) {
+    const configMapsPerType: Record<
+      ArmadaMigrationType,
+      Record<number, Record<string, ArmadaMigrationConfig>>
+    > = {
+      [ArmadaMigrationType.Compound]: compoundConfigsByChainId,
+      [ArmadaMigrationType.AaveV3]: aaveV3ConfigsByChainId,
+      [ArmadaMigrationType.Morpho]: morphoBlueConfigsByChainId,
+    }
+
+    const allMigrationTypes = Object.values(ArmadaMigrationType)
+    for (const migrationType of allMigrationTypes) {
+      const configMapsPerChain = configMapsPerType[migrationType]
+      if (!configMapsPerChain) {
+        continue
+      }
+      for (const chainId in configMapsPerChain) {
+        const configMaps = configMapsPerChain[chainId]
+        if (!configMaps) {
+          continue
+        }
+        for (const [, config] of Object.entries(configMaps)) {
+          if (config.positionAddress === positionId) {
+            return config.pool
+          }
+        }
+      }
+    }
+    return null
   }
 
   async getMigrationTX(

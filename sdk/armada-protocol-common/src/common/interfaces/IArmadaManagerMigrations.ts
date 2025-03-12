@@ -7,6 +7,7 @@ import type {
   IPercentage,
   ArmadaMigratablePosition,
   AddressValue,
+  ArmadaMigratablePositionApy,
 } from '@summerfi/sdk-common'
 import type { IArmadaVaultId } from './IArmadaVaultId'
 
@@ -33,6 +34,23 @@ export interface IArmadaManagerMigrations {
   }): Promise<{
     chainInfo: IChainInfo
     positions: ArmadaMigratablePosition[]
+  }>
+
+  /**
+   * @method getMigratablePositionsApy
+   * @description Returns the APY for the positions that can be migrated
+   *
+   * @param chainInfo Chain information
+   * @param positionIds The positions to get the APY for
+   *
+   * @returns The APY for the positions that can be migrated
+   */
+  getMigratablePositionsApy(params: {
+    chainInfo: IChainInfo
+    positionIds: AddressValue[]
+  }): Promise<{
+    chainInfo: IChainInfo
+    apyByPositionId: Record<string, ArmadaMigratablePositionApy>
   }>
 
   /**
