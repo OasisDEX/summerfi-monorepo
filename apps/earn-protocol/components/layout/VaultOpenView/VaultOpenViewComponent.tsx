@@ -287,6 +287,7 @@ export const VaultOpenViewComponent = ({
     chainId: vaultChainId,
     transaction: nextTransaction,
     walletAddress: user?.address,
+    publicClient,
   })
 
   const sidebarContent = nextTransaction?.type ? (

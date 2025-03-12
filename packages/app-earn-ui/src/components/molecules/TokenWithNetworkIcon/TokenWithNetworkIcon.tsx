@@ -20,18 +20,21 @@ export const networkNameIconMap = {
 }
 
 const tokenIconSizeMap = {
+  tiny: 20,
   small: 25,
   medium: 44,
   large: 64,
 }
 
 const networkIconSizeMap = {
+  tiny: 9,
   small: 11,
   medium: 16,
   large: 24,
 }
 
 const networkIconOffsetMap = {
+  tiny: { top: -10, left: -2 },
   small: { top: -10, left: -2 },
   medium: { top: -2, left: -2 },
   large: { top: 0, left: 0 },
@@ -39,7 +42,7 @@ const networkIconOffsetMap = {
 
 type BaseProps = {
   tokenName: TokenSymbolsList
-  variant?: 'small' | 'medium' | 'large'
+  variant?: 'tiny' | 'small' | 'medium' | 'large'
   overrideIconSize?: number
 }
 

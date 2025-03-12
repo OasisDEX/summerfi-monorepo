@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/consistent-indexed-object-style */
-import { type FC, type ReactNode } from 'react'
+import { type CSSProperties, type FC, type ReactNode } from 'react'
 
 import { Icon, type IconNamesList } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
@@ -12,6 +12,7 @@ interface AlertProps {
   error: ReactNode
   variant?: AlertVariant
   iconName?: IconNamesList
+  wrapperStyles?: CSSProperties
 }
 
 const variantToIconMap: Record<AlertVariant, IconNamesList> = {
@@ -35,7 +36,7 @@ const variantToBackgroundMap: Record<AlertVariant, string> = {
   success: 'var(--earn-protocol-success-10)',
 }
 
-export const Alert: FC<AlertProps> = ({ error, variant = 'critical', iconName }) => {
+export const Alert: FC<AlertProps> = ({ error, variant = 'critical', iconName, wrapperStyles }) => {
   const resolvedIconName = variant === 'general' && iconName ? iconName : variantToIconMap[variant]
 
   return (
@@ -44,6 +45,7 @@ export const Alert: FC<AlertProps> = ({ error, variant = 'critical', iconName })
       style={{
         background: variantToBackgroundMap[variant],
         borderRadius: 'var(--radius-medium)',
+        ...wrapperStyles,
       }}
     >
       <div className={styles.content}>

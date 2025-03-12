@@ -135,6 +135,15 @@ export const networkNameToSDKNetwork = (network: NetworkNames) => {
   }[network.toLowerCase()]
 }
 
+export const networkNameToSDKId = (network: NetworkNames) => {
+  return {
+    [NetworkNames.arbitrumMainnet.toLowerCase()]: SDKChainId.ARBITRUM,
+    [NetworkNames.baseMainnet.toLowerCase()]: SDKChainId.BASE,
+    [NetworkNames.ethereumMainnet.toLowerCase()]: SDKChainId.MAINNET,
+    [NetworkNames.optimismMainnet.toLowerCase()]: SDKChainId.OPTIMISM,
+  }[network.toLowerCase()]
+}
+
 export const subgraphNetworkToId = (network: SDKNetwork) => {
   return {
     [SDKNetwork.ArbitrumOne.toLowerCase()]: NetworkIds.ARBITRUMMAINNET,

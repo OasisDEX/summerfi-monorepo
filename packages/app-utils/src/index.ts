@@ -67,6 +67,7 @@ export {
   chainIdToSDKNetwork,
   sdkNetworkToChain,
   isSupportedHumanNetwork,
+  networkNameToSDKId,
 } from './helpers/earn-network-tools'
 export { setCookie, getCookie } from './helpers/cookies'
 export { verifyAccessToken } from './helpers/verify-access-token'

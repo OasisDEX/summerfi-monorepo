@@ -46,6 +46,7 @@ import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
+import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
 type MigrationVaultPageComponentProps = {
@@ -137,10 +138,13 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
       vaultChainId,
     })
 
+  const { publicClient } = useNetworkAlignedClient({ chainId: vaultChainId })
+
   const { transactionFee, loading: transactionFeeLoading } = useGasEstimation({
     chainId: vaultChainId,
     transaction: approveTransaction?.txData ?? migrationTransaction?.txData,
     walletAddress: walletAddress as Address,
+    publicClient,
   })
 
   const { rawToTokenAmount, isQuoteLoading } = useAmountWithSwap({

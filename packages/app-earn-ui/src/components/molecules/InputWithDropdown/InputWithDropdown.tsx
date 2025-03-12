@@ -1,11 +1,13 @@
 import { type ChangeEventHandler, type FC, type ReactNode } from 'react'
 import { type DropdownOption, type DropdownRawOption } from '@summerfi/app-types'
+import { humanReadableChainToLabelMap } from '@summerfi/app-utils'
 import clsx from 'clsx'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Input } from '@/components/atoms/Input/Input'
 import { Text } from '@/components/atoms/Text/Text'
 import { Dropdown } from '@/components/molecules/Dropdown/Dropdown'
+import { TokenWithNetworkIcon } from '@/components/molecules/TokenWithNetworkIcon/TokenWithNetworkIcon'
 
 import classNames from '@/components/molecules/InputWithDropdown/InputWithDropdown.module.scss'
 
@@ -13,13 +15,41 @@ interface ContentProps {
   option: DropdownOption
 }
 
-const Content: FC<ContentProps> = ({ option }) => (
-  <>
-    {'tokenSymbol' in option && <Icon size={20} tokenName={option.tokenSymbol} />}
-    {'iconName' in option && <Icon size={20} iconName={option.iconName} />}
-    <span>{option.label}</span>
-  </>
-)
+const Content: FC<ContentProps> = ({ option }) => {
+  const isWithNetwork = 'network' in option && option.network
+  const isWithChainId = 'chainId' in option && option.chainId
+
+  return (
+    <>
+      {'network' in option && option.network && (
+        <TokenWithNetworkIcon
+          tokenName={option.tokenSymbol}
+          network={option.network}
+          variant="tiny"
+        />
+      )}
+      {'chainId' in option && option.chainId && (
+        <TokenWithNetworkIcon
+          tokenName={option.tokenSymbol}
+          chainId={option.chainId}
+          variant="tiny"
+        />
+      )}
+      {'tokenSymbol' in option && !isWithNetwork && !isWithChainId && (
+        <Icon size={20} tokenName={option.tokenSymbol} />
+      )}
+      {'iconName' in option && !isWithNetwork && !isWithChainId && (
+        <Icon size={20} iconName={option.iconName} />
+      )}
+      <span>{option.label}</span>
+      {'chainId' in option && option.chainId && (
+        <Text as="span" variant="p4semi" style={{ color: 'var(--color-text-primary-disabled)' }}>
+          {humanReadableChainToLabelMap[option.chainId]}
+        </Text>
+      )}
+    </>
+  )
+}
 
 interface InputWithDropdownProps {
   options: DropdownOption[]
