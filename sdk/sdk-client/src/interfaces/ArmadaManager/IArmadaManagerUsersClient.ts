@@ -425,7 +425,7 @@ export interface IArmadaManagerUsersClient {
     apyByPositionId: Record<
       string,
       {
-        apy7d: IPercentage
+        apy7d: IPercentage | null
       }
     >
   }>

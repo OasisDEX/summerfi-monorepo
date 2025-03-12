@@ -21,7 +21,7 @@ export const compoundConfigsByChainId: Record<number, Record<string, ArmadaMigra
     aero: {
       positionAddress: '0x784efeB622244d2348d4F2522f8860B96fbEcE89',
       underlyingToken: '0x940181a94a35a4569e4529a3cdfb74e38fd98631',
-      pool: undefined,
+      pool: null,
     },
   },
   [ChainFamilyMap.Ethereum.Mainnet.chainId]: {
@@ -43,12 +43,12 @@ export const compoundConfigsByChainId: Record<number, Record<string, ArmadaMigra
     wsteth: {
       positionAddress: '0x3D0bb1ccaB520A66e607822fC55BC921738fAFE3',
       underlyingToken: '0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0',
-      pool: undefined,
+      pool: null,
     },
     usds: {
       positionAddress: '0x5D409e56D886231aDAf00c8775665AD0f9897b56',
       underlyingToken: '0xdC035D45d973E3EC169d2276DDab16f1e407384F',
-      pool: undefined,
+      pool: null,
     },
   },
   [ChainFamilyMap.Arbitrum.ArbitrumOne.chainId]: {

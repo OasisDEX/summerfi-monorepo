@@ -391,8 +391,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
         }
       }
     }
-
-    throw new Error('No defillama id found in config for position: ' + positionId)
+    return null
   }
 
   async getMigrationTX(

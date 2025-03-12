@@ -58,22 +58,22 @@ export const morphoBlueConfigsByChainId: Record<number, Record<string, ArmadaMig
     'ionic-ecosystem-usdc': {
       positionAddress: '0xCd347c1e7d600a9A3e403497562eDd0A7Bc3Ef21',
       underlyingToken: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
-      pool: undefined,
+      pool: null,
     },
     '9summits-weth-core': {
       positionAddress: '0xF540D790413FCFAedAC93518Ae99EdDacE82cb78',
       underlyingToken: '0x4200000000000000000000000000000000000006',
-      pool: undefined,
+      pool: null,
     },
     'gauntlet-weth-core': {
       positionAddress: '0x6b13c060F13Af1fdB319F52315BbbF3fb1D88844',
       underlyingToken: '0x4200000000000000000000000000000000000006',
-      pool: undefined,
+      pool: null,
     },
     'seamless-usdc-vault': {
       positionAddress: '0x616a4E1db48e22028f6bbf20444Cd3b8e3273738',
       underlyingToken: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
-      pool: undefined,
+      pool: null,
     },
     // 'steakhouse-eura': {
     //   sourceContract: '0xBEeFA28D5e56d41D35df760AB53B94D9FfD7051F',
@@ -90,22 +90,22 @@ export const morphoBlueConfigsByChainId: Record<number, Record<string, ArmadaMig
     'gauntlet-usdc-prime': {
       positionAddress: '0xeE8F4eC5672F09119b96Ab6fB59C27E1b7e44b61',
       underlyingToken: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
-      pool: undefined,
+      pool: null,
     },
     'universal-usdc': {
       positionAddress: '0xB7890CEE6CF4792cdCC13489D36D9d42726ab863',
       underlyingToken: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
-      pool: undefined,
+      pool: null,
     },
     'ionic-ecosystem-weth-2': {
       positionAddress: '0x5A32099837D89E3a794a44fb131CBbAD41f87a8C',
       underlyingToken: '0x4200000000000000000000000000000000000006',
-      pool: undefined,
+      pool: null,
     },
     're7-weth': {
       positionAddress: '0xA2Cac0023a4797b4729Db94783405189a4203AFc',
       underlyingToken: '0x4200000000000000000000000000000000000006',
-      pool: undefined,
+      pool: null,
     },
     // 'seamless-cbbtc-vault': {
     //   sourceContract: '0x5a47C803488FE2BB0A0EAaf346b420e4dF22F3C7',
@@ -118,12 +118,12 @@ export const morphoBlueConfigsByChainId: Record<number, Record<string, ArmadaMig
     '9summits-weth-core-1-1': {
       positionAddress: '0x5496b42ad0deCebFab0db944D83260e60D54f667',
       underlyingToken: '0x4200000000000000000000000000000000000006',
-      pool: undefined,
+      pool: null,
     },
     'gauntlet-usdc-core': {
       positionAddress: '0xc0c5689e6f4D256E861F65465b691aeEcC0dEb12',
       underlyingToken: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
-      pool: undefined,
+      pool: null,
     },
     // 'gauntlet-lbtc-core': {
     //   sourceContract: '0x0D05e6ec0A10f9fFE9229EAA785c11606a1d13Fb',
@@ -137,12 +137,12 @@ export const morphoBlueConfigsByChainId: Record<number, Record<string, ArmadaMig
     'seamless-weth-vault': {
       positionAddress: '0x27D8c7273fd3fcC6956a0B370cE5Fd4A7fc65c18',
       underlyingToken: '0x4200000000000000000000000000000000000006',
-      pool: undefined,
+      pool: null,
     },
     'degen-usdc': {
       positionAddress: '0xdB90A4e973B7663ce0Ccc32B6FbD37ffb19BfA83',
       underlyingToken: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
-      pool: undefined,
+      pool: null,
     },
     // 'relend-eth': {
     //   sourceContract: '0x70F796946eD919E4Bc6cD506F8dACC45E4539771',
@@ -159,7 +159,7 @@ export const morphoBlueConfigsByChainId: Record<number, Record<string, ArmadaMig
     'moonwell-flagship-usdc': {
       positionAddress: '0xc1256Ae5FF1cf2719D4937adb3bbCCab2E00A2Ca',
       underlyingToken: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
-      pool: undefined,
+      pool: null,
     },
     // 'morpho-degen': {
     //   sourceContract: '0x8c3A6B12332a6354805Eb4b72ef619aEdd22BcdD',
@@ -168,12 +168,12 @@ export const morphoBlueConfigsByChainId: Record<number, Record<string, ArmadaMig
     're7-usdc': {
       positionAddress: '0x12AFDeFb2237a5963e7BAb3e2D46ad0eee70406e',
       underlyingToken: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
-      pool: undefined,
+      pool: null,
     },
     'ionic-ecosystem-usdc-2': {
       positionAddress: '0x23479229e52Ab6aaD312D0B03DF9F33B46753B5e',
       underlyingToken: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
-      pool: undefined,
+      pool: null,
     },
     // 'gauntlet-cbbtc-core': {
     //   sourceContract: '0x6770216aC60F634483Ec073cBABC4011c94307Cb',
@@ -182,7 +182,7 @@ export const morphoBlueConfigsByChainId: Record<number, Record<string, ArmadaMig
     'pyth-usdc': {
       positionAddress: '0x0FaBfEAcedf47e890c50C8120177fff69C6a1d9B',
       underlyingToken: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
-      pool: undefined,
+      pool: null,
     },
   },
   [ChainFamilyMap.Ethereum.Mainnet.chainId]: {
