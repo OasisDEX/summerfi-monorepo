@@ -17,6 +17,7 @@ import {
   type AddressValue,
   type ApproveTransactionInfo,
   type ArmadaMigratablePosition,
+  type ArmadaMigratablePositionApy,
   type ArmadaMigrationType,
   type ChainInfo,
   type ClaimTransactionInfo,
@@ -422,12 +423,7 @@ export interface IArmadaManagerUsersClient {
     positionIds: AddressValue[]
   }): Promise<{
     chainInfo: IChainInfo
-    apyByPositionId: Record<
-      string,
-      {
-        apy7d: IPercentage | null
-      }
-    >
+    apyByPositionId: Record<string, ArmadaMigratablePositionApy>
   }>
 
   /**

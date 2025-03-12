@@ -7,6 +7,7 @@ import type {
   IPercentage,
   ArmadaMigratablePosition,
   AddressValue,
+  ArmadaMigratablePositionApy,
 } from '@summerfi/sdk-common'
 import type { IArmadaVaultId } from './IArmadaVaultId'
 
@@ -49,12 +50,7 @@ export interface IArmadaManagerMigrations {
     positionIds: AddressValue[]
   }): Promise<{
     chainInfo: IChainInfo
-    apyByPositionId: Record<
-      string,
-      {
-        apy7d: IPercentage | null
-      }
-    >
+    apyByPositionId: Record<string, ArmadaMigratablePositionApy>
   }>
 
   /**

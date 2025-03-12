@@ -9,6 +9,7 @@ import {
   TransactionType,
   type ApproveTransactionInfo,
   type ArmadaMigratablePosition,
+  type ArmadaMigratablePositionApy,
   type HexData,
   type IAddress,
   type IChainInfo,
@@ -318,8 +319,9 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
         if (!defillamaId) {
           return Promise.resolve({
             positionId: positionId,
+            apy: null,
             apy7d: null,
-          })
+          } as ArmadaMigratablePositionApy)
         }
         const url = `${baseUrl}${defillamaId}`
         const response = await fetch(url)
@@ -330,31 +332,27 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
             apyReward: number | null
           }[]
         }
-        // take last 7 records
+        // take the last record for current apy
+        const apy = json.data[json.data.length - 1].apy
+
+        // take last 7 records for the 7 days apy
         const last7Records = json.data.slice(-7)
-        // calculate the apy for the last 7 days
         const apy7d =
           last7Records.reduce((acc, record) => acc + record.apy, 0) / last7Records.length
         LoggingService.debug('apy7d for position ' + positionId, apy7d)
 
         return {
           positionId: positionId,
+          apy: Percentage.createFrom({ value: apy }),
           apy7d: Percentage.createFrom({ value: apy7d }),
-        }
+        } as ArmadaMigratablePositionApy
       }),
     )
 
     // return the apy in a record structure with position id as key
-    const apyByPositionId: Record<
-      string,
-      {
-        apy7d: IPercentage | null
-      }
-    > = {}
+    const apyByPositionId: Record<string, ArmadaMigratablePositionApy> = {}
     records.forEach((record) => {
-      apyByPositionId[record.positionId] = {
-        ...record,
-      }
+      apyByPositionId[record.positionId] = record
     })
 
     return {
