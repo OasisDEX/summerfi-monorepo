@@ -26,6 +26,7 @@ import { getClaimableAggregatedRewardsHandler } from '../handlers/getClaimableAg
 import { getBridgeTxHandler } from '../handlers/getBridgeTxHandler'
 import { getMigrateTxHandler } from '../handlers/getMigrateTxHandler'
 import { getMigratablePositionsHandler } from '../handlers/getMigratablePositionsHandler'
+import { getMigratablePositionsHandlerApy } from '../handlers/getMigratablePositionsHandlerApy'
 
 type UseSdk = {
   walletAddress?: string
@@ -90,6 +91,7 @@ export const useSDK = (params: UseSdk) => {
   const getSummerToken = useMemo(() => getSummerTokenHandler(sdk), [sdk])
   const getMigrateTx = useMemo(() => getMigrateTxHandler(sdk), [sdk])
   const getMigratablePositions = useMemo(() => getMigratablePositionsHandler(sdk), [sdk])
+  const getMigratablePositionsApy = useMemo(() => getMigratablePositionsHandlerApy(sdk), [sdk])
 
   const memo = useMemo(
     () => ({
@@ -118,6 +120,7 @@ export const useSDK = (params: UseSdk) => {
       getSummerToken,
       getMigrateTx,
       getMigratablePositions,
+      getMigratablePositionsApy,
     }),
     [
       getCurrentUser,
@@ -145,6 +148,7 @@ export const useSDK = (params: UseSdk) => {
       getSummerToken,
       getMigrateTx,
       getMigratablePositions,
+      getMigratablePositionsApy,
     ],
   )
 
