@@ -34,7 +34,7 @@ const networkIconSizeMap = {
 }
 
 const networkIconOffsetMap = {
-  tiny: { top: -10, left: -2 },
+  tiny: { top: -8, left: -1 },
   small: { top: -10, left: -2 },
   medium: { top: -2, left: -2 },
   large: { top: 0, left: 0 },
