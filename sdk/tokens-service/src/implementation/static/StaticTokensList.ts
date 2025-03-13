@@ -417,6 +417,15 @@ export const StaticTokensData: TokenListData = {
       chainId: 42161,
       logoURI: 'https://tokens.1inch.io/0xdac17f958d2ee523a2206206994597c13d831ec7.png',
     },
+    // added as USDT as well since there are 3rd party services that use USDT instead of USD₮0 on arbitrum
+    {
+      name: 'USD₮0',
+      address: '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9',
+      symbol: 'USDT',
+      decimals: 6,
+      chainId: 42161,
+      logoURI: 'https://tokens.1inch.io/0xdac17f958d2ee523a2206206994597c13d831ec7.png',
+    },
     {
       name: 'Tether USD Stablecoin',
       address: '0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2',
