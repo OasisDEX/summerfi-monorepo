@@ -53,6 +53,12 @@ export const MigrationLandingPagePositionCard: FC<MigrationLandingPagePositionCa
     </div>
   )
 
+  const resolvedCurrent7dApy = position.apy7d ? formatDecimalAsPercent(position.apy7d) : 'n/a'
+
+  const resolvedSummer7dApy = earningsData.lazySummer7dApy
+    ? formatDecimalAsPercent(earningsData.lazySummer7dApy)
+    : 'New strategy'
+
   return (
     <Card
       variant={isActive ? 'cardPrimaryColorfulBorder' : 'cardPrimary'}
@@ -98,20 +104,16 @@ export const MigrationLandingPagePositionCard: FC<MigrationLandingPagePositionCa
         {isMobile && checkmarkComponent}
       </div>
       <div className={classNames.dataBlocksWrapper}>
-        <DataBlock title="Current 7d APY" value={formatDecimalAsPercent(position.apy)} />
-        <DataBlock
-          title="Lazy Summer 7d APY"
-          value={formatDecimalAsPercent(earningsData.lazySummerCurrentApy)}
-        />
-        <DataBlock
-          title="7d APY Differential"
-          value={formatDecimalAsPercent(
-            Number(earningsData.lazySummerCurrentApy) - Number(position.apy),
-            {
+        <DataBlock title="Current 7d APY" value={resolvedCurrent7dApy} />
+        <DataBlock title="Lazy Summer 7d APY" value={resolvedSummer7dApy} />
+        {position.apy7d && earningsData.lazySummer7dApy && (
+          <DataBlock
+            title="7d APY Differential"
+            value={formatDecimalAsPercent(earningsData.lazySummer7dApy - position.apy7d, {
               plus: true,
-            },
-          )}
-        />
+            })}
+          />
+        )}
       </div>
       {!isMobile && checkmarkComponent}
     </Card>

@@ -13,7 +13,7 @@ interface NavConfigContentProps {
   handleOpenClose?: () => void
 }
 
-const slippageOptions = ['0.5', '1.00', '2.00', '2.50']
+const slippageOptions = ['0.05', '0.10', '0.20', '0.50']
 const marketCapOptions = ['150000000', '250000000', '500000000', '750000000']
 
 export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose }) => {

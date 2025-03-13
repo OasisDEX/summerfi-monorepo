@@ -75,6 +75,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
           price24hChange: token.price_24h_change,
           balance: token.amount,
           balanceUSD: token.amount * token.price,
+          id: token.id,
         }),
       )
       .filter(({ network }) => Object.values(NetworkNames).includes(network))

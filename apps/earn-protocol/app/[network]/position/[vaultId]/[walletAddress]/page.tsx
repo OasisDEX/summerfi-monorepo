@@ -145,7 +145,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     }),
   ])
 
-  const vaultApy =
+  const vaultApyData =
     vaultsApyRaw[`${vaultWithConfig.id}-${subgraphNetworkToId(vaultWithConfig.protocol.network)}`]
 
   if (!positionForecastResponse.ok) {
@@ -182,7 +182,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   return (
     <VaultManageView
       vault={vaultWithConfig}
-      vaultApy={vaultApy}
+      vaultApyData={vaultApyData}
       vaults={allVaultsWithConfig}
       position={positionJsonSafe}
       viewWalletAddress={walletAddress}

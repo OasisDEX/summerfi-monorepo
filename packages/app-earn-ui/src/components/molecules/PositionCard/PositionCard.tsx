@@ -19,10 +19,11 @@ interface PositionCardProps {
   }
   list: {
     label: string
-    value: string
+    value: ReactNode
   }[]
   banner?: ReactNode
   isActive?: boolean
+  listHeading?: ReactNode
 }
 
 export const PositionCard: FC<PositionCardProps> = ({
@@ -32,6 +33,7 @@ export const PositionCard: FC<PositionCardProps> = ({
   isActive,
   handleClick,
   banner,
+  listHeading = null,
 }) => {
   return (
     <Card className={classNames.positionCardWrapper} onClick={handleClick}>
@@ -60,7 +62,7 @@ export const PositionCard: FC<PositionCardProps> = ({
         <div className={classNames.positionSubHeaderAmount}>{title.value && title.value}</div>
       </div>
       <div className={classNames.divider} />
-
+      {listHeading}
       {list.length > 0 && (
         <OrderInformation
           items={list}

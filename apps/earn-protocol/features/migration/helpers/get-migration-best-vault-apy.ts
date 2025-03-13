@@ -43,11 +43,11 @@ export const getMigrationBestVaultApy = ({
         let best7dApy = 0
 
         networkVaults.forEach((vault) => {
-          const vaultApy =
+          const { apy, sma7d, sma30d } =
             vaultsApyByNetworkMap[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
-          const currentApy = vaultApy || 0
-          const apy30d = Number(vault.apr30d) / 100 || 0
-          const apy7d = Number(vault.apr7d) / 100 || 0
+          const currentApy = apy || 0
+          const apy30d = sma30d || 0
+          const apy7d = sma7d || 0
 
           if (currentApy > bestCurrentApy) {
             bestCurrentApy = currentApy
@@ -64,8 +64,8 @@ export const getMigrationBestVaultApy = ({
 
         acc[chainId] = {
           lazySummerCurrentApy: bestCurrentApy,
-          lazySummer30dApy: best30dApy,
-          lazySummer7dApy: best7dApy,
+          lazySummer30dApy: best30dApy === 0 ? undefined : best30dApy,
+          lazySummer7dApy: best7dApy === 0 ? undefined : best7dApy,
         }
       }
 

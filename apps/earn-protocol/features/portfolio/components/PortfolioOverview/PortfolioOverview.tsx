@@ -204,7 +204,7 @@ export const PortfolioOverview = ({
                     }
                   />
                 }
-                apy={
+                vaultApyData={
                   vaultsApyByNetworkMap[
                     `${position.vault.id}-${subgraphNetworkToId(position.vault.protocol.network)}`
                   ]

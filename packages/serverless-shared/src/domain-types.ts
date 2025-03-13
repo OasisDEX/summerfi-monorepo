@@ -103,6 +103,7 @@ export type PortfolioOverviewResponse = {
 }
 
 export type PortfolioWalletAsset = {
+  id: string
   name: string
   network: NetworkNames
   symbol: string

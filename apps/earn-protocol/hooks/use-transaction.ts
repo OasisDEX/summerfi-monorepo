@@ -398,7 +398,7 @@ export const useTransaction = ({
 
     if (!tokenBalanceLoading && tokenBalance && tokenBalance.isZero() && flow === 'open') {
       return {
-        label: 'Add funds',
+        label: 'Buy crypto',
         action: () => setIsTransakOpen(true),
         disabled: false,
       }

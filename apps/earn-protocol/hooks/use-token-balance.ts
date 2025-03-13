@@ -81,7 +81,9 @@ export const useTokenBalance = ({
       setVaultToken(fetchedVaultToken)
 
       if (tokenSymbol === 'ETH') {
-        setToken(fetchedToken)
+        const fetchedOrVaultToken = fetchedToken ?? fetchedVaultToken
+
+        setToken(fetchedOrVaultToken)
 
         publicClient
           .getBalance({

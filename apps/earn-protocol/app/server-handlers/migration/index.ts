@@ -10,7 +10,8 @@ import { mapMigrationResponse } from '@/features/migration/helpers/map-migration
 
 export type MigratablePosition = ArmadaMigratablePosition & {
   chainId: SDKChainId
-  apy: string
+  apy: number | undefined
+  apy7d: number | undefined
 }
 
 /**
@@ -35,31 +36,44 @@ export const getMigratablePositions = async ({
   const address = Address.createFromEthereum({ value: walletAddress })
 
   const positionsPromises = sdkSupportedChains.map(async (chainId) => {
+    const chainInfo = getChainInfoByChainId(chainId)
+    let positionsData
+    let apyData
+
     try {
-      const chainInfo = getChainInfoByChainId(chainId)
       const { user } = await backendSDK.users.getUserClient({
         walletAddress: address,
         chainInfo,
       })
 
-      const positions = await backendSDK.armada.users.getMigratablePositions({
+      positionsData = await backendSDK.armada.users.getMigratablePositions({
         user,
         chainInfo,
       })
-
-      return positions
     } catch (error) {
-      const chainInfo = getChainInfoByChainId(chainId)
-
       // eslint-disable-next-line no-console
       console.error(`Failed to fetch migratable positions for chain ${chainId}:`, error)
-
-      // Log error but continue with empty positions for this chain
-      return {
+      positionsData = {
         chainInfo,
         positions: [],
       }
     }
+
+    try {
+      apyData = await backendSDK.armada.users.getMigratablePositionsApy({
+        chainInfo,
+        positionIds: positionsData.positions.map((p) => p.id),
+      })
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(`Failed to fetch APY data for chain ${chainId}:`, error)
+      apyData = {
+        chainInfo,
+        apyByPositionId: {},
+      }
+    }
+
+    return { positionsData, apyData }
   })
 
   const results = await Promise.all(positionsPromises)

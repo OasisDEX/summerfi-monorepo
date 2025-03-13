@@ -6,6 +6,7 @@ import {
   type SDKVaultishType,
   type SDKVaultsListType,
   type UsersActivity,
+  type VaultApyData,
 } from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
@@ -22,7 +23,7 @@ type MigrationVaultPageViewProps = {
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
-  vaultApy?: number
+  vaultApyData: VaultApyData
   migratablePosition: MigratablePosition
   walletAddress: string
 }
@@ -35,7 +36,7 @@ export const MigrationVaultPageView: FC<MigrationVaultPageViewProps> = ({
   medianDefiYield,
   arksHistoricalChartData,
   arksInterestRates,
-  vaultApy,
+  vaultApyData,
   migratablePosition,
   walletAddress,
 }) => {
@@ -49,7 +50,7 @@ export const MigrationVaultPageView: FC<MigrationVaultPageViewProps> = ({
         medianDefiYield={medianDefiYield}
         arksHistoricalChartData={arksHistoricalChartData}
         arksInterestRates={arksInterestRates}
-        vaultApy={vaultApy}
+        vaultApyData={vaultApyData}
         migratablePosition={migratablePosition}
         walletAddress={walletAddress}
       />

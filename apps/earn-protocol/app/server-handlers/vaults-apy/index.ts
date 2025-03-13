@@ -1,4 +1,5 @@
 import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
+import { type VaultApyData } from '@summerfi/app-types'
 
 export type GetVaultsApyParams = {
   fleets: {
@@ -11,6 +12,11 @@ type GetVaultsApyRAWResponse = {
   rates: {
     chainId: number
     fleetAddress: string
+    sma: {
+      sma24h: string
+      sma7d: string
+      sma30d: string
+    }
     rates: [
       {
         id: string
@@ -31,7 +37,7 @@ export type GetVaultsApyResponse = {
   //   '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17-1': 8.890826768108603
   // }
   // apy gets divided by 100 to not confuse the frontend
-  [key: `${string}-${number}`]: number
+  [key: `${string}-${number}`]: VaultApyData
 }
 
 export const getVaultsApy: ({
@@ -59,9 +65,16 @@ export const getVaultsApy: ({
     const rawResponse = (await apiResponse.json()) as GetVaultsApyRAWResponse
 
     const response = rawResponse.rates.reduce<GetVaultsApyResponse>(
-      (topAcc, { rates, chainId }) => {
-        const ratesMap = rates.reduce<{ [key: string]: number }>((acc, { rate, fleetAddress }) => {
-          acc[`${fleetAddress}-${chainId}`] = Number(rate) / 100
+      (topAcc, { rates, chainId, sma }) => {
+        const ratesMap = rates.reduce<{
+          [key: string]: VaultApyData
+        }>((acc, { rate, fleetAddress }) => {
+          acc[`${fleetAddress}-${chainId}`] = {
+            apy: Number(rate) / 100,
+            sma24h: Number(sma.sma24h) / 100,
+            sma7d: Number(sma.sma7d) / 100,
+            sma30d: Number(sma.sma30d) / 100,
+          }
 
           return acc
         }, {})

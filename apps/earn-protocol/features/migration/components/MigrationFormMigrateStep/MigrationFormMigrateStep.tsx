@@ -9,7 +9,12 @@ import {
   Text,
   useLocalConfig,
 } from '@summerfi/app-earn-ui'
-import { type SDKVaultishType, type SDKVaultType, type TokenSymbolsList } from '@summerfi/app-types'
+import {
+  type SDKVaultishType,
+  type SDKVaultType,
+  type TokenSymbolsList,
+  type VaultApyData,
+} from '@summerfi/app-types'
 import {
   formatCryptoBalance,
   formatDecimalAsPercent,
@@ -17,7 +22,7 @@ import {
   subgraphNetworkToSDKId,
 } from '@summerfi/app-utils'
 import { type TransactionMetadataMigration } from '@summerfi/sdk-common'
-import { BigNumber } from 'bignumber.js'
+import { type BigNumber } from 'bignumber.js'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import {
@@ -37,7 +42,7 @@ interface MigrationFormMigrateStepProps {
   transactionFeeLoading: boolean
   transactionFee?: string
   state: MigrationState
-  vaultApy?: number
+  vaultApyData: VaultApyData
   isLoadingForecast: boolean
   isQuoteLoading: boolean
   txMetadata?: TransactionMetadataMigration
@@ -51,7 +56,7 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
   transactionFeeLoading,
   transactionFee,
   state,
-  vaultApy,
+  vaultApyData,
   isLoadingForecast,
   isQuoteLoading,
   txMetadata,
@@ -60,21 +65,20 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
     state: { slippageConfig },
   } = useLocalConfig()
 
-  // 9999 until we get correct value, until then new strategy string
-  const isVaultAtLeast7dOld = isVaultAtLeastDaysOld({ vault, days: 9999 })
+  const isVaultAtLeast7dOld = isVaultAtLeastDaysOld({ vault, days: 7 })
 
-  const apr7d = isVaultAtLeast7dOld
-    ? formatDecimalAsPercent(new BigNumber(vault.apr7d).div(100))
-    : 'New strategy'
+  const apr7d = isVaultAtLeast7dOld ? formatDecimalAsPercent(vaultApyData.sma7d) : 'New strategy'
 
-  const sourcePositionEstimatedEarningsUSD =
-    Number(amount) * Number(vault.inputTokenPriceUSD ?? 0) * Number(migratablePosition.apy)
+  const sourcePositionEstimatedEarningsUSD = migratablePosition.apy
+    ? Number(amount) * Number(vault.inputTokenPriceUSD ?? 0) * Number(migratablePosition.apy)
+    : undefined
 
   const estimatedEarningsUSD = Number(estimatedEarnings) * Number(vault.inputTokenPriceUSD ?? 0)
 
-  const apyDiff =
-    (estimatedEarningsUSD - sourcePositionEstimatedEarningsUSD) /
-    (Number(amount) * Number(vault.inputTokenPriceUSD ?? 0))
+  const apyDiff = sourcePositionEstimatedEarningsUSD
+    ? (estimatedEarningsUSD - sourcePositionEstimatedEarningsUSD) /
+      (Number(amount) * Number(vault.inputTokenPriceUSD ?? 0))
+    : undefined
 
   const { platformLogo } = mapMigrationToPortfolioCard(migratablePosition)
 
@@ -92,7 +96,11 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
       <div className={classNames.migrationMiniCardWrapper}>
         <MigrationMiniCard
           description="Passive Lending"
-          amount={`$${formatFiatBalance(sourcePositionEstimatedEarningsUSD)}`}
+          amount={
+            sourcePositionEstimatedEarningsUSD
+              ? `$${formatFiatBalance(sourcePositionEstimatedEarningsUSD)}`
+              : undefined
+          }
           token={migratablePosition.underlyingTokenAmount.token.symbol as TokenSymbolsList}
           type={MigrationMiniCardType.FROM}
           chainId={migratablePosition.chainId}
@@ -102,7 +110,7 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
         <MigrationMiniCard
           description="Lazy Summer"
           amount={`$${formatFiatBalance(estimatedEarningsUSD)}`}
-          change={formatDecimalAsPercent(apyDiff, { plus: true })}
+          change={apyDiff ? formatDecimalAsPercent(apyDiff, { plus: true }) : undefined}
           token={vault.inputToken.symbol as TokenSymbolsList}
           type={MigrationMiniCardType.TO}
           chainId={subgraphNetworkToSDKId(vault.protocol.network)}
@@ -113,7 +121,7 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
           <Icon iconName="arrow_forward" size={20} />
         </div>
       </div>
-      {apyDiff < 0 && !isLoadingForecast && !isQuoteLoading && (
+      {apyDiff && apyDiff < 0 && !isLoadingForecast && !isQuoteLoading && (
         <Alert
           variant="warning"
           error="Although Lazy Summer current APY is lower than the previous strategy, in long term you will most likely earn more due to automated rebalancing mechanisms."
@@ -145,7 +153,7 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
         title="What's changing"
         items={[
           { label: '7d APY', value: apr7d },
-          { label: 'Currenty APY', value: formatDecimalAsPercent(vaultApy ?? 0) },
+          { label: 'Currenty APY', value: formatDecimalAsPercent(vaultApyData.apy) },
           { label: 'Protocol', value: 'Lazy Summer' },
         ]}
       />

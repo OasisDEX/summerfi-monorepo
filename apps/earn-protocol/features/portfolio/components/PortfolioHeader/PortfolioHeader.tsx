@@ -39,7 +39,7 @@ const TransakTrigger = ({
 }) => (
   <Button variant="primaryMedium" style={{ minWidth: '130px' }} disabled={isDisabled}>
     <Text as="span" variant="p3semi">
-      Add funds
+      Buy crypto
     </Text>
     <Icon
       iconName={isOpen ? 'chevron_up' : 'chevron_down'}
@@ -114,7 +114,10 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
             <Button
               variant="secondaryMedium"
               style={{ minWidth: 'unset' }}
-              disabled={userWalletAddress?.toLowerCase() !== walletAddress.toLowerCase()}
+              disabled={
+                userWalletAddress?.toLowerCase() !== walletAddress.toLowerCase() ||
+                (walletData && walletData.assets.length === 0)
+              }
               onClick={() => {
                 setIsSendOpen(true)
               }}
@@ -215,7 +218,7 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
         />
       )}
 
-      {walletData && sendEnabled && (
+      {walletData && walletData.assets.length > 0 && sendEnabled && (
         <SendWidget
           walletAddress={walletAddress}
           isOpen={isSendOpen}

@@ -29,6 +29,7 @@ import {
   TOSStatus,
   TransactionAction,
   type UsersActivity,
+  type VaultApyData,
 } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
 import { getChainInfoByChainId, type IToken, TransactionType } from '@summerfi/sdk-common'
@@ -70,7 +71,7 @@ type VaultOpenViewComponentProps = {
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
-  vaultApy?: number
+  vaultApyData: VaultApyData
   vaultsApyRaw: GetVaultsApyResponse
 }
 
@@ -82,7 +83,7 @@ export const VaultOpenViewComponent = ({
   medianDefiYield,
   arksHistoricalChartData,
   arksInterestRates,
-  vaultApy,
+  vaultApyData,
   vaultsApyRaw,
 }: VaultOpenViewComponentProps) => {
   const { getStorageOnce } = useLocalStorageOnce<string>({
@@ -112,10 +113,38 @@ export const VaultOpenViewComponent = ({
 
   useEffect(() => {
     const fetchMigratablePositions = async (walletAddress: string) => {
-      const promises = sdkSupportedChains.map((chainId) => {
+      const promises = sdkSupportedChains.map(async (chainId) => {
         const chainInfo = getChainInfoByChainId(chainId)
 
-        return sdk.getMigratablePositions({ walletAddress, chainInfo })
+        let positionsData
+        let apyData
+
+        try {
+          positionsData = await sdk.getMigratablePositions({ walletAddress, chainInfo })
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error(`Failed to fetch migratable positions for chain ${chainId}:`, error)
+          positionsData = {
+            chainInfo,
+            positions: [],
+          }
+        }
+
+        try {
+          apyData = await sdk.getMigratablePositionsApy({
+            chainInfo,
+            positionIds: positionsData.positions.map((p) => p.id),
+          })
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error(`Failed to fetch APY data for chain ${chainId}:`, error)
+          apyData = {
+            chainInfo,
+            apyByPositionId: {},
+          }
+        }
+
+        return { positionsData, apyData }
       })
 
       const positions = await Promise.all(promises)
@@ -287,6 +316,7 @@ export const VaultOpenViewComponent = ({
     chainId: vaultChainId,
     transaction: nextTransaction,
     walletAddress: user?.address,
+    publicClient,
   })
 
   const sidebarContent = nextTransaction?.type ? (
@@ -393,7 +423,7 @@ export const VaultOpenViewComponent = ({
       displaySimulationGraph={displaySimulationGraph}
       sumrPrice={estimatedSumrPrice}
       onRefresh={revalidatePositionData}
-      vaultApy={vaultApy}
+      vaultApyData={vaultApyData}
       simulationGraph={
         <VaultSimulationGraph
           vault={vault}

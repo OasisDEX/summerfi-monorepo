@@ -22,7 +22,7 @@ export enum MigrationMiniCardType {
 
 interface MigrationMiniCardProps {
   description: string
-  amount: string
+  amount?: string
   change?: string
   token: TokenSymbolsList
   chainId: SDKChainId
@@ -88,7 +88,7 @@ export const MigrationMiniCard: FC<MigrationMiniCardProps> = ({
             height="14px"
             style={{ marginTop: '6px', marginBottom: 'var(--general-space-8)' }}
           />
-        ) : (
+        ) : amount ? (
           <Text as="p" variant="p1semi">
             {amount}{' '}
             {change && (
@@ -104,6 +104,10 @@ export const MigrationMiniCard: FC<MigrationMiniCardProps> = ({
                 {change}
               </Text>
             )}
+          </Text>
+        ) : (
+          <Text as="p" variant="p1semi">
+            n/a
           </Text>
         )}
       </div>

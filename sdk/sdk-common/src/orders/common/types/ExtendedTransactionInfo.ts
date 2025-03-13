@@ -19,6 +19,7 @@ export enum TransactionType {
   Unstake = 'Unstake',
   Migration = 'Migration',
   Bridge = 'Bridge',
+  Send = 'Send',
 }
 
 export type TransactionMetadataApproval = {

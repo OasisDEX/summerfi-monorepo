@@ -43,7 +43,7 @@
   .dataBlocksWrapper {
     flex: 1;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     gap: var(--general-space-16);
     flex-wrap: wrap;
   }

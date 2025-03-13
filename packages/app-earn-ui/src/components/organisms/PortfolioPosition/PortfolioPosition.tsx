@@ -1,7 +1,6 @@
 import { type ReactNode } from 'react'
-import { type IArmadaPosition, type SDKVaultishType } from '@summerfi/app-types'
+import { type IArmadaPosition, type SDKVaultishType, type VaultApyData } from '@summerfi/app-types'
 import { formatDecimalAsPercent } from '@summerfi/app-utils'
-import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 
@@ -23,7 +22,7 @@ type PortfolioPositionProps = {
   }
   positionGraph: ReactNode
   sumrPrice?: number
-  apy?: number
+  vaultApyData: VaultApyData
   isMobile?: boolean
 }
 
@@ -50,13 +49,12 @@ export const PortfolioPosition = ({
   portfolioPosition,
   positionGraph,
   sumrPrice,
-  apy,
+  vaultApyData,
   isMobile,
 }: PortfolioPositionProps) => {
   const {
     inputToken,
     protocol,
-    apr30d,
     totalValueLockedUSD,
     id: vaultId,
     customFields,
@@ -74,12 +72,11 @@ export const PortfolioPosition = ({
     },
   } = portfolioPosition.position
   const isVaultAtLeast30dOld = createdTimestamp
-    ? // 9999 until we get correct value, until then new strategy string
-      dayjs().diff(dayjs(Number(createdTimestamp) * 1000), 'day') > 9999
+    ? dayjs().diff(dayjs(Number(createdTimestamp) * 1000), 'day') > 30
     : false
-  const currentApr = formatDecimalAsPercent(apy ?? 0)
+  const currentApr = formatDecimalAsPercent(vaultApyData.apy)
   const apr30dParsed = isVaultAtLeast30dOld
-    ? formatDecimalAsPercent(new BigNumber(apr30d).div(100))
+    ? formatDecimalAsPercent(vaultApyData.sma30d)
     : 'New Strategy'
 
   const { sumrTokenBonus } = getSumrTokenBonus(

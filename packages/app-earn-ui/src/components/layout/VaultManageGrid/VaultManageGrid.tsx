@@ -1,14 +1,17 @@
 'use client'
 
 import { type FC, type ReactNode, useEffect, useState } from 'react'
-import { type SDKVaultishType, type SDKVaultsListType } from '@summerfi/app-types'
+import {
+  type SDKVaultishType,
+  type SDKVaultsListType,
+  type VaultApyData,
+} from '@summerfi/app-types'
 import {
   formatCryptoBalance,
   formatDecimalAsPercent,
   sdkNetworkToHumanNetwork,
 } from '@summerfi/app-utils'
 import { type IArmadaPositionStandalone as IArmadaPosition } from '@summerfi/armada-protocol-common'
-import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 import Link from 'next/link'
 
@@ -43,13 +46,13 @@ interface VaultManageGridProps {
   simulationGraph: ReactNode
   sumrPrice?: number
   onRefresh?: (chainName?: string, vaultId?: string, walletAddress?: string) => void
-  vaultApy?: number
+  vaultApyData: VaultApyData
   rightExtraContent?: ReactNode
 }
 
 export const VaultManageGrid: FC<VaultManageGridProps> = ({
   vault,
-  vaultApy,
+  vaultApyData,
   vaults,
   detailsContent,
   sidebarContent,
@@ -67,11 +70,10 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   const [displaySimulationGraphStaggered, setDisplaySimulationGraphStaggered] =
     useState(displaySimulationGraph)
 
-  // 9999 until we get correct value, until then new strategy string
-  const isVaultAtLeast30dOld = isVaultAtLeastDaysOld({ vault, days: 9999 })
+  const isVaultAtLeast30dOld = isVaultAtLeastDaysOld({ vault, days: 30 })
 
-  const apr30d = formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
-  const aprCurrent = formatDecimalAsPercent(vaultApy ?? 0)
+  const apr30d = isVaultAtLeast30dOld ? formatDecimalAsPercent(vaultApyData.sma30d) : 'New strategy'
+  const aprCurrent = formatDecimalAsPercent(vaultApyData.apy)
 
   const noOfDeposits = position.deposits.length.toString()
 

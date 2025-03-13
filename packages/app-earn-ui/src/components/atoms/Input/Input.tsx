@@ -28,6 +28,7 @@ export const Input: FC<
     wrapperClassName?: string
     secondaryValue?: string
     button?: ReactNode
+    buttonStyles?: CSSProperties
   }
 > = ({
   variant = 'default',
@@ -40,6 +41,7 @@ export const Input: FC<
   button,
   placeholder,
   value,
+  buttonStyles,
   ...rest
 }) => {
   return (
@@ -64,7 +66,9 @@ export const Input: FC<
         placeholder={placeholder}
       />
       {button && (
-        <div style={{ position: 'absolute', right: '34px', cursor: 'pointer' }}>{button}</div>
+        <div style={{ position: 'absolute', right: '34px', cursor: 'pointer', ...buttonStyles }}>
+          {button}
+        </div>
       )}
       {secondaryValue !== '0' && secondaryValue !== '' && (
         <Text

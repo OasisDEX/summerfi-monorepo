@@ -23,6 +23,7 @@ import {
   type SDKVaultType,
   TransactionAction,
   type UsersActivity,
+  type VaultApyData,
 } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
@@ -46,6 +47,7 @@ import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
+import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
 type MigrationVaultPageComponentProps = {
@@ -56,7 +58,7 @@ type MigrationVaultPageComponentProps = {
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
-  vaultApy?: number
+  vaultApyData: VaultApyData
   migratablePosition: MigratablePosition
   walletAddress: string
 }
@@ -69,7 +71,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
   medianDefiYield,
   arksHistoricalChartData,
   arksInterestRates,
-  vaultApy,
+  vaultApyData,
   migratablePosition,
   walletAddress,
 }) => {
@@ -137,10 +139,13 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
       vaultChainId,
     })
 
+  const { publicClient } = useNetworkAlignedClient({ chainId: vaultChainId })
+
   const { transactionFee, loading: transactionFeeLoading } = useGasEstimation({
     chainId: vaultChainId,
     transaction: approveTransaction?.txData ?? migrationTransaction?.txData,
     walletAddress: walletAddress as Address,
+    publicClient,
   })
 
   const { rawToTokenAmount, isQuoteLoading } = useAmountWithSwap({
@@ -243,7 +248,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
         transactionFeeLoading={transactionFeeLoading}
         transactionFee={transactionFee}
         amount={resolvedAmountParsed}
-        vaultApy={vaultApy}
+        vaultApyData={vaultApyData}
         isLoadingForecast={isLoadingForecast}
         isQuoteLoading={isQuoteLoading}
         txMetadata={migrationTransaction?.txData.metadata}
@@ -298,7 +303,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
       displaySimulationGraph={displaySimulationGraph}
       sumrPrice={estimatedSumrPrice}
       onRefresh={revalidatePositionData}
-      vaultApy={vaultApy}
+      vaultApyData={vaultApyData}
       headerLink={{
         label: 'Migrate',
         href: `/migrate/user/${walletAddress}`,

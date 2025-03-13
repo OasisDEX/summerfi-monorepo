@@ -3,6 +3,7 @@ name: summerfi-api-local
 services:
   rays-db:
     image: postgres:16
+    restart: always
     environment:
       POSTGRES_DB: rays
       POSTGRES_USER: user
@@ -34,6 +35,7 @@ services:
       - redis-cache-v7-data:/data
   oasis-borrow-db:
     image: postgres:12
+    restart: always
     build:
       context: .
       dockerfile: compose-build/oasis-borrow-seed.Dockerfile
@@ -55,6 +57,7 @@ services:
       - oasis-borrow-pg-v12-data:/var/lib/postgresql/data
   summer-protocol-db:
     image: postgres:16
+    restart: always
     environment:
       POSTGRES_DB: summerprotocol
       POSTGRES_USER: user
