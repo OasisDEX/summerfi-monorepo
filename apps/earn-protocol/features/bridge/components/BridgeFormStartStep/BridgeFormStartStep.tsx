@@ -34,6 +34,7 @@ import { useBridgeTransaction } from '@/features/bridge/hooks/use-bridge-transac
 import { type BridgeReducerAction, type BridgeState } from '@/features/bridge/types'
 import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
+import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { useRiskVerification } from '@/hooks/use-risk-verification'
 import { useToken } from '@/hooks/use-token'
 import { useUserWallet } from '@/hooks/use-user-wallet'
@@ -129,6 +130,11 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
       ? 'Insufficient balance'
       : error?.message
 
+  const { publicClient } = useNetworkAlignedClient({
+    chainId: sourceChain.id,
+    overrideNetwork: sourceNetwork,
+  })
+
   const {
     transactionFee: gasEstimate,
     rawTransactionFee: rawGasEstimate,
@@ -137,7 +143,7 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
     chainId: sourceChain.id,
     transaction: !isSourceMatchingDestination ? transaction : undefined,
     walletAddress: Address.createFromEthereum({ value: state.walletAddress }).value,
-    overrideNetwork: sourceNetwork,
+    publicClient,
   })
 
   const [selectedPercentage, setSelectedPercentage] = useState<number | null>(null)

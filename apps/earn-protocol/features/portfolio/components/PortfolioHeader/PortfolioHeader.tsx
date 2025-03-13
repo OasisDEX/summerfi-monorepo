@@ -114,7 +114,10 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
             <Button
               variant="secondaryMedium"
               style={{ minWidth: 'unset' }}
-              disabled={userWalletAddress?.toLowerCase() !== walletAddress.toLowerCase()}
+              disabled={
+                userWalletAddress?.toLowerCase() !== walletAddress.toLowerCase() ||
+                (walletData && walletData.assets.length === 0)
+              }
               onClick={() => {
                 setIsSendOpen(true)
               }}
@@ -215,7 +218,7 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
         />
       )}
 
-      {walletData && sendEnabled && (
+      {walletData && walletData.assets.length > 0 && sendEnabled && (
         <SendWidget
           walletAddress={walletAddress}
           isOpen={isSendOpen}

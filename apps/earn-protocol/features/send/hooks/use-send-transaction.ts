@@ -1,9 +1,17 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
-import { type IToken } from '@summerfi/sdk-common'
-import { encodeFunctionData } from 'viem' //
+import { useIsIframe } from '@summerfi/app-earn-ui'
+import { type SDKChainId, type TransactionHash } from '@summerfi/app-types'
+import { chainIdToSDKNetwork } from '@summerfi/app-utils'
+import { Address, type IToken, TransactionType } from '@summerfi/sdk-common'
+import { encodeFunctionData } from 'viem'
 
 import { accountType } from '@/account-kit/config'
+import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
+import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
+import { isValidAddress } from '@/helpers/is-valid-address'
+import { waitForTransaction } from '@/helpers/wait-for-transaction'
+import { type useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 
 export const useSendTransaction = ({
   onSuccess,
@@ -11,27 +19,104 @@ export const useSendTransaction = ({
   amount,
   token,
   recipient,
+  chainId,
+  publicClient,
 }: {
   onSuccess: () => void
   onError: () => void
   amount: string | undefined
   token: IToken | undefined
   recipient: string | undefined
+  chainId: SDKChainId
+  publicClient: ReturnType<typeof useNetworkAlignedClient>['publicClient']
 }) => {
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
+  const isIframe = useIsIframe()
+  const [waitingForTx, setWaitingForTx] = useState<TransactionHash>()
+  const [txHashes, setTxHashes] = useState<
+    { type: TransactionType; hash?: string; custom?: string }[]
+  >([])
+
+  const removeTxHash = useCallback(
+    (txHash: string) => {
+      setTxHashes((prev) => prev.filter((tx) => tx.hash !== txHash))
+    },
+    [setTxHashes],
+  )
+
+  const onSuccessHandler = useCallback(
+    ({
+      hash,
+      type,
+      message,
+    }: {
+      hash: TransactionHash
+      type: TransactionType
+      message: string
+    }) => {
+      if (isIframe) {
+        getSafeTxHash(hash, chainIdToSDKNetwork(chainId))
+          .then((safeTransactionData) => {
+            if (safeTransactionData.transactionHash) {
+              setWaitingForTx(safeTransactionData.transactionHash)
+            }
+
+            setTxHashes((prev) => [
+              ...prev,
+              {
+                type,
+                hash: safeTransactionData.transactionHash,
+              },
+            ])
+
+            if (
+              safeTransactionData.confirmations.length > safeTransactionData.confirmationsRequired
+            ) {
+              setTxHashes((prev) => [
+                ...prev,
+                {
+                  type,
+                  custom: message,
+                },
+              ])
+            }
+          })
+          .catch((err) => {
+            // eslint-disable-next-line no-console
+            console.error('Error getting the safe tx hash:', err)
+          })
+      } else {
+        setWaitingForTx(hash)
+        setTxHashes((prev) => [
+          ...prev,
+          {
+            type,
+            hash,
+          },
+        ])
+      }
+    },
+    [isIframe, chainId],
+  )
 
   const { sendUserOperationAsync, isSendingUserOperation } = useSendUserOperation({
     client: smartAccountClient,
     waitForTxn: true,
-    onSuccess,
+    onSuccess: ({ hash }) => {
+      onSuccessHandler({
+        hash,
+        type: TransactionType.Send,
+        message:
+          'Multisig transaction detected. After all approval confirmations are done, the position will be ready for migration.',
+      })
+    },
     onError,
   })
 
-  const sendTransaction = useCallback(async () => {
-    if (!token || !amount || !recipient) {
-      return
+  const transactionData = useMemo(() => {
+    if (!token || !amount || !isValidAddress(recipient)) {
+      return undefined
     }
-
     const transferData = encodeFunctionData({
       abi: [
         {
@@ -48,17 +133,58 @@ export const useSendTransaction = ({
       args: [recipient, BigInt(Number(amount) * 10 ** token.decimals)],
     })
 
-    await sendUserOperationAsync({
-      uo: {
-        target: token.address.value,
-        data: transferData,
-        value: 0n,
+    return {
+      transaction: {
+        target: Address.createFromEthereum({ value: token.address.value }),
+        calldata: transferData,
+        value: '0',
       },
+      description: 'Send',
+    }
+  }, [token, amount, recipient])
+
+  const sendTransaction = useCallback(async () => {
+    if (!transactionData) {
+      return
+    }
+
+    const txParams = {
+      target: transactionData.transaction.target.value,
+      data: transactionData.transaction.calldata,
+      value: BigInt(transactionData.transaction.value),
+    }
+
+    const resolvedOverrides = await getGasSponsorshipOverride({
+      smartAccountClient,
+      txParams,
     })
-  }, [token, amount, recipient, sendUserOperationAsync])
+
+    await sendUserOperationAsync({
+      uo: txParams,
+      overrides: resolvedOverrides,
+    })
+  }, [transactionData, sendUserOperationAsync, smartAccountClient])
+
+  useEffect(() => {
+    if (waitingForTx) {
+      waitForTransaction({ publicClient, hash: waitingForTx })
+        .then(() => {
+          onSuccess()
+        })
+        .catch((err) => {
+          onError()
+          // eslint-disable-next-line no-console
+          console.error('Error waiting for transaction:', err)
+        })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [waitingForTx, publicClient])
 
   return {
     isLoading: isSendingUserOperation,
     sendTransaction,
+    transactionData,
+    txHashes,
+    removeTxHash,
   }
 }

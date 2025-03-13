@@ -1,7 +1,5 @@
-.sendFormContentWrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 24px;
-  max-width: 450px;
+.spacer {
+  border-top: 1px solid var(--earn-protocol-neutral-100);
+  width: 100%;
+  margin-top: var(--general-space-24);
 }

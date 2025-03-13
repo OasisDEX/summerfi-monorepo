@@ -1,14 +1,23 @@
 import { useEffect, useState } from 'react'
 import {
+  type Address,
   type BridgeTransactionInfo,
   type ExtendedTransactionInfo,
   type HexData,
   type MigrationTransactionInfo,
 } from '@summerfi/sdk-common'
-import { formatEther } from 'viem'
+import { formatEther, type PublicClient } from 'viem'
 
 import { useAppSDK } from './use-app-sdk'
-import { useNetworkAlignedClient } from './use-network-aligned-client'
+
+type ClientTransaction = {
+  transaction: {
+    target: Address
+    calldata: HexData
+    value: string
+  }
+  description: string
+}
 
 type UseGasEstimationProps = {
   chainId: number
@@ -16,18 +25,18 @@ type UseGasEstimationProps = {
     | ExtendedTransactionInfo
     | BridgeTransactionInfo
     | MigrationTransactionInfo
+    | ClientTransaction
     | undefined
   walletAddress: HexData | undefined
-  overrideNetwork?: string
+  publicClient: PublicClient
 }
 
 export const useGasEstimation = ({
   chainId,
   transaction,
   walletAddress,
-  overrideNetwork,
+  publicClient,
 }: UseGasEstimationProps) => {
-  const { publicClient } = useNetworkAlignedClient({ chainId, overrideNetwork })
   const { getSwapQuote, getTokenBySymbol } = useAppSDK()
 
   const [loading, setLoading] = useState<boolean>(false)
@@ -36,7 +45,11 @@ export const useGasEstimation = ({
 
   useEffect(() => {
     const fetchGasEstimation = async (
-      _transaction: ExtendedTransactionInfo | BridgeTransactionInfo | MigrationTransactionInfo,
+      _transaction:
+        | ExtendedTransactionInfo
+        | BridgeTransactionInfo
+        | MigrationTransactionInfo
+        | ClientTransaction,
       _walletAddress: HexData,
     ) => {
       setLoading(true)

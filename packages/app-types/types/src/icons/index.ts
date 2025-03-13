@@ -305,6 +305,7 @@ export type IconNamesList =
   | 'refresh'
   | 'summer_light'
   | 'wsuperoethb'
+  | 'wallet'
 
 export type TokenSymbolsList =
   | 'AAVE'

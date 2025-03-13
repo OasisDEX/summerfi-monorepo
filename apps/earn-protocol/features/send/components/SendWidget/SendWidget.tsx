@@ -1,24 +1,38 @@
 'use client'
-import { type FC, useReducer, useState } from 'react'
+import { type FC, useReducer } from 'react'
 import { useChain } from '@account-kit/react'
-import { Modal, Sidebar, type SidebarProps, useAmount, useMobileCheck } from '@summerfi/app-earn-ui'
 import {
-  type DropdownOption,
+  getTokenGuarded,
+  Modal,
+  Sidebar,
+  type SidebarProps,
+  useAmount,
+  useMobileCheck,
+} from '@summerfi/app-earn-ui'
+import {
+  type Address,
   type DropdownRawOption,
+  type SDKSupportedChain,
+  type SDKSupportedNetwork,
+  sdkSupportedNetworks,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
-import { chainIdToSDKNetwork, networkNameToSDKNetwork } from '@summerfi/app-utils'
+import { networkNameToSDKId, networkNameToSDKNetwork } from '@summerfi/app-utils'
 import { isAddress } from 'viem'
 
 import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
+import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { SendFormContent } from '@/features/send/components/SendFormContent/SendFormContent'
 import { getSendPrimaryBtnLabel } from '@/features/send/helpers/get-send-primary-btn-label'
+import { getSendSidebarTitle } from '@/features/send/helpers/get-send-sidebar-title'
 import { useSendTransaction } from '@/features/send/hooks/use-send-transaction'
 import { sendReducer, sendState } from '@/features/send/state'
-import { SendTxStatuses } from '@/features/send/types'
+import { SendStep, SendTxStatuses } from '@/features/send/types'
 import { revalidateUser } from '@/helpers/revalidation-handlers'
+import { useClientChainId } from '@/hooks/use-client-chain-id'
+import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { usePublicClient } from '@/hooks/use-public-client'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 
@@ -39,33 +53,46 @@ export const SendWidget: FC<SendWidgetProps> = ({
 }) => {
   const { deviceType } = useDeviceType()
 
-  const [state, dispatch] = useReducer(sendReducer, sendState)
+  const walletDataAssetsSortedByUsdValue = walletData.assets.sort(
+    (a, b) => b.balanceUSD - a.balanceUSD,
+  )
 
   const defaultDropdownValue = {
-    label: walletData.assets[0].symbol.toUpperCase(),
-    value: walletData.assets[0].symbol,
-    tokenSymbol: walletData.assets[0].symbol.toUpperCase() as TokenSymbolsList,
+    label: walletDataAssetsSortedByUsdValue[0].symbol.toUpperCase(),
+    value: `${walletDataAssetsSortedByUsdValue[0].id}_${walletDataAssetsSortedByUsdValue[0].network}`,
+    tokenSymbol: walletDataAssetsSortedByUsdValue[0].symbol.toUpperCase() as TokenSymbolsList,
+    chainId: networkNameToSDKId(walletDataAssetsSortedByUsdValue[0].network) as SDKSupportedChain,
   }
-  const { isMobile, isTablet } = useMobileCheck(deviceType)
 
-  const [dropdownValue, setDropdownValue] = useState<DropdownOption>(defaultDropdownValue)
+  const [state, dispatch] = useReducer(sendReducer, {
+    ...sendState,
+    tokenDropdown: defaultDropdownValue,
+    walletAddress,
+  })
+
+  const { isMobile, isTablet } = useMobileCheck(deviceType)
 
   const isMobileOrTablet = isMobile || isTablet
 
-  const {
-    chain: { id },
-  } = useChain()
+  const { clientChainId } = useClientChainId()
 
-  const dropdownOptions = walletData.assets
-    .filter((item) => networkNameToSDKNetwork(item.network) === chainIdToSDKNetwork(id))
+  const { setChain } = useChain()
+
+  const dropdownOptions = walletDataAssetsSortedByUsdValue
+    .filter((item) =>
+      sdkSupportedNetworks.includes(networkNameToSDKNetwork(item.network) as SDKSupportedNetwork),
+    )
+    .filter((item) => !!getTokenGuarded(item.symbol.toLocaleUpperCase()))
     .map((asset) => ({
       label: asset.symbol.toUpperCase(),
-      value: asset.symbol,
+      value: `${asset.id}_${asset.network}`,
       tokenSymbol: asset.symbol.toUpperCase() as TokenSymbolsList,
+      chainId: networkNameToSDKId(asset.network) as SDKSupportedChain,
     }))
 
   const { publicClient } = usePublicClient({
-    chain: SDKChainIdToAAChainMap[id as keyof typeof SDKChainIdToAAChainMap],
+    chain:
+      SDKChainIdToAAChainMap[state.tokenDropdown.chainId as keyof typeof SDKChainIdToAAChainMap],
   })
 
   const {
@@ -74,9 +101,9 @@ export const SendWidget: FC<SendWidgetProps> = ({
     tokenBalanceLoading: selectedTokenBalanceLoading,
   } = useTokenBalance({
     publicClient,
-    vaultTokenSymbol: dropdownValue.value,
-    tokenSymbol: dropdownValue.value,
-    chainId: id,
+    vaultTokenSymbol: state.tokenDropdown.tokenSymbol,
+    tokenSymbol: state.tokenDropdown.tokenSymbol,
+    chainId: state.tokenDropdown.chainId,
   })
 
   const {
@@ -91,41 +118,62 @@ export const SendWidget: FC<SendWidgetProps> = ({
   } = useAmount({
     tokenDecimals: selectedToken?.decimals ?? 18,
     tokenPrice: walletData.assets
-      .find((item) => item.symbol === dropdownValue.value)
+      .find((item) => item.symbol === state.tokenDropdown.tokenSymbol)
       ?.priceUSD.toString(),
     selectedToken,
     initialAmount: undefined,
   })
 
-  const { sendTransaction, isLoading } = useSendTransaction({
+  const {
+    sendTransaction,
+    isLoading: _isTxLoading,
+    transactionData,
+    txHashes,
+    removeTxHash,
+  } = useSendTransaction({
     onSuccess: () => {
       dispatch({ type: 'update-tx-status', payload: SendTxStatuses.COMPLETED })
+      dispatch({ type: 'update-step', payload: SendStep.COMPLETED })
     },
     onError: () => {
       dispatch({ type: 'update-tx-status', payload: SendTxStatuses.FAILED })
+      dispatch({ type: 'update-step', payload: SendStep.INIT })
     },
     amount: amountRaw,
     token: selectedToken,
     recipient: state.recipientAddress,
+    chainId: state.tokenDropdown.chainId,
+    publicClient,
+  })
+
+  const { transactionFee, loading: transactionFeeLoading } = useGasEstimation({
+    chainId: state.tokenDropdown.chainId,
+    transaction: transactionData,
+    walletAddress: walletAddress as Address,
+    publicClient,
   })
 
   const handleDropdownChange = (option: DropdownRawOption) => {
-    setDropdownValue(
-      dropdownOptions.find((item) => item.value === option.value) ?? dropdownOptions[0],
-    )
+    dispatch({
+      type: 'update-token-dropdown',
+      payload: dropdownOptions.find((item) => item.value === option.value) ?? dropdownOptions[0],
+    })
     manualSetAmount('0')
   }
+
+  const isLoading = state.txStatus === SendTxStatuses.PENDING || _isTxLoading
 
   const isDisabled =
     !isAddress(state.recipientAddress) || !amountParsed.gt(0) || isLoading || !isOwner
 
+  const isCorrectChain = clientChainId === state.tokenDropdown.chainId
+
   const sidebarProps: SidebarProps = {
-    title: 'Send',
+    title: getSendSidebarTitle({ state }),
     content: (
       <SendFormContent
         amountDisplay={amountDisplay}
         amountDisplayUSD={amountDisplayUSD}
-        dropdownValue={dropdownValue}
         dropdownOptions={dropdownOptions}
         selectedTokenBalance={selectedTokenBalance}
         selectedTokenBalanceLoading={selectedTokenBalanceLoading}
@@ -138,13 +186,32 @@ export const SendWidget: FC<SendWidgetProps> = ({
         manualSetAmount={manualSetAmount}
         state={state}
         dispatch={dispatch}
+        transactionFee={transactionFee}
+        transactionFeeLoading={transactionFeeLoading}
       />
     ),
     primaryButton: {
-      label: getSendPrimaryBtnLabel({ state }),
+      label: getSendPrimaryBtnLabel({
+        state,
+        isCorrectChain,
+      }),
       action: () => {
+        if (!isCorrectChain) {
+          setChain({
+            chain:
+              SDKChainIdToAAChainMap[
+                state.tokenDropdown.chainId as keyof typeof SDKChainIdToAAChainMap
+              ],
+          })
+
+          return
+        }
+
         if (state.txStatus === SendTxStatuses.COMPLETED) {
-          dispatch({ type: 'reset' })
+          dispatch({
+            type: 'reset',
+            payload: { txStatus: undefined, step: SendStep.INIT, recipientAddress: '' },
+          })
           manualSetAmount('0')
           revalidateUser(walletAddress)
 
@@ -152,6 +219,7 @@ export const SendWidget: FC<SendWidgetProps> = ({
         }
 
         dispatch({ type: 'update-tx-status', payload: SendTxStatuses.PENDING })
+        dispatch({ type: 'update-step', payload: SendStep.PENDING })
 
         return sendTransaction()
       },
@@ -164,6 +232,18 @@ export const SendWidget: FC<SendWidgetProps> = ({
       forceMobileOpen: isOpen,
       closeDrawer: onClose,
     },
+    footnote: (
+      <>
+        {txHashes.map((txData) => (
+          <TransactionHashPill
+            key={txData.hash}
+            transactionData={txData}
+            removeTxHash={removeTxHash}
+            chainId={state.tokenDropdown.chainId}
+          />
+        ))}
+      </>
+    ),
   }
 
   return isMobile ? (

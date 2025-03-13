@@ -80,7 +80,8 @@ export default defineConfig(({ mode }) => {
           'next',
           'next/navigation',
           'jsonwebtoken',
-          '@account-kit/infra',
+          'viem',
+          'viem/chains',
         ],
         output: {
           assetFileNames: 'assets/[name][extname]',

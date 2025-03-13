@@ -1,4 +1,3 @@
-import { arbitrum, base, mainnet } from '@account-kit/infra'
 import {
   NetworkIds,
   NetworkNames,
@@ -9,7 +8,7 @@ import {
   type SDKSupportedNetwork,
   sdkSupportedNetworks,
 } from '@summerfi/app-types'
-import { type Chain } from 'viem/chains'
+import { arbitrum, base, type Chain, mainnet } from 'viem/chains'
 
 /**
  * Type guard to check if a chain ID is a supported SDK chain.
@@ -132,6 +131,15 @@ export const networkNameToSDKNetwork = (network: NetworkNames) => {
     [NetworkNames.baseMainnet.toLowerCase()]: SDKNetwork.Base,
     [NetworkNames.ethereumMainnet.toLowerCase()]: SDKNetwork.Mainnet,
     [NetworkNames.optimismMainnet.toLowerCase()]: SDKNetwork.Optimism,
+  }[network.toLowerCase()]
+}
+
+export const networkNameToSDKId = (network: NetworkNames) => {
+  return {
+    [NetworkNames.arbitrumMainnet.toLowerCase()]: SDKChainId.ARBITRUM,
+    [NetworkNames.baseMainnet.toLowerCase()]: SDKChainId.BASE,
+    [NetworkNames.ethereumMainnet.toLowerCase()]: SDKChainId.MAINNET,
+    [NetworkNames.optimismMainnet.toLowerCase()]: SDKChainId.OPTIMISM,
   }[network.toLowerCase()]
 }
 

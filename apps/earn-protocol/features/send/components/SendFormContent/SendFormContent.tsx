@@ -1,10 +1,17 @@
 import { type Dispatch, type FC } from 'react'
-import { Alert, Input, InputWithDropdown, SkeletonLine, Text } from '@summerfi/app-earn-ui'
+import { Alert } from '@summerfi/app-earn-ui'
 import { type DropdownOption, type DropdownRawOption } from '@summerfi/app-types'
-import { formatCryptoBalance } from '@summerfi/app-utils'
 import type BigNumber from 'bignumber.js'
 
-import { type SendReducerAction, type SendState, SendTxStatuses } from '@/features/send/types'
+import { SendFormInitialStep } from '@/features/send/components/SendFormInitialStep/SendFormInitialStep'
+import { SendFormOrderInformation } from '@/features/send/components/SendFormOrderInformation/SendFormOrderInformation'
+import { SendFormStatusStep } from '@/features/send/components/SendFormStatusStep/SendFormStatusStep'
+import {
+  type SendReducerAction,
+  type SendState,
+  SendStep,
+  SendTxStatuses,
+} from '@/features/send/types'
 import { isValidAddress } from '@/helpers/is-valid-address'
 
 import classNames from './SendFormContent.module.scss'
@@ -12,7 +19,6 @@ import classNames from './SendFormContent.module.scss'
 interface SendFormContentProps {
   amountDisplay: string
   amountDisplayUSD: string
-  dropdownValue: DropdownOption
   dropdownOptions: DropdownOption[]
   selectedTokenBalance: BigNumber | undefined
   selectedTokenBalanceLoading: boolean
@@ -25,6 +31,8 @@ interface SendFormContentProps {
   onFocus: () => void
   onBlur: () => void
   manualSetAmount: (amount: string) => void
+  transactionFee: string | undefined
+  transactionFeeLoading: boolean
 }
 
 export const SendFormContent: FC<SendFormContentProps> = ({
@@ -32,7 +40,6 @@ export const SendFormContent: FC<SendFormContentProps> = ({
   amountDisplayUSD,
   handleAmountChange,
   handleDropdownChange,
-  dropdownValue,
   dropdownOptions,
   selectedTokenBalance,
   selectedTokenBalanceLoading,
@@ -43,61 +50,59 @@ export const SendFormContent: FC<SendFormContentProps> = ({
   state,
   dispatch,
   manualSetAmount,
+  transactionFee,
+  transactionFeeLoading,
 }) => {
-  return (
-    <div className={classNames.sendFormContentWrapper}>
-      <InputWithDropdown
-        value={amountDisplay}
-        secondaryValue={amountDisplayUSD}
-        handleChange={handleAmountChange}
-        handleDropdownChange={handleDropdownChange}
-        options={dropdownOptions}
-        dropdownValue={dropdownValue}
-        heading={{
-          label: 'Token to send',
-          value: selectedTokenBalanceLoading ? (
-            <SkeletonLine width={80} height={14} />
-          ) : (
-            `Balance: ${formatCryptoBalance(selectedTokenBalance ?? 0)}`
-          ),
-          action: isOwner
-            ? () => {
-                if (selectedTokenBalance) {
-                  manualSetAmount(selectedTokenBalance.toString())
-                }
-              }
-            : undefined,
-        }}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        disabled={isLoading || state.txStatus === SendTxStatuses.COMPLETED}
-      />
-      <div>
-        <Text
-          as="p"
-          variant="p3semi"
-          style={{
-            marginBottom: 'var(--general-space-8)',
-            color: 'var(--color-text-primary-disabled)',
-          }}
-        >
-          Recipient address
-        </Text>
-        <Input
-          value={state.recipientAddress}
-          onChange={(e) => dispatch({ type: 'update-recipient-address', payload: e.target.value })}
-          placeholder="0x..."
-          disabled={isLoading || state.txStatus === SendTxStatuses.COMPLETED}
-          variant="dark"
-        />
-      </div>
+  const isInvalidAddress = state.recipientAddress !== '' && !isValidAddress(state.recipientAddress)
+  const isEmptyAmount = amountDisplay === '0'
 
-      {state.recipientAddress !== '' && !isValidAddress(state.recipientAddress) && (
-        <Alert error="Please enter a valid recipient address" variant="critical" />
+  return (
+    <>
+      {state.step === SendStep.INIT && (
+        <SendFormInitialStep
+          amountDisplay={amountDisplay}
+          amountDisplayUSD={amountDisplayUSD}
+          dropdownOptions={dropdownOptions}
+          selectedTokenBalance={selectedTokenBalance}
+          selectedTokenBalanceLoading={selectedTokenBalanceLoading}
+          isOwner={isOwner}
+          isLoading={isLoading}
+          state={state}
+          dispatch={dispatch}
+          handleDropdownChange={handleDropdownChange}
+          handleAmountChange={handleAmountChange}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          manualSetAmount={manualSetAmount}
+        />
       )}
+      {[SendStep.PENDING, SendStep.COMPLETED].includes(state.step) && (
+        <SendFormStatusStep state={state} />
+      )}
+      {![SendStep.PENDING, SendStep.COMPLETED].includes(state.step) && (
+        <div
+          className={classNames.spacer}
+          style={{
+            marginBottom:
+              isInvalidAddress || isEmptyAmount
+                ? 'var(--general-space-12)'
+                : 'var(--general-space-24)',
+          }}
+        />
+      )}
+      <SendFormOrderInformation
+        state={state}
+        amountDisplay={amountDisplay}
+        transactionFee={transactionFee}
+        transactionFeeLoading={transactionFeeLoading}
+      />
       {state.txStatus === SendTxStatuses.FAILED && (
-        <Alert error="Transaction failed, please try again." variant="critical" />
+        <Alert
+          error="Transaction failed, please try again."
+          variant="critical"
+          wrapperStyles={{ marginBottom: 'var(--general-space-16)' }}
+        />
       )}
-    </div>
+    </>
   )
 }
