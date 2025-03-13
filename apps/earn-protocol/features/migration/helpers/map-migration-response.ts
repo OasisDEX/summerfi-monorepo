@@ -1,4 +1,8 @@
-import { type ArmadaMigratablePosition, type IChainInfo } from '@summerfi/sdk-common'
+import {
+  type ArmadaMigratablePosition,
+  type ArmadaMigratablePositionApy,
+  type IChainInfo,
+} from '@summerfi/sdk-common'
 
 /**
  * Maps and transforms migration response data from multiple chains into a flattened and sorted array of positions.
@@ -17,22 +21,33 @@ import { type ArmadaMigratablePosition, type IChainInfo } from '@summerfi/sdk-co
  */
 export const mapMigrationResponse = (
   response: {
-    chainInfo: IChainInfo
-    positions: ArmadaMigratablePosition[]
+    positionsData: {
+      chainInfo: IChainInfo
+      positions: ArmadaMigratablePosition[]
+    }
+    apyData: {
+      chainInfo: IChainInfo
+      apyByPositionId: { [key: string]: ArmadaMigratablePositionApy }
+    }
   }[],
 ) => {
   if (!response || response.length === 0) {
     return []
   }
 
-  return response.flatMap(({ chainInfo, positions }) =>
-    positions
-      .map((position) => ({
+  const enrichedPositions = response.flatMap(({ positionsData, apyData }) =>
+    positionsData.positions.map((position) => {
+      const apy7d = apyData.apyByPositionId[position.id].apy7d?.value
+      const apy = apyData.apyByPositionId[position.id].apy?.value
+
+      return {
         ...position,
-        chainId: chainInfo.chainId,
-        // TO BE PROVIDED FROM SDK
-        apy: '0.05',
-      }))
-      .sort((a, b) => Number(b.usdValue.amount) - Number(a.usdValue.amount)),
+        chainId: positionsData.chainInfo.chainId,
+        apy7d: apy7d ? apy7d / 100 : undefined,
+        apy: apy ? apy / 100 : undefined,
+      }
+    }),
   )
+
+  return enrichedPositions.sort((a, b) => Number(b.usdValue.amount) - Number(a.usdValue.amount))
 }
