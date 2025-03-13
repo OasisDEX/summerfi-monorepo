@@ -1,7 +1,12 @@
 'use client'
 
 import { type FC, type ReactNode, useEffect, useState } from 'react'
-import { type SDKChainId, type SDKVaultishType, type SDKVaultsListType } from '@summerfi/app-types'
+import {
+  type SDKChainId,
+  type SDKVaultishType,
+  type SDKVaultsListType,
+  type VaultApyData,
+} from '@summerfi/app-types'
 import {
   formatCryptoBalance,
   formatDecimalAsPercent,
@@ -42,7 +47,7 @@ interface VaultOpenGridProps {
   medianDefiYield?: number
   sumrPrice?: number
   onRefresh?: (chainName?: string, vaultId?: string, walletAddress?: string) => void
-  vaultApy?: number
+  vaultApyData: VaultApyData
   rightExtraContent?: ReactNode
   headerLink?: {
     label: string
@@ -63,7 +68,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   medianDefiYield,
   sumrPrice,
   onRefresh,
-  vaultApy,
+  vaultApyData,
   rightExtraContent,
   headerLink = {
     label: 'Earn',
@@ -76,13 +81,10 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   const [displaySimulationGraphStaggered, setDisplaySimulationGraphStaggered] =
     useState(displaySimulationGraph)
 
-  // 9999 until we get correct value, until then new strategy string
-  const isVaultAtLeast30dOld = isVaultAtLeastDaysOld({ vault, days: 9999 })
+  const isVaultAtLeast30dOld = isVaultAtLeastDaysOld({ vault, days: 30 })
 
-  const apr30d = isVaultAtLeast30dOld
-    ? formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
-    : 'New strategy'
-  const aprCurrent = formatDecimalAsPercent(vaultApy ?? 0)
+  const apr30d = isVaultAtLeast30dOld ? formatDecimalAsPercent(vaultApyData.sma30d) : 'New strategy'
+  const aprCurrent = formatDecimalAsPercent(vaultApyData.apy)
   const totalValueLockedUSDParsed = formatCryptoBalance(new BigNumber(vault.totalValueLockedUSD))
   const totalValueLockedTokenParsed = formatCryptoBalance(
     new BigNumber(vault.inputTokenBalance.toString()).div(ten.pow(vault.inputToken.decimals)),
@@ -90,7 +92,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
 
   const medianBN = medianDefiYield ? new BigNumber(medianDefiYield) : null
   const medianDefiYieldDifference =
-    medianBN && vaultApy ? new BigNumber(vaultApy * 100).minus(medianBN) : null
+    medianBN && vaultApyData.apy ? new BigNumber(vaultApyData.apy * 100).minus(medianBN) : null
 
   useEffect(() => {
     const timer = setTimeout(() => {

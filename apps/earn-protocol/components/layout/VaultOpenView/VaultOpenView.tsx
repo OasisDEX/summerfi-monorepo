@@ -7,6 +7,7 @@ import {
   type SDKVaultsListType,
   type SDKVaultType,
   type UsersActivity,
+  type VaultApyData,
 } from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
@@ -22,7 +23,7 @@ export const VaultOpenView = ({
   medianDefiYield,
   arksHistoricalChartData,
   arksInterestRates,
-  vaultApy,
+  vaultApyData,
   vaultsApyRaw,
 }: {
   vault: SDKVaultType | SDKVaultishType
@@ -32,7 +33,7 @@ export const VaultOpenView = ({
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
-  vaultApy?: number
+  vaultApyData: VaultApyData
   vaultsApyRaw: GetVaultsApyResponse
 }) => {
   return (
@@ -45,7 +46,7 @@ export const VaultOpenView = ({
         medianDefiYield={medianDefiYield}
         arksHistoricalChartData={arksHistoricalChartData}
         arksInterestRates={arksInterestRates}
-        vaultApy={vaultApy}
+        vaultApyData={vaultApyData}
         vaultsApyRaw={vaultsApyRaw}
       />
     </SDKContextProvider>

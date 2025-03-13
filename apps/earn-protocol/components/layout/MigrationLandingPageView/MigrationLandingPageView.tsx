@@ -366,7 +366,7 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
                       apy={
                         vaultsApyByNetworkMap[
                           `${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`
-                        ]
+                        ].apy
                       }
                       disabled={
                         selectedPositionChainId !== subgraphNetworkToSDKId(vault.protocol.network)
@@ -390,7 +390,7 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
                     apy={
                       vaultsApyByNetworkMap[
                         `${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`
-                      ]
+                      ].apy
                     }
                     disabled={
                       selectedPositionChainId !== subgraphNetworkToSDKId(vault.protocol.network)

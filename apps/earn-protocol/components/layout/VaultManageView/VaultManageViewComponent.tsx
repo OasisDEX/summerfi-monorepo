@@ -35,6 +35,7 @@ import {
   TOSStatus,
   TransactionAction,
   type UsersActivity,
+  type VaultApyData,
 } from '@summerfi/app-types'
 import { formatDecimalAsPercent, subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
 import { type GetGlobalRebalancesQuery, type IArmadaPosition } from '@summerfi/sdk-client'
@@ -82,7 +83,7 @@ export const VaultManageViewComponent = ({
   performanceChartData,
   arksHistoricalChartData,
   arksInterestRates,
-  vaultApy,
+  vaultApyData,
   migratablePositions,
   migrationBestVaultApy,
 }: {
@@ -95,7 +96,7 @@ export const VaultManageViewComponent = ({
   performanceChartData: PerformanceChartData
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
-  vaultApy?: number
+  vaultApyData: VaultApyData
   migratablePositions: MigratablePosition[]
   migrationBestVaultApy: MigrationEarningsDataByChainId
 }) => {
@@ -404,7 +405,7 @@ export const VaultManageViewComponent = ({
       <NonOwnerPositionBanner isOwner={ownerView} walletStateLoaded={!isLoadingAccount} />
       <VaultManageGrid
         vault={vault}
-        vaultApy={vaultApy}
+        vaultApyData={vaultApyData}
         vaults={vaults}
         position={position}
         onRefresh={revalidatePositionData}

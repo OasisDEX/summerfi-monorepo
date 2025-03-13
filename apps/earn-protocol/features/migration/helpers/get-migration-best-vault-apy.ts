@@ -1,4 +1,3 @@
-import { isVaultAtLeastDaysOld } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
 import { subgraphNetworkToId, subgraphNetworkToSDKId } from '@summerfi/app-utils'
 
@@ -44,25 +43,21 @@ export const getMigrationBestVaultApy = ({
         let best7dApy = 0
 
         networkVaults.forEach((vault) => {
-          const vaultApy =
+          const { apy, sma7d, sma30d } =
             vaultsApyByNetworkMap[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
-          const currentApy = vaultApy || 0
-          const apy30d = Number(vault.apr30d) / 100 || 0
-          const apy7d = Number(vault.apr7d) / 100 || 0
-
-          // 9999 until we get correct value, until then new strategy string
-          const isVaultAtLeast7dOld = isVaultAtLeastDaysOld({ vault, days: 9999 })
-          const isVaultAtLeast30dOld = isVaultAtLeastDaysOld({ vault, days: 9999 })
+          const currentApy = apy || 0
+          const apy30d = sma30d || 0
+          const apy7d = sma7d || 0
 
           if (currentApy > bestCurrentApy) {
             bestCurrentApy = currentApy
           }
 
-          if (apy30d > best30dApy && isVaultAtLeast30dOld) {
+          if (apy30d > best30dApy) {
             best30dApy = apy30d
           }
 
-          if (apy7d > best7dApy && isVaultAtLeast7dOld) {
+          if (apy7d > best7dApy) {
             best7dApy = apy7d
           }
         })

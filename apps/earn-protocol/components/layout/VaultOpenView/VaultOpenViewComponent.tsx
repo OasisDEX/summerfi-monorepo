@@ -29,6 +29,7 @@ import {
   TOSStatus,
   TransactionAction,
   type UsersActivity,
+  type VaultApyData,
 } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
 import { getChainInfoByChainId, type IToken, TransactionType } from '@summerfi/sdk-common'
@@ -70,7 +71,7 @@ type VaultOpenViewComponentProps = {
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
-  vaultApy?: number
+  vaultApyData: VaultApyData
   vaultsApyRaw: GetVaultsApyResponse
 }
 
@@ -82,7 +83,7 @@ export const VaultOpenViewComponent = ({
   medianDefiYield,
   arksHistoricalChartData,
   arksInterestRates,
-  vaultApy,
+  vaultApyData,
   vaultsApyRaw,
 }: VaultOpenViewComponentProps) => {
   const { getStorageOnce } = useLocalStorageOnce<string>({
@@ -422,7 +423,7 @@ export const VaultOpenViewComponent = ({
       displaySimulationGraph={displaySimulationGraph}
       sumrPrice={estimatedSumrPrice}
       onRefresh={revalidatePositionData}
-      vaultApy={vaultApy}
+      vaultApyData={vaultApyData}
       simulationGraph={
         <VaultSimulationGraph
           vault={vault}
