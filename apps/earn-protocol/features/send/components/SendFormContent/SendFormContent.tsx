@@ -33,6 +33,7 @@ interface SendFormContentProps {
   manualSetAmount: (amount: string) => void
   transactionFee: string | undefined
   transactionFeeLoading: boolean
+  hasInsufficientBalance: boolean
 }
 
 export const SendFormContent: FC<SendFormContentProps> = ({
@@ -52,6 +53,7 @@ export const SendFormContent: FC<SendFormContentProps> = ({
   manualSetAmount,
   transactionFee,
   transactionFeeLoading,
+  hasInsufficientBalance,
 }) => {
   const isInvalidAddress = state.recipientAddress !== '' && !isValidAddress(state.recipientAddress)
   const isEmptyAmount = amountDisplay === '0'
@@ -98,7 +100,14 @@ export const SendFormContent: FC<SendFormContentProps> = ({
       />
       {state.txStatus === SendTxStatuses.FAILED && (
         <Alert
-          error="Transaction failed, please try again."
+          error="Transaction failed, please try again"
+          variant="critical"
+          wrapperStyles={{ marginBottom: 'var(--general-space-16)' }}
+        />
+      )}
+      {hasInsufficientBalance && (
+        <Alert
+          error="Amount entered exceeds available balance"
           variant="critical"
           wrapperStyles={{ marginBottom: 'var(--general-space-16)' }}
         />

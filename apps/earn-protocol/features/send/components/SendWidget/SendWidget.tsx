@@ -163,8 +163,14 @@ export const SendWidget: FC<SendWidgetProps> = ({
 
   const isLoading = state.txStatus === SendTxStatuses.PENDING || _isTxLoading
 
+  const hasInsufficientBalance = !!selectedTokenBalance?.lt(amountDisplay)
+
   const isDisabled =
-    !isAddress(state.recipientAddress) || !amountParsed.gt(0) || isLoading || !isOwner
+    !isAddress(state.recipientAddress) ||
+    !amountParsed.gt(0) ||
+    isLoading ||
+    !isOwner ||
+    hasInsufficientBalance
 
   const isCorrectChain = clientChainId === state.tokenDropdown.chainId
 
@@ -188,6 +194,7 @@ export const SendWidget: FC<SendWidgetProps> = ({
         dispatch={dispatch}
         transactionFee={transactionFee}
         transactionFeeLoading={transactionFeeLoading}
+        hasInsufficientBalance={hasInsufficientBalance}
       />
     ),
     primaryButton: {
