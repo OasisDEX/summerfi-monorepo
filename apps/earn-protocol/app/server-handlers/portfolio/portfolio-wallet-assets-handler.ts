@@ -9,6 +9,7 @@ export type PortfolioWalletAsset = {
   price24hChange?: number
   balance: number
   balanceUSD: number
+  id: string
 }
 
 export type PortfolioAssetsResponse = {
