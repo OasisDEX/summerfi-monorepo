@@ -45,8 +45,8 @@ export const SendFormStatusStep: FC<SendFormStatusStepProps> = ({ state }) => {
             gradient={{
               id: 'spinner-gradient',
               stops: [
-                { offset: '0%', color: '#b049ff' },
-                { offset: '100%', color: '#ff49a4' },
+                { offset: '0%', color: '#ff49a4' },
+                { offset: '100%', color: '#b049ff' },
               ],
             }}
           />
