@@ -9,6 +9,7 @@ export const LoadingSpinner = ({
   size = DEFAULT_SIZE,
   fast = false,
   color = 'var(--color-text-primary)',
+  strokeWidth = 2,
   style,
   appear,
 }: {
@@ -17,6 +18,7 @@ export const LoadingSpinner = ({
   fast?: boolean
   /** @default var(--color-text-primary) */
   color?: string
+  strokeWidth?: number
   style?: React.CSSProperties
   appear?: boolean
 }) => (
@@ -28,7 +30,7 @@ export const LoadingSpinner = ({
     fill="none"
     stroke="currentColor"
     color={color}
-    strokeWidth="2"
+    strokeWidth={strokeWidth}
     strokeLinecap="round"
     strokeLinejoin="round"
     style={style}

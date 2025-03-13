@@ -38,7 +38,7 @@ export const SendFormStatusStep: FC<SendFormStatusStepProps> = ({ state }) => {
     <div className={classNames.sendFormStatusStepWrapper}>
       {state.step === SendStep.PENDING && (
         <div className={classNames.loadingBox}>
-          <LoadingSpinner size={50} color="var(--earn-protocol-primary-100)" />
+          <LoadingSpinner size={55} color="var(--earn-protocol-primary-100)" strokeWidth={3} />
         </div>
       )}
       {state.step === SendStep.COMPLETED && (
