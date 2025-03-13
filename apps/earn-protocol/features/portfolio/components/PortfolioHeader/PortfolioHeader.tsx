@@ -39,7 +39,7 @@ const TransakTrigger = ({
 }) => (
   <Button variant="primaryMedium" style={{ minWidth: '130px' }} disabled={isDisabled}>
     <Text as="span" variant="p3semi">
-      Add funds
+      Buy crypto
     </Text>
     <Icon
       iconName={isOpen ? 'chevron_up' : 'chevron_down'}

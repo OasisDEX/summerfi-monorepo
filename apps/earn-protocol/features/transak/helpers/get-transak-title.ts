@@ -15,7 +15,7 @@ import {
 export const getTransakTitle = ({ state }: { state: TransakReducerState }): string => {
   switch (state.step) {
     case TransakSteps.INITIAL:
-      return 'Add funds via Transak'
+      return 'Buy crypto via Transak'
     case TransakSteps.ABOUT_KYC:
       return 'About KYC'
     case TransakSteps.BUY_ETH:
