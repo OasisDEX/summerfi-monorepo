@@ -73,33 +73,132 @@ export const getVaultsHistoricalApy: ({
 
     const rawResponse = (await apiResponse.json()) as GetVaultsHistoricalApyRAWResponse
 
+    // const response: GetVaultsHistoricalApyResponse = rawResponse.rates.reduce(
+    //   (topAcc, { rates, fleetAddress, chainId }) => {
+    //     const calculateSMA24 = (rates: RatesRaw[]) => {
+    //       // Sort rates by date to ensure correct order
+    //       const sortedRates = [...rates].sort((a, b) => Number(a.date) - Number(b.date))
+
+    //       return sortedRates.map((_, index, array) => {
+    //         if (index < 23) {
+    //           // Return raw value for the first 23 entries
+    //           return {
+    //             averageRate: array[index].averageRate,
+    //             date: Number(array[index].date),
+    //           }
+    //         }
+
+    //         // Calculate SMA using previous 24 values (including current)
+    //         const window = array.slice(index - 23, index + 1)
+    //         const sum = window.reduce((acc, curr) => acc + parseFloat(curr.averageRate), 0)
+    //         const sma = sum / 24
+
+    //         return {
+    //           averageRate: sma.toString(),
+    //           date: Number(array[index].date),
+    //         }
+    //       })
+    //     }
+
+    //     const hourlyInterestRates = calculateSMA24(rates.hourlyRates)
+    //     const dailyInterestRates = rates.dailyRates.map(({ averageRate, date }) => {
+    //       return {
+    //         averageRate,
+    //         date: Number(date),
+    //       }
+    //     })
+    //     const weeklyInterestRates = rates.weeklyRates.map(({ averageRate, date }) => {
+    //       return {
+    //         averageRate,
+    //         date: Number(date),
+    //       }
+    //     })
+
+    //     // Use the last SMA24 value from hourly rates as the latest rate
+    //     const latestInterestRate =
+    //       hourlyInterestRates.length > 0
+    //         ? [hourlyInterestRates[hourlyInterestRates.length - 1]]
+    //         : []
+
+    //     return {
+    //       ...topAcc,
+    //       [`${fleetAddress}-${chainId}`]: {
+    //         hourlyInterestRates,
+    //         dailyInterestRates,
+    //         weeklyInterestRates,
+    //         latestInterestRate,
+    //       },
+    //     }
+    //   },
+    //   {},
+    // )
+
     const response: GetVaultsHistoricalApyResponse = rawResponse.rates.reduce(
       (topAcc, { rates, fleetAddress, chainId }) => {
-        const hourlyInterestRates = rates.hourlyRates.map(({ averageRate, date }) => {
-          return {
-            averageRate,
-            date: Number(date),
+        const calculateSMA24 = (rates: RatesRaw[]) => {
+          // Sort rates by date to ensure correct order
+          const sortedRates = [...rates].sort((a, b) => Number(a.date) - Number(b.date))
+
+          // Kalman Filter parameters
+          let estimate = parseFloat(sortedRates[0].averageRate)
+          let errorEstimate = 1
+
+          // Tune these parameters to control smoothing:
+          const measurementNoise = 0.05 // Higher = more smoothing
+          const processNoise = 0.001 // Higher = faster response to changes
+
+          const smoothedRates = sortedRates.map((rate) => {
+            // Prediction phase
+            const errorPrediction = errorEstimate + processNoise
+
+            // Update phase
+            const kalmanGain = errorPrediction / (errorPrediction + measurementNoise)
+            estimate = estimate + kalmanGain * (parseFloat(rate.averageRate) - estimate)
+            errorEstimate = (1 - kalmanGain) * errorPrediction
+
+            return {
+              averageRate: estimate.toString(),
+              date: Number(rate.date),
+            }
+          })
+
+          // Add extra weight to recent values for the latest entries
+          const lastIndex = smoothedRates.length - 1
+          if (lastIndex >= 2) {
+            const recentWeight = 0.5
+            const midWeight = 0.3
+            const oldWeight = 0.2
+
+            const weightedEstimate =
+              parseFloat(smoothedRates[lastIndex].averageRate) * recentWeight +
+              parseFloat(smoothedRates[lastIndex - 1].averageRate) * midWeight +
+              parseFloat(smoothedRates[lastIndex - 2].averageRate) * oldWeight
+
+            smoothedRates[lastIndex].averageRate = weightedEstimate.toString()
           }
-        }, {})
+
+          return smoothedRates
+        }
+
+        const hourlyInterestRates = calculateSMA24(rates.hourlyRates)
         const dailyInterestRates = rates.dailyRates.map(({ averageRate, date }) => {
           return {
             averageRate,
             date: Number(date),
           }
-        }, {})
+        })
         const weeklyInterestRates = rates.weeklyRates.map(({ averageRate, date }) => {
           return {
             averageRate,
             date: Number(date),
           }
-        }, {})
+        })
 
-        const latestInterestRate = rates.latestRate.map(({ rate, timestamp }) => {
-          return {
-            averageRate: rate,
-            date: Number(timestamp),
-          }
-        }, {})
+        // Use the last SMA24 value from hourly rates as the latest rate
+        const latestInterestRate =
+          hourlyInterestRates.length > 0
+            ? [hourlyInterestRates[hourlyInterestRates.length - 1]]
+            : []
 
         return {
           ...topAcc,

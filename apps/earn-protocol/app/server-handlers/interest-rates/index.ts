@@ -267,11 +267,84 @@ export async function getInterestRates({
       }
     }),
   )
+  // const calculateSMA24 = (rates: { averageRate: number; date: number }[]) => {
+  //   // Sort rates by date to ensure correct order
+  //   const sortedRates = [...rates].sort((a, b) => a.date - b.date)
+
+  //   return sortedRates.map((_, index, array) => {
+  //     if (index < 23) {
+  //       // Return raw value for the first 23 entries
+  //       return {
+  //         averageRate: array[index].averageRate,
+  //         date: array[index].date,
+  //         __typename: 'HourlyInterestRate',
+  //       }
+  //     }
+
+  //     // Calculate SMA using previous 24 values (including current)
+  //     const smaWindow = array.slice(index - 23, index + 1)
+
+  //     const sum = smaWindow.reduce((acc, curr) => acc + Number(curr.averageRate), 0)
+
+  //     const sma = sum / 24
+
+  //     return {
+  //       averageRate: sma,
+  //       date: array[index].date,
+  //       __typename: 'HourlyInterestRate',
+  //     }
+  //   })
+  // }
+
+  const calculateSMA24 = (rates: Array<{ averageRate: number; date: number }>) => {
+    const sortedRates = [...rates].sort((a, b) => a.date - b.date)
+
+    // Kalman Filter parameters
+    let estimate = Number(sortedRates[0].averageRate)
+    let errorEstimate = 1
+    const measurementNoise = 0.05 // Higher = more smoothing
+    const processNoise = 0.001 // Higher = faster response to changes
+
+    return sortedRates.map((rate, index) => {
+      // Prediction phase
+      const errorPrediction = errorEstimate + processNoise
+
+      // Update phase
+      const kalmanGain = errorPrediction / (errorPrediction + measurementNoise)
+      estimate = estimate + kalmanGain * (rate.averageRate - estimate)
+      errorEstimate = (1 - kalmanGain) * errorPrediction
+
+      return {
+        averageRate: estimate,
+        date: rate.date,
+        __typename: 'HourlyInterestRate',
+      }
+    })
+  }
 
   return arkNamesList.reduce<{
     [key: string]: GetInterestRatesQuery
   }>((acc, arkName, index) => {
-    acc[arkName] = historicalResponse[index]
+    const rawData = historicalResponse[index]
+    const hourlyRatesWithSMA24 = calculateSMA24(rawData.hourlyInterestRates)
+    const latestSMA24 = hourlyRatesWithSMA24[hourlyRatesWithSMA24.length - 1]
+
+    acc[arkName] = {
+      ...rawData,
+      hourlyInterestRates: hourlyRatesWithSMA24,
+      latestInterestRate: [
+        {
+          __typename: 'HourlyInterestRate',
+          rate: [
+            {
+              __typename: 'InterestRate',
+              rate: latestSMA24.averageRate,
+              timestamp: latestSMA24.date,
+            },
+          ],
+        },
+      ],
+    }
 
     return acc
   }, {})

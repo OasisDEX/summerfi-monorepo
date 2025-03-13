@@ -11,6 +11,7 @@ type GetVaultsApyRAWResponse = {
   rates: {
     chainId: number
     fleetAddress: string
+    sma24: string
     rates: [
       {
         id: string
@@ -59,18 +60,10 @@ export const getVaultsApy: ({
     const rawResponse = (await apiResponse.json()) as GetVaultsApyRAWResponse
 
     const response = rawResponse.rates.reduce<GetVaultsApyResponse>(
-      (topAcc, { rates, chainId }) => {
-        const ratesMap = rates.reduce<{ [key: string]: number }>((acc, { rate, fleetAddress }) => {
-          acc[`${fleetAddress}-${chainId}`] = Number(rate) / 100
-
-          return acc
-        }, {})
-
-        return {
-          ...topAcc,
-          ...ratesMap,
-        }
-      },
+      (topAcc, { sma24, fleetAddress, chainId }) => ({
+        ...topAcc,
+        [`${fleetAddress}-${chainId}`]: Number(sma24) / 100,
+      }),
       {},
     )
 
