@@ -143,7 +143,8 @@ export function useBridgeTransaction({
           ),
           fromToken: ethToken,
           toToken: usdcToken,
-          slippage: 1,
+          // FIXME: Use actual slippage value from slippage config
+          slippage: 0.1,
         })
 
         setTransaction({
