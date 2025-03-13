@@ -63,6 +63,28 @@ export const SendFormInitialStep: FC<SendFormInitialStepProps> = ({
           placeholder="Recievers address"
           disabled={isLoading || state.txStatus === SendTxStatuses.COMPLETED}
           variant="dark"
+          maxLength={42}
+          button={
+            <Text
+              as="p"
+              variant="p3semi"
+              className={classNames.pasteButton}
+              onClick={async () => {
+                try {
+                  const text = await navigator.clipboard.readText()
+
+                  dispatch({ type: 'update-recipient-address', payload: text.toLowerCase() })
+                } catch (err) {
+                  // eslint-disable-next-line no-console
+                  console.error('Failed to read clipboard:', err)
+                }
+              }}
+            >
+              Paste
+            </Text>
+          }
+          style={{ paddingRight: 'var(--general-space-64)' }}
+          buttonStyles={{ right: '15px' }}
         />
       </div>
       {isInvalidAddress && (

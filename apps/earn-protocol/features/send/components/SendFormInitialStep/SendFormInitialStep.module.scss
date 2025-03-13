@@ -6,6 +6,14 @@
 
   .toWrapper {
     margin-top: var(--general-space-24);
+
+    .pasteButton {
+      color: var(--earn-protocol-primary-100);
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
   }
 
   .spacer {
