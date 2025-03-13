@@ -54,7 +54,7 @@ export const SendWidget: FC<SendWidgetProps> = ({
   const { deviceType } = useDeviceType()
   const defaultDropdownValue = {
     label: walletData.assets[0].symbol.toUpperCase(),
-    value: walletData.assets[0].symbol + walletData.assets[0].network,
+    value: walletData.assets[0].id,
     tokenSymbol: walletData.assets[0].symbol.toUpperCase() as TokenSymbolsList,
     chainId: networkNameToSDKId(walletData.assets[0].network) as SDKSupportedChain,
   }
@@ -80,7 +80,7 @@ export const SendWidget: FC<SendWidgetProps> = ({
     .filter((item) => !!getTokenGuarded(item.symbol))
     .map((asset) => ({
       label: asset.symbol.toUpperCase(),
-      value: asset.symbol + asset.network,
+      value: asset.id,
       tokenSymbol: asset.symbol.toUpperCase() as TokenSymbolsList,
       chainId: networkNameToSDKId(asset.network) as SDKSupportedChain,
     }))
