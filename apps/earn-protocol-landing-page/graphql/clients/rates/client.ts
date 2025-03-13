@@ -848,6 +848,8 @@ export type Query = {
   interestRates: Array<InterestRate>;
   product?: Maybe<Product>;
   products: Array<Product>;
+  timeHelper?: Maybe<TimeHelper>;
+  timeHelpers: Array<TimeHelper>;
   token?: Maybe<Token>;
   tokens: Array<Token>;
   vaultState?: Maybe<VaultState>;
@@ -934,6 +936,24 @@ export type QueryProductsArgs = {
 };
 
 
+export type QueryTimeHelperArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID']['input'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryTimeHelpersArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<TimeHelper_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<TimeHelper_Filter>;
+};
+
+
 export type QueryTokenArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
@@ -999,6 +1019,8 @@ export type Subscription = {
   interestRates: Array<InterestRate>;
   product?: Maybe<Product>;
   products: Array<Product>;
+  timeHelper?: Maybe<TimeHelper>;
+  timeHelpers: Array<TimeHelper>;
   token?: Maybe<Token>;
   tokens: Array<Token>;
   vaultState?: Maybe<VaultState>;
@@ -1085,6 +1107,24 @@ export type SubscriptionProductsArgs = {
 };
 
 
+export type SubscriptionTimeHelperArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID']['input'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionTimeHelpersArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<TimeHelper_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<TimeHelper_Filter>;
+};
+
+
 export type SubscriptionTokenArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
@@ -1137,6 +1177,42 @@ export type SubscriptionWeeklyInterestRatesArgs = {
   subgraphError?: _SubgraphErrorPolicy_;
   where?: InputMaybe<WeeklyInterestRate_Filter>;
 };
+
+export type TimeHelper = {
+  __typename?: 'TimeHelper';
+  id: Scalars['Bytes']['output'];
+  lastUpdateTimestamp: Scalars['BigInt']['output'];
+};
+
+export type TimeHelper_Filter = {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<TimeHelper_Filter>>>;
+  id?: InputMaybe<Scalars['Bytes']['input']>;
+  id_contains?: InputMaybe<Scalars['Bytes']['input']>;
+  id_gt?: InputMaybe<Scalars['Bytes']['input']>;
+  id_gte?: InputMaybe<Scalars['Bytes']['input']>;
+  id_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
+  id_lt?: InputMaybe<Scalars['Bytes']['input']>;
+  id_lte?: InputMaybe<Scalars['Bytes']['input']>;
+  id_not?: InputMaybe<Scalars['Bytes']['input']>;
+  id_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
+  id_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
+  lastUpdateTimestamp?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdateTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdateTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdateTimestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lastUpdateTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdateTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdateTimestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdateTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  or?: InputMaybe<Array<InputMaybe<TimeHelper_Filter>>>;
+};
+
+export enum TimeHelper_OrderBy {
+  id = 'id',
+  lastUpdateTimestamp = 'lastUpdateTimestamp'
+}
 
 export type Token = {
   __typename?: 'Token';

@@ -59,9 +59,9 @@ export const SendWidget: FC<SendWidgetProps> = ({
 
   const defaultDropdownValue = {
     label: walletDataAssetsSortedByUsdValue[0].symbol.toUpperCase(),
-    value: walletDataAssetsSortedByUsdValue[0].id,
+    value: `${walletDataAssetsSortedByUsdValue[0].id}_${walletDataAssetsSortedByUsdValue[0].network}`,
     tokenSymbol: walletDataAssetsSortedByUsdValue[0].symbol.toUpperCase() as TokenSymbolsList,
-    chainId: networkNameToSDKId(walletData.assets[0].network) as SDKSupportedChain,
+    chainId: networkNameToSDKId(walletDataAssetsSortedByUsdValue[0].network) as SDKSupportedChain,
   }
 
   const [state, dispatch] = useReducer(sendReducer, {
@@ -85,7 +85,7 @@ export const SendWidget: FC<SendWidgetProps> = ({
     .filter((item) => !!getTokenGuarded(item.symbol.toLocaleUpperCase()))
     .map((asset) => ({
       label: asset.symbol.toUpperCase(),
-      value: asset.id,
+      value: `${asset.id}_${asset.network}`,
       tokenSymbol: asset.symbol.toUpperCase() as TokenSymbolsList,
       chainId: networkNameToSDKId(asset.network) as SDKSupportedChain,
     }))
