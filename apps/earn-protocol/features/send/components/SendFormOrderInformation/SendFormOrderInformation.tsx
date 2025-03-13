@@ -58,8 +58,9 @@ export const SendFormOrderInformation: FC<SendFormOrderInformationProps> = ({
             value: `${formatCryptoBalance(amountDisplay)} ${state.tokenDropdown.tokenSymbol}`,
           },
           {
-            label: 'Estimated fee',
+            label: 'Transaction fee',
             value: transactionFee ? `$${formatFiatBalance(transactionFee)}` : 'n/a',
+            tooltip: 'Estimated transaction fee for this operation',
             isLoading: transactionFeeLoading,
           },
         ]}
