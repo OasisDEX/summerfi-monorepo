@@ -12,6 +12,9 @@ import {
   SendStep,
   SendTxStatuses,
 } from '@/features/send/types'
+import { isValidAddress } from '@/helpers/is-valid-address'
+
+import classNames from './SendFormContent.module.scss'
 
 interface SendFormContentProps {
   amountDisplay: string
@@ -50,6 +53,9 @@ export const SendFormContent: FC<SendFormContentProps> = ({
   transactionFee,
   transactionFeeLoading,
 }) => {
+  const isInvalidAddress = state.recipientAddress !== '' && !isValidAddress(state.recipientAddress)
+  const isEmptyAmount = amountDisplay === '0'
+
   return (
     <>
       {state.step === SendStep.INIT && (
@@ -72,6 +78,17 @@ export const SendFormContent: FC<SendFormContentProps> = ({
       )}
       {[SendStep.PENDING, SendStep.COMPLETED].includes(state.step) && (
         <SendFormStatusStep state={state} />
+      )}
+      {![SendStep.PENDING, SendStep.COMPLETED].includes(state.step) && (
+        <div
+          className={classNames.spacer}
+          style={{
+            marginBottom:
+              isInvalidAddress || isEmptyAmount
+                ? 'var(--general-space-12)'
+                : 'var(--general-space-24)',
+          }}
+        />
       )}
       <SendFormOrderInformation
         state={state}

@@ -35,7 +35,6 @@ export const SendFormOrderInformation: FC<SendFormOrderInformationProps> = ({
 
   return (
     <div className={classNames.sendFormOrderInformationWrapper}>
-      <div className={classNames.spacer} />
       <OrderInformation
         items={[
           {
