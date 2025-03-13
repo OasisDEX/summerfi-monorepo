@@ -10,7 +10,8 @@ import { mapMigrationResponse } from '@/features/migration/helpers/map-migration
 
 export type MigratablePosition = ArmadaMigratablePosition & {
   chainId: SDKChainId
-  apy: string
+  apy: number | undefined
+  apy7d: number | undefined
 }
 
 /**
@@ -42,12 +43,17 @@ export const getMigratablePositions = async ({
         chainInfo,
       })
 
-      const positions = await backendSDK.armada.users.getMigratablePositions({
+      const positionsData = await backendSDK.armada.users.getMigratablePositions({
         user,
         chainInfo,
       })
 
-      return positions
+      const apyData = await backendSDK.armada.users.getMigratablePositionsApy({
+        chainInfo,
+        positionIds: positionsData.positions.map((p) => p.id),
+      })
+
+      return { positionsData, apyData }
     } catch (error) {
       const chainInfo = getChainInfoByChainId(chainId)
 
@@ -56,8 +62,14 @@ export const getMigratablePositions = async ({
 
       // Log error but continue with empty positions for this chain
       return {
-        chainInfo,
-        positions: [],
+        positionsData: {
+          chainInfo,
+          positions: [],
+        },
+        apyData: {
+          chainInfo,
+          apyByPositionId: {},
+        },
       }
     }
   })

@@ -1,3 +1,4 @@
+import { isVaultAtLeastDaysOld } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
 import { subgraphNetworkToId, subgraphNetworkToSDKId } from '@summerfi/app-utils'
 
@@ -49,23 +50,27 @@ export const getMigrationBestVaultApy = ({
           const apy30d = Number(vault.apr30d) / 100 || 0
           const apy7d = Number(vault.apr7d) / 100 || 0
 
+          // 9999 until we get correct value, until then new strategy string
+          const isVaultAtLeast7dOld = isVaultAtLeastDaysOld({ vault, days: 9999 })
+          const isVaultAtLeast30dOld = isVaultAtLeastDaysOld({ vault, days: 9999 })
+
           if (currentApy > bestCurrentApy) {
             bestCurrentApy = currentApy
           }
 
-          if (apy30d > best30dApy) {
+          if (apy30d > best30dApy && isVaultAtLeast30dOld) {
             best30dApy = apy30d
           }
 
-          if (apy7d > best7dApy) {
+          if (apy7d > best7dApy && isVaultAtLeast7dOld) {
             best7dApy = apy7d
           }
         })
 
         acc[chainId] = {
           lazySummerCurrentApy: bestCurrentApy,
-          lazySummer30dApy: best30dApy,
-          lazySummer7dApy: best7dApy,
+          lazySummer30dApy: best30dApy === 0 ? undefined : best30dApy,
+          lazySummer7dApy: best7dApy === 0 ? undefined : best7dApy,
         }
       }
 

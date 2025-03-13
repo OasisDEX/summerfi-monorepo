@@ -36,8 +36,8 @@ export type MigrationReducerAction =
 
 export interface MigrationEarningsData {
   lazySummerCurrentApy: number
-  lazySummer30dApy: number
-  lazySummer7dApy: number
+  lazySummer30dApy: number | undefined
+  lazySummer7dApy: number | undefined
   // thirtydApyDifferential: number
   // missingOutAmount: number
 }

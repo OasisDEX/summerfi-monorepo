@@ -4,3 +4,10 @@
   justify-content: center;
   gap: var(--general-space-4);
 }
+
+.listHeadingWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: var(--general-space-4) 0;
+}

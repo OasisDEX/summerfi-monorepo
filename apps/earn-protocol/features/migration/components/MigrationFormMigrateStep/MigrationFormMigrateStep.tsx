@@ -67,14 +67,16 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
     ? formatDecimalAsPercent(new BigNumber(vault.apr7d).div(100))
     : 'New strategy'
 
-  const sourcePositionEstimatedEarningsUSD =
-    Number(amount) * Number(vault.inputTokenPriceUSD ?? 0) * Number(migratablePosition.apy)
+  const sourcePositionEstimatedEarningsUSD = migratablePosition.apy
+    ? Number(amount) * Number(vault.inputTokenPriceUSD ?? 0) * Number(migratablePosition.apy)
+    : undefined
 
   const estimatedEarningsUSD = Number(estimatedEarnings) * Number(vault.inputTokenPriceUSD ?? 0)
 
-  const apyDiff =
-    (estimatedEarningsUSD - sourcePositionEstimatedEarningsUSD) /
-    (Number(amount) * Number(vault.inputTokenPriceUSD ?? 0))
+  const apyDiff = sourcePositionEstimatedEarningsUSD
+    ? (estimatedEarningsUSD - sourcePositionEstimatedEarningsUSD) /
+      (Number(amount) * Number(vault.inputTokenPriceUSD ?? 0))
+    : undefined
 
   const { platformLogo } = mapMigrationToPortfolioCard(migratablePosition)
 
@@ -92,7 +94,11 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
       <div className={classNames.migrationMiniCardWrapper}>
         <MigrationMiniCard
           description="Passive Lending"
-          amount={`$${formatFiatBalance(sourcePositionEstimatedEarningsUSD)}`}
+          amount={
+            sourcePositionEstimatedEarningsUSD
+              ? `$${formatFiatBalance(sourcePositionEstimatedEarningsUSD)}`
+              : undefined
+          }
           token={migratablePosition.underlyingTokenAmount.token.symbol as TokenSymbolsList}
           type={MigrationMiniCardType.FROM}
           chainId={migratablePosition.chainId}
@@ -102,7 +108,7 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
         <MigrationMiniCard
           description="Lazy Summer"
           amount={`$${formatFiatBalance(estimatedEarningsUSD)}`}
-          change={formatDecimalAsPercent(apyDiff, { plus: true })}
+          change={apyDiff ? formatDecimalAsPercent(apyDiff, { plus: true }) : undefined}
           token={vault.inputToken.symbol as TokenSymbolsList}
           type={MigrationMiniCardType.TO}
           chainId={subgraphNetworkToSDKId(vault.protocol.network)}
@@ -113,7 +119,7 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
           <Icon iconName="arrow_forward" size={20} />
         </div>
       </div>
-      {apyDiff < 0 && !isLoadingForecast && !isQuoteLoading && (
+      {apyDiff && apyDiff < 0 && !isLoadingForecast && !isQuoteLoading && (
         <Alert
           variant="warning"
           error="Although Lazy Summer current APY is lower than the previous strategy, in long term you will most likely earn more due to automated rebalancing mechanisms."
