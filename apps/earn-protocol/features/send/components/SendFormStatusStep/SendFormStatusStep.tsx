@@ -38,7 +38,18 @@ export const SendFormStatusStep: FC<SendFormStatusStepProps> = ({ state }) => {
     <div className={classNames.sendFormStatusStepWrapper}>
       {state.step === SendStep.PENDING && (
         <div className={classNames.loadingBox}>
-          <LoadingSpinner size={55} color="var(--earn-protocol-primary-100)" strokeWidth={3} />
+          <LoadingSpinner
+            size={55}
+            color="var(--earn-protocol-primary-100)"
+            strokeWidth={3}
+            gradient={{
+              id: 'spinner-gradient',
+              stops: [
+                { offset: '0%', color: '#b049ff' },
+                { offset: '100%', color: '#ff49a4' },
+              ],
+            }}
+          />
         </div>
       )}
       {state.step === SendStep.COMPLETED && (

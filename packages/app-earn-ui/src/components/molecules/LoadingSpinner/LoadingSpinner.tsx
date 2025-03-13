@@ -12,6 +12,7 @@ export const LoadingSpinner = ({
   strokeWidth = 2,
   style,
   appear,
+  gradient,
 }: {
   className?: string
   size?: number
@@ -21,6 +22,10 @@ export const LoadingSpinner = ({
   strokeWidth?: number
   style?: React.CSSProperties
   appear?: boolean
+  gradient?: {
+    id: string
+    stops: { offset: string; color: string }[]
+  }
 }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -28,7 +33,7 @@ export const LoadingSpinner = ({
     height={size}
     viewBox="0 0 24 24"
     fill="none"
-    stroke="currentColor"
+    stroke={gradient ? `url(#${gradient.id})` : 'currentColor'}
     color={color}
     strokeWidth={strokeWidth}
     strokeLinecap="round"
@@ -41,6 +46,15 @@ export const LoadingSpinner = ({
       [loadingSpinnerStyles.animateSpin]: !fast,
     })}
   >
+    {gradient && (
+      <defs>
+        <linearGradient id={gradient.id}>
+          {gradient.stops.map((stop) => (
+            <stop key={stop.offset} offset={stop.offset} stopColor={stop.color} />
+          ))}
+        </linearGradient>
+      </defs>
+    )}
     <path d="M21 12a9 9 0 1 1-6.219-8.56" />
   </svg>
 )
