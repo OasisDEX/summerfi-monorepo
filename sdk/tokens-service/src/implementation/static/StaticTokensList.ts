@@ -1072,5 +1072,21 @@ export const StaticTokensData: TokenListData = {
       chainId: 8453,
       logoURI: 'https://tokens.1inch.io/0x940181a94a35a4569e4529a3cdfb74e38fd98631.png',
     },
+    {
+      name: 'EURC',
+      address: '0x1abaea1f7c830bd89acc67ec4af516284b1bc33c',
+      symbol: 'EURC',
+      decimals: 6,
+      chainId: ChainFamilyMap.Ethereum.Mainnet.chainId,
+      logoURI: 'https://tokens.1inch.io/0x1abaea1f7c830bd89acc67ec4af516284b1bc33c.png',
+    },
+    {
+      name: 'EURC',
+      address: '0x60a3e35cc302bfa44cb288bc5a4f316fdb1adb42',
+      symbol: 'EURC',
+      decimals: 6,
+      chainId: ChainFamilyMap.Base.Base.chainId,
+      logoURI: 'https://tokens.1inch.io/0x1abaea1f7c830bd89acc67ec4af516284b1bc33c.png',
+    },
   ],
 }
