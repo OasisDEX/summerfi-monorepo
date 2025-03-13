@@ -74,7 +74,7 @@ export const useGasEstimation = ({
           fromAmount: formatEther(txFee),
           fromToken: ethToken,
           toToken: usdcToken,
-          slippage: 1,
+          slippage: 0.1,
         })
 
         setTransactionFee(fetchedTransactionFee.toTokenAmount.amount)

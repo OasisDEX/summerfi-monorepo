@@ -26,7 +26,7 @@ export const defaultLocalConfig: LocalConfigState = {
     dilutedValuation: '250000000',
   },
   slippageConfig: {
-    slippage: '0.2',
+    slippage: '0.1',
   },
 }
 
