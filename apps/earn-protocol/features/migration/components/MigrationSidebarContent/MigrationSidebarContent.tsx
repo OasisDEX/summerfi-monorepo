@@ -1,5 +1,5 @@
 import { type FC } from 'react'
-import { type SDKVaultishType } from '@summerfi/app-types'
+import { type SDKVaultishType, type VaultApyData } from '@summerfi/app-types'
 import { type TransactionMetadataMigration } from '@summerfi/sdk-common'
 import { type BigNumber } from 'bignumber.js'
 
@@ -16,7 +16,7 @@ interface MigrationSidebarContentProps {
   state: MigrationState
   transactionFeeLoading: boolean
   transactionFee?: string
-  vaultApy?: number
+  vaultApyData: VaultApyData
   isLoadingForecast: boolean
   isQuoteLoading: boolean
   txMetadata?: TransactionMetadataMigration
@@ -30,7 +30,7 @@ export const MigrationSidebarContent: FC<MigrationSidebarContentProps> = ({
   state,
   transactionFeeLoading,
   transactionFee,
-  vaultApy,
+  vaultApyData,
   isLoadingForecast,
   isQuoteLoading,
   txMetadata,
@@ -48,7 +48,7 @@ export const MigrationSidebarContent: FC<MigrationSidebarContentProps> = ({
           state={state}
           transactionFeeLoading={transactionFeeLoading}
           transactionFee={transactionFee}
-          vaultApy={vaultApy}
+          vaultApyData={vaultApyData}
           isLoadingForecast={isLoadingForecast}
           isQuoteLoading={isQuoteLoading}
           txMetadata={txMetadata}
@@ -56,7 +56,7 @@ export const MigrationSidebarContent: FC<MigrationSidebarContentProps> = ({
       )}
       {state.step === MigrationSteps.COMPLETED && (
         <MigrationFormCompleteStep
-          vaultApy={vaultApy}
+          vaultApyData={vaultApyData}
           vaultTokenSymbol={vault.inputToken.symbol}
           amount={amount?.toNumber()}
         />

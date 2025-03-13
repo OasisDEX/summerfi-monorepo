@@ -79,6 +79,7 @@ export const LandingPageHero = ({
               key={vault.id}
               apy={
                 vaultsApyByNetworkMap[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
+                  .apy
               }
             />
           ))}

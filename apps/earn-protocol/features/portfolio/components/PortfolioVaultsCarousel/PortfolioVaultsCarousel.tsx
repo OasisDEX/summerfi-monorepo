@@ -54,6 +54,7 @@ export const PortfolioVaultsCarousel: FC<PortfolioVaultsCarouselProps> = ({
             sumrPrice={estimatedSumrPrice}
             apy={
               vaultsApyByNetworkMap[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
+                .apy
             }
           />
         ))}

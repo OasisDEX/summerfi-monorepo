@@ -106,7 +106,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
   })
 
   const arksInterestRates = mapArkLatestInterestRates(arkInterestRatesMap)
-  const vaultApy = vaultsApyRaw[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
+  const vaultApyData = vaultsApyRaw[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
 
   return (
     <VaultOpenView
@@ -117,7 +117,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       medianDefiYield={medianDefiYield}
       arksHistoricalChartData={arksHistoricalChartData}
       arksInterestRates={arksInterestRates}
-      vaultApy={vaultApy}
+      vaultApyData={vaultApyData}
       vaultsApyRaw={vaultsApyRaw}
     />
   )

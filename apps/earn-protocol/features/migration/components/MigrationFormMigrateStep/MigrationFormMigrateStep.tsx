@@ -9,7 +9,12 @@ import {
   Text,
   useLocalConfig,
 } from '@summerfi/app-earn-ui'
-import { type SDKVaultishType, type SDKVaultType, type TokenSymbolsList } from '@summerfi/app-types'
+import {
+  type SDKVaultishType,
+  type SDKVaultType,
+  type TokenSymbolsList,
+  type VaultApyData,
+} from '@summerfi/app-types'
 import {
   formatCryptoBalance,
   formatDecimalAsPercent,
@@ -17,7 +22,7 @@ import {
   subgraphNetworkToSDKId,
 } from '@summerfi/app-utils'
 import { type TransactionMetadataMigration } from '@summerfi/sdk-common'
-import { BigNumber } from 'bignumber.js'
+import { type BigNumber } from 'bignumber.js'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import {
@@ -37,7 +42,7 @@ interface MigrationFormMigrateStepProps {
   transactionFeeLoading: boolean
   transactionFee?: string
   state: MigrationState
-  vaultApy?: number
+  vaultApyData: VaultApyData
   isLoadingForecast: boolean
   isQuoteLoading: boolean
   txMetadata?: TransactionMetadataMigration
@@ -51,7 +56,7 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
   transactionFeeLoading,
   transactionFee,
   state,
-  vaultApy,
+  vaultApyData,
   isLoadingForecast,
   isQuoteLoading,
   txMetadata,
@@ -60,12 +65,9 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
     state: { slippageConfig },
   } = useLocalConfig()
 
-  // 9999 until we get correct value, until then new strategy string
-  const isVaultAtLeast7dOld = isVaultAtLeastDaysOld({ vault, days: 9999 })
+  const isVaultAtLeast7dOld = isVaultAtLeastDaysOld({ vault, days: 7 })
 
-  const apr7d = isVaultAtLeast7dOld
-    ? formatDecimalAsPercent(new BigNumber(vault.apr7d).div(100))
-    : 'New strategy'
+  const apr7d = isVaultAtLeast7dOld ? formatDecimalAsPercent(vaultApyData.sma7d) : 'New strategy'
 
   const sourcePositionEstimatedEarningsUSD = migratablePosition.apy
     ? Number(amount) * Number(vault.inputTokenPriceUSD ?? 0) * Number(migratablePosition.apy)
@@ -151,7 +153,7 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
         title="What's changing"
         items={[
           { label: '7d APY', value: apr7d },
-          { label: 'Currenty APY', value: formatDecimalAsPercent(vaultApy ?? 0) },
+          { label: 'Currenty APY', value: formatDecimalAsPercent(vaultApyData.apy) },
           { label: 'Protocol', value: 'Lazy Summer' },
         ]}
       />

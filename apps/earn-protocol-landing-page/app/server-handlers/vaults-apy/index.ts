@@ -31,7 +31,12 @@ export type GetVaultsApyResponse = {
   //   '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17-1': 8.890826768108603
   // }
   // apy gets divided by 100 to not confuse the frontend
-  [key: `${string}-${number}`]: number
+  [key: `${string}-${number}`]: {
+    apy: number
+    sma24h: number
+    sma7d: number
+    sma30d: number
+  }
 }
 
 export const getVaultsApy: ({

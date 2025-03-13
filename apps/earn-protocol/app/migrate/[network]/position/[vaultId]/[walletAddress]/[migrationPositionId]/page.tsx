@@ -126,7 +126,7 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
   })
 
   const arksInterestRates = mapArkLatestInterestRates(arkInterestRatesMap)
-  const vaultApy = vaultApyRaw[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
+  const vaultApyData = vaultApyRaw[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
 
   return (
     <MigrationVaultPageView
@@ -137,7 +137,7 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
       medianDefiYield={medianDefiYield}
       arksHistoricalChartData={arksHistoricalChartData}
       arksInterestRates={arksInterestRates}
-      vaultApy={vaultApy}
+      vaultApyData={vaultApyData}
       migratablePosition={migratablePosition}
       walletAddress={walletAddress}
     />
