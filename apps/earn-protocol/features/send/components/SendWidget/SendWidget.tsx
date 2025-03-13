@@ -52,10 +52,15 @@ export const SendWidget: FC<SendWidgetProps> = ({
   isOwner,
 }) => {
   const { deviceType } = useDeviceType()
+
+  const walletDataAssetsSortedByUsdValue = walletData.assets.sort(
+    (a, b) => b.balanceUSD - a.balanceUSD,
+  )
+
   const defaultDropdownValue = {
-    label: walletData.assets[0].symbol.toUpperCase(),
-    value: walletData.assets[0].id,
-    tokenSymbol: walletData.assets[0].symbol.toUpperCase() as TokenSymbolsList,
+    label: walletDataAssetsSortedByUsdValue[0].symbol.toUpperCase(),
+    value: walletDataAssetsSortedByUsdValue[0].id,
+    tokenSymbol: walletDataAssetsSortedByUsdValue[0].symbol.toUpperCase() as TokenSymbolsList,
     chainId: networkNameToSDKId(walletData.assets[0].network) as SDKSupportedChain,
   }
 
@@ -73,11 +78,11 @@ export const SendWidget: FC<SendWidgetProps> = ({
 
   const { setChain } = useChain()
 
-  const dropdownOptions = walletData.assets
+  const dropdownOptions = walletDataAssetsSortedByUsdValue
     .filter((item) =>
       sdkSupportedNetworks.includes(networkNameToSDKNetwork(item.network) as SDKSupportedNetwork),
     )
-    .filter((item) => !!getTokenGuarded(item.symbol))
+    .filter((item) => !!getTokenGuarded(item.symbol.toLocaleUpperCase()))
     .map((asset) => ({
       label: asset.symbol.toUpperCase(),
       value: asset.id,
