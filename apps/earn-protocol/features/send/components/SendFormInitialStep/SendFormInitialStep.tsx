@@ -87,13 +87,14 @@ export const SendFormInitialStep: FC<SendFormInitialStepProps> = ({
           buttonStyles={{ right: '15px' }}
         />
       </div>
-      {isInvalidAddress && (
-        <Alert
-          error="Please enter a valid recipient address"
-          variant="critical"
-          wrapperStyles={{ marginTop: 'var(--general-space-8)' }}
-        />
-      )}
+      <Alert
+        error="Please enter a valid recipient address"
+        variant="critical"
+        wrapperStyles={{
+          marginTop: 'var(--general-space-8)',
+          display: isInvalidAddress ? 'block' : 'none',
+        }}
+      />
       <InputWithDropdown
         value={amountDisplay}
         secondaryValue={amountDisplayUSD}
