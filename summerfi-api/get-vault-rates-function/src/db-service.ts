@@ -30,9 +30,9 @@ export interface FleetRateResult {
   chainId: string
   fleetAddress: string
   sma: {
-    sma24h: string
-    sma7d: string
-    sma30d: string
+    sma24h: string | null
+    sma7d: string | null
+    sma30d: string | null
   }
   rates: FleetRate[]
 }
@@ -263,14 +263,14 @@ export class VaultRatesService {
             sma: {
               sma24h:
                 sma24ByFleet.find((rate) => rate.fleetAddress === fleetAddress)?.sma24.toString() ||
-                '0',
+                null,
               sma7d:
                 sma7dByFleet.find((rate) => rate.fleetAddress === fleetAddress)?.sma7d.toString() ||
-                '0',
+                null,
               sma30d:
                 sma30dByFleet
                   .find((rate) => rate.fleetAddress === fleetAddress)
-                  ?.sma30d.toString() || '0',
+                  ?.sma30d.toString() || null,
             },
             rates: (ratesByFleet[fleetAddress] || []).slice(0, first),
           }))
