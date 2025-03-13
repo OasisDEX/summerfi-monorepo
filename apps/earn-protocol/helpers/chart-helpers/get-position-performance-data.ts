@@ -9,7 +9,7 @@ import {
 import dayjs from 'dayjs'
 
 import { type GetPositionHistoryReturnType } from '@/app/server-handlers/position-history'
-import { CHART_TIMESTAMP_FORMAT } from '@/constants/charts'
+import { CHART_TIMESTAMP_FORMAT_DETAILED } from '@/constants/charts'
 
 const preparePositionHistoryAndForecast = (
   positionHistory: GetPositionHistoryReturnType,
@@ -71,7 +71,7 @@ const preparePositionHistoryAndForecast = (
   // forecast hourly points
   positionForecast.dataPoints.hourly.forEach((point, pointIndex) => {
     const timestamp = dayjs(point.timestamp, 'YYYY-MM-DD HH:mm:ss').startOf('hour')
-    const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT)
+    const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED)
 
     if (pointIndex === 0) {
       // first point in the forecast must be merged with
@@ -114,7 +114,7 @@ const preparePositionHistoryAndForecast = (
   // forecast daily points
   positionForecast.dataPoints.daily.forEach((point, pointIndex) => {
     const timestamp = dayjs(point.timestamp, 'YYYY-MM-DD HH:mm:ss').startOf('day')
-    const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT)
+    const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED)
 
     if (pointIndex === 0) {
       // first point in the forecast must be merged with
@@ -170,7 +170,7 @@ const preparePositionHistoryAndForecast = (
   // forecast weekly points
   positionForecast.dataPoints.weekly.forEach((point, pointIndex) => {
     const timestamp = dayjs(point.timestamp, 'YYYY-MM-DD HH:mm:ss').startOf('week')
-    const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT)
+    const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED)
 
     if (pointIndex === 0) {
       // first point in the forecast must be merged with
@@ -206,7 +206,7 @@ const preparePositionHistoryAndForecast = (
   // history hourly points
   hourlyPositionHistory?.reverse().forEach((point) => {
     const timestamp = dayjs(point.timestamp * 1000).startOf('hour')
-    const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT)
+    const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED)
     const timestampUnix = timestamp.unix()
 
     const isSameHour = timestamp.isSame(nowStartOfHour)
@@ -237,7 +237,7 @@ const preparePositionHistoryAndForecast = (
   // history daily points
   dailyPositionHistory?.reverse().forEach((point) => {
     const timestamp = dayjs(point.timestamp * 1000).startOf('day')
-    const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT)
+    const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED)
     const timestampUnix = timestamp.unix()
 
     const isSameDay = timestamp.isSame(nowStartOfDay)
@@ -271,7 +271,7 @@ const preparePositionHistoryAndForecast = (
   // history weekly points
   weeklyPositionHistory?.reverse().forEach((point) => {
     const timestamp = dayjs(point.timestamp * 1000).startOf('week')
-    const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT)
+    const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED)
     const timestampUnix = timestamp.unix()
 
     const isSameWeek = timestamp.isSame(nowStartOfWeek)

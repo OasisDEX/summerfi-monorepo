@@ -14,7 +14,7 @@ import {
 
 import { PerformanceLegend } from '@/components/organisms/Charts/components/PerformanceLegend'
 import { historicalPerformanceLabelMap } from '@/components/organisms/Charts/labels'
-import { CHART_TIMESTAMP_FORMAT } from '@/constants/charts'
+import { CHART_TIMESTAMP_FORMAT_DETAILED, CHART_TIMESTAMP_FORMAT_SHORT } from '@/constants/charts'
 import { formatChartCryptoValue } from '@/features/forecast/chart-formatters'
 
 export type PerformanceChartProps = {
@@ -26,7 +26,12 @@ export type PerformanceChartProps = {
   showForecast: boolean
 }
 
-export const PerformanceChart = ({ data, inputToken, showForecast }: PerformanceChartProps) => {
+export const PerformanceChart = ({
+  data,
+  inputToken,
+  showForecast,
+  timeframe,
+}: PerformanceChartProps) => {
   return (
     <RechartResponsiveWrapper>
       <ResponsiveContainer width="100%" height="90%">
@@ -54,10 +59,10 @@ export const PerformanceChart = ({ data, inputToken, showForecast }: Performance
             width={80}
             domain={[
               (dataMin: number) => {
-                return Math.max(dataMin - 2, 0)
+                return Math.max(dataMin - Number(dataMin * 0.001), 0)
               },
               (dataMax: number) => {
-                return Math.min(dataMax + 2, dataMax * 2)
+                return dataMax + Number(dataMax * 0.001)
               },
             ]}
           />
@@ -68,7 +73,13 @@ export const PerformanceChart = ({ data, inputToken, showForecast }: Performance
                 : `${formatChartCryptoValue(Number(val))} ${inputToken}`,
               historicalPerformanceLabelMap[valueName] ?? valueName,
             ]}
-            labelFormatter={(label) => dayjs(label).format(CHART_TIMESTAMP_FORMAT)}
+            labelFormatter={(value) =>
+              dayjs(value).format(
+                timeframe === '7d' || timeframe === '30d'
+                  ? CHART_TIMESTAMP_FORMAT_DETAILED
+                  : CHART_TIMESTAMP_FORMAT_SHORT,
+              )
+            }
             wrapperStyle={{
               zIndex: 1000,
               backgroundColor: 'var(--color-surface-subtle)',

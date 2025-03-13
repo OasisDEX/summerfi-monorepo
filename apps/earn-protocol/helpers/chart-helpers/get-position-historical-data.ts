@@ -8,7 +8,7 @@ import {
 import dayjs from 'dayjs'
 
 import { type GetPositionHistoryReturnType } from '@/app/server-handlers/position-history'
-import { CHART_TIMESTAMP_FORMAT } from '@/constants/charts'
+import { CHART_TIMESTAMP_FORMAT_DETAILED } from '@/constants/charts'
 
 const mapPositionHistory = (
   positionHistory: GetPositionHistoryReturnType['positionHistory'],
@@ -58,7 +58,7 @@ const mapPositionHistory = (
   // history hourly points
   positionHistory.position?.hourlyPositionHistory.reverse().forEach((point) => {
     const timestamp = dayjs(point.timestamp * 1000).startOf('hour')
-    const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT)
+    const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED)
     const timestampUnix = timestamp.unix()
 
     const isSameHour = timestamp.isSame(nowStartOfHour)
@@ -89,7 +89,7 @@ const mapPositionHistory = (
   // history daily points
   positionHistory.position?.dailyPositionHistory.reverse().forEach((point) => {
     const timestamp = dayjs(point.timestamp * 1000).startOf('day')
-    const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT)
+    const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED)
     const timestampUnix = timestamp.unix()
 
     const isSameDay = timestamp.isSame(nowStartOfDay)
@@ -123,7 +123,7 @@ const mapPositionHistory = (
   // history weekly points
   positionHistory.position?.weeklyPositionHistory.reverse().forEach((point) => {
     const timestamp = dayjs(point.timestamp * 1000).startOf('week')
-    const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT)
+    const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED)
     const timestampUnix = timestamp.unix()
 
     const isSameWeek = timestamp.isSame(nowStartOfWeek)

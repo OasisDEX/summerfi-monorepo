@@ -18,7 +18,7 @@ export const VaultManageLoadingView = () => {
           <Expander
             title={
               <Text as="p" variant="p1semi">
-                Performance
+                Forecasted Market Value
               </Text>
             }
             defaultExpanded

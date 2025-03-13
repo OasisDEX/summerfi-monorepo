@@ -11,7 +11,7 @@ import { memoize } from 'lodash-es'
 
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { type GetVaultsHistoricalApyResponse } from '@/app/server-handlers/vault-historical-apy'
-import { CHART_TIMESTAMP_FORMAT } from '@/constants/charts'
+import { CHART_TIMESTAMP_FORMAT_DETAILED } from '@/constants/charts'
 import { getColor } from '@/helpers/get-color'
 import { getProtocolLabel } from '@/helpers/get-protocol-label'
 
@@ -56,7 +56,10 @@ const getBaseHistoricalChartsData = memoize(
       Array.from({ length: arrLength }).reduce<{
         [key: string]: { [key: string]: number | string; timestamp: string }
       }>((acc, _, i) => {
-        const timestamp = today.startOf(unit).subtract(i, unit).format(CHART_TIMESTAMP_FORMAT)
+        const timestamp = today
+          .startOf(unit)
+          .subtract(i, unit)
+          .format(CHART_TIMESTAMP_FORMAT_DETAILED)
 
         acc[timestamp] = { timestamp }
 
@@ -109,7 +112,7 @@ export const getArkHistoricalChartData = ({
   // mapping the interest rates for the vault itself
   for (const vaultHourlyInterestRate of vaultsInterestRates.hourlyInterestRates) {
     const timestamp = dayjs(Number(vaultHourlyInterestRate.date) * 1000).startOf('hour')
-    const timestampFormatted = timestamp.format(CHART_TIMESTAMP_FORMAT)
+    const timestampFormatted = timestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED)
 
     const averageRate = Number(vaultHourlyInterestRate.averageRate)
     const timestampAndData = { timestamp: timestampFormatted, [vaultName]: averageRate }
@@ -132,7 +135,7 @@ export const getArkHistoricalChartData = ({
   }
   for (const vaultDailyInterestRate of vaultsInterestRates.dailyInterestRates) {
     const timestamp = dayjs(Number(vaultDailyInterestRate.date) * 1000).startOf('day')
-    const timestampFormatted = timestamp.format(CHART_TIMESTAMP_FORMAT)
+    const timestampFormatted = timestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED)
 
     chartsDataRaw['90d'][timestampFormatted] = { timestamp: timestampFormatted }
     chartsDataRaw['6m'][timestampFormatted] = { timestamp: timestampFormatted }
@@ -160,7 +163,7 @@ export const getArkHistoricalChartData = ({
   }
   for (const vaultWeeklyInterestRate of vaultsInterestRates.weeklyInterestRates) {
     const timestamp = dayjs(Number(vaultWeeklyInterestRate.date) * 1000).startOf('week')
-    const timestampFormatted = timestamp.format(CHART_TIMESTAMP_FORMAT)
+    const timestampFormatted = timestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED)
 
     chartsDataRaw['3y'][timestampFormatted] = { timestamp: timestampFormatted }
 
@@ -187,7 +190,7 @@ export const getArkHistoricalChartData = ({
     for (const hourlyInterestRate of interestRates.hourlyInterestRates) {
       const timestamp = dayjs(hourlyInterestRate.date * 1000)
         .startOf('hour')
-        .format(CHART_TIMESTAMP_FORMAT)
+        .format(CHART_TIMESTAMP_FORMAT_DETAILED)
 
       if (timestamp in chartsDataRaw['7d']) {
         chartsDataRaw['7d'][timestamp] = {
@@ -206,7 +209,7 @@ export const getArkHistoricalChartData = ({
     for (const dailyInterestRate of interestRates.dailyInterestRates) {
       const timestamp = dayjs(dailyInterestRate.date * 1000)
         .startOf('day')
-        .format(CHART_TIMESTAMP_FORMAT)
+        .format(CHART_TIMESTAMP_FORMAT_DETAILED)
 
       if (timestamp in chartsDataRaw['90d']) {
         chartsDataRaw['90d'][timestamp] = {
@@ -230,7 +233,7 @@ export const getArkHistoricalChartData = ({
     for (const weeklyInterestRate of interestRates.weeklyInterestRates) {
       const timestamp = dayjs(weeklyInterestRate.date * 1000)
         .startOf('week')
-        .format(CHART_TIMESTAMP_FORMAT) as keyof (typeof chartsDataRaw)['90d']
+        .format(CHART_TIMESTAMP_FORMAT_DETAILED) as keyof (typeof chartsDataRaw)['90d']
 
       if (timestamp in chartsDataRaw['3y']) {
         chartsDataRaw['3y'][timestamp] = {
