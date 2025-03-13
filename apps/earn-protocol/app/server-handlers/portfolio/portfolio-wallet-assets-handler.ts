@@ -31,6 +31,18 @@ export const portfolioWalletAssetsHandler = async (
     },
   )
     .then((resp) => resp.json())
+    .then((data) => {
+      // Update USDT symbol on Arbitrum network
+      const updatedAssets = data.assets.map((asset: PortfolioWalletAsset) => {
+        if (asset.network === 'arbitrum' && asset.symbol === 'USDT') {
+          return { ...asset, symbol: 'USD₮0' as TokenSymbolsList }
+        }
+
+        return asset
+      })
+
+      return { ...data, assets: updatedAssets }
+    })
     .catch((error) => {
       // eslint-disable-next-line no-console
       console.error(
