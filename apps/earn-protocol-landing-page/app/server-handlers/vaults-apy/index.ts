@@ -12,6 +12,11 @@ type GetVaultsApyRAWResponse = {
   rates: {
     chainId: number
     fleetAddress: string
+    sma: {
+      sma24h: string | null
+      sma7d: string | null
+      sma30d: string | null
+    }
     rates: [
       {
         id: string
@@ -51,32 +56,49 @@ export const getVaultsApy: ({
     throw new Error('FUNCTIONS_API_URL is not set')
   }
 
-  const apiResponse = await fetch(`${functionsApiUrl}/api/vault/rates`, {
-    method: 'POST',
-    body: JSON.stringify({ fleets }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    next: {
-      revalidate: REVALIDATION_TIMES.INTEREST_RATES,
-      tags: [REVALIDATION_TAGS.INTEREST_RATES],
-    },
-  })
+  try {
+    const apiResponse = await fetch(`${functionsApiUrl}/api/vault/rates`, {
+      method: 'POST',
+      body: JSON.stringify({ fleets }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      next: {
+        revalidate: REVALIDATION_TIMES.INTEREST_RATES,
+        tags: [REVALIDATION_TAGS.INTEREST_RATES],
+      },
+    })
 
-  const rawResponse = (await apiResponse.json()) as GetVaultsApyRAWResponse
+    const rawResponse = (await apiResponse.json()) as GetVaultsApyRAWResponse
 
-  const response = rawResponse.rates.reduce<GetVaultsApyResponse>((topAcc, { rates, chainId }) => {
-    const ratesMap = rates.reduce<{ [key: string]: number }>((acc, { rate, fleetAddress }) => {
-      acc[`${fleetAddress}-${chainId}`] = Number(rate) / 100
+    const response = rawResponse.rates.reduce<GetVaultsApyResponse>(
+      (topAcc, { rates, chainId, sma }) => {
+        const ratesMap = rates.reduce<{
+          [key: string]: VaultApyData
+        }>((acc, { rate, fleetAddress }) => {
+          acc[`${fleetAddress}-${chainId}`] = {
+            apy: Number(rate) / 100,
+            sma24h: sma.sma24h ? Number(sma.sma24h) / 100 : null,
+            sma7d: sma.sma7d ? Number(sma.sma7d) / 100 : null,
+            sma30d: sma.sma30d ? Number(sma.sma30d) / 100 : null,
+          }
 
-      return acc
-    }, {})
+          return acc
+        }, {})
 
-    return {
-      ...topAcc,
-      ...ratesMap,
-    }
-  }, {})
+        return {
+          ...topAcc,
+          ...ratesMap,
+        }
+      },
+      {},
+    )
 
-  return response
+    return response
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('getVaultsApy: Error parsing vaults apy', error)
+
+    throw error
+  }
 }

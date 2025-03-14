@@ -30,12 +30,19 @@ type GetVaultsApyRAWResponse = {
 
 export type GetVaultsApyResponse = {
   // response {
-  //   '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17-42161': 8.002220099969366,
-  //   '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17-8453': 13.54019480114041,
-  //   '0x17ee2d03e88b55e762c66c76ec99c3a28a54ad8d-1': 6.578848760141222,
-  //   '0x67e536797570b3d8919df052484273815a0ab506-1': 2.7373712017127283,
-  //   '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17-1': 8.890826768108603
-  // }
+  //   '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17-42161': {
+  //     apy: 8.002220099969366,
+  //     sma24h: 13.54019480114041,
+  //     sma7d: 6.578848760141222,
+  //     sma30d: 2.7373712017127283,
+  //   },
+  //   '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17-8453': {
+  //     apy: 13.54019480114041,
+  //     sma24h: 13.54019480114041,
+  //     sma7d: 6.578848760141222,
+  //     sma30d: 2.7373712017127283,
+  //   },
+  // } etc
   // apy gets divided by 100 to not confuse the frontend
   [key: `${string}-${number}`]: VaultApyData
 }
