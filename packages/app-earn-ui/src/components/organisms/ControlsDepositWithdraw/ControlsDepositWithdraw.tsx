@@ -120,6 +120,7 @@ export const ControlsDepositWithdraw = ({
               symbol={getDisplayToken(vault.inputToken.symbol) as TokenSymbolsList}
               forecastSummaryMap={forecastSummaryMap}
               isLoading={isLoadingForecast}
+              transactionType={transactionType ?? TransactionAction.DEPOSIT}
             />
           )}
         </AnimateHeight>
