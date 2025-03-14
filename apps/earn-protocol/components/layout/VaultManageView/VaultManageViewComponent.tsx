@@ -539,6 +539,7 @@ export const VaultManageViewComponent = ({
                 userActivity={userActivity}
                 topDepositors={topDepositors}
                 vaultId={getUniqueVaultId(vault)}
+                vaultApyData={vaultApyData}
                 page="manage"
                 noHighlight
               />

@@ -440,6 +440,7 @@ export const VaultOpenViewComponent = ({
           topDepositors={topDepositors}
           arksHistoricalChartData={arksHistoricalChartData}
           arksInterestRates={arksInterestRates}
+          vaultApyData={vaultApyData}
         />
       }
       sidebarContent={

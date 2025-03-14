@@ -1,7 +1,13 @@
 'use client'
 import { type FC } from 'react'
 import { Card, TabBar, WithArrow } from '@summerfi/app-earn-ui'
-import { type SDKUsersActivityType, type UsersActivity } from '@summerfi/app-types'
+import {
+  type SDKNetwork,
+  type SDKUsersActivityType,
+  type UsersActivity,
+  type VaultApyData,
+} from '@summerfi/app-types'
+import { subgraphNetworkToId } from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import { TopDepositorsTable } from '@/features/user-activity/components/TopDepositorsTable/TopDepositorsTable'
@@ -14,6 +20,7 @@ interface UserActivityProps {
   vaultId: string
   page: 'open' | 'manage'
   noHighlight?: boolean
+  vaultApyData: VaultApyData
 }
 
 export const UserActivity: FC<UserActivityProps> = ({
@@ -22,11 +29,16 @@ export const UserActivity: FC<UserActivityProps> = ({
   vaultId,
   page,
   noHighlight,
+  vaultApyData,
 }) => {
   const userActivityHiddenColumns = {
     open: ['strategy', 'position'],
     manage: ['strategy', 'balance', 'position'],
   }[page]
+
+  const [rawVaultId, network] = vaultId.split('-')
+
+  const vaultApyUniqueId = `${rawVaultId}-${subgraphNetworkToId(network as SDKNetwork)}`
 
   const tabs = [
     {
@@ -49,6 +61,9 @@ export const UserActivity: FC<UserActivityProps> = ({
           topDepositorsList={topDepositors}
           hiddenColumns={['user', 'strategy', 'numberOfDeposits']}
           rowsToDisplay={4}
+          vaultsApyData={{
+            [vaultApyUniqueId]: vaultApyData,
+          }}
         />
       ),
     },

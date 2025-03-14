@@ -7,6 +7,7 @@ import {
   type SDKVaultsListType,
   type SDKVaultType,
   type UsersActivity,
+  type VaultApyData,
 } from '@summerfi/app-types'
 import { formatDecimalAsPercent } from '@summerfi/app-utils'
 import { type GetGlobalRebalancesQuery } from '@summerfi/sdk-client'
@@ -26,6 +27,7 @@ interface VaultOpenViewDetailsProps {
   topDepositors: SDKUsersActivityType
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
+  vaultApyData: VaultApyData
 }
 
 export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
@@ -35,6 +37,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
   topDepositors,
   arksHistoricalChartData,
   arksInterestRates,
+  vaultApyData,
 }) => {
   // needed due to type duality
   const rebalancesList =
@@ -105,6 +108,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
           userActivity={userActivity}
           topDepositors={topDepositors}
           vaultId={getUniqueVaultId(vault)}
+          vaultApyData={vaultApyData}
           page="open"
           noHighlight
         />

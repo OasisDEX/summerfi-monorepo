@@ -326,6 +326,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
           topDepositors={topDepositors}
           arksHistoricalChartData={arksHistoricalChartData}
           arksInterestRates={arksInterestRates}
+          vaultApyData={vaultApyData}
         />
       }
       sidebarContent={<Sidebar {...sidebarProps} />}

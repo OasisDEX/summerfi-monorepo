@@ -18,6 +18,7 @@ import {
   type UsersActivity,
 } from '@summerfi/app-types'
 
+import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { TopDepositorsTable } from '@/features/user-activity/components/TopDepositorsTable/TopDepositorsTable'
 import { UserActivityTable } from '@/features/user-activity/components/UserActivityTable/UserActivityTable'
@@ -40,6 +41,7 @@ interface UserActivityViewProps {
   topDepositors: SDKUsersActivityType
   totalUsers: number
   searchParams?: { [key: string]: string[] }
+  vaultsApyByNetworkMap: GetVaultsApyResponse
 }
 
 const initialRows = 10
@@ -50,6 +52,7 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
   topDepositors,
   totalUsers,
   searchParams,
+  vaultsApyByNetworkMap,
 }) => {
   const { setQueryParams } = useQueryParams()
   const [strategyFilter, setStrategyFilter] = useState<string[]>(searchParams?.strategies ?? [])
@@ -186,6 +189,7 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
               idx: 3,
               content: <TableCarousel carouselData={userActivityTableCarouselData} />,
             }}
+            vaultsApyData={vaultsApyByNetworkMap}
           />
         </InfiniteScroll>
       ),
