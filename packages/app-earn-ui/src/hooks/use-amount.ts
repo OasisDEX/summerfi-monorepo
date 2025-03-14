@@ -1,7 +1,7 @@
 'use client'
-import { type ChangeEvent, useEffect, useMemo, useState } from 'react'
+import { type ChangeEvent, useMemo, useState } from 'react'
 import { type IToken } from '@summerfi/app-types'
-import { cleanAmount, formatFiatBalance } from '@summerfi/app-utils'
+import { cleanAmount, formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
 type UseAmountProps = {
@@ -10,8 +10,6 @@ type UseAmountProps = {
   selectedToken: IToken | undefined
   initialAmount?: string
 }
-
-const MAX_AMOUNT_LENGTH = 20
 
 /**
  * Hook for managing amount input with formatting and validation for vault interactions.
@@ -31,12 +29,7 @@ const MAX_AMOUNT_LENGTH = 20
  *   - onFocus: Handler to enable edit mode
  *   - onBlur: Handler to disable edit mode and format amount
  */
-export const useAmount = ({
-  tokenDecimals,
-  tokenPrice,
-  selectedToken,
-  initialAmount,
-}: UseAmountProps) => {
+export const useAmount = ({ tokenPrice, selectedToken, initialAmount }: UseAmountProps) => {
   const [editMode, setEditMode] = useState(false)
   const [amountRaw, setAmountRaw] = useState<string | undefined>(initialAmount)
 
@@ -49,13 +42,8 @@ export const useAmount = ({
       return amountRaw
     }
 
-    const amountWithNoFollowingZeroes = new BigNumber(
-      // double parsing removes zeroes at the end
-      new BigNumber(amountRaw).toFixed(tokenDecimals), // and this gives it a "max" decimals
-    ).toString()
-
-    return amountWithNoFollowingZeroes
-  }, [amountRaw, editMode, tokenDecimals])
+    return formatCryptoBalance(amountRaw)
+  }, [amountRaw, editMode])
 
   const amountDisplayUSD = useMemo(() => {
     if (!tokenPrice) {
@@ -65,18 +53,8 @@ export const useAmount = ({
       return '$0.00'
     }
 
-    const amountDisplayWithoutCommas = cleanAmount(amountDisplay)
-
-    return `$${formatFiatBalance(
-      new BigNumber(amountDisplayWithoutCommas).times(new BigNumber(tokenPrice)),
-    )}`
-  }, [amountDisplay, amountRaw, tokenPrice])
-
-  useEffect(() => {
-    if (!editMode) {
-      setAmountRaw(amountDisplay)
-    }
-  }, [editMode, amountDisplay])
+    return `$${formatFiatBalance(new BigNumber(amountRaw).times(new BigNumber(tokenPrice)))}`
+  }, [amountRaw, tokenPrice])
 
   const amountParsed = useMemo(() => {
     if (!amountRaw || new BigNumber(cleanAmount(amountRaw)).isNaN()) {
@@ -88,13 +66,6 @@ export const useAmount = ({
 
   const handleAmountChange = (ev: ChangeEvent<HTMLInputElement>) => {
     const { value } = ev.target
-
-    if (value.length > MAX_AMOUNT_LENGTH) {
-      ev.stopPropagation()
-      ev.preventDefault()
-
-      return
-    }
 
     if (!value) {
       setAmountRaw(undefined)
