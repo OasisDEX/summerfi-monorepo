@@ -1,8 +1,8 @@
-import { ChainFamilyMap } from '@summerfi/sdk-common'
+import { ChainIds } from '@summerfi/sdk-common'
 import type { ArmadaMigrationConfig } from './types'
 // c tokens taken from: https://docs.compound.finance/#networks
 export const compoundConfigsByChainId: Record<number, Record<string, ArmadaMigrationConfig>> = {
-  [ChainFamilyMap.Base.Base.chainId]: {
+  [ChainIds.Base]: {
     usdc: {
       positionAddress: '0xb125E6687d4313864e53df431d5425969c15Eb2F',
       underlyingToken: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
@@ -24,7 +24,7 @@ export const compoundConfigsByChainId: Record<number, Record<string, ArmadaMigra
       pool: null,
     },
   },
-  [ChainFamilyMap.Ethereum.Mainnet.chainId]: {
+  [ChainIds.Mainnet]: {
     usdc: {
       positionAddress: '0xc3d688B66703497DAA19211EEdff47f25384cdc3',
       underlyingToken: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
@@ -51,7 +51,7 @@ export const compoundConfigsByChainId: Record<number, Record<string, ArmadaMigra
       pool: null,
     },
   },
-  [ChainFamilyMap.Arbitrum.ArbitrumOne.chainId]: {
+  [ChainIds.ArbitrumOne]: {
     usdce: {
       positionAddress: '0xA5EDBDD9646f8dFF606d7448e414884C7d905dCA',
       underlyingToken: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
