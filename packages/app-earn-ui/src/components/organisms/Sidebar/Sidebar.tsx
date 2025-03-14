@@ -5,7 +5,6 @@ import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
 import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
-import { Box } from '@/components/atoms/Box/Box'
 import { Button } from '@/components/atoms/Button/Button'
 import { Card } from '@/components/atoms/Card/Card'
 import { Icon } from '@/components/atoms/Icon/Icon'
@@ -202,10 +201,10 @@ export const Sidebar: FC<SidebarProps> = ({
         }}
       >
         <AnimateHeight show={!!error} id="sidebar-error">
-          <Box className={sidebarClassNames.sidebarErrorWrapper}>
+          <div className={sidebarClassNames.sidebarErrorWrapper}>
             {typeof error === 'string' ? (
               <div className={sidebarClassNames.sidebarErrorContent}>
-                <Icon iconName="warning" color="var(--earn-protocol-primary)" size={20} />
+                <Icon iconName="warning" color="var(--earn-protocol-critical-100)" size={20} />
                 <Text variant="p3semi" style={{ marginLeft: 'var(--general-space-12)' }}>
                   {error}
                 </Text>
@@ -213,7 +212,7 @@ export const Sidebar: FC<SidebarProps> = ({
             ) : (
               error
             )}
-          </Box>
+          </div>
         </AnimateHeight>
       </div>
       <div className={sidebarClassNames.sidebarCta}>

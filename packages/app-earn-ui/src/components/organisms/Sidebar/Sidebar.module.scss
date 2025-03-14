@@ -105,11 +105,11 @@
   color: var(--earn-protocol-primary);
   text-align: center;
   display: inline-block;
-}
 
-.sidebarErrorContent {
-  display: flex;
-  align-items: center;
+  .sidebarErrorContent {
+    display: flex;
+    align-items: center;
+  }
 }
 
 .sidebarCta {
