@@ -74,9 +74,11 @@ export const PortfolioPosition = ({
   const isVaultAtLeast30dOld = createdTimestamp
     ? dayjs().diff(dayjs(Number(createdTimestamp) * 1000), 'day') > 30
     : false
-  const currentApr = formatDecimalAsPercent(vaultApyData.apy)
-  const apr30dParsed = isVaultAtLeast30dOld
-    ? formatDecimalAsPercent(vaultApyData.sma30d)
+  const currentApy = formatDecimalAsPercent(vaultApyData.apy)
+  const apy30dParsed = isVaultAtLeast30dOld
+    ? vaultApyData.sma30d
+      ? formatDecimalAsPercent(vaultApyData.sma30d)
+      : 'n/a'
     : 'New Strategy'
 
   const { sumrTokenBonus } = getSumrTokenBonus(
@@ -123,8 +125,8 @@ export const PortfolioPosition = ({
             }
             value={sumrTokenBonus}
           />
-          <PortfolioPositionHeaderValue title="30d APY" value={apr30dParsed} />
-          <PortfolioPositionHeaderValue title="Current APY" value={currentApr} />
+          <PortfolioPositionHeaderValue title="30d APY" value={apy30dParsed} />
+          <PortfolioPositionHeaderValue title="Current APY" value={currentApy} />
           {!isMobile && linkToPosition}
         </div>
         <div className={portfolioPositionStyles.graphWrapper}>{positionGraph}</div>

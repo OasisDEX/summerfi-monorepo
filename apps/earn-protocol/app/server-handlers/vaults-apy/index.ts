@@ -13,9 +13,9 @@ type GetVaultsApyRAWResponse = {
     chainId: number
     fleetAddress: string
     sma: {
-      sma24h: string
-      sma7d: string
-      sma30d: string
+      sma24h: string | null
+      sma7d: string | null
+      sma30d: string | null
     }
     rates: [
       {
@@ -71,9 +71,9 @@ export const getVaultsApy: ({
         }>((acc, { rate, fleetAddress }) => {
           acc[`${fleetAddress}-${chainId}`] = {
             apy: Number(rate) / 100,
-            sma24h: Number(sma.sma24h) / 100,
-            sma7d: Number(sma.sma7d) / 100,
-            sma30d: Number(sma.sma30d) / 100,
+            sma24h: sma.sma24h ? Number(sma.sma24h) / 100 : null,
+            sma7d: sma.sma7d ? Number(sma.sma7d) / 100 : null,
+            sma30d: sma.sma30d ? Number(sma.sma30d) / 100 : null,
           }
 
           return acc

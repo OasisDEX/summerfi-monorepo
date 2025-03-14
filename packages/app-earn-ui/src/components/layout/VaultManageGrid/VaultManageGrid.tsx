@@ -72,7 +72,11 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
 
   const isVaultAtLeast30dOld = isVaultAtLeastDaysOld({ vault, days: 30 })
 
-  const apr30d = isVaultAtLeast30dOld ? formatDecimalAsPercent(vaultApyData.sma30d) : 'New strategy'
+  const apy30d = isVaultAtLeast30dOld
+    ? vaultApyData.sma30d
+      ? formatDecimalAsPercent(vaultApyData.sma30d)
+      : 'n/a'
+    : 'New strategy'
   const aprCurrent = formatDecimalAsPercent(vaultApyData.apy)
 
   const noOfDeposits = position.deposits.length.toString()
@@ -224,7 +228,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                   size="large"
                   titleSize="small"
                   title="30d APY"
-                  value={apr30d}
+                  value={apy30d}
                   subValue={`Current APY: ${aprCurrent}`}
                   subValueType="neutral"
                   subValueSize="medium"

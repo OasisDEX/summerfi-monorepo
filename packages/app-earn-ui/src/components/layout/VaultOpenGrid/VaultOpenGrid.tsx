@@ -83,7 +83,11 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
 
   const isVaultAtLeast30dOld = isVaultAtLeastDaysOld({ vault, days: 30 })
 
-  const apr30d = isVaultAtLeast30dOld ? formatDecimalAsPercent(vaultApyData.sma30d) : 'New strategy'
+  const apy30d = isVaultAtLeast30dOld
+    ? vaultApyData.sma30d
+      ? formatDecimalAsPercent(vaultApyData.sma30d)
+      : 'n/a'
+    : 'New strategy'
   const aprCurrent = formatDecimalAsPercent(vaultApyData.apy)
   const totalValueLockedUSDParsed = formatCryptoBalance(new BigNumber(vault.totalValueLockedUSD))
   const totalValueLockedTokenParsed = formatCryptoBalance(
@@ -206,7 +210,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 size="large"
                 titleSize="small"
                 title="30d APY"
-                value={apr30d}
+                value={apy30d}
                 subValue={
                   isVaultAtLeast30dOld ? `Current APY: ${aprCurrent}` : 'Requires more data'
                 }

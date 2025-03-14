@@ -67,7 +67,11 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
 
   const isVaultAtLeast7dOld = isVaultAtLeastDaysOld({ vault, days: 7 })
 
-  const apr7d = isVaultAtLeast7dOld ? formatDecimalAsPercent(vaultApyData.sma7d) : 'New strategy'
+  const apr7d = isVaultAtLeast7dOld
+    ? vaultApyData.sma7d
+      ? formatDecimalAsPercent(vaultApyData.sma7d)
+      : 'n/a'
+    : 'New strategy'
 
   const sourcePositionEstimatedEarningsUSD = migratablePosition.apy
     ? Number(amount) * Number(vault.inputTokenPriceUSD ?? 0) * Number(migratablePosition.apy)
