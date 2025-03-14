@@ -16,7 +16,12 @@ export const allTimeframesAvailable = {
   '3y': true,
 }
 
-export const useTimeframes = ({ chartData }: { chartData?: ChartsDataTimeframes }) => {
+type UseTimeframesProps = {
+  chartData?: ChartsDataTimeframes
+  customDefaultTimeframe?: TimeframesType
+}
+
+export const useTimeframes = ({ chartData, customDefaultTimeframe }: UseTimeframesProps) => {
   const timeframes = useMemo(() => {
     if (!chartData) {
       return {} as TimeframesItem
@@ -55,7 +60,9 @@ export const useTimeframes = ({ chartData }: { chartData?: ChartsDataTimeframes 
   }, [chartData])
 
   // if 90d isnt available, default to 7d
-  const [timeframe, setTimeframe] = useState<TimeframesType>(timeframes['90d'] ? '90d' : '7d')
+  const [timeframe, setTimeframe] = useState<TimeframesType>(
+    customDefaultTimeframe ? customDefaultTimeframe : timeframes['90d'] ? '90d' : '7d',
+  )
 
   return {
     timeframes,
