@@ -216,8 +216,8 @@ importers:
         specifier: ^2.53.0
         version: 2.53.0
       next:
-        specifier: 15.2.0
-        version: 15.2.0(@babel/core@7.26.0)(react-dom@19.0.0)(react@19.0.0)(sass@1.77.8)
+        specifier: 15.2.2
+        version: 15.2.2(@babel/core@7.26.0)(react-dom@19.0.0)(react@19.0.0)(sass@1.77.8)
       react:
         specifier: 19.0.0
         version: 19.0.0
@@ -355,8 +355,8 @@ importers:
         specifier: ^2.53.0
         version: 2.53.0
       next:
-        specifier: 15.2.0
-        version: 15.2.0(@babel/core@7.26.0)(react-dom@19.0.0)(react@19.0.0)(sass@1.77.8)
+        specifier: 15.2.2
+        version: 15.2.2(@babel/core@7.26.0)(react-dom@19.0.0)(react@19.0.0)(sass@1.77.8)
       react:
         specifier: 19.0.0
         version: 19.0.0
@@ -509,11 +509,11 @@ importers:
         specifier: ^2.53.0
         version: 2.53.0
       next:
-        specifier: 15.2.0
-        version: 15.2.0(@babel/core@7.26.0)(react-dom@19.0.0)(react@19.0.0)(sass@1.77.8)
+        specifier: 15.2.2
+        version: 15.2.2(@babel/core@7.26.0)(react-dom@19.0.0)(react@19.0.0)(sass@1.77.8)
       next-intl:
         specifier: ^3.21.1
-        version: 3.21.1(next@15.2.0)(react@19.0.0)
+        version: 3.21.1(next@15.2.2)(react@19.0.0)
       react:
         specifier: 19.0.0
         version: 19.0.0
@@ -868,8 +868,8 @@ importers:
         specifier: ^4.17.1
         version: 4.17.21
       next:
-        specifier: 15.2.0
-        version: 15.2.0(@babel/core@7.26.0)(react-dom@19.0.0)(react@19.0.0)(sass@1.77.8)
+        specifier: 15.2.2
+        version: 15.2.2(@babel/core@7.26.0)(react-dom@19.0.0)(react@19.0.0)(sass@1.77.8)
       react:
         specifier: 19.0.0
         version: 19.0.0
@@ -977,8 +977,8 @@ importers:
         specifier: ^4.3.4
         version: 4.3.4(vite@6.2.0)
       next:
-        specifier: 15.2.0
-        version: 15.2.0(@babel/core@7.26.0)(react-dom@19.0.0)(react@19.0.0)(sass@1.77.8)
+        specifier: 15.2.2
+        version: 15.2.2(@babel/core@7.26.0)(react-dom@19.0.0)(react@19.0.0)(sass@1.77.8)
       react:
         specifier: 19.0.0
         version: 19.0.0
@@ -1029,8 +1029,8 @@ importers:
         specifier: ^0.27.3
         version: 0.27.3
       next:
-        specifier: 15.2.0
-        version: 15.2.0(@babel/core@7.26.0)(react-dom@19.0.0)(react@19.0.0)(sass@1.77.8)
+        specifier: 15.2.2
+        version: 15.2.2(@babel/core@7.26.0)(react-dom@19.0.0)(react@19.0.0)(sass@1.77.8)
       react:
         specifier: 19.0.0
         version: 19.0.0
@@ -1093,8 +1093,8 @@ importers:
         specifier: ^0.27.3
         version: 0.27.3
       next:
-        specifier: 15.2.0
-        version: 15.2.0(@babel/core@7.26.0)(react-dom@19.0.0)(react@19.0.0)(sass@1.77.8)
+        specifier: 15.2.2
+        version: 15.2.2(@babel/core@7.26.0)(react-dom@19.0.0)(react@19.0.0)(sass@1.77.8)
       react:
         specifier: 19.0.0
         version: 19.0.0
@@ -1236,8 +1236,8 @@ importers:
         specifier: ^4.17.1
         version: 4.17.21
       next:
-        specifier: 15.2.0
-        version: 15.2.0(@babel/core@7.26.0)(react-dom@19.0.0)(react@19.0.0)(sass@1.77.8)
+        specifier: 15.2.2
+        version: 15.2.2(@babel/core@7.26.0)(react-dom@19.0.0)(react@19.0.0)(sass@1.77.8)
       react:
         specifier: 19.0.0
         version: 19.0.0
@@ -1330,8 +1330,8 @@ importers:
         specifier: ^4.17.1
         version: 4.17.21
       next:
-        specifier: 15.2.0
-        version: 15.2.0(@babel/core@7.26.0)(react-dom@19.0.0)(react@19.0.0)(sass@1.77.8)
+        specifier: 15.2.2
+        version: 15.2.2(@babel/core@7.26.0)(react-dom@19.0.0)(react@19.0.0)(sass@1.77.8)
       rollup-preserve-directives:
         specifier: ^1.1.3
         version: 1.1.3(rollup@4.34.9)
@@ -14237,8 +14237,8 @@ packages:
       react-is: 19.0.0
     dev: false
 
-  /@next/env@15.2.0:
-    resolution: {integrity: sha512-eMgJu1RBXxxqqnuRJQh5RozhskoNUDHBFybvi+Z+yK9qzKeG7dadhv/Vp1YooSZmCnegf7JxWuapV77necLZNA==}
+  /@next/env@15.2.2:
+    resolution: {integrity: sha512-yWgopCfA9XDR8ZH3taB5nRKtKJ1Q5fYsTOuYkzIIoS8TJ0UAUKAGF73JnGszbjk2ufAQDj6mDdgsJAFx5CLtYQ==}
     dev: false
 
   /@next/eslint-plugin-next@14.2.3:
@@ -14247,8 +14247,8 @@ packages:
       glob: 10.3.10
     dev: true
 
-  /@next/swc-darwin-arm64@15.2.0:
-    resolution: {integrity: sha512-rlp22GZwNJjFCyL7h5wz9vtpBVuCt3ZYjFWpEPBGzG712/uL1bbSkS675rVAUCRZ4hjoTJ26Q7IKhr5DfJrHDA==}
+  /@next/swc-darwin-arm64@15.2.2:
+    resolution: {integrity: sha512-HNBRnz+bkZ+KfyOExpUxTMR0Ow8nkkcE6IlsdEa9W/rI7gefud19+Sn1xYKwB9pdCdxIP1lPru/ZfjfA+iT8pw==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
@@ -14256,8 +14256,8 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-darwin-x64@15.2.0:
-    resolution: {integrity: sha512-DiU85EqSHogCz80+sgsx90/ecygfCSGl5P3b4XDRVZpgujBm5lp4ts7YaHru7eVTyZMjHInzKr+w0/7+qDrvMA==}
+  /@next/swc-darwin-x64@15.2.2:
+    resolution: {integrity: sha512-mJOUwp7al63tDpLpEFpKwwg5jwvtL1lhRW2fI1Aog0nYCPAhxbJsaZKdoVyPZCy8MYf/iQVNDuk/+i29iLCzIA==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
@@ -14265,8 +14265,8 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-linux-arm64-gnu@15.2.0:
-    resolution: {integrity: sha512-VnpoMaGukiNWVxeqKHwi8MN47yKGyki5q+7ql/7p/3ifuU2341i/gDwGK1rivk0pVYbdv5D8z63uu9yMw0QhpQ==}
+  /@next/swc-linux-arm64-gnu@15.2.2:
+    resolution: {integrity: sha512-5ZZ0Zwy3SgMr7MfWtRE7cQWVssfOvxYfD9O7XHM7KM4nrf5EOeqwq67ZXDgo86LVmffgsu5tPO57EeFKRnrfSQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
@@ -14274,8 +14274,8 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-linux-arm64-musl@15.2.0:
-    resolution: {integrity: sha512-ka97/ssYE5nPH4Qs+8bd8RlYeNeUVBhcnsNUmFM6VWEob4jfN9FTr0NBhXVi1XEJpj3cMfgSRW+LdE3SUZbPrw==}
+  /@next/swc-linux-arm64-musl@15.2.2:
+    resolution: {integrity: sha512-cgKWBuFMLlJ4TWcFHl1KOaVVUAF8vy4qEvX5KsNd0Yj5mhu989QFCq1WjuaEbv/tO1ZpsQI6h/0YR8bLwEi+nA==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
@@ -14283,8 +14283,8 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-linux-x64-gnu@15.2.0:
-    resolution: {integrity: sha512-zY1JduE4B3q0k2ZCE+DAF/1efjTXUsKP+VXRtrt/rJCTgDlUyyryx7aOgYXNc1d8gobys/Lof9P9ze8IyRDn7Q==}
+  /@next/swc-linux-x64-gnu@15.2.2:
+    resolution: {integrity: sha512-c3kWSOSsVL8rcNBBfOq1+/j2PKs2nsMwJUV4icUxRgGBwUOfppeh7YhN5s79enBQFU+8xRgVatFkhHU1QW7yUA==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
@@ -14292,8 +14292,8 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-linux-x64-musl@15.2.0:
-    resolution: {integrity: sha512-QqvLZpurBD46RhaVaVBepkVQzh8xtlUN00RlG4Iq1sBheNugamUNPuZEH1r9X1YGQo1KqAe1iiShF0acva3jHQ==}
+  /@next/swc-linux-x64-musl@15.2.2:
+    resolution: {integrity: sha512-PXTW9PLTxdNlVYgPJ0equojcq1kNu5NtwcNjRjHAB+/sdoKZ+X8FBu70fdJFadkxFIGekQTyRvPMFF+SOJaQjw==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
@@ -14301,8 +14301,8 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-win32-arm64-msvc@15.2.0:
-    resolution: {integrity: sha512-ODZ0r9WMyylTHAN6pLtvUtQlGXBL9voljv6ujSlcsjOxhtXPI1Ag6AhZK0SE8hEpR1374WZZ5w33ChpJd5fsjw==}
+  /@next/swc-win32-arm64-msvc@15.2.2:
+    resolution: {integrity: sha512-nG644Es5llSGEcTaXhnGWR/aThM/hIaz0jx4MDg4gWC8GfTCp8eDBWZ77CVuv2ha/uL9Ce+nPTfYkSLG67/sHg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
@@ -14310,8 +14310,8 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-win32-x64-msvc@15.2.0:
-    resolution: {integrity: sha512-8+4Z3Z7xa13NdUuUAcpVNA6o76lNPniBd9Xbo02bwXQXnZgFvEopwY2at5+z7yHl47X9qbZpvwatZ2BRo3EdZw==}
+  /@next/swc-win32-x64-msvc@15.2.2:
+    resolution: {integrity: sha512-52nWy65S/R6/kejz3jpvHAjZDPKIbEQu4x9jDBzmB9jJfuOy5rspjKu4u77+fI4M/WzLXrrQd57hlFGzz1ubcQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
@@ -18060,7 +18060,7 @@ packages:
   /@swc/helpers@0.5.15:
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
     dependencies:
-      tslib: 2.8.1
+      tslib: 2.2.0
     dev: false
 
   /@swc/types@0.1.19:
@@ -23595,6 +23595,10 @@ packages:
   /blakejs@1.2.1:
     resolution: {integrity: sha512-QXUSXI3QVc/gJME0dBpXrag1kbzOqCjCX8/b54ntNyW6sjtoqxqRk3LTmXzaJoh71zMsDCjM+47jS7XiwN/+fQ==}
 
+  /bn.js@4.11.6:
+    resolution: {integrity: sha512-XWwnNNFCuuSQ0m3r3C4LE3EiORltHd9M05pq6FOlVeiophzRbMo50Sbz1ehl8K3Z+jw9+vmgnXefY1hz8X+2wA==}
+    dev: true
+
   /bn.js@4.11.8:
     resolution: {integrity: sha512-ItfYfPLkWHUjckQCk8xC+LwxgK8NYcXywGigJgSwOP8Y2iyWT4f2vsZnoOXTTbo+o5yXmIUJ4gn5538SO5S3gA==}
     dev: false
@@ -25573,8 +25577,8 @@ packages:
     engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
     dependencies:
       is-url: 1.2.4
-      postcss: 8.4.47
-      postcss-values-parser: 6.0.2(postcss@8.4.47)
+      postcss: 8.5.3
+      postcss-values-parser: 6.0.2(postcss@8.5.3)
     dev: true
 
   /detective-sass@5.0.3:
@@ -27525,7 +27529,7 @@ packages:
     resolution: {integrity: sha512-/Sn9Y0oKl0uqQuvgFk/zQgR7aw1g36qX/jzSQ5lSwlO0GigPymk4eGQfeNTD03w1dPOqfz8V77Cy43jH56pagw==}
     engines: {node: '>=6.5.0', npm: '>=3'}
     dependencies:
-      bn.js: 5.2.1
+      bn.js: 4.11.6
       number-to-bn: 1.7.0
     dev: true
 
@@ -32894,7 +32898,7 @@ packages:
       '@segment/isodate': 1.0.3
     dev: false
 
-  /next-intl@3.21.1(next@15.2.0)(react@19.0.0):
+  /next-intl@3.21.1(next@15.2.2)(react@19.0.0):
     resolution: {integrity: sha512-hQm4Wgq5i1lfOHAWmXBVl5d2/XAeddcjsrUmjotXEESzPSvW5j2t0Pr8AV8WorTILgqU748aXuenBhz5P78tdw==}
     peerDependencies:
       next: ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0 || ^14.0.0
@@ -32902,7 +32906,7 @@ packages:
     dependencies:
       '@formatjs/intl-localematcher': 0.5.4
       negotiator: 0.6.3
-      next: 15.2.0(@babel/core@7.26.0)(react-dom@19.0.0)(react@19.0.0)(sass@1.77.8)
+      next: 15.2.2(@babel/core@7.26.0)(react-dom@19.0.0)(react@19.0.0)(sass@1.77.8)
       react: 19.0.0
       use-intl: 3.21.1(react@19.0.0)
     dev: false
@@ -32911,8 +32915,8 @@ packages:
     resolution: {integrity: sha512-CXdUiJembsNjuToQvxayPZF9Vqht7hewsvy2sOWafLvi2awflj9mOC6bHIg50orX8IJvWKY9wYQ/zB2kogPslQ==}
     dev: false
 
-  /next@15.2.0(@babel/core@7.26.0)(react-dom@19.0.0)(react@19.0.0)(sass@1.77.8):
-    resolution: {integrity: sha512-VaiM7sZYX8KIAHBrRGSFytKknkrexNfGb8GlG6e93JqueCspuGte8i4ybn8z4ww1x3f2uzY4YpTaBEW4/hvsoQ==}
+  /next@15.2.2(@babel/core@7.26.0)(react-dom@19.0.0)(react@19.0.0)(sass@1.77.8):
+    resolution: {integrity: sha512-dgp8Kcx5XZRjMw2KNwBtUzhngRaURPioxoNIVl5BOyJbhi9CUgEtKDO7fx5wh8Z8vOVX1nYZ9meawJoRrlASYA==}
     engines: {node: ^18.18.0 || ^19.8.0 || >= 20.0.0}
     hasBin: true
     peerDependencies:
@@ -32932,7 +32936,7 @@ packages:
       sass:
         optional: true
     dependencies:
-      '@next/env': 15.2.0
+      '@next/env': 15.2.2
       '@swc/counter': 0.1.3
       '@swc/helpers': 0.5.15
       busboy: 1.6.0
@@ -32943,14 +32947,14 @@ packages:
       sass: 1.77.8
       styled-jsx: 5.1.6(@babel/core@7.26.0)(react@19.0.0)
     optionalDependencies:
-      '@next/swc-darwin-arm64': 15.2.0
-      '@next/swc-darwin-x64': 15.2.0
-      '@next/swc-linux-arm64-gnu': 15.2.0
-      '@next/swc-linux-arm64-musl': 15.2.0
-      '@next/swc-linux-x64-gnu': 15.2.0
-      '@next/swc-linux-x64-musl': 15.2.0
-      '@next/swc-win32-arm64-msvc': 15.2.0
-      '@next/swc-win32-x64-msvc': 15.2.0
+      '@next/swc-darwin-arm64': 15.2.2
+      '@next/swc-darwin-x64': 15.2.2
+      '@next/swc-linux-arm64-gnu': 15.2.2
+      '@next/swc-linux-arm64-musl': 15.2.2
+      '@next/swc-linux-x64-gnu': 15.2.2
+      '@next/swc-linux-x64-musl': 15.2.2
+      '@next/swc-win32-arm64-msvc': 15.2.2
+      '@next/swc-win32-x64-msvc': 15.2.2
       sharp: 0.33.5
     transitivePeerDependencies:
       - '@babel/core'
@@ -33207,7 +33211,7 @@ packages:
     resolution: {integrity: sha512-wsJ9gfSz1/s4ZsJN01lyonwuxA1tml6X1yBDnfpMglypcBRFZZkus26EdPSlqS5GJfYddVZa22p3VNb3z5m5Ig==}
     engines: {node: '>=6.5.0', npm: '>=3'}
     dependencies:
-      bn.js: 5.2.1
+      bn.js: 4.11.6
       strip-hex-prefix: 1.0.0
     dev: true
 
@@ -34239,7 +34243,7 @@ packages:
   /postcss-value-parser@4.2.0:
     resolution: {integrity: sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==}
 
-  /postcss-values-parser@6.0.2(postcss@8.4.47):
+  /postcss-values-parser@6.0.2(postcss@8.5.3):
     resolution: {integrity: sha512-YLJpK0N1brcNJrs9WatuJFtHaV9q5aAOj+S4DI5S7jgHlRfm0PIbDCAFRYMQD5SHq7Fy6xsDhyutgS0QOAs0qw==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -34247,7 +34251,7 @@ packages:
     dependencies:
       color-name: 1.1.4
       is-url-superb: 4.0.0
-      postcss: 8.4.47
+      postcss: 8.5.3
       quote-unquote: 1.0.0
     dev: true
 
@@ -34255,8 +34259,8 @@ packages:
     resolution: {integrity: sha512-PS08Iboia9mts/2ygV3eLpY5ghnUcfLV/EXTOW1E2qYxJKGGBUtNjN76FYHnMs36RmARn41bC0AZmn+rR0OVpQ==}
     engines: {node: ^10 || ^12 || >=14}
     dependencies:
-      nanoid: 3.3.7
-      picocolors: 1.1.0
+      nanoid: 3.3.8
+      picocolors: 1.1.1
       source-map-js: 1.2.1
     dev: false
 
@@ -38507,7 +38511,7 @@ packages:
     dependencies:
       browserslist: 4.23.1
       escalade: 3.1.2
-      picocolors: 1.1.0
+      picocolors: 1.1.1
 
   /update-browserslist-db@1.1.1(browserslist@4.24.2):
     resolution: {integrity: sha512-R8UzCaa9Az+38REPiJ1tXlImTJXlVfgHZsglwBD/k6nj76ctsH1E3q4doGrukiLQd3sGQYu56r5+lo5r94l29A==}
@@ -38517,7 +38521,7 @@ packages:
     dependencies:
       browserslist: 4.24.2
       escalade: 3.2.0
-      picocolors: 1.1.0
+      picocolors: 1.1.1
 
   /update-check@1.5.4:
     resolution: {integrity: sha512-5YHsflzHP4t1G+8WGPlvKbJEbAJGCgw+Em+dGR1KmBUbr1J36SJBqlHLjR7oob7sco5hWHGQVcr9B2poIVDDTQ==}

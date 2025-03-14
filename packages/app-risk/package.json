@@ -28,7 +28,7 @@
   "peerDependencies": {
     "@summerfi/app-utils": "workspace:*",
     "react": "19.0.0",
-    "next": "15.2.0",
+    "next": "15.2.2",
     "zod": "^3.22.4",
     "kysely": "^0.27.3"
   },
