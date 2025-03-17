@@ -119,11 +119,17 @@ export const calculateNextProfit = ({
 
     const realizedProfitInDebt = subtractPercentage(afterSwap, SLIPPAGE)
 
-    const realizedProfitInCollateral = calculateBalance(
-      realizedProfitInDebt,
-      currentPosition.collateral.token,
-      reversePrice(executionPrice),
-    )
+    const realizedProfitInCollateral =
+      executionPrice > 0n
+        ? calculateBalance(
+            realizedProfitInDebt,
+            currentPosition.collateral.token,
+            reversePrice(executionPrice),
+          )
+        : {
+            balance: 0n,
+            token: currentPosition.collateral.token,
+          }
 
     logger?.debug('Calculated Realized Profit In Debt', {
       base: realizedProfit.balance,
