@@ -170,7 +170,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     }
     const configMaps = configMapsPerChain[params.chainInfo.chainId]
     if (!configMaps) {
-      throw new Error('No addresses mapping found for chain ' + params.chainInfo.chainId)
+      return []
     }
 
     // no configs for this chain
