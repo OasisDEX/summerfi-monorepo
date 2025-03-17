@@ -26,7 +26,7 @@ import {
 import { ChartCross } from '@/components/organisms/Charts/components/ChartCross'
 import { HistoricalLegend } from '@/components/organisms/Charts/components/HistoricalLegend'
 import { NotEnoughData } from '@/components/organisms/Charts/components/NotEnoughData'
-import { DAYS_TO_WAIT_FOR_CHART, POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
+import { POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { formatChartCryptoValue } from '@/features/forecast/chart-formatters'
 
@@ -68,7 +68,7 @@ export const HistoricalChart = ({
     <RechartResponsiveWrapper height="340px">
       {chartHidden && (
         <NotEnoughData
-          daysToWait={DAYS_TO_WAIT_FOR_CHART}
+          daysToWait={POINTS_REQUIRED_FOR_CHART[timeframe]}
           style={{
             width: '80%',
             backgroundColor: 'var(--color-surface-subtle)',
@@ -113,6 +113,7 @@ export const HistoricalChart = ({
           onMouseLeave={() => {
             setHighlightedData(legendBaseData)
           }}
+          dataKey="netValue"
         >
           <XAxis
             dataKey="timestampParsed"
@@ -138,7 +139,7 @@ export const HistoricalChart = ({
             ]}
             hide={chartHidden}
           />
-          {/* Cursor is needed for the chart cross to work */}
+          {/* Tooltip is needed for the chart cross to work */}
           <Tooltip content={() => null} cursor={false} />
           {!chartHidden ? <Customized component={<ChartCross />} /> : null}
           <Line

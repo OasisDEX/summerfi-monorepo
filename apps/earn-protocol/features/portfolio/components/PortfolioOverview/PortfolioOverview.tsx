@@ -8,6 +8,7 @@ import {
   PortfolioPosition,
   SUMR_CAP,
   Text,
+  Timeframes,
   useLocalConfig,
   useMobileCheck,
   WithArrow,
@@ -31,31 +32,9 @@ import { PortfolioSummerPro } from '@/features/portfolio/components/PortfolioSum
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 import { calculateOverallSumr } from '@/helpers/calculate-overall-sumr'
+import { allTimeframesAvailable, useTimeframes } from '@/hooks/use-timeframes'
 
 import portfolioOverviewStyles from './PortfolioOverview.module.scss'
-
-// const dummyNewsAndUpdatesItems = [
-//   {
-//     title: 'SUMR Market Cap hits 10b',
-//     timestamp: 1729236816761,
-//     link: './',
-//   },
-//   {
-//     title: 'SUMR Market Cap hits 10b',
-//     timestamp: 1729236816762,
-//     link: './',
-//   },
-//   {
-//     title: 'SUMR Market Cap hits 10b',
-//     timestamp: 1729236816763,
-//     link: './',
-//   },
-//   {
-//     title: 'SUMR Market Cap hits 10b',
-//     timestamp: 1729236816764,
-//     link: './',
-//   },
-// ]
 
 const getDatablocks = ({
   totalSummerPortfolioUSD,
@@ -133,6 +112,14 @@ export const PortfolioOverview = ({
     state: { sumrNetApyConfig },
   } = useLocalConfig()
 
+  const {
+    timeframe,
+    setTimeframe,
+    timeframes: _timeframes, // ignored on portfolio, we allow all timeframes
+  } = useTimeframes({
+    chartData: positionsHistoricalChartMap[getUniqueVaultId(positions[0].vault)].data,
+  })
+
   const { deviceType } = useDeviceType()
   const { isMobile, isTablet } = useMobileCheck(deviceType)
 
@@ -186,9 +173,16 @@ export const PortfolioOverview = ({
           </Card>
         ))}
         <Card style={{ flexDirection: 'column' }} variant="cardSecondary">
-          <Text as="h5" variant="h5">
-            Positions
-          </Text>
+          <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+            <Text as="h5" variant="h5">
+              Positions
+            </Text>
+            <Timeframes
+              timeframes={allTimeframesAvailable}
+              setActiveTimeframe={setTimeframe}
+              activeTimeframe={timeframe}
+            />
+          </div>
           {positions.length > 0 ? (
             positions.map((position) => (
               <PortfolioPosition
@@ -199,6 +193,7 @@ export const PortfolioOverview = ({
                   <PositionHistoricalChart
                     chartData={positionsHistoricalChartMap[getUniqueVaultId(position.vault)]}
                     position={position}
+                    timeframe={timeframe}
                     tokenSymbol={
                       getDisplayToken(position.vault.inputToken.symbol) as TokenSymbolsList
                     }
