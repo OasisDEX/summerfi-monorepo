@@ -58,9 +58,7 @@ export const ArkHistoricalYieldChart = ({
         position: 'relative',
       }}
     >
-      {!parsedDataWithCutoff.length && (
-        <NotEnoughData daysToWait={POINTS_REQUIRED_FOR_CHART[timeframe]} />
-      )}
+      {!parsedDataWithCutoff.length && <NotEnoughData />}
       <ChartHeader
         timeframes={timeframes}
         checkboxValue={compare}

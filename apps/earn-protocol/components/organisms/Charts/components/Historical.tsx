@@ -68,7 +68,6 @@ export const HistoricalChart = ({
     <RechartResponsiveWrapper height="340px">
       {chartHidden && (
         <NotEnoughData
-          daysToWait={POINTS_REQUIRED_FOR_CHART[timeframe]}
           style={{
             width: '80%',
             backgroundColor: 'var(--color-surface-subtle)',

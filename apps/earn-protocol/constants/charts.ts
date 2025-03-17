@@ -5,10 +5,16 @@ export const CHART_TIMESTAMP_FORMAT_SHORT = 'DD MMM YYYY' // used for daily and 
 export const POINTS_REQUIRED_FOR_CHART: {
   [key in TimeframesType]: number
 } = {
+  // show 7d hourly data after one hour
   '7d': 1, // hourly
-  '30d': 24, // hourly
-  '90d': 14, // daily
-  '6m': 60, // daily
-  '1y': 120, // daily
-  '3y': 360, // weekly
+  // show 30d hourly data after more than 7d (in hours) is available
+  '30d': 168, // hourly
+  // show 90d daily data after more than 30d (in days) is available
+  '90d': 30, // daily
+  // show 6m daily data after more than 90d (in days) is available
+  '6m': 90, // daily
+  // show 1y daily data after more than 6m (in days) is available
+  '1y': 180, // daily
+  // show 3y weekly data after more than 1y (in weeks) is available
+  '3y': 52, // weekly
 }

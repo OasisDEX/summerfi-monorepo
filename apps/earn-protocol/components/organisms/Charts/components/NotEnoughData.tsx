@@ -6,13 +6,7 @@ import graphIcon from '@/public/img/misc/graph_icon.svg'
 
 import notEnoughDataStyles from './NotEnoughData.module.scss'
 
-export const NotEnoughData = ({
-  daysToWait,
-  style,
-}: {
-  daysToWait: number
-  style?: CSSProperties
-}) => {
+export const NotEnoughData = ({ style }: { style?: CSSProperties }) => {
   return (
     <div className={notEnoughDataStyles.notEnoughDataInfo} style={style}>
       <Image
@@ -23,7 +17,7 @@ export const NotEnoughData = ({
       <Text variant="p2semi" style={{ marginBottom: '8px' }}>
         Not enough data to show this graph
       </Text>
-      <Text variant="p2">Please wait {daysToWait} days for data to accrue.</Text>
+      <Text variant="p2">Please wait more time for data to accrue.</Text>
     </div>
   )
 }
