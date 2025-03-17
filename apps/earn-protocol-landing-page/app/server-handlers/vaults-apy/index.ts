@@ -52,6 +52,17 @@ export const getVaultsApy: ({
 }: GetVaultsApyParams) => Promise<GetVaultsApyResponse> = async ({ fleets }) => {
   const functionsApiUrl = process.env.FUNCTIONS_API_URL
 
+  const emptyResponse = fleets.reduce<GetVaultsApyResponse>((acc, { fleetAddress, chainId }) => {
+    acc[`${fleetAddress}-${chainId}`] = {
+      apy: 0,
+      sma24h: null,
+      sma7d: null,
+      sma30d: null,
+    }
+
+    return acc
+  }, {})
+
   if (!functionsApiUrl) {
     throw new Error('FUNCTIONS_API_URL is not set')
   }
@@ -91,7 +102,7 @@ export const getVaultsApy: ({
           ...ratesMap,
         }
       },
-      {},
+      emptyResponse,
     )
 
     return response
