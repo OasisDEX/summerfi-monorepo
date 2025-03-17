@@ -52,7 +52,7 @@ export const PositionHistoricalChart = ({
         paddingBottom: 0,
         position: 'relative',
         ...(chartHidden && {
-          // so much hacks to just because the legend is used as a separate UI element
+          // so much hacks just because the legend is used as a separate UI element
           // will need to refactor this
           paddingLeft: 0,
         }),

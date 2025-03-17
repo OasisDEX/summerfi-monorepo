@@ -163,18 +163,16 @@ export const HistoricalChart = ({
             animateNewValues
             hide={chartHidden}
           />
-          {data?.length && (
-            <Legend
-              content={
-                <HistoricalLegend tokenSymbol={tokenSymbol} highlightedData={highlightedData} />
-              }
-              iconType="circle"
-              iconSize={10}
-              align={isMobile ? 'center' : 'right'}
-              verticalAlign={isMobile ? 'bottom' : 'top'}
-              layout="vertical"
-            />
-          )}
+          <Legend
+            content={
+              <HistoricalLegend tokenSymbol={tokenSymbol} highlightedData={highlightedData} />
+            }
+            iconType="circle"
+            iconSize={10}
+            align={isMobile ? 'center' : 'right'}
+            verticalAlign={isMobile ? 'bottom' : 'top'}
+            layout="vertical"
+          />
         </ComposedChart>
       </ResponsiveContainer>
     </RechartResponsiveWrapper>
