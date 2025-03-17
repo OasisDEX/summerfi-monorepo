@@ -168,13 +168,10 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     if (!configMapsPerChain) {
       throw new Error('Unsupported migration type: ' + params.migrationType)
     }
-    const configMaps = configMapsPerChain[params.chainInfo.chainId]
-    if (!configMaps) {
-      return []
-    }
 
     // no configs for this chain
-    if (Object.values(configMaps).length === 0) {
+    const configMaps = configMapsPerChain[params.chainInfo.chainId]
+    if (!configMaps || Object.keys(configMaps).length === 0) {
       return []
     }
 
