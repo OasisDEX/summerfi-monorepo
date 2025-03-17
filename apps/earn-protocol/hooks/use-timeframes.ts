@@ -16,6 +16,15 @@ export const allTimeframesAvailable = {
   '3y': true,
 }
 
+export const allTimeframesNotAvailable = {
+  '7d': false,
+  '30d': false,
+  '90d': false,
+  '6m': false,
+  '1y': false,
+  '3y': false,
+}
+
 type UseTimeframesProps = {
   chartData?: ChartsDataTimeframes
   customDefaultTimeframe?: TimeframesType
@@ -27,36 +36,26 @@ export const useTimeframes = ({ chartData, customDefaultTimeframe }: UseTimefram
       return {} as TimeframesItem
     }
 
-    return Object.keys(chartData).reduce<TimeframesItem>(
-      (acc, key) => {
-        const keyTyped = key as keyof ChartsDataTimeframes
+    return Object.keys(chartData).reduce<TimeframesItem>((acc, key) => {
+      const keyTyped = key as keyof ChartsDataTimeframes
 
-        if (keyTyped === '7d') {
-          // we always want to show 7d
-          return {
-            ...acc,
-            [keyTyped]: true,
-          }
-        }
-
+      if (keyTyped === '7d') {
+        // we always want to show 7d
         return {
           ...acc,
-          [keyTyped]:
-            chartData[keyTyped].filter((dataPoint) => {
-              // we dont want to include forecast data
-              return !dataPoint.forecast
-            }).length > POINTS_REQUIRED_FOR_CHART[keyTyped],
+          [keyTyped]: true,
         }
-      },
-      {
-        '7d': false,
-        '30d': false,
-        '90d': false,
-        '6m': false,
-        '1y': false,
-        '3y': false,
-      },
-    )
+      }
+
+      return {
+        ...acc,
+        [keyTyped]:
+          chartData[keyTyped].filter((dataPoint) => {
+            // we dont want to include forecast data
+            return !dataPoint.forecast
+          }).length > POINTS_REQUIRED_FOR_CHART[keyTyped],
+      }
+    }, allTimeframesNotAvailable)
   }, [chartData])
 
   // if 90d isnt available, default to 7d

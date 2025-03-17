@@ -32,7 +32,11 @@ import { PortfolioSummerPro } from '@/features/portfolio/components/PortfolioSum
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 import { calculateOverallSumr } from '@/helpers/calculate-overall-sumr'
-import { allTimeframesAvailable, useTimeframes } from '@/hooks/use-timeframes'
+import {
+  allTimeframesAvailable,
+  allTimeframesNotAvailable,
+  useTimeframes,
+} from '@/hooks/use-timeframes'
 
 import portfolioOverviewStyles from './PortfolioOverview.module.scss'
 
@@ -87,7 +91,7 @@ const getDatablocks = ({
 
 type PortfolioOverviewProps = {
   vaultsList: SDKVaultsListType
-  positions: PositionWithVault[]
+  positions: PositionWithVault[] | []
   rewardsData: ClaimDelegateExternalData
   positionsHistoricalChartMap: {
     [key: string]: HistoryChartData
@@ -112,12 +116,17 @@ export const PortfolioOverview = ({
     state: { sumrNetApyConfig },
   } = useLocalConfig()
 
+  const hasPositions = !!positions.length
+
   const {
     timeframe,
     setTimeframe,
     timeframes: _timeframes, // ignored on portfolio, we allow all timeframes
   } = useTimeframes({
-    chartData: positionsHistoricalChartMap[getUniqueVaultId(positions[0].vault)].data,
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    chartData: hasPositions
+      ? positionsHistoricalChartMap[getUniqueVaultId(positions[0].vault)].data
+      : undefined,
   })
 
   const { deviceType } = useDeviceType()
@@ -178,7 +187,7 @@ export const PortfolioOverview = ({
               Positions
             </Text>
             <Timeframes
-              timeframes={allTimeframesAvailable}
+              timeframes={hasPositions ? allTimeframesAvailable : allTimeframesNotAvailable}
               setActiveTimeframe={setTimeframe}
               activeTimeframe={timeframe}
             />
