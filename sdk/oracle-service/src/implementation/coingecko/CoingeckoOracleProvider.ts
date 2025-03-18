@@ -66,16 +66,17 @@ export class CoingeckoOracleProvider
   }
 
   /** @see IOracleProvider.getSpotPrice */
-  async getSpotPrice(params: {
-    baseToken: IToken
-    quoteToken?: Denomination
-  }): Promise<SpotPriceInfo> {
-    if (isToken(params.quoteToken)) {
+  async getSpotPrice(
+    params: Parameters<IOracleProvider['getSpotPrice']>[0],
+  ): ReturnType<IOracleProvider['getSpotPrice']> {
+    if (isToken(params.denomination)) {
       throw new Error('Quote token must be a fiat currency')
     }
 
     const baseToken = params.baseToken
-    const quoteCurrency = params.quoteToken ?? FiatCurrency.USD
+    const quoteCurrency = params.denomination ?? FiatCurrency.USD
+
+    const authHeader = this._getAuthHeader()
 
     const spotUrl = this._formatSpotUrl({
       chainInfo: params.baseToken.chainInfo,
@@ -83,7 +84,6 @@ export class CoingeckoOracleProvider
       quoteCurrency: quoteCurrency,
     })
 
-    const authHeader = this._getAuthHeader()
     const response = await fetch(spotUrl, {
       headers: authHeader,
     })
@@ -93,7 +93,7 @@ export class CoingeckoOracleProvider
       const errorType = this._parseErrorType(errorJSON)
 
       throw Error(
-        `Error performing 1inch spot price request: ${JSON.stringify({
+        `Error performing coingecko spot price request: ${JSON.stringify({
           apiQuery: spotUrl,
           statusCode: response.status,
           json: errorJSON,
@@ -122,6 +122,7 @@ export class CoingeckoOracleProvider
     params: Parameters<IOracleProvider['getSpotPrices']>[0],
   ): ReturnType<IOracleProvider['getSpotPrices']> {
     const authHeader = this._getAuthHeader()
+    const quote = params.quote ?? FiatCurrency.USD
 
     const spotUrl = this._formatSpotUrl({
       chainInfo: params.chainInfo,
@@ -138,7 +139,7 @@ export class CoingeckoOracleProvider
       const errorType = this._parseErrorType(errorJSON)
 
       throw Error(
-        `Error performing 1inch spot price request: ${JSON.stringify({
+        `Error performing coingecko spot price request: ${JSON.stringify({
           apiQuery: spotUrl,
           statusCode: response.status,
           json: errorJSON,
@@ -147,21 +148,25 @@ export class CoingeckoOracleProvider
       )
     }
 
-    const responseData = (await response.json()) as OneInchSpotResponse
+    const responseData = (await response.json()) as CoingeckoResponse
 
     const priceByAddress = Object.fromEntries(
       Object.entries(responseData).map(([address, price]) => {
-        const base = params.baseTokens.find(
+        const baseToken = params.baseTokens.find(
           (t) => t.address.value.toLowerCase() === address.toLowerCase(),
         )
-        if (!base) {
+        if (!baseToken) {
           throw new Error(
             `Token with address ${address} not found in base tokens: ${params.baseTokens.map((t) => t.address.value)}`,
           )
         }
         return [
           address.toLowerCase(),
-          Price.createFrom({ value: price.toString(), base, quote: params.quote }),
+          Price.createFrom({
+            value: price[quote.toLowerCase()].toString(),
+            base: baseToken,
+            quote,
+          }),
         ]
       }),
     )
