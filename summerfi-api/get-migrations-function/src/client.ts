@@ -8,7 +8,7 @@ import { USD_DECIMALS } from '@summerfi/serverless-shared/constants'
 import { ProtocolMigrationAssets } from './types'
 import {
   Address,
-  type ChainId,
+  ChainId,
   isChainId,
   PortfolioMigrationAddressType,
   PortfolioMigrationAsset,
@@ -50,6 +50,9 @@ export function createMigrationsClient(
       const chainId = Number(chainIdString)
       if (!isChainId(chainId)) {
         throw new Error(`Invalid chainId: ${chainId}`)
+      }
+      if (chainId === ChainId.SONIC) {
+        throw new Error('Sonic is not supported yet')
       }
       if (customChainId && customChainId !== chainId) {
         return
