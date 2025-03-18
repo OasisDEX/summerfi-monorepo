@@ -5,6 +5,7 @@ import {
   zero,
 } from '@summerfi/app-utils'
 import { type Metadata } from 'next'
+import { headers } from 'next/headers'
 
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
@@ -43,13 +44,19 @@ export async function generateMetadata(): Promise<Metadata> {
     vaults.reduce((acc, vault) => acc.plus(vault.totalValueLockedUSD), zero),
   )
   const protocolsSupported = getVaultsProtocolsList(vaults)
+  const prodHost = (await headers()).get('host')
+
+  const baseUrl =
+    process.env.NODE_ENV === 'development'
+      ? new URL(`http://localhost:${process.env.PORT ?? 3002}`)
+      : new URL(`https://${prodHost}`)
 
   return {
     title: `Lazy Summer Protocol - $${tvl} TVL with ${protocolsSupported.length} protocols supported`,
     description:
       "Get effortless access to crypto's best DeFi yields. Continually rebalanced by AI powered Keepers to earn you more while saving you time and reducing costs.'",
     openGraph: {
-      images: `/earn/api/og/vaults-list?tvl=${tvl}&protocols=${protocolsSupported.length}`,
+      images: `${baseUrl}/earn/api/og/vaults-list?tvl=${tvl}&protocols=${protocolsSupported.length}`,
     },
   }
 }
