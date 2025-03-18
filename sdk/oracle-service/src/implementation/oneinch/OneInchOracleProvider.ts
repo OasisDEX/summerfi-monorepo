@@ -186,6 +186,8 @@ export class OneInchOracleProvider
   ): ReturnType<IOracleProvider['getSpotPrices']> {
     const authHeader = this._getOneInchSpotAuthHeader()
 
+    const quote = params.quote ?? FiatCurrency.USD
+
     const spotUrl = this._formatOneInchSpotUrl({
       chainInfo: params.chainInfo,
       tokenAddresses: params.baseTokens.map((token) => token.address),
@@ -222,10 +224,7 @@ export class OneInchOracleProvider
             `Token with address ${address} not found in base tokens: ${params.baseTokens.map((t) => t.address.value)}`,
           )
         }
-        return [
-          address.toLowerCase(),
-          Price.createFrom({ value: price.toString(), base, quote: params.quote }),
-        ]
+        return [address.toLowerCase(), Price.createFrom({ value: price.toString(), base, quote })]
       }),
     )
 

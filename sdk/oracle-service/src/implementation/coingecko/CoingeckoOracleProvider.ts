@@ -144,10 +144,10 @@ export class CoingeckoOracleProvider
 
     const priceByAddress = Object.fromEntries(
       Object.entries(responseData).map(([address, price]) => {
-        const baseToken = params.baseTokens.find(
+        const base = params.baseTokens.find(
           (t) => t.address.value.toLowerCase() === address.toLowerCase(),
         )
-        if (!baseToken) {
+        if (!base) {
           throw new Error(
             `Token with address ${address} not found in base tokens: ${params.baseTokens.map((t) => t.address.value)}`,
           )
@@ -156,7 +156,7 @@ export class CoingeckoOracleProvider
           address.toLowerCase(),
           Price.createFrom({
             value: price[quote.toLowerCase()].toString(),
-            base: baseToken,
+            base,
             quote,
           }),
         ]
