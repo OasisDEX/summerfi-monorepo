@@ -42,7 +42,6 @@ export function GET(request: NextRequest) {
               width: '140%',
               height: '140%',
               objectFit: 'cover',
-              zIndex: -1,
             }}
           />
           <img
