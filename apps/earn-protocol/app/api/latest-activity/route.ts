@@ -6,7 +6,9 @@ import { getUsersActivitiesServerSide } from '@/app/server-handlers/tables-data/
 const LatestActivityQueryParamsSchema = z.object({
   page: z.coerce.number().int().positive().default(1),
   limit: z.coerce.number().int().min(1).max(100).default(50),
-  sortBy: z.enum(['timestamp', 'balanceUsd', 'amountUsd']).default('timestamp'),
+  sortBy: z
+    .enum(['timestamp', 'balance', 'balanceUsd', 'amount', 'amountUsd'])
+    .default('timestamp'),
   orderBy: z.enum(['asc', 'desc']).default('asc'),
   actionType: z.enum(['deposit', 'withdraw']).optional(),
   userAddress: z.string().optional(),

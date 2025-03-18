@@ -46,26 +46,28 @@ export const updateTopDepositors = async ({
     fleets: uniqueFleets,
   })
   const extendPositions = topDepositors.map((position) => {
-    const change7d = calculateTopDepositors7daysChange({ position }).toString()
+    const changeSevenDays = calculateTopDepositors7daysChange({ position }).toString()
 
-    const earningStreakResetTimestamp = getEarningStreakResetTimestamp({ position })
+    const earningsStreakResetTimestamp = getEarningStreakResetTimestamp({ position })
 
-    const earningStreak = BigInt(new Date().getTime() - earningStreakResetTimestamp)
+    const earningsStreak = BigInt(new Date().getTime() - earningsStreakResetTimestamp)
 
-    const projected1yEarnings = new BigNumber(
+    const projectedOneYearEarnings = new BigNumber(
       vaultsApyData[
         `${position.vault.id}-${subgraphNetworkToId(position.vault.protocol.network)}`
       ].apy,
     ).times(position.inputTokenBalanceNormalized)
 
-    const projected1yEarningsInUSD = projected1yEarnings.times(position.vault.inputTokenPriceUSD)
+    const projectedOneYearEarningsUsd = projectedOneYearEarnings.times(
+      position.vault.inputTokenPriceUSD,
+    )
 
     return {
       ...position,
-      change7d,
-      earningStreak,
-      projected1yEarnings: projected1yEarnings.toString(),
-      projected1yEarningsInUSD: projected1yEarningsInUSD.toString(),
+      changeSevenDays,
+      earningsStreak,
+      projectedOneYearEarnings: projectedOneYearEarnings.toString(),
+      projectedOneYearEarningsUsd: projectedOneYearEarningsUsd.toString(),
     }
   })
 

@@ -39,16 +39,16 @@ export const topDepositorsMapper = (rawData: TopDepositors[]) => {
   return rawData.map((item) => {
     const asset = getDisplayToken(item.inputTokenSymbol) as TokenSymbolsList
 
-    const change7days = new BigNumber(item.changeSevenDays.toString())
-    const changeSign = change7days.gt(0) ? '+' : ''
-    const changeColor = change7days.isZero()
+    const changeSevenDays = new BigNumber(item.changeSevenDays.toString())
+    const changeSign = changeSevenDays.gt(0) ? '+' : ''
+    const changeColor = changeSevenDays.isZero()
       ? 'var(--earn-protocol-secondary-100)'
-      : change7days.gt(0)
+      : changeSevenDays.gt(0)
         ? 'var(--earn-protocol-success-100)'
         : 'var(--earn-protocol-warning-100)'
 
-    const earningStreak = formatDateDifference({
-      value: Number(item.earningStreak),
+    const earningsStreak = formatDateDifference({
+      value: Number(item.earningsStreak),
     })
 
     return {
@@ -68,7 +68,7 @@ export const topDepositorsMapper = (rawData: TopDepositors[]) => {
             <TableCellText>{formatCryptoBalance(item.balance.toString())}</TableCellText>
           </div>
         ),
-        balanceUSD: (
+        balanceUsd: (
           <div
             style={{
               display: 'flex',
@@ -80,13 +80,13 @@ export const topDepositorsMapper = (rawData: TopDepositors[]) => {
           </div>
         ),
         strategy: <TableCellText style={{ whiteSpace: 'nowrap' }}>{item.strategy}</TableCellText>,
-        change7d: (
+        changeSevenDays: (
           <TableCellText style={{ color: changeColor }}>
             {changeSign}
-            {formatCryptoBalance(change7days)}
+            {formatCryptoBalance(changeSevenDays)}
           </TableCellText>
         ),
-        projected1yrEarnings: (
+        projectedOneYearEarnings: (
           <div
             style={{
               display: 'flex',
@@ -101,8 +101,8 @@ export const topDepositorsMapper = (rawData: TopDepositors[]) => {
             </TableCellText>
           </div>
         ),
-        numberOfDeposits: <TableCellText>{item.noOfDeposits.toString()}</TableCellText>,
-        earningsStreak: <TableCellText>{earningStreak}</TableCellText>,
+        noOfDeposits: <TableCellText>{item.noOfDeposits.toString()}</TableCellText>,
+        earningsStreak: <TableCellText>{earningsStreak}</TableCellText>,
         link: (
           <Link
             href={getVaultPositionUrl({

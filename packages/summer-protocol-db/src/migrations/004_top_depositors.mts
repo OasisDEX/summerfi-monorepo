@@ -20,7 +20,7 @@ export async function up(db: Kysely<never>): Promise<void> {
     .addColumn('no_of_withdrawals', 'bigint', (col) => col.notNull())
     .addColumn('projected_one_year_earnings', 'decimal(78, 18)', (col) => col.notNull())
     .addColumn('projected_one_year_earnings_usd', 'decimal(78, 18)', (col) => col.notNull())
-    .addColumn('earning_streak', 'bigint', (col) => col.notNull())
+    .addColumn('earnings_streak', 'bigint', (col) => col.notNull())
     .addColumn('input_token_price_usd', 'decimal(78, 18)', (col) => col.notNull())
     .addColumn('input_token_symbol', 'varchar(66)', (col) => col.notNull())
     .addColumn('input_token_decimals', 'bigint', (col) => col.notNull())

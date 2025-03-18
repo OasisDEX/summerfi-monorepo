@@ -111,7 +111,7 @@ export interface TopDepositors {
   balance: Numeric;
   balanceUsd: Numeric;
   changeSevenDays: Numeric;
-  earningStreak: Int8;
+  earningsStreak: Int8;
   id: Generated<number>;
   inputTokenDecimals: Int8;
   inputTokenPriceUsd: Numeric;

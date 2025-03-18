@@ -36,7 +36,7 @@ export const topDepositorsSorter = ({
           direction: sortConfig.direction,
         })
       })
-    case 'change7d':
+    case 'changeSevenDays':
       return data.sort((a, b) =>
         simpleSort({
           a: calculateTopDepositors7daysChange(a).toNumber(),
@@ -44,7 +44,7 @@ export const topDepositorsSorter = ({
           direction: sortConfig.direction,
         }),
       )
-    case 'projected1yrEarnings':
+    case 'projectedOneYearEarnings':
       return data.sort((a, b) =>
         simpleSort({
           a: new BigNumber(a.inputTokenBalance.toString())
@@ -56,7 +56,7 @@ export const topDepositorsSorter = ({
           direction: sortConfig.direction,
         }),
       )
-    case 'numberOfDeposits':
+    case 'noOfDeposits':
       return data.sort((a, b) =>
         simpleSort({
           a: a.deposits.length,

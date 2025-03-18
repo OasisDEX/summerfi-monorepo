@@ -11,7 +11,7 @@ export const topDepositorsColumns = [
   },
   {
     title: 'USD Value',
-    key: 'balanceUSD',
+    key: 'balanceUsd',
     sortable: true,
   },
   {
@@ -21,17 +21,17 @@ export const topDepositorsColumns = [
   },
   {
     title: 'Change (7d)',
-    key: 'change7d',
+    key: 'changeSevenDays',
     sortable: true,
   },
   {
     title: 'Projected 1yr Earnings',
-    key: 'projected1yrEarnings',
+    key: 'projectedOneYearEarnings',
     sortable: true,
   },
   {
     title: '# of Deposits',
-    key: 'numberOfDeposits',
+    key: 'noOfDeposits',
     sortable: true,
   },
   {
@@ -47,18 +47,18 @@ export const topDepositorsColumns = [
 ]
 
 export const topDepositorsColumnsHiddenOnTablet = [
-  'change7d',
-  'projected1yrEarnings',
-  'numberOfDeposits',
+  'changeSevenDays',
+  'projectedOneYearEarnings',
+  'noOfDeposits',
   'earningsStreak',
-  'balanceUSD',
+  'balanceUsd',
 ]
 
 export const topDepositorsColumnsHiddenOnMobile = [
   'strategy',
-  'change7d',
-  'balanceUSD',
-  'projected1yrEarnings',
-  'numberOfDeposits',
+  'changeSevenDays',
+  'balanceUsd',
+  'projectedOneYearEarnings',
+  'noOfDeposits',
   'earningsStreak',
 ]

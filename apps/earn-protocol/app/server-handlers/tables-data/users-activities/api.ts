@@ -13,7 +13,7 @@ export const getUsersActivitiesServerSide = async ({
 }: {
   page: number
   limit: number
-  sortBy: 'timestamp' | 'balanceUsd' | 'amountUsd'
+  sortBy: 'timestamp' | 'balance' | 'balanceUsd' | 'amount' | 'amountUsd'
   orderBy: 'asc' | 'desc'
   actionType?: ActionType
   userAddress?: string

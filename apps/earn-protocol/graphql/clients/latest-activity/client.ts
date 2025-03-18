@@ -10490,7 +10490,7 @@ export type GetLatestActivityQueryVariables = Exact<{
 }>;
 
 
-export type GetLatestActivityQuery = { __typename?: 'Query', deposits: Array<{ __typename?: 'Deposit', hash: string, timestamp: number, amount: number, amountUSD: number, position: { __typename?: 'Position', inputTokenBalance: number, account: { __typename?: 'Account', id: string }, vault: { __typename?: 'Vault', id: string, name?: string | null, inputTokenPriceUSD?: number | null, inputToken: { __typename?: 'Token', id: string, symbol: string, decimals: number }, protocol: { __typename?: 'YieldAggregator', network: Network } } } }>, withdraws: Array<{ __typename?: 'Withdraw', hash: string, timestamp: number, amount: number, amountUSD: number, position: { __typename?: 'Position', inputTokenBalance: number, account: { __typename?: 'Account', id: string }, vault: { __typename?: 'Vault', id: string, name?: string | null, inputTokenPriceUSD?: number | null, inputToken: { __typename?: 'Token', id: string, symbol: string, decimals: number }, protocol: { __typename?: 'YieldAggregator', network: Network } } } }> };
+export type GetLatestActivityQuery = { __typename?: 'Query', deposits: Array<{ __typename?: 'Deposit', hash: string, timestamp: number, amount: number, amountUSD: number, position: { __typename?: 'Position', inputTokenBalance: number, inputTokenBalanceNormalizedInUSD: number, account: { __typename?: 'Account', id: string }, vault: { __typename?: 'Vault', id: string, name?: string | null, inputTokenPriceUSD?: number | null, inputToken: { __typename?: 'Token', id: string, symbol: string, decimals: number }, protocol: { __typename?: 'YieldAggregator', network: Network } } } }>, withdraws: Array<{ __typename?: 'Withdraw', hash: string, timestamp: number, amount: number, amountUSD: number, position: { __typename?: 'Position', inputTokenBalance: number, inputTokenBalanceNormalizedInUSD: number, account: { __typename?: 'Account', id: string }, vault: { __typename?: 'Vault', id: string, name?: string | null, inputTokenPriceUSD?: number | null, inputToken: { __typename?: 'Token', id: string, symbol: string, decimals: number }, protocol: { __typename?: 'YieldAggregator', network: Network } } } }> };
 
 
 export const GetLatestActivityDocument = /*#__PURE__*/ gql`
@@ -10511,6 +10511,7 @@ export const GetLatestActivityDocument = /*#__PURE__*/ gql`
         id
       }
       inputTokenBalance
+      inputTokenBalanceNormalizedInUSD
       vault {
         id
         name
@@ -10542,6 +10543,7 @@ export const GetLatestActivityDocument = /*#__PURE__*/ gql`
         id
       }
       inputTokenBalance
+      inputTokenBalanceNormalizedInUSD
       vault {
         id
         name

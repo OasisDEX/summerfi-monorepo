@@ -11,8 +11,10 @@ const TopDepositorsQueryParamsSchema = z.object({
       'balanceUsd',
       'balance',
       'changeSevenDays',
+      'projectedOneYearEarnings',
       'projectedOneYearEarningsUsd',
       'noOfDeposits',
+      'earningsStreak',
     ])
     .default('balanceUsd'),
   orderBy: z.enum(['asc', 'desc']).default('asc'),

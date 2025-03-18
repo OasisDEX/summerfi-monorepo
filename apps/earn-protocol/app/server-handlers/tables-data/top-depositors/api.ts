@@ -16,8 +16,10 @@ export const getTopDepositorsServerSide = async ({
     | 'balanceUsd'
     | 'balance'
     | 'changeSevenDays'
+    | 'projectedOneYearEarnings'
     | 'projectedOneYearEarningsUsd'
     | 'noOfDeposits'
+    | 'earningsStreak'
   orderBy: 'asc' | 'desc'
   userAddress?: string
   strategies?: string[]

@@ -59,7 +59,7 @@ export const UserActivity: FC<UserActivityProps> = ({
       content: (
         <TopDepositorsTable
           topDepositorsList={topDepositors}
-          hiddenColumns={['user', 'strategy', 'numberOfDeposits']}
+          hiddenColumns={['user', 'strategy', 'noOfDeposits']}
           rowsToDisplay={4}
           vaultsApyData={{
             [vaultApyUniqueId]: vaultApyData,

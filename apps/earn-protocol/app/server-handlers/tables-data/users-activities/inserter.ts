@@ -28,8 +28,8 @@ export async function insertUsersActivitiesInBatches(
                 activity.position.vault.name,
               )
             : 'n/a',
-          balance: activity.amount,
-          balanceUsd: activity.amountUSD,
+          balance: activity.position.inputTokenBalance,
+          balanceUsd: activity.position.inputTokenBalanceNormalizedInUSD,
           network: sdkNetworkToDbNetworkMap[
             activity.position.vault.protocol.network as unknown as SDKSupportedNetwork
           ] as Network,

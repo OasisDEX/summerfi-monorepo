@@ -5,6 +5,7 @@ import {
   GenericMultiselect,
   getTwitterShareUrl,
   HeadingWithCards,
+  LoadingSpinner,
   TabBar,
   TableCarousel,
   type TableSortedColumn,
@@ -163,6 +164,8 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
       page: 1,
       tokens: tokenFilter,
       strategies: strategyFilter,
+      sortBy: latestActivitySortBy,
+      orderBy: latestActivityOrderBy,
     })
       .then((res) => {
         setLoadedUserActivityList(res.data)
@@ -170,7 +173,7 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
       .finally(() => {
         setIsLoading(false)
       })
-  }, [strategyFilter, tokenFilter])
+  }, [strategyFilter, tokenFilter, latestActivitySortBy, latestActivityOrderBy])
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -183,6 +186,8 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
       page: 1,
       tokens: tokenFilter,
       strategies: strategyFilter,
+      sortBy: topDepositorsSortBy,
+      orderBy: topDepositorsOrderBy,
     })
       .then((res) => {
         setLoadedTopDepositorsList(res.data)
@@ -190,7 +195,7 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
       .finally(() => {
         setIsLoading(false)
       })
-  }, [strategyFilter, tokenFilter])
+  }, [strategyFilter, tokenFilter, topDepositorsSortBy, topDepositorsOrderBy])
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -235,6 +240,11 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
         <InfiniteScroll
           loadMore={handleMoreTopDepositorsItems}
           hasMore={topDepositors.pagination.totalPages > currentTopDepositorsPage && !isLoading}
+          loader={
+            <LoadingSpinner
+              style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
+            />
+          }
         >
           {filters}
           <TopDepositorsTable
@@ -255,6 +265,11 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
         <InfiniteScroll
           loadMore={handleMoreUserActivityItems}
           hasMore={usersActivities.pagination.totalPages > currentUserActivityPage && !isLoading}
+          loader={
+            <LoadingSpinner
+              style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
+            />
+          }
         >
           {filters}
           <UserActivityTable
