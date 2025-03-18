@@ -7,7 +7,7 @@
     "dev": "dotenv -e ../../.env -e ../../.env.local -- next dev -p 3002 --turbopack",
     "build:apps": "dotenv -e ../../.env -e ../../.env.local -- next build",
     "start": "dotenv -e ../../.env -e ../../.env.local -- next start -p 3002",
-    "lint": "eslint .",
+    "lint": "tsc --noEmit && eslint .",
     "lint:fix": "eslint . --fix",
     "lint-timing": "TIMING=1 eslint .",
     "generate": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config"
