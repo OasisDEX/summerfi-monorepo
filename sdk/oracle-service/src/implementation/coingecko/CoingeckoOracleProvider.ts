@@ -1,24 +1,16 @@
-import { OneInchSpotResponse } from '../oneinch/Types'
-
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IOracleProvider } from '@summerfi/oracle-common'
 import {
   FiatCurrency,
   IAddress,
   IChainInfo,
-  IToken,
   SwapErrorType,
-  isTokenAmount,
-  Address,
   ChainId,
-  Denomination,
   Price,
-  isFiatCurrencyAmount,
   isToken,
-  type AddressValue,
   ChainIds,
 } from '@summerfi/sdk-common'
-import { OracleProviderType, SpotPriceInfo } from '@summerfi/sdk-common/oracle'
+import { OracleProviderType } from '@summerfi/sdk-common/oracle'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 import fetch from 'node-fetch'
 import type { OracleProviderConfig } from '../Types'
