@@ -40,17 +40,18 @@ const EarnAllVaultsPage = async () => {
 
 export async function generateMetadata(): Promise<Metadata> {
   const [{ vaults }] = await Promise.all([getVaultsList(), systemConfigHandler()])
+  const prodHost = (await headers()).get('host')
+  const baseUrl = new URL(`https://${prodHost}`)
+
   const tvl = formatCryptoBalance(
     vaults.reduce((acc, vault) => acc.plus(vault.totalValueLockedUSD), zero),
   )
   const protocolsSupported = getVaultsProtocolsList(vaults)
-  const prodHost = (await headers()).get('host')
-  const baseUrl = new URL(`https://${prodHost}`)
 
   return {
     title: `Lazy Summer Protocol - $${tvl} TVL with ${protocolsSupported.length} protocols supported`,
     description:
-      "Get effortless access to crypto's best DeFi yields. Continually rebalanced by AI powered Keepers to earn you more while saving you time and reducing costs.'",
+      "Get effortless access to crypto's best DeFi yields. Continually rebalanced by AI powered Keepers to earn you more while saving you time and reducing costs.",
     openGraph: {
       siteName: 'Lazy Summer Protocol',
       images: `${baseUrl}earn/api/og/vaults-list?tvl=${tvl}&protocols=${protocolsSupported.length}`,
