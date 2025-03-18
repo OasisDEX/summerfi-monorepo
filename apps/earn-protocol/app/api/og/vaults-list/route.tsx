@@ -11,6 +11,10 @@ export function GET(request: NextRequest) {
     const tvl = new URL(request.url).searchParams.get('tvl')
     const protocols = new URL(request.url).searchParams.get('protocols')
 
+    if (!tvl || !protocols || typeof tvl !== 'string' || isNaN(parseInt(protocols, 10))) {
+      return new Response('Invalid query parameters', { status: 400 })
+    }
+
     return new ImageResponse(
       (
         <div
@@ -50,10 +54,10 @@ export function GET(request: NextRequest) {
             }}
           />
           <p style={{ fontSize: '100px', margin: 0 }}>
-            <b style={{ fontWeight: 700, color: '#ff49a4' }}>${tvl}</b>&nbsp;TVL
+            <b style={{ fontWeight: 700, color: '#ff49a4' }}>${String(tvl)}</b>&nbsp;TVL
           </p>
           <p style={{ fontSize: '70px', margin: 0 }}>
-            <b style={{ fontWeight: 700, color: '#ff49a4' }}>{protocols}</b>&nbsp;Protocols
+            <b style={{ fontWeight: 700, color: '#ff49a4' }}>{String(protocols)}</b>&nbsp;Protocols
             Supported
           </p>
         </div>
@@ -63,7 +67,7 @@ export function GET(request: NextRequest) {
         height: 700,
       },
     )
-  } catch (e: any) {
+  } catch (e: unknown) {
     return new Response('Failed to generate OG Image', { status: 500 })
   }
 }
