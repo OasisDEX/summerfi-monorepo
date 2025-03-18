@@ -52,6 +52,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description:
       "Get effortless access to crypto's best DeFi yields. Continually rebalanced by AI powered Keepers to earn you more while saving you time and reducing costs.'",
     openGraph: {
+      siteName: 'Lazy Summer Protocol',
       images: `${baseUrl}earn/api/og/vaults-list?tvl=${tvl}&protocols=${protocolsSupported.length}`,
     },
   }
