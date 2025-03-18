@@ -6,6 +6,7 @@
     "DEBANK_API_KEY",
     "DEBANK_API_URL",
     "RPC_GATEWAY",
+    "PORT",
     "GET_TRIGGERS_URL",
     "MIXPANEL_LOG",
     "MIXPANEL_ENV",
