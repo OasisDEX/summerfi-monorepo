@@ -1,4 +1,4 @@
-import { ChainFamilyMap } from '@summerfi/sdk-common'
+import { ChainFamilyMap, ChainIds } from '@summerfi/sdk-common'
 import { TokenListData } from './TokensListData'
 
 export const StaticTokensData: TokenListData = {
@@ -1071,6 +1071,23 @@ export const StaticTokensData: TokenListData = {
       decimals: 18,
       chainId: 8453,
       logoURI: 'https://tokens.1inch.io/0x940181a94a35a4569e4529a3cdfb74e38fd98631.png',
+    },
+    {
+      name: 'Bridged USDC',
+      address: '0x29219dd400f2bf60e5a23d13be72b486d4038894',
+      symbol: 'USDC.e',
+      decimals: 6,
+      chainId: ChainIds.Sonic,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
+    },
+    {
+      name: 'Wrapped Ether',
+      address: '0x50c42deacd8fc9773493ed674b675be577f2634b',
+      symbol: 'WETH',
+      decimals: 18,
+      chainId: ChainIds.Sonic,
+      logoURI: 'https://assets.coingecko.com/coins/images/279/thumb/ethereum.png?1595348880',
     },
   ],
 }

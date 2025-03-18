@@ -1,9 +1,4 @@
-import {
-  OneInchOracleProviderConfig,
-  OneInchSpotAuthHeader,
-  OneInchSpotAuthHeaderKey,
-  OneInchSpotResponse,
-} from './Types'
+import { OneInchSpotResponse } from './Types'
 
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IOracleProvider } from '@summerfi/oracle-common'
@@ -21,11 +16,11 @@ import {
   isFiatCurrencyAmount,
   isToken,
   type AddressValue,
-  type IPrice,
 } from '@summerfi/sdk-common'
-import { OracleProviderType, SpotPriceInfo, type SpotPricesInfo } from '@summerfi/sdk-common/oracle'
+import { OracleProviderType, SpotPriceInfo } from '@summerfi/sdk-common/oracle'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 import fetch from 'node-fetch'
+import type { OracleProviderConfig } from '../Types'
 
 /**
  * @name OneInchOracleProvider
@@ -38,6 +33,8 @@ export class OneInchOracleProvider
   private readonly _apiUrl: string
   private readonly _apiKey: string
   private readonly _version: string
+  private readonly _authHeader: string
+  private readonly _supportedChainIds: ChainId[]
 
   /** CONSTRUCTOR */
 
@@ -49,11 +46,16 @@ export class OneInchOracleProvider
     this._apiUrl = config.apiUrl
     this._apiKey = config.apiKey
     this._version = config.version
+    this._authHeader = config.authHeader
+    const supportedChainIds = params.configProvider.getConfigurationItem({
+      name: 'ONE_INCH_SWAP_CHAIN_IDS',
+    })
+    this._supportedChainIds = supportedChainIds.split(',').map((id) => parseInt(id))
   }
 
   /** @see IOracleProvider.getSupportedChainIds */
   getSupportedChainIds(): ChainId[] {
-    return [1, 10, 8453, 42161]
+    return this._supportedChainIds
   }
 
   /** @see IOracleProvider.getSpotPrice */
@@ -237,9 +239,9 @@ export class OneInchOracleProvider
    * Returns the authentication header for the 1inch spot price API
    * @returns  The authentication header with the API key
    */
-  private _getOneInchSpotAuthHeader(): OneInchSpotAuthHeader {
+  private _getOneInchSpotAuthHeader() {
     return {
-      [OneInchSpotAuthHeaderKey]: `Bearer ${this._apiKey}`,
+      [this._authHeader]: `Bearer ${this._apiKey}`,
       'Content-Type': 'application/json',
     }
   }
@@ -272,11 +274,11 @@ export class OneInchOracleProvider
   }
 
   /**
-   * Returns the configuration for the 1inch oracle provider
-   * @returns The 1inch oracle provider configuration
+   * Returns the configuration for the oracle provider
+   * @returns The oracle provider configuration
    */
   private _getConfig(): {
-    config: OneInchOracleProviderConfig
+    config: OracleProviderConfig
   } {
     const ONE_INCH_API_SPOT_URL = this.configProvider.getConfigurationItem({
       name: 'ONE_INCH_API_SPOT_URL',
@@ -287,14 +289,23 @@ export class OneInchOracleProvider
     const ONE_INCH_API_SPOT_KEY = this.configProvider.getConfigurationItem({
       name: 'ONE_INCH_API_SPOT_KEY',
     })
+    const ONE_INCH_API_SPOT_AUTH_HEADER = this.configProvider.getConfigurationItem({
+      name: 'ONE_INCH_API_SPOT_AUTH_HEADER',
+    })
 
-    if (!ONE_INCH_API_SPOT_URL || !ONE_INCH_API_SPOT_KEY || !ONE_INCH_API_SPOT_VERSION) {
+    if (
+      !ONE_INCH_API_SPOT_URL ||
+      !ONE_INCH_API_SPOT_KEY ||
+      !ONE_INCH_API_SPOT_VERSION ||
+      !ONE_INCH_API_SPOT_AUTH_HEADER
+    ) {
       console.error(
         JSON.stringify(
           Object.entries({
             ONE_INCH_API_SPOT_URL,
             ONE_INCH_API_SPOT_KEY,
             ONE_INCH_API_SPOT_VERSION,
+            ONE_INCH_API_SPOT_AUTH_HEADER,
           }),
           null,
           2,
@@ -308,6 +319,7 @@ export class OneInchOracleProvider
         apiUrl: ONE_INCH_API_SPOT_URL,
         apiKey: ONE_INCH_API_SPOT_KEY,
         version: ONE_INCH_API_SPOT_VERSION,
+        authHeader: ONE_INCH_API_SPOT_AUTH_HEADER,
       },
     }
   }

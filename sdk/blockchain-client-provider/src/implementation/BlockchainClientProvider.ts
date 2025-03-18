@@ -1,13 +1,10 @@
 import { createPublicClient, defineChain, http, type Chain } from 'viem'
-import { arbitrum, base, mainnet, optimism } from 'viem/chains'
+import { arbitrum, base, mainnet, optimism, sonic } from 'viem/chains'
 
 import { IBlockchainClient, IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
-import { type IChainInfo } from '@summerfi/sdk-common'
-import {
-  IRpcConfig,
-  getRpcGatewayEndpoint,
-} from '@summerfi/serverless-shared/getRpcGatewayEndpoint'
+import { type ChainId, ChainIds, type IChainInfo } from '@summerfi/sdk-common'
+import { type IRpcConfig } from '@summerfi/serverless-shared/getRpcGatewayEndpoint'
 import { assert } from 'console'
 import { getForkUrl } from './getForkUrl'
 
@@ -22,6 +19,30 @@ const rpcConfig: IRpcConfig = {
   source: 'borrow-prod',
 }
 
+export function getRpcGatewayEndpoint(
+  rpcGatewayUrl: string,
+  chainId: ChainId,
+  rpcConfig: IRpcConfig,
+) {
+  const NetworkByChainID: Record<ChainId, string> = {
+    [ChainIds.Mainnet]: 'mainnet',
+    [ChainIds.ArbitrumOne]: 'arbitrum',
+    [ChainIds.Optimism]: 'optimism',
+    [ChainIds.Base]: 'base',
+    [ChainIds.Sonic]: 'sonic',
+  }
+
+  const network = NetworkByChainID[chainId]
+  return (
+    `${rpcGatewayUrl}/?` +
+    `network=${network}&` +
+    `skipCache=${rpcConfig.skipCache}&` +
+    `skipMulticall=${rpcConfig.skipMulticall}&` +
+    `skipGraph=${rpcConfig.skipGraph}&` +
+    `source=${rpcConfig.source}`
+  )
+}
+
 /**
  * Blockchain client provider implements the IBlockchainClientProvider interface
  * @implements IBlockchainClientProvider
@@ -34,7 +55,7 @@ export class BlockchainClientProvider implements IBlockchainClientProvider {
   /** CONSTRUCTOR */
   constructor(params: { configProvider: IConfigurationProvider }) {
     this._configProvider = params.configProvider
-    this._loadClients([mainnet, optimism, arbitrum, base])
+    this._loadClients([mainnet, optimism, arbitrum, base, sonic])
   }
 
   /** PUBLIC */
@@ -61,12 +82,12 @@ export class BlockchainClientProvider implements IBlockchainClientProvider {
 
       return this._createBlockchainClient({ rpcUrl: params.rpcUrl, chain: customChain })
     } else {
-      const provider = this._blockchainClients[params.chainInfo.chainId]
+      const client = this._blockchainClients[params.chainInfo.chainId]
       assert(
-        provider,
-        'Chain was found for the given chain info but the blockchain client was not, this should never happen',
+        client,
+        'Chain was found for the given chainInfo but the blockchain client was not, this should never happen',
       )
-      return provider
+      return client
     }
   }
 
