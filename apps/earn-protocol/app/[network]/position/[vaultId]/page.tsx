@@ -1,10 +1,15 @@
-import { Text } from '@summerfi/app-earn-ui'
+import { getDisplayToken, Text } from '@summerfi/app-earn-ui'
 import { type SDKNetwork } from '@summerfi/app-types'
 import {
+  formatCryptoBalance,
   humanNetworktoSDKNetwork,
   parseServerResponseToClient,
   subgraphNetworkToId,
+  ten,
 } from '@summerfi/app-utils'
+import BigNumber from 'bignumber.js'
+import { capitalize } from 'lodash-es'
+import { type Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
@@ -121,6 +126,34 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       vaultsApyRaw={vaultsApyRaw}
     />
   )
+}
+
+export async function generateMetadata({ params }: EarnVaultOpenPageProps): Promise<Metadata> {
+  const { network: paramsNetwork, vaultId } = await params
+  const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
+  const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
+  const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
+
+  const parsedVaultId = isAddress(vaultId)
+    ? vaultId
+    : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
+
+  const [vault] = await Promise.all([
+    getVaultDetails({
+      vaultAddress: parsedVaultId,
+      network: parsedNetwork,
+    }),
+  ])
+
+  const totalValueLockedTokenParsed = vault
+    ? formatCryptoBalance(
+        new BigNumber(vault.inputTokenBalance.toString()).div(ten.pow(vault.inputToken.decimals)),
+      )
+    : ''
+
+  return {
+    title: `Lazy Summer Protocol - ${vault ? getDisplayToken(vault.inputToken.symbol) : ''} on ${capitalize(paramsNetwork)}, $${totalValueLockedTokenParsed} TVL`,
+  }
 }
 
 export default EarnVaultOpenPage
