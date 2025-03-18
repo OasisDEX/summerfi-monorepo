@@ -28,6 +28,7 @@ export async function insertUsersActivitiesInBatches(
                 activity.position.vault.name,
               )
             : 'n/a',
+          strategyId: `${activity.position.vault.id}-${activity.position.vault.protocol.network}`,
           balance: activity.position.inputTokenBalance,
           balanceUsd: activity.position.inputTokenBalanceNormalizedInUSD,
           network: sdkNetworkToDbNetworkMap[

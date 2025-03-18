@@ -76,6 +76,7 @@ export interface LatestActivity {
   inputTokenSymbol: string;
   network: Network;
   strategy: string;
+  strategyId: string;
   timestamp: Int8;
   txHash: string;
   userAddress: string;
@@ -122,6 +123,7 @@ export interface TopDepositors {
   projectedOneYearEarnings: Numeric;
   projectedOneYearEarningsUsd: Numeric;
   strategy: string;
+  strategyId: string;
   updatedAt: Int8;
   userAddress: string;
   vaultId: string;

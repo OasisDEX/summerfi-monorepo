@@ -239,7 +239,11 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
       content: (
         <InfiniteScroll
           loadMore={handleMoreTopDepositorsItems}
-          hasMore={topDepositors.pagination.totalPages > currentTopDepositorsPage && !isLoading}
+          hasMore={
+            topDepositors.pagination.totalPages > currentTopDepositorsPage &&
+            !isLoading &&
+            topDepositors.data.length > 0
+          }
           loader={
             <LoadingSpinner
               style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
@@ -264,7 +268,11 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
       content: (
         <InfiniteScroll
           loadMore={handleMoreUserActivityItems}
-          hasMore={usersActivities.pagination.totalPages > currentUserActivityPage && !isLoading}
+          hasMore={
+            usersActivities.pagination.totalPages > currentUserActivityPage &&
+            !isLoading &&
+            usersActivities.data.length > 0
+          }
           loader={
             <LoadingSpinner
               style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}

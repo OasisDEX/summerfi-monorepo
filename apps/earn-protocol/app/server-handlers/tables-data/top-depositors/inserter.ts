@@ -29,6 +29,7 @@ export async function insertTopDepositorsInBatches(
                 topDepositor.vault.name,
               )
             : 'n/a',
+          strategyId: `${topDepositor.vault.id}-${topDepositor.vault.protocol.network}`,
           balance: topDepositor.inputTokenBalanceNormalized,
           balanceUsd: topDepositor.inputTokenBalanceNormalizedInUSD,
           network: sdkNetworkToDbNetworkMap[

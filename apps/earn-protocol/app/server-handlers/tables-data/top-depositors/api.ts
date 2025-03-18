@@ -51,7 +51,7 @@ export const getTopDepositorsServerSide = async ({
         qb.where('inputTokenSymbol', 'in', resolvedTokens as string[]),
       )
       .$if(!!strategies && strategies.length > 0, (qb) =>
-        qb.where('strategy', 'in', strategies as string[]),
+        qb.where('strategyId', 'in', strategies as string[]),
       )
 
     // Apply pagination and sorting
