@@ -23,6 +23,8 @@ export enum NetworkNames {
 
   baseMainnet = 'base',
   baseGoerli = 'base_goerli',
+
+  sonicMainnet = 'sonic',
 }
 
 export enum NetworkIds {
@@ -38,6 +40,7 @@ export enum NetworkIds {
   BASEMAINNET = 8453,
   BASEGOERLI = 84531,
   EMPTYNET = 0,
+  SONICMAINNET = 146,
 }
 
 export enum NetworkHexIds {
@@ -53,6 +56,7 @@ export enum NetworkHexIds {
   BASEMAINNET = '0x2105',
   BASEGOERLI = '0x14a33',
   EMPTYNET = '0x0',
+  SONICMAINNET = '0x92',
 }
 
 export type NetworkLabelType =
@@ -66,7 +70,7 @@ export type NetworkLabelType =
   | 'Optimism Goerli'
   | 'Base'
   | 'Base Goerli'
-
+  | 'Sonic'
 export type NetworkConfig = {
   name: NetworkNames
   testnet: boolean
