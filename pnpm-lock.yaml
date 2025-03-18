@@ -3566,8 +3566,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/serverless-shared
       viem:
-        specifier: 2.21.55
-        version: 2.21.55(typescript@5.7.3)(zod@3.22.4)
+        specifier: ^1.19.11
+        version: 1.21.4(typescript@5.7.3)(zod@3.22.4)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -3609,8 +3609,8 @@ importers:
         specifier: ^1.0.2
         version: 1.0.2(typescript@5.7.3)(zod@3.22.4)
       viem:
-        specifier: 2.21.55
-        version: 2.21.55(typescript@5.7.3)(zod@3.22.4)
+        specifier: ^1.21.4
+        version: 1.21.4(typescript@5.7.3)(zod@3.22.4)
       zod:
         specifier: ^3.22.4
         version: 3.22.4

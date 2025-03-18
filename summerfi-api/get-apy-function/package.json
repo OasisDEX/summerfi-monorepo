@@ -18,7 +18,7 @@
     "@summerfi/redis-cache": "workspace:*",
     "@summerfi/defi-llama-client": "workspace:*",
     "@summerfi/abstractions": "workspace:*",
-    "viem": "2.21.55",
+    "viem": "^1.19.11",
     "zod": "^3.22.4"
   },
   "devDependencies": {
