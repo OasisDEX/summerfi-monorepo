@@ -13,6 +13,20 @@ export class MockConfigurationProvider implements IConfigurationProvider {
         return 'key'
       case 'ONE_INCH_API_SPOT_URL':
         return 'https://someapi.com'
+      case 'ONE_INCH_API_SPOT_AUTH_HEADER':
+        return 'Auithorization'
+      case 'ONE_INCH_SWAP_CHAIN_IDS':
+        return '1'
+      case 'COINGECKO_API_URL':
+        return 'https://api.coingecko.com/api/v3'
+      case 'COINGECKO_API_VERSION':
+        return 'v3'
+      case 'COINGECKO_API_KEY':
+        return 'key'
+      case 'COINGECKO_API_AUTH_HEADER':
+        return 'Authorization'
+      case 'COINGECKO_SUPPORTED_CHAIN_IDS':
+        return '1'
       default:
         throw new Error(`Configuration item ${params.name} not found`)
     }
