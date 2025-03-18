@@ -45,18 +45,14 @@ export async function generateMetadata(): Promise<Metadata> {
   )
   const protocolsSupported = getVaultsProtocolsList(vaults)
   const prodHost = (await headers()).get('host')
-
-  const baseUrl =
-    process.env.NODE_ENV === 'development'
-      ? new URL(`http://localhost:${process.env.PORT ?? 3002}`)
-      : new URL(`https://${prodHost}`)
+  const baseUrl = new URL(`https://${prodHost}`)
 
   return {
     title: `Lazy Summer Protocol - $${tvl} TVL with ${protocolsSupported.length} protocols supported`,
     description:
       "Get effortless access to crypto's best DeFi yields. Continually rebalanced by AI powered Keepers to earn you more while saving you time and reducing costs.'",
     openGraph: {
-      images: `${baseUrl}/earn/api/og/vaults-list?tvl=${tvl}&protocols=${protocolsSupported.length}`,
+      images: `${baseUrl}earn/api/og/vaults-list?tvl=${tvl}&protocols=${protocolsSupported.length}`,
     },
   }
 }
