@@ -11,6 +11,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import { type DeviceType } from '@summerfi/app-types'
 import { getServerSideCookies, safeParseJson } from '@summerfi/app-utils'
+import type { Metadata } from 'next'
 import { cookies, headers } from 'next/headers'
 import Image from 'next/image'
 
@@ -25,6 +26,12 @@ import { SystemConfigProvider } from '@/contexts/SystemConfigContext/SystemConfi
 import { fontInter } from '@/helpers/fonts'
 import { AlchemyAccountsProvider } from '@/providers/AlchemyAccountsProvider/AlchemyAccountsProvider'
 import logoMaintenance from '@/public/img/branding/logo-dark.svg'
+
+export const metadata: Metadata = {
+  title: 'The home of the Lazy Summer Protocol',
+  description:
+    "Get effortless access to crypto's best DeFi yields. Continually rebalanced by AI powered Keepers to earn you more while saving you time and reducing costs.'",
+}
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const [{ config }] = await Promise.all([systemConfigHandler()])
