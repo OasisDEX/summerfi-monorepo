@@ -665,7 +665,8 @@ export const handler = async (
 
   // Get all potential networks
   const allNetworks = (await db.selectFrom('networkStatus').selectAll().execute()).filter(
-    (network) => network.network !== 'optimism',
+    (network) =>
+      network.network === 'mainnet' || network.network === 'arbitrum' || network.network === 'base',
   )
 
   logger.debug('Starting network processing', { networkCount: allNetworks.length })

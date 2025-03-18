@@ -11,4 +11,5 @@ export const MigrationConfig: IMigrationConfig = {
   [ChainId.OPTIMISM]: [ProtocolId.AAVE_V3],
   [ChainId.BASE]: [ProtocolId.AAVE_V3],
   [ChainId.SEPOLIA]: [],
+  [ChainId.SONIC]: [],
 }
