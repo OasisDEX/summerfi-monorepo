@@ -29,6 +29,7 @@ export const humanReadableNetworkMap = {
   [SDKNetwork.ArbitrumOne]: 'arbitrum',
   [SDKNetwork.Base]: 'base',
   [SDKNetwork.Mainnet]: 'mainnet',
+  [SDKNetwork.SonicMainnet]: 'sonic',
 } as const
 
 /**
@@ -38,6 +39,7 @@ export const humanReadableChainToLabelMap = {
   [SDKChainId.BASE]: 'Base',
   [SDKChainId.ARBITRUM]: 'Arbitrum',
   [SDKChainId.MAINNET]: 'Ethereum',
+  [SDKChainId.SONIC]: 'Sonic',
 } as const
 
 /**
@@ -47,6 +49,7 @@ const sdkNetworkMap = {
   arbitrum: SDKNetwork.ArbitrumOne,
   base: SDKNetwork.Base,
   mainnet: SDKNetwork.Mainnet,
+  sonic: SDKNetwork.SonicMainnet,
 }
 
 /**
@@ -122,6 +125,7 @@ export const chainIdToSDKNetwork = (chainId: SDKChainId) => {
     [SDKChainId.ARBITRUM]: SDKNetwork.ArbitrumOne,
     [SDKChainId.BASE]: SDKNetwork.Base,
     [SDKChainId.MAINNET]: SDKNetwork.Mainnet,
+    [SDKChainId.SONIC]: SDKNetwork.SonicMainnet,
   }[chainId]
 }
 
@@ -131,6 +135,7 @@ export const networkNameToSDKNetwork = (network: NetworkNames) => {
     [NetworkNames.baseMainnet.toLowerCase()]: SDKNetwork.Base,
     [NetworkNames.ethereumMainnet.toLowerCase()]: SDKNetwork.Mainnet,
     [NetworkNames.optimismMainnet.toLowerCase()]: SDKNetwork.Optimism,
+    [NetworkNames.sonicMainnet.toLowerCase()]: SDKNetwork.SonicMainnet,
   }[network.toLowerCase()]
 }
 
@@ -140,6 +145,7 @@ export const networkNameToSDKId = (network: NetworkNames) => {
     [NetworkNames.baseMainnet.toLowerCase()]: SDKChainId.BASE,
     [NetworkNames.ethereumMainnet.toLowerCase()]: SDKChainId.MAINNET,
     [NetworkNames.optimismMainnet.toLowerCase()]: SDKChainId.OPTIMISM,
+    [NetworkNames.sonicMainnet.toLowerCase()]: SDKChainId.SONIC,
   }[network.toLowerCase()]
 }
 
@@ -148,6 +154,7 @@ export const subgraphNetworkToId = (network: SDKNetwork) => {
     [SDKNetwork.ArbitrumOne.toLowerCase()]: NetworkIds.ARBITRUMMAINNET,
     [SDKNetwork.Base.toLowerCase()]: NetworkIds.BASEMAINNET,
     [SDKNetwork.Mainnet.toLowerCase()]: NetworkIds.MAINNET,
+    [SDKNetwork.SonicMainnet.toLowerCase()]: NetworkIds.SONICMAINNET,
   }[network.toLowerCase()]
 }
 
@@ -156,6 +163,7 @@ export const subgraphNetworkToSDKId = (network: SDKNetwork) => {
     [SDKNetwork.ArbitrumOne.toLowerCase()]: SDKChainId.ARBITRUM,
     [SDKNetwork.Base.toLowerCase()]: SDKChainId.BASE,
     [SDKNetwork.Mainnet.toLowerCase()]: SDKChainId.MAINNET,
+    [SDKNetwork.SonicMainnet.toLowerCase()]: SDKChainId.SONIC,
   }[network.toLowerCase()] as SDKSupportedChain
 }
 

@@ -2697,7 +2697,8 @@ export enum Network {
   Moonriver = 'MOONRIVER',
   NearMainnet = 'NEAR_MAINNET',
   Optimism = 'OPTIMISM',
-  Osmosis = 'OSMOSIS'
+  Osmosis = 'OSMOSIS',
+  SonicMainnet = 'SONIC_MAINNET'
 }
 
 /** Defines the order direction, either ascending or descending */

@@ -1,6 +1,6 @@
 import { Address, ChainId, getRpcGatewayEndpoint, IRpcConfig } from '@summerfi/serverless-shared'
 import { Chain as ViemChain, createPublicClient, http, PublicClient } from 'viem'
-import { arbitrum, base, mainnet, optimism, sepolia } from 'viem/chains'
+import { arbitrum, base, mainnet, optimism, sepolia, sonic } from 'viem/chains'
 import { morphoEmissionDataProviderAbi, morphoBlueAbi } from './abis'
 
 import { AbiParametersToPrimitiveTypes, ExtractAbiFunction } from 'abitype'
@@ -55,6 +55,7 @@ const domainChainIdToViemChain: Record<ChainId, ViemChain> = {
   [ChainId.OPTIMISM]: optimism,
   [ChainId.BASE]: base,
   [ChainId.SEPOLIA]: sepolia,
+  [ChainId.SONIC]: sonic,
 }
 
 export interface GetRewardsParams {

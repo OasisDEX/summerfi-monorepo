@@ -12,7 +12,7 @@ export const optimismMainnetRpc = getRpcGatewayUrl(NetworkNames.optimismMainnet)
 export const optimismGoerliRpc = getRpcGatewayUrl(NetworkNames.optimismGoerli)
 export const baseMainnetRpc = getRpcGatewayUrl(NetworkNames.baseMainnet)
 export const baseGoerliRpc = getRpcGatewayUrl(NetworkNames.baseGoerli)
-
+export const sonicMainnetRpc = getRpcGatewayUrl(NetworkNames.sonicMainnet)
 // use this ONLY server side so it doesnt leak to the client
 export const SDKChainIdToSSRRpcGatewayMap = {
   [SDKChainId.ARBITRUM]: arbitrumMainnetRpc,
@@ -20,4 +20,5 @@ export const SDKChainIdToSSRRpcGatewayMap = {
   [SDKChainId.MAINNET]: mainnetRpc,
   [SDKChainId.OPTIMISM]: optimismMainnetRpc,
   [SDKChainId.SEPOLIA]: baseGoerliRpc, // dummy for now, not used anyway
+  [SDKChainId.SONIC]: sonicMainnetRpc,
 }
