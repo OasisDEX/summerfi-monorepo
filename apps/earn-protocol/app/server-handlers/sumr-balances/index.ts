@@ -3,7 +3,7 @@ import { SummerTokenAbi, SummerVestingWalletFactoryAbi } from '@summerfi/armada-
 import { getChainInfoByChainId } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import { type Address, createPublicClient, http, zeroAddress } from 'viem'
-import { arbitrum, base, mainnet } from 'viem/chains'
+import { arbitrum, base, mainnet, sonic } from 'viem/chains'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 import { VESTING_WALLET_FACTORY_ADDRESS } from '@/constants/addresses'
@@ -13,12 +13,14 @@ export interface SumrBalancesData {
   mainnet: string
   arbitrum: string
   base: string
+  sonic: string
   total: string // without vesting
   vested: string
   raw: {
     mainnet: string
     arbitrum: string
     base: string
+    sonic: string
     total: string
     vested: string
   }
@@ -43,6 +45,7 @@ export const getSumrBalances = async ({
       { chain: base, chainId: SDKChainId.BASE, chainName: 'base' },
       { chain: mainnet, chainId: SDKChainId.MAINNET, chainName: 'mainnet' },
       { chain: arbitrum, chainId: SDKChainId.ARBITRUM, chainName: 'arbitrum' },
+      { chain: sonic, chainId: SDKChainId.SONIC, chainName: 'sonic' },
     ]
 
     const balances = await Promise.all(
@@ -128,12 +131,14 @@ export const getSumrBalances = async ({
       mainnet: '0',
       arbitrum: '0',
       base: '0',
+      sonic: '0',
       total: '0',
       vested: '0',
       raw: {
         mainnet: '0',
         arbitrum: '0',
         base: '0',
+        sonic: '0',
         total: '0',
         vested: '0',
       },
