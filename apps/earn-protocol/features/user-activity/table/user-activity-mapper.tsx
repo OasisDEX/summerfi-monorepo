@@ -4,47 +4,45 @@ import {
   getScannerUrl,
   Icon,
   TableCellText,
-  type TableSortedColumn,
   WithArrow,
 } from '@summerfi/app-earn-ui'
-import { type TokenSymbolsList, UserActivityType, type UsersActivity } from '@summerfi/app-types'
-import {
-  formatCryptoBalance,
-  getHumanReadableFleetName,
-  subgraphNetworkToSDKId,
-  timeAgo,
-} from '@summerfi/app-utils'
+import { type TokenSymbolsList } from '@summerfi/app-types'
+import { formatCryptoBalance, subgraphNetworkToSDKId, timeAgo } from '@summerfi/app-utils'
+import { type LatestActivity } from '@summerfi/summer-protocol-db'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
+import { dbNetworkToSdkNetworkMap } from '@/app/server-handlers/tables-data/consts'
 import { networkSDKChainIdIconMap } from '@/constants/network-id-to-icon'
-import { userActivitySorter } from '@/features/user-activity/table/user-activity-sorter'
+
+// const activityLabelMap = {
+//   [UserActivityType.DEPOSIT]: 'Deposit',
+//   [UserActivityType.WITHDRAW]: 'Withdraw',
+// }
+
+// const activityColorMap = {
+//   [UserActivityType.DEPOSIT]: 'var(--earn-protocol-success-100)',
+//   [UserActivityType.WITHDRAW]: 'var(--earn-protocol-warning-100)',
+// }
 
 const activityLabelMap = {
-  [UserActivityType.DEPOSIT]: 'Deposit',
-  [UserActivityType.WITHDRAW]: 'Withdraw',
+  deposit: 'Deposit',
+  withdraw: 'Withdraw',
 }
 
 const activityColorMap = {
-  [UserActivityType.DEPOSIT]: 'var(--earn-protocol-success-100)',
-  [UserActivityType.WITHDRAW]: 'var(--earn-protocol-warning-100)',
+  deposit: 'var(--earn-protocol-success-100)',
+  withdraw: 'var(--earn-protocol-warning-100)',
 }
 
-export const userActivityMapper = (
-  rawData: UsersActivity,
-  sortConfig?: TableSortedColumn<string>,
-) => {
-  const sorted = userActivitySorter({ data: rawData, sortConfig })
-
-  return sorted.map((item) => {
-    const asset = getDisplayToken(item.vault.inputToken.symbol) as TokenSymbolsList
-    const amount = new BigNumber(item.amount.toString()).shiftedBy(-item.vault.inputToken.decimals)
-    const balance = new BigNumber(item.balance.toString()).shiftedBy(
-      -item.vault.inputToken.decimals,
-    )
+export const userActivityMapper = (rawData: LatestActivity[]) => {
+  return rawData.map((item) => {
+    const asset = getDisplayToken(item.inputTokenSymbol) as TokenSymbolsList
+    const amount = new BigNumber(item.amount.toString()).shiftedBy(-item.inputTokenDecimals)
+    const balance = new BigNumber(item.balance.toString()).shiftedBy(-item.inputTokenDecimals)
 
     return {
-      id: item.account,
+      id: item.userAddress,
       content: {
         position: (
           <div
@@ -56,15 +54,18 @@ export const userActivityMapper = (
             }}
           >
             <div style={{ position: 'absolute', top: '-5px', left: '-3px' }}>
-              {networkSDKChainIdIconMap(subgraphNetworkToSDKId(item.vault.protocol.network), 10)}
+              {networkSDKChainIdIconMap(
+                subgraphNetworkToSDKId(dbNetworkToSdkNetworkMap[item.network]),
+                10,
+              )}
             </div>
             <Icon tokenName={asset} variant="s" />
             <TableCellText>{asset}</TableCellText>
           </div>
         ),
         activity: (
-          <TableCellText style={{ color: activityColorMap[item.activity] }}>
-            {activityLabelMap[item.activity]}
+          <TableCellText style={{ color: activityColorMap[item.actionType] }}>
+            {activityLabelMap[item.actionType]}
           </TableCellText>
         ),
         amount: (
@@ -79,11 +80,7 @@ export const userActivityMapper = (
             <TableCellText>{formatCryptoBalance(amount)}</TableCellText>
           </div>
         ),
-        strategy: (
-          <TableCellText style={{ whiteSpace: 'nowrap' }}>
-            {getHumanReadableFleetName(item.vault.protocol.network, item.vault.name)}
-          </TableCellText>
-        ),
+        strategy: <TableCellText style={{ whiteSpace: 'nowrap' }}>{item.strategy}</TableCellText>,
         timestamp: (
           <TableCellText suppressHydrationWarning>
             {timeAgo({ from: new Date(), to: new Date(Number(item.timestamp) * 1000) })}
@@ -103,7 +100,10 @@ export const userActivityMapper = (
         ),
         link: (
           <Link
-            href={getScannerUrl(subgraphNetworkToSDKId(item.vault.protocol.network), item.hash)}
+            href={getScannerUrl(
+              subgraphNetworkToSDKId(dbNetworkToSdkNetworkMap[item.network]),
+              item.txHash,
+            )}
             target="_blank"
           >
             <Button variant="textPrimaryMedium">

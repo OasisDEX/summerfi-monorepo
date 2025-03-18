@@ -1,13 +1,12 @@
 import { type FC } from 'react'
-import { parseQueryStringServerSide, subgraphNetworkToId } from '@summerfi/app-utils'
+import { parseQueryStringServerSide } from '@summerfi/app-utils'
 import { type ReadonlyURLSearchParams } from 'next/navigation'
 
-import { getUsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
+// import { getUsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
-import systemConfigHandler from '@/app/server-handlers/system-config'
-import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
+import { getTopDepositorsServerSide } from '@/app/server-handlers/tables-data/top-depositors/api'
+import { getUsersActivitiesServerSide } from '@/app/server-handlers/tables-data/users-activities/api'
 import { UserActivityView } from '@/features/user-activity/components/UserActivityView/UserActivityView'
-import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 interface UserActivityPageProps {
   searchParams: Promise<ReadonlyURLSearchParams>
@@ -15,33 +14,38 @@ interface UserActivityPageProps {
 
 const UserActivityPage: FC<UserActivityPageProps> = async ({ searchParams }) => {
   const searchParamsResolved = await searchParams
-  const [{ vaults }, { usersActivity, totalUsers, topDepositors }, systemConfig] =
-    await Promise.all([
-      getVaultsList(),
-      getUsersActivity({ filterTestingWallets: true }),
-      systemConfigHandler(),
-    ])
 
-  const vaultsWithConfig = decorateVaultsWithConfig({
-    vaults,
-    systemConfig: systemConfig.config,
-  })
+  const searchParamsParsed = parseQueryStringServerSide({ searchParams: searchParamsResolved })
 
-  const vaultsApyByNetworkMap = await getVaultsApy({
-    fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
-      fleetAddress: id,
-      chainId: subgraphNetworkToId(network),
-    })),
-  })
+  const tokens = searchParamsParsed.tokens ?? []
+  const strategies = searchParamsParsed.strategies ?? []
+
+  const [{ vaults }, topDepositors, usersActivities] = await Promise.all([
+    getVaultsList(),
+    getTopDepositorsServerSide({
+      page: 1,
+      limit: 50,
+      sortBy: 'balanceUsd',
+      orderBy: 'desc',
+      tokens,
+      strategies,
+    }).then((res) => res.json()),
+    getUsersActivitiesServerSide({
+      page: 1,
+      limit: 50,
+      sortBy: 'timestamp',
+      orderBy: 'desc',
+      tokens,
+      strategies,
+    }).then((res) => res.json()),
+  ])
 
   return (
     <UserActivityView
       vaultsList={vaults}
-      usersActivity={usersActivity}
+      usersActivities={usersActivities}
       topDepositors={topDepositors}
-      totalUsers={totalUsers}
-      searchParams={parseQueryStringServerSide({ searchParams: searchParamsResolved })}
-      vaultsApyByNetworkMap={vaultsApyByNetworkMap}
+      searchParams={searchParamsParsed}
     />
   )
 }

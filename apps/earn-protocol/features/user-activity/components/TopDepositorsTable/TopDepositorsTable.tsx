@@ -1,9 +1,8 @@
 'use client'
-import { type FC, type ReactNode, useMemo, useState } from 'react'
+import { type FC, type ReactNode, useMemo } from 'react'
 import { Table, type TableSortedColumn, Text, useMobileCheck } from '@summerfi/app-earn-ui'
-import { type SDKUsersActivityType } from '@summerfi/app-types'
+import { type TopDepositors } from '@summerfi/summer-protocol-db'
 
-import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import {
   topDepositorsColumns,
@@ -13,14 +12,14 @@ import {
 import { topDepositorsMapper } from '@/features/user-activity/table/top-depositors-mapper'
 
 interface TopDepositorsTableProps {
-  topDepositorsList: SDKUsersActivityType
+  topDepositorsList: TopDepositors[]
   customRow?: {
     idx: number
     content: ReactNode
   }
   hiddenColumns?: string[]
   rowsToDisplay?: number
-  vaultsApyData: GetVaultsApyResponse
+  handleSort?: (sortConfig: TableSortedColumn<string>) => void
 }
 
 export const TopDepositorsTable: FC<TopDepositorsTableProps> = ({
@@ -28,16 +27,12 @@ export const TopDepositorsTable: FC<TopDepositorsTableProps> = ({
   customRow,
   hiddenColumns,
   rowsToDisplay,
-  vaultsApyData,
+  handleSort,
 }) => {
-  const [sortConfig, setSortConfig] = useState<TableSortedColumn<string>>()
   const { deviceType } = useDeviceType()
   const { isMobile, isTablet } = useMobileCheck(deviceType)
 
-  const rows = useMemo(
-    () => topDepositorsMapper(topDepositorsList, vaultsApyData, sortConfig),
-    [topDepositorsList, sortConfig, vaultsApyData],
-  )
+  const rows = useMemo(() => topDepositorsMapper(topDepositorsList), [topDepositorsList])
 
   const resolvedHiddenColumns = isTablet
     ? topDepositorsColumnsHiddenOnTablet
@@ -51,7 +46,7 @@ export const TopDepositorsTable: FC<TopDepositorsTableProps> = ({
         rows={rows.slice(0, rowsToDisplay)}
         columns={topDepositorsColumns}
         customRow={customRow}
-        handleSort={(_sortConfig) => setSortConfig(_sortConfig)}
+        handleSort={handleSort}
         hiddenColumns={resolvedHiddenColumns}
       />
       {rows.length === 0 && (

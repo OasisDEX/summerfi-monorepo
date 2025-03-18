@@ -19,8 +19,16 @@
  * - Otherwise, returns years, assuming each year has 365 days.
  */
 
-export const formatDateDifference = ({ from, to }: { from: Date; to: Date }): string => {
-  const seconds = Math.floor((to.getTime() - from.getTime()) / 1000)
+export const formatDateDifference = (
+  params: { from: Date; to: Date } | { value: number },
+): string => {
+  let seconds: number
+
+  if ('from' in params && 'to' in params) {
+    seconds = Math.floor((params.to.getTime() - params.from.getTime()) / 1000)
+  } else {
+    seconds = params.value / 1000
+  }
 
   if (seconds < 60) {
     return `just now`

@@ -1,5 +1,5 @@
 'use client'
-import { type FC, useMemo, useState } from 'react'
+import { type FC, useEffect, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import {
   GenericMultiselect,
@@ -7,19 +7,17 @@ import {
   HeadingWithCards,
   TabBar,
   TableCarousel,
+  type TableSortedColumn,
   useCurrentUrl,
   useMobileCheck,
   useQueryParams,
 } from '@summerfi/app-earn-ui'
-import {
-  type SDKUsersActivityType,
-  type SDKVaultsListType,
-  UserActivityType,
-  type UsersActivity,
-} from '@summerfi/app-types'
+import { type SDKVaultsListType } from '@summerfi/app-types'
+import { type LatestActivity, type TopDepositors } from '@summerfi/summer-protocol-db'
 
-import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
+import { getTopDepositors } from '@/features/user-activity/api/get-top-depositors'
+import { getUsersActivity } from '@/features/user-activity/api/get-users-activity'
 import { TopDepositorsTable } from '@/features/user-activity/components/TopDepositorsTable/TopDepositorsTable'
 import { UserActivityTable } from '@/features/user-activity/components/UserActivityTable/UserActivityTable'
 import {
@@ -27,99 +25,113 @@ import {
   userActivityHeading,
 } from '@/features/user-activity/components/UserActivityView/cards'
 import { userActivityTableCarouselData } from '@/features/user-activity/components/UserActivityView/carousel'
-import { getUsersActivityMedianDeposit } from '@/features/user-activity/helpers/get-median-deposit'
 import { mapMultiselectOptions } from '@/features/user-activity/table/filters/mappers'
-import { topDepositorsFilter } from '@/features/user-activity/table/filters/top-depositors-filter'
-import { userActivityFilter } from '@/features/user-activity/table/filters/user-activity-filters'
 import { UserActivityTab } from '@/features/user-activity/types/tabs'
 
 import classNames from './UserActivityView.module.scss'
 
 interface UserActivityViewProps {
   vaultsList: SDKVaultsListType
-  usersActivity: UsersActivity
-  topDepositors: SDKUsersActivityType
-  totalUsers: number
   searchParams?: { [key: string]: string[] }
-  vaultsApyByNetworkMap: GetVaultsApyResponse
+  topDepositors: {
+    data: TopDepositors[]
+    pagination: {
+      currentPage: number
+      totalPages: number
+      totalItems: number
+      itemsPerPage: number
+    }
+  }
+  usersActivities: {
+    data: LatestActivity[]
+    pagination: {
+      currentPage: number
+      totalPages: number
+      totalItems: number
+      itemsPerPage: number
+    }
+    medianDeposit: number
+    totalDeposits: number
+  }
 }
-
-const initialRows = 10
 
 export const UserActivityView: FC<UserActivityViewProps> = ({
   vaultsList,
-  usersActivity,
-  topDepositors,
-  totalUsers,
   searchParams,
-  vaultsApyByNetworkMap,
+  topDepositors,
+  usersActivities,
 }) => {
-  const { setQueryParams } = useQueryParams()
-  const [strategyFilter, setStrategyFilter] = useState<string[]>(searchParams?.strategies ?? [])
-  const [tokenFilter, setTokenFilter] = useState<string[]>(searchParams?.tokens ?? [])
+  const { setQueryParams, queryParams } = useQueryParams(searchParams)
+  const [isLoading, setIsLoading] = useState(false)
+
+  const strategyFilter = queryParams.strategies
+  const tokenFilter = queryParams.tokens
+
+  const topDepositorsSortBy = queryParams.topDepositorsSortBy?.[0]
+  const topDepositorsOrderBy = queryParams.topDepositorsOrderBy?.[0]
+
+  const latestActivitySortBy = queryParams.latestActivitySortBy?.[0]
+  const latestActivityOrderBy = queryParams.latestActivityOrderBy?.[0]
+
   const currentUrl = useCurrentUrl()
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
-
-  const [currentUserActivityIdx, setCurrentUserActivityIdx] = useState(initialRows)
-  const [currentTopDepositorsIdx, setCurrentTopDepositorsIdx] = useState(initialRows)
-
-  const [loadedUserActivityList, setLoadedUserActivityList] = useState(
-    usersActivity.slice(0, initialRows),
+  const isFirstRender = useRef(true)
+  const [currentUserActivityPage, setCurrentUserActivityPage] = useState(
+    usersActivities.pagination.currentPage,
+  )
+  const [currentTopDepositorsPage, setCurrentTopDepositorsPage] = useState(
+    topDepositors.pagination.currentPage,
   )
 
-  const [loadedTopDepositorsList, setLoadedTopDepositorsList] = useState(
-    topDepositors.slice(0, initialRows),
-  )
+  const [loadedUserActivityList, setLoadedUserActivityList] = useState(usersActivities.data)
 
-  const [noMoreUserActivityItems, setNoMoreUserActivityItems] = useState(false)
+  const [loadedTopDepositorsList, setLoadedTopDepositorsList] = useState(topDepositors.data)
 
   const { strategiesOptions, tokensOptions } = useMemo(
     () => mapMultiselectOptions(vaultsList),
     [vaultsList],
   )
 
-  const handleMoreUserActivityItems = () => {
-    try {
-      setLoadedUserActivityList((prev) => [
-        ...prev,
-        ...usersActivity.slice(currentUserActivityIdx, currentUserActivityIdx + initialRows),
-      ])
-      setCurrentUserActivityIdx(currentUserActivityIdx + initialRows)
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.info('No more users activity items to load')
-      setNoMoreUserActivityItems(true)
-    }
+  const handleMoreUserActivityItems = async () => {
+    const res = await getUsersActivity({
+      page: currentUserActivityPage + 1,
+      tokens: tokenFilter,
+      strategies: strategyFilter,
+      sortBy: latestActivitySortBy,
+      orderBy: latestActivityOrderBy,
+    })
+
+    setLoadedUserActivityList((prev) => [...prev, ...res.data])
+    setCurrentUserActivityPage((prev) => prev + 1)
   }
 
-  const handleMoreTopDepositorsItems = () => {
-    setLoadedTopDepositorsList((prev) => [
-      ...prev,
-      ...topDepositors.slice(currentTopDepositorsIdx, currentTopDepositorsIdx + initialRows),
-    ])
-    setCurrentTopDepositorsIdx(currentTopDepositorsIdx + initialRows)
+  const handleMoreTopDepositorsItems = async () => {
+    const res = await getTopDepositors({
+      page: currentTopDepositorsPage + 1,
+      tokens: tokenFilter,
+      strategies: strategyFilter,
+      sortBy: topDepositorsSortBy,
+      orderBy: topDepositorsOrderBy,
+    })
+
+    setLoadedTopDepositorsList((prev) => [...prev, ...res.data])
+    setCurrentTopDepositorsPage((prev) => prev + 1)
   }
 
-  const userActivityFilteredList = useMemo(
-    () =>
-      userActivityFilter({
-        userActivityList: loadedUserActivityList,
-        strategyFilter,
-        tokenFilter,
-      }),
-    [loadedUserActivityList, strategyFilter, tokenFilter],
-  )
+  const handleSortTopDepositors = (sortConfig: TableSortedColumn<string>) => {
+    setQueryParams({
+      topDepositorsSortBy: sortConfig.key,
+      topDepositorsOrderBy: sortConfig.direction,
+    })
+  }
 
-  const topDepositorsFilteredList = useMemo(
-    () =>
-      topDepositorsFilter({
-        topDepositorsList: loadedTopDepositorsList,
-        strategyFilter,
-        tokenFilter,
-      }),
-    [loadedTopDepositorsList, strategyFilter, tokenFilter],
-  )
+  const handleSortUserActivity = (sortConfig: TableSortedColumn<string>) => {
+    setQueryParams({
+      latestActivitySortBy: sortConfig.key,
+      latestActivityOrderBy: sortConfig.direction,
+    })
+  }
 
   const genericMultiSelectFilters = [
     {
@@ -127,7 +139,6 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
       label: 'Strategies',
       onChange: (strategies: string[]) => {
         setQueryParams({ strategies })
-        setStrategyFilter(strategies)
       },
       initialValues: strategyFilter,
     },
@@ -136,26 +147,69 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
       label: 'Tokens',
       onChange: (tokens: string[]) => {
         setQueryParams({ tokens })
-        setTokenFilter(tokens)
       },
       initialValues: tokenFilter,
     },
   ]
 
-  const totalUserActivityItems = usersActivity.filter(
-    (item) => item.activity === UserActivityType.DEPOSIT,
-  ).length
+  useEffect(() => {
+    if (isFirstRender.current) {
+      return
+    }
 
-  const medianDeposit = useMemo(() => getUsersActivityMedianDeposit(usersActivity), [usersActivity])
+    setIsLoading(true)
+
+    getUsersActivity({
+      page: 1,
+      tokens: tokenFilter,
+      strategies: strategyFilter,
+    })
+      .then((res) => {
+        setLoadedUserActivityList(res.data)
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+  }, [strategyFilter, tokenFilter])
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      return
+    }
+
+    setIsLoading(true)
+
+    getTopDepositors({
+      page: 1,
+      tokens: tokenFilter,
+      strategies: strategyFilter,
+    })
+      .then((res) => {
+        setLoadedTopDepositorsList(res.data)
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+  }, [strategyFilter, tokenFilter])
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+    }
+  }, [])
 
   const cards = useMemo(
     () =>
       getUserActivityHeadingCards({
-        totalItems: totalUserActivityItems,
-        medianDeposit,
-        totalUsers,
+        totalItems: usersActivities.totalDeposits,
+        medianDeposit: usersActivities.medianDeposit,
+        totalUsers: topDepositors.pagination.totalItems,
       }),
-    [totalUserActivityItems, medianDeposit, totalUsers],
+    [
+      usersActivities.totalDeposits,
+      usersActivities.medianDeposit,
+      topDepositors.pagination.totalItems,
+    ],
   )
 
   const filters = (
@@ -180,16 +234,16 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
       content: (
         <InfiniteScroll
           loadMore={handleMoreTopDepositorsItems}
-          hasMore={topDepositors.length > loadedTopDepositorsList.length}
+          hasMore={topDepositors.pagination.totalPages > currentTopDepositorsPage && !isLoading}
         >
           {filters}
           <TopDepositorsTable
-            topDepositorsList={topDepositorsFilteredList}
+            topDepositorsList={loadedTopDepositorsList}
             customRow={{
               idx: 3,
               content: <TableCarousel carouselData={userActivityTableCarouselData} />,
             }}
-            vaultsApyData={vaultsApyByNetworkMap}
+            handleSort={handleSortTopDepositors}
           />
         </InfiniteScroll>
       ),
@@ -198,15 +252,19 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
       id: UserActivityTab.LATEST_ACTIVITY,
       label: 'Latest activity',
       content: (
-        <InfiniteScroll loadMore={handleMoreUserActivityItems} hasMore={!noMoreUserActivityItems}>
+        <InfiniteScroll
+          loadMore={handleMoreUserActivityItems}
+          hasMore={usersActivities.pagination.totalPages > currentUserActivityPage && !isLoading}
+        >
           {filters}
           <UserActivityTable
-            userActivityList={userActivityFilteredList}
+            userActivityList={loadedUserActivityList}
             customRow={{
               idx: 3,
               content: <TableCarousel carouselData={userActivityTableCarouselData} />,
             }}
             hiddenColumns={['position']}
+            handleSort={handleSortUserActivity}
           />
         </InfiniteScroll>
       ),

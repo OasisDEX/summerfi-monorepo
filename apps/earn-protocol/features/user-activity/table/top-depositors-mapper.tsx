@@ -4,28 +4,20 @@ import {
   getVaultPositionUrl,
   Icon,
   TableCellText,
-  type TableSortedColumn,
   WithArrow,
 } from '@summerfi/app-earn-ui'
-import {
-  type SDKUserActivityType,
-  type SDKUsersActivityType,
-  type TokenSymbolsList,
-} from '@summerfi/app-types'
+import { type SDKUserActivityType, type TokenSymbolsList } from '@summerfi/app-types'
 import {
   formatAddress,
   formatCryptoBalance,
   formatDateDifference,
-  getHumanReadableFleetName,
   getPastTimestamp,
-  subgraphNetworkToId,
 } from '@summerfi/app-utils'
+import { type TopDepositors } from '@summerfi/summer-protocol-db'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
-import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
-import { getEarningStreakResetTimestamp } from '@/features/user-activity/helpers/get-earning-streak-reset-timestamp'
-import { topDepositorsSorter } from '@/features/user-activity/table/top-depositors-sorter'
+import { dbNetworkToSdkNetworkMap } from '@/app/server-handlers/tables-data/consts'
 
 export const calculateTopDepositors7daysChange = (item: SDKUserActivityType) => {
   const timeStamp7daysAgo = getPastTimestamp(7)
@@ -43,20 +35,11 @@ export const calculateTopDepositors7daysChange = (item: SDKUserActivityType) => 
   )
 }
 
-export const topDepositorsMapper = (
-  rawData: SDKUsersActivityType,
-  vaultsApyData: GetVaultsApyResponse,
-  sortConfig?: TableSortedColumn<string>,
-) => {
-  const sorted = topDepositorsSorter({ data: rawData, sortConfig })
+export const topDepositorsMapper = (rawData: TopDepositors[]) => {
+  return rawData.map((item) => {
+    const asset = getDisplayToken(item.inputTokenSymbol) as TokenSymbolsList
 
-  return sorted.map((item) => {
-    const { decimals } = item.vault.inputToken
-    const asset = getDisplayToken(item.vault.inputToken.symbol) as TokenSymbolsList
-    const balance = new BigNumber(item.inputTokenBalance.toString()).shiftedBy(-decimals)
-    const balanceUSD = balance.times(new BigNumber(item.vault.inputTokenPriceUSD as string))
-
-    const change7days = calculateTopDepositors7daysChange(item)
+    const change7days = new BigNumber(item.changeSevenDays.toString())
     const changeSign = change7days.gt(0) ? '+' : ''
     const changeColor = change7days.isZero()
       ? 'var(--earn-protocol-secondary-100)'
@@ -64,17 +47,14 @@ export const topDepositorsMapper = (
         ? 'var(--earn-protocol-success-100)'
         : 'var(--earn-protocol-warning-100)'
 
-    const earningStreakResetTimestamp = getEarningStreakResetTimestamp(item)
-
     const earningStreak = formatDateDifference({
-      from: new Date(earningStreakResetTimestamp),
-      to: new Date(),
+      value: Number(item.earningStreak),
     })
 
     return {
       content: {
         user: (
-          <TableCellText>{formatAddress(item.account.id, { first: 4, last: 3 })}</TableCellText>
+          <TableCellText>{formatAddress(item.userAddress, { first: 4, last: 3 })}</TableCellText>
         ),
         balance: (
           <div
@@ -85,7 +65,7 @@ export const topDepositorsMapper = (
             }}
           >
             <Icon tokenName={asset} variant="s" />
-            <TableCellText>{formatCryptoBalance(balance)}</TableCellText>
+            <TableCellText>{formatCryptoBalance(item.balance.toString())}</TableCellText>
           </div>
         ),
         balanceUSD: (
@@ -96,14 +76,10 @@ export const topDepositorsMapper = (
               gap: 'var(--spacing-space-2x-small)',
             }}
           >
-            <TableCellText>${formatCryptoBalance(balanceUSD)}</TableCellText>
+            <TableCellText>${formatCryptoBalance(item.balanceUsd.toString())}</TableCellText>
           </div>
         ),
-        strategy: (
-          <TableCellText style={{ whiteSpace: 'nowrap' }}>
-            {getHumanReadableFleetName(item.vault.protocol.network, item.vault.name)}
-          </TableCellText>
-        ),
+        strategy: <TableCellText style={{ whiteSpace: 'nowrap' }}>{item.strategy}</TableCellText>,
         change7d: (
           <TableCellText style={{ color: changeColor }}>
             {changeSign}
@@ -121,24 +97,18 @@ export const topDepositorsMapper = (
           >
             <Icon tokenName={asset} variant="s" />
             <TableCellText>
-              {formatCryptoBalance(
-                balance.times(
-                  vaultsApyData[
-                    `${item.vault.id}-${subgraphNetworkToId(item.vault.protocol.network)}`
-                  ].apy,
-                ),
-              )}
+              {formatCryptoBalance(item.projectedOneYearEarnings.toString())}
             </TableCellText>
           </div>
         ),
-        numberOfDeposits: <TableCellText>{item.deposits.length}</TableCellText>,
+        numberOfDeposits: <TableCellText>{item.noOfDeposits.toString()}</TableCellText>,
         earningsStreak: <TableCellText>{earningStreak}</TableCellText>,
         link: (
           <Link
             href={getVaultPositionUrl({
-              network: item.vault.protocol.network,
-              vaultId: item.vault.id,
-              walletAddress: item.account.id,
+              network: dbNetworkToSdkNetworkMap[item.network],
+              vaultId: item.vaultId,
+              walletAddress: item.userAddress,
             })}
           >
             <Button variant="textPrimaryMedium">

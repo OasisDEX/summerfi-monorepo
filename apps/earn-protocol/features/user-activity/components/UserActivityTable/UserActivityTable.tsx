@@ -1,7 +1,7 @@
 'use client'
 import { type FC, type ReactNode, useMemo, useState } from 'react'
 import { Table, type TableSortedColumn, Text, useMobileCheck } from '@summerfi/app-earn-ui'
-import { type UsersActivity } from '@summerfi/app-types'
+import { type LatestActivity } from '@summerfi/summer-protocol-db'
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import {
@@ -12,7 +12,7 @@ import {
 import { userActivityMapper } from '@/features/user-activity/table/user-activity-mapper'
 
 interface UserActivityTableProps {
-  userActivityList: UsersActivity
+  userActivityList: LatestActivity[]
   customRow?: {
     idx: number
     content: ReactNode
@@ -20,6 +20,7 @@ interface UserActivityTableProps {
   hiddenColumns?: string[]
   rowsToDisplay?: number
   noHighlight?: boolean
+  handleSort?: (sortConfig: TableSortedColumn<string>) => void
 }
 
 export const UserActivityTable: FC<UserActivityTableProps> = ({
@@ -28,16 +29,13 @@ export const UserActivityTable: FC<UserActivityTableProps> = ({
   hiddenColumns,
   rowsToDisplay,
   noHighlight,
+  handleSort,
 }) => {
-  const [sortConfig, setSortConfig] = useState<TableSortedColumn<string>>()
   const { deviceType } = useDeviceType()
   const { isMobile, isTablet } = useMobileCheck(deviceType)
   const [highlightedAddress, setHighlightedAddress] = useState<string | undefined>()
 
-  const rows = useMemo(
-    () => userActivityMapper(userActivityList, sortConfig),
-    [userActivityList, sortConfig],
-  )
+  const rows = useMemo(() => userActivityMapper(userActivityList), [userActivityList])
 
   const resolvedHiddenColumns = isTablet
     ? userActivityColumnsHiddenOnTablet
@@ -51,7 +49,7 @@ export const UserActivityTable: FC<UserActivityTableProps> = ({
         rows={rows.slice(0, rowsToDisplay)}
         columns={userActivityColumns}
         customRow={customRow}
-        handleSort={(_sortConfig) => setSortConfig(_sortConfig)}
+        handleSort={handleSort}
         hiddenColumns={resolvedHiddenColumns}
         onRowHover={!noHighlight ? (id?: string) => setHighlightedAddress(id) : undefined}
         highlightedRow={!noHighlight ? highlightedAddress : undefined}
