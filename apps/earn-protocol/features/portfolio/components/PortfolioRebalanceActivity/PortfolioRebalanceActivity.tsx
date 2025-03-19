@@ -104,7 +104,7 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
       <InfiniteScroll
         loadMore={handleMoreItems}
         hasMore={
-          rebalanceActivity.pagination.totalPages > currentPage && rebalanceActivity.data.length > 0
+          rebalanceActivity.pagination.totalPages > currentPage && currentlyLoadedList.length > 0
         }
       >
         <PortfolioRebalanceActivityList

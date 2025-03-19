@@ -166,8 +166,8 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
         loadMore={handleMoreItems}
         hasMore={
           rebalanceActivity.pagination.totalPages > currentPage &&
-          !isLoading &&
-          rebalanceActivity.data.length > 0
+          currentlyLoadedList.length > 0 &&
+          !isLoading
         }
       >
         <RebalanceActivityTable

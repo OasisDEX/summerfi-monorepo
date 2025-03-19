@@ -85,7 +85,7 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
         loadMore={handleMoreItems}
         hasMore={
           userActivity.pagination.totalPages > currentPage &&
-          userActivity.data.length > 0 &&
+          currentlyLoadedList.length > 0 &&
           !isLoading
         }
         loader={

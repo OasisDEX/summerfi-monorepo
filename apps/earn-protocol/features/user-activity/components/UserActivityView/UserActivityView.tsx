@@ -224,8 +224,8 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
           loadMore={handleMoreTopDepositorsItems}
           hasMore={
             topDepositors.pagination.totalPages > currentTopDepositorsPage &&
-            !isLoading &&
-            topDepositors.data.length > 0
+            loadedTopDepositorsList.length > 0 &&
+            !isLoading
           }
           loader={
             <LoadingSpinner
@@ -253,8 +253,8 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
           loadMore={handleMoreUserActivityItems}
           hasMore={
             usersActivities.pagination.totalPages > currentUserActivityPage &&
-            !isLoading &&
-            usersActivities.data.length > 0
+            loadedUserActivityList.length > 0 &&
+            !isLoading
           }
           loader={
             <LoadingSpinner
