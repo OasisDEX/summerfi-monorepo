@@ -10,6 +10,7 @@ const RebalanceActivityQueryParamsSchema = z.object({
   orderBy: z.enum(['asc', 'desc']).default('asc'),
   tokens: z.string().optional(),
   strategies: z.string().optional(),
+  protocols: z.string().optional(),
 })
 
 export async function GET(request: NextRequest) {
@@ -26,10 +27,11 @@ export async function GET(request: NextRequest) {
     )
   }
 
-  const { page, limit, sortBy, orderBy, tokens, strategies } = result.data
+  const { page, limit, sortBy, orderBy, tokens, strategies, protocols } = result.data
 
   const parsedTokens = tokens ? tokens.split(',') : undefined
   const parsedStrategies = strategies ? strategies.split(',') : undefined
+  const parsedProtocols = protocols ? protocols.split(',') : undefined
 
   return await getRebalanceActivityServerSide({
     page,
@@ -38,5 +40,6 @@ export async function GET(request: NextRequest) {
     orderBy,
     tokens: parsedTokens,
     strategies: parsedStrategies,
+    protocols: parsedProtocols,
   })
 }

@@ -22,7 +22,10 @@ import {
   rebalanceActivityHeading,
 } from '@/features/rebalance-activity/components/RebalanceActivityView/cards'
 import { rebalanceActivityTableCarouselData } from '@/features/rebalance-activity/components/RebalanceActivityView/carousel'
-import { mapMultiselectOptions } from '@/features/rebalance-activity/table/filters/mappers'
+import {
+  mapMultiselectOptions,
+  parseProtocolFilter,
+} from '@/features/rebalance-activity/table/filters/mappers'
 
 import classNames from './RebalanceActivityView.module.scss'
 
@@ -40,7 +43,10 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
   const { setQueryParams, queryParams } = useQueryParams(searchParams)
   const strategyFilter = queryParams.strategies
   const tokenFilter = queryParams.tokens
-  const protocolFilter = queryParams.protocols
+  const protocolFilter = useMemo(
+    () => parseProtocolFilter(queryParams.protocols),
+    [queryParams.protocols],
+  )
 
   const isFirstRender = useRef(true)
   const currentUrl = useCurrentUrl()
@@ -61,6 +67,7 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
       page: currentPage + 1,
       tokens: tokenFilter,
       strategies: strategyFilter,
+      protocols: protocolFilter,
     })
 
     setCurrentlyLoadedList((prev) => [...prev, ...res.data])
@@ -107,6 +114,7 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
       page: 1,
       tokens: tokenFilter,
       strategies: strategyFilter,
+      protocols: protocolFilter,
       sortBy: 'timestamp',
       orderBy: 'desc',
     })
@@ -116,7 +124,7 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
       .finally(() => {
         setIsLoading(false)
       })
-  }, [strategyFilter, tokenFilter])
+  }, [strategyFilter, tokenFilter, protocolFilter])
 
   const { totalItems } = rebalanceActivity.pagination
 

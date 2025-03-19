@@ -3,6 +3,7 @@ export const getRebalanceActivity = async ({
   limit = 50,
   tokens,
   strategies,
+  protocols,
   sortBy,
   orderBy,
   userAddress,
@@ -11,6 +12,7 @@ export const getRebalanceActivity = async ({
   limit?: number
   tokens?: string[]
   strategies?: string[]
+  protocols?: string[]
   sortBy?: string
   orderBy?: string
   userAddress?: string
@@ -20,6 +22,7 @@ export const getRebalanceActivity = async ({
     limit: limit.toString(),
     ...(tokens && tokens.length > 0 && { tokens: tokens.join(',') }),
     ...(strategies && strategies.length > 0 && { strategies: strategies.join(',') }),
+    ...(protocols && protocols.length > 0 && { protocols: protocols.join(',') }),
     ...(sortBy && { sortBy }),
     ...(orderBy && { orderBy: orderBy.toLowerCase() }),
     ...(userAddress && { userAddress }),

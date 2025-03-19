@@ -10,6 +10,7 @@ export const getRebalanceActivityServerSide = async ({
   orderBy = 'desc',
   tokens,
   strategies,
+  protocols,
   startTimestamp,
 }: {
   page: number
@@ -18,6 +19,7 @@ export const getRebalanceActivityServerSide = async ({
   orderBy?: 'asc' | 'desc'
   tokens?: string[]
   strategies?: string[]
+  protocols?: string[]
   startTimestamp?: number
 }) => {
   const connectionString = process.env.EARN_PROTOCOL_DB_CONNECTION_STRING
@@ -46,6 +48,14 @@ export const getRebalanceActivityServerSide = async ({
       )
       .$if(!!strategies && strategies.length > 0, (qb) =>
         qb.where('strategyId', 'in', strategies as string[]),
+      )
+      .$if(!!protocols && protocols.length > 0, (qb) =>
+        qb.where((eb) =>
+          eb.or([
+            eb('fromName', 'in', protocols as string[]),
+            eb('toName', 'in', protocols as string[]),
+          ]),
+        ),
       )
       .$if(!!startTimestamp, (qb) => qb.where('timestamp', '>=', startTimestamp?.toString() ?? '0'))
 
@@ -91,6 +101,7 @@ export const getPaginatedRebalanceActivity = async ({
   orderBy = 'desc',
   tokens,
   strategies,
+  protocols,
   startTimestamp,
 }: {
   page: number
@@ -100,6 +111,7 @@ export const getPaginatedRebalanceActivity = async ({
   userAddress?: string
   tokens?: string[]
   strategies?: string[]
+  protocols?: string[]
   startTimestamp?: number
 }): Promise<RebalanceActivityPagination> => {
   return await getRebalanceActivityServerSide({
@@ -109,6 +121,7 @@ export const getPaginatedRebalanceActivity = async ({
     orderBy,
     tokens,
     strategies,
+    protocols,
     startTimestamp,
   }).then((res) => res.json())
 }

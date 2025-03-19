@@ -15,7 +15,9 @@ interface UserActivityPageProps {
 const UserActivityPage: FC<UserActivityPageProps> = async ({ searchParams }) => {
   const searchParamsResolved = await searchParams
 
-  const searchParamsParsed = parseQueryStringServerSide({ searchParams: searchParamsResolved })
+  const searchParamsParsed = await parseQueryStringServerSide({
+    searchParams: searchParamsResolved,
+  })
 
   const tokens = searchParamsParsed.tokens ?? []
   const strategies = searchParamsParsed.strategies ?? []
