@@ -3,75 +3,49 @@ import {
   Icon,
   TableCellNodes,
   TableCellText,
-  type TableSortedColumn,
   Text,
   WithArrow,
 } from '@summerfi/app-earn-ui'
-import {
-  type IconNamesList,
-  type SDKGlobalRebalancesType,
-  type SDKGlobalRebalanceType,
-  type TokenSymbolsList,
-} from '@summerfi/app-types'
+import { type IconNamesList, type TokenSymbolsList } from '@summerfi/app-types'
 import { formatCryptoBalance, subgraphNetworkToSDKId, timeAgo } from '@summerfi/app-utils'
+import { type RebalanceActivity } from '@summerfi/summer-protocol-db'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
-import { rebalanceActivitySorter } from '@/features/rebalance-activity/table/sorter'
+import { dbNetworkToSdkNetworkMap } from '@/app/server-handlers/tables-data/consts'
 import { getProtocolLabel } from '@/helpers/get-protocol-label'
 
-export const rebalanceActivityPurposeMapper = (
-  item: SDKGlobalRebalanceType,
-): { label: string; icon: IconNamesList } => {
-  const actionFromRawName = item.from.name?.split('-')[0] ?? 'n/a'
-  const actionToRawName = item.to.name?.split('-')[0] ?? 'n/a'
-
-  const isFromBuffer = actionFromRawName === 'BufferArk'
-  const isToBuffer = actionToRawName === 'BufferArk'
-
-  if (!isFromBuffer && !isToBuffer && Number(item.fromPostAction.depositLimit) !== 0) {
-    return Number(item.fromPostAction.totalValueLockedUSD) + Number(item.amountUSD) <
-      Number(item.fromPostAction.depositLimit)
-      ? { label: 'Rate Enhancement', icon: 'arrow_increase' }
-      : { label: 'Risk Reduction', icon: 'arrow_decrease' }
-  }
-
-  if (!isFromBuffer && !isToBuffer && Number(item.fromPostAction.depositLimit) === 0) {
-    return { label: 'Risk Reduction', icon: 'arrow_decrease' }
-  }
-
-  if (isFromBuffer) {
-    return { label: 'Funds Deployed', icon: 'deposit' }
-  }
-
-  if (isToBuffer) {
-    return { label: 'Funds Withdrawn', icon: 'withdraw' }
-  }
-
-  // eslint-disable-next-line no-console
-  console.error('Unknown rebalance purpose, fallback to n/a')
-
-  return { label: 'n/a', icon: 'not_supported_icon' }
+const actionTypeMapp: {
+  [key: RebalanceActivity['actionType']]: { label: string; icon: IconNamesList }
+} = {
+  deposit: { label: 'Funds Deployed', icon: 'deposit' },
+  withdraw: { label: 'Funds Withdrawn', icon: 'withdraw' },
+  // eslint-disable-next-line camelcase
+  rate_enhancement: { label: 'Rate Enhancement', icon: 'arrow_increase' },
+  // eslint-disable-next-line camelcase
+  risk_reduction: { label: 'Risk Reduction', icon: 'arrow_decrease' },
+  'n/a': { label: 'n/a', icon: 'not_supported_icon' },
 }
 
-export const rebalancingActivityMapper = (
-  rawData: SDKGlobalRebalancesType,
-  sortConfig?: TableSortedColumn<string>,
-) => {
-  const sorted = rebalanceActivitySorter({ data: rawData, sortConfig })
+export const rebalanceActivityPurposeMapper = (
+  item: RebalanceActivity,
+): { label: string; icon: IconNamesList } => {
+  return actionTypeMapp[item.actionType]
+}
 
-  return sorted.map((item) => {
-    const asset = item.asset.symbol as TokenSymbolsList
+export const rebalancingActivityMapper = (rawData: RebalanceActivity[]) => {
+  return rawData.map((item) => {
+    const asset = item.inputTokenSymbol as TokenSymbolsList
 
     const scannerLink = getScannerUrl(
-      subgraphNetworkToSDKId(item.protocol.network),
-      item.id.split('-')[0] ?? '',
+      subgraphNetworkToSDKId(dbNetworkToSdkNetworkMap[item.network]),
+      item.rebalanceId.split('-')[0] ?? '',
     )
 
-    const amount = new BigNumber(item.amount.toString()).shiftedBy(-item.asset.decimals)
+    const amount = new BigNumber(item.amount.toString()).shiftedBy(-item.inputTokenDecimals)
 
-    const actionFromRawName = item.from.name?.split('-') ?? ['n/a']
-    const actionToRawName = item.to.name?.split('-') ?? ['n/a']
+    const actionFromRawName = item.fromName?.split('-') ?? ['n/a']
+    const actionToRawName = item.toName?.split('-') ?? ['n/a']
 
     const actionFromLabel = getProtocolLabel(actionFromRawName)
     const actionToLabel = getProtocolLabel(actionToRawName)
@@ -129,7 +103,7 @@ export const rebalancingActivityMapper = (
             </TableCellNodes>
           </TableCellNodes>
         ),
-        strategy: <TableCellText>{item.vault.name}</TableCellText>,
+        strategy: <TableCellText>{item.vaultName}</TableCellText>,
         transaction: (
           <Link href={scannerLink} target="_blank">
             <WithArrow

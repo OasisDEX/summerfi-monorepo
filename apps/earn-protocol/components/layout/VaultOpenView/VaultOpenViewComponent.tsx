@@ -34,6 +34,7 @@ import { getChainInfoByChainId, type IToken, TransactionType } from '@summerfi/s
 
 import { AccountKitAccountType } from '@/account-kit/types'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { type UsersActivitiesPagination } from '@/app/server-handlers/tables-data/users-activities/types'
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
@@ -68,6 +69,7 @@ type VaultOpenViewComponentProps = {
   vaults: SDKVaultsListType
   usersActivities: UsersActivitiesPagination
   topDepositors: TopDepositorsPagination
+  rebalanceActivity: RebalanceActivityPagination
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
@@ -80,6 +82,7 @@ export const VaultOpenViewComponent = ({
   vaults,
   usersActivities,
   topDepositors,
+  rebalanceActivity,
   medianDefiYield,
   arksHistoricalChartData,
   arksInterestRates,
@@ -435,9 +438,9 @@ export const VaultOpenViewComponent = ({
       detailsContent={
         <VaultOpenViewDetails
           vault={vault}
-          vaults={vaults}
           usersActivities={usersActivities}
           topDepositors={topDepositors}
+          rebalanceActivity={rebalanceActivity}
           arksHistoricalChartData={arksHistoricalChartData}
           arksInterestRates={arksInterestRates}
           vaultApyData={vaultApyData}

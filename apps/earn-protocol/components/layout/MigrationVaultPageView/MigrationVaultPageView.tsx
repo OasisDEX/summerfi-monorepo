@@ -9,6 +9,7 @@ import {
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { type UsersActivitiesPagination } from '@/app/server-handlers/tables-data/users-activities/types'
 import { sdkApiUrl } from '@/constants/sdk'
@@ -20,6 +21,7 @@ type MigrationVaultPageViewProps = {
   vaults: SDKVaultsListType
   topDepositors: TopDepositorsPagination
   usersActivities: UsersActivitiesPagination
+  rebalanceActivity: RebalanceActivityPagination
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
@@ -33,6 +35,7 @@ export const MigrationVaultPageView: FC<MigrationVaultPageViewProps> = ({
   vaults,
   usersActivities,
   topDepositors,
+  rebalanceActivity,
   medianDefiYield,
   arksHistoricalChartData,
   arksInterestRates,
@@ -47,6 +50,7 @@ export const MigrationVaultPageView: FC<MigrationVaultPageViewProps> = ({
         vaults={vaults}
         usersActivities={usersActivities}
         topDepositors={topDepositors}
+        rebalanceActivity={rebalanceActivity}
         medianDefiYield={medianDefiYield}
         arksHistoricalChartData={arksHistoricalChartData}
         arksInterestRates={arksInterestRates}

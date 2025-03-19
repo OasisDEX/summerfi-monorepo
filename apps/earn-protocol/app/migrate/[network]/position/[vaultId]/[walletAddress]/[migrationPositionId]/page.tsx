@@ -14,6 +14,7 @@ import { getMigratablePositions } from '@/app/server-handlers/migration'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
+import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
 import { getPaginatedUsersActivities } from '@/app/server-handlers/tables-data/users-activities/api'
 import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
@@ -60,6 +61,7 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
     migratablePositionsData,
     topDepositors,
     usersActivities,
+    rebalanceActivity,
   ] = await Promise.all([
     getVaultDetails({
       vaultAddress: parsedVaultId,
@@ -81,6 +83,12 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
       sortBy: 'timestamp',
       orderBy: 'desc',
       strategies: [strategy],
+    }),
+    getPaginatedRebalanceActivity({
+      page: 1,
+      limit: 4,
+      sortBy: 'timestamp',
+      orderBy: 'desc',
     }),
   ])
 
@@ -148,6 +156,7 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
       vaults={allVaultsWithConfig}
       usersActivities={usersActivities}
       topDepositors={topDepositors}
+      rebalanceActivity={rebalanceActivity}
       medianDefiYield={medianDefiYield}
       arksHistoricalChartData={arksHistoricalChartData}
       arksInterestRates={arksInterestRates}

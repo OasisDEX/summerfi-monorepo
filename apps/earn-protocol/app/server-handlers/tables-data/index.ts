@@ -3,6 +3,7 @@ import { type SummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { GraphQLClient } from 'graphql-request'
 import { type NextRequest, NextResponse } from 'next/server'
 
+import { updateRebalanceActivity } from './rebalance-activity/updater'
 import { updateTopDepositors } from './top-depositors/updater'
 import { updateUsersActivities } from './users-activities/updater'
 
@@ -32,6 +33,13 @@ export const updateTablesData = async ({
   })
 
   await updateTopDepositors({
+    db,
+    mainnetGraphQlClient,
+    baseGraphQlClient,
+    arbitrumGraphQlClient,
+  })
+
+  await updateRebalanceActivity({
     db,
     mainnetGraphQlClient,
     baseGraphQlClient,

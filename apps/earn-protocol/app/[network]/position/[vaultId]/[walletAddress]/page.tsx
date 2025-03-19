@@ -25,6 +25,7 @@ import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
+import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
 import { getPaginatedUsersActivities } from '@/app/server-handlers/tables-data/users-activities/api'
 import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
@@ -66,33 +67,41 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
 
   const strategy = `${parsedVaultId}-${parsedNetwork}`
 
-  const [vault, { vaults }, position, topDepositors, userActivities] = await Promise.all([
-    getVaultDetails({
-      vaultAddress: parsedVaultId,
-      network: parsedNetwork,
-    }),
-    getVaultsList(),
-    getUserPosition({
-      vaultAddress: parsedVaultId,
-      network: parsedNetwork,
-      walletAddress,
-    }),
-    getPaginatedTopDepositors({
-      page: 1,
-      limit: 4,
-      sortBy: 'balanceUsd',
-      orderBy: 'desc',
-      strategies: [strategy],
-    }),
-    getPaginatedUsersActivities({
-      page: 1,
-      limit: 4,
-      sortBy: 'timestamp',
-      orderBy: 'desc',
-      strategies: [strategy],
-      userAddress: walletAddress,
-    }),
-  ])
+  const [vault, { vaults }, position, topDepositors, userActivities, rebalanceActivity] =
+    await Promise.all([
+      getVaultDetails({
+        vaultAddress: parsedVaultId,
+        network: parsedNetwork,
+      }),
+      getVaultsList(),
+      getUserPosition({
+        vaultAddress: parsedVaultId,
+        network: parsedNetwork,
+        walletAddress,
+      }),
+      getPaginatedTopDepositors({
+        page: 1,
+        limit: 4,
+        sortBy: 'balanceUsd',
+        orderBy: 'desc',
+        strategies: [strategy],
+      }),
+      getPaginatedUsersActivities({
+        page: 1,
+        limit: 4,
+        sortBy: 'timestamp',
+        orderBy: 'desc',
+        strategies: [strategy],
+        userAddress: walletAddress,
+      }),
+      getPaginatedRebalanceActivity({
+        page: 1,
+        limit: 4,
+        sortBy: 'timestamp',
+        orderBy: 'desc',
+        strategies: [strategy],
+      }),
+    ])
 
   if (!vault) {
     return (
@@ -205,6 +214,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       viewWalletAddress={walletAddress}
       userActivities={userActivities}
       topDepositors={topDepositors}
+      rebalanceActivity={rebalanceActivity}
       performanceChartData={performanceChartData}
       arksHistoricalChartData={arksHistoricalChartData}
       arksInterestRates={arksInterestRates}

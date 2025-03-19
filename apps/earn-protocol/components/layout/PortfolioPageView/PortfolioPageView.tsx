@@ -2,14 +2,11 @@
 
 import { type FC, useEffect, useReducer } from 'react'
 import { getPositionValues, NonOwnerPortfolioBanner, TabBar } from '@summerfi/app-earn-ui'
-import {
-  type HistoryChartData,
-  type SDKGlobalRebalancesType,
-  type SDKVaultishType,
-} from '@summerfi/app-types'
+import { type HistoryChartData, type SDKVaultishType } from '@summerfi/app-types'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
+import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type UsersActivitiesPagination } from '@/app/server-handlers/tables-data/users-activities/types'
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { claimDelegateReducer, claimDelegateState } from '@/features/claim-and-delegate/state'
@@ -36,7 +33,7 @@ interface PortfolioPageViewProps {
   rewardsData: ClaimDelegateExternalData
   vaultsList: SDKVaultishType[]
   positions: PositionWithVault[]
-  rebalancesList: SDKGlobalRebalancesType
+  rebalanceActivity: RebalanceActivityPagination
   userActivity: UsersActivitiesPagination
   totalRays: number
   positionsHistoricalChartMap: {
@@ -53,7 +50,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   rewardsData,
   vaultsList,
   positions,
-  rebalancesList,
+  rebalanceActivity,
   userActivity,
   totalRays,
   positionsHistoricalChartMap,
@@ -83,11 +80,6 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     // only on tab change
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab])
-
-  const totalRebalances = positions.reduce(
-    (acc, position) => acc + Number(position.vault.rebalanceCount),
-    0,
-  )
 
   const overallSumr = calculateOverallSumr(rewardsData)
 
@@ -134,10 +126,10 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
         label: 'Rebalance Activity',
         content: (
           <PortfolioRebalanceActivity
-            rebalancesList={rebalancesList}
+            rebalanceActivity={rebalanceActivity}
             walletAddress={walletAddress}
-            totalRebalances={totalRebalances}
             vaultsList={vaultsList}
+            positions={positions}
           />
         ),
       },

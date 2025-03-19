@@ -23,7 +23,6 @@ import { fetchRaysLeaderboard } from '@/app/server-handlers/leaderboard'
 import { getMigratablePositions } from '@/app/server-handlers/migration'
 import { portfolioWalletAssetsHandler } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { getPositionHistory } from '@/app/server-handlers/position-history'
-import { getGlobalRebalances } from '@/app/server-handlers/sdk/get-global-rebalances'
 import { getUserPositions } from '@/app/server-handlers/sdk/get-user-positions'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
@@ -32,6 +31,7 @@ import { getSumrDelegatesWithDecayFactor } from '@/app/server-handlers/sumr-dele
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
 import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
 import systemConfigHandler from '@/app/server-handlers/system-config'
+import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getPaginatedUsersActivities } from '@/app/server-handlers/tables-data/users-activities/api'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { PortfolioPageViewComponent } from '@/components/layout/PortfolioPageView/PortfolioPageViewComponent'
@@ -56,7 +56,6 @@ const portfolioCallsHandler = async (walletAddress: string) => {
   }
   const [
     walletData,
-    { rebalances },
     sumrStakeDelegate,
     sumrEligibility,
     sumrBalances,
@@ -70,7 +69,6 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     userActivity,
   ] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
-    unstableCache(getGlobalRebalances, [walletAddress], cacheConfig)(),
     unstableCache(getSumrDelegateStake, [walletAddress], cacheConfig)({ walletAddress }),
     fetchRaysLeaderboard({ userAddress: walletAddress, page: '1', limit: '1' }),
     unstableCache(getSumrBalances, [walletAddress], cacheConfig)({ walletAddress }),
@@ -90,7 +88,6 @@ const portfolioCallsHandler = async (walletAddress: string) => {
 
   return {
     walletData,
-    rebalances,
     sumrStakeDelegate,
     sumrEligibility,
     sumrBalances,
@@ -129,7 +126,6 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
 
   const {
     walletData,
-    rebalances,
     sumrStakeDelegate,
     sumrEligibility,
     sumrBalances,
@@ -162,7 +158,9 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     })
   })
 
-  const [positionHistoryMap, vaultsApyByNetworkMap] = await Promise.all([
+  const userVaultsIds = positionsWithVault.map((position) => getUniqueVaultId(position.vault))
+
+  const [positionHistoryMap, vaultsApyByNetworkMap, rebalanceActivity] = await Promise.all([
     Promise.all(
       vaultsWithConfig.map((vault) =>
         getPositionHistory({
@@ -178,12 +176,14 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
         chainId: subgraphNetworkToId(network),
       })),
     }),
+    getPaginatedRebalanceActivity({
+      page: 1,
+      limit: 50,
+      sortBy: 'timestamp',
+      orderBy: 'desc',
+      strategies: userVaultsIds,
+    }),
   ])
-
-  const userVaultsIds = positionsWithVault.map((position) => position.vault.id.toLowerCase())
-  const userRebalances = rebalances.filter((rebalance) =>
-    userVaultsIds.includes(rebalance.vault.id.toLowerCase()),
-  )
 
   const rewardsData: ClaimDelegateExternalData = {
     sumrToClaim,
@@ -226,13 +226,13 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       walletData={walletData}
       rewardsData={rewardsData}
       vaultsList={vaultsWithConfig}
-      rebalancesList={userRebalances}
       totalRays={totalRays}
       userActivity={userActivity}
       positionsHistoricalChartMap={positionsHistoricalChartMap}
       vaultsApyByNetworkMap={vaultsApyByNetworkMap}
       migratablePositions={migratablePositions}
       migrationBestVaultApy={migrationBestVaultApy}
+      rebalanceActivity={rebalanceActivity}
     />
   )
 }

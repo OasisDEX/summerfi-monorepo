@@ -92,7 +92,7 @@ export interface NetworkStatus {
 }
 
 export interface RebalanceActivity {
-  actionType: ActionType;
+  actionType: string;
   amount: Numeric;
   amountUsd: Numeric;
   fromDepositLimit: Numeric;

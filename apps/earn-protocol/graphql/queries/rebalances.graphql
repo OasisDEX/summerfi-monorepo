@@ -19,6 +19,12 @@ query GetRebalances($timestamp: BigInt, $first: Int!, $skip: Int!) {
       depositLimit
       totalValueLockedUSD
     }
+    fromPostAction {
+      depositLimit
+    }
+    toPostAction {
+      depositLimit
+    }
     timestamp
     vault {
       id
@@ -33,5 +39,6 @@ query GetRebalances($timestamp: BigInt, $first: Int!, $skip: Int!) {
         network
       }
     }
+    hash
   }
 }

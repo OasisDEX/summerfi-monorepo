@@ -36,11 +36,12 @@ import {
   type VaultApyData,
 } from '@summerfi/app-types'
 import { formatDecimalAsPercent, subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
-import { type GetGlobalRebalancesQuery, type IArmadaPosition } from '@summerfi/sdk-client'
+import { type IArmadaPosition } from '@summerfi/sdk-client'
 import { TransactionType } from '@summerfi/sdk-common'
 
 import { AccountKitAccountType } from '@/account-kit/types'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { type UsersActivitiesPagination } from '@/app/server-handlers/tables-data/users-activities/types'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
@@ -80,6 +81,7 @@ export const VaultManageViewComponent = ({
   userActivities,
   topDepositors,
   viewWalletAddress,
+  rebalanceActivity,
   performanceChartData,
   arksHistoricalChartData,
   arksInterestRates,
@@ -92,6 +94,7 @@ export const VaultManageViewComponent = ({
   position: IArmadaPosition
   topDepositors: TopDepositorsPagination
   userActivities: UsersActivitiesPagination
+  rebalanceActivity: RebalanceActivityPagination
   viewWalletAddress: string
   performanceChartData: PerformanceChartData
   arksHistoricalChartData: ArksHistoricalChartData
@@ -391,10 +394,6 @@ export const VaultManageViewComponent = ({
       ? tosSidebarProps
       : sidebarProps
 
-  // needed due to type duality
-  const rebalancesList =
-    `rebalances` in vault ? (vault.rebalances as GetGlobalRebalancesQuery['rebalances']) : []
-
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   // "It’s 1% for usd and 0.3% for eth"
@@ -522,10 +521,9 @@ export const VaultManageViewComponent = ({
               }
             >
               <RebalancingActivity
-                rebalancesList={rebalancesList}
+                rebalanceActivity={rebalanceActivity}
                 vaultId={getUniqueVaultId(vault)}
-                totalRebalances={Number(vault.rebalanceCount)}
-                vaultsList={vaults}
+                vault={vault}
               />
             </Expander>
             <Expander
