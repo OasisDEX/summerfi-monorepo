@@ -25,8 +25,8 @@ import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
-import { getTopDepositorsServerSide } from '@/app/server-handlers/tables-data/top-depositors/api'
-import { getUsersActivitiesServerSide } from '@/app/server-handlers/tables-data/users-activities/api'
+import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
+import { getPaginatedUsersActivities } from '@/app/server-handlers/tables-data/users-activities/api'
 import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { VaultManageView } from '@/components/layout/VaultManageView/VaultManageView'
@@ -77,21 +77,21 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       network: parsedNetwork,
       walletAddress,
     }),
-    getTopDepositorsServerSide({
+    getPaginatedTopDepositors({
       page: 1,
       limit: 4,
       sortBy: 'balanceUsd',
       orderBy: 'desc',
       strategies: [strategy],
-    }).then((res) => res.json()),
-    getUsersActivitiesServerSide({
+    }),
+    getPaginatedUsersActivities({
       page: 1,
       limit: 4,
       sortBy: 'timestamp',
       orderBy: 'desc',
       strategies: [strategy],
       userAddress: walletAddress,
-    }).then((res) => res.json()),
+    }),
   ])
 
   if (!vault) {

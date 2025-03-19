@@ -32,7 +32,7 @@ import { getSumrDelegatesWithDecayFactor } from '@/app/server-handlers/sumr-dele
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
 import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
 import systemConfigHandler from '@/app/server-handlers/system-config'
-import { getUsersActivitiesServerSide } from '@/app/server-handlers/tables-data/users-activities/api'
+import { getPaginatedUsersActivities } from '@/app/server-handlers/tables-data/users-activities/api'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { PortfolioPageViewComponent } from '@/components/layout/PortfolioPageView/PortfolioPageViewComponent'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
@@ -81,11 +81,11 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     getVaultsList(),
     systemConfigHandler(),
     unstableCache(getMigratablePositions, [walletAddress], cacheConfig)({ walletAddress }),
-    getUsersActivitiesServerSide({
+    getPaginatedUsersActivities({
       page: 1,
       limit: 50,
       userAddress: walletAddress,
-    }).then((res) => res.json()),
+    }),
   ])
 
   return {

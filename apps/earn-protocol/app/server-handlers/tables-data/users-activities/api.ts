@@ -1,6 +1,8 @@
 import { type ActionType, getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { NextResponse } from 'next/server'
 
+import { type UsersActivitiesPagination } from './types'
+
 export const getUsersActivitiesServerSide = async ({
   page,
   limit,
@@ -114,4 +116,35 @@ export const getUsersActivitiesServerSide = async ({
 
     return NextResponse.json({ error: 'Failed to fetch latest activity' }, { status: 500 })
   }
+}
+
+export const getPaginatedUsersActivities = async ({
+  page,
+  limit,
+  sortBy = 'timestamp',
+  orderBy = 'desc',
+  actionType,
+  userAddress,
+  tokens,
+  strategies,
+}: {
+  page: number
+  limit: number
+  sortBy?: 'timestamp' | 'balance' | 'balanceUsd' | 'amount' | 'amountUsd'
+  orderBy?: 'asc' | 'desc'
+  actionType?: ActionType
+  userAddress?: string
+  tokens?: string[]
+  strategies?: string[]
+}): Promise<UsersActivitiesPagination> => {
+  return await getUsersActivitiesServerSide({
+    page,
+    limit,
+    sortBy,
+    orderBy,
+    actionType,
+    userAddress,
+    tokens,
+    strategies,
+  }).then((res) => res.json())
 }

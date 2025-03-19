@@ -3,10 +3,9 @@ import { parseQueryStringServerSide } from '@summerfi/app-utils'
 import { type Metadata } from 'next'
 import { type ReadonlyURLSearchParams } from 'next/navigation'
 
-// import { getUsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
-import { getTopDepositorsServerSide } from '@/app/server-handlers/tables-data/top-depositors/api'
-import { getUsersActivitiesServerSide } from '@/app/server-handlers/tables-data/users-activities/api'
+import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
+import { getPaginatedUsersActivities } from '@/app/server-handlers/tables-data/users-activities/api'
 import { UserActivityView } from '@/features/user-activity/components/UserActivityView/UserActivityView'
 
 interface UserActivityPageProps {
@@ -23,22 +22,22 @@ const UserActivityPage: FC<UserActivityPageProps> = async ({ searchParams }) => 
 
   const [{ vaults }, topDepositors, usersActivities] = await Promise.all([
     getVaultsList(),
-    getTopDepositorsServerSide({
+    getPaginatedTopDepositors({
       page: 1,
       limit: 50,
       sortBy: 'balanceUsd',
       orderBy: 'desc',
       tokens,
       strategies,
-    }).then((res) => res.json()),
-    getUsersActivitiesServerSide({
+    }),
+    getPaginatedUsersActivities({
       page: 1,
       limit: 50,
       sortBy: 'timestamp',
       orderBy: 'desc',
       tokens,
       strategies,
-    }).then((res) => res.json()),
+    }),
   ])
 
   return (

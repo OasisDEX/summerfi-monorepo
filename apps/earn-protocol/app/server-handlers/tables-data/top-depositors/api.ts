@@ -1,6 +1,8 @@
 import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { NextResponse } from 'next/server'
 
+import { type TopDepositorsPagination } from './types'
+
 export const getTopDepositorsServerSide = async ({
   page,
   limit,
@@ -89,4 +91,39 @@ export const getTopDepositorsServerSide = async ({
 
     return NextResponse.json({ error: 'Failed to fetch top depositors' }, { status: 500 })
   }
+}
+
+export const getPaginatedTopDepositors = async ({
+  page,
+  limit,
+  sortBy,
+  orderBy,
+  userAddress,
+  strategies,
+  tokens,
+}: {
+  page: number
+  limit: number
+  sortBy:
+    | 'balanceUsd'
+    | 'balance'
+    | 'changeSevenDays'
+    | 'projectedOneYearEarnings'
+    | 'projectedOneYearEarningsUsd'
+    | 'noOfDeposits'
+    | 'earningsStreak'
+  orderBy: 'asc' | 'desc'
+  userAddress?: string
+  strategies?: string[]
+  tokens?: string[]
+}): Promise<TopDepositorsPagination> => {
+  return await getTopDepositorsServerSide({
+    page,
+    limit,
+    sortBy,
+    orderBy,
+    userAddress,
+    strategies,
+    tokens,
+  }).then((res) => res.json())
 }
