@@ -37,7 +37,6 @@
     "@graphql-codegen/cli": "^5.0.2",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
-    "@types/jsonwebtoken": "^9.0.0",
     "@types/loadable__component": "^5.13.9",
     "@types/lodash-es": "^4.17.1",
     "@types/mixpanel-browser": "^2.49.0",

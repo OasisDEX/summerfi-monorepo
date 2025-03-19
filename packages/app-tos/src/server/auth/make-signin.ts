@@ -1,6 +1,6 @@
 import { type JWTChallenge, type JwtPayload, SDKChainId } from '@summerfi/app-types'
 import { chainIdSchema, getRpcGatewayEndpoint, type IRpcConfig } from '@summerfi/serverless-shared'
-import jwt from 'jsonwebtoken'
+import { jwtVerify, SignJWT } from 'jose'
 import type { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 import { type NextRequest, NextResponse } from 'next/server'
 import {
@@ -36,7 +36,6 @@ const domainChainIdToViemChain: { [key in SDKChainId]: ViemChain } = {
   [SDKChainId.SEPOLIA]: sepolia,
   [SDKChainId.SONIC]: sonic,
 }
-
 const rpcConfig: IRpcConfig = {
   skipCache: false,
   skipMulticall: false,
@@ -61,9 +60,16 @@ export async function makeSignIn({
   let challenge: JWTChallenge
 
   try {
-    challenge = jwt.verify(body.challenge, jwtChallengeSecret, {
-      algorithms: ['HS512'],
-    }) as JWTChallenge
+    if (!body.challenge || !jwtChallengeSecret) {
+      throw new Error('No challenge provided')
+    }
+    const jwtChallengeSecretEncoded = new TextEncoder().encode(jwtChallengeSecret)
+
+    challenge = (
+      await jwtVerify(body.challenge, jwtChallengeSecretEncoded, {
+        algorithms: ['HS512'],
+      })
+    ).payload.payload as JWTChallenge
   } catch (e) {
     return NextResponse.json({ error: 'Invalid challenge' }, { status: 400 })
   }
@@ -85,6 +91,8 @@ export async function makeSignIn({
   })
 
   const message = recreateSignedMessage(challenge, body.type)
+
+  console.log('message', message)
 
   const { isGnosisSafe } = body
   let isArgentWallet = false
@@ -142,7 +150,15 @@ export async function makeSignIn({
     challenge: body.challenge,
     chainId: body.chainId,
   }
-  const token = jwt.sign(userJwtPayload, jwtSecret, { algorithm: 'HS512' })
+
+  const secret = new TextEncoder().encode(jwtSecret)
+
+  const token = await new SignJWT({
+    payload: userJwtPayload,
+  })
+    .setIssuedAt()
+    .setProtectedHeader({ alg: 'HS512' })
+    .sign(secret)
 
   const response = NextResponse.json({ jwt: token })
 

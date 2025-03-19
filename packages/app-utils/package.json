@@ -31,7 +31,6 @@
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
     "@summerfi/app-types": "workspace:*",
-    "@types/jsonwebtoken": "^9.0.0",
     "vite-plugin-node-polyfills": "^0.23.0",
     "eslint": "8.57.0",
     "typescript": "^5.7.3",
@@ -47,7 +46,7 @@
     "dayjs": "^1.11.12",
     "lodash-es": "^4.17.1",
     "next": "15.2.2",
-    "jsonwebtoken": "^9.0.0",
+    "jose": "^6.0.10",
     "viem": "2.21.55"
   },
   "dependencies": {

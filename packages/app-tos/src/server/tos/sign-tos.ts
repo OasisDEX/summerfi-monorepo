@@ -42,7 +42,9 @@ export async function signTos<DB extends TOSRequiredDB>({
     return NextResponse.json({ authenticated: false }, { status: 401 })
   }
 
-  const decoded = verifyAccessToken({ token: token.value, jwtSecret })
+  const decoded = await verifyAccessToken({ token: token.value, jwtSecret })
+
+  console.log('sign tos decoded', decoded)
 
   if (!decoded) {
     return NextResponse.json({ authenticated: false }, { status: 401 })

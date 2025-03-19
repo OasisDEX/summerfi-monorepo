@@ -62,7 +62,7 @@ export const useTermsOfServiceSidebar = ({
   }, [tosStatus, tosAction, checkRisk])
 
   const tosSidebarProps: SidebarProps = {
-    title: 'Terms & Conditions',
+    title: 'Terms\u00A0&\u00A0Conditions',
     content: (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--general-space-16)' }}>
         <Text
