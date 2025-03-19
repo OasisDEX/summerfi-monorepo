@@ -1,7 +1,7 @@
 import type SafeAppsSDK from '@safe-global/safe-apps-sdk'
 // eslint-disable-next-line no-duplicate-imports
 import { type SignMessageResponse } from '@safe-global/safe-apps-sdk'
-import { decode } from 'jsonwebtoken'
+import { decodeJwt } from 'jose'
 
 import { getDataToSignFromChallenge } from '@/client/helpers/get-data-to-sign-from-challenge'
 import { type TOSMessageType } from '@/types'
@@ -48,7 +48,7 @@ export const getGnosisSafeDetails = async (
     : undefined
 
   if (pendingSignature) {
-    const exp = (decode(pendingSignature.challenge) as any)?.exp
+    const { exp } = decodeJwt(pendingSignature.challenge)
 
     if (exp && exp * 1000 >= Date.now()) {
       return {

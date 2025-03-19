@@ -16,6 +16,7 @@ import { type IArmadaPosition } from '@summerfi/sdk-client'
 import dayjs from 'dayjs'
 import { capitalize } from 'lodash-es'
 import { type Metadata } from 'next'
+import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
@@ -231,6 +232,8 @@ export async function generateMetadata({ params }: EarnVaultManagePageProps): Pr
   const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
   const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
+  const prodHost = (await headers()).get('host')
+  const baseUrl = new URL(`https://${prodHost}`)
 
   const parsedVaultId = isAddress(vaultId)
     ? vaultId
@@ -257,7 +260,11 @@ export async function generateMetadata({ params }: EarnVaultManagePageProps): Pr
       : { netValue: 0 }
 
   return {
-    title: `Lazy Summer Protocol - $${formatCryptoBalance(netValue)} ${vault ? getDisplayToken(vault.inputToken.symbol) : ''} position on ${capitalize(paramsNetwork)}`,
+    title: `Lazy Summer Protocol - ${formatCryptoBalance(netValue)} ${vault ? getDisplayToken(vault.inputToken.symbol) : ''} position on ${capitalize(paramsNetwork)}`,
+    openGraph: {
+      siteName: 'Lazy Summer Protocol',
+      images: `${baseUrl}earn/api/og/vault-position?amount=${formatCryptoBalance(netValue)}&token=${vault ? getDisplayToken(vault.inputToken.symbol) : ''}&address=${walletAddress}`,
+    },
   }
 }
 

@@ -1,5 +1,5 @@
 import { Chain, createPublicClient, extractChain, getContract, http, HttpTransport } from 'viem'
-import { arbitrum, base, mainnet, optimism, sepolia } from 'viem/chains'
+import { arbitrum, base, mainnet, optimism, sepolia, sonic } from 'viem/chains'
 import { aavePoolContract } from './abi/aavePoolContract'
 import { decodeBitmapToAssetsAddresses } from './decodeBitmapToAssetsAddresses'
 import { aavePoolDataProviderContract } from './abi/aavePoolDataProviderContract'
@@ -51,14 +51,15 @@ export function createMigrationsClient(
       if (!isChainId(chainId)) {
         throw new Error(`Invalid chainId: ${chainId}`)
       }
-      if (chainId === ChainId.SONIC) {
-        throw new Error('Sonic is not supported yet')
+      // skik unsupported chains
+      if ([ChainId.SONIC].includes(chainId)) {
+        return
       }
       if (customChainId && customChainId !== chainId) {
         return
       }
       const chain = extractChain({
-        chains: [mainnet, base, optimism, arbitrum, sepolia],
+        chains: [mainnet, base, optimism, arbitrum, sepolia, sonic],
         id: chainId,
       })
 
@@ -130,17 +131,17 @@ async function getAssets(
   const aavePool = getContract({
     address: addressService.getProtocolContract(protocol, 'LendingPool'),
     abi: aavePoolContract.abi,
-    publicClient,
+    client: publicClient,
   })
   const aavePoolDataProvider = getContract({
     address: addressService.getProtocolContract(protocol, 'PoolDataProvider'),
     abi: aavePoolDataProviderContract.abi,
-    publicClient,
+    client: publicClient,
   })
   const aaveOracle = getContract({
     address: addressService.getProtocolContract(protocol, 'Oracle'),
     abi: aaveOracleContract.abi,
-    publicClient,
+    client: publicClient,
   })
 
   // read getReservesList
