@@ -51,8 +51,9 @@ export function createMigrationsClient(
       if (!isChainId(chainId)) {
         throw new Error(`Invalid chainId: ${chainId}`)
       }
-      if (chainId === ChainId.SONIC) {
-        throw new Error('Sonic is not supported yet')
+      // skik unsupported chains
+      if ([ChainId.SONIC].includes(chainId)) {
+        return
       }
       if (customChainId && customChainId !== chainId) {
         return
