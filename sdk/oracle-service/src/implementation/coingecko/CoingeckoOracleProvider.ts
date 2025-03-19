@@ -175,7 +175,7 @@ export class CoingeckoOracleProvider
    */
   private _getAuthHeader() {
     return {
-      [this._authHeader]: `Bearer ${this._apiKey}`,
+      [this._authHeader]: `${this._apiKey}`,
       'Content-Type': 'application/json',
     }
   }
@@ -195,6 +195,7 @@ export class CoingeckoOracleProvider
   }): string {
     const chainId = params.chainInfo.chainId
     const tokenAddresses = params.tokenAddresses.map((address) => address.value.toLowerCase())
+    const platform = this._getPlatform(chainId)
 
     /**
      * apiSpotUrl includes the complete path for the spot price endpoint
@@ -202,9 +203,12 @@ export class CoingeckoOracleProvider
      * https://portal.1inch.dev/documentation/spot-price/swagger?method=get&path=%2Fv1.1%2F1%2F%7Baddresses%7D
      */
 
-    const currency = params.quoteCurrency ? `?currency=${params.quoteCurrency.toUpperCase()}` : ''
+    const currency = params.quoteCurrency
+      ? `&vs_currencies=${params.quoteCurrency.toLowerCase()}`
+      : ''
+    const precision = `&precision=6`
 
-    return `${this._apiUrl}/price/${this._version}/${chainId}/${tokenAddresses.join(',')}${currency}`
+    return `${this._apiUrl}/${this._version}/simple/token_price/${platform}?contract_addresses=${tokenAddresses.join(',')}${currency}${precision}`
   }
 
   /**
