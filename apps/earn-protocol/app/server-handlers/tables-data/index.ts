@@ -25,21 +25,21 @@ export const updateTablesData = async ({
   const baseGraphQlClient = new GraphQLClient(subgraphsMap[SDKNetwork.Base])
   const arbitrumGraphQlClient = new GraphQLClient(subgraphsMap[SDKNetwork.ArbitrumOne])
 
-  await updateUsersActivities({
+  const updatedUsersActivities = await updateUsersActivities({
     db,
     mainnetGraphQlClient,
     baseGraphQlClient,
     arbitrumGraphQlClient,
   })
 
-  await updateTopDepositors({
+  const updatedTopDepositors = await updateTopDepositors({
     db,
     mainnetGraphQlClient,
     baseGraphQlClient,
     arbitrumGraphQlClient,
   })
 
-  await updateRebalanceActivity({
+  const updatedRebalanceActivity = await updateRebalanceActivity({
     db,
     mainnetGraphQlClient,
     baseGraphQlClient,
@@ -47,8 +47,8 @@ export const updateTablesData = async ({
   })
 
   return NextResponse.json({
-    // latestActivity,
-    // topDepositors,
-    // newActivities,
+    updatedUsersActivities,
+    updatedTopDepositors,
+    updatedRebalanceActivity,
   })
 }

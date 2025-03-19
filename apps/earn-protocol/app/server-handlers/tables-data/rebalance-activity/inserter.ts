@@ -14,10 +14,12 @@ export async function insertRebalanceActivitiesInBatches(
   activities: RebalanceActivity[],
   batchSize: number = DB_BATCH_SIZE,
 ) {
+  let updated = 0
+
   for (let i = 0; i < activities.length; i += batchSize) {
     const batch = activities.slice(i, i + batchSize)
 
-    await db
+    const result = await db
       .insertInto('rebalanceActivity')
       .values(
         batch.map((activity) => ({
@@ -48,5 +50,11 @@ export async function insertRebalanceActivitiesInBatches(
         })),
       )
       .execute()
+
+    updated += Number(result[0].numInsertedOrUpdatedRows ?? 0)
+  }
+
+  return {
+    updated,
   }
 }

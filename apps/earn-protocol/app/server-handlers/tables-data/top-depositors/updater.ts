@@ -20,6 +20,7 @@ export const updateTopDepositors = async ({
   baseGraphQlClient: GraphQLClient
   arbitrumGraphQlClient: GraphQLClient
 }) => {
+  const startTime = Date.now()
   const topDepositors = await getTopDepositors({
     mainnetGraphQlClient,
     baseGraphQlClient,
@@ -71,6 +72,13 @@ export const updateTopDepositors = async ({
     }
   })
 
-  // Insert top depositors in batches to avoid parameter limit
-  await insertTopDepositorsInBatches(db, extendPositions)
+  const { updated } = await insertTopDepositorsInBatches(db, extendPositions)
+
+  const endTime = Date.now()
+  const duration = `${((endTime - startTime) / 1000).toFixed(2)}s`
+
+  return {
+    updated,
+    duration,
+  }
 }

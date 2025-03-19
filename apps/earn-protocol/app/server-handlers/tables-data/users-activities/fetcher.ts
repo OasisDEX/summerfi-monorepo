@@ -23,10 +23,8 @@ export async function fetchAllUserActivities(
   let skip = 0
   let hasMoreDeposits = true
   let hasMoreWithdraws = true
-  let batchNumber = 0
 
   while (hasMoreDeposits || hasMoreWithdraws) {
-    batchNumber++
     const response = await client.request<GraphQLResponse>(GetLatestActivityDocument, {
       timestamp,
       first: BATCH_SIZE,
@@ -38,19 +36,6 @@ export async function fetchAllUserActivities(
 
     allDeposits = [...allDeposits, ...deposits]
     allWithdraws = [...allWithdraws, ...withdraws]
-
-    // eslint-disable-next-line no-console
-    console.info('--------------------------------')
-    // eslint-disable-next-line no-console
-    console.info('Fetch all users activities')
-    // eslint-disable-next-line no-console
-    console.info(`Batch ${batchNumber}:`)
-    // eslint-disable-next-line no-console
-    console.info(`- Deposits: ${deposits.length} (Total: ${allDeposits.length})`)
-    // eslint-disable-next-line no-console
-    console.info(`- Withdraws: ${withdraws.length} (Total: ${allWithdraws.length})`)
-    // eslint-disable-next-line no-console
-    console.info('--------------------------------')
 
     // If we got less than the batch size for both, we've reached the end
     if (deposits.length < BATCH_SIZE) {

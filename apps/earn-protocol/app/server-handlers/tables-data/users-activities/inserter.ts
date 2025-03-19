@@ -13,10 +13,12 @@ export async function insertUsersActivitiesInBatches(
   activities: UserActivity[],
   batchSize: number = DB_BATCH_SIZE,
 ) {
+  let updated = 0
+
   for (let i = 0; i < activities.length; i += batchSize) {
     const batch = activities.slice(i, i + batchSize)
 
-    await db
+    const result = await db
       .insertInto('latestActivity')
       .values(
         batch.map((activity) => ({
@@ -46,5 +48,11 @@ export async function insertUsersActivitiesInBatches(
         })),
       )
       .execute()
+
+    updated += Number(result[0].numInsertedOrUpdatedRows ?? 0)
+  }
+
+  return {
+    updated,
   }
 }

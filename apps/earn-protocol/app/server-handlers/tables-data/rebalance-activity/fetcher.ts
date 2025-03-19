@@ -16,10 +16,8 @@ export async function fetchAllRebalanceActivities(
   let allRebalances: Rebalance[] = []
   let skip = 0
   let hasMoreRebalances = true
-  let batchNumber = 0
 
   while (hasMoreRebalances) {
-    batchNumber++
     const response = await client.request<GraphQLResponse>(GetRebalancesDocument, {
       timestamp,
       first: BATCH_SIZE,
@@ -29,17 +27,6 @@ export async function fetchAllRebalanceActivities(
     const rebalances = response.rebalances || []
 
     allRebalances = [...allRebalances, ...rebalances]
-
-    // eslint-disable-next-line no-console
-    console.info('--------------------------------')
-    // eslint-disable-next-line no-console
-    console.info('Fetch all rebalances')
-    // eslint-disable-next-line no-console
-    console.info(`Batch ${batchNumber}:`)
-    // eslint-disable-next-line no-console
-    console.info(`- Rebalances: ${rebalances.length} (Total: ${allRebalances.length})`)
-    // eslint-disable-next-line no-console
-    console.info('--------------------------------')
 
     // If we got less than the batch size for both, we've reached the end
     if (rebalances.length < BATCH_SIZE) {

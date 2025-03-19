@@ -14,12 +14,14 @@ export async function insertTopDepositorsInBatches(
   topDepositors: TopDepositorPosition[],
   batchSize: number = DB_BATCH_SIZE,
 ) {
+  let updated = 0
+
   for (let i = 0; i < topDepositors.length; i += batchSize) {
     const batch = topDepositors.slice(i, i + batchSize)
 
     const updatedAt = BigInt(new Date().getTime())
 
-    await db
+    const result = await db
       .insertInto('topDepositors')
       .values(
         batch.map((topDepositor) => ({
@@ -67,5 +69,11 @@ export async function insertTopDepositorsInBatches(
         }),
       )
       .execute()
+
+    updated += Number(result[0].numInsertedOrUpdatedRows ?? 0)
+  }
+
+  return {
+    updated,
   }
 }

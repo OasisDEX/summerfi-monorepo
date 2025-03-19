@@ -15,6 +15,7 @@ export const updateRebalanceActivity = async ({
   baseGraphQlClient: GraphQLClient
   arbitrumGraphQlClient: GraphQLClient
 }) => {
+  const startTime = Date.now()
   const [latestRebalanceActivity] = await Promise.all([
     db.selectFrom('rebalanceActivity').selectAll().orderBy('timestamp', 'desc').limit(1).execute(),
   ])
@@ -30,5 +31,14 @@ export const updateRebalanceActivity = async ({
   })
 
   // Insert activities in batches to avoid parameter limit
-  await insertRebalanceActivitiesInBatches(db, allRebalanceActivities)
+  const { updated } = await insertRebalanceActivitiesInBatches(db, allRebalanceActivities)
+
+  const endTime = Date.now()
+  const duration = `${((endTime - startTime) / 1000).toFixed(2)}s`
+
+  return {
+    updated,
+    startingFrom: lastTimestamp,
+    duration,
+  }
 }
