@@ -142,7 +142,7 @@ describe('Armada Protocol Deposit', () => {
         )
       })
 
-      it.skip(`should deposit 1 USDC (without stake) to fleet at ${fleetAddress.value}`, async () => {
+      it(`should deposit 1 USDC (without stake) to fleet at ${fleetAddress.value}`, async () => {
         const amount = '1'
 
         const transactions = await sdk.armada.users.getNewDepositTX({
