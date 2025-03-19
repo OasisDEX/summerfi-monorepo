@@ -1,5 +1,6 @@
 import { type FC } from 'react'
 import { parseQueryStringServerSide } from '@summerfi/app-utils'
+import { type Metadata } from 'next'
 import { type ReadonlyURLSearchParams } from 'next/navigation'
 
 // import { getUsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
@@ -48,6 +49,14 @@ const UserActivityPage: FC<UserActivityPageProps> = async ({ searchParams }) => 
       searchParams={searchParamsParsed}
     />
   )
+}
+
+export function generateMetadata(): Metadata {
+  return {
+    title: `Lazy Summer Protocol - Global User Activity`,
+    description:
+      'A transparent view of global user activity for the Lazy Summer Protocol, showcasing the activity of all our users and access to their individual position pages.',
+  }
 }
 
 export default UserActivityPage

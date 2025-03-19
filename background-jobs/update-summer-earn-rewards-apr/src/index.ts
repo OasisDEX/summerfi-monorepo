@@ -20,7 +20,7 @@ import { ChainId } from '@summerfi/serverless-shared'
 
 import { GetArksRatesQuery, GetProductsQuery } from '@summerfi/summer-earn-rates-subgraph'
 
-const logger = new Logger({ serviceName: 'update-summer-earn-rewards-apr' })
+const logger = new Logger({ serviceName: 'update-summer-earn-rewards-apr', logLevel: 'DEBUG' })
 
 export enum Protocol {
   Morpho = 'Morpho',
@@ -119,6 +119,13 @@ export async function updateVaultAprs(
     const fleetArksWithTvl = arksWithTvl.filter((ark) => ark.vault.id === vault.id)
     const fleetTvl = fleetArksWithTvl.reduce((acc, ark) => acc + +ark.totalValueLockedUSD, 0)
     logger.debug('Calculated fleet TVL', { network: network.network, fleetTvl })
+    if (fleetTvl === 0) {
+      logger.debug('Skipping vault APR updates - no TVL', {
+        network: network.network,
+        vaultId: vault.id,
+      })
+      continue
+    }
 
     const fleetArksWithRatios = fleetArksWithTvl.map((ark) => ({
       ...ark,
@@ -658,7 +665,8 @@ export const handler = async (
 
   // Get all potential networks
   const allNetworks = (await db.selectFrom('networkStatus').selectAll().execute()).filter(
-    (network) => network.network !== 'optimism',
+    (network) =>
+      network.network === 'mainnet' || network.network === 'arbitrum' || network.network === 'base',
   )
 
   logger.debug('Starting network processing', { networkCount: allNetworks.length })

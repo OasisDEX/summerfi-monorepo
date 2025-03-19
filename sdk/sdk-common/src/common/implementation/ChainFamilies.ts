@@ -4,6 +4,7 @@ import {
   ChainFamilyName,
   EthereumChainNames,
   OptimismChainNames,
+  SonicChainNames,
 } from '../enums/ChainNames'
 import { ChainInfo } from './ChainInfo'
 import { ChainId } from '../types/ChainId'
@@ -44,6 +45,13 @@ const BaseFamily: Record<BaseChainNames, ChainInfo> = {
   }),
 }
 
+const SonicFamily: Record<SonicChainNames, ChainInfo> = {
+  [SonicChainNames.Sonic]: ChainInfo.createFrom({
+    chainId: ChainIds.Sonic,
+    name: BaseChainNames.Mainnet,
+  }),
+}
+
 /**
  * Complex type to allow Typescript to figure out the type of the value when
  * using a ChainFamilyName as a key
@@ -57,7 +65,9 @@ export type ChainFamily = {
         ? typeof OptimismFamily
         : key extends ChainFamilyName.Base
           ? typeof BaseFamily
-          : never
+          : key extends ChainFamilyName.Sonic
+            ? typeof SonicFamily
+            : never
 }
 
 /**
@@ -70,6 +80,7 @@ export const ChainFamilyMap: ChainFamily = {
   [ChainFamilyName.Arbitrum]: ArbitrumFamily,
   [ChainFamilyName.Optimism]: OptimismFamily,
   [ChainFamilyName.Base]: BaseFamily,
+  [ChainFamilyName.Sonic]: SonicFamily,
 }
 
 export type ChainFamilyInfo = {

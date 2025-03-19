@@ -12,13 +12,18 @@ import {
   YAxis,
 } from 'recharts'
 
+import { NotEnoughData } from '@/components/organisms/Charts/components/NotEnoughData'
 import { PerformanceLegend } from '@/components/organisms/Charts/components/PerformanceLegend'
 import { historicalPerformanceLabelMap } from '@/components/organisms/Charts/labels'
-import { CHART_TIMESTAMP_FORMAT_DETAILED, CHART_TIMESTAMP_FORMAT_SHORT } from '@/constants/charts'
+import {
+  CHART_TIMESTAMP_FORMAT_DETAILED,
+  CHART_TIMESTAMP_FORMAT_SHORT,
+  POINTS_REQUIRED_FOR_CHART,
+} from '@/constants/charts'
 import { formatChartCryptoValue } from '@/features/forecast/chart-formatters'
 
 export type PerformanceChartProps = {
-  data:
+  data?:
     | PerformanceChartData['forecast'][TimeframesType]
     | PerformanceChartData['historic'][TimeframesType]
   timeframe: TimeframesType
@@ -32,8 +37,20 @@ export const PerformanceChart = ({
   showForecast,
   timeframe,
 }: PerformanceChartProps) => {
+  const chartHidden = !data || data.length < POINTS_REQUIRED_FOR_CHART[timeframe]
+
   return (
     <RechartResponsiveWrapper>
+      {chartHidden && (
+        <NotEnoughData
+          style={{
+            width: '100%',
+            height: '340px',
+            marginTop: '35px',
+            backgroundColor: 'var(--color-surface-subtle)',
+          }}
+        />
+      )}
       <ResponsiveContainer width="100%" height="90%">
         <ComposedChart
           data={data}
@@ -100,51 +117,57 @@ export const PerformanceChart = ({
               letterSpacing: '-0.5px',
             }}
           />
-          <Area
-            type="natural"
-            dataKey="bounds"
-            stroke="none"
-            legendType="none"
-            fill="#8D3360"
-            connectNulls
-            dot={false}
-            activeDot={false}
-            animationDuration={200}
-            animationBegin={200}
-            animateNewValues
-          />
-          <Line
-            dot={false}
-            type="natural"
-            dataKey="forecast"
-            stroke="#FF80BF"
-            activeDot={false}
-            connectNulls
-            animationDuration={400}
-            strokeDasharray="5 5"
-            animateNewValues
-          />
-          <Line
-            dot={false}
-            type="monotone"
-            dataKey="netValue"
-            stroke="#FF80BF"
-            activeDot={false}
-            connectNulls
-            animationDuration={400}
-            animateNewValues
-          />
-          <Line
-            dot={false}
-            type="stepAfter"
-            dataKey="depositedValue"
-            stroke="#FF49A4"
-            activeDot={false}
-            connectNulls
-            animationDuration={400}
-            animateNewValues
-          />
-          {data.length && (
+          {showForecast ? (
+            <>
+              <Area
+                type="natural"
+                dataKey="bounds"
+                stroke="none"
+                legendType="none"
+                fill="#8D3360"
+                dot={false}
+                activeDot={false}
+                animationDuration={200}
+                animationBegin={200}
+                animateNewValues
+              />
+              <Line
+                dot={false}
+                type="natural"
+                dataKey="forecast"
+                stroke="#FF80BF"
+                activeDot={false}
+                connectNulls
+                animationDuration={400}
+                strokeDasharray="5 5"
+                animateNewValues
+              />
+            </>
+          ) : (
+            <>
+              <Line
+                dot={false}
+                type="monotone"
+                dataKey="netValue"
+                stroke="#FF80BF"
+                activeDot={false}
+                connectNulls
+                animationDuration={400}
+                animateNewValues
+              />
+              <Line
+                dot={false}
+                type="stepAfter"
+                dataKey="depositedValue"
+                stroke="#FF49A4"
+                activeDot={false}
+                connectNulls
+                animationDuration={400}
+                animateNewValues
+              />
+            </>
+          )}
+          {data?.length && (
             <Legend
               content={<PerformanceLegend showForecast={showForecast} />}
               iconType="circle"

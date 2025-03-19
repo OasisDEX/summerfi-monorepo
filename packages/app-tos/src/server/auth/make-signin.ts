@@ -10,7 +10,7 @@ import {
   type PublicClient,
   recoverMessageAddress,
 } from 'viem'
-import { arbitrum, base, mainnet, optimism, sepolia } from 'viem/chains'
+import { arbitrum, base, mainnet, optimism, sepolia, sonic } from 'viem/chains'
 import * as z from 'zod'
 
 import { checkIfArgentWallet } from '@/server/helpers/check-if-argent'
@@ -34,6 +34,7 @@ const domainChainIdToViemChain: { [key in SDKChainId]: ViemChain } = {
   [SDKChainId.OPTIMISM]: optimism,
   [SDKChainId.BASE]: base,
   [SDKChainId.SEPOLIA]: sepolia,
+  [SDKChainId.SONIC]: sonic,
 }
 
 const rpcConfig: IRpcConfig = {

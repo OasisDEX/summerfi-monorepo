@@ -152,6 +152,9 @@ importers:
       '@summerfi/app-earn-ui':
         specifier: workspace:*
         version: link:../../packages/app-earn-ui
+      '@summerfi/app-icons':
+        specifier: workspace:*
+        version: link:../../packages/app-icons
       '@summerfi/app-risk':
         specifier: workspace:*
         version: link:../../packages/app-risk
@@ -664,6 +667,9 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.14.2)
+      typescript:
+        specifier: ^5.7.3
+        version: 5.7.3
 
   external-api/get-collateral-locked-function:
     dependencies:
@@ -1978,8 +1984,8 @@ importers:
         specifier: workspace:*
         version: link:../triggers-shared
       viem:
-        specifier: ^2.9.19
-        version: 2.12.0(typescript@5.7.3)(zod@3.22.4)
+        specifier: 2.21.55
+        version: 2.21.55(typescript@5.7.3)(zod@3.22.4)
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -3606,8 +3612,8 @@ importers:
         specifier: ^1.0.2
         version: 1.0.2(typescript@5.7.3)(zod@3.22.4)
       viem:
-        specifier: ^1.21.4
-        version: 1.21.4(typescript@5.7.3)(zod@3.22.4)
+        specifier: 2.21.55
+        version: 2.21.55(typescript@5.7.3)(zod@3.22.4)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -3962,8 +3968,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/triggers-shared
       viem:
-        specifier: ^2.9.19
-        version: 2.12.0(typescript@5.7.3)(zod@3.22.4)
+        specifier: 2.21.55
+        version: 2.21.55(typescript@5.7.3)(zod@3.22.4)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -4104,8 +4110,8 @@ importers:
         specifier: ^3.3.2
         version: 3.3.2
       viem:
-        specifier: ^2.9.19
-        version: 2.12.0(typescript@5.7.3)(zod@3.22.4)
+        specifier: 2.21.55
+        version: 2.21.55(typescript@5.7.3)(zod@3.22.4)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -13882,7 +13888,7 @@ packages:
       '@ethereumjs/tx': 4.2.0
       '@metamask/superstruct': 3.0.0
       '@noble/hashes': 1.7.1
-      '@scure/base': 1.2.1
+      '@scure/base': 1.2.4
       '@types/debug': 4.1.12
       debug: 4.4.0
       pony-cause: 2.1.11
@@ -16331,10 +16337,6 @@ packages:
   /@scure/base@1.1.7:
     resolution: {integrity: sha512-PPNYBslrLNNUQ/Yad37MHYsNQtK67EhWb6WtSvNLLPo7SdVZgkUjD6Dg+5On7zNwmskf8OX7I7Nx5oN+MIWE0g==}
 
-  /@scure/base@1.2.1:
-    resolution: {integrity: sha512-DGmGtC8Tt63J5GfHgfl5CuAXh96VF/LD8K9Hr/Gv0J2lAoRGlPOMpqMpMbCTOoOJMZCk2Xt+DskdDyn6dEFdzQ==}
-    dev: false
-
   /@scure/base@1.2.4:
     resolution: {integrity: sha512-5Yy9czTO47mqz+/J8GM6GIId4umdCk1wc1q8rKERQulIoc8VP9pzDcghv10Tl2E7R96ZUx/PhND3ESYUQX8NuQ==}
     dev: false
@@ -16366,7 +16368,7 @@ packages:
     dependencies:
       '@noble/curves': 1.7.0
       '@noble/hashes': 1.6.1
-      '@scure/base': 1.2.1
+      '@scure/base': 1.2.4
     dev: false
 
   /@scure/bip32@1.6.2:
@@ -16400,7 +16402,7 @@ packages:
     resolution: {integrity: sha512-Dop+ASYhnrwm9+HA/HwXg7j2ZqM6yk2fyLWb5znexjctFY3+E+eU8cIWI0Pql0Qx4hPZCijlGq4OL71g+Uz30A==}
     dependencies:
       '@noble/hashes': 1.6.1
-      '@scure/base': 1.2.1
+      '@scure/base': 1.2.4
     dev: false
 
   /@scure/bip39@1.5.4:
@@ -18060,7 +18062,7 @@ packages:
   /@swc/helpers@0.5.15:
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
     dependencies:
-      tslib: 2.2.0
+      tslib: 2.8.1
     dev: false
 
   /@swc/types@0.1.19:

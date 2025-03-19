@@ -29,15 +29,15 @@ export const PositionPerformanceChart = ({
       return []
     }
 
-    if (!showPastPerformance) {
-      return chartData.forecast[timeframe]
+    if (showPastPerformance) {
+      return chartData.historic[timeframe]
     }
 
-    return chartData.historic[timeframe]
+    return chartData.forecast[timeframe]
   }, [timeframe, chartData, showPastPerformance])
 
   const parsedTimeframes = useMemo(() => {
-    return !showPastPerformance ? allTimeframesAvailable : timeframes
+    return showPastPerformance ? timeframes : allTimeframesAvailable
   }, [showPastPerformance, timeframes])
 
   useEffect(() => {

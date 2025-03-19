@@ -1,5 +1,10 @@
 import { ADDRESSES } from '@oasisdex/addresses'
-import { ChainId, NetworkByChainID, Address } from '@summerfi/serverless-shared/domain-types'
+import {
+  ChainId,
+  NetworkByChainID,
+  Address,
+  Network,
+} from '@summerfi/serverless-shared/domain-types'
 
 export interface Addresses {
   AutomationBot: Address
@@ -19,6 +24,9 @@ export interface Addresses {
 
 export function getAddresses(chainId: ChainId): Addresses {
   const network = NetworkByChainID[chainId]
+  if (network === Network.SONIC) {
+    throw new Error('Sonic is not supported yet')
+  }
   const addresses = ADDRESSES[network]
 
   return {

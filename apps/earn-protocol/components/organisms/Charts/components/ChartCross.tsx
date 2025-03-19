@@ -19,7 +19,7 @@ export const ChartCross = ({
     }
     // taking the active point by active tooltip index (same count as points)
     // kinda hacky, but it works for now, we might revisit that later
-    const { x, y } = formattedGraphicalItems[1].props.points[activeTooltipIndex]
+    const { x, y } = formattedGraphicalItems[0].props.points[activeTooltipIndex]
     const pointProps = { cx: x, cy: y }
 
     return (

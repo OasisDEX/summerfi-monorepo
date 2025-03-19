@@ -1,10 +1,17 @@
-import { Text } from '@summerfi/app-earn-ui'
+import { getDisplayToken, isVaultAtLeastDaysOld, Text } from '@summerfi/app-earn-ui'
 import { type SDKNetwork } from '@summerfi/app-types'
 import {
+  formatCryptoBalance,
+  formatDecimalAsPercent,
   humanNetworktoSDKNetwork,
   parseServerResponseToClient,
   subgraphNetworkToId,
+  ten,
 } from '@summerfi/app-utils'
+import BigNumber from 'bignumber.js'
+import { capitalize } from 'lodash-es'
+import { type Metadata } from 'next'
+import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
@@ -121,6 +128,67 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       vaultsApyRaw={vaultsApyRaw}
     />
   )
+}
+
+export async function generateMetadata({ params }: EarnVaultOpenPageProps): Promise<Metadata> {
+  const { network: paramsNetwork, vaultId } = await params
+  const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
+  const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
+  const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
+  const prodHost = (await headers()).get('host')
+  const baseUrl = new URL(`https://${prodHost}`)
+
+  const parsedVaultId = isAddress(vaultId)
+    ? vaultId
+    : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
+
+  const [vault] = await Promise.all([
+    getVaultDetails({
+      vaultAddress: parsedVaultId,
+      network: parsedNetwork,
+    }),
+  ])
+
+  const [vaultWithConfig] = vault
+    ? decorateVaultsWithConfig({
+        vaults: [vault],
+        systemConfig,
+      })
+    : []
+
+  const [vaultsApyRaw] = await Promise.all([
+    getVaultsApy({
+      fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
+        fleetAddress: id,
+        chainId: subgraphNetworkToId(network),
+      })),
+    }),
+  ])
+
+  const vaultApyData =
+    vaultsApyRaw[`${vaultWithConfig.id}-${subgraphNetworkToId(vaultWithConfig.protocol.network)}`]
+
+  const totalValueLockedTokenParsed = vault
+    ? formatCryptoBalance(
+        new BigNumber(vault.inputTokenBalance.toString()).div(ten.pow(vault.inputToken.decimals)),
+      )
+    : ''
+
+  const isVaultAtLeast30dOld = isVaultAtLeastDaysOld({ vault: vaultWithConfig, days: 30 })
+
+  const apy30d = isVaultAtLeast30dOld
+    ? vaultApyData.sma30d
+      ? formatDecimalAsPercent(vaultApyData.sma30d, { noPercentSign: true })
+      : 'n/a'
+    : 'New'
+
+  return {
+    title: `Lazy Summer Protocol - ${vault ? getDisplayToken(vault.inputToken.symbol) : ''} on ${capitalize(paramsNetwork)}, $${totalValueLockedTokenParsed} TVL`,
+    openGraph: {
+      siteName: 'Lazy Summer Protocol',
+      images: `${baseUrl}earn/api/og/vault?tvl=${totalValueLockedTokenParsed}&apy30d=${apy30d}&token=${vaultWithConfig.inputToken.symbol}`,
+    },
+  }
 }
 
 export default EarnVaultOpenPage

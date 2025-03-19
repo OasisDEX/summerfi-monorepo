@@ -1,7 +1,7 @@
 import { Address, ChainId, PoolId, ProtocolId } from '@summerfi/serverless-shared/domain-types'
 import { getAddresses } from '@summerfi/triggers-shared'
 import { Chain as ViemChain, createPublicClient, http, PublicClient } from 'viem'
-import { arbitrum, base, mainnet, optimism, sepolia } from 'viem/chains'
+import { arbitrum, base, mainnet, optimism, sepolia, sonic } from 'viem/chains'
 import { Logger } from '@aws-lambda-powertools/logger'
 import {
   AaveAutoBuyEventBody,
@@ -58,6 +58,7 @@ const domainChainIdToViemChain: Record<ChainId, ViemChain> = {
   [ChainId.OPTIMISM]: optimism,
   [ChainId.BASE]: base,
   [ChainId.SEPOLIA]: sepolia,
+  [ChainId.SONIC]: sonic,
 }
 
 // Aave checks

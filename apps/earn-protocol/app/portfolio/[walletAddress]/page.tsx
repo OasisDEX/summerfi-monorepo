@@ -1,10 +1,21 @@
-import { getUniqueVaultId, REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
+import {
+  getPositionValues,
+  getUniqueVaultId,
+  REVALIDATION_TAGS,
+  REVALIDATION_TIMES,
+} from '@summerfi/app-earn-ui'
 import {
   type HistoryChartData,
   type IArmadaPosition,
   type SDKVaultishType,
 } from '@summerfi/app-types'
-import { parseServerResponseToClient, subgraphNetworkToId } from '@summerfi/app-utils'
+import {
+  formatAddress,
+  formatFiatBalance,
+  parseServerResponseToClient,
+  subgraphNetworkToId,
+} from '@summerfi/app-utils'
+import { type Metadata } from 'next'
 import { unstable_cache as unstableCache } from 'next/cache'
 import { redirect } from 'next/navigation'
 
@@ -228,6 +239,42 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       migrationBestVaultApy={migrationBestVaultApy}
     />
   )
+}
+
+export async function generateMetadata({ params }: PortfolioPageProps): Promise<Metadata> {
+  const { walletAddress: walletAddressRaw } = await params
+
+  const walletAddress = walletAddressRaw.toLowerCase()
+
+  const { userPositions, vaultsList, systemConfig } = await portfolioCallsHandler(walletAddress)
+
+  const vaultsWithConfig = decorateVaultsWithConfig({
+    vaults: vaultsList.vaults,
+    systemConfig: systemConfig.config,
+  })
+
+  const userPositionsJsonSafe = userPositions
+    ? parseServerResponseToClient<IArmadaPosition[]>(userPositions)
+    : []
+
+  const positionsWithVault = userPositionsJsonSafe.map((position) => {
+    return mergePositionWithVault({
+      position,
+      vaultsWithConfig,
+    })
+  })
+
+  const totalSummerPortfolioUSD = positionsWithVault.reduce(
+    (acc, position) => acc + getPositionValues(position).netValueUSD.toNumber(),
+
+    0,
+  )
+
+  return {
+    title: `Lazy Summer Protocol - ${formatAddress(walletAddress, { first: 6 })} - $${formatFiatBalance(totalSummerPortfolioUSD)} in Lazy Summer`,
+    description:
+      "Get effortless access to crypto's best DeFi yields. Continually rebalanced by AI powered Keepers to earn you more while saving you time and reducing costs.",
+  }
 }
 
 export default PortfolioPage
