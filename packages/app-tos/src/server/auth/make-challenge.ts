@@ -1,6 +1,6 @@
 import { type JWTChallenge } from '@summerfi/app-types'
 import { getRandomString } from '@summerfi/app-utils'
-import jwt from 'jsonwebtoken'
+import { SignJWT } from 'jose'
 import { type NextRequest, NextResponse } from 'next/server'
 import { type Address } from 'viem'
 import * as z from 'zod'
@@ -45,11 +45,17 @@ export const makeChallenge = async ({
     address: body.address as Address,
     randomChallenge: getRandomString(),
   }
+  const secret = new TextEncoder().encode(jwtChallengeSecret)
 
-  const challenge = jwt.sign(payload, jwtChallengeSecret, {
-    algorithm: 'HS512',
-    expiresIn: body.isGnosisSafe ? GNOSIS_SAFE_CHALLENGE_JWT_EXPIRATION : CHALLENGE_JWT_EXPIRATION,
+  const challenge = await new SignJWT({
+    payload,
   })
+    .setIssuedAt()
+    .setExpirationTime(
+      body.isGnosisSafe ? GNOSIS_SAFE_CHALLENGE_JWT_EXPIRATION : CHALLENGE_JWT_EXPIRATION,
+    )
+    .setProtectedHeader({ alg: 'HS512' })
+    .sign(secret)
 
   return NextResponse.json({ challenge })
 }

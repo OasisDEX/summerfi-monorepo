@@ -515,11 +515,11 @@ export const useTransaction = ({
 
   const sidebarTitle = useMemo(() => {
     if (nextTransaction?.type === TransactionType.Deposit) {
-      return 'Preview deposit'
+      return 'Preview\u00A0deposit'
     }
 
     if (nextTransaction?.type === TransactionType.Withdraw) {
-      return 'Preview withdraw'
+      return 'Preview\u00A0withdraw'
     }
 
     return nextTransaction?.type

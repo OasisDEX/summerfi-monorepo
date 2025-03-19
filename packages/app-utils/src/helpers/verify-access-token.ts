@@ -1,5 +1,5 @@
 import { type JwtPayload } from '@summerfi/app-types'
-import jwt from 'jsonwebtoken'
+import { jwtVerify } from 'jose'
 
 /**
  * Verify the provided access token using the given secret.
@@ -12,15 +12,21 @@ import jwt from 'jsonwebtoken'
  * This function attempts to verify a JWT token using the provided secret. If verification
  * is successful, it returns the decoded payload. If verification fails, it returns null.
  */
-export function verifyAccessToken({
+export async function verifyAccessToken({
   token,
   jwtSecret,
 }: {
   token: string
   jwtSecret: string
-}): JwtPayload | null {
+}): Promise<JwtPayload | null> {
   try {
-    return jwt.verify(token, jwtSecret) as JwtPayload
+    const jwtChallengeSecretEncoded = new TextEncoder().encode(jwtSecret)
+
+    return (
+      await jwtVerify(token, jwtChallengeSecretEncoded, {
+        algorithms: ['HS512'],
+      })
+    ).payload.payload as JwtPayload
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Failed to verify access token', error)

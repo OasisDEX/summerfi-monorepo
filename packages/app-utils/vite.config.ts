@@ -79,7 +79,7 @@ export default defineConfig(({ mode }) => {
           '@summerfi/app-types',
           'next',
           'next/navigation',
-          'jsonwebtoken',
+          'jose',
           'viem',
           'viem/chains',
         ],
