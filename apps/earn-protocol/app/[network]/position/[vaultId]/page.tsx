@@ -9,6 +9,7 @@ import {
   ten,
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
+import dayjs from 'dayjs'
 import { capitalize } from 'lodash-es'
 import { type Metadata } from 'next'
 import { headers } from 'next/headers'
@@ -84,6 +85,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
         sortBy: 'timestamp',
         orderBy: 'desc',
         strategies: [strategy],
+        startTimestamp: dayjs().subtract(30, 'days').unix(),
       }),
     ])
 

@@ -5,6 +5,7 @@ import {
   parseServerResponseToClient,
   subgraphNetworkToId,
 } from '@summerfi/app-utils'
+import dayjs from 'dayjs'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
@@ -89,6 +90,7 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
       limit: 4,
       sortBy: 'timestamp',
       orderBy: 'desc',
+      startTimestamp: dayjs().subtract(30, 'days').unix(),
     }),
   ])
 

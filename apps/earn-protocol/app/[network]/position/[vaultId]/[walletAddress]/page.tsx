@@ -13,6 +13,7 @@ import {
   subgraphNetworkToId,
 } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
+import dayjs from 'dayjs'
 import { capitalize } from 'lodash-es'
 import { type Metadata } from 'next'
 import { redirect } from 'next/navigation'
@@ -100,6 +101,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
         sortBy: 'timestamp',
         orderBy: 'desc',
         strategies: [strategy],
+        startTimestamp: dayjs().subtract(30, 'days').unix(),
       }),
     ])
 

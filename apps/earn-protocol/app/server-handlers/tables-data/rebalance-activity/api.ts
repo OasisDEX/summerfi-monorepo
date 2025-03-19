@@ -10,6 +10,7 @@ export const getRebalanceActivityServerSide = async ({
   orderBy = 'desc',
   tokens,
   strategies,
+  startTimestamp,
 }: {
   page: number
   limit: number
@@ -17,6 +18,7 @@ export const getRebalanceActivityServerSide = async ({
   orderBy?: 'asc' | 'desc'
   tokens?: string[]
   strategies?: string[]
+  startTimestamp?: number
 }) => {
   const connectionString = process.env.EARN_PROTOCOL_DB_CONNECTION_STRING
 
@@ -45,6 +47,7 @@ export const getRebalanceActivityServerSide = async ({
       .$if(!!strategies && strategies.length > 0, (qb) =>
         qb.where('strategyId', 'in', strategies as string[]),
       )
+      .$if(!!startTimestamp, (qb) => qb.where('timestamp', '>=', startTimestamp?.toString() ?? '0'))
 
     // Apply pagination and sorting
     const finalQuery = filteredQuery
@@ -88,6 +91,7 @@ export const getPaginatedRebalanceActivity = async ({
   orderBy = 'desc',
   tokens,
   strategies,
+  startTimestamp,
 }: {
   page: number
   limit: number
@@ -96,6 +100,7 @@ export const getPaginatedRebalanceActivity = async ({
   userAddress?: string
   tokens?: string[]
   strategies?: string[]
+  startTimestamp?: number
 }): Promise<RebalanceActivityPagination> => {
   return await getRebalanceActivityServerSide({
     page,
@@ -104,5 +109,6 @@ export const getPaginatedRebalanceActivity = async ({
     orderBy,
     tokens,
     strategies,
+    startTimestamp,
   }).then((res) => res.json())
 }
