@@ -1,7 +1,6 @@
 import { type SDKNetwork } from '@summerfi/app-types'
+import { GetRebalancesDocument, type Rebalance } from '@summerfi/subgraph-manager-common'
 import { type GraphQLClient } from 'graphql-request'
-
-import { GetRebalancesDocument, type Rebalance } from '@/graphql/clients/rebalances/client'
 
 interface GraphQLResponse {
   rebalances: Rebalance[]

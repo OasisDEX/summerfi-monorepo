@@ -7,12 +7,11 @@ import {
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { type TokenSymbolsList } from '@summerfi/app-types'
-import { formatCryptoBalance, subgraphNetworkToSDKId, timeAgo } from '@summerfi/app-utils'
+import { formatCryptoBalance, mapDbNetworkToChainId, timeAgo } from '@summerfi/app-utils'
 import { type LatestActivity } from '@summerfi/summer-protocol-db'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
-import { dbNetworkToSdkNetworkMap } from '@/app/server-handlers/tables-data/consts'
 import { networkSDKChainIdIconMap } from '@/constants/network-id-to-icon'
 
 // const activityLabelMap = {
@@ -54,10 +53,7 @@ export const userActivityMapper = (rawData: LatestActivity[]) => {
             }}
           >
             <div style={{ position: 'absolute', top: '-5px', left: '-3px' }}>
-              {networkSDKChainIdIconMap(
-                subgraphNetworkToSDKId(dbNetworkToSdkNetworkMap[item.network]),
-                10,
-              )}
+              {networkSDKChainIdIconMap(mapDbNetworkToChainId(item.network), 10)}
             </div>
             <Icon tokenName={asset} variant="s" />
             <TableCellText>{asset}</TableCellText>
@@ -100,10 +96,7 @@ export const userActivityMapper = (rawData: LatestActivity[]) => {
         ),
         link: (
           <Link
-            href={getScannerUrl(
-              subgraphNetworkToSDKId(dbNetworkToSdkNetworkMap[item.network]),
-              item.txHash,
-            )}
+            href={getScannerUrl(mapDbNetworkToChainId(item.network), item.txHash)}
             target="_blank"
           >
             <Button variant="textPrimaryMedium">

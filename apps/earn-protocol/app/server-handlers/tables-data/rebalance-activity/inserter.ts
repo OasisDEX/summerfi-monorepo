@@ -1,8 +1,11 @@
-import { type SDKSupportedNetwork } from '@summerfi/app-types'
-import { getHumanReadableFleetName } from '@summerfi/app-utils'
+import {
+  getHumanReadableFleetName,
+  mapChainIdToDbNetwork,
+  subgraphNetworkToSDKId,
+} from '@summerfi/app-utils'
 import { type Network, type SummerProtocolDB } from '@summerfi/summer-protocol-db'
 
-import { DB_BATCH_SIZE, sdkNetworkToDbNetworkMap } from '@/app/server-handlers/tables-data/consts'
+import { DB_BATCH_SIZE } from '@/app/server-handlers/tables-data/consts'
 
 import { type RebalanceActivity } from './types'
 
@@ -19,26 +22,23 @@ export async function insertRebalanceActivitiesInBatches(
       .values(
         batch.map((activity) => ({
           rebalanceId: activity.id,
-          amount: activity.amount,
-          amountUsd: activity.amountUSD,
+          amount: activity.amount.toString(),
+          amountUsd: activity.amountUSD.toString(),
           vaultId: activity.vault.id,
           vaultName: activity.vault.name ?? 'n/a',
           strategy: activity.vault.name
-            ? getHumanReadableFleetName(
-                activity.vault.protocol.network as unknown as SDKSupportedNetwork,
-                activity.vault.name,
-              )
+            ? getHumanReadableFleetName(activity.vault.protocol.network, activity.vault.name)
             : 'n/a',
           strategyId: `${activity.vault.id}-${activity.vault.protocol.network}`,
           fromName: activity.from.name ?? 'n/a',
-          fromDepositLimit: activity.fromPostAction.depositLimit,
-          fromTotalValueLockedUsd: activity.from.totalValueLockedUSD,
+          fromDepositLimit: activity.fromPostAction.depositLimit.toString(),
+          fromTotalValueLockedUsd: activity.from.totalValueLockedUSD.toString(),
           toName: activity.to.name ?? 'n/a',
-          toDepositLimit: activity.toPostAction.depositLimit,
+          toDepositLimit: activity.toPostAction.depositLimit.toString(),
           toTotalValueLockedUsd: activity.to.totalValueLockedUSD,
-          network: sdkNetworkToDbNetworkMap[
-            activity.vault.protocol.network as unknown as SDKSupportedNetwork
-          ] as Network,
+          network: mapChainIdToDbNetwork(
+            subgraphNetworkToSDKId(activity.vault.protocol.network),
+          ) as Network,
           actionType: activity.actionType,
           inputTokenPriceUsd: activity.vault.inputTokenPriceUSD ?? '0',
           inputTokenSymbol: activity.vault.inputToken.symbol,

@@ -1,6 +1,5 @@
+import { type Position } from '@summerfi/subgraph-manager-common'
 import { type TopDepositors } from '@summerfi/summer-protocol-db'
-
-import { type Position } from '@/graphql/clients/top-depositors/client'
 
 export type TopDepositorPosition = Position & {
   changeSevenDays: string

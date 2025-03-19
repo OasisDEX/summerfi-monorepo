@@ -8,16 +8,16 @@ import {
 } from '@summerfi/app-earn-ui'
 import { type SDKUserActivityType, type TokenSymbolsList } from '@summerfi/app-types'
 import {
+  chainIdToSDKNetwork,
   formatAddress,
   formatCryptoBalance,
   formatDateDifference,
   getPastTimestamp,
+  mapDbNetworkToChainId,
 } from '@summerfi/app-utils'
 import { type TopDepositors } from '@summerfi/summer-protocol-db'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
-
-import { dbNetworkToSdkNetworkMap } from '@/app/server-handlers/tables-data/consts'
 
 export const calculateTopDepositors7daysChange = (item: SDKUserActivityType) => {
   const timeStamp7daysAgo = getPastTimestamp(7)
@@ -106,7 +106,7 @@ export const topDepositorsMapper = (rawData: TopDepositors[]) => {
         link: (
           <Link
             href={getVaultPositionUrl({
-              network: dbNetworkToSdkNetworkMap[item.network],
+              network: chainIdToSDKNetwork(mapDbNetworkToChainId(item.network)),
               vaultId: item.vaultId,
               walletAddress: item.userAddress,
             })}

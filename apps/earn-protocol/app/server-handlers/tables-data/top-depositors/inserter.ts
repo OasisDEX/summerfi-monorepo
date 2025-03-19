@@ -1,8 +1,11 @@
-import { type SDKSupportedNetwork } from '@summerfi/app-types'
-import { getHumanReadableFleetName } from '@summerfi/app-utils'
+import {
+  getHumanReadableFleetName,
+  mapChainIdToDbNetwork,
+  subgraphNetworkToSDKId,
+} from '@summerfi/app-utils'
 import { type Network, type SummerProtocolDB } from '@summerfi/summer-protocol-db'
 
-import { DB_BATCH_SIZE, sdkNetworkToDbNetworkMap } from '@/app/server-handlers/tables-data/consts'
+import { DB_BATCH_SIZE } from '@/app/server-handlers/tables-data/consts'
 
 import { type TopDepositorPosition } from './types'
 
@@ -25,16 +28,16 @@ export async function insertTopDepositorsInBatches(
           vaultName: topDepositor.vault.name ?? 'n/a',
           strategy: topDepositor.vault.name
             ? getHumanReadableFleetName(
-                topDepositor.vault.protocol.network as unknown as SDKSupportedNetwork,
+                topDepositor.vault.protocol.network,
                 topDepositor.vault.name,
               )
             : 'n/a',
           strategyId: `${topDepositor.vault.id}-${topDepositor.vault.protocol.network}`,
           balance: topDepositor.inputTokenBalanceNormalized,
           balanceUsd: topDepositor.inputTokenBalanceNormalizedInUSD,
-          network: sdkNetworkToDbNetworkMap[
-            topDepositor.vault.protocol.network as unknown as SDKSupportedNetwork
-          ] as Network,
+          network: mapChainIdToDbNetwork(
+            subgraphNetworkToSDKId(topDepositor.vault.protocol.network),
+          ) as Network,
           changeSevenDays: topDepositor.changeSevenDays,
           noOfDeposits: topDepositor.deposits.length,
           noOfWithdrawals: topDepositor.withdrawals.length,

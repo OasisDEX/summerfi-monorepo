@@ -1,7 +1,6 @@
 import { getPastTimestamp } from '@summerfi/app-utils'
+import { type Position } from '@summerfi/subgraph-manager-common'
 import BigNumber from 'bignumber.js'
-
-import { type Position } from '@/graphql/clients/top-depositors/client'
 
 export const calculateTopDepositors7daysChange = ({ position }: { position: Position }) => {
   const timeStamp7daysAgo = getPastTimestamp(7)

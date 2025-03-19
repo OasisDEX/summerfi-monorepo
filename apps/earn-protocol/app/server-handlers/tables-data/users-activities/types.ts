@@ -1,6 +1,5 @@
+import { type Deposit, type Withdraw } from '@summerfi/subgraph-manager-common'
 import { type LatestActivity } from '@summerfi/summer-protocol-db'
-
-import { type Deposit, type Withdraw } from '@/graphql/clients/latest-activity/client'
 
 export type DepositOrWithdraw = Deposit | Withdraw
 

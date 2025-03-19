@@ -1,8 +1,8 @@
 import { type SDKNetwork } from '@summerfi/app-types'
+import { GetTopDepositorsDocument, type Position } from '@summerfi/subgraph-manager-common'
 import { type GraphQLClient } from 'graphql-request'
 
 import { SUBGRAPH_BATCH_SIZE } from '@/app/server-handlers/tables-data/consts'
-import { GetTopDepositorsDocument, type Position } from '@/graphql/clients/top-depositors/client'
 
 interface GraphQLResponse {
   positions: Position[]

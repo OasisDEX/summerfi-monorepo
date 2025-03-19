@@ -1,4 +1,5 @@
 import {
+  type EarnProtocolDbNetwork,
   NetworkIds,
   NetworkNames,
   SDKChainId,
@@ -129,6 +130,12 @@ export const chainIdToSDKNetwork = (chainId: SDKChainId) => {
   }[chainId]
 }
 
+export const sdkChainIdToHumanNetwork = (chainId: SDKChainId): string => {
+  const network = chainIdToSDKNetwork(chainId)
+
+  return sdkNetworkToHumanNetwork(network)
+}
+
 export const networkNameToSDKNetwork = (network: NetworkNames) => {
   return {
     [NetworkNames.arbitrumMainnet.toLowerCase()]: SDKNetwork.ArbitrumOne,
@@ -179,4 +186,32 @@ export const sdkNetworkToChain = (network: SDKNetwork): Chain => {
   }
 
   return chainMap[network as SDKSupportedNetwork]
+}
+
+const dbNetworkToChainId: { [key in EarnProtocolDbNetwork]: SDKChainId } = {
+  arbitrum: SDKChainId.ARBITRUM,
+  optimism: SDKChainId.OPTIMISM,
+  base: SDKChainId.BASE,
+  mainnet: SDKChainId.MAINNET,
+  sonic: SDKChainId.SONIC,
+}
+
+export function mapDbNetworkToChainId(network: EarnProtocolDbNetwork): SDKChainId {
+  if (!dbNetworkToChainId[network]) {
+    throw new Error(`No matching chainId found for network: ${network}`)
+  }
+
+  return dbNetworkToChainId[network]
+}
+
+export function mapChainIdToDbNetwork(chainId: SDKChainId): EarnProtocolDbNetwork {
+  const network = Object.entries(dbNetworkToChainId).find(([_, value]) => {
+    return Number(value) === Number(chainId)
+  })?.[0]
+
+  if (!network) {
+    throw new Error(`No matching database network found for chainId: ${chainId}`)
+  }
+
+  return network as EarnProtocolDbNetwork
 }

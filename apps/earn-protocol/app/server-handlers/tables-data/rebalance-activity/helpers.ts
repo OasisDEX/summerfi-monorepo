@@ -1,4 +1,4 @@
-import { type Rebalance } from '@/graphql/clients/latest-activity/client'
+import { type Rebalance } from '@summerfi/subgraph-manager-common'
 
 export const rebalancesActionTypeMapper = (
   item: Rebalance,

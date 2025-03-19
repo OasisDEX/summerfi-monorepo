@@ -1,8 +1,11 @@
-import { type SDKSupportedNetwork } from '@summerfi/app-types'
-import { getHumanReadableFleetName } from '@summerfi/app-utils'
+import {
+  getHumanReadableFleetName,
+  mapChainIdToDbNetwork,
+  subgraphNetworkToSDKId,
+} from '@summerfi/app-utils'
 import { type Network, type SummerProtocolDB } from '@summerfi/summer-protocol-db'
 
-import { DB_BATCH_SIZE, sdkNetworkToDbNetworkMap } from '@/app/server-handlers/tables-data/consts'
+import { DB_BATCH_SIZE } from '@/app/server-handlers/tables-data/consts'
 import { type UserActivity } from '@/app/server-handlers/tables-data/users-activities/types'
 
 export async function insertUsersActivitiesInBatches(
@@ -17,23 +20,23 @@ export async function insertUsersActivitiesInBatches(
       .insertInto('latestActivity')
       .values(
         batch.map((activity) => ({
-          amount: activity.amount,
-          amountUsd: activity.amountUSD,
+          amount: activity.amount.toString(),
+          amountUsd: activity.amountUSD.toString(),
           userAddress: activity.position.account.id.toLowerCase(),
           vaultId: activity.position.vault.id,
           vaultName: activity.position.vault.name ?? 'n/a',
           strategy: activity.position.vault.name
             ? getHumanReadableFleetName(
-                activity.position.vault.protocol.network as unknown as SDKSupportedNetwork,
+                activity.position.vault.protocol.network,
                 activity.position.vault.name,
               )
             : 'n/a',
           strategyId: `${activity.position.vault.id}-${activity.position.vault.protocol.network}`,
-          balance: activity.position.inputTokenBalance,
+          balance: activity.position.inputTokenBalance.toString(),
           balanceUsd: activity.position.inputTokenBalanceNormalizedInUSD,
-          network: sdkNetworkToDbNetworkMap[
-            activity.position.vault.protocol.network as unknown as SDKSupportedNetwork
-          ] as Network,
+          network: mapChainIdToDbNetwork(
+            subgraphNetworkToSDKId(activity.position.vault.protocol.network),
+          ) as Network,
           inputTokenPriceUsd: activity.position.vault.inputTokenPriceUSD ?? '0',
           inputTokenSymbol: activity.position.vault.inputToken.symbol,
           inputTokenDecimals: activity.position.vault.inputToken.decimals,

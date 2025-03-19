@@ -1,13 +1,18 @@
 import { type FC, useState } from 'react'
 import { getVaultPositionUrl, Icon, Text, useMobileCheck, WithArrow } from '@summerfi/app-earn-ui'
 import { type TokenSymbolsList } from '@summerfi/app-types'
-import { formatFiatBalance, sdkNetworkToHumanNetwork, timeAgo } from '@summerfi/app-utils'
+import {
+  chainIdToSDKNetwork,
+  formatFiatBalance,
+  mapDbNetworkToChainId,
+  sdkChainIdToHumanNetwork,
+  timeAgo,
+} from '@summerfi/app-utils'
 import { type RebalanceActivity } from '@summerfi/summer-protocol-db'
 import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
-import { dbNetworkToSdkNetworkMap } from '@/app/server-handlers/tables-data/consts'
-import { networkIconByNetworkName } from '@/constants/networkIcons'
+import { networkIconByChainId } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { rebalanceActivityPurposeMapper } from '@/features/rebalance-activity/table/mapper'
 
@@ -36,7 +41,7 @@ export const PortfolioRebalanceActivityList: FC<PortfolioRebalanceActivityListPr
 
           return (
             <div
-              key={item.id?.toString() ?? item.rebalanceId}
+              key={item.id.toString() ?? item.rebalanceId}
               onMouseEnter={() => setHoveredItemTimestamp(Number(item.timestamp))}
               onMouseLeave={() => setHoveredItemTimestamp(undefined)}
             >
@@ -70,9 +75,8 @@ export const PortfolioRebalanceActivityList: FC<PortfolioRebalanceActivityListPr
                       <div className={classNames.leftContentDescriptionNetwork}>
                         <Icon
                           iconName={
-                            networkIconByNetworkName[
-                              dbNetworkToSdkNetworkMap[item.network] ?? 'not_supported_icon'
-                            ]
+                            networkIconByChainId[mapDbNetworkToChainId(item.network)] ??
+                            'not_supported_icon'
                           }
                           variant="xs"
                         />
@@ -82,7 +86,7 @@ export const PortfolioRebalanceActivityList: FC<PortfolioRebalanceActivityListPr
                           style={{ color: 'var(--earn-protocol-secondary-60)' }}
                         >
                           {capitalize(
-                            sdkNetworkToHumanNetwork(dbNetworkToSdkNetworkMap[item.network]),
+                            sdkChainIdToHumanNetwork(mapDbNetworkToChainId(item.network)),
                           )}
                         </Text>
                       </div>
@@ -96,7 +100,7 @@ export const PortfolioRebalanceActivityList: FC<PortfolioRebalanceActivityListPr
                   {!isMobile && <span>&#8226;</span>}
                   <Link
                     href={getVaultPositionUrl({
-                      network: dbNetworkToSdkNetworkMap[item.network],
+                      network: chainIdToSDKNetwork(mapDbNetworkToChainId(item.network)),
                       vaultId: item.vaultId,
                       walletAddress,
                     })}

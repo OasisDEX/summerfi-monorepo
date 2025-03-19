@@ -7,12 +7,11 @@ import {
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { type IconNamesList, type TokenSymbolsList } from '@summerfi/app-types'
-import { formatCryptoBalance, subgraphNetworkToSDKId, timeAgo } from '@summerfi/app-utils'
+import { formatCryptoBalance, mapDbNetworkToChainId, timeAgo } from '@summerfi/app-utils'
 import { type RebalanceActivity } from '@summerfi/summer-protocol-db'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
-import { dbNetworkToSdkNetworkMap } from '@/app/server-handlers/tables-data/consts'
 import { getProtocolLabel } from '@/helpers/get-protocol-label'
 
 const actionTypeMapp: {
@@ -38,14 +37,14 @@ export const rebalancingActivityMapper = (rawData: RebalanceActivity[]) => {
     const asset = item.inputTokenSymbol as TokenSymbolsList
 
     const scannerLink = getScannerUrl(
-      subgraphNetworkToSDKId(dbNetworkToSdkNetworkMap[item.network]),
+      mapDbNetworkToChainId(item.network),
       item.rebalanceId.split('-')[0] ?? '',
     )
 
     const amount = new BigNumber(item.amount.toString()).shiftedBy(-item.inputTokenDecimals)
 
-    const actionFromRawName = item.fromName?.split('-') ?? ['n/a']
-    const actionToRawName = item.toName?.split('-') ?? ['n/a']
+    const actionFromRawName = item.fromName.split('-') ?? ['n/a']
+    const actionToRawName = item.toName.split('-') ?? ['n/a']
 
     const actionFromLabel = getProtocolLabel(actionFromRawName)
     const actionToLabel = getProtocolLabel(actionToRawName)

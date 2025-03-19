@@ -163,3 +163,5 @@ export type VaultApyData = {
   sma7d: number | null
   sma30d: number | null
 }
+
+export type EarnProtocolDbNetwork = 'arbitrum' | 'optimism' | 'base' | 'mainnet' | 'sonic'

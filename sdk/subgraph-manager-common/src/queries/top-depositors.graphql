@@ -1,0 +1,32 @@
+query GetTopDepositors($first: Int!, $skip: Int!) {
+  positions(first: $first, skip: $skip, orderBy: createdTimestamp, orderDirection: desc) {
+    account {
+      id
+    }
+    inputTokenBalance
+    inputTokenBalanceNormalized
+    inputTokenBalanceNormalizedInUSD
+    deposits {
+      timestamp
+      amount
+    }
+    withdrawals {
+      timestamp
+      amount
+    }
+    vault {
+      name
+      id
+      rebalanceCount
+      inputToken {
+        id
+        symbol
+        decimals
+      }
+      inputTokenPriceUSD
+      protocol {
+        network
+      }
+    }
+  }
+}

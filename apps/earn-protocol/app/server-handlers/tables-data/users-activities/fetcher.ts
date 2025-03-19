@@ -1,11 +1,10 @@
 import { type SDKNetwork } from '@summerfi/app-types'
-import { type GraphQLClient } from 'graphql-request'
-
 import {
   type Deposit,
   GetLatestActivityDocument,
   type Withdraw,
-} from '@/graphql/clients/latest-activity/client'
+} from '@summerfi/subgraph-manager-common'
+import { type GraphQLClient } from 'graphql-request'
 
 interface GraphQLResponse {
   deposits: Deposit[]

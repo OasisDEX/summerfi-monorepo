@@ -59,7 +59,7 @@ export const updateTopDepositors = async ({
     ).times(position.inputTokenBalanceNormalized)
 
     const projectedOneYearEarningsUsd = projectedOneYearEarnings.times(
-      position.vault.inputTokenPriceUSD,
+      position.vault.inputTokenPriceUSD ?? 0,
     )
 
     return {
