@@ -92,8 +92,6 @@ export async function makeSignIn({
 
   const message = recreateSignedMessage(challenge, body.type)
 
-  console.log('message', message)
-
   const { isGnosisSafe } = body
   let isArgentWallet = false
 
