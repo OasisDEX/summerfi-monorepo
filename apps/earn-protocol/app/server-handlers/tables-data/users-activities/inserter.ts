@@ -19,7 +19,7 @@ export async function insertUsersActivitiesInBatches(
         batch.map((activity) => ({
           amount: activity.amount,
           amountUsd: activity.amountUSD,
-          userAddress: activity.position.account.id,
+          userAddress: activity.position.account.id.toLowerCase(),
           vaultId: activity.position.vault.id,
           vaultName: activity.position.vault.name ?? 'n/a',
           strategy: activity.position.vault.name

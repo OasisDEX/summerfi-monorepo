@@ -2,16 +2,16 @@ import { type FC } from 'react'
 import { Card, Expander, getUniqueVaultId, Text } from '@summerfi/app-earn-ui'
 import {
   type ArksHistoricalChartData,
-  type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
-  type UsersActivity,
   type VaultApyData,
 } from '@summerfi/app-types'
 import { formatDecimalAsPercent } from '@summerfi/app-utils'
 import { type GetGlobalRebalancesQuery } from '@summerfi/sdk-client'
 
+import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
+import { type UsersActivitiesPagination } from '@/app/server-handlers/tables-data/users-activities/types'
 import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
@@ -23,8 +23,8 @@ import { VaultOpenHeaderBlock } from './VaultOpenHeaderBlock'
 interface VaultOpenViewDetailsProps {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
-  userActivity: UsersActivity
-  topDepositors: SDKUsersActivityType
+  topDepositors: TopDepositorsPagination
+  usersActivities: UsersActivitiesPagination
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
   vaultApyData: VaultApyData
@@ -33,11 +33,10 @@ interface VaultOpenViewDetailsProps {
 export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
   vault,
   vaults,
-  userActivity,
+  usersActivities,
   topDepositors,
   arksHistoricalChartData,
   arksInterestRates,
-  vaultApyData,
 }) => {
   // needed due to type duality
   const rebalancesList =
@@ -105,10 +104,9 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
         defaultExpanded
       >
         <UserActivity
-          userActivity={userActivity}
+          usersActivities={usersActivities}
           topDepositors={topDepositors}
           vaultId={getUniqueVaultId(vault)}
-          vaultApyData={vaultApyData}
           page="open"
           noHighlight
         />

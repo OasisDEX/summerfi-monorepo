@@ -3,17 +3,17 @@
 import {
   type ArksHistoricalChartData,
   type PerformanceChartData,
-  type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
-  type UsersActivity,
   type VaultApyData,
 } from '@summerfi/app-types'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
+import { type UsersActivitiesPagination } from '@/app/server-handlers/tables-data/users-activities/types'
 import { VaultManageViewComponent } from '@/components/layout/VaultManageView/VaultManageViewComponent'
 import { sdkApiUrl } from '@/constants/sdk'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
@@ -22,7 +22,7 @@ export const VaultManageView = ({
   vault,
   vaults,
   position,
-  userActivity,
+  userActivities,
   topDepositors,
   viewWalletAddress,
   performanceChartData,
@@ -35,8 +35,8 @@ export const VaultManageView = ({
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
   position: IArmadaPosition
-  userActivity: UsersActivity
-  topDepositors: SDKUsersActivityType
+  userActivities: UsersActivitiesPagination
+  topDepositors: TopDepositorsPagination
   viewWalletAddress: string
   performanceChartData: PerformanceChartData
   arksHistoricalChartData: ArksHistoricalChartData
@@ -52,7 +52,7 @@ export const VaultManageView = ({
         vaultApyData={vaultApyData}
         vaults={vaults}
         position={position}
-        userActivity={userActivity}
+        userActivities={userActivities}
         topDepositors={topDepositors}
         viewWalletAddress={viewWalletAddress}
         performanceChartData={performanceChartData}

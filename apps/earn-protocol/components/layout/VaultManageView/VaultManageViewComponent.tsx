@@ -28,13 +28,11 @@ import { useTermsOfService } from '@summerfi/app-tos'
 import {
   type ArksHistoricalChartData,
   type PerformanceChartData,
-  type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
   TOSStatus,
   TransactionAction,
-  type UsersActivity,
   type VaultApyData,
 } from '@summerfi/app-types'
 import { formatDecimalAsPercent, subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
@@ -43,6 +41,8 @@ import { TransactionType } from '@summerfi/sdk-common'
 
 import { AccountKitAccountType } from '@/account-kit/types'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
+import { type UsersActivitiesPagination } from '@/app/server-handlers/tables-data/users-activities/types'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import {
   ControlsApproval,
@@ -77,7 +77,7 @@ export const VaultManageViewComponent = ({
   vault,
   vaults,
   position,
-  userActivity,
+  userActivities,
   topDepositors,
   viewWalletAddress,
   performanceChartData,
@@ -90,8 +90,8 @@ export const VaultManageViewComponent = ({
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
   position: IArmadaPosition
-  userActivity: UsersActivity
-  topDepositors: SDKUsersActivityType
+  topDepositors: TopDepositorsPagination
+  userActivities: UsersActivitiesPagination
   viewWalletAddress: string
   performanceChartData: PerformanceChartData
   arksHistoricalChartData: ArksHistoricalChartData
@@ -536,12 +536,12 @@ export const VaultManageViewComponent = ({
               }
             >
               <UserActivity
-                userActivity={userActivity}
+                usersActivities={userActivities}
                 topDepositors={topDepositors}
                 vaultId={getUniqueVaultId(vault)}
-                vaultApyData={vaultApyData}
                 page="manage"
                 noHighlight
+                walletAddress={viewWalletAddress}
               />
             </Expander>
           </div>,

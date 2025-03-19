@@ -1,49 +1,105 @@
-import { type FC, useState } from 'react'
+import { type FC, useEffect, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
-import { Card, Text } from '@summerfi/app-earn-ui'
-import { type UsersActivity } from '@summerfi/app-types'
+import { Card, LoadingSpinner, type TableSortedColumn, Text } from '@summerfi/app-earn-ui'
+import { type LatestActivity } from '@summerfi/summer-protocol-db'
 
+import { getUsersActivity } from '@/features/user-activity/api/get-users-activity'
 import { UserActivityTable } from '@/features/user-activity/components/UserActivityTable/UserActivityTable'
 
 import classNames from './PortfolioYourActivity.module.scss'
 
 interface PortfolioYourActivityProps {
-  userActivity: UsersActivity
+  userActivity: {
+    data: LatestActivity[]
+    pagination: {
+      currentPage: number
+      totalPages: number
+      totalItems: number
+      itemsPerPage: number
+    }
+    medianDeposit: number
+    totalDeposits: number
+  }
+  walletAddress: string
 }
 
-const initialRows = 10
+export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
+  userActivity,
+  walletAddress,
+}) => {
+  const isFirstRender = useRef(true)
 
-export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({ userActivity }) => {
-  const [current, setCurrent] = useState(initialRows)
+  const [sortBy, setSortBy] = useState<TableSortedColumn<string> | undefined>()
+  const [currentlyLoadedList, setCurrentlyLoadedList] = useState(userActivity.data)
+  const [currentPage, setCurrentPage] = useState(userActivity.pagination.currentPage)
+  const [isLoading, setIsLoading] = useState(false)
 
-  const [currentlyLoadedList, setCurrentlyLoadedList] = useState(userActivity.slice(0, initialRows))
+  const handleSort = (sortConfig: TableSortedColumn<string>) => {
+    setSortBy(sortConfig)
+  }
 
-  const [noMoreToLoad, setNoMoreToLoad] = useState(false)
-
-  const handleMoreItems = () => {
+  const handleMoreItems = async () => {
     try {
-      setCurrentlyLoadedList((prev) => [
-        ...prev,
-        ...userActivity.slice(current, current + initialRows),
-      ])
+      const res = await getUsersActivity({
+        page: currentPage + 1,
+        userAddress: walletAddress,
+        sortBy: sortBy?.key,
+        orderBy: sortBy?.direction,
+      })
+
+      setCurrentlyLoadedList((prev) => [...prev, ...res.data])
+      setCurrentPage((prev) => prev + 1)
     } catch (error) {
       // eslint-disable-next-line no-console
       console.info('No more users activity items to load')
-      setNoMoreToLoad(true)
+    }
+  }
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false
 
       return
     }
 
-    setCurrent(current + initialRows)
-  }
+    setIsLoading(true)
+
+    getUsersActivity({
+      page: 1,
+      userAddress: walletAddress,
+      sortBy: sortBy?.key,
+      orderBy: sortBy?.direction,
+    })
+      .then((res) => {
+        setCurrentlyLoadedList(res.data)
+      })
+      .finally(() => setIsLoading(false))
+  }, [sortBy?.key, sortBy?.direction, walletAddress])
 
   return (
     <Card className={classNames.wrapper} variant="cardSecondary">
       <Text as="h5" variant="h5" className={classNames.header}>
         Your Activity
       </Text>
-      <InfiniteScroll loadMore={handleMoreItems} hasMore={!noMoreToLoad}>
-        <UserActivityTable userActivityList={currentlyLoadedList} hiddenColumns={['strategy']} />
+      <InfiniteScroll
+        loadMore={handleMoreItems}
+        hasMore={
+          userActivity.pagination.totalPages > currentPage &&
+          userActivity.data.length > 0 &&
+          !isLoading
+        }
+        loader={
+          <LoadingSpinner
+            key="spinner"
+            style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
+          />
+        }
+      >
+        <UserActivityTable
+          userActivityList={currentlyLoadedList}
+          hiddenColumns={['strategy']}
+          handleSort={handleSort}
+        />
       </InfiniteScroll>
     </Card>
   )

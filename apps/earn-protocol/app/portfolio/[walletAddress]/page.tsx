@@ -25,7 +25,6 @@ import { portfolioWalletAssetsHandler } from '@/app/server-handlers/portfolio/po
 import { getPositionHistory } from '@/app/server-handlers/position-history'
 import { getGlobalRebalances } from '@/app/server-handlers/sdk/get-global-rebalances'
 import { getUserPositions } from '@/app/server-handlers/sdk/get-user-positions'
-import { getUsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
@@ -33,6 +32,7 @@ import { getSumrDelegatesWithDecayFactor } from '@/app/server-handlers/sumr-dele
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
 import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
 import systemConfigHandler from '@/app/server-handlers/system-config'
+import { getUsersActivitiesServerSide } from '@/app/server-handlers/tables-data/users-activities/api'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { PortfolioPageViewComponent } from '@/components/layout/PortfolioPageView/PortfolioPageViewComponent'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
@@ -63,11 +63,11 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     sumrStakingInfo,
     { sumrDelegates, sumrDecayFactors },
     sumrToClaim,
-    usersActivity,
     userPositions,
     vaultsList,
     systemConfig,
     migratablePositionsData,
+    userActivity,
   ] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
     unstableCache(getGlobalRebalances, [walletAddress], cacheConfig)(),
@@ -77,15 +77,15 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     unstableCache(getSumrStakingInfo, [walletAddress], cacheConfig)(),
     unstableCache(getSumrDelegatesWithDecayFactor, [walletAddress], cacheConfig)(),
     unstableCache(getSumrToClaim, [walletAddress], cacheConfig)({ walletAddress }),
-    unstableCache(
-      getUsersActivity,
-      [walletAddress],
-      cacheConfig,
-    )({ filterTestingWallets: false, walletAddress }),
     unstableCache(getUserPositions, [walletAddress], cacheConfig)({ walletAddress }),
     getVaultsList(),
     systemConfigHandler(),
     unstableCache(getMigratablePositions, [walletAddress], cacheConfig)({ walletAddress }),
+    getUsersActivitiesServerSide({
+      page: 1,
+      limit: 50,
+      userAddress: walletAddress,
+    }).then((res) => res.json()),
   ])
 
   return {
@@ -98,11 +98,11 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     sumrDelegates,
     sumrDecayFactors,
     sumrToClaim,
-    usersActivity,
     userPositions,
     vaultsList,
     systemConfig,
     migratablePositionsData,
+    userActivity,
   }
 }
 
@@ -137,11 +137,11 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     sumrDelegates,
     sumrDecayFactors,
     sumrToClaim,
-    usersActivity,
     userPositions,
     vaultsList,
     systemConfig,
     migratablePositionsData,
+    userActivity,
   } = await portfolioCallsHandler(walletAddress)
 
   const vaultsWithConfig = decorateVaultsWithConfig({
@@ -198,10 +198,6 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   const tgeSnapshotPoints = Number(sumrEligibility.leaderboard[0]?.tgeSnapshotPoints ?? 0)
 
   const totalRays = totalRaysPoints - tgeSnapshotPoints
-
-  const userActivity = usersActivity.usersActivity.filter(
-    (activity) => activity.account.toLowerCase() === walletAddress.toLowerCase(),
-  )
 
   const positionsHistoricalChartMap = positionsWithVault.reduce<{
     [key: string]: HistoryChartData

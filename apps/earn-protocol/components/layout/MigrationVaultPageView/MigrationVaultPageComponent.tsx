@@ -17,12 +17,10 @@ import {
 } from '@summerfi/app-earn-ui'
 import {
   type ArksHistoricalChartData,
-  type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
   TransactionAction,
-  type UsersActivity,
   type VaultApyData,
 } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
@@ -32,6 +30,8 @@ import { type Address } from 'viem'
 
 import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
+import { type UsersActivitiesPagination } from '@/app/server-handlers/tables-data/users-activities/types'
 import { VaultOpenViewDetails } from '@/components/layout/VaultOpenView/VaultOpenViewDetails'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
@@ -53,8 +53,8 @@ import { useUserWallet } from '@/hooks/use-user-wallet'
 type MigrationVaultPageComponentProps = {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
-  userActivity: UsersActivity
-  topDepositors: SDKUsersActivityType
+  topDepositors: TopDepositorsPagination
+  usersActivities: UsersActivitiesPagination
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
@@ -66,7 +66,7 @@ type MigrationVaultPageComponentProps = {
 export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> = ({
   vault,
   vaults,
-  userActivity,
+  usersActivities,
   topDepositors,
   medianDefiYield,
   arksHistoricalChartData,
@@ -322,7 +322,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
         <VaultOpenViewDetails
           vault={vault}
           vaults={vaults}
-          userActivity={userActivity}
+          usersActivities={usersActivities}
           topDepositors={topDepositors}
           arksHistoricalChartData={arksHistoricalChartData}
           arksInterestRates={arksInterestRates}

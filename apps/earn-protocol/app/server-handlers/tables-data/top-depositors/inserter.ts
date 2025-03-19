@@ -20,7 +20,7 @@ export async function insertTopDepositorsInBatches(
       .insertInto('topDepositors')
       .values(
         batch.map((topDepositor) => ({
-          userAddress: topDepositor.account.id,
+          userAddress: topDepositor.account.id.toLowerCase(),
           vaultId: topDepositor.vault.id,
           vaultName: topDepositor.vault.name ?? 'n/a',
           strategy: topDepositor.vault.name

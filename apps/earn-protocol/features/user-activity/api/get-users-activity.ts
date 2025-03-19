@@ -5,6 +5,7 @@ export const getUsersActivity = async ({
   strategies,
   sortBy,
   orderBy,
+  userAddress,
 }: {
   page: number
   limit?: number
@@ -12,6 +13,7 @@ export const getUsersActivity = async ({
   strategies?: string[]
   sortBy?: string
   orderBy?: string
+  userAddress?: string
 }) => {
   const query = new URLSearchParams({
     page: page.toString(),
@@ -20,6 +22,7 @@ export const getUsersActivity = async ({
     ...(strategies && strategies.length > 0 && { strategies: strategies.join(',') }),
     ...(sortBy && { sortBy }),
     ...(orderBy && { orderBy: orderBy.toLowerCase() }),
+    ...(userAddress && { userAddress }),
   })
 
   const response = await fetch(`/earn/api/latest-activity?${query.toString()}`)

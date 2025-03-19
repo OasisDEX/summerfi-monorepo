@@ -4,8 +4,8 @@ import { NextResponse } from 'next/server'
 export const getUsersActivitiesServerSide = async ({
   page,
   limit,
-  sortBy,
-  orderBy,
+  sortBy = 'timestamp',
+  orderBy = 'desc',
   actionType,
   userAddress,
   tokens,
@@ -13,8 +13,8 @@ export const getUsersActivitiesServerSide = async ({
 }: {
   page: number
   limit: number
-  sortBy: 'timestamp' | 'balance' | 'balanceUsd' | 'amount' | 'amountUsd'
-  orderBy: 'asc' | 'desc'
+  sortBy?: 'timestamp' | 'balance' | 'balanceUsd' | 'amount' | 'amountUsd'
+  orderBy?: 'asc' | 'desc'
   actionType?: ActionType
   userAddress?: string
   tokens?: string[]
@@ -42,7 +42,9 @@ export const getUsersActivitiesServerSide = async ({
     // Apply filters if provided
     const filteredQuery = baseQuery
       .$if(!!actionType, (qb) => qb.where('actionType', '=', actionType as ActionType))
-      .$if(!!userAddress, (qb) => qb.where('userAddress', '=', userAddress as string))
+      .$if(!!userAddress, (qb) =>
+        qb.where('userAddress', '=', userAddress?.toLowerCase() as string),
+      )
       .$if(!!tokens && tokens.length > 0, (qb) =>
         qb.where('inputTokenSymbol', 'in', resolvedTokens as string[]),
       )
@@ -60,7 +62,7 @@ export const getUsersActivitiesServerSide = async ({
     // Execute query and get total count using the same filters
     const [activities, countResult, totalDepositsCount, depositsForMedian] = await Promise.all([
       finalQuery,
-      baseQuery
+      filteredQuery
         .clearSelect() // Clear the previous selectAll()
         .select((eb) => eb.fn.countAll().as('count'))
         .executeTakeFirst(),

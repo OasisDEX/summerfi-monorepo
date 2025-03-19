@@ -14,8 +14,9 @@ import {
   useQueryParams,
 } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
-import { type LatestActivity, type TopDepositors } from '@summerfi/summer-protocol-db'
 
+import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
+import { type UsersActivitiesPagination } from '@/app/server-handlers/tables-data/users-activities/types'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { getTopDepositors } from '@/features/user-activity/api/get-top-depositors'
 import { getUsersActivity } from '@/features/user-activity/api/get-users-activity'
@@ -34,26 +35,8 @@ import classNames from './UserActivityView.module.scss'
 interface UserActivityViewProps {
   vaultsList: SDKVaultsListType
   searchParams?: { [key: string]: string[] }
-  topDepositors: {
-    data: TopDepositors[]
-    pagination: {
-      currentPage: number
-      totalPages: number
-      totalItems: number
-      itemsPerPage: number
-    }
-  }
-  usersActivities: {
-    data: LatestActivity[]
-    pagination: {
-      currentPage: number
-      totalPages: number
-      totalItems: number
-      itemsPerPage: number
-    }
-    medianDeposit: number
-    totalDeposits: number
-  }
+  topDepositors: TopDepositorsPagination
+  usersActivities: UsersActivitiesPagination
 }
 
 export const UserActivityView: FC<UserActivityViewProps> = ({

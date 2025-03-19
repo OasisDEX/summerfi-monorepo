@@ -11,10 +11,11 @@ import { isAddress } from 'viem'
 import { getMedianDefiYield } from '@/app/server-handlers/defillama/get-median-defi-yield'
 import { getInterestRates } from '@/app/server-handlers/interest-rates'
 import { getMigratablePositions } from '@/app/server-handlers/migration'
-import { getUsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
+import { getTopDepositorsServerSide } from '@/app/server-handlers/tables-data/top-depositors/api'
+import { getUsersActivitiesServerSide } from '@/app/server-handlers/tables-data/users-activities/api'
 import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { MigrationVaultPageView } from '@/components/layout/MigrationVaultPageView/MigrationVaultPageView'
@@ -50,24 +51,37 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
     ? vaultId
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
+  const strategy = `${parsedVaultId}-${parsedNetwork}`
+
   const [
     vault,
     { vaults },
-    { usersActivity, topDepositors },
     medianDefiYield,
     migratablePositionsData,
+    topDepositors,
+    usersActivities,
   ] = await Promise.all([
     getVaultDetails({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),
     getVaultsList(),
-    getUsersActivity({
-      filterTestingWallets: true,
-      vaultId,
-    }),
     getMedianDefiYield(),
     getMigratablePositions({ walletAddress }),
+    getTopDepositorsServerSide({
+      page: 1,
+      limit: 4,
+      sortBy: 'balanceUsd',
+      orderBy: 'desc',
+      strategies: [strategy],
+    }).then((res) => res.json()),
+    getUsersActivitiesServerSide({
+      page: 1,
+      limit: 4,
+      sortBy: 'timestamp',
+      orderBy: 'desc',
+      strategies: [strategy],
+    }).then((res) => res.json()),
   ])
 
   const migratablePositions = parseServerResponseToClient(migratablePositionsData)
@@ -132,7 +146,7 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
     <MigrationVaultPageView
       vault={vaultWithConfig}
       vaults={allVaultsWithConfig}
-      userActivity={usersActivity}
+      usersActivities={usersActivities}
       topDepositors={topDepositors}
       medianDefiYield={medianDefiYield}
       arksHistoricalChartData={arksHistoricalChartData}

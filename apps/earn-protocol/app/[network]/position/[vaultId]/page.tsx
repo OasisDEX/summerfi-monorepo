@@ -17,10 +17,11 @@ import { isAddress } from 'viem'
 
 import { getMedianDefiYield } from '@/app/server-handlers/defillama/get-median-defi-yield'
 import { getInterestRates } from '@/app/server-handlers/interest-rates'
-import { getUsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
+import { getTopDepositorsServerSide } from '@/app/server-handlers/tables-data/top-depositors/api'
+import { getUsersActivitiesServerSide } from '@/app/server-handlers/tables-data/users-activities/api'
 import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { VaultOpenView } from '@/components/layout/VaultOpenView/VaultOpenView'
@@ -52,17 +53,29 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     redirect('/not-found')
   }
 
-  const [vault, { vaults }, { usersActivity, topDepositors }, medianDefiYield] = await Promise.all([
+  const strategy = `${parsedVaultId}-${parsedNetwork}`
+
+  const [vault, { vaults }, medianDefiYield, topDepositors, usersActivities] = await Promise.all([
     getVaultDetails({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),
     getVaultsList(),
-    getUsersActivity({
-      filterTestingWallets: true,
-      vaultId,
-    }),
     getMedianDefiYield(),
+    getTopDepositorsServerSide({
+      page: 1,
+      limit: 4,
+      sortBy: 'balanceUsd',
+      orderBy: 'desc',
+      strategies: [strategy],
+    }).then((res) => res.json()),
+    getUsersActivitiesServerSide({
+      page: 1,
+      limit: 4,
+      sortBy: 'timestamp',
+      orderBy: 'desc',
+      strategies: [strategy],
+    }).then((res) => res.json()),
   ])
 
   const [vaultWithConfig] = vault
@@ -119,7 +132,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     <VaultOpenView
       vault={vaultWithConfig}
       vaults={allVaultsWithConfig}
-      userActivity={usersActivity}
+      usersActivities={usersActivities}
       topDepositors={topDepositors}
       medianDefiYield={medianDefiYield}
       arksHistoricalChartData={arksHistoricalChartData}

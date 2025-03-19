@@ -46,7 +46,9 @@ export const getTopDepositorsServerSide = async ({
 
     // Apply filters if provided
     const filteredQuery = baseQuery
-      .$if(!!userAddress, (qb) => qb.where('userAddress', '=', userAddress as string))
+      .$if(!!userAddress, (qb) =>
+        qb.where('userAddress', '=', userAddress?.toLowerCase() as string),
+      )
       .$if(!!tokens && tokens.length > 0, (qb) =>
         qb.where('inputTokenSymbol', 'in', resolvedTokens as string[]),
       )
@@ -64,7 +66,7 @@ export const getTopDepositorsServerSide = async ({
     // Execute query and get total count using the same filters
     const [topDepositors, countResult] = await Promise.all([
       finalQuery,
-      baseQuery
+      filteredQuery
         .clearSelect() // Clear the previous selectAll()
         .select((eb) => eb.fn.countAll().as('count'))
         .executeTakeFirst(),
