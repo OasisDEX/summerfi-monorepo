@@ -1,0 +1,37 @@
+query GetRebalances($timestamp: BigInt, $first: Int!, $skip: Int!) {
+  rebalances(
+    where: { timestamp_gt: $timestamp }
+    first: $first
+    skip: $skip
+    orderBy: timestamp
+    orderDirection: desc
+  ) {
+    id
+    amount
+    amountUSD
+    from {
+      name
+      depositLimit
+      totalValueLockedUSD
+    }
+    to {
+      name
+      depositLimit
+      totalValueLockedUSD
+    }
+    timestamp
+    vault {
+      id
+      name
+      inputToken {
+        id
+        symbol
+        decimals
+      }
+      inputTokenPriceUSD
+      protocol {
+        network
+      }
+    }
+  }
+}

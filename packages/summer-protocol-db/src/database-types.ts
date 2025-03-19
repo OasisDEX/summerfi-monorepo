@@ -91,6 +91,30 @@ export interface NetworkStatus {
   network: Network;
 }
 
+export interface RebalanceActivity {
+  actionType: ActionType;
+  amount: Numeric;
+  amountUsd: Numeric;
+  fromDepositLimit: Numeric;
+  fromName: string;
+  fromTotalValueLockedUsd: Numeric;
+  id: Generated<number>;
+  inputTokenDecimals: Int8;
+  inputTokenPriceUsd: Numeric;
+  inputTokenSymbol: string;
+  network: Network;
+  rebalanceId: string;
+  strategy: string;
+  strategyId: string;
+  timestamp: Int8;
+  toDepositLimit: Numeric;
+  toName: string;
+  toTotalValueLockedUsd: Numeric;
+  txHash: string;
+  vaultId: string;
+  vaultName: string;
+}
+
 export interface RewardRate {
   id: string;
   network: Network;
@@ -174,6 +198,7 @@ export interface Database {
   hourlyRewardRate: HourlyRewardRate;
   latestActivity: LatestActivity;
   networkStatus: NetworkStatus;
+  rebalanceActivity: RebalanceActivity;
   rewardRate: RewardRate;
   token: Token;
   topDepositors: TopDepositors;
