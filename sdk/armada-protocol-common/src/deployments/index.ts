@@ -4,6 +4,7 @@ import {
   BaseChainNames,
   ChainFamilyName,
   EthereumChainNames,
+  SonicChainNames,
   type ChainInfo,
   type IAddress,
 } from '@summerfi/sdk-common'
@@ -34,8 +35,8 @@ export const isTestDeployment = () => {
   }
 }
 
-type Config = typeof sumrConfig
-type ConfigKey = 'mainnet' | 'base' | 'arbitrum'
+type Config = typeof bummerConfig
+type ConfigKey = 'mainnet' | 'base' | 'arbitrum' | 'sonic'
 type CategoryKey = keyof Config[ConfigKey]['deployedContracts']
 
 const getConfigKey = <TName extends string>(name: TName) => {
@@ -43,6 +44,7 @@ const getConfigKey = <TName extends string>(name: TName) => {
     [EthereumChainNames.Mainnet]: 'mainnet',
     [BaseChainNames.Mainnet]: 'base',
     [ArbitrumChainNames.ArbitrumOne]: 'arbitrum',
+    [SonicChainNames.Sonic]: 'sonic',
   }
 
   const key = keyMap[name]
@@ -52,8 +54,9 @@ const getConfigKey = <TName extends string>(name: TName) => {
   return key
 }
 
-const getConfig = () => {
-  return isTestDeployment() ? bummerConfig : sumrConfig
+const getConfig = (): Config => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return isTestDeployment() ? bummerConfig : (sumrConfig as any)
 }
 
 export const getDeployedContractAddress = <

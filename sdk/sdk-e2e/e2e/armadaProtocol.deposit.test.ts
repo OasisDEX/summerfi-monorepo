@@ -16,7 +16,7 @@ import { signerPrivateKey, SDKApiUrl, testConfig, signerAddress } from './utils/
 
 jest.setTimeout(300000)
 
-describe.skip('Armada Protocol Deposit', () => {
+describe('Armada Protocol Deposit', () => {
   const main = async () => {
     for (const { symbol, swapSymbol, chainInfo, fleetAddress, rpcUrl } of testConfig) {
       console.log(`Running tests for ${symbol} on ${chainInfo.name}`)
@@ -64,7 +64,7 @@ describe.skip('Armada Protocol Deposit', () => {
       user = data.user
     })
 
-    describe.skip(`Deposit on ${chainInfo.name}`, () => {
+    describe(`Deposit on ${chainInfo.name}`, () => {
       it(`should deposit 1 USDC (with stake) to fleet at ${fleetAddress.value}`, async () => {
         const amount = '1'
         const transactions = await sdk.armada.users.getNewDepositTX({
@@ -126,7 +126,7 @@ describe.skip('Armada Protocol Deposit', () => {
         )
       })
 
-      it(`should deposit 1 USDC (without stake) to fleet at ${fleetAddress.value}`, async () => {
+      it.skip(`should deposit 1 USDC (without stake) to fleet at ${fleetAddress.value}`, async () => {
         const amount = '1'
 
         const transactions = await sdk.armada.users.getNewDepositTX({
@@ -190,7 +190,7 @@ describe.skip('Armada Protocol Deposit', () => {
         ).toBeGreaterThan(0.9)
       })
 
-      it(`should deposit and swap 1 ${swapSymbol} (with stake) to fleet at ${fleetAddress.value}`, async () => {
+      it.skip(`should deposit and swap 1 ${swapSymbol} (with stake) to fleet at ${fleetAddress.value}`, async () => {
         const amount = '1'
         const transactions = await sdk.armada.users.getNewDepositTX({
           vaultId,
@@ -252,7 +252,7 @@ describe.skip('Armada Protocol Deposit', () => {
       })
     })
 
-    describe(`Withdraw on ${chainInfo.name}`, () => {
+    describe.skip(`Withdraw on ${chainInfo.name}`, () => {
       it(`should withdraw 1 USDC unstaked assets back from fleet at ${fleetAddress.value}`, async () => {
         const amount = '1'
 

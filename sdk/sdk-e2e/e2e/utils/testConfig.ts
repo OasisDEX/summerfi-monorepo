@@ -50,10 +50,10 @@ export const testConfig = [
   // },
   {
     chainInfo: ChainFamilyMap.Sonic.Sonic,
-    symbol: 'USDC',
-    swapSymbol: 'USDC',
+    symbol: 'USDC.e',
+    swapSymbol: 'USDC.e',
     fleetAddress: Address.createFromEthereum({
-      value: '0xd94d5f8969825c5fBCC127195f08F0762a010BA8',
+      value: '0xF06BEDaf951aaFf253acaA05e391AdfbdD6BFbe0',
     }),
     rpcUrl: process.env.E2E_SDK_FORK_URL_SONIC,
     userAddress: user,
