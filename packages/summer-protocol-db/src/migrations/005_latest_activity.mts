@@ -1,6 +1,9 @@
 import { Kysely, sql } from 'kysely'
 
 export async function up(db: Kysely<never>): Promise<void> {
+  // Create action type enum
+  await sql`CREATE TYPE action_type AS ENUM ('deposit', 'withdraw')`.execute(db)
+
   await db.schema
     .createTable('latest_activity')
     .addColumn('id', 'varchar', (col) => col.primaryKey())
@@ -31,4 +34,5 @@ export async function up(db: Kysely<never>): Promise<void> {
 
 export async function down(db: Kysely<never>): Promise<void> {
   await db.schema.dropTable('latest_activity').execute()
+  await sql`DROP TYPE action_type`.execute(db)
 }

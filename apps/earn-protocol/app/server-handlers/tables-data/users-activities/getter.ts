@@ -1,4 +1,3 @@
-import { SDKNetwork } from '@summerfi/app-types'
 import { type GraphQLClient } from 'graphql-request'
 
 import { type UserActivity } from '@/app/server-handlers/tables-data/users-activities/types'
@@ -16,11 +15,15 @@ export const getAllUserActivities = async ({
   baseGraphQlClient: GraphQLClient
   arbitrumGraphQlClient: GraphQLClient
 }): Promise<UserActivity[]> => {
-  const [mainnetActivities, baseActivities, arbitrumActivities] = await Promise.all([
-    fetchAllUserActivities(mainnetGraphQlClient, lastTimestamp, SDKNetwork.Mainnet),
-    fetchAllUserActivities(baseGraphQlClient, lastTimestamp, SDKNetwork.Base),
-    fetchAllUserActivities(arbitrumGraphQlClient, lastTimestamp, SDKNetwork.ArbitrumOne),
+  const results = await Promise.allSettled([
+    fetchAllUserActivities(mainnetGraphQlClient, lastTimestamp),
+    fetchAllUserActivities(baseGraphQlClient, lastTimestamp),
+    fetchAllUserActivities(arbitrumGraphQlClient, lastTimestamp),
   ])
+
+  const [mainnetActivities, baseActivities, arbitrumActivities] = results.map((result) =>
+    result.status === 'fulfilled' ? result.value : { deposits: [], withdraws: [] },
+  )
 
   // Combine all new activities from different networks and add type property
   return [

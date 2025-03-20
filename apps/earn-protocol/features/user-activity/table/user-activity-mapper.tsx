@@ -14,22 +14,12 @@ import Link from 'next/link'
 
 import { networkSDKChainIdIconMap } from '@/constants/network-id-to-icon'
 
-// const activityLabelMap = {
-//   [UserActivityType.DEPOSIT]: 'Deposit',
-//   [UserActivityType.WITHDRAW]: 'Withdraw',
-// }
-
-// const activityColorMap = {
-//   [UserActivityType.DEPOSIT]: 'var(--earn-protocol-success-100)',
-//   [UserActivityType.WITHDRAW]: 'var(--earn-protocol-warning-100)',
-// }
-
-const activityLabelMap = {
+const activityLabelMap: { [key in LatestActivity['actionType']]: string } = {
   deposit: 'Deposit',
   withdraw: 'Withdraw',
 }
 
-const activityColorMap = {
+const activityColorMap: { [key in LatestActivity['actionType']]: string } = {
   deposit: 'var(--earn-protocol-success-100)',
   withdraw: 'var(--earn-protocol-warning-100)',
 }

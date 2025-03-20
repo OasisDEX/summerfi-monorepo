@@ -1,4 +1,3 @@
-import { SDKNetwork } from '@summerfi/app-types'
 import { type GraphQLClient } from 'graphql-request'
 
 import { fetchTopDepositors } from './fetcher'
@@ -13,9 +12,9 @@ export const getTopDepositors = async ({
   arbitrumGraphQlClient: GraphQLClient
 }) => {
   const [mainnetPositions, basePositions, arbitrumPositions] = await Promise.all([
-    fetchTopDepositors(mainnetGraphQlClient, SDKNetwork.Mainnet),
-    fetchTopDepositors(baseGraphQlClient, SDKNetwork.Base),
-    fetchTopDepositors(arbitrumGraphQlClient, SDKNetwork.ArbitrumOne),
+    fetchTopDepositors(mainnetGraphQlClient),
+    fetchTopDepositors(baseGraphQlClient),
+    fetchTopDepositors(arbitrumGraphQlClient),
   ])
 
   return [...mainnetPositions, ...basePositions, ...arbitrumPositions]

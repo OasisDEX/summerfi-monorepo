@@ -33,7 +33,7 @@ export const updater = async (context: Context, tableName: string): Promise<void
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
 
-    logger.error('Error updating users activities table', { error: errorMessage })
+    logger.error(`Error updating ${tableName} table`, { error: errorMessage })
   }
 
   logger.debug('Handler completed')

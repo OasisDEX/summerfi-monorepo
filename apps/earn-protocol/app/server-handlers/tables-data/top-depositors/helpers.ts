@@ -26,5 +26,7 @@ export const getEarningStreakResetTimestamp = ({ position }: { position: Positio
   // first deposit event
   const firstDepositTimestamp = position.deposits[0]?.timestamp
 
-  return Number(earnStreakWithdrawResetTimestamp ?? firstDepositTimestamp) * 1000
+  const timestamp = earnStreakWithdrawResetTimestamp ?? firstDepositTimestamp
+
+  return timestamp ? Number(timestamp) * 1000 : 0
 }

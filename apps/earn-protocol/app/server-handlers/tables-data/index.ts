@@ -16,10 +16,17 @@ export const updateTablesData = async ({
   db: SummerProtocolDB['db']
 }) => {
   // reusable
+
+  const baseUrl = process.env.SUBGRAPH_BASE
+
+  if (!baseUrl) {
+    throw new Error('SUBGRAPH_BASE is not set')
+  }
+
   const subgraphsMap = {
-    [SDKNetwork.Mainnet]: `${process.env.SUBGRAPH_BASE}/summer-protocol`,
-    [SDKNetwork.Base]: `${process.env.SUBGRAPH_BASE}/summer-protocol-base`,
-    [SDKNetwork.ArbitrumOne]: `${process.env.SUBGRAPH_BASE}/summer-protocol-arbitrum`,
+    [SDKNetwork.Mainnet]: `${baseUrl}/summer-protocol`,
+    [SDKNetwork.Base]: `${baseUrl}/summer-protocol-base`,
+    [SDKNetwork.ArbitrumOne]: `${baseUrl}/summer-protocol-arbitrum`,
   }
 
   const mainnetGraphQlClient = new GraphQLClient(subgraphsMap[SDKNetwork.Mainnet])

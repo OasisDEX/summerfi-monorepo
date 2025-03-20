@@ -7,4 +7,9 @@ export const updateTable = async (authToken: string, baseUrl: string, tableName:
     body: JSON.stringify({
       tablesToUpdate: [tableName],
     }),
-  }).then((res) => res.json())
+  }).then((res) => {
+    if (!res.ok) {
+      throw new Error(`Failed to update table: ${res.status} ${res.statusText}`)
+    }
+    return res.json()
+  })

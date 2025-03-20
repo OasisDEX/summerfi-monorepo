@@ -133,6 +133,10 @@ export const chainIdToSDKNetwork = (chainId: SDKChainId) => {
 export const sdkChainIdToHumanNetwork = (chainId: SDKChainId): string => {
   const network = chainIdToSDKNetwork(chainId)
 
+  if (!network) {
+    throw new Error(`Unsupported chain ID: ${chainId}`)
+  }
+
   return sdkNetworkToHumanNetwork(network)
 }
 

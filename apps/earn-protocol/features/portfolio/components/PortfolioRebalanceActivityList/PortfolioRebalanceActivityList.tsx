@@ -39,6 +39,15 @@ export const PortfolioRebalanceActivityList: FC<PortfolioRebalanceActivityListPr
         {rebalanceActivityList.map((item) => {
           const purpose = rebalanceActivityPurposeMapper(item)
 
+          let dbNetworkToChainId
+
+          try {
+            dbNetworkToChainId = mapDbNetworkToChainId(item.network)
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error('Error mapping network to chainId', error)
+          }
+
           return (
             <div
               key={item.id.toString()}
@@ -75,8 +84,9 @@ export const PortfolioRebalanceActivityList: FC<PortfolioRebalanceActivityListPr
                       <div className={classNames.leftContentDescriptionNetwork}>
                         <Icon
                           iconName={
-                            networkIconByChainId[mapDbNetworkToChainId(item.network)] ??
-                            'not_supported_icon'
+                            dbNetworkToChainId
+                              ? networkIconByChainId[dbNetworkToChainId] ?? 'not_supported_icon'
+                              : 'not_supported_icon'
                           }
                           variant="xs"
                         />

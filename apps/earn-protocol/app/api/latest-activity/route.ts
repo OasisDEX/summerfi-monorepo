@@ -9,7 +9,7 @@ const LatestActivityQueryParamsSchema = z.object({
   sortBy: z
     .enum(['timestamp', 'balance', 'balanceUsd', 'amount', 'amountUsd'])
     .default('timestamp'),
-  orderBy: z.enum(['asc', 'desc']).default('asc'),
+  orderBy: z.enum(['asc', 'desc']).default('desc'),
   actionType: z.enum(['deposit', 'withdraw']).optional(),
   userAddress: z.string().optional(),
   tokens: z.string().optional(),

@@ -7,7 +7,7 @@ const RebalanceActivityQueryParamsSchema = z.object({
   page: z.coerce.number().int().positive().default(1),
   limit: z.coerce.number().int().min(1).max(100).default(50),
   sortBy: z.enum(['timestamp', 'amount', 'amountUsd']).default('timestamp'),
-  orderBy: z.enum(['asc', 'desc']).default('asc'),
+  orderBy: z.enum(['asc', 'desc']).default('desc'),
   tokens: z.string().optional(),
   strategies: z.string().optional(),
   protocols: z.string().optional(),

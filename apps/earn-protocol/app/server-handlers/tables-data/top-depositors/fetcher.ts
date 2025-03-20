@@ -1,4 +1,3 @@
-import { type SDKNetwork } from '@summerfi/app-types'
 import { GetTopDepositorsDocument, type Position } from '@summerfi/subgraph-manager-common'
 import { type GraphQLClient } from 'graphql-request'
 
@@ -8,7 +7,7 @@ interface GraphQLResponse {
   positions: Position[]
 }
 
-export async function fetchTopDepositors(client: GraphQLClient, _network: SDKNetwork) {
+export async function fetchTopDepositors(client: GraphQLClient) {
   let allPositions: Position[] = []
   let skip = 0
   let hasMorePositions = true

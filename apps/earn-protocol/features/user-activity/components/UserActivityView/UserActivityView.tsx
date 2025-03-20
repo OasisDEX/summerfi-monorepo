@@ -46,7 +46,8 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
   usersActivities,
 }) => {
   const { setQueryParams, queryParams } = useQueryParams(searchParams)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingActivity, setIsLoadingActivity] = useState(false)
+  const [isLoadingDepositors, setIsLoadingDepositors] = useState(false)
 
   const strategyFilter = queryParams.strategies
   const tokenFilter = queryParams.tokens
@@ -93,7 +94,7 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
       // eslint-disable-next-line no-console
       console.error('Error fetching more user activity', error)
     } finally {
-      setIsLoading(false)
+      setIsLoadingActivity(false)
     }
   }
 
@@ -113,7 +114,7 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
       // eslint-disable-next-line no-console
       console.error('Error fetching more top depositors', error)
     } finally {
-      setIsLoading(false)
+      setIsLoadingDepositors(false)
     }
   }
 
@@ -155,7 +156,7 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
       return
     }
 
-    setIsLoading(true)
+    setIsLoadingActivity(true)
 
     getUsersActivity({
       page: 1,
@@ -172,7 +173,7 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
         console.error('Error fetching user activity', error)
       })
       .finally(() => {
-        setIsLoading(false)
+        setIsLoadingActivity(false)
       })
   }, [strategyFilter, tokenFilter, latestActivitySortBy, latestActivityOrderBy])
 
@@ -181,7 +182,7 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
       return
     }
 
-    setIsLoading(true)
+    setIsLoadingDepositors(true)
 
     getTopDepositors({
       page: 1,
@@ -198,7 +199,7 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
         console.error('Error fetching top depositors', error)
       })
       .finally(() => {
-        setIsLoading(false)
+        setIsLoadingDepositors(false)
       })
   }, [strategyFilter, tokenFilter, topDepositorsSortBy, topDepositorsOrderBy])
 
@@ -247,7 +248,7 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
           hasMore={
             topDepositors.pagination.totalPages > currentTopDepositorsPage &&
             loadedTopDepositorsList.length > 0 &&
-            !isLoading
+            !isLoadingDepositors
           }
           loader={
             <LoadingSpinner
@@ -276,7 +277,7 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
           hasMore={
             usersActivities.pagination.totalPages > currentUserActivityPage &&
             loadedUserActivityList.length > 0 &&
-            !isLoading
+            !isLoadingActivity
           }
           loader={
             <LoadingSpinner

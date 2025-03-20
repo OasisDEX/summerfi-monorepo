@@ -5,7 +5,7 @@ export const latestActivityHandler = async (
   _: EventBridgeEvent<'Scheduled Event', never>,
   context: Context,
 ): Promise<void> => {
-  await updater(context, 'latest-activiy')
+  await updater(context, 'latest-activity')
 }
 
 export default latestActivityHandler

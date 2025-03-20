@@ -1,4 +1,3 @@
-import { type SDKNetwork } from '@summerfi/app-types'
 import {
   type Deposit,
   GetLatestActivityDocument,
@@ -6,18 +5,14 @@ import {
 } from '@summerfi/subgraph-manager-common'
 import { type GraphQLClient } from 'graphql-request'
 
+import { SUBGRAPH_BATCH_SIZE } from '@/app/server-handlers/tables-data/consts'
+
 interface GraphQLResponse {
   deposits: Deposit[]
   withdraws: Withdraw[]
 }
 
-const BATCH_SIZE = 1000
-
-export async function fetchAllUserActivities(
-  client: GraphQLClient,
-  timestamp: string,
-  _network: SDKNetwork,
-) {
+export async function fetchAllUserActivities(client: GraphQLClient, timestamp: string) {
   let allDeposits: Deposit[] = []
   let allWithdraws: Withdraw[] = []
   let skip = 0
@@ -27,7 +22,7 @@ export async function fetchAllUserActivities(
   while (hasMoreDeposits || hasMoreWithdraws) {
     const response = await client.request<GraphQLResponse>(GetLatestActivityDocument, {
       timestamp,
-      first: BATCH_SIZE,
+      first: SUBGRAPH_BATCH_SIZE,
       skip,
     })
 
@@ -38,15 +33,15 @@ export async function fetchAllUserActivities(
     allWithdraws = [...allWithdraws, ...withdraws]
 
     // If we got less than the batch size for both, we've reached the end
-    if (deposits.length < BATCH_SIZE) {
+    if (deposits.length < SUBGRAPH_BATCH_SIZE) {
       hasMoreDeposits = false
     }
-    if (withdraws.length < BATCH_SIZE) {
+    if (withdraws.length < SUBGRAPH_BATCH_SIZE) {
       hasMoreWithdraws = false
     }
 
     if (hasMoreDeposits || hasMoreWithdraws) {
-      skip += BATCH_SIZE
+      skip += SUBGRAPH_BATCH_SIZE
     }
   }
 

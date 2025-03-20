@@ -3,7 +3,7 @@ import {
   mapChainIdToDbNetwork,
   subgraphNetworkToSDKId,
 } from '@summerfi/app-utils'
-import { type Network, type SummerProtocolDB } from '@summerfi/summer-protocol-db'
+import { type SummerProtocolDB } from '@summerfi/summer-protocol-db'
 
 import { DB_BATCH_SIZE } from '@/app/server-handlers/tables-data/consts'
 
@@ -40,7 +40,7 @@ export async function insertTopDepositorsInBatches(
           balanceUsd: topDepositor.inputTokenBalanceNormalizedInUSD,
           network: mapChainIdToDbNetwork(
             subgraphNetworkToSDKId(topDepositor.vault.protocol.network),
-          ) as Network,
+          ),
           changeSevenDays: topDepositor.changeSevenDays,
           noOfDeposits: topDepositor.deposits.length,
           noOfWithdrawals: topDepositor.withdrawals.length,

@@ -9,4 +9,3 @@ export const topDepositorsHandler = async (
 }
 
 export default topDepositorsHandler
-

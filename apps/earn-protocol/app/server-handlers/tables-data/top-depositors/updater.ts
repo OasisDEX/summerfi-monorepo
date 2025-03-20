@@ -33,10 +33,13 @@ export const updateTopDepositors = async ({
     .execute()
 
   const ratesByFleet = rates.reduce<{ [key: string]: FleetRate[] }>((acc, rate) => {
-    if (!acc[`${rate.fleetAddress}-${rate.network}`]) {
-      acc[`${rate.fleetAddress}-${rate.network}`] = []
+    const fleetId = `${rate.fleetAddress}-${rate.network}`
+
+    if (!acc[fleetId]) {
+      acc[fleetId] = []
     }
-    acc[`${rate.fleetAddress}-${rate.network}`].push({
+
+    acc[fleetId].push({
       id: rate.id,
       rate: rate.rate.toString(),
       timestamp: Number(rate.timestamp),
@@ -48,13 +51,12 @@ export const updateTopDepositors = async ({
 
   const latestRatesByFleet = Object.entries(ratesByFleet).reduce<{
     [key: string]: FleetRate
-  }>(
-    (acc, [fleetId, _rates]) => ({
-      ...acc,
-      [fleetId]: _rates[0], // Take first item since array is already sorted by timestamp desc
-    }),
-    {},
-  )
+  }>((acc, [fleetId, _rates]) => {
+    // eslint-disable-next-line prefer-destructuring
+    acc[fleetId] = _rates[0] // Take first item since array is already sorted by timestamp desc
+
+    return acc
+  }, {})
 
   const extendPositions = topDepositors.map((position) => {
     const changeSevenDays = calculateTopDepositors7daysChange({ position }).toString()
@@ -65,7 +67,13 @@ export const updateTopDepositors = async ({
 
     const earningsStreak = BigInt(new Date().getTime() - earningsStreakResetTimestamp)
 
-    const projectedOneYearEarnings = new BigNumber(latestRatesByFleet[fleetId].rate)
+    const fleetRate = latestRatesByFleet[fleetId]
+
+    if (!fleetRate) {
+      throw new Error(`No fleet rate found for fleetId: ${fleetId}`)
+    }
+
+    const projectedOneYearEarnings = new BigNumber(fleetRate.rate)
       .div(100)
       .times(position.inputTokenBalanceNormalized)
 

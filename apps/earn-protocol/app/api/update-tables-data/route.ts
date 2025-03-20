@@ -40,10 +40,18 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  const { db } = await getSummerProtocolDB({
-    connectionString,
-  })
+  let db
 
+  try {
+    const connection = await getSummerProtocolDB({
+      connectionString,
+    })
+
+    // eslint-disable-next-line prefer-destructuring
+    db = connection.db
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to connect to database' }, { status: 500 })
+  }
   const authHeader = req.headers.get('authorization')
   const expectedAuth = process.env.EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN
 

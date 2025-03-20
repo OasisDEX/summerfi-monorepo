@@ -17,7 +17,7 @@ const TopDepositorsQueryParamsSchema = z.object({
       'earningsStreak',
     ])
     .default('balanceUsd'),
-  orderBy: z.enum(['asc', 'desc']).default('asc'),
+  orderBy: z.enum(['asc', 'desc']).default('desc'),
   userAddress: z.string().optional(),
   tokens: z.string().optional(),
   strategies: z.string().optional(),
