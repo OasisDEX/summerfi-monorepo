@@ -1,10 +1,10 @@
 import { type SummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { type GraphQLClient } from 'graphql-request'
 
-import { getAllUserActivities } from './getter'
-import { insertUsersActivitiesInBatches } from './inserter'
+import { getAllLatestActivities } from './getter'
+import { insertLatestActivitiesInBatches } from './inserter'
 
-export const updateUsersActivities = async ({
+export const updateLatestActivities = async ({
   db,
   mainnetGraphQlClient,
   baseGraphQlClient,
@@ -23,15 +23,14 @@ export const updateUsersActivities = async ({
   // Get the most recent timestamp from the database, or 0 if no records exist
   const lastTimestamp = latestActivity[0]?.timestamp || '0'
 
-  const allUserActivities = await getAllUserActivities({
+  const allLatestActivities = await getAllLatestActivities({
     lastTimestamp,
     mainnetGraphQlClient,
     baseGraphQlClient,
     arbitrumGraphQlClient,
   })
 
-  // Insert activities in batches to avoid parameter limit
-  const { updated } = await insertUsersActivitiesInBatches(db, allUserActivities)
+  const { updated } = await insertLatestActivitiesInBatches(db, allLatestActivities)
 
   const endTime = Date.now()
   const duration = `${((endTime - startTime) / 1000).toFixed(2)}s`

@@ -30,9 +30,9 @@ import { type Address } from 'viem'
 
 import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { type LatestActivitiesPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
-import { type UsersActivitiesPagination } from '@/app/server-handlers/tables-data/users-activities/types'
 import { VaultOpenViewDetails } from '@/components/layout/VaultOpenView/VaultOpenViewDetails'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
@@ -55,7 +55,7 @@ type MigrationVaultPageComponentProps = {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
   topDepositors: TopDepositorsPagination
-  usersActivities: UsersActivitiesPagination
+  latestActivity: LatestActivitiesPagination
   rebalanceActivity: RebalanceActivityPagination
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData
@@ -68,7 +68,7 @@ type MigrationVaultPageComponentProps = {
 export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> = ({
   vault,
   vaults,
-  usersActivities,
+  latestActivity,
   topDepositors,
   rebalanceActivity,
   medianDefiYield,
@@ -324,7 +324,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
       detailsContent={
         <VaultOpenViewDetails
           vault={vault}
-          usersActivities={usersActivities}
+          latestActivity={latestActivity}
           topDepositors={topDepositors}
           rebalanceActivity={rebalanceActivity}
           arksHistoricalChartData={arksHistoricalChartData}

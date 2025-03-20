@@ -3,10 +3,10 @@ import { type SummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { GraphQLClient } from 'graphql-request'
 import { NextResponse } from 'next/server'
 
+import { updateLatestActivities } from './latest-activity/updater'
 import { updateRebalanceActivity } from './rebalance-activity/updater'
 import { updateTopDepositors } from './top-depositors/updater'
 import { UpdateTables } from './types'
-import { updateUsersActivities } from './users-activities/updater'
 
 export const updateTablesData = async ({
   tablesToUpdate,
@@ -34,12 +34,12 @@ export const updateTablesData = async ({
   const arbitrumGraphQlClient = new GraphQLClient(subgraphsMap[SDKNetwork.ArbitrumOne])
 
   try {
-    let updatedUsersActivities
+    let updatedLatestActivities
     let updatedTopDepositors
     let updatedRebalanceActivity
 
     if (tablesToUpdate.includes(UpdateTables.LatestActivity)) {
-      updatedUsersActivities = await updateUsersActivities({
+      updatedLatestActivities = await updateLatestActivities({
         db,
         mainnetGraphQlClient,
         baseGraphQlClient,
@@ -66,7 +66,7 @@ export const updateTablesData = async ({
     }
 
     return NextResponse.json({
-      updatedUsersActivities,
+      updatedLatestActivities,
       updatedTopDepositors,
       updatedRebalanceActivity,
     })

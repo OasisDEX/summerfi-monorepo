@@ -21,9 +21,9 @@ import { getInterestRates } from '@/app/server-handlers/interest-rates'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
+import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
-import { getPaginatedUsersActivities } from '@/app/server-handlers/tables-data/users-activities/api'
 import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { VaultOpenView } from '@/components/layout/VaultOpenView/VaultOpenView'
@@ -57,7 +57,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
 
   const strategy = `${parsedVaultId}-${parsedNetwork}`
 
-  const [vault, { vaults }, medianDefiYield, topDepositors, usersActivities, rebalanceActivity] =
+  const [vault, { vaults }, medianDefiYield, topDepositors, latestActivity, rebalanceActivity] =
     await Promise.all([
       getVaultDetails({
         vaultAddress: parsedVaultId,
@@ -70,7 +70,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
         limit: 4,
         strategies: [strategy],
       }),
-      getPaginatedUsersActivities({
+      getPaginatedLatestActivity({
         page: 1,
         limit: 4,
         strategies: [strategy],
@@ -137,7 +137,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     <VaultOpenView
       vault={vaultWithConfig}
       vaults={allVaultsWithConfig}
-      usersActivities={usersActivities}
+      latestActivity={latestActivity}
       topDepositors={topDepositors}
       rebalanceActivity={rebalanceActivity}
       medianDefiYield={medianDefiYield}

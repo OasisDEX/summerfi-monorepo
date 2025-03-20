@@ -41,9 +41,9 @@ import { TransactionType } from '@summerfi/sdk-common'
 
 import { AccountKitAccountType } from '@/account-kit/types'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { type LatestActivitiesPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
-import { type UsersActivitiesPagination } from '@/app/server-handlers/tables-data/users-activities/types'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import {
   ControlsApproval,
@@ -56,10 +56,10 @@ import { PositionPerformanceChart } from '@/components/organisms/Charts/Position
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
+import { LatestActivity } from '@/features/latest-activity/components/LatestActivity/LatestActivity'
 import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
-import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { revalidatePositionData } from '@/helpers/revalidation-handlers'
@@ -78,7 +78,7 @@ export const VaultManageViewComponent = ({
   vault,
   vaults,
   position,
-  userActivities,
+  latestActivity,
   topDepositors,
   viewWalletAddress,
   rebalanceActivity,
@@ -93,7 +93,7 @@ export const VaultManageViewComponent = ({
   vaults: SDKVaultsListType
   position: IArmadaPosition
   topDepositors: TopDepositorsPagination
-  userActivities: UsersActivitiesPagination
+  latestActivity: LatestActivitiesPagination
   rebalanceActivity: RebalanceActivityPagination
   viewWalletAddress: string
   performanceChartData: PerformanceChartData
@@ -533,8 +533,8 @@ export const VaultManageViewComponent = ({
                 </Text>
               }
             >
-              <UserActivity
-                usersActivities={userActivities}
+              <LatestActivity
+                latestActivity={latestActivity}
                 topDepositors={topDepositors}
                 vaultId={getUniqueVaultId(vault)}
                 page="manage"

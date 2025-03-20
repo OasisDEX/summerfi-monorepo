@@ -12,7 +12,7 @@ interface GraphQLResponse {
   withdraws: Withdraw[]
 }
 
-export async function fetchAllUserActivities(client: GraphQLClient, timestamp: string) {
+export async function fetchAllLatestActivities(client: GraphQLClient, timestamp: string) {
   let allDeposits: Deposit[] = []
   let allWithdraws: Withdraw[] = []
   let skip = 0

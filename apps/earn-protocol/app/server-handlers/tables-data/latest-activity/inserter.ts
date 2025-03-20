@@ -6,11 +6,11 @@ import {
 import { type Network, type SummerProtocolDB } from '@summerfi/summer-protocol-db'
 
 import { DB_BATCH_SIZE } from '@/app/server-handlers/tables-data/consts'
-import { type UserActivity } from '@/app/server-handlers/tables-data/users-activities/types'
+import { type LatestActivity } from '@/app/server-handlers/tables-data/latest-activity/types'
 
-export async function insertUsersActivitiesInBatches(
+export async function insertLatestActivitiesInBatches(
   db: SummerProtocolDB['db'],
-  activities: UserActivity[],
+  activities: LatestActivity[],
   batchSize: number = DB_BATCH_SIZE,
 ) {
   let updated = 0

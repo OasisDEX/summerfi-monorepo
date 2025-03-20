@@ -1,12 +1,12 @@
 import { formatCryptoBalance, formatShorthandNumber } from '@summerfi/app-utils'
 
-export const userActivityHeading = {
+export const latestActivityHeading = {
   title: 'Lazy Summer Global User Activity',
   description:
     'Below is a transparent view of global user activity for the Lazy Summer Protocol, showcasing the activity of all our users and access to their individual position pages.',
 }
 
-export const getUserActivityHeadingCards = ({
+export const getLatestActivityHeadingCards = ({
   totalItems,
   totalUsers,
   medianDeposit,

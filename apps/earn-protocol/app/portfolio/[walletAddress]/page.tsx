@@ -31,8 +31,8 @@ import { getSumrDelegatesWithDecayFactor } from '@/app/server-handlers/sumr-dele
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
 import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
 import systemConfigHandler from '@/app/server-handlers/system-config'
+import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
-import { getPaginatedUsersActivities } from '@/app/server-handlers/tables-data/users-activities/api'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { PortfolioPageViewComponent } from '@/components/layout/PortfolioPageView/PortfolioPageViewComponent'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
@@ -66,7 +66,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     vaultsList,
     systemConfig,
     migratablePositionsData,
-    userActivity,
+    latestActivity,
   ] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
     unstableCache(getSumrDelegateStake, [walletAddress], cacheConfig)({ walletAddress }),
@@ -80,7 +80,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     systemConfigHandler(),
     unstableCache(getMigratablePositions, [walletAddress], cacheConfig)({ walletAddress }),
     unstableCache(
-      getPaginatedUsersActivities,
+      getPaginatedLatestActivity,
       [walletAddress],
       cacheConfig,
     )({
@@ -103,7 +103,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     vaultsList,
     systemConfig,
     migratablePositionsData,
-    userActivity,
+    latestActivity,
   }
 }
 
@@ -141,7 +141,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     vaultsList,
     systemConfig,
     migratablePositionsData,
-    userActivity,
+    latestActivity,
   } = await portfolioCallsHandler(walletAddress)
 
   const vaultsWithConfig = decorateVaultsWithConfig({
@@ -229,7 +229,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       rewardsData={rewardsData}
       vaultsList={vaultsWithConfig}
       totalRays={totalRays}
-      userActivity={userActivity}
+      latestActivity={latestActivity}
       positionsHistoricalChartMap={positionsHistoricalChartMap}
       vaultsApyByNetworkMap={vaultsApyByNetworkMap}
       migratablePositions={migratablePositions}

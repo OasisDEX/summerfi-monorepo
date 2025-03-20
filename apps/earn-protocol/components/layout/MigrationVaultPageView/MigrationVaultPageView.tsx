@@ -9,9 +9,9 @@ import {
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { type LatestActivitiesPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
-import { type UsersActivitiesPagination } from '@/app/server-handlers/tables-data/users-activities/types'
 import { sdkApiUrl } from '@/constants/sdk'
 
 import { MigrationVaultPageComponent } from './MigrationVaultPageComponent'
@@ -20,7 +20,7 @@ type MigrationVaultPageViewProps = {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
   topDepositors: TopDepositorsPagination
-  usersActivities: UsersActivitiesPagination
+  latestActivity: LatestActivitiesPagination
   rebalanceActivity: RebalanceActivityPagination
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData
@@ -33,7 +33,7 @@ type MigrationVaultPageViewProps = {
 export const MigrationVaultPageView: FC<MigrationVaultPageViewProps> = ({
   vault,
   vaults,
-  usersActivities,
+  latestActivity,
   topDepositors,
   rebalanceActivity,
   medianDefiYield,
@@ -48,7 +48,7 @@ export const MigrationVaultPageView: FC<MigrationVaultPageViewProps> = ({
       <MigrationVaultPageComponent
         vault={vault}
         vaults={vaults}
-        usersActivities={usersActivities}
+        latestActivity={latestActivity}
         topDepositors={topDepositors}
         rebalanceActivity={rebalanceActivity}
         medianDefiYield={medianDefiYield}

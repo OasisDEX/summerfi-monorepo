@@ -1,58 +1,53 @@
 'use client'
-import { type FC, type ReactNode, useMemo, useState } from 'react'
+import { type FC, type ReactNode, useMemo } from 'react'
 import { Table, type TableSortedColumn, Text, useMobileCheck } from '@summerfi/app-earn-ui'
-import { type LatestActivity } from '@summerfi/summer-protocol-db'
+import { type TopDepositors } from '@summerfi/summer-protocol-db'
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import {
-  userActivityColumns,
-  userActivityColumnsHiddenOnMobile,
-  userActivityColumnsHiddenOnTablet,
-} from '@/features/user-activity/table/user-activity-columns'
-import { userActivityMapper } from '@/features/user-activity/table/user-activity-mapper'
+  topDepositorsColumns,
+  topDepositorsColumnsHiddenOnMobile,
+  topDepositorsColumnsHiddenOnTablet,
+} from '@/features/latest-activity/table/top-depositors-columns'
+import { topDepositorsMapper } from '@/features/latest-activity/table/top-depositors-mapper'
 
-interface UserActivityTableProps {
-  userActivityList: LatestActivity[]
+interface TopDepositorsTableProps {
+  topDepositorsList: TopDepositors[]
   customRow?: {
     idx: number
     content: ReactNode
   }
   hiddenColumns?: string[]
   rowsToDisplay?: number
-  noHighlight?: boolean
   handleSort?: (sortConfig: TableSortedColumn<string>) => void
 }
 
-export const UserActivityTable: FC<UserActivityTableProps> = ({
-  userActivityList,
+export const TopDepositorsTable: FC<TopDepositorsTableProps> = ({
+  topDepositorsList,
   customRow,
   hiddenColumns,
   rowsToDisplay,
-  noHighlight,
   handleSort,
 }) => {
   const { deviceType } = useDeviceType()
   const { isMobile, isTablet } = useMobileCheck(deviceType)
-  const [highlightedAddress, setHighlightedAddress] = useState<string | undefined>()
 
-  const rows = useMemo(() => userActivityMapper(userActivityList), [userActivityList])
+  const rows = useMemo(() => topDepositorsMapper(topDepositorsList), [topDepositorsList])
 
   const resolvedHiddenColumns = isTablet
-    ? userActivityColumnsHiddenOnTablet
+    ? topDepositorsColumnsHiddenOnTablet
     : isMobile
-      ? userActivityColumnsHiddenOnMobile
+      ? topDepositorsColumnsHiddenOnMobile
       : hiddenColumns
 
   return (
     <>
       <Table
         rows={rows.slice(0, rowsToDisplay)}
-        columns={userActivityColumns}
+        columns={topDepositorsColumns}
         customRow={customRow}
         handleSort={handleSort}
         hiddenColumns={resolvedHiddenColumns}
-        onRowHover={!noHighlight ? (id?: string) => setHighlightedAddress(id) : undefined}
-        highlightedRow={!noHighlight ? highlightedAddress : undefined}
       />
       {rows.length === 0 && (
         <Text

@@ -4,15 +4,15 @@ import { type Metadata } from 'next'
 import { type ReadonlyURLSearchParams } from 'next/navigation'
 
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
+import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
-import { getPaginatedUsersActivities } from '@/app/server-handlers/tables-data/users-activities/api'
-import { UserActivityView } from '@/features/user-activity/components/UserActivityView/UserActivityView'
+import { LatestActivityView } from '@/features/latest-activity/components/LatestActivityView/LatestActivityView'
 
-interface UserActivityPageProps {
+interface LatestActivityPageProps {
   searchParams: Promise<ReadonlyURLSearchParams>
 }
 
-const UserActivityPage: FC<UserActivityPageProps> = async ({ searchParams }) => {
+const LatestActivityPage: FC<LatestActivityPageProps> = async ({ searchParams }) => {
   const searchParamsResolved = await searchParams
 
   const searchParamsParsed = await parseQueryStringServerSide({
@@ -22,7 +22,7 @@ const UserActivityPage: FC<UserActivityPageProps> = async ({ searchParams }) => 
   const tokens = searchParamsParsed.tokens ?? []
   const strategies = searchParamsParsed.strategies ?? []
 
-  const [{ vaults }, topDepositors, usersActivities] = await Promise.all([
+  const [{ vaults }, topDepositors, latestActivity] = await Promise.all([
     getVaultsList(),
     getPaginatedTopDepositors({
       page: 1,
@@ -30,7 +30,7 @@ const UserActivityPage: FC<UserActivityPageProps> = async ({ searchParams }) => 
       tokens,
       strategies,
     }),
-    getPaginatedUsersActivities({
+    getPaginatedLatestActivity({
       page: 1,
       limit: 50,
       tokens,
@@ -39,9 +39,9 @@ const UserActivityPage: FC<UserActivityPageProps> = async ({ searchParams }) => 
   ])
 
   return (
-    <UserActivityView
+    <LatestActivityView
       vaultsList={vaults}
-      usersActivities={usersActivities}
+      latestActivity={latestActivity}
       topDepositors={topDepositors}
       searchParams={searchParamsParsed}
     />
@@ -56,4 +56,4 @@ export function generateMetadata(): Metadata {
   }
 }
 
-export default UserActivityPage
+export default LatestActivityPage

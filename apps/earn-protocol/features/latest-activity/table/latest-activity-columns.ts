@@ -1,4 +1,4 @@
-export const userActivityColumns = [
+export const latestActivityColumns = [
   {
     title: 'Position',
     key: 'position',
@@ -36,5 +36,5 @@ export const userActivityColumns = [
   },
 ]
 
-export const userActivityColumnsHiddenOnMobile = ['strategy', 'timestamp', 'balance', 'position']
-export const userActivityColumnsHiddenOnTablet = ['timestamp', 'balance']
+export const latestActivityColumnsHiddenOnMobile = ['strategy', 'timestamp', 'balance', 'position']
+export const latestActivityColumnsHiddenOnTablet = ['timestamp', 'balance']

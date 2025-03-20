@@ -24,7 +24,7 @@ const activityColorMap: { [key in LatestActivity['actionType']]: string } = {
   withdraw: 'var(--earn-protocol-warning-100)',
 }
 
-export const userActivityMapper = (rawData: LatestActivity[]) => {
+export const latestActivityMapper = (rawData: LatestActivity[]) => {
   return rawData.map((item) => {
     const asset = getDisplayToken(item.inputTokenSymbol) as TokenSymbolsList
     const amount = new BigNumber(item.amount.toString()).shiftedBy(-item.inputTokenDecimals)

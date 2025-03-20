@@ -30,7 +30,6 @@ export const updateRebalanceActivity = async ({
     arbitrumGraphQlClient,
   })
 
-  // Insert activities in batches to avoid parameter limit
   const { updated } = await insertRebalanceActivitiesInBatches(db, allRebalanceActivities)
 
   const endTime = Date.now()

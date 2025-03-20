@@ -6,8 +6,8 @@ import { type HistoryChartData, type SDKVaultishType } from '@summerfi/app-types
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
+import { type LatestActivitiesPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
-import { type UsersActivitiesPagination } from '@/app/server-handlers/tables-data/users-activities/types'
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { claimDelegateReducer, claimDelegateState } from '@/features/claim-and-delegate/state'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
@@ -34,7 +34,7 @@ interface PortfolioPageViewProps {
   vaultsList: SDKVaultishType[]
   positions: PositionWithVault[]
   rebalanceActivity: RebalanceActivityPagination
-  userActivity: UsersActivitiesPagination
+  latestActivity: LatestActivitiesPagination
   totalRays: number
   positionsHistoricalChartMap: {
     [key: string]: HistoryChartData
@@ -51,7 +51,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   vaultsList,
   positions,
   rebalanceActivity,
-  userActivity,
+  latestActivity,
   totalRays,
   positionsHistoricalChartMap,
   vaultsApyByNetworkMap,
@@ -118,7 +118,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
         id: PortfolioTabs.YOUR_ACTIVITY,
         label: 'Your Activity',
         content: (
-          <PortfolioYourActivity userActivity={userActivity} walletAddress={walletAddress} />
+          <PortfolioYourActivity latestActivity={latestActivity} walletAddress={walletAddress} />
         ),
       },
       {

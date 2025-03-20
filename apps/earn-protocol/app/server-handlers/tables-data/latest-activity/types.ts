@@ -1,14 +1,14 @@
 import { type Deposit, type Withdraw } from '@summerfi/subgraph-manager-common'
-import { type LatestActivity } from '@summerfi/summer-protocol-db'
+import { type LatestActivity as LatestActivityDb } from '@summerfi/summer-protocol-db'
 
 export type DepositOrWithdraw = Deposit | Withdraw
 
-export type UserActivity = DepositOrWithdraw & {
+export type LatestActivity = DepositOrWithdraw & {
   type: 'deposit' | 'withdraw'
 }
 
-export type UsersActivitiesPagination = {
-  data: LatestActivity[]
+export type LatestActivitiesPagination = {
+  data: LatestActivityDb[]
   pagination: {
     currentPage: number
     totalPages: number
@@ -19,4 +19,4 @@ export type UsersActivitiesPagination = {
   totalDeposits: number
 }
 
-export type UsersActivitiesSortBy = 'timestamp' | 'balance' | 'balanceUsd' | 'amount' | 'amountUsd'
+export type LatestActivitiesSortBy = 'timestamp' | 'balance' | 'balanceUsd' | 'amount' | 'amountUsd'

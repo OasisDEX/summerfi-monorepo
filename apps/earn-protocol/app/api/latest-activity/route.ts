@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
-import { getUsersActivitiesServerSide } from '@/app/server-handlers/tables-data/users-activities/api'
+import { getLatestActivitiesServerSide } from '@/app/server-handlers/tables-data/latest-activity/api'
 
 const LatestActivityQueryParamsSchema = z.object({
   page: z.coerce.number().int().positive().default(1),
@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
   const parsedTokens = tokens ? tokens.split(',') : undefined
   const parsedStrategies = strategies ? strategies.split(',') : undefined
 
-  return await getUsersActivitiesServerSide({
+  return await getLatestActivitiesServerSide({
     page,
     limit,
     sortBy,

@@ -3,39 +3,39 @@ import { type FC, useEffect, useRef, useState } from 'react'
 import { Card, TabBar, type TableSortedColumn, WithArrow } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
+import { type LatestActivitiesPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
-import { type UsersActivitiesPagination } from '@/app/server-handlers/tables-data/users-activities/types'
-import { getTopDepositors } from '@/features/user-activity/api/get-top-depositors'
-import { getUsersActivity } from '@/features/user-activity/api/get-users-activity'
-import { TopDepositorsTable } from '@/features/user-activity/components/TopDepositorsTable/TopDepositorsTable'
-import { UserActivityTable } from '@/features/user-activity/components/UserActivityTable/UserActivityTable'
-import { UserActivityTab } from '@/features/user-activity/types/tabs'
+import { getLatestActivity } from '@/features/latest-activity/api/get-latest-activity'
+import { getTopDepositors } from '@/features/latest-activity/api/get-top-depositors'
+import { LatestActivityTable } from '@/features/latest-activity/components/LatestActivityTable/LatestActivityTable'
+import { TopDepositorsTable } from '@/features/latest-activity/components/TopDepositorsTable/TopDepositorsTable'
+import { UserActivityTab } from '@/features/latest-activity/types/tabs'
 
-interface UserActivityProps {
+interface LatestActivityProps {
   vaultId: string
   page: 'open' | 'manage'
   noHighlight?: boolean
   topDepositors: TopDepositorsPagination
-  usersActivities: UsersActivitiesPagination
+  latestActivity: LatestActivitiesPagination
   walletAddress?: string
 }
 
-export const UserActivity: FC<UserActivityProps> = ({
+export const LatestActivity: FC<LatestActivityProps> = ({
   topDepositors,
-  usersActivities,
+  latestActivity,
   vaultId,
   page,
   noHighlight,
   walletAddress,
 }) => {
-  const userActivityHiddenColumns = {
+  const latestActivityHiddenColumns = {
     open: ['strategy', 'position'],
     manage: ['strategy', 'balance', 'position'],
   }[page]
 
   const isFirstRender = useRef(true)
 
-  const [loadedUserActivityList, setLoadedUserActivityList] = useState(usersActivities.data)
+  const [loadedLatestActivityList, setLoadedLatestActivityList] = useState(latestActivity.data)
 
   const [loadedTopDepositorsList, setLoadedTopDepositorsList] = useState(topDepositors.data)
 
@@ -60,7 +60,7 @@ export const UserActivity: FC<UserActivityProps> = ({
       return
     }
 
-    getUsersActivity({
+    getLatestActivity({
       page: 1,
       limit: 4,
       strategies: [vaultId],
@@ -69,11 +69,11 @@ export const UserActivity: FC<UserActivityProps> = ({
       userAddress: walletAddress,
     })
       .then((res) => {
-        setLoadedUserActivityList(res.data)
+        setLoadedLatestActivityList(res.data)
       })
       .catch((error) => {
         // eslint-disable-next-line no-console
-        console.error('Error fetching user activity', error)
+        console.error('Error fetching latest activity', error)
       })
   }, [latestActivitySorting?.key, latestActivitySorting?.direction, vaultId, walletAddress])
 
@@ -109,9 +109,9 @@ export const UserActivity: FC<UserActivityProps> = ({
       id: UserActivityTab.LATEST_ACTIVITY,
       label: 'Latest activity',
       content: (
-        <UserActivityTable
-          userActivityList={loadedUserActivityList}
-          hiddenColumns={userActivityHiddenColumns}
+        <LatestActivityTable
+          latestActivityList={loadedLatestActivityList}
+          hiddenColumns={latestActivityHiddenColumns}
           noHighlight={noHighlight}
           handleSort={handleLatestActivitySortingChange}
         />

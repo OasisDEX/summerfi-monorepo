@@ -1,37 +1,27 @@
 import { type FC, useEffect, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import { Card, LoadingSpinner, type TableSortedColumn, Text } from '@summerfi/app-earn-ui'
-import { type LatestActivity } from '@summerfi/summer-protocol-db'
 
-import { getUsersActivity } from '@/features/user-activity/api/get-users-activity'
-import { UserActivityTable } from '@/features/user-activity/components/UserActivityTable/UserActivityTable'
+import { type LatestActivitiesPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
+import { getLatestActivity } from '@/features/latest-activity/api/get-latest-activity'
+import { LatestActivityTable } from '@/features/latest-activity/components/LatestActivityTable/LatestActivityTable'
 
 import classNames from './PortfolioYourActivity.module.scss'
 
 interface PortfolioYourActivityProps {
-  userActivity: {
-    data: LatestActivity[]
-    pagination: {
-      currentPage: number
-      totalPages: number
-      totalItems: number
-      itemsPerPage: number
-    }
-    medianDeposit: number
-    totalDeposits: number
-  }
+  latestActivity: LatestActivitiesPagination
   walletAddress: string
 }
 
 export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
-  userActivity,
+  latestActivity,
   walletAddress,
 }) => {
   const isFirstRender = useRef(true)
 
   const [sortBy, setSortBy] = useState<TableSortedColumn<string> | undefined>()
-  const [currentlyLoadedList, setCurrentlyLoadedList] = useState(userActivity.data)
-  const [currentPage, setCurrentPage] = useState(userActivity.pagination.currentPage)
+  const [currentlyLoadedList, setCurrentlyLoadedList] = useState(latestActivity.data)
+  const [currentPage, setCurrentPage] = useState(latestActivity.pagination.currentPage)
   const [isLoading, setIsLoading] = useState(false)
 
   const handleSort = (sortConfig: TableSortedColumn<string>) => {
@@ -41,7 +31,7 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
   const handleMoreItems = async () => {
     try {
       setIsLoading(true)
-      const res = await getUsersActivity({
+      const res = await getLatestActivity({
         page: currentPage + 1,
         userAddress: walletAddress,
         sortBy: sortBy?.key,
@@ -52,7 +42,7 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
       setCurrentPage((prev) => prev + 1)
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.info('No more users activity items to load')
+      console.info('No more latest activity items to load')
     } finally {
       setIsLoading(false)
     }
@@ -67,7 +57,7 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
 
     setIsLoading(true)
 
-    getUsersActivity({
+    getLatestActivity({
       page: 1,
       userAddress: walletAddress,
       sortBy: sortBy?.key,
@@ -91,7 +81,7 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
       <InfiniteScroll
         loadMore={handleMoreItems}
         hasMore={
-          userActivity.pagination.totalPages > currentPage &&
+          latestActivity.pagination.totalPages > currentPage &&
           currentlyLoadedList.length > 0 &&
           !isLoading
         }
@@ -102,8 +92,8 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
           />
         }
       >
-        <UserActivityTable
-          userActivityList={currentlyLoadedList}
+        <LatestActivityTable
+          latestActivityList={currentlyLoadedList}
           hiddenColumns={['strategy']}
           handleSort={handleSort}
         />

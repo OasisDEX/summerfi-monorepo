@@ -15,35 +15,33 @@ import {
 } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
 
+import { type LatestActivitiesPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
-import { type UsersActivitiesPagination } from '@/app/server-handlers/tables-data/users-activities/types'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
-import { getTopDepositors } from '@/features/user-activity/api/get-top-depositors'
-import { getUsersActivity } from '@/features/user-activity/api/get-users-activity'
-import { TopDepositorsTable } from '@/features/user-activity/components/TopDepositorsTable/TopDepositorsTable'
-import { UserActivityTable } from '@/features/user-activity/components/UserActivityTable/UserActivityTable'
-import {
-  getUserActivityHeadingCards,
-  userActivityHeading,
-} from '@/features/user-activity/components/UserActivityView/cards'
-import { userActivityTableCarouselData } from '@/features/user-activity/components/UserActivityView/carousel'
-import { mapMultiselectOptions } from '@/features/user-activity/table/filters/mappers'
-import { UserActivityTab } from '@/features/user-activity/types/tabs'
+import { getLatestActivity } from '@/features/latest-activity/api/get-latest-activity'
+import { getTopDepositors } from '@/features/latest-activity/api/get-top-depositors'
+import { LatestActivityTable } from '@/features/latest-activity/components/LatestActivityTable/LatestActivityTable'
+import { userActivityTableCarouselData } from '@/features/latest-activity/components/LatestActivityView/carousel'
+import { TopDepositorsTable } from '@/features/latest-activity/components/TopDepositorsTable/TopDepositorsTable'
+import { mapMultiselectOptions } from '@/features/latest-activity/table/filters/mappers'
+import { UserActivityTab } from '@/features/latest-activity/types/tabs'
 
-import classNames from './UserActivityView.module.scss'
+import { getLatestActivityHeadingCards, latestActivityHeading } from './cards'
 
-interface UserActivityViewProps {
+import classNames from './LatestActivityView.module.scss'
+
+interface LatestActivityViewProps {
   vaultsList: SDKVaultsListType
   searchParams?: { [key: string]: string[] }
   topDepositors: TopDepositorsPagination
-  usersActivities: UsersActivitiesPagination
+  latestActivity: LatestActivitiesPagination
 }
 
-export const UserActivityView: FC<UserActivityViewProps> = ({
+export const LatestActivityView: FC<LatestActivityViewProps> = ({
   vaultsList,
   searchParams,
   topDepositors,
-  usersActivities,
+  latestActivity,
 }) => {
   const { setQueryParams, queryParams } = useQueryParams(searchParams)
   const [isLoadingActivity, setIsLoadingActivity] = useState(false)
@@ -62,14 +60,14 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
   const isFirstRender = useRef(true)
-  const [currentUserActivityPage, setCurrentUserActivityPage] = useState(
-    usersActivities.pagination.currentPage,
+  const [currentLatestActivityPage, setCurrentLatestActivityPage] = useState(
+    latestActivity.pagination.currentPage,
   )
   const [currentTopDepositorsPage, setCurrentTopDepositorsPage] = useState(
     topDepositors.pagination.currentPage,
   )
 
-  const [loadedUserActivityList, setLoadedUserActivityList] = useState(usersActivities.data)
+  const [loadedLatestActivityList, setLoadedLatestActivityList] = useState(latestActivity.data)
 
   const [loadedTopDepositorsList, setLoadedTopDepositorsList] = useState(topDepositors.data)
 
@@ -81,16 +79,16 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
   const handleMoreUserActivityItems = async () => {
     try {
       setIsLoadingActivity(true)
-      const res = await getUsersActivity({
-        page: currentUserActivityPage + 1,
+      const res = await getLatestActivity({
+        page: currentLatestActivityPage + 1,
         tokens: tokenFilter,
         strategies: strategyFilter,
         sortBy: latestActivitySortBy,
         orderBy: latestActivityOrderBy,
       })
 
-      setLoadedUserActivityList((prev) => [...prev, ...res.data])
-      setCurrentUserActivityPage((prev) => prev + 1)
+      setLoadedLatestActivityList((prev) => [...prev, ...res.data])
+      setCurrentLatestActivityPage((prev) => prev + 1)
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Error fetching more user activity', error)
@@ -127,7 +125,7 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
     })
   }
 
-  const handleSortUserActivity = (sortConfig: TableSortedColumn<string>) => {
+  const handleSortLatestActivity = (sortConfig: TableSortedColumn<string>) => {
     setQueryParams({
       latestActivitySortBy: sortConfig.key,
       latestActivityOrderBy: sortConfig.direction,
@@ -160,7 +158,7 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
 
     setIsLoadingActivity(true)
 
-    getUsersActivity({
+    getLatestActivity({
       page: 1,
       tokens: tokenFilter,
       strategies: strategyFilter,
@@ -168,11 +166,11 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
       orderBy: latestActivityOrderBy,
     })
       .then((res) => {
-        setLoadedUserActivityList(res.data)
+        setLoadedLatestActivityList(res.data)
       })
       .catch((error) => {
         // eslint-disable-next-line no-console
-        console.error('Error fetching user activity', error)
+        console.error('Error fetching latest activity', error)
       })
       .finally(() => {
         setIsLoadingActivity(false)
@@ -213,14 +211,14 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
 
   const cards = useMemo(
     () =>
-      getUserActivityHeadingCards({
-        totalItems: usersActivities.totalDeposits,
-        medianDeposit: usersActivities.medianDeposit,
+      getLatestActivityHeadingCards({
+        totalItems: latestActivity.totalDeposits,
+        medianDeposit: latestActivity.medianDeposit,
         totalUsers: topDepositors.pagination.totalItems,
       }),
     [
-      usersActivities.totalDeposits,
-      usersActivities.medianDeposit,
+      latestActivity.totalDeposits,
+      latestActivity.medianDeposit,
       topDepositors.pagination.totalItems,
     ],
   )
@@ -277,8 +275,8 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
         <InfiniteScroll
           loadMore={handleMoreUserActivityItems}
           hasMore={
-            usersActivities.pagination.totalPages > currentUserActivityPage &&
-            loadedUserActivityList.length > 0 &&
+            latestActivity.pagination.totalPages > currentLatestActivityPage &&
+            loadedLatestActivityList.length > 0 &&
             !isLoadingActivity
           }
           loader={
@@ -288,14 +286,14 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
           }
         >
           {filters}
-          <UserActivityTable
-            userActivityList={loadedUserActivityList}
+          <LatestActivityTable
+            latestActivityList={loadedLatestActivityList}
             customRow={{
               idx: 3,
               content: <TableCarousel carouselData={userActivityTableCarouselData} />,
             }}
             hiddenColumns={['position']}
-            handleSort={handleSortUserActivity}
+            handleSort={handleSortLatestActivity}
           />
         </InfiniteScroll>
       ),
@@ -305,8 +303,8 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
   return (
     <div className={classNames.wrapper}>
       <HeadingWithCards
-        title={userActivityHeading.title}
-        description={userActivityHeading.description}
+        title={latestActivityHeading.title}
+        description={latestActivityHeading.description}
         cards={cards}
         social={{
           linkToCopy: currentUrl,

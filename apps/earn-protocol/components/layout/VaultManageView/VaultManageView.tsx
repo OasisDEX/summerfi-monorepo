@@ -12,9 +12,9 @@ import { type IArmadaPosition } from '@summerfi/sdk-client'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { type LatestActivitiesPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
-import { type UsersActivitiesPagination } from '@/app/server-handlers/tables-data/users-activities/types'
 import { VaultManageViewComponent } from '@/components/layout/VaultManageView/VaultManageViewComponent'
 import { sdkApiUrl } from '@/constants/sdk'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
@@ -23,7 +23,7 @@ export const VaultManageView = ({
   vault,
   vaults,
   position,
-  userActivities,
+  latestActivity,
   topDepositors,
   rebalanceActivity,
   viewWalletAddress,
@@ -37,7 +37,7 @@ export const VaultManageView = ({
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
   position: IArmadaPosition
-  userActivities: UsersActivitiesPagination
+  latestActivity: LatestActivitiesPagination
   topDepositors: TopDepositorsPagination
   rebalanceActivity: RebalanceActivityPagination
   viewWalletAddress: string
@@ -55,7 +55,7 @@ export const VaultManageView = ({
         vaultApyData={vaultApyData}
         vaults={vaults}
         position={position}
-        userActivities={userActivities}
+        latestActivity={latestActivity}
         topDepositors={topDepositors}
         rebalanceActivity={rebalanceActivity}
         viewWalletAddress={viewWalletAddress}

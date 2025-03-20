@@ -8,12 +8,12 @@ import {
 } from '@summerfi/app-types'
 import { formatDecimalAsPercent } from '@summerfi/app-utils'
 
+import { type LatestActivitiesPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
-import { type UsersActivitiesPagination } from '@/app/server-handlers/tables-data/users-activities/types'
 import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
+import { LatestActivity } from '@/features/latest-activity/components/LatestActivity/LatestActivity'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
-import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 
 import { detailsLinks } from './mocks'
@@ -22,7 +22,7 @@ import { VaultOpenHeaderBlock } from './VaultOpenHeaderBlock'
 interface VaultOpenViewDetailsProps {
   vault: SDKVaultType | SDKVaultishType
   topDepositors: TopDepositorsPagination
-  usersActivities: UsersActivitiesPagination
+  latestActivity: LatestActivitiesPagination
   rebalanceActivity: RebalanceActivityPagination
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
@@ -31,7 +31,7 @@ interface VaultOpenViewDetailsProps {
 
 export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
   vault,
-  usersActivities,
+  latestActivity,
   topDepositors,
   rebalanceActivity,
   arksHistoricalChartData,
@@ -97,8 +97,8 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
         }
         defaultExpanded
       >
-        <UserActivity
-          usersActivities={usersActivities}
+        <LatestActivity
+          latestActivity={latestActivity}
           topDepositors={topDepositors}
           vaultId={getUniqueVaultId(vault)}
           page="open"

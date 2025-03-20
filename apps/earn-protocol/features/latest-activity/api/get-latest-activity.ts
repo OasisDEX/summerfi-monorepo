@@ -1,4 +1,4 @@
-export const getUsersActivity = async ({
+export const getLatestActivity = async ({
   page,
   limit = 50,
   tokens,

@@ -1,10 +1,10 @@
 import { type GraphQLClient } from 'graphql-request'
 
-import { type UserActivity } from '@/app/server-handlers/tables-data/users-activities/types'
+import { type LatestActivity } from '@/app/server-handlers/tables-data/latest-activity/types'
 
-import { fetchAllUserActivities } from './fetcher'
+import { fetchAllLatestActivities } from './fetcher'
 
-export const getAllUserActivities = async ({
+export const getAllLatestActivities = async ({
   lastTimestamp,
   mainnetGraphQlClient,
   baseGraphQlClient,
@@ -14,11 +14,11 @@ export const getAllUserActivities = async ({
   mainnetGraphQlClient: GraphQLClient
   baseGraphQlClient: GraphQLClient
   arbitrumGraphQlClient: GraphQLClient
-}): Promise<UserActivity[]> => {
+}): Promise<LatestActivity[]> => {
   const results = await Promise.allSettled([
-    fetchAllUserActivities(mainnetGraphQlClient, lastTimestamp),
-    fetchAllUserActivities(baseGraphQlClient, lastTimestamp),
-    fetchAllUserActivities(arbitrumGraphQlClient, lastTimestamp),
+    fetchAllLatestActivities(mainnetGraphQlClient, lastTimestamp),
+    fetchAllLatestActivities(baseGraphQlClient, lastTimestamp),
+    fetchAllLatestActivities(arbitrumGraphQlClient, lastTimestamp),
   ])
 
   const [mainnetActivities, baseActivities, arbitrumActivities] = results.map((result) =>
