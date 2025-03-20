@@ -7,7 +7,7 @@ export type Generated<T> =
 
 export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>
 
-export type Network = 'arbitrum' | 'base' | 'mainnet' | 'optimism'
+export type Network = 'arbitrum' | 'base' | 'mainnet' | 'optimism' | 'sonic'
 
 export type Numeric = ColumnType<string, number | string, number | string>
 

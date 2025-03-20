@@ -146,7 +146,20 @@ export class RatesService {
         .limit(100)
         .execute()
 
-      return rates.map((rate) => ({
+      const ratesSummedByTimestamp = rates.reduce(
+        (acc: Record<string, (typeof rates)[0]>, rate) => {
+          const key = `${rate.productId}-${rate.timestamp}`
+          if (!acc[key]) {
+            acc[key] = rate
+          } else {
+            acc[key].rate = (Number(acc[key].rate) + Number(rate.rate)).toString()
+          }
+          return acc
+        },
+        {} as Record<string, (typeof rates)[0]>,
+      )
+
+      return Object.values(ratesSummedByTimestamp).map((rate) => ({
         id: rate.id,
         rate: rate.rate.toString(),
         timestamp: Number(rate.timestamp),
@@ -306,6 +319,7 @@ export class RatesService {
       optimism: [],
       base: [],
       mainnet: [],
+      sonic: [],
     }
     requests.forEach(({ chainId, productId }) => {
       const network = mapChainIdToDbNetwork(chainId)
@@ -327,26 +341,34 @@ export class RatesService {
           if (productIds.length === 0) {
             return
           }
-
+          const timestampHourAgo = (Math.floor(Date.now() / 1000) - 60 * 60).toString()
+          // from past 1h
           const rates = await this.db!.db.selectFrom('rewardRate')
             .select(['id', 'rate', 'timestamp', 'productId'])
             .where('network', '=', network as DbNetworks)
             .where('productId', 'in', productIds)
+            .where('timestamp', '>=', timestampHourAgo)
             .orderBy('timestamp', 'desc')
             .execute()
 
-          // Group rates by productId
+          // Group rates by productId and timestamp, summing rates
           rates.forEach((rate) => {
             const key = rate.productId
             if (!results[key]) {
               results[key] = []
             }
-            results[key].push({
-              id: rate.id,
-              rate: rate.rate.toString(),
-              timestamp: Number(rate.timestamp),
-              productId: rate.productId,
-            })
+
+            const existingRate = results[key].find((r) => r.timestamp === Number(rate.timestamp))
+            if (existingRate) {
+              existingRate.rate = (Number(existingRate.rate) + Number(rate.rate)).toString()
+            } else {
+              results[key].push({
+                id: rate.id,
+                rate: rate.rate.toString(),
+                timestamp: Number(rate.timestamp),
+                productId: rate.productId,
+              })
+            }
           })
         }),
       )
