@@ -342,7 +342,7 @@ export class RatesService {
             return
           }
           const timestampHourAgo = (Math.floor(Date.now() / 1000) - 60 * 60).toString()
-          // from past 24h
+          // from past 1h
           const rates = await this.db!.db.selectFrom('rewardRate')
             .select(['id', 'rate', 'timestamp', 'productId'])
             .where('network', '=', network as DbNetworks)
