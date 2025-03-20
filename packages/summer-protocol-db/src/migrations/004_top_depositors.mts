@@ -3,7 +3,6 @@ import { Kysely, sql } from 'kysely'
 export async function up(db: Kysely<never>): Promise<void> {
   // Create action type enum
   await sql`CREATE TYPE action_type AS ENUM ('deposit', 'withdraw')`.execute(db)
-  await sql`ALTER TYPE network ADD VALUE IF NOT EXISTS 'sonic'`.execute(db)
 
   await db.schema
     .createTable('top_depositors')
