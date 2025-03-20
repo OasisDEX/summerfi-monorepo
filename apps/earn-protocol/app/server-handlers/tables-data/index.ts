@@ -1,17 +1,18 @@
 import { SDKNetwork } from '@summerfi/app-types'
 import { type SummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { GraphQLClient } from 'graphql-request'
-import { type NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 
 import { updateRebalanceActivity } from './rebalance-activity/updater'
 import { updateTopDepositors } from './top-depositors/updater'
+import { UpdateTables } from './types'
 import { updateUsersActivities } from './users-activities/updater'
 
 export const updateTablesData = async ({
-  _req,
+  tablesToUpdate,
   db,
 }: {
-  _req: NextRequest
+  tablesToUpdate: UpdateTables[]
   db: SummerProtocolDB['db']
 }) => {
   // reusable
@@ -26,26 +27,36 @@ export const updateTablesData = async ({
   const arbitrumGraphQlClient = new GraphQLClient(subgraphsMap[SDKNetwork.ArbitrumOne])
 
   try {
-    const updatedUsersActivities = await updateUsersActivities({
-      db,
-      mainnetGraphQlClient,
-      baseGraphQlClient,
-      arbitrumGraphQlClient,
-    })
+    let updatedUsersActivities
+    let updatedTopDepositors
+    let updatedRebalanceActivity
 
-    const updatedTopDepositors = await updateTopDepositors({
-      db,
-      mainnetGraphQlClient,
-      baseGraphQlClient,
-      arbitrumGraphQlClient,
-    })
+    if (tablesToUpdate.includes(UpdateTables.LatestActivity)) {
+      updatedUsersActivities = await updateUsersActivities({
+        db,
+        mainnetGraphQlClient,
+        baseGraphQlClient,
+        arbitrumGraphQlClient,
+      })
+    }
 
-    const updatedRebalanceActivity = await updateRebalanceActivity({
-      db,
-      mainnetGraphQlClient,
-      baseGraphQlClient,
-      arbitrumGraphQlClient,
-    })
+    if (tablesToUpdate.includes(UpdateTables.TopDepositors)) {
+      updatedTopDepositors = await updateTopDepositors({
+        db,
+        mainnetGraphQlClient,
+        baseGraphQlClient,
+        arbitrumGraphQlClient,
+      })
+    }
+
+    if (tablesToUpdate.includes(UpdateTables.RebalanceActivity)) {
+      updatedRebalanceActivity = await updateRebalanceActivity({
+        db,
+        mainnetGraphQlClient,
+        baseGraphQlClient,
+        arbitrumGraphQlClient,
+      })
+    }
 
     return NextResponse.json({
       updatedUsersActivities,
