@@ -39,6 +39,7 @@ export interface MerkleDistribution {
 export interface RewardRate {
   rewardToken: string
   rate: string
+  index: number
   token: {
     address: string
     symbol: string
@@ -208,6 +209,7 @@ export class RewardsService {
         const rewardRate = {
           rewardToken: '0x0000000000000000000000000000000000000000',
           rate: currentApr.toString(),
+          index: 0,
           token: {
             address: '0x0000000000000000000000000000000000000000',
             symbol: 'Aave Merit',
@@ -304,9 +306,10 @@ export class RewardsService {
         parseFloat(vaultData.state.netApyWithoutRewards.toString())) *
       100
 
-    const rewards = vaultData.state.rewards.map((reward) => ({
+    const rewards = vaultData.state.rewards.map((reward, index) => ({
       rewardToken: reward.asset.address,
       rate: (reward.supplyApr * 100).toString(),
+      index,
       token: {
         address: reward.asset.address,
         symbol: reward.asset.symbol,
@@ -323,6 +326,7 @@ export class RewardsService {
       {
         rewardToken: morphoTokenByChainId[chainId],
         rate: morphoTokenRewardRate.toString(),
+        index: rewards.length,
         token: {
           address: morphoTokenByChainId[chainId],
           symbol: 'Morpho',
@@ -353,6 +357,7 @@ export class RewardsService {
         const rewards = distribution.rewardsRecord.breakdowns.map((reward, index) => ({
           rewardToken: reward.token.address,
           rate: distribution.aprRecord.breakdowns[index].value.toString(),
+          index,
           token: {
             address: reward.token.address,
             symbol: reward.token.symbol,
@@ -400,9 +405,10 @@ export class RewardsService {
                 reward.startTimestamp <= currentTimestamp &&
                 reward.endTimestamp >= currentTimestamp,
             )
-            .map((reward) => ({
+            .map((reward, index) => ({
               rewardToken: reward.rewardToken.address,
               rate: reward.apr.toString(),
+              index,
               token: {
                 address: reward.rewardToken.address,
                 symbol: reward.rewardToken.symbol,

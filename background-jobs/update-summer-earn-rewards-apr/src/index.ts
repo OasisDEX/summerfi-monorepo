@@ -444,7 +444,7 @@ async function updateRewardRates(
 
     // Store individual reward rates
     for (const rewardRate of productRewardRates) {
-      const rewardRateId = `${product.id}-${currentTimestamp}-${rewardRate.rewardToken}`
+      const rewardRateId = `${product.id}-${currentTimestamp}-${rewardRate.rewardToken}-${rewardRate.index}`
       await trx
         .insertInto('rewardRate')
         .values({
