@@ -7,7 +7,6 @@ export async function up(db: Kysely<never>): Promise<void> {
 
   await db.schema
     .createTable('top_depositors')
-    .addColumn('id', 'serial', (col) => col.primaryKey())
     .addColumn('user_address', 'varchar(42)', (col) => col.notNull())
     .addColumn('vault_id', 'varchar(66)', (col) => col.notNull())
     .addColumn('vault_name', 'varchar(255)', (col) => col.notNull())
@@ -26,8 +25,7 @@ export async function up(db: Kysely<never>): Promise<void> {
     .addColumn('input_token_symbol', 'varchar(66)', (col) => col.notNull())
     .addColumn('input_token_decimals', 'bigint', (col) => col.notNull())
     .addColumn('updated_at', 'bigint', (col) => col.notNull())
-    // Add unique constraint for vault_id and user_address combination
-    .addUniqueConstraint('top_depositors_vault_user_network_unique', [
+    .addUniqueConstraint('top_depositors_vault_id_user_address_network_unique', [
       'vault_id',
       'user_address',
       'network',

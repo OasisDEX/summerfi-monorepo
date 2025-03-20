@@ -3,7 +3,6 @@ import { Kysely, sql } from 'kysely'
 export async function up(db: Kysely<never>): Promise<void> {
   await db.schema
     .createTable('rebalance_activity')
-    .addColumn('id', 'serial', (col) => col.primaryKey())
     .addColumn('rebalance_id', 'varchar(255)', (col) => col.notNull())
     .addColumn('amount', 'decimal(78, 18)', (col) => col.notNull())
     .addColumn('amount_usd', 'decimal(78, 18)', (col) => col.notNull())
@@ -24,6 +23,11 @@ export async function up(db: Kysely<never>): Promise<void> {
     .addColumn('input_token_decimals', 'bigint', (col) => col.notNull())
     .addColumn('tx_hash', 'varchar(66)', (col) => col.notNull())
     .addColumn('timestamp', 'bigint', (col) => col.notNull())
+    .addUniqueConstraint('rebalance_activity_rebalance_id_network_timestamp_unique', [
+      'rebalance_id',
+      'network',
+      'timestamp',
+    ])
     .execute()
 }
 

@@ -70,7 +70,6 @@ export interface LatestActivity {
   amountUsd: Numeric;
   balance: Numeric;
   balanceUsd: Numeric;
-  id: Generated<number>;
   inputTokenDecimals: Int8;
   inputTokenPriceUsd: Numeric;
   inputTokenSymbol: string;
@@ -98,7 +97,6 @@ export interface RebalanceActivity {
   fromDepositLimit: Numeric;
   fromName: string;
   fromTotalValueLockedUsd: Numeric;
-  id: Generated<number>;
   inputTokenDecimals: Int8;
   inputTokenPriceUsd: Numeric;
   inputTokenSymbol: string;
@@ -137,7 +135,6 @@ export interface TopDepositors {
   balanceUsd: Numeric;
   changeSevenDays: Numeric;
   earningsStreak: Int8;
-  id: Generated<number>;
   inputTokenDecimals: Int8;
   inputTokenPriceUsd: Numeric;
   inputTokenSymbol: string;
