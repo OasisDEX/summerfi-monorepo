@@ -1,5 +1,11 @@
 query GetTopDepositors($first: Int!, $skip: Int!) {
-  positions(first: $first, skip: $skip, orderBy: createdTimestamp, orderDirection: desc) {
+  positions(
+    first: $first
+    skip: $skip
+    orderBy: createdTimestamp
+    orderDirection: desc
+    where: { inputTokenBalance_gt: "0" }
+  ) {
     account {
       id
     }

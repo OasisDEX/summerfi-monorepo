@@ -165,3 +165,10 @@ export type VaultApyData = {
 }
 
 export type EarnProtocolDbNetwork = 'arbitrum' | 'optimism' | 'base' | 'mainnet' | 'sonic'
+
+export interface FleetRate {
+  id: string
+  rate: string
+  timestamp: number
+  fleetAddress: string
+}

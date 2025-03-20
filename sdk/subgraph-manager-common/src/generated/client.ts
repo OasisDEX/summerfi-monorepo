@@ -10824,6 +10824,7 @@ export const GetTopDepositorsDocument = gql`
     skip: $skip
     orderBy: createdTimestamp
     orderDirection: desc
+    where: {inputTokenBalance_gt: "0"}
   ) {
     account {
       id
