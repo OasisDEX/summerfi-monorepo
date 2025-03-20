@@ -1,10 +1,11 @@
-import { type ChangeEventHandler, type FC, type ReactNode } from 'react'
+import { type ChangeEventHandler, type FC, type ReactNode, Suspense } from 'react'
 import { type DropdownOption, type DropdownRawOption } from '@summerfi/app-types'
 import { humanReadableChainToLabelMap } from '@summerfi/app-utils'
 import clsx from 'clsx'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Input } from '@/components/atoms/Input/Input'
+import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { Text } from '@/components/atoms/Text/Text'
 import { Dropdown } from '@/components/molecules/Dropdown/Dropdown'
 import { TokenWithNetworkIcon } from '@/components/molecules/TokenWithNetworkIcon/TokenWithNetworkIcon'
@@ -115,21 +116,23 @@ export const InputWithDropdown: FC<InputWithDropdownProps> = ({
       )}
       <div style={{ width: '100%' }}>
         <div className={classNames.inputWrapper}>
-          <Dropdown
-            options={options.map((item) => ({
-              value: item.value,
-              content: <Content key={item.label} option={item} />,
-            }))}
-            dropdownValue={{
-              value: dropdownValue.value,
-              content: <Content option={dropdownValue} />,
-            }}
-            asPill
-            onChange={handleDropdownChange}
-            isDisabled={disabled}
-          >
-            <Content option={dropdownValue} />
-          </Dropdown>
+          <Suspense fallback={<SkeletonLine width={130} height={40} />}>
+            <Dropdown
+              options={options.map((item) => ({
+                value: item.value,
+                content: <Content key={item.label} option={item} />,
+              }))}
+              dropdownValue={{
+                value: dropdownValue.value,
+                content: <Content option={dropdownValue} />,
+              }}
+              asPill
+              onChange={handleDropdownChange}
+              isDisabled={disabled}
+            >
+              <Content option={dropdownValue} />
+            </Dropdown>
+          </Suspense>
           <Input
             placeholder={placeholder}
             value={value}
