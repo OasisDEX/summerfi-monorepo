@@ -35,7 +35,7 @@ export async function insertTopDepositorsInBatches(
               )
             : 'n/a',
           strategyId: `${topDepositor.vault.id}-${topDepositor.vault.protocol.network}`,
-          balance: topDepositor.inputTokenBalanceNormalized,
+          balance: topDepositor.inputTokenBalance.toString(),
           balanceUsd: topDepositor.inputTokenBalanceNormalizedInUSD,
           network: mapChainIdToDbNetwork(
             subgraphNetworkToSDKId(topDepositor.vault.protocol.network),

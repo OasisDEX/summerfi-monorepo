@@ -51,6 +51,8 @@ export const topDepositorsMapper = (rawData: TopDepositors[]) => {
       value: Number(item.earningsStreak),
     })
 
+    const balance = new BigNumber(item.balance.toString()).shiftedBy(-item.inputTokenDecimals)
+
     return {
       content: {
         user: (
@@ -65,7 +67,7 @@ export const topDepositorsMapper = (rawData: TopDepositors[]) => {
             }}
           >
             <Icon tokenName={asset} variant="s" />
-            <TableCellText>{formatCryptoBalance(item.balance.toString())}</TableCellText>
+            <TableCellText>{formatCryptoBalance(balance)}</TableCellText>
           </div>
         ),
         balanceUsd: (
