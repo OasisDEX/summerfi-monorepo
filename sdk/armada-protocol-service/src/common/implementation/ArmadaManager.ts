@@ -102,10 +102,7 @@ export class ArmadaManager implements IArmadaManager {
     setTestDeployment(
       this._configProvider.getConfigurationItem({ name: 'SUMMER_DEPLOYMENT_CONFIG' }),
     )
-    console.log(
-      'SUMMER_DEPLOYMENT_CONFIG',
-      this._configProvider.getConfigurationItem({ name: 'SUMMER_DEPLOYMENT_CONFIG' }),
-    )
+
     this._isTestDeployment = isTestDeployment()
 
     this._supportedChains = this._configProvider
