@@ -26,8 +26,9 @@ export enum Protocol {
   Morpho = 'Morpho',
   Euler = 'Euler',
   Aave = 'AaveV3',
+  Gearbox = 'Gearbox',
 }
-const supportedProtocols = [Protocol.Morpho, Protocol.Euler, Protocol.Aave]
+const supportedProtocols = [Protocol.Morpho, Protocol.Euler, Protocol.Aave, Protocol.Gearbox]
 
 const rewardsService = new RewardsService(logger)
 
@@ -476,6 +477,9 @@ async function updateHourlyRewardAverage(
   newRate: string,
   hourTimestamp: number,
 ) {
+  if (newRate === '0') {
+    return
+  }
   const hourlyRateId = `${network.network}-${product.id}-${hourTimestamp}`
 
   // Get or create hourly rate
@@ -525,6 +529,9 @@ async function updateDailyRewardAverage(
   newRate: string,
   dayTimestamp: number,
 ) {
+  if (newRate === '0') {
+    return
+  }
   const dailyRateId = `${network.network}-${product.id}-${dayTimestamp}`
 
   const dailyRate = await trx
@@ -571,6 +578,9 @@ async function updateWeeklyRewardAverage(
   newRate: string,
   weekTimestamp: number,
 ) {
+  if (newRate === '0') {
+    return
+  }
   const weeklyRateId = `${network.network}-${product.id}-${weekTimestamp}`
 
   const weeklyRate = await trx

@@ -15,6 +15,27 @@ interface AaveMeritResponse {
   }
 }
 
+export interface MerkleDistribution {
+  identifier: string
+  chainId: number
+  aprRecord: {
+    cumulated: number
+    breakdowns: {
+      value: number
+    }[]
+  }
+  rewardsRecord: {
+    breakdowns: {
+      token: {
+        address: string
+        symbol: string
+        decimals: number
+      }
+      value: number
+    }[]
+  }
+}
+
 export interface RewardRate {
   rewardToken: string
   rate: string
@@ -67,6 +88,8 @@ interface RetryConfig {
 export class RewardsService {
   private readonly MORPHO_API_URL = 'https://blue-api.morpho.org/graphql'
   private readonly EULER_API_URL = 'https://app.euler.finance/api/v1/rewards/merkl?chainId='
+  private readonly GEARBOX_API_URL =
+    'https://api.merkl.xyz/v4/opportunities?mainProtocolId=gearbox&status=LIVE&'
   private readonly DEFAULT_RETRY_CONFIG: RetryConfig = {
     maxRetries: 5,
     initialDelay: 2000, // 2 seconds
@@ -120,6 +143,13 @@ export class RewardsService {
       Object.assign(results, aaveResults)
     }
 
+    if (protocolGroups[Protocol.Gearbox]?.length) {
+      const gearboxResults = await this.getGearboxRewardsBatch(
+        protocolGroups[Protocol.Gearbox],
+        chainId,
+      )
+      Object.assign(results, gearboxResults)
+    }
     return results
   }
 
@@ -302,7 +332,45 @@ export class RewardsService {
       },
     ]
   }
+  private async getGearboxRewardsBatch(
+    products: Product[],
+    chainId: ChainId,
+  ): Promise<Record<string, RewardRate[]>> {
+    try {
+      const MERKL_API_URL = `${this.GEARBOX_API_URL}${chainId}`
+      const response = await this.fetchWithRetry(MERKL_API_URL)
+      const data = (await response.json()) as MerkleDistribution[]
+      const rewardRates: Record<string, RewardRate[]> = Object.fromEntries(
+        products.map((product) => [product.id, []]),
+      )
+      for (const product of products) {
+        const distribution = data.find(
+          (d) => d.identifier.toLowerCase() === product.pool.toLowerCase(),
+        )
+        if (!distribution) {
+          continue
+        }
+        const rewards = distribution.rewardsRecord.breakdowns.map((reward, index) => ({
+          rewardToken: reward.token.address,
+          rate: distribution.aprRecord.breakdowns[index].value.toString(),
+          token: {
+            address: reward.token.address,
+            symbol: reward.token.symbol,
+            decimals: reward.token.decimals,
+            precision: (10n ** BigInt(reward.token.decimals)).toString(),
+          },
+        }))
+        if (rewards.length > 0) {
+          rewardRates[product.id] = rewards
+        }
+      }
 
+      return rewardRates
+    } catch (error) {
+      console.error('[RewardsService] Error fetching Gearbox rewards:', error)
+      return Object.fromEntries(products.map((product) => [product.id, []]))
+    }
+  }
   private async getEulerRewardsBatch(
     products: Product[],
     chainId: ChainId,
