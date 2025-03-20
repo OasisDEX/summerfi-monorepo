@@ -1,11 +1,18 @@
 import { Product } from '@summerfi/summer-earn-rates-subgraph'
 import { Protocol } from '.'
-import { ChainId } from '@summerfi/serverless-shared'
+import { ChainId, NetworkByChainID } from '@summerfi/serverless-shared'
 import { Logger } from '@aws-lambda-powertools/logger'
 
 const morphoTokenByChainId: Partial<Record<ChainId, string>> = {
   [ChainId.BASE]: '0xBAa5CC21fd487B8Fcc2F632f3F4E8D37262a0842',
   [ChainId.MAINNET]: '0x5956F3590814dC8f92Cf1D16d7D3B54e56Ec9090',
+}
+
+interface AaveMeritResponse {
+  previousAPR: number | null
+  currentAPR: {
+    actionsAPR: Record<string, number>
+  }
 }
 
 export interface RewardRate {
@@ -105,6 +112,14 @@ export class RewardsService {
       Object.assign(results, eulerResults)
     }
 
+    if (protocolGroups[Protocol.Aave]?.length) {
+      const aaveResults = await this.getAaveMeritRewardsBatch(
+        protocolGroups[Protocol.Aave],
+        chainId,
+      )
+      Object.assign(results, aaveResults)
+    }
+
     return results
   }
 
@@ -139,6 +154,45 @@ export class RewardsService {
       }
     }
     throw new Error('Unexpected error in fetchWithRetry')
+  }
+
+  private async getAaveMeritRewardsBatch(
+    products: Product[],
+    chainId: ChainId,
+  ): Promise<Record<string, RewardRate[]>> {
+    try {
+      const response = await this.fetchWithRetry('https://apps.aavechan.com/api/merit/aprs')
+      const data = (await response.json()) as AaveMeritResponse
+
+      const network = chainId === ChainId.MAINNET ? 'ethereum' : NetworkByChainID[chainId]
+      const rewards: Record<string, RewardRate[]> = Object.fromEntries(
+        products.map((product) => [product.id, []]),
+      )
+      for (const product of products) {
+        // lowercased without specialcharacters
+        const normalizedSymbol = product.token.symbol.toLowerCase().replace(/[^a-z0-9]/g, '')
+        const currentApr = data.currentAPR.actionsAPR[`${network}-supply-${normalizedSymbol}`]
+        if (!currentApr) {
+          continue
+        }
+        const rewardRate = {
+          rewardToken: '0x0000000000000000000000000000000000000000',
+          rate: currentApr.toString(),
+          token: {
+            address: '0x0000000000000000000000000000000000000000',
+            symbol: 'Aave Merit',
+            decimals: 18,
+            precision: (10n ** BigInt(18)).toString(),
+          },
+        }
+        rewards[product.id] = [rewardRate]
+      }
+
+      return rewards
+    } catch (error) {
+      console.error('[RewardsService] Error fetching Aave Merit rewards:', error)
+      return Object.fromEntries(products.map((product) => [product.id, []]))
+    }
   }
 
   private async getMorphoRewardsBatch(

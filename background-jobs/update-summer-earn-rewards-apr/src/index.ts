@@ -25,8 +25,9 @@ const logger = new Logger({ serviceName: 'update-summer-earn-rewards-apr', logLe
 export enum Protocol {
   Morpho = 'Morpho',
   Euler = 'Euler',
+  Aave = 'AaveV3',
 }
-const supportedProtocols = [Protocol.Morpho, Protocol.Euler]
+const supportedProtocols = [Protocol.Morpho, Protocol.Euler, Protocol.Aave]
 
 const rewardsService = new RewardsService(logger)
 
@@ -666,7 +667,10 @@ export const handler = async (
   // Get all potential networks
   const allNetworks = (await db.selectFrom('networkStatus').selectAll().execute()).filter(
     (network) =>
-      network.network === 'mainnet' || network.network === 'arbitrum' || network.network === 'base',
+      network.network === 'mainnet' ||
+      network.network === 'arbitrum' ||
+      network.network === 'base' ||
+      network.network === 'sonic',
   )
 
   logger.debug('Starting network processing', { networkCount: allNetworks.length })
