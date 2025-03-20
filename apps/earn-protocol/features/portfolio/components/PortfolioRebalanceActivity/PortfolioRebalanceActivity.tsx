@@ -1,6 +1,14 @@
 import { type FC, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
-import { Card, DataBlock, getUniqueVaultId, Icon, Text, Tooltip } from '@summerfi/app-earn-ui'
+import {
+  Card,
+  DataBlock,
+  getUniqueVaultId,
+  Icon,
+  LoadingSpinner,
+  Text,
+  Tooltip,
+} from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
 import {
   formatFiatBalance,
@@ -31,6 +39,8 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
 }) => {
   const { totalItems } = rebalanceActivity.pagination
 
+  const [isLoading, setIsLoading] = useState(false)
+
   const savedTimeInHours = useMemo(() => getRebalanceSavedTimeInHours(totalItems), [totalItems])
   const savedGasCost = useMemo(() => getRebalanceSavedGasCost(vaultsList), [vaultsList])
 
@@ -40,6 +50,7 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
 
   const handleMoreItems = async () => {
     try {
+      setIsLoading(true)
       const res = await getRebalanceActivity({
         page: currentPage + 1,
         sortBy: 'timestamp',
@@ -52,6 +63,8 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Error fetching rebalance activity', error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -109,7 +122,15 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
       <InfiniteScroll
         loadMore={handleMoreItems}
         hasMore={
-          rebalanceActivity.pagination.totalPages > currentPage && currentlyLoadedList.length > 0
+          rebalanceActivity.pagination.totalPages > currentPage &&
+          currentlyLoadedList.length > 0 &&
+          !isLoading
+        }
+        loader={
+          <LoadingSpinner
+            key="spinner"
+            style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
+          />
         }
       >
         <PortfolioRebalanceActivityList

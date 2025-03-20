@@ -95,9 +95,9 @@ export const PortfolioRebalanceActivityList: FC<PortfolioRebalanceActivityListPr
                           variant="p3semi"
                           style={{ color: 'var(--earn-protocol-secondary-60)' }}
                         >
-                          {capitalize(
-                            sdkChainIdToHumanNetwork(mapDbNetworkToChainId(item.network)),
-                          )}
+                          {dbNetworkToChainId
+                            ? capitalize(sdkChainIdToHumanNetwork(dbNetworkToChainId))
+                            : 'n/a'}
                         </Text>
                       </div>
                     </div>
@@ -108,15 +108,17 @@ export const PortfolioRebalanceActivityList: FC<PortfolioRebalanceActivityListPr
                     {timeAgo({ from: new Date(), to: new Date(Number(item.timestamp) * 1000) })}
                   </Text>
                   {!isMobile && <span>&#8226;</span>}
-                  <Link
-                    href={getVaultPositionUrl({
-                      network: chainIdToSDKNetwork(mapDbNetworkToChainId(item.network)),
-                      vaultId: item.vaultId,
-                      walletAddress,
-                    })}
-                  >
-                    <WithArrow reserveSpace={!isMobile}>Go to position</WithArrow>
-                  </Link>
+                  {dbNetworkToChainId && (
+                    <Link
+                      href={getVaultPositionUrl({
+                        network: chainIdToSDKNetwork(dbNetworkToChainId),
+                        vaultId: item.vaultId,
+                        walletAddress,
+                      })}
+                    >
+                      <WithArrow reserveSpace={!isMobile}>Go to position</WithArrow>
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>

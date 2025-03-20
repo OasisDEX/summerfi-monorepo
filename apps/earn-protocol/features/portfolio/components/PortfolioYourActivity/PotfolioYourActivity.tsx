@@ -40,6 +40,7 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
 
   const handleMoreItems = async () => {
     try {
+      setIsLoading(true)
       const res = await getUsersActivity({
         page: currentPage + 1,
         userAddress: walletAddress,
@@ -52,6 +53,8 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
     } catch (error) {
       // eslint-disable-next-line no-console
       console.info('No more users activity items to load')
+    } finally {
+      setIsLoading(false)
     }
   }
 

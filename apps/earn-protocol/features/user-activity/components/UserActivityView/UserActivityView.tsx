@@ -80,6 +80,7 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
 
   const handleMoreUserActivityItems = async () => {
     try {
+      setIsLoadingActivity(true)
       const res = await getUsersActivity({
         page: currentUserActivityPage + 1,
         tokens: tokenFilter,
@@ -100,6 +101,7 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
 
   const handleMoreTopDepositorsItems = async () => {
     try {
+      setIsLoadingDepositors(true)
       const res = await getTopDepositors({
         page: currentTopDepositorsPage + 1,
         tokens: tokenFilter,
