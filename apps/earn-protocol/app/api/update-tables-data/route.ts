@@ -40,15 +40,12 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  let db
+  let dbInstance: Awaited<ReturnType<typeof getSummerProtocolDB>> | undefined
 
   try {
-    const connection = await getSummerProtocolDB({
+    dbInstance = await getSummerProtocolDB({
       connectionString,
     })
-
-    // eslint-disable-next-line prefer-destructuring
-    db = connection.db
   } catch (error) {
     return NextResponse.json({ error: 'Failed to connect to database' }, { status: 500 })
   }
@@ -63,5 +60,5 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  return await updateTablesData({ db, tablesToUpdate: body.tablesToUpdate })
+  return await updateTablesData({ db: dbInstance.db, tablesToUpdate: body.tablesToUpdate })
 }

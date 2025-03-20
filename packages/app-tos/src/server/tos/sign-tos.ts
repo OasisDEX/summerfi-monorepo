@@ -87,5 +87,10 @@ export async function signTos<DB extends TOSRequiredDB>({
     await resolvedDB.insertInto('tosApproval').values(approvalData).execute()
   }
 
+  await resolvedDB.destroy().catch((err) => {
+    // eslint-disable-next-line no-console
+    console.error('Error closing database connection:', err)
+  })
+
   return NextResponse.json({ docVersion })
 }

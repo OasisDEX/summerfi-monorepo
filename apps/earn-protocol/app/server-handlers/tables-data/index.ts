@@ -80,5 +80,10 @@ export const updateTablesData = async ({
       { error: 'Failed to update tables data', details: errorMessage },
       { status: 500 },
     )
+  } finally {
+    await db.destroy().catch((err) => {
+      // eslint-disable-next-line no-console
+      console.error('Error closing database connection:', err)
+    })
   }
 }
