@@ -3,7 +3,7 @@ import { type FC, useEffect, useRef, useState } from 'react'
 import { Card, TabBar, type TableSortedColumn, WithArrow } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
-import { type LatestActivitiesPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
+import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { getLatestActivity } from '@/features/latest-activity/api/get-latest-activity'
 import { getTopDepositors } from '@/features/latest-activity/api/get-top-depositors'
@@ -16,7 +16,7 @@ interface LatestActivityProps {
   page: 'open' | 'manage'
   noHighlight?: boolean
   topDepositors: TopDepositorsPagination
-  latestActivity: LatestActivitiesPagination
+  latestActivity: LatestActivityPagination
   walletAddress?: string
 }
 

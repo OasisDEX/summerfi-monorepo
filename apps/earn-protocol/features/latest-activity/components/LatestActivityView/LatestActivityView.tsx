@@ -15,7 +15,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
 
-import { type LatestActivitiesPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
+import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { getLatestActivity } from '@/features/latest-activity/api/get-latest-activity'
@@ -34,7 +34,7 @@ interface LatestActivityViewProps {
   vaultsList: SDKVaultsListType
   searchParams?: { [key: string]: string[] }
   topDepositors: TopDepositorsPagination
-  latestActivity: LatestActivitiesPagination
+  latestActivity: LatestActivityPagination
 }
 
 export const LatestActivityView: FC<LatestActivityViewProps> = ({

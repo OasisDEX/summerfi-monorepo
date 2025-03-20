@@ -7,7 +7,7 @@ export type LatestActivity = DepositOrWithdraw & {
   type: 'deposit' | 'withdraw'
 }
 
-export type LatestActivitiesPagination = {
+export type LatestActivityPagination = {
   data: LatestActivityDb[]
   pagination: {
     currentPage: number

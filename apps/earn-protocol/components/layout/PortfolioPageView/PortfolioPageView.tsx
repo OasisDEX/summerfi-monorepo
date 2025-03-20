@@ -6,7 +6,7 @@ import { type HistoryChartData, type SDKVaultishType } from '@summerfi/app-types
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
-import { type LatestActivitiesPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
+import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { claimDelegateReducer, claimDelegateState } from '@/features/claim-and-delegate/state'
@@ -34,7 +34,7 @@ interface PortfolioPageViewProps {
   vaultsList: SDKVaultishType[]
   positions: PositionWithVault[]
   rebalanceActivity: RebalanceActivityPagination
-  latestActivity: LatestActivitiesPagination
+  latestActivity: LatestActivityPagination
   totalRays: number
   positionsHistoricalChartMap: {
     [key: string]: HistoryChartData

@@ -1,7 +1,7 @@
 import { type ActionType, getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { NextResponse } from 'next/server'
 
-import { type LatestActivitiesPagination, type LatestActivitiesSortBy } from './types'
+import { type LatestActivitiesSortBy, type LatestActivityPagination } from './types'
 
 export const getLatestActivitiesServerSide = async ({
   page,
@@ -145,7 +145,7 @@ export const getPaginatedLatestActivity = async ({
   userAddress?: string
   tokens?: string[]
   strategies?: string[]
-}): Promise<LatestActivitiesPagination> => {
+}): Promise<LatestActivityPagination> => {
   return await getLatestActivitiesServerSide({
     page,
     limit,

@@ -2,14 +2,14 @@ import { type FC, useEffect, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import { Card, LoadingSpinner, type TableSortedColumn, Text } from '@summerfi/app-earn-ui'
 
-import { type LatestActivitiesPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
+import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { getLatestActivity } from '@/features/latest-activity/api/get-latest-activity'
 import { LatestActivityTable } from '@/features/latest-activity/components/LatestActivityTable/LatestActivityTable'
 
 import classNames from './PortfolioYourActivity.module.scss'
 
 interface PortfolioYourActivityProps {
-  latestActivity: LatestActivitiesPagination
+  latestActivity: LatestActivityPagination
   walletAddress: string
 }
 

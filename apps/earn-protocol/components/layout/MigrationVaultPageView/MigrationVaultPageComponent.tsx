@@ -30,7 +30,7 @@ import { type Address } from 'viem'
 
 import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
-import { type LatestActivitiesPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
+import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { VaultOpenViewDetails } from '@/components/layout/VaultOpenView/VaultOpenViewDetails'
@@ -55,7 +55,7 @@ type MigrationVaultPageComponentProps = {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
   topDepositors: TopDepositorsPagination
-  latestActivity: LatestActivitiesPagination
+  latestActivity: LatestActivityPagination
   rebalanceActivity: RebalanceActivityPagination
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData

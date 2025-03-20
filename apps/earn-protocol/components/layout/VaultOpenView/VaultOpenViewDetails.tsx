@@ -8,7 +8,7 @@ import {
 } from '@summerfi/app-types'
 import { formatDecimalAsPercent } from '@summerfi/app-utils'
 
-import { type LatestActivitiesPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
+import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
@@ -22,7 +22,7 @@ import { VaultOpenHeaderBlock } from './VaultOpenHeaderBlock'
 interface VaultOpenViewDetailsProps {
   vault: SDKVaultType | SDKVaultishType
   topDepositors: TopDepositorsPagination
-  latestActivity: LatestActivitiesPagination
+  latestActivity: LatestActivityPagination
   rebalanceActivity: RebalanceActivityPagination
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
