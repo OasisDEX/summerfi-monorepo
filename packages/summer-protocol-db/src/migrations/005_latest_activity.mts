@@ -3,6 +3,7 @@ import { Kysely, sql } from 'kysely'
 export async function up(db: Kysely<never>): Promise<void> {
   await db.schema
     .createTable('latest_activity')
+    .addColumn('id', 'varchar', (col) => col.primaryKey())
     .addColumn('user_address', 'varchar(42)', (col) => col.notNull())
     .addColumn('vault_id', 'varchar(66)', (col) => col.notNull())
     .addColumn('vault_name', 'varchar(255)', (col) => col.notNull())
@@ -19,11 +20,11 @@ export async function up(db: Kysely<never>): Promise<void> {
     .addColumn('input_token_decimals', 'bigint', (col) => col.notNull())
     .addColumn('tx_hash', 'varchar(66)', (col) => col.notNull())
     .addColumn('timestamp', 'bigint', (col) => col.notNull())
-    .addUniqueConstraint('latest_activity_user_address_vault_id_network_timestamp_unique', [
-      'user_address',
+    .addUniqueConstraint('latest_activity_vault_id_user_address_network_timestamp_unique', [
       'vault_id',
-      'timestamp',
+      'user_address',
       'network',
+      'timestamp',
     ])
     .execute()
 }

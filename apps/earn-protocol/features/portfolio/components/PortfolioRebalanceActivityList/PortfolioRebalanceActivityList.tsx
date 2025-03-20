@@ -41,7 +41,7 @@ export const PortfolioRebalanceActivityList: FC<PortfolioRebalanceActivityListPr
 
           return (
             <div
-              key={item.id.toString() ?? item.rebalanceId}
+              key={item.id.toString()}
               onMouseEnter={() => setHoveredItemTimestamp(Number(item.timestamp))}
               onMouseLeave={() => setHoveredItemTimestamp(undefined)}
             >

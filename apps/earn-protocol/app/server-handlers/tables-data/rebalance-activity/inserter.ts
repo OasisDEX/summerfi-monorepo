@@ -23,6 +23,7 @@ export async function insertRebalanceActivitiesInBatches(
       .insertInto('rebalanceActivity')
       .values(
         batch.map((activity) => ({
+          id: `${activity.id}-${activity.vault.protocol.network}-${activity.timestamp}`,
           rebalanceId: activity.id,
           amount: activity.amount.toString(),
           amountUsd: activity.amountUSD.toString(),

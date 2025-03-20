@@ -3,6 +3,7 @@ import { Kysely, sql } from 'kysely'
 export async function up(db: Kysely<never>): Promise<void> {
   await db.schema
     .createTable('rebalance_activity')
+    .addColumn('id', 'varchar', (col) => col.primaryKey())
     .addColumn('rebalance_id', 'varchar(255)', (col) => col.notNull())
     .addColumn('amount', 'decimal(78, 18)', (col) => col.notNull())
     .addColumn('amount_usd', 'decimal(78, 18)', (col) => col.notNull())

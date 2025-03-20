@@ -6,16 +6,16 @@ import { type TopDepositorsPagination, type TopDepositorsSortBy } from './types'
 export const getTopDepositorsServerSide = async ({
   page,
   limit,
-  sortBy,
-  orderBy,
+  sortBy = 'balanceUsd',
+  orderBy = 'desc',
   userAddress,
   strategies,
   tokens,
 }: {
   page: number
   limit: number
-  sortBy: TopDepositorsSortBy
-  orderBy: 'asc' | 'desc'
+  sortBy?: TopDepositorsSortBy
+  orderBy?: 'asc' | 'desc'
   userAddress?: string
   strategies?: string[]
   tokens?: string[]
@@ -89,16 +89,16 @@ export const getTopDepositorsServerSide = async ({
 export const getPaginatedTopDepositors = async ({
   page,
   limit,
-  sortBy,
-  orderBy,
+  sortBy = 'balanceUsd',
+  orderBy = 'desc',
   userAddress,
   strategies,
   tokens,
 }: {
   page: number
   limit: number
-  sortBy: TopDepositorsSortBy
-  orderBy: 'asc' | 'desc'
+  sortBy?: TopDepositorsSortBy
+  orderBy?: 'asc' | 'desc'
   userAddress?: string
   strategies?: string[]
   tokens?: string[]

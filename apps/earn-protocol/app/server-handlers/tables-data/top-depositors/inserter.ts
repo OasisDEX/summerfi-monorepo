@@ -25,6 +25,7 @@ export async function insertTopDepositorsInBatches(
       .insertInto('topDepositors')
       .values(
         batch.map((topDepositor) => ({
+          id: `${topDepositor.vault.id}-${topDepositor.account.id}-${topDepositor.vault.protocol.network}`,
           userAddress: topDepositor.account.id.toLowerCase(),
           vaultId: topDepositor.vault.id,
           vaultName: topDepositor.vault.name ?? 'n/a',

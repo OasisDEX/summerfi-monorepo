@@ -27,16 +27,12 @@ const UserActivityPage: FC<UserActivityPageProps> = async ({ searchParams }) => 
     getPaginatedTopDepositors({
       page: 1,
       limit: 50,
-      sortBy: 'balanceUsd',
-      orderBy: 'desc',
       tokens,
       strategies,
     }),
     getPaginatedUsersActivities({
       page: 1,
       limit: 50,
-      sortBy: 'timestamp',
-      orderBy: 'desc',
       tokens,
       strategies,
     }),

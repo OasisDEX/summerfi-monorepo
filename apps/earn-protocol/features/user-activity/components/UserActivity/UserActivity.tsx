@@ -67,9 +67,14 @@ export const UserActivity: FC<UserActivityProps> = ({
       sortBy: latestActivitySorting?.key,
       orderBy: latestActivitySorting?.direction,
       userAddress: walletAddress,
-    }).then((res) => {
-      setLoadedUserActivityList(res.data)
     })
+      .then((res) => {
+        setLoadedUserActivityList(res.data)
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.error('Error fetching user activity', error)
+      })
   }, [latestActivitySorting?.key, latestActivitySorting?.direction, vaultId, walletAddress])
 
   useEffect(() => {
@@ -83,9 +88,14 @@ export const UserActivity: FC<UserActivityProps> = ({
       strategies: [vaultId],
       sortBy: topDepositorsSorting?.key,
       orderBy: topDepositorsSorting?.direction,
-    }).then((res) => {
-      setLoadedTopDepositorsList(res.data)
     })
+      .then((res) => {
+        setLoadedTopDepositorsList(res.data)
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.error('Error fetching top depositors', error)
+      })
   }, [topDepositorsSorting?.key, topDepositorsSorting?.direction, vaultId])
 
   useEffect(() => {

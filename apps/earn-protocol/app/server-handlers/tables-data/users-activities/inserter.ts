@@ -22,6 +22,7 @@ export async function insertUsersActivitiesInBatches(
       .insertInto('latestActivity')
       .values(
         batch.map((activity) => ({
+          id: `${activity.position.vault.id}-${activity.position.account.id}-${activity.position.vault.protocol.network}-${activity.timestamp}`,
           amount: activity.amount.toString(),
           amountUsd: activity.amountUSD.toString(),
           userAddress: activity.position.account.id.toLowerCase(),

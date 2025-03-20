@@ -78,29 +78,43 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
   )
 
   const handleMoreUserActivityItems = async () => {
-    const res = await getUsersActivity({
-      page: currentUserActivityPage + 1,
-      tokens: tokenFilter,
-      strategies: strategyFilter,
-      sortBy: latestActivitySortBy,
-      orderBy: latestActivityOrderBy,
-    })
+    try {
+      const res = await getUsersActivity({
+        page: currentUserActivityPage + 1,
+        tokens: tokenFilter,
+        strategies: strategyFilter,
+        sortBy: latestActivitySortBy,
+        orderBy: latestActivityOrderBy,
+      })
 
-    setLoadedUserActivityList((prev) => [...prev, ...res.data])
-    setCurrentUserActivityPage((prev) => prev + 1)
+      setLoadedUserActivityList((prev) => [...prev, ...res.data])
+      setCurrentUserActivityPage((prev) => prev + 1)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error fetching more user activity', error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleMoreTopDepositorsItems = async () => {
-    const res = await getTopDepositors({
-      page: currentTopDepositorsPage + 1,
-      tokens: tokenFilter,
-      strategies: strategyFilter,
-      sortBy: topDepositorsSortBy,
-      orderBy: topDepositorsOrderBy,
-    })
+    try {
+      const res = await getTopDepositors({
+        page: currentTopDepositorsPage + 1,
+        tokens: tokenFilter,
+        strategies: strategyFilter,
+        sortBy: topDepositorsSortBy,
+        orderBy: topDepositorsOrderBy,
+      })
 
-    setLoadedTopDepositorsList((prev) => [...prev, ...res.data])
-    setCurrentTopDepositorsPage((prev) => prev + 1)
+      setLoadedTopDepositorsList((prev) => [...prev, ...res.data])
+      setCurrentTopDepositorsPage((prev) => prev + 1)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error fetching more top depositors', error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleSortTopDepositors = (sortConfig: TableSortedColumn<string>) => {
@@ -153,6 +167,10 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
       .then((res) => {
         setLoadedUserActivityList(res.data)
       })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.error('Error fetching user activity', error)
+      })
       .finally(() => {
         setIsLoading(false)
       })
@@ -174,6 +192,10 @@ export const UserActivityView: FC<UserActivityViewProps> = ({
     })
       .then((res) => {
         setLoadedTopDepositorsList(res.data)
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.error('Error fetching top depositors', error)
       })
       .finally(() => {
         setIsLoading(false)

@@ -7,6 +7,7 @@ export async function up(db: Kysely<never>): Promise<void> {
 
   await db.schema
     .createTable('top_depositors')
+    .addColumn('id', 'varchar', (col) => col.primaryKey())
     .addColumn('user_address', 'varchar(42)', (col) => col.notNull())
     .addColumn('vault_id', 'varchar(66)', (col) => col.notNull())
     .addColumn('vault_name', 'varchar(255)', (col) => col.notNull())

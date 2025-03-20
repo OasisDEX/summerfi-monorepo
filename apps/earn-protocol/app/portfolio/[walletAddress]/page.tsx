@@ -79,7 +79,11 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     getVaultsList(),
     systemConfigHandler(),
     unstableCache(getMigratablePositions, [walletAddress], cacheConfig)({ walletAddress }),
-    getPaginatedUsersActivities({
+    unstableCache(
+      getPaginatedUsersActivities,
+      [walletAddress],
+      cacheConfig,
+    )({
       page: 1,
       limit: 50,
       userAddress: walletAddress,
@@ -179,8 +183,6 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     getPaginatedRebalanceActivity({
       page: 1,
       limit: 50,
-      sortBy: 'timestamp',
-      orderBy: 'desc',
       strategies: userVaultsIds,
     }),
   ])

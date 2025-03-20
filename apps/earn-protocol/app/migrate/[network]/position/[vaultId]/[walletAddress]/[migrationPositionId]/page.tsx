@@ -74,22 +74,16 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
     getPaginatedTopDepositors({
       page: 1,
       limit: 4,
-      sortBy: 'balanceUsd',
-      orderBy: 'desc',
       strategies: [strategy],
     }),
     getPaginatedUsersActivities({
       page: 1,
       limit: 4,
-      sortBy: 'timestamp',
-      orderBy: 'desc',
       strategies: [strategy],
     }),
     getPaginatedRebalanceActivity({
       page: 1,
       limit: 4,
-      sortBy: 'timestamp',
-      orderBy: 'desc',
       startTimestamp: dayjs().subtract(30, 'days').unix(),
     }),
   ])

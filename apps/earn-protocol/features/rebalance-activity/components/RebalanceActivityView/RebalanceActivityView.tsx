@@ -63,15 +63,22 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
   )
 
   const handleMoreItems = async () => {
-    const res = await getRebalanceActivity({
-      page: currentPage + 1,
-      tokens: tokenFilter,
-      strategies: strategyFilter,
-      protocols: protocolFilter,
-    })
+    try {
+      const res = await getRebalanceActivity({
+        page: currentPage + 1,
+        tokens: tokenFilter,
+        strategies: strategyFilter,
+        protocols: protocolFilter,
+      })
 
-    setCurrentlyLoadedList((prev) => [...prev, ...res.data])
-    setCurrentPage((prev) => prev + 1)
+      setCurrentlyLoadedList((prev) => [...prev, ...res.data])
+      setCurrentPage((prev) => prev + 1)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error fetching more rebalance activity', error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const genericMultiSelectFilters = [
