@@ -221,9 +221,22 @@ export class RatesService {
           .where('network', '=', network)
           .where('productId', '=', productId)
           .orderBy('timestamp', 'desc')
-          .limit(1)
+          .limit(100)
           .execute(),
       ])
+
+      // Sum rates with same timestamp
+      const summedLatestRate = latestRate.reduce(
+        (acc, rate) => {
+          if (!acc.length) return [rate]
+          if (acc[0].timestamp === rate.timestamp) {
+            acc[0].rate = (Number(acc[0].rate) + Number(rate.rate)).toString()
+            return acc
+          }
+          return acc
+        },
+        [] as typeof latestRate,
+      )
 
       return {
         dailyRates: dailyRates.map((rate) => ({
@@ -242,14 +255,14 @@ export class RatesService {
           date: rate.date.toString(),
         })),
         latestRate:
-          latestRate.length > 0
+          summedLatestRate.length > 0
             ? [
                 {
                   rate: [
                     {
-                      id: latestRate[0].id,
-                      rate: latestRate[0].rate.toString(),
-                      timestamp: latestRate[0].timestamp.toString(),
+                      id: summedLatestRate[0].id,
+                      rate: summedLatestRate[0].rate.toString(),
+                      timestamp: summedLatestRate[0].timestamp.toString(),
                     },
                   ],
                 },
