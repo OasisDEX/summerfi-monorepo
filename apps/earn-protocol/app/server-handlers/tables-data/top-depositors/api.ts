@@ -29,13 +29,15 @@ export const getTopDepositorsServerSide = async ({
     )
   }
 
+  let dbInstance: Awaited<ReturnType<typeof getSummerProtocolDB>> | undefined
+
   try {
-    const { db } = await getSummerProtocolDB({
+    dbInstance = await getSummerProtocolDB({
       connectionString,
     })
 
     // Build the query with proper typing
-    const baseQuery = db.selectFrom('topDepositors').selectAll()
+    const baseQuery = dbInstance.db.selectFrom('topDepositors').selectAll()
 
     const resolvedTokens = tokens?.map((token) => (token === 'ETH' ? 'WETH' : token))
 
@@ -83,6 +85,13 @@ export const getTopDepositorsServerSide = async ({
     console.error('Error fetching top depositors:', error)
 
     return NextResponse.json({ error: 'Failed to fetch top depositors' }, { status: 500 })
+  } finally {
+    if (dbInstance) {
+      await dbInstance.db.destroy().catch((err) => {
+        // eslint-disable-next-line no-console
+        console.error('Error closing database connection:', err)
+      })
+    }
   }
 }
 

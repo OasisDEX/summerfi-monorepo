@@ -33,13 +33,15 @@ export const getRebalanceActivityServerSide = async ({
 
   const resolvedTokens = tokens?.map((token) => (token === 'ETH' ? 'WETH' : token))
 
+  let dbInstance: Awaited<ReturnType<typeof getSummerProtocolDB>> | undefined
+
   try {
-    const { db } = await getSummerProtocolDB({
+    dbInstance = await getSummerProtocolDB({
       connectionString,
     })
 
     // Build the query with proper typing
-    const baseQuery = db.selectFrom('rebalanceActivity').selectAll()
+    const baseQuery = dbInstance.db.selectFrom('rebalanceActivity').selectAll()
 
     // Apply filters if provided
     const filteredQuery = baseQuery
@@ -91,6 +93,14 @@ export const getRebalanceActivityServerSide = async ({
     console.error('Error fetching latest activity:', error)
 
     return NextResponse.json({ error: 'Failed to fetch latest activity' }, { status: 500 })
+  } finally {
+    // Always clean up the database connection
+    if (dbInstance) {
+      await dbInstance.db.destroy().catch((err) => {
+        // eslint-disable-next-line no-console
+        console.error('Error closing database connection:', err)
+      })
+    }
   }
 }
 
