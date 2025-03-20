@@ -14,3 +14,5 @@ export type RebalanceActivityPagination = {
     itemsPerPage: number
   }
 }
+
+export type RebalanceActivitySortBy = 'timestamp' | 'amount' | 'amountUsd'

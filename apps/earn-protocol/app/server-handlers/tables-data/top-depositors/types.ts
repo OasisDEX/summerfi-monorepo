@@ -17,3 +17,12 @@ export type TopDepositorsPagination = {
     itemsPerPage: number
   }
 }
+
+export type TopDepositorsSortBy =
+  | 'balanceUsd'
+  | 'balance'
+  | 'changeSevenDays'
+  | 'projectedOneYearEarnings'
+  | 'projectedOneYearEarningsUsd'
+  | 'noOfDeposits'
+  | 'earningsStreak'

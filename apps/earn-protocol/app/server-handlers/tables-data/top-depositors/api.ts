@@ -1,7 +1,7 @@
 import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { NextResponse } from 'next/server'
 
-import { type TopDepositorsPagination } from './types'
+import { type TopDepositorsPagination, type TopDepositorsSortBy } from './types'
 
 export const getTopDepositorsServerSide = async ({
   page,
@@ -14,14 +14,7 @@ export const getTopDepositorsServerSide = async ({
 }: {
   page: number
   limit: number
-  sortBy:
-    | 'balanceUsd'
-    | 'balance'
-    | 'changeSevenDays'
-    | 'projectedOneYearEarnings'
-    | 'projectedOneYearEarningsUsd'
-    | 'noOfDeposits'
-    | 'earningsStreak'
+  sortBy: TopDepositorsSortBy
   orderBy: 'asc' | 'desc'
   userAddress?: string
   strategies?: string[]
@@ -104,14 +97,7 @@ export const getPaginatedTopDepositors = async ({
 }: {
   page: number
   limit: number
-  sortBy:
-    | 'balanceUsd'
-    | 'balance'
-    | 'changeSevenDays'
-    | 'projectedOneYearEarnings'
-    | 'projectedOneYearEarningsUsd'
-    | 'noOfDeposits'
-    | 'earningsStreak'
+  sortBy: TopDepositorsSortBy
   orderBy: 'asc' | 'desc'
   userAddress?: string
   strategies?: string[]

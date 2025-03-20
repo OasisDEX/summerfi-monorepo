@@ -1,7 +1,7 @@
 import { type ActionType, getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { NextResponse } from 'next/server'
 
-import { type UsersActivitiesPagination } from './types'
+import { type UsersActivitiesPagination, type UsersActivitiesSortBy } from './types'
 
 export const getUsersActivitiesServerSide = async ({
   page,
@@ -15,7 +15,7 @@ export const getUsersActivitiesServerSide = async ({
 }: {
   page: number
   limit: number
-  sortBy?: 'timestamp' | 'balance' | 'balanceUsd' | 'amount' | 'amountUsd'
+  sortBy?: UsersActivitiesSortBy
   orderBy?: 'asc' | 'desc'
   actionType?: ActionType
   userAddress?: string
@@ -130,7 +130,7 @@ export const getPaginatedUsersActivities = async ({
 }: {
   page: number
   limit: number
-  sortBy?: 'timestamp' | 'balance' | 'balanceUsd' | 'amount' | 'amountUsd'
+  sortBy?: UsersActivitiesSortBy
   orderBy?: 'asc' | 'desc'
   actionType?: ActionType
   userAddress?: string

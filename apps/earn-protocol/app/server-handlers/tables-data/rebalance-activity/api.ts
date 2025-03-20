@@ -1,7 +1,7 @@
 import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { NextResponse } from 'next/server'
 
-import { type RebalanceActivityPagination } from './types'
+import { type RebalanceActivityPagination, type RebalanceActivitySortBy } from './types'
 
 export const getRebalanceActivityServerSide = async ({
   page,
@@ -15,7 +15,7 @@ export const getRebalanceActivityServerSide = async ({
 }: {
   page: number
   limit: number
-  sortBy?: 'timestamp' | 'amount' | 'amountUsd'
+  sortBy?: RebalanceActivitySortBy
   orderBy?: 'asc' | 'desc'
   tokens?: string[]
   strategies?: string[]
@@ -106,7 +106,7 @@ export const getPaginatedRebalanceActivity = async ({
 }: {
   page: number
   limit: number
-  sortBy?: 'timestamp' | 'amount' | 'amountUsd'
+  sortBy?: RebalanceActivitySortBy
   orderBy?: 'asc' | 'desc'
   userAddress?: string
   tokens?: string[]
