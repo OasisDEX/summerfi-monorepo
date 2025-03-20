@@ -61,6 +61,13 @@ export const getUsersActivitiesServerSide = async ({
       .offset((page - 1) * limit)
       .execute()
 
+    const offset = await baseQuery
+      .clearSelect()
+      .where('actionType', '=', 'deposit')
+      .select((eb) => eb.fn.countAll().as('count'))
+      .executeTakeFirst()
+      .then((result) => Math.floor((Number(result?.count ?? 0) - 1) / 2))
+
     // Execute query and get total count using the same filters
     const [activities, countResult, totalDepositsCount, depositsForMedian] = await Promise.all([
       finalQuery,
@@ -78,14 +85,7 @@ export const getUsersActivitiesServerSide = async ({
         .where('actionType', '=', 'deposit')
         .select('amountUsd')
         .orderBy('amountUsd', 'asc')
-        .offset(
-          await baseQuery
-            .clearSelect()
-            .where('actionType', '=', 'deposit')
-            .select((eb) => eb.fn.countAll().as('count'))
-            .executeTakeFirst()
-            .then((result) => Math.floor((Number(result?.count ?? 0) - 1) / 2)),
-        )
+        .offset(offset === -1 ? 0 : offset)
         .limit(2)
         .execute(),
     ])
