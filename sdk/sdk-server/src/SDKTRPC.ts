@@ -19,5 +19,8 @@ export const publicProcedure = t.procedure.use(async (opts) => {
   }
 
   const result = await opts.next()
+  if (process.env.SDK_LOGGING_ENABLED === 'true') {
+    console.log('- result.data => ', (result as { data: unknown })?.data)
+  }
   return result
 })

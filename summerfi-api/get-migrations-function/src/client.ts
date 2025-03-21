@@ -1,4 +1,12 @@
-import { Chain, createPublicClient, extractChain, getContract, http, HttpTransport } from 'viem'
+import {
+  Chain,
+  createPublicClient,
+  erc20Abi,
+  extractChain,
+  getContract,
+  http,
+  HttpTransport,
+} from 'viem'
 import { arbitrum, base, mainnet, optimism, sepolia, sonic } from 'viem/chains'
 import { aavePoolContract } from './abi/aavePoolContract'
 import { decodeBitmapToAssetsAddresses } from './decodeBitmapToAssetsAddresses'
@@ -21,7 +29,6 @@ import {
   getRpcGatewayEndpoint,
   IRpcConfig,
 } from '@summerfi/serverless-shared/getRpcGatewayEndpoint'
-import { publicActionReverseMirage } from 'reverse-mirage'
 import { getDsProxy } from './getDsProxy'
 import { Logger } from '@aws-lambda-powertools/logger'
 
@@ -124,7 +131,7 @@ async function getAssets(
   const publicClient = createPublicClient({
     chain,
     transport,
-  }).extend(publicActionReverseMirage)
+  })
 
   const addressService = createAddressService(chain.id)
 
@@ -175,12 +182,37 @@ async function getAssets(
             symbol: 'MKR',
           }
         }
-        return publicClient.getERC20({
-          erc20: {
-            address,
-            chainID: chain.id,
-          },
-        })
+        // get decimals and symbol using the multicall
+        const contract = {
+          address,
+          abi: erc20Abi,
+        }
+        return publicClient
+          .multicall({
+            contracts: [
+              {
+                ...contract,
+                functionName: 'decimals',
+              },
+              {
+                ...contract,
+                functionName: 'symbol',
+              },
+            ],
+          })
+          .then(([decimals, symbol]) => {
+            // if success
+            if (decimals.status === 'failure' || symbol.status === 'failure') {
+              throw new Error(
+                `Failed to get decimals or symbol for address ${address}: ${decimals.status} ${symbol.status}`,
+              )
+            }
+            return {
+              address: address,
+              decimals: decimals.result,
+              symbol: symbol.result,
+            }
+          })
       }),
     ),
   ])

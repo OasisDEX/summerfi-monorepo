@@ -5,6 +5,7 @@ import { z } from 'zod'
  */
 export enum OracleProviderType {
   OneInch = 'OneInch',
+  Coingecko = 'Coingecko',
 }
 
 /**

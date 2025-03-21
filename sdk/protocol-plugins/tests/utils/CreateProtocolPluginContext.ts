@@ -14,7 +14,7 @@ export async function createProtocolPluginContext(
   chainInfo: IChainInfo,
   __ctxOverrides?: Partial<IProtocolPluginContext>,
 ): Promise<IProtocolPluginContext> {
-  const RPC_URL = process.env['MAINNET_RPC_URL'] || ''
+  const RPC_URL = process.env['E2E_SDK_FORK_URL_MAINNET'] || ''
   const provider: PublicClient = createPublicClient({
     batch: {
       multicall: true,

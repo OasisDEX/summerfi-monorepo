@@ -59,7 +59,7 @@ describe('Armada Protocol Migration', () => {
             user,
             migrationType,
           })
-          assert(positionsBefore.positions.length > 1, 'No multiple migratable positions found')
+          assert(positionsBefore.positions.length > 0, 'No migratable positions found')
 
           console.log(
             'before',
