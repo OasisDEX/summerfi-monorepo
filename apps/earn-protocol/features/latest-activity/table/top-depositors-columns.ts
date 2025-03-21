@@ -6,7 +6,7 @@ export const topDepositorsColumns = [
   },
   {
     title: 'Position Balance',
-    key: 'balance',
+    key: 'balanceNormalized',
     sortable: true,
   },
   {
@@ -26,7 +26,7 @@ export const topDepositorsColumns = [
   },
   {
     title: 'Projected 1yr Earnings',
-    key: 'projectedOneYearEarnings',
+    key: 'projectedOneYearEarningsUsd',
     sortable: true,
   },
   {

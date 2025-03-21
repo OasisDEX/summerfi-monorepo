@@ -4,6 +4,7 @@ import {
   subgraphNetworkToSDKId,
 } from '@summerfi/app-utils'
 import { type Network, type SummerProtocolDB } from '@summerfi/summer-protocol-db'
+import BigNumber from 'bignumber.js'
 
 import { DB_BATCH_SIZE } from '@/app/server-handlers/tables-data/consts'
 import { type LatestActivity } from '@/app/server-handlers/tables-data/latest-activity/types'
@@ -24,6 +25,9 @@ export async function insertLatestActivitiesInBatches(
         batch.map((activity) => ({
           id: `${activity.position.vault.id}-${activity.position.account.id}-${activity.position.vault.protocol.network}-${activity.timestamp}`,
           amount: activity.amount.toString(),
+          amountNormalized: new BigNumber(activity.amount.toString())
+            .shiftedBy(-activity.position.vault.inputToken.decimals)
+            .toString(),
           amountUsd: activity.amountUSD.toString(),
           userAddress: activity.position.account.id.toLowerCase(),
           vaultId: activity.position.vault.id,
@@ -36,6 +40,7 @@ export async function insertLatestActivitiesInBatches(
             : 'n/a',
           strategyId: `${activity.position.vault.id}-${activity.position.vault.protocol.network}`,
           balance: activity.position.inputTokenBalance.toString(),
+          balanceNormalized: activity.position.inputTokenBalanceNormalized,
           balanceUsd: activity.position.inputTokenBalanceNormalizedInUSD,
           network: mapChainIdToDbNetwork(
             subgraphNetworkToSDKId(activity.position.vault.protocol.network),

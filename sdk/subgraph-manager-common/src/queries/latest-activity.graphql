@@ -15,6 +15,7 @@ query GetLatestActivity($timestamp: BigInt, $first: Int!, $skip: Int!) {
         id
       }
       inputTokenBalance
+      inputTokenBalanceNormalized
       inputTokenBalanceNormalizedInUSD
       vault {
         id
@@ -47,6 +48,7 @@ query GetLatestActivity($timestamp: BigInt, $first: Int!, $skip: Int!) {
         id
       }
       inputTokenBalance
+      inputTokenBalanceNormalized
       inputTokenBalanceNormalizedInUSD
       vault {
         id

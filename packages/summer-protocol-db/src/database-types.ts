@@ -68,8 +68,10 @@ export interface HourlyRewardRate {
 export interface LatestActivity {
   actionType: ActionType
   amount: Numeric
+  amountNormalized: Numeric
   amountUsd: Numeric
   balance: Numeric
+  balanceNormalized: Numeric
   balanceUsd: Numeric
   id: string
   inputTokenDecimals: Int8
@@ -95,8 +97,10 @@ export interface NetworkStatus {
 export interface RebalanceActivity {
   actionType: string
   amount: Numeric
+  amountNormalized: Numeric
   amountUsd: Numeric
   fromDepositLimit: Numeric
+  fromDepositLimitNormalized: Numeric
   fromName: string
   fromTotalValueLockedUsd: Numeric
   id: string
@@ -109,6 +113,7 @@ export interface RebalanceActivity {
   strategyId: string
   timestamp: Int8
   toDepositLimit: Numeric
+  toDepositLimitNormalized: Numeric
   toName: string
   toTotalValueLockedUsd: Numeric
   txHash: string
@@ -135,6 +140,7 @@ export interface Token {
 
 export interface TopDepositors {
   balance: Numeric
+  balanceNormalized: Numeric
   balanceUsd: Numeric
   changeSevenDays: Numeric
   earningsStreak: Int8

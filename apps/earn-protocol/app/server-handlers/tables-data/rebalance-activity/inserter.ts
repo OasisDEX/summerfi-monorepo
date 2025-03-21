@@ -4,6 +4,7 @@ import {
   subgraphNetworkToSDKId,
 } from '@summerfi/app-utils'
 import { type Network, type SummerProtocolDB } from '@summerfi/summer-protocol-db'
+import BigNumber from 'bignumber.js'
 
 import { DB_BATCH_SIZE } from '@/app/server-handlers/tables-data/consts'
 
@@ -26,6 +27,9 @@ export async function insertRebalanceActivitiesInBatches(
           id: `${activity.id}-${activity.vault.protocol.network}-${activity.timestamp}`,
           rebalanceId: activity.id,
           amount: activity.amount.toString(),
+          amountNormalized: new BigNumber(activity.amount.toString())
+            .shiftedBy(-activity.vault.inputToken.decimals)
+            .toString(),
           amountUsd: activity.amountUSD.toString(),
           vaultId: activity.vault.id,
           vaultName: activity.vault.name ?? 'n/a',
@@ -35,9 +39,15 @@ export async function insertRebalanceActivitiesInBatches(
           strategyId: `${activity.vault.id}-${activity.vault.protocol.network}`,
           fromName: activity.from.name ?? 'n/a',
           fromDepositLimit: activity.fromPostAction.depositLimit.toString(),
+          fromDepositLimitNormalized: new BigNumber(activity.fromPostAction.depositLimit.toString())
+            .shiftedBy(-activity.vault.inputToken.decimals)
+            .toString(),
           fromTotalValueLockedUsd: activity.from.totalValueLockedUSD.toString(),
           toName: activity.to.name ?? 'n/a',
           toDepositLimit: activity.toPostAction.depositLimit.toString(),
+          toDepositLimitNormalized: new BigNumber(activity.toPostAction.depositLimit.toString())
+            .shiftedBy(-activity.vault.inputToken.decimals)
+            .toString(),
           toTotalValueLockedUsd: activity.to.totalValueLockedUSD,
           network: mapChainIdToDbNetwork(
             subgraphNetworkToSDKId(activity.vault.protocol.network),

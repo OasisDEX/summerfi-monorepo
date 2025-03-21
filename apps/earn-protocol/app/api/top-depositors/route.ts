@@ -10,6 +10,7 @@ const TopDepositorsQueryParamsSchema = z.object({
     .enum([
       'balanceUsd',
       'balance',
+      'balanceNormalized',
       'changeSevenDays',
       'projectedOneYearEarnings',
       'projectedOneYearEarningsUsd',
