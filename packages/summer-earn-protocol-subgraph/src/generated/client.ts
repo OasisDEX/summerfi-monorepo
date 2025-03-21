@@ -10381,7 +10381,7 @@ export type HistoricalVaultsQueryVariables = Exact<{
 export type HistoricalVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', id: string, name?: string | null, totalValueLockedUSD: number, rewardsManager: { __typename?: 'RewardsManager', id: string }, arks: Array<{ __typename?: 'Ark', id: string, name?: string | null, details?: string | null, productId: string, totalValueLockedUSD: number, vault: { __typename?: 'Vault', id: string } }> }> };
 
 
-export const UserPositionsDocument = gql`
+export const UserPositionsDocument: DocumentNode = gql`
     query UserPositions($userAddress: String!) {
   positions(where: {account: $userAddress}) {
     id
@@ -10402,7 +10402,7 @@ export const UserPositionsDocument = gql`
   }
 }
     `;
-export const UsersPositionsDocument = gql`
+export const UsersPositionsDocument: DocumentNode = gql`
     query UsersPositions($userAddresses: [String!]) {
   positions(where: {account_in: $userAddresses}, first: 1000) {
     id
@@ -10423,7 +10423,7 @@ export const UsersPositionsDocument = gql`
   }
 }
     `;
-export const VaultsDocument = gql`
+export const VaultsDocument: DocumentNode = gql`
     query Vaults {
   vaults(first: 1000) {
     id
@@ -10445,7 +10445,7 @@ export const VaultsDocument = gql`
   }
 }
     `;
-export const UsersDocument = gql`
+export const UsersDocument: DocumentNode = gql`
     query Users($first: Int, $skip: Int) {
   accounts(first: $first, skip: $skip, orderBy: id, orderDirection: asc) {
     id
@@ -10453,7 +10453,7 @@ export const UsersDocument = gql`
   }
 }
     `;
-export const HistoricalVaultsDocument = gql`
+export const HistoricalVaultsDocument: DocumentNode = gql`
     query HistoricalVaults($blockNumber: Int!) {
   vaults(block: {number: $blockNumber}, first: 1000) {
     id

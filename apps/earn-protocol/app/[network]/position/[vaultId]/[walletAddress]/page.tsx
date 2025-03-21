@@ -1,16 +1,21 @@
 import {
   fetchForecastData,
+  getDisplayToken,
   getPositionValues,
   parseForecastDatapoints,
   Text,
 } from '@summerfi/app-earn-ui'
 import { type PositionForecastAPIResponse, type SDKNetwork } from '@summerfi/app-types'
 import {
+  formatCryptoBalance,
   humanNetworktoSDKNetwork,
   parseServerResponseToClient,
   subgraphNetworkToId,
 } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
+import { capitalize } from 'lodash-es'
+import { type Metadata } from 'next'
+import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
@@ -195,6 +200,47 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       migrationBestVaultApy={migrationBestVaultApy}
     />
   )
+}
+
+export async function generateMetadata({ params }: EarnVaultManagePageProps): Promise<Metadata> {
+  const { network: paramsNetwork, vaultId, walletAddress } = await params
+  const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
+  const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
+  const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
+  const prodHost = (await headers()).get('host')
+  const baseUrl = new URL(`https://${prodHost}`)
+
+  const parsedVaultId = isAddress(vaultId)
+    ? vaultId
+    : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
+
+  const [position, vault] = await Promise.all([
+    getUserPosition({
+      vaultAddress: parsedVaultId,
+      network: parsedNetwork,
+      walletAddress,
+    }),
+    getVaultDetails({
+      vaultAddress: parsedVaultId,
+      network: parsedNetwork,
+    }),
+  ])
+
+  const { netValue } =
+    position && vault
+      ? getPositionValues({
+          position,
+          vault,
+        })
+      : { netValue: 0 }
+
+  return {
+    title: `Lazy Summer Protocol - ${formatCryptoBalance(netValue)} ${vault ? getDisplayToken(vault.inputToken.symbol) : ''} position on ${capitalize(paramsNetwork)}`,
+    openGraph: {
+      siteName: 'Lazy Summer Protocol',
+      images: `${baseUrl}earn/api/og/vault-position?amount=${formatCryptoBalance(netValue)}&token=${vault ? getDisplayToken(vault.inputToken.symbol) : ''}&address=${walletAddress}`,
+    },
+  }
 }
 
 export default EarnVaultManagePage

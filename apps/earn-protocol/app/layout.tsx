@@ -30,7 +30,7 @@ import logoMaintenance from '@/public/img/branding/logo-dark.svg'
 export const metadata: Metadata = {
   title: 'The home of the Lazy Summer Protocol',
   description:
-    "Get effortless access to crypto's best DeFi yields. Continually rebalanced by AI powered Keepers to earn you more while saving you time and reducing costs.'",
+    "Get effortless access to crypto's best DeFi yields. Continually rebalanced by AI powered Keepers to earn you more while saving you time and reducing costs.",
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

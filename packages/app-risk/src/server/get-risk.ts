@@ -57,7 +57,7 @@ export const getRisk = async <DB extends RiskRequiredDB>({
     return NextResponse.json({ authenticated: false }, { status: 401 })
   }
 
-  const decoded = verifyAccessToken({ token: token.value, jwtSecret })
+  const decoded = await verifyAccessToken({ token: token.value, jwtSecret })
 
   if (!decoded) {
     return NextResponse.json({ authenticated: false }, { status: 401 })
