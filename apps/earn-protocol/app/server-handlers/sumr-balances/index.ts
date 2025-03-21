@@ -5,6 +5,7 @@ import BigNumber from 'bignumber.js'
 import { type Address, createPublicClient, http, zeroAddress } from 'viem'
 import { arbitrum, base, mainnet, sonic } from 'viem/chains'
 
+import { serverOnlyErrorHandler } from '@/app/server-handlers/error-handler'
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 import { VESTING_WALLET_FACTORY_ADDRESS } from '@/constants/addresses'
 import { SDKChainIdToSSRRpcGatewayMap } from '@/helpers/rpc-gateway-ssr'
@@ -166,11 +167,9 @@ export const getSumrBalances = async ({
       },
     }
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error in getSumrBalances:', error)
-
-    throw new Error(
-      `Failed to get $SUMR balances: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    return serverOnlyErrorHandler(
+      'getSumrBalances',
+      error instanceof Error ? error.message : 'Unknown error',
     )
   }
 }

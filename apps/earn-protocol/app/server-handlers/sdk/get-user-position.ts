@@ -3,6 +3,7 @@ import { subgraphNetworkToId } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
 import { Address, getChainInfoByChainId, User, Wallet } from '@summerfi/sdk-common'
 
+import { serverOnlyErrorHandler } from '@/app/server-handlers/error-handler'
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 
 export async function getUserPosition({
@@ -38,6 +39,6 @@ export async function getUserPosition({
 
     return position as IArmadaPosition | undefined
   } catch (error) {
-    throw new Error(`Failed to get users position: ${error}`)
+    return serverOnlyErrorHandler('getUserPosition', error as string)
   }
 }

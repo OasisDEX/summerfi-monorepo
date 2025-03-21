@@ -5,6 +5,7 @@ import BigNumber from 'bignumber.js'
 import { type Address, createPublicClient, http } from 'viem'
 import { base } from 'viem/chains'
 
+import { serverOnlyErrorHandler } from '@/app/server-handlers/error-handler'
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 import {
   GOVERNANCE_REWARDS_MANAGER_ADDRESS,
@@ -50,8 +51,9 @@ export const getSumrDelegateStake = async ({
         chainInfo: getChainInfoByChainId(SDKChainId.BASE),
       })
     } catch (error) {
-      throw new Error(
-        `Failed to fetch SUMMER token data: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      return serverOnlyErrorHandler(
+        'getSummerToken sdk',
+        error instanceof Error ? error.message : 'Unknown error',
       )
     }
 
@@ -159,16 +161,15 @@ export const getSumrDelegateStake = async ({
         stakedAmount,
       }
     } catch (error) {
-      throw new Error(
-        `Failed to fetch contract data: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      return serverOnlyErrorHandler(
+        'getSummerToken multicalls',
+        error instanceof Error ? error.message : 'Unknown error',
       )
     }
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error in getSumrDelegateStake:', error)
-
-    throw new Error(
-      `Failed to get $SUMR delegate stake: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    return serverOnlyErrorHandler(
+      'getSummerToken global',
+      error instanceof Error ? error.message : 'Unknown error',
     )
   }
 }
