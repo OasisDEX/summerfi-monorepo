@@ -1,5 +1,5 @@
 'use client'
-import { type CSSProperties, useEffect, useMemo, useRef, useState } from 'react'
+import { type CSSProperties, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { type TokenSymbolsList } from '@summerfi/app-types'
 import { toggleArrayItem } from '@summerfi/app-utils'
 import { isEqual } from 'lodash-es'
@@ -419,13 +419,26 @@ export function GenericMultiselect({
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center' }}>{selectLabel}</div>
-          <Icon
-            iconName={isOpen ? 'chevron_up' : 'chevron_down'}
-            size={12}
-            color={
-              isOpen ? 'var(--earn-protocol-secondary-100)' : 'var(--earn-protocol-secondary-40)'
+          <Suspense
+            fallback={
+              <div
+                style={{
+                  width: '12px',
+                  height: '12px',
+                  backgroundColor: 'var(--earn-protocol-neutral-70)',
+                  borderRadius: '50%',
+                }}
+              />
             }
-          />
+          >
+            <Icon
+              iconName={isOpen ? 'chevron_up' : 'chevron_down'}
+              size={12}
+              color={
+                isOpen ? 'var(--earn-protocol-secondary-100)' : 'var(--earn-protocol-secondary-40)'
+              }
+            />
+          </Suspense>
         </Text>
       </div>
       {isMobile ? (
