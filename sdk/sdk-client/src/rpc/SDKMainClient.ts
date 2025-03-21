@@ -43,7 +43,8 @@ export function createMainRPCClient(apiURL: string): RPCMainClientType {
                   ? SerializationService.getTransformer().deserialize(object)
                   : res
               } catch (error) {
-                console.log(error)
+                console.log('Error deserializing object', error)
+                console.log('object', object)
               }
             },
           },
