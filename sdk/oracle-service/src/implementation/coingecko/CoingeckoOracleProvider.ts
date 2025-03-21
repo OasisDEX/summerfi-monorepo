@@ -23,7 +23,7 @@ export type CoingeckoResponse = {
 
 /**
  * @name CoingeckoOracleProvider
- * @description This class is responsible for fetching spot prices from the 1inch API
+ * @description This class is responsible for fetching spot prices from the Coingecko API
  */
 export class CoingeckoOracleProvider
   extends ManagerProviderBase<OracleProviderType>
@@ -38,7 +38,7 @@ export class CoingeckoOracleProvider
   /** CONSTRUCTOR */
 
   constructor(params: { configProvider: IConfigurationProvider }) {
-    super({ ...params, type: OracleProviderType.OneInch })
+    super({ ...params, type: OracleProviderType.Coingecko })
 
     const { config } = this._getConfig()
 

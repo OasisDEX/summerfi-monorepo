@@ -341,8 +341,8 @@ describe('Armada Protocol Deposit', () => {
         })
 
         await new Promise((resolve) => {
-          console.log('wait 3 seconds...')
-          return setTimeout(resolve, 3000)
+          console.log('wait 5 seconds...')
+          return setTimeout(resolve, 5000)
         })
 
         const fleetAmountAfter = await sdk.armada.users.getFleetBalance({

@@ -14,7 +14,7 @@ export class MockConfigurationProvider implements IConfigurationProvider {
       case 'ONE_INCH_API_SPOT_URL':
         return 'https://someapi.com'
       case 'ONE_INCH_API_SPOT_AUTH_HEADER':
-        return 'Auithorization'
+        return 'Authorization'
       case 'ONE_INCH_SWAP_CHAIN_IDS':
         return '1'
       case 'COINGECKO_API_URL':
