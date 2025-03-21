@@ -2843,8 +2843,8 @@ importers:
         specifier: workspace:*
         version: link:../subgraph-manager-common
       '@trpc/client':
-        specifier: 11.0.0-rc.502
-        version: 11.0.0-rc.502(@trpc/server@11.0.0-rc.502)
+        specifier: 11.0.0-rc.844
+        version: 11.0.0-rc.844(@trpc/server@11.0.0-rc.844)(typescript@5.7.3)
       superjson:
         specifier: ^1.13.3
         version: 1.13.3
@@ -2999,26 +2999,26 @@ importers:
   sdk/sdk-router-function:
     dependencies:
       '@aws-lambda-powertools/logger':
-        specifier: ^1.18.1
-        version: 1.18.1(@middy/core@6.0.0)
+        specifier: ^2.16.0
+        version: 2.16.0(@middy/core@6.1.6)
       '@aws-lambda-powertools/metrics':
-        specifier: ^1.18.1
-        version: 1.18.1(@middy/core@6.0.0)
+        specifier: ^2.16.0
+        version: 2.16.0(@middy/core@6.1.6)
       '@aws-lambda-powertools/tracer':
-        specifier: ^1.18.1
-        version: 1.18.1(@middy/core@6.0.0)
+        specifier: ^2.16.0
+        version: 2.16.0(@middy/core@6.1.6)
       '@middy/core':
-        specifier: ^6.0.0
-        version: 6.0.0
+        specifier: ^6.1.6
+        version: 6.1.6
       '@summerfi/sdk-server':
         specifier: workspace:*
         version: link:../sdk-server
       '@trpc/server':
-        specifier: 11.0.0-rc.502
-        version: 11.0.0-rc.502
+        specifier: 11.0.0-rc.844
+        version: 11.0.0-rc.844(typescript@5.7.3)
       superjson:
-        specifier: ^1.13.3
-        version: 1.13.3
+        specifier: ^2.2.2
+        version: 2.2.2
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -3037,10 +3037,10 @@ importers:
         version: 1.18.1(@middy/core@6.0.0)
       '@aws-lambda-powertools/metrics':
         specifier: ^1.18.1
-        version: 1.18.1(@middy/core@6.0.0)
+        version: 1.18.1
       '@aws-lambda-powertools/tracer':
         specifier: ^1.18.1
-        version: 1.18.1(@middy/core@6.0.0)
+        version: 1.18.1
       '@summerfi/abi-provider-common':
         specifier: workspace:*
         version: link:../abi-provider-common
@@ -3144,8 +3144,8 @@ importers:
         specifier: workspace:*
         version: link:../tokens-service
       '@trpc/server':
-        specifier: 11.0.0-rc.502
-        version: 11.0.0-rc.502
+        specifier: 11.0.0-rc.844
+        version: 11.0.0-rc.844(typescript@5.7.3)
       superjson:
         specifier: ^1.13.3
         version: 1.13.3
@@ -4753,6 +4753,10 @@ packages:
     resolution: {integrity: sha512-6tH27airGDbK+hNltrb33qdsbbrql34KcSBLmKnZYGZam7nWc5giTEtDh1Zyw2N3bQ0BnZ6SahgO9eY46WaiRA==}
     dev: false
 
+  /@aws-lambda-powertools/commons@2.16.0:
+    resolution: {integrity: sha512-HtVibLx8yCHvfRhOwI85ghJJqF3pYr49rZP+kRyath0ZnIEWfklFmv9ehcohPzlIgaiOijKV4vyGCKiXBOnigw==}
+    dev: false
+
   /@aws-lambda-powertools/logger@1.18.1(@middy/core@6.0.0):
     resolution: {integrity: sha512-GsSMqaFXCSz+llSOn2CVNMoN+j/jNsS6JP2Opy9myU0tvg7PeuU3+rN24vKyibUwpxM466IzWFBSJkYdm0bqVw==}
     deprecated: 'Version 1.x has reached End-of-Life, please upgrade to 2.x, more info here: https://s12d.com/upgrade-v2'
@@ -4779,7 +4783,20 @@ packages:
       lodash.merge: 4.6.2
     dev: false
 
-  /@aws-lambda-powertools/metrics@1.18.1(@middy/core@6.0.0):
+  /@aws-lambda-powertools/logger@2.16.0(@middy/core@6.1.6):
+    resolution: {integrity: sha512-k7Xpjx1VAd/52p3Wssq83OwUFOeus6Mx9JnsXBAdAA/aUON7srbv2pPRFMGuoK9Qv5nYvADaBcL9hYtK/XknaA==}
+    peerDependencies:
+      '@middy/core': 4.x || 5.x || 6.x
+    peerDependenciesMeta:
+      '@middy/core':
+        optional: true
+    dependencies:
+      '@aws-lambda-powertools/commons': 2.16.0
+      '@middy/core': 6.1.6
+      lodash.merge: 4.6.2
+    dev: false
+
+  /@aws-lambda-powertools/metrics@1.18.1:
     resolution: {integrity: sha512-ebojjuoOlm0bOtZ6H5fyTnC5B0owVX1nNqDUPEQSejkeiiBW0m6DVzy6hFWuKmGtBtm2WNnWwTE//WtF+CD6Ug==}
     peerDependencies:
       '@middy/core': '>=3.x'
@@ -4788,7 +4805,6 @@ packages:
         optional: true
     dependencies:
       '@aws-lambda-powertools/commons': 1.18.1
-      '@middy/core': 6.0.0
     dev: false
 
   /@aws-lambda-powertools/metrics@2.0.4:
@@ -4802,7 +4818,19 @@ packages:
       '@aws-lambda-powertools/commons': 2.0.4
     dev: false
 
-  /@aws-lambda-powertools/tracer@1.18.1(@middy/core@6.0.0):
+  /@aws-lambda-powertools/metrics@2.16.0(@middy/core@6.1.6):
+    resolution: {integrity: sha512-QC+/ZGAOzDy7GWhBILZaEcuj6IpaOMUTgTuSs+C/OLC+Qil/jMHDNzGzVkBPsLRYfG3wxLM0vV9LXFK+DQYxLQ==}
+    peerDependencies:
+      '@middy/core': 4.x || 5.x || 6.x
+    peerDependenciesMeta:
+      '@middy/core':
+        optional: true
+    dependencies:
+      '@aws-lambda-powertools/commons': 2.16.0
+      '@middy/core': 6.1.6
+    dev: false
+
+  /@aws-lambda-powertools/tracer@1.18.1:
     resolution: {integrity: sha512-bMLBtdEFNmLUR9RJvBULR6XJD0XopUhhS1mlpeQlm2BCPIN3gLbqAlJK8dMXyAw8GCpLpHaziCo2+7a/AIh7lA==}
     peerDependencies:
       '@middy/core': '>=3.x'
@@ -4811,7 +4839,6 @@ packages:
         optional: true
     dependencies:
       '@aws-lambda-powertools/commons': 1.18.1
-      '@middy/core': 6.0.0
       aws-xray-sdk-core: 3.6.0
     dev: false
 
@@ -4825,6 +4852,19 @@ packages:
     dependencies:
       '@aws-lambda-powertools/commons': 2.0.4
       aws-xray-sdk-core: 3.6.0
+    dev: false
+
+  /@aws-lambda-powertools/tracer@2.16.0(@middy/core@6.1.6):
+    resolution: {integrity: sha512-6TMj5a1Mc14f2GgXZnObo9WlrfQtXuJDxDu1rsR44iJdHdrAs8PoGM0ZHvR5RJgcitBNu4IRdD4X/5z0OHu1Kw==}
+    peerDependencies:
+      '@middy/core': 4.x || 5.x || 6.x
+    peerDependenciesMeta:
+      '@middy/core':
+        optional: true
+    dependencies:
+      '@aws-lambda-powertools/commons': 2.16.0
+      '@middy/core': 6.1.6
+      aws-xray-sdk-core: 3.10.3
     dev: false
 
   /@aws-sdk/client-cloudformation@3.555.0:
@@ -13992,6 +14032,11 @@ packages:
     engines: {node: '>=20'}
     dev: false
 
+  /@middy/core@6.1.6:
+    resolution: {integrity: sha512-YT7J0+9zgGIhKnC6lA5z1iE+EDHpmMda7H7gD59cu4inxRC2RTk+ensGFaJxXXMlAM08vGJn6Q5gH8KnV6YWoQ==}
+    engines: {node: '>=20'}
+    dev: false
+
   /@mobily/ts-belt@3.13.1:
     resolution: {integrity: sha512-K5KqIhPI/EoCTbA6CGbrenM9s41OouyK8A03fGJJcla/zKucsgLbz8HNbeseoLarRPgyWJsUyCYqFhI7t3Ra9Q==}
     engines: {node: '>= 10.*'}
@@ -18756,20 +18801,26 @@ packages:
       '@trpc/server': 11.0.0-next-beta.264
     dev: false
 
-  /@trpc/client@11.0.0-rc.502(@trpc/server@11.0.0-rc.502):
-    resolution: {integrity: sha512-ysFQ3wHnjzLcAqeuwx9/B/YV+2XN/kmfAdTUG+O/SUAdP2wAwo6XbhOxlHw0HWS5pDCsTfJkxDr1nMVkuFM07Q==}
+  /@trpc/client@11.0.0-rc.844(@trpc/server@11.0.0-rc.844)(typescript@5.7.3):
+    resolution: {integrity: sha512-WPyGZZvTvhlTdozBcJVFrh40RYOuI90Ghaq/DYOPFBC9H8aRR5uExCIemU+O1h8jaAs1E+IFdHpUNEVzZJ9pQw==}
     peerDependencies:
-      '@trpc/server': 11.0.0-rc.502+2a8c56027
+      '@trpc/server': 11.0.0-rc.844+0244dee81
+      typescript: '>=5.7.2'
     dependencies:
-      '@trpc/server': 11.0.0-rc.502
+      '@trpc/server': 11.0.0-rc.844(typescript@5.7.3)
+      typescript: 5.7.3
     dev: false
 
   /@trpc/server@11.0.0-next-beta.264:
     resolution: {integrity: sha512-h6RJX+C+VgFQusxGVtw3n1PZPLt27ZG70U8cPR5pwmsnE2E3vREijOgEo5MRKoiUhVrjbw8e6gnGVeKzl7uZXg==}
     dev: false
 
-  /@trpc/server@11.0.0-rc.502:
-    resolution: {integrity: sha512-n6B8Q/UqF+hFXyCTXq9AWSn6EkXBbVo/Bs7/QzZxe5KD5CdnBomC7A1y6Qr+i0eiOWwTHJZQ0az+gJetb2fdxw==}
+  /@trpc/server@11.0.0-rc.844(typescript@5.7.3):
+    resolution: {integrity: sha512-jy2qccOY4kjSmfRaAjZ/BZUG1D90Dex/ow0X920wAsno/EX+orR9vNXbNKsL/4TmM8CzRJ6jw1Y39GwBnrfziA==}
+    peerDependencies:
+      typescript: '>=5.7.2'
+    dependencies:
+      typescript: 5.7.3
     dev: false
 
   /@trpc/server@9.16.0:
@@ -23265,6 +23316,18 @@ packages:
       uuid: 8.0.0
       xml2js: 0.6.2
     dev: true
+
+  /aws-xray-sdk-core@3.10.3:
+    resolution: {integrity: sha512-bltsLAr4juMJJ2tT5/L/CtwUGIvHihtPe6SO/z3jjOD73PHhOYxcuwCMFFyTbTy5S4WThJO32oZk7r+pg3ZoCQ==}
+    engines: {node: '>= 14.x'}
+    dependencies:
+      '@aws-sdk/types': 3.731.0
+      '@smithy/service-error-classification': 2.1.5
+      '@types/cls-hooked': 4.3.8
+      atomic-batcher: 1.0.2
+      cls-hooked: 4.2.2
+      semver: 7.6.3
+    dev: false
 
   /aws-xray-sdk-core@3.6.0:
     resolution: {integrity: sha512-+UnYmVEni9NNJvE6aFY1dbvMtFquXSYAj+HYfm+90icoGKYvvLD71R7PHyFFnYct5of4NFpEXJtUJrWMv8e4mQ==}
@@ -37263,6 +37326,13 @@ packages:
   /superjson@1.13.3:
     resolution: {integrity: sha512-mJiVjfd2vokfDxsQPOwJ/PtanO87LhpYY88ubI5dUB1Ab58Txbyje3+jpm+/83R/fevaq/107NNhtYBLuoTrFg==}
     engines: {node: '>=10'}
+    dependencies:
+      copy-anything: 3.0.5
+    dev: false
+
+  /superjson@2.2.2:
+    resolution: {integrity: sha512-5JRxVqC8I8NuOUjzBbvVJAKNM8qoVuH0O77h4WInc/qC2q5IreqKxYwgkga3PfA22OayK2ikceb/B26dztPl+Q==}
+    engines: {node: '>=16'}
     dependencies:
       copy-anything: 3.0.5
     dev: false
