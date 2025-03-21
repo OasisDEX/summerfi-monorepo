@@ -25,6 +25,7 @@ interface MigrationLandingPagePositionCardProps {
   isActive: boolean
   earningsData: MigrationEarningsData
   wrapperStyle?: CSSProperties
+  renderIcon?: boolean
 }
 
 export const MigrationLandingPagePositionCard: FC<MigrationLandingPagePositionCardProps> = ({
@@ -33,6 +34,7 @@ export const MigrationLandingPagePositionCard: FC<MigrationLandingPagePositionCa
   isActive,
   earningsData,
   wrapperStyle,
+  renderIcon = true,
 }) => {
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
@@ -68,14 +70,26 @@ export const MigrationLandingPagePositionCard: FC<MigrationLandingPagePositionCa
     >
       <div className={classNames.iconTextualWrapper}>
         <div className={classNames.iconValueWrapper}>
-          <TokenWithNetworkIcon
-            tokenName={
-              position.underlyingTokenAmount.token.symbol.toUpperCase() as TokenSymbolsList
-            }
-            variant="medium"
-            chainId={position.chainId}
-            overrideIconSize={40}
-          />
+          {renderIcon ? (
+            <TokenWithNetworkIcon
+              tokenName={
+                position.underlyingTokenAmount.token.symbol.toUpperCase() as TokenSymbolsList
+              }
+              variant="medium"
+              chainId={position.chainId}
+              overrideIconSize={40}
+            />
+          ) : (
+            <div
+              style={{
+                paddingTop: '5px',
+                width: 40,
+                height: 40,
+                backgroundColor: 'var(--earn-protocol-neutral-70)',
+                borderRadius: '50%',
+              }}
+            />
+          )}
           <div className={classNames.valuePlatformWrapper}>
             <Text as="h4" variant="h4">
               ${formatFiatBalance(position.usdValue.amount)}{' '}
