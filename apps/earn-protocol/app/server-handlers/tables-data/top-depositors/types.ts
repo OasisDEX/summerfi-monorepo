@@ -21,6 +21,7 @@ export type TopDepositorsPagination = {
 export type TopDepositorsSortBy =
   | 'balanceUsd'
   | 'balance'
+  | 'balanceNormalized'
   | 'changeSevenDays'
   | 'projectedOneYearEarnings'
   | 'projectedOneYearEarningsUsd'
