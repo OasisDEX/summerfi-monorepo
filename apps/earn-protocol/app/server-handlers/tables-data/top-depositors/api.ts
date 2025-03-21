@@ -1,6 +1,7 @@
 import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { NextResponse } from 'next/server'
 
+import { userAddresesToFilterOut } from '@/app/server-handlers/tables-data/consts'
 import { type TableSortOrder } from '@/app/server-handlers/tables-data/types'
 
 import { type TopDepositorsPagination, type TopDepositorsSortBy } from './types'
@@ -15,6 +16,7 @@ import { type TopDepositorsPagination, type TopDepositorsSortBy } from './types'
  * @param {string} [userAddress] - Optional filter for a specific user address.
  * @param {string[]} [strategies] - Optional filter for specific strategies.
  * @param {string[]} [tokens] - Optional filter for specific tokens.
+ * @param {string[]} [filterOutUsersAddresses] - Optional filter for specific users addresses to filter out.
  * @returns {Promise<NextResponse>} - A response containing the top depositors and pagination details.
  */
 export const getTopDepositorsServerSide = async ({
@@ -25,6 +27,7 @@ export const getTopDepositorsServerSide = async ({
   userAddress,
   strategies,
   tokens,
+  filterOutUsersAddresses = userAddresesToFilterOut,
 }: {
   page: number
   limit: number
@@ -33,6 +36,7 @@ export const getTopDepositorsServerSide = async ({
   userAddress?: string
   strategies?: string[]
   tokens?: string[]
+  filterOutUsersAddresses?: string[]
 }) => {
   const connectionString = process.env.EARN_PROTOCOL_DB_CONNECTION_STRING
 
@@ -55,6 +59,13 @@ export const getTopDepositorsServerSide = async ({
 
     const resolvedTokens = tokens?.map((token) => (token === 'ETH' ? 'WETH' : token))
 
+    // If userAddress is provided, don't filter out any addresses
+    // Testing wallets should display in the top depositors on thier position
+    // page or portfolio page
+    const resolvedFilterOutUsersAddresses = userAddress
+      ? []
+      : filterOutUsersAddresses.map((address) => address.toLowerCase())
+
     // Apply filters if provided
     const filteredQuery = baseQuery
       .$if(!!userAddress, (qb) =>
@@ -65,6 +76,9 @@ export const getTopDepositorsServerSide = async ({
       )
       .$if(!!strategies && strategies.length > 0, (qb) =>
         qb.where('strategyId', 'in', strategies as string[]),
+      )
+      .$if(resolvedFilterOutUsersAddresses.length > 0, (qb) =>
+        qb.where('userAddress', 'not in', resolvedFilterOutUsersAddresses),
       )
 
     // Apply pagination and sorting
@@ -119,6 +133,7 @@ export const getTopDepositorsServerSide = async ({
  * @param {string} [userAddress] - Optional filter for a specific user address.
  * @param {string[]} [strategies] - Optional filter for specific strategies.
  * @param {string[]} [tokens] - Optional filter for specific tokens.
+ * @param {string[]} [filterOutUsersAddresses] - Optional filter for specific users addresses to filter out.
  * @returns {Promise<TopDepositorsPagination>} - A promise resolving to paginated top depositors data.
  */
 export const getPaginatedTopDepositors = async ({
@@ -129,6 +144,7 @@ export const getPaginatedTopDepositors = async ({
   userAddress,
   strategies,
   tokens,
+  filterOutUsersAddresses,
 }: {
   page: number
   limit: number
@@ -137,6 +153,7 @@ export const getPaginatedTopDepositors = async ({
   userAddress?: string
   strategies?: string[]
   tokens?: string[]
+  filterOutUsersAddresses?: string[]
 }): Promise<TopDepositorsPagination> => {
   return await getTopDepositorsServerSide({
     page,
@@ -146,5 +163,6 @@ export const getPaginatedTopDepositors = async ({
     userAddress,
     strategies,
     tokens,
+    filterOutUsersAddresses,
   }).then((res) => res.json())
 }

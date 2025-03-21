@@ -1,6 +1,7 @@
 import { type ActionType, getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { NextResponse } from 'next/server'
 
+import { userAddresesToFilterOut } from '@/app/server-handlers/tables-data/consts'
 import { type TableSortOrder } from '@/app/server-handlers/tables-data/types'
 
 import { type LatestActivitiesSortBy, type LatestActivityPagination } from './types'
@@ -17,6 +18,7 @@ import { type LatestActivitiesSortBy, type LatestActivityPagination } from './ty
  * @param {string} [params.userAddress] - Optional user address to filter activity for a specific user.
  * @param {string[]} [params.tokens] - Optional list of token symbols to filter by.
  * @param {string[]} [params.strategies] - Optional list of strategy IDs to filter by.
+ * @param {string[]} [params.filterOutUsersAddresses] - Optional list of user addresses to filter out.
  *
  * @returns {NextResponse} A Next.js response containing the latest activities and pagination details.
  */
@@ -29,6 +31,7 @@ export const getLatestActivitiesServerSide = async ({
   userAddress,
   tokens,
   strategies,
+  filterOutUsersAddresses = userAddresesToFilterOut,
 }: {
   page: number
   limit: number
@@ -38,6 +41,7 @@ export const getLatestActivitiesServerSide = async ({
   userAddress?: string
   tokens?: string[]
   strategies?: string[]
+  filterOutUsersAddresses?: string[]
 }) => {
   const connectionString = process.env.EARN_PROTOCOL_DB_CONNECTION_STRING
 
@@ -60,6 +64,13 @@ export const getLatestActivitiesServerSide = async ({
     // Build the query with proper typing
     const baseQuery = dbInstance.db.selectFrom('latestActivity').selectAll()
 
+    // If userAddress is provided, don't filter out any addresses
+    // Testing wallets should display in the latest activity on thier position
+    // page or portfolio page
+    const resolvedFilterOutUsersAddresses = userAddress
+      ? []
+      : filterOutUsersAddresses.map((address) => address.toLowerCase())
+
     // Apply filters if provided
     const filteredQuery = baseQuery
       .$if(!!actionType, (qb) => qb.where('actionType', '=', actionType as ActionType))
@@ -71,6 +82,9 @@ export const getLatestActivitiesServerSide = async ({
       )
       .$if(!!strategies && strategies.length > 0, (qb) =>
         qb.where('strategyId', 'in', strategies as string[]),
+      )
+      .$if(resolvedFilterOutUsersAddresses.length > 0, (qb) =>
+        qb.where('userAddress', 'not in', resolvedFilterOutUsersAddresses),
       )
 
     // Apply pagination and sorting
@@ -156,6 +170,7 @@ export const getLatestActivitiesServerSide = async ({
  * @param {string} [params.userAddress] - Optional user address to filter activity for a specific user.
  * @param {string[]} [params.tokens] - Optional list of token symbols to filter by.
  * @param {string[]} [params.strategies] - Optional list of strategy IDs to filter by.
+ * @param {string[]} [params.filterOutUsersAddresses] - Optional list of user addresses to filter out.
  *
  * @returns {Promise<LatestActivityPagination>} A promise resolving to the paginated API response in JSON format.
  */
@@ -168,6 +183,7 @@ export const getPaginatedLatestActivity = async ({
   userAddress,
   tokens,
   strategies,
+  filterOutUsersAddresses,
 }: {
   page: number
   limit: number
@@ -177,6 +193,7 @@ export const getPaginatedLatestActivity = async ({
   userAddress?: string
   tokens?: string[]
   strategies?: string[]
+  filterOutUsersAddresses?: string[]
 }): Promise<LatestActivityPagination> => {
   return await getLatestActivitiesServerSide({
     page,
@@ -187,5 +204,6 @@ export const getPaginatedLatestActivity = async ({
     userAddress,
     tokens,
     strategies,
+    filterOutUsersAddresses,
   }).then((res) => res.json())
 }
