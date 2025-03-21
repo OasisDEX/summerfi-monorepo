@@ -19,6 +19,7 @@ import {
   getHumanReadableFleetName,
   getPastTimestamp,
   subgraphNetworkToId,
+  zero,
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
@@ -123,9 +124,11 @@ export const topDepositorsMapper = (
             <TableCellText>
               {formatCryptoBalance(
                 balance.times(
-                  vaultsApyData[
-                    `${item.vault.id}-${subgraphNetworkToId(item.vault.protocol.network)}`
-                  ].apy,
+                  (
+                    vaultsApyData[
+                      `${item.vault.id}-${subgraphNetworkToId(item.vault.protocol.network)}`
+                    ] as { apy: number } | undefined
+                  )?.apy ?? zero,
                 ),
               )}
             </TableCellText>
