@@ -1,7 +1,6 @@
 import { Address } from '@summerfi/serverless-shared'
 import { createAddressService } from './addressService'
 import { Chain, HttpTransport, createPublicClient } from 'viem'
-import { publicActionReverseMirage } from 'reverse-mirage'
 import { dsProxyRegistryContract } from './abi/dsProxyRegistryContract'
 import { dsProxyContract } from './abi/dsProxyContract'
 import { Logger } from '@aws-lambda-powertools/logger'
@@ -23,7 +22,7 @@ export const getDsProxy = async (
   const publicClient = createPublicClient({
     chain,
     transport,
-  }).extend(publicActionReverseMirage)
+  })
 
   const dsProxyRegistry = getCoreContract('DSProxyRegistry')
 
