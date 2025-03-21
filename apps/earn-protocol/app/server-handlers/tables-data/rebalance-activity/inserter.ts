@@ -10,6 +10,22 @@ import { DB_BATCH_SIZE } from '@/app/server-handlers/tables-data/consts'
 
 import { type RebalanceActivity } from './types'
 
+/**
+ * Inserts a batch of rebalance activities into the database.
+ *
+ * This function processes the provided rebalance activities in batches and inserts them into the `rebalanceActivity` table in
+ * the database. Each activity is mapped to the corresponding database fields with normalization applied to the token amounts
+ * and balances. The insertion is performed in batches to optimize performance and avoid exceeding the database's insert limit.
+ *
+ * @param {SummerProtocolDB['db']} db - The database instance used to perform the insert operation.
+ * @param {RebalanceActivity[]} activities - An array of `RebalanceActivity` objects to be inserted into the database.
+ * @param {number} [batchSize=DB_BATCH_SIZE] - The number of activities to insert in each batch. Defaults to `DB_BATCH_SIZE`.
+ * @returns {Promise<{ updated: number }>} - A promise that resolves to an object containing the number of inserted or updated rows.
+ *
+ * @example
+ * const result = await insertRebalanceActivitiesInBatches(db, activities)
+ * console.log(result.updated) // Logs the number of rows inserted or updated
+ */
 export async function insertRebalanceActivitiesInBatches(
   db: SummerProtocolDB['db'],
   activities: RebalanceActivity[],

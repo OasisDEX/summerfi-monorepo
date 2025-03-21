@@ -7,6 +7,18 @@ interface GraphQLResponse {
   positions: Position[]
 }
 
+/**
+ * Fetches the top depositors from the GraphQL subgraph in batches.
+ *
+ * This function retrieves top depositor positions by making multiple requests to the GraphQL endpoint
+ * with pagination. It keeps requesting until all positions are fetched, determined by the batch size.
+ *
+ * @param {GraphQLClient} client - The GraphQL client used to send requests to the subgraph.
+ * @returns {Promise<Position[]>} - A promise that resolves to an array containing all the top depositor positions.
+ *
+ * @example
+ * const topDepositors = await fetchTopDepositors(client)
+ */
 export async function fetchTopDepositors(client: GraphQLClient) {
   let allPositions: Position[] = []
   let skip = 0

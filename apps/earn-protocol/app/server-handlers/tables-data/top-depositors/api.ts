@@ -1,8 +1,22 @@
 import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { NextResponse } from 'next/server'
 
+import { type TableSortOrder } from '@/app/server-handlers/tables-data/types'
+
 import { type TopDepositorsPagination, type TopDepositorsSortBy } from './types'
 
+/**
+ * Fetches the top depositors from the database on the server side.
+ *
+ * @param {number} page - The current page number.
+ * @param {number} limit - The number of records per page.
+ * @param {TopDepositorsSortBy} [sortBy='balanceUsd'] - The field used for sorting.
+ * @param {TableSortOrder} [orderBy='desc'] - The sorting order ('asc' or 'desc').
+ * @param {string} [userAddress] - Optional filter for a specific user address.
+ * @param {string[]} [strategies] - Optional filter for specific strategies.
+ * @param {string[]} [tokens] - Optional filter for specific tokens.
+ * @returns {Promise<NextResponse>} - A response containing the top depositors and pagination details.
+ */
 export const getTopDepositorsServerSide = async ({
   page,
   limit,
@@ -15,7 +29,7 @@ export const getTopDepositorsServerSide = async ({
   page: number
   limit: number
   sortBy?: TopDepositorsSortBy
-  orderBy?: 'asc' | 'desc'
+  orderBy?: TableSortOrder
   userAddress?: string
   strategies?: string[]
   tokens?: string[]
@@ -95,6 +109,18 @@ export const getTopDepositorsServerSide = async ({
   }
 }
 
+/**
+ * Fetches paginated top depositors data from the server-side function and returns the parsed JSON response.
+ *
+ * @param {number} page - The current page number.
+ * @param {number} limit - The number of records per page.
+ * @param {TopDepositorsSortBy} [sortBy='balanceUsd'] - The field used for sorting.
+ * @param {TableSortOrder} [orderBy='desc'] - The sorting order ('asc' or 'desc').
+ * @param {string} [userAddress] - Optional filter for a specific user address.
+ * @param {string[]} [strategies] - Optional filter for specific strategies.
+ * @param {string[]} [tokens] - Optional filter for specific tokens.
+ * @returns {Promise<TopDepositorsPagination>} - A promise resolving to paginated top depositors data.
+ */
 export const getPaginatedTopDepositors = async ({
   page,
   limit,
@@ -107,7 +133,7 @@ export const getPaginatedTopDepositors = async ({
   page: number
   limit: number
   sortBy?: TopDepositorsSortBy
-  orderBy?: 'asc' | 'desc'
+  orderBy?: TableSortOrder
   userAddress?: string
   strategies?: string[]
   tokens?: string[]

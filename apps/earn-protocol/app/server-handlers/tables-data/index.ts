@@ -8,6 +8,14 @@ import { updateRebalanceActivity } from './rebalance-activity/updater'
 import { updateTopDepositors } from './top-depositors/updater'
 import { UpdateTables } from './types'
 
+/**
+ * Updates the specified tables in the database by fetching the latest data from subgraphs.
+ *
+ * @param tablesToUpdate - An array of tables to update.
+ * @param db - The database instance for performing the updates.
+ *
+ * @returns A JSON response containing the results of the updates for each table, or an error message if the update fails.
+ */
 export const updateTablesData = async ({
   tablesToUpdate,
   db,

@@ -9,6 +9,22 @@ import { DB_BATCH_SIZE } from '@/app/server-handlers/tables-data/consts'
 
 import { type TopDepositorPosition } from './types'
 
+/**
+ * Inserts a batch of top depositors into the database.
+ *
+ * This function processes the provided top depositor positions in batches and inserts them into the `topDepositors` table in the
+ * database. It updates existing records when conflicts occur, and inserts new records when necessary. The insertion is performed
+ * in batches to optimize performance and avoid exceeding the database's insert limit.
+ *
+ * @param {SummerProtocolDB['db']} db - The database instance used to perform the insert operation.
+ * @param {TopDepositorPosition[]} topDepositors - An array of `TopDepositorPosition` objects to be inserted into the database.
+ * @param {number} [batchSize=DB_BATCH_SIZE] - The number of top depositor positions to insert in each batch. Defaults to `DB_BATCH_SIZE`.
+ * @returns {Promise<{ updated: number }>} - A promise that resolves to an object containing the number of inserted or updated rows.
+ *
+ * @example
+ * const result = await insertTopDepositorsInBatches(db, topDepositors)
+ * console.log(result.updated) // Logs the number of rows inserted or updated
+ */
 export async function insertTopDepositorsInBatches(
   db: SummerProtocolDB['db'],
   topDepositors: TopDepositorPosition[],

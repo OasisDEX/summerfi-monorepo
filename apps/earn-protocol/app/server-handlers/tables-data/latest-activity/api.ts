@@ -1,8 +1,25 @@
 import { type ActionType, getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { NextResponse } from 'next/server'
 
+import { type TableSortOrder } from '@/app/server-handlers/tables-data/types'
+
 import { type LatestActivitiesSortBy, type LatestActivityPagination } from './types'
 
+/**
+ * Fetches the latest activities from the database server-side with optional filters.
+ *
+ * @param {Object} params - Query parameters for fetching latest activities.
+ * @param {number} params.page - The page number for pagination.
+ * @param {number} params.limit - The number of records per page.
+ * @param {LatestActivitiesSortBy} [params.sortBy='timestamp'] - Field to sort results by (default: timestamp).
+ * @param {TableSortOrder} [params.orderBy='desc'] - Sorting order (`asc` or `desc`), defaulting to `desc`.
+ * @param {ActionType} [params.actionType] - Optional action type to filter by.
+ * @param {string} [params.userAddress] - Optional user address to filter activity for a specific user.
+ * @param {string[]} [params.tokens] - Optional list of token symbols to filter by.
+ * @param {string[]} [params.strategies] - Optional list of strategy IDs to filter by.
+ *
+ * @returns {NextResponse} A Next.js response containing the latest activities and pagination details.
+ */
 export const getLatestActivitiesServerSide = async ({
   page,
   limit,
@@ -16,7 +33,7 @@ export const getLatestActivitiesServerSide = async ({
   page: number
   limit: number
   sortBy?: LatestActivitiesSortBy
-  orderBy?: 'asc' | 'desc'
+  orderBy?: TableSortOrder
   actionType?: ActionType
   userAddress?: string
   tokens?: string[]
@@ -127,6 +144,21 @@ export const getLatestActivitiesServerSide = async ({
   }
 }
 
+/**
+ * Fetches paginated latest activity data.
+ *
+ * @param {Object} params - Query parameters for fetching latest activities.
+ * @param {number} params.page - The page number for pagination.
+ * @param {number} params.limit - The number of records per page.
+ * @param {LatestActivitiesSortBy} [params.sortBy='timestamp'] - Field to sort results by (default: timestamp).
+ * @param {TableSortOrder} [params.orderBy='desc'] - Sorting order (`asc` or `desc`), defaulting to `desc`.
+ * @param {ActionType} [params.actionType] - Optional action type to filter by.
+ * @param {string} [params.userAddress] - Optional user address to filter activity for a specific user.
+ * @param {string[]} [params.tokens] - Optional list of token symbols to filter by.
+ * @param {string[]} [params.strategies] - Optional list of strategy IDs to filter by.
+ *
+ * @returns {Promise<LatestActivityPagination>} A promise resolving to the paginated API response in JSON format.
+ */
 export const getPaginatedLatestActivity = async ({
   page,
   limit,
@@ -140,7 +172,7 @@ export const getPaginatedLatestActivity = async ({
   page: number
   limit: number
   sortBy?: LatestActivitiesSortBy
-  orderBy?: 'asc' | 'desc'
+  orderBy?: TableSortOrder
   actionType?: ActionType
   userAddress?: string
   tokens?: string[]

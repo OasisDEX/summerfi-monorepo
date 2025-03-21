@@ -12,6 +12,20 @@ interface GraphQLResponse {
   withdraws: Withdraw[]
 }
 
+/**
+ * Fetches all latest deposit and withdraw activities from the GraphQL subgraph in batches.
+ *
+ * This function makes multiple requests to the GraphQL endpoint until all activities are retrieved.
+ * It handles pagination by using the `skip` and `first` arguments in the GraphQL request.
+ * The process continues until there are no more deposits or withdraws to fetch.
+ *
+ * @param {GraphQLClient} client - The GraphQL client used to send requests to the subgraph.
+ * @param {string} timestamp - The timestamp used as a filter for the latest activities.
+ * @returns {Promise<{ deposits: Deposit[], withdraws: Withdraw[] }>} - A promise that resolves to an object containing all the deposits and withdraws.
+ *
+ * @example
+ * const { deposits, withdraws } = await fetchAllLatestActivities(client, '1625461923')
+ */
 export async function fetchAllLatestActivities(client: GraphQLClient, timestamp: string) {
   let allDeposits: Deposit[] = []
   let allWithdraws: Withdraw[] = []

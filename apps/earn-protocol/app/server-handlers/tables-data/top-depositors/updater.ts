@@ -8,6 +8,17 @@ import { getTopDepositors } from './getter'
 import { calculateTopDepositors7daysChange, getEarningStreakResetTimestamp } from './helpers'
 import { insertTopDepositorsInBatches } from './inserter'
 
+/**
+ * Updates the top depositors by fetching the latest data, calculating derived metrics,
+ * and inserting it into the database.
+ *
+ * @param db - The database instance for performing insert operations.
+ * @param mainnetGraphQlClient - The GraphQL client instance for the mainnet.
+ * @param baseGraphQlClient - The GraphQL client instance for the base network.
+ * @param arbitrumGraphQlClient - The GraphQL client instance for the arbitrum network.
+ *
+ * @returns An object containing the number of updated rows and the operation duration in seconds.
+ */
 export const updateTopDepositors = async ({
   db,
   mainnetGraphQlClient,

@@ -4,6 +4,27 @@ import { type LatestActivity } from '@/app/server-handlers/tables-data/latest-ac
 
 import { fetchAllLatestActivities } from './fetcher'
 
+/**
+ * Fetches all the latest deposit and withdraw activities from multiple networks (Mainnet, Base, Arbitrum).
+ *
+ * This function fetches the latest activity data (deposits and withdraws) from three different networks
+ * using GraphQL clients. It combines the activities, adds a `type` property to each item to distinguish
+ * between deposits and withdraws, and sorts them in descending order by timestamp.
+ *
+ * @param {string} lastTimestamp - The timestamp from which to fetch the latest activities.
+ * @param {GraphQLClient} mainnetGraphQlClient - The GraphQL client for the Mainnet network.
+ * @param {GraphQLClient} baseGraphQlClient - The GraphQL client for the Base network.
+ * @param {GraphQLClient} arbitrumGraphQlClient - The GraphQL client for the Arbitrum network.
+ * @returns {Promise<LatestActivity[]>} - A promise that resolves to an array of latest activities from all networks.
+ *
+ * @example
+ * const activities = await getAllLatestActivities({
+ *   lastTimestamp: '1620000000',
+ *   mainnetGraphQlClient,
+ *   baseGraphQlClient,
+ *   arbitrumGraphQlClient
+ * })
+ */
 export const getAllLatestActivities = async ({
   lastTimestamp,
   mainnetGraphQlClient,
