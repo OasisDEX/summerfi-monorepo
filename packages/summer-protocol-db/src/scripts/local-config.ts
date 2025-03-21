@@ -4,6 +4,7 @@ import path from 'node:path'
 import { FileMigrationProvider, Kysely, Migrator } from 'kysely'
 import { PostgresJSDialect } from 'kysely-postgres-js'
 import postgres from 'postgres'
+import { PostgresDB } from 'kysely-codegen/dist/dialects/postgres/postgres-db'
 
 export function getMigrator() {
   console.log('Retrieving database connection string from environment variables...')
@@ -23,7 +24,7 @@ export function getMigrator() {
   console.log('Postgres dialect created.')
 
   console.log('Initializing Kysely database instance...')
-  const db = new Kysely<unknown>({
+  const db = new Kysely<PostgresDB>({
     dialect: dialect,
   })
   console.log('Kysely database instance initialized.')

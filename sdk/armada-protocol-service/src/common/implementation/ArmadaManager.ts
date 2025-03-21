@@ -102,10 +102,7 @@ export class ArmadaManager implements IArmadaManager {
     setTestDeployment(
       this._configProvider.getConfigurationItem({ name: 'SUMMER_DEPLOYMENT_CONFIG' }),
     )
-    console.log(
-      'SUMMER_DEPLOYMENT_CONFIG',
-      this._configProvider.getConfigurationItem({ name: 'SUMMER_DEPLOYMENT_CONFIG' }),
-    )
+
     this._isTestDeployment = isTestDeployment()
 
     this._supportedChains = this._configProvider
@@ -970,6 +967,7 @@ export class ArmadaManager implements IArmadaManager {
             vaultId: params.vaultId,
             slippage: params.slippage,
             amount: fleetAssetsWithdrawAmount,
+            exitAll: true,
             // if withdraw is WETH and unwrapping to ETH,
             // we need to withdraw WETH for later deposit & unwrap operation
             swapToToken:
@@ -1205,6 +1203,7 @@ export class ArmadaManager implements IArmadaManager {
     slippage: IPercentage
     toEth: boolean
     shouldSwap: boolean
+    exitAll?: boolean
   }): Promise<{
     multicallArgs: HexData[]
     multicallOperations: string[]
@@ -1213,11 +1212,12 @@ export class ArmadaManager implements IArmadaManager {
     const multicallOperations: string[] = []
 
     const fromAmount = params.amount
+    const exitAll = params.exitAll ?? false
 
     const exitFleetCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'exitFleet',
-      args: [params.vaultId.fleetAddress.value, 0n],
+      args: [params.vaultId.fleetAddress.value, exitAll ? 0n : fromAmount.toSolidityValue()],
     })
     multicallArgs.push(exitFleetCalldata)
     multicallOperations.push('exitFleet ' + fromAmount.token.toString() + ' (all)')

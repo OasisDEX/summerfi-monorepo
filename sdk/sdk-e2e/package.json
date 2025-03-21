@@ -11,6 +11,7 @@
   "devDependencies": {
     "@summerfi/armada-protocol-common": "workspace:*",
     "@summerfi/armada-protocol-service": "workspace:*",
+    "@summerfi/armada-protocol-abis": "workspace:*",
     "@summerfi/core-contracts": "workspace:*",
     "@summerfi/deployment-utils": "workspace:*",
     "@summerfi/eslint-config": "workspace:*",

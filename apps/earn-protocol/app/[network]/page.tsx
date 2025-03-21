@@ -41,9 +41,11 @@ const EarnNetworkVaultsPage = async ({ params }: EarnNetworkVaultsPageProps) => 
     })),
   })
 
+  const vaultsList = vaultsWithConfig.filter(({ inputToken }) => inputToken.symbol !== 'EURC')
+
   return (
     <VaultListViewComponent
-      vaultsList={vaultsWithConfig}
+      vaultsList={vaultsList}
       selectedNetwork={parsedNetwork}
       vaultsApyByNetworkMap={vaultsApyByNetworkMap}
     />

@@ -128,9 +128,10 @@ export default async function HomePage() {
   const { config } = parseServerResponseToClient(systemConfig)
 
   const vaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig: config })
+  const vaultsList = vaultsWithConfig.filter(({ inputToken }) => inputToken.symbol !== 'EURC')
 
   const vaultsApyByNetworkMap = await getVaultsApy({
-    fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
+    fleets: vaultsList.map(({ id, protocol: { network } }) => ({
       fleetAddress: id,
       chainId: subgraphNetworkToId(network),
     })),
@@ -146,10 +147,7 @@ export default async function HomePage() {
         padding: '0 24px',
       }}
     >
-      <LandingPageHero
-        vaultsList={vaultsWithConfig}
-        vaultsApyByNetworkMap={vaultsApyByNetworkMap}
-      />
+      <LandingPageHero vaultsList={vaultsList} vaultsApyByNetworkMap={vaultsApyByNetworkMap} />
       <BigGradientBox>
         <EffortlessAccessBlock />
         <SupportedNetworksList />

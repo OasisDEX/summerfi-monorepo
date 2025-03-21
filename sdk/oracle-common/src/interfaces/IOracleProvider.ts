@@ -14,23 +14,22 @@ import { IManagerProvider } from '@summerfi/sdk-server-common'
 export interface IOracleProvider extends IManagerProvider<OracleProviderType> {
   /**
    * @name getSpotPrice
-   * @description Returns the prevailing market price for a given asset
-   *              in terms of a base currency
-   * @param baseToken A price request for baseToken
-   * @param quoteToken A price request - QuoteToken is optional with a USD default.
+   * @description Returns the prevailing market price for a single token
+   * @param baseToken requested base token
+   * @param denomination optional denomination either fiat or token, defaults to USD
    */
-  getSpotPrice(params: { baseToken: IToken; quoteToken?: Denomination }): Promise<SpotPriceInfo>
+  getSpotPrice(params: { baseToken: IToken; denomination?: Denomination }): Promise<SpotPriceInfo>
 
   /**
    * @name getSpotPrices
-   * @description Returns the prevailing market price for a given asset
-   *              in terms of a base currency
-   * @param baseToken A price request for baseToken
-   * @param quoteTokens A price request for multiple quoteTokens
+   * @description Returns the prevailing market prices for multiple tokens
+   * @param chainInfo The chain info for specific chain
+   * @param baseTokens An array of requested base tokens
+   * @param quote A quote currency, defaults to USD
    */
   getSpotPrices(params: {
     chainInfo: IChainInfo
     baseTokens: IToken[]
-    quote: FiatCurrency
+    quote?: FiatCurrency
   }): Promise<SpotPricesInfo>
 }

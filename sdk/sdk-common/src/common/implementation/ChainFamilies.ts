@@ -48,7 +48,7 @@ const BaseFamily: Record<BaseChainNames, ChainInfo> = {
 const SonicFamily: Record<SonicChainNames, ChainInfo> = {
   [SonicChainNames.Sonic]: ChainInfo.createFrom({
     chainId: ChainIds.Sonic,
-    name: BaseChainNames.Mainnet,
+    name: SonicChainNames.Sonic,
   }),
 }
 
