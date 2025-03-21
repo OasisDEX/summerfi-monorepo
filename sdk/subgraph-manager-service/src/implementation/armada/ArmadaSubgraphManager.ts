@@ -1,6 +1,7 @@
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IArmadaSubgraphManager, createGraphQLClient } from '@summerfi/subgraph-manager-common'
 import { type ChainId } from '@summerfi/sdk-common'
+import { any } from 'zod'
 
 export interface SubgraphConfig {
   urlPerChain: Record<ChainId, string>
@@ -34,7 +35,16 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
   }
 
   getVaults({ chainId }: Parameters<IArmadaSubgraphManager['getVaults']>[0]) {
-    return this._getClient(chainId).GetVaults()
+    try {
+      return this._getClient(chainId).GetVaults()
+    } catch (error) {
+      console.error(
+        'Error fetching vaults:',
+        (error as { message: string } | undefined)?.message ?? error,
+      )
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return undefined as any
+    }
   }
 
   getVault({ chainId, vaultId }: Parameters<IArmadaSubgraphManager['getVault']>[0]) {
