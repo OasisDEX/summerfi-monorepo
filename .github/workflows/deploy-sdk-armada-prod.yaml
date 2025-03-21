@@ -12,10 +12,10 @@ jobs:
     environment: staging
     runs-on: ubuntu-latest
     env:
-      COINGECK_API_URL: ${{ secrets.COINGECKO_API_URL }}
-      COINGECK_API_VERSION: ${{ secrets.COINGECKO_API_VERSION }}
-      COINGECK_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
-      COINGECK_API_AUTH_HEADER: ${{ secrets.COINGECKO_API_AUTH_HEADER }}
+      COINGECKO_API_URL: ${{ secrets.COINGECKO_API_URL }}
+      COINGECKO_API_VERSION: ${{ secrets.COINGECKO_API_VERSION }}
+      COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
+      COINGECKO_API_AUTH_HEADER: ${{ secrets.COINGECKO_API_AUTH_HEADER }}
       COINGECKO_SUPPORTED_CHAIN_IDS: ${{ secrets.COINGECKO_SUPPORTED_CHAIN_IDS }}
       ONE_INCH_API_URL: ${{ secrets.ONE_INCH_API_URL }}
       ONE_INCH_API_VERSION: ${{ secrets.ONE_INCH_API_VERSION }}
