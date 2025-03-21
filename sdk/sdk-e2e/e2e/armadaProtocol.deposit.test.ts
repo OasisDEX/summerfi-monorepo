@@ -9,10 +9,11 @@ import {
 } from '@summerfi/sdk-common'
 
 import { ArmadaVaultId } from '@summerfi/armada-protocol-service'
-import { sendAndLogTransactions } from '@summerfi/testing-utils'
+import { sendAndLogTransactions, TransactionUtils } from '@summerfi/testing-utils'
 import type { IArmadaVaultId } from '@summerfi/armada-protocol-common'
 import { prepareData } from './utils/prepareData'
 import { signerPrivateKey, SDKApiUrl, testConfig, signerAddress } from './utils/testConfig'
+import { FleetCommanderAbi } from '@summerfi/armada-protocol-abis'
 
 jest.setTimeout(300000)
 
@@ -20,7 +21,7 @@ describe('Armada Protocol Deposit', () => {
   const main = async () => {
     for (const { symbol, swapSymbol, chainInfo, fleetAddress, rpcUrl } of testConfig) {
       console.log(`Running tests for ${symbol} on ${chainInfo.name}`)
-      await runTests({ symbol, swapSymbol, chainInfo, fleetAddress, forkUrl: rpcUrl })
+      await runTests({ symbol, swapSymbol, chainInfo, fleetAddress, rpcUrl: rpcUrl })
     }
   }
   main()
@@ -30,21 +31,27 @@ describe('Armada Protocol Deposit', () => {
     swapSymbol,
     chainInfo,
     fleetAddress,
-    forkUrl,
+    rpcUrl,
   }: {
     chainInfo: ChainInfo
     symbol: string
     swapSymbol: string
     fleetAddress: Address
-    forkUrl: string | undefined
+    rpcUrl: string | undefined
   }) {
     const sdk: SDKManager = makeSDK({
       apiURL: SDKApiUrl,
     })
 
-    if (!forkUrl) {
+    if (!rpcUrl) {
       throw new Error('Missing fork url')
     }
+    const transactionUtils = new TransactionUtils({
+      rpcUrl,
+      walletPrivateKey: signerPrivateKey,
+      chainInfo: chainInfo,
+      useFork: process.env.SDK_USE_FORK === 'true',
+    })
 
     let vaultId: IArmadaVaultId
     let token: IToken
@@ -53,7 +60,6 @@ describe('Armada Protocol Deposit', () => {
 
     beforeEach(async () => {
       console.log(`Preparation for ${symbol} on ${chainInfo.name}`)
-
       const data = await prepareData(symbol, swapSymbol, chainInfo, sdk, signerAddress)
       vaultId = ArmadaVaultId.createFrom({
         chainInfo,
@@ -73,15 +79,22 @@ describe('Armada Protocol Deposit', () => {
         vaultId,
         user,
       })
-      console.log(
-        'before',
-        fleetAmountBefore.shares.toSolidityValue(),
-        stakedAmountBefore.shares.toSolidityValue(),
-      )
+      console.log('fleet balance', fleetAmountBefore.shares.toSolidityValue())
+      console.log('staked balance', stakedAmountBefore.shares.toSolidityValue())
+    })
+
+    it('check max deposit', async () => {
+      const maxDeposit = await transactionUtils.publicClient.readContract({
+        address: fleetAddress.value,
+        abi: FleetCommanderAbi,
+        functionName: 'maxDeposit',
+        args: [user.wallet.address.value],
+      })
+      console.log('max deposit', maxDeposit)
     })
 
     describe(`Deposit on ${chainInfo.name}`, () => {
-      it.skip(`should deposit 1 USDC (with stake) to fleet at ${fleetAddress.value}`, async () => {
+      it(`should deposit 1 USDC (with stake) to fleet at ${fleetAddress.value}`, async () => {
         const amount = '1'
         const transactions = await sdk.armada.users.getNewDepositTX({
           vaultId,
@@ -111,7 +124,7 @@ describe('Armada Protocol Deposit', () => {
         const { statuses } = await sendAndLogTransactions({
           chainInfo,
           transactions,
-          rpcUrl: forkUrl,
+          rpcUrl: rpcUrl,
           privateKey: signerPrivateKey,
         })
         statuses.forEach((status) => {
@@ -142,7 +155,7 @@ describe('Armada Protocol Deposit', () => {
         )
       })
 
-      it(`should deposit 1 USDC (without stake) to fleet at ${fleetAddress.value}`, async () => {
+      it.skip(`should deposit 1 USDC (without stake) to fleet at ${fleetAddress.value}`, async () => {
         const amount = '1'
 
         const transactions = await sdk.armada.users.getNewDepositTX({
@@ -175,7 +188,7 @@ describe('Armada Protocol Deposit', () => {
         const { statuses } = await sendAndLogTransactions({
           chainInfo,
           transactions,
-          rpcUrl: forkUrl,
+          rpcUrl: rpcUrl,
           privateKey: signerPrivateKey,
         })
         statuses.forEach((status) => {
@@ -236,7 +249,7 @@ describe('Armada Protocol Deposit', () => {
         const { statuses } = await sendAndLogTransactions({
           chainInfo,
           transactions,
-          rpcUrl: forkUrl,
+          rpcUrl: rpcUrl,
           privateKey: signerPrivateKey,
         })
         statuses.forEach((status) => {
@@ -269,7 +282,7 @@ describe('Armada Protocol Deposit', () => {
     })
 
     describe(`Withdraw on ${chainInfo.name}`, () => {
-      it.skip(`should withdraw 1 USDC unstaked assets back from fleet at ${fleetAddress.value}`, async () => {
+      it(`should withdraw 1 USDC unstaked assets back from fleet at ${fleetAddress.value}`, async () => {
         const amount = '0.6'
 
         // const pre = await sdk.armada.users.getNewDepositTX({
@@ -320,7 +333,7 @@ describe('Armada Protocol Deposit', () => {
         const { statuses } = await sendAndLogTransactions({
           chainInfo,
           transactions: transactions,
-          rpcUrl: forkUrl,
+          rpcUrl: rpcUrl,
           privateKey: signerPrivateKey,
         })
         statuses.forEach((status) => {

@@ -1,4 +1,4 @@
-import { Address, ChainFamilyMap } from '@summerfi/sdk-common'
+import { Address, ChainFamilyMap, type AddressValue } from '@summerfi/sdk-common'
 
 if (!process.env.E2E_SDK_API_URL) {
   throw new Error('Missing E2E_SDK_API_URL')
@@ -12,8 +12,8 @@ if (!process.env.E2E_USER_PRIVATE_KEY) {
 
 /** TEST CONFIG */
 export const SDKApiUrl = process.env.E2E_SDK_API_URL,
-  signerAddress = process.env.E2E_USER_ADDRESS,
-  signerPrivateKey = process.env.E2E_USER_PRIVATE_KEY,
+  signerAddress = process.env.E2E_USER_ADDRESS as AddressValue,
+  signerPrivateKey = process.env.E2E_USER_PRIVATE_KEY as AddressValue,
   user = Address.createFromEthereum({
     value: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
   })
@@ -54,9 +54,9 @@ export const testConfig = [
     swapSymbol: 'USDC.e',
     fleetAddress: Address.createFromEthereum({
       // bummer
-      // value: '0xF06BEDaf951aaFf253acaA05e391AdfbdD6BFbe0',
+      value: '0xF06BEDaf951aaFf253acaA05e391AdfbdD6BFbe0',
       // summer
-      value: '0x507A2D9E87DBD3076e65992049C41270b47964f8',
+      // value: '0x507A2D9E87DBD3076e65992049C41270b47964f8',
     }),
     rpcUrl: process.env.E2E_SDK_FORK_URL_SONIC,
     userAddress: user,
