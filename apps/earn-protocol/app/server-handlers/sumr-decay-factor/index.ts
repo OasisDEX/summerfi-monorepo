@@ -4,6 +4,7 @@ import BigNumber from 'bignumber.js'
 import { createPublicClient, http } from 'viem'
 import { base } from 'viem/chains'
 
+import { serverOnlyErrorHandler } from '@/app/server-handlers/error-handler'
 import { GOVERNANCE_REWARDS_MANAGER_ADDRESS } from '@/constants/addresses'
 import { SDKChainIdToSSRRpcGatewayMap } from '@/helpers/rpc-gateway-ssr'
 
@@ -53,16 +54,15 @@ export const getSumrDecayFactor = async (addresses: string[]): Promise<SumrDecay
         decayFactor: new BigNumber(callResult[index].result.toString()).shiftedBy(-18).toNumber(),
       }))
     } catch (error) {
-      throw new Error(
-        `Failed to fetch decay factors: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      return serverOnlyErrorHandler(
+        'getSumrDecayFactor multicall',
+        error instanceof Error ? error.message : 'Unknown error',
       )
     }
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error in getSumrDecayFactor:', error)
-
-    throw new Error(
-      `Failed to get $SUMR decay factors: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    return serverOnlyErrorHandler(
+      'getSumrDecayFactor global',
+      error instanceof Error ? error.message : 'Unknown error',
     )
   }
 }

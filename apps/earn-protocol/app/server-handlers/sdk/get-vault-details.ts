@@ -3,6 +3,7 @@ import { subgraphNetworkToId } from '@summerfi/app-utils'
 import { ArmadaVaultId } from '@summerfi/sdk-client'
 import { Address, getChainInfoByChainId } from '@summerfi/sdk-common'
 
+import { serverOnlyErrorHandler } from '@/app/server-handlers/error-handler'
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 
 export async function getVaultDetails({
@@ -29,6 +30,9 @@ export async function getVaultDetails({
 
     return vault as SDKVaultType | undefined
   } catch (error) {
-    throw new Error(`Failed to get vault details: ${error}`)
+    return serverOnlyErrorHandler(
+      'getVaultDetails',
+      error instanceof Error ? error.message : 'Unknown error',
+    )
   }
 }

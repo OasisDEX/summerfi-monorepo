@@ -6,6 +6,7 @@ import BigNumber from 'bignumber.js'
 import { createPublicClient, http } from 'viem'
 import { base } from 'viem/chains'
 
+import { serverOnlyErrorHandler } from '@/app/server-handlers/error-handler'
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 import { GOVERNANCE_REWARDS_MANAGER_ADDRESS } from '@/constants/addresses'
 import { SDKChainIdToSSRRpcGatewayMap } from '@/helpers/rpc-gateway-ssr'
@@ -36,7 +37,10 @@ export const getSumrStakingInfo = async (): Promise<SumrStakingInfoData> => {
         chainInfo: getChainInfoByChainId(SDKChainId.BASE),
       })
       .catch((error) => {
-        throw new Error(`Failed to get SUMMER token: ${error.message}`)
+        return serverOnlyErrorHandler(
+          'getSummerToken getSumrStakingInfo',
+          error instanceof Error ? error.message : 'Unknown error',
+        )
       })
 
     const [wrappedStakingTokenResult, rewardDataResult] = await publicClient
@@ -56,7 +60,10 @@ export const getSumrStakingInfo = async (): Promise<SumrStakingInfoData> => {
         ],
       })
       .catch((error) => {
-        throw new Error(`Failed to fetch staking data: ${error.message}`)
+        return serverOnlyErrorHandler(
+          'getSummerToken getSumrStakingInfo multicalls',
+          error instanceof Error ? error.message : 'Unknown error',
+        )
       })
 
     const wrappedStakingToken = wrappedStakingTokenResult.result
@@ -87,7 +94,10 @@ export const getSumrStakingInfo = async (): Promise<SumrStakingInfoData> => {
         args: [GOVERNANCE_REWARDS_MANAGER_ADDRESS],
       })
       .catch((error) => {
-        throw new Error(`Failed to read wrapped staked $SUMR balance: ${error.message}`)
+        return serverOnlyErrorHandler(
+          'getSummerToken getSumrStakingInfo balanceOf',
+          error instanceof Error ? error.message : 'Unknown error',
+        )
       })
 
     const sumrTokenWrappedStakedAmount = new BigNumber(_sumrTokenWrappedStakedAmount.toString())

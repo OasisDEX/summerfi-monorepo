@@ -2,6 +2,7 @@ import { sdkSupportedChains } from '@summerfi/app-types'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
 import { Address, getChainInfoByChainId, User, Wallet } from '@summerfi/sdk-common'
 
+import { serverOnlyErrorHandler } from '@/app/server-handlers/error-handler'
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 
 export async function getUserPositions({ walletAddress }: { walletAddress: string }) {
@@ -32,6 +33,6 @@ export async function getUserPositions({ walletAddress }: { walletAddress: strin
 
     return positionsList as IArmadaPosition[] | undefined
   } catch (error) {
-    throw new Error(`Failed to get users positions: ${error}`)
+    return serverOnlyErrorHandler('getUserPositions', error as string)
   }
 }
