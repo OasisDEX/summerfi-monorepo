@@ -1,4 +1,4 @@
-import { type FC, useMemo } from 'react'
+import { type FC, Suspense, useMemo } from 'react'
 import { icons } from '@summerfi/app-icons'
 import { type TokenSymbolsList } from '@summerfi/app-types'
 
@@ -60,17 +60,30 @@ export const Icon: FC<IconPropsWithIconName | IconPropsWithTokenName> = ({
   if (!SvgIcon) return null
 
   return (
-    <div style={{ color: colorSet, display: 'inline-block', ...style }}>
-      <SvgIcon
-        className={className}
-        title={iconName}
-        style={{
-          display: 'block',
-          ...style,
-        }}
-        {...(finalSize ? { width: finalSize, height: finalSize } : {})}
-        {...rest}
-      />
-    </div>
+    <Suspense
+      fallback={
+        <div
+          style={{
+            width: finalSize,
+            height: finalSize,
+            backgroundColor: 'var(--earn-protocol-neutral-70)',
+            borderRadius: '50%',
+          }}
+        />
+      }
+    >
+      <div style={{ color: colorSet, display: 'inline-block', ...style }}>
+        <SvgIcon
+          className={className}
+          title={iconName}
+          style={{
+            display: 'block',
+            ...style,
+          }}
+          {...(finalSize ? { width: finalSize, height: finalSize } : {})}
+          {...rest}
+        />
+      </div>
+    </Suspense>
   )
 }
