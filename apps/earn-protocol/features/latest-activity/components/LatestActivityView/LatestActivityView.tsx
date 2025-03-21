@@ -252,6 +252,7 @@ export const LatestActivityView: FC<LatestActivityViewProps> = ({
           }
           loader={
             <LoadingSpinner
+              key="spinner"
               style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
             />
           }
@@ -281,6 +282,7 @@ export const LatestActivityView: FC<LatestActivityViewProps> = ({
           }
           loader={
             <LoadingSpinner
+              key="spinner"
               style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
             />
           }
