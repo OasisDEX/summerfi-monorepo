@@ -71,7 +71,8 @@ jobs:
       NEWSLETTER_ENDPOINT: ${{ secrets.NEWSLETTER_ENDPOINT }}
       NEXT_TELEMETRY_DISABLED: ${{ secrets.NEXT_TELEMETRY_DISABLED }}
       SUMMER_DEPLOYMENT_CONFIG: ${{ vars.SUMMER_DEPLOYMENT_CONFIG }}
-
+      EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN: ${{ secrets.EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN }}
+      EARN_APP_URL: ${{ secrets.EARN_APP_URL }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -193,6 +194,8 @@ jobs:
                        --build-arg NEWSLETTER_ENDPOINT=${{ secrets.NEWSLETTER_ENDPOINT }} \
                        --build-arg NEXT_TELEMETRY_DISABLED=${{ secrets.NEXT_TELEMETRY_DISABLED }} \
                        --build-arg SDK_API_URL=${{ secrets.SDK_API_URL }} \
+                       --build-arg EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN=${{ secrets.EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN }} \
+                       --build-arg EARN_APP_URL=${{ secrets.EARN_APP_URL }} \
                        --cache-from type=registry,ref=189194422115.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/buildkit-test:cache \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$SHA_TAG \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$LATEST_TAG \

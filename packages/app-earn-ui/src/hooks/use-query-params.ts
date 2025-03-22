@@ -10,6 +10,8 @@ const parseSearchParams = (searchParams: URLSearchParams) =>
  * A custom React hook for managing query parameters in the URL.
  * It allows you to read, update, and synchronize query parameters with the URL.
  *
+ * @param initialQueryParams - An optional object representing the initial query parameters.
+ *
  * @returns An object containing:
  *  - `queryParams`: An object representing the current query parameters as key-value pairs.
  *  - `setQueryParams`: A function to update the query parameters.
@@ -24,11 +26,11 @@ const parseSearchParams = (searchParams: URLSearchParams) =>
  * setQueryParams({ param1: 'value1', param2: ['value2', 'value3'] });
  */
 
-export const useQueryParams = () => {
-  const [queryParams, setQueryParams] = useState<{ [key: string]: string[] }>(() => {
-    if (typeof window === 'undefined') return {}
+export const useQueryParams = (initialQueryParams?: { [key: string]: string[] | undefined }) => {
+  const [queryParams, setQueryParams] = useState<{ [key: string]: string[] | undefined }>(() => {
+    if (typeof window === 'undefined') return initialQueryParams ?? {}
 
-    return parseSearchParams(new URLSearchParams(window.location.search))
+    return initialQueryParams ?? parseSearchParams(new URLSearchParams(window.location.search))
   })
 
   const updateQueryParams = (

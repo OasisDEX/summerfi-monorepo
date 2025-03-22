@@ -2,19 +2,18 @@ import { type FC } from 'react'
 import { Card, Expander, getUniqueVaultId, Text } from '@summerfi/app-earn-ui'
 import {
   type ArksHistoricalChartData,
-  type SDKUsersActivityType,
   type SDKVaultishType,
-  type SDKVaultsListType,
   type SDKVaultType,
-  type UsersActivity,
   type VaultApyData,
 } from '@summerfi/app-types'
 import { formatDecimalAsPercent } from '@summerfi/app-utils'
-import { type GetGlobalRebalancesQuery } from '@summerfi/sdk-client'
 
+import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
+import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
+import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
+import { LatestActivity } from '@/features/latest-activity/components/LatestActivity/LatestActivity'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
-import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 
 import { detailsLinks } from './mocks'
@@ -22,9 +21,9 @@ import { VaultOpenHeaderBlock } from './VaultOpenHeaderBlock'
 
 interface VaultOpenViewDetailsProps {
   vault: SDKVaultType | SDKVaultishType
-  vaults: SDKVaultsListType
-  userActivity: UsersActivity
-  topDepositors: SDKUsersActivityType
+  topDepositors: TopDepositorsPagination
+  latestActivity: LatestActivityPagination
+  rebalanceActivity: RebalanceActivityPagination
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
   vaultApyData: VaultApyData
@@ -32,17 +31,12 @@ interface VaultOpenViewDetailsProps {
 
 export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
   vault,
-  vaults,
-  userActivity,
+  latestActivity,
   topDepositors,
+  rebalanceActivity,
   arksHistoricalChartData,
   arksInterestRates,
-  vaultApyData,
 }) => {
-  // needed due to type duality
-  const rebalancesList =
-    `rebalances` in vault ? (vault.rebalances as GetGlobalRebalancesQuery['rebalances']) : []
-
   const summerVaultName = vault.customFields?.name ?? `Summer ${vault.inputToken.symbol} Vault`
 
   // "It’s 1% for usd and 0.3% for eth"
@@ -90,10 +84,9 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
         defaultExpanded
       >
         <RebalancingActivity
-          rebalancesList={rebalancesList}
+          rebalanceActivity={rebalanceActivity}
           vaultId={getUniqueVaultId(vault)}
-          totalRebalances={Number(vault.rebalanceCount)}
-          vaultsList={vaults}
+          vault={vault}
         />
       </Expander>
       <Expander
@@ -104,11 +97,10 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
         }
         defaultExpanded
       >
-        <UserActivity
-          userActivity={userActivity}
+        <LatestActivity
+          latestActivity={latestActivity}
           topDepositors={topDepositors}
           vaultId={getUniqueVaultId(vault)}
-          vaultApyData={vaultApyData}
           page="open"
           noHighlight
         />

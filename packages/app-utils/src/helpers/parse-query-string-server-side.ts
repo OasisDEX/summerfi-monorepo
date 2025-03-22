@@ -11,19 +11,23 @@ interface ParseQueryStringParams {
  *
  * @param searchParams - The `ReadonlyURLSearchParams` object containing the query string parameters.
  *
- * @returns An object where each key is a query parameter and the value is an array
+ * @returns An Promise<object> where each key is a query parameter and the value is an array
  *          of strings representing the corresponding values from the query string.
  *
  * @example
  * const searchParams = new URLSearchParams('param1=value1,value2&param2=value3');
- * const parsedParams = parseQueryStringServerSide({ searchParams });
+ * const parsedParams = await parseQueryStringServerSide({ searchParams });
  * console.log(parsedParams);
  * // Output: { param1: ['value1', 'value2'], param2: ['value3'] }
  */
-export function parseQueryStringServerSide({ searchParams }: ParseQueryStringParams): {
+export async function parseQueryStringServerSide({
+  searchParams,
+}: ParseQueryStringParams): Promise<{
   [key: string]: string[]
-} {
-  return Object.entries(searchParams).reduce(
+}> {
+  const resolvedSearchParams = await searchParams
+
+  return Object.entries(resolvedSearchParams).reduce(
     (total, [key, value]) => ({
       ...total,
       [key]: value.split(','),

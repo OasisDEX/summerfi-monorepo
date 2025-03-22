@@ -1,5 +1,5 @@
 'use client'
-import { type FC, useMemo, useState } from 'react'
+import { type FC, useEffect, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import {
   GenericMultiselect,
@@ -10,79 +10,77 @@ import {
   useMobileCheck,
   useQueryParams,
 } from '@summerfi/app-earn-ui'
-import { type SDKGlobalRebalancesType, type SDKVaultsListType } from '@summerfi/app-types'
+import { type SDKVaultsListType } from '@summerfi/app-types'
 import { getRebalanceSavedGasCost, getRebalanceSavedTimeInHours } from '@summerfi/app-utils'
 
+import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
+import { getRebalanceActivity } from '@/features/rebalance-activity/api/get-rebalance-activity'
 import { RebalanceActivityTable } from '@/features/rebalance-activity/components/RebalanceActivityTable/RebalanceActivityTable'
 import {
   getRebalanceActivityHeadingCards,
   rebalanceActivityHeading,
 } from '@/features/rebalance-activity/components/RebalanceActivityView/cards'
 import { rebalanceActivityTableCarouselData } from '@/features/rebalance-activity/components/RebalanceActivityView/carousel'
-import { rebalanceActivityFilter } from '@/features/rebalance-activity/table/filters/filters'
-import { mapMultiselectOptions } from '@/features/rebalance-activity/table/filters/mappers'
+import {
+  mapMultiselectOptions,
+  parseProtocolFilter,
+} from '@/features/rebalance-activity/table/filters/mappers'
 
 import classNames from './RebalanceActivityView.module.scss'
 
 interface RebalanceActivityViewProps {
   vaultsList: SDKVaultsListType
-  rebalancesList: SDKGlobalRebalancesType
+  rebalanceActivity: RebalanceActivityPagination
   searchParams?: { [key: string]: string[] }
 }
 
-const initialRows = 10
-
 export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
   vaultsList,
-  rebalancesList,
+  rebalanceActivity,
   searchParams,
 }) => {
-  const { setQueryParams } = useQueryParams()
-  const [strategyFilter, setStrategyFilter] = useState<string[]>(searchParams?.strategies ?? [])
-  const [tokenFilter, setTokenFilter] = useState<string[]>(searchParams?.tokens ?? [])
-  const [protocolFilter, setProtocolFilter] = useState<string[]>(searchParams?.protocols ?? [])
+  const { setQueryParams, queryParams } = useQueryParams(searchParams)
+  const strategyFilter = queryParams.strategies
+  const tokenFilter = queryParams.tokens
+  const protocolFilter = useMemo(
+    () => parseProtocolFilter(queryParams.protocols),
+    [queryParams.protocols],
+  )
+
+  const isFirstRender = useRef(true)
   const currentUrl = useCurrentUrl()
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
 
-  const [current, setCurrent] = useState(initialRows)
-
-  const [currentlyLoadedList, setCurrentlyLoadedList] = useState(
-    rebalancesList.slice(0, initialRows),
-  )
-
-  const [noMoreItems, setNoMoreItems] = useState(false)
+  const [currentPage, setCurrentPage] = useState(rebalanceActivity.pagination.currentPage)
+  const [isLoading, setIsLoading] = useState(false)
+  const [currentlyLoadedList, setCurrentlyLoadedList] = useState(rebalanceActivity.data)
 
   const { strategiesOptions, tokensOptions, protocolsOptions } = useMemo(
     () => mapMultiselectOptions(vaultsList),
     [vaultsList],
   )
 
-  const handleMoreItems = () => {
+  const handleMoreItems = async () => {
     try {
-      setCurrentlyLoadedList((prev) => [
-        ...prev,
-        ...rebalancesList.slice(current, current + initialRows),
-      ])
-      setCurrent(current + initialRows)
+      setIsLoading(true)
+      const res = await getRebalanceActivity({
+        page: currentPage + 1,
+        tokens: tokenFilter,
+        strategies: strategyFilter,
+        protocols: protocolFilter,
+      })
+
+      setCurrentlyLoadedList((prev) => [...prev, ...res.data])
+      setCurrentPage((prev) => prev + 1)
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.info('No more rebalance activity items to load')
-      setNoMoreItems(true)
+      console.error('Error fetching more rebalance activity', error)
+    } finally {
+      setIsLoading(false)
     }
   }
-
-  const filteredList = useMemo(
-    () =>
-      rebalanceActivityFilter({
-        rebalancesList: currentlyLoadedList,
-        strategyFilter,
-        tokenFilter,
-        protocolFilter,
-      }),
-    [currentlyLoadedList, strategyFilter, tokenFilter, protocolFilter],
-  )
 
   const genericMultiSelectFilters = [
     {
@@ -90,7 +88,6 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
       label: 'Strategies',
       onChange: (strategies: string[]) => {
         setQueryParams({ strategies })
-        setStrategyFilter(strategies)
       },
       initialValues: strategyFilter,
     },
@@ -99,7 +96,6 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
       label: 'Tokens',
       onChange: (tokens: string[]) => {
         setQueryParams({ tokens })
-        setTokenFilter(tokens)
       },
       initialValues: tokenFilter,
     },
@@ -108,13 +104,37 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
       label: 'Protocols',
       onChange: (protocols: string[]) => {
         setQueryParams({ protocols })
-        setProtocolFilter(protocols)
       },
       initialValues: protocolFilter,
     },
   ]
 
-  const totalItems = vaultsList.reduce((acc, vault) => acc + Number(vault.rebalanceCount), 0)
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+
+      return
+    }
+
+    setIsLoading(true)
+
+    getRebalanceActivity({
+      page: 1,
+      tokens: tokenFilter,
+      strategies: strategyFilter,
+      protocols: protocolFilter,
+      sortBy: 'timestamp',
+      orderBy: 'desc',
+    })
+      .then((res) => {
+        setCurrentlyLoadedList(res.data)
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+  }, [strategyFilter, tokenFilter, protocolFilter])
+
+  const { totalItems } = rebalanceActivity.pagination
 
   const savedTimeInHours = useMemo(() => getRebalanceSavedTimeInHours(totalItems), [totalItems])
   const savedGasCost = useMemo(() => getRebalanceSavedGasCost(vaultsList), [vaultsList])
@@ -150,9 +170,16 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
           />
         ))}
       </div>
-      <InfiniteScroll loadMore={handleMoreItems} hasMore={!noMoreItems}>
+      <InfiniteScroll
+        loadMore={handleMoreItems}
+        hasMore={
+          rebalanceActivity.pagination.totalPages > currentPage &&
+          currentlyLoadedList.length > 0 &&
+          !isLoading
+        }
+      >
         <RebalanceActivityTable
-          rebalancesList={filteredList}
+          rebalanceActivityList={currentlyLoadedList}
           customRow={{
             idx: 3,
             content: <TableCarousel carouselData={rebalanceActivityTableCarouselData} />,

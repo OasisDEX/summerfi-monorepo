@@ -9,6 +9,7 @@ import { SummerStackContext } from './summer-stack-context'
 import { addRaysConfig } from './rays'
 import { addRedis } from './redis'
 import { addSummerProtocolConfig } from './summer-protocol'
+import { addSummerEarnAppTablesConfig } from './summer-earn-app-tables'
 
 export function API(stackContext: StackContext) {
   const { stack } = stackContext
@@ -47,7 +48,7 @@ export function API(stackContext: StackContext) {
   addApyConfig(summerContext)
   addRaysConfig(summerContext)
   addSummerProtocolConfig(summerContext)
-
+  addSummerEarnAppTablesConfig(summerContext)
   stack.addOutputs({
     ApiEndpoint: api.url,
   })

@@ -1,6 +1,6 @@
 import { type FC, useMemo } from 'react'
 import { Card, DataBlock, Icon, Text, Tooltip, WithArrow } from '@summerfi/app-earn-ui'
-import { type SDKGlobalRebalancesType, type SDKVaultsListType } from '@summerfi/app-types'
+import { type SDKVaultishType } from '@summerfi/app-types'
 import {
   formatFiatBalance,
   getRebalanceSavedGasCost,
@@ -8,28 +8,24 @@ import {
 } from '@summerfi/app-utils'
 import Link from 'next/link'
 
+import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { RebalanceActivityTable } from '@/features/rebalance-activity/components/RebalanceActivityTable/RebalanceActivityTable'
 
 interface RebalancingActivityProps {
-  rebalancesList: SDKGlobalRebalancesType
+  rebalanceActivity: RebalanceActivityPagination
   vaultId: string
-  totalRebalances: number
-  vaultsList: SDKVaultsListType
+  vault: SDKVaultishType
 }
 
-const rowsToDisplay = 4
-
 export const RebalancingActivity: FC<RebalancingActivityProps> = ({
-  rebalancesList,
+  rebalanceActivity,
   vaultId,
-  totalRebalances,
-  vaultsList,
+  vault,
 }) => {
-  const savedTimeInHours = useMemo(
-    () => getRebalanceSavedTimeInHours(totalRebalances),
-    [totalRebalances],
-  )
-  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(vaultsList), [vaultsList])
+  const { totalItems } = rebalanceActivity.pagination
+
+  const savedTimeInHours = useMemo(() => getRebalanceSavedTimeInHours(totalItems), [totalItems])
+  const savedGasCost = useMemo(() => getRebalanceSavedGasCost([vault]), [vault])
 
   return (
     <Card style={{ marginTop: 'var(--spacing-space-medium)' }}>
@@ -45,7 +41,7 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({
             flexWrap: 'wrap',
           }}
         >
-          <DataBlock title="Rebalance actions" size="small" value={`${totalRebalances}`} />
+          <DataBlock title="Rebalance actions" size="small" value={`${totalItems}`} />
           <DataBlock
             title={
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
@@ -91,9 +87,8 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({
           Risk Manager.
         </Text>
         <RebalanceActivityTable
-          rebalancesList={rebalancesList}
+          rebalanceActivityList={rebalanceActivity.data}
           hiddenColumns={['strategy', 'provider']}
-          rowsToDisplay={rowsToDisplay}
         />
         <Link
           href={`/rebalance-activity?strategies=${vaultId}`}

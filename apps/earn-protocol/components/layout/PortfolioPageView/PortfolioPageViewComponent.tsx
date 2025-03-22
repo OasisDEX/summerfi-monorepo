@@ -1,15 +1,12 @@
 'use client'
 import { type FC } from 'react'
-import {
-  type HistoryChartData,
-  type SDKGlobalRebalancesType,
-  type SDKVaultishType,
-  type UsersActivity,
-} from '@summerfi/app-types'
+import { type HistoryChartData, type SDKVaultishType } from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
+import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
+import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { sdkApiUrl } from '@/constants/sdk'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
@@ -24,8 +21,8 @@ interface PortfolioPageViewComponentProps {
   rewardsData: ClaimDelegateExternalData
   vaultsList: SDKVaultishType[]
   positions: PositionWithVault[]
-  rebalancesList: SDKGlobalRebalancesType
-  userActivity: UsersActivity
+  rebalanceActivity: RebalanceActivityPagination
+  latestActivity: LatestActivityPagination
   totalRays: number
   positionsHistoricalChartMap: {
     [key: string]: HistoryChartData
@@ -41,8 +38,8 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
   rewardsData,
   vaultsList,
   positions,
-  rebalancesList,
-  userActivity,
+  rebalanceActivity,
+  latestActivity,
   totalRays,
   positionsHistoricalChartMap,
   vaultsApyByNetworkMap,
@@ -57,8 +54,8 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
         walletData={walletData}
         rewardsData={rewardsData}
         vaultsList={vaultsList}
-        rebalancesList={rebalancesList}
-        userActivity={userActivity}
+        rebalanceActivity={rebalanceActivity}
+        latestActivity={latestActivity}
         totalRays={totalRays}
         positionsHistoricalChartMap={positionsHistoricalChartMap}
         vaultsApyByNetworkMap={vaultsApyByNetworkMap}

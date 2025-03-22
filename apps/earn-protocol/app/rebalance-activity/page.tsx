@@ -3,9 +3,10 @@ import { parseQueryStringServerSide } from '@summerfi/app-utils'
 import { type Metadata } from 'next'
 import { type ReadonlyURLSearchParams } from 'next/navigation'
 
-import { getGlobalRebalances } from '@/app/server-handlers/sdk/get-global-rebalances'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
+import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { RebalanceActivityView } from '@/features/rebalance-activity/components/RebalanceActivityView/RebalanceActivityView'
+import { parseProtocolFilter } from '@/features/rebalance-activity/table/filters/mappers'
 
 interface RebalanceActivityPageProps {
   searchParams: ReadonlyURLSearchParams
@@ -13,13 +14,22 @@ interface RebalanceActivityPageProps {
 
 const RebalanceActivityPage: FC<RebalanceActivityPageProps> = async (props) => {
   const { searchParams } = await props
-  const [{ vaults }, { rebalances }] = await Promise.all([getVaultsList(), getGlobalRebalances()])
+
+  const parsedSearchParams = await parseQueryStringServerSide({ searchParams })
+  const [{ vaults }, rebalanceActivity] = await Promise.all([
+    getVaultsList(),
+    getPaginatedRebalanceActivity({
+      page: 1,
+      limit: 50,
+      protocols: parseProtocolFilter(parsedSearchParams.protocols),
+    }),
+  ])
 
   return (
     <RebalanceActivityView
       vaultsList={vaults}
-      rebalancesList={rebalances}
-      searchParams={parseQueryStringServerSide({ searchParams })}
+      rebalanceActivity={rebalanceActivity}
+      searchParams={parsedSearchParams}
     />
   )
 }

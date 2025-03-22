@@ -195,13 +195,16 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
     )?.chainId
   }, [migratablePositions, selectedPosition])
 
-  const mapMigrationPositionCard = (position: MigratablePosition) => (
+  // render icon condition added to avoid issues with
+  // icon rendering when animated height is closed
+  const mapMigrationPositionCard = (position: MigratablePosition, renderIcon: boolean) => (
     <MigrationLandingPagePositionCard
       key={position.id}
       position={position}
       onSelectPosition={handleSelectPosition}
       isActive={selectedPosition === position.id}
       earningsData={migrationBestVaultApy[position.chainId]}
+      renderIcon={renderIcon}
     />
   )
 
@@ -310,7 +313,8 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
               </Text>
             </div>
             <div className={classNames.positionsListWrapper}>
-              {preselectedPosition && [preselectedPosition].map(mapMigrationPositionCard)}
+              {preselectedPosition &&
+                [preselectedPosition].map((position) => mapMigrationPositionCard(position, true))}
               <AnimateHeight
                 id="migration-positions-list"
                 show={showAllPositions}
@@ -321,7 +325,9 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
                     : classNames.positionsList
                 }
               >
-                {filteredPositions.map(mapMigrationPositionCard)}
+                {filteredPositions.map((position) =>
+                  mapMigrationPositionCard(position, showAllPositions),
+                )}
               </AnimateHeight>
               {filteredPositions.length === 0 && !preselectedPosition && (
                 <Text as="p" variant="p2" style={{ color: 'var(--earn-protocol-secondary-60)' }}>

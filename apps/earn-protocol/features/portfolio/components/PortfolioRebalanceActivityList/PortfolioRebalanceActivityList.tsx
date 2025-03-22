@@ -1,23 +1,30 @@
 import { type FC, useState } from 'react'
 import { getVaultPositionUrl, Icon, Text, useMobileCheck, WithArrow } from '@summerfi/app-earn-ui'
-import { type SDKGlobalRebalancesType, type TokenSymbolsList } from '@summerfi/app-types'
-import { formatFiatBalance, sdkNetworkToHumanNetwork, timeAgo } from '@summerfi/app-utils'
+import { type TokenSymbolsList } from '@summerfi/app-types'
+import {
+  chainIdToSDKNetwork,
+  formatFiatBalance,
+  mapDbNetworkToChainId,
+  sdkChainIdToHumanNetwork,
+  timeAgo,
+} from '@summerfi/app-utils'
+import { type RebalanceActivity } from '@summerfi/summer-protocol-db'
 import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
-import { networkIconByNetworkName } from '@/constants/networkIcons'
+import { networkIconByChainId } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { rebalanceActivityPurposeMapper } from '@/features/rebalance-activity/table/mapper'
 
 import classNames from './PortfolioRebalanceActivityList.module.scss'
 
 interface PortfolioRebalanceActivityListProps {
-  rebalancesList: SDKGlobalRebalancesType
+  rebalanceActivityList: RebalanceActivity[]
   walletAddress: string
 }
 
 export const PortfolioRebalanceActivityList: FC<PortfolioRebalanceActivityListProps> = ({
-  rebalancesList,
+  rebalanceActivityList,
   walletAddress,
 }) => {
   // timestamp should be unique, so can be used as id
@@ -29,12 +36,21 @@ export const PortfolioRebalanceActivityList: FC<PortfolioRebalanceActivityListPr
   return (
     <>
       <div className={classNames.wrapper}>
-        {rebalancesList.map((item) => {
+        {rebalanceActivityList.map((item) => {
           const purpose = rebalanceActivityPurposeMapper(item)
+
+          let dbNetworkToChainId
+
+          try {
+            dbNetworkToChainId = mapDbNetworkToChainId(item.network)
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error('Error mapping network to chainId', error)
+          }
 
           return (
             <div
-              key={item.id}
+              key={item.id.toString()}
               onMouseEnter={() => setHoveredItemTimestamp(Number(item.timestamp))}
               onMouseLeave={() => setHoveredItemTimestamp(undefined)}
             >
@@ -56,19 +72,21 @@ export const PortfolioRebalanceActivityList: FC<PortfolioRebalanceActivityListPr
                       {purpose.label}
                     </Text>
                     <div className={classNames.leftContentDescription}>
-                      <Icon tokenName={item.asset.symbol as TokenSymbolsList} variant="s" />
+                      <Icon tokenName={item.inputTokenSymbol as TokenSymbolsList} variant="s" />
                       <Text
                         as="p"
                         variant="p3semi"
                         style={{ color: 'var(--earn-protocol-secondary-60)' }}
                       >
-                        {formatFiatBalance(item.amountUSD)}
+                        {formatFiatBalance(item.amountUsd.toString())}
                       </Text>
                       {!isMobile && <span>&#8226;</span>}
                       <div className={classNames.leftContentDescriptionNetwork}>
                         <Icon
                           iconName={
-                            networkIconByNetworkName[item.protocol.network] ?? 'not_supported_icon'
+                            dbNetworkToChainId
+                              ? networkIconByChainId[dbNetworkToChainId] ?? 'not_supported_icon'
+                              : 'not_supported_icon'
                           }
                           variant="xs"
                         />
@@ -77,7 +95,9 @@ export const PortfolioRebalanceActivityList: FC<PortfolioRebalanceActivityListPr
                           variant="p3semi"
                           style={{ color: 'var(--earn-protocol-secondary-60)' }}
                         >
-                          {capitalize(sdkNetworkToHumanNetwork(item.protocol.network))}
+                          {dbNetworkToChainId
+                            ? capitalize(sdkChainIdToHumanNetwork(dbNetworkToChainId))
+                            : 'n/a'}
                         </Text>
                       </div>
                     </div>
@@ -88,22 +108,24 @@ export const PortfolioRebalanceActivityList: FC<PortfolioRebalanceActivityListPr
                     {timeAgo({ from: new Date(), to: new Date(Number(item.timestamp) * 1000) })}
                   </Text>
                   {!isMobile && <span>&#8226;</span>}
-                  <Link
-                    href={getVaultPositionUrl({
-                      network: item.protocol.network,
-                      vaultId: item.vault.id,
-                      walletAddress,
-                    })}
-                  >
-                    <WithArrow reserveSpace={!isMobile}>Go to position</WithArrow>
-                  </Link>
+                  {dbNetworkToChainId && (
+                    <Link
+                      href={getVaultPositionUrl({
+                        network: chainIdToSDKNetwork(dbNetworkToChainId),
+                        vaultId: item.vaultId,
+                        walletAddress,
+                      })}
+                    >
+                      <WithArrow reserveSpace={!isMobile}>Go to position</WithArrow>
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>
           )
         })}
       </div>{' '}
-      {rebalancesList.length === 0 && (
+      {rebalanceActivityList.length === 0 && (
         <Text
           as="p"
           variant="p3semi"

@@ -122,5 +122,10 @@ export const getRisk = async <DB extends RiskRequiredDB>({
     console.error('Failed to verify risk', error)
 
     return NextResponse.json({ error: `Failed to verify risk ${error}` }, { status: 500 })
+  } finally {
+    await db.destroy().catch((err) => {
+      // eslint-disable-next-line no-console
+      console.error('Error closing database connection:', err)
+    })
   }
 }

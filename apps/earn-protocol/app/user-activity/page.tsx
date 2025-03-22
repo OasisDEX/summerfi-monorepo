@@ -1,48 +1,52 @@
 import { type FC } from 'react'
-import { parseQueryStringServerSide, subgraphNetworkToId } from '@summerfi/app-utils'
+import { parseQueryStringServerSide } from '@summerfi/app-utils'
 import { type Metadata } from 'next'
 import { type ReadonlyURLSearchParams } from 'next/navigation'
 
-import { getUsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
-import systemConfigHandler from '@/app/server-handlers/system-config'
-import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
-import { UserActivityView } from '@/features/user-activity/components/UserActivityView/UserActivityView'
-import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
+import { userAddresesToFilterOut } from '@/app/server-handlers/tables-data/consts'
+import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
+import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
+import { LatestActivityView } from '@/features/latest-activity/components/LatestActivityView/LatestActivityView'
 
-interface UserActivityPageProps {
+interface LatestActivityPageProps {
   searchParams: Promise<ReadonlyURLSearchParams>
 }
 
-const UserActivityPage: FC<UserActivityPageProps> = async ({ searchParams }) => {
+const LatestActivityPage: FC<LatestActivityPageProps> = async ({ searchParams }) => {
   const searchParamsResolved = await searchParams
-  const [{ vaults }, { usersActivity, totalUsers, topDepositors }, systemConfig] =
-    await Promise.all([
-      getVaultsList(),
-      getUsersActivity({ filterTestingWallets: true }),
-      systemConfigHandler(),
-    ])
 
-  const vaultsWithConfig = decorateVaultsWithConfig({
-    vaults,
-    systemConfig: systemConfig.config,
+  const searchParamsParsed = await parseQueryStringServerSide({
+    searchParams: searchParamsResolved,
   })
 
-  const vaultsApyByNetworkMap = await getVaultsApy({
-    fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
-      fleetAddress: id,
-      chainId: subgraphNetworkToId(network),
-    })),
-  })
+  const tokens = searchParamsParsed.tokens ?? []
+  const strategies = searchParamsParsed.strategies ?? []
+
+  const [{ vaults }, topDepositors, latestActivity] = await Promise.all([
+    getVaultsList(),
+    getPaginatedTopDepositors({
+      page: 1,
+      limit: 50,
+      tokens,
+      strategies,
+      filterOutUsersAddresses: userAddresesToFilterOut,
+    }),
+    getPaginatedLatestActivity({
+      page: 1,
+      limit: 50,
+      tokens,
+      strategies,
+      filterOutUsersAddresses: userAddresesToFilterOut,
+    }),
+  ])
 
   return (
-    <UserActivityView
+    <LatestActivityView
       vaultsList={vaults}
-      usersActivity={usersActivity}
+      latestActivity={latestActivity}
       topDepositors={topDepositors}
-      totalUsers={totalUsers}
-      searchParams={parseQueryStringServerSide({ searchParams: searchParamsResolved })}
-      vaultsApyByNetworkMap={vaultsApyByNetworkMap}
+      searchParams={searchParamsParsed}
     />
   )
 }
@@ -55,4 +59,4 @@ export function generateMetadata(): Metadata {
   }
 }
 
-export default UserActivityPage
+export default LatestActivityPage

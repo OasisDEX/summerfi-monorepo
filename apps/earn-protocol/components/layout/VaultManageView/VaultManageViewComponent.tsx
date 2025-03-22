@@ -28,21 +28,22 @@ import { useTermsOfService } from '@summerfi/app-tos'
 import {
   type ArksHistoricalChartData,
   type PerformanceChartData,
-  type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
   TOSStatus,
   TransactionAction,
-  type UsersActivity,
   type VaultApyData,
 } from '@summerfi/app-types'
 import { formatDecimalAsPercent, subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
-import { type GetGlobalRebalancesQuery, type IArmadaPosition } from '@summerfi/sdk-client'
+import { type IArmadaPosition } from '@summerfi/sdk-client'
 import { TransactionType } from '@summerfi/sdk-common'
 
 import { AccountKitAccountType } from '@/account-kit/types'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
+import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
+import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import {
   ControlsApproval,
@@ -55,10 +56,10 @@ import { PositionPerformanceChart } from '@/components/organisms/Charts/Position
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
+import { LatestActivity } from '@/features/latest-activity/components/LatestActivity/LatestActivity'
 import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
-import { UserActivity } from '@/features/user-activity/components/UserActivity/UserActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { revalidatePositionData } from '@/helpers/revalidation-handlers'
@@ -77,9 +78,10 @@ export const VaultManageViewComponent = ({
   vault,
   vaults,
   position,
-  userActivity,
+  latestActivity,
   topDepositors,
   viewWalletAddress,
+  rebalanceActivity,
   performanceChartData,
   arksHistoricalChartData,
   arksInterestRates,
@@ -90,8 +92,9 @@ export const VaultManageViewComponent = ({
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
   position: IArmadaPosition
-  userActivity: UsersActivity
-  topDepositors: SDKUsersActivityType
+  topDepositors: TopDepositorsPagination
+  latestActivity: LatestActivityPagination
+  rebalanceActivity: RebalanceActivityPagination
   viewWalletAddress: string
   performanceChartData: PerformanceChartData
   arksHistoricalChartData: ArksHistoricalChartData
@@ -391,10 +394,6 @@ export const VaultManageViewComponent = ({
       ? tosSidebarProps
       : sidebarProps
 
-  // needed due to type duality
-  const rebalancesList =
-    `rebalances` in vault ? (vault.rebalances as GetGlobalRebalancesQuery['rebalances']) : []
-
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   // "It’s 1% for usd and 0.3% for eth"
@@ -522,10 +521,9 @@ export const VaultManageViewComponent = ({
               }
             >
               <RebalancingActivity
-                rebalancesList={rebalancesList}
+                rebalanceActivity={rebalanceActivity}
                 vaultId={getUniqueVaultId(vault)}
-                totalRebalances={Number(vault.rebalanceCount)}
-                vaultsList={vaults}
+                vault={vault}
               />
             </Expander>
             <Expander
@@ -535,13 +533,13 @@ export const VaultManageViewComponent = ({
                 </Text>
               }
             >
-              <UserActivity
-                userActivity={userActivity}
+              <LatestActivity
+                latestActivity={latestActivity}
                 topDepositors={topDepositors}
                 vaultId={getUniqueVaultId(vault)}
-                vaultApyData={vaultApyData}
                 page="manage"
                 noHighlight
+                walletAddress={viewWalletAddress}
               />
             </Expander>
           </div>,
