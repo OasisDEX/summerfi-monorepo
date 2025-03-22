@@ -13,15 +13,15 @@ export const createCallerFactory = t.createCallerFactory
 export const publicProcedure = t.procedure.use(async (opts) => {
   const { ctx } = opts
   if (process.env.SDK_LOGGING_ENABLED === 'true') {
-    console.log('Call url: ', ctx.callUrl)
+    console.log(`Call url (${ctx.callKey}): ${ctx.callUrl}`)
   }
 
   const result = await opts.next()
   if (process.env.SDK_LOGGING_ENABLED === 'true') {
     try {
-      console.log('Result: ', JSON.stringify((result as { data: unknown })?.data))
+      console.log(`Result (${ctx.callKey}): ${JSON.stringify((result as { data: unknown })?.data)}`)
     } catch (error) {
-      /* empty */
+      console.log(`Result (${ctx.callKey}): Cannot serialize data`)
     }
   }
   return result
