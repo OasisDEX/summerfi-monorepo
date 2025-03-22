@@ -21,9 +21,9 @@ export function createMainRPCClient(apiURL: string): RPCMainClientType {
     links: [
       loggerLink({
         enabled: (opts) => opts.direction === 'down' && opts.result instanceof Error,
-        // logger: (data) => {
-        //   console.log(JSON.stringify(data, null, 2))
-        // },
+        logger: (ops) => {
+          console.log(JSON.stringify(ops, null, 2))
+        },
       }),
       httpLink({
         url: apiURL,
