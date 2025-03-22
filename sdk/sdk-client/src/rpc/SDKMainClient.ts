@@ -49,6 +49,7 @@ export function createMainRPCClient(apiURL: string): RPCMainClientType {
             },
           },
         },
+        maxURLLength: 10000,
       }),
     ],
   })
