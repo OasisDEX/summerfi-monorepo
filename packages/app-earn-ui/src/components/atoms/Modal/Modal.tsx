@@ -1,8 +1,9 @@
 'use client'
-import { type FC, type ReactNode, useEffect, useRef } from 'react'
+import { type FC, type ReactNode, Suspense, useEffect, useRef } from 'react'
 
 import { Button } from '@/components/atoms/Button/Button.tsx'
 import { Icon } from '@/components/atoms/Icon/Icon.tsx'
+import { LoadingSpinner } from '@/components/molecules/LoadingSpinner/LoadingSpinner'
 
 import modalStyles from '@/components/atoms/Modal/Modal.module.scss'
 
@@ -53,7 +54,7 @@ export const Modal: FC<ModalProps> = ({
   return (
     <dialog ref={ref} onCancel={closeModal} className={modalStyles.dialog}>
       <div id="modal-portal" style={{ position: 'absolute' }} />
-      {children}
+      <Suspense fallback={<LoadingSpinner size={40} />}>{openModal ? children : null}</Suspense>
       {withCloseButton && (
         <Button variant="unstyled" onClick={closeModal} className={modalStyles.closeButton}>
           <Icon iconName="close" variant="xs" color="var(--earn-protocol-secondary-40)" />

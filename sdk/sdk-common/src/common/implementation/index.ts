@@ -1,4 +1,5 @@
 export * from './Address'
+export * from './ChainIds'
 export * from './ChainFamilies'
 export * from './ChainInfo'
 export * from './FiatCurrencyAmount'

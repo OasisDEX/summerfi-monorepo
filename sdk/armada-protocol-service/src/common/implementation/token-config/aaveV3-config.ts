@@ -1,9 +1,9 @@
-import { ChainFamilyMap } from '@summerfi/sdk-common'
+import { ChainIds } from '@summerfi/sdk-common'
 import type { ArmadaMigrationConfig } from './types'
 
 // a tokens taken from: https://aave.com/docs/resources/addresses
 export const aaveV3ConfigsByChainId: Record<number, Record<string, ArmadaMigrationConfig>> = {
-  [ChainFamilyMap.Base.Base.chainId]: {
+  [ChainIds.Base]: {
     weth: {
       positionAddress: '0xD4a0e0b9149BCee3C920d2E00b5dE09138fd8bb7',
       underlyingToken: '0x4200000000000000000000000000000000000006',
@@ -45,7 +45,7 @@ export const aaveV3ConfigsByChainId: Record<number, Record<string, ArmadaMigrati
       pool: '409b75a5-62ec-4067-a32a-e372b2917fac',
     },
   },
-  [ChainFamilyMap.Ethereum.Mainnet.chainId]: {
+  [ChainIds.Mainnet]: {
     // WETH https://etherscan.io/address/0x4d5F47FA6A74757f35C14fD3a6Ef8E3C9BC514E8 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2
     weth: {
       positionAddress: '0x4d5F47FA6A74757f35C14fD3a6Ef8E3C9BC514E8',
@@ -137,7 +137,7 @@ export const aaveV3ConfigsByChainId: Record<number, Record<string, ArmadaMigrati
       pool: '45d6af39-ed10-4002-8b4b-e5da908bdb75',
     },
   },
-  [ChainFamilyMap.Arbitrum.ArbitrumOne.chainId]: {
+  [ChainIds.ArbitrumOne]: {
     // DAI https://arbiscan.io/address/0x82E64f49Ed5EC1bC6e43DAD4FC8Af9bb3A2312EE 0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1
     dai: {
       positionAddress: '0x82E64f49Ed5EC1bC6e43DAD4FC8Af9bb3A2312EE',
@@ -197,6 +197,13 @@ export const aaveV3ConfigsByChainId: Record<number, Record<string, ArmadaMigrati
       positionAddress: '0xEA1132120ddcDDA2F119e99Fa7A27a0d036F7Ac9',
       underlyingToken: '0x2416092f143378750bb29b79eD961ab195CcEea5',
       pool: '21320dfc-69d0-40c7-a224-7bead1fb576e',
+    },
+  },
+  [ChainIds.Sonic]: {
+    usdce: {
+      positionAddress: '0x578Ee1ca3a8E1b54554Da1Bf7C583506C4CD11c6',
+      underlyingToken: '0x29219dd400f2bf60e5a23d13be72b486d4038894',
+      pool: '9bf5faf4-32e3-437e-8080-c38eae10cfa6',
     },
   },
 }

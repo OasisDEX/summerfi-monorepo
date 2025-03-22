@@ -6,6 +6,7 @@ import arbitrumMainnetBadge from '@/public/img/network_icons/arbitrum_badge_main
 import baseMainnetBadge from '@/public/img/network_icons/base_badge_mainnet.svg'
 import ethereumMainnetBadge from '@/public/img/network_icons/ethereum_badge_mainnet.svg'
 import optimismMainnetBadge from '@/public/img/network_icons/optimism_badge_mainnet.svg'
+import sonicMainnetBadge from '@/public/img/network_icons/sonic_badge_mainnet.svg'
 
 export type NetworkConfigHexId = `0x${number | string}`
 
@@ -24,6 +25,8 @@ export enum NetworkNames {
 
   baseMainnet = 'base',
   baseGoerli = 'base_goerli',
+
+  sonicMainnet = 'sonic',
 }
 
 export enum NetworkIds {
@@ -39,6 +42,7 @@ export enum NetworkIds {
   BASEMAINNET = 8453,
   BASEGOERLI = 84531,
   EMPTYNET = 0,
+  SONICMAINNET = 146,
 }
 
 export enum NetworkHexIds {
@@ -54,6 +58,7 @@ export enum NetworkHexIds {
   BASEMAINNET = '0x2105',
   BASEGOERLI = '0x14a33',
   EMPTYNET = '0x0',
+  SONICMAINNET = '0x92',
 }
 
 export type NetworkLabelType =
@@ -67,6 +72,7 @@ export type NetworkLabelType =
   | 'Optimism Goerli'
   | 'Base'
   | 'Base Goerli'
+  | 'Sonic'
 
 export type NetworkConfig = {
   name: NetworkNames
@@ -98,6 +104,7 @@ export const optimismMainnetRpc = getRpc(NetworkNames.optimismMainnet)
 export const optimismGoerliRpc = getRpc(NetworkNames.optimismGoerli)
 export const baseMainnetRpc = getRpc(NetworkNames.baseMainnet)
 export const baseGoerliRpc = getRpc(NetworkNames.baseGoerli)
+export const sonicMainnetRpc = getRpc(NetworkNames.sonicMainnet)
 
 export const SDKChainIdToRpcGatewayMap = {
   [SDKChainId.ARBITRUM]: arbitrumMainnetRpc,
@@ -105,6 +112,7 @@ export const SDKChainIdToRpcGatewayMap = {
   [SDKChainId.MAINNET]: mainnetRpc,
   [SDKChainId.OPTIMISM]: optimismMainnetRpc,
   [SDKChainId.SEPOLIA]: baseGoerliRpc, // dummy for now, not used anyway
+  [SDKChainId.SONIC]: sonicMainnetRpc,
 }
 
 const mainnetConfig: NetworkConfig = {
@@ -203,6 +211,18 @@ const baseGoerliConfig: NetworkConfig = {
   rpcUrl: baseGoerliRpc,
 }
 
+const sonicMainnetConfig: NetworkConfig = {
+  name: NetworkNames.sonicMainnet,
+  hexId: NetworkHexIds.SONICMAINNET,
+  label: 'Sonic',
+  token: 'S',
+  testnet: false,
+  badge: sonicMainnetBadge as string,
+  color: '#0052ff',
+  id: NetworkIds.SONICMAINNET,
+  rpcUrl: sonicMainnetRpc,
+}
+
 export const mainnetNetworks = [mainnetConfig, goerliConfig]
 
 export const L2Networks = [
@@ -212,6 +232,7 @@ export const L2Networks = [
   optimismGoerliConfig,
   baseMainnetConfig,
   baseGoerliConfig,
+  sonicMainnetConfig,
 ]
 
 export const networksList = [...mainnetNetworks, ...L2Networks]

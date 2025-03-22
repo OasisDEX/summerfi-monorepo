@@ -70,7 +70,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
         (phItem) =>
           phItem.label.includes(item.label) &&
           phItem.protocol === item.protocol &&
-          phItem.network === network &&
+          (phItem.network as unknown as SupportedNetworks) === network &&
           phItem.product.includes(productType as OmniProductType),
       )
 

@@ -1,6 +1,7 @@
 import { type IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { OracleManager } from './OracleManager'
 import { OneInchOracleProvider } from './oneinch/OneInchOracleProvider'
+import { CoingeckoOracleProvider } from './coingecko/CoingeckoOracleProvider'
 
 /**
  * @name OracleManagerFactory
@@ -11,7 +12,7 @@ export class OracleManagerFactory {
     configProvider: IConfigurationProvider
   }): OracleManager {
     return new OracleManager({
-      providers: [new OneInchOracleProvider(params)],
+      providers: [new OneInchOracleProvider(params), new CoingeckoOracleProvider(params)],
     })
   }
 }

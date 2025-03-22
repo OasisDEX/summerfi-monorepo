@@ -23,6 +23,7 @@ import {
   type SDKVaultType,
   TransactionAction,
   type UsersActivity,
+  type VaultApyData,
 } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
@@ -57,7 +58,7 @@ type MigrationVaultPageComponentProps = {
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
-  vaultApy?: number
+  vaultApyData: VaultApyData
   migratablePosition: MigratablePosition
   walletAddress: string
 }
@@ -70,7 +71,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
   medianDefiYield,
   arksHistoricalChartData,
   arksInterestRates,
-  vaultApy,
+  vaultApyData,
   migratablePosition,
   walletAddress,
 }) => {
@@ -247,7 +248,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
         transactionFeeLoading={transactionFeeLoading}
         transactionFee={transactionFee}
         amount={resolvedAmountParsed}
-        vaultApy={vaultApy}
+        vaultApyData={vaultApyData}
         isLoadingForecast={isLoadingForecast}
         isQuoteLoading={isQuoteLoading}
         txMetadata={migrationTransaction?.txData.metadata}
@@ -302,7 +303,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
       displaySimulationGraph={displaySimulationGraph}
       sumrPrice={estimatedSumrPrice}
       onRefresh={revalidatePositionData}
-      vaultApy={vaultApy}
+      vaultApyData={vaultApyData}
       headerLink={{
         label: 'Migrate',
         href: `/migrate/user/${walletAddress}`,
@@ -325,6 +326,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
           topDepositors={topDepositors}
           arksHistoricalChartData={arksHistoricalChartData}
           arksInterestRates={arksInterestRates}
+          vaultApyData={vaultApyData}
         />
       }
       sidebarContent={<Sidebar {...sidebarProps} />}

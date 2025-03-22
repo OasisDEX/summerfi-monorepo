@@ -17,7 +17,7 @@
     "@summerfi/serverless-shared": "workspace:*",
     "@summerfi/triggers-calculations": "workspace:*",
     "@summerfi/triggers-shared": "workspace:*",
-    "viem": "^2.9.19",
+    "viem": "2.21.55",
     "zod": "^3.22.4"
   },
   "devDependencies": {

@@ -20,13 +20,15 @@ import { ChainId } from '@summerfi/serverless-shared'
 
 import { GetArksRatesQuery, GetProductsQuery } from '@summerfi/summer-earn-rates-subgraph'
 
-const logger = new Logger({ serviceName: 'update-summer-earn-rewards-apr' })
+const logger = new Logger({ serviceName: 'update-summer-earn-rewards-apr', logLevel: 'DEBUG' })
 
 export enum Protocol {
   Morpho = 'Morpho',
   Euler = 'Euler',
+  Aave = 'AaveV3',
+  Gearbox = 'Gearbox',
 }
-const supportedProtocols = [Protocol.Morpho, Protocol.Euler]
+const supportedProtocols = [Protocol.Morpho, Protocol.Euler, Protocol.Aave, Protocol.Gearbox]
 
 const rewardsService = new RewardsService(logger)
 
@@ -119,6 +121,13 @@ export async function updateVaultAprs(
     const fleetArksWithTvl = arksWithTvl.filter((ark) => ark.vault.id === vault.id)
     const fleetTvl = fleetArksWithTvl.reduce((acc, ark) => acc + +ark.totalValueLockedUSD, 0)
     logger.debug('Calculated fleet TVL', { network: network.network, fleetTvl })
+    if (fleetTvl === 0) {
+      logger.debug('Skipping vault APR updates - no TVL', {
+        network: network.network,
+        vaultId: vault.id,
+      })
+      continue
+    }
 
     const fleetArksWithRatios = fleetArksWithTvl.map((ark) => ({
       ...ark,
@@ -435,7 +444,7 @@ async function updateRewardRates(
 
     // Store individual reward rates
     for (const rewardRate of productRewardRates) {
-      const rewardRateId = `${product.id}-${currentTimestamp}-${rewardRate.rewardToken}`
+      const rewardRateId = `${product.id}-${currentTimestamp}-${rewardRate.rewardToken}-${rewardRate.index}`
       await trx
         .insertInto('rewardRate')
         .values({
@@ -468,6 +477,9 @@ async function updateHourlyRewardAverage(
   newRate: string,
   hourTimestamp: number,
 ) {
+  if (newRate === '0') {
+    return
+  }
   const hourlyRateId = `${network.network}-${product.id}-${hourTimestamp}`
 
   // Get or create hourly rate
@@ -517,6 +529,9 @@ async function updateDailyRewardAverage(
   newRate: string,
   dayTimestamp: number,
 ) {
+  if (newRate === '0') {
+    return
+  }
   const dailyRateId = `${network.network}-${product.id}-${dayTimestamp}`
 
   const dailyRate = await trx
@@ -563,6 +578,9 @@ async function updateWeeklyRewardAverage(
   newRate: string,
   weekTimestamp: number,
 ) {
+  if (newRate === '0') {
+    return
+  }
   const weeklyRateId = `${network.network}-${product.id}-${weekTimestamp}`
 
   const weeklyRate = await trx
@@ -658,7 +676,11 @@ export const handler = async (
 
   // Get all potential networks
   const allNetworks = (await db.selectFrom('networkStatus').selectAll().execute()).filter(
-    (network) => network.network !== 'optimism',
+    (network) =>
+      network.network === 'mainnet' ||
+      network.network === 'arbitrum' ||
+      network.network === 'base' ||
+      network.network === 'sonic',
   )
 
   logger.debug('Starting network processing', { networkCount: allNetworks.length })

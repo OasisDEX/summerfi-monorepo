@@ -35,7 +35,7 @@ export const Timeframes = ({
               color:
                 timeframe === activeTimeframe
                   ? 'var(--color-text-primary)'
-                  : 'var(--color-text-secondary)',
+                  : 'var(--color-text-secondary-disabled)',
             }}
           >
             {timeframe}

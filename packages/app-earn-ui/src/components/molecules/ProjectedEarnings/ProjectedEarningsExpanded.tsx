@@ -1,12 +1,13 @@
 'use client'
 
 import { type FC, useState } from 'react'
+import { type TransactionAction } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 
 import { Button } from '@/components/atoms/Button/Button'
 import { Card } from '@/components/atoms/Card/Card'
-import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { Text } from '@/components/atoms/Text/Text'
+import { OrderInformation } from '@/components/molecules/OrderInformation/OrderInformation'
 import { type EarningsEstimationsMap } from '@/helpers/get-earnings-estimations-map'
 
 import classNames from './ProjectedEarnings.module.scss'
@@ -15,6 +16,7 @@ interface ProjectedEarningsExpandedProps {
   forecastSummaryMap: EarningsEstimationsMap
   isLoading?: boolean
   symbol: string
+  transactionType: TransactionAction
 }
 
 type ForecastMethodType = 'forecast' | 'lowerBound' | 'upperBound'
@@ -23,6 +25,7 @@ export const ProjectedEarningsExpanded: FC<ProjectedEarningsExpandedProps> = ({
   forecastSummaryMap,
   isLoading = true,
   symbol,
+  transactionType,
 }) => {
   const [forecastMethod, setForecastMethod] = useState<ForecastMethodType>('forecast')
 
@@ -34,7 +37,7 @@ export const ProjectedEarningsExpanded: FC<ProjectedEarningsExpandedProps> = ({
           color: 'var(--color-text-primary-disabled)',
         }}
       >
-        Estimated earnings of your position after deposit
+        Estimated earnings of your position after {transactionType}
       </Text>
       <div
         style={{
@@ -68,64 +71,36 @@ export const ProjectedEarningsExpanded: FC<ProjectedEarningsExpandedProps> = ({
           </Button>
         ))}
       </div>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr auto',
-          marginTop: 'var(--spacing-space-medium)',
-          width: '100%',
-          placeItems: 'start stretch',
+
+      <OrderInformation
+        wrapperStyles={{
+          paddingLeft: 'unset',
+          paddingRight: 'unset',
+          paddingBottom: 'unset',
         }}
-      >
-        <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
-          After 30 days
-        </Text>
-        <Text variant="p3semi" as="div" style={{ textAlign: 'right' }}>
-          {isLoading ? (
-            <SkeletonLine width={70} height={10} style={{ marginTop: '5px' }} />
-          ) : (
-            <>
-              {formatCryptoBalance(forecastSummaryMap['30d'][forecastMethod])}&nbsp;{symbol}
-            </>
-          )}
-        </Text>
-        <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
-          6 months
-        </Text>
-        <Text variant="p3semi" as="div" style={{ textAlign: 'right' }}>
-          {isLoading ? (
-            <SkeletonLine width={70} height={10} style={{ marginTop: '5px' }} />
-          ) : (
-            <>
-              {formatCryptoBalance(forecastSummaryMap['6m'][forecastMethod])}&nbsp;{symbol}
-            </>
-          )}
-        </Text>
-        <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
-          1 year
-        </Text>
-        <Text variant="p3semi" as="div" style={{ textAlign: 'right' }}>
-          {isLoading ? (
-            <SkeletonLine width={70} height={10} style={{ marginTop: '5px' }} />
-          ) : (
-            <>
-              {formatCryptoBalance(forecastSummaryMap['1y'][forecastMethod])}&nbsp;{symbol}
-            </>
-          )}
-        </Text>
-        <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
-          3 years
-        </Text>
-        <Text variant="p3semi" as="div" style={{ textAlign: 'right' }}>
-          {isLoading ? (
-            <SkeletonLine width={70} height={10} style={{ marginTop: '5px' }} />
-          ) : (
-            <>
-              {formatCryptoBalance(forecastSummaryMap['3y'][forecastMethod])}&nbsp;{symbol}
-            </>
-          )}
-        </Text>
-      </div>
+        items={[
+          {
+            label: 'After 30 days',
+            value: `${formatCryptoBalance(forecastSummaryMap['30d'][forecastMethod])} ${symbol}`,
+            isLoading,
+          },
+          {
+            label: 'After 6 months',
+            value: `${formatCryptoBalance(forecastSummaryMap['6m'][forecastMethod])} ${symbol}`,
+            isLoading,
+          },
+          {
+            label: 'After 1 year',
+            value: `${formatCryptoBalance(forecastSummaryMap['1y'][forecastMethod])} ${symbol}`,
+            isLoading,
+          },
+          {
+            label: 'After 3 years',
+            value: `${formatCryptoBalance(forecastSummaryMap['3y'][forecastMethod])} ${symbol}`,
+            isLoading,
+          },
+        ]}
+      />
     </Card>
   )
 }

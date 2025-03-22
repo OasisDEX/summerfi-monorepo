@@ -15,7 +15,7 @@ import {
 } from '@summerfi/summer-earn-protocol-subgraph'
 import { getVaults } from '@summerfi/summer-earn-protocol-subgraph'
 import { createPublicClient, http } from 'viem'
-import { mainnet, optimism, arbitrum, base } from 'viem/chains'
+import { mainnet, optimism, arbitrum, base, sonic } from 'viem/chains'
 import { supportedChains } from '@summerfi/summer-earn-protocol-subgraph'
 import { fleetRewardsManagerAbi } from './abis/fleetRewardsManager'
 
@@ -23,6 +23,7 @@ const rewardTokenPerChain: Partial<Record<ChainId, Address>> = {
   [ChainId.MAINNET]: '0x194f360D130F2393a5E9F3117A6a1B78aBEa1624',
   [ChainId.ARBITRUM]: '0x194f360D130F2393a5E9F3117A6a1B78aBEa1624',
   [ChainId.BASE]: '0x194f360D130F2393a5E9F3117A6a1B78aBEa1624',
+  [ChainId.SONIC]: '0x4e0037f487bBb588bf1B7a83BDe6c34FeD6099e3',
 }
 
 const logger = new Logger({ serviceName: 'get-protocol-info-function' })
@@ -118,6 +119,8 @@ const getChainConfig = (chainId: ChainId) => {
       return arbitrum
     case ChainId.BASE:
       return base
+    case ChainId.SONIC:
+      return sonic
     default:
       logger.error(`Unsupported chain ID: ${chainId}`)
       throw new Error(`Unsupported chain ID: ${chainId}`)
@@ -137,6 +140,7 @@ function getRpcUrl(chainId: ChainId): string {
     [ChainId.ARBITRUM]: 'arbitrum',
     [ChainId.BASE]: 'base',
     [ChainId.SEPOLIA]: 'sepolia',
+    [ChainId.SONIC]: 'sonic',
   }[chainId]
 
   if (!networkName) {

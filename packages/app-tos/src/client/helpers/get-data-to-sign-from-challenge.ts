@@ -1,5 +1,5 @@
 import { type JWTChallenge } from '@summerfi/app-types'
-import { decode } from 'jsonwebtoken'
+import { decodeJwt } from 'jose'
 
 import { getSignMessage } from '@/server/helpers/get-sign-message'
 import { type TOSMessageType } from '@/types'
@@ -17,7 +17,7 @@ import { type TOSMessageType } from '@/types'
  * @returns A string message containing the address and random challenge from the decoded payload.
  */
 export const getDataToSignFromChallenge = (challenge: string, type: TOSMessageType): string => {
-  const decodedChallenge = decode(challenge) as JWTChallenge
+  const decodedChallenge = decodeJwt(challenge).payload as JWTChallenge
 
   return getSignMessage(decodedChallenge, type)
 }

@@ -67,7 +67,7 @@ export default defineConfig(({ mode }) => {
           'graphql',
           'graphql-tag',
           '@safe-global/safe-apps-sdk',
-          'jsonwebtoken',
+          'jose',
           '@summerfi/app-types',
           '@summerfi/serverless-shared',
         ],

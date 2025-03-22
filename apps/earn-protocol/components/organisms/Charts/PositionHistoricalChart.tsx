@@ -6,6 +6,7 @@ import {
   type HistoryChartData,
   type IArmadaPosition,
   type SDKVaultishType,
+  type TimeframesType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
 
@@ -19,6 +20,7 @@ export type PositionHistoricalChartProps = {
     position: IArmadaPosition
     vault: SDKVaultishType
   }
+  timeframe?: TimeframesType
 }
 
 import classNames from './PositionHistoricalChart.module.scss'
@@ -27,8 +29,9 @@ export const PositionHistoricalChart = ({
   chartData,
   tokenSymbol,
   position,
+  timeframe,
 }: PositionHistoricalChartProps) => {
-  const staticTimeframe = '7d'
+  const defaultTimeframe = '7d'
 
   const parsedData = useMemo(() => {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -36,10 +39,10 @@ export const PositionHistoricalChart = ({
       return []
     }
 
-    return chartData.data[staticTimeframe]
-  }, [chartData])
+    return chartData.data[timeframe ?? defaultTimeframe]
+  }, [chartData, timeframe])
 
-  const chartHidden = parsedData.length < POINTS_REQUIRED_FOR_CHART[staticTimeframe]
+  const chartHidden = parsedData.length < POINTS_REQUIRED_FOR_CHART[timeframe ?? defaultTimeframe]
 
   return (
     <Card
@@ -49,7 +52,7 @@ export const PositionHistoricalChart = ({
         paddingBottom: 0,
         position: 'relative',
         ...(chartHidden && {
-          // so much hacks to just because the legend is used as a separate UI element
+          // so much hacks just because the legend is used as a separate UI element
           // will need to refactor this
           paddingLeft: 0,
         }),
@@ -57,7 +60,7 @@ export const PositionHistoricalChart = ({
       className={classNames.positionHistoricalChartWrapper}
     >
       <HistoricalChart
-        timeframe={staticTimeframe}
+        timeframe={timeframe ?? defaultTimeframe}
         data={parsedData}
         tokenSymbol={tokenSymbol}
         portfolioPosition={position}

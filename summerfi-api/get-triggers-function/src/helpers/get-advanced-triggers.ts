@@ -9,7 +9,7 @@ import {
   MakerAutoTakeProfitToDebt,
 } from '@summerfi/triggers-shared/contracts'
 import { createPublicClient, http, PublicClient, Chain as ViemChain } from 'viem'
-import { arbitrum, base, mainnet, optimism, sepolia } from 'viem/chains'
+import { arbitrum, base, mainnet, optimism, sepolia, sonic } from 'viem/chains'
 import { z } from 'zod'
 import { paramsSchema } from '../constants'
 import {
@@ -44,6 +44,7 @@ const domainChainIdToViemChain: Record<ChainId, ViemChain> = {
   [ChainId.OPTIMISM]: optimism,
   [ChainId.BASE]: base,
   [ChainId.SEPOLIA]: sepolia,
+  [ChainId.SONIC]: sonic,
 }
 
 export const getAdvancedTriggers = async ({

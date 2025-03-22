@@ -7,7 +7,7 @@ import { type ArksHistoricalChartData, type TimeframesType } from '@summerfi/app
 import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
 import { NotEnoughData } from '@/components/organisms/Charts/components/NotEnoughData'
 import { YieldsChart } from '@/components/organisms/Charts/components/Yields'
-import { DAYS_TO_WAIT_FOR_CHART, POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
+import { POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
 import { useTimeframes } from '@/hooks/use-timeframes'
 
 type ArkHistoricalYieldChartProps = {
@@ -58,7 +58,7 @@ export const ArkHistoricalYieldChart = ({
         position: 'relative',
       }}
     >
-      {!parsedDataWithCutoff.length && <NotEnoughData daysToWait={DAYS_TO_WAIT_FOR_CHART} />}
+      {!parsedDataWithCutoff.length && <NotEnoughData />}
       <ChartHeader
         timeframes={timeframes}
         checkboxValue={compare}

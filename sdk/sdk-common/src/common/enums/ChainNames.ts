@@ -6,6 +6,7 @@ export enum ChainFamilyName {
   Arbitrum = 'Arbitrum',
   Optimism = 'Optimism',
   Base = 'Base',
+  Sonic = 'Sonic',
 }
 
 export enum EthereumChainNames {
@@ -25,8 +26,13 @@ export enum BaseChainNames {
   Mainnet = 'Base',
 }
 
+export enum SonicChainNames {
+  Sonic = 'Sonic',
+}
+
 export type ChainNames =
   | EthereumChainNames
   | ArbitrumChainNames
   | OptimismChainNames
   | BaseChainNames
+  | SonicChainNames

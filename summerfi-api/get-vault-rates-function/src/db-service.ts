@@ -29,6 +29,11 @@ export interface FleetRate {
 export interface FleetRateResult {
   chainId: string
   fleetAddress: string
+  sma: {
+    sma24h: string | null
+    sma7d: string | null
+    sma30d: string | null
+  }
   rates: FleetRate[]
 }
 
@@ -144,15 +149,97 @@ export class VaultRatesService {
       // Query each chain's data in parallel
       const results = await Promise.all(
         Object.values(chainGroups).map(async ({ network, chainId, fleetAddresses }) => {
-          const rates = await this.db!.db.selectFrom('fleetInterestRate')
-            .select(['id', 'rate', 'timestamp', 'fleetAddress'])
-            .where('network', '=', network as any)
-            .where('fleetAddress', 'in', Array.from(fleetAddresses))
-            .orderBy('timestamp', 'desc')
-            .limit(first * fleetAddresses.size)
-            .execute()
+          const [rates, hourlyRates, dailyRates] = await Promise.all([
+            this.db!.db.selectFrom('fleetInterestRate')
+              .select(['id', 'rate', 'timestamp', 'fleetAddress'])
+              .where('network', '=', network as any)
+              .where('fleetAddress', 'in', Array.from(fleetAddresses))
+              .orderBy('timestamp', 'desc')
+              .limit(first * fleetAddresses.size)
+              .execute(),
 
-          // Group rates by fleet address
+            this.db!.db.selectFrom('hourlyFleetInterestRate')
+              .select(['id', 'averageRate', 'date', 'fleetAddress'])
+              .where('network', '=', network as any)
+              .where('fleetAddress', 'in', Array.from(fleetAddresses))
+              .orderBy('date', 'desc')
+              .limit(24 * fleetAddresses.size)
+              .execute(),
+
+            this.db!.db.selectFrom('dailyFleetInterestRate')
+              .select(['id', 'averageRate', 'date', 'fleetAddress'])
+              .where('network', '=', network as any)
+              .where('fleetAddress', 'in', Array.from(fleetAddresses))
+              .orderBy('date', 'desc')
+              .limit(30 * fleetAddresses.size)
+              .execute(),
+          ])
+          // calculate sma24 for each fleet address
+          const hourlyRatesByFleet = hourlyRates.reduce(
+            (acc, rate) => {
+              if (!acc[rate.fleetAddress]) {
+                acc[rate.fleetAddress] = []
+              }
+              acc[rate.fleetAddress].push(rate.averageRate)
+              return acc
+            },
+            {} as Record<string, string[]>,
+          )
+
+          const dailyRatesByFleet = dailyRates.reduce(
+            (acc, rate) => {
+              if (!acc[rate.fleetAddress]) {
+                acc[rate.fleetAddress] = []
+              }
+              acc[rate.fleetAddress].push({
+                rate: rate.averageRate,
+                date: new Date(rate.date).getTime(),
+              })
+              return acc
+            },
+            {} as Record<string, Array<{ rate: string; date: number }>>,
+          )
+
+          // Sort daily rates for each fleet by date (most recent first)
+          Object.values(dailyRatesByFleet).forEach((rates) => {
+            rates.sort((a, b) => b.date - a.date)
+          })
+
+          const sma24ByFleet = Object.entries(hourlyRatesByFleet).map(([fleetAddress, rates]) => {
+            const sma24 =
+              rates.length > 0
+                ? rates.reduce((acc, rate) => acc + Number(rate), 0) / rates.length
+                : 0
+            return {
+              fleetAddress,
+              sma24,
+            }
+          })
+
+          const sma7dByFleet = Object.entries(dailyRatesByFleet).map(([fleetAddress, rates]) => {
+            const last7Days = rates.slice(0, 7)
+            const sma7d =
+              last7Days.length > 0
+                ? last7Days.reduce((acc, { rate }) => acc + Number(rate), 0) / last7Days.length
+                : 0
+            return {
+              fleetAddress,
+              sma7d,
+            }
+          })
+
+          const sma30dByFleet = Object.entries(dailyRatesByFleet).map(([fleetAddress, rates]) => {
+            const last30Days = rates.slice(0, 30)
+            const sma30d =
+              last30Days.length > 0
+                ? last30Days.reduce((acc, { rate }) => acc + Number(rate), 0) / last30Days.length
+                : 0
+            return {
+              fleetAddress,
+              sma30d,
+            }
+          })
+
           const ratesByFleet = rates.reduce(
             (acc, rate) => {
               if (!acc[rate.fleetAddress]) {
@@ -173,6 +260,18 @@ export class VaultRatesService {
           return Array.from(fleetAddresses).map((fleetAddress) => ({
             chainId,
             fleetAddress,
+            sma: {
+              sma24h:
+                sma24ByFleet.find((rate) => rate.fleetAddress === fleetAddress)?.sma24.toString() ||
+                null,
+              sma7d:
+                sma7dByFleet.find((rate) => rate.fleetAddress === fleetAddress)?.sma7d.toString() ||
+                null,
+              sma30d:
+                sma30dByFleet
+                  .find((rate) => rate.fleetAddress === fleetAddress)
+                  ?.sma30d.toString() || null,
+            },
             rates: (ratesByFleet[fleetAddress] || []).slice(0, first),
           }))
         }),

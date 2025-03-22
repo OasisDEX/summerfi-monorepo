@@ -18,10 +18,13 @@ import {
   formatDateDifference,
   getHumanReadableFleetName,
   getPastTimestamp,
+  subgraphNetworkToId,
+  zero,
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
+import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { getEarningStreakResetTimestamp } from '@/features/user-activity/helpers/get-earning-streak-reset-timestamp'
 import { topDepositorsSorter } from '@/features/user-activity/table/top-depositors-sorter'
 
@@ -43,6 +46,7 @@ export const calculateTopDepositors7daysChange = (item: SDKUserActivityType) => 
 
 export const topDepositorsMapper = (
   rawData: SDKUsersActivityType,
+  vaultsApyData: GetVaultsApyResponse,
   sortConfig?: TableSortedColumn<string>,
 ) => {
   const sorted = topDepositorsSorter({ data: rawData, sortConfig })
@@ -118,7 +122,15 @@ export const topDepositorsMapper = (
           >
             <Icon tokenName={asset} variant="s" />
             <TableCellText>
-              {formatCryptoBalance(balance.times(item.vault.apr365d).div(100))}
+              {formatCryptoBalance(
+                balance.times(
+                  (
+                    vaultsApyData[
+                      `${item.vault.id}-${subgraphNetworkToId(item.vault.protocol.network)}`
+                    ] as { apy: number } | undefined
+                  )?.apy ?? zero,
+                ),
+              )}
             </TableCellText>
           </div>
         ),

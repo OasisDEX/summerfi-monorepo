@@ -3,6 +3,7 @@ import { type FC, type ReactNode, useMemo, useState } from 'react'
 import { Table, type TableSortedColumn, Text, useMobileCheck } from '@summerfi/app-earn-ui'
 import { type SDKUsersActivityType } from '@summerfi/app-types'
 
+import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import {
   topDepositorsColumns,
@@ -19,6 +20,7 @@ interface TopDepositorsTableProps {
   }
   hiddenColumns?: string[]
   rowsToDisplay?: number
+  vaultsApyData: GetVaultsApyResponse
 }
 
 export const TopDepositorsTable: FC<TopDepositorsTableProps> = ({
@@ -26,14 +28,15 @@ export const TopDepositorsTable: FC<TopDepositorsTableProps> = ({
   customRow,
   hiddenColumns,
   rowsToDisplay,
+  vaultsApyData,
 }) => {
   const [sortConfig, setSortConfig] = useState<TableSortedColumn<string>>()
   const { deviceType } = useDeviceType()
   const { isMobile, isTablet } = useMobileCheck(deviceType)
 
   const rows = useMemo(
-    () => topDepositorsMapper(topDepositorsList, sortConfig),
-    [topDepositorsList, sortConfig],
+    () => topDepositorsMapper(topDepositorsList, vaultsApyData, sortConfig),
+    [topDepositorsList, sortConfig, vaultsApyData],
   )
 
   const resolvedHiddenColumns = isTablet

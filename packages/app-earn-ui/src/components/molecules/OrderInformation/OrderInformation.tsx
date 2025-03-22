@@ -79,7 +79,10 @@ export const OrderInformation: FC<OrderInformationProps> = ({ title, items, wrap
                         >
                           {nestedItem.label}
                         </Text>
-                        <Text variant="p3semi">
+                        <Text
+                          variant="p3semi"
+                          style={{ color: 'var(--earn-protocol-secondary-100)' }}
+                        >
                           {nestedItem.isLoading ? (
                             <SkeletonLine width="80px" height="14px" />
                           ) : (
@@ -108,7 +111,7 @@ export const OrderInformation: FC<OrderInformationProps> = ({ title, items, wrap
                   </Tooltip>
                 )}
               </Text>
-              <Text variant="p3semi">
+              <Text variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
                 {item.isLoading ? <SkeletonLine width="80px" height="14px" /> : item.value}
               </Text>
             </li>

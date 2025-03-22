@@ -12,13 +12,18 @@ import {
   YAxis,
 } from 'recharts'
 
+import { NotEnoughData } from '@/components/organisms/Charts/components/NotEnoughData'
 import { PerformanceLegend } from '@/components/organisms/Charts/components/PerformanceLegend'
 import { historicalPerformanceLabelMap } from '@/components/organisms/Charts/labels'
-import { CHART_TIMESTAMP_FORMAT } from '@/constants/charts'
+import {
+  CHART_TIMESTAMP_FORMAT_DETAILED,
+  CHART_TIMESTAMP_FORMAT_SHORT,
+  POINTS_REQUIRED_FOR_CHART,
+} from '@/constants/charts'
 import { formatChartCryptoValue } from '@/features/forecast/chart-formatters'
 
 export type PerformanceChartProps = {
-  data:
+  data?:
     | PerformanceChartData['forecast'][TimeframesType]
     | PerformanceChartData['historic'][TimeframesType]
   timeframe: TimeframesType
@@ -26,9 +31,26 @@ export type PerformanceChartProps = {
   showForecast: boolean
 }
 
-export const PerformanceChart = ({ data, inputToken, showForecast }: PerformanceChartProps) => {
+export const PerformanceChart = ({
+  data,
+  inputToken,
+  showForecast,
+  timeframe,
+}: PerformanceChartProps) => {
+  const chartHidden = !data || data.length < POINTS_REQUIRED_FOR_CHART[timeframe]
+
   return (
     <RechartResponsiveWrapper>
+      {chartHidden && (
+        <NotEnoughData
+          style={{
+            width: '100%',
+            height: '340px',
+            marginTop: '35px',
+            backgroundColor: 'var(--color-surface-subtle)',
+          }}
+        />
+      )}
       <ResponsiveContainer width="100%" height="90%">
         <ComposedChart
           data={data}
@@ -54,10 +76,10 @@ export const PerformanceChart = ({ data, inputToken, showForecast }: Performance
             width={80}
             domain={[
               (dataMin: number) => {
-                return Math.max(dataMin - 2, 0)
+                return Math.max(dataMin - Number(dataMin * 0.001), 0)
               },
               (dataMax: number) => {
-                return Math.min(dataMax + 2, dataMax * 2)
+                return dataMax + Number(dataMax * 0.001)
               },
             ]}
           />
@@ -68,7 +90,13 @@ export const PerformanceChart = ({ data, inputToken, showForecast }: Performance
                 : `${formatChartCryptoValue(Number(val))} ${inputToken}`,
               historicalPerformanceLabelMap[valueName] ?? valueName,
             ]}
-            labelFormatter={(label) => dayjs(label).format(CHART_TIMESTAMP_FORMAT)}
+            labelFormatter={(value) =>
+              dayjs(value).format(
+                timeframe === '7d' || timeframe === '30d'
+                  ? CHART_TIMESTAMP_FORMAT_DETAILED
+                  : CHART_TIMESTAMP_FORMAT_SHORT,
+              )
+            }
             wrapperStyle={{
               zIndex: 1000,
               backgroundColor: 'var(--color-surface-subtle)',
@@ -89,51 +117,57 @@ export const PerformanceChart = ({ data, inputToken, showForecast }: Performance
               letterSpacing: '-0.5px',
             }}
           />
-          <Area
-            type="natural"
-            dataKey="bounds"
-            stroke="none"
-            legendType="none"
-            fill="#8D3360"
-            connectNulls
-            dot={false}
-            activeDot={false}
-            animationDuration={200}
-            animationBegin={200}
-            animateNewValues
-          />
-          <Line
-            dot={false}
-            type="natural"
-            dataKey="forecast"
-            stroke="#FF80BF"
-            activeDot={false}
-            connectNulls
-            animationDuration={400}
-            strokeDasharray="5 5"
-            animateNewValues
-          />
-          <Line
-            dot={false}
-            type="monotone"
-            dataKey="netValue"
-            stroke="#FF80BF"
-            activeDot={false}
-            connectNulls
-            animationDuration={400}
-            animateNewValues
-          />
-          <Line
-            dot={false}
-            type="stepAfter"
-            dataKey="depositedValue"
-            stroke="#FF49A4"
-            activeDot={false}
-            connectNulls
-            animationDuration={400}
-            animateNewValues
-          />
-          {data.length && (
+          {showForecast ? (
+            <>
+              <Area
+                type="natural"
+                dataKey="bounds"
+                stroke="none"
+                legendType="none"
+                fill="#8D3360"
+                dot={false}
+                activeDot={false}
+                animationDuration={200}
+                animationBegin={200}
+                animateNewValues
+              />
+              <Line
+                dot={false}
+                type="natural"
+                dataKey="forecast"
+                stroke="#FF80BF"
+                activeDot={false}
+                connectNulls
+                animationDuration={400}
+                strokeDasharray="5 5"
+                animateNewValues
+              />
+            </>
+          ) : (
+            <>
+              <Line
+                dot={false}
+                type="monotone"
+                dataKey="netValue"
+                stroke="#FF80BF"
+                activeDot={false}
+                connectNulls
+                animationDuration={400}
+                animateNewValues
+              />
+              <Line
+                dot={false}
+                type="stepAfter"
+                dataKey="depositedValue"
+                stroke="#FF49A4"
+                activeDot={false}
+                connectNulls
+                animationDuration={400}
+                animateNewValues
+              />
+            </>
+          )}
+          {data?.length && (
             <Legend
               content={<PerformanceLegend showForecast={showForecast} />}
               iconType="circle"

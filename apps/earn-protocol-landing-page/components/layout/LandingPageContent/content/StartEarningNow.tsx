@@ -129,7 +129,10 @@ export const StartEarningNow = () => {
             'Still able to withdraw at anytime',
           ]}
           cta={
-            <Link href="https://chat.summer.fi/" target="_blank">
+            <Link
+              href="https://cal.com/jordan-jackson-d278ib/summer.fi-support-call"
+              target="_blank"
+            >
               <Button variant="primarySmall" className={clsx(startEarningNowStyles.ctaButton)}>
                 <Text variant="p3semi">Set up a call</Text>
               </Button>

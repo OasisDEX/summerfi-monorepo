@@ -168,13 +168,10 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     if (!configMapsPerChain) {
       throw new Error('Unsupported migration type: ' + params.migrationType)
     }
-    const configMaps = configMapsPerChain[params.chainInfo.chainId]
-    if (!configMaps) {
-      throw new Error('No addresses mapping found for chain ' + params.chainInfo.chainId)
-    }
 
     // no configs for this chain
-    if (Object.values(configMaps).length === 0) {
+    const configMaps = configMapsPerChain[params.chainInfo.chainId]
+    if (!configMaps || Object.keys(configMaps).length === 0) {
       return []
     }
 
@@ -335,16 +332,18 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
         // take the last record for current apy
         const apy = json.data[json.data.length - 1].apy
 
-        // take last 7 records for the 7 days apy
+        // take last 7 records for the 7 days and calculate the SMA fer the last 7 days
         const last7Records = json.data.slice(-7)
-        const apy7d =
-          last7Records.reduce((acc, record) => acc + record.apy, 0) / last7Records.length
-        LoggingService.debug('apy7d for position ' + positionId, apy7d)
+        const apy7d = last7Records.reduce((acc, record) => acc + record.apy, 0) / 7
+        // take last 30 records for the 30 days and calculate the SMA fer the last 30 days
+        const last30Records = json.data.slice(-30)
+        const apy30d = last30Records.reduce((acc, record) => acc + record.apy, 0) / 30
 
         return {
           positionId: positionId,
           apy: Percentage.createFrom({ value: apy }),
           apy7d: Percentage.createFrom({ value: apy7d }),
+          apy30d: Percentage.createFrom({ value: apy30d }),
         } as ArmadaMigratablePositionApy
       }),
     )

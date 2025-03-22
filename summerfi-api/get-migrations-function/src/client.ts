@@ -1,5 +1,13 @@
-import { Chain, createPublicClient, extractChain, getContract, http, HttpTransport } from 'viem'
-import { arbitrum, base, mainnet, optimism, sepolia } from 'viem/chains'
+import {
+  Chain,
+  createPublicClient,
+  erc20Abi,
+  extractChain,
+  getContract,
+  http,
+  HttpTransport,
+} from 'viem'
+import { arbitrum, base, mainnet, optimism, sepolia, sonic } from 'viem/chains'
 import { aavePoolContract } from './abi/aavePoolContract'
 import { decodeBitmapToAssetsAddresses } from './decodeBitmapToAssetsAddresses'
 import { aavePoolDataProviderContract } from './abi/aavePoolDataProviderContract'
@@ -8,7 +16,7 @@ import { USD_DECIMALS } from '@summerfi/serverless-shared/constants'
 import { ProtocolMigrationAssets } from './types'
 import {
   Address,
-  type ChainId,
+  ChainId,
   isChainId,
   PortfolioMigrationAddressType,
   PortfolioMigrationAsset,
@@ -21,7 +29,6 @@ import {
   getRpcGatewayEndpoint,
   IRpcConfig,
 } from '@summerfi/serverless-shared/getRpcGatewayEndpoint'
-import { publicActionReverseMirage } from 'reverse-mirage'
 import { getDsProxy } from './getDsProxy'
 import { Logger } from '@aws-lambda-powertools/logger'
 
@@ -51,11 +58,15 @@ export function createMigrationsClient(
       if (!isChainId(chainId)) {
         throw new Error(`Invalid chainId: ${chainId}`)
       }
+      // skik unsupported chains
+      if ([ChainId.SONIC].includes(chainId)) {
+        return
+      }
       if (customChainId && customChainId !== chainId) {
         return
       }
       const chain = extractChain({
-        chains: [mainnet, base, optimism, arbitrum, sepolia],
+        chains: [mainnet, base, optimism, arbitrum, sepolia, sonic],
         id: chainId,
       })
 
@@ -120,24 +131,24 @@ async function getAssets(
   const publicClient = createPublicClient({
     chain,
     transport,
-  }).extend(publicActionReverseMirage)
+  })
 
   const addressService = createAddressService(chain.id)
 
   const aavePool = getContract({
     address: addressService.getProtocolContract(protocol, 'LendingPool'),
     abi: aavePoolContract.abi,
-    publicClient,
+    client: publicClient,
   })
   const aavePoolDataProvider = getContract({
     address: addressService.getProtocolContract(protocol, 'PoolDataProvider'),
     abi: aavePoolDataProviderContract.abi,
-    publicClient,
+    client: publicClient,
   })
   const aaveOracle = getContract({
     address: addressService.getProtocolContract(protocol, 'Oracle'),
     abi: aaveOracleContract.abi,
-    publicClient,
+    client: publicClient,
   })
 
   // read getReservesList
@@ -171,12 +182,37 @@ async function getAssets(
             symbol: 'MKR',
           }
         }
-        return publicClient.getERC20({
-          erc20: {
-            address,
-            chainID: chain.id,
-          },
-        })
+        // get decimals and symbol using the multicall
+        const contract = {
+          address,
+          abi: erc20Abi,
+        }
+        return publicClient
+          .multicall({
+            contracts: [
+              {
+                ...contract,
+                functionName: 'decimals',
+              },
+              {
+                ...contract,
+                functionName: 'symbol',
+              },
+            ],
+          })
+          .then(([decimals, symbol]) => {
+            // if success
+            if (decimals.status === 'failure' || symbol.status === 'failure') {
+              throw new Error(
+                `Failed to get decimals or symbol for address ${address}: ${decimals.status} ${symbol.status}`,
+              )
+            }
+            return {
+              address: address,
+              decimals: decimals.result,
+              symbol: symbol.result,
+            }
+          })
       }),
     ),
   ])

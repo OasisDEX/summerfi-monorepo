@@ -4,16 +4,18 @@ import {
   ChainFamilyName,
   EthereumChainNames,
   OptimismChainNames,
+  SonicChainNames,
 } from '../enums/ChainNames'
 import { ChainInfo } from './ChainInfo'
 import { ChainId } from '../types/ChainId'
+import { ChainIds } from './ChainIds'
 
 /**
  * Chain definition per family
  */
 const EthereumFamily: Record<EthereumChainNames, ChainInfo> = {
   [EthereumChainNames.Mainnet]: ChainInfo.createFrom({
-    chainId: 1,
+    chainId: ChainIds.Mainnet,
     name: EthereumChainNames.Mainnet,
   }),
   [EthereumChainNames.Goerli]: ChainInfo.createFrom({
@@ -24,22 +26,29 @@ const EthereumFamily: Record<EthereumChainNames, ChainInfo> = {
 
 const ArbitrumFamily: Record<ArbitrumChainNames, ChainInfo> = {
   [ArbitrumChainNames.ArbitrumOne]: ChainInfo.createFrom({
-    chainId: 42161,
+    chainId: ChainIds.ArbitrumOne,
     name: ArbitrumChainNames.ArbitrumOne,
   }),
 }
 
 const OptimismFamily: Record<OptimismChainNames, ChainInfo> = {
   [OptimismChainNames.Optimism]: ChainInfo.createFrom({
-    chainId: 10,
+    chainId: ChainIds.Optimism,
     name: OptimismChainNames.Optimism,
   }),
 }
 
 const BaseFamily: Record<BaseChainNames, ChainInfo> = {
   [BaseChainNames.Mainnet]: ChainInfo.createFrom({
-    chainId: 8453,
+    chainId: ChainIds.Base,
     name: BaseChainNames.Mainnet,
+  }),
+}
+
+const SonicFamily: Record<SonicChainNames, ChainInfo> = {
+  [SonicChainNames.Sonic]: ChainInfo.createFrom({
+    chainId: ChainIds.Sonic,
+    name: SonicChainNames.Sonic,
   }),
 }
 
@@ -56,7 +65,9 @@ export type ChainFamily = {
         ? typeof OptimismFamily
         : key extends ChainFamilyName.Base
           ? typeof BaseFamily
-          : never
+          : key extends ChainFamilyName.Sonic
+            ? typeof SonicFamily
+            : never
 }
 
 /**
@@ -69,6 +80,7 @@ export const ChainFamilyMap: ChainFamily = {
   [ChainFamilyName.Arbitrum]: ArbitrumFamily,
   [ChainFamilyName.Optimism]: OptimismFamily,
   [ChainFamilyName.Base]: BaseFamily,
+  [ChainFamilyName.Sonic]: SonicFamily,
 }
 
 export type ChainFamilyInfo = {

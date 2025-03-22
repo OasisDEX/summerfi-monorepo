@@ -17,9 +17,10 @@ export const PositionPerformanceChart = ({
   chartData,
   inputToken,
 }: PositionPerformanceChartProps) => {
-  const [showForecast, setShowForecast] = useState(false)
+  const [showPastPerformance, setShowPastPerformance] = useState(false)
   const { timeframe, setTimeframe, timeframes } = useTimeframes({
     chartData: chartData.historic,
+    customDefaultTimeframe: showPastPerformance ? undefined : '1y',
   })
 
   const parsedData = useMemo(() => {
@@ -28,22 +29,22 @@ export const PositionPerformanceChart = ({
       return []
     }
 
-    if (showForecast) {
-      return chartData.forecast[timeframe]
+    if (showPastPerformance) {
+      return chartData.historic[timeframe]
     }
 
-    return chartData.historic[timeframe]
-  }, [timeframe, chartData, showForecast])
+    return chartData.forecast[timeframe]
+  }, [timeframe, chartData, showPastPerformance])
 
   const parsedTimeframes = useMemo(() => {
-    return showForecast ? allTimeframesAvailable : timeframes
-  }, [showForecast, timeframes])
+    return showPastPerformance ? timeframes : allTimeframesAvailable
+  }, [showPastPerformance, timeframes])
 
   useEffect(() => {
     if (!parsedTimeframes[timeframe]) {
       setTimeframe('7d')
     }
-  }, [showForecast, parsedTimeframes, timeframe, setTimeframe])
+  }, [showPastPerformance, parsedTimeframes, timeframe, setTimeframe])
 
   return (
     <Card
@@ -57,16 +58,18 @@ export const PositionPerformanceChart = ({
       <ChartHeader
         timeframes={parsedTimeframes}
         timeframe={timeframe}
-        checkboxValue={showForecast}
-        setCheckboxValue={(nextShowForecast) => setShowForecast(nextShowForecast)}
-        checkboxLabel="Forecast"
+        checkboxValue={showPastPerformance}
+        setCheckboxValue={(nextShowPastPerformance) =>
+          setShowPastPerformance(nextShowPastPerformance)
+        }
+        checkboxLabel="Show past performance"
         setTimeframe={(nextTimeFrame) => setTimeframe(nextTimeFrame as TimeframesType)}
       />
       <PerformanceChart
         timeframe={timeframe}
         data={parsedData}
         inputToken={inputToken}
-        showForecast={showForecast}
+        showForecast={!showPastPerformance}
       />
     </Card>
   )

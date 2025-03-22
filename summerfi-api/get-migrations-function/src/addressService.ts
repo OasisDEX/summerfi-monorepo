@@ -2,12 +2,16 @@ import { AaveLikeProtocol, ADDRESSES, Common, Core } from '@oasisdex/addresses'
 import {
   Address,
   ChainId,
+  Network,
   NetworkByChainID,
   ProtocolId,
 } from '@summerfi/serverless-shared/domain-types'
 
 export const createAddressService = (chainId: ChainId) => {
   const network = NetworkByChainID[chainId]
+  if (network === Network.SONIC) {
+    throw new Error('Sonic is not supported yet')
+  }
   const addresses = ADDRESSES[network]
 
   const getTokenContract = (token: Common): Address => {

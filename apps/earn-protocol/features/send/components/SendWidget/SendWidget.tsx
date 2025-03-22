@@ -53,9 +53,11 @@ export const SendWidget: FC<SendWidgetProps> = ({
 }) => {
   const { deviceType } = useDeviceType()
 
-  const walletDataAssetsSortedByUsdValue = walletData.assets.sort(
-    (a, b) => b.balanceUSD - a.balanceUSD,
-  )
+  const walletDataAssetsSortedByUsdValue = walletData.assets
+    .sort((a, b) => b.balanceUSD - a.balanceUSD)
+    // this needs to be fixed on the wallet assets level
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    .filter(({ network }) => networkNameToSDKId(network) !== undefined)
 
   const defaultDropdownValue = {
     label: walletDataAssetsSortedByUsdValue[0].symbol.toUpperCase(),
