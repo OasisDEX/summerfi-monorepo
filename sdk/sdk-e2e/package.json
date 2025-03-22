@@ -9,9 +9,9 @@
     "e2e": "jest --roots e2e"
   },
   "devDependencies": {
+    "@summerfi/armada-protocol-abis": "workspace:*",
     "@summerfi/armada-protocol-common": "workspace:*",
     "@summerfi/armada-protocol-service": "workspace:*",
-    "@summerfi/armada-protocol-abis": "workspace:*",
     "@summerfi/core-contracts": "workspace:*",
     "@summerfi/deployment-utils": "workspace:*",
     "@summerfi/eslint-config": "workspace:*",

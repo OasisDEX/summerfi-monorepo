@@ -18,9 +18,6 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@aws-lambda-powertools/logger": "^1.18.1",
-    "@aws-lambda-powertools/metrics": "^1.18.1",
-    "@aws-lambda-powertools/tracer": "^1.18.1",
     "@summerfi/common": "workspace:*",
     "@summerfi/configuration-provider": "workspace:*",
     "@summerfi/configuration-provider-common": "workspace:*",
@@ -55,8 +52,7 @@
     "@summerfi/contracts-provider-common": "workspace:*",
     "@summerfi/contracts-provider-service": "workspace:*",
     "@summerfi/subgraph-manager-service": "workspace:*",
-    "@trpc/server": "11.0.0-rc.844",
-    "superjson": "^1.13.3"
+    "@trpc/server": "11.0.0-rc.844"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
