@@ -32,6 +32,7 @@ import { createProtocolsPluginsRegistry } from './CreateProtocolPluginsRegistry'
 export type SDKContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>
 
 export type SDKAppContext = {
+  callUrl: string
   addressBookManager: IAddressBookManager
   configProvider: IConfigurationProvider
   blockchainClientProvider: BlockchainClientProvider
@@ -88,6 +89,7 @@ export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
   })
 
   return {
+    callUrl: `${opts.event.rawPath}?${opts.event.rawQueryString}`,
     configProvider,
     blockchainClientProvider,
     abiProvider,
