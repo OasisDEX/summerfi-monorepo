@@ -2,6 +2,7 @@ import type { RegisterOptions } from 'node_modules/superjson/dist/class-registry
 import type { CustomTransfomer } from 'node_modules/superjson/dist/custom-transformer-registry'
 import type { JSONValue } from 'node_modules/superjson/dist/types'
 import { SuperJSON } from 'superjson'
+import { LoggingService } from './LoggingService'
 
 export type Class = object
 
@@ -31,21 +32,21 @@ export class SerializationService {
     return {
       input: {
         serialize: (data: unknown) => {
-          console.log('input ser => ', data)
+          LoggingService.debug('input ser => ', data)
           return SuperJSON.stringify(data)
         },
         deserialize: (data: string) => {
-          console.log('input des => ', data)
+          LoggingService.debug('input des => ', data)
           return SuperJSON.parse(data)
         },
       },
       output: {
         serialize: (data: unknown) => {
-          console.log('output ser => ', data)
+          LoggingService.debug('output ser => ', data)
           return SuperJSON.stringify(data)
         },
         deserialize: (data: string) => {
-          console.log('output des => ', data)
+          LoggingService.debug('output des => ', data)
           return SuperJSON.parse(data)
         },
       },
