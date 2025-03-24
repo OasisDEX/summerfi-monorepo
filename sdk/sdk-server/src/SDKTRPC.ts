@@ -11,18 +11,29 @@ export const router = t.router
 export const createCallerFactory = t.createCallerFactory
 
 export const publicProcedure = t.procedure.use(async (opts) => {
-  const { ctx } = opts
-  if (process.env.SDK_LOGGING_ENABLED === 'true') {
-    console.log(`Call url (${ctx.callKey}): ${ctx.callUrl}`)
+  const { ctx, path } = opts
+  const isLoggingEnabled = process.env.SDK_LOGGING_ENABLED === 'true'
+  const start = isLoggingEnabled ? performance.now() : 0
+
+  if (isLoggingEnabled) {
+    console.log(`[CALL] Procedure: ${path} (${ctx.callKey})`)
   }
 
   const result = await opts.next()
-  if (process.env.SDK_LOGGING_ENABLED === 'true') {
+
+  if (isLoggingEnabled) {
     try {
-      console.log(`Result (${ctx.callKey}): ${JSON.stringify((result as { data: unknown })?.data)}`)
+      const end = performance.now()
+      console.log(
+        `[RESULT] Procedure: ${path} (${ctx.callKey}) took ${end - start} milliseconds. Data: ${JSON.stringify((result as { data: unknown })?.data)}`,
+      )
     } catch (error) {
-      console.log(`Result (${ctx.callKey}): Cannot serialize data`)
+      const end = performance.now()
+      console.log(
+        `[RESULT] Procedure: ${path} (${ctx.callKey}): Cannot serialize data. Took ${end - start} milliseconds.`,
+      )
     }
   }
+
   return result
 })
