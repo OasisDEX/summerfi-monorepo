@@ -28,6 +28,7 @@ export async function GET(request: NextRequest) {
     const tokenData = getTokenGuarded(token.replace('USD₮0', 'USDT')) // fancy glyphs not supported
     const iconName = tokenData?.iconName ?? 'not_supported_icon'
     const TokenIcon = (await iconsSync[iconName]).default
+    const apy30dFormatted = apy30d === 'New' ? 'New Vault' : `${apy30d}%`
 
     return new ImageResponse(
       (
@@ -118,7 +119,7 @@ export async function GET(request: NextRequest) {
               }}
             >
               <p style={{ margin: 0 }}>30d APY:</p>
-              <b style={{ fontWeight: 700, color: '#ff49a4' }}>{String(apy30d)}%</b>
+              <b style={{ fontWeight: 700, color: '#ff49a4' }}>{apy30dFormatted}</b>
             </div>
           </div>
         </div>
