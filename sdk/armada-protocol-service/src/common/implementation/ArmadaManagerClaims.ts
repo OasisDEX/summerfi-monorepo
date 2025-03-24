@@ -42,7 +42,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
   private _rewardsRedeemerAddress: IAddress
   private _distributionsUrls: string[]
   private _subgraphManager: IArmadaSubgraphManager
-  
+
   /** CONSTRUCTOR */
   constructor(params: {
     blockchainClientProvider: IBlockchainClientProvider
