@@ -22,13 +22,11 @@ import { useTermsOfService } from '@summerfi/app-tos'
 import {
   type ArksHistoricalChartData,
   sdkSupportedChains,
-  type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
   TOSStatus,
   TransactionAction,
-  type UsersActivity,
   type VaultApyData,
 } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
@@ -36,6 +34,9 @@ import { getChainInfoByChainId, type IToken, TransactionType } from '@summerfi/s
 
 import { AccountKitAccountType } from '@/account-kit/types'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
+import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
+import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { ControlsApproval, OrderInfoDeposit } from '@/components/molecules/SidebarElements'
@@ -66,8 +67,9 @@ import { VaultOpenViewDetails } from './VaultOpenViewDetails'
 type VaultOpenViewComponentProps = {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
-  userActivity: UsersActivity
-  topDepositors: SDKUsersActivityType
+  latestActivity: LatestActivityPagination
+  topDepositors: TopDepositorsPagination
+  rebalanceActivity: RebalanceActivityPagination
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
@@ -78,8 +80,9 @@ type VaultOpenViewComponentProps = {
 export const VaultOpenViewComponent = ({
   vault,
   vaults,
-  userActivity,
+  latestActivity,
   topDepositors,
+  rebalanceActivity,
   medianDefiYield,
   arksHistoricalChartData,
   arksInterestRates,
@@ -435,9 +438,9 @@ export const VaultOpenViewComponent = ({
       detailsContent={
         <VaultOpenViewDetails
           vault={vault}
-          vaults={vaults}
-          userActivity={userActivity}
+          latestActivity={latestActivity}
           topDepositors={topDepositors}
+          rebalanceActivity={rebalanceActivity}
           arksHistoricalChartData={arksHistoricalChartData}
           arksInterestRates={arksInterestRates}
           vaultApyData={vaultApyData}

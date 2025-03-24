@@ -74,22 +74,26 @@ const mapTokensToMultiselectOptions = (
 const mapProtocolsToMultiselectOptions = (
   vaultsList: SDKVaultsListType,
 ): GenericMultiselectOption[] => {
-  const uniqueProtocolsList = [
-    ...new Set(
-      vaultsList.flatMap((vault) =>
-        vault.arks.map((ark) => {
-          const protocol = ark.name?.split('-') ?? ['n/a']
+  const protocolsMap = new Map<string, { label: string; values: string[] }>()
 
-          return getProtocolLabel(protocol)
-        }),
-      ),
-    ),
-  ]
+  vaultsList.forEach((vault) =>
+    vault.arks.forEach((ark) => {
+      if (!ark.name) return
 
-  return uniqueProtocolsList.map((protocol) => ({
-    label: protocol,
-    icon: getProtocolIcon(protocol),
-    value: protocol,
+      const protocol = ark.name.split('-')
+      const label = getProtocolLabel(protocol)
+
+      if (!protocolsMap.has(label)) {
+        protocolsMap.set(label, { label, values: [] })
+      }
+      protocolsMap.get(label)?.values.push(ark.name)
+    }),
+  )
+
+  return Array.from(protocolsMap.values()).map(({ label, values }) => ({
+    label,
+    icon: getProtocolIcon(label),
+    value: [...new Set(values)].join(','),
   }))
 }
 
@@ -99,4 +103,21 @@ export const mapMultiselectOptions = (vaultsList: SDKVaultsListType) => {
     tokensOptions: mapTokensToMultiselectOptions(vaultsList),
     protocolsOptions: mapProtocolsToMultiselectOptions(vaultsList),
   }
+}
+
+export const parseProtocolFilter = (protocolFilter: string[] | undefined) => {
+  return protocolFilter?.reduce((acc: string[], protocol: string) => {
+    const [baseProtocol] = protocol.split('-')
+    const existingProtocol = acc.find((p) => p.startsWith(baseProtocol))
+
+    if (existingProtocol) {
+      const index = acc.indexOf(existingProtocol)
+
+      acc[index] = `${existingProtocol},${protocol}`
+    } else {
+      acc.push(protocol)
+    }
+
+    return [...new Set(acc)]
+  }, [])
 }

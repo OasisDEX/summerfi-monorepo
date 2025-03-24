@@ -1,5 +1,7 @@
 import type { ColumnType } from 'kysely'
 
+export type ActionType = 'deposit' | 'withdraw'
+
 export type Generated<T> =
   T extends ColumnType<infer S, infer I, infer U>
     ? ColumnType<S, I | undefined, U>
@@ -63,11 +65,60 @@ export interface HourlyRewardRate {
   updateCount: Int8
 }
 
+export interface LatestActivity {
+  actionType: ActionType
+  amount: Numeric
+  amountNormalized: Numeric
+  amountUsd: Numeric
+  balance: Numeric
+  balanceNormalized: Numeric
+  balanceUsd: Numeric
+  id: string
+  inputTokenDecimals: Int8
+  inputTokenPriceUsd: Numeric
+  inputTokenSymbol: string
+  network: Network
+  strategy: string
+  strategyId: string
+  timestamp: Int8
+  txHash: string
+  userAddress: string
+  vaultId: string
+  vaultName: string
+}
+
 export interface NetworkStatus {
   isUpdating: Generated<boolean>
   lastBlockNumber: Int8
   lastUpdatedAt: Int8
   network: Network
+}
+
+export interface RebalanceActivity {
+  actionType: string
+  amount: Numeric
+  amountNormalized: Numeric
+  amountUsd: Numeric
+  fromDepositLimit: Numeric
+  fromDepositLimitNormalized: Numeric
+  fromName: string
+  fromTotalValueLockedUsd: Numeric
+  id: string
+  inputTokenDecimals: Int8
+  inputTokenPriceUsd: Numeric
+  inputTokenSymbol: string
+  network: Network
+  rebalanceId: string
+  strategy: string
+  strategyId: string
+  timestamp: Int8
+  toDepositLimit: Numeric
+  toDepositLimitNormalized: Numeric
+  toName: string
+  toTotalValueLockedUsd: Numeric
+  txHash: string
+  vaultId: string
+  vaultName: string
 }
 
 export interface RewardRate {
@@ -85,6 +136,29 @@ export interface Token {
   network: Network
   precision: string
   symbol: string
+}
+
+export interface TopDepositors {
+  balance: Numeric
+  balanceNormalized: Numeric
+  balanceUsd: Numeric
+  changeSevenDays: Numeric
+  earningsStreak: Int8
+  id: string
+  inputTokenDecimals: Int8
+  inputTokenPriceUsd: Numeric
+  inputTokenSymbol: string
+  network: Network
+  noOfDeposits: Int8
+  noOfWithdrawals: Int8
+  projectedOneYearEarnings: Numeric
+  projectedOneYearEarningsUsd: Numeric
+  strategy: string
+  strategyId: string
+  updatedAt: Int8
+  userAddress: string
+  vaultId: string
+  vaultName: string
 }
 
 export interface TosApproval {
@@ -129,9 +203,12 @@ export interface Database {
   fleetInterestRate: FleetInterestRate
   hourlyFleetInterestRate: HourlyFleetInterestRate
   hourlyRewardRate: HourlyRewardRate
+  latestActivity: LatestActivity
   networkStatus: NetworkStatus
+  rebalanceActivity: RebalanceActivity
   rewardRate: RewardRate
   token: Token
+  topDepositors: TopDepositors
   tosApproval: TosApproval
   walletRisk: WalletRisk
   weeklyFleetInterestRate: WeeklyFleetInterestRate
