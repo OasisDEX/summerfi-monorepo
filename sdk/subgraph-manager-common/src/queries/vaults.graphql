@@ -5,6 +5,9 @@ query GetVaults {
     }
     id
     name
+    rewardsManager {
+      id
+    }
     rewardTokens {
       id
       token {
