@@ -8,6 +8,14 @@ import { safe } from 'wagmi/connectors'
 
 export const queryClient = new QueryClient()
 
+const customAAKitSonicConfig: Chain = {
+  ...sonic,
+  rpcUrls: {
+    ...sonic.rpcUrls,
+    alchemy: sonic.rpcUrls.default,
+  },
+}
+
 export type AccountKitSupportedNetworks =
   | SDKChainId.BASE
   | SDKChainId.ARBITRUM
@@ -76,7 +84,7 @@ export const getAccountKitConfig = ({
         [SDKSupportedNetworkIdsEnum.BASE]: base,
         [SDKSupportedNetworkIdsEnum.MAINNET]: mainnet,
         [SDKSupportedNetworkIdsEnum.OPTIMISM]: optimism,
-        [SDKSupportedNetworkIdsEnum.SONIC]: sonic,
+        [SDKSupportedNetworkIdsEnum.SONIC]: customAAKitSonicConfig,
       }[chainId ?? defaultChain.id] as Chain,
       chains: Object.values(SDKChainIdToAAChainMap).map((chain) => ({
         chain,
