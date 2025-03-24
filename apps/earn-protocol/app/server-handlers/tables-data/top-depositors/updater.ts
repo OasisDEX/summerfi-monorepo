@@ -30,17 +30,20 @@ export const updateTopDepositors = async ({
   mainnetGraphQlClient,
   baseGraphQlClient,
   arbitrumGraphQlClient,
+  sonicGraphQlClient,
 }: {
   db: SummerProtocolDB['db']
   mainnetGraphQlClient: GraphQLClient
   baseGraphQlClient: GraphQLClient
   arbitrumGraphQlClient: GraphQLClient
+  sonicGraphQlClient: GraphQLClient
 }) => {
   const startTime = Date.now()
   const topDepositors = await getTopDepositors({
     mainnetGraphQlClient,
     baseGraphQlClient,
     arbitrumGraphQlClient,
+    sonicGraphQlClient,
   })
 
   // TEMPORARY: USE getVaultsApy instead of reading it from the db since it's not available in new dbs

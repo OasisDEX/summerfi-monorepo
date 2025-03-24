@@ -35,11 +35,13 @@ export const updateTablesData = async ({
     [SDKNetwork.Mainnet]: `${baseUrl}/summer-protocol`,
     [SDKNetwork.Base]: `${baseUrl}/summer-protocol-base`,
     [SDKNetwork.ArbitrumOne]: `${baseUrl}/summer-protocol-arbitrum`,
+    [SDKNetwork.SonicMainnet]: `${baseUrl}/summer-protocol-sonic`,
   }
 
   const mainnetGraphQlClient = new GraphQLClient(subgraphsMap[SDKNetwork.Mainnet])
   const baseGraphQlClient = new GraphQLClient(subgraphsMap[SDKNetwork.Base])
   const arbitrumGraphQlClient = new GraphQLClient(subgraphsMap[SDKNetwork.ArbitrumOne])
+  const sonicGraphQlClient = new GraphQLClient(subgraphsMap[SDKNetwork.SonicMainnet])
 
   try {
     let updatedLatestActivities
@@ -52,6 +54,7 @@ export const updateTablesData = async ({
         mainnetGraphQlClient,
         baseGraphQlClient,
         arbitrumGraphQlClient,
+        sonicGraphQlClient,
       })
     }
 
@@ -61,6 +64,7 @@ export const updateTablesData = async ({
         mainnetGraphQlClient,
         baseGraphQlClient,
         arbitrumGraphQlClient,
+        sonicGraphQlClient,
       })
     }
 
@@ -70,6 +74,7 @@ export const updateTablesData = async ({
         mainnetGraphQlClient,
         baseGraphQlClient,
         arbitrumGraphQlClient,
+        sonicGraphQlClient,
       })
     }
 
