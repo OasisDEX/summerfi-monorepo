@@ -1422,7 +1422,7 @@ export class ArmadaManager implements IArmadaManager {
   private async _getPriceImpact(params: {
     fromAmount: ITokenAmount
     toAmount: ITokenAmount
-  }): Promise<TransactionPriceImpact | null> {
+  }): Promise<TransactionPriceImpact> {
     // for quote we should use optimal quote not the min quote
     const quotePrice = Price.createFrom({
       base: params.fromAmount.token,
