@@ -4,6 +4,7 @@ import { arbitrum, base, mainnet } from '@account-kit/infra'
 import { useChain } from '@account-kit/react'
 import { humanNetworktoSDKNetwork, subgraphNetworkToId } from '@summerfi/app-utils'
 import { useParams } from 'next/navigation'
+import { sonic } from 'viem/chains'
 
 import { NetworkIds } from '@/constants/networks-list'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
@@ -12,6 +13,7 @@ export const networkIdsToAccountKitChainsMap = {
   [NetworkIds.BASEMAINNET]: base,
   [NetworkIds.ARBITRUMMAINNET]: arbitrum,
   [NetworkIds.MAINNET]: mainnet,
+  [NetworkIds.SONICMAINNET]: sonic,
 }
 
 // Update account kit network based on app network derived from currently displayed strategy
@@ -40,6 +42,7 @@ export const useUpdateAANetwork = (overrideNetwork?: string) => {
     | NetworkIds.BASEMAINNET
     | NetworkIds.ARBITRUMMAINNET
     | NetworkIds.MAINNET
+    | NetworkIds.SONICMAINNET
 
   const appChain = networkIdsToAccountKitChainsMap[appChainId]
 
