@@ -77,7 +77,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
       ? formatDecimalAsPercent(vaultApyData.sma30d)
       : 'n/a'
     : 'New strategy'
-  const aprCurrent = formatDecimalAsPercent(vaultApyData.apy)
+  const aprCurrent = vaultApyData.apy ? formatDecimalAsPercent(vaultApyData.apy) : 'New strategy'
 
   const noOfDeposits = position.deposits.length.toString()
 

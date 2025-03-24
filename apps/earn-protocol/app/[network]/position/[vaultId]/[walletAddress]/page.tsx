@@ -171,7 +171,9 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   ])
 
   const vaultApyData =
-    vaultsApyRaw[`${vaultWithConfig.id}-${subgraphNetworkToId(vaultWithConfig.protocol.network)}`]
+    vaultsApyRaw[
+      `${vaultWithConfig.id}-${subgraphNetworkToId(vaultWithConfig.protocol.network)}`
+    ] ?? {}
 
   if (!positionForecastResponse.ok) {
     throw new Error('Failed to fetch forecast data')
