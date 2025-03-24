@@ -28,7 +28,10 @@ export const publicProcedure = t.procedure.use(async (opts) => {
         `[RESULT] Procedure: ${path} (${ctx.callKey}) took ${end - start} milliseconds. Data: ${JSON.stringify((result as { data: unknown })?.data)}`,
       )
     } catch (error) {
-      console.log(`[RESULT] Procedure: ${path} (${ctx.callKey}): Cannot serialize data`)
+      const end = performance.now()
+      console.log(
+        `[RESULT] Procedure: ${path} (${ctx.callKey}): Cannot serialize data. Took ${end - start} milliseconds.`,
+      )
     }
   }
 
