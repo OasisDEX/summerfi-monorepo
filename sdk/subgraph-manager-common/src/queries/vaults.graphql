@@ -98,6 +98,9 @@ query GetVault($id: ID!) {
     protocol {
       network
     }
+    rewardsManager {
+      id
+    }
     id
     name
     rewardTokens {
