@@ -5,6 +5,7 @@ import {
   GenericMultiselect,
   getTwitterShareUrl,
   HeadingWithCards,
+  LoadingSpinner,
   TableCarousel,
   useCurrentUrl,
   useMobileCheck,
@@ -64,7 +65,6 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
 
   const handleMoreItems = async () => {
     try {
-      setIsLoading(true)
       const res = await getRebalanceActivity({
         page: currentPage + 1,
         tokens: tokenFilter,
@@ -77,8 +77,6 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Error fetching more rebalance activity', error)
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -176,6 +174,12 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
           rebalanceActivity.pagination.totalPages > currentPage &&
           currentlyLoadedList.length > 0 &&
           !isLoading
+        }
+        loader={
+          <LoadingSpinner
+            key="spinner"
+            style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
+          />
         }
       >
         <RebalanceActivityTable
