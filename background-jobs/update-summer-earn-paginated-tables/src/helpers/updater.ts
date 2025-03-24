@@ -7,7 +7,7 @@ const logger = new Logger({ serviceName: 'update-summer-earn-paginated-tables', 
 
 export const updater = async (context: Context, tableName: string): Promise<void> => {
   logger.addContext(context)
-  logger.debug('Handler started')
+  logger.debug(`${tableName} handler started`)
 
   const { EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN, EARN_APP_URL, NODE_ENV } = process.env
 
@@ -29,12 +29,13 @@ export const updater = async (context: Context, tableName: string): Promise<void
   }
 
   try {
-    await updateTable(authToken, EARN_APP_URL, tableName)
+    const result = await updateTable(authToken, EARN_APP_URL, tableName)
+    logger.debug(`${tableName} table updated`, { result })
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
 
     logger.error(`Error updating ${tableName} table`, { error: errorMessage })
   }
 
-  logger.debug('Handler completed')
+  logger.debug(`${tableName} handler completed`)
 }
