@@ -46,6 +46,7 @@ jobs:
       SDK_API_URL: ${{ secrets.SDK_API_URL }}
       EARN_PROTOCOL_DB_CONNECTION_STRING: ${{ secrets.EARN_PROTOCOL_DB_CONNECTION_STRING }}
       EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN: ${{ secrets.EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN }}
+      EARN_APP_URL: ${{ secrets.EARN_APP_URL }}
 
     steps:
       - name: Git clone the repository
