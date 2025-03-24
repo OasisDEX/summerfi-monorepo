@@ -85,7 +85,7 @@ export function addSummerEarnAppTablesConfig({ stack, vpc, app }: SummerStackCon
 
   new Cron(stack, 'update-top-depositors-table-cron', {
     schedule: 'rate(5 minutes)',
-    enabled: false,
+    enabled: true,
     job: updateTopDepositorsTableCronFunction,
   })
 

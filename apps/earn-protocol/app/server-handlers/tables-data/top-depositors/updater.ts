@@ -114,7 +114,7 @@ export const updateTopDepositors = async ({
     }
 
     const projectedOneYearEarnings = new BigNumber(fleetRate.apy)
-      .div(100)
+      // .div(100) // THIS DIVISION IS NEEDED WHEN USING APY FROM DB
       .times(position.inputTokenBalanceNormalized)
 
     const projectedOneYearEarningsUsd = projectedOneYearEarnings.times(
