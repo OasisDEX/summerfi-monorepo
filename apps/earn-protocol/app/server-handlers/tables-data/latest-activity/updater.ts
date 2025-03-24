@@ -27,11 +27,13 @@ export const updateLatestActivities = async ({
   mainnetGraphQlClient,
   baseGraphQlClient,
   arbitrumGraphQlClient,
+  sonicGraphQlClient,
 }: {
   db: SummerProtocolDB['db']
   mainnetGraphQlClient: GraphQLClient
   baseGraphQlClient: GraphQLClient
   arbitrumGraphQlClient: GraphQLClient
+  sonicGraphQlClient: GraphQLClient
 }) => {
   const startTime = Date.now()
   const [latestActivity] = await Promise.all([
@@ -46,6 +48,7 @@ export const updateLatestActivities = async ({
     mainnetGraphQlClient,
     baseGraphQlClient,
     arbitrumGraphQlClient,
+    sonicGraphQlClient,
   })
 
   const { updated } = await insertLatestActivitiesInBatches(db, allLatestActivities)

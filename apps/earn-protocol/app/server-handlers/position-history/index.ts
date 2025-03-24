@@ -32,6 +32,7 @@ export async function getPositionHistory({ network, address, vault }: GetPositio
     [SDKNetwork.Mainnet]: `${process.env.SUBGRAPH_BASE}/summer-protocol`,
     [SDKNetwork.Base]: `${process.env.SUBGRAPH_BASE}/summer-protocol-base`,
     [SDKNetwork.ArbitrumOne]: `${process.env.SUBGRAPH_BASE}/summer-protocol-arbitrum`,
+    [SDKNetwork.SonicMainnet]: `${process.env.SUBGRAPH_BASE}/summer-protocol-sonic`,
   }
 
   const isProperNetwork = (net: string): net is keyof typeof subgraphsMap => net in subgraphsMap

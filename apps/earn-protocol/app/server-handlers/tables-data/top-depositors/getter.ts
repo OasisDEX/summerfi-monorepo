@@ -13,6 +13,7 @@ import { fetchTopDepositors } from './fetcher'
  * @param {GraphQLClient} mainnetGraphQlClient - The GraphQL client for the Mainnet network.
  * @param {GraphQLClient} baseGraphQlClient - The GraphQL client for the Base network.
  * @param {GraphQLClient} arbitrumGraphQlClient - The GraphQL client for the Arbitrum network.
+ * @param {GraphQLClient} sonicGraphQlClient - The GraphQL client for the Sonic network.
  * @returns {Promise<Position[]>} - A promise that resolves to an array of positions representing the top depositors
  * with deposits greater than zero, sorted by `inputTokenBalance` in descending order.
  *
@@ -27,18 +28,21 @@ export const getTopDepositors = async ({
   mainnetGraphQlClient,
   baseGraphQlClient,
   arbitrumGraphQlClient,
+  sonicGraphQlClient,
 }: {
   mainnetGraphQlClient: GraphQLClient
   baseGraphQlClient: GraphQLClient
   arbitrumGraphQlClient: GraphQLClient
+  sonicGraphQlClient: GraphQLClient
 }) => {
-  const [mainnetPositions, basePositions, arbitrumPositions] = await Promise.all([
+  const [mainnetPositions, basePositions, arbitrumPositions, sonicPositions] = await Promise.all([
     fetchTopDepositors(mainnetGraphQlClient),
     fetchTopDepositors(baseGraphQlClient),
     fetchTopDepositors(arbitrumGraphQlClient),
+    fetchTopDepositors(sonicGraphQlClient),
   ])
 
-  return [...mainnetPositions, ...basePositions, ...arbitrumPositions]
+  return [...mainnetPositions, ...basePositions, ...arbitrumPositions, ...sonicPositions]
     .filter((position) => position.deposits.length > 0)
     .sort((a, b) => Number(b.inputTokenBalance) - Number(a.inputTokenBalance))
 }

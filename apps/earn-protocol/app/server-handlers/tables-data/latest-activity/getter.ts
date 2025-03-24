@@ -30,20 +30,23 @@ export const getAllLatestActivities = async ({
   mainnetGraphQlClient,
   baseGraphQlClient,
   arbitrumGraphQlClient,
+  sonicGraphQlClient,
 }: {
   lastTimestamp: string
   mainnetGraphQlClient: GraphQLClient
   baseGraphQlClient: GraphQLClient
   arbitrumGraphQlClient: GraphQLClient
+  sonicGraphQlClient: GraphQLClient
 }): Promise<LatestActivity[]> => {
   const results = await Promise.allSettled([
     fetchAllLatestActivities(mainnetGraphQlClient, lastTimestamp),
     fetchAllLatestActivities(baseGraphQlClient, lastTimestamp),
     fetchAllLatestActivities(arbitrumGraphQlClient, lastTimestamp),
+    fetchAllLatestActivities(sonicGraphQlClient, lastTimestamp),
   ])
 
-  const [mainnetActivities, baseActivities, arbitrumActivities] = results.map((result) =>
-    result.status === 'fulfilled' ? result.value : { deposits: [], withdraws: [] },
+  const [mainnetActivities, baseActivities, arbitrumActivities, sonicActivities] = results.map(
+    (result) => (result.status === 'fulfilled' ? result.value : { deposits: [], withdraws: [] }),
   )
 
   // Combine all new activities from different networks and add type property
@@ -51,8 +54,10 @@ export const getAllLatestActivities = async ({
     ...mainnetActivities.deposits.map((deposit) => ({ ...deposit, type: 'deposit' as const })),
     ...baseActivities.deposits.map((deposit) => ({ ...deposit, type: 'deposit' as const })),
     ...arbitrumActivities.deposits.map((deposit) => ({ ...deposit, type: 'deposit' as const })),
+    ...sonicActivities.deposits.map((deposit) => ({ ...deposit, type: 'deposit' as const })),
     ...mainnetActivities.withdraws.map((withdraw) => ({ ...withdraw, type: 'withdraw' as const })),
     ...baseActivities.withdraws.map((withdraw) => ({ ...withdraw, type: 'withdraw' as const })),
     ...arbitrumActivities.withdraws.map((withdraw) => ({ ...withdraw, type: 'withdraw' as const })),
+    ...sonicActivities.withdraws.map((withdraw) => ({ ...withdraw, type: 'withdraw' as const })),
   ].sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
 }

@@ -23,11 +23,13 @@ export const updateRebalanceActivity = async ({
   mainnetGraphQlClient,
   baseGraphQlClient,
   arbitrumGraphQlClient,
+  sonicGraphQlClient,
 }: {
   db: SummerProtocolDB['db']
   mainnetGraphQlClient: GraphQLClient
   baseGraphQlClient: GraphQLClient
   arbitrumGraphQlClient: GraphQLClient
+  sonicGraphQlClient: GraphQLClient
 }) => {
   const startTime = Date.now()
   const [latestRebalanceActivity] = await Promise.all([
@@ -42,6 +44,7 @@ export const updateRebalanceActivity = async ({
     mainnetGraphQlClient,
     baseGraphQlClient,
     arbitrumGraphQlClient,
+    sonicGraphQlClient,
   })
 
   const { updated } = await insertRebalanceActivitiesInBatches(db, allRebalanceActivities)

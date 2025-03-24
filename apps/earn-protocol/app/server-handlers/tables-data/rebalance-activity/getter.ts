@@ -17,6 +17,7 @@ import { type RebalanceActivity } from './types'
  * @param {GraphQLClient} mainnetGraphQlClient - The GraphQL client for the Mainnet network.
  * @param {GraphQLClient} baseGraphQlClient - The GraphQL client for the Base network.
  * @param {GraphQLClient} arbitrumGraphQlClient - The GraphQL client for the Arbitrum network.
+ * @param {GraphQLClient} sonicGraphQlClient - The GraphQL client for the Sonic network.
  * @returns {Promise<RebalanceActivity[]>} - A promise that resolves to an array of rebalance activities from all networks, each having an `actionType` property.
  *
  * @example
@@ -32,17 +33,21 @@ export const getAllRebalanceActivities = async ({
   mainnetGraphQlClient,
   baseGraphQlClient,
   arbitrumGraphQlClient,
+  sonicGraphQlClient,
 }: {
   lastTimestamp: string
   mainnetGraphQlClient: GraphQLClient
   baseGraphQlClient: GraphQLClient
   arbitrumGraphQlClient: GraphQLClient
+  sonicGraphQlClient: GraphQLClient
 }): Promise<RebalanceActivity[]> => {
-  const [mainnetRebalances, baseRebalances, arbitrumRebalances] = await Promise.all([
-    fetchAllRebalanceActivities(mainnetGraphQlClient, lastTimestamp, SDKNetwork.Mainnet),
-    fetchAllRebalanceActivities(baseGraphQlClient, lastTimestamp, SDKNetwork.Base),
-    fetchAllRebalanceActivities(arbitrumGraphQlClient, lastTimestamp, SDKNetwork.ArbitrumOne),
-  ])
+  const [mainnetRebalances, baseRebalances, arbitrumRebalances, sonicRebalances] =
+    await Promise.all([
+      fetchAllRebalanceActivities(mainnetGraphQlClient, lastTimestamp, SDKNetwork.Mainnet),
+      fetchAllRebalanceActivities(baseGraphQlClient, lastTimestamp, SDKNetwork.Base),
+      fetchAllRebalanceActivities(arbitrumGraphQlClient, lastTimestamp, SDKNetwork.ArbitrumOne),
+      fetchAllRebalanceActivities(sonicGraphQlClient, lastTimestamp, SDKNetwork.SonicMainnet),
+    ])
 
   // Combine all new activities from different networks and add type property
   return [
@@ -55,6 +60,10 @@ export const getAllRebalanceActivities = async ({
       actionType: rebalancesActionTypeMapper(rebalance),
     })),
     ...arbitrumRebalances.rebalances.map((rebalance) => ({
+      ...rebalance,
+      actionType: rebalancesActionTypeMapper(rebalance),
+    })),
+    ...sonicRebalances.rebalances.map((rebalance) => ({
       ...rebalance,
       actionType: rebalancesActionTypeMapper(rebalance),
     })),
