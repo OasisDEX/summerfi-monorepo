@@ -4,14 +4,13 @@ import { useIsIframe } from '@summerfi/app-earn-ui'
 import { type SDKChainId, type TransactionHash } from '@summerfi/app-types'
 import { chainIdToSDKNetwork } from '@summerfi/app-utils'
 import { Address, type IToken, TransactionType } from '@summerfi/sdk-common'
-import { encodeFunctionData } from 'viem'
+import { encodeFunctionData, type PublicClient } from 'viem'
 
 import { accountType } from '@/account-kit/config'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
 import { isValidAddress } from '@/helpers/is-valid-address'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
-import { type useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 
 export const useSendTransaction = ({
   onSuccess,
@@ -28,7 +27,7 @@ export const useSendTransaction = ({
   token: IToken | undefined
   recipient: string | undefined
   chainId: SDKChainId
-  publicClient: ReturnType<typeof useNetworkAlignedClient>['publicClient']
+  publicClient: PublicClient
 }) => {
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
   const isIframe = useIsIframe()

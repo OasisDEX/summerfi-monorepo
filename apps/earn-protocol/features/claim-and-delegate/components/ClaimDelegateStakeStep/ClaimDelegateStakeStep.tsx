@@ -46,7 +46,7 @@ import {
 import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 import { revalidateUser } from '@/helpers/revalidation-handlers'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
-import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
+import { usePublicClient } from '@/hooks/use-public-client'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
@@ -124,7 +124,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
   const { clientChainId } = useClientChainId()
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
-  const { publicClient } = useNetworkAlignedClient({ chainId: base.id })
+  const { publicClient } = usePublicClient({ chain: base })
   const {
     token: sumrToken,
     tokenBalance: sumrBalance,
