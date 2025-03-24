@@ -24,9 +24,7 @@ import { fetchRaysLeaderboard } from '@/app/server-handlers/leaderboard'
 import { getMigratablePositions } from '@/app/server-handlers/migration'
 import { portfolioWalletAssetsHandler } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { getPositionHistory } from '@/app/server-handlers/position-history'
-import { getGlobalRebalances } from '@/app/server-handlers/sdk/get-global-rebalances'
 import { getUserPositions } from '@/app/server-handlers/sdk/get-user-positions'
-import { getUsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
@@ -34,6 +32,8 @@ import { getSumrDelegatesWithDecayFactor } from '@/app/server-handlers/sumr-dele
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
 import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
 import systemConfigHandler from '@/app/server-handlers/system-config'
+import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
+import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { PortfolioPageViewComponent } from '@/components/layout/PortfolioPageView/PortfolioPageViewComponent'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
@@ -57,41 +57,42 @@ const portfolioCallsHandler = async (walletAddress: string) => {
   }
   const [
     walletData,
-    { rebalances },
     sumrStakeDelegate,
     sumrEligibility,
     sumrBalances,
     sumrStakingInfo,
     { sumrDelegates, sumrDecayFactors },
     sumrToClaim,
-    usersActivity,
     userPositions,
     vaultsList,
     systemConfig,
     migratablePositionsData,
+    latestActivity,
   ] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
-    unstableCache(getGlobalRebalances, [walletAddress], cacheConfig)(),
     unstableCache(getSumrDelegateStake, [walletAddress], cacheConfig)({ walletAddress }),
     fetchRaysLeaderboard({ userAddress: walletAddress, page: '1', limit: '1' }),
     unstableCache(getSumrBalances, [walletAddress], cacheConfig)({ walletAddress }),
     unstableCache(getSumrStakingInfo, [walletAddress], cacheConfig)(),
     unstableCache(getSumrDelegatesWithDecayFactor, [walletAddress], cacheConfig)(),
     unstableCache(getSumrToClaim, [walletAddress], cacheConfig)({ walletAddress }),
-    unstableCache(
-      getUsersActivity,
-      [walletAddress],
-      cacheConfig,
-    )({ filterTestingWallets: false, walletAddress }),
     unstableCache(getUserPositions, [walletAddress], cacheConfig)({ walletAddress }),
     getVaultsList(),
     systemConfigHandler(),
     unstableCache(getMigratablePositions, [walletAddress], cacheConfig)({ walletAddress }),
+    unstableCache(
+      getPaginatedLatestActivity,
+      [walletAddress],
+      cacheConfig,
+    )({
+      page: 1,
+      limit: 50,
+      userAddress: walletAddress,
+    }),
   ])
 
   return {
     walletData,
-    rebalances,
     sumrStakeDelegate,
     sumrEligibility,
     sumrBalances,
@@ -99,11 +100,11 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     sumrDelegates,
     sumrDecayFactors,
     sumrToClaim,
-    usersActivity,
     userPositions,
     vaultsList,
     systemConfig,
     migratablePositionsData,
+    latestActivity,
   }
 }
 
@@ -130,7 +131,6 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
 
   const {
     walletData,
-    rebalances,
     sumrStakeDelegate,
     sumrEligibility,
     sumrBalances,
@@ -138,11 +138,11 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     sumrDelegates,
     sumrDecayFactors,
     sumrToClaim,
-    usersActivity,
     userPositions,
     vaultsList,
     systemConfig,
     migratablePositionsData,
+    latestActivity,
   } = await portfolioCallsHandler(walletAddress)
 
   const vaultsWithConfig = decorateVaultsWithConfig({
@@ -163,7 +163,9 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     })
   })
 
-  const [positionHistoryMap, vaultsApyByNetworkMap] = await Promise.all([
+  const userVaultsIds = positionsWithVault.map((position) => getUniqueVaultId(position.vault))
+
+  const [positionHistoryMap, vaultsApyByNetworkMap, rebalanceActivity] = await Promise.all([
     Promise.all(
       vaultsWithConfig.map((vault) =>
         getPositionHistory({
@@ -179,12 +181,12 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
         chainId: subgraphNetworkToId(network),
       })),
     }),
+    getPaginatedRebalanceActivity({
+      page: 1,
+      limit: 50,
+      strategies: userVaultsIds,
+    }),
   ])
-
-  const userVaultsIds = positionsWithVault.map((position) => position.vault.id.toLowerCase())
-  const userRebalances = rebalances.filter((rebalance) =>
-    userVaultsIds.includes(rebalance.vault.id.toLowerCase()),
-  )
 
   const rewardsData: ClaimDelegateExternalData = {
     sumrToClaim,
@@ -199,10 +201,6 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   const tgeSnapshotPoints = Number(sumrEligibility.leaderboard[0]?.tgeSnapshotPoints ?? 0)
 
   const totalRays = totalRaysPoints - tgeSnapshotPoints
-
-  const userActivity = usersActivity.usersActivity.filter(
-    (activity) => activity.account.toLowerCase() === walletAddress.toLowerCase(),
-  )
 
   const positionsHistoricalChartMap = positionsWithVault.reduce<{
     [key: string]: HistoryChartData
@@ -231,13 +229,13 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       walletData={walletData}
       rewardsData={rewardsData}
       vaultsList={vaultsWithConfig}
-      rebalancesList={userRebalances}
       totalRays={totalRays}
-      userActivity={userActivity}
+      latestActivity={latestActivity}
       positionsHistoricalChartMap={positionsHistoricalChartMap}
       vaultsApyByNetworkMap={vaultsApyByNetworkMap}
       migratablePositions={migratablePositions}
       migrationBestVaultApy={migrationBestVaultApy}
+      rebalanceActivity={rebalanceActivity}
     />
   )
 }

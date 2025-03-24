@@ -2,15 +2,16 @@
 import { type FC } from 'react'
 import {
   type ArksHistoricalChartData,
-  type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
-  type UsersActivity,
   type VaultApyData,
 } from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
+import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
+import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { sdkApiUrl } from '@/constants/sdk'
 
 import { MigrationVaultPageComponent } from './MigrationVaultPageComponent'
@@ -18,8 +19,9 @@ import { MigrationVaultPageComponent } from './MigrationVaultPageComponent'
 type MigrationVaultPageViewProps = {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
-  userActivity: UsersActivity
-  topDepositors: SDKUsersActivityType
+  topDepositors: TopDepositorsPagination
+  latestActivity: LatestActivityPagination
+  rebalanceActivity: RebalanceActivityPagination
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
@@ -31,8 +33,9 @@ type MigrationVaultPageViewProps = {
 export const MigrationVaultPageView: FC<MigrationVaultPageViewProps> = ({
   vault,
   vaults,
-  userActivity,
+  latestActivity,
   topDepositors,
+  rebalanceActivity,
   medianDefiYield,
   arksHistoricalChartData,
   arksInterestRates,
@@ -45,8 +48,9 @@ export const MigrationVaultPageView: FC<MigrationVaultPageViewProps> = ({
       <MigrationVaultPageComponent
         vault={vault}
         vaults={vaults}
-        userActivity={userActivity}
+        latestActivity={latestActivity}
         topDepositors={topDepositors}
+        rebalanceActivity={rebalanceActivity}
         medianDefiYield={medianDefiYield}
         arksHistoricalChartData={arksHistoricalChartData}
         arksInterestRates={arksInterestRates}

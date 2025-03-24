@@ -1,7 +1,7 @@
 'use client'
-import { type FC, type ReactNode, useMemo, useState } from 'react'
+import { type FC, type ReactNode, useMemo } from 'react'
 import { Table, type TableSortedColumn, Text, useMobileCheck } from '@summerfi/app-earn-ui'
-import { type SDKGlobalRebalancesType } from '@summerfi/app-types'
+import { type RebalanceActivity } from '@summerfi/summer-protocol-db'
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import {
@@ -11,28 +11,29 @@ import {
 import { rebalancingActivityMapper } from '@/features/rebalance-activity/table/mapper'
 
 interface RebalanceActivityTableProps {
-  rebalancesList: SDKGlobalRebalancesType
+  rebalanceActivityList: RebalanceActivity[]
   customRow?: {
     idx: number
     content: ReactNode
   }
   hiddenColumns?: string[]
   rowsToDisplay?: number
+  handleSort?: (sortConfig: TableSortedColumn<string>) => void
 }
 
 export const RebalanceActivityTable: FC<RebalanceActivityTableProps> = ({
-  rebalancesList,
+  rebalanceActivityList,
   customRow,
   hiddenColumns,
   rowsToDisplay,
+  handleSort,
 }) => {
-  const [sortConfig, setSortConfig] = useState<TableSortedColumn<string>>()
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
 
   const rows = useMemo(
-    () => rebalancingActivityMapper(rebalancesList, sortConfig),
-    [rebalancesList, sortConfig],
+    () => rebalancingActivityMapper(rebalanceActivityList),
+    [rebalanceActivityList],
   )
 
   const resolvedHiddenColumns = isMobile ? rebalancingActivityColumnsHiddenOnMobile : hiddenColumns
@@ -43,7 +44,7 @@ export const RebalanceActivityTable: FC<RebalanceActivityTableProps> = ({
         rows={rows.slice(0, rowsToDisplay)}
         columns={rebalancingActivityColumns}
         customRow={customRow}
-        handleSort={(_sortConfig) => setSortConfig(_sortConfig)}
+        handleSort={handleSort}
         hiddenColumns={resolvedHiddenColumns}
       />
       {rows.length === 0 && (

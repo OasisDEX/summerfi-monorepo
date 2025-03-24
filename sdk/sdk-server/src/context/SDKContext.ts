@@ -32,6 +32,8 @@ import { createProtocolsPluginsRegistry } from './CreateProtocolPluginsRegistry'
 export type SDKContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>
 
 export type SDKAppContext = {
+  callUrl: string
+  callKey: string
   addressBookManager: IAddressBookManager
   configProvider: IConfigurationProvider
   blockchainClientProvider: BlockchainClientProvider
@@ -45,6 +47,16 @@ export type SDKAppContext = {
   orderPlannerService: IOrderPlannerService
   allowanceManager: IAllowanceManager
   armadaManager: IArmadaManager
+}
+
+const quickHashCode = (str: string): string => {
+  let hash = 0
+  for (let i = 0, len = str.length; i < len; i++) {
+    const chr = str.charCodeAt(i)
+    hash = (hash << 5) - hash + chr
+    hash |= 0 // Convert to 32bit integer
+  }
+  return String(Math.abs(hash))
 }
 
 // context for each request
@@ -88,6 +100,8 @@ export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
   })
 
   return {
+    callUrl: `${opts.event.rawPath}?${opts.event.rawQueryString}`,
+    callKey: quickHashCode(`${opts.event.rawPath}${opts.event.rawQueryString}`),
     configProvider,
     blockchainClientProvider,
     abiProvider,

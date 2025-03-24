@@ -2,15 +2,12 @@
 
 import { type FC, useEffect, useReducer } from 'react'
 import { getPositionValues, NonOwnerPortfolioBanner, TabBar } from '@summerfi/app-earn-ui'
-import {
-  type HistoryChartData,
-  type SDKGlobalRebalancesType,
-  type SDKVaultishType,
-  type UsersActivity,
-} from '@summerfi/app-types'
+import { type HistoryChartData, type SDKVaultishType } from '@summerfi/app-types'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
+import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
+import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { claimDelegateReducer, claimDelegateState } from '@/features/claim-and-delegate/state'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
@@ -36,8 +33,8 @@ interface PortfolioPageViewProps {
   rewardsData: ClaimDelegateExternalData
   vaultsList: SDKVaultishType[]
   positions: PositionWithVault[]
-  rebalancesList: SDKGlobalRebalancesType
-  userActivity: UsersActivity
+  rebalanceActivity: RebalanceActivityPagination
+  latestActivity: LatestActivityPagination
   totalRays: number
   positionsHistoricalChartMap: {
     [key: string]: HistoryChartData
@@ -53,8 +50,8 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   rewardsData,
   vaultsList,
   positions,
-  rebalancesList,
-  userActivity,
+  rebalanceActivity,
+  latestActivity,
   totalRays,
   positionsHistoricalChartMap,
   vaultsApyByNetworkMap,
@@ -83,11 +80,6 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     // only on tab change
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab])
-
-  const totalRebalances = positions.reduce(
-    (acc, position) => acc + Number(position.vault.rebalanceCount),
-    0,
-  )
 
   const overallSumr = calculateOverallSumr(rewardsData)
 
@@ -125,17 +117,19 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
       {
         id: PortfolioTabs.YOUR_ACTIVITY,
         label: 'Your Activity',
-        content: <PortfolioYourActivity userActivity={userActivity} />,
+        content: (
+          <PortfolioYourActivity latestActivity={latestActivity} walletAddress={walletAddress} />
+        ),
       },
       {
         id: PortfolioTabs.REBALANCE_ACTIVITY,
         label: 'Rebalance Activity',
         content: (
           <PortfolioRebalanceActivity
-            rebalancesList={rebalancesList}
+            rebalanceActivity={rebalanceActivity}
             walletAddress={walletAddress}
-            totalRebalances={totalRebalances}
             vaultsList={vaultsList}
+            positions={positions}
           />
         ),
       },

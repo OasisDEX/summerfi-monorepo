@@ -11,16 +11,18 @@ export const router = t.router
 export const createCallerFactory = t.createCallerFactory
 
 export const publicProcedure = t.procedure.use(async (opts) => {
-  const { getRawInput, path, type } = opts
+  const { ctx } = opts
   if (process.env.SDK_LOGGING_ENABLED === 'true') {
-    console.log('- path => ', path)
-    console.log('- type => ', type)
-    console.log('- rawInput => ', await getRawInput())
+    console.log(`Call url (${ctx.callKey}): ${ctx.callUrl}`)
   }
 
   const result = await opts.next()
   if (process.env.SDK_LOGGING_ENABLED === 'true') {
-    console.log('- result.data => ', (result as { data: unknown })?.data)
+    try {
+      console.log(`Result (${ctx.callKey}): ${JSON.stringify((result as { data: unknown })?.data)}`)
+    } catch (error) {
+      console.log(`Result (${ctx.callKey}): Cannot serialize data`)
+    }
   }
   return result
 })
