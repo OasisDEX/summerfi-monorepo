@@ -36,5 +36,10 @@ export const latestActivityColumns = [
   },
 ]
 
-export const latestActivityColumnsHiddenOnMobile = ['strategy', 'timestamp', 'balance', 'position']
-export const latestActivityColumnsHiddenOnTablet = ['timestamp', 'balance']
+export const latestActivityColumnsHiddenOnMobile = [
+  'strategy',
+  'timestamp',
+  'balanceUsd',
+  'position',
+]
+export const latestActivityColumnsHiddenOnTablet = ['timestamp', 'balanceUsd']
