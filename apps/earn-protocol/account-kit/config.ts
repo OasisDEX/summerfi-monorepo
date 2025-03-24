@@ -3,6 +3,7 @@ import { type AlchemyAccountsUIConfig, cookieStorage, createConfig } from '@acco
 import { SDKChainId, SDKSupportedNetworkIdsEnum } from '@summerfi/app-types'
 import { QueryClient } from '@tanstack/react-query'
 import { type Chain } from 'viem'
+import { sonic } from 'viem/chains'
 import { safe } from 'wagmi/connectors'
 
 export const queryClient = new QueryClient()
@@ -12,6 +13,7 @@ export type AccountKitSupportedNetworks =
   | SDKChainId.ARBITRUM
   | SDKChainId.MAINNET
   | SDKChainId.OPTIMISM
+  | SDKChainId.SONIC
 
 export const SDKChainIdToAAChainMap: {
   [key in AccountKitSupportedNetworks]: Chain
@@ -20,6 +22,7 @@ export const SDKChainIdToAAChainMap: {
   [SDKChainId.BASE]: base,
   [SDKChainId.MAINNET]: mainnet,
   [SDKChainId.OPTIMISM]: optimism,
+  [SDKChainId.SONIC]: sonic,
 }
 
 export const GasSponsorshipIdMap = {
@@ -27,6 +30,7 @@ export const GasSponsorshipIdMap = {
   [SDKChainId.BASE]: '7d552463-eba5-4eac-a940-56f0515243f2',
   [SDKChainId.MAINNET]: undefined,
   [SDKChainId.OPTIMISM]: undefined,
+  [SDKChainId.SONIC]: undefined,
 }
 
 const uiConfig: AlchemyAccountsUIConfig = {
@@ -72,6 +76,7 @@ export const getAccountKitConfig = ({
         [SDKSupportedNetworkIdsEnum.BASE]: base,
         [SDKSupportedNetworkIdsEnum.MAINNET]: mainnet,
         [SDKSupportedNetworkIdsEnum.OPTIMISM]: optimism,
+        [SDKSupportedNetworkIdsEnum.SONIC]: sonic,
       }[chainId ?? defaultChain.id] as Chain,
       chains: Object.values(SDKChainIdToAAChainMap).map((chain) => ({
         chain,

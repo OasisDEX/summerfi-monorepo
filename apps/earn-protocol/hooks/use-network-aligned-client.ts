@@ -6,7 +6,7 @@ import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
 import { useUpdateAANetwork } from '@/hooks/use-update-aa-network'
 
 type UseClientProps = {
-  chainId?: SDKChainId.ARBITRUM | SDKChainId.BASE | SDKChainId.MAINNET
+  chainId?: SDKChainId.ARBITRUM | SDKChainId.BASE | SDKChainId.MAINNET | SDKChainId.SONIC
   overrideNetwork?: string
 }
 
@@ -18,8 +18,9 @@ type UseClientProps = {
 export const useNetworkAlignedClient = (params?: UseClientProps) => {
   const { appChain } = useUpdateAANetwork(params?.overrideNetwork)
 
-  const _chainId: SDKChainId.ARBITRUM | SDKChainId.BASE | SDKChainId.MAINNET =
-    params?.chainId ?? (appChain.id as SDKChainId.ARBITRUM | SDKChainId.BASE | SDKChainId.MAINNET)
+  const _chainId: SDKChainId.ARBITRUM | SDKChainId.BASE | SDKChainId.MAINNET | SDKChainId.SONIC =
+    params?.chainId ??
+    (appChain.id as SDKChainId.ARBITRUM | SDKChainId.BASE | SDKChainId.MAINNET | SDKChainId.SONIC)
 
   // Client for read-only data fetching using our rpcGateway
   const publicClient = useMemo(() => {
