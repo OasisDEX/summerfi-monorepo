@@ -79,7 +79,7 @@ export function addSummerEarnAppTablesConfig({ stack, vpc, app }: SummerStackCon
 
   new Cron(stack, 'update-latest-activity-table-cron', {
     schedule: 'rate(1 minute)',
-    enabled: false,
+    enabled: true,
     job: updateLatestActivityTableCronFunction,
   })
 
@@ -91,7 +91,7 @@ export function addSummerEarnAppTablesConfig({ stack, vpc, app }: SummerStackCon
 
   new Cron(stack, 'update-rebalance-activity-table-cron', {
     schedule: 'rate(10 minutes)',
-    enabled: false,
+    enabled: true,
     job: updateRebalanceActivityTableCronFunction,
   })
 }
