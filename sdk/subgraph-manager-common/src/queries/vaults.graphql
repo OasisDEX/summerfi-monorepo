@@ -5,6 +5,9 @@ query GetVaults {
     }
     id
     name
+    rewardsManager {
+      id
+    }
     rewardTokens {
       id
       token {
@@ -94,6 +97,9 @@ query GetVault($id: ID!) {
   vault(id: $id) {
     protocol {
       network
+    }
+    rewardsManager {
+      id
     }
     id
     name
