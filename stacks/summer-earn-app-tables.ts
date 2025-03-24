@@ -2,7 +2,7 @@ import { SummerStackContext } from './summer-stack-context'
 import { Cron, Function, FunctionProps } from 'sst/constructs'
 import * as process from 'node:process'
 
-export function addSummerEarnAppTablesConfig({ stack, vpc, app, isProd }: SummerStackContext) {
+export function addSummerEarnAppTablesConfig({ stack, vpc, app }: SummerStackContext) {
   const { EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN, EARN_APP_URL } = process.env
 
   if (!EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN) {
@@ -28,7 +28,6 @@ export function addSummerEarnAppTablesConfig({ stack, vpc, app, isProd }: Summer
     POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
     EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN,
     NODE_ENV: app.stage,
-    IS_PROD: isProd.toString(),
     EARN_APP_URL,
   }
 
@@ -79,7 +78,7 @@ export function addSummerEarnAppTablesConfig({ stack, vpc, app, isProd }: Summer
   )
 
   new Cron(stack, 'update-latest-activity-table-cron', {
-    schedule: 'rate(1 minutes)',
+    schedule: 'rate(1 minute)',
     enabled: false,
     job: updateLatestActivityTableCronFunction,
   })
