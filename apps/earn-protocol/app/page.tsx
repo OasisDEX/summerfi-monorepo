@@ -30,10 +30,11 @@ const EarnAllVaultsPage = async () => {
     })),
   })
 
-  const vaultsList = vaultsWithConfig.filter(({ inputToken }) => inputToken.symbol !== 'EURC')
-
   return (
-    <VaultListViewComponent vaultsList={vaultsList} vaultsApyByNetworkMap={vaultsApyByNetworkMap} />
+    <VaultListViewComponent
+      vaultsList={vaultsWithConfig}
+      vaultsApyByNetworkMap={vaultsApyByNetworkMap}
+    />
   )
 }
 

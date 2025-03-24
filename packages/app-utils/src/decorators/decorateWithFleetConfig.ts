@@ -12,19 +12,24 @@ export const decorateWithFleetConfig = (
   vaults: SDKVaultishType[],
   fleetMap: EarnAppConfigType['fleetMap'],
 ) =>
-  vaults.map((vault) => {
-    const vaultNetworkId = subgraphNetworkToId(vault.protocol.network)
-    const vaultNetworkConfig = fleetMap[String(vaultNetworkId) as keyof typeof fleetMap]
-    const configCustomFields = vaultNetworkConfig[vault.id.toLowerCase() as '0x']
+  vaults
+    .map((vault) => {
+      const vaultNetworkId = subgraphNetworkToId(vault.protocol.network)
+      const vaultNetworkConfig = fleetMap[String(vaultNetworkId) as keyof typeof fleetMap]
+      const configCustomFields = vaultNetworkConfig[vault.id.toLowerCase() as '0x']
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    return configCustomFields
-      ? {
-          ...vault,
-          customFields: {
-            ...vault.customFields,
-            ...configCustomFields,
-          },
-        }
-      : vault
-  })
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      return configCustomFields
+        ? {
+            ...vault,
+            customFields: {
+              ...vault.customFields,
+              ...configCustomFields,
+            },
+          }
+        : vault
+    })
+    .filter(({ customFields }) => {
+      // filter disabled (with config) vaults
+      return customFields?.disabled ? !customFields.disabled : true
+    })

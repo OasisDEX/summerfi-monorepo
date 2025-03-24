@@ -9,7 +9,7 @@ import {
   type SDKSupportedNetwork,
   sdkSupportedNetworks,
 } from '@summerfi/app-types'
-import { arbitrum, base, type Chain, mainnet } from 'viem/chains'
+import { arbitrum, base, type Chain, mainnet, sonic } from 'viem/chains'
 
 /**
  * Type guard to check if a chain ID is a supported SDK chain.
@@ -187,6 +187,7 @@ export const sdkNetworkToChain = (network: SDKNetwork): Chain => {
     [SDKNetwork.ArbitrumOne]: arbitrum,
     [SDKNetwork.Base]: base,
     [SDKNetwork.Mainnet]: mainnet,
+    [SDKNetwork.SonicMainnet]: sonic,
   }
 
   return chainMap[network as SDKSupportedNetwork]

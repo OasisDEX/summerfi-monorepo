@@ -55,8 +55,20 @@ export type Risk = 'lower' | 'medium' | 'higher'
 // -ish because it can be a detailed vault or a vault from list (less details), use with that in mind
 export type SDKVaultishType = (SDKVaultType | SDKVaultsListType[number]) & VaultCustomFields
 
-export const sdkSupportedNetworks = [Network.ArbitrumOne, Network.Base, Network.Mainnet] as const
-export const sdkSupportedChains = [ChainId.ARBITRUM, ChainId.BASE, ChainId.MAINNET] as const
+export const sdkSupportedNetworks = [
+  Network.ArbitrumOne,
+  Network.Base,
+  Network.Mainnet,
+  Network.SonicMainnet,
+] as const
+
+export const sdkSupportedChains = [
+  ChainId.ARBITRUM,
+  ChainId.BASE,
+  ChainId.MAINNET,
+  ChainId.SONIC,
+] as const
+
 export type SDKSupportedNetwork = (typeof sdkSupportedNetworks)[number]
 export type SDKSupportedChain = (typeof sdkSupportedChains)[number]
 
@@ -65,6 +77,7 @@ export enum SDKSupportedNetworkIdsEnum {
   BASE = ChainId.BASE,
   OPTIMISM = ChainId.OPTIMISM,
   MAINNET = ChainId.MAINNET,
+  SONIC = ChainId.SONIC,
 }
 
 export type EarnTransactionViewStates =
