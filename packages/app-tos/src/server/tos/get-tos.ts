@@ -64,6 +64,11 @@ export async function getTos<DB extends TOSRequiredDB>({
     .where(({ eb, and }) => and([eb('docVersion', 'like', `%${sanitizedVersion}%`)]))
     .execute()
 
+  await resolvedDB.destroy().catch((err) => {
+    // eslint-disable-next-line no-console
+    console.error('Error closing database connection:', err)
+  })
+
   if (tos.length === 0) {
     return NextResponse.json({ acceptance: false, authorized })
   } else {

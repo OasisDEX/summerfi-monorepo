@@ -1,7 +1,15 @@
 import { type FC, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
-import { Card, DataBlock, Icon, Text, Tooltip } from '@summerfi/app-earn-ui'
-import { type SDKGlobalRebalancesType, type SDKVaultsListType } from '@summerfi/app-types'
+import {
+  Card,
+  DataBlock,
+  getUniqueVaultId,
+  Icon,
+  LoadingSpinner,
+  Text,
+  Tooltip,
+} from '@summerfi/app-earn-ui'
+import { type SDKVaultsListType } from '@summerfi/app-types'
 import {
   formatFiatBalance,
   formatShorthandNumber,
@@ -9,49 +17,61 @@ import {
   getRebalanceSavedTimeInHours,
 } from '@summerfi/app-utils'
 
+import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { PortfolioRebalanceActivityList } from '@/features/portfolio/components/PortfolioRebalanceActivityList/PortfolioRebalanceActivityList'
+import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
+import { getRebalanceActivity } from '@/features/rebalance-activity/api/get-rebalance-activity'
 
 import classNames from './PortfolioRebalanceActivity.module.scss'
 
 interface PortfolioRebalanceActivityProps {
-  rebalancesList: SDKGlobalRebalancesType
+  rebalanceActivity: RebalanceActivityPagination
   walletAddress: string
-  totalRebalances: number
   vaultsList: SDKVaultsListType
+  positions: PositionWithVault[]
 }
 
-const initialRows = 10
-
 export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = ({
-  rebalancesList,
+  rebalanceActivity,
   walletAddress,
-  totalRebalances,
   vaultsList,
+  positions,
 }) => {
-  const savedTimeInHours = useMemo(
-    () => getRebalanceSavedTimeInHours(totalRebalances),
-    [totalRebalances],
-  )
+  const { totalItems } = rebalanceActivity.pagination
+
+  const [isLoading, setIsLoading] = useState(false)
+
+  const savedTimeInHours = useMemo(() => getRebalanceSavedTimeInHours(totalItems), [totalItems])
   const savedGasCost = useMemo(() => getRebalanceSavedGasCost(vaultsList), [vaultsList])
 
-  const [current, setCurrent] = useState(initialRows)
+  const [currentPage, setCurrentPage] = useState(rebalanceActivity.pagination.currentPage)
 
-  const [currentlyLoadedList, setCurrentlyLoadedList] = useState(
-    rebalancesList.slice(0, initialRows),
-  )
+  const [currentlyLoadedList, setCurrentlyLoadedList] = useState(rebalanceActivity.data)
 
-  const handleMoreItems = () => {
-    setCurrentlyLoadedList((prev) => [
-      ...prev,
-      ...rebalancesList.slice(current, current + initialRows),
-    ])
-    setCurrent(current + initialRows)
+  const handleMoreItems = async () => {
+    try {
+      setIsLoading(true)
+      const res = await getRebalanceActivity({
+        page: currentPage + 1,
+        sortBy: 'timestamp',
+        orderBy: 'desc',
+        strategies: positions.map((position) => getUniqueVaultId(position.vault)),
+      })
+
+      setCurrentlyLoadedList((prev) => [...prev, ...res.data])
+      setCurrentPage((prev) => prev + 1)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error fetching rebalance activity', error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const blocks = [
     {
       title: 'Rebalance actions',
-      value: formatShorthandNumber(totalRebalances, { precision: 0 }),
+      value: formatShorthandNumber(totalItems, { precision: 0 }),
     },
     {
       title: (
@@ -101,10 +121,20 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
       </div>
       <InfiniteScroll
         loadMore={handleMoreItems}
-        hasMore={totalRebalances > currentlyLoadedList.length}
+        hasMore={
+          rebalanceActivity.pagination.totalPages > currentPage &&
+          currentlyLoadedList.length > 0 &&
+          !isLoading
+        }
+        loader={
+          <LoadingSpinner
+            key="spinner"
+            style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
+          />
+        }
       >
         <PortfolioRebalanceActivityList
-          rebalancesList={currentlyLoadedList}
+          rebalanceActivityList={currentlyLoadedList}
           walletAddress={walletAddress}
         />
       </InfiniteScroll>

@@ -179,6 +179,9 @@ importers:
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../../sdk/sdk-common
+      '@summerfi/subgraph-manager-common':
+        specifier: workspace:*
+        version: link:../../sdk/subgraph-manager-common
       '@summerfi/summer-protocol-db':
         specifier: workspace:*
         version: link:../../packages/summer-protocol-db
@@ -612,6 +615,46 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.12.7)
+
+  background-jobs/update-summer-earn-paginated-tables:
+    dependencies:
+      '@aws-lambda-powertools/logger':
+        specifier: ^2.0.2
+        version: 2.0.4
+      '@aws-lambda-powertools/metrics':
+        specifier: ^2.0.2
+        version: 2.0.4
+      '@aws-lambda-powertools/tracer':
+        specifier: ^2.0.2
+        version: 2.0.4
+      graphql-tag:
+        specifier: ^2.12.6
+        version: 2.12.6(graphql@16.8.2)
+      kysely:
+        specifier: ^0.27.3
+        version: 0.27.3
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      '@types/node':
+        specifier: ^20.11.5
+        version: 20.14.2
+      eslint:
+        specifier: ^8.56.0
+        version: 8.57.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.14.2)
+      typescript:
+        specifier: ^5.7.3
+        version: 5.7.3
 
   background-jobs/update-summer-earn-rewards-apr:
     dependencies:
@@ -1183,6 +1226,9 @@ importers:
       '@summerfi/subgraph-manager-common':
         specifier: workspace:*
         version: link:../../sdk/subgraph-manager-common
+      '@summerfi/summer-protocol-db':
+        specifier: workspace:*
+        version: link:../summer-protocol-db
       '@types/react':
         specifier: 19.0.8
         version: 19.0.8
@@ -18780,7 +18826,7 @@ packages:
   /@trpc/server@9.16.0:
     resolution: {integrity: sha512-IENsJs41ZR4oeFUJhsNNTSgEOtuRN0m9u7ec4u3eG/qOc7bIoo1nDoYtx4bl6OJJSQYEytG9tlcVz9G8OAaHbg==}
     dependencies:
-      tslib: 2.2.0
+      tslib: 2.8.1
     dev: true
 
   /@trysound/sax@0.2.0:
@@ -23644,10 +23690,6 @@ packages:
   /blakejs@1.2.1:
     resolution: {integrity: sha512-QXUSXI3QVc/gJME0dBpXrag1kbzOqCjCX8/b54ntNyW6sjtoqxqRk3LTmXzaJoh71zMsDCjM+47jS7XiwN/+fQ==}
 
-  /bn.js@4.11.6:
-    resolution: {integrity: sha512-XWwnNNFCuuSQ0m3r3C4LE3EiORltHd9M05pq6FOlVeiophzRbMo50Sbz1ehl8K3Z+jw9+vmgnXefY1hz8X+2wA==}
-    dev: true
-
   /bn.js@4.11.8:
     resolution: {integrity: sha512-ItfYfPLkWHUjckQCk8xC+LwxgK8NYcXywGigJgSwOP8Y2iyWT4f2vsZnoOXTTbo+o5yXmIUJ4gn5538SO5S3gA==}
     dev: false
@@ -27575,7 +27617,7 @@ packages:
     resolution: {integrity: sha512-/Sn9Y0oKl0uqQuvgFk/zQgR7aw1g36qX/jzSQ5lSwlO0GigPymk4eGQfeNTD03w1dPOqfz8V77Cy43jH56pagw==}
     engines: {node: '>=6.5.0', npm: '>=3'}
     dependencies:
-      bn.js: 4.11.6
+      bn.js: 5.2.1
       number-to-bn: 1.7.0
     dev: true
 
@@ -28880,7 +28922,7 @@ packages:
       graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
       graphql: 15.8.0
-      tslib: 2.2.0
+      tslib: 2.8.1
     dev: false
 
   /graphql-tag@2.12.6(graphql@16.8.2):
@@ -28890,7 +28932,7 @@ packages:
       graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
       graphql: 16.8.2
-      tslib: 2.2.0
+      tslib: 2.8.1
 
   /graphql-ws@5.16.0(graphql@16.8.2):
     resolution: {integrity: sha512-Ju2RCU2dQMgSKtArPbEtsK5gNLnsQyTNIo/T7cZNp96niC1x0KdJNZV0TIoilceBPQwfb5itrGl8pkFeOUMl4A==}
@@ -33215,7 +33257,7 @@ packages:
     resolution: {integrity: sha512-wsJ9gfSz1/s4ZsJN01lyonwuxA1tml6X1yBDnfpMglypcBRFZZkus26EdPSlqS5GJfYddVZa22p3VNb3z5m5Ig==}
     engines: {node: '>=6.5.0', npm: '>=3'}
     dependencies:
-      bn.js: 4.11.6
+      bn.js: 5.2.1
       strip-hex-prefix: 1.0.0
     dev: true
 

@@ -5,16 +5,19 @@ import {
   parseServerResponseToClient,
   subgraphNetworkToId,
 } from '@summerfi/app-utils'
+import dayjs from 'dayjs'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
 import { getMedianDefiYield } from '@/app/server-handlers/defillama/get-median-defi-yield'
 import { getInterestRates } from '@/app/server-handlers/interest-rates'
 import { getMigratablePositions } from '@/app/server-handlers/migration'
-import { getUsersActivity } from '@/app/server-handlers/sdk/get-users-activity'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
+import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
+import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
+import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
 import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { MigrationVaultPageView } from '@/components/layout/MigrationVaultPageView/MigrationVaultPageView'
@@ -50,24 +53,39 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
     ? vaultId
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
+  const strategy = `${parsedVaultId}-${parsedNetwork}`
+
   const [
     vault,
     { vaults },
-    { usersActivity, topDepositors },
     medianDefiYield,
     migratablePositionsData,
+    topDepositors,
+    latestActivity,
+    rebalanceActivity,
   ] = await Promise.all([
     getVaultDetails({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),
     getVaultsList(),
-    getUsersActivity({
-      filterTestingWallets: true,
-      vaultId,
-    }),
     getMedianDefiYield(),
     getMigratablePositions({ walletAddress }),
+    getPaginatedTopDepositors({
+      page: 1,
+      limit: 4,
+      strategies: [strategy],
+    }),
+    getPaginatedLatestActivity({
+      page: 1,
+      limit: 4,
+      strategies: [strategy],
+    }),
+    getPaginatedRebalanceActivity({
+      page: 1,
+      limit: 4,
+      startTimestamp: dayjs().subtract(30, 'days').unix(),
+    }),
   ])
 
   const migratablePositions = parseServerResponseToClient(migratablePositionsData)
@@ -132,8 +150,9 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
     <MigrationVaultPageView
       vault={vaultWithConfig}
       vaults={allVaultsWithConfig}
-      userActivity={usersActivity}
+      latestActivity={latestActivity}
       topDepositors={topDepositors}
+      rebalanceActivity={rebalanceActivity}
       medianDefiYield={medianDefiYield}
       arksHistoricalChartData={arksHistoricalChartData}
       arksInterestRates={arksInterestRates}

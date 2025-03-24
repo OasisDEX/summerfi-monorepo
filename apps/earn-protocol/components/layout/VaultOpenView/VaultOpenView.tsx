@@ -2,15 +2,16 @@
 
 import {
   type ArksHistoricalChartData,
-  type SDKUsersActivityType,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
-  type UsersActivity,
   type VaultApyData,
 } from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
+import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
+import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
+import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { VaultOpenViewComponent } from '@/components/layout/VaultOpenView/VaultOpenViewComponent'
 import { sdkApiUrl } from '@/constants/sdk'
@@ -18,8 +19,9 @@ import { sdkApiUrl } from '@/constants/sdk'
 export const VaultOpenView = ({
   vault,
   vaults,
-  userActivity,
+  latestActivity,
   topDepositors,
+  rebalanceActivity,
   medianDefiYield,
   arksHistoricalChartData,
   arksInterestRates,
@@ -28,8 +30,9 @@ export const VaultOpenView = ({
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
-  userActivity: UsersActivity
-  topDepositors: SDKUsersActivityType
+  latestActivity: LatestActivityPagination
+  topDepositors: TopDepositorsPagination
+  rebalanceActivity: RebalanceActivityPagination
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates?: { [key: string]: number }
@@ -41,8 +44,9 @@ export const VaultOpenView = ({
       <VaultOpenViewComponent
         vault={vault}
         vaults={vaults}
-        userActivity={userActivity}
+        latestActivity={latestActivity}
         topDepositors={topDepositors}
+        rebalanceActivity={rebalanceActivity}
         medianDefiYield={medianDefiYield}
         arksHistoricalChartData={arksHistoricalChartData}
         arksInterestRates={arksInterestRates}

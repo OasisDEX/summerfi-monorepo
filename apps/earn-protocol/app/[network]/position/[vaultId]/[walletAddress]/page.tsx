@@ -13,6 +13,7 @@ import {
   subgraphNetworkToId,
 } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
+import dayjs from 'dayjs'
 import { capitalize } from 'lodash-es'
 import { type Metadata } from 'next'
 import { headers } from 'next/headers'
@@ -22,11 +23,13 @@ import { isAddress } from 'viem'
 import { getInterestRates } from '@/app/server-handlers/interest-rates'
 import { getMigratablePositions } from '@/app/server-handlers/migration'
 import { getPositionHistory } from '@/app/server-handlers/position-history'
-import { getUserActivity } from '@/app/server-handlers/sdk/get-user-activity'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
+import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
+import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
+import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
 import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { VaultManageView } from '@/components/layout/VaultManageView/VaultManageView'
@@ -64,23 +67,38 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     redirect('/not-found')
   }
 
-  const [vault, { vaults }, position, { userActivity, topDepositors }] = await Promise.all([
-    getVaultDetails({
-      vaultAddress: parsedVaultId,
-      network: parsedNetwork,
-    }),
-    getVaultsList(),
-    getUserPosition({
-      vaultAddress: parsedVaultId,
-      network: parsedNetwork,
-      walletAddress,
-    }),
-    getUserActivity({
-      vaultAddress: parsedVaultId,
-      network: parsedNetwork,
-      walletAddress,
-    }),
-  ])
+  const strategy = `${parsedVaultId}-${parsedNetwork}`
+
+  const [vault, { vaults }, position, topDepositors, latestActivity, rebalanceActivity] =
+    await Promise.all([
+      getVaultDetails({
+        vaultAddress: parsedVaultId,
+        network: parsedNetwork,
+      }),
+      getVaultsList(),
+      getUserPosition({
+        vaultAddress: parsedVaultId,
+        network: parsedNetwork,
+        walletAddress,
+      }),
+      getPaginatedTopDepositors({
+        page: 1,
+        limit: 4,
+        strategies: [strategy],
+      }),
+      getPaginatedLatestActivity({
+        page: 1,
+        limit: 4,
+        strategies: [strategy],
+        userAddress: walletAddress,
+      }),
+      getPaginatedRebalanceActivity({
+        page: 1,
+        limit: 4,
+        strategies: [strategy],
+        startTimestamp: dayjs().subtract(30, 'days').unix(),
+      }),
+    ])
 
   if (!vault) {
     return (
@@ -193,8 +211,9 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       vaults={allVaultsWithConfig}
       position={positionJsonSafe}
       viewWalletAddress={walletAddress}
-      userActivity={userActivity}
+      latestActivity={latestActivity}
       topDepositors={topDepositors}
+      rebalanceActivity={rebalanceActivity}
       performanceChartData={performanceChartData}
       arksHistoricalChartData={arksHistoricalChartData}
       arksInterestRates={arksInterestRates}
