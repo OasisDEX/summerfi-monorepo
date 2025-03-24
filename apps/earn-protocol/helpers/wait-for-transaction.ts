@@ -1,7 +1,7 @@
-import { type useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
+import { type PublicClient } from 'viem'
 
 type WaitForTransactionParams = {
-  publicClient: ReturnType<typeof useNetworkAlignedClient>['publicClient']
+  publicClient: PublicClient
   hash: `0x${string}`
 }
 

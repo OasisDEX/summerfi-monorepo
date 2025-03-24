@@ -64,6 +64,12 @@ const clients = {
       fetch: customFetchCache,
     },
   ),
+  [SDKNetwork.SonicMainnet]: new GraphQLClient(
+    `${process.env.SUBGRAPH_BASE}/summer-earn-protocol-rates-sonic`,
+    {
+      fetch: customFetchCache,
+    },
+  ),
 }
 
 if (!process.env.FUNCTIONS_API_URL) {

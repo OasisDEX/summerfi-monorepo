@@ -27,6 +27,7 @@ import {
 import type BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 import { useRouter } from 'next/navigation'
+import { type PublicClient } from 'viem'
 
 import {
   type AccountKitSupportedNetworks,
@@ -41,7 +42,6 @@ import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
-import { type useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 
 import { useUserWallet } from './use-user-wallet'
 
@@ -54,7 +54,7 @@ type UseTransactionParams = {
   token: IToken | undefined
   tokenBalance: BigNumber | undefined
   tokenBalanceLoading: boolean
-  publicClient?: ReturnType<typeof useNetworkAlignedClient>['publicClient']
+  publicClient?: PublicClient
   flow: 'open' | 'manage'
   ownerView?: boolean
   positionAmount?: BigNumber

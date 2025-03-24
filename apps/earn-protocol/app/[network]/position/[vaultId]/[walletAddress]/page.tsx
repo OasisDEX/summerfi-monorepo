@@ -121,9 +121,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     systemConfig,
   })
 
-  const allVaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig }).filter(
-    ({ inputToken }) => inputToken.symbol !== 'EURC',
-  )
+  const allVaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })
 
   const { netValue } = getPositionValues({
     position,

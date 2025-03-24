@@ -114,9 +114,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     }),
   ])
 
-  const allVaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig }).filter(
-    ({ inputToken }) => inputToken.symbol !== 'EURC',
-  )
+  const allVaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })
 
   if (!vault) {
     return (
