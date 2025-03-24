@@ -28,7 +28,7 @@ export function createMainRPCClient(apiURL: string, logging?: boolean): RPCMainC
           const transformer = SerializationService.getTransformer()
           const input = transformer.stringify(opts.input)
           apiUrlBase.searchParams.set('input', input)
-          console.log('Calling SDK url:', apiUrlBase.toString())
+          console.log(`SDK call (${opts.path}):`, apiUrlBase.toString())
         },
       }),
       httpBatchLink({
