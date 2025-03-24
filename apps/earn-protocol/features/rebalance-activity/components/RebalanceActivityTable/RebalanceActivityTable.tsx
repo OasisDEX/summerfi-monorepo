@@ -19,6 +19,8 @@ interface RebalanceActivityTableProps {
   hiddenColumns?: string[]
   rowsToDisplay?: number
   handleSort?: (sortConfig: TableSortedColumn<string>) => void
+  isLoading?: boolean
+  skeletonLines?: number
 }
 
 export const RebalanceActivityTable: FC<RebalanceActivityTableProps> = ({
@@ -27,6 +29,8 @@ export const RebalanceActivityTable: FC<RebalanceActivityTableProps> = ({
   hiddenColumns,
   rowsToDisplay,
   handleSort,
+  isLoading,
+  skeletonLines,
 }) => {
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
@@ -46,6 +50,8 @@ export const RebalanceActivityTable: FC<RebalanceActivityTableProps> = ({
         customRow={customRow}
         handleSort={handleSort}
         hiddenColumns={resolvedHiddenColumns}
+        isLoading={isLoading}
+        skeletonLines={skeletonLines}
       />
       {rows.length === 0 && (
         <Text

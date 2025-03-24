@@ -30,7 +30,6 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
 
   const handleMoreItems = async () => {
     try {
-      setIsLoading(true)
       const res = await getLatestActivity({
         page: currentPage + 1,
         userAddress: walletAddress,
@@ -43,8 +42,6 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
     } catch (error) {
       // eslint-disable-next-line no-console
       console.info('No more latest activity items to load')
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -96,6 +93,7 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
           latestActivityList={currentlyLoadedList}
           hiddenColumns={['strategy']}
           handleSort={handleSort}
+          isLoading={isLoading}
         />
       </InfiniteScroll>
     </Card>

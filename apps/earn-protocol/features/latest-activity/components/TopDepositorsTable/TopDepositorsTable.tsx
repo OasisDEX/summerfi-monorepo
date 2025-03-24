@@ -20,6 +20,8 @@ interface TopDepositorsTableProps {
   hiddenColumns?: string[]
   rowsToDisplay?: number
   handleSort?: (sortConfig: TableSortedColumn<string>) => void
+  isLoading?: boolean
+  skeletonLines?: number
 }
 
 export const TopDepositorsTable: FC<TopDepositorsTableProps> = ({
@@ -28,6 +30,8 @@ export const TopDepositorsTable: FC<TopDepositorsTableProps> = ({
   hiddenColumns,
   rowsToDisplay,
   handleSort,
+  isLoading = true,
+  skeletonLines,
 }) => {
   const { deviceType } = useDeviceType()
   const { isMobile, isTablet } = useMobileCheck(deviceType)
@@ -48,6 +52,8 @@ export const TopDepositorsTable: FC<TopDepositorsTableProps> = ({
         customRow={customRow}
         handleSort={handleSort}
         hiddenColumns={resolvedHiddenColumns}
+        isLoading={isLoading}
+        skeletonLines={skeletonLines}
       />
       {rows.length === 0 && (
         <Text

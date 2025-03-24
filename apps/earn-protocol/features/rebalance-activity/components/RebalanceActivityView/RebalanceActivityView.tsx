@@ -184,6 +184,7 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
             idx: 3,
             content: <TableCarousel carouselData={rebalanceActivityTableCarouselData} />,
           }}
+          isLoading={isLoading}
         />
       </InfiniteScroll>
     </div>

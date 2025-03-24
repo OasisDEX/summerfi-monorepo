@@ -1,8 +1,9 @@
 'use client'
-import { Fragment, type ReactNode, useState } from 'react'
+import { type CSSProperties, Fragment, type ReactNode, useState } from 'react'
 import { SortDirection } from '@summerfi/app-utils'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
+import { TableSkeleton } from '@/components/molecules/TableSkeleton/TableSkeleton'
 
 import styles from './Table.module.scss'
 
@@ -36,6 +37,9 @@ interface TableProps<K extends string> {
   }
   onRowHover?: (address?: string) => void
   highlightedRow?: string
+  isLoading?: boolean
+  skeletonLines?: number
+  skeletonStyles?: CSSProperties
 }
 
 export function Table<K extends string>({
@@ -46,6 +50,9 @@ export function Table<K extends string>({
   customRow,
   onRowHover,
   highlightedRow,
+  isLoading,
+  skeletonLines = 10,
+  skeletonStyles,
 }: TableProps<K>) {
   const [sortConfig, setSortConfig] = useState<TableSortedColumn<K> | null>(null)
   const [expandedRow, setExpandedRow] = useState<number | null>(null)
@@ -130,63 +137,65 @@ export function Table<K extends string>({
           </tr>
         </thead>
         <tbody>
-          {resolvedRows.map((row, rowIndex) => (
-            <Fragment key={rowIndex}>
-              <tr
-                onMouseEnter={() => onRowHover?.(row.id)}
-                onMouseLeave={() => onRowHover?.(undefined)}
-                onClick={() => setExpandedRow(expandedRow === rowIndex ? null : rowIndex)}
-                style={{
-                  cursor: row.details ? 'pointer' : 'default',
-                  ...(highlightedRow &&
-                    highlightedRow === row.id && {
-                      background:
-                        'linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%)',
-                    }),
-                }}
-              >
-                {Object.values(row.content).map((item, idx) => (
-                  <td key={idx}>
-                    {idx === 0 && row.details ? (
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: 'var(--spacing-space-x-small)',
-                        }}
-                      >
-                        {item as ReactNode}{' '}
-                        {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
-                        {idx === 0 ? (
-                          <Icon
-                            iconName={expandedRow === rowIndex ? 'chevron_up' : 'chevron_down'}
-                            variant="xxs"
-                            color="rgba(119, 117, 118, 1)"
-                          />
-                        ) : null}
-                      </div>
-                    ) : (
-                      <>{item as ReactNode}</>
-                    )}
-                  </td>
-                ))}
-              </tr>
-              {expandedRow === rowIndex && row.details && (
-                <tr className={styles.expandedRow}>
-                  <td colSpan={columns.length}>
-                    <div className={styles.details}>{row.details}</div>
-                  </td>
+          {!isLoading &&
+            resolvedRows.map((row, rowIndex) => (
+              <Fragment key={rowIndex}>
+                <tr
+                  onMouseEnter={() => onRowHover?.(row.id)}
+                  onMouseLeave={() => onRowHover?.(undefined)}
+                  onClick={() => setExpandedRow(expandedRow === rowIndex ? null : rowIndex)}
+                  style={{
+                    cursor: row.details ? 'pointer' : 'default',
+                    ...(highlightedRow &&
+                      highlightedRow === row.id && {
+                        background:
+                          'linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%)',
+                      }),
+                  }}
+                >
+                  {Object.values(row.content).map((item, idx) => (
+                    <td key={idx}>
+                      {idx === 0 && row.details ? (
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 'var(--spacing-space-x-small)',
+                          }}
+                        >
+                          {item as ReactNode}{' '}
+                          {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
+                          {idx === 0 ? (
+                            <Icon
+                              iconName={expandedRow === rowIndex ? 'chevron_up' : 'chevron_down'}
+                              variant="xxs"
+                              color="rgba(119, 117, 118, 1)"
+                            />
+                          ) : null}
+                        </div>
+                      ) : (
+                        <>{item as ReactNode}</>
+                      )}
+                    </td>
+                  ))}
                 </tr>
-              )}
-              {customRow?.idx === rowIndex && (
-                <tr className={styles.customRow}>
-                  <td colSpan={columns.length}>{customRow.content}</td>
-                </tr>
-              )}
-            </Fragment>
-          ))}
+                {expandedRow === rowIndex && row.details && (
+                  <tr className={styles.expandedRow}>
+                    <td colSpan={columns.length}>
+                      <div className={styles.details}>{row.details}</div>
+                    </td>
+                  </tr>
+                )}
+                {customRow?.idx === rowIndex && (
+                  <tr className={styles.customRow}>
+                    <td colSpan={columns.length}>{customRow.content}</td>
+                  </tr>
+                )}
+              </Fragment>
+            ))}
         </tbody>
       </table>
+      {isLoading && <TableSkeleton rows={skeletonLines} wrapperStyles={skeletonStyles} />}
     </div>
   )
 }

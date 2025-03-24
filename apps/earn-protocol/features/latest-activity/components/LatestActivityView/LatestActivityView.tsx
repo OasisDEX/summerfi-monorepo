@@ -78,7 +78,6 @@ export const LatestActivityView: FC<LatestActivityViewProps> = ({
 
   const handleMoreUserActivityItems = async () => {
     try {
-      setIsLoadingActivity(true)
       const res = await getLatestActivity({
         page: currentLatestActivityPage + 1,
         tokens: tokenFilter,
@@ -92,14 +91,11 @@ export const LatestActivityView: FC<LatestActivityViewProps> = ({
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Error fetching more user activity', error)
-    } finally {
-      setIsLoadingActivity(false)
     }
   }
 
   const handleMoreTopDepositorsItems = async () => {
     try {
-      setIsLoadingDepositors(true)
       const res = await getTopDepositors({
         page: currentTopDepositorsPage + 1,
         tokens: tokenFilter,
@@ -113,8 +109,6 @@ export const LatestActivityView: FC<LatestActivityViewProps> = ({
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Error fetching more top depositors', error)
-    } finally {
-      setIsLoadingDepositors(false)
     }
   }
 
@@ -265,6 +259,7 @@ export const LatestActivityView: FC<LatestActivityViewProps> = ({
               content: <TableCarousel carouselData={userActivityTableCarouselData} />,
             }}
             handleSort={handleSortTopDepositors}
+            isLoading={isLoadingDepositors}
           />
         </InfiniteScroll>
       ),
@@ -296,6 +291,7 @@ export const LatestActivityView: FC<LatestActivityViewProps> = ({
             }}
             hiddenColumns={['position']}
             handleSort={handleSortLatestActivity}
+            isLoading={isLoadingActivity}
           />
         </InfiniteScroll>
       ),
