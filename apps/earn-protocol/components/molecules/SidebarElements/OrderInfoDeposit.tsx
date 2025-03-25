@@ -101,8 +101,13 @@ export const OrderInfoDeposit = ({
                     label: 'Slippage',
                     value: formatPercent(slippage.value, { precision: 2 }),
                   },
+                  {
+                    label: 'Depositing into Strategy',
+                    value: `${formatCryptoBalance(toAmount.amount)} ${toAmount.token.symbol}`,
+                  },
                 ]
               : []),
+
             {
               label: 'Transaction Fee',
               value: transactionFee ? `$${formatFiatBalance(transactionFee)}` : 'n/a',
