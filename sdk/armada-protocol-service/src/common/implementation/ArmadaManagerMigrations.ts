@@ -143,7 +143,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       positions = positionsArrays.flat()
     }
 
-    // filter the tokens that have balance > 0
+    // filter the tokens that have borrowBalance > 0
     const nonEmptyPositions = positions.filter(
       (position) => position.positionTokenAmount.toSolidityValue() > 0n,
     )
@@ -206,7 +206,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
 
         const [underlyingAmount] = await Promise.all([
           this._getUnderlyingAmount({
-            balance: positionBalance,
+            borrowBalance: positionBalance,
             type: params.migrationType,
             underlyingToken,
           }),
@@ -308,14 +308,14 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       chainInfo: params.chainInfo,
     })
 
-    const balance = await client.readContract({
+    const borrowBalance = await client.readContract({
       abi: abiBorrowBalanceOf,
       address: params.positionAddress,
       functionName: 'borrowBalanceOf',
       args: [params.user.wallet.address.value],
     })
 
-    return BigInt(balance.toString())
+    return borrowBalance
   }
 
   private async _getAaveV3PositionDebt(params: {
@@ -341,7 +341,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
   }
 
   private async _getUnderlyingAmount(params: {
-    balance: ITokenAmount
+    borrowBalance: ITokenAmount
     type: ArmadaMigrationType
     underlyingToken: IToken
   }) {
@@ -349,22 +349,22 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       case ArmadaMigrationType.Compound:
         return TokenAmount.createFromBaseUnit({
           token: params.underlyingToken,
-          amount: params.balance.amount,
+          amount: params.borrowBalance.amount,
         })
       case ArmadaMigrationType.AaveV3:
         return TokenAmount.createFromBaseUnit({
           token: params.underlyingToken,
-          amount: params.balance.amount,
+          amount: params.borrowBalance.amount,
         })
       case ArmadaMigrationType.Morpho: {
         const client = await this._blockchainClientProvider.getBlockchainClient({
-          chainInfo: params.balance.token.chainInfo,
+          chainInfo: params.borrowBalance.token.chainInfo,
         })
         const convertedBalance = await client.readContract({
           abi: abiConvertToAssets,
-          address: params.balance.token.address.value,
+          address: params.borrowBalance.token.address.value,
           functionName: 'convertToAssets',
-          args: [params.balance.toSolidityValue()],
+          args: [params.borrowBalance.toSolidityValue()],
         })
 
         return TokenAmount.createFromBaseUnit({
