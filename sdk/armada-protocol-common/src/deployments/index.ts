@@ -123,7 +123,7 @@ export const getCompoundV3Address = <
     const address = config[chainKey]['protocolSpecific']['compoundV3'][params.contractName]
 
     if (!address) {
-      throw new Error(`Contract ${params.contractName.toString()} not found in aaveV3 config`)
+      throw new Error(`Contract ${params.contractName.toString()} not found in compoundV3 config`)
     }
     return Address.createFromEthereum({
       value: address,

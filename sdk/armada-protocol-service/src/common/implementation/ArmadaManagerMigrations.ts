@@ -142,7 +142,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       positions = positionsArrays.flat()
     }
 
-    // filter the tokens that have borrowBalance > 0
+    // filter positions with balance
     const nonEmptyPositions = positions.filter(
       (position) => position.positionTokenAmount.toSolidityValue() > 0n,
     )
