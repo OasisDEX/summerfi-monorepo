@@ -13,7 +13,7 @@ import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
-import { rebalanceActivitySorter } from '@/features/vault-exposure/table/sorter'
+import { vaultExposureSorter } from '@/features/vault-exposure/table/sorter'
 import { getColor } from '@/helpers/get-color'
 import { getProtocolLabel } from '@/helpers/get-protocol-label'
 
@@ -25,7 +25,21 @@ export const vaultExposureMapper = (
   sortConfig?: TableSortedColumn<string>,
 ) => {
   const vaultInputToken = vault.inputTokenBalance
-  const sortedArks = rebalanceActivitySorter({ vault, sortConfig })
+
+  const extendedArks = vault.arks.map((ark) => {
+    const arkInterestRate = arksInterestRates?.[ark.name as string]
+
+    const apy = isNaN(Number(arkInterestRate))
+      ? new BigNumber(0)
+      : new BigNumber(arkInterestRate ?? 0).div(100)
+
+    return {
+      ...ark,
+      apy,
+    }
+  })
+
+  const sortedArks = vaultExposureSorter({ extendedArks, sortConfig })
 
   const vaultNetwork = vault.protocol.network as
     | SDKNetwork.Mainnet
@@ -40,12 +54,6 @@ export const vaultExposureMapper = (
       vaultInputToken.toString() !== '0'
         ? new BigNumber(item.inputTokenBalance.toString()).div(vaultInputToken.toString())
         : '0'
-
-    const arkInterestRate = arksInterestRates?.[item.name as string]
-
-    const apr = isNaN(Number(arkInterestRate))
-      ? new BigNumber(0)
-      : new BigNumber(arkInterestRate ?? 0).div(100)
 
     const cap =
       item.depositLimit.toString() !== '0'
@@ -77,7 +85,7 @@ export const vaultExposureMapper = (
           </TableCellNodes>
         ),
         allocation: <TableCellText>{formatDecimalAsPercent(allocation)}</TableCellText>,
-        currentApy: <TableCellText>{formatDecimalAsPercent(apr)}</TableCellText>,
+        currentApy: <TableCellText>{formatDecimalAsPercent(item.apy)}</TableCellText>,
         liquidity: <TableCellText>{formatCryptoBalance(allocationRaw)}</TableCellText>,
         cap: <TableCellText>{formatDecimalAsPercent(cap)}</TableCellText>,
       },
