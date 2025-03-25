@@ -29,7 +29,7 @@
     max-height: 0;
     opacity: 0;
     transition: opacity 0.2s ease;
-    visibility: hidden;
+    pointer-events: none;
   }
 
   &OverflowWrapper {
@@ -43,6 +43,7 @@
     max-height: 280px; // Set a max-height for the dropdown (adjust as necessary)
     opacity: 1;
     visibility: visible;
+    pointer-events: all
   }
 
   &Option {
@@ -72,7 +73,7 @@
   }
 }
 
-.dropdownOption > span {
+.dropdownOption>span {
   display: flex;
   align-items: center;
   gap: 8px;
