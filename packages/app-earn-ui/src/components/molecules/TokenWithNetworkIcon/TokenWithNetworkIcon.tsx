@@ -10,6 +10,7 @@ export const chainIdIconMap = {
   [SDKChainId.BASE]: 'earn_network_base',
   [SDKChainId.ARBITRUM]: 'earn_network_arbitrum',
   [SDKChainId.OPTIMISM]: 'earn_network_optimism',
+  [SDKChainId.SONIC]: 'earn_network_sonic',
 }
 
 export const networkNameIconMap = {
@@ -17,6 +18,7 @@ export const networkNameIconMap = {
   [SDKNetwork.Base]: 'earn_network_base',
   [SDKNetwork.ArbitrumOne]: 'earn_network_arbitrum',
   [SDKNetwork.Optimism]: 'earn_network_optimism',
+  [SDKNetwork.SonicMainnet]: 'earn_network_sonic',
 }
 
 const tokenIconSizeMap = {

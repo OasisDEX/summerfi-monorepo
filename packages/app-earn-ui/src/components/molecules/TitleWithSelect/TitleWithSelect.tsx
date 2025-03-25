@@ -11,10 +11,10 @@ import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 
 import titleWithSelectStyles from '@/components/molecules/TitleWithSelect/TitleWithSelect.module.scss'
 
-interface ContentProps {
+interface DropdownItemProps {
   option: DropdownOption
 }
-const Content: FC<ContentProps> = ({ option }) => (
+const DropdownItem: FC<DropdownItemProps> = ({ option }) => (
   <>
     {'tokenSymbol' in option && <Icon tokenName={option.tokenSymbol} />}
     {'iconName' in option && <Icon iconName={option.iconName} />}
@@ -53,15 +53,15 @@ export const TitleWithSelect = ({
 }: TitleWithSelectProps) => {
   const tooltipContent = selected && options && onChangeNetwork && (
     <Dropdown
-      dropdownValue={{ value: selected.value, content: <Content option={selected} /> }}
+      dropdownValue={{ value: selected.value, content: <DropdownItem option={selected} /> }}
       options={options.map((option) => ({
         value: option.value,
-        content: <Content option={option} />,
+        content: <DropdownItem option={option} />,
       }))}
       onChange={onChangeNetwork}
       asPill
     >
-      <Content option={selected} />
+      <DropdownItem option={selected} />
     </Dropdown>
   )
 

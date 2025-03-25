@@ -33,6 +33,10 @@ const networks: { value: PortfolioAssetNetworkOption; icon?: ReactNode; label?: 
     value: NetworkNames.arbitrumMainnet,
     icon: <Icon iconName="earn_network_arbitrum" variant="m" />,
   },
+  {
+    value: NetworkNames.sonicMainnet,
+    icon: <Icon iconName="earn_network_sonic" variant="m" />,
+  },
 ]
 
 interface PortfolioAssetsProps {

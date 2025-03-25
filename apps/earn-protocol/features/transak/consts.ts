@@ -168,4 +168,10 @@ export const transakNetworkOptions: TransakNetworkOption[] = [
     chainId: SDKChainId.ARBITRUM,
     iconName: 'earn_network_arbitrum',
   },
+  {
+    label: 'Sonic',
+    value: 'sonic',
+    chainId: SDKChainId.SONIC,
+    iconName: 'earn_network_sonic',
+  },
 ]
