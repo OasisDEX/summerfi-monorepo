@@ -89,8 +89,6 @@ export const VaultExposure: FC<VaultExposureProps> = ({ vault, arksInterestRates
 
   const humanReadableNetwork = capitalize(sdkNetworkToHumanNetwork(vault.protocol.network))
 
-  console.log('arksInterestRates', arksInterestRates)
-
   const tabs = [
     {
       label: 'All',
