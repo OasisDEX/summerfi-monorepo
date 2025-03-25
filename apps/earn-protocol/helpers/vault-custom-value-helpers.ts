@@ -1,6 +1,7 @@
 import {
   type EarnAppConfigType,
   type EarnAppFleetCustomConfigType,
+  type IArmadaPosition,
   type SDKVaultishType,
 } from '@summerfi/app-types'
 import { decorateWithFleetConfig } from '@summerfi/app-utils'
@@ -8,12 +9,19 @@ import { decorateWithFleetConfig } from '@summerfi/app-utils'
 type VaultConfigDecorator = {
   vaults: SDKVaultishType[]
   systemConfig: Partial<EarnAppConfigType>
+  userPositions?: IArmadaPosition[]
 }
 
-export const decorateVaultsWithConfig = ({ vaults, systemConfig }: VaultConfigDecorator) => {
+export const decorateVaultsWithConfig = ({
+  vaults,
+  systemConfig,
+  userPositions,
+}: VaultConfigDecorator) => {
   const { fleetMap } = systemConfig
 
-  const vaultsWithConfig = fleetMap ? decorateWithFleetConfig(vaults, fleetMap) : vaults
+  const vaultsWithConfig = fleetMap
+    ? decorateWithFleetConfig(vaults, fleetMap, userPositions)
+    : vaults
 
   return vaultsWithConfig as SDKVaultishType[]
 }
