@@ -40,7 +40,6 @@ import { aaveV3ConfigsByChainId } from './token-config/aaveV3-config'
 import { morphoBlueConfigsByChainId } from './token-config/morpho-blue-config'
 import type { IOracleManager } from '@summerfi/oracle-common'
 import {
-  abiBalanceOf,
   abiIsAllowed,
   abiAllow,
   abiAllowance,
@@ -50,7 +49,7 @@ import {
   abiBorrowBalanceOf,
 } from './abi'
 import type { ArmadaMigrationConfig } from './token-config/types'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'bignumber.js'
 
 /**
  * @name ArmadaManagerMigrations
@@ -218,14 +217,14 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
           user: params.user,
           positionAddress: config.positionAddress,
         })
-        const isDebt = debt > 0n
+        const hasDebt = debt > 0n
 
         return {
           id: config.positionAddress,
           migrationType: params.migrationType,
           positionTokenAmount: positionBalance,
           underlyingTokenAmount: underlyingAmount,
-          // isDebt,
+          hasDebt,
           usdValue: FiatCurrencyAmount.createFrom({
             amount: '0',
             fiat: FiatCurrency.USD,
@@ -255,11 +254,13 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       return {
         ...position,
         usdValue: position.underlyingTokenAmount.multiply(price),
-      } as ArmadaMigratablePosition
+      }
     })
 
+    const positionsWithoutDebt = positionsWithPrices.filter((position) => !position.hasDebt)
+
     // sort by usd value
-    const sortedPositions = positionsWithPrices.sort((a, b) => {
+    const sortedPositions = positionsWithoutDebt.sort((a, b) => {
       if (b.usdValue.toSolidityValue() > a.usdValue.toSolidityValue()) {
         return 1
       }
@@ -269,7 +270,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       return 0
     })
 
-    return sortedPositions
+    return sortedPositions as ArmadaMigratablePosition[]
   }
 
   private async _getPositionDebt(params: {
