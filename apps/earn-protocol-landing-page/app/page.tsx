@@ -52,7 +52,7 @@ const supportedProtocolsConfig: {
   },
   sky: {
     displayName: 'Sky',
-    defillamaProtocolName: 'maker',
+    defillamaProtocolName: 'sky',
     icon: 'scroller_sky',
   },
   spark: {
