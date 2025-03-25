@@ -2,7 +2,7 @@ import { SummerStackContext } from './summer-stack-context'
 import { Cron, Function, FunctionProps } from 'sst/constructs'
 import * as process from 'node:process'
 
-export function addSummerEarnAppTablesConfig({ stack, vpc, app, isProd }: SummerStackContext) {
+export function addSummerEarnAppTablesConfig({ stack, vpc, app }: SummerStackContext) {
   const { EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN, EARN_APP_URL } = process.env
 
   if (!EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN) {
@@ -77,8 +77,7 @@ export function addSummerEarnAppTablesConfig({ stack, vpc, app, isProd }: Summer
     updateRebalanceActivityTableCronFunctionProps,
   )
 
-  // temporarily disable cron jobs in prod
-  const enabled = isProd ? false : true
+  const enabled = true
 
   new Cron(stack, 'update-latest-activity-table-cron', {
     schedule: 'rate(1 minute)',
