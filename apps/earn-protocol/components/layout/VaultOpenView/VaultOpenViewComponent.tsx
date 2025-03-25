@@ -473,6 +473,7 @@ export const VaultOpenViewComponent = ({
                 walletAddress: userWalletAddress,
                 selectedPosition,
               }),
+              disabled: !selectedPosition,
             }}
             migrationBestVaultApy={migrationBestVaultApy}
           />

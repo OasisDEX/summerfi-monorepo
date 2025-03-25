@@ -557,6 +557,7 @@ export const VaultManageViewComponent = ({
                   walletAddress: viewWalletAddress,
                   selectedPosition,
                 }),
+                disabled: !selectedPosition,
               }}
               migrationBestVaultApy={migrationBestVaultApy}
             />
