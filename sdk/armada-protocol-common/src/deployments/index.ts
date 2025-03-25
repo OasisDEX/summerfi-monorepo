@@ -36,11 +36,11 @@ export const isTestDeployment = () => {
 }
 
 type Config = typeof bummerConfig
-type ConfigKey = 'mainnet' | 'base' | 'arbitrum' | 'sonic'
-type CategoryKey = keyof Config[ConfigKey]['deployedContracts']
+type ChainKey = 'mainnet' | 'base' | 'arbitrum' | 'sonic'
+type ContractCategoryKey = keyof Config[ChainKey]['deployedContracts']
 
-const getConfigKey = <TName extends string>(name: TName) => {
-  const keyMap: Record<ChainInfo['name'], ConfigKey> = {
+const getChainKey = <TName extends string>(name: TName) => {
+  const keyMap: Record<ChainInfo['name'], ChainKey> = {
     [EthereumChainNames.Mainnet]: 'mainnet',
     [BaseChainNames.Mainnet]: 'base',
     [ArbitrumChainNames.ArbitrumOne]: 'arbitrum',
@@ -60,18 +60,20 @@ const getConfig = (): Config => {
 }
 
 export const getDeployedContractAddress = <
-  TKey extends ConfigKey,
+  TKey extends ChainKey,
   TChainInfo extends ChainInfo,
-  TCategory extends CategoryKey,
+  TCategory extends ContractCategoryKey,
 >(params: {
   chainInfo: TChainInfo
   contractCategory: TCategory
   contractName: keyof Config[TKey]['deployedContracts'][TCategory]
 }): IAddress => {
   const config = getConfig()
-  const key = getConfigKey(params.chainInfo.name) as TKey
+  const chainKey = getChainKey(params.chainInfo.name) as TKey
 
-  const contract = config[key].deployedContracts[params.contractCategory][params.contractName] as
+  const contract = config[chainKey].deployedContracts[params.contractCategory][
+    params.contractName
+  ] as
     | {
         address: string
       }
@@ -88,9 +90,65 @@ export const getDeployedContractAddress = <
   })
 }
 
+export const getAaveV3Address = <TKey extends ChainKey, TChainInfo extends ChainInfo>(params: {
+  chainInfo: TChainInfo
+  contractName: keyof Config[ChainKey]['protocolSpecific']['aaveV3']
+}): IAddress => {
+  const config = getConfig()
+  const chainKey = getChainKey(params.chainInfo.name) as TKey
+
+  const address = config[chainKey]['protocolSpecific']['aaveV3'][params.contractName]
+
+  if (!address) {
+    throw new Error(`Contract ${params.contractName.toString()} not found in aaveV3 config`)
+  }
+
+  return Address.createFromEthereum({
+    value: address,
+  })
+}
+
+export const getCompoundV3Address = <
+  TKey extends 'mainnet' | 'base' | 'arbitrum',
+  TChainInfo extends ChainInfo,
+>(params: {
+  chainInfo: TChainInfo
+  contractName: keyof Config['mainnet' | 'base' | 'arbitrum']['protocolSpecific']['compoundV3']
+  token?: keyof Config['mainnet' | 'base' | 'arbitrum']['protocolSpecific']['compoundV3']['pools']
+}): IAddress => {
+  const config = getConfig()
+  const chainKey = getChainKey(params.chainInfo.name) as TKey
+
+  if (params.contractName === 'rewards') {
+    const address = config[chainKey]['protocolSpecific']['compoundV3'][params.contractName]
+
+    if (!address) {
+      throw new Error(`Contract ${params.contractName.toString()} not found in aaveV3 config`)
+    }
+    return Address.createFromEthereum({
+      value: address,
+    })
+  } else {
+    if (!params.token) {
+      throw new Error(`Token must be specified for ${params.contractName} contract`)
+    }
+
+    const address =
+      config[chainKey]['protocolSpecific']['compoundV3'][params.contractName][params.token]
+    if (!address) {
+      throw new Error(
+        `Contract ${params.contractName.toString()} for token ${params.token.toString()} not found in compoundV3 config`,
+      )
+    }
+    return Address.createFromEthereum({
+      value: address.cToken,
+    })
+  }
+}
+
 export const getDeployedRewardsRedeemerAddress = () => {
   const config = getConfig()
-  const key = getConfigKey(ChainFamilyName.Base)
+  const key = getChainKey(ChainFamilyName.Base)
 
   const maybeAddress = (
     config[key].deployedContracts.gov as { rewardsRedeemer: { address: string | undefined } }
@@ -105,7 +163,7 @@ export const getDeployedRewardsRedeemerAddress = () => {
 
 export const getDeployedGovRewardsManagerAddress = () => {
   const config = getConfig()
-  const key = getConfigKey(ChainFamilyName.Base)
+  const key = getChainKey(ChainFamilyName.Base)
 
   const maybeAddress = (
     config[key].deployedContracts.gov as { rewardsManager: { address: string | undefined } }
@@ -133,7 +191,7 @@ export const getLayerZeroConfig = (
   eID: number
 } => {
   const config = getConfig()
-  const key = getConfigKey(chainInfo.name)
+  const key = getChainKey(chainInfo.name)
   if (!config[key].common) {
     throw new Error(`Common configuration not found for chain: ${chainInfo.name}`)
   }
