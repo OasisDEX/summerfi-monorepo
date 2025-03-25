@@ -60,6 +60,19 @@ export default function GlobalErrorHandler({ error }: { error: Error & { digest?
           </div>
         </Text>
       )}
+      {process.env.NODE_ENV === 'development' && (
+        <pre
+          style={{
+            textAlign: 'left',
+            maxWidth: '90vw',
+            fontFamily: 'monospace',
+            wordWrap: 'break-word',
+            whiteSpace: 'pre-wrap',
+          }}
+        >
+          {error.stack}
+        </pre>
+      )}
       <Link href="/">
         <Button variant="primaryLarge">Go back to the home page</Button>
       </Link>

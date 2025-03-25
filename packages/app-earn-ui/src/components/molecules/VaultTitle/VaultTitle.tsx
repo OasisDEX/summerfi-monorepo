@@ -20,6 +20,7 @@ const networkIdIconMap = {
   [NetworkIds.BASEMAINNET]: <Icon iconName="earn_network_base" size={16} />,
   [NetworkIds.ARBITRUMMAINNET]: <Icon iconName="earn_network_arbitrum" size={16} />,
   [NetworkIds.OPTIMISMMAINNET]: <Icon iconName="earn_network_optimism" size={16} />,
+  [NetworkIds.SONICMAINNET]: <Icon iconName="earn_network_sonic" size={16} />,
 }
 
 const networkNameIconMap = {
@@ -27,6 +28,7 @@ const networkNameIconMap = {
   [SDKNetwork.Base]: <Icon iconName="earn_network_base" size={16} />,
   [SDKNetwork.ArbitrumOne]: <Icon iconName="earn_network_arbitrum" size={16} />,
   [SDKNetwork.Optimism]: <Icon iconName="earn_network_optimism" size={16} />,
+  [SDKNetwork.SonicMainnet]: <Icon iconName="earn_network_sonic" size={16} />,
 }
 
 interface VaultTitleProps {

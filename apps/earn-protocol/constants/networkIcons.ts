@@ -4,12 +4,12 @@ export const networkIconByNetworkName: Partial<{ [key in SDKNetwork]: IconNamesL
   [SDKNetwork.ArbitrumOne]: 'earn_network_arbitrum',
   [SDKNetwork.Base]: 'earn_network_base',
   [SDKNetwork.Mainnet]: 'earn_network_ethereum',
-  [SDKNetwork.SonicMainnet]: 'not_supported_icon',
+  [SDKNetwork.SonicMainnet]: 'earn_network_sonic',
 }
 
 export const networkIconByChainId: Partial<{ [key in SDKChainId]: IconNamesList }> = {
   [SDKChainId.ARBITRUM]: 'earn_network_arbitrum',
   [SDKChainId.BASE]: 'earn_network_base',
   [SDKChainId.MAINNET]: 'earn_network_ethereum',
-  [SDKChainId.SONIC]: 'not_supported_icon',
+  [SDKChainId.SONIC]: 'earn_network_sonic',
 }

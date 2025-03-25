@@ -84,20 +84,30 @@ export const OrderInfoDeposit = ({
                   },
                   {
                     label: 'Price',
-                    value: `${formatCryptoBalance(priceImpact.price.value)} ${
-                      (priceImpact.price.quote as IToken).symbol
-                    }/${(priceImpact.price.base as IToken).symbol}`,
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                    value: priceImpact.price
+                      ? `${formatCryptoBalance(priceImpact.price.value)} ${
+                          (priceImpact.price.quote as IToken).symbol
+                        }/${(priceImpact.price.base as IToken).symbol}`
+                      : 'n/a',
                   },
                   {
                     label: 'Price Impact',
-                    value: formatPercent(priceImpact.impact.value, { precision: 2 }),
+                    value: priceImpact.impact.value
+                      ? formatPercent(priceImpact.impact.value, { precision: 2 })
+                      : 'n/a',
                   },
                   {
                     label: 'Slippage',
                     value: formatPercent(slippage.value, { precision: 2 }),
                   },
+                  {
+                    label: 'Depositing into Strategy',
+                    value: `${formatCryptoBalance(toAmount.amount)} ${toAmount.token.symbol}`,
+                  },
                 ]
               : []),
+
             {
               label: 'Transaction Fee',
               value: transactionFee ? `$${formatFiatBalance(transactionFee)}` : 'n/a',

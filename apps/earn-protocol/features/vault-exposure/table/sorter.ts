@@ -1,17 +1,20 @@
 import { type TableSortedColumn } from '@summerfi/app-earn-ui'
 import { type SDKVaultType } from '@summerfi/app-types'
 import { simpleSort, SortDirection } from '@summerfi/app-utils'
+import type BigNumber from 'bignumber.js'
 
-export const rebalanceActivitySorter = ({
-  vault,
+type ExtendedArk = SDKVaultType['arks'][number] & { apy: BigNumber }
+
+export const vaultExposureSorter = ({
+  extendedArks,
   sortConfig,
 }: {
-  vault: SDKVaultType
+  extendedArks: ExtendedArk[]
   sortConfig?: TableSortedColumn<string>
 }) => {
   switch (sortConfig?.key) {
     case 'allocation':
-      return vault.arks.sort((a, b) =>
+      return extendedArks.sort((a, b) =>
         simpleSort({
           a: a.inputTokenBalance,
           b: b.inputTokenBalance,
@@ -19,15 +22,15 @@ export const rebalanceActivitySorter = ({
         }),
       )
     case 'currentApy':
-      return vault.arks.sort((a, b) =>
+      return extendedArks.sort((a, b) =>
         simpleSort({
-          a: a.calculatedApr,
-          b: b.calculatedApr,
+          a: a.apy.toNumber(),
+          b: b.apy.toNumber(),
           direction: sortConfig.direction,
         }),
       )
     case 'liquidity':
-      return vault.arks.sort((a, b) =>
+      return extendedArks.sort((a, b) =>
         simpleSort({
           a: a.inputTokenBalance,
           b: b.inputTokenBalance,
@@ -35,7 +38,7 @@ export const rebalanceActivitySorter = ({
         }),
       )
     default:
-      return vault.arks.sort((a, b) =>
+      return extendedArks.sort((a, b) =>
         simpleSort({
           a: a.inputTokenBalance,
           b: b.inputTokenBalance,

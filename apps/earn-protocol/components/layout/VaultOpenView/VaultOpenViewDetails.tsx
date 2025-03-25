@@ -36,6 +36,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
   rebalanceActivity,
   arksHistoricalChartData,
   arksInterestRates,
+  vaultApyData,
 }) => {
   const summerVaultName = vault.customFields?.name ?? `Summer ${vault.inputToken.symbol} Vault`
 
@@ -122,7 +123,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
               marginBottom: 'var(--general-space-24)',
             }}
           >
-            {formatDecimalAsPercent(managementFee)} Management Fee, already included in APY
+            {formatDecimalAsPercent(managementFee)} management fee
           </Text>
           <Text
             as="p"
@@ -131,9 +132,13 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
               color: 'var(--color-text-secondary)',
             }}
           >
-            A {formatDecimalAsPercent(managementFee)} management fee is applied to your position,
-            but it’s already factored into the APY you see. This means the rate displayed reflects
-            your net return - no hidden fees, just straightforward earnings.
+            A {formatDecimalAsPercent(managementFee)} annualised management fee is charged for using
+            this strategy. The fees are continually accounted for and reflected in the market value
+            of your position. This strategy has no other fees, and there are no restrictions or
+            delays when withdrawing.
+            {vaultApyData.sma30d
+              ? ` The 30d APY for this strategy after fees is ${formatDecimalAsPercent(vaultApyData.sma30d)}.`
+              : ''}
           </Text>
         </Card>
       </Expander>

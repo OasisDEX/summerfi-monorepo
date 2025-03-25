@@ -1,4 +1,8 @@
-import { type EarnAppConfigType, type SDKVaultishType } from '@summerfi/app-types'
+import {
+  type EarnAppConfigType,
+  type IArmadaPosition,
+  type SDKVaultishType,
+} from '@summerfi/app-types'
 
 import { subgraphNetworkToId } from '@/helpers/earn-network-tools'
 
@@ -11,6 +15,7 @@ import { subgraphNetworkToId } from '@/helpers/earn-network-tools'
 export const decorateWithFleetConfig = (
   vaults: SDKVaultishType[],
   fleetMap: EarnAppConfigType['fleetMap'],
+  userPositions?: IArmadaPosition[],
 ) =>
   vaults
     .map((vault) => {
@@ -29,7 +34,12 @@ export const decorateWithFleetConfig = (
           }
         : vault
     })
-    .filter(({ customFields }) => {
+    .filter(({ customFields, id }) => {
+      // we dont want to filter out vaults that user has a position in
+      const hasUserPosition = userPositions?.some(
+        (position) => position.pool.id.fleetAddress.value.toLowerCase() === id.toLowerCase(),
+      )
+
       // filter disabled (with config) vaults
-      return customFields?.disabled ? !customFields.disabled : true
+      return !hasUserPosition && customFields?.disabled ? !customFields.disabled : true
     })

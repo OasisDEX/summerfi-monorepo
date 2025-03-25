@@ -15,12 +15,14 @@ export const mergePositionWithVault = ({
 }: MergePositionWithVaultProps) => {
   const vaultData = vaultsWithConfig.find(
     (vault) =>
-      vault.id === position.pool.id.fleetAddress.value &&
+      vault.id.toLowerCase() === position.pool.id.fleetAddress.value.toLowerCase() &&
       subgraphNetworkToSDKId(vault.protocol.network) === position.id.user.chainInfo.chainId,
   )
 
   if (!vaultData) {
-    throw new Error(`Vault not found for position ${position.pool.id.fleetAddress.value}`)
+    throw new Error(
+      `Vault not found for position ${position.pool.id.fleetAddress.value} on ${position.id.user.chainInfo.chainId}, available vaults: ${vaultsWithConfig.map((v) => `${v.id} on ${v.protocol.network}`).join(', ')}`,
+    )
   }
 
   return {

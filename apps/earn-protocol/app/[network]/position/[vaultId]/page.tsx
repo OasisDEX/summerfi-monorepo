@@ -48,7 +48,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
   const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
 
   const parsedVaultId = isAddress(vaultId)
-    ? vaultId
+    ? vaultId.toLowerCase()
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
   if (!parsedVaultId && !isAddress(vaultId)) {
@@ -158,7 +158,7 @@ export async function generateMetadata({ params }: EarnVaultOpenPageProps): Prom
   const baseUrl = new URL(`https://${prodHost}`)
 
   const parsedVaultId = isAddress(vaultId)
-    ? vaultId
+    ? vaultId.toLowerCase()
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
   const [vault] = await Promise.all([

@@ -51,6 +51,7 @@ export type IconNamesList =
   | 'earn_network_blast'
   | 'earn_network_ethereum'
   | 'earn_network_optimism'
+  | 'earn_network_sonic'
   | 'ena'
   | 'eth_circle_color'
   | 'eth_circle_mono'
