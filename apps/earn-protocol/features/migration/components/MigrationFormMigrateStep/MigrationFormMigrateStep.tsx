@@ -181,7 +181,7 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
               ]
             : []),
           {
-            label: 'Transaction fee',
+            label: 'Transaction Fee',
             value: transactionFee ? `$${formatFiatBalance(transactionFee)}` : 'n/a',
             tooltip: 'Estimated transaction fee for this operation',
             isLoading: transactionFeeLoading || state.step === MigrationSteps.INIT,
