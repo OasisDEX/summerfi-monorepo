@@ -7,6 +7,7 @@ import {
   Percentage,
   TokenAmount,
   TransactionType,
+  type AddressValue,
   type ApproveTransactionInfo,
   type ArmadaMigratablePosition,
   type ArmadaMigratablePositionApy,
@@ -24,6 +25,7 @@ import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-comm
 import type { IContractsProvider } from '@summerfi/contracts-provider-common'
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import {
+  getAaveV3Address,
   getDeployedContractAddress,
   type IArmadaManagerMigrations,
   type IArmadaVaultId,
@@ -44,6 +46,8 @@ import {
   abiAllowance,
   abiApprove,
   abiConvertToAssets,
+  abiGetUserAccountData,
+  abiBorrowBalanceOf,
 } from './abi'
 import type { ArmadaMigrationConfig } from './token-config/types'
 import BigNumber from 'bignumber.js'
@@ -272,7 +276,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     chainInfo: IChainInfo
     migrationType: ArmadaMigrationType
     user: IUser
-    positionAddress: string
+    positionAddress: AddressValue
   }): Promise<bigint> {
     switch (params.migrationType) {
       case ArmadaMigrationType.Compound:
@@ -298,16 +302,16 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
   private async _getCompoundPositionDebt(params: {
     chainInfo: IChainInfo
     user: IUser
-    positionAddress: string
+    positionAddress: AddressValue
   }): Promise<bigint> {
     const client = await this._blockchainClientProvider.getBlockchainClient({
       chainInfo: params.chainInfo,
     })
 
     const balance = await client.readContract({
-      abi: abiBalanceOf,
+      abi: abiBorrowBalanceOf,
       address: params.positionAddress,
-      functionName: 'balanceOf',
+      functionName: 'borrowBalanceOf',
       args: [params.user.wallet.address.value],
     })
 
@@ -317,20 +321,23 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
   private async _getAaveV3PositionDebt(params: {
     chainInfo: IChainInfo
     user: IUser
-    positionAddress: string
+    positionAddress: AddressValue
   }): Promise<bigint> {
     const client = await this._blockchainClientProvider.getBlockchainClient({
       chainInfo: params.chainInfo,
     })
 
-    const balance = await client.readContract({
-      abi: [],
-      address: '',
+    const [, totalDebtBase] = await client.readContract({
+      abi: abiGetUserAccountData,
+      address: getAaveV3Address({
+        chainInfo: params.chainInfo,
+        contractName: 'pool',
+      }).value,
       functionName: 'getUserAccountData',
       args: [params.user.wallet.address.value],
     })
 
-    return BigInt(balance.toString())
+    return totalDebtBase
   }
 
   private async _getUnderlyingAmount(params: {
