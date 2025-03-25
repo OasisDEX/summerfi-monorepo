@@ -93,7 +93,7 @@ export const OrderInfoDeposit = ({
                   },
                   {
                     label: 'Price Impact',
-                    value: priceImpact.impact.value
+                    value: priceImpact.impact?.value
                       ? formatPercent(priceImpact.impact.value, { precision: 2 })
                       : 'n/a',
                   },

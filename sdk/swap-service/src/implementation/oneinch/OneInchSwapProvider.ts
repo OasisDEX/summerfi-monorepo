@@ -86,7 +86,7 @@ export class OneInchSwapProvider
       slippage: params.slippage,
     })
 
-    LoggingService.debug('OneInchSwapUrl', swapUrl)
+    LoggingService.debug('OneInchSwapDataUrl', swapUrl)
 
     const authHeader = this._getOneInchAuthHeader()
 
@@ -135,6 +135,7 @@ export class OneInchSwapProvider
       fromTokenAmount: params.fromAmount,
       toToken: params.toToken,
     })
+    LoggingService.debug('OneInchSwapQuoteUrl', swapUrl)
 
     const authHeader = this._getOneInchAuthHeader()
 

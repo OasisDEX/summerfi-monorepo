@@ -1,7 +1,11 @@
 import { SDKNetwork } from '@summerfi/app-types'
 
 export const arkDetailsMap: {
-  [key in SDKNetwork.ArbitrumOne | SDKNetwork.Base | SDKNetwork.Mainnet]: {
+  [key in
+    | SDKNetwork.ArbitrumOne
+    | SDKNetwork.Base
+    | SDKNetwork.Mainnet
+    | SDKNetwork.SonicMainnet]: {
     [key: string]: { description: string; link?: string }
   }
 } = {
@@ -224,6 +228,30 @@ export const arkDetailsMap: {
       description:
         'The buffer is a portion of a vault that is not held in any one particular strategy and stands ready to be deployed to capitalize on any new strategies that may arise.',
     },
+    '0x699909add8946be934059bfe7e326ffd2cde1db2': {
+      description:
+        'A dynamically managed USDC strategy, adjusting to market conditions in real time to ensure optimal capital performance.',
+      link: 'https://fluid.instadapp.io/lending/1',
+    },
+    '0x7bb4536e67c804758f77c218d9af28856566151e': {
+      description:
+        'A structurally efficient USDC strategy, minimizing inefficiencies and optimizing returns through a measured, risk-conscious approach.',
+      link: 'https://app.compound.finance/markets/usdc-arb',
+    },
+    '0xadb5a577caef5bb19e88a2cd6e3e1a8f37e6a41d': {
+      description:
+        'A strategy designed to optimize USDC exposure while prioritizing security, efficiency, and predictable returns.',
+      link: 'https://app.gearbox.fi/pools/0x890a69ef363c9c7bdd5e36eb95ceb569f63acbf6',
+    },
+    '0xbb79242b9518f450cde8eb957e15c38ab09b1419': {
+      description:
+        'The buffer is a portion of a vault that is not held in any one particular strategy and stands ready to be deployed to capitalize on any new strategies that may arise.',
+    },
+    '0x64e3d757d0ea851a79cdc8390c9434a915949461': {
+      description:
+        'A proven USDC strategy, engineered for consistent performance and structured to reduce exposure to inefficiencies.',
+      link: 'https://app.aave.com/reserve-overview/?underlyingAsset=0xaf88d065e77c8cc2239327c5edb3a432268e5831&marketName=proto_arbitrum_v3',
+    },
   },
   [SDKNetwork.Base]: {
     '0x165d1accc5c6326e7ee4deef75ac3ffc8ce4d79b': {
@@ -272,6 +300,41 @@ export const arkDetailsMap: {
       link: 'https://app.compound.finance/markets/usdc-basemainnet',
     },
     '0x106cbb1f445f0bffa7894f4199ee940bf7f6dd2b': {
+      description:
+        'The buffer is a portion of a vault that is not held in any one particular strategy and stands ready to be deployed to capitalize on any new strategies that may arise.',
+    },
+    '0x0dd6f8a9dd2b6f1df8dee95eb32f9ad7ba8218c1': {
+      description:
+        'A core EURC strategy, optimized for efficiency and designed to provide sustainable, long-term yield without excessive risk.',
+      link: 'https://app.morpho.org/base/vault/0x1c155be6bC51F2c37d472d4C2Eba7a637806e122/gauntlet-eurc-core',
+    },
+    '0x67dacdf8ba7025fbea5060e384448af3cc9c362a': {
+      description:
+        'A proven EURC strategy, engineered for consistent performance and structured to reduce exposure to inefficiencies.',
+      link: 'https://app.aave.com/reserve-overview/?underlyingAsset=0x60a3e35cc302bfa44cb288bc5a4f316fdb1adb42&marketName=proto_base_v3',
+    },
+    '0xa3cc259b68eae4d72572756a685fd877e420aa95': {
+      description:
+        'A top-tier EURC strategy, built for efficiency, long-term resilience, and reduced exposure to unnecessary risks.',
+      link: 'https://app.morpho.org/base/vault/0xf24608E0CCb972b0b0f4A6446a0BBf58c701a026/moonwell-flagship-eurc',
+    },
+    '0xdc736314330e545e7b5db1199e43d6d31bd6802c': {
+      description:
+        'A dynamically managed EURC strategy, adjusting to market conditions in real time to ensure optimal capital performance.',
+      link: 'https://fluid.instadapp.io/lending/1',
+    },
+    '0xe949e2f45d300e934572bf261428f9261090bef6': {
+      description:
+        'A top-tier EURC strategy, built for efficiency, long-term resilience, and reduced exposure to unnecessary risks.',
+      link: 'https://app.morpho.org/base/vault/0xBeEF086b8807Dc5E5A1740C5E3a7C4c366eA6ab5/steakhouse-eurc',
+    },
+    '0xc65b7e8fec2b7b329ab1d08c78f9f01fe4e4b3ec': {
+      description:
+        'The buffer is a portion of a vault that is not held in any one particular strategy and stands ready to be deployed to capitalize on any new strategies that may arise.',
+    },
+  },
+  [SDKNetwork.SonicMainnet]: {
+    '0x809a0c98fac68a0c4319f3a3e864540c772562af': {
       description:
         'The buffer is a portion of a vault that is not held in any one particular strategy and stands ready to be deployed to capitalize on any new strategies that may arise.',
     },

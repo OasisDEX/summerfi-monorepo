@@ -1,6 +1,6 @@
 'use client'
 
-import { type Dispatch, type FC, type SetStateAction, useState } from 'react'
+import { type Dispatch, type FC, type SetStateAction, useMemo, useState } from 'react'
 import { Button, Card, Icon, TabBar, Text } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType, type SDKVaultType } from '@summerfi/app-types'
 import { sdkNetworkToHumanNetwork } from '@summerfi/app-utils'
@@ -34,14 +34,16 @@ const VaultExposureTableSection: FC<VaultExposureTableSectionProps> = ({
   setSeeAll,
   arksInterestRates,
 }) => {
+  const vaultExposureFiltered = useMemo(
+    () => vaultExposureFilter({ vault: vault as SDKVaultType, allocationType }),
+    [allocationType, vault],
+  )
+
   return (
     <>
       <VaultExposureTable
         arksInterestRates={arksInterestRates}
-        vault={vaultExposureFilter({
-          vault: vault as SDKVaultType,
-          allocationType,
-        })}
+        vault={vaultExposureFiltered}
         rowsToDisplay={resolvedRowsToDisplay}
         hiddenColumns={['cap']}
       />

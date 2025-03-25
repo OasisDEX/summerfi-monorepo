@@ -16,6 +16,7 @@ import {
   isFiatCurrencyAmount,
   isToken,
   type AddressValue,
+  LoggingService,
 } from '@summerfi/sdk-common'
 import { OracleProviderType, SpotPriceInfo } from '@summerfi/sdk-common/oracle'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
@@ -80,6 +81,7 @@ export class OneInchOracleProvider
         // We use USD as base for both tokens and then derive a spot price
         quoteCurrency: quoteCurrencySymbol,
       })
+      LoggingService.debug('OneInchSpotPriceUrl', spotUrl)
 
       const response = await fetch(spotUrl, {
         headers: authHeader,
@@ -193,6 +195,7 @@ export class OneInchOracleProvider
       tokenAddresses: params.baseTokens.map((token) => token.address),
       quoteCurrency: params.quote,
     })
+    LoggingService.debug('OneInchSpotPricesUrl', spotUrl)
 
     const response = await fetch(spotUrl, {
       headers: authHeader,

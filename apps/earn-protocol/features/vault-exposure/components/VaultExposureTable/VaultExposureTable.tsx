@@ -1,5 +1,5 @@
 'use client'
-import { type FC, type ReactNode, useMemo, useState } from 'react'
+import { type FC, type ReactNode, useCallback, useMemo, useState } from 'react'
 import { Table, type TableSortedColumn, useMobileCheck } from '@summerfi/app-earn-ui'
 import { type SDKVaultType } from '@summerfi/app-types'
 
@@ -33,18 +33,23 @@ export const VaultExposureTable: FC<VaultExposureTableProps> = ({
   const { isMobile } = useMobileCheck(deviceType)
 
   const rows = useMemo(
-    () => vaultExposureMapper(vault, arksInterestRates, sortConfig),
-    [vault, arksInterestRates, sortConfig],
+    () => vaultExposureMapper(vault, arksInterestRates, sortConfig).slice(0, rowsToDisplay),
+    [vault, arksInterestRates, sortConfig, rowsToDisplay],
+  )
+
+  const handleSort = useCallback(
+    (nextSortConfig: TableSortedColumn<string>) => setSortConfig(nextSortConfig),
+    [],
   )
 
   const resolvedHiddenColumns = isMobile ? vaultExposureColumnsHiddenOnMobile : hiddenColumns
 
   return (
     <Table
-      rows={rows.slice(0, rowsToDisplay)}
+      rows={rows}
       columns={vaultExposureColumns}
       customRow={customRow}
-      handleSort={(_sortConfig) => setSortConfig(_sortConfig)}
+      handleSort={handleSort}
       hiddenColumns={resolvedHiddenColumns}
     />
   )

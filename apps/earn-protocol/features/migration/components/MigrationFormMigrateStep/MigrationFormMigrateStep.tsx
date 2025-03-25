@@ -90,7 +90,7 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
     migratablePosition.underlyingTokenAmount.token.symbol.toUpperCase() !==
     vault.inputToken.symbol.toUpperCase()
 
-  const priceImpactRaw = txMetadata?.priceImpactByPositionId[migratablePosition.id]?.impact.value
+  const priceImpactRaw = txMetadata?.priceImpactByPositionId[migratablePosition.id]?.impact?.value
   const priceImpact = priceImpactRaw
     ? formatDecimalAsPercent(priceImpactRaw / 100, { precision: 4 })
     : 'n/a'
@@ -181,7 +181,7 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
               ]
             : []),
           {
-            label: 'Transaction fee',
+            label: 'Transaction Fee',
             value: transactionFee ? `$${formatFiatBalance(transactionFee)}` : 'n/a',
             tooltip: 'Estimated transaction fee for this operation',
             isLoading: transactionFeeLoading || state.step === MigrationSteps.INIT,

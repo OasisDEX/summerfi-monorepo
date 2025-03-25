@@ -29,7 +29,7 @@ export type TransactionMetadataApproval = {
 
 export type TransactionPriceImpact = {
   price: IPrice
-  impact: IPercentage
+  impact: IPercentage | null
 }
 
 export type TransactionMetadataDeposit = {

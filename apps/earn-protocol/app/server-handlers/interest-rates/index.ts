@@ -39,7 +39,7 @@ const customFetchCache = async (url: RequestInfo | URL, params?: RequestInit) =>
     })
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('customFetchCache error', error)
+    console.error('customFetchCache error:', error)
 
     throw error
   }

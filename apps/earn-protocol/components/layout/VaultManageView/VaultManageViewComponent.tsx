@@ -61,6 +61,7 @@ import { MigrationBox } from '@/features/migration/components/MigrationBox/Migra
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
+import { getManagementFee } from '@/helpers/get-management-fee'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -396,8 +397,7 @@ export const VaultManageViewComponent = ({
 
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
-  // "It’s 1% for usd and 0.3% for eth"
-  const managementFee = vault.inputToken.symbol.includes('USD') ? 0.01 : 0.003
+  const managementFee = getManagementFee(vault.inputToken.symbol)
 
   return (
     <>

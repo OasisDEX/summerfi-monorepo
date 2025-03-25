@@ -183,7 +183,13 @@ export async function updateVaultAprs(
           .onRef('rewardRate.network', '=', 'latest_timestamps.network')
           .onRef('rewardRate.timestamp', '=', 'latest_timestamps.maxTimestamp'),
       )
-      .selectAll('rewardRate')
+      .select([
+        'rewardRate.productId',
+        'rewardRate.network',
+        (eb) => eb.fn.sum('rewardRate.rate').as('rate'),
+        'rewardRate.timestamp',
+      ])
+      .groupBy(['rewardRate.productId', 'rewardRate.network', 'rewardRate.timestamp'])
       .execute()
 
     logger.debug('Retrieved reward rates', {
@@ -199,7 +205,9 @@ export async function updateVaultAprs(
     const fleetArksTotalRates = arksRates.products.map((product) => ({
       ...product,
       interestRates: product.interestRates.map((rate) => {
-        const rewardRate = parseFloat(arksRewardsRatesMap.get(rate.productId)?.rate || '0')
+        const rewardRate = parseFloat(
+          arksRewardsRatesMap.get(rate.productId)?.rate.toString() || '0',
+        )
         const totalRate = rewardRate + +rate.rate || +rate.rate
         logger.debug('Calculated total rate', {
           network: network.network,
