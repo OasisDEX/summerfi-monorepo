@@ -121,9 +121,12 @@ export default async function HomePage() {
     }),
   ])
 
-  const protocolTvls = protocolTvlsArray.reduce<{
-    [key in SupportedTvlProtocols]: bigint
-  }>((acc, curr) => ({ ...acc, ...curr }), emptyTvls)
+  const protocolTvls = protocolTvlsArray
+    // filter zero TVL protocols (set to zero because of an error)
+    .filter((protocolTVL) => Object.values(protocolTVL).some((tvl) => tvl !== 0n))
+    .reduce<{
+      [key in SupportedTvlProtocols]: bigint
+    }>((acc, curr) => ({ ...acc, ...curr }), emptyTvls)
 
   const { config } = parseServerResponseToClient(systemConfig)
 
