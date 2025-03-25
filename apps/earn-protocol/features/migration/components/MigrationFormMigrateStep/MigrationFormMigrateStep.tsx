@@ -90,7 +90,7 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
     migratablePosition.underlyingTokenAmount.token.symbol.toUpperCase() !==
     vault.inputToken.symbol.toUpperCase()
 
-  const priceImpactRaw = txMetadata?.priceImpactByPositionId[migratablePosition.id]?.impact.value
+  const priceImpactRaw = txMetadata?.priceImpactByPositionId[migratablePosition.id]?.impact?.value
   const priceImpact = priceImpactRaw
     ? formatDecimalAsPercent(priceImpactRaw / 100, { precision: 4 })
     : 'n/a'

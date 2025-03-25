@@ -80,9 +80,9 @@ export const OrderInfoWithdraw = ({
                   },
                   {
                     label: 'Price Impact',
-                    value: formatPercent(priceImpact.impact.value, {
-                      precision: 2,
-                    }),
+                    value: priceImpact.impact?.value
+                      ? formatPercent(priceImpact.impact.value, { precision: 2 })
+                      : 'n/a',
                   },
                   {
                     label: 'Slippage',
