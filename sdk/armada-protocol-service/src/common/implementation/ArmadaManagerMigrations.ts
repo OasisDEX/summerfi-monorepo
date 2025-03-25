@@ -348,12 +348,12 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
   }) {
     switch (params.type) {
       case ArmadaMigrationType.Compound:
-        return TokenAmount.createFromBaseUnit({
+        return TokenAmount.createFrom({
           token: params.underlyingToken,
           amount: params.borrowBalance.amount,
         })
       case ArmadaMigrationType.AaveV3:
-        return TokenAmount.createFromBaseUnit({
+        return TokenAmount.createFrom({
           token: params.underlyingToken,
           amount: params.borrowBalance.amount,
         })
