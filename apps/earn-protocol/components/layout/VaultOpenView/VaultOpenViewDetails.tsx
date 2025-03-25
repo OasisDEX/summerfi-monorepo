@@ -15,6 +15,7 @@ import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistor
 import { LatestActivity } from '@/features/latest-activity/components/LatestActivity/LatestActivity'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
+import { getManagementFee } from '@/helpers/get-management-fee'
 
 import { detailsLinks } from './mocks'
 import { VaultOpenHeaderBlock } from './VaultOpenHeaderBlock'
@@ -40,8 +41,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
 }) => {
   const summerVaultName = vault.customFields?.name ?? `Summer ${vault.inputToken.symbol} Vault`
 
-  // "It’s 1% for usd and 0.3% for eth"
-  const managementFee = vault.inputToken.symbol.includes('USD') ? 0.01 : 0.003
+  const managementFee = getManagementFee(vault.inputToken.symbol)
 
   return (
     <div
