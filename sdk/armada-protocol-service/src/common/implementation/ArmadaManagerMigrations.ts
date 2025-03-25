@@ -183,21 +183,17 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     // read the balances for all supported tokens
     const positions = await Promise.all(
       Object.entries(configMaps).map(async ([_, config]) => {
-        const erc20Contract = Erc20Contract.create({
+        const positionErc20Contract = Erc20Contract.create({
           blockchainClient: client,
           tokensManager: this._tokensManager,
           chainInfo: params.chainInfo,
           address: Address.createFromEthereum({ value: config.positionAddress }),
         })
 
-        const [balance, token, underlyingToken] = await Promise.all([
-          client.readContract({
-            abi: abiBalanceOf,
-            address: config.positionAddress,
-            functionName: 'balanceOf',
-            args: [params.user.wallet.address.value],
+        const [positionBalance, underlyingToken] = await Promise.all([
+          positionErc20Contract.balanceOf({
+            address: params.user.wallet.address,
           }),
-          erc20Contract.getToken(),
           this._tokensManager.getTokenByAddress({
             chainInfo: params.chainInfo,
             address: Address.createFromEthereum({ value: config.underlyingToken }),
@@ -206,21 +202,25 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
 
         const [underlyingAmount] = await Promise.all([
           this._getUnderlyingAmount({
-            balance: balance.toString(),
+            balance: positionBalance,
             type: params.migrationType,
-            token: token,
             underlyingToken,
           }),
         ])
 
+        // const debt = await this._getPositionDebt({
+        //   chainInfo: params.chainInfo,
+        //   user: params.user,
+        //   positionAddress: config.positionAddress,
+        // })
+        // const isDebt = debt.toSolidityValue() > 0n
+
         return {
           id: config.positionAddress,
           migrationType: params.migrationType,
-          positionTokenAmount: TokenAmount.createFromBaseUnit({
-            token: token,
-            amount: balance.toString(),
-          }),
+          positionTokenAmount: positionBalance,
           underlyingTokenAmount: underlyingAmount,
+          // isDebt,
           usdValue: FiatCurrencyAmount.createFrom({
             amount: '0',
             fiat: FiatCurrency.USD,
@@ -268,31 +268,30 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
   }
 
   private async _getUnderlyingAmount(params: {
-    balance: string
+    balance: ITokenAmount
     type: ArmadaMigrationType
-    token: IToken
     underlyingToken: IToken
   }) {
     switch (params.type) {
       case ArmadaMigrationType.Compound:
         return TokenAmount.createFromBaseUnit({
           token: params.underlyingToken,
-          amount: params.balance,
+          amount: params.balance.amount,
         })
       case ArmadaMigrationType.AaveV3:
         return TokenAmount.createFromBaseUnit({
           token: params.underlyingToken,
-          amount: params.balance,
+          amount: params.balance.amount,
         })
       case ArmadaMigrationType.Morpho: {
         const client = await this._blockchainClientProvider.getBlockchainClient({
-          chainInfo: params.token.chainInfo,
+          chainInfo: params.balance.token.chainInfo,
         })
         const convertedBalance = await client.readContract({
           abi: abiConvertToAssets,
-          address: params.token.address.value,
+          address: params.balance.token.address.value,
           functionName: 'convertToAssets',
-          args: [BigInt(params.balance)],
+          args: [params.balance.toSolidityValue()],
         })
 
         return TokenAmount.createFromBaseUnit({
