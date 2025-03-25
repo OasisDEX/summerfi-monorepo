@@ -101,6 +101,7 @@ export const getSumrDelegates = async (): Promise<SumrDelegates[]> => {
   }
 
   if (!result.data) {
+    // eslint-disable-next-line no-console
     console.error('No data returned from Tally API')
 
     return []
