@@ -208,12 +208,13 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
           }),
         ])
 
-        // const debt = await this._getPositionDebt({
-        //   chainInfo: params.chainInfo,
-        //   user: params.user,
-        //   positionAddress: config.positionAddress,
-        // })
-        // const isDebt = debt.toSolidityValue() > 0n
+        const debt = await this._getPositionDebt({
+          chainInfo: params.chainInfo,
+          migrationType: params.migrationType,
+          user: params.user,
+          positionAddress: config.positionAddress,
+        })
+        const isDebt = debt > 0n
 
         return {
           id: config.positionAddress,
@@ -265,6 +266,71 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     })
 
     return sortedPositions
+  }
+
+  private async _getPositionDebt(params: {
+    chainInfo: IChainInfo
+    migrationType: ArmadaMigrationType
+    user: IUser
+    positionAddress: string
+  }): Promise<bigint> {
+    switch (params.migrationType) {
+      case ArmadaMigrationType.Compound:
+        return this._getCompoundPositionDebt({
+          chainInfo: params.chainInfo,
+          user: params.user,
+          positionAddress: params.positionAddress,
+        })
+      case ArmadaMigrationType.AaveV3:
+        return this._getAaveV3PositionDebt({
+          chainInfo: params.chainInfo,
+          user: params.user,
+          positionAddress: params.positionAddress,
+        })
+      case ArmadaMigrationType.Morpho:
+        // morpho does not have debt
+        return 0n
+      default:
+        throw new Error('Unsupported migration type: ' + params.migrationType)
+    }
+  }
+
+  private async _getCompoundPositionDebt(params: {
+    chainInfo: IChainInfo
+    user: IUser
+    positionAddress: string
+  }): Promise<bigint> {
+    const client = await this._blockchainClientProvider.getBlockchainClient({
+      chainInfo: params.chainInfo,
+    })
+
+    const balance = await client.readContract({
+      abi: abiBalanceOf,
+      address: params.positionAddress,
+      functionName: 'balanceOf',
+      args: [params.user.wallet.address.value],
+    })
+
+    return BigInt(balance.toString())
+  }
+
+  private async _getAaveV3PositionDebt(params: {
+    chainInfo: IChainInfo
+    user: IUser
+    positionAddress: string
+  }): Promise<bigint> {
+    const client = await this._blockchainClientProvider.getBlockchainClient({
+      chainInfo: params.chainInfo,
+    })
+
+    const balance = await client.readContract({
+      abi: [],
+      address: '',
+      functionName: 'getUserAccountData',
+      args: [params.user.wallet.address.value],
+    })
+
+    return BigInt(balance.toString())
   }
 
   private async _getUnderlyingAmount(params: {
