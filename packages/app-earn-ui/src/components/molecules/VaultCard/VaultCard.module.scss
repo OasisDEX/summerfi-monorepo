@@ -18,6 +18,13 @@
   gap: var(--general-space-10);
 }
 
+.vaultBonusWrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+}
+
 .vaultCardAssetsWrapper {
   display: flex;
   gap: var(--general-space-16);

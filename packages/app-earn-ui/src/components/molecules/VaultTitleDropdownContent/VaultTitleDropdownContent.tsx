@@ -17,9 +17,10 @@ interface VaultDropdownContentProps {
 }
 
 const networkNameIconMap = {
-  [SDKNetwork.Mainnet]: <Icon iconName="network_ethereum" size={10} />,
-  [SDKNetwork.ArbitrumOne]: <Icon iconName="network_arbitrum" size={10} />,
-  [SDKNetwork.Base]: <Icon iconName="network_base" size={10} />,
+  [SDKNetwork.Mainnet]: <Icon iconName="earn_network_ethereum" size={10} />,
+  [SDKNetwork.ArbitrumOne]: <Icon iconName="earn_network_arbitrum" size={10} />,
+  [SDKNetwork.Base]: <Icon iconName="earn_network_base" size={10} />,
+  [SDKNetwork.SonicMainnet]: <Icon iconName="earn_network_sonic" size={10} />,
 }
 
 export const VaultTitleDropdownContent: FC<VaultDropdownContentProps> = ({

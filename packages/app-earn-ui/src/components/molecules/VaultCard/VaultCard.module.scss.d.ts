@@ -1,5 +1,6 @@
 export type Styles = {
   totalAssetsDisplay: string
+  vaultBonusWrapper: string
   vaultCard: string
   vaultCardAssetsWrapper: string
   vaultCardHeaderWrapper: string
