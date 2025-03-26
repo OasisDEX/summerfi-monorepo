@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  margin-bottom: 150px;
+  margin-bottom: 100px;
 
   @include media('<=s') {
     margin-bottom: var(--spacing-space-2x-large);
