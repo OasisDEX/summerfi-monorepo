@@ -106,24 +106,24 @@ jobs:
           sudo apt update
           sudo apt install -y openvpn openvpn-systemd-resolved
           echo 'Configuring the VPN...'
-          echo "${{ secrets.VPN_CONFIG }}" > vpn-config.ovpn
-          echo "${{ secrets.VPN_USERNAME }}" > vpn-credentials.txt
-          echo "${{ secrets.VPN_PASSWORD }}" >> vpn-credentials.txt
+          echo "${{ secrets.NEW_VPN_CONFIG }}" > vpn-config.ovpn
+          echo "${{ secrets.NEW_VPN_USERNAME }}" > vpn-credentials.txt
+          echo "${{ secrets.NEW_VPN_PASSWORD }}" >> vpn-credentials.txt
           echo 'Connecting to the VPN...'
           sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-credentials.txt --daemon
           sleep 5
 
       - name: Check VPN connection
         env:
-          BORROW_DB_READ_DB: ${{ secrets.NEW_BORROW_DB_READ_DB }}
-          BORROW_DB_READ_HOST: ${{ secrets.NEW_BORROW_DB_READ_HOST }}
-          BORROW_DB_READ_USER: ${{ secrets.NEW_BORROW_DB_READ_USER }}
-          BORROW_DB_READ_PASSWORD: ${{ secrets.NEW_BORROW_DB_READ_PASSWORD }}
+          SUMMER_DB_NAME: ${{ secrets.SUMMER_DB_NAME }}
+          SUMMER_DB_HOST: ${{ secrets.SUMMER_DB_HOST }}
+          SUMMER_DB_USER: ${{ secrets.SUMMER_DB_USER }}
+          SUMMER_DB_PASSWORD: ${{ secrets.SUMMER_DB_PASSWORD }}
           PGCONNECT_TIMEOUT: 10
         run: |
           echo 'Checking the VPN connection...'
           sudo systemctl start postgresql.service
-          PGPASSWORD=$BORROW_DB_READ_PASSWORD /usr/bin/psql -d $BORROW_DB_READ_DB -U $BORROW_DB_READ_USER -h $BORROW_DB_READ_HOST -c 'SELECT 1;' > /dev/null
+          PGPASSWORD=$SUMMER_DB_PASSWORD /usr/bin/psql -d $SUMMER_DB_NAME -U $SUMMER_DB_USER -h $SUMMER_DB_HOST -c 'SELECT 1;' > /dev/null
           STATUS_CODE=$?
           if ! [[ "$STATUS_CODE" = 0 ]]; then
             echo 'VPN connection failed'
