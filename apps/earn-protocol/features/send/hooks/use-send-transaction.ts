@@ -120,7 +120,7 @@ export const useSendTransaction = ({
     // eslint-disable-next-line no-mixed-operators
     const resolvedAmount = BigInt(Number(amount) * 10 ** token.decimals)
 
-    const isEth = token.symbol === 'ETH'
+    const isEth = ['ETH', 'WETH'].includes(token.symbol)
 
     const transferData = encodeFunctionData({
       abi: [
