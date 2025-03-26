@@ -10,6 +10,8 @@ import { GenericTokenIcon } from '@/components/atoms/GenericTokenIcon/GenericTok
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { Text } from '@/components/atoms/Text/Text'
+import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
+import { networkWarnings } from '@/constants/earn-protocol'
 import { getDisplayToken } from '@/helpers/get-display-token'
 import { getTokenGuarded } from '@/tokens/helpers'
 
@@ -103,6 +105,25 @@ export const VaultTitle: FC<VaultTitleProps> = ({
         </div>
         {value && <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>{value}</div>}
       </div>
+      {networkName && networkWarnings[networkName]?.enabled ? (
+        <Tooltip
+          style={{
+            margin: '0 10px',
+          }}
+          tooltipWrapperStyles={{
+            marginTop: '20px',
+          }}
+          tooltip={
+            networkWarnings[networkName].message ? (
+              <Text variant="p4semi" style={{ whiteSpace: 'pre' }}>
+                {networkWarnings[networkName].message}
+              </Text>
+            ) : undefined
+          }
+        >
+          <Icon iconName="vault_network_warning" />
+        </Tooltip>
+      ) : null}
     </div>
   )
 }
