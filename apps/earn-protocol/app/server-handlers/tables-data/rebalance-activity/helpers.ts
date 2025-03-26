@@ -9,15 +9,19 @@ export const rebalancesActionTypeMapper = (
   const isFromBuffer = actionFromRawName === 'BufferArk'
   const isToBuffer = actionToRawName === 'BufferArk'
 
-  if (!isFromBuffer && !isToBuffer && Number(item.fromPostAction.depositLimit) !== 0) {
-    return Number(item.fromPostAction.totalValueLockedUSD) + Number(item.amountUSD) <
-      Number(item.fromPostAction.depositLimit)
-      ? 'rate_enhancement'
-      : 'risk_reduction'
-  }
-
+  // TODO: we need to think about more specifc logic to handle this
+  // if (!isFromBuffer && !isToBuffer && Number(item.fromPostAction.depositLimit) !== 0) {
+  //   return Number(item.fromPostAction.totalValueLockedUSD) + Number(item.amountUSD) <
+  //     Number(item.fromPostAction.depositLimit)
+  //     ? 'rate_enhancement'
+  //     : 'risk_reduction'
+  // }
   if (!isFromBuffer && !isToBuffer && Number(item.fromPostAction.depositLimit) === 0) {
     return 'risk_reduction'
+  }
+
+  if (!isFromBuffer && !isToBuffer) {
+    return 'rate_enhancement'
   }
 
   if (isFromBuffer) {
