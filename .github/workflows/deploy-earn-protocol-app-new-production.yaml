@@ -106,9 +106,9 @@ jobs:
           sudo apt update
           sudo apt install -y openvpn openvpn-systemd-resolved
           echo 'Configuring the VPN...'
-          echo "${{ secrets.NEW_VPN_CONFIG }}" > vpn-config.ovpn
-          echo "${{ secrets.NEW_VPN_USERNAME }}" > vpn-credentials.txt
-          echo "${{ secrets.NEW_VPN_PASSWORD }}" >> vpn-credentials.txt
+          echo "${{ secrets.VPN_CONFIG }}" > vpn-config.ovpn
+          echo "${{ secrets.VPN_USERNAME }}" > vpn-credentials.txt
+          echo "${{ secrets.VPN_PASSWORD }}" >> vpn-credentials.txt
           echo 'Connecting to the VPN...'
           sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-credentials.txt --daemon
           sleep 5
@@ -119,7 +119,7 @@ jobs:
           BORROW_DB_READ_HOST: ${{ secrets.NEW_BORROW_DB_READ_HOST }}
           BORROW_DB_READ_USER: ${{ secrets.NEW_BORROW_DB_READ_USER }}
           BORROW_DB_READ_PASSWORD: ${{ secrets.NEW_BORROW_DB_READ_PASSWORD }}
-          PGCONNECT_TIMEOUT: 5
+          PGCONNECT_TIMEOUT: 10
         run: |
           echo 'Checking the VPN connection...'
           sudo systemctl start postgresql.service
@@ -160,7 +160,7 @@ jobs:
         id: build-image
         env:
           LATEST_TAG: latest
-          ECR_REPO_NAME: summer-fi-earn-prod
+          ECR_REPO_NAME: summer-fi-earn-production
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           SHA_TAG: ${{ steps.vars.outputs.sha_short }}
         run: |
