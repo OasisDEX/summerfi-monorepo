@@ -11,38 +11,49 @@ import { fetchAllLatestActivities } from './fetcher'
  * using GraphQL clients. It combines the activities, adds a `type` property to each item to distinguish
  * between deposits and withdraws, and sorts them in descending order by timestamp.
  *
- * @param {string} lastTimestamp - The timestamp from which to fetch the latest activities.
- * @param {GraphQLClient} mainnetGraphQlClient - The GraphQL client for the Mainnet network.
- * @param {GraphQLClient} baseGraphQlClient - The GraphQL client for the Base network.
- * @param {GraphQLClient} arbitrumGraphQlClient - The GraphQL client for the Arbitrum network.
+ * @param {Object} params - The parameters for the function.
+ * @param {Object} params.timestamps - The timestamps from which to fetch the latest activities.
+ * @param {Object} params.clients - The GraphQL clients for the different networks.
  * @returns {Promise<LatestActivity[]>} - A promise that resolves to an array of latest activities from all networks.
  *
  * @example
  * const activities = await getAllLatestActivities({
- *   lastTimestamp: '1620000000',
- *   mainnetGraphQlClient,
- *   baseGraphQlClient,
- *   arbitrumGraphQlClient
+ *   timestamps: {
+ *     mainnet: '1620000000',
+ *     base: '1620000000',
+ *     arbitrum: '1620000000',
+ *     sonic: '1620000000',
+ *   },
+ *   clients: {
+ *     mainnetGraphQlClient,
+ *     baseGraphQlClient,
+ *     arbitrumGraphQlClient,
+ *     sonicGraphQlClient,
+ *   },
  * })
  */
 export const getAllLatestActivities = async ({
-  lastTimestamp,
-  mainnetGraphQlClient,
-  baseGraphQlClient,
-  arbitrumGraphQlClient,
-  sonicGraphQlClient,
+  timestamps,
+  clients,
 }: {
-  lastTimestamp: string
-  mainnetGraphQlClient: GraphQLClient
-  baseGraphQlClient: GraphQLClient
-  arbitrumGraphQlClient: GraphQLClient
-  sonicGraphQlClient: GraphQLClient
+  timestamps: {
+    mainnet: string
+    base: string
+    arbitrum: string
+    sonic: string
+  }
+  clients: {
+    mainnetGraphQlClient: GraphQLClient
+    baseGraphQlClient: GraphQLClient
+    arbitrumGraphQlClient: GraphQLClient
+    sonicGraphQlClient: GraphQLClient
+  }
 }): Promise<LatestActivity[]> => {
   const results = await Promise.allSettled([
-    fetchAllLatestActivities(mainnetGraphQlClient, lastTimestamp),
-    fetchAllLatestActivities(baseGraphQlClient, lastTimestamp),
-    fetchAllLatestActivities(arbitrumGraphQlClient, lastTimestamp),
-    fetchAllLatestActivities(sonicGraphQlClient, lastTimestamp),
+    fetchAllLatestActivities(clients.mainnetGraphQlClient, timestamps.mainnet),
+    fetchAllLatestActivities(clients.baseGraphQlClient, timestamps.base),
+    fetchAllLatestActivities(clients.arbitrumGraphQlClient, timestamps.arbitrum),
+    fetchAllLatestActivities(clients.sonicGraphQlClient, timestamps.sonic),
   ])
 
   const [mainnetActivities, baseActivities, arbitrumActivities, sonicActivities] = results.map(
