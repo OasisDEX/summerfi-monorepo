@@ -41,6 +41,7 @@ interface VaultTitleProps {
   selected?: boolean
   titleVariant?: TextVariants
   isLoading?: boolean
+  isVaultCard?: boolean
 }
 
 export const VaultTitle: FC<VaultTitleProps> = ({
@@ -51,6 +52,7 @@ export const VaultTitle: FC<VaultTitleProps> = ({
   selected,
   titleVariant = 'h4',
   isLoading,
+  isVaultCard,
 }) => {
   const resolvedSymbol = getDisplayToken(symbol)
   const isIconDefined = getTokenGuarded(resolvedSymbol)?.iconName
@@ -105,7 +107,7 @@ export const VaultTitle: FC<VaultTitleProps> = ({
         </div>
         {value && <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>{value}</div>}
       </div>
-      {networkName && networkWarnings[networkName]?.enabled ? (
+      {!isVaultCard && networkName && networkWarnings[networkName]?.enabled ? (
         <Tooltip
           style={{
             margin: '0 10px',
