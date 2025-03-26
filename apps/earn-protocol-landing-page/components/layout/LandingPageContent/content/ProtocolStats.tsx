@@ -1,4 +1,4 @@
-import { type FC } from 'react'
+import { type FC, Fragment } from 'react'
 import { Card, getVaultsProtocolsList, Text } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
@@ -31,8 +31,8 @@ export const ProtocolStats: FC<ProtocolStatsProps> = ({ vaultsList }) => {
   return (
     <Card variant="cardSecondary" className={classNames.protocolStatsWrapper}>
       {data.map((item, index) => (
-        <>
-          <div key={item.title} className={classNames.dataBlock}>
+        <Fragment key={item.title}>
+          <div className={classNames.dataBlock}>
             <Text
               as="p"
               variant="p3semi"
@@ -48,7 +48,7 @@ export const ProtocolStats: FC<ProtocolStatsProps> = ({ vaultsList }) => {
             </Text>
           </div>
           {index !== data.length - 1 && <div className={classNames.divider} />}
-        </>
+        </Fragment>
       ))}
     </Card>
   )
