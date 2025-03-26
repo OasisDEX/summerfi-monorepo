@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useMemo, useState } from 'react'
-import { Button, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { Button, getVaultsProtocolsList, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
 import {
   formatFiatBalance,
@@ -237,26 +237,7 @@ export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({ vaultsList
 
   const totalAssets = vaultsList.reduce((acc, vault) => acc + Number(vault.totalValueLockedUSD), 0)
 
-  const formattedProtocolsSupportedList = useMemo(
-    () =>
-      new Set(
-        vaultsList.reduce<string[]>(
-          (acc, { arks }) => [
-            // converting a list which looks like `protocolName-token-chainId`
-            // into a unique list of protocols for all vaults
-            ...acc,
-            ...arks
-              .map((ark) => ark.name?.split('-')[0])
-              .filter((arkName): arkName is string => Boolean(arkName)),
-          ],
-          [],
-        ),
-      ),
-    [vaultsList],
-  )
-
-  // -1 because BufferArk is not a protocol
-  const supportedProtocolsCount = formattedProtocolsSupportedList.size - 1
+  const supportedProtocolsCount = getVaultsProtocolsList(vaultsList).length
 
   return (
     <div>
