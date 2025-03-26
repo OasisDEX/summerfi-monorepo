@@ -103,6 +103,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
             risk={customFields?.risk ?? 'lower'}
             networkName={protocol.network}
             selected={selected}
+            isVaultCard
           />
           <div className={vaultCardStyles.vaultBonusWrapper}>
             {Number(rawSumrTokenBonus) > 0 && (

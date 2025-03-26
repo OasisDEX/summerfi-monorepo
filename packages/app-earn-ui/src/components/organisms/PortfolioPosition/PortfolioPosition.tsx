@@ -112,6 +112,7 @@ export const PortfolioPosition = ({
               risk={customFields?.risk ?? 'lower'}
               networkName={protocol.network}
               titleVariant="h3"
+              isVaultCard
             />
             {isMobile && linkToPosition}
           </div>

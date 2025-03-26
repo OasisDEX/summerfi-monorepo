@@ -16,6 +16,7 @@ interface VaultTitleWithRiskProps {
   networkId?: NetworkIds
   networkName?: SDKNetwork
   selected?: boolean
+  isVaultCard?: boolean
   titleVariant?: TextVariants
 }
 
@@ -25,6 +26,7 @@ export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
   networkId,
   networkName,
   selected,
+  isVaultCard,
   titleVariant = 'h4semi',
 }) => {
   const color = riskColors[risk]
@@ -35,6 +37,7 @@ export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
       networkId={networkId}
       selected={selected}
       titleVariant={titleVariant}
+      isVaultCard={isVaultCard}
       /* networkName should work 99% of the time, because SDKVault returns very similar results for that */
       networkName={networkName}
       value={
