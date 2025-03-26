@@ -186,10 +186,13 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
         loadMore={handleMoreItems}
         hasMore={hasMoreItems}
         loader={
-          <LoadingSpinner
-            key="spinner"
-            style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
-          />
+          // inversed, we don't want loading spinner when skeleton is visible
+          !isLoading ? (
+            <LoadingSpinner
+              key="spinner"
+              style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
+            />
+          ) : undefined
         }
       >
         <RebalanceActivityTable

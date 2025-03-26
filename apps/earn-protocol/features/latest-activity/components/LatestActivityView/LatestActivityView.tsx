@@ -269,10 +269,13 @@ export const LatestActivityView: FC<LatestActivityViewProps> = ({
           loadMore={handleMoreTopDepositorsItems}
           hasMore={hasMoreTopDepositorsItems}
           loader={
-            <LoadingSpinner
-              key="spinner"
-              style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
-            />
+            // inversed, we don't want loading spinner when skeleton is visible
+            !isLoadingDepositors ? (
+              <LoadingSpinner
+                key="spinner"
+                style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
+              />
+            ) : undefined
           }
         >
           {filters}
@@ -296,10 +299,13 @@ export const LatestActivityView: FC<LatestActivityViewProps> = ({
           loadMore={handleMoreUserActivityItems}
           hasMore={hasMoreLatestActivityItems}
           loader={
-            <LoadingSpinner
-              key="spinner"
-              style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
-            />
+            // inversed, we don't want loading spinner when skeleton is visible
+            !isLoadingActivity ? (
+              <LoadingSpinner
+                key="spinner"
+                style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
+              />
+            ) : undefined
           }
         >
           {filters}

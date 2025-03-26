@@ -24,12 +24,14 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
   const [currentPage, setCurrentPage] = useState(latestActivity.pagination.currentPage)
   const [isLoading, setIsLoading] = useState(false)
   const [hasMoreItems, setHasMoreItems] = useState(true)
+
   const handleSort = (sortConfig: TableSortedColumn<string>) => {
     setSortBy(sortConfig)
   }
 
   const handleMoreItems = async () => {
     if (!hasMoreItems || isLoading) return
+
     try {
       const nextPage = currentPage + 1
       const res = await getLatestActivity({
@@ -91,10 +93,13 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
         loadMore={handleMoreItems}
         hasMore={hasMoreItems}
         loader={
-          <LoadingSpinner
-            key="spinner"
-            style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
-          />
+          // inversed, we don't want loading spinner when skeleton is visible
+          !isLoading ? (
+            <LoadingSpinner
+              key="spinner"
+              style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
+            />
+          ) : undefined
         }
       >
         <LatestActivityTable
