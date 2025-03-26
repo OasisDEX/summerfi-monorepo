@@ -16,13 +16,12 @@ export const rebalancesActionTypeMapper = (
   //     ? 'rate_enhancement'
   //     : 'risk_reduction'
   // }
+  if (!isFromBuffer && !isToBuffer && Number(item.fromPostAction.depositLimit) === 0) {
+    return 'risk_reduction'
+  }
 
   if (!isFromBuffer && !isToBuffer) {
     return 'rate_enhancement'
-  }
-
-  if (!isFromBuffer && !isToBuffer && Number(item.fromPostAction.depositLimit) === 0) {
-    return 'risk_reduction'
   }
 
   if (isFromBuffer) {
