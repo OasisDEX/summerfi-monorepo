@@ -141,7 +141,7 @@ export const useSendTransaction = ({
       transaction: {
         target: Address.createFromEthereum({ value: token.address.value }),
         calldata: transferData,
-        value: isEth ? resolvedAmount : '0',
+        value: isEth ? resolvedAmount.toString() : '0',
       },
       description: 'Send',
     }
