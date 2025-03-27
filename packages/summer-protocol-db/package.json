@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "kysely": "^0.27.3",
-    "kysely-postgres-js": "^2.0.0",
     "pg": "^8.14.1",
     "@summerfi/abstractions": "workspace:*",
     "@summerfi/serverless-shared": "workspace:*"
