@@ -6,8 +6,14 @@ type WaitForTransactionParams = {
 }
 
 export const waitForTransaction = async ({ publicClient, hash }: WaitForTransactionParams) => {
-  return await publicClient.waitForTransactionReceipt({
+  const receipt = await publicClient.waitForTransactionReceipt({
     hash,
     confirmations: 2,
   })
+
+  if (receipt.status === 'reverted') {
+    throw new Error('Transaction reverted')
+  }
+
+  return receipt
 }
