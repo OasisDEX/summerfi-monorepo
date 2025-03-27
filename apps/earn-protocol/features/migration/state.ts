@@ -4,7 +4,7 @@ export const migrationState: MigrationState = {
   step: MigrationSteps.INIT,
   approveStatus: undefined,
   migrationStatus: undefined,
-  walletAddress: '0x0', // dummy, invalid address for initial state
+  walletAddress: '0x0', // dummy, invalid address for init
 }
 
 export const migrationReducer = (prevState: MigrationState, action: MigrationReducerAction) => {
