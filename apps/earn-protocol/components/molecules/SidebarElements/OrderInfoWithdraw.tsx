@@ -1,5 +1,5 @@
 import { Icon, OrderInformation, Text } from '@summerfi/app-earn-ui'
-import { type TokenSymbolsList } from '@summerfi/app-types'
+import { SDKChainId, type TokenSymbolsList } from '@summerfi/app-types'
 import { formatCryptoBalance, formatFiatBalance, formatPercent } from '@summerfi/app-utils'
 import { type ExtendedTransactionInfo, type IToken, TransactionType } from '@summerfi/sdk-common'
 import type BigNumber from 'bignumber.js'
@@ -12,6 +12,7 @@ type OrderInfoWithdrawProps = {
   amountDisplayUSD: string
   transactionFee?: string
   transactionFeeLoading: boolean
+  chainId: SDKChainId
 }
 
 export const OrderInfoWithdraw = ({
@@ -20,6 +21,7 @@ export const OrderInfoWithdraw = ({
   amountDisplayUSD,
   transactionFee,
   transactionFeeLoading,
+  chainId,
 }: OrderInfoWithdrawProps) => {
   if (transaction.type !== TransactionType.Withdraw) {
     throw new Error('Invalid transaction type')
@@ -90,11 +92,15 @@ export const OrderInfoWithdraw = ({
                   },
                 ]
               : []),
-            {
-              label: 'Transaction Fee',
-              value: transactionFee ? `$${formatFiatBalance(transactionFee)}` : 'n/a',
-              isLoading: transactionFeeLoading,
-            },
+            ...(chainId !== SDKChainId.SONIC
+              ? [
+                  {
+                    label: 'Transaction Fee',
+                    value: transactionFee ? `$${formatFiatBalance(transactionFee)}` : 'n/a',
+                    isLoading: transactionFeeLoading,
+                  },
+                ]
+              : []),
           ]}
         />
       </div>

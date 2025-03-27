@@ -290,6 +290,7 @@ export const VaultManageViewComponent = ({
       ),
       [TransactionType.Deposit]: (
         <OrderInfoDeposit
+          chainId={vaultChainId}
           transaction={nextTransaction}
           amountParsed={amountParsed}
           amountDisplayUSD={amountDisplayUSDWithSwap}
@@ -299,6 +300,7 @@ export const VaultManageViewComponent = ({
       ),
       [TransactionType.Withdraw]: (
         <OrderInfoWithdraw
+          chainId={vaultChainId}
           transaction={nextTransaction}
           amountParsed={amountParsed}
           amountDisplayUSD={amountDisplayUSDWithSwap}

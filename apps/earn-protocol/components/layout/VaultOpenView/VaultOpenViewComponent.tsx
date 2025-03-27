@@ -339,6 +339,7 @@ export const VaultOpenViewComponent = ({
       ),
       [TransactionType.Deposit]: (
         <OrderInfoDeposit
+          chainId={vaultChainId}
           transaction={nextTransaction}
           amountParsed={amountParsed}
           amountDisplayUSD={amountDisplayUSDWithSwap}
