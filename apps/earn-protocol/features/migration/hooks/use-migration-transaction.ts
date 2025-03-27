@@ -284,8 +284,14 @@ export const useMigrationTransaction = ({
   useEffect(() => {
     if (waitingForTx) {
       waitForTransaction({ publicClient, hash: waitingForTx })
-        .then(() => {
+        .then((receipt) => {
           if (step === MigrationSteps.MIGRATE) {
+            if (receipt.status === 'reverted') {
+              onMigrationError()
+
+              return
+            }
+
             setMigrationTransaction(undefined)
             onMigrationSuccess()
           } else {
