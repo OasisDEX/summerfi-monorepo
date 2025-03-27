@@ -3,32 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - "main"
-
-jobs:
-  changes:
-    name: Check for earn protocol changes
-    runs-on: ubuntu-22.04
-    if: ${{ github.event_name == 'push' }}
-    permissions:
-      pull-requests: read
-    outputs:
-      build-earn-protocol: ${{ steps.filter.outputs.build-earn-protocol }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            build-earn-protocol:
-              - 'apps/earn-protocol/**'
-              - 'packages/app-db/**'
-              - 'packages/app-types/**'
-              - 'packages/app-earn-ui/**'
-              - 'packages/app-icons/**'
-              - '.github/workflows/deploy-earn-protocol-app-new-production.yaml'
-              - 'sdk/sdk-client/**'
-              - 'sdk/sdk-client-react/**'
+      - 'main'
 
   build-earn-protocol:
     name: Build and deploy Earn Protocol App
@@ -36,8 +11,6 @@ jobs:
     permissions:
       id-token: write
     environment: production
-    needs: changes
-    if: ${{ needs.changes.outputs.build-earn-protocol == 'true' }}
     env:
       AWS_REGION: eu-central-1
       ENVIRONMENT_TAG: production
