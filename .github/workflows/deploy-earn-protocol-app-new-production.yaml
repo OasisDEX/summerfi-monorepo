@@ -1,26 +1,54 @@
-name: Deploy Earn Protocol App Production
+name: Deploy Earn Protocol App New Production
 on:
   workflow_dispatch:
   push:
     branches:
-      - "aws-prod"
+      - "main"
 
 jobs:
+  changes:
+    name: Check for earn protocol changes
+    runs-on: ubuntu-22.04
+    if: ${{ github.event_name == 'push' }}
+    permissions:
+      pull-requests: read
+    outputs:
+      build-earn-protocol: ${{ steps.filter.outputs.build-earn-protocol }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            build-earn-protocol:
+              - 'apps/earn-protocol/**'
+              - 'packages/app-db/**'
+              - 'packages/app-types/**'
+              - 'packages/app-earn-ui/**'
+              - 'packages/app-icons/**'
+              - '.github/workflows/deploy-earn-protocol-app-new-production.yaml'
+              - 'sdk/sdk-client/**'
+              - 'sdk/sdk-client-react/**'
+
   build-earn-protocol:
     name: Build and deploy Earn Protocol App
     runs-on: ubuntu-22.04
+    permissions:
+      id-token: write
     environment: production
+    needs: changes
+    if: ${{ needs.changes.outputs.build-earn-protocol == 'true' }}
     env:
-      AWS_REGION: us-east-1
+      AWS_REGION: eu-central-1
       ENVIRONMENT_TAG: production
-      SERVICE_NAME: summer-fi-earn-protocol-staging
-      CLUSTER_NAME: summer-fi-earn-protocol-staging
+      SERVICE_NAME: summer-fi-earn-service-prod
+      CLUSTER_NAME: summer-fi-earn-production
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
       CONFIG_URL_EARN: ${{ secrets.CONFIG_URL_EARN }}
       CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
       FUNCTIONS_API_URL: ${{ secrets.FUNCTIONS_API_URL }}
       BORROW_DB_READ_CONNECTION_STRING: ${{ secrets.NEW_BORROW_DB_READ_CONNECTION_STRING }}
-      EARN_PROTOCOL_DB_CONNECTION_STRING: ${{ secrets.EARN_PROTOCOL_DB_CONNECTION_STRING }}
+      EARN_PROTOCOL_DB_CONNECTION_STRING: ${{ secrets.NEW_EARN_PROTOCOL_DB_CONNECTION_STRING }}
       CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_ACCESS_TOKEN }}
       CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_PREVIEW_ACCESS_TOKEN }}
       CONTENTFUL_SPACE_ID: ${{ secrets.CONTENTFUL_SPACE_ID }}
@@ -42,7 +70,7 @@ jobs:
       NEWSLETTER_PUBLICATION_ID: ${{ secrets.NEWSLETTER_PUBLICATION_ID }}
       NEWSLETTER_ENDPOINT: ${{ secrets.NEWSLETTER_ENDPOINT }}
       NEXT_TELEMETRY_DISABLED: ${{ secrets.NEXT_TELEMETRY_DISABLED }}
-      SUMMER_DEPLOYMENT_CONFIG: ${{ vars.SUMMER_DEPLOYMENT_CONFIG_PROD }}
+      SUMMER_DEPLOYMENT_CONFIG: ${{ vars.SUMMER_DEPLOYMENT_CONFIG }}
       EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN: ${{ secrets.EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN }}
       EARN_APP_URL: ${{ secrets.EARN_APP_URL }}
     steps:
@@ -78,24 +106,24 @@ jobs:
           sudo apt update
           sudo apt install -y openvpn openvpn-systemd-resolved
           echo 'Configuring the VPN...'
-          echo "${{ secrets.VPN_CONFIG }}" > vpn-config.ovpn
-          echo "${{ secrets.VPN_USERNAME }}" > vpn-credentials.txt
-          echo "${{ secrets.VPN_PASSWORD }}" >> vpn-credentials.txt
+          echo "${{ secrets.NEW_VPN_CONFIG }}" > vpn-config.ovpn
+          echo "${{ secrets.NEW_VPN_USERNAME }}" > vpn-credentials.txt
+          echo "${{ secrets.NEW_VPN_PASSWORD }}" >> vpn-credentials.txt
           echo 'Connecting to the VPN...'
           sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-credentials.txt --daemon
           sleep 5
 
       - name: Check VPN connection
         env:
-          BORROW_DB_READ_DB: ${{ secrets.NEW_BORROW_DB_READ_DB }}
-          BORROW_DB_READ_HOST: ${{ secrets.NEW_BORROW_DB_READ_HOST }}
-          BORROW_DB_READ_USER: ${{ secrets.NEW_BORROW_DB_READ_USER }}
-          BORROW_DB_READ_PASSWORD: ${{ secrets.NEW_BORROW_DB_READ_PASSWORD }}
+          SUMMER_DB_NAME: ${{ secrets.SUMMER_DB_NAME }}
+          SUMMER_DB_HOST: ${{ secrets.SUMMER_DB_HOST }}
+          SUMMER_DB_USER: ${{ secrets.SUMMER_DB_USER }}
+          SUMMER_DB_PASSWORD: ${{ secrets.SUMMER_DB_PASSWORD }}
           PGCONNECT_TIMEOUT: 10
         run: |
           echo 'Checking the VPN connection...'
           sudo systemctl start postgresql.service
-          PGPASSWORD=$BORROW_DB_READ_PASSWORD /usr/bin/psql -d $BORROW_DB_READ_DB -U $BORROW_DB_READ_USER -h $BORROW_DB_READ_HOST -c 'SELECT 1;' > /dev/null
+          PGPASSWORD=$SUMMER_DB_PASSWORD /usr/bin/psql -d $SUMMER_DB_NAME -U $SUMMER_DB_USER -h $SUMMER_DB_HOST -c 'SELECT 1;' > /dev/null
           STATUS_CODE=$?
           if ! [[ "$STATUS_CODE" = 0 ]]; then
             echo 'VPN connection failed'
@@ -119,10 +147,9 @@ jobs:
         run: pnpm build-earn-frontend
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY_ID_DEV }}
+          role-to-assume: ${{ secrets.BUILD_DEPLOY_OIDC_ROLE_PROD }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
@@ -133,7 +160,7 @@ jobs:
         id: build-image
         env:
           LATEST_TAG: latest
-          ECR_REPO_NAME: summer-fi-earn-protocol-staging
+          ECR_REPO_NAME: summer-fi-earn-production
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           SHA_TAG: ${{ steps.vars.outputs.sha_short }}
         run: |
@@ -183,4 +210,4 @@ jobs:
 
       - name: Invalidate CloudFront
         run: |
-          AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.EARN_CF_DIST_ID }} --paths "/*"
+          AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.NEW_EARN_CF_DIST_ID }} --paths "/*"

@@ -1,20 +1,48 @@
-name: Deploy Earn Protocol Landing Page Production
+name: Deploy Earn Protocol Landing Page New Production
 on:
   workflow_dispatch:
   push:
     branches:
-      - "aws-prod"
+      - "main"
 
 jobs:
+  changes:
+    name: Check for earn protocol changes
+    runs-on: ubuntu-22.04
+    if: ${{ github.event_name == 'push' }}
+    permissions:
+      pull-requests: read
+    outputs:
+      build-earn-protocol-landing-page: ${{ steps.filter.outputs.build-earn-protocol-landing-page }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            build-earn-protocol-landing-page:
+              - 'apps/earn-protocol-landing-page/**'
+              - 'packages/app-db/**'
+              - 'packages/app-types/**'
+              - 'packages/app-earn-ui/**'
+              - 'packages/app-utils/**'
+              - 'packages/serverless-shared/**'
+              - 'sdk/sdk-client/**'
+              - 'sdk/sdk-client-react/**'
+              - '.github/workflows/deploy-earn-protocol-landing-page-new-production.yaml'
   build-earn-protocol-landing-page:
     name: Build and deploy Earn Protocol App
     runs-on: ubuntu-22.04
+    permissions:
+      id-token: write
     environment: production
+    needs: changes
+    if: ${{ needs.changes.outputs.build-earn-protocol-landing-page == 'true' }}
     env:
-      AWS_REGION: us-east-1
+      AWS_REGION: eu-central-1
       ENVIRONMENT_TAG: production
-      SERVICE_NAME: earn-protocol-lp-2
-      CLUSTER_NAME: summer-fi-earn-protocol-landing-page-staging
+      SERVICE_NAME: summer-fi-earn-lp-service-prod
+      CLUSTER_NAME: summer-fi-earn-lp-production
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
       CONFIG_URL_EARN: ${{ secrets.CONFIG_URL_EARN }}
       CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
@@ -75,10 +103,9 @@ jobs:
         run: pnpm build-earn-frontend-landing
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY_ID_DEV }}
+          role-to-assume: ${{ secrets.BUILD_DEPLOY_OIDC_ROLE_PROD }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
@@ -89,7 +116,7 @@ jobs:
         id: build-image
         env:
           LATEST_TAG: latest
-          ECR_REPO_NAME: summer-fi-earn-protocol-landing-page-staging
+          ECR_REPO_NAME: summer-fi-earn-lp-production
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           SHA_TAG: ${{ steps.vars.outputs.sha_short }}
         run: |
@@ -123,4 +150,4 @@ jobs:
 
       - name: Invalidate CloudFront
         run: |
-          AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.EARN_CF_DIST_ID }} --paths "/*"
+          AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.NEW_EARN_CF_DIST_ID }} --paths "/*"
