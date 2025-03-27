@@ -1,7 +1,6 @@
 import { Database } from './database-types'
-import { CamelCasePlugin, Kysely } from 'kysely'
-import { PostgresJSDialect } from 'kysely-postgres-js'
-import postgres from 'postgres'
+import { CamelCasePlugin, Kysely, PostgresDialect, sql } from 'kysely'
+import { Pool } from 'pg'
 
 export interface PgSummerProtocolDbConfig {
   connectionString: string
@@ -19,21 +18,29 @@ export interface SummerProtocolDB {
 
 export * from './database-types'
 export { mapDbNetworkToChainId, mapChainIdToDbNetwork, type DbNetworks } from './helpers'
+
 export const getSummerProtocolDB = async (
   config: PgSummerProtocolDbConfig,
 ): Promise<SummerProtocolDB> => {
-  const pg = postgres(config.connectionString, {
-    max: config.pool?.max ?? 10,
-    idle_timeout: config.pool?.idleTimeoutMillis ?? 0,
-    connect_timeout: config.pool?.acquireTimeoutMillis ?? 30000,
-  })
-
   const db = new Kysely<Database>({
-    dialect: new PostgresJSDialect({
-      postgres: pg,
+    dialect: new PostgresDialect({
+      pool: new Pool({
+        connectionString: config.connectionString,
+        max: config.pool?.max ?? 10,
+        idleTimeoutMillis: config.pool?.idleTimeoutMillis ?? 0,
+        connectionTimeoutMillis: config.pool?.acquireTimeoutMillis ?? 30000,
+      }),
     }),
     plugins: [new CamelCasePlugin()],
   })
+
+  // Test the connection by executing a simple query
+  try {
+    await sql`SELECT 1`.execute(db)
+  } catch (error) {
+    await db.destroy()
+    throw new Error(`Failed to connect to earn app database`)
+  }
 
   return {
     db,
