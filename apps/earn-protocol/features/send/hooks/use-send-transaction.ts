@@ -116,6 +116,12 @@ export const useSendTransaction = ({
     if (!token || !amount || !isValidAddress(recipient)) {
       return undefined
     }
+
+    // eslint-disable-next-line no-mixed-operators
+    const resolvedAmount = BigInt(Number(amount) * 10 ** token.decimals)
+
+    const isEth = ['ETH', 'WETH'].includes(token.symbol)
+
     const transferData = encodeFunctionData({
       abi: [
         {
@@ -128,9 +134,19 @@ export const useSendTransaction = ({
           outputs: [{ type: 'bool' }],
         },
       ],
-      // eslint-disable-next-line no-mixed-operators
-      args: [recipient, BigInt(Number(amount) * 10 ** token.decimals)],
+      args: [recipient, resolvedAmount],
     })
+
+    if (isEth) {
+      return {
+        transaction: {
+          target: Address.createFromEthereum({ value: recipient }),
+          calldata: '0x' as `0x${string}`, // empty calldata for ETH transfer
+          value: resolvedAmount.toString(),
+        },
+        description: 'Send',
+      }
+    }
 
     return {
       transaction: {

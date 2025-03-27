@@ -5,7 +5,6 @@ import { subgraphNetworkToId } from '@summerfi/app-utils'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
-import { SummerFiProBox } from '@/components/layout/LandingPageContent'
 import { LandingPageVaultPicker } from '@/components/organisms/LandingPageVaultPicker/LandingPageVaultPicker'
 import { sdkApiUrl } from '@/constants/sdk'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
@@ -85,7 +84,7 @@ export const LandingPageHero = ({
           ))}
           contentWidth={515}
         />
-        <SummerFiProBox />
+        {/* <SummerFiProBox /> */}
       </div>
     </SDKContextProvider>
   )

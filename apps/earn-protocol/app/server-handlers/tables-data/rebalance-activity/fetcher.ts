@@ -1,4 +1,3 @@
-import { type SDKNetwork } from '@summerfi/app-types'
 import { GetRebalancesDocument, type Rebalance } from '@summerfi/subgraph-manager-common'
 import { type GraphQLClient } from 'graphql-request'
 
@@ -17,17 +16,12 @@ interface GraphQLResponse {
  *
  * @param {GraphQLClient} client - The GraphQL client used to send requests to the subgraph.
  * @param {string} timestamp - The timestamp used as a filter for the rebalance activities.
- * @param {SDKNetwork} _network - The network to be used (used for possible network-specific adjustments).
  * @returns {Promise<Rebalance[]>} - A promise that resolves to an array containing all the rebalances.
  *
  * @example
  * const rebalances = await fetchAllRebalanceActivities(client, '1625461923', network)
  */
-export async function fetchAllRebalanceActivities(
-  client: GraphQLClient,
-  timestamp: string,
-  _network: SDKNetwork,
-) {
+export async function fetchAllRebalanceActivities(client: GraphQLClient, timestamp: string) {
   let allRebalances: Rebalance[] = []
   let skip = 0
   let hasMoreRebalances = true

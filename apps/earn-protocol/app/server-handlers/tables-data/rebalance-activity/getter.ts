@@ -1,4 +1,3 @@
-import { SDKNetwork } from '@summerfi/app-types'
 import { type GraphQLClient } from 'graphql-request'
 
 import { fetchAllRebalanceActivities } from './fetcher'
@@ -13,11 +12,9 @@ import { type RebalanceActivity } from './types'
  * It combines the activities, adds an `actionType` property to each rebalance (using a helper function),
  * and sorts the activities in descending order by timestamp.
  *
- * @param {string} lastTimestamp - The timestamp from which to fetch the latest rebalance activities.
- * @param {GraphQLClient} mainnetGraphQlClient - The GraphQL client for the Mainnet network.
- * @param {GraphQLClient} baseGraphQlClient - The GraphQL client for the Base network.
- * @param {GraphQLClient} arbitrumGraphQlClient - The GraphQL client for the Arbitrum network.
- * @param {GraphQLClient} sonicGraphQlClient - The GraphQL client for the Sonic network.
+ * @param {Object} params - The parameters for the function.
+ * @param {Object} params.timestamps - The timestamps from which to fetch the latest rebalance activities.
+ * @param {Object} params.clients - The GraphQL clients for the different networks.
  * @returns {Promise<RebalanceActivity[]>} - A promise that resolves to an array of rebalance activities from all networks, each having an `actionType` property.
  *
  * @example
@@ -29,24 +26,28 @@ import { type RebalanceActivity } from './types'
  * })
  */
 export const getAllRebalanceActivities = async ({
-  lastTimestamp,
-  mainnetGraphQlClient,
-  baseGraphQlClient,
-  arbitrumGraphQlClient,
-  sonicGraphQlClient,
+  timestamps,
+  clients,
 }: {
-  lastTimestamp: string
-  mainnetGraphQlClient: GraphQLClient
-  baseGraphQlClient: GraphQLClient
-  arbitrumGraphQlClient: GraphQLClient
-  sonicGraphQlClient: GraphQLClient
+  timestamps: {
+    mainnet: string
+    base: string
+    arbitrum: string
+    sonic: string
+  }
+  clients: {
+    mainnetGraphQlClient: GraphQLClient
+    baseGraphQlClient: GraphQLClient
+    arbitrumGraphQlClient: GraphQLClient
+    sonicGraphQlClient: GraphQLClient
+  }
 }): Promise<RebalanceActivity[]> => {
   const [mainnetRebalances, baseRebalances, arbitrumRebalances, sonicRebalances] =
     await Promise.all([
-      fetchAllRebalanceActivities(mainnetGraphQlClient, lastTimestamp, SDKNetwork.Mainnet),
-      fetchAllRebalanceActivities(baseGraphQlClient, lastTimestamp, SDKNetwork.Base),
-      fetchAllRebalanceActivities(arbitrumGraphQlClient, lastTimestamp, SDKNetwork.ArbitrumOne),
-      fetchAllRebalanceActivities(sonicGraphQlClient, lastTimestamp, SDKNetwork.SonicMainnet),
+      fetchAllRebalanceActivities(clients.mainnetGraphQlClient, timestamps.mainnet),
+      fetchAllRebalanceActivities(clients.baseGraphQlClient, timestamps.base),
+      fetchAllRebalanceActivities(clients.arbitrumGraphQlClient, timestamps.arbitrum),
+      fetchAllRebalanceActivities(clients.sonicGraphQlClient, timestamps.sonic),
     ])
 
   // Combine all new activities from different networks and add type property

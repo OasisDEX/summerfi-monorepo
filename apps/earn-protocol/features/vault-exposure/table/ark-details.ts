@@ -1,7 +1,11 @@
 import { SDKNetwork } from '@summerfi/app-types'
 
 export const arkDetailsMap: {
-  [key in SDKNetwork.ArbitrumOne | SDKNetwork.Base | SDKNetwork.Mainnet]: {
+  [key in
+    | SDKNetwork.ArbitrumOne
+    | SDKNetwork.Base
+    | SDKNetwork.Mainnet
+    | SDKNetwork.SonicMainnet]: {
     [key: string]: { description: string; link?: string }
   }
 } = {
@@ -325,6 +329,12 @@ export const arkDetailsMap: {
       link: 'https://app.morpho.org/base/vault/0xBeEF086b8807Dc5E5A1740C5E3a7C4c366eA6ab5/steakhouse-eurc',
     },
     '0xc65b7e8fec2b7b329ab1d08c78f9f01fe4e4b3ec': {
+      description:
+        'The buffer is a portion of a vault that is not held in any one particular strategy and stands ready to be deployed to capitalize on any new strategies that may arise.',
+    },
+  },
+  [SDKNetwork.SonicMainnet]: {
+    '0x809a0c98fac68a0c4319f3a3e864540c772562af': {
       description:
         'The buffer is a portion of a vault that is not held in any one particular strategy and stands ready to be deployed to capitalize on any new strategies that may arise.',
     },

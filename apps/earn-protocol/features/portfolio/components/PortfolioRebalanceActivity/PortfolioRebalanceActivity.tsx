@@ -39,7 +39,7 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
 }) => {
   const { totalItems } = rebalanceActivity.pagination
 
-  const [isLoading, setIsLoading] = useState(false)
+  const [hasMoreItems, setHasMoreItems] = useState(true)
 
   const savedTimeInHours = useMemo(() => getRebalanceSavedTimeInHours(totalItems), [totalItems])
   const savedGasCost = useMemo(() => getRebalanceSavedGasCost(vaultsList), [vaultsList])
@@ -49,8 +49,9 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
   const [currentlyLoadedList, setCurrentlyLoadedList] = useState(rebalanceActivity.data)
 
   const handleMoreItems = async () => {
+    if (!hasMoreItems) return
+
     try {
-      setIsLoading(true)
       const res = await getRebalanceActivity({
         page: currentPage + 1,
         sortBy: 'timestamp',
@@ -58,13 +59,16 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
         strategies: positions.map((position) => getUniqueVaultId(position.vault)),
       })
 
+      if (res.data.length === 0 || currentPage + 1 >= rebalanceActivity.pagination.totalPages) {
+        setHasMoreItems(false)
+      }
+
       setCurrentlyLoadedList((prev) => [...prev, ...res.data])
       setCurrentPage((prev) => prev + 1)
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Error fetching rebalance activity', error)
-    } finally {
-      setIsLoading(false)
+      setHasMoreItems(false)
     }
   }
 
@@ -121,11 +125,7 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
       </div>
       <InfiniteScroll
         loadMore={handleMoreItems}
-        hasMore={
-          rebalanceActivity.pagination.totalPages > currentPage &&
-          currentlyLoadedList.length > 0 &&
-          !isLoading
-        }
+        hasMore={hasMoreItems}
         loader={
           <LoadingSpinner
             key="spinner"

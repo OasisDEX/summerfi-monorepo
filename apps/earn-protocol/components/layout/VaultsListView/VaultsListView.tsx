@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import {
   DataBlock,
   getUniqueVaultId,
+  getVaultsProtocolsList,
   SimpleGrid,
   SUMR_CAP,
   Text,
@@ -38,7 +39,6 @@ import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { revalidateVaultsListData } from '@/helpers/revalidation-handlers'
-import { getVaultsProtocolsList } from '@/helpers/vaults-protocols-list'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { usePosition } from '@/hooks/use-position'
 import { useTokenBalances } from '@/hooks/use-tokens-balances'

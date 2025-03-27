@@ -53,6 +53,7 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
   const currentUrl = useCurrentUrl()
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
+  const [hasMoreItems, setHasMoreItems] = useState(true)
 
   const [currentPage, setCurrentPage] = useState(rebalanceActivity.pagination.currentPage)
   const [isLoading, setIsLoading] = useState(false)
@@ -64,19 +65,26 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
   )
 
   const handleMoreItems = async () => {
+    if (!hasMoreItems || isLoading) return // Add loading check
+
     try {
+      const nextPage = currentPage + 1
       const res = await getRebalanceActivity({
-        page: currentPage + 1,
+        page: nextPage,
         tokens: tokenFilter,
         strategies: strategyFilter,
         protocols: protocolFilter,
       })
 
+      if (res.data.length === 0 || nextPage >= res.pagination.totalPages) {
+        setHasMoreItems(false)
+      }
       setCurrentlyLoadedList((prev) => [...prev, ...res.data])
       setCurrentPage((prev) => prev + 1)
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Error fetching more rebalance activity', error)
+      setHasMoreItems(false)
     }
   }
 
@@ -115,6 +123,7 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
     }
 
     setIsLoading(true)
+    setHasMoreItems(true)
 
     getRebalanceActivity({
       page: 1,
@@ -126,6 +135,11 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
     })
       .then((res) => {
         setCurrentlyLoadedList(res.data)
+        setCurrentPage(1)
+
+        if (res.data.length === 0 || res.pagination.currentPage >= res.pagination.totalPages) {
+          setHasMoreItems(false)
+        }
       })
       .finally(() => {
         setIsLoading(false)
@@ -170,16 +184,15 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
       </div>
       <InfiniteScroll
         loadMore={handleMoreItems}
-        hasMore={
-          rebalanceActivity.pagination.totalPages > currentPage &&
-          currentlyLoadedList.length > 0 &&
-          !isLoading
-        }
+        hasMore={hasMoreItems}
         loader={
-          <LoadingSpinner
-            key="spinner"
-            style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
-          />
+          // inversed, we don't want loading spinner when skeleton is visible
+          !isLoading ? (
+            <LoadingSpinner
+              key="spinner"
+              style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
+            />
+          ) : undefined
         }
       >
         <RebalanceActivityTable
