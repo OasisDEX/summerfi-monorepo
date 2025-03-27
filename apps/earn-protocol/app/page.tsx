@@ -32,8 +32,8 @@ const EarnAllVaultsPage = async () => {
 
   return (
     <VaultListViewComponent
-      vaultsList={vaultsWithConfig}
       vaultsApyByNetworkMap={vaultsApyByNetworkMap}
+      vaultsList={vaultsWithConfig}
     />
   )
 }

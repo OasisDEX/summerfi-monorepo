@@ -59,8 +59,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   href={`${EXTERNAL_LINKS.KB.HELP}/legal/uk-disclaimer`}
                   style={{
                     color: 'var(--earn-protocol-primary-100)',
-                    paddingLeft: 'var(--general-space-4)',
                     fontWeight: '500',
+                    paddingLeft: 'var(--general-space-4)',
                   }}
                   target="_blank"
                 >
