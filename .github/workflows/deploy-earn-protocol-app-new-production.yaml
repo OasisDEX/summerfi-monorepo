@@ -5,6 +5,7 @@ on:
     branches:
       - 'main'
 
+jobs:
   build-earn-protocol:
     name: Build and deploy Earn Protocol App
     runs-on: ubuntu-22.04

@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - 'main'
+
+jobs:
   build-earn-protocol-landing-page:
     name: Build and deploy Earn Protocol App
     runs-on: ubuntu-22.04

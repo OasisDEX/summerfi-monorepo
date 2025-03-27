@@ -110,8 +110,8 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
   const { userWalletAddress } = useUserWallet()
   const [isRefreshing, setIsRefreshing] = useState(false)
 
-  const isOwner = walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
   const positionId = searchParams.get('positionId')
+  const isOwner = walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
 
   const [showAllPositions, setShowAllPositions] = useState(!positionId)
   const [selectedPosition, setSelectedPosition] = useState<string | null>(positionId)
