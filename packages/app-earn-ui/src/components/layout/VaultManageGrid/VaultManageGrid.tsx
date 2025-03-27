@@ -174,7 +174,10 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
             <div className={vaultManageGridStyles.vaultBonusWrapper}>
               {Number(rawSumrTokenBonus) > 0 && (
                 <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-                  <BonusLabel tokenBonus={sumrTokenBonus} withTokenBonus />
+                  <BonusLabel
+                    tokenBonus={sumrTokenBonus}
+                    withTokenBonus={Number(rawSumrTokenBonus) > 0}
+                  />
                 </Text>
               )}
               <AdditionalBonusLabel bonus={vault.customFields?.bonus} />

@@ -106,16 +106,14 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
             isVaultCard
           />
           <div className={vaultCardStyles.vaultBonusWrapper}>
-            {Number(rawSumrTokenBonus) > 0 && (
-              <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-                <BonusLabel
-                  tokenBonus={sumrTokenBonus}
-                  apy={parsedApr}
-                  withTokenBonus={withTokenBonus}
-                  combinedApr={combinedApr}
-                />
-              </Text>
-            )}
+            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+              <BonusLabel
+                tokenBonus={sumrTokenBonus}
+                apy={parsedApr}
+                withTokenBonus={Number(rawSumrTokenBonus) > 0 ? withTokenBonus : false}
+                combinedApr={combinedApr}
+              />
+            </Text>
             <AdditionalBonusLabel bonus={customFields?.bonus} />
           </div>
         </div>
