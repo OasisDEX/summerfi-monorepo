@@ -11,8 +11,8 @@ type OrderInfoDepositProps = {
   amountParsed: BigNumber
   amountDisplayUSD: string
   transactionFee?: string
-  transactionFeeLoading: boolean
   chainId: SDKChainId
+  transactionFeeLoading: boolean
 }
 
 export const OrderInfoDeposit = ({
@@ -20,8 +20,8 @@ export const OrderInfoDeposit = ({
   amountParsed,
   amountDisplayUSD,
   transactionFee,
-  transactionFeeLoading,
   chainId,
+  transactionFeeLoading,
 }: OrderInfoDepositProps) => {
   if (transaction.type !== TransactionType.Deposit) {
     throw new Error('Invalid transaction type')
