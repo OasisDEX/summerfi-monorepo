@@ -117,7 +117,7 @@ export const Footer: FC<FooterProps> = ({ logo, newsletter, languageSwitcher }) 
       window.removeEventListener('keydown', handleKeyDown)
       window.removeEventListener('keyup', handleKeyUp)
     }
-  }, [isAltPressed])
+  }, [])
 
   return (
     <div className={footerStyles.container}>
