@@ -239,7 +239,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     const prices = await this._oracleManager.getSpotPrices({
       chainInfo: params.chainInfo,
       baseTokens: tokens,
-      quote: FiatCurrency.USD,
+      quoteCurrency: FiatCurrency.USD,
     })
 
     const positionsWithPrices = positions.map((position) => {
@@ -467,6 +467,10 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
   async getMigrationTX(
     params: Parameters<IArmadaManagerMigrations['getMigrationTX']>[0],
   ): ReturnType<IArmadaManagerMigrations['getMigrationTX']> {
+    if (!params.positionIds || params.positionIds.length === 0) {
+      throw new Error('PositionIds are required')
+    }
+
     const shouldStake = params.shouldStake ?? true
 
     const multicallArgs: HexData[] = []
@@ -487,12 +491,24 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       params.positionIds.some((id) => id === position.id),
     )
 
-    // get the migration transaction info from params
+    if (filteredPositions.length === 0) {
+      throw new Error(
+        'No positions found to migrate for the provided position ids: ' + params.positionIds,
+      )
+    }
+
+    LoggingService.debug('filtered positions: ', {
+      positionsIds: params.positionIds.join(', '),
+      positionsResponse: positionsResponse.positions.map((position) => position.id).join(', '),
+      filteredPositions: filteredPositions.map((position) => position.id).join(', '),
+    })
+
+    // get the move calls to multicall
     const moveCalls = filteredPositions.map((position) => this._getMoveCall({ ...position }))
     multicallArgs.push(...moveCalls.map((call) => call.call))
     multicallOperations.push(...moveCalls.map((call) => call.operation))
 
-    // check and swap migrated tokens to fleet token
+    // check the fleet token
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.vaultId.chainInfo,
       address: params.vaultId.fleetAddress,
@@ -501,6 +517,11 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
 
     const swapAmountByPositionId: Record<string, ITokenAmount> = {}
     const priceImpactByPositionId: Record<string, TransactionPriceImpact> = {}
+
+    LoggingService.debug('getMigrationTX: ', {
+      fleetToken: fleetToken.toString(),
+      moveCalls: moveCalls.map((call) => call.operation),
+    })
 
     for (const position of filteredPositions) {
       // We need to swap position when token is not a fleet token
@@ -564,6 +585,10 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
         priceImpactByPositionId,
       },
     }
+    LoggingService.debug(
+      'Migration TX: ',
+      multicallOperations.map((op) => op.toString()),
+    )
 
     const approvalTransactions = await Promise.all(
       filteredPositions.map(async (position) => {
@@ -574,10 +599,6 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     const validApprovalTransactions = approvalTransactions.filter(
       (approval) => approval !== undefined,
     ) as ApproveTransactionInfo[]
-    console.log('approvals: ', {
-      approvalTransactions,
-      filteredApprovals: validApprovalTransactions,
-    })
     if (validApprovalTransactions.length > 0) {
       LoggingService.debug(
         'approvalTransactions: ',

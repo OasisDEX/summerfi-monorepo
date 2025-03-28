@@ -114,12 +114,12 @@ export class CoingeckoOracleProvider
     params: Parameters<IOracleProvider['getSpotPrices']>[0],
   ): ReturnType<IOracleProvider['getSpotPrices']> {
     const authHeader = this._getAuthHeader()
-    const quote = params.quote ?? FiatCurrency.USD
+    const quote = params.quoteCurrency ?? FiatCurrency.USD
 
     const spotUrl = this._formatSpotUrl({
       chainInfo: params.chainInfo,
       tokenAddresses: params.baseTokens.map((token) => token.address),
-      quoteCurrency: params.quote,
+      quoteCurrency: params.quoteCurrency,
     })
 
     const response = await fetch(spotUrl, {
