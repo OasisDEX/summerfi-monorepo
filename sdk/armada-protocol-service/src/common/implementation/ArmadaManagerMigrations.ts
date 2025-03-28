@@ -239,7 +239,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     const prices = await this._oracleManager.getSpotPrices({
       chainInfo: params.chainInfo,
       baseTokens: tokens,
-      quote: FiatCurrency.USD,
+      quoteCurrency: FiatCurrency.USD,
     })
 
     const positionsWithPrices = positions.map((position) => {

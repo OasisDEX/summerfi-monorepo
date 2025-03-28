@@ -27,6 +27,8 @@ import { getBridgeTxHandler } from '../handlers/getBridgeTxHandler'
 import { getMigrateTxHandler } from '../handlers/getMigrateTxHandler'
 import { getMigratablePositionsHandler } from '../handlers/getMigratablePositionsHandler'
 import { getMigratablePositionsHandlerApy } from '../handlers/getMigratablePositionsHandlerApy'
+import { getSpotPriceHandler } from '../handlers/getSpotPriceHandler'
+import { getSpotPricesHandler } from '../handlers/getSpotPricesHandler'
 
 type UseSdk = {
   walletAddress?: string
@@ -68,6 +70,11 @@ export const useSDK = (params: UseSdk) => {
 
   // SWAPS
   const getSwapQuote = useMemo(() => getSwapQuoteHandler(sdk), [sdk])
+
+  // ORACLES
+
+  const getSpotPrice = useMemo(() => getSpotPriceHandler(sdk), [sdk])
+  const getSpotPrices = useMemo(() => getSpotPricesHandler(sdk), [sdk])
 
   // CLAIMS
   const getAggregatedRewards = useMemo(() => getAggregatedRewardsHandler(sdk), [sdk])
@@ -121,6 +128,8 @@ export const useSDK = (params: UseSdk) => {
       getMigrateTx,
       getMigratablePositions,
       getMigratablePositionsApy,
+      getSpotPrice,
+      getSpotPrices,
     }),
     [
       getCurrentUser,
@@ -149,6 +158,8 @@ export const useSDK = (params: UseSdk) => {
       getMigrateTx,
       getMigratablePositions,
       getMigratablePositionsApy,
+      getSpotPrice,
+      getSpotPrices,
     ],
   )
 

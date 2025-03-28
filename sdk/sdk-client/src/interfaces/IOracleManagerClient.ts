@@ -1,17 +1,18 @@
-import {
-  Denomination,
+import type {
+  SpotPriceInfo,
+  SpotPricesInfo,
   IToken,
-  type FiatCurrency,
-  type IChainInfo,
-} from '@summerfi/sdk-common/common'
-import { OracleProviderType, SpotPriceInfo, type SpotPricesInfo } from '@summerfi/sdk-common/oracle'
-import { IManagerProvider } from '@summerfi/sdk-server-common'
+  Denomination,
+  FiatCurrency,
+  IChainInfo,
+} from '@summerfi/sdk-common'
 
 /**
- * @name IOracleProvider
- * @description Interface for implementing different oracle provider plugins
+ * @name IOracleManagerClient
+ * @description Interface for the Oracle Manager client implementation.
+ * @see IOracleManager
  */
-export interface IOracleProvider extends IManagerProvider<OracleProviderType> {
+export interface IOracleManagerClient {
   /**
    * @name getSpotPrice
    * @description Returns the prevailing market price for a single token
