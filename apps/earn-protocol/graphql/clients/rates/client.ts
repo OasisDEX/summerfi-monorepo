@@ -658,6 +658,7 @@ export type Product = {
   network: Scalars['String']['output'];
   pool: Scalars['String']['output'];
   protocol: Scalars['String']['output'];
+  rewardsInterestRates: Array<RewardsInterestRate>;
   token: Token;
   weeklyInterestRates: Array<WeeklyInterestRate>;
 };
@@ -687,6 +688,15 @@ export type ProductInterestRatesArgs = {
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<InterestRate_Filter>;
+};
+
+
+export type ProductRewardsInterestRatesArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<RewardsInterestRate_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<RewardsInterestRate_Filter>;
 };
 
 
@@ -794,6 +804,7 @@ export type Product_Filter = {
   protocol_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   protocol_starts_with?: InputMaybe<Scalars['String']['input']>;
   protocol_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  rewardsInterestRates_?: InputMaybe<RewardsInterestRate_Filter>;
   token?: InputMaybe<Scalars['String']['input']>;
   token_?: InputMaybe<Token_Filter>;
   token_contains?: InputMaybe<Scalars['String']['input']>;
@@ -827,6 +838,7 @@ export enum Product_OrderBy {
   network = 'network',
   pool = 'pool',
   protocol = 'protocol',
+  rewardsInterestRates = 'rewardsInterestRates',
   token = 'token',
   token__address = 'token__address',
   token__decimals = 'token__decimals',
