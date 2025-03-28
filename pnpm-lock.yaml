@@ -2851,9 +2851,6 @@ importers:
       '@trpc/client':
         specifier: 11.0.0-rc.844
         version: 11.0.0-rc.844(@trpc/server@11.0.0-rc.844)(typescript@5.7.3)
-      superjson:
-        specifier: ^1.13.3
-        version: 1.13.3
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -3022,9 +3019,6 @@ importers:
       '@trpc/server':
         specifier: 11.0.0-rc.844
         version: 11.0.0-rc.844(typescript@5.7.3)
-      superjson:
-        specifier: ^2.2.2
-        version: 2.2.2
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -3038,15 +3032,6 @@ importers:
 
   sdk/sdk-server:
     dependencies:
-      '@aws-lambda-powertools/logger':
-        specifier: ^1.18.1
-        version: 1.18.1(@middy/core@6.0.0)
-      '@aws-lambda-powertools/metrics':
-        specifier: ^1.18.1
-        version: 1.18.1
-      '@aws-lambda-powertools/tracer':
-        specifier: ^1.18.1
-        version: 1.18.1
       '@summerfi/abi-provider-common':
         specifier: workspace:*
         version: link:../abi-provider-common
@@ -3152,9 +3137,6 @@ importers:
       '@trpc/server':
         specifier: 11.0.0-rc.844
         version: 11.0.0-rc.844(typescript@5.7.3)
-      superjson:
-        specifier: ^1.13.3
-        version: 1.13.3
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -4802,17 +4784,6 @@ packages:
       lodash.merge: 4.6.2
     dev: false
 
-  /@aws-lambda-powertools/metrics@1.18.1:
-    resolution: {integrity: sha512-ebojjuoOlm0bOtZ6H5fyTnC5B0owVX1nNqDUPEQSejkeiiBW0m6DVzy6hFWuKmGtBtm2WNnWwTE//WtF+CD6Ug==}
-    peerDependencies:
-      '@middy/core': '>=3.x'
-    peerDependenciesMeta:
-      '@middy/core':
-        optional: true
-    dependencies:
-      '@aws-lambda-powertools/commons': 1.18.1
-    dev: false
-
   /@aws-lambda-powertools/metrics@2.0.4:
     resolution: {integrity: sha512-w9kaRtqH1xPe2SLny5hF1z2c2rQDlgYtbVGm0YtQ48nIxHMNh+yV8dLd4o7fdjl2p6yuhXlHCiD+HoMi5aOPCg==}
     peerDependencies:
@@ -4834,18 +4805,6 @@ packages:
     dependencies:
       '@aws-lambda-powertools/commons': 2.16.0
       '@middy/core': 6.1.6
-    dev: false
-
-  /@aws-lambda-powertools/tracer@1.18.1:
-    resolution: {integrity: sha512-bMLBtdEFNmLUR9RJvBULR6XJD0XopUhhS1mlpeQlm2BCPIN3gLbqAlJK8dMXyAw8GCpLpHaziCo2+7a/AIh7lA==}
-    peerDependencies:
-      '@middy/core': '>=3.x'
-    peerDependenciesMeta:
-      '@middy/core':
-        optional: true
-    dependencies:
-      '@aws-lambda-powertools/commons': 1.18.1
-      aws-xray-sdk-core: 3.6.0
     dev: false
 
   /@aws-lambda-powertools/tracer@2.0.4:
@@ -37261,13 +37220,6 @@ packages:
   /superjson@1.13.3:
     resolution: {integrity: sha512-mJiVjfd2vokfDxsQPOwJ/PtanO87LhpYY88ubI5dUB1Ab58Txbyje3+jpm+/83R/fevaq/107NNhtYBLuoTrFg==}
     engines: {node: '>=10'}
-    dependencies:
-      copy-anything: 3.0.5
-    dev: false
-
-  /superjson@2.2.2:
-    resolution: {integrity: sha512-5JRxVqC8I8NuOUjzBbvVJAKNM8qoVuH0O77h4WInc/qC2q5IreqKxYwgkga3PfA22OayK2ikceb/B26dztPl+Q==}
-    engines: {node: '>=16'}
     dependencies:
       copy-anything: 3.0.5
     dev: false

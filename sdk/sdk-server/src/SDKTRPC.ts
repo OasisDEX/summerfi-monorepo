@@ -2,9 +2,9 @@ import { SerializationService } from '@summerfi/sdk-common/services'
 import { initTRPC } from '@trpc/server'
 import { SDKAppContext } from './context/SDKContext'
 
-export const t = initTRPC
-  .context<SDKAppContext>()
-  .create({ transformer: SerializationService.getTransformer() })
+export const t = initTRPC.context<SDKAppContext>().create({
+  transformer: SerializationService.getTransformer(),
+})
 
 export const router = t.router
 

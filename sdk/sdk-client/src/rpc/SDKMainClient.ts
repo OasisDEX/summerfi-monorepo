@@ -14,8 +14,6 @@ import { createTRPCClient, httpBatchLink, loggerLink } from '@trpc/client'
 // export * from '@summerfi/sdk-common/tokens'
 // export * from '@summerfi/sdk-common/user'
 
-const EnableDeserialize = false
-
 export type RPCMainClientType = ReturnType<typeof createTRPCClient<SDKAppRouter>>
 
 export function createMainRPCClient(apiURL: string, logging?: boolean): RPCMainClientType {
@@ -33,24 +31,7 @@ export function createMainRPCClient(apiURL: string, logging?: boolean): RPCMainC
       }),
       httpBatchLink({
         url: apiURL,
-        transformer: {
-          input: SerializationService.getTransformer(),
-          output: {
-            serialize: SerializationService.getTransformer().serialize,
-            deserialize: (object) => {
-              try {
-                const res = SerializationService.getTransformer().parse(
-                  JSON.stringify(object, null, 2),
-                )
-                return EnableDeserialize
-                  ? SerializationService.getTransformer().deserialize(object)
-                  : res
-              } catch (error) {
-                console.log('Error deserializing object', error)
-              }
-            },
-          },
-        },
+        transformer: SerializationService.getTransformer(),
         maxURLLength: 10000,
       }),
     ],

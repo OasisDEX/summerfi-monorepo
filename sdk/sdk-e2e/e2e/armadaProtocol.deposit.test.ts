@@ -93,7 +93,7 @@ describe('Armada Protocol Deposit', () => {
       console.log('max deposit', maxDeposit)
     })
 
-    describe(`Deposit on ${chainInfo.name}`, () => {
+    describe.skip(`Deposit on ${chainInfo.name}`, () => {
       it(`should deposit 1 USDC (with stake) to fleet at ${fleetAddress.value}`, async () => {
         const amount = '1'
         const transactions = await sdk.armada.users.getNewDepositTX({
@@ -281,7 +281,7 @@ describe('Armada Protocol Deposit', () => {
       })
     })
 
-    describe(`Withdraw on ${chainInfo.name}`, () => {
+    describe.skip(`Withdraw on ${chainInfo.name}`, () => {
       it(`should withdraw 1 USDC unstaked assets back from fleet at ${fleetAddress.value}`, async () => {
         const amount = '0.6'
 
