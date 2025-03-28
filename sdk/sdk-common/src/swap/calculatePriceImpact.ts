@@ -10,13 +10,13 @@ import { IPercentage } from '../common/interfaces/IPercentage'
  *      affects the price. It is determined by the breadth and depth of liquidity.
  */
 export function calculatePriceImpact(spotPrice: IPrice, quotePrice: IPrice): IPercentage {
+  const val = spotPrice
+    .toBigNumber()
+    .minus(quotePrice.toBigNumber())
+    .div(spotPrice.toBigNumber())
+    .times(100)
+    .toNumber()
   return Percentage.createFrom({
-    value: spotPrice
-      .toBigNumber()
-      .minus(quotePrice.toBigNumber())
-      .div(spotPrice.toBigNumber())
-      .abs()
-      .times(100)
-      .toNumber(),
+    value: val < 0 ? 0 : val,
   })
 }
