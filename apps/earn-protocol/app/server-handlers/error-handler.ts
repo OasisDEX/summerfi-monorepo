@@ -8,10 +8,8 @@ export const serverOnlyErrorHandler = (
   errorMessage: string,
   additionalParams?: { [key: string]: unknown },
 ) => {
-  console.error(`Error in ${errorSource}:`)
   console.error(
-    'Environment stack:',
-    JSON.stringify(
+    `Error in ${errorSource}:\nEnvironment stack:\n${JSON.stringify(
       {
         NODE_ENV: process.env.NODE_ENV,
         RPC_GATEWAY: process.env.RPC_GATEWAY,
@@ -23,7 +21,7 @@ export const serverOnlyErrorHandler = (
       },
       null,
       2,
-    ),
+    )}`,
   )
 
   throw new Error(errorMessage)
