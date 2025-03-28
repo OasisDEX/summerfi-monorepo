@@ -305,14 +305,10 @@ export const VaultOpenViewComponent = ({
   useEffect(() => {
     const savedVaultsListData = getStorageOnce()
 
-    console.log('savedVaultsListData', savedVaultsListData)
-
     if (savedVaultsListData) {
       const selectedCustomToken = tokenOptions.find(
         (option) => option.value === getDisplayToken(savedVaultsListData.token),
       )
-
-      console.log('selectedCustomToken', selectedCustomToken)
 
       manualSetAmount(savedVaultsListData.amount)
       if (selectedCustomToken) {
