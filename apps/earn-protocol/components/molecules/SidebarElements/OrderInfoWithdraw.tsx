@@ -11,8 +11,8 @@ type OrderInfoWithdrawProps = {
   amountParsed: BigNumber
   amountDisplayUSD: string
   transactionFee?: string
-  transactionFeeLoading: boolean
   chainId: SDKChainId
+  transactionFeeLoading: boolean
 }
 
 export const OrderInfoWithdraw = ({
@@ -20,8 +20,8 @@ export const OrderInfoWithdraw = ({
   amountParsed,
   amountDisplayUSD,
   transactionFee,
-  transactionFeeLoading,
   chainId,
+  transactionFeeLoading,
 }: OrderInfoWithdrawProps) => {
   if (transaction.type !== TransactionType.Withdraw) {
     throw new Error('Invalid transaction type')
