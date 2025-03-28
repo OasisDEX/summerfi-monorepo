@@ -27,10 +27,17 @@ export enum Protocol {
   Euler = 'Euler',
   Aave = 'AaveV3',
   Gearbox = 'Gearbox',
+  Moonwell = 'Moonwell',
+  Silo = 'Silo',
 }
-const supportedProtocols = [Protocol.Morpho, Protocol.Euler, Protocol.Aave, Protocol.Gearbox]
-
-const rewardsService = new RewardsService(logger)
+const supportedProtocols = [
+  Protocol.Morpho,
+  Protocol.Euler,
+  Protocol.Aave,
+  Protocol.Gearbox,
+  Protocol.Moonwell,
+  Protocol.Silo,
+]
 
 export interface NetworkStatus {
   network: Network
@@ -415,8 +422,10 @@ async function updateRewardRates(
   network: NetworkStatus,
   products: Product[],
   updateStartTimestamp: number,
+  ratesSubgraphClient: RatesSubgraphClient,
 ) {
   const chainId = mapDbNetworkToChainId(network.network)
+  const rewardsService = new RewardsService(logger, ratesSubgraphClient)
   const rewardRates = await rewardsService.getRewardRates(products, chainId)
 
   const currentTimestamp = updateStartTimestamp
@@ -748,7 +757,13 @@ export const handler = async (
             .onConflict((oc) => oc.doNothing())
             .execute()
 
-          await updateRewardRates(trx, updatedNetwork, products, updateStartTimestamp)
+          await updateRewardRates(
+            trx,
+            updatedNetwork,
+            products,
+            updateStartTimestamp,
+            ratesSubgraphClient,
+          )
 
           logger.debug('Updated reward rates', {
             network: updatedNetwork.network,

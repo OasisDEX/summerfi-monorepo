@@ -94,7 +94,28 @@ query GetArksRates($productIds: [ID!]!) {
     }
   }
 }
-
+# we get first 10 in case there are multiple rewards with the same timestamp
+query GetArksRewardsRates($productIds: [ID!]!) {
+  products(where: { id_in: $productIds }) {
+    id
+    rewardsInterestRates(orderBy: timestamp, orderDirection: desc, first: 10) {
+      timestamp
+      rate
+      productId
+      protocol
+      token {
+        symbol
+        address
+        decimals
+      }
+      rewardToken {
+        symbol
+        address
+        decimals
+      }
+    }
+  }
+}
 query GetHistoricalArksRates($productIds: [ID!]!, $timestamp: BigInt!) {
   products(where: { id_in: $productIds }) {
     id
