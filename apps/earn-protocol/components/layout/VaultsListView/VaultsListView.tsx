@@ -5,6 +5,7 @@ import {
   DataBlock,
   getUniqueVaultId,
   getVaultsProtocolsList,
+  getVaultUrl,
   SimpleGrid,
   SUMR_CAP,
   Text,
@@ -33,6 +34,7 @@ import {
   zero,
 } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
+import { useRouter } from 'next/navigation'
 
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { networkIconByNetworkName } from '@/constants/networkIcons'
@@ -66,6 +68,7 @@ export const VaultsListView = ({
   vaultsApyByNetworkMap,
 }: VaultsListViewProps) => {
   const { deviceType } = useDeviceType()
+  const { push } = useRouter()
   const { isMobile, isTablet, isMobileOrTablet } = useMobileCheck(deviceType)
 
   const [localVaultNetwork, setLocalVaultNetwork] =
@@ -161,6 +164,13 @@ export const VaultsListView = ({
   }
 
   const handleChangeVault = (nextselectedVaultId: string) => {
+    if (nextselectedVaultId === selectedVaultId) {
+      const vaultUrl = getVaultUrl(resolvedVaultData)
+
+      push(vaultUrl)
+
+      return
+    }
     setSelectedVaultId(nextselectedVaultId)
   }
 

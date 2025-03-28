@@ -96,5 +96,6 @@ export const useTokenSelector = ({ vault, chainId }: TokenSelectorProps) => {
     baseTokenOptions,
     selectedTokenOption,
     handleTokenSelectionChange,
+    setSelectedTokenOption,
   }
 }

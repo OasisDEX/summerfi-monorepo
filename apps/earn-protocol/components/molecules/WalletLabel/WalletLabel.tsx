@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { useAuthModal, useChain, useLogout, useSignerStatus } from '@account-kit/react'
+import { useAuthModal, useLogout, useSignerStatus } from '@account-kit/react'
 import {
   Button,
   type ButtonClassNames,
@@ -12,9 +12,10 @@ import {
   Tooltip,
   useIsIframe,
 } from '@summerfi/app-earn-ui'
-import { formatAddress, safeBTOA } from '@summerfi/app-utils'
+import { formatAddress, safeBTOA, sdkChainIdToHumanNetwork } from '@summerfi/app-utils'
 
 import { networkSDKChainIdIconMap } from '@/constants/network-id-to-icon'
+import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import walletLabelStyles from './WalletLabel.module.scss'
@@ -180,7 +181,9 @@ export default function WalletLabel({
 }: WalletLabelProps) {
   const [addressCopied, setAddressCopied] = useState(false)
   const { userWalletAddress } = useUserWallet()
-  const { chain } = useChain()
+  const { clientChainId } = useClientChainId()
+
+  const chainName = sdkChainIdToHumanNetwork(clientChainId)
 
   const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
   const { isInitializing: isSignerInitializing, isAuthenticating: isSignerAuthenticating } =
@@ -251,7 +254,7 @@ export default function WalletLabel({
           >
             <WalletAvatar
               address={userWalletAddress}
-              chainId={chain.id}
+              chainId={clientChainId}
               size={16}
               iconSize={8}
               hideNetworkIcon={hideNetworkIcon}
@@ -284,7 +287,7 @@ export default function WalletLabel({
         persistWhenOpened
         tooltip={
           <WalletTooltipContent
-            chainName={chain.name}
+            chainName={chainName}
             address={userWalletAddress}
             onCopy={handleCopyAddress}
             copied={addressCopied}
@@ -301,7 +304,7 @@ export default function WalletLabel({
           <Button variant="secondarySmall" className={walletLabelStyles.mainButtonWrapper}>
             <WalletAvatar
               address={userWalletAddress}
-              chainId={chain.id}
+              chainId={clientChainId}
               size={24}
               iconSize={12}
               hideNetworkIcon={hideNetworkIcon}

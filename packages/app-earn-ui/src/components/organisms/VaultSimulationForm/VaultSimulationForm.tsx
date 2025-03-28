@@ -92,7 +92,10 @@ export const VaultSimulationForm = ({
     return () => null
   }, [vaultData.id])
 
-  const { setStorageOnce } = useLocalStorageOnce({
+  const { setStorageOnce } = useLocalStorageOnce<{
+    amount: string
+    token: string
+  }>({
     key: `${vaultData.id}-amount`,
   })
 
@@ -155,7 +158,10 @@ export const VaultSimulationForm = ({
                   label: 'Deposit',
                   url: vaultUrl,
                   action: () => {
-                    setStorageOnce(amountParsed.toNumber())
+                    setStorageOnce({
+                      amount: amountParsed.toString(),
+                      token: selectedTokenOption.value,
+                    })
                   },
                   disabled: isLoading,
                 },

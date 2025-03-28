@@ -89,7 +89,10 @@ export const VaultOpenViewComponent = ({
   vaultApyData,
   vaultsApyRaw,
 }: VaultOpenViewComponentProps) => {
-  const { getStorageOnce } = useLocalStorageOnce<string>({
+  const { getStorageOnce } = useLocalStorageOnce<{
+    amount: string
+    token: string
+  }>({
     key: `${vault.id}-amount`,
   })
   const { publicClient } = useNetworkAlignedClient()
@@ -177,10 +180,11 @@ export const VaultOpenViewComponent = ({
     setSelectedPosition(id)
   }
 
-  const { handleTokenSelectionChange, selectedTokenOption, tokenOptions } = useTokenSelector({
-    vault,
-    chainId: vaultChainId,
-  })
+  const { handleTokenSelectionChange, setSelectedTokenOption, selectedTokenOption, tokenOptions } =
+    useTokenSelector({
+      vault,
+      chainId: vaultChainId,
+    })
 
   const {
     vaultToken,
@@ -299,10 +303,17 @@ export const VaultOpenViewComponent = ({
   const { tosSidebarProps } = useTermsOfServiceSidebar({ tosState, handleGoBack: backToInit })
 
   useEffect(() => {
-    const savedAmount = getStorageOnce()
+    const savedVaultsListData = getStorageOnce()
 
-    if (savedAmount) {
-      manualSetAmount(savedAmount)
+    if (savedVaultsListData) {
+      const selectedCustomToken = tokenOptions.find(
+        (option) => option.value === getDisplayToken(savedVaultsListData.token),
+      )
+
+      manualSetAmount(savedVaultsListData.amount)
+      if (selectedCustomToken) {
+        setSelectedTokenOption(selectedCustomToken)
+      }
     }
   })
   useRedirectToPositionView({ vault, position })
