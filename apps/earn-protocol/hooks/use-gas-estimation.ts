@@ -32,7 +32,7 @@ type UseGasEstimationProps = {
   publicClient: PublicClient
 }
 
-const chainNativeSymbol: { [chainId: number]: string } = {
+const nativeSymbolByChain: { [chainId: number]: string } = {
   [ChainIds.ArbitrumOne]: 'WETH',
   [ChainIds.Base]: 'WETH',
   [ChainIds.Mainnet]: 'WETH',
@@ -63,7 +63,7 @@ export const useGasEstimation = ({
     ) => {
       setLoading(true)
 
-      const nativeSymbol = chainNativeSymbol[chainId]
+      const nativeSymbol = nativeSymbolByChain[chainId]
 
       try {
         const [fetchedGas, gasPrice, nativeToken] = await Promise.all([
