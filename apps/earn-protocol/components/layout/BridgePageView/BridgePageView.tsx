@@ -8,8 +8,8 @@ import { type BridgeExternalData } from '@/features/bridge/types'
 import classNames from './BridgePageView.module.scss'
 
 interface BridgePageViewProps {
-  walletAddress: string
   externalData: BridgeExternalData
+  walletAddress: string
 }
 
 export const BridgePageView: FC<BridgePageViewProps> = ({ walletAddress, externalData }) => {
