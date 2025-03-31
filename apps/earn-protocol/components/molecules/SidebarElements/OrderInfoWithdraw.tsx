@@ -92,15 +92,11 @@ export const OrderInfoWithdraw = ({
                   },
                 ]
               : []),
-            ...(chainId !== SDKChainId.SONIC
-              ? [
-                  {
-                    label: 'Transaction Fee',
-                    value: transactionFee ? `$${formatFiatBalance(transactionFee)}` : 'n/a',
-                    isLoading: transactionFeeLoading,
-                  },
-                ]
-              : []),
+            {
+              label: 'Transaction Fee',
+              value: transactionFee ? `$${formatFiatBalance(transactionFee)}` : 'n/a',
+              isLoading: transactionFeeLoading,
+            },
           ]}
         />
       </div>

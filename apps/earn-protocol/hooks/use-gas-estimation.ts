@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import {
   type Address,
   type BridgeTransactionInfo,
+  ChainIds,
   type ExtendedTransactionInfo,
   type HexData,
   type MigrationTransactionInfo,
@@ -31,6 +32,14 @@ type UseGasEstimationProps = {
   publicClient: PublicClient
 }
 
+const chainNativeSymbol: { [chainId: number]: string } = {
+  [ChainIds.ArbitrumOne]: 'WETH',
+  [ChainIds.Base]: 'WETH',
+  [ChainIds.Mainnet]: 'WETH',
+  [ChainIds.Optimism]: 'WETH',
+  [ChainIds.Sonic]: 'WS',
+}
+
 export const useGasEstimation = ({
   chainId,
   transaction,
@@ -53,8 +62,11 @@ export const useGasEstimation = ({
       _walletAddress: HexData,
     ) => {
       setLoading(true)
+
+      const nativeSymbol = chainNativeSymbol[chainId]
+
       try {
-        const [fetchedGas, gasPrice, ethToken] = await Promise.all([
+        const [fetchedGas, gasPrice, nativeToken] = await Promise.all([
           publicClient.estimateGas({
             account: _walletAddress,
             to: _transaction.transaction.target.value,
@@ -66,7 +78,7 @@ export const useGasEstimation = ({
           publicClient.estimateFeesPerGas(),
           getTokenBySymbol({
             chainId,
-            symbol: 'WETH',
+            symbol: nativeSymbol,
           }),
         ])
         // fee calculation with 20% buffer and including priority fee
@@ -74,15 +86,15 @@ export const useGasEstimation = ({
           // eslint-disable-next-line no-mixed-operators
           (fetchedGas * gasPrice.maxFeePerGas * 120n) / 100n
 
-        const { price: ethPrice } = await getSpotPrice({
-          baseToken: ethToken,
+        const { price: nativePrice } = await getSpotPrice({
+          baseToken: nativeToken,
         })
 
-        const amountEth = formatEther(txFee)
-        const priceInUsd = ethPrice.multiply(amountEth).toString()
+        const nativeAmount = formatEther(txFee)
+        const priceInUsd = nativePrice.multiply(nativeAmount).value.toString()
 
         setTransactionFee(priceInUsd)
-        setRawTransactionFee(amountEth)
+        setRawTransactionFee(nativeAmount)
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error('Gas Estimation failed', e)
