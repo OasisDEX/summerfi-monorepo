@@ -521,7 +521,7 @@ export const VaultManageViewComponent = ({
                   market value of your position. This strategy has no other fees, and there are no
                   restrictions or delays when withdrawing.{' '}
                   {vaultApyData.sma30d
-                    ? ` The 30d APY for this strategy after fees is ${formatDecimalAsPercent(vaultApyData.sma30d)}.`
+                    ? ` The 30d APY for this strategy after fees is ${formatDecimalAsPercent(vaultApyData.sma30d - managementFee)}.`
                     : ''}
                 </Text>
               </Card>
