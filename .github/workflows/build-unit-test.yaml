@@ -10,8 +10,8 @@ on:
     inputs:
       disable_turbo_cache:
         description: 'Disable turbo cache'
-        required: false
-        default: false
+        required: true
+        default: true
         type: boolean
 jobs:
   build:
