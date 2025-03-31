@@ -1,6 +1,6 @@
-import type { RegisterOptions } from 'node_modules/superjson/dist/class-registry'
-import type { CustomTransfomer } from 'node_modules/superjson/dist/custom-transformer-registry'
-import type { JSONValue } from 'node_modules/superjson/dist/types'
+import type { RegisterOptions } from 'superjson/dist/class-registry'
+import type { CustomTransfomer } from 'superjson/dist/custom-transformer-registry'
+import type { JSONValue } from 'superjson/dist/types'
 import { SuperJSON } from 'superjson'
 import { LoggingService } from './LoggingService'
 
