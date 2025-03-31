@@ -13,10 +13,10 @@
     "generate": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config"
   },
   "dependencies": {
-    "@account-kit/core": "^4.20.1",
-    "@account-kit/infra": "^4.20.1",
-    "@account-kit/react": "^4.20.1",
-    "@account-kit/signer": "^4.20.1",
+    "@account-kit/core": "^4.15.3",
+    "@account-kit/infra": "^4.15.3",
+    "@account-kit/react": "^4.15.3",
+    "@account-kit/signer": "^4.15.3",
     "@layerzerolabs/scan-client": "^0.0.8",
     "@loadable/component": "^5.16.4",
     "@safe-global/safe-apps-sdk": "^9.0.0",
