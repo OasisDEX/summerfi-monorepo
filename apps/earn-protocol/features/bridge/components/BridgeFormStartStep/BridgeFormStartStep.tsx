@@ -33,6 +33,7 @@ import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import { useBridgeTransaction } from '@/features/bridge/hooks/use-bridge-transaction'
 import { type BridgeReducerAction, type BridgeState } from '@/features/bridge/types'
 import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
+import { sdkNetworkToAAChain } from '@/helpers/sdk-network-to-aa-chain'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { useRiskVerification } from '@/hooks/use-risk-verification'
@@ -54,6 +55,7 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
   const sourceNetwork = chainIdToSDKNetwork(sourceChain.id)
   const humanNetworkName = sdkNetworkToHumanNetwork(sourceNetwork)
   const searchParams = useSearchParams()
+
   const sourceChainFromParams = searchParams.get('source_chain')
   const amountFromParams = searchParams.get('amount')
   const viaParam = searchParams.get('via')
@@ -239,14 +241,14 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
   }
 
   const handleDestinationChainChange = (newDestination: SDKNetwork) => {
-    dispatch({ type: 'update-destination-chain', payload: sdkNetworkToChain(newDestination) })
+    dispatch({ type: 'update-destination-chain', payload: sdkNetworkToAAChain(newDestination) })
     if (amountParsed.gt(0)) {
       prepareTransaction()
     }
   }
 
   const handleSourceChainChange = (network: SDKNetwork) => {
-    const nextSourceChain = sdkNetworkToChain(network)
+    const nextSourceChain = sdkNetworkToAAChain(network)
 
     setSourceChain({ chain: nextSourceChain })
     if (amountParsed.gt(0)) {
