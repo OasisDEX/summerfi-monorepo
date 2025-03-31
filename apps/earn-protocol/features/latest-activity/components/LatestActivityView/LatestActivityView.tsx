@@ -47,6 +47,9 @@ export const LatestActivityView: FC<LatestActivityViewProps> = ({
   const [isLoadingActivity, setIsLoadingActivity] = useState(false)
   const [isLoadingDepositors, setIsLoadingDepositors] = useState(false)
 
+  const [hasMoreTopDepositorsItems, setHasMoreTopDepositorsItems] = useState(true)
+  const [hasMoreLatestActivityItems, setHasMoreLatestActivityItems] = useState(true)
+
   const strategyFilter = queryParams.strategies
   const tokenFilter = queryParams.tokens
 
@@ -77,44 +80,53 @@ export const LatestActivityView: FC<LatestActivityViewProps> = ({
   )
 
   const handleMoreUserActivityItems = async () => {
+    if (!hasMoreLatestActivityItems || isLoadingActivity) return
     try {
-      setIsLoadingActivity(true)
+      const nextPage = currentLatestActivityPage + 1
       const res = await getLatestActivity({
-        page: currentLatestActivityPage + 1,
+        page: nextPage,
         tokens: tokenFilter,
         strategies: strategyFilter,
         sortBy: latestActivitySortBy,
         orderBy: latestActivityOrderBy,
       })
 
-      setLoadedLatestActivityList((prev) => [...prev, ...res.data])
-      setCurrentLatestActivityPage((prev) => prev + 1)
+      if (res.data.length === 0 || nextPage >= latestActivity.pagination.totalPages) {
+        setHasMoreLatestActivityItems(false)
+      } else {
+        setLoadedLatestActivityList((prev) => [...prev, ...res.data])
+        setCurrentLatestActivityPage((prev) => prev + 1)
+      }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Error fetching more user activity', error)
-    } finally {
-      setIsLoadingActivity(false)
+      setHasMoreLatestActivityItems(false)
     }
   }
 
   const handleMoreTopDepositorsItems = async () => {
+    if (!hasMoreTopDepositorsItems || isLoadingDepositors) return
+
     try {
-      setIsLoadingDepositors(true)
+      const nextPage = currentTopDepositorsPage + 1
       const res = await getTopDepositors({
-        page: currentTopDepositorsPage + 1,
+        page: nextPage,
         tokens: tokenFilter,
         strategies: strategyFilter,
         sortBy: topDepositorsSortBy,
         orderBy: topDepositorsOrderBy,
       })
 
-      setLoadedTopDepositorsList((prev) => [...prev, ...res.data])
-      setCurrentTopDepositorsPage((prev) => prev + 1)
+      if (res.data.length === 0 || nextPage >= topDepositors.pagination.totalPages) {
+        setHasMoreTopDepositorsItems(false)
+      } else {
+        setLoadedTopDepositorsList((prev) => [...prev, ...res.data])
+        setCurrentTopDepositorsPage((prev) => prev + 1)
+      }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Error fetching more top depositors', error)
-    } finally {
-      setIsLoadingDepositors(false)
+      setHasMoreTopDepositorsItems(false)
     }
   }
 
@@ -157,7 +169,7 @@ export const LatestActivityView: FC<LatestActivityViewProps> = ({
     }
 
     setIsLoadingActivity(true)
-
+    setHasMoreLatestActivityItems(true)
     getLatestActivity({
       page: 1,
       tokens: tokenFilter,
@@ -167,6 +179,11 @@ export const LatestActivityView: FC<LatestActivityViewProps> = ({
     })
       .then((res) => {
         setLoadedLatestActivityList(res.data)
+        setCurrentLatestActivityPage(1)
+
+        if (res.data.length === 0 || res.pagination.currentPage >= res.pagination.totalPages) {
+          setHasMoreLatestActivityItems(false)
+        }
       })
       .catch((error) => {
         // eslint-disable-next-line no-console
@@ -183,7 +200,7 @@ export const LatestActivityView: FC<LatestActivityViewProps> = ({
     }
 
     setIsLoadingDepositors(true)
-
+    setHasMoreTopDepositorsItems(true)
     getTopDepositors({
       page: 1,
       tokens: tokenFilter,
@@ -193,6 +210,11 @@ export const LatestActivityView: FC<LatestActivityViewProps> = ({
     })
       .then((res) => {
         setLoadedTopDepositorsList(res.data)
+        setCurrentTopDepositorsPage(1)
+
+        if (res.data.length === 0 || res.pagination.currentPage >= res.pagination.totalPages) {
+          setHasMoreTopDepositorsItems(false)
+        }
       })
       .catch((error) => {
         // eslint-disable-next-line no-console
@@ -245,16 +267,15 @@ export const LatestActivityView: FC<LatestActivityViewProps> = ({
       content: (
         <InfiniteScroll
           loadMore={handleMoreTopDepositorsItems}
-          hasMore={
-            topDepositors.pagination.totalPages > currentTopDepositorsPage &&
-            loadedTopDepositorsList.length > 0 &&
-            !isLoadingDepositors
-          }
+          hasMore={hasMoreTopDepositorsItems}
           loader={
-            <LoadingSpinner
-              key="spinner"
-              style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
-            />
+            // inversed, we don't want loading spinner when skeleton is visible
+            !isLoadingDepositors ? (
+              <LoadingSpinner
+                key="spinner"
+                style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
+              />
+            ) : undefined
           }
         >
           {filters}
@@ -265,6 +286,7 @@ export const LatestActivityView: FC<LatestActivityViewProps> = ({
               content: <TableCarousel carouselData={userActivityTableCarouselData} />,
             }}
             handleSort={handleSortTopDepositors}
+            isLoading={isLoadingDepositors}
           />
         </InfiniteScroll>
       ),
@@ -275,16 +297,15 @@ export const LatestActivityView: FC<LatestActivityViewProps> = ({
       content: (
         <InfiniteScroll
           loadMore={handleMoreUserActivityItems}
-          hasMore={
-            latestActivity.pagination.totalPages > currentLatestActivityPage &&
-            loadedLatestActivityList.length > 0 &&
-            !isLoadingActivity
-          }
+          hasMore={hasMoreLatestActivityItems}
           loader={
-            <LoadingSpinner
-              key="spinner"
-              style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
-            />
+            // inversed, we don't want loading spinner when skeleton is visible
+            !isLoadingActivity ? (
+              <LoadingSpinner
+                key="spinner"
+                style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
+              />
+            ) : undefined
           }
         >
           {filters}
@@ -296,6 +317,7 @@ export const LatestActivityView: FC<LatestActivityViewProps> = ({
             }}
             hiddenColumns={['position']}
             handleSort={handleSortLatestActivity}
+            isLoading={isLoadingActivity}
           />
         </InfiniteScroll>
       ),

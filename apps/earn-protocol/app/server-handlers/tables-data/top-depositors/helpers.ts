@@ -13,7 +13,8 @@ export const calculateTopDepositors7daysChange = ({ position }: { position: Posi
     .filter((withdraw) => Number(withdraw.timestamp) * 1000 > timeStamp7daysAgo)
     .reduce((acc, curr) => acc + Number(curr.amount), 0)
 
-  return new BigNumber(depositsFromLast7Days - withdrawalsFromLast7Days).shiftedBy(
+  // plus since withdrawals are already negative
+  return new BigNumber(depositsFromLast7Days + withdrawalsFromLast7Days).shiftedBy(
     -position.vault.inputToken.decimals,
   )
 }

@@ -68,23 +68,39 @@ export async function signTos<DB extends TOSRequiredDB>({
     )
     .selectAll()
     .execute()
+    .catch((err) => {
+      // eslint-disable-next-line no-console
+      console.error('Error fetching ToS approval:', err)
+    })
 
-  const [currentRecord] = queryResult
+  const currentRecord = queryResult?.find(
+    (record) => record.docVersion === docVersion && record.chainId === decoded.chainId,
+  )
 
   if (currentRecord) {
-    await resolvedDB
-      .updateTable('tosApproval')
-      .where(({ eb, and }) =>
-        and([
-          eb('address', '=', currentRecord.address),
-          eb('docVersion', '=', currentRecord.docVersion),
-          eb('chainId', '=', currentRecord.chainId),
-        ]),
-      )
-      .set(approvalData)
-      .execute()
+    try {
+      await resolvedDB
+        .updateTable('tosApproval')
+        .where(({ eb, and }) =>
+          and([
+            eb('address', '=', currentRecord.address),
+            eb('docVersion', '=', currentRecord.docVersion),
+            eb('chainId', '=', currentRecord.chainId),
+          ]),
+        )
+        .set(approvalData)
+        .execute()
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error updating ToS approval:', error)
+    }
   } else {
-    await resolvedDB.insertInto('tosApproval').values(approvalData).execute()
+    try {
+      await resolvedDB.insertInto('tosApproval').values(approvalData).execute()
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error inserting ToS approval:', error)
+    }
   }
 
   await resolvedDB.destroy().catch((err) => {

@@ -4,14 +4,13 @@ import { useIsIframe } from '@summerfi/app-earn-ui'
 import { type SDKChainId, type TransactionHash } from '@summerfi/app-types'
 import { chainIdToSDKNetwork } from '@summerfi/app-utils'
 import { Address, type IToken, TransactionType } from '@summerfi/sdk-common'
-import { encodeFunctionData } from 'viem'
+import { encodeFunctionData, type PublicClient } from 'viem'
 
 import { accountType } from '@/account-kit/config'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
 import { isValidAddress } from '@/helpers/is-valid-address'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
-import { type useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 
 export const useSendTransaction = ({
   onSuccess,
@@ -28,7 +27,7 @@ export const useSendTransaction = ({
   token: IToken | undefined
   recipient: string | undefined
   chainId: SDKChainId
-  publicClient: ReturnType<typeof useNetworkAlignedClient>['publicClient']
+  publicClient: PublicClient
 }) => {
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
   const isIframe = useIsIframe()
@@ -117,6 +116,12 @@ export const useSendTransaction = ({
     if (!token || !amount || !isValidAddress(recipient)) {
       return undefined
     }
+
+    // eslint-disable-next-line no-mixed-operators
+    const resolvedAmount = BigInt(Number(amount) * 10 ** token.decimals)
+
+    const isEth = ['ETH', 'WETH'].includes(token.symbol)
+
     const transferData = encodeFunctionData({
       abi: [
         {
@@ -129,9 +134,19 @@ export const useSendTransaction = ({
           outputs: [{ type: 'bool' }],
         },
       ],
-      // eslint-disable-next-line no-mixed-operators
-      args: [recipient, BigInt(Number(amount) * 10 ** token.decimals)],
+      args: [recipient, resolvedAmount],
     })
+
+    if (isEth) {
+      return {
+        transaction: {
+          target: Address.createFromEthereum({ value: recipient }),
+          calldata: '0x' as `0x${string}`, // empty calldata for ETH transfer
+          value: resolvedAmount.toString(),
+        },
+        description: 'Send',
+      }
+    }
 
     return {
       transaction: {

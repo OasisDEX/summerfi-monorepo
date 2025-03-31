@@ -1,8 +1,12 @@
 import { type SummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { type GraphQLClient } from 'graphql-request'
 
+import { getLatestTimestamp } from '@/app/server-handlers/tables-data/helpers'
+
 import { getAllRebalanceActivities } from './getter'
 import { insertRebalanceActivitiesInBatches } from './inserter'
+
+const table = 'rebalanceActivity'
 
 /**
  * Updates the rebalance activities by fetching the latest data and inserting it into the database in batches.
@@ -23,25 +27,40 @@ export const updateRebalanceActivity = async ({
   mainnetGraphQlClient,
   baseGraphQlClient,
   arbitrumGraphQlClient,
+  sonicGraphQlClient,
 }: {
   db: SummerProtocolDB['db']
   mainnetGraphQlClient: GraphQLClient
   baseGraphQlClient: GraphQLClient
   arbitrumGraphQlClient: GraphQLClient
+  sonicGraphQlClient: GraphQLClient
 }) => {
   const startTime = Date.now()
-  const [latestRebalanceActivity] = await Promise.all([
-    db.selectFrom('rebalanceActivity').selectAll().orderBy('timestamp', 'desc').limit(1).execute(),
+  const [
+    latestRebalanceActivityMainnet,
+    latestRebalanceActivityBase,
+    latestRebalanceActivityArbitrum,
+    latestRebalanceActivitySonic,
+  ] = await Promise.all([
+    getLatestTimestamp({ network: 'mainnet', db, table }),
+    getLatestTimestamp({ network: 'base', db, table }),
+    getLatestTimestamp({ network: 'arbitrum', db, table }),
+    getLatestTimestamp({ network: 'sonic', db, table }),
   ])
 
-  // Get the most recent timestamp from the database, or 0 if no records exist
-  const lastTimestamp = latestRebalanceActivity[0]?.timestamp || '0'
-
   const allRebalanceActivities = await getAllRebalanceActivities({
-    lastTimestamp,
-    mainnetGraphQlClient,
-    baseGraphQlClient,
-    arbitrumGraphQlClient,
+    timestamps: {
+      mainnet: latestRebalanceActivityMainnet,
+      base: latestRebalanceActivityBase,
+      arbitrum: latestRebalanceActivityArbitrum,
+      sonic: latestRebalanceActivitySonic,
+    },
+    clients: {
+      mainnetGraphQlClient,
+      baseGraphQlClient,
+      arbitrumGraphQlClient,
+      sonicGraphQlClient,
+    },
   })
 
   const { updated } = await insertRebalanceActivitiesInBatches(db, allRebalanceActivities)
@@ -51,7 +70,12 @@ export const updateRebalanceActivity = async ({
 
   return {
     updated,
-    startingFrom: lastTimestamp,
+    startingFrom: {
+      mainnet: latestRebalanceActivityMainnet,
+      base: latestRebalanceActivityBase,
+      arbitrum: latestRebalanceActivityArbitrum,
+      sonic: latestRebalanceActivitySonic,
+    },
     duration,
   }
 }

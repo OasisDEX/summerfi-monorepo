@@ -16,6 +16,7 @@ import {
   isFiatCurrencyAmount,
   isToken,
   type AddressValue,
+  LoggingService,
 } from '@summerfi/sdk-common'
 import { OracleProviderType, SpotPriceInfo } from '@summerfi/sdk-common/oracle'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
@@ -59,19 +60,18 @@ export class OneInchOracleProvider
   }
 
   /** @see IOracleProvider.getSpotPrice */
-  async getSpotPrice(params: {
-    baseToken: IToken
-    quoteToken?: Denomination
-  }): Promise<SpotPriceInfo> {
+  async getSpotPrice(
+    params: Parameters<IOracleProvider['getSpotPrice']>[0],
+  ): ReturnType<IOracleProvider['getSpotPrice']> {
     const authHeader = this._getOneInchSpotAuthHeader()
 
-    if (params.quoteToken && isToken(params.quoteToken)) {
+    if (params.denomination && isToken(params.denomination)) {
       if (Array.isArray(params.baseToken)) {
         throw new Error('Array of tokens is not supported for this operation')
       }
 
       const baseTokenAddress = params.baseToken.address
-      const quoteTokenAddress = params.quoteToken.address
+      const quoteTokenAddress = params.denomination.address
       const quoteCurrencySymbol = FiatCurrency.USD
 
       const spotUrl = this._formatOneInchSpotUrl({
@@ -80,6 +80,7 @@ export class OneInchOracleProvider
         // We use USD as base for both tokens and then derive a spot price
         quoteCurrency: quoteCurrencySymbol,
       })
+      LoggingService.debug('OneInchSpotPriceUrl', spotUrl)
 
       const response = await fetch(spotUrl, {
         headers: authHeader,
@@ -101,7 +102,7 @@ export class OneInchOracleProvider
 
       const responseData = (await response.json()) as OneInchSpotResponse
       const baseToken = params.baseToken
-      const quoteToken = params.quoteToken
+      const quoteToken = params.denomination
       const prices = Object.entries(responseData).map(([address, price]) => {
         const isBaseToken = baseToken.address.equals(
           Address.createFromEthereum({ value: address as AddressValue }),
@@ -137,7 +138,7 @@ export class OneInchOracleProvider
         price: resultingPrice,
       }
     } else {
-      const quoteCurrency = params.quoteToken ?? FiatCurrency.USD
+      const quoteCurrency = params.denomination ?? FiatCurrency.USD
       const baseToken = params.baseToken
 
       const spotUrl = this._formatOneInchSpotUrl({
@@ -186,13 +187,14 @@ export class OneInchOracleProvider
   ): ReturnType<IOracleProvider['getSpotPrices']> {
     const authHeader = this._getOneInchSpotAuthHeader()
 
-    const quote = params.quote ?? FiatCurrency.USD
+    const quote = params.quoteCurrency ?? FiatCurrency.USD
 
     const spotUrl = this._formatOneInchSpotUrl({
       chainInfo: params.chainInfo,
       tokenAddresses: params.baseTokens.map((token) => token.address),
-      quoteCurrency: params.quote,
+      quoteCurrency: params.quoteCurrency,
     })
+    LoggingService.debug('OneInchSpotPricesUrl', spotUrl)
 
     const response = await fetch(spotUrl, {
       headers: authHeader,

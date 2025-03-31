@@ -9,6 +9,7 @@ import {
   getPositionValues,
   getUniqueVaultId,
   NonOwnerPositionBanner,
+  ProjectedEarningsCombined,
   Sidebar,
   SidebarFootnote,
   sidebarFootnote,
@@ -61,6 +62,7 @@ import { MigrationBox } from '@/features/migration/components/MigrationBox/Migra
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
+import { getManagementFee } from '@/helpers/get-management-fee'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -289,6 +291,7 @@ export const VaultManageViewComponent = ({
       ),
       [TransactionType.Deposit]: (
         <OrderInfoDeposit
+          chainId={vaultChainId}
           transaction={nextTransaction}
           amountParsed={amountParsed}
           amountDisplayUSD={amountDisplayUSDWithSwap}
@@ -298,6 +301,7 @@ export const VaultManageViewComponent = ({
       ),
       [TransactionType.Withdraw]: (
         <OrderInfoWithdraw
+          chainId={vaultChainId}
           transaction={nextTransaction}
           amountParsed={amountParsed}
           amountDisplayUSD={amountDisplayUSDWithSwap}
@@ -332,10 +336,6 @@ export const VaultManageViewComponent = ({
       }
       tokenBalanceLoading={selectedTokenBalanceLoading}
       manualSetAmount={manualSetAmount}
-      vault={vault}
-      estimatedEarnings={estimatedEarnings}
-      forecastSummaryMap={forecastSummaryMap}
-      isLoadingForecast={isLoadingForecast}
     />
   )
 
@@ -364,6 +364,16 @@ export const VaultManageViewComponent = ({
     primaryButton: sidebar.primaryButton,
     footnote: (
       <>
+        {!nextTransaction?.type ? (
+          <ProjectedEarningsCombined
+            vault={vault}
+            amountDisplay={amountDisplay}
+            estimatedEarnings={estimatedEarnings}
+            forecastSummaryMap={forecastSummaryMap}
+            isLoadingForecast={isLoadingForecast}
+            ownerView={ownerView}
+          />
+        ) : null}
         {txHashes.map((transactionData) => (
           <TransactionHashPill
             key={transactionData.hash}
@@ -396,8 +406,7 @@ export const VaultManageViewComponent = ({
 
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
-  // "It’s 1% for usd and 0.3% for eth"
-  const managementFee = vault.inputToken.symbol.includes('USD') ? 0.01 : 0.003
+  const managementFee = getManagementFee(vault.inputToken.symbol)
 
   return (
     <>
@@ -413,6 +422,7 @@ export const VaultManageViewComponent = ({
         displaySimulationGraph={displaySimulationGraph}
         simulationGraph={
           <VaultSimulationGraph
+            isManage
             vault={vault}
             forecast={forecast}
             isLoadingForecast={isLoadingForecast}
@@ -497,7 +507,7 @@ export const VaultManageViewComponent = ({
                     marginBottom: 'var(--general-space-24)',
                   }}
                 >
-                  {formatDecimalAsPercent(managementFee)} Management Fee, already included in APY
+                  {formatDecimalAsPercent(managementFee)} management fee
                 </Text>
                 <Text
                   as="p"
@@ -506,10 +516,13 @@ export const VaultManageViewComponent = ({
                     color: 'var(--color-text-secondary)',
                   }}
                 >
-                  A {formatDecimalAsPercent(managementFee)} management fee is applied to your
-                  position, but it’s already factored into the APY you see. This means the rate
-                  displayed reflects your net return - no hidden fees, just straightforward
-                  earnings.
+                  A {formatDecimalAsPercent(managementFee)} annualised management fee is charged for
+                  using this strategy. The fees are continually accounted for and reflected in the
+                  market value of your position. This strategy has no other fees, and there are no
+                  restrictions or delays when withdrawing.{' '}
+                  {vaultApyData.sma30d
+                    ? ` The 30d APY for this strategy after fees is ${formatDecimalAsPercent(vaultApyData.sma30d)}.`
+                    : ''}
                 </Text>
               </Card>
             </Expander>
@@ -557,6 +570,7 @@ export const VaultManageViewComponent = ({
                   walletAddress: viewWalletAddress,
                   selectedPosition,
                 }),
+                disabled: !selectedPosition,
               }}
               migrationBestVaultApy={migrationBestVaultApy}
             />

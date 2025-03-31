@@ -3,6 +3,7 @@ import {
   ControlsDepositWithdraw,
   getDisplayToken,
   getMigrationLandingPageUrl,
+  ProjectedEarningsCombined,
   Sidebar,
   SidebarFootnote,
   sidebarFootnote,
@@ -89,7 +90,10 @@ export const VaultOpenViewComponent = ({
   vaultApyData,
   vaultsApyRaw,
 }: VaultOpenViewComponentProps) => {
-  const { getStorageOnce } = useLocalStorageOnce<string>({
+  const { getStorageOnce } = useLocalStorageOnce<{
+    amount: string
+    token: string
+  }>({
     key: `${vault.id}-amount`,
   })
   const { publicClient } = useNetworkAlignedClient()
@@ -177,10 +181,11 @@ export const VaultOpenViewComponent = ({
     setSelectedPosition(id)
   }
 
-  const { handleTokenSelectionChange, selectedTokenOption, tokenOptions } = useTokenSelector({
-    vault,
-    chainId: vaultChainId,
-  })
+  const { handleTokenSelectionChange, setSelectedTokenOption, selectedTokenOption, tokenOptions } =
+    useTokenSelector({
+      vault,
+      chainId: vaultChainId,
+    })
 
   const {
     vaultToken,
@@ -299,10 +304,17 @@ export const VaultOpenViewComponent = ({
   const { tosSidebarProps } = useTermsOfServiceSidebar({ tosState, handleGoBack: backToInit })
 
   useEffect(() => {
-    const savedAmount = getStorageOnce()
+    const savedVaultsListData = getStorageOnce()
 
-    if (savedAmount) {
-      manualSetAmount(savedAmount)
+    if (savedVaultsListData) {
+      const selectedCustomToken = tokenOptions.find(
+        (option) => option.value === getDisplayToken(savedVaultsListData.token),
+      )
+
+      manualSetAmount(savedVaultsListData.amount)
+      if (selectedCustomToken) {
+        setSelectedTokenOption(selectedCustomToken)
+      }
     }
   })
   useRedirectToPositionView({ vault, position })
@@ -339,6 +351,7 @@ export const VaultOpenViewComponent = ({
       ),
       [TransactionType.Deposit]: (
         <OrderInfoDeposit
+          chainId={vaultChainId}
           transaction={nextTransaction}
           amountParsed={amountParsed}
           amountDisplayUSD={amountDisplayUSDWithSwap}
@@ -362,11 +375,7 @@ export const VaultOpenViewComponent = ({
       tokenBalance={selectedTokenBalance}
       tokenBalanceLoading={selectedTokenBalanceLoading}
       manualSetAmount={manualSetAmount}
-      vault={vault}
-      estimatedEarnings={estimatedEarnings}
-      isLoadingForecast={isLoadingForecast}
       ownerView
-      isOpen
     />
   )
 
@@ -387,6 +396,15 @@ export const VaultOpenViewComponent = ({
     primaryButton: sidebar.primaryButton,
     footnote: (
       <>
+        {!nextTransaction?.type ? (
+          <ProjectedEarningsCombined
+            vault={vault}
+            amountDisplay={amountDisplay}
+            estimatedEarnings={estimatedEarnings}
+            isLoadingForecast={isLoadingForecast}
+            isOpen
+          />
+        ) : null}
         {txHashes.map((transactionData) => (
           <TransactionHashPill
             key={transactionData.hash}
@@ -473,6 +491,7 @@ export const VaultOpenViewComponent = ({
                 walletAddress: userWalletAddress,
                 selectedPosition,
               }),
+              disabled: !selectedPosition,
             }}
             migrationBestVaultApy={migrationBestVaultApy}
           />

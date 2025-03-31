@@ -33,6 +33,9 @@ export const LatestActivity: FC<LatestActivityProps> = ({
     manage: ['strategy', 'balance', 'position'],
   }[page]
 
+  const [isLoadingActivity, setIsLoadingActivity] = useState(false)
+  const [isLoadingDepositors, setIsLoadingDepositors] = useState(false)
+
   const isFirstRender = useRef(true)
 
   const [loadedLatestActivityList, setLoadedLatestActivityList] = useState(latestActivity.data)
@@ -60,6 +63,8 @@ export const LatestActivity: FC<LatestActivityProps> = ({
       return
     }
 
+    setIsLoadingActivity(true)
+
     getLatestActivity({
       page: 1,
       limit: 4,
@@ -75,12 +80,17 @@ export const LatestActivity: FC<LatestActivityProps> = ({
         // eslint-disable-next-line no-console
         console.error('Error fetching latest activity', error)
       })
+      .finally(() => {
+        setIsLoadingActivity(false)
+      })
   }, [latestActivitySorting?.key, latestActivitySorting?.direction, vaultId, walletAddress])
 
   useEffect(() => {
     if (isFirstRender.current) {
       return
     }
+
+    setIsLoadingDepositors(true)
 
     getTopDepositors({
       page: 1,
@@ -95,6 +105,9 @@ export const LatestActivity: FC<LatestActivityProps> = ({
       .catch((error) => {
         // eslint-disable-next-line no-console
         console.error('Error fetching top depositors', error)
+      })
+      .finally(() => {
+        setIsLoadingDepositors(false)
       })
   }, [topDepositorsSorting?.key, topDepositorsSorting?.direction, vaultId])
 
@@ -114,6 +127,8 @@ export const LatestActivity: FC<LatestActivityProps> = ({
           hiddenColumns={latestActivityHiddenColumns}
           noHighlight={noHighlight}
           handleSort={handleLatestActivitySortingChange}
+          skeletonLines={4}
+          isLoading={isLoadingActivity}
         />
       ),
     },
@@ -125,6 +140,8 @@ export const LatestActivity: FC<LatestActivityProps> = ({
           topDepositorsList={loadedTopDepositorsList}
           hiddenColumns={['user', 'strategy', 'noOfDeposits']}
           handleSort={handleTopDepositorsSortingChange}
+          skeletonLines={4}
+          isLoading={isLoadingDepositors}
         />
       ),
     },

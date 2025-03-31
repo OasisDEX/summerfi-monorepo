@@ -1,13 +1,19 @@
-import { type useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
+import { type PublicClient } from 'viem'
 
 type WaitForTransactionParams = {
-  publicClient: ReturnType<typeof useNetworkAlignedClient>['publicClient']
+  publicClient: PublicClient
   hash: `0x${string}`
 }
 
 export const waitForTransaction = async ({ publicClient, hash }: WaitForTransactionParams) => {
-  return await publicClient.waitForTransactionReceipt({
+  const receipt = await publicClient.waitForTransactionReceipt({
     hash,
     confirmations: 2,
   })
+
+  if (receipt.status === 'reverted') {
+    throw new Error('Transaction reverted')
+  }
+
+  return receipt
 }

@@ -11,7 +11,7 @@ export const latestActivityColumns = [
   },
   {
     title: 'Amount',
-    key: 'amount',
+    key: 'amountUsd',
     sortable: true,
   },
   {
@@ -26,7 +26,7 @@ export const latestActivityColumns = [
   },
   {
     title: 'Total Position Balance',
-    key: 'balance',
+    key: 'balanceUsd',
     sortable: true,
   },
   {
@@ -36,5 +36,10 @@ export const latestActivityColumns = [
   },
 ]
 
-export const latestActivityColumnsHiddenOnMobile = ['strategy', 'timestamp', 'balance', 'position']
-export const latestActivityColumnsHiddenOnTablet = ['timestamp', 'balance']
+export const latestActivityColumnsHiddenOnMobile = [
+  'strategy',
+  'timestamp',
+  'balanceUsd',
+  'position',
+]
+export const latestActivityColumnsHiddenOnTablet = ['timestamp', 'balanceUsd']

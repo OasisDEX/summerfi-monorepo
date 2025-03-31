@@ -1,5 +1,5 @@
 import { Icon, OrderInformation, Text } from '@summerfi/app-earn-ui'
-import { type TokenSymbolsList } from '@summerfi/app-types'
+import { SDKChainId, type TokenSymbolsList } from '@summerfi/app-types'
 import { formatCryptoBalance, formatFiatBalance, formatPercent } from '@summerfi/app-utils'
 import { type ExtendedTransactionInfo, type IToken, TransactionType } from '@summerfi/sdk-common'
 import type BigNumber from 'bignumber.js'
@@ -11,6 +11,7 @@ type OrderInfoDepositProps = {
   amountParsed: BigNumber
   amountDisplayUSD: string
   transactionFee?: string
+  chainId: SDKChainId
   transactionFeeLoading: boolean
 }
 
@@ -19,6 +20,7 @@ export const OrderInfoDeposit = ({
   amountParsed,
   amountDisplayUSD,
   transactionFee,
+  chainId,
   transactionFeeLoading,
 }: OrderInfoDepositProps) => {
   if (transaction.type !== TransactionType.Deposit) {
@@ -84,25 +86,39 @@ export const OrderInfoDeposit = ({
                   },
                   {
                     label: 'Price',
-                    value: `${formatCryptoBalance(priceImpact.price.value)} ${
-                      (priceImpact.price.quote as IToken).symbol
-                    }/${(priceImpact.price.base as IToken).symbol}`,
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                    value: priceImpact.price
+                      ? `${formatCryptoBalance(priceImpact.price.value)} ${
+                          (priceImpact.price.quote as IToken).symbol
+                        }/${(priceImpact.price.base as IToken).symbol}`
+                      : 'n/a',
                   },
                   {
                     label: 'Price Impact',
-                    value: formatPercent(priceImpact.impact.value, { precision: 2 }),
+                    value: priceImpact.impact?.value
+                      ? formatPercent(priceImpact.impact.value, { precision: 2 })
+                      : 'n/a',
                   },
                   {
                     label: 'Slippage',
                     value: formatPercent(slippage.value, { precision: 2 }),
                   },
+                  {
+                    label: 'Depositing into Strategy',
+                    value: `${formatCryptoBalance(toAmount.amount)} ${toAmount.token.symbol}`,
+                  },
                 ]
               : []),
-            {
-              label: 'Transaction Fee',
-              value: transactionFee ? `$${formatFiatBalance(transactionFee)}` : 'n/a',
-              isLoading: transactionFeeLoading,
-            },
+
+            ...(chainId !== SDKChainId.SONIC
+              ? [
+                  {
+                    label: 'Transaction Fee',
+                    value: transactionFee ? `$${formatFiatBalance(transactionFee)}` : 'n/a',
+                    isLoading: transactionFeeLoading,
+                  },
+                ]
+              : []),
           ]}
         />
       </div>

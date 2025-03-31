@@ -7,6 +7,7 @@ import {
   Percentage,
   TokenAmount,
   TransactionType,
+  type AddressValue,
   type ApproveTransactionInfo,
   type ArmadaMigratablePosition,
   type ArmadaMigratablePositionApy,
@@ -24,6 +25,7 @@ import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-comm
 import type { IContractsProvider } from '@summerfi/contracts-provider-common'
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import {
+  getAaveV3Address,
   getDeployedContractAddress,
   type IArmadaManagerMigrations,
   type IArmadaVaultId,
@@ -38,15 +40,16 @@ import { aaveV3ConfigsByChainId } from './token-config/aaveV3-config'
 import { morphoBlueConfigsByChainId } from './token-config/morpho-blue-config'
 import type { IOracleManager } from '@summerfi/oracle-common'
 import {
-  abiBalanceOf,
   abiIsAllowed,
   abiAllow,
   abiAllowance,
   abiApprove,
   abiConvertToAssets,
+  abiGetUserAccountData,
+  abiBorrowBalanceOf,
 } from './abi'
 import type { ArmadaMigrationConfig } from './token-config/types'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'bignumber.js'
 
 /**
  * @name ArmadaManagerMigrations
@@ -139,7 +142,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       positions = positionsArrays.flat()
     }
 
-    // filter the tokens that have balance > 0
+    // filter positions with balance
     const nonEmptyPositions = positions.filter(
       (position) => position.positionTokenAmount.toSolidityValue() > 0n,
     )
@@ -183,21 +186,17 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     // read the balances for all supported tokens
     const positions = await Promise.all(
       Object.entries(configMaps).map(async ([_, config]) => {
-        const erc20Contract = Erc20Contract.create({
+        const positionErc20Contract = Erc20Contract.create({
           blockchainClient: client,
           tokensManager: this._tokensManager,
           chainInfo: params.chainInfo,
           address: Address.createFromEthereum({ value: config.positionAddress }),
         })
 
-        const [balance, token, underlyingToken] = await Promise.all([
-          client.readContract({
-            abi: abiBalanceOf,
-            address: config.positionAddress,
-            functionName: 'balanceOf',
-            args: [params.user.wallet.address.value],
+        const [positionBalance, underlyingToken] = await Promise.all([
+          positionErc20Contract.balanceOf({
+            address: params.user.wallet.address,
           }),
-          erc20Contract.getToken(),
           this._tokensManager.getTokenByAddress({
             chainInfo: params.chainInfo,
             address: Address.createFromEthereum({ value: config.underlyingToken }),
@@ -206,21 +205,26 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
 
         const [underlyingAmount] = await Promise.all([
           this._getUnderlyingAmount({
-            balance: balance.toString(),
+            borrowBalance: positionBalance,
             type: params.migrationType,
-            token: token,
             underlyingToken,
           }),
         ])
 
+        const debt = await this._getPositionDebt({
+          chainInfo: params.chainInfo,
+          migrationType: params.migrationType,
+          user: params.user,
+          positionAddress: config.positionAddress,
+        })
+        const hasDebt = debt > 0n
+
         return {
           id: config.positionAddress,
           migrationType: params.migrationType,
-          positionTokenAmount: TokenAmount.createFromBaseUnit({
-            token: token,
-            amount: balance.toString(),
-          }),
+          positionTokenAmount: positionBalance,
           underlyingTokenAmount: underlyingAmount,
+          hasDebt,
           usdValue: FiatCurrencyAmount.createFrom({
             amount: '0',
             fiat: FiatCurrency.USD,
@@ -235,7 +239,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     const prices = await this._oracleManager.getSpotPrices({
       chainInfo: params.chainInfo,
       baseTokens: tokens,
-      quote: FiatCurrency.USD,
+      quoteCurrency: FiatCurrency.USD,
     })
 
     const positionsWithPrices = positions.map((position) => {
@@ -250,11 +254,13 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       return {
         ...position,
         usdValue: position.underlyingTokenAmount.multiply(price),
-      } as ArmadaMigratablePosition
+      }
     })
 
+    const positionsWithoutDebt = positionsWithPrices.filter((position) => !position.hasDebt)
+
     // sort by usd value
-    const sortedPositions = positionsWithPrices.sort((a, b) => {
+    const sortedPositions = positionsWithoutDebt.sort((a, b) => {
       if (b.usdValue.toSolidityValue() > a.usdValue.toSolidityValue()) {
         return 1
       }
@@ -264,35 +270,102 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       return 0
     })
 
-    return sortedPositions
+    return sortedPositions as ArmadaMigratablePosition[]
+  }
+
+  private async _getPositionDebt(params: {
+    chainInfo: IChainInfo
+    migrationType: ArmadaMigrationType
+    user: IUser
+    positionAddress: AddressValue
+  }): Promise<bigint> {
+    switch (params.migrationType) {
+      case ArmadaMigrationType.Compound:
+        return this._getCompoundPositionDebt({
+          chainInfo: params.chainInfo,
+          user: params.user,
+          positionAddress: params.positionAddress,
+        })
+      case ArmadaMigrationType.AaveV3:
+        return this._getAaveV3PositionDebt({
+          chainInfo: params.chainInfo,
+          user: params.user,
+          positionAddress: params.positionAddress,
+        })
+      case ArmadaMigrationType.Morpho:
+        // morpho does not have debt
+        return 0n
+      default:
+        throw new Error('Unsupported migration type: ' + params.migrationType)
+    }
+  }
+
+  private async _getCompoundPositionDebt(params: {
+    chainInfo: IChainInfo
+    user: IUser
+    positionAddress: AddressValue
+  }): Promise<bigint> {
+    const client = await this._blockchainClientProvider.getBlockchainClient({
+      chainInfo: params.chainInfo,
+    })
+
+    const borrowBalance = await client.readContract({
+      abi: abiBorrowBalanceOf,
+      address: params.positionAddress,
+      functionName: 'borrowBalanceOf',
+      args: [params.user.wallet.address.value],
+    })
+
+    return borrowBalance
+  }
+
+  private async _getAaveV3PositionDebt(params: {
+    chainInfo: IChainInfo
+    user: IUser
+    positionAddress: AddressValue
+  }): Promise<bigint> {
+    const client = await this._blockchainClientProvider.getBlockchainClient({
+      chainInfo: params.chainInfo,
+    })
+
+    const [, totalDebtBase] = await client.readContract({
+      abi: abiGetUserAccountData,
+      address: getAaveV3Address({
+        chainInfo: params.chainInfo,
+        contractName: 'pool',
+      }).value,
+      functionName: 'getUserAccountData',
+      args: [params.user.wallet.address.value],
+    })
+
+    return totalDebtBase
   }
 
   private async _getUnderlyingAmount(params: {
-    balance: string
+    borrowBalance: ITokenAmount
     type: ArmadaMigrationType
-    token: IToken
     underlyingToken: IToken
   }) {
     switch (params.type) {
       case ArmadaMigrationType.Compound:
-        return TokenAmount.createFromBaseUnit({
+        return TokenAmount.createFrom({
           token: params.underlyingToken,
-          amount: params.balance,
+          amount: params.borrowBalance.amount,
         })
       case ArmadaMigrationType.AaveV3:
-        return TokenAmount.createFromBaseUnit({
+        return TokenAmount.createFrom({
           token: params.underlyingToken,
-          amount: params.balance,
+          amount: params.borrowBalance.amount,
         })
       case ArmadaMigrationType.Morpho: {
         const client = await this._blockchainClientProvider.getBlockchainClient({
-          chainInfo: params.token.chainInfo,
+          chainInfo: params.borrowBalance.token.chainInfo,
         })
         const convertedBalance = await client.readContract({
           abi: abiConvertToAssets,
-          address: params.token.address.value,
+          address: params.borrowBalance.token.address.value,
           functionName: 'convertToAssets',
-          args: [BigInt(params.balance)],
+          args: [params.borrowBalance.toSolidityValue()],
         })
 
         return TokenAmount.createFromBaseUnit({
@@ -394,6 +467,10 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
   async getMigrationTX(
     params: Parameters<IArmadaManagerMigrations['getMigrationTX']>[0],
   ): ReturnType<IArmadaManagerMigrations['getMigrationTX']> {
+    if (!params.positionIds || params.positionIds.length === 0) {
+      throw new Error('PositionIds are required')
+    }
+
     const shouldStake = params.shouldStake ?? true
 
     const multicallArgs: HexData[] = []
@@ -414,12 +491,24 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       params.positionIds.some((id) => id === position.id),
     )
 
-    // get the migration transaction info from params
+    if (filteredPositions.length === 0) {
+      throw new Error(
+        'No positions found to migrate for the provided position ids: ' + params.positionIds,
+      )
+    }
+
+    LoggingService.debug('filtered positions: ', {
+      positionsIds: params.positionIds.join(', '),
+      positionsResponse: positionsResponse.positions.map((position) => position.id).join(', '),
+      filteredPositions: filteredPositions.map((position) => position.id).join(', '),
+    })
+
+    // get the move calls to multicall
     const moveCalls = filteredPositions.map((position) => this._getMoveCall({ ...position }))
     multicallArgs.push(...moveCalls.map((call) => call.call))
     multicallOperations.push(...moveCalls.map((call) => call.operation))
 
-    // check and swap migrated tokens to fleet token
+    // check the fleet token
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.vaultId.chainInfo,
       address: params.vaultId.fleetAddress,
@@ -428,6 +517,11 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
 
     const swapAmountByPositionId: Record<string, ITokenAmount> = {}
     const priceImpactByPositionId: Record<string, TransactionPriceImpact> = {}
+
+    LoggingService.debug('getMigrationTX: ', {
+      fleetToken: fleetToken.toString(),
+      moveCalls: moveCalls.map((call) => call.operation),
+    })
 
     for (const position of filteredPositions) {
       // We need to swap position when token is not a fleet token
@@ -491,6 +585,10 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
         priceImpactByPositionId,
       },
     }
+    LoggingService.debug(
+      'Migration TX: ',
+      multicallOperations.map((op) => op.toString()),
+    )
 
     const approvalTransactions = await Promise.all(
       filteredPositions.map(async (position) => {
@@ -501,10 +599,6 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     const validApprovalTransactions = approvalTransactions.filter(
       (approval) => approval !== undefined,
     ) as ApproveTransactionInfo[]
-    console.log('approvals: ', {
-      approvalTransactions,
-      filteredApprovals: validApprovalTransactions,
-    })
     if (validApprovalTransactions.length > 0) {
       LoggingService.debug(
         'approvalTransactions: ',

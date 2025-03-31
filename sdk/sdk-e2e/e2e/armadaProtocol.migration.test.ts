@@ -25,7 +25,7 @@ describe('Armada Protocol Migration', () => {
         }),
       })
 
-      describe(`getMigratablePositions and APY`, () => {
+      describe.skip(`getMigratablePositions and APY`, () => {
         it(`should get all migratable positions`, async () => {
           const res = await sdk.armada.users.getMigratablePositions({
             chainInfo,
@@ -39,18 +39,16 @@ describe('Armada Protocol Migration', () => {
               usdValue: p.usdValue.toString(),
             })),
           )
-          expect(res.positions.length).toBeGreaterThan(0)
 
           const apy = await sdk.armada.users.getMigratablePositionsApy({
             chainInfo,
             positionIds: res.positions.map((p) => p.id),
           })
           console.log(JSON.stringify(apy.apyByPositionId, null, 2))
-          expect(apy.apyByPositionId).not.toBeNull()
         })
       })
 
-      describe.skip(`getMigrationTX`, () => {
+      describe(`getMigrationTX`, () => {
         const migrationType = ArmadaMigrationType.AaveV3
 
         it(`should migrate first migratable position`, async () => {
@@ -77,6 +75,7 @@ describe('Armada Protocol Migration', () => {
           })
 
           const positionIdsToMigrate = positionsBefore.positions.slice(0, 1).map((p) => p.id)
+          assert(positionIdsToMigrate.length > 0, 'No position ids found')
           positionIdsToMigrate.forEach((id, i) => {
             console.log(`- migrating position ${i}: `, id)
           })

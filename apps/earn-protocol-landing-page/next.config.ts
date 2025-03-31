@@ -1,4 +1,5 @@
-import type { NextConfig, Redirect } from 'next'
+import type { NextConfig } from 'next'
+import { PHASE_DEVELOPMENT_SERVER } from 'next/dist/shared/lib/constants'
 
 const redirectToProSummer = (pathname: string) => ({
   source: pathname,
@@ -7,21 +8,20 @@ const redirectToProSummer = (pathname: string) => ({
   permanent: true,
 })
 
-const nextConfig: NextConfig = {
+const nextConfig: (phase: string) => NextConfig = (phase) => ({
   devIndicators: {
     position: 'bottom-right',
   },
-  experimental: {
-    turbo: {},
-  },
   output: 'standalone',
   reactStrictMode: false,
-  webpack: (config) => {
-    return {
-      ...config,
-      externals: [...config.externals, 'pino-pretty', 'encoding'],
-    }
-  },
+  ...(phase !== PHASE_DEVELOPMENT_SERVER
+    ? {
+        webpack: (config) => ({
+          ...config,
+          externals: [...config.externals, 'pino-pretty', 'encoding'],
+        }),
+      }
+    : {}),
   sassOptions: {
     prependData: `
         @import './node_modules/include-media/dist/_include-media.scss';
@@ -50,6 +50,6 @@ const nextConfig: NextConfig = {
       redirectToProSummer('/:makerPosition(\\d{1,})'),
     ])
   },
-}
+})
 
 export default nextConfig

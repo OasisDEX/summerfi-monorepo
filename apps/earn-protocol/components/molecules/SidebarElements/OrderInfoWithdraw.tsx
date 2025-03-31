@@ -1,5 +1,5 @@
 import { Icon, OrderInformation, Text } from '@summerfi/app-earn-ui'
-import { type TokenSymbolsList } from '@summerfi/app-types'
+import { SDKChainId, type TokenSymbolsList } from '@summerfi/app-types'
 import { formatCryptoBalance, formatFiatBalance, formatPercent } from '@summerfi/app-utils'
 import { type ExtendedTransactionInfo, type IToken, TransactionType } from '@summerfi/sdk-common'
 import type BigNumber from 'bignumber.js'
@@ -11,6 +11,7 @@ type OrderInfoWithdrawProps = {
   amountParsed: BigNumber
   amountDisplayUSD: string
   transactionFee?: string
+  chainId: SDKChainId
   transactionFeeLoading: boolean
 }
 
@@ -19,6 +20,7 @@ export const OrderInfoWithdraw = ({
   amountParsed,
   amountDisplayUSD,
   transactionFee,
+  chainId,
   transactionFeeLoading,
 }: OrderInfoWithdrawProps) => {
   if (transaction.type !== TransactionType.Withdraw) {
@@ -80,9 +82,9 @@ export const OrderInfoWithdraw = ({
                   },
                   {
                     label: 'Price Impact',
-                    value: formatPercent(priceImpact.impact.value, {
-                      precision: 2,
-                    }),
+                    value: priceImpact.impact?.value
+                      ? formatPercent(priceImpact.impact.value, { precision: 2 })
+                      : 'n/a',
                   },
                   {
                     label: 'Slippage',
@@ -90,11 +92,15 @@ export const OrderInfoWithdraw = ({
                   },
                 ]
               : []),
-            {
-              label: 'Transaction Fee',
-              value: transactionFee ? `$${formatFiatBalance(transactionFee)}` : 'n/a',
-              isLoading: transactionFeeLoading,
-            },
+            ...(chainId !== SDKChainId.SONIC
+              ? [
+                  {
+                    label: 'Transaction Fee',
+                    value: transactionFee ? `$${formatFiatBalance(transactionFee)}` : 'n/a',
+                    isLoading: transactionFeeLoading,
+                  },
+                ]
+              : []),
           ]}
         />
       </div>

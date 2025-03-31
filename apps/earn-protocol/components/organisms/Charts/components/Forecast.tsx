@@ -87,7 +87,7 @@ export const ForecastChart = ({ data, isLoading, tokenPrice }: ForecastChartProp
             layout="horizontal"
             wrapperStyle={{ bottom: '-10px' }}
           />
-          <Customized component={<ChartCross />} />
+          <Customized component={<ChartCross graphicalItemIndex={1} />} />
         </ComposedChart>
       </ResponsiveContainer>
       {isLoading && (

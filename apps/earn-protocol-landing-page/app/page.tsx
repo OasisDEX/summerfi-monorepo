@@ -20,6 +20,7 @@ import { BestOfDecentralizedFinance } from '@/components/layout/LandingPageConte
 import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { CryptoUtilities } from '@/components/layout/LandingPageContent/content/CryptoUtilities'
 import { LandingFaqSection } from '@/components/layout/LandingPageContent/content/LandingFaqSection'
+import { ProtocolStats } from '@/components/layout/LandingPageContent/content/ProtocolStats'
 import { StartEarningNow } from '@/components/layout/LandingPageContent/content/StartEarningNow'
 import { SummerFiProSection } from '@/components/layout/LandingPageContent/content/SummerFiProSection'
 import { SumrToken } from '@/components/layout/LandingPageContent/content/SumrToken'
@@ -52,7 +53,7 @@ const supportedProtocolsConfig: {
   },
   sky: {
     displayName: 'Sky',
-    defillamaProtocolName: 'maker',
+    defillamaProtocolName: 'sky',
     icon: 'scroller_sky',
   },
   spark: {
@@ -121,17 +122,19 @@ export default async function HomePage() {
     }),
   ])
 
-  const protocolTvls = protocolTvlsArray.reduce<{
-    [key in SupportedTvlProtocols]: bigint
-  }>((acc, curr) => ({ ...acc, ...curr }), emptyTvls)
+  const protocolTvls = protocolTvlsArray
+    // filter zero TVL protocols (set to zero because of an error)
+    .filter((protocolTVL) => Object.values(protocolTVL).some((tvl) => tvl !== 0n))
+    .reduce<{
+      [key in SupportedTvlProtocols]: bigint
+    }>((acc, curr) => ({ ...acc, ...curr }), emptyTvls)
 
   const { config } = parseServerResponseToClient(systemConfig)
 
   const vaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig: config })
-  const vaultsList = vaultsWithConfig.filter(({ inputToken }) => inputToken.symbol !== 'EURC')
 
   const vaultsApyByNetworkMap = await getVaultsApy({
-    fleets: vaultsList.map(({ id, protocol: { network } }) => ({
+    fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
       fleetAddress: id,
       chainId: subgraphNetworkToId(network),
     })),
@@ -147,7 +150,11 @@ export default async function HomePage() {
         padding: '0 24px',
       }}
     >
-      <LandingPageHero vaultsList={vaultsList} vaultsApyByNetworkMap={vaultsApyByNetworkMap} />
+      <LandingPageHero
+        vaultsList={vaultsWithConfig}
+        vaultsApyByNetworkMap={vaultsApyByNetworkMap}
+      />
+      <ProtocolStats vaultsList={vaultsWithConfig} />
       <BigGradientBox>
         <EffortlessAccessBlock />
         <SupportedNetworksList />

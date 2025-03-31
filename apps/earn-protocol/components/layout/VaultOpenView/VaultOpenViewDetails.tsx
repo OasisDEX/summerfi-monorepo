@@ -15,6 +15,7 @@ import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistor
 import { LatestActivity } from '@/features/latest-activity/components/LatestActivity/LatestActivity'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
+import { getManagementFee } from '@/helpers/get-management-fee'
 
 import { detailsLinks } from './mocks'
 import { VaultOpenHeaderBlock } from './VaultOpenHeaderBlock'
@@ -36,11 +37,11 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
   rebalanceActivity,
   arksHistoricalChartData,
   arksInterestRates,
+  vaultApyData,
 }) => {
   const summerVaultName = vault.customFields?.name ?? `Summer ${vault.inputToken.symbol} Vault`
 
-  // "It’s 1% for usd and 0.3% for eth"
-  const managementFee = vault.inputToken.symbol.includes('USD') ? 0.01 : 0.003
+  const managementFee = getManagementFee(vault.inputToken.symbol)
 
   return (
     <div
@@ -122,7 +123,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
               marginBottom: 'var(--general-space-24)',
             }}
           >
-            {formatDecimalAsPercent(managementFee)} Management Fee, already included in APY
+            {formatDecimalAsPercent(managementFee)} management fee
           </Text>
           <Text
             as="p"
@@ -131,9 +132,13 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
               color: 'var(--color-text-secondary)',
             }}
           >
-            A {formatDecimalAsPercent(managementFee)} management fee is applied to your position,
-            but it’s already factored into the APY you see. This means the rate displayed reflects
-            your net return - no hidden fees, just straightforward earnings.
+            A {formatDecimalAsPercent(managementFee)} annualised management fee is charged for using
+            this strategy. The fees are continually accounted for and reflected in the market value
+            of your position. This strategy has no other fees, and there are no restrictions or
+            delays when withdrawing.
+            {vaultApyData.sma30d
+              ? ` The 30d APY for this strategy after fees is ${formatDecimalAsPercent(vaultApyData.sma30d)}.`
+              : ''}
           </Text>
         </Card>
       </Expander>

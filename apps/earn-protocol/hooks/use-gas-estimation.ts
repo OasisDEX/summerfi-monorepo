@@ -43,6 +43,8 @@ export const useGasEstimation = ({
   const [transactionFee, setTransactionFee] = useState<string | undefined>(undefined)
   const [rawTransactionFee, setRawTransactionFee] = useState<string | undefined>(undefined)
 
+  const usdTokenSymbol = chainId === 146 ? 'USDC.e' : 'USDC'
+
   useEffect(() => {
     const fetchGasEstimation = async (
       _transaction:
@@ -70,14 +72,14 @@ export const useGasEstimation = ({
           // eslint-disable-next-line no-mixed-operators
           (fetchedGas * gasPrice.maxFeePerGas * 120n) / 100n
 
-        const [ethToken, usdcToken] = await Promise.all([
+        const [ethToken, usdValuedToken] = await Promise.all([
           getTokenBySymbol({
             chainId,
             symbol: 'WETH',
           }),
           getTokenBySymbol({
             chainId,
-            symbol: 'USDC',
+            symbol: usdTokenSymbol,
           }),
         ])
 
@@ -86,7 +88,7 @@ export const useGasEstimation = ({
         const fetchedTransactionFee = await getSwapQuote({
           fromAmount: formatEther(txFee),
           fromToken: ethToken,
-          toToken: usdcToken,
+          toToken: usdValuedToken,
           slippage: 0.1,
         })
 

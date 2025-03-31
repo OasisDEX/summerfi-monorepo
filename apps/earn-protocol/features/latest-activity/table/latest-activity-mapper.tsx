@@ -54,7 +54,7 @@ export const latestActivityMapper = (rawData: LatestActivity[]) => {
             {activityLabelMap[item.actionType]}
           </TableCellText>
         ),
-        amount: (
+        amountUsd: (
           <div
             style={{
               display: 'flex',
@@ -72,7 +72,7 @@ export const latestActivityMapper = (rawData: LatestActivity[]) => {
             {timeAgo({ from: new Date(), to: new Date(Number(item.timestamp) * 1000) })}
           </TableCellText>
         ),
-        balance: (
+        balanceUsd: (
           <div
             style={{
               display: 'flex',

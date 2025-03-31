@@ -145,16 +145,17 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     latestActivity,
   } = await portfolioCallsHandler(walletAddress)
 
-  const vaultsWithConfig = decorateVaultsWithConfig({
-    vaults: vaultsList.vaults,
-    systemConfig: systemConfig.config,
-  })
-
   const userPositionsJsonSafe = userPositions
     ? parseServerResponseToClient<IArmadaPosition[]>(userPositions)
     : []
 
   const migratablePositions = parseServerResponseToClient(migratablePositionsData)
+
+  const vaultsWithConfig = decorateVaultsWithConfig({
+    vaults: vaultsList.vaults,
+    systemConfig: systemConfig.config,
+    userPositions: userPositionsJsonSafe,
+  })
 
   const positionsWithVault = userPositionsJsonSafe.map((position) => {
     return mergePositionWithVault({
@@ -249,14 +250,15 @@ export async function generateMetadata({ params }: PortfolioPageProps): Promise<
 
   const { userPositions, vaultsList, systemConfig } = await portfolioCallsHandler(walletAddress)
 
-  const vaultsWithConfig = decorateVaultsWithConfig({
-    vaults: vaultsList.vaults,
-    systemConfig: systemConfig.config,
-  })
-
   const userPositionsJsonSafe = userPositions
     ? parseServerResponseToClient<IArmadaPosition[]>(userPositions)
     : []
+
+  const vaultsWithConfig = decorateVaultsWithConfig({
+    vaults: vaultsList.vaults,
+    systemConfig: systemConfig.config,
+    userPositions: userPositionsJsonSafe,
+  })
 
   const positionsWithVault = userPositionsJsonSafe.map((position) => {
     return mergePositionWithVault({

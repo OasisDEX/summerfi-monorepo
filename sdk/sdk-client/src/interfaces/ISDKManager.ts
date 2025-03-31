@@ -1,9 +1,10 @@
-import { IArmadaManagerClient } from './ArmadaManager/IArmadaManagerClient'
-import { IChainsManagerClient } from './IChainsManager'
-import { IPortfolioManager } from './IPortfolioManager'
+import type { IArmadaManagerClient } from './ArmadaManager/IArmadaManagerClient'
+import type { IChainsManagerClient } from './IChainsManager'
+import type { IOracleManagerClient } from './IOracleManagerClient'
+import type { IPortfolioManager } from './IPortfolioManager'
 import type { ISwapManagerClient } from './ISwapManagerClient'
-import { IUsersManager } from './IUsersManager'
-import { ISimulationManager } from './simulations/ISimulationManager'
+import type { IUsersManager } from './IUsersManager'
+import type { ISimulationManager } from './simulations/ISimulationManager'
 
 /**
  * SDKManager is the main entry point for interacting with the SDK in the client side
@@ -23,4 +24,6 @@ export interface ISDKManager {
   readonly armada: IArmadaManagerClient
   /** Swap Manager for interacting with the swaps */
   readonly swaps: ISwapManagerClient
+  /** Swap Manager for interacting with the swaps */
+  readonly oracle: IOracleManagerClient
 }

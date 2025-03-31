@@ -7,6 +7,7 @@ export type Styles = {
   rightBlockWrapper: string
   rightExtraBlockMobileWrapper: string
   rotate: string
+  vaultBonusWrapper: string
   vaultManageGridBreadcrumbsWrapper: string
   vaultManageGridPositionWrapper: string
   vaultManageGridTopLeftWrapper: string

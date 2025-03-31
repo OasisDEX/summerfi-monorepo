@@ -57,19 +57,19 @@ const contentCards: {
   {
     title: 'Best yields',
     description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Vivamus cursus, elit ut auctor dignissim, justo nisi tincidunt ',
+      'Lazy Summer Protocol users earn more. Consistently outperforming benchmark DeFi yields thanks to automated, AI-powered rebalancing.',
     iconName: 'plant_colorful',
   },
   {
     title: 'Highest Quality Protocols',
     description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Vivamus cursus, elit ut auctor dignissim, justo nisi tincidunt ',
+      'Lazy Summer Protocol curates only the highest-quality strategies and protocols. Carefully selected for safety, reliability, and performance.',
     iconName: 'checkmark_cookie_colorful',
   },
   {
     title: 'Automated Rebalancing',
     description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Vivamus cursus, elit ut auctor dignissim, justo nisi tincidunt ',
+      'Take the hassle out of yield hunting by automatically rebalancing your capital across top-tier strategies and protocols—so you never miss evolving market opportunities.',
     iconName: 'migrate_colorful',
   },
 ]
@@ -110,9 +110,8 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
   const { userWalletAddress } = useUserWallet()
   const [isRefreshing, setIsRefreshing] = useState(false)
 
-  const isOwner = walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
-
   const positionId = searchParams.get('positionId')
+  const isOwner = walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
 
   const [showAllPositions, setShowAllPositions] = useState(!positionId)
   const [selectedPosition, setSelectedPosition] = useState<string | null>(positionId)

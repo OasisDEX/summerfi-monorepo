@@ -21,6 +21,8 @@ interface LatestActivityTableProps {
   rowsToDisplay?: number
   noHighlight?: boolean
   handleSort?: (sortConfig: TableSortedColumn<string>) => void
+  isLoading?: boolean
+  skeletonLines?: number
 }
 
 export const LatestActivityTable: FC<LatestActivityTableProps> = ({
@@ -30,6 +32,8 @@ export const LatestActivityTable: FC<LatestActivityTableProps> = ({
   rowsToDisplay,
   noHighlight,
   handleSort,
+  isLoading,
+  skeletonLines,
 }) => {
   const { deviceType } = useDeviceType()
   const { isMobile, isTablet } = useMobileCheck(deviceType)
@@ -53,6 +57,8 @@ export const LatestActivityTable: FC<LatestActivityTableProps> = ({
         hiddenColumns={resolvedHiddenColumns}
         onRowHover={!noHighlight ? (id?: string) => setHighlightedAddress(id) : undefined}
         highlightedRow={!noHighlight ? highlightedAddress : undefined}
+        isLoading={isLoading}
+        skeletonLines={skeletonLines}
       />
       {rows.length === 0 && (
         <Text

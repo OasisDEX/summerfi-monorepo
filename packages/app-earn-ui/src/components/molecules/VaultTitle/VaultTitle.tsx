@@ -10,6 +10,8 @@ import { GenericTokenIcon } from '@/components/atoms/GenericTokenIcon/GenericTok
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { Text } from '@/components/atoms/Text/Text'
+import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
+import { networkWarnings } from '@/constants/earn-protocol'
 import { getDisplayToken } from '@/helpers/get-display-token'
 import { getTokenGuarded } from '@/tokens/helpers'
 
@@ -20,6 +22,7 @@ const networkIdIconMap = {
   [NetworkIds.BASEMAINNET]: <Icon iconName="earn_network_base" size={16} />,
   [NetworkIds.ARBITRUMMAINNET]: <Icon iconName="earn_network_arbitrum" size={16} />,
   [NetworkIds.OPTIMISMMAINNET]: <Icon iconName="earn_network_optimism" size={16} />,
+  [NetworkIds.SONICMAINNET]: <Icon iconName="earn_network_sonic" size={16} />,
 }
 
 const networkNameIconMap = {
@@ -27,6 +30,7 @@ const networkNameIconMap = {
   [SDKNetwork.Base]: <Icon iconName="earn_network_base" size={16} />,
   [SDKNetwork.ArbitrumOne]: <Icon iconName="earn_network_arbitrum" size={16} />,
   [SDKNetwork.Optimism]: <Icon iconName="earn_network_optimism" size={16} />,
+  [SDKNetwork.SonicMainnet]: <Icon iconName="earn_network_sonic" size={16} />,
 }
 
 interface VaultTitleProps {
@@ -37,6 +41,7 @@ interface VaultTitleProps {
   selected?: boolean
   titleVariant?: TextVariants
   isLoading?: boolean
+  isVaultCard?: boolean
 }
 
 export const VaultTitle: FC<VaultTitleProps> = ({
@@ -47,6 +52,7 @@ export const VaultTitle: FC<VaultTitleProps> = ({
   selected,
   titleVariant = 'h4',
   isLoading,
+  isVaultCard,
 }) => {
   const resolvedSymbol = getDisplayToken(symbol)
   const isIconDefined = getTokenGuarded(resolvedSymbol)?.iconName
@@ -101,6 +107,25 @@ export const VaultTitle: FC<VaultTitleProps> = ({
         </div>
         {value && <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>{value}</div>}
       </div>
+      {!isVaultCard && networkName && networkWarnings[networkName]?.enabled ? (
+        <Tooltip
+          style={{
+            margin: '0 10px',
+          }}
+          tooltipWrapperStyles={{
+            marginTop: '20px',
+          }}
+          tooltip={
+            networkWarnings[networkName].message ? (
+              <Text variant="p4semi" style={{ whiteSpace: 'pre' }}>
+                {networkWarnings[networkName].message}
+              </Text>
+            ) : undefined
+          }
+        >
+          <Icon iconName="vault_network_warning" />
+        </Tooltip>
+      ) : null}
     </div>
   )
 }

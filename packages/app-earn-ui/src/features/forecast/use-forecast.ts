@@ -76,6 +76,7 @@ export const useForecast = ({
             'Failed to fetch forecast:',
             error instanceof Error ? error.message : 'Unknown error',
           )
+          setForecast(undefined)
           setIsLoadingForecast(false)
         })
 

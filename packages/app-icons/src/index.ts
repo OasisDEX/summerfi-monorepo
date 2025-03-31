@@ -89,6 +89,7 @@ export const icons = {
   earn_network_blast: customLazy(() => import('./icons/earn_network_blast.svg?react')),
   earn_network_ethereum: customLazy(() => import('./icons/earn_network_ethereum.svg?react')),
   earn_network_optimism: customLazy(() => import('./icons/earn_network_optimism.svg?react')),
+  earn_network_sonic: customLazy(() => import('./icons/earn_network_sonic.svg?react')),
   edit: customLazy(() => import('./icons/edit.svg?react')),
   ena: customLazy(() => import('./icons/ena.svg?react')),
   eth_circle_color: customLazy(() => import('./icons/eth_circle_color.svg?react')),
@@ -292,6 +293,7 @@ export const icons = {
   usdt: customLazy(() => import('./icons/usdt.svg?react')),
   'usd₮0_circle_color': customLazy(() => import('./icons/usd₮0_circle_color.svg?react')),
   user: customLazy(() => import('./icons/user.svg?react')),
+  vault_network_warning: customLazy(() => import('./icons/vault_network_warning.svg?react')),
   wallet: customLazy(() => import('./icons/wallet.svg?react')),
   wbtc_circle_color: customLazy(() => import('./icons/wbtc_circle_color.svg?react')),
   wbtc_color: customLazy(() => import('./icons/wbtc_color.svg?react')),
@@ -358,7 +360,9 @@ export const icons = {
 }
 
 // used only in OG images - can't lazy load anything there
-export const iconsSync = {
+export const iconsSync: {
+  [key in keyof typeof icons]: Promise<typeof import('*.svg?react')>
+} = {
   aave_cbETH_usdc: import('./icons/aave_cbETH_usdc.svg?react'),
   aave_circle_color: import('./icons/aave_circle_color.svg?react'),
   aave_eth_usdc: import('./icons/aave_eth_usdc.svg?react'),
@@ -440,6 +444,7 @@ export const iconsSync = {
   earn_network_blast: import('./icons/earn_network_blast.svg?react'),
   earn_network_ethereum: import('./icons/earn_network_ethereum.svg?react'),
   earn_network_optimism: import('./icons/earn_network_optimism.svg?react'),
+  earn_network_sonic: import('./icons/earn_network_sonic.svg?react'),
   edit: import('./icons/edit.svg?react'),
   ena: import('./icons/ena.svg?react'),
   eth_circle_color: import('./icons/eth_circle_color.svg?react'),
@@ -613,6 +618,7 @@ export const iconsSync = {
   usdt: import('./icons/usdt.svg?react'),
   'usd₮0_circle_color': import('./icons/usd₮0_circle_color.svg?react'),
   user: import('./icons/user.svg?react'),
+  vault_network_warning: import('./icons/vault_network_warning.svg?react'),
   wallet: import('./icons/wallet.svg?react'),
   wbtc_circle_color: import('./icons/wbtc_circle_color.svg?react'),
   wbtc_color: import('./icons/wbtc_color.svg?react'),

@@ -115,6 +115,7 @@ export {
   type MarketingPointsListData,
 } from './components/organisms/MarketingPointsList/MarketkingPointsList'
 export { ControlsDepositWithdraw } from './components/organisms/ControlsDepositWithdraw/ControlsDepositWithdraw'
+export { ProjectedEarningsCombined } from './components/organisms/ProjectedEarningsCombined/ProjectedEarningsCombined'
 
 export { useToggle } from './hooks/use-toggle'
 export { useHash } from './hooks/use-hash'
@@ -157,6 +158,8 @@ export { getDisplayToken } from './helpers/get-display-token'
 export { softRouterPush } from './helpers/soft-router-push'
 export { isVaultAtLeastDaysOld } from './helpers/is-vault-at-least-days-old'
 export { INTERNAL_LINKS, EXTERNAL_LINKS } from './helpers/application-links'
+export { getVaultsProtocolsList } from './helpers/get-vaults-protocols-list'
+
 export { getTokenGuarded } from './tokens/helpers'
 
 // forecast stuff

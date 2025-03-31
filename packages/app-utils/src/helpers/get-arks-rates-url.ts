@@ -18,6 +18,7 @@ export const getArkHistoricalRatesUrl = ({
     [SDKNetwork.Mainnet]: `${apiUrl}/api/historicalRates/${SDKChainId.MAINNET}`,
     [SDKNetwork.Base]: `${apiUrl}/api/historicalRates/${SDKChainId.BASE}`,
     [SDKNetwork.ArbitrumOne]: `${apiUrl}/api/historicalRates/${SDKChainId.ARBITRUM}`,
+    [SDKNetwork.SonicMainnet]: `${apiUrl}/api/historicalRates/${SDKChainId.SONIC}`,
   })[network]
 
 /**
@@ -38,6 +39,7 @@ export const getArkRatesUrl = ({
     [SDKNetwork.Mainnet]: `${apiUrl}/api/rates/${SDKChainId.MAINNET}`,
     [SDKNetwork.Base]: `${apiUrl}/api/rates/${SDKChainId.BASE}`,
     [SDKNetwork.ArbitrumOne]: `${apiUrl}/api/rates/${SDKChainId.ARBITRUM}`,
+    [SDKNetwork.SonicMainnet]: `${apiUrl}/api/rates/${SDKChainId.SONIC}`,
   })[network]
 
 /**

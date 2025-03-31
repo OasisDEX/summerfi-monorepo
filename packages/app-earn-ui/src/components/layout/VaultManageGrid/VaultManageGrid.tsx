@@ -15,6 +15,7 @@ import { type IArmadaPositionStandalone as IArmadaPosition } from '@summerfi/arm
 import clsx from 'clsx'
 import Link from 'next/link'
 
+import { AdditionalBonusLabel } from '@/components/atoms/AdditionalBonusLabel/AdditionalBonusLabel'
 import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
 import { Box } from '@/components/atoms/Box/Box'
 import { Icon } from '@/components/atoms/Icon/Icon'
@@ -77,7 +78,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
       ? formatDecimalAsPercent(vaultApyData.sma30d)
       : 'n/a'
     : 'New strategy'
-  const aprCurrent = formatDecimalAsPercent(vaultApyData.apy)
+  const aprCurrent = vaultApyData.apy ? formatDecimalAsPercent(vaultApyData.apy) : 'New strategy'
 
   const noOfDeposits = position.deposits.length.toString()
 
@@ -170,11 +171,17 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 networkName={vault.protocol.network}
               />
             </Dropdown>
-            {Number(rawSumrTokenBonus) > 0 && (
-              <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-                <BonusLabel tokenBonus={sumrTokenBonus} withTokenBonus />
-              </Text>
-            )}
+            <div className={vaultManageGridStyles.vaultBonusWrapper}>
+              {Number(rawSumrTokenBonus) > 0 && (
+                <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+                  <BonusLabel
+                    tokenBonus={sumrTokenBonus}
+                    withTokenBonus={Number(rawSumrTokenBonus) > 0}
+                  />
+                </Text>
+              )}
+              <AdditionalBonusLabel bonus={vault.customFields?.bonus} />
+            </div>
           </div>
           <AnimateHeight id="simulation-graph" scale show={displaySimulationGraphStaggered}>
             {simulationGraph}

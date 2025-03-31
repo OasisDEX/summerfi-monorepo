@@ -39,7 +39,7 @@ const customFetchCache = async (url: RequestInfo | URL, params?: RequestInit) =>
     })
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('customFetchCache error', error)
+    console.error('customFetchCache error:', error)
 
     throw error
   }
@@ -60,6 +60,12 @@ const clients = {
   ),
   [SDKNetwork.ArbitrumOne]: new GraphQLClient(
     `${process.env.SUBGRAPH_BASE}/summer-earn-protocol-rates-arbitrum`,
+    {
+      fetch: customFetchCache,
+    },
+  ),
+  [SDKNetwork.SonicMainnet]: new GraphQLClient(
+    `${process.env.SUBGRAPH_BASE}/summer-earn-protocol-rates-sonic`,
     {
       fetch: customFetchCache,
     },

@@ -4,8 +4,10 @@ export const getProtocolTvl = async (
 ): Promise<{
   [protocol: string]: bigint
 }> => {
+  const url = `https://api.llama.fi/tvl/${defillamaProtocolName}`
+
   try {
-    const response = await fetch(`https://api.llama.fi/tvl/${defillamaProtocolName}`)
+    const response = await fetch(url)
     const responseJson = await response.json()
     const tvl = String(responseJson)
 
@@ -16,9 +18,12 @@ export const getProtocolTvl = async (
     // eslint-disable-next-line no-console
     console.error(
       `Error fetching TVL for ${defillamaProtocolName} (${originalProtocolName}) `,
+      url,
       error,
     )
 
-    throw error
+    return {
+      [originalProtocolName]: BigInt(0),
+    }
   }
 }

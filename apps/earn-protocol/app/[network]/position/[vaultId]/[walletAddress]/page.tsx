@@ -57,7 +57,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
 
   const parsedVaultId = isAddress(vaultId)
-    ? vaultId
+    ? vaultId.toLowerCase()
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
   if (!parsedVaultId && !isAddress(vaultId)) {
@@ -121,9 +121,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     systemConfig,
   })
 
-  const allVaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig }).filter(
-    ({ inputToken }) => inputToken.symbol !== 'EURC',
-  )
+  const allVaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })
 
   const { netValue } = getPositionValues({
     position,
@@ -171,7 +169,9 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   ])
 
   const vaultApyData =
-    vaultsApyRaw[`${vaultWithConfig.id}-${subgraphNetworkToId(vaultWithConfig.protocol.network)}`]
+    vaultsApyRaw[
+      `${vaultWithConfig.id}-${subgraphNetworkToId(vaultWithConfig.protocol.network)}`
+    ] ?? {}
 
   if (!positionForecastResponse.ok) {
     throw new Error('Failed to fetch forecast data')
@@ -232,7 +232,7 @@ export async function generateMetadata({ params }: EarnVaultManagePageProps): Pr
   const baseUrl = new URL(`https://${prodHost}`)
 
   const parsedVaultId = isAddress(vaultId)
-    ? vaultId
+    ? vaultId.toLowerCase()
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
   const [position, vault] = await Promise.all([

@@ -60,6 +60,8 @@ import { getMigratablePositions } from './armada-protocol-handlers/users/getMigr
 import { getMigrationTX } from './armada-protocol-handlers/users/getMigrationTX'
 import { getBridgeTx } from './armada-protocol-handlers/users/getBridgeTx'
 import { getMigratablePositionsApy } from './armada-protocol-handlers/users/getMigratablePositionsApy'
+import { getSpotPrice } from './handlers/getSpotPrice'
+import { getSpotPrices } from './handlers/getSpotPrices'
 
 /**
  * Server
@@ -89,6 +91,10 @@ export const sdkAppRouter = router({
   swaps: {
     getSwapDataExactInput: getSwapDataExactInput,
     getSwapQuoteExactInput: getSwapQuoteExactInput,
+  },
+  oracle: {
+    getSpotPrice: getSpotPrice,
+    getSpotPrices: getSpotPrices,
   },
   armada: {
     users: {

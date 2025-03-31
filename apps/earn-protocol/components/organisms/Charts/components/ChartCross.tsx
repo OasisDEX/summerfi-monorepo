@@ -5,8 +5,11 @@ export const ChartCross = ({
   tooltipTicks,
   formattedGraphicalItems,
   offset,
+  graphicalItemIndex,
   ...rest
-}: CategoricalChartState) => {
+}: CategoricalChartState & {
+  graphicalItemIndex?: number
+}) => {
   // custom component for showing our 'crosshair' on the chart
   if (
     offset &&
@@ -19,7 +22,8 @@ export const ChartCross = ({
     }
     // taking the active point by active tooltip index (same count as points)
     // kinda hacky, but it works for now, we might revisit that later
-    const { x, y } = formattedGraphicalItems[0].props.points[activeTooltipIndex]
+    const { x, y } =
+      formattedGraphicalItems[graphicalItemIndex ?? 0].props.points[activeTooltipIndex]
     const pointProps = { cx: x, cy: y }
 
     return (

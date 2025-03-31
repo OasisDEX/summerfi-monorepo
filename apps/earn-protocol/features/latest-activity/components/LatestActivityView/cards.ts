@@ -27,7 +27,7 @@ export const getLatestActivityHeadingCards = ({
   },
   {
     title: 'Median Deposits Size',
-    value: `${formatCryptoBalance(medianDeposit)}`,
+    value: `$${formatCryptoBalance(medianDeposit)}`,
     description: 'The median size of a deposit across all users and positions. ',
   },
 ]

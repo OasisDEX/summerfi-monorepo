@@ -2,12 +2,11 @@ import { useCallback, useEffect, useState } from 'react'
 import { ten } from '@summerfi/app-utils'
 import { getChainInfoByChainId, type HexData, type IToken } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
-import { erc20Abi } from 'viem'
+import { erc20Abi, type PublicClient } from 'viem'
 
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import { useAppSDK } from './use-app-sdk'
-import type { useNetworkAlignedClient } from './use-network-aligned-client'
 
 export interface TokenBalanceData {
   vaultToken: IToken | undefined
@@ -34,7 +33,7 @@ export const useTokenBalance = ({
   skip, // to be used when we there are multiple calls of this hook within single component
   overwriteWalletAddress,
 }: {
-  publicClient: ReturnType<typeof useNetworkAlignedClient>['publicClient']
+  publicClient: PublicClient
   vaultTokenSymbol: string
   tokenSymbol: string
   chainId: number

@@ -5,7 +5,7 @@ import { Logger } from '@aws-lambda-powertools/logger'
 
 const morphoTokenByChainId: Partial<Record<ChainId, string>> = {
   [ChainId.BASE]: '0xBAa5CC21fd487B8Fcc2F632f3F4E8D37262a0842',
-  [ChainId.MAINNET]: '0x5956F3590814dC8f92Cf1D16d7D3B54e56Ec9090',
+  [ChainId.MAINNET]: '0x58D97B57BB95320F9a05dC918Aef65434969c2B2',
 }
 
 interface AaveMeritResponse {
@@ -59,17 +59,8 @@ interface EulerReward {
   }
 }
 interface MorphoVaultReward {
-  id: string
-  address: string
-  symbol: string
-  name: string
-  chain: {
-    id: string
-  }
-  creationBlockNumber: number
+  address: string // Only needed fields for vault identification
   state: {
-    netApy: number
-    netApyWithoutRewards: number
     rewards: {
       supplyApr: number
       asset: {
@@ -77,6 +68,19 @@ interface MorphoVaultReward {
         symbol: string
         decimals: number
       }
+    }[]
+    allocation: {
+      market: {
+        state: {
+          rewards: {
+            supplyApr: number
+            asset: {
+              symbol: string
+            }
+          }[]
+        }
+      }
+      supplyAssetsUsd: number
     }[]
   }
 }
@@ -241,17 +245,8 @@ export class RewardsService {
       query GetVaultRewards($vaults: [String!]!, $chainId: Int!) {
         vaults(where: { address_in: $vaults, chainId_in: [$chainId] }) {
           items {
-            id
             address
-            symbol
-            name
-            chain {
-              id
-            }
-            creationBlockNumber
             state {
-              netApy
-              netApyWithoutRewards
               rewards {
                 supplyApr
                 asset {
@@ -259,6 +254,19 @@ export class RewardsService {
                   symbol
                   decimals
                 }
+              }
+              allocation {
+                market {
+                  state {
+                    rewards {
+                      supplyApr
+                      asset {
+                        symbol
+                      }
+                    }
+                  }
+                }
+                supplyAssetsUsd
               }
             }
           }
@@ -301,14 +309,34 @@ export class RewardsService {
     if (!morphoTokenByChainId[chainId]) {
       return []
     }
-    const totalRewardsRate =
-      (parseFloat(vaultData.state.netApy.toString()) -
-        parseFloat(vaultData.state.netApyWithoutRewards.toString())) *
-      100
 
+    // Calculate total allocated assets in USD
+    const totalAssetsAllocated = vaultData.state.allocation.reduce(
+      (sum, alloc) => sum + alloc.supplyAssetsUsd,
+      0,
+    )
+
+    // Calculate weighted rewards across all markets
+    const weightedMorphoTokenRewardsApy = vaultData.state.allocation.reduce((acc, allocation) => {
+      const marketRewards = allocation.market.state.rewards
+        .filter((reward) => reward.asset.symbol === 'MORPHO')
+        .map((reward) => {
+          return reward.supplyApr * (allocation.supplyAssetsUsd / totalAssetsAllocated)
+        })
+
+      return acc.concat(marketRewards)
+    }, [] as number[])
+
+    // Calculate total rewards APY
+    const morphoTokenRewardsApy = weightedMorphoTokenRewardsApy.reduce(
+      (sum, reward) => sum + reward,
+      0,
+    )
+
+    // Create reward rates array
     const rewards = vaultData.state.rewards.map((reward, index) => ({
       rewardToken: reward.asset.address,
-      rate: (reward.supplyApr * 100).toString(),
+      rate: (reward.supplyApr * 100).toString(), // Convert to percentage
       index,
       token: {
         address: reward.asset.address,
@@ -318,14 +346,12 @@ export class RewardsService {
       },
     }))
 
-    const totalVaultRewardsRate = rewards.reduce((sum, reward) => sum + parseFloat(reward.rate), 0)
-    const morphoTokenRewardRate = totalRewardsRate - totalVaultRewardsRate
-
+    // Add Morpho token reward
     return [
       ...rewards,
       {
         rewardToken: morphoTokenByChainId[chainId],
-        rate: morphoTokenRewardRate.toString(),
+        rate: (morphoTokenRewardsApy * 100).toString(), // Convert to percentage
         index: rewards.length,
         token: {
           address: morphoTokenByChainId[chainId],

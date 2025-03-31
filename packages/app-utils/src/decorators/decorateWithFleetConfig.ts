@@ -1,4 +1,8 @@
-import { type EarnAppConfigType, type SDKVaultishType } from '@summerfi/app-types'
+import {
+  type EarnAppConfigType,
+  type IArmadaPosition,
+  type SDKVaultishType,
+} from '@summerfi/app-types'
 
 import { subgraphNetworkToId } from '@/helpers/earn-network-tools'
 
@@ -11,20 +15,31 @@ import { subgraphNetworkToId } from '@/helpers/earn-network-tools'
 export const decorateWithFleetConfig = (
   vaults: SDKVaultishType[],
   fleetMap: EarnAppConfigType['fleetMap'],
+  userPositions?: IArmadaPosition[],
 ) =>
-  vaults.map((vault) => {
-    const vaultNetworkId = subgraphNetworkToId(vault.protocol.network)
-    const vaultNetworkConfig = fleetMap[String(vaultNetworkId) as keyof typeof fleetMap]
-    const configCustomFields = vaultNetworkConfig[vault.id.toLowerCase() as '0x']
+  vaults
+    .map((vault) => {
+      const vaultNetworkId = subgraphNetworkToId(vault.protocol.network)
+      const vaultNetworkConfig = fleetMap[String(vaultNetworkId) as keyof typeof fleetMap]
+      const configCustomFields = vaultNetworkConfig[vault.id.toLowerCase() as '0x']
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    return configCustomFields
-      ? {
-          ...vault,
-          customFields: {
-            ...vault.customFields,
-            ...configCustomFields,
-          },
-        }
-      : vault
-  })
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      return configCustomFields
+        ? {
+            ...vault,
+            customFields: {
+              ...vault.customFields,
+              ...configCustomFields,
+            },
+          }
+        : vault
+    })
+    .filter(({ customFields, id }) => {
+      // we dont want to filter out vaults that user has a position in
+      const hasUserPosition = userPositions?.some(
+        (position) => position.pool.id.fleetAddress.value.toLowerCase() === id.toLowerCase(),
+      )
+
+      // filter disabled (with config) vaults
+      return !hasUserPosition && customFields?.disabled ? !customFields.disabled : true
+    })

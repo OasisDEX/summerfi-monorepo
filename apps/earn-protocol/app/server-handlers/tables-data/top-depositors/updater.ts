@@ -1,8 +1,14 @@
-import { type FleetRate } from '@summerfi/app-types'
-import { mapChainIdToDbNetwork, subgraphNetworkToSDKId } from '@summerfi/app-utils'
+// import { type FleetRate } from '@summerfi/app-types'
+import {
+  mapChainIdToDbNetwork,
+  subgraphNetworkToId,
+  subgraphNetworkToSDKId,
+} from '@summerfi/app-utils'
 import { type SummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { BigNumber } from 'bignumber.js'
 import { type GraphQLClient } from 'graphql-request'
+
+import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 
 import { getTopDepositors } from './getter'
 import { calculateTopDepositors7daysChange, getEarningStreakResetTimestamp } from './helpers'
@@ -24,50 +30,73 @@ export const updateTopDepositors = async ({
   mainnetGraphQlClient,
   baseGraphQlClient,
   arbitrumGraphQlClient,
+  sonicGraphQlClient,
 }: {
   db: SummerProtocolDB['db']
   mainnetGraphQlClient: GraphQLClient
   baseGraphQlClient: GraphQLClient
   arbitrumGraphQlClient: GraphQLClient
+  sonicGraphQlClient: GraphQLClient
 }) => {
   const startTime = Date.now()
   const topDepositors = await getTopDepositors({
     mainnetGraphQlClient,
     baseGraphQlClient,
     arbitrumGraphQlClient,
+    sonicGraphQlClient,
   })
 
-  const rates = await db
-    .selectFrom('fleetInterestRate')
-    .selectAll()
-    .orderBy('timestamp', 'desc')
-    .execute()
+  // TEMPORARY: USE getVaultsApy instead of reading it from the db since it's not available in new dbs
+  const uniqueFleets = Array.from(
+    new Set(
+      topDepositors.map(
+        (position) =>
+          `${position.vault.id}-${subgraphNetworkToId(position.vault.protocol.network)}`,
+      ),
+    ),
+  ).map((key) => {
+    const [fleetAddress, chainId] = key.split('-')
 
-  const ratesByFleet = rates.reduce<{ [key: string]: FleetRate[] }>((acc, rate) => {
-    const fleetId = `${rate.fleetAddress}-${rate.network}`
-
-    if (!acc[fleetId]) {
-      acc[fleetId] = []
+    return {
+      fleetAddress,
+      chainId: Number(chainId),
     }
+  })
+  const vaultsApyData = await getVaultsApy({
+    fleets: uniqueFleets,
+  })
 
-    acc[fleetId].push({
-      id: rate.id,
-      rate: rate.rate.toString(),
-      timestamp: Number(rate.timestamp),
-      fleetAddress: rate.fleetAddress,
-    })
+  // const rates = await db
+  //   .selectFrom('fleetInterestRate')
+  //   .selectAll()
+  //   .orderBy('timestamp', 'desc')
+  //   .execute()
 
-    return acc
-  }, {})
+  // const ratesByFleet = rates.reduce<{ [key: string]: FleetRate[] }>((acc, rate) => {
+  //   const fleetId = `${rate.fleetAddress}-${rate.network}`
 
-  const latestRatesByFleet = Object.entries(ratesByFleet).reduce<{
-    [key: string]: FleetRate
-  }>((acc, [fleetId, _rates]) => {
-    // eslint-disable-next-line prefer-destructuring
-    acc[fleetId] = _rates[0] // Take first item since array is already sorted by timestamp desc
+  //   if (!acc[fleetId]) {
+  //     acc[fleetId] = []
+  //   }
 
-    return acc
-  }, {})
+  //   acc[fleetId].push({
+  //     id: rate.id,
+  //     rate: rate.rate.toString(),
+  //     timestamp: Number(rate.timestamp),
+  //     fleetAddress: rate.fleetAddress,
+  //   })
+
+  //   return acc
+  // }, {})
+
+  // const latestRatesByFleet = Object.entries(ratesByFleet).reduce<{
+  //   [key: string]: FleetRate
+  // }>((acc, [fleetId, _rates]) => {
+  //   // eslint-disable-next-line prefer-destructuring
+  //   acc[fleetId] = _rates[0] // Take first item since array is already sorted by timestamp desc
+
+  //   return acc
+  // }, {})
 
   const extendPositions = topDepositors.map((position) => {
     const changeSevenDays = calculateTopDepositors7daysChange({ position }).toString()
@@ -78,14 +107,17 @@ export const updateTopDepositors = async ({
 
     const earningsStreak = BigInt(new Date().getTime() - earningsStreakResetTimestamp)
 
-    const fleetRate = latestRatesByFleet[fleetId]
+    const fleetRate =
+      vaultsApyData[`${position.vault.id}-${subgraphNetworkToId(position.vault.protocol.network)}`]
+
+    // const fleetRate = vaultsApyData[fleetId]
 
     if (!fleetRate) {
       throw new Error(`No fleet rate found for fleetId: ${fleetId}`)
     }
 
-    const projectedOneYearEarnings = new BigNumber(fleetRate.rate)
-      .div(100)
+    const projectedOneYearEarnings = new BigNumber(fleetRate.apy)
+      // .div(100) // THIS DIVISION IS NEEDED WHEN USING APY FROM DB
       .times(position.inputTokenBalanceNormalized)
 
     const projectedOneYearEarningsUsd = projectedOneYearEarnings.times(

@@ -30,6 +30,7 @@ export enum DebankNetworkNames {
   polygonMainnet = 'matic',
   optimismMainnet = 'op',
   baseMainnet = 'base',
+  sonicMainnet = 'sonic',
 }
 
 export const DebankNetworkNameToOurs = {
@@ -38,4 +39,5 @@ export const DebankNetworkNameToOurs = {
   [DebankNetworkNames.polygonMainnet]: NetworkNames.polygonMainnet,
   [DebankNetworkNames.optimismMainnet]: NetworkNames.optimismMainnet,
   [DebankNetworkNames.baseMainnet]: NetworkNames.baseMainnet,
+  [DebankNetworkNames.sonicMainnet]: NetworkNames.sonicMainnet,
 }

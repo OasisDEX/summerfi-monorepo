@@ -2,6 +2,7 @@ import { arbitrum, base, mainnet } from '@account-kit/infra'
 import { SDKChainId, SDKNetwork } from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
 import { createPublicClient, http } from 'viem'
+import { sonic } from 'viem/chains'
 
 import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
 import { supportedNetworkGuard } from '@/helpers/supported-network-guard'
@@ -19,6 +20,11 @@ const arbitrumPublicClient = createPublicClient({
 const basePublicClient = createPublicClient({
   chain: base,
   transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.BASE]),
+})
+
+const sonicPublicClient = createPublicClient({
+  chain: sonic,
+  transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.SONIC]),
 })
 
 const mainnetPublicClient = createPublicClient({
@@ -74,11 +80,19 @@ export const useTokenBalances = ({
     chainId: SDKChainId.MAINNET,
     skip: network !== SDKNetwork.Mainnet,
   })
+  const sonicTokenBalance = useTokenBalance({
+    tokenSymbol,
+    vaultTokenSymbol,
+    publicClient: sonicPublicClient,
+    chainId: SDKChainId.SONIC,
+    skip: network !== SDKNetwork.SonicMainnet,
+  })
 
   const balance = {
     [SDKNetwork.ArbitrumOne]: arbitrumTokenBalance,
     [SDKNetwork.Base]: baseTokenBalance,
     [SDKNetwork.Mainnet]: mainnetTokenBalance,
+    [SDKNetwork.SonicMainnet]: sonicTokenBalance,
   }[network]
 
   /**

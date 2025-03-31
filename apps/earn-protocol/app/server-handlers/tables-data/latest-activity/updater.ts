@@ -1,8 +1,12 @@
 import { type SummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { type GraphQLClient } from 'graphql-request'
 
+import { getLatestTimestamp } from '@/app/server-handlers/tables-data/helpers'
+
 import { getAllLatestActivities } from './getter'
 import { insertLatestActivitiesInBatches } from './inserter'
+
+const table = 'latestActivity'
 
 /**
  * Updates the latest activities in the database by fetching and inserting them in batches.
@@ -27,25 +31,36 @@ export const updateLatestActivities = async ({
   mainnetGraphQlClient,
   baseGraphQlClient,
   arbitrumGraphQlClient,
+  sonicGraphQlClient,
 }: {
   db: SummerProtocolDB['db']
   mainnetGraphQlClient: GraphQLClient
   baseGraphQlClient: GraphQLClient
   arbitrumGraphQlClient: GraphQLClient
+  sonicGraphQlClient: GraphQLClient
 }) => {
   const startTime = Date.now()
-  const [latestActivity] = await Promise.all([
-    db.selectFrom('latestActivity').selectAll().orderBy('timestamp', 'desc').limit(1).execute(),
-  ])
-
-  // Get the most recent timestamp from the database, or 0 if no records exist
-  const lastTimestamp = latestActivity[0]?.timestamp || '0'
+  const [latestActivityMainnet, latestActivityBase, latestActivityArbitrum, latestActivitySonic] =
+    await Promise.all([
+      getLatestTimestamp({ network: 'mainnet', db, table }),
+      getLatestTimestamp({ network: 'base', db, table }),
+      getLatestTimestamp({ network: 'arbitrum', db, table }),
+      getLatestTimestamp({ network: 'sonic', db, table }),
+    ])
 
   const allLatestActivities = await getAllLatestActivities({
-    lastTimestamp,
-    mainnetGraphQlClient,
-    baseGraphQlClient,
-    arbitrumGraphQlClient,
+    timestamps: {
+      mainnet: latestActivityMainnet,
+      base: latestActivityBase,
+      arbitrum: latestActivityArbitrum,
+      sonic: latestActivitySonic,
+    },
+    clients: {
+      mainnetGraphQlClient,
+      baseGraphQlClient,
+      arbitrumGraphQlClient,
+      sonicGraphQlClient,
+    },
   })
 
   const { updated } = await insertLatestActivitiesInBatches(db, allLatestActivities)
@@ -55,7 +70,12 @@ export const updateLatestActivities = async ({
 
   return {
     updated,
-    startingFrom: lastTimestamp,
+    startingFrom: {
+      mainnet: latestActivityMainnet,
+      base: latestActivityBase,
+      arbitrum: latestActivityArbitrum,
+      sonic: latestActivitySonic,
+    },
     duration,
   }
 }

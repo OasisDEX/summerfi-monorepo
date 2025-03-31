@@ -1,6 +1,6 @@
 import { SerializationService } from '@summerfi/sdk-common/services'
 import type { SDKAppRouter } from '@summerfi/sdk-server'
-import { createTRPCClient, httpBatchLink } from '@trpc/client'
+import { createTRPCClient, httpBatchLink, loggerLink } from '@trpc/client'
 
 // Workaround to register all serializable classes for the old web app
 // export * from '@summerfi/protocol-plugins'
@@ -16,9 +16,19 @@ import { createTRPCClient, httpBatchLink } from '@trpc/client'
 
 export type RPCMainClientType = ReturnType<typeof createTRPCClient<SDKAppRouter>>
 
-export function createMainRPCClient(apiURL: string): RPCMainClientType {
+export function createMainRPCClient(apiURL: string, logging?: boolean): RPCMainClientType {
   return createTRPCClient<SDKAppRouter>({
     links: [
+      loggerLink({
+        enabled: () => !!logging,
+        logger(opts) {
+          const apiUrlBase = new URL(`${apiURL}/${opts.path}`)
+          const transformer = SerializationService.getTransformer()
+          const input = transformer.stringify(opts.input)
+          apiUrlBase.searchParams.set('input', input)
+          console.log(`SDK call (${opts.path}):`, apiUrlBase.toString())
+        },
+      }),
       httpBatchLink({
         url: apiURL,
         transformer: SerializationService.getTransformer(),

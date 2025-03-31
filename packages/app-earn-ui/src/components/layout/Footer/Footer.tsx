@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type ReactNode } from 'react'
+import { type FC, type ReactNode, useEffect, useState } from 'react'
 import Link from 'next/link'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
@@ -94,6 +94,31 @@ const linksList = [
 ]
 
 export const Footer: FC<FooterProps> = ({ logo, newsletter, languageSwitcher }) => {
+  // listen to holding ALT button
+  const [isAltPressed, setIsAltPressed] = useState(false)
+
+  useEffect(() => {
+    const handleKeyDown = (ev: KeyboardEvent) => {
+      if (ev.key === 'Alt') {
+        setIsAltPressed(true)
+      }
+    }
+
+    const handleKeyUp = (ev: KeyboardEvent) => {
+      if (ev.key === 'Alt') {
+        setIsAltPressed(false)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('keyup', handleKeyUp)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      window.removeEventListener('keyup', handleKeyUp)
+    }
+  }, [])
+
   return (
     <div className={footerStyles.container}>
       <div>
@@ -127,6 +152,19 @@ export const Footer: FC<FooterProps> = ({ logo, newsletter, languageSwitcher }) 
             </Link>
           </li>
         </ul>
+        {isAltPressed && (
+          <Text variant="p3semiColorful">
+            <Link
+              href={
+                process.env.NEXT_PUBLIC_SHA
+                  ? `https://github.com/OasisDEX/summerfi-monorepo/commit/${process.env.NEXT_PUBLIC_SHA}`
+                  : '#'
+              }
+            >
+              SHA Commit:&nbsp;{process.env.NEXT_PUBLIC_SHA ?? 'none'}
+            </Link>
+          </Text>
+        )}
         {languageSwitcher}
       </div>
       {linksList.map(({ links, title }, i) => (

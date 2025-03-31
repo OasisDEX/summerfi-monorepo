@@ -25,6 +25,7 @@ import { encodeFunctionData } from 'viem'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import type { IContractsProvider } from '@summerfi/contracts-provider-common'
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
+import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 
 /**
  * @name ArmadaManager
@@ -40,6 +41,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
   private _hubChainInfo: IChainInfo
   private _rewardsRedeemerAddress: IAddress
   private _distributionsUrls: string[]
+  private _subgraphManager: IArmadaSubgraphManager
 
   /** CONSTRUCTOR */
   constructor(params: {
@@ -50,6 +52,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     hubChainInfo: IChainInfo
     rewardsRedeemerAddress: IAddress
     getSummerToken: (params: { chainInfo: IChainInfo }) => IToken
+    subgraphManager: IArmadaSubgraphManager
   }) {
     this._blockchainClientProvider = params.blockchainClientProvider
     this._contractsProvider = params.contractsProvider
@@ -58,7 +61,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     this._hubChainInfo = params.hubChainInfo
     this._rewardsRedeemerAddress = params.rewardsRedeemerAddress
     this._getSummerToken = params.getSummerToken
-
+    this._subgraphManager = params.subgraphManager
     const _distributionsBaseUrl = this._configProvider.getConfigurationItem({
       name: 'SDK_DISTRIBUTIONS_BASE_URL',
     })
@@ -201,34 +204,23 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       contractName: 'summerToken',
     })
 
-    const harborCommandAddress = getDeployedContractAddress({
-      chainInfo,
-      contractCategory: 'core',
-      contractName: 'harborCommand',
-    })
-
+    const vaults = await this._subgraphManager.getVaults({ chainId: chainInfo.chainId })
+    const fleetCommanderAddresses = vaults.vaults.map((vault) => vault.id as `0x${string}`)
+    const stakingRewardsManagerAddresses = vaults.vaults.map(
+      (vault) => vault.rewardsManager.id as `0x${string}`,
+    )
     // readContract summer token abi
-    const fleetCommanderAddresses = await client.readContract({
-      abi: HarborCommandAbi,
-      address: harborCommandAddress.value,
-      functionName: 'getActiveFleetCommanders',
-    })
 
     const contractCalls: {
       abi: typeof StakingRewardsManagerBaseAbi
       address: HexData
       functionName: 'earned'
     }[] = []
-    for await (const fleetCommanderAddress of fleetCommanderAddresses) {
+    for (let index = 0; index < fleetCommanderAddresses.length; index++) {
       // read earned staking rewards from rewards manager
-      const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-        chainInfo,
-        address: Address.createFromEthereum({ value: fleetCommanderAddress }),
-      })
-      const { stakingRewardsManager } = await fleetContract.config()
       const earnedCall = {
         abi: StakingRewardsManagerBaseAbi,
-        address: stakingRewardsManager.value,
+        address: stakingRewardsManagerAddresses[index],
         functionName: 'earned',
         args: [user.wallet.address.value, summerTokenAddress.value],
       } as const

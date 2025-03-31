@@ -6,6 +6,7 @@ import { formatCryptoBalance, formatDecimalAsPercent, ten } from '@summerfi/app-
 import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 
+import { AdditionalBonusLabel } from '@/components/atoms/AdditionalBonusLabel/AdditionalBonusLabel'
 import { Card } from '@/components/atoms/Card/Card'
 import { Text } from '@/components/atoms/Text/Text'
 import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
@@ -102,15 +103,19 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
             risk={customFields?.risk ?? 'lower'}
             networkName={protocol.network}
             selected={selected}
+            isVaultCard
           />
-          <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-            <BonusLabel
-              tokenBonus={sumrTokenBonus}
-              apy={parsedApr}
-              withTokenBonus={withTokenBonus}
-              combinedApr={combinedApr}
-            />
-          </Text>
+          <div className={vaultCardStyles.vaultBonusWrapper}>
+            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+              <BonusLabel
+                tokenBonus={sumrTokenBonus}
+                apy={parsedApr}
+                withTokenBonus={Number(rawSumrTokenBonus) > 0 ? withTokenBonus : false}
+                combinedApr={combinedApr}
+              />
+            </Text>
+            <AdditionalBonusLabel bonus={customFields?.bonus} />
+          </div>
         </div>
         <div className={vaultCardStyles.vaultCardAssetsWrapper}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>

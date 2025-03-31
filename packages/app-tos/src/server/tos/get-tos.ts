@@ -55,13 +55,11 @@ export async function getTos<DB extends TOSRequiredDB>({
     }
   }
 
-  const sanitizedVersion = version.split('-')[0].replace(/[^a-zA-Z0-9.-]/gu, '')
-
   const tos = await resolvedDB
     .selectFrom('tosApproval')
     .where(({ eb, and }) => and([eb('address', '=', walletAddress.toLowerCase())]))
     .select('docVersion')
-    .where(({ eb, and }) => and([eb('docVersion', 'like', `%${sanitizedVersion}%`)]))
+    .where(({ eb, and }) => and([eb('docVersion', '=', version)]))
     .execute()
 
   await resolvedDB.destroy().catch((err) => {

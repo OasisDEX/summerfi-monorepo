@@ -1,3 +1,4 @@
+import { getVaultsProtocolsList } from '@summerfi/app-earn-ui'
 import {
   formatCryptoBalance,
   parseServerResponseToClient,
@@ -12,7 +13,6 @@ import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { VaultListViewComponent } from '@/components/layout/VaultsListView/VaultListViewComponent'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
-import { getVaultsProtocolsList } from '@/helpers/vaults-protocols-list'
 
 const EarnAllVaultsPage = async () => {
   const [{ vaults }, configRaw] = await Promise.all([getVaultsList(), systemConfigHandler()])
@@ -30,10 +30,11 @@ const EarnAllVaultsPage = async () => {
     })),
   })
 
-  const vaultsList = vaultsWithConfig.filter(({ inputToken }) => inputToken.symbol !== 'EURC')
-
   return (
-    <VaultListViewComponent vaultsList={vaultsList} vaultsApyByNetworkMap={vaultsApyByNetworkMap} />
+    <VaultListViewComponent
+      vaultsApyByNetworkMap={vaultsApyByNetworkMap}
+      vaultsList={vaultsWithConfig}
+    />
   )
 }
 
