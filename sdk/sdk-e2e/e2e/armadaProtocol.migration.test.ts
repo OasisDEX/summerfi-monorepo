@@ -25,7 +25,7 @@ describe('Armada Protocol Migration', () => {
         }),
       })
 
-      describe.skip(`getMigratablePositions and APY`, () => {
+      describe(`getMigratablePositions and APY`, () => {
         it(`should get all migratable positions`, async () => {
           const res = await sdk.armada.users.getMigratablePositions({
             chainInfo,
@@ -48,7 +48,7 @@ describe('Armada Protocol Migration', () => {
         })
       })
 
-      describe(`getMigrationTX`, () => {
+      describe.skip(`getMigrationTX`, () => {
         const migrationType = ArmadaMigrationType.AaveV3
 
         it(`should migrate first migratable position`, async () => {

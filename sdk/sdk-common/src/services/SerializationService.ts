@@ -31,23 +31,25 @@ export class SerializationService {
   static getTransformer() {
     return {
       input: {
-        serialize: (data: unknown) => {
-          LoggingService.debug('input ser => ', data)
-          return SuperJSON.stringify(data)
+        serialize: (obj: unknown) => {
+          const serializedData = SuperJSON.stringify(obj)
+          LoggingService.debug(' => serialize request :: ', serializedData)
+          return serializedData
         },
-        deserialize: (data: string) => {
-          LoggingService.debug('input des => ', data)
-          return SuperJSON.parse(data)
+        deserialize: (serializedData: string) => {
+          LoggingService.debug(' => deserialize request :: ', serializedData)
+          return SuperJSON.parse(serializedData)
         },
       },
       output: {
-        serialize: (data: unknown) => {
-          LoggingService.debug('output ser => ', data)
-          return SuperJSON.stringify(data)
+        serialize: (obj: unknown) => {
+          const serializedData = SuperJSON.stringify(obj)
+          LoggingService.debug(' <= serialize resposne :: ', serializedData)
+          return serializedData
         },
-        deserialize: (data: string) => {
-          LoggingService.debug('output des => ', data)
-          return SuperJSON.parse(data)
+        deserialize: (serializedData: string) => {
+          LoggingService.debug(' <= deserialize response :: ', serializedData)
+          return SuperJSON.parse(serializedData)
         },
       },
     }
