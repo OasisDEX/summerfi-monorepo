@@ -1,0 +1,12 @@
+.homepageCarouselWrapper {
+  width: 100vw;
+
+  & :global .embla__slide {
+    flex: 0 0 500px;
+    min-width: 0;
+
+    &:last-child {
+      margin-right: var(--general-space-16);
+    }
+  }
+}

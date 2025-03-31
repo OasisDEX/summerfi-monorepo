@@ -1,0 +1,18 @@
+.vaultCardHomepageWrapper {
+  display: flex;
+  width: 500px;
+}
+
+.vaultCardHomepageDataRow {
+  display: flex;
+  gap: var(--general-space-24);
+  width: 100%;
+
+  .dataPrimary {
+    width: 250px;
+  }
+
+  .dataSecondary {
+    width: 160px;
+  }
+}

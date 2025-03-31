@@ -1,6 +1,7 @@
 'use client'
 import { type FC, type ReactNode, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import clsx from 'clsx'
 import { type EmblaOptionsType } from 'embla-carousel'
 import useEmblaCarousel from 'embla-carousel-react'
 
@@ -29,6 +30,7 @@ type PropType = {
   dotsPosition?: SliderCarouselDotsPosition
   withAutoPlay?: boolean
   portalElementId?: string
+  dimInactive?: boolean
 }
 
 export const SlideCarousel: FC<PropType> = ({
@@ -42,6 +44,7 @@ export const SlideCarousel: FC<PropType> = ({
   dotsPosition = SliderCarouselDotsPosition.TOP,
   withAutoPlay = false,
   portalElementId,
+  dimInactive,
 }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel(options)
   const [autoSlideDirection, setAutoSlideDirection] = useState<'prev' | 'next'>('next')
@@ -168,7 +171,12 @@ export const SlideCarousel: FC<PropType> = ({
             <div className={classNames.emblaViewport} ref={emblaRef}>
               <div className={classNames.emblaContainer}>
                 {slides.map((slide, idx) => (
-                  <div className={classNames.emblaSlide} key={idx}>
+                  <div
+                    className={clsx(classNames.emblaSlide, 'embla__slide', {
+                      [classNames.emblaSlideDimmed]: dimInactive && idx !== selectedIndex,
+                    })}
+                    key={idx}
+                  >
                     <div className={classNames.emblaSlideNumber}>{slide}</div>
                   </div>
                 ))}
@@ -191,7 +199,12 @@ export const SlideCarousel: FC<PropType> = ({
         <div className={classNames.emblaViewport} ref={emblaRef}>
           <div className={classNames.emblaContainer}>
             {slides.map((slide, idx) => (
-              <div className={classNames.emblaSlide} key={idx}>
+              <div
+                className={clsx(classNames.emblaSlide, 'embla__slide', {
+                  [classNames.emblaSlideDimmed]: dimInactive && idx !== selectedIndex,
+                })}
+                key={idx}
+              >
                 <div className={classNames.emblaSlideNumber}>{slide}</div>
               </div>
             ))}
