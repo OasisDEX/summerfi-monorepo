@@ -1,4 +1,4 @@
-import { SerializationService } from '@summerfi/sdk-common/services'
+import { LoggingService, SerializationService } from '@summerfi/sdk-common/services'
 import type { SDKAppRouter } from '@summerfi/sdk-server'
 import { createTRPCClient, httpBatchLink, loggerLink } from '@trpc/client'
 
@@ -25,7 +25,7 @@ export function createMainRPCClient(apiURL: string, logging?: boolean): RPCMainC
           const apiUrlBase = new URL(`${apiURL}/${opts.path}`)
           const input = SerializationService.stringify(opts.input)
           apiUrlBase.searchParams.set('input', input)
-          console.log(`SDK call (${opts.path}):`, apiUrlBase.toString())
+          LoggingService.log(`SDK call (${opts.path}):`, apiUrlBase.toString())
         },
       }),
       httpBatchLink({
