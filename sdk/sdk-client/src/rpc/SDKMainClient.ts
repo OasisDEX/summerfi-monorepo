@@ -23,8 +23,7 @@ export function createMainRPCClient(apiURL: string, logging?: boolean): RPCMainC
         enabled: () => !!logging,
         logger(opts) {
           const apiUrlBase = new URL(`${apiURL}/${opts.path}`)
-          const transformer = SerializationService.getTransformer()
-          const input = transformer.stringify(opts.input)
+          const input = SerializationService.stringify(opts.input)
           apiUrlBase.searchParams.set('input', input)
           console.log(`SDK call (${opts.path}):`, apiUrlBase.toString())
         },
