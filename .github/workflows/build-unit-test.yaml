@@ -6,6 +6,13 @@ on:
     branches:
       - main
       - dev
+  workflow_dispatch:
+    inputs:
+      disable_turbo_cache:
+        description: 'Disable turbo cache'
+        required: false
+        default: false
+        type: boolean
 jobs:
   build:
     name: Build and Unit Test
@@ -33,6 +40,7 @@ jobs:
 
       - name: Set up turbo cache
         uses: rharkor/caching-for-turbo@v1.5
+        if: ${{ inputs.disable_turbo_cache != 'true' }}
 
       - uses: pnpm/action-setup@v2.0.1
         with:

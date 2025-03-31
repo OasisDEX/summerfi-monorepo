@@ -37,13 +37,11 @@ export const useGasEstimation = ({
   walletAddress,
   publicClient,
 }: UseGasEstimationProps) => {
-  const { getSwapQuote, getTokenBySymbol } = useAppSDK()
+  const { getSpotPrice, getTokenBySymbol } = useAppSDK()
 
   const [loading, setLoading] = useState<boolean>(false)
   const [transactionFee, setTransactionFee] = useState<string | undefined>(undefined)
   const [rawTransactionFee, setRawTransactionFee] = useState<string | undefined>(undefined)
-
-  const usdTokenSymbol = chainId === 146 ? 'USDC.e' : 'USDC'
 
   useEffect(() => {
     const fetchGasEstimation = async (
@@ -56,7 +54,7 @@ export const useGasEstimation = ({
     ) => {
       setLoading(true)
       try {
-        const [fetchedGas, gasPrice] = await Promise.all([
+        const [fetchedGas, gasPrice, ethToken] = await Promise.all([
           publicClient.estimateGas({
             account: _walletAddress,
             to: _transaction.transaction.target.value,
@@ -66,34 +64,25 @@ export const useGasEstimation = ({
               : undefined,
           }),
           publicClient.estimateFeesPerGas(),
+          getTokenBySymbol({
+            chainId,
+            symbol: 'WETH',
+          }),
         ])
         // fee calculation with 20% buffer and including priority fee
         const txFee =
           // eslint-disable-next-line no-mixed-operators
           (fetchedGas * gasPrice.maxFeePerGas * 120n) / 100n
 
-        const [ethToken, usdValuedToken] = await Promise.all([
-          getTokenBySymbol({
-            chainId,
-            symbol: 'WETH',
-          }),
-          getTokenBySymbol({
-            chainId,
-            symbol: usdTokenSymbol,
-          }),
-        ])
-
-        // TODO: should change this to use the spot price
-        // there is no such public api in the sdk yet need to implement it and replace this
-        const fetchedTransactionFee = await getSwapQuote({
-          fromAmount: formatEther(txFee),
-          fromToken: ethToken,
-          toToken: usdValuedToken,
-          slippage: 0.1,
+        const { price: ethPrice } = await getSpotPrice({
+          baseToken: ethToken,
         })
 
-        setTransactionFee(fetchedTransactionFee.toTokenAmount.amount)
-        setRawTransactionFee(fetchedTransactionFee.fromTokenAmount.amount)
+        const amountEth = formatEther(txFee)
+        const priceInUsd = ethPrice.multiply(amountEth).toString()
+
+        setTransactionFee(priceInUsd)
+        setRawTransactionFee(amountEth)
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error('Gas Estimation failed', e)
@@ -104,7 +93,7 @@ export const useGasEstimation = ({
     if (transaction !== undefined && walletAddress !== undefined) {
       fetchGasEstimation(transaction, walletAddress)
     }
-  }, [publicClient, getTokenBySymbol, chainId, getSwapQuote, transaction, walletAddress])
+  }, [publicClient, getTokenBySymbol, chainId, getSpotPrice, transaction, walletAddress])
 
   return {
     loading,
