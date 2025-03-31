@@ -19,16 +19,16 @@ export const SDKApiUrl = process.env.E2E_SDK_API_URL,
   })
 
 export const testConfig = [
-  {
-    chainInfo: ChainFamilyMap.Base.Base,
-    symbol: 'ETH',
-    swapSymbol: 'USDC',
-    fleetAddress: Address.createFromEthereum({
-      value: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
-    }),
-    rpcUrl: process.env.E2E_SDK_FORK_URL_BASE,
-    userAddress: user,
-  },
+  // {
+  //   chainInfo: ChainFamilyMap.Base.Base,
+  //   symbol: 'ETH',
+  //   swapSymbol: 'USDC',
+  //   fleetAddress: Address.createFromEthereum({
+  //     value: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
+  //   }),
+  //   rpcUrl: process.env.E2E_SDK_FORK_URL_BASE,
+  //   userAddress: user,
+  // },
   // {
   //   chainInfo: ChainFamilyMap.Arbitrum.ArbitrumOne,
   //   symbol: 'USDC.e',
@@ -48,17 +48,17 @@ export const testConfig = [
   //   rpcUrl: process.env.E2E_SDK_FORK_URL_MAINNET,
   //   userAddress: user,
   // },
-  // {
-  //   chainInfo: ChainFamilyMap.Sonic.Sonic,
-  //   symbol: 'USDC.e',
-  //   swapSymbol: 'USDC.e',
-  //   fleetAddress: Address.createFromEthereum({
-  //     // bummer
-  //     value: '0xF06BEDaf951aaFf253acaA05e391AdfbdD6BFbe0',
-  //     // summer
-  //     // value: '0x507A2D9E87DBD3076e65992049C41270b47964f8',
-  //   }),
-  //   rpcUrl: process.env.E2E_SDK_FORK_URL_SONIC,
-  //   userAddress: user,
-  // },
+  {
+    chainInfo: ChainFamilyMap.Sonic.Sonic,
+    symbol: 'USDC.e',
+    swapSymbol: 'USDC.e',
+    fleetAddress: Address.createFromEthereum({
+      // bummer
+      value: '0xF06BEDaf951aaFf253acaA05e391AdfbdD6BFbe0',
+      // summer
+      // value: '0x507A2D9E87DBD3076e65992049C41270b47964f8',
+    }),
+    rpcUrl: process.env.E2E_SDK_FORK_URL_SONIC,
+    userAddress: user,
+  },
 ]

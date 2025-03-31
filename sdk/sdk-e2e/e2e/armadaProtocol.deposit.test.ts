@@ -93,7 +93,7 @@ describe('Armada Protocol Deposit', () => {
       console.log('max deposit', maxDeposit)
     })
 
-    describe.skip(`Deposit on ${chainInfo.name}`, () => {
+    describe(`Deposit on ${chainInfo.name}`, () => {
       it(`should deposit 1 USDC (with stake) to fleet at ${fleetAddress.value}`, async () => {
         const amount = '1'
         const transactions = await sdk.armada.users.getNewDepositTX({
@@ -104,7 +104,7 @@ describe('Armada Protocol Deposit', () => {
             token,
           }),
           slippage: Percentage.createFrom({
-            value: 0.01,
+            value: 0.02,
           }),
         })
 
