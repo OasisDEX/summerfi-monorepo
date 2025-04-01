@@ -120,6 +120,11 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
   async getMigratablePositions(
     params: Parameters<IArmadaManagerMigrations['getMigratablePositions']>[0],
   ): ReturnType<IArmadaManagerMigrations['getMigratablePositions']> {
+    LoggingService.debug('getMigratablePositions: ', {
+      chainId: params.chainInfo.chainId,
+      user: params.user.wallet.address.value,
+      migrationType: params.migrationType,
+    })
     // read the users balances on provided chain/source for all supported tokens using multicall
     let positions: ArmadaMigratablePosition[] = []
 
@@ -381,6 +386,10 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
   async getMigratablePositionsApy(
     params: Parameters<IArmadaManagerMigrations['getMigratablePositionsApy']>[0],
   ): ReturnType<IArmadaManagerMigrations['getMigratablePositionsApy']> {
+    LoggingService.debug('getMigratablePositionsApy: ', {
+      chainId: params.chainInfo.chainId,
+      positionIds: params.positionIds.join(', '),
+    })
     // read apy timeseries for all position ids
     const baseUrl = 'https://yields.llama.fi/chart/'
     const records = await Promise.all(
@@ -467,6 +476,13 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
   async getMigrationTX(
     params: Parameters<IArmadaManagerMigrations['getMigrationTX']>[0],
   ): ReturnType<IArmadaManagerMigrations['getMigrationTX']> {
+    LoggingService.debug('getMigrationTX: ', {
+      user: params.user.wallet.address.value,
+      chainId: params.vaultId.chainInfo.chainId,
+      vaultId: params.vaultId.fleetAddress.value,
+      slippage: params.slippage.toString(),
+      shouldStake: params.shouldStake,
+    })
     if (!params.positionIds || params.positionIds.length === 0) {
       throw new Error('PositionIds are required')
     }
@@ -497,7 +513,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       )
     }
 
-    LoggingService.debug('filtered positions: ', {
+    LoggingService.debug('positions: ', {
       positionsIds: params.positionIds.join(', '),
       positionsResponse: positionsResponse.positions.map((position) => position.id).join(', '),
       filteredPositions: filteredPositions.map((position) => position.id).join(', '),
@@ -518,7 +534,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     const swapAmountByPositionId: Record<string, ITokenAmount> = {}
     const priceImpactByPositionId: Record<string, TransactionPriceImpact> = {}
 
-    LoggingService.debug('getMigrationTX: ', {
+    LoggingService.debug('tokens: ', {
       fleetToken: fleetToken.toString(),
       moveCalls: moveCalls.map((call) => call.operation),
     })
@@ -586,7 +602,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       },
     }
     LoggingService.debug(
-      'Migration TX: ',
+      'multicallTransaction: ',
       multicallOperations.map((op) => op.toString()),
     )
 
