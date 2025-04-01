@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react'
 import { type EarnAppConfigType, type IconNamesList } from '@summerfi/app-types'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
@@ -10,7 +11,7 @@ type AdditionalBonusLabelProps = {
   bonus?: EarnAppConfigType['fleetMap']['1']['0x']['bonus']
 }
 
-export const AdditionalBonusLabel = ({ bonus }: AdditionalBonusLabelProps) => {
+export const AdditionalBonusLabel = ({ bonus }: AdditionalBonusLabelProps): ReactNode | null => {
   return bonus ? (
     <Tooltip
       tooltipWrapperStyles={{

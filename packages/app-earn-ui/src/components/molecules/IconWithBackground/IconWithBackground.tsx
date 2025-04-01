@@ -21,7 +21,7 @@ export const IconWithBackground = ({
   backgroundSize?: number
   wrapperStyle?: CSSProperties
   wrapperClassName?: string
-}) => {
+}): React.ReactNode => {
   return (
     <div className={clsx(classNames.wrapper, wrapperClassName)} style={wrapperStyle}>
       <div

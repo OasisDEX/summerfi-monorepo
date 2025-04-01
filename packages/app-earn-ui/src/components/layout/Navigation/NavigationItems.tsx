@@ -19,7 +19,7 @@ export type NavigationItemsProps = {
   currentPath?: string
 }
 
-export const NavigationItems = ({ items, currentPath }: NavigationItemsProps) => {
+export const NavigationItems = ({ items, currentPath }: NavigationItemsProps): React.ReactNode => {
   return (
     <div className={navigationItemsStyles.navigationItemsWrapper}>
       {items.map((item) => (

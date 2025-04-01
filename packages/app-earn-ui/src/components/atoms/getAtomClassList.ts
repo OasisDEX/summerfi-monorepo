@@ -5,7 +5,7 @@ interface GetAtomClassListParams {
   className?: string
 }
 
-export const getAtomClassList = ({ className, variant }: GetAtomClassListParams) => {
+export const getAtomClassList = ({ className, variant }: GetAtomClassListParams): string => {
   return [...(variant ? [variant] : []), ...(className ? [className] : [])].join(' ')
 }
 

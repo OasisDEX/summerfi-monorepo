@@ -22,7 +22,7 @@ export const ToggleButton = ({
   onChange,
   wrapperStyle,
   trackVariant = 'light',
-}: ToggleButtonProps) => {
+}: ToggleButtonProps): React.ReactNode => {
   return (
     <div className={slideButtonStyles.slideButtonWrapper} style={wrapperStyle}>
       <Text variant={titleVariant ?? 'p2semi'}>{title}</Text>

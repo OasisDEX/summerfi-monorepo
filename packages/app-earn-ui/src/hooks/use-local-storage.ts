@@ -35,7 +35,7 @@ export const getStorageValue = <V>(
   key: string,
   defaultValue: unknown,
   isValid?: isValidFunction<V>,
-) => {
+): V => {
   if (typeof window !== 'undefined') {
     const saved = localStorage.getItem(key)
     const parsed = parseJSON<V>(saved, key)

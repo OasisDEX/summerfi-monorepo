@@ -1,1 +1,1 @@
-export const isOutsideLink = (url: string) => url.startsWith('http')
+export const isOutsideLink = (url: string): boolean => url.startsWith('http')

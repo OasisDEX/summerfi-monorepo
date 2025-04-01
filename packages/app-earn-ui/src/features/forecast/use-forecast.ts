@@ -24,7 +24,12 @@ export const useForecast = ({
   amount,
   disabled = false,
   isEarnApp = false,
-}: UseForecastProps) => {
+}: UseForecastProps): {
+  forecast: ForecastData | undefined
+  isLoadingForecast: boolean
+  oneYearEarningsForecast: string | undefined
+  forecastSummaryMap: EarningsEstimationsMap | undefined
+} => {
   const [isLoadingForecast, setIsLoadingForecast] = useState(true)
   const [forecast, setForecast] = useState<ForecastData | undefined>()
   const [forecastSummaryMap, setForecastSummaryMap] = useState<EarningsEstimationsMap | undefined>()

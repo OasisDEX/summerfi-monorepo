@@ -18,7 +18,7 @@ export const GradientBox = ({
   selected,
   withHover,
   ...rest
-}: GradientBoxProps) => {
+}: GradientBoxProps): React.ReactNode => {
   return (
     <div
       className={clsx(className, gradientBoxStyles.gradientBoxWrapper, {

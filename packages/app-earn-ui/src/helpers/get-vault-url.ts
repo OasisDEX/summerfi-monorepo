@@ -1,13 +1,13 @@
 import { type SDKNetwork, type SDKVaultishType } from '@summerfi/app-types'
 import { sdkNetworkToHumanNetwork } from '@summerfi/app-utils'
 
-export const getVaultUrl = (vault?: SDKVaultishType) => {
+export const getVaultUrl = (vault?: SDKVaultishType): string => {
   if (!vault) return ''
 
   return `/${sdkNetworkToHumanNetwork(vault.protocol.network)}/position/${vault.customFields?.slug ?? vault.id}`
 }
 
-export const getVaultDetailsUrl = (vault?: SDKVaultishType) => {
+export const getVaultDetailsUrl = (vault?: SDKVaultishType): string => {
   if (!vault) return ''
 
   return `/${sdkNetworkToHumanNetwork(vault.protocol.network)}/details/${vault.customFields?.slug ?? vault.id}`
@@ -33,7 +33,7 @@ export const getMigrationVaultUrl = ({
   vaultId: string
   walletAddress?: string
   selectedPosition?: string
-}) => {
+}): string => {
   if (!selectedPosition || !walletAddress) {
     return ''
   }
@@ -47,7 +47,7 @@ export const getMigrationLandingPageUrl = ({
 }: {
   walletAddress?: string
   selectedPosition?: string
-}) => {
+}): string => {
   if (!selectedPosition || !walletAddress) {
     return ''
   }

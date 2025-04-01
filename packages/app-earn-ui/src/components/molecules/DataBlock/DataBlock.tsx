@@ -43,7 +43,7 @@ export const DataBlock = ({
   subValueStyle,
   accent,
   tooltipIconName,
-}: DataBlockProps) => {
+}: DataBlockProps): React.ReactNode => {
   const titleVariant = {
     small: 'p3semi' as const,
     medium: 'p2semi' as const,

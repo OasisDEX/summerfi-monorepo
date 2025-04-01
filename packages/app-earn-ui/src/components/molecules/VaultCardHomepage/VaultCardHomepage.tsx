@@ -97,7 +97,7 @@ export const VaultCardHomepage = ({
   vaultsApyByNetworkMap,
   selected = true,
   onSelect,
-}: VaultCardHomepageProps) => {
+}: VaultCardHomepageProps): React.ReactNode => {
   const { apy } =
     vaultsApyByNetworkMap[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
   const parsedApy = formatDecimalAsPercent(apy)

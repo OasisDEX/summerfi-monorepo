@@ -12,7 +12,7 @@ import { type SDKVaultsListType } from '@summerfi/app-types'
  * @param vaultsList - List of vaults containing ark configurations
  * @returns An array of unique protocol names
  */
-export const getVaultsProtocolsList = (vaultsList: SDKVaultsListType) => {
+export const getVaultsProtocolsList = (vaultsList: SDKVaultsListType): string[] => {
   return [
     ...new Set(
       vaultsList.reduce<string[]>(

@@ -40,7 +40,7 @@ const SupportBoxElement = ({
   )
 }
 
-export const SupportBox = () => {
+export const SupportBox = (): React.ReactNode => {
   return (
     <div className={supportBoxStyles.supportBoxWrapper}>
       <div className={supportBoxStyles.supportBoxTitleBarWrapper}>

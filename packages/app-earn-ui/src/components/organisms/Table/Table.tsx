@@ -53,7 +53,7 @@ export function Table<K extends string>({
   isLoading,
   skeletonLines = 10,
   skeletonStyles,
-}: TableProps<K>) {
+}: TableProps<K>): React.ReactNode {
   const [sortConfig, setSortConfig] = useState<TableSortedColumn<K> | null>(null)
   const [expandedRow, setExpandedRow] = useState<number | null>(null)
 

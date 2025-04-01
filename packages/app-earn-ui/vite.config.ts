@@ -11,6 +11,8 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 // preserves directives like "use client" in the output
 import preserveDirectives from 'rollup-preserve-directives'
 
+import UnpluginIsolatedDecl from 'unplugin-isolated-decl/vite'
+
 const logger = createLogger()
 const loggerInfo = logger.info
 
@@ -50,6 +52,7 @@ export default defineConfig(({ mode }) => {
           }
         },
       },
+      UnpluginIsolatedDecl(),
     ],
     css: {
       preprocessorOptions: {

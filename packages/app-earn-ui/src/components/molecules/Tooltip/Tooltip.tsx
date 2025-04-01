@@ -1,10 +1,12 @@
 'use client'
 
 import {
+  type Dispatch,
   type FC,
   type HTMLAttributes,
   isValidElement,
   type ReactNode,
+  type SetStateAction,
   useCallback,
   useEffect,
   useMemo,
@@ -26,10 +28,14 @@ import tooltipStyles from '@/components/molecules/Tooltip/Tooltip.module.scss'
 
 const generateUniqueId = () => `tooltip-${Math.random().toString(36).slice(2, 9)}`
 
-export function useTooltip(uniqueId: string) {
+export function useTooltip(uniqueId: string): {
+  tooltipOpen: boolean
+  setTooltipOpen: Dispatch<SetStateAction<boolean>>
+  closeHandler: () => void
+} {
   const [tooltipOpen, setTooltipOpen] = useState(false)
 
-  const closeHandler = useCallback(() => {
+  const closeHandler = useCallback((): void => {
     setTooltipOpen(false)
   }, [])
 

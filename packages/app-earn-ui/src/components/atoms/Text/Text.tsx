@@ -1,8 +1,13 @@
-import { createElement, forwardRef } from 'react'
+import {
+  createElement,
+  forwardRef,
+  type ForwardRefExoticComponent,
+  type RefAttributes,
+} from 'react'
 
 import { type AtomProps, getAtomClassList } from '@/components/atoms/getAtomClassList'
 
-import textStyles, { type ClassNames } from '@/components/atoms/Text/Text.module.scss'
+import textStyles, { type ClassNames, type Styles } from '@/components/atoms/Text/Text.module.scss'
 
 export type TextAllowedHtmlTags =
   | 'blockquote'
@@ -21,7 +26,20 @@ export type TextAllowedHtmlTags =
   | 'div'
   | 'li'
 
-export const Text = forwardRef<
+export const Text: ForwardRefExoticComponent<
+  Omit<AtomProps<TextAllowedHtmlTags, keyof Styles>, 'ref'> &
+    RefAttributes<
+      | HTMLQuoteElement
+      | HTMLElement
+      | HTMLHeadingElement
+      | HTMLLabelElement
+      | HTMLParagraphElement
+      | HTMLPreElement
+      | HTMLSpanElement
+      | HTMLDivElement
+      | HTMLLIElement
+    >
+> = forwardRef<
   HTMLElementTagNameMap[TextAllowedHtmlTags],
   AtomProps<TextAllowedHtmlTags, ClassNames>
 >(({ as = 'span', className, variant = 'p1', ...props }, ref) => {

@@ -50,7 +50,7 @@ export const TitleWithSelect = ({
   tooltip,
   isRefreshing,
   onRefresh,
-}: TitleWithSelectProps) => {
+}: TitleWithSelectProps): React.ReactNode => {
   const tooltipContent = selected && options && onChangeNetwork && (
     <Dropdown
       dropdownValue={{ value: selected.value, content: <DropdownItem option={selected} /> }}

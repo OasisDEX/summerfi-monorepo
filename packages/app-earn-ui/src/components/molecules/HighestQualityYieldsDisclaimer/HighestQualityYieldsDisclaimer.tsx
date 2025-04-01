@@ -2,7 +2,7 @@ import { Text } from '@/components/atoms/Text/Text'
 
 import styles from './HighestQualityYieldsDisclaimer.module.scss'
 
-export const HighestQualityYieldsDisclaimer = () => {
+export const HighestQualityYieldsDisclaimer = (): React.ReactNode => {
   return (
     <Text variant="p2" className={styles.disclaimer}>
       <span style={{ position: 'relative' }}>

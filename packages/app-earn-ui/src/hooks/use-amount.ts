@@ -1,5 +1,5 @@
 'use client'
-import { type ChangeEvent, useMemo, useState } from 'react'
+import { type ChangeEvent, type Dispatch, type SetStateAction, useMemo, useState } from 'react'
 import { type IToken } from '@summerfi/app-types'
 import { cleanAmount, formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
@@ -29,7 +29,35 @@ type UseAmountProps = {
  *   - onFocus: Handler to enable edit mode
  *   - onBlur: Handler to disable edit mode and format amount
  */
-export const useAmount = ({ tokenPrice, selectedToken, initialAmount }: UseAmountProps) => {
+export const useAmount = ({
+  tokenPrice,
+  selectedToken,
+  initialAmount,
+}: UseAmountProps): {
+  /**
+    A is a string version of the amount
+  */
+  amountRaw: string | undefined
+  /**
+    A parsed (bignumber) version of the amount
+  */
+  amountParsed: BigNumber
+  /**
+    A string version of the amount, formatted for display
+  */
+  amountDisplay: string
+  amountDisplayUSD: string
+  /**
+    A function to handle changes to the amount (with event)
+  */
+  handleAmountChange: (ev: ChangeEvent<HTMLInputElement>) => void
+  /**
+    A function to manually set the amount
+  */
+  manualSetAmount: Dispatch<SetStateAction<string | undefined>>
+  onFocus: () => void
+  onBlur: () => void
+} => {
   const [editMode, setEditMode] = useState(false)
   const [amountRaw, setAmountRaw] = useState<string | undefined>(initialAmount)
 
@@ -64,7 +92,7 @@ export const useAmount = ({ tokenPrice, selectedToken, initialAmount }: UseAmoun
     return new BigNumber(cleanAmount(amountRaw))
   }, [amountRaw])
 
-  const handleAmountChange = (ev: ChangeEvent<HTMLInputElement>) => {
+  const handleAmountChange = (ev: ChangeEvent<HTMLInputElement>): void => {
     const { value } = ev.target
 
     if (!value) {
