@@ -1,11 +1,9 @@
 'use client'
-import { Carousel, Text, useMobileCheck } from '@summerfi/app-earn-ui'
+import { HomepageCarousel, Text, useMobileCheck } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType } from '@summerfi/app-types'
-import { subgraphNetworkToId } from '@summerfi/app-utils'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
-import { LandingPageVaultPicker } from '@/components/organisms/LandingPageVaultPicker/LandingPageVaultPicker'
 import { sdkApiUrl } from '@/constants/sdk'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 
@@ -71,19 +69,7 @@ export const LandingPageHero = ({
           )}
           {!isMobileOrTablet && headerPartB}
         </div>
-        <Carousel
-          components={vaultsList.map((vault) => (
-            <LandingPageVaultPicker
-              vault={vault}
-              key={vault.id}
-              apy={
-                vaultsApyByNetworkMap[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
-                  .apy
-              }
-            />
-          ))}
-          contentWidth={515}
-        />
+        <HomepageCarousel vaultsList={vaultsList} vaultsApyByNetworkMap={vaultsApyByNetworkMap} />
         {/* <SummerFiProBox /> */}
       </div>
     </SDKContextProvider>

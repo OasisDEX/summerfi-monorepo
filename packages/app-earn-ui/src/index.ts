@@ -102,6 +102,8 @@ export { IllustrationCircle } from './components/molecules/IllustrationCircle/Il
 export { TokenWithNetworkIcon } from './components/molecules/TokenWithNetworkIcon/TokenWithNetworkIcon'
 export { OrderInformation } from './components/molecules/OrderInformation/OrderInformation'
 export { PositionCard } from './components/molecules/PositionCard/PositionCard'
+export { VaultCardHomepage } from './components/molecules/VaultCardHomepage/VaultCardHomepage'
+export { HomepageCarousel } from './components/molecules/HomepageCarousel/HomepageCarousel'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'
