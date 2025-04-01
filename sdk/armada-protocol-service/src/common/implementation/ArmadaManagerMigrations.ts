@@ -2,7 +2,6 @@ import {
   Address,
   ArmadaMigrationType,
   FiatCurrency,
-  FiatCurrencyAmount,
   LoggingService,
   Percentage,
   TokenAmount,
