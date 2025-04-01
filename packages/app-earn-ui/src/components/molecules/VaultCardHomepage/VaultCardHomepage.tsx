@@ -9,6 +9,7 @@ import {
 import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 import { capitalize } from 'lodash-es'
+import Link from 'next/link'
 
 import { AdditionalBonusLabel } from '@/components/atoms/AdditionalBonusLabel/AdditionalBonusLabel'
 import { Button } from '@/components/atoms/Button/Button'
@@ -17,6 +18,7 @@ import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { VaultTitle } from '@/components/molecules/VaultTitle/VaultTitle'
 import { getDisplayToken } from '@/helpers/get-display-token'
+import { getVaultUrl } from '@/helpers/get-vault-url'
 import { riskColors } from '@/helpers/risk-colors'
 
 import vaultCardHomepageStyles from './VaultCardHomepage.module.scss'
@@ -215,7 +217,11 @@ export const VaultCardHomepage = ({
             />
           </div>
         </div>
-        <Button variant="primaryLargeColorful">Get started</Button>
+        <Link href={`/earn${getVaultUrl(vault)}`}>
+          <Button variant="primaryLargeColorful" style={{ width: '100%' }}>
+            Get started
+          </Button>
+        </Link>
       </div>
     </Card>
   )
