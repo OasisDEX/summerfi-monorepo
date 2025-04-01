@@ -1,3 +1,4 @@
+'use client'
 import { useCallback, useEffect, useState } from 'react'
 import { type SDKVaultishType, type VaultApyData } from '@summerfi/app-types'
 import clsx from 'clsx'
