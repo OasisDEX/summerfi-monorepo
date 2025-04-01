@@ -15,7 +15,7 @@ export function NavigationMenuLink({
   onClick,
   onMouseEnter,
   currentPath,
-}: NavigationMenuPanelLinkProps) {
+}: NavigationMenuPanelLinkProps): React.ReactNode {
   // SSR hack
   const [isMounted, setIsMounted] = useState(false)
 

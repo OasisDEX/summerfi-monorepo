@@ -6,7 +6,7 @@ import { EXTERNAL_LINKS } from '@/helpers/application-links'
 
 import launchBannerStyles from '@/components/organisms/LaunchBanner/LaunchBanner.module.scss'
 
-export const LaunchBanner = () => {
+export const LaunchBanner = (): React.ReactNode => {
   const futureTimestamp = '2024-07-31T16:00:00-02:00'
 
   return (

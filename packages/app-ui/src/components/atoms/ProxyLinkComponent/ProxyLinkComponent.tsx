@@ -1,4 +1,9 @@
-import { forwardRef, type HTMLAttributeAnchorTarget } from 'react'
+import {
+  forwardRef,
+  type ForwardRefExoticComponent,
+  type HTMLAttributeAnchorTarget,
+  type RefAttributes,
+} from 'react'
 
 import { basePath } from '@/helpers/base-path'
 
@@ -12,7 +17,17 @@ import { basePath } from '@/helpers/base-path'
  * ```
  * This link on Rays dashboard is gonna be `/rays/example`, this component fixes that
  */
-export const ProxyLinkComponent = forwardRef(
+export const ProxyLinkComponent: ForwardRefExoticComponent<
+  {
+    onClick?: (params: unknown) => void
+    href?: string
+    children: React.ReactNode
+    style?: React.CSSProperties
+    className?: string
+    suppressHydrationWarning?: boolean
+    target?: HTMLAttributeAnchorTarget
+  } & RefAttributes<HTMLAnchorElement>
+> = forwardRef(
   (
     {
       onClick: _onClick,

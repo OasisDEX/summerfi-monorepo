@@ -20,7 +20,7 @@ export function WithArrow({
   as?: TextAllowedHtmlTags
   enabled?: boolean
   className?: string
-}>) {
+}>): React.ReactNode {
   return (
     <Text
       variant={variant}

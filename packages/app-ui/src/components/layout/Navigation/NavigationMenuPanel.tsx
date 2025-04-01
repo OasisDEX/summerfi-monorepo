@@ -32,7 +32,7 @@ export function NavigationMenuPanel({
   url,
   isPanelOpen,
   onMouseEnter,
-}: NavigationMenuPanelProps) {
+}: NavigationMenuPanelProps): React.ReactNode {
   return (
     <li
       className={navigationMenuStyles.navigationMenuPanel}

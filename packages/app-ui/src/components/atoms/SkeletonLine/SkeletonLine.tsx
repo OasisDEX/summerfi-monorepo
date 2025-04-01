@@ -42,7 +42,7 @@ export const SkeletonLine = ({
   radius = 'var(--radius-50)',
   width = '100%',
   height = 3,
-}: Omit<SkeletonProps, 'cols' | 'count' | 'gap'>) => {
+}: Omit<SkeletonProps, 'cols' | 'count' | 'gap'>): React.ReactNode => {
   const theme = skeletonColorTheme[color]
 
   return (

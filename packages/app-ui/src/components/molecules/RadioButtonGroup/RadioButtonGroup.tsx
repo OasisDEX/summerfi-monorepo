@@ -14,7 +14,7 @@ export const RadioButtonGroup = ({
   value: string
   onChange: (value: string) => void
   vertical?: boolean
-}) => {
+}): React.ReactNode => {
   return (
     <div
       style={{

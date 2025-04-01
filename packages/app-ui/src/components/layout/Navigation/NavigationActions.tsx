@@ -16,7 +16,7 @@ export const NavigationActions = ({
   walletConnectionComponent,
   raysCountComponent,
   toggleMobileMenu,
-}: NavigationActionsProps) => {
+}: NavigationActionsProps): React.ReactNode => {
   return (
     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', columnGap: '8px' }}>
       {raysCountComponent}

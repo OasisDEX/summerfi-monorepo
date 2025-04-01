@@ -1,9 +1,11 @@
 'use client'
 
 import {
+  type Dispatch,
   type FC,
   type HTMLAttributes,
   type ReactNode,
+  type SetStateAction,
   useCallback,
   useEffect,
   useMemo,
@@ -15,7 +17,10 @@ import { isTouchDevice } from '@/helpers/is-touch-device'
 
 import tooltipStyles from '@/components/molecules/Tooltip/Tooltip.module.scss'
 
-export function useTooltip() {
+export function useTooltip(): {
+  tooltipOpen: boolean
+  setTooltipOpen: Dispatch<SetStateAction<boolean>>
+} {
   const [tooltipOpen, setTooltipOpen] = useState(false)
 
   const closeHandler = useCallback(() => {
