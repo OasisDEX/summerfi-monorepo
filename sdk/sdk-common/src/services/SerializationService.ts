@@ -6,8 +6,6 @@ import { LoggingService } from './LoggingService'
 
 export type Class = object
 
-const LOG_SERIALIZATION = false
-
 export class SerializationService {
   static registerClass(v: Class, options?: string | RegisterOptions | undefined): void {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,41 +24,32 @@ export class SerializationService {
     return SuperJSON.stringify(v)
   }
 
-  static parse<T>(v: unknown): T {
-    console.log('>>>> TYPE: ', typeof v)
-    return SuperJSON.parse(SuperJSON.stringify(v))
+  static parse<T>(v: string): T {
+    return SuperJSON.parse(v)
   }
 
   static getTransformer() {
     return {
       input: {
         serialize: (obj: unknown) => {
-          const serializedData = SuperJSON.stringify(obj)
-          if (LOG_SERIALIZATION) {
-            LoggingService.debug(' => serialize request :: ', serializedData)
-          }
+          const serializedData = SerializationService.stringify(obj)
+          LoggingService.debug(' => serialize request :: ', serializedData)
           return serializedData
         },
         deserialize: (serializedData: string) => {
-          if (LOG_SERIALIZATION) {
-            LoggingService.debug(' => deserialize request :: ', serializedData)
-          }
-          return SuperJSON.parse(serializedData)
+          LoggingService.debug(' => deserialize request :: ', serializedData)
+          return SerializationService.parse(serializedData)
         },
       },
       output: {
         serialize: (obj: unknown) => {
-          const serializedData = SuperJSON.stringify(obj)
-          if (LOG_SERIALIZATION) {
-            LoggingService.debug(' <= serialize resposne :: ', serializedData)
-          }
+          const serializedData = SerializationService.stringify(obj)
+          LoggingService.debug(' <= serialize resposne :: ', serializedData)
           return serializedData
         },
         deserialize: (serializedData: string) => {
-          if (LOG_SERIALIZATION) {
-            LoggingService.debug(' <= deserialize response :: ', serializedData)
-          }
-          return SuperJSON.parse(serializedData)
+          LoggingService.debug(' <= deserialize response :: ', serializedData)
+          return SerializationService.parse(serializedData)
         },
       },
     }

@@ -53,10 +53,8 @@ export const testConfig = [
     symbol: 'USDC.e',
     swapSymbol: 'USDC.e',
     fleetAddress: Address.createFromEthereum({
-      // bummer
-      value: '0xF06BEDaf951aaFf253acaA05e391AdfbdD6BFbe0',
       // summer
-      // value: '0x507A2D9E87DBD3076e65992049C41270b47964f8',
+      value: '0x507A2D9E87DBD3076e65992049C41270b47964f8',
     }),
     rpcUrl: process.env.E2E_SDK_FORK_URL_SONIC,
     userAddress: user,

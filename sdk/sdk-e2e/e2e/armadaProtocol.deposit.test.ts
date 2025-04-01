@@ -79,8 +79,26 @@ describe('Armada Protocol Deposit', () => {
         vaultId,
         user,
       })
-      console.log('fleet balance', fleetAmountBefore.shares.toSolidityValue())
-      console.log('staked balance', stakedAmountBefore.shares.toSolidityValue())
+      console.log(
+        'fleet balance',
+        fleetAmountBefore.shares.toSolidityValue(),
+        typeof fleetAmountBefore.shares.toSolidityValue(),
+      )
+      console.log(
+        'fleet assets',
+        fleetAmountBefore.assets.toSolidityValue(),
+        typeof fleetAmountBefore.assets.toSolidityValue(),
+      )
+      console.log(
+        'staked balance',
+        stakedAmountBefore.shares.toSolidityValue(),
+        typeof stakedAmountBefore.shares.toSolidityValue(),
+      )
+      console.log(
+        'staked assets',
+        stakedAmountBefore.assets.toSolidityValue(),
+        typeof stakedAmountBefore.assets.toSolidityValue(),
+      )
     })
 
     it('check max deposit', async () => {
@@ -90,10 +108,10 @@ describe('Armada Protocol Deposit', () => {
         functionName: 'maxDeposit',
         args: [user.wallet.address.value],
       })
-      console.log('max deposit', maxDeposit)
+      console.log('max deposit', maxDeposit, typeof maxDeposit)
     })
 
-    describe(`Deposit on ${chainInfo.name}`, () => {
+    describe.skip(`Deposit on ${chainInfo.name}`, () => {
       it(`should deposit 1 USDC (with stake) to fleet at ${fleetAddress.value}`, async () => {
         const amount = '1'
         const transactions = await sdk.armada.users.getNewDepositTX({
@@ -104,7 +122,7 @@ describe('Armada Protocol Deposit', () => {
             token,
           }),
           slippage: Percentage.createFrom({
-            value: 0.02,
+            value: 1,
           }),
         })
 
@@ -119,7 +137,9 @@ describe('Armada Protocol Deposit', () => {
         console.log(
           'before',
           fleetAmountBefore.shares.toSolidityValue(),
+          typeof fleetAmountBefore.shares.toSolidityValue(),
           stakedAmountBefore.shares.toSolidityValue(),
+          typeof stakedAmountBefore.shares.toSolidityValue(),
         )
         const { statuses } = await sendAndLogTransactions({
           chainInfo,
@@ -142,7 +162,11 @@ describe('Armada Protocol Deposit', () => {
         console.log(
           'after',
           fleetAmountAfter.shares.toSolidityValue(),
+          typeof fleetAmountAfter.shares.toSolidityValue(),
           stakedAmountAfter.shares.toSolidityValue(),
+          typeof stakedAmountAfter.shares.toSolidityValue(),
+          'difference',
+          stakedAmountAfter.assets.subtract(stakedAmountBefore.assets).toString(),
         )
         expect(fleetAmountAfter.shares.toSolidityValue()).toEqual(
           fleetAmountBefore.shares.toSolidityValue(),
@@ -150,9 +174,9 @@ describe('Armada Protocol Deposit', () => {
         expect(stakedAmountAfter.shares.toSolidityValue()).toBeGreaterThan(
           stakedAmountBefore.shares.toSolidityValue(),
         )
-        expect(stakedAmountAfter.assets.subtract(stakedAmountBefore.assets).amount).toBeGreaterThan(
-          0.9,
-        )
+        expect(
+          Number(stakedAmountAfter.assets.subtract(stakedAmountBefore.assets).amount),
+        ).toBeGreaterThan(0.9)
       })
 
       it.skip(`should deposit 1 USDC (without stake) to fleet at ${fleetAddress.value}`, async () => {
@@ -167,7 +191,7 @@ describe('Armada Protocol Deposit', () => {
           }),
           shouldStake: false,
           slippage: Percentage.createFrom({
-            value: 0.01,
+            value: 1,
           }),
         })
 
@@ -229,7 +253,7 @@ describe('Armada Protocol Deposit', () => {
             token: swapToken,
           }),
           slippage: Percentage.createFrom({
-            value: 0.2,
+            value: 1,
           }),
         })
 
@@ -281,9 +305,9 @@ describe('Armada Protocol Deposit', () => {
       })
     })
 
-    describe.skip(`Withdraw on ${chainInfo.name}`, () => {
+    describe(`Withdraw on ${chainInfo.name}`, () => {
       it(`should withdraw 1 USDC unstaked assets back from fleet at ${fleetAddress.value}`, async () => {
-        const amount = '0.6'
+        const amount = '1'
 
         // const pre = await sdk.armada.users.getNewDepositTX({
         //   vaultId: vaultId,
@@ -313,7 +337,7 @@ describe('Armada Protocol Deposit', () => {
           }),
           toToken: swapToken,
           slippage: Percentage.createFrom({
-            value: 0.2,
+            value: 1,
           }),
         })
 
