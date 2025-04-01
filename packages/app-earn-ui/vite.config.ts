@@ -10,7 +10,7 @@ import { libInjectCss } from 'vite-plugin-lib-inject-css'
 import tsconfigPaths from 'vite-tsconfig-paths'
 // preserves directives like "use client" in the output
 import preserveDirectives from 'rollup-preserve-directives'
-
+// generates .d.ts files
 import UnpluginIsolatedDecl from 'unplugin-isolated-decl/vite'
 
 const logger = createLogger()
@@ -114,6 +114,7 @@ export default defineConfig(({ mode }) => {
             ]),
         ),
         output: {
+          dir: resolve(__dirname, 'dist/src'),
           assetFileNames: 'assets/[name][extname]',
           entryFileNames: '[name].js',
         },

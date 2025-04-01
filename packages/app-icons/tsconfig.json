@@ -6,6 +6,8 @@
     "baseUrl": ".",
     "lib": ["dom", "dom.iterable", "esnext"],
     "typeRoots": [],
+    "allowJs": false,
+    "isolatedDeclarations": true,
     "outDir": "./dist"
   }
 }

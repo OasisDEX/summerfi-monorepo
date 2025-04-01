@@ -1,5 +1,4 @@
-import { Card } from '@summerfi/app-earn-ui'
-import { type CardVariant } from '@summerfi/app-earn-ui/dist/types/src/components/atoms/Card/Card'
+import { Card, type CardVariant } from '@summerfi/app-earn-ui'
 import { type ForecastDataPoints, type TimeframesType } from '@summerfi/app-types'
 
 import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
