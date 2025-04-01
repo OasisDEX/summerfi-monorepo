@@ -1,4 +1,7 @@
-import { Product } from '@summerfi/summer-earn-rates-subgraph'
+import {
+  Product,
+  SubgraphClient as RatesSubgraphClient,
+} from '@summerfi/summer-earn-rates-subgraph'
 import { Protocol } from '.'
 import { ChainId, NetworkByChainID } from '@summerfi/serverless-shared'
 import { Logger } from '@aws-lambda-powertools/logger'
@@ -101,9 +104,13 @@ export class RewardsService {
     backoffFactor: 2,
   }
   private readonly logger: Logger
-  constructor(logger: Logger) {
+  private readonly ratesSubgraphClient: RatesSubgraphClient
+
+  constructor(logger: Logger, ratesSubgraphClient: RatesSubgraphClient) {
     this.logger = logger
+    this.ratesSubgraphClient = ratesSubgraphClient
   }
+
   async getRewardRates(
     products: Product[],
     chainId: ChainId,
@@ -155,7 +162,24 @@ export class RewardsService {
       )
       Object.assign(results, gearboxResults)
     }
-    return results
+
+    // we call it for all arks i ncase there are additional rewards calcualted with onchian data
+    const subgraphResults = await this.getArksRewardsBatch(products)
+
+    // combine results and subgraph results
+    const combinedResults = Object.entries(subgraphResults).reduce(
+      (acc, [productId, rewards]) => {
+        if (results[productId]) {
+          acc[productId] = [...results[productId], ...rewards]
+        } else {
+          acc[productId] = rewards
+        }
+        return acc
+      },
+      {} as Record<string, RewardRate[]>,
+    )
+
+    return combinedResults
   }
 
   private async fetchWithRetry(
@@ -229,6 +253,41 @@ export class RewardsService {
       console.error('[RewardsService] Error fetching Aave Merit rewards:', error)
       return Object.fromEntries(products.map((product) => [product.id, []]))
     }
+  }
+
+  private async getArksRewardsBatch(products: Product[]): Promise<Record<string, RewardRate[]>> {
+    const productIds = products.map((product) => product.id)
+    const subgraphResults = await this.ratesSubgraphClient.GetArksRewardsRates({ productIds })
+
+    const rewards: Record<string, RewardRate[]> = Object.fromEntries(
+      products.map((product) => [product.id, []]),
+    )
+
+    for (const product of products) {
+      const subgraphResult = subgraphResults.products.find((p) => p.id === product.id)
+      if (subgraphResult && subgraphResult.rewardsInterestRates.length > 0) {
+        // Get the most recent timestamp from the first rate (since they're sorted desc)
+        const latestTimestamp = subgraphResult.rewardsInterestRates[0].timestamp
+
+        // Filter rates to only include those from the latest timestamp
+        const latestRates = subgraphResult.rewardsInterestRates
+          .filter((r) => r.timestamp === latestTimestamp)
+          .map((r, index) => ({
+            rewardToken: r.rewardToken.address,
+            rate: r.rate.toString(),
+            index,
+            token: {
+              address: r.token.address,
+              symbol: r.token.symbol,
+              decimals: parseInt(r.token.decimals),
+              precision: (10n ** BigInt(parseInt(r.token.decimals))).toString(),
+            },
+          }))
+
+        rewards[product.id] = latestRates
+      }
+    }
+    return rewards
   }
 
   private async getMorphoRewardsBatch(
