@@ -32,24 +32,42 @@ export class SerializationService {
     return {
       input: {
         serialize: (obj: unknown) => {
-          const serializedData = SerializationService.stringify(obj)
-          LoggingService.debug(' => serialize request :: ', serializedData)
-          return serializedData
+          try {
+            const serializedData = SerializationService.stringify(obj)
+            return serializedData
+          } catch (error) {
+            LoggingService.debug(' => serialize request error :: ', JSON.stringify(obj), error)
+            throw error
+          }
         },
         deserialize: (serializedData: string) => {
-          LoggingService.debug(' => deserialize request :: ', serializedData)
-          return SerializationService.parse(serializedData)
+          try {
+            const parsedData = SerializationService.parse(serializedData)
+            return parsedData
+          } catch (error) {
+            LoggingService.debug(' => deserialize request error :: ', serializedData, error)
+            throw error
+          }
         },
       },
       output: {
         serialize: (obj: unknown) => {
-          const serializedData = SerializationService.stringify(obj)
-          LoggingService.debug(' <= serialize resposne :: ', serializedData)
-          return serializedData
+          try {
+            const serializedData = SerializationService.stringify(obj)
+            return serializedData
+          } catch (error) {
+            LoggingService.debug(' => serialize response error :: ', JSON.stringify(obj), error)
+            throw error
+          }
         },
         deserialize: (serializedData: string) => {
-          LoggingService.debug(' <= deserialize response :: ', serializedData)
-          return SerializationService.parse(serializedData)
+          try {
+            const parsedData = SerializationService.parse(serializedData)
+            return parsedData
+          } catch (error) {
+            LoggingService.debug(' => deserialize response error :: ', serializedData, error)
+            throw error
+          }
         },
       },
     }
