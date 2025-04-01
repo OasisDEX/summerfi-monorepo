@@ -1,5 +1,5 @@
 import { Icon, OrderInformation, Text } from '@summerfi/app-earn-ui'
-import { SDKChainId, type TokenSymbolsList } from '@summerfi/app-types'
+import { type SDKChainId, type TokenSymbolsList } from '@summerfi/app-types'
 import { formatCryptoBalance, formatFiatBalance, formatPercent } from '@summerfi/app-utils'
 import { type ExtendedTransactionInfo, type IToken, TransactionType } from '@summerfi/sdk-common'
 import type BigNumber from 'bignumber.js'
@@ -20,7 +20,6 @@ export const OrderInfoWithdraw = ({
   amountParsed,
   amountDisplayUSD,
   transactionFee,
-  chainId,
   transactionFeeLoading,
 }: OrderInfoWithdrawProps) => {
   if (transaction.type !== TransactionType.Withdraw) {
