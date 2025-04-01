@@ -46,7 +46,19 @@ export const getRisk = async <DB extends RiskRequiredDB>({
   trmApiKey: string
   db: Kysely<DB>
   jwtSecret: string
-}) => {
+}): Promise<
+  NextResponse<
+    | {
+        authenticated: boolean
+      }
+    | {
+        isRisky: boolean
+      }
+    | {
+        error: string
+      }
+  >
+> => {
   const { chainId, walletAddress, cookiePrefix } = inputSchema.parse(await req.json())
 
   const resolvedDB = db as unknown as Kysely<RiskRequiredDB>

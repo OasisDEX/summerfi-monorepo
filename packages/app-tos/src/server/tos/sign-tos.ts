@@ -31,7 +31,16 @@ export async function signTos<DB extends TOSRequiredDB>({
   req: NextRequest
   jwtSecret: string
   db: Kysely<DB>
-}) {
+}): Promise<
+  NextResponse<
+    | {
+        authenticated: boolean
+      }
+    | {
+        docVersion: string
+      }
+  >
+> {
   const resolvedDB = db as unknown as Kysely<TOSRequiredDB>
 
   const { docVersion, walletAddress, cookiePrefix } = tosSchema.parse(await req.json())

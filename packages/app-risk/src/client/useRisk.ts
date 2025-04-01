@@ -27,7 +27,12 @@ export interface RiskState extends RiskResponse {
  * const { isRisky, isLoading, error } = useRisk({ chainId: 1, walletAddress: '0x123...', host: 'https://api.example.com' });
  */
 
-export const useRisk = ({ chainId, walletAddress, cookiePrefix, host = '' }: UseRiskInput) => {
+export const useRisk = ({
+  chainId,
+  walletAddress,
+  cookiePrefix,
+  host = '',
+}: UseRiskInput): RiskState => {
   const [risk, setRisk] = useState<RiskState>({ isLoading: false })
 
   useEffect(() => {

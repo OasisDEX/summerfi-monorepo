@@ -23,7 +23,7 @@ export const checkIfRisky = async ({
   address: string
   apiKey: string
   chainId: number
-}) => {
+}): Promise<boolean> => {
   try {
     const trmData = await getTrmRisk({ address, apiKey, chainId })
 

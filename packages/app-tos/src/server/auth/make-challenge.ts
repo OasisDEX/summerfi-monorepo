@@ -38,7 +38,11 @@ export const makeChallenge = async ({
 }: {
   req: NextRequest
   jwtChallengeSecret: string
-}) => {
+}): Promise<
+  NextResponse<{
+    challenge: string
+  }>
+> => {
   const body = inputSchema.parse(await req.json())
 
   const payload: JWTChallenge = {

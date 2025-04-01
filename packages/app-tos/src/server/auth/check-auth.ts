@@ -8,7 +8,17 @@ const paramsSchema = z.object({
   cookiePrefix: z.string(),
 })
 
-export const checkAuth = async ({ req, jwtSecret }: { req: NextRequest; jwtSecret: string }) => {
+export const checkAuth = async ({
+  req,
+  jwtSecret,
+}: {
+  req: NextRequest
+  jwtSecret: string
+}): Promise<
+  NextResponse<{
+    authenticated: boolean
+  }>
+> => {
   const { walletAddress, cookiePrefix } = paramsSchema.parse(await req.json())
 
   const token = req.cookies.get(`${cookiePrefix}-${walletAddress.toLowerCase()}`)

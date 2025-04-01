@@ -4,6 +4,8 @@ import { fileURLToPath } from 'node:url'
 import { extname, relative, resolve } from 'path'
 import { createLogger, defineConfig } from 'vite'
 
+// generates typescript declaration files (just the js/ts, scss is done in package.json)
+import UnpluginIsolatedDecl from 'unplugin-isolated-decl/vite'
 // handles tsconfig paths from the tsconfig.json
 import tsconfigPaths from 'vite-tsconfig-paths'
 // preserves directives like "use client" in the output
@@ -44,6 +46,7 @@ export default defineConfig(({ mode }) => {
           }
         },
       },
+      UnpluginIsolatedDecl(),
     ],
     customLogger: !notDev ? logger : undefined,
     clearScreen: false,
