@@ -32,12 +32,21 @@ type UseGasEstimationProps = {
   publicClient: PublicClient
 }
 
-const nativeSymbolByChain: { [chainId: number]: string } = {
-  [ChainIds.ArbitrumOne]: 'WETH',
-  [ChainIds.Base]: 'WETH',
-  [ChainIds.Mainnet]: 'WETH',
-  [ChainIds.Optimism]: 'WETH',
-  [ChainIds.Sonic]: 'WS',
+const getNativeSymbol = (chainId: number) => {
+  const nativeSymbolByChain: { [chainId: number]: string } = {
+    [ChainIds.ArbitrumOne]: 'WETH',
+    [ChainIds.Base]: 'WETH',
+    [ChainIds.Mainnet]: 'WETH',
+    [ChainIds.Optimism]: 'WETH',
+    [ChainIds.Sonic]: 'WS',
+  }
+  const symbol = nativeSymbolByChain[chainId]
+
+  if (!symbol) {
+    throw new Error(`No native symbol found for chainId ${chainId}`)
+  }
+
+  return symbol
 }
 
 export const useGasEstimation = ({
@@ -63,7 +72,7 @@ export const useGasEstimation = ({
     ) => {
       setLoading(true)
 
-      const nativeSymbol = nativeSymbolByChain[chainId]
+      const nativeSymbol = getNativeSymbol(chainId)
 
       try {
         const [fetchedGas, gasPrice, nativeToken] = await Promise.all([
