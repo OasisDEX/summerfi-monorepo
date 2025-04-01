@@ -30,7 +30,7 @@ const isValidNumericInputValue = (input: string) => {
  * @param value - The input string to be formatted or trimmed.
  * @returns A formatted string if valid or the input with the last character removed if invalid.
  */
-export const mapNumericInput = (value: string) => {
+export const mapNumericInput = (value: string): string => {
   if (!isValidNumericInputValue(value)) {
     return value.slice(0, -1)
   }

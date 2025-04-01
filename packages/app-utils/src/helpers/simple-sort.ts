@@ -31,7 +31,7 @@ export const simpleSort = ({
   direction: SortDirection
   a: bigint | string | number
   b: bigint | string | number
-}) => {
+}): number => {
   let result: number
 
   const isNumericString = (value: string) => !isNaN(Number(value))

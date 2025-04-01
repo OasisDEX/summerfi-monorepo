@@ -15,7 +15,7 @@ type RebalanceCountsType = { total: number } & Partial<{ [key in SDKNetwork]: nu
  * @param vaultsList - List of vaults with their rebalance counts and network information
  * @returns Total USD value of gas saved across all networks
  */
-export const getRebalanceSavedGasCost = (vaultsList: SDKVaultsListType) => {
+export const getRebalanceSavedGasCost = (vaultsList: SDKVaultsListType): number => {
   const rebalanceCounts = vaultsList.reduce<RebalanceCountsType>(
     (acc, vault) => {
       const { network } = vault.protocol
