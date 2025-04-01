@@ -152,10 +152,13 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       (position) => position.positionTokenAmount.toSolidityValue() > 0n,
     )
 
-    return {
+    const res = {
       chainInfo: params.chainInfo,
       positions: nonEmptyPositions,
     }
+
+    LoggingService.debug('res: ', JSON.stringify(res))
+    return res
   }
 
   private async _getPositions(params: {
@@ -436,10 +439,13 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       apyByPositionId[record.positionId] = record
     })
 
-    return {
+    const res = {
       chainInfo: params.chainInfo,
       apyByPositionId,
     }
+
+    LoggingService.debug('res: ', JSON.stringify(res))
+    return res
   }
 
   private _getDefillamaId(positionId: string) {
@@ -534,10 +540,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     const swapAmountByPositionId: Record<string, ITokenAmount> = {}
     const priceImpactByPositionId: Record<string, TransactionPriceImpact> = {}
 
-    LoggingService.debug('tokens: ', {
-      fleetToken: fleetToken.toString(),
-      moveCalls: moveCalls.map((call) => call.operation),
-    })
+    LoggingService.debug('fleetToken: ', fleetToken.toString())
 
     for (const position of filteredPositions) {
       // We need to swap position when token is not a fleet token
