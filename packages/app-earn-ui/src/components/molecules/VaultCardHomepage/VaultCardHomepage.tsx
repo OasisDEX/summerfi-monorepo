@@ -7,6 +7,7 @@ import {
   ten,
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
+import clsx from 'clsx'
 import { capitalize } from 'lodash-es'
 
 import { AdditionalBonusLabel } from '@/components/atoms/AdditionalBonusLabel/AdditionalBonusLabel'
@@ -20,42 +21,81 @@ import { riskColors } from '@/helpers/risk-colors'
 
 import vaultCardHomepageStyles from './VaultCardHomepage.module.scss'
 
-type VaultCardHomepageProps = {
-  vault: SDKVaultishType
-  vaultsApyByNetworkMap: {
-    [key: `${string}-${number}`]: VaultApyData
-  }
-}
-
 const DataBlock = ({
   title,
-  content,
+  contentDesktop,
+  contentMobile,
   primary = false,
   titleIcon,
 }: {
   title: string
   titleIcon?: IconNamesList
-  content: ReactNode
+  contentDesktop: ReactNode
+  contentMobile: ReactNode
   primary?: boolean
 }) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-        {title}
-        {titleIcon ? <Icon iconName={titleIcon} size={16} /> : null}
-      </Text>
+      <div style={{ display: 'flex' }}>
+        <Text
+          as="p"
+          variant="p3semi"
+          style={{ color: 'var(--earn-protocol-secondary-40)' }}
+          className={vaultCardHomepageStyles.dataBlockDesktop}
+        >
+          {title}
+        </Text>
+        <Text
+          as="p"
+          variant="p4semi"
+          style={{ color: 'var(--earn-protocol-secondary-40)' }}
+          className={vaultCardHomepageStyles.dataBlockMobile}
+        >
+          {title}
+        </Text>
+        {titleIcon ? (
+          <Icon
+            iconName={titleIcon}
+            size={16}
+            style={{ color: 'var(--earn-protocol-secondary-40)', margin: '1.5px 0 0 1px' }}
+          />
+        ) : null}
+      </div>
       <div
-        className={
-          primary ? vaultCardHomepageStyles.dataPrimary : vaultCardHomepageStyles.dataSecondary
-        }
+        className={clsx(vaultCardHomepageStyles.dataBlockDesktop, {
+          [vaultCardHomepageStyles.dataPrimary]: primary,
+          [vaultCardHomepageStyles.dataSecondary]: !primary,
+        })}
       >
-        {content}
+        {contentDesktop}
+      </div>
+      <div
+        className={clsx(vaultCardHomepageStyles.dataBlockMobile, {
+          [vaultCardHomepageStyles.dataPrimary]: primary,
+          [vaultCardHomepageStyles.dataSecondary]: !primary,
+        })}
+      >
+        {contentMobile}
       </div>
     </div>
   )
 }
 
-export const VaultCardHomepage = ({ vault, vaultsApyByNetworkMap }: VaultCardHomepageProps) => {
+type VaultCardHomepageProps = {
+  vault: SDKVaultishType
+  vaultsApyByNetworkMap: {
+    [key: `${string}-${number}`]: VaultApyData
+  }
+  selected?: boolean
+  onSelect?: () => void
+}
+
+export const VaultCardHomepage = ({
+  vault,
+  vaultsApyByNetworkMap,
+  selected = true,
+  onSelect,
+}: VaultCardHomepageProps) => {
   const { apy } =
     vaultsApyByNetworkMap[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
   const parsedApy = formatDecimalAsPercent(apy)
@@ -67,22 +107,21 @@ export const VaultCardHomepage = ({ vault, vaultsApyByNetworkMap }: VaultCardHom
   )
 
   return (
-    <div className={vaultCardHomepageStyles.vaultCardHomepageWrapper}>
-      <Card
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 'var(--general-space-32)',
-        }}
+    <Card
+      className={clsx(vaultCardHomepageStyles.vaultCardHomepageWrapper, {
+        [vaultCardHomepageStyles.vaultCardHomepageWrapperSelected]: selected,
+      })}
+      style={{
+        cursor: selected ? 'auto' : 'pointer',
+      }}
+      onClick={!selected ? onSelect : undefined}
+    >
+      <div
+        className={clsx(vaultCardHomepageStyles.vaultCardHomepageContentWrapper, {
+          [vaultCardHomepageStyles.vaultCardHomepageContentWrapperSelected]: selected,
+        })}
       >
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            width: '100%',
-          }}
-        >
+        <div className={vaultCardHomepageStyles.vaultCardHomepageTitleWrapper}>
           <VaultTitle
             symbol={vault.inputToken.symbol}
             networkName={vault.protocol.network}
@@ -90,35 +129,50 @@ export const VaultCardHomepage = ({ vault, vaultsApyByNetworkMap }: VaultCardHom
           />
           <AdditionalBonusLabel bonus={vault.customFields?.bonus} />
         </div>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            gap: 'var(--general-space-32)',
-            width: '100%',
-          }}
-        >
+        <div className={vaultCardHomepageStyles.vaultCardHomepageDatablocksWrapper}>
           <div className={vaultCardHomepageStyles.vaultCardHomepageDataRow}>
             <DataBlock
               title="Total assets"
               primary
-              content={
-                <>
+              contentDesktop={
+                <div style={{ display: 'flex' }}>
                   <Text variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
                     {parsedTotalValueLocked}&nbsp;{getDisplayToken(vault.inputToken.symbol)}
                   </Text>
-                  <Text variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+                  &nbsp;
+                  <Text
+                    variant="p4semi"
+                    style={{ color: 'var(--earn-protocol-secondary-40)', marginTop: '3px' }}
+                  >
                     ${parsedTotalValueLockedUSD}
                   </Text>
-                </>
+                </div>
+              }
+              contentMobile={
+                <div style={{ display: 'flex' }}>
+                  <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+                    {parsedTotalValueLocked}&nbsp;{getDisplayToken(vault.inputToken.symbol)}
+                  </Text>
+                  &nbsp;
+                  <Text
+                    variant="p4semi"
+                    style={{ color: 'var(--earn-protocol-secondary-40)', marginTop: '3px' }}
+                  >
+                    ${parsedTotalValueLockedUSD}
+                  </Text>
+                </div>
               }
             />
             <DataBlock
               title="APY"
               titleIcon="stars"
-              content={
+              contentDesktop={
                 <Text variant="p1colorful" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+                  {parsedApy}
+                </Text>
+              }
+              contentMobile={
+                <Text variant="p2colorful" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
                   {parsedApy}
                 </Text>
               }
@@ -128,8 +182,13 @@ export const VaultCardHomepage = ({ vault, vaultsApyByNetworkMap }: VaultCardHom
             <DataBlock
               title="Best for"
               primary
-              content={
+              contentDesktop={
                 <Text variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+                  {vault.customFields?.bestFor ?? 'Optimized lending yield'}
+                </Text>
+              }
+              contentMobile={
+                <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
                   {vault.customFields?.bestFor ?? 'Optimized lending yield'}
                 </Text>
               }
@@ -137,9 +196,17 @@ export const VaultCardHomepage = ({ vault, vaultsApyByNetworkMap }: VaultCardHom
             <DataBlock
               title="Risk"
               titleIcon="clock"
-              content={
+              contentDesktop={
                 <Text
                   variant="p1semi"
+                  style={{ color: riskColors[vault.customFields?.risk ?? 'lower'] }}
+                >
+                  {capitalize(vault.customFields?.risk ?? 'lower')} risk
+                </Text>
+              }
+              contentMobile={
+                <Text
+                  variant="p2semi"
                   style={{ color: riskColors[vault.customFields?.risk ?? 'lower'] }}
                 >
                   {capitalize(vault.customFields?.risk ?? 'lower')} risk
@@ -149,7 +216,7 @@ export const VaultCardHomepage = ({ vault, vaultsApyByNetworkMap }: VaultCardHom
           </div>
         </div>
         <Button variant="primaryLargeColorful">Get started</Button>
-      </Card>
-    </div>
+      </div>
+    </Card>
   )
 }

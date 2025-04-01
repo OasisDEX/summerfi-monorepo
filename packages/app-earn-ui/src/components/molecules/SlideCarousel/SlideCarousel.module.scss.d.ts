@@ -12,7 +12,6 @@ export type Styles = {
   emblaOneSlide: string
   emblaSideButton: string
   emblaSlide: string
-  emblaSlideDimmed: string
   emblaSlideNumber: string
   emblaThreeSlides: string
   emblaTwoSlides: string
