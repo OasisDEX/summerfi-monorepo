@@ -31,7 +31,7 @@ export const VaultDetailsView: FC<VaultDetailsViewProps> = ({
         vault={vault}
         arksInterestRates={arksInterestRates}
       />
-      <VaultDetailsSecurity />
+      <VaultDetailsSecurity vault={vault} />
       <VaultDetailsFaq />
     </>
   )

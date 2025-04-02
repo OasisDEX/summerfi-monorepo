@@ -63,7 +63,10 @@ export const VaultGridDetails = ({
               networkName={vault.protocol.network}
             />
           </Dropdown>
-          <Button variant="primarySmall" style={{ height: '48px', paddingRight: '40px' }}>
+          <Button
+            variant="primarySmall"
+            style={{ height: '48px', paddingRight: '30px', minWidth: '128px' }}
+          >
             <Link href={getVaultUrl(vault)}>
               <WithArrow
                 as="span"

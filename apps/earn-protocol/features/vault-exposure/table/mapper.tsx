@@ -47,7 +47,9 @@ const calculateAverageApy = (rates: { averageRate: number; date: number }[], day
     new BigNumber(0),
   )
 
-  return sum.div(relevantRates.length)
+  const avgApy = sum.div(relevantRates.length)
+
+  return avgApy.isNaN() ? new BigNumber(0) : avgApy
 }
 
 const calculateYearlyYieldRange = (rates: { averageRate: number; date: number }[]): YieldRange => {
@@ -60,9 +62,12 @@ const calculateYearlyYieldRange = (rates: { averageRate: number; date: number }[
 
   const apyValues = yearlyRates.map((rate) => new BigNumber(rate.averageRate).div(100))
 
+  const low = BigNumber.min(...apyValues)
+  const high = BigNumber.max(...apyValues)
+
   return {
-    low: BigNumber.min(...apyValues),
-    high: BigNumber.max(...apyValues),
+    low: low.isNaN() ? new BigNumber(0) : low,
+    high: high.isNaN() ? new BigNumber(0) : high,
   }
 }
 

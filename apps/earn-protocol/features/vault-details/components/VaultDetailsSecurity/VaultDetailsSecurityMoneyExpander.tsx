@@ -1,14 +1,18 @@
-import { Card, Expander, Icon, Text, Tooltip, WithArrow } from '@summerfi/app-earn-ui'
+import { type FC } from 'react'
+import {
+  Card,
+  Expander,
+  getScannerAddressUrl,
+  Icon,
+  Text,
+  Tooltip,
+  WithArrow,
+} from '@summerfi/app-earn-ui'
+import { type SDKVaultishType } from '@summerfi/app-types'
+import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
 import Link from 'next/link'
 
-const verifiableSmartContractCodeLinks = [
-  { title: 'Summer.fi Protocol Source code', link: '/' },
-  { title: 'Summer.fi Rebalancer Smart Contract', link: '/' },
-  { title: 'Ethena sUSDe Smart Contract ', link: '/' },
-  { title: 'MetaMorpho Gauntlet MKR Blended Smart Contract ', link: '/' },
-  { title: 'Pendle USD0++ Smart Contract', link: '/' },
-  { title: 'AAVE v3 USDC Smart Contract ', link: '/' },
-]
+import { getProtocolLabel } from '@/helpers/get-protocol-label'
 
 const whitelistedActorsLinks = [
   { title: 'a16z Crypto', link: '/' },
@@ -17,7 +21,23 @@ const whitelistedActorsLinks = [
   { title: 'Block Tower Capital', link: '/' },
 ]
 
-export const VaultDetailsSecurityMoneyExpander = () => {
+type VaultDetailsSecurityMoneyExpanderProps = {
+  vault: SDKVaultishType
+}
+
+export const VaultDetailsSecurityMoneyExpander: FC<VaultDetailsSecurityMoneyExpanderProps> = ({
+  vault,
+}) => {
+  const arkLinks = vault.arks.map((ark) => {
+    const protocol = ark.name?.split('-') ?? []
+    const label = getProtocolLabel(protocol)
+
+    return {
+      title: label,
+      link: getScannerAddressUrl(subgraphNetworkToSDKId(vault.protocol.network), ark.id),
+    }
+  })
+
   return (
     <Card>
       <Expander
@@ -71,14 +91,14 @@ export const VaultDetailsSecurityMoneyExpander = () => {
             width: 'fit-content',
           }}
         >
-          {verifiableSmartContractCodeLinks.map((item) => (
+          {arkLinks.map((item) => (
             <Link href={item.link} key={item.title}>
               <WithArrow
                 as="p"
                 variant="p3semi"
                 style={{ color: 'var(--earn-protocol-primary-100)' }}
               >
-                {item.title}
+                {item.title} Smart Contract
               </WithArrow>
             </Link>
           ))}

@@ -9,9 +9,13 @@ const chainsMap: {
   10: 'https://optimistic.etherscan.io', // OPTIMISM
   8453: 'https://basescan.org', // BASE
   11155111: 'https://sepolia.etherscan.io', // SEPOLIA
-  146: 'https://sonicscan.org/', // SONIC
+  146: 'https://sonicscan.org', // SONIC
 }
 
 export const getScannerUrl = (chainId: number, txHash: string) => {
   return `${chainsMap[chainId]}/tx/${txHash}`
+}
+
+export const getScannerAddressUrl = (chainId: number, contractAddress: string) => {
+  return `${chainsMap[chainId]}/address/${contractAddress}`
 }
