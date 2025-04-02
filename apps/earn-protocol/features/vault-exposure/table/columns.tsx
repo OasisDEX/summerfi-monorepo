@@ -17,6 +17,27 @@ export const vaultExposureColumns = [
     sortable: true,
   },
   {
+    title: '30d AVG. APY',
+    key: 'avgApy30d',
+    sortable: true,
+  },
+  {
+    title: '1y AVG. APY',
+    key: 'avgApy1y',
+    sortable: true,
+  },
+
+  {
+    title: '1y APY Low',
+    key: 'yearlyLow',
+    sortable: true,
+  },
+  {
+    title: '1y APY High',
+    key: 'yearlyHigh',
+    sortable: true,
+  },
+  {
     title: 'Liquidity',
     key: 'liquidity',
     sortable: true,
@@ -34,4 +55,12 @@ export const vaultExposureColumns = [
   },
 ]
 
-export const vaultExposureColumnsHiddenOnMobile = ['liquidity', 'cap', 'currentApy']
+export const vaultExposureColumnsHiddenOnMobile = [
+  'liquidity',
+  'cap',
+  'currentApy',
+  'avgApy30d',
+  'avgApy1y',
+  'yearlyLow',
+  'yearlyHigh',
+]

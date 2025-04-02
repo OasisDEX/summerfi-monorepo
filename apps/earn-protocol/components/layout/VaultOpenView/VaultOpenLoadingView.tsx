@@ -2,6 +2,8 @@ import { Expander, Sidebar, SkeletonLine, Text, VaultOpenLoadingGrid } from '@su
 
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
 
+import { detailsLinks } from './mocks'
+
 import vaultOpenViewStyles from './VaultOpenView.module.scss'
 
 export const VaultOpenLoadingView = () => {
@@ -9,7 +11,7 @@ export const VaultOpenLoadingView = () => {
     <VaultOpenLoadingGrid
       detailsContent={
         <div className={vaultOpenViewStyles.leftContentWrapper}>
-          <VaultOpenHeaderBlock detailsLinks={[]} />
+          <VaultOpenHeaderBlock detailsLinks={detailsLinks} />
           {[
             'Historical yield',
             'Vault exposure',

@@ -5,15 +5,15 @@ import classNames from './VaultDetailsSecurity.module.scss'
 const dataBlocks = [
   {
     title: 'Total Assets Managed',
-    value: '4.2b',
+    value: '2.71B',
   },
   {
     title: '30d Volume',
-    value: '11.2b',
+    value: '$994.78M',
   },
   {
     title: 'Vault Automated',
-    value: '249.6m',
+    value: '$191.60M',
   },
   {
     title: 'Time operating',

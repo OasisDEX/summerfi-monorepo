@@ -3,6 +3,7 @@ import { type FC, type ReactNode, useCallback, useMemo, useState } from 'react'
 import { Table, type TableSortedColumn, useMobileCheck } from '@summerfi/app-earn-ui'
 import { type SDKVaultType } from '@summerfi/app-types'
 
+import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import {
   vaultExposureColumns,
@@ -18,7 +19,7 @@ interface VaultExposureTableProps {
   }
   hiddenColumns?: string[]
   rowsToDisplay?: number
-  arksInterestRates?: { [key: string]: number }
+  arksInterestRates: GetInterestRatesReturnType
 }
 
 export const VaultExposureTable: FC<VaultExposureTableProps> = ({

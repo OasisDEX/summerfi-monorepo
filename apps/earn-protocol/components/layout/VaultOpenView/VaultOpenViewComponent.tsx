@@ -34,6 +34,7 @@ import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
 import { getChainInfoByChainId, type IToken, TransactionType } from '@summerfi/sdk-common'
 
 import { AccountKitAccountType } from '@/account-kit/types'
+import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
@@ -73,7 +74,7 @@ type VaultOpenViewComponentProps = {
   rebalanceActivity: RebalanceActivityPagination
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData
-  arksInterestRates?: { [key: string]: number }
+  arksInterestRates: GetInterestRatesReturnType
   vaultApyData: VaultApyData
   vaultsApyRaw: GetVaultsApyResponse
 }

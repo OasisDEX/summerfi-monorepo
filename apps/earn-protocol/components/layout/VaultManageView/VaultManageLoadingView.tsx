@@ -6,6 +6,7 @@ import {
   VaultManageLoadingGrid,
 } from '@summerfi/app-earn-ui'
 
+import { detailsLinks } from '@/components/layout/VaultOpenView/mocks'
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
 
 import vaultManageViewStyles from './VaultManageView.module.scss'
@@ -31,7 +32,7 @@ export const VaultManageLoadingView = () => {
           </Expander>
         </div>,
         <div className={vaultManageViewStyles.leftContentWrapper} key="AboutTheStrategy">
-          <VaultOpenHeaderBlock detailsLinks={[]} />
+          <VaultOpenHeaderBlock detailsLinks={detailsLinks} />
           {[
             'Historical yield',
             'Vault exposure',

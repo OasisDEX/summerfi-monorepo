@@ -1,13 +1,14 @@
 import { type FC } from 'react'
-import { Text } from '@summerfi/app-earn-ui'
+import { getVaultDetailsUrl, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType } from '@summerfi/app-types'
+import Link from 'next/link'
 
 interface VaultOpenHeaderBlockProps {
   vault?: SDKVaultishType
   detailsLinks: { label: string; id: string }[]
 }
 
-export const VaultOpenHeaderBlock: FC<VaultOpenHeaderBlockProps> = () => {
+export const VaultOpenHeaderBlock: FC<VaultOpenHeaderBlockProps> = ({ detailsLinks, vault }) => {
   return (
     <div
       style={{
@@ -26,7 +27,7 @@ export const VaultOpenHeaderBlock: FC<VaultOpenHeaderBlockProps> = () => {
         The Summer Earn Protocol is a permissionless passive lending product, which sets out to
         offer effortless and secure optimised yield, while diversifying risk.
       </Text>
-      {/* <div
+      <div
         style={{
           display: 'flex',
           flexDirection: 'row',
@@ -51,7 +52,7 @@ export const VaultOpenHeaderBlock: FC<VaultOpenHeaderBlockProps> = () => {
             </Text>
           </Link>
         ))}
-      </div> */}
+      </div>
     </div>
   )
 }

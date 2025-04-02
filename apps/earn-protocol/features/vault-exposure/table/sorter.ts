@@ -3,7 +3,17 @@ import { type SDKVaultType } from '@summerfi/app-types'
 import { simpleSort, SortDirection } from '@summerfi/app-utils'
 import type BigNumber from 'bignumber.js'
 
-type ExtendedArk = SDKVaultType['arks'][number] & { apy: BigNumber }
+type YieldRange = {
+  low: BigNumber
+  high: BigNumber
+}
+
+type ExtendedArk = SDKVaultType['arks'][number] & {
+  apy: BigNumber
+  avgApy30d: BigNumber
+  avgApy1y: BigNumber
+  yearlyYieldRange: YieldRange
+}
 
 export const vaultExposureSorter = ({
   extendedArks,

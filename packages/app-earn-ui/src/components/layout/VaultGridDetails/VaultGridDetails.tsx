@@ -11,6 +11,7 @@ import { Dropdown } from '@/components/molecules/Dropdown/Dropdown'
 import { VaultTitleDropdownContent } from '@/components/molecules/VaultTitleDropdownContent/VaultTitleDropdownContent'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
 import { getDisplayToken } from '@/helpers/get-display-token'
+import { getUniqueVaultId } from '@/helpers/get-unique-vault-id'
 import { getVaultDetailsUrl, getVaultUrl } from '@/helpers/get-vault-url'
 
 import vaultGridDetailsStyles from './VaultGridDetails.module.scss'
@@ -48,11 +49,11 @@ export const VaultGridDetails = ({
         <div className={vaultGridDetailsStyles.vaultGridDetailsHeaderWrapper}>
           <Dropdown
             options={vaults.map((item) => ({
-              value: item.id,
+              value: getUniqueVaultId(item),
               content: <VaultTitleDropdownContent vault={item} link={getVaultDetailsUrl(item)} />,
             }))}
             dropdownValue={{
-              value: vault.id,
+              value: getUniqueVaultId(vault),
               content: <VaultTitleDropdownContent vault={vault} link={getVaultDetailsUrl(vault)} />,
             }}
           >

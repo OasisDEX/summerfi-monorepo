@@ -11,6 +11,7 @@ type ChartHeaderProps = {
   timeframe?: TimeframesType
   timeframes: TimeframesItem
   setTimeframe?: (timeframe: string) => void
+  wrapperStyle?: React.CSSProperties
 }
 
 export const ChartHeader = ({
@@ -21,9 +22,10 @@ export const ChartHeader = ({
   setCheckboxValue,
   setTimeframe,
   timeframes,
+  wrapperStyle,
 }: ChartHeaderProps) => {
   return (
-    <div className={classNames.wrapper}>
+    <div className={classNames.wrapper} style={wrapperStyle}>
       {title && <Text variant="p2semi">{title}</Text>}
       {setCheckboxValue && checkboxLabel && (
         <ToggleButton

@@ -22,7 +22,6 @@ import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-a
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { MigrationVaultPageView } from '@/components/layout/MigrationVaultPageView/MigrationVaultPageView'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
-import { mapArkLatestInterestRates } from '@/helpers/map-ark-interest-rates'
 import {
   decorateVaultsWithConfig,
   getVaultIdByVaultCustomName,
@@ -143,7 +142,6 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
     vaultInterestRates,
   })
 
-  const arksInterestRates = mapArkLatestInterestRates(arkInterestRatesMap)
   const vaultApyData = vaultApyRaw[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
 
   return (
@@ -155,7 +153,7 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
       rebalanceActivity={rebalanceActivity}
       medianDefiYield={medianDefiYield}
       arksHistoricalChartData={arksHistoricalChartData}
-      arksInterestRates={arksInterestRates}
+      arksInterestRates={arkInterestRatesMap}
       vaultApyData={vaultApyData}
       migratablePosition={migratablePosition}
       walletAddress={walletAddress}
