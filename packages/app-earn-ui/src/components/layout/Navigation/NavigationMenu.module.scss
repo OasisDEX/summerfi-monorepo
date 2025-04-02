@@ -5,11 +5,11 @@
   justify-content: center;
   width: 100%;
 
-  @include media('>=xl') {
+  @include im.media('>=xl') {
     padding-left: var(--general-space-32);
   }
 
-  @include media('>=m') {
+  @include im.media('>=m') {
     display: flex;
   }
 }
@@ -21,7 +21,7 @@
   gap: var(--general-space-40);
   margin-left: var(--general-space-20);
 
-  @include media('>=xl') {
+  @include im.media('>=xl') {
     gap: 48px;
   }
 

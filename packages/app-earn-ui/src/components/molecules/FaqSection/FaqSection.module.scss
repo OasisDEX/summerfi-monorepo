@@ -1,7 +1,7 @@
 .faqGeneralWrapper {
   width: 100%;
 
-  > span {
+  >span {
     padding: 0 var(--general-space-16);
   }
 }
@@ -13,15 +13,15 @@
   margin-top: var(--general-space-16);
   flex-wrap: wrap;
 
-  @include media('>m') {
+  @include im.media('>m') {
     flex-wrap: nowrap;
   }
 
-  > div {
+  >div {
     border-bottom: 1px solid var(--earn-protocol-neutral-70);
   }
 
-  > div:last-of-type {
+  >div:last-of-type {
     border-bottom: none;
   }
 

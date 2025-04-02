@@ -4,7 +4,7 @@
   padding: var(--general-space-20);
   border-radius: var(--radius-roundish);
 
-  @include media('>s') {
+  @include im.media('>s') {
     padding: var(--general-space-24);
   }
 

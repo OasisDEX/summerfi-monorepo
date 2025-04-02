@@ -24,7 +24,7 @@
   min-width: 0;
   margin-right: var(--general-space-24);
 
-  @include media('<s') {
+  @include im.media('<s') {
     flex: 0 0 calc(100vw - (var(--general-space-8) * 2));
     margin-right: var(--general-space-16);
   }
@@ -45,7 +45,7 @@
   height: 0;
   overflow: visible;
 
-  @include media('<s') {
+  @include im.media('<s') {
     display: none;
   }
 
@@ -95,7 +95,7 @@
   width: 100%;
   margin-top: var(--general-space-24);
 
-  @include media('>s') {
+  @include im.media('>s') {
     display: none;
   }
 

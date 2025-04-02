@@ -57,14 +57,16 @@ export default defineConfig(({ mode }) => {
     css: {
       preprocessorOptions: {
         scss: {
+          api: 'modern-compiler',
           // OB breakpoints: 531, 744, 1025, 1279
           additionalData: `
-          @import 'include-media/dist/_include-media.scss';
-          $breakpoints: (
-            s: 531px,
-            m: 744px,
-            l: 1025px,
-            xl: 1279px,
+          @use 'include-media/dist/_include-media.scss' as im with (
+            $breakpoints: (
+              s: 531px,
+              m: 744px,
+              l: 1025px,
+              xl: 1279px,
+            ),
           );
           `,
         },

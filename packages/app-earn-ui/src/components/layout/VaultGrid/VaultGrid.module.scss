@@ -4,11 +4,11 @@
   width: 100%;
   padding: 0 var(--general-space-4);
 
-  @include media('>m') {
+  @include im.media('>m') {
     padding: 0 var(--general-space-16);
   }
 
-  @include media('>xl') {
+  @include im.media('>xl') {
     padding: 0;
   }
 }

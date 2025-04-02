@@ -1,16 +1,16 @@
 .wrapper {
   padding: 0 var(--general-space-24);
   margin-bottom: var(--general-space-56);
-  
-  @include media('>s') {
+
+  @include im.media('>s') {
     padding: 0 var(--general-space-32);
   }
 
-  @include media('>s') {
+  @include im.media('>s') {
     padding: 0 var(--general-space-32);
   }
 
-  @include media('>xl') {
+  @include im.media('>xl') {
     padding: 0 var(--general-space-64);
   }
 }
@@ -29,7 +29,7 @@
   padding: var(--general-space-24) 0;
   margin: 0 auto;
 
-  @include media('>s') {
+  @include im.media('>s') {
     grid-template-columns: auto 1fr auto;
     padding: var(--general-space-32) 0;
   }
@@ -50,7 +50,7 @@
   .logo {
     width: 129px;
 
-    @include media('>s') {
+    @include im.media('>s') {
       display: inline;
     }
   }
@@ -58,7 +58,7 @@
   .logoSmall {
     width: 25px;
 
-    @include media('<=s') {
+    @include im.media('<=s') {
       display: inline;
     }
   }

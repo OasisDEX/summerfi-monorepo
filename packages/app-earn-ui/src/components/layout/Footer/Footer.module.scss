@@ -5,11 +5,11 @@
   row-gap: var(--general-space-32);
   padding: var(--general-space-64) var(--general-space-40);
 
-  @include media('>l') {
+  @include im.media('>l') {
     padding: var(--general-space-64) var(--general-space-32);
   }
 
-  @include media('>xl') {
+  @include im.media('>xl') {
     padding: var(--general-space-64);
   }
 
@@ -29,44 +29,88 @@
     width: 108px;
   }
 
-  @include media('>s') {
+  @include im.media('>s') {
     grid-template-columns: repeat(2, 1fr);
-    grid-template-areas: 
+    grid-template-areas:
       "top top"
       "left-1 right-1"
       "left-2 right-2";
 
-    > div:nth-child(1) { grid-area: top; }
-    > div:nth-child(2) { grid-area: left-1; }
-    > div:nth-child(3) { grid-area: right-1; }
-    > div:nth-child(4) { grid-area: left-2; }
-    > div:nth-child(5) { grid-area: right-2; }
+    >div:nth-child(1) {
+      grid-area: top;
+    }
+
+    >div:nth-child(2) {
+      grid-area: left-1;
+    }
+
+    >div:nth-child(3) {
+      grid-area: right-1;
+    }
+
+    >div:nth-child(4) {
+      grid-area: left-2;
+    }
+
+    >div:nth-child(5) {
+      grid-area: right-2;
+    }
   }
 
-  @include media('>l') {
+  @include im.media('>l') {
     grid-template-columns: repeat(4, 1fr);
-    grid-template-areas: 
+    grid-template-areas:
       "one two three four"
       "full full full full";
 
-    > div:nth-child(1) { grid-area: one; }
-    > div:nth-child(2) { grid-area: two; }
-    > div:nth-child(3) { grid-area: three; }
-    > div:nth-child(4) { grid-area: four; }
-    > div:nth-child(5) { grid-area: full; margin-top: var(--general-space-64); }
+    >div:nth-child(1) {
+      grid-area: one;
+    }
+
+    >div:nth-child(2) {
+      grid-area: two;
+    }
+
+    >div:nth-child(3) {
+      grid-area: three;
+    }
+
+    >div:nth-child(4) {
+      grid-area: four;
+    }
+
+    >div:nth-child(5) {
+      grid-area: full;
+      margin-top: var(--general-space-64);
+    }
   }
 
-  @include media('>xl') {
+  @include im.media('>xl') {
     grid-template-columns: repeat(4, 1fr) auto;
     grid-template-areas: "one two three four five";
     max-width: 1400px;
     margin: 0 auto;
 
-    > div:nth-child(1) { grid-area: one; }
-    > div:nth-child(2) { grid-area: two; }
-    > div:nth-child(3) { grid-area: three; }
-    > div:nth-child(4) { grid-area: four; }
-    > div:nth-child(5) { grid-area: five; margin-top: 0; }
+    >div:nth-child(1) {
+      grid-area: one;
+    }
+
+    >div:nth-child(2) {
+      grid-area: two;
+    }
+
+    >div:nth-child(3) {
+      grid-area: three;
+    }
+
+    >div:nth-child(4) {
+      grid-area: four;
+    }
+
+    >div:nth-child(5) {
+      grid-area: five;
+      margin-top: 0;
+    }
   }
 }
 

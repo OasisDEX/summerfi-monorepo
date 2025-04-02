@@ -4,7 +4,7 @@
   align-items: center;
   column-gap: var(--general-space-8);
 
-  @include media('>=l') {
+  @include im.media('>=l') {
     display: flex;
   }
 }
@@ -42,7 +42,7 @@
     justify-content: center;
   }
 
-  @include media('<=l') {
+  @include im.media('<=l') {
     display: flex;
     align-items: center;
     gap: var(--general-space-16);

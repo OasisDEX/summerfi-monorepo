@@ -24,7 +24,7 @@
   border: unset;
   outline: none;
 
-  @include media('>=s') {
+  @include im.media('>=s') {
     font-size: var(--font-size-h4);
   }
 

@@ -5,7 +5,7 @@
   transition: background-color 0.3s ease-in-out;
   padding: var(--general-space-32);
 
-  @include media('<s') {
+  @include im.media('<s') {
     width: calc(100vw - (var(--general-space-8) * 2));
     padding: var(--general-space-24);
   }
@@ -48,26 +48,26 @@
   gap: var(--general-space-24);
   width: 100%;
 
-  @include media('<s') {
+  @include im.media('<s') {
     gap: var(--general-space-24);
   }
 
   .dataPrimary {
     width: 250px;
 
-    @include media('<s') {
+    @include im.media('<s') {
       width: 187px;
     }
   }
 
   .dataBlockDesktop {
-    @include media('<s') {
+    @include im.media('<s') {
       display: none;
     }
   }
 
   .dataBlockMobile {
-    @include media('>s') {
+    @include im.media('>s') {
       display: none;
     }
   }
@@ -75,7 +75,7 @@
   .dataSecondary {
     width: 160px;
 
-    @include media('<s') {
+    @include im.media('<s') {
       width: 92px;
     }
   }

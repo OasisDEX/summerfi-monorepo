@@ -97,6 +97,7 @@
 .drawerBottomContentSidebar {
   height: 100%;
 }
+
 .drawerRightContentSidebar,
 .drawerLeftContentSidebar {
   height: 100%;
@@ -117,11 +118,11 @@
   height: 100%;
   overflow-y: auto;
 
-  > div {
+  >div {
     padding: var(--spacing-space-large) var(--spacing-space-x-large);
   }
 
-  @include media('>l') {
+  @include im.media('>l') {
     padding: var(--spacing-space-x-large);
   }
 }

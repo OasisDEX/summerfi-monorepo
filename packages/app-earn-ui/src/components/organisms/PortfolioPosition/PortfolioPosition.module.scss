@@ -54,7 +54,7 @@
   justify-content: center;
   gap: 100px;
 
-  @include media('<=s') {
+  @include im.media('<=s') {
     flex-direction: column;
   }
 }

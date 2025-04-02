@@ -16,7 +16,7 @@
   width: 100%;
   border-radius: var(--radius-large);
 
-  @include media('>=s') {
+  @include im.media('>=s') {
     border-radius: var(--radius-roundish);
   }
 }

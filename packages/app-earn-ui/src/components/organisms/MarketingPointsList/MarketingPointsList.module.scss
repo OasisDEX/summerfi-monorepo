@@ -5,12 +5,12 @@
   padding: var(--spacing-space-small);
   margin-bottom: var(--general-space-32);
 
-  @include media('>s') {
+  @include im.media('>s') {
     max-width: 80%;
     padding: 0;
   }
 
-  @include media('>l') {
+  @include im.media('>l') {
     max-width: 100%;
   }
 }
@@ -20,12 +20,12 @@
   gap: var(--general-space-32);
   grid-template-columns: 1fr;
 
-  @include media('>s') {
+  @include im.media('>s') {
     grid-template-columns: 1fr;
     padding: var(--spacing-space-x-large) var(--spacing-space-x-large) 0;
   }
 
-  @include media('>xl') {
+  @include im.media('>xl') {
     grid-template-columns: 1fr 2fr;
     padding: var(--spacing-space-2x-large) var(--spacing-space-2x-large) 0;
   }
@@ -37,16 +37,16 @@
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  
+
   &::-webkit-scrollbar {
     display: none;
   }
 
-  @include media('>s') {
+  @include im.media('>s') {
     flex-direction: row;
   }
 
-  @include media('>xl') {
+  @include im.media('>xl') {
     flex-direction: column;
     justify-content: right;
     overflow-x: visible;
@@ -68,7 +68,7 @@
     border-bottom: 1px solid #494949;
   }
 
-  @include media('>xl') {
+  @include im.media('>xl') {
     border-right: 1px solid #2b2b2b;
     border-bottom: none;
     text-wrap: initial;
@@ -79,7 +79,7 @@
     }
   }
 
-  & > span {
+  &>span {
     color: var(--color-text-primary-disabled);
   }
 }
@@ -92,10 +92,10 @@
     border-bottom: 2px solid #a859fa;
   }
 
-  @include media('>xl') {
+  @include im.media('>xl') {
     border-right: 2px solid #a859fa;
     border-bottom: none;
-    
+
     &:hover {
       border-right: 2px solid #a859fa;
       border-bottom: none;

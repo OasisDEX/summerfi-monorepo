@@ -1,5 +1,5 @@
-@import './vendor.scss';
-@import './base.scss';
+@use 'vendor.scss';
+@use 'base.scss';
 
 html {
   scroll-behavior: smooth;

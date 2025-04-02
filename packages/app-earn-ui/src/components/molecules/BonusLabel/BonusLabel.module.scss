@@ -1,7 +1,7 @@
 .apyLabel {
   display: none;
 
-  @include media('>s') {
+  @include im.media('>s') {
     display: inline-block;
   }
 }
