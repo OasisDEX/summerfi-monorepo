@@ -1,6 +1,6 @@
 import { Text } from '@/components/atoms/Text/Text'
 
-export const vaultFaqData = [
+export const vaultFaqData: { title: string; content: React.ReactNode }[] = [
   {
     title: 'Why trust Summer.fi with your funds?',
     content: (
