@@ -6,7 +6,7 @@ import { createLogger, defineConfig } from 'vite'
 // handles tsconfig paths from the tsconfig.json
 import tsconfigPaths from 'vite-tsconfig-paths'
 // generates typescript declaration files (just the js/ts, scss is done in package.json)
-import dts from 'vite-plugin-dts'
+import UnpluginIsolatedDecl from 'unplugin-isolated-decl/vite'
 // preserves directives like "use client" in the output
 import preserveDirectives from 'rollup-preserve-directives'
 
@@ -44,12 +44,7 @@ export default defineConfig(({ mode }) => {
           }
         },
       },
-      dts({
-        outDir: 'dist/types',
-        insertTypesEntry: true,
-        strictOutput: true,
-        copyDtsFiles: true,
-      }),
+      UnpluginIsolatedDecl(),
     ],
     customLogger: !notDev ? logger : undefined,
     clearScreen: false,

@@ -11,7 +11,7 @@ import { clone } from 'lodash-es'
  * @returns A new object or array with all values set to `null`.
  */
 // eslint-disable-next-line
-export const cleanObjectToNull = (object: any) => {
+export const cleanObjectToNull = (object: any): any => {
   // this is used to replace everything in config to null, so it's easy to change the values in localStorage
   let newObject = clone(object)
 
@@ -52,7 +52,7 @@ export const cleanObjectToNull = (object: any) => {
  * @returns A new object or array with all `null` values removed.
  */
 // eslint-disable-next-line
-export const cleanObjectFromNull = (obj: any) => {
+export const cleanObjectFromNull = (obj: any): any => {
   // this is used to remove all null values from config
   const newObj = clone(obj)
 

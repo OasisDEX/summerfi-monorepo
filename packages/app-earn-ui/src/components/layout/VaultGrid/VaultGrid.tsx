@@ -32,7 +32,7 @@ export const VaultGrid = ({
   onChangeNetwork,
   isMobileOrTablet,
   onRefresh,
-}: VaultGridProps) => {
+}: VaultGridProps): React.ReactNode => {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const handleUserRefresh = () => {
     onRefresh?.()

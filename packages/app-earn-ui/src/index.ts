@@ -102,6 +102,8 @@ export { IllustrationCircle } from './components/molecules/IllustrationCircle/Il
 export { TokenWithNetworkIcon } from './components/molecules/TokenWithNetworkIcon/TokenWithNetworkIcon'
 export { OrderInformation } from './components/molecules/OrderInformation/OrderInformation'
 export { PositionCard } from './components/molecules/PositionCard/PositionCard'
+export { VaultCardHomepage } from './components/molecules/VaultCardHomepage/VaultCardHomepage'
+export { HomepageCarousel } from './components/molecules/HomepageCarousel/HomepageCarousel'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'
@@ -115,6 +117,7 @@ export {
   type MarketingPointsListData,
 } from './components/organisms/MarketingPointsList/MarketkingPointsList'
 export { ControlsDepositWithdraw } from './components/organisms/ControlsDepositWithdraw/ControlsDepositWithdraw'
+export { ProjectedEarningsCombined } from './components/organisms/ProjectedEarningsCombined/ProjectedEarningsCombined'
 
 export { useToggle } from './hooks/use-toggle'
 export { useHash } from './hooks/use-hash'

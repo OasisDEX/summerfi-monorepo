@@ -21,7 +21,7 @@ export function NavigationMobileMenuPanel({
   openNestedMenu,
   navigationModules,
   onOpenNestedMenu,
-}: NavigationMobileMenuPanelProps) {
+}: NavigationMobileMenuPanelProps): React.ReactNode {
   const [isAccordionOpen, toggleIsAccordionOpen, setIsAccordionOpen] = useToggle(false)
 
   useEffect(() => {

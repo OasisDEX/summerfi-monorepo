@@ -22,7 +22,7 @@ export const RadioButton = ({
   label: string
   className?: string
   style?: React.CSSProperties
-}) => {
+}): React.ReactNode => {
   return (
     <div
       className={clsx(radioButtonStyles.radioButtonWrapper, className, {

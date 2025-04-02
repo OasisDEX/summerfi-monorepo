@@ -23,7 +23,7 @@ export const VaultGridDetails = ({
   vault: SDKVaultType
   vaults: SDKVaultsListType
   children: ReactNode
-}) => {
+}): React.ReactNode => {
   return (
     <>
       <div className={vaultGridDetailsStyles.vaultGridDetailsBreadcrumbsWrapper}>

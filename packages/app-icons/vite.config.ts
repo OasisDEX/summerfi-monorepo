@@ -2,7 +2,7 @@ import { resolve } from 'path'
 import { defineConfig, createLogger } from 'vite'
 
 // generates typescript declaration files (just the js/ts, scss is done in package.json)
-import dts from 'vite-plugin-dts'
+import UnpluginIsolatedDecl from 'unplugin-isolated-decl/vite'
 // compresses svgs (around 40-50% reduction with no build time increase)
 import react from '@vitejs/plugin-react'
 import svgr from 'vite-plugin-svgr'
@@ -40,13 +40,7 @@ export default defineConfig(({ mode }) => {
           },
         },
       }),
-      dts({
-        include: 'src/**/*',
-        outDir: 'dist/types',
-        insertTypesEntry: true,
-        strictOutput: true,
-        copyDtsFiles: true,
-      }),
+      UnpluginIsolatedDecl(),
     ],
     customLogger: !notDev ? logger : undefined,
     clearScreen: false,

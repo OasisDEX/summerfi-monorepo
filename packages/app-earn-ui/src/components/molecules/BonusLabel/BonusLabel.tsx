@@ -24,7 +24,7 @@ export const BonusLabel = ({
   raw?: ReactNode
   withTokenBonus?: boolean
   combinedApr?: string
-}) => {
+}): React.ReactNode => {
   return (
     <Tooltip
       hideDrawerOnMobile

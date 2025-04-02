@@ -51,7 +51,8 @@ export const Icon: FC<IconPropsWithIconName | IconPropsWithTokenName> = ({
       xxxl: 45,
     }[variant]
 
-  const iconName = iconNameProp ?? getTokenGuarded(tokenName)?.iconName ?? 'not_supported_icon'
+  const iconName =
+    iconNameProp ?? getTokenGuarded(tokenName as string)?.iconName ?? 'not_supported_icon'
 
   const colorSet = color ?? style?.stroke
 

@@ -86,7 +86,7 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
       <div className={classNames.ctaWrapper}>
         <Button
           variant="neutralSmall"
-          onClick={(e) => {
+          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
             e.stopPropagation()
             onClaim()
           }}

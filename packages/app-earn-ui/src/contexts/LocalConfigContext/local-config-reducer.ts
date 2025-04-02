@@ -27,7 +27,10 @@ export interface LocalConfigState {
   slippageConfig: SlippageConfig
 }
 
-export const localConfigReducer = (prevState: LocalConfigState, action: LocalConfigActions) => {
+export const localConfigReducer = (
+  prevState: LocalConfigState,
+  action: LocalConfigActions,
+): LocalConfigState => {
   switch (action.type) {
     case LocalConfigDispatchActions.UPDATE_SUMR_NET_APY_CONFIG:
       return {

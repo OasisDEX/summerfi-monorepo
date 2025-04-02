@@ -14,6 +14,7 @@ import Link from 'next/link'
 import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
 import { SidebarMobileHeader } from '@/components/molecules/SidebarMobileHeader/SidebarMobileHeader'
 import { ControlsDepositWithdraw } from '@/components/organisms/ControlsDepositWithdraw/ControlsDepositWithdraw'
+import { ProjectedEarningsCombined } from '@/components/organisms/ProjectedEarningsCombined/ProjectedEarningsCombined'
 import { Sidebar } from '@/components/organisms/Sidebar/Sidebar'
 import { useForecast } from '@/features/forecast/use-forecast'
 import { getDisplayToken } from '@/helpers/get-display-token'
@@ -65,7 +66,7 @@ export const VaultSimulationForm = ({
   positionExists,
   userWalletAddress,
   isLoading = false,
-}: VaultSimulationFormProps) => {
+}: VaultSimulationFormProps): React.ReactNode => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [isGradientBorder, setIsGradientBorder] = useState(false)
 
@@ -129,12 +130,7 @@ export const VaultSimulationForm = ({
               tokenBalance={isEarnApp ? tokenBalance : undefined}
               tokenBalanceLoading={!!isEarnApp && !!isTokenBalanceLoading}
               manualSetAmount={manualSetAmount}
-              vault={vaultData}
-              isOpen={!!estimatedEarnings && estimatedEarnings !== '0'}
-              estimatedEarnings={estimatedEarnings}
-              isLoadingForecast={isLoadingForecast}
               ownerView
-              isSimulation
             />
           ),
           customHeader:
@@ -165,11 +161,23 @@ export const VaultSimulationForm = ({
                   },
                   disabled: isLoading,
                 },
-          footnote: !positionExists ? (
-            <Link href={vaultUrl}>
-              <WithArrow variant="p3semi">View strategy</WithArrow>
-            </Link>
-          ) : null,
+          footnote: (
+            <>
+              {!positionExists ? (
+                <Link href={vaultUrl}>
+                  <WithArrow variant="p3semi">View strategy</WithArrow>
+                </Link>
+              ) : null}
+              <ProjectedEarningsCombined
+                amountDisplay={amountDisplay}
+                estimatedEarnings={estimatedEarnings}
+                isLoadingForecast={isLoadingForecast}
+                isOpen={!!estimatedEarnings && estimatedEarnings !== '0'}
+                isSimulation
+                vault={vaultData}
+              />
+            </>
+          ),
         }}
         isMobileOrTablet={isMobileOrTablet}
         hiddenHeaderChevron={hiddenHeaderChevron}

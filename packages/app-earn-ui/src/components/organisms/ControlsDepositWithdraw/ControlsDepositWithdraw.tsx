@@ -1,23 +1,11 @@
-import {
-  type DropdownOption,
-  type DropdownRawOption,
-  type SDKVaultishType,
-  type SDKVaultType,
-  type TokenSymbolsList,
-  TransactionAction,
-} from '@summerfi/app-types'
+import { type DropdownOption, type DropdownRawOption, TransactionAction } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import type BigNumber from 'bignumber.js'
 
-import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
 import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { InputWithDropdown } from '@/components/molecules/InputWithDropdown/InputWithDropdown'
-import { ProjectedEarnings } from '@/components/molecules/ProjectedEarnings/ProjectedEarnings'
-import { ProjectedEarningsExpanded } from '@/components/molecules/ProjectedEarnings/ProjectedEarningsExpanded'
-import { getDisplayToken } from '@/helpers/get-display-token'
-import { type EarningsEstimationsMap } from '@/helpers/get-earnings-estimations-map'
 
-import styles from './ControlsDepositWithdraw.module.scss'
+import constrolsDepositWithdrawStyles from './ControlsDepositWithdraw.module.scss'
 
 type ControlsDepositWithdrawProps = {
   amountDisplay: string
@@ -27,18 +15,12 @@ type ControlsDepositWithdrawProps = {
   tokenSymbol: string
   tokenBalance: BigNumber | undefined
   tokenBalanceLoading: boolean
-  vault: SDKVaultType | SDKVaultishType
-  estimatedEarnings: string
-  isLoadingForecast: boolean
   handleAmountChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   handleDropdownChange: (option: DropdownRawOption) => void
   onFocus: () => void
   onBlur: () => void
   manualSetAmount: (amountParsed: string | undefined) => void
   ownerView?: boolean
-  forecastSummaryMap?: EarningsEstimationsMap
-  isSimulation?: boolean
-  isOpen?: boolean
   transactionType?: TransactionAction
 }
 
@@ -50,22 +32,16 @@ export const ControlsDepositWithdraw = ({
   tokenSymbol,
   tokenBalance,
   tokenBalanceLoading,
-  vault,
-  estimatedEarnings,
-  isLoadingForecast,
   ownerView,
-  forecastSummaryMap,
-  isSimulation = false,
-  isOpen,
   handleAmountChange,
   handleDropdownChange,
   onFocus,
   onBlur,
   manualSetAmount,
   transactionType,
-}: ControlsDepositWithdrawProps) => {
+}: ControlsDepositWithdrawProps): React.ReactNode => {
   return (
-    <div className={styles.depositViewWrapper}>
+    <div className={constrolsDepositWithdrawStyles.depositViewWrapper}>
       <InputWithDropdown
         value={amountDisplay}
         placeholder="10,000.00"
@@ -101,30 +77,6 @@ export const ControlsDepositWithdraw = ({
             : undefined,
         }}
       />
-      <div className={styles.projectedEarningsWrapper}>
-        <AnimateHeight id="earnings" show={isOpen}>
-          <ProjectedEarnings
-            earnings={estimatedEarnings}
-            symbol={getDisplayToken(vault.inputToken.symbol) as TokenSymbolsList}
-            isLoading={isLoadingForecast}
-          />
-        </AnimateHeight>
-        <AnimateHeight
-          id="earnings-expanded"
-          show={
-            amountDisplay !== '0' && !isOpen && ownerView && !isSimulation && !!forecastSummaryMap
-          }
-        >
-          {forecastSummaryMap && (
-            <ProjectedEarningsExpanded
-              symbol={getDisplayToken(vault.inputToken.symbol) as TokenSymbolsList}
-              forecastSummaryMap={forecastSummaryMap}
-              isLoading={isLoadingForecast}
-              transactionType={transactionType ?? TransactionAction.DEPOSIT}
-            />
-          )}
-        </AnimateHeight>
-      </div>
     </div>
   )
 }

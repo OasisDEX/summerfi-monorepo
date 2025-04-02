@@ -23,11 +23,13 @@ export const VaultSimulationGraph = ({
   vault,
   forecast,
   isLoadingForecast,
+  isManage = false,
 }: {
   amount?: BigNumber
   vault: SDKVaultishType
   forecast?: ForecastData
   isLoadingForecast?: boolean
+  isManage?: boolean
 }) => {
   const [timeframe, setTimeframe] = useState<TimeframesType>('3y')
   const [amountCached, setAmountCached] = useState<BigNumber>()
@@ -134,6 +136,7 @@ export const VaultSimulationGraph = ({
         setTimeframe={setTimeframe}
         parsedData={parsedData}
         isLoadingForecast={isLoadingForecast}
+        isManage={isManage}
         cardVariant="cardPrimary"
       />
     </Card>

@@ -212,7 +212,7 @@ export function GenericMultiselect({
   options,
   style,
   withSearch,
-}: GenericMultiselectProps) {
+}: GenericMultiselectProps): React.ReactNode {
   const didMountRef = useRef(false)
   const [values, setValues] = useState<string[]>(initialValues)
   const [isOpen, setIsOpen] = useState<boolean>(false)

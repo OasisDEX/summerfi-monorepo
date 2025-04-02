@@ -676,7 +676,6 @@ export class ArmadaManager implements IArmadaManager {
     const shouldSwap = !swapFromAmount.token.address.equals(fleetToken.address)
     const shouldStake = params.shouldStake ?? true
 
-    let swapMinAmount: ITokenAmount | undefined
     let swapToAmount: ITokenAmount | undefined
     const transactions: ExtendedTransactionInfo[] = []
 
@@ -735,7 +734,6 @@ export class ArmadaManager implements IArmadaManager {
       )
 
       swapToAmount = swapCall.toAmount
-      swapMinAmount = swapCall.minAmount
     }
 
     // when staking admirals quarters will receive LV tokens, otherwise the user
@@ -1432,7 +1430,7 @@ export class ArmadaManager implements IArmadaManager {
 
     const spotPrice = await this._oracleManager.getSpotPrice({
       baseToken: params.fromAmount.token,
-      quoteToken: params.toAmount.token,
+      denomination: params.toAmount.token,
     })
 
     const impact =

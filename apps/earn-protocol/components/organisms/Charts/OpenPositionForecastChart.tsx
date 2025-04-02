@@ -1,5 +1,4 @@
-import { Card } from '@summerfi/app-earn-ui'
-import { type CardVariant } from '@summerfi/app-earn-ui/dist/types/src/components/atoms/Card/Card'
+import { Card, type CardVariant } from '@summerfi/app-earn-ui'
 import { type ForecastDataPoints, type TimeframesType } from '@summerfi/app-types'
 
 import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
@@ -10,6 +9,7 @@ export const OpenPositionForecastChart = ({
   setTimeframe,
   cardVariant = 'cardSecondary',
   parsedData,
+  isManage,
   isLoadingForecast,
   tokenPrice,
 }: {
@@ -18,6 +18,7 @@ export const OpenPositionForecastChart = ({
   cardVariant?: CardVariant
   parsedData: ForecastDataPoints
   isLoadingForecast?: boolean
+  isManage?: boolean
   tokenPrice?: string | null
 }) => {
   return (
@@ -38,7 +39,7 @@ export const OpenPositionForecastChart = ({
           '1y': true,
           '3y': true,
         }}
-        title="Open Position Forecast"
+        title={isManage ? 'Updated Position Forecast' : 'Open Position Forecast'}
         timeframe={timeframe}
         setTimeframe={(nextTimeFrame) => setTimeframe(nextTimeFrame as TimeframesType)}
       />

@@ -67,7 +67,7 @@ export const Newsletter = ({
   inputWrapperClassName,
   inputWrapperStyles,
   inputBtnLabel = 'Join',
-}: NewsletterPropsType) => {
+}: NewsletterPropsType): React.ReactNode => {
   const [isFocused, setIsFocused] = useState(false)
   const updateEmail = (ev: React.ChangeEvent<HTMLInputElement>) => {
     newsletter.onEmailUpdate(ev.target.value)

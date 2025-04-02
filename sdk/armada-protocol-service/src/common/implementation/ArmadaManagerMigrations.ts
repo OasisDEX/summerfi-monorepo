@@ -2,7 +2,6 @@ import {
   Address,
   ArmadaMigrationType,
   FiatCurrency,
-  FiatCurrencyAmount,
   LoggingService,
   Percentage,
   TokenAmount,
@@ -14,6 +13,7 @@ import {
   type HexData,
   type IAddress,
   type IChainInfo,
+  type IFiatCurrencyAmount,
   type IPercentage,
   type IToken,
   type ITokenAmount,
@@ -50,6 +50,8 @@ import {
 } from './abi'
 import type { ArmadaMigrationConfig } from './token-config/types'
 import { BigNumber } from 'bignumber.js'
+
+type ArmadaMigratablePositionWithoutPrice = Omit<ArmadaMigratablePosition, 'usdValue'>
 
 /**
  * @name ArmadaManagerMigrations
@@ -120,26 +122,39 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
   async getMigratablePositions(
     params: Parameters<IArmadaManagerMigrations['getMigratablePositions']>[0],
   ): ReturnType<IArmadaManagerMigrations['getMigratablePositions']> {
+    LoggingService.debug('getMigratablePositions: ', {
+      chainId: params.chainInfo.chainId,
+      user: params.user.wallet.address.value,
+      migrationType: params.migrationType,
+    })
     // read the users balances on provided chain/source for all supported tokens using multicall
     let positions: ArmadaMigratablePosition[] = []
 
     if (params.migrationType) {
-      positions = await this._getPositions({
+      const _positions = await this._getPositionsWithoutPrices({
         chainInfo: params.chainInfo,
         user: params.user,
         migrationType: params.migrationType,
       })
+      positions = await this._getPositionsWithPrices({
+        chainInfo: params.chainInfo,
+        positions: _positions,
+      })
     } else {
       const allMigrationTypes = Object.values(ArmadaMigrationType)
       const positionsPromises = allMigrationTypes.map((migrationType) =>
-        this._getPositions({
+        this._getPositionsWithoutPrices({
           chainInfo: params.chainInfo,
           user: params.user,
           migrationType: migrationType as ArmadaMigrationType,
         }),
       )
       const positionsArrays = await Promise.all(positionsPromises)
-      positions = positionsArrays.flat()
+      const _positions = positionsArrays.flat()
+      positions = await this._getPositionsWithPrices({
+        chainInfo: params.chainInfo,
+        positions: _positions,
+      })
     }
 
     // filter positions with balance
@@ -147,17 +162,20 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       (position) => position.positionTokenAmount.toSolidityValue() > 0n,
     )
 
-    return {
+    const res = {
       chainInfo: params.chainInfo,
       positions: nonEmptyPositions,
     }
+
+    LoggingService.debug('res: ', JSON.stringify(res))
+    return res
   }
 
-  private async _getPositions(params: {
+  private async _getPositionsWithoutPrices(params: {
     chainInfo: IChainInfo
     user: IUser
     migrationType: ArmadaMigrationType
-  }): Promise<ArmadaMigratablePosition[]> {
+  }): Promise<ArmadaMigratablePositionWithoutPrice[]> {
     const configMapsPerType: Record<
       ArmadaMigrationType,
       Record<number, Record<string, ArmadaMigrationConfig>>
@@ -225,21 +243,45 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
           positionTokenAmount: positionBalance,
           underlyingTokenAmount: underlyingAmount,
           hasDebt,
-          usdValue: FiatCurrencyAmount.createFrom({
-            amount: '0',
-            fiat: FiatCurrency.USD,
-          }),
         }
       }),
     )
 
-    const tokens = positions.map((position) => {
-      return position.underlyingTokenAmount.token
+    const positionsNonEmpty = positions.filter(
+      (position) => position.underlyingTokenAmount.toSolidityValue() > 0n,
+    )
+
+    const positionsNonEmptyWithoutDebt = positionsNonEmpty.filter((position) => !position.hasDebt)
+
+    return positionsNonEmptyWithoutDebt
+  }
+
+  private async _getPositionsWithPrices(params: {
+    chainInfo: IChainInfo
+    positions: ArmadaMigratablePositionWithoutPrice[]
+  }): Promise<ArmadaMigratablePosition[]> {
+    const positions = [...params.positions]
+
+    if (positions.length === 0) {
+      return []
+    }
+
+    const tokens = positions.reduce<IToken[]>((acc, position) => {
+      const token = position.underlyingTokenAmount.token
+      if (!acc.some((t) => t.address.equals(token.address))) {
+        acc.push(token)
+      }
+      return acc
+    }, [])
+    LoggingService.debug('prices for positions: ', {
+      chainId: params.chainInfo.chainId,
+      positions: positions.map((position) => position.underlyingTokenAmount.toString()),
+      tokens: tokens.map((token) => token.toString()),
     })
     const prices = await this._oracleManager.getSpotPrices({
       chainInfo: params.chainInfo,
       baseTokens: tokens,
-      quote: FiatCurrency.USD,
+      quoteCurrency: FiatCurrency.USD,
     })
 
     const positionsWithPrices = positions.map((position) => {
@@ -253,14 +295,12 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
 
       return {
         ...position,
-        usdValue: position.underlyingTokenAmount.multiply(price),
+        usdValue: position.underlyingTokenAmount.multiply(price) as IFiatCurrencyAmount,
       }
     })
 
-    const positionsWithoutDebt = positionsWithPrices.filter((position) => !position.hasDebt)
-
     // sort by usd value
-    const sortedPositions = positionsWithoutDebt.sort((a, b) => {
+    const sortedPositions = positionsWithPrices.sort((a, b) => {
       if (b.usdValue.toSolidityValue() > a.usdValue.toSolidityValue()) {
         return 1
       }
@@ -270,7 +310,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       return 0
     })
 
-    return sortedPositions as ArmadaMigratablePosition[]
+    return sortedPositions
   }
 
   private async _getPositionDebt(params: {
@@ -381,6 +421,10 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
   async getMigratablePositionsApy(
     params: Parameters<IArmadaManagerMigrations['getMigratablePositionsApy']>[0],
   ): ReturnType<IArmadaManagerMigrations['getMigratablePositionsApy']> {
+    LoggingService.debug('getMigratablePositionsApy: ', {
+      chainId: params.chainInfo.chainId,
+      positionIds: params.positionIds.join(', '),
+    })
     // read apy timeseries for all position ids
     const baseUrl = 'https://yields.llama.fi/chart/'
     const records = await Promise.all(
@@ -427,10 +471,13 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       apyByPositionId[record.positionId] = record
     })
 
-    return {
+    const res = {
       chainInfo: params.chainInfo,
       apyByPositionId,
     }
+
+    LoggingService.debug('res: ', JSON.stringify(res))
+    return res
   }
 
   private _getDefillamaId(positionId: string) {
@@ -467,6 +514,17 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
   async getMigrationTX(
     params: Parameters<IArmadaManagerMigrations['getMigrationTX']>[0],
   ): ReturnType<IArmadaManagerMigrations['getMigrationTX']> {
+    LoggingService.debug('getMigrationTX: ', {
+      user: params.user.wallet.address.value,
+      chainId: params.vaultId.chainInfo.chainId,
+      vaultId: params.vaultId.fleetAddress.value,
+      slippage: params.slippage.toString(),
+      shouldStake: params.shouldStake,
+    })
+    if (!params.positionIds || params.positionIds.length === 0) {
+      throw new Error('PositionIds are required')
+    }
+
     const shouldStake = params.shouldStake ?? true
 
     const multicallArgs: HexData[] = []
@@ -487,12 +545,24 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       params.positionIds.some((id) => id === position.id),
     )
 
-    // get the migration transaction info from params
+    if (filteredPositions.length === 0) {
+      throw new Error(
+        'No positions found to migrate for the provided position ids: ' + params.positionIds,
+      )
+    }
+
+    LoggingService.debug('positions: ', {
+      positionsIds: params.positionIds.join(', '),
+      positionsResponse: positionsResponse.positions.map((position) => position.id).join(', '),
+      filteredPositions: filteredPositions.map((position) => position.id).join(', '),
+    })
+
+    // get the move calls to multicall
     const moveCalls = filteredPositions.map((position) => this._getMoveCall({ ...position }))
     multicallArgs.push(...moveCalls.map((call) => call.call))
     multicallOperations.push(...moveCalls.map((call) => call.operation))
 
-    // check and swap migrated tokens to fleet token
+    // check the fleet token
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.vaultId.chainInfo,
       address: params.vaultId.fleetAddress,
@@ -501,6 +571,8 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
 
     const swapAmountByPositionId: Record<string, ITokenAmount> = {}
     const priceImpactByPositionId: Record<string, TransactionPriceImpact> = {}
+
+    LoggingService.debug('fleetToken: ', fleetToken.toString())
 
     for (const position of filteredPositions) {
       // We need to swap position when token is not a fleet token
@@ -564,6 +636,10 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
         priceImpactByPositionId,
       },
     }
+    LoggingService.debug(
+      'multicallTransaction: ',
+      multicallOperations.map((op) => op.toString()),
+    )
 
     const approvalTransactions = await Promise.all(
       filteredPositions.map(async (position) => {
@@ -574,10 +650,6 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     const validApprovalTransactions = approvalTransactions.filter(
       (approval) => approval !== undefined,
     ) as ApproveTransactionInfo[]
-    console.log('approvals: ', {
-      approvalTransactions,
-      filteredApprovals: validApprovalTransactions,
-    })
     if (validApprovalTransactions.length > 0) {
       LoggingService.debug(
         'approvalTransactions: ',

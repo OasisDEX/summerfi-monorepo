@@ -22,7 +22,7 @@ const checkIframe = () => {
  * Multiple detection methods are used for better reliability
  * @returns {boolean} True if running in an iframe, false otherwise
  */
-export const useIsIframe = () => {
+export const useIsIframe = (): boolean => {
   const [isIframe, setIsIframe] = useState(false)
 
   useEffect(() => {

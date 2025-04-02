@@ -11,7 +11,7 @@ export const NonOwnerPositionBanner = ({
 }: {
   isOwner: boolean
   walletStateLoaded: boolean
-}) => {
+}): React.ReactNode => {
   return (
     <div
       suppressHydrationWarning
@@ -33,7 +33,7 @@ export const NonOwnerPortfolioBanner = ({
 }: {
   isOwner: boolean
   walletStateLoaded: boolean
-}) => {
+}): React.ReactNode => {
   return (
     <div
       suppressHydrationWarning

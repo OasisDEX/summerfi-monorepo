@@ -19,7 +19,7 @@ export const SelectionBlock = ({
   active = false,
   children,
   style,
-}: SelectionBlockProps) => {
+}: SelectionBlockProps): React.ReactNode => {
   return (
     <GradientBox
       className={selectionStyles.selectionBlockBorderWrapper}

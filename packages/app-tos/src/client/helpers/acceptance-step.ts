@@ -29,7 +29,7 @@ export const acceptanceStep = ({
   setTos: TosUpdate
   walletAddress: string
   termsOfServiceAcceptance: TOSVerifyAcceptance
-}) => {
+}): void => {
   const newStatus = termsOfServiceAcceptance.updated
     ? TOSStatus.WAITING_FOR_ACCEPTANCE_UPDATED
     : TOSStatus.WAITING_FOR_ACCEPTANCE

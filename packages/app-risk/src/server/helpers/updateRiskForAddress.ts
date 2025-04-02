@@ -1,4 +1,4 @@
-import type { Kysely } from 'kysely'
+import type { Kysely, UpdateResult } from 'kysely'
 
 import type { RiskRequiredDB } from '@/types'
 
@@ -22,7 +22,7 @@ export const updateRiskForAddress = async ({
   db: Kysely<RiskRequiredDB>
   address: string
   isRisky: boolean
-}) => {
+}): Promise<UpdateResult[]> => {
   const lowerCaseAddress = address.toLowerCase()
 
   return await db

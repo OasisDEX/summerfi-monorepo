@@ -7,6 +7,7 @@ import {
   TransactionAction,
 } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
+import type BigNumber from 'bignumber.js'
 
 import { useSwapQuote } from './use-swap-quote'
 
@@ -51,7 +52,14 @@ export const useAmountWithSwap = ({
   slippageConfig,
   sdk,
   defaultQuoteLoading,
-}: UseAmountProps) => {
+}: UseAmountProps): {
+  fromTokenSymbol: string
+  toTokenSymbol: string
+  amountDisplayUSDWithSwap: string
+  rawToTokenAmount: BigNumber | undefined
+  rawFromTokenAmount: BigNumber | undefined
+  isQuoteLoading: boolean
+} => {
   const fromTokenSymbol: string = useMemo(() => {
     return {
       [TransactionAction.DEPOSIT]: selectedTokenOption.value,

@@ -15,7 +15,7 @@ export const sidebarFootnote = {
       Risk management and limits on exposure all handled by class leading risk curator,
       BlockAnalitica
     </>,
-  ],
+  ] satisfies (string | React.ReactNode)[] as (string | React.ReactNode)[],
 
   tooltip: {
     style: {

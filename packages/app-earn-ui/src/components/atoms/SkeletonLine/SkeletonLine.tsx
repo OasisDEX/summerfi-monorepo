@@ -19,7 +19,7 @@ export const SkeletonLine = ({
   width = '100%',
   height = 3,
   style,
-}: Omit<SkeletonProps, 'cols' | 'count' | 'gap'>) => {
+}: Omit<SkeletonProps, 'cols' | 'count' | 'gap'>): React.ReactNode => {
   return (
     <span
       className={skeletonStyles.skeletonLine}

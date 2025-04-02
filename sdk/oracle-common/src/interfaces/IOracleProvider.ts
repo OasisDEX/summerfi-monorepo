@@ -30,6 +30,6 @@ export interface IOracleProvider extends IManagerProvider<OracleProviderType> {
   getSpotPrices(params: {
     chainInfo: IChainInfo
     baseTokens: IToken[]
-    quote?: FiatCurrency
+    quoteCurrency?: FiatCurrency
   }): Promise<SpotPricesInfo>
 }

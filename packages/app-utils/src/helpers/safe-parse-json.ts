@@ -3,7 +3,7 @@
  * @param json - The JSON string to parse
  * @returns The parsed JSON object or an empty object if parsing fails
  */
-export const safeParseJson = (json: string) => {
+export const safeParseJson = (json: string): any => {
   if (!json) {
     return {}
   }

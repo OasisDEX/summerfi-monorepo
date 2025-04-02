@@ -24,15 +24,13 @@ export class OracleManager
   }
 
   /** @see IOracleManager.getSpotPrice */
-  async getSpotPrice(params: {
-    baseToken: IToken
-    quoteToken?: Denomination
-    forceUseProvider?: OracleProviderType
-  }): Promise<SpotPriceInfo> {
+  async getSpotPrice(
+    params: Parameters<IOracleManager['getSpotPrice']>[0],
+  ): ReturnType<IOracleManager['getSpotPrice']> {
     if (
-      params.quoteToken &&
-      isToken(params.quoteToken) &&
-      !params.baseToken.chainInfo.equals(params.quoteToken.chainInfo)
+      params.denomination &&
+      isToken(params.denomination) &&
+      !params.baseToken.chainInfo.equals(params.denomination.chainInfo)
     ) {
       throw new Error('Base token and quote token must be on the same chain')
     }

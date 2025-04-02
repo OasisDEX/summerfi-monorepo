@@ -19,7 +19,7 @@ export function NavigationMenuDropdownContentListItem({
   promoted,
   tags,
   title,
-}: NavigationMenuDropdownContentListItemProps) {
+}: NavigationMenuDropdownContentListItemProps): React.ReactNode {
   return (
     <div
       className={

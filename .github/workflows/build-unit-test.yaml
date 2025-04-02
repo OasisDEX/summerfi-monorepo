@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - dev
+
 jobs:
   build:
     name: Build and Unit Test

@@ -33,7 +33,7 @@ export { Tooltip } from './components/molecules/Tooltip/Tooltip'
 export { CountDownBanner } from './components/organisms/CountDownBanner/CountDownBanner'
 export { LaunchBanner } from './components/organisms/LaunchBanner/LaunchBanner'
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
-export { Newsletter } from './components/organisms/Newsletter/Newsletter'
+export { Newsletter, type NewsletterPropsType } from './components/organisms/Newsletter/Newsletter'
 
 export { Footer } from './components/layout/Footer/Footer'
 

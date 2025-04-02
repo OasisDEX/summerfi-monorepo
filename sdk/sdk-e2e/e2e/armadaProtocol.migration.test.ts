@@ -75,6 +75,7 @@ describe('Armada Protocol Migration', () => {
           })
 
           const positionIdsToMigrate = positionsBefore.positions.slice(0, 1).map((p) => p.id)
+          assert(positionIdsToMigrate.length > 0, 'No position ids found')
           positionIdsToMigrate.forEach((id, i) => {
             console.log(`- migrating position ${i}: `, id)
           })

@@ -12,6 +12,6 @@ export const getResolvedForecastAmountParsed = ({
 }: {
   amountParsed: BigNumber
   rawToTokenAmount?: BigNumber
-}) => {
+}): BigNumber => {
   return rawToTokenAmount ?? amountParsed
 }

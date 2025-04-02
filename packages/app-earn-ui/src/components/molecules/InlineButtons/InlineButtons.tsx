@@ -27,7 +27,7 @@ export function InlineButtons<O extends string>({
   asUnstyled,
   as = 'span',
   variant,
-}: InlineButtonsProps<O>) {
+}: InlineButtonsProps<O>): React.ReactNode {
   return (
     <div className={classNames.inlineButtonsWrapper} style={style}>
       {options.map((option) => (

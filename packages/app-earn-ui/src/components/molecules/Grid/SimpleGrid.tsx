@@ -12,7 +12,7 @@ export const SimpleGrid = ({
   columns?: number
   rows?: number
   gap?: number | string
-}) => {
+}): React.ReactNode => {
   return (
     <div
       className={className}

@@ -1,4 +1,4 @@
-import type { Kysely } from 'kysely'
+import type { InsertResult, Kysely } from 'kysely'
 
 import type { RiskRequiredDB } from '@/types'
 
@@ -22,7 +22,7 @@ export const createRiskForAddress = async ({
   db: Kysely<RiskRequiredDB>
   address: string
   isRisky: boolean
-}) => {
+}): Promise<InsertResult[]> => {
   try {
     return await db
       .insertInto('walletRisk')

@@ -32,7 +32,7 @@ export const formatDecimalAsPercent = (
     noPercentSign?: boolean
     maxThreshold?: string
   } = {},
-) => {
+): string => {
   const formatedAmount = formatToBigNumber(amount)
 
   if (maxThreshold && formatedAmount.times(100).isGreaterThan(maxThreshold)) {

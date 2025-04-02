@@ -20,7 +20,7 @@ export const formatShorthandNumber = (
     suffix?: string
     precision?: number
   } = {},
-) => {
+): string => {
   const sh = new BigNumber(
     amount
       .toString()

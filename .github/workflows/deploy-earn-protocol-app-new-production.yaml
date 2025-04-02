@@ -107,9 +107,9 @@ jobs:
 
       - name: Extract commit hash
         id: vars
-        shell: bash
         run: |
-          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+          calculatedSha=$(git rev-parse --short ${{ github.sha }})
+          echo "NEXT_PUBLIC_SHA=$calculatedSha" >> $GITHUB_ENV
 
       - name: Install dependencies
         run: pnpm install
@@ -136,7 +136,7 @@ jobs:
           LATEST_TAG: latest
           ECR_REPO_NAME: summer-fi-earn-production
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          SHA_TAG: ${{ steps.vars.outputs.sha_short }}
+          NEXT_PUBLIC_SHA: ${{ env.NEXT_PUBLIC_SHA }}
         run: |
           # Build a docker container and
           # push it to ECR so that it can
@@ -170,8 +170,9 @@ jobs:
                        --build-arg SDK_API_URL=${{ secrets.SDK_API_URL }} \
                        --build-arg EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN=${{ secrets.EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN }} \
                        --build-arg EARN_APP_URL=${{ secrets.EARN_APP_URL }} \
+                       --build-arg NEXT_PUBLIC_SHA=${{ env.NEXT_PUBLIC_SHA }} \
                        --cache-from type=registry,ref=189194422115.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/buildkit-test:cache \
-                       -t $ECR_REGISTRY/$ECR_REPO_NAME:$SHA_TAG \
+                       -t $ECR_REGISTRY/$ECR_REPO_NAME:$NEXT_PUBLIC_SHA \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$LATEST_TAG \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$ENVIRONMENT_TAG \
                        ./apps/earn-protocol

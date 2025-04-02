@@ -9,6 +9,7 @@ import {
   getPositionValues,
   getUniqueVaultId,
   NonOwnerPositionBanner,
+  ProjectedEarningsCombined,
   Sidebar,
   SidebarFootnote,
   sidebarFootnote,
@@ -335,10 +336,6 @@ export const VaultManageViewComponent = ({
       }
       tokenBalanceLoading={selectedTokenBalanceLoading}
       manualSetAmount={manualSetAmount}
-      vault={vault}
-      estimatedEarnings={estimatedEarnings}
-      forecastSummaryMap={forecastSummaryMap}
-      isLoadingForecast={isLoadingForecast}
     />
   )
 
@@ -367,6 +364,16 @@ export const VaultManageViewComponent = ({
     primaryButton: sidebar.primaryButton,
     footnote: (
       <>
+        {!nextTransaction?.type ? (
+          <ProjectedEarningsCombined
+            vault={vault}
+            amountDisplay={amountDisplay}
+            estimatedEarnings={estimatedEarnings}
+            forecastSummaryMap={forecastSummaryMap}
+            isLoadingForecast={isLoadingForecast}
+            ownerView={ownerView}
+          />
+        ) : null}
         {txHashes.map((transactionData) => (
           <TransactionHashPill
             key={transactionData.hash}
@@ -415,6 +422,7 @@ export const VaultManageViewComponent = ({
         displaySimulationGraph={displaySimulationGraph}
         simulationGraph={
           <VaultSimulationGraph
+            isManage
             vault={vault}
             forecast={forecast}
             isLoadingForecast={isLoadingForecast}
@@ -513,7 +521,7 @@ export const VaultManageViewComponent = ({
                   market value of your position. This strategy has no other fees, and there are no
                   restrictions or delays when withdrawing.{' '}
                   {vaultApyData.sma30d
-                    ? ` The 30d APY for this strategy after fees is ${formatDecimalAsPercent(vaultApyData.sma30d)}.`
+                    ? ` The 30d APY for this strategy after fees is ${formatDecimalAsPercent(vaultApyData.sma30d - managementFee)}.`
                     : ''}
                 </Text>
               </Card>
