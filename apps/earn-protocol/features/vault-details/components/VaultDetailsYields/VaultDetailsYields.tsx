@@ -22,7 +22,6 @@ export const VaultDetailsYields: FC<VaultDetailsYieldsProps> = ({
   return (
     <Card variant="cardSecondary">
       <div id="advanced-yield-data" />
-      <div id="yield-sources" />
       <div
         style={{
           display: 'flex',
