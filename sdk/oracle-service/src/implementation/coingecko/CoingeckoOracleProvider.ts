@@ -140,7 +140,7 @@ export class CoingeckoOracleProvider
         const errorType = this._parseErrorType(errorJSON)
 
         throw Error(
-          `Error performing 1inch spot price request: ${JSON.stringify({
+          `Error performing coingecko spot price request: ${JSON.stringify({
             apiQuery: spotUrl,
             statusCode: response.status,
             json: errorJSON,
@@ -158,7 +158,7 @@ export class CoingeckoOracleProvider
       }
 
       return {
-        provider: OracleProviderType.OneInch,
+        provider: OracleProviderType.Coingecko,
         token: baseToken,
         price: Price.createFrom({
           value: price.toString(),
