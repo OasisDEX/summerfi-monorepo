@@ -29,7 +29,7 @@ export class MockOracleProvider
 
   async getSpotPrice(params: {
     baseToken: IToken
-    quoteToken?: Denomination
+    denomination?: Denomination
   }): Promise<SpotPriceInfo> {
     return {
       provider: this.type,

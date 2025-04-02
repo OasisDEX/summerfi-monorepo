@@ -34,7 +34,7 @@ export async function estimateSwapFromAmount(params: {
   const spotPriceSourceToken = (
     await params.oracleManager.getSpotPrice({
       baseToken: params.fromToken,
-      quoteToken: receiveAtLeast.token,
+      denomination: receiveAtLeast.token,
     })
   ).price
 

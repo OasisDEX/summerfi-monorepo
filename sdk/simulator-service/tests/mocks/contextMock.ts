@@ -53,7 +53,7 @@ async function getSwapQuoteExactInput(params: { fromAmount: TokenAmount; toToken
 
 async function getSpotPrice(params: {
   baseToken: IToken
-  quoteToken?: Denomination
+  denomination?: Denomination
 }): Promise<SpotPriceInfo> {
   const MOCK_PRICE = 0.5
   const MOCK_QUOTE_CURRENCY = FiatCurrency.USD
@@ -63,7 +63,7 @@ async function getSpotPrice(params: {
     price: Price.createFrom({
       value: MOCK_PRICE.toString(),
       base: params.baseToken,
-      quote: params.quoteToken || MOCK_QUOTE_CURRENCY,
+      quote: params.denomination || MOCK_QUOTE_CURRENCY,
     }),
   }
 }
