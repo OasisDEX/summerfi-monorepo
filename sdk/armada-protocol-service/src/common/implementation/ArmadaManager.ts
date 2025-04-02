@@ -1432,7 +1432,7 @@ export class ArmadaManager implements IArmadaManager {
 
     const spotPrice = await this._oracleManager.getSpotPrice({
       baseToken: params.fromAmount.token,
-      quoteToken: params.toAmount.token,
+      denomination: params.toAmount.token,
     })
 
     const impact =

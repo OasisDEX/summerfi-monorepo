@@ -1,2 +1,2 @@
 /** 1Inch spot price response */
-export type OneInchSpotResponse = Record<string, number>
+export type OneInchSpotResponse = Record<string, string>

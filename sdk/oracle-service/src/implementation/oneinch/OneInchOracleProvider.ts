@@ -6,22 +6,19 @@ import {
   FiatCurrency,
   IAddress,
   IChainInfo,
-  IToken,
   SwapErrorType,
   isTokenAmount,
-  Address,
   ChainId,
-  Denomination,
   Price,
   isFiatCurrencyAmount,
   isToken,
-  type AddressValue,
   LoggingService,
 } from '@summerfi/sdk-common'
-import { OracleProviderType, SpotPriceInfo } from '@summerfi/sdk-common/oracle'
+import { OracleProviderType } from '@summerfi/sdk-common/oracle'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 import fetch from 'node-fetch'
 import type { OracleProviderConfig } from '../Types'
+import { BigNumber } from 'bignumber.js'
 
 /**
  * @name OneInchOracleProvider
@@ -66,17 +63,13 @@ export class OneInchOracleProvider
     const authHeader = this._getOneInchSpotAuthHeader()
 
     if (params.denomination && isToken(params.denomination)) {
-      if (Array.isArray(params.baseToken)) {
-        throw new Error('Array of tokens is not supported for this operation')
-      }
-
-      const baseTokenAddress = params.baseToken.address
-      const quoteTokenAddress = params.denomination.address
+      const baseToken = params.baseToken
+      const quoteToken = params.denomination
       const quoteCurrencySymbol = FiatCurrency.USD
 
-      const spotUrl = this._formatOneInchSpotUrl({
+      const spotUrl = this._formatSpotUrl({
         chainInfo: params.baseToken.chainInfo,
-        tokenAddresses: [baseTokenAddress, quoteTokenAddress],
+        tokenAddresses: [baseToken.address, quoteToken.address],
         // We use USD as base for both tokens and then derive a spot price
         quoteCurrency: quoteCurrencySymbol,
       })
@@ -101,47 +94,33 @@ export class OneInchOracleProvider
       }
 
       const responseData = (await response.json()) as OneInchSpotResponse
-      const baseToken = params.baseToken
-      const quoteToken = params.denomination
-      const prices = Object.entries(responseData).map(([address, price]) => {
-        const isBaseToken = baseToken.address.equals(
-          Address.createFromEthereum({ value: address as AddressValue }),
+
+      const baseUSDPrice = responseData[params.baseToken.address.value.toLowerCase()]
+      const quoteUSDPrice = responseData[params.denomination.address.value.toLowerCase()]
+      if (!baseUSDPrice || !quoteUSDPrice) {
+        throw Error(
+          'BaseToken | QuoteToken spot prices could not be determined: ' +
+            JSON.stringify(responseData),
         )
-        return Price.createFrom({
-          value: price.toString(),
-          base: isBaseToken ? baseToken : quoteToken,
-          quote: quoteCurrencySymbol,
-        })
-      })
-
-      const baseTokenPriceQuotedInCurrencySymbol = prices.find(
-        (p) => isToken(p.base) && p.base.address.equals(baseToken.address),
-      )
-      const quoteTokenPriceQuoteInCurrencySymbol = prices.find(
-        (p) => isToken(p.base) && p.base.address.equals(quoteToken.address),
-      )
-
-      if (!baseTokenPriceQuotedInCurrencySymbol || !quoteTokenPriceQuoteInCurrencySymbol) {
-        throw new Error('BaseToken | QuoteToken spot prices could not be determined')
       }
 
-      const resultingPrice = baseTokenPriceQuotedInCurrencySymbol.divide(
-        quoteTokenPriceQuoteInCurrencySymbol,
-      )
-      if (isTokenAmount(resultingPrice) || isFiatCurrencyAmount(resultingPrice)) {
-        throw new Error('Resulting price is not a proper price, check the quote and base tokens')
-      }
+      const value = BigNumber(baseUSDPrice).div(quoteUSDPrice).toString()
+      console.log('value', value)
 
       return {
         provider: OracleProviderType.OneInch,
         token: baseToken,
-        price: resultingPrice,
+        price: Price.createFrom({
+          value: value,
+          base: baseToken,
+          quote: params.denomination,
+        }),
       }
     } else {
       const quoteCurrency = params.denomination ?? FiatCurrency.USD
       const baseToken = params.baseToken
 
-      const spotUrl = this._formatOneInchSpotUrl({
+      const spotUrl = this._formatSpotUrl({
         chainInfo: params.baseToken.chainInfo,
         tokenAddresses: [baseToken.address],
         quoteCurrency: quoteCurrency,
@@ -189,7 +168,7 @@ export class OneInchOracleProvider
 
     const quote = params.quoteCurrency ?? FiatCurrency.USD
 
-    const spotUrl = this._formatOneInchSpotUrl({
+    const spotUrl = this._formatSpotUrl({
       chainInfo: params.chainInfo,
       tokenAddresses: params.baseTokens.map((token) => token.address),
       quoteCurrency: params.quoteCurrency,
@@ -255,7 +234,7 @@ export class OneInchOracleProvider
    *
    * @returns The formatted spot price URL
    */
-  private _formatOneInchSpotUrl(params: {
+  private _formatSpotUrl(params: {
     chainInfo: IChainInfo
     tokenAddresses: IAddress[]
     quoteCurrency?: FiatCurrency

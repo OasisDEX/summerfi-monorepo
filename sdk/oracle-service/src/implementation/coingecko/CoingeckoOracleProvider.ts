@@ -9,11 +9,13 @@ import {
   Price,
   isToken,
   ChainIds,
+  LoggingService,
 } from '@summerfi/sdk-common'
 import { OracleProviderType } from '@summerfi/sdk-common/oracle'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 import fetch from 'node-fetch'
 import type { OracleProviderConfig } from '../Types'
+import { BigNumber } from 'bignumber.js'
 
 export type CoingeckoResponse = {
   [address: string]: {
@@ -61,51 +63,109 @@ export class CoingeckoOracleProvider
   async getSpotPrice(
     params: Parameters<IOracleProvider['getSpotPrice']>[0],
   ): ReturnType<IOracleProvider['getSpotPrice']> {
-    if (isToken(params.denomination)) {
-      throw new Error('Quote token must be a fiat currency')
-    }
-
-    const baseToken = params.baseToken
-    const quoteCurrency = params.denomination ?? FiatCurrency.USD
-
     const authHeader = this._getAuthHeader()
 
-    const spotUrl = this._formatSpotUrl({
-      chainInfo: params.baseToken.chainInfo,
-      tokenAddresses: [baseToken.address],
-      quoteCurrency: quoteCurrency,
-    })
+    if (params.denomination && isToken(params.denomination)) {
+      const baseToken = params.baseToken
+      const quoteToken = params.denomination
+      const quoteCurrencySymbol = FiatCurrency.USD
 
-    const response = await fetch(spotUrl, {
-      headers: authHeader,
-    })
+      const spotUrl = this._formatSpotUrl({
+        chainInfo: params.baseToken.chainInfo,
+        tokenAddresses: [baseToken.address, quoteToken.address],
+        // We use USD as base for both tokens and then derive a spot price
+        quoteCurrency: quoteCurrencySymbol,
+      })
+      LoggingService.debug('CoingeckoSpotPriceUrl', spotUrl)
 
-    if (!response.ok) {
-      const errorJSON = await response.text()
-      const errorType = this._parseErrorType(errorJSON)
+      const response = await fetch(spotUrl, {
+        headers: authHeader,
+      })
 
-      throw Error(
-        `Error performing coingecko spot price request: ${JSON.stringify({
-          apiQuery: spotUrl,
-          statusCode: response.status,
-          json: errorJSON,
-          subtype: errorType,
-        })}`,
-      )
-    }
+      if (!response.ok) {
+        const errorJSON = await response.text()
+        const errorType = this._parseErrorType(errorJSON)
 
-    const responseData = (await response.json()) as CoingeckoResponse
+        throw Error(
+          `Error performing coingecko spot price request: ${JSON.stringify({
+            apiQuery: spotUrl,
+            statusCode: response.status,
+            json: errorJSON,
+            subtype: errorType,
+          })}`,
+        )
+      }
 
-    const [, price] = Object.entries(responseData)[0]
+      const responseData = (await response.json()) as CoingeckoResponse
 
-    return {
-      provider: OracleProviderType.Coingecko,
-      token: baseToken,
-      price: Price.createFrom({
-        value: price[quoteCurrency.toLowerCase()].toString(),
-        base: baseToken,
-        quote: quoteCurrency,
-      }),
+      const baseUSDPrice =
+        responseData[params.baseToken.address.value.toLowerCase()][
+          quoteCurrencySymbol.toLowerCase()
+        ]
+      const quoteUSDPrice =
+        responseData[params.denomination?.address.value.toLowerCase()][
+          quoteCurrencySymbol.toLowerCase()
+        ]
+      if (!baseUSDPrice || !quoteUSDPrice) {
+        throw new Error('BaseToken | QuoteToken spot prices could not be determined')
+      }
+
+      const value = BigNumber(baseUSDPrice).div(quoteUSDPrice).toString()
+
+      return {
+        provider: OracleProviderType.Coingecko,
+        token: baseToken,
+        price: Price.createFrom({
+          value,
+          base: baseToken,
+          quote: params.denomination,
+        }),
+      }
+    } else {
+      const quoteCurrency = params.denomination ?? FiatCurrency.USD
+      const baseToken = params.baseToken
+
+      const spotUrl = this._formatSpotUrl({
+        chainInfo: params.baseToken.chainInfo,
+        tokenAddresses: [baseToken.address],
+        quoteCurrency: quoteCurrency,
+      })
+
+      const response = await fetch(spotUrl, {
+        headers: authHeader,
+      })
+
+      if (!response.ok) {
+        const errorJSON = await response.text()
+        const errorType = this._parseErrorType(errorJSON)
+
+        throw Error(
+          `Error performing 1inch spot price request: ${JSON.stringify({
+            apiQuery: spotUrl,
+            statusCode: response.status,
+            json: errorJSON,
+            subtype: errorType,
+          })}`,
+        )
+      }
+
+      const responseData = (await response.json()) as CoingeckoResponse
+
+      const [, price] = Object.entries(responseData)[0]
+
+      if (!price) {
+        throw Error('BaseToken spot price could not be determined')
+      }
+
+      return {
+        provider: OracleProviderType.OneInch,
+        token: baseToken,
+        price: Price.createFrom({
+          value: price.toString(),
+          base: baseToken,
+          quote: quoteCurrency,
+        }),
+      }
     }
   }
 
