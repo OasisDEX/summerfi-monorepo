@@ -1,31 +1,16 @@
-.embla,
-.emblaOneSlide,
-.emblaTwoSlides,
-.emblaThreeSlides {
+.homepageCarouselWrapper {
+  width: 100vw;
+}
+
+.embla {
   --slide-spacing: var(--general-radius-24);
   --slide-size: 100%;
 }
 
-.emblaOneSlide {
-  @media (min-width: 900px) {
-    --slide-size: 100%;
-  }
-}
-
-.emblaTwoSlides {
-  @media (min-width: 900px) {
-    --slide-size: calc(50% - var(--general-space-8));
-  }
-}
-
-.emblaThreeSlides {
-  @media (min-width: 900px) {
-    --slide-size: calc(33.3% - var(--general-space-12));
-  }
-}
-
 .emblaViewport {
   overflow: hidden;
+  position: relative;
+  z-index: 40;
 }
 
 .emblaContainer {
@@ -35,16 +20,14 @@
 
 .emblaSlide {
   transform: translate3d(0, 0, 0);
-  flex: 0 0 var(--slide-size);
+  flex: 0 0 500px;
   min-width: 0;
+  margin-right: var(--general-space-24);
 
-  @media (min-width: 768px) {
+  @include media('<s') {
+    flex: 0 0 calc(100vw - (var(--general-space-8) * 2));
     margin-right: var(--general-space-16);
   }
-}
-
-.emblaSlide:last-child {
-  margin-right: 0;
 }
 
 .emblaSlideNumber {
@@ -55,37 +38,35 @@
   user-select: none;
 }
 
-.emblaControls,
-.emblaControlsPortal {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+.emblaButtonsWrapper {
+  position: relative;
+  z-index: 50;
+  width: 100%;
+  height: 0;
+  overflow: visible;
 
-.emblaControls {
-  margin-bottom: var(--general-space-24);
-}
-
-.emblaButtons {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--general-space-16);
-  align-items: center;
-  width: fit-content;
-}
-
-.emblaSideButton {
-  padding: var(--general-space-16);
-
-  @include media('<=s') {
-    padding: 0;
+  @include media('<s') {
+    display: none;
   }
-}
 
-.emblaButtonsOnSidesWrapper {
-  display: flex;
-  align-items: center;
-  gap: var(--general-space-16);
+  .emblaButtons {
+    width: 650px;
+    height: 50px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .homepageEmblaButton {
+    width: 50px;
+    height: 50px;
+    padding: 2px 0 0 2px;
+    margin-top: 140px;
+    text-align: center;
+    border-radius: var(--radius-circle);
+    background-color: #232323;
+  }
 }
 
 .dots {
@@ -114,11 +95,16 @@
   width: 100%;
   margin-top: var(--general-space-24);
 
+  @include media('>s') {
+    display: none;
+  }
+
   .dot {
     width: 8px;
     height: 8px;
     background-color: var(--earn-protocol-neutral-80);
     border-radius: var(--radius-circle);
+    transition: background-color 0.3s ease-in-out;
 
     &Active {
       background: var(--gradient-earn-protocol-dark);

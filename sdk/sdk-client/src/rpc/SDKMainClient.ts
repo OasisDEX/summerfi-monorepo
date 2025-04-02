@@ -1,4 +1,4 @@
-import { SerializationService } from '@summerfi/sdk-common/services'
+import { LoggingService, SerializationService } from '@summerfi/sdk-common/services'
 import type { SDKAppRouter } from '@summerfi/sdk-server'
 import { createTRPCClient, httpBatchLink, loggerLink } from '@trpc/client'
 
@@ -14,8 +14,6 @@ import { createTRPCClient, httpBatchLink, loggerLink } from '@trpc/client'
 // export * from '@summerfi/sdk-common/tokens'
 // export * from '@summerfi/sdk-common/user'
 
-const EnableDeserialize = false
-
 export type RPCMainClientType = ReturnType<typeof createTRPCClient<SDKAppRouter>>
 
 export function createMainRPCClient(apiURL: string, logging?: boolean): RPCMainClientType {
@@ -25,32 +23,14 @@ export function createMainRPCClient(apiURL: string, logging?: boolean): RPCMainC
         enabled: () => !!logging,
         logger(opts) {
           const apiUrlBase = new URL(`${apiURL}/${opts.path}`)
-          const transformer = SerializationService.getTransformer()
-          const input = transformer.stringify(opts.input)
+          const input = SerializationService.stringify(opts.input)
           apiUrlBase.searchParams.set('input', input)
-          console.log(`SDK call (${opts.path}):`, apiUrlBase.toString())
+          LoggingService.log(`SDK call (${opts.path}):`, apiUrlBase.toString())
         },
       }),
       httpBatchLink({
         url: apiURL,
-        transformer: {
-          input: SerializationService.getTransformer(),
-          output: {
-            serialize: SerializationService.getTransformer().serialize,
-            deserialize: (object) => {
-              try {
-                const res = SerializationService.getTransformer().parse(
-                  JSON.stringify(object, null, 2),
-                )
-                return EnableDeserialize
-                  ? SerializationService.getTransformer().deserialize(object)
-                  : res
-              } catch (error) {
-                console.log('Error deserializing object', error)
-              }
-            },
-          },
-        },
+        transformer: SerializationService.getTransformer(),
         maxURLLength: 10000,
       }),
     ],

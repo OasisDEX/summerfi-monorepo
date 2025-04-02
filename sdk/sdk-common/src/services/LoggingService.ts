@@ -7,7 +7,7 @@ export class LoggingService {
 
   static debug(...messages: unknown[]) {
     if (process.env.SDK_DEBUG_ENABLED === 'true') {
-      console.log(...messages)
+      console.info(...messages)
     }
   }
 }

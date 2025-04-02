@@ -27,8 +27,7 @@
     "@summerfi/subgraph-manager-common": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/sdk-server": "workspace:*",
-    "@trpc/client": "11.0.0-rc.844",
-    "superjson": "^1.13.3"
+    "@trpc/client": "11.0.0-rc.844"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

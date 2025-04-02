@@ -1,6 +1,7 @@
 'use client'
 import { type FC, type ReactNode, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import clsx from 'clsx'
 import { type EmblaOptionsType } from 'embla-carousel'
 import useEmblaCarousel from 'embla-carousel-react'
 
@@ -168,7 +169,7 @@ export const SlideCarousel: FC<PropType> = ({
             <div className={classNames.emblaViewport} ref={emblaRef}>
               <div className={classNames.emblaContainer}>
                 {slides.map((slide, idx) => (
-                  <div className={classNames.emblaSlide} key={idx}>
+                  <div className={clsx(classNames.emblaSlide, 'embla__slide')} key={idx}>
                     <div className={classNames.emblaSlideNumber}>{slide}</div>
                   </div>
                 ))}
@@ -191,7 +192,7 @@ export const SlideCarousel: FC<PropType> = ({
         <div className={classNames.emblaViewport} ref={emblaRef}>
           <div className={classNames.emblaContainer}>
             {slides.map((slide, idx) => (
-              <div className={classNames.emblaSlide} key={idx}>
+              <div className={clsx(classNames.emblaSlide, 'embla__slide')} key={idx}>
                 <div className={classNames.emblaSlideNumber}>{slide}</div>
               </div>
             ))}

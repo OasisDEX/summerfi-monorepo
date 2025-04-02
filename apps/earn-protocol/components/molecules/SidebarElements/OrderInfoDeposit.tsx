@@ -1,5 +1,5 @@
 import { Icon, OrderInformation, Text } from '@summerfi/app-earn-ui'
-import { SDKChainId, type TokenSymbolsList } from '@summerfi/app-types'
+import { type SDKChainId, type TokenSymbolsList } from '@summerfi/app-types'
 import { formatCryptoBalance, formatFiatBalance, formatPercent } from '@summerfi/app-utils'
 import { type ExtendedTransactionInfo, type IToken, TransactionType } from '@summerfi/sdk-common'
 import type BigNumber from 'bignumber.js'
@@ -20,7 +20,6 @@ export const OrderInfoDeposit = ({
   amountParsed,
   amountDisplayUSD,
   transactionFee,
-  chainId,
   transactionFeeLoading,
 }: OrderInfoDepositProps) => {
   if (transaction.type !== TransactionType.Deposit) {
@@ -109,16 +108,11 @@ export const OrderInfoDeposit = ({
                   },
                 ]
               : []),
-
-            ...(chainId !== SDKChainId.SONIC
-              ? [
-                  {
-                    label: 'Transaction Fee',
-                    value: transactionFee ? `$${formatFiatBalance(transactionFee)}` : 'n/a',
-                    isLoading: transactionFeeLoading,
-                  },
-                ]
-              : []),
+            {
+              label: 'Transaction Fee',
+              value: transactionFee ? `$${formatFiatBalance(transactionFee)}` : 'n/a',
+              isLoading: transactionFeeLoading,
+            },
           ]}
         />
       </div>
