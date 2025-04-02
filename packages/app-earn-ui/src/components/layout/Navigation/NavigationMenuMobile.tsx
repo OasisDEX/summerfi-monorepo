@@ -31,7 +31,7 @@ export const NavigationMenuMobile = ({
   signUpComponent,
   walletConnectionComponent,
   secondaryWalletConnectionComponent,
-}: NavigationMobileMenuType) => {
+}: NavigationMobileMenuType): React.ReactNode => {
   return (
     <>
       <div className={navigationMenuMobileStyles.topBar}>

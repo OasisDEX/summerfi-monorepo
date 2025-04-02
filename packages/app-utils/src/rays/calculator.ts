@@ -38,7 +38,7 @@ const getPointsPerUsdPerSecond = (usdAmount: number): number => {
 export const getPointsPerPeriodInSeconds = (
   _amount: number,
   periodInSeconds: number = SECONDS_PER_YEAR,
-) => {
+): number => {
   const amount = Math.min(_amount, CALCULATOR_NET_VALUE_CAP)
   const pointsPerSecond = getPointsPerUsdPerSecond(amount)
 
@@ -50,7 +50,7 @@ export const getPointsPerPeriodInSeconds = (
  * @param _amount - The amount used to calculate the points. It will be capped at 10,000,000.
  * @returns The total points earned over the year.
  */
-export const getPointsPerYear = (_amount: number) => {
+export const getPointsPerYear = (_amount: number): number => {
   return getPointsPerPeriodInSeconds(_amount, SECONDS_PER_YEAR)
 }
 
@@ -60,7 +60,11 @@ export const getCalculatorValues = ({
 }: {
   usdAmount: number
   migration: boolean
-}) => {
+}): {
+  basePoints: number
+  migrationBonus: number
+  totalPoints: number
+} => {
   const basePoints = getPointsPerYear(usdAmount)
   const migrationBonus = migration ? basePoints * 0.2 : 0
 

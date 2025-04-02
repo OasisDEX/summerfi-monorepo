@@ -9,7 +9,7 @@
  * This function generates a random 128-bit value, formats it as a UUID-like string,
  * and returns it as a hexadecimal string of length 32.
  */
-export function getRandomString() {
+export function getRandomString(): string {
   let randomString = ''
   let randomValue = ''
 

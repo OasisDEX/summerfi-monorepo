@@ -40,7 +40,7 @@ export const useTermsOfService = ({
   type = 'default',
   isSmartAccount,
   publicClient,
-}: Omit<TOSInput, 'isGnosisSafe'>) => {
+}: Omit<TOSInput, 'isGnosisSafe'>): TOSState => {
   const [tos, setTos] = useState<TOSState>({
     status: TOSStatus.INIT,
   })

@@ -22,7 +22,7 @@ export const CheckboxButton = ({
   className?: string
   style?: React.CSSProperties
   iconSize?: number
-}) => {
+}): React.ReactNode => {
   return (
     <div className={clsx(checkboxButtonStyles.checkboxSectionWrapper, className)} style={style}>
       <div

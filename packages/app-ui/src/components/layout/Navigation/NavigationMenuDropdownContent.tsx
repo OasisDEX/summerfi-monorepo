@@ -24,7 +24,7 @@ export const NavigationMenuDropdownContent = ({
   onChange,
   onSelect,
   navigationModules,
-}: NavigationMenuDropdownContentProps) => {
+}: NavigationMenuDropdownContentProps): React.ReactNode => {
   const ref = useRef<HTMLLIElement>(null)
   const [selected, setSelected] = useState<[number, number]>([0, 0])
 

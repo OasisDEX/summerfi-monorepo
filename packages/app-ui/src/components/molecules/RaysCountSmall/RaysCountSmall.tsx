@@ -29,7 +29,7 @@ export const RaysCountSmall = ({
   userAddress,
   formatter,
   raysFetchFunction,
-}: RaysCountSmallProps) => {
+}: RaysCountSmallProps): React.ReactNode => {
   const [loadingRaysCount, setLoadingRaysCount] = useState<boolean>(false)
   const [raysCount, setRaysCount] = useState<number | null>(null)
   const [raysAddresses, setRaysAddresses] = useState<string[]>([])

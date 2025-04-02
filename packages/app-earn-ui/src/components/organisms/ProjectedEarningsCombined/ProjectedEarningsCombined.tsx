@@ -35,7 +35,7 @@ export const ProjectedEarningsCombined = ({
   ownerView,
   transactionType,
   vault,
-}: ProjectedEarningsCombinedProps) => {
+}: ProjectedEarningsCombinedProps): React.ReactNode => {
   return (
     <div className={projectedEarningsCombinedStyles.projectedEarningsWrapper}>
       <AnimateHeight id="earnings" show={isOpen && Number(estimatedEarnings) > 0}>

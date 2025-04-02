@@ -14,7 +14,7 @@ type NavigationMenuType = {
   currentPath?: string
 }
 
-export const NavigationMenu = ({ links, currentPath }: NavigationMenuType) => {
+export const NavigationMenu = ({ links, currentPath }: NavigationMenuType): React.ReactNode => {
   return (
     <div className={navigationMenuStyles.navigationMenu}>
       <ul className={navigationMenuStyles.navigationMenuLinks}>

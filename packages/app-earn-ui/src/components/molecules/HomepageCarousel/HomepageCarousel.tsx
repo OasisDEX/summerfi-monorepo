@@ -19,7 +19,10 @@ type HomepageCarouselProps = {
   }
 }
 
-export const HomepageCarousel = ({ vaultsList, vaultsApyByNetworkMap }: HomepageCarouselProps) => {
+export const HomepageCarousel = ({
+  vaultsList,
+  vaultsApyByNetworkMap,
+}: HomepageCarouselProps): React.ReactNode => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'center',
     loop: true,

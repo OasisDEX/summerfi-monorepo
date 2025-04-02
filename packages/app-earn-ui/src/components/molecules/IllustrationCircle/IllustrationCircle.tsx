@@ -16,7 +16,7 @@ export const IllustrationCircle = ({
   size?: IllustrationCircleSize
   with3rdLayer?: boolean
   iconSize?: number
-}) => {
+}): React.ReactNode => {
   return (
     <div className={`${classNames[`size${size.charAt(0).toUpperCase()}${size.slice(1)}`]}`}>
       <div className={classNames.firstLayerCircle}>

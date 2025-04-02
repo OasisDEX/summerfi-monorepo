@@ -25,7 +25,7 @@ export const AnimateHeight = ({
   customHeight?: number
   className?: string
   contentClassName?: string
-}) => {
+}): React.ReactNode => {
   return (
     <OGAnimateHeight
       id={id}

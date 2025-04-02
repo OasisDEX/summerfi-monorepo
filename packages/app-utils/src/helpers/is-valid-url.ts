@@ -7,7 +7,7 @@
  * @param urlString - The string to be validated as a URL.
  * @returns `true` if the string is a valid URL, otherwise `false`.
  */
-export const isValidUrl = (urlString: string) => {
+export const isValidUrl = (urlString: string): boolean => {
   try {
     new URL(urlString)
 

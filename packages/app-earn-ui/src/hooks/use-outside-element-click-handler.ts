@@ -1,7 +1,7 @@
 'use client'
 
 'use client'
-import { useEffect, useRef } from 'react'
+import { type RefObject, useEffect, useRef } from 'react'
 
 /**
  * Custom hook to detect and handle clicks outside of a specified element.
@@ -19,7 +19,7 @@ import { useEffect, useRef } from 'react'
  *
  * return <div ref={ref}>This element listens for outside clicks.</div>
  */
-export function useOutsideElementClickHandler(cb: () => void) {
+export function useOutsideElementClickHandler(cb: () => void): RefObject<HTMLDivElement | null> {
   const elementRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {

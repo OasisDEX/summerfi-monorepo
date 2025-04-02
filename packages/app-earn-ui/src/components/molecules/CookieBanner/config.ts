@@ -5,10 +5,10 @@ export enum AnalyticsCookieNames {
   ANALYTICS = 'analytics',
 }
 
-export const ANALYTICS_COOKIE_NAMES = [
+export const ANALYTICS_COOKIE_NAMES: readonly [
   AnalyticsCookieNames.ANALYTICS,
   AnalyticsCookieNames.MARKETING,
-]
+] = [AnalyticsCookieNames.ANALYTICS, AnalyticsCookieNames.MARKETING]
 
 export type AnalyticsCookieName = (typeof ANALYTICS_COOKIE_NAMES)[number]
 

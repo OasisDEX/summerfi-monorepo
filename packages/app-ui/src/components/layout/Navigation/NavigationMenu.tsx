@@ -24,7 +24,7 @@ export const NavigationMenu = ({
   panels,
   currentPath,
   navigationModules,
-}: NavigationMenuProps) => {
+}: NavigationMenuProps): React.ReactNode => {
   const [isPanelOpen, setIsPanelOpen] = useState<boolean>(false)
   const [isPanelSwitched, setIsPanelSwitched] = useState<boolean>(false)
   const [currentPanel, setCurrentPanel] = useState<string>(panels?.[0].label ?? '')

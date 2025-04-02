@@ -8,8 +8,8 @@ import { defineConfig, createLogger } from 'vite'
 import { libInjectCss } from 'vite-plugin-lib-inject-css'
 // handles tsconfig paths from the tsconfig.json
 import tsconfigPaths from 'vite-tsconfig-paths'
-// generates typescript declaration files (just the js/ts, scss is done in package.json)
-import dts from 'vite-plugin-dts'
+// generates .d.ts files
+import UnpluginIsolatedDecl from 'unplugin-isolated-decl/vite'
 // preserves directives like "use client" in the output
 import preserveDirectives from 'rollup-preserve-directives'
 
@@ -52,12 +52,7 @@ export default defineConfig(({ mode }) => {
           }
         },
       },
-      dts({
-        outDir: 'dist/types',
-        insertTypesEntry: true,
-        strictOutput: true,
-        copyDtsFiles: true,
-      }),
+      UnpluginIsolatedDecl(),
     ],
     css: {
       preprocessorOptions: {
@@ -99,6 +94,7 @@ export default defineConfig(({ mode }) => {
           'boring-avatars',
           'clsx',
           'lodash-es',
+          '@summerfi/app-token-config',
           'next',
           'next/image',
           'next/link',
@@ -116,6 +112,7 @@ export default defineConfig(({ mode }) => {
             ]),
         ),
         output: {
+          dir: resolve(__dirname, 'dist/src'),
           assetFileNames: 'assets/[name][extname]',
           entryFileNames: '[name].js',
         },

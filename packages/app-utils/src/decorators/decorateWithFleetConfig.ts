@@ -16,7 +16,7 @@ export const decorateWithFleetConfig = (
   vaults: SDKVaultishType[],
   fleetMap: EarnAppConfigType['fleetMap'],
   userPositions?: IArmadaPosition[],
-) =>
+): SDKVaultishType[] =>
   vaults
     .map((vault) => {
       const vaultNetworkId = subgraphNetworkToId(vault.protocol.network)

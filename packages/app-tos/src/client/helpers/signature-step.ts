@@ -45,7 +45,7 @@ export const signatureStep = ({
   termsOfServiceAcceptance: TOSVerifyAcceptance
   walletAddress: string
   type: TOSMessageType
-}) => {
+}): void => {
   setTos({
     status: TOSStatus.WAITING_FOR_SIGNATURE,
     action: actionErrorWrapper({

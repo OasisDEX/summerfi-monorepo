@@ -18,7 +18,11 @@ export const selectRiskForAddress = async ({
 }: {
   db: Kysely<RiskRequiredDB>
   address: string
-}) => {
+}): Promise<{
+  address: string
+  isRisky: boolean
+  lastCheck: Date
+}> => {
   const data = await db
     .selectFrom('walletRisk')
     .where('address', '=', address.toLowerCase())

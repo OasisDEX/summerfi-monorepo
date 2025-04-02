@@ -46,7 +46,7 @@ export const timeAgo = ({
   numeric?: Intl.RelativeTimeFormatNumeric
   style?: Intl.RelativeTimeFormatStyle
   to: Date
-}) => {
+}): string => {
   const mappedLang = Object.keys(languagesMap).includes(lang)
     ? languagesMap[lang as keyof typeof languagesMap]
     : lang

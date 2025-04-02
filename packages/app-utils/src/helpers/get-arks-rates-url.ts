@@ -13,7 +13,7 @@ export const getArkHistoricalRatesUrl = ({
 }: {
   network: SDKSupportedNetwork
   apiUrl: string
-}) =>
+}): string =>
   ({
     [SDKNetwork.Mainnet]: `${apiUrl}/api/historicalRates/${SDKChainId.MAINNET}`,
     [SDKNetwork.Base]: `${apiUrl}/api/historicalRates/${SDKChainId.BASE}`,
@@ -34,7 +34,7 @@ export const getArkRatesUrl = ({
 }: {
   network: SDKSupportedNetwork
   apiUrl: string
-}) =>
+}): string =>
   ({
     [SDKNetwork.Mainnet]: `${apiUrl}/api/rates/${SDKChainId.MAINNET}`,
     [SDKNetwork.Base]: `${apiUrl}/api/rates/${SDKChainId.BASE}`,

@@ -66,7 +66,7 @@ export const VaultSimulationForm = ({
   positionExists,
   userWalletAddress,
   isLoading = false,
-}: VaultSimulationFormProps) => {
+}: VaultSimulationFormProps): React.ReactNode => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [isGradientBorder, setIsGradientBorder] = useState(false)
 

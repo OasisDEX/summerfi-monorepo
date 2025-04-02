@@ -26,7 +26,7 @@ export const NavigationMenuDropdownContentList = ({
   navigationModules,
   onClick,
   onSelect,
-}: NavigationMenuDropdownContentListProps) => (
+}: NavigationMenuDropdownContentListProps): React.ReactNode => (
   <>
     {header && (
       <Text

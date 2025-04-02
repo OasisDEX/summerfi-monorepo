@@ -26,7 +26,17 @@ const parseSearchParams = (searchParams: URLSearchParams) =>
  * setQueryParams({ param1: 'value1', param2: ['value2', 'value3'] });
  */
 
-export const useQueryParams = (initialQueryParams?: { [key: string]: string[] | undefined }) => {
+export const useQueryParams = (initialQueryParams?: {
+  [key: string]: string[] | undefined
+}): {
+  queryParams: {
+    [key: string]: string[] | undefined
+  }
+  setQueryParams: (
+    params: { [key: string]: string | string[] | undefined },
+    separator?: string,
+  ) => void
+} => {
   const [queryParams, setQueryParams] = useState<{ [key: string]: string[] | undefined }>(() => {
     if (typeof window === 'undefined') return initialQueryParams ?? {}
 
@@ -36,7 +46,7 @@ export const useQueryParams = (initialQueryParams?: { [key: string]: string[] | 
   const updateQueryParams = (
     params: { [key: string]: string | string[] | undefined },
     separator = ',',
-  ) => {
+  ): void => {
     const url = new URL(window.location.href)
     const searchParams = new URLSearchParams(url.search)
 

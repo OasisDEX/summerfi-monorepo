@@ -4,7 +4,7 @@ export const Divider = ({
 }: {
   vertical?: boolean
   style?: React.CSSProperties
-}) => {
+}): React.ReactNode => {
   return (
     <div
       style={{

@@ -49,7 +49,7 @@ export const updateConfigOverrides = (config: AppConfigType): void => {
  * @param config - The configuration object to be saved in localStorage.
  * @returns void
  */
-export const saveConfigToLocalStorage = (config: AppConfigType) => {
+export const saveConfigToLocalStorage = (config: AppConfigType): void => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!window?.localStorage) return
   localStorage.setItem(configLSKey, JSON.stringify(config))
@@ -61,7 +61,7 @@ export const saveConfigToLocalStorage = (config: AppConfigType) => {
  * PLEASE NOTE THAT THIS IS NOT DYNAMIC, IT WILL NOT UPDATE WHEN CONFIG CHANGES (only after a refresh)
  * @returns AppConfigType or empty config
  */
-export const loadConfigFromLocalStorage = () => {
+export const loadConfigFromLocalStorage = (): AppConfigType => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (typeof localStorage === 'undefined' || !localStorage || !window?.localStorage) {
     return emptyConfig

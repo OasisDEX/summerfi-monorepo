@@ -7,7 +7,15 @@ const getRaysDailyChallengeDateFormat = () => dayjs().format('YYYY-MM-DD')
 const s1Cutoff = dayjs('2025-01-24').subtract(1, 'day') // because its a full day
 
 // this function is taken from oasis-borrow, if you make changes here you should also update it there
-export const getRaysDailyChallengeData = (claimedDates?: string[]) => {
+export const getRaysDailyChallengeData = (
+  claimedDates?: string[],
+): {
+  dailyChallengeRays: number
+  streakRays: number
+  allBonusRays: number
+  currentStreak: number
+  streaks: number
+} => {
   if (!claimedDates) {
     return {
       dailyChallengeRays: 0,

@@ -7,7 +7,7 @@ type ArksAggregatedByNetwork = { [key in SDKNetwork]: { arks: SDKVaultishType['a
  * @param vaults - Array of vault objects containing protocol and arks information
  * @returns Object with networks as keys and their unique arks as values
  */
-export const aggregateArksPerNetwork = (vaults: SDKVaultishType[]) => {
+export const aggregateArksPerNetwork = (vaults: SDKVaultishType[]): ArksAggregatedByNetwork => {
   return vaults.reduce<ArksAggregatedByNetwork>((acc, vault) => {
     const { network } = vault.protocol
 

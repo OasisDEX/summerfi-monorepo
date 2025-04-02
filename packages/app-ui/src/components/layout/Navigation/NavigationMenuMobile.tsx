@@ -27,7 +27,7 @@ export const NavigationMenuMobile = ({
   links,
   panels,
   navigationModules,
-}: NavigationMenuMobileProps) => {
+}: NavigationMenuMobileProps): React.ReactNode => {
   const [openNestedMenu, setOpenNestedMenu] = useState<[string, number, number]>()
 
   return (

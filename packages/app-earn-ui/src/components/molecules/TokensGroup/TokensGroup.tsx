@@ -28,7 +28,12 @@ const tokenMarginRight = {
   m: '-12px',
 }
 
-export function TokensGroup({ forceSize, network, tokens, variant }: TokensGroupProps) {
+export function TokensGroup({
+  forceSize,
+  network,
+  tokens,
+  variant,
+}: TokensGroupProps): React.ReactNode {
   const networkSize = forceSize ?? (tokens.length > 1 ? defaultSingleSize : defaultMultipleSize)
 
   return (

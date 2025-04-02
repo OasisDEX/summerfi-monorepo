@@ -17,7 +17,12 @@ interface TagRowProps {
   className?: string
 }
 
-export const TagRow = ({ options, selectedValue, onChange, className }: TagRowProps) => {
+export const TagRow = ({
+  options,
+  selectedValue,
+  onChange,
+  className,
+}: TagRowProps): React.ReactNode => {
   return (
     <div className={clsx(styles.tagRow, className)} role="radiogroup" aria-label="Filter options">
       {options.map((option) => (
