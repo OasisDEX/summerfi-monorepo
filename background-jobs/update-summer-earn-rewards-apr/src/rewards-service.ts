@@ -376,15 +376,20 @@ export class RewardsService {
     )
 
     // Calculate weighted rewards across all markets
-    const weightedMorphoTokenRewardsApy = totalAssetsAllocated == 0 ? [] : vaultData.state.allocation.reduce((acc, allocation) => {
-      const marketRewards = allocation.market.state.rewards
-        .filter((reward) => reward.asset.symbol === 'MORPHO')
-        .map((reward) => {
-          return  (reward.supplyApr ?? 0) * (allocation.supplyAssetsUsd ?? 0 / totalAssetsAllocated)
-        })
+    const weightedMorphoTokenRewardsApy =
+      totalAssetsAllocated == 0
+        ? []
+        : vaultData.state.allocation.reduce((acc, allocation) => {
+            const marketRewards = allocation.market.state.rewards
+              .filter((reward) => reward.asset.symbol === 'MORPHO')
+              .map((reward) => {
+                return (
+                  (reward.supplyApr ?? 0) * (allocation.supplyAssetsUsd ?? 0 / totalAssetsAllocated)
+                )
+              })
 
-      return acc.concat(marketRewards)
-    }, [] as number[])
+            return acc.concat(marketRewards)
+          }, [] as number[])
 
     // Calculate total rewards APY
     const morphoTokenRewardsApy = weightedMorphoTokenRewardsApy.reduce(
