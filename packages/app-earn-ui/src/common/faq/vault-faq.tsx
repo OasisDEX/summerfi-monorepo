@@ -1,8 +1,8 @@
-import { Text } from '@summerfi/app-earn-ui'
+import { Text } from '@/components/atoms/Text/Text'
 
 export const vaultFaqData = [
   {
-    title: 'Why should you trust Summer.fi with your funds?',
+    title: 'Why trust Summer.fi with your funds?',
     content: (
       <>
         <Text
@@ -106,7 +106,13 @@ export const vaultFaqData = [
         >
           These yields are generated through four core strategies:
         </Text>
-        <ul style={{ listStyleType: 'disc', paddingLeft: '32px' }}>
+        <ul
+          style={{
+            listStyleType: 'disc',
+            paddingLeft: 'var(--general-space-32)',
+            marginBottom: 'var(--general-space-12)',
+          }}
+        >
           <li>
             <Text variant="p2" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
               <strong>Lending:</strong> Earn interest by providing liquidity to borrowers.

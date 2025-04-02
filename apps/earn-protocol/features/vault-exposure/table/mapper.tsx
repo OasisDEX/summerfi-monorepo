@@ -36,6 +36,7 @@ type ExtendedArk = SDKVaultType['arks'][0] & {
 
 const calculateAverageApy = (rates: { averageRate: number; date: number }[], days: number) => {
   const now = dayjs().unix()
+  // eslint-disable-next-line no-mixed-operators
   const cutoffDate = now - days * 24 * 60 * 60
   const relevantRates = rates.filter((rate) => rate.date >= cutoffDate)
 
@@ -51,6 +52,7 @@ const calculateAverageApy = (rates: { averageRate: number; date: number }[], day
 
 const calculateYearlyYieldRange = (rates: { averageRate: number; date: number }[]): YieldRange => {
   const now = dayjs().unix()
+  // eslint-disable-next-line no-mixed-operators
   const oneYearAgo = now - 365 * 24 * 60 * 60
   const yearlyRates = rates.filter((rate) => rate.date >= oneYearAgo)
 

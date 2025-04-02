@@ -6,6 +6,7 @@ import {
   type SDKVaultishType,
 } from '@summerfi/app-types'
 
+import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { VaultDetailsHistoricalYieldChart } from '@/features/vault-details/components/VaultDetailsHistoricalYieldChart/VaultDetailsHistoricalYieldChart'
 import { VaultDetailsIndividualYieldData } from '@/features/vault-details/components/VaultDetailsIndividualYieldData/VaultDetailsIndividualYieldData'
 
@@ -13,7 +14,7 @@ interface VaultDetailsAdvancedYieldProps {
   chartData: ArksHistoricalChartData
   summerVaultName: string
   vault: SDKVaultishType
-  arksInterestRates: { [key: string]: number }
+  arksInterestRates: GetInterestRatesReturnType
 }
 
 export const VaultDetailsAdvancedYield: FC<VaultDetailsAdvancedYieldProps> = ({
@@ -40,11 +41,6 @@ export const VaultDetailsAdvancedYield: FC<VaultDetailsAdvancedYieldProps> = ({
   }, [chartNames])
 
   const [currentOptions, setCurrentOptions] = useState<InlineButtonOption<string>[]>([options[1]])
-
-  // const [individualYieldOption, setIndividualYieldOption] = useState<InlineButtonOption<string>>(
-  //   individualYieldOptions[0],
-  // )
-  // const rows = useMemo(() => individualYieldsMapper(yieldsRawData), [])
 
   return (
     <>
@@ -86,7 +82,7 @@ export const VaultDetailsAdvancedYield: FC<VaultDetailsAdvancedYieldProps> = ({
         variant="p2semi"
         style={{
           marginBottom: 'var(--spacing-space-medium)',
-          marginTop: 'var(--spacing-space-large)',
+          marginTop: 'var(--spacing-space-medium)',
         }}
       >
         Individual Yield Data

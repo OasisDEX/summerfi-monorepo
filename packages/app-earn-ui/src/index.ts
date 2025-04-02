@@ -134,6 +134,8 @@ export { useIsIframe } from './hooks/use-is-iframe'
 export { useAnalyticsCookies } from './hooks/use-analytics-cookies'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
+export { vaultFaqData } from './common/faq/vault-faq'
+
 export {
   getVaultUrl,
   getVaultDetailsUrl,

@@ -3,13 +3,14 @@ import { type FC } from 'react'
 import { Card, Text } from '@summerfi/app-earn-ui'
 import { type ArksHistoricalChartData, type SDKVaultishType } from '@summerfi/app-types'
 
+import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { VaultDetailsAdvancedYield } from '@/features/vault-details/components/VaultDetailsAdvancedYield/VaultDetailsAdvancedYield'
 
 interface VaultDetailsYieldsProps {
   arksHistoricalChartData: ArksHistoricalChartData
   summerVaultName: string
   vault: SDKVaultishType
-  arksInterestRates: { [key: string]: number }
+  arksInterestRates: GetInterestRatesReturnType
 }
 
 export const VaultDetailsYields: FC<VaultDetailsYieldsProps> = ({
@@ -37,7 +38,7 @@ export const VaultDetailsYields: FC<VaultDetailsYieldsProps> = ({
             marginBottom: 'var(--general-space-16)',
           }}
         >
-          Historical Yields
+          {vault.inputToken.symbol} {vault.customFields?.risk ?? 'Lower'} Risk Historical Yields
         </Text>
         <Text
           as="p"

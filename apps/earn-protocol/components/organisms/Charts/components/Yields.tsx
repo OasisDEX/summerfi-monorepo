@@ -26,8 +26,6 @@ export const YieldsChart = ({ data, dataNames, colors, summerVaultName }: Yields
   const [highlightedProtocol, setHighlightedProtocol] = useState<string>()
   const xAxisInterval = Math.ceil(data.length / 7)
 
-  console.log('dataNames', dataNames)
-
   return (
     <RechartResponsiveWrapper>
       <ResponsiveContainer width="100%" height="90%">

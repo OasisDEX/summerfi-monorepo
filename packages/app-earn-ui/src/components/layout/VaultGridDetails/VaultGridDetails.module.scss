@@ -28,8 +28,13 @@
 .vaultGridDetailsHeaderWrapper {
   display: flex;
   flex-direction: row;
-  width: 100%;
+  width: calc(100% + 1px);
   justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--earn-protocol-neutral-100);
+  padding: var(--general-space-16) 0;
 }
 
 .vaultGridDetailsContentWrapper {
