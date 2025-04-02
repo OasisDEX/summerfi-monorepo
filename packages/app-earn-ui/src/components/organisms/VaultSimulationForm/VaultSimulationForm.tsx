@@ -149,6 +149,12 @@ export const VaultSimulationForm = ({
                   label: 'View your position',
                   url: `${vaultUrl}/${userWalletAddress}`,
                   disabled: isLoading,
+                  action: () => {
+                    setStorageOnce({
+                      amount: amountParsed.toString(),
+                      token: selectedTokenOption.value,
+                    })
+                  },
                 }
               : {
                   label: 'Deposit',

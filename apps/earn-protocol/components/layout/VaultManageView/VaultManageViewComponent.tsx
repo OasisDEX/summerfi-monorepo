@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useUser } from '@account-kit/react'
 import {
   Card,
@@ -21,6 +21,7 @@ import {
   useAmountWithSwap,
   useForecast,
   useLocalConfig,
+  useLocalStorageOnce,
   useMobileCheck,
   useTokenSelector,
   VaultManageGrid,
@@ -105,6 +106,12 @@ export const VaultManageViewComponent = ({
   migratablePositions: MigratablePosition[]
   migrationBestVaultApy: MigrationEarningsDataByChainId
 }) => {
+  const { getStorageOnce } = useLocalStorageOnce<{
+    amount: string
+    token: string
+  }>({
+    key: `${vault.id}-amount`,
+  })
   const user = useUser()
   const { userWalletAddress, isLoadingAccount } = useUserWallet()
   const ownerView = viewWalletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
@@ -120,11 +127,16 @@ export const VaultManageViewComponent = ({
     setSelectedPosition(id)
   }
 
-  const { handleTokenSelectionChange, selectedTokenOption, tokenOptions, baseTokenOptions } =
-    useTokenSelector({
-      vault,
-      chainId: vaultChainId,
-    })
+  const {
+    handleTokenSelectionChange,
+    setSelectedTokenOption,
+    selectedTokenOption,
+    tokenOptions,
+    baseTokenOptions,
+  } = useTokenSelector({
+    vault,
+    chainId: vaultChainId,
+  })
 
   const {
     vaultToken,
@@ -272,6 +284,21 @@ export const VaultManageViewComponent = ({
     transaction: nextTransaction,
     walletAddress: user?.address,
     publicClient,
+  })
+
+  useEffect(() => {
+    const savedVaultsListData = getStorageOnce()
+
+    if (savedVaultsListData) {
+      const selectedCustomToken = tokenOptions.find(
+        (option) => option.value === getDisplayToken(savedVaultsListData.token),
+      )
+
+      manualSetAmount(savedVaultsListData.amount)
+      if (selectedCustomToken) {
+        setSelectedTokenOption(selectedCustomToken)
+      }
+    }
   })
 
   const sidebarContent = nextTransaction?.type ? (
