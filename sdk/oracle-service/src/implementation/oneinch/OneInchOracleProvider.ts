@@ -103,7 +103,6 @@ export class OneInchOracleProvider
       }
 
       const value = BigNumber(baseUSDPrice).div(quoteUSDPrice).toString()
-      console.log('value', value)
 
       return {
         provider: OracleProviderType.OneInch,
