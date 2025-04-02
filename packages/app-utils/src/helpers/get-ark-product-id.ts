@@ -2,7 +2,7 @@ import { type ArkDetailsType, type SDKVaultishType, type SDKVaultType } from '@s
 
 export const getArkProductId = (
   ark: SDKVaultishType['arks'][number] | SDKVaultType['arks'][number],
-) => {
+): string | false => {
   if (!ark.details || ark.name === 'BufferArk') {
     return false
   }
@@ -28,12 +28,14 @@ export const getArkProductId = (
   return `${protocol}-${assetAddress}-${poolAddress}-${chainId}`
 }
 
-export const getArkProductIdList = (arks: SDKVaultishType['arks'] | SDKVaultType['arks']) => {
+type ArkType = SDKVaultishType['arks'] | SDKVaultType['arks']
+
+export const getArkProductIdList = (arks: ArkType) => {
   return arks.map(getArkProductId).filter(Boolean) as `${string}-${string}-${string}-${string}`[]
 }
 
-export const getArkByProductId = (arks: SDKVaultishType['arks'] | SDKVaultType['arks']) => {
-  return (productId: string) => {
+export const getArkByProductId = (arks: ArkType) => {
+  return (productId: string): ArkType[number] | undefined => {
     return arks.find((ark) => getArkProductId(ark) === productId)
   }
 }

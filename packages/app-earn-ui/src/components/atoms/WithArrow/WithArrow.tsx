@@ -35,7 +35,7 @@ export function WithArrow({
   onClick?: () => void
   hideArrow?: boolean
   isLoading?: boolean
-}>) {
+}>): React.ReactNode {
   return (
     <span
       style={{

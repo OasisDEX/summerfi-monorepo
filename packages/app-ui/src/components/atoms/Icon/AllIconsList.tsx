@@ -4,7 +4,7 @@ import { type IconNamesList } from '@summerfi/app-types'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 
-export const AllIconsList = () => {
+export const AllIconsList = (): React.ReactNode => {
   return (
     <div
       style={{

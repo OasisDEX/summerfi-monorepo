@@ -62,6 +62,6 @@ export const LocalConfigContextProvider: FC<{
   )
 }
 
-export const useLocalConfig = () => {
+export const useLocalConfig = (): LocalConfigType => {
   return useContext(LocalConfigContext)
 }

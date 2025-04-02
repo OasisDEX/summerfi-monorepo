@@ -14,7 +14,7 @@ export function NavigationMenuDropdownContentIcon({
   image,
   position,
   tokens,
-}: NavigationMenuDropdownContentIconProps) {
+}: NavigationMenuDropdownContentIconProps): React.ReactNode {
   const isGlobal = position === 'global'
   const iconForceSize = isGlobal && tokens?.length === 1 ? 40 : 30
 

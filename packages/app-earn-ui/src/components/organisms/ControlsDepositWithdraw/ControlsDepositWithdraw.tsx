@@ -39,7 +39,7 @@ export const ControlsDepositWithdraw = ({
   onBlur,
   manualSetAmount,
   transactionType,
-}: ControlsDepositWithdrawProps) => {
+}: ControlsDepositWithdrawProps): React.ReactNode => {
   return (
     <div className={constrolsDepositWithdrawStyles.depositViewWrapper}>
       <InputWithDropdown

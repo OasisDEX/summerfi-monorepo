@@ -1,8 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { Card } from '@summerfi/app-earn-ui'
-import { type CardVariant } from '@summerfi/app-earn-ui/dist/types/src/components/atoms/Card/Card'
+import { Card, type CardVariant } from '@summerfi/app-earn-ui'
 import { type TimeframesType } from '@summerfi/app-types'
 import { memoize, random } from 'lodash-es'
 

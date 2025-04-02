@@ -21,7 +21,7 @@ export const NavigationActions = ({
   signUpComponent,
   toggleMobileMenu,
   configComponent,
-}: NavigationActionsProps) => {
+}: NavigationActionsProps): React.ReactNode => {
   return (
     <div>
       <div className={navigationActionsStyles.navigationActionsWrapper}>

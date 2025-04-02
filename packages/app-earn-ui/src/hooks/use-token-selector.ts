@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useMemo, useState } from 'react'
+import { type Dispatch, type SetStateAction, useEffect, useMemo, useState } from 'react'
 import {
   type DropdownOption,
   type DropdownRawOption,
@@ -26,7 +26,16 @@ type TokenSelectorProps = {
  * @returns {DropdownOption} return.selectedTokenOption - The currently selected token option.
  * @returns {Function} return.handleTokenSelectionChange - The function to handle changes in token selection.
  */
-export const useTokenSelector = ({ vault, chainId }: TokenSelectorProps) => {
+export const useTokenSelector = ({
+  vault,
+  chainId,
+}: TokenSelectorProps): {
+  tokenOptions: DropdownOption[]
+  baseTokenOptions: DropdownOption[]
+  selectedTokenOption: DropdownOption
+  handleTokenSelectionChange: (option: DropdownRawOption) => void
+  setSelectedTokenOption: Dispatch<SetStateAction<DropdownOption>>
+} => {
   const baseTokenOptions = useMemo(() => {
     return [vault.inputToken.symbol].map((symbol) => ({
       tokenSymbol: symbol as TokenSymbolsList,
@@ -85,7 +94,7 @@ export const useTokenSelector = ({ vault, chainId }: TokenSelectorProps) => {
     }
   }, [tokenOptions, vault.inputToken.symbol])
 
-  const handleTokenSelectionChange = (option: DropdownRawOption) => {
+  const handleTokenSelectionChange = (option: DropdownRawOption): void => {
     const value = tokenOptions.find((opt) => opt.value === option.value) ?? tokenOptions[0]
 
     setSelectedTokenOption(value)

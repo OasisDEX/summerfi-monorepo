@@ -13,6 +13,8 @@
     "resolveJsonModule": true,
     "isolatedModules": false,
     "emitDeclarationOnly": true,
+    "allowJs": false,
+    "isolatedDeclarations": true,
     "jsx": "react-jsx",
     "strictNullChecks": true,
     "declaration": true,

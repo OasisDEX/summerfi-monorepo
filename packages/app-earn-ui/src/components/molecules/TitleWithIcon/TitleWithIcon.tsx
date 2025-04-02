@@ -30,7 +30,7 @@ export const TitleWithIcon = ({
   color,
   titleStyle,
   tooltipWrapperStyles,
-}: TitleWithIconProps) => {
+}: TitleWithIconProps): React.ReactNode => {
   // clear undefined values from style properties to avoid overwrite
   const resolvedTitleStyle = pickBy(titleStyle, identity)
 

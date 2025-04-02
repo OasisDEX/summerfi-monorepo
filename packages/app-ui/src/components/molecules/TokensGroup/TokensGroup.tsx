@@ -17,7 +17,7 @@ const defaultSingleSize = 44
 const defaultMultipleSize = 30
 const networkSizeScaleFactor = 0.1
 
-export function TokensGroup({ forceSize, network, tokens }: TokensGroupProps) {
+export function TokensGroup({ forceSize, network, tokens }: TokensGroupProps): React.ReactNode {
   const networkSize = forceSize ?? (tokens.length > 1 ? defaultSingleSize : defaultMultipleSize)
 
   return (

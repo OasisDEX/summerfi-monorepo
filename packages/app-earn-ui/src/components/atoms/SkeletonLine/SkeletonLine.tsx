@@ -21,7 +21,7 @@ export const SkeletonLine = ({
   height = 3,
   style,
   id,
-}: Omit<SkeletonProps, 'cols' | 'count' | 'gap'>) => {
+}: Omit<SkeletonProps, 'cols' | 'count' | 'gap'>): React.ReactNode => {
   return (
     <span
       id={id}

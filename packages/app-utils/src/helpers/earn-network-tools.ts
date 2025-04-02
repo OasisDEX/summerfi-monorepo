@@ -26,7 +26,12 @@ export const isSupportedSDKChain = (
 /**
  * Maps SDK network identifiers to human readable network names.
  */
-export const humanReadableNetworkMap = {
+export const humanReadableNetworkMap: {
+  readonly ARBITRUM_ONE: 'arbitrum'
+  readonly BASE: 'base'
+  readonly MAINNET: 'mainnet'
+  readonly SONIC_MAINNET: 'sonic'
+} = {
   [SDKNetwork.ArbitrumOne]: 'arbitrum',
   [SDKNetwork.Base]: 'base',
   [SDKNetwork.Mainnet]: 'mainnet',
@@ -36,7 +41,12 @@ export const humanReadableNetworkMap = {
 /**
  * Maps chain IDs to their display labels.
  */
-export const humanReadableChainToLabelMap = {
+export const humanReadableChainToLabelMap: {
+  readonly 8453: 'Base'
+  readonly 42161: 'Arbitrum'
+  readonly 1: 'Ethereum'
+  readonly 146: 'Sonic'
+} = {
   [SDKChainId.BASE]: 'Base',
   [SDKChainId.ARBITRUM]: 'Arbitrum',
   [SDKChainId.MAINNET]: 'Ethereum',
@@ -117,7 +127,7 @@ export const humanNetworktoSDKNetwork = (network: string): SDKNetwork => {
   return sdkNetworkMap[network.toLowerCase() as keyof typeof sdkNetworkMap]
 }
 
-export const chainIdToSDKNetwork = (chainId: SDKChainId) => {
+export const chainIdToSDKNetwork = (chainId: SDKChainId): SDKNetwork => {
   if (chainId === SDKChainId.SEPOLIA || chainId === SDKChainId.OPTIMISM) {
     throw new Error('Sepolia and Optimism are not supported [chainIdToSDKNetwork]')
   }
@@ -140,7 +150,7 @@ export const sdkChainIdToHumanNetwork = (chainId: SDKChainId): string => {
   return sdkNetworkToHumanNetwork(network)
 }
 
-export const networkNameToSDKNetwork = (network: NetworkNames) => {
+export const networkNameToSDKNetwork = (network: NetworkNames): SDKNetwork => {
   return {
     [NetworkNames.arbitrumMainnet.toLowerCase()]: SDKNetwork.ArbitrumOne,
     [NetworkNames.baseMainnet.toLowerCase()]: SDKNetwork.Base,
@@ -150,7 +160,7 @@ export const networkNameToSDKNetwork = (network: NetworkNames) => {
   }[network.toLowerCase()]
 }
 
-export const networkNameToSDKId = (network: NetworkNames) => {
+export const networkNameToSDKId = (network: NetworkNames): SDKChainId => {
   return {
     [NetworkNames.arbitrumMainnet.toLowerCase()]: SDKChainId.ARBITRUM,
     [NetworkNames.baseMainnet.toLowerCase()]: SDKChainId.BASE,
@@ -160,7 +170,7 @@ export const networkNameToSDKId = (network: NetworkNames) => {
   }[network.toLowerCase()]
 }
 
-export const subgraphNetworkToId = (network: SDKNetwork) => {
+export const subgraphNetworkToId = (network: SDKNetwork): NetworkIds => {
   return {
     [SDKNetwork.ArbitrumOne.toLowerCase()]: NetworkIds.ARBITRUMMAINNET,
     [SDKNetwork.Base.toLowerCase()]: NetworkIds.BASEMAINNET,

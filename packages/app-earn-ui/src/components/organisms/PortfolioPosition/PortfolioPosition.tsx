@@ -51,7 +51,7 @@ export const PortfolioPosition = ({
   sumrPrice,
   vaultApyData,
   isMobile,
-}: PortfolioPositionProps) => {
+}: PortfolioPositionProps): React.ReactNode => {
   const {
     inputToken,
     protocol,

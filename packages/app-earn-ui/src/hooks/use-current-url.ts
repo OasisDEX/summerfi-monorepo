@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react'
  * const currentUrl = useCurrentUrl();
  * console.log(currentUrl); // Logs the current full URL.
  */
-export const useCurrentUrl = () => {
+export const useCurrentUrl = (): string => {
   const [currentUrl, setCurrentUrl] = useState<string>('/')
 
   useEffect(() => {

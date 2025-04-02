@@ -60,7 +60,7 @@ export const NavigationMenuDropdown = ({
   isPanelSwitched,
   panels,
   navigationModules,
-}: NavigationMenuDropdownProps) => {
+}: NavigationMenuDropdownProps): React.ReactNode => {
   const ref = useRef<HTMLDivElement>(null)
   const [isListSwitched, setIsListSwitched] = useState<boolean>(false)
   const [height, setHeight] = useState<number>(0)

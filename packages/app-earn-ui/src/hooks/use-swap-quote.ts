@@ -38,7 +38,10 @@ export const useSwapQuote = ({
   slippage: number
   sdk: SdkClient
   defaultQuoteLoading?: boolean
-}) => {
+}): {
+  quote: QuoteData | undefined
+  quoteLoading: boolean
+} => {
   const [quote, setQuote] = useState<QuoteData>()
   const [quoteLoading, setQuoteLoading] = useState(defaultQuoteLoading)
 

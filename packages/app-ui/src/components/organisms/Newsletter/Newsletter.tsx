@@ -59,7 +59,7 @@ function NewsletterFormSuccess() {
   )
 }
 
-export const Newsletter = ({ newsletter }: NewsletterPropsType) => {
+export const Newsletter = ({ newsletter }: NewsletterPropsType): React.ReactNode => {
   const [isFocused, setIsFocused] = useState(false)
   const updateEmail = (ev: React.ChangeEvent<HTMLInputElement>) => {
     newsletter.onEmailUpdate(ev.target.value)

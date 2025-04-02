@@ -21,7 +21,12 @@ type EmphasisProps = {
     | 'p4semiColorful'
 }
 
-export const Emphasis = ({ children, variant = 'h4colorful', className, style }: EmphasisProps) => (
+export const Emphasis = ({
+  children,
+  variant = 'h4colorful',
+  className,
+  style,
+}: EmphasisProps): React.ReactNode => (
   <Text variant={variant} as="span" className={className} style={style}>
     {children}
   </Text>

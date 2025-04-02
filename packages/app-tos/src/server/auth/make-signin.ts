@@ -54,7 +54,16 @@ export async function makeSignIn({
   jwtSecret: string
   jwtChallengeSecret: string
   rpcGateway: string
-}) {
+}): Promise<
+  NextResponse<
+    | {
+        error: string
+      }
+    | {
+        jwt: string
+      }
+  >
+> {
   const body = inputSchema.parse(await req.json())
 
   let challenge: JWTChallenge

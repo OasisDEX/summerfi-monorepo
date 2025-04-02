@@ -12,7 +12,7 @@ export const Timeframes = ({
   timeframes: TimeframesItem
   activeTimeframe: TimeframesType
   setActiveTimeframe: (timeframe: TimeframesType) => void
-}) => {
+}): React.ReactNode => {
   return (
     <div className={timeframesStyles.timeframesWrapper}>
       {Object.keys(timeframes).map((timeframe: TimeframesType) => (

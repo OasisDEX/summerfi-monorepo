@@ -5,10 +5,10 @@ const LSOnceKey = 'earn-ui-once'
 
 export const useLocalStorageOnce = <T>(params?: { key: string }) => {
   return {
-    setStorageOnce: (value: T) => {
+    setStorageOnce: (value: T): void => {
       localStorage.setItem(params?.key ?? LSOnceKey, JSON.stringify(value))
     },
-    getStorageOnce: () => {
+    getStorageOnce: (): T | null => {
       if (!localStorage.getItem(params?.key ?? LSOnceKey)) {
         return null
       }

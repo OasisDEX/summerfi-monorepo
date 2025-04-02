@@ -31,7 +31,7 @@ describe('OracleManager', () => {
   it('should fetch spot price', async () => {
     const wethSpotPrice = await oracleManager.getSpotPrice({
       baseToken: WETH,
-      quoteToken: FiatCurrency.USD,
+      denomination: FiatCurrency.USD,
     })
 
     expect(wethSpotPrice).toBeDefined()

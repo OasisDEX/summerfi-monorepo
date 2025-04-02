@@ -12,7 +12,7 @@ export const Box = ({
   className?: string | string[]
   light?: boolean
   style?: React.CSSProperties
-}) => {
+}): React.ReactNode => {
   return (
     <div
       className={clsx(boxStyles.box, className, {

@@ -2,8 +2,7 @@
 
 import { useState } from 'react'
 import { type AppConfigType } from '@summerfi/app-types'
-import { Newsletter, ProxyLinkComponent } from '@summerfi/app-ui'
-import { type NewsletterPropsType } from '@summerfi/app-ui/dist/types/src/components/organisms/Newsletter/Newsletter'
+import { Newsletter, type NewsletterPropsType, ProxyLinkComponent } from '@summerfi/app-ui'
 import { EMAIL_REGEX } from '@summerfi/app-utils'
 import Link from 'next/link'
 

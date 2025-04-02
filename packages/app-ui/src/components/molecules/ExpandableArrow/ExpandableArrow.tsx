@@ -16,7 +16,7 @@ export function ExpandableArrow({
   direction,
   size = 10,
   style,
-}: ExpandableArrowProps) {
+}: ExpandableArrowProps): React.ReactNode {
   const isDown = direction === 'down'
 
   return (

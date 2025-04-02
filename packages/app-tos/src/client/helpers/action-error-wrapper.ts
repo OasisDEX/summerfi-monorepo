@@ -24,7 +24,7 @@ export const actionErrorWrapper =
     setTos: Dispatch<SetStateAction<TOSState>>
     actionStatus: TOSStatus
   }) =>
-  async () => {
+  async (): Promise<void> => {
     try {
       await fn()
     } catch (error) {

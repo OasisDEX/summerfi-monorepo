@@ -14,7 +14,7 @@ export const isVaultAtLeastDaysOld = ({
 }: {
   vault: SDKVaultishType
   days: number
-}) => {
+}): boolean => {
   return vault.createdTimestamp
     ? dayjs().diff(dayjs(Number(vault.createdTimestamp) * 1000), 'day') > days
     : false
