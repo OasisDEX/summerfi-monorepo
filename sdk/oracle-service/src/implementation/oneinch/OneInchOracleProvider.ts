@@ -7,10 +7,8 @@ import {
   IAddress,
   IChainInfo,
   SwapErrorType,
-  isTokenAmount,
   ChainId,
   Price,
-  isFiatCurrencyAmount,
   isToken,
   LoggingService,
 } from '@summerfi/sdk-common'
