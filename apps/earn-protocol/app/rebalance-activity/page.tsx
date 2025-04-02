@@ -23,6 +23,7 @@ const RebalanceActivityPage: FC<RebalanceActivityPageProps> = async (props) => {
       limit: 50,
       protocols: parseProtocolFilter(parsedSearchParams.protocols),
       strategies: parsedSearchParams.strategies,
+      tokens: parsedSearchParams.tokens,
     }),
   ])
 
