@@ -3,10 +3,14 @@ import { Cron, Function, FunctionProps } from 'sst/constructs'
 import * as process from 'node:process'
 
 export function addSummerProAppProductHubConfig({ stack, vpc, app }: SummerStackContext) {
-  const { SUMMER_PRO_PRODUCT_HUB_KEY } = process.env
+  const { SUMMER_PRO_PRODUCT_HUB_KEY, PRO_APP_URL } = process.env
 
   if (!SUMMER_PRO_PRODUCT_HUB_KEY) {
     throw new Error('SUMMER_PRO_PRODUCT_HUB_KEY is not set')
+  }
+
+  if (!PRO_APP_URL) {
+    throw new Error('PRO_APP_URL is not set')
   }
 
   const updateProductHubCronFunctionProps: FunctionProps = {
@@ -17,6 +21,7 @@ export function addSummerProAppProductHubConfig({ stack, vpc, app }: SummerStack
       POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
       SUMMER_PRO_PRODUCT_HUB_KEY,
       NODE_ENV: app.stage,
+      PRO_APP_URL,
     },
     ...(vpc && {
       vpc: vpc.vpc,
