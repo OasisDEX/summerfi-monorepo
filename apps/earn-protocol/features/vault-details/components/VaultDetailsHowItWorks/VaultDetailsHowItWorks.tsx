@@ -5,9 +5,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { vaultDetailsHowItWorksLinks } from '@/features/vault-details/components/VaultDetailsHowItWorks/config'
-
-import governance from '@/public/img/vault_details/governance.png'
-import howItWorks from '@/public/img/vault_details/how_it_works.png'
+import governance from '@/public/img/vault_details/governance.svg'
+import howItWorks from '@/public/img/vault_details/how_it_works.svg'
 
 const LinksAndDescription = () => {
   return (
@@ -83,7 +82,6 @@ export const VaultDetailsHowItWorks = () => {
                 height: 'auto',
               }}
               width={1200}
-              placeholder="blur"
             />
           </ImageWrapper>
         </ContentWrapper>
@@ -104,7 +102,6 @@ export const VaultDetailsHowItWorks = () => {
                 height: 'auto',
               }}
               width={1200}
-              placeholder="blur"
             />
           </ImageWrapper>
         </ContentWrapper>
