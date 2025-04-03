@@ -13,26 +13,26 @@ const items: {
   {
     text: '1 on 1 guidance and onboarding',
     link: {
-      label: 'Text Link',
-      href: '/',
+      label: 'Sign up',
+      href: 'https://cal.com/jordan-jackson-d278ib/summer.fi-support-call',
     },
-    iconName: 'person',
+    iconName: 'earn_1_on_1',
   },
   {
     text: 'Email support tickets for all your questions',
     link: {
       label: 'Contact us',
-      href: '/',
+      href: 'https://docs.summer.fi/get-in-touch/contact-us',
     },
-    iconName: 'question',
+    iconName: 'earn_email',
   },
   {
     text: 'Live chat for your immediate needs',
     link: {
-      label: 'Start Chatting with us',
-      href: '/',
+      label: 'Start chatting',
+      href: 'https://chat.summer.fi',
     },
-    iconName: 'discord',
+    iconName: 'earn_discord',
   },
 ]
 
@@ -76,7 +76,7 @@ export const VaultDetailsSecuritySupportExpander = () => {
               }}
               key={item.text}
             >
-              <Icon iconName={item.iconName} color="rgba(255, 251, 253, 1)" variant="s" />
+              <Icon iconName={item.iconName} color="rgba(255, 251, 253, 1)" variant="l" />
               <Text as="p" variant="p2semi">
                 {item.text}
               </Text>

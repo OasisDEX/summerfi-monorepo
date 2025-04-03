@@ -10,6 +10,7 @@ interface SkeletonProps {
   radius?: string
   width?: string | number
   style?: React.CSSProperties
+  id?: string
 }
 
 export const SkeletonLine = ({
@@ -19,9 +20,11 @@ export const SkeletonLine = ({
   width = '100%',
   height = 3,
   style,
+  id,
 }: Omit<SkeletonProps, 'cols' | 'count' | 'gap'>): React.ReactNode => {
   return (
     <span
+      id={id}
       className={skeletonStyles.skeletonLine}
       style={{
         position: 'relative',

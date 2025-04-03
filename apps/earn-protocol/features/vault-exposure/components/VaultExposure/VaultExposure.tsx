@@ -6,6 +6,7 @@ import { type SDKVaultishType, type SDKVaultType } from '@summerfi/app-types'
 import { sdkNetworkToHumanNetwork } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
 
+import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { VaultExposureTable } from '@/features/vault-exposure/components/VaultExposureTable/VaultExposureTable'
 import { vaultExposureFilter } from '@/features/vault-exposure/table/filters/filters'
 
@@ -22,10 +23,11 @@ interface VaultExposureTableSectionProps {
   resolvedRowsToDisplay: number
   seeAll: boolean
   setSeeAll: Dispatch<SetStateAction<boolean>>
-  arksInterestRates?: { [key: string]: number }
+  arksInterestRates: GetInterestRatesReturnType
+  hiddenColumns?: string[]
 }
 
-const VaultExposureTableSection: FC<VaultExposureTableSectionProps> = ({
+export const VaultExposureTableSection: FC<VaultExposureTableSectionProps> = ({
   allocationType,
   filteredVault,
   vault,
@@ -33,6 +35,7 @@ const VaultExposureTableSection: FC<VaultExposureTableSectionProps> = ({
   seeAll,
   setSeeAll,
   arksInterestRates,
+  hiddenColumns,
 }) => {
   const vaultExposureFiltered = useMemo(
     () => vaultExposureFilter({ vault: vault as SDKVaultType, allocationType }),
@@ -45,7 +48,7 @@ const VaultExposureTableSection: FC<VaultExposureTableSectionProps> = ({
         arksInterestRates={arksInterestRates}
         vault={vaultExposureFiltered}
         rowsToDisplay={resolvedRowsToDisplay}
-        hiddenColumns={['cap']}
+        hiddenColumns={['cap', ...(hiddenColumns ?? [])]}
       />
       {filteredVault.arks.length > 5 && (
         <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
@@ -78,8 +81,10 @@ const rowsToDisplay = 5
 
 interface VaultExposureProps {
   vault: SDKVaultishType
-  arksInterestRates?: { [key: string]: number }
+  arksInterestRates: GetInterestRatesReturnType
 }
+
+const columnsToHide = ['avgApy30d', 'avgApy1y', 'yearlyLow', 'yearlyHigh']
 
 export const VaultExposure: FC<VaultExposureProps> = ({ vault, arksInterestRates }) => {
   const [seeAll, setSeeAll] = useState(false)
@@ -105,6 +110,7 @@ export const VaultExposure: FC<VaultExposureProps> = ({ vault, arksInterestRates
           setSeeAll={setSeeAll}
           resolvedRowsToDisplay={resolvedRowsToDisplay}
           allocationType={VaultExposureFilterType.ALL}
+          hiddenColumns={columnsToHide}
         />
       ),
     },
@@ -123,6 +129,7 @@ export const VaultExposure: FC<VaultExposureProps> = ({ vault, arksInterestRates
           setSeeAll={setSeeAll}
           resolvedRowsToDisplay={resolvedRowsToDisplay}
           allocationType={VaultExposureFilterType.ALLOCATED}
+          hiddenColumns={columnsToHide}
         />
       ),
     },
@@ -141,6 +148,7 @@ export const VaultExposure: FC<VaultExposureProps> = ({ vault, arksInterestRates
           setSeeAll={setSeeAll}
           resolvedRowsToDisplay={resolvedRowsToDisplay}
           allocationType={VaultExposureFilterType.UNALLOCATED}
+          hiddenColumns={columnsToHide}
         />
       ),
     },

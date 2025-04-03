@@ -28,7 +28,6 @@ import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-a
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { VaultOpenView } from '@/components/layout/VaultOpenView/VaultOpenView'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
-import { mapArkLatestInterestRates } from '@/helpers/map-ark-interest-rates'
 import {
   decorateVaultsWithConfig,
   getVaultIdByVaultCustomName,
@@ -130,7 +129,6 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     vaultInterestRates,
   })
 
-  const arksInterestRates = mapArkLatestInterestRates(arkInterestRatesMap)
   const vaultApyData = vaultsApyRaw[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
 
   return (
@@ -142,7 +140,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       rebalanceActivity={rebalanceActivity}
       medianDefiYield={medianDefiYield}
       arksHistoricalChartData={arksHistoricalChartData}
-      arksInterestRates={arksInterestRates}
+      arksInterestRates={arkInterestRatesMap}
       vaultApyData={vaultApyData}
       vaultsApyRaw={vaultsApyRaw}
     />

@@ -8,6 +8,7 @@ import {
 } from '@summerfi/app-types'
 import { formatDecimalAsPercent } from '@summerfi/app-utils'
 
+import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
@@ -17,7 +18,7 @@ import { RebalancingActivity } from '@/features/rebalance-activity/components/Re
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 import { getManagementFee } from '@/helpers/get-management-fee'
 
-import { detailsLinks } from './mocks'
+import { detailsLinks } from './vault-details-links'
 import { VaultOpenHeaderBlock } from './VaultOpenHeaderBlock'
 
 interface VaultOpenViewDetailsProps {
@@ -26,7 +27,7 @@ interface VaultOpenViewDetailsProps {
   latestActivity: LatestActivityPagination
   rebalanceActivity: RebalanceActivityPagination
   arksHistoricalChartData: ArksHistoricalChartData
-  arksInterestRates?: { [key: string]: number }
+  arksInterestRates: GetInterestRatesReturnType
   vaultApyData: VaultApyData
 }
 

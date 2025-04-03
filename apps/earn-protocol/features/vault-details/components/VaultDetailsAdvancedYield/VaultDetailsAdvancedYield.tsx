@@ -1,25 +1,46 @@
-import { useMemo, useState } from 'react'
-import { InlineButtons, Table, Text } from '@summerfi/app-earn-ui'
-import { type InlineButtonOption } from '@summerfi/app-types'
-
-import { MockedLineChart } from '@/components/organisms/Charts/MockedLineChart'
+import { type FC, useMemo, useState } from 'react'
+import { InlineButtons, Text } from '@summerfi/app-earn-ui'
 import {
-  historicalYieldOptions,
-  individualYieldOptions,
-  yieldsRawData,
-} from '@/features/vault-details/components/VaultDetailsAdvancedYield/config'
-import { individualYieldsMapper } from '@/features/vault-details/components/VaultDetailsAdvancedYield/mapper'
-import { individualYieldsColumns } from '@/features/vault-details/components/VaultDetailsYields/columns'
+  type ArksHistoricalChartData,
+  type InlineButtonOption,
+  type SDKVaultishType,
+} from '@summerfi/app-types'
 
-export const VaultDetailsAdvancedYield = () => {
-  const [currentOption, setCurrentOption] = useState<InlineButtonOption<string>>(
-    historicalYieldOptions[0],
-  )
+import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
+import { VaultDetailsHistoricalYieldChart } from '@/features/vault-details/components/VaultDetailsHistoricalYieldChart/VaultDetailsHistoricalYieldChart'
+import { VaultDetailsIndividualYieldData } from '@/features/vault-details/components/VaultDetailsIndividualYieldData/VaultDetailsIndividualYieldData'
 
-  const [individualYieldOption, setIndividualYieldOption] = useState<InlineButtonOption<string>>(
-    individualYieldOptions[0],
-  )
-  const rows = useMemo(() => individualYieldsMapper(yieldsRawData), [])
+interface VaultDetailsAdvancedYieldProps {
+  chartData: ArksHistoricalChartData
+  summerVaultName: string
+  vault: SDKVaultishType
+  arksInterestRates: GetInterestRatesReturnType
+}
+
+export const VaultDetailsAdvancedYield: FC<VaultDetailsAdvancedYieldProps> = ({
+  chartData,
+  summerVaultName,
+  vault,
+  arksInterestRates,
+}) => {
+  const chartNames = useMemo(() => {
+    return [summerVaultName, ...(chartData.dataNames ?? [])]
+  }, [chartData.dataNames, summerVaultName])
+
+  const options = useMemo(() => {
+    return [
+      {
+        title: 'All',
+        key: 'all',
+      },
+      ...chartNames.map((value) => ({
+        title: value,
+        key: value,
+      })),
+    ]
+  }, [chartNames])
+
+  const [currentOptions, setCurrentOptions] = useState<InlineButtonOption<string>[]>([options[1]])
 
   return (
     <>
@@ -27,43 +48,46 @@ export const VaultDetailsAdvancedYield = () => {
         Historical Yields
       </Text>
       <InlineButtons
-        options={historicalYieldOptions}
-        currentOption={currentOption}
-        handleOption={(option) => setCurrentOption(option)}
-        style={{
-          marginBottom: 'var(--spacing-space-large)',
+        options={options}
+        currentOptions={currentOptions}
+        handleOption={(option) => {
+          setCurrentOptions((prev) => {
+            const isSelected = prev.some((opt) => opt.key === option.key)
+
+            if (isSelected) {
+              const filteredOptions = prev.filter((opt) => opt.key !== option.key)
+
+              return filteredOptions.length === 0 ? [options[0]] : filteredOptions
+            }
+
+            // If selecting a non-"All" option, remove "All" option and add the new option
+            if (option.key !== 'all') {
+              return [...prev.filter((opt) => opt.key !== 'all'), option]
+            }
+
+            // If selecting "All", remove all other options
+            return [option]
+          })
         }}
         asButtons
         variant="p4semi"
       />
-      <MockedLineChart cardVariant="cardPrimary" />
+      <VaultDetailsHistoricalYieldChart
+        chartData={chartData}
+        summerVaultName={summerVaultName}
+        currentOptions={currentOptions}
+      />
       <Text
         as="p"
         variant="p2semi"
         style={{
           marginBottom: 'var(--spacing-space-medium)',
-          marginTop: 'var(--spacing-space-large)',
+          marginTop: 'var(--spacing-space-medium)',
         }}
       >
         Individual Yield Data
       </Text>
-      <InlineButtons
-        options={individualYieldOptions}
-        currentOption={individualYieldOption}
-        handleOption={(option) => setIndividualYieldOption(option)}
-        style={{
-          paddingBottom: 'var(--spacing-space-small)',
-          borderBottom: '1px solid var(--earn-protocol-neutral-70)',
-        }}
-        asUnstyled
-        variant="p3semi"
-      />
-      <Table
-        rows={rows}
-        columns={individualYieldsColumns}
-        // eslint-disable-next-line no-console
-        handleSort={(item) => console.log(item)}
-      />
+      <VaultDetailsIndividualYieldData vault={vault} arksInterestRates={arksInterestRates} />
     </>
   )
 }

@@ -65,6 +65,7 @@ export const Icon: FC<IconPropsWithIconName | IconPropsWithTokenName> = ({
       fallback={
         <div
           style={{
+            display: 'inline-block',
             width: finalSize,
             height: finalSize,
             backgroundColor: 'var(--earn-protocol-neutral-70)',

@@ -9,7 +9,7 @@ import classNames from './InlineButtons.module.scss'
 
 interface InlineButtonsProps<O extends string> {
   options: InlineButtonOption<O>[]
-  currentOption: InlineButtonOption<O>
+  currentOptions: InlineButtonOption<O>[]
   handleOption: (option: InlineButtonOption<O>) => void
   style?: CSSProperties
   asButtons?: boolean
@@ -20,7 +20,7 @@ interface InlineButtonsProps<O extends string> {
 
 export function InlineButtons<O extends string>({
   options,
-  currentOption,
+  currentOptions,
   handleOption,
   style,
   asButtons,
@@ -34,7 +34,7 @@ export function InlineButtons<O extends string>({
         <Button
           key={option.key}
           variant={
-            option.key === currentOption.key
+            currentOptions.some((o) => o.key === option.key)
               ? asUnstyled
                 ? 'unstyled'
                 : 'primarySmall'
@@ -49,10 +49,9 @@ export function InlineButtons<O extends string>({
             as={as}
             variant={variant}
             style={{
-              color:
-                option === currentOption
-                  ? 'var(--earn-protocol-secondary-100)'
-                  : 'var(--earn-protocol-secondary-60)',
+              color: currentOptions.some((o) => o.key === option.key)
+                ? 'var(--earn-protocol-secondary-100)'
+                : 'var(--earn-protocol-secondary-60)',
             }}
           >
             {option.title}

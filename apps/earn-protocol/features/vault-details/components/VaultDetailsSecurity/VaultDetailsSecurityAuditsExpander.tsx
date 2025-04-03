@@ -2,27 +2,21 @@ import { Card, Expander, LinkCard, type LinkCardWithIconName, Text } from '@summ
 
 const auditCards: LinkCardWithIconName[] = [
   {
-    title: 'Trail of bits',
-    description: '0 critical bugs',
-    link: { href: '/', label: 'View full report' },
-    iconName: 'trail_of_bits',
-  },
-  {
-    title: 'Quant Stamp',
-    description: '0 critical bugs',
-    link: { href: '/', label: 'View full report' },
-    iconName: 'quant_stamp',
-  },
-  {
     title: 'Chain Security',
     description: '0 critical bugs',
-    link: { href: '/', label: 'View full report' },
+    link: {
+      href: 'https://www.chainsecurity.com/smart-contract-audit-reports',
+      label: 'View full report',
+    },
     iconName: 'chain_security',
   },
   {
     title: 'Bug Bounty Program',
-    description: 'Max Payout: $2,000,000',
-    link: { href: '/', label: 'View bug bounty' },
+    description: 'Maximum Bounty: $100,000',
+    link: {
+      href: 'https://immunefi.com/bug-bounty/summerfi/information/',
+      label: 'View bug bounty',
+    },
     iconName: 'bug',
   },
 ]

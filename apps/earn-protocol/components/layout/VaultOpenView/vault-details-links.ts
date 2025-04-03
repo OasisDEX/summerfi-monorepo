@@ -8,10 +8,6 @@ export const detailsLinks = [
     id: 'advanced-yield-data',
   },
   {
-    label: 'Yield sources',
-    id: 'yield-sources',
-  },
-  {
     label: 'Security',
     id: 'security',
   },

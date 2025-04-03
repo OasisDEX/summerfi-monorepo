@@ -1,32 +1,27 @@
 'use client'
-import { type FC, useEffect, useState } from 'react'
-import { Card, InlineButtons, Text, useHash } from '@summerfi/app-earn-ui'
-import { type InlineButtonOption } from '@summerfi/app-types'
+import { type FC } from 'react'
+import { Card, Text } from '@summerfi/app-earn-ui'
+import { type ArksHistoricalChartData, type SDKVaultishType } from '@summerfi/app-types'
 
+import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { VaultDetailsAdvancedYield } from '@/features/vault-details/components/VaultDetailsAdvancedYield/VaultDetailsAdvancedYield'
-import {
-  vaultDetailsYieldOptions,
-  YieldOption,
-} from '@/features/vault-details/components/VaultDetailsYields/config'
-import { VaultDetailsYieldSources } from '@/features/vault-details/components/VaultDetailsYieldSources/VaultDetailsYieldSources'
 
-export const VaultDetailsYields: FC = () => {
-  const hash = useHash<YieldOption>()
+interface VaultDetailsYieldsProps {
+  arksHistoricalChartData: ArksHistoricalChartData
+  summerVaultName: string
+  vault: SDKVaultishType
+  arksInterestRates: GetInterestRatesReturnType
+}
 
-  const [currentYieldOption, setCurrentYieldOption] = useState<InlineButtonOption<string>>(
-    vaultDetailsYieldOptions[0],
-  )
-
-  useEffect(() => {
-    setCurrentYieldOption(
-      vaultDetailsYieldOptions.find((item) => item.key === hash) ?? vaultDetailsYieldOptions[0],
-    )
-  }, [hash])
-
+export const VaultDetailsYields: FC<VaultDetailsYieldsProps> = ({
+  arksHistoricalChartData,
+  summerVaultName,
+  vault,
+  arksInterestRates,
+}) => {
   return (
     <Card variant="cardSecondary">
       <div id="advanced-yield-data" />
-      <div id="yield-sources" />
       <div
         style={{
           display: 'flex',
@@ -35,16 +30,15 @@ export const VaultDetailsYields: FC = () => {
           width: '100%',
         }}
       >
-        <InlineButtons
-          options={vaultDetailsYieldOptions}
-          currentOption={currentYieldOption}
-          handleOption={(option) => setCurrentYieldOption(option)}
-          style={{
-            marginBottom: 'var(--spacing-space-large)',
-          }}
-          asUnstyled
+        <Text
+          as="h5"
           variant="h5"
-        />
+          style={{
+            marginBottom: 'var(--general-space-16)',
+          }}
+        >
+          {vault.inputToken.symbol} {vault.customFields?.risk ?? 'Lower'} Risk Historical Yields
+        </Text>
         <Text
           as="p"
           variant="p2"
@@ -56,8 +50,12 @@ export const VaultDetailsYields: FC = () => {
           The Summer Earn Protocol is a permissionless passive lending product, which sets out to
           offer effortless and secure optimised yield, while diversifying risk.
         </Text>
-        {currentYieldOption.key === YieldOption.ADVANCED_YIELD && <VaultDetailsAdvancedYield />}
-        {currentYieldOption.key === YieldOption.YIELD_SOURCES && <VaultDetailsYieldSources />}
+        <VaultDetailsAdvancedYield
+          chartData={arksHistoricalChartData}
+          summerVaultName={summerVaultName}
+          vault={vault}
+          arksInterestRates={arksInterestRates}
+        />
       </div>
     </Card>
   )

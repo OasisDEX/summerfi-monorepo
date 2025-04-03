@@ -136,6 +136,8 @@ export { useIsIframe } from './hooks/use-is-iframe'
 export { useAnalyticsCookies } from './hooks/use-analytics-cookies'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
+export { vaultFaqData } from './common/faq/vault-faq'
+
 export {
   getVaultUrl,
   getVaultDetailsUrl,
@@ -144,7 +146,7 @@ export {
   getMigrationLandingPageUrl,
 } from './helpers/get-vault-url'
 export { getTwitterShareUrl } from './helpers/get-twitter-share-url'
-export { getScannerUrl } from './helpers/get-scanner-url'
+export { getScannerUrl, getScannerAddressUrl } from './helpers/get-scanner-url'
 export { getMedian } from './helpers/get-median'
 export { getOneYearEarnings } from './helpers/get-one-year-earnings'
 export { getPositionValues } from './helpers/get-position-values'

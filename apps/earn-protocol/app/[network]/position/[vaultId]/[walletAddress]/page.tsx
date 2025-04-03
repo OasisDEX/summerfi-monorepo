@@ -36,7 +36,6 @@ import { VaultManageView } from '@/components/layout/VaultManageView/VaultManage
 import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import { getPositionPerformanceData } from '@/helpers/chart-helpers/get-position-performance-data'
-import { mapArkLatestInterestRates } from '@/helpers/map-ark-interest-rates'
 import {
   decorateVaultsWithConfig,
   getVaultIdByVaultCustomName,
@@ -196,8 +195,6 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     vaultInterestRates,
   })
 
-  const arksInterestRates = mapArkLatestInterestRates(arkInterestRatesMap)
-
   const migrationBestVaultApy = getMigrationBestVaultApy({
     migratablePositions,
     vaultsWithConfig: allVaultsWithConfig,
@@ -216,7 +213,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       rebalanceActivity={rebalanceActivity}
       performanceChartData={performanceChartData}
       arksHistoricalChartData={arksHistoricalChartData}
-      arksInterestRates={arksInterestRates}
+      arksInterestRates={arkInterestRatesMap}
       migratablePositions={migratablePositions}
       migrationBestVaultApy={migrationBestVaultApy}
     />

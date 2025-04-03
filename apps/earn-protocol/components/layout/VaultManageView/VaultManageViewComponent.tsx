@@ -8,6 +8,7 @@ import {
   getMigrationLandingPageUrl,
   getPositionValues,
   getUniqueVaultId,
+  getVaultDetailsUrl,
   NonOwnerPositionBanner,
   ProjectedEarningsCombined,
   Sidebar,
@@ -25,6 +26,7 @@ import {
   useMobileCheck,
   useTokenSelector,
   VaultManageGrid,
+  WithArrow,
 } from '@summerfi/app-earn-ui'
 import { useTermsOfService } from '@summerfi/app-tos'
 import {
@@ -40,12 +42,15 @@ import {
 import { formatDecimalAsPercent, subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
 import { type IArmadaPosition } from '@summerfi/sdk-client'
 import { TransactionType } from '@summerfi/sdk-common'
+import Link from 'next/link'
 
 import { AccountKitAccountType } from '@/account-kit/types'
+import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
+import { detailsLinks } from '@/components/layout/VaultOpenView/vault-details-links'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import {
   ControlsApproval,
@@ -101,7 +106,7 @@ export const VaultManageViewComponent = ({
   viewWalletAddress: string
   performanceChartData: PerformanceChartData
   arksHistoricalChartData: ArksHistoricalChartData
-  arksInterestRates?: { [key: string]: number }
+  arksInterestRates: GetInterestRatesReturnType
   vaultApyData: VaultApyData
   migratablePositions: MigratablePosition[]
   migrationBestVaultApy: MigrationEarningsDataByChainId
@@ -494,6 +499,33 @@ export const VaultManageViewComponent = ({
                 The Summer Earn Protocol is a permissionless passive lending product, which sets out
                 to offer effortless and secure optimised yield, while diversifying risk.
               </Text>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  flexWrap: 'wrap',
+                  gap: 'var(--general-space-24)',
+                  marginTop: 'var(--general-space-20)',
+                }}
+              >
+                {detailsLinks.map(({ label, id }) => (
+                  <Link key={label} href={`${getVaultDetailsUrl(vault)}#${id}`}>
+                    <Text
+                      as="p"
+                      variant="p3semi"
+                      style={{
+                        color: 'var(--color-text-link)',
+                        textDecoration: 'none',
+                        cursor: 'pointer',
+                        paddingRight: 'var(--spacing-space-medium)',
+                      }}
+                    >
+                      <WithArrow>{label}</WithArrow>
+                    </Text>
+                  </Link>
+                ))}
+              </div>
             </div>
             <Expander
               title={
