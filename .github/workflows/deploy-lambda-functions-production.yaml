@@ -44,6 +44,8 @@ jobs:
       EARN_PROTOCOL_DB_CONNECTION_STRING: ${{ secrets.EARN_PROTOCOL_DB_CONNECTION_STRING }}
       EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN: ${{ secrets.EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN }}
       EARN_APP_URL: ${{ secrets.EARN_APP_URL }}
+      SUMMER_PRO_PRODUCT_HUB_KEY: ${{ secrets.SUMMER_PRO_PRODUCT_HUB_KEY }}
+      PRO_APP_URL: ${{ secrets.PRO_APP_URL }}
     steps:
       - name: Git clone the repository
         uses: actions/checkout@v3

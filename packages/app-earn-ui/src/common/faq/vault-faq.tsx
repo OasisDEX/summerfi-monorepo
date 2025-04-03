@@ -23,7 +23,7 @@ export const vaultFaqData: { title: string; content: React.ReactNode }[] = [
             marginBottom: 'var(--general-space-12)',
           }}
         >
-          With over $4 billion in assets trusted on the platform, Summer.fi continues to set the
+          With over $2 billion in assets trusted on the platform, Summer.fi continues to set the
           standard in DeFi reliability. Our original app, Summer.fi Pro, remains a cornerstone of
           DeFi innovation, now complemented by the revolutionary Lazy Summer Protocol.
         </Text>
