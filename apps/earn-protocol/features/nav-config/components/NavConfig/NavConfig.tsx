@@ -29,7 +29,7 @@ export const NavConfig = () => {
         </MobileDrawer>
       ) : (
         <Modal openModal={isOpen} closeModal={handleOpenClose}>
-          <NavConfigContent />
+          <NavConfigContent handleOpenClose={handleOpenClose} />
         </Modal>
       )}
     </>

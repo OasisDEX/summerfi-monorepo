@@ -8,6 +8,9 @@ import {
 } from '@summerfi/app-earn-ui'
 import { getCookie, setCookie } from '@summerfi/app-utils'
 
+import { trackInputChange } from '@/helpers/mixpanel'
+import { useUserWallet } from '@/hooks/use-user-wallet'
+
 /**
  * Custom hook to manage SUMR Net APY configuration.
  *
@@ -22,14 +25,18 @@ export const useSumrNetApyConfig = (): [SumrNetApyConfig, (value: SumrNetApyConf
     dispatch,
   } = useLocalConfig()
   const cookie = getCookie(sumrNetApyConfigCookieName)
+  const { userWalletAddress } = useUserWallet()
 
   const setValue = (value: SumrNetApyConfig) => {
-    setCookie(
-      sumrNetApyConfigCookieName,
-      JSON.stringify({ ...value, dilutedValuation: value.dilutedValuation.replaceAll(',', '') }),
-      365,
-      { secure: true },
-    )
+    const nextValue = { ...value, dilutedValuation: value.dilutedValuation.replaceAll(',', '') }
+
+    trackInputChange({
+      id: 'SUMRNetAPYConfig',
+      page: '/#settings-modal',
+      userAddress: userWalletAddress,
+      value: nextValue,
+    })
+    setCookie(sumrNetApyConfigCookieName, JSON.stringify(nextValue), 365, { secure: true })
     dispatch({ type: LocalConfigDispatchActions.UPDATE_SUMR_NET_APY_CONFIG, payload: value })
   }
 

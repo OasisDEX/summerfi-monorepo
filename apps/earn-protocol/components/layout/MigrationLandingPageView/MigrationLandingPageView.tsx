@@ -301,7 +301,7 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
               </MobileDrawer>
             ) : (
               <Modal openModal={isConfigOpen} closeModal={handleConfigOpenClose}>
-                <NavConfigContent />
+                <NavConfigContent handleOpenClose={handleConfigOpenClose} />
               </Modal>
             )}
           </div>
