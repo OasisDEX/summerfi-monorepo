@@ -7,7 +7,7 @@ const VaultDetailsLoadingState = () => {
         width="35%"
         height={25}
         radius="var(--radius-roundish)"
-        style={{ marginBottom: 'var(--general-space-32)' }}
+        style={{ marginBottom: 'var(--general-space-8)' }}
       />
       <SkeletonLine
         width="100%"

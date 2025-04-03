@@ -2,6 +2,10 @@ import { useMemo } from 'react'
 import { Card, DataBlock, Text } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
 import { formatCryptoBalance, zero } from '@summerfi/app-utils'
+import Image from 'next/image'
+import Link from 'next/link'
+
+import blockAnalyticaLogo from '@/public/img/misc/block-analytica.svg'
 
 import classNames from './VaultDetailsSecurity.module.scss'
 
@@ -37,7 +41,11 @@ export const VaultDetailsSecurityStats = ({
     },
     {
       title: 'Risk Curators',
-      value: '6 years',
+      value: (
+        <Link href="https://blockanalitica.com/" target="_blank">
+          <Image src={blockAnalyticaLogo} alt="Block Analytica" height={30} />
+        </Link>
+      ),
     },
   ]
 

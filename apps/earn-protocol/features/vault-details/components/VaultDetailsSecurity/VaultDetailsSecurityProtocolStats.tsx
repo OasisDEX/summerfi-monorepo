@@ -5,11 +5,6 @@ import Link from 'next/link'
 
 const securityDropdownOptions: DropdownOption[] = [
   {
-    label: 'Aave V2',
-    value: 'aavev2',
-    iconName: 'aave_circle_color',
-  },
-  {
     label: 'Aave V3',
     value: 'aavev3',
     iconName: 'aave_circle_color',
@@ -24,7 +19,53 @@ const securityDropdownOptions: DropdownOption[] = [
     value: 'sky',
     iconName: 'sky',
   },
+  {
+    label: 'Euler',
+    value: 'euler',
+    iconName: 'euler',
+  },
+  {
+    label: 'Morpho',
+    value: 'morpho',
+    iconName: 'morpho_circle_color',
+  },
+  {
+    label: 'Compound V3',
+    value: 'compoundv3',
+    iconName: 'compound_circle_color',
+  },
+  {
+    label: 'Gearbox',
+    value: 'gearbox',
+    iconName: 'gearbox',
+  },
 ]
+
+const optionDescriptions: { [key: string]: string } = {
+  aavev3:
+    'Aave V3 is a leading DeFi lending protocol featuring isolated markets, high capital efficiency, and innovative features like eMode for correlated assets. It offers robust security and deep liquidity across multiple chains.',
+  spark:
+    'Spark Protocol is a specialized lending platform built on Aave V3, focusing on stablecoin lending with optimized risk parameters. It provides competitive rates and enhanced security for stablecoin markets.',
+  sky: 'Sky Protocol is a next-generation lending platform that combines traditional DeFi lending with novel features like dynamic interest rates and advanced risk management systems.',
+  euler:
+    'Euler is a non-custodial protocol that enables permissionless lending and borrowing of any ERC20 token. It features unique risk management through reactive interest rates and tiered asset pools.',
+  morpho:
+    'Morpho Protocol optimizes lending rates by matching borrowers and lenders peer-to-peer while maintaining the security of underlying protocols. It offers improved capital efficiency and better rates.',
+  compoundv3:
+    'Compound V3 introduces a new architecture with isolated collateral and borrow positions, enabling more efficient capital utilization and improved risk management for lending markets.',
+  gearbox:
+    'Gearbox Protocol enables leveraged trading and yield farming through credit accounts, allowing users to multiply their positions while maintaining full control over their assets.',
+}
+
+const optionLinks: { [key: string]: string } = {
+  aavev3: 'https://aave.com/',
+  spark: 'https://spark.fi/',
+  sky: 'https://sky.money/',
+  euler: 'https://www.euler.finance/',
+  morpho: 'https://morpho.org/',
+  compoundv3: 'https://compound.finance/',
+  gearbox: 'https://gearbox.fi/',
+}
 
 interface ContentProps {
   option: DropdownOption
@@ -95,11 +136,9 @@ export const VaultDetailsSecurityProtocolStats = () => {
             marginBottom: 'var(--spacing-space-x-small)',
           }}
         >
-          {resolvedOption.label} offers efficient capital utilization, advanced risk management
-          features, cross-chain functionality, and deep liquidity, making it ideal for secure,
-          scalable integration.
+          {optionDescriptions[resolvedOption.value]}
         </Text>
-        <Link href="/apps/earn-protocol/public">
+        <Link href={optionLinks[resolvedOption.value]}>
           <WithArrow as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
             View {resolvedOption.label}
           </WithArrow>
