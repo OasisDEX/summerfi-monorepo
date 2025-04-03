@@ -37,11 +37,6 @@ export const ChainSelector: React.FC<ChainSelectorProps> = ({ label, chainId, on
   const selectedNetwork =
     networkOptions.find((opt) => opt.value === chainIdToSDKNetwork(chainId)) ?? networkOptions[0]
 
-  if (label === 'From') {
-    console.log('selectedNetwork', selectedNetwork)
-    console.log('chainId', chainId)
-  }
-
   return (
     <div className={styles.chainSelector}>
       <Text variant="p3semi" as="label" className={styles.label}>
