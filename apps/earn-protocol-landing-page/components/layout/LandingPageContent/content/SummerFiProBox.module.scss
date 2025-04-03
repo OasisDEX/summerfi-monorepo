@@ -1,12 +1,7 @@
 .summerProInfoBox {
   width: 100%;
   background-color: var(--earn-protocol-neutral-100);
-  margin-top: var(--spacing-space-medium);
-
-  @include media('>=s') {
-    margin-top: var(--spacing-space-large);
-    max-width: 515px;
-  }
+  margin-bottom: 100px;
 
   &>div {
     padding: var(--spacing-space-medium) var(--spacing-space-large);
@@ -27,5 +22,14 @@
   .summerProInfoBoxLinks,
   .summerProInfoBoxLinks>* {
     color: var(--color-text-link-hover)
+  }
+}
+
+.summerProInfoBoxCard {
+  justify-content: space-between;
+
+  @include media('<s') {
+    flex-direction: column;
+    gap: 30px;
   }
 }

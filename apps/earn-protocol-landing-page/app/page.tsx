@@ -13,6 +13,7 @@ import {
   LandingPageHero,
   MarketingPoints,
   ProtocolScroller,
+  SummerFiProBox,
   SupportedNetworksList,
 } from '@/components/layout/LandingPageContent'
 import { Audits } from '@/components/layout/LandingPageContent/content/Audits'
@@ -155,6 +156,7 @@ export default async function HomePage() {
         vaultsApyByNetworkMap={vaultsApyByNetworkMap}
       />
       <ProtocolStats vaultsList={vaultsWithConfig} />
+      <SummerFiProBox />
       <BigGradientBox>
         <EffortlessAccessBlock />
         <SupportedNetworksList />

@@ -1,7 +1,8 @@
 'use client'
-import { HomepageCarousel, Text, useMobileCheck } from '@summerfi/app-earn-ui'
+import { HomepageCarousel, Text, useMobileCheck, WithArrow } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType } from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
+import Link from 'next/link'
 
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { sdkApiUrl } from '@/constants/sdk'
@@ -70,7 +71,13 @@ export const LandingPageHero = ({
           {!isMobileOrTablet && headerPartB}
         </div>
         <HomepageCarousel vaultsList={vaultsList} vaultsApyByNetworkMap={vaultsApyByNetworkMap} />
-        {/* <SummerFiProBox /> */}
+        <Link href="/earn">
+          <Text className={landingPageHeroStyles.viewAllStrategies} variant="p3semi">
+            <WithArrow style={{ color: 'white' }}>
+              View all {vaultsList.length} strategies
+            </WithArrow>
+          </Text>
+        </Link>
       </div>
     </SDKContextProvider>
   )
