@@ -2,7 +2,7 @@ import { Expander, Sidebar, SkeletonLine, Text, VaultOpenLoadingGrid } from '@su
 
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
 
-import { detailsLinks } from './mocks'
+import { detailsLinks } from './vault-details-links'
 
 import vaultOpenViewStyles from './VaultOpenView.module.scss'
 

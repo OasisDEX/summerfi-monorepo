@@ -6,7 +6,7 @@ import {
   VaultManageLoadingGrid,
 } from '@summerfi/app-earn-ui'
 
-import { detailsLinks } from '@/components/layout/VaultOpenView/mocks'
+import { detailsLinks } from '@/components/layout/VaultOpenView/vault-details-links'
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
 
 import vaultManageViewStyles from './VaultManageView.module.scss'

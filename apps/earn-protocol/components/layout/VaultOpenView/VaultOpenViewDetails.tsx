@@ -18,7 +18,7 @@ import { RebalancingActivity } from '@/features/rebalance-activity/components/Re
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 import { getManagementFee } from '@/helpers/get-management-fee'
 
-import { detailsLinks } from './mocks'
+import { detailsLinks } from './vault-details-links'
 import { VaultOpenHeaderBlock } from './VaultOpenHeaderBlock'
 
 interface VaultOpenViewDetailsProps {
