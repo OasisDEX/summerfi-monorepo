@@ -16,6 +16,7 @@ export interface LinkCardWithIconName {
   iconName: IconNamesList
   variant?: CardVariant
   style?: CSSProperties
+  target?: string
 }
 
 export interface LinkCardWithIcon {
@@ -25,6 +26,7 @@ export interface LinkCardWithIcon {
   icon: ReactNode
   variant?: CardVariant
   style?: CSSProperties
+  target?: string
 }
 
 type LinkCardProps = LinkCardWithIconName | LinkCardWithIcon
@@ -35,6 +37,7 @@ export const LinkCard: FC<LinkCardProps> = ({
   description,
   variant,
   style,
+  target,
   ...rest
 }) => {
   return (
@@ -57,7 +60,7 @@ export const LinkCard: FC<LinkCardProps> = ({
         </div>
       </div>
       {link.href ? (
-        <Link href={link.href} className={classNames.linkWrapper}>
+        <Link href={link.href} className={classNames.linkWrapper} target={target}>
           <WithArrow as="p" variant="p3semi" className={classNames.link}>
             {link.label}
           </WithArrow>

@@ -138,7 +138,7 @@ export const VaultDetailsSecurityProtocolStats = () => {
         >
           {optionDescriptions[resolvedOption.value]}
         </Text>
-        <Link href={optionLinks[resolvedOption.value]}>
+        <Link href={optionLinks[resolvedOption.value]} target="_blank">
           <WithArrow as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
             View {resolvedOption.label}
           </WithArrow>

@@ -87,7 +87,7 @@ export const VaultDetailsSecurityMoneyExpander: FC<VaultDetailsSecurityMoneyExpa
           }}
         >
           {arkLinks.map((item) => (
-            <Link href={item.link} key={item.title}>
+            <Link href={item.link} key={item.title} target="_blank">
               <WithArrow
                 as="p"
                 variant="p3semi"
@@ -131,7 +131,7 @@ export const VaultDetailsSecurityMoneyExpander: FC<VaultDetailsSecurityMoneyExpa
           }}
         >
           {whitelistedActorsLinks.map((item) => (
-            <Link href={item.link} key={item.title}>
+            <Link href={item.link} key={item.title} target="_blank">
               <WithArrow
                 as="p"
                 variant="p3semi"

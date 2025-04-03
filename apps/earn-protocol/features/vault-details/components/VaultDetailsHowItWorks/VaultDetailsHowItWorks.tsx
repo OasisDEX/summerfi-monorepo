@@ -24,7 +24,7 @@ const LinksAndDescription = () => {
       </Text>
       <div style={{ display: 'flex', gap: '45px', flexWrap: 'wrap' }}>
         {vaultDetailsHowItWorksLinks.map((link) => (
-          <Link href={link.href} key={link.label}>
+          <Link href={link.href} key={link.label} target="_blank">
             <WithArrow
               as="p"
               variant="p3semi"

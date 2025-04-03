@@ -54,6 +54,7 @@ export const VaultDetailsSecurityAuditsExpander = () => {
               iconName={item.iconName}
               variant="cardSecondarySmallPaddings"
               style={{ background: 'var(--earn-protocol-neutral-80)' }}
+              target="_blank"
             />
           ))}
         </div>

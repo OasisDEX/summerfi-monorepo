@@ -80,7 +80,7 @@ export const VaultDetailsSecuritySupportExpander = () => {
               <Text as="p" variant="p2semi">
                 {item.text}
               </Text>
-              <Link href={item.link.href}>
+              <Link href={item.link.href} target="_blank">
                 <WithArrow
                   as="p"
                   variant="p3semi"
