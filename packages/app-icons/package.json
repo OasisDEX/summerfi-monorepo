@@ -32,7 +32,7 @@
     "glob": "^11.0.0",
     "jest": "29.7.0",
     "typescript": "^5.7.3",
-    "vite": "6.2.3"
+    "vite": "6.2.4"
   },
   "peerDependencies": {
     "@loadable/component": "^5.16.4",
