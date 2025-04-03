@@ -576,31 +576,6 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
 
-  background-jobs/update-product-hub-cron-function:
-    dependencies:
-      '@aws-lambda-powertools/logger':
-        specifier: ^2.0.2
-        version: 2.16.0(@middy/core@6.1.6)
-    devDependencies:
-      '@summerfi/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@summerfi/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
-      '@types/node':
-        specifier: ^20.11.5
-        version: 20.14.2
-      eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.14.2)
-      typescript:
-        specifier: ^5.7.3
-        version: 5.7.3
-
   background-jobs/update-rays-cron-function:
     dependencies:
       '@aws-lambda-powertools/logger':
@@ -665,9 +640,6 @@ importers:
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.14.2)
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -720,6 +692,28 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.14.2)
+      typescript:
+        specifier: ^5.7.3
+        version: 5.7.3
+
+  background-jobs/update-summer-pro-product-hub-cron-function:
+    dependencies:
+      '@aws-lambda-powertools/logger':
+        specifier: ^2.0.2
+        version: 2.16.0(@middy/core@6.1.6)
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      '@types/node':
+        specifier: ^20.11.5
+        version: 20.14.2
+      eslint:
+        specifier: ^8.56.0
+        version: 8.57.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
