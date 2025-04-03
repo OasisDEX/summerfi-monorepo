@@ -1,11 +1,23 @@
 'use client'
 import { type ChangeEvent, type FC, useState } from 'react'
-import { Badge, Button, Card, Icon, Input, Text, ToggleButton } from '@summerfi/app-earn-ui'
+import { toast } from 'react-toastify'
+import {
+  Badge,
+  Button,
+  Card,
+  Icon,
+  Input,
+  Text,
+  ToggleButton,
+  useMobileCheck,
+} from '@summerfi/app-earn-ui'
 import { mapNumericInput } from '@summerfi/app-utils'
 import Link from 'next/link'
 
+import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
+import { SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 
 import classNames from './NavConfigContent.module.scss'
 
@@ -19,6 +31,8 @@ const marketCapOptions = ['150000000', '250000000', '500000000', '750000000']
 export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose }) => {
   const [sumrNetApyConfig, setSumrNetApyConfig] = useSumrNetApyConfig()
   const [slippageConfig, setSlippageConfig] = useSlippageConfig()
+  const { deviceType } = useDeviceType()
+  const { isMobile } = useMobileCheck(deviceType)
 
   const [inputValue, setInputValue] = useState(mapNumericInput(sumrNetApyConfig.dilutedValuation))
   const [slippage, setSlippage] = useState(mapNumericInput(slippageConfig.slippage))
@@ -163,7 +177,7 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
         </div>
         <div
           style={
-            handleOpenClose
+            handleOpenClose && isMobile
               ? {
                   display: 'flex',
                   justifyContent: 'space-between',
@@ -177,7 +191,7 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
                 }
           }
         >
-          {handleOpenClose && (
+          {handleOpenClose && isMobile && (
             <Button variant="secondaryMedium" onClick={handleOpenClose}>
               <Icon iconName="close" size={12} style={{ opacity: 0.5 }} />
               Close
@@ -191,6 +205,8 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
                 dilutedValuation: inputValue,
               })
               setSlippageConfig({ slippage })
+              toast.success('Settings saved successfully', SUCCESS_TOAST_CONFIG)
+              handleOpenClose?.()
             }}
             disabled={
               (sumrNetApyConfig.dilutedValuation === inputValue.replaceAll(',', '') &&
