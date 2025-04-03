@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import { Card } from '@summerfi/app-earn-ui'
 import {
   type ArksHistoricalChartData,
+  type ChartDataPoints,
   type InlineButtonOption,
   type TimeframesType,
 } from '@summerfi/app-types'
@@ -51,7 +52,7 @@ export const VaultDetailsHistoricalYieldChart = ({
     }
 
     return chartData.data[timeframe].map((point) => {
-      const filteredPoint: any = { timestamp: point.timestamp }
+      const filteredPoint: ChartDataPoints = { timestamp: point.timestamp }
 
       // Include data for selected options
       selectedOptions.forEach((option) => {

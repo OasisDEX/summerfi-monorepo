@@ -14,7 +14,7 @@ export { Network as SDKNetwork }
 export { ChainId as SDKChainId }
 export { IArmadaPositionStandalone as IArmadaPosition }
 
-type ChartDataPoints = {
+export type ChartDataPoints = {
   timestamp: number
   [key: string]: number | string | number[]
 }

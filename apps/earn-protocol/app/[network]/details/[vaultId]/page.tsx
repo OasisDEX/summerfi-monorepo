@@ -16,7 +16,6 @@ import { userAddresesToFilterOut } from '@/app/server-handlers/tables-data/const
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
 import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
-import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { VaultDetailsView } from '@/components/layout/VaultDetailsView/VaultDetailsView'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import {
@@ -81,20 +80,12 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
   })
 
   const [arkInterestRatesMap, vaultInterestRates] = await Promise.all([
-    vault.arks
-      ? getInterestRates({
-          network: parsedNetwork,
-          arksList: vault.arks,
-        })
-      : Promise.resolve({}),
+    getInterestRates({
+      network: parsedNetwork,
+      arksList: vault.arks,
+    }),
     getVaultsHistoricalApy({
       // just the vault displayed
-      fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
-        fleetAddress: id,
-        chainId: subgraphNetworkToId(network),
-      })),
-    }),
-    getVaultsApy({
       fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
         chainId: subgraphNetworkToId(network),
