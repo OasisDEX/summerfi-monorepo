@@ -12,7 +12,7 @@ const nextConfig: (phase: string) => NextConfig = (phase) => ({
   devIndicators: {
     position: 'bottom-right',
   },
-  output: 'standalone',
+  output: 'export',
   reactStrictMode: false,
   ...(phase !== PHASE_DEVELOPMENT_SERVER
     ? {
@@ -32,23 +32,6 @@ const nextConfig: (phase: string) => NextConfig = (phase) => ({
           xl: 1279px,
         );
         `,
-  },
-  redirects: function () {
-    return Promise.resolve([
-      // portfolio redirect
-      redirectToProSummer('/portfolio/:otherPosition'),
-      // product redirects
-      redirectToProSummer('/multiply'),
-      redirectToProSummer('/borrow'),
-      // network + position (or others) redirects
-      redirectToProSummer('/ethereum/:otherPosition*'),
-      redirectToProSummer('/base/:otherPosition*'),
-      redirectToProSummer('/optimism/:otherPosition*'),
-      redirectToProSummer('/arbitrum/:otherPosition*'),
-      // maker position redirects
-      // matches to `/{number}`
-      redirectToProSummer('/:makerPosition(\\d{1,})'),
-    ])
   },
 })
 

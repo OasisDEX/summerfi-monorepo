@@ -1,29 +1,17 @@
 'use client'
 
 import { type PropsWithChildren, useEffect, useState } from 'react'
-import {
-  CookieBanner,
-  Footer,
-  NewsletterWrapper,
-  type SavedAnalyticsCookiesSettings,
-  Text,
-  useAnalyticsCookies,
-} from '@summerfi/app-earn-ui'
+import { Footer, NewsletterWrapper, Text } from '@summerfi/app-earn-ui'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
-import { manageAnalyticsCookies } from '@/features/analytics-cookies/manage-analytics-cookies'
 
 import landingMasterPageStyles from '@/components/layout/LandingMasterPage/landingMasterPage.module.scss'
 
-interface LandingMasterPageProps {
-  analyticsCookie: SavedAnalyticsCookiesSettings | null
-}
+interface LandingMasterPageProps {}
 
 export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProps>> = ({
   children,
-  analyticsCookie,
 }) => {
-  const [cookieSettings, setCookieSettings] = useAnalyticsCookies(analyticsCookie)
   const [scrolledAmount, setScrolledAmount] = useState(0)
 
   useEffect(() => {
@@ -90,11 +78,6 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
           }
         />
       </div>
-      <CookieBanner
-        value={cookieSettings}
-        setValue={setCookieSettings}
-        manageCookie={manageAnalyticsCookies}
-      />
     </div>
   )
 }

@@ -5,8 +5,6 @@ import { Button, Text } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { trackError } from '@/helpers/mixpanel'
-
 import errorImage from '@/public/img/misc/error.png'
 
 export default function GlobalErrorHandler({ error }: { error: Error & { digest?: string } }) {
@@ -14,7 +12,6 @@ export default function GlobalErrorHandler({ error }: { error: Error & { digest?
     // Log the error to an error reporting service
     // eslint-disable-next-line no-console
     console.error(error)
-    trackError({ id: error.message, page: 'GlobalErrorHandler', digest: error.digest })
   }, [error])
 
   return (
