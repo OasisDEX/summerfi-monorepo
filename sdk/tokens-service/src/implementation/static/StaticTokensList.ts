@@ -303,6 +303,14 @@ export const StaticTokensData: TokenListData = {
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png',
     },
     {
+      name: 'ether.fi BTC',
+      address: '0x657e8c867d8b37dcc18fa4caead9c45eb088c642',
+      symbol: 'EBTC',
+      decimals: 8,
+      chainId: 1,
+      logoURI: 'https://etherscan.io/token/images/eBTC_32.png',
+    },
+    {
       name: 'Arbitrum Bridged WBTC',
       address: '0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f',
       symbol: 'WBTC',
