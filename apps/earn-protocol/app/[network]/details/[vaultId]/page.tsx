@@ -12,6 +12,9 @@ import { getInterestRates } from '@/app/server-handlers/interest-rates'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
+import { userAddresesToFilterOut } from '@/app/server-handlers/tables-data/consts'
+import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
+import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
 import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { VaultDetailsView } from '@/components/layout/VaultDetailsView/VaultDetailsView'
@@ -43,22 +46,24 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
     redirect('/not-found')
   }
 
-  const [vault, { vaults }] = await Promise.all([
+  const [vault, { vaults }, rebalanceActivity, topDepositors] = await Promise.all([
     getVaultDetails({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),
     getVaultsList(),
+    // just to get info about total rebalance actions
+    getPaginatedRebalanceActivity({
+      page: 1,
+      limit: 1,
+    }),
+    // just to get info about total users
+    getPaginatedTopDepositors({
+      page: 1,
+      limit: 1,
+      filterOutUsersAddresses: userAddresesToFilterOut,
+    }),
   ])
-
-  // const [vaultWithConfig] = vault
-  //   ? decorateVaultsWithConfig({
-  //       vaults: [vault],
-  //       systemConfig,
-  //     })
-  //   : []
-
-  // const vaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })
 
   const allVaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })
 
@@ -105,6 +110,9 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
 
   const summerVaultName = vault.customFields?.name ?? `Summer ${vault.inputToken.symbol} Vault`
 
+  const totalRebalanceActions = rebalanceActivity.pagination.totalItems
+  const totalUsers = topDepositors.pagination.totalItems
+
   return (
     <VaultGridDetails vault={vault} vaults={allVaultsWithConfig}>
       <VaultDetailsView
@@ -112,6 +120,9 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
         summerVaultName={summerVaultName}
         vault={vault}
         arksInterestRates={arkInterestRatesMap}
+        vaults={vaults}
+        totalRebalanceActions={totalRebalanceActions}
+        totalUsers={totalUsers}
       />
     </VaultGridDetails>
   )

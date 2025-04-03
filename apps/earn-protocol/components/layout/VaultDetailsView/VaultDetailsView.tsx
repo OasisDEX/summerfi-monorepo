@@ -1,7 +1,11 @@
 'use client'
 
 import { type FC } from 'react'
-import { type ArksHistoricalChartData, type SDKVaultishType } from '@summerfi/app-types'
+import {
+  type ArksHistoricalChartData,
+  type SDKVaultishType,
+  type SDKVaultsListType,
+} from '@summerfi/app-types'
 
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { VaultDetailsFaq } from '@/features/vault-details/components/VaultDetailsFaq/VaultDetailsFaq'
@@ -13,14 +17,20 @@ interface VaultDetailsViewProps {
   arksHistoricalChartData: ArksHistoricalChartData
   summerVaultName: string
   vault: SDKVaultishType
+  vaults: SDKVaultsListType
   arksInterestRates: GetInterestRatesReturnType
+  totalRebalanceActions: number
+  totalUsers: number
 }
 
 export const VaultDetailsView: FC<VaultDetailsViewProps> = ({
   arksHistoricalChartData,
   summerVaultName,
   vault,
+  vaults,
   arksInterestRates,
+  totalRebalanceActions,
+  totalUsers,
 }) => {
   return (
     <>
@@ -31,7 +41,12 @@ export const VaultDetailsView: FC<VaultDetailsViewProps> = ({
         vault={vault}
         arksInterestRates={arksInterestRates}
       />
-      <VaultDetailsSecurity vault={vault} />
+      <VaultDetailsSecurity
+        vault={vault}
+        vaults={vaults}
+        totalRebalanceActions={totalRebalanceActions}
+        totalUsers={totalUsers}
+      />
       <VaultDetailsFaq />
     </>
   )

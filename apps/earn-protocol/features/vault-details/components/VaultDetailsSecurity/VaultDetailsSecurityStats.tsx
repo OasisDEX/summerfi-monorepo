@@ -1,27 +1,46 @@
+import { useMemo } from 'react'
 import { Card, DataBlock, Text } from '@summerfi/app-earn-ui'
+import { type SDKVaultsListType } from '@summerfi/app-types'
+import { formatCryptoBalance, zero } from '@summerfi/app-utils'
 
 import classNames from './VaultDetailsSecurity.module.scss'
 
-const dataBlocks = [
-  {
-    title: 'Total Assets Managed',
-    value: '2.71B',
-  },
-  {
-    title: '30d Volume',
-    value: '$994.78M',
-  },
-  {
-    title: 'Vault Automated',
-    value: '$191.60M',
-  },
-  {
-    title: 'Time operating',
-    value: '6 years',
-  },
-]
+interface VaultDetailsSecurityStatsProps {
+  vaults: SDKVaultsListType
+  totalRebalanceActions: number
+  totalUsers: number
+}
 
-export const VaultDetailsSecurityStats = () => {
+export const VaultDetailsSecurityStats = ({
+  vaults,
+  totalRebalanceActions,
+  totalUsers,
+}: VaultDetailsSecurityStatsProps) => {
+  const formattedTotalAssets = useMemo(() => {
+    return formatCryptoBalance(
+      vaults.reduce((acc, vault) => acc.plus(vault.totalValueLockedUSD), zero),
+    )
+  }, [vaults])
+
+  const dataBlocks = [
+    {
+      title: 'Lazy Summer Protocol TVL',
+      value: formattedTotalAssets,
+    },
+    {
+      title: 'Total Users',
+      value: totalUsers,
+    },
+    {
+      title: 'Rebalancing Actions',
+      value: totalRebalanceActions,
+    },
+    {
+      title: 'Risk Curators',
+      value: '6 years',
+    },
+  ]
+
   return (
     <>
       <Text as="h5" variant="h5" style={{ marginBottom: 'var(--spacing-space-x-small)' }}>
