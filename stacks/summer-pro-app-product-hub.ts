@@ -37,7 +37,7 @@ export function addSummerProAppProductHubConfig({ stack, vpc, app }: SummerStack
     updateProductHubCronFunctionProps,
   )
 
-  new Cron(stack, 'update-summer-pro-product-hub-cron-function', {
+  new Cron(stack, 'update-summer-pro-product-hub-cron', {
     schedule: 'rate(60 minutes)',
     enabled: true,
     job: updateProductHubCronFunction,
