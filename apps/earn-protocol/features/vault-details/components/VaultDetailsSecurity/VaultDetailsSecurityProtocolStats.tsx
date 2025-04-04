@@ -50,7 +50,7 @@ const optionDescriptions: { [key: string]: string } = {
   euler:
     'Euler is a non-custodial protocol that enables permissionless lending and borrowing of any ERC20 token. It features unique risk management through reactive interest rates and tiered asset pools.',
   morpho:
-    'Morpho Protocol optimizes lending rates by matching borrowers and lenders peer-to-peer while maintaining the security of underlying protocols. It offers improved capital efficiency and better rates.',
+    'Morpho is a transparent, high-performance, and robust protocol enabling users to earn yield and borrow assets. Simultaneously, it empowers developers and businesses to launch markets, design vaults, and build diverse applications on top of its adaptable and unchangeable foundation.',
   compoundv3:
     'Compound V3 introduces a new architecture with isolated collateral and borrow positions, enabling more efficient capital utilization and improved risk management for lending markets.',
   gearbox:
