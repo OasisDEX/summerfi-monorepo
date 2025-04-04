@@ -4,7 +4,7 @@ import {
   ILendingPoolInfo,
   IToken,
   OracleProviderType,
-  SpotPriceInfo,
+  ISpotPriceInfo,
 } from '@summerfi/sdk-common'
 import { Address, Maybe, Percentage, Price, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import {
@@ -54,7 +54,7 @@ async function getSwapQuoteExactInput(params: { fromAmount: TokenAmount; toToken
 async function getSpotPrice(params: {
   baseToken: IToken
   denomination?: Denomination
-}): Promise<SpotPriceInfo> {
+}): Promise<ISpotPriceInfo> {
   const MOCK_PRICE = 0.5
   const MOCK_QUOTE_CURRENCY = FiatCurrency.USD
   return {

@@ -17,7 +17,7 @@ export type ISpotPriceInfo = {
 }
 
 /**
- * @description Zod schema for SpotPriceInfo
+ * @description Zod schema for ISpotPriceInfo
  */
 export const SpotPriceInfoDataSchema = z.object({
   provider: OracleProviderTypeSchema,
@@ -37,7 +37,7 @@ export type SpotPricesInfo = {
 }
 
 /**
- * @description Zod schema for SpotPriceInfo
+ * @description Zod schema for ISpotPriceInfo
  */
 export const SpotPricesInfoDataSchema = z.object({
   provider: OracleProviderTypeSchema,
