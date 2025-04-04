@@ -1,5 +1,3 @@
-'use server'
-
 /* eslint-disable camelcase */
 type FetchForecastDataParams = {
   fleetAddress: `0x${string}`

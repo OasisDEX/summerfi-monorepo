@@ -1,5 +1,3 @@
-'use server'
-
 /**
  * Normalizes an email address by trimming whitespace and converting to lowercase
  * @param email - The email address to normalize
