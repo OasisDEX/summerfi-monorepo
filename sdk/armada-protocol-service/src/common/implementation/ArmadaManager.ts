@@ -1429,9 +1429,9 @@ export class ArmadaManager implements IArmadaManager {
       value: new BigNumber(params.toAmount.amount).div(params.fromAmount.amount).toString(),
     })
 
-    let spotPrice: ISpotPriceInfo | null = null
+    let spotPriceInfo: ISpotPriceInfo | undefined
     try {
-      spotPrice = await this._oracleManager.getSpotPrice({
+      spotPriceInfo = await this._oracleManager.getSpotPrice({
         baseToken: params.fromAmount.token,
         denomination: params.toAmount.token,
       })
@@ -1441,18 +1441,18 @@ export class ArmadaManager implements IArmadaManager {
       })
     }
 
-    const price = spotPrice?.price ?? null
-
-    const impact = !price || price.isZero() ? null : calculatePriceImpact(price, quotePrice)
+    const spotPrice = spotPriceInfo?.price
+    const impact =
+      !spotPrice || spotPrice.isZero() ? null : calculatePriceImpact(spotPrice, quotePrice)
 
     LoggingService.debug('getPriceImpact', {
       quotePrice: quotePrice.toString(),
-      spotPrice: price?.toString(),
+      spotPrice: spotPrice?.toString(),
       impact: impact?.toString(),
     })
 
     return {
-      price,
+      price: quotePrice,
       impact,
     }
   }
