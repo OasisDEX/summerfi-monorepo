@@ -141,8 +141,7 @@ export const VaultDetailsSecurityProtocolStats = () => {
             color: 'var(--earn-protocol-secondary-60)',
           }}
         >
-          The Summer Earn protocol only selects the highest quality DeFi protocols to integrate into
-          our strategies.
+          The Lazy Summer protocol only supports the highest quality DeFi protocols and strategies.
         </Text>
 
         <Text as="p" variant="p2semi" style={{ marginBottom: 'var(--spacing-space-x-small)' }}>
