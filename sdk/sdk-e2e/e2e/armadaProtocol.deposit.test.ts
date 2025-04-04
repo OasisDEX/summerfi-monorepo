@@ -1,4 +1,4 @@
-import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
+import { ArmadaVaultId, makeSDK, type SDKManager } from '@summerfi/sdk-client'
 import {
   Percentage,
   TokenAmount,
@@ -8,7 +8,6 @@ import {
   type IUser,
 } from '@summerfi/sdk-common'
 
-import { ArmadaVaultId } from '@summerfi/armada-protocol-service'
 import { sendAndLogTransactions, TransactionUtils } from '@summerfi/testing-utils'
 import type { IArmadaVaultId } from '@summerfi/armada-protocol-common'
 import { prepareData } from './utils/prepareData'

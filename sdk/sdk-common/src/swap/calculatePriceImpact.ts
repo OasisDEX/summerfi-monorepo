@@ -9,7 +9,16 @@ import { IPercentage } from '../common/interfaces/IPercentage'
  *      into account price impact - where price impact is a measure of how much our trade
  *      affects the price. It is determined by the breadth and depth of liquidity.
  */
-export function calculatePriceImpact(spotPrice: IPrice, quotePrice: IPrice): IPercentage {
+export function calculatePriceImpact(spotPrice: IPrice, quotePrice: IPrice): IPercentage | null {
+  // check for zeros and return 0
+  if (spotPrice.isZero() || quotePrice.isZero()) {
+    return null
+  }
+  // check for negative values and return 0
+  if (spotPrice.toBigNumber().isNegative() || quotePrice.toBigNumber().isNegative()) {
+    return null
+  }
+
   const val = spotPrice
     .toBigNumber()
     .minus(quotePrice.toBigNumber())

@@ -85,7 +85,6 @@ export const OrderInfoDeposit = ({
                   },
                   {
                     label: 'Price',
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                     value: priceImpact.price
                       ? `${formatCryptoBalance(priceImpact.price.value)} ${
                           (priceImpact.price.quote as IToken).symbol
