@@ -106,8 +106,30 @@ export class CoingeckoOracleProvider
         responseData[params.denomination?.address.value.toLowerCase()][
           quoteCurrencySymbol.toLowerCase()
         ]
+      // price cannot undefined
       if (!baseUSDPrice || !quoteUSDPrice) {
-        throw new Error('BaseToken | QuoteToken spot prices could not be determined')
+        throw Error(
+          'BaseToken or QuoteToken spot prices could not be retrieved: ' +
+            JSON.stringify(responseData),
+        )
+      }
+      // price cannot be zero or negative
+      if (BigNumber(baseUSDPrice).isZero() || BigNumber(quoteUSDPrice).isZero()) {
+        throw Error(
+          'BaseToken or QuoteToken spot prices retrieved zero value: ' +
+            JSON.stringify({
+              baseUSDPrice,
+              quoteUSDPrice,
+            }),
+        )
+      } else if (BigNumber(baseUSDPrice).isNegative() || BigNumber(quoteUSDPrice).isNegative()) {
+        throw Error(
+          'BaseToken or QuoteToken spot prices retrieved negative value: ' +
+            JSON.stringify({
+              baseUSDPrice,
+              quoteUSDPrice,
+            }),
+        )
       }
 
       const value = BigNumber(baseUSDPrice).div(quoteUSDPrice).toString()
