@@ -119,11 +119,7 @@ export function getChainFamilyInfoByChainId(chainId: ChainId): ChainFamilyInfo {
 
 export function getChainInfoByChainId(chainId: ChainId): ChainInfo {
   const chainFamilyInfo = getChainFamilyInfoByChainId(chainId)
-  const maybeChainInfo = chainFamilyInfo?.chainInfo
-  if (!maybeChainInfo) {
-    throw new Error(`Chain with id ${chainId} not supported`)
-  }
-  return maybeChainInfo
+  return chainFamilyInfo.chainInfo
 }
 
 export function valuesOfChainFamilyMap(families: ChainFamilyName[]): ChainInfo[] {
