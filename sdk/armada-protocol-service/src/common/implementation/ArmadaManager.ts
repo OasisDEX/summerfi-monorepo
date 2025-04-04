@@ -36,7 +36,7 @@ import {
   type HexData,
   type IPercentage,
   type IToken,
-  type SpotPriceInfo,
+  type ISpotPriceInfo,
   type TransactionPriceImpact,
 } from '@summerfi/sdk-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
@@ -1429,7 +1429,7 @@ export class ArmadaManager implements IArmadaManager {
       value: new BigNumber(params.toAmount.amount).div(params.fromAmount.amount).toString(),
     })
 
-    let spotPrice: SpotPriceInfo | null = null
+    let spotPrice: ISpotPriceInfo | null = null
     try {
       spotPrice = await this._oracleManager.getSpotPrice({
         baseToken: params.fromAmount.token,

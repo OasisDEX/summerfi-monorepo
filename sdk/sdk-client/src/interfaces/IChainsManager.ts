@@ -26,16 +26,6 @@ export interface IChainsManagerClient {
   getChain(params: { chainInfo: ChainInfo }): Promise<Chain>
 
   /**
-   * @method getChainByName
-   * @description Retrieves a chain by its name
-   *
-   * @param name The name of the chain to retrieve
-   *
-   * @returns The chain with the given name
-   */
-  getChainByName(params: { name: string }): Promise<Maybe<Chain>>
-
-  /**
    * @method getChainById
    * @description Retrieves a network by its chain ID
    *

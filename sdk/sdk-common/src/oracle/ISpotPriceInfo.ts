@@ -4,10 +4,10 @@ import { OracleProviderType, OracleProviderTypeSchema } from './OracleProviderTy
 import { z } from 'zod'
 
 /**
- * @name SpotPriceInfo
+ * @name ISpotPriceInfo
  * @description Gives the current market price for a specific asset
  */
-export type SpotPriceInfo = {
+export type ISpotPriceInfo = {
   /** The oracle provider type */
   provider: OracleProviderType
   /** The token for which the price is being requested. Also included in price, but added here for convenience */

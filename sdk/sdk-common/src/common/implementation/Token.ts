@@ -19,10 +19,10 @@ export class Token implements IToken {
   readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
-  readonly chainInfo: IChainInfo
-  readonly address: IAddress
   readonly symbol: string
   readonly name: string
+  readonly chainInfo: IChainInfo
+  readonly address: IAddress
   readonly decimals: number
 
   /** FACTORY */

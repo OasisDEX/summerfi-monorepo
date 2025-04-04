@@ -6,7 +6,7 @@ import {
   FiatCurrency,
   OracleProviderType,
   Price,
-  SpotPriceInfo,
+  ISpotPriceInfo,
   type SpotPricesInfo,
 } from '@summerfi/sdk-common'
 import { IToken } from '@summerfi/sdk-common/common'
@@ -30,7 +30,7 @@ export class MockOracleProvider
   async getSpotPrice(params: {
     baseToken: IToken
     denomination?: Denomination
-  }): Promise<SpotPriceInfo> {
+  }): Promise<ISpotPriceInfo> {
     return {
       provider: this.type,
       token: params.baseToken,
