@@ -65,7 +65,7 @@ interface MorphoVaultReward {
   address: string // Only needed fields for vault identification
   state: {
     rewards: {
-      supplyApr: number
+      supplyApr: number | null
       asset: {
         address: string
         symbol: string
@@ -76,14 +76,14 @@ interface MorphoVaultReward {
       market: {
         state: {
           rewards: {
-            supplyApr: number
+            supplyApr: number | null
             asset: {
               symbol: string
             }
           }[]
         }
       }
-      supplyAssetsUsd: number
+      supplyAssetsUsd: number | null
     }[]
   }
 }
@@ -371,31 +371,34 @@ export class RewardsService {
 
     // Calculate total allocated assets in USD
     const totalAssetsAllocated = vaultData.state.allocation.reduce(
-      (sum, alloc) => sum + alloc.supplyAssetsUsd,
+      (sum, alloc) => sum + (alloc.supplyAssetsUsd ?? 0),
       0,
     )
-
     // Calculate weighted rewards across all markets
-    const weightedMorphoTokenRewardsApy = vaultData.state.allocation.reduce((acc, allocation) => {
-      const marketRewards = allocation.market.state.rewards
-        .filter((reward) => reward.asset.symbol === 'MORPHO')
-        .map((reward) => {
-          return reward.supplyApr * (allocation.supplyAssetsUsd / totalAssetsAllocated)
-        })
+    const weightedMorphoTokenRewardsApy =
+      totalAssetsAllocated == 0
+        ? []
+        : vaultData.state.allocation.reduce((acc, allocation) => {
+            const marketRewards = allocation.market.state.rewards
+              .filter((reward) => reward.asset.symbol === 'MORPHO')
+              .map((reward) => {
+                return (
+                  (reward.supplyApr ?? 0) *
+                  ((allocation.supplyAssetsUsd ?? 0) / totalAssetsAllocated)
+                )
+              })
 
-      return acc.concat(marketRewards)
-    }, [] as number[])
-
+            return acc.concat(marketRewards)
+          }, [] as number[])
     // Calculate total rewards APY
     const morphoTokenRewardsApy = weightedMorphoTokenRewardsApy.reduce(
       (sum, reward) => sum + reward,
       0,
     )
-
     // Create reward rates array
     const rewards = vaultData.state.rewards.map((reward, index) => ({
       rewardToken: reward.asset.address,
-      rate: (reward.supplyApr * 100).toString(), // Convert to percentage
+      rate: ((reward.supplyApr ?? 0) * 100).toString(), // Convert to percentage
       index,
       token: {
         address: reward.asset.address,
@@ -410,7 +413,7 @@ export class RewardsService {
       ...rewards,
       {
         rewardToken: morphoTokenByChainId[chainId],
-        rate: (morphoTokenRewardsApy * 100).toString(), // Convert to percentage
+        rate: (morphoTokenRewardsApy > 10 ? 0 : morphoTokenRewardsApy * 100).toString(), // Convert to percentage
         index: rewards.length,
         token: {
           address: morphoTokenByChainId[chainId],
