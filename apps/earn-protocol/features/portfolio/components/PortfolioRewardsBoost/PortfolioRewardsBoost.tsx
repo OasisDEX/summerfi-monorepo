@@ -23,7 +23,7 @@ export const PortfolioRewardsBoost = () => {
         Boost your $SUMR
       </Text>
       <Text as="p" variant="p2" className={classNames.description}>
-        The Summer Earn Protocol is a permissionless passive lending product, which sets out to
+        The Lazy Summer Protocol is a permissionless passive lending product, which sets out to
         offer effortless and secure optimised yield, while diversifying risk.
       </Text>
       <Link href="/" className={classNames.link}>
