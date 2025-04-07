@@ -12,7 +12,7 @@ const nextConfig: (phase: string) => NextConfig = (phase) => ({
   devIndicators: {
     position: 'bottom-right',
   },
-  output: 'export',
+  output: phase !== PHASE_DEVELOPMENT_SERVER ? 'export' : 'standalone',
   reactStrictMode: false,
   ...(phase !== PHASE_DEVELOPMENT_SERVER
     ? {
