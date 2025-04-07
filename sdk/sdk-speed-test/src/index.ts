@@ -26,6 +26,10 @@ if (!fleetAddressParam) {
   throw new Error('Fleet address is required')
 }
 
+if (!process.env.SDK_API_URL) {
+  throw new Error('SDK_API_URL is not set')
+}
+
 console.log(`[SDK Speed test] ${chainInfo.name}`)
 const sdkTestStartTime = Date.now()
 
@@ -74,7 +78,7 @@ const testSDKEndpointSpeed = async (callName: string, callFunction: () => Promis
       }
     } catch (e) {
       console.error(`Error in ${callName}:`, e)
-      throw e
+      return null // Continue with other tests
     } finally {
       const endTime = Date.now()
       const duration = endTime - startTime
