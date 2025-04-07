@@ -13,7 +13,20 @@ import {
 
 const [chainIdParam, walletAddressParam, fleetAddressParam] = process.argv.slice(2)
 
-console.log('[SDK Speed test] Mainnet')
+const chainInfo = getChainFamilyInfoByChainId(Number(chainIdParam)).chainInfo
+
+if (!chainInfo) {
+  throw new Error(`Invalid chainId: ${chainIdParam}`)
+}
+
+if (!walletAddressParam) {
+  throw new Error('Wallet address is required')
+}
+if (!fleetAddressParam) {
+  throw new Error('Fleet address is required')
+}
+
+console.log(`[SDK Speed test] ${chainInfo.name}`)
 const sdkTestStartTime = Date.now()
 
 // Helpers
@@ -23,8 +36,6 @@ const stringifyWithBigInt = (_: string, v: unknown) => (typeof v === 'bigint' ? 
 const sdk = makeSDK({
   apiURL: `${process.env.SDK_API_URL}/api/sdk`,
 })
-
-const chainInfo = getChainFamilyInfoByChainId(Number(chainIdParam)).chainInfo
 
 const wallet = Wallet.createFrom({
   address: Address.createFromEthereum({
