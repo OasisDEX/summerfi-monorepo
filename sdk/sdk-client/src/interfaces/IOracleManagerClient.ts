@@ -1,5 +1,5 @@
 import type {
-  SpotPriceInfo,
+  ISpotPriceInfo,
   SpotPricesInfo,
   IToken,
   Denomination,
@@ -19,7 +19,7 @@ export interface IOracleManagerClient {
    * @param baseToken requested base token
    * @param denomination optional denomination either fiat or token, defaults to USD
    */
-  getSpotPrice(params: { baseToken: IToken; denomination?: Denomination }): Promise<SpotPriceInfo>
+  getSpotPrice(params: { baseToken: IToken; denomination?: Denomination }): Promise<ISpotPriceInfo>
 
   /**
    * @name getSpotPrices

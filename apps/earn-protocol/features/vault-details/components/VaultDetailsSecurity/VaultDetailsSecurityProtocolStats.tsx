@@ -41,7 +41,7 @@ const securityDropdownOptions: DropdownOption[] = [
   },
 ]
 
-const optionDescriptions: { [key: string]: string } = {
+const optionDescriptions: { [key: string]: React.ReactNode } = {
   aavev3:
     'Aave V3 is a leading DeFi lending protocol featuring isolated markets, high capital efficiency, and innovative features like eMode for correlated assets. It offers robust security and deep liquidity across multiple chains.',
   spark:
@@ -49,8 +49,28 @@ const optionDescriptions: { [key: string]: string } = {
   sky: 'Sky Protocol is a next-generation lending platform that combines traditional DeFi lending with novel features like dynamic interest rates and advanced risk management systems.',
   euler:
     'Euler is a non-custodial protocol that enables permissionless lending and borrowing of any ERC20 token. It features unique risk management through reactive interest rates and tiered asset pools.',
-  morpho:
-    'Morpho Protocol optimizes lending rates by matching borrowers and lenders peer-to-peer while maintaining the security of underlying protocols. It offers improved capital efficiency and better rates.',
+  morpho: (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-space-small)' }}>
+      <Text as="span" variant="p3">
+        Morpho Blue is a decentralized, permissionless lending protocol that enables anyone to
+        create isolated, immutable lending markets on Ethereum. Each Morpho Market is a simple pair:
+        one collateral asset and one loan asset. These markets are isolated (risk doesn’t spread
+        across markets), immutable (parameters can’t be changed once deployed), and transparent
+        (rules are clear and enforced by smart contracts).
+      </Text>
+      <Text as="span" variant="p3">
+        Unlike traditional lending protocols that pool assets and require governance approval to
+        list new assets or adjust parameters, Morpho lets anyone create a market without permission.
+        Each market selects its own parameters—like loan-to-value ratio and interest rate model—from
+        options approved by Morpho Governance, but once chosen, these settings are locked in
+        forever.
+      </Text>
+      <Text as="span" variant="p3">
+        This structure makes Morpho highly predictable, efficient, and ideal as a foundational layer
+        for DeFi applications that want trust-minimized, overcollateralized lending.
+      </Text>
+    </div>
+  ),
   compoundv3:
     'Compound V3 introduces a new architecture with isolated collateral and borrow positions, enabling more efficient capital utilization and improved risk management for lending markets.',
   gearbox:
@@ -121,8 +141,7 @@ export const VaultDetailsSecurityProtocolStats = () => {
             color: 'var(--earn-protocol-secondary-60)',
           }}
         >
-          The Summer Earn protocol only selects the highest quality DeFi protocols to integrate into
-          our strategies.
+          The Lazy Summer protocol only supports the highest quality DeFi protocols and strategies.
         </Text>
 
         <Text as="p" variant="p2semi" style={{ marginBottom: 'var(--spacing-space-x-small)' }}>

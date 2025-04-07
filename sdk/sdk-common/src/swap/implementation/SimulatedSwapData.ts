@@ -14,6 +14,6 @@ export type SimulatedSwapData = Omit<QuoteData, 'estimatedGas' | 'routes'> & {
   offerPrice: IPrice
   /* Also known as marketPrice or marketPrice with zero price impact */
   spotPrice: IPrice
-  priceImpact: IPercentage
+  priceImpact: IPercentage | null
   summerFee: ITokenAmount
 }

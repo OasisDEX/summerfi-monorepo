@@ -95,10 +95,29 @@ export class OneInchOracleProvider
 
       const baseUSDPrice = responseData[params.baseToken.address.value.toLowerCase()]
       const quoteUSDPrice = responseData[params.denomination.address.value.toLowerCase()]
+      // price cannot undefined
       if (!baseUSDPrice || !quoteUSDPrice) {
         throw Error(
-          'BaseToken | QuoteToken spot prices could not be determined: ' +
+          'BaseToken or QuoteToken spot prices could not be retrieved: ' +
             JSON.stringify(responseData),
+        )
+      }
+      // price cannot be zero or negative
+      if (BigNumber(baseUSDPrice).isZero() || BigNumber(quoteUSDPrice).isZero()) {
+        throw Error(
+          'BaseToken or QuoteToken spot prices retrieved zero value: ' +
+            JSON.stringify({
+              baseUSDPrice,
+              quoteUSDPrice,
+            }),
+        )
+      } else if (BigNumber(baseUSDPrice).isNegative() || BigNumber(quoteUSDPrice).isNegative()) {
+        throw Error(
+          'BaseToken or QuoteToken spot prices retrieved negative value: ' +
+            JSON.stringify({
+              baseUSDPrice,
+              quoteUSDPrice,
+            }),
         )
       }
 

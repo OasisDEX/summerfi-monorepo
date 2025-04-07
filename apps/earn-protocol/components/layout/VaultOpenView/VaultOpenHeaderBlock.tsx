@@ -24,7 +24,7 @@ export const VaultOpenHeaderBlock: FC<VaultOpenHeaderBlockProps> = ({ detailsLin
           color: 'var(--color-text-secondary)',
         }}
       >
-        The Summer Earn Protocol is a permissionless passive lending product, which sets out to
+        The Lazy Summer Protocol is a permissionless passive lending product, which sets out to
         offer effortless and secure optimised yield, while diversifying risk.
       </Text>
       <div

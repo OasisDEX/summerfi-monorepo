@@ -1,2 +1,2 @@
 export * from './OracleProviderType'
-export * from './SpotPriceInfo'
+export * from './ISpotPriceInfo'

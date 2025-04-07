@@ -6,7 +6,7 @@ import {
   ChainFamilyMap,
   FiatCurrency,
   OracleProviderType,
-  SpotPriceInfo,
+  ISpotPriceInfo,
 } from '@summerfi/sdk-common'
 
 describe('OneInch | OracleManager | Integration', () => {
@@ -26,7 +26,7 @@ describe('OneInch | OracleManager | Integration', () => {
     const configProvider = new ConfigurationProvider()
     const oracleManager = OracleManagerFactory.newOracleManager({ configProvider })
 
-    const spotPriceInfo: SpotPriceInfo = await oracleManager.getSpotPrice({
+    const spotPriceInfo: ISpotPriceInfo = await oracleManager.getSpotPrice({
       baseToken: WETH,
       quoteToken: FiatCurrency.USD,
       forceUseProvider: OracleProviderType.OneInch,

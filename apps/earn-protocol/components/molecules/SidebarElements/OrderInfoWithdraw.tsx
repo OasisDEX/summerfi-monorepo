@@ -75,9 +75,11 @@ export const OrderInfoWithdraw = ({
                   },
                   {
                     label: 'Price',
-                    value: `${formatCryptoBalance(priceImpact.price.value)} ${
-                      (priceImpact.price.quote as IToken).symbol
-                    }/${(priceImpact.price.base as IToken).symbol}`,
+                    value: priceImpact.price
+                      ? `${formatCryptoBalance(priceImpact.price.value)} ${
+                          (priceImpact.price.quote as IToken).symbol
+                        }/${(priceImpact.price.base as IToken).symbol}`
+                      : 'n/a',
                   },
                   {
                     label: 'Price Impact',
