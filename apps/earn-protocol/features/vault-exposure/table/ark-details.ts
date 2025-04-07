@@ -338,5 +338,20 @@ export const arkDetailsMap: {
       description:
         'The buffer is a portion of a vault that is not held in any one particular strategy and stands ready to be deployed to capitalize on any new strategies that may arise.',
     },
+    '0x4d00d0dc44c4d6352c2bcb2228f2863e48cd53f4': {
+      description:
+        'Built on time-tested infrastructure, delivering efficient USDC.E yield optimization with a strong track record of reliability and security.',
+      link: 'https://app.aave.com/reserve-overview/?underlyingAsset=0x29219dd400f2bf60e5a23d13be72b486d4038894&marketName=proto_sonic_v3',
+    },
+    '0x3002a7c8d5dc5cfaf81e747120b54d44bfad5935': {
+      description:
+        'Engineered for efficient USDC.E deployment, minimizing unnecessary risks while ensuring capital remains productive.',
+      link: 'https://app.euler.finance/vault/0x3D9e5462A940684073EED7e4a13d19AE0Dcd13bc?network=sonic',
+    },
+    '0xda50ce93aae2c764532e5b11dc6378af3330a817': {
+      description:
+        'Engineered for efficient USDC.E deployment, minimizing unnecessary risks while ensuring capital remains productive.',
+      link: 'https://app.euler.finance/vault/0x196F3C7443E940911EE2Bb88e019Fd71400349D9?network=sonic',
+    },
   },
 }
