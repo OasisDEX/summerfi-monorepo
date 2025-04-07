@@ -1,0 +1,17 @@
+{
+  "name": "@summerfi/sdk-speed-test",
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "speed-test": "dotenv -e ../../.env -e ../../.env.local -- bun run src/index.ts"
+  },
+  "dependencies": {
+    "@summerfi/sdk-client": "workspace:*",
+    "@summerfi/sdk-common": "workspace:*"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/jest-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*"
+  }
+}
