@@ -85,7 +85,7 @@ const testSDKEndpointSpeed = async (callName: string, callFunction: () => Promis
 
   const meanTime = callTimes.reduce((a, b) => a + b, 0) / callTimes.length
   console.log(
-    `[SDK Speed test] Call times for ${callName}: ${callLog.join(', ')}, mean time: ${meanTime.toFixed(2)}ms`,
+    `[SDK Speed test] ${callName}: ${callLog.join(', ')}, mean time: ${meanTime.toFixed(2)}ms`,
   )
 }
 
