@@ -82,6 +82,11 @@ export const getVaultsApy: ({
 
     const rawResponse = (await apiResponse.json()) as GetVaultsApyRAWResponse
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (!rawResponse.rates) {
+      return emptyResponse
+    }
+
     const response = rawResponse.rates.reduce<GetVaultsApyResponse>(
       (topAcc, { rates, chainId, sma }) => {
         const ratesMap = rates.reduce<{

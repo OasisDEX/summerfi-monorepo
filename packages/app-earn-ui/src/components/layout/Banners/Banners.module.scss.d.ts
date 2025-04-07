@@ -4,6 +4,7 @@ export type Styles = {
   bannerWrapperSuccess: string
   bannerWrapperVisible: string
   bannerWrapperWarning: string
+  globalIssueBannerWrapper: string
 }
 
 export type ClassNames = keyof Styles

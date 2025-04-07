@@ -2,6 +2,7 @@ import { ToastContainer } from 'react-toastify'
 import { cookieToInitialState } from '@account-kit/core'
 import {
   analyticsCookieName,
+  GlobalIssueBanner,
   GlobalStyles,
   GoogleTagManager,
   LocalConfigContextProvider,
@@ -87,6 +88,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <GlobalStyles />
       </head>
       <body className={`${fontInter.className} ${fontInter.variable}`}>
+        {config.bannerMessage && <GlobalIssueBanner message={config.bannerMessage} />}
         <GoogleTagManager />
         <AlchemyAccountsProvider initialState={accountKitInitializedState}>
           <GlobalEventTracker />

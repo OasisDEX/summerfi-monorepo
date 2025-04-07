@@ -53,6 +53,19 @@ export const getVaultsHistoricalApy: ({
   fleets,
 }) => {
   const functionsApiUrl = process.env.FUNCTIONS_API_URL
+  const emptyResponse = fleets.reduce<GetVaultsHistoricalApyResponse>(
+    (acc, { fleetAddress, chainId }) => {
+      acc[`${fleetAddress}-${chainId}`] = {
+        hourlyInterestRates: [],
+        dailyInterestRates: [],
+        weeklyInterestRates: [],
+        latestInterestRate: [],
+      }
+
+      return acc
+    },
+    {},
+  )
 
   if (!functionsApiUrl) {
     throw new Error('FUNCTIONS_API_URL is not set')
@@ -72,6 +85,11 @@ export const getVaultsHistoricalApy: ({
     })
 
     const rawResponse = (await apiResponse.json()) as GetVaultsHistoricalApyRAWResponse
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (!rawResponse.rates) {
+      return emptyResponse
+    }
 
     const response: GetVaultsHistoricalApyResponse = rawResponse.rates.reduce(
       (topAcc, { rates, fleetAddress, chainId }) => {
