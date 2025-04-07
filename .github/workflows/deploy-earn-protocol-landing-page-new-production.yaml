@@ -1,9 +1,6 @@
 name: Deploy Earn Protocol Landing Page New Production
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - 'main'
 
 jobs:
   build-earn-protocol-landing-page:
