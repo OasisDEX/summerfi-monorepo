@@ -1,17 +1,5 @@
-import {
-  analyticsCookieName,
-  EXTERNAL_LINKS,
-  GlobalStyles,
-  GoogleTagManager,
-  HeaderDisclaimer,
-  LocalConfigContextProvider,
-  slippageConfigCookieName,
-  sumrNetApyConfigCookieName,
-} from '@summerfi/app-earn-ui'
-import { getServerSideCookies, safeParseJson } from '@summerfi/app-utils'
+import { GlobalStyles, GoogleTagManager } from '@summerfi/app-earn-ui'
 import type { Metadata } from 'next'
-import { cookies } from 'next/headers'
-import Link from 'next/link'
 
 import { LandingMasterPage } from '@/components/layout/LandingMasterPage/LandingMasterPage'
 import { SystemConfigProvider } from '@/contexts/SystemConfigContext/SystemConfigContext'
@@ -30,16 +18,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   const { config } = await systemConfigHandler()
 
-  const cookieRaw = await cookies()
-  const cookie = cookieRaw.toString()
-
-  const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
-  const slippageConfig = safeParseJson(getServerSideCookies(slippageConfigCookieName, cookie))
-  const analyticsCookie = safeParseJson(getServerSideCookies(analyticsCookieName, cookie))
-  const country = getServerSideCookies('country', cookie)
-
-  const isGB = country === 'GB'
-
   return (
     <html lang={locale}>
       <head>
@@ -49,27 +27,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className={` ${fontInter.variable}`}>
         <GoogleTagManager />
         <SystemConfigProvider value={config}>
-          <LocalConfigContextProvider value={{ sumrNetApyConfig, slippageConfig }}>
-            {isGB && (
-              <HeaderDisclaimer>
-                UK disclaimer: This web application is provided as a tool for users to interact with
-                third party DeFi protocols on their own initiative, with no endorsement or
-                recommendation of ...
-                <Link
-                  href={`${EXTERNAL_LINKS.KB.HELP}/legal/uk-disclaimer`}
-                  style={{
-                    color: 'var(--earn-protocol-primary-100)',
-                    fontWeight: '500',
-                    paddingLeft: 'var(--general-space-4)',
-                  }}
-                  target="_blank"
-                >
-                  Read more
-                </Link>
-              </HeaderDisclaimer>
-            )}
-            <LandingMasterPage analyticsCookie={analyticsCookie}>{children}</LandingMasterPage>
-          </LocalConfigContextProvider>
+          <LandingMasterPage>{children}</LandingMasterPage>
         </SystemConfigProvider>
         <div id="portal" style={{ position: 'absolute' }} />
       </body>

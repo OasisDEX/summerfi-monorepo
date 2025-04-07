@@ -1,5 +1,3 @@
-'use server'
-
 import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { type GetInterestRatesParams, SDKNetwork } from '@summerfi/app-types'
 import {
