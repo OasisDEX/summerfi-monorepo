@@ -1,6 +1,7 @@
 import {
   analyticsCookieName,
   EXTERNAL_LINKS,
+  GlobalIssueBanner,
   GlobalStyles,
   GoogleTagManager,
   HeaderDisclaimer,
@@ -47,6 +48,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <GlobalStyles />
       </head>
       <body className={` ${fontInter.variable}`}>
+        {config.bannerMessage && <GlobalIssueBanner message={config.bannerMessage} />}
         <GoogleTagManager />
         <SystemConfigProvider value={config}>
           <LocalConfigContextProvider value={{ sumrNetApyConfig, slippageConfig }}>
