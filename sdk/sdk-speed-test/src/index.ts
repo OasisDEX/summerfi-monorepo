@@ -57,7 +57,7 @@ const testSDKEndpointSpeed = async (callName: string, callFunction: () => Promis
     try {
       const res = await callFunction()
       try {
-        JSON.stringify(res, stringifyWithBigInt) // if its stringifiable i assume its ok
+        JSON.stringify(res, stringifyWithBigInt) // if it's stringifiable, I assume it's okay
       } catch (e) {
         console.log(`Response from ${callName} (cannot stringify):`, res)
       }
