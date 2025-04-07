@@ -117,10 +117,12 @@ jobs:
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$ENVIRONMENT_TAG \
                        ./apps/earn-protocol-landing-page
           docker push $ECR_REGISTRY/$ECR_REPO_NAME --all-tags
+
       - name: Update ECS service with latest Docker image
         id: service-update
         run: |
           aws ecs update-service --cluster $CLUSTER_NAME --service ${{ env.SERVICE_NAME }} --force-new-deployment --region $AWS_REGION
+
       - name: Invalidate CloudFront
         run: |
           AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.NEW_EARN_CF_DIST_ID }} --paths "/*"
