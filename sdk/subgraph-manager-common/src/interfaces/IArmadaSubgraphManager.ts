@@ -80,11 +80,10 @@ export interface IArmadaSubgraphManager {
   getUserPosition(params: { user: IUser; fleetAddress: IAddress }): Promise<GetUserPositionQuery>
 
   /**
-   * @name getUserPosition
+   * @name getPosition
    * @description get the position of a user in a fleet
    *
-   * @param user target user
-   * @param fleetAddress Address of the fleet
+   * @param positionId Position ID
    *
    * @returns GetUserPositionQuery
    *
