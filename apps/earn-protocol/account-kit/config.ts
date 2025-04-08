@@ -1,8 +1,9 @@
-import { alchemy, arbitrum, base, mainnet, optimism, sonic } from '@account-kit/infra'
+import { alchemy, arbitrum, base, mainnet, optimism } from '@account-kit/infra'
 import { type AlchemyAccountsUIConfig, cookieStorage, createConfig } from '@account-kit/react'
 import { SDKChainId, SDKSupportedNetworkIdsEnum } from '@summerfi/app-types'
 import { QueryClient } from '@tanstack/react-query'
 import { type Chain } from 'viem'
+import { sonic } from 'viem/chains'
 import { safe } from 'wagmi/connectors'
 
 export const queryClient = new QueryClient()
@@ -13,6 +14,14 @@ export type AccountKitSupportedNetworks =
   | SDKChainId.MAINNET
   | SDKChainId.OPTIMISM
   | SDKChainId.SONIC
+
+const customAAKitSonicConfig: Chain = {
+  ...sonic,
+  rpcUrls: {
+    ...sonic.rpcUrls,
+    alchemy: sonic.rpcUrls.default,
+  },
+}
 
 export const SDKChainIdToAAChainMap: {
   [key in AccountKitSupportedNetworks]: Chain
@@ -75,7 +84,7 @@ export const getAccountKitConfig = ({
         [SDKSupportedNetworkIdsEnum.BASE]: base,
         [SDKSupportedNetworkIdsEnum.MAINNET]: mainnet,
         [SDKSupportedNetworkIdsEnum.OPTIMISM]: optimism,
-        [SDKSupportedNetworkIdsEnum.SONIC]: sonic,
+        [SDKSupportedNetworkIdsEnum.SONIC]: customAAKitSonicConfig,
       }[chainId ?? defaultChain.id] as Chain,
       chains: Object.values(SDKChainIdToAAChainMap).map((chain) => ({
         chain,
