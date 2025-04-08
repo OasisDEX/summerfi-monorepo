@@ -43,12 +43,12 @@ export const mapGraphDataToArmadaPosition =
     const sharesBalance = BigNumber(position.outputTokenBalance.toString())
 
     const claimedSummerToken = TokenAmount.createFrom({
-      amount: position.claimedSummerTokenNormalized,
+      amount: position.claimedSummerTokenNormalized || '0',
       token: summerToken,
     })
 
     const claimableSummerToken = TokenAmount.createFrom({
-      amount: position.claimableSummerTokenNormalized,
+      amount: position.claimableSummerTokenNormalized || '0',
       token: summerToken,
     })
 
@@ -57,13 +57,20 @@ export const mapGraphDataToArmadaPosition =
         chainInfo,
         symbol: reward.rewardToken.symbol,
       })
+      if (token == null) {
+        throw SDKError.createFrom({
+          message: 'token not found for symbol: ' + reward.rewardToken.symbol,
+          reason: 'missing in token list',
+          type: SDKErrorType.ArmadaError,
+        })
+      }
       return {
         claimed: TokenAmount.createFrom({
-          amount: reward.claimedNormalized,
+          amount: reward.claimedNormalized || '0',
           token: token,
         }),
         claimable: TokenAmount.createFrom({
-          amount: reward.claimableNormalized,
+          amount: reward.claimableNormalized || '0',
           token: token,
         }),
       }
