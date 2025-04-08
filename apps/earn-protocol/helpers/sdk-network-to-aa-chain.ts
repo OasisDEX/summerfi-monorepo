@@ -1,7 +1,8 @@
 import { arbitrum, base, mainnet } from '@account-kit/infra'
 import { SDKNetwork, type SDKSupportedNetwork, sdkSupportedNetworks } from '@summerfi/app-types'
 import { type Chain } from 'viem'
-import { sonic } from 'viem/chains'
+
+import { customAAKitSonicConfig as sonic } from '@/account-kit/config'
 
 /**
  * Converts a SDKNetwork to an AccountKit Chain

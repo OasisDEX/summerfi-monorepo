@@ -15,7 +15,7 @@ export type AccountKitSupportedNetworks =
   | SDKChainId.OPTIMISM
   | SDKChainId.SONIC
 
-const customAAKitSonicConfig: Chain = {
+export const customAAKitSonicConfig: Chain = {
   ...sonic,
   rpcUrls: {
     ...sonic.rpcUrls,
@@ -30,7 +30,7 @@ export const SDKChainIdToAAChainMap: {
   [SDKChainId.BASE]: base,
   [SDKChainId.MAINNET]: mainnet,
   [SDKChainId.OPTIMISM]: optimism,
-  [SDKChainId.SONIC]: sonic,
+  [SDKChainId.SONIC]: customAAKitSonicConfig,
 }
 
 export const GasSponsorshipIdMap = {
