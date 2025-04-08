@@ -18,6 +18,7 @@ import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { VaultTitle } from '@/components/molecules/VaultTitle/VaultTitle'
 import { getDisplayToken } from '@/helpers/get-display-token'
+import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 import { riskColors } from '@/helpers/risk-colors'
 
@@ -90,6 +91,7 @@ type VaultCardHomepageProps = {
   }
   selected?: boolean
   onSelect?: () => void
+  sumrPrice?: number
 }
 
 export const VaultCardHomepage = ({
@@ -97,15 +99,29 @@ export const VaultCardHomepage = ({
   vaultsApyByNetworkMap,
   selected = true,
   onSelect,
+  sumrPrice,
 }: VaultCardHomepageProps): React.ReactNode => {
-  const { apy } =
-    vaultsApyByNetworkMap[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
+  const {
+    id,
+    inputToken,
+    inputTokenBalance,
+    totalValueLockedUSD,
+    protocol,
+    customFields,
+    rewardTokens,
+    rewardTokenEmissionsAmount,
+  } = vault
+  const { apy } = vaultsApyByNetworkMap[`${id}-${subgraphNetworkToId(protocol.network)}`]
   const parsedApy = formatDecimalAsPercent(apy)
   const parsedTotalValueLocked = formatCryptoBalance(
-    new BigNumber(String(vault.inputTokenBalance)).div(ten.pow(vault.inputToken.decimals)),
+    new BigNumber(String(inputTokenBalance)).div(ten.pow(inputToken.decimals)),
   )
-  const parsedTotalValueLockedUSD = formatCryptoBalance(
-    new BigNumber(String(vault.totalValueLockedUSD)),
+  const parsedTotalValueLockedUSD = formatCryptoBalance(new BigNumber(String(totalValueLockedUSD)))
+  const { sumrTokenBonus } = getSumrTokenBonus(
+    rewardTokens,
+    rewardTokenEmissionsAmount,
+    sumrPrice,
+    totalValueLockedUSD,
   )
 
   return (
@@ -124,12 +140,11 @@ export const VaultCardHomepage = ({
         })}
       >
         <div className={vaultCardHomepageStyles.vaultCardHomepageTitleWrapper}>
-          <VaultTitle
-            symbol={vault.inputToken.symbol}
-            networkName={vault.protocol.network}
-            isVaultCard
+          <VaultTitle symbol={inputToken.symbol} networkName={protocol.network} isVaultCard />
+          <AdditionalBonusLabel
+            externalTokenBonus={customFields?.bonus}
+            sumrTokenBonus={sumrTokenBonus}
           />
-          <AdditionalBonusLabel bonus={vault.customFields?.bonus} />
         </div>
         <div className={vaultCardHomepageStyles.vaultCardHomepageDatablocksWrapper}>
           <div className={vaultCardHomepageStyles.vaultCardHomepageDataRow}>
@@ -139,7 +154,7 @@ export const VaultCardHomepage = ({
               contentDesktop={
                 <div style={{ display: 'flex' }}>
                   <Text variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-                    {parsedTotalValueLocked}&nbsp;{getDisplayToken(vault.inputToken.symbol)}
+                    {parsedTotalValueLocked}&nbsp;{getDisplayToken(inputToken.symbol)}
                   </Text>
                   &nbsp;
                   <Text
@@ -153,7 +168,7 @@ export const VaultCardHomepage = ({
               contentMobile={
                 <div style={{ display: 'flex' }}>
                   <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-                    {parsedTotalValueLocked}&nbsp;{getDisplayToken(vault.inputToken.symbol)}
+                    {parsedTotalValueLocked}&nbsp;{getDisplayToken(inputToken.symbol)}
                   </Text>
                   &nbsp;
                   <Text
@@ -169,7 +184,10 @@ export const VaultCardHomepage = ({
               title="APY"
               titleIcon="stars"
               contentDesktop={
-                <Text variant="p1colorful" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+                <Text
+                  variant="p1semiColorful"
+                  style={{ color: 'var(--earn-protocol-secondary-100)' }}
+                >
                   {parsedApy}
                 </Text>
               }
@@ -186,12 +204,12 @@ export const VaultCardHomepage = ({
               primary
               contentDesktop={
                 <Text variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-                  {vault.customFields?.bestFor ?? 'Optimized lending yield'}
+                  {customFields?.bestFor ?? 'Optimized lending yield'}
                 </Text>
               }
               contentMobile={
                 <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-                  {vault.customFields?.bestFor ?? 'Optimized lending yield'}
+                  {customFields?.bestFor ?? 'Optimized lending yield'}
                 </Text>
               }
             />
@@ -199,19 +217,13 @@ export const VaultCardHomepage = ({
               title="Risk"
               titleIcon="clock"
               contentDesktop={
-                <Text
-                  variant="p1semi"
-                  style={{ color: riskColors[vault.customFields?.risk ?? 'lower'] }}
-                >
-                  {capitalize(vault.customFields?.risk ?? 'lower')} risk
+                <Text variant="p1semi" style={{ color: riskColors[customFields?.risk ?? 'lower'] }}>
+                  {capitalize(customFields?.risk ?? 'lower')} risk
                 </Text>
               }
               contentMobile={
-                <Text
-                  variant="p2semi"
-                  style={{ color: riskColors[vault.customFields?.risk ?? 'lower'] }}
-                >
-                  {capitalize(vault.customFields?.risk ?? 'lower')} risk
+                <Text variant="p2semi" style={{ color: riskColors[customFields?.risk ?? 'lower'] }}>
+                  {capitalize(customFields?.risk ?? 'lower')} risk
                 </Text>
               }
             />

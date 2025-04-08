@@ -1,7 +1,7 @@
 'use client'
 
 import { type FC } from 'react'
-import { type SDKVaultishType } from '@summerfi/app-types'
+import { type SDKVaultishType, type VaultApyData } from '@summerfi/app-types'
 import { formatCryptoBalance, formatDecimalAsPercent, ten } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
@@ -15,6 +15,7 @@ import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/Va
 import { getDisplayToken } from '@/helpers/get-display-token'
 import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getUniqueVaultId } from '@/helpers/get-unique-vault-id'
+import { useApyUpdatedAt } from '@/hooks/use-apy-updated-at'
 
 import vaultCardStyles from './VaultCard.module.scss'
 
@@ -28,7 +29,7 @@ type VaultCardProps = SDKVaultishType & {
   sumrDilutedValuation?: string
   sumrPrice?: number
   showCombinedBonus?: boolean
-  apy: number
+  vaultApyData: VaultApyData
   wrapperStyle?: React.CSSProperties
   disabled?: boolean
 }
@@ -50,7 +51,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     withTokenBonus,
     sumrPrice,
     showCombinedBonus = false,
-    apy,
+    vaultApyData,
     wrapperStyle,
     disabled,
   } = props
@@ -73,15 +74,19 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     }
   }
 
-  const parsedApr = formatDecimalAsPercent(apy)
+  const parsedApr = formatDecimalAsPercent(vaultApyData.apy)
   const parsedTotalValueLocked = formatCryptoBalance(
     new BigNumber(String(inputTokenBalance)).div(ten.pow(inputToken.decimals)),
   )
   const parsedTotalValueLockedUSD = formatCryptoBalance(new BigNumber(String(totalValueLockedUSD)))
 
   const combinedApr = showCombinedBonus
-    ? formatDecimalAsPercent(Number(apy) + Number(rawSumrTokenBonus))
+    ? formatDecimalAsPercent(Number(vaultApyData.apy) + Number(rawSumrTokenBonus))
     : undefined
+
+  const apyUpdatedAt = useApyUpdatedAt({
+    vaultApyData,
+  })
 
   return (
     <GradientBox
@@ -112,9 +117,10 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
                 apy={parsedApr}
                 withTokenBonus={Number(rawSumrTokenBonus) > 0 ? withTokenBonus : false}
                 combinedApr={combinedApr}
+                apyUpdatedAt={apyUpdatedAt}
               />
             </Text>
-            <AdditionalBonusLabel bonus={customFields?.bonus} />
+            <AdditionalBonusLabel externalTokenBonus={customFields?.bonus} />
           </div>
         </div>
         <div className={vaultCardStyles.vaultCardAssetsWrapper}>

@@ -1,11 +1,12 @@
 'use client'
 
-import { type FC, type ReactNode, useEffect, useState } from 'react'
+import { type FC, type ReactNode } from 'react'
 import Link from 'next/link'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { EXTERNAL_LINKS, INTERNAL_LINKS } from '@/helpers/application-links'
+import { useHoldAlt } from '@/hooks/use-hold-alt'
 
 import footerStyles from '@/components/layout/Footer/Footer.module.scss'
 
@@ -95,29 +96,7 @@ const linksList = [
 
 export const Footer: FC<FooterProps> = ({ logo, newsletter, languageSwitcher }) => {
   // listen to holding ALT button
-  const [isAltPressed, setIsAltPressed] = useState(false)
-
-  useEffect(() => {
-    const handleKeyDown = (ev: KeyboardEvent) => {
-      if (ev.key === 'Alt') {
-        setIsAltPressed(true)
-      }
-    }
-
-    const handleKeyUp = (ev: KeyboardEvent) => {
-      if (ev.key === 'Alt') {
-        setIsAltPressed(false)
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    window.addEventListener('keyup', handleKeyUp)
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-      window.removeEventListener('keyup', handleKeyUp)
-    }
-  }, [])
+  const isAltPressed = useHoldAlt()
 
   return (
     <div className={footerStyles.container}>

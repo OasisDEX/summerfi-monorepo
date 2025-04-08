@@ -1,10 +1,14 @@
+'use client'
+
 import { type ReactNode } from 'react'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Pill } from '@/components/atoms/Pill/Pill'
 import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { Text } from '@/components/atoms/Text/Text'
+import { LiveApyInfo } from '@/components/molecules/LiveApyInfo/LiveApyInfo'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
+import { useHoldAlt } from '@/hooks/use-hold-alt'
 
 import styles from './BonusLabel.module.scss'
 
@@ -16,6 +20,7 @@ export const BonusLabel = ({
   withTokenBonus = true,
   combinedApr,
   isLoading,
+  apyUpdatedAt,
 }: {
   isLoading?: boolean
   tokenBonus?: string
@@ -24,26 +29,37 @@ export const BonusLabel = ({
   raw?: ReactNode
   withTokenBonus?: boolean
   combinedApr?: string
+  apyUpdatedAt?: {
+    apyUpdatedAtLabel: string
+    apyUpdatedAtAltLabel: string
+  }
 }): React.ReactNode => {
+  const isAltPressed = useHoldAlt()
+
   return (
     <Tooltip
       hideDrawerOnMobile
       tooltip={
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div
+          style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-space-x-small)' }}
+        >
           {apy && (
-            <Text as="p" variant="p4semi">
-              Native Yield: {apy}
-            </Text>
+            <LiveApyInfo apyCurrent={apy} apyUpdatedAt={apyUpdatedAt} isAltPressed={isAltPressed} />
           )}
           {tokenBonus && withTokenBonus && (
-            <Text as="p" variant="p4semi">
+            <Text as="p" variant="p2semi">
               $SUMR Rewards: {tokenBonus}
             </Text>
           )}
         </div>
       }
-      tooltipWrapperStyles={{ minWidth: '240px', top: '30px', left: '0px' }}
-      tooltipCardVariant="cardSecondarySmallPaddings"
+      tooltipWrapperStyles={{
+        minWidth: '240px',
+        maxWidth: '500px',
+        top: '30px',
+        left: '0px',
+      }}
+      tooltipCardVariant="cardSecondary"
     >
       <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
         {isLoading ? (

@@ -284,9 +284,8 @@ export const VaultsListView = ({
               onClick={handleChangeVault}
               withTokenBonus={sumrNetApyConfig.withSumr}
               sumrPrice={estimatedSumrPrice}
-              apy={
+              vaultApyData={
                 vaultsApyByNetworkMap[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
-                  .apy
               }
             />
           ))}

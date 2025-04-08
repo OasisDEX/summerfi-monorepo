@@ -24,6 +24,8 @@ import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
 import { DataBlock } from '@/components/molecules/DataBlock/DataBlock'
 import { Dropdown } from '@/components/molecules/Dropdown/Dropdown'
 import { SimpleGrid } from '@/components/molecules/Grid/SimpleGrid'
+import { LiveApyInfo } from '@/components/molecules/LiveApyInfo/LiveApyInfo'
+import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { VaultTitleDropdownContent } from '@/components/molecules/VaultTitleDropdownContent/VaultTitleDropdownContent'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
 import { getDisplayToken } from '@/helpers/get-display-token'
@@ -31,6 +33,8 @@ import { getPositionValues } from '@/helpers/get-position-values'
 import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 import { isVaultAtLeastDaysOld } from '@/helpers/is-vault-at-least-days-old'
+import { useApyUpdatedAt } from '@/hooks/use-apy-updated-at'
+import { useHoldAlt } from '@/hooks/use-hold-alt'
 
 import vaultManageGridStyles from './VaultManageGrid.module.scss'
 
@@ -67,6 +71,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   onRefresh,
   rightExtraContent,
 }) => {
+  const isAltPressed = useHoldAlt()
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [displaySimulationGraphStaggered, setDisplaySimulationGraphStaggered] =
     useState(displaySimulationGraph)
@@ -78,7 +83,10 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
       ? formatDecimalAsPercent(vaultApyData.sma30d)
       : 'n/a'
     : 'New strategy'
-  const aprCurrent = vaultApyData.apy ? formatDecimalAsPercent(vaultApyData.apy) : 'New strategy'
+  const apyCurrent = vaultApyData.apy ? formatDecimalAsPercent(vaultApyData.apy) : 'New strategy'
+  const apyUpdatedAt = useApyUpdatedAt({
+    vaultApyData,
+  })
 
   const noOfDeposits = position.deposits.length.toString()
 
@@ -180,7 +188,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                   />
                 </Text>
               )}
-              <AdditionalBonusLabel bonus={vault.customFields?.bonus} />
+              <AdditionalBonusLabel externalTokenBonus={vault.customFields?.bonus} />
             </div>
           </div>
           <AnimateHeight id="simulation-graph" scale show={displaySimulationGraphStaggered}>
@@ -210,7 +218,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                   </>
                 }
                 subValueType={netEarnings.isPositive() ? 'positive' : 'negative'}
-                subValueSize="medium"
+                subValueSize="small"
               />
             </Box>
             <Box>
@@ -225,7 +233,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                   </>
                 }
                 subValue={`# of Deposits: ${noOfDeposits}`}
-                subValueSize="medium"
+                subValueSize="small"
                 subValueStyle={{ color: 'var(--earn-protocol-success-100)' }}
               />
             </Box>
@@ -235,13 +243,47 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                   size="large"
                   titleSize="small"
                   title="30d APY"
-                  value={apy30d}
-                  subValue={`Current APY: ${aprCurrent}`}
+                  value={
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <Text variant="h4" style={{ marginRight: 'var(--general-space-8)' }}>
+                        {apy30d}
+                      </Text>
+                      <Icon iconName="stars_colorful" size={20} />
+                    </div>
+                  }
+                  subValue={
+                    <Tooltip
+                      tooltip={
+                        <LiveApyInfo
+                          apyCurrent={apyCurrent}
+                          apyUpdatedAt={apyUpdatedAt}
+                          isAltPressed={isAltPressed}
+                        />
+                      }
+                      tooltipWrapperStyles={{
+                        maxWidth: '455px',
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                        <Text
+                          variant="p4semi"
+                          style={{
+                            marginRight: 'var(--general-space-4)',
+                            color: 'var(--color-text-success)',
+                          }}
+                        >
+                          Live&nbsp;APY:&nbsp;{apyCurrent}&nbsp;(
+                          {apyUpdatedAt.apyUpdatedAtLabel}m&nbsp;ago)
+                        </Text>
+                        <Icon iconName="info" size={16} color="var(--color-text-success)" />
+                      </div>
+                    </Tooltip>
+                  }
                   subValueType="neutral"
-                  subValueSize="medium"
+                  subValueSize="small"
                 />
               ) : (
-                <DataBlock size="large" titleSize="small" title="Current APY" value={aprCurrent} />
+                <DataBlock size="large" titleSize="small" title="Current APY" value={apyCurrent} />
               )}
             </Box>
           </SimpleGrid>

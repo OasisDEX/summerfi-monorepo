@@ -172,6 +172,7 @@ export type PlatformLogo = 'aave' | 'spark' | 'morpho' | 'summer'
 
 export type VaultApyData = {
   apy: number
+  apyTimestamp: number | null
   sma24h: number | null
   sma7d: number | null
   sma30d: number | null

@@ -197,7 +197,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                   <BonusLabel tokenBonus={sumrTokenBonus} withTokenBonus />
                 </Text>
               )}
-              <AdditionalBonusLabel bonus={vault.customFields?.bonus} />
+              <AdditionalBonusLabel externalTokenBonus={vault.customFields?.bonus} />
             </div>
           </div>
           <AnimateHeight id="simulation-graph" scale show={displaySimulationGraphStaggered}>

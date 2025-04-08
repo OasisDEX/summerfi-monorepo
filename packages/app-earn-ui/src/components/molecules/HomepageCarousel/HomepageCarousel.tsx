@@ -9,6 +9,8 @@ import {
   usePrevNextButtons,
 } from '@/components/molecules/SlideCarousel/SlideCarouselButtons'
 import { VaultCardHomepage } from '@/components/molecules/VaultCardHomepage/VaultCardHomepage'
+import { SUMR_CAP } from '@/constants/earn-protocol'
+import { useLocalConfig } from '@/contexts/LocalConfigContext/LocalConfigContext'
 
 import homepageCarouselStyles from './HomepageCarousel.module.scss'
 
@@ -29,6 +31,10 @@ export const HomepageCarousel = ({
     skipSnaps: true,
   })
   const [selectedIndex, setSelectedIndex] = useState(0)
+  const {
+    state: { sumrNetApyConfig },
+  } = useLocalConfig()
+  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   const { prevBtnDisabled, nextBtnDisabled, onPrevButtonClick, onNextButtonClick } =
     usePrevNextButtons(emblaApi)
@@ -84,6 +90,7 @@ export const HomepageCarousel = ({
                     onSelect={selectSlide(vaultIndex)}
                     vaultsApyByNetworkMap={vaultsApyByNetworkMap}
                     selected={selectedIndex === vaultIndex}
+                    sumrPrice={estimatedSumrPrice}
                   />
                 </div>
               </div>
