@@ -1,13 +1,9 @@
-import {
-  IPosition,
-  ITokenAmount,
-  PositionDataSchema,
-  PositionType,
-  isTokenAmount,
-} from '@summerfi/sdk-common/common'
 import { z } from 'zod'
-import { IArmadaVault, isArmadaVault } from './IArmadaVault'
-import { IArmadaPositionId, isArmadaPositionId } from './IArmadaPositionId'
+import { type IArmadaVault, isArmadaVault } from './IArmadaVault'
+import { type IArmadaPositionId, isArmadaPositionId } from './IArmadaPositionId'
+import { PositionDataSchema, type IPosition } from './IPosition'
+import { isTokenAmount, type ITokenAmount } from './ITokenAmount'
+import { PositionType } from '../enums/PositionType'
 
 /**
  * Unique signature to provide branded types to the interface
@@ -30,6 +26,16 @@ export interface IArmadaPosition extends IPosition, IArmadaPositionData {
   /** Number of shares allocated to this position */
   readonly shares: ITokenAmount
 
+  /** Claimed SUMR rewards */
+  readonly claimedSummerToken: ITokenAmount
+  /** Claimable SUMR rewards */
+  readonly claimableSummerToken: ITokenAmount
+  /** Reward assets for this position */
+  readonly rewards: Array<{
+    claimed: ITokenAmount
+    claimable: ITokenAmount
+  }>
+
   // Re-declaring to narrow the type
   readonly type: PositionType.Armada
 }
@@ -45,6 +51,14 @@ export const ArmadaPositionDataSchema = z.object({
   shares: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
   deposits: z.array(z.custom<ITokenAmount>((val) => isTokenAmount(val))),
   withdrawals: z.array(z.custom<ITokenAmount>((val) => isTokenAmount(val))),
+  claimedSummerToken: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  claimableSummerToken: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  rewards: z.array(
+    z.object({
+      claimed: z.custom<ITokenAmount>(isTokenAmount),
+      claimable: z.custom<ITokenAmount>(isTokenAmount),
+    }),
+  ),
   type: z.literal(PositionType.Armada),
 })
 

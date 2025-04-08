@@ -1,7 +1,6 @@
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IArmadaSubgraphManager, createGraphQLClient } from '@summerfi/subgraph-manager-common'
 import { type ChainId } from '@summerfi/sdk-common'
-import { any } from 'zod'
 
 export interface SubgraphConfig {
   urlPerChain: Record<ChainId, string>
@@ -82,6 +81,12 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     return this._getClient(user.chainInfo.chainId).GetUserPosition({
       accountAddress: user.wallet.address.value,
       vaultId: fleetAddress.value as string,
+    })
+  }
+
+  getPosition(params: Parameters<IArmadaSubgraphManager['getPosition']>[0]) {
+    return this._getClient(params.positionId.user.chainInfo.chainId).GetPosition({
+      id: params.positionId.id,
     })
   }
 

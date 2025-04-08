@@ -1,11 +1,9 @@
-import {
-  IArmadaVault,
-  IArmadaVaultData,
-  IArmadaVaultId,
-  __iarmadavault__,
-} from '@summerfi/armada-protocol-common'
-import { Pool, PoolType } from '@summerfi/sdk-common/common'
-import { SerializationService } from '@summerfi/sdk-common/services'
+import { SerializationService } from '../../services/SerializationService'
+import { PoolType } from '../enums/PoolType'
+import { __iarmadavault__ } from '../interfaces'
+import type { IArmadaVault, IArmadaVaultData } from '../interfaces/IArmadaVault'
+import { type IArmadaVaultId } from '../interfaces/IArmadaVaultId'
+import { Pool } from './Pool'
 
 /**
  * Type for the parameters of ArmadaVault

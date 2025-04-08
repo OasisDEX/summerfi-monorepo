@@ -1,7 +1,7 @@
+import { IArmadaPosition, isArmadaPosition } from '@summerfi/sdk-common'
 import { ISimulation, SimulationSchema, SimulationType } from '@summerfi/sdk-common/simulation'
 import { IUser, isUser } from '@summerfi/sdk-common/user'
 import { z } from 'zod'
-import { IArmadaPosition, isArmadaPosition } from '../../common/interfaces/IArmadaPosition'
 
 /**
  * Unique signature to provide branded types to the interface

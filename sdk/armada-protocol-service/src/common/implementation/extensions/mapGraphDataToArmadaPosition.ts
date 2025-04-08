@@ -6,16 +6,17 @@ import {
   Token,
   Address,
   type IChainInfo,
+  type IToken,
+  ArmadaPosition,
+  ArmadaPositionId,
+  ArmadaVault,
+  ArmadaVaultId,
 } from '@summerfi/sdk-common'
 import type { GetUserPositionQuery } from '@summerfi/subgraph-manager-common'
-import { ArmadaVault } from '../ArmadaVault'
-import { ArmadaVaultId } from '../ArmadaVaultId'
-import { ArmadaPosition } from '../ArmadaPosition'
-import { ArmadaPositionId } from '../ArmadaPositionId'
 import { BigNumber } from 'bignumber.js'
 
 export const mapGraphDataToArmadaPosition =
-  ({ user, chainInfo }: { user: IUser; chainInfo: IChainInfo }) =>
+  ({ user, chainInfo, summerToken }: { user: IUser; chainInfo: IChainInfo; summerToken: IToken }) =>
   (position: GetUserPositionQuery['positions'][number]) => {
     if (position.vault.outputToken == null) {
       throw SDKError.createFrom({
@@ -31,15 +32,53 @@ export const mapGraphDataToArmadaPosition =
 
     const sharesBalance = BigNumber(position.outputTokenBalance.toString())
 
+    const claimedSummerToken = TokenAmount.createFrom({
+      amount: position.claimedSummerTokenNormalized,
+      token: summerToken,
+    })
+
+    const claimableSummerToken = TokenAmount.createFrom({
+      amount: position.claimableSummerTokenNormalized,
+      token: summerToken,
+    })
+
+    const rewards = position.rewards.map((reward) => {
+      const token = getRewardToken({
+        chainInfo,
+        symbol: reward.rewardToken.symbol,
+      })
+      return {
+        claimed: TokenAmount.createFrom({
+          amount: reward.claimedNormalized,
+          token: token,
+        }),
+        claimable: TokenAmount.createFrom({
+          amount: reward.claimableNormalized,
+          token: token,
+        }),
+      }
+    })
+
     return ArmadaPosition.createFrom({
       id: ArmadaPositionId.createFrom({ id: position.id, user: user }),
-
       pool: ArmadaVault.createFrom({
         id: ArmadaVaultId.createFrom({
           chainInfo,
           fleetAddress: Address.createFromEthereum({
             value: position.vault.id,
           }),
+        }),
+      }),
+      shares: TokenAmount.createFrom({
+        amount: sharesBalance.toString(),
+        token: Token.createFrom({
+          chainInfo,
+          address: Address.createFromEthereum({
+            value: position.vault.outputToken.id,
+          }),
+          name: position.vault.outputToken.name,
+          symbol: position.vault.outputToken.symbol,
+          decimals: position.vault.outputToken.decimals,
         }),
       }),
       amount: TokenAmount.createFrom({
@@ -86,17 +125,8 @@ export const mapGraphDataToArmadaPosition =
           }),
         }),
       ),
-      shares: TokenAmount.createFrom({
-        amount: sharesBalance.toString(),
-        token: Token.createFrom({
-          chainInfo,
-          address: Address.createFromEthereum({
-            value: position.vault.outputToken.id,
-          }),
-          name: position.vault.outputToken.name,
-          symbol: position.vault.outputToken.symbol,
-          decimals: position.vault.outputToken.decimals,
-        }),
-      }),
+      claimedSummerToken,
+      claimableSummerToken,
+      rewards,
     })
   }

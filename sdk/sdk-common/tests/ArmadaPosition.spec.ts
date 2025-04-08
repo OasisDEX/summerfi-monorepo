@@ -1,8 +1,8 @@
-import { Address, ChainFamilyMap, Token, TokenAmount, User, Wallet } from '@summerfi/sdk-common'
 import { ArmadaVault } from '../src/common/implementation/ArmadaVault'
 import { ArmadaVaultId } from '../src/common/implementation/ArmadaVaultId'
 import { ArmadaPosition } from '../src/common/implementation/ArmadaPosition'
 import { ArmadaPositionId } from '../src/common/implementation/ArmadaPositionId'
+import { Address, ChainFamilyMap, Token, TokenAmount, User, Wallet } from '../src'
 
 describe('SDK Common | Armada | ArmadaPosition', () => {
   const chainInfo = ChainFamilyMap.Base.Base
@@ -75,6 +75,9 @@ describe('SDK Common | Armada | ArmadaPosition', () => {
         pool: pool,
         deposits: [],
         withdrawals: [],
+        claimableSummerToken: tokenAmount,
+        claimedSummerToken: tokenAmount,
+        rewards: [],
       })
 
       expect(position).toBeDefined()

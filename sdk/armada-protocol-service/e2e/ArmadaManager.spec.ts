@@ -23,7 +23,7 @@ import {
 import { ArmadaPositionId } from '../src'
 import { ArmadaManager } from '../src/common/implementation/ArmadaManager'
 import { ArmadaManagerFactory } from '../src/common/implementation/ArmadaManagerFactory'
-import { ArmadaVaultId } from '../src/common/implementation/ArmadaVaultId'
+import { ArmadaVaultId } from '../../sdk-common/src/common/implementation/ArmadaVaultId'
 
 describe('Armada Protocol Service', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Base.Base

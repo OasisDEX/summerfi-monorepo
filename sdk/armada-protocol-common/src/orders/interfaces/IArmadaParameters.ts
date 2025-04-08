@@ -4,9 +4,10 @@ import {
   isTokenAmount,
   isUser,
   ArmadaOperationType,
+  isArmadaVaultId,
+  type IArmadaVaultId,
 } from '@summerfi/sdk-common'
 import { z } from 'zod'
-import { IArmadaVaultId, isArmadaVaultId } from '../../common/interfaces/IArmadaVaultId'
 
 /**
  * Unique signature to provide branded types to the interface

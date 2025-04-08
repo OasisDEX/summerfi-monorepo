@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { IPrintable } from '../../common'
+import { IPrintable } from '../../common/interfaces/IPrintable'
 import { IChainInfo, isChainInfo } from '../../common/interfaces/IChainInfo'
 import { IWallet, isWallet } from '../../common/interfaces/IWallet'
 

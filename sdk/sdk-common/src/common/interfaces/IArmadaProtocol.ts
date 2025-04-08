@@ -1,5 +1,6 @@
-import { IProtocol, ProtocolDataSchema, ProtocolName } from '@summerfi/sdk-common/common'
 import { z } from 'zod'
+import { ProtocolName } from '../enums/ProtocolName'
+import { ProtocolDataSchema, type IProtocol } from './IProtocol'
 
 /**
  * Unique signature to provide branded types to the interface

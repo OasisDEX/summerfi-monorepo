@@ -1,5 +1,5 @@
 import { publicProcedure } from '../SDKTRPC'
-import { Maybe, Token, isChainInfo } from '@summerfi/sdk-common'
+import { Token, isChainInfo } from '@summerfi/sdk-common'
 import { z } from 'zod'
 
 export const getTokenByName = publicProcedure
@@ -9,7 +9,7 @@ export const getTokenByName = publicProcedure
       name: z.string(),
     }),
   )
-  .query(async (opts): Promise<Maybe<Token>> => {
+  .query(async (opts): Promise<Token> => {
     if (!isChainInfo(opts.input.chainInfo)) {
       throw new Error('Invalid chain info')
     }

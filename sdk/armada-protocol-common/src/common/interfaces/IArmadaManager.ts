@@ -2,15 +2,15 @@ import {
   IAddress,
   IPercentage,
   ITokenAmount,
+  type IArmadaPosition,
+  type IArmadaPositionId,
+  type IArmadaVaultId,
+  type IArmadaVaultInfo,
   type IChainInfo,
   type IToken,
 } from '@summerfi/sdk-common/common'
 import { TransactionInfo, ExtendedTransactionInfo } from '@summerfi/sdk-common/orders'
 import { IUser } from '@summerfi/sdk-common/user'
-import { IArmadaVaultId } from './IArmadaVaultId'
-import { IArmadaVaultInfo } from './IArmadaVaultInfo'
-import { IArmadaPosition } from './IArmadaPosition'
-import { IArmadaPositionId } from './IArmadaPositionId'
 import type {
   GetGlobalRebalancesQuery,
   GetVaultQuery,
