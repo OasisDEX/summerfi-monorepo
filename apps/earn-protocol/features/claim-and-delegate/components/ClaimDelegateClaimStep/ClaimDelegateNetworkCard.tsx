@@ -1,12 +1,12 @@
 import { type FC } from 'react'
-import { SDKChainId } from '@summerfi/app-types'
+import { SDKChainId, type SDKSupportedChain } from '@summerfi/app-types'
 import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 
 import { ClaimDelegateToBridge } from './ClaimDelegateToBridge'
 import { ClaimDelegateToClaim } from './ClaimDelegateToClaim'
 
 interface ClaimDelegateNetworkCardProps {
-  chainId: SDKChainId.BASE | SDKChainId.MAINNET | SDKChainId.ARBITRUM
+  chainId: SDKSupportedChain
   claimableAmount: number
   balance: number
   estimatedSumrPrice: number

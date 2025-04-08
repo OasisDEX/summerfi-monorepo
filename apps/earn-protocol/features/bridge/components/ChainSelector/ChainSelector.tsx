@@ -16,7 +16,9 @@ const networkOptions = Object.entries(networkIconByNetworkName)
     iconName,
   }))
   .filter(({ value }) =>
-    [SDKNetwork.ArbitrumOne, SDKNetwork.Base, SDKNetwork.Mainnet].includes(value as SDKNetwork),
+    [SDKNetwork.ArbitrumOne, SDKNetwork.Base, SDKNetwork.Mainnet, SDKNetwork.SonicMainnet].includes(
+      value as SDKNetwork,
+    ),
   )
 
 const NetworkContent: React.FC<{ option: DropdownOption }> = ({ option }) => (
