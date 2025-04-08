@@ -34,7 +34,7 @@
     "next": "15.2.3",
     "zod": "^3.22.4",
     "kysely": "^0.27.3",
-    "viem": "2.21.55",
+    "viem": "2.26.1",
     "@safe-global/safe-apps-sdk": "^9.0.0",
     "jose": "^6.0.10",
     "@summerfi/serverless-shared": "workspace:*"
