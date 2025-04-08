@@ -124,7 +124,6 @@ jobs:
           # push it to ECR so that it can
           # be deployed to ECS.
           docker build -f apps/rays-dashboard/docker/Dockerfile \
-                       --build-arg BORROW_DB_READ_CONNECTION_STRING=${{ secrets.BORROW_DB_READ_CONNECTION_STRING_NEW }} \
                        --build-arg CONTENTFUL_SPACE_ID=${{ secrets.CONTENTFUL_SPACE_ID }} \
                        --build-arg CONTENTFUL_ACCESS_TOKEN=${{ secrets.CONTENTFUL_ACCESS_TOKEN }} \
                        --build-arg CONTENTFUL_PREVIEW_ACCESS_TOKEN=${{ secrets.CONTENTFUL_PREVIEW_ACCESS_TOKEN }} \
