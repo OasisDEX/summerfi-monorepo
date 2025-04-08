@@ -41,7 +41,7 @@
     "typescript": "^5.7.3",
     "unplugin-isolated-decl": "^0.13.5",
     "vite-plugin-lib-inject-css": "^2.2.1",
-    "vite": "6.2.3"
+    "vite": "6.2.5"
   },
   "peerDependencies": {
     "@loadable/component": "^5.16.4",
@@ -51,7 +51,7 @@
     "clsx": "^2.1.1",
     "dayjs": "^1.11.12",
     "lodash-es": "^4.17.1",
-    "next": "15.2.3",
+    "next": "15.2.4",
     "react-dom": "19.0.0",
     "react": "19.0.0",
     "usehooks-ts": "^3.1.0",
