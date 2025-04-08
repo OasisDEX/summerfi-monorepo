@@ -34,6 +34,7 @@ import { getDisplayToken } from '@/helpers/get-display-token'
 import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 import { isVaultAtLeastDaysOld } from '@/helpers/is-vault-at-least-days-old'
+import { useApyUpdatedAt } from '@/hooks/use-apy-updated-at'
 
 import vaultOpenGridStyles from './VaultOpenGrid.module.scss'
 
@@ -89,7 +90,10 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
       ? formatDecimalAsPercent(vaultApyData.sma30d)
       : 'n/a'
     : 'New strategy'
-  const aprCurrent = formatDecimalAsPercent(vaultApyData.apy)
+  const apyCurrent = vaultApyData.apy ? formatDecimalAsPercent(vaultApyData.apy) : 'New strategy'
+  const apyUpdatedAt = useApyUpdatedAt({
+    vaultApyData,
+  })
   const totalValueLockedUSDParsed = formatCryptoBalance(new BigNumber(vault.totalValueLockedUSD))
   const totalValueLockedTokenParsed = formatCryptoBalance(
     new BigNumber(vault.inputTokenBalance.toString()).div(ten.pow(vault.inputToken.decimals)),
@@ -214,20 +218,14 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 size="large"
                 titleSize="small"
                 title="30d APY"
-                value={apy30d}
-                subValue={
-                  isVaultAtLeast30dOld ? `Current APY: ${aprCurrent}` : 'Requires more data'
+                value={
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <Text variant="h4" style={{ marginRight: 'var(--general-space-8)' }}>
+                      {apy30d}
+                    </Text>
+                    <Icon iconName="stars_colorful" size={20} />
+                  </div>
                 }
-                subValueType={isVaultAtLeast30dOld ? 'neutral' : 'positive'}
-                subValueSize="medium"
-              />
-            </Box>
-            <Box>
-              <DataBlock
-                size="large"
-                titleSize="small"
-                title="Current APY"
-                value={aprCurrent}
                 subValue={
                   medianBN ? (
                     <Tooltip
@@ -249,6 +247,20 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                   ) : null
                 }
                 subValueType={medianDefiYieldDifference?.gt(0) ? 'positive' : 'neutral'}
+                subValueSize="small"
+              />
+            </Box>
+            <Box>
+              <DataBlock
+                size="large"
+                titleSize="small"
+                title={
+                  <>
+                    Live&nbsp;APY&nbsp;(
+                    {apyUpdatedAt.apyUpdatedAtLabel}m&nbsp;ago)
+                  </>
+                }
+                value={apyCurrent}
                 subValueSize="medium"
               />
             </Box>
