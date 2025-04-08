@@ -44,6 +44,7 @@ export {
   NonOwnerPositionBanner,
   NonOwnerPortfolioBanner,
 } from './components/layout/Banners/NonOwnerBanners'
+export { GlobalIssueBanner } from './components/layout/Banners/GlobalIssueBanner'
 
 export { Tooltip } from './components/molecules/Tooltip/Tooltip'
 export { Dropdown } from './components/molecules/Dropdown/Dropdown'

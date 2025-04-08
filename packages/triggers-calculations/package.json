@@ -14,7 +14,7 @@
     "@summerfi/serverless-shared": "workspace:*",
     "@summerfi/prices-subgraph": "workspace:*",
     "@summerfi/triggers-shared": "workspace:*",
-    "viem": "2.21.55"
+    "viem": "2.26.1"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

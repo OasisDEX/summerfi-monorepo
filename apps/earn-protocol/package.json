@@ -13,10 +13,10 @@
     "generate": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config"
   },
   "dependencies": {
-    "@account-kit/core": "^4.15.3",
-    "@account-kit/infra": "^4.15.3",
-    "@account-kit/react": "^4.15.3",
-    "@account-kit/signer": "^4.15.3",
+    "@account-kit/core": "^4.24.0",
+    "@account-kit/infra": "^4.24.0",
+    "@account-kit/react": "^4.24.0",
+    "@account-kit/signer": "^4.24.0",
     "@layerzerolabs/scan-client": "^0.0.8",
     "@loadable/component": "^5.16.4",
     "@safe-global/safe-apps-sdk": "^9.0.0",
@@ -44,7 +44,7 @@
     "lodash-es": "^4.17.1",
     "mixpanel": "^0.18.0",
     "mixpanel-browser": "^2.53.0",
-    "next": "15.2.3",
+    "next": "15.2.4",
     "pg": "^8.14.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",
@@ -54,7 +54,7 @@
     "sharp": "^0.33.5",
     "uniqolor": "1.1.1",
     "usehooks-ts": "^3.1.0",
-    "viem": "2.21.55",
+    "viem": "2.26.1",
     "wagmi": "^2.10.9",
     "websocket": "^1.0.35"
   },

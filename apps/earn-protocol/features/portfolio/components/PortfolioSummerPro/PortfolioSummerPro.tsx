@@ -40,7 +40,7 @@ export const PortfolioSummerPro: FC<PortfolioSummerProProps> = ({
     <Card variant="cardSecondary" className={classNames.portfolioSummerProWrapper}>
       <div className={classNames.portfolioSummerProHeader}>
         <Text variant="h5" as="h5">
-          Summer.fi Pro Positions
+          Migrate to Lazy Summer
         </Text>
         <div id="portal-embla-buttons" />
       </div>
