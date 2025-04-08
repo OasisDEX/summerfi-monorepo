@@ -10,6 +10,8 @@ jobs:
     name: Build and deploy Rays Dashboard
     runs-on: ubuntu-22.04
     environment: production
+    permissions:
+      id-token: write
     env:
       AWS_REGION: eu-central-1
       ENVIRONMENT_TAG: prod
