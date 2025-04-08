@@ -1797,6 +1797,8 @@ export enum Deposit_OrderBy {
   InputTokenBalanceNormalizedUsd = 'inputTokenBalanceNormalizedUSD',
   LogIndex = 'logIndex',
   Position = 'position',
+  PositionClaimableSummerToken = 'position__claimableSummerToken',
+  PositionClaimableSummerTokenNormalized = 'position__claimableSummerTokenNormalized',
   PositionClaimedSummerToken = 'position__claimedSummerToken',
   PositionClaimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   PositionCreatedBlockNumber = 'position__createdBlockNumber',
@@ -2711,6 +2713,8 @@ export type Position = {
   __typename?: 'Position';
   /**  Account associated with the position  */
   account: Account;
+  claimableSummerToken: Scalars['BigInt']['output'];
+  claimableSummerTokenNormalized: Scalars['BigDecimal']['output'];
   claimedSummerToken: Scalars['BigInt']['output'];
   claimedSummerTokenNormalized: Scalars['BigDecimal']['output'];
   /**  Creation block number  */
@@ -2742,6 +2746,7 @@ export type Position = {
   inputTokenWithdrawalsNormalizedInUSD: Scalars['BigDecimal']['output'];
   /**  Supply of the output token for the position  */
   outputTokenBalance: Scalars['BigInt']['output'];
+  rewards: Array<PositionRewards>;
   stakedEvents: Array<Staked>;
   /**  Staked balance of the input token for the position  */
   stakedInputTokenBalance: Scalars['BigInt']['output'];
@@ -2791,6 +2796,15 @@ export type PositionHourlySnapshotsArgs = {
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<PositionHourlySnapshot_Filter>;
+};
+
+
+export type PositionRewardsArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<PositionRewards_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<PositionRewards_Filter>;
 };
 
 
@@ -2996,6 +3010,8 @@ export enum PositionDailySnapshot_OrderBy {
   InputTokenWithdrawalsNormalizedInUsd = 'inputTokenWithdrawalsNormalizedInUSD',
   OutputTokenBalance = 'outputTokenBalance',
   Position = 'position',
+  PositionClaimableSummerToken = 'position__claimableSummerToken',
+  PositionClaimableSummerTokenNormalized = 'position__claimableSummerTokenNormalized',
   PositionClaimedSummerToken = 'position__claimedSummerToken',
   PositionClaimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   PositionCreatedBlockNumber = 'position__createdBlockNumber',
@@ -3189,6 +3205,8 @@ export enum PositionHourlySnapshot_OrderBy {
   InputTokenWithdrawalsNormalizedInUsd = 'inputTokenWithdrawalsNormalizedInUSD',
   OutputTokenBalance = 'outputTokenBalance',
   Position = 'position',
+  PositionClaimableSummerToken = 'position__claimableSummerToken',
+  PositionClaimableSummerTokenNormalized = 'position__claimableSummerTokenNormalized',
   PositionClaimedSummerToken = 'position__claimedSummerToken',
   PositionClaimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   PositionCreatedBlockNumber = 'position__createdBlockNumber',
@@ -3213,6 +3231,147 @@ export enum PositionHourlySnapshot_OrderBy {
   PositionUnstakedInputTokenBalanceNormalizedInUsd = 'position__unstakedInputTokenBalanceNormalizedInUSD',
   PositionUnstakedOutputTokenBalance = 'position__unstakedOutputTokenBalance',
   Timestamp = 'timestamp'
+}
+
+export type PositionRewards = {
+  __typename?: 'PositionRewards';
+  claimable: Scalars['BigInt']['output'];
+  claimableNormalized: Scalars['BigDecimal']['output'];
+  claimed: Scalars['BigInt']['output'];
+  claimedNormalized: Scalars['BigDecimal']['output'];
+  id: Scalars['ID']['output'];
+  position: Position;
+  rewardToken: Token;
+};
+
+export type PositionRewards_Filter = {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<PositionRewards_Filter>>>;
+  claimable?: InputMaybe<Scalars['BigInt']['input']>;
+  claimableNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimableNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimableNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimableNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  claimableNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimableNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimableNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimableNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  claimable_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  claimable_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  claimable_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  claimable_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  claimable_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  claimable_not?: InputMaybe<Scalars['BigInt']['input']>;
+  claimable_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  claimed?: InputMaybe<Scalars['BigInt']['input']>;
+  claimedNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimedNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimedNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimedNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  claimedNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimedNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimedNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimedNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  claimed_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  claimed_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  claimed_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  claimed_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  claimed_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  claimed_not?: InputMaybe<Scalars['BigInt']['input']>;
+  claimed_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_gt?: InputMaybe<Scalars['ID']['input']>;
+  id_gte?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_lt?: InputMaybe<Scalars['ID']['input']>;
+  id_lte?: InputMaybe<Scalars['ID']['input']>;
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  or?: InputMaybe<Array<InputMaybe<PositionRewards_Filter>>>;
+  position?: InputMaybe<Scalars['String']['input']>;
+  position_?: InputMaybe<Position_Filter>;
+  position_contains?: InputMaybe<Scalars['String']['input']>;
+  position_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_ends_with?: InputMaybe<Scalars['String']['input']>;
+  position_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_gt?: InputMaybe<Scalars['String']['input']>;
+  position_gte?: InputMaybe<Scalars['String']['input']>;
+  position_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  position_lt?: InputMaybe<Scalars['String']['input']>;
+  position_lte?: InputMaybe<Scalars['String']['input']>;
+  position_not?: InputMaybe<Scalars['String']['input']>;
+  position_not_contains?: InputMaybe<Scalars['String']['input']>;
+  position_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  position_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  position_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  position_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_starts_with?: InputMaybe<Scalars['String']['input']>;
+  position_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  rewardToken?: InputMaybe<Scalars['String']['input']>;
+  rewardToken_?: InputMaybe<Token_Filter>;
+  rewardToken_contains?: InputMaybe<Scalars['String']['input']>;
+  rewardToken_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  rewardToken_ends_with?: InputMaybe<Scalars['String']['input']>;
+  rewardToken_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  rewardToken_gt?: InputMaybe<Scalars['String']['input']>;
+  rewardToken_gte?: InputMaybe<Scalars['String']['input']>;
+  rewardToken_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  rewardToken_lt?: InputMaybe<Scalars['String']['input']>;
+  rewardToken_lte?: InputMaybe<Scalars['String']['input']>;
+  rewardToken_not?: InputMaybe<Scalars['String']['input']>;
+  rewardToken_not_contains?: InputMaybe<Scalars['String']['input']>;
+  rewardToken_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  rewardToken_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  rewardToken_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  rewardToken_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  rewardToken_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  rewardToken_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  rewardToken_starts_with?: InputMaybe<Scalars['String']['input']>;
+  rewardToken_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+};
+
+export enum PositionRewards_OrderBy {
+  Claimable = 'claimable',
+  ClaimableNormalized = 'claimableNormalized',
+  Claimed = 'claimed',
+  ClaimedNormalized = 'claimedNormalized',
+  Id = 'id',
+  Position = 'position',
+  PositionClaimableSummerToken = 'position__claimableSummerToken',
+  PositionClaimableSummerTokenNormalized = 'position__claimableSummerTokenNormalized',
+  PositionClaimedSummerToken = 'position__claimedSummerToken',
+  PositionClaimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
+  PositionCreatedBlockNumber = 'position__createdBlockNumber',
+  PositionCreatedTimestamp = 'position__createdTimestamp',
+  PositionId = 'position__id',
+  PositionInputTokenBalance = 'position__inputTokenBalance',
+  PositionInputTokenBalanceNormalized = 'position__inputTokenBalanceNormalized',
+  PositionInputTokenBalanceNormalizedInUsd = 'position__inputTokenBalanceNormalizedInUSD',
+  PositionInputTokenDeposits = 'position__inputTokenDeposits',
+  PositionInputTokenDepositsNormalized = 'position__inputTokenDepositsNormalized',
+  PositionInputTokenDepositsNormalizedInUsd = 'position__inputTokenDepositsNormalizedInUSD',
+  PositionInputTokenWithdrawals = 'position__inputTokenWithdrawals',
+  PositionInputTokenWithdrawalsNormalized = 'position__inputTokenWithdrawalsNormalized',
+  PositionInputTokenWithdrawalsNormalizedInUsd = 'position__inputTokenWithdrawalsNormalizedInUSD',
+  PositionOutputTokenBalance = 'position__outputTokenBalance',
+  PositionStakedInputTokenBalance = 'position__stakedInputTokenBalance',
+  PositionStakedInputTokenBalanceNormalized = 'position__stakedInputTokenBalanceNormalized',
+  PositionStakedInputTokenBalanceNormalizedInUsd = 'position__stakedInputTokenBalanceNormalizedInUSD',
+  PositionStakedOutputTokenBalance = 'position__stakedOutputTokenBalance',
+  PositionUnstakedInputTokenBalance = 'position__unstakedInputTokenBalance',
+  PositionUnstakedInputTokenBalanceNormalized = 'position__unstakedInputTokenBalanceNormalized',
+  PositionUnstakedInputTokenBalanceNormalizedInUsd = 'position__unstakedInputTokenBalanceNormalizedInUSD',
+  PositionUnstakedOutputTokenBalance = 'position__unstakedOutputTokenBalance',
+  RewardToken = 'rewardToken',
+  RewardTokenDecimals = 'rewardToken__decimals',
+  RewardTokenId = 'rewardToken__id',
+  RewardTokenLastPriceBlockNumber = 'rewardToken__lastPriceBlockNumber',
+  RewardTokenLastPriceUsd = 'rewardToken__lastPriceUSD',
+  RewardTokenName = 'rewardToken__name',
+  RewardTokenSymbol = 'rewardToken__symbol'
 }
 
 export type PositionWeeklySnapshot = {
@@ -3382,6 +3541,8 @@ export enum PositionWeeklySnapshot_OrderBy {
   InputTokenWithdrawalsNormalizedInUsd = 'inputTokenWithdrawalsNormalizedInUSD',
   OutputTokenBalance = 'outputTokenBalance',
   Position = 'position',
+  PositionClaimableSummerToken = 'position__claimableSummerToken',
+  PositionClaimableSummerTokenNormalized = 'position__claimableSummerTokenNormalized',
   PositionClaimedSummerToken = 'position__claimedSummerToken',
   PositionClaimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   PositionCreatedBlockNumber = 'position__createdBlockNumber',
@@ -3433,6 +3594,22 @@ export type Position_Filter = {
   account_starts_with?: InputMaybe<Scalars['String']['input']>;
   account_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   and?: InputMaybe<Array<InputMaybe<Position_Filter>>>;
+  claimableSummerToken?: InputMaybe<Scalars['BigInt']['input']>;
+  claimableSummerTokenNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimableSummerTokenNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimableSummerTokenNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimableSummerTokenNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  claimableSummerTokenNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimableSummerTokenNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimableSummerTokenNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  claimableSummerTokenNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  claimableSummerToken_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  claimableSummerToken_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  claimableSummerToken_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  claimableSummerToken_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  claimableSummerToken_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  claimableSummerToken_not?: InputMaybe<Scalars['BigInt']['input']>;
+  claimableSummerToken_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   claimedSummerToken?: InputMaybe<Scalars['BigInt']['input']>;
   claimedSummerTokenNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
   claimedSummerTokenNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -3557,6 +3734,7 @@ export type Position_Filter = {
   outputTokenBalance_lte?: InputMaybe<Scalars['BigInt']['input']>;
   outputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
   outputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  rewards_?: InputMaybe<PositionRewards_Filter>;
   stakedEvents_?: InputMaybe<Staked_Filter>;
   stakedInputTokenBalance?: InputMaybe<Scalars['BigInt']['input']>;
   stakedInputTokenBalanceNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -3653,6 +3831,8 @@ export enum Position_OrderBy {
   AccountClaimedSummerToken = 'account__claimedSummerToken',
   AccountClaimedSummerTokenNormalized = 'account__claimedSummerTokenNormalized',
   AccountId = 'account__id',
+  ClaimableSummerToken = 'claimableSummerToken',
+  ClaimableSummerTokenNormalized = 'claimableSummerTokenNormalized',
   ClaimedSummerToken = 'claimedSummerToken',
   ClaimedSummerTokenNormalized = 'claimedSummerTokenNormalized',
   CreatedBlockNumber = 'createdBlockNumber',
@@ -3671,6 +3851,7 @@ export enum Position_OrderBy {
   InputTokenWithdrawalsNormalized = 'inputTokenWithdrawalsNormalized',
   InputTokenWithdrawalsNormalizedInUsd = 'inputTokenWithdrawalsNormalizedInUSD',
   OutputTokenBalance = 'outputTokenBalance',
+  Rewards = 'rewards',
   StakedEvents = 'stakedEvents',
   StakedInputTokenBalance = 'stakedInputTokenBalance',
   StakedInputTokenBalanceNormalized = 'stakedInputTokenBalanceNormalized',
@@ -4500,6 +4681,8 @@ export type Query = {
   positionDailySnapshots: Array<PositionDailySnapshot>;
   positionHourlySnapshot?: Maybe<PositionHourlySnapshot>;
   positionHourlySnapshots: Array<PositionHourlySnapshot>;
+  positionRewards?: Maybe<PositionRewards>;
+  positionRewards_collection: Array<PositionRewards>;
   positionWeeklySnapshot?: Maybe<PositionWeeklySnapshot>;
   positionWeeklySnapshots: Array<PositionWeeklySnapshot>;
   positions: Array<Position>;
@@ -4807,6 +4990,24 @@ export type QueryPositionHourlySnapshotsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   subgraphError?: _SubgraphErrorPolicy_;
   where?: InputMaybe<PositionHourlySnapshot_Filter>;
+};
+
+
+export type QueryPositionRewardsArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID']['input'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryPositionRewards_CollectionArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<PositionRewards_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<PositionRewards_Filter>;
 };
 
 
@@ -6002,6 +6203,8 @@ export enum Staked_OrderBy {
   InputTokenBalanceNormalizedUsd = 'inputTokenBalanceNormalizedUSD',
   LogIndex = 'logIndex',
   Position = 'position',
+  PositionClaimableSummerToken = 'position__claimableSummerToken',
+  PositionClaimableSummerTokenNormalized = 'position__claimableSummerTokenNormalized',
   PositionClaimedSummerToken = 'position__claimedSummerToken',
   PositionClaimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   PositionCreatedBlockNumber = 'position__createdBlockNumber',
@@ -6115,6 +6318,8 @@ export type Subscription = {
   positionDailySnapshots: Array<PositionDailySnapshot>;
   positionHourlySnapshot?: Maybe<PositionHourlySnapshot>;
   positionHourlySnapshots: Array<PositionHourlySnapshot>;
+  positionRewards?: Maybe<PositionRewards>;
+  positionRewards_collection: Array<PositionRewards>;
   positionWeeklySnapshot?: Maybe<PositionWeeklySnapshot>;
   positionWeeklySnapshots: Array<PositionWeeklySnapshot>;
   positions: Array<Position>;
@@ -6422,6 +6627,24 @@ export type SubscriptionPositionHourlySnapshotsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   subgraphError?: _SubgraphErrorPolicy_;
   where?: InputMaybe<PositionHourlySnapshot_Filter>;
+};
+
+
+export type SubscriptionPositionRewardsArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID']['input'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionPositionRewards_CollectionArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<PositionRewards_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<PositionRewards_Filter>;
 };
 
 
@@ -7281,6 +7504,8 @@ export enum Unstaked_OrderBy {
   InputTokenBalanceNormalizedUsd = 'inputTokenBalanceNormalizedUSD',
   LogIndex = 'logIndex',
   Position = 'position',
+  PositionClaimableSummerToken = 'position__claimableSummerToken',
+  PositionClaimableSummerTokenNormalized = 'position__claimableSummerTokenNormalized',
   PositionClaimedSummerToken = 'position__claimedSummerToken',
   PositionClaimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   PositionCreatedBlockNumber = 'position__createdBlockNumber',
@@ -10037,6 +10262,8 @@ export enum Withdraw_OrderBy {
   InputTokenBalanceNormalizedUsd = 'inputTokenBalanceNormalizedUSD',
   LogIndex = 'logIndex',
   Position = 'position',
+  PositionClaimableSummerToken = 'position__claimableSummerToken',
+  PositionClaimableSummerTokenNormalized = 'position__claimableSummerTokenNormalized',
   PositionClaimedSummerToken = 'position__claimedSummerToken',
   PositionClaimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   PositionCreatedBlockNumber = 'position__createdBlockNumber',
