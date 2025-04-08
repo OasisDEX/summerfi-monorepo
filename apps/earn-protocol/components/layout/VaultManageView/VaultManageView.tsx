@@ -2,13 +2,13 @@
 
 import {
   type ArksHistoricalChartData,
+  type IArmadaPosition,
   type PerformanceChartData,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
   type VaultApyData,
 } from '@summerfi/app-types'
-import { type IArmadaPosition } from '@summerfi/sdk-client'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'

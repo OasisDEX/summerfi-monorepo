@@ -12,6 +12,7 @@ import {
   type ArmadaMigratablePositionApy,
   type HexData,
   type IAddress,
+  type IArmadaVaultId,
   type IChainInfo,
   type IFiatCurrencyAmount,
   type IPercentage,
@@ -28,7 +29,6 @@ import {
   getAaveV3Address,
   getDeployedContractAddress,
   type IArmadaManagerMigrations,
-  type IArmadaVaultId,
 } from '@summerfi/armada-protocol-common'
 import { AdmiralsQuartersAbi } from '@summerfi/armada-protocol-abis'
 import { encodeFunctionData } from 'viem'

@@ -1,6 +1,5 @@
-import { type SDKVaultishType } from '@summerfi/app-types'
+import { type IArmadaPosition, type SDKVaultishType } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
-import { type IArmadaPosition } from '@summerfi/sdk-client'
 
 export type MergePositionWithVaultProps = {
   position: IArmadaPosition

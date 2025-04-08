@@ -16,7 +16,17 @@ import type { GetUserPositionQuery } from '@summerfi/subgraph-manager-common'
 import { BigNumber } from 'bignumber.js'
 
 export const mapGraphDataToArmadaPosition =
-  ({ user, chainInfo, summerToken }: { user: IUser; chainInfo: IChainInfo; summerToken: IToken }) =>
+  ({
+    user,
+    chainInfo,
+    summerToken,
+    getTokenBySymbol,
+  }: {
+    user: IUser
+    chainInfo: IChainInfo
+    summerToken: IToken
+    getTokenBySymbol: (params: { chainInfo: IChainInfo; symbol: string }) => IToken
+  }) =>
   (position: GetUserPositionQuery['positions'][number]) => {
     if (position.vault.outputToken == null) {
       throw SDKError.createFrom({
@@ -43,7 +53,7 @@ export const mapGraphDataToArmadaPosition =
     })
 
     const rewards = position.rewards.map((reward) => {
-      const token = getRewardToken({
+      const token = getTokenBySymbol({
         chainInfo,
         symbol: reward.rewardToken.symbol,
       })

@@ -230,10 +230,13 @@ export class ArmadaManager implements IArmadaManager {
   /** @see IArmadaManager.getUserPositions */
   async getUserPositions({ user }: { user: IUser }): Promise<IArmadaPosition[]> {
     const summerToken = this.getSummerToken({ chainInfo: user.chainInfo })
+    const getTokenBySymbol = this._tokensManager.getTokenBySymbol.bind(this._tokensManager)
+
     return parseGetUserPositionsQuery({
       user,
       query: await this._subgraphManager.getUserPositions({ user }),
       summerToken,
+      getTokenBySymbol,
     })
   }
 
@@ -246,20 +249,26 @@ export class ArmadaManager implements IArmadaManager {
     fleetAddress: IAddress
   }): Promise<IArmadaPosition> {
     const summerToken = this.getSummerToken({ chainInfo: user.chainInfo })
+    const getTokenBySymbol = this._tokensManager.getTokenBySymbol.bind(this._tokensManager)
+
     return parseGetUserPositionQuery({
       user,
       query: await this._subgraphManager.getUserPosition({ user, fleetAddress }),
       summerToken,
+      getTokenBySymbol,
     })
   }
 
   /** @see IArmadaManager.getPosition */
   async getPosition(params: { positionId: IArmadaPositionId }): Promise<IArmadaPosition> {
     const summerToken = this.getSummerToken({ chainInfo: params.positionId.user.chainInfo })
+    const getTokenBySymbol = this._tokensManager.getTokenBySymbol.bind(this._tokensManager)
+
     return parseGetUserPositionQuery({
       user: params.positionId.user,
       query: await this._subgraphManager.getPosition({ positionId: params.positionId }),
       summerToken,
+      getTokenBySymbol,
     })
   }
 

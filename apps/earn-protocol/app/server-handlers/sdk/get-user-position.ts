@@ -1,6 +1,5 @@
-import { type SDKNetwork } from '@summerfi/app-types'
+import { type IArmadaPosition, type SDKNetwork } from '@summerfi/app-types'
 import { subgraphNetworkToId } from '@summerfi/app-utils'
-import { type IArmadaPosition } from '@summerfi/sdk-client'
 import { Address, getChainInfoByChainId, User, Wallet } from '@summerfi/sdk-common'
 
 import { serverOnlyErrorHandler } from '@/app/server-handlers/error-handler'

@@ -1,5 +1,9 @@
-import { IArmadaVaultId, isArmadaVaultId } from '@summerfi/armada-protocol-common'
-import { IPercentage, isPercentage } from '@summerfi/sdk-common'
+import {
+  IPercentage,
+  isArmadaVaultId,
+  isPercentage,
+  type IArmadaVaultId,
+} from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 

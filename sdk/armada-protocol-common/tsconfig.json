@@ -5,18 +5,6 @@
     "outDir": "dist",
     "baseUrl": "."
   },
-  "include": [
-    "src/**/*.ts",
-    "tests/**/*.ts",
-    "src/**/*.json",
-    "../sdk-common/src/common/enums/ArmadaMigrationType.ts",
-    "../sdk-common/src/common/enums/ArmadaOperationType.ts",
-    "../sdk-common/src/common/interfaces/IArmadaPosition.ts",
-    "../sdk-common/src/common/interfaces/IArmadaPositionId.ts",
-    "../sdk-common/src/common/interfaces/IArmadaProtocol.ts",
-    "../sdk-common/src/common/interfaces/IArmadaVault.ts",
-    "../sdk-common/src/common/interfaces/IArmadaVaultId.ts",
-    "../sdk-common/src/common/interfaces/IArmadaVaultInfo.ts"
-  ],
+  "include": ["src/**/*.ts", "tests/**/*.ts", "src/**/*.json"],
   "exclude": ["node_modules", "dist"]
 }

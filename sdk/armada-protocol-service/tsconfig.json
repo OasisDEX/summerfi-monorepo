@@ -25,23 +25,6 @@
       "@summerfi/serverless-shared/*": ["node_modules/@summerfi/serverless-shared/src/*"]
     }
   },
-  "include": [
-    "src/**/*.ts",
-    "tests/**/*.ts",
-    "e2e/**/*.ts",
-    "src/**/*.json",
-    "../sdk-common/src/common/implementation/ArmadaPosition.ts",
-    "../sdk-common/src/common/implementation/ArmadaPositionId.ts",
-    "../sdk-common/src/common/implementation/ArmadaProtocol.ts",
-    "../sdk-common/src/common/implementation/ArmadaVault.ts",
-    "../sdk-common/src/common/implementation/ArmadaVaultId.ts",
-    "../sdk-common/src/common/implementation/ArmadaVaultInfo.ts",
-    "../sdk-common/tests/ArmadaPool.spec.ts",
-    "../sdk-common/tests/ArmadaPoolInfo.spec.ts",
-    "../sdk-common/tests/ArmadaPosition.spec.ts",
-    "../sdk-common/tests/ArmadaPositionId.spec.ts",
-    "../sdk-common/tests/ArmadaProtocol.spec.ts",
-    "../sdk-common/tests/ArmadaVaultId.spec.ts"
-  ],
+  "include": ["src/**/*.ts", "tests/**/*.ts", "e2e/**/*.ts", "src/**/*.json"],
   "exclude": ["node_modules", "dist"]
 }

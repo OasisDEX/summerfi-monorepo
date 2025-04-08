@@ -5,14 +5,17 @@ import {
   parseForecastDatapoints,
   Text,
 } from '@summerfi/app-earn-ui'
-import { type PositionForecastAPIResponse, type SDKNetwork } from '@summerfi/app-types'
+import {
+  type IArmadaPosition,
+  type PositionForecastAPIResponse,
+  type SDKNetwork,
+} from '@summerfi/app-types'
 import {
   formatCryptoBalance,
   humanNetworktoSDKNetwork,
   parseServerResponseToClient,
   subgraphNetworkToId,
 } from '@summerfi/app-utils'
-import { type IArmadaPosition } from '@summerfi/sdk-client'
 import dayjs from 'dayjs'
 import { capitalize } from 'lodash-es'
 import { type Metadata } from 'next'

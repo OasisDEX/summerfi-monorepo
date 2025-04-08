@@ -1,6 +1,6 @@
-import { IArmadaVaultId, isArmadaVaultId } from '@summerfi/armada-protocol-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
+import { isArmadaVaultId, type IArmadaVaultId } from '@summerfi/sdk-common'
 
 export const getVaultRaw = publicProcedure
   .input(

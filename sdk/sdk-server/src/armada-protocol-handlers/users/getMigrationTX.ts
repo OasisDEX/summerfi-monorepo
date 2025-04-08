@@ -1,5 +1,12 @@
-import { IArmadaVaultId, isArmadaVaultId } from '@summerfi/armada-protocol-common'
-import { AddressValue, IUser, isPercentage, isUser, type IPercentage } from '@summerfi/sdk-common'
+import {
+  AddressValue,
+  IUser,
+  isArmadaVaultId,
+  isPercentage,
+  isUser,
+  type IArmadaVaultId,
+  type IPercentage,
+} from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 import { isHex } from 'viem'

@@ -2,6 +2,7 @@
 
 import { type FC, type ReactNode, useEffect, useState } from 'react'
 import {
+  type IArmadaPosition,
   type SDKVaultishType,
   type SDKVaultsListType,
   type VaultApyData,
@@ -11,7 +12,6 @@ import {
   formatDecimalAsPercent,
   sdkNetworkToHumanNetwork,
 } from '@summerfi/app-utils'
-import { type IArmadaPositionStandalone as IArmadaPosition } from '@summerfi/armada-protocol-common'
 import clsx from 'clsx'
 import Link from 'next/link'
 
