@@ -1,7 +1,8 @@
-import { arbitrum, base, mainnet, sonic } from '@account-kit/infra'
+import { arbitrum, base, mainnet } from '@account-kit/infra'
 import { SDKChainId, SDKNetwork } from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
 import { createPublicClient, http } from 'viem'
+import { sonic } from 'viem/chains'
 
 import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
 import { supportedNetworkGuard } from '@/helpers/supported-network-guard'
