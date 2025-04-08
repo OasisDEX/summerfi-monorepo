@@ -30,7 +30,7 @@ export const SDKChainIdToAAChainMap: {
   [SDKChainId.BASE]: base,
   [SDKChainId.MAINNET]: mainnet,
   [SDKChainId.OPTIMISM]: optimism,
-  [SDKChainId.SONIC]: sonic,
+  [SDKChainId.SONIC]: customAAKitSonicConfig,
 }
 
 export const GasSponsorshipIdMap = {
