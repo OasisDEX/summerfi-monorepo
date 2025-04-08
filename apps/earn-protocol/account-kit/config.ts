@@ -15,7 +15,7 @@ export type AccountKitSupportedNetworks =
   | SDKChainId.OPTIMISM
   | SDKChainId.SONIC
 
-const customAAKitSonicConfig: Chain = {
+export const customAAKitSonicConfig: Chain = {
   ...sonic,
   rpcUrls: {
     ...sonic.rpcUrls,
