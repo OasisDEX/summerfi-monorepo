@@ -59,6 +59,16 @@ export const getMigratablePositions = async ({
       }
     }
 
+    if (positionsData.positions.length === 0) {
+      return {
+        positionsData,
+        apyData: {
+          chainInfo,
+          apyByPositionId: {},
+        },
+      }
+    }
+
     try {
       apyData = await backendSDK.armada.users.getMigratablePositionsApy({
         chainInfo,
