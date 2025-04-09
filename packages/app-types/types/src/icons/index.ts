@@ -139,7 +139,7 @@ export type IconNamesList =
   | 'sai'
   | 'sdai_circle_color'
   | 'sky'
-  | 'sonic_circle_color'
+  | 'sonic_badge_mainnet'
   | 'snx'
   | 'spark_circle_color'
   | 'steth_circle_color'

@@ -351,6 +351,9 @@ export const icons = {
   snx: customLazy(() => import('./icons/snx.svg?react')) as IconExportType,
   social_link: customLazy(() => import('./icons/social_link.svg?react')) as IconExportType,
   social_x: customLazy(() => import('./icons/social_x.svg?react')) as IconExportType,
+  sonic_badge_mainnet: customLazy(
+    () => import('./icons/sonic_badge_mainnet.svg?react'),
+  ) as IconExportType,
   spark_circle_color: customLazy(
     () => import('./icons/spark_circle_color.svg?react'),
   ) as IconExportType,

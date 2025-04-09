@@ -646,6 +646,6 @@ export const tokenConfigs: TokenConfig[] = [
   {
     symbol: 'S',
     name: 'Sonic',
-    iconName: 'sonic_circle_color',
+    iconName: 'sonic_badge_mainnet',
   },
 ]
