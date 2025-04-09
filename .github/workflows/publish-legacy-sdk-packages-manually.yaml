@@ -1,4 +1,4 @@
-name: Publish SDK Packages Manually
+name: Publish Legacy SDK Packages Manually
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
@@ -24,6 +24,7 @@ on:
           - 'all'
           - 'sdk-common'
           - 'sdk-client'
+          - 'protocol-plugins'
 
 jobs:
   print-inputs:
@@ -38,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        sdk_package: [sdk-common, sdk-client]
+        sdk_package: [sdk-common, sdk-client, protocol-plugins]
     env:
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
       CONFIG_URL_EARN: ${{ secrets.CONFIG_URL_EARN }}
