@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
-import { type SDKSupportedChain } from '@summerfi/app-types'
-import { type IArmadaPosition } from '@summerfi/sdk-client'
+import { type IArmadaPosition, type SDKSupportedChain } from '@summerfi/app-types'
 import { Address, getChainInfoByChainId, User, Wallet } from '@summerfi/sdk-common'
 
 import { useAppSDK } from '@/hooks/use-app-sdk'

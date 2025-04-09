@@ -1,4 +1,4 @@
-import type { Token, Address, Maybe } from '@summerfi/sdk-common/common'
+import type { Token, Address } from '@summerfi/sdk-common/common'
 
 /**
  * @name ITokensManagerClient
@@ -26,7 +26,7 @@ export interface ITokensManagerClient {
    *
    * @returns The token with the given address
    */
-  getTokenByAddress(params: { address: Address }): Promise<Maybe<Token>>
+  getTokenByAddress(params: { address: Address }): Promise<Token>
 
   /**
    * @method getTokenByName
@@ -36,5 +36,5 @@ export interface ITokensManagerClient {
    *
    * @returns The token with the given name
    */
-  getTokenByName(params: { name: string }): Promise<Maybe<Token>>
+  getTokenByName(params: { name: string }): Promise<Token>
 }

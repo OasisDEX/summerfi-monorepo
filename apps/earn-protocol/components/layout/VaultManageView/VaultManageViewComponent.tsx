@@ -31,6 +31,7 @@ import {
 import { useTermsOfService } from '@summerfi/app-tos'
 import {
   type ArksHistoricalChartData,
+  type IArmadaPosition,
   type PerformanceChartData,
   type SDKVaultishType,
   type SDKVaultsListType,
@@ -40,7 +41,6 @@ import {
   type VaultApyData,
 } from '@summerfi/app-types'
 import { formatDecimalAsPercent, subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
-import { type IArmadaPosition } from '@summerfi/sdk-client'
 import { TransactionType } from '@summerfi/sdk-common'
 import Link from 'next/link'
 

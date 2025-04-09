@@ -1,4 +1,3 @@
-import { IArmadaVaultId, IRebalanceData } from '@summerfi/armada-protocol-common'
 import { TransactionInfo } from '@summerfi/sdk-common'
 import { IArmadaManagerKeepersClient } from '../../interfaces/ArmadaManager/IArmadaManagerKeepersClient'
 import { IRPCClient } from '../../interfaces/IRPCClient'

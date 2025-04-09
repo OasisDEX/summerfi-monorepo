@@ -1,4 +1,4 @@
-import { ChainFamilyMap, ProtocolName } from '@summerfi/sdk-common'
+import { ChainFamilyMap, ProtocolName } from '../src'
 import { ArmadaProtocol } from '../src/common/implementation/ArmadaProtocol'
 
 describe('SDK Common | Armada | ArmadaProtocol', () => {

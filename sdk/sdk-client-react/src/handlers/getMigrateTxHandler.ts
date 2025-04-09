@@ -1,5 +1,5 @@
-import { ArmadaVaultId, ISDKManager } from '@summerfi/sdk-client'
-import { Percentage, Address, IChainInfo, User, Wallet } from '@summerfi/sdk-common'
+import { ISDKManager } from '@summerfi/sdk-client'
+import { Percentage, Address, IChainInfo, User, Wallet, ArmadaVaultId } from '@summerfi/sdk-common'
 
 /**
  * Creates a handler function that generates migration transaction data for specified positions.

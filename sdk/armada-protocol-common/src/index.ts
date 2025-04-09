@@ -6,4 +6,3 @@ export * from './deployments'
 export * from './distributions'
 
 export type { IRebalanceData } from '@summerfi/contracts-provider-common'
-export type { IArmadaPosition as IArmadaPositionStandalone } from './common/interfaces/IArmadaPosition'

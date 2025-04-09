@@ -1,12 +1,8 @@
-import {
-  IPoolInfo,
-  ITokenAmount,
-  PoolInfoDataSchema,
-  PoolType,
-  isTokenAmount,
-} from '@summerfi/sdk-common/common'
+import { IPoolInfo, PoolInfoDataSchema } from './IPoolInfo'
 import { z } from 'zod'
 import { IArmadaVaultId, isArmadaVaultId } from './IArmadaVaultId'
+import { isTokenAmount, type ITokenAmount } from './ITokenAmount'
+import { PoolType } from '../enums/PoolType'
 
 /**
  * Unique signature to provide branded types to the interface

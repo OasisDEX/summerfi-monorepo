@@ -1,5 +1,11 @@
-import { IArmadaVaultId, IRebalanceData } from '@summerfi/armada-protocol-common'
-import { IAddress, IPercentage, ITokenAmount, TransactionInfo } from '@summerfi/sdk-common'
+import { IRebalanceData } from '@summerfi/armada-protocol-common'
+import {
+  IAddress,
+  IPercentage,
+  ITokenAmount,
+  TransactionInfo,
+  type IArmadaVaultId,
+} from '@summerfi/sdk-common'
 
 /**
  * @interface IArmadaManagerKeepersClient

@@ -41,6 +41,16 @@ query GetUserPositions($accountAddress: String!) {
     account {
       id
     }
+    claimedSummerTokenNormalized
+    claimableSummerTokenNormalized
+    rewards {
+      claimedNormalized
+      claimableNormalized
+      rewardToken {
+        symbol
+        lastPriceUSD
+      }
+    }
   }
 }
 
@@ -85,6 +95,71 @@ query GetUserPosition($accountAddress: String!, $vaultId: String!) {
     }
     account {
       id
+    }
+    claimedSummerTokenNormalized
+    claimableSummerTokenNormalized
+    rewards {
+      claimedNormalized
+      claimableNormalized
+      rewardToken {
+        symbol
+        lastPriceUSD
+      }
+    }
+  }
+}
+
+query GetPosition($id: ID!) {
+  positions(where: { id: $id }) {
+    id
+    inputTokenBalance
+    outputTokenBalance
+    stakedInputTokenBalance
+    stakedOutputTokenBalance
+    createdTimestamp
+    deposits {
+      amount
+      amountUSD
+      inputTokenBalance
+    }
+    withdrawals {
+      amount
+      amountUSD
+      inputTokenBalance
+    }
+    vault {
+      id
+      inputTokenBalance
+      inputTokenPriceUSD
+      outputTokenPriceUSD
+      inputToken {
+        id
+        symbol
+        name
+        decimals
+      }
+      outputToken {
+        id
+        symbol
+        name
+        decimals
+      }
+      protocol {
+        id
+      }
+    }
+    account {
+      id
+    }
+    claimedSummerTokenNormalized
+    claimableSummerTokenNormalized
+    rewards {
+      claimedNormalized
+      claimableNormalized
+      rewardToken {
+        symbol
+        lastPriceUSD
+      }
     }
   }
 }

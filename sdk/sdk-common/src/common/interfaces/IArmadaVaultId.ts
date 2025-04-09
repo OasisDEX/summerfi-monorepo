@@ -1,13 +1,9 @@
-import { IAddress, isAddress } from '@summerfi/sdk-common'
-import {
-  IChainInfo,
-  IPoolId,
-  PoolIdDataSchema,
-  PoolType,
-  isChainInfo,
-} from '@summerfi/sdk-common/common'
 import { z } from 'zod'
 import { IArmadaProtocol, isArmadaProtocol } from './IArmadaProtocol'
+import { PoolIdDataSchema, type IPoolId } from './IPoolId'
+import { isChainInfo, type IChainInfo } from './IChainInfo'
+import { isAddress, type IAddress } from './IAddress'
+import { PoolType } from '../enums/PoolType'
 
 /**
  * Unique signature to provide branded types to the interface

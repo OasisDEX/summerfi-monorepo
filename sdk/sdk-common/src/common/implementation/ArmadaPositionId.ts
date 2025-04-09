@@ -1,10 +1,9 @@
-import {
-  IArmadaPositionId,
-  IArmadaPositionIdData,
-  __iarmadapositionid__,
-} from '@summerfi/armada-protocol-common'
-import { IUser, PositionId, PositionType } from '@summerfi/sdk-common'
-import { SerializationService } from '@summerfi/sdk-common/services'
+import { SerializationService } from '../../services/SerializationService'
+import type { IUser } from '../../user/interfaces/IUser'
+import { PositionType } from '../enums/PositionType'
+import { __iarmadapositionid__ } from '../interfaces'
+import type { IArmadaPositionId, IArmadaPositionIdData } from '../interfaces/IArmadaPositionId'
+import { PositionId } from './PositionId'
 
 /**
  * Type for the parameters of ArmadaPositionId

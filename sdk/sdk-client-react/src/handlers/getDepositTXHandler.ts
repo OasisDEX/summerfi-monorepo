@@ -1,6 +1,7 @@
-import { type ISDKManager, ArmadaVaultId } from '@summerfi/sdk-client'
+import { type ISDKManager } from '@summerfi/sdk-client'
 import {
   Address,
+  ArmadaVaultId,
   Percentage,
   User,
   Wallet,

@@ -1,7 +1,6 @@
 import { type SDKNetwork, type SDKVaultType } from '@summerfi/app-types'
 import { subgraphNetworkToId } from '@summerfi/app-utils'
-import { ArmadaVaultId } from '@summerfi/sdk-client'
-import { Address, getChainInfoByChainId } from '@summerfi/sdk-common'
+import { Address, ArmadaVaultId, getChainInfoByChainId } from '@summerfi/sdk-common'
 
 import { serverOnlyErrorHandler } from '@/app/server-handlers/error-handler'
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'

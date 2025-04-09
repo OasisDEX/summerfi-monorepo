@@ -1,6 +1,6 @@
-import { isArmadaPositionId, type IArmadaPositionId } from '@summerfi/armada-protocol-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
+import { type IArmadaPositionId, isArmadaPositionId } from '@summerfi/sdk-common'
 
 export const getPosition = publicProcedure
   .input(

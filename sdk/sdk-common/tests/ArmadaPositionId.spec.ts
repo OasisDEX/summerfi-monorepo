@@ -1,4 +1,4 @@
-import { Address, ChainFamilyMap, User, Wallet } from '@summerfi/sdk-common'
+import { Address, ChainFamilyMap, User, Wallet } from '../src'
 import { ArmadaPositionId } from '../src/common/implementation/ArmadaPositionId'
 
 describe('SDK Common | Armada | ArmadaPositionId', () => {

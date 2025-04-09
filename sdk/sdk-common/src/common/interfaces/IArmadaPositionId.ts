@@ -1,6 +1,7 @@
-import { IPositionId, PositionIdDataSchema, PositionType } from '@summerfi/sdk-common/common'
-import { IUser, isUser } from '@summerfi/sdk-common/user'
 import { z } from 'zod'
+import { PositionType } from '../enums/PositionType'
+import { type IPositionId, PositionIdDataSchema } from './IPositionId'
+import { isUser, type IUser } from '../../user/interfaces/IUser'
 
 /**
  * Unique signature to provide branded types to the interface

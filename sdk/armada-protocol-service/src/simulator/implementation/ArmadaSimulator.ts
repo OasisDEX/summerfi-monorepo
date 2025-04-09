@@ -3,8 +3,7 @@ import {
   IArmadaParameters,
   IArmadaSimulation,
 } from '@summerfi/armada-protocol-common'
-import { ArmadaOperationType, SDKError, SDKErrorType } from '@summerfi/sdk-common'
-import { ArmadaPositionId } from '../../common'
+import { ArmadaOperationType, ArmadaPositionId, SDKError, SDKErrorType } from '@summerfi/sdk-common'
 import { ArmadaSimulatedPosition } from './ArmadaSimulatedPosition'
 import { ArmadaSimulation } from './ArmadaSimulation'
 
