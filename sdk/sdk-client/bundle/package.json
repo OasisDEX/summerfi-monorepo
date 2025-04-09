@@ -1,6 +1,6 @@
 {
-  "name": "@summer_fi/summerfi-sdk-client",
-  "version": "0.3.3",
+  "name": "@summer_fi/sdk-client",
+  "version": "0.1.0",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "packageManager": "yarn@1.22.21",
@@ -8,10 +8,6 @@
   "dependencies": {
     "abitype": "^1.0.2",
     "bignumber.js": "^9.1.2",
-    "@trpc/client": "11.0.0-next-beta.264",
-    "@trpc/server": "11.0.0-next-beta.264",
-    "superjson": "^1.13.3",
-    "viem": "2.26.1",
-    "zod": "^3.22.4"
+    "@trpc/client": "11.0.0-next-beta.264"
   }
 }
