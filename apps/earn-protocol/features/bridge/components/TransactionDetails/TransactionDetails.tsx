@@ -34,7 +34,7 @@ export const TransactionDetails = ({
       value: loading ? (
         <SkeletonLine width={100} height={20} />
       ) : (
-        `$${formatCryptoBalance(gasOnSource)}`
+        `${formatCryptoBalance(gasOnSource, '$')}`
       ),
       type: 'entry' as const,
     },

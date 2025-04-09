@@ -12,6 +12,7 @@ import {
   Percentage,
   BridgeTransactionInfo,
   TokenAmount,
+  IToken,
 } from '@summerfi/sdk-common'
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { addressToBytes32, Options } from '@layerzerolabs/lz-v2-utilities'
@@ -32,20 +33,20 @@ export class ArmadaManagerBridge implements IArmadaManagerBridge {
   private _blockchainClientProvider: IBlockchainClientProvider
   private _supportedChains: IChainInfo[]
   private _tokensManager: ITokensManager
-  private _bridgeContractAddress: Address
+  private _getSummerToken: (params: { chainInfo: IChainInfo }) => IToken
 
   constructor(params: {
     blockchainClientProvider: IBlockchainClientProvider
     configProvider: IConfigurationProvider
     supportedChains: IChainInfo[]
     tokensManager: ITokensManager
-    bridgeContractAddress: Address
+    getSummerToken: (params: { chainInfo: IChainInfo }) => IToken
   }) {
     this._configProvider = params.configProvider
     this._blockchainClientProvider = params.blockchainClientProvider
     this._supportedChains = params.supportedChains
     this._tokensManager = params.tokensManager
-    this._bridgeContractAddress = params.bridgeContractAddress
+    this._getSummerToken = params.getSummerToken
   }
 
   async getBridgeTx(params: BridgeTxParams): Promise<BridgeTransactionInfo[]> {
@@ -79,8 +80,9 @@ export class ArmadaManagerBridge implements IArmadaManagerBridge {
       oftCmd: '0x' as `0x${string}`,
     }
 
+    const bridgeContractAddress = this._getSummerToken({ chainInfo: params.sourceChain }).address
     const quotedFee = await client.readContract({
-      address: this._bridgeContractAddress.value,
+      address: bridgeContractAddress.value,
       abi: BridgeAbi,
       functionName: 'quoteSend',
       args: [param, false] as const,
@@ -103,14 +105,16 @@ export class ArmadaManagerBridge implements IArmadaManagerBridge {
       `Bridge ${params.amount.toString()} of SUMR token ` +
       `from ${params.sourceChain.name} to ${params.targetChain.name}`
 
-    const ETH = await this._tokensManager.getTokenBySymbol({
-      symbol: 'ETH',
+    const feeTokenSymbol = params.sourceChain.chainId === 146 ? 'S' : 'ETH'
+    const feeToken = await this._tokensManager.getTokenBySymbol({
+      symbol: feeTokenSymbol,
       chainInfo: params.sourceChain,
     })
+
     const transaction: BridgeTransactionInfo = {
       description,
       transaction: {
-        target: this._bridgeContractAddress,
+        target: bridgeContractAddress,
         value: quotedFee.nativeFee.toString(),
         calldata,
       },
@@ -119,7 +123,7 @@ export class ArmadaManagerBridge implements IArmadaManagerBridge {
         toAmount: params.amount,
         slippage: Percentage.createFrom({ value: 0 }),
         lzFee: TokenAmount.createFromBaseUnit({
-          token: ETH,
+          token: feeToken,
           amount: quotedFee.nativeFee.toString(),
         }),
       },

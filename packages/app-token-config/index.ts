@@ -643,4 +643,9 @@ export const tokenConfigs: TokenConfig[] = [
     name: 'CRVV1ETHSTETH',
     iconName: 'not_supported_icon',
   },
+  {
+    symbol: 'S',
+    name: 'Sonic',
+    iconName: 'sonic_circle_color',
+  },
 ]

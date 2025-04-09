@@ -16,26 +16,33 @@ import { hundredThousand, oneThousandth, ten, zero } from '@/numbers'
  * @param amount - The `BigNumber` representing the cryptocurrency balance.
  * @returns The formatted balance string.
  */
-export const formatCryptoBalance = (amount: BigNumber | string | number | bigint): string => {
+export const formatCryptoBalance = (
+  amount: BigNumber | string | number | bigint,
+  prefix?: string,
+): string => {
+  if (isNaN(Number(amount))) {
+    return '-'
+  }
+
   const resolvedAmount = formatToBigNumber(amount.toString())
 
   const absAmount = resolvedAmount.abs()
 
   if (absAmount.eq(zero)) {
-    return formatAsShorthandNumbers(resolvedAmount, { precision: 2 })
+    return `${prefix ?? ''}${formatAsShorthandNumbers(resolvedAmount, { precision: 2 })}`
   }
 
   if (absAmount.lt(oneThousandth)) {
-    return `${resolvedAmount.isNegative() ? '0.000' : '<0.001'}`
+    return `${prefix ?? ''}${resolvedAmount.isNegative() ? '0.000' : '<0.001'}`
   }
 
   if (absAmount.lt(ten)) {
-    return formatAsShorthandNumbers(resolvedAmount, { precision: 4 })
+    return `${prefix ?? ''}${formatAsShorthandNumbers(resolvedAmount, { precision: 4 })}`
   }
 
   if (absAmount.lt(hundredThousand)) {
-    return resolvedAmount.toFormat(2, BigNumber.ROUND_DOWN)
+    return `${prefix ?? ''}${resolvedAmount.toFormat(2, BigNumber.ROUND_DOWN)}`
   }
 
-  return formatAsShorthandNumbers(resolvedAmount, { precision: 2 })
+  return `${prefix ?? ''}${formatAsShorthandNumbers(resolvedAmount, { precision: 2 })}`
 }

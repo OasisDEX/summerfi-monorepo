@@ -5,7 +5,12 @@ import {
   useSendUserOperation,
   useSmartAccountClient,
 } from '@account-kit/react'
-import { type BridgeTransactionInfo, type IAddress, TokenAmount } from '@summerfi/sdk-common'
+import {
+  type BridgeTransactionInfo,
+  type IAddress,
+  QuoteData,
+  TokenAmount,
+} from '@summerfi/sdk-common'
 import { type Chain, formatEther } from 'viem'
 
 import { accountType } from '@/account-kit/config'
@@ -133,25 +138,28 @@ export function useBridgeTransaction({
           }),
           getTokenBySymbol({
             chainId: sourceChainInfo.chainId,
-            symbol: 'USDC',
+            symbol: sourceChainInfo.chainId === 146 ? 'USDC.e' : 'USDC',
           }),
         ])
 
-        const fetchedTransactionFee = await getSwapQuote({
-          fromAmount: formatEther(
-            bridgeTx.metadata.lzFee.toSolidityValue({ decimals: ETH_DECIMALS }),
-          ),
-          fromToken: ethToken,
-          toToken: usdcToken,
-          // FIXME: Use actual slippage value from slippage config
-          slippage: 0.1,
-        })
+        let fetchedTransactionFee: QuoteData | undefined
+        if (sourceChainInfo.chainId !== 146) {
+          fetchedTransactionFee = await getSwapQuote({
+            fromAmount: formatEther(
+              bridgeTx.metadata.lzFee.toSolidityValue({ decimals: ETH_DECIMALS }),
+            ),
+            fromToken: ethToken,
+            toToken: usdcToken,
+            // FIXME: Use actual slippage value from slippage config
+            slippage: 0.1,
+          })
+        }
 
         setTransaction({
           ...bridgeTx,
           metadata: {
             ...bridgeTx.metadata,
-            lzFeeUsd: fetchedTransactionFee.toTokenAmount.amount,
+            lzFeeUsd: fetchedTransactionFee ? fetchedTransactionFee.toTokenAmount.amount : '0',
           },
         })
       } catch (err) {

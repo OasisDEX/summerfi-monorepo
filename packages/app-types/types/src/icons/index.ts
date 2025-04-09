@@ -139,6 +139,7 @@ export type IconNamesList =
   | 'sai'
   | 'sdai_circle_color'
   | 'sky'
+  | 'sonic_circle_color'
   | 'snx'
   | 'spark_circle_color'
   | 'steth_circle_color'
@@ -429,6 +430,7 @@ export type TokenSymbolsList =
   | 'WUSDL'
   | 'MBASIS'
   | 'USD₮0'
+  | 'S'
   // deprecated ones
   | 'CRVV1ETHSTETH'
   | 'UNIV2AAVEETH'

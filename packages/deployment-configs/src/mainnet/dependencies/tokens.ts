@@ -284,4 +284,8 @@ export const TokensDependeciesConfiguration: TokenDependencyConfig = {
     name: 'RPL',
     address: '0xd33526068d116ce69f19a9ee46f0bd304f21a51f',
   },
+  S: {
+    name: 'Sonic',
+    address: '0x0000000000000000000000000000000000000000', // Placeholder address
+  },
 }

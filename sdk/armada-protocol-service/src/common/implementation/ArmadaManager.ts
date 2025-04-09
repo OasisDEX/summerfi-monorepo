@@ -140,7 +140,7 @@ export class ArmadaManager implements IArmadaManager {
       blockchainClientProvider: this._blockchainClientProvider,
       configProvider: this._configProvider,
       tokensManager: this._tokensManager,
-      bridgeContractAddress: this.getSummerToken({ chainInfo: this._hubChainInfo }).address,
+      getSummerToken: this.getSummerToken.bind(this),
     })
   }
 
@@ -149,10 +149,12 @@ export class ArmadaManager implements IArmadaManager {
   ): ReturnType<IArmadaManager['getSummerToken']> {
     const tokenSymbol = this._isTestDeployment ? 'BUMMER' : 'SUMR'
 
-    return this._tokensManager.getTokenBySymbol({
+    const token = this._tokensManager.getTokenBySymbol({
       chainInfo: params.chainInfo,
       symbol: tokenSymbol,
     })
+    console.log('getSummerToken', token)
+    return token
   }
 
   /** POOLS */
