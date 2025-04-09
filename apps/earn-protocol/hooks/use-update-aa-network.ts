@@ -1,10 +1,11 @@
 'use client'
 import { useEffect } from 'react'
-import { arbitrum, base, mainnet, sonic } from '@account-kit/infra'
+import { arbitrum, base, mainnet } from '@account-kit/infra'
 import { useChain } from '@account-kit/react'
 import { humanNetworktoSDKNetwork, subgraphNetworkToId } from '@summerfi/app-utils'
 import { useParams } from 'next/navigation'
 
+import { customAAKitSonicConfig as sonic } from '@/account-kit/config'
 import { NetworkIds } from '@/constants/networks-list'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 

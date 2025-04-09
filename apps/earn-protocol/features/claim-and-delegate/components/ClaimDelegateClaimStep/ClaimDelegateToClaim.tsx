@@ -1,6 +1,6 @@
 import { type FC } from 'react'
 import { Button, Card, Icon, LoadingSpinner, Text, WithArrow } from '@summerfi/app-earn-ui'
-import { type SDKChainId } from '@summerfi/app-types'
+import { type SDKSupportedChain } from '@summerfi/app-types'
 import { humanReadableChainToLabelMap } from '@summerfi/app-utils'
 import clsx from 'clsx'
 
@@ -12,7 +12,7 @@ interface ClaimDelegateToClaimProps {
   earned: string
   earnedInUSD: string
   balance: string
-  chainId: SDKChainId.BASE | SDKChainId.MAINNET | SDKChainId.ARBITRUM
+  chainId: SDKSupportedChain
   onClaim: () => void
   isLoading?: boolean
   isChangingNetwork?: boolean

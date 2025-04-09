@@ -2,7 +2,7 @@ import { type Dispatch, type FC, useCallback, useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
 import { SUMR_CAP, useLocalConfig } from '@summerfi/app-earn-ui'
-import { SDKChainId } from '@summerfi/app-types'
+import { SDKChainId, type SDKSupportedChain } from '@summerfi/app-types'
 import {
   chainIdToSDKNetwork,
   isSupportedHumanNetwork,
@@ -35,10 +35,11 @@ const delayPerNetwork = {
   [SDKChainId.BASE]: 4000,
   [SDKChainId.ARBITRUM]: 4000,
   [SDKChainId.MAINNET]: 13000,
+  [SDKChainId.SONIC]: 4000,
 } as const
 
 const claimItems: {
-  chainId: SDKChainId.BASE | SDKChainId.MAINNET | SDKChainId.ARBITRUM
+  chainId: SDKSupportedChain
 }[] = [
   {
     chainId: SDKChainId.BASE,
@@ -48,6 +49,9 @@ const claimItems: {
   },
   {
     chainId: SDKChainId.MAINNET,
+  },
+  {
+    chainId: SDKChainId.SONIC,
   },
 ]
 
@@ -79,7 +83,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
 
   const { setChain, isSettingChain } = useChain()
   const { clientChainId } = useClientChainId() as {
-    clientChainId: SDKChainId.BASE | SDKChainId.ARBITRUM | SDKChainId.MAINNET
+    clientChainId: SDKSupportedChain
   }
 
   const handleClaimError = useCallback(() => {
@@ -192,9 +196,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     dispatch({ type: 'update-step', payload: ClaimDelegateSteps.DELEGATE })
   }
 
-  const handleClaimClick = (
-    chainId: SDKChainId.BASE | SDKChainId.MAINNET | SDKChainId.ARBITRUM,
-  ) => {
+  const handleClaimClick = (chainId: SDKSupportedChain) => {
     // Prevent multiple simultaneous claims
     if (state.claimStatus === ClaimDelegateTxStatuses.PENDING || isSettingChain) {
       return
