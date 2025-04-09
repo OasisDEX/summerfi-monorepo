@@ -5,14 +5,14 @@ import {
   GetGlobalRebalancesQuery,
   GetUsersActivityQuery,
 } from '@summerfi/subgraph-manager-common'
+import { IArmadaPosition } from '@summerfi/sdk-common'
 import { ChainId } from '@summerfi/serverless-shared'
-import { type IArmadaPositionStandalone } from '@summerfi/armada-protocol-common'
 import { EarnAppFleetCustomConfigType } from '../generated/earn-app-config'
 import { TimeframesType } from '../components'
 
 export { Network as SDKNetwork }
 export { ChainId as SDKChainId }
-export { IArmadaPositionStandalone as IArmadaPosition }
+export type { IArmadaPosition as IArmadaPosition }
 
 export type ChartDataPoints = {
   timestamp: number

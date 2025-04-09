@@ -1,13 +1,11 @@
-import {
-  IArmadaVault,
-  IArmadaPosition,
-  IArmadaPositionData,
-  IArmadaPositionId,
-  __iarmadaposition__,
-} from '@summerfi/armada-protocol-common'
-import { PositionType } from '@summerfi/sdk-common'
-import { ITokenAmount, Position } from '@summerfi/sdk-common/common'
-import { SerializationService } from '@summerfi/sdk-common/services'
+import { SerializationService } from '../../services/SerializationService'
+import { PositionType } from '../enums/PositionType'
+import { __iarmadaposition__ } from '../interfaces'
+import type { IArmadaPosition, IArmadaPositionData } from '../interfaces/IArmadaPosition'
+import type { IArmadaPositionId } from '../interfaces/IArmadaPositionId'
+import type { IArmadaVault } from '../interfaces/IArmadaVault'
+import type { ITokenAmount } from '../interfaces/ITokenAmount'
+import { Position } from './Position'
 
 /**
  * Type for the parameters of ArmadaPosition
@@ -31,6 +29,13 @@ export class ArmadaPosition extends Position implements IArmadaPosition {
   readonly deposits: ITokenAmount[]
   readonly withdrawals: ITokenAmount[]
 
+  readonly claimedSummerToken: ITokenAmount
+  readonly claimableSummerToken: ITokenAmount
+  readonly rewards: Array<{
+    claimed: ITokenAmount
+    claimable: ITokenAmount
+  }>
+
   /** FACTORY */
   static createFrom(params: ArmadaPositionParameters): ArmadaPosition {
     return new ArmadaPosition(params)
@@ -46,6 +51,9 @@ export class ArmadaPosition extends Position implements IArmadaPosition {
     this.shares = params.shares
     this.deposits = params.deposits
     this.withdrawals = params.withdrawals
+    this.claimedSummerToken = params.claimedSummerToken
+    this.claimableSummerToken = params.claimableSummerToken
+    this.rewards = params.rewards
   }
 }
 

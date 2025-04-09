@@ -1,4 +1,4 @@
-import type { ChainId, IAddress, IUser } from '@summerfi/sdk-common'
+import type { ChainId, IAddress, IArmadaPositionId, IUser } from '@summerfi/sdk-common'
 import type {
   GetUserPositionQuery,
   GetUserPositionsQuery,
@@ -8,6 +8,7 @@ import type {
   GetUsersActivityQuery,
   GetUserActivityQuery,
   Position_Filter,
+  GetPositionQuery,
 } from '../generated/client'
 
 /**
@@ -77,6 +78,19 @@ export interface IArmadaSubgraphManager {
    *
    */
   getUserPosition(params: { user: IUser; fleetAddress: IAddress }): Promise<GetUserPositionQuery>
+
+  /**
+   * @name getPosition
+   * @description get the position of a user in a fleet
+   *
+   * @param positionId Position ID
+   *
+   * @returns GetUserPositionQuery
+   *
+   * @throws Error
+   *
+   */
+  getPosition(params: { positionId: IArmadaPositionId }): Promise<GetPositionQuery>
 
   /**
    * @name getUsersActivity

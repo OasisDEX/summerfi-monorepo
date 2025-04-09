@@ -1,5 +1,10 @@
-import type { IArmadaPosition } from '@summerfi/armada-protocol-common'
-import { isAddress, isUser, type IAddress, type IUser } from '@summerfi/sdk-common'
+import {
+  isAddress,
+  isUser,
+  type IAddress,
+  type IArmadaPosition,
+  type IUser,
+} from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 

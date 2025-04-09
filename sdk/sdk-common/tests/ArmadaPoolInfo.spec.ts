@@ -1,4 +1,4 @@
-import { Address, ChainFamilyMap, Token, TokenAmount } from '@summerfi/sdk-common'
+import { ChainFamilyMap, Address, Token, TokenAmount } from '../src'
 import { ArmadaVaultId } from '../src/common/implementation/ArmadaVaultId'
 import { ArmadaVaultInfo } from '../src/common/implementation/ArmadaVaultInfo'
 

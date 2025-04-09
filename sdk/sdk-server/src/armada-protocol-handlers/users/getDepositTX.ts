@@ -1,9 +1,10 @@
-import { IArmadaVaultId, isArmadaVaultId } from '@summerfi/armada-protocol-common'
 import {
   IUser,
+  isArmadaVaultId,
   isPercentage,
   isTokenAmount,
   isUser,
+  type IArmadaVaultId,
   type IPercentage,
   type ITokenAmount,
 } from '@summerfi/sdk-common'

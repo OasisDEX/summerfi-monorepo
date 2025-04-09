@@ -1,7 +1,6 @@
-import { isArmadaVaultId, type IArmadaVaultId } from '@summerfi/armada-protocol-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
-import { isUser, type IUser } from '@summerfi/sdk-common'
+import { isArmadaVaultId, isUser, type IArmadaVaultId, type IUser } from '@summerfi/sdk-common'
 
 export const getTotalBalance = publicProcedure
   .input(

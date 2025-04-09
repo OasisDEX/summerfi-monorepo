@@ -1,6 +1,5 @@
-import { Address, ChainFamilyMap } from '@summerfi/sdk-common'
-import { ArmadaVaultId } from '../src'
 import { ArmadaProtocol } from '../src/common/implementation/ArmadaProtocol'
+import { Address, ArmadaVaultId, ChainFamilyMap } from '../src'
 
 describe('SDK Common | Armada | ArmadaVaultId', () => {
   const chainInfo = ChainFamilyMap.Base.Base

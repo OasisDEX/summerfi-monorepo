@@ -8,8 +8,8 @@ import type {
   ArmadaMigratablePosition,
   AddressValue,
   ArmadaMigratablePositionApy,
+  IArmadaVaultId,
 } from '@summerfi/sdk-common'
-import type { IArmadaVaultId } from './IArmadaVaultId'
 
 /**
  * @name IArmadaManagerMigrations

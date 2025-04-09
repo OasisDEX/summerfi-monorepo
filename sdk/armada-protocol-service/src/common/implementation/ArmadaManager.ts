@@ -3,10 +3,6 @@ import { AdmiralsQuartersAbi, StakingRewardsManagerBaseAbi } from '@summerfi/arm
 import {
   getDeployedContractAddress,
   IArmadaManager,
-  IArmadaVaultInfo,
-  IArmadaPosition,
-  IArmadaPositionId,
-  IArmadaVaultId,
   createDepositTransaction,
   createWithdrawTransaction,
   type IArmadaManagerClaims,
@@ -38,13 +34,15 @@ import {
   type IToken,
   type ISpotPriceInfo,
   type TransactionPriceImpact,
+  type IArmadaVaultInfo,
+  type IArmadaPosition,
+  type IArmadaPositionId,
+  type IArmadaVaultId,
+  ArmadaVaultInfo,
 } from '@summerfi/sdk-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { ITokensManager } from '@summerfi/tokens-common'
 import { encodeFunctionData } from 'viem'
-import { ArmadaVault } from './ArmadaVault'
-import { ArmadaVaultInfo } from './ArmadaVaultInfo'
-import { ArmadaPosition } from './ArmadaPosition'
 import { parseGetUserPositionQuery } from './extensions/parseGetUserPositionQuery'
 import { parseGetUserPositionsQuery } from './extensions/parseGetUserPositionsQuery'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
@@ -231,9 +229,14 @@ export class ArmadaManager implements IArmadaManager {
   /** POSITIONS */
   /** @see IArmadaManager.getUserPositions */
   async getUserPositions({ user }: { user: IUser }): Promise<IArmadaPosition[]> {
+    const summerToken = this.getSummerToken({ chainInfo: user.chainInfo })
+    const getTokenBySymbol = this._tokensManager.getTokenBySymbol.bind(this._tokensManager)
+
     return parseGetUserPositionsQuery({
       user,
       query: await this._subgraphManager.getUserPositions({ user }),
+      summerToken,
+      getTokenBySymbol,
     })
   }
 
@@ -245,41 +248,27 @@ export class ArmadaManager implements IArmadaManager {
     user: IUser
     fleetAddress: IAddress
   }): Promise<IArmadaPosition> {
+    const summerToken = this.getSummerToken({ chainInfo: user.chainInfo })
+    const getTokenBySymbol = this._tokensManager.getTokenBySymbol.bind(this._tokensManager)
+
     return parseGetUserPositionQuery({
       user,
       query: await this._subgraphManager.getUserPosition({ user, fleetAddress }),
+      summerToken,
+      getTokenBySymbol,
     })
   }
 
   /** @see IArmadaManager.getPosition */
-  async getPosition(params: {
-    vaultId: IArmadaVaultId
-    positionId: IArmadaPositionId
-  }): Promise<IArmadaPosition> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
+  async getPosition(params: { positionId: IArmadaPositionId }): Promise<IArmadaPosition> {
+    const summerToken = this.getSummerToken({ chainInfo: params.positionId.user.chainInfo })
+    const getTokenBySymbol = this._tokensManager.getTokenBySymbol.bind(this._tokensManager)
 
-    const fleetERC4626Contract = fleetContract.asErc4626()
-    const fleetERC20Contract = fleetERC4626Contract.asErc20()
-
-    const userShares = await fleetERC20Contract.balanceOf({
-      address: params.positionId.user.wallet.address,
-    })
-    const userAssets = await fleetERC4626Contract.convertToAssets({ amount: userShares })
-
-    const pool = ArmadaVault.createFrom({
-      id: params.vaultId,
-    })
-
-    return ArmadaPosition.createFrom({
-      id: params.positionId,
-      pool: pool,
-      amount: userAssets,
-      shares: userShares,
-      deposits: [],
-      withdrawals: [],
+    return parseGetUserPositionQuery({
+      user: params.positionId.user,
+      query: await this._subgraphManager.getPosition({ positionId: params.positionId }),
+      summerToken,
+      getTokenBySymbol,
     })
   }
 

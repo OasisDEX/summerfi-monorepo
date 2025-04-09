@@ -1,4 +1,4 @@
-import { Address, ChainFamilyMap, PoolType } from '@summerfi/sdk-common'
+import { ChainFamilyMap, Address, PoolType } from '../src'
 import { ArmadaVault } from '../src/common/implementation/ArmadaVault'
 import { ArmadaVaultId } from '../src/common/implementation/ArmadaVaultId'
 

@@ -5,12 +5,6 @@
     "outDir": "dist",
     "baseUrl": "."
   },
-  "include": [
-    "src/**/*.ts",
-    "tests/**/*.ts",
-    "src/**/*.json",
-    "../sdk-common/src/common/enums/ArmadaMigrationType.ts",
-    "../sdk-common/src/common/enums/ArmadaOperationType.ts"
-  ],
+  "include": ["src/**/*.ts", "tests/**/*.ts", "src/**/*.json"],
   "exclude": ["node_modules", "dist"]
 }

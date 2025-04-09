@@ -29,7 +29,7 @@ export class MockTokensProvider
     return [1, 4, 6]
   }
 
-  async getTokenBySymbol(params: { chainInfo: IChainInfo; symbol: string }): Promise<IToken> {
+  getTokenBySymbol(params: { chainInfo: IChainInfo; symbol: string }): IToken {
     return Token.createFrom({
       name: 'MockToken',
       symbol: params.symbol,
@@ -42,7 +42,7 @@ export class MockTokensProvider
     })
   }
 
-  async getTokenByAddress(params: { chainInfo: IChainInfo; address: IAddress }): Promise<IToken> {
+  getTokenByAddress(params: { chainInfo: IChainInfo; address: IAddress }): IToken {
     return Token.createFrom({
       name: 'MockToken',
       symbol: 'MOCK',
@@ -52,7 +52,7 @@ export class MockTokensProvider
     })
   }
 
-  async getTokenByName(params: { chainInfo: IChainInfo; name: string }): Promise<IToken> {
+  getTokenByName(params: { chainInfo: IChainInfo; name: string }): IToken {
     return Token.createFrom({
       name: params.name,
       symbol: 'MOCK',

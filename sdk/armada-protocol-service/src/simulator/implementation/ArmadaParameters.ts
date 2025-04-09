@@ -1,10 +1,13 @@
 import {
   IArmadaParameters,
   IArmadaParametersData,
-  IArmadaVaultId,
   __iarmadaparameters__,
 } from '@summerfi/armada-protocol-common'
-import { ITokenAmount, type ArmadaOperationType } from '@summerfi/sdk-common/common'
+import {
+  ITokenAmount,
+  type ArmadaOperationType,
+  type IArmadaVaultId,
+} from '@summerfi/sdk-common/common'
 import { SerializationService } from '@summerfi/sdk-common/services'
 import { IUser } from '@summerfi/sdk-common/user'
 

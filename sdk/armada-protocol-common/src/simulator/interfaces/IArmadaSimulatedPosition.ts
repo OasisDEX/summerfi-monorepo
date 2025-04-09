@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { IArmadaManager } from '../../common/interfaces/IArmadaManager'
-import { ArmadaPositionDataSchema, IArmadaPosition } from '../../common/interfaces/IArmadaPosition'
+import { IArmadaPosition, ArmadaPositionDataSchema } from '@summerfi/sdk-common'
 
 /**
  * Unique signature to provide branded types to the interface

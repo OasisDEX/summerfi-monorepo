@@ -55,7 +55,7 @@ export class StaticTokensProvider
   }
 
   /** @see ITokensProvider.getTokenBySymbol */
-  async getTokenBySymbol(params: { chainInfo: IChainInfo; symbol: string }): Promise<IToken> {
+  getTokenBySymbol(params: { chainInfo: IChainInfo; symbol: string }): IToken {
     const { chainInfo } = params
 
     const tokenMap = this._getTokenMap(params.chainInfo)
@@ -72,7 +72,7 @@ export class StaticTokensProvider
   }
 
   /** @see ITokensProvider.getTokenByAddress */
-  async getTokenByAddress(params: { chainInfo: IChainInfo; address: IAddress }): Promise<IToken> {
+  getTokenByAddress(params: { chainInfo: IChainInfo; address: IAddress }): IToken {
     const { chainInfo } = params
 
     const tokenMap = this._getTokenMap(params.chainInfo)
@@ -91,7 +91,7 @@ export class StaticTokensProvider
   }
 
   /** @see ITokensProvider.getTokenByName */
-  async getTokenByName(params: { chainInfo: IChainInfo; name: string }): Promise<IToken> {
+  getTokenByName(params: { chainInfo: IChainInfo; name: string }): IToken {
     const { chainInfo } = params
 
     const tokenMap = this._getTokenMap(params.chainInfo)

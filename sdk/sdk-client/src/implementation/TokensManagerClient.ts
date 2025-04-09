@@ -25,7 +25,7 @@ export class TokensManagerClient extends IRPCClient implements ITokensManagerCli
   }
 
   /** @see ITokensManagerClient.getTokenByAddress */
-  public async getTokenByAddress(params: { address: Address }): Promise<Maybe<IToken>> {
+  public async getTokenByAddress(params: { address: Address }): Promise<IToken> {
     return this.rpcClient.tokens.getTokenByAddress.query({
       chainInfo: this._chainInfo,
       address: params.address,
@@ -33,7 +33,7 @@ export class TokensManagerClient extends IRPCClient implements ITokensManagerCli
   }
 
   /** @see ITokensManagerClient.getTokenByName */
-  public async getTokenByName(_params: { name: string }): Promise<Maybe<IToken>> {
+  public async getTokenByName(_params: { name: string }): Promise<IToken> {
     return this.rpcClient.tokens.getTokenByName.query({
       chainInfo: this._chainInfo,
       name: _params.name,

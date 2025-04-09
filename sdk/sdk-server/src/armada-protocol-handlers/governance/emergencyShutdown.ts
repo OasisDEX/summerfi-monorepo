@@ -1,6 +1,6 @@
-import { isArmadaVaultId, type IArmadaVaultId } from '@summerfi/armada-protocol-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
+import { type IArmadaVaultId, isArmadaVaultId } from '@summerfi/sdk-common'
 
 export const emergencyShutdown = publicProcedure
   .input(

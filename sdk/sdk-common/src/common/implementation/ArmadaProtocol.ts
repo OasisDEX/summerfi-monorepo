@@ -1,10 +1,8 @@
-import {
-  IArmadaProtocol,
-  IArmadaProtocolData,
-  __iarmadaprotocol__,
-} from '@summerfi/armada-protocol-common'
-import { Protocol, ProtocolName } from '@summerfi/sdk-common/common'
-import { SerializationService } from '@summerfi/sdk-common/services'
+import { SerializationService } from '../../services/SerializationService'
+import { ProtocolName } from '../enums/ProtocolName'
+import { __iarmadaprotocol__ } from '../interfaces'
+import type { IArmadaProtocol, IArmadaProtocolData } from '../interfaces/IArmadaProtocol'
+import { Protocol } from './Protocol'
 
 /**
  * Type for the parameters of the ArmadaProtocol
