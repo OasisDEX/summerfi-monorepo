@@ -27,6 +27,7 @@ import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
 import { DataBlock } from '@/components/molecules/DataBlock/DataBlock'
 import { Dropdown } from '@/components/molecules/Dropdown/Dropdown'
 import { SimpleGrid } from '@/components/molecules/Grid/SimpleGrid'
+import { LiveApyInfo } from '@/components/molecules/LiveApyInfo/LiveApyInfo'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { VaultTitleDropdownContent } from '@/components/molecules/VaultTitleDropdownContent/VaultTitleDropdownContent'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
@@ -35,6 +36,7 @@ import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 import { isVaultAtLeastDaysOld } from '@/helpers/is-vault-at-least-days-old'
 import { useApyUpdatedAt } from '@/hooks/use-apy-updated-at'
+import { useHoldAlt } from '@/hooks/use-hold-alt'
 
 import vaultOpenGridStyles from './VaultOpenGrid.module.scss'
 
@@ -84,6 +86,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
     useState(displaySimulationGraph)
 
   const isVaultAtLeast30dOld = isVaultAtLeastDaysOld({ vault, days: 30 })
+  const isAltPressed = useHoldAlt()
 
   const apy30d = isVaultAtLeast30dOld
     ? vaultApyData.sma30d
@@ -100,7 +103,11 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   )
 
   const medianBN = medianDefiYield ? new BigNumber(medianDefiYield) : null
-  const medianDefiYieldDifference =
+  const medianDefiYield30DDifference =
+    medianBN && vaultApyData.sma30d
+      ? new BigNumber(vaultApyData.sma30d * 100).minus(medianBN)
+      : null
+  const medianDefiYieldLiveDifference =
     medianBN && vaultApyData.apy ? new BigNumber(vaultApyData.apy * 100).minus(medianBN) : null
 
   useEffect(() => {
@@ -227,7 +234,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                   </div>
                 }
                 subValue={
-                  medianBN ? (
+                  medianBN && medianDefiYield30DDifference && isVaultAtLeast30dOld ? (
                     <Tooltip
                       tooltip={
                         <>
@@ -237,16 +244,14 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                       }
                     >
                       <div>
-                        {medianDefiYieldDifference
-                          ? `${medianDefiYieldDifference.gt(0) ? '+' : ''}${formatDecimalAsPercent(
-                              medianDefiYieldDifference.div(100),
-                            )} vs Median DeFi Yield`
-                          : ''}
+                        {`${medianDefiYield30DDifference.gt(0) ? '+' : ''}${formatDecimalAsPercent(
+                          medianDefiYield30DDifference.div(100),
+                        )} vs Median DeFi Yield`}
                       </div>
                     </Tooltip>
                   ) : null
                 }
-                subValueType={medianDefiYieldDifference?.gt(0) ? 'positive' : 'neutral'}
+                subValueType={medianDefiYield30DDifference?.gt(0) ? 'positive' : 'neutral'}
                 subValueSize="small"
               />
             </Box>
@@ -255,13 +260,53 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 size="large"
                 titleSize="small"
                 title={
-                  <>
-                    Live&nbsp;APY&nbsp;(
-                    {apyUpdatedAt.apyUpdatedAtLabel}m&nbsp;ago)
-                  </>
+                  <Tooltip
+                    tooltip={
+                      <LiveApyInfo
+                        apyCurrent={apyCurrent}
+                        apyUpdatedAt={apyUpdatedAt}
+                        isAltPressed={isAltPressed}
+                      />
+                    }
+                    tooltipWrapperStyles={{
+                      maxWidth: '455px',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                      <Text
+                        variant="p4semi"
+                        style={{
+                          marginRight: 'var(--general-space-4)',
+                        }}
+                      >
+                        Live&nbsp;APY&nbsp;(
+                        {apyUpdatedAt.apyUpdatedAtLabel}m&nbsp;ago)
+                      </Text>
+                      <Icon iconName="info" size={16} />
+                    </div>
+                  </Tooltip>
                 }
                 value={apyCurrent}
-                subValueSize="medium"
+                subValue={
+                  medianBN && medianDefiYieldLiveDifference ? (
+                    <Tooltip
+                      tooltip={
+                        <>
+                          Median&nbsp;DeFi&nbsp;Yield:&nbsp;
+                          {formatDecimalAsPercent(medianBN.div(100))}
+                        </>
+                      }
+                    >
+                      <div>
+                        {`${medianDefiYieldLiveDifference.gt(0) ? '+' : ''}${formatDecimalAsPercent(
+                          medianDefiYieldLiveDifference.div(100),
+                        )} vs Median DeFi Yield`}
+                      </div>
+                    </Tooltip>
+                  ) : null
+                }
+                subValueType={medianDefiYieldLiveDifference?.gt(0) ? 'positive' : 'neutral'}
+                subValueSize="small"
               />
             </Box>
             <Box

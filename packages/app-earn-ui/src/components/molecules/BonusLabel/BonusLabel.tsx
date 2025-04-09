@@ -47,9 +47,23 @@ export const BonusLabel = ({
             <LiveApyInfo apyCurrent={apy} apyUpdatedAt={apyUpdatedAt} isAltPressed={isAltPressed} />
           )}
           {tokenBonus && withTokenBonus && (
-            <Text as="p" variant="p2semi">
-              $SUMR Rewards: {tokenBonus}
-            </Text>
+            <>
+              <Text as="p" variant="p3semi">
+                $SUMR Token Rewards:
+              </Text>
+              <div
+                style={{
+                  display: 'flex',
+                  gap: 'var(--spacing-space-x-small)',
+                  alignItems: 'center',
+                }}
+              >
+                <Icon iconName="stars_colorful" size={20} />
+                <Text as="p" variant="p1semiColorful">
+                  {tokenBonus}
+                </Text>
+              </div>
+            </>
           )}
         </div>
       }
