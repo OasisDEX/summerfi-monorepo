@@ -8,10 +8,14 @@ import { Button } from '@/components/atoms/Button/Button'
 import { Card } from '@/components/atoms/Card/Card'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
+import { LiveApyInfo } from '@/components/molecules/LiveApyInfo/LiveApyInfo'
+import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
 import { getDisplayToken } from '@/helpers/get-display-token'
 import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getVaultPositionUrl } from '@/helpers/get-vault-url'
+import { useApyUpdatedAt } from '@/hooks/use-apy-updated-at'
+import { useHoldAlt } from '@/hooks/use-hold-alt'
 
 import portfolioPositionStyles from './PortfolioPosition.module.scss'
 
@@ -74,7 +78,11 @@ export const PortfolioPosition = ({
   const isVaultAtLeast30dOld = createdTimestamp
     ? dayjs().diff(dayjs(Number(createdTimestamp) * 1000), 'day') > 30
     : false
-  const currentApy = formatDecimalAsPercent(vaultApyData.apy)
+  const apyCurrent = vaultApyData.apy ? formatDecimalAsPercent(vaultApyData.apy) : 'New strategy'
+  const apyUpdatedAt = useApyUpdatedAt({
+    vaultApyData,
+  })
+  const isAltPressed = useHoldAlt()
   const apy30dParsed = isVaultAtLeast30dOld
     ? vaultApyData.sma30d
       ? formatDecimalAsPercent(vaultApyData.sma30d)
@@ -127,7 +135,36 @@ export const PortfolioPosition = ({
             value={sumrTokenBonus}
           />
           <PortfolioPositionHeaderValue title="30d APY" value={apy30dParsed} />
-          <PortfolioPositionHeaderValue title="Current APY" value={currentApy} />
+          <PortfolioPositionHeaderValue
+            title={
+              <Tooltip
+                tooltip={
+                  <LiveApyInfo
+                    apyCurrent={apyCurrent}
+                    apyUpdatedAt={apyUpdatedAt}
+                    isAltPressed={isAltPressed}
+                  />
+                }
+                tooltipWrapperStyles={{
+                  maxWidth: '455px',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                  <Text
+                    variant="p4semi"
+                    style={{
+                      marginRight: 'var(--general-space-4)',
+                    }}
+                  >
+                    Live&nbsp;APY&nbsp;(
+                    {apyUpdatedAt.apyUpdatedAtLabel}m&nbsp;ago)
+                  </Text>
+                  <Icon iconName="info" size={16} />
+                </div>
+              </Tooltip>
+            }
+            value={apyCurrent}
+          />
           {!isMobile && linkToPosition}
         </div>
         <div className={portfolioPositionStyles.graphWrapper}>{positionGraph}</div>
