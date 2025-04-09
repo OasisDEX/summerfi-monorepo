@@ -147,18 +147,11 @@ export class ArmadaManager implements IArmadaManager {
   getSummerToken(
     params: Parameters<IArmadaManager['getSummerToken']>[0],
   ): ReturnType<IArmadaManager['getSummerToken']> {
-    const address = getDeployedContractAddress({
-      chainInfo: params.chainInfo,
-      contractCategory: 'gov',
-      contractName: 'summerToken',
-    })
+    const tokenSymbol = this._isTestDeployment ? 'BUMMER' : 'SUMR'
 
-    return Token.createFrom({
+    return this._tokensManager.getTokenBySymbol({
       chainInfo: params.chainInfo,
-      address: address,
-      decimals: 18,
-      name: 'SummerToken',
-      symbol: this._isTestDeployment ? 'BUMMER' : 'SUMR',
+      symbol: tokenSymbol,
     })
   }
 
