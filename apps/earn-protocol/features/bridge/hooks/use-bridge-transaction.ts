@@ -20,7 +20,6 @@ import { BigNumber } from 'bignumber.js'
 import { type Chain, formatEther } from 'viem'
 
 import { accountType } from '@/account-kit/config'
-import { ETH_DECIMALS } from '@/features/bridge/constants/decimals'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 
@@ -32,11 +31,40 @@ const USDC_SYMBOL_BY_CHAIN_ID: { [key: number]: string } = {
   [SDKChainId.BASE]: 'USDC',
 }
 
+// Mapping for native gas tokens by chain ID
+const NATIVE_GAS_TOKEN_BY_CHAIN_ID: { [key: number]: string } = {
+  [SDKChainId.SONIC]: 'WS',
+  [SDKChainId.MAINNET]: 'WETH',
+  [SDKChainId.ARBITRUM]: 'WETH',
+  [SDKChainId.BASE]: 'WETH',
+}
+
+/**
+ * Helper function to get the token symbol for a specific chain ID
+ * @param chainId The chain ID
+ * @param mapping The mapping of chain IDs to token symbols
+ * @param tokenType The type of token (for error messages)
+ * @returns The token symbol for the chain ID
+ */
+const getTokenSymbolForChain = (
+  chainId: number,
+  mapping: { [key: number]: string },
+  tokenType: string,
+): string => {
+  const symbol = mapping[chainId]
+
+  if (!symbol) {
+    throw new Error(`No ${tokenType} symbol found for chainId ${chainId}`)
+  }
+
+  return symbol
+}
+
 /**
  * Helper function to get the USD value of a LayerZero fee
  * @param chainId The chain ID
  * @param lzFee The LayerZero fee in ETH
- * @param ethToken The ETH token
+ * @param nativeGasToken The native gas token
  * @param usdcToken The USDC token
  * @param getSwapQuote Function to get swap quote
  * @param getSpotPrice Function to get spot price
@@ -45,7 +73,7 @@ const USDC_SYMBOL_BY_CHAIN_ID: { [key: number]: string } = {
 const getLzFeeUsdValue = async (
   chainId: number,
   lzFee: ITokenAmount,
-  ethToken: IToken,
+  nativeGasToken: IToken,
   usdcToken: IToken,
   getSwapQuote: (params: {
     fromAmount: string
@@ -61,17 +89,19 @@ const getLzFeeUsdValue = async (
   // For Sonic chain, we use getSpotPrice to get the ETH/USDC price
   if (chainId === SDKChainId.SONIC) {
     const spotPrice = await getSpotPrice({
-      baseToken: ethToken,
+      baseToken: nativeGasToken,
     })
-    const ethAmount = formatEther(lzFee.toSolidityValue({ decimals: ETH_DECIMALS }))
+    const nativeGasAmount = formatEther(
+      lzFee.toSolidityValue({ decimals: nativeGasToken.decimals }),
+    )
 
-    return new BigNumber(ethAmount).times(spotPrice.price.value).toString()
+    return new BigNumber(nativeGasAmount).times(spotPrice.price.value).toString()
   }
 
   // For other chains, we get the swap quote
   const quote = await getSwapQuote({
-    fromAmount: formatEther(lzFee.toSolidityValue({ decimals: ETH_DECIMALS })),
-    fromToken: ethToken,
+    fromAmount: formatEther(lzFee.toSolidityValue({ decimals: nativeGasToken.decimals })),
+    fromToken: nativeGasToken,
     toToken: usdcToken,
     // FIXME: Use actual slippage value from slippage config
     slippage: 0.1,
@@ -193,21 +223,29 @@ export function useBridgeTransaction({
           throw new Error('Bridge transaction is undefined')
         }
 
-        const [ethToken, usdcToken] = await Promise.all([
+        const [nativeGasToken, usdcToken] = await Promise.all([
           getTokenBySymbol({
             chainId: sourceChainInfo.chainId,
-            symbol: 'WETH',
+            symbol: getTokenSymbolForChain(
+              sourceChainInfo.chainId,
+              NATIVE_GAS_TOKEN_BY_CHAIN_ID,
+              'native gas token',
+            ),
           }),
           getTokenBySymbol({
             chainId: sourceChainInfo.chainId,
-            symbol: USDC_SYMBOL_BY_CHAIN_ID[sourceChainInfo.chainId] || 'USDC',
+            symbol: getTokenSymbolForChain(
+              sourceChainInfo.chainId,
+              USDC_SYMBOL_BY_CHAIN_ID,
+              'USDC',
+            ),
           }),
         ])
 
         const lzFeeUsd = await getLzFeeUsdValue(
           sourceChainInfo.chainId,
           bridgeTx.metadata.lzFee,
-          ethToken,
+          nativeGasToken,
           usdcToken,
           getSwapQuote,
           getSpotPrice,
