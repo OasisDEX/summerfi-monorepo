@@ -201,12 +201,6 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       chainInfo: params.chainInfo,
     })
 
-    console.log('positions without prices: ', {
-      chainId: params.chainInfo.chainId,
-      migrationType: params.migrationType,
-      positionIds: Object.values(configMaps),
-    })
-
     // read the balances for all supported tokens
     const positions = await Promise.all(
       Object.entries(configMaps).map(async ([_, config]) => {
