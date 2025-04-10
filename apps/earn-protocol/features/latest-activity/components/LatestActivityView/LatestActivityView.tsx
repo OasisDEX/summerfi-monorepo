@@ -236,13 +236,9 @@ export const LatestActivityView: FC<LatestActivityViewProps> = ({
       getLatestActivityHeadingCards({
         totalItems: latestActivity.totalDeposits,
         medianDeposit: latestActivity.medianDeposit,
-        totalUsers: topDepositors.pagination.totalItems,
+        totalUsers: latestActivity.totalUniqueUsers,
       }),
-    [
-      latestActivity.totalDeposits,
-      latestActivity.medianDeposit,
-      topDepositors.pagination.totalItems,
-    ],
+    [latestActivity.totalDeposits, latestActivity.medianDeposit, latestActivity.totalUniqueUsers],
   )
 
   const filters = (
