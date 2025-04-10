@@ -75,7 +75,11 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
         }
         defaultExpanded
       >
-        <VaultExposure vault={vault} arksInterestRates={arksInterestRates} />
+        <VaultExposure
+          vault={vault}
+          arksInterestRates={arksInterestRates}
+          vaultApyData={vaultApyData}
+        />
       </Expander>
       <Expander
         title={

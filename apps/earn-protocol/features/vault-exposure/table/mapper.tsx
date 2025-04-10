@@ -1,6 +1,7 @@
 import {
   getDisplayToken,
   Icon,
+  TableCellAllocationCap,
   TableCellNodes,
   TableCellText,
   TableRowAccent,
@@ -143,13 +144,17 @@ export const vaultExposureMapper = (
             <TableRowAccent backgroundColor={getColor(protocolLabel)} />
             <Icon
               tokenName={getDisplayToken(item.inputToken.symbol) as TokenSymbolsList}
-              variant="s"
+              variant="m"
             />
-            <TableCellText>{protocolLabel}</TableCellText>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <TableCellText>{protocolLabel}</TableCellText>
+              <TableCellText small style={{ color: 'var(--color-text-secondary)' }}>
+                {formatDecimalAsPercent(allocation)} allocated
+              </TableCellText>
+            </div>
           </TableCellNodes>
         ),
-        allocation: <TableCellText>{formatDecimalAsPercent(allocation)}</TableCellText>,
-        currentApy: <TableCellText>{formatDecimalAsPercent(item.apy)}</TableCellText>,
+        liveApy: <TableCellText>{formatDecimalAsPercent(item.apy)}</TableCellText>,
         avgApy30d: <TableCellText>{formatDecimalAsPercent(item.avgApy30d)}</TableCellText>,
         avgApy1y: <TableCellText>{formatDecimalAsPercent(item.avgApy1y)}</TableCellText>,
         yearlyLow: (
@@ -158,8 +163,15 @@ export const vaultExposureMapper = (
         yearlyHigh: (
           <TableCellText>{formatDecimalAsPercent(item.yearlyYieldRange.high)}</TableCellText>
         ),
-        liquidity: <TableCellText>{formatCryptoBalance(allocationRaw)}</TableCellText>,
-        cap: <TableCellText>{formatDecimalAsPercent(cap)}</TableCellText>,
+        allocated: <TableCellText>{formatCryptoBalance(allocationRaw)}</TableCellText>,
+        allocationCap: (
+          <TableCellNodes>
+            <TableCellAllocationCap
+              capPercent={formatDecimalAsPercent(cap)}
+              tooltipContent={<div>this&nbsp;bit&nbsp;here</div>}
+            />
+          </TableCellNodes>
+        ),
       },
       details: arkDetails ? (
         <div

@@ -548,7 +548,11 @@ export const VaultManageViewComponent = ({
                 </Text>
               }
             >
-              <VaultExposure vault={vault as SDKVaultType} arksInterestRates={arksInterestRates} />
+              <VaultExposure
+                vault={vault as SDKVaultType}
+                arksInterestRates={arksInterestRates}
+                vaultApyData={vaultApyData}
+              />
             </Expander>
             <Expander
               title={

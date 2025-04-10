@@ -1,7 +1,14 @@
 'use client'
 import { type FC, type ReactNode, useCallback, useMemo, useState } from 'react'
-import { Table, type TableSortedColumn, useMobileCheck } from '@summerfi/app-earn-ui'
-import { type SDKVaultType } from '@summerfi/app-types'
+import {
+  Table,
+  type TableSortedColumn,
+  useApyUpdatedAt,
+  useHoldAlt,
+  useMobileCheck,
+} from '@summerfi/app-earn-ui'
+import { type SDKVaultType, type VaultApyData } from '@summerfi/app-types'
+import { formatDecimalAsPercent } from '@summerfi/app-utils'
 
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
@@ -20,6 +27,7 @@ interface VaultExposureTableProps {
   hiddenColumns?: string[]
   rowsToDisplay?: number
   arksInterestRates: GetInterestRatesReturnType
+  vaultApyData: VaultApyData
 }
 
 export const VaultExposureTable: FC<VaultExposureTableProps> = ({
@@ -28,6 +36,7 @@ export const VaultExposureTable: FC<VaultExposureTableProps> = ({
   hiddenColumns,
   rowsToDisplay,
   arksInterestRates,
+  vaultApyData,
 }) => {
   const [sortConfig, setSortConfig] = useState<TableSortedColumn<string>>()
   const { deviceType } = useDeviceType()
@@ -44,11 +53,24 @@ export const VaultExposureTable: FC<VaultExposureTableProps> = ({
   )
 
   const resolvedHiddenColumns = isMobile ? vaultExposureColumnsHiddenOnMobile : hiddenColumns
+  const isAltPressed = useHoldAlt()
+  const apyCurrent = vaultApyData.apy ? formatDecimalAsPercent(vaultApyData.apy) : 'New strategy'
+  const apyUpdatedAt = useApyUpdatedAt({
+    vaultApyData,
+  })
+
+  const columns = useMemo(() => {
+    return vaultExposureColumns({
+      apyCurrent,
+      apyUpdatedAt,
+      isAltPressed,
+    })
+  }, [apyCurrent, apyUpdatedAt, isAltPressed])
 
   return (
     <Table
       rows={rows}
-      columns={vaultExposureColumns}
+      columns={columns}
       customRow={customRow}
       handleSort={handleSort}
       hiddenColumns={resolvedHiddenColumns}

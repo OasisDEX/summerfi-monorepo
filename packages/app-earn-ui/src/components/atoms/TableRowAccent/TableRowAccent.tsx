@@ -8,7 +8,7 @@ interface TableRowAccentProps {
 export const TableRowAccent: FC<TableRowAccentProps> = ({ backgroundColor, style }) => (
   <div
     style={{
-      height: '22px',
+      height: '42px',
       width: '2px',
       backgroundColor,
       ...style,

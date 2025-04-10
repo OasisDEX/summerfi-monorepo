@@ -1,19 +1,37 @@
-import { TableHeadWithTooltip } from '@summerfi/app-earn-ui'
+import { LiveApyInfo, TableHeadWithTooltip } from '@summerfi/app-earn-ui'
 
-export const vaultExposureColumns = [
+export const vaultExposureColumns = ({
+  apyCurrent,
+  apyUpdatedAt,
+  isAltPressed,
+}: {
+  apyCurrent: string
+  apyUpdatedAt: {
+    apyUpdatedAtLabel: string
+    apyUpdatedAtAltLabel: string
+  }
+  isAltPressed: boolean
+}) => [
   {
     title: 'Strategy',
     key: 'strategy',
     sortable: false,
   },
   {
-    title: '% Allocation',
-    key: 'allocation',
-    sortable: true,
-  },
-  {
-    title: 'Current APY',
-    key: 'currentApy',
+    title: (
+      <TableHeadWithTooltip
+        minWidth="247px"
+        title="Live APY"
+        tooltip={
+          <LiveApyInfo
+            apyCurrent={apyCurrent}
+            apyUpdatedAt={apyUpdatedAt}
+            isAltPressed={isAltPressed}
+          />
+        }
+      />
+    ),
+    key: 'liveApy',
     sortable: true,
   },
   {
@@ -38,27 +56,21 @@ export const vaultExposureColumns = [
     sortable: true,
   },
   {
-    title: 'Liquidity',
-    key: 'liquidity',
+    title: 'Allocated',
+    key: 'allocated',
     sortable: true,
   },
   {
-    title: (
-      <TableHeadWithTooltip
-        minWidth="247px"
-        title="Cap"
-        tooltip="This is the maximum allocation the pool or market can be exposed to, managed by the Risk Manager."
-      />
-    ),
-    key: 'cap',
+    title: 'Allocation Cap',
+    key: 'allocationCap',
     sortable: true,
   },
 ]
 
 export const vaultExposureColumnsHiddenOnMobile = [
-  'liquidity',
-  'cap',
-  'currentApy',
+  'allocated',
+  'liveApy',
+  'allocationCap',
   'avgApy30d',
   'avgApy1y',
   'yearlyLow',
