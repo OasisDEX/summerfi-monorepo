@@ -10,7 +10,8 @@
     "lint": "tsc --noEmit && eslint .",
     "lint:fix": "eslint . --fix",
     "lint-timing": "TIMING=1 eslint .",
-    "generate": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config"
+    "generate": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config",
+    "update-tables": "dotenv -e ../../.env -e ../../.env.local -- node --import tsx misc/scripts/update-tables.ts"
   },
   "dependencies": {
     "@account-kit/core": "^4.24.0",
