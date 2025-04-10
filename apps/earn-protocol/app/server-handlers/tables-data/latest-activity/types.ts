@@ -17,6 +17,7 @@ export type LatestActivityPagination = {
   }
   medianDeposit: number
   totalDeposits: number
+  totalUniqueUsers: number
 }
 
 export type LatestActivitiesSortBy = 'timestamp' | 'balance' | 'balanceUsd' | 'amount' | 'amountUsd'

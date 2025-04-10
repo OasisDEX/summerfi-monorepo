@@ -133,7 +133,7 @@ export const updateTopDepositors = async ({
     }
   })
 
-  const { updated } = await insertTopDepositorsInBatches(db, extendPositions)
+  const { updated, deleted } = await insertTopDepositorsInBatches(db, extendPositions)
 
   const endTime = Date.now()
   const duration = `${((endTime - startTime) / 1000).toFixed(2)}s`
@@ -141,5 +141,6 @@ export const updateTopDepositors = async ({
   return {
     updated,
     duration,
+    deleted,
   }
 }
