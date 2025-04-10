@@ -55,6 +55,7 @@ export const getVaultsApy: ({
   const emptyResponse = fleets.reduce<GetVaultsApyResponse>((acc, { fleetAddress, chainId }) => {
     acc[`${fleetAddress}-${chainId}`] = {
       apy: 0,
+      apyTimestamp: null,
       sma24h: null,
       sma7d: null,
       sma30d: null,
@@ -94,6 +95,7 @@ export const getVaultsApy: ({
         }>((acc, { rate, fleetAddress }) => {
           acc[`${fleetAddress}-${chainId}`] = {
             apy: Number(rate) / 100,
+            apyTimestamp: rates[0].timestamp,
             sma24h: sma.sma24h ? Number(sma.sma24h) / 100 : null,
             sma7d: sma.sma7d ? Number(sma.sma7d) / 100 : null,
             sma30d: sma.sma30d ? Number(sma.sma30d) / 100 : null,
