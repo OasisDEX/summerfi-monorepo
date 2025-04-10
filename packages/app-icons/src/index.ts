@@ -771,6 +771,7 @@ export const iconsSync: {
   snx: import('./icons/snx.svg?react'),
   social_link: import('./icons/social_link.svg?react'),
   social_x: import('./icons/social_x.svg?react'),
+  sonic_badge_mainnet: import('./icons/sonic_badge_mainnet.svg?react'),
   spark_circle_color: import('./icons/spark_circle_color.svg?react'),
   stars: import('./icons/stars.svg?react'),
   stars_colorful: import('./icons/stars_colorful.svg?react'),

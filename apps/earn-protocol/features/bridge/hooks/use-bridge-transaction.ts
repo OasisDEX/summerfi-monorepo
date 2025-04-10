@@ -8,7 +8,7 @@ import {
 import {
   type BridgeTransactionInfo,
   type IAddress,
-  QuoteData,
+  type QuoteData,
   TokenAmount,
 } from '@summerfi/sdk-common'
 import { type Chain, formatEther } from 'viem'
@@ -143,6 +143,7 @@ export function useBridgeTransaction({
         ])
 
         let fetchedTransactionFee: QuoteData | undefined
+
         if (sourceChainInfo.chainId !== 146) {
           fetchedTransactionFee = await getSwapQuote({
             fromAmount: formatEther(
