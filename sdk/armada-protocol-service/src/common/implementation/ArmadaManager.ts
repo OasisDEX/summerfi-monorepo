@@ -149,12 +149,10 @@ export class ArmadaManager implements IArmadaManager {
   ): ReturnType<IArmadaManager['getSummerToken']> {
     const tokenSymbol = this._isTestDeployment ? 'BUMMER' : 'SUMR'
 
-    const token = this._tokensManager.getTokenBySymbol({
+    return this._tokensManager.getTokenBySymbol({
       chainInfo: params.chainInfo,
       symbol: tokenSymbol,
     })
-    console.log('getSummerToken', token)
-    return token
   }
 
   /** POOLS */

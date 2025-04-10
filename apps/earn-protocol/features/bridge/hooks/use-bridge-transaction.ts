@@ -5,9 +5,12 @@ import {
   useSendUserOperation,
   useSmartAccountClient,
 } from '@account-kit/react'
+import { SDKChainId } from '@summerfi/app-types'
 import {
   type BridgeTransactionInfo,
   type IAddress,
+  type IToken,
+  type ITokenAmount,
   type QuoteData,
   TokenAmount,
 } from '@summerfi/sdk-common'
@@ -17,6 +20,52 @@ import { accountType } from '@/account-kit/config'
 import { ETH_DECIMALS } from '@/features/bridge/constants/decimals'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { useAppSDK } from '@/hooks/use-app-sdk'
+
+// Mapping for USDC token symbols by chain ID
+const USDC_SYMBOL_BY_CHAIN_ID: { [key: number]: string } = {
+  [SDKChainId.SONIC]: 'USDC.e',
+  [SDKChainId.MAINNET]: 'USDC',
+  [SDKChainId.ARBITRUM]: 'USDC',
+  [SDKChainId.BASE]: 'USDC',
+}
+
+/**
+ * Helper function to get the USD value of a LayerZero fee
+ * @param chainId The chain ID
+ * @param lzFee The LayerZero fee in ETH
+ * @param ethToken The ETH token
+ * @param usdcToken The USDC token
+ * @param getSwapQuote Function to get swap quote
+ * @returns The USD value of the LayerZero fee
+ */
+const getLzFeeUsdValue = async (
+  chainId: number,
+  lzFee: ITokenAmount,
+  ethToken: IToken,
+  usdcToken: IToken,
+  getSwapQuote: (params: {
+    fromAmount: string
+    fromToken: IToken
+    toToken: IToken
+    slippage: number
+  }) => Promise<QuoteData>,
+): Promise<string> => {
+  // Sonic chain doesn't have 1inch deployed yet, so we return 0
+  if (chainId === SDKChainId.SONIC) {
+    return '0'
+  }
+
+  // For other chains, we get the swap quote
+  const quote = await getSwapQuote({
+    fromAmount: formatEther(lzFee.toSolidityValue({ decimals: ETH_DECIMALS })),
+    fromToken: ethToken,
+    toToken: usdcToken,
+    // FIXME: Use actual slippage value from slippage config
+    slippage: 0.1,
+  })
+
+  return quote.toTokenAmount.amount
+}
 
 /**
  * Parameters required for executing a bridge transaction
@@ -138,29 +187,23 @@ export function useBridgeTransaction({
           }),
           getTokenBySymbol({
             chainId: sourceChainInfo.chainId,
-            symbol: sourceChainInfo.chainId === 146 ? 'USDC.e' : 'USDC',
+            symbol: USDC_SYMBOL_BY_CHAIN_ID[sourceChainInfo.chainId] || 'USDC',
           }),
         ])
 
-        let fetchedTransactionFee: QuoteData | undefined
-
-        if (sourceChainInfo.chainId !== 146) {
-          fetchedTransactionFee = await getSwapQuote({
-            fromAmount: formatEther(
-              bridgeTx.metadata.lzFee.toSolidityValue({ decimals: ETH_DECIMALS }),
-            ),
-            fromToken: ethToken,
-            toToken: usdcToken,
-            // FIXME: Use actual slippage value from slippage config
-            slippage: 0.1,
-          })
-        }
+        const lzFeeUsd = await getLzFeeUsdValue(
+          sourceChainInfo.chainId,
+          bridgeTx.metadata.lzFee,
+          ethToken,
+          usdcToken,
+          getSwapQuote,
+        )
 
         setTransaction({
           ...bridgeTx,
           metadata: {
             ...bridgeTx.metadata,
-            lzFeeUsd: fetchedTransactionFee ? fetchedTransactionFee.toTokenAmount.amount : '0',
+            lzFeeUsd,
           },
         })
       } catch (err) {
