@@ -26,6 +26,7 @@ query GetVaults {
       depositLimit
       depositCap
       inputTokenBalance
+      maxDepositPercentageOfTVL
       inputToken {
         id
         name
@@ -165,6 +166,7 @@ query GetVault($id: ID!) {
       depositCap
       cumulativeEarnings
       inputTokenBalance
+      maxDepositPercentageOfTVL
       inputToken {
         id
         name
