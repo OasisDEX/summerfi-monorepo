@@ -175,7 +175,7 @@ export class CoingeckoOracleProvider
 
       const [, price] = Object.entries(responseData)[0]
 
-      const priceValue = price['usd'] ?? price
+      const priceValue = price['usd'] ?? price[quoteCurrency.toLowerCase()] ?? price
 
       if (!price) {
         throw Error('BaseToken spot price could not be determined')
