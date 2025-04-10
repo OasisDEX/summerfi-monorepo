@@ -128,7 +128,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       migrationType: params.migrationType,
     })
     // read the users balances on provided chain/source for all supported tokens using multicall
-    let positions: ArmadaMigratablePosition[] = []
+    let positionsWithPrices: ArmadaMigratablePosition[] = []
 
     if (params.migrationType) {
       const _positions = await this._getPositionsWithoutPrices({
@@ -136,7 +136,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
         user: params.user,
         migrationType: params.migrationType,
       })
-      positions = await this._getPositionsWithPrices({
+      positionsWithPrices = await this._getPositionsWithPrices({
         chainInfo: params.chainInfo,
         positions: _positions,
       })
@@ -151,14 +151,14 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       )
       const positionsArrays = await Promise.all(positionsPromises)
       const _positions = positionsArrays.flat()
-      positions = await this._getPositionsWithPrices({
+      positionsWithPrices = await this._getPositionsWithPrices({
         chainInfo: params.chainInfo,
         positions: _positions,
       })
     }
 
     // filter positions with balance
-    const nonEmptyPositions = positions.filter(
+    const nonEmptyPositions = positionsWithPrices.filter(
       (position) => position.positionTokenAmount.toSolidityValue() > 0n,
     )
 
@@ -211,15 +211,13 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
           address: Address.createFromEthereum({ value: config.positionAddress }),
         })
 
-        const [positionBalance, underlyingToken] = await Promise.all([
-          positionErc20Contract.balanceOf({
-            address: params.user.wallet.address,
-          }),
-          this._tokensManager.getTokenByAddress({
-            chainInfo: params.chainInfo,
-            address: Address.createFromEthereum({ value: config.underlyingToken }),
-          }),
-        ])
+        const positionBalance = await positionErc20Contract.balanceOf({
+          address: params.user.wallet.address,
+        })
+        const underlyingToken = this._tokensManager.getTokenByAddress({
+          chainInfo: params.chainInfo,
+          address: Address.createFromEthereum({ value: config.underlyingToken }),
+        })
 
         const [underlyingAmount] = await Promise.all([
           this._getUnderlyingAmount({

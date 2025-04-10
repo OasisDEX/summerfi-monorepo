@@ -1,5 +1,6 @@
-import { ArmadaVaultId, makeSDK } from '@summerfi/sdk-client'
+import { makeSDK } from '@summerfi/sdk-client'
 import {
+  ArmadaVaultId,
   Address,
   ChainFamilyMap,
   getChainFamilyInfoByChainId,
