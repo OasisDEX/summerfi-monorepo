@@ -5,13 +5,110 @@ import {
   useSendUserOperation,
   useSmartAccountClient,
 } from '@account-kit/react'
-import { type BridgeTransactionInfo, type IAddress, TokenAmount } from '@summerfi/sdk-common'
+import { SDKChainId } from '@summerfi/app-types'
+import {
+  type BridgeTransactionInfo,
+  type Denomination,
+  type IAddress,
+  type ISpotPriceInfo,
+  type IToken,
+  type ITokenAmount,
+  type QuoteData,
+  TokenAmount,
+} from '@summerfi/sdk-common'
+import { BigNumber } from 'bignumber.js'
 import { type Chain, formatEther } from 'viem'
 
 import { accountType } from '@/account-kit/config'
-import { ETH_DECIMALS } from '@/features/bridge/constants/decimals'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { useAppSDK } from '@/hooks/use-app-sdk'
+
+// Mapping for USDC token symbols by chain ID
+const USDC_SYMBOL_BY_CHAIN_ID: { [key: number]: string } = {
+  [SDKChainId.SONIC]: 'USDC.e',
+  [SDKChainId.MAINNET]: 'USDC',
+  [SDKChainId.ARBITRUM]: 'USDC',
+  [SDKChainId.BASE]: 'USDC',
+}
+
+// Mapping for native gas tokens by chain ID
+const NATIVE_GAS_TOKEN_BY_CHAIN_ID: { [key: number]: string } = {
+  [SDKChainId.SONIC]: 'WS',
+  [SDKChainId.MAINNET]: 'WETH',
+  [SDKChainId.ARBITRUM]: 'WETH',
+  [SDKChainId.BASE]: 'WETH',
+}
+
+/**
+ * Helper function to get the token symbol for a specific chain ID
+ * @param chainId The chain ID
+ * @param mapping The mapping of chain IDs to token symbols
+ * @param tokenType The type of token (for error messages)
+ * @returns The token symbol for the chain ID
+ */
+const getTokenSymbolForChain = (
+  chainId: number,
+  mapping: { [key: number]: string },
+  tokenType: string,
+): string => {
+  const symbol = mapping[chainId]
+
+  if (!symbol) {
+    throw new Error(`No ${tokenType} symbol found for chainId ${chainId}`)
+  }
+
+  return symbol
+}
+
+/**
+ * Helper function to get the USD value of a LayerZero fee
+ * @param chainId The chain ID
+ * @param lzFee The LayerZero fee in ETH
+ * @param nativeGasToken The native gas token
+ * @param usdcToken The USDC token
+ * @param getSwapQuote Function to get swap quote
+ * @param getSpotPrice Function to get spot price
+ * @returns The USD value of the LayerZero fee
+ */
+const getLzFeeUsdValue = async (
+  chainId: number,
+  lzFee: ITokenAmount,
+  nativeGasToken: IToken,
+  usdcToken: IToken,
+  getSwapQuote: (params: {
+    fromAmount: string
+    fromToken: IToken
+    toToken: IToken
+    slippage: number
+  }) => Promise<QuoteData>,
+  getSpotPrice: (params: {
+    baseToken: IToken
+    denomination?: Denomination
+  }) => Promise<ISpotPriceInfo>,
+): Promise<string> => {
+  // For Sonic chain, we use getSpotPrice to get the ETH/USDC price
+  if (chainId === SDKChainId.SONIC) {
+    const spotPrice = await getSpotPrice({
+      baseToken: nativeGasToken,
+    })
+    const nativeGasAmount = formatEther(
+      lzFee.toSolidityValue({ decimals: nativeGasToken.decimals }),
+    )
+
+    return new BigNumber(nativeGasAmount).times(spotPrice.price.value).toString()
+  }
+
+  // For other chains, we get the swap quote
+  const quote = await getSwapQuote({
+    fromAmount: formatEther(lzFee.toSolidityValue({ decimals: nativeGasToken.decimals })),
+    fromToken: nativeGasToken,
+    toToken: usdcToken,
+    // FIXME: Use actual slippage value from slippage config
+    slippage: 0.1,
+  })
+
+  return quote.toTokenAmount.amount
+}
 
 /**
  * Parameters required for executing a bridge transaction
@@ -79,7 +176,7 @@ export function useBridgeTransaction({
   onSuccess,
   onError,
 }: BridgeTransactionParams): BridgeTransactionDetails {
-  const { getSwapQuote, getTokenBySymbol } = useAppSDK()
+  const { getSwapQuote, getTokenBySymbol, getSpotPrice } = useAppSDK()
   const [isLoading, setIsLoading] = useState(false)
   const [isEstimating, setIsEstimating] = useState(false)
   const [error, setError] = useState<Error | null>(null)
@@ -126,32 +223,39 @@ export function useBridgeTransaction({
           throw new Error('Bridge transaction is undefined')
         }
 
-        const [ethToken, usdcToken] = await Promise.all([
+        const [nativeGasToken, usdcToken] = await Promise.all([
           getTokenBySymbol({
             chainId: sourceChainInfo.chainId,
-            symbol: 'WETH',
+            symbol: getTokenSymbolForChain(
+              sourceChainInfo.chainId,
+              NATIVE_GAS_TOKEN_BY_CHAIN_ID,
+              'native gas token',
+            ),
           }),
           getTokenBySymbol({
             chainId: sourceChainInfo.chainId,
-            symbol: 'USDC',
+            symbol: getTokenSymbolForChain(
+              sourceChainInfo.chainId,
+              USDC_SYMBOL_BY_CHAIN_ID,
+              'USDC',
+            ),
           }),
         ])
 
-        const fetchedTransactionFee = await getSwapQuote({
-          fromAmount: formatEther(
-            bridgeTx.metadata.lzFee.toSolidityValue({ decimals: ETH_DECIMALS }),
-          ),
-          fromToken: ethToken,
-          toToken: usdcToken,
-          // FIXME: Use actual slippage value from slippage config
-          slippage: 0.1,
-        })
+        const lzFeeUsd = await getLzFeeUsdValue(
+          sourceChainInfo.chainId,
+          bridgeTx.metadata.lzFee,
+          nativeGasToken,
+          usdcToken,
+          getSwapQuote,
+          getSpotPrice,
+        )
 
         setTransaction({
           ...bridgeTx,
           metadata: {
             ...bridgeTx.metadata,
-            lzFeeUsd: fetchedTransactionFee.toTokenAmount.amount,
+            lzFeeUsd,
           },
         })
       } catch (err) {
@@ -172,6 +276,7 @@ export function useBridgeTransaction({
       amount,
       getTokenBySymbol,
       getSwapQuote,
+      getSpotPrice,
     ],
   )
 

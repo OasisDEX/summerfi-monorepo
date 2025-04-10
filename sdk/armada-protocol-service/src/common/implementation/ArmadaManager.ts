@@ -140,7 +140,7 @@ export class ArmadaManager implements IArmadaManager {
       blockchainClientProvider: this._blockchainClientProvider,
       configProvider: this._configProvider,
       tokensManager: this._tokensManager,
-      bridgeContractAddress: this.getSummerToken({ chainInfo: this._hubChainInfo }).address,
+      getSummerToken: this.getSummerToken.bind(this),
     })
   }
 

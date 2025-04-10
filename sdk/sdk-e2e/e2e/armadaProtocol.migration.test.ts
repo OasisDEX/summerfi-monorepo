@@ -1,5 +1,5 @@
-import { ArmadaVaultId, makeSDK, type SDKManager } from '@summerfi/sdk-client'
-import { ArmadaMigrationType, Percentage, User, Wallet } from '@summerfi/sdk-common'
+import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
+import { ArmadaMigrationType, ArmadaVaultId, Percentage, User, Wallet } from '@summerfi/sdk-common'
 
 import { SDKApiUrl, signerPrivateKey, testConfig } from './utils/testConfig'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'

@@ -1,15 +1,16 @@
-import { ArmadaVaultId, makeSDK, type SDKManager } from '@summerfi/sdk-client'
+import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
 import {
+  ArmadaVaultId,
   Percentage,
   TokenAmount,
   type Address,
   type ChainInfo,
+  type IArmadaVaultId,
   type IToken,
   type IUser,
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions, TransactionUtils } from '@summerfi/testing-utils'
-import type { IArmadaVaultId } from '@summerfi/armada-protocol-common'
 import { prepareData } from './utils/prepareData'
 import { signerPrivateKey, SDKApiUrl, testConfig, signerAddress } from './utils/testConfig'
 import { FleetCommanderAbi } from '@summerfi/armada-protocol-abis'
