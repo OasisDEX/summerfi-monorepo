@@ -1,4 +1,3 @@
-import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { type VaultApyData } from '@summerfi/app-types'
 
 export type GetVaultsApyParams = {
