@@ -9,15 +9,17 @@ import tableCellCustomComponentsStyles from './TableCellCustomComponents.module.
 export const TableCellAllocationCap = ({
   capPercent,
   tooltipContent,
+  isBuffer = false,
 }: {
   capPercent: string
   tooltipContent?: ReactNode
+  isBuffer?: boolean
 }): ReactNode => {
   return (
     <div className={tableCellCustomComponentsStyles.tableCellAllocationCapWrapper}>
       <div className={tableCellCustomComponentsStyles.tableCellAllocationCapPercentTooltipWrapper}>
-        <Text variant="p3semi">{capPercent}</Text>
-        {tooltipContent && (
+        <Text variant="p3semi">{!isBuffer ? capPercent : 'n/a'}</Text>
+        {tooltipContent && !isBuffer && (
           <Tooltip
             tooltip={tooltipContent}
             tooltipWrapperStyles={{ maxWidth: '260px', width: '260px' }}
@@ -26,14 +28,16 @@ export const TableCellAllocationCap = ({
           </Tooltip>
         )}
       </div>
-      <div className={tableCellCustomComponentsStyles.tableCellAllocationCapBar}>
-        <div
-          className={tableCellCustomComponentsStyles.tableCellAllocationCapBarFilled}
-          style={{
-            width: capPercent,
-          }}
-        />
-      </div>
+      {!isBuffer && (
+        <div className={tableCellCustomComponentsStyles.tableCellAllocationCapBar}>
+          <div
+            className={tableCellCustomComponentsStyles.tableCellAllocationCapBarFilled}
+            style={{
+              width: capPercent,
+            }}
+          />
+        </div>
+      )}
     </div>
   )
 }

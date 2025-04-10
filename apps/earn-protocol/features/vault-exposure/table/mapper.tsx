@@ -181,53 +181,49 @@ export const vaultExposureMapper = (
         allocationCap: (
           <TableCellNodes>
             <TableCellAllocationCap
+              isBuffer={isBuffer}
               capPercent={isBuffer ? 'n/a' : formatDecimalAsPercent(cap)}
               tooltipContent={
-                !isBuffer ? (
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 'var(--general-space-24)',
+                  }}
+                >
                   <div
                     style={{
                       display: 'flex',
                       flexDirection: 'column',
-                      gap: 'var(--general-space-24)',
+                      gap: 'var(--spacing-space-2x-small)',
                     }}
                   >
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 'var(--spacing-space-2x-small)',
-                      }}
-                    >
-                      <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
-                        Allocation cap
-                      </Text>
-                      <Text
-                        variant="p3semiColorful"
-                        style={{ color: 'var(--color-text-secondary)' }}
-                      >
-                        {formatCryptoBalance(mainAllocationCap)} {item.inputToken.symbol}
-                      </Text>
-                      <Text variant="p4semi" style={{ color: 'var(--color-text-secondary)' }}>
-                        This is the maximum amount that can be allocated to this strategy within
-                        this Vault. It is calculated as the minimum of the absolute and TVL exposure
-                        based caps (as shown below).
-                      </Text>
-                    </div>
-                    <div style={{ height: '1px', backgroundColor: 'var(--color-border)' }} />
-                    <TableCellAllocationCapTooltipDataBlock
-                      title="Absolute allocation cap"
-                      value={`${formatCryptoBalance(absoluteAllocationCap)} ${item.inputToken.symbol}`}
-                    />
-                    <TableCellAllocationCapTooltipDataBlock
-                      title="TVL allocation cap %"
-                      value={`${formatDecimalAsPercent(maxPercentageTVL)} (${formatCryptoBalance(vaultTvlAllocationCap)})`}
-                    />
-                    <TableCellAllocationCapTooltipDataBlock
-                      title="Cap utilisation"
-                      value={`${formatDecimalAsPercent(cap)} (${formatCryptoBalance(arkTokenTVL)} / ${formatCryptoBalance(mainAllocationCap)})`}
-                    />
+                    <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
+                      Allocation cap
+                    </Text>
+                    <Text variant="p3semiColorful" style={{ color: 'var(--color-text-secondary)' }}>
+                      {formatCryptoBalance(mainAllocationCap)} {item.inputToken.symbol}
+                    </Text>
+                    <Text variant="p4semi" style={{ color: 'var(--color-text-secondary)' }}>
+                      This is the maximum amount that can be allocated to this strategy within this
+                      Vault. It is calculated as the minimum of the absolute and TVL exposure based
+                      caps (as shown below).
+                    </Text>
                   </div>
-                ) : undefined
+                  <div style={{ height: '1px', backgroundColor: 'var(--color-border)' }} />
+                  <TableCellAllocationCapTooltipDataBlock
+                    title="Absolute allocation cap"
+                    value={`${formatCryptoBalance(absoluteAllocationCap)} ${item.inputToken.symbol}`}
+                  />
+                  <TableCellAllocationCapTooltipDataBlock
+                    title="TVL allocation cap %"
+                    value={`${formatDecimalAsPercent(maxPercentageTVL)} (${formatCryptoBalance(vaultTvlAllocationCap)})`}
+                  />
+                  <TableCellAllocationCapTooltipDataBlock
+                    title="Cap utilisation"
+                    value={`${formatDecimalAsPercent(cap)} (${formatCryptoBalance(arkTokenTVL)} / ${formatCryptoBalance(mainAllocationCap)})`}
+                  />
+                </div>
               }
             />
           </TableCellNodes>
