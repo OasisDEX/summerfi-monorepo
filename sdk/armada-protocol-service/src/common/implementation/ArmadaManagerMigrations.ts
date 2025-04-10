@@ -211,15 +211,13 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
           address: Address.createFromEthereum({ value: config.positionAddress }),
         })
 
-        const [positionBalance, underlyingToken] = await Promise.all([
-          positionErc20Contract.balanceOf({
-            address: params.user.wallet.address,
-          }),
-          this._tokensManager.getTokenByAddress({
-            chainInfo: params.chainInfo,
-            address: Address.createFromEthereum({ value: config.underlyingToken }),
-          }),
-        ])
+        const positionBalance = await positionErc20Contract.balanceOf({
+          address: params.user.wallet.address,
+        })
+        const underlyingToken = this._tokensManager.getTokenByAddress({
+          chainInfo: params.chainInfo,
+          address: Address.createFromEthereum({ value: config.underlyingToken }),
+        })
 
         const [underlyingAmount] = await Promise.all([
           this._getUnderlyingAmount({
