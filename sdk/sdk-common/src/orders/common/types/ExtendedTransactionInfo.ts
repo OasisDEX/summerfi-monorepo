@@ -49,7 +49,6 @@ export type TransactionMetadataWithdraw = {
 export type TransactionMetadataBridge = {
   fromAmount: ITokenAmount
   toAmount: ITokenAmount
-  slippage: IPercentage
   lzFee: ITokenAmount
 }
 

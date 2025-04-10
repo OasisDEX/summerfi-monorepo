@@ -8,12 +8,15 @@ import {
 import { SDKChainId } from '@summerfi/app-types'
 import {
   type BridgeTransactionInfo,
+  type Denomination,
   type IAddress,
+  type ISpotPriceInfo,
   type IToken,
   type ITokenAmount,
   type QuoteData,
   TokenAmount,
 } from '@summerfi/sdk-common'
+import { BigNumber } from 'bignumber.js'
 import { type Chain, formatEther } from 'viem'
 
 import { accountType } from '@/account-kit/config'
@@ -36,6 +39,7 @@ const USDC_SYMBOL_BY_CHAIN_ID: { [key: number]: string } = {
  * @param ethToken The ETH token
  * @param usdcToken The USDC token
  * @param getSwapQuote Function to get swap quote
+ * @param getSpotPrice Function to get spot price
  * @returns The USD value of the LayerZero fee
  */
 const getLzFeeUsdValue = async (
@@ -49,10 +53,19 @@ const getLzFeeUsdValue = async (
     toToken: IToken
     slippage: number
   }) => Promise<QuoteData>,
+  getSpotPrice: (params: {
+    baseToken: IToken
+    denomination?: Denomination
+  }) => Promise<ISpotPriceInfo>,
 ): Promise<string> => {
-  // Sonic chain doesn't have 1inch deployed yet, so we return 0
+  // For Sonic chain, we use getSpotPrice to get the ETH/USDC price
   if (chainId === SDKChainId.SONIC) {
-    return '0'
+    const spotPrice = await getSpotPrice({
+      baseToken: ethToken,
+    })
+    const ethAmount = formatEther(lzFee.toSolidityValue({ decimals: ETH_DECIMALS }))
+
+    return new BigNumber(ethAmount).times(spotPrice.price.value).toString()
   }
 
   // For other chains, we get the swap quote
@@ -133,7 +146,7 @@ export function useBridgeTransaction({
   onSuccess,
   onError,
 }: BridgeTransactionParams): BridgeTransactionDetails {
-  const { getSwapQuote, getTokenBySymbol } = useAppSDK()
+  const { getSwapQuote, getTokenBySymbol, getSpotPrice } = useAppSDK()
   const [isLoading, setIsLoading] = useState(false)
   const [isEstimating, setIsEstimating] = useState(false)
   const [error, setError] = useState<Error | null>(null)
@@ -197,6 +210,7 @@ export function useBridgeTransaction({
           ethToken,
           usdcToken,
           getSwapQuote,
+          getSpotPrice,
         )
 
         setTransaction({
@@ -224,6 +238,7 @@ export function useBridgeTransaction({
       amount,
       getTokenBySymbol,
       getSwapQuote,
+      getSpotPrice,
     ],
   )
 

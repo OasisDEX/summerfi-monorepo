@@ -13,6 +13,7 @@ import {
   BridgeTransactionInfo,
   TokenAmount,
   IToken,
+  ChainIds,
 } from '@summerfi/sdk-common'
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { addressToBytes32, Options } from '@layerzerolabs/lz-v2-utilities'
@@ -105,7 +106,18 @@ export class ArmadaManagerBridge implements IArmadaManagerBridge {
       `Bridge ${params.amount.toString()} of SUMR token ` +
       `from ${params.sourceChain.name} to ${params.targetChain.name}`
 
-    const feeTokenSymbol = params.sourceChain.chainId === 146 ? 'S' : 'ETH'
+    const chainIdToFeeTokenSymbol: Record<number, string> = {
+      [ChainIds.Sonic]: 'S',
+      [ChainIds.Mainnet]: 'ETH',
+      [ChainIds.ArbitrumOne]: 'ETH',
+      [ChainIds.Base]: 'ETH',
+    }
+
+    if (!chainIdToFeeTokenSymbol[params.sourceChain.chainId]) {
+      throw new Error(`Unsupported chain ID: ${params.sourceChain.chainId}`)
+    }
+
+    const feeTokenSymbol = chainIdToFeeTokenSymbol[params.sourceChain.chainId]
     const feeToken = await this._tokensManager.getTokenBySymbol({
       symbol: feeTokenSymbol,
       chainInfo: params.sourceChain,
@@ -121,7 +133,6 @@ export class ArmadaManagerBridge implements IArmadaManagerBridge {
       metadata: {
         fromAmount: params.amount,
         toAmount: params.amount,
-        slippage: Percentage.createFrom({ value: 0 }),
         lzFee: TokenAmount.createFromBaseUnit({
           token: feeToken,
           amount: quotedFee.nativeFee.toString(),
