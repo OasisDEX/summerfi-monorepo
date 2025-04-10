@@ -1115,7 +1115,7 @@ export const StaticTokensData: TokenListData = {
     },
     {
       name: 'Wrapped Sonic',
-      address: '0x039e2fb66102314ce7b64ce5ce3e5183bc94ad38',
+      address: '0x039e2fB66102314Ce7b64Ce5Ce3E5183bc94aD38', // Wrapped Sonic (wS) address
       symbol: 'WS',
       decimals: 18,
       chainId: ChainIds.Sonic,
@@ -1187,6 +1187,15 @@ export const StaticTokensData: TokenListData = {
       decimals: 18,
       chainId: ChainIds.Sonic,
       logoURI: '',
+    },
+    {
+      name: 'Sonic',
+      address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+      symbol: 'S',
+      decimals: 18,
+      chainId: ChainIds.Sonic,
+      logoURI:
+        'https://assets.coingecko.com/coins/images/38108/standard/200x200_Sonic_Logo.png?1734679256',
     },
   ],
 }
