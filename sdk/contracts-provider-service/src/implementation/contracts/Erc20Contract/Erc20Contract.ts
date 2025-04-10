@@ -70,18 +70,14 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
         // token not found which is ok as it is only fallback for internal symbols
       }
 
-      const [tokenInfo] = await Promise.allSettled([this._retrieveTokenInfo()])
-
-      if (tokenInfo.status === 'rejected') {
-        throw tokenInfo.reason
-      }
+      const tokenInfo = await this._retrieveTokenInfo()
 
       return Token.createFrom({
         address: this.address,
         chainInfo: this.chainInfo,
-        decimals: tokenInfo.value.decimals,
-        symbol: maybeToken !== undefined ? maybeToken.symbol : tokenInfo.value.symbol,
-        name: tokenInfo.value.name,
+        decimals: tokenInfo.decimals,
+        symbol: maybeToken !== undefined ? maybeToken.symbol : tokenInfo.symbol,
+        name: tokenInfo.name,
       })
     }
     return this._token
