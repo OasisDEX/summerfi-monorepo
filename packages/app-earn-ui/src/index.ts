@@ -106,7 +106,10 @@ export { OrderInformation } from './components/molecules/OrderInformation/OrderI
 export { PositionCard } from './components/molecules/PositionCard/PositionCard'
 export { VaultCardHomepage } from './components/molecules/VaultCardHomepage/VaultCardHomepage'
 export { HomepageCarousel } from './components/molecules/HomepageCarousel/HomepageCarousel'
-export { TableCellAllocationCap } from './components/molecules/TableCellCustomComponents/TableCellCustomComponents'
+export {
+  TableCellAllocationCap,
+  TableCellAllocationCapTooltipDataBlock,
+} from './components/molecules/TableCellCustomComponents/TableCellCustomComponents'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'

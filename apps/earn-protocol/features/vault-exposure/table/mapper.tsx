@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import {
   getDisplayToken,
   Icon,
   TableCellAllocationCap,
+  TableCellAllocationCapTooltipDataBlock,
   TableCellNodes,
   TableCellText,
   TableRowAccent,
@@ -77,7 +79,7 @@ export const vaultExposureMapper = (
   arksInterestRates: GetInterestRatesReturnType,
   sortConfig?: TableSortedColumn<string>,
 ) => {
-  const vaultInputToken = vault.inputTokenBalance
+  const vaultInputTokenBalance = vault.inputTokenBalance
 
   const arksLatestInterestRates = mapArkLatestInterestRates(arksInterestRates)
 
@@ -112,21 +114,33 @@ export const vaultExposureMapper = (
     | SDKNetwork.Base
 
   return sortedArks.map((item) => {
-    const allocationRaw = new BigNumber(item.inputTokenBalance.toString()).shiftedBy(
+    const maxPercentageTVL = new BigNumber(item.maxDepositPercentageOfTVL.toString()).shiftedBy(
+      -18 - 2, // -18 because its 'in wei' and then -2 because we want to use formatDecimalAsPercent
+    )
+    const arkTokenTVL = new BigNumber(item.inputTokenBalance.toString()).shiftedBy(
       -vault.inputToken.decimals,
     )
     const allocation =
-      vaultInputToken.toString() !== '0'
-        ? new BigNumber(item.inputTokenBalance.toString()).div(vaultInputToken.toString())
+      vaultInputTokenBalance.toString() !== '0'
+        ? new BigNumber(item.inputTokenBalance.toString()).div(vaultInputTokenBalance.toString())
         : '0'
-
     const cap =
       item.depositLimit.toString() !== '0'
         ? new BigNumber(item.inputTokenBalance.toString()).div(item.depositLimit.toString())
         : '0'
+    const absoluteAllocationCap =
+      item.depositCap.toString() !== '0'
+        ? new BigNumber(item.depositCap.toString()).shiftedBy(-item.inputToken.decimals).toString()
+        : '0'
+
+    const vaultTvlAllocationCap = new BigNumber(
+      new BigNumber(vaultInputTokenBalance.toString()).shiftedBy(-vault.inputToken.decimals),
+    ).times(maxPercentageTVL)
+    const mainAllocationCap = BigNumber.minimum(absoluteAllocationCap, vaultTvlAllocationCap)
 
     const protocol = item.name?.split('-') ?? ['n/a']
     const protocolLabel = getProtocolLabel(protocol)
+    const isBuffer = protocolLabel === 'Buffer'
 
     let arkDetails
 
@@ -163,12 +177,58 @@ export const vaultExposureMapper = (
         yearlyHigh: (
           <TableCellText>{formatDecimalAsPercent(item.yearlyYieldRange.high)}</TableCellText>
         ),
-        allocated: <TableCellText>{formatCryptoBalance(allocationRaw)}</TableCellText>,
+        allocated: <TableCellText>{formatCryptoBalance(arkTokenTVL)}</TableCellText>,
         allocationCap: (
           <TableCellNodes>
             <TableCellAllocationCap
-              capPercent={formatDecimalAsPercent(cap)}
-              tooltipContent={<div>this&nbsp;bit&nbsp;here</div>}
+              capPercent={isBuffer ? 'n/a' : formatDecimalAsPercent(cap)}
+              tooltipContent={
+                !isBuffer ? (
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: 'var(--general-space-24)',
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 'var(--spacing-space-2x-small)',
+                      }}
+                    >
+                      <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
+                        Allocation cap
+                      </Text>
+                      <Text
+                        variant="p3semiColorful"
+                        style={{ color: 'var(--color-text-secondary)' }}
+                      >
+                        {formatCryptoBalance(mainAllocationCap)} {item.inputToken.symbol}
+                      </Text>
+                      <Text variant="p4semi" style={{ color: 'var(--color-text-secondary)' }}>
+                        This is the maximum amount that can be allocated to this strategy within
+                        this Vault. It is calculated as the minimum of the absolute and TVL exposure
+                        based caps (as shown below).
+                      </Text>
+                    </div>
+                    <div style={{ height: '1px', backgroundColor: 'var(--color-border)' }} />
+                    <TableCellAllocationCapTooltipDataBlock
+                      title="Absolute allocation cap"
+                      value={`${formatCryptoBalance(absoluteAllocationCap)} ${item.inputToken.symbol}`}
+                    />
+                    <TableCellAllocationCapTooltipDataBlock
+                      title="TVL allocation cap %"
+                      value={`${formatDecimalAsPercent(maxPercentageTVL)} (${formatCryptoBalance(vaultTvlAllocationCap)})`}
+                    />
+                    <TableCellAllocationCapTooltipDataBlock
+                      title="Cap utilisation"
+                      value={`${formatDecimalAsPercent(cap)} (${formatCryptoBalance(arkTokenTVL)} / ${formatCryptoBalance(mainAllocationCap)})`}
+                    />
+                  </div>
+                ) : undefined
+              }
             />
           </TableCellNodes>
         ),

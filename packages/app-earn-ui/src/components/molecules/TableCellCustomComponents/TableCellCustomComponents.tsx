@@ -18,7 +18,10 @@ export const TableCellAllocationCap = ({
       <div className={tableCellCustomComponentsStyles.tableCellAllocationCapPercentTooltipWrapper}>
         <Text variant="p3semi">{capPercent}</Text>
         {tooltipContent && (
-          <Tooltip tooltip={tooltipContent}>
+          <Tooltip
+            tooltip={tooltipContent}
+            tooltipWrapperStyles={{ maxWidth: '260px', width: '260px' }}
+          >
             <Icon iconName="info" size={20} color="#777576" />
           </Tooltip>
         )}
@@ -31,6 +34,25 @@ export const TableCellAllocationCap = ({
           }}
         />
       </div>
+    </div>
+  )
+}
+
+export const TableCellAllocationCapTooltipDataBlock = ({
+  title,
+  value,
+}: {
+  title: string
+  value: string | ReactNode
+}): ReactNode => {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-space-2x-small)' }}>
+      <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
+        {title}
+      </Text>
+      <Text variant="p3semi" style={{ color: 'var(--color-text-primary)' }}>
+        {value}
+      </Text>
     </div>
   )
 }
