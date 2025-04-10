@@ -102,26 +102,34 @@ export const getLatestActivitiesServerSide = async ({
       .then((result) => Math.floor((Number(result?.count ?? 0) - 1) / 2))
 
     // Execute query and get total count using the same filters
-    const [activities, countResult, totalDepositsCount, depositsForMedian] = await Promise.all([
-      finalQuery,
-      filteredQuery
-        .clearSelect() // Clear the previous selectAll()
-        .select((eb) => eb.fn.countAll().as('count'))
-        .executeTakeFirst(),
-      baseQuery
-        .clearSelect() // Clear the previous selectAll()
-        .where('actionType', '=', 'deposit')
-        .select((eb) => eb.fn.countAll().as('count'))
-        .executeTakeFirst(),
-      baseQuery
-        .clearSelect()
-        .where('actionType', '=', 'deposit')
-        .select('amountUsd')
-        .orderBy('amountUsd', 'asc')
-        .offset(offset === -1 ? 0 : offset)
-        .limit(2)
-        .execute(),
-    ])
+    const [activities, countResult, totalDepositsCount, depositsForMedian, uniqueUsersCount] =
+      await Promise.all([
+        finalQuery,
+        filteredQuery
+          .clearSelect() // Clear the previous selectAll()
+          .select((eb) => eb.fn.countAll().as('count'))
+          .executeTakeFirst(),
+        baseQuery
+          .clearSelect() // Clear the previous selectAll()
+          .where('actionType', '=', 'deposit')
+          .select((eb) => eb.fn.countAll().as('count'))
+          .executeTakeFirst(),
+        baseQuery
+          .clearSelect()
+          .where('actionType', '=', 'deposit')
+          .select('amountUsd')
+          .orderBy('amountUsd', 'asc')
+          .offset(offset === -1 ? 0 : offset)
+          .limit(2)
+          .execute(),
+        baseQuery
+          .clearSelect()
+          .where('actionType', '=', 'deposit')
+          .select((eb) => eb.fn.count('userAddress').as('count'))
+          .groupBy('userAddress')
+          .execute()
+          .then((results) => results.length),
+      ])
 
     const medianDeposit =
       (Number(depositsForMedian[0]?.amountUsd ?? 0) +
@@ -129,6 +137,7 @@ export const getLatestActivitiesServerSide = async ({
       2
 
     const totalDeposits = Number(totalDepositsCount?.count ?? 0)
+    const totalUniqueUsers = uniqueUsersCount
 
     const totalItems = Number(countResult?.count ?? 0)
 
@@ -142,6 +151,7 @@ export const getLatestActivitiesServerSide = async ({
       },
       totalDeposits,
       medianDeposit,
+      totalUniqueUsers,
     })
   } catch (error) {
     // eslint-disable-next-line no-console
