@@ -52,9 +52,8 @@ export const PortfolioVaultsCarousel: FC<PortfolioVaultsCarouselProps> = ({
             onClick={() => push(getVaultUrl(vault))}
             withTokenBonus={sumrNetApyConfig.withSumr}
             sumrPrice={estimatedSumrPrice}
-            apy={
+            vaultApyData={
               vaultsApyByNetworkMap[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
-                .apy
             }
           />
         ))}

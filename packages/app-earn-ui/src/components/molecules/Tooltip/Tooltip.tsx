@@ -114,7 +114,7 @@ const TooltipWrapper: FC<TooltipWrapperProps> = ({
 type ChildrenCallback = (tooltipOpen: boolean, setTooltipOpen: (flag: boolean) => void) => ReactNode
 
 interface StatefulTooltipProps {
-  tooltip: ReactNode | ChildrenCallback
+  tooltip?: ReactNode | ChildrenCallback
   children: ReactNode | ChildrenCallback
   tooltipWrapperStyles?: HTMLAttributes<HTMLDivElement>['style']
   tooltipCardVariant?: CardVariants
@@ -230,6 +230,10 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
 
   if (!portalElement) {
     return childrenTypeGuard(children) ? children : children(tooltipOpen, handleTooltipOpenState)
+  }
+
+  if (!tooltip) {
+    return children
   }
 
   const portal = createPortal(

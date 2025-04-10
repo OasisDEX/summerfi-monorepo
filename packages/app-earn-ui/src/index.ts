@@ -135,6 +135,8 @@ export { useAmountWithSwap } from './hooks/use-amount-with-swap'
 export { useForecast } from './features/forecast/use-forecast.ts'
 export { useIsIframe } from './hooks/use-is-iframe'
 export { useAnalyticsCookies } from './hooks/use-analytics-cookies'
+export { useHoldAlt } from './hooks/use-hold-alt'
+export { useApyUpdatedAt } from './hooks/use-apy-updated-at'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
 export { vaultFaqData } from './common/faq/vault-faq'

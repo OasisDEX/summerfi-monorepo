@@ -8,32 +8,51 @@ import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import additionalBonusLabelStyles from './AdditionalBonusLabel.module.scss'
 
 type AdditionalBonusLabelProps = {
-  bonus?: EarnAppConfigType['fleetMap']['1']['0x']['bonus']
+  externalTokenBonus?: EarnAppConfigType['fleetMap']['1']['0x']['bonus']
+  sumrTokenBonus?: string
 }
 
-export const AdditionalBonusLabel = ({ bonus }: AdditionalBonusLabelProps): ReactNode | null => {
-  return bonus ? (
+/**
+ * This is the `plain white` bonus label.
+ */
+export const AdditionalBonusLabel = ({
+  externalTokenBonus,
+  sumrTokenBonus,
+}: AdditionalBonusLabelProps): ReactNode | null => {
+  return externalTokenBonus ?? sumrTokenBonus ? (
     <Tooltip
       tooltipWrapperStyles={{
         marginTop: 'var(--general-space-12)',
       }}
       tooltip={
-        <div className={additionalBonusLabelStyles.additionalBonusTooltipWrapper}>
-          <div className={additionalBonusLabelStyles.additionalBonusTooltipTitle}>
-            <Icon iconName={bonus.icon as IconNamesList} size={16} />
-            <Text variant="p3semi" style={{ color: 'var(--color-text-primary-hover)' }}>
-              {bonus.label}
+        externalTokenBonus ? (
+          <div className={additionalBonusLabelStyles.additionalBonusTooltipWrapper}>
+            <div className={additionalBonusLabelStyles.additionalBonusTooltipTitle}>
+              <Icon iconName={externalTokenBonus.icon as IconNamesList} size={16} />
+              <Text variant="p3semi" style={{ color: 'var(--color-text-primary-hover)' }}>
+                {externalTokenBonus.label}
+              </Text>
+            </div>
+            <Text variant="p1semi" style={{ width: '270px', marginTop: 'var(--general-space-8)' }}>
+              {externalTokenBonus.description}
             </Text>
           </div>
-          <Text variant="p1semi" style={{ width: '270px', marginTop: 'var(--general-space-8)' }}>
-            {bonus.description}
-          </Text>
-        </div>
+        ) : undefined
       }
     >
       <div className={additionalBonusLabelStyles.additionalBonusLabelWrapper}>
-        <Text variant="p2semi">{bonus.multiplier}x</Text>
-        <Icon iconName={bonus.icon as IconNamesList} size={20} />
+        {sumrTokenBonus && (
+          <div>
+            <Icon iconName="stars" size={23} />
+            <Text variant="p2semi">{sumrTokenBonus} SUMR</Text>
+          </div>
+        )}
+        {externalTokenBonus && (
+          <div>
+            <Text variant="p2semi">{externalTokenBonus.multiplier}x</Text>
+            <Icon iconName={externalTokenBonus.icon as IconNamesList} size={20} />
+          </div>
+        )}
       </div>
     </Tooltip>
   ) : null
