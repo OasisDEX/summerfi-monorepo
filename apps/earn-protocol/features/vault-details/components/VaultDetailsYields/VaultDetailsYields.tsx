@@ -1,7 +1,11 @@
 'use client'
 import { type FC } from 'react'
 import { Card, Text } from '@summerfi/app-earn-ui'
-import { type ArksHistoricalChartData, type SDKVaultishType } from '@summerfi/app-types'
+import {
+  type ArksHistoricalChartData,
+  type SDKVaultishType,
+  type VaultApyData,
+} from '@summerfi/app-types'
 
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { VaultDetailsAdvancedYield } from '@/features/vault-details/components/VaultDetailsAdvancedYield/VaultDetailsAdvancedYield'
@@ -11,6 +15,7 @@ interface VaultDetailsYieldsProps {
   summerVaultName: string
   vault: SDKVaultishType
   arksInterestRates: GetInterestRatesReturnType
+  vaultApyData: VaultApyData
 }
 
 export const VaultDetailsYields: FC<VaultDetailsYieldsProps> = ({
@@ -18,6 +23,7 @@ export const VaultDetailsYields: FC<VaultDetailsYieldsProps> = ({
   summerVaultName,
   vault,
   arksInterestRates,
+  vaultApyData,
 }) => {
   return (
     <Card variant="cardSecondary">
@@ -55,6 +61,7 @@ export const VaultDetailsYields: FC<VaultDetailsYieldsProps> = ({
           summerVaultName={summerVaultName}
           vault={vault}
           arksInterestRates={arksInterestRates}
+          vaultApyData={vaultApyData}
         />
       </div>
     </Card>

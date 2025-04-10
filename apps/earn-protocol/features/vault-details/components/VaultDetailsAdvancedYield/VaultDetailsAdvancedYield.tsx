@@ -4,6 +4,7 @@ import {
   type ArksHistoricalChartData,
   type InlineButtonOption,
   type SDKVaultishType,
+  type VaultApyData,
 } from '@summerfi/app-types'
 
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
@@ -15,6 +16,7 @@ interface VaultDetailsAdvancedYieldProps {
   summerVaultName: string
   vault: SDKVaultishType
   arksInterestRates: GetInterestRatesReturnType
+  vaultApyData: VaultApyData
 }
 
 export const VaultDetailsAdvancedYield: FC<VaultDetailsAdvancedYieldProps> = ({
@@ -22,6 +24,7 @@ export const VaultDetailsAdvancedYield: FC<VaultDetailsAdvancedYieldProps> = ({
   summerVaultName,
   vault,
   arksInterestRates,
+  vaultApyData,
 }) => {
   const chartNames = useMemo(() => {
     return [summerVaultName, ...(chartData.dataNames ?? [])]
@@ -87,7 +90,11 @@ export const VaultDetailsAdvancedYield: FC<VaultDetailsAdvancedYieldProps> = ({
       >
         Individual Yield Data
       </Text>
-      <VaultDetailsIndividualYieldData vault={vault} arksInterestRates={arksInterestRates} />
+      <VaultDetailsIndividualYieldData
+        vault={vault}
+        arksInterestRates={arksInterestRates}
+        vaultApyData={vaultApyData}
+      />
     </>
   )
 }
