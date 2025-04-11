@@ -18,7 +18,7 @@ export const TableCellText: FC<TableCellTextProps> = ({
   <Text
     as="p"
     variant={small ? 'p4semi' : 'p3semi'}
-    style={{ color: 'var(--earn-protocol-secondary-100)', ...style }}
+    style={{ color: 'var(--earn-protocol-secondary-100)', userSelect: 'none', ...style }}
     suppressHydrationWarning={suppressHydrationWarning}
   >
     {children}

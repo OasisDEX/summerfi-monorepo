@@ -13,6 +13,7 @@ import {
   sdkNetworkToHumanNetwork,
 } from '@summerfi/app-utils'
 import clsx from 'clsx'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 
 import { AdditionalBonusLabel } from '@/components/atoms/AdditionalBonusLabel/AdditionalBonusLabel'
@@ -85,7 +86,19 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
       'n/a'
     )
   ) : (
-    <>New&nbsp;strategy</>
+    <Tooltip
+      tooltip={
+        <Text variant="p4" style={{ color: 'var(--color-text-primary)' }}>
+          This vault is only {dayjs().diff(dayjs(Number(vault.createdTimestamp) * 1000), 'day')}{' '}
+          days old. 30d APY will be available after 30 days.
+        </Text>
+      }
+      tooltipWrapperStyles={{
+        width: '300px',
+      }}
+    >
+      <span>New&nbsp;strategy</span>
+    </Tooltip>
   )
   const apyCurrent = vaultApyData.apy ? formatDecimalAsPercent(vaultApyData.apy) : 'New strategy'
   const apyUpdatedAt = useApyUpdatedAt({

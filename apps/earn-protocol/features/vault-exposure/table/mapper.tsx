@@ -166,7 +166,7 @@ export const vaultExposureMapper = (
             </div>
           </TableCellNodes>
         ),
-        liveApy: <TableCellText>{formatDecimalAsPercent(item.apy)}</TableCellText>,
+        liveApy: <TableCellText>{isBuffer ? '-' : formatDecimalAsPercent(item.apy)}</TableCellText>,
         avgApy30d: <TableCellText>{formatDecimalAsPercent(item.avgApy30d)}</TableCellText>,
         avgApy1y: <TableCellText>{formatDecimalAsPercent(item.avgApy1y)}</TableCellText>,
         yearlyLow: (

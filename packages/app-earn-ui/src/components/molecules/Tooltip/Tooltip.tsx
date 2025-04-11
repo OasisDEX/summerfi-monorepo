@@ -145,7 +145,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
   withinDialog,
   tooltipId,
   hideDrawerOnMobile = false,
-}) => {
+}): ReactNode => {
   const generatedId = useRef(tooltipId ?? generateUniqueId()).current
 
   const { tooltipOpen, setTooltipOpen, closeHandler } = useTooltip(generatedId)
@@ -233,7 +233,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
   }
 
   if (!tooltip) {
-    return children
+    return childrenTypeGuard(children) ? children : children(tooltipOpen, handleTooltipOpenState)
   }
 
   const portal = createPortal(
