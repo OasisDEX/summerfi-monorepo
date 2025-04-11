@@ -28,7 +28,7 @@ export const handler = async (
     const res = await fetch(`${PRO_APP_URL}/api/product-hub`, {
       method: 'PATCH',
       body: JSON.stringify({
-        protocols: ['ajna', 'aavev2', 'aavev3', 'maker', 'sparkv3', 'morphoblue', 'erc-4626'],
+        protocols: ['ajna', 'aavev3', 'maker', 'sparkv3', 'morphoblue', 'erc-4626'],
       }),
       headers: {
         'Content-Type': 'application/json',
