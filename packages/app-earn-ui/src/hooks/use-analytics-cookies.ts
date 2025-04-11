@@ -12,7 +12,7 @@ import {
  */
 export const useAnalyticsCookies = (
   savedFromServer: SavedAnalyticsCookiesSettings | null,
-): (SavedAnalyticsCookiesSettings | ((value: SavedAnalyticsCookiesSettings) => void) | null)[] => {
+): [SavedAnalyticsCookiesSettings | null, (value: SavedAnalyticsCookiesSettings) => void] => {
   const cookie = getCookie(analyticsCookieName)
 
   const cookieSettings = cookie

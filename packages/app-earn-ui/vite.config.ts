@@ -12,6 +12,7 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 import preserveDirectives from 'rollup-preserve-directives'
 // generates .d.ts files
 import UnpluginIsolatedDecl from 'unplugin-isolated-decl/vite'
+import path from 'node:path'
 
 const logger = createLogger()
 const loggerInfo = logger.info
@@ -52,7 +53,24 @@ export default defineConfig(({ mode }) => {
           }
         },
       },
-      UnpluginIsolatedDecl(),
+      UnpluginIsolatedDecl({
+        rewriteImports: (id: string, importer: string) => {
+          if (id.startsWith('@/') && id.endsWith('.scss')) {
+            // the files are in the same folder, so we just need `./{file}.scss`
+            const fileName = path.basename(id, '.scss')
+            return `./${fileName}.scss`
+          }
+          if (id.startsWith('@/') && !id.endsWith('.scss')) {
+            const cleanId = id.replace('@/', './dist/src/')
+            const relativePath = relative(importer, cleanId)
+            return relativePath
+          }
+          if (id.startsWith('@/')) {
+            console.log(`Missing rewrite imports config: ${importer}, id: ${id}`)
+          }
+          return id
+        },
+      }),
     ],
     css: {
       preprocessorOptions: {

@@ -2,7 +2,7 @@
 
 import { type FC, useState } from 'react'
 import { TabBar } from '@summerfi/app-earn-ui'
-import { type SDKVaultishType, type SDKVaultType } from '@summerfi/app-types'
+import { type SDKVaultishType, type SDKVaultType, type VaultApyData } from '@summerfi/app-types'
 
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { VaultExposureTableSection } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
@@ -21,11 +21,13 @@ const hiddenColumns = ['liquidity']
 interface VaultDetailsIndividualYieldDataProps {
   vault: SDKVaultishType
   arksInterestRates: GetInterestRatesReturnType
+  vaultApyData: VaultApyData
 }
 
 export const VaultDetailsIndividualYieldData: FC<VaultDetailsIndividualYieldDataProps> = ({
   vault,
   arksInterestRates,
+  vaultApyData,
 }) => {
   const [seeAll, setSeeAll] = useState(false)
 
@@ -40,6 +42,7 @@ export const VaultDetailsIndividualYieldData: FC<VaultDetailsIndividualYieldData
         <VaultExposureTableSection
           arksInterestRates={arksInterestRates}
           vault={vault}
+          vaultApyData={vaultApyData}
           filteredVault={vaultExposureFilter({
             vault: vault as SDKVaultType,
             allocationType: VaultExposureFilterType.ALL,
@@ -59,6 +62,7 @@ export const VaultDetailsIndividualYieldData: FC<VaultDetailsIndividualYieldData
         <VaultExposureTableSection
           arksInterestRates={arksInterestRates}
           vault={vault}
+          vaultApyData={vaultApyData}
           filteredVault={vaultExposureFilter({
             vault: vault as SDKVaultType,
             allocationType: VaultExposureFilterType.ALLOCATED,
@@ -78,6 +82,7 @@ export const VaultDetailsIndividualYieldData: FC<VaultDetailsIndividualYieldData
         <VaultExposureTableSection
           arksInterestRates={arksInterestRates}
           vault={vault}
+          vaultApyData={vaultApyData}
           filteredVault={vaultExposureFilter({
             vault: vault as SDKVaultType,
             allocationType: VaultExposureFilterType.UNALLOCATED,

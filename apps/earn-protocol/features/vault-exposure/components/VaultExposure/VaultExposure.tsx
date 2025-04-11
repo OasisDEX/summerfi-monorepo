@@ -2,7 +2,7 @@
 
 import { type Dispatch, type FC, type SetStateAction, useMemo, useState } from 'react'
 import { Button, Card, Icon, TabBar, Text } from '@summerfi/app-earn-ui'
-import { type SDKVaultishType, type SDKVaultType } from '@summerfi/app-types'
+import { type SDKVaultishType, type SDKVaultType, type VaultApyData } from '@summerfi/app-types'
 import { sdkNetworkToHumanNetwork } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
 
@@ -25,6 +25,7 @@ interface VaultExposureTableSectionProps {
   setSeeAll: Dispatch<SetStateAction<boolean>>
   arksInterestRates: GetInterestRatesReturnType
   hiddenColumns?: string[]
+  vaultApyData: VaultApyData
 }
 
 export const VaultExposureTableSection: FC<VaultExposureTableSectionProps> = ({
@@ -36,6 +37,7 @@ export const VaultExposureTableSection: FC<VaultExposureTableSectionProps> = ({
   setSeeAll,
   arksInterestRates,
   hiddenColumns,
+  vaultApyData,
 }) => {
   const vaultExposureFiltered = useMemo(
     () => vaultExposureFilter({ vault: vault as SDKVaultType, allocationType }),
@@ -48,7 +50,8 @@ export const VaultExposureTableSection: FC<VaultExposureTableSectionProps> = ({
         arksInterestRates={arksInterestRates}
         vault={vaultExposureFiltered}
         rowsToDisplay={resolvedRowsToDisplay}
-        hiddenColumns={['cap', ...(hiddenColumns ?? [])]}
+        hiddenColumns={hiddenColumns ?? []}
+        vaultApyData={vaultApyData}
       />
       {filteredVault.arks.length > 5 && (
         <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
@@ -82,11 +85,16 @@ const rowsToDisplay = 5
 interface VaultExposureProps {
   vault: SDKVaultishType
   arksInterestRates: GetInterestRatesReturnType
+  vaultApyData: VaultApyData
 }
 
 const columnsToHide = ['avgApy30d', 'avgApy1y', 'yearlyLow', 'yearlyHigh']
 
-export const VaultExposure: FC<VaultExposureProps> = ({ vault, arksInterestRates }) => {
+export const VaultExposure: FC<VaultExposureProps> = ({
+  vault,
+  arksInterestRates,
+  vaultApyData,
+}) => {
   const [seeAll, setSeeAll] = useState(false)
 
   // hard to tell how many arks will be per vault therefore limiting it for now to 20
@@ -101,6 +109,7 @@ export const VaultExposure: FC<VaultExposureProps> = ({ vault, arksInterestRates
       content: (
         <VaultExposureTableSection
           arksInterestRates={arksInterestRates}
+          vaultApyData={vaultApyData}
           vault={vault}
           filteredVault={vaultExposureFilter({
             vault: vault as SDKVaultType,
@@ -120,6 +129,7 @@ export const VaultExposure: FC<VaultExposureProps> = ({ vault, arksInterestRates
       content: (
         <VaultExposureTableSection
           arksInterestRates={arksInterestRates}
+          vaultApyData={vaultApyData}
           vault={vault}
           filteredVault={vaultExposureFilter({
             vault: vault as SDKVaultType,
@@ -139,6 +149,7 @@ export const VaultExposure: FC<VaultExposureProps> = ({ vault, arksInterestRates
       content: (
         <VaultExposureTableSection
           arksInterestRates={arksInterestRates}
+          vaultApyData={vaultApyData}
           vault={vault}
           filteredVault={vaultExposureFilter({
             vault: vault as SDKVaultType,

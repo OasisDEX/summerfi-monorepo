@@ -13,6 +13,7 @@ import {
   sdkNetworkToHumanNetwork,
 } from '@summerfi/app-utils'
 import clsx from 'clsx'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 
 import { AdditionalBonusLabel } from '@/components/atoms/AdditionalBonusLabel/AdditionalBonusLabel'
@@ -78,11 +79,27 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
 
   const isVaultAtLeast30dOld = isVaultAtLeastDaysOld({ vault, days: 30 })
 
-  const apy30d = isVaultAtLeast30dOld
-    ? vaultApyData.sma30d
-      ? formatDecimalAsPercent(vaultApyData.sma30d)
-      : 'n/a'
-    : 'New strategy'
+  const apy30d = isVaultAtLeast30dOld ? (
+    vaultApyData.sma30d ? (
+      formatDecimalAsPercent(vaultApyData.sma30d)
+    ) : (
+      'n/a'
+    )
+  ) : (
+    <Tooltip
+      tooltip={
+        <Text variant="p4" style={{ color: 'var(--color-text-primary)' }}>
+          This vault is only {dayjs().diff(dayjs(Number(vault.createdTimestamp) * 1000), 'day')}{' '}
+          days old. 30d APY will be available after 30 days.
+        </Text>
+      }
+      tooltipWrapperStyles={{
+        width: '300px',
+      }}
+    >
+      <span>New&nbsp;strategy</span>
+    </Tooltip>
+  )
   const apyCurrent = vaultApyData.apy ? formatDecimalAsPercent(vaultApyData.apy) : 'New strategy'
   const apyUpdatedAt = useApyUpdatedAt({
     vaultApyData,
@@ -238,53 +255,48 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
               />
             </Box>
             <Box>
-              {isVaultAtLeast30dOld ? (
-                <DataBlock
-                  size="large"
-                  titleSize="small"
-                  title="30d APY"
-                  value={
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <Text variant="h4" style={{ marginRight: 'var(--general-space-8)' }}>
-                        {apy30d}
+              <DataBlock
+                size="large"
+                titleSize="small"
+                title="30d APY"
+                value={
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <Text variant="h4" style={{ marginRight: 'var(--general-space-8)' }}>
+                      {apy30d}
+                    </Text>
+                    <Icon iconName="stars_colorful" size={20} />
+                  </div>
+                }
+                subValue={
+                  <Tooltip
+                    tooltip={
+                      <LiveApyInfo
+                        apyCurrent={apyCurrent}
+                        apyUpdatedAt={apyUpdatedAt}
+                        isAltPressed={isAltPressed}
+                      />
+                    }
+                    tooltipWrapperStyles={{
+                      maxWidth: '455px',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                      <Text
+                        variant="p4semi"
+                        style={{
+                          marginRight: 'var(--general-space-4)',
+                          color: 'var(--color-text-success)',
+                        }}
+                      >
+                        Live&nbsp;APY:&nbsp;{apyCurrent}&nbsp;(
+                        {apyUpdatedAt.apyUpdatedAtLabel}m&nbsp;ago)
                       </Text>
-                      <Icon iconName="stars_colorful" size={20} />
+                      <Icon iconName="info" size={16} color="var(--color-text-success)" />
                     </div>
-                  }
-                  subValue={
-                    <Tooltip
-                      tooltip={
-                        <LiveApyInfo
-                          apyCurrent={apyCurrent}
-                          apyUpdatedAt={apyUpdatedAt}
-                          isAltPressed={isAltPressed}
-                        />
-                      }
-                      tooltipWrapperStyles={{
-                        maxWidth: '455px',
-                      }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                        <Text
-                          variant="p4semi"
-                          style={{
-                            marginRight: 'var(--general-space-4)',
-                            color: 'var(--color-text-success)',
-                          }}
-                        >
-                          Live&nbsp;APY:&nbsp;{apyCurrent}&nbsp;(
-                          {apyUpdatedAt.apyUpdatedAtLabel}m&nbsp;ago)
-                        </Text>
-                        <Icon iconName="info" size={16} color="var(--color-text-success)" />
-                      </div>
-                    </Tooltip>
-                  }
-                  subValueType="neutral"
-                  subValueSize="small"
-                />
-              ) : (
-                <DataBlock size="large" titleSize="small" title="Current APY" value={apyCurrent} />
-              )}
+                  </Tooltip>
+                }
+                subValueSize="small"
+              />
             </Box>
           </SimpleGrid>
           {isMobile && rightExtraContent && (

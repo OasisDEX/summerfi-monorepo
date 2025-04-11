@@ -6,17 +6,19 @@ interface TableCellTextProps {
   children: ReactNode
   style?: CSSProperties
   suppressHydrationWarning?: boolean
+  small?: boolean
 }
 
 export const TableCellText: FC<TableCellTextProps> = ({
   children,
   style = {},
   suppressHydrationWarning,
+  small = false,
 }) => (
   <Text
     as="p"
-    variant="p3semi"
-    style={{ color: 'var(--earn-protocol-secondary-100)', ...style }}
+    variant={small ? 'p4semi' : 'p3semi'}
+    style={{ color: 'var(--earn-protocol-secondary-100)', userSelect: 'none', ...style }}
     suppressHydrationWarning={suppressHydrationWarning}
   >
     {children}

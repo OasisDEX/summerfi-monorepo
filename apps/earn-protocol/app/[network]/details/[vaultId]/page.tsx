@@ -16,6 +16,7 @@ import { userAddresesToFilterOut } from '@/app/server-handlers/tables-data/const
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
 import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
+import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { VaultDetailsView } from '@/components/layout/VaultDetailsView/VaultDetailsView'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import {
@@ -79,13 +80,19 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
     systemConfig,
   })
 
-  const [arkInterestRatesMap, vaultInterestRates] = await Promise.all([
+  const [arkInterestRatesMap, vaultInterestRates, vaultsApyRaw] = await Promise.all([
     getInterestRates({
       network: parsedNetwork,
       arksList: vault.arks,
     }),
     getVaultsHistoricalApy({
       // just the vault displayed
+      fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
+        fleetAddress: id,
+        chainId: subgraphNetworkToId(network),
+      })),
+    }),
+    getVaultsApy({
       fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
         chainId: subgraphNetworkToId(network),
@@ -103,6 +110,7 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
 
   const totalRebalanceActions = rebalanceActivity.pagination.totalItems
   const totalUsers = topDepositors.pagination.totalItems
+  const vaultApyData = vaultsApyRaw[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
 
   return (
     <VaultGridDetails vault={vault} vaults={allVaultsWithConfig}>
@@ -114,6 +122,7 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
         vaults={vaults}
         totalRebalanceActions={totalRebalanceActions}
         totalUsers={totalUsers}
+        vaultApyData={vaultApyData}
       />
     </VaultGridDetails>
   )
