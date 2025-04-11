@@ -1,7 +1,7 @@
 import { type TableSortedColumn } from '@summerfi/app-earn-ui'
 import { type SDKVaultType } from '@summerfi/app-types'
 import { simpleSort, SortDirection } from '@summerfi/app-utils'
-import type BigNumber from 'bignumber.js'
+import BigNumber from 'bignumber.js'
 
 type YieldRange = {
   low: BigNumber
@@ -13,6 +13,13 @@ type ExtendedArk = SDKVaultType['arks'][number] & {
   avgApy30d: BigNumber
   avgApy1y: BigNumber
   yearlyYieldRange: YieldRange
+  arkTokenTVL: BigNumber
+  allocationRatio: BigNumber | string
+  capRatio: BigNumber | string
+  vaultTvlAllocationCap: BigNumber
+  mainAllocationCap: BigNumber
+  absoluteAllocationCap: BigNumber | string
+  maxPercentageTVL: BigNumber | string
 }
 
 export const vaultExposureSorter = ({
@@ -23,7 +30,7 @@ export const vaultExposureSorter = ({
   sortConfig?: TableSortedColumn<string>
 }) => {
   switch (sortConfig?.key) {
-    case 'allocation':
+    case 'allocated':
       return extendedArks.sort((a, b) =>
         simpleSort({
           a: a.inputTokenBalance,
@@ -31,7 +38,7 @@ export const vaultExposureSorter = ({
           direction: sortConfig.direction,
         }),
       )
-    case 'currentApy':
+    case 'liveApy':
       return extendedArks.sort((a, b) =>
         simpleSort({
           a: a.apy.toNumber(),
@@ -79,6 +86,14 @@ export const vaultExposureSorter = ({
           direction: sortConfig.direction,
         }),
       )
+    case 'allocationCap':
+      return extendedArks.sort((a, b) => {
+        return simpleSort({
+          a: new BigNumber(a.capRatio).toString(),
+          b: new BigNumber(b.capRatio).toString(),
+          direction: sortConfig.direction,
+        })
+      })
     default:
       return extendedArks.sort((a, b) =>
         simpleSort({

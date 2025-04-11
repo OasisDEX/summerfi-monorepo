@@ -35,6 +35,13 @@ type ExtendedArk = SDKVaultType['arks'][0] & {
   avgApy30d: BigNumber
   avgApy1y: BigNumber
   yearlyYieldRange: YieldRange
+  arkTokenTVL: BigNumber
+  allocationRatio: BigNumber | string
+  capRatio: BigNumber | string
+  vaultTvlAllocationCap: BigNumber
+  mainAllocationCap: BigNumber
+  absoluteAllocationCap: BigNumber | string
+  maxPercentageTVL: BigNumber | string
 }
 
 const calculateAverageApy = (rates: { averageRate: number; date: number }[], days: number) => {
@@ -94,6 +101,29 @@ export const vaultExposureMapper = (
     const avgApy30d = calculateAverageApy(arkRates.dailyInterestRates ?? [], 30)
     const avgApy1y = calculateAverageApy(arkRates.dailyInterestRates ?? [], 365)
     const yearlyYieldRange = calculateYearlyYieldRange(arkRates.dailyInterestRates ?? [])
+    const maxPercentageTVL = new BigNumber(ark.maxDepositPercentageOfTVL.toString()).shiftedBy(
+      -18 - 2, // -18 because its 'in wei' and then -2 because we want to use formatDecimalAsPercent
+    )
+    const arkTokenTVL = new BigNumber(ark.inputTokenBalance.toString()).shiftedBy(
+      -vault.inputToken.decimals,
+    )
+    const allocationRatio =
+      vaultInputTokenBalance.toString() !== '0'
+        ? new BigNumber(ark.inputTokenBalance.toString()).div(vaultInputTokenBalance.toString())
+        : '0'
+    const capRatio =
+      ark.depositLimit.toString() !== '0'
+        ? new BigNumber(ark.inputTokenBalance.toString()).div(ark.depositLimit.toString())
+        : '0'
+    const absoluteAllocationCap =
+      ark.depositCap.toString() !== '0'
+        ? new BigNumber(ark.depositCap.toString()).shiftedBy(-ark.inputToken.decimals).toString()
+        : '0'
+
+    const vaultTvlAllocationCap = new BigNumber(
+      new BigNumber(vaultInputTokenBalance.toString()).shiftedBy(-vault.inputToken.decimals),
+    ).times(maxPercentageTVL)
+    const mainAllocationCap = BigNumber.minimum(absoluteAllocationCap, vaultTvlAllocationCap)
 
     const extendedArk: ExtendedArk = {
       ...ark,
@@ -101,6 +131,13 @@ export const vaultExposureMapper = (
       avgApy30d,
       avgApy1y,
       yearlyYieldRange,
+      arkTokenTVL,
+      absoluteAllocationCap,
+      allocationRatio,
+      capRatio,
+      vaultTvlAllocationCap,
+      mainAllocationCap,
+      maxPercentageTVL,
     }
 
     return extendedArk
@@ -115,29 +152,6 @@ export const vaultExposureMapper = (
 
   return sortedArks.map((item) => {
     const arkTokenSymbol = item.inputToken.symbol
-    const maxPercentageTVL = new BigNumber(item.maxDepositPercentageOfTVL.toString()).shiftedBy(
-      -18 - 2, // -18 because its 'in wei' and then -2 because we want to use formatDecimalAsPercent
-    )
-    const arkTokenTVL = new BigNumber(item.inputTokenBalance.toString()).shiftedBy(
-      -vault.inputToken.decimals,
-    )
-    const allocationRatio =
-      vaultInputTokenBalance.toString() !== '0'
-        ? new BigNumber(item.inputTokenBalance.toString()).div(vaultInputTokenBalance.toString())
-        : '0'
-    const capRatio =
-      item.depositLimit.toString() !== '0'
-        ? new BigNumber(item.inputTokenBalance.toString()).div(item.depositLimit.toString())
-        : '0'
-    const absoluteAllocationCap =
-      item.depositCap.toString() !== '0'
-        ? new BigNumber(item.depositCap.toString()).shiftedBy(-item.inputToken.decimals).toString()
-        : '0'
-
-    const vaultTvlAllocationCap = new BigNumber(
-      new BigNumber(vaultInputTokenBalance.toString()).shiftedBy(-vault.inputToken.decimals),
-    ).times(maxPercentageTVL)
-    const mainAllocationCap = BigNumber.minimum(absoluteAllocationCap, vaultTvlAllocationCap)
 
     const protocol = item.name?.split('-') ?? ['n/a']
     const protocolLabel = getProtocolLabel(protocol)
@@ -161,7 +175,7 @@ export const vaultExposureMapper = (
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <TableCellText>{protocolLabel}</TableCellText>
               <TableCellText small style={{ color: 'var(--color-text-secondary)' }}>
-                {formatDecimalAsPercent(allocationRatio)} allocated
+                {formatDecimalAsPercent(item.allocationRatio)} allocated
               </TableCellText>
             </div>
           </TableCellNodes>
@@ -175,12 +189,12 @@ export const vaultExposureMapper = (
         yearlyHigh: (
           <TableCellText>{formatDecimalAsPercent(item.yearlyYieldRange.high)}</TableCellText>
         ),
-        allocated: <TableCellText>{formatCryptoBalance(arkTokenTVL)}</TableCellText>,
+        allocated: <TableCellText>{formatCryptoBalance(item.arkTokenTVL)}</TableCellText>,
         allocationCap: (
           <TableCellNodes>
             <TableCellAllocationCap
               isBuffer={isBuffer}
-              capPercent={isBuffer ? 'n/a' : formatDecimalAsPercent(capRatio)}
+              capPercent={isBuffer ? 'n/a' : formatDecimalAsPercent(item.capRatio)}
               tooltipContent={
                 <div
                   style={{
@@ -200,7 +214,7 @@ export const vaultExposureMapper = (
                       Allocation cap
                     </Text>
                     <Text variant="p3semiColorful" style={{ color: 'var(--color-text-secondary)' }}>
-                      {formatCryptoBalance(mainAllocationCap)} {arkTokenSymbol}
+                      {formatCryptoBalance(item.mainAllocationCap)} {arkTokenSymbol}
                     </Text>
                     <Text variant="p4semi" style={{ color: 'var(--color-text-secondary)' }}>
                       This is the maximum amount that can be allocated to this strategy within this
@@ -211,15 +225,15 @@ export const vaultExposureMapper = (
                   <div style={{ height: '1px', backgroundColor: 'var(--color-border)' }} />
                   <TableCellAllocationCapTooltipDataBlock
                     title="Absolute allocation cap"
-                    value={`${formatCryptoBalance(absoluteAllocationCap)} ${arkTokenSymbol}`}
+                    value={`${formatCryptoBalance(item.absoluteAllocationCap)} ${arkTokenSymbol}`}
                   />
                   <TableCellAllocationCapTooltipDataBlock
                     title="TVL allocation cap %"
-                    value={`${formatDecimalAsPercent(maxPercentageTVL)} (${formatCryptoBalance(vaultTvlAllocationCap)})`}
+                    value={`${formatDecimalAsPercent(item.maxPercentageTVL)} (${formatCryptoBalance(item.vaultTvlAllocationCap)})`}
                   />
                   <TableCellAllocationCapTooltipDataBlock
                     title="Cap utilisation"
-                    value={`${formatDecimalAsPercent(capRatio)} (${formatCryptoBalance(arkTokenTVL)} / ${formatCryptoBalance(mainAllocationCap)})`}
+                    value={`${formatDecimalAsPercent(item.capRatio)} (${formatCryptoBalance(item.arkTokenTVL)} / ${formatCryptoBalance(item.mainAllocationCap)})`}
                   />
                 </div>
               }
