@@ -114,17 +114,18 @@ export const vaultExposureMapper = (
     | SDKNetwork.Base
 
   return sortedArks.map((item) => {
+    const arkTokenSymbol = item.inputToken.symbol
     const maxPercentageTVL = new BigNumber(item.maxDepositPercentageOfTVL.toString()).shiftedBy(
       -18 - 2, // -18 because its 'in wei' and then -2 because we want to use formatDecimalAsPercent
     )
     const arkTokenTVL = new BigNumber(item.inputTokenBalance.toString()).shiftedBy(
       -vault.inputToken.decimals,
     )
-    const allocation =
+    const allocationRatio =
       vaultInputTokenBalance.toString() !== '0'
         ? new BigNumber(item.inputTokenBalance.toString()).div(vaultInputTokenBalance.toString())
         : '0'
-    const cap =
+    const capRatio =
       item.depositLimit.toString() !== '0'
         ? new BigNumber(item.inputTokenBalance.toString()).div(item.depositLimit.toString())
         : '0'
@@ -156,14 +157,11 @@ export const vaultExposureMapper = (
         vault: (
           <TableCellNodes>
             <TableRowAccent backgroundColor={getColor(protocolLabel)} />
-            <Icon
-              tokenName={getDisplayToken(item.inputToken.symbol) as TokenSymbolsList}
-              variant="m"
-            />
+            <Icon tokenName={getDisplayToken(arkTokenSymbol) as TokenSymbolsList} variant="m" />
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <TableCellText>{protocolLabel}</TableCellText>
               <TableCellText small style={{ color: 'var(--color-text-secondary)' }}>
-                {formatDecimalAsPercent(allocation)} allocated
+                {formatDecimalAsPercent(allocationRatio)} allocated
               </TableCellText>
             </div>
           </TableCellNodes>
@@ -182,7 +180,7 @@ export const vaultExposureMapper = (
           <TableCellNodes>
             <TableCellAllocationCap
               isBuffer={isBuffer}
-              capPercent={isBuffer ? 'n/a' : formatDecimalAsPercent(cap)}
+              capPercent={isBuffer ? 'n/a' : formatDecimalAsPercent(capRatio)}
               tooltipContent={
                 <div
                   style={{
@@ -202,7 +200,7 @@ export const vaultExposureMapper = (
                       Allocation cap
                     </Text>
                     <Text variant="p3semiColorful" style={{ color: 'var(--color-text-secondary)' }}>
-                      {formatCryptoBalance(mainAllocationCap)} {item.inputToken.symbol}
+                      {formatCryptoBalance(mainAllocationCap)} {arkTokenSymbol}
                     </Text>
                     <Text variant="p4semi" style={{ color: 'var(--color-text-secondary)' }}>
                       This is the maximum amount that can be allocated to this strategy within this
@@ -213,7 +211,7 @@ export const vaultExposureMapper = (
                   <div style={{ height: '1px', backgroundColor: 'var(--color-border)' }} />
                   <TableCellAllocationCapTooltipDataBlock
                     title="Absolute allocation cap"
-                    value={`${formatCryptoBalance(absoluteAllocationCap)} ${item.inputToken.symbol}`}
+                    value={`${formatCryptoBalance(absoluteAllocationCap)} ${arkTokenSymbol}`}
                   />
                   <TableCellAllocationCapTooltipDataBlock
                     title="TVL allocation cap %"
@@ -221,7 +219,7 @@ export const vaultExposureMapper = (
                   />
                   <TableCellAllocationCapTooltipDataBlock
                     title="Cap utilisation"
-                    value={`${formatDecimalAsPercent(cap)} (${formatCryptoBalance(arkTokenTVL)} / ${formatCryptoBalance(mainAllocationCap)})`}
+                    value={`${formatDecimalAsPercent(capRatio)} (${formatCryptoBalance(arkTokenTVL)} / ${formatCryptoBalance(mainAllocationCap)})`}
                   />
                 </div>
               }
