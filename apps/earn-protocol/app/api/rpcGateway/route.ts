@@ -41,6 +41,7 @@ export async function POST(req: NextRequest) {
     },
   })
   const response = await fetch(request, {
+    cache: 'no-store',
     next: {
       revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
     },

@@ -82,7 +82,8 @@ export const getVaultsHistoricalApy: ({
       },
     })
 
-    const rawResponse = (await apiResponse.json()) as GetVaultsHistoricalApyRAWResponse
+    let rawResponse: GetVaultsHistoricalApyRAWResponse | null =
+      (await apiResponse.json()) as GetVaultsHistoricalApyRAWResponse
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!rawResponse.rates) {
@@ -129,6 +130,9 @@ export const getVaultsHistoricalApy: ({
       },
       {},
     )
+
+    // Clear the reference to rawResponse after processing
+    rawResponse = null
 
     return response
   } catch (error) {
