@@ -1,4 +1,4 @@
-FROM node:23-alpine
+FROM node:22.7.0-alpine
 EXPOSE 3000
 WORKDIR .
 COPY .next/standalone .next/standalone
