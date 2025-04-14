@@ -82,6 +82,10 @@ export async function getInterestRates({
         headers: {
           'Content-Type': 'application/json',
         },
+        cache: 'no-store',
+        next: {
+          revalidate: 0,
+        },
       })
 
       if (!apiResponse.ok) {
@@ -149,7 +153,12 @@ export async function getInterestRates({
             // Try primary source first
             const startTime = performance.now()
             const apiUrl = `${resolvedUrl}?productId=${productId}`
-            const apiResponse = await fetch(apiUrl)
+            const apiResponse = await fetch(apiUrl, {
+              cache: 'no-store',
+              next: {
+                revalidate: 0,
+              },
+            })
             const endTime = performance.now()
 
             // eslint-disable-next-line no-console
@@ -208,7 +217,12 @@ export async function getInterestRates({
 
         // Try primary source first
         const apiUrl = `${resolvedUrl}?productId=${productId}`
-        const apiResponse = await fetch(apiUrl)
+        const apiResponse = await fetch(apiUrl, {
+          cache: 'no-store',
+          next: {
+            revalidate: 0,
+          },
+        })
 
         if (!apiResponse.ok) {
           throw new Error('Primary API request failed')
