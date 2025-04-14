@@ -1,5 +1,3 @@
-import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
-
 export type GetVaultsHistoricalApyParams = {
   fleets: {
     fleetAddress: string
@@ -77,10 +75,6 @@ export const getVaultsHistoricalApy: ({
       body: JSON.stringify({ fleets }),
       headers: {
         'Content-Type': 'application/json',
-      },
-      next: {
-        revalidate: REVALIDATION_TIMES.INTEREST_RATES,
-        tags: [REVALIDATION_TAGS.INTEREST_RATES],
       },
     })
 

@@ -1,6 +1,5 @@
 'use server'
 
-import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { type GetInterestRatesParams, SDKNetwork } from '@summerfi/app-types'
 import {
   getArkHistoricalRatesUrl,
@@ -27,48 +26,18 @@ const noInterestRates: GetInterestRatesQuery = {
   ],
 }
 
-// passing next.js fetcher with cache duration
-const customFetchCache = async (url: RequestInfo | URL, params?: RequestInit) => {
-  try {
-    return await fetch(url, {
-      ...params,
-      next: {
-        revalidate: REVALIDATION_TIMES.INTEREST_RATES,
-        tags: [REVALIDATION_TAGS.INTEREST_RATES],
-      },
-    })
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('customFetchCache error', error)
-
-    throw error
-  }
-}
-
 const clients = {
   [SDKNetwork.Mainnet]: new GraphQLClient(
     `${process.env.SUBGRAPH_BASE}/summer-earn-protocol-rates`,
-    {
-      fetch: customFetchCache,
-    },
   ),
   [SDKNetwork.Base]: new GraphQLClient(
     `${process.env.SUBGRAPH_BASE}/summer-earn-protocol-rates-base`,
-    {
-      fetch: customFetchCache,
-    },
   ),
   [SDKNetwork.ArbitrumOne]: new GraphQLClient(
     `${process.env.SUBGRAPH_BASE}/summer-earn-protocol-rates-arbitrum`,
-    {
-      fetch: customFetchCache,
-    },
   ),
   [SDKNetwork.SonicMainnet]: new GraphQLClient(
     `${process.env.SUBGRAPH_BASE}/summer-earn-protocol-rates-sonic`,
-    {
-      fetch: customFetchCache,
-    },
   ),
 }
 
@@ -112,10 +81,6 @@ export async function getInterestRates({
         body: JSON.stringify({ productIds }),
         headers: {
           'Content-Type': 'application/json',
-        },
-        next: {
-          revalidate: REVALIDATION_TIMES.INTEREST_RATES,
-          tags: [REVALIDATION_TAGS.INTEREST_RATES],
         },
       })
 
@@ -184,12 +149,7 @@ export async function getInterestRates({
             // Try primary source first
             const startTime = performance.now()
             const apiUrl = `${resolvedUrl}?productId=${productId}`
-            const apiResponse = await fetch(apiUrl, {
-              next: {
-                revalidate: REVALIDATION_TIMES.INTEREST_RATES,
-                tags: [REVALIDATION_TAGS.INTEREST_RATES],
-              },
-            })
+            const apiResponse = await fetch(apiUrl)
             const endTime = performance.now()
 
             // eslint-disable-next-line no-console
@@ -248,12 +208,7 @@ export async function getInterestRates({
 
         // Try primary source first
         const apiUrl = `${resolvedUrl}?productId=${productId}`
-        const apiResponse = await fetch(apiUrl, {
-          next: {
-            revalidate: REVALIDATION_TIMES.INTEREST_RATES,
-            tags: [REVALIDATION_TAGS.INTEREST_RATES],
-          },
-        })
+        const apiResponse = await fetch(apiUrl)
 
         if (!apiResponse.ok) {
           throw new Error('Primary API request failed')

@@ -1,4 +1,3 @@
-import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { type VaultApyData } from '@summerfi/app-types'
 
 export type GetVaultsApyParams = {
@@ -74,10 +73,6 @@ export const getVaultsApy: ({
       body: JSON.stringify({ fleets }),
       headers: {
         'Content-Type': 'application/json',
-      },
-      next: {
-        revalidate: REVALIDATION_TIMES.INTEREST_RATES,
-        tags: [REVALIDATION_TAGS.INTEREST_RATES],
       },
     })
 
