@@ -49,7 +49,9 @@ const baseParamsSchema = z
 const userParamsSchema = z.union([
   // GET query params schema
   z.object({
-    addresses: addressesSchema,
+    addresses: addressesSchema.refine((addresses) => addresses.length <= 1000, {
+      message: 'Maximum of 1000 addresses allowed',
+    }),
     chainId: chainIdSchema.optional(),
   }),
   // POST body schema
@@ -59,19 +61,13 @@ const userParamsSchema = z.union([
       .refine((addresses) => addresses.every((address) => isValidAddress(address)), {
         message: 'Invalid format of addresses',
       })
+      .refine((addresses) => addresses.length <= 1000, {
+        message: 'Maximum of 1000 addresses allowed',
+      })
       .transform((addresses) => addresses.map((address) => address as Address)),
     chainId: chainIdSchema.optional(),
   }),
 ])
-
-const paginationParamsSchema = z
-  .object({
-    p: z.string().regex(/^\d+$/).transform(Number).optional(),
-  })
-  .optional()
-  .transform((val) => ({
-    page: val?.p ?? 0,
-  }))
 
 interface UserRewardsInfo {
   unclaimed: number
@@ -381,36 +377,44 @@ async function handleProtocolRoute(
   }
 }
 
-async function handleAllUsersRoute(
-  params: z.infer<typeof paginationParamsSchema>,
-  subgraphBase: string,
-): Promise<AllUsersResponseBody> {
-  const PAGE_SIZE = 1000
-  const skip = params.page * PAGE_SIZE
-
-  logger.info(`Fetching users with pagination: page ${params.page}, skip ${skip}`)
+async function handleAllUsersRoute(subgraphBase: string): Promise<AllUsersResponseBody> {
+  const PAGE_SIZE = 5000
+  logger.info('Fetching all users across all chains')
 
   try {
     const allUsers: Address[] = []
+
     await Promise.all(
       supportedChains.map(async (chainId) => {
-        const result = await getUsers(
-          {
-            first: PAGE_SIZE,
-            skip: skip,
-          },
-          {
-            chainId,
-            urlBase: subgraphBase,
-          },
-        )
-        allUsers.push(...result.accounts.map((account) => account.id as Address))
+        let hasMore = true
+        let currentPage = 0
+
+        while (hasMore) {
+          const skip = currentPage * PAGE_SIZE
+          logger.info(`Fetching users for chain ${chainId}, page ${currentPage}, skip ${skip}`)
+
+          const result = await getUsers(
+            {
+              first: PAGE_SIZE,
+              skip: skip,
+            },
+            {
+              chainId,
+              urlBase: subgraphBase,
+            },
+          )
+
+          allUsers.push(...result.accounts.map((account) => account.id as Address))
+
+          // If we got less results than PAGE_SIZE, we've reached the end
+          hasMore = result.accounts.length === PAGE_SIZE
+          currentPage++
+        }
       }),
     )
 
-    const addresses = allUsers.filter((address, index, self) => self.indexOf(address) === index) // Remove duplicates
-
-    logger.info(`Found ${addresses.length} unique addresses`)
+    const addresses = [...new Set(allUsers)]
+    logger.info(`Found ${addresses.length} unique addresses across all chains`)
 
     return {
       addresses,
@@ -443,15 +447,7 @@ export const handler = async (
   try {
     switch (true) {
       case isAllUsersRoute: {
-        const parseResult = paginationParamsSchema.safeParse(event.queryStringParameters)
-        if (!parseResult.success) {
-          logger.warn('Validation errors occurred', { errors: parseResult.error.errors })
-          return ResponseBadRequest({
-            message: 'Validation Errors',
-            errors: parseResult.error.errors,
-          })
-        }
-        const response = await handleAllUsersRoute(parseResult.data, SUBGRAPH_BASE)
+        const response = await handleAllUsersRoute(SUBGRAPH_BASE)
         return ResponseOk({ body: response })
       }
       case isUsersRoute: {
