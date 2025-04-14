@@ -35,4 +35,4 @@ ENV CONFIG_URL=$CONFIG_URL \
     NEXT_PUBLIC_SHA=$NEXT_PUBLIC_SHA \
     FUNCTIONS_API_URL=$FUNCTIONS_API_URL
 
-CMD [ "node", ".next/standalone/apps/earn-protocol-landing-page/server.js" ]
+CMD [ "node", "--max-old-space-size=6144", ".next/standalone/apps/earn-protocol-landing-page/server.js" ]
