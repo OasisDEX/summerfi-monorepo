@@ -74,6 +74,10 @@ export const getVaultsApy: ({
       headers: {
         'Content-Type': 'application/json',
       },
+      cache: 'no-store',
+      next: {
+        revalidate: 0,
+      },
     })
 
     const rawResponse = (await apiResponse.json()) as GetVaultsApyRAWResponse
