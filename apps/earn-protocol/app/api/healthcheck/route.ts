@@ -1,39 +1,50 @@
-import { NextResponse } from 'next/server'
-import { freemem, totalmem } from 'os'
+import { readFileSync } from 'fs'
+import { type NextRequest, NextResponse } from 'next/server'
+import path from 'path'
+import { writeHeapSnapshot } from 'v8'
 
 export const revalidate = 0
 
-const formatMemoryUsage = (data: number) => `${Math.round((data / 1024 / 1024) * 100) / 100} MB`
-
 // eslint-disable-next-line require-await
-export async function GET() {
-  try {
-    const freeMemory = freemem()
-    const totalMemory = totalmem()
-    const os = {
-      freeMemory: `${formatMemoryUsage(freeMemory)} -> free memory available`,
-      totalMemory: `${formatMemoryUsage(totalMemory)} -> total memory available`,
-    }
+export async function GET(request: NextRequest) {
+  const { searchParams, host } = request.nextUrl
+  const jwtSecret = process.env.EARN_PROTOCOL_JWT_SECRET
 
-    const memoryData = process.memoryUsage()
-    const node = {
-      rss: `${formatMemoryUsage(memoryData.rss)} -> Resident Set Size - total memory allocated for the process execution`,
-      heapTotal: `${formatMemoryUsage(memoryData.heapTotal)} -> total size of the allocated heap`,
-      heapUsed: `${formatMemoryUsage(memoryData.heapUsed)} -> actual memory used during the execution`,
-      external: `${formatMemoryUsage(memoryData.external)} -> V8 external memory`,
-    }
+  if (!jwtSecret) {
+    return NextResponse.json({ error: 'Required ENV variable is not set' }, { status: 500 })
+  }
 
-    return NextResponse.json({
-      pong: true,
-      time: Date.now(),
-      os,
-      node,
-    })
-  } catch (error) {
-    return NextResponse.json({
-      pong: true,
-      time: Date.now(),
-      error: error instanceof Error ? error.toString() : String(error),
+  if (searchParams.get('secret') !== jwtSecret) {
+    return NextResponse.json({ error: 'Invalid secret' }, { status: 401 })
+  }
+  const filename = searchParams.get('filename')
+
+  if (filename) {
+    // return the snapshot file
+    const filePath = path.join(process.cwd(), filename)
+    const file = readFileSync(filePath)
+
+    return new NextResponse(file, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Disposition': `attachment; filename=${filename}`,
+      },
     })
   }
+  // create a heap snapshot
+  const snapshot = writeHeapSnapshot()
+
+  return NextResponse.json(
+    {
+      message: 'Heap snapshot created',
+      url: `${host}/earn/api/healthcheck?filename=${snapshot}&secret=${jwtSecret}`,
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      status: 200,
+    },
+  )
 }
