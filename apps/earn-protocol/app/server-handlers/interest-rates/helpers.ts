@@ -108,7 +108,6 @@ export const prepareInterestRatesFallbackCalls =
       const startTime = performance.now()
       const apiUrl = `${resolvedUrl}?productId=${productId}`
       const apiResponse = await fetch(apiUrl, {
-        cache: 'no-store',
         next: {
           revalidate: 0,
         },
@@ -161,7 +160,6 @@ export const prepareInterestRatesHistoricalResponse =
       // Try primary source first
       const apiUrl = `${resolvedUrl}?productId=${productId}`
       const apiResponse = await fetch(apiUrl, {
-        cache: 'no-store',
         next: {
           revalidate: 0,
         },
