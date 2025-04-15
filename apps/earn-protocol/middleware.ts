@@ -53,10 +53,6 @@ export function middleware(request: NextRequest) {
     response.cookies.set('country', country)
   }
 
-  // Print the requested URL
-  // eslint-disable-next-line no-console
-  console.log(JSON.stringify({ [request.method]: request.nextUrl }))
-
   return response
 }
 
