@@ -12,6 +12,7 @@
     "lint": "eslint *.ts*",
     "dev": "pnpm vite build -w true",
     "build": "pnpm vite build -w false",
+    "prebuild": "pnpm vite build -w false",
     "clean": "rm -rf dist"
   },
   "devDependencies": {

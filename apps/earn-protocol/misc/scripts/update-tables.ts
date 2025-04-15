@@ -19,7 +19,7 @@ export const updateTables = async () => {
     throw new Error('EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN is not set')
   }
 
-  const result = await fetch('http://localhost:3002/earn/api/update-tables-data', {
+  const result = await fetch('http://localhost:3000/earn/api/update-tables-data', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${authToken}`,
