@@ -217,9 +217,8 @@ export const vaultExposureMapper = (
                       {formatCryptoBalance(item.mainAllocationCap)} {arkTokenSymbol}
                     </Text>
                     <Text variant="p4semi" style={{ color: 'var(--color-text-secondary)' }}>
-                      This is the maximum amount that can be allocated to this strategy within this
-                      Vault. It is calculated as the minimum of the absolute and TVL exposure based
-                      caps (as shown below).
+                      This is the maximum allocation for this strategy in the Vault—it’s set to the
+                      lower value between the absolute cap and the TVL-based cap (see below). .
                     </Text>
                   </div>
                   <div style={{ height: '1px', backgroundColor: 'var(--color-border)' }} />
