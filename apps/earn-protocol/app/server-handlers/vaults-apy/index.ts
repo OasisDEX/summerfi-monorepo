@@ -46,22 +46,28 @@ export type GetVaultsApyResponse = {
   [key: `${string}-${number}`]: VaultApyData
 }
 
-export const getVaultsApy: ({
-  fleets,
-}: GetVaultsApyParams) => Promise<GetVaultsApyResponse> = async ({ fleets }) => {
-  const functionsApiUrl = process.env.FUNCTIONS_API_URL
+const getEmptyResponse = (fleets: GetVaultsApyParams['fleets']) => {
+  const emptyResponse: GetVaultsApyResponse = {}
 
-  const emptyResponse = fleets.reduce<GetVaultsApyResponse>((acc, { fleetAddress, chainId }) => {
-    acc[`${fleetAddress}-${chainId}`] = {
+  for (const { fleetAddress, chainId } of fleets) {
+    emptyResponse[`${fleetAddress}-${chainId}`] = {
       apy: 0,
       apyTimestamp: null,
       sma24h: null,
       sma7d: null,
       sma30d: null,
     }
+  }
 
-    return acc
-  }, {})
+  return emptyResponse
+}
+
+export const getVaultsApy: ({
+  fleets,
+}: GetVaultsApyParams) => Promise<GetVaultsApyResponse> = async ({ fleets }) => {
+  const functionsApiUrl = process.env.FUNCTIONS_API_URL
+
+  const emptyResponse = getEmptyResponse(fleets)
 
   if (!functionsApiUrl) {
     throw new Error('FUNCTIONS_API_URL is not set')
@@ -88,29 +94,19 @@ export const getVaultsApy: ({
       return emptyResponse
     }
 
-    const response = rawResponse.rates.reduce<GetVaultsApyResponse>(
-      (topAcc, { rates, chainId, sma }) => {
-        const ratesMap = rates.reduce<{
-          [key: string]: VaultApyData
-        }>((acc, { rate, fleetAddress }) => {
-          acc[`${fleetAddress}-${chainId}`] = {
-            apy: Number(rate) / 100,
-            apyTimestamp: rates[0].timestamp,
-            sma24h: sma.sma24h ? Number(sma.sma24h) / 100 : null,
-            sma7d: sma.sma7d ? Number(sma.sma7d) / 100 : null,
-            sma30d: sma.sma30d ? Number(sma.sma30d) / 100 : null,
-          }
+    const response: GetVaultsApyResponse = { ...emptyResponse }
 
-          return acc
-        }, {})
-
-        return {
-          ...topAcc,
-          ...ratesMap,
+    for (const { rates, chainId, sma } of rawResponse.rates) {
+      for (const { rate, fleetAddress, timestamp } of rates) {
+        response[`${fleetAddress}-${chainId}`] = {
+          apy: Number(rate) / 100,
+          apyTimestamp: timestamp,
+          sma24h: sma.sma24h ? Number(sma.sma24h) / 100 : null,
+          sma7d: sma.sma7d ? Number(sma.sma7d) / 100 : null,
+          sma30d: sma.sma30d ? Number(sma.sma30d) / 100 : null,
         }
-      },
-      emptyResponse,
-    )
+      }
+    }
 
     // Clear the reference to rawResponse after processing
     rawResponse = null

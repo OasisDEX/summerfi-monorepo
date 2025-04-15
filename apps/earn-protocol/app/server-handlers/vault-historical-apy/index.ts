@@ -12,6 +12,13 @@ type RatesRaw = {
   fleetAddress: string
 }
 
+type LatestRateRaw = {
+  id: string
+  rate: string
+  timestamp: string
+  fleetAddress: string
+}
+
 type GetVaultsHistoricalApyRAWResponse = {
   rates: {
     chainId: number
@@ -20,12 +27,7 @@ type GetVaultsHistoricalApyRAWResponse = {
       dailyRates: RatesRaw[]
       hourlyRates: RatesRaw[]
       weeklyRates: RatesRaw[]
-      latestRate: {
-        id: string
-        rate: string
-        timestamp: string
-        fleetAddress: string
-      }[]
+      latestRate: LatestRateRaw[]
     }
   }[]
 }
@@ -45,25 +47,38 @@ export type GetVaultsHistoricalApyResponse = {
   }
 }
 
+const mapRates = ({ averageRate, date }: RatesRaw) => ({
+  averageRate,
+  date: Number(date),
+})
+
+const mapLatestRate = ({ rate, timestamp }: LatestRateRaw) => ({
+  averageRate: rate,
+  date: Number(timestamp),
+})
+
+const getEmptyResponse = (fleets: GetVaultsHistoricalApyParams['fleets']) => {
+  const emptyResponse: GetVaultsHistoricalApyResponse = {}
+
+  for (const { fleetAddress, chainId } of fleets) {
+    emptyResponse[`${fleetAddress}-${chainId}`] = {
+      hourlyInterestRates: [],
+      dailyInterestRates: [],
+      weeklyInterestRates: [],
+      latestInterestRate: [],
+    }
+  }
+
+  return emptyResponse
+}
+
 export const getVaultsHistoricalApy: ({
   fleets,
 }: GetVaultsHistoricalApyParams) => Promise<GetVaultsHistoricalApyResponse> = async ({
   fleets,
 }) => {
   const functionsApiUrl = process.env.FUNCTIONS_API_URL
-  const emptyResponse = fleets.reduce<GetVaultsHistoricalApyResponse>(
-    (acc, { fleetAddress, chainId }) => {
-      acc[`${fleetAddress}-${chainId}`] = {
-        hourlyInterestRates: [],
-        dailyInterestRates: [],
-        weeklyInterestRates: [],
-        latestInterestRate: [],
-      }
-
-      return acc
-    },
-    {},
-  )
+  const emptyResponse = getEmptyResponse(fleets)
 
   if (!functionsApiUrl) {
     throw new Error('FUNCTIONS_API_URL is not set')
@@ -90,46 +105,16 @@ export const getVaultsHistoricalApy: ({
       return emptyResponse
     }
 
-    const response: GetVaultsHistoricalApyResponse = rawResponse.rates.reduce(
-      (topAcc, { rates, fleetAddress, chainId }) => {
-        const hourlyInterestRates = rates.hourlyRates.map(({ averageRate, date }) => {
-          return {
-            averageRate,
-            date: Number(date),
-          }
-        }, {})
-        const dailyInterestRates = rates.dailyRates.map(({ averageRate, date }) => {
-          return {
-            averageRate,
-            date: Number(date),
-          }
-        }, {})
-        const weeklyInterestRates = rates.weeklyRates.map(({ averageRate, date }) => {
-          return {
-            averageRate,
-            date: Number(date),
-          }
-        }, {})
+    const response: GetVaultsHistoricalApyResponse = {}
 
-        const latestInterestRate = rates.latestRate.map(({ rate, timestamp }) => {
-          return {
-            averageRate: rate,
-            date: Number(timestamp),
-          }
-        }, {})
-
-        return {
-          ...topAcc,
-          [`${fleetAddress}-${chainId}`]: {
-            hourlyInterestRates,
-            dailyInterestRates,
-            weeklyInterestRates,
-            latestInterestRate,
-          },
-        }
-      },
-      {},
-    )
+    for (const { rates, fleetAddress, chainId } of rawResponse.rates) {
+      response[`${fleetAddress}-${chainId}`] = {
+        hourlyInterestRates: rates.hourlyRates.map(mapRates),
+        dailyInterestRates: rates.dailyRates.map(mapRates),
+        weeklyInterestRates: rates.weeklyRates.map(mapRates),
+        latestInterestRate: rates.latestRate.map(mapLatestRate),
+      }
+    }
 
     // Clear the reference to rawResponse after processing
     rawResponse = null
