@@ -5,31 +5,22 @@ import { unstable_cache as unstableCache } from 'next/cache'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 
-export const getVaultsList = unstableCache(
-  async () => {
-    const vaultsListByNetwork = await Promise.all(
-      sdkSupportedChains.map((networkId) => {
-        const chainInfo = getChainInfoByChainId(networkId)
-
-        return backendSDK.armada.users.getVaultsRaw({
-          chainInfo,
-        })
+const getVaultsListRaw = async () => {
+  const vaultsListByNetwork = await Promise.all(
+    sdkSupportedChains.map((networkId) =>
+      backendSDK.armada.users.getVaultsRaw({
+        chainInfo: getChainInfoByChainId(networkId),
       }),
-    )
+    ),
+  )
 
-    // flatten the list
-    const vaultsFlatList = vaultsListByNetwork.reduce<
-      (typeof vaultsListByNetwork)[number]['vaults']
-    >((acc, { vaults }) => [...acc, ...vaults], [])
+  return {
+    vaults: vaultsListByNetwork.flatMap(({ vaults }) => vaults),
+    callDataTimestamp: Date.now(),
+  }
+}
 
-    return {
-      vaults: vaultsFlatList,
-      callDataTimestamp: Date.now(),
-    }
-  },
-  [],
-  {
-    revalidate: REVALIDATION_TIMES.VAULTS_LIST,
-    tags: [REVALIDATION_TAGS.VAULTS_LIST],
-  },
-)
+export const getVaultsList = unstableCache(getVaultsListRaw, [], {
+  revalidate: REVALIDATION_TIMES.VAULTS_LIST,
+  tags: [REVALIDATION_TAGS.VAULTS_LIST],
+})
