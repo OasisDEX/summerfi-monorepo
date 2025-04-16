@@ -56,6 +56,7 @@ export const VaultGrid = ({
         <Link
           href="https://blog.summer.fi/say-hello-to-the-lazy-summer-protocol"
           style={{ display: 'block', width: 'min-content', whiteSpace: 'pre' }}
+          target="_blank"
         >
           <Text as="p" variant="p3semi" style={{ display: 'inline' }}>
             <WithArrow style={{ display: 'inline' }}>What is the Lazy Summer Protocol</WithArrow>
