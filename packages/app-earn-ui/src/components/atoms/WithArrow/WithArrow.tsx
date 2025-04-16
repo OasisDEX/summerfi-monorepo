@@ -88,7 +88,13 @@ export function WithArrow({
         )}
       </Text>
       {withStatic && (
-        <Icon iconName="share" variant="xs" style={{ marginLeft: 'var(--general-space-4)' }} />
+        <Icon
+          iconName="share"
+          variant="xs"
+          style={{
+            marginLeft: 'var(--general-space-2)',
+          }}
+        />
       )}
     </span>
   )
