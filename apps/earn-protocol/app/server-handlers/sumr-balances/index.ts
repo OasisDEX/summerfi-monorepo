@@ -2,13 +2,12 @@ import { SDKChainId } from '@summerfi/app-types'
 import { SummerTokenAbi, SummerVestingWalletFactoryAbi } from '@summerfi/armada-protocol-abis'
 import { getChainInfoByChainId } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
-import { type Address, createPublicClient, http, zeroAddress } from 'viem'
-import { arbitrum, base, mainnet, sonic } from 'viem/chains'
+import { type Address, zeroAddress } from 'viem'
 
 import { serverOnlyErrorHandler } from '@/app/server-handlers/error-handler'
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 import { VESTING_WALLET_FACTORY_ADDRESS } from '@/constants/addresses'
-import { SDKChainIdToSSRRpcGatewayMap } from '@/helpers/rpc-gateway-ssr'
+import { getSSRPublicClient, SSRChainConfigs } from '@/helpers/get-ssr-public-client'
 
 export interface SumrBalancesData {
   mainnet: string
@@ -42,19 +41,13 @@ export const getSumrBalances = async ({
   try {
     const resolvedWalletAddress = walletAddress as Address
 
-    const chainConfigs = [
-      { chain: base, chainId: SDKChainId.BASE, chainName: 'base' },
-      { chain: mainnet, chainId: SDKChainId.MAINNET, chainName: 'mainnet' },
-      { chain: arbitrum, chainId: SDKChainId.ARBITRUM, chainName: 'arbitrum' },
-      { chain: sonic, chainId: SDKChainId.SONIC, chainName: 'sonic' },
-    ]
-
     const balances = await Promise.all(
-      chainConfigs.map(async ({ chain, chainId, chainName }) => {
-        const publicClient = createPublicClient({
-          chain,
-          transport: http(await SDKChainIdToSSRRpcGatewayMap[chainId]),
-        })
+      SSRChainConfigs.map(async ({ chain, chainId, chainName }) => {
+        const publicClient = await getSSRPublicClient(chainId)
+
+        if (!publicClient) {
+          throw new Error(`Public client for chain ${chainId} not found`)
+        }
 
         try {
           const sumrToken = await backendSDK.armada.users.getSummerToken({

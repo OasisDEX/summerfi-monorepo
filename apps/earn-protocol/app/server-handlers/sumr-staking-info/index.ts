@@ -3,13 +3,11 @@ import { SECONDS_PER_DAY } from '@summerfi/app-utils'
 import { GovernanceRewardsManagerAbi, SummerTokenAbi } from '@summerfi/armada-protocol-abis'
 import { getChainInfoByChainId } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
-import { createPublicClient, http } from 'viem'
-import { base } from 'viem/chains'
 
 import { serverOnlyErrorHandler } from '@/app/server-handlers/error-handler'
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 import { GOVERNANCE_REWARDS_MANAGER_ADDRESS } from '@/constants/addresses'
-import { SDKChainIdToSSRRpcGatewayMap } from '@/helpers/rpc-gateway-ssr'
+import { getSSRPublicClient } from '@/helpers/get-ssr-public-client'
 
 export interface SumrStakingInfoData {
   sumrTokenWrappedStakedAmount: number
@@ -27,10 +25,11 @@ export interface SumrStakingInfoData {
  */
 export const getSumrStakingInfo = async (): Promise<SumrStakingInfoData> => {
   try {
-    const publicClient = createPublicClient({
-      chain: base,
-      transport: http(await SDKChainIdToSSRRpcGatewayMap[SDKChainId.BASE]),
-    })
+    const publicClient = await getSSRPublicClient(SDKChainId.BASE)
+
+    if (!publicClient) {
+      throw new Error(`Public client for chain ${SDKChainId.BASE} not found`)
+    }
 
     const sumrToken = await backendSDK.armada.users
       .getSummerToken({

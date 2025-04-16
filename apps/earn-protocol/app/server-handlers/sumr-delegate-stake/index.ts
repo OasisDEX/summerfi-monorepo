@@ -2,8 +2,7 @@ import { SDKChainId } from '@summerfi/app-types'
 import { SummerTokenAbi, SummerVestingWalletFactoryAbi } from '@summerfi/armada-protocol-abis'
 import { getChainInfoByChainId } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
-import { type Address, createPublicClient, http } from 'viem'
-import { base } from 'viem/chains'
+import { type Address } from 'viem'
 
 import { serverOnlyErrorHandler } from '@/app/server-handlers/error-handler'
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
@@ -11,7 +10,7 @@ import {
   GOVERNANCE_REWARDS_MANAGER_ADDRESS,
   VESTING_WALLET_FACTORY_ADDRESS,
 } from '@/constants/addresses'
-import { SDKChainIdToSSRRpcGatewayMap } from '@/helpers/rpc-gateway-ssr'
+import { getSSRPublicClient } from '@/helpers/get-ssr-public-client'
 
 export interface SumrDelegateStakeData {
   delegatedTo: Address
@@ -39,10 +38,11 @@ export const getSumrDelegateStake = async ({
   try {
     const resolvedWalletAddress = walletAddress as Address
 
-    const publicClient = createPublicClient({
-      chain: base,
-      transport: http(await SDKChainIdToSSRRpcGatewayMap[SDKChainId.BASE]),
-    })
+    const publicClient = await getSSRPublicClient(SDKChainId.BASE)
+
+    if (!publicClient) {
+      throw new Error(`Public client for chain ${SDKChainId.BASE} not found`)
+    }
 
     let sumrToken
 

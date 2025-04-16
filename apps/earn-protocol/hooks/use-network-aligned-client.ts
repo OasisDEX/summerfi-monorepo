@@ -1,8 +1,7 @@
 import { useMemo } from 'react'
 import { type SDKChainId } from '@summerfi/app-types'
-import { createPublicClient, http } from 'viem'
 
-import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
+import { publicClientMap } from '@/helpers/get-fe-public-client'
 import { useUpdateAANetwork } from '@/hooks/use-update-aa-network'
 
 type UseClientProps = {
@@ -24,11 +23,8 @@ export const useNetworkAlignedClient = (params?: UseClientProps) => {
 
   // Client for read-only data fetching using our rpcGateway
   const publicClient = useMemo(() => {
-    return createPublicClient({
-      chain: appChain,
-      transport: http(SDKChainIdToRpcGatewayMap[_chainId]),
-    })
-  }, [appChain, _chainId])
+    return publicClientMap[_chainId]
+  }, [_chainId])
 
   return {
     publicClient,
