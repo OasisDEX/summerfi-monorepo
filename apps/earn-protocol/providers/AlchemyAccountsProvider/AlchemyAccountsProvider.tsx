@@ -5,7 +5,7 @@ import { AlchemyAccountProvider, type AlchemyAccountsConfigWithUI } from '@accou
 import { QueryClientProvider } from '@tanstack/react-query'
 import { getAccountKitConfig, queryClient } from 'account-kit/config'
 
-export const AlchemyAccountsProvider: FC<
+const AlchemyAccountsProvider: FC<
   PropsWithChildren<{
     initialState?: AlchemyClientState
   }>
@@ -26,3 +26,5 @@ export const AlchemyAccountsProvider: FC<
     </Suspense>
   )
 }
+
+export default AlchemyAccountsProvider

@@ -199,6 +199,7 @@ export {
   LocalConfigDispatchActions,
   type SlippageConfig,
   type SumrNetApyConfig,
+  type LocalConfigState,
 } from './contexts/LocalConfigContext/local-config-reducer'
 
 // constants

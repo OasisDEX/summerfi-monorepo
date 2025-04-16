@@ -5,7 +5,6 @@ import {
   GlobalIssueBanner,
   GlobalStyles,
   GoogleTagManager,
-  LocalConfigContextProvider,
   slippageConfigCookieName,
   sumrNetApyConfigCookieName,
   Text,
@@ -19,13 +18,10 @@ import Image from 'next/image'
 import { getAccountKitConfig } from '@/account-kit/config'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
-import { GlobalEventTracker } from '@/components/organisms/Events/GlobalEventTracker'
+import { GlobalProvider } from '@/components/organisms/Providers/GlobalProvider'
 import { accountKitCookieStateName } from '@/constants/account-kit-cookie-state-name'
 import { forksCookieName } from '@/constants/forks-cookie-name'
-import { DeviceProvider } from '@/contexts/DeviceContext/DeviceContext'
-import { SystemConfigProvider } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { fontInter } from '@/helpers/fonts'
-import { AlchemyAccountsProvider } from '@/providers/AlchemyAccountsProvider/AlchemyAccountsProvider'
 import logoMaintenance from '@/public/img/branding/logo-dark.svg'
 
 export const metadata: Metadata = {
@@ -91,16 +87,18 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className={`${fontInter.className} ${fontInter.variable}`}>
         {config.bannerMessage && <GlobalIssueBanner message={config.bannerMessage} />}
         <GoogleTagManager />
-        <AlchemyAccountsProvider initialState={accountKitInitializedState}>
-          <GlobalEventTracker />
-          <SystemConfigProvider value={config}>
-            <DeviceProvider value={deviceType}>
-              <LocalConfigContextProvider value={{ sumrNetApyConfig, slippageConfig }}>
-                <MasterPage analyticsCookie={analyticsCookie}>{children}</MasterPage>
-              </LocalConfigContextProvider>
-            </DeviceProvider>
-          </SystemConfigProvider>
-        </AlchemyAccountsProvider>
+        <GlobalProvider
+          accountKitInitializedState={accountKitInitializedState}
+          config={config}
+          analyticsCookie={analyticsCookie}
+          deviceType={deviceType}
+          localConfigContextState={{
+            slippageConfig,
+            sumrNetApyConfig,
+          }}
+        >
+          {children}
+        </GlobalProvider>
         <div id="portal" style={{ position: 'absolute' }} />
         {/* Separate portal for dropdown is needed to not mix up position calculation */}
         <div id="portal-dropdown" style={{ position: 'absolute' }} />
