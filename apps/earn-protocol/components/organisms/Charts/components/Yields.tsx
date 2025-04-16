@@ -24,7 +24,6 @@ type YieldsChartProps = {
 
 export const YieldsChart = ({ data, dataNames, colors, summerVaultName }: YieldsChartProps) => {
   const [highlightedProtocol, setHighlightedProtocol] = useState<string>()
-  const xAxisInterval = Math.ceil(data.length / 7)
 
   return (
     <RechartResponsiveWrapper>
@@ -47,7 +46,7 @@ export const YieldsChart = ({ data, dataNames, colors, summerVaultName }: Yields
           <XAxis
             dataKey="timestamp"
             fontSize={12}
-            interval={xAxisInterval}
+            interval="preserveStartEnd"
             tickMargin={10}
             tickFormatter={(timestamp: string) => {
               return timestamp.split(' ')[0]
