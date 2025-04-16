@@ -1,6 +1,12 @@
 import { SDKChainId, SDKNetwork } from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
 
+import {
+  arbitrumPublicClient,
+  basePublicClient,
+  mainnetPublicClient,
+  sonicPublicClient,
+} from '@/helpers/get-fe-public-client'
 import { supportedNetworkGuard } from '@/helpers/supported-network-guard'
 import { type TokenBalanceData, useTokenBalance } from '@/hooks/use-token-balance'
 import { useUserWallet } from '@/hooks/use-user-wallet'

@@ -1,6 +1,6 @@
 import { arbitrum, base, mainnet } from '@account-kit/infra'
 import { SDKChainId } from '@summerfi/app-types'
-import { createPublicClient, http } from 'viem'
+import { createPublicClient, http, type PublicClient } from 'viem'
 
 import { customAAKitSonicConfig as sonic } from '@/account-kit/config'
 import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
@@ -33,7 +33,7 @@ export const publicClientMap: {
     | SDKChainId.ARBITRUM
     | SDKChainId.BASE
     | SDKChainId.MAINNET
-    | SDKChainId.SONIC]: ReturnType<typeof createPublicClient>
+    | SDKChainId.SONIC]: PublicClient
 } = {
   [SDKChainId.ARBITRUM]: arbitrumPublicClient,
   [SDKChainId.BASE]: basePublicClient,
