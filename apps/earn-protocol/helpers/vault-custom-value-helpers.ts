@@ -26,31 +26,6 @@ export const decorateVaultsWithConfig = ({
   return vaultsWithConfig as SDKVaultishType[]
 }
 
-export const getCustomVaultConfigById = (
-  vaultId: string,
-  networkId: string,
-  systemConfig: Partial<EarnAppConfigType>,
-) => {
-  const { fleetMap } = systemConfig
-
-  if (!fleetMap) {
-    return ''
-  }
-  const vaultNetworkConfig = fleetMap[String(networkId) as keyof typeof fleetMap]
-  const customFields = Object.values(vaultNetworkConfig).find(
-    (fleet) => fleet.address === vaultId,
-  ) as EarnAppFleetCustomConfigType | undefined
-
-  if (!customFields?.name) {
-    // eslint-disable-next-line no-console
-    console.log(`No vault found with the id ${vaultId} on the network ${networkId}`)
-
-    return ''
-  }
-
-  return customFields
-}
-
 export const getVaultIdByVaultCustomName = (
   vaultCustomName: string,
   networkId: string,

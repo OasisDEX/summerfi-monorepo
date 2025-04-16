@@ -6,34 +6,17 @@ import {
   TableCellText,
   WithArrow,
 } from '@summerfi/app-earn-ui'
-import { type SDKUserActivityType, type TokenSymbolsList } from '@summerfi/app-types'
+import { type TokenSymbolsList } from '@summerfi/app-types'
 import {
   chainIdToSDKNetwork,
   formatAddress,
   formatCryptoBalance,
   formatDateDifference,
-  getPastTimestamp,
   mapDbNetworkToChainId,
 } from '@summerfi/app-utils'
 import { type TopDepositors } from '@summerfi/summer-protocol-db'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
-
-export const calculateTopDepositors7daysChange = (item: SDKUserActivityType) => {
-  const timeStamp7daysAgo = getPastTimestamp(7)
-
-  const depositsFromLast7Days = item.deposits
-    .filter((deposit) => Number(deposit.timestamp) * 1000 > timeStamp7daysAgo)
-    .reduce((acc, curr) => acc + Number(curr.amount), 0)
-
-  const withdrawalsFromLast7Days = item.withdrawals
-    .filter((withdraw) => Number(withdraw.timestamp) * 1000 > timeStamp7daysAgo)
-    .reduce((acc, curr) => acc + Number(curr.amount), 0)
-
-  return new BigNumber(depositsFromLast7Days - withdrawalsFromLast7Days).shiftedBy(
-    -item.vault.inputToken.decimals,
-  )
-}
 
 export const topDepositorsMapper = (rawData: TopDepositors[]) => {
   return rawData.map((item) => {

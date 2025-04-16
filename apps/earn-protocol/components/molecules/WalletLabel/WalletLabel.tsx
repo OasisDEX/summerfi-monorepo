@@ -20,7 +20,7 @@ import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import walletLabelStyles from './WalletLabel.module.scss'
 
-export type WalletLabelVariant = 'default' | 'addressOnly' | 'logoutOnly'
+type WalletLabelVariant = 'default' | 'addressOnly' | 'logoutOnly'
 
 interface WalletLabelProps {
   variant?: WalletLabelVariant

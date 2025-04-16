@@ -1,7 +1,7 @@
 import { type Deposit, type Withdraw } from '@summerfi/subgraph-manager-common'
 import { type LatestActivity as LatestActivityDb } from '@summerfi/summer-protocol-db'
 
-export type DepositOrWithdraw = Deposit | Withdraw
+type DepositOrWithdraw = Deposit | Withdraw
 
 export type LatestActivity = DepositOrWithdraw & {
   type: 'deposit' | 'withdraw'
