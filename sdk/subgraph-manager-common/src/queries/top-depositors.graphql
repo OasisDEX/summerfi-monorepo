@@ -15,10 +15,12 @@ query GetTopDepositors($first: Int!, $skip: Int!) {
     deposits {
       timestamp
       amount
+      inputTokenBalance
     }
     withdrawals {
       timestamp
       amount
+      inputTokenBalance
     }
     vault {
       name

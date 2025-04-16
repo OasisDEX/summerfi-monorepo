@@ -11212,7 +11212,7 @@ export type GetTopDepositorsQueryVariables = Exact<{
 }>;
 
 
-export type GetTopDepositorsQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', inputTokenBalance: bigint, inputTokenBalanceNormalized: string, inputTokenBalanceNormalizedInUSD: string, account: { __typename?: 'Account', id: string }, deposits: Array<{ __typename?: 'Deposit', timestamp: bigint, amount: bigint }>, withdrawals: Array<{ __typename?: 'Withdraw', timestamp: bigint, amount: bigint }>, vault: { __typename?: 'Vault', name?: string | null, id: string, rebalanceCount: bigint, inputTokenPriceUSD?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string, decimals: number }, protocol: { __typename?: 'YieldAggregator', network: Network } } }> };
+export type GetTopDepositorsQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', inputTokenBalance: bigint, inputTokenBalanceNormalized: string, inputTokenBalanceNormalizedInUSD: string, account: { __typename?: 'Account', id: string }, deposits: Array<{ __typename?: 'Deposit', timestamp: bigint, amount: bigint, inputTokenBalance: bigint }>, withdrawals: Array<{ __typename?: 'Withdraw', timestamp: bigint, amount: bigint, inputTokenBalance: bigint }>, vault: { __typename?: 'Vault', name?: string | null, id: string, rebalanceCount: bigint, inputTokenPriceUSD?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string, decimals: number }, protocol: { __typename?: 'YieldAggregator', network: Network } } }> };
 
 export type GetUserActivityQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -11597,10 +11597,12 @@ export const GetTopDepositorsDocument = gql`
     deposits {
       timestamp
       amount
+      inputTokenBalance
     }
     withdrawals {
       timestamp
       amount
+      inputTokenBalance
     }
     vault {
       name
