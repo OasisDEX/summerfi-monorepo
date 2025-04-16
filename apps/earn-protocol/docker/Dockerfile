@@ -2,10 +2,10 @@ FROM node:22.7.0-alpine
 RUN apk add --no-cache curl wget
 EXPOSE 3000
 WORKDIR .
-#COPY .next/standalone .next/standalone
+COPY .next/standalone .next/standalone
 COPY package.json next.config.ts .
 COPY public .next/standalone/apps/earn-protocol/public
-#COPY .next/static .next/standalone/apps/earn-protocol/.next/static
+COPY .next/static .next/standalone/apps/earn-protocol/.next/static
 
 ARG FUNCTIONS_API_URL \
     BORROW_DB_READ_CONNECTION_STRING \
