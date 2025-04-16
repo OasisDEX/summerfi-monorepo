@@ -1,4 +1,5 @@
 FROM node:22.7.0-alpine
+RUN apk add --no-cache curl wget
 EXPOSE 3000
 WORKDIR .
 COPY .next/standalone .next/standalone
