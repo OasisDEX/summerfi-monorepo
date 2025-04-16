@@ -54,11 +54,8 @@
     "@types/lodash-es": "^4.17.1",
     "@types/mixpanel-browser": "^2.49.0",
     "@types/node": "^20.14.2",
-    "@types/node-fetch": "^2.6.11",
     "@types/react": "19.0.8",
-    "@types/react-dom": "19.0.3",
-    "json-to-ts": "^1.7.0",
-    "node-fetch": "^2.7.0"
+    "@types/react-dom": "19.0.3"
   },
   "packageManager": "pnpm@8.15.4"
 }

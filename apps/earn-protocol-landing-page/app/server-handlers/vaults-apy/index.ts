@@ -1,6 +1,6 @@
 import { type VaultApyData } from '@summerfi/app-types'
 
-export type GetVaultsApyParams = {
+type GetVaultsApyParams = {
   fleets: {
     fleetAddress: string
     chainId: number

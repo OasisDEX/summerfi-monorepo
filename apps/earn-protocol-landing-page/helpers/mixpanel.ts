@@ -4,12 +4,12 @@ import { upperFirst } from 'lodash-es'
 
 import { mixpanelBrowser } from '@/helpers/mixpanel-init'
 
-export const optedOutCheck = () =>
+const optedOutCheck = () =>
   process.env.NODE_ENV !== 'development' && mixpanelBrowser.has_opted_out_tracking()
 
 const includeBasePath = (path: string) => `/earn${path.replace(/\/$/u, '')}`
 
-export const trackEvent = (eventName: string, eventBody: { [key: string]: unknown }) => {
+const trackEvent = (eventName: string, eventBody: { [key: string]: unknown }) => {
   // eslint-disable-next-line turbo/no-undeclared-env-vars
   if (process.env.TURBOPACK) {
     return
@@ -68,7 +68,7 @@ type PageViewType = {
 }
 
 // page view
-export const trackPageView = ({ path, userAddress }: PageViewType) => {
+const trackPageView = ({ path, userAddress }: PageViewType) => {
   try {
     const eventBody = {
       product: MixpanelEventProduct.EarnProtocol,
@@ -85,7 +85,7 @@ export const trackPageView = ({ path, userAddress }: PageViewType) => {
   }
 }
 
-export const trackPageViewTimed = ({ path, userAddress }: PageViewType) => {
+const trackPageViewTimed = ({ path, userAddress }: PageViewType) => {
   setTimeout(() => {
     trackPageView({ path, userAddress })
   }, 1000)
@@ -99,7 +99,7 @@ type AccountChangeType = {
 }
 
 // account change
-export const trackAccountChange = ({
+const trackAccountChange = ({
   account,
   network,
   accountType,
@@ -132,7 +132,7 @@ type ButtonClickType = {
 }
 
 // button click
-export const trackButtonClick = ({ id, page, userAddress, ...rest }: ButtonClickType) => {
+const trackButtonClick = ({ id, page, userAddress, ...rest }: ButtonClickType) => {
   try {
     const eventBody = {
       product: MixpanelEventProduct.EarnProtocol,
@@ -159,7 +159,7 @@ type InputChangeType = {
 }
 
 // input change
-export const trackInputChange = ({ id, page, userAddress, ...rest }: InputChangeType) => {
+const trackInputChange = ({ id, page, userAddress, ...rest }: InputChangeType) => {
   try {
     const eventBody = {
       product: MixpanelEventProduct.EarnProtocol,

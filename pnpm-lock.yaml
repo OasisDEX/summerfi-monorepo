@@ -285,9 +285,6 @@ importers:
       '@types/node':
         specifier: ^20.14.2
         version: 20.14.2
-      '@types/node-fetch':
-        specifier: ^2.6.11
-        version: 2.6.11
       '@types/pg':
         specifier: ^8.11.11
         version: 8.11.11
@@ -303,15 +300,9 @@ importers:
       graphql:
         specifier: ^16.8.1
         version: 16.8.2
-      json-to-ts:
-        specifier: ^1.7.0
-        version: 1.7.0
       knip:
         specifier: ^5.50.4
         version: 5.50.4(@types/node@20.14.2)(typescript@5.7.3)
-      node-fetch:
-        specifier: ^2.7.0
-        version: 2.7.0
       postcss:
         specifier: ^8
         version: 8.4.47
@@ -351,9 +342,6 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
-      dayjs:
-        specifier: ^1.11.12
-        version: 1.11.12
       graphql-request:
         specifier: ^6.1.0
         version: 6.1.0(graphql@16.8.2)
@@ -366,9 +354,6 @@ importers:
       lodash-es:
         specifier: ^4.17.1
         version: 4.17.21
-      mixpanel:
-        specifier: ^0.18.0
-        version: 0.18.0
       mixpanel-browser:
         specifier: ^2.53.0
         version: 2.53.0
@@ -387,6 +372,9 @@ importers:
       usehooks-ts:
         specifier: ^3.1.0
         version: 3.1.0(react@19.1.0)
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
     devDependencies:
       '@graphql-codegen/cli':
         specifier: ^5.0.2
@@ -409,9 +397,6 @@ importers:
       '@types/node':
         specifier: ^20.14.2
         version: 20.14.2
-      '@types/node-fetch':
-        specifier: ^2.6.11
-        version: 2.6.11
       '@types/react':
         specifier: 19.0.8
         version: 19.0.8
@@ -421,12 +406,12 @@ importers:
       graphql:
         specifier: ^16.8.1
         version: 16.8.2
-      json-to-ts:
-        specifier: ^1.7.0
-        version: 1.7.0
-      node-fetch:
-        specifier: ^2.7.0
-        version: 2.7.0
+      knip:
+        specifier: ^5.50.4
+        version: 5.50.4(@types/node@20.14.2)(typescript@5.7.3)
+      typescript:
+        specifier: ^5.7.3
+        version: 5.7.3
 
   apps/rays-dashboard:
     dependencies:
@@ -560,21 +545,12 @@ importers:
       '@types/node':
         specifier: ^20.14.2
         version: 20.14.2
-      '@types/node-fetch':
-        specifier: ^2.6.11
-        version: 2.6.11
       '@types/react':
         specifier: 19.0.8
         version: 19.0.8
       '@types/react-dom':
         specifier: 19.0.3
         version: 19.0.3(@types/react@19.0.8)
-      json-to-ts:
-        specifier: ^1.7.0
-        version: 1.7.0
-      node-fetch:
-        specifier: ^2.7.0
-        version: 2.7.0
 
   armada-protocol/abis:
     devDependencies:

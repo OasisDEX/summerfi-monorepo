@@ -17,5 +17,3 @@ const systemConfigHandler = async () => {
 }
 
 export default systemConfigHandler
-
-export type SystemConfig = Awaited<ReturnType<typeof systemConfigHandler>>

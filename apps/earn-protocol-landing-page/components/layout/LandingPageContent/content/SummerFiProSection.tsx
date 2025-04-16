@@ -5,7 +5,7 @@ import { Emphasis } from '@/components/layout/LandingPageContent/components/Emph
 
 import summerFiProSectionStyles from '@/components/layout/LandingPageContent/content/SummerFiProSection.module.scss'
 
-export const SummerFiProSectionBlock = ({
+const SummerFiProSectionBlock = ({
   tag,
   title,
   pointsList,
