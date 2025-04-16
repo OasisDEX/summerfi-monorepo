@@ -28,7 +28,7 @@ export interface GenericMultiselectOption {
   value: string
 }
 
-export interface GenericMultiselectProps {
+interface GenericMultiselectProps {
   fitContents?: boolean
   icon?: IconNamesList
   initialValues?: string[]

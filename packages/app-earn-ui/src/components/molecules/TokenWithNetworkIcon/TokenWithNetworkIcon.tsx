@@ -5,7 +5,7 @@ import { Icon } from '@/components/atoms/Icon/Icon'
 
 import classNames from './TokenWithNetworkIcon.module.scss'
 
-export const chainIdIconMap: {
+const chainIdIconMap: {
   1: string
   8453: string
   42161: string
@@ -19,7 +19,7 @@ export const chainIdIconMap: {
   [SDKChainId.SONIC]: 'earn_network_sonic',
 }
 
-export const networkNameIconMap: {
+const networkNameIconMap: {
   MAINNET: string
   BASE: string
   ARBITRUM_ONE: string

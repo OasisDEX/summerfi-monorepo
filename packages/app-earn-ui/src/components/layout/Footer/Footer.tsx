@@ -10,7 +10,7 @@ import { useHoldAlt } from '@/hooks/use-hold-alt'
 
 import footerStyles from '@/components/layout/Footer/Footer.module.scss'
 
-export interface FooterProps {
+interface FooterProps {
   logo: string
   languageSwitcher?: ReactNode
   newsletter: ReactNode

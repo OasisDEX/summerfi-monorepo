@@ -31,7 +31,7 @@ const parseJSON = <T>(value: string | null, key: string): T | undefined => {
  * @param isValid - An optional validation function to check the validity of the parsed value.
  * @returns The stored value if valid, otherwise the default value.
  */
-export const getStorageValue = <V>(
+const getStorageValue = <V>(
   key: string,
   defaultValue: unknown,
   isValid?: isValidFunction<V>,

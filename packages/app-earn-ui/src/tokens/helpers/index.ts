@@ -21,7 +21,7 @@ export function getToken(tokenSymbol: string): TokenConfig {
   return tokensBySymbol[tokenSymbol]
 }
 
-export const getTokens = (tokenSymbol: string[]): typeof tokens => {
+const getTokens = (tokenSymbol: string[]): typeof tokens => {
   if (tokenSymbol instanceof Array) {
     return tokenSymbol.map(getToken)
   }

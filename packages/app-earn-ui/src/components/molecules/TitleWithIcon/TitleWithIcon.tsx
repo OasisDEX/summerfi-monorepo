@@ -10,7 +10,7 @@ import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import titleWithIconStyles from './TitleWithIcon.module.scss'
 import { type ClassNames as TextVariants } from '@/components/atoms/Text/Text.module.scss'
 
-export type TitleWithIconProps = {
+type TitleWithIconProps = {
   title: ReactNode
   titleVariant?: TextVariants
   tooltip?: string

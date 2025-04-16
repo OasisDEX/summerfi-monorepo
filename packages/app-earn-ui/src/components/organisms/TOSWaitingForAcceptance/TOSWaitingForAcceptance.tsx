@@ -11,7 +11,7 @@ import { Text } from '@/components/atoms/Text/Text'
 
 import tosWaitingForAcceptanceStyles from '@/components/organisms/TOSWaitingForAcceptance/TOSWaitingForAcceptance.module.scss'
 
-export interface TOSWaiting4AcceptanceProps {
+interface TOSWaiting4AcceptanceProps {
   tosState: TOSWaitingForAcceptanceStep | TOSWaitingForAcceptanceUpdatedStep
   handleToggle: () => void
   toggle: boolean

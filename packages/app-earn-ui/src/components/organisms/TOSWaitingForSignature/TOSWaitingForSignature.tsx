@@ -5,7 +5,7 @@ import { Text } from '@/components/atoms/Text/Text'
 
 import tosWaitingForSignatureStyles from '@/components/organisms/TOSWaitingForSignature/TOSWaitingForSignature.module.scss'
 
-export interface TOSWaitingForSignatureProps {
+interface TOSWaitingForSignatureProps {
   texts?: {
     tosWelcome?: ReactNode
     tosSignatureMessage?: ReactNode

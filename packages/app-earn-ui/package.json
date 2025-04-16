@@ -17,7 +17,8 @@
     "generate-module-types-watch": "concurrently \"typed-scss-modules -w 'src/**/*.module.scss'\" \"typed-scss-modules --outputFolder 'dist/' -w 'src/**/*.module.scss'\"",
     "build": "concurrently \"pnpm vite build -w false\" \"pnpm generate-module-types\"",
     "prebuild": "concurrently \"pnpm vite build -w false --mode=prod\" \"pnpm generate-module-types\"",
-    "dev": "concurrently \"pnpm vite build -w true --mode=dev\" \"pnpm:generate-module-types-watch\""
+    "dev": "concurrently \"pnpm vite build -w true --mode=dev\" \"pnpm:generate-module-types-watch\"",
+    "knip": "knip"
   },
   "devDependencies": {
     "@summerfi/app-icons": "workspace:*",
@@ -29,19 +30,20 @@
     "@types/loadable__component": "^5.13.9",
     "@types/lodash-es": "^4.17.1",
     "@types/node": "20.12.7",
-    "@types/react-dom": "19.0.3",
     "@types/react": "19.0.8",
+    "@types/react-dom": "19.0.3",
     "@vitejs/plugin-react-swc": "^3.8.0",
     "concurrently": "^9.0.1",
     "eslint": "8.57.0",
     "glob": "^11.0.0",
     "jest": "29.7.0",
+    "knip": "^5.50.4",
     "sass": "^1.77.8",
     "tsc-watch": "^6.2.0",
     "typescript": "^5.7.3",
     "unplugin-isolated-decl": "^0.13.5",
-    "vite-plugin-lib-inject-css": "^2.2.1",
-    "vite": "6.2.5"
+    "vite": "6.2.5",
+    "vite-plugin-lib-inject-css": "^2.2.1"
   },
   "peerDependencies": {
     "@loadable/component": "^5.16.4",
@@ -50,13 +52,13 @@
     "boring-avatars": "1.10.2",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.12",
+    "embla-carousel": "8.3.0",
+    "embla-carousel-react": "8.3.0",
     "lodash-es": "^4.17.1",
     "next": "15.3.0",
-    "react-dom": "19.1.0",
     "react": "19.1.0",
-    "usehooks-ts": "^3.1.0",
-    "embla-carousel-react": "8.3.0",
-    "embla-carousel": "8.3.0"
+    "react-dom": "19.1.0",
+    "usehooks-ts": "^3.1.0"
   },
   "publishConfig": {
     "access": "public"

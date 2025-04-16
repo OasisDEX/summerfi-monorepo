@@ -20,7 +20,7 @@ type LocalConfigType = {
   dispatch: Dispatch<LocalConfigActions>
 }
 
-export const defaultLocalConfig: LocalConfigState = {
+const defaultLocalConfig: LocalConfigState = {
   sumrNetApyConfig: {
     withSumr: true,
     dilutedValuation: '250000000',

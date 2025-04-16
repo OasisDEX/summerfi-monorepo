@@ -7,7 +7,7 @@ import { Text } from '@/components/atoms/Text/Text'
 
 import tosRetryStyles from '@/components/organisms/TOSRetry/TOSRetry.module.scss'
 
-export interface TOSRetryProps {
+interface TOSRetryProps {
   tosState: TOSRetryStep
   texts?: {
     tosRetry?: ReactNode
