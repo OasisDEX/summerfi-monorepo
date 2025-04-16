@@ -11,7 +11,8 @@
     "lint:fix": "eslint . --fix",
     "lint-timing": "TIMING=1 eslint .",
     "generate": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config",
-    "update-tables": "dotenv -e ../../.env -e ../../.env.local -- node --import tsx misc/scripts/update-tables.ts"
+    "update-tables": "dotenv -e ../../.env -e ../../.env.local -- node --import tsx misc/scripts/update-tables.ts",
+    "knip": "knip"
   },
   "dependencies": {
     "@account-kit/core": "^4.24.0",
@@ -75,6 +76,7 @@
     "@types/react-infinite-scroller": "^1.2.5",
     "graphql": "^16.8.1",
     "json-to-ts": "^1.7.0",
+    "knip": "^5.50.4",
     "node-fetch": "^2.7.0",
     "postcss": "^8",
     "tailwindcss": "^3.4.4",

@@ -2,21 +2,12 @@ import { SDKChainId } from '@summerfi/app-types'
 
 import { clientId } from '@/helpers/client-id'
 
-export type NetworkConfigHexId = `0x${number | string}`
+type NetworkConfigHexId = `0x${number | string}`
 
 export enum NetworkNames {
   ethereumMainnet = 'ethereum',
-  ethereumGoerli = 'ethereum_goerli',
-
   arbitrumMainnet = 'arbitrum',
-  arbitrumGoerli = 'arbitrum_goerli',
-
-  polygonMainnet = 'polygon',
-  polygonMumbai = 'polygon_mumbai',
-
   optimismMainnet = 'optimism',
-  optimismGoerli = 'optimism_goerli',
-
   baseMainnet = 'base',
   baseGoerli = 'base_goerli',
 
@@ -39,7 +30,7 @@ export enum NetworkIds {
   SONICMAINNET = 146,
 }
 
-export enum NetworkHexIds {
+enum NetworkHexIds {
   MAINNET = '0x1',
   GOERLI = '0x5',
   DEFAULTFORK = '0x859',
@@ -55,7 +46,7 @@ export enum NetworkHexIds {
   SONICMAINNET = '0x92',
 }
 
-export type NetworkLabelType =
+type NetworkLabelType =
   | 'Ethereum'
   | 'Ethereum Goerli'
   | 'Arbitrum'
@@ -68,7 +59,7 @@ export type NetworkLabelType =
   | 'Base Goerli'
   | 'Sonic'
 
-export type NetworkConfig = {
+type NetworkConfig = {
   name: NetworkNames
   testnet: boolean
   badge: string

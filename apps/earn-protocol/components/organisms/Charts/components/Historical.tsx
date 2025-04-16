@@ -30,7 +30,7 @@ import { POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { formatChartCryptoValue } from '@/features/forecast/chart-formatters'
 
-export type HistoricalChartProps = {
+type HistoricalChartProps = {
   data?: unknown[]
   tokenSymbol: TokenSymbolsList
   portfolioPosition: {

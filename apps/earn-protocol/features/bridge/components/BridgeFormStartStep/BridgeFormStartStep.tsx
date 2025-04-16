@@ -23,7 +23,7 @@ import BigNumber from 'bignumber.js'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import { TermsOfServiceCookiePrefix } from '@/constants/terms-of-service'
-import { BridgeFormTitle } from '@/features/bridge/components/BridgeFormTitle/BridgeFormTitle'
+import BridgeFormTitle from '@/features/bridge/components/BridgeFormTitle/BridgeFormTitle'
 import { BridgeInput } from '@/features/bridge/components/BridgeInput/BridgeInput'
 import { ChainSelectors } from '@/features/bridge/components/ChainSelectors/ChainSelectors'
 import { QuickActionTags } from '@/features/bridge/components/QuickActionTags/QuickActionTags'

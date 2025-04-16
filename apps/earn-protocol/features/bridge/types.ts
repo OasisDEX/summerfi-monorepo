@@ -3,14 +3,14 @@ import type { Chain } from 'viem/chains'
 
 import type { SumrBalancesData } from '@/app/server-handlers/sumr-balances'
 
-export interface SimulatedTransactionDetails {
+interface SimulatedTransactionDetails {
   gasOnDestination: string
   amountReceived: string
   fee: string
   isReady: boolean
 }
 
-export interface SendParam {
+interface SendParam {
   dstEid: number
   to: Address
   amountLD: bigint
@@ -20,7 +20,7 @@ export interface SendParam {
   oftCmd: Address
 }
 
-export interface Fee {
+interface Fee {
   nativeFee: bigint
   lzTokenFee: bigint
 }

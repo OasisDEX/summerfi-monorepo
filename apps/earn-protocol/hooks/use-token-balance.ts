@@ -8,7 +8,7 @@ import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import { useAppSDK } from './use-app-sdk'
 
-export interface TokenBalanceData {
+interface TokenBalanceData {
   vaultToken: IToken | undefined
   token: IToken | undefined
   tokenBalance: BigNumber | undefined

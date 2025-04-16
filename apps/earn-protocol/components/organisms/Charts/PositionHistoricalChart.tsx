@@ -13,7 +13,7 @@ import {
 import { HistoricalChart } from '@/components/organisms/Charts/components/Historical'
 import { POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
 
-export type PositionHistoricalChartProps = {
+type PositionHistoricalChartProps = {
   chartData: HistoryChartData
   tokenSymbol: TokenSymbolsList
   position: {
