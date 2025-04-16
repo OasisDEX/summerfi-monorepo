@@ -20,14 +20,26 @@ export const calculateTopDepositors7daysChange = ({ position }: { position: Posi
 }
 
 export const getEarningStreakResetTimestamp = ({ position }: { position: Position }) => {
-  // get withdraw event which ended up in empty position
-  const earnStreakWithdrawResetTimestamp = position.withdrawals.find(
-    (withdraw) => Number(withdraw.inputTokenBalance) === 0,
-  )?.timestamp
-  // first deposit event
-  const firstDepositTimestamp = position.deposits[0]?.timestamp
+  // get the latest withdraw event which ended up in empty position
+  const latestWithdrawEmptyPositionTimestamp = position.withdrawals
+    .sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
+    .find((withdraw) => withdraw.inputTokenBalance.toString() === '0')?.timestamp
 
-  const timestamp = earnStreakWithdrawResetTimestamp ?? firstDepositTimestamp
+  // get the first deposit event after the latest withdraw event which ended up in empty position
+  const firstDepositTimestampAfterEmptyPosition = latestWithdrawEmptyPositionTimestamp
+    ? position.deposits
+        .filter(
+          (deposit) => Number(deposit.timestamp) > Number(latestWithdrawEmptyPositionTimestamp),
+        )
+        .sort((a, b) => Number(a.timestamp) - Number(b.timestamp))[0]?.timestamp
+    : undefined
+
+  // first deposit event
+  const firstDepositTimestamp = position.deposits.sort(
+    (a, b) => Number(a.timestamp) - Number(b.timestamp),
+  )[0]?.timestamp
+
+  const timestamp = firstDepositTimestampAfterEmptyPosition ?? firstDepositTimestamp
 
   return timestamp ? Number(timestamp) * 1000 : 0
 }
