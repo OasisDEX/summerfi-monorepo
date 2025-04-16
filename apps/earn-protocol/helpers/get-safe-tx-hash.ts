@@ -41,7 +41,7 @@ type SafeTransactionDataType = {
   signatures: unknown
 }
 
-export const subgraphNetworkToSafeSDKAPI = (network: SDKNetwork) => {
+const subgraphNetworkToSafeSDKAPI = (network: SDKNetwork) => {
   return {
     [SDKNetwork.Mainnet.toLowerCase()]: 'https://safe-transaction-mainnet.safe.global',
     [SDKNetwork.ArbitrumOne.toLowerCase()]: 'https://safe-transaction-arbitrum.safe.global',

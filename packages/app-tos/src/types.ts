@@ -45,9 +45,9 @@ type Generated<T> =
     ? ColumnType<S, I | undefined, U>
     : ColumnType<T, T | undefined, T>
 
-export type Timestamp = ColumnType<Date, Date | string, Date | string>
+type Timestamp = ColumnType<Date, Date | string, Date | string>
 
-export interface TosApproval {
+interface TosApproval {
   address: string
   chainId: Generated<number>
   docVersion: string

@@ -1,7 +1,7 @@
 import { type JWTChallenge } from '@summerfi/app-types'
 import { type PublicClient } from 'viem'
 
-export const safeAbi = [
+const safeAbi = [
   {
     inputs: [{ name: 'owner', type: 'address' }],
     name: 'isOwner',

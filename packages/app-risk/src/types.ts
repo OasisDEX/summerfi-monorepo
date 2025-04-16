@@ -31,9 +31,9 @@ export interface RiskDataResponse {
   trmAppUrl: string
 }
 
-export type Timestamp = ColumnType<Date, Date | string, Date | string>
+type Timestamp = ColumnType<Date, Date | string, Date | string>
 
-export interface WalletRisk {
+interface WalletRisk {
   address: string
   isRisky: boolean
   lastCheck: Timestamp

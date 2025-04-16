@@ -1,4 +1,4 @@
-export type GetVaultsHistoricalApyParams = {
+type GetVaultsHistoricalApyParams = {
   fleets: {
     fleetAddress: string
     chainId: number

@@ -8,30 +8,30 @@
     "build:apps": "dotenv -e ../../.env -e ../../.env.local -- next build",
     "start": "next start -p 3003",
     "lint": "eslint .",
-    "generate": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config"
+    "generate": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config",
+    "knip": "knip"
   },
   "dependencies": {
     "@loadable/component": "^5.16.4",
     "@summerfi/app-earn-ui": "workspace:*",
     "@summerfi/app-types": "workspace:*",
     "@summerfi/app-utils": "workspace:*",
-    "@summerfi/sdk-common": "workspace:*",
     "@summerfi/sdk-client": "workspace:^",
     "@summerfi/sdk-client-react": "workspace:^",
+    "@summerfi/sdk-common": "workspace:*",
     "browser-detect": "^0.2.28",
     "clsx": "^2.1.1",
-    "dayjs": "^1.11.12",
     "graphql-request": "^6.1.0",
     "graphql-tag": "^2.12.6",
     "include-media": "2.0.0",
     "lodash-es": "^4.17.1",
     "mixpanel-browser": "^2.53.0",
-    "mixpanel": "^0.18.0",
     "next": "15.3.0",
-    "react-dom": "19.1.0",
     "react": "19.1.0",
+    "react-dom": "19.1.0",
     "sharp": "^0.33.5",
-    "usehooks-ts": "^3.1.0"
+    "usehooks-ts": "^3.1.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.2",
@@ -40,13 +40,12 @@
     "@types/loadable__component": "^5.13.9",
     "@types/lodash-es": "^4.17.1",
     "@types/mixpanel-browser": "^2.49.0",
-    "@types/node-fetch": "^2.6.11",
     "@types/node": "^20.14.2",
-    "@types/react-dom": "19.0.3",
     "@types/react": "19.0.8",
+    "@types/react-dom": "19.0.3",
     "graphql": "^16.8.1",
-    "json-to-ts": "^1.7.0",
-    "node-fetch": "^2.7.0"
+    "knip": "^5.50.4",
+    "typescript": "^5.7.3"
   },
   "packageManager": "pnpm@8.15.4"
 }

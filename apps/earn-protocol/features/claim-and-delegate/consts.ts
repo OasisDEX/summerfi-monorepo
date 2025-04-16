@@ -3,7 +3,7 @@ import { formatAddress, isValidLink } from '@summerfi/app-utils'
 import { type SumrDecayFactorData } from '@/app/server-handlers/sumr-decay-factor'
 import { type SumrDelegates } from '@/app/server-handlers/sumr-delegates'
 
-export interface SumrDelegate {
+interface SumrDelegate {
   sumrAmount: number
   ens: string
   address: string

@@ -8,7 +8,7 @@ import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-
 import { VaultExposureTableSection } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 import { vaultExposureFilter } from '@/features/vault-exposure/table/filters/filters'
 
-export enum VaultExposureFilterType {
+enum VaultExposureFilterType {
   ALL = 'ALL',
   ALLOCATED = 'ALLOCATED',
   UNALLOCATED = 'UNALLOCATED',

@@ -26,7 +26,7 @@ export const isSupportedSDKChain = (
 /**
  * Maps SDK network identifiers to human readable network names.
  */
-export const humanReadableNetworkMap: {
+const humanReadableNetworkMap: {
   readonly ARBITRUM_ONE: 'arbitrum'
   readonly BASE: 'base'
   readonly MAINNET: 'mainnet'
@@ -76,7 +76,7 @@ export type HumanReadableNetwork =
  * @param network - The network to check
  * @returns True if the network is supported, false otherwise
  */
-export const isSupportedSDKNetwork = (network: unknown): network is SDKSupportedNetwork => {
+const isSupportedSDKNetwork = (network: unknown): network is SDKSupportedNetwork => {
   return typeof network === 'string' && network in humanReadableNetworkMap
 }
 

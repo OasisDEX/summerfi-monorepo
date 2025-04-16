@@ -3,7 +3,7 @@ import { Text } from '@summerfi/app-earn-ui'
 
 import styles from './BridgeFormTitle.module.scss'
 
-export const BridgeFormTitle = () => {
+const BridgeFormTitle = () => {
   return (
     <div className={styles.titleWrapper}>
       <Text variant="h5" as="h5">

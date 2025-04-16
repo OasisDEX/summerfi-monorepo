@@ -22,7 +22,7 @@ import {
 } from '@/constants/charts'
 import { formatChartCryptoValue } from '@/features/forecast/chart-formatters'
 
-export type PerformanceChartProps = {
+type PerformanceChartProps = {
   data?:
     | PerformanceChartData['forecast'][TimeframesType]
     | PerformanceChartData['historic'][TimeframesType]

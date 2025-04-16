@@ -61,5 +61,3 @@ export const ChainSelector: React.FC<ChainSelectorProps> = ({ label, chainId, on
     </div>
   )
 }
-
-export default ChainSelector

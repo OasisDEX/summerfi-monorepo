@@ -23,7 +23,7 @@ import { useLocalStorageOnce } from '@/hooks/use-local-storage-once'
 
 import classNames from './VaultSimulationForm.module.scss'
 
-export type VaultSimulationFormProps = {
+type VaultSimulationFormProps = {
   vaultData: SDKVaultishType
   tokenBalance?: BigNumber
   tokenPriceUSD?: number

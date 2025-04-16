@@ -9,7 +9,7 @@ import { customAAKitSonicConfig as sonic } from '@/account-kit/config'
 import { NetworkIds } from '@/constants/networks-list'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 
-export const networkIdsToAccountKitChainsMap = {
+const networkIdsToAccountKitChainsMap = {
   [NetworkIds.BASEMAINNET]: base,
   [NetworkIds.ARBITRUMMAINNET]: arbitrum,
   [NetworkIds.MAINNET]: mainnet,

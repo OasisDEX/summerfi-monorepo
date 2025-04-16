@@ -5,10 +5,9 @@ import { SummerTokenAbi } from '@summerfi/armada-protocol-abis'
 import { getChainInfoByChainId } from '@summerfi/sdk-common'
 import { useQuery } from '@tanstack/react-query'
 import BigNumber from 'bignumber.js'
-import { type Address, createPublicClient, http } from 'viem'
-import { base } from 'viem/chains'
+import { type Address } from 'viem'
 
-import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
+import { getSSRPublicClient } from '@/helpers/get-ssr-public-client'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 
 type DecayFactorResponse = {
@@ -32,17 +31,18 @@ export const useDecayFactor = (delegatedAddress?: string): DecayFactorResponse =
 
   const fetchDecayFactor = async (address: Address): Promise<number> => {
     try {
-      const publicClient = createPublicClient({
-        chain: base,
-        transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.BASE]),
-      })
+      const publicClient = await getSSRPublicClient(SDKChainId.BASE)
+
+      if (!publicClient) {
+        throw new Error(`Public client for chain ${SDKChainId.BASE} not found`)
+      }
 
       const sumrToken = await sdk
         .getSummerToken({
           chainInfo: getChainInfoByChainId(SDKChainId.BASE),
         })
-        .catch((error) => {
-          throw new Error(`Failed to fetch SUMMER token: ${error.message}`)
+        .catch((getSummerTokenError) => {
+          throw new Error(`Failed to fetch SUMMER token: ${getSummerTokenError.message}`)
         })
 
       const decayFactor = await publicClient
@@ -52,8 +52,8 @@ export const useDecayFactor = (delegatedAddress?: string): DecayFactorResponse =
           functionName: 'getDecayFactor',
           args: [address],
         })
-        .catch((error) => {
-          throw new Error(`Failed to fetch decay factor: ${error.message}`)
+        .catch((decayFactorError) => {
+          throw new Error(`Failed to fetch decay factor: ${decayFactorError.message}`)
         })
 
       if (!decayFactor) {

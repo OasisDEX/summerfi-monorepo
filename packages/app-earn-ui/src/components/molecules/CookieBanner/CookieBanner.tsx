@@ -19,7 +19,7 @@ import {
 
 import classNames from './CookieBanner.module.scss'
 
-export function initSelectedCookies(defaultValue: boolean): SelectedAnalyticsCookies {
+function initSelectedCookies(defaultValue: boolean): SelectedAnalyticsCookies {
   return ANALYTICS_COOKIE_NAMES.reduce(
     (acc, cookieName) => ({ ...acc, [cookieName]: defaultValue }),
     {

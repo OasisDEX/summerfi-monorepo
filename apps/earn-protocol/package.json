@@ -11,7 +11,8 @@
     "lint:fix": "eslint . --fix",
     "lint-timing": "TIMING=1 eslint .",
     "generate": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config",
-    "update-tables": "dotenv -e ../../.env -e ../../.env.local -- node --import tsx misc/scripts/update-tables.ts"
+    "update-tables": "dotenv -e ../../.env -e ../../.env.local -- node --import tsx misc/scripts/update-tables.ts",
+    "knip": "knip"
   },
   "dependencies": {
     "@account-kit/core": "^4.26.0",
@@ -28,11 +29,11 @@
     "@summerfi/app-types": "workspace:*",
     "@summerfi/app-utils": "workspace:*",
     "@summerfi/armada-protocol-abis": "workspace:*",
-    "@summerfi/sdk-client-react": "workspace:^",
     "@summerfi/sdk-client": "workspace:^",
+    "@summerfi/sdk-client-react": "workspace:^",
     "@summerfi/sdk-common": "workspace:*",
-    "@summerfi/summer-protocol-db": "workspace:*",
     "@summerfi/subgraph-manager-common": "workspace:*",
+    "@summerfi/summer-protocol-db": "workspace:*",
     "@tanstack/react-query": "^5.51.1",
     "@transak/transak-sdk": "^3.1.3",
     "bignumber.js": "^9.1.2",
@@ -57,7 +58,8 @@
     "usehooks-ts": "^3.1.0",
     "viem": "2.26.1",
     "wagmi": "^2.10.9",
-    "websocket": "^1.0.35"
+    "websocket": "^1.0.35",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.2",
@@ -67,16 +69,15 @@
     "@types/lodash-es": "^4.17.1",
     "@types/mixpanel-browser": "^2.49.0",
     "@types/node": "^20.14.2",
-    "@types/node-fetch": "^2.6.11",
+    "@types/pg": "^8.11.11",
     "@types/react": "19.0.8",
     "@types/react-dom": "19.0.3",
     "@types/react-infinite-scroller": "^1.2.5",
-    "@types/pg": "^8.11.11",
     "graphql": "^16.8.1",
-    "json-to-ts": "^1.7.0",
-    "node-fetch": "^2.7.0",
+    "knip": "^5.50.4",
     "postcss": "^8",
-    "tailwindcss": "^3.4.4"
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.7.3"
   },
   "packageManager": "pnpm@8.15.4"
 }

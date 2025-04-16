@@ -20,11 +20,11 @@ export interface IconPropsBase {
   className?: string
 }
 
-export interface IconPropsWithIconName extends IconPropsBase {
+interface IconPropsWithIconName extends IconPropsBase {
   iconName: IconNamesList
 }
 
-export interface IconPropsWithTokenName extends IconPropsBase {
+interface IconPropsWithTokenName extends IconPropsBase {
   tokenName: TokenSymbolsList
 }
 

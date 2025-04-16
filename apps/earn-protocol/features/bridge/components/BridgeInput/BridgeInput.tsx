@@ -1,6 +1,6 @@
 'use client'
 
-export interface BridgeInputProps {
+interface BridgeInputProps {
   children: React.ReactNode
 }
 

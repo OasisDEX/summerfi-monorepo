@@ -4,12 +4,12 @@ import { upperFirst } from 'lodash-es'
 
 import { mixpanelBrowser } from '@/helpers/mixpanel-init'
 
-export const optedOutCheck = () =>
+const optedOutCheck = () =>
   process.env.NODE_ENV !== 'development' && mixpanelBrowser.has_opted_out_tracking()
 
 const includeBasePath = (path: string) => `/earn${path.replace(/\/$/u, '')}`
 
-export const trackEvent = (eventName: string, eventBody: { [key: string]: unknown }) => {
+const trackEvent = (eventName: string, eventBody: { [key: string]: unknown }) => {
   // eslint-disable-next-line turbo/no-undeclared-env-vars
   if (process.env.TURBOPACK) {
     return
@@ -60,122 +60,6 @@ export const trackEvent = (eventName: string, eventBody: { [key: string]: unknow
       }),
     }),
   })
-}
-
-type PageViewType = {
-  path: string
-  userAddress?: string
-}
-
-// page view
-export const trackPageView = ({ path, userAddress }: PageViewType) => {
-  try {
-    const eventBody = {
-      product: MixpanelEventProduct.EarnProtocol,
-      id: includeBasePath(path),
-      userAddress,
-    }
-
-    if (!optedOutCheck()) {
-      trackEvent(MixpanelEventTypes.Pageview, eventBody)
-    }
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error tracking page view', error)
-  }
-}
-
-export const trackPageViewTimed = ({ path, userAddress }: PageViewType) => {
-  setTimeout(() => {
-    trackPageView({ path, userAddress })
-  }, 1000)
-}
-
-type AccountChangeType = {
-  account: `0x${string}`
-  accountType?: string
-  network: string
-  connectionMethod: string
-}
-
-// account change
-export const trackAccountChange = ({
-  account,
-  network,
-  accountType,
-  connectionMethod,
-}: AccountChangeType) => {
-  try {
-    const eventBody = {
-      product: MixpanelEventProduct.EarnProtocol,
-      id: 'AccountChange',
-      account,
-      network,
-      connectionMethod,
-      accountType,
-    }
-
-    if (!optedOutCheck()) {
-      trackEvent(MixpanelEventTypes.AccountChange, eventBody)
-    }
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error tracking account change', error)
-  }
-}
-
-type ButtonClickType = {
-  id: string
-  page: string
-  userAddress?: string
-  [key: string]: unknown
-}
-
-// button click
-export const trackButtonClick = ({ id, page, userAddress, ...rest }: ButtonClickType) => {
-  try {
-    const eventBody = {
-      product: MixpanelEventProduct.EarnProtocol,
-      id,
-      page: includeBasePath(page),
-      userAddress,
-      ...rest,
-    }
-
-    if (!optedOutCheck()) {
-      trackEvent(MixpanelEventTypes.ButtonClick, eventBody)
-    }
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error tracking button click', error)
-  }
-}
-
-type InputChangeType = {
-  id: string
-  page: string
-  userAddress?: string
-  [key: string]: unknown
-}
-
-// input change
-export const trackInputChange = ({ id, page, userAddress, ...rest }: InputChangeType) => {
-  try {
-    const eventBody = {
-      product: MixpanelEventProduct.EarnProtocol,
-      id,
-      page: includeBasePath(page),
-      userAddress,
-      ...rest,
-    }
-
-    if (!optedOutCheck()) {
-      trackEvent(MixpanelEventTypes.InputChange, eventBody)
-    }
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error tracking button click', error)
-  }
 }
 
 type AppError = {

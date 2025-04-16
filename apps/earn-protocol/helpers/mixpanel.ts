@@ -4,12 +4,12 @@ import { upperFirst } from 'lodash-es'
 
 import { mixpanelBrowser } from '@/helpers/mixpanel-init'
 
-export const optedOutCheck = () =>
+const optedOutCheck = () =>
   process.env.NODE_ENV !== 'development' && mixpanelBrowser.has_opted_out_tracking()
 
 const includeBasePath = (path: string) => `/earn${path.replace(/\/$/u, '')}`
 
-export const trackEvent = (eventName: string, eventBody: { [key: string]: unknown }) => {
+const trackEvent = (eventName: string, eventBody: { [key: string]: unknown }) => {
   // eslint-disable-next-line turbo/no-undeclared-env-vars
   if (process.env.TURBOPACK) {
     return
@@ -68,7 +68,7 @@ type PageViewType = {
 }
 
 // page view
-export const trackPageView = ({ path, userAddress }: PageViewType) => {
+const trackPageView = ({ path, userAddress }: PageViewType) => {
   try {
     const eventBody = {
       product: MixpanelEventProduct.EarnProtocol,

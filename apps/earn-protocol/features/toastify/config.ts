@@ -1,6 +1,6 @@
 import { type ToastOptions } from 'react-toastify'
 
-export const BASIC_TOAST_CONFIG: ToastOptions = {
+const BASIC_TOAST_CONFIG: ToastOptions = {
   position: 'bottom-right',
   autoClose: 5000,
   hideProgressBar: false,

@@ -1,7 +1,5 @@
 import { init } from 'mixpanel'
 
-export type MixpanelPropertyNameType = '$initial_referrer' | '$user_id'
-
 if (!process.env.EARN_MIXPANEL_KEY) {
   throw new Error('EARN_MIXPANEL_KEY is not defined')
 }

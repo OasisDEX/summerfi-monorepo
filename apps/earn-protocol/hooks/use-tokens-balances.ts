@@ -1,36 +1,15 @@
-import { arbitrum, base, mainnet } from '@account-kit/infra'
 import { SDKChainId, SDKNetwork } from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
-import { createPublicClient, http } from 'viem'
 
-import { customAAKitSonicConfig as sonic } from '@/account-kit/config'
-import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
+import {
+  arbitrumPublicClient,
+  basePublicClient,
+  mainnetPublicClient,
+  sonicPublicClient,
+} from '@/helpers/get-fe-public-client'
 import { supportedNetworkGuard } from '@/helpers/supported-network-guard'
-import { useTokenBalance } from '@/hooks/use-token-balance'
+import { type TokenBalanceData, useTokenBalance } from '@/hooks/use-token-balance'
 import { useUserWallet } from '@/hooks/use-user-wallet'
-
-/**
- * Public client instances for interacting with different networks
- */
-const arbitrumPublicClient = createPublicClient({
-  chain: arbitrum,
-  transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.ARBITRUM]),
-})
-
-const basePublicClient = createPublicClient({
-  chain: base,
-  transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.BASE]),
-})
-
-const sonicPublicClient = createPublicClient({
-  chain: sonic,
-  transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.SONIC]),
-})
-
-const mainnetPublicClient = createPublicClient({
-  chain: mainnet,
-  transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.MAINNET]),
-})
 
 /**
  * Hook to fetch token and vault token balances for a specific network
@@ -53,7 +32,7 @@ export const useTokenBalances = ({
   tokenSymbol: string
   network: SDKNetwork
   vaultTokenSymbol: string
-}) => {
+}): TokenBalanceData => {
   if (!supportedNetworkGuard(network)) {
     throw new Error(`Unsupported network: ${network}`)
   }

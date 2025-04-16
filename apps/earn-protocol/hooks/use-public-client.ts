@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import { type SDKChainId } from '@summerfi/app-types'
-import { type Chain, createPublicClient, http } from 'viem'
+import { type Chain } from 'viem'
 
-import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
+import { publicClientMap } from '@/helpers/get-fe-public-client'
 
 /**
  * Hook to create a Viem public client for interacting with the blockchain
@@ -11,10 +11,9 @@ import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
  */
 export const usePublicClient = ({ chain }: { chain: Chain }) => {
   const publicClient = useMemo(() => {
-    return createPublicClient({
-      chain,
-      transport: http(SDKChainIdToRpcGatewayMap[chain.id as SDKChainId]),
-    })
+    return publicClientMap[
+      chain.id as SDKChainId.ARBITRUM | SDKChainId.BASE | SDKChainId.MAINNET | SDKChainId.SONIC
+    ]
   }, [chain])
 
   return { publicClient }

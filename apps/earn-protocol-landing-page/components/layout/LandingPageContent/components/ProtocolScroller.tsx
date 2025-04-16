@@ -31,7 +31,7 @@ type ProtocolScrollerItemProps = {
   url: string
 }
 
-export type ProtocolScrollerProps = {
+type ProtocolScrollerProps = {
   protocolsList: {
     protocol: string
     protocolIcon: IconNamesList

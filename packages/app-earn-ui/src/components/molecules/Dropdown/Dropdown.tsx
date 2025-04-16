@@ -17,7 +17,7 @@ import dropdownStyles from '@/components/molecules/Dropdown/Dropdown.module.scss
 
 type TriggerProps = { isOpen: boolean; isDisabled?: boolean }
 
-export interface DropdownProps {
+interface DropdownProps {
   options: DropdownRawOption[]
   dropdownValue: DropdownRawOption
   children: ReactNode

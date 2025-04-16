@@ -1,29 +1,6 @@
-import type { Address } from 'viem'
 import type { Chain } from 'viem/chains'
 
 import type { SumrBalancesData } from '@/app/server-handlers/sumr-balances'
-
-export interface SimulatedTransactionDetails {
-  gasOnDestination: string
-  amountReceived: string
-  fee: string
-  isReady: boolean
-}
-
-export interface SendParam {
-  dstEid: number
-  to: Address
-  amountLD: bigint
-  minAmountLD: bigint
-  extraOptions: Address
-  composeMsg: Address
-  oftCmd: Address
-}
-
-export interface Fee {
-  nativeFee: bigint
-  lzTokenFee: bigint
-}
 
 export type BridgeExternalData = {
   sumrBalances: SumrBalancesData

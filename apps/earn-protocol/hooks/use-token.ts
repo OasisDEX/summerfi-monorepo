@@ -3,7 +3,7 @@ import { getChainInfoByChainId, type IToken } from '@summerfi/sdk-common'
 
 import { useAppSDK } from './use-app-sdk'
 
-export interface TokenData {
+interface TokenData {
   token: IToken | undefined
   tokenLoading: boolean
   error: Error | undefined

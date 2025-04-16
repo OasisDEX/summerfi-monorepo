@@ -28,7 +28,7 @@ import tooltipStyles from '@/components/molecules/Tooltip/Tooltip.module.scss'
 
 const generateUniqueId = () => `tooltip-${Math.random().toString(36).slice(2, 9)}`
 
-export function useTooltip(uniqueId: string): {
+function useTooltip(uniqueId: string): {
   tooltipOpen: boolean
   setTooltipOpen: Dispatch<SetStateAction<boolean>>
   closeHandler: () => void

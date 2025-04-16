@@ -8,7 +8,7 @@ import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
 import { PerformanceChart } from '@/components/organisms/Charts/components/Performance'
 import { allTimeframesAvailable, useTimeframes } from '@/hooks/use-timeframes'
 
-export type PositionPerformanceChartProps = {
+type PositionPerformanceChartProps = {
   chartData: PerformanceChartData
   inputToken: string
 }

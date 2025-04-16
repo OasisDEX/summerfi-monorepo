@@ -2,7 +2,7 @@ import { type IArmadaPosition, type SDKVaultishType } from '@summerfi/app-types'
 import { zero } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
-export type PositionValues = {
+type PositionValues = {
   netValue: BigNumber
   netValueUSD: BigNumber
   netDeposited: BigNumber
