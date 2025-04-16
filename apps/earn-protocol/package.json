@@ -14,10 +14,10 @@
     "update-tables": "dotenv -e ../../.env -e ../../.env.local -- node --import tsx misc/scripts/update-tables.ts"
   },
   "dependencies": {
-    "@account-kit/core": "^4.24.0",
-    "@account-kit/infra": "^4.24.0",
-    "@account-kit/react": "^4.24.0",
-    "@account-kit/signer": "^4.24.0",
+    "@account-kit/core": "^4.26.0",
+    "@account-kit/infra": "^4.26.0",
+    "@account-kit/react": "^4.26.0",
+    "@account-kit/signer": "^4.26.0",
     "@layerzerolabs/scan-client": "^0.0.8",
     "@loadable/component": "^5.16.4",
     "@safe-global/safe-apps-sdk": "^9.0.0",
