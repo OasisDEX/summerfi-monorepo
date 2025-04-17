@@ -1,1 +1,1 @@
-export * from './rays'
+export type { RaysApiResponse } from './rays'

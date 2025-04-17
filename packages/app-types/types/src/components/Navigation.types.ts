@@ -55,14 +55,6 @@ export interface NavigationMenuPanelAsset {
   link: string
 }
 
-export interface NavigationMenuPanelLink {
-  icon: IconNamesList
-  title: string
-  link: string
-  hash?: string
-  footnote?: ReactNode
-}
-
 export type NavigationMenuPanelListTags = ([string, string] | string)[]
 
 export interface NavigationMenuPanelList {
