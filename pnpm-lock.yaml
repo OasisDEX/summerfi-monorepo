@@ -130,16 +130,16 @@ importers:
     dependencies:
       '@account-kit/core':
         specifier: ^4.26.0
-        version: 4.26.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react-native-inappbrowser-reborn@3.7.0)(react-native-mmkv@3.2.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.26.1)(wagmi@2.10.9)
+        version: 4.26.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react-native-inappbrowser-reborn@3.7.0)(react-native-mmkv@3.2.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.27.2)(wagmi@2.10.9)
       '@account-kit/infra':
         specifier: ^4.26.0
-        version: 4.26.0(typescript@5.7.3)(viem@2.26.1)
+        version: 4.26.0(typescript@5.7.3)(viem@2.27.2)
       '@account-kit/react':
         specifier: ^4.26.0
-        version: 4.26.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@tanstack/react-query@5.51.1)(@types/react@19.0.8)(@wagmi/core@2.13.8)(immer@9.0.21)(react-dom@19.1.0)(react-native-inappbrowser-reborn@3.7.0)(react-native-mmkv@3.2.0)(react-native@0.78.0)(react@19.1.0)(tailwindcss@3.4.13)(typescript@5.7.3)(viem@2.26.1)(wagmi@2.10.9)
+        version: 4.26.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@tanstack/react-query@5.51.1)(@types/react@19.0.8)(@wagmi/core@2.13.8)(immer@9.0.21)(react-dom@19.1.0)(react-native-inappbrowser-reborn@3.7.0)(react-native-mmkv@3.2.0)(react-native@0.78.0)(react@19.1.0)(tailwindcss@3.4.13)(typescript@5.7.3)(viem@2.27.2)(wagmi@2.10.9)
       '@account-kit/signer':
         specifier: ^4.26.0
-        version: 4.26.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.26.1)
+        version: 4.26.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.27.2)
       '@layerzerolabs/scan-client':
         specifier: ^0.0.8
         version: 0.0.8(axios@1.7.7)
@@ -252,11 +252,11 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0(react@19.1.0)
       viem:
-        specifier: 2.26.1
-        version: 2.26.1(typescript@5.7.3)(zod@3.22.4)
+        specifier: 2.27.2
+        version: 2.27.2(typescript@5.7.3)(zod@3.22.4)
       wagmi:
         specifier: ^2.10.9
-        version: 2.10.9(@tanstack/react-query@5.51.1)(@types/react@19.0.8)(immer@9.0.21)(react-dom@19.1.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.26.1)(zod@3.22.4)
+        version: 2.10.9(@tanstack/react-query@5.51.1)(@types/react@19.0.8)(immer@9.0.21)(react-dom@19.1.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.27.2)(zod@3.22.4)
       websocket:
         specifier: ^1.0.35
         version: 1.0.35
@@ -1149,8 +1149,8 @@ importers:
         specifier: ^1.1.3
         version: 1.1.3(rollup@4.34.9)
       viem:
-        specifier: 2.26.1
-        version: 2.26.1(typescript@5.7.3)(zod@3.22.4)
+        specifier: 2.27.2
+        version: 2.27.2(typescript@5.7.3)(zod@3.22.4)
       vite-tsconfig-paths:
         specifier: ^5.1.3
         version: 5.1.4(typescript@5.7.3)(vite@6.2.5)
@@ -1383,8 +1383,8 @@ importers:
         specifier: ^1.1.3
         version: 1.1.3(rollup@4.34.9)
       viem:
-        specifier: 2.26.1
-        version: 2.26.1(typescript@5.7.3)(zod@3.22.4)
+        specifier: 2.27.2
+        version: 2.27.2(typescript@5.7.3)(zod@3.22.4)
       vite-tsconfig-paths:
         specifier: ^5.1.3
         version: 5.1.4(typescript@5.7.3)(vite@6.2.5)
@@ -2028,8 +2028,8 @@ importers:
         specifier: workspace:*
         version: link:../triggers-shared
       viem:
-        specifier: 2.26.1
-        version: 2.26.1(typescript@5.7.3)(zod@3.22.4)
+        specifier: 2.27.2
+        version: 2.27.2(typescript@5.7.3)(zod@3.22.4)
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -3651,8 +3651,8 @@ importers:
         specifier: ^1.0.2
         version: 1.0.2(typescript@5.7.3)(zod@3.22.4)
       viem:
-        specifier: 2.26.1
-        version: 2.26.1(typescript@5.7.3)(zod@3.22.4)
+        specifier: 2.27.2
+        version: 2.27.2(typescript@5.7.3)(zod@3.22.4)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -4001,8 +4001,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/triggers-shared
       viem:
-        specifier: 2.26.1
-        version: 2.26.1(typescript@5.7.3)(zod@3.22.4)
+        specifier: 2.27.2
+        version: 2.27.2(typescript@5.7.3)(zod@3.22.4)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -4143,8 +4143,8 @@ importers:
         specifier: ^3.3.2
         version: 3.3.2
       viem:
-        specifier: 2.26.1
-        version: 2.26.1(typescript@5.7.3)(zod@3.22.4)
+        specifier: 2.27.2
+        version: 2.27.2(typescript@5.7.3)(zod@3.22.4)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -4185,14 +4185,14 @@ importers:
 
 packages:
 
-  /@aa-sdk/core@4.26.0(typescript@5.7.3)(viem@2.26.1):
+  /@aa-sdk/core@4.26.0(typescript@5.7.3)(viem@2.27.2):
     resolution: {integrity: sha512-nwDfh/xELlpCiDJUeJDDaXfXZod4PAMHgnLCWfhkvk1gf7HtD32VJG/Z8QU5+kGWm9YrVZYviCq4h/8XqhIxRQ==}
     peerDependencies:
       viem: ^2.22.6
     dependencies:
       abitype: 0.8.7(typescript@5.7.3)(zod@3.22.4)
       eventemitter3: 5.0.1
-      viem: 2.26.1(typescript@5.7.3)(zod@3.22.4)
+      viem: 2.27.2(typescript@5.7.3)(zod@3.22.4)
       zod: 3.22.4
     transitivePeerDependencies:
       - typescript
@@ -4203,20 +4203,20 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /@account-kit/core@4.26.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react-native-inappbrowser-reborn@3.7.0)(react-native-mmkv@3.2.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.26.1)(wagmi@2.10.9):
+  /@account-kit/core@4.26.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react-native-inappbrowser-reborn@3.7.0)(react-native-mmkv@3.2.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.27.2)(wagmi@2.10.9):
     resolution: {integrity: sha512-H8O6ZsHNq1BMz/QZj1FD2+TCeb8P8kUAhvvhr7J4fuxxwe3GQ5kgaeKgg4WQdNLBZ6Nf6oKIAD8MRbiWNZGXfw==}
     peerDependencies:
       viem: ^2.22.6
       wagmi: ^2.12.7
     dependencies:
-      '@account-kit/infra': 4.26.0(typescript@5.7.3)(viem@2.26.1)
+      '@account-kit/infra': 4.26.0(typescript@5.7.3)(viem@2.27.2)
       '@account-kit/logging': 4.26.0
       '@account-kit/react-native-signer': 4.26.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react-native-inappbrowser-reborn@3.7.0)(react-native-mmkv@3.2.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(zod@3.22.4)
-      '@account-kit/signer': 4.26.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.26.1)
-      '@account-kit/smart-contracts': 4.26.0(typescript@5.7.3)(viem@2.26.1)
+      '@account-kit/signer': 4.26.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.27.2)
+      '@account-kit/smart-contracts': 4.26.0(typescript@5.7.3)(viem@2.27.2)
       js-cookie: 3.0.5
-      viem: 2.26.1(typescript@5.7.3)(zod@3.22.4)
-      wagmi: 2.10.9(@tanstack/react-query@5.51.1)(@types/react@19.0.8)(immer@9.0.21)(react-dom@19.1.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.26.1)(zod@3.22.4)
+      viem: 2.27.2(typescript@5.7.3)(zod@3.22.4)
+      wagmi: 2.10.9(@tanstack/react-query@5.51.1)(@types/react@19.0.8)(immer@9.0.21)(react-dom@19.1.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.27.2)(zod@3.22.4)
       zod: 3.22.4
       zustand: 5.0.0(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)
     optionalDependencies:
@@ -4239,15 +4239,15 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@account-kit/infra@4.26.0(typescript@5.7.3)(viem@2.26.1):
+  /@account-kit/infra@4.26.0(typescript@5.7.3)(viem@2.27.2):
     resolution: {integrity: sha512-K3Pfx2Y+se0I7CSIwr5gvCMTnnjh2AxvNABRzvGTea7z+IGI/143CgCo1AA2NfaFqj77WB6M4aiTwNVqrbqLWQ==}
     peerDependencies:
       viem: ^2.22.6
     dependencies:
-      '@aa-sdk/core': 4.26.0(typescript@5.7.3)(viem@2.26.1)
+      '@aa-sdk/core': 4.26.0(typescript@5.7.3)(viem@2.27.2)
       '@account-kit/logging': 4.26.0
       eventemitter3: 5.0.1
-      viem: 2.26.1(typescript@5.7.3)(zod@3.22.4)
+      viem: 2.27.2(typescript@5.7.3)(zod@3.22.4)
       zod: 3.22.4
     optionalDependencies:
       alchemy-sdk: 3.3.1
@@ -4277,13 +4277,13 @@ packages:
       react-native-inappbrowser-reborn: ^3.7.0
       react-native-mmkv: ^3.1.0
     dependencies:
-      '@aa-sdk/core': 4.26.0(typescript@5.7.3)(viem@2.26.1)
-      '@account-kit/signer': 4.26.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.26.1)
+      '@aa-sdk/core': 4.26.0(typescript@5.7.3)(viem@2.27.2)
+      '@account-kit/signer': 4.26.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.27.2)
       react: 19.1.0
       react-native: 0.78.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(react@19.1.0)
       react-native-inappbrowser-reborn: 3.7.0(react-native@0.78.0)
       react-native-mmkv: 3.2.0(react-native@0.78.0)(react@19.1.0)
-      viem: 2.26.1(typescript@5.7.3)(zod@3.22.4)
+      viem: 2.27.2(typescript@5.7.3)(zod@3.22.4)
     transitivePeerDependencies:
       - '@babel/core'
       - '@babel/preset-env'
@@ -4298,7 +4298,7 @@ packages:
       - zod
     dev: false
 
-  /@account-kit/react@4.26.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@tanstack/react-query@5.51.1)(@types/react@19.0.8)(@wagmi/core@2.13.8)(immer@9.0.21)(react-dom@19.1.0)(react-native-inappbrowser-reborn@3.7.0)(react-native-mmkv@3.2.0)(react-native@0.78.0)(react@19.1.0)(tailwindcss@3.4.13)(typescript@5.7.3)(viem@2.26.1)(wagmi@2.10.9):
+  /@account-kit/react@4.26.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@tanstack/react-query@5.51.1)(@types/react@19.0.8)(@wagmi/core@2.13.8)(immer@9.0.21)(react-dom@19.1.0)(react-native-inappbrowser-reborn@3.7.0)(react-native-mmkv@3.2.0)(react-native@0.78.0)(react@19.1.0)(tailwindcss@3.4.13)(typescript@5.7.3)(viem@2.27.2)(wagmi@2.10.9):
     resolution: {integrity: sha512-U8P+bomJMIjeZshPtwP2rLKHjjs3uhNleQFUjbPoMz4kzGsP6sL33lJSKZW+P9vVPcurk3dUGkjhbI9st2rhYQ==}
     peerDependencies:
       '@tanstack/react-query': ^5.28.9
@@ -4308,20 +4308,20 @@ packages:
       viem: ^2.22.6
       wagmi: ^2.12.7
     dependencies:
-      '@account-kit/core': 4.26.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react-native-inappbrowser-reborn@3.7.0)(react-native-mmkv@3.2.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.26.1)(wagmi@2.10.9)
-      '@account-kit/infra': 4.26.0(typescript@5.7.3)(viem@2.26.1)
+      '@account-kit/core': 4.26.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react-native-inappbrowser-reborn@3.7.0)(react-native-mmkv@3.2.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.27.2)(wagmi@2.10.9)
+      '@account-kit/infra': 4.26.0(typescript@5.7.3)(viem@2.27.2)
       '@account-kit/logging': 4.26.0
-      '@account-kit/signer': 4.26.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.26.1)
+      '@account-kit/signer': 4.26.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.27.2)
       '@tanstack/react-form': 0.33.0(react-dom@19.1.0)(react@19.1.0)(typescript@5.7.3)
       '@tanstack/react-query': 5.51.1(react@19.1.0)
       '@tanstack/zod-form-adapter': 0.33.0(zod@3.22.4)
-      '@wagmi/connectors': 5.1.15(@types/react@19.0.8)(@wagmi/core@2.13.8)(react-dom@19.1.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.26.1)(zod@3.22.4)
+      '@wagmi/connectors': 5.1.15(@types/react@19.0.8)(@wagmi/core@2.13.8)(react-dom@19.1.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.27.2)(zod@3.22.4)
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
       react-remove-scroll: 2.6.0(@types/react@19.0.8)(react@19.1.0)
       tailwindcss: 3.4.13
-      viem: 2.26.1(typescript@5.7.3)(zod@3.22.4)
-      wagmi: 2.10.9(@tanstack/react-query@5.51.1)(@types/react@19.0.8)(immer@9.0.21)(react-dom@19.1.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.26.1)(zod@3.22.4)
+      viem: 2.27.2(typescript@5.7.3)(zod@3.22.4)
+      wagmi: 2.10.9(@tanstack/react-query@5.51.1)(@types/react@19.0.8)(immer@9.0.21)(react-dom@19.1.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.27.2)(zod@3.22.4)
       zod: 3.22.4
       zustand: 5.0.0(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)
     optionalDependencies:
@@ -4360,20 +4360,20 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@account-kit/signer@4.26.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.26.1):
+  /@account-kit/signer@4.26.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.27.2):
     resolution: {integrity: sha512-0jj317sbxWnaRf8XLbQsjyslk7jP8BhgdVOIFoOpjYDeW9VPqnKOBomXww8UaN7mdCaeXAmTyyIjOkubOXo2FQ==}
     peerDependencies:
       viem: ^2.22.6
     dependencies:
-      '@aa-sdk/core': 4.26.0(typescript@5.7.3)(viem@2.26.1)
+      '@aa-sdk/core': 4.26.0(typescript@5.7.3)(viem@2.27.2)
       '@account-kit/logging': 4.26.0
       '@solana/web3.js': 1.98.0
       '@turnkey/http': 2.10.0
       '@turnkey/iframe-stamper': 1.2.0
-      '@turnkey/viem': 0.4.22(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(react@19.1.0)(viem@2.26.1)
+      '@turnkey/viem': 0.4.22(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(react@19.1.0)(viem@2.27.2)
       '@turnkey/webauthn-stamper': 0.4.3
       jwt-decode: 4.0.0
-      viem: 2.26.1(typescript@5.7.3)(zod@3.22.4)
+      viem: 2.27.2(typescript@5.7.3)(zod@3.22.4)
       zod: 3.22.4
       zustand: 5.0.0(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)
     transitivePeerDependencies:
@@ -4390,14 +4390,14 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@account-kit/smart-contracts@4.26.0(typescript@5.7.3)(viem@2.26.1):
+  /@account-kit/smart-contracts@4.26.0(typescript@5.7.3)(viem@2.27.2):
     resolution: {integrity: sha512-0avghxTbMCKbhueEHW+JsQJ/LuJwtZMpkB8c5dwwo0Pep1pV5KqxQtPX96kZtoNVB7SL880Hf2PlB5zpgf6dhA==}
     peerDependencies:
       viem: ^2.22.6
     dependencies:
-      '@aa-sdk/core': 4.26.0(typescript@5.7.3)(viem@2.26.1)
-      '@account-kit/infra': 4.26.0(typescript@5.7.3)(viem@2.26.1)
-      viem: 2.26.1(typescript@5.7.3)(zod@3.22.4)
+      '@aa-sdk/core': 4.26.0(typescript@5.7.3)(viem@2.27.2)
+      '@account-kit/infra': 4.26.0(typescript@5.7.3)(viem@2.27.2)
+      viem: 2.27.2(typescript@5.7.3)(zod@3.22.4)
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -16538,7 +16538,6 @@ packages:
       estree-walker: 2.0.2
       picomatch: 2.3.1
       rollup: 4.34.9
-    dev: true
 
   /@rollup/rollup-android-arm-eabi@4.34.9:
     resolution: {integrity: sha512-qZdlImWXur0CFakn2BJ2znJOdqYZKiedEPEVNTBrpfPjc/YuTGcaYZcdmNFTkUj3DU0ZM/AElcM8Ybww3xVLzA==}
@@ -16723,7 +16722,7 @@ packages:
     resolution: {integrity: sha512-N5p/ulfnnA2Pi2M3YeWjULeWbjo7ei22JwU/IXnhoHzKq3pYCN6ynL9mJBOlvDVv892EgLPCWCOwQk/uBT2v0Q==}
     dependencies:
       '@safe-global/safe-gateway-typescript-sdk': 3.21.2
-      viem: 2.26.1(typescript@5.7.3)(zod@3.22.4)
+      viem: 2.27.2(typescript@5.7.3)(zod@3.22.4)
     transitivePeerDependencies:
       - bufferutil
       - typescript
@@ -19325,7 +19324,7 @@ packages:
       - encoding
     dev: false
 
-  /@turnkey/viem@0.4.22(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(react@19.1.0)(viem@2.26.1):
+  /@turnkey/viem@0.4.22(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(react@19.1.0)(viem@2.27.2):
     resolution: {integrity: sha512-f90rUC77fMv2nr7EziJPda+o8a6TGjm0IvCUZCcZt6K+26HE5UcDpxsErJjEVMxhRv//CdlCbomYOJTqvMWABQ==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
@@ -19337,7 +19336,7 @@ packages:
       '@turnkey/sdk-server': 1.0.0
       cross-fetch: 4.0.0
       typescript: 5.7.3
-      viem: 2.26.1(typescript@5.7.3)(zod@3.22.4)
+      viem: 2.27.2(typescript@5.7.3)(zod@3.22.4)
     transitivePeerDependencies:
       - '@babel/core'
       - '@babel/preset-env'
@@ -20319,7 +20318,7 @@ packages:
       - zod
     dev: false
 
-  /@wagmi/connectors@5.0.21(@types/react@19.0.8)(@wagmi/core@2.11.6)(react-dom@19.1.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.26.1)(zod@3.22.4):
+  /@wagmi/connectors@5.0.21(@types/react@19.0.8)(@wagmi/core@2.11.6)(react-dom@19.1.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.27.2)(zod@3.22.4):
     resolution: {integrity: sha512-lbjXEv6HhOa9nXZ5r6NGFJdaadCt2Yj9hSWHjKuiTobrE6dEGQqG16mCQS17yXcvXpI62Q/sW6SL347JrBju/Q==}
     peerDependencies:
       '@wagmi/core': 2.11.6
@@ -20333,12 +20332,12 @@ packages:
       '@metamask/sdk': 0.26.4(react-dom@19.1.0)(react-native@0.78.0)(react@19.1.0)
       '@safe-global/safe-apps-provider': 0.18.1(typescript@5.7.3)(zod@3.22.4)
       '@safe-global/safe-apps-sdk': 8.1.0(typescript@5.7.3)(zod@3.22.4)
-      '@wagmi/core': 2.11.6(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.26.1)(zod@3.22.4)
+      '@wagmi/core': 2.11.6(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.27.2)(zod@3.22.4)
       '@walletconnect/ethereum-provider': 2.13.0(@types/react@19.0.8)(react@19.1.0)
       '@walletconnect/modal': 2.6.2(@types/react@19.0.8)(react@19.1.0)
       cbw-sdk: /@coinbase/wallet-sdk@3.9.3
       typescript: 5.7.3
-      viem: 2.26.1(typescript@5.7.3)(zod@3.22.4)
+      viem: 2.27.2(typescript@5.7.3)(zod@3.22.4)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -20366,7 +20365,7 @@ packages:
       - zod
     dev: false
 
-  /@wagmi/connectors@5.1.15(@types/react@19.0.8)(@wagmi/core@2.13.8)(react-dom@19.1.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.26.1)(zod@3.22.4):
+  /@wagmi/connectors@5.1.15(@types/react@19.0.8)(@wagmi/core@2.13.8)(react-dom@19.1.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.27.2)(zod@3.22.4):
     resolution: {integrity: sha512-Bz5EBpn8hAYFuxCWoXviwABk2VlLRuQTpJ7Yd/hu4HuuXnTdCN27cfvT+Fy2sWbwpLnr1e29LJGAUCIyYkHz7g==}
     peerDependencies:
       '@wagmi/core': 2.13.8
@@ -20380,12 +20379,12 @@ packages:
       '@metamask/sdk': 0.28.4(react-dom@19.1.0)(react-native@0.78.0)(react@19.1.0)
       '@safe-global/safe-apps-provider': 0.18.3(typescript@5.7.3)(zod@3.22.4)
       '@safe-global/safe-apps-sdk': 9.1.0(typescript@5.7.3)(zod@3.22.4)
-      '@wagmi/core': 2.13.8(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.26.1)
+      '@wagmi/core': 2.13.8(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.27.2)
       '@walletconnect/ethereum-provider': 2.17.0(@types/react@19.0.8)(react@19.1.0)
       '@walletconnect/modal': 2.7.0(@types/react@19.0.8)(react@19.1.0)
       cbw-sdk: /@coinbase/wallet-sdk@3.9.3
       typescript: 5.7.3
-      viem: 2.26.1(typescript@5.7.3)(zod@3.22.4)
+      viem: 2.27.2(typescript@5.7.3)(zod@3.22.4)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -20453,7 +20452,7 @@ packages:
       - zod
     dev: false
 
-  /@wagmi/core@2.11.6(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.26.1)(zod@3.22.4):
+  /@wagmi/core@2.11.6(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.27.2)(zod@3.22.4):
     resolution: {integrity: sha512-Ohk7Bh+Q8kjzxEHImIq98CnPduz8n1a5bdwJi6F7zU3h62crhlVq7fZBYoBhoDgmX0ROVOMr8WW3XU3XhRwUOw==}
     peerDependencies:
       '@tanstack/query-core': '>=5.0.0'
@@ -20468,7 +20467,7 @@ packages:
       eventemitter3: 5.0.1
       mipd: 0.0.5(typescript@5.7.3)(zod@3.22.4)
       typescript: 5.7.3
-      viem: 2.26.1(typescript@5.7.3)(zod@3.22.4)
+      viem: 2.27.2(typescript@5.7.3)(zod@3.22.4)
       zustand: 4.4.1(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)
     transitivePeerDependencies:
       - '@types/react'
@@ -20479,7 +20478,7 @@ packages:
       - zod
     dev: false
 
-  /@wagmi/core@2.13.8(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.26.1):
+  /@wagmi/core@2.13.8(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.27.2):
     resolution: {integrity: sha512-bX84cpLq3WWQgGthJlSgcWPAOdLzrP/W0jnbz5XowkCUn6j/T77WyxN5pBb+HmLoJf3ei9tkX9zWhMpczTc3cA==}
     peerDependencies:
       '@tanstack/query-core': '>=5.0.0'
@@ -20494,7 +20493,7 @@ packages:
       eventemitter3: 5.0.1
       mipd: 0.0.7(typescript@5.7.3)
       typescript: 5.7.3
-      viem: 2.26.1(typescript@5.7.3)(zod@3.22.4)
+      viem: 2.27.2(typescript@5.7.3)(zod@3.22.4)
       zustand: 4.4.1(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)
     transitivePeerDependencies:
       - '@types/react'
@@ -39508,8 +39507,8 @@ packages:
       - zod
     dev: false
 
-  /viem@2.26.1(typescript@5.7.3)(zod@3.22.4):
-    resolution: {integrity: sha512-bGRLLTHlmk9OEF9lvtAIv6eqQe9vIVDOWowBI05GM3npIwDD7WeTryBE8QeJZXb0ZTpDU/4Gf4iAWKZApKC4KQ==}
+  /viem@2.27.2(typescript@5.7.3)(zod@3.22.4):
+    resolution: {integrity: sha512-VwsB+RswcflbwBNPMvzTHuafDA51iT8v4SuIFcudTP2skmxcdodbgoOLP4dYELVnCzcedxoSJDOeext4V3zdnA==}
     peerDependencies:
       typescript: '>=5.0.4'
     peerDependenciesMeta:
@@ -39582,7 +39581,7 @@ packages:
     peerDependencies:
       vite: ^2.6.0 || 3 || 4 || 5
     dependencies:
-      '@rollup/pluginutils': 5.1.0(rollup@3.29.4)
+      '@rollup/pluginutils': 5.1.0(rollup@4.34.9)
       '@svgr/core': 8.1.0(typescript@5.7.3)
       '@svgr/plugin-jsx': 8.1.0(@svgr/core@8.1.0)
       vite: 6.2.5(@types/node@20.12.7)(sass@1.77.8)(tsx@4.16.5)
@@ -39886,7 +39885,7 @@ packages:
       - zod
     dev: false
 
-  /wagmi@2.10.9(@tanstack/react-query@5.51.1)(@types/react@19.0.8)(immer@9.0.21)(react-dom@19.1.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.26.1)(zod@3.22.4):
+  /wagmi@2.10.9(@tanstack/react-query@5.51.1)(@types/react@19.0.8)(immer@9.0.21)(react-dom@19.1.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.27.2)(zod@3.22.4):
     resolution: {integrity: sha512-pYGTLmVIAC4q/a90i+vlrkJL86n5Kf/gwhhi65XtQklpsUQWrKDmn4dsY1/yFeAmZ/1yx1mpxYpX3LI97eTuWA==}
     peerDependencies:
       '@tanstack/react-query': '>=5.0.0'
@@ -39898,12 +39897,12 @@ packages:
         optional: true
     dependencies:
       '@tanstack/react-query': 5.51.1(react@19.1.0)
-      '@wagmi/connectors': 5.0.21(@types/react@19.0.8)(@wagmi/core@2.11.6)(react-dom@19.1.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.26.1)(zod@3.22.4)
-      '@wagmi/core': 2.11.6(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.26.1)(zod@3.22.4)
+      '@wagmi/connectors': 5.0.21(@types/react@19.0.8)(@wagmi/core@2.11.6)(react-dom@19.1.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.27.2)(zod@3.22.4)
+      '@wagmi/core': 2.11.6(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.27.2)(zod@3.22.4)
       react: 19.1.0
       typescript: 5.7.3
       use-sync-external-store: 1.2.0(react@19.1.0)
-      viem: 2.26.1(typescript@5.7.3)(zod@3.22.4)
+      viem: 2.27.2(typescript@5.7.3)(zod@3.22.4)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
