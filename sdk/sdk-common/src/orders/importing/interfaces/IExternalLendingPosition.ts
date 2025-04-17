@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { IPrintable } from '../../../common'
+import { IPrintable } from '../../../common/interfaces/IPrintable'
 import {
   ILendingPosition,
   LendingPositionDataSchema,

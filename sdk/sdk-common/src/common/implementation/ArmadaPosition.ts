@@ -1,6 +1,6 @@
 import { SerializationService } from '../../services/SerializationService'
 import { PositionType } from '../enums/PositionType'
-import { __iarmadaposition__ } from '../interfaces'
+import { __signature__ } from '../interfaces/IArmadaPosition'
 import type { IArmadaPosition, IArmadaPositionData } from '../interfaces/IArmadaPosition'
 import type { IArmadaPositionId } from '../interfaces/IArmadaPositionId'
 import type { IArmadaVault } from '../interfaces/IArmadaVault'
@@ -18,7 +18,7 @@ export type ArmadaPositionParameters = Omit<IArmadaPositionData, 'type'>
  */
 export class ArmadaPosition extends Position implements IArmadaPosition {
   /** SIGNATURE */
-  readonly [__iarmadaposition__] = __iarmadaposition__
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly type = PositionType.Armada

@@ -1,1 +1,1 @@
-export * from './implementation'
+export { ConfigurationProvider } from './implementation/ConfigurationProvider'

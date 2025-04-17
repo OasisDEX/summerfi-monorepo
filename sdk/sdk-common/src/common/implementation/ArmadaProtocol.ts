@@ -1,6 +1,6 @@
 import { SerializationService } from '../../services/SerializationService'
 import { ProtocolName } from '../enums/ProtocolName'
-import { __iarmadaprotocol__ } from '../interfaces'
+import { __signature__ } from '../interfaces/IArmadaProtocol'
 import type { IArmadaProtocol, IArmadaProtocolData } from '../interfaces/IArmadaProtocol'
 import { Protocol } from './Protocol'
 
@@ -15,7 +15,7 @@ export type ArmadaProtocolParameters = Omit<IArmadaProtocolData, 'name'>
  */
 export class ArmadaProtocol extends Protocol implements IArmadaProtocol {
   /** SIGNATURE */
-  readonly [__iarmadaprotocol__] = __iarmadaprotocol__
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly name = ProtocolName.Armada

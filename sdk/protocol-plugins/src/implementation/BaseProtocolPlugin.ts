@@ -12,22 +12,19 @@ import {
   IPositionIdData,
   Maybe,
   ProtocolName,
-} from '@summerfi/sdk-common/common'
-import {
   IExternalLendingPosition,
   IPositionsManager,
   TransactionInfo,
-} from '@summerfi/sdk-common/orders'
-
-import {
   ILendingPool,
   ILendingPoolIdData,
   ILendingPoolInfo,
   ILendingPosition,
   ILendingPositionIdData,
-} from '@summerfi/sdk-common/lending-protocols'
-import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
-import { IUser } from '@summerfi/sdk-common/user'
+  SimulationSteps,
+  steps,
+  IUser,
+} from '@summerfi/sdk-common'
+
 import { getContractAddress } from '../plugins/utils/GetContractAddress'
 
 /**

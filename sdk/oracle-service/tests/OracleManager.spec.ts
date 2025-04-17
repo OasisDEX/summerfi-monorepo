@@ -1,5 +1,4 @@
-import { ChainInfo, FiatCurrency, OracleProviderType, Token } from '@summerfi/sdk-common'
-import { Address } from '@summerfi/sdk-common/common'
+import { ChainInfo, FiatCurrency, OracleProviderType, Token, Address } from '@summerfi/sdk-common'
 
 import { MockOracleProvider } from './mocks/MockOracleProvider'
 import { IOracleManager } from '@summerfi/oracle-common'

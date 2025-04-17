@@ -1,9 +1,9 @@
 import { IBlockchainClient } from '@summerfi/blockchain-client-common'
 import {
-  FleetCommanderTypes,
   IErc20Contract,
   IErc4626Contract,
   IFleetCommanderContract,
+  RebalanceDataSolidity,
   type IFleetConfig,
   type IRebalanceData,
 } from '@summerfi/contracts-provider-common'
@@ -370,7 +370,7 @@ export class FleetCommanderContract<
   /** PRIVATE */
   private _convertRebalanceDataToSolidity(params: {
     rebalanceData: IRebalanceData[]
-  }): FleetCommanderTypes.RebalanceDataSolidity[] {
+  }): RebalanceDataSolidity[] {
     return params.rebalanceData.map((data) => ({
       fromArk: data.fromArk.toSolidityValue(),
       toArk: data.toArk.toSolidityValue(),

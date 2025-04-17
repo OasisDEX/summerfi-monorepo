@@ -6,13 +6,20 @@ import {
   Token,
   TokenAmount,
   type Maybe,
-} from '@summerfi/sdk-common/common'
+} from '@summerfi/sdk-common'
 
 import { Deployments } from '@summerfi/core-contracts'
 import { DeploymentIndex } from '@summerfi/deployment-utils'
 import { makeSDK, type Chain } from '@summerfi/sdk-client'
-import { CommonTokenSymbols } from '@summerfi/sdk-common/common/enums'
-import { Order, PositionsManager, RefinanceParameters } from '@summerfi/sdk-common/orders'
+import {
+  CommonTokenSymbols,
+  Order,
+  PositionsManager,
+  RefinanceParameters,
+  LendingPositionType,
+  IRefinanceSimulation,
+  isRefinanceSimulation,
+} from '@summerfi/sdk-common'
 import {
   TransactionUtils,
   decodeActionCalldata,
@@ -26,8 +33,6 @@ import {
   PositionCreatedAction,
   SendTokenAction,
   SetApprovalAction,
-} from '@summerfi/protocol-plugins/plugins/common'
-import {
   ILKType,
   MakerLendingPoolId,
   MakerLendingPosition,
@@ -39,8 +44,6 @@ import {
   isMakerLendingPosition,
   isMakerLendingPositionId,
   isMakerProtocol,
-} from '@summerfi/protocol-plugins/plugins/maker'
-import {
   SparkBorrowAction,
   SparkDepositAction,
   SparkLendingPoolId,
@@ -50,12 +53,7 @@ import {
   isSparkLendingPosition,
   isSparkLendingPositionId,
   isSparkProtocol,
-} from '@summerfi/protocol-plugins/plugins/spark'
-import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
-import {
-  IRefinanceSimulation,
-  isRefinanceSimulation,
-} from '@summerfi/sdk-common/simulation/interfaces'
+} from '@summerfi/protocol-plugins'
 import assert from 'assert'
 import { Hex } from 'viem'
 

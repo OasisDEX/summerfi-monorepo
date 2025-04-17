@@ -8,7 +8,7 @@ import {
   IToken,
   TokensProviderType,
 } from '@summerfi/sdk-common'
-import { Token } from '@summerfi/sdk-common/common'
+import { Token } from '@summerfi/sdk-common'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 import { ITokensProvider } from '@summerfi/tokens-common'
 

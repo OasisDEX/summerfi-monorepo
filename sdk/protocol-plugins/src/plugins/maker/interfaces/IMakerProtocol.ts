@@ -1,5 +1,5 @@
 import { IProtocol, ProtocolName } from '@summerfi/sdk-common'
-import { ProtocolDataSchema } from '@summerfi/sdk-common/common'
+import { ProtocolDataSchema } from '@summerfi/sdk-common'
 import { z } from 'zod'
 
 /**

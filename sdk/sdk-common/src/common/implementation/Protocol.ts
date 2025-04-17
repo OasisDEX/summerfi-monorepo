@@ -1,5 +1,5 @@
 import { IPrintable } from '../../common/interfaces/IPrintable'
-import { SerializationService } from '../../services'
+import { SerializationService } from '../../services/SerializationService'
 import { ProtocolName } from '../enums/ProtocolName'
 import { IChainInfo } from '../interfaces/IChainInfo'
 import { IProtocol, IProtocolData, __signature__ } from '../interfaces/IProtocol'

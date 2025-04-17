@@ -1,5 +1,5 @@
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
-import { ChainId } from '@summerfi/sdk-common/common'
+import { ChainId } from '@summerfi/sdk-common'
 
 /**
  * @name IManagerProvider

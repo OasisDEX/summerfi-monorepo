@@ -1,6 +1,6 @@
 import { ChainId } from '@summerfi/sdk-common'
-import { IAddress, IChainInfo, IToken } from '@summerfi/sdk-common/common'
-import { TokensProviderType } from '@summerfi/sdk-common/tokens'
+import { IAddress, IChainInfo, IToken } from '@summerfi/sdk-common'
+import { TokensProviderType } from '@summerfi/sdk-common'
 import { IManagerProvider } from '@summerfi/sdk-server-common'
 
 /**

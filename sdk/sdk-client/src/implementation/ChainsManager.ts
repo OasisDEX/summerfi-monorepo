@@ -1,10 +1,5 @@
 import { getChainFamilyInfoByChainId } from '@summerfi/sdk-common'
-import {
-  ChainIds,
-  ChainInfo,
-  getChainInfoByChainId,
-  IChainInfoData,
-} from '@summerfi/sdk-common/common'
+import { ChainIds, ChainInfo, getChainInfoByChainId, IChainInfoData } from '@summerfi/sdk-common'
 import { IChainsManagerClient } from '../interfaces/IChainsManager'
 import { IRPCClient } from '../interfaces/IRPCClient'
 import { RPCMainClientType } from '../rpc/SDKMainClient'

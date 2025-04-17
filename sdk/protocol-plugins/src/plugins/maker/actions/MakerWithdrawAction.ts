@@ -1,7 +1,6 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
-import { IAddress, IPosition, ITokenAmount } from '@summerfi/sdk-common'
-import { IPositionsManager } from '@summerfi/sdk-common/orders'
-import { isMakerLendingPositionId } from '../interfaces'
+import { IAddress, IPosition, ITokenAmount, IPositionsManager } from '@summerfi/sdk-common'
+import { isMakerLendingPositionId } from '../interfaces/IMakerLendingPositionId'
 
 export class MakerWithdrawAction extends BaseAction<typeof MakerWithdrawAction.Config> {
   public static readonly Config = {

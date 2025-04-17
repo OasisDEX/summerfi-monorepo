@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ProtocolName, Token } from '@summerfi/sdk-common/common'
+import { ProtocolName, Token } from '@summerfi/sdk-common'
 
 type ReservesConfigData = {
   decimals: bigint

@@ -1,5 +1,5 @@
 import { SerializationService } from '../../services/SerializationService'
-import { SimulationType } from '../enums'
+import { SimulationType } from '../enums/SimulationType'
 import { ISimulation, ISimulationData, __signature__ } from '../interfaces/ISimulation'
 
 /**

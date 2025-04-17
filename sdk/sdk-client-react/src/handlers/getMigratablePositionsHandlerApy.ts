@@ -1,5 +1,5 @@
 import { ISDKManager } from '@summerfi/sdk-client'
-import { IChainInfo } from '@summerfi/sdk-common/common/interfaces'
+import { IChainInfo } from '@summerfi/sdk-common'
 
 /**
  * Creates a handler function that fetches migratable positions apy for a given position ids.

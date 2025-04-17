@@ -5,7 +5,7 @@ import { IOracleManager } from '@summerfi/oracle-common'
 import { ProtocolPluginsRecord, ProtocolPluginsRegistry } from '@summerfi/protocol-plugins'
 import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
 import { ChainFamilyMap } from '@summerfi/sdk-common'
-import { ISwapManager } from '@summerfi/swap-common/interfaces'
+import { ISwapManager } from '@summerfi/swap-common'
 import { ITokensManager } from '@summerfi/tokens-common'
 
 /**

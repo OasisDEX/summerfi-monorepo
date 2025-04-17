@@ -1,8 +1,8 @@
-import { IProtocol, Maybe, Position, PositionId } from '@summerfi/sdk-common/common'
+import { IProtocol, Maybe, Position, PositionId } from '@summerfi/sdk-common'
 
-import { Order } from '@summerfi/sdk-common/orders'
-import { ISimulation } from '@summerfi/sdk-common/simulation'
-import { IUser } from '@summerfi/sdk-common/user'
+import { Order } from '@summerfi/sdk-common'
+import { ISimulation } from '@summerfi/sdk-common'
+import { IUser } from '@summerfi/sdk-common'
 
 /**
  * @interface IUserClient

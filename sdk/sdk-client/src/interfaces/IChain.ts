@@ -1,4 +1,4 @@
-import { IChainInfo } from '@summerfi/sdk-common/common'
+import { IChainInfo } from '@summerfi/sdk-common'
 import { IProtocolsManagerClient } from './IProtocolsManagerClient'
 import { ITokensManagerClient } from './ITokensManagerClient'
 

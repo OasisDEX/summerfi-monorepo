@@ -1,7 +1,6 @@
 /* eslint-disable no-mixed-operators */
 import { SDKChainId } from '@summerfi/app-types'
-import { getChainInfoByChainId } from '@summerfi/sdk-common'
-import { Address } from '@summerfi/sdk-common/common'
+import { Address, getChainInfoByChainId } from '@summerfi/sdk-common'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 

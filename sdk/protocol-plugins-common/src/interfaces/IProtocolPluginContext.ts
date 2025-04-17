@@ -1,7 +1,7 @@
 import { IAddressBookManager } from '@summerfi/address-book-common'
 import type { IBlockchainClient } from '@summerfi/blockchain-client-common'
 import { IOracleManager } from '@summerfi/oracle-common'
-import { ISwapManager } from '@summerfi/swap-common/interfaces'
+import { ISwapManager } from '@summerfi/swap-common'
 import { ITokensManager } from '@summerfi/tokens-common'
 
 /**

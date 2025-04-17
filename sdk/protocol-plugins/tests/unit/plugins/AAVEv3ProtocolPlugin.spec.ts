@@ -1,5 +1,5 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { ChainFamilyMap, ChainInfo, ProtocolName } from '@summerfi/sdk-common/common'
+import { ChainFamilyMap, ChainInfo, ProtocolName } from '@summerfi/sdk-common'
 import assert from 'assert'
 import { AaveV3LendingPositionId } from '../../../src'
 import { AaveV3ProtocolPlugin } from '../../../src/plugins/aave-v3/implementation/AAVEv3ProtocolPlugin'

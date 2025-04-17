@@ -1,19 +1,22 @@
+import { makeSDK, type Chain } from '@summerfi/sdk-client'
 import {
   Address,
   ChainFamilyMap,
   Token,
   TokenAmount,
   type Maybe,
-} from '@summerfi/sdk-common/common'
-
-import { makeSDK, type Chain } from '@summerfi/sdk-client'
-import { CommonTokenSymbols } from '@summerfi/sdk-common/common/enums'
-import {
+  CommonTokenSymbols,
   ExternalLendingPositionType,
   ImportPositionParameters,
   Order,
-} from '@summerfi/sdk-common/orders'
-import { SimulationSteps, SimulationType } from '@summerfi/sdk-common/simulation'
+  SimulationSteps,
+  SimulationType,
+  ExternalLendingPosition,
+  ExternalLendingPositionId,
+  LendingPositionType,
+  IImportSimulation,
+  isImportSimulation,
+} from '@summerfi/sdk-common'
 
 import {
   ILKType,
@@ -23,10 +26,7 @@ import {
   MakerProtocol,
   isMakerLendingPool,
   isMakerProtocol,
-} from '@summerfi/protocol-plugins/plugins/maker'
-import { ExternalLendingPosition, ExternalLendingPositionId } from '@summerfi/sdk-common'
-import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
-import { IImportSimulation, isImportSimulation } from '@summerfi/sdk-common/simulation/interfaces'
+} from '@summerfi/protocol-plugins'
 import { TransactionUtils } from '@summerfi/testing-utils'
 import assert from 'assert'
 import { Hex } from 'viem'

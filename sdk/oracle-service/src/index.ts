@@ -1,1 +1,7 @@
-export * from './implementation'
+export { OracleManager } from './implementation/OracleManager'
+export type { OracleManagerProviderConfig } from './implementation/OracleManager'
+export { OracleManagerFactory } from './implementation/OracleManagerFactory'
+export { OneInchOracleProvider } from './implementation/oneinch/OneInchOracleProvider'
+export { CoingeckoOracleProvider } from './implementation/coingecko/CoingeckoOracleProvider'
+export type { CoingeckoResponse } from './implementation/coingecko/CoingeckoOracleProvider'
+export type { OracleProviderConfig } from './implementation/Types'

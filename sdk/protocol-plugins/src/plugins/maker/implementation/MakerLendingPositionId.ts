@@ -1,5 +1,4 @@
-import { LendingPositionId } from '@summerfi/sdk-common/lending-protocols'
-import { SerializationService } from '@summerfi/sdk-common/services'
+import { LendingPositionId, SerializationService } from '@summerfi/sdk-common'
 import {
   IMakerLendingPositionId,
   IMakerLendingPositionIdData,

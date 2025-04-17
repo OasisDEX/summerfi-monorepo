@@ -1,6 +1,5 @@
-import { Maybe } from '@summerfi/sdk-common/common'
-import { Order } from '@summerfi/sdk-common/orders'
-import { BuildOrderParams } from '../types'
+import { Maybe, Order } from '@summerfi/sdk-common'
+import { BuildOrderParams } from '../types/BuildOrderParams'
 
 /**
  * Order planner service interface

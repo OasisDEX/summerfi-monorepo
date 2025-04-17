@@ -1,6 +1,6 @@
-import { Percentage, TokenAmount } from '@summerfi/sdk-common/common'
+import { Percentage, TokenAmount } from '@summerfi/sdk-common'
 
-import { LendingPosition } from '@summerfi/sdk-common/lending-protocols'
+import { LendingPosition } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
 import { PositionUtils } from '../src/utils/PositionUtils'
 import { DAI, WETH, WSTETH } from './TestUtils'

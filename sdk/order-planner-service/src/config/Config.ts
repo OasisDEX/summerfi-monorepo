@@ -1,4 +1,4 @@
-import { SimulationSteps } from '@summerfi/sdk-common/simulation'
+import { SimulationSteps } from '@summerfi/sdk-common'
 import { ActionBuildersMap } from '@summerfi/protocol-plugins-common'
 import {
   DepositBorrowActionBuilder,
@@ -12,7 +12,7 @@ import {
   SwapActionBuilder,
   OpenPositionActionBuilder,
   SkippedStepActionBuilder,
-} from '@summerfi/protocol-plugins/plugins/common'
+} from '@summerfi/protocol-plugins'
 
 export const ActionBuildersConfig: ActionBuildersMap = {
   [SimulationSteps.PullToken]: PullTokenActionBuilder,

@@ -3,7 +3,6 @@ import type { IAddress } from '../../../common/interfaces/IAddress'
 import type { IPrice } from '../../../common/interfaces/IPrice'
 import type { IPercentage } from '../../../common/interfaces/IPercentage'
 import type { Transaction } from './Transaction'
-import type { ArmadaMigrationType } from '../../../common'
 
 /**
  * @enum TransactionType

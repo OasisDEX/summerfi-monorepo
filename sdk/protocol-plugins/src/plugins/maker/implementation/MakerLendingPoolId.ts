@@ -1,6 +1,4 @@
-import { IPrintable, IToken } from '@summerfi/sdk-common/common'
-import { LendingPoolId } from '@summerfi/sdk-common/lending-protocols'
-import { SerializationService } from '@summerfi/sdk-common/services'
+import { IPrintable, IToken, LendingPoolId, SerializationService } from '@summerfi/sdk-common'
 import { ILKType } from '../enums/ILKType'
 import {
   IMakerLendingPoolId,

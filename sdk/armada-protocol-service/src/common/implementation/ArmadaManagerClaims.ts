@@ -1,7 +1,6 @@
 import {
   AdmiralsQuartersAbi,
   GovernanceRewardsManagerAbi,
-  HarborCommandAbi,
   StakingRewardsManagerBaseAbi,
   SummerRewardsRedeemerAbi,
 } from '@summerfi/armada-protocol-abis'

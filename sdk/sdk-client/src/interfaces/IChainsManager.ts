@@ -1,4 +1,4 @@
-import { ChainInfo, Maybe } from '@summerfi/sdk-common/common'
+import { ChainInfo, Maybe } from '@summerfi/sdk-common'
 import { Chain } from '../implementation/Chain'
 
 /**

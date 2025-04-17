@@ -1,5 +1,5 @@
 import { IToken, OracleProviderType } from '@summerfi/sdk-common'
-import { ISpotPriceInfo, type SpotPricesInfo } from '@summerfi/sdk-common/oracle'
+import { ISpotPriceInfo, type SpotPricesInfo } from '@summerfi/sdk-common'
 import { IOracleManager, IOracleProvider } from '@summerfi/oracle-common'
 import { ManagerWithProvidersBase } from '@summerfi/sdk-server-common'
 

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { PoolType } from '../enums'
+import { PoolType } from '../enums/PoolType'
 import { IProtocol, isProtocol } from './IProtocol'
 
 /**

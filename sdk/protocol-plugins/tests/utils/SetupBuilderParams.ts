@@ -1,8 +1,8 @@
 import { IAddressBookManager } from '@summerfi/address-book-common'
 import { ActionBuildersMap, IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
-import { Address, ChainInfo, Wallet } from '@summerfi/sdk-common/common'
-import { IPositionsManager } from '@summerfi/sdk-common/orders'
-import { IUser, User } from '@summerfi/sdk-common/user'
+import { Address, ChainInfo, Wallet } from '@summerfi/sdk-common'
+import { IPositionsManager } from '@summerfi/sdk-common'
+import { IUser, User } from '@summerfi/sdk-common'
 import {
   AddressBookManagerMock,
   StepBuilderContextMock,

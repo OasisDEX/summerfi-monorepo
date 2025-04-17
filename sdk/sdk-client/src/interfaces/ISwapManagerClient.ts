@@ -1,5 +1,5 @@
 import type { QuoteData } from '@summerfi/sdk-common'
-import type { IToken, ITokenAmount, IPercentage } from '@summerfi/sdk-common/common'
+import type { IToken, ITokenAmount, IPercentage } from '@summerfi/sdk-common'
 
 /**
  * @name ISwapManagerClient

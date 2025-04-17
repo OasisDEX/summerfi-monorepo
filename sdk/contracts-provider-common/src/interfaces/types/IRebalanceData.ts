@@ -3,7 +3,7 @@ import {
   IAddress,
   ITokenAmount,
   TokenAmountDataSchema,
-} from '@summerfi/sdk-common/common'
+} from '@summerfi/sdk-common'
 import { z } from 'zod'
 
 /**

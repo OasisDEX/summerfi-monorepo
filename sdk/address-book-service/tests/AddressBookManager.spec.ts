@@ -1,5 +1,4 @@
-import { ChainFamilyMap } from '@summerfi/sdk-common'
-import { AddressType } from '@summerfi/sdk-common/common'
+import { ChainFamilyMap, AddressType } from '@summerfi/sdk-common'
 import { AddressBookManager } from '../src'
 import { DeploymentIndex } from '@summerfi/deployment-utils'
 import { IAddressBookManager } from '@summerfi/address-book-common'

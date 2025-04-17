@@ -1,35 +1,33 @@
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import { IOracleManager } from '@summerfi/oracle-common'
 import { ActionCall, IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
-import { ProtocolPluginsRegistry } from '@summerfi/protocol-plugins/implementation'
 import {
+  ProtocolPluginsRegistry,
   FlashloanAction,
   ReturnFundsAction,
   SetApprovalAction,
-} from '@summerfi/protocol-plugins/plugins/common'
-import {
   MakerPaybackAction,
   MakerProtocolPlugin,
   MakerWithdrawAction,
   isMakerLendingPositionId,
-} from '@summerfi/protocol-plugins/plugins/maker'
-import {
   SparkBorrowAction,
   SparkDepositAction,
   SparkProtocolPlugin,
-} from '@summerfi/protocol-plugins/plugins/spark'
-import { IRefinanceSimulation } from '@summerfi/sdk-common'
+} from '@summerfi/protocol-plugins'
 import {
+  IRefinanceSimulation,
   Address,
   ChainFamilyMap,
   ChainInfo,
   ProtocolName,
   Wallet,
-} from '@summerfi/sdk-common/common'
-import { IPositionsManager } from '@summerfi/sdk-common/orders'
-import { FlashloanProvider, SimulationType } from '@summerfi/sdk-common/simulation'
-import { IUser, User } from '@summerfi/sdk-common/user'
-import { ISwapManager } from '@summerfi/swap-common/interfaces'
+  IPositionsManager,
+  FlashloanProvider,
+  SimulationType,
+  IUser,
+  User,
+} from '@summerfi/sdk-common'
+import { ISwapManager } from '@summerfi/swap-common'
 import {
   AddressBookManagerMock,
   SwapManagerMock,

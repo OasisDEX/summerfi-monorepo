@@ -1,5 +1,5 @@
 import { AddressValue } from '@summerfi/sdk-common'
-import { HexData } from '@summerfi/sdk-common/common'
+import { HexData } from '@summerfi/sdk-common'
 import { decodeFunctionData, parseAbi } from 'viem'
 
 export function decodeFleetDepositCalldata(calldata: HexData | string):

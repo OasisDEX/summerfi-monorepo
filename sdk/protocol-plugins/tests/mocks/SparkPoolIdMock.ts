@@ -1,4 +1,4 @@
-import { ChainFamilyMap } from '@summerfi/sdk-common/common'
+import { ChainFamilyMap } from '@summerfi/sdk-common'
 import { TokensManagerMock } from '@summerfi/testing-utils'
 import { ISparkLendingPoolId, SparkLendingPoolId, SparkProtocol } from '../../src'
 import { EmodeType } from '../../src/plugins/common'

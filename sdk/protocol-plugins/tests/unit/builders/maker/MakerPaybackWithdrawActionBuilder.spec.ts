@@ -5,8 +5,8 @@ import {
   Percentage,
   Token,
   TokenAmount,
-} from '@summerfi/sdk-common/common'
-import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
+} from '@summerfi/sdk-common'
+import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common'
 import { getErrorMessage } from '@summerfi/testing-utils'
 import assert from 'assert'
 import {
@@ -26,7 +26,7 @@ import {
 import { SetupBuilderReturnType, setupBuilderParams } from '../../../utils/SetupBuilderParams'
 
 import { RiskRatio, RiskRatioType } from '@summerfi/sdk-common'
-import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
+import { LendingPositionType } from '@summerfi/sdk-common'
 
 describe('Maker Payback Withdraw Action Builder', () => {
   let builderParams: SetupBuilderReturnType

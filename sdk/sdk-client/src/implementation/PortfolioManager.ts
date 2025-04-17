@@ -1,4 +1,4 @@
-import type { ChainInfo, Wallet, Position } from '@summerfi/sdk-common/common'
+import type { ChainInfo, Wallet, Position } from '@summerfi/sdk-common'
 import { IPortfolioManager } from '../interfaces/IPortfolioManager'
 import { IRPCClient } from '../interfaces/IRPCClient'
 import { RPCMainClientType } from '../rpc/SDKMainClient'

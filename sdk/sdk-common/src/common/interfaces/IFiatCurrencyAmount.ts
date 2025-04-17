@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { FiatCurrency, FiatCurrencySchema } from '../enums'
+import { FiatCurrency, FiatCurrencySchema } from '../enums/FiatCurrency'
 import { type IPercentage } from './IPercentage'
 import { type IPrice } from './IPrice'
 import { IPrintable } from './IPrintable'

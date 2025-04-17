@@ -1,5 +1,5 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { ChainFamilyMap, ChainInfo, ProtocolName } from '@summerfi/sdk-common/common'
+import { ChainFamilyMap, ChainInfo, ProtocolName } from '@summerfi/sdk-common'
 import assert from 'assert'
 import {
   ISparkLendingPoolId,

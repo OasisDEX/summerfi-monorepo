@@ -1,5 +1,15 @@
 import { ConfigurationProvider } from '@summerfi/configuration-provider'
-import { SDKError, SDKErrorType, isTokenAmount } from '@summerfi/sdk-common'
+import {
+  SDKError,
+  SDKErrorType,
+  isTokenAmount,
+  QuoteData,
+  SwapData,
+  SwapError,
+  SwapErrorType,
+  SwapProviderType,
+  isSwapError,
+} from '@summerfi/sdk-common'
 import {
   Address,
   ChainFamilyMap,
@@ -9,15 +19,7 @@ import {
   Token,
   TokenAmount,
   type ChainInfo,
-} from '@summerfi/sdk-common/common'
-import {
-  QuoteData,
-  SwapData,
-  SwapError,
-  SwapErrorType,
-  SwapProviderType,
-  isSwapError,
-} from '@summerfi/sdk-common/swap'
+} from '@summerfi/sdk-common'
 import assert from 'assert'
 import { SwapManagerFactory } from '../src/implementation/SwapManagerFactory'
 

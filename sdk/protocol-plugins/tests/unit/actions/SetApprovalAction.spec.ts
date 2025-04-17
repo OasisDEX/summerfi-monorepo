@@ -1,4 +1,4 @@
-import { Address, Token, TokenAmount } from '@summerfi/sdk-common/common'
+import { Address, Token, TokenAmount } from '@summerfi/sdk-common'
 import { decodeActionCalldata, getTargetHash } from '@summerfi/testing-utils'
 import { SetApprovalAction } from '../../../src/plugins/common/actions'
 

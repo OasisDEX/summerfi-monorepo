@@ -1,6 +1,6 @@
 import { TestManagerProvider, TestProviderType } from './TestManagerProvider'
 import { ManagerWithProvidersBase } from '../../src'
-import { IChainInfo, Maybe } from '@summerfi/sdk-common/common'
+import { IChainInfo, Maybe } from '@summerfi/sdk-common'
 
 export class TestManager extends ManagerWithProvidersBase<TestProviderType, TestManagerProvider> {
   constructor(params: { providers: TestManagerProvider[] }) {

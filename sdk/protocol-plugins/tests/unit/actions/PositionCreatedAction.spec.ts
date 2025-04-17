@@ -1,5 +1,4 @@
-import { Address, ChainInfo, Token, TokenAmount } from '@summerfi/sdk-common/common'
-import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
+import { Address, ChainInfo, Token, TokenAmount, LendingPositionType } from '@summerfi/sdk-common'
 import { decodeActionCalldata, getTargetHash } from '@summerfi/testing-utils'
 import {
   EmodeType,

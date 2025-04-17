@@ -1,3 +1,4 @@
+import { SwapProviderType } from '../../swap/enums/SwapProviderType'
 import { ProtocolName } from '../../common/enums/ProtocolName'
 import { IPercentage } from '../../common/interfaces/IPercentage'
 import { IPrice } from '../../common/interfaces/IPrice'
@@ -7,11 +8,11 @@ import { ILendingPool } from '../../lending-protocols/interfaces/ILendingPool'
 import { ILendingPosition } from '../../lending-protocols/interfaces/ILendingPosition'
 import { IExternalLendingPosition } from '../../orders/importing/interfaces/IExternalLendingPosition'
 
-import { SwapProviderType, SwapRoute } from '../../swap'
 import { FlashloanProvider } from '../enums/FlashloanProvider'
 import { SimulationSteps } from '../enums/SimulationSteps'
 import { TokenTransferTargetType } from '../enums/TokenTransferTargetType'
 import { ReferenceableField, ValueReference } from './ValueReference'
+import { SwapRoute } from '../../swap/implementation/QuoteData'
 
 export interface Step<T extends SimulationSteps, I, O = undefined> {
   type: T

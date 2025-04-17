@@ -1,8 +1,6 @@
-import { Percentage, TokenAmount } from '@summerfi/sdk-common/common'
-import { steps } from '@summerfi/sdk-common/simulation'
+import { Percentage, TokenAmount, steps, calculatePriceImpact } from '@summerfi/sdk-common'
 import { ISimulationState } from '../../../interfaces/simulation'
 import { addBalance, subtractBalance } from '../../utils'
-import { calculatePriceImpact } from '@summerfi/sdk-common'
 
 export function swapReducer(step: steps.SwapStep, state: ISimulationState): ISimulationState {
   const balanceWithoutFromToken = subtractBalance(step.inputs.inputAmount, state.balances)

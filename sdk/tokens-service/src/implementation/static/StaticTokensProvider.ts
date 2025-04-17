@@ -8,8 +8,8 @@ import {
   Maybe,
   Token,
   TokensProviderType,
+  AddressType,
 } from '@summerfi/sdk-common'
-import { AddressType } from '@summerfi/sdk-common/common'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 import { ITokensProvider } from '@summerfi/tokens-common'
 import assert from 'assert'

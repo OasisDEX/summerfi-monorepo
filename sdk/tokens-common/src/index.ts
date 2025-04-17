@@ -1,1 +1,2 @@
-export * from './interfaces'
+export type { ITokensManager } from './interfaces/ITokensManager'
+export type { ITokensProvider } from './interfaces/ITokensProvider'

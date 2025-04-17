@@ -1,5 +1,4 @@
-import { LendingPosition } from '@summerfi/sdk-common/lending-protocols'
-import { SerializationService } from '@summerfi/sdk-common/services'
+import { LendingPosition, SerializationService } from '@summerfi/sdk-common'
 import { IAaveV3LendingPool } from '../interfaces/IAaveV3LendingPool'
 import {
   IAaveV3LendingPosition,

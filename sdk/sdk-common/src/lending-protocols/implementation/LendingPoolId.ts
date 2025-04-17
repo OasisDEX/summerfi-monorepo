@@ -1,7 +1,7 @@
-import { PoolType } from '../../common'
+import { PoolType } from '../../common/enums/PoolType'
 import { PoolId } from '../../common/implementation/PoolId'
 import { IPrintable } from '../../common/interfaces/IPrintable'
-import { SerializationService } from '../../services'
+import { SerializationService } from '../../services/SerializationService'
 import { ILendingPoolId, ILendingPoolIdData, __signature__ } from '../interfaces/ILendingPoolId'
 
 /**

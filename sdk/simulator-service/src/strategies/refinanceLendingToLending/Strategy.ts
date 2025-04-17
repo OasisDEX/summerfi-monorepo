@@ -1,4 +1,4 @@
-import { SimulationSteps } from '@summerfi/sdk-common/simulation'
+import { SimulationSteps } from '@summerfi/sdk-common'
 import { makeStrategy } from '../../implementation/utils'
 
 export const refinanceLendingToLendingAnyPairStrategy = makeStrategy([

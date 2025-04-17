@@ -1,6 +1,5 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
-import { IAddress } from '@summerfi/sdk-common'
-import { ITokenAmount } from '@summerfi/sdk-common/common'
+import { IAddress, ITokenAmount } from '@summerfi/sdk-common'
 
 export class AaveV3PaybackAction extends BaseAction<typeof AaveV3PaybackAction.Config> {
   public static readonly Config = {

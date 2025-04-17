@@ -1,7 +1,7 @@
-import * as React from 'react'
+import { createContext, useContext } from 'react'
 
 // don't expose the contex to consumers, should be accessed by the hook
-const SDKContext = React.createContext<Partial<SDKContextType>>({
+const SDKContext = createContext<Partial<SDKContextType>>({
   apiURL: undefined,
 })
 
@@ -12,7 +12,7 @@ export type SDKContextType = {
 }
 
 export function useSDKContext() {
-  const { apiURL } = React.useContext(SDKContext)
+  const { apiURL } = useContext(SDKContext)
 
   // validate that the context value is initialized
   if (!apiURL) {

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { isToken, Token } from '@summerfi/sdk-common/common'
+import { isToken, Token } from '@summerfi/sdk-common'
 import { publicProcedure } from '../SDKTRPC'
 
 export const getSpotPrice = publicProcedure

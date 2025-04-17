@@ -1,4 +1,4 @@
-import { steps } from '@summerfi/sdk-common/simulation'
+import { steps } from '@summerfi/sdk-common'
 import { ReferenceableField } from '@summerfi/sdk-common'
 import { ActionConfig } from '../actions/Types'
 

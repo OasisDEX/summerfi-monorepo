@@ -1,7 +1,6 @@
 import { IAddressBookManager } from '@summerfi/address-book-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
-import { ChainFamilyMap } from '@summerfi/sdk-common'
-import { AddressType } from '@summerfi/sdk-common/common'
+import { ChainFamilyMap, AddressType } from '@summerfi/sdk-common'
 import { AddressBookManagerFactory } from '../src'
 
 import assert from 'assert'

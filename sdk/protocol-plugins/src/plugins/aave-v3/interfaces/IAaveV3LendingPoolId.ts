@@ -1,5 +1,4 @@
-import { IToken, isToken } from '@summerfi/sdk-common'
-import { ILendingPoolId, LendingPoolIdDataSchema } from '@summerfi/sdk-common/lending-protocols'
+import { IToken, isToken, ILendingPoolId, LendingPoolIdDataSchema } from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { EmodeType, EmodeTypeSchema } from '../../common/enums/EmodeType'
 import { IAaveV3Protocol, isAaveV3Protocol } from './IAaveV3Protocol'

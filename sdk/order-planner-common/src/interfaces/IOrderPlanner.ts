@@ -1,6 +1,4 @@
-import { Maybe } from '@summerfi/sdk-common/common'
-import { Order } from '@summerfi/sdk-common/orders'
-import { SimulationType } from '@summerfi/sdk-common/simulation'
+import { Maybe, Order, SimulationType } from '@summerfi/sdk-common'
 import { BuildOrderParams } from '../types/BuildOrderParams'
 
 /**

@@ -1,5 +1,5 @@
 import { HexData, IAddress, IChainInfo, ITokenAmount, Transaction } from '@summerfi/sdk-common'
-import { TransactionUtils } from '@summerfi/testing-utils/utils'
+import { TransactionUtils } from '@summerfi/testing-utils'
 import axios, { AxiosInstance } from 'axios'
 import { JsonRpcProvider, ethers } from 'ethers'
 import { TransactionReceipt } from 'viem'

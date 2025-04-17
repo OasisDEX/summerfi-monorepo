@@ -11,8 +11,9 @@ import {
   RiskRatio,
   RiskRatioType,
   TokenAmount,
+  IChainInfo,
+  IToken,
 } from '@summerfi/sdk-common'
-import { IChainInfo, IToken } from '@summerfi/sdk-common/common'
 import { BigNumber } from 'bignumber.js'
 import { BaseProtocolPlugin } from '../../../../implementation/BaseProtocolPlugin'
 import { ChainContractsProvider, GenericAbiMap } from '../../../utils/ChainContractProvider'

@@ -1,5 +1,5 @@
-import { isRefinanceParameters } from '@summerfi/sdk-common/orders'
-import { IRefinanceSimulation } from '@summerfi/sdk-common/simulation'
+import { isRefinanceParameters } from '@summerfi/sdk-common'
+import { IRefinanceSimulation } from '@summerfi/sdk-common'
 import { refinanceLendingToLending } from '@summerfi/simulator-service/strategies'
 import { z } from 'zod'
 import { publicProcedure } from '../SDKTRPC'

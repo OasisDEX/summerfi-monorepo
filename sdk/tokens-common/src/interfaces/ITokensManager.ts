@@ -1,5 +1,5 @@
-import type { IChainInfo, IAddress, IToken } from '@summerfi/sdk-common/common'
-import { TokensProviderType } from '@summerfi/sdk-common/tokens'
+import type { IChainInfo, IAddress, IToken } from '@summerfi/sdk-common'
+import { TokensProviderType } from '@summerfi/sdk-common'
 import { IManagerWithProviders } from '@summerfi/sdk-server-common'
 import { ITokensProvider } from './ITokensProvider'
 

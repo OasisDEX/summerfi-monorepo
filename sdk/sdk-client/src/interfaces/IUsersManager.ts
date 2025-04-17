@@ -1,5 +1,5 @@
-import { Address, ChainInfo } from '@summerfi/sdk-common/common'
-import { IUser } from '@summerfi/sdk-common/user'
+import { Address, ChainInfo } from '@summerfi/sdk-common'
+import { IUser } from '@summerfi/sdk-common'
 import type { IUserClient } from './IUserClient'
 
 /**

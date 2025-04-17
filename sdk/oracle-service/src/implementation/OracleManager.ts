@@ -1,8 +1,6 @@
-import type { Denomination, Maybe } from '@summerfi/sdk-common/common/types'
-import type { IToken } from '@summerfi/sdk-common/common'
-import { isToken } from '@summerfi/sdk-common/common'
+import type { Maybe } from '@summerfi/sdk-common'
+import { isToken, OracleProviderType } from '@summerfi/sdk-common'
 import { IOracleManager, IOracleProvider } from '@summerfi/oracle-common'
-import { OracleProviderType, ISpotPriceInfo } from '@summerfi/sdk-common/oracle'
 import { ManagerWithProvidersBase } from '@summerfi/sdk-server-common'
 
 export type OracleManagerProviderConfig = {

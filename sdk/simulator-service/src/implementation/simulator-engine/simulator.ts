@@ -3,9 +3,8 @@ import type { Tail } from '../../interfaces/helperTypes'
 import { head, tail } from '../utils'
 import { processStepOutput } from './stepProcessor/stepOutputProcessors'
 import { stateReducer } from './reducer/stateReducers'
-import type { SimulationStrategy } from '@summerfi/sdk-common/simulation'
-import { steps } from '@summerfi/sdk-common/simulation'
-import { Maybe, ProtocolName, SimulationSteps } from '@summerfi/sdk-common'
+import type { SimulationStrategy } from '@summerfi/sdk-common'
+import { steps, Maybe, ProtocolName, SimulationSteps } from '@summerfi/sdk-common'
 import {
   GetReferencedValue,
   NextFunction,

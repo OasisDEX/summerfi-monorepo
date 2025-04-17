@@ -1,4 +1,4 @@
-import { ChainFamilyMap } from '@summerfi/sdk-common/common'
+import { ChainFamilyMap } from '@summerfi/sdk-common'
 import { TokensManagerMock } from '@summerfi/testing-utils'
 import { ILKType, MakerLendingPoolId, MakerProtocol } from '../../src/plugins/maker'
 import { IMakerLendingPoolId } from '../../src/plugins/maker/interfaces/IMakerLendingPoolId'

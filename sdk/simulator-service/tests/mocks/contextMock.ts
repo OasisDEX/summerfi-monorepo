@@ -5,20 +5,21 @@ import {
   IToken,
   OracleProviderType,
   ISpotPriceInfo,
-} from '@summerfi/sdk-common'
-import { Address, Maybe, Percentage, Price, Token, TokenAmount } from '@summerfi/sdk-common/common'
-import {
+  Address,
+  Maybe,
+  Percentage,
+  Price,
+  Token,
+  TokenAmount,
   ILendingPool,
   ILendingPosition,
   ILendingPositionIdData,
-} from '@summerfi/sdk-common/lending-protocols'
-import {
   IExternalLendingPosition,
   IPositionsManager,
   TransactionInfo,
-} from '@summerfi/sdk-common/orders'
-import { SwapProviderType } from '@summerfi/sdk-common/swap'
-import { IUser } from '@summerfi/sdk-common/user'
+  SwapProviderType,
+  IUser,
+} from '@summerfi/sdk-common'
 import {
   testTargetLendingPool,
   testTargetLendingPoolInfo,

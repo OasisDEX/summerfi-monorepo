@@ -1,6 +1,11 @@
-import { ILendingPool, IRiskRatio, isAddress, isRiskRatio } from '@summerfi/sdk-common'
-import { IAddress } from '@summerfi/sdk-common/common'
-import { LendingPoolDataSchema } from '@summerfi/sdk-common/lending-protocols'
+import {
+  ILendingPool,
+  IRiskRatio,
+  isAddress,
+  isRiskRatio,
+  IAddress,
+  LendingPoolDataSchema,
+} from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { IMorphoLendingPoolId, isMorphoLendingPoolId } from './IMorphoLendingPoolId'
 

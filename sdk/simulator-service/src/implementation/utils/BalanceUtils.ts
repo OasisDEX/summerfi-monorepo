@@ -1,4 +1,4 @@
-import { IToken, ITokenAmount, TokenAmount } from '@summerfi/sdk-common/common'
+import { IToken, ITokenAmount, TokenAmount } from '@summerfi/sdk-common'
 import { BalancesRecord } from '../../types/Types'
 
 // TODO: This should be transformed into a proper class, as we are passing the balances record

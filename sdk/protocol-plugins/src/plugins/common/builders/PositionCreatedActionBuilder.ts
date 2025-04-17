@@ -1,4 +1,4 @@
-import { steps } from '@summerfi/sdk-common/simulation'
+import { steps } from '@summerfi/sdk-common'
 import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import { PositionCreatedAction } from '../actions/PositionCreatedAction'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'

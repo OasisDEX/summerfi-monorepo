@@ -1,6 +1,7 @@
-import { IAddress, ITokenAmount } from '@summerfi/sdk-common/common'
-import { HexData } from '../../common/types'
+import { ITokenAmount } from '../..//common/interfaces/ITokenAmount'
+import { HexData } from '../../common/types/HexData'
 import type { SwapProviderType } from '../enums/SwapProviderType'
+import { IAddress } from '../..//common/interfaces/IAddress'
 
 /**
  * @name SwapData

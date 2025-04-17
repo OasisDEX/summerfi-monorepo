@@ -1,1 +1,0 @@
-export { ConfigurationProvider } from './ConfigurationProvider'

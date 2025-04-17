@@ -2542,6 +2542,9 @@ importers:
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common
+      '@summerfi/configuration-provider':
+        specifier: workspace:*
+        version: link:../configuration-provider
       '@summerfi/configuration-provider-common':
         specifier: workspace:*
         version: link:../configuration-provider-common
@@ -3368,6 +3371,9 @@ importers:
       '@inquirer/prompts':
         specifier: ^4.3.3
         version: 4.3.3
+      '@summerfi/configuration-provider':
+        specifier: workspace:*
+        version: link:../configuration-provider
       '@summerfi/configuration-provider-common':
         specifier: workspace:*
         version: link:../configuration-provider-common

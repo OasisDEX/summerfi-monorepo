@@ -1,21 +1,20 @@
 import { IProtocolManager } from '@summerfi/protocol-manager-common'
 import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
-import { IPositionId, Maybe, isPositionId } from '@summerfi/sdk-common'
 import {
+  IPositionId,
+  Maybe,
+  isPositionId,
   ILendingPool,
   ILendingPoolId,
   ILendingPoolInfo,
   ILendingPosition,
   ILendingPositionId,
   isLendingPoolId,
-} from '@summerfi/sdk-common/lending-protocols'
-import {
   IExternalLendingPosition,
   IPositionsManager,
   TransactionInfo,
-} from '@summerfi/sdk-common/orders'
-
-import { IUser } from '@summerfi/sdk-common/user'
+  IUser,
+} from '@summerfi/sdk-common'
 
 /**
  * @class ProtocolManager

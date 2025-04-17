@@ -1,6 +1,6 @@
 import { SerializationService } from '../../services/SerializationService'
 import { PoolType } from '../enums/PoolType'
-import { __iarmadavaultid__ } from '../interfaces'
+import { __signature__ } from '../interfaces/IArmadaVaultId'
 import type { IAddress } from '../interfaces/IAddress'
 import type { IArmadaProtocol } from '../interfaces/IArmadaProtocol'
 import type { IArmadaVaultId, IArmadaVaultIdData } from '../interfaces/IArmadaVaultId'
@@ -19,7 +19,7 @@ export type ArmadaVaultIdParameters = Omit<IArmadaVaultIdData, 'type' | 'protoco
  */
 export class ArmadaVaultId extends PoolId implements IArmadaVaultId {
   /** SIGNATURE */
-  readonly [__iarmadavaultid__] = __iarmadavaultid__
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly type = PoolType.Armada

@@ -1,6 +1,6 @@
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { ChainInfo } from '@summerfi/sdk-common'
-import { Address, AddressType } from '@summerfi/sdk-common/common'
+import { Address, AddressType } from '@summerfi/sdk-common'
 import { ITokensProvider } from '@summerfi/tokens-common'
 import assert from 'assert'
 import { StaticTokensProvider } from '../src/implementation/static/StaticTokensProvider'

@@ -1,5 +1,5 @@
 import { Wallet } from '@summerfi/sdk-common'
-import type { Address, ChainInfo } from '@summerfi/sdk-common/common'
+import type { Address, ChainInfo } from '@summerfi/sdk-common'
 import { IRPCClient } from '../interfaces/IRPCClient'
 import { IUsersManager } from '../interfaces/IUsersManager'
 import { RPCMainClientType } from '../rpc/SDKMainClient'

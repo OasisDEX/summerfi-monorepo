@@ -1,6 +1,5 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
-import { IAddress } from '@summerfi/sdk-common'
-import { ITokenAmount } from '@summerfi/sdk-common/common'
+import { IAddress, ITokenAmount } from '@summerfi/sdk-common'
 
 export class SparkPaybackAction extends BaseAction<typeof SparkPaybackAction.Config> {
   public static readonly Config = {

@@ -1,0 +1,8 @@
+{
+  "name": "remove-barrel-files",
+  "version": "1.0.0",
+  "dependencies": {
+    "glob": "^11.0.0",
+    "ignore": "^7.0.3"
+  }
+}

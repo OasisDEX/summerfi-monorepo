@@ -1,16 +1,15 @@
-import { ILendingPoolId, Maybe } from '@summerfi/sdk-common'
 import {
+  ILendingPoolId,
+  Maybe,
   ILendingPool,
   ILendingPoolInfo,
   ILendingPosition,
   ILendingPositionId,
-} from '@summerfi/sdk-common/lending-protocols'
-import {
   IExternalLendingPosition,
   IPositionsManager,
   TransactionInfo,
-} from '@summerfi/sdk-common/orders'
-import { IUser } from '@summerfi/sdk-common/user'
+  IUser,
+} from '@summerfi/sdk-common'
 
 /**
  * @interface IProtocolManager

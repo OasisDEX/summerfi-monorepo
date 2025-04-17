@@ -3,7 +3,7 @@ import { Token } from '../../common/implementation/Token'
 import { IPrintable } from '../../common/interfaces/IPrintable'
 import { IToken } from '../../common/interfaces/IToken'
 import { PoolType } from '../../common/enums/PoolType'
-import { SerializationService } from '../../services'
+import { SerializationService } from '../../services/SerializationService'
 import { ILendingPool, ILendingPoolData, __signature__ } from '../interfaces/ILendingPool'
 import { ILendingPoolId } from '../interfaces/ILendingPoolId'
 

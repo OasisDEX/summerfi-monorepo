@@ -1,8 +1,9 @@
 import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
-import { getValueFromReference, steps } from '@summerfi/sdk-common/simulation'
+import { getValueFromReference, steps } from '@summerfi/sdk-common'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
-import { SetApprovalAction } from '../../common'
-import { MorphoPaybackAction, MorphoWithdrawAction } from '../actions'
+import { SetApprovalAction } from '../../common/actions/SetApprovalAction'
+import { MorphoPaybackAction } from '../actions/MorphoPaybackAction'
+import { MorphoWithdrawAction } from '../actions/MorphoWithdrawAction'
 import { isMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
 
 export class MorphoPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.PaybackWithdrawStep> {

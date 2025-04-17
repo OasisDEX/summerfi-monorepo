@@ -1,6 +1,5 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
-import { IPosition, ITokenAmount } from '@summerfi/sdk-common/common'
-import { IPositionsManager } from '@summerfi/sdk-common/orders'
+import { IPosition, ITokenAmount, IPositionsManager } from '@summerfi/sdk-common'
 import { isMakerLendingPositionId } from '../interfaces/IMakerLendingPositionId'
 
 export class MakerPaybackAction extends BaseAction<typeof MakerPaybackAction.Config> {

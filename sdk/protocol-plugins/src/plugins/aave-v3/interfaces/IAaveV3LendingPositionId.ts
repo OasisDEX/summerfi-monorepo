@@ -1,7 +1,4 @@
-import {
-  ILendingPositionId,
-  LendingPositionIdDataSchema,
-} from '@summerfi/sdk-common/lending-protocols'
+import { ILendingPositionId, LendingPositionIdDataSchema } from '@summerfi/sdk-common'
 import { z } from 'zod'
 
 /**

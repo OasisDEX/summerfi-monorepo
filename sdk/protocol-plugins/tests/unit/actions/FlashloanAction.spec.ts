@@ -1,5 +1,4 @@
-import { Address, Token, TokenAmount } from '@summerfi/sdk-common/common'
-import { FlashloanProvider } from '@summerfi/sdk-common/simulation'
+import { Address, Token, TokenAmount, FlashloanProvider } from '@summerfi/sdk-common'
 import { decodeActionCalldata, getTargetHash } from '@summerfi/testing-utils'
 import { FlashloanAction } from '../../../src/plugins/common/actions/FlashloanAction'
 

@@ -4,20 +4,20 @@ import {
   Maybe,
   ProtocolName,
   valuesOfChainFamilyMap,
-} from '@summerfi/sdk-common/common'
+  FiatCurrency,
+  IChainInfo,
+  ILendingPoolIdData,
+  ILendingPosition,
+  IExternalLendingPosition,
+  IPositionsManager,
+  TransactionInfo,
+  IUser,
+} from '@summerfi/sdk-common'
 import { SparkLendingPool } from './SparkLendingPool'
 
 import { SparkContractNames } from '@summerfi/deployment-types'
 import { ActionBuildersMap, IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { FiatCurrency, IChainInfo } from '@summerfi/sdk-common'
-import { ILendingPoolIdData, ILendingPosition } from '@summerfi/sdk-common/lending-protocols'
-import {
-  IExternalLendingPosition,
-  IPositionsManager,
-  TransactionInfo,
-} from '@summerfi/sdk-common/orders'
-import { IUser } from '@summerfi/sdk-common/user'
-import { IAaveV3LendingPositionIdData } from '../../aave-v3'
+import { IAaveV3LendingPositionIdData } from '../../aave-v3/interfaces/IAaveV3LendingPositionId'
 import { AAVEv3LikeBaseProtocolPlugin } from '../../common/helpers/aaveV3Like/AAVEv3LikeBaseProtocolPlugin'
 import { ContractInfo } from '../../common/types/ContractInfo'
 import { ChainContractsProvider } from '../../utils/ChainContractProvider'

@@ -1,6 +1,5 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
-import { IPercentage, ITokenAmount } from '@summerfi/sdk-common/common'
-import { HexData } from '@summerfi/sdk-common/common/types'
+import { IPercentage, ITokenAmount, HexData } from '@summerfi/sdk-common'
 
 export class SwapAction extends BaseAction<typeof SwapAction.Config> {
   public static readonly Config = {

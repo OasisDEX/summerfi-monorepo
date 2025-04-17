@@ -1,5 +1,5 @@
 import { ILendingPosition } from '@summerfi/sdk-common'
-import { IPercentage, ITokenAmount, Percentage } from '@summerfi/sdk-common/common'
+import { IPercentage, ITokenAmount, Percentage } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
 
 // TODO: refactor BigNumbers to use the SDK's TokenAmount operations

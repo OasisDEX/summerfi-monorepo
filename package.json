@@ -12,6 +12,7 @@
     "build-earn-frontend": "turbo run build:apps --cache-dir=.turbo --filter=@summerfi/earn-protocol",
     "build-earn-frontend-landing": "turbo run build:apps --cache-dir=.turbo --filter=@summerfi/earn-protocol-landing-page",
     "prebuild:sdk": "turbo run prebuild --cache-dir=.turbo --filter=./packages/* --filter=./sdk/*",
+    "dev:sdk": "turbo run dev  --concurrency=100 --cache-dir=.turbo --filter=./packages/* --filter=./sdk/*",
     "build:sdk": "turbo run build --cache-dir=.turbo --filter=./packages/* --filter=./sdk/*",
     "lint": "turbo run lint --cache-dir=.turbo",
     "lint:sdk": "turbo run lint --cache-dir=.turbo --filter=./packages/* --filter=./sdk/*",

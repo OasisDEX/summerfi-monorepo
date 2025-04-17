@@ -13,8 +13,8 @@ import {
   PositionType,
   Token,
   TokenAmount,
-} from '@summerfi/sdk-common/common'
-import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
+} from '@summerfi/sdk-common'
+import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common'
 import { DerivedAction } from '@summerfi/testing-utils/mocks/actions/DerivedAction'
 import { StepBuilderContext } from '../src/context'
 

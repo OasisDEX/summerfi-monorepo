@@ -6,9 +6,9 @@ import {
   Percentage,
   Token,
   TokenAmount,
-} from '@summerfi/sdk-common/common'
-import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
-import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
+} from '@summerfi/sdk-common'
+import { LendingPositionType } from '@summerfi/sdk-common'
+import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common'
 import { getErrorMessage } from '@summerfi/testing-utils'
 import assert from 'assert'
 import {

@@ -7,22 +7,6 @@ import {
   borrowFromPosition,
   depositToPosition,
   newEmptyPositionFromPool,
-} from '@summerfi/sdk-common/common'
-
-import { EmodeType } from '@summerfi/protocol-plugins'
-import {
-  ILKType,
-  MakerLendingPool,
-  MakerLendingPoolId,
-  MakerProtocol,
-} from '@summerfi/protocol-plugins/plugins/maker'
-import {
-  SparkLendingPool,
-  SparkLendingPoolId,
-  SparkLendingPoolInfo,
-  SparkProtocol,
-} from '@summerfi/protocol-plugins/plugins/spark'
-import {
   CollateralInfo,
   DebtInfo,
   FiatCurrency,
@@ -30,6 +14,18 @@ import {
   Price,
   RiskRatio,
 } from '@summerfi/sdk-common'
+
+import {
+  EmodeType,
+  ILKType,
+  MakerLendingPool,
+  MakerLendingPoolId,
+  MakerProtocol,
+  SparkLendingPool,
+  SparkLendingPoolId,
+  SparkLendingPoolInfo,
+  SparkProtocol,
+} from '@summerfi/protocol-plugins'
 
 const testChain = ChainInfo.createFrom({ chainId: 1, name: 'test' })
 

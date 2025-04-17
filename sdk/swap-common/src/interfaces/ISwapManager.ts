@@ -1,5 +1,12 @@
-import type { IPercentage, IAddress, IToken, ITokenAmount } from '@summerfi/sdk-common/common'
-import type { QuoteData, SwapData, SwapProviderType } from '@summerfi/sdk-common/swap'
+import type {
+  IPercentage,
+  IAddress,
+  IToken,
+  ITokenAmount,
+  QuoteData,
+  SwapData,
+  SwapProviderType,
+} from '@summerfi/sdk-common'
 import { IManagerWithProviders } from '@summerfi/sdk-server-common'
 import { ISwapProvider } from './ISwapProvider'
 

@@ -1,5 +1,5 @@
 import { ActionCall, ActionCallBatch } from '../actions/Types'
-import { Maybe } from '@summerfi/sdk-common/common'
+import { Maybe } from '@summerfi/sdk-common'
 
 /**
  * @name ActionCallsStack

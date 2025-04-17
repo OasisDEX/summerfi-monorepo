@@ -2,29 +2,23 @@ import {
   AaveV3LendingPosition,
   AaveV3LendingPositionId,
   isAaveV3LendingPool,
-} from '@summerfi/protocol-plugins/plugins/aave-v3'
-import {
   MakerLendingPosition,
   MakerLendingPositionId,
   isMakerLendingPool,
-} from '@summerfi/protocol-plugins/plugins/maker'
-import {
   MorphoLendingPosition,
   MorphoLendingPositionId,
   isMorphoLendingPool,
-} from '@summerfi/protocol-plugins/plugins/morphoblue'
-import {
   SparkLendingPosition,
   SparkLendingPositionId,
   isSparkLendingPool,
-} from '@summerfi/protocol-plugins/plugins/spark'
-import { TokenAmount } from '@summerfi/sdk-common'
-import { ProtocolName } from '@summerfi/sdk-common/common'
+} from '@summerfi/protocol-plugins'
 import {
+  TokenAmount,
+  ProtocolName,
   ILendingPool,
   ILendingPosition,
   LendingPositionType,
-} from '@summerfi/sdk-common/lending-protocols'
+} from '@summerfi/sdk-common'
 
 export function getTargetPosition(params: {
   sourcePosition: ILendingPosition

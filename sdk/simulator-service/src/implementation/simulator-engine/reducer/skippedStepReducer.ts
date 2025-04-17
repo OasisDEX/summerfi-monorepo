@@ -1,4 +1,4 @@
-import { steps } from '@summerfi/sdk-common/simulation'
+import { steps } from '@summerfi/sdk-common'
 import { ISimulationState } from '../../../interfaces/simulation'
 
 export function skippedStepReducer(

@@ -1,5 +1,5 @@
-import type { IImportPositionParameters } from '@summerfi/sdk-common/orders'
-import { IImportSimulation } from '@summerfi/sdk-common/simulation'
+import type { IImportPositionParameters } from '@summerfi/sdk-common'
+import { IImportSimulation } from '@summerfi/sdk-common'
 import { importPosition } from '@summerfi/simulator-service/strategies'
 import { z } from 'zod'
 import { publicProcedure } from '../SDKTRPC'

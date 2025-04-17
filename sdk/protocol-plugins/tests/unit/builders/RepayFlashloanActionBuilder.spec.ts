@@ -5,8 +5,8 @@ import {
   ChainInfo,
   Token,
   TokenAmount,
-} from '@summerfi/sdk-common/common'
-import { FlashloanProvider, SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
+} from '@summerfi/sdk-common'
+import { FlashloanProvider, SimulationSteps, steps } from '@summerfi/sdk-common'
 import { SetupBuilderReturnType, setupBuilderParams } from '../../utils/SetupBuilderParams'
 import { RepayFlashloanActionBuilder } from '../../../src/plugins/common/builders/RepayFlashloanActionBuilder'
 import { AddressBookManagerMock, getErrorMessage } from '@summerfi/testing-utils'

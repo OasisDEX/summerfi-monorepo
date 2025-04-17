@@ -1,5 +1,4 @@
-import { HexData } from '@summerfi/sdk-common'
-import { ILendingPoolId, LendingPoolIdDataSchema } from '@summerfi/sdk-common/lending-protocols'
+import { HexData, ILendingPoolId, LendingPoolIdDataSchema } from '@summerfi/sdk-common'
 import { isHex } from 'viem'
 import { z } from 'zod'
 import { IMorphoProtocol, isMorphoProtocol } from './IMorphoProtocol'

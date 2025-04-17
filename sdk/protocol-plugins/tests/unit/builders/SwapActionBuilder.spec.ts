@@ -6,9 +6,9 @@ import {
   Price,
   Token,
   TokenAmount,
-} from '@summerfi/sdk-common/common'
-import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
-import { SwapProviderType } from '@summerfi/sdk-common/swap'
+} from '@summerfi/sdk-common'
+import { SimulationSteps, steps } from '@summerfi/sdk-common'
+import { SwapProviderType } from '@summerfi/sdk-common'
 
 import { FiatCurrency } from '@summerfi/sdk-common'
 import { AddressBookManagerMock } from '@summerfi/testing-utils'

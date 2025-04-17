@@ -8,17 +8,17 @@ import {
   ITokenAmount,
   Percentage,
   TokenAmount,
-} from '@summerfi/sdk-common/common'
-import { ChainId, HexData } from '@summerfi/sdk-common/common/types'
-import {
+  ChainId,
+  HexData,
   QuoteData,
   SwapData,
   SwapErrorType,
   SwapProviderType,
   SwapRoute,
-} from '@summerfi/sdk-common/swap'
+  LoggingService,
+} from '@summerfi/sdk-common'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
-import { type ISwapProvider } from '@summerfi/swap-common/interfaces'
+import { type ISwapProvider } from '@summerfi/swap-common'
 import fetch from 'node-fetch'
 import {
   OneInchAuthHeader,
@@ -28,7 +28,6 @@ import {
   OneInchSwapResponse,
   OneInchSwapRoute,
 } from './types'
-import { LoggingService } from '@summerfi/sdk-common'
 
 export class OneInchSwapProvider
   extends ManagerProviderBase<SwapProviderType>
