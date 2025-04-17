@@ -26,7 +26,7 @@ const getInterfaces = (configObject = { features: {} }) => {
         return typeInterface
       })
       .join('\n\n')
-    const importRisk = 'import { Risk } from "../earn-protocol";\n'
+    const importRisk = 'import { Risk } from "../earn-protocol/risk";\n'
     const intarfacesMapped = interfaces
       .replaceAll('_0x', 'EarnAppFleetCustomConfigType')
       .replaceAll(

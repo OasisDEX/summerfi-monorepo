@@ -1,4 +1,4 @@
-export {
+export type {
   NavigationBrandingPill,
   NavigationBrandingPillColor,
   NavigationBrandingProps,
@@ -15,6 +15,6 @@ export {
   NavigationProps,
   WithNavigationModules,
 } from './Navigation.types'
-export { DropdownOption, DropdownRawOption } from './Dropdown.types'
-export { InlineButtonOption } from './InlineButtons.types'
-export { TimeframesItem, TimeframesType } from './Timeframes.types'
+export type { DropdownOption, DropdownRawOption } from './Dropdown.types'
+export type { InlineButtonOption } from './InlineButtons.types'
+export type { TimeframesItem, TimeframesType } from './Timeframes.types'
