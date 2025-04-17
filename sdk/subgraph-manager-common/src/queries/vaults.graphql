@@ -25,6 +25,7 @@ query GetVaults {
       details
       depositLimit
       depositCap
+      cumulativeEarnings
       inputTokenBalance
       maxDepositPercentageOfTVL
       inputToken {
@@ -58,40 +59,8 @@ query GetVaults {
     cumulativeSupplySideRevenueUSD
     cumulativeProtocolSideRevenueUSD
     lastUpdateTimestamp
-    apr7d
-    apr30d
-    apr90d
-    apr180d
-    apr365d
-    calculatedApr
-    aprValues
     withdrawableTotalAssets
     withdrawableTotalAssetsUSD
-    # needed for the historical graph
-    dailyInterestRates(
-      first: 365 # 365 days
-      orderBy: date
-      orderDirection: desc
-    ) {
-      averageRate
-      date
-    }
-    hourlyInterestRates(
-      first: 720 # 24 * 30 = one month
-      orderBy: date
-      orderDirection: desc
-    ) {
-      averageRate
-      date
-    }
-    weeklyInterestRates(
-      first: 156 # 52 * 3 = three years
-      orderBy: date
-      orderDirection: desc
-    ) {
-      averageRate
-      date
-    }
   }
 }
 query GetVault($id: ID!) {
@@ -99,11 +68,11 @@ query GetVault($id: ID!) {
     protocol {
       network
     }
+    id
+    name
     rewardsManager {
       id
     }
-    id
-    name
     rewardTokens {
       id
       token {
@@ -112,52 +81,9 @@ query GetVault($id: ID!) {
         decimals
       }
     }
-    rewardTokenEmissionsUSD
     rewardTokenEmissionsAmount
+    rewardTokenEmissionsUSD
     rebalanceCount
-    rebalances(orderBy: timestamp, orderDirection: desc) {
-      id
-      amount
-      amountUSD
-      asset {
-        id
-        symbol
-        decimals
-      }
-      from {
-        name
-        depositLimit
-        calculatedApr
-        totalValueLockedUSD
-      }
-      to {
-        name
-        depositLimit
-        calculatedApr
-        totalValueLockedUSD
-      }
-      toPostAction {
-        totalValueLockedUSD
-        depositLimit
-      }
-      fromPostAction {
-        totalValueLockedUSD
-        depositLimit
-      }
-      protocol {
-        name
-        network
-      }
-      timestamp
-      vault {
-        id
-        name
-        inputToken {
-          id
-          symbol
-        }
-      }
-    }
     arks {
       id
       name
@@ -173,19 +99,6 @@ query GetVault($id: ID!) {
         symbol
         decimals
       }
-      dailySnapshots(first: 10) {
-        id
-        apr
-        totalValueLockedUSD
-        inputTokenBalance
-      }
-      hourlySnapshots(first: 10) {
-        id
-        calculatedApr
-        totalValueLockedUSD
-        inputTokenBalance
-      }
-      calculatedApr
       createdTimestamp
       lastUpdateTimestamp
     }
@@ -204,7 +117,6 @@ query GetVault($id: ID!) {
     inputTokenBalance
     inputTokenPriceUSD
     outputTokenPriceUSD
-
     depositLimit
     createdTimestamp
     totalValueLockedUSD
@@ -212,39 +124,7 @@ query GetVault($id: ID!) {
     cumulativeSupplySideRevenueUSD
     cumulativeProtocolSideRevenueUSD
     lastUpdateTimestamp
-    apr7d
-    apr30d
-    apr90d
-    apr180d
-    apr365d
-    calculatedApr
-    aprValues
     withdrawableTotalAssets
     withdrawableTotalAssetsUSD
-    # needed for the historical graph
-    dailyInterestRates(
-      first: 365 # 365 days
-      orderBy: date
-      orderDirection: desc
-    ) {
-      averageRate
-      date
-    }
-    hourlyInterestRates(
-      first: 720 # 24 * 30 = one month
-      orderBy: date
-      orderDirection: desc
-    ) {
-      averageRate
-      date
-    }
-    weeklyInterestRates(
-      first: 156 # 52 * 3 = three years
-      orderBy: date
-      orderDirection: desc
-    ) {
-      averageRate
-      date
-    }
   }
 }

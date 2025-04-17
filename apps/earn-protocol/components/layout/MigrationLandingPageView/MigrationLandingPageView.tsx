@@ -120,14 +120,9 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
     setSelectedPosition(id)
   }
   const networkFilteredVaults = useMemo(() => {
-    const properVaultsList =
-      localVaultNetwork && localVaultNetwork !== 'all-networks'
-        ? vaultsList.filter(({ protocol }) => protocol.network === localVaultNetwork)
-        : vaultsList
-
-    return properVaultsList.sort((a, b) => {
-      return Number(a.calculatedApr) > Number(b.calculatedApr) ? -1 : 1
-    })
+    return localVaultNetwork && localVaultNetwork !== 'all-networks'
+      ? vaultsList.filter(({ protocol }) => protocol.network === localVaultNetwork)
+      : vaultsList
   }, [localVaultNetwork, vaultsList])
 
   const [selectedVaultId, setSelectedVaultId] = useState<string | undefined>(undefined)
