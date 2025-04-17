@@ -111,10 +111,6 @@ export const vaultExposureMapper = (
       vaultInputTokenBalance.toString() !== '0'
         ? new BigNumber(ark.inputTokenBalance.toString()).div(vaultInputTokenBalance.toString())
         : '0'
-    const capRatio =
-      ark.depositLimit.toString() !== '0'
-        ? new BigNumber(ark.inputTokenBalance.toString()).div(ark.depositLimit.toString())
-        : '0'
     const absoluteAllocationCap =
       ark.depositCap.toString() !== '0'
         ? new BigNumber(ark.depositCap.toString()).shiftedBy(-ark.inputToken.decimals).toString()
@@ -124,6 +120,8 @@ export const vaultExposureMapper = (
       new BigNumber(vaultInputTokenBalance.toString()).shiftedBy(-vault.inputToken.decimals),
     ).times(maxPercentageTVL)
     const mainAllocationCap = BigNumber.minimum(absoluteAllocationCap, vaultTvlAllocationCap)
+
+    const capRatio = BigNumber.minimum(arkTokenTVL.div(mainAllocationCap), 1)
 
     const extendedArk: ExtendedArk = {
       ...ark,
