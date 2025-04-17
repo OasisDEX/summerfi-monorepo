@@ -12,7 +12,7 @@ export {
   emptyConfig as raysEmptyConfig,
 } from './src/generated/rays-config'
 export { AutomationFeatures, AutomationKinds } from './src/automation'
-export {
+export type {
   DropdownOption,
   DropdownRawOption,
   InlineButtonOption,
@@ -34,12 +34,12 @@ export {
   TimeframesType,
   WithNavigationModules,
 } from './src/components'
-export { IconNamesList, TokenConfig, TokenSymbolsList } from './src/icons'
-export { LeaderboardItem, LeaderboardResponse } from './src/leaderboard'
-export { PortfolioMigrations } from './src/migrations'
+export type { IconNamesList, TokenConfig, TokenSymbolsList } from './src/icons'
+export type { LeaderboardItem, LeaderboardResponse } from './src/leaderboard'
+export type { PortfolioMigrations } from './src/migrations'
 export { LendingProtocol, lendingProtocolMap } from './src/lending-protocol'
 export { MixpanelEventProduct, MixpanelEventTypes } from './src/mixpanel'
-export {
+export type {
   NavigationFeaturedProduct,
   NavigationLinkTypes,
   NavigationMenuPanelListItem,
@@ -47,6 +47,17 @@ export {
 } from './src/navigation'
 export { NetworkHexIds, NetworkIds, NetworkNames } from './src/networks'
 export {
+  OmniBorrowFormAction,
+  OmniEarnFormAction,
+  OmniMultiplyFormAction,
+  OmniMultiplyPanel,
+  OmniProductType,
+  OmniSidebarAutomationStep,
+  OmniSidebarBorrowPanel,
+  OmniSidebarEarnPanel,
+  OmniSidebarStep,
+} from './src/omni-kit'
+export type {
   AutomationMetadataValues,
   AutomationMetadataValuesSimulation,
   GenericProductContext,
@@ -56,9 +67,7 @@ export {
   LendingMetadata,
   NetworkIdsWithValues,
   OmniAutomationSimulationResponse,
-  OmniBorrowFormAction,
   OmniCloseTo,
-  OmniEarnFormAction,
   OmniEntryToken,
   OmniExtraTokenData,
   OmniFiltersParameters,
@@ -69,23 +78,16 @@ export {
   OmniGenericPosition,
   OmniLendingMetadataHandlers,
   OmniMetadataParams,
-  OmniMultiplyFormAction,
-  OmniMultiplyPanel,
   OmniNotificationCallbackWithParams,
   OmniPartialValidations,
   OmniPositionSet,
   OmniProductBorrowishType,
   OmniProductPage,
-  OmniProductType,
   OmniProtocolHookProps,
   OmniProtocolSettings,
   OmniProtocolsSettings,
   OmniSidebarAutomationEditingStep,
-  OmniSidebarAutomationStep,
-  OmniSidebarBorrowPanel,
-  OmniSidebarEarnPanel,
   OmniSidebarEditingStep,
-  OmniSidebarStep,
   OmniSidebarStepsSet,
   OmniSimulationCommon,
   OmniSimulationData,
@@ -112,9 +114,9 @@ export {
   SupplyMetadata,
   WithAutomation,
 } from './src/omni-kit'
-export {
+export { ProductHubCategory, ProductHubTag } from './src/product-hub'
+export type {
   ProductHubCategories,
-  ProductHubCategory,
   ProductHubColumnKey,
   ProductHubData,
   ProductHubDatabaseQuery,
@@ -131,25 +133,32 @@ export {
   ProductHubManagementType,
   ProductHubMultiplyStrategyType,
   ProductHubSupportedNetworks,
-  ProductHubTag,
   ProductHubTags,
   ProductHubTooltipType,
 } from './src/product-hub'
-export { RaysApiResponse } from './src/server-handlers'
-export { TranslatableType } from './src/translatable'
-export {
+export type { RaysApiResponse } from './src/server-handlers'
+export type { TranslatableType } from './src/translatable'
+export { TOSStatus } from './src/terms-of-service'
+export type {
   TOSFinishedStep,
   TOSInitializedStep,
   TOSLoadingStep,
   TOSRetryStep,
   TOSState,
-  TOSStatus,
   TOSWaitingForAcceptanceStep,
   TOSWaitingForAcceptanceUpdatedStep,
   TOSWaitingForSignatureStep,
 } from './src/terms-of-service'
-export { JWTChallenge, JwtPayload } from './src/auth'
+export type { JWTChallenge, JwtPayload } from './src/auth'
 export {
+  SDKChainId,
+  SDKNetwork,
+  SDKSupportedNetworkIdsEnum,
+  UserActivityType,
+  sdkSupportedChains,
+  sdkSupportedNetworks,
+} from './src/earn-protocol'
+export type {
   ArkDetailsType,
   ArksHistoricalChartData,
   ChartDataPoints,
@@ -167,26 +176,21 @@ export {
   PlatformLogo,
   PositionForecastAPIResponse,
   Risk,
-  SDKChainId,
   SDKGlobalRebalanceType,
   SDKGlobalRebalancesType,
-  SDKNetwork,
   SDKSupportedChain,
   SDKSupportedNetwork,
-  SDKSupportedNetworkIdsEnum,
   SDKUserActivityType,
   SDKUsersActivityType,
   SDKVaultType,
   SDKVaultishType,
   SDKVaultsListType,
   UserActivity,
-  UserActivityType,
   UsersActivity,
   VaultApyData,
-  sdkSupportedChains,
-  sdkSupportedNetworks,
 } from './src/earn-protocol'
-export { DeviceInfo, DeviceType } from './src/device-type'
+export { DeviceType } from './src/device-type'
+export type { DeviceInfo } from './src/device-type'
 export { TransactionAction } from './src/transaction'
 
 export type { SdkClient } from './src/sdk-client-react'
