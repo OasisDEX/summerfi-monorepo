@@ -1,5 +1,4 @@
-import { borrowFromPosition, depositToPosition } from '@summerfi/sdk-common'
-import { steps } from '@summerfi/sdk-common'
+import { borrowFromPosition, depositToPosition, steps } from '@summerfi/sdk-common'
 import { ISimulationState } from '../../../interfaces/simulation'
 import { addBalance, getValueFromReference, subtractBalance } from '../../utils'
 

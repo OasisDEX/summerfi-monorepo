@@ -4,7 +4,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "dev": "dotenv -e ../../.env -e ../../.env.local -- next dev -p 3001 --turbo",
-    "build": "dotenv -e ../../.env -e ../../.env.local -- next build",
+    "build:apps": "dotenv -e ../../.env -e ../../.env.local -- next build",
     "start": "next start -p 3001",
     "lint": "eslint ."
   },

@@ -1,9 +1,7 @@
 import { BaseAction } from '../actions/BaseAction'
 import { ActionCallBatch, ActionConfig } from '../actions/Types'
-import { steps } from '@summerfi/sdk-common'
-import { Maybe } from '@summerfi/sdk-common'
+import { steps, Maybe, TransactionInfo } from '@summerfi/sdk-common'
 import { StorageInputsMapType, StorageOutputsMapType } from '../types/ActionStorageTypes'
-import { TransactionInfo } from '@summerfi/sdk-common'
 
 /**
  * @name IStepBuilderContext

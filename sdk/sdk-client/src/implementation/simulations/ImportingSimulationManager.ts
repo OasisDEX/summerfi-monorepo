@@ -1,5 +1,4 @@
-import { IImportSimulation } from '@summerfi/sdk-common'
-import { IImportPositionParameters } from '@summerfi/sdk-common'
+import { IImportSimulation, IImportPositionParameters } from '@summerfi/sdk-common'
 import { IRPCClient } from '../../interfaces/IRPCClient'
 import { IImportingSimulationManager } from '../../interfaces/simulations/IImportingSimulationManager'
 import { RPCMainClientType } from '../../rpc/SDKMainClient'

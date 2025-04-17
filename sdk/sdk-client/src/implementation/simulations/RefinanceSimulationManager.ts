@@ -1,5 +1,4 @@
-import { IRefinanceSimulation } from '@summerfi/sdk-common'
-import { IRefinanceParameters } from '@summerfi/sdk-common'
+import { IRefinanceSimulation, IRefinanceParameters } from '@summerfi/sdk-common'
 import { IRPCClient } from '../../interfaces/IRPCClient'
 import { IRefinanceSimulationManager } from '../../interfaces/simulations/IRefinanceSimulationManager'
 import { RPCMainClientType } from '../../rpc/SDKMainClient'

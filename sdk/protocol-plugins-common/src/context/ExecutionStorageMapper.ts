@@ -1,5 +1,4 @@
-import { isValueReference, steps } from '@summerfi/sdk-common'
-import { Maybe } from '@summerfi/sdk-common'
+import { isValueReference, steps, Maybe } from '@summerfi/sdk-common'
 import assert from 'assert'
 import { StorageInputsMapType, StorageOutputsMapType } from '../types/ActionStorageTypes'
 import { BaseAction } from '../actions/BaseAction'

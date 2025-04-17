@@ -1,5 +1,4 @@
-import { AddressValue } from '@summerfi/sdk-common'
-import { HexData } from '@summerfi/sdk-common'
+import { AddressValue, HexData } from '@summerfi/sdk-common'
 import { decodeFunctionData, parseAbi } from 'viem'
 
 export function decodeAllowanceCalldata(calldata: HexData | string) {

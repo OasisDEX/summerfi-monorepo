@@ -24,7 +24,6 @@ import {
   IUser,
   LoggingService,
   Price,
-  Token,
   TokenAmount,
   TransactionInfo,
   type ChainInfo,

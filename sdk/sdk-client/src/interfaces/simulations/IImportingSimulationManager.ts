@@ -1,5 +1,4 @@
-import { IImportPositionParameters } from '@summerfi/sdk-common'
-import { IImportSimulation } from '@summerfi/sdk-common'
+import { IImportPositionParameters, IImportSimulation } from '@summerfi/sdk-common'
 
 /**
  * Interface for the Importing Simulation Manager
