@@ -1,5 +1,5 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
-import { ILendingPosition } from '@summerfi/sdk-common/lending-protocols'
+import { ILendingPosition } from '@summerfi/sdk-common'
 
 export class PositionCreatedAction extends BaseAction<typeof PositionCreatedAction.Config> {
   public static Config = {

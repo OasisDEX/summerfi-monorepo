@@ -1,18 +1,16 @@
-import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
 import {
+  EmodeType,
   MorphoLendingPoolId,
   MorphoProtocol,
   isMorphoLendingPoolId,
   isMorphoProtocol,
-} from '@summerfi/protocol-plugins/plugins/morphoblue'
-import {
   SparkLendingPoolId,
   SparkLendingPosition,
   SparkLendingPositionId,
   SparkProtocol,
   isSparkLendingPool,
   isSparkProtocol,
-} from '@summerfi/protocol-plugins/plugins/spark'
+} from '@summerfi/protocol-plugins'
 import { makeSDK } from '@summerfi/sdk-client'
 import {
   Address,
@@ -23,9 +21,10 @@ import {
   Percentage,
   TokenAmount,
   isLendingPool,
+  LendingPositionType,
+  PositionsManager,
+  RefinanceParameters,
 } from '@summerfi/sdk-common'
-import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
-import { PositionsManager, RefinanceParameters } from '@summerfi/sdk-common/orders'
 import { TransactionUtils } from '@summerfi/testing-utils'
 
 import assert from 'assert'

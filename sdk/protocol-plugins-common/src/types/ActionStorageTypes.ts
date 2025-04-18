@@ -1,5 +1,4 @@
-import { steps } from '@summerfi/sdk-common/simulation'
-import { ReferenceableField } from '@summerfi/sdk-common'
+import { steps, ReferenceableField } from '@summerfi/sdk-common'
 import { ActionConfig } from '../actions/Types'
 
 //export type Slot = number

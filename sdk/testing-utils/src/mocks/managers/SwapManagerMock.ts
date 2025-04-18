@@ -1,6 +1,13 @@
-import { Address, Percentage, Token, TokenAmount } from '@summerfi/sdk-common/common'
-import { SwapData, QuoteData, SwapProviderType } from '@summerfi/sdk-common/swap'
-import { ISwapManager, ISwapProvider } from '@summerfi/swap-common/interfaces'
+import {
+  Address,
+  Percentage,
+  Token,
+  TokenAmount,
+  SwapData,
+  QuoteData,
+  SwapProviderType,
+} from '@summerfi/sdk-common'
+import { ISwapManager, ISwapProvider } from '@summerfi/swap-common'
 import { ManagerWithProvidersBase } from '@summerfi/sdk-server-common'
 export class SwapManagerMock
   extends ManagerWithProvidersBase<SwapProviderType, ISwapProvider>

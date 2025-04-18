@@ -7,9 +7,9 @@ import {
   MakerLendingPosition,
   MakerLendingPositionId,
   MakerProtocol,
-} from '@summerfi/protocol-plugins/plugins/maker'
-import { Address, ChainFamilyMap, ChainInfo, Token, TokenAmount } from '@summerfi/sdk-common/common'
-import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
+} from '@summerfi/protocol-plugins'
+import { Address, ChainFamilyMap, ChainInfo, Token, TokenAmount } from '@summerfi/sdk-common'
+import { LendingPositionType } from '@summerfi/sdk-common'
 
 export function getMakerPosition(): IMakerLendingPosition {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet

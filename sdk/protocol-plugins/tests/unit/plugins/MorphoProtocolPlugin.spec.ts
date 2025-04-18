@@ -1,5 +1,5 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { ChainFamilyMap, ChainInfo, ProtocolName } from '@summerfi/sdk-common/common'
+import { ChainFamilyMap, ChainInfo, ProtocolName } from '@summerfi/sdk-common'
 import assert from 'assert'
 import { MorphoLendingPositionId } from '../../../src'
 import { MorphoProtocolPlugin } from '../../../src/plugins/morphoblue/implementation/MorphoProtocolPlugin'
@@ -10,7 +10,6 @@ import {
 import { morphoPoolIdMock } from '../../mocks/MorphoPoolIdMock'
 import { createProtocolPluginContext } from '../../utils/CreateProtocolPluginContext'
 import { getErrorMessage } from '../../utils/ErrorMessage'
-import type { ILendingPositionId } from '@summerfi/sdk-common'
 
 describe('Protocol Plugin | Unit | Morpho', () => {
   let ctx: IProtocolPluginContext

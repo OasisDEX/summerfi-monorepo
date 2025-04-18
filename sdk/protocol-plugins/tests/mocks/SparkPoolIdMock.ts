@@ -1,7 +1,7 @@
-import { ChainFamilyMap } from '@summerfi/sdk-common/common'
+import { ChainFamilyMap } from '@summerfi/sdk-common'
 import { TokensManagerMock } from '@summerfi/testing-utils'
 import { ISparkLendingPoolId, SparkLendingPoolId, SparkProtocol } from '../../src'
-import { EmodeType } from '../../src/plugins/common'
+import { EmodeType } from '../../src/plugins/common/enums/EmodeType'
 
 export async function getSparkPoolIdMock(): Promise<ISparkLendingPoolId> {
   const tokenManagerMock = new TokensManagerMock()

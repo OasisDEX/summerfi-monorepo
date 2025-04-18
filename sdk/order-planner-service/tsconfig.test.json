@@ -14,9 +14,12 @@
       ],
       "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
       "@summerfi/sdk-common": ["node_modules/@summerfi/sdk-common/src/index.ts"],
+      "@summerfi/abis": ["../../packages/abis/src/index.ts"],
       "@summerfi/core-contracts": ["node_modules/@summerfi/core-contracts/src/index.ts"],
       "@summerfi/swap-common/*": ["node_modules/@summerfi/swap-common/src/*"],
       "@summerfi/deployment-utils": ["node_modules/@summerfi/deployment-utils/src/index.ts"],
+      "@summerfi/blockchain-client-provider": ["../blockchain-client-provider/src/index.ts"],
+      "@summerfi/protocol-plugins": ["../protocol-plugins/src/index.ts"],
       "@summerfi/protocol-plugins/*": ["node_modules/@summerfi/protocol-plugins/src/*"],
       "@summerfi/protocol-plugins-common": [
         "node_modules/@summerfi/protocol-plugins-common/src/index.ts"

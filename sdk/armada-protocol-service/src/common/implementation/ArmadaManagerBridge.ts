@@ -2,14 +2,12 @@ import { encodeFunctionData } from 'viem'
 import { SummerTokenAbi as BridgeAbi } from '@summerfi/armada-protocol-abis'
 import { getLayerZeroConfig } from '@summerfi/armada-protocol-common'
 import {
-  Address,
   type ChainInfo,
   type ITokenAmount,
   type IAddress,
   type IUser,
   type IChainInfo,
   TransactionType,
-  Percentage,
   BridgeTransactionInfo,
   TokenAmount,
   IToken,

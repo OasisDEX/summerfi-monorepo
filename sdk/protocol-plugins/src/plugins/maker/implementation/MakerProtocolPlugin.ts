@@ -9,8 +9,6 @@ import {
   RiskRatio,
   RiskRatioType,
   TokenAmount,
-} from '@summerfi/sdk-common'
-import {
   Address,
   ChainFamilyName,
   CommonTokenSymbols,
@@ -19,19 +17,15 @@ import {
   Maybe,
   ProtocolName,
   valuesOfChainFamilyMap,
-} from '@summerfi/sdk-common/common'
-import {
   ILendingPoolId,
   ILendingPosition,
   ILendingPositionId,
-} from '@summerfi/sdk-common/lending-protocols'
-import {
   ExternalLendingPositionType,
   IExternalLendingPosition,
   IPositionsManager,
   TransactionInfo,
-} from '@summerfi/sdk-common/orders'
-import { IUser } from '@summerfi/sdk-common/user'
+  IUser,
+} from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
 import { getContract, stringToHex } from 'viem'
 import { BaseProtocolPlugin } from '../../../implementation/BaseProtocolPlugin'

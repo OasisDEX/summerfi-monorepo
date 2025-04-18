@@ -7,8 +7,8 @@ import {
   IProtocolPlugin,
   IProtocolPluginContext,
 } from '@summerfi/protocol-plugins-common'
-import { ChainFamilyMap, IPoolId, Maybe, ProtocolName } from '@summerfi/sdk-common/common'
-import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
+import { ChainFamilyMap, IPoolId, Maybe, ProtocolName } from '@summerfi/sdk-common'
+import { SimulationSteps, steps } from '@summerfi/sdk-common'
 
 import { TransactionInfo } from '@summerfi/sdk-common'
 import {
@@ -18,11 +18,11 @@ import {
   ILendingPoolInfo,
   ILendingPosition,
   ILendingPositionId,
-} from '@summerfi/sdk-common/lending-protocols'
-import { IExternalLendingPosition, IPositionsManager } from '@summerfi/sdk-common/orders'
-import { IUser } from '@summerfi/sdk-common/user'
+} from '@summerfi/sdk-common'
+import { IExternalLendingPosition, IPositionsManager } from '@summerfi/sdk-common'
+import { IUser } from '@summerfi/sdk-common'
 import { StepBuilderContextMock } from '@summerfi/testing-utils'
-import { BaseActionBuilder } from '../../src'
+import { BaseActionBuilder } from '../../src/implementation/BaseActionBuilder'
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 

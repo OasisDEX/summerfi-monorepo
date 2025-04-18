@@ -1,4 +1,4 @@
-import { steps } from '@summerfi/sdk-common/simulation'
+import { steps } from '@summerfi/sdk-common'
 import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import { isAaveV3LendingPool } from '../interfaces'
 import { AaveV3SetEmodeAction } from '../actions/AaveV3SetEmodeAction'

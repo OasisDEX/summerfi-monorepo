@@ -1,6 +1,5 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
-import { IAddress } from '@summerfi/sdk-common'
-import { ITokenAmount } from '@summerfi/sdk-common/common'
+import { IAddress, ITokenAmount } from '@summerfi/sdk-common'
 import { MorphoLLTVPrecision } from '../constants/MorphoConstants'
 import { IMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
 import { MorphoMarketParametersAbi } from '../types/MorphoMarketParameters'

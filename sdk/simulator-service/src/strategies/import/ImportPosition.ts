@@ -1,6 +1,9 @@
-import { IImportSimulation, ImportSimulation } from '@summerfi/sdk-common'
-import { IImportPositionParameters } from '@summerfi/sdk-common/orders'
-import { SimulationSteps } from '@summerfi/sdk-common/simulation'
+import {
+  IImportSimulation,
+  ImportSimulation,
+  IImportPositionParameters,
+  SimulationSteps,
+} from '@summerfi/sdk-common'
 import { Simulator } from '../../implementation/simulator-engine'
 import { importPositionStrategy } from './Strategy'
 

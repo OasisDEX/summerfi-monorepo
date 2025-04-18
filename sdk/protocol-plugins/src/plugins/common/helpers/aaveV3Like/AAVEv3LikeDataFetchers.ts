@@ -1,5 +1,4 @@
-import { Token } from '@summerfi/sdk-common/common'
-import { IAddress } from '@summerfi/sdk-common'
+import { Token, IAddress } from '@summerfi/sdk-common'
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import { Abi } from 'viem'
 

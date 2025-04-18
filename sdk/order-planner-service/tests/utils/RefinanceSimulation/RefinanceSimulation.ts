@@ -1,11 +1,12 @@
-import { ILendingPosition, IRefinanceSimulation } from '@summerfi/sdk-common'
 import {
+  ILendingPosition,
+  IRefinanceSimulation,
   FlashloanProvider,
   RefinanceSimulation,
   SimulationSteps,
   TokenTransferTargetType,
   steps,
-} from '@summerfi/sdk-common/simulation'
+} from '@summerfi/sdk-common'
 
 export function getRefinanceSimulation(params: {
   sourcePosition: ILendingPosition

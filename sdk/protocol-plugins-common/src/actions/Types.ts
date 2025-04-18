@@ -1,5 +1,5 @@
 import { ActionNames } from '@summerfi/deployment-types'
-import { HexData } from '@summerfi/sdk-common/common'
+import { HexData } from '@summerfi/sdk-common'
 
 /**
  * Helper types

@@ -1,6 +1,5 @@
 import { IArmadaPosition, isArmadaPosition } from '@summerfi/sdk-common'
-import { ISimulation, SimulationSchema, SimulationType } from '@summerfi/sdk-common/simulation'
-import { IUser, isUser } from '@summerfi/sdk-common/user'
+import { ISimulation, SimulationSchema, SimulationType, IUser, isUser } from '@summerfi/sdk-common'
 import { z } from 'zod'
 
 /**

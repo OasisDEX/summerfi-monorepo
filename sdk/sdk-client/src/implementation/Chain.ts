@@ -1,4 +1,4 @@
-import type { ChainInfo, IChainInfo } from '@summerfi/sdk-common/common'
+import type { ChainInfo, IChainInfo } from '@summerfi/sdk-common'
 import { IChain } from '../interfaces/IChain'
 import { IProtocolsManagerClient } from '../interfaces/IProtocolsManagerClient'
 import { ITokensManagerClient } from '../interfaces/ITokensManagerClient'

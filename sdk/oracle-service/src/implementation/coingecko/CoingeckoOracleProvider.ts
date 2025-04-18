@@ -10,8 +10,8 @@ import {
   isToken,
   ChainIds,
   LoggingService,
+  OracleProviderType,
 } from '@summerfi/sdk-common'
-import { OracleProviderType } from '@summerfi/sdk-common/oracle'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 import fetch from 'node-fetch'
 import type { OracleProviderConfig } from '../Types'

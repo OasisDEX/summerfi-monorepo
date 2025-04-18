@@ -1,12 +1,11 @@
-import { encodeStrategy } from '../src/utils'
-import { Address } from '@summerfi/sdk-common/common'
+import { encodeStrategy } from '../src/utils/EncodeStrategy'
+import { Address, IPositionsManager } from '@summerfi/sdk-common'
 import {
   DerivedAction,
   decodePositionsManagerCalldata,
   decodeStrategyExecutorCalldata,
 } from '@summerfi/testing-utils'
 import assert from 'assert'
-import { IPositionsManager } from '@summerfi/sdk-common/orders'
 
 describe('Encode Strategy', () => {
   const derivedAction = new DerivedAction()

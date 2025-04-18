@@ -1,6 +1,6 @@
-import { steps } from '@summerfi/sdk-common/simulation'
-import { isSparkLendingPool } from '../interfaces'
-import { SparkSetEmodeAction } from '../actions'
+import { steps } from '@summerfi/sdk-common'
+import { isSparkLendingPool } from '../interfaces/ISparkLendingPool'
+import { SparkSetEmodeAction } from '../actions/SparkSetEmodeAction'
 import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 

@@ -1,6 +1,14 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { ChainFamilyMap, FiatCurrency, OracleProviderType } from '@summerfi/sdk-common'
-import { Percentage, PoolType, Price, RiskRatio, TokenAmount } from '@summerfi/sdk-common/common'
+import {
+  ChainFamilyMap,
+  FiatCurrency,
+  OracleProviderType,
+  Percentage,
+  PoolType,
+  Price,
+  RiskRatio,
+  TokenAmount,
+} from '@summerfi/sdk-common'
 import { OracleManagerMock } from '@summerfi/testing-utils'
 import { isMorphoLendingPool, isMorphoLendingPoolId } from '../../src'
 import { MorphoProtocolPlugin } from '../../src/plugins/morphoblue/implementation/MorphoProtocolPlugin'

@@ -3,11 +3,6 @@ import {
   Maybe,
   ProtocolName,
   valuesOfChainFamilyMap,
-} from '@summerfi/sdk-common/common'
-
-import { morphoBlueAbi, morphoBlueOracleAbi } from '@summerfi/abis'
-import { ActionBuildersMap, IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import {
   Address,
   DebtInfo,
   IPercentage,
@@ -17,34 +12,33 @@ import {
   RiskRatio,
   RiskRatioType,
   TokenAmount,
-} from '@summerfi/sdk-common'
-import {
   CollateralInfo,
   ILendingPoolIdData,
   ILendingPosition,
   ILendingPositionIdData,
-} from '@summerfi/sdk-common/lending-protocols'
-import {
   IExternalLendingPosition,
   IPositionsManager,
   TransactionInfo,
-} from '@summerfi/sdk-common/orders'
-import { IUser } from '@summerfi/sdk-common/user'
+  IUser,
+} from '@summerfi/sdk-common'
+
+import { morphoBlueAbi, morphoBlueOracleAbi } from '@summerfi/abis'
+import { ActionBuildersMap, IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import { BigNumber } from 'bignumber.js'
-import { BaseProtocolPlugin } from '../../../implementation'
+import { BaseProtocolPlugin } from '../../../implementation/BaseProtocolPlugin'
 import { MorphoStepBuilders } from '../builders/MorphoStepBuilders'
 import { MorphoLLTVPrecision, MorphoOraclePricePrecision } from '../constants/MorphoConstants'
+import { IMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
 import {
-  IMorphoLendingPool,
   IMorphoLendingPositionIdData,
   isMorphoLendingPositionId,
-} from '../interfaces'
+} from '../interfaces/IMorphoLendingPositionId'
 import {
   IMorphoLendingPoolId,
   IMorphoLendingPoolIdData,
   isMorphoLendingPoolId,
 } from '../interfaces/IMorphoLendingPoolId'
-import { MorphoMarketParameters } from '../types'
+import { MorphoMarketParameters } from '../types/MorphoMarketParameters'
 import { MorphoMarketInfo } from '../types/MorphoMarketInfo'
 import { MorphoLendingPool } from './MorphoLendingPool'
 import { MorphoLendingPoolInfo } from './MorphoLendingPoolInfo'

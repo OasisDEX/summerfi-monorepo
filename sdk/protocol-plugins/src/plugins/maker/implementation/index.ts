@@ -1,7 +1,0 @@
-export * from './MakerLendingPool'
-export * from './MakerLendingPoolId'
-export * from './MakerLendingPoolInfo'
-export * from './MakerLendingPosition'
-export * from './MakerLendingPositionId'
-export * from './MakerProtocol'
-export * from './MakerProtocolPlugin'

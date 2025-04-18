@@ -87,15 +87,15 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
     }),
     getVaultsHistoricalApy({
       // just the vault displayed
-      fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
+      fleets: [vaultWithConfig].map(({ id, protocol: { network: protocolNetwork } }) => ({
         fleetAddress: id,
-        chainId: subgraphNetworkToId(network),
+        chainId: subgraphNetworkToId(protocolNetwork),
       })),
     }),
     getVaultsApy({
-      fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
+      fleets: [vaultWithConfig].map(({ id, protocol: { network: protocolNetwork } }) => ({
         fleetAddress: id,
-        chainId: subgraphNetworkToId(network),
+        chainId: subgraphNetworkToId(protocolNetwork),
       })),
     }),
   ])

@@ -1,6 +1,6 @@
 import { ActionBuildersMap } from '@summerfi/protocol-plugins-common'
 import { SparkDepositBorrowActionBuilder } from './SparkDepositBorrowActionBuilder'
-import { SimulationSteps } from '@summerfi/sdk-common/simulation'
+import { SimulationSteps } from '@summerfi/sdk-common'
 import { SparkPaybackWithdrawActionBuilder } from './SparkPaybackWithdrawActionBuilder'
 import { SparkOpenPositionActionBuilder } from './SparkOpenPositionActionBuilder'
 

@@ -1,4 +1,4 @@
-import { IAddress, ITokenAmount } from '@summerfi/sdk-common/common'
+import { IAddress, ITokenAmount } from '@summerfi/sdk-common'
 
 /**
  * @name IFleetConfig

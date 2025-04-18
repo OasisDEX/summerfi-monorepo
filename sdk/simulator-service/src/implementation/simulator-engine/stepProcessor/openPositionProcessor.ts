@@ -1,6 +1,5 @@
-import { steps } from '@summerfi/sdk-common/simulation'
+import { steps, newEmptyPositionFromPool } from '@summerfi/sdk-common'
 import type { StepOutputProcessor } from '../../../interfaces/steps'
-import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 
 export const openPositionProcessor: StepOutputProcessor<steps.OpenPosition> = async (step) => {
   return {

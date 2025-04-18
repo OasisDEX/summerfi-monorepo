@@ -1,6 +1,6 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { Price, RiskRatio, TokenAmount, Percentage } from '@summerfi/sdk-common/common'
-import { AaveV3ProtocolPlugin } from '../../src/plugins/aave-v3'
+import { Price, RiskRatio, TokenAmount, Percentage } from '@summerfi/sdk-common'
+import { AaveV3ProtocolPlugin } from '../../src/plugins/aave-v3/implementation/AAVEv3ProtocolPlugin'
 import { getAaveV3PoolIdMock } from '../mocks/AAVEv3PoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 import { IAaveV3LendingPoolId } from '../../src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId'

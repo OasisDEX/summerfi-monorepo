@@ -1,8 +1,5 @@
-import { IToken } from '@summerfi/sdk-common'
-import { IPrintable } from '@summerfi/sdk-common/common'
-import { LendingPoolId } from '@summerfi/sdk-common/lending-protocols'
-import { SerializationService } from '@summerfi/sdk-common/services'
-import { EmodeType } from '../../common'
+import { IToken, IPrintable, LendingPoolId, SerializationService } from '@summerfi/sdk-common'
+import { EmodeType } from '../../common/enums/EmodeType'
 import {
   IAaveV3LendingPoolId,
   IAaveV3LendingPoolIdData,

@@ -1,5 +1,4 @@
-import { ChainInfo } from '@summerfi/sdk-common'
-import { Address, AddressType } from '@summerfi/sdk-common/common'
+import { ChainInfo, Address, AddressType } from '@summerfi/sdk-common'
 import { ITokensManager } from '@summerfi/tokens-common'
 import assert from 'assert'
 

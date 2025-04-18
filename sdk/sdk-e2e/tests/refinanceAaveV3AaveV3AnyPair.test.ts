@@ -6,8 +6,8 @@ import {
   isAaveV3LendingPool,
   isAaveV3LendingPoolId,
   isAaveV3Protocol,
+  EmodeType,
 } from '@summerfi/protocol-plugins'
-import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
 import { makeSDK, type Chain } from '@summerfi/sdk-client'
 import {
   Address,
@@ -19,8 +19,13 @@ import {
   TokenAmount,
   type Maybe,
 } from '@summerfi/sdk-common'
-import { LendingPositionType, isLendingPool } from '@summerfi/sdk-common/lending-protocols'
-import { Order, PositionsManager, RefinanceParameters } from '@summerfi/sdk-common/orders'
+import {
+  LendingPositionType,
+  isLendingPool,
+  Order,
+  PositionsManager,
+  RefinanceParameters,
+} from '@summerfi/sdk-common'
 import { TransactionUtils } from '@summerfi/testing-utils'
 import assert from 'assert'
 import { Hex } from 'viem'

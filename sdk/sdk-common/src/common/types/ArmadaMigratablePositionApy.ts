@@ -1,4 +1,4 @@
-import type { IPercentage } from '../interfaces'
+import type { IPercentage } from '../interfaces/IPercentage'
 
 export type ArmadaMigratablePositionApy = {
   // position id

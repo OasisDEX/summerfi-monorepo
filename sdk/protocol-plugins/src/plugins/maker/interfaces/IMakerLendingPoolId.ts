@@ -1,8 +1,6 @@
-import { isToken } from '@summerfi/sdk-common'
-import { IToken } from '@summerfi/sdk-common/common'
-import { ILendingPoolId, LendingPoolIdDataSchema } from '@summerfi/sdk-common/lending-protocols'
+import { isToken, IToken, ILendingPoolId, LendingPoolIdDataSchema } from '@summerfi/sdk-common'
 import { z } from 'zod'
-import { ILKType, ILKTypeSchema } from '../enums'
+import { ILKType, ILKTypeSchema } from '../enums/ILKType'
 import { IMakerProtocol, isMakerProtocol } from './IMakerProtocol'
 
 /**

@@ -1,4 +1,4 @@
-import { ILendingPoolInfo, LendingPoolInfoDataSchema } from '@summerfi/sdk-common/lending-protocols'
+import { ILendingPoolInfo, LendingPoolInfoDataSchema } from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { IMakerLendingPoolId, isMakerLendingPoolId } from './IMakerLendingPoolId'
 

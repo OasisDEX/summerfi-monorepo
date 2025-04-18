@@ -1,7 +1,7 @@
 import { BigNumber } from 'bignumber.js'
 import { Denomination } from '../types/Denomination'
 import { FiatCurrency, isFiatCurrency } from '../enums/FiatCurrency'
-import { IPercentage } from '../interfaces'
+import { IPercentage } from '../interfaces/IPercentage'
 import {
   type IFiatCurrencyAmount,
   type IFiatCurrencyAmountData,

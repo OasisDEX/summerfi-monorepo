@@ -23,6 +23,8 @@
     "@summerfi/armada-protocol-abis": "workspace:*",
     "@summerfi/armada-protocol-common": "workspace:*",
     "@summerfi/blockchain-client-common": "workspace:*",
+    "@summerfi/blockchain-client-provider": "workspace:*",
+    "@summerfi/configuration-provider-mock": "workspace:*",
     "@summerfi/contracts-provider-common": "workspace:*",
     "@summerfi/common": "workspace:*",
     "@summerfi/configuration-provider-common": "workspace:*",

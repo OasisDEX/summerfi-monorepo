@@ -1,5 +1,5 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
-import { ITokenAmount } from '@summerfi/sdk-common/common'
+import { ITokenAmount } from '@summerfi/sdk-common'
 
 export class AaveV3DepositAction extends BaseAction<typeof AaveV3DepositAction.Config> {
   public static readonly Config = {

@@ -1,1 +1,1 @@
-export * from './interfaces'
+export type { IAllowanceManager } from './interfaces/IAllowanceManager'

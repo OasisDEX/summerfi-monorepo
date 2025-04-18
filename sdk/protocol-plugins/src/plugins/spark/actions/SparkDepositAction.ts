@@ -1,5 +1,5 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
-import { ITokenAmount } from '@summerfi/sdk-common/common'
+import { ITokenAmount } from '@summerfi/sdk-common'
 
 export class SparkDepositAction extends BaseAction<typeof SparkDepositAction.Config> {
   public static readonly Config = {

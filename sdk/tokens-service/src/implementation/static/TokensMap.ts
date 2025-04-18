@@ -1,6 +1,5 @@
-import { AddressValue, Maybe } from '@summerfi/sdk-common'
+import { AddressValue, Maybe, ChainId } from '@summerfi/sdk-common'
 import { TokenData } from './TokensData'
-import { ChainId } from '@summerfi/sdk-common/common'
 
 /**
  * @name TokensMap

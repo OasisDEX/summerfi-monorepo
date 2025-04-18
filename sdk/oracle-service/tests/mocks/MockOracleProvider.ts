@@ -7,9 +7,9 @@ import {
   OracleProviderType,
   Price,
   ISpotPriceInfo,
-  type SpotPricesInfo,
+  IToken,
 } from '@summerfi/sdk-common'
-import { IToken } from '@summerfi/sdk-common/common'
+import type { SpotPricesInfo } from '@summerfi/sdk-common'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 
 export class MockOracleProvider

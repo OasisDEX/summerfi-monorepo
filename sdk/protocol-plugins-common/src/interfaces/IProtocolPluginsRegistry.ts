@@ -1,4 +1,4 @@
-import { Maybe, ProtocolName } from '@summerfi/sdk-common/common'
+import { Maybe, ProtocolName } from '@summerfi/sdk-common'
 import { type IProtocolPlugin } from './IProtocolPlugin'
 
 export interface IProtocolPluginsRegistry {

@@ -4,8 +4,8 @@ import {
   MakerLendingPoolInfo,
   MakerProtocol,
   isMakerProtocol,
-} from '@summerfi/protocol-plugins/plugins/maker'
-import { isMakerLendingPoolId } from '@summerfi/protocol-plugins/plugins/maker/interfaces/IMakerLendingPoolId'
+  isMakerLendingPoolId,
+} from '@summerfi/protocol-plugins'
 import { Address, ChainFamilyMap, PoolType, ProtocolName, Token } from '@summerfi/sdk-common'
 import assert from 'assert'
 import { SDKManager } from '../../src/implementation/SDKManager'

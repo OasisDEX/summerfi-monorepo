@@ -1,4 +1,4 @@
-import { SerializationService } from '@summerfi/sdk-common/services'
+import { SerializationService } from '@summerfi/sdk-common'
 import { initTRPC } from '@trpc/server'
 import { SDKAppContext } from './context/SDKContext'
 

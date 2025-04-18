@@ -1,6 +1,9 @@
-import { IRefinanceSimulation, RefinanceParameters } from '@summerfi/sdk-common'
-import { Percentage } from '@summerfi/sdk-common/common'
-import { SimulationSteps } from '@summerfi/sdk-common/simulation'
+import {
+  IRefinanceSimulation,
+  RefinanceParameters,
+  Percentage,
+  SimulationSteps,
+} from '@summerfi/sdk-common'
 import { refinanceLendingToLending } from '../src/strategies'
 import { mockRefinanceContext, mockRefinanceContextRequiredSwaps } from './mocks/contextMock'
 import {

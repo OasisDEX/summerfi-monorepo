@@ -1,3 +1,3 @@
-export * from './interfaces'
+export type { IArmadaSubgraphManager } from './interfaces/IArmadaSubgraphManager'
 export * from './generated/client'
-export * from './utils'
+export { createGraphQLClient } from './utils/createGraphQLClient'

@@ -1,4 +1,4 @@
-import { steps } from '@summerfi/sdk-common/simulation'
+import { steps } from '@summerfi/sdk-common'
 import { getValueFromReference } from '../../utils'
 import type { StepOutputProcessor } from '../../../interfaces/steps'
 

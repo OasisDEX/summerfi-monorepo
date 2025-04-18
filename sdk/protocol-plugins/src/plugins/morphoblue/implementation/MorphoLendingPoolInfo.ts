@@ -1,5 +1,4 @@
-import { LendingPoolInfo } from '@summerfi/sdk-common/lending-protocols'
-import { SerializationService } from '@summerfi/sdk-common/services'
+import { LendingPoolInfo, SerializationService } from '@summerfi/sdk-common'
 import { IMorphoLendingPoolId } from '../interfaces/IMorphoLendingPoolId'
 import {
   IMorphoLendingPoolInfo,

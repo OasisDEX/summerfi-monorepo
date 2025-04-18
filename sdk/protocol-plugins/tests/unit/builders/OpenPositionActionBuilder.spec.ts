@@ -1,6 +1,6 @@
-import { Address, ChainFamilyMap, ChainInfo, Token, TokenAmount } from '@summerfi/sdk-common/common'
-import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
-import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
+import { Address, ChainFamilyMap, ChainInfo, Token, TokenAmount } from '@summerfi/sdk-common'
+import { LendingPositionType } from '@summerfi/sdk-common'
+import { SimulationSteps, steps } from '@summerfi/sdk-common'
 import { getErrorMessage } from '@summerfi/testing-utils'
 import assert from 'assert'
 import {

@@ -1,1 +1,1 @@
-export * from './implementation'
+export { ProtocolManager } from './implementation/ProtocolManager'

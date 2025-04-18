@@ -1,5 +1,5 @@
 import { ActionCall } from '@summerfi/protocol-plugins-common'
-import { HexData } from '@summerfi/sdk-common/common'
+import { HexData } from '@summerfi/sdk-common'
 import { decodeFunctionData, parseAbi } from 'viem'
 
 export function decodeStrategyExecutorCalldata(calldata: HexData | string):

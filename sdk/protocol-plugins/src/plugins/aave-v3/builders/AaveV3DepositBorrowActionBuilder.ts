@@ -1,12 +1,12 @@
 import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
-import { IAddress } from '@summerfi/sdk-common/common'
 import {
+  IAddress,
   TokenTransferTargetType,
   getValueFromReference,
   steps,
-} from '@summerfi/sdk-common/simulation'
+} from '@summerfi/sdk-common'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
-import { SetApprovalAction } from '../../common'
+import { SetApprovalAction } from '../../common/actions/SetApprovalAction'
 import { getContractAddress } from '../../utils/GetContractAddress'
 import { AaveV3BorrowAction } from '../actions/AaveV3BorrowAction'
 import { AaveV3DepositAction } from '../actions/AaveV3DepositAction'

@@ -1,4 +1,4 @@
-import { Address, HexData, Token } from '@summerfi/sdk-common/common'
+import { Address, HexData, Token, IAddress, IChainInfo } from '@summerfi/sdk-common'
 import {
   AllowedProtocolNames,
   WithToken,
@@ -17,7 +17,6 @@ import {
   fetchAssetPrices,
   fetchReservesTokens,
 } from './AAVEv3LikeDataFetchers'
-import { IAddress, IChainInfo } from '@summerfi/sdk-common'
 import { ChainContractsProvider, GenericAbiMap } from '../../../utils/ChainContractProvider'
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import { Abi } from 'viem'

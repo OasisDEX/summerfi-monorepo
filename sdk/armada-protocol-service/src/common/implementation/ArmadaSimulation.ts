@@ -3,10 +3,8 @@ import {
   IArmadaSimulationData,
   __iarmadasimulation__,
 } from '@summerfi/armada-protocol-common'
-import type { IArmadaPosition } from '@summerfi/sdk-common/common'
-import { SerializationService } from '@summerfi/sdk-common/services'
-import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
-import { IUser } from '@summerfi/sdk-common/user'
+import type { IArmadaPosition } from '@summerfi/sdk-common'
+import { SerializationService, Simulation, SimulationType, IUser } from '@summerfi/sdk-common'
 
 /**
  * Type for the parameters of ArmadaSimulation

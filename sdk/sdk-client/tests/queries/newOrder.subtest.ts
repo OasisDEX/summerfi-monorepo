@@ -1,5 +1,5 @@
-import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
 import {
+  EmodeType,
   ILKType,
   IMakerLendingPosition,
   MakerLendingPool,
@@ -7,25 +7,25 @@ import {
   MakerLendingPosition,
   MakerLendingPositionId,
   MakerProtocol,
-} from '@summerfi/protocol-plugins/plugins/maker'
-import {
   SparkLendingPool,
   SparkLendingPoolId,
   SparkLendingPosition,
   SparkLendingPositionId,
   SparkProtocol,
-} from '@summerfi/protocol-plugins/plugins/spark'
-import { IRefinanceSimulation, RefinanceSimulation } from '@summerfi/sdk-common'
+} from '@summerfi/protocol-plugins'
 import {
+  IRefinanceSimulation,
+  RefinanceSimulation,
   Address,
   ChainFamilyMap,
   ChainInfo,
   Maybe,
   Token,
   TokenAmount,
-} from '@summerfi/sdk-common/common'
-import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
-import { IPositionsManager, Order } from '@summerfi/sdk-common/orders'
+  LendingPositionType,
+  IPositionsManager,
+  Order,
+} from '@summerfi/sdk-common'
 import { SDKManager } from '../../src/implementation/SDKManager'
 import { UserClient } from '../../src/implementation/UserClient'
 import { RPCMainClientType } from '../../src/rpc/SDKMainClient'

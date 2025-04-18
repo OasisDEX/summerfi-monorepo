@@ -1,4 +1,4 @@
-import { ILendingPool } from '../../../lending-protocols'
+import { ILendingPool } from '../../../lending-protocols/interfaces/ILendingPool'
 import { LendingPosition } from '../../../lending-protocols/implementation/LendingPosition'
 import { SerializationService } from '../../../services/SerializationService'
 import {

@@ -1,5 +1,4 @@
-import { IChainInfo, Maybe } from '@summerfi/sdk-common'
-import { Transaction } from '@summerfi/sdk-common/orders'
+import { IChainInfo, Maybe, Transaction } from '@summerfi/sdk-common'
 import { getRpcGatewayEndpoint } from '@summerfi/serverless-shared'
 import {
   Account,

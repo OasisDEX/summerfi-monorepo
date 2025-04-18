@@ -1,7 +1,7 @@
-import { ILendingPosition } from '../../lending-protocols'
+import { ILendingPosition } from '../../lending-protocols/interfaces/ILendingPosition'
 import { IExternalLendingPosition } from '../../orders/importing/interfaces/IExternalLendingPosition'
 import { SerializationService } from '../../services/SerializationService'
-import { SimulationType } from '../enums'
+import { SimulationType } from '../enums/SimulationType'
 import {
   IImportSimulation,
   IImportSimulationData,

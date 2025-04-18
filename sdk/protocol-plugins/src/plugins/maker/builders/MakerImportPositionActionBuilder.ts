@@ -1,6 +1,5 @@
 import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
-import { ProtocolName } from '@summerfi/sdk-common'
-import { steps } from '@summerfi/sdk-common/simulation'
+import { ProtocolName, steps } from '@summerfi/sdk-common'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 import { isMakerLendingPoolId } from '../interfaces/IMakerLendingPoolId'
 

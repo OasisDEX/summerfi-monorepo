@@ -5,13 +5,21 @@ import {
   Token,
   TokenAmount,
   type Maybe,
-} from '@summerfi/sdk-common/common'
+} from '@summerfi/sdk-common'
 
 import { makeSDK, type Chain } from '@summerfi/sdk-client'
-import { Order, PositionsManager } from '@summerfi/sdk-common/orders'
-
-import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
 import {
+  Order,
+  PositionsManager,
+  AddressValue,
+  CommonTokenSymbols,
+  LendingPositionType,
+  RefinanceParameters,
+  isLendingPool,
+} from '@summerfi/sdk-common'
+
+import {
+  EmodeType,
   ILKType,
   MakerLendingPoolId,
   MakerLendingPosition,
@@ -19,20 +27,11 @@ import {
   MakerProtocol,
   isMakerLendingPool,
   isMakerProtocol,
-} from '@summerfi/protocol-plugins/plugins/maker'
-import {
   SparkLendingPoolId,
   SparkProtocol,
   isSparkLendingPoolId,
   isSparkProtocol,
-} from '@summerfi/protocol-plugins/plugins/spark'
-import {
-  AddressValue,
-  CommonTokenSymbols,
-  LendingPositionType,
-  RefinanceParameters,
-} from '@summerfi/sdk-common'
-import { isLendingPool } from '@summerfi/sdk-common/lending-protocols'
+} from '@summerfi/protocol-plugins'
 import { TransactionUtils } from '@summerfi/testing-utils'
 import assert from 'assert'
 import { Hex } from 'viem'

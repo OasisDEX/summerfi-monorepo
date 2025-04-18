@@ -1,5 +1,5 @@
 import { IPrintable } from '../interfaces/IPrintable'
-import { SerializationService } from '../../services'
+import { SerializationService } from '../../services/SerializationService'
 import { IPoolId, IPoolIdData, __signature__ } from '../interfaces/IPoolId'
 import { IProtocol } from '../interfaces/IProtocol'
 import { PoolType } from '../enums/PoolType'

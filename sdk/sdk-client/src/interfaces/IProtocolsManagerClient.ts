@@ -1,9 +1,4 @@
-import { Maybe } from '@summerfi/sdk-common/common'
-import {
-  ILendingPool,
-  ILendingPoolIdData,
-  ILendingPoolInfo,
-} from '@summerfi/sdk-common/lending-protocols'
+import { Maybe, ILendingPool, ILendingPoolIdData, ILendingPoolInfo } from '@summerfi/sdk-common'
 
 /**
  * @interface IProtocolsManagerClient

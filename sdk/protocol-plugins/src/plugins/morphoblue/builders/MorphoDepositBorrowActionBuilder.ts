@@ -1,11 +1,8 @@
 import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
-import {
-  TokenTransferTargetType,
-  getValueFromReference,
-  steps,
-} from '@summerfi/sdk-common/simulation'
+import { TokenTransferTargetType, getValueFromReference, steps } from '@summerfi/sdk-common'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
-import { SendTokenAction, SetApprovalAction } from '../../common'
+import { SetApprovalAction } from '../../common/actions/SetApprovalAction'
+import { SendTokenAction } from '../../common/actions/SendTokenAction'
 import { MorphoBorrowAction } from '../actions/MorphoBorrowAction'
 import { MorphoDepositAction } from '../actions/MorphoDepositAction'
 import { isMorphoLendingPool } from '../interfaces/IMorphoLendingPool'

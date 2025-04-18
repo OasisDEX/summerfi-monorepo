@@ -1,19 +1,20 @@
-import { ChainInfo, Maybe, ProtocolName } from '@summerfi/sdk-common/common'
-
 import {
+  ChainInfo,
+  Maybe,
+  ProtocolName,
   ILendingPool,
   ILendingPoolIdData,
   ILendingPoolInfo,
   ILendingPosition,
   ILendingPositionIdData,
-} from '@summerfi/sdk-common/lending-protocols'
-import {
   IExternalLendingPosition,
   IPositionsManager,
   TransactionInfo,
-} from '@summerfi/sdk-common/orders'
-import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
-import { IUser } from '@summerfi/sdk-common/user'
+  SimulationSteps,
+  steps,
+  IUser,
+} from '@summerfi/sdk-common'
+
 import { ActionBuildersMap, FilterStep, IActionBuilder } from './IActionBuilder'
 import { type IProtocolPluginContext } from './IProtocolPluginContext'
 

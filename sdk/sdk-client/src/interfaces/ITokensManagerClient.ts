@@ -1,4 +1,4 @@
-import type { Token, Address } from '@summerfi/sdk-common/common'
+import type { Token, Address } from '@summerfi/sdk-common'
 
 /**
  * @name ITokensManagerClient

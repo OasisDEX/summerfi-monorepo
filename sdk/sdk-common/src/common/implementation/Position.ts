@@ -1,5 +1,5 @@
 import { SerializationService } from '../../services/SerializationService'
-import { IPool } from '../interfaces'
+import { IPool } from '../interfaces/IPool'
 import { IPosition, IPositionData, __signature__ } from '../interfaces/IPosition'
 import { IPositionId } from '../interfaces/IPositionId'
 import { PositionType } from '../enums/PositionType'

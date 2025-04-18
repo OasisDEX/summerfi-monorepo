@@ -8,9 +8,10 @@ import {
   type IArmadaVaultInfo,
   type IChainInfo,
   type IToken,
-} from '@summerfi/sdk-common/common'
-import { TransactionInfo, ExtendedTransactionInfo } from '@summerfi/sdk-common/orders'
-import { IUser } from '@summerfi/sdk-common/user'
+  TransactionInfo,
+  ExtendedTransactionInfo,
+  IUser,
+} from '@summerfi/sdk-common'
 import type {
   GetGlobalRebalancesQuery,
   GetVaultQuery,

@@ -1,4 +1,4 @@
-import { AddressValue } from '@summerfi/sdk-common/common'
+import { AddressValue } from '@summerfi/sdk-common'
 import { Hex, encodeFunctionData, parseAbi } from 'viem'
 
 export function encodeMakerProxyActionsAllow(params: {

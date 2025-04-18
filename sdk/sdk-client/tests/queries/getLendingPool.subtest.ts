@@ -3,8 +3,8 @@ import {
   MakerLendingPool,
   MakerLendingPoolId,
   MakerProtocol,
-} from '@summerfi/protocol-plugins/plugins/maker'
-import { isMakerLendingPoolId } from '@summerfi/protocol-plugins/plugins/maker/interfaces/IMakerLendingPoolId'
+  isMakerLendingPoolId,
+} from '@summerfi/protocol-plugins'
 import { Address, ChainFamilyMap, PoolType, ProtocolName, Token } from '@summerfi/sdk-common'
 import { SDKManager } from '../../src/implementation/SDKManager'
 import { RPCMainClientType } from '../../src/rpc/SDKMainClient'

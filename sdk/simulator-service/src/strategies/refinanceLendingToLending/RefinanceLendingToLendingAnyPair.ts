@@ -1,15 +1,19 @@
-import { SDKError, SDKErrorType, isLendingPosition } from '@summerfi/sdk-common'
-import { CommonTokenSymbols, Percentage, TokenAmount } from '@summerfi/sdk-common/common'
-import { isLendingPool } from '@summerfi/sdk-common/lending-protocols'
-import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import {
+  SDKError,
+  SDKErrorType,
+  isLendingPosition,
+  CommonTokenSymbols,
+  Percentage,
+  TokenAmount,
+  isLendingPool,
+  IRefinanceParameters,
   FlashloanProvider,
   IRefinanceSimulation,
   RefinanceSimulation,
   SimulationSteps,
   TokenTransferTargetType,
   getValueFromReference,
-} from '@summerfi/sdk-common/simulation'
+} from '@summerfi/sdk-common'
 import { Simulator } from '../../implementation/simulator-engine'
 import { estimateSwapFromAmount } from '../../implementation/utils/EstimateSwapFromAmount'
 import { getSwapStepData } from '../../implementation/utils/GetSwapStepData'

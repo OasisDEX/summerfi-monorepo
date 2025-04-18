@@ -1,4 +1,4 @@
-import { type ISwapManager } from '@summerfi/swap-common/interfaces'
+import { type ISwapManager } from '@summerfi/swap-common'
 import { type IProtocolManager } from '@summerfi/protocol-manager-common'
 import { type IOracleManager } from '@summerfi/oracle-common'
 

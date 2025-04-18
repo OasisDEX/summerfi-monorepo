@@ -2,7 +2,8 @@ import { IAddress, IPercentage, ITokenAmount, TransactionInfo } from '@summerfi/
 import { IContractWrapper } from './IContractWrapper'
 import { IErc20Contract } from './IErc20Contract'
 import { IErc4626Contract } from './IErc4626Contract'
-import type { IFleetConfig, IRebalanceData } from '../types'
+import type { IFleetConfig } from '../types/IFleetConfig'
+import type { IRebalanceData } from '../types/IRebalanceData'
 
 /**
  * @name IFleetCommanderContract

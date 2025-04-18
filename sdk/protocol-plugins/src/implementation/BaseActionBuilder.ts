@@ -5,8 +5,7 @@ import {
   FilterStep,
   IActionBuilder,
 } from '@summerfi/protocol-plugins-common'
-import { IAddress, IChainInfo, ProtocolName } from '@summerfi/sdk-common/common'
-import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
+import { IAddress, IChainInfo, ProtocolName, SimulationSteps, steps } from '@summerfi/sdk-common'
 import { getContractAddress } from '../plugins/utils/GetContractAddress'
 
 /**

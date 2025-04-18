@@ -1,4 +1,4 @@
-import { ChainId, IChainInfo, Maybe } from '@summerfi/sdk-common/common'
+import { ChainId, IChainInfo } from '@summerfi/sdk-common'
 import { IManagerProvider } from '../interfaces/IManagerProvider'
 import { IManagerWithProviders } from '../interfaces/IManagerWithProviders'
 

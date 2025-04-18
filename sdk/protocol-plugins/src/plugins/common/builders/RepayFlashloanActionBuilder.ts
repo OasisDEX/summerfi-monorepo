@@ -1,4 +1,4 @@
-import { FlashloanProvider, steps } from '@summerfi/sdk-common/simulation'
+import { FlashloanProvider, steps } from '@summerfi/sdk-common'
 import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import { SendTokenAction } from '../actions/SendTokenAction'
 import { FlashloanAction } from '../actions/FlashloanAction'

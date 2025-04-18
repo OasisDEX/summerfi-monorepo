@@ -2,7 +2,7 @@ import {
   ILendingPosition,
   LendingPositionDataSchema,
   LendingPositionType,
-} from '@summerfi/sdk-common/lending-protocols'
+} from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { IMakerLendingPool, isMakerLendingPool } from './IMakerLendingPool'
 import { IMakerLendingPositionId, isMakerLendingPositionId } from './IMakerLendingPositionId'

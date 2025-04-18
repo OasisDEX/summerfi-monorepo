@@ -13,16 +13,22 @@ import {
   IStepBuilderContext,
   StepBuilderContext,
 } from '@summerfi/protocol-plugins-common'
-import { IUser, SDKError } from '@summerfi/sdk-common'
-import { Maybe, SDKErrorType } from '@summerfi/sdk-common/common'
-import { Order, TransactionInfo, type IPositionsManager } from '@summerfi/sdk-common/orders'
-import { SimulationSteps, SimulationType, steps } from '@summerfi/sdk-common/simulation'
 import {
+  IUser,
+  SDKError,
+  Maybe,
+  SDKErrorType,
+  SimulationSteps,
+  SimulationType,
+  steps,
   IImportSimulation,
   IRefinanceSimulation,
   isImportSimulation,
   isRefinanceSimulation,
-} from '@summerfi/sdk-common/simulation/interfaces'
+  Order,
+  TransactionInfo,
+} from '@summerfi/sdk-common'
+import type { IPositionsManager } from '@summerfi/sdk-common'
 
 /**
  * @name DMAOrderPlanner

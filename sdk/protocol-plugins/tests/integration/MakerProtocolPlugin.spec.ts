@@ -1,13 +1,7 @@
-import {
-  ChainInfo,
-  Token,
-  Address,
-  Price,
-  TokenAmount,
-  Percentage,
-} from '@summerfi/sdk-common/common'
+import { Token, Address, Price, TokenAmount, Percentage } from '@summerfi/sdk-common'
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { IMakerLendingPoolId, MakerProtocolPlugin } from '../../src/plugins/maker'
+import { MakerProtocolPlugin } from '../../src/plugins/maker/implementation/MakerProtocolPlugin'
+import { IMakerLendingPoolId } from '../../src/plugins/maker/interfaces/IMakerLendingPoolId'
 import { getMakerPoolIdMock } from '../mocks/MakerPoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 import { OracleManagerMock } from '@summerfi/testing-utils'

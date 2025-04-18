@@ -1,10 +1,4 @@
-import {
-  Address,
-  ChainFamilyMap,
-  Percentage,
-  TokenAmount,
-  type Maybe,
-} from '@summerfi/sdk-common/common'
+import { Address, ChainFamilyMap, Percentage, TokenAmount, type Maybe } from '@summerfi/sdk-common'
 
 import { makeSDK, type Chain } from '@summerfi/sdk-client'
 import {
@@ -14,25 +8,6 @@ import {
   Order,
   PositionsManager,
   RefinanceParameters,
-} from '@summerfi/sdk-common/orders'
-
-import {
-  AaveV3LendingPoolId,
-  AaveV3Protocol,
-  isAaveV3LendingPoolId,
-  isAaveV3Protocol,
-} from '@summerfi/protocol-plugins'
-import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
-import {
-  ILKType,
-  MakerLendingPoolId,
-  MakerLendingPosition,
-  MakerLendingPositionId,
-  MakerProtocol,
-  isMakerLendingPool,
-  isMakerProtocol,
-} from '@summerfi/protocol-plugins/plugins/maker'
-import {
   AddressValue,
   CommonTokenSymbols,
   ExternalLendingPosition,
@@ -41,8 +16,23 @@ import {
   IToken,
   LendingPositionType,
   Token,
+  isLendingPool,
 } from '@summerfi/sdk-common'
-import { isLendingPool } from '@summerfi/sdk-common/lending-protocols'
+
+import {
+  AaveV3LendingPoolId,
+  AaveV3Protocol,
+  isAaveV3LendingPoolId,
+  isAaveV3Protocol,
+  EmodeType,
+  ILKType,
+  MakerLendingPoolId,
+  MakerLendingPosition,
+  MakerLendingPositionId,
+  MakerProtocol,
+  isMakerLendingPool,
+  isMakerProtocol,
+} from '@summerfi/protocol-plugins'
 import { TransactionUtils } from '@summerfi/testing-utils'
 import assert from 'assert'
 import { Hex } from 'viem'

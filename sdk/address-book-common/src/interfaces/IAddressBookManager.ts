@@ -1,4 +1,4 @@
-import type { Maybe, IChainInfo, IAddress } from '@summerfi/sdk-common/common'
+import type { Maybe, IChainInfo, IAddress } from '@summerfi/sdk-common'
 
 /**
  * @name IAddressBookManager

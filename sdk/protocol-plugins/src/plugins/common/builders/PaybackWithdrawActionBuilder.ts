@@ -1,5 +1,5 @@
 import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
-import { steps } from '@summerfi/sdk-common/simulation'
+import { steps } from '@summerfi/sdk-common'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 
 export class PaybackWithdrawActionBuilder extends BaseActionBuilder<steps.PaybackWithdrawStep> {

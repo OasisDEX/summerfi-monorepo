@@ -1,8 +1,10 @@
 import { ConfigurationProvider } from '@summerfi/configuration-provider'
-import { Address, Token, type ChainInfo } from '@summerfi/sdk-common/common'
+import type { ChainInfo } from '@summerfi/sdk-common'
 
 import { OracleManagerFactory } from '../src/implementation/OracleManagerFactory'
 import {
+  Address,
+  Token,
   ChainFamilyMap,
   FiatCurrency,
   OracleProviderType,

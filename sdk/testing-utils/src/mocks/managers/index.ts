@@ -1,5 +1,0 @@
-export * from './AddressBookManagerMock'
-export * from './OracleManagerMock'
-export * from './StepBuilderContextMock'
-export * from './SwapManagerMock'
-export * from './TokensManagerMock'

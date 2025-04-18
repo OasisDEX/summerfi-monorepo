@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { PositionType, PositionTypeSchema } from '../enums'
+import { PositionType, PositionTypeSchema } from '../enums/PositionType'
 
 /**
  * Unique signature to provide branded types to the interface

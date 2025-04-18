@@ -1,6 +1,6 @@
 import { morphoBlueAbi } from '@summerfi/abis'
 import { MorphoBlueContractNames } from '@summerfi/deployment-types'
-import { AddressValue } from '@summerfi/sdk-common/common'
+import { AddressValue } from '@summerfi/sdk-common'
 
 type MorphoAbiMap = {
   MorphoBlue: typeof morphoBlueAbi

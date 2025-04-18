@@ -1,5 +1,5 @@
-import { Maybe, SDKError, SDKErrorType } from '@summerfi/sdk-common/common'
-import type { Order } from '@summerfi/sdk-common/orders'
+import { Maybe, SDKError, SDKErrorType } from '@summerfi/sdk-common'
+import type { Order } from '@summerfi/sdk-common'
 
 import { isBuildOrderInputs } from '@summerfi/order-planner-common/'
 import { z } from 'zod'

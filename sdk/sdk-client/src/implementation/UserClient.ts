@@ -6,13 +6,14 @@ import {
   Maybe,
   Position,
   PositionId,
-} from '@summerfi/sdk-common/common'
-import { IPositionsManager, Order } from '@summerfi/sdk-common/orders'
-import { ISimulation } from '@summerfi/sdk-common/simulation'
+  IPositionsManager,
+  Order,
+  ISimulation,
+  SerializationService,
+} from '@summerfi/sdk-common'
 import { IUserClient } from '../interfaces/IUserClient'
 import { RPCMainClientType } from '../rpc/SDKMainClient'
 import { IRPCClient } from '../interfaces/IRPCClient'
-import { SerializationService } from '@summerfi/sdk-common/services'
 
 /**
  * @class UserClient
