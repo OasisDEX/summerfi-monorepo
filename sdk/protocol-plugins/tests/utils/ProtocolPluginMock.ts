@@ -22,7 +22,7 @@ import {
 import { IExternalLendingPosition, IPositionsManager } from '@summerfi/sdk-common'
 import { IUser } from '@summerfi/sdk-common'
 import { StepBuilderContextMock } from '@summerfi/testing-utils'
-import { BaseActionBuilder } from '../../src'
+import { BaseActionBuilder } from '../../src/implementation/BaseActionBuilder'
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 

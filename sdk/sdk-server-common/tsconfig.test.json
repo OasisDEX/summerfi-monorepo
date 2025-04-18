@@ -15,6 +15,9 @@
       "@summerfi/configuration-provider-common": [
         "node_modules/@summerfi/configuration-provider-common/src/index.ts"
       ],
+      "@summerfi/configuration-provider-mock": [
+        "node_modules/@summerfi/configuration-provider-mock/src/index.ts"
+      ],
       "@summerfi/configuration-provider": ["../configuration-provider/src/index.ts"]
     }
   },

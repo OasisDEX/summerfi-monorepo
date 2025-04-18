@@ -1,7 +1,7 @@
 import { BlockchainClientProvider } from '@summerfi/blockchain-client-provider'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import { Address, ChainFamilyMap, ChainInfo } from '@summerfi/sdk-common'
-import { ConfigurationProviderMock } from '@summerfi/testing-utils/mocks/managers/ConfigurationProviderMock'
+import { ConfigurationProviderMock } from '@summerfi/configuration-provider-mock'
 import { ContractsProviderFactory } from '../src'
 
 describe('Contracts Provider Service - ERC20 Contract', () => {

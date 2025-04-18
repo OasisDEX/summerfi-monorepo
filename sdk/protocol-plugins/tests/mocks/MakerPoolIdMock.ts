@@ -1,7 +1,9 @@
 import { ChainFamilyMap } from '@summerfi/sdk-common'
 import { TokensManagerMock } from '@summerfi/testing-utils'
-import { ILKType, MakerLendingPoolId, MakerProtocol } from '../../src/plugins/maker'
+import { ILKType } from '../../src/plugins/maker/enums/ILKType'
 import { IMakerLendingPoolId } from '../../src/plugins/maker/interfaces/IMakerLendingPoolId'
+import { MakerLendingPoolId } from '../../src/plugins/maker/implementation/MakerLendingPoolId'
+import { MakerProtocol } from '../../src/plugins/maker/implementation/MakerProtocol'
 
 export async function getMakerPoolIdMock(): Promise<IMakerLendingPoolId> {
   const tokenManagerMock = new TokensManagerMock()

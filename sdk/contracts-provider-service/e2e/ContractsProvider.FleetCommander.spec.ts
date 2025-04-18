@@ -1,9 +1,9 @@
-import { IBlockchainClientProvider } from '@summerfi/blockchain-client-provider'
+import { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { IContractsProvider, IFleetCommanderContract } from '@summerfi/contracts-provider-common'
 import { Address, ChainFamilyMap, ChainInfo, Percentage } from '@summerfi/sdk-common'
 import { Tenderly, TenderlyFork } from '@summerfi/tenderly-utils'
-import { BlockchainClientProviderMock } from '@summerfi/testing-utils/mocks/managers/BlockchainClientProviderMock'
-import { ConfigurationProviderMock } from '@summerfi/testing-utils/mocks/managers/ConfigurationProviderMock'
+import { BlockchainClientProviderMock } from '@summerfi/testing-utils'
+import { ConfigurationProviderMock } from '@summerfi/configuration-provider-mock'
 import { ContractsProviderFactory } from '../src/implementation/ContractsProviderFactory'
 
 describe('Contracts Provider Service - FleetCommander Contract', () => {

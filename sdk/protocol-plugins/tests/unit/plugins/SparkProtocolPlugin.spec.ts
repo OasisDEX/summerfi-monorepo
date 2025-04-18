@@ -1,13 +1,13 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import { ChainFamilyMap, ChainInfo, ProtocolName } from '@summerfi/sdk-common'
 import assert from 'assert'
+import { SparkLendingPositionId } from '../../../src/plugins/spark/implementation/SparkLendingPositionId'
+import { SparkProtocolPlugin } from '../../../src/plugins/spark/implementation/SparkProtocolPlugin'
 import {
   ISparkLendingPoolId,
   ISparkLendingPoolIdData,
-  SparkLendingPositionId,
-  SparkProtocolPlugin,
   isSparkLendingPoolId,
-} from '../../../src/plugins/spark'
+} from '../../../src/plugins/spark/interfaces/ISparkLendingPoolId'
 import { getSparkPoolIdMock } from '../../mocks/SparkPoolIdMock'
 import { createProtocolPluginContext } from '../../utils/CreateProtocolPluginContext'
 import { getErrorMessage } from '../../utils/ErrorMessage'
