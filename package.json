@@ -36,7 +36,7 @@
     "sst:deploy:sdk:oasis-borrow": "sst deploy --stage production --app sdk",
     "remove": "sst remove",
     "console": "sst console",
-    "format": "prettier --check \"./**/*.{ts,tsx,js,jsx,json}\"",
+    "format": "prettier --cache --check \"./**/*.{ts,tsx,js,jsx,json}\"",
     "format:fix": "prettier --write \"./**/*.{ts,tsx,js,jsx,json}\"",
     "coverage:total": "node scripts/coverage-report/GenerateCoverageReport.js",
     "armada:install": "git submodule update --init armada-protocol/contracts && cd armada-protocol/contracts && pnpm i",
