@@ -111,8 +111,9 @@ export async function GET(request: NextRequest) {
                 gap: '20px',
               }}
             >
-              <div
+              <p
                 style={{
+                  margin: '0 auto',
                   display: 'flex',
                   lineHeight: '100px',
                   fontSize: '100px',
@@ -122,7 +123,7 @@ export async function GET(request: NextRequest) {
                 }}
               >
                 {String(amount)}&nbsp;{tokenData ? getDisplayToken(tokenData.symbol) : ''}
-              </div>
+              </p>
               <p
                 style={{
                   margin: '0 auto',

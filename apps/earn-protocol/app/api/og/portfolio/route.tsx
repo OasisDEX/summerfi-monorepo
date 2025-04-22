@@ -69,7 +69,7 @@ export function GET(request: NextRequest) {
               borderBottom: '1px solid #ff49a4',
             }}
           >
-            <div
+            <p
               style={{
                 display: 'flex',
                 textAlign: 'center',
@@ -80,8 +80,8 @@ export function GET(request: NextRequest) {
               }}
             >
               {String(amount)}
-            </div>
-            <div
+            </p>
+            <p
               style={{
                 display: 'flex',
                 paddingBottom: '25px',
@@ -93,7 +93,7 @@ export function GET(request: NextRequest) {
               }}
             >
               {String(sumrEarned)}&nbsp;SUMR&nbsp;earned
-            </div>
+            </p>
           </div>
           <p
             style={{
