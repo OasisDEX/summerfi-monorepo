@@ -145,8 +145,6 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
 
   const sumrRewards = useSumrRewardsToDate(position)
 
-  console.log('sumrRewards', sumrRewards)
-
   return (
     <>
       <div className={vaultManageGridStyles.vaultManageGridBreadcrumbsWrapper}>
