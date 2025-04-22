@@ -14,7 +14,7 @@ import Link from 'next/link'
 
 import { getProtocolLabel } from '@/helpers/get-protocol-label'
 
-const whitelistedActorsLinks = [{ title: 'BlockAnalytica ', link: 'https://blockanalytica.com/' }]
+const whitelistedActorsLinks = [{ title: 'BlockAnalytica ', link: 'https://blockanalitica.com/' }]
 
 type VaultDetailsSecurityMoneyExpanderProps = {
   vault: SDKVaultishType
