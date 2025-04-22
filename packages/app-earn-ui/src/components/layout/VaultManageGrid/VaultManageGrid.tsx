@@ -11,7 +11,6 @@ import {
   formatCryptoBalance,
   formatDecimalAsPercent,
   sdkNetworkToHumanNetwork,
-  tenThousand,
 } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
@@ -206,11 +205,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                   <BonusLabel
                     tokenBonus={sumrTokenBonus}
                     withTokenBonus={Number(rawSumrTokenBonus) > 0}
-                    totalSumrEarned={
-                      sumrRewards.gt(tenThousand)
-                        ? formatCryptoBalance(sumrRewards)
-                        : sumrRewards.toFixed(2)
-                    }
+                    totalSumrEarned={formatCryptoBalance(sumrRewards)}
                   />
                 </Text>
               )}
