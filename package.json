@@ -14,6 +14,7 @@
     "prebuild:sdk": "turbo run prebuild --cache-dir=.turbo --filter=./packages/* --filter=./sdk/*",
     "dev:sdk": "turbo run dev  --concurrency=100 --cache-dir=.turbo --filter=./packages/* --filter=./sdk/*",
     "build:sdk": "turbo run build --cache-dir=.turbo --filter=./packages/* --filter=./sdk/*",
+    "publish:sdk": "turbo run publish:sdk --cache-dir=.turbo --filter=./packages/* --filter=./sdk/*",
     "lint": "turbo run lint --cache-dir=.turbo",
     "lint:sdk": "turbo run lint --cache-dir=.turbo --filter=./packages/* --filter=./sdk/*",
     "lint:fix": "turbo run lint:fix",
