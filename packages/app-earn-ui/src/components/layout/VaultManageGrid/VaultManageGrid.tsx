@@ -11,11 +11,11 @@ import {
   formatCryptoBalance,
   formatDecimalAsPercent,
   sdkNetworkToHumanNetwork,
+  tenThousand,
 } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
 import Link from 'next/link'
-import { hundredThousand } from 'node_modules/@summerfi/app-utils/dist/numbers'
 
 import { AdditionalBonusLabel } from '@/components/atoms/AdditionalBonusLabel/AdditionalBonusLabel'
 import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
@@ -207,7 +207,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                     tokenBonus={sumrTokenBonus}
                     withTokenBonus={Number(rawSumrTokenBonus) > 0}
                     totalSumrEarned={
-                      sumrRewards.gt(hundredThousand)
+                      sumrRewards.gt(tenThousand)
                         ? formatCryptoBalance(sumrRewards)
                         : sumrRewards.toFixed(2)
                     }

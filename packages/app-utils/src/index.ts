@@ -8,6 +8,8 @@ export {
   thousand,
   million,
   billion,
+  hundredThousand,
+  tenThousand,
 } from './numbers'
 export {
   HOUR,
