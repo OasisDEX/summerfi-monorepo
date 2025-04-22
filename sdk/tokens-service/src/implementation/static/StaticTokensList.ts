@@ -1197,5 +1197,13 @@ export const StaticTokensData: TokenListData = {
       logoURI:
         'https://assets.coingecko.com/coins/images/38108/standard/200x200_Sonic_Logo.png?1734679256',
     },
+    {
+      name: 'Ripple USD',
+      address: '0x8292Bb45bf1Ee4d140127049757C2E0fF06317eD',
+      symbol: 'RLUSD',
+      decimals: 18,
+      chainId: ChainIds.Mainnet,
+      logoURI: 'https://tokens.1inch.io/0x8292Bb45bf1Ee4d140127049757C2E0fF06317eD.png',
+    },
   ],
 }
