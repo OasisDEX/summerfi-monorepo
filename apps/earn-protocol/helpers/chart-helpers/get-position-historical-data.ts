@@ -20,6 +20,10 @@ const mapPositionHistory = (
   const nowStartOfDay = now.startOf('day')
   const nowStartOfWeek = now.startOf('week')
 
+  const vaultStartTime = vault?.createdTimestamp
+    ? dayjs(Number(vault.createdTimestamp) * 1000)
+    : false
+
   const thresholdHistorical7d = nowStartOfHour.subtract(Math.ceil(7), 'day').unix()
   const thresholdHistorical30d = nowStartOfHour.subtract(Math.ceil(30), 'day').unix()
   const thresholdHistorical90d = nowStartOfDay.subtract(Math.ceil(90), 'day').unix()
@@ -56,10 +60,31 @@ const mapPositionHistory = (
   }
 
   // history hourly points
-  positionHistory.position?.hourlyPositionHistory.reverse().forEach((point) => {
+  positionHistory.position?.hourlyPositionHistory.reverse().forEach((point, pointIndex) => {
     const timestamp = dayjs(point.timestamp * 1000).startOf('hour')
     const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED)
     const timestampUnix = timestamp.unix()
+
+    // backfill the hourly position history with 0 values
+    if (pointIndex === 0 && vaultStartTime) {
+      const hoursSinceVaultStartUntilFirstPoint = timestamp.diff(vaultStartTime, 'hours')
+
+      for (let i = 0; i < hoursSinceVaultStartUntilFirstPoint; i++) {
+        const backfillPointData = {
+          timestamp: vaultStartTime.add(i, 'hour').unix(),
+          timestampParsed: vaultStartTime.add(i, 'hour').format(CHART_TIMESTAMP_FORMAT_DETAILED),
+          netValue: 0,
+          depositedValue: 0,
+        }
+
+        if (timestampUnix >= thresholdHistorical7d) {
+          chartBaseData['7d'].push(backfillPointData)
+        }
+        if (timestampUnix >= thresholdHistorical30d) {
+          chartBaseData['30d'].push(backfillPointData)
+        }
+      }
+    }
 
     const isSameHour = timestamp.isSame(nowStartOfHour)
 
@@ -87,10 +112,34 @@ const mapPositionHistory = (
   })
 
   // history daily points
-  positionHistory.position?.dailyPositionHistory.reverse().forEach((point) => {
+  positionHistory.position?.dailyPositionHistory.reverse().forEach((point, pointIndex) => {
     const timestamp = dayjs(point.timestamp * 1000).startOf('day')
     const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED)
     const timestampUnix = timestamp.unix()
+
+    // backfill the daily position history with 0 values
+    if (pointIndex === 0 && vaultStartTime) {
+      const daysSinceVaultStartUntilFirstPoint = timestamp.diff(vaultStartTime, 'days')
+
+      for (let i = 0; i < daysSinceVaultStartUntilFirstPoint; i++) {
+        const backfillPointData = {
+          timestamp: vaultStartTime.add(i, 'day').unix(),
+          timestampParsed: vaultStartTime.add(i, 'day').format(CHART_TIMESTAMP_FORMAT_DETAILED),
+          netValue: 0,
+          depositedValue: 0,
+        }
+
+        if (timestampUnix >= thresholdHistorical90d) {
+          chartBaseData['90d'].push(backfillPointData)
+        }
+        if (timestampUnix >= thresholdHistorical6m) {
+          chartBaseData['6m'].push(backfillPointData)
+        }
+        if (timestampUnix >= thresholdHistorical1y) {
+          chartBaseData['1y'].push(backfillPointData)
+        }
+      }
+    }
 
     const isSameDay = timestamp.isSame(nowStartOfDay)
 
@@ -121,10 +170,28 @@ const mapPositionHistory = (
   })
 
   // history weekly points
-  positionHistory.position?.weeklyPositionHistory.reverse().forEach((point) => {
+  positionHistory.position?.weeklyPositionHistory.reverse().forEach((point, pointIndex) => {
     const timestamp = dayjs(point.timestamp * 1000).startOf('week')
     const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED)
     const timestampUnix = timestamp.unix()
+
+    // backfill the weekly position history with 0 values
+    if (pointIndex === 0 && vaultStartTime) {
+      const weeksSinceVaultStartUntilFirstPoint = timestamp.diff(vaultStartTime, 'weeks')
+
+      for (let i = 0; i < weeksSinceVaultStartUntilFirstPoint; i++) {
+        const backfillPointData = {
+          timestamp: vaultStartTime.add(i, 'week').unix(),
+          timestampParsed: vaultStartTime.add(i, 'week').format(CHART_TIMESTAMP_FORMAT_DETAILED),
+          netValue: 0,
+          depositedValue: 0,
+        }
+
+        if (timestampUnix >= thresholdHistorical3y) {
+          chartBaseData['3y'].push(backfillPointData)
+        }
+      }
+    }
 
     const isSameWeek = timestamp.isSame(nowStartOfWeek)
 
