@@ -11,6 +11,7 @@ import {
   formatCryptoBalance,
   formatDecimalAsPercent,
   sdkNetworkToHumanNetwork,
+  tenThousand,
 } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
@@ -36,6 +37,7 @@ import { getVaultUrl } from '@/helpers/get-vault-url'
 import { isVaultAtLeastDaysOld } from '@/helpers/is-vault-at-least-days-old'
 import { useApyUpdatedAt } from '@/hooks/use-apy-updated-at'
 import { useHoldAlt } from '@/hooks/use-hold-alt'
+import { useSumrRewardsToDate } from '@/hooks/use-sumr-rewards-to-date'
 
 import vaultManageGridStyles from './VaultManageGrid.module.scss'
 
@@ -141,6 +143,8 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
     }, 5000)
   }
 
+  const sumrRewards = useSumrRewardsToDate(position)
+
   return (
     <>
       <div className={vaultManageGridStyles.vaultManageGridBreadcrumbsWrapper}>
@@ -202,6 +206,11 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                   <BonusLabel
                     tokenBonus={sumrTokenBonus}
                     withTokenBonus={Number(rawSumrTokenBonus) > 0}
+                    totalSumrEarned={
+                      sumrRewards.gt(tenThousand)
+                        ? formatCryptoBalance(sumrRewards)
+                        : sumrRewards.toFixed(2)
+                    }
                   />
                 </Text>
               )}

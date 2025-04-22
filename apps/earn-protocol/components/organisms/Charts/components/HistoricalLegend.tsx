@@ -65,21 +65,21 @@ export const HistoricalLegend = ({
       />
     ),
   }
-  // const sumrEarnedBlock = {
-  //   legendIcon: emptyLegendIcon,
-  //   value: (
-  //     <LegendBlock
-  //       color="white"
-  //       title={historicalPerformanceLabelMap.sumrEarned}
-  //       value={
-  //         <>
-  //           <Icon tokenName="SUMR" size={20} />
-  //           <Text variant="p1semi">{highlightedData.sumrEarned}</Text>
-  //         </>
-  //       }
-  //     />
-  //   ),
-  // }
+  const sumrEarnedBlock = {
+    legendIcon: emptyLegendIcon,
+    value: (
+      <LegendBlock
+        color="white"
+        title={historicalPerformanceLabelMap.sumrEarned}
+        value={
+          <>
+            <Icon tokenName="SUMR" size={20} />
+            <Text variant="p1semi">{highlightedData.sumrEarned}</Text>
+          </>
+        }
+      />
+    ),
+  }
   const nextPayload = [
     ...(payload?.map(({ dataKey, inactive: _inactive, ...entry }) => ({
       ...entry,
@@ -100,7 +100,7 @@ export const HistoricalLegend = ({
       ),
     })) ?? []),
     earningsBlock,
-    // sumrEarnedBlock,
+    sumrEarnedBlock,
   ]
 
   return (

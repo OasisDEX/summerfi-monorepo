@@ -21,6 +21,7 @@ export const BonusLabel = ({
   combinedApr,
   isLoading,
   apyUpdatedAt,
+  totalSumrEarned,
 }: {
   isLoading?: boolean
   tokenBonus?: string
@@ -29,6 +30,7 @@ export const BonusLabel = ({
   raw?: ReactNode
   withTokenBonus?: boolean
   combinedApr?: string
+  totalSumrEarned?: string
   apyUpdatedAt?: {
     apyUpdatedAtLabel: string
     apyUpdatedAtAltLabel: string
@@ -41,14 +43,14 @@ export const BonusLabel = ({
       hideDrawerOnMobile
       tooltip={
         <div
-          style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-space-x-small)' }}
+          style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-space-medium)' }}
         >
           {apy && (
             <LiveApyInfo apyCurrent={apy} apyUpdatedAt={apyUpdatedAt} isAltPressed={isAltPressed} />
           )}
           {tokenBonus && withTokenBonus && (
-            <>
-              <Text as="p" variant="p3semi">
+            <div>
+              <Text as="p" variant="p3semi" style={{ color: '#d2d2d2' }}>
                 $SUMR Token Rewards:
               </Text>
               <div
@@ -63,7 +65,25 @@ export const BonusLabel = ({
                   {tokenBonus}
                 </Text>
               </div>
-            </>
+            </div>
+          )}
+          {tokenBonus && withTokenBonus && totalSumrEarned && (
+            <div>
+              <Text as="p" variant="p3semi" style={{ color: '#d2d2d2' }}>
+                Total SUMR Earned to Date:
+              </Text>
+              <div
+                style={{
+                  display: 'flex',
+                  gap: 'var(--spacing-space-x-small)',
+                  alignItems: 'center',
+                }}
+              >
+                <Text as="p" variant="p1semi">
+                  {totalSumrEarned} $SUMR
+                </Text>
+              </div>
+            </div>
           )}
         </div>
       }
