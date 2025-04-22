@@ -15,6 +15,7 @@ import {
 import clsx from 'clsx'
 import dayjs from 'dayjs'
 import Link from 'next/link'
+import { hundredThousand } from 'node_modules/@summerfi/app-utils/dist/numbers'
 
 import { AdditionalBonusLabel } from '@/components/atoms/AdditionalBonusLabel/AdditionalBonusLabel'
 import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
@@ -36,6 +37,7 @@ import { getVaultUrl } from '@/helpers/get-vault-url'
 import { isVaultAtLeastDaysOld } from '@/helpers/is-vault-at-least-days-old'
 import { useApyUpdatedAt } from '@/hooks/use-apy-updated-at'
 import { useHoldAlt } from '@/hooks/use-hold-alt'
+import { useSumrRewardsToDate } from '@/hooks/use-sumr-rewards-to-date'
 
 import vaultManageGridStyles from './VaultManageGrid.module.scss'
 
@@ -141,6 +143,10 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
     }, 5000)
   }
 
+  const sumrRewards = useSumrRewardsToDate(position)
+
+  console.log('sumrRewards', sumrRewards)
+
   return (
     <>
       <div className={vaultManageGridStyles.vaultManageGridBreadcrumbsWrapper}>
@@ -202,6 +208,11 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                   <BonusLabel
                     tokenBonus={sumrTokenBonus}
                     withTokenBonus={Number(rawSumrTokenBonus) > 0}
+                    totalSumrEarned={
+                      sumrRewards.gt(hundredThousand)
+                        ? formatCryptoBalance(sumrRewards)
+                        : sumrRewards.toFixed(2)
+                    }
                   />
                 </Text>
               )}

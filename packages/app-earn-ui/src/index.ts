@@ -142,6 +142,7 @@ export { useIsIframe } from './hooks/use-is-iframe'
 export { useAnalyticsCookies } from './hooks/use-analytics-cookies'
 export { useHoldAlt } from './hooks/use-hold-alt'
 export { useApyUpdatedAt } from './hooks/use-apy-updated-at'
+export { useSumrRewardsToDate } from './hooks/use-sumr-rewards-to-date'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
 export { vaultFaqData } from './common/faq/vault-faq'

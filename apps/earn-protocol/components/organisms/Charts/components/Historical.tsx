@@ -4,6 +4,7 @@ import {
   getPositionValues,
   RechartResponsiveWrapper,
   useMobileCheck,
+  useSumrRewardsToDate,
 } from '@summerfi/app-earn-ui'
 import {
   type IArmadaPosition,
@@ -52,11 +53,13 @@ export const HistoricalChart = ({
   const { netValue, netDeposited, netEarnings } = getPositionValues(portfolioPosition)
   const positionToken = getDisplayToken(portfolioPosition.vault.inputToken.symbol)
 
+  const sumrRewards = useSumrRewardsToDate(portfolioPosition.position)
+
   const legendBaseData = {
     netValue: `${formatCryptoBalance(netValue)} ${positionToken}`,
     depositedValue: `${formatCryptoBalance(netDeposited)} ${positionToken}`,
     earnings: `${formatCryptoBalance(netEarnings)} ${positionToken}`,
-    // sumrEarned: `TBD `,
+    sumrEarned: `${formatCryptoBalance(sumrRewards)} SUMR`,
   }
   const [highlightedData, setHighlightedData] = useState<{
     [key: string]: string | number
