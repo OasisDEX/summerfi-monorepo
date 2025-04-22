@@ -11,10 +11,13 @@ import {
 } from '@summerfi/app-types'
 import {
   formatAddress,
+  formatCryptoBalance,
   formatFiatBalance,
   parseServerResponseToClient,
   subgraphNetworkToId,
+  zero,
 } from '@summerfi/app-utils'
+import BigNumber from 'bignumber.js'
 import { type Metadata } from 'next'
 import { unstable_cache as unstableCache } from 'next/cache'
 import { headers } from 'next/headers'
@@ -273,13 +276,27 @@ export async function generateMetadata({ params }: PortfolioPageProps): Promise<
     0,
   )
 
+  const totalSUMREarned = positionsWithVault.reduce((acc, { position }) => {
+    const sumrReward = position.rewards.find((reward) => {
+      return reward.claimed.token.symbol === 'SUMR'
+    })
+
+    if (!sumrReward) {
+      return zero
+    }
+
+    return acc.plus(
+      new BigNumber(sumrReward.claimable.amount).plus(new BigNumber(sumrReward.claimed.amount)),
+    )
+  }, zero)
+
   return {
     title: `Lazy Summer Protocol - ${formatAddress(walletAddress, { first: 6 })} - $${formatFiatBalance(totalSummerPortfolioUSD)} in Lazy Summer`,
     description:
       "Get effortless access to crypto's best DeFi yields. Continually rebalanced by AI powered Keepers to earn you more while saving you time and reducing costs.",
     openGraph: {
       siteName: 'Lazy Summer Protocol',
-      images: `${baseUrl}earn/api/og/portfolio?amount=$${formatFiatBalance(totalSummerPortfolioUSD)}&address=${walletAddress}`,
+      images: `${baseUrl}earn/api/og/portfolio?amount=$${formatFiatBalance(totalSummerPortfolioUSD)}&address=${walletAddress}&sumrEarned=${formatCryptoBalance(totalSUMREarned)}`,
     },
   }
 }

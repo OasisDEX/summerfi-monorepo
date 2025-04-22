@@ -15,6 +15,7 @@ export async function GET(request: NextRequest) {
     const token = new URL(request.url).searchParams.get('token') as TokenSymbolsList | undefined
     const amount = new URL(request.url).searchParams.get('amount')
     const address = new URL(request.url).searchParams.get('address')
+    const sumrEarned = new URL(request.url).searchParams.get('sumrEarned')
 
     if (
       !amount ||
@@ -22,7 +23,9 @@ export async function GET(request: NextRequest) {
       !address ||
       typeof address !== 'string' ||
       !token ||
-      typeof token !== 'string'
+      typeof token !== 'string' ||
+      !sumrEarned ||
+      typeof sumrEarned !== 'string'
     ) {
       return new Response('Invalid query parameters', { status: 400 })
     }
@@ -98,18 +101,40 @@ export async function GET(request: NextRequest) {
             <div
               style={{
                 display: 'flex',
+                flexDirection: 'column',
                 paddingTop: '20px',
                 borderTop: '1px solid #ff49a4',
                 paddingBottom: '25px',
                 borderBottom: '1px solid #ff49a4',
                 textAlign: 'center',
                 margin: '20px auto 0',
-                lineHeight: '140px',
-                fontSize: '140px',
-                color: '#ff49a4',
+                gap: '20px',
               }}
             >
-              {String(amount)}&nbsp;{tokenData ? getDisplayToken(tokenData.symbol) : ''}
+              <div
+                style={{
+                  display: 'flex',
+                  lineHeight: '100px',
+                  fontSize: '100px',
+                  textAlign: 'center',
+                  color: '#ff49a4',
+                  width: '100%',
+                }}
+              >
+                {String(amount)}&nbsp;{tokenData ? getDisplayToken(tokenData.symbol) : ''}
+              </div>
+              <p
+                style={{
+                  margin: '0 auto',
+                  display: 'flex',
+                  lineHeight: '60px',
+                  fontSize: '60px',
+                  textAlign: 'center',
+                  width: '100%',
+                }}
+              >
+                {String(sumrEarned)}&nbsp;SUMR&nbsp;earned
+              </p>
             </div>
           </div>
           <p

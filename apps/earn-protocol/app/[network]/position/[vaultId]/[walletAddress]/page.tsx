@@ -15,7 +15,9 @@ import {
   humanNetworktoSDKNetwork,
   parseServerResponseToClient,
   subgraphNetworkToId,
+  zero,
 } from '@summerfi/app-utils'
+import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
 import { capitalize } from 'lodash-es'
 import { type Metadata } from 'next'
@@ -255,11 +257,19 @@ export async function generateMetadata({ params }: EarnVaultManagePageProps): Pr
         })
       : { netValue: 0 }
 
+  const sumrReward = position?.rewards.find((reward) => {
+    return reward.claimed.token.symbol === 'SUMR'
+  })
+
+  const totalSUMREarned = sumrReward
+    ? new BigNumber(sumrReward.claimable.amount).plus(new BigNumber(sumrReward.claimed.amount))
+    : zero
+
   return {
     title: `Lazy Summer Protocol - ${formatCryptoBalance(netValue)} ${vault ? getDisplayToken(vault.inputToken.symbol) : ''} position on ${capitalize(paramsNetwork)}`,
     openGraph: {
       siteName: 'Lazy Summer Protocol',
-      images: `${baseUrl}earn/api/og/vault-position?amount=${formatCryptoBalance(netValue)}&token=${vault ? getDisplayToken(vault.inputToken.symbol) : ''}&address=${walletAddress}`,
+      images: `${baseUrl}earn/api/og/vault-position?amount=${formatCryptoBalance(netValue)}&token=${vault ? getDisplayToken(vault.inputToken.symbol) : ''}&address=${walletAddress}&sumrEarned=${formatCryptoBalance(totalSUMREarned)}`,
     },
   }
 }

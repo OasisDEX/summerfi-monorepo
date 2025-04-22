@@ -11,8 +11,16 @@ export function GET(request: NextRequest) {
   try {
     const amount = new URL(request.url).searchParams.get('amount')
     const address = new URL(request.url).searchParams.get('address')
+    const sumrEarned = new URL(request.url).searchParams.get('sumrEarned')
 
-    if (!amount || typeof amount !== 'string' || !address || typeof address !== 'string') {
+    if (
+      !amount ||
+      typeof amount !== 'string' ||
+      !address ||
+      typeof address !== 'string' ||
+      !sumrEarned ||
+      typeof sumrEarned !== 'string'
+    ) {
       return new Response('Invalid query parameters', { status: 400 })
     }
 
@@ -48,7 +56,7 @@ export function GET(request: NextRequest) {
             src="https://summer.fi/earn/img/branding/logo-dark.svg"
             alt="Lazy Summer Protocol"
             style={{
-              marginBottom: '30px',
+              marginBottom: '60px',
               height: '100px',
             }}
           />
@@ -57,19 +65,13 @@ export function GET(request: NextRequest) {
               display: 'flex',
               flexDirection: 'column',
               gap: '20px',
-              width: '100%',
-              padding: '30px 50px',
-              fontSize: '80px',
-              lineHeight: '80px',
+              borderTop: '1px solid #ff49a4',
+              borderBottom: '1px solid #ff49a4',
             }}
           >
             <div
               style={{
                 display: 'flex',
-                paddingTop: '20px',
-                borderTop: '1px solid #ff49a4',
-                paddingBottom: '25px',
-                borderBottom: '1px solid #ff49a4',
                 textAlign: 'center',
                 margin: '20px auto 0',
                 lineHeight: '140px',
@@ -78,6 +80,19 @@ export function GET(request: NextRequest) {
               }}
             >
               {String(amount)}
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                paddingBottom: '25px',
+                textAlign: 'center',
+                margin: '20px auto 0',
+                lineHeight: '60px',
+                fontSize: '60px',
+                color: '#fff',
+              }}
+            >
+              {String(sumrEarned)}&nbsp;SUMR&nbsp;earned
             </div>
           </div>
           <p
