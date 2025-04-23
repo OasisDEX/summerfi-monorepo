@@ -1,6 +1,12 @@
 {
   "name": "@summer_fi/sdk-client",
   "version": "0.2.0",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "summer.fi",
+    "email": "integration@summer.fi",
+    "url": "https://summer.fi"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
