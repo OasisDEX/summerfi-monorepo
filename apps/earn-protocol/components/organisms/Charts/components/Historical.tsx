@@ -13,6 +13,7 @@ import {
   type TokenSymbolsList,
 } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
+import dayjs from 'dayjs'
 import {
   ComposedChart,
   Customized,
@@ -27,7 +28,11 @@ import {
 import { ChartCross } from '@/components/organisms/Charts/components/ChartCross'
 import { HistoricalLegend } from '@/components/organisms/Charts/components/HistoricalLegend'
 import { NotEnoughData } from '@/components/organisms/Charts/components/NotEnoughData'
-import { POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
+import {
+  CHART_TIMESTAMP_FORMAT_DETAILED,
+  CHART_TIMESTAMP_FORMAT_SHORT,
+  POINTS_REQUIRED_FOR_CHART,
+} from '@/constants/charts'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { formatChartCryptoValue } from '@/features/forecast/chart-formatters'
 
@@ -66,6 +71,7 @@ export const HistoricalChart = ({
   }>(legendBaseData)
 
   const chartHidden = !data || data.length < POINTS_REQUIRED_FOR_CHART[timeframe]
+  const vaultCreationTimestamp = dayjs(Number(portfolioPosition.vault.createdTimestamp) * 1000)
 
   return (
     <RechartResponsiveWrapper height="340px">
@@ -103,8 +109,10 @@ export const HistoricalChart = ({
               setHighlightedData((prevData) => ({
                 ...prevData,
                 ...activePayload.reduce(
-                  (acc, { dataKey, value }) => ({
+                  (acc, { dataKey, value, payload: { timestamp } }) => ({
                     ...acc,
+                    timestamp,
+                    timeframe,
                     [dataKey]: `${formatCryptoBalance(value)} ${positionToken}`,
                   }),
                   {},
@@ -142,7 +150,33 @@ export const HistoricalChart = ({
             hide={chartHidden}
           />
           {/* Tooltip is needed for the chart cross to work */}
-          <Tooltip content={() => null} cursor={false} />
+          <Tooltip
+            formatter={() => {
+              return ''
+            }}
+            itemStyle={{
+              display: 'none',
+            }}
+            labelStyle={{
+              color: 'white',
+              fontSize: '12px',
+            }}
+            labelFormatter={(label: string) => {
+              const parsedTimestamp = dayjs(label)
+              const formattedDate = parsedTimestamp.format(
+                ['7d', '30d'].includes(timeframe)
+                  ? CHART_TIMESTAMP_FORMAT_DETAILED
+                  : CHART_TIMESTAMP_FORMAT_SHORT,
+              )
+
+              return formattedDate
+            }}
+            contentStyle={{
+              borderRadius: '14px',
+              backgroundColor: 'var(--color-surface-subtle)',
+              border: 'none',
+            }}
+          />
           {!chartHidden ? <Customized component={<ChartCross />} /> : null}
           <Line
             dot={false}

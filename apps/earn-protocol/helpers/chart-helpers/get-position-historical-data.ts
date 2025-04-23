@@ -20,16 +20,12 @@ const mapPositionHistory = (
   const nowStartOfDay = now.startOf('day')
   const nowStartOfWeek = now.startOf('week')
 
-  const vaultStartTime = vault?.createdTimestamp
-    ? dayjs(Number(vault.createdTimestamp) * 1000)
-    : false
-
-  const thresholdHistorical7d = nowStartOfHour.subtract(Math.ceil(7), 'day').unix()
-  const thresholdHistorical30d = nowStartOfHour.subtract(Math.ceil(30), 'day').unix()
-  const thresholdHistorical90d = nowStartOfDay.subtract(Math.ceil(90), 'day').unix()
-  const thresholdHistorical6m = nowStartOfDay.subtract(Math.ceil(6), 'month').unix()
-  const thresholdHistorical1y = nowStartOfDay.subtract(Math.ceil(1), 'year').unix()
-  const thresholdHistorical3y = nowStartOfWeek.subtract(Math.ceil(3), 'year').unix()
+  const thresholdHistorical7d = nowStartOfHour.subtract(7, 'day').unix()
+  const thresholdHistorical30d = nowStartOfHour.subtract(30, 'day').unix()
+  const thresholdHistorical90d = nowStartOfDay.subtract(90, 'day').unix()
+  const thresholdHistorical6m = nowStartOfDay.subtract(6, 'month').unix()
+  const thresholdHistorical1y = nowStartOfDay.subtract(1, 'year').unix()
+  const thresholdHistorical3y = nowStartOfWeek.subtract(3, 'year').unix()
 
   const chartBaseData: ChartsDataTimeframes = {
     '7d': [], // hourly
@@ -66,21 +62,36 @@ const mapPositionHistory = (
     const timestampUnix = timestamp.unix()
 
     // backfill the hourly position history with 0 values
-    if (pointIndex === 0 && vaultStartTime) {
-      const hoursSinceVaultStartUntilFirstPoint = timestamp.diff(vaultStartTime, 'hours')
+    if (pointIndex === 0) {
+      const chartStartTime7d = dayjs(thresholdHistorical7d * 1000).subtract(7, 'days')
+      const chartStartTime30d = dayjs(thresholdHistorical30d * 1000).subtract(30, 'days')
+      const hoursNeededFor7dChart = timestamp.diff(chartStartTime7d, 'hours')
+      const hoursNeededFor30dChart = timestamp.diff(chartStartTime30d, 'hours')
 
-      for (let i = 0; i < hoursSinceVaultStartUntilFirstPoint; i++) {
-        const backfillPointData = {
-          timestamp: vaultStartTime.add(i, 'hour').unix(),
-          timestampParsed: vaultStartTime.add(i, 'hour').format(CHART_TIMESTAMP_FORMAT_DETAILED),
-          netValue: 0,
-          depositedValue: 0,
-        }
+      if (hoursNeededFor7dChart > 0) {
+        for (let i = 0; i < hoursNeededFor7dChart; i++) {
+          const backfillTimestamp = chartStartTime7d.add(i, 'hour')
+          const backfillPointData = {
+            timestamp: backfillTimestamp.unix(),
+            timestampParsed: backfillTimestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED),
+            netValue: 0,
+            depositedValue: 0,
+          }
 
-        if (timestampUnix >= thresholdHistorical7d) {
           chartBaseData['7d'].push(backfillPointData)
         }
-        if (timestampUnix >= thresholdHistorical30d) {
+      }
+
+      if (hoursNeededFor30dChart > 0) {
+        for (let i = 0; i < hoursNeededFor30dChart; i++) {
+          const backfillTimestamp = chartStartTime30d.add(i, 'hour')
+          const backfillPointData = {
+            timestamp: backfillTimestamp.unix(),
+            timestampParsed: backfillTimestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED),
+            netValue: 0,
+            depositedValue: 0,
+          }
+
           chartBaseData['30d'].push(backfillPointData)
         }
       }
@@ -118,24 +129,50 @@ const mapPositionHistory = (
     const timestampUnix = timestamp.unix()
 
     // backfill the daily position history with 0 values
-    if (pointIndex === 0 && vaultStartTime) {
-      const daysSinceVaultStartUntilFirstPoint = timestamp.diff(vaultStartTime, 'days')
+    if (pointIndex === 0) {
+      const chartStartTime90d = dayjs(thresholdHistorical90d * 1000).subtract(90, 'days')
+      const chartStartTime6m = dayjs(thresholdHistorical6m * 1000).subtract(6, 'months')
+      const chartStartTime1y = dayjs(thresholdHistorical1y * 1000).subtract(1, 'year')
+      const daysNeededFor90dChart = timestamp.diff(chartStartTime90d, 'days')
+      const daysNeededFor6mChart = timestamp.diff(chartStartTime6m, 'days')
+      const daysNeededFor1yChart = timestamp.diff(chartStartTime1y, 'days')
 
-      for (let i = 0; i < daysSinceVaultStartUntilFirstPoint; i++) {
-        const backfillPointData = {
-          timestamp: vaultStartTime.add(i, 'day').unix(),
-          timestampParsed: vaultStartTime.add(i, 'day').format(CHART_TIMESTAMP_FORMAT_DETAILED),
-          netValue: 0,
-          depositedValue: 0,
-        }
+      if (daysNeededFor90dChart > 0) {
+        for (let i = 0; i < daysNeededFor90dChart; i++) {
+          const backfillTimestamp = chartStartTime90d.add(i, 'day')
+          const backfillPointData = {
+            timestamp: backfillTimestamp.unix(),
+            timestampParsed: backfillTimestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED),
+            netValue: 0,
+            depositedValue: 0,
+          }
 
-        if (timestampUnix >= thresholdHistorical90d) {
           chartBaseData['90d'].push(backfillPointData)
         }
-        if (timestampUnix >= thresholdHistorical6m) {
+      }
+      if (daysNeededFor6mChart > 0) {
+        for (let i = 0; i < daysNeededFor6mChart; i++) {
+          const backfillTimestamp = chartStartTime6m.add(i, 'day')
+          const backfillPointData = {
+            timestamp: backfillTimestamp.unix(),
+            timestampParsed: backfillTimestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED),
+            netValue: 0,
+            depositedValue: 0,
+          }
+
           chartBaseData['6m'].push(backfillPointData)
         }
-        if (timestampUnix >= thresholdHistorical1y) {
+      }
+      if (daysNeededFor1yChart > 0) {
+        for (let i = 0; i < daysNeededFor1yChart; i++) {
+          const backfillTimestamp = chartStartTime1y.add(i, 'day')
+          const backfillPointData = {
+            timestamp: backfillTimestamp.unix(),
+            timestampParsed: backfillTimestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED),
+            netValue: 0,
+            depositedValue: 0,
+          }
+
           chartBaseData['1y'].push(backfillPointData)
         }
       }
@@ -176,20 +213,20 @@ const mapPositionHistory = (
     const timestampUnix = timestamp.unix()
 
     // backfill the weekly position history with 0 values
-    if (pointIndex === 0 && vaultStartTime) {
-      const weeksSinceVaultStartUntilFirstPoint = timestamp.diff(vaultStartTime, 'weeks')
+    if (pointIndex === 0) {
+      const chartStartTime3y = dayjs(thresholdHistorical3y * 1000).subtract(3, 'years')
+      const weeksNeededFor3yChart = timestamp.diff(chartStartTime3y, 'weeks')
 
-      for (let i = 0; i < weeksSinceVaultStartUntilFirstPoint; i++) {
+      for (let i = 0; i < weeksNeededFor3yChart; i++) {
+        const backfillTimestamp = chartStartTime3y.add(i, 'week')
         const backfillPointData = {
-          timestamp: vaultStartTime.add(i, 'week').unix(),
-          timestampParsed: vaultStartTime.add(i, 'week').format(CHART_TIMESTAMP_FORMAT_DETAILED),
+          timestamp: backfillTimestamp.unix(),
+          timestampParsed: backfillTimestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED),
           netValue: 0,
           depositedValue: 0,
         }
 
-        if (timestampUnix >= thresholdHistorical3y) {
-          chartBaseData['3y'].push(backfillPointData)
-        }
+        chartBaseData['3y'].push(backfillPointData)
       }
     }
 
