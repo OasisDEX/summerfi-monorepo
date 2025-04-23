@@ -1,7 +1,7 @@
 {
   "name": "@summerfi/typescript-config",
   "version": "0.0.1",
-  "license": "SUmmer.fi",
+  "license": "Summer.fi",
   "devDependencies": {
     "@tsconfig/node20": "^20.1.4"
   }
