@@ -176,9 +176,6 @@
     },
     "deploy:staging": {
       "dependsOn": ["cicheck", "^deploy:staging"]
-    },
-    "publish:npm": {
-      "dependsOn": ["prebuild", "build", "^publish:npm"]
     }
   }
 }
