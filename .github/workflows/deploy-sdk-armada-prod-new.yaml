@@ -9,7 +9,7 @@ permissions:
 jobs:
   deploy:
     name: Build & Deploy SDK Armada to production using SST
-    environment: staging
+    environment: production
     runs-on: ubuntu-latest
     env:
       COINGECKO_API_URL: ${{ secrets.COINGECKO_API_URL }}
