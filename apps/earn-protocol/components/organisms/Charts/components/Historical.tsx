@@ -71,7 +71,6 @@ export const HistoricalChart = ({
   }>(legendBaseData)
 
   const chartHidden = !data || data.length < POINTS_REQUIRED_FOR_CHART[timeframe]
-  const vaultCreationTimestamp = dayjs(Number(portfolioPosition.vault.createdTimestamp) * 1000)
 
   return (
     <RechartResponsiveWrapper height="340px">
