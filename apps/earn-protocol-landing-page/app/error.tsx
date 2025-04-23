@@ -22,8 +22,8 @@ export default function GlobalErrorHandler({ error }: { error: Error & { digest?
       style={{
         display: 'flex',
         flexDirection: 'column',
-        textAlign: 'center',
         alignItems: 'center',
+        textAlign: 'center',
         gap: '3rem',
         marginBottom: '300px',
       }}
