@@ -1,6 +1,7 @@
 {
   "name": "@summerfi/sdk-common",
   "version": "0.0.1",
+  "license": "Summer.fi",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -22,7 +23,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "check-circular": "madge --circular --extensions ts ./src",
-    "bundle:npm": "rm -rf bundle/dist bundle/tsconfig.build.tsbuildinfo && esbuild src/index.ts --platform=neutral --target=es2020 --conditions= --main-fields=main --bundle --sourcemap --outfile=bundle/dist/index.js --keep-names --external:crypto --external:fs --external:http --external:https --external:net --external:os --external:path --external:stream --external:tls --external:zlib --external:bignumber.js --external:superjson --external:zod && tsc -b -v --declaration --emitDeclarationOnly tsconfig.bundle.json",
+    "bundle:npm": "rm -rf bundle/dist bundle/tsconfig.bundle.tsbuildinfo && esbuild src/index.ts --platform=neutral --target=es2020 --conditions= --main-fields=main --format=cjs --bundle --sourcemap --outfile=bundle/dist/index.js --keep-names --external:crypto --external:fs --external:http --external:https --external:net --external:os --external:path --external:stream --external:tls --external:zlib --external:bignumber.js --external:superjson --external:zod && tsc --declaration --emitDeclarationOnly -p tsconfig.bundle.json",
     "publish:npm": "pnpm bundle:npm && cd bundle && npm publish && cd .."
   },
   "dependencies": {

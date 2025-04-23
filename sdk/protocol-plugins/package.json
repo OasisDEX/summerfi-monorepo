@@ -1,6 +1,7 @@
 {
   "name": "@summerfi/protocol-plugins",
   "version": "0.0.1",
+  "license": "Summer.fi",
   "exports": {
     ".": {
       "import": "./src/index.ts",
@@ -20,9 +21,7 @@
     "testw:integration": "jest tests/integration --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "tsc -b --preserveWatchOutput -v tsconfig.build.json",
-    "bundle:npm": "rm -rf bundle/dist bundle/tsconfig.build.tsbuildinfo && esbuild src/index.ts --platform=neutral --target=es2020 --conditions= --main-fields=main --bundle --sourcemap --outfile=bundle/dist/index.js --keep-names --external:crypto --external:tls --external:https --external:net --external:http --external:stream --external:zlib --external:assert --external:fs --external:os --external:path --external:zod --external:bignumber.js && tsc --emitDeclarationOnly --outDir bundle/dist tsconfig.build.json",
-    "publish:npm": "pnpm bundle:npm && cd bundle && npm publish && cd .."
+    "build": "tsc -b --preserveWatchOutput -v tsconfig.build.json"
   },
   "dependencies": {
     "@summerfi/abis": "workspace:*",

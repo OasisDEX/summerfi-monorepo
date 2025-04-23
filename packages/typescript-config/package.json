@@ -1,11 +1,7 @@
 {
   "name": "@summerfi/typescript-config",
-  "version": "0.0.0",
-  "private": true,
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
+  "version": "0.0.1",
+  "license": "SUmmer.fi",
   "devDependencies": {
     "@tsconfig/node20": "^20.1.4"
   }

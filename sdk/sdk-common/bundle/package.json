@@ -1,14 +1,11 @@
 {
   "name": "@summer_fi/sdk-common",
-  "version": "0.1.0",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "packageManager": "yarn@1.22.21",
-  "scripts": {},
+  "version": "0.2.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "dependencies": {
     "bignumber.js": "^9.1.2",
     "superjson": "^1.13.3",
     "zod": "^3.22.4"
-  },
-  "devDependencies": {}
+  }
 }
