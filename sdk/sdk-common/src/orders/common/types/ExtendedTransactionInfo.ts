@@ -62,7 +62,7 @@ export type TransactionMetadataVaultSwitch = {
   fromVault: IArmadaVaultId
   toVault: IArmadaVaultId
   fromAmount: ITokenAmount
-  toAmount: ITokenAmount
+  toAmount?: ITokenAmount
   priceImpact?: TransactionPriceImpact
   slippage: IPercentage
 }

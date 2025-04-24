@@ -82,8 +82,8 @@ export interface IArmadaManagerVaults {
    * @name getVaultSwitchTx
    * @description Returns the transactions needed to switch from one vault to another
    *
-   * @param sourceVault ID of the source pool
-   * @param destinationVault ID of the destination pool
+   * @param sourceVaultId ID of the source pool
+   * @param destinationVaultId ID of the destination pool
    * @param user Address of the user that is trying to switch
    * @param amount Token amount to be switched
    * @param slippage Maximum slippage allowed for the operation
@@ -91,11 +91,16 @@ export interface IArmadaManagerVaults {
    * @returns ExtendedTransactionInfo[] An array of transactions that must be executed
    */
   getVaultSwitchTx(params: {
-    sourceVault: IArmadaVaultId
-    destinationVault: IArmadaVaultId
+    sourceVaultId: IArmadaVaultId
+    destinationVaultId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
     slippage: IPercentage
     shouldStake?: boolean
-  }): Promise<[VaultSwitchTransactionInfo] | [ApproveTransactionInfo, VaultSwitchTransactionInfo]>
+  }): Promise<
+    | [VaultSwitchTransactionInfo]
+    | [ApproveTransactionInfo, VaultSwitchTransactionInfo]
+    | [VaultSwitchTransactionInfo, VaultSwitchTransactionInfo]
+    | [ApproveTransactionInfo, VaultSwitchTransactionInfo, VaultSwitchTransactionInfo]
+  >
 }

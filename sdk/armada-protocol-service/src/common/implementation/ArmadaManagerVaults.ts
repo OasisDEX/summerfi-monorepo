@@ -5,6 +5,7 @@ import {
   createWithdrawTransaction,
   getDeployedContractAddress,
   type IArmadaManagerUtils,
+  createVaultSwitchTransaction,
 } from '@summerfi/armada-protocol-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { AdmiralsQuartersAbi } from '@summerfi/armada-protocol-abis'
@@ -26,11 +27,16 @@ import {
   type DepositTransactionInfo,
   type ApproveTransactionInfo,
   type WithdrawTransactionInfo,
+  type VaultSwitchTransactionInfo,
 } from '@summerfi/sdk-common'
 import type { ISwapManager } from '@summerfi/swap-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import { encodeFunctionData } from 'viem'
 import BigNumber from 'bignumber.js'
+
+// Define a small dust threshold for share amounts (e.g., $0.01)
+// This helps decide if fleet shares are negligible
+const fleetDustThreshold = 10n
 
 export class ArmadaManagerVaults implements IArmadaManagerVaults {
   private _supportedChains: IChainInfo[]
@@ -97,15 +103,467 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
   }
 
   async getVaultSwitchTx(params: {
-    sourceVault: IArmadaVaultId
-    destinationVault: IArmadaVaultId
+    sourceVaultId: IArmadaVaultId
+    destinationVaultId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
     slippage: IPercentage
     shouldStake?: boolean
   }): ReturnType<IArmadaManagerVaults['getVaultSwitchTx']> {
-    // TODO: Implement vault switch logic as specified
-    throw new Error('Not implemented')
+    // vaults should have same chainId
+    if (params.sourceVaultId.chainInfo.chainId !== params.destinationVaultId.chainInfo.chainId) {
+      throw new Error('Vaults must be on the same chain')
+    }
+    const transferAmount = params.amount
+
+    const sourceFleet = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.sourceVaultId.chainInfo,
+      address: params.sourceVaultId.fleetAddress,
+    })
+    const sourceFleetToken = await sourceFleet.asErc4626().asset()
+    // source token must be the same as the amount
+    if (!sourceFleetToken.address.equals(transferAmount.token.address)) {
+      throw new Error('Source fleet token must be the same as the amount token')
+    }
+    const fromEth = sourceFleetToken.symbol === 'ETH'
+
+    const destinationFleet = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.destinationVaultId.chainInfo,
+      address: params.destinationVaultId.fleetAddress,
+    })
+    const destinationFleetToken = await destinationFleet.asErc4626().asset()
+    const toEth = destinationFleetToken.symbol === 'ETH'
+
+    const shouldSwap = !destinationFleetToken.equals(sourceFleetToken)
+
+    let swapToAmount: ITokenAmount | undefined
+    let transactions:
+      | [VaultSwitchTransactionInfo]
+      | [ApproveTransactionInfo, VaultSwitchTransactionInfo]
+      | [VaultSwitchTransactionInfo, VaultSwitchTransactionInfo]
+      | [ApproveTransactionInfo, VaultSwitchTransactionInfo, VaultSwitchTransactionInfo]
+
+    const [beforeFleetShares, beforeStakedShares, requestedWithdrawShares] = await Promise.all([
+      this._utils.getFleetShares({
+        vaultId: params.sourceVaultId,
+        user: params.user,
+      }),
+      this._utils.getStakedShares({
+        vaultId: params.sourceVaultId,
+        user: params.user,
+      }),
+      this._previewWithdraw({
+        vaultId: params.sourceVaultId,
+        assets: transferAmount,
+      }),
+    ])
+
+    LoggingService.debug('getVaultSwitchTx', {
+      sourceVaultId: params.sourceVaultId.fleetAddress.value,
+      destinationVaultId: params.destinationVaultId.fleetAddress.value,
+      beforeFleetShares: beforeFleetShares.toString(),
+      beforeStakedShares: beforeStakedShares.toString(),
+      requestedWithdrawShares: requestedWithdrawShares.toString(),
+      sourceFleetToken,
+      destinationFleetToken,
+      fromEth,
+      toEth,
+      shouldSwap,
+    })
+
+    const admiralsQuartersAddress = getDeployedContractAddress({
+      chainInfo: params.sourceVaultId.chainInfo,
+      contractCategory: 'core',
+      contractName: 'admiralsQuarters',
+    })
+
+    let approveTransaction: ApproveTransactionInfo | undefined
+
+    // Deposit logic
+    const shouldStake = params.shouldStake ?? true
+
+    const depositMulticallArgs: HexData[] = []
+    const depositMulticallOperations: string[] = []
+    const depositTokensCalldata = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'depositTokens',
+      args: [transferAmount.token.address.value, transferAmount.toSolidityValue()],
+    })
+    depositMulticallArgs.push(depositTokensCalldata)
+    depositMulticallOperations.push('depositTokens ' + transferAmount.toString())
+    // If depositing a token that is not the fleet token,
+    // we need to swap it to fleet asset
+    if (shouldSwap) {
+      const swapCall = await this._utils.getSwapCall({
+        vaultId: params.sourceVaultId,
+        fromAmount: transferAmount,
+        toToken: destinationFleetToken,
+        slippage: params.slippage,
+      })
+      depositMulticallArgs.push(swapCall.calldata)
+      depositMulticallOperations.push(
+        `swap ${transferAmount.toString()} to min ${swapCall.minAmount.toString()}`,
+      )
+
+      swapToAmount = swapCall.toAmount
+    }
+    // when staking admirals quarters will receive LV tokens, otherwise the user
+    const fleetTokenReceiver = shouldStake
+      ? admiralsQuartersAddress.value
+      : params.user.wallet.address.value
+
+    const enterFleetCalldata = encodeFunctionData({
+      abi: AdmiralsQuartersAbi,
+      functionName: 'enterFleet',
+      args: [params.destinationVaultId.fleetAddress.value, 0n, fleetTokenReceiver],
+    })
+    depositMulticallArgs.push(enterFleetCalldata)
+    depositMulticallOperations.push('enterFleet all (0)')
+
+    if (shouldStake) {
+      const stakeCalldata = encodeFunctionData({
+        abi: AdmiralsQuartersAbi,
+        functionName: 'stake',
+        args: [params.destinationVaultId.fleetAddress.value, 0n],
+      })
+      depositMulticallArgs.push(stakeCalldata)
+      depositMulticallOperations.push('stake all (0)')
+    }
+
+    // Withdraw logic
+
+    // Are fleetShares available at all? (should be greater than dust)
+    if (beforeFleetShares.toSolidityValue() > 0) {
+      // Yes. Are fleetShares sufficient to meet the requestedWithdrawShares?
+      if (beforeFleetShares.toSolidityValue() >= requestedWithdrawShares.toSolidityValue()) {
+        // Yes. Withdraw all from fleetShares
+        LoggingService.debug('fleet shares is enough for requested amount', {
+          fleetShares: beforeFleetShares.toString(),
+        })
+
+        // Approve the requested amount in shares
+        const [approveToTakeSharesOnBehalf, exitWithdrawMulticall, priceImpact] = await Promise.all(
+          [
+            this._allowanceManager.getApproval({
+              chainInfo: params.sourceVaultId.chainInfo,
+              spender: admiralsQuartersAddress,
+              amount: requestedWithdrawShares,
+              owner: params.user.wallet.address,
+            }),
+            this._getExitWithdrawMulticall({
+              vaultId: params.sourceVaultId,
+              slippage: params.slippage,
+              amount: transferAmount,
+              // if withdraw is WETH and unwrapping to ETH,
+              // we need to withdraw WETH for later deposit & unwrap operation
+              swapToToken:
+                transferAmount.token.symbol === 'WETH' && toEth
+                  ? transferAmount.token
+                  : destinationFleetToken,
+              shouldSwap,
+              toEth,
+            }),
+            swapToAmount &&
+              this._utils.getPriceImpact({
+                fromAmount: transferAmount,
+                toAmount: swapToAmount,
+              }),
+          ],
+        )
+
+        if (approveToTakeSharesOnBehalf) {
+          LoggingService.debug('approveToTakeSharesOnBehalf', {
+            sharesToWithdraw: requestedWithdrawShares.toString(),
+          })
+        } else {
+          LoggingService.debug('approveToTakeSharesOnBehalf', {
+            message: 'No approval needed',
+          })
+        }
+        approveTransaction = approveToTakeSharesOnBehalf
+
+        const multicallCalldata = encodeFunctionData({
+          abi: AdmiralsQuartersAbi,
+          functionName: 'multicall',
+          args: [[...exitWithdrawMulticall.multicallArgs, ...depositMulticallArgs]],
+        })
+        const withdrawTransaction = createVaultSwitchTransaction({
+          target: admiralsQuartersAddress,
+          calldata: multicallCalldata,
+          description:
+            'Vault Switch Operations: ' +
+            exitWithdrawMulticall.multicallOperations.join(', ') +
+            depositMulticallOperations.join(', '),
+          metadata: {
+            fromAmount: transferAmount,
+            toAmount: swapToAmount,
+            fromVault: params.sourceVaultId,
+            toVault: params.destinationVaultId,
+            slippage: params.slippage,
+            priceImpact,
+          },
+        })
+        if (approveTransaction) {
+          transactions = [approveTransaction, withdrawTransaction]
+        } else {
+          transactions = [withdrawTransaction]
+        }
+      } else {
+        // No. Withdraw all from fleetShares and the reminder from stakedShares
+        LoggingService.debug('fleet shares is not enough', {
+          fleetShares: beforeFleetShares.toString(),
+        })
+        const [fleetAssetsWithdrawAmount, approveToTakeSharesOnBehalf] = await Promise.all([
+          this._previewRedeem({
+            vaultId: params.sourceVaultId,
+            shares: beforeFleetShares,
+          }),
+          this._allowanceManager.getApproval({
+            chainInfo: params.sourceVaultId.chainInfo,
+            spender: admiralsQuartersAddress,
+            amount: beforeFleetShares,
+            owner: params.user.wallet.address,
+          }),
+        ])
+
+        LoggingService.debug('- first take all fleet shares', {
+          fleetAssetsWithdrawAmount: fleetAssetsWithdrawAmount.toString(),
+        })
+
+        if (approveToTakeSharesOnBehalf) {
+          LoggingService.debug('approveToTakeSharesOnBehalf', {
+            sharesToWithdraw: beforeFleetShares.toString(),
+          })
+        } else {
+          LoggingService.debug('approveToTakeSharesOnBehalf', {
+            message: 'No approval needed',
+          })
+        }
+
+        const multicallArgs: HexData[] = []
+        const multicallOperations: string[] = []
+        const unstakeMulticallArgs: HexData[] = []
+        const unstakeMulticallOperations: string[] = []
+
+        const reminderShares = requestedWithdrawShares.subtract(beforeFleetShares)
+        LoggingService.debug('- then reminder from staked shares', {
+          reminderShares: reminderShares.toString(),
+        })
+
+        // For unstakeAndWithdraw operations, get the chain-specific address
+        const unstakeAdmiralsQuartersAddress = this._getUnstakeAdmiralsQuartersAddress(
+          params.sourceVaultId.chainInfo,
+        )
+
+        const [exitWithdrawMulticall, unstakeAndWithdrawCall, priceImpact] = await Promise.all([
+          this._getExitWithdrawMulticall({
+            vaultId: params.sourceVaultId,
+            slippage: params.slippage,
+            amount: fleetAssetsWithdrawAmount,
+            exitAll: true,
+            // if withdraw is WETH and unwrapping to ETH,
+            // we need to withdraw WETH for later deposit & unwrap operation
+            swapToToken:
+              fleetAssetsWithdrawAmount.token.symbol === 'WETH' && toEth
+                ? fleetAssetsWithdrawAmount.token
+                : destinationFleetToken,
+            shouldSwap,
+            toEth,
+          }),
+          this._getUnstakeAndWithdrawCall({
+            vaultId: params.sourceVaultId,
+            shares: reminderShares,
+            stakedShares: beforeStakedShares,
+          }),
+          swapToAmount &&
+            this._utils.getPriceImpact({
+              fromAmount: transferAmount,
+              toAmount: swapToAmount,
+            }),
+        ])
+
+        multicallArgs.push(...exitWithdrawMulticall.multicallArgs)
+        multicallOperations.push(...exitWithdrawMulticall.multicallOperations)
+        // multicallArgs.push(unstakeAndWithdrawCall.calldata)
+        // multicallOperations.push('unstakeAndWithdraw ' + reminderShares.toString())
+
+        // NOTE: Temporary solution whilst using two AdmiralsQuarters contracts
+        unstakeMulticallArgs.push(unstakeAndWithdrawCall.calldata)
+        unstakeMulticallOperations.push('unstakeAndWithdraw ' + reminderShares.toString())
+
+        // NOTE: Disabled whilst withdraws require two AdmiralsQuarters contracts
+        // if (shouldSwap) {
+        //   // approval to swap from user EOA
+        //   const [approveToSwapForUser, depositSwapWithdrawMulticall] = await Promise.all([
+        //     this._allowanceManager.getApproval({
+        //       chainInfo: params.vaultId.chainInfo,
+        //       spender: admiralsQuartersAddress,
+        //       amount: withdrawAmount,
+        //       owner: params.user.wallet.address,
+        //     }),
+        //     this._getDepositSwapWithdrawMulticall({
+        //       vaultId: params.vaultId,
+        //       slippage: params.slippage,
+        //       fromAmount: withdrawAmount,
+        //       toToken: swapToToken,
+        //       toEth,
+        //     }),
+        //   ])
+        //   if (approveToSwapForUser) {
+        //     transactions.push(approveToSwapForUser)
+        //     LoggingService.debug('approveToSwapForUser', {
+        //       outAmount: withdrawAmount.toString(),
+        //     })
+        //   }
+        //   multicallArgs.push(...depositSwapWithdrawMulticall.multicallArgs)
+        //   multicallOperations.push(...depositSwapWithdrawMulticall.multicallOperations)
+        //   swapToAmount = depositSwapWithdrawMulticall.toAmount
+        // }
+        // compose multicall
+        const multicallCalldata = encodeFunctionData({
+          abi: AdmiralsQuartersAbi,
+          functionName: 'multicall',
+          args: [multicallArgs],
+        })
+        const withdrawTransaction = createVaultSwitchTransaction({
+          target: admiralsQuartersAddress,
+          calldata: multicallCalldata,
+          description: 'Vault Switch Operations: ' + multicallOperations.join(', '),
+          metadata: {
+            fromAmount: transferAmount,
+            toAmount: swapToAmount,
+            fromVault: params.sourceVaultId,
+            toVault: params.destinationVaultId,
+            slippage: params.slippage,
+            priceImpact,
+          },
+        })
+
+        const unstakeAndWithdrawCalldata = encodeFunctionData({
+          abi: AdmiralsQuartersAbi,
+          functionName: 'multicall',
+          args: [[...unstakeMulticallArgs, ...depositMulticallArgs]],
+        })
+        const unstakeAndWithdrawTransaction = createVaultSwitchTransaction({
+          target: unstakeAdmiralsQuartersAddress,
+          calldata: unstakeAndWithdrawCalldata,
+          description:
+            'Unstake and Withdraw Operations: ' +
+            unstakeMulticallOperations.join(', ') +
+            depositMulticallOperations.join(', '),
+          metadata: {
+            fromAmount: transferAmount,
+            toAmount: swapToAmount,
+            fromVault: params.sourceVaultId,
+            toVault: params.destinationVaultId,
+            slippage: params.slippage,
+            priceImpact,
+          },
+        })
+        if (approveToTakeSharesOnBehalf) {
+          transactions = [
+            approveToTakeSharesOnBehalf,
+            withdrawTransaction,
+            unstakeAndWithdrawTransaction,
+          ]
+        } else {
+          transactions = [withdrawTransaction, unstakeAndWithdrawTransaction]
+        }
+      }
+    } else {
+      // No. Unstake and withdraw everything from stakedShares.
+      const multicallArgs: HexData[] = []
+      const multicallOperations: string[] = []
+
+      LoggingService.debug('fleet shares is 0, take all from staked shares', {
+        outShares: requestedWithdrawShares.toString(),
+      })
+
+      // Get the chain-specific address for unstakeAndWithdraw
+      const unstakeAdmiralsQuartersAddress = this._getUnstakeAdmiralsQuartersAddress(
+        params.sourceVaultId.chainInfo,
+      )
+
+      // withdraw all from staked tokens
+      const [unstakeAndWithdrawCall, priceImpact] = await Promise.all([
+        this._getUnstakeAndWithdrawCall({
+          vaultId: params.sourceVaultId,
+          shares: requestedWithdrawShares,
+          stakedShares: beforeStakedShares,
+        }),
+        swapToAmount &&
+          this._utils.getPriceImpact({
+            fromAmount: transferAmount,
+            toAmount: swapToAmount,
+          }),
+      ])
+      multicallArgs.push(unstakeAndWithdrawCall.calldata)
+      multicallOperations.push('unstakeAndWithdraw ' + requestedWithdrawShares.toString())
+
+      // NOTE: Disabled whilst withdraws require two AdmiralsQuarters contracts
+      // if (shouldSwap) {
+      //   // approval to swap from user EOA
+      //   const [approveToSwapForUser, depositSwapWithdrawMulticall] = await Promise.all([
+      //     this._allowanceManager.getApproval({
+      //       chainInfo: params.vaultId.chainInfo,
+      //       spender: admiralsQuartersAddress,
+      //       amount: withdrawAmount,
+      //       owner: params.user.wallet.address,
+      //     }),
+      //     this._getDepositSwapWithdrawMulticall({
+      //       vaultId: params.vaultId,
+      //       slippage: params.slippage,
+      //       fromAmount: withdrawAmount,
+      //       toToken: swapToToken,
+      //       toEth,
+      //     }),
+      //   ])
+      //   if (approveToSwapForUser) {
+      //     transactions.push(approveToSwapForUser)
+      //     LoggingService.debug('approveToSwapForUser', {
+      //       approveToSwapForUser: withdrawAmount.toString(),
+      //     })
+      //   }
+
+      //   multicallArgs.push(...depositSwapWithdrawMulticall.multicallArgs)
+      //   multicallOperations.push(...depositSwapWithdrawMulticall.multicallOperations)
+      //   swapToAmount = depositSwapWithdrawMulticall.toAmount
+      // }
+      // compose multicall
+      const multicallCalldata = encodeFunctionData({
+        abi: AdmiralsQuartersAbi,
+        functionName: 'multicall',
+        args: [[...multicallArgs, ...depositMulticallArgs]],
+      })
+
+      const vaultSwitchTransaction = createVaultSwitchTransaction({
+        target: unstakeAdmiralsQuartersAddress, // Use the chain-specific address for transactions with unstakeAndWithdraw
+        calldata: multicallCalldata,
+        description:
+          'Vault Switch Operations: ' +
+          multicallOperations.join(', ') +
+          depositMulticallOperations.join(', '),
+        metadata: {
+          fromAmount: transferAmount,
+          toAmount: swapToAmount,
+          fromVault: params.sourceVaultId,
+          toVault: params.destinationVaultId,
+          slippage: params.slippage,
+          priceImpact,
+        },
+      })
+      transactions = [vaultSwitchTransaction]
+    }
+
+    LoggingService.debug('transactions', {
+      transactions: transactions.map(({ description, type, transaction }) => ({
+        description,
+        type,
+        transactionValue: transaction.value,
+      })),
+    })
+
+    return transactions
   }
 
   /**

@@ -6,7 +6,9 @@ import {
   TransactionMetadataWithdraw,
   type WithdrawTransactionInfo,
   type DepositTransactionInfo,
+  type VaultSwitchTransactionInfo,
 } from '@summerfi/sdk-common'
+import type { TransactionMetadataVaultSwitch } from 'node_modules/@summerfi/sdk-common/src/orders/common/types/ExtendedTransactionInfo'
 
 export function createDepositTransaction(params: {
   target: IAddress
@@ -42,6 +44,25 @@ export function createWithdrawTransaction(params: {
     },
     description: params.description,
     type: TransactionType.Withdraw,
+    metadata: params.metadata,
+  }
+}
+
+export function createVaultSwitchTransaction(params: {
+  target: IAddress
+  calldata: HexData
+  value?: bigint
+  description: string
+  metadata: TransactionMetadataVaultSwitch
+}): VaultSwitchTransactionInfo {
+  return {
+    transaction: {
+      target: params.target,
+      calldata: params.calldata,
+      value: String(params.value ?? 0),
+    },
+    description: params.description,
+    type: TransactionType.VaultSwitch,
     metadata: params.metadata,
   }
 }
