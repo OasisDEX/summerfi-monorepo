@@ -32,7 +32,7 @@ jobs:
       REDIS_CACHE_URL: ${{ secrets.REDIS_CACHE_URL }}
       REDIS_CACHE_USER: ${{ secrets.REDIS_CACHE_USER }}
       REDIS_CACHE_PASSWORD: ${{ secrets.REDIS_CACHE_PASSWORD }}
-      VPC_ID: ${{ secrets.VPC_ID }}
+      VPC_ID: ${{ secrets.NEW_VPC_ID }}
       SECURITY_GROUP_ID: ${{ secrets.SECURITY_GROUP_ID }}
       RAYS_DB_WRITE_CONNECTION_STRING: ${{ secrets.RAYS_DB_WRITE_CONNECTION_STRING }}
       RAYS_DB_READ_CONNECTION_STRING: ${{ secrets.RAYS_DB_READ_CONNECTION_STRING }}
