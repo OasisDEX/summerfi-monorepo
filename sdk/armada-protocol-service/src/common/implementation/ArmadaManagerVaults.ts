@@ -34,10 +34,6 @@ import type { ITokensManager } from '@summerfi/tokens-common'
 import { encodeFunctionData } from 'viem'
 import BigNumber from 'bignumber.js'
 
-// Define a small dust threshold for share amounts (e.g., $0.01)
-// This helps decide if fleet shares are negligible
-const fleetDustThreshold = 10n
-
 export class ArmadaManagerVaults implements IArmadaManagerVaults {
   private _supportedChains: IChainInfo[]
   private _blockchainClientProvider: IBlockchainClientProvider
