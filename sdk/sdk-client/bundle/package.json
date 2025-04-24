@@ -1,13 +1,16 @@
 {
   "name": "@summer_fi/sdk-client",
-  "version": "0.1.0",
-  "module": "dist/index.js",
+  "version": "0.2.0",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "summer.fi",
+    "email": "integration@summer.fi",
+    "url": "https://summer.fi"
+  },
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "packageManager": "yarn@1.22.21",
-  "scripts": {},
   "dependencies": {
-    "abitype": "^1.0.2",
     "bignumber.js": "^9.1.2",
-    "@trpc/client": "11.0.0-next-beta.264"
+    "@trpc/client": "11.0.0-rc.844"
   }
 }

@@ -6,8 +6,8 @@
     "watch": "tsc -w",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "bundle:npm": "esbuild src/index.ts --platform=node --target=es2020 --conditions= --main-fields=main --bundle --sourcemap --outfile=bundle/dist/index.js --external:crypto --external:tls --external:https --external:net --external:http --external:stream --external:zlib --external:assert --keep-names && tsc --emitDeclarationOnly --outDir bundle/dist tsconfig.build.json",
-    "strategy:gen": "pnpm bundle:npm; node ./bundle/dist/index.js"
+    "bundle": "esbuild src/index.ts --platform=node --target=es2020 --conditions= --main-fields=main --bundle --sourcemap --outfile=bundle/dist/index.js --external:crypto --external:tls --external:https --external:net --external:http --external:stream --external:zlib --external:assert --keep-names && tsc --emitDeclarationOnly --outDir bundle/dist tsconfig.build.json",
+    "strategy:gen": "pnpm bundle; node ./bundle/dist/index.js"
   },
   "dependencies": {
     "@summerfi/order-planner-service": "workspace:*",
