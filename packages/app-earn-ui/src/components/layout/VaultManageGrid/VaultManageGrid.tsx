@@ -44,7 +44,7 @@ interface VaultManageGridProps {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
   position: IArmadaPosition
-  detailsContent: ReactNode[]
+  detailsContent: ReactNode[] | ReactNode
   sidebarContent: ReactNode
   connectedWalletAddress?: string
   viewWalletAddress: string
