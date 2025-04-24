@@ -10,13 +10,12 @@ import {
   TransactionType,
   BridgeTransactionInfo,
   TokenAmount,
-  IToken,
   ChainIds,
 } from '@summerfi/sdk-common'
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { addressToBytes32, Options } from '@layerzerolabs/lz-v2-utilities'
 import { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
-import type { IArmadaManagerBridge } from '@summerfi/armada-protocol-common'
+import type { IArmadaManagerBridge, IArmadaManagerUtils } from '@summerfi/armada-protocol-common'
 import { ITokensManager } from '@summerfi/tokens-common'
 
 export interface BridgeTxParams {
@@ -32,20 +31,20 @@ export class ArmadaManagerBridge implements IArmadaManagerBridge {
   private _blockchainClientProvider: IBlockchainClientProvider
   private _supportedChains: IChainInfo[]
   private _tokensManager: ITokensManager
-  private _getSummerToken: (params: { chainInfo: IChainInfo }) => IToken
+  private _utils: IArmadaManagerUtils
 
   constructor(params: {
     blockchainClientProvider: IBlockchainClientProvider
     configProvider: IConfigurationProvider
     supportedChains: IChainInfo[]
     tokensManager: ITokensManager
-    getSummerToken: (params: { chainInfo: IChainInfo }) => IToken
+    utils: IArmadaManagerUtils
   }) {
     this._configProvider = params.configProvider
     this._blockchainClientProvider = params.blockchainClientProvider
     this._supportedChains = params.supportedChains
     this._tokensManager = params.tokensManager
-    this._getSummerToken = params.getSummerToken
+    this._utils = params.utils
   }
 
   async getBridgeTx(params: BridgeTxParams): Promise<BridgeTransactionInfo[]> {
@@ -79,7 +78,9 @@ export class ArmadaManagerBridge implements IArmadaManagerBridge {
       oftCmd: '0x' as `0x${string}`,
     }
 
-    const bridgeContractAddress = this._getSummerToken({ chainInfo: params.sourceChain }).address
+    const bridgeContractAddress = this._utils.getSummerToken({
+      chainInfo: params.sourceChain,
+    }).address
     const quotedFee = await client.readContract({
       address: bridgeContractAddress.value,
       abi: BridgeAbi,

@@ -12,10 +12,8 @@ import {
   type ArmadaMigratablePositionApy,
   type HexData,
   type IAddress,
-  type IArmadaVaultId,
   type IChainInfo,
   type IFiatCurrencyAmount,
-  type IPercentage,
   type IToken,
   type ITokenAmount,
   type IUser,
@@ -29,6 +27,7 @@ import {
   getAaveV3Address,
   getDeployedContractAddress,
   type IArmadaManagerMigrations,
+  type IArmadaManagerUtils,
 } from '@summerfi/armada-protocol-common'
 import { AdmiralsQuartersAbi } from '@summerfi/armada-protocol-abis'
 import { encodeFunctionData } from 'viem'
@@ -64,20 +63,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
   private _allowanceManager: IAllowanceManager
   private _tokensManager: ITokensManager
   private _oracleManager: IOracleManager
-  private _getSwapCall: (params: {
-    vaultId: IArmadaVaultId
-    fromAmount: ITokenAmount
-    toToken: IToken
-    slippage: IPercentage
-  }) => Promise<{
-    calldata: HexData
-    minAmount: ITokenAmount
-    toAmount: ITokenAmount
-  }>
-  private _getPriceImpact: (params: {
-    fromAmount: ITokenAmount
-    toAmount: ITokenAmount
-  }) => Promise<TransactionPriceImpact>
+  private _utils: IArmadaManagerUtils
 
   private _supportedChains: IChainInfo[]
   private _hubChainInfo: IChainInfo
@@ -92,20 +78,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     supportedChains: IChainInfo[]
     hubChainInfo: IChainInfo
     oracleManager: IOracleManager
-    getSwapCall: (params: {
-      vaultId: IArmadaVaultId
-      fromAmount: ITokenAmount
-      toToken: IToken
-      slippage: IPercentage
-    }) => Promise<{
-      calldata: HexData
-      minAmount: ITokenAmount
-      toAmount: ITokenAmount
-    }>
-    getPriceImpact: (params: {
-      fromAmount: ITokenAmount
-      toAmount: ITokenAmount
-    }) => Promise<TransactionPriceImpact>
+    utils: IArmadaManagerUtils
   }) {
     this._blockchainClientProvider = params.blockchainClientProvider
     this._contractsProvider = params.contractsProvider
@@ -115,8 +88,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     this._supportedChains = params.supportedChains
     this._hubChainInfo = params.hubChainInfo
     this._oracleManager = params.oracleManager
-    this._getSwapCall = params.getSwapCall
-    this._getPriceImpact = params.getPriceImpact
+    this._utils = params.utils
   }
 
   async getMigratablePositions(
@@ -575,7 +547,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     for (const position of filteredPositions) {
       // We need to swap position when token is not a fleet token
       if (!position.underlyingTokenAmount.token.equals(fleetToken)) {
-        const swapCall = await this._getSwapCall({
+        const swapCall = await this._utils.getSwapCall({
           vaultId: params.vaultId,
           fromAmount: position.underlyingTokenAmount,
           toToken: fleetToken,
@@ -586,7 +558,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
           `swap ${position.underlyingTokenAmount.toString()} to ${swapCall.toAmount.toString()} (min ${swapCall.minAmount.toString()})`,
         )
         swapAmountByPositionId[position.id] = swapCall.toAmount
-        priceImpactByPositionId[position.id] = await this._getPriceImpact({
+        priceImpactByPositionId[position.id] = await this._utils.getPriceImpact({
           fromAmount: position.underlyingTokenAmount,
           toAmount: swapCall.toAmount,
         })

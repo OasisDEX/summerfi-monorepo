@@ -1,10 +1,11 @@
 import {
   type HexData,
   type IAddress,
-  type ExtendedTransactionInfo,
   TransactionType,
   TransactionMetadataDeposit,
   TransactionMetadataWithdraw,
+  type WithdrawTransactionInfo,
+  type DepositTransactionInfo,
 } from '@summerfi/sdk-common'
 
 export function createDepositTransaction(params: {
@@ -13,7 +14,7 @@ export function createDepositTransaction(params: {
   value?: bigint
   description: string
   metadata: TransactionMetadataDeposit
-}): ExtendedTransactionInfo {
+}): DepositTransactionInfo {
   return {
     transaction: {
       target: params.target,
@@ -32,7 +33,7 @@ export function createWithdrawTransaction(params: {
   value?: bigint
   description: string
   metadata: TransactionMetadataWithdraw
-}): ExtendedTransactionInfo {
+}): WithdrawTransactionInfo {
   return {
     transaction: {
       target: params.target,
