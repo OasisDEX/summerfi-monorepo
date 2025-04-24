@@ -598,6 +598,7 @@ export class ArmadaManager implements IArmadaManager {
   /** PRIVATE */
 
   /**
+   * FIXME: This is some kind of a hack to use different AQ for withdrawals
    * Returns the chain-specific Admirals Quarters address for unstake operations
    * @param chainInfo The chain information
    * @returns The appropriate Admirals Quarters address for the chain
@@ -833,10 +834,11 @@ export class ArmadaManager implements IArmadaManager {
       contractName: 'admiralsQuarters',
     })
 
-    // are unstaked tokens available greater than dust
+    // Are fleetShares available at all? (should be greater than dust)
     if (beforeFleetShares.toSolidityValue() > 0) {
-      // Yes. is the unstaked amount sufficient to meet the withdrawal?
+      // Yes. Are fleetShares sufficient to meet the requestedWithdrawShares?
       if (beforeFleetShares.toSolidityValue() >= requestedWithdrawShares.toSolidityValue()) {
+        // Yes. Withdraw all from fleetShares
         LoggingService.debug('fleet shares is enough for requested amount', {
           fleetShares: beforeFleetShares.toString(),
         })
@@ -899,7 +901,7 @@ export class ArmadaManager implements IArmadaManager {
           }),
         )
       } else {
-        // Request withdrawal of all unstaked tokens and the rest from staked tokens
+        // No. Withdraw all from fleetShares and the reminder from stakedShares
         LoggingService.debug('fleet shares is not enough', {
           fleetShares: beforeFleetShares.toString(),
         })
@@ -1046,7 +1048,7 @@ export class ArmadaManager implements IArmadaManager {
         )
       }
     } else {
-      // No. Unstake and withdraw everything from staked tokens.
+      // No. Unstake and withdraw everything from stakedShares.
       const multicallArgs: HexData[] = []
       const multicallOperations: string[] = []
 

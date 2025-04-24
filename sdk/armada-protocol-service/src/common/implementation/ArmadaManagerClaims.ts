@@ -185,7 +185,6 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     })
   }
 
-  // TODO optimise stakingRewardsManager addresses to config
   private async getProtocolUsageRewards(
     user: IUser,
     chainInfo: IChainInfo,
