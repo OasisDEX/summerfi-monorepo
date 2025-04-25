@@ -158,7 +158,7 @@ export {
   sdkSupportedChains,
   sdkSupportedNetworks,
 } from './src/earn-protocol'
-export type { Risk } from './src/earn-protocol/risk'
+export type { RiskType } from './src/earn-protocol/risk'
 export type {
   ArkDetailsType,
   ArksHistoricalChartData,

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useUser } from '@account-kit/react'
 import {
   ControlsDepositWithdraw,
+  ControlsSwitch,
   getDisplayToken,
   getMigrationLandingPageUrl,
   getPositionValues,
@@ -12,6 +13,7 @@ import {
   sidebarFootnote,
   SidebarMobileHeader,
   type SidebarProps,
+  SkeletonLine,
   SUMR_CAP,
   useAmount,
   useAmountWithSwap,
@@ -26,16 +28,17 @@ import { useTermsOfService } from '@summerfi/app-tos'
 import {
   type ArksHistoricalChartData,
   type IArmadaPosition,
+  type NetworkIds,
   type PerformanceChartData,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
   TOSStatus,
   TransactionAction,
-  type VaultApyData,
 } from '@summerfi/app-types'
-import { subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
+import { subgraphNetworkToId, subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
 import { TransactionType } from '@summerfi/sdk-common'
+import dynamic from 'next/dynamic'
 
 import { AccountKitAccountType } from '@/account-kit/types'
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
@@ -43,13 +46,9 @@ import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
+import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { VaultManageViewDetails } from '@/components/layout/VaultManageView/VaultManageViewDetails'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
-import {
-  ControlsApproval,
-  OrderInfoDeposit,
-  OrderInfoWithdraw,
-} from '@/components/molecules/SidebarElements'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
@@ -67,6 +66,30 @@ import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useTransaction } from '@/hooks/use-transaction'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
+const ControlsApproval = dynamic(
+  () =>
+    import('@/components/molecules/SidebarElements/ControlsApproval').then(
+      (mod) => mod.ControlsApproval,
+    ),
+  { ssr: false, loading: () => <SkeletonLine width="100%" height="100%" /> },
+)
+
+const OrderInfoDeposit = dynamic(
+  () =>
+    import('@/components/molecules/SidebarElements/OrderInfoDeposit').then(
+      (mod) => mod.OrderInfoDeposit,
+    ),
+  { ssr: false, loading: () => <SkeletonLine width="100%" height="100%" /> },
+)
+
+const OrderInfoWithdraw = dynamic(
+  () =>
+    import('@/components/molecules/SidebarElements/OrderInfoWithdraw').then(
+      (mod) => mod.OrderInfoWithdraw,
+    ),
+  { ssr: false, loading: () => <SkeletonLine width="100%" height="100%" /> },
+)
+
 export const VaultManageViewComponent = ({
   vault,
   vaults,
@@ -78,7 +101,7 @@ export const VaultManageViewComponent = ({
   performanceChartData,
   arksHistoricalChartData,
   arksInterestRates,
-  vaultApyData,
+  vaultsApyByNetworkMap,
   migratablePositions,
   migrationBestVaultApy,
 }: {
@@ -92,7 +115,7 @@ export const VaultManageViewComponent = ({
   performanceChartData: PerformanceChartData
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates: GetInterestRatesReturnType
-  vaultApyData: VaultApyData
+  vaultsApyByNetworkMap: GetVaultsApyResponse
   migratablePositions: MigratablePosition[]
   migrationBestVaultApy: MigrationEarningsDataByChainId
 }) => {
@@ -112,6 +135,9 @@ export const VaultManageViewComponent = ({
   const [selectedPosition, setSelectedPosition] = useState<string | undefined>(
     migratablePositions[0]?.id,
   )
+
+  const vaultApyData =
+    vaultsApyByNetworkMap[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`] ?? {}
 
   const handleSelectPosition = (id: string) => {
     setSelectedPosition(id)
@@ -292,6 +318,15 @@ export const VaultManageViewComponent = ({
     }
   })
 
+  const potentialVaultsToSwitchTo = useMemo(() => {
+    return vaults.filter((potentialVault) => {
+      return (
+        subgraphNetworkToSDKId(potentialVault.protocol.network) === vaultChainId &&
+        potentialVault.id !== vault.id
+      )
+    })
+  }, [vault.id, vaultChainId, vaults])
+
   const sidebarContent = nextTransaction?.type ? (
     {
       [TransactionType.Approve]: (
@@ -329,7 +364,12 @@ export const VaultManageViewComponent = ({
       ),
     }[nextTransaction.type]
   ) : transactionType === TransactionAction.SWITCH ? (
-    <div>switch</div>
+    <ControlsSwitch
+      currentPosition={position}
+      currentVault={vault}
+      potentialVaults={potentialVaultsToSwitchTo}
+      chainId={vaultChainId as unknown as NetworkIds}
+    />
   ) : (
     <ControlsDepositWithdraw
       amountDisplay={amountDisplay}

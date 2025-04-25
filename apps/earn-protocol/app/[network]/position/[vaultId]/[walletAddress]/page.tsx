@@ -137,7 +137,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     vaultInterestRates,
     positionHistory,
     positionForecastResponse,
-    vaultsApyRaw,
+    vaultsApyByNetworkMap,
     migratablePositionsData,
   ] = await Promise.all([
     getInterestRates({
@@ -172,11 +172,6 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     }),
   ])
 
-  const vaultApyData =
-    vaultsApyRaw[
-      `${vaultWithConfig.id}-${subgraphNetworkToId(vaultWithConfig.protocol.network)}`
-    ] ?? {}
-
   if (!positionForecastResponse.ok) {
     throw new Error('Failed to fetch forecast data')
   }
@@ -203,14 +198,14 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   const migrationBestVaultApy = getMigrationBestVaultApy({
     migratablePositions,
     vaultsWithConfig: allVaultsWithConfig,
-    vaultsApyByNetworkMap: vaultsApyRaw,
+    vaultsApyByNetworkMap,
   })
 
   return (
     <VaultManageView
       vault={vaultWithConfig}
-      vaultApyData={vaultApyData}
       vaults={allVaultsWithConfig}
+      vaultsApyByNetworkMap={vaultsApyByNetworkMap}
       position={positionJsonSafe}
       viewWalletAddress={walletAddress}
       latestActivity={latestActivity}
