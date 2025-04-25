@@ -1,20 +1,21 @@
 import {
-  IUser,
+  IPercentage,
   isArmadaVaultId,
   isPercentage,
   isTokenAmount,
   isUser,
   type IArmadaVaultId,
-  type IPercentage,
   type ITokenAmount,
+  type IUser,
 } from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 
-export const getDepositTx = publicProcedure
+export const getVaultSwitchTx = publicProcedure
   .input(
     z.object({
-      vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
+      sourceVaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
+      destinationVaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
       user: z.custom<IUser>(isUser),
       amount: z.custom<ITokenAmount>(isTokenAmount),
       slippage: z.custom<IPercentage>(isPercentage),
@@ -22,5 +23,5 @@ export const getDepositTx = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.vaults.getNewDepositTX(opts.input)
+    return await opts.ctx.armadaManager.vaults.getVaultSwitchTx(opts.input)
   })

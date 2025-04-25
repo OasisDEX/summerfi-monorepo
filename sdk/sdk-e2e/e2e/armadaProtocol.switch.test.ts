@@ -5,24 +5,15 @@ import {
   ChainIds,
   getChainInfoByChainId,
   Percentage,
-  TokenAmount,
   User,
   Wallet,
   type ChainInfo,
   type IArmadaVaultId,
-  type IToken,
   type IUser,
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { prepareData } from './utils/prepareData'
-import {
-  signerPrivateKey,
-  SDKApiUrl,
-  testConfig,
-  signerAddress,
-  userAddress,
-} from './utils/testConfig'
+import { signerPrivateKey, SDKApiUrl, userAddress } from './utils/testConfig'
 
 jest.setTimeout(300000)
 
@@ -107,8 +98,6 @@ describe('Armada Protocol Switch', () => {
 
     describe(`Switch position on ${chainInfo.name}`, () => {
       it(`should switch position from ${sourceFleetAddress.value}`, async () => {
-        const amount = '1'
-
         const sourcePositionBefore = await sdk.armada.users.getUserPosition({
           user,
           fleetAddress: sourceFleetAddress,
@@ -121,12 +110,12 @@ describe('Armada Protocol Switch', () => {
         console.log('positions before', sourcePositionBefore, destinationPositionBefore)
 
         const transactions = await sdk.armada.users.getVaultSwitchTx({
-          vaultId,
+          sourceVaultId,
+          destinationVaultId,
+          amount: sourcePositionBefore.amount,
           user,
-          amount: TokenAmount.createFrom({
-            amount,
-            token,
-          }),
+          slippage,
+          shouldStake: true,
         })
 
         const { statuses } = await sendAndLogTransactions({

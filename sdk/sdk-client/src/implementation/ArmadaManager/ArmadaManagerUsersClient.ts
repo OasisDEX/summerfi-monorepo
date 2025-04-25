@@ -1,8 +1,13 @@
 import {
   BridgeTransactionInfo,
   ITokenAmount,
+  type ApproveTransactionInfo,
   type IArmadaPosition,
+  type IArmadaVaultId,
   type IArmadaVaultInfo,
+  type IPercentage,
+  type IUser,
+  type VaultSwitchTransactionInfo,
 } from '@summerfi/sdk-common'
 import { IArmadaManagerUsersClient } from '../../interfaces/ArmadaManager/IArmadaManagerUsersClient'
 import { IRPCClient } from '../../interfaces/IRPCClient'
@@ -222,5 +227,11 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     params: Parameters<IArmadaManagerUsersClient['getMigrationTX']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getMigrationTX']> {
     return this.rpcClient.armada.users.getMigrationTX.query(params)
+  }
+
+  async getVaultSwitchTx(
+    params: Parameters<IArmadaManagerUsersClient['getVaultSwitchTx']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getVaultSwitchTx']> {
+    return this.rpcClient.armada.users.getVaultSwitchTx.query(params)
   }
 }

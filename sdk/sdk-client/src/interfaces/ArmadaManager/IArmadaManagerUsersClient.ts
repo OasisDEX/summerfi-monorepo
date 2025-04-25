@@ -30,6 +30,7 @@ import {
   type MigrationTransactionInfo,
   type StakeTransactionInfo,
   type UnstakeTransactionInfo,
+  type VaultSwitchTransactionInfo,
 } from '@summerfi/sdk-common'
 
 /**
@@ -446,4 +447,30 @@ export interface IArmadaManagerUsersClient {
     slippage: IPercentage
     positionIds: AddressValue[]
   }): Promise<[ApproveTransactionInfo[], MigrationTransactionInfo] | [MigrationTransactionInfo]>
+
+  /**
+   * @name getVaultSwitchTx
+   * @description Returns the transactions needed to switch from one vault to another
+   *
+   * @param sourceVaultId ID of the source pool
+   * @param destinationVaultId ID of the destination pool
+   * @param user Address of the user that is trying to switch
+   * @param amount Token amount to be switched
+   * @param slippage Maximum slippage allowed for the operation
+   *
+   * @returns An array of transactions that must be executed
+   */
+  getVaultSwitchTx(params: {
+    sourceVaultId: IArmadaVaultId
+    destinationVaultId: IArmadaVaultId
+    user: IUser
+    amount: ITokenAmount
+    slippage: IPercentage
+    shouldStake?: boolean
+  }): Promise<
+    | [VaultSwitchTransactionInfo]
+    | [ApproveTransactionInfo, VaultSwitchTransactionInfo]
+    | [VaultSwitchTransactionInfo, VaultSwitchTransactionInfo]
+    | [ApproveTransactionInfo, VaultSwitchTransactionInfo, VaultSwitchTransactionInfo]
+  >
 }

@@ -88,7 +88,7 @@ export interface IArmadaManagerVaults {
    * @param amount Token amount to be switched
    * @param slippage Maximum slippage allowed for the operation
    *
-   * @returns ExtendedTransactionInfo[] An array of transactions that must be executed
+   * @returns An array of transactions that must be executed
    */
   getVaultSwitchTx(params: {
     sourceVaultId: IArmadaVaultId
