@@ -5,9 +5,8 @@ import {
   type SDKVaultType,
   type TimeframesType,
 } from '@summerfi/app-types'
-import { subgraphNetworkToId } from '@summerfi/app-utils'
+import { getVaultNiceName, subgraphNetworkToId } from '@summerfi/app-utils'
 import dayjs from 'dayjs'
-import { memoize } from 'lodash-es'
 
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { type GetVaultsHistoricalApyResponse } from '@/app/server-handlers/vault-historical-apy'
@@ -39,43 +38,41 @@ const emptyChart = {
   '3y': [{ timestamp: 0 }],
 }
 
-const getBaseHistoricalChartsData = memoize(
-  (fillTimeframe = true): BaseHistoricalChartsDataReturnType => {
-    const today = dayjs()
-    // establish a base values for the chart data
-    // each chart data points has a timestamp key and an empty object as value
-    // which will be filled with the interest rate data
+const getBaseHistoricalChartsData = (fillTimeframe = true): BaseHistoricalChartsDataReturnType => {
+  const today = dayjs()
+  // establish a base values for the chart data
+  // each chart data points has a timestamp key and an empty object as value
+  // which will be filled with the interest rate data
 
-    if (!fillTimeframe) {
-      // if we dont want to show the whole timeframe (ex 1y worth of points with only available data)
-      // just set this to false
-      return emptyChartRaw
-    }
+  if (!fillTimeframe) {
+    // if we dont want to show the whole timeframe (ex 1y worth of points with only available data)
+    // just set this to false
+    return emptyChartRaw
+  }
 
-    const createDataArray = (arrLength: number, unit: dayjs.ManipulateType) =>
-      Array.from({ length: arrLength }).reduce<{
-        [key: string]: { [key: string]: number | string; timestamp: string }
-      }>((acc, _, i) => {
-        const timestamp = today
-          .startOf(unit)
-          .subtract(i, unit)
-          .format(CHART_TIMESTAMP_FORMAT_DETAILED)
+  const createDataArray = (arrLength: number, unit: dayjs.ManipulateType) =>
+    Array.from({ length: arrLength }).reduce<{
+      [key: string]: { [key: string]: number | string; timestamp: string }
+    }>((acc, _, i) => {
+      const timestamp = today
+        .startOf(unit)
+        .subtract(i, unit)
+        .format(CHART_TIMESTAMP_FORMAT_DETAILED)
 
-        acc[timestamp] = { timestamp }
+      acc[timestamp] = { timestamp }
 
-        return acc
-      }, {})
+      return acc
+    }, {})
 
-    return {
-      '7d': createDataArray(7 * 24, 'hour'),
-      '30d': createDataArray(30 * 24, 'hour'),
-      '90d': createDataArray(90, 'day'),
-      '6m': createDataArray(30 * 6, 'day'),
-      '1y': createDataArray(365, 'day'),
-      '3y': createDataArray(52 * 3, 'week'),
-    }
-  },
-)
+  return {
+    '7d': createDataArray(7 * 24, 'hour'),
+    '30d': createDataArray(30 * 24, 'hour'),
+    '90d': createDataArray(90, 'day'),
+    '6m': createDataArray(30 * 6, 'day'),
+    '1y': createDataArray(365, 'day'),
+    '3y': createDataArray(52 * 3, 'week'),
+  }
+}
 
 export const getArkHistoricalChartData = ({
   vault,
@@ -89,8 +86,7 @@ export const getArkHistoricalChartData = ({
   const castedVault = vault as SDKVaultType
   const vaultsInterestRates =
     vaultInterestRates[`${castedVault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
-  const vaultName =
-    castedVault.customFields?.name ?? `Summer ${castedVault.inputToken.symbol} Vault`
+  const vaultName = getVaultNiceName({ vault: castedVault })
   const today = dayjs()
   const threshold7d = today.startOf('hour').subtract(7, 'day').unix()
   const threshold30d = today.startOf('hour').subtract(30, 'day').unix()

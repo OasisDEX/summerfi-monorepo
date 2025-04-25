@@ -30,6 +30,7 @@ export async function getInterestRates({
   const filteredArksWithCapHigherThanZero = arksList.filter(filterArksWithCapHigherThanZero)
 
   const arkNamesList = filteredArksWithCapHigherThanZero.map(interestRatesMapArkName)
+
   const functionsApiUrl = process.env.FUNCTIONS_API_URL
 
   if (!functionsApiUrl) {

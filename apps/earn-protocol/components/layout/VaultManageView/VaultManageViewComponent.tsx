@@ -40,7 +40,12 @@ import {
   TransactionAction,
   type VaultApyData,
 } from '@summerfi/app-types'
-import { formatDecimalAsPercent, subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
+import {
+  formatDecimalAsPercent,
+  getVaultNiceName,
+  subgraphNetworkToSDKId,
+  zero,
+} from '@summerfi/app-utils'
 import { TransactionType } from '@summerfi/sdk-common'
 import Link from 'next/link'
 
@@ -536,9 +541,7 @@ export const VaultManageViewComponent = ({
             >
               <ArkHistoricalYieldChart
                 chartData={arksHistoricalChartData}
-                summerVaultName={
-                  vault.customFields?.name ?? `Summer ${vault.inputToken.symbol} Vault`
-                }
+                summerVaultName={getVaultNiceName({ vault })}
               />
             </Expander>
             <Expander

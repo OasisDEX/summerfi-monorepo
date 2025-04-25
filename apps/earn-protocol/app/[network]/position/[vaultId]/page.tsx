@@ -89,7 +89,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       })
     : []
 
-  const vaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })
+  const allVaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })
 
   const [arkInterestRatesMap, vaultInterestRates, vaultsApyRaw] = await Promise.all([
     vault?.arks
@@ -106,14 +106,12 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       })),
     }),
     getVaultsApy({
-      fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
+      fleets: allVaultsWithConfig.map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
         chainId: subgraphNetworkToId(network),
       })),
     }),
   ])
-
-  const allVaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })
 
   if (!vault) {
     return (
