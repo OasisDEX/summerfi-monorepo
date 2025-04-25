@@ -26,7 +26,7 @@ export const getWithdrawTX = publicProcedure
   )
   .query(async (opts) => {
     try {
-      return await opts.ctx.armadaManager.getWithdrawTX(opts.input)
+      return await opts.ctx.armadaManager.vaults.getWithdrawTX(opts.input)
     } catch (error) {
       console.error(error)
       throw new TRPCError({

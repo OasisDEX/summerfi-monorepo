@@ -18,5 +18,5 @@ export const setArkDepositCap = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.setArkDepositCap(opts.input)
+    return opts.ctx.armadaManager.utils.setArkDepositCap(opts.input)
   })

@@ -22,5 +22,5 @@ export const getDepositTX = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.getNewDepositTX(opts.input)
+    return opts.ctx.armadaManager.vaults.getNewDepositTX(opts.input)
   })

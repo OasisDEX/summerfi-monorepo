@@ -67,7 +67,7 @@ export class ArmadaSimulator {
       user: simulationParams.user,
     })
 
-    const prevPosition = await armadaManager.getPosition({
+    const prevPosition = await armadaManager.utils.getPosition({
       positionId,
     })
 
@@ -105,7 +105,7 @@ export class ArmadaSimulator {
       user: simulationParams.user,
     })
 
-    const prevPosition = await armadaManager.getPosition({
+    const prevPosition = await armadaManager.utils.getPosition({
       positionId,
     })
 

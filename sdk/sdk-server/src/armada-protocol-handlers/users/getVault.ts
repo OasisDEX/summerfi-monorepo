@@ -9,5 +9,5 @@ export const getVaultRaw = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.getVaultRaw(opts.input)
+    return opts.ctx.armadaManager.utils.getVaultRaw(opts.input)
   })

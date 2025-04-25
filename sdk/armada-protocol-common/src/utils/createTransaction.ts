@@ -4,11 +4,11 @@ import {
   TransactionType,
   TransactionMetadataDeposit,
   TransactionMetadataWithdraw,
+  TransactionMetadataVaultSwitch,
   type WithdrawTransactionInfo,
   type DepositTransactionInfo,
   type VaultSwitchTransactionInfo,
 } from '@summerfi/sdk-common'
-import type { TransactionMetadataVaultSwitch } from 'node_modules/@summerfi/sdk-common/src/orders/common/types/ExtendedTransactionInfo'
 
 export function createDepositTransaction(params: {
   target: IAddress

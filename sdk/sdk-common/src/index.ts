@@ -297,6 +297,7 @@ export type {
   TransactionPriceImpact,
   TransactionMetadataDeposit,
   TransactionMetadataWithdraw,
+  TransactionMetadataVaultSwitch,
   TransactionMetadataBridge,
   TransactionMetadataMigration,
   ApproveTransactionInfo,
