@@ -12,6 +12,22 @@ const nextConfig: (phase: string) => NextConfig = (phase) => ({
   devIndicators: {
     position: 'bottom-right',
   },
+  experimental: {
+    optimizePackageImports: [
+      '@summerfi/app-earn-ui',
+      '@summerfi/app-types',
+      '@summerfi/app-utils',
+      '@summerfi/sdk-client',
+      '@summerfi/sdk-client-react',
+      '@summerfi/sdk-common',
+      'graphql-request',
+      'graphql-tag',
+      'graphql',
+      'mixpanel-browser',
+      'usehooks-ts',
+      'zod',
+    ],
+  },
   output: 'standalone',
   reactStrictMode: false,
   ...(phase !== PHASE_DEVELOPMENT_SERVER
