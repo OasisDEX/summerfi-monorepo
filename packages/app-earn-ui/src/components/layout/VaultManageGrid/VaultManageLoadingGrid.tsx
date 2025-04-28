@@ -1,6 +1,7 @@
 'use client'
 
 import { type FC, type ReactNode } from 'react'
+import { getVaultRiskTooltipLabel } from '@summerfi/app-utils'
 
 import { Box } from '@/components/atoms/Box/Box'
 import { Icon } from '@/components/atoms/Icon/Icon'
@@ -25,6 +26,10 @@ export const VaultManageLoadingGrid: FC<VaultManageLoadingGridProps> = ({
   detailsContent,
   sidebarContent,
 }) => {
+  const riskTooltipLabel = getVaultRiskTooltipLabel({
+    risk: 'lower',
+  })
+
   return (
     <>
       <div className={vaultManageGridStyles.vaultManageGridBreadcrumbsWrapper}>
@@ -56,7 +61,7 @@ export const VaultManageLoadingGrid: FC<VaultManageLoadingGridProps> = ({
                   <>
                     <SkeletonLine height={22} width={120} style={{ marginTop: '2px' }} />
                     <Tooltip
-                      tooltip="Lower risk Vaults contain no exposure to peg or swap risk."
+                      tooltip={riskTooltipLabel}
                       tooltipWrapperStyles={{ minWidth: '200px' }}
                     >
                       <Icon iconName="question_o" variant="s" color={riskColors.lower} />

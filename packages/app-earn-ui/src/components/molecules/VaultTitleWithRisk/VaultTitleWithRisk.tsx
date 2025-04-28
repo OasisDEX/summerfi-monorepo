@@ -5,6 +5,7 @@ import {
   type SDKNetwork,
   type SDKVaultType,
 } from '@summerfi/app-types'
+import { getVaultRiskTooltipLabel } from '@summerfi/app-utils'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Risk } from '@/components/atoms/Risk/Risk'
@@ -34,6 +35,9 @@ export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
   titleVariant = 'h4semi',
 }) => {
   const color = riskColors[risk]
+  const riskTooltipLabel = getVaultRiskTooltipLabel({
+    risk,
+  })
 
   return (
     <VaultTitle
@@ -47,10 +51,7 @@ export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
       value={
         <>
           <Risk risk={risk} variant="p3semi" />
-          <Tooltip
-            tooltip="Lower risk Vaults contain no exposure to peg or swap risk."
-            tooltipWrapperStyles={{ minWidth: '200px' }}
-          >
+          <Tooltip tooltip={riskTooltipLabel} tooltipWrapperStyles={{ minWidth: '300px' }}>
             <Icon iconName="question_o" variant="s" color={color} />
           </Tooltip>
         </>
