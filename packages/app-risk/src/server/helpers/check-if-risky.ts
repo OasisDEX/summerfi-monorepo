@@ -33,7 +33,7 @@ export const checkIfRisky = async ({
       console.error('TRM_LOG logging failed', ex)
     }
 
-    return trmData.addressRiskIndicators.some((indicator) => Number(indicator.totalVolumeUsd) > 0)
+    return trmData.addressRiskIndicators.some((indicator) => Number(indicator.totalVolumeUsd) > 100)
   } catch (ex) {
     console.error(`TRM_LOG ${address} check failed`)
     console.error(ex)

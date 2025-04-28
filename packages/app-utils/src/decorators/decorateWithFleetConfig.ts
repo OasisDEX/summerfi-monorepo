@@ -14,14 +14,15 @@ import { subgraphNetworkToId } from '@/helpers/earn-network-tools'
  */
 export const decorateWithFleetConfig = (
   vaults: SDKVaultishType[],
-  fleetMap: EarnAppConfigType['fleetMap'],
+  systemConfig: Partial<EarnAppConfigType>,
   userPositions?: IArmadaPosition[],
 ): SDKVaultishType[] =>
   vaults
     .map((vault) => {
       const vaultNetworkId = subgraphNetworkToId(vault.protocol.network)
-      const vaultNetworkConfig = fleetMap[String(vaultNetworkId) as keyof typeof fleetMap]
-      const configCustomFields = vaultNetworkConfig[vault.id.toLowerCase() as '0x']
+      const vaultNetworkConfig =
+        systemConfig.fleetMap?.[String(vaultNetworkId) as keyof typeof systemConfig.fleetMap]
+      const configCustomFields = vaultNetworkConfig?.[vault.id.toLowerCase() as '0x']
 
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       return configCustomFields
@@ -33,6 +34,13 @@ export const decorateWithFleetConfig = (
             },
           }
         : vault
+    })
+    .filter(({ inputTokenBalance }) => {
+      if (systemConfig.features?.FilterZeroTokenVaults) {
+        return inputTokenBalance > 0
+      }
+
+      return true
     })
     .filter(({ customFields, id }) => {
       // we dont want to filter out vaults that user has a position in

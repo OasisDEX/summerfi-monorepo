@@ -154,5 +154,5 @@ export const EXTERNAL_LINKS = {
   LIDO_FI_STETH_LIQUIDITY:
     'https://blog.lido.fi/providing-steth-liquidity-via-curve-to-receive-rewards',
   HOW_TO_SET_UP_AUTO_TAKE_PROFIT_VIDEO: 'https://youtu.be/ZqnvxeccJDQ?feature=shared',
-  EARN_APP_PORTFOLIO: 'https://lazy.summer.fi/earn/portfolio',
+  EARN_APP_PORTFOLIO: 'https://summer.fi/earn/portfolio',
 }
