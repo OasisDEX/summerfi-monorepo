@@ -8,6 +8,7 @@ import {
   type IArmadaManagerBridge,
   type IArmadaManagerVaults,
   type IArmadaManagerUtils,
+  setTestDeployment,
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
@@ -68,6 +69,11 @@ export class ArmadaManager implements IArmadaManager {
     this._swapManager = params.swapManager
     this._oracleManager = params.oracleManager
     this._tokensManager = params.tokensManager
+
+    const summerDeployment = this._configProvider.getConfigurationItem({
+      name: 'SUMMER_DEPLOYMENT_CONFIG',
+    })
+    setTestDeployment(summerDeployment)
 
     this._supportedChains = this._configProvider
       .getConfigurationItem({

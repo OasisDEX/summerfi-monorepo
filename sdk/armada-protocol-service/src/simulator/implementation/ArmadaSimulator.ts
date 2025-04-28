@@ -73,14 +73,14 @@ export class ArmadaSimulator {
 
     const simulatedPosition = ArmadaSimulatedPosition.createFrom({
       armadaManager,
-      ...prevPosition,
+      ...prevPosition!,
     })
 
     await simulatedPosition.deposit(simulationParams.amount)
 
     return ArmadaSimulation.createFrom({
       user: simulationParams.user,
-      previousPosition: prevPosition,
+      previousPosition: prevPosition!,
       newPosition: simulatedPosition,
     })
   }
@@ -111,14 +111,14 @@ export class ArmadaSimulator {
 
     const simulatedPosition = ArmadaSimulatedPosition.createFrom({
       armadaManager,
-      ...prevPosition,
+      ...prevPosition!,
     })
 
     simulatedPosition.withdraw(simulationParams.amount)
 
     return ArmadaSimulation.createFrom({
       user: simulationParams.user,
-      previousPosition: prevPosition,
+      previousPosition: prevPosition!,
       newPosition: simulatedPosition,
     })
   }

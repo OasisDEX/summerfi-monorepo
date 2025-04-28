@@ -135,7 +135,10 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns The position of the user in the corresponding Armada pool
    */
-  getUserPosition(params: { user: IUser; fleetAddress: IAddress }): Promise<IArmadaPosition>
+  getUserPosition(params: {
+    user: IUser
+    fleetAddress: IAddress
+  }): Promise<IArmadaPosition | undefined>
 
   /**
    * @method getPosition
@@ -145,7 +148,7 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns The position of the user in the corresponding Armada pool
    */
-  getPosition(params: { positionId: IArmadaPositionId }): Promise<IArmadaPosition>
+  getPosition(params: { positionId: IArmadaPositionId }): Promise<IArmadaPosition | undefined>
 
   /**
    * @method getNewDepositTX

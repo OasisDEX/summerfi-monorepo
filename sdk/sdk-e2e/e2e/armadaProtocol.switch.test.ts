@@ -96,48 +96,54 @@ describe('Armada Protocol Switch', () => {
       })
     })
 
-    describe(`Switch position on ${chainInfo.name}`, () => {
-      it(`should switch position from ${sourceFleetAddress.value}`, async () => {
-        const sourcePositionBefore = await sdk.armada.users.getUserPosition({
-          user,
-          fleetAddress: sourceFleetAddress,
-        })
-        const destinationPositionBefore = await sdk.armada.users.getUserPosition({
-          user,
-          fleetAddress: destinationFleetAddress,
-        })
-
-        console.log('positions before', sourcePositionBefore, destinationPositionBefore)
-
-        const transactions = await sdk.armada.users.getVaultSwitchTx({
-          sourceVaultId,
-          destinationVaultId,
-          amount: sourcePositionBefore.amount,
-          user,
-          slippage,
-          shouldStake: true,
-        })
-
-        const { statuses } = await sendAndLogTransactions({
-          chainInfo,
-          transactions,
-          rpcUrl: rpcUrl,
-          privateKey: signerPrivateKey,
-        })
-        statuses.forEach((status) => {
-          expect(status).toBe('success')
-        })
-
-        const sourcePositionAfter = await sdk.armada.users.getUserPosition({
-          user,
-          fleetAddress: sourceFleetAddress,
-        })
-        const destinationPositionAfter = await sdk.armada.users.getUserPosition({
-          user,
-          fleetAddress: destinationFleetAddress,
-        })
-        console.log('positions after', sourcePositionAfter, destinationPositionAfter)
+    it(`should switch position from ${sourceFleetAddress.value}`, async () => {
+      const sourcePositionBefore = await sdk.armada.users.getUserPosition({
+        user,
+        fleetAddress: sourceFleetAddress,
       })
+      const destinationPositionBefore = await sdk.armada.users.getUserPosition({
+        user,
+        fleetAddress: destinationFleetAddress,
+      })
+
+      console.log(
+        'positions before',
+        sourcePositionBefore.amount.toString(),
+        destinationPositionBefore.amount.toString(),
+      )
+
+      const transactions = await sdk.armada.users.getVaultSwitchTx({
+        sourceVaultId,
+        destinationVaultId,
+        amount: sourcePositionBefore.amount,
+        user,
+        slippage,
+        shouldStake: true,
+      })
+
+      const { statuses } = await sendAndLogTransactions({
+        chainInfo,
+        transactions,
+        rpcUrl: rpcUrl,
+        privateKey: signerPrivateKey,
+      })
+      statuses.forEach((status) => {
+        expect(status).toBe('success')
+      })
+
+      const sourcePositionAfter = await sdk.armada.users.getUserPosition({
+        user,
+        fleetAddress: sourceFleetAddress,
+      })
+      const destinationPositionAfter = await sdk.armada.users.getUserPosition({
+        user,
+        fleetAddress: destinationFleetAddress,
+      })
+      console.log(
+        'positions after',
+        sourcePositionAfter.amount.toString(),
+        destinationPositionAfter.amount.toString(),
+      )
     })
   }
 })

@@ -58,7 +58,10 @@ export interface IArmadaManagerUtils {
    *
    * @returns IArmadaPosition
    */
-  getUserPosition(params: { user: IUser; fleetAddress: IAddress }): Promise<IArmadaPosition>
+  getUserPosition(params: {
+    user: IUser
+    fleetAddress: IAddress
+  }): Promise<IArmadaPosition | undefined>
 
   /**
    * @name getPosition
@@ -69,7 +72,7 @@ export interface IArmadaManagerUtils {
    * @returns IArmadaPosition The position of the user in the fleet
    *
    */
-  getPosition(params: { positionId: IArmadaPositionId }): Promise<IArmadaPosition>
+  getPosition(params: { positionId: IArmadaPositionId }): Promise<IArmadaPosition | undefined>
 
   /** VAULT */
 

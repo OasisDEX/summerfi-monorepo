@@ -1,10 +1,4 @@
-import {
-  isAddress,
-  isUser,
-  type IAddress,
-  type IArmadaPosition,
-  type IUser,
-} from '@summerfi/sdk-common'
+import { isAddress, isUser, type IAddress, type IUser } from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 
@@ -15,6 +9,6 @@ export const getUserPosition = publicProcedure
       fleetAddress: z.custom<IAddress>(isAddress),
     }),
   )
-  .query(async (opts): Promise<IArmadaPosition> => {
+  .query(async (opts) => {
     return opts.ctx.armadaManager.utils.getUserPosition(opts.input)
   })

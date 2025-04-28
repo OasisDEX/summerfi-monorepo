@@ -73,7 +73,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   /** @see IArmadaManagerUsersClient.getUserPositions */
   async getUserPosition(
     params: Parameters<IArmadaManagerUsersClient['getUserPosition']>[0],
-  ): Promise<IArmadaPosition> {
+  ): Promise<IArmadaPosition | undefined> {
     return this.rpcClient.armada.users.getUserPosition.query({
       user: params.user,
       fleetAddress: params.fleetAddress,
@@ -83,7 +83,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   /** @see IArmadaManagerUsersClient.getPosition */
   async getPosition(
     params: Parameters<IArmadaManagerUsersClient['getPosition']>[0],
-  ): Promise<IArmadaPosition> {
+  ): Promise<IArmadaPosition | undefined> {
     return this.rpcClient.armada.users.getPosition.query(params)
   }
 

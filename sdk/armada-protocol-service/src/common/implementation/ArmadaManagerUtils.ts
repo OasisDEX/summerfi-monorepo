@@ -80,10 +80,6 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
     this._oracleManager = params.oracleManager
     this._tokensManager = params.tokensManager
 
-    setTestDeployment(
-      this._configProvider.getConfigurationItem({ name: 'SUMMER_DEPLOYMENT_CONFIG' }),
-    )
-
     this._isTestDeployment = isTestDeployment()
 
     this._supportedChains = this._configProvider
@@ -197,7 +193,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
   }: {
     user: IUser
     fleetAddress: IAddress
-  }): Promise<IArmadaPosition> {
+  }): Promise<IArmadaPosition | undefined> {
     const summerToken = this.getSummerToken({ chainInfo: user.chainInfo })
     const getTokenBySymbol = this._tokensManager.getTokenBySymbol.bind(this._tokensManager)
 
@@ -210,7 +206,9 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
   }
 
   /** @see IArmadaManagerUtils.getPosition */
-  async getPosition(params: { positionId: IArmadaPositionId }): Promise<IArmadaPosition> {
+  async getPosition(params: {
+    positionId: IArmadaPositionId
+  }): Promise<IArmadaPosition | undefined> {
     const summerToken = this.getSummerToken({ chainInfo: params.positionId.user.chainInfo })
     const getTokenBySymbol = this._tokensManager.getTokenBySymbol.bind(this._tokensManager)
 
