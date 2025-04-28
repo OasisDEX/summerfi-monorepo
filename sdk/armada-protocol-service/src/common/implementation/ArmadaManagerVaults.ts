@@ -133,7 +133,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
 
     const shouldSwap = !destinationFleetToken.equals(sourceFleetToken)
 
-    let swapToAmount: ITokenAmount | undefined
+    let swapToAmount: ITokenAmount | undefined = undefined
     let transactions:
       | [VaultSwitchTransactionInfo]
       | [ApproveTransactionInfo, VaultSwitchTransactionInfo]
@@ -188,22 +188,46 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     })
     depositMulticallArgs.push(depositTokensCalldata)
     depositMulticallOperations.push('depositTokens ' + transferAmount.toString())
+
     // If depositing a token that is not the fleet token,
     // we need to swap it to fleet asset
-    if (shouldSwap) {
-      const swapCall = await this._utils.getSwapCall({
-        vaultId: params.sourceVaultId,
-        fromAmount: transferAmount,
-        toToken: destinationFleetToken,
-        slippage: params.slippage,
-      })
-      depositMulticallArgs.push(swapCall.calldata)
-      depositMulticallOperations.push(
-        `swap ${transferAmount.toString()} to min ${swapCall.minAmount.toString()}`,
-      )
-
-      swapToAmount = swapCall.toAmount
+    let approvalForDeposit: ApproveTransactionInfo | undefined
+    if (!shouldSwap) {
+      throw new Error('Not supported')
     }
+
+    const swapCall = await this._utils.getSwapCall({
+      vaultId: params.sourceVaultId,
+      fromAmount: transferAmount,
+      toToken: destinationFleetToken,
+      slippage: params.slippage,
+    })
+    depositMulticallArgs.push(swapCall.calldata)
+    depositMulticallOperations.push(
+      `swap ${transferAmount.toString()} to min ${swapCall.minAmount.toString()}`,
+    )
+
+    swapToAmount = swapCall.toAmount
+    // approval to swap from user EOA
+    const [approvalTx] = await Promise.all([
+      this._allowanceManager.getApproval({
+        chainInfo: params.sourceVaultId.chainInfo,
+        spender: admiralsQuartersAddress,
+        amount: transferAmount,
+        owner: params.user.wallet.address,
+      }),
+    ])
+    if (approvalTx) {
+      LoggingService.debug('approvalForDeposit', {
+        approvalForDeposit: swapToAmount.toString(),
+      })
+      approvalForDeposit = approvalTx
+    } else {
+      LoggingService.debug('approvalForDeposit', {
+        message: 'No approval needed',
+      })
+    }
+
     // when staking admirals quarters will receive LV tokens, otherwise the user
     const fleetTokenReceiver = shouldStake
       ? admiralsQuartersAddress.value
@@ -310,6 +334,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
         LoggingService.debug('fleet shares is not enough', {
           fleetShares: beforeFleetShares.toString(),
         })
+        throw new Error('Not implemented yet')
         const [fleetAssetsWithdrawAmount, approveToTakeSharesOnBehalf] = await Promise.all([
           this._previewRedeem({
             vaultId: params.sourceVaultId,
@@ -497,35 +522,6 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       multicallArgs.push(unstakeAndWithdrawCall.calldata)
       multicallOperations.push('unstakeAndWithdraw ' + requestedWithdrawShares.toString())
 
-      // NOTE: Disabled whilst withdraws require two AdmiralsQuarters contracts
-      // if (shouldSwap) {
-      //   // approval to swap from user EOA
-      //   const [approveToSwapForUser, depositSwapWithdrawMulticall] = await Promise.all([
-      //     this._allowanceManager.getApproval({
-      //       chainInfo: params.vaultId.chainInfo,
-      //       spender: admiralsQuartersAddress,
-      //       amount: withdrawAmount,
-      //       owner: params.user.wallet.address,
-      //     }),
-      //     this._getDepositSwapWithdrawMulticall({
-      //       vaultId: params.vaultId,
-      //       slippage: params.slippage,
-      //       fromAmount: withdrawAmount,
-      //       toToken: swapToToken,
-      //       toEth,
-      //     }),
-      //   ])
-      //   if (approveToSwapForUser) {
-      //     transactions.push(approveToSwapForUser)
-      //     LoggingService.debug('approveToSwapForUser', {
-      //       approveToSwapForUser: withdrawAmount.toString(),
-      //     })
-      //   }
-
-      //   multicallArgs.push(...depositSwapWithdrawMulticall.multicallArgs)
-      //   multicallOperations.push(...depositSwapWithdrawMulticall.multicallOperations)
-      //   swapToAmount = depositSwapWithdrawMulticall.toAmount
-      // }
       // compose multicall
       const multicallCalldata = encodeFunctionData({
         abi: AdmiralsQuartersAbi,
@@ -549,7 +545,9 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
           priceImpact,
         },
       })
-      transactions = [vaultSwitchTransaction]
+      transactions = approvalForDeposit
+        ? [approvalForDeposit, vaultSwitchTransaction]
+        : [vaultSwitchTransaction]
     }
 
     LoggingService.debug('transactions', {

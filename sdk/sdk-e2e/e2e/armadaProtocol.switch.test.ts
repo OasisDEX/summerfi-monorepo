@@ -14,6 +14,7 @@ import {
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
 import { signerPrivateKey, SDKApiUrl, userAddress } from './utils/testConfig'
+import assert from 'assert'
 
 jest.setTimeout(300000)
 
@@ -89,7 +90,7 @@ describe('Armada Protocol Switch', () => {
       })
       destinationVaultId = ArmadaVaultId.createFrom({
         chainInfo,
-        fleetAddress: sourceFleetAddress,
+        fleetAddress: destinationFleetAddress,
       })
       slippage = Percentage.createFrom({
         value: 1,
@@ -106,10 +107,15 @@ describe('Armada Protocol Switch', () => {
         fleetAddress: destinationFleetAddress,
       })
 
+      assert(
+        sourcePositionBefore !== undefined,
+        `Source position should be defined for ${sourceFleetAddress.value}`,
+      )
+
       console.log(
         'positions before',
         sourcePositionBefore.amount.toString(),
-        destinationPositionBefore.amount.toString(),
+        destinationPositionBefore?.amount.toString(),
       )
 
       const transactions = await sdk.armada.users.getVaultSwitchTx({
@@ -139,9 +145,14 @@ describe('Armada Protocol Switch', () => {
         user,
         fleetAddress: destinationFleetAddress,
       })
+      assert(
+        destinationPositionAfter !== undefined,
+        `Destination position should be defined for ${destinationFleetAddress.value}`,
+      )
+
       console.log(
         'positions after',
-        sourcePositionAfter.amount.toString(),
+        sourcePositionAfter?.amount.toString(),
         destinationPositionAfter.amount.toString(),
       )
     })
