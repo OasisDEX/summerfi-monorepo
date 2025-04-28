@@ -27,6 +27,7 @@ import {
 import { useTermsOfService } from '@summerfi/app-tos'
 import {
   type ArksHistoricalChartData,
+  type EarnAppConfigType,
   type IArmadaPosition,
   type NetworkIds,
   type PerformanceChartData,
@@ -36,12 +37,7 @@ import {
   TOSStatus,
   TransactionAction,
 } from '@summerfi/app-types'
-import {
-  formatDecimalAsPercent,
-  getVaultNiceName,
-  subgraphNetworkToSDKId,
-  zero,
-} from '@summerfi/app-utils'
+import { subgraphNetworkToId, subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
 import { TransactionType } from '@summerfi/sdk-common'
 import dynamic from 'next/dynamic'
 
@@ -109,6 +105,7 @@ export const VaultManageViewComponent = ({
   vaultsApyByNetworkMap,
   migratablePositions,
   migrationBestVaultApy,
+  systemConfig,
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
@@ -123,6 +120,7 @@ export const VaultManageViewComponent = ({
   vaultsApyByNetworkMap: GetVaultsApyResponse
   migratablePositions: MigratablePosition[]
   migrationBestVaultApy: MigrationEarningsDataByChainId
+  systemConfig: Partial<EarnAppConfigType>
 }) => {
   const { getStorageOnce } = useLocalStorageOnce<{
     amount: string
@@ -147,6 +145,18 @@ export const VaultManageViewComponent = ({
   const handleSelectPosition = (id: string) => {
     setSelectedPosition(id)
   }
+
+  const sidebarTabsList = [
+    TransactionAction.DEPOSIT,
+    TransactionAction.WITHDRAW,
+    TransactionAction.SWITCH,
+  ].filter((action) => {
+    if (!systemConfig.features?.VaultSwitching) {
+      return action !== TransactionAction.SWITCH
+    }
+
+    return true
+  })
 
   const {
     handleTokenSelectionChange,
@@ -406,9 +416,7 @@ export const VaultManageViewComponent = ({
 
   const sidebarProps: SidebarProps = {
     title: !nextTransaction ? transactionType : sidebar.title,
-    titleTabs: !nextTransaction
-      ? [TransactionAction.DEPOSIT, TransactionAction.WITHDRAW, TransactionAction.SWITCH]
-      : undefined,
+    titleTabs: !nextTransaction ? sidebarTabsList : undefined,
     onTitleTabChange: (action) => {
       setTransactionType(action as TransactionAction)
       if (amountParsed.gt(0)) {
@@ -493,162 +501,19 @@ export const VaultManageViewComponent = ({
           />
         }
         sumrPrice={estimatedSumrPrice}
-        detailsContent={[
-          <div className={vaultManageViewStyles.leftContentWrapper} key="PerformanceBlock">
-            <Expander
-              title={
-                <Text as="p" variant="p1semi">
-                  Forecasted Market Value
-                </Text>
-              }
-              defaultExpanded
-            >
-              <PositionPerformanceChart
-                chartData={performanceChartData}
-                inputToken={getDisplayToken(vault.inputToken.symbol)}
-              />
-            </Expander>
-          </div>,
-          <div className={vaultManageViewStyles.leftContentWrapper} key="AboutTheStrategy">
-            <div>
-              <Text
-                as="p"
-                variant="p1semi"
-                style={{
-                  marginBottom: 'var(--spacing-space-medium)',
-                }}
-              >
-                About the strategy
-              </Text>
-              <Text
-                as="p"
-                variant="p2"
-                style={{
-                  color: 'var(--color-text-secondary)',
-                }}
-              >
-                The Lazy Summer Protocol is a permissionless passive lending product, which sets out
-                to offer effortless and secure optimised yield, while diversifying risk.
-              </Text>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'flex-start',
-                  flexWrap: 'wrap',
-                  gap: 'var(--general-space-24)',
-                  marginTop: 'var(--general-space-20)',
-                }}
-              >
-                {detailsLinks.map(({ label, id }) => (
-                  <Link key={label} href={`${getVaultDetailsUrl(vault)}#${id}`}>
-                    <Text
-                      as="p"
-                      variant="p3semi"
-                      style={{
-                        color: 'var(--color-text-link)',
-                        textDecoration: 'none',
-                        cursor: 'pointer',
-                        paddingRight: 'var(--spacing-space-medium)',
-                      }}
-                    >
-                      <WithArrow>{label}</WithArrow>
-                    </Text>
-                  </Link>
-                ))}
-              </div>
-            </div>
-            <Expander
-              title={
-                <Text as="p" variant="p1semi">
-                  Historical yield
-                </Text>
-              }
-            >
-              <ArkHistoricalYieldChart
-                chartData={arksHistoricalChartData}
-                summerVaultName={getVaultNiceName({ vault })}
-              />
-            </Expander>
-            <Expander
-              title={
-                <Text as="p" variant="p1semi">
-                  Vault exposure
-                </Text>
-              }
-            >
-              <VaultExposure
-                vault={vault as SDKVaultType}
-                arksInterestRates={arksInterestRates}
-                vaultApyData={vaultApyData}
-              />
-            </Expander>
-            <Expander
-              title={
-                <Text as="p" variant="p1semi">
-                  Strategy management fee
-                </Text>
-              }
-            >
-              <Card style={{ flexDirection: 'column', marginTop: 'var(--general-space-16)' }}>
-                <Text
-                  as="p"
-                  variant="p2semi"
-                  style={{
-                    color: 'var(--color-text-primary)',
-                    marginBottom: 'var(--general-space-24)',
-                  }}
-                >
-                  {formatDecimalAsPercent(managementFee)} management fee
-                </Text>
-                <Text
-                  as="p"
-                  variant="p2"
-                  style={{
-                    color: 'var(--color-text-secondary)',
-                  }}
-                >
-                  A {formatDecimalAsPercent(managementFee)} annualised management fee is charged for
-                  using this strategy. The fees are continually accounted for and reflected in the
-                  market value of your position. This strategy has no other fees, and there are no
-                  restrictions or delays when withdrawing.{' '}
-                  {vaultApyData.sma30d
-                    ? ` The 30d APY for this strategy after fees is ${formatDecimalAsPercent(vaultApyData.sma30d - managementFee)}.`
-                    : ''}
-                </Text>
-              </Card>
-            </Expander>
-            <Expander
-              title={
-                <Text as="p" variant="p1semi">
-                  Rebalancing activity
-                </Text>
-              }
-            >
-              <RebalancingActivity
-                rebalanceActivity={rebalanceActivity}
-                vaultId={getUniqueVaultId(vault)}
-                vault={vault}
-              />
-            </Expander>
-            <Expander
-              title={
-                <Text as="p" variant="p1semi">
-                  User activity
-                </Text>
-              }
-            >
-              <LatestActivity
-                latestActivity={latestActivity}
-                topDepositors={topDepositors}
-                vaultId={getUniqueVaultId(vault)}
-                page="manage"
-                noHighlight
-                walletAddress={viewWalletAddress}
-              />
-            </Expander>
-          </div>,
-        ]}
+        detailsContent={
+          <VaultManageViewDetails
+            arksHistoricalChartData={arksHistoricalChartData}
+            performanceChartData={performanceChartData}
+            arksInterestRates={arksInterestRates}
+            vaultApyData={vaultApyData}
+            vault={vault}
+            rebalanceActivity={rebalanceActivity}
+            latestActivity={latestActivity}
+            topDepositors={topDepositors}
+            viewWalletAddress={viewWalletAddress}
+          />
+        }
         sidebarContent={<Sidebar {...resovledSidebarProps} />}
         rightExtraContent={
           migrationsEnabled &&

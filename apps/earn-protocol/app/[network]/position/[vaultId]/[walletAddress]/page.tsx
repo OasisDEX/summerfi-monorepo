@@ -203,6 +203,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
 
   return (
     <VaultManageView
+      systemConfig={systemConfig}
       vault={vaultWithConfig}
       vaults={allVaultsWithConfig}
       vaultsApyByNetworkMap={vaultsApyByNetworkMap}

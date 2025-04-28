@@ -2,6 +2,7 @@
 
 import {
   type ArksHistoricalChartData,
+  type EarnAppConfigType,
   type IArmadaPosition,
   type PerformanceChartData,
   type SDKVaultishType,
@@ -34,6 +35,7 @@ export const VaultManageView = ({
   vaultsApyByNetworkMap,
   migratablePositions,
   migrationBestVaultApy,
+  systemConfig,
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
@@ -48,10 +50,12 @@ export const VaultManageView = ({
   vaultsApyByNetworkMap: GetVaultsApyResponse
   migratablePositions: MigratablePosition[]
   migrationBestVaultApy: MigrationEarningsDataByChainId
+  systemConfig: Partial<EarnAppConfigType>
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
       <VaultManageViewComponent
+        systemConfig={systemConfig}
         vault={vault}
         vaults={vaults}
         vaultsApyByNetworkMap={vaultsApyByNetworkMap}

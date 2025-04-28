@@ -26,14 +26,14 @@ const getInterfaces = (configObject = { features: {} }) => {
         return typeInterface
       })
       .join('\n\n')
-    const importRisk = 'import { Risk } from "../earn-protocol/risk";\n'
+    const importRisk = 'import { RiskType } from "../earn-protocol/risk";\n'
     const intarfacesMapped = interfaces
       .replaceAll('_0x', 'EarnAppFleetCustomConfigType')
       .replaceAll(
         'interface EarnAppFleetCustomConfigType',
         'export interface EarnAppFleetCustomConfigType',
       )
-      .replaceAll('risk: string', 'risk: Risk')
+      .replaceAll('risk: string', 'risk: RiskType')
     return `${importRisk}${intarfacesMapped}`
   } catch (error) {
     console.error(`Earn Protocol Summer.fi: Error generating config types: ${error}`)

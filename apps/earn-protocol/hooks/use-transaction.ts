@@ -308,10 +308,12 @@ export const useTransaction = ({
       const fromToken = {
         [TransactionAction.DEPOSIT]: token,
         [TransactionAction.WITHDRAW]: vaultToken,
+        [TransactionAction.SWITCH]: vaultToken, // TODO fix this value
       }[transactionType]
       const toToken = {
         [TransactionAction.DEPOSIT]: vaultToken,
         [TransactionAction.WITHDRAW]: token,
+        [TransactionAction.SWITCH]: vaultToken, // TODO fix this value
       }[transactionType]
 
       setTxStatus('loadingTx')
@@ -319,6 +321,7 @@ export const useTransaction = ({
         const transactionsList = await {
           [TransactionAction.DEPOSIT]: getDepositTX,
           [TransactionAction.WITHDRAW]: getWithdrawTX,
+          [TransactionAction.SWITCH]: getDepositTX, // TODO fix this value
         }[transactionType]({
           walletAddress: Address.createFromEthereum({
             value: user.address,
