@@ -20,15 +20,6 @@ type BaseHistoricalChartsDataReturnType = {
   }
 }
 
-const emptyChartRaw = {
-  '7d': {},
-  '30d': {},
-  '90d': {},
-  '6m': {},
-  '1y': {},
-  '3y': {},
-}
-
 const emptyChart = {
   '7d': [{ timestamp: 0 }],
   '30d': [{ timestamp: 0 }],
@@ -47,7 +38,14 @@ const getBaseHistoricalChartsData = (fillTimeframe = true): BaseHistoricalCharts
   if (!fillTimeframe) {
     // if we dont want to show the whole timeframe (ex 1y worth of points with only available data)
     // just set this to false
-    return emptyChartRaw
+    return {
+      '7d': {},
+      '30d': {},
+      '90d': {},
+      '6m': {},
+      '1y': {},
+      '3y': {},
+    }
   }
 
   const createDataArray = (arrLength: number, unit: dayjs.ManipulateType) =>
