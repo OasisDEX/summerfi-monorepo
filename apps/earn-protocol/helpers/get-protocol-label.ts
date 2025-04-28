@@ -17,6 +17,10 @@ export const getProtocolLabel = (nameParts: string[]) => {
     const [secondPart] = remainingParts
 
     return secondPart.charAt(0).toUpperCase() + secondPart.slice(1).replaceAll('_', ' ')
+  } else if (baseName === 'Silo') {
+    const [secondPart] = remainingParts
+
+    return `${baseName} ${secondPart.charAt(0).toUpperCase() + secondPart.slice(1).replaceAll('_', ' ')}`
   }
 
   return arkNameMap[baseName] ?? baseName
