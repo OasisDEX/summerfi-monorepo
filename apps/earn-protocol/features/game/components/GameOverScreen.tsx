@@ -1,5 +1,7 @@
 'use client'
 
+import { Button, Icon, Text } from '@summerfi/app-earn-ui'
+
 import { type CardData } from '@/features/game/types'
 
 import Card from './Card'
@@ -17,6 +19,8 @@ interface GameOverScreenProps {
   lastSelected?: number | null
   avgResponse?: number
   timedOut?: boolean
+  closeGame: () => void
+  onReturnToMenu: () => void
 }
 
 const GameOverScreen: React.FC<GameOverScreenProps> = ({
@@ -30,6 +34,8 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
   lastSelected,
   avgResponse,
   timedOut,
+  closeGame,
+  onReturnToMenu,
 }) => {
   // Find the correct card index
   const correctIdx =
@@ -90,13 +96,23 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
         </div>
       ) : null}
       <div className={styles.buttonsRow}>
-        <button className={styles.button} onClick={onRestart}>
+        <Button variant="primaryLarge" onClick={onRestart}>
           Try getting a better score
-        </button>
-        or
-        <button className={`${styles.button} ${styles.buttonAI}`} onClick={onAI}>
+          <Icon iconName="arrow_forward" size={16} />
+        </Button>
+        <Text variant="p1semiColorful">or</Text>
+        <Button variant="primaryLargeColorful" onClick={onAI}>
           let the AI do the work
-        </button>
+          <Icon iconName="arrow_increase" size={16} />
+        </Button>
+        <Button variant="secondaryLarge" onClick={onReturnToMenu}>
+          Return to Menu
+          <Icon iconName="arrow_backward" size={16} />
+        </Button>
+        <Button variant="textPrimaryLarge" onClick={closeGame}>
+          <span>Exit</span>
+          <Icon iconName="close" size={16} />
+        </Button>
       </div>
     </div>
   )

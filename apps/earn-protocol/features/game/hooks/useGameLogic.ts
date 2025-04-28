@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { createRef, useCallback, useEffect, useRef, useState } from 'react' // Import createRef
 
 import { playCorrectSound, playIncorrectSound } from '@/features/game/helpers/audioHelpers'
@@ -65,8 +66,8 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
   const [streak, setStreak] = useState(0)
   const [bestStreak, setBestStreak] = useState(0)
   const [round, setRound] = useState(0)
-  const [timeLeft, setTimeLeft] = useState(3)
-  const [timer, setTimer] = useState(3)
+  const [timeLeft, setTimeLeft] = useState(5)
+  const [timer, setTimer] = useState(5)
   const [gameOver, setGameOver] = useState(false)
   const [scoreAnim, setScoreAnim] = useState(false)
   const [streakAnim, setStreakAnim] = useState(false)
@@ -92,24 +93,23 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
       ? validResponses.reduce((a, b) => a + b, 0) / validResponses.length
       : 0
 
-  const nextRound = useCallback((decreaseTime = true) => {
+  const nextRound = useCallback((decreaseTime = true, nextRoundNumber: number) => {
     setSelected(null) // Clear selection immediately
-    setTimeout(() => {
-      setCards(generateCards())
-      setRound((r) => r + 1)
-      setTimer((t) => {
-        const newTime = decreaseTime ? Math.max(1.2, t - 0.1) : t
+    setCards(() => generateCards(nextRoundNumber))
+    setRound(nextRoundNumber)
+    setTimer((t) => {
+      const newTime = decreaseTime ? Math.max(1.2, t - 0.1) : t
 
-        setTimeLeft(newTime)
+      setTimeLeft(newTime)
 
-        return newTime
-      })
-      setRoundStartTime(Date.now())
-    }, 0)
+      return newTime
+    })
+    setRoundStartTime(Date.now())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
-    nextRound(false)
+    nextRound(false, 1) // Start with round 1
     setScore(0)
     setStreak(0)
     setBestStreak(0)
@@ -132,7 +132,7 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
   const handleSelect = useCallback(
     (
       idx: number,
-      event?: React.MouseEvent<HTMLDivElement>,
+      ev?: React.MouseEvent<HTMLDivElement>,
       aiCoords?: { x: number; y: number }, // Add optional AI coordinates
     ) => {
       if (selected !== null || gameOver) return
@@ -147,10 +147,10 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
 
       if (idx === correctIdx) {
         cardDataForAnim = currentCards[idx]
-        if (event) {
+        if (ev) {
           // User click
-          startX = event.clientX
-          startY = event.clientY
+          startX = ev.clientX
+          startY = ev.clientY
         } else if (aiCoords) {
           // AI selection - Use provided coords
           startX = aiCoords.x
@@ -182,7 +182,10 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
         points = Math.floor(Number(100 * (actualRemainingTime / timer)) + 10)
         perfect = true
 
-        nextRound()
+        nextRound(
+          true,
+          round + 1, // Cap at round 30
+        )
 
         if (startX !== null && startY !== null && cardDataForAnim !== null) {
           const newId = flyingApyIdCounter.current++
@@ -268,6 +271,7 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
       })
     }, 30)
 
+    // eslint-disable-next-line consistent-return
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current)
     }

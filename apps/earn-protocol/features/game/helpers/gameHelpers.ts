@@ -16,9 +16,9 @@ export function getTrendDataForAPY(apy: number): { x: number; y: number }[] {
   })
 }
 
-export function generateCards(): CardData[] {
-  const count = Math.floor(Math.random() * 3) + 3
-  const apys = Array.from({ length: count }, () =>
+export function generateCards(round: number): CardData[] {
+  const roundBasedCardCount = round <= 15 ? 3 : round <= 30 ? 6 : 9
+  const apys = Array.from({ length: roundBasedCardCount }, () =>
     Number((Number(Math.random() * 18) + 2).toFixed(2)),
   )
 

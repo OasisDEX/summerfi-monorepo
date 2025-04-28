@@ -1,6 +1,6 @@
 'use client'
 
-import clsx from 'clsx'
+import { Button, Icon, Text } from '@summerfi/app-earn-ui'
 
 import styles from './StartScreen.module.css'
 
@@ -22,36 +22,39 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart, onHowToPlay, onAI, c
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>APY Game</h1>
+      <h1 className={styles.title}>APY GAME</h1>
       <div className={styles.description}>
         Click the card with the highest APY before time runs out!
-        <br />
         <br />
         Can you beat the AI?
       </div>
       <div
         style={{
           display: 'flex',
-          flexDirection: 'row',
+          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
           gap: 12,
         }}
       >
-        <button className={styles.button} onClick={handleStartClick}>
-          Start
-        </button>
-        or
-        <button className={styles.button} onClick={onAI}>
-          let the AI play it for you
-        </button>
+        <Button variant="primaryLarge" onClick={handleStartClick}>
+          <span>Play</span>
+          <Icon iconName="arrow_forward" size={16} />
+        </Button>
+        <Text variant="p1semiColorful">or</Text>
+        <Button variant="primaryLargeColorful" onClick={onAI}>
+          <span>let the AI play it for you</span>
+          <Icon iconName="arrow_increase" size={16} />
+        </Button>
+        <Button variant="secondaryLarge" onClick={handleHowToPlayClick}>
+          <span>How to Play</span>
+          <Icon iconName="question_mark" size={16} />
+        </Button>
+        <Button variant="textPrimaryLarge" onClick={closeGame}>
+          <span>Exit</span>
+          <Icon iconName="close" size={16} />
+        </Button>
       </div>
-      <button className={styles.buttonHowTo} onClick={handleHowToPlayClick}>
-        How to Play
-      </button>
-      <button className={clsx(styles.button, styles.buttonClose)} onClick={closeGame}>
-        Close the game
-      </button>
     </div>
   )
 }
