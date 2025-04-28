@@ -17,11 +17,7 @@ export const decorateVaultsWithConfig = ({
   systemConfig,
   userPositions,
 }: VaultConfigDecorator) => {
-  const { fleetMap } = systemConfig
-
-  const vaultsWithConfig = fleetMap
-    ? decorateWithFleetConfig(vaults, fleetMap, userPositions)
-    : vaults
+  const vaultsWithConfig = decorateWithFleetConfig(vaults, systemConfig, userPositions)
 
   return vaultsWithConfig as SDKVaultishType[]
 }

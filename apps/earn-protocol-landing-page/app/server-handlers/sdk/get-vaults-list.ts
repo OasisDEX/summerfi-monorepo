@@ -15,9 +15,7 @@ const getVaultsListRaw = async () => {
   )
 
   return {
-    vaults: vaultsListByNetwork
-      .flatMap(({ vaults }) => vaults)
-      .filter((vault) => vault.inputTokenBalance > 0n),
+    vaults: vaultsListByNetwork.flatMap(({ vaults }) => vaults),
     callDataTimestamp: Date.now(),
   }
 }

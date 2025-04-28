@@ -8,9 +8,7 @@ export const decorateVaultsWithConfig = ({
   vaults: SDKVaultishType[]
   systemConfig: Partial<EarnAppConfigType>
 }) => {
-  const { fleetMap } = systemConfig
-
-  const vaultsWithConfig = fleetMap ? decorateWithFleetConfig(vaults, fleetMap) : vaults
+  const vaultsWithConfig = decorateWithFleetConfig(vaults, systemConfig)
 
   return vaultsWithConfig as SDKVaultishType[]
 }

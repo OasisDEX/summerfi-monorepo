@@ -157,7 +157,7 @@ export const PortfolioPosition = ({
                     }}
                   >
                     Live&nbsp;APY&nbsp;(
-                    {apyUpdatedAt.apyUpdatedAtLabel}m&nbsp;ago)
+                    {apyUpdatedAt.apyUpdatedAtLabel})
                   </Text>
                   <Icon iconName="info" size={16} />
                 </div>
