@@ -14,7 +14,7 @@ import {
   type SDKVaultType,
   type VaultApyData,
 } from '@summerfi/app-types'
-import { formatDecimalAsPercent } from '@summerfi/app-utils'
+import { formatDecimalAsPercent, getVaultNiceName } from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
@@ -128,7 +128,7 @@ export const VaultManageViewDetails = ({
       >
         <ArkHistoricalYieldChart
           chartData={arksHistoricalChartData}
-          summerVaultName={vault.customFields?.name ?? `Summer ${vault.inputToken.symbol} Vault`}
+          summerVaultName={getVaultNiceName({ vault })}
         />
       </Expander>
       <Expander
