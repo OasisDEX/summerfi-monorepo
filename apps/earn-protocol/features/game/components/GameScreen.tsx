@@ -25,7 +25,7 @@ interface GameScreenProps {
     avgResponse?: number
     timedOut?: boolean
   }) => void
-  onReturnToMenu: () => void // Add this prop
+  onReturnToMenu: () => void
 }
 
 const GameScreen: React.FC<GameScreenProps> = ({ isAI, onGameOver, onReturnToMenu }) => {

@@ -10,16 +10,17 @@
 }
 
 .title {
-  font-size: 32px;
+  font-size: 64px;
   font-weight: 800;
   margin-bottom: 16px;
 }
 
 .description {
-  max-width: 320px;
+  font-size: 22px;
+  max-width: 620px;
   text-align: center;
   margin-bottom: 32px;
-  color: #444;
+  color: #efefef;
 }
 
 .button {

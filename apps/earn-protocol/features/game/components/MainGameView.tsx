@@ -7,7 +7,7 @@ import GameScreen from '@/features/game/components/GameScreen'
 import HowToPlayModal from '@/features/game/components/HowToPlayModal'
 import StartScreen from '@/features/game/components/StartScreen'
 import { playGameStartSound } from '@/features/game/helpers/audioHelpers'
-import { setMusicVolume } from '@/features/game/helpers/musicHelper'
+import { setMusicVolume, stopMusic } from '@/features/game/helpers/musicHelper'
 import { useHomeState } from '@/features/game/hooks/useHomeState'
 
 import mainGameViewStyles from './MainGameView.module.css'
@@ -25,9 +25,12 @@ export default function MainGameView({ closeGame }: { closeGame: () => void }) {
   )
 
   useEffect(() => {
+    document.querySelectorAll('body')[0].style.overflow = 'hidden'
     window.addEventListener('keydown', handleEscape)
 
     return () => {
+      stopMusic() // Stop music when component unmounts
+      document.querySelectorAll('body')[0].style.overflow = 'auto'
       window.removeEventListener('keydown', handleEscape)
     }
   }, [handleEscape])
@@ -82,6 +85,8 @@ export default function MainGameView({ closeGame }: { closeGame: () => void }) {
           timedOut={home.timedOut}
           onRestart={() => startGame(home.lastWasAI)} // Use startGame for restart
           onAI={() => startGame(true)} // Use startGame for starting AI game
+          onReturnToMenu={() => home.setScreenName('start')}
+          closeGame={closeGame} // Close game function
         />
       )}
       {home.showHow && <HowToPlayModal onClose={() => home.setShowHow(false)} />}
