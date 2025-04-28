@@ -1,0 +1,68 @@
+.card {
+  border: 1px solid #ccc;
+  border-radius: 16px;
+  padding: 18px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  min-width: 110px;
+  max-width: 150px;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: border 0.2s, background 0.2s, box-shadow 0.2s, transform 0.18s cubic-bezier(.4, 2, .6, 1), opacity 0.18s cubic-bezier(.4, 2, .6, 1);
+  outline: none;
+  box-sizing: border-box;
+  user-select: none;
+  opacity: 1;
+  transform: scale(1);
+}
+
+.selected {
+  border: 2px solid #4f8cff;
+  background: #eaf3ff;
+  box-shadow: 0 4px 16px rgba(79, 140, 255, 0.10);
+  transform: scale(1.09);
+}
+
+.highlight {
+  border: 2px solid #1db954;
+  background: #eafff3;
+  box-shadow: 0 4px 16px rgba(29, 185, 84, 0.10);
+  transform: scale(1.05);
+}
+
+.hovered {
+  box-shadow: 0 4px 16px rgba(79, 140, 255, 0.10);
+  transform: scale(1.04);
+}
+
+.invisible {
+  opacity: 0;
+  transform: scale(0.85) translateY(20px);
+}
+
+.apyValue {
+  font-weight: 700;
+  margin-top: 8px;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 2px #fff, 0 0 1px #ccc;
+}
+
+@media (max-width: 600px) {
+  .card {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    min-height: 90px;
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .apyValue {
+    font-size: 18px !important;
+  }
+}

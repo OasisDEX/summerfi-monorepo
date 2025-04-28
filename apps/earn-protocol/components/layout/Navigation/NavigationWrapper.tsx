@@ -1,7 +1,13 @@
 'use client'
 
 import { type FC } from 'react'
-import { Button, getNavigationItems, Navigation, SkeletonLine } from '@summerfi/app-earn-ui'
+import {
+  Button,
+  getNavigationItems,
+  Navigation,
+  SkeletonLine,
+  useHoldAlt,
+} from '@summerfi/app-earn-ui'
 import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
 
@@ -20,6 +26,7 @@ const WalletLabel = dynamic(() => import('../../molecules/WalletLabel/WalletLabe
 export const NavigationWrapper: FC = () => {
   const currentPath = usePathname()
   const { userWalletAddress } = useUserWallet()
+  const isHoldingAlt = useHoldAlt()
 
   return (
     <Navigation
@@ -40,6 +47,7 @@ export const NavigationWrapper: FC = () => {
         // because router will use base path...
         window.location.replace('/')
       }}
+      startTheGame={isHoldingAlt ? console.log : undefined}
     />
   )
 }

@@ -4,6 +4,7 @@ export type Styles = {
   mobileMenuButton: string
   navigationActionsWrapper: string
   summerProButton: string
+  theGameButton: string
   walletButtonMock: string
 }
 

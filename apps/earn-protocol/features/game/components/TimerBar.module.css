@@ -1,0 +1,42 @@
+.timerBarOuter {
+  width: 500px;
+  height: 22px;
+  background: #eee;
+  border-radius: 8px;
+  margin: 16px 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.timerBarInner {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  border-radius: 8px;
+  transition: width 0.1s linear, background 0.2s;
+  position: relative;
+}
+
+.timerText {
+  font-size: 14px;
+  font-weight: 700;
+  color: #222;
+  padding: 0 10px;
+  text-shadow: 0 1px 4px #fff, 0 0 2px #fff;
+  letter-spacing: 0.5px;
+  user-select: none;
+}
+
+@media (max-width: 600px) {
+  .timerBarOuter {
+    width: 95vw;
+    min-width: 0;
+    height: 18px;
+  }
+
+  .timerText {
+    font-size: 12px;
+    padding: 0 6px;
+  }
+}

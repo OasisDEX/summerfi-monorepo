@@ -9,6 +9,18 @@
   }
 }
 
+.theGameButton {
+  color: var(--color-text-link-hover);
+  padding: 8px 10px 10px 10px;
+  margin-right: 30px;
+  cursor: pointer;
+  height: 36px;
+
+  &:hover {
+    color: var(--color-text-link);
+  }
+}
+
 .walletButtonMock {
   min-height: auto;
   line-height: 22px;

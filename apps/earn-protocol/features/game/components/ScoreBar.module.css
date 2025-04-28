@@ -1,0 +1,18 @@
+.scoreBar {
+  font-weight: 700;
+  font-size: 18px;
+  margin: 16px 0 4px;
+  transition: color 0.2s;
+}
+
+.streak {
+  color: #1db954;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.streakAnim {
+  color: #ffb300;
+  font-weight: 600;
+  transition: color 0.2s;
+}
