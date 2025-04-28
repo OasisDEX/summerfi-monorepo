@@ -1,8 +1,8 @@
 .card {
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-surface-subtle);
   border-radius: 16px;
   padding: 18px;
-  background: #fff;
+  background: var(--color-surface-subtler);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   cursor: pointer;
   min-width: 110px;
@@ -21,14 +21,14 @@
 
 .selected {
   border: 2px solid #4f8cff;
-  background: #eaf3ff;
+  background: var(--color-surface);
   box-shadow: 0 4px 16px rgba(79, 140, 255, 0.10);
   transform: scale(1.09);
 }
 
 .highlight {
   border: 2px solid #1db954;
-  background: #eafff3;
+  background: var(--color-surface);
   box-shadow: 0 4px 16px rgba(29, 185, 84, 0.10);
   transform: scale(1.05);
 }
@@ -47,7 +47,7 @@
   font-weight: 700;
   margin-top: 8px;
   letter-spacing: 0.5px;
-  text-shadow: 0 1px 2px #fff, 0 0 1px #ccc;
+  text-shadow: 0 1px 2px #333, 0 0 1px #333;
 }
 
 @media (max-width: 600px) {

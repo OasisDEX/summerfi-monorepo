@@ -34,7 +34,7 @@ function getRandomLabel() {
     'AMAZING!',
     'WOW!',
     'STELLAR!',
-    'ON FIRE!',
+    'ON\u00A0FIRE!',
     'UNSTOPPABLE!',
     'LEGENDARY!',
   ]

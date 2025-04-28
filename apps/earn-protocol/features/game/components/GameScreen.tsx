@@ -76,7 +76,7 @@ const GameScreen: React.FC<GameScreenProps> = ({ isAI, onGameOver, onReturnToMen
       {/* Fade-in message and button after 30 rounds in AI mode */}
       {isAI && (
         <div style={{ ...fadeIn, textAlign: 'center', marginTop: 32 }}>
-          <div style={{ fontSize: 17, color: '#000', marginBottom: 16 }}>
+          <div style={{ fontSize: 17, color: '#afafaf', marginBottom: 16 }}>
             The AI can keep playing endlessly, so feel free to take a break whenever you like.
           </div>
           <button

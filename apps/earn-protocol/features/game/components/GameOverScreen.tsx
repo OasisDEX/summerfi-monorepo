@@ -75,12 +75,12 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
                 trendData={card.trendData}
                 selected={lastSelected === i}
                 highlight={i === correctIdx}
-                apyColorOverride={(() => {
+                apyColor={(() => {
                   if (card.apy >= 10) return '#1db954'
                   if (card.apy <= 3) return '#d7263d'
                   if (card.apy <= 5) return 'rgb(120,40,40)'
 
-                  return '#1a2233'
+                  return '#afafaf'
                 })()}
               />
               {lastSelected === i && <div className={styles.selectedLabel}>you selected</div>}

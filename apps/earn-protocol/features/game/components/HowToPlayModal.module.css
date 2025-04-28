@@ -78,7 +78,7 @@
   font-weight: 700;
   border-radius: 8px;
   border: none;
-  background: linear-gradient(90deg, #4f8cff 60%, #1db954 100%);
+  background: #333;
   color: #fff;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(79, 140, 255, 0.08);
@@ -87,7 +87,7 @@
 
 .closeBtn:hover,
 .closeBtn:focus {
-  background: linear-gradient(90deg, #1db954 60%, #4f8cff 100%);
+  background: #484848;
   transform: translateY(-2px) scale(1.04);
   outline: none;
 }

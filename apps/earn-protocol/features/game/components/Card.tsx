@@ -10,22 +10,14 @@ export interface CardProps {
   selected?: boolean
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void
   highlight?: boolean
-  apyColorOverride?: string
+  apyColor?: string
   'data-card-index'?: number // Keep data attribute
 }
 
 // Use forwardRef to pass the ref to the underlying div
 const Card: FC<CardProps> = forwardRef<HTMLDivElement, CardProps>(
   (
-    {
-      apy,
-      trendData,
-      selected,
-      onClick,
-      highlight,
-      apyColorOverride,
-      'data-card-index': dataCardIndex,
-    },
+    { apy, trendData, selected, onClick, highlight, apyColor, 'data-card-index': dataCardIndex },
     ref,
   ) => {
     const [hovered, setHovered] = useState(false)
@@ -37,16 +29,10 @@ const Card: FC<CardProps> = forwardRef<HTMLDivElement, CardProps>(
       return () => setVisible(false)
     }, [])
 
-    let apyColor = apyColorOverride || '#1a2233'
     let apyFontSize = 20
 
     if (apy >= 10) {
       apyFontSize = 24 // bigger for high yield
-    } else if (apy <= 3 && !apyColorOverride) {
-      apyColor = '#d7263d' // red for very low yield
-    } else if (apy <= 5 && !apyColorOverride) {
-      // interpolate between red and dark for low yields
-      apyColor = 'rgb(120,40,40)'
     }
 
     return (

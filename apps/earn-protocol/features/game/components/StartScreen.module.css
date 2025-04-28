@@ -1,11 +1,11 @@
 /* Main container styles */
 .container {
+  width: 100%;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: #f6f8fa;
   padding: 24px;
 }
 
@@ -50,6 +50,12 @@
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: background 0.2s;
+}
+
+.buttonClose {
+  background: #333;
+  color: #eee;
+  margin-top: 32px;
 }
 
 @media (max-width: 600px) {
