@@ -1,0 +1,28 @@
+.streakAnimation {
+  position: absolute;
+  left: 50%;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 800;
+  /* This adds a subtle dark outline for visibility */
+  letter-spacing: 1px;
+  animation: pop 0.35s;
+  /* transform is set inline only */
+}
+
+@keyframes pop {
+  0% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
+
+  60% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

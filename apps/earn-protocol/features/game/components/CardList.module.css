@@ -1,0 +1,25 @@
+.cardList {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 24px 0;
+  position: relative;
+}
+
+@media (max-width: 600px) {
+  .cardList {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 98vw;
+    margin: 12px 0;
+  }
+}
+
+@media (max-width: 400px) {
+  .cardList {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}

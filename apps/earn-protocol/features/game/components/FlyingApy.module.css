@@ -1,0 +1,26 @@
+.flyingApy {
+  position: fixed;
+  /* Use fixed positioning relative to viewport */
+  font-size: 24px;
+  /* Initial size, matches card */
+  font-weight: bold;
+  color: #1db954;
+  /* Default color, will be overridden */
+  pointer-events: none;
+  z-index: 1000;
+  animation: flyAndFade 0.8s ease-out forwards;
+  white-space: nowrap;
+}
+
+@keyframes flyAndFade {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    /* Target transform is set via inline style */
+    transform: var(--target-transform);
+    opacity: 0;
+  }
+}

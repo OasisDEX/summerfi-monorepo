@@ -1,0 +1,172 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 24px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.score {
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+.statsRow {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.statBox {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  padding: 18px 28px;
+  min-width: 110px;
+  text-align: center;
+}
+
+.statLabel {
+  font-size: 15px;
+  color: #888;
+  margin-bottom: 2px;
+}
+
+.statValue {
+  font-size: 26px;
+  font-weight: 800;
+  color: #1a2233;
+}
+
+.timedOut {
+  font-size: 22px;
+  color: #d7263d;
+  font-weight: 700;
+  margin: 12px 0 24px 0;
+}
+
+.lastCardsRow {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin: 32px 0 24px 0;
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+}
+
+.lastCardCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.selectedLabel {
+  margin-top: 8px;
+  color: #4f8cff;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.2px;
+}
+
+.bestApyLabel {
+  margin-top: 8px;
+  color: #1db954;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.2px;
+}
+
+.button {
+  padding: 12px 20px;
+  font-size: 17px;
+  font-weight: 700;
+  border-radius: 8px;
+  border: none;
+  background: #4f8cff;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: background 0.2s;
+  margin-top: 0;
+}
+
+.buttonAI {
+  /*fancy button*/
+  background: linear-gradient(90deg, #4f8cff, #1db954);
+}
+
+.buttonBack {
+  background: #eee;
+  color: #333;
+}
+
+.buttonsRow {
+  display: flex;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  margin-top: 24px;
+}
+
+.buttonsRow button {
+  word-break: keep-all;
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 8px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .score {
+    font-size: 16px;
+  }
+
+  .statsRow {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .statBox {
+    min-width: 80px;
+    padding: 10px 8px;
+    font-size: 14px;
+  }
+
+  .lastCardsRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    flex-direction: unset;
+    margin: 16px 0 12px 0;
+    max-width: 98vw;
+  }
+
+  .buttonsRow {
+    flex-direction: column;
+    gap: 10px;
+    height: auto;
+  }
+
+  .button {
+    width: 100%;
+    font-size: 15px;
+    padding: 10px 0;
+  }
+}

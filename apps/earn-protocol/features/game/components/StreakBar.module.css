@@ -1,0 +1,12 @@
+.streakBar {
+  font-size: 18px;
+  margin: 8px 0;
+  transition: color 0.2s, font-weight 0.2s;
+  color: #555;
+  font-weight: 400;
+}
+
+.streakAnim {
+  color: #ffb300;
+  font-weight: 700;
+}

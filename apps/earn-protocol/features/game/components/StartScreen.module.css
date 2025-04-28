@@ -1,0 +1,81 @@
+/* Main container styles */
+.container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.description {
+  max-width: 320px;
+  text-align: center;
+  margin-bottom: 32px;
+  color: #444;
+}
+
+.button {
+  width: 220px;
+  padding: 14px 0;
+  font-size: 18px;
+  font-weight: 700;
+  border-radius: 8px;
+  border: none;
+  background: #4f8cff;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: background 0.2s;
+  margin-top: 0;
+}
+
+.buttonHowTo {
+  margin-top: 12px;
+  width: 220px;
+  padding: 14px 0;
+  font-size: 18px;
+  font-weight: 700;
+  border-radius: 8px;
+  border: none;
+  background: #eee;
+  color: #333;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: background 0.2s;
+}
+
+.buttonClose {
+  background: #333;
+  color: #eee;
+  margin-top: 32px;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 8px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .description {
+    font-size: 15px;
+    margin-bottom: 18px;
+  }
+
+  .button,
+  .buttonHowTo {
+    width: 100%;
+    font-size: 16px;
+    padding: 12px 0;
+  }
+}
