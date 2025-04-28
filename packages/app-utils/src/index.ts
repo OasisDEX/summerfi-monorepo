@@ -101,4 +101,4 @@ export {
   getArkRatesUrl,
   getArkRatesBatchUrl,
 } from './helpers/get-arks-rates-url'
-export { getVaultNiceName } from '@/helpers/get-vault-nice-name'
+export { getVaultNiceName } from './helpers/get-vault-nice-name'

@@ -2,12 +2,12 @@
 
 import {
   type ArksHistoricalChartData,
+  type EarnAppConfigType,
   type IArmadaPosition,
   type PerformanceChartData,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
-  type VaultApyData,
 } from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
@@ -16,6 +16,7 @@ import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
+import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { VaultManageViewComponent } from '@/components/layout/VaultManageView/VaultManageViewComponent'
 import { sdkApiUrl } from '@/constants/sdk'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
@@ -31,9 +32,10 @@ export const VaultManageView = ({
   performanceChartData,
   arksHistoricalChartData,
   arksInterestRates,
-  vaultApyData,
+  vaultsApyByNetworkMap,
   migratablePositions,
   migrationBestVaultApy,
+  systemConfig,
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
@@ -45,16 +47,18 @@ export const VaultManageView = ({
   performanceChartData: PerformanceChartData
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates: GetInterestRatesReturnType
-  vaultApyData: VaultApyData
+  vaultsApyByNetworkMap: GetVaultsApyResponse
   migratablePositions: MigratablePosition[]
   migrationBestVaultApy: MigrationEarningsDataByChainId
+  systemConfig: Partial<EarnAppConfigType>
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
       <VaultManageViewComponent
+        systemConfig={systemConfig}
         vault={vault}
-        vaultApyData={vaultApyData}
         vaults={vaults}
+        vaultsApyByNetworkMap={vaultsApyByNetworkMap}
         position={position}
         latestActivity={latestActivity}
         topDepositors={topDepositors}

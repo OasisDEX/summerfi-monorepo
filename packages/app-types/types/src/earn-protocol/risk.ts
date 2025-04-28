@@ -1,1 +1,1 @@
-export type Risk = 'lower' | 'medium' | 'higher'
+export type RiskType = 'lower' | 'medium' | 'higher'
