@@ -13,6 +13,7 @@ const nextConfig: (phase: string) => NextConfig = (phase) => ({
     position: 'bottom-right',
   },
   experimental: {
+    serverComponentsHmrCache: true,
     optimizePackageImports: [
       '@summerfi/app-earn-ui',
       '@summerfi/app-types',

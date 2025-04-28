@@ -16,6 +16,7 @@ const nextConfig: (phase: string) => NextConfig = (phase) => ({
   output: 'standalone',
   reactStrictMode: false,
   experimental: {
+    serverComponentsHmrCache: true,
     optimizePackageImports: [
       '@account-kit/core',
       '@account-kit/infra',
