@@ -9,7 +9,7 @@
     gap: 64px;
   }
 
-  @include media('>s') {
+  @include media('<m') {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr 1fr;
     gap: 16px;
@@ -24,11 +24,12 @@
 
 .leftHeaderFiltersRow {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-between;
   gap: 16px;
   margin-bottom: 24px;
 
-  @include media('>m') {
+  @include media('<m') {
     flex-direction: column;
   }
 }
