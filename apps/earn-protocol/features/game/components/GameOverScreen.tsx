@@ -105,6 +105,8 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
           let the AI do the work
           <Icon iconName="arrow_increase" size={16} />
         </Button>
+      </div>
+      <div className={styles.buttonsRowOptions}>
         <Button variant="secondaryLarge" onClick={onReturnToMenu}>
           Return to Menu
           <Icon iconName="arrow_backward" size={16} />

@@ -9,6 +9,14 @@
   padding: 24px;
 }
 
+.animated {
+  opacity: 0;
+  animation-name: fadeInGameStartScreen;
+  animation-duration: 0.4s;
+  animation-timing-function: ease-in;
+  animation-fill-mode: both;
+}
+
 .title {
   font-size: 64px;
   font-weight: 800;
@@ -23,40 +31,18 @@
   color: #efefef;
 }
 
-.button {
-  width: 220px;
-  padding: 14px 0;
-  font-size: 18px;
-  font-weight: 700;
-  border-radius: 8px;
-  border: none;
-  background: #4f8cff;
-  color: #fff;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  transition: background 0.2s;
-  margin-top: 0;
-}
+@keyframes fadeInGameStartScreen {
+  from {
+    opacity: 0;
+    /* Start with opacity 0 */
+    transform: translateY(20px);
+  }
 
-.buttonHowTo {
-  margin-top: 12px;
-  width: 220px;
-  padding: 14px 0;
-  font-size: 18px;
-  font-weight: 700;
-  border-radius: 8px;
-  border: none;
-  background: #eee;
-  color: #333;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  transition: background 0.2s;
-}
-
-.buttonClose {
-  background: #333;
-  color: #eee;
-  margin-top: 32px;
+  to {
+    opacity: 1;
+    /* Fade in to full opacity */
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 600px) {

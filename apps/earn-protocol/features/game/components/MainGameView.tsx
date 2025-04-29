@@ -25,12 +25,12 @@ export default function MainGameView({ closeGame }: { closeGame: () => void }) {
   )
 
   useEffect(() => {
-    document.querySelectorAll('body')[0].style.overflow = 'hidden'
+    document.querySelectorAll('body')[0].classList.add('no-scroll') // Prevent body scroll when modal is open
     window.addEventListener('keydown', handleEscape)
 
     return () => {
       stopMusic() // Stop music when component unmounts
-      document.querySelectorAll('body')[0].style.overflow = 'auto'
+      document.querySelectorAll('body')[0].classList.remove('no-scroll') // Re-enable body scroll
       window.removeEventListener('keydown', handleEscape)
     }
   }, [handleEscape])

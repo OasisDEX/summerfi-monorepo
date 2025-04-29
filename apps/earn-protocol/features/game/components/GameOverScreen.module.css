@@ -97,6 +97,15 @@
   margin-top: 24px;
 }
 
+.buttonsRowOptions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  margin-top: 24px;
+}
+
 @media (max-width: 600px) {
   .container {
     padding: 8px;
