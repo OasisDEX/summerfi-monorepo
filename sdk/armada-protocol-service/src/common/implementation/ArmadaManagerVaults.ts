@@ -6,7 +6,6 @@ import {
   getDeployedContractAddress,
   type IArmadaManagerUtils,
   createVaultSwitchTransaction,
-  setTestDeployment,
 } from '@summerfi/armada-protocol-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { AdmiralsQuartersAbi } from '@summerfi/armada-protocol-abis'
@@ -33,7 +32,7 @@ import {
 import type { ISwapManager } from '@summerfi/swap-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import { encodeFunctionData } from 'viem'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'bignumber.js'
 
 export class ArmadaManagerVaults implements IArmadaManagerVaults {
   private _supportedChains: IChainInfo[]
@@ -134,11 +133,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     const shouldSwap = !destinationFleetToken.equals(sourceFleetToken)
 
     let swapToAmount: ITokenAmount | undefined = undefined
-    let transactions:
-      | [VaultSwitchTransactionInfo]
-      | [ApproveTransactionInfo, VaultSwitchTransactionInfo]
-      | [VaultSwitchTransactionInfo, VaultSwitchTransactionInfo]
-      | [ApproveTransactionInfo, VaultSwitchTransactionInfo, VaultSwitchTransactionInfo]
+    let transactions: Awaited<ReturnType<IArmadaManagerVaults['getVaultSwitchTx']>>
 
     const [beforeFleetShares, beforeStakedShares, requestedWithdrawShares] = await Promise.all([
       this._utils.getFleetShares({
@@ -174,7 +169,8 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       contractName: 'admiralsQuarters',
     })
 
-    let approveTransaction: ApproveTransactionInfo | undefined
+    let approvalForWithdraw: ApproveTransactionInfo | undefined
+    let approvalForDeposit: ApproveTransactionInfo | undefined
 
     // Deposit logic
     const shouldStake = params.shouldStake ?? true
@@ -191,7 +187,6 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
 
     // If depositing a token that is not the fleet token,
     // we need to swap it to fleet asset
-    let approvalForDeposit: ApproveTransactionInfo | undefined
     if (!shouldSwap) {
       throw new Error('Not supported')
     }
@@ -219,7 +214,8 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     ])
     if (approvalTx) {
       LoggingService.debug('approvalForDeposit', {
-        approvalForDeposit: swapToAmount.toString(),
+        spender: approvalTx.metadata.approvalSpender.toString(),
+        approved: approvalTx.metadata.approvalAmount.toString(),
       })
       approvalForDeposit = approvalTx
     } else {
@@ -294,14 +290,15 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
 
         if (approveToTakeSharesOnBehalf) {
           LoggingService.debug('approveToTakeSharesOnBehalf', {
-            sharesToWithdraw: requestedWithdrawShares.toString(),
+            spender: approveToTakeSharesOnBehalf.metadata.approvalSpender.toString(),
+            approved: approveToTakeSharesOnBehalf.metadata.approvalAmount.toString(),
           })
         } else {
           LoggingService.debug('approveToTakeSharesOnBehalf', {
             message: 'No approval needed',
           })
         }
-        approveTransaction = approveToTakeSharesOnBehalf
+        approvalForWithdraw = approveToTakeSharesOnBehalf
 
         const multicallCalldata = encodeFunctionData({
           abi: AdmiralsQuartersAbi,
@@ -324,11 +321,14 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
             priceImpact,
           },
         })
-        if (approveTransaction) {
-          transactions = [approveTransaction, withdrawTransaction]
-        } else {
-          transactions = [withdrawTransaction]
-        }
+        transactions =
+          approvalForWithdraw && approvalForDeposit
+            ? [approvalForWithdraw, approvalForDeposit, withdrawTransaction]
+            : approvalForDeposit
+              ? [approvalForDeposit, withdrawTransaction]
+              : approvalForWithdraw
+                ? [approvalForWithdraw, withdrawTransaction]
+                : [withdrawTransaction]
       } else {
         // No. Withdraw all from fleetShares and the reminder from stakedShares
         LoggingService.debug('fleet shares is not enough', {
@@ -373,7 +373,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
         })
 
         // For unstakeAndWithdraw operations, get the chain-specific address
-        const unstakeAdmiralsQuartersAddress = this._getUnstakeAdmiralsQuartersAddress(
+        const unstakeAdmiralsQuartersAddress = this._getUnstakeWithdrawAdmiralsQuartersAddress(
           params.sourceVaultId.chainInfo,
         )
 
@@ -494,17 +494,16 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       }
     } else {
       // No. Unstake and withdraw everything from stakedShares.
-      const multicallArgs: HexData[] = []
-      const multicallOperations: string[] = []
+      const unstakeWithdrawMulticallArgs: HexData[] = []
+      const unstakeWithdrawMulticallOperations: string[] = []
 
       LoggingService.debug('fleet shares is 0, take all from staked shares', {
         outShares: requestedWithdrawShares.toString(),
       })
 
       // Get the chain-specific address for unstakeAndWithdraw
-      const unstakeAdmiralsQuartersAddress = this._getUnstakeAdmiralsQuartersAddress(
-        params.sourceVaultId.chainInfo,
-      )
+      const unstakeWithdrawAdmiralsQuartersAddress =
+        this._getUnstakeWithdrawAdmiralsQuartersAddress(params.sourceVaultId.chainInfo)
 
       // withdraw all from staked tokens
       const [unstakeAndWithdrawCall, priceImpact] = await Promise.all([
@@ -519,22 +518,24 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
             toAmount: swapToAmount,
           }),
       ])
-      multicallArgs.push(unstakeAndWithdrawCall.calldata)
-      multicallOperations.push('unstakeAndWithdraw ' + requestedWithdrawShares.toString())
+      unstakeWithdrawMulticallArgs.push(unstakeAndWithdrawCall.calldata)
+      unstakeWithdrawMulticallOperations.push(
+        'unstakeAndWithdraw ' + requestedWithdrawShares.toString(),
+      )
 
-      // compose multicall
+      // compose unstake withdraw deposit multicall
       const multicallCalldata = encodeFunctionData({
         abi: AdmiralsQuartersAbi,
         functionName: 'multicall',
-        args: [[...multicallArgs, ...depositMulticallArgs]],
+        args: [[...unstakeWithdrawMulticallArgs, ...depositMulticallArgs]],
       })
 
       const vaultSwitchTransaction = createVaultSwitchTransaction({
-        target: unstakeAdmiralsQuartersAddress, // Use the chain-specific address for transactions with unstakeAndWithdraw
+        target: unstakeWithdrawAdmiralsQuartersAddress,
         calldata: multicallCalldata,
         description:
           'Vault Switch Operations: ' +
-          multicallOperations.join(', ') +
+          unstakeWithdrawMulticallArgs.join(', ') +
           depositMulticallOperations.join(', '),
         metadata: {
           fromAmount: transferAmount,
@@ -898,7 +899,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
         })
 
         // For unstakeAndWithdraw operations, get the chain-specific address
-        const unstakeAdmiralsQuartersAddress = this._getUnstakeAdmiralsQuartersAddress(
+        const unstakeAdmiralsQuartersAddress = this._getUnstakeWithdrawAdmiralsQuartersAddress(
           params.vaultId.chainInfo,
         )
 
@@ -1020,7 +1021,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       })
 
       // Get the chain-specific address for unstakeAndWithdraw
-      const unstakeAdmiralsQuartersAddress = this._getUnstakeAdmiralsQuartersAddress(
+      const unstakeAdmiralsQuartersAddress = this._getUnstakeWithdrawAdmiralsQuartersAddress(
         params.vaultId.chainInfo,
       )
 
@@ -1102,13 +1103,13 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
   }
 
   /**
-   * FIXME: This is some kind of a hack to use different AQ for withdrawals
-   * Returns the chain-specific Admirals Quarters address for unstake operations
+   * FIXME: This is a hack to use different AQ with rights for unstake-withdraw operation
+   * Returns the chain-specific Admirals Quarters address for unstake-withdraw operation
    * @param chainInfo The chain information
-   * @returns The appropriate Admirals Quarters address for the chain
+   * @returns Admirals Quarters address for the chain
    */
-  private _getUnstakeAdmiralsQuartersAddress(chainInfo: IChainInfo): IAddress {
-    // Chain-specific overrides for unstake operations
+  private _getUnstakeWithdrawAdmiralsQuartersAddress(chainInfo: IChainInfo): IAddress {
+    // Chain-specific overrides for unstake operation
     switch (chainInfo.chainId) {
       case 1: // Ethereum Mainnet
         return Address.createFromEthereum({ value: '0x275CA55c32258CE10870CA4e44c071aa14A2C836' })
