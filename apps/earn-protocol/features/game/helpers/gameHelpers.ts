@@ -18,9 +18,15 @@ export function getTrendDataForAPY(apy: number): { x: number; y: number }[] {
 
 export function generateCards(round: number): CardData[] {
   const roundBasedCardCount = round <= 15 ? 3 : round <= 30 ? 6 : 9
-  const apys = Array.from({ length: roundBasedCardCount }, () =>
-    Number((Number(Math.random() * 18) + 2).toFixed(2)),
-  )
+  const apys: number[] = []
+
+  while (apys.length < roundBasedCardCount) {
+    const newApy = Number((Number(Math.random() * 18) + 2).toFixed(2))
+
+    if (apys.every((apy) => Math.abs(apy - newApy) >= 0.01)) {
+      apys.push(newApy)
+    }
+  }
 
   return apys.map((apy) => ({ apy, trendData: getTrendDataForAPY(apy) }))
 }
