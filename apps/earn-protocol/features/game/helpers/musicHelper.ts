@@ -1,4 +1,3 @@
-// filepath: src/app/helpers/musicHelper.ts
 let audioContext: AudioContext | null = null
 let mainGainNode: GainNode | null = null
 let schedulerInterval: NodeJS.Timeout | null = null

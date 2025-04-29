@@ -8,12 +8,10 @@ interface ScoreBarProps {
   streakAnim: boolean
 }
 
-const ScoreBar: React.FC<ScoreBarProps> = ({ score, streak, streakAnim }) => (
+const ScoreBar: React.FC<ScoreBarProps> = ({ score, streakAnim }) => (
   <div className={styles.scoreBar}>
+    <p className={clsx(styles.streak, streakAnim && styles.streakFadeOut)}>&nbsp;+5 streak!</p>
     Score: {score}
-    {streak >= 2 && (
-      <span className={clsx(streakAnim ? styles.streakAnim : styles.streak)}>+5 streak!</span>
-    )}
   </div>
 )
 

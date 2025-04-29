@@ -1,8 +1,8 @@
 .cardList {
   width: 100%;
   max-width: 420px;
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 10px;
   margin: 24px 0;
   position: relative;

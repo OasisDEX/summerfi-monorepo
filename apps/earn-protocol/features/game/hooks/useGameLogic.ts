@@ -175,13 +175,11 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
       }
 
       let points = 0
-      let perfect = false
+      const perfect = responseTime > 1 ? actualRemainingTime > 1 : true
 
       if (idx === correctIdx) {
         playCorrectSound(actualRemainingTime, timer)
         points = Math.floor(Number(100 * (actualRemainingTime / timer)) + 10)
-        perfect = true
-
         nextRound(
           true,
           round + 1, // Cap at round 30
@@ -208,8 +206,6 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
         }
       } else {
         playIncorrectSound()
-        points = -30
-        perfect = false
 
         setGameOver(true)
         onGameOver({

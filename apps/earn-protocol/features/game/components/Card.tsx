@@ -20,7 +20,6 @@ const Card: FC<CardProps> = forwardRef<HTMLDivElement, CardProps>(
     { apy, trendData, selected, onClick, highlight, apyColor, 'data-card-index': dataCardIndex },
     ref,
   ) => {
-    const [hovered, setHovered] = useState(false)
     const [visible, setVisible] = useState(false)
 
     useEffect(() => {
@@ -43,45 +42,10 @@ const Card: FC<CardProps> = forwardRef<HTMLDivElement, CardProps>(
           styles.card,
           selected && styles.selected,
           highlight && styles.highlight,
-          hovered && styles.hovered,
           !visible && styles.invisible,
         )}
         tabIndex={0}
         onClick={onClick} // Pass the event directly
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            if (onClick) {
-              const syntheticMouseEvent = {
-                ...e,
-                type: 'click',
-                button: 0,
-              } as unknown as React.MouseEvent<HTMLDivElement>
-
-              onClick(syntheticMouseEvent)
-            }
-          }
-        }}
-        onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.97)')}
-        onMouseUp={(e) =>
-          (e.currentTarget.style.transform = selected
-            ? 'scale(1.09)'
-            : highlight
-              ? 'scale(1.05)'
-              : hovered
-                ? 'scale(1.04)'
-                : 'scale(1)')
-        }
-        onMouseLeave={(e) => {
-          setHovered(false)
-          e.currentTarget.style.transform = selected
-            ? 'scale(1.09)'
-            : highlight
-              ? 'scale(1.05)'
-              : 'scale(1)'
-        }}
-        onMouseEnter={() => setHovered(true)}
-        onFocus={() => setHovered(true)}
-        onBlur={() => setHovered(false)}
       >
         <div style={{ width: '100%', height: 36 }}>
           <ResponsiveContainer width="100%" height="100%">

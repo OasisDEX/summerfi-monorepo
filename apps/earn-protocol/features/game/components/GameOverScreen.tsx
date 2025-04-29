@@ -1,8 +1,11 @@
 'use client'
 
+import { useEffect } from 'react'
 import { Button, Icon, Text } from '@summerfi/app-earn-ui'
 
 import { type CardData } from '@/features/game/types'
+import { trackGameFinished } from '@/helpers/mixpanel'
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import Card from './Card'
 
@@ -44,6 +47,20 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
           (card) => card.apy === Math.max(...lastCards.map((lastCard) => lastCard.apy)),
         )
       : null
+
+  const { userWalletAddress } = useUserWallet()
+
+  useEffect(() => {
+    trackGameFinished({
+      id: 'GameFinished',
+      page: window.location.host + window.location.pathname,
+      userAddress: userWalletAddress,
+      score,
+      rounds,
+      avgResponse,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <div className={styles.container}>
