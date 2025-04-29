@@ -52,6 +52,8 @@ import { usePosition } from '@/hooks/use-position'
 import { useTokenBalances } from '@/hooks/use-tokens-balances'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
+import vaultsListViewStyles from './VaultsListView.module.scss'
+
 type VaultsListViewProps = {
   vaultsList: SDKVaultsListType
   vaultsApyByNetworkMap: GetVaultsApyResponse
@@ -430,7 +432,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
         <SimpleGrid
           columns={isMobile ? 1 : 3}
           rows={isMobile ? 3 : 1}
-          style={{ justifyItems: 'stretch' }}
+          className={vaultsListViewStyles.topContentGrid}
           gap={isMobile ? 16 : isTablet ? 64 : 170}
         >
           <DataBlock
@@ -459,19 +461,13 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
       }
       leftContent={
         <>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div className={vaultsListViewStyles.leftHeaderRow}>
             <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
               1. Choose a strategy
             </Text>
           </div>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
-            <div style={{ display: 'flex', gap: '16px' }}>
+          <div className={vaultsListViewStyles.leftHeaderFiltersRow}>
+            <div className={vaultsListViewStyles.filtersGroup}>
               <GenericMultiselect
                 options={assetsList}
                 label="Tokens"
@@ -534,18 +530,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
               />
             ))
           ) : (
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '100%',
-                width: '100%',
-                gap: '16px',
-                padding: isMobile ? '50px 16px 5px 16px' : '50px 32px 5px 32px',
-              }}
-            >
+            <div className={vaultsListViewStyles.noVaultsWrapper}>
               <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
                 No vaults available
                 {filterNetworks.length

@@ -1,0 +1,48 @@
+.topContentGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 170px;
+
+  @include media('>m') {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 64px;
+  }
+
+  @include media('>s') {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+}
+
+.leftHeaderRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.leftHeaderFiltersRow {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+
+  @include media('>m') {
+    flex-direction: column;
+  }
+}
+
+.filtersGroup {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.noVaultsWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 32px;
+}
