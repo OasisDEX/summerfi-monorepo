@@ -1,7 +1,7 @@
 'use client'
 
 import { type ReactNode, useState } from 'react'
-import { type DropdownOption, type DropdownRawOption } from '@summerfi/app-types'
+import { type DropdownRawOption } from '@summerfi/app-types'
 import Link from 'next/link'
 
 import { Box } from '@/components/atoms/Box/Box'
@@ -16,9 +16,6 @@ type VaultGridProps = {
   topContent: ReactNode
   leftContent: ReactNode
   rightContent: ReactNode
-  networksList: DropdownOption[]
-  onChangeNetwork: (selected: DropdownRawOption) => void
-  selectedNetwork?: DropdownOption
   isMobileOrTablet?: boolean
   onRefresh?: () => void
 }
@@ -27,9 +24,6 @@ export const VaultGrid = ({
   topContent,
   leftContent,
   rightContent,
-  networksList,
-  selectedNetwork,
-  onChangeNetwork,
   isMobileOrTablet,
   onRefresh,
 }: VaultGridProps): React.ReactNode => {
@@ -45,14 +39,7 @@ export const VaultGrid = ({
   return (
     <div className={vaultGridStyles.vaultGridWrapper}>
       <div className={vaultGridStyles.vaultGridHeaderWrapper}>
-        <TitleWithSelect
-          title="Earn"
-          options={networksList}
-          onChangeNetwork={onChangeNetwork}
-          selected={selectedNetwork}
-          onRefresh={handleUserRefresh}
-          isRefreshing={isRefreshing}
-        />
+        <TitleWithSelect title="Earn" onRefresh={handleUserRefresh} isRefreshing={isRefreshing} />
         <Link
           href="https://blog.summer.fi/say-hello-to-the-lazy-summer-protocol"
           style={{ display: 'block', width: 'min-content', whiteSpace: 'pre' }}

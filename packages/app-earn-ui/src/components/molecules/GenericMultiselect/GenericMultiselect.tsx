@@ -40,6 +40,9 @@ interface GenericMultiselectProps {
     id: string
     key: string
     options: string[]
+    icon?: IconNamesList
+    buttonStyle?: CSSProperties
+    iconStyle?: CSSProperties
   }[]
   style?: CSSProperties
   withSearch?: boolean
@@ -243,6 +246,7 @@ export function GenericMultiselect({
 
         return (
           <>
+            {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
             {selected && (selected.icon ?? selected.image ?? selected.token) && (
               <GenericMultiselectIcon
                 icon={selected.icon}
@@ -281,6 +285,7 @@ export function GenericMultiselect({
   useEffect(() => {
     if (didMountRef.current) onChange(values)
     else didMountRef.current = true
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values])
 
   const optionsMapped = (
@@ -330,34 +335,48 @@ export function GenericMultiselect({
         </li>
       )}
       {optionGroups && optionGroups.length > 0 && (
-        <li style={{ display: 'flex', gap: 'var(--general-space-4)' }}>
-          {optionGroups.map(({ id, key, options: _options }) => (
-            <Button
-              key={id}
-              variant="unstyled"
-              style={{
-                flexShrink: 0,
-                padding: '0 var(--general-space-16)',
-                whiteSpace: 'nowrap',
-                ...(matchingOptionsGroup === id && {
-                  '&, &:hover': {
-                    color: 'neutral10',
-                    backgroundColor: 'interactive100',
-                    borderColor: 'interactive100',
-                  },
-                }),
-              }}
-              onClick={() => {
-                if (matchingOptionsGroup === id) setValues([])
-                else {
-                  setValues(_options)
-                  onSingleChange?.(`Group: ${id}`)
-                }
-              }}
-            >
-              {key} ({_options.length})
-            </Button>
-          ))}
+        <li style={{ display: 'flex', flexDirection: 'column', gap: 'var(--general-space-4)' }}>
+          {optionGroups.map(
+            ({ id, key, options: _options, icon: optionGroupIcon, buttonStyle, iconStyle }) => (
+              <Button
+                key={id}
+                variant="unstyled"
+                style={{
+                  display: 'flex',
+                  alignContent: 'center',
+                  flexShrink: 0,
+                  padding: '0 var(--general-space-16)',
+                  whiteSpace: 'nowrap',
+                  ...(matchingOptionsGroup === id && {
+                    '&, &:hover': {
+                      color: 'neutral10',
+                      backgroundColor: 'interactive100',
+                      borderColor: 'interactive100',
+                    },
+                  }),
+                  ...buttonStyle,
+                }}
+                onClick={() => {
+                  if (matchingOptionsGroup === id) setValues([])
+                  else {
+                    setValues(_options)
+                    onSingleChange?.(`Group: ${id}`)
+                  }
+                }}
+              >
+                {optionGroupIcon && (
+                  <Icon
+                    iconName={optionGroupIcon}
+                    size={24}
+                    style={{ ...iconStyle, marginRight: 'var(--general-space-8)' }}
+                  />
+                )}
+                <Text as="span" variant="p3semi">
+                  {key} ({_options.length})
+                </Text>
+              </Button>
+            ),
+          )}
         </li>
       )}
       {filteredOptions.map((option) => (

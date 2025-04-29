@@ -165,6 +165,7 @@ export type IconNamesList =
   | 'univ2_dai_usdt_circles_color'
   | 'univ2_eth_usdt_circles_color'
   | 'univ2_usdc_eth_circles_color'
+  | 'usd_circle'
   | 'usd_circle_color'
   | 'usda'
   | 'usdc_circle_color'

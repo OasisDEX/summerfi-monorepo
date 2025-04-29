@@ -21,8 +21,6 @@ export const VaultsListViewLoading = () => {
   return (
     <VaultGrid
       isMobileOrTablet={isMobileOrTablet}
-      networksList={[]}
-      onChangeNetwork={() => null}
       topContent={
         <SimpleGrid
           columns={isMobile ? 1 : 3}
@@ -54,6 +52,19 @@ export const VaultsListViewLoading = () => {
             <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
               1. Choose a strategy
             </Text>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div style={{ display: 'flex', gap: '16px' }}>
+              <SkeletonLine width={130} height={35} style={{ margin: '5px 0 5px' }} />
+              <SkeletonLine width={130} height={35} style={{ margin: '5px 0 5px' }} />
+            </div>
+            <SkeletonLine width={160} height={35} style={{ margin: '5px 0 5px' }} />
           </div>
           <SkeletonLine width="100%" height={208} radius="var(--radius-roundish)" />
           <SkeletonLine width="100%" height={208} radius="var(--radius-roundish)" />

@@ -445,6 +445,7 @@ export const icons = {
   univ2_usdc_eth_circles_color: customLazy(
     () => import('./icons/univ2_usdc_eth_circles_color.svg?react'),
   ) as IconExportType,
+  usd_circle: customLazy(() => import('./icons/usd_circle.svg?react')) as IconExportType,
   usd_circle_color: customLazy(
     () => import('./icons/usd_circle_color.svg?react'),
   ) as IconExportType,
@@ -818,6 +819,7 @@ export const iconsSync: {
   univ2_dai_usdt_circles_color: import('./icons/univ2_dai_usdt_circles_color.svg?react'),
   univ2_eth_usdt_circles_color: import('./icons/univ2_eth_usdt_circles_color.svg?react'),
   univ2_usdc_eth_circles_color: import('./icons/univ2_usdc_eth_circles_color.svg?react'),
+  usd_circle: import('./icons/usd_circle.svg?react'),
   usd_circle_color: import('./icons/usd_circle_color.svg?react'),
   usda: import('./icons/usda.svg?react'),
   usdc_circle_color: import('./icons/usdc_circle_color.svg?react'),
