@@ -114,11 +114,11 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
   const vaultApyData = vaultsApyRaw[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
 
   return (
-    <VaultGridDetails vault={vault} vaults={allVaultsWithConfig}>
+    <VaultGridDetails vault={vaultWithConfig} vaults={allVaultsWithConfig}>
       <VaultDetailsView
         arksHistoricalChartData={arksHistoricalChartData}
         summerVaultName={summerVaultName}
-        vault={vault}
+        vault={vaultWithConfig}
         arksInterestRates={arkInterestRatesMap}
         vaults={vaults}
         totalRebalanceActions={totalRebalanceActions}

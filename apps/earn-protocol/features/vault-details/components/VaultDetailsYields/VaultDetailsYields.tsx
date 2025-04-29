@@ -6,6 +6,7 @@ import {
   type SDKVaultishType,
   type VaultApyData,
 } from '@summerfi/app-types'
+import { capitalize } from 'lodash-es'
 
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { VaultDetailsAdvancedYield } from '@/features/vault-details/components/VaultDetailsAdvancedYield/VaultDetailsAdvancedYield'
@@ -43,7 +44,8 @@ export const VaultDetailsYields: FC<VaultDetailsYieldsProps> = ({
             marginBottom: 'var(--general-space-16)',
           }}
         >
-          {vault.inputToken.symbol} {vault.customFields?.risk ?? 'Lower'} Risk Historical Yields
+          {vault.inputToken.symbol} {capitalize(vault.customFields?.risk ?? 'Lower')} Risk
+          Historical Yields
         </Text>
         <Text
           as="p"
