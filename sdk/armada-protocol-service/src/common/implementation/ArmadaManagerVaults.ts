@@ -163,11 +163,15 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       destinationFleetToken,
     })
 
-    const admiralsQuartersAddress = getDeployedContractAddress({
-      chainInfo: params.sourceVaultId.chainInfo,
-      contractCategory: 'core',
-      contractName: 'admiralsQuarters',
-    })
+    // const admiralsQuartersAddress = getDeployedContractAddress({
+    //   chainInfo: params.sourceVaultId.chainInfo,
+    //   contractCategory: 'core',
+    //   contractName: 'admiralsQuarters',
+    // })
+    const unstakeWithdrawAdmiralsQuartersAddress = this._getUnstakeWithdrawAdmiralsQuartersAddress(
+      params.sourceVaultId.chainInfo,
+    )
+    const admiralsQuartersAddress = unstakeWithdrawAdmiralsQuartersAddress
 
     let approvalForWithdraw: ApproveTransactionInfo | undefined
     let approvalForDeposit: ApproveTransactionInfo | undefined
@@ -204,7 +208,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
 
     // when staking admirals quarters will receive LV tokens, otherwise the user
     const fleetTokenReceiver = shouldStake
-      ? admiralsQuartersAddress.value
+      ? unstakeWithdrawAdmiralsQuartersAddress.value
       : params.user.wallet.address.value
 
     const enterFleetCalldata = encodeFunctionData({
@@ -328,20 +332,19 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       LoggingService.debug('>>> fleet shares is 0, take all from staked shares')
 
       // Get the chain-specific address for unstakeAndWithdraw
-      const unstakeWithdrawAdmiralsQuartersAddress =
-        this._getUnstakeWithdrawAdmiralsQuartersAddress(params.sourceVaultId.chainInfo)
+
+      const withdrawalData = await this._calculateWithdrawalDataForStakedShares({
+        vaultId: params.sourceVaultId,
+        shares: calculatedSharesFromAmount,
+        stakedShares: beforeStakedShares,
+        amount: transferAmount,
+      })
 
       // withdraw all from staked tokens
-      const [unstakeAndWithdrawCall, withdrawalData, priceImpact] = await Promise.all([
+      const [unstakeAndWithdrawCall, priceImpact] = await Promise.all([
         this._getUnstakeAndWithdrawCall({
           vaultId: params.sourceVaultId,
-          unstakeWithdrawSharesAmount: calculatedSharesFromAmount,
-        }),
-        this._calculateWithdrawalDataForStakedShares({
-          vaultId: params.sourceVaultId,
-          shares: calculatedSharesFromAmount,
-          stakedShares: beforeStakedShares,
-          amount: transferAmount,
+          sharesValue: withdrawalData.unstakeWithdrawSharesAmount,
         }),
         swapToAmount &&
           this._utils.getPriceImpact({
@@ -353,6 +356,12 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       unstakeWithdrawMulticallOperations.push(
         'unstakeAndWithdraw ' + withdrawalData.approvedDepositAmount.toString(),
       )
+      approvalForDeposit = await this._getApprovalBasedOnWithdrawalData({
+        admiralsQuartersAddress: unstakeWithdrawAdmiralsQuartersAddress,
+        vaultId: params.sourceVaultId,
+        user: params.user,
+        amount: withdrawalData.approvedDepositAmount,
+      })
 
       // compose unstake withdraw deposit multicall
       const multicallCalldata = encodeFunctionData({
@@ -757,7 +766,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
           }),
           this._getUnstakeAndWithdrawCall({
             vaultId: params.vaultId,
-            unstakeWithdrawSharesAmount: reminderShares,
+            sharesValue: reminderShares.toSolidityValue(),
           }),
           swapToAmount &&
             this._utils.getPriceImpact({
@@ -863,8 +872,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       const [unstakeAndWithdrawCall, priceImpact] = await Promise.all([
         this._getUnstakeAndWithdrawCall({
           vaultId: params.vaultId,
-          shares: calculatedSharesFromAmount,
-          stakedShares: beforeStakedShares,
+          sharesValue: calculatedSharesFromAmount.toSolidityValue(),
         }),
         swapToAmount &&
           this._utils.getPriceImpact({
@@ -1076,18 +1084,17 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
    */
   private async _getUnstakeAndWithdrawCall(params: {
     vaultId: IArmadaVaultId
-    unstakeWithdrawSharesAmount: ITokenAmount
+    sharesValue: bigint
     claimRewards?: boolean
   }): Promise<{
     calldata: HexData
   }> {
     const claimRewards = params.claimRewards ?? true
-    const sharesValue = params.unstakeWithdrawSharesAmount.toSolidityValue()
 
     const calldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'unstakeAndWithdrawAssets',
-      args: [params.vaultId.fleetAddress.value, sharesValue, claimRewards],
+      args: [params.vaultId.fleetAddress.value, params.sharesValue, claimRewards],
     })
 
     return { calldata }
@@ -1259,7 +1266,8 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     }
   }
 
-  private async getApprovalBasedOnWithdrawal(params: {
+  private async _getApprovalBasedOnWithdrawalData(params: {
+    admiralsQuartersAddress: IAddress
     vaultId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
@@ -1269,7 +1277,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     const [approvalTx] = await Promise.all([
       this._allowanceManager.getApproval({
         chainInfo: params.vaultId.chainInfo,
-        spender: admiralsQuartersAddress,
+        spender: params.admiralsQuartersAddress,
         amount: params.amount,
         owner: params.user.wallet.address,
       }),

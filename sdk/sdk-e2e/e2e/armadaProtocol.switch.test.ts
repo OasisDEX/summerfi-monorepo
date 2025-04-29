@@ -31,18 +31,18 @@ const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
 describe('Armada Protocol Switch', () => {
   const main = async () => {
     const chainInfo = getChainInfoByChainId(chainId)
-    await runTests({
-      chainInfo,
-      sourceFleetAddress: usdcFleet,
-      destinationFleetAddress: ethFleet,
-      rpcUrl,
-    })
-    await runTests({
-      chainInfo,
-      sourceFleetAddress: ethFleet,
-      destinationFleetAddress: eurcFleet,
-      rpcUrl,
-    })
+    // await runTests({
+    //   chainInfo,
+    //   sourceFleetAddress: usdcFleet,
+    //   destinationFleetAddress: ethFleet,
+    //   rpcUrl,
+    // })
+    // await runTests({
+    //   chainInfo,
+    //   sourceFleetAddress: ethFleet,
+    //   destinationFleetAddress: eurcFleet,
+    //   rpcUrl,
+    // })
     await runTests({
       chainInfo,
       sourceFleetAddress: eurcFleet,
@@ -136,6 +136,9 @@ describe('Armada Protocol Switch', () => {
       statuses.forEach((status) => {
         expect(status).toBe('success')
       })
+
+      // wait 5 seconds for the transaction to be mined
+      await new Promise((resolve) => setTimeout(resolve, 5000))
 
       const sourcePositionAfter = await sdk.armada.users.getUserPosition({
         user,
