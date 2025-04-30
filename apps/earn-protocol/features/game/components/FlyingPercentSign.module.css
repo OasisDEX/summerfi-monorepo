@@ -1,0 +1,26 @@
+.flyingPercentSign {
+  position: fixed;
+  font-size: 28px;
+  font-weight: bold;
+  pointer-events: none;
+  z-index: 1000;
+  animation: flyAndFadePercent 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  white-space: nowrap;
+  font-family: Arial, sans-serif;
+}
+
+@keyframes flyAndFadePercent {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5) rotate(0deg);
+    opacity: 1;
+  }
+
+  25% {
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: var(--target-transform);
+    opacity: 0;
+  }
+}

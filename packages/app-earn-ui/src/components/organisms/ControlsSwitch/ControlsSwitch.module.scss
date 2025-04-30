@@ -1,0 +1,46 @@
+.positionAndVaultsListWrapper {
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--spacing-space-large);
+  padding-bottom: var(--spacing-space-large);
+  gap: var(--spacing-space-medium);
+}
+
+.cardWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-medium);
+}
+
+.titleRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
+  width: max-content;
+}
+
+.dataRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  .dataRowColumn {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.arrowForward {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 28px;
+  height: 28px;
+  margin: 0 auto;
+  border-radius: var(--radius-circle);
+  transform: rotate(90deg);
+  background-color: var(--color-surface-subtler);
+}

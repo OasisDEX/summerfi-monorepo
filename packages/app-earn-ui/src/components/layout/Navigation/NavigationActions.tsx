@@ -14,6 +14,7 @@ interface NavigationActionsProps {
   walletConnectionComponent?: ReactNode
   configComponent?: ReactNode
   toggleMobileMenu: () => void
+  startTheGame?: () => void
 }
 
 export const NavigationActions = ({
@@ -21,10 +22,16 @@ export const NavigationActions = ({
   signUpComponent,
   toggleMobileMenu,
   configComponent,
+  startTheGame,
 }: NavigationActionsProps): React.ReactNode => {
   return (
     <div>
       <div className={navigationActionsStyles.navigationActionsWrapper}>
+        {startTheGame && (
+          <div onClick={startTheGame} className={navigationActionsStyles.theGameButton}>
+            <Icon iconName="gamepad" size={22} />
+          </div>
+        )}
         <Link href={INTERNAL_LINKS.summerPro} target="_blank">
           <Text as="p" variant="p2semi" className={clsx(navigationActionsStyles.summerProButton)}>
             Summer.fi Pro

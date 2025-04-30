@@ -72,3 +72,9 @@ dialog {
 :where(button, input, select, textarea) {
   border: none;
 }
+
+.no-scroll {
+  overflow: hidden !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+}

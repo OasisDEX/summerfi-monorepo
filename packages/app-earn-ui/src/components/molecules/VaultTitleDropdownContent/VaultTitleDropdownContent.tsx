@@ -1,12 +1,11 @@
 import type { FC } from 'react'
 import { SDKNetwork, type SDKVaultishType, type TokenSymbolsList } from '@summerfi/app-types'
-import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
+import { Risk } from '@/components/atoms/Risk/Risk'
 import { Text } from '@/components/atoms/Text/Text'
 import { getDisplayToken } from '@/helpers/get-display-token'
-import { riskColors } from '@/helpers/risk-colors'
 
 import classNames from './VaultTitleDropdownContent.module.scss'
 
@@ -45,13 +44,7 @@ export const VaultTitleDropdownContent: FC<VaultDropdownContentProps> = ({
           {getDisplayToken(vault.inputToken.symbol)}
         </Text>
       </div>
-      <Text
-        as="p"
-        variant="p4semi"
-        style={{ color: riskColors[vault.customFields?.risk ?? 'lower'] }}
-      >
-        {capitalize(vault.customFields?.risk ?? 'lower')} risk
-      </Text>
+      <Risk risk={vault.customFields?.risk ?? 'lower'} variant="p4semi" />
     </div>
   )
 

@@ -71,7 +71,7 @@ const definedTermsList = [
   '	“Airdrop Period” means a specified period, as determined by the Company in its sole discretion and announced on the Protocol’s website.',
   '	“API” means application programing interface.',
   '	“App” refers to any ‘front-end’ or web interface mentioned in Article II of these terms including https://summer.fi and any subdomain.',
-  '	“Airdrop Website” means the website where Participant may claim tokens located at lazy.summer.fi/earn/sumr. ',
+  '	“Airdrop Website” means the website where Participant may claim tokens located at summer.fi/earn/sumr. ',
   '	“Company” has the meaning set forth in Article II of these Terms. ',
   '	“ETH” means Ether, the native cryptocurrency of Ethereum. ',
   '	“EU” means the European Union. ',

@@ -123,6 +123,7 @@ export {
   type MarketingPointsListData,
 } from './components/organisms/MarketingPointsList/MarketkingPointsList'
 export { ControlsDepositWithdraw } from './components/organisms/ControlsDepositWithdraw/ControlsDepositWithdraw'
+export { ControlsSwitch } from './components/organisms/ControlsSwitch/ControlsSwitch'
 export { ProjectedEarningsCombined } from './components/organisms/ProjectedEarningsCombined/ProjectedEarningsCombined'
 
 export { useToggle } from './hooks/use-toggle'

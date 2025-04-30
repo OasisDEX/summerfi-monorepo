@@ -178,6 +178,26 @@ export const trackInputChange = ({ id, page, userAddress, ...rest }: InputChange
   }
 }
 
+// game finished
+export const trackGameFinished = ({ id, page, userAddress, ...rest }: InputChangeType) => {
+  try {
+    const eventBody = {
+      product: MixpanelEventProduct.EarnProtocol,
+      id,
+      page: includeBasePath(page),
+      userAddress,
+      ...rest,
+    }
+
+    if (!optedOutCheck()) {
+      trackEvent(MixpanelEventTypes.GameFinished, eventBody)
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error tracking button click', error)
+  }
+}
+
 type AppError = {
   id: string
   page: string

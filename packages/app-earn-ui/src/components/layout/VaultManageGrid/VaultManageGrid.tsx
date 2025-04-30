@@ -44,7 +44,7 @@ interface VaultManageGridProps {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
   position: IArmadaPosition
-  detailsContent: ReactNode[]
+  detailsContent: ReactNode[] | ReactNode
   sidebarContent: ReactNode
   connectedWalletAddress?: string
   viewWalletAddress: string
@@ -293,7 +293,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                         }}
                       >
                         Live&nbsp;APY:&nbsp;{apyCurrent}&nbsp;(
-                        {apyUpdatedAt.apyUpdatedAtLabel}m&nbsp;ago)
+                        {apyUpdatedAt.apyUpdatedAtLabel})
                       </Text>
                       <Icon iconName="info" size={16} color="var(--color-text-success)" />
                     </div>

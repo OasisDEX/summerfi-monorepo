@@ -11,6 +11,7 @@ export enum MixpanelEventTypes {
   ProductHubChange = 'product-hub-change',
   RaysTopClimbers = 'rays-top-climbers',
   AppError = 'app-error',
+  GameFinished = 'game-finished',
 }
 
 export enum MixpanelEventProduct {

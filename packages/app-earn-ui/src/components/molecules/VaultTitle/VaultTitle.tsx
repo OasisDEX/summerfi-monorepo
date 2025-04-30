@@ -42,6 +42,7 @@ interface VaultTitleProps {
   titleVariant?: TextVariants
   isLoading?: boolean
   isVaultCard?: boolean
+  iconSize?: number
 }
 
 export const VaultTitle: FC<VaultTitleProps> = ({
@@ -53,6 +54,7 @@ export const VaultTitle: FC<VaultTitleProps> = ({
   titleVariant = 'h4',
   isLoading,
   isVaultCard,
+  iconSize = 44,
 }) => {
   const resolvedSymbol = getDisplayToken(symbol)
   const isIconDefined = getTokenGuarded(resolvedSymbol)?.iconName
@@ -61,10 +63,10 @@ export const VaultTitle: FC<VaultTitleProps> = ({
     <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
       <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
         {isLoading ? (
-          <SkeletonLine height={44} width={44} />
+          <SkeletonLine height={iconSize} width={iconSize} />
         ) : isIconDefined ? (
           /* if any icon breaks, this is probably because of TokenSymbolsList vs whatever comes from the subgraph */
-          <Icon tokenName={resolvedSymbol as TokenSymbolsList} size={44} />
+          <Icon tokenName={resolvedSymbol as TokenSymbolsList} size={iconSize} />
         ) : (
           <GenericTokenIcon symbol={resolvedSymbol} customSize={32} />
         )}

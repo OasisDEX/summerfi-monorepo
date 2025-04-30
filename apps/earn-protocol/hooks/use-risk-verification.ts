@@ -44,7 +44,7 @@ export const useRiskVerification = ({
         logout()
         // eslint-disable-next-line no-alert
         alert(
-          'Your wallet has been flagged by our automated risk tools, and as such your access to lazy.summer.fi restricted. If you believe this to be incorrect, please reach out to support@summer.fi',
+          'Your wallet has been flagged by our automated risk tools, and as such your access to summer.fi restricted. If you believe this to be incorrect, please reach out to support@summer.fi',
         )
       }
 

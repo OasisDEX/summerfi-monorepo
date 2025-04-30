@@ -6,7 +6,7 @@ import {
   type SDKVaultType,
   type VaultApyData,
 } from '@summerfi/app-types'
-import { formatDecimalAsPercent } from '@summerfi/app-utils'
+import { formatDecimalAsPercent, getVaultNiceName } from '@summerfi/app-utils'
 
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
@@ -40,7 +40,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
   arksInterestRates,
   vaultApyData,
 }) => {
-  const summerVaultName = vault.customFields?.name ?? `Summer ${vault.inputToken.symbol} Vault`
+  const summerVaultName = getVaultNiceName({ vault })
 
   const managementFee = getManagementFee(vault.inputToken.symbol)
 

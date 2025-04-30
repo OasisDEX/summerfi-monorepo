@@ -175,6 +175,7 @@ export const icons = {
   gemini_circle_color: customLazy(
     () => import('./icons/gemini_circle_color.svg?react'),
   ) as IconExportType,
+  gamepad: customLazy(() => import('./icons/gamepad.svg?react')) as IconExportType,
   gemini_color: customLazy(() => import('./icons/gemini_color.svg?react')) as IconExportType,
   gemini: customLazy(() => import('./icons/gemini.svg?react')) as IconExportType,
   gho_circle_color: customLazy(
@@ -444,6 +445,7 @@ export const icons = {
   univ2_usdc_eth_circles_color: customLazy(
     () => import('./icons/univ2_usdc_eth_circles_color.svg?react'),
   ) as IconExportType,
+  usd_circle: customLazy(() => import('./icons/usd_circle.svg?react')) as IconExportType,
   usd_circle_color: customLazy(
     () => import('./icons/usd_circle_color.svg?react'),
   ) as IconExportType,
@@ -670,6 +672,7 @@ export const iconsSync: {
   ezeth: import('./icons/ezeth.svg?react'),
   etherscan: import('./icons/etherscan.svg?react'),
   frax_circle_color: import('./icons/frax_circle_color.svg?react'),
+  gamepad: import('./icons/gamepad.svg?react'),
   gemini_circle_color: import('./icons/gemini_circle_color.svg?react'),
   gemini_color: import('./icons/gemini_color.svg?react'),
   gemini: import('./icons/gemini.svg?react'),
@@ -816,6 +819,7 @@ export const iconsSync: {
   univ2_dai_usdt_circles_color: import('./icons/univ2_dai_usdt_circles_color.svg?react'),
   univ2_eth_usdt_circles_color: import('./icons/univ2_eth_usdt_circles_color.svg?react'),
   univ2_usdc_eth_circles_color: import('./icons/univ2_usdc_eth_circles_color.svg?react'),
+  usd_circle: import('./icons/usd_circle.svg?react'),
   usd_circle_color: import('./icons/usd_circle_color.svg?react'),
   usda: import('./icons/usda.svg?react'),
   usdc_circle_color: import('./icons/usdc_circle_color.svg?react'),

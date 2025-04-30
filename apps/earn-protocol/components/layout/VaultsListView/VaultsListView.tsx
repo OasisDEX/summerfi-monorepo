@@ -1,8 +1,11 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { type CSSProperties, useCallback, useEffect, useMemo, useState } from 'react'
 import {
   DataBlock,
+  Dropdown,
+  GenericMultiselect,
+  getSumrTokenBonus,
   getUniqueVaultId,
   getVaultsProtocolsList,
   getVaultUrl,
@@ -23,6 +26,7 @@ import {
   type IconNamesList,
   type IToken,
   type SDKNetwork,
+  type SDKVaultishType,
   type SDKVaultsListType,
   TransactionAction,
 } from '@summerfi/app-types'
@@ -34,11 +38,13 @@ import {
   zero,
 } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
-import { useRouter } from 'next/navigation'
+import { type ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation'
 
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
+import { mapTokensToMultiselectOptions } from '@/features/latest-activity/table/filters/mappers'
+import { filterStablecoins } from '@/helpers/filter-stablecoins'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { revalidateVaultsListData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -46,86 +52,224 @@ import { usePosition } from '@/hooks/use-position'
 import { useTokenBalances } from '@/hooks/use-tokens-balances'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
+import vaultsListViewStyles from './VaultsListView.module.scss'
+
 type VaultsListViewProps = {
   vaultsList: SDKVaultsListType
-  selectedNetwork?: SDKNetwork | 'all-networks'
   vaultsApyByNetworkMap: GetVaultsApyResponse
 }
 
-const allNetworksOption = {
-  iconName: 'earn_network_all' as IconNamesList,
-  label: 'All Networks',
-  value: 'all-networks',
+enum VaultsSorting {
+  HIGHEST_APY = 'highest-apy',
+  HIGHEST_REWARDS = 'highest-rewards',
+  HIGHEST_TVL = 'highest-tvl',
 }
+
+const sortingMethods = [
+  {
+    // default sorting method
+    id: VaultsSorting.HIGHEST_APY,
+    label: 'Highest APY',
+  },
+  {
+    id: VaultsSorting.HIGHEST_REWARDS,
+    label: 'Highest SUMR Rewards',
+  },
+  {
+    id: VaultsSorting.HIGHEST_TVL,
+    label: 'Highest TVL',
+  },
+]
 
 const softRouterPush = (url: string) => {
   window.history.pushState(null, '', url)
 }
 
-export const VaultsListView = ({
-  selectedNetwork,
-  vaultsList,
-  vaultsApyByNetworkMap,
-}: VaultsListViewProps) => {
+const VaultsSortingItem = ({ label, style }: { label: string; style?: CSSProperties }) => {
+  return (
+    <Text variant="p3semi" style={style}>
+      {label}
+    </Text>
+  )
+}
+
+const updateQueryParams = (
+  queryParams: ReadonlyURLSearchParams,
+  newFilters: { assets?: string[]; networks?: string[]; sorting?: DropdownRawOption },
+) => {
+  // use soft router push to update the URL without reloading the page
+  const newQueryParams = {
+    ...(newFilters.assets && { assets: newFilters.assets.join(',') }),
+    ...(newFilters.networks && { networks: newFilters.networks.join(',') }),
+    ...(newFilters.sorting && {
+      sort: newFilters.sorting.value !== 'highest-apy' ? newFilters.sorting.value : '', // if its the default one its gonna be deleted below
+    }),
+  }
+
+  const nextQueryParams = new URLSearchParams(newQueryParams)
+  const currentQueryParams = new URLSearchParams(queryParams.toString())
+  const mergedQueryParams = new URLSearchParams({
+    ...Object.fromEntries(currentQueryParams.entries()),
+    ...Object.fromEntries(nextQueryParams.entries()),
+  })
+
+  for (const param of ['assets', 'networks', 'sort']) {
+    if (mergedQueryParams.get(param) === null || mergedQueryParams.get(param) === '') {
+      mergedQueryParams.delete(param)
+    }
+  }
+
+  const newUrl = `/earn?${mergedQueryParams.toString()}`
+
+  softRouterPush(newUrl)
+}
+
+export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsListViewProps) => {
   const { deviceType } = useDeviceType()
   const { push } = useRouter()
-  const { isMobile, isTablet, isMobileOrTablet } = useMobileCheck(deviceType)
+  const queryParams = useSearchParams()
 
-  const [localVaultNetwork, setLocalVaultNetwork] =
-    useState<VaultsListViewProps['selectedNetwork']>(selectedNetwork)
+  const { isMobile, isTablet, isMobileOrTablet } = useMobileCheck(deviceType)
+  const filterNetworks = useMemo(() => queryParams.get('networks')?.split(',') ?? [], [queryParams])
+  const filterAssets = useMemo(() => queryParams.get('assets')?.split(',') ?? [], [queryParams])
+  const sortingMethodId = useMemo(
+    () => queryParams.get('sort') ?? VaultsSorting.HIGHEST_APY,
+    [queryParams],
+  )
+
   const {
     state: { sumrNetApyConfig, slippageConfig },
   } = useLocalConfig()
 
-  const networkFilteredVaults = useMemo(() => {
-    const properVaultsList =
-      localVaultNetwork && localVaultNetwork !== 'all-networks'
-        ? vaultsList.filter(({ protocol }) => protocol.network === localVaultNetwork)
-        : vaultsList
-
-    return properVaultsList.sort((a, b) => {
-      const aApy = vaultsApyByNetworkMap[`${a.id}-${subgraphNetworkToId(a.protocol.network)}`]
-      const bApy = vaultsApyByNetworkMap[`${b.id}-${subgraphNetworkToId(b.protocol.network)}`]
-
-      return Number(aApy) > Number(bApy) ? -1 : 1
-    })
-  }, [localVaultNetwork, vaultsList, vaultsApyByNetworkMap])
   const sdk = useAppSDK()
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
-  const [selectedVaultId, setSelectedVaultId] = useState<string | undefined>(
-    getUniqueVaultId(networkFilteredVaults[0]),
+  const filterAssetVaults = useCallback(
+    (vault: (typeof vaultsList)[number]) => {
+      const assetsFilterList = [...filterAssets.map((asset) => asset.toLowerCase())]
+
+      if (assetsFilterList.includes('eth')) {
+        assetsFilterList.push('weth')
+      }
+      if (assetsFilterList.includes('USDT'.toLowerCase())) {
+        assetsFilterList.push('USD₮0'.toLowerCase())
+      }
+
+      const filtered = assetsFilterList.includes(vault.inputToken.symbol.toLowerCase())
+
+      return filtered
+    },
+    [filterAssets],
   )
 
-  const selectedNetworkOption = useMemo(
-    () =>
-      localVaultNetwork && localVaultNetwork !== 'all-networks'
-        ? {
-            iconName: networkIconByNetworkName[localVaultNetwork] as IconNamesList,
-            value: localVaultNetwork,
-            label: capitalize(sdkNetworkToHumanNetwork(localVaultNetwork)),
-          }
-        : allNetworksOption,
-    [localVaultNetwork],
+  const filterNetworkVaults = useCallback(
+    ({ protocol }: (typeof vaultsList)[number]) => {
+      const filtered = filterNetworks
+        .map((network) => network.toLowerCase())
+        .includes(protocol.network.toLowerCase())
+
+      return filtered
+    },
+    [filterNetworks],
   )
-  const vaultsNetworksList = useMemo(
-    () => [
-      ...[...new Set(vaultsList.map(({ protocol }) => protocol.network))].map((network) => ({
-        iconName: networkIconByNetworkName[network] as IconNamesList,
-        value: network,
-        label: capitalize(sdkNetworkToHumanNetwork(network)),
-      })),
-      allNetworksOption,
-    ],
-    [vaultsList],
+
+  const sortVaults = useCallback(
+    (a: (typeof vaultsList)[number], b: (typeof vaultsList)[number]) => {
+      const aTvl = a.totalValueLockedUSD
+      const bTvl = b.totalValueLockedUSD
+      const aRewards = getSumrTokenBonus(
+        a.rewardTokens,
+        a.rewardTokenEmissionsAmount,
+        estimatedSumrPrice,
+        aTvl,
+      ).rawSumrTokenBonus
+      const bRewards = getSumrTokenBonus(
+        b.rewardTokens,
+        b.rewardTokenEmissionsAmount,
+        estimatedSumrPrice,
+        bTvl,
+      ).rawSumrTokenBonus
+
+      if (sortingMethodId === VaultsSorting.HIGHEST_TVL) {
+        return Number(aTvl) > Number(bTvl) ? -1 : 1
+      }
+      if (sortingMethodId === VaultsSorting.HIGHEST_REWARDS) {
+        return Number(aRewards) > Number(bRewards) ? -1 : 1
+      }
+
+      const aApy = vaultsApyByNetworkMap[`${a.id}-${subgraphNetworkToId(a.protocol.network)}`]
+      const bApy = vaultsApyByNetworkMap[`${b.id}-${subgraphNetworkToId(b.protocol.network)}`]
+
+      // default sorting method which is VaultsSorting.HIGHEST_APY
+      return Number(aApy.apy) > Number(bApy.apy) ? -1 : 1
+    },
+    [vaultsApyByNetworkMap, estimatedSumrPrice, sortingMethodId],
+  )
+
+  const filteredSafeVaultsList = useMemo(() => {
+    // the 'safe' means theres always gonna be a vault on this list (even if the filteredAndSortedVaults
+    // is empty due to filters) but we try to make it at least have something in common with the filters
+    const [vaultFilteredByNetwork] = vaultsList.filter(filterNetworkVaults)
+    const [vaultFilteredByAssets] = vaultsList
+      .filter(filterAssetVaults)
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      .filter((vault) => vault.id !== vaultFilteredByNetwork?.id)
+
+    const vaultsSafeSorted = [vaultFilteredByAssets, vaultFilteredByNetwork]
+      .filter(Boolean)
+      .sort(sortVaults)
+
+    return [...(vaultsSafeSorted.length ? vaultsSafeSorted : [vaultsList[0]])]
+  }, [filterAssetVaults, filterNetworkVaults, sortVaults, vaultsList])
+
+  const filteredAndSortedVaults = useMemo(() => {
+    const networkFilteredVaults = filterNetworks.length
+      ? vaultsList.filter(filterNetworkVaults)
+      : vaultsList
+
+    const assetFilteredVaults = filterAssets.length
+      ? (networkFilteredVaults.filter(filterAssetVaults) as SDKVaultishType[] | undefined)
+      : networkFilteredVaults
+
+    const sortedVaults = assetFilteredVaults?.sort(sortVaults)
+
+    return sortedVaults
+  }, [sortVaults, filterNetworks, filterNetworkVaults, filterAssetVaults, vaultsList, filterAssets])
+
+  const [selectedVaultId, setSelectedVaultId] = useState<string | undefined>(
+    filteredAndSortedVaults?.length
+      ? getUniqueVaultId(filteredAndSortedVaults[0])
+      : getUniqueVaultId(filteredSafeVaultsList[0]),
   )
 
   const selectedVaultData = useMemo(
-    () => vaultsList.find((vault) => getUniqueVaultId(vault) === selectedVaultId),
-    [vaultsList, selectedVaultId],
+    () =>
+      filteredAndSortedVaults?.find((vault) => getUniqueVaultId(vault) === selectedVaultId) ??
+      filteredSafeVaultsList.find((vault) => getUniqueVaultId(vault) === selectedVaultId),
+    [filteredAndSortedVaults, filteredSafeVaultsList, selectedVaultId],
   )
 
-  const resolvedVaultData = selectedVaultData ?? networkFilteredVaults[0]
+  const usingSafeVaultsList = !filteredAndSortedVaults?.[0]
+  const resolvedVaultData =
+    selectedVaultData ?? filteredAndSortedVaults?.[0] ?? filteredSafeVaultsList[0]
+
+  useEffect(() => {
+    // update the selected vault id when the query params change
+    const nextSafeSelectedVault = filteredAndSortedVaults?.length
+      ? getUniqueVaultId(filteredAndSortedVaults[0])
+      : getUniqueVaultId(filteredSafeVaultsList[0])
+
+    if (selectedVaultId !== nextSafeSelectedVault) {
+      const tempVaultsIdList = filteredAndSortedVaults?.map((vault) => {
+        return getUniqueVaultId(vault)
+      })
+
+      if (selectedVaultId && !tempVaultsIdList?.includes(selectedVaultId) && !usingSafeVaultsList) {
+        setSelectedVaultId(nextSafeSelectedVault)
+      }
+    }
+  }, [filteredAndSortedVaults, filteredSafeVaultsList, selectedVaultId, usingSafeVaultsList])
+
   const { userWalletAddress } = useUserWallet()
 
   const { position: positionExists, isLoading } = usePosition({
@@ -144,24 +288,6 @@ export const VaultsListView = ({
     network: resolvedVaultData.protocol.network,
     vaultTokenSymbol: resolvedVaultData.inputToken.symbol,
   })
-
-  const handleChangeNetwork = (selected: DropdownRawOption) => {
-    setLocalVaultNetwork(selected.value as VaultsListViewProps['selectedNetwork'])
-    switch (selected.value) {
-      case 'all-networks':
-        softRouterPush('/earn')
-
-        break
-
-      default:
-        if (selectedVaultData && selectedVaultData.protocol.network !== selected.value) {
-          setSelectedVaultId(undefined)
-        }
-        softRouterPush(`/earn/${sdkNetworkToHumanNetwork(selected.value as SDKNetwork)}`)
-
-        break
-    }
-  }
 
   const handleChangeVault = (nextselectedVaultId: string) => {
     if (nextselectedVaultId === selectedVaultId) {
@@ -227,18 +353,86 @@ export const VaultsListView = ({
     rawToTokenAmount,
   })
 
+  const assetsList = useMemo(
+    () =>
+      mapTokensToMultiselectOptions(vaultsList).filter((option) => {
+        return option.token !== 'USD₮0' // remove the fancy glyphs
+      }),
+    [vaultsList],
+  )
+  const tokenOptionGroups = useMemo(
+    () => [
+      {
+        id: 'all-tokens',
+        key: 'All tokens',
+        icon: 'earn_network_all' as IconNamesList,
+        buttonStyle: {
+          paddingLeft: '8px',
+          paddingTop: '4px',
+          paddingBottom: '4px',
+        },
+        options: assetsList.map(({ value }) => value),
+      },
+      {
+        id: 'all-stables',
+        key: 'All stables',
+        icon: 'usd_circle' as IconNamesList,
+        buttonStyle: {
+          paddingLeft: '8px',
+          paddingTop: '4px',
+          paddingBottom: '4px',
+        },
+        iconStyle: {
+          color: '#777576',
+        },
+        options: assetsList.map(({ value }) => value).filter(filterStablecoins),
+      },
+    ],
+    [assetsList],
+  )
+
+  const vaultsNetworksList = useMemo(
+    () => [
+      ...[...new Set(vaultsList.map(({ protocol }) => protocol.network))].map((network) => ({
+        icon: networkIconByNetworkName[network] as IconNamesList,
+        value: network,
+        label: capitalize(sdkNetworkToHumanNetwork(network)),
+      })),
+    ],
+    [vaultsList],
+  )
+  const vaultsNetworksOptionGroups = useMemo(() => {
+    return [
+      {
+        id: 'all-networks',
+        key: 'All networks',
+        icon: 'earn_network_all' as IconNamesList,
+        buttonStyle: {
+          paddingLeft: '8px',
+          paddingTop: '4px',
+          paddingBottom: '4px',
+        },
+        options: vaultsNetworksList.map(({ value }) => value),
+      },
+    ]
+  }, [vaultsNetworksList])
+
+  const selectedSortingMethod = useMemo(() => {
+    const sortingMethod = sortingMethods.find(({ id }) => id === sortingMethodId)
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return sortingMethod ?? sortingMethods.find(({ id }) => id === 'highest-apy')! // selecting the default one
+  }, [sortingMethodId])
+
   return (
     <VaultGrid
       isMobileOrTablet={isMobileOrTablet}
-      networksList={vaultsNetworksList}
-      selectedNetwork={selectedNetworkOption}
-      onChangeNetwork={handleChangeNetwork}
       onRefresh={revalidateVaultsListData}
       topContent={
         <SimpleGrid
           columns={isMobile ? 1 : 3}
           rows={isMobile ? 3 : 1}
-          style={{ justifyItems: 'stretch' }}
+          className={vaultsListViewStyles.topContentGrid}
           gap={isMobile ? 16 : isTablet ? 64 : 170}
         >
           <DataBlock
@@ -267,28 +461,117 @@ export const VaultsListView = ({
       }
       leftContent={
         <>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div className={vaultsListViewStyles.leftHeaderRow}>
             <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
               1. Choose a strategy
             </Text>
           </div>
-          {networkFilteredVaults.map((vault, vaultIndex) => (
-            <VaultCard
-              key={getUniqueVaultId(vault)}
-              {...vault}
-              withHover
-              selected={
-                selectedVaultId === getUniqueVaultId(vault) ||
-                (!selectedVaultId && vaultIndex === 0)
-              }
-              onClick={handleChangeVault}
-              withTokenBonus={sumrNetApyConfig.withSumr}
-              sumrPrice={estimatedSumrPrice}
-              vaultApyData={
-                vaultsApyByNetworkMap[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
-              }
-            />
-          ))}
+          <div className={vaultsListViewStyles.leftHeaderFiltersRow}>
+            <div className={vaultsListViewStyles.filtersGroup}>
+              <GenericMultiselect
+                options={assetsList}
+                label="Tokens"
+                onChange={(assets) => {
+                  updateQueryParams(queryParams, { assets })
+                }}
+                initialValues={filterAssets}
+                optionGroups={tokenOptionGroups}
+                style={{ width: isMobile ? '100%' : 'fit-content' }}
+              />
+              <GenericMultiselect
+                options={vaultsNetworksList}
+                label="Networks"
+                onChange={(networks) => {
+                  updateQueryParams(queryParams, { networks })
+                }}
+                initialValues={filterNetworks}
+                optionGroups={vaultsNetworksOptionGroups}
+                style={{ width: isMobile ? '100%' : 'fit-content' }}
+              />
+            </div>
+            <Dropdown
+              dropdownValue={{
+                value: selectedSortingMethod.id,
+                content: <VaultsSortingItem label={selectedSortingMethod.label} />,
+              }}
+              options={sortingMethods.map(({ id, label }) => ({
+                value: id,
+                content: <VaultsSortingItem label={label} />,
+              }))}
+              onChange={(sorting: DropdownRawOption) => {
+                updateQueryParams(queryParams, { sorting })
+              }}
+              asPill
+            >
+              <VaultsSortingItem
+                label={selectedSortingMethod.label}
+                style={{ padding: '0 15px' }}
+              />
+            </Dropdown>
+          </div>
+          {filteredAndSortedVaults?.length ? (
+            filteredAndSortedVaults.map((vault, vaultIndex) => (
+              <VaultCard
+                key={getUniqueVaultId(vault)}
+                {...vault}
+                withHover
+                selected={
+                  selectedVaultId === getUniqueVaultId(vault) ||
+                  (!selectedVaultId && vaultIndex === 0)
+                }
+                onClick={handleChangeVault}
+                withTokenBonus={sumrNetApyConfig.withSumr}
+                sumrPrice={estimatedSumrPrice}
+                vaultApyData={
+                  vaultsApyByNetworkMap[
+                    `${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`
+                  ]
+                }
+              />
+            ))
+          ) : (
+            <div className={vaultsListViewStyles.noVaultsWrapper}>
+              <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+                No vaults available
+                {filterNetworks.length
+                  ? ` for ${filterNetworks.map((network) => capitalize(sdkNetworkToHumanNetwork(network as SDKNetwork))).join(' and ')}`
+                  : ''}
+                {filterAssets.length
+                  ? ` with ${filterAssets.join(' and ')} token${filterAssets.length > 1 ? 's' : ''}`
+                  : ''}
+              </Text>
+              <Text
+                as="p"
+                variant="p1semiColorful"
+                style={{ color: 'var(--earn-protocol-secondary-60)' }}
+              >
+                You might like these:
+              </Text>
+            </div>
+          )}
+          {usingSafeVaultsList && (
+            <>
+              {filteredSafeVaultsList.map((vault, vaultIndex) => (
+                <VaultCard
+                  key={getUniqueVaultId(vault)}
+                  {...vault}
+                  withHover
+                  selected={
+                    selectedVaultId === getUniqueVaultId(vault) ||
+                    (!selectedVaultId && vaultIndex === 0)
+                  }
+                  onClick={handleChangeVault}
+                  withTokenBonus={sumrNetApyConfig.withSumr}
+                  sumrPrice={estimatedSumrPrice}
+                  vaultApyData={
+                    vaultsApyByNetworkMap[
+                      `${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`
+                    ]
+                  }
+                />
+              ))}
+            </>
+          )}
         </>
       }
       rightContent={

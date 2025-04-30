@@ -63,8 +63,8 @@ const mapPositionHistory = (
 
     // backfill the hourly position history with 0 values
     if (pointIndex === 0) {
-      const chartStartTime7d = dayjs(thresholdHistorical7d * 1000).subtract(7, 'days')
-      const chartStartTime30d = dayjs(thresholdHistorical30d * 1000).subtract(30, 'days')
+      const chartStartTime7d = dayjs(thresholdHistorical7d * 1000)
+      const chartStartTime30d = dayjs(thresholdHistorical30d * 1000)
       const hoursNeededFor7dChart = timestamp.diff(chartStartTime7d, 'hours')
       const hoursNeededFor30dChart = timestamp.diff(chartStartTime30d, 'hours')
 
@@ -130,9 +130,9 @@ const mapPositionHistory = (
 
     // backfill the daily position history with 0 values
     if (pointIndex === 0) {
-      const chartStartTime90d = dayjs(thresholdHistorical90d * 1000).subtract(90, 'days')
-      const chartStartTime6m = dayjs(thresholdHistorical6m * 1000).subtract(6, 'months')
-      const chartStartTime1y = dayjs(thresholdHistorical1y * 1000).subtract(1, 'year')
+      const chartStartTime90d = dayjs(thresholdHistorical90d * 1000)
+      const chartStartTime6m = dayjs(thresholdHistorical6m * 1000)
+      const chartStartTime1y = dayjs(thresholdHistorical1y * 1000)
       const daysNeededFor90dChart = timestamp.diff(chartStartTime90d, 'days')
       const daysNeededFor6mChart = timestamp.diff(chartStartTime6m, 'days')
       const daysNeededFor1yChart = timestamp.diff(chartStartTime1y, 'days')
@@ -214,7 +214,7 @@ const mapPositionHistory = (
 
     // backfill the weekly position history with 0 values
     if (pointIndex === 0) {
-      const chartStartTime3y = dayjs(thresholdHistorical3y * 1000).subtract(3, 'years')
+      const chartStartTime3y = dayjs(thresholdHistorical3y * 1000)
       const weeksNeededFor3yChart = timestamp.diff(chartStartTime3y, 'weeks')
 
       for (let i = 0; i < weeksNeededFor3yChart; i++) {

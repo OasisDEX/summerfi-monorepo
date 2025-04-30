@@ -1,0 +1,68 @@
+/* Main container styles */
+.container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+}
+
+.animated {
+  opacity: 0;
+  animation-name: fadeInGameStartScreen;
+  animation-duration: 0.4s;
+  animation-timing-function: ease-in;
+  animation-fill-mode: both;
+}
+
+.title {
+  font-size: 64px;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.description {
+  font-size: 22px;
+  max-width: 620px;
+  text-align: center;
+  margin-bottom: 32px;
+  color: #efefef;
+}
+
+@keyframes fadeInGameStartScreen {
+  from {
+    opacity: 0;
+    /* Start with opacity 0 */
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    /* Fade in to full opacity */
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 8px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .description {
+    font-size: 15px;
+    margin-bottom: 18px;
+  }
+
+  .button,
+  .buttonHowTo {
+    width: 100%;
+    font-size: 16px;
+    padding: 12px 0;
+  }
+}

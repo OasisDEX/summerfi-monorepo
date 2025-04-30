@@ -37,6 +37,7 @@ export interface EarnNavigationProps {
   signupComponent?: ReactNode
   noNavMargin?: boolean
   onLogoClick?: () => void
+  startTheGame?: () => void
 }
 
 export const Navigation: FC<EarnNavigationProps> = ({
@@ -50,6 +51,7 @@ export const Navigation: FC<EarnNavigationProps> = ({
   signupComponent,
   noNavMargin = false,
   onLogoClick,
+  startTheGame,
 }) => {
   const [tempCurrentPath, setTempCurrentPath] = useState(currentPath)
   const [mobileMenuOpened, setMobileMenuOpened] = useState(false)
@@ -87,6 +89,7 @@ export const Navigation: FC<EarnNavigationProps> = ({
           signUpComponent={signupComponent}
           toggleMobileMenu={toggleMobileMenu}
           configComponent={configComponent}
+          startTheGame={startTheGame}
         />
       </header>
       {(isMobile || isTablet) && (

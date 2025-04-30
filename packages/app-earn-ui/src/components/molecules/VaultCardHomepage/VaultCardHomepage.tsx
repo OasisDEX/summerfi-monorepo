@@ -8,19 +8,18 @@ import {
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
-import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
 import { AdditionalBonusLabel } from '@/components/atoms/AdditionalBonusLabel/AdditionalBonusLabel'
 import { Button } from '@/components/atoms/Button/Button'
 import { Card } from '@/components/atoms/Card/Card'
 import { Icon } from '@/components/atoms/Icon/Icon'
+import { Risk } from '@/components/atoms/Risk/Risk'
 import { Text } from '@/components/atoms/Text/Text'
 import { VaultTitle } from '@/components/molecules/VaultTitle/VaultTitle'
 import { getDisplayToken } from '@/helpers/get-display-token'
 import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getVaultUrl } from '@/helpers/get-vault-url'
-import { riskColors } from '@/helpers/risk-colors'
 
 import vaultCardHomepageStyles from './VaultCardHomepage.module.scss'
 
@@ -216,16 +215,8 @@ export const VaultCardHomepage = ({
             <DataBlock
               title="Risk"
               titleIcon="clock"
-              contentDesktop={
-                <Text variant="p1semi" style={{ color: riskColors[customFields?.risk ?? 'lower'] }}>
-                  {capitalize(customFields?.risk ?? 'lower')} risk
-                </Text>
-              }
-              contentMobile={
-                <Text variant="p2semi" style={{ color: riskColors[customFields?.risk ?? 'lower'] }}>
-                  {capitalize(customFields?.risk ?? 'lower')} risk
-                </Text>
-              }
+              contentDesktop={<Risk risk={customFields?.risk ?? 'lower'} variant="p1semi" />}
+              contentMobile={<Risk risk={customFields?.risk ?? 'lower'} variant="p2semi" />}
             />
           </div>
         </div>

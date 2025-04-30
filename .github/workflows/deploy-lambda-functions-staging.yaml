@@ -1,9 +1,11 @@
 name: 'Deploy Lambda Functions Staging'
 concurrency: staging
 on:
-  push:
-    branches:
-      - dev
+  workflow_dispatch:
+  # temporarly changed to manual deploy since we are switching to new workflow
+  # push:
+  #   branches:
+  #     - dev
 
 permissions:
   id-token: write # This is required for requesting the JWT

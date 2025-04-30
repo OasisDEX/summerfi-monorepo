@@ -17,7 +17,7 @@ const mapStrategiesToMultiselectOptions = (
     value: getUniqueVaultId(vault),
   }))
 
-const mapTokensToMultiselectOptions = (
+export const mapTokensToMultiselectOptions = (
   vaultsList: SDKVaultsListType,
 ): GenericMultiselectOption[] => {
   const uniqueTokenSymbolList = [

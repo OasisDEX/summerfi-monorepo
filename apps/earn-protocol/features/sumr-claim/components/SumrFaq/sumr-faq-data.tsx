@@ -109,7 +109,7 @@ export const sumrFaqData = [
             href={`${INTERNAL_LINKS.summerLazy}/earn/sumr`}
             style={{ color: 'var(--earn-protocol-primary-100)' }}
           >
-            lazy.summer.fi
+            summer.fi
           </Link>
         </Text>
       </>

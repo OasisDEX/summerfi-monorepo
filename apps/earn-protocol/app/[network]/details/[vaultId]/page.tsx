@@ -1,6 +1,7 @@
 import { Text, VaultGridDetails } from '@summerfi/app-earn-ui'
 import { type SDKNetwork } from '@summerfi/app-types'
 import {
+  getVaultNiceName,
   humanNetworktoSDKNetwork,
   parseServerResponseToClient,
   subgraphNetworkToId,
@@ -106,18 +107,18 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
     vaultInterestRates,
   })
 
-  const summerVaultName = vault.customFields?.name ?? `Summer ${vault.inputToken.symbol} Vault`
+  const summerVaultName = getVaultNiceName({ vault: vaultWithConfig })
 
   const totalRebalanceActions = rebalanceActivity.pagination.totalItems
   const totalUsers = topDepositors.pagination.totalItems
   const vaultApyData = vaultsApyRaw[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
 
   return (
-    <VaultGridDetails vault={vault} vaults={allVaultsWithConfig}>
+    <VaultGridDetails vault={vaultWithConfig} vaults={allVaultsWithConfig}>
       <VaultDetailsView
         arksHistoricalChartData={arksHistoricalChartData}
         summerVaultName={summerVaultName}
-        vault={vault}
+        vault={vaultWithConfig}
         arksInterestRates={arkInterestRatesMap}
         vaults={vaults}
         totalRebalanceActions={totalRebalanceActions}
