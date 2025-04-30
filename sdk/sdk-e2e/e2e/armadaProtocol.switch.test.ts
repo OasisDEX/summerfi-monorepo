@@ -31,24 +31,24 @@ const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
 describe('Armada Protocol Switch', () => {
   const main = async () => {
     const chainInfo = getChainInfoByChainId(chainId)
-    // await runTests({
-    //   chainInfo,
-    //   sourceFleetAddress: usdcFleet,
-    //   destinationFleetAddress: ethFleet,
-    //   rpcUrl,
-    // })
+    await runTests({
+      chainInfo,
+      sourceFleetAddress: usdcFleet,
+      destinationFleetAddress: ethFleet,
+      rpcUrl,
+    })
     // await runTests({
     //   chainInfo,
     //   sourceFleetAddress: ethFleet,
     //   destinationFleetAddress: eurcFleet,
     //   rpcUrl,
     // })
-    await runTests({
-      chainInfo,
-      sourceFleetAddress: eurcFleet,
-      destinationFleetAddress: usdcFleet,
-      rpcUrl,
-    })
+    // await runTests({
+    //   chainInfo,
+    //   sourceFleetAddress: eurcFleet,
+    //   destinationFleetAddress: usdcFleet,
+    //   rpcUrl,
+    // })
   }
   main()
 
@@ -110,6 +110,10 @@ describe('Armada Protocol Switch', () => {
       assert(
         sourcePositionBefore !== undefined,
         `Source position should be defined for ${sourceFleetAddress.value}`,
+      )
+      assert(
+        sourcePositionBefore.amount.toSolidityValue() > 0,
+        `Source position value should be greater than 0 for ${sourceFleetAddress.value}`,
       )
 
       console.log(
