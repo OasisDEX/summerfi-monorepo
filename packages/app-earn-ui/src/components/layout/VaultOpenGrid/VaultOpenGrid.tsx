@@ -359,7 +359,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                       gap: 'var(--general-space-20)',
                     }}
                   >
-                    ${formatDecimalAsPercent(depositCapUsed)} filled
+                    {formatDecimalAsPercent(depositCapUsed)} filled
                     <ChartBar value={formatDecimalAsPercent(depositCapUsed)} />
                   </div>
                 }
