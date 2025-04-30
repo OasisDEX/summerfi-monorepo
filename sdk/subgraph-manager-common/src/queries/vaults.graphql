@@ -53,6 +53,7 @@ query GetVaults {
     inputTokenPriceUSD
     outputTokenPriceUSD
     depositLimit
+    depositCap
     createdTimestamp
     totalValueLockedUSD
     cumulativeTotalRevenueUSD
@@ -118,6 +119,7 @@ query GetVault($id: ID!) {
     inputTokenPriceUSD
     outputTokenPriceUSD
     depositLimit
+    depositCap
     createdTimestamp
     totalValueLockedUSD
     cumulativeTotalRevenueUSD
