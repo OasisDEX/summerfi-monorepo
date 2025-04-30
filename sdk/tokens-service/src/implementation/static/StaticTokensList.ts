@@ -1205,5 +1205,13 @@ export const StaticTokensData: TokenListData = {
       chainId: ChainIds.Mainnet,
       logoURI: 'https://tokens.1inch.io/0x8292Bb45bf1Ee4d140127049757C2E0fF06317eD.png',
     },
+    {
+      name: 'PT Ethereal eUSDE',
+      address: '0x50D2C7992b802Eef16c04FeADAB310f31866a545',
+      symbol: 'eUSDE',
+      decimals: 18,
+      chainId: ChainIds.Mainnet,
+      logoURI: 'https://tokens.1inch.io/0x8292Bb45bf1Ee4d140127049757C2E0fF06317eD.png',
+    },
   ],
 }
