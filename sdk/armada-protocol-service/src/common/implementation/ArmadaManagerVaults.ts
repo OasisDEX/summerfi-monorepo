@@ -119,14 +119,12 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     if (!sourceFleetToken.address.equals(withdrawAmount.token.address)) {
       throw new Error('Source fleet token must be the same as the amount token')
     }
-    const fromEth = sourceFleetToken.symbol === 'ETH'
 
     const destinationFleet = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.destinationVaultId.chainInfo,
       address: params.destinationVaultId.fleetAddress,
     })
     const destinationFleetToken = await destinationFleet.asErc4626().asset()
-    const toEth = destinationFleetToken.symbol === 'ETH'
 
     const shouldSwap = !destinationFleetToken.equals(sourceFleetToken)
 
@@ -153,13 +151,9 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       beforeStakedShares: beforeStakedShares.toString(),
       withdrawAmount: withdrawAmount.toString(),
       calculatedSharesToWithdraw: calculatedSharesToWithdraw.toString(),
-      fromEth,
-      toEth,
       shouldSwap,
-      sourceVaultId: params.sourceVaultId.fleetAddress.value,
-      destinationVaultId: params.destinationVaultId.fleetAddress.value,
-      sourceFleetToken,
-      destinationFleetToken,
+      sourceFleetToken: sourceFleetToken.toString(),
+      destinationFleetToken: destinationFleetToken.toString(),
     })
 
     const admiralsQuartersAddress = getDeployedContractAddress({
@@ -173,29 +167,31 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
 
     // Deposit logic
     const shouldStake = params.shouldStake ?? true
+    // should compensate the tip during withdrawal
+    const depositAmount = this._compensateAmount(withdrawAmount, 'decrease')
 
     const depositMulticallArgs: HexData[] = []
     const depositMulticallOperations: string[] = []
     const depositTokensCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'depositTokens',
-      args: [withdrawAmount.token.address.value, withdrawAmount.toSolidityValue()],
+      args: [depositAmount.token.address.value, depositAmount.toSolidityValue()],
     })
     depositMulticallArgs.push(depositTokensCalldata)
-    depositMulticallOperations.push('depositTokens ' + withdrawAmount.toString())
+    depositMulticallOperations.push('depositTokens ' + depositAmount.toString())
 
     // If depositing a token that is not the fleet token,
     // we need to swap it to fleet asset
     if (shouldSwap) {
       const swapCall = await this._utils.getSwapCall({
         vaultId: params.sourceVaultId,
-        fromAmount: withdrawAmount,
+        fromAmount: depositAmount,
         toToken: destinationFleetToken,
         slippage: params.slippage,
       })
       depositMulticallArgs.push(swapCall.calldata)
       depositMulticallOperations.push(
-        `swap ${withdrawAmount.toString()} to min ${swapCall.minAmount.toString()}`,
+        `swap ${depositAmount.toString()} to min ${swapCall.minAmount.toString()}`,
       )
 
       swapToAmount = swapCall.toAmount
@@ -256,14 +252,9 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
             vaultId: params.sourceVaultId,
             slippage: params.slippage,
             amount: withdrawAmount,
-            // if withdraw is WETH and unwrapping to ETH,
-            // we need to withdraw WETH for later deposit & unwrap operation
-            swapToToken:
-              withdrawAmount.token.symbol === 'WETH' && toEth
-                ? withdrawAmount.token
-                : destinationFleetToken,
-            shouldSwap,
-            toEth,
+            withdrawToken: withdrawAmount.token,
+            shouldSwap: false, //override as we do swap in deposit
+            toEth: false,
           }),
           swapToAmount &&
             this._utils.getPriceImpact({
@@ -644,7 +635,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
               amount: withdrawAmount,
               // if withdraw is WETH and unwrapping to ETH,
               // we need to withdraw WETH for later deposit & unwrap operation
-              swapToToken:
+              withdrawToken:
                 withdrawAmount.token.symbol === 'WETH' && toEth
                   ? withdrawAmount.token
                   : swapToToken,
@@ -749,7 +740,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
             exitAll: true,
             // if withdraw is WETH and unwrapping to ETH,
             // we need to withdraw WETH for later deposit & unwrap operation
-            swapToToken:
+            withdrawToken:
               calculatedUnstakedAssets.token.symbol === 'WETH' && toEth
                 ? calculatedUnstakedAssets.token
                 : swapToToken,
@@ -1103,7 +1094,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
   private async _getExitWithdrawMulticall(params: {
     vaultId: IArmadaVaultId
     amount: ITokenAmount
-    swapToToken: IToken
+    withdrawToken: IToken
     slippage: IPercentage
     toEth: boolean
     shouldSwap: boolean
@@ -1126,7 +1117,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     multicallArgs.push(exitFleetCalldata)
     multicallOperations.push('exitFleet ' + fromAmount.token.toString() + ' (all)')
 
-    let toToken = params.swapToToken
+    let toToken = params.withdrawToken
     // if the out token is ETH, we need to use wrapped ETH to withdraw
     if (params.toEth) {
       toToken = await this._tokensManager.getTokenBySymbol({
@@ -1152,27 +1143,29 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
         `swap ${compensatedFromAmount.toString()} to min ${swapCall.minAmount.toString()}`,
       )
 
-      const withdrawTokensCalldata = encodeFunctionData({
+      const withdrawRemainingDustAfterSwapCalldata = encodeFunctionData({
         abi: AdmiralsQuartersAbi,
         functionName: 'withdrawTokens',
         args: [fromAmount.token.address.value, 0n],
       })
-      multicallArgs.push(withdrawTokensCalldata)
-      multicallOperations.push('withdrawTokens ' + fromAmount.token.toString() + ' (all)')
+      multicallArgs.push(withdrawRemainingDustAfterSwapCalldata)
+      multicallOperations.push(
+        'withdrawRemainingDustAfterSwap ' + fromAmount.token.toString() + ' (all)',
+      )
     }
 
-    const withdrawAmount = TokenAmount.createFromBaseUnit({
-      token: params.swapToToken,
+    const withdrawAll = TokenAmount.createFromBaseUnit({
+      token: params.withdrawToken,
       amount: '0', // all
     })
 
     const withdrawTokensCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'withdrawTokens',
-      args: [withdrawAmount.token.address.value, withdrawAmount.toSolidityValue()],
+      args: [withdrawAll.token.address.value, withdrawAll.toSolidityValue()],
     })
     multicallArgs.push(withdrawTokensCalldata)
-    multicallOperations.push('withdrawTokens ' + withdrawAmount.toString())
+    multicallOperations.push('withdrawTokens' + withdrawAll.token.toString() + ' (all)')
 
     return { multicallArgs, multicallOperations }
   }
