@@ -384,6 +384,7 @@ export const VaultManageViewComponent = ({
       currentVault={vault}
       potentialVaults={potentialVaultsToSwitchTo}
       chainId={vaultChainId as unknown as NetworkIds}
+      vaultsApyByNetworkMap={vaultsApyByNetworkMap}
     />
   ) : (
     <ControlsDepositWithdraw
