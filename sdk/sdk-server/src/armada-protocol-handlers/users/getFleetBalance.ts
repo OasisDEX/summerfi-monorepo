@@ -10,5 +10,5 @@ export const getFleetBalance = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.getFleetBalance(opts.input)
+    return opts.ctx.armadaManager.utils.getFleetBalance(opts.input)
   })

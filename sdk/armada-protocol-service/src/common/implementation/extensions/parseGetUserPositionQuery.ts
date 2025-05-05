@@ -17,10 +17,10 @@ export const parseGetUserPositionQuery = ({
   query: GetUserPositionQuery
   summerToken: IToken
   getTokenBySymbol: (params: { chainInfo: IChainInfo; symbol: string }) => IToken
-}): IArmadaPosition => {
+}): IArmadaPosition | undefined => {
   const chainInfo = user.chainInfo
   const armadaPositions = query.positions.map(
     mapGraphDataToArmadaPosition({ user, chainInfo, summerToken, getTokenBySymbol }),
   )
-  return armadaPositions[0]
+  return armadaPositions[0] ? armadaPositions[0] : undefined
 }

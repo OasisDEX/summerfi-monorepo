@@ -9,5 +9,5 @@ export const setTipJar = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.setTipJar(opts.input)
+    return opts.ctx.armadaManager.utils.setTipJar(opts.input)
   })

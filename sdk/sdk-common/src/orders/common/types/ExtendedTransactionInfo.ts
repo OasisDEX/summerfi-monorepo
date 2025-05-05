@@ -3,6 +3,7 @@ import type { IAddress } from '../../../common/interfaces/IAddress'
 import type { IPrice } from '../../../common/interfaces/IPrice'
 import type { IPercentage } from '../../../common/interfaces/IPercentage'
 import type { Transaction } from './Transaction'
+import type { IArmadaVaultId } from '../../../common/interfaces/IArmadaVaultId'
 
 /**
  * @enum TransactionType
@@ -19,16 +20,17 @@ export enum TransactionType {
   Migration = 'Migration',
   Bridge = 'Bridge',
   Send = 'Send',
-}
-
-export type TransactionMetadataApproval = {
-  approvalAmount: ITokenAmount
-  approvalSpender: IAddress
+  VaultSwitch = 'VaultSwitch',
 }
 
 export type TransactionPriceImpact = {
   price: IPrice | null
   impact: IPercentage | null
+}
+
+export type TransactionMetadataApproval = {
+  approvalAmount: ITokenAmount
+  approvalSpender: IAddress
 }
 
 export type TransactionMetadataDeposit = {
@@ -56,6 +58,15 @@ export type TransactionMetadataMigration = {
   priceImpactByPositionId: Record<string, TransactionPriceImpact>
 }
 
+export type TransactionMetadataVaultSwitch = {
+  fromVault: IArmadaVaultId
+  toVault: IArmadaVaultId
+  fromAmount: ITokenAmount
+  toAmount?: ITokenAmount
+  priceImpact?: TransactionPriceImpact
+  slippage: IPercentage
+}
+
 type TransactionInfo = {
   transaction: Transaction
   description: string
@@ -76,19 +87,15 @@ export type WithdrawTransactionInfo = TransactionInfo & {
   metadata: TransactionMetadataWithdraw
 }
 
+export type VaultSwitchTransactionInfo = TransactionInfo & {
+  type: TransactionType.VaultSwitch
+  metadata: TransactionMetadataVaultSwitch
+}
+
 export type BridgeTransactionInfo = TransactionInfo & {
   type: TransactionType.Bridge
   metadata: TransactionMetadataBridge
 }
-
-/**
- * @interface Deposit/Withdraw DO NOT EXTEND THIS INTERFACE
- * @description Contains the information of a deposit or withdraw transaction.
- */
-export type ExtendedTransactionInfo =
-  | ApproveTransactionInfo
-  | DepositTransactionInfo
-  | WithdrawTransactionInfo
 
 export type ClaimTransactionInfo = TransactionInfo & {
   type: TransactionType.Claim

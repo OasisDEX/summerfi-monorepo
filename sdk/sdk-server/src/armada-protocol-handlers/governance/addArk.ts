@@ -10,5 +10,5 @@ export const addArk = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.addArk(opts.input)
+    return opts.ctx.armadaManager.utils.addArk(opts.input)
   })

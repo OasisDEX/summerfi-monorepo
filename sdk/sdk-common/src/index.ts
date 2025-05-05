@@ -297,18 +297,19 @@ export type {
   TransactionPriceImpact,
   TransactionMetadataDeposit,
   TransactionMetadataWithdraw,
+  TransactionMetadataVaultSwitch,
   TransactionMetadataBridge,
   TransactionMetadataMigration,
   ApproveTransactionInfo,
   DepositTransactionInfo,
   WithdrawTransactionInfo,
   BridgeTransactionInfo,
-  ExtendedTransactionInfo,
   ClaimTransactionInfo,
   DelegateTransactionInfo,
   StakeTransactionInfo,
   UnstakeTransactionInfo,
   MigrationTransactionInfo,
+  VaultSwitchTransactionInfo,
 } from './orders/common/types/ExtendedTransactionInfo'
 export type { Order } from './orders/common/types/Order'
 export type { TransactionInfo } from './orders/common/types/TransactionInfo'
@@ -410,3 +411,5 @@ export type { IUser, IUserData } from './user/interfaces/IUser'
 
 export { Simulation } from './simulation/implementation/Simulation'
 export * as steps from './simulation/interfaces/Steps'
+
+export type { ExtendedTransactionInfo } from './orders/common/types/DEPRECATED'

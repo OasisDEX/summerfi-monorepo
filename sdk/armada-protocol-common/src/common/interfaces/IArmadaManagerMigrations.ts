@@ -54,7 +54,7 @@ export interface IArmadaManagerMigrations {
   }>
 
   /**
-   * @method getMigrationTX
+   * @method getMigrationTx
    * @description Returns the transaction for the migration
    *
    * @param user The user
@@ -66,7 +66,7 @@ export interface IArmadaManagerMigrations {
    * @returns The transaction for the migration
    * @throws Error if the migration type is not supported
    */
-  getMigrationTX(params: {
+  getMigrationTx(params: {
     user: IUser
     vaultId: IArmadaVaultId
     shouldStake?: boolean

@@ -15,14 +15,14 @@ import { setTipRate } from './armada-protocol-handlers/governance/setTipRate'
 import { updateRebalanceCooldown } from './armada-protocol-handlers/governance/updateRebalanceCooldown'
 import { adjustBuffer } from './armada-protocol-handlers/keepers/adjustBuffer'
 import { rebalance } from './armada-protocol-handlers/keepers/rebalance'
-import { getDepositTX } from './armada-protocol-handlers/users/getDepositTX'
+import { getDepositTx } from './armada-protocol-handlers/users/getDepositTxTx'
 import { getVaultsRaw } from './armada-protocol-handlers/users/getVaults'
 import { getVaultRaw } from './armada-protocol-handlers/users/getVault'
 import { getPoolInfo } from './armada-protocol-handlers/users/getPoolInfo'
 import { getPosition as getArmadaPosition } from './armada-protocol-handlers/users/getPosition'
 import { getUserPositions } from './armada-protocol-handlers/users/getUserPositions'
 import { getUserPosition } from './armada-protocol-handlers/users/getUserPosition'
-import { getWithdrawTX } from './armada-protocol-handlers/users/getWithdrawTX'
+import { getWithdrawTx } from './armada-protocol-handlers/users/getWithdrawTxTx'
 import { buildOrder } from './handlers/buildOrder'
 import { getArmadaSimulation } from './handlers/getArmadaSimulation'
 import { getImportSimulation } from './handlers/getImportSimulation'
@@ -62,6 +62,7 @@ import { getBridgeTx } from './armada-protocol-handlers/users/getBridgeTx'
 import { getMigratablePositionsApy } from './armada-protocol-handlers/users/getMigratablePositionsApy'
 import { getSpotPrice } from './handlers/getSpotPrice'
 import { getSpotPrices } from './handlers/getSpotPrices'
+import { getVaultSwitchTx } from './armada-protocol-handlers/users/getVaultSwitchTx'
 
 /**
  * Server
@@ -107,8 +108,8 @@ export const sdkAppRouter = router({
       getPosition: getArmadaPosition,
       getUserPositions: getUserPositions,
       getUserPosition: getUserPosition,
-      getDepositTX: getDepositTX,
-      getWithdrawTX: getWithdrawTX,
+      getDepositTx: getDepositTx,
+      getWithdrawTx: getWithdrawTx,
       getFleetBalance: getFleetBalance,
       getStakedBalance: getStakedBalance,
       getTotalBalance: getTotalBalance,
@@ -117,19 +118,20 @@ export const sdkAppRouter = router({
       getClaimableAggregatedRewards: getClaimableAggregatedRewards,
       getAggregatedClaimsForChainTX: getAggregatedClaimsForChainTX,
       getUserDelegatee: getUserDelegatee,
-      getDelegateTX: getDelegateTx,
+      getDelegateTx: getDelegateTx,
       getUndelegateTx: getUndelegateTx,
       getUserVotes: getUserVotes,
       getUserStakedBalance: getUserStakedBalance,
       getUserEarnedRewards: getUserEarnedRewards,
-      getStakeTX: getStakeTx,
-      getUnstakeTX: getUnstakeTx,
+      getStakeTx: getStakeTx,
+      getUnstakeTx: getUnstakeTx,
       getUserBalance: getUserBalance,
       getSummerToken: getSummerToken,
       getDelegationChainLength: getDelegationChainLength,
       getMigratablePositions: getMigratablePositions,
       getMigratablePositionsApy: getMigratablePositionsApy,
-      getMigrationTX: getMigrationTX,
+      getMigrationTx: getMigrationTX,
+      getVaultSwitchTx: getVaultSwitchTx,
     },
     keepers: {
       rebalance: rebalance,

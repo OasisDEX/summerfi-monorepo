@@ -9,5 +9,5 @@ export const getSummerToken = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return await opts.ctx.armadaManager.getSummerToken(opts.input)
+    return await opts.ctx.armadaManager.utils.getSummerToken(opts.input)
   })

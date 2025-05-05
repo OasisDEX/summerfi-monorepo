@@ -103,6 +103,7 @@ export class RewardsService {
     initialDelay: 2000, // 2 seconds
     backoffFactor: 2,
   }
+  private readonly ONE_HOUR_IN_SECONDS = 3600
   private readonly logger: Logger
   private readonly ratesSubgraphClient: RatesSubgraphClient
 
@@ -262,12 +263,17 @@ export class RewardsService {
     const rewards: Record<string, RewardRate[]> = Object.fromEntries(
       products.map((product) => [product.id, []]),
     )
-
+    const currentTimestampInSeconds = Math.floor(Date.now() / 1000)
+    const timestampHourAgoInSeconds = currentTimestampInSeconds - this.ONE_HOUR_IN_SECONDS
     for (const product of products) {
       const subgraphResult = subgraphResults.products.find((p) => p.id === product.id)
       if (subgraphResult && subgraphResult.rewardsInterestRates.length > 0) {
         // Get the most recent timestamp from the first rate (since they're sorted desc)
         const latestTimestamp = subgraphResult.rewardsInterestRates[0].timestamp
+        // if the latest timestamp is more than 1 hour ago, skip the product
+        if (parseInt(latestTimestamp) < timestampHourAgoInSeconds) {
+          continue
+        }
 
         // Filter rates to only include those from the latest timestamp
         const latestRates = subgraphResult.rewardsInterestRates

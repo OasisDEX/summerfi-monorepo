@@ -52,7 +52,7 @@ export class ArmadaSimulatedPosition extends ArmadaPosition implements IArmadaSi
   async deposit(amount: ITokenAmount) {
     this.amount = this.amount.add(amount)
 
-    this.shares = await this.armadaManager.convertToShares({
+    this.shares = await this.armadaManager.utils.convertToShares({
       vaultId: this.pool.id,
       amount: this.amount,
     })
@@ -68,7 +68,7 @@ export class ArmadaSimulatedPosition extends ArmadaPosition implements IArmadaSi
   async withdraw(amount: ITokenAmount) {
     this.amount = this.amount.subtract(amount)
 
-    this.shares = await this.armadaManager.convertToShares({
+    this.shares = await this.armadaManager.utils.convertToShares({
       vaultId: this.pool.id,
       amount: this.amount,
     })

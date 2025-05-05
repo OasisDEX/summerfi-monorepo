@@ -3,6 +3,7 @@ import {
   getDeployedContractAddress,
   getDeployedGovRewardsManagerAddress,
   type IArmadaManagerGovernance,
+  type IArmadaManagerUtils,
 } from '@summerfi/armada-protocol-common'
 import {
   Address,
@@ -10,7 +11,6 @@ import {
   TransactionType,
   type IAddress,
   type IChainInfo,
-  type IToken,
 } from '@summerfi/sdk-common'
 import { encodeFunctionData, zeroAddress } from 'viem'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
@@ -23,7 +23,7 @@ import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
   private _blockchainClientProvider: IBlockchainClientProvider
   private _allowanceManager: IAllowanceManager
-  private _getSummerToken: (params: { chainInfo: IChainInfo }) => IToken
+  private _utils: IArmadaManagerUtils
 
   private _hubChainSummerTokenAddress: IAddress
   private _hubChainInfo: IChainInfo
@@ -33,12 +33,12 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     blockchainClientProvider: IBlockchainClientProvider
     allowanceManager: IAllowanceManager
     hubChainInfo: IChainInfo
-    getSummerToken: (params: { chainInfo: IChainInfo }) => IToken
+    utils: IArmadaManagerUtils
   }) {
     this._blockchainClientProvider = params.blockchainClientProvider
     this._allowanceManager = params.allowanceManager
     this._hubChainInfo = params.hubChainInfo
-    this._getSummerToken = params.getSummerToken
+    this._utils = params.utils
 
     this._hubChainSummerTokenAddress = getDeployedContractAddress({
       chainInfo: this._hubChainInfo,
@@ -200,7 +200,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       spender: rewardsManagerAddress,
       amount: TokenAmount.createFromBaseUnit({
         amount: params.amount.toString(),
-        token: this._getSummerToken({
+        token: this._utils.getSummerToken({
           chainInfo: this._hubChainInfo,
         }),
       }),

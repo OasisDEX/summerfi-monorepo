@@ -9,5 +9,5 @@ export const emergencyShutdown = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.emergencyShutdown(opts.input)
+    return opts.ctx.armadaManager.utils.emergencyShutdown(opts.input)
   })

@@ -1,8 +1,13 @@
 import {
   BridgeTransactionInfo,
   ITokenAmount,
+  type ApproveTransactionInfo,
   type IArmadaPosition,
+  type IArmadaVaultId,
   type IArmadaVaultInfo,
+  type IPercentage,
+  type IUser,
+  type VaultSwitchTransactionInfo,
 } from '@summerfi/sdk-common'
 import { IArmadaManagerUsersClient } from '../../interfaces/ArmadaManager/IArmadaManagerUsersClient'
 import { IRPCClient } from '../../interfaces/IRPCClient'
@@ -68,7 +73,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   /** @see IArmadaManagerUsersClient.getUserPositions */
   async getUserPosition(
     params: Parameters<IArmadaManagerUsersClient['getUserPosition']>[0],
-  ): Promise<IArmadaPosition> {
+  ): Promise<IArmadaPosition | undefined> {
     return this.rpcClient.armada.users.getUserPosition.query({
       user: params.user,
       fleetAddress: params.fleetAddress,
@@ -78,7 +83,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   /** @see IArmadaManagerUsersClient.getPosition */
   async getPosition(
     params: Parameters<IArmadaManagerUsersClient['getPosition']>[0],
-  ): Promise<IArmadaPosition> {
+  ): Promise<IArmadaPosition | undefined> {
     return this.rpcClient.armada.users.getPosition.query(params)
   }
 
@@ -86,14 +91,14 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   async getNewDepositTX(
     params: Parameters<IArmadaManagerUsersClient['getNewDepositTX']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getNewDepositTX']> {
-    return this.rpcClient.armada.users.getDepositTX.query(params)
+    return this.rpcClient.armada.users.getDepositTx.query(params)
   }
 
   /** @see IArmadaManagerUsersClient.getWithdrawTX */
   async getWithdrawTX(
     params: Parameters<IArmadaManagerUsersClient['getWithdrawTX']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getWithdrawTX']> {
-    return this.rpcClient.armada.users.getWithdrawTX.query(params)
+    return this.rpcClient.armada.users.getWithdrawTx.query(params)
   }
 
   async getStakedBalance(
@@ -157,7 +162,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   async getDelegateTx(
     params: Parameters<IArmadaManagerUsersClient['getDelegateTx']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getDelegateTx']> {
-    return this.rpcClient.armada.users.getDelegateTX.query(params)
+    return this.rpcClient.armada.users.getDelegateTx.query(params)
   }
 
   async getUndelegateTx(): ReturnType<IArmadaManagerUsersClient['getUndelegateTx']> {
@@ -191,13 +196,13 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   async getStakeTx(
     params: Parameters<IArmadaManagerUsersClient['getStakeTx']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getStakeTx']> {
-    return this.rpcClient.armada.users.getStakeTX.query(params)
+    return this.rpcClient.armada.users.getStakeTx.query(params)
   }
 
   async getUnstakeTx(
     params: Parameters<IArmadaManagerUsersClient['getUnstakeTx']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getUnstakeTx']> {
-    return this.rpcClient.armada.users.getUnstakeTX.query(params)
+    return this.rpcClient.armada.users.getUnstakeTx.query(params)
   }
 
   async getDelegationChainLength(
@@ -218,9 +223,15 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getMigratablePositionsApy.query(params)
   }
 
-  async getMigrationTX(
-    params: Parameters<IArmadaManagerUsersClient['getMigrationTX']>[0],
-  ): ReturnType<IArmadaManagerUsersClient['getMigrationTX']> {
-    return this.rpcClient.armada.users.getMigrationTX.query(params)
+  async getMigrationTx(
+    params: Parameters<IArmadaManagerUsersClient['getMigrationTx']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getMigrationTx']> {
+    return this.rpcClient.armada.users.getMigrationTx.query(params)
+  }
+
+  async getVaultSwitchTx(
+    params: Parameters<IArmadaManagerUsersClient['getVaultSwitchTx']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getVaultSwitchTx']> {
+    return this.rpcClient.armada.users.getVaultSwitchTx.query(params)
   }
 }
