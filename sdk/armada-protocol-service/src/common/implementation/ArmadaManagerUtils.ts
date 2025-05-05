@@ -558,7 +558,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
     const slippageComplement = params.slippage.toComplement()
     const minTokensReceived = BigInt(
       new BigNumber(swapData.toTokenAmount.toSolidityValue().toString())
-        .times(slippageComplement.value / 100)
+        .times(new BigNumber(slippageComplement.value).div(100))
         .toFixed(0, BigNumber.ROUND_DOWN),
     )
 
