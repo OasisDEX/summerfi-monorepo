@@ -2,7 +2,7 @@ import type { IArmadaManagerClaims } from './IArmadaManagerClaims'
 import type { IArmadaManagerGovernance } from './IArmadaManagerGovernance'
 import type { IArmadaManagerMigrations } from './IArmadaManagerMigrations'
 import type { IArmadaManagerBridge } from './IArmadaManagerBridge'
-import { IArmadaManagerVaults } from './IArmadaManagerVaults'
+import type { IArmadaManagerVaults } from './IArmadaManagerVaults'
 import type { IArmadaManagerUtils } from './IArmadaManagerUtils'
 /**
  * @name IArmadaManager
