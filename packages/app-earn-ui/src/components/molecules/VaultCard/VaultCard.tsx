@@ -54,6 +54,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     vaultApyData,
     wrapperStyle,
     disabled,
+    depositCap,
   } = props
 
   const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus(
@@ -87,6 +88,12 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
   const apyUpdatedAt = useApyUpdatedAt({
     vaultApyData,
   })
+
+  const depositCapInToken = new BigNumber(depositCap.toString()).div(ten.pow(inputToken.decimals))
+
+  const depositCapUsed = new BigNumber(inputTokenBalance.toString())
+    .div(ten.pow(inputToken.decimals))
+    .div(depositCapInToken)
 
   return (
     <GradientBox
@@ -136,6 +143,16 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
                 (${parsedTotalValueLockedUSD})
               </Text>
             </div>
+            <Text
+              variant="p4semi"
+              style={{
+                margin: 0,
+                color: 'var(--color-text-primary-disabled)',
+              }}
+            >
+              of {formatCryptoBalance(depositCapInToken)}&nbsp;{inputToken.symbol} cap (
+              {formatDecimalAsPercent(depositCapUsed)} used)
+            </Text>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>

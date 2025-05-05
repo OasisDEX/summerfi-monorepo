@@ -5,8 +5,9 @@ import {
   type RiskType,
   type SDKVaultishType,
   type SDKVaultsListType,
+  type VaultApyData,
 } from '@summerfi/app-types'
-import { formatCryptoBalance } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
 import clsx from 'clsx'
 
 import { Card } from '@/components/atoms/Card/Card'
@@ -36,11 +37,13 @@ const VaultSwitchCard = ({
   risk,
   positionBalance,
   apy30d,
+  apyLive,
 }: {
   token: string
   positionBalance?: string
-  apy30d?: string
-  risk: RiskType
+  apy30d?: number
+  apyLive?: number
+  risk?: RiskType
   chainId: NetworkIds
 }) => {
   return (
@@ -52,7 +55,16 @@ const VaultSwitchCard = ({
       <div className={controlsSwitchStyles.dataRow}>
         <div className={controlsSwitchStyles.dataRowColumn}>
           <VaultSwitchCardDataBlock title="Balance" value={positionBalance} />
-          <VaultSwitchCardDataBlock title="30d APY" value={apy30d} />
+          <VaultSwitchCardDataBlock
+            title="30d APY"
+            value={apy30d ? formatDecimalAsPercent(apy30d) : 'n/a'}
+          />
+        </div>
+        <div className={controlsSwitchStyles.dataRowColumn}>
+          <VaultSwitchCardDataBlock
+            title="Live APY"
+            value={apyLive ? formatDecimalAsPercent(apyLive) : 'n/a'}
+          />
         </div>
       </div>
     </Card>
@@ -64,12 +76,18 @@ export const ControlsSwitch = ({
   currentVault,
   potentialVaults,
   chainId,
+  vaultsApyByNetworkMap,
 }: {
   currentPosition: IArmadaPosition
   currentVault: SDKVaultishType
   potentialVaults: SDKVaultsListType
   chainId: NetworkIds
+  vaultsApyByNetworkMap: {
+    [key: `${string}-${number}`]: VaultApyData
+  }
 }): ReactNode => {
+  const currentVaultApy = vaultsApyByNetworkMap[`${currentVault.id}-${chainId}`]
+
   return (
     <div>
       <div className={controlsSwitchStyles.positionAndVaultsListWrapper}>
@@ -81,6 +99,7 @@ export const ControlsSwitch = ({
           positionBalance={`${formatCryptoBalance(currentPosition.amount.amount)} ${
             currentPosition.amount.token.symbol
           }`}
+          apyLive={currentVaultApy.apy}
           risk={currentVault.customFields?.risk ?? 'lower'}
           chainId={chainId}
         />
@@ -95,6 +114,11 @@ export const ControlsSwitch = ({
             key={vault.id}
             token={vault.inputToken.symbol}
             risk={vault.customFields?.risk ?? 'lower'}
+            apy30d={vaultsApyByNetworkMap[`${vault.id}-${chainId}`].sma30d ?? 0}
+            apyLive={
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+              vaultsApyByNetworkMap[`${vault.id}-${chainId}`].apy ?? 0
+            }
             chainId={chainId}
           />
         ))}

@@ -1,6 +1,6 @@
 export type Styles = {
-  tableCellAllocationCapPercentTooltipWrapper: string
-  tableCellAllocationCapWrapper: string
+  bar: string
+  barFilled: string
 }
 
 export type ClassNames = keyof Styles

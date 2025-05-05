@@ -1,4 +1,4 @@
-import { type RefObject } from 'react'
+import { memo, type RefObject, useMemo } from 'react'
 
 import { type CardData } from '@/features/game/types'
 
@@ -14,17 +14,15 @@ interface CardListProps {
   cardRefs: RefObject<HTMLDivElement[]> // Add prop for refs array
 }
 
-const CardList: React.FC<CardListProps> = ({
-  cards,
-  selected,
-  isAI,
-  onSelect,
-  cardRefs, // Destructure the refs prop
-}) => {
-  // Cast Card to ForwardRefExoticComponent to allow ref prop
-  const ForwardRefCard = Card as React.ForwardRefExoticComponent<
-    React.PropsWithoutRef<React.ComponentProps<typeof Card>> & React.RefAttributes<HTMLDivElement>
-  >
+const CardList: React.FC<CardListProps> = memo(({ cards, selected, isAI, onSelect, cardRefs }) => {
+  const ForwardRefCard = useMemo(
+    () =>
+      Card as React.ForwardRefExoticComponent<
+        React.PropsWithoutRef<React.ComponentProps<typeof Card>> &
+          React.RefAttributes<HTMLDivElement>
+      >,
+    [],
+  )
 
   return (
     <div className={styles.cardList}>
@@ -40,10 +38,10 @@ const CardList: React.FC<CardListProps> = ({
           apy={card.apy}
           trendData={card.trendData}
           selected={selected === i}
-          onClick={(event) => !isAI && onSelect(i, event)}
+          onClick={(evt) => !isAI && onSelect(i, evt)}
           highlight={
             selected !== null &&
-            i === cards.findIndex((c) => c.apy === Math.max(...cards.map((c) => c.apy)))
+            i === cards.findIndex((item) => item.apy === Math.max(...cards.map((c) => c.apy)))
           }
           apyColor={(() => {
             if (card.apy >= 10) return '#1db954'
@@ -56,6 +54,6 @@ const CardList: React.FC<CardListProps> = ({
       ))}
     </div>
   )
-}
+})
 
 export default CardList

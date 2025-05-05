@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react'
 
+import { ChartBar } from '@/components/atoms/ChartBar/ChartBar'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
@@ -28,16 +29,7 @@ export const TableCellAllocationCap = ({
           </Tooltip>
         )}
       </div>
-      {!isBuffer && (
-        <div className={tableCellCustomComponentsStyles.tableCellAllocationCapBar}>
-          <div
-            className={tableCellCustomComponentsStyles.tableCellAllocationCapBarFilled}
-            style={{
-              width: capPercent,
-            }}
-          />
-        </div>
-      )}
+      {!isBuffer && <ChartBar value={capPercent} />}
     </div>
   )
 }

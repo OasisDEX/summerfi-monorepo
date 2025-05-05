@@ -22,6 +22,7 @@ import Link from 'next/link'
 import { AdditionalBonusLabel } from '@/components/atoms/AdditionalBonusLabel/AdditionalBonusLabel'
 import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
 import { Box } from '@/components/atoms/Box/Box'
+import { ChartBar } from '@/components/atoms/ChartBar/ChartBar'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
@@ -156,6 +157,14 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
       setIsRefreshing(false)
     }, 5000)
   }
+
+  const depositCapInToken = new BigNumber(vault.depositCap.toString()).div(
+    ten.pow(vault.inputToken.decimals),
+  )
+
+  const depositCapUsed = new BigNumber(vault.inputTokenBalance.toString())
+    .div(ten.pow(vault.inputToken.decimals))
+    .div(depositCapInToken)
 
   return (
     <>
@@ -326,18 +335,35 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 subValueSize="small"
               />
             </Box>
-            <Box
-              style={{
-                gridColumn: '1/3',
-              }}
-            >
+            <Box>
               <DataBlock
                 size="large"
                 titleSize="small"
                 title="Assets in vault"
                 value={`${totalValueLockedTokenParsed} ${getDisplayToken(vault.inputToken.symbol)}`}
                 subValue={`$${totalValueLockedUSDParsed}`}
-                subValueSize="medium"
+                subValueSize="small"
+              />
+            </Box>
+            <Box>
+              <DataBlock
+                size="large"
+                titleSize="small"
+                title="Deposit Cap"
+                value={`${formatCryptoBalance(depositCapInToken)} ${getDisplayToken(vault.inputToken.symbol)} cap`}
+                subValue={
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 'var(--general-space-20)',
+                    }}
+                  >
+                    {formatDecimalAsPercent(depositCapUsed)} filled
+                    <ChartBar value={formatDecimalAsPercent(depositCapUsed)} />
+                  </div>
+                }
+                subValueSize="small"
               />
             </Box>
           </SimpleGrid>
