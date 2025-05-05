@@ -9,6 +9,8 @@ import { Logger } from '@aws-lambda-powertools/logger'
 
 const logger = new Logger({ serviceName: 'rates-db-service' })
 
+const ONE_HOUR_IN_SECONDS = 3600
+
 export interface DBRate {
   id: string
   rate: string
@@ -137,11 +139,15 @@ export class RatesService {
     })
 
     try {
+      const currentTimestampInSeconds = Math.floor(Date.now() / 1000)
+      const timestampHourAgoInSeconds = (currentTimestampInSeconds - ONE_HOUR_IN_SECONDS).toString()
+      // from past 1h
       const rates = await this.db.db
         .selectFrom('rewardRate')
         .select(['id', 'rate', 'timestamp', 'productId'])
         .where('network', '=', network)
         .where('productId', '=', productId)
+        .where('timestamp', '>=', timestampHourAgoInSeconds)
         .orderBy('timestamp', 'desc')
         .limit(100)
         .execute()
@@ -187,6 +193,8 @@ export class RatesService {
     logger.info('Fetching historical rates', { chainId, network, productId })
 
     try {
+      const currentTimestampInSeconds = Math.floor(Date.now() / 1000)
+      const timestampHourAgoInSeconds = (currentTimestampInSeconds - ONE_HOUR_IN_SECONDS).toString()
       const [dailyRates, hourlyRates, weeklyRates, latestRate] = await Promise.all([
         this.db.db
           .selectFrom('dailyRewardRate')
@@ -220,6 +228,7 @@ export class RatesService {
           .select(['id', 'rate', 'timestamp'])
           .where('network', '=', network)
           .where('productId', '=', productId)
+          .where('timestamp', '>=', timestampHourAgoInSeconds)
           .orderBy('timestamp', 'desc')
           .limit(100)
           .execute(),
