@@ -223,9 +223,9 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getMigratablePositionsApy.query(params)
   }
 
-  async getMigrationTX(
-    params: Parameters<IArmadaManagerUsersClient['getMigrationTX']>[0],
-  ): ReturnType<IArmadaManagerUsersClient['getMigrationTX']> {
+  async getMigrationTx(
+    params: Parameters<IArmadaManagerUsersClient['getMigrationTx']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getMigrationTx']> {
     return this.rpcClient.armada.users.getMigrationTX.query(params)
   }
 

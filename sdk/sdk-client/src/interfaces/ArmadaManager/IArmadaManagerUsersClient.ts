@@ -443,7 +443,7 @@ export interface IArmadaManagerUsersClient {
    * @returns The transaction for the migration
    * @throws Error if the migration type is not supported
    */
-  getMigrationTX(params: {
+  getMigrationTx(params: {
     user: IUser
     vaultId: IArmadaVaultId
     shouldStake?: boolean

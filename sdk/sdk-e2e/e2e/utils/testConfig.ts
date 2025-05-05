@@ -36,7 +36,7 @@ export const testConfig = [
   //     value: '0x2653014Cd3AD332a98B0A80Ccf12473740DF81C2',
   //   }),
   //   rpcUrl: process.env.E2E_SDK_FORK_URL_ARBITRUM,
-  //   userAddress: user,
+  //   userAddress,
   // },
   // {
   //   chainInfo: ChainFamilyMap.Ethereum.Mainnet,
@@ -46,7 +46,7 @@ export const testConfig = [
   //     value: '0xd94d5f8969825c5fBCC127195f08F0762a010BA8',
   //   }),
   //   rpcUrl: process.env.E2E_SDK_FORK_URL_MAINNET,
-  //   userAddress: user,
+  //   userAddress,
   // },
   // {
   //   chainInfo: ChainFamilyMap.Sonic.Sonic,
@@ -57,6 +57,6 @@ export const testConfig = [
   //     value: '0x507A2D9E87DBD3076e65992049C41270b47964f8',
   //   }),
   //   rpcUrl: process.env.E2E_SDK_FORK_URL_SONIC,
-  //   userAddress: user,
+  //   userAddress,
   // },
 ]
