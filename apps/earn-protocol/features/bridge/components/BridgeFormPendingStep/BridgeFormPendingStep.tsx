@@ -2,7 +2,15 @@ import { type Dispatch, type FC, useCallback, useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
 import { MessageStatus } from '@layerzerolabs/scan-client'
-import { Alert, Icon, InfoBox, LoadingSpinner, Sidebar, Text } from '@summerfi/app-earn-ui'
+import {
+  Alert,
+  Icon,
+  InfoBox,
+  LoadingSpinner,
+  networkIconByNetworkName,
+  Sidebar,
+  Text,
+} from '@summerfi/app-earn-ui'
 import { SDKChainId } from '@summerfi/app-types'
 import {
   chainIdToSDKNetwork,
@@ -13,7 +21,6 @@ import clsx from 'clsx'
 import { capitalize } from 'lodash-es'
 import { useSearchParams } from 'next/navigation'
 
-import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { BridgeFormStepFallback } from '@/features/bridge/components/BridgeFormFallbackStep/BridgeFormStepFallback'
 import { useCrossChainMessages } from '@/features/bridge/hooks/use-cross-chain-messages'
 import { type BridgeReducerAction, type BridgeState, BridgeTxStatus } from '@/features/bridge/types'

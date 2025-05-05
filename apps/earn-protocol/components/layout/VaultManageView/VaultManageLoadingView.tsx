@@ -61,6 +61,7 @@ export const VaultManageLoadingView = () => {
       sidebarContent={
         <Sidebar
           title="Deposit"
+          titleTabs={['Deposit', 'Withdraw', 'Switch']}
           content={
             <div
               style={{

@@ -1,9 +1,16 @@
 export type Styles = {
+  activeFilter: string
   arrowForward: string
   cardWrapper: string
   dataRow: string
   dataRowColumn: string
+  nextPositionIconFilterButton: string
+  nextPositionIconsInfo: string
+  nextPositionInfo: string
+  nextVaultCard: string
+  nextVaultCardNotSelected: string
   positionAndVaultsListWrapper: string
+  title: string
   titleRow: string
 }
 

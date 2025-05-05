@@ -176,6 +176,7 @@ export { INTERNAL_LINKS, EXTERNAL_LINKS } from './helpers/application-links'
 export { getVaultsProtocolsList } from './helpers/get-vaults-protocols-list'
 
 export { getTokenGuarded } from './tokens/helpers'
+export { networkIconByNetworkName, networkIconByChainId } from './helpers/network-icons'
 
 // forecast stuff
 export { parseForecastDatapoints } from './features/forecast/parse-forecast-datapoints'

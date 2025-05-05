@@ -146,18 +146,6 @@ export const VaultManageViewComponent = ({
     setSelectedPosition(id)
   }
 
-  const sidebarTabsList = [
-    TransactionAction.DEPOSIT,
-    TransactionAction.WITHDRAW,
-    TransactionAction.SWITCH,
-  ].filter((action) => {
-    if (!systemConfig.features?.VaultSwitching) {
-      return action !== TransactionAction.SWITCH
-    }
-
-    return true
-  })
-
   const {
     handleTokenSelectionChange,
     setSelectedTokenOption,
@@ -226,6 +214,8 @@ export const VaultManageViewComponent = ({
     approvalTokenSymbol,
     setApprovalType,
     backToInit,
+    setSelectedSwitchVault,
+    selectedSwitchVault,
   } = useTransaction({
     vault,
     vaultChainId,
@@ -334,13 +324,37 @@ export const VaultManageViewComponent = ({
   })
 
   const potentialVaultsToSwitchTo = useMemo(() => {
-    return vaults.filter((potentialVault) => {
-      return (
-        subgraphNetworkToSDKId(potentialVault.protocol.network) === vaultChainId &&
-        potentialVault.id !== vault.id
-      )
-    })
-  }, [vault.id, vaultChainId, vaults])
+    return vaults
+      .filter((potentialVault) => {
+        return (
+          subgraphNetworkToSDKId(potentialVault.protocol.network) === vaultChainId &&
+          potentialVault.id !== vault.id
+        )
+      })
+      .sort((a, b) => {
+        const vaultApyA = vaultsApyByNetworkMap[`${a.id}-${vaultChainId}`]
+        const vaultApyB = vaultsApyByNetworkMap[`${b.id}-${vaultChainId}`]
+
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        if (!vaultApyA || !vaultApyB) {
+          return 0
+        }
+
+        return vaultApyB.apy - vaultApyA.apy
+      })
+  }, [vault.id, vaultChainId, vaults, vaultsApyByNetworkMap])
+
+  const sidebarTabsList = [
+    TransactionAction.DEPOSIT,
+    TransactionAction.WITHDRAW,
+    TransactionAction.SWITCH,
+  ].filter((action) => {
+    if (!systemConfig.features?.VaultSwitching && potentialVaultsToSwitchTo.length > 0) {
+      return action !== TransactionAction.SWITCH
+    }
+
+    return true
+  })
 
   const sidebarContent = nextTransaction?.type ? (
     {
@@ -385,6 +399,8 @@ export const VaultManageViewComponent = ({
       potentialVaults={potentialVaultsToSwitchTo}
       chainId={vaultChainId as unknown as NetworkIds}
       vaultsApyByNetworkMap={vaultsApyByNetworkMap}
+      selectVault={setSelectedSwitchVault}
+      selectedVault={selectedSwitchVault}
     />
   ) : (
     <ControlsDepositWithdraw

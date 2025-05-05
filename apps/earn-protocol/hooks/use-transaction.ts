@@ -108,11 +108,17 @@ export const useTransaction = ({
   const [transactions, setTransactions] = useState<ExtendedTransactionInfo[]>()
   const [sidebarTransactionError, setSidebarTransactionError] = useState<string>()
   const [sidebarValidationError, setSidebarValidationError] = useState<string>()
+  const [selectedSwitchVault, setSelectedSwitchVault] = useState<
+    `${string}-${number}` | undefined
+  >()
   const isIframe = useIsIframe()
 
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
 
   const isProperChainSelected = clientChainId === vaultChainId
+  const isWithdraw = transactionType === TransactionAction.WITHDRAW
+  const isDeposit = transactionType === TransactionAction.DEPOSIT
+  const isSwitch = transactionType === TransactionAction.SWITCH
 
   const nextTransaction = useMemo(() => {
     if (!transactions || transactions.length === 0) {
@@ -304,16 +310,15 @@ export const useTransaction = ({
   )
 
   const getTransactionsList = useCallback(async () => {
-    if (ownerView && token && vaultToken && amount && user) {
+    // get deposit/withdraw transactions
+    if ((isWithdraw || isDeposit) && ownerView && token && vaultToken && amount && user) {
       const fromToken = {
         [TransactionAction.DEPOSIT]: token,
         [TransactionAction.WITHDRAW]: vaultToken,
-        [TransactionAction.SWITCH]: vaultToken, // TODO fix this value
       }[transactionType]
       const toToken = {
         [TransactionAction.DEPOSIT]: vaultToken,
         [TransactionAction.WITHDRAW]: token,
-        [TransactionAction.SWITCH]: vaultToken, // TODO fix this value
       }[transactionType]
 
       setTxStatus('loadingTx')
@@ -321,7 +326,6 @@ export const useTransaction = ({
         const transactionsList = await {
           [TransactionAction.DEPOSIT]: getDepositTX,
           [TransactionAction.WITHDRAW]: getWithdrawTX,
-          [TransactionAction.SWITCH]: getDepositTX, // TODO fix this value
         }[transactionType]({
           walletAddress: Address.createFromEthereum({
             value: user.address,
@@ -349,20 +353,30 @@ export const useTransaction = ({
         }
       }
     }
+    // get switch transactions
+    if (isSwitch && ownerView && selectedSwitchVault) {
+      setTxStatus('loadingTx')
+      // eslint-disable-next-line no-console
+      console.log('switching vault', selectedSwitchVault)
+      setTimeout(() => {
+        setTxStatus('txSuccess')
+      }, 1000)
+    }
   }, [
+    isWithdraw,
+    isDeposit,
+    isSwitch,
     ownerView,
     token,
     vaultToken,
     amount,
     user,
-    setTxStatus,
     transactionType,
-    setTransactions,
+    selectedSwitchVault,
     getDepositTX,
+    getWithdrawTX,
     vault.id,
     vaultChainId,
-    getWithdrawTX,
-    setSidebarTransactionError,
     slippageConfig.slippage,
   ])
 
@@ -408,12 +422,7 @@ export const useTransaction = ({
     }
 
     // deposit balance check
-    if (
-      transactionType === TransactionAction.DEPOSIT &&
-      tokenBalance &&
-      amount &&
-      amount.isGreaterThan(tokenBalance)
-    ) {
+    if (isDeposit && tokenBalance && amount && amount.isGreaterThan(tokenBalance)) {
       return {
         label: capitalize(transactionType),
         action: () => null,
@@ -423,17 +432,20 @@ export const useTransaction = ({
     }
 
     // withdraw balance check
-    if (
-      transactionType === TransactionAction.WITHDRAW &&
-      positionAmount &&
-      amount &&
-      amount.isGreaterThan(positionAmount)
-    ) {
+    if (isWithdraw && positionAmount && amount && amount.isGreaterThan(positionAmount)) {
       return {
         label: capitalize(transactionType),
         action: () => null,
         disabled: true,
         loading: false,
+      }
+    }
+
+    // switch check
+    if (isSwitch && selectedSwitchVault) {
+      return {
+        label: capitalize(transactionType),
+        action: getTransactionsList,
       }
     }
 
@@ -494,26 +506,30 @@ export const useTransaction = ({
       action: getTransactionsList,
     }
   }, [
-    ownerView,
-    token,
-    flow,
-    tokenBalanceLoading,
-    tokenBalance,
     user,
+    ownerView,
     isProperChainSelected,
     isSettingChain,
+    tokenBalanceLoading,
+    tokenBalance,
+    flow,
+    isDeposit,
+    isWithdraw,
+    isSwitch,
+    selectedSwitchVault,
     amount,
+    positionAmount,
     txStatus,
+    token,
     nextTransaction?.type,
-    transactionType,
     getTransactionsList,
     openAuthModal,
     isAuthModalOpen,
     vaultChainId,
     setChain,
-    executeNextTransaction,
-    positionAmount,
+    transactionType,
     approvalTokenSymbol,
+    executeNextTransaction,
   ])
 
   const sidebarTitle = useMemo(() => {
@@ -551,12 +567,9 @@ export const useTransaction = ({
 
         // makes sure the user is redirected to the correct page
         // after closing or opening
-        const isOpening = transactionType === TransactionAction.DEPOSIT && flow === 'open'
+        const isOpening = isDeposit && flow === 'open'
         const isClosing =
-          transactionType === TransactionAction.WITHDRAW &&
-          positionAmount &&
-          flow === 'manage' &&
-          amount?.eq(positionAmount)
+          isWithdraw && positionAmount && flow === 'manage' && amount?.eq(positionAmount)
 
         if (isOpening || isClosing) {
           push(
@@ -585,6 +598,8 @@ export const useTransaction = ({
     vault,
     waitingForTx,
     userWalletAddress,
+    isDeposit,
+    isWithdraw,
   ])
 
   // watch for sendUserOperationError
@@ -621,7 +636,7 @@ export const useTransaction = ({
 
   useEffect(() => {
     setSidebarTransactionError(undefined)
-    if (transactionType === TransactionAction.DEPOSIT) {
+    if (isDeposit) {
       if (amount && tokenBalance && amount.isGreaterThan(tokenBalance) && !sidebarValidationError) {
         setSidebarValidationError(errorsMap.insufficientBalanceError)
       }
@@ -629,7 +644,7 @@ export const useTransaction = ({
         setSidebarValidationError(undefined)
       }
     }
-    if (transactionType === TransactionAction.WITHDRAW) {
+    if (isWithdraw) {
       if (
         amount &&
         positionAmount &&
@@ -647,7 +662,15 @@ export const useTransaction = ({
         setSidebarValidationError(undefined)
       }
     }
-  }, [amount, sidebarValidationError, tokenBalance, transactionType, positionAmount])
+  }, [
+    amount,
+    sidebarValidationError,
+    tokenBalance,
+    transactionType,
+    positionAmount,
+    isDeposit,
+    isWithdraw,
+  ])
 
   return {
     manualSetAmount,
@@ -670,5 +693,7 @@ export const useTransaction = ({
     setApprovalType,
     isTransakOpen,
     setIsTransakOpen,
+    setSelectedSwitchVault,
+    selectedSwitchVault,
   }
 }

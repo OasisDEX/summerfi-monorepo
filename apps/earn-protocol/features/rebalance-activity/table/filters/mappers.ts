@@ -2,10 +2,10 @@ import {
   type GenericMultiselectOption,
   getDisplayToken,
   getUniqueVaultId,
+  networkIconByNetworkName,
 } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType, type TokenSymbolsList } from '@summerfi/app-types'
 
-import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { getProtocolLabel } from '@/helpers/get-protocol-label'
 
 const getProtocolIcon = (protocolLabel: string) => {
