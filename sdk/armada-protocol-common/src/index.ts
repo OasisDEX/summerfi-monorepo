@@ -33,13 +33,19 @@ export type {
   IArmadaSimulation,
   IArmadaSimulationData,
 } from './simulator/interfaces/IArmadaSimulation'
-export { createDepositTransaction, createWithdrawTransaction } from './utils/createTransaction'
+export {
+  createDepositTransaction,
+  createWithdrawTransaction,
+  createVaultSwitchTransaction,
+} from './utils/createTransaction'
 export type { IArmadaManager } from './common/interfaces/IArmadaManager'
 export type { IArmadaManagerMigrations } from './common/interfaces/IArmadaManagerMigrations'
 export type { IArmadaManagerGovernance } from './common/interfaces/IArmadaManagerGovernance'
 export type { IArmadaManagerClaims } from './common/interfaces/IArmadaManagerClaims'
 export { getAllMerkleClaims } from './distributions/index'
 export type { IArmadaManagerBridge } from './common/interfaces/IArmadaManagerBridge'
+export type { IArmadaManagerVaults } from './common/interfaces/IArmadaManagerVaults'
+export type { IArmadaManagerUtils } from './common/interfaces/IArmadaManagerUtils'
 export {
   setTestDeployment,
   isTestDeployment,

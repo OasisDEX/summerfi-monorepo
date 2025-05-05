@@ -30,7 +30,7 @@ const eurcFleet = Address.createFromEthereum({
 })
 const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
 
-describe('Armada Protocol Deposit', () => {
+describe('Armada Protocol Withdraw', () => {
   const main = async () => {
     const chainInfo = getChainInfoByChainId(chainId)
 
@@ -39,7 +39,6 @@ describe('Armada Protocol Deposit', () => {
       chainInfo,
       fleetAddress: usdcFleet,
       rpcUrl,
-      stake: false,
     })
   }
   main()
@@ -49,13 +48,11 @@ describe('Armada Protocol Deposit', () => {
     chainInfo,
     fleetAddress,
     rpcUrl,
-    stake,
   }: {
     chainInfo: ChainInfo
     swapToSymbol: string | undefined
     fleetAddress: Address
     rpcUrl: string | undefined
-    stake: boolean
   }) {
     const sdk: SDKManager = makeSDK({
       apiURL: SDKApiUrl,
@@ -94,30 +91,21 @@ describe('Armada Protocol Deposit', () => {
         : undefined
     })
 
-    it(`should deposit 1 USDC to fleet at ${fleetAddress.value} ${stake ? 'with staking' : 'without staking'} ${swapToken ? 'and with swap to ' + swapToken.symbol : ''} `, async () => {
+    it(`should withdraw 1 USDC unstaked assets back from fleet at ${fleetAddress.value}`, async () => {
       const amount = TokenAmount.createFrom({
         amount: '1',
         token: swapToken || token,
       })
-      const transactions = await sdk.armada.users.getNewDepositTX({
-        vaultId,
+
+      const transactions = await sdk.armada.users.getWithdrawTX({
+        vaultId: vaultId,
         user,
         amount,
+        toToken: swapToken || token,
         slippage: Percentage.createFrom({
           value: 1,
         }),
-        shouldStake: stake,
       })
-
-      const vaultInfo = await sdk.armada.users.getVaultInfo({
-        vaultId,
-      })
-      assert(
-        vaultInfo.depositCap.isGreaterOrEqualThan(vaultInfo.totalDeposits.add(amount)),
-        `Deposit cap is not enough: ${vaultInfo.depositCap.toString()} < ${vaultInfo.totalDeposits
-          .add(amount)
-          .toString()}`,
-      )
 
       const fleetAmountBefore = await sdk.armada.users.getFleetBalance({
         vaultId,
@@ -127,15 +115,23 @@ describe('Armada Protocol Deposit', () => {
         vaultId,
         user,
       })
+
       console.log(
         'before',
         fleetAmountBefore.assets.toSolidityValue(),
         '/',
         stakedAmountBefore.assets.toSolidityValue(),
       )
+
+      const totalAssetsBefore = fleetAmountBefore.assets.add(stakedAmountBefore.assets)
+      assert(
+        totalAssetsBefore.isGreaterOrEqualThan(amount),
+        `Fleet balance is not enough: ${totalAssetsBefore.toString()} < ${amount.toString()}`,
+      )
+
       const { statuses } = await sendAndLogTransactions({
         chainInfo,
-        transactions,
+        transactions: transactions,
         rpcUrl: rpcUrl,
         privateKey: signerPrivateKey,
       })

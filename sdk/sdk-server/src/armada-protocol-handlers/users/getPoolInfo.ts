@@ -9,5 +9,5 @@ export const getPoolInfo = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.getVaultInfo(opts.input)
+    return opts.ctx.armadaManager.utils.getVaultInfo(opts.input)
   })

@@ -10,5 +10,5 @@ export const getTotalBalance = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.getTotalBalance(opts.input)
+    return opts.ctx.armadaManager.utils.getTotalBalance(opts.input)
   })

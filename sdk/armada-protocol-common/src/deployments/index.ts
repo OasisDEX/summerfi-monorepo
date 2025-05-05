@@ -31,7 +31,9 @@ export const isTestDeployment = () => {
     case 'SUMMER':
       return false
     default:
-      throw new Error('_deployment must be set to "SUMMER" or "BUMMER"')
+      throw new Error(
+        'Deployment singleton was not initialized. Please call setTestDeployment first.',
+      )
   }
 }
 

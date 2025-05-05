@@ -1,10 +1,13 @@
 import {
   type HexData,
   type IAddress,
-  type ExtendedTransactionInfo,
   TransactionType,
   TransactionMetadataDeposit,
   TransactionMetadataWithdraw,
+  TransactionMetadataVaultSwitch,
+  type WithdrawTransactionInfo,
+  type DepositTransactionInfo,
+  type VaultSwitchTransactionInfo,
 } from '@summerfi/sdk-common'
 
 export function createDepositTransaction(params: {
@@ -13,7 +16,7 @@ export function createDepositTransaction(params: {
   value?: bigint
   description: string
   metadata: TransactionMetadataDeposit
-}): ExtendedTransactionInfo {
+}): DepositTransactionInfo {
   return {
     transaction: {
       target: params.target,
@@ -32,7 +35,7 @@ export function createWithdrawTransaction(params: {
   value?: bigint
   description: string
   metadata: TransactionMetadataWithdraw
-}): ExtendedTransactionInfo {
+}): WithdrawTransactionInfo {
   return {
     transaction: {
       target: params.target,
@@ -41,6 +44,25 @@ export function createWithdrawTransaction(params: {
     },
     description: params.description,
     type: TransactionType.Withdraw,
+    metadata: params.metadata,
+  }
+}
+
+export function createVaultSwitchTransaction(params: {
+  target: IAddress
+  calldata: HexData
+  value?: bigint
+  description: string
+  metadata: TransactionMetadataVaultSwitch
+}): VaultSwitchTransactionInfo {
+  return {
+    transaction: {
+      target: params.target,
+      calldata: params.calldata,
+      value: String(params.value ?? 0),
+    },
+    description: params.description,
+    type: TransactionType.VaultSwitch,
     metadata: params.metadata,
   }
 }

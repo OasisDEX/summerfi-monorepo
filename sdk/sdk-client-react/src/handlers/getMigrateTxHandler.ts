@@ -44,7 +44,7 @@ export const getMigrateTxHandler =
       }),
     })
 
-    return sdk.armada.users.getMigrationTX({
+    return sdk.armada.users.getMigrationTx({
       user,
       vaultId,
       shouldStake,

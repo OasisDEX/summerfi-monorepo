@@ -11,7 +11,7 @@ import {
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 
-export const getDepositTX = publicProcedure
+export const getDepositTx = publicProcedure
   .input(
     z.object({
       vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
@@ -22,5 +22,5 @@ export const getDepositTX = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.getNewDepositTX(opts.input)
+    return opts.ctx.armadaManager.vaults.getNewDepositTx(opts.input)
   })

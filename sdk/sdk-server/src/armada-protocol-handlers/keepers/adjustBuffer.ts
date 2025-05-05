@@ -11,5 +11,5 @@ export const adjustBuffer = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.adjustBuffer(opts.input)
+    return opts.ctx.armadaManager.utils.adjustBuffer(opts.input)
   })
