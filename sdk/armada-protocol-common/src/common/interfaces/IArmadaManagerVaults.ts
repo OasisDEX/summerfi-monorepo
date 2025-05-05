@@ -26,7 +26,7 @@ export interface IArmadaManagerVaults {
    *
    * @returns An array of transactions that must be executed
    */
-  getNewDepositTX(params: {
+  getNewDepositTx(params: {
     vaultId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
@@ -65,7 +65,7 @@ export interface IArmadaManagerVaults {
    *
    * @returns ExtendedTransactionInfo[] An array of transactions that must be executed for the operation to succeed
    */
-  getWithdrawTX(params: {
+  getWithdrawTx(params: {
     vaultId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
@@ -101,7 +101,7 @@ export interface IArmadaManagerVaults {
     | [VaultSwitchTransactionInfo]
     | [ApproveTransactionInfo, VaultSwitchTransactionInfo]
     | [ApproveTransactionInfo, ApproveTransactionInfo, VaultSwitchTransactionInfo]
-    | [WithdrawTransactionInfo, DepositTransactionInfo]
-    | [ApproveTransactionInfo, WithdrawTransactionInfo, DepositTransactionInfo]
+    | [VaultSwitchTransactionInfo, VaultSwitchTransactionInfo]
+    | [ApproveTransactionInfo, VaultSwitchTransactionInfo, VaultSwitchTransactionInfo]
   >
 }

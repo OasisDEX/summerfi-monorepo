@@ -473,6 +473,7 @@ export interface IArmadaManagerUsersClient {
   }): Promise<
     | [VaultSwitchTransactionInfo]
     | [ApproveTransactionInfo, VaultSwitchTransactionInfo]
+    | [ApproveTransactionInfo, ApproveTransactionInfo, VaultSwitchTransactionInfo]
     | [VaultSwitchTransactionInfo, VaultSwitchTransactionInfo]
     | [ApproveTransactionInfo, VaultSwitchTransactionInfo, VaultSwitchTransactionInfo]
   >

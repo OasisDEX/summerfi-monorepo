@@ -66,11 +66,11 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
   }
 
   /**
-   * @see IArmadaManagerVaults.getNewDepositTX
+   * @see IArmadaManagerVaults.getNewDepositTx
    */
-  async getNewDepositTX(
-    params: Parameters<IArmadaManagerVaults['getNewDepositTX']>[0],
-  ): ReturnType<IArmadaManagerVaults['getNewDepositTX']> {
+  async getNewDepositTx(
+    params: Parameters<IArmadaManagerVaults['getNewDepositTx']>[0],
+  ): ReturnType<IArmadaManagerVaults['getNewDepositTx']> {
     return this._getDepositTX(params)
   }
 
@@ -78,7 +78,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     params: Parameters<IArmadaManagerVaults['getUpdateDepositTX']>[0],
   ): ReturnType<IArmadaManagerVaults['getUpdateDepositTX']> {
     // Call getNewDepositTX with user from positionId
-    return this.getNewDepositTX({
+    return this.getNewDepositTx({
       vaultId: params.vaultId,
       user: params.positionId.user,
       amount: params.amount,
@@ -88,11 +88,11 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
   }
 
   /**
-   * @see IArmadaManagerVaults.getWithdrawTX
+   * @see IArmadaManagerVaults.getWithdrawTx
    */
-  async getWithdrawTX(
-    params: Parameters<IArmadaManagerVaults['getWithdrawTX']>[0],
-  ): ReturnType<IArmadaManagerVaults['getWithdrawTX']> {
+  async getWithdrawTx(
+    params: Parameters<IArmadaManagerVaults['getWithdrawTx']>[0],
+  ): ReturnType<IArmadaManagerVaults['getWithdrawTx']> {
     return this._getWithdrawTX(params)
   }
 
@@ -401,7 +401,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     amount: ITokenAmount
     slippage: IPercentage
     shouldStake?: boolean
-  }): ReturnType<IArmadaManagerVaults['getNewDepositTX']> {
+  }): ReturnType<IArmadaManagerVaults['getNewDepositTx']> {
     const fleetCommander = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.vaultId.chainInfo,
       address: params.vaultId.fleetAddress,
@@ -566,7 +566,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     amount: ITokenAmount
     slippage: IPercentage
     toToken: IToken
-  }): ReturnType<IArmadaManagerVaults['getWithdrawTX']> {
+  }): ReturnType<IArmadaManagerVaults['getWithdrawTx']> {
     const withdrawAmount = params.amount
     const toEth = params.toToken.symbol === 'ETH'
     const swapToToken = params.toToken

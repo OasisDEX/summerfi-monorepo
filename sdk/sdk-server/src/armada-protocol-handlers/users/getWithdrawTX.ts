@@ -24,5 +24,5 @@ export const getWithdrawTx = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return await opts.ctx.armadaManager.vaults.getWithdrawTX(opts.input)
+    return await opts.ctx.armadaManager.vaults.getWithdrawTx(opts.input)
   })
