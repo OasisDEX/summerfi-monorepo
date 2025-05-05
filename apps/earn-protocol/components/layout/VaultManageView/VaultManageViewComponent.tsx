@@ -391,6 +391,7 @@ export const VaultManageViewComponent = ({
           transactionFeeLoading={transactionFeeLoading}
         />
       ),
+      [TransactionType.VaultSwitch]: <div>eye candy</div>,
     }[nextTransaction.type]
   ) : transactionType === TransactionAction.SWITCH ? (
     <ControlsSwitch

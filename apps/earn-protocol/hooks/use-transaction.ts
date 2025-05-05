@@ -106,8 +106,11 @@ export const useTransaction = ({
     { type: TransactionType; hash?: string; custom?: string }[]
   >([])
   const [txStatus, setTxStatus] = useState<EarnTransactionViewStates>('idle')
-  const [transactions, setTransactions] =
-    useState<(ExtendedTransactionInfo | VaultSwitchTransactionInfo)[]>()
+  const [transactions, setTransactions] = useState<
+    // TODO: need to have a list of possible transaction types
+    // it was ExtendedTransactionInfo but now its deprecated
+    (ExtendedTransactionInfo | VaultSwitchTransactionInfo)[]
+  >()
   const [sidebarTransactionError, setSidebarTransactionError] = useState<string>()
   const [sidebarValidationError, setSidebarValidationError] = useState<string>()
   const [selectedSwitchVault, setSelectedSwitchVault] = useState<
@@ -471,15 +474,8 @@ export const useTransaction = ({
       }
     }
 
-    // switch check
-    if (isSwitch && selectedSwitchVault) {
-      return {
-        label: `Preview ${capitalize(transactionType)}`,
-        action: getTransactionsList,
-      }
-    }
-
-    if (!amount || amount.isZero()) {
+    // we want to check that only on deposit/withdraw
+    if ((!amount || amount.isZero()) && !isSwitch) {
       return {
         label: capitalize(transactionType),
         action: () => null,
@@ -518,6 +514,15 @@ export const useTransaction = ({
           [TransactionType.VaultSwitch]: 'Switch',
         }[nextTransaction.type],
         action: executeNextTransaction,
+      }
+    }
+
+    // switch check
+    if (isSwitch) {
+      return {
+        label: `Preview ${capitalize(transactionType)}`,
+        action: getTransactionsList,
+        disabled: !selectedSwitchVault,
       }
     }
 
@@ -570,6 +575,10 @@ export const useTransaction = ({
 
     if (nextTransaction?.type === TransactionType.Withdraw) {
       return 'Preview\u00A0withdraw'
+    }
+
+    if (nextTransaction?.type === TransactionType.VaultSwitch) {
+      return 'Preview\u00A0switch'
     }
 
     return nextTransaction?.type
