@@ -23,6 +23,7 @@ import {
   type IToken,
   TokenAmount,
   TransactionType,
+  type VaultSwitchTransactionInfo,
 } from '@summerfi/sdk-common'
 import type BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
@@ -91,7 +92,7 @@ export const useTransaction = ({
   const [slippageConfig] = useSlippageConfig()
   const user = useUser()
   const { userWalletAddress } = useUserWallet()
-  const { getDepositTx: getDepositTX, getWithdrawTx: getWithdrawTX } = useAppSDK()
+  const { getDepositTx: getDepositTX, getWithdrawTx: getWithdrawTX, getVaultSwitchTx } = useAppSDK()
   const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
   const [isTransakOpen, setIsTransakOpen] = useState(false)
   const { setChain, isSettingChain } = useChain()
@@ -105,7 +106,8 @@ export const useTransaction = ({
     { type: TransactionType; hash?: string; custom?: string }[]
   >([])
   const [txStatus, setTxStatus] = useState<EarnTransactionViewStates>('idle')
-  const [transactions, setTransactions] = useState<ExtendedTransactionInfo[]>()
+  const [transactions, setTransactions] =
+    useState<(ExtendedTransactionInfo | VaultSwitchTransactionInfo)[]>()
   const [sidebarTransactionError, setSidebarTransactionError] = useState<string>()
   const [sidebarValidationError, setSidebarValidationError] = useState<string>()
   const [selectedSwitchVault, setSelectedSwitchVault] = useState<
@@ -354,30 +356,58 @@ export const useTransaction = ({
       }
     }
     // get switch transactions
-    if (isSwitch && ownerView && selectedSwitchVault) {
+    if (isSwitch && ownerView && selectedSwitchVault && vaultToken && user) {
       setTxStatus('loadingTx')
-      // eslint-disable-next-line no-console
-      console.log('switching vault', selectedSwitchVault)
-      setTimeout(() => {
-        setTxStatus('txSuccess')
-      }, 1000)
+      const [destinationFleetAddress] = selectedSwitchVault.split('-') // it is {vaultId}-{chainId}
+
+      try {
+        const transactionsList = await getVaultSwitchTx({
+          walletAddress: Address.createFromEthereum({
+            value: user.address,
+          }),
+          amount: TokenAmount.createFrom({
+            token: vaultToken,
+            amount: positionAmount?.toString() ?? '0',
+          }),
+          chainInfo: getChainInfoByChainId(vaultChainId),
+          slippage: Number(slippageConfig.slippage),
+          sourceFleetAddress: vault.id,
+          destinationFleetAddress,
+        })
+
+        // TS says that this is never empty, but it can be... leaving that for now
+        // if (transactionsList.length === 0) {
+        //   throw new Error('Error getting the transactions list')
+        // }
+
+        setTransactions(transactionsList)
+        setTxStatus('txPrepared')
+      } catch (err) {
+        if (err instanceof Error) {
+          setSidebarTransactionError(err.message)
+        } else {
+          setSidebarTransactionError(errorsMap.transactionRetrievalError)
+        }
+      }
     }
   }, [
     isWithdraw,
     isDeposit,
-    isSwitch,
     ownerView,
     token,
     vaultToken,
     amount,
     user,
-    transactionType,
+    isSwitch,
     selectedSwitchVault,
+    transactionType,
     getDepositTX,
     getWithdrawTX,
     vault.id,
     vaultChainId,
     slippageConfig.slippage,
+    getVaultSwitchTx,
+    positionAmount,
   ])
 
   const sidebarPrimaryButton = useMemo(() => {
@@ -444,7 +474,7 @@ export const useTransaction = ({
     // switch check
     if (isSwitch && selectedSwitchVault) {
       return {
-        label: capitalize(transactionType),
+        label: `Preview ${capitalize(transactionType)}`,
         action: getTransactionsList,
       }
     }
@@ -485,6 +515,7 @@ export const useTransaction = ({
           [TransactionType.Approve]: `Approve ${approvalTokenSymbol}`,
           [TransactionType.Deposit]: 'Deposit',
           [TransactionType.Withdraw]: 'Withdraw',
+          [TransactionType.VaultSwitch]: 'Switch',
         }[nextTransaction.type],
         action: executeNextTransaction,
       }
