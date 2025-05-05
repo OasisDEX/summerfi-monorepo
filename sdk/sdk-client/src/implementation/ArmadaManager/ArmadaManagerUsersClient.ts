@@ -91,14 +91,14 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   async getNewDepositTX(
     params: Parameters<IArmadaManagerUsersClient['getNewDepositTX']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getNewDepositTX']> {
-    return this.rpcClient.armada.users.getDepositTX.query(params)
+    return this.rpcClient.armada.users.getDepositTx.query(params)
   }
 
   /** @see IArmadaManagerUsersClient.getWithdrawTX */
   async getWithdrawTX(
     params: Parameters<IArmadaManagerUsersClient['getWithdrawTX']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getWithdrawTX']> {
-    return this.rpcClient.armada.users.getWithdrawTX.query(params)
+    return this.rpcClient.armada.users.getWithdrawTx.query(params)
   }
 
   async getStakedBalance(
@@ -162,7 +162,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   async getDelegateTx(
     params: Parameters<IArmadaManagerUsersClient['getDelegateTx']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getDelegateTx']> {
-    return this.rpcClient.armada.users.getDelegateTX.query(params)
+    return this.rpcClient.armada.users.getDelegateTx.query(params)
   }
 
   async getUndelegateTx(): ReturnType<IArmadaManagerUsersClient['getUndelegateTx']> {
@@ -196,13 +196,13 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   async getStakeTx(
     params: Parameters<IArmadaManagerUsersClient['getStakeTx']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getStakeTx']> {
-    return this.rpcClient.armada.users.getStakeTX.query(params)
+    return this.rpcClient.armada.users.getStakeTx.query(params)
   }
 
   async getUnstakeTx(
     params: Parameters<IArmadaManagerUsersClient['getUnstakeTx']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getUnstakeTx']> {
-    return this.rpcClient.armada.users.getUnstakeTX.query(params)
+    return this.rpcClient.armada.users.getUnstakeTx.query(params)
   }
 
   async getDelegationChainLength(
@@ -226,7 +226,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   async getMigrationTx(
     params: Parameters<IArmadaManagerUsersClient['getMigrationTx']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getMigrationTx']> {
-    return this.rpcClient.armada.users.getMigrationTX.query(params)
+    return this.rpcClient.armada.users.getMigrationTx.query(params)
   }
 
   async getVaultSwitchTx(

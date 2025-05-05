@@ -22,5 +22,5 @@ export const getMigrationTX = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.migrations.getMigrationTX(opts.input)
+    return opts.ctx.armadaManager.migrations.getMigrationTx(opts.input)
   })

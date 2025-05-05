@@ -63,8 +63,8 @@ export const useSDK = (params: UseSdk) => {
   const getTokenBySymbol = useMemo(() => getTokenBySymbolHandler(getChain), [getChain])
 
   // ARMADA HANDLERS
-  const getWithdrawTX = useMemo(() => getWithdrawTXHandler(sdk), [sdk])
-  const getDepositTX = useMemo(() => getDepositTXHandler(sdk), [sdk])
+  const getWithdrawTx = useMemo(() => getWithdrawTXHandler(sdk), [sdk])
+  const getDepositTx = useMemo(() => getDepositTXHandler(sdk), [sdk])
   const getUserPosition = useMemo(() => getUserPositionHandler(sdk), [sdk])
   const getUserPositions = useMemo(() => getUserPositionsHandler(sdk), [sdk])
 
@@ -108,8 +108,8 @@ export const useSDK = (params: UseSdk) => {
       getTargetChainInfo,
       getChain,
       getTokenBySymbol,
-      getDepositTX,
-      getWithdrawTX,
+      getDepositTx: getDepositTx,
+      getWithdrawTx: getWithdrawTx,
       getUserPositions,
       getUserPosition,
       getSwapQuote,
@@ -138,8 +138,8 @@ export const useSDK = (params: UseSdk) => {
       getTargetChainInfo,
       getChain,
       getTokenBySymbol,
-      getDepositTX,
-      getWithdrawTX,
+      getDepositTx,
+      getWithdrawTx,
       getUserPositions,
       getUserPosition,
       getSwapQuote,

@@ -481,10 +481,10 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     return null
   }
 
-  async getMigrationTX(
-    params: Parameters<IArmadaManagerMigrations['getMigrationTX']>[0],
-  ): ReturnType<IArmadaManagerMigrations['getMigrationTX']> {
-    LoggingService.debug('getMigrationTX: ', {
+  async getMigrationTx(
+    params: Parameters<IArmadaManagerMigrations['getMigrationTx']>[0],
+  ): ReturnType<IArmadaManagerMigrations['getMigrationTx']> {
+    LoggingService.debug('getMigrationTx: ', {
       user: params.user.wallet.address.value,
       chainId: params.vaultId.chainInfo.chainId,
       vaultId: params.vaultId.fleetAddress.value,

@@ -425,7 +425,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
 
     let swapToAmount: ITokenAmount | undefined
 
-    LoggingService.debug('getDepositTX', {
+    LoggingService.debug('getDepositTx', {
       inAmount: inAmount.toString(),
       shouldSwap,
       isEth: fromEth,
