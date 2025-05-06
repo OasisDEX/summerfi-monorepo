@@ -42,4 +42,4 @@ export class ArmadaVaultInfo extends PoolInfo implements IArmadaVaultInfo {
   }
 }
 
-SerializationService.registerClass(ArmadaVaultInfo, { identifier: 'ArmadaPoolInfo' })
+SerializationService.registerClass(ArmadaVaultInfo, { identifier: 'ArmadaVaultInfo' })
