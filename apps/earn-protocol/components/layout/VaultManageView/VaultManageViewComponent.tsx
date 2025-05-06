@@ -75,10 +75,10 @@ const ControlsApproval = dynamic(
   { ssr: false, loading: () => <SkeletonLine width="100%" height="100%" /> },
 )
 
-const ControlsSwitchApproval = dynamic(
+const ControlsSwitchTransactionView = dynamic(
   () =>
-    import('@/components/molecules/SidebarElements/ControlsSwitchApproval').then(
-      (mod) => mod.ControlsSwitchApproval,
+    import('@/components/molecules/SidebarElements/ControlsSwitchTransactionView').then(
+      (mod) => mod.ControlsSwitchTransactionView,
     ),
   { ssr: false, loading: () => <SkeletonLine width="100%" height="100%" /> },
 )
@@ -423,18 +423,13 @@ export const VaultManageViewComponent = ({
       }
     }
     if (nextTransaction.type === TransactionType.Approve) {
-      if (isSwitch) {
+      if (isSwitch && selectedSwitchVault) {
         return (
-          <ControlsSwitchApproval
-            tokenSymbol={approvalTokenSymbol}
-            approvalType={approvalType}
-            setApprovalType={setApprovalType}
-            setApprovalCustomValue={approvalHandleAmountChange}
-            approvalCustomValue={approvalCustomAmount}
-            customApprovalManualSetAmount={approvalManualSetAmount}
-            customApprovalOnBlur={approvalOnBlur}
-            customApprovalOnFocus={approvalOnFocus}
-            tokenBalance={selectedTokenBalance}
+          <ControlsSwitchTransactionView
+            currentVault={vault}
+            vaultsList={potentialVaultsToSwitchTo}
+            selectedSwitchVault={selectedSwitchVault}
+            vaultsApyByNetworkMap={vaultsApyByNetworkMap}
           />
         )
       } else if (isDepositOrWithdraw) {

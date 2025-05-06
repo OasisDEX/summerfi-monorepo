@@ -342,7 +342,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
     vaultChainId: subgraphNetworkToSDKId(resolvedVaultData.protocol.network),
     amountDisplay,
     amountDisplayUSD,
-    transactionType: TransactionAction.DEPOSIT,
+    sidebarTransactionType: TransactionAction.DEPOSIT,
     selectedTokenOption,
     sdk,
     slippageConfig,
