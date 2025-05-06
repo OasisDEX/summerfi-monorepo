@@ -361,6 +361,7 @@ export const VaultOpenViewComponent = ({
         />
       ),
       [TransactionType.Withdraw]: null, // just for types, withdraw doesn't happen on open view
+      [TransactionType.VaultSwitch]: null, // just for types, switch doesn't happen on open view
     }[nextTransaction.type]
   ) : (
     <ControlsDepositWithdraw
