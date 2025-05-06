@@ -102,6 +102,5 @@ export interface IArmadaManagerVaults {
     | [ApproveTransactionInfo, VaultSwitchTransactionInfo]
     | [ApproveTransactionInfo, ApproveTransactionInfo, VaultSwitchTransactionInfo]
     | [VaultSwitchTransactionInfo, VaultSwitchTransactionInfo]
-    | [ApproveTransactionInfo, VaultSwitchTransactionInfo, VaultSwitchTransactionInfo]
   >
 }
