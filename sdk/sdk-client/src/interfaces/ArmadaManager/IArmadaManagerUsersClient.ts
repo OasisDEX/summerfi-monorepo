@@ -475,6 +475,5 @@ export interface IArmadaManagerUsersClient {
     | [ApproveTransactionInfo, VaultSwitchTransactionInfo]
     | [ApproveTransactionInfo, ApproveTransactionInfo, VaultSwitchTransactionInfo]
     | [VaultSwitchTransactionInfo, VaultSwitchTransactionInfo]
-    | [ApproveTransactionInfo, VaultSwitchTransactionInfo, VaultSwitchTransactionInfo]
   >
 }
