@@ -1,6 +1,6 @@
 {
   "name": "@summer_fi/sdk-client",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "license": "Apache-2.0",
   "author": {
     "name": "summer.fi",
@@ -11,6 +11,7 @@
   "types": "dist/index.d.ts",
   "dependencies": {
     "bignumber.js": "^9.1.2",
-    "@trpc/client": "11.0.0-rc.844"
+    "@trpc/client": "11.0.0-rc.844",
+    "@summer_fi/sdk-common": "^0.3.0"
   }
 }
