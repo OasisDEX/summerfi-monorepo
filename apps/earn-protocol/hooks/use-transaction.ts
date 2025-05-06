@@ -97,7 +97,7 @@ export const useTransaction = ({
   const [isTransakOpen, setIsTransakOpen] = useState(false)
   const { setChain, isSettingChain } = useChain()
   const { clientChainId } = useClientChainId()
-  const [transactionType, setTransactionType] = useState<TransactionAction>(
+  const [sidebarTransactionType, setSidebarTransactionType] = useState<TransactionAction>(
     TransactionAction.DEPOSIT,
   )
   const [waitingForTx, setWaitingForTx] = useState<`0x${string}`>()
@@ -121,9 +121,9 @@ export const useTransaction = ({
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
 
   const isProperChainSelected = clientChainId === vaultChainId
-  const isWithdraw = transactionType === TransactionAction.WITHDRAW
-  const isDeposit = transactionType === TransactionAction.DEPOSIT
-  const isSwitch = transactionType === TransactionAction.SWITCH
+  const isWithdraw = sidebarTransactionType === TransactionAction.WITHDRAW
+  const isDeposit = sidebarTransactionType === TransactionAction.DEPOSIT
+  const isSwitch = sidebarTransactionType === TransactionAction.SWITCH
 
   const nextTransaction = useMemo(() => {
     if (!transactions || transactions.length === 0) {
@@ -320,18 +320,18 @@ export const useTransaction = ({
       const fromToken = {
         [TransactionAction.DEPOSIT]: token,
         [TransactionAction.WITHDRAW]: vaultToken,
-      }[transactionType]
+      }[sidebarTransactionType]
       const toToken = {
         [TransactionAction.DEPOSIT]: vaultToken,
         [TransactionAction.WITHDRAW]: token,
-      }[transactionType]
+      }[sidebarTransactionType]
 
       setTxStatus('loadingTx')
       try {
         const transactionsList = await {
           [TransactionAction.DEPOSIT]: getDepositTX,
           [TransactionAction.WITHDRAW]: getWithdrawTX,
-        }[transactionType]({
+        }[sidebarTransactionType]({
           walletAddress: Address.createFromEthereum({
             value: user.address,
           }),
@@ -403,7 +403,7 @@ export const useTransaction = ({
     user,
     isSwitch,
     selectedSwitchVault,
-    transactionType,
+    sidebarTransactionType,
     getDepositTX,
     getWithdrawTX,
     vault.id,
@@ -457,7 +457,7 @@ export const useTransaction = ({
     // deposit balance check
     if (isDeposit && tokenBalance && amount && amount.isGreaterThan(tokenBalance)) {
       return {
-        label: capitalize(transactionType),
+        label: capitalize(sidebarTransactionType),
         action: () => null,
         disabled: true,
         loading: false,
@@ -467,7 +467,7 @@ export const useTransaction = ({
     // withdraw balance check
     if (isWithdraw && positionAmount && amount && amount.isGreaterThan(positionAmount)) {
       return {
-        label: capitalize(transactionType),
+        label: capitalize(sidebarTransactionType),
         action: () => null,
         disabled: true,
         loading: false,
@@ -477,7 +477,7 @@ export const useTransaction = ({
     // we want to check that only on deposit/withdraw
     if ((!amount || amount.isZero()) && !isSwitch) {
       return {
-        label: capitalize(transactionType),
+        label: capitalize(sidebarTransactionType),
         action: () => null,
         disabled: true,
       }
@@ -520,7 +520,7 @@ export const useTransaction = ({
     // switch check
     if (isSwitch) {
       return {
-        label: `Preview ${capitalize(transactionType)}`,
+        label: `Preview ${capitalize(sidebarTransactionType)}`,
         action: getTransactionsList,
         disabled: !selectedSwitchVault,
       }
@@ -563,12 +563,19 @@ export const useTransaction = ({
     isAuthModalOpen,
     vaultChainId,
     setChain,
-    transactionType,
+    sidebarTransactionType,
     approvalTokenSymbol,
     executeNextTransaction,
   ])
 
   const sidebarTitle = useMemo(() => {
+    // switch has slightly different title
+    if (
+      sidebarTransactionType === TransactionAction.SWITCH &&
+      nextTransaction?.type === TransactionType.Approve
+    ) {
+      return 'Switch\u00A0your\u00A0position'
+    }
     if (nextTransaction?.type === TransactionType.Deposit) {
       return 'Preview\u00A0deposit'
     }
@@ -584,7 +591,7 @@ export const useTransaction = ({
     return nextTransaction?.type
       ? capitalize(nextTransaction.type)
       : capitalize(TransactionAction.DEPOSIT)
-  }, [nextTransaction?.type])
+  }, [nextTransaction?.type, sidebarTransactionType])
 
   // refresh data when all transactions are executed and are successful
   useEffect(() => {
@@ -632,7 +639,7 @@ export const useTransaction = ({
     positionAmount,
     push,
     reset,
-    transactionType,
+    sidebarTransactionType,
     transactions?.length,
     txStatus,
     vault,
@@ -706,7 +713,7 @@ export const useTransaction = ({
     amount,
     sidebarValidationError,
     tokenBalance,
-    transactionType,
+    sidebarTransactionType,
     positionAmount,
     isDeposit,
     isWithdraw,
@@ -727,8 +734,8 @@ export const useTransaction = ({
     backToInit,
     user,
     approvalTokenSymbol,
-    setTransactionType,
-    transactionType,
+    setSidebarTransactionType,
+    sidebarTransactionType,
     approvalType,
     setApprovalType,
     isTransakOpen,

@@ -75,6 +75,14 @@ const ControlsApproval = dynamic(
   { ssr: false, loading: () => <SkeletonLine width="100%" height="100%" /> },
 )
 
+const ControlsSwitchApproval = dynamic(
+  () =>
+    import('@/components/molecules/SidebarElements/ControlsSwitchApproval').then(
+      (mod) => mod.ControlsSwitchApproval,
+    ),
+  { ssr: false, loading: () => <SkeletonLine width="100%" height="100%" /> },
+)
+
 const OrderInfoDeposit = dynamic(
   () =>
     import('@/components/molecules/SidebarElements/OrderInfoDeposit').then(
@@ -207,8 +215,8 @@ export const VaultManageViewComponent = ({
     txHashes,
     removeTxHash,
     reset,
-    transactionType,
-    setTransactionType,
+    sidebarTransactionType,
+    setSidebarTransactionType,
     nextTransaction,
     approvalType,
     approvalTokenSymbol,
@@ -252,7 +260,7 @@ export const VaultManageViewComponent = ({
     vaultChainId,
     amountDisplay,
     amountDisplayUSD,
-    transactionType,
+    sidebarTransactionType,
     selectedTokenOption,
     sdk,
     slippageConfig,
@@ -272,7 +280,7 @@ export const VaultManageViewComponent = ({
         ? zero
         : netValue.minus(resolvedAmountParsed),
       [TransactionAction.SWITCH]: zero,
-    }[transactionType].toString(),
+    }[sidebarTransactionType].toString(),
     disabled: !ownerView,
     isEarnApp: true,
   })
@@ -356,32 +364,124 @@ export const VaultManageViewComponent = ({
     return true
   })
 
-  const sidebarContent = nextTransaction?.type ? (
-    {
-      [TransactionType.Approve]: (
-        <ControlsApproval
-          tokenSymbol={approvalTokenSymbol}
-          approvalType={approvalType}
-          setApprovalType={setApprovalType}
-          setApprovalCustomValue={approvalHandleAmountChange}
-          approvalCustomValue={approvalCustomAmount}
-          customApprovalManualSetAmount={approvalManualSetAmount}
-          customApprovalOnBlur={approvalOnBlur}
-          customApprovalOnFocus={approvalOnFocus}
-          tokenBalance={selectedTokenBalance}
-        />
-      ),
-      [TransactionType.Deposit]: (
-        <OrderInfoDeposit
-          chainId={vaultChainId}
-          transaction={nextTransaction}
-          amountParsed={amountParsed}
-          amountDisplayUSD={amountDisplayUSDWithSwap}
-          transactionFee={transactionFee}
-          transactionFeeLoading={transactionFeeLoading}
-        />
-      ),
-      [TransactionType.Withdraw]: (
+  const sidebarContent = useMemo(() => {
+    const isSwitch = sidebarTransactionType === TransactionAction.SWITCH
+    const isDeposit = sidebarTransactionType === TransactionAction.DEPOSIT
+    const isWithdraw = sidebarTransactionType === TransactionAction.WITHDRAW
+    const isDepositOrWithdraw = isDeposit || isWithdraw
+
+    if (!nextTransaction) {
+      // trying to make this simple - if there is no next transaction, we are in the entry points
+      // also adding a fail safe for the mapping missing here at the end
+      if (isSwitch) {
+        return (
+          <ControlsSwitch
+            currentPosition={position}
+            currentVault={vault}
+            potentialVaults={potentialVaultsToSwitchTo}
+            chainId={vaultChainId as unknown as NetworkIds}
+            vaultsApyByNetworkMap={vaultsApyByNetworkMap}
+            selectVault={setSelectedSwitchVault}
+            selectedVault={selectedSwitchVault}
+          />
+        )
+      } else if (isDepositOrWithdraw) {
+        return (
+          <ControlsDepositWithdraw
+            amountDisplay={amountDisplay}
+            amountDisplayUSD={amountDisplayUSDWithSwap}
+            handleAmountChange={handleAmountChange}
+            handleDropdownChange={handleTokenSelectionChange}
+            transactionType={sidebarTransactionType}
+            options={
+              sidebarTransactionType === TransactionAction.WITHDRAW
+                ? baseTokenOptions
+                : tokenOptions
+            }
+            dropdownValue={selectedTokenOption}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            ownerView={ownerView}
+            tokenSymbol={
+              sidebarTransactionType === TransactionAction.DEPOSIT
+                ? selectedTokenOption.value
+                : getDisplayToken(vault.inputToken.symbol)
+            }
+            tokenBalance={
+              sidebarTransactionType === TransactionAction.DEPOSIT
+                ? selectedTokenBalance
+                : ownerView
+                  ? netValue
+                  : undefined
+            }
+            tokenBalanceLoading={selectedTokenBalanceLoading}
+            manualSetAmount={manualSetAmount}
+          />
+        )
+      } else {
+        return <div>Sidebar TX type not supported</div>
+      }
+    }
+    if (nextTransaction.type === TransactionType.Approve) {
+      if (isSwitch) {
+        return (
+          <ControlsSwitchApproval
+            tokenSymbol={approvalTokenSymbol}
+            approvalType={approvalType}
+            setApprovalType={setApprovalType}
+            setApprovalCustomValue={approvalHandleAmountChange}
+            approvalCustomValue={approvalCustomAmount}
+            customApprovalManualSetAmount={approvalManualSetAmount}
+            customApprovalOnBlur={approvalOnBlur}
+            customApprovalOnFocus={approvalOnFocus}
+            tokenBalance={selectedTokenBalance}
+          />
+        )
+      } else if (isDepositOrWithdraw) {
+        return (
+          <ControlsApproval
+            tokenSymbol={approvalTokenSymbol}
+            approvalType={approvalType}
+            setApprovalType={setApprovalType}
+            setApprovalCustomValue={approvalHandleAmountChange}
+            approvalCustomValue={approvalCustomAmount}
+            customApprovalManualSetAmount={approvalManualSetAmount}
+            customApprovalOnBlur={approvalOnBlur}
+            customApprovalOnFocus={approvalOnFocus}
+            tokenBalance={selectedTokenBalance}
+          />
+        )
+      } else {
+        return (
+          <div>
+            {nextTransaction.type}/{sidebarTransactionType} type not supported
+          </div>
+        )
+      }
+    } else if (nextTransaction.type === TransactionType.Deposit) {
+      if (isSwitch) {
+        return <div>Switch deposit view</div>
+      } else if (isDepositOrWithdraw) {
+        return (
+          <OrderInfoDeposit
+            chainId={vaultChainId}
+            transaction={nextTransaction}
+            amountParsed={amountParsed}
+            amountDisplayUSD={amountDisplayUSDWithSwap}
+            transactionFee={transactionFee}
+            transactionFeeLoading={transactionFeeLoading}
+          />
+        )
+      } else {
+        return (
+          <div>
+            {nextTransaction.type}/{sidebarTransactionType} type not supported
+          </div>
+        )
+      }
+    } else if (nextTransaction.type === TransactionType.Withdraw) {
+      // no switch withdraw view (duh)
+      return (
         <OrderInfoWithdraw
           chainId={vaultChainId}
           transaction={nextTransaction}
@@ -390,53 +490,52 @@ export const VaultManageViewComponent = ({
           transactionFee={transactionFee}
           transactionFeeLoading={transactionFeeLoading}
         />
-      ),
-      [TransactionType.VaultSwitch]: <div>eye candy</div>,
-    }[nextTransaction.type]
-  ) : transactionType === TransactionAction.SWITCH ? (
-    <ControlsSwitch
-      currentPosition={position}
-      currentVault={vault}
-      potentialVaults={potentialVaultsToSwitchTo}
-      chainId={vaultChainId as unknown as NetworkIds}
-      vaultsApyByNetworkMap={vaultsApyByNetworkMap}
-      selectVault={setSelectedSwitchVault}
-      selectedVault={selectedSwitchVault}
-    />
-  ) : (
-    <ControlsDepositWithdraw
-      amountDisplay={amountDisplay}
-      amountDisplayUSD={amountDisplayUSDWithSwap}
-      handleAmountChange={handleAmountChange}
-      handleDropdownChange={handleTokenSelectionChange}
-      transactionType={transactionType}
-      options={transactionType === TransactionAction.WITHDRAW ? baseTokenOptions : tokenOptions}
-      dropdownValue={selectedTokenOption}
-      onFocus={onFocus}
-      onBlur={onBlur}
-      ownerView={ownerView}
-      tokenSymbol={
-        {
-          [TransactionAction.DEPOSIT]: selectedTokenOption.value,
-          [TransactionAction.WITHDRAW]: getDisplayToken(vault.inputToken.symbol),
-        }[transactionType as TransactionAction.DEPOSIT | TransactionAction.WITHDRAW]
-      }
-      tokenBalance={
-        {
-          [TransactionAction.DEPOSIT]: selectedTokenBalance,
-          [TransactionAction.WITHDRAW]: ownerView ? netValue : undefined,
-        }[transactionType as TransactionAction.DEPOSIT | TransactionAction.WITHDRAW]
-      }
-      tokenBalanceLoading={selectedTokenBalanceLoading}
-      manualSetAmount={manualSetAmount}
-    />
-  )
+      )
+    } else {
+      return <div>Transaction type not supported</div>
+    }
+  }, [
+    nextTransaction,
+    sidebarTransactionType,
+    approvalTokenSymbol,
+    approvalType,
+    setApprovalType,
+    approvalHandleAmountChange,
+    approvalCustomAmount,
+    approvalManualSetAmount,
+    approvalOnBlur,
+    approvalOnFocus,
+    selectedTokenBalance,
+    vaultChainId,
+    amountParsed,
+    amountDisplayUSDWithSwap,
+    transactionFee,
+    transactionFeeLoading,
+    position,
+    vault,
+    potentialVaultsToSwitchTo,
+    vaultsApyByNetworkMap,
+    setSelectedSwitchVault,
+    selectedSwitchVault,
+    amountDisplay,
+    handleAmountChange,
+    handleTokenSelectionChange,
+    baseTokenOptions,
+    tokenOptions,
+    selectedTokenOption,
+    onFocus,
+    onBlur,
+    ownerView,
+    netValue,
+    selectedTokenBalanceLoading,
+    manualSetAmount,
+  ])
 
   const sidebarProps: SidebarProps = {
-    title: !nextTransaction ? transactionType : sidebar.title,
+    title: !nextTransaction ? sidebarTransactionType : sidebar.title,
     titleTabs: !nextTransaction ? sidebarTabsList : undefined,
     onTitleTabChange: (action) => {
-      setTransactionType(action as TransactionAction)
+      setSidebarTransactionType(action as TransactionAction)
       if (amountParsed.gt(0)) {
         reset()
       }
@@ -446,8 +545,8 @@ export const VaultManageViewComponent = ({
       !isDrawerOpen && isMobile ? (
         <SidebarMobileHeader
           type="manage"
-          transactionType={transactionType}
-          setTransactionType={setTransactionType}
+          sidebarTransactionType={sidebarTransactionType}
+          setSidebarTransactionType={setSidebarTransactionType}
         />
       ) : undefined,
     handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),

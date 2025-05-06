@@ -270,7 +270,7 @@ export const VaultOpenViewComponent = ({
     vaultChainId,
     amountDisplay,
     amountDisplayUSD,
-    transactionType: TransactionAction.DEPOSIT,
+    sidebarTransactionType: TransactionAction.DEPOSIT,
     selectedTokenOption,
     sdk,
     slippageConfig,
