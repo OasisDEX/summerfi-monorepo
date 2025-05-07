@@ -15,7 +15,7 @@ export interface IArmadaManagerVaults {
   /** USER TRANSACTIONS */
 
   /**
-   * @name getNewDepositTX
+   * @name getNewDepositTx
    * @description Returns the transactions needed to deposit tokens in the Fleet for a new position
    *
    * @param vaultId ID of the pool to deposit in
@@ -35,7 +35,7 @@ export interface IArmadaManagerVaults {
   }): Promise<[DepositTransactionInfo] | [ApproveTransactionInfo, DepositTransactionInfo]>
 
   /**
-   * @name getUpdateDepositTX
+   * @name getUpdateDepositTx
    * @description Returns the transactions needed to deposit tokens in the Fleet for an existing position
    *
    * @param vaultId ID of the pool to deposit in
@@ -46,7 +46,7 @@ export interface IArmadaManagerVaults {
    *
    * @returns TransactionInfo[] An array of transactions that must be executed for the operation to succeed
    */
-  getUpdateDepositTX(params: {
+  getUpdateDepositTx(params: {
     vaultId: IArmadaVaultId
     positionId: IArmadaPositionId
     amount: ITokenAmount
@@ -55,7 +55,7 @@ export interface IArmadaManagerVaults {
   }): Promise<[DepositTransactionInfo] | [ApproveTransactionInfo, DepositTransactionInfo]>
 
   /**
-   * @name getWithdrawTX
+   * @name getWithdrawTx
    * @description Returns the transactions needed to withdraw tokens from the Fleet
    *
    * @param vaultId ID of the pool to withdraw from

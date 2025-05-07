@@ -74,9 +74,9 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     return this._getDepositTX(params)
   }
 
-  async getUpdateDepositTX(
-    params: Parameters<IArmadaManagerVaults['getUpdateDepositTX']>[0],
-  ): ReturnType<IArmadaManagerVaults['getUpdateDepositTX']> {
+  async getUpdateDepositTx(
+    params: Parameters<IArmadaManagerVaults['getUpdateDepositTx']>[0],
+  ): ReturnType<IArmadaManagerVaults['getUpdateDepositTx']> {
     // Call getNewDepositTX with user from positionId
     return this.getNewDepositTx({
       vaultId: params.vaultId,
