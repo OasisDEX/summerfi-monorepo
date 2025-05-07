@@ -330,7 +330,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
           reminderShares: reminderFromStakedShares.toString(),
         })
 
-        const withdrawalData = await this._calculateWithdrawalDataForStakedShares({
+        const calculatedUnstakeWithdrawData = await this._calculateUnstakeWithdrawData({
           vaultId: params.sourceVaultId,
           shares: reminderFromStakedShares,
           stakedShares: beforeStakedShares,
@@ -339,7 +339,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
 
         const [
           approvalToWithdrawSharesOnBehalf,
-          approvalToDepositBasedOnWithdrawalData,
+          approvalToDepositBasedOnUnstakeWithdrawData,
           exitWithdrawMulticall,
           unstakeAndWithdrawCall,
           priceImpact,
@@ -347,14 +347,14 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
           this._allowanceManager.getApproval({
             chainInfo: params.sourceVaultId.chainInfo,
             spender: admiralsQuartersAddress,
-            amount: reminderFromStakedShares,
+            amount: this._compensateAmount(reminderFromStakedShares, 'increase'),
             owner: params.user.wallet.address,
           }),
-          await this._getApprovalBasedOnWithdrawalData({
+          await this._getApprovalBasedOnUnstakeWithdrawData({
             admiralsQuartersAddress,
             vaultId: params.sourceVaultId,
             user: params.user,
-            amount: withdrawalData.calculatedUnstakeWithdrawAssets,
+            amount: calculatedUnstakeWithdrawData.calculatedUnstakeWithdrawAssets,
           }),
           this._getExitWithdrawMulticall({
             vaultId: params.sourceVaultId,
@@ -366,7 +366,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
           }),
           this._getUnstakeAndWithdrawCall({
             vaultId: params.sourceVaultId,
-            sharesValue: withdrawalData.unstakeWithdrawSharesValue,
+            sharesValue: calculatedUnstakeWithdrawData.unstakeWithdrawSharesValue,
           }),
           swapToAmount &&
             this._utils.getPriceImpact({
@@ -387,14 +387,14 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
         }
 
         approvalForWithdraw = approvalToWithdrawSharesOnBehalf
-        approvalForDeposit = approvalToDepositBasedOnWithdrawalData
+        approvalForDeposit = approvalToDepositBasedOnUnstakeWithdrawData
 
         multicallArgs.push(...exitWithdrawMulticall.multicallArgs)
         multicallOperations.push(...exitWithdrawMulticall.multicallOperations)
 
         unstakeWithdrawMulticallArgs.push(unstakeAndWithdrawCall.calldata)
         unstakeWithdrawMulticallOperations.push(
-          'unstakeAndWithdraw ' + withdrawalData.unstakeWithdrawSharesValue,
+          'unstakeAndWithdraw ' + calculatedUnstakeWithdrawData.unstakeWithdrawSharesValue,
         )
 
         // compose unstake withdraw deposit multicall
@@ -439,7 +439,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       const unstakeWithdrawMulticallArgs: HexData[] = []
       const unstakeWithdrawMulticallOperations: string[] = []
 
-      const withdrawalData = await this._calculateWithdrawalDataForStakedShares({
+      const calculatedUnstakeWithdrawData = await this._calculateUnstakeWithdrawData({
         vaultId: params.sourceVaultId,
         shares: calculatedSharesToWithdraw,
         stakedShares: beforeStakedShares,
@@ -450,7 +450,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       const [unstakeAndWithdrawCall, priceImpact] = await Promise.all([
         this._getUnstakeAndWithdrawCall({
           vaultId: params.sourceVaultId,
-          sharesValue: withdrawalData.unstakeWithdrawSharesValue,
+          sharesValue: calculatedUnstakeWithdrawData.unstakeWithdrawSharesValue,
         }),
         swapToAmount &&
           this._utils.getPriceImpact({
@@ -460,13 +460,13 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       ])
       unstakeWithdrawMulticallArgs.push(unstakeAndWithdrawCall.calldata)
       unstakeWithdrawMulticallOperations.push(
-        'unstakeAndWithdraw ' + withdrawalData.unstakeWithdrawSharesValue,
+        'unstakeAndWithdraw ' + calculatedUnstakeWithdrawData.unstakeWithdrawSharesValue,
       )
-      approvalForDeposit = await this._getApprovalBasedOnWithdrawalData({
+      approvalForDeposit = await this._getApprovalBasedOnUnstakeWithdrawData({
         admiralsQuartersAddress,
         vaultId: params.sourceVaultId,
         user: params.user,
-        amount: withdrawalData.calculatedUnstakeWithdrawAssets,
+        amount: calculatedUnstakeWithdrawData.calculatedUnstakeWithdrawAssets,
       })
 
       // compose unstake withdraw deposit multicall
@@ -826,7 +826,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
           reminderShares: reminderFromStakedShares.toString(),
         })
 
-        const withdrawalData = await this._calculateWithdrawalDataForStakedShares({
+        const calculatedUnstakeWithdrawData = await this._calculateUnstakeWithdrawData({
           vaultId: params.vaultId,
           shares: reminderFromStakedShares,
           stakedShares: beforeStakedShares,
@@ -861,7 +861,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
           }),
           this._getUnstakeAndWithdrawCall({
             vaultId: params.vaultId,
-            sharesValue: withdrawalData.unstakeWithdrawSharesValue,
+            sharesValue: calculatedUnstakeWithdrawData.unstakeWithdrawSharesValue,
           }),
           swapToAmount &&
             this._utils.getPriceImpact({
@@ -886,7 +886,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
 
         unstakeWithdrawMulticallArgs.push(unstakeAndWithdrawCall.calldata)
         unstakeWithdrawMulticallOperations.push(
-          'unstakeAndWithdraw ' + withdrawalData.unstakeWithdrawSharesValue,
+          'unstakeAndWithdraw ' + calculatedUnstakeWithdrawData.unstakeWithdrawSharesValue,
         )
 
         let approvalDepositSwapWithdraw: ApproveTransactionInfo | undefined
@@ -964,7 +964,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       const unstakeWithdrawMulticallArgs: HexData[] = []
       const unstakeWithdrawMulticallOperations: string[] = []
 
-      const withdrawalData = await this._calculateWithdrawalDataForStakedShares({
+      const calculatedUnstakeWithdrawData = await this._calculateUnstakeWithdrawData({
         vaultId: params.vaultId,
         shares: calculatedSharesToWithdraw,
         stakedShares: beforeStakedShares,
@@ -975,7 +975,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       const [unstakeAndWithdrawCall, priceImpact] = await Promise.all([
         this._getUnstakeAndWithdrawCall({
           vaultId: params.vaultId,
-          sharesValue: withdrawalData.unstakeWithdrawSharesValue,
+          sharesValue: calculatedUnstakeWithdrawData.unstakeWithdrawSharesValue,
         }),
         swapToAmount &&
           this._utils.getPriceImpact({
@@ -985,7 +985,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       ])
       unstakeWithdrawMulticallArgs.push(unstakeAndWithdrawCall.calldata)
       unstakeWithdrawMulticallOperations.push(
-        'unstakeAndWithdraw ' + withdrawalData.unstakeWithdrawSharesValue,
+        'unstakeAndWithdraw ' + calculatedUnstakeWithdrawData.unstakeWithdrawSharesValue,
       )
 
       let approvalDepositSwapWithdraw: ApproveTransactionInfo | undefined
@@ -1300,7 +1300,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
         multiplier = multiplierDown
         break
       default:
-        throw new Error(`Invalid direction: ${direction}. Must be 'up' or 'down'.`)
+        throw new Error(`Invalid direction: ${direction}. Must be 'increase' or 'decrease'.`)
     }
 
     return TokenAmount.createFromBaseUnit({
@@ -1311,7 +1311,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     })
   }
 
-  private async _calculateWithdrawalDataForStakedShares(params: {
+  private async _calculateUnstakeWithdrawData(params: {
     vaultId: IArmadaVaultId
     amount: ITokenAmount
     shares: ITokenAmount
@@ -1357,7 +1357,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     }
   }
 
-  private async _getApprovalBasedOnWithdrawalData(params: {
+  private async _getApprovalBasedOnUnstakeWithdrawData(params: {
     admiralsQuartersAddress: IAddress
     vaultId: IArmadaVaultId
     user: IUser

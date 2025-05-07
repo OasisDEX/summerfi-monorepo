@@ -75,9 +75,9 @@ describe('Armada Protocol User', () => {
     })
     console.log(
       'Fleet: ',
-      fleetAmountBefore.assets.toSolidityValue(),
+      fleetAmountBefore.assets.toString(),
       'Staked: ',
-      stakedAmountBefore.assets.toSolidityValue(),
+      stakedAmountBefore.assets.toString(),
     )
   })
 })
