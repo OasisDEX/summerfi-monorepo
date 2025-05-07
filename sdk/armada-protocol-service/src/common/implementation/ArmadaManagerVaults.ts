@@ -149,6 +149,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     LoggingService.debug('getVaultSwitchTx', {
       beforeFleetShares: beforeFleetShares.toString(),
       beforeStakedShares: beforeStakedShares.toString(),
+      beforeTotalShares: beforeFleetShares.add(beforeStakedShares).toString(),
       withdrawAmount: withdrawAmount.toString(),
       calculatedSharesToWithdraw: calculatedSharesToWithdraw.toString(),
       shouldSwap,
@@ -353,7 +354,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
             admiralsQuartersAddress,
             vaultId: params.sourceVaultId,
             user: params.user,
-            amount: withdrawalData.approvedDepositAmount,
+            amount: withdrawalData.calculatedUnstakeWithdrawAssets,
           }),
           this._getExitWithdrawMulticall({
             vaultId: params.sourceVaultId,
@@ -365,7 +366,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
           }),
           this._getUnstakeAndWithdrawCall({
             vaultId: params.sourceVaultId,
-            sharesValue: withdrawalData.unstakeWithdrawSharesAmount,
+            sharesValue: withdrawalData.unstakeWithdrawSharesValue,
           }),
           swapToAmount &&
             this._utils.getPriceImpact({
@@ -393,7 +394,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
 
         unstakeWithdrawMulticallArgs.push(unstakeAndWithdrawCall.calldata)
         unstakeWithdrawMulticallOperations.push(
-          'unstakeAndWithdraw ' + withdrawalData.unstakeWithdrawSharesAmount,
+          'unstakeAndWithdraw ' + withdrawalData.unstakeWithdrawSharesValue,
         )
 
         // compose unstake withdraw deposit multicall
@@ -449,7 +450,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       const [unstakeAndWithdrawCall, priceImpact] = await Promise.all([
         this._getUnstakeAndWithdrawCall({
           vaultId: params.sourceVaultId,
-          sharesValue: withdrawalData.unstakeWithdrawSharesAmount,
+          sharesValue: withdrawalData.unstakeWithdrawSharesValue,
         }),
         swapToAmount &&
           this._utils.getPriceImpact({
@@ -459,13 +460,13 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       ])
       unstakeWithdrawMulticallArgs.push(unstakeAndWithdrawCall.calldata)
       unstakeWithdrawMulticallOperations.push(
-        'unstakeAndWithdraw ' + withdrawalData.unstakeWithdrawSharesAmount,
+        'unstakeAndWithdraw ' + withdrawalData.unstakeWithdrawSharesValue,
       )
       approvalForDeposit = await this._getApprovalBasedOnWithdrawalData({
         admiralsQuartersAddress,
         vaultId: params.sourceVaultId,
         user: params.user,
-        amount: withdrawalData.approvedDepositAmount,
+        amount: withdrawalData.calculatedUnstakeWithdrawAssets,
       })
 
       // compose unstake withdraw deposit multicall
@@ -860,7 +861,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
           }),
           this._getUnstakeAndWithdrawCall({
             vaultId: params.vaultId,
-            sharesValue: withdrawalData.unstakeWithdrawSharesAmount,
+            sharesValue: withdrawalData.unstakeWithdrawSharesValue,
           }),
           swapToAmount &&
             this._utils.getPriceImpact({
@@ -885,7 +886,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
 
         unstakeWithdrawMulticallArgs.push(unstakeAndWithdrawCall.calldata)
         unstakeWithdrawMulticallOperations.push(
-          'unstakeAndWithdraw ' + withdrawalData.unstakeWithdrawSharesAmount,
+          'unstakeAndWithdraw ' + withdrawalData.unstakeWithdrawSharesValue,
         )
 
         let approvalDepositSwapWithdraw: ApproveTransactionInfo | undefined
@@ -974,7 +975,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       const [unstakeAndWithdrawCall, priceImpact] = await Promise.all([
         this._getUnstakeAndWithdrawCall({
           vaultId: params.vaultId,
-          sharesValue: withdrawalData.unstakeWithdrawSharesAmount,
+          sharesValue: withdrawalData.unstakeWithdrawSharesValue,
         }),
         swapToAmount &&
           this._utils.getPriceImpact({
@@ -984,7 +985,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       ])
       unstakeWithdrawMulticallArgs.push(unstakeAndWithdrawCall.calldata)
       unstakeWithdrawMulticallOperations.push(
-        'unstakeAndWithdraw ' + withdrawalData.unstakeWithdrawSharesAmount,
+        'unstakeAndWithdraw ' + withdrawalData.unstakeWithdrawSharesValue,
       )
 
       let approvalDepositSwapWithdraw: ApproveTransactionInfo | undefined
@@ -1317,8 +1318,8 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     stakedShares: ITokenAmount
   }): Promise<{
     shouldWithdrawAll: boolean
-    approvedDepositAmount: ITokenAmount
-    unstakeWithdrawSharesAmount: bigint
+    calculatedUnstakeWithdrawAssets: ITokenAmount
+    unstakeWithdrawSharesValue: bigint
   }> {
     // if the requested amount is close to all staked shares, we make assumption to withdraw all
     // withdraw all assumption threshold is set to 0.9999
@@ -1327,9 +1328,9 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     const shouldWithdrawAll = new BigNumber(params.shares.toSolidityValue().toString())
       .div(params.stakedShares.toSolidityValue().toString())
       .gte(withdrawAllThreshold)
-    const unstakeWithdrawSharesAmount = shouldWithdrawAll ? 0n : params.shares.toSolidityValue()
+    const unstakeWithdrawSharesValue = shouldWithdrawAll ? 0n : params.shares.toSolidityValue()
 
-    let approvedDepositAmount: ITokenAmount | undefined
+    let calculatedUnstakeWithdrawAssets: ITokenAmount | undefined
     if (shouldWithdrawAll) {
       // if we are withdrawing all, we need to calculate full amount
       const calculatedFullAmount = await this._previewRedeem({
@@ -1337,24 +1338,22 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
         shares: params.shares,
       })
 
-      approvedDepositAmount = calculatedFullAmount
-      // approvedDepositAmount = this._compensateAmount(calculatedFullAmount, 'increase')
+      calculatedUnstakeWithdrawAssets = calculatedFullAmount
     } else {
-      // if we are not withdrawing all, we need to approve the transfer amount
-      approvedDepositAmount = params.amount
+      // if we are not withdrawing all, we need to approve the specific amount
+      calculatedUnstakeWithdrawAssets = params.amount
     }
 
     LoggingService.debug('_calculateWithdrawalDataForStakedShares', {
       shouldWithdrawAll,
-      unstakeWithdrawSharesAmount: unstakeWithdrawSharesAmount.toString(),
-      transferAmount: params.amount.toString(),
-      approvedDepositAmount: approvedDepositAmount.toString(),
+      unstakeWithdrawSharesAmount: unstakeWithdrawSharesValue.toString(),
+      unstakeWithdrawAssetsAmount: calculatedUnstakeWithdrawAssets.toString(),
     })
 
     return {
       shouldWithdrawAll,
-      approvedDepositAmount,
-      unstakeWithdrawSharesAmount,
+      calculatedUnstakeWithdrawAssets,
+      unstakeWithdrawSharesValue,
     }
   }
 
