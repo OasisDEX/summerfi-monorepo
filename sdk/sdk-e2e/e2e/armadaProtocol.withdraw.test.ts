@@ -150,9 +150,9 @@ describe('Armada Protocol Withdraw', () => {
     )
     console.log(
       'difference',
-      fleetAmountBefore.assets.subtract(fleetAmountAfter.assets).toString(),
+      fleetAmountAfter.assets.subtract(fleetAmountBefore.assets).toString(),
       '/',
-      stakedAmountBefore.assets.subtract(stakedAmountAfter.assets).toString(),
+      stakedAmountAfter.assets.subtract(stakedAmountBefore.assets).toString(),
     )
   }
 })

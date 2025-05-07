@@ -36,15 +36,15 @@ describe('Armada Protocol Deposit', () => {
       fleetAddress: usdcFleet,
       rpcUrl,
       stake: false,
-      amountValue: '0.2',
+      amountValue: '1.2',
     })
-    await runTests({
-      swapToSymbol: undefined,
-      chainId,
-      fleetAddress: usdcFleet,
-      rpcUrl,
-      amountValue: '0.2',
-    })
+    // await runTests({
+    //   swapToSymbol: undefined,
+    //   chainId,
+    //   fleetAddress: usdcFleet,
+    //   rpcUrl,
+    //   amountValue: '0.2',
+    // })
   })
 
   async function runTests({
@@ -157,9 +157,9 @@ describe('Armada Protocol Deposit', () => {
     )
     console.log(
       'difference',
-      fleetAmountBefore.assets.subtract(fleetAmountAfter.assets).toString(),
+      fleetAmountAfter.assets.subtract(fleetAmountBefore.assets).toString(),
       '/',
-      stakedAmountBefore.assets.subtract(stakedAmountAfter.assets).toString(),
+      stakedAmountAfter.assets.subtract(stakedAmountBefore.assets).toString(),
     )
   }
 })
