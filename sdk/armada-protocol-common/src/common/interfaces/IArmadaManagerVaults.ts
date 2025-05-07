@@ -9,6 +9,8 @@ import {
   type WithdrawTransactionInfo,
   type DepositTransactionInfo,
   type VaultSwitchTransactionInfo,
+  type IArmadaVaultInfo,
+  type ChainId,
 } from '@summerfi/sdk-common'
 
 export interface IArmadaManagerVaults {
@@ -101,4 +103,8 @@ export interface IArmadaManagerVaults {
     | [ApproveTransactionInfo, VaultSwitchTransactionInfo]
     | [ApproveTransactionInfo, ApproveTransactionInfo, VaultSwitchTransactionInfo]
   >
+
+  getVaultInfoList(params: { chainId: ChainId }): Promise<{
+    vaultList: IArmadaVaultInfo[]
+  }>
 }

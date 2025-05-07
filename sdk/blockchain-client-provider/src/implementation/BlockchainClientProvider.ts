@@ -21,10 +21,10 @@ const rpcConfig: IRpcConfig = {
 
 export function getRpcGatewayEndpoint(
   rpcGatewayUrl: string,
-  chainId: ChainId,
+  chainId: number,
   rpcConfig: IRpcConfig,
 ) {
-  const NetworkByChainID: Record<ChainId, string> = {
+  const NetworkByChainID: Record<number, string> = {
     [ChainIds.Mainnet]: 'mainnet',
     [ChainIds.ArbitrumOne]: 'arbitrum',
     [ChainIds.Optimism]: 'optimism',

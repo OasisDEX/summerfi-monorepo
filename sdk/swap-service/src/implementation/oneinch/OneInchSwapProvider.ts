@@ -16,6 +16,7 @@ import {
   SwapProviderType,
   SwapRoute,
   LoggingService,
+  isChainId,
 } from '@summerfi/sdk-common'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 import { type ISwapProvider } from '@summerfi/swap-common'
@@ -337,7 +338,9 @@ export class OneInchSwapProvider
           ? []
           : ONE_INCH_EXCLUDED_SWAP_PROTOCOLS.split(','),
       },
-      chainIds: ONE_INCH_SWAP_CHAIN_IDS.split(',').map((id: string) => parseInt(id)),
+      chainIds: ONE_INCH_SWAP_CHAIN_IDS.split(',')
+        .map((id: string) => parseInt(id))
+        .filter(isChainId),
     }
   }
 

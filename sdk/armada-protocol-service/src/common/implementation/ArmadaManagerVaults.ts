@@ -26,6 +26,8 @@ import {
   type DepositTransactionInfo,
   type ApproveTransactionInfo,
   type WithdrawTransactionInfo,
+  type ChainId,
+  type IArmadaVaultInfo,
 } from '@summerfi/sdk-common'
 import type { ISwapManager } from '@summerfi/swap-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
@@ -1385,5 +1387,11 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       })
     }
     return result
+  }
+
+  getVaultInfoList(
+    params: Parameters<IArmadaManagerVaults['getVaultInfoList']>[0],
+  ): ReturnType<IArmadaManagerVaults['getVaultInfoList']> {
+    throw new Error('Method not implemented.')
   }
 }
