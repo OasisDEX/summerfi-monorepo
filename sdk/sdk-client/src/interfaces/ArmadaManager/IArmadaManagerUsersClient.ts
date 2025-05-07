@@ -18,6 +18,7 @@ import {
   type ChainInfo,
   type ClaimTransactionInfo,
   type DelegateTransactionInfo,
+  type DepositTransactionInfo,
   type ExtendedTransactionInfo,
   type IAddress,
   type IArmadaPosition,
@@ -31,6 +32,7 @@ import {
   type StakeTransactionInfo,
   type UnstakeTransactionInfo,
   type VaultSwitchTransactionInfo,
+  type WithdrawTransactionInfo,
 } from '@summerfi/sdk-common'
 
 /**
@@ -168,7 +170,7 @@ export interface IArmadaManagerUsersClient {
     amount: ITokenAmount
     slippage: IPercentage
     shouldStake?: boolean
-  }): Promise<ExtendedTransactionInfo[]>
+  }): Promise<[DepositTransactionInfo] | [ApproveTransactionInfo, DepositTransactionInfo]>
 
   /**
    * @method getWithdrawTX
@@ -188,7 +190,10 @@ export interface IArmadaManagerUsersClient {
     amount: ITokenAmount
     toToken: IToken
     slippage: IPercentage
-  }): Promise<ExtendedTransactionInfo[]>
+  }):
+    | [WithdrawTransactionInfo]
+    | [ApproveTransactionInfo, WithdrawTransactionInfo]
+    | [ApproveTransactionInfo, ApproveTransactionInfo, WithdrawTransactionInfo]
 
   /**
    * @method getStakedBalance
@@ -474,6 +479,5 @@ export interface IArmadaManagerUsersClient {
     | [VaultSwitchTransactionInfo]
     | [ApproveTransactionInfo, VaultSwitchTransactionInfo]
     | [ApproveTransactionInfo, ApproveTransactionInfo, VaultSwitchTransactionInfo]
-    | [VaultSwitchTransactionInfo, VaultSwitchTransactionInfo]
   >
 }

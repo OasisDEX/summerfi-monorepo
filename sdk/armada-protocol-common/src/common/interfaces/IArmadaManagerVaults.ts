@@ -74,8 +74,7 @@ export interface IArmadaManagerVaults {
   }): Promise<
     | [WithdrawTransactionInfo]
     | [ApproveTransactionInfo, WithdrawTransactionInfo]
-    | [WithdrawTransactionInfo, WithdrawTransactionInfo]
-    | [ApproveTransactionInfo, WithdrawTransactionInfo, WithdrawTransactionInfo]
+    | [ApproveTransactionInfo, ApproveTransactionInfo, WithdrawTransactionInfo]
   >
 
   /**
@@ -101,6 +100,5 @@ export interface IArmadaManagerVaults {
     | [VaultSwitchTransactionInfo]
     | [ApproveTransactionInfo, VaultSwitchTransactionInfo]
     | [ApproveTransactionInfo, ApproveTransactionInfo, VaultSwitchTransactionInfo]
-    | [VaultSwitchTransactionInfo, VaultSwitchTransactionInfo]
   >
 }

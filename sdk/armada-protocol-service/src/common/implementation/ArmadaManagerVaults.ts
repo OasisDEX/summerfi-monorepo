@@ -227,11 +227,11 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       // Yes. Are fleetShares sufficient to meet the calculatedWithdrawShares?
       if (beforeFleetShares.toSolidityValue() >= calculatedSharesToWithdraw.toSolidityValue()) {
         // Yes. Withdraw all from fleetShares
-        LoggingService.debug('>>> fleet shares is enough for requested amount')
+        LoggingService.debug('>>> Withdraw all from fleetShares')
 
         // Approve the requested amount in shares
         const [
-          approvalToTakeSharesOnBehalf,
+          approvalToWithdrawSharesOnBehalf,
           approvalToDepositAsset,
           exitWithdrawMulticall,
           priceImpact,
@@ -263,10 +263,10 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
             }),
         ])
 
-        if (approvalToTakeSharesOnBehalf) {
+        if (approvalToWithdrawSharesOnBehalf) {
           LoggingService.debug('approveToTakeSharesOnBehalf', {
-            spender: approvalToTakeSharesOnBehalf.metadata.approvalSpender.toString(),
-            approved: approvalToTakeSharesOnBehalf.metadata.approvalAmount.toString(),
+            spender: approvalToWithdrawSharesOnBehalf.metadata.approvalSpender.toString(),
+            approved: approvalToWithdrawSharesOnBehalf.metadata.approvalAmount.toString(),
           })
         } else {
           LoggingService.debug('approveToTakeSharesOnBehalf', {
@@ -274,7 +274,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
           })
         }
 
-        approvalForWithdraw = approvalToTakeSharesOnBehalf
+        approvalForWithdraw = approvalToWithdrawSharesOnBehalf
         approvalForDeposit = approvalToDepositAsset
 
         const multicallCalldata = encodeFunctionData({
@@ -306,57 +306,55 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
                 ? [approvalForWithdraw, withdrawTransaction]
                 : [withdrawTransaction]
       } else {
-        // No. Withdraw all from fleetShares and the reminder from stakedShares
-        LoggingService.debug('>>> fleet shares is not enough')
+        // No. Withdraw all fleetShares and the reminder from stakedShares
+        LoggingService.debug('>>> Withdraw all fleetShares and the reminder from stakedShares')
 
         // Approve the requested amount in shares
-        const [approvalToTakeSharesOnBehalf, calculatedBeforeFleetAssets] = await Promise.all([
-          this._allowanceManager.getApproval({
-            chainInfo: params.sourceVaultId.chainInfo,
-            spender: admiralsQuartersAddress,
-            amount: calculatedSharesToWithdraw,
-            owner: params.user.wallet.address,
-          }),
-
+        const [calculatedBeforeFleetAssets] = await Promise.all([
           this._previewRedeem({
             vaultId: params.sourceVaultId,
             shares: beforeFleetShares,
           }),
         ])
 
-        if (approvalToTakeSharesOnBehalf) {
-          LoggingService.debug('approveToTakeSharesOnBehalf', {
-            spender: approvalToTakeSharesOnBehalf.metadata.approvalSpender.toString(),
-            approved: approvalToTakeSharesOnBehalf.metadata.approvalAmount.toString(),
-          })
-        } else {
-          LoggingService.debug('approveToTakeSharesOnBehalf', {
-            message: 'No approval needed',
-          })
-        }
-
-        approvalForWithdraw = approvalToTakeSharesOnBehalf
-
         const multicallArgs: HexData[] = []
         const multicallOperations: string[] = []
         const unstakeWithdrawMulticallArgs: HexData[] = []
         const unstakeWithdrawMulticallOperations: string[] = []
 
-        const reminderShares = calculatedSharesToWithdraw.subtract(beforeFleetShares)
+        const reminderFromStakedShares = calculatedSharesToWithdraw.subtract(beforeFleetShares)
         LoggingService.debug('- first take all fleet shares, then reminder from staked shares', {
           beforeFleetShares: beforeFleetShares.toString(),
           calculatedBeforeFleetAssets: calculatedBeforeFleetAssets.toString(),
-          reminderShares: reminderShares.toString(),
+          reminderShares: reminderFromStakedShares.toString(),
         })
 
         const withdrawalData = await this._calculateWithdrawalDataForStakedShares({
           vaultId: params.sourceVaultId,
-          shares: reminderShares,
+          shares: reminderFromStakedShares,
           stakedShares: beforeStakedShares,
           amount: withdrawAmount,
         })
 
-        const [exitWithdrawMulticall, unstakeAndWithdrawCall, priceImpact] = await Promise.all([
+        const [
+          approvalToWithdrawSharesOnBehalf,
+          approvalToDepositBasedOnWithdrawalData,
+          exitWithdrawMulticall,
+          unstakeAndWithdrawCall,
+          priceImpact,
+        ] = await Promise.all([
+          this._allowanceManager.getApproval({
+            chainInfo: params.sourceVaultId.chainInfo,
+            spender: admiralsQuartersAddress,
+            amount: reminderFromStakedShares,
+            owner: params.user.wallet.address,
+          }),
+          await this._getApprovalBasedOnWithdrawalData({
+            admiralsQuartersAddress,
+            vaultId: params.sourceVaultId,
+            user: params.user,
+            amount: withdrawalData.approvedDepositAmount,
+          }),
           this._getExitWithdrawMulticall({
             vaultId: params.sourceVaultId,
             slippage: params.slippage,
@@ -376,6 +374,20 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
             }),
         ])
 
+        if (approvalToWithdrawSharesOnBehalf) {
+          LoggingService.debug('approveToWithdrawSharesOnBehalf', {
+            spender: approvalToWithdrawSharesOnBehalf.metadata.approvalSpender.toString(),
+            approved: approvalToWithdrawSharesOnBehalf.metadata.approvalAmount.toString(),
+          })
+        } else {
+          LoggingService.debug('approveToWithdrawSharesOnBehalf', {
+            message: 'No approval needed',
+          })
+        }
+
+        approvalForWithdraw = approvalToWithdrawSharesOnBehalf
+        approvalForDeposit = approvalToDepositBasedOnWithdrawalData
+
         multicallArgs.push(...exitWithdrawMulticall.multicallArgs)
         multicallOperations.push(...exitWithdrawMulticall.multicallOperations)
 
@@ -383,12 +395,6 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
         unstakeWithdrawMulticallOperations.push(
           'unstakeAndWithdraw ' + withdrawalData.unstakeWithdrawSharesAmount,
         )
-        approvalForDeposit = await this._getApprovalBasedOnWithdrawalData({
-          admiralsQuartersAddress,
-          vaultId: params.sourceVaultId,
-          user: params.user,
-          amount: withdrawalData.approvedDepositAmount,
-        })
 
         // compose unstake withdraw deposit multicall
         const multicallCalldata = encodeFunctionData({
@@ -427,7 +433,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       }
     } else {
       // No. Unstake and withdraw everything from stakedShares.
-      LoggingService.debug('>>> fleet shares is 0, take all from staked shares')
+      LoggingService.debug('>>> Unstake and withdraw everything from stakedShares.')
 
       const unstakeWithdrawMulticallArgs: HexData[] = []
       const unstakeWithdrawMulticallOperations: string[] = []
@@ -692,11 +698,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
 
     // let swapMinAmount: ITokenAmount | undefined
     let swapToAmount: ITokenAmount | undefined = undefined
-    let transactions:
-      | [WithdrawTransactionInfo]
-      | [ApproveTransactionInfo, WithdrawTransactionInfo]
-      | [WithdrawTransactionInfo, WithdrawTransactionInfo]
-      | [ApproveTransactionInfo, WithdrawTransactionInfo, WithdrawTransactionInfo]
+    let transactions: Awaited<ReturnType<IArmadaManagerVaults['getWithdrawTx']>>
 
     const [beforeFleetShares, beforeStakedShares, calculatedSharesToWithdraw] = await Promise.all([
       this._utils.getFleetShares({
@@ -734,12 +736,12 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       // Yes. Are fleetShares sufficient to meet the calculatedWithdrawShares?
       if (beforeFleetShares.toSolidityValue() >= calculatedSharesToWithdraw.toSolidityValue()) {
         // Yes. Withdraw all from fleetShares
-        LoggingService.debug('>>> fleet shares is enough for requested amount')
+        LoggingService.debug('>>> Withdraw all from fleetShares')
 
         // TODO: when withdraw from fleetShares and no swap, we can skip approval and multicall and withdraw directly from fleet
 
         // Approve the requested amount in shares
-        const [approvalToTakeSharesOnBehalf, exitWithdrawMulticall, priceImpact] =
+        const [approvalToWithdrawSharesOnBehalf, exitWithdrawMulticall, priceImpact] =
           await Promise.all([
             this._allowanceManager.getApproval({
               chainInfo: params.vaultId.chainInfo,
@@ -767,10 +769,10 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
               }),
           ])
 
-        if (approvalToTakeSharesOnBehalf) {
+        if (approvalToWithdrawSharesOnBehalf) {
           LoggingService.debug('approveToTakeSharesOnBehalf', {
-            spender: approvalToTakeSharesOnBehalf.metadata.approvalSpender.toString(),
-            approved: approvalToTakeSharesOnBehalf.metadata.approvalAmount.toString(),
+            spender: approvalToWithdrawSharesOnBehalf.metadata.approvalSpender.toString(),
+            approved: approvalToWithdrawSharesOnBehalf.metadata.approvalAmount.toString(),
           })
         } else {
           LoggingService.debug('approveToTakeSharesOnBehalf', {
@@ -795,59 +797,53 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
             priceImpact,
           },
         })
-        if (approvalToTakeSharesOnBehalf) {
-          transactions = [approvalToTakeSharesOnBehalf, withdrawTransaction]
+        if (approvalToWithdrawSharesOnBehalf) {
+          transactions = [approvalToWithdrawSharesOnBehalf, withdrawTransaction]
         } else {
           transactions = [withdrawTransaction]
         }
       } else {
-        // No. Withdraw all from fleetShares and the reminder from stakedShares
-        LoggingService.debug('>>> fleet shares is not enough')
+        // No. Withdraw all fleetShares and the reminder from stakedShares
+        LoggingService.debug('>>> Withdraw all fleetShares and the reminder from stakedShares')
 
-        const [approveToTakeSharesOnBehalf, calculatedBeforeFleetAssets] = await Promise.all([
-          this._allowanceManager.getApproval({
-            chainInfo: params.vaultId.chainInfo,
-            spender: admiralsQuartersAddress,
-            amount: beforeFleetShares,
-            owner: params.user.wallet.address,
-          }),
+        const [calculatedBeforeFleetAssets] = await Promise.all([
           this._previewRedeem({
             vaultId: params.vaultId,
             shares: beforeFleetShares,
           }),
         ])
 
-        if (approveToTakeSharesOnBehalf) {
-          LoggingService.debug('approveToTakeSharesOnBehalf', {
-            spender: approveToTakeSharesOnBehalf.metadata.approvalSpender.toString(),
-            approved: approveToTakeSharesOnBehalf.metadata.approvalAmount.toString(),
-          })
-        } else {
-          LoggingService.debug('approveToTakeSharesOnBehalf', {
-            message: 'No approval needed',
-          })
-        }
-
         const multicallArgs: HexData[] = []
         const multicallOperations: string[] = []
         const unstakeWithdrawMulticallArgs: HexData[] = []
         const unstakeWithdrawMulticallOperations: string[] = []
 
-        const reminderShares = calculatedSharesToWithdraw.subtract(beforeFleetShares)
+        const reminderFromStakedShares = calculatedSharesToWithdraw.subtract(beforeFleetShares)
         LoggingService.debug('- first take all fleet shares, then reminder from staked shares', {
           beforeFleetShares: beforeFleetShares.toString(),
           calculatedBeforeFleetAssets: calculatedBeforeFleetAssets.toString(),
-          reminderShares: reminderShares.toString(),
+          reminderShares: reminderFromStakedShares.toString(),
         })
 
         const withdrawalData = await this._calculateWithdrawalDataForStakedShares({
           vaultId: params.vaultId,
-          shares: reminderShares,
+          shares: reminderFromStakedShares,
           stakedShares: beforeStakedShares,
           amount: withdrawAmount,
         })
 
-        const [exitWithdrawMulticall, unstakeAndWithdrawCall, priceImpact] = await Promise.all([
+        const [
+          approveToWithdrawSharesOnBehalf,
+          exitWithdrawMulticall,
+          unstakeAndWithdrawCall,
+          priceImpact,
+        ] = await Promise.all([
+          this._allowanceManager.getApproval({
+            chainInfo: params.vaultId.chainInfo,
+            spender: admiralsQuartersAddress,
+            amount: reminderFromStakedShares,
+            owner: params.user.wallet.address,
+          }),
           this._getExitWithdrawMulticall({
             vaultId: params.vaultId,
             slippage: params.slippage,
@@ -857,7 +853,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
             // we need to withdraw WETH for later deposit & unwrap operation
             withdrawToken:
               calculatedBeforeFleetAssets.token.symbol === 'WETH' && toEth
-                ? calculatedBeforeFleetAssets.token
+                ? calculatedBeforeFleetAssets.token // this is WETH
                 : swapToToken,
             shouldSwap,
             toEth,
@@ -872,6 +868,17 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
               toAmount: swapToAmount,
             }),
         ])
+
+        if (approveToWithdrawSharesOnBehalf) {
+          LoggingService.debug('approveToWithdrawSharesOnBehalf', {
+            spender: approveToWithdrawSharesOnBehalf.metadata.approvalSpender.toString(),
+            approved: approveToWithdrawSharesOnBehalf.metadata.approvalAmount.toString(),
+          })
+        } else {
+          LoggingService.debug('approveToWithdrawSharesOnBehalf', {
+            message: 'No approval needed',
+          })
+        }
 
         multicallArgs.push(...exitWithdrawMulticall.multicallArgs)
         multicallOperations.push(...exitWithdrawMulticall.multicallOperations)
@@ -940,35 +947,18 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
           },
         })
 
-        const unstakeAndWithdrawCalldata = encodeFunctionData({
-          abi: AdmiralsQuartersAbi,
-          functionName: 'multicall',
-          args: [unstakeWithdrawMulticallArgs],
-        })
-        const unstakeAndWithdrawTransaction = createWithdrawTransaction({
-          target: admiralsQuartersAddress,
-          calldata: unstakeAndWithdrawCalldata,
-          description: 'Unstake and withdraw: ' + unstakeWithdrawMulticallOperations.join(', '),
-          metadata: {
-            fromAmount: withdrawAmount,
-            toAmount: swapToAmount,
-            slippage: params.slippage,
-            priceImpact,
-          },
-        })
-        if (approveToTakeSharesOnBehalf) {
-          transactions = [
-            approveToTakeSharesOnBehalf,
-            withdrawTransaction,
-            unstakeAndWithdrawTransaction,
-          ]
-        } else {
-          transactions = [withdrawTransaction, unstakeAndWithdrawTransaction]
-        }
+        transactions =
+          approveToWithdrawSharesOnBehalf && approvalDepositSwapWithdraw
+            ? [approveToWithdrawSharesOnBehalf, approvalDepositSwapWithdraw, withdrawTransaction]
+            : approvalDepositSwapWithdraw
+              ? [approvalDepositSwapWithdraw, withdrawTransaction]
+              : approveToWithdrawSharesOnBehalf
+                ? [approveToWithdrawSharesOnBehalf, withdrawTransaction]
+                : [withdrawTransaction]
       }
     } else {
       // No. Unstake and withdraw everything from stakedShares.
-      LoggingService.debug('>>> fleet shares is 0, take all from staked shares')
+      LoggingService.debug('>>> Unstake and withdraw everything from stakedShares.')
 
       const unstakeWithdrawMulticallArgs: HexData[] = []
       const unstakeWithdrawMulticallOperations: string[] = []
