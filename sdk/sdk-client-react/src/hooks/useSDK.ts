@@ -82,7 +82,7 @@ export const useSDK = (params: UseSdk) => {
     () => getClaimableAggregatedRewardsHandler(sdk),
     [sdk],
   )
-  const getAggregatedClaimsForChainTX = useMemo(
+  const getAggregatedClaimsForChainTx = useMemo(
     () => getAggregatedClaimsForChainTXHandler(sdk),
     [sdk],
   )
@@ -108,14 +108,14 @@ export const useSDK = (params: UseSdk) => {
       getTargetChainInfo,
       getChain,
       getTokenBySymbol,
-      getDepositTx: getDepositTx,
-      getWithdrawTx: getWithdrawTx,
+      getDepositTx,
+      getWithdrawTx,
       getUserPositions,
       getUserPosition,
       getSwapQuote,
       getAggregatedRewards,
       getClaimableAggregatedRewards,
-      getAggregatedClaimsForChainTX,
+      getAggregatedClaimsForChainTx,
       getBridgeTx,
       getDelegateTx,
       getStakeTx,
@@ -145,7 +145,7 @@ export const useSDK = (params: UseSdk) => {
       getSwapQuote,
       getAggregatedRewards,
       getClaimableAggregatedRewards,
-      getAggregatedClaimsForChainTX,
+      getAggregatedClaimsForChainTx,
       getDelegateTx,
       getBridgeTx,
       getStakeTx,

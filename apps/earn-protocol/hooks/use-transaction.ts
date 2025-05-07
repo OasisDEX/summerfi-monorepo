@@ -336,7 +336,7 @@ export const useTransaction = ({
           slippage: Number(slippageConfig.slippage),
         })
 
-        if (transactionsList.length === 0) {
+        if (transactionsList.length <= 0) {
           throw new Error('Error getting the transactions list')
         }
         setTransactions(transactionsList)

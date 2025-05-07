@@ -40,7 +40,7 @@ export const getWithdrawTXHandler =
       }),
     })
 
-    return sdk.armada.users.getWithdrawTX({
+    return sdk.armada.users.getWithdrawTx({
       vaultId: poolId,
       user,
       amount: amount,

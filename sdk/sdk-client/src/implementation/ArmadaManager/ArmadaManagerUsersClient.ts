@@ -87,17 +87,17 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getPosition.query(params)
   }
 
-  /** @see IArmadaManagerUsersClient.getNewDepositTX */
-  async getNewDepositTX(
-    params: Parameters<IArmadaManagerUsersClient['getNewDepositTX']>[0],
-  ): ReturnType<IArmadaManagerUsersClient['getNewDepositTX']> {
+  /** @see IArmadaManagerUsersClient.getNewDepositTx */
+  async getNewDepositTx(
+    params: Parameters<IArmadaManagerUsersClient['getNewDepositTx']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getNewDepositTx']> {
     return this.rpcClient.armada.users.getDepositTx.query(params)
   }
 
-  /** @see IArmadaManagerUsersClient.getWithdrawTX */
-  async getWithdrawTX(
-    params: Parameters<IArmadaManagerUsersClient['getWithdrawTX']>[0],
-  ): ReturnType<IArmadaManagerUsersClient['getWithdrawTX']> {
+  /** @see IArmadaManagerUsersClient.getWithdrawTx */
+  async getWithdrawTx(
+    params: Parameters<IArmadaManagerUsersClient['getWithdrawTx']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getWithdrawTx']> {
     return this.rpcClient.armada.users.getWithdrawTx.query(params)
   }
 
@@ -147,10 +147,10 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getClaimableAggregatedRewards.query(params)
   }
 
-  async getAggregatedClaimsForChainTX(
-    params: Parameters<IArmadaManagerUsersClient['getAggregatedClaimsForChainTX']>[0],
-  ): ReturnType<IArmadaManagerUsersClient['getAggregatedClaimsForChainTX']> {
-    return this.rpcClient.armada.users.getAggregatedClaimsForChainTX.query(params)
+  async getAggregatedClaimsForChainTx(
+    params: Parameters<IArmadaManagerUsersClient['getAggregatedClaimsForChainTx']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getAggregatedClaimsForChainTx']> {
+    return this.rpcClient.armada.users.getAggregatedClaimsForChainTx.query(params)
   }
 
   async getUserDelegatee(

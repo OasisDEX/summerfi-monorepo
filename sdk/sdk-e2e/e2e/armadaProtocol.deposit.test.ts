@@ -98,7 +98,7 @@ describe('Armada Protocol Deposit', () => {
       amount: amountValue,
       token: swapToken || token,
     })
-    const transactions = await sdk.armada.users.getNewDepositTX({
+    const transactions = await sdk.armada.users.getNewDepositTx({
       vaultId,
       user,
       amount,
