@@ -50,6 +50,7 @@ import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { VaultManageViewDetails } from '@/components/layout/VaultManageView/VaultManageViewDetails'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
+import { PendingTransactionsList } from '@/components/molecules/PendingTransactionsList/PendingTransactionsList'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
@@ -568,7 +569,12 @@ export const VaultManageViewComponent = ({
         reset()
       }
     },
-    content: sidebarContent,
+    content: (
+      <>
+        {sidebarContent}
+        <PendingTransactionsList transactions={transactions} />
+      </>
+    ),
     customHeader:
       !isDrawerOpen && isMobile ? (
         <SidebarMobileHeader
