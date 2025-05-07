@@ -13,12 +13,12 @@ describe('SDK Server Common | Unit | ManagerProviderBase', () => {
         new TestManagerProvider({
           type: TestProviderType.TestProvider,
           configProvider: {} as unknown as IConfigurationProvider,
-          supportedChainIds: [1, 5, 7],
+          supportedChainIds: [1],
         }),
         new TestManagerProvider({
           type: TestProviderType.OtherTestProvider,
           configProvider: {} as unknown as IConfigurationProvider,
-          supportedChainIds: [2, 3, 10],
+          supportedChainIds: [10],
         }),
       ],
     })

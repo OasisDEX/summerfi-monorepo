@@ -57,14 +57,14 @@ describe('Maker Protocol Plugin', () => {
       protocol: {
         ...makerPoolIdMock.protocol,
         chainInfo: ChainInfo.createFrom({
-          chainId: 2,
+          chainId: 10,
           name: 'Unknown',
         }),
       },
     }
     await expect(
       makerProtocolPlugin.getLendingPool(invalidMakerPoolIdUnsupportedChain),
-    ).rejects.toThrow('Chain ID 2 is not supported')
+    ).rejects.toThrow('Chain ID 10 is not supported')
   })
 
   it('should throw an error when calling getPool with chain id missing from ctx', async () => {

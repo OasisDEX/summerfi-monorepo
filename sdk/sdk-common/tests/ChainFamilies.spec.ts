@@ -1,9 +1,9 @@
-import { ChainInfo } from '../src'
+import { ChainIds, ChainInfo } from '../src'
 import { getChainFamilyInfoByChainId } from '../src/common/implementation/ChainFamilies'
 
 describe('Chain Families', () => {
   it('should retrieve chain info by Id', () => {
-    const ethereumMainnet = getChainFamilyInfoByChainId(1)
+    const ethereumMainnet = getChainFamilyInfoByChainId(ChainIds.Mainnet)
 
     expect(ethereumMainnet).toEqual({
       familyName: 'Ethereum',
@@ -13,13 +13,13 @@ describe('Chain Families', () => {
       }),
     })
 
-    const ethereumGoerli = getChainFamilyInfoByChainId(5)
+    const base = getChainFamilyInfoByChainId(ChainIds.Base)
 
-    expect(ethereumGoerli).toEqual({
-      familyName: 'Ethereum',
+    expect(base).toEqual({
+      familyName: 'Base',
       chainInfo: ChainInfo.createFrom({
-        chainId: 5,
-        name: 'Goerli',
+        chainId: ChainIds.Base,
+        name: 'Base',
       }),
     })
 
