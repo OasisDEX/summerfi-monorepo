@@ -339,7 +339,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
 
         const [
           approvalToWithdrawSharesOnBehalf,
-          approvalToDepositBasedOnUnstakeWithdrawData,
+          approvalToDepositBasedWithdrawAmount,
           exitWithdrawMulticall,
           unstakeAndWithdrawCall,
           priceImpact,
@@ -350,11 +350,11 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
             amount: this._compensateAmount(reminderFromStakedShares, 'increase'),
             owner: params.user.wallet.address,
           }),
-          await this._getApprovalBasedOnUnstakeWithdrawData({
-            admiralsQuartersAddress,
-            vaultId: params.sourceVaultId,
-            user: params.user,
-            amount: calculatedUnstakeWithdrawData.calculatedUnstakeWithdrawAssets,
+          this._allowanceManager.getApproval({
+            chainInfo: params.sourceVaultId.chainInfo,
+            spender: admiralsQuartersAddress,
+            amount: withdrawAmount,
+            owner: params.user.wallet.address,
           }),
           this._getExitWithdrawMulticall({
             vaultId: params.sourceVaultId,
@@ -387,7 +387,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
         }
 
         approvalForWithdraw = approvalToWithdrawSharesOnBehalf
-        approvalForDeposit = approvalToDepositBasedOnUnstakeWithdrawData
+        approvalForDeposit = approvalToDepositBasedWithdrawAmount
 
         multicallArgs.push(...exitWithdrawMulticall.multicallArgs)
         multicallOperations.push(...exitWithdrawMulticall.multicallOperations)

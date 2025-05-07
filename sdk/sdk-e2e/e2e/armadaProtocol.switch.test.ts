@@ -32,7 +32,7 @@ describe('Armada Protocol Switch', () => {
     await runTests({
       chainId,
       sourceFleetAddress: usdcFleet,
-      destinationFleetAddress: ethFleet,
+      destinationFleetAddress: eurcFleet,
       rpcUrl,
     })
     // await runTests({
