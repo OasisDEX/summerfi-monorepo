@@ -525,17 +525,20 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
 
     const inAmount = params.amount
     const fromEth = inAmount.token.symbol === 'ETH'
-    const swapFromAmount = fromEth
-      ? // if the deposit is in ETH, we need to wrap it to WETH for the swap
-        TokenAmount.createFrom({
-          amount: inAmount.amount,
-          token: await this._tokensManager.getTokenBySymbol({
-            chainInfo: params.vaultId.chainInfo,
-            symbol: 'WETH',
-          }),
-        })
-      : inAmount
-    const shouldSwap = !swapFromAmount.token.address.equals(fleetToken.address)
+    let swapFromAmount = inAmount
+    // if the deposit is in ETH, we need to convert to WETH for the swap
+    if (fromEth) {
+      const token = this._tokensManager.getTokenBySymbol({
+        chainInfo: params.vaultId.chainInfo,
+        symbol: 'WETH',
+      })
+      swapFromAmount = TokenAmount.createFrom({
+        amount: inAmount.amount,
+        token,
+      })
+    }
+
+    const shouldSwap = swapFromAmount.token.address.value !== fleetToken.address.value
     const shouldStake = params.shouldStake ?? true
 
     let swapToAmount: ITokenAmount | undefined
