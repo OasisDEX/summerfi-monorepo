@@ -78,3 +78,9 @@
   align-items: center;
   margin-top: var(--general-space-8);
 }
+
+.manualSetAmountControls {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-space-x-small);
+}

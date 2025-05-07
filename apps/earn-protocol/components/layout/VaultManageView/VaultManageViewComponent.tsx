@@ -407,9 +407,9 @@ export const VaultManageViewComponent = ({
     const isWithdraw = sidebarTransactionType === TransactionAction.WITHDRAW
     const isDepositOrWithdraw = isDeposit || isWithdraw
 
+    // trying to make this simple - if there is no next transaction, we are in the entry points
+    // also adding a fail safe for the mapping missing here at the end
     if (!nextTransaction) {
-      // trying to make this simple - if there is no next transaction, we are in the entry points
-      // also adding a fail safe for the mapping missing here at the end
       if (isSwitch) {
         return (
           <ControlsSwitch
@@ -459,66 +459,48 @@ export const VaultManageViewComponent = ({
         return <div>Sidebar TX type not supported</div>
       }
     }
+    if (isSwitch && selectedSwitchVault) {
+      return (
+        <ControlsSwitchTransactionView
+          currentVault={vault}
+          vaultsList={potentialVaultsToSwitchTo}
+          selectedSwitchVault={selectedSwitchVault}
+          vaultsApyByNetworkMap={vaultsApyByNetworkMap}
+          transactions={transactions}
+          switchingAmount={switchAmountDisplay}
+          setSwitchingAmount={switchManualSetAmount}
+          isLoading={sidebar.primaryButton.loading}
+          switchingAmountOnBlur={switchOnBlur}
+          switchingAmountOnFocus={switchOnFocus}
+        />
+      )
+    }
     if (nextTransaction.type === TransactionType.Approve) {
-      if (isSwitch && selectedSwitchVault) {
-        return (
-          <ControlsSwitchTransactionView
-            currentVault={vault}
-            vaultsList={potentialVaultsToSwitchTo}
-            selectedSwitchVault={selectedSwitchVault}
-            vaultsApyByNetworkMap={vaultsApyByNetworkMap}
-            transactions={transactions}
-            switchingAmount={switchAmountDisplay}
-            setSwitchingAmount={switchManualSetAmount}
-            isLoading={sidebar.primaryButton.loading}
-            switchingAmountOnBlur={switchOnBlur}
-            switchingAmountOnFocus={switchOnFocus}
-          />
-        )
-      } else if (isDepositOrWithdraw) {
-        return (
-          <ControlsApproval
-            tokenSymbol={approvalTokenSymbol}
-            approvalType={approvalType}
-            setApprovalType={setApprovalType}
-            setApprovalCustomValue={approvalHandleAmountChange}
-            approvalCustomValue={approvalCustomAmount}
-            customApprovalManualSetAmount={approvalManualSetAmount}
-            customApprovalOnBlur={approvalOnBlur}
-            customApprovalOnFocus={approvalOnFocus}
-            tokenBalance={selectedTokenBalance}
-          />
-        )
-      } else {
-        return (
-          <div>
-            {nextTransaction.type}/{sidebarTransactionType} type not supported
-          </div>
-        )
-      }
+      return (
+        <ControlsApproval
+          tokenSymbol={approvalTokenSymbol}
+          approvalType={approvalType}
+          setApprovalType={setApprovalType}
+          setApprovalCustomValue={approvalHandleAmountChange}
+          approvalCustomValue={approvalCustomAmount}
+          customApprovalManualSetAmount={approvalManualSetAmount}
+          customApprovalOnBlur={approvalOnBlur}
+          customApprovalOnFocus={approvalOnFocus}
+          tokenBalance={selectedTokenBalance}
+        />
+      )
     } else if (nextTransaction.type === TransactionType.Deposit) {
-      if (isSwitch) {
-        return <div>Switch deposit view</div>
-      } else if (isDepositOrWithdraw) {
-        return (
-          <OrderInfoDeposit
-            chainId={vaultChainId}
-            transaction={nextTransaction}
-            amountParsed={amountParsed}
-            amountDisplayUSD={amountDisplayUSDWithSwap}
-            transactionFee={transactionFee}
-            transactionFeeLoading={transactionFeeLoading}
-          />
-        )
-      } else {
-        return (
-          <div>
-            {nextTransaction.type}/{sidebarTransactionType} type not supported
-          </div>
-        )
-      }
+      return (
+        <OrderInfoDeposit
+          chainId={vaultChainId}
+          transaction={nextTransaction}
+          amountParsed={amountParsed}
+          amountDisplayUSD={amountDisplayUSDWithSwap}
+          transactionFee={transactionFee}
+          transactionFeeLoading={transactionFeeLoading}
+        />
+      )
     } else if (nextTransaction.type === TransactionType.Withdraw) {
-      // no switch withdraw view (duh)
       return (
         <OrderInfoWithdraw
           chainId={vaultChainId}
@@ -530,7 +512,9 @@ export const VaultManageViewComponent = ({
         />
       )
     } else {
-      return <div>Transaction type not supported</div>
+      // this is a fail safe for the mapping missing here at the end
+      // we should never get here
+      return <div>Transaction type ({nextTransaction.type}) not supported</div>
     }
   }, [
     sidebarTransactionType,

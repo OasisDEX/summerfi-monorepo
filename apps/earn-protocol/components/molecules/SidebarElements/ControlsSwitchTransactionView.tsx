@@ -201,6 +201,24 @@ export const ControlsSwitchTransactionView = ({
           options={[]}
           dropdownValue={onlyTokenOption}
         />
+        <div className={controlsSwitchTransactionViewStyles.manualSetAmountControls}>
+          <Button
+            variant="secondarySmall"
+            onClick={() => {
+              setSwitchAmountTempValue(new BigNumber(currentAmount).multipliedBy(0.5).toString())
+            }}
+          >
+            50%
+          </Button>
+          <Button
+            variant="secondarySmall"
+            onClick={() => {
+              setSwitchAmountTempValue(currentAmount)
+            }}
+          >
+            Max
+          </Button>
+        </div>
         <Button variant="primaryLarge" onClick={saveNextSwitchingAmount}>
           Update
         </Button>
