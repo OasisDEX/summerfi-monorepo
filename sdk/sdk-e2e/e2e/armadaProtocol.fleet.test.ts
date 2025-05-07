@@ -40,14 +40,9 @@ describe('Armada Protocol User', () => {
       address: userAddress,
     }),
   })
-  const vaultId = ArmadaVaultId.createFrom({
-    chainInfo,
-    fleetAddress,
-  })
-
   console.log(`Running on ${chainInfo.name} for user ${userAddress.value}`)
 
-  it.skip(`should get all user positions: ${fleetAddress.value}`, async () => {
+  it(`should get all user positions: ${fleetAddress.value}`, async () => {
     const positions = await sdk.armada.users.getUserPositions({
       user,
     })
@@ -64,20 +59,29 @@ describe('Armada Protocol User', () => {
     })
     assert(position != null, 'User position not found')
     console.log(`User position for fleet ${fleetAddress.value}: ${position.amount.toString()}`)
+  })
 
-    const fleetAmountBefore = await sdk.armada.users.getFleetBalance({
-      vaultId,
-      user,
+  it('should get all fleets', async () => {
+    const raw = await sdk.armada.users.getVaultsRaw({
+      chainInfo,
     })
-    const stakedAmountBefore = await sdk.armada.users.getStakedBalance({
-      vaultId,
-      user,
+    const vaults = raw.vaults
+    assert(vaults != null, 'No vaults found')
+    console.log('Vaults:')
+    vaults.forEach((vault) => {
+      console.log(`Vault ${vault.id} amount: ${vault.inputTokenBalance}`)
     })
-    console.log(
-      'Fleet: ',
-      fleetAmountBefore.assets.toSolidityValue(),
-      'Staked: ',
-      stakedAmountBefore.assets.toSolidityValue(),
-    )
+  })
+
+  it('should get specific fleet', async () => {
+    const raw = await sdk.armada.users.getVaultRaw({
+      vaultId: ArmadaVaultId.createFrom({
+        chainInfo,
+        fleetAddress,
+      }),
+    })
+    const vault = raw.vault
+    assert(vault != null, 'Vault not found')
+    console.log(`Vault ${vault.id} amount: ${vault.inputTokenBalance}`)
   })
 })

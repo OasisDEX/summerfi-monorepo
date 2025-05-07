@@ -157,9 +157,9 @@ describe('Armada Protocol Deposit', () => {
     )
     console.log(
       'difference',
-      fleetAmountAfter.assets.subtract(fleetAmountBefore.assets).toString(),
+      fleetAmountBefore.assets.subtract(fleetAmountAfter.assets).toString(),
       '/',
-      stakedAmountAfter.assets.subtract(stakedAmountBefore.assets).toString(),
+      stakedAmountBefore.assets.subtract(stakedAmountAfter.assets).toString(),
     )
   }
 })
