@@ -1,12 +1,31 @@
-import { useMemo } from 'react'
-import { GradientBox, Icon, Text } from '@summerfi/app-earn-ui'
+import { type Dispatch, type ReactNode, type SetStateAction, useMemo, useState } from 'react'
+import {
+  Button,
+  Card,
+  getDisplayToken,
+  GradientBox,
+  Icon,
+  InputWithDropdown,
+  SkeletonLine,
+  Text,
+} from '@summerfi/app-earn-ui'
 import {
   type SDKChainId,
   type SDKVaultishType,
   type TokenSymbolsList,
   type VaultApyData,
 } from '@summerfi/app-types'
-import { formatDecimalAsPercent, subgraphNetworkToSDKId } from '@summerfi/app-utils'
+import {
+  formatCryptoBalance,
+  formatDecimalAsPercent,
+  subgraphNetworkToSDKId,
+} from '@summerfi/app-utils'
+import {
+  type ExtendedTransactionInfo,
+  TransactionType,
+  type VaultSwitchTransactionInfo,
+} from '@summerfi/sdk-common'
+import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 import { capitalize } from 'lodash-es'
 
@@ -20,12 +39,16 @@ const VaultBoxContent = ({
   chainId,
   risk,
   apy,
+  isLoading,
+  amount,
 }: {
   title: string
   tokenName: TokenSymbolsList
   chainId: SDKChainId
   risk: string
   apy?: number
+  amount?: string
+  isLoading?: boolean
 }) => (
   <>
     <Text variant="p4semi" className={controlsSwitchTransactionViewStyles.vaultBoxFromTo}>
@@ -49,8 +72,28 @@ const VaultBoxContent = ({
         Live&nbsp;APY:&nbsp;{formatDecimalAsPercent(apy)}
       </Text>
     )}
+    {isLoading ? (
+      <SkeletonLine width={100} height={10} />
+    ) : (
+      <Text variant="p2semi" style={{ color: 'var(--color-text-primary)' }}>
+        {amount ? `${formatCryptoBalance(amount)} ${tokenName}` : 'n/a'}
+      </Text>
+    )}
   </>
 )
+
+const WhatsChangingBox = ({ title, change }: { title: string; change: ReactNode }) => {
+  return (
+    <div className={controlsSwitchTransactionViewStyles.whatsChangingBox}>
+      <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
+        {title}
+      </Text>
+      <Text variant="p3semi" style={{ color: 'var(--color-text-primary)' }}>
+        {change}
+      </Text>
+    </div>
+  )
+}
 
 type ControlsSwitchTransactionViewProps = {
   currentVault: SDKVaultishType
@@ -59,6 +102,12 @@ type ControlsSwitchTransactionViewProps = {
   vaultsApyByNetworkMap: {
     [key: `${string}-${number}`]: VaultApyData
   }
+  transactions?: (ExtendedTransactionInfo | VaultSwitchTransactionInfo)[]
+  isLoading?: boolean
+  switchingAmount: string
+  setSwitchingAmount: Dispatch<SetStateAction<string | undefined>>
+  switchingAmountOnFocus: () => void
+  switchingAmountOnBlur: () => void
 }
 
 export const ControlsSwitchTransactionView = ({
@@ -66,47 +115,209 @@ export const ControlsSwitchTransactionView = ({
   vaultsList,
   selectedSwitchVault,
   vaultsApyByNetworkMap,
+  transactions,
+  isLoading,
+  switchingAmount,
+  switchingAmountOnFocus,
+  switchingAmountOnBlur,
+  setSwitchingAmount,
 }: ControlsSwitchTransactionViewProps) => {
-  const vaultChainId = subgraphNetworkToSDKId(currentVault.protocol.network)
-  const selectedVault = useMemo(() => {
-    const [selectedVaultId] = selectedSwitchVault.split('-')
+  const [switchAmountTempValue, setSwitchAmountTempValue] = useState(switchingAmount)
+  const [isEditingSwitchAmount, setIsEditingSwitchAmount] = useState(false)
 
-    return vaultsList.find((vault) => vault.id === selectedVaultId) as SDKVaultishType
+  const vaultChainId = subgraphNetworkToSDKId(currentVault.protocol.network)
+
+  const nextVault = useMemo(() => {
+    const [nextVaultId] = selectedSwitchVault.split('-')
+
+    return vaultsList.find((vault) => vault.id === nextVaultId) as SDKVaultishType
   }, [selectedSwitchVault, vaultsList])
 
-  const currentLiveApy = vaultsApyByNetworkMap[`${currentVault.id}-${vaultChainId}`].apy
-  const selectedLiveApy = vaultsApyByNetworkMap[`${selectedVault.id}-${vaultChainId}`].apy
+  const vaultSwitchTransaction = transactions?.find(
+    (transaction) => transaction.type === TransactionType.VaultSwitch,
+  ) as VaultSwitchTransactionInfo
+
+  const currentAmount = vaultSwitchTransaction.metadata.fromAmount.amount
+  const currentToken = getDisplayToken(
+    currentVault.inputToken.symbol.toUpperCase(),
+  ) as TokenSymbolsList
+  const currentApyObject = vaultsApyByNetworkMap[`${currentVault.id}-${vaultChainId}`]
+  const currentLiveApy = currentApyObject.apy
+  const current30dApy = currentApyObject.sma30d
+  const currentTokenPrice = currentVault.inputTokenPriceUSD
+  const currentYearlyEarnings =
+    currentLiveApy && currentTokenPrice
+      ? new BigNumber(currentAmount)
+          .multipliedBy(currentLiveApy)
+          .multipliedBy(currentTokenPrice)
+          .toString()
+      : false
+
+  const nextAmount = vaultSwitchTransaction.metadata.toAmount?.amount
+  const nextApyObject = vaultsApyByNetworkMap[`${nextVault.id}-${vaultChainId}`]
+  const nextLiveApy = nextApyObject.apy
+  const next30dApy = nextApyObject.sma30d
+  const nextToken = getDisplayToken(nextVault.inputToken.symbol.toUpperCase()) as TokenSymbolsList
+  const nextTokenPrice = nextVault.inputTokenPriceUSD
+  const nextYearlyEarnings =
+    nextLiveApy && nextAmount && nextTokenPrice
+      ? new BigNumber(nextAmount).multipliedBy(nextLiveApy).multipliedBy(nextTokenPrice).toString()
+      : false
+
+  const tempSwitchingAmountInUsd = useMemo(() => {
+    return new BigNumber(switchAmountTempValue).times(currentTokenPrice ?? 0).toString()
+  }, [switchAmountTempValue, currentTokenPrice])
+
+  const handleTempAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSwitchAmountTempValue(e.target.value)
+  }
+
+  const editSwitchingAmount = () => {
+    setIsEditingSwitchAmount(true)
+  }
+
+  const saveNextSwitchingAmount = () => {
+    setSwitchingAmount(switchAmountTempValue)
+    setIsEditingSwitchAmount(false)
+  }
+
+  if (isEditingSwitchAmount) {
+    const onlyTokenOption = {
+      tokenSymbol: currentVault.inputToken.symbol as TokenSymbolsList,
+      label: currentVault.inputToken.symbol,
+      value: currentVault.inputToken.symbol,
+    }
+
+    return (
+      <div className={controlsSwitchTransactionViewStyles.controlsSwitchTransactionView}>
+        <InputWithDropdown
+          value={switchAmountTempValue}
+          placeholder="10,000.00"
+          secondaryValue={tempSwitchingAmountInUsd}
+          handleChange={handleTempAmountChange}
+          onFocus={switchingAmountOnFocus}
+          onBlur={switchingAmountOnBlur}
+          selectAllOnFocus
+          options={[]}
+          dropdownValue={onlyTokenOption}
+        />
+        <Button variant="primaryLarge" onClick={saveNextSwitchingAmount}>
+          Update
+        </Button>
+      </div>
+    )
+  }
 
   return (
-    <div className={controlsSwitchTransactionViewStyles.vaultsWrapper}>
-      <div
-        className={clsx(
-          controlsSwitchTransactionViewStyles.vaultBox,
-          controlsSwitchTransactionViewStyles.vaultBoxCurrent,
-        )}
-      >
-        <VaultBoxContent
-          title="From"
-          chainId={vaultChainId}
-          tokenName={currentVault.inputToken.symbol.toUpperCase() as TokenSymbolsList}
-          risk={capitalize(currentVault.customFields?.risk ?? 'Lower')}
-          apy={currentLiveApy}
-        />
-      </div>
-      <div className={controlsSwitchTransactionViewStyles.arrowBox}>
-        <Icon iconName="arrow_forward" size={20} />
-      </div>
-      <GradientBox selected style={{ cursor: 'initial' }}>
-        <div className={clsx(controlsSwitchTransactionViewStyles.vaultBox)}>
+    <div className={controlsSwitchTransactionViewStyles.controlsSwitchTransactionView}>
+      <div className={controlsSwitchTransactionViewStyles.vaultsWrapper}>
+        <div
+          className={clsx(
+            controlsSwitchTransactionViewStyles.vaultBox,
+            controlsSwitchTransactionViewStyles.vaultBoxCurrent,
+          )}
+          style={{
+            width: '50%',
+          }}
+        >
           <VaultBoxContent
-            title="To"
+            title="From"
             chainId={vaultChainId}
-            tokenName={selectedVault.inputToken.symbol.toUpperCase() as TokenSymbolsList}
-            risk={capitalize(selectedVault.customFields?.risk ?? 'Lower')}
-            apy={selectedLiveApy}
+            tokenName={currentToken}
+            risk={capitalize(currentVault.customFields?.risk ?? 'Lower')}
+            apy={currentLiveApy}
+            amount={currentAmount}
+            isLoading={isLoading}
           />
         </div>
+        <div className={controlsSwitchTransactionViewStyles.arrowBox}>
+          <Icon iconName="arrow_forward" size={20} />
+        </div>
+        <GradientBox selected style={{ cursor: 'initial', width: '50%' }}>
+          <div className={clsx(controlsSwitchTransactionViewStyles.vaultBox)}>
+            <VaultBoxContent
+              title="To"
+              chainId={vaultChainId}
+              tokenName={nextToken}
+              risk={capitalize(nextVault.customFields?.risk ?? 'Lower')}
+              apy={nextLiveApy}
+              amount={nextAmount}
+              isLoading={isLoading}
+            />
+          </div>
+        </GradientBox>
+      </div>
+      <GradientBox selected style={{ cursor: 'initial' }}>
+        <div className={controlsSwitchTransactionViewStyles.totalSwitchingBox}>
+          <div className={controlsSwitchTransactionViewStyles.totalSwitchingBoxTitleRow}>
+            <Text variant="p3semi" style={{ color: 'var(--color-text-primary-disabled)' }}>
+              Total Switching
+            </Text>
+            <Button
+              variant="textPrimaryMedium"
+              style={{ paddingTop: 0, paddingBottom: 0 }}
+              onClick={editSwitchingAmount}
+            >
+              Edit
+            </Button>
+          </div>
+          <Text variant="p1semi" style={{ color: 'var(--color-text-primary)' }}>
+            {formatCryptoBalance(
+              new BigNumber(switchingAmount).gt(0) ? switchingAmount : currentAmount,
+            )}
+            &nbsp;
+            {currentToken}
+          </Text>
+        </div>
       </GradientBox>
+      <Card variant="cardPrimaryMediumPaddings" style={{ flexDirection: 'column' }}>
+        <Text
+          variant="p2semi"
+          style={{ color: 'var(--color-text-primary-disabled)', marginBottom: '4px' }}
+        >
+          What&apos;s changing
+        </Text>
+        <WhatsChangingBox
+          title="Deposit asset"
+          change={
+            <>
+              {currentToken}&nbsp;→&nbsp;{nextToken}
+            </>
+          }
+        />
+        <WhatsChangingBox
+          title="Live APY"
+          change={
+            <>
+              {formatDecimalAsPercent(currentLiveApy)}&nbsp;→&nbsp;
+              {formatDecimalAsPercent(nextLiveApy)}
+              &nbsp;
+              <span style={{ color: 'var(--color-text-primary-disabled)' }}>(New Asset)</span>
+            </>
+          }
+        />
+        <WhatsChangingBox
+          title="30d APY"
+          change={
+            <>
+              {current30dApy ? formatDecimalAsPercent(current30dApy) : 'n/a'}&nbsp;→&nbsp;
+              {next30dApy ? formatDecimalAsPercent(next30dApy) : 'n/a'}
+              &nbsp;
+              <span style={{ color: 'var(--color-text-primary-disabled)' }}>(New Asset)</span>
+            </>
+          }
+        />
+        <WhatsChangingBox
+          title="1yr earning difference"
+          change={
+            <>
+              {currentYearlyEarnings ? <>${formatCryptoBalance(currentYearlyEarnings)}</> : 'n/a'}
+              &nbsp;→&nbsp;
+              {nextYearlyEarnings ? <>${formatCryptoBalance(nextYearlyEarnings)}</> : 'n/a'}
+            </>
+          }
+        />
+      </Card>
     </div>
   )
 }

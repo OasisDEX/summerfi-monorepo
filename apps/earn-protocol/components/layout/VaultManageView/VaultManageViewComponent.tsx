@@ -140,6 +140,9 @@ export const VaultManageViewComponent = ({
   const { userWalletAddress, isLoadingAccount } = useUserWallet()
   const ownerView = viewWalletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
   const { publicClient } = useNetworkAlignedClient()
+  const [sidebarTransactionType, setSidebarTransactionType] = useState<TransactionAction>(
+    TransactionAction.DEPOSIT,
+  )
 
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
 
@@ -177,6 +180,11 @@ export const VaultManageViewComponent = ({
     chainId: vaultChainId,
   })
 
+  const { netValue } = getPositionValues({
+    position,
+    vault,
+  })
+
   const {
     amountParsed,
     manualSetAmount,
@@ -186,6 +194,7 @@ export const VaultManageViewComponent = ({
     onBlur,
     onFocus,
   } = useAmount({
+    // withdraw/deposit amount
     tokenDecimals: vault.inputToken.decimals,
     tokenPrice: vault.inputTokenPriceUSD,
     selectedToken,
@@ -199,24 +208,48 @@ export const VaultManageViewComponent = ({
     onFocus: approvalOnFocus,
     manualSetAmount: approvalManualSetAmount,
   } = useAmount({
+    // approval amount
     tokenDecimals: vault.inputToken.decimals,
     tokenPrice: vault.inputTokenPriceUSD,
     selectedToken,
     initialAmount: amountParsed.toString(),
   })
 
-  const { netValue } = getPositionValues({
-    position,
-    vault,
+  const {
+    manualSetAmount: switchManualSetAmount,
+    amountDisplay: switchAmountDisplay,
+    amountParsed: switchAmountParsed,
+    onBlur: switchOnBlur,
+    onFocus: switchOnFocus,
+  } = useAmount({
+    // switch amount
+    tokenDecimals: vault.inputToken.decimals,
+    tokenPrice: vault.inputTokenPriceUSD,
+    selectedToken,
+    initialAmount: netValue.toString(),
   })
+
+  const transactionAmount = useMemo(() => {
+    if (sidebarTransactionType === TransactionAction.SWITCH) {
+      return switchAmountParsed
+    }
+
+    return amountParsed
+  }, [sidebarTransactionType, switchAmountParsed, amountParsed])
+
+  const transactionManualSetAmount = useMemo(() => {
+    if (sidebarTransactionType === TransactionAction.SWITCH) {
+      return switchManualSetAmount
+    }
+
+    return manualSetAmount
+  }, [sidebarTransactionType, switchManualSetAmount, manualSetAmount])
 
   const {
     sidebar,
     txHashes,
     removeTxHash,
     reset,
-    sidebarTransactionType,
-    setSidebarTransactionType,
     nextTransaction,
     approvalType,
     approvalTokenSymbol,
@@ -224,11 +257,12 @@ export const VaultManageViewComponent = ({
     backToInit,
     setSelectedSwitchVault,
     selectedSwitchVault,
+    transactions,
   } = useTransaction({
     vault,
     vaultChainId,
-    amount: amountParsed,
-    manualSetAmount,
+    amount: transactionAmount,
+    manualSetAmount: transactionManualSetAmount,
     publicClient,
     vaultToken,
     token: selectedToken,
@@ -238,6 +272,7 @@ export const VaultManageViewComponent = ({
     ownerView,
     positionAmount: netValue,
     approvalCustomValue: approvalAmountParsed,
+    sidebarTransactionType,
   })
 
   const sdk = useAppSDK()
@@ -271,6 +306,8 @@ export const VaultManageViewComponent = ({
     rawToTokenAmount,
   })
 
+  const forecastDisabled = !ownerView || sidebarTransactionType === TransactionAction.SWITCH
+
   const { isLoadingForecast, oneYearEarningsForecast, forecast, forecastSummaryMap } = useForecast({
     fleetAddress: vault.id,
     chainId: vaultChainId,
@@ -281,7 +318,7 @@ export const VaultManageViewComponent = ({
         : netValue.minus(resolvedAmountParsed),
       [TransactionAction.SWITCH]: zero,
     }[sidebarTransactionType].toString(),
-    disabled: !ownerView,
+    disabled: forecastDisabled,
     isEarnApp: true,
   })
 
@@ -430,6 +467,12 @@ export const VaultManageViewComponent = ({
             vaultsList={potentialVaultsToSwitchTo}
             selectedSwitchVault={selectedSwitchVault}
             vaultsApyByNetworkMap={vaultsApyByNetworkMap}
+            transactions={transactions}
+            switchingAmount={switchAmountDisplay}
+            setSwitchingAmount={switchManualSetAmount}
+            isLoading={sidebar.primaryButton.loading}
+            switchingAmountOnBlur={switchOnBlur}
+            switchingAmountOnFocus={switchOnFocus}
           />
         )
       } else if (isDepositOrWithdraw) {
@@ -490,29 +533,17 @@ export const VaultManageViewComponent = ({
       return <div>Transaction type not supported</div>
     }
   }, [
-    nextTransaction,
     sidebarTransactionType,
-    approvalTokenSymbol,
-    approvalType,
-    setApprovalType,
-    approvalHandleAmountChange,
-    approvalCustomAmount,
-    approvalManualSetAmount,
-    approvalOnBlur,
-    approvalOnFocus,
-    selectedTokenBalance,
-    vaultChainId,
-    amountParsed,
-    amountDisplayUSDWithSwap,
-    transactionFee,
-    transactionFeeLoading,
+    nextTransaction,
     position,
     vault,
     potentialVaultsToSwitchTo,
+    vaultChainId,
     vaultsApyByNetworkMap,
     setSelectedSwitchVault,
     selectedSwitchVault,
     amountDisplay,
+    amountDisplayUSDWithSwap,
     handleAmountChange,
     handleTokenSelectionChange,
     baseTokenOptions,
@@ -521,9 +552,27 @@ export const VaultManageViewComponent = ({
     onFocus,
     onBlur,
     ownerView,
+    selectedTokenBalance,
     netValue,
     selectedTokenBalanceLoading,
     manualSetAmount,
+    transactions,
+    switchAmountDisplay,
+    switchManualSetAmount,
+    sidebar.primaryButton.loading,
+    switchOnBlur,
+    switchOnFocus,
+    approvalTokenSymbol,
+    approvalType,
+    setApprovalType,
+    approvalHandleAmountChange,
+    approvalCustomAmount,
+    approvalManualSetAmount,
+    approvalOnBlur,
+    approvalOnFocus,
+    amountParsed,
+    transactionFee,
+    transactionFeeLoading,
   ])
 
   const sidebarProps: SidebarProps = {
@@ -604,13 +653,15 @@ export const VaultManageViewComponent = ({
         connectedWalletAddress={user?.address}
         displaySimulationGraph={displaySimulationGraph}
         simulationGraph={
-          <VaultSimulationGraph
-            isManage
-            vault={vault}
-            forecast={forecast}
-            isLoadingForecast={isLoadingForecast}
-            amount={amountParsed}
-          />
+          !forecastDisabled && (
+            <VaultSimulationGraph
+              isManage
+              vault={vault}
+              forecast={forecast}
+              isLoadingForecast={isLoadingForecast}
+              amount={amountParsed}
+            />
+          )
         }
         sumrPrice={estimatedSumrPrice}
         detailsContent={

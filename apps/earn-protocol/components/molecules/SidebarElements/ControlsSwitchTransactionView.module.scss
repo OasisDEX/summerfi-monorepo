@@ -1,3 +1,9 @@
+.controlsSwitchTransactionView {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-x-small);
+}
+
 .vaultsWrapper {
   display: flex;
   gap: var(--spacing-space-x-small);
@@ -8,7 +14,7 @@
 .vaultBox {
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 100%;
   border-radius: var(--radius-roundish);
   background-color: var(--color-surface-subtle);
   padding: var(--spacing-space-medium);
@@ -47,4 +53,28 @@
   width: calc(100% + 32px);
   background-color: #1C1C1C;
   margin: var(--spacing-space-medium) -16px var(--spacing-space-small);
+}
+
+.totalSwitchingBox {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: var(--color-surface-subtler);
+  border-radius: var(--radius-roundish);
+  padding: var(--spacing-space-medium);
+}
+
+.totalSwitchingBoxTitleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-space-x-small);
+}
+
+.whatsChangingBox {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--general-space-8);
 }

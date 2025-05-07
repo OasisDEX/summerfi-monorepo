@@ -61,6 +61,7 @@ type UseTransactionParams = {
   positionAmount?: BigNumber
   approvalCustomValue?: BigNumber
   approvalTokenSymbol?: string
+  sidebarTransactionType: TransactionAction
 }
 
 const errorsMap = {
@@ -87,6 +88,7 @@ export const useTransaction = ({
   ownerView, // on non-owner views we dont want to make all of these calls
   positionAmount,
   approvalCustomValue,
+  sidebarTransactionType,
 }: UseTransactionParams) => {
   const { refresh: refreshView, push } = useRouter()
   const [slippageConfig] = useSlippageConfig()
@@ -97,9 +99,6 @@ export const useTransaction = ({
   const [isTransakOpen, setIsTransakOpen] = useState(false)
   const { setChain, isSettingChain } = useChain()
   const { clientChainId } = useClientChainId()
-  const [sidebarTransactionType, setSidebarTransactionType] = useState<TransactionAction>(
-    TransactionAction.DEPOSIT,
-  )
   const [waitingForTx, setWaitingForTx] = useState<`0x${string}`>()
   const [approvalType, setApprovalType] = useState<EarnAllowanceTypes>('deposit')
   const [txHashes, setTxHashes] = useState<
@@ -370,7 +369,7 @@ export const useTransaction = ({
           }),
           amount: TokenAmount.createFrom({
             token: vaultToken,
-            amount: positionAmount?.toString() ?? '0',
+            amount: amount && amount.gt(0) ? amount.toString() : positionAmount?.toString() ?? '0',
           }),
           chainInfo: getChainInfoByChainId(vaultChainId),
           slippage: Number(slippageConfig.slippage),
@@ -681,6 +680,7 @@ export const useTransaction = ({
     setTransactions,
   ])
 
+  // watch for token balance changes
   useEffect(() => {
     setSidebarTransactionError(undefined)
     if (isDeposit) {
@@ -709,6 +709,19 @@ export const useTransaction = ({
         setSidebarValidationError(undefined)
       }
     }
+    if (isSwitch) {
+      if (!selectedSwitchVault) {
+        setSidebarValidationError('Please select a vault to switch to')
+      } else {
+        setSidebarValidationError(undefined)
+      }
+      if (amount && positionAmount && amount.isGreaterThan(positionAmount)) {
+        setSidebarValidationError(errorsMap.insufficientPositionBalanceError)
+      }
+      if (amount && positionAmount && !amount.isGreaterThan(positionAmount)) {
+        setSidebarValidationError(undefined)
+      }
+    }
   }, [
     amount,
     sidebarValidationError,
@@ -717,7 +730,17 @@ export const useTransaction = ({
     positionAmount,
     isDeposit,
     isWithdraw,
+    isSwitch,
+    selectedSwitchVault,
   ])
+
+  // refresh the transactions list when the amount changes, while is switching
+  useEffect(() => {
+    if (amount && amount.isGreaterThan(0) && isSwitch) {
+      getTransactionsList()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [amount])
 
   return {
     manualSetAmount,
@@ -734,13 +757,12 @@ export const useTransaction = ({
     backToInit,
     user,
     approvalTokenSymbol,
-    setSidebarTransactionType,
-    sidebarTransactionType,
     approvalType,
     setApprovalType,
     isTransakOpen,
     setIsTransakOpen,
     setSelectedSwitchVault,
     selectedSwitchVault,
+    transactions,
   }
 }

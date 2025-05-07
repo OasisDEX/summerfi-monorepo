@@ -258,6 +258,7 @@ export const VaultOpenViewComponent = ({
     flow: 'open',
     ownerView: true,
     approvalCustomValue: approvalAmountParsed,
+    sidebarTransactionType: TransactionAction.DEPOSIT,
   })
 
   const { position } = usePosition({
