@@ -7,13 +7,12 @@ import {
   Percentage,
   User,
   Wallet,
-  type ChainInfo,
-  type IArmadaVaultId,
-  type IUser,
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
 import { signerPrivateKey, SDKApiUrl, userAddress } from './utils/testConfig'
+import { waitSeconds } from './utils/wait'
+import { TX_CONFIRMATION_WAIT_TIME } from './utils/constants'
 import assert from 'assert'
 
 jest.setTimeout(300000)
@@ -29,10 +28,9 @@ const eurcFleet = Address.createFromEthereum({
 const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
 
 describe('Armada Protocol Switch', () => {
-  const main = async () => {
-    const chainInfo = getChainInfoByChainId(chainId)
+  it('should switch position', async () => {
     await runTests({
-      chainInfo,
+      chainId,
       sourceFleetAddress: usdcFleet,
       destinationFleetAddress: ethFleet,
       rpcUrl,
@@ -49,119 +47,125 @@ describe('Armada Protocol Switch', () => {
     //   destinationFleetAddress: usdcFleet,
     //   rpcUrl,
     // })
-  }
-  main()
+  })
 
   async function runTests({
-    chainInfo,
+    chainId,
     sourceFleetAddress,
     destinationFleetAddress,
     rpcUrl,
+    amountValue,
+    stake,
   }: {
-    chainInfo: ChainInfo
+    chainId: number
     sourceFleetAddress: Address
     destinationFleetAddress: Address
     rpcUrl: string | undefined
+    amountValue?: string
+    stake?: boolean
   }) {
     const sdk: SDKManager = makeSDK({
       apiURL: SDKApiUrl,
     })
-
     if (!rpcUrl) {
       throw new Error('Missing fork url')
     }
 
-    let user: IUser
-    let sourceVaultId: IArmadaVaultId
-    let destinationVaultId: IArmadaVaultId
-    let slippage: Percentage
+    const chainInfo = getChainInfoByChainId(chainId)
 
-    beforeEach(async () => {
-      console.log(`Preparation for ${chainInfo.name}`)
-      user = User.createFrom({
-        wallet: Wallet.createFrom({
-          address: userAddress,
-        }),
-        chainInfo,
-      })
-      sourceVaultId = ArmadaVaultId.createFrom({
-        chainInfo,
-        fleetAddress: sourceFleetAddress,
-      })
-      destinationVaultId = ArmadaVaultId.createFrom({
-        chainInfo,
-        fleetAddress: destinationFleetAddress,
-      })
-      slippage = Percentage.createFrom({
-        value: 1,
-      })
+    const user = User.createFrom({
+      wallet: Wallet.createFrom({
+        address: userAddress,
+      }),
+      chainInfo,
+    })
+    const sourceVaultId = ArmadaVaultId.createFrom({
+      chainInfo,
+      fleetAddress: sourceFleetAddress,
+    })
+    const destinationVaultId = ArmadaVaultId.createFrom({
+      chainInfo,
+      fleetAddress: destinationFleetAddress,
+    })
+    const slippage = Percentage.createFrom({
+      value: 1,
     })
 
-    it(`should switch position from ${sourceFleetAddress.value}`, async () => {
-      const sourcePositionBefore = await sdk.armada.users.getUserPosition({
-        user,
-        fleetAddress: sourceFleetAddress,
-      })
-      const destinationPositionBefore = await sdk.armada.users.getUserPosition({
-        user,
-        fleetAddress: destinationFleetAddress,
-      })
-
-      assert(
-        sourcePositionBefore !== undefined,
-        `Source position should be defined for ${sourceFleetAddress.value}`,
-      )
-      assert(
-        sourcePositionBefore.amount.toSolidityValue() > 0,
-        `Source position value should be greater than 0 for ${sourceFleetAddress.value}`,
-      )
-
-      console.log(
-        'positions before',
-        sourcePositionBefore.amount.toString(),
-        destinationPositionBefore?.amount.toString(),
-      )
-
-      const transactions = await sdk.armada.users.getVaultSwitchTx({
-        sourceVaultId,
-        destinationVaultId,
-        amount: sourcePositionBefore.amount,
-        user,
-        slippage,
-        shouldStake: true,
-      })
-
-      const { statuses } = await sendAndLogTransactions({
-        chainInfo,
-        transactions,
-        rpcUrl: rpcUrl,
-        privateKey: signerPrivateKey,
-      })
-      statuses.forEach((status) => {
-        expect(status).toBe('success')
-      })
-
-      // wait 5 seconds for the transaction to be mined
-      await new Promise((resolve) => setTimeout(resolve, 5000))
-
-      const sourcePositionAfter = await sdk.armada.users.getUserPosition({
-        user,
-        fleetAddress: sourceFleetAddress,
-      })
-      const destinationPositionAfter = await sdk.armada.users.getUserPosition({
-        user,
-        fleetAddress: destinationFleetAddress,
-      })
-      assert(
-        destinationPositionAfter !== undefined,
-        `Destination position should be defined for ${destinationFleetAddress.value}`,
-      )
-
-      console.log(
-        'positions after',
-        sourcePositionAfter?.amount.toString(),
-        destinationPositionAfter.amount.toString(),
-      )
+    const sourceVaultInfo = await sdk.armada.users.getVaultInfo({
+      vaultId: sourceVaultId,
     })
+    const destinationVaultInfo = await sdk.armada.users.getVaultInfo({
+      vaultId: destinationVaultId,
+    })
+
+    const sourcePositionBefore = await sdk.armada.users.getUserPosition({
+      user,
+      fleetAddress: sourceFleetAddress,
+    })
+    const destinationPositionBefore = await sdk.armada.users.getUserPosition({
+      user,
+      fleetAddress: destinationFleetAddress,
+    })
+
+    assert(
+      sourcePositionBefore !== undefined,
+      `Source position should be defined for ${sourceFleetAddress.value}`,
+    )
+    assert(
+      sourcePositionBefore.amount.toSolidityValue() > 0,
+      `Source position value should be greater than 0 for ${sourceFleetAddress.value}`,
+    )
+
+    console.log(
+      'positions before',
+      sourcePositionBefore.amount.toString(),
+      destinationPositionBefore?.amount.toString(),
+    )
+
+    const switchAmount = sourcePositionBefore.amount
+    console.log(
+      `switch position from ${switchAmount.toString()} to ${destinationVaultInfo.depositCap.token.toString()}`,
+    )
+
+    const transactions = await sdk.armada.users.getVaultSwitchTx({
+      sourceVaultId,
+      destinationVaultId,
+      amount: switchAmount,
+      user,
+      slippage,
+      shouldStake: stake,
+    })
+
+    const { statuses } = await sendAndLogTransactions({
+      chainInfo,
+      transactions,
+      rpcUrl: rpcUrl,
+      privateKey: signerPrivateKey,
+    })
+    statuses.forEach((status) => {
+      expect(status).toBe('success')
+    })
+
+    // Wait for transaction confirmation
+    await waitSeconds(TX_CONFIRMATION_WAIT_TIME)
+
+    const sourcePositionAfter = await sdk.armada.users.getUserPosition({
+      user,
+      fleetAddress: sourceFleetAddress,
+    })
+    const destinationPositionAfter = await sdk.armada.users.getUserPosition({
+      user,
+      fleetAddress: destinationFleetAddress,
+    })
+    assert(
+      destinationPositionAfter !== undefined,
+      `Destination position should be defined for ${destinationFleetAddress.value}`,
+    )
+
+    console.log(
+      'positions after',
+      sourcePositionAfter?.amount.toString(),
+      destinationPositionAfter.amount.toString(),
+    )
   }
 })
