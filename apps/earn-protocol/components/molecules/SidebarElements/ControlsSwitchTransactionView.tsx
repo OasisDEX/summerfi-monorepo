@@ -82,7 +82,7 @@ const VaultBoxContent = ({
   </>
 )
 
-const WhatsChangingBox = ({ title, change }: { title: string; change: ReactNode }) => {
+const ChangeBox = ({ title, change }: { title: string; change: ReactNode }) => {
   return (
     <div className={controlsSwitchTransactionViewStyles.whatsChangingBox}>
       <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
@@ -295,7 +295,7 @@ export const ControlsSwitchTransactionView = ({
         >
           What&apos;s changing
         </Text>
-        <WhatsChangingBox
+        <ChangeBox
           title="Deposit asset"
           change={
             <>
@@ -303,7 +303,7 @@ export const ControlsSwitchTransactionView = ({
             </>
           }
         />
-        <WhatsChangingBox
+        <ChangeBox
           title="Live APY"
           change={
             <>
@@ -314,7 +314,7 @@ export const ControlsSwitchTransactionView = ({
             </>
           }
         />
-        <WhatsChangingBox
+        <ChangeBox
           title="30d APY"
           change={
             <>
@@ -325,7 +325,7 @@ export const ControlsSwitchTransactionView = ({
             </>
           }
         />
-        <WhatsChangingBox
+        <ChangeBox
           title="1yr earning difference"
           change={
             <>
