@@ -8,6 +8,7 @@
 .transactionitem {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 8px 16px;
   border-radius: 8px;
   background-color: var(--color-background-secondary-disabled);

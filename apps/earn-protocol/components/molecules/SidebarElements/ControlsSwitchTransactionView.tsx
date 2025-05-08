@@ -1,4 +1,12 @@
-import { type Dispatch, type ReactNode, type SetStateAction, useMemo, useState } from 'react'
+import {
+  type CSSProperties,
+  type Dispatch,
+  type ReactNode,
+  type SetStateAction,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import {
   Button,
   Card,
@@ -13,18 +21,17 @@ import {
   type SDKChainId,
   type SDKVaultishType,
   type TokenSymbolsList,
+  type TransactionWithStatus,
   type VaultApyData,
 } from '@summerfi/app-types'
 import {
   formatCryptoBalance,
   formatDecimalAsPercent,
+  formatFiatBalance,
+  formatPercent,
   subgraphNetworkToSDKId,
 } from '@summerfi/app-utils'
-import {
-  type ExtendedTransactionInfo,
-  TransactionType,
-  type VaultSwitchTransactionInfo,
-} from '@summerfi/sdk-common'
+import { TransactionType, type VaultSwitchTransactionInfo } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 import { capitalize } from 'lodash-es'
@@ -72,8 +79,8 @@ const VaultBoxContent = ({
         Live&nbsp;APY:&nbsp;{formatDecimalAsPercent(apy)}
       </Text>
     )}
-    {isLoading ? (
-      <SkeletonLine width={100} height={10} />
+    {isLoading && !amount ? (
+      <SkeletonLine width={100} height={14} style={{ margin: '5px 0' }} />
     ) : (
       <Text variant="p2semi" style={{ color: 'var(--color-text-primary)' }}>
         {amount ? `${formatCryptoBalance(amount)} ${tokenName}` : 'n/a'}
@@ -82,9 +89,17 @@ const VaultBoxContent = ({
   </>
 )
 
-const ChangeBox = ({ title, change }: { title: string; change: ReactNode }) => {
+const ChangeBox = ({
+  title,
+  change,
+  style,
+}: {
+  title: string
+  change: ReactNode
+  style?: CSSProperties
+}) => {
   return (
-    <div className={controlsSwitchTransactionViewStyles.whatsChangingBox}>
+    <div className={controlsSwitchTransactionViewStyles.whatsChangingBox} style={style}>
       <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
         {title}
       </Text>
@@ -102,12 +117,18 @@ type ControlsSwitchTransactionViewProps = {
   vaultsApyByNetworkMap: {
     [key: `${string}-${number}`]: VaultApyData
   }
-  transactions?: (ExtendedTransactionInfo | VaultSwitchTransactionInfo)[]
+  transactions?: TransactionWithStatus[]
   isLoading?: boolean
   switchingAmount: string
   setSwitchingAmount: Dispatch<SetStateAction<string | undefined>>
   switchingAmountOnFocus: () => void
   switchingAmountOnBlur: () => void
+  transactionFee?: string
+  transactionFeeLoading: boolean
+  resetToInitialAmount: () => void
+  currentVaultNetValue: BigNumber
+  setIsEditingSwitchAmount: Dispatch<SetStateAction<boolean>>
+  isEditingSwitchAmount: boolean
 }
 
 export const ControlsSwitchTransactionView = ({
@@ -121,9 +142,14 @@ export const ControlsSwitchTransactionView = ({
   switchingAmountOnFocus,
   switchingAmountOnBlur,
   setSwitchingAmount,
+  transactionFee,
+  transactionFeeLoading,
+  resetToInitialAmount,
+  currentVaultNetValue,
+  setIsEditingSwitchAmount,
+  isEditingSwitchAmount,
 }: ControlsSwitchTransactionViewProps) => {
   const [switchAmountTempValue, setSwitchAmountTempValue] = useState(switchingAmount)
-  const [isEditingSwitchAmount, setIsEditingSwitchAmount] = useState(false)
 
   const vaultChainId = subgraphNetworkToSDKId(currentVault.protocol.network)
 
@@ -133,9 +159,11 @@ export const ControlsSwitchTransactionView = ({
     return vaultsList.find((vault) => vault.id === nextVaultId) as SDKVaultishType
   }, [selectedSwitchVault, vaultsList])
 
-  const vaultSwitchTransaction = transactions?.find(
-    (transaction) => transaction.type === TransactionType.VaultSwitch,
-  ) as VaultSwitchTransactionInfo
+  const vaultSwitchTransaction = useMemo(() => {
+    return transactions?.find(
+      (transaction) => transaction.type === TransactionType.VaultSwitch,
+    ) as VaultSwitchTransactionInfo
+  }, [transactions])
 
   const currentAmount = vaultSwitchTransaction.metadata.fromAmount.amount
   const currentToken = getDisplayToken(
@@ -181,6 +209,13 @@ export const ControlsSwitchTransactionView = ({
     setIsEditingSwitchAmount(false)
   }
 
+  useEffect(() => {
+    // on mount reset the switching amount to the current vault amount
+    resetToInitialAmount()
+    setSwitchAmountTempValue(currentVaultNetValue.toString())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   if (isEditingSwitchAmount) {
     const onlyTokenOption = {
       tokenSymbol: currentVault.inputToken.symbol as TokenSymbolsList,
@@ -205,10 +240,26 @@ export const ControlsSwitchTransactionView = ({
           <Button
             variant="secondarySmall"
             onClick={() => {
+              setSwitchAmountTempValue(new BigNumber(currentAmount).multipliedBy(0.25).toString())
+            }}
+          >
+            25%
+          </Button>
+          <Button
+            variant="secondarySmall"
+            onClick={() => {
               setSwitchAmountTempValue(new BigNumber(currentAmount).multipliedBy(0.5).toString())
             }}
           >
             50%
+          </Button>
+          <Button
+            variant="secondarySmall"
+            onClick={() => {
+              setSwitchAmountTempValue(new BigNumber(currentAmount).multipliedBy(0.75).toString())
+            }}
+          >
+            75%
           </Button>
           <Button
             variant="secondarySmall"
@@ -225,6 +276,10 @@ export const ControlsSwitchTransactionView = ({
       </div>
     )
   }
+  const { fromAmount, slippage, priceImpact, toAmount } = vaultSwitchTransaction.metadata
+
+  const priceImpactPrice = priceImpact?.price?.value.toString()
+  const priceImpactPercentage = priceImpact?.impact?.value.toString()
 
   return (
     <div className={controlsSwitchTransactionViewStyles.controlsSwitchTransactionView}>
@@ -333,6 +388,81 @@ export const ControlsSwitchTransactionView = ({
               &nbsp;→&nbsp;
               {nextYearlyEarnings ? <>${formatCryptoBalance(nextYearlyEarnings)}</> : 'n/a'}
             </>
+          }
+        />
+      </Card>
+      <Card variant="cardPrimaryMediumPaddings" style={{ flexDirection: 'column' }}>
+        <ChangeBox
+          title="Price impact"
+          style={{
+            marginTop: 0,
+          }}
+          change={
+            <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
+              {priceImpactPrice ? (
+                <>
+                  {formatCryptoBalance(priceImpactPrice)}&nbsp;{nextToken}/{currentToken}
+                </>
+              ) : (
+                'n/a'
+              )}
+              &nbsp;
+              {priceImpactPercentage ? (
+                <Text
+                  as="span"
+                  variant="p3semi"
+                  style={{
+                    color: new BigNumber(priceImpactPercentage).gt(0.02)
+                      ? 'var(--color-text-critical)'
+                      : 'var(--color-text-primary)',
+                  }}
+                >
+                  ({formatDecimalAsPercent(priceImpactPercentage)})
+                </Text>
+              ) : (
+                'n/a'
+              )}
+            </Text>
+          }
+        />
+        {toAmount && (
+          <ChangeBox
+            title="Swap"
+            change={
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                  gap: '4px',
+                }}
+              >
+                <Icon
+                  tokenName={fromAmount.token.symbol.toUpperCase() as TokenSymbolsList}
+                  size={20}
+                />
+                {formatCryptoBalance(fromAmount.amount)}&nbsp;{'->'}
+                <Icon
+                  tokenName={toAmount.token.symbol.toUpperCase() as TokenSymbolsList}
+                  size={20}
+                />
+                {formatCryptoBalance(toAmount.amount)}
+              </div>
+            }
+          />
+        )}
+
+        <ChangeBox title="Slippage" change={formatPercent(slippage.value, { precision: 2 })} />
+        <ChangeBox
+          title="Transaction fee"
+          change={
+            transactionFeeLoading ? (
+              <SkeletonLine width={100} height={10} />
+            ) : (
+              <Text variant="p3semi" style={{ color: 'var(--color-text-primary)' }}>
+                {transactionFee ? `$${formatFiatBalance(transactionFee)}` : 'n/a'}
+              </Text>
+            )
           }
         />
       </Card>

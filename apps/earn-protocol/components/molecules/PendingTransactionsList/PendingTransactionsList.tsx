@@ -1,14 +1,12 @@
-import { Expander, getDisplayToken, Text } from '@summerfi/app-earn-ui'
+import { Expander, getDisplayToken, getScannerUrl, Icon, Text } from '@summerfi/app-earn-ui'
+import { type TransactionWithStatus } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
-import {
-  type ExtendedTransactionInfo,
-  TransactionType,
-  type VaultSwitchTransactionInfo,
-} from '@summerfi/sdk-common'
+import { TransactionType } from '@summerfi/sdk-common'
+import Link from 'next/link'
 
 import pendingTransactionsListStyles from './PendingTransactionsList.module.scss'
 
-const getHumanReadableDescription = (tx: ExtendedTransactionInfo | VaultSwitchTransactionInfo) => {
+const getHumanReadableDescription = (tx: TransactionWithStatus) => {
   switch (tx.type) {
     case TransactionType.Approve:
       return (
@@ -49,20 +47,37 @@ const getHumanReadableDescription = (tx: ExtendedTransactionInfo | VaultSwitchTr
         </>
       )
     default:
-      return `Transaction not mapped - (${(tx as ExtendedTransactionInfo | VaultSwitchTransactionInfo).type})`
+      return `Transaction not mapped - (${(tx as TransactionWithStatus).type})`
   }
 }
 
 export const PendingTransactionsList = ({
   transactions,
+  chainId,
 }: {
-  transactions?: (ExtendedTransactionInfo | VaultSwitchTransactionInfo)[]
+  transactions?: TransactionWithStatus[]
+  chainId: number
 }) => {
   const transactionCount = transactions?.length ?? 0
+  const pendingTransactions = transactions?.filter((tx) => !tx.executed).length ?? 0
+  const executedTransactions = transactions?.filter((tx) => tx.executed).length ?? 0
 
-  return transactionCount ? (
+  return transactionCount && pendingTransactions ? (
     <div style={{ marginTop: '16px' }}>
-      <Expander title={`${transactionCount} pending transactions`}>
+      <Expander
+        title={
+          <span>
+            {transactionCount} {transactionCount > 1 ? 'transactions' : 'transaction'}
+            {executedTransactions ? (
+              <small style={{ color: 'var(--color-text-success)' }}>
+                &nbsp;({executedTransactions} executed)
+              </small>
+            ) : (
+              ''
+            )}
+          </span>
+        }
+      >
         <div className={pendingTransactionsListStyles.transactionList}>
           {transactions?.map((tx) => (
             <Text
@@ -70,7 +85,30 @@ export const PendingTransactionsList = ({
               variant="p4"
               className={pendingTransactionsListStyles.transactionitem}
             >
-              {getHumanReadableDescription(tx)}
+              <div style={{ display: 'flex', alignContent: 'center' }}>
+                <Icon
+                  iconName="checkmark_colorful_slim"
+                  style={{
+                    opacity: tx.executed ? 1 : 0,
+                    color: 'green',
+                    marginRight: '4px',
+                  }}
+                  size={20}
+                />
+                {getHumanReadableDescription(tx)}
+              </div>
+              {tx.txHash && (
+                <Link href={getScannerUrl(chainId, tx.txHash)} target="_blank">
+                  <Text
+                    variant="p4semi"
+                    style={{
+                      color: 'var(--color-text-link)',
+                    }}
+                  >
+                    view transaction
+                  </Text>
+                </Link>
+              )}
             </Text>
           ))}
         </div>

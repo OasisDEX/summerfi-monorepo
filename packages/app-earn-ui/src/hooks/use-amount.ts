@@ -1,5 +1,12 @@
 'use client'
-import { type ChangeEvent, type Dispatch, type SetStateAction, useMemo, useState } from 'react'
+import {
+  type ChangeEvent,
+  type Dispatch,
+  type SetStateAction,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react'
 import { type IToken } from '@summerfi/app-types'
 import { cleanAmount, formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
@@ -57,9 +64,14 @@ export const useAmount = ({
   manualSetAmount: Dispatch<SetStateAction<string | undefined>>
   onFocus: () => void
   onBlur: () => void
+  resetToInitialAmount: () => void
 } => {
   const [editMode, setEditMode] = useState(false)
   const [amountRaw, setAmountRaw] = useState<string | undefined>(initialAmount)
+
+  const resetToInitialAmount = useCallback(() => {
+    setAmountRaw(initialAmount)
+  }, [initialAmount])
 
   const amountDisplay = useMemo(() => {
     if (!amountRaw && amountRaw !== '0') {
@@ -154,5 +166,9 @@ export const useAmount = ({
     manualSetAmount: setAmountRaw,
     onFocus: () => setEditMode(true),
     onBlur: () => setEditMode(false),
+    /**
+      A function to reset the amount to the initial amount
+    */
+    resetToInitialAmount,
   }
 }

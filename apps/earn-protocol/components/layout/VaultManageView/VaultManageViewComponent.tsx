@@ -37,7 +37,7 @@ import {
   TOSStatus,
   TransactionAction,
 } from '@summerfi/app-types'
-import { subgraphNetworkToId, subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
+import { one, subgraphNetworkToId, subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
 import { TransactionType } from '@summerfi/sdk-common'
 import dynamic from 'next/dynamic'
 
@@ -51,7 +51,6 @@ import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { VaultManageViewDetails } from '@/components/layout/VaultManageView/VaultManageViewDetails'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { PendingTransactionsList } from '@/components/molecules/PendingTransactionsList/PendingTransactionsList'
-import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
@@ -80,6 +79,14 @@ const ControlsSwitchTransactionView = dynamic(
   () =>
     import('@/components/molecules/SidebarElements/ControlsSwitchTransactionView').then(
       (mod) => mod.ControlsSwitchTransactionView,
+    ),
+  { ssr: false, loading: () => <SkeletonLine width="100%" height="100%" /> },
+)
+
+const ControlsSwitchSuccessErrorView = dynamic(
+  () =>
+    import('@/components/molecules/SidebarElements/ControlsSwitchSuccessErrorView').then(
+      (mod) => mod.ControlsSwitchSuccessErrorView,
     ),
   { ssr: false, loading: () => <SkeletonLine width="100%" height="100%" /> },
 )
@@ -222,6 +229,7 @@ export const VaultManageViewComponent = ({
     amountParsed: switchAmountParsed,
     onBlur: switchOnBlur,
     onFocus: switchOnFocus,
+    resetToInitialAmount: switchResetToInitialAmount,
   } = useAmount({
     // switch amount
     tokenDecimals: vault.inputToken.decimals,
@@ -248,8 +256,6 @@ export const VaultManageViewComponent = ({
 
   const {
     sidebar,
-    txHashes,
-    removeTxHash,
     reset,
     nextTransaction,
     approvalType,
@@ -259,6 +265,9 @@ export const VaultManageViewComponent = ({
     setSelectedSwitchVault,
     selectedSwitchVault,
     transactions,
+    txStatus,
+    setIsEditingSwitchAmount,
+    isEditingSwitchAmount,
   } = useTransaction({
     vault,
     vaultChainId,
@@ -274,6 +283,7 @@ export const VaultManageViewComponent = ({
     positionAmount: netValue,
     approvalCustomValue: approvalAmountParsed,
     sidebarTransactionType,
+    setSidebarTransactionType,
   })
 
   const sdk = useAppSDK()
@@ -390,28 +400,45 @@ export const VaultManageViewComponent = ({
       })
   }, [vault.id, vaultChainId, vaults, vaultsApyByNetworkMap])
 
-  const sidebarTabsList = [
-    TransactionAction.DEPOSIT,
-    TransactionAction.WITHDRAW,
-    TransactionAction.SWITCH,
-  ].filter((action) => {
-    if (!systemConfig.features?.VaultSwitching && potentialVaultsToSwitchTo.length > 0) {
-      return action !== TransactionAction.SWITCH
-    }
+  const sidebarTabsList = useMemo(() => {
+    return [TransactionAction.DEPOSIT, TransactionAction.WITHDRAW, TransactionAction.SWITCH].filter(
+      (action) => {
+        const disabledByConfig = !systemConfig.features?.VaultSwitching
+        const noVaults = potentialVaultsToSwitchTo.length === 0
 
-    return true
-  })
+        if (disabledByConfig || noVaults || netValue.lt(one)) {
+          return action !== TransactionAction.SWITCH
+        }
+
+        return true
+      },
+    )
+  }, [netValue, potentialVaultsToSwitchTo.length, systemConfig.features?.VaultSwitching])
+
+  const isSwitch = sidebarTransactionType === TransactionAction.SWITCH
+  const isDeposit = sidebarTransactionType === TransactionAction.DEPOSIT
+  const isWithdraw = sidebarTransactionType === TransactionAction.WITHDRAW
+  const isDepositOrWithdraw = isDeposit || isWithdraw
 
   const sidebarContent = useMemo(() => {
-    const isSwitch = sidebarTransactionType === TransactionAction.SWITCH
-    const isDeposit = sidebarTransactionType === TransactionAction.DEPOSIT
-    const isWithdraw = sidebarTransactionType === TransactionAction.WITHDRAW
-    const isDepositOrWithdraw = isDeposit || isWithdraw
-
+    // TODO: this hook needs a rework after vault switching is done
     // trying to make this simple - if there is no next transaction, we are in the entry points
     // also adding a fail safe for the mapping missing here at the end
     if (!nextTransaction) {
       if (isSwitch) {
+        if (txStatus === 'txSuccess' && selectedSwitchVault) {
+          // a success screen specially for the switch action
+          return (
+            <ControlsSwitchSuccessErrorView
+              currentVault={vault}
+              selectedSwitchVault={selectedSwitchVault}
+              vaultsList={potentialVaultsToSwitchTo}
+              transactions={transactions}
+              chainId={vaultChainId as unknown as NetworkIds}
+            />
+          )
+        }
+
         return (
           <ControlsSwitch
             currentPosition={position}
@@ -464,6 +491,7 @@ export const VaultManageViewComponent = ({
       return (
         <ControlsSwitchTransactionView
           currentVault={vault}
+          currentVaultNetValue={netValue}
           vaultsList={potentialVaultsToSwitchTo}
           selectedSwitchVault={selectedSwitchVault}
           vaultsApyByNetworkMap={vaultsApyByNetworkMap}
@@ -473,6 +501,11 @@ export const VaultManageViewComponent = ({
           isLoading={sidebar.primaryButton.loading}
           switchingAmountOnBlur={switchOnBlur}
           switchingAmountOnFocus={switchOnFocus}
+          transactionFee={transactionFee}
+          transactionFeeLoading={transactionFeeLoading}
+          resetToInitialAmount={switchResetToInitialAmount}
+          isEditingSwitchAmount={isEditingSwitchAmount}
+          setIsEditingSwitchAmount={setIsEditingSwitchAmount}
         />
       )
     }
@@ -518,19 +551,23 @@ export const VaultManageViewComponent = ({
       return <div>Transaction type ({nextTransaction.type}) not supported</div>
     }
   }, [
-    sidebarTransactionType,
     nextTransaction,
+    isSwitch,
+    selectedSwitchVault,
+    isDepositOrWithdraw,
+    txStatus,
     position,
     vault,
     potentialVaultsToSwitchTo,
     vaultChainId,
     vaultsApyByNetworkMap,
     setSelectedSwitchVault,
-    selectedSwitchVault,
+    transactions,
     amountDisplay,
     amountDisplayUSDWithSwap,
     handleAmountChange,
     handleTokenSelectionChange,
+    sidebarTransactionType,
     baseTokenOptions,
     tokenOptions,
     selectedTokenOption,
@@ -541,12 +578,16 @@ export const VaultManageViewComponent = ({
     netValue,
     selectedTokenBalanceLoading,
     manualSetAmount,
-    transactions,
     switchAmountDisplay,
     switchManualSetAmount,
     sidebar.primaryButton.loading,
     switchOnBlur,
     switchOnFocus,
+    transactionFee,
+    transactionFeeLoading,
+    switchResetToInitialAmount,
+    isEditingSwitchAmount,
+    setIsEditingSwitchAmount,
     approvalTokenSymbol,
     approvalType,
     setApprovalType,
@@ -556,13 +597,35 @@ export const VaultManageViewComponent = ({
     approvalOnBlur,
     approvalOnFocus,
     amountParsed,
-    transactionFee,
-    transactionFeeLoading,
   ])
 
+  const sidebarTitle = useMemo(() => {
+    if (!nextTransaction) {
+      if (isSwitch && txStatus === 'txSuccess') {
+        return sidebar.title
+      }
+
+      return sidebarTransactionType
+    }
+
+    return sidebar.title
+  }, [isSwitch, nextTransaction, sidebar.title, sidebarTransactionType, txStatus])
+
+  const sidebarTitleTabs = useMemo(() => {
+    if (!nextTransaction) {
+      if (isSwitch && txStatus === 'txSuccess') {
+        return undefined
+      }
+
+      return sidebarTabsList
+    }
+
+    return undefined
+  }, [nextTransaction, sidebarTabsList, isSwitch, txStatus])
+
   const sidebarProps: SidebarProps = {
-    title: !nextTransaction ? sidebarTransactionType : sidebar.title,
-    titleTabs: !nextTransaction ? sidebarTabsList : undefined,
+    title: sidebarTitle,
+    titleTabs: sidebarTitleTabs,
     onTitleTabChange: (action) => {
       setSidebarTransactionType(action as TransactionAction)
       if (amountParsed.gt(0)) {
@@ -572,7 +635,7 @@ export const VaultManageViewComponent = ({
     content: (
       <>
         {sidebarContent}
-        <PendingTransactionsList transactions={transactions} />
+        <PendingTransactionsList transactions={transactions} chainId={vaultChainId} />
       </>
     ),
     customHeader:
@@ -586,6 +649,7 @@ export const VaultManageViewComponent = ({
     handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
     goBackAction: nextTransaction?.type ? backToInit : undefined,
     primaryButton: sidebar.primaryButton,
+    secondaryButton: sidebar.secondaryButton,
     footnote: (
       <>
         {!nextTransaction?.type ? (
@@ -598,14 +662,6 @@ export const VaultManageViewComponent = ({
             ownerView={ownerView}
           />
         ) : null}
-        {txHashes.map((transactionData) => (
-          <TransactionHashPill
-            key={transactionData.hash}
-            transactionData={transactionData}
-            removeTxHash={removeTxHash}
-            chainId={vaultChainId}
-          />
-        ))}
         <SidebarFootnote
           title={sidebarFootnote.title}
           list={sidebarFootnote.list}

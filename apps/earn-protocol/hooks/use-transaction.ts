@@ -1,6 +1,13 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import {
+  type Dispatch,
+  type SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import {
   useAuthModal,
   useChain,
@@ -14,16 +21,15 @@ import {
   type EarnTransactionViewStates,
   type SDKVaultishType,
   TransactionAction,
+  type TransactionWithStatus,
 } from '@summerfi/app-types'
 import { sdkNetworkToHumanNetwork, ten } from '@summerfi/app-utils'
 import {
   Address,
-  type ExtendedTransactionInfo,
   getChainInfoByChainId,
   type IToken,
   TokenAmount,
   TransactionType,
-  type VaultSwitchTransactionInfo,
 } from '@summerfi/sdk-common'
 import type BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
@@ -62,6 +68,7 @@ type UseTransactionParams = {
   approvalCustomValue?: BigNumber
   approvalTokenSymbol?: string
   sidebarTransactionType: TransactionAction
+  setSidebarTransactionType?: Dispatch<SetStateAction<TransactionAction>>
 }
 
 const errorsMap = {
@@ -89,6 +96,7 @@ export const useTransaction = ({
   positionAmount,
   approvalCustomValue,
   sidebarTransactionType,
+  setSidebarTransactionType,
 }: UseTransactionParams) => {
   const { refresh: refreshView, push } = useRouter()
   const [slippageConfig] = useSlippageConfig()
@@ -101,20 +109,14 @@ export const useTransaction = ({
   const { clientChainId } = useClientChainId()
   const [waitingForTx, setWaitingForTx] = useState<`0x${string}`>()
   const [approvalType, setApprovalType] = useState<EarnAllowanceTypes>('deposit')
-  const [txHashes, setTxHashes] = useState<
-    { type: TransactionType; hash?: string; custom?: string }[]
-  >([])
   const [txStatus, setTxStatus] = useState<EarnTransactionViewStates>('idle')
-  const [transactions, setTransactions] = useState<
-    // TODO: need to have a list of possible transaction types
-    // it was ExtendedTransactionInfo but now its deprecated
-    (ExtendedTransactionInfo | VaultSwitchTransactionInfo)[]
-  >()
+  const [transactions, setTransactions] = useState<TransactionWithStatus[] | undefined>()
   const [sidebarTransactionError, setSidebarTransactionError] = useState<string>()
   const [sidebarValidationError, setSidebarValidationError] = useState<string>()
   const [selectedSwitchVault, setSelectedSwitchVault] = useState<
     `${string}-${number}` | undefined
   >()
+  const [isEditingSwitchAmount, setIsEditingSwitchAmount] = useState(false)
   const isIframe = useIsIframe()
 
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
@@ -129,7 +131,7 @@ export const useTransaction = ({
       return undefined
     }
 
-    return transactions[0]
+    return transactions.find((tx) => !tx.executed)
   }, [transactions])
 
   const approvalTokenSymbol = useMemo(() => {
@@ -137,6 +139,107 @@ export const useTransaction = ({
       ? nextTransaction.metadata.approvalAmount.token.symbol
       : ''
   }, [nextTransaction?.metadata, nextTransaction?.type])
+
+  const getTransactionsList = useCallback(async () => {
+    // get deposit/withdraw transactions
+    if ((isWithdraw || isDeposit) && ownerView && token && vaultToken && amount && user) {
+      const fromToken = {
+        [TransactionAction.DEPOSIT]: token,
+        [TransactionAction.WITHDRAW]: vaultToken,
+      }[sidebarTransactionType]
+      const toToken = {
+        [TransactionAction.DEPOSIT]: vaultToken,
+        [TransactionAction.WITHDRAW]: token,
+      }[sidebarTransactionType]
+
+      setTxStatus('loadingTx')
+      try {
+        const transactionsList = await {
+          [TransactionAction.DEPOSIT]: getDepositTX,
+          [TransactionAction.WITHDRAW]: getWithdrawTX,
+        }[sidebarTransactionType]({
+          walletAddress: Address.createFromEthereum({
+            value: user.address,
+          }),
+          amount: TokenAmount.createFrom({
+            token: fromToken,
+            amount: amount.toString(),
+          }),
+          toToken,
+          fleetAddress: vault.id,
+          chainInfo: getChainInfoByChainId(vaultChainId),
+          slippage: Number(slippageConfig.slippage),
+        })
+
+        if (transactionsList.length === 0) {
+          throw new Error('Error getting the transactions list')
+        }
+        // Map to TransactionWithStatus and set executed to false
+        setTransactions(transactionsList.map((tx) => ({ ...tx, executed: false })))
+        setTxStatus('txPrepared')
+      } catch (err) {
+        if (err instanceof Error) {
+          setSidebarTransactionError(err.message)
+        } else {
+          setSidebarTransactionError(errorsMap.transactionRetrievalError)
+        }
+      }
+    }
+    // get switch transactions
+    if (isSwitch && ownerView && selectedSwitchVault && vaultToken && user) {
+      setTxStatus('loadingTx')
+      const [destinationFleetAddress] = selectedSwitchVault.split('-') // it is {vaultId}-{chainId}
+
+      try {
+        const transactionsList = await getVaultSwitchTx({
+          walletAddress: Address.createFromEthereum({
+            value: user.address,
+          }),
+          amount: TokenAmount.createFrom({
+            token: vaultToken,
+            amount: amount && amount.gt(0) ? amount.toString() : positionAmount?.toString() ?? '0',
+          }),
+          chainInfo: getChainInfoByChainId(vaultChainId),
+          slippage: Number(slippageConfig.slippage),
+          sourceFleetAddress: vault.id,
+          destinationFleetAddress,
+        })
+
+        // TS says that this is never empty, but it can be... leaving that for now
+        // if (transactionsList.length === 0) {
+        //   throw new Error('Error getting the transactions list')
+        // }
+
+        // Map to TransactionWithStatus and set executed to false
+        setTransactions(transactionsList.map((tx) => ({ ...tx, executed: false })))
+        setTxStatus('txPrepared')
+      } catch (err) {
+        if (err instanceof Error) {
+          setSidebarTransactionError(err.message)
+        } else {
+          setSidebarTransactionError(errorsMap.transactionRetrievalError)
+        }
+      }
+    }
+  }, [
+    isWithdraw,
+    isDeposit,
+    ownerView,
+    token,
+    vaultToken,
+    amount,
+    user,
+    isSwitch,
+    selectedSwitchVault,
+    sidebarTransactionType,
+    getDepositTX,
+    getWithdrawTX,
+    vault.id,
+    vaultChainId,
+    slippageConfig.slippage,
+    getVaultSwitchTx,
+    positionAmount,
+  ])
 
   // Configure User Operation (transaction) sender, passing client which can be undefined
   const {
@@ -154,28 +257,13 @@ export const useTransaction = ({
               setWaitingForTx(safeTransactionData.transactionHash)
             }
             if (nextTransaction) {
-              setTxHashes((prev) => {
-                const nextHashes = [
-                  ...prev,
-                  {
-                    type: nextTransaction.type,
-                    hash: safeTransactionData.transactionHash,
-                  },
-                ]
-
-                if (
-                  safeTransactionData.confirmations.length >
-                  safeTransactionData.confirmationsRequired
-                ) {
-                  nextHashes.push({
-                    type: nextTransaction.type,
-                    custom:
-                      'Multisig transaction detected. After all confirmations are done, the position will be ready.',
-                  })
-                }
-
-                return nextHashes
-              })
+              setTransactions((prev) =>
+                prev?.map((tx) =>
+                  !tx.executed && !tx.txHash && tx.type === nextTransaction.type
+                    ? { ...tx, txHash: safeTransactionData.transactionHash }
+                    : tx,
+                ),
+              )
             }
           })
           .catch((err) => {
@@ -185,17 +273,22 @@ export const useTransaction = ({
       } else {
         setWaitingForTx(hash)
         if (nextTransaction) {
-          setTxHashes((prev) => [
-            ...prev,
-            {
-              type: nextTransaction.type,
-              hash,
-            },
-          ])
+          setTransactions((prev) =>
+            prev?.map((tx) =>
+              !tx.executed && !tx.txHash && tx.type === nextTransaction.type
+                ? { ...tx, txHash: hash }
+                : tx,
+            ),
+          )
         }
       }
     },
     onError: (err) => {
+      if (isSwitch) {
+        // when switching sometimes the transaction fails due to the time between approval and switching
+        // we need to refresh the transactions list then to fetch the new swap
+        getTransactionsList()
+      }
       // eslint-disable-next-line no-console
       console.error('Error executing the transaction:', err)
 
@@ -303,116 +396,38 @@ export const useTransaction = ({
     manualSetAmount(undefined)
     setSidebarTransactionError(undefined)
     setSidebarValidationError(undefined)
-    setTxHashes([])
-  }, [backToInit, manualSetAmount, setSidebarTransactionError, setTxHashes])
-
-  const removeTxHash = useCallback(
-    (txHash: string) => {
-      setTxHashes((prev) => prev.filter((tx) => tx.hash !== txHash))
-    },
-    [setTxHashes],
-  )
-
-  const getTransactionsList = useCallback(async () => {
-    // get deposit/withdraw transactions
-    if ((isWithdraw || isDeposit) && ownerView && token && vaultToken && amount && user) {
-      const fromToken = {
-        [TransactionAction.DEPOSIT]: token,
-        [TransactionAction.WITHDRAW]: vaultToken,
-      }[sidebarTransactionType]
-      const toToken = {
-        [TransactionAction.DEPOSIT]: vaultToken,
-        [TransactionAction.WITHDRAW]: token,
-      }[sidebarTransactionType]
-
-      setTxStatus('loadingTx')
-      try {
-        const transactionsList = await {
-          [TransactionAction.DEPOSIT]: getDepositTX,
-          [TransactionAction.WITHDRAW]: getWithdrawTX,
-        }[sidebarTransactionType]({
-          walletAddress: Address.createFromEthereum({
-            value: user.address,
-          }),
-          amount: TokenAmount.createFrom({
-            token: fromToken,
-            amount: amount.toString(),
-          }),
-          toToken,
-          fleetAddress: vault.id,
-          chainInfo: getChainInfoByChainId(vaultChainId),
-          slippage: Number(slippageConfig.slippage),
-        })
-
-        if (transactionsList.length === 0) {
-          throw new Error('Error getting the transactions list')
-        }
-        setTransactions(transactionsList)
-        setTxStatus('txPrepared')
-      } catch (err) {
-        if (err instanceof Error) {
-          setSidebarTransactionError(err.message)
-        } else {
-          setSidebarTransactionError(errorsMap.transactionRetrievalError)
-        }
-      }
-    }
-    // get switch transactions
-    if (isSwitch && ownerView && selectedSwitchVault && vaultToken && user) {
-      setTxStatus('loadingTx')
-      const [destinationFleetAddress] = selectedSwitchVault.split('-') // it is {vaultId}-{chainId}
-
-      try {
-        const transactionsList = await getVaultSwitchTx({
-          walletAddress: Address.createFromEthereum({
-            value: user.address,
-          }),
-          amount: TokenAmount.createFrom({
-            token: vaultToken,
-            amount: amount && amount.gt(0) ? amount.toString() : positionAmount?.toString() ?? '0',
-          }),
-          chainInfo: getChainInfoByChainId(vaultChainId),
-          slippage: Number(slippageConfig.slippage),
-          sourceFleetAddress: vault.id,
-          destinationFleetAddress,
-        })
-
-        // TS says that this is never empty, but it can be... leaving that for now
-        // if (transactionsList.length === 0) {
-        //   throw new Error('Error getting the transactions list')
-        // }
-
-        setTransactions(transactionsList)
-        setTxStatus('txPrepared')
-      } catch (err) {
-        if (err instanceof Error) {
-          setSidebarTransactionError(err.message)
-        } else {
-          setSidebarTransactionError(errorsMap.transactionRetrievalError)
-        }
-      }
-    }
+    setSidebarTransactionType?.(TransactionAction.DEPOSIT)
   }, [
-    isWithdraw,
-    isDeposit,
-    ownerView,
-    token,
-    vaultToken,
-    amount,
-    user,
-    isSwitch,
-    selectedSwitchVault,
-    sidebarTransactionType,
-    getDepositTX,
-    getWithdrawTX,
-    vault.id,
-    vaultChainId,
-    slippageConfig.slippage,
-    getVaultSwitchTx,
-    positionAmount,
+    backToInit,
+    manualSetAmount,
+    setSidebarTransactionError,
+    setSidebarValidationError,
+    setSidebarTransactionType,
   ])
 
+  const sidebarSecondaryButton = useMemo(() => {
+    if (txStatus === 'txSuccess' && !nextTransaction && userWalletAddress) {
+      return {
+        label: 'Go back',
+        action: () => {
+          reset()
+          refreshView()
+        },
+      }
+    }
+
+    return undefined
+  }, [nextTransaction, refreshView, reset, txStatus, userWalletAddress])
+
   const sidebarPrimaryButton = useMemo(() => {
+    if (isEditingSwitchAmount) {
+      // special case for editing the switch amount - it has its own button
+      return {
+        label: '',
+        hidden: true,
+        loading: false,
+      }
+    }
     // missing data
     if (!user) {
       return {
@@ -518,6 +533,21 @@ export const useTransaction = ({
 
     // switch check
     if (isSwitch) {
+      if (txStatus === 'txSuccess' && !nextTransaction && userWalletAddress) {
+        return {
+          label: 'Go to new position',
+          action: () => {
+            push(
+              getVaultPositionUrl({
+                network: vault.protocol.network,
+                vaultId: selectedSwitchVault?.split('-')[0] ?? '',
+                walletAddress: userWalletAddress,
+              }),
+            )
+          },
+        }
+      }
+
       return {
         label: `Preview ${capitalize(sidebarTransactionType)}`,
         action: getTransactionsList,
@@ -549,14 +579,13 @@ export const useTransaction = ({
     tokenBalance,
     flow,
     isDeposit,
-    isWithdraw,
-    isSwitch,
-    selectedSwitchVault,
     amount,
+    isWithdraw,
     positionAmount,
+    isSwitch,
     txStatus,
     token,
-    nextTransaction?.type,
+    nextTransaction,
     getTransactionsList,
     openAuthModal,
     isAuthModalOpen,
@@ -565,6 +594,11 @@ export const useTransaction = ({
     sidebarTransactionType,
     approvalTokenSymbol,
     executeNextTransaction,
+    userWalletAddress,
+    selectedSwitchVault,
+    push,
+    vault.protocol.network,
+    isEditingSwitchAmount,
   ])
 
   const sidebarTitle = useMemo(() => {
@@ -574,6 +608,13 @@ export const useTransaction = ({
       nextTransaction?.type === TransactionType.Approve
     ) {
       return 'Switch\u00A0your\u00A0position'
+    }
+    if (
+      sidebarTransactionType === TransactionAction.SWITCH &&
+      !nextTransaction &&
+      txStatus === 'txSuccess'
+    ) {
+      return 'Position\u00A0switched!'
     }
     if (nextTransaction?.type === TransactionType.Deposit) {
       return 'Preview\u00A0deposit'
@@ -590,16 +631,19 @@ export const useTransaction = ({
     return nextTransaction?.type
       ? capitalize(nextTransaction.type)
       : capitalize(TransactionAction.DEPOSIT)
-  }, [nextTransaction?.type, sidebarTransactionType])
+  }, [nextTransaction, sidebarTransactionType, txStatus])
 
   // refresh data when all transactions are executed and are successful
   useEffect(() => {
     if (
       txStatus === 'txSuccess' &&
       !isSendingUserOperation &&
-      transactions?.length === 0 &&
-      !waitingForTx
+      transactions?.every((tx) => tx.executed) && // Check if all transactions are executed
+      !waitingForTx &&
+      sidebarTransactionType !== TransactionAction.SWITCH
     ) {
+      // we do not want to reset the sidebar on switch
+      // because there is a separate success screen
       reset()
       if (userWalletAddress) {
         // refreshes the view
@@ -639,13 +683,13 @@ export const useTransaction = ({
     push,
     reset,
     sidebarTransactionType,
-    transactions?.length,
     txStatus,
     vault,
     waitingForTx,
     userWalletAddress,
     isDeposit,
     isWithdraw,
+    transactions,
   ])
 
   // watch for sendUserOperationError
@@ -660,9 +704,31 @@ export const useTransaction = ({
     if (waitingForTx && txStatus !== 'txSuccess' && publicClient) {
       waitForTransaction({ publicClient, hash: waitingForTx })
         .then(() => {
-          setTxStatus('txSuccess')
-          setWaitingForTx(undefined)
-          setTransactions(transactions?.slice(1))
+          // if its switch and its the last transaction, we want the success screen a _LITTLE_ later
+          // this is because on the next (success) screen we want to show the new position
+          if (sidebarTransactionType === TransactionAction.SWITCH && !nextTransaction) {
+            setTimeout(() => {
+              setTxStatus('txSuccess')
+            }, 3000)
+          } else {
+            setTxStatus('txSuccess')
+          }
+
+          // Mark the completed transaction as executed: true
+          setTransactions((prevTransactions) =>
+            prevTransactions?.map((tx) => {
+              // Use the hash stored in waitingForTx to identify the transaction
+              if (
+                tx.transaction.calldata === nextTransaction?.transaction.calldata && // A way to identify the transaction, might need a better unique ID
+                !tx.executed
+              ) {
+                return { ...tx, executed: true }
+              }
+
+              return tx
+            }),
+          )
+          setWaitingForTx(undefined) // Clear waitingForTx after successful execution and state update
         })
         .catch((err) => {
           // eslint-disable-next-line no-console
@@ -678,6 +744,8 @@ export const useTransaction = ({
     setTxStatus,
     setWaitingForTx,
     setTransactions,
+    nextTransaction,
+    sidebarTransactionType,
   ])
 
   // watch for token balance changes
@@ -747,11 +815,10 @@ export const useTransaction = ({
     sidebar: {
       title: sidebarTitle,
       primaryButton: sidebarPrimaryButton,
+      secondaryButton: sidebarSecondaryButton,
       error: sidebarTransactionError ?? sidebarValidationError,
     },
     nextTransaction,
-    txHashes,
-    removeTxHash,
     vaultChainId,
     reset,
     backToInit,
@@ -764,5 +831,8 @@ export const useTransaction = ({
     setSelectedSwitchVault,
     selectedSwitchVault,
     transactions,
+    txStatus,
+    isEditingSwitchAmount,
+    setIsEditingSwitchAmount,
   }
 }

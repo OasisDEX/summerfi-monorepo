@@ -1,4 +1,3 @@
-// know i said no barrel files but these are just types
 export { type AppConfigType, emptyConfig, FeaturesEnum } from './src/generated/main-config'
 export {
   type EarnAppConfigType,
@@ -176,15 +175,16 @@ export type {
   PerformanceChartData,
   PlatformLogo,
   PositionForecastAPIResponse,
-  SDKGlobalRebalanceType,
   SDKGlobalRebalancesType,
+  SDKGlobalRebalanceType,
   SDKSupportedChain,
   SDKSupportedNetwork,
   SDKUserActivityType,
   SDKUsersActivityType,
-  SDKVaultType,
   SDKVaultishType,
   SDKVaultsListType,
+  SDKVaultType,
+  TransactionWithStatus,
   UserActivity,
   UsersActivity,
   VaultApyData,

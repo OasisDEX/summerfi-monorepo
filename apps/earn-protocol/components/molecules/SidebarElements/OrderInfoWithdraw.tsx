@@ -1,18 +1,17 @@
 import { Icon, OrderInformation, Text } from '@summerfi/app-earn-ui'
-import { type SDKChainId, type TokenSymbolsList } from '@summerfi/app-types'
-import { formatCryptoBalance, formatFiatBalance, formatPercent } from '@summerfi/app-utils'
 import {
-  type ExtendedTransactionInfo,
-  type IToken,
-  TransactionType,
-  type VaultSwitchTransactionInfo,
-} from '@summerfi/sdk-common'
+  type SDKChainId,
+  type TokenSymbolsList,
+  type TransactionWithStatus,
+} from '@summerfi/app-types'
+import { formatCryptoBalance, formatFiatBalance, formatPercent } from '@summerfi/app-utils'
+import { type IToken, TransactionType } from '@summerfi/sdk-common'
 import type BigNumber from 'bignumber.js'
 
 import orderInfoDepositWithdrawStyles from './OrderInfoDepositWithdraw.module.scss'
 
 type OrderInfoWithdrawProps = {
-  transaction: ExtendedTransactionInfo | VaultSwitchTransactionInfo
+  transaction: TransactionWithStatus
   amountParsed: BigNumber
   amountDisplayUSD: string
   transactionFee?: string
