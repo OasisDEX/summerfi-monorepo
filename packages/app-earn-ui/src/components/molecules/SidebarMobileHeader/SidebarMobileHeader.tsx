@@ -16,8 +16,8 @@ type SidebarMobileHeaderProps =
     }
   | {
       type: 'manage'
-      transactionType: TransactionAction
-      setTransactionType: (type: TransactionAction) => void
+      sidebarTransactionType: TransactionAction
+      setSidebarTransactionType: (type: TransactionAction) => void
     }
 
 export const SidebarMobileHeader: FC<SidebarMobileHeaderProps> = (props) => {
@@ -52,19 +52,23 @@ export const SidebarMobileHeader: FC<SidebarMobileHeaderProps> = (props) => {
     >
       <Button
         variant={
-          props.transactionType === TransactionAction.DEPOSIT ? 'primarySmall' : 'secondarySmall'
+          props.sidebarTransactionType === TransactionAction.DEPOSIT
+            ? 'primarySmall'
+            : 'secondarySmall'
         }
         style={{ flex: 1 }}
-        onClick={() => props.setTransactionType(TransactionAction.DEPOSIT)}
+        onClick={() => props.setSidebarTransactionType(TransactionAction.DEPOSIT)}
       >
         Deposit
       </Button>
       <Button
         variant={
-          props.transactionType === TransactionAction.WITHDRAW ? 'primarySmall' : 'secondarySmall'
+          props.sidebarTransactionType === TransactionAction.WITHDRAW
+            ? 'primarySmall'
+            : 'secondarySmall'
         }
         style={{ flex: 1 }}
-        onClick={() => props.setTransactionType(TransactionAction.WITHDRAW)}
+        onClick={() => props.setSidebarTransactionType(TransactionAction.WITHDRAW)}
       >
         Withdraw
       </Button>

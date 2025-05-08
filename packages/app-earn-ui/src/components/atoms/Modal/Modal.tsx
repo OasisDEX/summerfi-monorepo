@@ -1,5 +1,5 @@
 'use client'
-import { type FC, type ReactNode, Suspense, useEffect, useRef } from 'react'
+import { type FC, type ReactNode, Suspense, useEffect, useMemo, useRef } from 'react'
 
 import { Button } from '@/components/atoms/Button/Button.tsx'
 import { Icon } from '@/components/atoms/Icon/Icon.tsx'
@@ -23,6 +23,7 @@ export const Modal: FC<ModalProps> = ({
   withCloseButton = true,
 }) => {
   const ref = useRef<HTMLDialogElement>(null)
+  const defaultBodyOverflow = useMemo(() => document.body.style.overflow, [])
 
   useEffect(() => {
     const handleOutsideClick = (ev: MouseEvent) => {
@@ -41,15 +42,16 @@ export const Modal: FC<ModalProps> = ({
       document.addEventListener('mousedown', handleOutsideClick)
       document.body.style.overflow = 'hidden'
     } else {
-      document.body.style.overflow = 'auto'
+      document.body.style.overflow = defaultBodyOverflow
+
       ref.current?.close()
     }
 
     return () => {
       document.removeEventListener('mousedown', handleOutsideClick)
-      document.body.style.overflow = 'auto'
+      document.body.style.overflow = defaultBodyOverflow
     }
-  }, [openModal, closeModal, disableCloseOutside])
+  }, [openModal, closeModal, disableCloseOutside, defaultBodyOverflow])
 
   return (
     <dialog ref={ref} onCancel={closeModal} className={modalStyles.dialog}>

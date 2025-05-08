@@ -9,6 +9,7 @@ import {
   getUniqueVaultId,
   getVaultsProtocolsList,
   getVaultUrl,
+  networkIconByNetworkName,
   SimpleGrid,
   SUMR_CAP,
   Text,
@@ -41,7 +42,6 @@ import { capitalize } from 'lodash-es'
 import { type ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation'
 
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
-import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { mapTokensToMultiselectOptions } from '@/features/latest-activity/table/filters/mappers'
 import { filterStablecoins } from '@/helpers/filter-stablecoins'
@@ -342,7 +342,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
     vaultChainId: subgraphNetworkToSDKId(resolvedVaultData.protocol.network),
     amountDisplay,
     amountDisplayUSD,
-    transactionType: TransactionAction.DEPOSIT,
+    sidebarTransactionType: TransactionAction.DEPOSIT,
     selectedTokenOption,
     sdk,
     slippageConfig,

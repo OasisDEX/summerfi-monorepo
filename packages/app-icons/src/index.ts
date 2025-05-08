@@ -88,6 +88,12 @@ export const icons = {
   checkmark_colorful: customLazy(
     () => import('./icons/checkmark_colorful.svg?react'),
   ) as IconExportType,
+  checkmark_circle: customLazy(
+    () => import('./icons/checkmark_circle.svg?react'),
+  ) as IconExportType,
+  checkmark_colorful_circle: customLazy(
+    () => import('./icons/checkmark_colorful_circle.svg?react'),
+  ) as IconExportType,
   checkmark_colorful_slim: customLazy(
     () => import('./icons/checkmark_colorful_slim.svg?react'),
   ) as IconExportType,
@@ -620,6 +626,8 @@ export const iconsSync: {
   chainlink_color: import('./icons/chainlink_color.svg?react'),
   chainlink: import('./icons/chainlink.svg?react'),
   checkmark_colorful: import('./icons/checkmark_colorful.svg?react'),
+  checkmark_circle: import('./icons/checkmark_circle.svg?react'),
+  checkmark_colorful_circle: import('./icons/checkmark_colorful_circle.svg?react'),
   checkmark_colorful_slim: import('./icons/checkmark_colorful_slim.svg?react'),
   checkmark: import('./icons/checkmark.svg?react'),
   chevron_down: import('./icons/chevron_down.svg?react'),

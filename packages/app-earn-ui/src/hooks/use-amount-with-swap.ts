@@ -16,7 +16,7 @@ type UseAmountProps = {
   vaultChainId: number
   amountDisplay: string
   amountDisplayUSD: string
-  transactionType: TransactionAction
+  sidebarTransactionType: TransactionAction
   selectedTokenOption: DropdownOption
   slippageConfig: { slippage: string }
   sdk: SdkClient
@@ -30,7 +30,7 @@ type UseAmountProps = {
  * @param vaultChainId - Chain ID where the vault is deployed
  * @param amountDisplay - Amount to swap in crypto units
  * @param amountDisplayUSD - Amount in USD
- * @param transactionType - Type of transaction (deposit/withdraw)
+ * @param sidebarTransactionType - Type of transaction (deposit/withdraw)
  * @param selectedTokenOption - Selected token from dropdown
  * @param slippageConfig - Slippage configuration object containing slippage percentage
  * @param sdk - SDK client instance
@@ -47,7 +47,7 @@ export const useAmountWithSwap = ({
   vaultChainId,
   amountDisplay,
   amountDisplayUSD,
-  transactionType,
+  sidebarTransactionType,
   selectedTokenOption,
   slippageConfig,
   sdk,
@@ -64,15 +64,15 @@ export const useAmountWithSwap = ({
     return {
       [TransactionAction.DEPOSIT]: selectedTokenOption.value,
       [TransactionAction.WITHDRAW]: vault.inputToken.symbol,
-    }[transactionType]
-  }, [transactionType, selectedTokenOption.value, vault.inputToken.symbol])
+    }[sidebarTransactionType]
+  }, [sidebarTransactionType, selectedTokenOption.value, vault.inputToken.symbol])
 
   const toTokenSymbol: string = useMemo(() => {
     return {
       [TransactionAction.DEPOSIT]: vault.inputToken.symbol,
       [TransactionAction.WITHDRAW]: selectedTokenOption.value,
-    }[transactionType]
-  }, [transactionType, selectedTokenOption.value, vault.inputToken.symbol])
+    }[sidebarTransactionType]
+  }, [sidebarTransactionType, selectedTokenOption.value, vault.inputToken.symbol])
 
   const { quote, quoteLoading } = useSwapQuote({
     chainId: vaultChainId,
@@ -96,10 +96,10 @@ export const useAmountWithSwap = ({
     const amountWithSwap = {
       [TransactionAction.DEPOSIT]: `${formatCryptoBalance(quote.toTokenAmount.toBigNumber())} ${quote.toTokenAmount.token.symbol}`, // Display 2 decimal places for USD
       [TransactionAction.WITHDRAW]: `${formatCryptoBalance(quote.toTokenAmount.toBigNumber())} ${quote.toTokenAmount.token.symbol}`, // Cap decimals at 8 for better readability
-    }[transactionType]
+    }[sidebarTransactionType]
 
     return amountWithSwap
-  }, [quote, quoteLoading, amountDisplayUSD, transactionType])
+  }, [quote, quoteLoading, amountDisplayUSD, sidebarTransactionType])
 
   return {
     fromTokenSymbol,
