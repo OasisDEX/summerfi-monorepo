@@ -423,7 +423,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       })
     }
 
-    const shouldSwap = swapFromAmount.token.address.value !== fleetToken.address.value
+    const shouldSwap = !swapFromAmount.token.equals(fleetToken)
     const shouldStake = params.shouldStake ?? true
 
     let swapToAmount: ITokenAmount | undefined
