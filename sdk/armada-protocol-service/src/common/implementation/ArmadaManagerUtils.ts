@@ -4,7 +4,6 @@ import {
   getDeployedContractAddress,
   getDeployedRewardsRedeemerAddress,
   isTestDeployment,
-  setTestDeployment,
   type IArmadaManagerUtils,
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
@@ -142,33 +141,6 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
       chainId: params.vaultId.chainInfo.chainId,
       vaultId: params.vaultId.fleetAddress.value,
       accountAddress: params.accountAddress,
-    })
-  }
-
-  /** @see IArmadaManagerUtils.getVaultInfo */
-  async getVaultInfo(
-    params: Parameters<IArmadaManagerUtils['getVaultInfo']>[0],
-  ): Promise<IArmadaVaultInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    const fleetERC4626Contract = fleetContract.asErc4626()
-    const fleetERC20Contract = fleetERC4626Contract.asErc20()
-
-    const [config, totalDeposits, totalShares] = await Promise.all([
-      fleetContract.config(),
-      fleetERC4626Contract.totalAssets(),
-      fleetERC20Contract.totalSupply(),
-    ])
-    const { depositCap } = config
-
-    return ArmadaVaultInfo.createFrom({
-      id: params.vaultId,
-      depositCap: depositCap,
-      totalDeposits: totalDeposits,
-      totalShares: totalShares,
     })
   }
 

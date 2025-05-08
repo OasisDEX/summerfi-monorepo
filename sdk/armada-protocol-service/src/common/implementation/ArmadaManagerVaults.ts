@@ -28,6 +28,7 @@ import {
   type WithdrawTransactionInfo,
   type ChainId,
   type IArmadaVaultInfo,
+  ArmadaVaultInfo,
 } from '@summerfi/sdk-common'
 import type { ISwapManager } from '@summerfi/swap-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
@@ -1387,6 +1388,33 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       })
     }
     return result
+  }
+
+  /** @see IArmadaManagerVaults.getVaultInfo */
+  async getVaultInfo(
+    params: Parameters<IArmadaManagerVaults['getVaultInfo']>[0],
+  ): Promise<IArmadaVaultInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    const fleetERC4626Contract = fleetContract.asErc4626()
+    const fleetERC20Contract = fleetERC4626Contract.asErc20()
+
+    const [config, totalDeposits, totalShares] = await Promise.all([
+      fleetContract.config(),
+      fleetERC4626Contract.totalAssets(),
+      fleetERC20Contract.totalSupply(),
+    ])
+    const { depositCap } = config
+
+    return ArmadaVaultInfo.createFrom({
+      id: params.vaultId,
+      depositCap: depositCap,
+      totalDeposits: totalDeposits,
+      totalShares: totalShares,
+    })
   }
 
   getVaultInfoList(

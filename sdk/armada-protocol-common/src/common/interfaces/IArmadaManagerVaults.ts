@@ -104,6 +104,16 @@ export interface IArmadaManagerVaults {
     | [ApproveTransactionInfo, ApproveTransactionInfo, VaultSwitchTransactionInfo]
   >
 
+  /**
+   * @method getVaultInfo
+   * @description Retrieves the information of an Armada vault by its ID
+   *
+   * @param vaultId ID of the vault to retrieve
+   *
+   * @returns IArmadaVaultInfo The extended information of the vault
+   */
+  getVaultInfo(params: { vaultId: IArmadaVaultId }): Promise<IArmadaVaultInfo>
+
   getVaultInfoList(params: { chainId: ChainId }): Promise<{
     vaultList: IArmadaVaultInfo[]
   }>

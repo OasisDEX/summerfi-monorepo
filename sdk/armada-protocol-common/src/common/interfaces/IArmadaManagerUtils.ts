@@ -5,7 +5,6 @@ import {
   type IArmadaPosition,
   type IArmadaPositionId,
   type IArmadaVaultId,
-  type IArmadaVaultInfo,
   type IChainInfo,
   type IToken,
   TransactionInfo,
@@ -131,16 +130,6 @@ export interface IArmadaManagerUtils {
     vaultId: IArmadaVaultId
     accountAddress: string
   }): Promise<GetUserActivityQuery>
-
-  /**
-   * @name getVaultInfo
-   * @description Get the extended information of the vault
-   *
-   * @param vaultId ID of the vault to retrieve
-   *
-   * @returns IArmadaVaultInfo The extended information of the vault
-   */
-  getVaultInfo(params: { vaultId: IArmadaVaultId }): Promise<IArmadaVaultInfo>
 
   /**
    * @name getFleetShares
