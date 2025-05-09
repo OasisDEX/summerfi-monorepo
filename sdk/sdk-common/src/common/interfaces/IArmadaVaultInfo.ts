@@ -20,6 +20,8 @@ export interface IArmadaVaultInfo extends IPoolInfo, IArmadaVaultInfoData {
   readonly [__signature__]: symbol
   /** ID of the vault */
   readonly id: IArmadaVaultId
+  /** Token of the vault */
+  readonly token: IToken
   /** Maximum amount that can be deposited into the vault at this moment */
   readonly depositCap: ITokenAmount
   /** Total amount of assets currently deposited in the vault */
@@ -44,6 +46,7 @@ export interface IArmadaVaultInfo extends IPoolInfo, IArmadaVaultInfoData {
 export const ArmadaVaultInfoDataSchema = z.object({
   ...PoolInfoDataSchema.shape,
   id: z.custom<IArmadaVaultId>((val) => isArmadaVaultId(val)),
+  token: z.custom<IToken>((val) => isToken(val)),
   depositCap: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
   totalDeposits: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
   totalShares: z.custom<ITokenAmount>((val) => isTokenAmount(val)),

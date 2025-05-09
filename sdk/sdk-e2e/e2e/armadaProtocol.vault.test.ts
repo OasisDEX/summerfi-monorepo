@@ -68,14 +68,23 @@ describe('Armada Protocol Vault', () => {
     console.log(
       'All vaults:',
       vaults.list
-        .map((vaultInfo, index) => {
-          return [
-            `\nVault ${index} address: ${vaultInfo.id.fleetAddress}`,
-            `\nDeposit cap: `,
-            vaultInfo.depositCap.toString(),
-            `\nTotal deposits: `,
-            vaultInfo.totalDeposits.toString(),
-          ].join('')
+        .map((vaultInfo) => {
+          return JSON.stringify(
+            {
+              id: vaultInfo.id.toString(),
+              token: vaultInfo.token.toString(),
+              depositCap: vaultInfo.depositCap.toString(),
+              totalDeposits: vaultInfo.totalDeposits.toString(),
+              totalShares: vaultInfo.totalShares.toString(),
+              apy: vaultInfo.apy?.toString(),
+              rewardsApys: vaultInfo.rewardsApys.map((reward) => ({
+                token: reward.token.toString(),
+                apy: reward.apy?.toString(),
+              })),
+            },
+            null,
+            2,
+          )
         })
         .toString(),
     )

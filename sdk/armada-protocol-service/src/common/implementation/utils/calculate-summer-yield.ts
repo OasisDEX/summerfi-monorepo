@@ -24,7 +24,7 @@ export const calculateRewardApy = ({
     .multipliedBy(tokenPriceUsd)
     .dividedBy(tvlUsd)
     .toString()
-
+  console.log('first', dailyTokenEmissionAmount, tokenPriceUsd, tvlUsd, raw)
   return Percentage.createFrom({
     value: Number(raw),
   })

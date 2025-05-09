@@ -1416,8 +1416,9 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     const fleetERC4626Contract = fleetContract.asErc4626()
     const fleetERC20Contract = fleetERC4626Contract.asErc20()
 
-    const [config, totalDeposits, totalShares, apys, rewardsApys] = await Promise.all([
+    const [config, token, totalDeposits, totalShares, apys, rewardsApys] = await Promise.all([
       fleetContract.config(),
+      fleetERC20Contract.getToken(),
       fleetERC4626Contract.totalAssets(),
       fleetERC20Contract.totalSupply(),
       this.getVaultsApys({
@@ -1433,6 +1434,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
 
     return ArmadaVaultInfo.createFrom({
       id: params.vaultId,
+      token: token,
       depositCap: depositCap,
       totalDeposits: totalDeposits,
       totalShares: totalShares,
@@ -1573,11 +1575,13 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       (result, vault) => {
         const { rewardTokens, rewardTokenEmissionsAmount, totalValueLockedUSD } = vault
         // Calculate APY for each reward token
+        console.log('rewardTokenEmissionsAmount', rewardTokenEmissionsAmount)
         result[vault.id.toLowerCase()] = rewardTokens.map((token, index) => {
           const dailyTokenEmissionAmount = new BigNumber(
             rewardTokenEmissionsAmount[index].toString(),
           )
-            .div(new BigNumber(10).pow(token.token.decimals))
+            .div(new BigNumber(10).pow(36))
+            .times(100) // why 36 and not decimals
             .toString()
           // Use token price if available, otherwise fallback to default for SUMR
           const tokenPriceUsd = prices.priceByAddress[token.token.id.toLowerCase()]
