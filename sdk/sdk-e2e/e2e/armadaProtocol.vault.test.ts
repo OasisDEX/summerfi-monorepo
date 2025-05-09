@@ -23,7 +23,7 @@ const eurcFleet = Address.createFromEthereum({
 })
 const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
 
-describe('Armada Protocol User', () => {
+describe('Armada Protocol Vault', () => {
   const sdk: SDKManager = makeSDK({
     apiURL: SDKApiUrl,
   })
@@ -47,8 +47,8 @@ describe('Armada Protocol User', () => {
       user,
     })
     console.log('User positions:')
-    positions.forEach((position) => {
-      console.log(`Position ${position.id.id} amount: ${position.amount.toString()}`)
+    positions.forEach((position, index) => {
+      console.log(`Position ${index} amount: ${position.amount.toString()}`)
     })
   })
 
@@ -61,27 +61,29 @@ describe('Armada Protocol User', () => {
     console.log(`User position for fleet ${fleetAddress.value}: ${position.amount.toString()}`)
   })
 
-  it('should get all fleets', async () => {
-    const raw = await sdk.armada.users.getVaultsRaw({
-      chainInfo,
+  it('should get all vaults with info', async () => {
+    const vaults = await sdk.armada.users.getVaultInfoList({
+      chainId,
     })
-    const vaults = raw.vaults
-    assert(vaults != null, 'No vaults found')
-    console.log('Vaults:')
-    vaults.forEach((vault) => {
-      console.log(`Vault ${vault.id} amount: ${vault.inputTokenBalance}`)
+    console.log('All vaults:')
+    vaults.list.forEach((vaultInfo, index) => {
+      console.log(`Vault ${index} address: ${vaultInfo.id.fleetAddress}`)
+      console.log(`Deposit cap`, vaultInfo.depositCap.toString())
+      console.log(`Total deposits`, vaultInfo.totalDeposits.toString())
     })
   })
 
-  it('should get specific fleet', async () => {
-    const raw = await sdk.armada.users.getVaultRaw({
-      vaultId: ArmadaVaultId.createFrom({
-        chainInfo,
-        fleetAddress,
-      }),
+  it('should get a specific vault info', async () => {
+    const vaultId = ArmadaVaultId.createFrom({
+      chainInfo,
+      fleetAddress: ethFleet,
     })
-    const vault = raw.vault
-    assert(vault != null, 'Vault not found')
-    console.log(`Vault ${vault.id} amount: ${vault.inputTokenBalance}`)
+    const vaultInfo = await sdk.armada.users.getVaultInfo({
+      vaultId,
+    })
+    assert(vaultInfo != null, 'Vault not found')
+    console.log(`Vault address: ${vaultInfo.id.fleetAddress}`)
+    console.log(`Deposit cap`, vaultInfo.depositCap.toString())
+    console.log(`Total deposits`, vaultInfo.totalDeposits.toString())
   })
 })

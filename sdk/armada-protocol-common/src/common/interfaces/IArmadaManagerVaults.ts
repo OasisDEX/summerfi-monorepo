@@ -110,11 +110,19 @@ export interface IArmadaManagerVaults {
    *
    * @param vaultId ID of the vault to retrieve
    *
-   * @returns IArmadaVaultInfo The extended information of the vault
+   * @returns The information of the corresponding Armada vault
    */
   getVaultInfo(params: { vaultId: IArmadaVaultId }): Promise<IArmadaVaultInfo>
 
+  /**
+   * @method getVaultInfoList
+   * @description Retrieves the information of all Armada vaults for a given chain
+   *
+   * @param chainInfo Chain information
+   *
+   * @returns The information of all Armada vaults for the given chain
+   */
   getVaultInfoList(params: { chainId: ChainId }): Promise<{
-    vaultList: IArmadaVaultInfo[]
+    list: IArmadaVaultInfo[]
   }>
 }

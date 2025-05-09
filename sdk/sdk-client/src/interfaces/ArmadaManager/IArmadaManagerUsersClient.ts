@@ -15,6 +15,7 @@ import {
   type ArmadaMigratablePosition,
   type ArmadaMigratablePositionApy,
   type ArmadaMigrationType,
+  type ChainId,
   type ChainInfo,
   type ClaimTransactionInfo,
   type DelegateTransactionInfo,
@@ -115,6 +116,18 @@ export interface IArmadaManagerUsersClient {
    * @returns The information of the corresponding Armada vault
    */
   getVaultInfo(params: { vaultId: IArmadaVaultId }): Promise<IArmadaVaultInfo>
+
+  /**
+   * @method getVaultInfoList
+   * @description Retrieves the information of all Armada vaults for a given chain
+   *
+   * @param chainInfo Chain information
+   *
+   * @returns The information of all Armada vaults for the given chain
+   */
+  getVaultInfoList(params: { chainId: ChainId }): Promise<{
+    list: IArmadaVaultInfo[]
+  }>
 
   /**
    * @name getUserPositions

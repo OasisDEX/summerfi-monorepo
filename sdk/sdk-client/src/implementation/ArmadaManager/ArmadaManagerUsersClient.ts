@@ -57,23 +57,22 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   }
 
   /** @see IArmadaManagerUsersClient.getVaultInfo */
-  async getVaultInfo(
-    params: Parameters<IArmadaManagerUsersClient['getVaultInfo']>[0],
-  ): Promise<IArmadaVaultInfo> {
-    return this.rpcClient.armada.users.getPoolInfo.query(params)
+  async getVaultInfo(params: Parameters<IArmadaManagerUsersClient['getVaultInfo']>[0]) {
+    return this.rpcClient.armada.users.getVaultInfo.query(params)
+  }
+
+  /** @see IArmadaManagerUsersClient.getVaultInfoList */
+  async getVaultInfoList(params: Parameters<IArmadaManagerUsersClient['getVaultInfoList']>[0]) {
+    return this.rpcClient.armada.users.getVaultInfoList.query(params)
   }
 
   /** @see IArmadaManagerUsersClient.getUserPositions */
-  async getUserPositions(
-    params: Parameters<IArmadaManagerUsersClient['getUserPositions']>[0],
-  ): Promise<IArmadaPosition[]> {
+  async getUserPositions(params: Parameters<IArmadaManagerUsersClient['getUserPositions']>[0]) {
     return this.rpcClient.armada.users.getUserPositions.query(params)
   }
 
   /** @see IArmadaManagerUsersClient.getUserPositions */
-  async getUserPosition(
-    params: Parameters<IArmadaManagerUsersClient['getUserPosition']>[0],
-  ): Promise<IArmadaPosition | undefined> {
+  async getUserPosition(params: Parameters<IArmadaManagerUsersClient['getUserPosition']>[0]) {
     return this.rpcClient.armada.users.getUserPosition.query({
       user: params.user,
       fleetAddress: params.fleetAddress,
@@ -81,9 +80,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   }
 
   /** @see IArmadaManagerUsersClient.getPosition */
-  async getPosition(
-    params: Parameters<IArmadaManagerUsersClient['getPosition']>[0],
-  ): Promise<IArmadaPosition | undefined> {
+  async getPosition(params: Parameters<IArmadaManagerUsersClient['getPosition']>[0]) {
     return this.rpcClient.armada.users.getPosition.query(params)
   }
 
@@ -122,16 +119,13 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   /** @see IArmadaManagerUsersClient.getBridgeTx */
   async getBridgeTx(
     params: Parameters<IArmadaManagerUsersClient['getBridgeTx']>[0],
-  ): Promise<BridgeTransactionInfo[]> {
+  ): ReturnType<IArmadaManagerUsersClient['getBridgeTx']> {
     return this.rpcClient.armada.users.getBridgeTx.query(params)
   }
 
   async getTotalBalance(
     params: Parameters<IArmadaManagerUsersClient['getTotalBalance']>[0],
-  ): Promise<{
-    shares: ITokenAmount
-    assets: ITokenAmount
-  }> {
+  ): ReturnType<IArmadaManagerUsersClient['getTotalBalance']> {
     return this.rpcClient.armada.users.getTotalBalance.query(params)
   }
 
