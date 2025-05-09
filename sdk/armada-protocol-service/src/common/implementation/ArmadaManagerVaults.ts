@@ -1580,7 +1580,8 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
           const dailyTokenEmissionAmount = new BigNumber(
             rewardTokenEmissionsAmount[index].toString(),
           )
-            .div(new BigNumber(10).pow(36))
+            // 18 is coming form the bug in contract increasing denomination by Constants.WAD
+            .div(new BigNumber(10).pow(18 + token.token.decimals))
             .times(100) // why 36 and not decimals
             .toString()
           // Use token price if available, otherwise fallback to default for SUMR
