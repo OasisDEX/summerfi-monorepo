@@ -37,7 +37,7 @@ import {
   TOSStatus,
   TransactionAction,
 } from '@summerfi/app-types'
-import { one, subgraphNetworkToId, subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
+import { subgraphNetworkToId, subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
 import { TransactionType } from '@summerfi/sdk-common'
 import dynamic from 'next/dynamic'
 
@@ -188,7 +188,7 @@ export const VaultManageViewComponent = ({
     chainId: vaultChainId,
   })
 
-  const { netValue } = getPositionValues({
+  const { netValue, netValueUSD } = getPositionValues({
     position,
     vault,
   })
@@ -406,14 +406,14 @@ export const VaultManageViewComponent = ({
         const disabledByConfig = !systemConfig.features?.VaultSwitching
         const noVaults = potentialVaultsToSwitchTo.length === 0
 
-        if (disabledByConfig || noVaults || netValue.lt(one)) {
+        if (disabledByConfig || noVaults || netValueUSD.lt(0.1)) {
           return action !== TransactionAction.SWITCH
         }
 
         return true
       },
     )
-  }, [netValue, potentialVaultsToSwitchTo.length, systemConfig.features?.VaultSwitching])
+  }, [netValueUSD, potentialVaultsToSwitchTo.length, systemConfig.features?.VaultSwitching])
 
   const isSwitch = sidebarTransactionType === TransactionAction.SWITCH
   const isDeposit = sidebarTransactionType === TransactionAction.DEPOSIT

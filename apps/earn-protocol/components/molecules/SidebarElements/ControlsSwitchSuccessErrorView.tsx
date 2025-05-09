@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   getDisplayToken,
   getPositionValues,
@@ -128,35 +128,51 @@ export const ControlsSwitchSuccessErrorView = ({
   chainId,
 }: ControlsSwitchSuccessErrorViewProps) => {
   const { userWalletAddress } = useUserWallet()
+  const [locallyLoadingNextPosition, setLocallyLoadingNextPosition] = useState(false)
+  const [throttledLocallyLoading, setThrottledLocallyLoading] = useState(false)
+  const throttleTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+
   const nextVault = useMemo(() => {
     const [nextVaultId] = selectedSwitchVault.split('-')
 
     return vaultsList.find((vault) => vault.id === nextVaultId) as SDKVaultishType
   }, [selectedSwitchVault, vaultsList])
 
-  const { position: currentPosition, isLoading: currentPositionLoading } = usePosition({
+  const {
+    position: currentPosition,
+    isLoading: currentPositionLoading,
+    reFetchPosition: reFetchCurrentPosition,
+  } = usePosition({
     vaultId: currentVault.id,
     chainId,
   })
 
-  const { position: nextPosition, isLoading: nextPositionLoading } = usePosition({
+  const {
+    position: nextPosition,
+    isLoading: nextPositionLoading,
+    reFetchPosition: reFetchNextPosition,
+  } = usePosition({
     vaultId: nextVault.id,
     chainId,
   })
 
-  const currentPositionValues = currentPosition
-    ? getPositionValues({
-        position: currentPosition,
-        vault: currentVault,
-      })
-    : undefined
+  const currentPositionValues = useMemo(() => {
+    return currentPosition
+      ? getPositionValues({
+          position: currentPosition,
+          vault: currentVault,
+        })
+      : undefined
+  }, [currentPosition, currentVault])
 
-  const nextPositionValues = nextPosition
-    ? getPositionValues({
-        position: nextPosition,
-        vault: nextVault,
-      })
-    : undefined
+  const nextPositionValues = useMemo(() => {
+    return nextPosition
+      ? getPositionValues({
+          position: nextPosition,
+          vault: nextVault,
+        })
+      : undefined
+  }, [nextPosition, nextVault])
 
   const {
     metadata: { fromAmount, toAmount },
@@ -173,6 +189,49 @@ export const ControlsSwitchSuccessErrorView = ({
 
   const nextAmount = toAmount?.amount
   const nextToken = getDisplayToken(nextVault.inputToken.symbol.toUpperCase()) as TokenSymbolsList
+
+  const nextPositionReady = useMemo(() => {
+    return !!nextPositionValues?.netValueUSD.gt(0.01)
+  }, [nextPositionValues?.netValueUSD])
+
+  useEffect(() => {
+    if (!nextPositionReady && !locallyLoadingNextPosition) {
+      setLocallyLoadingNextPosition(true)
+      setTimeout(() => {
+        Promise.all([reFetchCurrentPosition(), reFetchNextPosition()]).then(() => {
+          setLocallyLoadingNextPosition(false)
+        })
+      }, 3000)
+    } else if (nextPositionReady) {
+      setLocallyLoadingNextPosition(false)
+    }
+  }, [
+    nextPositionValues,
+    nextPositionReady,
+    reFetchCurrentPosition,
+    reFetchNextPosition,
+    locallyLoadingNextPosition,
+  ])
+
+  useEffect(() => {
+    // this might be useful as a hook in the future
+    if (locallyLoadingNextPosition) {
+      setThrottledLocallyLoading(true)
+      if (throttleTimeout.current) {
+        clearTimeout(throttleTimeout.current)
+      }
+    } else {
+      throttleTimeout.current = setTimeout(() => {
+        setThrottledLocallyLoading(false)
+      }, 400)
+    }
+
+    return () => {
+      if (throttleTimeout.current) {
+        clearTimeout(throttleTimeout.current)
+      }
+    }
+  }, [locallyLoadingNextPosition])
 
   useEffect(() => {
     trackVaultSwitched({
@@ -206,7 +265,7 @@ export const ControlsSwitchSuccessErrorView = ({
             currentNetValueUsd={currentPositionValues?.netValueUSD}
             switchedAmount={new BigNumber(switchedAmount).negated().toString()}
             chainId={chainId}
-            isLoading={currentPositionLoading}
+            isLoading={currentPositionLoading || throttledLocallyLoading}
           />
         </div>
         <div className={controlsSwitchSuccessErrorViewStyles.arrowBox}>
@@ -221,7 +280,7 @@ export const ControlsSwitchSuccessErrorView = ({
               currentNetValueUsd={nextPositionValues?.netValueUSD ?? new BigNumber(0)}
               switchedAmount={nextAmount}
               chainId={chainId}
-              isLoading={nextPositionLoading}
+              isLoading={nextPositionLoading || throttledLocallyLoading}
             />
           </div>
         </GradientBox>
