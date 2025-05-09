@@ -29,11 +29,15 @@ import {
   type ChainId,
   type IArmadaVaultInfo,
   ArmadaVaultInfo,
+  ArmadaVaultId,
+  getChainInfoByChainId,
+  Address,
 } from '@summerfi/sdk-common'
 import type { ISwapManager } from '@summerfi/swap-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import { encodeFunctionData } from 'viem'
 import { BigNumber } from 'bignumber.js'
+import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 
 export class ArmadaManagerVaults implements IArmadaManagerVaults {
   private _supportedChains: IChainInfo[]
@@ -45,6 +49,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
   private _contractsProvider: IContractsProvider
   private _swapManager: ISwapManager
   private _utils: IArmadaManagerUtils
+  private _subgraphManager: IArmadaSubgraphManager
 
   constructor(params: {
     supportedChains: IChainInfo[]
@@ -56,6 +61,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     contractsProvider: IContractsProvider
     swapManager: ISwapManager
     utils: IArmadaManagerUtils
+    subgraphManager: IArmadaSubgraphManager
   }) {
     this._supportedChains = params.supportedChains
     this._blockchainClientProvider = params.blockchainClientProvider
@@ -66,6 +72,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     this._contractsProvider = params.contractsProvider
     this._swapManager = params.swapManager
     this._utils = params.utils
+    this._subgraphManager = params.subgraphManager
   }
 
   /**
@@ -1417,9 +1424,27 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     })
   }
 
-  getVaultInfoList(
+  async getVaultInfoList(
     params: Parameters<IArmadaManagerVaults['getVaultInfoList']>[0],
   ): ReturnType<IArmadaManagerVaults['getVaultInfoList']> {
-    throw new Error('Method not implemented.')
+    const { chainId } = params
+    const queryResult = await this._subgraphManager.getVaults({ chainId })
+
+    if (!queryResult || !queryResult.vaults) {
+      return { list: [] }
+    }
+
+    const chainInfo = getChainInfoByChainId(chainId)
+
+    const vaultInfoPromises = queryResult.vaults.map((rawVault) => {
+      const vaultId = ArmadaVaultId.createFrom({
+        chainInfo,
+        fleetAddress: Address.createFromEthereum({ value: rawVault.id }),
+      })
+      return this.getVaultInfo({ vaultId })
+    })
+
+    const list = await Promise.all(vaultInfoPromises)
+    return { list }
   }
 }

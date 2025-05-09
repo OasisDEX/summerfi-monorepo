@@ -61,16 +61,24 @@ describe('Armada Protocol Vault', () => {
     console.log(`User position for fleet ${fleetAddress.value}: ${position.amount.toString()}`)
   })
 
-  it('should get all vaults with info', async () => {
+  it.only('should get all vaults with info', async () => {
     const vaults = await sdk.armada.users.getVaultInfoList({
       chainId,
     })
-    console.log('All vaults:')
-    vaults.list.forEach((vaultInfo, index) => {
-      console.log(`Vault ${index} address: ${vaultInfo.id.fleetAddress}`)
-      console.log(`Deposit cap`, vaultInfo.depositCap.toString())
-      console.log(`Total deposits`, vaultInfo.totalDeposits.toString())
-    })
+    console.log(
+      'All vaults:',
+      vaults.list
+        .map((vaultInfo, index) => {
+          return [
+            `\nVault ${index} address: ${vaultInfo.id.fleetAddress}`,
+            `\nDeposit cap: `,
+            vaultInfo.depositCap.toString(),
+            `\nTotal deposits: `,
+            vaultInfo.totalDeposits.toString(),
+          ].join('')
+        })
+        .toString(),
+    )
   })
 
   it('should get a specific vault info', async () => {
@@ -82,8 +90,12 @@ describe('Armada Protocol Vault', () => {
       vaultId,
     })
     assert(vaultInfo != null, 'Vault not found')
-    console.log(`Vault address: ${vaultInfo.id.fleetAddress}`)
-    console.log(`Deposit cap`, vaultInfo.depositCap.toString())
-    console.log(`Total deposits`, vaultInfo.totalDeposits.toString())
+    console.log(
+      `Vault address: ${vaultInfo.id.fleetAddress}`,
+      `\nDeposit cap: `,
+      vaultInfo.depositCap.toString(),
+      `\nTotal deposits: `,
+      vaultInfo.totalDeposits.toString(),
+    )
   })
 })
