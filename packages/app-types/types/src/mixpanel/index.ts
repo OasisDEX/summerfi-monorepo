@@ -12,6 +12,7 @@ export enum MixpanelEventTypes {
   RaysTopClimbers = 'rays-top-climbers',
   AppError = 'app-error',
   GameFinished = 'game-finished',
+  VaultSwitched = 'vault-switched',
 }
 
 export enum MixpanelEventProduct {

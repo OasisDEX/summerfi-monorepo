@@ -151,7 +151,7 @@ export const trackButtonClick = ({ id, page, userAddress, ...rest }: ButtonClick
   }
 }
 
-type InputChangeType = {
+type MixpanelEventData = {
   id: string
   page: string
   userAddress?: string
@@ -159,7 +159,7 @@ type InputChangeType = {
 }
 
 // input change
-export const trackInputChange = ({ id, page, userAddress, ...rest }: InputChangeType) => {
+export const trackInputChange = ({ id, page, userAddress, ...rest }: MixpanelEventData) => {
   try {
     const eventBody = {
       product: MixpanelEventProduct.EarnProtocol,
@@ -179,7 +179,7 @@ export const trackInputChange = ({ id, page, userAddress, ...rest }: InputChange
 }
 
 // game finished
-export const trackGameFinished = ({ id, page, userAddress, ...rest }: InputChangeType) => {
+export const trackGameFinished = ({ id, page, userAddress, ...rest }: MixpanelEventData) => {
   try {
     const eventBody = {
       product: MixpanelEventProduct.EarnProtocol,
@@ -194,7 +194,26 @@ export const trackGameFinished = ({ id, page, userAddress, ...rest }: InputChang
     }
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Error tracking button click', error)
+    console.error('Error tracking game finished', error)
+  }
+}
+
+export const trackVaultSwitched = ({ id, page, userAddress, ...rest }: MixpanelEventData) => {
+  try {
+    const eventBody = {
+      product: MixpanelEventProduct.EarnProtocol,
+      id,
+      page: includeBasePath(page),
+      userAddress,
+      ...rest,
+    }
+
+    if (!optedOutCheck()) {
+      trackEvent(MixpanelEventTypes.VaultSwitched, eventBody)
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error tracking vault switched', error)
   }
 }
 

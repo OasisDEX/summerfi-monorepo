@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import {
   getDisplayToken,
   getPositionValues,
@@ -20,7 +20,9 @@ import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 
 import { networkSDKChainIdIconMap } from '@/constants/network-id-to-icon'
+import { trackVaultSwitched } from '@/helpers/mixpanel'
 import { usePosition } from '@/hooks/use-position'
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import controlsSwitchSuccessErrorViewStyles from './ControlsSwitchSuccessErrorView.module.scss'
 
@@ -125,6 +127,7 @@ export const ControlsSwitchSuccessErrorView = ({
   transactions,
   chainId,
 }: ControlsSwitchSuccessErrorViewProps) => {
+  const { userWalletAddress } = useUserWallet()
   const nextVault = useMemo(() => {
     const [nextVaultId] = selectedSwitchVault.split('-')
 
@@ -170,6 +173,22 @@ export const ControlsSwitchSuccessErrorView = ({
 
   const nextAmount = toAmount?.amount
   const nextToken = getDisplayToken(nextVault.inputToken.symbol.toUpperCase()) as TokenSymbolsList
+
+  useEffect(() => {
+    trackVaultSwitched({
+      id: 'VaultSwitched',
+      page: window.location.host + window.location.pathname,
+      userAddress: userWalletAddress,
+      fromVaultId: currentVault.id,
+      toVaultId: nextVault.id,
+      fromToken: currentVault.inputToken.symbol,
+      toToken: nextVault.inputToken.symbol,
+      fromAmount: switchedAmount,
+      toAmount: nextAmount,
+      chainId,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <div className={controlsSwitchSuccessErrorViewStyles.controlsSwitchSuccessErrorView}>
