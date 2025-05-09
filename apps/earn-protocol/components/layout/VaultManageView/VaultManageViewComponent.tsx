@@ -268,6 +268,7 @@ export const VaultManageViewComponent = ({
     txStatus,
     setIsEditingSwitchAmount,
     isEditingSwitchAmount,
+    setSidebarTransactionError,
   } = useTransaction({
     vault,
     vaultChainId,
@@ -628,6 +629,7 @@ export const VaultManageViewComponent = ({
     titleTabs: sidebarTitleTabs,
     onTitleTabChange: (action) => {
       setSidebarTransactionType(action as TransactionAction)
+      setSidebarTransactionError(undefined)
       if (amountParsed.gt(0)) {
         reset()
       }

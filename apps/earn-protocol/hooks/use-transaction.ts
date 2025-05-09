@@ -292,10 +292,14 @@ export const useTransaction = ({
       // eslint-disable-next-line no-console
       console.error('Error executing the transaction:', err)
 
-      if (err instanceof Error && 'shortMessage' in err && typeof err.shortMessage === 'string') {
-        setSidebarTransactionError(err.shortMessage)
-      } else if (err instanceof Error && err.name in errorsMap) {
+      if (err instanceof Error && err.name in errorsMap) {
         setSidebarTransactionError(errorsMap[err.name as keyof typeof errorsMap])
+      } else if (
+        err instanceof Error &&
+        'shortMessage' in err &&
+        typeof err.shortMessage === 'string'
+      ) {
+        setSidebarTransactionError(`${err.shortMessage}. You can try again.`)
       } else {
         setSidebarTransactionError(errorsMap.TransactionExecutionError)
       }
@@ -734,6 +738,7 @@ export const useTransaction = ({
           // eslint-disable-next-line no-console
           console.error('Error waiting for transaction', err)
           setTxStatus('txError')
+          setSidebarTransactionError(`${errorsMap.transactionExecutionError}`)
         })
     }
   }, [
@@ -750,7 +755,6 @@ export const useTransaction = ({
 
   // watch for token balance changes
   useEffect(() => {
-    setSidebarTransactionError(undefined)
     if (isDeposit) {
       if (amount && tokenBalance && amount.isGreaterThan(tokenBalance) && !sidebarValidationError) {
         setSidebarValidationError(errorsMap.insufficientBalanceError)
@@ -834,5 +838,6 @@ export const useTransaction = ({
     txStatus,
     isEditingSwitchAmount,
     setIsEditingSwitchAmount,
+    setSidebarTransactionError,
   }
 }
