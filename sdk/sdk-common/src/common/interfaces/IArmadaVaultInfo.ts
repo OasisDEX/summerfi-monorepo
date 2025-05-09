@@ -3,6 +3,8 @@ import { z } from 'zod'
 import { IArmadaVaultId, isArmadaVaultId } from './IArmadaVaultId'
 import { isTokenAmount, type ITokenAmount } from './ITokenAmount'
 import { PoolType } from '../enums/PoolType'
+import { isPercentage, type IPercentage } from './IPercentage'
+import { isToken, type IToken } from './IToken'
 
 /**
  * Unique signature to provide branded types to the interface
@@ -24,6 +26,13 @@ export interface IArmadaVaultInfo extends IPoolInfo, IArmadaVaultInfoData {
   readonly totalDeposits: ITokenAmount
   /** Total amount of shares currently minted in the vault */
   readonly totalShares: ITokenAmount
+  /** Vault apy */
+  readonly apy: IPercentage | null
+  /** Vault SUMR rewards apy */
+  readonly rewardsApys: Array<{
+    token: IToken
+    apy: IPercentage | null
+  }>
 
   // Re-declaring the properties to narrow the types
   readonly type: PoolType.Armada
@@ -38,6 +47,13 @@ export const ArmadaVaultInfoDataSchema = z.object({
   depositCap: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
   totalDeposits: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
   totalShares: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  apy: z.custom<IPercentage | null>((val) => isPercentage(val) || val === null),
+  rewardsApys: z.array(
+    z.object({
+      token: z.custom<IToken>((val) => isToken(val)),
+      apy: z.custom<IPercentage | null>((val) => isPercentage(val) || val === null),
+    }),
+  ),
   type: z.literal(PoolType.Armada),
 })
 

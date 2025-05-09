@@ -25,19 +25,22 @@ import {
   IAddress,
   type DepositTransactionInfo,
   type ApproveTransactionInfo,
-  type WithdrawTransactionInfo,
-  type ChainId,
   type IArmadaVaultInfo,
   ArmadaVaultInfo,
   ArmadaVaultId,
   getChainInfoByChainId,
   Address,
+  Percentage,
+  Price,
+  FiatCurrency,
 } from '@summerfi/sdk-common'
 import type { ISwapManager } from '@summerfi/swap-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import { encodeFunctionData } from 'viem'
 import { BigNumber } from 'bignumber.js'
 import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
+import { calculateRewardApy } from './utils/calculate-summer-yield'
+import { get } from 'http'
 
 export class ArmadaManagerVaults implements IArmadaManagerVaults {
   private _supportedChains: IChainInfo[]
@@ -50,6 +53,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
   private _swapManager: ISwapManager
   private _utils: IArmadaManagerUtils
   private _subgraphManager: IArmadaSubgraphManager
+  private _functionsUrl: string
 
   constructor(params: {
     supportedChains: IChainInfo[]
@@ -73,6 +77,9 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     this._swapManager = params.swapManager
     this._utils = params.utils
     this._subgraphManager = params.subgraphManager
+    this._functionsUrl = this._configProvider.getConfigurationItem({
+      name: 'FUNCTIONS_API_URL',
+    })
   }
 
   /**
@@ -1409,10 +1416,18 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     const fleetERC4626Contract = fleetContract.asErc4626()
     const fleetERC20Contract = fleetERC4626Contract.asErc20()
 
-    const [config, totalDeposits, totalShares] = await Promise.all([
+    const [config, totalDeposits, totalShares, apys, rewardsApys] = await Promise.all([
       fleetContract.config(),
       fleetERC4626Contract.totalAssets(),
       fleetERC20Contract.totalSupply(),
+      this.getVaultsApys({
+        chainId: params.vaultId.chainInfo.chainId,
+        vaultIds: [params.vaultId],
+      }),
+      this.getVaultsRewardsApys({
+        chainId: params.vaultId.chainInfo.chainId,
+        vaultIds: [params.vaultId],
+      }),
     ])
     const { depositCap } = config
 
@@ -1421,6 +1436,8 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       depositCap: depositCap,
       totalDeposits: totalDeposits,
       totalShares: totalShares,
+      apy: apys.byFleetAddress[params.vaultId.fleetAddress.value.toLowerCase()].apy,
+      rewardsApys: rewardsApys.byFleetAddress[params.vaultId.fleetAddress.value.toLowerCase()],
     })
   }
 
@@ -1446,5 +1463,151 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
 
     const list = await Promise.all(vaultInfoPromises)
     return { list }
+  }
+
+  async getVaultsApys(
+    params: Parameters<IArmadaManagerVaults['getVaultsApys']>[0],
+  ): ReturnType<IArmadaManagerVaults['getVaultsApys']> {
+    if (params.vaultIds.some((vaultId) => vaultId.chainInfo.chainId !== params.chainId)) {
+      throw new Error('ChainId mismatch in vaultIds')
+    }
+
+    const input = {
+      fleets: params.vaultIds.map((vaultId) => ({
+        fleetAddress: vaultId.fleetAddress.value,
+        chainId: vaultId.chainInfo.chainId,
+      })),
+    }
+
+    const res = await fetch(this._functionsUrl + '/api/vault/rates', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(input),
+    })
+
+    // handle res errors
+    if (!res.ok) {
+      const error = await res.json()
+      throw new Error(`Error fetching vault rates: ${JSON.stringify(error)}`)
+    }
+
+    const data: {
+      rates: Array<{
+        chainId: number
+        fleetAddress: string
+        sma: {
+          sma24h: string
+          sma7d: string
+          sma30d: string
+        }
+        rates: [
+          {
+            id: string
+            rate: string
+            timestamp: number
+            fleetAddress: string
+          },
+        ]
+      }>
+    } = await res.json()
+
+    const byFleetAddress = data.rates.reduce(
+      (result, rate) => {
+        const fleetAddress = rate.fleetAddress
+        const apy = rate.rates[0].rate
+        result[fleetAddress] = {
+          apy: Percentage.createFrom({
+            value: Number(apy),
+          }),
+        }
+        return result
+      },
+      {} as {
+        [fleetAddress: string]: {
+          apy: IPercentage | null
+        }
+      },
+    )
+
+    return { byFleetAddress }
+  }
+
+  async getVaultsRewardsApys(
+    params: Parameters<IArmadaManagerVaults['getVaultsRewardsApys']>[0],
+  ): ReturnType<IArmadaManagerVaults['getVaultsRewardsApys']> {
+    // iterate vaultIds and check chainId is matching params.chainId
+    if (params.vaultIds.some((vaultId) => vaultId.chainInfo.chainId !== params.chainId)) {
+      throw new Error('ChainId mismatch in vaultIds')
+    }
+
+    const chainInfo = getChainInfoByChainId(params.chainId)
+    const vaultsRaw = await this._subgraphManager.getVaults({
+      chainId: params.chainId,
+    })
+
+    // fetching prices
+    const allTokens = vaultsRaw.vaults.flatMap((vault) => vault.rewardTokens)
+    const baseTokens = allTokens.map((token) =>
+      this._tokensManager.getTokenBySymbol({
+        chainInfo,
+        symbol: token.token.symbol,
+      }),
+    )
+    const prices = await this._oracleManager.getSpotPrices({
+      chainInfo,
+      baseTokens,
+    })
+    // add SUMR price to prices as it's not available for trading
+    const sumrToken = baseTokens.find((token) => token.symbol === 'SUMR')
+    if (sumrToken) {
+      prices.priceByAddress[sumrToken.address.value.toLowerCase()] = Price.createFrom({
+        base: sumrToken,
+        quote: FiatCurrency.USD,
+        value: '0.25',
+      })
+    }
+
+    const byFleetAddress = vaultsRaw.vaults.reduce(
+      (result, vault) => {
+        const { rewardTokens, rewardTokenEmissionsAmount, totalValueLockedUSD } = vault
+        // Calculate APY for each reward token
+        result[vault.id.toLowerCase()] = rewardTokens.map((token, index) => {
+          const dailyTokenEmissionAmount = new BigNumber(
+            rewardTokenEmissionsAmount[index].toString(),
+          )
+            .div(new BigNumber(10).pow(token.token.decimals))
+            .toString()
+          // Use token price if available, otherwise fallback to default for SUMR
+          const tokenPriceUsd = prices.priceByAddress[token.token.id.toLowerCase()]
+            .toBigNumber()
+            .toString()
+
+          return {
+            token: this._tokensManager.getTokenBySymbol({
+              chainInfo,
+              symbol: token.token.symbol,
+            }),
+            apy: calculateRewardApy({
+              dailyTokenEmissionAmount,
+              tokenPriceUsd,
+              tvlUsd: totalValueLockedUSD,
+            }),
+          }
+        })
+        return result
+      },
+      {} as {
+        [fleetAddress: string]: {
+          token: IToken
+          apy: IPercentage | null
+        }[]
+      },
+    )
+
+    return {
+      byFleetAddress,
+    }
   }
 }

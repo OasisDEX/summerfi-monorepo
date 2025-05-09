@@ -125,4 +125,21 @@ export interface IArmadaManagerVaults {
   getVaultInfoList(params: { chainId: ChainId }): Promise<{
     list: IArmadaVaultInfo[]
   }>
+
+  getVaultsApys(params: { chainId: ChainId; vaultIds: IArmadaVaultId[] }): Promise<{
+    byFleetAddress: {
+      [fleetAddress: string]: {
+        apy: IPercentage | null
+      }
+    }
+  }>
+
+  getVaultsRewardsApys(params: { chainId: ChainId; vaultIds: IArmadaVaultId[] }): Promise<{
+    byFleetAddress: {
+      [fleetAddress: string]: {
+        token: IToken
+        apy: IPercentage | null
+      }[]
+    }
+  }>
 }
