@@ -42,7 +42,6 @@ import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { ControlsApproval, OrderInfoDeposit } from '@/components/molecules/SidebarElements'
-import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
@@ -238,8 +237,6 @@ export const VaultOpenViewComponent = ({
     approvalTokenSymbol,
     setApprovalType,
     sidebar,
-    txHashes,
-    removeTxHash,
     nextTransaction,
     backToInit,
     user,
@@ -258,6 +255,7 @@ export const VaultOpenViewComponent = ({
     flow: 'open',
     ownerView: true,
     approvalCustomValue: approvalAmountParsed,
+    sidebarTransactionType: TransactionAction.DEPOSIT,
   })
 
   const { position } = usePosition({
@@ -270,7 +268,7 @@ export const VaultOpenViewComponent = ({
     vaultChainId,
     amountDisplay,
     amountDisplayUSD,
-    transactionType: TransactionAction.DEPOSIT,
+    sidebarTransactionType: TransactionAction.DEPOSIT,
     selectedTokenOption,
     sdk,
     slippageConfig,
@@ -361,6 +359,7 @@ export const VaultOpenViewComponent = ({
         />
       ),
       [TransactionType.Withdraw]: null, // just for types, withdraw doesn't happen on open view
+      [TransactionType.VaultSwitch]: null, // just for types, switch doesn't happen on open view
     }[nextTransaction.type]
   ) : (
     <ControlsDepositWithdraw
@@ -406,14 +405,6 @@ export const VaultOpenViewComponent = ({
             isOpen
           />
         ) : null}
-        {txHashes.map((transactionData) => (
-          <TransactionHashPill
-            key={transactionData.hash}
-            transactionData={transactionData}
-            removeTxHash={removeTxHash}
-            chainId={vaultChainId}
-          />
-        ))}
         <SidebarFootnote
           title={sidebarFootnote.title}
           list={sidebarFootnote.list}

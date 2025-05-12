@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type ReactNode, useEffect, useState } from 'react'
+import { type FC, type ReactNode, useEffect, useMemo, useState } from 'react'
 import { type NavigationMenuPanelLinkType } from '@summerfi/app-types'
 
 import { NavigationActions } from '@/components/layout/Navigation/NavigationActions'
@@ -56,6 +56,7 @@ export const Navigation: FC<EarnNavigationProps> = ({
   const [tempCurrentPath, setTempCurrentPath] = useState(currentPath)
   const [mobileMenuOpened, setMobileMenuOpened] = useState(false)
   const { isMobile, isTablet } = useMobileCheck()
+  const defaultBodyOverflow = useMemo(() => document.body.style.overflow, [])
 
   const toggleMobileMenu = () => {
     const nextValue = !mobileMenuOpened
@@ -64,7 +65,7 @@ export const Navigation: FC<EarnNavigationProps> = ({
       // mobile menu
       document.body.style.overflow = 'hidden'
     } else {
-      document.body.style.overflow = 'auto'
+      document.body.style.overflow = defaultBodyOverflow
     }
     setMobileMenuOpened(!mobileMenuOpened)
   }
@@ -73,9 +74,9 @@ export const Navigation: FC<EarnNavigationProps> = ({
     if (tempCurrentPath !== currentPath) {
       setTempCurrentPath(currentPath)
       setMobileMenuOpened(false)
-      document.body.style.overflow = 'auto'
+      document.body.style.overflow = defaultBodyOverflow
     }
-  }, [currentPath, tempCurrentPath])
+  }, [currentPath, tempCurrentPath, defaultBodyOverflow])
 
   return (
     <div

@@ -1,14 +1,12 @@
 import { type FC } from 'react'
-import { Icon, OrderInformation } from '@summerfi/app-earn-ui'
+import { Icon, networkIconByChainId, OrderInformation } from '@summerfi/app-earn-ui'
 import { type IconNamesList } from '@summerfi/app-types'
 import {
-  chainIdToSDKNetwork,
   formatCryptoBalance,
   formatFiatBalance,
   humanReadableChainToLabelMap,
 } from '@summerfi/app-utils'
 
-import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { type SendState } from '@/features/send/types'
 import { isValidAddress } from '@/helpers/is-valid-address'
 
@@ -43,11 +41,7 @@ export const SendFormOrderInformation: FC<SendFormOrderInformationProps> = ({
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
                 {humanReadableChainToLabelMap[state.tokenDropdown.chainId]}
                 <Icon
-                  iconName={
-                    networkIconByNetworkName[
-                      chainIdToSDKNetwork(state.tokenDropdown.chainId)
-                    ] as IconNamesList
-                  }
+                  iconName={networkIconByChainId[state.tokenDropdown.chainId] as IconNamesList}
                   size={16}
                 />
               </div>

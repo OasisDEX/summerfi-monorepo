@@ -1,11 +1,9 @@
 'use client'
-import { Dropdown, Icon, Text } from '@summerfi/app-earn-ui'
+import { Dropdown, Icon, networkIconByNetworkName, Text } from '@summerfi/app-earn-ui'
 import { type DropdownOption, type DropdownRawOption, SDKNetwork } from '@summerfi/app-types'
 import { chainIdToSDKNetwork, sdkNetworkToHumanNetwork } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
 import { type Chain } from 'viem'
-
-import { networkIconByNetworkName } from '@/constants/networkIcons'
 
 import styles from './ChainSelector.module.scss'
 

@@ -18,8 +18,9 @@ describe('AAVEv3 Protocol Plugin (Integration)', () => {
       context: ctx,
     })
   })
-
-  it('correctly populates collateral configuration from blockchain data', async () => {
+  // added skip since Aave adds new tokens which doesn't affect us, but which causing to this test to fail
+  // (aggread with team as temporary solution)
+  it.skip('correctly populates collateral configuration from blockchain data', async () => {
     const pool = await aaveV3ProtocolPlugin.getLendingPool(validAaveV3PoolId)
     const aaveV3PoolInfo = await aaveV3ProtocolPlugin.getLendingPoolInfo(pool.id)
 
@@ -62,7 +63,9 @@ describe('AAVEv3 Protocol Plugin (Integration)', () => {
     expect(Number(liquidationPenalty.value)).toBeGreaterThan(100)
   })
 
-  it('correctly populates debt configuration from blockchain data', async () => {
+  // added skip since Aave adds new tokens which doesn't affect us, but which causing to this test to fail
+  // (aggread with team as temporary solution)
+  it.skip('correctly populates debt configuration from blockchain data', async () => {
     const pool = await aaveV3ProtocolPlugin.getLendingPool(validAaveV3PoolId)
     const aaveV3PoolInfo = await aaveV3ProtocolPlugin.getLendingPoolInfo(pool.id)
 
