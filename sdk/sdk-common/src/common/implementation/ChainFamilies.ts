@@ -7,7 +7,6 @@ import {
   SonicChainNames,
 } from '../enums/ChainNames'
 import { ChainInfo } from './ChainInfo'
-import { ChainId } from '../types/ChainId'
 import { ChainIds } from './ChainIds'
 
 /**
@@ -17,10 +16,6 @@ const EthereumFamily: Record<EthereumChainNames, ChainInfo> = {
   [EthereumChainNames.Mainnet]: ChainInfo.createFrom({
     chainId: ChainIds.Mainnet,
     name: EthereumChainNames.Mainnet,
-  }),
-  [EthereumChainNames.Goerli]: ChainInfo.createFrom({
-    chainId: 5,
-    name: EthereumChainNames.Goerli,
   }),
 }
 
@@ -88,7 +83,7 @@ export type ChainFamilyInfo = {
   chainInfo: ChainInfo
 }
 
-export type ChainFamilyInfoById = Record<ChainId, ChainFamilyInfo>
+export type ChainFamilyInfoById = Record<number, ChainFamilyInfo>
 
 /**
  * @type Record<ChainId, ChainInfo>
@@ -109,7 +104,7 @@ function createChainIdToChainFamilyInfoMap(): ChainFamilyInfoById {
 
 const chainIdToChainFamilyInfoMap = createChainIdToChainFamilyInfoMap()
 
-export function getChainFamilyInfoByChainId(chainId: ChainId): ChainFamilyInfo {
+export function getChainFamilyInfoByChainId(chainId: number): ChainFamilyInfo {
   const maybe = chainIdToChainFamilyInfoMap[chainId]
   if (!maybe) {
     throw new Error(`Chain with id ${chainId} not supported`)
@@ -117,7 +112,7 @@ export function getChainFamilyInfoByChainId(chainId: ChainId): ChainFamilyInfo {
   return maybe
 }
 
-export function getChainInfoByChainId(chainId: ChainId): ChainInfo {
+export function getChainInfoByChainId(chainId: number): ChainInfo {
   const chainFamilyInfo = getChainFamilyInfoByChainId(chainId)
   return chainFamilyInfo.chainInfo
 }

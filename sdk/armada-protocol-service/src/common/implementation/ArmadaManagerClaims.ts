@@ -405,9 +405,9 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     ]
   }
 
-  async getAggregatedClaimsForChainTX(
-    params: Parameters<IArmadaManagerClaims['getAggregatedClaimsForChainTX']>[0],
-  ): ReturnType<IArmadaManagerClaims['getAggregatedClaimsForChainTX']> {
+  async getAggregatedClaimsForChainTx(
+    params: Parameters<IArmadaManagerClaims['getAggregatedClaimsForChainTx']>[0],
+  ): ReturnType<IArmadaManagerClaims['getAggregatedClaimsForChainTx']> {
     const isHubChain = params.chainInfo.chainId === this._hubChainInfo.chainId
 
     const govRewardsManagerAddress = getDeployedGovRewardsManagerAddress()

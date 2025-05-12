@@ -12,6 +12,7 @@ import {
   isToken,
   LoggingService,
   OracleProviderType,
+  isChainId,
 } from '@summerfi/sdk-common'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 import fetch from 'node-fetch'
@@ -46,7 +47,10 @@ export class OneInchOracleProvider
     const supportedChainIds = params.configProvider.getConfigurationItem({
       name: 'ONE_INCH_SWAP_CHAIN_IDS',
     })
-    this._supportedChainIds = supportedChainIds.split(',').map((id) => parseInt(id))
+    this._supportedChainIds = supportedChainIds
+      .split(',')
+      .map((id) => parseInt(id))
+      .filter(isChainId)
   }
 
   /** @see IOracleProvider.getSupportedChainIds */

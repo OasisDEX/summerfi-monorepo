@@ -132,6 +132,7 @@ export class ArmadaManager implements IArmadaManager {
       contractsProvider: this._contractsProvider,
       swapManager: this._swapManager,
       utils: this.utils,
+      subgraphManager: this._subgraphManager,
     })
   }
 }

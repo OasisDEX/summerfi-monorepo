@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
 import {
   Address,
@@ -12,7 +13,7 @@ import {
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
 import { signerPrivateKey, SDKApiUrl, userAddress } from './utils/testConfig'
 import { waitSeconds } from './utils/wait'
-import { TX_CONFIRMATION_WAIT_TIME } from './utils/constants'
+import { TX_CONFIRMATION_WAIT_TIME, DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 import assert from 'assert'
 
 jest.setTimeout(300000)
@@ -32,7 +33,7 @@ describe('Armada Protocol Switch', () => {
     await runTests({
       chainId,
       sourceFleetAddress: usdcFleet,
-      destinationFleetAddress: ethFleet,
+      destinationFleetAddress: eurcFleet,
       rpcUrl,
     })
     // await runTests({
@@ -88,12 +89,9 @@ describe('Armada Protocol Switch', () => {
       fleetAddress: destinationFleetAddress,
     })
     const slippage = Percentage.createFrom({
-      value: 1,
+      value: DEFAULT_SLIPPAGE_PERCENTAGE,
     })
 
-    const sourceVaultInfo = await sdk.armada.users.getVaultInfo({
-      vaultId: sourceVaultId,
-    })
     const destinationVaultInfo = await sdk.armada.users.getVaultInfo({
       vaultId: destinationVaultId,
     })

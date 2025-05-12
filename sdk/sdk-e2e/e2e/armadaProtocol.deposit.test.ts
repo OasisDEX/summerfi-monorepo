@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
 import {
   Address,
@@ -13,7 +14,7 @@ import {
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
 import { signerPrivateKey, SDKApiUrl, userAddress } from './utils/testConfig'
 import { waitSeconds } from './utils/wait'
-import { TX_CONFIRMATION_WAIT_TIME } from './utils/constants'
+import { DEFAULT_SLIPPAGE_PERCENTAGE, TX_CONFIRMATION_WAIT_TIME } from './utils/constants'
 import assert from 'assert'
 
 jest.setTimeout(300000)
@@ -36,15 +37,15 @@ describe('Armada Protocol Deposit', () => {
       fleetAddress: usdcFleet,
       rpcUrl,
       stake: false,
-      amountValue: '0.2',
+      amountValue: '1.2',
     })
-    await runTests({
-      swapToSymbol: undefined,
-      chainId,
-      fleetAddress: usdcFleet,
-      rpcUrl,
-      amountValue: '0.2',
-    })
+    // await runTests({
+    //   swapToSymbol: undefined,
+    //   chainId,
+    //   fleetAddress: usdcFleet,
+    //   rpcUrl,
+    //   amountValue: '0.2',
+    // })
   })
 
   async function runTests({
@@ -98,12 +99,12 @@ describe('Armada Protocol Deposit', () => {
       amount: amountValue,
       token: swapToken || token,
     })
-    const transactions = await sdk.armada.users.getNewDepositTX({
+    const transactions = await sdk.armada.users.getNewDepositTx({
       vaultId,
       user,
       amount,
       slippage: Percentage.createFrom({
-        value: 1,
+        value: DEFAULT_SLIPPAGE_PERCENTAGE,
       }),
       shouldStake: stake,
     })

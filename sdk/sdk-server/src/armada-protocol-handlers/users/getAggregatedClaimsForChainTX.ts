@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 import { IChainInfo, isChainInfo, isUser, type IUser } from '@summerfi/sdk-common'
 
-export const getAggregatedClaimsForChainTX = publicProcedure
+export const getAggregatedClaimsForChainTx = publicProcedure
   .input(
     z.object({
       chainInfo: z.custom<IChainInfo>(isChainInfo),
@@ -10,5 +10,5 @@ export const getAggregatedClaimsForChainTX = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.claims.getAggregatedClaimsForChainTX(opts.input)
+    return opts.ctx.armadaManager.claims.getAggregatedClaimsForChainTx(opts.input)
   })

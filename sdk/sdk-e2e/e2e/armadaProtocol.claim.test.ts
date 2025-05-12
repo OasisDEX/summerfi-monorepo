@@ -45,7 +45,7 @@ describe.skip('Armada Protocol Claim', () => {
 
           assert(rewards.total > 0n, 'Rewards should be greater than 0')
 
-          const tx = await sdk.armada.users.getAggregatedClaimsForChainTX({
+          const tx = await sdk.armada.users.getAggregatedClaimsForChainTx({
             chainInfo,
             user,
           })

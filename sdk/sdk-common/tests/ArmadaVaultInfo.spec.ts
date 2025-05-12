@@ -1,4 +1,4 @@
-import { ChainFamilyMap, Address, Token, TokenAmount } from '../src'
+import { ChainFamilyMap, Address, Token, TokenAmount, Percentage } from '../src'
 import { ArmadaVaultId } from '../src/common/implementation/ArmadaVaultId'
 import { ArmadaVaultInfo } from '../src/common/implementation/ArmadaVaultInfo'
 
@@ -51,6 +51,11 @@ describe('SDK Common | Armada | ArmadaVaultInfo', () => {
         depositCap,
         totalDeposits,
         totalShares,
+        token: underlyingAsset,
+        apy: Percentage.createFrom({
+          value: 0.05,
+        }),
+        rewardsApys: [],
       })
 
       expect(poolInfo).toBeDefined()

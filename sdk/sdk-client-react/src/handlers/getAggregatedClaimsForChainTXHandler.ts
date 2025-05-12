@@ -4,7 +4,7 @@ import { type IChainInfo, type IUser } from '@summerfi/sdk-common'
 export const getAggregatedClaimsForChainTXHandler =
   (sdk: ISDKManager) =>
   async ({ user, chainInfo }: { user: IUser; chainInfo: IChainInfo }) => {
-    const position = await sdk.armada.users.getAggregatedClaimsForChainTX({
+    const position = await sdk.armada.users.getAggregatedClaimsForChainTx({
       chainInfo,
       user,
     })
