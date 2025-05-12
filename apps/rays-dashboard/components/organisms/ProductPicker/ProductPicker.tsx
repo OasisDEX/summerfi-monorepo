@@ -17,7 +17,7 @@ import { NetworkNames } from '@/constants/networks-list'
 import { type LendingProtocol } from '@/helpers/lending-protocol'
 import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
 
-import productPickerStyles from '@/components/organisms/ProductPicker/ProductPicker.module.scss'
+import productPickerStyles from '@/components/organisms/ProductPicker/ProductPicker.module.css'
 
 type SupportedNetworks =
   | NetworkNames.ethereumMainnet

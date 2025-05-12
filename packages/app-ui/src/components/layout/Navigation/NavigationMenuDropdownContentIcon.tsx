@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { TokensGroup } from '@/components/molecules/TokensGroup/TokensGroup'
 
-import navigationMenuDropdownContentIconStyles from './NavigationMenuDropdownContentIcon.module.scss'
+import navigationMenuDropdownContentIconStyles from './NavigationMenuDropdownContentIcon.module.css'
 
 export type NavigationMenuDropdownContentIconProps = NavigationMenuPanelIcon
 

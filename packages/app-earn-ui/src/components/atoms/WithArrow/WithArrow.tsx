@@ -5,8 +5,8 @@ import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text, type TextAllowedHtmlTags } from '@/components/atoms/Text/Text'
 import { LoadingSpinner } from '@/components/molecules/LoadingSpinner/LoadingSpinner'
 
-import { type ClassNames as TextClassNames } from '@/components/atoms/Text/Text.module.scss'
-import withArrowStyles from '@/components/atoms/WithArrow/WithArrow.module.scss'
+import { type ClassNames as TextClassNames } from '@/components/atoms/Text/Text.module.css'
+import withArrowStyles from '@/components/atoms/WithArrow/WithArrow.module.css'
 
 export function WithArrow({
   children,

@@ -12,7 +12,7 @@ import { getTransakPaymentTimeInSeconds } from '@/features/transak/helpers/get-t
 import { getTransakRemainingOrderTime } from '@/features/transak/helpers/get-transak-remaining-order-time'
 import { TransakOrderDataStatus, type TransakReducerState } from '@/features/transak/types'
 
-import classNames from './TransakOrder.module.scss'
+import classNames from './TransakOrder.module.css'
 
 interface TransakOrderStepProps {
   state: TransakReducerState

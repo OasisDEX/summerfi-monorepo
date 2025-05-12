@@ -5,7 +5,7 @@ import { capitalize } from 'lodash-es'
 import { Text, type TextAllowedHtmlTags } from '@/components/atoms/Text/Text'
 import { riskColors } from '@/helpers/risk-colors'
 
-import { type ClassNames as TextVariants } from '@/components/atoms/Text/Text.module.scss'
+import { type ClassNames as TextVariants } from '@/components/atoms/Text/Text.module.css'
 
 export const Risk = ({
   risk,

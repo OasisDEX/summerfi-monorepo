@@ -53,7 +53,7 @@ import {
 } from './getDelegateButtonLabel'
 import { ClaimDelegateAction } from './types'
 
-import classNames from './ClaimDelegateStep.module.scss'
+import classNames from './ClaimDelegateStep.module.css'
 
 const getFilteredDelegates = (delegates: SumrDelegateWithDecayFactor[], searchValue: string) => {
   return delegates.filter((delegate) => {
@@ -424,7 +424,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
               value={searchValue}
             />
           </div>
-          <div className={classNames.sortWrapper}>
+          <div>
             <Dropdown
               options={getDelegateSortOptions(sortBy.value as DelegateSortOptions)}
               dropdownValue={sortBy}

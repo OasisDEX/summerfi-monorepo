@@ -7,7 +7,7 @@ import {
 
 import { type AtomProps, getAtomClassList } from '@/components/atoms/getAtomClassList'
 
-import textStyles, { type ClassNames, type Styles } from '@/components/atoms/Text/Text.module.scss'
+import textStyles, { type ClassNames, type Styles } from '@/components/atoms/Text/Text.module.css'
 
 export type TextAllowedHtmlTags =
   | 'blockquote'

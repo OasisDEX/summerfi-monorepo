@@ -5,7 +5,7 @@ import { CountDownItem } from '@/components/molecules/CountDownItem/CountDownIte
 
 import countdownStyles, {
   type ClassNames,
-} from '@/components/organisms/CountDown/CountDown.module.scss'
+} from '@/components/organisms/CountDown/CountDown.module.css'
 
 interface CountDownProps {
   futureTimestamp: string

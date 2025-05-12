@@ -2,7 +2,7 @@ import { type ReactNode } from 'react'
 
 import { Text } from '@/components/atoms/Text/Text'
 
-import bannerStyles from './Banners.module.scss'
+import bannerStyles from './Banners.module.css'
 
 export const GlobalIssueBanner = ({ message }: { message: string }): ReactNode => {
   return (

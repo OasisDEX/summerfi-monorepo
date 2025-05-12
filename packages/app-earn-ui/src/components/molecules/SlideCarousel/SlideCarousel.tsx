@@ -7,7 +7,7 @@ import useEmblaCarousel from 'embla-carousel-react'
 
 import { SlideCarouselButton, usePrevNextButtons } from './SlideCarouselButtons'
 
-import classNames from './SlideCarousel.module.scss'
+import classNames from './SlideCarousel.module.css'
 
 export enum SlideCarouselButtonPosition {
   TOP = 'TOP',

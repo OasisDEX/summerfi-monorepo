@@ -11,7 +11,7 @@ import { type EarnNavigationProps } from '@/components/layout/Navigation/Navigat
 import { NavigationItems } from '@/components/layout/Navigation/NavigationItems'
 import { INTERNAL_LINKS } from '@/helpers/application-links.ts'
 
-import navigationMenuMobileStyles from '@/components/layout/Navigation/NavigationMenuMobile.module.scss'
+import navigationMenuMobileStyles from '@/components/layout/Navigation/NavigationMenuMobile.module.css'
 
 type NavigationMobileMenuType = {
   links: EarnNavigationProps['links']

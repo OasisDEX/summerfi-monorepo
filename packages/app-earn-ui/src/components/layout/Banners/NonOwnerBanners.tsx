@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 
-import bannerStyles from './Banners.module.scss'
+import bannerStyles from './Banners.module.css'
 
 export const NonOwnerPositionBanner = ({
   isOwner,

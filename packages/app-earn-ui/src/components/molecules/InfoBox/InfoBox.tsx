@@ -6,7 +6,7 @@ import clsx from 'clsx'
 import { Text } from '@/components/atoms/Text/Text'
 import { Alert } from '@/components/molecules/Alert/Alert'
 
-import styles from './InfoBox.module.scss'
+import styles from './InfoBox.module.css'
 
 interface InfoBoxRow {
   label?: ReactNode

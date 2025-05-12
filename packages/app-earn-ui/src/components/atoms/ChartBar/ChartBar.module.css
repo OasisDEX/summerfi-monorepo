@@ -1,0 +1,11 @@
+.bar {
+  height: 6px;
+  width: 80px;
+  background-color: var(--color-border-hover);
+  border-radius: var(--radius-circle);
+}
+.bar .barFilled {
+  height: 6px;
+  background-color: var(--color-background-success-bold);
+  border-radius: var(--radius-circle);
+}

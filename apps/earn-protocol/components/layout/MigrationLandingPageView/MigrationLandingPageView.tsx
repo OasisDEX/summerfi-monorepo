@@ -47,7 +47,7 @@ import { NavConfigContent } from '@/features/nav-config/components/NavConfigCont
 import { revalidateMigrationData } from '@/helpers/revalidation-handlers'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
-import classNames from './MigrationLandingPageView.module.scss'
+import classNames from './MigrationLandingPageView.module.css'
 
 const contentCards: {
   title: string

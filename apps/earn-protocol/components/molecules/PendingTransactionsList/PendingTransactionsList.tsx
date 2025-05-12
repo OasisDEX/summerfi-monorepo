@@ -4,7 +4,7 @@ import { formatCryptoBalance } from '@summerfi/app-utils'
 import { TransactionType } from '@summerfi/sdk-common'
 import Link from 'next/link'
 
-import pendingTransactionsListStyles from './PendingTransactionsList.module.scss'
+import pendingTransactionsListStyles from './PendingTransactionsList.module.css'
 
 const getHumanReadableDescription = (tx: TransactionWithStatus) => {
   switch (tx.type) {

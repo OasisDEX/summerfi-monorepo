@@ -1,7 +1,7 @@
 import { Text, Timeframes, ToggleButton } from '@summerfi/app-earn-ui'
 import { type TimeframesItem, type TimeframesType } from '@summerfi/app-types'
 
-import classNames from './ChartHeader.module.scss'
+import classNames from './ChartHeader.module.css'
 
 type ChartHeaderProps = {
   title?: string

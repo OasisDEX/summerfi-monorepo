@@ -3,7 +3,7 @@ import { Card, getVaultsProtocolsList, Text } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 
-import classNames from './ProtocolStats.module.scss'
+import classNames from './ProtocolStats.module.css'
 
 interface ProtocolStatsProps {
   vaultsList: SDKVaultsListType

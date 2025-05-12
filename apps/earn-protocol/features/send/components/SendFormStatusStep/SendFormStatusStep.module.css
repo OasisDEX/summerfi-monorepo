@@ -1,0 +1,52 @@
+.sendFormStatusStepWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.sendFormStatusStepWrapper .loadingBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  background-color: var(--earn-protocol-neutral-85);
+  margin-top: var(--general-space-32);
+  border-radius: 50%;
+}
+.sendFormStatusStepWrapper .walletInfoWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--general-space-16);
+  flex-wrap: wrap;
+  margin: 60px 0;
+}
+.sendFormStatusStepWrapper .walletInfoWrapper .fromToWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--general-space-16);
+}
+.sendFormStatusStepWrapper .walletInfoWrapper .fromToWrapper .iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--earn-protocol-neutral-80);
+}
+.sendFormStatusStepWrapper .walletInfoWrapper .fromToWrapper .textualWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-4);
+}
+.sendFormStatusStepWrapper .walletInfoWrapper .arrowWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--earn-protocol-neutral-80);
+}

@@ -19,7 +19,7 @@ import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
 import { SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 
-import classNames from './NavConfigContent.module.scss'
+import classNames from './NavConfigContent.module.css'
 
 interface NavConfigContentProps {
   handleOpenClose?: () => void

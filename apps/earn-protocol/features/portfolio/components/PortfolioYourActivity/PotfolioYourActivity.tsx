@@ -6,7 +6,7 @@ import { type LatestActivityPagination } from '@/app/server-handlers/tables-data
 import { getLatestActivity } from '@/features/latest-activity/api/get-latest-activity'
 import { LatestActivityTable } from '@/features/latest-activity/components/LatestActivityTable/LatestActivityTable'
 
-import classNames from './PortfolioYourActivity.module.scss'
+import classNames from './PortfolioYourActivity.module.css'
 
 interface PortfolioYourActivityProps {
   latestActivity: LatestActivityPagination

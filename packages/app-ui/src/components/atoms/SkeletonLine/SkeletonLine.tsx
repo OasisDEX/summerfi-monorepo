@@ -1,4 +1,4 @@
-import skeletonStyles from '@/components/atoms/SkeletonLine/SkeletonLine.module.scss'
+import skeletonStyles from '@/components/atoms/SkeletonLine/SkeletonLine.module.css'
 
 type SkeletonColorTheme =
   | 'default'

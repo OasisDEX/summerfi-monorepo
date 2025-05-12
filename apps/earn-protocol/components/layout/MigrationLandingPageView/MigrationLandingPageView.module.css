@@ -1,0 +1,101 @@
+.migrationLandingPageViewWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-16);
+  width: 100%;
+}
+.migrationLandingPageViewWrapper .headerWrapper {
+  display: flex;
+  flex-direction: column;
+}
+.migrationLandingPageViewWrapper .headerWrapper a {
+  margin-top: var(--general-space-12);
+  color: var(--earn-protocol-primary-100);
+}
+.migrationLandingPageViewWrapper .contentWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-24);
+}
+.migrationLandingPageViewWrapper .contentWrapper .cardsWrapper {
+  display: flex;
+  gap: var(--general-space-24);
+  flex-wrap: wrap;
+  margin-top: var(--general-space-8);
+}
+.migrationLandingPageViewWrapper .contentWrapper .mainContentWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-32);
+}
+.migrationLandingPageViewWrapper .contentWrapper .mainContentWrapper .mainContentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--general-space-16);
+  flex-wrap: wrap;
+  gap: var(--general-space-16);
+}
+.migrationLandingPageViewWrapper .contentWrapper .mainContentWrapper .positionsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-16);
+  width: 100%;
+}
+.migrationLandingPageViewWrapper .contentWrapper .mainContentWrapper .positionsWrapper .positionsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.migrationLandingPageViewWrapper .contentWrapper .mainContentWrapper .positionsWrapper .positionsListWrapper {
+  width: 100%;
+  text-align: center;
+}
+.migrationLandingPageViewWrapper .contentWrapper .mainContentWrapper .positionsWrapper .positionsListWrapper .positionsList,
+.migrationLandingPageViewWrapper .contentWrapper .mainContentWrapper .positionsWrapper .positionsListWrapper .positionListWithPadding {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-16);
+  width: 100%;
+}
+.migrationLandingPageViewWrapper .contentWrapper .mainContentWrapper .positionsWrapper .positionsListWrapper .positionListWithPadding {
+  padding-top: var(--general-space-16);
+}
+.migrationLandingPageViewWrapper .contentWrapper .mainContentWrapper .positionsWrapper .showAllPositions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.migrationLandingPageViewWrapper .contentWrapper .mainContentWrapper .vaultsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-16);
+  width: 100%;
+}
+.migrationLandingPageViewWrapper .contentWrapper .mainContentWrapper .vaultsWrapper .vaultsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--general-space-16);
+}
+@media (min-width: 768px) {
+  .migrationLandingPageViewWrapper .contentWrapper .mainContentWrapper .vaultsWrapper .vaultsList {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--general-space-16);
+  }
+}
+@media (min-width: 1025px) {
+  .migrationLandingPageViewWrapper .contentWrapper .mainContentWrapper .vaultsWrapper .vaultsList {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--general-space-16);
+  }
+}
+.migrationLandingPageViewWrapper .contentWrapper .mainContentWrapper .migrationButton {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}

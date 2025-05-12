@@ -4,8 +4,8 @@ import clsx from 'clsx'
 import { Expander } from '@/components/atoms/Expander/Expander'
 import { Text } from '@/components/atoms/Text/Text'
 
-import faqSectionStyles from './FaqSection.module.scss'
-import { type ClassNames as TextClassNames } from '@/components/atoms/Text/Text.module.scss'
+import faqSectionStyles from './FaqSection.module.css'
+import { type ClassNames as TextClassNames } from '@/components/atoms/Text/Text.module.css'
 
 const ExpanderContent = ({ children }: { children: ReactNode }) => {
   return <div className={faqSectionStyles.faqSectionExpanderContent}>{children}</div>

@@ -54,6 +54,7 @@ export const getSumrBalances = async ({
             chainInfo: getChainInfoByChainId(chainId),
           })
 
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           if (!sumrToken || sumrToken.address.value.toLowerCase() === zeroAddress.toLowerCase()) {
             // Token not available on this network
             return {
@@ -88,6 +89,7 @@ export const getSumrBalances = async ({
             })
           }
 
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           if (balanceResult === undefined) {
             return {
               chain: chainName,

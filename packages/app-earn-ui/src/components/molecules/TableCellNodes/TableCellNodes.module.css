@@ -1,0 +1,14 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  user-select: none;
+}
+
+.small {
+  gap: var(--spacing-space-2x-small);
+}
+
+.medium {
+  gap: var(--spacing-space-x-small);
+}

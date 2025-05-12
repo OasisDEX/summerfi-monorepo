@@ -9,8 +9,8 @@ import { Text } from '@/components/atoms/Text/Text'
 import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
 import { TitleWithSelect } from '@/components/molecules/TitleWithSelect/TitleWithSelect'
 
-import vaultGridStyles from './VaultGrid.module.scss'
-import vaultManageGridStyles from '@/components/layout/VaultManageGrid/VaultManageGrid.module.scss'
+import vaultGridStyles from './VaultGrid.module.css'
+import vaultManageGridStyles from '@/components/layout/VaultManageGrid/VaultManageGrid.module.css'
 
 type VaultGridProps = {
   topContent: ReactNode

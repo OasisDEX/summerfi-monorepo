@@ -17,7 +17,7 @@ import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { type MigrationEarningsData } from '@/features/migration/types'
 import { platformLogoMap, platformLogoMapByMigrationType } from '@/helpers/platform-logo-map'
 
-import classNames from './MigrationLandingPagePositionCard.module.scss'
+import classNames from './MigrationLandingPagePositionCard.module.css'
 
 interface MigrationLandingPagePositionCardProps {
   position: MigratablePosition

@@ -15,7 +15,7 @@ import {
 import { Card } from '@/components/atoms/Card/Card'
 import { isTouchDevice } from '@/helpers/is-touch-device'
 
-import tooltipStyles from '@/components/molecules/Tooltip/Tooltip.module.scss'
+import tooltipStyles from '@/components/molecules/Tooltip/Tooltip.module.css'
 
 export function useTooltip(): {
   tooltipOpen: boolean

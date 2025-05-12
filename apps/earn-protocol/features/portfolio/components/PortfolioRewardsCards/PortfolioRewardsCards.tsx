@@ -31,7 +31,7 @@ import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyCo
 import { trackButtonClick } from '@/helpers/mixpanel'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
-import classNames from './PortfolioRewardsCards.module.scss'
+import classNames from './PortfolioRewardsCards.module.css'
 
 interface SumrAvailableToClaimProps {
   rewardsData: ClaimDelegateExternalData

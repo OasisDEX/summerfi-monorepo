@@ -3,7 +3,7 @@ import { type CSSProperties, type FC, type ReactNode, useEffect, useMemo, useRef
 
 import { Card } from '@/components/atoms/Card/Card'
 
-import styles from './MobileDrawer.module.scss'
+import styles from './MobileDrawer.module.css'
 
 type SlideFrom = 'bottom' | 'top' | 'left' | 'right'
 

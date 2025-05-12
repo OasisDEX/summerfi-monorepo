@@ -20,7 +20,7 @@ import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { VaultTitle } from '@/components/molecules/VaultTitle/VaultTitle'
 import { getTokenDisplayName } from '@/tokens/helpers'
 
-import controlsSwitchStyles from './ControlsSwitch.module.scss'
+import controlsSwitchStyles from './ControlsSwitch.module.css'
 
 const VaultSwitchCardDataBlock = ({ title, value }: { title: string; value?: string }) => {
   return value ? (

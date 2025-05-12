@@ -8,7 +8,7 @@ import {
   ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
 
-import classNames from './ClaimDelegateFormHeader.module.scss'
+import classNames from './ClaimDelegateFormHeader.module.css'
 
 const getSteps = (isJustStakeDelegate: boolean) => [
   ...(!isJustStakeDelegate
@@ -75,7 +75,7 @@ export const ClaimDelegateFormHeader: FC<ClaimDelegateFormHeaderProps> = ({
                 })}
               >
                 {!getIsCompleted({ idx, state, steps }) && (
-                  <Text as="p" variant="p2semi" className={classNames.circleText}>
+                  <Text as="p" variant="p2semi">
                     {idx + 1}
                   </Text>
                 )}

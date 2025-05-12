@@ -1,0 +1,125 @@
+.sidebarWrapper {
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding-top: unset;
+}
+.sidebarWrapper.centered {
+  margin: 0 auto;
+  max-width: 100%;
+  max-height: unset;
+  width: 100%;
+}
+@media (min-width: 532px) {
+  .sidebarWrapper.centered {
+    max-width: 455px;
+    width: 455px;
+  }
+}
+
+.sidebarTitleWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.sidebarHeaderWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 0 var(--general-space-12) 0;
+}
+@media (min-width: 1026px) {
+  .sidebarHeaderWrapper {
+    padding: var(--general-space-20) 0;
+  }
+}
+.sidebarHeaderWrapper.centerTitle {
+  justify-content: center;
+}
+
+.sidebarContent {
+  width: 100%;
+}
+
+.goBackButton {
+  width: 100%;
+  justify-self: flex-start;
+  cursor: pointer;
+}
+
+.goBackButtonFillFLex {
+  width: 100%;
+}
+
+.sidebarHeaderActionButtonsWrapper {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.sidebarTitle {
+  color: var(--earn-protocol-secondary-100);
+  white-space: nowrap;
+}
+
+.sidebarHeaderChevron {
+  display: flex;
+}
+@media screen and (min-width: 768px) {
+  .sidebarHeaderChevron {
+    display: none;
+  }
+}
+
+.sidebarHeaderSpacer {
+  border-bottom: 1px solid var(--earn-protocol-neutral-100);
+  width: calc(100% + 48px);
+  margin-left: -24px;
+  margin-right: -24px;
+}
+.sidebarHeaderSpacer.hidden {
+  visibility: hidden;
+}
+@media (min-width: 532px) {
+  .sidebarHeaderSpacer.hidden {
+    visibility: visible;
+  }
+}
+
+.sidebarFootnoteWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  text-align: center;
+  margin-top: var(--general-space-20);
+}
+
+.sidebarErrorWrapper {
+  width: 100%;
+  padding: var(--general-space-16);
+  border-radius: var(--general-radius-8);
+  margin-bottom: var(--general-space-24);
+  background: var(--earn-protocol-critical-10);
+  color: var(--earn-protocol-primary);
+  text-align: center;
+  display: inline-block;
+}
+.sidebarErrorWrapper .sidebarErrorContent {
+  display: flex;
+  align-items: center;
+}
+
+.sidebarCta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-8);
+  width: 100%;
+}
+.sidebarCta a, .sidebarCta button {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

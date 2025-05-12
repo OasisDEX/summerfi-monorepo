@@ -15,7 +15,7 @@ import { SumrRaysRewards } from '@/features/sumr-claim/components/SumrRaysReward
 import { SumrTransferabilityCounter } from '@/features/sumr-claim/components/SumrTransferabilityCounter/SumrTransferabilityCounter'
 import { SumrWhatIsSumrToken } from '@/features/sumr-claim/components/SumrWhatIsSumrToken/SumrWhatIsSumrToken'
 
-import classNames from './SumrPageView.module.scss'
+import classNames from './SumrPageView.module.css'
 
 interface SumrPageViewProps {}
 

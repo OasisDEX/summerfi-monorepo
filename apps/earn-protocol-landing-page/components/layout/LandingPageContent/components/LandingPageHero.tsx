@@ -8,7 +8,7 @@ import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { sdkApiUrl } from '@/constants/sdk'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 
-import landingPageHeroStyles from '@/components/layout/LandingPageContent/components/LandingPageHero.module.scss'
+import landingPageHeroStyles from '@/components/layout/LandingPageContent/components/LandingPageHero.module.css'
 
 export const LandingPageHero = ({
   vaultsList,

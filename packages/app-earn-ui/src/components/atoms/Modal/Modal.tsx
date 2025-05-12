@@ -5,7 +5,7 @@ import { Button } from '@/components/atoms/Button/Button.tsx'
 import { Icon } from '@/components/atoms/Icon/Icon.tsx'
 import { LoadingSpinner } from '@/components/molecules/LoadingSpinner/LoadingSpinner'
 
-import modalStyles from '@/components/atoms/Modal/Modal.module.scss'
+import modalStyles from '@/components/atoms/Modal/Modal.module.css'
 
 interface ModalProps {
   openModal: boolean

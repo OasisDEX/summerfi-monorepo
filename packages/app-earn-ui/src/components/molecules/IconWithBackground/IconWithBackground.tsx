@@ -3,7 +3,7 @@ import clsx from 'clsx'
 
 import { Icon, type IconNamesList } from '@/components/atoms/Icon/Icon'
 
-import classNames from './IconWithBackground.module.scss'
+import classNames from './IconWithBackground.module.css'
 
 export const IconWithBackground = ({
   iconName,

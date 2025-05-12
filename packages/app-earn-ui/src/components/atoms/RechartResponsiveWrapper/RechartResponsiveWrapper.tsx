@@ -1,6 +1,6 @@
 import { type FC, type ReactNode } from 'react'
 
-import classNames from './RechartResponsiveWrapper.module.scss'
+import classNames from './RechartResponsiveWrapper.module.css'
 
 interface RechartResponsiveWrapperProps {
   children: ReactNode

@@ -15,7 +15,7 @@ import {
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
 
-import classNames from './StakeDelegatePageView.module.scss'
+import classNames from './StakeDelegatePageView.module.css'
 
 interface StakeDelegatePageViewProps {
   walletAddress: string

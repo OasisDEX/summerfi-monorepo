@@ -20,7 +20,7 @@ import BigNumber from 'bignumber.js'
 import { type PortfolioWalletAsset } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { valueColorResolver } from '@/helpers/value-color-resolver'
 
-import classNames from './PortfolioAssetsList.module.scss'
+import classNames from './PortfolioAssetsList.module.css'
 
 const dataBlocksStyles: {
   valueStyle: CSSProperties

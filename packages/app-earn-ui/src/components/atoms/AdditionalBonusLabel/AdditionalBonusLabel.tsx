@@ -5,7 +5,7 @@ import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 
-import additionalBonusLabelStyles from './AdditionalBonusLabel.module.scss'
+import additionalBonusLabelStyles from './AdditionalBonusLabel.module.css'
 
 type AdditionalBonusLabelProps = {
   externalTokenBonus?: EarnAppConfigType['fleetMap']['1']['0x']['bonus']

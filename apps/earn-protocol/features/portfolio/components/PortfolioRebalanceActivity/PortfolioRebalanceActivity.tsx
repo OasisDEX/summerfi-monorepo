@@ -22,7 +22,7 @@ import { PortfolioRebalanceActivityList } from '@/features/portfolio/components/
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 import { getRebalanceActivity } from '@/features/rebalance-activity/api/get-rebalance-activity'
 
-import classNames from './PortfolioRebalanceActivity.module.scss'
+import classNames from './PortfolioRebalanceActivity.module.css'
 
 interface PortfolioRebalanceActivityProps {
   rebalanceActivity: RebalanceActivityPagination

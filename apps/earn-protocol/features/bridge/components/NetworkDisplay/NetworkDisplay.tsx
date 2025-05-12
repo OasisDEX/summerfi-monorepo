@@ -2,7 +2,7 @@ import { Icon, networkIconByNetworkName, Text } from '@summerfi/app-earn-ui'
 import { chainIdToSDKNetwork, sdkNetworkToHumanNetwork } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
 
-import styles from './NetworkDisplay.module.scss'
+import styles from './NetworkDisplay.module.css'
 
 interface NetworkDisplayProps {
   chainId: number

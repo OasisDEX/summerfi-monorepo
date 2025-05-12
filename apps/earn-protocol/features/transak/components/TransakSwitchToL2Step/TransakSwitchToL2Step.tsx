@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { TransakIconWrapper } from '@/features/transak/components/TransakIconWrapper/TransakIconWrapper'
 import { type TransakReducerAction, TransakSteps } from '@/features/transak/types'
 
-import classNames from './TransakSwitchToL2Step.module.scss'
+import classNames from './TransakSwitchToL2Step.module.css'
 
 const switchToL2Copies = [
   {

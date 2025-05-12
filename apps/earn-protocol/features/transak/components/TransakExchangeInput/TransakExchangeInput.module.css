@@ -1,0 +1,31 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  height: 70px;
+  border-radius: var(--general-radius-8);
+  background-color: var(--earn-protocol-neutral-80);
+  justify-content: space-between;
+}
+
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border-right: 1px solid var(--earn-protocol-neutral-70);
+  padding: var(--general-space-4) var(--general-space-12);
+  flex: 1;
+}
+.inputWrapper input {
+  outline: none;
+  font-size: 18px;
+  color: var(--earn-protocol-secondary-100);
+}
+.inputWrapper .label {
+  color: var(--earn-protocol-secondary-40);
+}
+
+.dropdownWrapper {
+  display: flex;
+  align-items: center;
+  padding: 0 var(--general-space-16);
+}

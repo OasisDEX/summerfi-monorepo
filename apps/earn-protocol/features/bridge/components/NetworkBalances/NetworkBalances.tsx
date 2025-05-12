@@ -6,7 +6,7 @@ import { ArrowSplitter } from '@/features/bridge/components/ArrowSplitter/ArrowS
 import { NetworkDisplay } from '@/features/bridge/components/NetworkDisplay/NetworkDisplay'
 import { type BridgeState } from '@/features/bridge/types'
 
-import styles from './NetworkBalances.module.scss'
+import styles from './NetworkBalances.module.css'
 
 interface NetworkBalancesProps {
   sourceHumanNetworkName: keyof BridgeState['sumrBalances']

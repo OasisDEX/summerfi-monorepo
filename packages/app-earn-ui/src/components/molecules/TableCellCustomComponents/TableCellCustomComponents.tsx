@@ -5,7 +5,7 @@ import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 
-import tableCellCustomComponentsStyles from './TableCellCustomComponents.module.scss'
+import tableCellCustomComponentsStyles from './TableCellCustomComponents.module.css'
 
 export const TableCellAllocationCap = ({
   capPercent,

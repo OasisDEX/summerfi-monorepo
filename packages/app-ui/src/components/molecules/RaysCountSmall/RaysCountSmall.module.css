@@ -1,0 +1,13 @@
+.raysCountWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 4px;
+  margin-right: var(--space-m);
+  color: var(--color-text-primary);
+}
+@media (max-width: 531px) {
+  .raysCountWrapper {
+    margin-right: var(--space-s);
+  }
+}

@@ -2,8 +2,8 @@ import clsx from 'clsx'
 
 import { Text, type TextAllowedHtmlTags } from '@/components/atoms/Text/Text'
 
-import { type ClassNames as TextClassNames } from '@/components/atoms/Text/Text.module.scss'
-import withArrowStyles from '@/components/atoms/WithArrow/WithArrow.module.scss'
+import { type ClassNames as TextClassNames } from '@/components/atoms/Text/Text.module.css'
+import withArrowStyles from '@/components/atoms/WithArrow/WithArrow.module.css'
 
 export function WithArrow({
   children,

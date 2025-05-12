@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import dayjs from 'dayjs'
 import { type TooltipProps } from 'recharts'
 
-import forecastTooltipStyles from '@/components/organisms/Charts/components/ForecastTooltip.module.scss'
+import forecastTooltipStyles from '@/components/organisms/Charts/components/ForecastTooltip.module.css'
 
 const SvgCircle = ({ color }: { color: string }) => (
   <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">

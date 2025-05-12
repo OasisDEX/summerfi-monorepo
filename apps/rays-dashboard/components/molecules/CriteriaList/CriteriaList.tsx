@@ -2,7 +2,7 @@ import { type RaysApiResponse } from '@summerfi/app-types'
 import { Card, EXTERNAL_LINKS, Icon, Text, Tooltip } from '@summerfi/app-ui'
 import Link from 'next/link'
 
-import criteriaListStyles from '@/components/molecules/CriteriaList/CriteriaList.module.scss'
+import criteriaListStyles from '@/components/molecules/CriteriaList/CriteriaList.module.css'
 
 interface CriteriaListProps {
   userRays:

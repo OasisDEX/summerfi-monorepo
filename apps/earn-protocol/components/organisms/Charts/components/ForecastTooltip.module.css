@@ -1,0 +1,41 @@
+.forecastTooltipWrapper {
+  text-align: left;
+  border-radius: var(--radius-large);
+  background-color: var(--color-surface-light);
+  padding: var(--spacing-space-small);
+  box-shadow: var(--shadow-depth-1);
+}
+.forecastTooltipWrapper .timestampInfo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.forecastTooltipWrapper .timestampInfo > p {
+  padding-top: 3px;
+  margin-left: 5px;
+}
+.forecastTooltipWrapper .gridColumn {
+  text-align: right;
+  justify-content: flex-end;
+}
+.forecastTooltipWrapper .gridColumn .firstColumn {
+  text-align: left;
+}
+.forecastTooltipWrapper .gridColumnValue {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.forecastTooltipWrapper .gridColumnValue > svg {
+  display: inline-block;
+  margin-right: 15px;
+}
+
+.divider {
+  border-top: 1px solid #3D3D3D;
+  margin: var(--spacing-space-small) 0;
+}
+
+.subtleText {
+  color: var(--color-text-primary-disabled);
+}

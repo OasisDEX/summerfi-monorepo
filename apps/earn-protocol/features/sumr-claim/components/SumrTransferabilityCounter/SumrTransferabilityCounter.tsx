@@ -2,7 +2,7 @@
 import { type CSSProperties, type FC, useEffect, useState } from 'react'
 import { Dial, Text } from '@summerfi/app-earn-ui'
 
-import classNames from './SumrTransferabilityCounter.module.scss'
+import classNames from './SumrTransferabilityCounter.module.css'
 
 const getTimeDifference = (
   startDate: number,

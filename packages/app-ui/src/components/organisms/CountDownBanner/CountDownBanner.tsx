@@ -5,7 +5,7 @@ import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { CountDown } from '@/components/organisms/CountDown/CountDown'
 
-import countdownBannerStyles from '@/components/organisms/CountDownBanner/CountDownBanner.module.scss'
+import countdownBannerStyles from '@/components/organisms/CountDownBanner/CountDownBanner.module.css'
 
 interface CountDownBannerProps {
   countdownLabel: string

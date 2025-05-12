@@ -1,0 +1,72 @@
+.claimDelegateCardWrapper {
+  gap: var(--general-space-16);
+  align-items: center;
+  margin-bottom: var(--general-space-8);
+  cursor: pointer;
+  padding: var(--general-space-16);
+}
+.claimDelegateCardWrapper:hover {
+  background-color: var(--earn-protocol-neutral-80);
+  transition: background-color 0.2s;
+}
+.claimDelegateCardWrapper .checkmarkIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  border: 1px solid var(--earn-protocol-neutral-70);
+  border-radius: var(--general-radius-50);
+  background-color: var(--earn-protocol-neutral-90);
+}
+.claimDelegateCardWrapper .checkmarkIcon.active {
+  border: 1px solid var(--earn-protocol-success-50);
+  background-color: var(--earn-protocol-success-10);
+}
+.claimDelegateCardWrapper .content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+.claimDelegateCardWrapper .content .heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: var(--general-space-8);
+  margin-bottom: var(--general-space-8);
+}
+.claimDelegateCardWrapper .content .heading .title {
+  display: flex;
+  align-items: center;
+  gap: var(--general-space-8);
+}
+.claimDelegateCardWrapper .content .heading .amount {
+  display: flex;
+  align-items: center;
+  gap: var(--general-space-4);
+}
+.claimDelegateCardWrapper .content .footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  flex-wrap: wrap;
+}
+.claimDelegateCardWrapper .content .footer .social {
+  display: flex;
+  gap: var(--general-space-8);
+  align-items: center;
+  margin-top: var(--general-space-12);
+  color: var(--earn-protocol-secondary-40);
+}
+.claimDelegateCardWrapper .content .footer .social a:hover {
+  color: var(--earn-protocol-secondary-100);
+}
+.claimDelegateCardWrapper .content .footer .votingPower {
+  display: flex;
+  align-items: center;
+  gap: var(--general-space-4);
+}

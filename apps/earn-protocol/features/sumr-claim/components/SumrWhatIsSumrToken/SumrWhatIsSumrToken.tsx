@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 import sumrTokenBubbles from '@/public/img/sumr/sumr_token_bubbles.svg'
 
-import classNames from './SumrWhatIsSumrToken.module.scss'
+import classNames from './SumrWhatIsSumrToken.module.css'
 
 export const SumrWhatIsSumrToken = () => {
   return (

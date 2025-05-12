@@ -1,0 +1,6 @@
+:root {
+  --shadow-depth-1: rgba(0, 0, 0, 10%) 0px 0px 8px;
+  --shadow-depth-2: rgba(0, 0, 0, 15%) 0px 0px 8px;
+  --shadow-depth-3: rgba(0, 0, 0, 20%) 0px 4px 8px;
+  --shadow-active: rgba(87, 92, 254, 0.70) 0px 0px 6px;
+}

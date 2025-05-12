@@ -13,7 +13,7 @@ import { BridgeFormStepFallback } from '@/features/bridge/components/BridgeFormF
 import { NetworkBalances } from '@/features/bridge/components/NetworkBalances/NetworkBalances'
 import { type BridgeReducerAction, type BridgeState } from '@/features/bridge/types'
 
-import styles from './BridgeFormCompletedStep.module.scss'
+import styles from './BridgeFormCompletedStep.module.css'
 
 interface BridgeFormCompletedStepProps {
   dispatch: Dispatch<BridgeReducerAction>

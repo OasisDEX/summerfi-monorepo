@@ -5,7 +5,7 @@ import { chainIdToSDKNetwork, sdkNetworkToHumanNetwork } from '@summerfi/app-uti
 import { capitalize } from 'lodash-es'
 import { type Chain } from 'viem'
 
-import styles from './ChainSelector.module.scss'
+import styles from './ChainSelector.module.css'
 
 const networkOptions = Object.entries(networkIconByNetworkName)
   .map(([network, iconName]) => ({

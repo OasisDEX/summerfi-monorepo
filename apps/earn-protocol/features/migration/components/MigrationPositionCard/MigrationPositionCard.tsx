@@ -13,7 +13,7 @@ import { mapMigrationToPortfolioCard } from '@/features/migration/helpers/map-mi
 import { type MigrationEarningsData } from '@/features/migration/types'
 import { platformLogoMap } from '@/helpers/platform-logo-map'
 
-import classNames from './MigrationPositionCard.module.scss'
+import classNames from './MigrationPositionCard.module.css'
 
 interface MigrationPositionCardProps {
   migratablePosition: MigratablePosition

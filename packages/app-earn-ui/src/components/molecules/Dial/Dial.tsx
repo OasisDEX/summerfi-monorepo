@@ -9,7 +9,7 @@ import { Text } from '@/components/atoms/Text/Text'
 
 import dialStyles, {
   type ClassNames as DialClassnames,
-} from '@/components/molecules/Dial/Dial.module.scss'
+} from '@/components/molecules/Dial/Dial.module.css'
 
 interface DialProps {
   rawValue: ReactNode

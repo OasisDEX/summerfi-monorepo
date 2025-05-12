@@ -1,0 +1,15 @@
+.dataModuleWrapper {
+  justify-content: space-between;
+  height: 100%;
+  flex-wrap: wrap;
+  gap: var(--general-space-16);
+}
+.dataModuleWrapper .actionable {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.gradientBackground {
+  background-image: var(--gradient-earn-protocol-dark-10);
+}

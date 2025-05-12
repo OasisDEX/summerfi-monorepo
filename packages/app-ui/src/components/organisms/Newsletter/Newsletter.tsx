@@ -7,7 +7,7 @@ import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { LoadingSpinner } from '@/components/molecules/Loader/Loader'
 
-import newsletterStyles from '@/components/organisms/Newsletter/Newsletter.module.scss'
+import newsletterStyles from '@/components/organisms/Newsletter/Newsletter.module.css'
 
 type NewsletterStatus = 'initial' | 'loading' | 'success' | 'error'
 

@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 
-import navigationItemsStyles from './NavigationItems.module.scss'
+import navigationItemsStyles from './NavigationItems.module.css'
 
 export type NavigationItemsProps = {
   items: {

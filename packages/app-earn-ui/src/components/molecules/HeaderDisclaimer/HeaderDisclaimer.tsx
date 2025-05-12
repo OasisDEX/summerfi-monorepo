@@ -2,7 +2,7 @@ import { type FC, type ReactNode } from 'react'
 
 import { Text } from '@/components/atoms/Text/Text'
 
-import headerDisclaimerStyles from './HeaderDisclaimer.module.scss'
+import headerDisclaimerStyles from './HeaderDisclaimer.module.css'
 
 interface HeaderDisclaimerProps {
   children: ReactNode

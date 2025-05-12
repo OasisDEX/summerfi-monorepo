@@ -1,0 +1,22 @@
+.notConnectedHeader {
+  margin-top: var(--space-xxl);
+}
+
+.connectedTitle {
+  text-align: center;
+}
+@media (max-width: 531px) {
+  .connectedTitle {
+    font-size: 44px;
+  }
+}
+
+.earning {
+  margin-top: var(--space-m);
+  margin-bottom: var(--space-m);
+}
+@media (max-width: 531px) {
+  .earning {
+    text-align: center;
+  }
+}

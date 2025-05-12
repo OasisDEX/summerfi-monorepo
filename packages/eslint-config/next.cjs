@@ -27,6 +27,7 @@ module.exports = {
     '.*.js',
     '*.cjs', // .eslint.cjs
     '*.config.ts', // vite config
+    '*.module.css.d.ts', // generated css module types
     'tsconfig.tsbuildinfo', // tsconfig.tsbuildinfo
     'node_modules/',
     'out/',

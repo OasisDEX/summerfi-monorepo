@@ -3,16 +3,18 @@
   "version": "0.0.6",
   "license": "Apache-2.0",
   "scripts": {
-    "prebuild": "pnpm run generate",
-    "dev": "dotenv -e ../../.env -e ../../.env.local -- next dev -p 3002 --turbopack",
+    "prebuild": "concurrently \"pnpm:codegen\" \"pnpm:generate-module-types\"",
+    "dev": "dotenv -e ../../.env -e ../../.env.local -- concurrently \"next dev -p 3002 --turbopack\" \"pnpm:generate-module-types-watch\"",
     "build:apps": "dotenv -e ../../.env -e ../../.env.local -- next build",
     "start": "dotenv -e ../../.env -e ../../.env.local -- next start -p 3002",
     "lint": "tsc --noEmit && eslint .",
     "lint:fix": "eslint . --fix",
     "lint-timing": "TIMING=1 eslint .",
-    "generate": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config",
+    "codegen": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config",
     "update-tables": "dotenv -e ../../.env -e ../../.env.local -- node --import tsx misc/scripts/update-tables.ts",
-    "knip": "knip"
+    "knip": "knip",
+    "generate-module-types": "tcm -s -p './+(components|features)/**/*.module.css'",
+    "generate-module-types-watch": "tcm -p './+(components|features)/**/*.module.css' -w -s"
   },
   "dependencies": {
     "@account-kit/core": "^4.26.0",
@@ -39,10 +41,10 @@
     "bignumber.js": "^9.1.2",
     "browser-detect": "^0.2.28",
     "clsx": "^2.1.1",
+    "concurrently": "^9.0.1",
     "dayjs": "^1.11.12",
     "graphql-request": "^6.1.0",
     "graphql-tag": "^2.12.6",
-    "include-media": "2.0.0",
     "lodash-es": "^4.17.1",
     "mixpanel": "^0.18.0",
     "mixpanel-browser": "^2.53.0",
@@ -77,6 +79,7 @@
     "knip": "^5.50.4",
     "postcss": "^8",
     "tailwindcss": "^3.4.4",
+    "typed-css-modules": "0.9.1",
     "typescript": "^5.7.3"
   },
   "packageManager": "pnpm@8.15.4"

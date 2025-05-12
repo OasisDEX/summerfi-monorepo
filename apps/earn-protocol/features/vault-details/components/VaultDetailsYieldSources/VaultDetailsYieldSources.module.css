@@ -1,0 +1,50 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.chartSection {
+  display: flex;
+  justify-content: center;
+  gap: var(--general-space-64);
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: var(--general-space-40);
+  margin-bottom: var(--general-space-40);
+}
+.chartSection .customTooltipWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--general-space-8);
+  background-color: var(--earn-protocol-neutral-80);
+  border-radius: var(--general-radius-8);
+  padding: var(--general-space-8);
+}
+.chartSection .chartLegendWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-24);
+}
+.chartSection .legendItemWrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: var(--general-space-8);
+}
+.chartSection .legendItemWrapper .legendItemText {
+  color: var(--earn-protocol-secondary-60);
+}
+.chartSection .legendItemWrapper .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-circle);
+}
+
+.headings {
+  margin-bottom: var(--general-space-8);
+}
+
+.description {
+  color: var(--earn-protocol-secondary-60);
+}

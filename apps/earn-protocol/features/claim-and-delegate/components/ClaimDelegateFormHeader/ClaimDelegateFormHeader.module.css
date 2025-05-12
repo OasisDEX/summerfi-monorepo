@@ -1,0 +1,61 @@
+.claimDelegateFormHeaderWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: var(--general-space-32);
+}
+@media (min-width: 532px) {
+  .claimDelegateFormHeaderWrapper {
+    gap: var(--general-space-48);
+  }
+}
+@media (min-width: 1026px) {
+  .claimDelegateFormHeaderWrapper {
+    gap: unset;
+    gap: var(--general-space-16);
+  }
+}
+.claimDelegateFormHeaderWrapper .step {
+  display: flex;
+  align-items: center;
+  gap: var(--general-space-16);
+}
+.claimDelegateFormHeaderWrapper .step .stepLabel {
+  display: none;
+}
+@media (min-width: 1026px) {
+  .claimDelegateFormHeaderWrapper .step .stepLabel {
+    display: block;
+  }
+}
+.claimDelegateFormHeaderWrapper .step .stepArrow {
+  display: none;
+  color: var(--earn-protocol-secondary-40);
+}
+@media (min-width: 1026px) {
+  .claimDelegateFormHeaderWrapper .step .stepArrow {
+    display: block;
+    margin-left: var(--general-space-8);
+    margin-right: var(--general-space-24);
+  }
+}
+.claimDelegateFormHeaderWrapper .step .circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--general-radius-50);
+  background-color: var(--earn-protocol-neutral-85);
+}
+.claimDelegateFormHeaderWrapper .step .circle.active {
+  background-image: var(--gradient-earn-protocol-dark);
+}
+.claimDelegateFormHeaderWrapper .step .circle.completed {
+  background-color: var(--earn-protocol-success-10);
+}
+.claimDelegateFormHeaderWrapper .separator {
+  border-bottom: 1px solid var(--earn-protocol-neutral-100);
+}

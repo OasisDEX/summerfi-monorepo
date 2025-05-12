@@ -7,7 +7,7 @@ import { Card } from '@/components/atoms/Card/Card'
 import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { Text } from '@/components/atoms/Text/Text'
 
-import classNames from './ProjectedEarnings.module.scss'
+import classNames from './ProjectedEarnings.module.css'
 
 interface ProjectedEarningsProps {
   earnings: BigNumber | number | string | undefined

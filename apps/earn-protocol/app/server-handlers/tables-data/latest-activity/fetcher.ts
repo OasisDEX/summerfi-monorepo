@@ -40,7 +40,9 @@ export async function fetchAllLatestActivities(client: GraphQLClient, timestamp:
       skip,
     })
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const deposits = response.deposits || []
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const withdraws = response.withdraws || []
 
     allDeposits = [...allDeposits, ...deposits]

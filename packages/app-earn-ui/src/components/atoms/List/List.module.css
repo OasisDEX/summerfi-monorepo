@@ -1,0 +1,10 @@
+.liWrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: left;
+  gap: var(--spacing-space-small);
+}
+.liWrapper:not(:last-child) {
+  margin-bottom: var(--spacing-space-small);
+}

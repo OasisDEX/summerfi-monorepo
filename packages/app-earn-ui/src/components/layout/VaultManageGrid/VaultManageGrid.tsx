@@ -38,7 +38,7 @@ import { useApyUpdatedAt } from '@/hooks/use-apy-updated-at'
 import { useHoldAlt } from '@/hooks/use-hold-alt'
 import { useSumrRewardsToDate } from '@/hooks/use-sumr-rewards-to-date'
 
-import vaultManageGridStyles from './VaultManageGrid.module.scss'
+import vaultManageGridStyles from './VaultManageGrid.module.css'
 
 interface VaultManageGridProps {
   vault: SDKVaultishType

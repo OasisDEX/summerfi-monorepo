@@ -7,7 +7,7 @@ import { Risk } from '@/components/atoms/Risk/Risk'
 import { Text } from '@/components/atoms/Text/Text'
 import { getDisplayToken } from '@/helpers/get-display-token'
 
-import classNames from './VaultTitleDropdownContent.module.scss'
+import classNames from './VaultTitleDropdownContent.module.css'
 
 interface VaultDropdownContentProps {
   vault: SDKVaultishType

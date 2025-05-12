@@ -13,7 +13,7 @@ import clsx from 'clsx'
 import Image, { type StaticImageData } from 'next/image'
 import Link from 'next/link'
 
-import higherYieldsBlockStyles from '@/components/layout/LandingPageContent/content/HigherYieldsBlock.module.scss'
+import higherYieldsBlockStyles from '@/components/layout/LandingPageContent/content/HigherYieldsBlock.module.css'
 
 import howWeUseAi from '@/public/img/landing-page/higher-yields_how-we-use-ai.png'
 import howYouEarnMoreImage from '@/public/img/landing-page/higher-yields_how-you-earn-more.png'

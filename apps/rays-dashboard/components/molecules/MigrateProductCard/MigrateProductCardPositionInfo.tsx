@@ -4,7 +4,7 @@ import { formatAsShorthandNumbers } from '@summerfi/app-utils'
 import { IconHelpCircle } from '@tabler/icons-react'
 import BigNumber from 'bignumber.js'
 
-import migrateProductCardStyles from '@/components/molecules/MigrateProductCard/MigrateProductCard.module.scss'
+import migrateProductCardStyles from '@/components/molecules/MigrateProductCard/MigrateProductCard.module.css'
 
 const getMigrationTokenValue = (
   asset:

@@ -1,0 +1,29 @@
+.faqGeneralWrapper {
+  width: 100%;
+}
+.faqGeneralWrapper > span {
+  padding: 0 var(--general-space-16);
+}
+
+.faqSectionBlockWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: var(--general-space-16);
+  flex-wrap: wrap;
+}
+@media (min-width: 745px) {
+  .faqSectionBlockWrapper {
+    flex-wrap: nowrap;
+  }
+}
+.faqSectionBlockWrapper > div {
+  border-bottom: 1px solid var(--earn-protocol-neutral-70);
+}
+.faqSectionBlockWrapper > div:last-of-type {
+  border-bottom: none;
+}
+.faqSectionBlockWrapper .faqSectionExpanderContent {
+  color: var(--color-text-secondary);
+  padding: var(--spacing-space-medium);
+}

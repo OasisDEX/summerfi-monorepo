@@ -10,7 +10,7 @@ import Image from 'next/image'
 
 import { NavigationMobileMenuPanel } from '@/components/layout/Navigation/NavigationMobileMenuPanel'
 
-import navigationMenuMobileStyles from './NavigationMenuMobile.module.scss'
+import navigationMenuMobileStyles from './NavigationMenuMobile.module.css'
 
 interface NavigationMenuMobileProps extends WithNavigationModules {
   menuOpened: boolean

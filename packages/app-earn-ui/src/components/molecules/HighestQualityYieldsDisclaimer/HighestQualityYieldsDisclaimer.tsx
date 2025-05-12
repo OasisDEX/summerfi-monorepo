@@ -1,6 +1,6 @@
 import { Text } from '@/components/atoms/Text/Text'
 
-import styles from './HighestQualityYieldsDisclaimer.module.scss'
+import styles from './HighestQualityYieldsDisclaimer.module.css'
 
 export const HighestQualityYieldsDisclaimer = (): React.ReactNode => {
   return (

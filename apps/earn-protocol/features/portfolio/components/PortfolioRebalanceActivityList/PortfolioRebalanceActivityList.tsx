@@ -22,7 +22,7 @@ import Link from 'next/link'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { rebalanceActivityPurposeMapper } from '@/features/rebalance-activity/table/mapper'
 
-import classNames from './PortfolioRebalanceActivityList.module.scss'
+import classNames from './PortfolioRebalanceActivityList.module.css'
 
 interface PortfolioRebalanceActivityListProps {
   rebalanceActivityList: RebalanceActivity[]

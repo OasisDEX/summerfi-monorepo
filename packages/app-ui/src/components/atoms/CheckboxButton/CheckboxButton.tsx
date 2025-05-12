@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 
-import checkboxButtonStyles from './CheckboxButton.module.scss'
+import checkboxButtonStyles from './CheckboxButton.module.css'
 
 export const CheckboxButton = ({
   name,

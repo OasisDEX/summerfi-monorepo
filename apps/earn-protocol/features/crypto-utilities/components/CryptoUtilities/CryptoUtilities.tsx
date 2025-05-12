@@ -2,7 +2,7 @@ import { Card, TabBar, Text } from '@summerfi/app-earn-ui'
 
 import { CryptoUtilitiesBasics } from '@/features/crypto-utilities/components/CryptoUtilitiesBasics/CryptoUtilitiesBasics'
 
-import classNames from './CryptoUtilities.module.scss'
+import classNames from './CryptoUtilities.module.css'
 
 const tabs = [
   {

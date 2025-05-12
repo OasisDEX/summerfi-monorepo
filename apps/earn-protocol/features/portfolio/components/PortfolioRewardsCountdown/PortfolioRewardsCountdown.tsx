@@ -2,7 +2,7 @@ import { Card, NewsletterWrapper, Text } from '@summerfi/app-earn-ui'
 
 import { SumrTransferabilityCounter } from '@/features/sumr-claim/components/SumrTransferabilityCounter/SumrTransferabilityCounter'
 
-import classNames from './PortfolioRewardsCountdown.module.scss'
+import classNames from './PortfolioRewardsCountdown.module.css'
 
 export const PortfolioRewardsCountdown = () => {
   return (

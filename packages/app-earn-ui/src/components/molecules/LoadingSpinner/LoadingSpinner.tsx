@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 
-import loadingSpinnerStyles from '@/components/molecules/LoadingSpinner/LoadingSpinner.module.scss'
+import loadingSpinnerStyles from '@/components/molecules/LoadingSpinner/LoadingSpinner.module.css'
 
 const DEFAULT_SIZE = 24
 

@@ -1,0 +1,8 @@
+.apyLabel {
+  display: none;
+}
+@media (min-width: 532px) {
+  .apyLabel {
+    display: inline-block;
+  }
+}

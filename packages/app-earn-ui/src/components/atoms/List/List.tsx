@@ -4,7 +4,7 @@ import { type IconNamesList } from '@summerfi/app-types'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 
-import classNames from '@/components/atoms/List/List.module.scss'
+import classNames from '@/components/atoms/List/List.module.css'
 
 interface ListProps {
   list: ReactNode[]

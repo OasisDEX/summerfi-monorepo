@@ -1,0 +1,30 @@
+.portfolioRewardsCountdownWrapper {
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--general-space-16);
+}
+.portfolioRewardsCountdownWrapper .newsletterWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  flex: 1;
+}
+.portfolioRewardsCountdownWrapper .newsletterWrapper .customNewsletterSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .portfolioRewardsCountdownWrapper .newsletterWrapper .customNewsletterSection input {
+    min-width: 352px;
+  }
+}
+.portfolioRewardsCountdownWrapper .countdownWrapper {
+  width: fit-content;
+  align-items: center;
+}

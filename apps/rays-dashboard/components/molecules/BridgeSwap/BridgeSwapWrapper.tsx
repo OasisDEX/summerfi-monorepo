@@ -1,6 +1,6 @@
 import { useLayoutEffect } from 'react'
 
-import bridgeSwapHandlerStyles from './BridgeSwapHandler.module.scss'
+import bridgeSwapHandlerStyles from './BridgeSwapHandler.module.css'
 
 type BridgeSwapHandlerLoaderProps = {
   showNavigationModule: 'swap' | 'bridge' | undefined

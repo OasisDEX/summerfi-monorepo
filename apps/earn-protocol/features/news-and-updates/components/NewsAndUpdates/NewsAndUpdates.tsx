@@ -3,7 +3,7 @@ import { Card, Text } from '@summerfi/app-earn-ui'
 
 import { NewsAndUpdatesList } from '@/features/news-and-updates/components/NewsAndUpdatesList/NewsAndUpdatesList'
 
-import classNames from './NewsAndUpdates.module.scss'
+import classNames from './NewsAndUpdates.module.css'
 
 interface NewsAndUpdatesProps {
   items: { title: string; timestamp: number; link: string }[]

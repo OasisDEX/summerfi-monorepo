@@ -1,3 +1,3 @@
-import '@/styles/index.scss'
+import '@/styles/index.css'
 
 export const GlobalStyles = () => null

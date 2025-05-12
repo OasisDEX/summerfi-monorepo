@@ -11,7 +11,7 @@ import { ProjectedEarningsExpanded } from '@/components/molecules/ProjectedEarni
 import { getDisplayToken } from '@/helpers/get-display-token'
 import { type EarningsEstimationsMap } from '@/helpers/get-earnings-estimations-map'
 
-import projectedEarningsCombinedStyles from './ProjectedEarningsCombined.module.scss'
+import projectedEarningsCombinedStyles from './ProjectedEarningsCombined.module.css'
 
 type ProjectedEarningsCombinedProps = {
   amountDisplay: string

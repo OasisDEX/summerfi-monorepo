@@ -1,0 +1,110 @@
+.homepageCarouselWrapper {
+  width: 100vw;
+}
+
+.embla {
+  --slide-spacing: var(--general-radius-24);
+  --slide-size: 100%;
+}
+
+.emblaViewport {
+  overflow: hidden;
+  position: relative;
+  z-index: 40;
+}
+
+.emblaContainer {
+  display: flex;
+  touch-action: pan-y pinch-zoom;
+}
+
+.emblaSlide {
+  transform: translate3d(0, 0, 0);
+  flex: 0 0 500px;
+  min-width: 0;
+  margin-right: var(--general-space-24);
+}
+@media (max-width: 530px) {
+  .emblaSlide {
+    flex: 0 0 calc(100vw - var(--general-space-8) * 2);
+    margin-right: var(--general-space-16);
+  }
+}
+
+.emblaSlideNumber {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: var(--slide-height);
+  user-select: none;
+}
+
+.emblaButtonsWrapper {
+  position: relative;
+  z-index: 50;
+  width: 100%;
+  height: 0;
+  overflow: visible;
+}
+@media (max-width: 530px) {
+  .emblaButtonsWrapper {
+    display: none;
+  }
+}
+.emblaButtonsWrapper .emblaButtons {
+  width: 650px;
+  height: 50px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.emblaButtonsWrapper .homepageEmblaButton {
+  width: 50px;
+  height: 50px;
+  padding: 2px 0 0 2px;
+  margin-top: 140px;
+  text-align: center;
+  border-radius: var(--radius-circle);
+  background-color: #232323;
+}
+
+.dots {
+  display: flex;
+  align-items: center;
+  gap: var(--general-space-4);
+  margin-bottom: var(--general-space-12);
+}
+.dots .dot {
+  width: 4px;
+  height: 4px;
+  background-color: var(--earn-protocol-secondary-40);
+  border-radius: var(--radius-circle);
+}
+.dots .dotActive {
+  background-color: var(--earn-protocol-secondary-70);
+}
+
+.dotsBottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--general-space-8);
+  width: 100%;
+  margin-top: var(--general-space-24);
+}
+@media (min-width: 532px) {
+  .dotsBottom {
+    display: none;
+  }
+}
+.dotsBottom .dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--earn-protocol-neutral-80);
+  border-radius: var(--radius-circle);
+  transition: background-color 0.3s ease-in-out;
+}
+.dotsBottom .dotActive {
+  background: var(--gradient-earn-protocol-dark);
+}

@@ -29,7 +29,7 @@ import { ClaimDelegateError, ClaimDelegateNoBalances } from './ClaimDelegateErro
 import { ClaimDelegateFooter } from './ClaimDelegateFooter'
 import { ClaimDelegateNetworkCard } from './ClaimDelegateNetworkCard'
 
-import classNames from './ClaimDelegateClaimStep.module.scss'
+import classNames from './ClaimDelegateClaimStep.module.css'
 
 const delayPerNetwork = {
   [SDKChainId.BASE]: 4000,

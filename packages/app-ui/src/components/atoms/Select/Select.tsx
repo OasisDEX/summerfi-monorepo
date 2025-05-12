@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 
-import selectStyles from '@/components/atoms/Select/Select.module.scss'
+import selectStyles from '@/components/atoms/Select/Select.module.css'
 
 interface SelectProps {
   options: { value: string; label: string }[]

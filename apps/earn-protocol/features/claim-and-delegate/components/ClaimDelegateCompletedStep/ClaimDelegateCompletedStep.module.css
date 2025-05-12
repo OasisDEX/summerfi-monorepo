@@ -1,0 +1,73 @@
+.claimDelegateStakeDelegateCompletedSubstepWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.claimDelegateStakeDelegateCompletedSubstepWrapper .mainContent {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--general-space-16);
+  width: 100%;
+}
+@media (min-width: 745px) {
+  .claimDelegateStakeDelegateCompletedSubstepWrapper .mainContent {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+.claimDelegateStakeDelegateCompletedSubstepWrapper .mainContent .cardWrapper {
+  min-width: 200px;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--general-space-12);
+}
+.claimDelegateStakeDelegateCompletedSubstepWrapper .footer {
+  flex-direction: column;
+  align-items: center;
+  margin-top: var(--general-space-16);
+  margin-bottom: var(--general-space-24);
+}
+.claimDelegateStakeDelegateCompletedSubstepWrapper .footer .status {
+  display: flex;
+  gap: var(--general-space-16);
+  align-items: center;
+  margin-bottom: var(--general-space-12);
+  flex-wrap: wrap;
+}
+@media (min-width: 532px) {
+  .claimDelegateStakeDelegateCompletedSubstepWrapper .footer .status {
+    gap: var(--general-space-24);
+  }
+}
+@media (min-width: 1026px) {
+  .claimDelegateStakeDelegateCompletedSubstepWrapper .footer .status {
+    gap: var(--general-space-64);
+  }
+}
+.claimDelegateStakeDelegateCompletedSubstepWrapper .footer .status .block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--general-space-4);
+}
+.claimDelegateStakeDelegateCompletedSubstepWrapper .footer .status .block .withIcon {
+  display: flex;
+  align-items: center;
+  gap: var(--general-space-8);
+}
+.claimDelegateStakeDelegateCompletedSubstepWrapper .footer .status .arrow {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: #FFF;
+  background: var(--earn-protocol-neutral-80);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto;
+}
+@media (min-width: 532px) {
+  .claimDelegateStakeDelegateCompletedSubstepWrapper .footer .status .arrow {
+    display: flex;
+  }
+}

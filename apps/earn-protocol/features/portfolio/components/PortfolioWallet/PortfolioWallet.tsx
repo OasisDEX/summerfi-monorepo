@@ -6,7 +6,7 @@ import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { PortfolioAssets } from '@/features/portfolio/components/PortfolioAssets/PortfolioAssets'
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
 
-import classNames from './PorftolioWallet.module.scss'
+import classNames from './PorftolioWallet.module.css'
 
 interface PortfolioWalletProps {
   walletData: PortfolioAssetsResponse

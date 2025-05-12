@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { ProxyLinkComponent } from '@/components/atoms/ProxyLinkComponent/ProxyLinkComponent'
 import { Text } from '@/components/atoms/Text/Text'
 
-import navigationMenuStyles from '@/components/layout/Navigation/NavigationMenu.module.scss'
+import navigationMenuStyles from '@/components/layout/Navigation/NavigationMenu.module.css'
 
 export function NavigationMenuLink({
   label,

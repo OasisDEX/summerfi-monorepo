@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
-import classNames from './SumrNotTransferable.module.scss'
+import classNames from './SumrNotTransferable.module.css'
 
 const getBoxes = (userWalletAddress: string | undefined) => [
   {

@@ -2,7 +2,7 @@ import clsx from 'clsx'
 
 import { Text } from '@/components/atoms/Text/Text'
 
-import blockLabelStyles, { type ClassNames as BlockLabelVariants } from './BlockLabel.module.scss'
+import blockLabelStyles, { type ClassNames as BlockLabelVariants } from './BlockLabel.module.css'
 
 interface BlockLabelProps {
   label: string

@@ -3,7 +3,7 @@ import { Text } from '@summerfi/app-earn-ui'
 
 import { type TransakPriceQuoteResponse } from '@/features/transak/types'
 
-import classNames from './TransakExchangeDetails.module.scss'
+import classNames from './TransakExchangeDetails.module.css'
 
 const fees: {
   label: string

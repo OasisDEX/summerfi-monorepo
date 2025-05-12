@@ -38,7 +38,7 @@ import { capitalize } from 'lodash-es'
 
 import { networkSDKChainIdIconMap } from '@/constants/network-id-to-icon'
 
-import controlsSwitchTransactionViewStyles from './ControlsSwitchTransactionView.module.scss'
+import controlsSwitchTransactionViewStyles from './ControlsSwitchTransactionView.module.css'
 
 const VaultBoxContent = ({
   title,

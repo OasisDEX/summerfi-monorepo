@@ -20,7 +20,7 @@ import { SumrSupplySchedule } from '@/features/sumr-claim/components/SumrSupplyS
 import { isOutsideLink } from '@/helpers/is-outside-link'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
-import classNames from './SumrGovernance.module.scss'
+import classNames from './SumrGovernance.module.css'
 
 interface SumrGovernanceContentProps {
   children: ReactNode

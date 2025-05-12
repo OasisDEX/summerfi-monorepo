@@ -3,7 +3,7 @@ import { type EarnAllowanceTypes } from '@summerfi/app-types'
 import type BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 
-import controlsApprovalStyles from './ControlsApproval.module.scss'
+import controlsApprovalStyles from './ControlsApproval.module.css'
 
 type ControlsApprovalProps = {
   tokenSymbol: string

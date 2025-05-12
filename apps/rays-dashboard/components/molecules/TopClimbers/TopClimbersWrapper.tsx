@@ -19,7 +19,7 @@ import { climbersCount } from '@/constants/leaderboard'
 import { basePath } from '@/helpers/base-path'
 import { trackEvent } from '@/helpers/mixpanel'
 
-import topClimbersStyles from './TopClimbers.module.scss'
+import topClimbersStyles from './TopClimbers.module.css'
 
 export const TopClimbersWrapper = ({ topClimbers }: { topClimbers?: LeaderboardResponse }) => {
   const [topClimbersOpen, toggleTopClimbers] = useToggle(false)

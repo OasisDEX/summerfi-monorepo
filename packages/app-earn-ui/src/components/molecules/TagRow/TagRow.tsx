@@ -3,7 +3,7 @@
 import { type ReactNode } from 'react'
 import clsx from 'clsx'
 
-import styles from './TagRow.module.scss'
+import styles from './TagRow.module.css'
 
 export interface TagOption {
   label: ReactNode

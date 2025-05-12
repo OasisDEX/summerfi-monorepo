@@ -1,7 +1,7 @@
 import { Text } from '@/components/atoms/Text/Text'
 import { GradientBox } from '@/components/molecules/GradientBox/GradientBox'
 
-import selectionStyles from './SelectionBlock.module.scss'
+import selectionStyles from './SelectionBlock.module.css'
 
 type SelectionBlockProps = {
   title: string

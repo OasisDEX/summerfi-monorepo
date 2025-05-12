@@ -12,7 +12,7 @@ import { ProxyLinkComponent } from '@/components/atoms/ProxyLinkComponent/ProxyL
 import { Text } from '@/components/atoms/Text/Text'
 import { EXTERNAL_LINKS, INTERNAL_LINKS } from '@/helpers/application-links'
 
-import footerStyles from '@/components/layout/Footer/Footer.module.scss'
+import footerStyles from '@/components/layout/Footer/Footer.module.css'
 
 export interface FooterProps {
   logo: string

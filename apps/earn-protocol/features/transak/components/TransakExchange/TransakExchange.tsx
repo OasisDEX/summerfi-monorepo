@@ -17,7 +17,7 @@ import {
 } from '@/features/transak/types'
 import { validateTransakFiatInput } from '@/features/transak/validators'
 
-import classNames from './TransakExchange.module.scss'
+import classNames from './TransakExchange.module.css'
 
 interface TransakExchangeProps {
   dispatch: Dispatch<TransakReducerAction>

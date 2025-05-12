@@ -13,7 +13,7 @@ import Image from 'next/image'
 
 import { platformLogoMap } from '@/helpers/platform-logo-map'
 
-import classNames from './MigrationMiniCard.module.scss'
+import classNames from './MigrationMiniCard.module.css'
 
 export enum MigrationMiniCardType {
   FROM = 'from',

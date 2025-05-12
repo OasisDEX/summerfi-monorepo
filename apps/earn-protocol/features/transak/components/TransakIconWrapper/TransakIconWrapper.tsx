@@ -1,6 +1,6 @@
 import { Icon, type IconNamesList } from '@summerfi/app-earn-ui'
 
-import classNames from './TransakIconWrapper.module.scss'
+import classNames from './TransakIconWrapper.module.css'
 
 export const TransakIconWrapper = ({
   icon,

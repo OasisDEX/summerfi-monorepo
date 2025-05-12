@@ -8,7 +8,7 @@ import { Card } from '@/components/atoms/Card/Card'
 import { ProxyLinkComponent } from '@/components/atoms/ProxyLinkComponent/ProxyLinkComponent'
 import { Text } from '@/components/atoms/Text/Text'
 
-import bannerCardStyles from '@/components/molecules/BannerCard/BannerCard.module.scss'
+import bannerCardStyles from '@/components/molecules/BannerCard/BannerCard.module.css'
 
 interface BannerCardProps {
   title: ReactNode

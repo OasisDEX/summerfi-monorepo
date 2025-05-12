@@ -8,7 +8,7 @@ import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/po
 import { PortfolioAssetsList } from '@/features/portfolio/components/PortfolioAssetsList/PortfolioAssetsList'
 import { valueColorResolver } from '@/helpers/value-color-resolver'
 
-import classNames from './PotfolioAssets.module.scss'
+import classNames from './PotfolioAssets.module.css'
 
 type PortfolioAssetNetworkOption = NetworkNames | 'all'
 

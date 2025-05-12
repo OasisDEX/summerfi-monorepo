@@ -17,7 +17,7 @@ import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getUniqueVaultId } from '@/helpers/get-unique-vault-id'
 import { useApyUpdatedAt } from '@/hooks/use-apy-updated-at'
 
-import vaultCardStyles from './VaultCard.module.scss'
+import vaultCardStyles from './VaultCard.module.css'
 
 type VaultCardProps = SDKVaultishType & {
   onClick?: (id: string) => void

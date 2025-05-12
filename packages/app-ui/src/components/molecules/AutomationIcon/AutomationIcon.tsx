@@ -3,7 +3,7 @@ import { type FC, type ReactNode } from 'react'
 import { Icon, type IconPropsBase } from '@/components/atoms/Icon/Icon'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 
-import automationIconStyles from '@/components/molecules/AutomationIcon/AutomationIcon.module.scss'
+import automationIconStyles from '@/components/molecules/AutomationIcon/AutomationIcon.module.css'
 
 interface AutomationIconProps {
   tooltip: ReactNode

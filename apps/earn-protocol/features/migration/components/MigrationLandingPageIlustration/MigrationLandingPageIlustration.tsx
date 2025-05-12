@@ -2,7 +2,7 @@ import { type FC } from 'react'
 import { IllustrationCircle, Text } from '@summerfi/app-earn-ui'
 import { type IconNamesList } from '@summerfi/app-types'
 
-import classNames from './MigrationLandingPageIlustration.module.scss'
+import classNames from './MigrationLandingPageIlustration.module.css'
 
 interface MigrationLandingPageIlustrationProps {
   iconName: IconNamesList

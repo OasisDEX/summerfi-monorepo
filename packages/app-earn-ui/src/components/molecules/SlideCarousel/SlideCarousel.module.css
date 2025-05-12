@@ -1,0 +1,125 @@
+.embla,
+.emblaOneSlide,
+.emblaTwoSlides,
+.emblaThreeSlides {
+  --slide-spacing: var(--general-radius-24);
+  --slide-size: 100%;
+}
+
+@media (min-width: 900px) {
+  .emblaOneSlide {
+    --slide-size: 100%;
+  }
+}
+
+@media (min-width: 900px) {
+  .emblaTwoSlides {
+    --slide-size: calc(50% - var(--general-space-8));
+  }
+}
+
+@media (min-width: 900px) {
+  .emblaThreeSlides {
+    --slide-size: calc(33.3% - var(--general-space-12));
+  }
+}
+
+.emblaViewport {
+  overflow: hidden;
+}
+
+.emblaContainer {
+  display: flex;
+  touch-action: pan-y pinch-zoom;
+}
+
+.emblaSlide {
+  transform: translate3d(0, 0, 0);
+  flex: 0 0 var(--slide-size);
+  min-width: 0;
+}
+@media (min-width: 768px) {
+  .emblaSlide {
+    margin-right: var(--general-space-16);
+  }
+}
+
+.emblaSlide:last-child {
+  margin-right: 0;
+}
+
+.emblaSlideNumber {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: var(--slide-height);
+  user-select: none;
+}
+
+.emblaControls,
+.emblaControlsPortal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.emblaControls {
+  margin-bottom: var(--general-space-24);
+}
+
+.emblaButtons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--general-space-16);
+  align-items: center;
+  width: fit-content;
+}
+
+.emblaSideButton {
+  padding: var(--general-space-16);
+}
+@media (max-width: 531px) {
+  .emblaSideButton {
+    padding: 0;
+  }
+}
+
+.emblaButtonsOnSidesWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--general-space-16);
+}
+
+.dots {
+  display: flex;
+  align-items: center;
+  gap: var(--general-space-4);
+  margin-bottom: var(--general-space-12);
+}
+.dots .dot {
+  width: 4px;
+  height: 4px;
+  background-color: var(--earn-protocol-secondary-40);
+  border-radius: var(--radius-circle);
+}
+.dots .dotActive {
+  background-color: var(--earn-protocol-secondary-70);
+}
+
+.dotsBottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--general-space-8);
+  width: 100%;
+  margin-top: var(--general-space-24);
+}
+.dotsBottom .dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--earn-protocol-neutral-80);
+  border-radius: var(--radius-circle);
+}
+.dotsBottom .dotActive {
+  background: var(--gradient-earn-protocol-dark);
+}

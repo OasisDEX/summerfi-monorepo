@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react'
 
-import chartBarStyles from './ChartBar.module.scss'
+import chartBarStyles from './ChartBar.module.css'
 
 export const ChartBar = ({ value }: { value: string }): ReactNode => {
   return (

@@ -1,6 +1,6 @@
 import { type CSSProperties, type FC, type ReactNode } from 'react'
 
-import classNames from './TableCellNodes.module.scss'
+import classNames from './TableCellNodes.module.css'
 
 interface TableCellNodesProps {
   children: ReactNode

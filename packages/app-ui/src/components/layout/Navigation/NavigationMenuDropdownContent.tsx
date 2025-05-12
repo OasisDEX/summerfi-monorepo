@@ -4,7 +4,7 @@ import clsx from 'clsx'
 
 import { NavigationMenuDropdownContentList } from '@/components/layout/Navigation/NavigationMenuDropdownContentList'
 
-import navigationMenuDropdownContentStyles from './NavigationMenuDropdownContent.module.scss'
+import navigationMenuDropdownContentStyles from './NavigationMenuDropdownContent.module.css'
 
 export type NavigationMenuDropdownContentProps = NavigationMenuPanelType &
   WithNavigationModules & {

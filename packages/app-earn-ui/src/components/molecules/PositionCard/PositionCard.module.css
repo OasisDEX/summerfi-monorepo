@@ -1,0 +1,51 @@
+.positionCardWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-16);
+  cursor: pointer;
+  transition: border 0.1s ease-in-out;
+  border: 1px solid transparent;
+}
+.positionCardWrapper:hover {
+  border: 1px solid var(--earn-protocol-neutral-70);
+}
+.positionCardWrapper .positionCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.positionCardWrapper .positionCardHeader .positionCardHeaderIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--earn-protocol-neutral-90);
+  border: 1px solid var(--earn-protocol-neutral-70);
+  border-radius: var(--general-radius-50);
+  width: 32px;
+  height: 32px;
+}
+.positionCardWrapper .positionCardHeader .positionCardHeaderIconActive {
+  background-color: var(--earn-protocol-success-10);
+  border: 1px solid var(--earn-protocol-success-50);
+}
+.positionCardWrapper .positionSubHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.positionCardWrapper .positionSubHeader .positionSubHeaderAmount {
+  display: flex;
+  align-items: center;
+  gap: var(--general-space-4);
+}
+.positionCardWrapper .divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--earn-protocol-neutral-90);
+}
+.positionCardWrapper .positionCardBanner {
+  display: flex;
+  justify-content: center;
+  background-color: var(--earn-protocol-neutral-80);
+  border-radius: var(--general-radius-12);
+}

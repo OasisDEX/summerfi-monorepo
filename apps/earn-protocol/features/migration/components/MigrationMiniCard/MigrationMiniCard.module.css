@@ -1,0 +1,32 @@
+.miniCardWrapper {
+  display: flex;
+  flex-direction: column;
+}
+.miniCardWrapper .heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--general-space-12);
+}
+.miniCardWrapper .content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.miniCardWrapper .content .iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.miniCardWrapper .divider {
+  width: calc(100% + 32px);
+  height: 1px;
+  margin: var(--general-space-16) 0 var(--general-space-16) -16px;
+}
+.miniCardWrapper .footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

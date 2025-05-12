@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { type ClaimDelegateState, ClaimDelegateSteps } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
 
-import classNames from './ClaimDelegateHeader.module.scss'
+import classNames from './ClaimDelegateHeader.module.css'
 
 interface ClaimDelegateHeaderProps {
   state: ClaimDelegateState

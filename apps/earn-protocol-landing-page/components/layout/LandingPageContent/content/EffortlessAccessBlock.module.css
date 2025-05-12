@@ -1,0 +1,31 @@
+.wrapper {
+  overflow: hidden;
+}
+
+.callout {
+  padding: var(--general-space-40) var(--spacing-space-large);
+  text-align: center;
+}
+@media (min-width: 531px) {
+  .callout {
+    padding: 66px var(--spacing-space-2x-large) 48px var(--spacing-space-2x-large);
+  }
+}
+@media (min-width: 1025px) {
+  .callout {
+    text-align: left;
+    padding: 88px var(--spacing-space-3x-large) 64px var(--spacing-space-3x-large);
+  }
+}
+
+.uiImage {
+  padding: 0 var(--general-space-40);
+  margin-left: 30px;
+}
+@media (max-width: 531px) {
+  .uiImage {
+    padding: 0 var(--general-space-4);
+    margin-left: 10px;
+    text-align: center;
+  }
+}

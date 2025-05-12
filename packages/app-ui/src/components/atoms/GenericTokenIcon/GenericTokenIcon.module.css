@@ -1,0 +1,38 @@
+.smallIcon,
+.largeIcon {
+  display: flex;
+  position: relative;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.smallIcon .unknownIcon,
+.largeIcon .unknownIcon {
+  position: absolute;
+  color: var(--color-primary-100);
+  text-align: center;
+  font-weight: 500;
+}
+
+.largeIcon {
+  width: 44px;
+  height: 44px;
+}
+
+.largeIcon .unknownIcon {
+  width: 35.75px;
+  font-size: 22px;
+  line-height: 35.75px;
+}
+
+.smallIcon {
+  width: 30px;
+  height: 30px;
+}
+
+.smallIcon .unknownIcon {
+  width: 24.375px;
+  font-size: 15px;
+  line-height: 24.375px;
+}

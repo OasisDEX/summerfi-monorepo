@@ -23,7 +23,7 @@ type PositionHistoricalChartProps = {
   timeframe?: TimeframesType
 }
 
-import classNames from './PositionHistoricalChart.module.scss'
+import classNames from './PositionHistoricalChart.module.css'
 
 export const PositionHistoricalChart = ({
   chartData,

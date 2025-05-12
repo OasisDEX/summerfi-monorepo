@@ -4,7 +4,7 @@ import { Text } from '@/components/atoms/Text/Text'
 import { CountDown } from '@/components/organisms/CountDown/CountDown'
 import { EXTERNAL_LINKS } from '@/helpers/application-links'
 
-import launchBannerStyles from '@/components/organisms/LaunchBanner/LaunchBanner.module.scss'
+import launchBannerStyles from '@/components/organisms/LaunchBanner/LaunchBanner.module.css'
 
 export const LaunchBanner = (): React.ReactNode => {
   const futureTimestamp = '2024-07-31T16:00:00-02:00'

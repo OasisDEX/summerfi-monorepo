@@ -6,7 +6,7 @@ import Link from 'next/link'
 
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
-import classNames from './SumrMultipleWaysToEarn.module.scss'
+import classNames from './SumrMultipleWaysToEarn.module.css'
 
 import earnSumr from '@/public/img/sumr/earn_sumr.png'
 import rebalanceActivity from '@/public/img/sumr/rebalance_activity.png'

@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { Pill } from '@/components/atoms/Pill/Pill'
 import { Text } from '@/components/atoms/Text/Text'
 
-import protocolLabelStyles from '@/components/molecules/ProtocolLabel/ProtocolLabel.module.scss'
+import protocolLabelStyles from '@/components/molecules/ProtocolLabel/ProtocolLabel.module.css'
 
 interface ProtocolLabelProps {
   protocol: {

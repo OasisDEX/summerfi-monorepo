@@ -1,0 +1,109 @@
+.container {
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: var(--spacing-space-x-large);
+  row-gap: var(--general-space-32);
+  padding: var(--general-space-64) var(--general-space-40);
+}
+@media (min-width: 1026px) {
+  .container {
+    padding: var(--general-space-64) var(--general-space-32);
+  }
+}
+@media (min-width: 1280px) {
+  .container {
+    padding: var(--general-space-64);
+  }
+}
+.container > div {
+  min-width: 180px;
+}
+.container a {
+  color: var(--color-text-primary);
+}
+.container a:hover {
+  color: var(--color-text-primary-hover);
+}
+.container .logo {
+  width: 108px;
+}
+@media (min-width: 532px) {
+  .container {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-areas: "top top" "left-1 right-1" "left-2 right-2";
+  }
+  .container > div:nth-child(1) {
+    grid-area: top;
+  }
+  .container > div:nth-child(2) {
+    grid-area: left-1;
+  }
+  .container > div:nth-child(3) {
+    grid-area: right-1;
+  }
+  .container > div:nth-child(4) {
+    grid-area: left-2;
+  }
+  .container > div:nth-child(5) {
+    grid-area: right-2;
+  }
+}
+@media (min-width: 1026px) {
+  .container {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-areas: "one two three four" "full full full full";
+  }
+  .container > div:nth-child(1) {
+    grid-area: one;
+  }
+  .container > div:nth-child(2) {
+    grid-area: two;
+  }
+  .container > div:nth-child(3) {
+    grid-area: three;
+  }
+  .container > div:nth-child(4) {
+    grid-area: four;
+  }
+  .container > div:nth-child(5) {
+    grid-area: full;
+    margin-top: var(--general-space-64);
+  }
+}
+@media (min-width: 1280px) {
+  .container {
+    grid-template-columns: repeat(4, 1fr) auto;
+    grid-template-areas: "one two three four five";
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .container > div:nth-child(1) {
+    grid-area: one;
+  }
+  .container > div:nth-child(2) {
+    grid-area: two;
+  }
+  .container > div:nth-child(3) {
+    grid-area: three;
+  }
+  .container > div:nth-child(4) {
+    grid-area: four;
+  }
+  .container > div:nth-child(5) {
+    grid-area: five;
+    margin-top: 0;
+  }
+}
+
+.socialsList {
+  display: flex;
+  column-gap: var(--general-space-12);
+  margin-top: var(--general-space-24);
+}
+
+.linksList {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--general-space-16);
+  margin-top: var(--general-space-16);
+}

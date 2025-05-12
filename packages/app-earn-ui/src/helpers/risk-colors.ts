@@ -1,4 +1,4 @@
-// used raw colors due to issues with Icon scss computed colors
+// used raw colors due to issues with Icon css computed colors
 import { type RiskType } from '@summerfi/app-types'
 
 export const riskColors: { [key in RiskType]: string } = {
