@@ -13,7 +13,7 @@ import {
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
 import { signerPrivateKey, SDKApiUrl, userAddress } from './utils/testConfig'
 import { waitSeconds } from './utils/wait'
-import { TX_CONFIRMATION_WAIT_TIME } from './utils/constants'
+import { DEFAULT_SLIPPAGE_PERCENTAGE, TX_CONFIRMATION_WAIT_TIME } from './utils/constants'
 import assert from 'assert'
 
 jest.setTimeout(300000)
@@ -103,7 +103,7 @@ describe('Armada Protocol Deposit', () => {
       user,
       amount,
       slippage: Percentage.createFrom({
-        value: 1,
+        value: DEFAULT_SLIPPAGE_PERCENTAGE,
       }),
       shouldStake: stake,
     })
