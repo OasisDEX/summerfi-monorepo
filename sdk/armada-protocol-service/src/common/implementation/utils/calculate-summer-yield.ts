@@ -1,4 +1,4 @@
-import { Percentage } from '@summerfi/sdk-common/index'
+import { Percentage } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
 
 /**
