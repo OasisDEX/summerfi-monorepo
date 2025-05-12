@@ -8,6 +8,7 @@
   max-width: 1072px;
   width: 100%;
 }
+
 @media (min-width: 1026px) {
   .claimPageWrapper {
     padding: 0;

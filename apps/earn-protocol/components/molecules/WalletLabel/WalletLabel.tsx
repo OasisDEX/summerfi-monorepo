@@ -309,7 +309,7 @@ export default function WalletLabel({
               iconSize={12}
               hideNetworkIcon={hideNetworkIcon}
             />
-            <AddressDisplay address={userWalletAddress} maxChars={maxAddressChars || 6} />
+            <AddressDisplay address={userWalletAddress} maxChars={maxAddressChars ?? 6} />
           </Button>
         </div>
       </Tooltip>

@@ -18,7 +18,6 @@ const StreakAnimation: React.FC<StreakAnimationProps> = ({
   color = '#ffb300',
 }) => (
   <div
-    className={styles.streakAnimationWrapper}
     style={{
       top: `calc(80px + ${offsetY}px)`,
       left: `calc(50% + ${offsetX}px)`,

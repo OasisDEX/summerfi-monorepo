@@ -75,7 +75,7 @@ export const ClaimDelegateFormHeader: FC<ClaimDelegateFormHeaderProps> = ({
                 })}
               >
                 {!getIsCompleted({ idx, state, steps }) && (
-                  <Text as="p" variant="p2semi" className={classNames.circleText}>
+                  <Text as="p" variant="p2semi">
                     {idx + 1}
                   </Text>
                 )}

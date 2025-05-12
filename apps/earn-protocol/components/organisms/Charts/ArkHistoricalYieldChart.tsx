@@ -29,9 +29,11 @@ export const ArkHistoricalYieldChart = ({
     ...chartData.colors,
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const dataNames = [summerVaultName, ...(compare ? chartData.dataNames ?? [] : [])]
 
   const parsedData = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!chartData) {
       return []
     }
@@ -47,6 +49,7 @@ export const ArkHistoricalYieldChart = ({
   }, [timeframe, chartData, compare, summerVaultName])
 
   const parsedDataWithCutoff =
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     !chartData || chartData.data['7d'].length <= POINTS_REQUIRED_FOR_CHART['7d'] ? [] : parsedData
 
   return (

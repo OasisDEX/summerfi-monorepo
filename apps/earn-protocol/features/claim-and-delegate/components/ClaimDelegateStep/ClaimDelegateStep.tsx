@@ -424,7 +424,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
               value={searchValue}
             />
           </div>
-          <div className={classNames.sortWrapper}>
+          <div>
             <Dropdown
               options={getDelegateSortOptions(sortBy.value as DelegateSortOptions)}
               dropdownValue={sortBy}

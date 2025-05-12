@@ -13,10 +13,10 @@ export const CrossChainProviderNotice: FC = () => {
             <Icon iconName="layerzero" size={32} className={styles.logo} />
           </div>
           <div className={styles.textSection}>
-            <Text variant="p2semiColorful" as="p" className={styles.title}>
+            <Text variant="p2semiColorful" as="p">
               Powered by LayerZero
             </Text>
-            <Text variant="p3semi" as="p" className={styles.subtitle}>
+            <Text variant="p3semi" as="p">
               Censorship-resistant. Immutable. Permissionless.
             </Text>
           </div>

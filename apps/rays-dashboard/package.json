@@ -3,10 +3,13 @@
   "version": "0.0.1",
   "license": "Apache-2.0",
   "scripts": {
-    "dev": "dotenv -e ../../.env -e ../../.env.local -- next dev -p 3001 --turbo",
+    "prebuild": "pnpm generate-module-types",
+    "dev": "dotenv -e ../../.env -e ../../.env.local -- concurrently \"next dev -p 3001 --turbopack\" \"pnpm:generate-module-types-watch\"",
     "build:apps": "dotenv -e ../../.env -e ../../.env.local -- next build",
     "start": "next start -p 3001",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "generate-module-types": "tcm -s -p './+(components|features)/**/*.module.css'",
+    "generate-module-types-watch": "tcm -p './+(components|features)/**/*.module.css' -w -s"
   },
   "dependencies": {
     "@lifi/wallet-management": "^2.6.1",
@@ -35,6 +38,7 @@
     "boring-avatars": "^1.10.2",
     "browser-detect": "^0.2.28",
     "clsx": "^2.1.1",
+    "concurrently": "^9.0.1",
     "dayjs": "^1.11.12",
     "lodash-es": "^4.17.1",
     "mixpanel": "^0.18.0",
@@ -54,7 +58,8 @@
     "@types/mixpanel-browser": "^2.49.0",
     "@types/node": "^20.14.2",
     "@types/react": "19.0.8",
-    "@types/react-dom": "19.0.3"
+    "@types/react-dom": "19.0.3",
+    "typed-css-modules": "0.9.1"
   },
   "packageManager": "pnpm@8.15.4"
 }

@@ -74,6 +74,7 @@ export async function insertTopDepositorsInBatches(
         )
         .execute()
 
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       deleted = Number(deleteResult[0].numDeletedRows ?? 0)
     }
 

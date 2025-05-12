@@ -24,7 +24,7 @@ export const ClaimDelegateToBridge: FC<ClaimDelegateToBridgeProps> = ({
   return (
     <Card className={classNames.cardWrapper}>
       <div className={clsx(classNames.tagWrapper, classNames.bridge)}>
-        <Text as="p" variant="p4semi" className={classNames.tabLabel}>
+        <Text as="p" variant="p4semi">
           Ready to bridge
         </Text>
       </div>

@@ -112,6 +112,7 @@ export const updateTopDepositors = async ({
 
     // const fleetRate = vaultsApyData[fleetId]
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!fleetRate) {
       throw new Error(`No fleet rate found for fleetId: ${fleetId}`)
     }
