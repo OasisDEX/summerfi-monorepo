@@ -28,45 +28,6 @@ export type TransactionPriceImpact = {
   impact: IPercentage | null
 }
 
-export type TransactionMetadataApproval = {
-  approvalAmount: ITokenAmount
-  approvalSpender: IAddress
-}
-
-export type TransactionMetadataDeposit = {
-  fromAmount: ITokenAmount
-  toAmount?: ITokenAmount
-  priceImpact?: TransactionPriceImpact
-  slippage: IPercentage
-}
-
-export type TransactionMetadataWithdraw = {
-  fromAmount: ITokenAmount
-  toAmount?: ITokenAmount
-  priceImpact?: TransactionPriceImpact
-  slippage: IPercentage
-}
-
-export type TransactionMetadataBridge = {
-  fromAmount: ITokenAmount
-  toAmount: ITokenAmount
-  lzFee: ITokenAmount
-}
-
-export type TransactionMetadataMigration = {
-  swapAmountByPositionId: Record<string, ITokenAmount>
-  priceImpactByPositionId: Record<string, TransactionPriceImpact>
-}
-
-export type TransactionMetadataVaultSwitch = {
-  fromVault: IArmadaVaultId
-  toVault: IArmadaVaultId
-  fromAmount: ITokenAmount
-  toAmount?: ITokenAmount
-  priceImpact?: TransactionPriceImpact
-  slippage: IPercentage
-}
-
 type TransactionInfo = {
   transaction: Transaction
   description: string
@@ -76,25 +37,63 @@ export type ApproveTransactionInfo = TransactionInfo & {
   type: TransactionType.Approve
   metadata: TransactionMetadataApproval
 }
+export type TransactionMetadataApproval = {
+  approvalAmount: ITokenAmount
+  approvalSpender: IAddress
+}
 
 export type DepositTransactionInfo = TransactionInfo & {
   type: TransactionType.Deposit
   metadata: TransactionMetadataDeposit
+}
+export type TransactionMetadataDeposit = {
+  fromAmount: ITokenAmount
+  toAmount?: ITokenAmount
+  priceImpact?: TransactionPriceImpact
+  slippage: IPercentage
 }
 
 export type WithdrawTransactionInfo = TransactionInfo & {
   type: TransactionType.Withdraw
   metadata: TransactionMetadataWithdraw
 }
+export type TransactionMetadataWithdraw = {
+  fromAmount: ITokenAmount
+  toAmount?: ITokenAmount
+  priceImpact?: TransactionPriceImpact
+  slippage: IPercentage
+}
 
 export type VaultSwitchTransactionInfo = TransactionInfo & {
   type: TransactionType.VaultSwitch
   metadata: TransactionMetadataVaultSwitch
 }
+export type TransactionMetadataVaultSwitch = {
+  fromVault: IArmadaVaultId
+  toVault: IArmadaVaultId
+  fromAmount: ITokenAmount
+  toAmount?: ITokenAmount
+  priceImpact?: TransactionPriceImpact
+  slippage: IPercentage
+}
+
+export type MigrationTransactionInfo = TransactionInfo & {
+  type: TransactionType.Migration
+  metadata: TransactionMetadataMigration
+}
+export type TransactionMetadataMigration = {
+  swapAmountByPositionId: Record<string, ITokenAmount>
+  priceImpactByPositionId: Record<string, TransactionPriceImpact>
+}
 
 export type BridgeTransactionInfo = TransactionInfo & {
   type: TransactionType.Bridge
   metadata: TransactionMetadataBridge
+}
+export type TransactionMetadataBridge = {
+  fromAmount: ITokenAmount
+  toAmount: ITokenAmount
+  lzFee: ITokenAmount
 }
 
 export type ClaimTransactionInfo = TransactionInfo & {
@@ -111,9 +110,4 @@ export type StakeTransactionInfo = TransactionInfo & {
 
 export type UnstakeTransactionInfo = TransactionInfo & {
   type: TransactionType.Unstake
-}
-
-export type MigrationTransactionInfo = TransactionInfo & {
-  type: TransactionType.Migration
-  metadata: TransactionMetadataMigration
 }
