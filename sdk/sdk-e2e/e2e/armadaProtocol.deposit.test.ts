@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
 import {
   Address,

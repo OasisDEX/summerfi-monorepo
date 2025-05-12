@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
 import {
   Address,
@@ -91,9 +92,6 @@ describe('Armada Protocol Switch', () => {
       value: DEFAULT_SLIPPAGE_PERCENTAGE,
     })
 
-    const sourceVaultInfo = await sdk.armada.users.getVaultInfo({
-      vaultId: sourceVaultId,
-    })
     const destinationVaultInfo = await sdk.armada.users.getVaultInfo({
       vaultId: destinationVaultId,
     })
