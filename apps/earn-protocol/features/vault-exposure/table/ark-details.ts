@@ -60,6 +60,40 @@ export const arkDetailsMap: {
       description:
         'The buffer is a portion of a vault that is not held in any one particular strategy and stands ready to be deployed to capitalize on any new strategies that may arise.',
     },
+    '0xe2d4075734dba76d5d17cd3fec8401f521522c34': {
+      description:
+        'Engineered for efficient ETH deployment, minimizing unnecessary risks while ensuring capital remains productive.',
+      link: 'https://app.euler.finance/vault/0xD8b27CF359b7D15710a5BE299AF6e7Bf904984C2?network=ethereum',
+    },
+    '0x0f7c5a02f0763b2806cae1bc7e965dae089322da': {
+      description:
+        'Engineered for efficient ETH deployment, minimizing unnecessary risks while ensuring capital remains productive.',
+      link: 'https://app.euler.finance/vault/0x716bF454066a84F39A2F78b5707e79a9d64f1225?network=ethereum',
+    },
+    '0x7e29e6503df46d4060301c1b4317adf2a6d6d371': {
+      description:
+        'An advanced ETH strategy, built with algorithmic optimization to enhance performance while maintaining risk-adjusted stability.',
+      link: 'https://app.morpho.org/base/vault/0x6b13c060F13Af1fdB319F52315BbbF3fb1D88844/gauntlet-weth-core',
+    },
+    '0x4aa2b5d3a044aae29afbb90800e13382a295f63e': {
+      description:
+        'The MEVCap WETH Morpho vault, managed by MEV Capital, is designed to optimize risk-adjusted returns by lending wrapped ETH (wETH) against a curated selection of Liquid Staking Tokens (LSTs) and Liquid Restaking Tokens (LRTs) used as collateral on the Ethereum network.',
+      link: 'https://app.morpho.org/ethereum/vault/0x9a8bC3B04b7f3D87cfC09ba407dCED575f2d61D8/mev-capital-weth',
+    },
+    '0x88e7b6f36ec5bb35f802f11d5807401e1f0073a2': {
+      description:
+        'The buffer is a portion of a vault that is not held in any one particular strategy and stands ready to be deployed to capitalize on any new strategies that may arise.',
+    },
+    '0x5982d78ab5f7ed0e7d3feb08fddd1daab15212cc': {
+      description:
+        'An advanced ETH strategy, leveraging algorithmic efficiency to enhance returns while maintaining risk-conscious exposure.',
+      link: 'https://app.morpho.org/ethereum/vault/0x78Fc2c2eD1A4cDb5402365934aE5648aDAd094d0/re7-weth',
+    },
+    '0x10ef55e974c18ce0ed9105868fff412752fed951': {
+      description:
+        'A dynamically managed ETH strategy, adjusting to market conditions in real time to ensure optimal capital performance.',
+      link: 'https://fluid.instadapp.io/lending/1',
+    },
 
     // USDT Strategies
     '0x26c50781f592cf4c7389615a38dc927c81f8a0a4': {
