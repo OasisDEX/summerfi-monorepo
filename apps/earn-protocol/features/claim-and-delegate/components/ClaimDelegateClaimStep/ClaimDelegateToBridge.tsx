@@ -7,7 +7,7 @@ import Link from 'next/link'
 
 import { networkSDKChainIdIconMap } from '@/constants/network-id-to-icon'
 
-import classNames from './ClaimDelegateClaimStep.module.scss'
+import classNames from './ClaimDelegateClaimStep.module.css'
 
 interface ClaimDelegateToBridgeProps {
   balance: string

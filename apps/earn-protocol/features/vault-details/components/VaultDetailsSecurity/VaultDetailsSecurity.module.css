@@ -1,0 +1,20 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-space-x-small);
+  width: 100%;
+}
+
+.dataBlockWrapper {
+  justify-content: flex-start;
+  display: flex;
+  gap: var(--spacing-space-x-large);
+  flex-wrap: wrap;
+  width: 100%;
+}
+@media (min-width: 744px) {
+  .dataBlockWrapper {
+    gap: var(--spacing-space-3x-large);
+  }
+}

@@ -1,0 +1,16 @@
+.noPositionsWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 34px;
+  margin-top: var(--general-space-20);
+  text-align: center;
+  gap: var(--general-space-16);
+  background-color: var(--color-surface-subtler);
+  border-radius: var(--general-radius-4);
+}
+.noPositionsWrapper p {
+  color: var(--color-text-secondary);
+}

@@ -12,7 +12,7 @@ import { VaultCardHomepage } from '@/components/molecules/VaultCardHomepage/Vaul
 import { SUMR_CAP } from '@/constants/earn-protocol'
 import { useLocalConfig } from '@/contexts/LocalConfigContext/LocalConfigContext'
 
-import homepageCarouselStyles from './HomepageCarousel.module.scss'
+import homepageCarouselStyles from './HomepageCarousel.module.css'
 
 type HomepageCarouselProps = {
   vaultsList: SDKVaultishType[]

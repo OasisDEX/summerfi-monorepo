@@ -1,0 +1,55 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.heading {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: var(--general-space-16);
+  gap: var(--general-space-16);
+  flex-wrap: wrap;
+}
+.heading .headingIcons {
+  display: flex;
+  gap: 10px;
+}
+.heading .headingIcons button,
+.heading .headingIcons a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: background-color 0.2s ease-in-out;
+  border-radius: var(--general-radius-50);
+}
+.heading .headingIcons button:hover,
+.heading .headingIcons a:hover {
+  background-color: rgba(141, 51, 96, 0.15);
+}
+
+.description {
+  color: var(--earn-protocol-secondary-60);
+  margin-bottom: var(--general-space-24);
+}
+
+.cardsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-16);
+  margin-bottom: var(--general-space-40);
+}
+.cardsWrapper .card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+}
+@media screen and (min-width: 768px) {
+  .cardsWrapper {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}

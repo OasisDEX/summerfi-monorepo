@@ -3,7 +3,7 @@ import { Text } from '@summerfi/app-ui'
 import { formatAddress, formatCryptoBalance } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
-import claimRaysTitleStyles from './ClaimRaysTitle.module.scss'
+import claimRaysTitleStyles from './ClaimRaysTitle.module.css'
 
 interface ClaimRaysTitleProps {
   userAddress?: string

@@ -7,7 +7,7 @@ import { PortfolioHeader } from '@/features/portfolio/components/PortfolioHeader
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { useTabStateQuery } from '@/hooks/use-tab-state'
 
-import classNames from './PortfolioPageView.module.scss'
+import classNames from './PortfolioPageView.module.css'
 
 const SimplePortfolioSkeleton = (
   <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>

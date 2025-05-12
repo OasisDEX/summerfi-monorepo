@@ -1,0 +1,80 @@
+.tabBar {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.tabHeaderWrapper {
+  position: relative;
+  height: fit-content;
+}
+
+.tabHeaders {
+  display: flex;
+  border-bottom: 1px solid var(--earn-protocol-neutral-85); /* Grey underline spanning the entire container */
+  overflow-x: auto;
+  scrollbar-width: none; /* Hide scrollbar on Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar on IE/Edge */
+  /* Hide scrollbar on Webkit browsers (Safari, Chrome) */
+}
+.tabHeaders::-webkit-scrollbar {
+  display: none;
+}
+
+.tabButton {
+  padding: 12px 8px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: var(--earn-protocol-secondary-40);
+  transition: color 0.3s ease;
+  white-space: nowrap; /* Prevent text wrapping for tabs */
+  flex-shrink: 0; /* Ensure buttons don't shrink when content is wide */
+  position: relative;
+}
+.tabButton::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background-color: #ff0080;
+  transition: width 0.3s ease;
+}
+.tabButton:hover {
+  color: var(--earn-protocol-secondary-100);
+}
+.tabButton:focus {
+  outline: none; /* Remove default focus outline */
+}
+.tabButton.active {
+  color: var(--earn-protocol-secondary-100);
+}
+.tabButton.active::after {
+  width: 100%;
+}
+
+.tabContent {
+  padding: var(--general-space-16) 0;
+}
+
+@media (min-width: 532px) {
+  .tabButton {
+    padding: 15px 10px;
+    font-size: 14px;
+  }
+  .tabContent {
+    padding: 15px;
+  }
+}
+@media (min-width: 745px) {
+  .tabButton {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+  .tabContent {
+    padding: var(--general-space-24) 0;
+  }
+}

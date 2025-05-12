@@ -1,0 +1,98 @@
+.bestOfDecentralizedFinanceHeaderWrapper {
+  text-align: center;
+  padding: 0 var(--spacing-space-3x-large);
+}
+@media (max-width: 531px) {
+  .bestOfDecentralizedFinanceHeaderWrapper {
+    padding: 0 var(--spacing-space-large);
+  }
+}
+
+.bestOfDecentralizedFinanceHeader {
+  font-weight: 600;
+}
+
+.bestOfDecentralizedFinanceBlockWrapper {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: var(--spacing-space-medium);
+  margin-top: 0;
+}
+@media (min-width: 532px) {
+  .bestOfDecentralizedFinanceBlockWrapper {
+    grid-template-columns: repeat(1, 1fr);
+    padding: var(--spacing-space-2x-large) var(--spacing-space-2x-large) 0;
+  }
+}
+@media (min-width: 1026px) {
+  .bestOfDecentralizedFinanceBlockWrapper {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.bestOfDecentralizedFinanceBlockWrapper .bestOfDecentralizedFinanceBlock {
+  padding: var(--spacing-space-large) var(--spacing-space-large) 0;
+}
+@media (min-width: 532px) {
+  .bestOfDecentralizedFinanceBlockWrapper .bestOfDecentralizedFinanceBlock {
+    padding: var(--spacing-space-x-large) var(--spacing-space-x-large) 0;
+  }
+}
+@media (min-width: 1026px) {
+  .bestOfDecentralizedFinanceBlockWrapper .bestOfDecentralizedFinanceBlock {
+    padding: var(--spacing-space-x-large) var(--spacing-space-x-large) 0;
+  }
+}
+.bestOfDecentralizedFinanceBlockWrapper .bestOfDecentralizedFinanceBlockDescription {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-2x-small);
+}
+.bestOfDecentralizedFinanceBlockWrapper .bestOfDecentralizedFinanceBlockDescription p {
+  color: var(--color-text-secondary);
+}
+.bestOfDecentralizedFinanceBlockWrapper .chart {
+  display: flex;
+  gap: 20px;
+  margin: 49px 0;
+}
+.bestOfDecentralizedFinanceBlockWrapper .chart img:first-child {
+  width: 60%;
+}
+.bestOfDecentralizedFinanceBlockWrapper .chart img:last-child {
+  width: 35%;
+}
+@media (min-width: 532px) {
+  .bestOfDecentralizedFinanceBlockWrapper .chart img:first-child {
+    width: 60%;
+  }
+  .bestOfDecentralizedFinanceBlockWrapper .chart img:last-child {
+    width: 35%;
+  }
+}
+@media (min-width: 745px) {
+  .bestOfDecentralizedFinanceBlockWrapper .chart img:first-child {
+    width: 55%;
+  }
+  .bestOfDecentralizedFinanceBlockWrapper .chart img:last-child {
+    width: 40%;
+  }
+}
+.bestOfDecentralizedFinanceBlockWrapper .ui {
+  margin: 49px 0 0;
+}
+.bestOfDecentralizedFinanceBlockWrapper .protocols {
+  margin: 50px auto 0 auto;
+  text-align: center;
+}
+
+.gradientLeftBox {
+  background: linear-gradient(180deg, rgba(28, 28, 28, 0.2) 0%, rgba(175, 20, 92, 0.1) 79.63%, rgba(190, 0, 89, 0.2) 100%);
+}
+
+.gradientCenterBox {
+  background: linear-gradient(178.55deg, rgba(28, 28, 28, 0.2) 13.48%, rgba(175, 20, 92, 0.1) 57.02%, rgba(28, 28, 28, 0.2) 100.56%);
+}
+
+.gradientRightBox {
+  background: linear-gradient(180deg, rgba(28, 28, 28, 0.2) 0%, rgba(175, 20, 92, 0.1) 79.63%, rgba(190, 0, 89, 0.2) 100%);
+}

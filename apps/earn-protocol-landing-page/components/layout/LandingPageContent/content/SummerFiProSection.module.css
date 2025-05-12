@@ -1,0 +1,107 @@
+.summerFiProSectionHeaderWrapper {
+  text-align: center;
+  padding: 0 var(--spacing-space-small);
+}
+@media (min-width: 532px) {
+  .summerFiProSectionHeaderWrapper {
+    padding: 0 var(--spacing-space-2x-large);
+  }
+}
+@media (min-width: 1026px) {
+  .summerFiProSectionHeaderWrapper {
+    padding: 0 var(--spacing-space-3x-large);
+  }
+}
+@media (min-width: 1280px) {
+  .summerFiProSectionHeaderWrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+}
+
+.summerFiProSectionHeader {
+  font-weight: 600;
+}
+.summerFiProSectionHeader > span {
+  font-weight: 600;
+}
+
+.summerFiProSectionBlockWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-medium);
+  padding: 0;
+  margin: 0 auto;
+  margin-top: 48px;
+  border-radius: var(--radius-roundish);
+  max-width: 1057px;
+}
+@media (min-width: 532px) {
+  .summerFiProSectionBlockWrapper {
+    padding: 0 var(--spacing-space-2x-large);
+  }
+}
+@media (min-width: 1280px) {
+  .summerFiProSectionBlockWrapper {
+    padding: 0;
+  }
+}
+
+.summerFiProSectionCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-space-x-large);
+  gap: var(--spacing-space-x-large);
+}
+@media (min-width: 532px) {
+  .summerFiProSectionCard {
+    flex-direction: row;
+    gap: var(--spacing-space-2x-large);
+  }
+}
+.summerFiProSectionCard .summerFiProSectionCardDetails {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 6px;
+}
+.summerFiProSectionCard .summerFiProSectionCardDetails > h5 {
+  font-weight: 600;
+}
+.summerFiProSectionCard .summerFiProSectionCardDetailsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-large);
+  margin-top: var(--spacing-space-small);
+}
+@media (min-width: 532px) {
+  .summerFiProSectionCard .summerFiProSectionCardDetailsList {
+    flex-direction: row;
+  }
+}
+.summerFiProSectionCard .summerFiProSectionCardDetailsList > span {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  gap: var(--spacing-space-x-small);
+  white-space: nowrap;
+}
+.summerFiProSectionCard .summerFiProSectionCardCta {
+  margin-right: 15px;
+  white-space: nowrap;
+}
+.summerFiProSectionCard .summerFiProSectionCardCta a {
+  color: var(--earn-protocol-primary-100);
+}
+
+.summerFiProSectionBottomLink {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--spacing-space-x-large);
+}
+.summerFiProSectionBottomLink a {
+  color: var(--earn-protocol-primary-100);
+}

@@ -18,7 +18,7 @@ import {
 import { climbersCount } from '@/constants/leaderboard'
 import { trackButtonClick, trackEvent } from '@/helpers/mixpanel'
 
-import topClimbersStyles from './TopClimbers.module.scss'
+import topClimbersStyles from './TopClimbers.module.css'
 
 export const TopClimbers = ({
   topClimbers,

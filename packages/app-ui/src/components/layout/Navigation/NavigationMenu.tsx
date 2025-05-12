@@ -11,7 +11,7 @@ import { NavigationMenuDropdown } from '@/components/layout/Navigation/Navigatio
 import { NavigationMenuLink } from '@/components/layout/Navigation/NavigationMenuLink'
 import { NavigationMenuPanel } from '@/components/layout/Navigation/NavigationMenuPanel'
 
-import navigationMenuStyles from '@/components/layout/Navigation/NavigationMenu.module.scss'
+import navigationMenuStyles from '@/components/layout/Navigation/NavigationMenu.module.css'
 
 interface NavigationMenuProps extends WithNavigationModules {
   currentPath: string

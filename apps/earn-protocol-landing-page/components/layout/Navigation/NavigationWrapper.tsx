@@ -5,7 +5,7 @@ import { Button, getNavigationItems, Navigation } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-import navigationWrapperStyles from './NavigationWrapper.module.scss'
+import navigationWrapperStyles from './NavigationWrapper.module.css'
 
 export const NavigationWrapper: FC = () => {
   const currentPath = usePathname()

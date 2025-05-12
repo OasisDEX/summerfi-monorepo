@@ -1,7 +1,7 @@
 import { type FC, type PropsWithChildren } from 'react'
 import { Icon, LinkCard, type LinkCardWithIcon } from '@summerfi/app-earn-ui'
 
-import classNames from './CryptoUtilitiesBasics.module.scss'
+import classNames from './CryptoUtilitiesBasics.module.css'
 
 const IconWrapper: FC<PropsWithChildren> = ({ children }) => (
   <div className={classNames.iconWrapper}>{children}</div>

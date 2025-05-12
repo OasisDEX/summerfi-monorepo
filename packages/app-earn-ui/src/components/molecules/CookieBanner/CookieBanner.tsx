@@ -17,7 +17,7 @@ import {
   type SelectedAnalyticsCookies,
 } from './config'
 
-import classNames from './CookieBanner.module.scss'
+import classNames from './CookieBanner.module.css'
 
 function initSelectedCookies(defaultValue: boolean): SelectedAnalyticsCookies {
   return ANALYTICS_COOKIE_NAMES.reduce(

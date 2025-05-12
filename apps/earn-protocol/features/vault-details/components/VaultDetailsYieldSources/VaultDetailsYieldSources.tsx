@@ -10,7 +10,7 @@ import {
 } from '@/features/vault-details/components/VaultDetailsYieldSources/config'
 import { yieldSourcesMapper } from '@/features/vault-details/components/VaultDetailsYieldSources/mapper'
 
-import classNames from './VaultDetailsYieldSources.module.scss'
+import classNames from './VaultDetailsYieldSources.module.css'
 
 interface LegendItemProps {
   label: string

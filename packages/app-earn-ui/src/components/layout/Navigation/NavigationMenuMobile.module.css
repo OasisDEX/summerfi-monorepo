@@ -1,0 +1,88 @@
+.topBar {
+  display: flex;
+  position: sticky;
+  top: 0;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-bottom: var(--general-space-24);
+}
+.topBar .logoSmall {
+  width: 25px;
+  display: inline;
+}
+.topBar .gradientOuterCircle {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  padding: 0;
+  background-color: var(--earn-protocol-neutral-85);
+}
+.topBar .gradientInnerCircle {
+  background-image: var(--gradient-earn-protocol-dark);
+  content: "";
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  z-index: -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spacer {
+  height: 1px;
+  width: calc(100% + 64px);
+  background-color: var(--earn-protocol-neutral-80);
+  margin: 0 -32px;
+}
+
+.linksListWrapper {
+  overflow-y: auto;
+  max-height: 70vh;
+  margin-top: var(--general-space-12);
+}
+
+.linksList {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  row-gap: var(--general-space-16);
+}
+.linksList > a {
+  color: var(--earn-protocol-secondary-40);
+  padding-bottom: 0;
+}
+.linksList > p,
+.linksList > a {
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  padding-left: 0;
+}
+.linksList > p:last-child,
+.linksList > a:last-child {
+  border-bottom: none;
+}
+.linksList .activeLink {
+  color: var(--earn-protocol-primary-100);
+}
+
+.actionsWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-x-small);
+}
+
+.buttonWrapper {
+  width: 100%;
+}
+
+.walletConnectionComponent {
+  margin-top: var(--general-space-20);
+  padding-top: var(--general-space-20);
+  border-top: 1px solid var(--earn-protocol-neutral-80);
+}

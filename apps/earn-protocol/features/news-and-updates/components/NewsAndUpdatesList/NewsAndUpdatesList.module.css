@@ -1,0 +1,24 @@
+.wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: var(--general-space-16);
+  border-bottom: 1px solid var(--earn-protocol-neutral-70);
+  padding: var(--general-space-16) var(--general-space-12);
+}
+.wrapper .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--earn-protocol-primary-40);
+  transition: background-color ease-out 0.2s;
+}
+.wrapper:hover .dot {
+  background-color: var(--earn-protocol-primary-100);
+  transition: background-color ease-out 0.2s;
+}
+.wrapper .content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-8);
+}

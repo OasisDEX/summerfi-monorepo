@@ -1,7 +1,7 @@
 import { resolve } from 'path'
 import { defineConfig, createLogger } from 'vite'
 
-// generates typescript declaration files (just the js/ts, scss is done in package.json)
+// generates typescript declaration files (just the js/ts, css is done in package.json)
 import UnpluginIsolatedDecl from 'unplugin-isolated-decl/vite'
 // compresses svgs (around 40-50% reduction with no build time increase)
 import react from '@vitejs/plugin-react'

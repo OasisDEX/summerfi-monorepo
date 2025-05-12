@@ -4,7 +4,7 @@ import { Button } from '@/components/atoms/Button/Button'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { LoadingSpinner } from '@/components/molecules/Loader/Loader'
 
-import navigationActionStyles from '@/components/layout/Navigation/NavigationActions.module.scss'
+import navigationActionStyles from '@/components/layout/Navigation/NavigationActions.module.css'
 
 interface NavigationActionsProps {
   walletConnectionComponent?: React.ReactNode

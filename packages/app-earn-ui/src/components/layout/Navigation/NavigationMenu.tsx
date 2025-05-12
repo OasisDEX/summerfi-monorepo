@@ -7,7 +7,7 @@ import { Icon } from '@/components/atoms/Icon/Icon'
 import { type EarnNavigationProps } from '@/components/layout/Navigation/Navigation'
 import { NavigationItems } from '@/components/layout/Navigation/NavigationItems'
 
-import navigationMenuStyles from '@/components/layout/Navigation/NavigationMenu.module.scss'
+import navigationMenuStyles from '@/components/layout/Navigation/NavigationMenu.module.css'
 
 type NavigationMenuType = {
   links: EarnNavigationProps['links']

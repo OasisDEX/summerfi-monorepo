@@ -8,7 +8,7 @@ import {
 import { capitalize } from 'lodash-es'
 import { type Chain } from 'viem'
 
-import styles from './TransactionDetails.module.scss'
+import styles from './TransactionDetails.module.css'
 
 interface TransactionDetailsProps {
   loading: boolean

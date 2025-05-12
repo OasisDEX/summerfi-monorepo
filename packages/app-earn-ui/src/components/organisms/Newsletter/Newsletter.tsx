@@ -9,7 +9,7 @@ import { Text } from '@/components/atoms/Text/Text'
 import { WithArrow } from '@/components/atoms/WithArrow/WithArrow.tsx'
 import { LoadingSpinner } from '@/components/molecules/LoadingSpinner/LoadingSpinner'
 
-import newsletterStyles from '@/components/organisms/Newsletter/Newsletter.module.scss'
+import newsletterStyles from '@/components/organisms/Newsletter/Newsletter.module.css'
 
 type NewsletterStatus = 'initial' | 'loading' | 'success' | 'error'
 

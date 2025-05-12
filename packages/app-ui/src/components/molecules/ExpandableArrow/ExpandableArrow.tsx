@@ -1,4 +1,4 @@
-import expandableArrowStyles from './ExpandableArrow.module.scss'
+import expandableArrowStyles from './ExpandableArrow.module.css'
 
 type ArrowDirectionType = 'up' | 'down'
 

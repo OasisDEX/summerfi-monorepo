@@ -4,7 +4,7 @@ import { type TOSState, TOSStatus } from '@summerfi/app-types'
 import { Button } from '@/components/atoms/Button/Button'
 import { Text } from '@/components/atoms/Text/Text'
 
-import tosButtonsStyles from '@/components/organisms/TOSButtons/TOSButtons.module.scss'
+import tosButtonsStyles from '@/components/organisms/TOSButtons/TOSButtons.module.css'
 
 const withDisconnectButtonStep = [
   TOSStatus.WAITING_FOR_ACCEPTANCE,

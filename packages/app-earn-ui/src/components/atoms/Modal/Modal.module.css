@@ -1,0 +1,23 @@
+.dialog {
+  border: unset;
+  padding: unset;
+  background: unset;
+  outline: none;
+  position: relative;
+  overflow: visible;
+}
+.dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+.dialog .closeButton {
+  position: absolute;
+  top: 23px;
+  right: 15px;
+  height: 30px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.dialog .closeButton:hover {
+  opacity: 0.7;
+  transition: opacity 0.2s ease-out;
+}

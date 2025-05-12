@@ -14,7 +14,7 @@ import Link from 'next/link'
 
 import { isOutsideLink } from '@/helpers/is-outside-link'
 
-import classNames from './SumrRaysRewards.module.scss'
+import classNames from './SumrRaysRewards.module.css'
 
 interface SumrRaysRewardsContentProps {
   icon: { iconName: IconNamesList; size?: number }

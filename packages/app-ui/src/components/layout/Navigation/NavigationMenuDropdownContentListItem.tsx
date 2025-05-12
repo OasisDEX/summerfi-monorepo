@@ -5,7 +5,7 @@ import clsx from 'clsx'
 import { Text } from '@/components/atoms/Text/Text'
 import { NavigationMenuDropdownContentIcon } from '@/components/layout/Navigation/NavigationMenuDropdownContentIcon'
 
-import navigationMenuDropdownContentListItemStyles from './NavigationMenuDropdownContentListItem.module.scss'
+import navigationMenuDropdownContentListItemStyles from './NavigationMenuDropdownContentListItem.module.css'
 
 type NavigationMenuDropdownContentListItemProps = {
   onClick?: () => void

@@ -12,7 +12,7 @@ import { getAtomClassList } from '@/components/atoms/getAtomClassList'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 
-import inputStyles, { type ClassNames } from '@/components/atoms/Input/Input.module.scss'
+import inputStyles, { type ClassNames } from '@/components/atoms/Input/Input.module.css'
 
 export const Input: FC<
   DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> & {

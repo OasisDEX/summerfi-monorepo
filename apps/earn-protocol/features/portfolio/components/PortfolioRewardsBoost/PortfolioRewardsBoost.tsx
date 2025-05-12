@@ -1,7 +1,7 @@
 import { BonusLabel, Card, Text, WithArrow } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
-import classNames from './PortfolioRewardsBoost.module.scss'
+import classNames from './PortfolioRewardsBoost.module.css'
 
 const boostCards = [
   {

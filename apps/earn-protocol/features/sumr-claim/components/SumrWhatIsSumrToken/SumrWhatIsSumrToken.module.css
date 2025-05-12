@@ -1,0 +1,55 @@
+.container {
+  max-width: 100%;
+  margin: 0 auto;
+}
+@media (min-width: 1280px) {
+  .container {
+    margin: 0;
+  }
+}
+
+.sumrWhatIsSumrTokenWrapper {
+  margin-top: var(--general-space-128);
+  flex-direction: column;
+}
+.sumrWhatIsSumrTokenWrapper .content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--general-space-64);
+  padding: var(--general-space-8);
+}
+@media (min-width: 745px) {
+  .sumrWhatIsSumrTokenWrapper .content {
+    padding: var(--general-space-32);
+    grid-template-columns: 1fr;
+  }
+}
+@media (min-width: 1026px) {
+  .sumrWhatIsSumrTokenWrapper .content {
+    grid-template-columns: auto 1fr;
+  }
+}
+@media (min-width: 1280px) {
+  .sumrWhatIsSumrTokenWrapper .content {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--general-space-64);
+  }
+}
+.sumrWhatIsSumrTokenWrapper .content .textual {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 513px;
+  flex: 1;
+  margin-top: var(--general-space-12);
+}
+@media (min-width: 768px) {
+  .sumrWhatIsSumrTokenWrapper .content .textual {
+    margin: 0 70px;
+  }
+}
+.sumrWhatIsSumrTokenWrapper .content .textual .actionable {
+  min-width: unset;
+  gap: 12px;
+}

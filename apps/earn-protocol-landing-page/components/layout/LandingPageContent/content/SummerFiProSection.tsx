@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 import { Emphasis } from '@/components/layout/LandingPageContent/components/Emphasis'
 
-import summerFiProSectionStyles from '@/components/layout/LandingPageContent/content/SummerFiProSection.module.scss'
+import summerFiProSectionStyles from '@/components/layout/LandingPageContent/content/SummerFiProSection.module.css'
 
 const SummerFiProSectionBlock = ({
   tag,

@@ -5,7 +5,7 @@ import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip, type TooltipProps } 
 
 import { sumrOwnershipChartData } from '@/features/sumr-claim/components/SumrOwnership/config'
 
-import classNames from './SumrOwnership.module.scss'
+import classNames from './SumrOwnership.module.css'
 
 interface LegendItemProps {
   label: string

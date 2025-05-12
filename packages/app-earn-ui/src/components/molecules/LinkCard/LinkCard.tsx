@@ -7,7 +7,7 @@ import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
 
-import classNames from './LinkCard.module.scss'
+import classNames from './LinkCard.module.css'
 
 export interface LinkCardWithIconName {
   title: string

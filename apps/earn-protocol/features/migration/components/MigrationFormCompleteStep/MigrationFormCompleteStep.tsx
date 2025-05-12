@@ -3,7 +3,7 @@ import { IllustrationCircle, Text } from '@summerfi/app-earn-ui'
 import { type VaultApyData } from '@summerfi/app-types'
 import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
 
-import classNames from './MigrationFormCompleteStep.module.scss'
+import classNames from './MigrationFormCompleteStep.module.css'
 
 interface MigrationFormCompleteStepProps {
   vaultTokenSymbol: string

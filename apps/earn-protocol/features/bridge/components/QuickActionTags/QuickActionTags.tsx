@@ -1,7 +1,7 @@
 'use client'
 import { type TagOption, TagRow } from '@summerfi/app-earn-ui'
 
-import styles from './QuickActionTags.module.scss'
+import styles from './QuickActionTags.module.css'
 
 interface QuickActionTagsProps {
   selectedValue: number | null

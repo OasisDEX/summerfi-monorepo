@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Emphasis } from '@/components/layout/LandingPageContent/components/Emphasis'
 import sumrTokenBubbles from '@/public/img/landing-page/sumr-token_bubbles.svg'
 
-import sumrTokenStyles from '@/components/layout/LandingPageContent/content/SumrToken.module.scss'
+import sumrTokenStyles from '@/components/layout/LandingPageContent/content/SumrToken.module.css'
 
 export const SumrToken = () => {
   return (

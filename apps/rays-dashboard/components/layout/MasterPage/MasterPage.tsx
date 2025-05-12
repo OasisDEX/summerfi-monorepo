@@ -10,7 +10,7 @@ import { NewsletterWrapper } from '@/components/organisms/NewsletterWrapper/News
 import { basePath } from '@/helpers/base-path'
 import systemConfigHandler from '@/server-handlers/system-config'
 
-import masterPageStyles from './MasterPage.module.scss'
+import masterPageStyles from './MasterPage.module.css'
 
 interface MasterPageProps {
   // more to be implemented in the future

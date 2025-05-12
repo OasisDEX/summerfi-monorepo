@@ -7,8 +7,8 @@ import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 
-import titleWithIconStyles from './TitleWithIcon.module.scss'
-import { type ClassNames as TextVariants } from '@/components/atoms/Text/Text.module.scss'
+import titleWithIconStyles from './TitleWithIcon.module.css'
+import { type ClassNames as TextVariants } from '@/components/atoms/Text/Text.module.css'
 
 type TitleWithIconProps = {
   title: ReactNode

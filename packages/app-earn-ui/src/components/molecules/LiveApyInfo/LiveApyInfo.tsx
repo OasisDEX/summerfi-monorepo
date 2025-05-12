@@ -2,7 +2,7 @@ import { type ReactNode } from 'react'
 
 import { Text } from '@/components/atoms/Text/Text'
 
-import liveApyInfoStyles from './LiveApyInfo.module.scss'
+import liveApyInfoStyles from './LiveApyInfo.module.css'
 
 export const LiveApyInfo = ({
   apyCurrent,

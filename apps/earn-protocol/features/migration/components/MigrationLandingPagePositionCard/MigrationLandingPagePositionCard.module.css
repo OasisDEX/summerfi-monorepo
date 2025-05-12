@@ -1,0 +1,60 @@
+.migrationLandingPagePositionCardWrapper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  gap: var(--general-space-16);
+  width: 100%;
+  flex-wrap: wrap;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+@media (min-width: 768px) {
+  .migrationLandingPagePositionCardWrapper {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+.migrationLandingPagePositionCardWrapper:hover {
+  transition: background-color 0.3s ease;
+  background-color: var(--earn-protocol-neutral-80);
+}
+.migrationLandingPagePositionCardWrapper .iconTextualWrapper {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  gap: var(--general-space-8);
+  width: 100%;
+}
+.migrationLandingPagePositionCardWrapper .iconTextualWrapper .iconValueWrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--general-space-8);
+}
+.migrationLandingPagePositionCardWrapper .iconTextualWrapper .iconValueWrapper .valuePlatformWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.migrationLandingPagePositionCardWrapper .dataBlocksWrapper {
+  flex: 1;
+  display: flex;
+  justify-content: space-around;
+  gap: var(--general-space-16);
+  flex-wrap: wrap;
+}
+.migrationLandingPagePositionCardWrapper .positionCardHeaderIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--earn-protocol-neutral-90);
+  border: 1px solid var(--earn-protocol-neutral-70);
+  border-radius: var(--general-radius-50);
+  width: 32px;
+  height: 32px;
+}
+.migrationLandingPagePositionCardWrapper .positionCardHeaderIconActive {
+  background-color: var(--earn-protocol-success-10);
+  border: 1px solid var(--earn-protocol-success-50);
+}

@@ -10,7 +10,7 @@ import { LiveApyInfo } from '@/components/molecules/LiveApyInfo/LiveApyInfo'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { useHoldAlt } from '@/hooks/use-hold-alt'
 
-import styles from './BonusLabel.module.scss'
+import styles from './BonusLabel.module.css'
 
 export const BonusLabel = ({
   tokenBonus,

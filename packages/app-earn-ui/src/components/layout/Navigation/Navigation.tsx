@@ -14,7 +14,7 @@ import {
 } from '@/components/molecules/MobileDrawer/MobileDrawer'
 import { useMobileCheck } from '@/hooks/use-mobile-check'
 
-import navigationStyles from '@/components/layout/Navigation/Navigation.module.scss'
+import navigationStyles from '@/components/layout/Navigation/Navigation.module.css'
 
 export interface EarnNavigationProps {
   currentPath: string
@@ -56,15 +56,23 @@ export const Navigation: FC<EarnNavigationProps> = ({
   const [tempCurrentPath, setTempCurrentPath] = useState(currentPath)
   const [mobileMenuOpened, setMobileMenuOpened] = useState(false)
   const { isMobile, isTablet } = useMobileCheck()
-  const defaultBodyOverflow = useMemo(() => document.body.style.overflow, [])
+  const defaultBodyOverflow = useMemo(() => {
+    if (typeof document !== 'undefined') {
+      return document.body.style.overflow
+    }
+
+    return undefined
+  }, [])
 
   const toggleMobileMenu = () => {
     const nextValue = !mobileMenuOpened
 
     if (nextValue) {
       // mobile menu
-      document.body.style.overflow = 'hidden'
-    } else {
+      if (typeof document !== 'undefined') {
+        document.body.style.overflow = 'hidden'
+      }
+    } else if (typeof document !== 'undefined' && defaultBodyOverflow) {
       document.body.style.overflow = defaultBodyOverflow
     }
     setMobileMenuOpened(!mobileMenuOpened)
@@ -74,7 +82,9 @@ export const Navigation: FC<EarnNavigationProps> = ({
     if (tempCurrentPath !== currentPath) {
       setTempCurrentPath(currentPath)
       setMobileMenuOpened(false)
-      document.body.style.overflow = defaultBodyOverflow
+      if (defaultBodyOverflow) {
+        document.body.style.overflow = defaultBodyOverflow
+      }
     }
   }, [currentPath, tempCurrentPath, defaultBodyOverflow])
 

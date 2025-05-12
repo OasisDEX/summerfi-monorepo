@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 import { Emphasis } from '@/components/layout/LandingPageContent/components/Emphasis'
 
-import buildBySummerFiStyles from '@/components/layout/LandingPageContent/content/BuildBySummerFi.module.scss'
+import buildBySummerFiStyles from '@/components/layout/LandingPageContent/content/BuildBySummerFi.module.css'
 
 const StatBlock = ({ title, value }: { title: string; value: string }) => {
   return (

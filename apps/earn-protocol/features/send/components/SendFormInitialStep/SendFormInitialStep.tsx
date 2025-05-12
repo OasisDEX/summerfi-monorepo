@@ -7,7 +7,7 @@ import type BigNumber from 'bignumber.js'
 import { type SendReducerAction, type SendState, SendTxStatuses } from '@/features/send/types'
 import { isValidAddress } from '@/helpers/is-valid-address'
 
-import classNames from './SendFormInitialStep.module.scss'
+import classNames from './SendFormInitialStep.module.css'
 
 interface SendFormInitialStepProps {
   amountDisplay: string

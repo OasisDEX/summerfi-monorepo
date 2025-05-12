@@ -3,8 +3,8 @@ import { type CSSProperties, type FC, type ReactNode, useRef, useState } from 'r
 
 import { Text } from '@/components/atoms/Text/Text'
 
-import styles from './TabBar.module.scss'
-import { type ClassNames as TextClassNames } from '@/components/atoms/Text/Text.module.scss'
+import styles from './TabBar.module.css'
+import { type ClassNames as TextClassNames } from '@/components/atoms/Text/Text.module.css'
 
 interface Tab {
   id: string

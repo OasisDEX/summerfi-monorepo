@@ -25,7 +25,7 @@ import { trackButtonClick } from '@/helpers/mixpanel'
 import { useTabStateQuery } from '@/hooks/use-tab-state'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
-import classNames from './PortfolioPageView.module.scss'
+import classNames from './PortfolioPageView.module.css'
 
 interface PortfolioPageViewProps {
   walletAddress: string

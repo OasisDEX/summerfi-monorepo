@@ -14,7 +14,7 @@ import {
 } from '@/features/send/types'
 import { isValidAddress } from '@/helpers/is-valid-address'
 
-import classNames from './SendFormContent.module.scss'
+import classNames from './SendFormContent.module.css'
 
 interface SendFormContentProps {
   amountDisplay: string

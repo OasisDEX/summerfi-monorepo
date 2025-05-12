@@ -9,7 +9,7 @@ import BigNumber from 'bignumber.js'
 import { AnimatedNumber } from '@/components/molecules/AnimatedNumber/AnimatedNumber'
 import { ModalButton, type ModalButtonProps } from '@/components/molecules/Modal/ModalButton'
 
-import calculatorModalStyles from './CalculatorModal.module.scss'
+import calculatorModalStyles from './CalculatorModal.module.css'
 
 const cleanInputValue = (value: string) => `${value}`.replace('$', '').trim()
 

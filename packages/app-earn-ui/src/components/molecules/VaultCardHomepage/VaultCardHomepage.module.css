@@ -1,0 +1,82 @@
+.vaultCardHomepageWrapper {
+  display: flex;
+  width: 500px;
+  background-color: #1e1e1e;
+  transition: background-color 0.3s ease-in-out;
+  padding: var(--general-space-32);
+}
+@media (max-width: 530px) {
+  .vaultCardHomepageWrapper {
+    width: calc(100vw - var(--general-space-8) * 2);
+    padding: var(--general-space-24);
+  }
+}
+
+.vaultCardHomepageWrapperSelected {
+  background-color: #232323;
+}
+
+.vaultCardHomepageContentWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-32);
+  opacity: 0.3;
+  transition: opacity 0.3s ease-in-out;
+  width: 100%;
+}
+
+.vaultCardHomepageContentWrapperSelected {
+  opacity: 1;
+}
+
+.vaultCardHomepageTitleWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.vaultCardHomepageDatablocksWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--general-space-32);
+  width: 100%;
+}
+
+.vaultCardHomepageDataRow {
+  display: flex;
+  gap: var(--general-space-24);
+  width: 100%;
+}
+@media (max-width: 530px) {
+  .vaultCardHomepageDataRow {
+    gap: var(--general-space-24);
+  }
+}
+.vaultCardHomepageDataRow .dataPrimary {
+  width: 250px;
+}
+@media (max-width: 530px) {
+  .vaultCardHomepageDataRow .dataPrimary {
+    width: 187px;
+  }
+}
+@media (max-width: 530px) {
+  .vaultCardHomepageDataRow .dataBlockDesktop {
+    display: none;
+  }
+}
+@media (min-width: 532px) {
+  .vaultCardHomepageDataRow .dataBlockMobile {
+    display: none;
+  }
+}
+.vaultCardHomepageDataRow .dataSecondary {
+  width: 160px;
+}
+@media (max-width: 530px) {
+  .vaultCardHomepageDataRow .dataSecondary {
+    width: 92px;
+  }
+}

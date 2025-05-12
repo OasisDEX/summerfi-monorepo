@@ -5,7 +5,7 @@ import { type TOSState } from '@summerfi/app-types'
 import { TOSButtons } from '@/components/organisms/TOSButtons/TOSButtons'
 import { TOSContent } from '@/components/organisms/TOSContent/TOSContent'
 
-import termsOfServiceStyles from '@/components/organisms/TermsOfService/TermsOfService.module.scss'
+import termsOfServiceStyles from '@/components/organisms/TermsOfService/TermsOfService.module.css'
 
 interface TermsOfServiceProps {
   tosState: TOSState

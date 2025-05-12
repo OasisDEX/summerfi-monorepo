@@ -5,7 +5,7 @@ import type BigNumber from 'bignumber.js'
 import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { InputWithDropdown } from '@/components/molecules/InputWithDropdown/InputWithDropdown'
 
-import constrolsDepositWithdrawStyles from './ControlsDepositWithdraw.module.scss'
+import constrolsDepositWithdrawStyles from './ControlsDepositWithdraw.module.css'
 
 type ControlsDepositWithdrawProps = {
   amountDisplay: string

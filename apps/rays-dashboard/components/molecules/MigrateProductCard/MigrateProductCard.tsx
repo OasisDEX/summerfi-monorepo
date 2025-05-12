@@ -14,7 +14,7 @@ import { MigrateProductCardTitle } from '@/components/molecules/MigrateProductCa
 import { networksByChainId } from '@/constants/networks-list'
 import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
 
-import migrateProductCardStyles from '@/components/molecules/MigrateProductCard/MigrateProductCard.module.scss'
+import migrateProductCardStyles from '@/components/molecules/MigrateProductCard/MigrateProductCard.module.css'
 
 interface MigrateProductCardProps {
   migration: PortfolioMigrations['migrationsV2'][number]

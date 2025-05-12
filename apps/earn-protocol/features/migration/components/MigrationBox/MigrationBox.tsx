@@ -7,7 +7,7 @@ import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { MigrationPositionCard } from '@/features/migration/components/MigrationPositionCard/MigrationPositionCard'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 
-import classNames from './MigrationBox.module.scss'
+import classNames from './MigrationBox.module.css'
 
 interface MigrationBoxProps {
   title?: string

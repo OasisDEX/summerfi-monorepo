@@ -8,7 +8,7 @@ import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { Text } from '@/components/atoms/Text/Text'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 
-import classNames from './OrderInformation.module.scss'
+import classNames from './OrderInformation.module.css'
 
 type OrderInformationItem = {
   label: string

@@ -4,7 +4,7 @@ import { type CSSProperties, type FC, type ReactNode, useCallback, useState } fr
 import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
 import { Icon, type IconVariant } from '@/components/atoms/Icon/Icon'
 
-import styles from './Expander.module.scss'
+import styles from './Expander.module.css'
 
 interface ExpanderProps {
   title: ReactNode

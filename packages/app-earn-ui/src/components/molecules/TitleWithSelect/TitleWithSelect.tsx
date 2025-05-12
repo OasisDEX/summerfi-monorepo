@@ -9,7 +9,7 @@ import { Text } from '@/components/atoms/Text/Text'
 import { Dropdown } from '@/components/molecules/Dropdown/Dropdown'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 
-import titleWithSelectStyles from '@/components/molecules/TitleWithSelect/TitleWithSelect.module.scss'
+import titleWithSelectStyles from '@/components/molecules/TitleWithSelect/TitleWithSelect.module.css'
 
 interface DropdownItemProps {
   option: DropdownOption

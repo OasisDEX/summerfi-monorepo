@@ -52,7 +52,7 @@ import { usePosition } from '@/hooks/use-position'
 import { useTokenBalances } from '@/hooks/use-tokens-balances'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
-import vaultsListViewStyles from './VaultsListView.module.scss'
+import vaultsListViewStyles from './VaultsListView.module.css'
 
 type VaultsListViewProps = {
   vaultsList: SDKVaultsListType

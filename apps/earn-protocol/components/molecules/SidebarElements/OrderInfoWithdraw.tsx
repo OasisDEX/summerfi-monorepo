@@ -8,7 +8,7 @@ import { formatCryptoBalance, formatFiatBalance, formatPercent } from '@summerfi
 import { type IToken, TransactionType } from '@summerfi/sdk-common'
 import type BigNumber from 'bignumber.js'
 
-import orderInfoDepositWithdrawStyles from './OrderInfoDepositWithdraw.module.scss'
+import orderInfoDepositWithdrawStyles from './OrderInfoDepositWithdraw.module.css'
 
 type OrderInfoWithdrawProps = {
   transaction: TransactionWithStatus

@@ -38,7 +38,7 @@ import {
   useTimeframes,
 } from '@/hooks/use-timeframes'
 
-import portfolioOverviewStyles from './PortfolioOverview.module.scss'
+import portfolioOverviewStyles from './PortfolioOverview.module.css'
 
 const getDatablocks = ({
   totalSummerPortfolioUSD,

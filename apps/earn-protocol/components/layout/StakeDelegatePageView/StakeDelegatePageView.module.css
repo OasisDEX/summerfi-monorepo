@@ -1,0 +1,36 @@
+.stakeDelegatePageWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--general-space-16);
+  max-width: 1072px;
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .stakeDelegatePageWrapper {
+    padding: 0;
+  }
+}
+.stakeDelegatePageWrapper .stakeDelegateHeaderWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  margin-bottom: var(--general-space-24);
+  width: 100%;
+}
+.stakeDelegatePageWrapper .stakeDelegateHeaderWrapper .pathLinkWrapper {
+  display: flex;
+  gap: var(--general-space-8);
+  margin-bottom: var(--general-space-12);
+}
+.stakeDelegatePageWrapper .stakeDelegateForm {
+  width: 100%;
+  flex-direction: column;
+}
+.stakeDelegatePageWrapper .stakeDelegateForm .separator {
+  margin: var(--general-space-32) 0;
+  width: calc(100% + 48px);
+  border-bottom: 1px solid var(--earn-protocol-neutral-100);
+}

@@ -4,7 +4,7 @@ import clsx from 'clsx'
 
 import { NavigationMenuDropdownContent } from '@/components/layout/Navigation/NavigationMenuDropdownContent'
 
-import navigationMenuDropdownStyles from './NavigationMenuDropdown.module.scss'
+import navigationMenuDropdownStyles from './NavigationMenuDropdown.module.css'
 
 export interface NavigationMenuDropdownProps extends WithNavigationModules {
   arrowPosition: number

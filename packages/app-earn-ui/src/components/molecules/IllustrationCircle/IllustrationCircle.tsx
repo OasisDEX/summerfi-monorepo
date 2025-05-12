@@ -1,6 +1,6 @@
 import { Icon, type IconNamesList } from '@/components/atoms/Icon/Icon'
 
-import classNames from './IllustrationCircle.module.scss'
+import classNames from './IllustrationCircle.module.css'
 
 type IllustrationCircleSize = 'small' | 'medium' | 'large' | 'extraLarge'
 

@@ -1,0 +1,30 @@
+.historicalLegendWrapper {
+  margin-left: 0;
+}
+@media (min-width: 768px) {
+  .historicalLegendWrapper {
+    margin-left: 80px;
+  }
+}
+
+.historicalLegendItemWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.3rem;
+  margin-top: -5px;
+}
+.historicalLegendItemWrapper .historicalLegendItemTitle {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 7px;
+}
+.historicalLegendItemWrapper .historicalLegendItemValue {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 7px;
+  margin-left: 15px;
+  color: var(--color-text-primary);
+}

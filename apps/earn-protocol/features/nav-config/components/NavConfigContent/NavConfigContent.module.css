@@ -1,0 +1,48 @@
+.navConfigContent {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.navConfigContent button {
+  min-width: unset;
+}
+@media screen and (min-width: 768px) {
+  .navConfigContent {
+    min-width: 321px;
+  }
+}
+.navConfigContent .navConfigContentScrollable {
+  overflow-y: auto;
+  scrollbar-color: grey transparent;
+  scrollbar-width: thin;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 70vh;
+}
+.navConfigContent .navConfigContentScrollable .spacerHeader {
+  width: calc(100% + 48px);
+  margin-left: -24px;
+  margin-bottom: var(--general-space-24);
+  border-bottom: 1px solid var(--earn-protocol-neutral-100);
+}
+.navConfigContent .navConfigContentScrollable .spacerContent {
+  width: 100%;
+  margin-top: var(--general-space-12);
+  margin-bottom: var(--general-space-24);
+  border-bottom: 1px solid var(--earn-protocol-neutral-70);
+}
+.navConfigContent .navConfigContentScrollable .toggleWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--general-space-16);
+}
+.navConfigContent .navConfigContentScrollable .slippageOptionsWrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--general-space-12);
+  margin-bottom: var(--general-space-12);
+  flex-wrap: wrap;
+  gap: var(--general-space-8);
+}

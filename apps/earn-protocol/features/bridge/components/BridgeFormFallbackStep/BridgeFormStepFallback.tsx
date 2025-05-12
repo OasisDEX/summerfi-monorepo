@@ -4,7 +4,7 @@ import { redirect, useSearchParams } from 'next/navigation'
 
 import { type BridgeReducerAction, type BridgeState } from '@/features/bridge/types'
 
-import styles from './BridgeFormStepFallback.module.scss'
+import styles from './BridgeFormStepFallback.module.css'
 
 interface BridgeFormStepFallbackProps {
   state: BridgeState

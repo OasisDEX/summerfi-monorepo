@@ -1,0 +1,96 @@
+.navigationMenuDropdownContentListItemWrapper {
+  display: flex;
+  align-items: center;
+  column-gap: 12px;
+  line-height: 24px;
+}
+
+.navigationMenuDropdownContentListItem {
+  display: flex;
+  align-items: center;
+  column-gap: 2;
+}
+
+.starTransition {
+  transition: color 200ms;
+}
+
+.navigationMenuDropdownContentListItemTitleGradientaavev2::after, .navigationMenuDropdownContentListItemTitleGradientaavev3::after {
+  background-image: var(--gradient-protocol-aave);
+}
+.navigationMenuDropdownContentListItemTitleGradientajna::after {
+  background-image: var(--gradient-protocol-ajna);
+}
+.navigationMenuDropdownContentListItemTitleGradientmaker::after {
+  background-image: var(--gradient-protocol-maker);
+}
+.navigationMenuDropdownContentListItemTitleGradientmorphoblue::after {
+  background-image: var(--gradient-protocol-morpho-blue);
+}
+.navigationMenuDropdownContentListItemTitleGradientsparkv3::after {
+  background-image: var(--gradient-protocol-spark);
+}
+.navigationMenuDropdownContentListItemTitleGradientsky::after {
+  background-image: var(--gradient-protocol-sky);
+}
+
+.navigationMenuDropdownContentListItemTitle {
+  color: var(--color-primary-100);
+  position: relative;
+  transition: color 200ms;
+}
+.navigationMenuDropdownContentListItemTitle::after {
+  content: attr(data-value);
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 200ms;
+  background-clip: text;
+}
+
+.navigationMenuDropdownContentListItemDescription {
+  margin-top: var(--space-xs);
+  color: var(--color-neutral-80);
+}
+.navigationMenuDropdownContentListItemDescription em {
+  color: var(--color-primary-100);
+  font-style: normal;
+}
+
+.navigationMenuDropdownContentListItemTags {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.navigationMenuDropdownContentListItemTagsLi {
+  color: var(--color-neutral-80);
+  position: relative;
+}
+.navigationMenuDropdownContentListItemTagsLiNotFirst {
+  margin-left: var(--space-m);
+}
+.navigationMenuDropdownContentListItemTagsLiNotFirst::before {
+  content: "";
+  position: absolute;
+  top: var(--space-s);
+  left: -10px;
+  width: var(--space-xxs);
+  height: var(--space-xxs);
+  background-color: var(--color-neutral-80);
+  border-radius: var(--radius-circle);
+}
+.navigationMenuDropdownContentListItemTagsLiArrayTag {
+  transition: color 200ms;
+}
+.navigationMenuDropdownContentListItemTagsLiArrayTag::after {
+  content: attr(data-value);
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 200ms;
+  background-clip: text;
+}

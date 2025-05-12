@@ -1,0 +1,40 @@
+.vaultCard {
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.vaultCardSelected {
+  background: var(--earn-protocol-neutral-80);
+}
+
+.vaultCardHeaderWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: var(--general-space-24);
+  flex-wrap: wrap;
+  gap: var(--general-space-10);
+}
+
+.vaultBonusWrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.vaultCardAssetsWrapper {
+  display: flex;
+  gap: var(--general-space-16);
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.vaultCardAssetsWrapper .totalAssetsDisplay {
+  display: flex;
+  flex-direction: row;
+  gap: var(--general-space-10);
+  align-items: end;
+}

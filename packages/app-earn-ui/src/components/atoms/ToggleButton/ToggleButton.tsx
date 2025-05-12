@@ -3,8 +3,8 @@ import clsx from 'clsx'
 
 import { Text } from '@/components/atoms/Text/Text'
 
-import slideButtonStyles from './ToggleButton.module.scss'
-import { type ClassNames as TextVariants } from '@/components/atoms/Text/Text.module.scss'
+import slideButtonStyles from './ToggleButton.module.css'
+import { type ClassNames as TextVariants } from '@/components/atoms/Text/Text.module.css'
 
 type ToggleButtonProps = {
   title: string

@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { extname, relative, resolve } from 'path'
 import { createLogger, defineConfig } from 'vite'
 
-// generates typescript declaration files (just the js/ts, scss is done in package.json)
+// generates typescript declaration files (just the js/ts, css is done in package.json)
 import UnpluginIsolatedDecl from 'unplugin-isolated-decl/vite'
 // handles tsconfig paths from the tsconfig.json
 import tsconfigPaths from 'vite-tsconfig-paths'

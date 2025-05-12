@@ -1,0 +1,51 @@
+.bridgePageViewLoadingStateWrapper {
+  margin: 0 auto;
+  width: 100%;
+}
+@media (min-width: 532px) {
+  .bridgePageViewLoadingStateWrapper {
+    max-width: 455px;
+  }
+}
+
+.skeletonTitleSpacer {
+  border-bottom: 1px solid var(--earn-protocol-neutral-100);
+  width: calc(100% + 48px);
+  margin-left: -24px;
+  margin-right: -24px;
+}
+
+.skeletonTitleWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: var(--general-space-24) 0;
+  padding-top: 0;
+}
+
+.skeletonCta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-8);
+  width: 100%;
+}
+.skeletonCta a, .skeletonCta button {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.skeletonContent {
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--general-space-24);
+  gap: var(--general-space-24);
+}
+
+.skeletonCard {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}

@@ -8,7 +8,7 @@ import BigNumber from 'bignumber.js'
 import { networksByChainId } from '@/constants/networks-list'
 import { type LendingProtocolConfig } from '@/helpers/lending-protocols-configs'
 
-import migrateProductCardStyles from '@/components/molecules/MigrateProductCard/MigrateProductCard.module.scss'
+import migrateProductCardStyles from '@/components/molecules/MigrateProductCard/MigrateProductCard.module.css'
 
 const formatRaysPoints = (points: string | number) =>
   formatCryptoBalance(new BigNumber(Number(points).toFixed(0)))

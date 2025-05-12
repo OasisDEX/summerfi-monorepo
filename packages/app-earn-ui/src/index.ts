@@ -3,11 +3,11 @@ export { GlobalStyles } from './GlobalStyles'
 
 export { Box } from './components/atoms/Box/Box'
 export { Button } from './components/atoms/Button/Button'
-export { type ClassNames as ButtonClassNames } from './components/atoms/Button/Button.module.scss'
+export { type ClassNames as ButtonClassNames } from './components/atoms/Button/Button.module.css'
 
 export { Text } from './components/atoms/Text/Text'
 export { Card, type CardVariant } from './components/atoms/Card/Card'
-export { type ClassNames as TextClassNames } from './components/atoms/Text/Text.module.scss'
+export { type ClassNames as TextClassNames } from './components/atoms/Text/Text.module.css'
 
 export { Modal } from './components/atoms/Modal/Modal'
 export { Icon, type IconNamesList } from './components/atoms/Icon/Icon'

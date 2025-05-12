@@ -39,17 +39,6 @@ const nextConfig: (phase: string) => NextConfig = (phase) => ({
         }),
       }
     : {}),
-  sassOptions: {
-    prependData: `
-        @import './node_modules/include-media/dist/_include-media.scss';
-        $breakpoints: (
-          s: 531px,
-          m: 744px,
-          l: 1025px,
-          xl: 1279px,
-        );
-        `,
-  },
   redirects: function () {
     return Promise.resolve([
       // portfolio redirect

@@ -21,7 +21,7 @@ import { getDisplayToken } from '@/helpers/get-display-token'
 import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 
-import vaultCardHomepageStyles from './VaultCardHomepage.module.scss'
+import vaultCardHomepageStyles from './VaultCardHomepage.module.css'
 
 const DataBlock = ({
   title,

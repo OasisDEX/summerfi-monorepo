@@ -10,7 +10,7 @@ import { Text } from '@/components/atoms/Text/Text'
 import { OrderInformation } from '@/components/molecules/OrderInformation/OrderInformation'
 import { type EarningsEstimationsMap } from '@/helpers/get-earnings-estimations-map'
 
-import classNames from './ProjectedEarnings.module.scss'
+import classNames from './ProjectedEarnings.module.css'
 
 interface ProjectedEarningsExpandedProps {
   forecastSummaryMap: EarningsEstimationsMap

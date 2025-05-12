@@ -10,7 +10,7 @@ import {
 import { type SendState } from '@/features/send/types'
 import { isValidAddress } from '@/helpers/is-valid-address'
 
-import classNames from './SendFormOrderInformation.module.scss'
+import classNames from './SendFormOrderInformation.module.css'
 
 interface SendFormOrderInformationProps {
   state: SendState

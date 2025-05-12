@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 
-import boxStyles from './Box.module.scss'
+import boxStyles from './Box.module.css'
 
 export const Box = ({
   children,

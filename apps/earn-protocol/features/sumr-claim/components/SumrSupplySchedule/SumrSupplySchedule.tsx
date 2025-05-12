@@ -18,7 +18,7 @@ import {
   sumrSupplyScheduleDataNames,
 } from './config'
 
-import classNames from './SumrSupplySchedule.module.scss'
+import classNames from './SumrSupplySchedule.module.css'
 
 const Legend = () => {
   return (

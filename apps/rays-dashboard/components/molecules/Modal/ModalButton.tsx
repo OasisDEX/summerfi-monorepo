@@ -2,7 +2,7 @@ import { type PropsWithChildren, useState } from 'react'
 import { IconX } from '@tabler/icons-react'
 import { useToggle } from 'usehooks-ts'
 
-import modalButtonStyles from './ModalButton.module.scss'
+import modalButtonStyles from './ModalButton.module.css'
 
 export type ModalButtonProps = { onClick: () => void }
 

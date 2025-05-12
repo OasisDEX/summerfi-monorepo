@@ -9,7 +9,7 @@ import {
 import { CheckboxButton } from '@/components/atoms/CheckboxButton/CheckboxButton'
 import { Text } from '@/components/atoms/Text/Text'
 
-import tosWaitingForAcceptanceStyles from '@/components/organisms/TOSWaitingForAcceptance/TOSWaitingForAcceptance.module.scss'
+import tosWaitingForAcceptanceStyles from '@/components/organisms/TOSWaitingForAcceptance/TOSWaitingForAcceptance.module.css'
 
 interface TOSWaiting4AcceptanceProps {
   tosState: TOSWaitingForAcceptanceStep | TOSWaitingForAcceptanceUpdatedStep

@@ -2,7 +2,7 @@ import { type FC } from 'react'
 import { Icon, Text } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
-import styles from './CrossChainProviderNotice.module.scss'
+import styles from './CrossChainProviderNotice.module.css'
 
 export const CrossChainProviderNotice: FC = () => {
   return (

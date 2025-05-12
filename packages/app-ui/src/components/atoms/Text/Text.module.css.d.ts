@@ -1,0 +1,31 @@
+declare const styles: {
+  readonly "h1": string;
+  readonly "h1colorful": string;
+  readonly "h2": string;
+  readonly "h2colorful": string;
+  readonly "h3": string;
+  readonly "h3colorful": string;
+  readonly "h4": string;
+  readonly "h4colorful": string;
+  readonly "h5": string;
+  readonly "h5colorful": string;
+  readonly "hidden": string;
+  readonly "p1": string;
+  readonly "p1colorful": string;
+  readonly "p1semi": string;
+  readonly "p1semiColorful": string;
+  readonly "p2": string;
+  readonly "p2colorful": string;
+  readonly "p2semi": string;
+  readonly "p2semiColorful": string;
+  readonly "p3": string;
+  readonly "p3colorful": string;
+  readonly "p3semi": string;
+  readonly "p3semiColorful": string;
+  readonly "p4": string;
+  readonly "p4colorful": string;
+  readonly "p4semi": string;
+  readonly "p4semiColorful": string;
+};
+export = styles;
+

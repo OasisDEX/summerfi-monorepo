@@ -25,7 +25,7 @@ import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 import { useVisibleParagraph } from '@/hooks/use-visible-paragraph'
 
-import classNames from './ClaimDelegateAcceptanceStep.module.scss'
+import classNames from './ClaimDelegateAcceptanceStep.module.css'
 
 interface ClaimDelegateAcceptanceStepProps {
   state: ClaimDelegateState

@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react'
 
-import styles from '@/components/molecules/Table/Table.module.scss'
+import styles from '@/components/molecules/Table/Table.module.css'
 
 interface Column {
   title: ReactNode

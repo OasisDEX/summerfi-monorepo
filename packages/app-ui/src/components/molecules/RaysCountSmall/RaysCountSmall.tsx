@@ -8,7 +8,7 @@ import { Icon } from '@/components/atoms/Icon/Icon'
 import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { Text } from '@/components/atoms/Text/Text'
 
-import raysCountSmallStyles from './RaysCountSmall.module.scss'
+import raysCountSmallStyles from './RaysCountSmall.module.css'
 
 type RaysCountSmallProps = {
   userAddress?: string

@@ -1,0 +1,38 @@
+.container {
+  background: rgba(23, 23, 23, 0.95);
+  background: var(--gradient-earn-protocol-light-10);
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid var(--earn-protocol-primary-40);
+  max-height: unset;
+  width: 100%;
+  margin-top: var(--general-space-24);
+}
+@media (min-width: 532px) {
+  .container {
+    max-width: 455px;
+    width: 455px;
+    margin: var(--general-space-24) auto 0;
+  }
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  gap: var(--general-space-8);
+}
+
+.logoSection {
+  display: flex;
+}
+.logoSection .logo {
+  border-radius: 50%;
+}
+
+.textSection {
+  flex: 1;
+}
+
+.arrowSection .arrow {
+  color: rgba(255, 255, 255, 0.5);
+}

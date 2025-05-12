@@ -5,7 +5,7 @@ import Link from 'next/link'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
 import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
 
-import auditsStyles from '@/components/layout/LandingPageContent/content/Audits.module.scss'
+import auditsStyles from '@/components/layout/LandingPageContent/content/Audits.module.css'
 
 const AuditBlock = ({
   description,

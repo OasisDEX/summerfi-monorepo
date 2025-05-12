@@ -1,7 +1,7 @@
 import { type FC, type ReactNode } from 'react'
 import clsx from 'clsx'
 
-import bigGradientBoxStyles from './BigGradientBox.module.scss'
+import bigGradientBoxStyles from './BigGradientBox.module.css'
 
 export const BigGradientBox: FC<{
   reversed?: boolean

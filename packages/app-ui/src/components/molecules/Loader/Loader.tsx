@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 
-import loaderStyles from '@/components/molecules/Loader/Loader.module.scss'
+import loaderStyles from '@/components/molecules/Loader/Loader.module.css'
 
 const DEFAULT_SIZE = 24
 

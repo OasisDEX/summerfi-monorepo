@@ -1,0 +1,55 @@
+.sumrGovernanceWrapper {
+  margin-top: var(--general-space-128);
+}
+@media (min-width: 768px) {
+  .sumrGovernanceWrapper {
+    min-height: 740px;
+  }
+}
+.sumrGovernanceWrapper .sumrGovernanceContent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+.sumrGovernanceWrapper .sumrGovernanceContent h3 {
+  max-width: 100%;
+}
+@media (min-width: 532px) {
+  .sumrGovernanceWrapper .sumrGovernanceContent h3 {
+    max-width: 90%;
+  }
+}
+@media (min-width: 768px) {
+  .sumrGovernanceWrapper .sumrGovernanceContent {
+    min-width: 849px;
+  }
+}
+.sumrGovernanceWrapper .sumrGovernanceContent > p {
+  margin-bottom: var(--general-space-24);
+  color: var(--earn-protocol-secondary-40);
+}
+.sumrGovernanceWrapper .sumrGovernanceContent .customCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: var(--general-space-24);
+}
+.sumrGovernanceWrapper .sumrGovernanceContent .actionableWrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: var(--general-space-12);
+}
+.sumrGovernanceWrapper .sumrGovernanceContent .actionableWrapper > button {
+  min-width: unset;
+  height: 38px;
+  font-size: 14px;
+}
+@media (min-width: 532px) {
+  .sumrGovernanceWrapper .marketingDetailsCustomWrapper {
+    padding: var(--spacing-space-small);
+    padding-right: 0;
+    padding-left: 0;
+  }
+}

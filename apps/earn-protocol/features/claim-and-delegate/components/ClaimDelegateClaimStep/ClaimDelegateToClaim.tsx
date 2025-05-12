@@ -6,7 +6,7 @@ import clsx from 'clsx'
 
 import { networkSDKChainIdIconMap } from '@/constants/network-id-to-icon'
 
-import classNames from './ClaimDelegateClaimStep.module.scss'
+import classNames from './ClaimDelegateClaimStep.module.css'
 
 interface ClaimDelegateToClaimProps {
   earned: string

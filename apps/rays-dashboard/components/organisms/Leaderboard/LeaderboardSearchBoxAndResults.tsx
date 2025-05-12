@@ -11,7 +11,7 @@ import { basePath } from '@/helpers/base-path'
 import { trackInputChange } from '@/helpers/mixpanel'
 import { type FetchRaysReturnType } from '@/server-handlers/rays'
 
-import leaderboardSearchBoxAndResults from './LeaderboardSearchBoxAndResults.module.scss'
+import leaderboardSearchBoxAndResults from './LeaderboardSearchBoxAndResults.module.css'
 
 export const LeaderboardSearchBoxAndResults = () => {
   const [input, setInput] = useState('')

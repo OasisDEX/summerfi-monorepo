@@ -18,7 +18,7 @@ import { networkSDKChainIdIconMap } from '@/constants/network-id-to-icon'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
-import walletLabelStyles from './WalletLabel.module.scss'
+import walletLabelStyles from './WalletLabel.module.css'
 
 type WalletLabelVariant = 'default' | 'addressOnly' | 'logoutOnly'
 

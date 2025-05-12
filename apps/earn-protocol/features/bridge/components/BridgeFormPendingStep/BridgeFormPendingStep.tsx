@@ -26,7 +26,7 @@ import { useCrossChainMessages } from '@/features/bridge/hooks/use-cross-chain-m
 import { type BridgeReducerAction, type BridgeState, BridgeTxStatus } from '@/features/bridge/types'
 import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 
-import styles from './BridgeFormPendingStep.module.scss'
+import styles from './BridgeFormPendingStep.module.css'
 
 interface BridgeFormPendingStepProps {
   dispatch: Dispatch<BridgeReducerAction>

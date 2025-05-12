@@ -6,7 +6,7 @@ import { Button, Card, SkeletonLine } from '@summerfi/app-earn-ui'
 import BridgeFormTitle from '@/features/bridge/components/BridgeFormTitle/BridgeFormTitle'
 import { Spacer } from '@/features/bridge/components/Spacer/Spacer'
 
-import classNames from './BridgePageViewLoadingState.module.scss'
+import classNames from './BridgePageViewLoadingState.module.css'
 
 interface BridgePageViewLoadingStateProps {}
 

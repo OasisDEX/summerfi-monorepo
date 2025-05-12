@@ -55,12 +55,12 @@ export default defineConfig(({ mode }) => {
       },
       UnpluginIsolatedDecl({
         rewriteImports: (id: string, importer: string) => {
-          if (id.startsWith('@/') && id.endsWith('.scss')) {
-            // the files are in the same folder, so we just need `./{file}.scss`
-            const fileName = path.basename(id, '.scss')
-            return `./${fileName}.scss`
+          if (id.startsWith('@/') && id.endsWith('.css')) {
+            // the files are in the same folder, so we just need `./{file}.css`
+            const fileName = path.basename(id, '.css')
+            return `./${fileName}.css`
           }
-          if (id.startsWith('@/') && !id.endsWith('.scss')) {
+          if (id.startsWith('@/') && !id.endsWith('.css')) {
             const cleanId = id.replace('@/', './dist/src/')
             const relativePath = relative(importer, cleanId)
             return relativePath
@@ -72,22 +72,6 @@ export default defineConfig(({ mode }) => {
         },
       }),
     ],
-    css: {
-      preprocessorOptions: {
-        scss: {
-          // OB breakpoints: 531, 744, 1025, 1279
-          additionalData: `
-          @import 'include-media/dist/_include-media.scss';
-          $breakpoints: (
-            s: 531px,
-            m: 744px,
-            l: 1025px,
-            xl: 1279px,
-          );
-          `,
-        },
-      },
-    },
     customLogger: !notDev ? logger : undefined,
     clearScreen: false,
     build: {

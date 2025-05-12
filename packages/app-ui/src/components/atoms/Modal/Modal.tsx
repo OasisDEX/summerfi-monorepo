@@ -1,7 +1,7 @@
 'use client'
 import { type FC, type ReactNode, useEffect, useRef } from 'react'
 
-import modalStyles from '@/components/atoms/Modal/Modal.module.scss'
+import modalStyles from '@/components/atoms/Modal/Modal.module.css'
 
 interface ModalProps {
   openModal: boolean

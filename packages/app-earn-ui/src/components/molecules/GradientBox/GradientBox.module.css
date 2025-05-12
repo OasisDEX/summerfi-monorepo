@@ -1,0 +1,60 @@
+.gradientBoxWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 5px;
+  border: solid 1px transparent;
+}
+.gradientBoxWrapper.selected {
+  position: relative;
+  background-clip: padding-box;
+  box-sizing: border-box;
+  border: solid 1px transparent;
+  cursor: pointer;
+}
+.gradientBoxWrapper.selected::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: -1px;
+  transition: all 0.2s ease;
+  border-radius: var(--radius-large);
+  background: var(--gradient-earn-protocol-light);
+}
+@media (min-width: 531px) {
+  .gradientBoxWrapper.selected::before {
+    border-radius: var(--radius-roundish);
+  }
+}
+.gradientBoxWrapper.withHover {
+  position: relative;
+  background-clip: padding-box;
+  box-sizing: border-box;
+  border: solid 1px transparent;
+  cursor: pointer;
+}
+.gradientBoxWrapper.withHover::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: -1px;
+  opacity: 0;
+  transition: all 0.2s ease;
+  border-radius: var(--radius-roundish);
+  background: var(--color-border-hover);
+  box-shadow: var(--shadow-depth-3);
+}
+.gradientBoxWrapper.withHover:hover::before {
+  opacity: 1;
+}
+.gradientBoxWrapper > div {
+  position: relative;
+}

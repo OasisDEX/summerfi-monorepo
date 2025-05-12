@@ -1,7 +1,7 @@
 import { AutomationIcon, Button, Text } from '@summerfi/app-ui'
 import { IconArrowRight } from '@tabler/icons-react'
 
-import migrateProductCardStyles from '@/components/molecules/MigrateProductCard/MigrateProductCard.module.scss'
+import migrateProductCardStyles from '@/components/molecules/MigrateProductCard/MigrateProductCard.module.css'
 
 export const MigrateProductCardFooter = ({ action }: { action: () => void }) => (
   <div className={migrateProductCardStyles.footer}>

@@ -1,0 +1,53 @@
+.sumrTransferabilityCounterWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--general-space-24);
+}
+.sumrTransferabilityCounterWrapper .heading {
+  margin-bottom: var(--general-space-16);
+  text-align: center;
+}
+.sumrTransferabilityCounterWrapper .dialsWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--general-space-32);
+}
+.sumrTransferabilityCounterWrapper .dialsWrapper .dialWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.sumrTransferabilityCounterWrapper .dialsWrapper .dialWrapper .dialCustomSize {
+  width: 50px;
+  height: 50px;
+}
+@media (min-width: 532px) {
+  .sumrTransferabilityCounterWrapper .dialsWrapper .dialWrapper .dialCustomSize {
+    width: 68px;
+    height: 68px;
+  }
+}
+.sumrTransferabilityCounterWrapper .dialsWrapper .dialWrapper p {
+  margin-top: var(--general-space-8);
+  color: var(--earn-protocol-secondary-60);
+  font-size: 0.75rem;
+}
+@media (min-width: 745px) {
+  .sumrTransferabilityCounterWrapper .dialsWrapper .dialWrapper p {
+    margin-top: var(--general-space-12);
+    font-size: 1rem;
+  }
+}
+.sumrTransferabilityCounterWrapper .dialsWrapper .dialWrapper h5 {
+  font-size: 14px;
+}
+@media (min-width: 532px) {
+  .sumrTransferabilityCounterWrapper .dialsWrapper .dialWrapper h5 {
+    font-size: var(--font-size-h5);
+  }
+}

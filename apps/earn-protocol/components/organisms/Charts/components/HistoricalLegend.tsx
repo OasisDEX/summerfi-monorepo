@@ -5,7 +5,7 @@ import { DefaultLegendContent, type LegendProps } from 'recharts'
 
 import { historicalPerformanceLabelMap } from '@/components/organisms/Charts/labels'
 
-import historicalLegendStyles from './HistoricalLegend.module.scss'
+import historicalLegendStyles from './HistoricalLegend.module.css'
 
 type HistoricalLegendProps = LegendProps & {
   tokenSymbol: TokenSymbolsList

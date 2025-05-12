@@ -1,0 +1,117 @@
+.mainWrapper {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  height: 38px;
+  padding-right: var(--general-space-16);
+  padding-left: var(--general-space-16);
+  border: 1px solid;
+  border-radius: var(--radius-circle);
+  background-color: var(--earn-protocol-neutral-85);
+  cursor: pointer;
+  transition: border-color 200ms;
+  border-color: var(--earn-protocol-neutral-80);
+}
+.mainWrapper:hover {
+  border-color: var(--earn-protocol-neutral-60);
+}
+
+.searchInput {
+  height: 36px;
+  padding: var(--general-space-8);
+  padding-left: 34px;
+  color: var(--earn-protocol-secondary-80);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-roundish);
+  font-size: 14px;
+  text-align: left;
+}
+.searchInput:focus {
+  outline: none;
+}
+.searchInput:hover {
+  border-color: var(--color-border-hover);
+}
+.searchInput::placeholder {
+  color: var(--earn-protocol-secondary-40);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--general-space-8);
+  padding-left: 0;
+  padding-right: var(--general-space-8);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.list::-webkit-scrollbar {
+  width: 6px;
+  border-radius: var(--general-radius-16);
+}
+.list::-webkit-scrollbar-thumb {
+  background-color: var(--earn-protocol-secondary-100);
+  border-radius: var(--general-radius-16);
+}
+.list::-webkit-scrollbar-track {
+  background-color: var(--earn-protocol-secondary-60);
+  border-radius: var(--general-radius-16);
+}
+
+.listItem {
+  display: flex;
+  position: relative;
+  align-items: center;
+  padding-right: var(--general-space-16);
+  font-size: 14px;
+  font-weight: 600;
+  transition: color 200ms, background-color 200ms;
+  white-space: nowrap;
+}
+
+.clearButton {
+  height: 26px;
+  width: 26px;
+  background-color: var(--earn-protocol-neutral-80);
+  border-radius: var(--general-radius-50);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: var(--general-space-12);
+}
+
+.optionsWrapper {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 100%;
+  margin-top: var(--general-space-8);
+  padding: var(--general-space-16);
+  padding-right: var(--general-space-8);
+  border: 1px solid;
+  border-color: var(--earn-protocol-neutral-70);
+  border-radius: var(--general-radius-12);
+  background-color: var(--earn-protocol-neutral-90);
+  z-index: 1;
+  transition: opacity 200ms, transform 200ms;
+}
+
+.checkboxWrapper {
+  position: absolute;
+  top: 10px;
+  left: var(--general-space-8);
+  width: 26px;
+  height: 26px;
+  border: 1px solid;
+  border-radius: var(--general-radius-4);
+  transition: background-color 100ms, border-color 100ms;
+}
+.checkboxWrapper .checkboxIcon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  transition: opacity 100ms;
+}

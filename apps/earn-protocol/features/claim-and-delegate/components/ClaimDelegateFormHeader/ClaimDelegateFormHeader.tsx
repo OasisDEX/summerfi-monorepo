@@ -8,7 +8,7 @@ import {
   ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
 
-import classNames from './ClaimDelegateFormHeader.module.scss'
+import classNames from './ClaimDelegateFormHeader.module.css'
 
 const getSteps = (isJustStakeDelegate: boolean) => [
   ...(!isJustStakeDelegate

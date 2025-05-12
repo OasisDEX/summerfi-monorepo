@@ -24,7 +24,7 @@ import { trackVaultSwitched } from '@/helpers/mixpanel'
 import { usePosition } from '@/hooks/use-position'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
-import controlsSwitchSuccessErrorViewStyles from './ControlsSwitchSuccessErrorView.module.scss'
+import controlsSwitchSuccessErrorViewStyles from './ControlsSwitchSuccessErrorView.module.css'
 
 const VaultBoxContents = ({
   fromToken,

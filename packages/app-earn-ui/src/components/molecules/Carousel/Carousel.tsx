@@ -4,7 +4,7 @@ import { type FC, type ReactNode, useEffect, useState } from 'react'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 
-import styles from './Carousel.module.scss'
+import styles from './Carousel.module.css'
 
 type CarouselProps = {
   components: ReactNode[]

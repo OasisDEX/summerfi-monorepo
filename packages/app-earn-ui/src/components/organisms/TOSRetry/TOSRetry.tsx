@@ -5,7 +5,7 @@ import { type TOSRetryStep } from '@summerfi/app-types'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 
-import tosRetryStyles from '@/components/organisms/TOSRetry/TOSRetry.module.scss'
+import tosRetryStyles from '@/components/organisms/TOSRetry/TOSRetry.module.css'
 
 interface TOSRetryProps {
   tosState: TOSRetryStep

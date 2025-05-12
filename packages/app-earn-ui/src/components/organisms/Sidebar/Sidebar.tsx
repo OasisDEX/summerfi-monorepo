@@ -12,7 +12,7 @@ import { Text } from '@/components/atoms/Text/Text'
 import { LoadingSpinner } from '@/components/molecules/LoadingSpinner/LoadingSpinner'
 import { MobileDrawer } from '@/components/molecules/MobileDrawer/MobileDrawer'
 
-import sidebarClassNames from '@/components/organisms/Sidebar/Sidebar.module.scss'
+import sidebarClassNames from '@/components/organisms/Sidebar/Sidebar.module.css'
 
 export interface SidebarProps {
   title: string

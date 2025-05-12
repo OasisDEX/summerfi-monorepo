@@ -1,0 +1,53 @@
+.cookieBannerWrapper {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  right: 0;
+  background-color: var(--earn-protocol-neutral-90);
+  padding: var(--general-space-24);
+  border-top-left-radius: var(--general-radius-16);
+  border-top-right-radius: var(--general-radius-16);
+  box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06);
+  z-index: 2;
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .cookieBannerWrapper {
+    max-width: 1000px;
+  }
+}
+.cookieBannerWrapper .cookieBannerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--general-space-16);
+}
+.cookieBannerWrapper .cookieBannerContent .buttonsWrapper {
+  display: flex;
+  gap: var(--general-space-8);
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: center;
+}
+@media (min-width: 768px) {
+  .cookieBannerWrapper .cookieBannerContent .buttonsWrapper {
+    width: unset;
+  }
+}
+.cookieBannerWrapper .expanderContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-8);
+  padding-top: var(--general-space-8);
+}
+.cookieBannerWrapper .expanderContent .expanderContentConfig {
+  display: flex;
+  gap: var(--general-space-8);
+}
+.cookieBannerWrapper .expanderContent .expanderContentTextual {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-4);
+}

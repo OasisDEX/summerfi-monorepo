@@ -8,7 +8,7 @@ import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { OrderInformation } from '@/components/molecules/OrderInformation/OrderInformation'
 
-import classNames from './PositionCard.module.scss'
+import classNames from './PositionCard.module.css'
 
 interface PositionCardProps {
   handleClick?: () => void

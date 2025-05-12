@@ -8,7 +8,7 @@ import { useUserWallet } from '@/hooks/use-user-wallet'
 import pillars from '@/public/img/sumr/pillars.svg'
 import rewardingUsage from '@/public/img/sumr/rewarding_usage.svg'
 
-import classNames from './SumrFundametnalUtility.module.scss'
+import classNames from './SumrFundametnalUtility.module.css'
 
 interface SumrFundamentalTextualContentProps {
   title: string

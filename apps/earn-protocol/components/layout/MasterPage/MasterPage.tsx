@@ -13,7 +13,7 @@ import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrap
 import { manageAnalyticsCookies } from '@/features/manage-analytics-cookies/manage-analytics-cookies'
 
 import './global.css'
-import masterPageStyles from './MasterPage.module.scss'
+import masterPageStyles from './MasterPage.module.css'
 
 interface MasterPageProps {
   skipNavigation?: boolean

@@ -1,0 +1,26 @@
+.skeletonLine {
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+.skeletonLine::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 300%;
+  height: 100%;
+  background-image: linear-gradient(90deg, #e6e9eb 0%, #f8f7f9 33.3%, #f8f7f9 66.6%, #e6e9eb 100%);
+  transform: translateX(-100%);
+  animation: gradient 1.5s infinite;
+  animation-fill-mode: forwards;
+  animation-timing-function: linear;
+}
+@keyframes gradient {
+  0% {
+    transform: translateX(-100%);
+  }
+  80% {
+    transform: translateX(33.3%);
+  }
+}

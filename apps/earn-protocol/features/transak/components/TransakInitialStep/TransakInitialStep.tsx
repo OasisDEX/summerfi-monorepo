@@ -3,7 +3,7 @@ import { Text } from '@summerfi/app-earn-ui'
 
 import { TransakIconWrapper } from '@/features/transak/components/TransakIconWrapper/TransakIconWrapper'
 
-import classNames from './TransakInitialStep.module.scss'
+import classNames from './TransakInitialStep.module.css'
 
 const initialStepCopies = [
   {

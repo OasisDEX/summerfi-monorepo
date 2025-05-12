@@ -13,7 +13,7 @@ import { NavigationBranding } from '@/components/layout/Navigation/NavigationBra
 import { NavigationMenu } from '@/components/layout/Navigation/NavigationMenu'
 import { NavigationMenuMobile } from '@/components/layout/Navigation/NavigationMenuMobile'
 
-import navigationStyles from '@/components/layout/Navigation/Navigation.module.scss'
+import navigationStyles from '@/components/layout/Navigation/Navigation.module.css'
 
 interface NavigationProps extends WithNavigationModules {
   currentPath: string

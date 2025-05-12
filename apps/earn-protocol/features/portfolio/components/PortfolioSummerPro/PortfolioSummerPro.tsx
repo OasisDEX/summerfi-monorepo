@@ -15,7 +15,7 @@ import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { MigrationPositionCard } from '@/features/migration/components/MigrationPositionCard/MigrationPositionCard'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 
-import classNames from './PortfolioSummerPro.module.scss'
+import classNames from './PortfolioSummerPro.module.css'
 
 interface PortfolioSummerProProps {
   walletAddress: string

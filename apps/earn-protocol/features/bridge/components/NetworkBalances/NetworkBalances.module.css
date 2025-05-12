@@ -1,0 +1,25 @@
+.networkBalancesWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--general-space-24);
+  margin: var(--general-space-24) 0;
+  padding: 0 var(--general-space-16);
+  flex-direction: column;
+}
+@media (min-width: 532px) {
+  .networkBalancesWrapper {
+    flex-direction: row;
+    padding: 0;
+    gap: var(--general-space-32);
+  }
+}
+
+.arrowSplitterWrapper {
+  transform: rotate(90deg);
+}
+@media (min-width: 532px) {
+  .arrowSplitterWrapper {
+    transform: rotate(0deg);
+  }
+}

@@ -1,7 +1,7 @@
 import { type FC } from 'react'
 import { Alert, Button } from '@summerfi/app-earn-ui'
 
-import classNames from './ClaimDelegateClaimStep.module.scss'
+import classNames from './ClaimDelegateClaimStep.module.css'
 
 interface ClaimDelegateErrorProps {
   error: string

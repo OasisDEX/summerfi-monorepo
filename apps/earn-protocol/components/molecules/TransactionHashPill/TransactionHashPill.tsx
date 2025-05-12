@@ -2,7 +2,7 @@ import { Box, getScannerUrl, Icon, Text } from '@summerfi/app-earn-ui'
 import { type TransactionType } from '@summerfi/sdk-common'
 import Link from 'next/link'
 
-import transactionsStyles from './TransactionHashPill.module.scss'
+import transactionsStyles from './TransactionHashPill.module.css'
 
 export const TransactionHashPill = ({
   transactionData,

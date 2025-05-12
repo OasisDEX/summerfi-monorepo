@@ -1,0 +1,10 @@
+.positionHistoricalChartWrapper {
+  padding-left: 0;
+  padding-right: 0;
+}
+@media (min-width: 768px) {
+  .positionHistoricalChartWrapper {
+    padding-left: var(--general-space-24);
+    padding-right: var(--general-space-24);
+  }
+}

@@ -4,7 +4,7 @@ import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpe
 
 import { detailsLinks } from './vault-details-links'
 
-import vaultOpenViewStyles from './VaultOpenView.module.scss'
+import vaultOpenViewStyles from './VaultOpenView.module.css'
 
 export const VaultOpenLoadingView = () => {
   return (

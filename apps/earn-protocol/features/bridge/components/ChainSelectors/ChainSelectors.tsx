@@ -5,7 +5,7 @@ import { type Chain } from 'viem'
 import { ArrowSplitter } from '@/features/bridge/components/ArrowSplitter/ArrowSplitter'
 import { ChainSelector } from '@/features/bridge/components/ChainSelector/ChainSelector'
 
-import styles from './ChainSelectors.module.scss'
+import styles from './ChainSelectors.module.css'
 
 interface ChainSelectorsProps {
   sourceChain: Chain
