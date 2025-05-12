@@ -40,7 +40,6 @@ import { encodeFunctionData } from 'viem'
 import { BigNumber } from 'bignumber.js'
 import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { calculateRewardApy } from './utils/calculate-summer-yield'
-import { get } from 'http'
 
 export class ArmadaManagerVaults implements IArmadaManagerVaults {
   private _supportedChains: IChainInfo[]
@@ -1342,14 +1341,16 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     // withdraw all assumption threshold is set to 0.9999
     const withdrawAllThreshold = 0.9999
 
-    const shouldWithdrawAll = new BigNumber(params.shares.toSolidityValue().toString())
-      .div(params.stakedShares.toSolidityValue().toString())
-      .gte(withdrawAllThreshold)
+    const staked = params.stakedShares.toSolidityValue()
+    const shouldWithdrawAll =
+      staked === 0n ||
+      new BigNumber(params.shares.toSolidityValue().toString())
+        .div(staked.toString())
+        .gte(withdrawAllThreshold)
     const unstakeWithdrawSharesValue = shouldWithdrawAll ? 0n : params.shares.toSolidityValue()
 
     let calculatedUnstakeWithdrawAssets: ITokenAmount | undefined
     if (shouldWithdrawAll) {
-      // if we are withdrawing all, we need to calculate full amount
       const calculatedFullAmount = await this._previewRedeem({
         vaultId: params.vaultId,
         shares: params.shares,

@@ -31,8 +31,11 @@ export function getRpcGatewayEndpoint(
     [ChainIds.Base]: 'base',
     [ChainIds.Sonic]: 'sonic',
   }
-
   const network = NetworkByChainID[chainId]
+  if (!network) {
+    throw new Error(`Chain ID ${chainId} is not supported`)
+  }
+
   return (
     `${rpcGatewayUrl}/?` +
     `network=${network}&` +

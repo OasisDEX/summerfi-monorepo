@@ -19,12 +19,16 @@ export const calculateRewardApy = ({
   tokenPriceUsd: string
   tvlUsd: string
 }) => {
+  if (new BigNumber(tvlUsd).isZero()) {
+    return Percentage.createFrom({ value: 0 })
+  }
+
   const raw = new BigNumber(dailyTokenEmissionAmount)
     .multipliedBy(365)
     .multipliedBy(tokenPriceUsd)
     .dividedBy(tvlUsd)
     .toString()
-  console.log('first', dailyTokenEmissionAmount, tokenPriceUsd, tvlUsd, raw)
+
   return Percentage.createFrom({
     value: Number(raw),
   })

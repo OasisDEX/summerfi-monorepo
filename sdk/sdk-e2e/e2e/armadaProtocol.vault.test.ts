@@ -90,7 +90,7 @@ describe('Armada Protocol Vault', () => {
     )
   })
 
-  it.only('should get a specific vault info', async () => {
+  it('should get a specific vault info', async () => {
     const vaultId = ArmadaVaultId.createFrom({
       chainInfo,
       fleetAddress: ethFleet,
