@@ -6,6 +6,8 @@ const NETWORK_GAS_SAVINGS: { [key: string]: number } = {
   base: 0.05, // $0.05
   arbitrum: 0.05, // $0.05
   mainnet: 20.0, // $20.00
+  sonic: 0.05, // $0.05
+  optimism: 0.05, // $0.05
 }
 
 type RebalanceCountsType = { total: number } & Partial<{ [key in SDKNetwork]: number }>
