@@ -61,12 +61,12 @@ describe('Armada Protocol Vault', () => {
     console.log(`User position for fleet ${fleetAddress.value}: ${position.amount.toString()}`)
   })
 
-  it.only('should get all vaults with info', async () => {
+  it('should get all vaults with info', async () => {
     const vaults = await sdk.armada.users.getVaultInfoList({
       chainId,
     })
     console.log(
-      'All vaults:',
+      'All vaults info:',
       vaults.list
         .map((vaultInfo) => {
           return JSON.stringify(
@@ -90,7 +90,7 @@ describe('Armada Protocol Vault', () => {
     )
   })
 
-  it('should get a specific vault info', async () => {
+  it.only('should get a specific vault info', async () => {
     const vaultId = ArmadaVaultId.createFrom({
       chainInfo,
       fleetAddress: ethFleet,
@@ -100,11 +100,23 @@ describe('Armada Protocol Vault', () => {
     })
     assert(vaultInfo != null, 'Vault not found')
     console.log(
-      `Vault address: ${vaultInfo.id.fleetAddress}`,
-      `\nDeposit cap: `,
-      vaultInfo.depositCap.toString(),
-      `\nTotal deposits: `,
-      vaultInfo.totalDeposits.toString(),
+      'Specific vault info:',
+      JSON.stringify(
+        {
+          id: vaultInfo.id.toString(),
+          token: vaultInfo.token.toString(),
+          depositCap: vaultInfo.depositCap.toString(),
+          totalDeposits: vaultInfo.totalDeposits.toString(),
+          totalShares: vaultInfo.totalShares.toString(),
+          apy: vaultInfo.apy?.toString(),
+          rewardsApys: vaultInfo.rewardsApys.map((reward) => ({
+            token: reward.token.toString(),
+            apy: reward.apy?.toString(),
+          })),
+        },
+        null,
+        2,
+      ),
     )
   })
 })
