@@ -1568,7 +1568,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       prices.priceByAddress[sumrToken.address.value.toLowerCase()] = Price.createFrom({
         base: sumrToken,
         quote: FiatCurrency.USD,
-        value: '0.25',
+        value: '0.25', // price is hardcoded for now until we have trading enabled
       })
     }
 
@@ -1576,7 +1576,6 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       (result, vault) => {
         const { rewardTokens, rewardTokenEmissionsAmount, totalValueLockedUSD } = vault
         // Calculate APY for each reward token
-        console.log('rewardTokenEmissionsAmount', rewardTokenEmissionsAmount)
         result[vault.id.toLowerCase()] = rewardTokens.map((token, index) => {
           const dailyTokenEmissionAmount = new BigNumber(
             rewardTokenEmissionsAmount[index].toString(),
