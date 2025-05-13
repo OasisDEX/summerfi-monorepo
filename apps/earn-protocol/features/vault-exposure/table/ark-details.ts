@@ -387,5 +387,15 @@ export const arkDetailsMap: {
         'Engineered for efficient USDC.E deployment, minimizing unnecessary risks while ensuring capital remains productive.',
       link: 'https://app.euler.finance/vault/0x196F3C7443E940911EE2Bb88e019Fd71400349D9?network=sonic',
     },
+    '0x5c841955d7ee3e2f7a077aa0aca3a7d724b15da2': {
+      description:
+        'Engineered for isolated USDC.E deployment on Sonic, balancing yield opportunities with siloed risk controls to protect capital.',
+      link: 'https://v2.silo.finance/markets/sonic/s-usdc-20?action=deposit',
+    },
+    '0x42aade02448fdaf56bbb153b2984e3d53dc531c1': {
+      description:
+        'Engineered for isolated USDC.E deployment on Sonic, balancing yield opportunities with siloed risk controls to protect capital.',
+      link: 'https://v2.silo.finance/markets/sonic/s-usdc-8?action=deposit',
+    },
   },
 }
