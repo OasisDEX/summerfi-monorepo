@@ -110,8 +110,8 @@ export const mapGraphDataToArmadaPosition =
           decimals: position.vault.inputToken.decimals,
         }),
       }),
-      deposits: position.deposits.map((deposit) =>
-        TokenAmount.createFrom({
+      deposits: position.deposits.map((deposit) => {
+        const amount = TokenAmount.createFrom({
           amount: BigNumber(deposit.amount.toString())
             .div(10 ** position.vault.inputToken.decimals)
             .toString(),
@@ -124,10 +124,14 @@ export const mapGraphDataToArmadaPosition =
             symbol: position.vault.inputToken.symbol,
             decimals: position.vault.inputToken.decimals,
           }),
-        }),
-      ),
-      withdrawals: position.withdrawals.map((withdrawal) =>
-        TokenAmount.createFrom({
+        })
+        return {
+          amount,
+          timestamp: Number(deposit.timestamp),
+        }
+      }),
+      withdrawals: position.withdrawals.map((withdrawal) => {
+        const amount = TokenAmount.createFrom({
           amount: BigNumber(withdrawal.amount.toString())
             .div(10 ** position.vault.inputToken.decimals)
             .toString(),
@@ -140,8 +144,12 @@ export const mapGraphDataToArmadaPosition =
             symbol: position.vault.inputToken.symbol,
             decimals: position.vault.inputToken.decimals,
           }),
-        }),
-      ),
+        })
+        return {
+          amount,
+          timestamp: Number(withdrawal.timestamp),
+        }
+      }),
       claimedSummerToken,
       claimableSummerToken,
       rewards,
