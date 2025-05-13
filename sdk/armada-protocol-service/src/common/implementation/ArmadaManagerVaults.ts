@@ -1583,7 +1583,8 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
         // Calculate APY for each reward token
         result[vault.id.toLowerCase()] = rewardTokens.map((token, index) => {
           // if emission finish is in the past, skip
-          if (Number(rewardTokenEmissionsFinish[index]) < Date.now() / 1000) {
+          const timestampInSeconds = Math.floor(Date.now() / 1000)
+          if (Number(rewardTokenEmissionsFinish[index]) < timestampInSeconds) {
             return {
               token: this._tokensManager.getTokenBySymbol({
                 chainInfo,
