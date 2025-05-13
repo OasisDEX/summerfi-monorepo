@@ -117,7 +117,7 @@ export const VaultCardHomepage = ({
     new BigNumber(String(inputTokenBalance)).div(ten.pow(inputToken.decimals)),
   )
   const parsedTotalValueLockedUSD = formatCryptoBalance(new BigNumber(String(totalValueLockedUSD)))
-  const { sumrTokenBonus } = getSumrTokenBonus(
+  const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus(
     rewardTokens,
     rewardTokenEmissionsAmount,
     sumrPrice,
@@ -144,7 +144,7 @@ export const VaultCardHomepage = ({
           <VaultTitle symbol={inputToken.symbol} networkName={protocol.network} isVaultCard />
           <AdditionalBonusLabel
             externalTokenBonus={customFields?.bonus}
-            sumrTokenBonus={sumrTokenBonus}
+            sumrTokenBonus={rawSumrTokenBonus !== '0' ? sumrTokenBonus : undefined}
           />
         </div>
         <div className={vaultCardHomepageStyles.vaultCardHomepageDatablocksWrapper}>
