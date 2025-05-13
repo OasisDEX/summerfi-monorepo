@@ -17,6 +17,7 @@ query GetVaults {
       }
     }
     rewardTokenEmissionsAmount
+    rewardTokenEmissionsFinish
     rewardTokenEmissionsUSD
     rebalanceCount
     arks {

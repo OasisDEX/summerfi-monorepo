@@ -1574,9 +1574,25 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
 
     const byFleetAddress = vaultsRaw.vaults.reduce(
       (result, vault) => {
-        const { rewardTokens, rewardTokenEmissionsAmount, totalValueLockedUSD } = vault
+        const {
+          rewardTokens,
+          rewardTokenEmissionsAmount,
+          rewardTokenEmissionsFinish,
+          totalValueLockedUSD,
+        } = vault
         // Calculate APY for each reward token
         result[vault.id.toLowerCase()] = rewardTokens.map((token, index) => {
+          // if emission finish is in the past, skip
+          if (Number(rewardTokenEmissionsFinish[index]) < Date.now() / 1000) {
+            return {
+              token: this._tokensManager.getTokenBySymbol({
+                chainInfo,
+                symbol: token.token.symbol,
+              }),
+              apy: Percentage.createFrom({ value: 0 }),
+            }
+          }
+
           const dailyTokenEmissionAmount = new BigNumber(
             rewardTokenEmissionsAmount[index].toString(),
           )
