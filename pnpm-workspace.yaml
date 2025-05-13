@@ -2,6 +2,8 @@ packages:
   - 'packages/**'
   - 'apps/*'
   - 'sdk/**'
+  - '!sdk/sdk-client/bundle'
+  - '!sdk/sdk-common/bundle'
   - 'stacks/**'
   - 'turbo/**'
   - 'background-jobs/**'
