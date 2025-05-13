@@ -1,0 +1,23 @@
+.timeframesWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+@media screen and (min-width: 768px) {
+  .timeframesWrapper {
+    justify-content: flex-end;
+    width: unset;
+  }
+}
+.timeframesWrapper button {
+  margin-left: var(--general-space-8);
+}
+@media screen and (min-width: 768px) {
+  .timeframesWrapper button {
+    margin-left: var(--general-space-32);
+  }
+}
+.timeframesWrapper button:first-child {
+  margin-left: 0;
+}

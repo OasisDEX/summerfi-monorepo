@@ -16,7 +16,7 @@ import { type NetworkNames, networksByName } from '@/constants/networks-list'
 import { type LendingProtocolConfig } from '@/helpers/lending-protocols-configs'
 import { trackButtonClick } from '@/helpers/mixpanel'
 
-import raysProductCardStyles from '@/components/molecules/RaysProductCard/RaysProductCard.module.scss'
+import raysProductCardStyles from '@/components/molecules/RaysProductCard/RaysProductCard.module.css'
 
 interface AutomationItem {
   tooltip: string

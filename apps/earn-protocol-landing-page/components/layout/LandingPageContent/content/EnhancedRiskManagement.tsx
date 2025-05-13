@@ -7,7 +7,7 @@ import morphoBlueLogo from '@/public/img/landing-page/protocols/morpho-blue.svg'
 import skyLogo from '@/public/img/landing-page/protocols/sky.svg'
 import sparkLogo from '@/public/img/landing-page/protocols/spark.svg'
 
-import enhancedRiskManagementStyles from '@/components/layout/LandingPageContent/content/EnhancedRiskManagement.module.scss'
+import enhancedRiskManagementStyles from '@/components/layout/LandingPageContent/content/EnhancedRiskManagement.module.css'
 
 import rebalanceActivityImage from '@/public/img/landing-page/enhanced-risk-management_rebalance-activity.png'
 import strategyExposureImage from '@/public/img/landing-page/enhanced-risk-management_strategy-exposure.png'

@@ -1,0 +1,5 @@
+.spacer {
+  height: 1px;
+  border-bottom: 1px solid var(--earn-protocol-neutral-100);
+  margin: var(--general-space-24) 0 var(--general-space-0) 0;
+}

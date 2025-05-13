@@ -4,7 +4,7 @@ import { formatAddress } from '@summerfi/app-utils'
 
 import { type SendState, SendStep } from '@/features/send/types'
 
-import classNames from './SendFormStatusStep.module.scss'
+import classNames from './SendFormStatusStep.module.css'
 
 interface FromToProps {
   variant: 'from' | 'to'

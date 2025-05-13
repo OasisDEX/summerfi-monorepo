@@ -1,0 +1,31 @@
+.claimDelegateActionCardWrapper {
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.claimDelegateActionCardWrapper .closeButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+.claimDelegateActionCardWrapper .iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+  width: 64px;
+  border-radius: 50%;
+  background-color: var(--earn-protocol-neutral-80);
+  margin-bottom: var(--general-space-24);
+  margin-top: var(--general-space-24);
+}
+.claimDelegateActionCardWrapper .iconWrapper .innerBackground {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 46px;
+  width: 46px;
+  border-radius: 50%;
+  background-image: var(--gradient-earn-protocol-dark-10);
+}

@@ -13,7 +13,7 @@ import {
   type ClaimDelegateExternalData,
 } from '@/features/claim-and-delegate/types'
 
-import classNames from './ClaimPageView.module.scss'
+import classNames from './ClaimPageView.module.css'
 
 interface ClaimPageViewProps {
   walletAddress: string

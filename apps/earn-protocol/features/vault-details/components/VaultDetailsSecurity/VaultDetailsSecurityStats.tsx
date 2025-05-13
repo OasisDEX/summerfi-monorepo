@@ -7,7 +7,7 @@ import Link from 'next/link'
 
 import blockAnalyticaLogo from '@/public/img/misc/block-analytica.svg'
 
-import classNames from './VaultDetailsSecurity.module.scss'
+import classNames from './VaultDetailsSecurity.module.css'
 
 interface VaultDetailsSecurityStatsProps {
   vaults: SDKVaultsListType

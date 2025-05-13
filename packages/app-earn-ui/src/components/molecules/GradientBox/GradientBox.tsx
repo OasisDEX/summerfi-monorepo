@@ -1,7 +1,7 @@
 import { type HTMLAttributes } from 'react'
 import clsx from 'clsx'
 
-import gradientBoxStyles from './GradientBox.module.scss'
+import gradientBoxStyles from './GradientBox.module.css'
 
 type GradientBoxProps = HTMLAttributes<HTMLDivElement> & {
   children: React.ReactNode

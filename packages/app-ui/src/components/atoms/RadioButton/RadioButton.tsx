@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 
-import radioButtonStyles from './RadioButton.module.scss'
+import radioButtonStyles from './RadioButton.module.css'
 
 export const RadioButton = ({
   name,

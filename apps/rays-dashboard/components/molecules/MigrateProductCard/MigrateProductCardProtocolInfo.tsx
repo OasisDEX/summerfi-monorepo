@@ -3,7 +3,7 @@ import { Text, TokensGroup } from '@summerfi/app-ui'
 
 import { type LendingProtocolConfig } from '@/helpers/lending-protocols-configs'
 
-import migrateProductCardStyles from '@/components/molecules/MigrateProductCard/MigrateProductCard.module.scss'
+import migrateProductCardStyles from '@/components/molecules/MigrateProductCard/MigrateProductCard.module.css'
 
 export const MigrateProductCardProtocolInfo = ({
   tokens,

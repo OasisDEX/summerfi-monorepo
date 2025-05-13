@@ -1,0 +1,20 @@
+div.selectionBlockBorderWrapper {
+  border-radius: var(--general-radius-12);
+  margin-bottom: var(--general-radius-12) !important;
+}
+div.selectionBlockBorderWrapper::before {
+  border-radius: var(--general-radius-12) !important;
+}
+
+.selectionBlockWrapper {
+  background-color: var(--color-surface-subtler);
+  border-radius: var(--general-radius-12);
+  width: 100%;
+  min-height: 70px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-space-x-small) var(--spacing-space-x-small) var(--spacing-space-x-small) var(--spacing-space-medium);
+  position: relative;
+}

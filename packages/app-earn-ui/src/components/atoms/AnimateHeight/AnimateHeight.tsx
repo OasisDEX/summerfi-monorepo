@@ -3,7 +3,7 @@
 import OGAnimateHeight from 'react-animate-height'
 import clsx from 'clsx'
 
-import animateHeightStyles from './AnimateHeight.module.scss'
+import animateHeightStyles from './AnimateHeight.module.css'
 
 const animationDuration = 600
 

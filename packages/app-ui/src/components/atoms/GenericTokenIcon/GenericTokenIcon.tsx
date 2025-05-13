@@ -6,7 +6,7 @@ import { safeBTOA } from '@summerfi/app-utils'
 
 import genericTokenIconStyles, {
   type ClassNames,
-} from '@/components/atoms/GenericTokenIcon/GenericTokenIcon.module.scss'
+} from '@/components/atoms/GenericTokenIcon/GenericTokenIcon.module.css'
 
 interface GenericTokenIconProps {
   variant?: ClassNames

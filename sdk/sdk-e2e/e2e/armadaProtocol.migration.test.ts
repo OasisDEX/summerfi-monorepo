@@ -4,6 +4,7 @@ import { ArmadaMigrationType, ArmadaVaultId, Percentage, User, Wallet } from '@s
 import { SDKApiUrl, signerPrivateKey, testConfig } from './utils/testConfig'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
 import assert from 'assert'
+import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 
 jest.setTimeout(300000)
 
@@ -84,7 +85,7 @@ describe('Armada Protocol Migration', () => {
             vaultId,
             user,
             positionIds: positionIdsToMigrate,
-            slippage: Percentage.createFrom({ value: 1 }),
+            slippage: Percentage.createFrom({ value: DEFAULT_SLIPPAGE_PERCENTAGE }),
           })
 
           console.log(
@@ -154,7 +155,7 @@ describe('Armada Protocol Migration', () => {
             vaultId,
             user,
             positionIds: positionIdsToMigrate,
-            slippage: Percentage.createFrom({ value: 1 }),
+            slippage: Percentage.createFrom({ value: DEFAULT_SLIPPAGE_PERCENTAGE }),
           })
 
           const { statuses } = await sendAndLogTransactions({

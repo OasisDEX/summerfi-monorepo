@@ -13,7 +13,7 @@ import {
   ClaimDelegateSteps,
 } from '@/features/claim-and-delegate/types'
 
-import classNames from './ClaimDelegateFormContent.module.scss'
+import classNames from './ClaimDelegateFormContent.module.css'
 
 interface ClaimDelegateFormContentProps {
   state: ClaimDelegateState

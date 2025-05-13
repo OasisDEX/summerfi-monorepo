@@ -1,0 +1,4 @@
+.quickActionTags {
+  display: flex;
+  gap: var(--general-space-8);
+}

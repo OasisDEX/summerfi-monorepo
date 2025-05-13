@@ -3,7 +3,7 @@ import { type FC, type ReactNode, useState } from 'react'
 
 import { Text } from '@/components/atoms/Text/Text'
 
-import styles from './PillSelector.module.scss'
+import styles from './PillSelector.module.css'
 
 type PillOption = {
   label?: string

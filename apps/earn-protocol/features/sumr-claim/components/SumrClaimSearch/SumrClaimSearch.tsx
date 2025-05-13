@@ -21,7 +21,7 @@ import { getUserSumrEligibility } from '@/features/sumr-claim/helpers/getUserSum
 import { trackButtonClick, trackInputChange } from '@/helpers/mixpanel'
 import { useUserAggregatedRewards } from '@/hooks/use-user-aggregated-rewards'
 
-import classNames from './SumrClaimSearch.module.scss'
+import classNames from './SumrClaimSearch.module.css'
 
 export const SumrClaimSearch = () => {
   const { push } = useRouter()

@@ -59,14 +59,14 @@ describe('AAVEv3 Protocol Plugin', () => {
       protocol: {
         ...aaveV3PoolIdMock.protocol,
         chainInfo: ChainInfo.createFrom({
-          chainId: 2,
+          chainId: 146,
           name: 'Unknown',
         }),
       },
     }
     await expect(
       aaveV3ProtocolPlugin.getLendingPool(invalidAaveV3PoolIdUnsupportedChain),
-    ).rejects.toThrow('Chain ID 2 is not supported')
+    ).rejects.toThrow('Chain ID 146 is not supported')
   })
 
   it('should throw an error when calling getLendingPool with chain id missing from ctx', async () => {

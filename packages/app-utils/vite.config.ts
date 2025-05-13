@@ -5,7 +5,7 @@ import { createLogger, defineConfig } from 'vite'
 
 // handles tsconfig paths from the tsconfig.json
 import tsconfigPaths from 'vite-tsconfig-paths'
-// generates typescript declaration files (just the js/ts, scss is done in package.json)
+// generates typescript declaration files (just the js/ts, css is done in package.json)
 import UnpluginIsolatedDecl from 'unplugin-isolated-decl/vite'
 // preserves directives like "use client" in the output
 import preserveDirectives from 'rollup-preserve-directives'

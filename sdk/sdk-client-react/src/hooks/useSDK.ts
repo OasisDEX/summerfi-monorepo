@@ -25,6 +25,7 @@ import { getSummerTokenHandler } from '../handlers/getSummerTokenHandler'
 import { getClaimableAggregatedRewardsHandler } from '../handlers/getClaimableAggregatedRewardsHandler'
 import { getBridgeTxHandler } from '../handlers/getBridgeTxHandler'
 import { getMigrateTxHandler } from '../handlers/getMigrateTxHandler'
+import { getVaultSwitchTXHandler } from '../handlers/getVaultSwitchTxHandler'
 import { getMigratablePositionsHandler } from '../handlers/getMigratablePositionsHandler'
 import { getMigratablePositionsHandlerApy } from '../handlers/getMigratablePositionsHandlerApy'
 import { getSpotPriceHandler } from '../handlers/getSpotPriceHandler'
@@ -82,7 +83,7 @@ export const useSDK = (params: UseSdk) => {
     () => getClaimableAggregatedRewardsHandler(sdk),
     [sdk],
   )
-  const getAggregatedClaimsForChainTX = useMemo(
+  const getAggregatedClaimsForChainTx = useMemo(
     () => getAggregatedClaimsForChainTXHandler(sdk),
     [sdk],
   )
@@ -97,6 +98,7 @@ export const useSDK = (params: UseSdk) => {
   const getUserVotes = useMemo(() => getUserVotesHandler(sdk), [sdk])
   const getSummerToken = useMemo(() => getSummerTokenHandler(sdk), [sdk])
   const getMigrateTx = useMemo(() => getMigrateTxHandler(sdk), [sdk])
+  const getVaultSwitchTx = useMemo(() => getVaultSwitchTXHandler(sdk), [sdk])
   const getMigratablePositions = useMemo(() => getMigratablePositionsHandler(sdk), [sdk])
   const getMigratablePositionsApy = useMemo(() => getMigratablePositionsHandlerApy(sdk), [sdk])
 
@@ -108,14 +110,14 @@ export const useSDK = (params: UseSdk) => {
       getTargetChainInfo,
       getChain,
       getTokenBySymbol,
-      getDepositTx: getDepositTx,
-      getWithdrawTx: getWithdrawTx,
+      getDepositTx,
+      getWithdrawTx,
       getUserPositions,
       getUserPosition,
       getSwapQuote,
       getAggregatedRewards,
       getClaimableAggregatedRewards,
-      getAggregatedClaimsForChainTX,
+      getAggregatedClaimsForChainTx,
       getBridgeTx,
       getDelegateTx,
       getStakeTx,
@@ -126,6 +128,7 @@ export const useSDK = (params: UseSdk) => {
       getUserVotes,
       getSummerToken,
       getMigrateTx,
+      getVaultSwitchTx,
       getMigratablePositions,
       getMigratablePositionsApy,
       getSpotPrice,
@@ -145,7 +148,7 @@ export const useSDK = (params: UseSdk) => {
       getSwapQuote,
       getAggregatedRewards,
       getClaimableAggregatedRewards,
-      getAggregatedClaimsForChainTX,
+      getAggregatedClaimsForChainTx,
       getDelegateTx,
       getBridgeTx,
       getStakeTx,
@@ -156,6 +159,7 @@ export const useSDK = (params: UseSdk) => {
       getUserVotes,
       getSummerToken,
       getMigrateTx,
+      getVaultSwitchTx,
       getMigratablePositions,
       getMigratablePositionsApy,
       getSpotPrice,

@@ -3,7 +3,7 @@ import { type FC, type ReactNode } from 'react'
 
 import { Text } from '@/components/atoms/Text/Text'
 
-import tosWaitingForSignatureStyles from '@/components/organisms/TOSWaitingForSignature/TOSWaitingForSignature.module.scss'
+import tosWaitingForSignatureStyles from '@/components/organisms/TOSWaitingForSignature/TOSWaitingForSignature.module.css'
 
 interface TOSWaitingForSignatureProps {
   texts?: {

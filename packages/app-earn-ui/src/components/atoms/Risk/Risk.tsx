@@ -2,22 +2,24 @@ import { type ReactNode } from 'react'
 import { type RiskType } from '@summerfi/app-types'
 import { capitalize } from 'lodash-es'
 
-import { Text } from '@/components/atoms/Text/Text'
+import { Text, type TextAllowedHtmlTags } from '@/components/atoms/Text/Text'
 import { riskColors } from '@/helpers/risk-colors'
 
-import { type ClassNames as TextVariants } from '@/components/atoms/Text/Text.module.scss'
+import { type ClassNames as TextVariants } from '@/components/atoms/Text/Text.module.css'
 
 export const Risk = ({
   risk,
   variant = 'p3semi',
+  as = 'p',
 }: {
   risk: RiskType
-  variant: TextVariants
+  variant?: TextVariants
+  as?: TextAllowedHtmlTags
 }): ReactNode => {
   const color = riskColors[risk]
 
   return (
-    <Text as="p" variant={variant} style={{ color }}>
+    <Text as={as} variant={variant} style={{ color }}>
       {capitalize(risk)} Risk
     </Text>
   )

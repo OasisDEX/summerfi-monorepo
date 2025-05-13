@@ -1,0 +1,105 @@
+.cardPrimary,
+.cardPrimaryColorfulBorder,
+.cardPrimarySmallPaddingsColorfulBorder,
+.cardPrimaryMediumPaddingsColorfulBorder,
+.cardSecondary,
+.cardSecondaryColorfulBorder,
+.cardSecondarySmallPaddingsColorfulBorder,
+.cardSecondaryMediumPaddingsColorfulBorder,
+.cardGradientLight,
+.cardGradientDark,
+.cardPrimarySmallPaddings,
+.cardPrimaryMediumPaddings,
+.cardSecondarySmallPaddings,
+.cardSecondaryMediumPaddings {
+  display: flex;
+  width: 100%;
+  border-radius: var(--radius-large);
+}
+@media (min-width: 531px) {
+  .cardPrimary,
+  .cardPrimaryColorfulBorder,
+  .cardPrimarySmallPaddingsColorfulBorder,
+  .cardPrimaryMediumPaddingsColorfulBorder,
+  .cardSecondary,
+  .cardSecondaryColorfulBorder,
+  .cardSecondarySmallPaddingsColorfulBorder,
+  .cardSecondaryMediumPaddingsColorfulBorder,
+  .cardGradientLight,
+  .cardGradientDark,
+  .cardPrimarySmallPaddings,
+  .cardPrimaryMediumPaddings,
+  .cardSecondarySmallPaddings,
+  .cardSecondaryMediumPaddings {
+    border-radius: var(--radius-roundish);
+  }
+}
+
+.cardPrimary,
+.cardPrimaryColorfulBorder,
+.cardSecondary,
+.cardSecondaryColorfulBorder,
+.cardGradientLight,
+.cardGradientDark {
+  padding: var(--general-space-24);
+}
+
+.cardPrimary,
+.cardPrimaryColorfulBorder,
+.cardPrimarySmallPaddings,
+.cardPrimaryMediumPaddings,
+.cardPrimarySmallPaddingsColorfulBorder {
+  background-color: var(--earn-protocol-neutral-85);
+}
+
+.cardSecondary,
+.cardSecondaryColorfulBorder,
+.cardSecondarySmallPaddings,
+.cardSecondarySmallPaddingsColorfulBorder {
+  background-color: var(--earn-protocol-neutral-90);
+}
+
+.cardPrimarySmallPaddings,
+.cardSecondarySmallPaddings,
+.cardPrimarySmallPaddingsColorfulBorder,
+.cardSecondarySmallPaddingsColorfulBorder {
+  padding: var(--general-space-12);
+}
+
+.cardPrimaryMediumPaddings,
+.cardSecondaryMediumPaddings,
+.cardPrimaryMediumPaddingsColorfulBorder,
+.cardSecondaryMediumPaddingsColorfulBorder {
+  padding: var(--general-space-16);
+}
+
+.cardGradientLight {
+  background: var(--earn-protocol-neutral-100) var(--gradient-earn-protocol-light-10);
+}
+
+.cardGradientDark {
+  background: var(--earn-protocol-neutral-100) var(--gradient-earn-protocol-dark-10);
+}
+
+.cardPrimaryColorfulBorder,
+.cardSecondaryColorfulBorder,
+.cardPrimarySmallPaddingsColorfulBorder,
+.cardSecondarySmallPaddingsColorfulBorder,
+.cardPrimaryMediumPaddingsColorfulBorder,
+.cardSecondaryMediumPaddingsColorfulBorder {
+  border: double 1.5px transparent;
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+.cardPrimaryColorfulBorder,
+.cardPrimarySmallPaddingsColorfulBorder,
+.cardPrimaryMediumPaddingsColorfulBorder {
+  background-image: linear-gradient(rgb(43, 43, 43), rgb(43, 43, 43)), linear-gradient(90deg, rgba(255, 73, 164, 0.5), rgba(176, 73, 255, 0.5));
+}
+
+.cardSecondaryColorfulBorder,
+.cardSecondarySmallPaddingsColorfulBorder,
+.cardSecondaryMediumPaddingsColorfulBorder {
+  background-image: linear-gradient(rgb(35, 35, 35), rgb(35, 35, 35)), linear-gradient(90deg, rgba(255, 73, 164, 0.5), rgba(176, 73, 255, 0.5));
+}

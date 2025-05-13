@@ -13,7 +13,7 @@ import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { VaultTitle } from '@/components/molecules/VaultTitle/VaultTitle'
 import { riskColors } from '@/helpers/risk-colors'
 
-import { type ClassNames as TextVariants } from '@/components/atoms/Text/Text.module.scss'
+import { type ClassNames as TextVariants } from '@/components/atoms/Text/Text.module.css'
 
 interface VaultTitleWithRiskProps {
   risk: RiskType

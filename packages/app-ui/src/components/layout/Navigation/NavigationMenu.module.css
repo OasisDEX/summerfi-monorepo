@@ -1,0 +1,77 @@
+.navigationMenu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  z-index: 2;
+}
+@media (max-width: 1024px) {
+  .navigationMenu {
+    display: none;
+  }
+}
+
+.navigationMenuList {
+  display: flex;
+  list-style: none;
+  justify-content: center;
+  padding: 0;
+  column-gap: calc(var(--space-m) + var(--space-xl));
+}
+@media (min-width: 532px) {
+  .navigationMenuList {
+    column-gap: unset;
+  }
+}
+@media (min-width: 1026px) {
+  .navigationMenuList {
+    column-gap: var(--space-xl);
+  }
+}
+@media (min-width: 1279px) {
+  .navigationMenuList {
+    column-gap: calc(var(--space-m) + var(--space-xl));
+  }
+}
+
+.navigationMenuPanel {
+  flex-shrink: 0;
+  cursor: default;
+}
+
+.navigationMenuPanelLabel {
+  white-space: nowrap;
+  cursor: inherit;
+  transition: color 200ms;
+  color: var(--color-neutral-80);
+}
+.navigationMenuPanelLabelActive {
+  color: var(--color-primary-100);
+}
+
+.navigationMenuLink {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.navigationMenuLinkElement {
+  white-space: nowrap;
+  transition: color 200ms;
+  color: var(--color-neutral-80);
+}
+.navigationMenuLinkElementActive {
+  color: var(--color-primary-100);
+}
+.navigationMenuLinkElement:hover {
+  color: primary100;
+}
+
+.navigationMenuLinkElementOnClick {
+  color: var(--color-neutral-80);
+  white-space: nowrap;
+  transition: color 200ms;
+  cursor: pointer;
+}
+.navigationMenuLinkElementOnClick:hover {
+  color: var(--color-primary-100);
+}

@@ -20,7 +20,9 @@ const LatestActivityPage: FC<LatestActivityPageProps> = async ({ searchParams })
     searchParams: searchParamsResolved,
   })
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const tokens = searchParamsParsed.tokens ?? []
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const strategies = searchParamsParsed.strategies ?? []
 
   const [{ vaults }, topDepositors, latestActivity] = await Promise.all([

@@ -54,22 +54,6 @@ export default defineConfig(({ mode }) => {
       },
       UnpluginIsolatedDecl(),
     ],
-    css: {
-      preprocessorOptions: {
-        scss: {
-          // OB breakpoints: 531, 744, 1025, 1279
-          additionalData: `
-          @import 'include-media/dist/_include-media.scss';
-          $breakpoints: (
-            s: 531px,
-            m: 744px,
-            l: 1025px,
-            xl: 1279px,
-          );
-          `,
-        },
-      },
-    },
     customLogger: !notDev ? logger : undefined,
     clearScreen: false,
     build: {

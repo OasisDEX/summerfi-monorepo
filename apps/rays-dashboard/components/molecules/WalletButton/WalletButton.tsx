@@ -7,7 +7,7 @@ import { useConnectWallet } from '@web3-onboard/react'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
-import walletButtonStyles from './WalletButton.module.scss'
+import walletButtonStyles from './WalletButton.module.css'
 
 const WalletIcon = ({
   wallet,

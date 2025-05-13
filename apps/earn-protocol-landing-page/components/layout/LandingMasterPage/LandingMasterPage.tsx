@@ -13,7 +13,7 @@ import {
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
 import { manageAnalyticsCookies } from '@/features/analytics-cookies/manage-analytics-cookies'
 
-import landingMasterPageStyles from '@/components/layout/LandingMasterPage/landingMasterPage.module.scss'
+import landingMasterPageStyles from '@/components/layout/LandingMasterPage/landingMasterPage.module.css'
 
 interface LandingMasterPageProps {
   analyticsCookie: SavedAnalyticsCookiesSettings | null

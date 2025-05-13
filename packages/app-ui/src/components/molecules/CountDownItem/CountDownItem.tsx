@@ -2,8 +2,8 @@ import { type FC } from 'react'
 
 import { Text, type TextAllowedHtmlTags } from '@/components/atoms/Text/Text'
 
-import { type Styles } from '@/components/atoms/Text/Text.module.scss'
-import countDownItemStyles from '@/components/molecules/CountDownItem/CountDownItem.module.scss'
+import { type Styles } from '@/components/atoms/Text/Text.module.css'
+import countDownItemStyles from '@/components/molecules/CountDownItem/CountDownItem.module.css'
 
 interface Variants {
   value: {

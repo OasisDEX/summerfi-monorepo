@@ -1,0 +1,29 @@
+.faqSectionHeaderWrapper {
+  color: var(--color-text-secondary);
+  padding: 0 var(--spacing-space-medium);
+}
+@media (min-width: 532px) {
+  .faqSectionHeaderWrapper {
+    padding: 0 var(--spacing-space-x-large);
+  }
+}
+@media (min-width: 1026px) {
+  .faqSectionHeaderWrapper {
+    padding: 0 var(--spacing-space-3x-large);
+  }
+}
+
+.faqSectionBlockWrapper {
+  margin-top: var(--spacing-space-x-large);
+  padding: 0 var(--spacing-space-medium);
+}
+@media (min-width: 532px) {
+  .faqSectionBlockWrapper {
+    padding: 0 var(--spacing-space-x-large);
+  }
+}
+@media (min-width: 1026px) {
+  .faqSectionBlockWrapper {
+    padding: 0 var(--spacing-space-3x-large);
+  }
+}

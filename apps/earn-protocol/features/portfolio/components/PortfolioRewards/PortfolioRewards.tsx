@@ -9,7 +9,7 @@ import { PortfolioRewardsCards } from '@/features/portfolio/components/Portfolio
 import { PortfolioRewardsCountdown } from '@/features/portfolio/components/PortfolioRewardsCountdown/PortfolioRewardsCountdown'
 import { PortfolioRewardsFaq } from '@/features/portfolio/components/PortfolioRewardsFaq/PortfolioRewardsFaq'
 
-import classNames from './PortfolioRewards.module.scss'
+import classNames from './PortfolioRewards.module.css'
 
 interface PortfolioRewardsProps {
   rewardsData: ClaimDelegateExternalData

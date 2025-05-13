@@ -1,0 +1,95 @@
+.sumrClaimSearchWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--general-space-8);
+}
+.sumrClaimSearchWrapper .headerTextual {
+  text-align: center;
+  margin-bottom: var(--general-space-16);
+  display: inline;
+  gap: var(--general-space-12);
+  flex-direction: column;
+  justify-content: center;
+  flex-wrap: wrap;
+  word-break: break-word;
+  max-width: 660px;
+}
+@media (min-width: 745px) {
+  .sumrClaimSearchWrapper .headerTextual {
+    flex-direction: row;
+  }
+}
+.sumrClaimSearchWrapper .headerTextualColored {
+  color: var(--earn-protocol-primary-100);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--general-space-12);
+}
+.sumrClaimSearchWrapper .headerDescription {
+  color: var(--earn-protocol-secondary-60);
+  margin-bottom: var(--general-space-24);
+  text-align: center;
+}
+.sumrClaimSearchWrapper .actionableWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--general-space-8);
+  width: 302px;
+  position: relative;
+}
+.sumrClaimSearchWrapper .actionableWrapper a {
+  width: 100%;
+}
+.sumrClaimSearchWrapper .actionableWrapper .autoComplete,
+.sumrClaimSearchWrapper .actionableWrapper .autoCompleteHidden {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 57px;
+  left: 0;
+  z-index: 2;
+  background-color: var(--earn-protocol-neutral-80);
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.2s ease;
+}
+@media (min-width: 768px) {
+  .sumrClaimSearchWrapper .actionableWrapper .autoComplete,
+  .sumrClaimSearchWrapper .actionableWrapper .autoCompleteHidden {
+    width: fit-content;
+  }
+}
+.sumrClaimSearchWrapper .actionableWrapper .autoComplete > ul li,
+.sumrClaimSearchWrapper .actionableWrapper .autoCompleteHidden > ul li {
+  padding: var(--general-space-8) var(--general-space-8);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-radius: var(--general-radius-16);
+}
+.sumrClaimSearchWrapper .actionableWrapper .autoComplete > ul li:hover,
+.sumrClaimSearchWrapper .actionableWrapper .autoCompleteHidden > ul li:hover {
+  background-color: var(--earn-protocol-neutral-60);
+  border-radius: var(--general-radius-16);
+}
+.sumrClaimSearchWrapper .actionableWrapper .autoCompleteHidden {
+  opacity: 0;
+  visibility: hidden;
+}
+.sumrClaimSearchWrapper .gradientBox {
+  margin-top: var(--general-space-64);
+  max-width: 515px;
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+}
+.sumrClaimSearchWrapper .gradientBoxOpened {
+  position: relative;
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+}

@@ -1,0 +1,25 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  margin-bottom: var(--general-space-40);
+}
+
+.blocksWrapper {
+  display: flex;
+  margin-bottom: var(--general-space-40);
+  gap: var(--general-space-64);
+  flex-wrap: wrap;
+}
+@media (min-width: 768px) {
+  .blocksWrapper {
+    gap: var(--general-space-128);
+  }
+}
+@media (min-width: 1026px) {
+  .blocksWrapper {
+    gap: var(--general-space-256);
+  }
+}

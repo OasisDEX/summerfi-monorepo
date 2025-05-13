@@ -14,7 +14,7 @@ import { getDisplayToken } from '@/helpers/get-display-token'
 import { getUniqueVaultId } from '@/helpers/get-unique-vault-id'
 import { getVaultDetailsUrl, getVaultUrl } from '@/helpers/get-vault-url'
 
-import vaultGridDetailsStyles from './VaultGridDetails.module.scss'
+import vaultGridDetailsStyles from './VaultGridDetails.module.css'
 
 export const VaultGridDetails = ({
   vault,

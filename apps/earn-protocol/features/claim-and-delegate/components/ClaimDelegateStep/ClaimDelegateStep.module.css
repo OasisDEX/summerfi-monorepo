@@ -1,0 +1,127 @@
+.claimDelegateStepWrapper {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--general-space-16);
+  width: 100%;
+  min-height: 650px;
+}
+.claimDelegateStepWrapper .leftContent {
+  display: grid;
+  grid-template-areas: "delegate" "info" "rewards" "self";
+  grid-template-columns: 1fr;
+  gap: 0;
+  width: 100%;
+}
+@media (min-width: 532px) {
+  .claimDelegateStepWrapper .leftContent {
+    gap: var(--general-space-24);
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "delegate delegate" "info rewards" "self self";
+  }
+}
+.claimDelegateStepWrapper .leftContent > *:nth-child(1) {
+  grid-area: delegate;
+}
+.claimDelegateStepWrapper .leftContent > *:nth-child(2) {
+  grid-area: info;
+}
+.claimDelegateStepWrapper .leftContent > *:nth-child(3) {
+  grid-area: rewards;
+}
+.claimDelegateStepWrapper .leftContent > *:nth-child(4) {
+  grid-area: self;
+}
+@media (min-width: 1026px) {
+  .claimDelegateStepWrapper .leftContent {
+    display: flex;
+    max-width: 359px;
+    flex-direction: column;
+  }
+}
+.claimDelegateStepWrapper .leftContent .cardWrapper {
+  flex-direction: column;
+  gap: var(--general-space-4);
+  align-items: center;
+  max-width: 100%;
+  margin-bottom: var(--general-space-32);
+}
+@media (min-width: 1026px) {
+  .claimDelegateStepWrapper .leftContent .cardWrapper {
+    max-width: 560px;
+  }
+}
+.claimDelegateStepWrapper .leftContent .cardWrapper .valueWithIcon {
+  display: flex;
+  align-items: center;
+  gap: var(--general-space-16);
+}
+.claimDelegateStepWrapper .leftContent .selfDelegateCard {
+  margin-top: var(--general-space-32);
+}
+.claimDelegateStepWrapper .leftContent .spacer {
+  border-bottom: 1px solid var(--earn-protocol-neutral-60);
+  width: 100%;
+  margin: var(--general-space-24) 0;
+  display: block;
+}
+@media (min-width: 532px) {
+  .claimDelegateStepWrapper .leftContent .spacer {
+    display: none;
+  }
+}
+@media (min-width: 1026px) {
+  .claimDelegateStepWrapper .leftContent .spacer {
+    display: block;
+  }
+}
+.claimDelegateStepWrapper .rightContent {
+  display: flex;
+  flex-direction: column;
+  max-width: 585px;
+  width: 100%;
+}
+.claimDelegateStepWrapper .rightContent .rightContentHeading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--general-space-16);
+  margin-bottom: var(--general-space-16);
+}
+.claimDelegateStepWrapper .rightContent .rightContentHeading .inputWrapper {
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .claimDelegateStepWrapper .rightContent .rightContentHeading .inputWrapper {
+    max-width: 345px;
+  }
+}
+.claimDelegateStepWrapper .rightContent .rightContentHeading .inputWrapper .inputCustomStyles {
+  font-size: 14px;
+}
+.claimDelegateStepWrapper .rightContent .delegates {
+  display: flex;
+  flex-direction: column;
+  max-height: 700px;
+  overflow-y: auto;
+  scrollbar-color: grey transparent;
+  scrollbar-width: thin;
+  height: 100%;
+}
+.claimDelegateStepWrapper .rightContent .buttonsWrapper {
+  margin-top: var(--general-space-32);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--general-space-16);
+}
+.claimDelegateStepWrapper .rightContent .buttonsWrapper .buttonsGroup {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: var(--general-space-16);
+}

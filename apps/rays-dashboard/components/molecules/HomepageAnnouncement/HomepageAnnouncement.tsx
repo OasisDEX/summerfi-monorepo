@@ -2,7 +2,7 @@ import { type IconNamesList } from '@summerfi/app-types'
 import { Icon, Text, WithArrow } from '@summerfi/app-ui'
 import Link from 'next/link'
 
-import homepageAnnouncementStyles from './HomepageAnnouncement.module.scss'
+import homepageAnnouncementStyles from './HomepageAnnouncement.module.css'
 
 export type HomepageAnnouncementProps = {
   announcement?: {

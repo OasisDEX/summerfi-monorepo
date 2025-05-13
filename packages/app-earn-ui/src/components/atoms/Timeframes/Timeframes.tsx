@@ -2,7 +2,7 @@ import { type TimeframesItem, type TimeframesType } from '@summerfi/app-types'
 
 import { Text } from '@/components/atoms/Text/Text'
 
-import timeframesStyles from './Timeframes.module.scss'
+import timeframesStyles from './Timeframes.module.css'
 
 export const Timeframes = ({
   timeframes,

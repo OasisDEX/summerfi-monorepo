@@ -3,7 +3,7 @@ import Image from 'next/image'
 
 import { Emphasis } from '@/components/layout/LandingPageContent/components/Emphasis'
 
-import effortlessAccessBlockStyles from '@/components/layout/LandingPageContent/content/EffortlessAccessBlock.module.scss'
+import effortlessAccessBlockStyles from '@/components/layout/LandingPageContent/content/EffortlessAccessBlock.module.css'
 
 import summerEarnUi from '@/public/img/landing-page/summer-earn-ui.png'
 

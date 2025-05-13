@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import { Card, type CardVariant } from '@/components/atoms/Card/Card.tsx'
 import { DataBlock, type DataBlockProps } from '@/components/molecules/DataBlock/DataBlock.tsx'
 
-import classNames from './DataModule.module.scss'
+import classNames from './DataModule.module.css'
 
 interface DataModuleProps {
   dataBlock: DataBlockProps

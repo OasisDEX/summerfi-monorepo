@@ -1,7 +1,7 @@
 import { type FC } from 'react'
 import { Button, Card, Icon, Text } from '@summerfi/app-earn-ui'
 
-import classNames from './ClaimDelegateActionCard.module.scss'
+import classNames from './ClaimDelegateActionCard.module.css'
 
 interface ClaimDelegateActionCardProps {
   title: string

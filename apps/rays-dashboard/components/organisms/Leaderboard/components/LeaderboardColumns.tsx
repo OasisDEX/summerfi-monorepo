@@ -15,7 +15,7 @@ import { usePathname } from 'next/navigation'
 
 import { trackButtonClick } from '@/helpers/mixpanel'
 
-import leaderboardStyles from '@/components/organisms/Leaderboard/Leaderboard.module.scss'
+import leaderboardStyles from '@/components/organisms/Leaderboard/Leaderboard.module.css'
 
 const uprankColor = 'var(--color-success-70)'
 const downrankColor = 'var(--color-critical-70)'

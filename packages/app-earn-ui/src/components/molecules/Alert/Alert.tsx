@@ -4,7 +4,7 @@ import { type CSSProperties, type FC, type ReactNode } from 'react'
 import { Icon, type IconNamesList } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 
-import styles from './Alert.module.scss'
+import styles from './Alert.module.css'
 
 type AlertVariant = 'general' | 'critical' | 'warning' | 'success'
 

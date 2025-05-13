@@ -18,7 +18,7 @@ import { rebalance } from './armada-protocol-handlers/keepers/rebalance'
 import { getDepositTx } from './armada-protocol-handlers/users/getDepositTxTx'
 import { getVaultsRaw } from './armada-protocol-handlers/users/getVaults'
 import { getVaultRaw } from './armada-protocol-handlers/users/getVault'
-import { getPoolInfo } from './armada-protocol-handlers/users/getPoolInfo'
+import { getVaultInfo } from './armada-protocol-handlers/users/getVaultInfo'
 import { getPosition as getArmadaPosition } from './armada-protocol-handlers/users/getPosition'
 import { getUserPositions } from './armada-protocol-handlers/users/getUserPositions'
 import { getUserPosition } from './armada-protocol-handlers/users/getUserPosition'
@@ -42,7 +42,7 @@ import { getFleetBalance } from './armada-protocol-handlers/users/getFleetBalanc
 import { getStakedBalance } from './armada-protocol-handlers/users/getStakedBalance'
 import { getTotalBalance } from './armada-protocol-handlers/users/getTotalBalance'
 import { getAggregatedRewards } from './armada-protocol-handlers/users/getAggregatedRewards'
-import { getAggregatedClaimsForChainTX } from './armada-protocol-handlers/users/getAggregatedClaimsForChainTX'
+import { getAggregatedClaimsForChainTx } from './armada-protocol-handlers/users/getAggregatedClaimsForChainTX'
 import { getUserDelegatee } from './armada-protocol-handlers/users/getUserDelegatee'
 import { getDelegateTx } from './armada-protocol-handlers/users/getDelegateTx'
 import { getUndelegateTx } from './armada-protocol-handlers/users/getUndelegateTx'
@@ -63,6 +63,7 @@ import { getMigratablePositionsApy } from './armada-protocol-handlers/users/getM
 import { getSpotPrice } from './handlers/getSpotPrice'
 import { getSpotPrices } from './handlers/getSpotPrices'
 import { getVaultSwitchTx } from './armada-protocol-handlers/users/getVaultSwitchTx'
+import { getVaultInfoList } from './armada-protocol-handlers/users/getVaultInfoList'
 
 /**
  * Server
@@ -104,7 +105,8 @@ export const sdkAppRouter = router({
       getGlobalRebalancesRaw: getGlobalRebalancesRaw,
       getUsersActivityRaw: getUsersActivityRaw,
       getUserActivityRaw: getUserActivityRaw,
-      getPoolInfo: getPoolInfo,
+      getVaultInfo: getVaultInfo,
+      getVaultInfoList: getVaultInfoList,
       getPosition: getArmadaPosition,
       getUserPositions: getUserPositions,
       getUserPosition: getUserPosition,
@@ -116,7 +118,7 @@ export const sdkAppRouter = router({
       getBridgeTx: getBridgeTx,
       getAggregatedRewards: getAggregatedRewards,
       getClaimableAggregatedRewards: getClaimableAggregatedRewards,
-      getAggregatedClaimsForChainTX: getAggregatedClaimsForChainTX,
+      getAggregatedClaimsForChainTx: getAggregatedClaimsForChainTx,
       getUserDelegatee: getUserDelegatee,
       getDelegateTx: getDelegateTx,
       getUndelegateTx: getUndelegateTx,

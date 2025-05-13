@@ -6,7 +6,7 @@ import bestOfDecentralizedFinanceChart1 from '@/public/img/landing-page/best-of-
 import bestOfDecentralizedFinanceChart2 from '@/public/img/landing-page/best-of-decentralised-finance_chart-2.svg'
 import bestOfDecentralizedFinancePermissionless from '@/public/img/landing-page/best-of-decentralised-finance_permissionless.svg'
 
-import bestOfDecentralizedFinanceStyles from '@/components/layout/LandingPageContent/content/BestOfDecentralizedFinance.module.scss'
+import bestOfDecentralizedFinanceStyles from '@/components/layout/LandingPageContent/content/BestOfDecentralizedFinance.module.css'
 
 import bestOfDecentralizedFinanceUI from '@/public/img/landing-page/best-of-decentralised-finance_ui.png'
 

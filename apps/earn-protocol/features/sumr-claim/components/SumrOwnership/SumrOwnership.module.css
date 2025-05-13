@@ -1,0 +1,64 @@
+.sumrOwnershipWrapper {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--general-space-32);
+  width: 100%;
+}
+.sumrOwnershipWrapper .chartSection {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--general-space-64);
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.sumrOwnershipWrapper .chartSection .customChartWrapper {
+  min-width: 235px;
+}
+@media (min-width: 768px) {
+  .sumrOwnershipWrapper .chartSection .customChartWrapper {
+    min-width: 265px;
+  }
+}
+.sumrOwnershipWrapper .chartSection .customTooltipWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--general-space-8);
+  background-color: var(--earn-protocol-neutral-80);
+  border-radius: var(--general-radius-8);
+  padding: var(--general-space-8);
+}
+.sumrOwnershipWrapper .chartSection .chartLegendWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-24);
+}
+.sumrOwnershipWrapper .chartSection .legendItemWrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--general-space-16);
+}
+.sumrOwnershipWrapper .chartSection .legendItemWrapper .dotAndTextWrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: var(--general-space-16);
+}
+.sumrOwnershipWrapper .chartSection .legendItemWrapper .dotAndTextWrapper .textualWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.sumrOwnershipWrapper .chartSection .legendItemWrapper .dotAndTextWrapper .textualWrapper .legendItemText {
+  margin-bottom: var(--general-space-4);
+  max-width: 300px;
+}
+.sumrOwnershipWrapper .chartSection .legendItemWrapper .dotAndTextWrapper .textualWrapper .legendItemValue {
+  color: var(--earn-protocol-secondary-60);
+}
+.sumrOwnershipWrapper .chartSection .legendItemWrapper .dotAndTextWrapper .dot {
+  min-width: 10px;
+  height: 10px;
+  border-radius: var(--radius-circle);
+}

@@ -39,7 +39,7 @@ export const getDepositTXHandler =
       }),
     })
 
-    return sdk.armada.users.getNewDepositTX({
+    return sdk.armada.users.getNewDepositTx({
       vaultId: poolId,
       user,
       amount: amount,

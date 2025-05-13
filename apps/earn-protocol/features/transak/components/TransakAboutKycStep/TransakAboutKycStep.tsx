@@ -3,7 +3,7 @@ import { Text } from '@summerfi/app-earn-ui'
 
 import { TransakIconWrapper } from '@/features/transak/components/TransakIconWrapper/TransakIconWrapper'
 
-import classNames from './TransakAboutKyc.module.scss'
+import classNames from './TransakAboutKyc.module.css'
 
 const aboutKYCCopies = [
   {

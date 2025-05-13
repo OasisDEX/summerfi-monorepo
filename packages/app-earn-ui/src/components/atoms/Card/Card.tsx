@@ -2,7 +2,7 @@ import { type DetailedHTMLProps, type FC, type HTMLAttributes, type ReactNode } 
 
 import { getAtomClassList } from '@/components/atoms/getAtomClassList'
 
-import cardStyles, { type ClassNames } from '@/components/atoms/Card/Card.module.scss'
+import cardStyles, { type ClassNames } from '@/components/atoms/Card/Card.module.css'
 
 interface CardProps {
   children: ReactNode

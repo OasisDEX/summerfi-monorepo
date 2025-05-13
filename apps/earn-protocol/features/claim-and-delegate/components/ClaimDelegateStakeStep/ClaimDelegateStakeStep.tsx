@@ -52,7 +52,7 @@ import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import { getStakeButtonLabel } from './getStakeButtonLabel'
 
-import classNames from './ClaimDelegateStakeStep.module.scss'
+import classNames from './ClaimDelegateStakeStep.module.css'
 
 const percentageButtons = [0.25, 0.5, 0.75, 1]
 

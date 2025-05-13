@@ -14,6 +14,7 @@ import { getServerSideCookies, safeParseJson } from '@summerfi/app-utils'
 import type { Metadata } from 'next'
 import { cookies, headers } from 'next/headers'
 import Image from 'next/image'
+import Script from 'next/script'
 
 import { getAccountKitConfig } from '@/account-kit/config'
 import systemConfigHandler from '@/app/server-handlers/system-config'
@@ -29,6 +30,8 @@ export const metadata: Metadata = {
   description:
     "Get effortless access to crypto's best DeFi yields. Continually rebalanced by AI powered Keepers to earn you more while saving you time and reducing costs.",
 }
+
+const reactScanDebug = false
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const [{ config }] = await Promise.all([systemConfigHandler()])
@@ -83,6 +86,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang={locale} suppressHydrationWarning style={{ backgroundColor: '#1c1c1c' }}>
       <head>
         <GlobalStyles />
+        {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
+        {reactScanDebug && (
+          <Script
+            src="https://cdn.jsdelivr.net/npm/react-scan/dist/auto.global.js"
+            strategy="afterInteractive"
+          />
+        )}
       </head>
       <body className={`${fontInter.className} ${fontInter.variable}`}>
         {config.bannerMessage && <GlobalIssueBanner message={config.bannerMessage} />}

@@ -1,9 +1,9 @@
 'use client'
-import { type CSSProperties, type FC, type ReactNode, useEffect, useRef } from 'react'
+import { type CSSProperties, type FC, type ReactNode, useEffect, useMemo, useRef } from 'react'
 
 import { Card } from '@/components/atoms/Card/Card'
 
-import styles from './MobileDrawer.module.scss'
+import styles from './MobileDrawer.module.css'
 
 type SlideFrom = 'bottom' | 'top' | 'left' | 'right'
 
@@ -112,18 +112,19 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
   style,
 }) => {
   const drawerRef = useRef<HTMLDivElement>(null)
+  const defaultBodyOverflow = useMemo(() => document.body.style.overflow, [])
 
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden'
     } else {
-      document.body.style.overflow = 'auto'
+      document.body.style.overflow = defaultBodyOverflow
     }
 
     return () => {
-      document.body.style.overflow = 'auto'
+      document.body.style.overflow = defaultBodyOverflow
     }
-  }, [isOpen])
+  }, [isOpen, defaultBodyOverflow])
 
   return (
     <>

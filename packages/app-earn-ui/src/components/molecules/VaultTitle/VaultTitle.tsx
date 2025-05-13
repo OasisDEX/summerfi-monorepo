@@ -15,7 +15,7 @@ import { networkWarnings } from '@/constants/earn-protocol'
 import { getDisplayToken } from '@/helpers/get-display-token'
 import { getTokenGuarded } from '@/tokens/helpers'
 
-import { type ClassNames as TextVariants } from '@/components/atoms/Text/Text.module.scss'
+import { type ClassNames as TextVariants } from '@/components/atoms/Text/Text.module.css'
 
 const networkIdIconMap = {
   [NetworkIds.MAINNET]: <Icon iconName="earn_network_ethereum" size={16} />,

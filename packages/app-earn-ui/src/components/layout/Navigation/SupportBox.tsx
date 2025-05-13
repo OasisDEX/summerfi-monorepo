@@ -6,7 +6,7 @@ import { Text } from '@/components/atoms/Text/Text'
 import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
 import { isOutsideLink } from '@/helpers/is-outside-link'
 
-import supportBoxStyles from './SupportBox.module.scss'
+import supportBoxStyles from './SupportBox.module.css'
 
 const SupportBoxElement = ({
   icon,

@@ -29,7 +29,7 @@ import { RebalancingActivity } from '@/features/rebalance-activity/components/Re
 import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 import { getManagementFee } from '@/helpers/get-management-fee'
 
-import vaultManageViewStyles from './VaultManageView.module.scss'
+import vaultManageViewStyles from './VaultManageView.module.css'
 
 export const VaultManageViewDetails = ({
   vault,

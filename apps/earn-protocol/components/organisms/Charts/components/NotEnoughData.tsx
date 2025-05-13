@@ -4,7 +4,7 @@ import Image from 'next/image'
 
 import graphIcon from '@/public/img/misc/graph_icon.svg'
 
-import notEnoughDataStyles from './NotEnoughData.module.scss'
+import notEnoughDataStyles from './NotEnoughData.module.css'
 
 export const NotEnoughData = ({ style }: { style?: CSSProperties }) => {
   return (

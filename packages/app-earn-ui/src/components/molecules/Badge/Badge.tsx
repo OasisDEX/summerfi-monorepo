@@ -3,7 +3,7 @@ import clsx from 'clsx'
 
 import { Text } from '@/components/atoms/Text/Text'
 
-import classNames from './Badge.module.scss'
+import classNames from './Badge.module.css'
 
 interface BadgeProps {
   value: string

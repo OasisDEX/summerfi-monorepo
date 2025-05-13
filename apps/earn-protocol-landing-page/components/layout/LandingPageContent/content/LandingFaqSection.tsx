@@ -1,6 +1,6 @@
 import { FaqSection, vaultFaqData } from '@summerfi/app-earn-ui'
 
-import classNames from './LandingFaqSection.module.scss'
+import classNames from './LandingFaqSection.module.css'
 
 export const LandingFaqSection = () => {
   return (

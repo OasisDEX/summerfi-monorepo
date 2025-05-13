@@ -28,7 +28,7 @@ import {
   parseProtocolFilter,
 } from '@/features/rebalance-activity/table/filters/mappers'
 
-import classNames from './RebalanceActivityView.module.scss'
+import classNames from './RebalanceActivityView.module.css'
 
 interface RebalanceActivityViewProps {
   vaultsList: SDKVaultsListType

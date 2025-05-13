@@ -2,7 +2,7 @@
 import { type FC } from 'react'
 import { Card, RAYS_TO_SUMR_CONVERSION_RATE, Text } from '@summerfi/app-earn-ui'
 
-import classNames from './SumrConversionAndTotalSupply.module.scss'
+import classNames from './SumrConversionAndTotalSupply.module.css'
 
 const data = [
   {

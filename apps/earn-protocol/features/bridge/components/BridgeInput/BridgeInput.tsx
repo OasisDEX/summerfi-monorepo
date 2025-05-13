@@ -4,7 +4,7 @@ interface BridgeInputProps {
   children: React.ReactNode
 }
 
-import styles from './BridgeInput.module.scss'
+import styles from './BridgeInput.module.css'
 
 export const BridgeInput = ({ children }: BridgeInputProps) => {
   return (

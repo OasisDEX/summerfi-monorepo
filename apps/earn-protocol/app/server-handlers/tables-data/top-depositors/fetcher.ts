@@ -30,6 +30,7 @@ export async function fetchTopDepositors(client: GraphQLClient) {
       skip,
     })
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const positions = response.positions || []
 
     allPositions = [...allPositions, ...positions]

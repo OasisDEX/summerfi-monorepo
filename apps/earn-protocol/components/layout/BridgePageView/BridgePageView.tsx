@@ -5,7 +5,7 @@ import { BridgeFormContent } from '@/features/bridge/components/BridgeFormConten
 import { bridgeReducer, bridgeState } from '@/features/bridge/state'
 import { type BridgeExternalData } from '@/features/bridge/types'
 
-import classNames from './BridgePageView.module.scss'
+import classNames from './BridgePageView.module.css'
 
 interface BridgePageViewProps {
   externalData: BridgeExternalData

@@ -3,11 +3,11 @@ export { GlobalStyles } from './GlobalStyles'
 
 export { Box } from './components/atoms/Box/Box'
 export { Button } from './components/atoms/Button/Button'
-export { type ClassNames as ButtonClassNames } from './components/atoms/Button/Button.module.scss'
+export { type ClassNames as ButtonClassNames } from './components/atoms/Button/Button.module.css'
 
 export { Text } from './components/atoms/Text/Text'
 export { Card, type CardVariant } from './components/atoms/Card/Card'
-export { type ClassNames as TextClassNames } from './components/atoms/Text/Text.module.scss'
+export { type ClassNames as TextClassNames } from './components/atoms/Text/Text.module.css'
 
 export { Modal } from './components/atoms/Modal/Modal'
 export { Icon, type IconNamesList } from './components/atoms/Icon/Icon'
@@ -16,6 +16,7 @@ export { Input } from './components/atoms/Input/Input'
 export { SkeletonLine } from './components/atoms/SkeletonLine/SkeletonLine'
 export { Pill } from './components/atoms/Pill/Pill'
 export { List } from './components/atoms/List/List'
+export { Risk } from './components/atoms/Risk/Risk'
 export { WithArrow } from './components/atoms/WithArrow/WithArrow'
 export { Expander } from './components/atoms/Expander/Expander'
 export { TableRowAccent } from './components/atoms/TableRowAccent/TableRowAccent'
@@ -176,6 +177,7 @@ export { INTERNAL_LINKS, EXTERNAL_LINKS } from './helpers/application-links'
 export { getVaultsProtocolsList } from './helpers/get-vaults-protocols-list'
 
 export { getTokenGuarded } from './tokens/helpers'
+export { networkIconByNetworkName, networkIconByChainId } from './helpers/network-icons'
 
 // forecast stuff
 export { parseForecastDatapoints } from './features/forecast/parse-forecast-datapoints'

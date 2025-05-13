@@ -1,0 +1,10 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.vaultCarousel {
+  margin-bottom: var(--general-space-24);
+  margin-top: var(--general-space-24);
+}

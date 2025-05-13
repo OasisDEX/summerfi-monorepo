@@ -17,7 +17,7 @@ import { getVaultPositionUrl } from '@/helpers/get-vault-url'
 import { useApyUpdatedAt } from '@/hooks/use-apy-updated-at'
 import { useHoldAlt } from '@/hooks/use-hold-alt'
 
-import portfolioPositionStyles from './PortfolioPosition.module.scss'
+import portfolioPositionStyles from './PortfolioPosition.module.css'
 
 type PortfolioPositionProps = {
   portfolioPosition: {

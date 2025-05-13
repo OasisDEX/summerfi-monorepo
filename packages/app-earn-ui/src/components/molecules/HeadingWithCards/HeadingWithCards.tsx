@@ -8,7 +8,7 @@ import { Text } from '@/components/atoms/Text/Text'
 import { CopyToClipboard } from '@/components/molecules/CopyToClipboard/CopyToClipboard'
 import { DataBlock } from '@/components/molecules/DataBlock/DataBlock'
 
-import classNames from './HeadingWithCards.module.scss'
+import classNames from './HeadingWithCards.module.css'
 
 interface HeadingWithSocialAndCardsProps {
   title: string

@@ -3,7 +3,7 @@ import { Dropdown, Icon, Text } from '@summerfi/app-earn-ui'
 import { type DropdownOption, type DropdownRawOption } from '@summerfi/app-types'
 import { mapNumericInput } from '@summerfi/app-utils'
 
-import classNames from './TransakExchangeInput.module.scss'
+import classNames from './TransakExchangeInput.module.css'
 
 interface ContentProps {
   option: DropdownOption

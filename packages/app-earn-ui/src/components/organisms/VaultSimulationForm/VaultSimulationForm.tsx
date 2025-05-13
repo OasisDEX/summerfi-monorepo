@@ -21,7 +21,7 @@ import { getDisplayToken } from '@/helpers/get-display-token'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 import { useLocalStorageOnce } from '@/hooks/use-local-storage-once'
 
-import classNames from './VaultSimulationForm.module.scss'
+import classNames from './VaultSimulationForm.module.css'
 
 type VaultSimulationFormProps = {
   vaultData: SDKVaultishType

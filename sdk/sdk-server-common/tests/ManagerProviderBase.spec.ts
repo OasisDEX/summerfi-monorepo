@@ -11,7 +11,7 @@ describe('SDK Server Common | Unit | ManagerProviderBase', () => {
     testManagerProvider = new TestManagerProvider({
       type: TestProviderType.TestProvider,
       configProvider: configurationProviderMock,
-      supportedChainIds: [1, 5, 7],
+      supportedChainIds: [1],
     })
 
     configurationProviderMock.setConfigurationItem({ name: 'testKey', value: 'testValue' })
@@ -29,6 +29,6 @@ describe('SDK Server Common | Unit | ManagerProviderBase', () => {
   })
 
   it('should store the supported chain ids', () => {
-    expect(testManagerProvider.supportedChainIds).toEqual([1, 5, 7])
+    expect(testManagerProvider.supportedChainIds).toEqual([1])
   })
 })

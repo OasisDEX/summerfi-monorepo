@@ -6,7 +6,7 @@ import { NavigationMenuDropdownContentList } from '@/components/layout/Navigatio
 import { ExpandableArrow } from '@/components/molecules/ExpandableArrow/ExpandableArrow'
 import { useToggle } from '@/hooks/use-toggle'
 
-import navigationMenuMobileStyles from './NavigationMenuMobile.module.scss'
+import navigationMenuMobileStyles from './NavigationMenuMobile.module.css'
 
 type NavigationMobileMenuPanelProps = NavigationMenuPanelType & {
   isOpen: boolean

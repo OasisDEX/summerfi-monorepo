@@ -8,7 +8,7 @@ import { useConnectWallet } from '@web3-onboard/react'
 import { BridgeSwapOnboarding } from '@/components/molecules/BridgeSwap/BridgeSwapOnboarding'
 import { swapWidgetConfig } from '@/constants/swap-widget-config'
 
-import bridgeSwapHandlerStyles from './BridgeSwapHandler.module.scss'
+import bridgeSwapHandlerStyles from './BridgeSwapHandler.module.css'
 
 type BridgeSwapHandlerProps = {
   showNavigationModule: 'swap' | 'bridge' | undefined

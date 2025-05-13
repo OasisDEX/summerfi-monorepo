@@ -5,7 +5,7 @@ import clsx from 'clsx'
 import { Text } from '@/components/atoms/Text/Text'
 import { TitleWithIcon } from '@/components/molecules/TitleWithIcon/TitleWithIcon'
 
-import dataBlockStyles from './DataBlock.module.scss'
+import dataBlockStyles from './DataBlock.module.css'
 
 export type DataBlockProps = {
   title: ReactNode

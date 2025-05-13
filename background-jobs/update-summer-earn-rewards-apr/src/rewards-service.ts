@@ -95,7 +95,7 @@ interface RetryConfig {
 
 export class RewardsService {
   private readonly MORPHO_API_URL = 'https://blue-api.morpho.org/graphql'
-  private readonly EULER_API_URL = 'https://app.euler.finance/api/v1/rewards/merkl?chainId='
+  private readonly EULER_API_URL = 'https://app.euler.finance/api/v2/rewards/merkl?chainId='
   private readonly GEARBOX_API_URL =
     'https://api.merkl.xyz/v4/opportunities?mainProtocolId=gearbox&status=LIVE&'
   private readonly DEFAULT_RETRY_CONFIG: RetryConfig = {

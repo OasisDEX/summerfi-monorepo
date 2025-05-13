@@ -28,7 +28,7 @@ import { UserActivityTab } from '@/features/latest-activity/types/tabs'
 
 import { getLatestActivityHeadingCards, latestActivityHeading } from './cards'
 
-import classNames from './LatestActivityView.module.scss'
+import classNames from './LatestActivityView.module.css'
 
 interface LatestActivityViewProps {
   vaultsList: SDKVaultsListType

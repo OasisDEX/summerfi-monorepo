@@ -1,0 +1,19 @@
+.bigGradientBox {
+  border-radius: var(--radius-rounder);
+  height: 100%;
+  width: 100%;
+}
+
+.bigGradientBoxPurple {
+  background: linear-gradient(180deg, rgba(255, 73, 164, 0.1019607843) 0%, rgba(176, 73, 255, 0.1019607843) 47%, rgba(28, 28, 28, 0.1019607843) 96%);
+}
+.bigGradientBoxPurple.reversed {
+  background: linear-gradient(0deg, rgba(255, 73, 164, 0.1019607843) 0%, rgba(176, 73, 255, 0.1019607843) 47%, rgba(28, 28, 28, 0.1019607843) 96%);
+}
+
+.bigGradientBoxRed {
+  background: linear-gradient(0deg, rgba(28, 28, 28, 0.2) 0%, rgba(175, 20, 92, 0.1) 48.68%, rgba(190, 0, 89, 0.2) 100%);
+}
+.bigGradientBoxRed.reversed {
+  background: linear-gradient(180deg, rgba(28, 28, 28, 0.2) 0%, rgba(175, 20, 92, 0.1) 48.68%, rgba(190, 0, 89, 0.2) 100%);
+}

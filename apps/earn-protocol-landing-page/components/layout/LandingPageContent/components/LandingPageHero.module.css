@@ -1,0 +1,33 @@
+.landingPageHeroWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+@media (max-width: 531px) {
+  .landingPageHeroWrapper {
+    margin-bottom: var(--spacing-space-2x-large);
+  }
+}
+
+.heroHeader {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 74px;
+}
+
+.heroHeaderMobile {
+  text-align: center;
+}
+.heroHeaderMobile > h1 {
+  display: inline;
+}
+.heroHeaderMobile > h1:last-child {
+  margin-left: 10px;
+}
+
+.viewAllStrategies {
+  display: block;
+  margin: var(--spacing-space-2x-large) 0;
+}

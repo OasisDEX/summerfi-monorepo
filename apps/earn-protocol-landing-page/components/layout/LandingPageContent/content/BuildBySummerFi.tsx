@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 import { Emphasis } from '@/components/layout/LandingPageContent/components/Emphasis'
 
-import buildBySummerFiStyles from '@/components/layout/LandingPageContent/content/BuildBySummerFi.module.scss'
+import buildBySummerFiStyles from '@/components/layout/LandingPageContent/content/BuildBySummerFi.module.css'
 
 const StatBlock = ({ title, value }: { title: string; value: string }) => {
   return (
@@ -41,9 +41,9 @@ export const BuildBySummerFi = () => {
         </Link>
       </div>
       <div className={buildBySummerFiStyles.buildBySummerFiStatBlockWrapper}>
-        <StatBlock title="Summer.fi TVL" value="2.69B" />
-        <StatBlock title="Summer.fi 30D Volume" value="$837.99M" />
-        <StatBlock title="Capital Automated" value="$189.60M" />
+        <StatBlock title="Summer.fi TVL" value="2.63B" />
+        <StatBlock title="Summer.fi 30D Volume" value="$374.66M" />
+        <StatBlock title="Capital Automated" value="$202.50M" />
         <StatBlock title="Time Operating" value="7 years" />
       </div>
     </div>

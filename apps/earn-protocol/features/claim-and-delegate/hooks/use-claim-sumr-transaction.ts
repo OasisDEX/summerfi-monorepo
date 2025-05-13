@@ -26,7 +26,7 @@ export const useClaimSumrTransaction = ({
   isLoading: boolean
   error: Error | null
 } => {
-  const { getAggregatedClaimsForChainTX, getCurrentUser, getChainInfo } = useAppSDK()
+  const { getAggregatedClaimsForChainTx, getCurrentUser, getChainInfo } = useAppSDK()
 
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
 
@@ -45,7 +45,7 @@ export const useClaimSumrTransaction = ({
     const user = getCurrentUser()
     const chainInfo = getChainInfo()
 
-    const tx = await getAggregatedClaimsForChainTX({ user, chainInfo })
+    const tx = await getAggregatedClaimsForChainTx({ user, chainInfo })
 
     if (tx === undefined) {
       throw new Error('aggregated claims tx is undefined')

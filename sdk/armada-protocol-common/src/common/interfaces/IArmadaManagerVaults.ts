@@ -9,13 +9,15 @@ import {
   type WithdrawTransactionInfo,
   type DepositTransactionInfo,
   type VaultSwitchTransactionInfo,
+  type IArmadaVaultInfo,
+  type ChainId,
 } from '@summerfi/sdk-common'
 
 export interface IArmadaManagerVaults {
   /** USER TRANSACTIONS */
 
   /**
-   * @name getNewDepositTX
+   * @name getNewDepositTx
    * @description Returns the transactions needed to deposit tokens in the Fleet for a new position
    *
    * @param vaultId ID of the pool to deposit in
@@ -35,7 +37,7 @@ export interface IArmadaManagerVaults {
   }): Promise<[DepositTransactionInfo] | [ApproveTransactionInfo, DepositTransactionInfo]>
 
   /**
-   * @name getUpdateDepositTX
+   * @name getUpdateDepositTx
    * @description Returns the transactions needed to deposit tokens in the Fleet for an existing position
    *
    * @param vaultId ID of the pool to deposit in
@@ -46,7 +48,7 @@ export interface IArmadaManagerVaults {
    *
    * @returns TransactionInfo[] An array of transactions that must be executed for the operation to succeed
    */
-  getUpdateDepositTX(params: {
+  getUpdateDepositTx(params: {
     vaultId: IArmadaVaultId
     positionId: IArmadaPositionId
     amount: ITokenAmount
@@ -55,7 +57,7 @@ export interface IArmadaManagerVaults {
   }): Promise<[DepositTransactionInfo] | [ApproveTransactionInfo, DepositTransactionInfo]>
 
   /**
-   * @name getWithdrawTX
+   * @name getWithdrawTx
    * @description Returns the transactions needed to withdraw tokens from the Fleet
    *
    * @param vaultId ID of the pool to withdraw from
@@ -74,8 +76,7 @@ export interface IArmadaManagerVaults {
   }): Promise<
     | [WithdrawTransactionInfo]
     | [ApproveTransactionInfo, WithdrawTransactionInfo]
-    | [WithdrawTransactionInfo, WithdrawTransactionInfo]
-    | [ApproveTransactionInfo, WithdrawTransactionInfo, WithdrawTransactionInfo]
+    | [ApproveTransactionInfo, ApproveTransactionInfo, WithdrawTransactionInfo]
   >
 
   /**
@@ -101,7 +102,44 @@ export interface IArmadaManagerVaults {
     | [VaultSwitchTransactionInfo]
     | [ApproveTransactionInfo, VaultSwitchTransactionInfo]
     | [ApproveTransactionInfo, ApproveTransactionInfo, VaultSwitchTransactionInfo]
-    | [VaultSwitchTransactionInfo, VaultSwitchTransactionInfo]
-    | [ApproveTransactionInfo, VaultSwitchTransactionInfo, VaultSwitchTransactionInfo]
   >
+
+  /**
+   * @method getVaultInfo
+   * @description Retrieves the information of an Armada vault by its ID
+   *
+   * @param vaultId ID of the vault to retrieve
+   *
+   * @returns The information of the corresponding Armada vault
+   */
+  getVaultInfo(params: { vaultId: IArmadaVaultId }): Promise<IArmadaVaultInfo>
+
+  /**
+   * @method getVaultInfoList
+   * @description Retrieves the information of all Armada vaults for a given chain
+   *
+   * @param chainInfo Chain information
+   *
+   * @returns The information of all Armada vaults for the given chain
+   */
+  getVaultInfoList(params: { chainId: ChainId }): Promise<{
+    list: IArmadaVaultInfo[]
+  }>
+
+  getVaultsApys(params: { chainId: ChainId; vaultIds: IArmadaVaultId[] }): Promise<{
+    byFleetAddress: {
+      [fleetAddress: string]: {
+        apy: IPercentage | null
+      }
+    }
+  }>
+
+  getVaultsRewardsApys(params: { chainId: ChainId; vaultIds: IArmadaVaultId[] }): Promise<{
+    byFleetAddress: {
+      [fleetAddress: string]: {
+        token: IToken
+        apy: IPercentage | null
+      }[]
+    }
+  }>
 }

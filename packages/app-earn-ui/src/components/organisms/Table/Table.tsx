@@ -5,7 +5,7 @@ import { SortDirection } from '@summerfi/app-utils'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { TableSkeleton } from '@/components/molecules/TableSkeleton/TableSkeleton'
 
-import styles from './Table.module.scss'
+import styles from './Table.module.css'
 
 interface Column<K> {
   title: ReactNode

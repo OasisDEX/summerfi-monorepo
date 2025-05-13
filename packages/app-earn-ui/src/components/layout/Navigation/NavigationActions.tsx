@@ -7,7 +7,7 @@ import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { INTERNAL_LINKS } from '@/helpers/application-links.ts'
 
-import navigationActionsStyles from '@/components/layout/Navigation/NavigationActions.module.scss'
+import navigationActionsStyles from '@/components/layout/Navigation/NavigationActions.module.css'
 
 interface NavigationActionsProps {
   signUpComponent?: ReactNode

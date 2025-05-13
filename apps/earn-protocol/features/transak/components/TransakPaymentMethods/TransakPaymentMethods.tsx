@@ -4,7 +4,7 @@ import clsx from 'clsx'
 
 import { type TransakPaymentOptions } from '@/features/transak/types'
 
-import classNames from './TransakPaymentMethods.module.scss'
+import classNames from './TransakPaymentMethods.module.css'
 
 interface TransakPaymentMethodsProps {
   onChange: (paymentMethod: TransakPaymentOptions) => void

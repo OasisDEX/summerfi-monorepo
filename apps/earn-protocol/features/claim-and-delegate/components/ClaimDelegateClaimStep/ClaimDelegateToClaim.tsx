@@ -6,7 +6,7 @@ import clsx from 'clsx'
 
 import { networkSDKChainIdIconMap } from '@/constants/network-id-to-icon'
 
-import classNames from './ClaimDelegateClaimStep.module.scss'
+import classNames from './ClaimDelegateClaimStep.module.css'
 
 interface ClaimDelegateToClaimProps {
   earned: string
@@ -44,12 +44,8 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
   return (
     <Card className={classNames.cardWrapper + (canClaim ? '' : ` ${classNames.disabled}`)}>
       {canClaim && (
-        <div
-          className={clsx(classNames.tagWrapper, classNames.claim, {
-            [classNames.onlyStep]: isOnlyStep,
-          })}
-        >
-          <Text as="p" variant="p4semi" className={classNames.tabLabel}>
+        <div className={clsx(classNames.tagWrapper, classNames.claim)}>
+          <Text as="p" variant="p4semi">
             Available to claim
           </Text>
         </div>

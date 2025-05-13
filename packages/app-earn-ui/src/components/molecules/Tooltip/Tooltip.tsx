@@ -23,8 +23,8 @@ import {
 import { isTouchDevice } from '@/helpers/is-touch-device'
 import { useMobileCheck } from '@/hooks/use-mobile-check'
 
-import { type ClassNames as CardVariants } from '@/components/atoms/Card/Card.module.scss'
-import tooltipStyles from '@/components/molecules/Tooltip/Tooltip.module.scss'
+import { type ClassNames as CardVariants } from '@/components/atoms/Card/Card.module.css'
+import tooltipStyles from '@/components/molecules/Tooltip/Tooltip.module.css'
 
 const generateUniqueId = () => `tooltip-${Math.random().toString(36).slice(2, 9)}`
 

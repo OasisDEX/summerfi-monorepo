@@ -40,7 +40,7 @@ import { isVaultAtLeastDaysOld } from '@/helpers/is-vault-at-least-days-old'
 import { useApyUpdatedAt } from '@/hooks/use-apy-updated-at'
 import { useHoldAlt } from '@/hooks/use-hold-alt'
 
-import vaultOpenGridStyles from './VaultOpenGrid.module.scss'
+import vaultOpenGridStyles from './VaultOpenGrid.module.css'
 
 interface VaultOpenGridProps {
   vault: SDKVaultishType

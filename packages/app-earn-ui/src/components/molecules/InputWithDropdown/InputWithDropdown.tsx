@@ -10,7 +10,7 @@ import { Text } from '@/components/atoms/Text/Text'
 import { Dropdown } from '@/components/molecules/Dropdown/Dropdown'
 import { TokenWithNetworkIcon } from '@/components/molecules/TokenWithNetworkIcon/TokenWithNetworkIcon'
 
-import classNames from '@/components/molecules/InputWithDropdown/InputWithDropdown.module.scss'
+import classNames from '@/components/molecules/InputWithDropdown/InputWithDropdown.module.css'
 
 interface ContentProps {
   option: DropdownOption

@@ -8,7 +8,7 @@ import {
   type mapLeaderboardColumns,
 } from '@/components/organisms/Leaderboard/columns'
 
-import leaderboardStyles from '@/components/organisms/Leaderboard/Leaderboard.module.scss'
+import leaderboardStyles from '@/components/organisms/Leaderboard/Leaderboard.module.css'
 
 interface LeaderboardProps {
   leaderboardData?: ReturnType<typeof mapLeaderboardColumns>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
 import {
   Address,
@@ -8,14 +9,12 @@ import {
   TokenAmount,
   User,
   Wallet,
-  type ChainInfo,
-  type IArmadaVaultId,
-  type IToken,
-  type IUser,
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
 import { signerPrivateKey, SDKApiUrl, userAddress } from './utils/testConfig'
+import { waitSeconds } from './utils/wait'
+import { DEFAULT_SLIPPAGE_PERCENTAGE, TX_CONFIRMATION_WAIT_TIME } from './utils/constants'
 import assert from 'assert'
 
 jest.setTimeout(300000)
@@ -31,143 +30,137 @@ const eurcFleet = Address.createFromEthereum({
 const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
 
 describe('Armada Protocol Deposit', () => {
-  const main = async () => {
-    const chainInfo = getChainInfoByChainId(chainId)
-
+  it('should make deposits to fleet', async () => {
     await runTests({
       swapToSymbol: undefined,
-      chainInfo,
+      chainId,
       fleetAddress: usdcFleet,
       rpcUrl,
       stake: false,
+      amountValue: '1.2',
     })
-  }
-  main()
+    // await runTests({
+    //   swapToSymbol: undefined,
+    //   chainId,
+    //   fleetAddress: usdcFleet,
+    //   rpcUrl,
+    //   amountValue: '0.2',
+    // })
+  })
 
   async function runTests({
     swapToSymbol: swapSymbol,
-    chainInfo,
+    chainId,
     fleetAddress,
     rpcUrl,
+    amountValue,
     stake,
   }: {
-    chainInfo: ChainInfo
+    chainId: number
     swapToSymbol: string | undefined
     fleetAddress: Address
     rpcUrl: string | undefined
-    stake: boolean
+    amountValue: string
+    stake?: boolean
   }) {
     const sdk: SDKManager = makeSDK({
       apiURL: SDKApiUrl,
     })
-
     if (!rpcUrl) {
       throw new Error('Missing rpc url')
     }
 
-    let vaultId: IArmadaVaultId
-    let token: IToken
-    let swapToken: IToken | undefined
-    let user: IUser
-
-    beforeEach(async () => {
-      console.log(`Preparation for fleet ${fleetAddress} on ${chainInfo.name}`)
-
-      user = User.createFrom({
-        wallet: Wallet.createFrom({
-          address: userAddress,
-        }),
-        chainInfo,
-      })
-      vaultId = ArmadaVaultId.createFrom({
-        chainInfo,
-        fleetAddress,
-      })
-
-      const chain = await sdk.chains.getChain({ chainInfo })
-      const vaultInfo = await sdk.armada.users.getVaultInfo({
-        vaultId,
-      })
-      token = vaultInfo.depositCap.token
-      swapToken = swapSymbol
-        ? await chain.tokens.getTokenBySymbol({ symbol: swapSymbol })
-        : undefined
+    const chainInfo = getChainInfoByChainId(chainId)
+    const user = User.createFrom({
+      wallet: Wallet.createFrom({
+        address: userAddress,
+      }),
+      chainInfo,
+    })
+    const vaultId = ArmadaVaultId.createFrom({
+      chainInfo,
+      fleetAddress,
     })
 
-    it(`should deposit 1 USDC to fleet at ${fleetAddress.value} ${stake ? 'with staking' : 'without staking'} ${swapToken ? 'and with swap to ' + swapToken.symbol : ''} `, async () => {
-      const amount = TokenAmount.createFrom({
-        amount: '1',
-        token: swapToken || token,
-      })
-      const transactions = await sdk.armada.users.getNewDepositTX({
-        vaultId,
-        user,
-        amount,
-        slippage: Percentage.createFrom({
-          value: 1,
-        }),
-        shouldStake: stake,
-      })
-
-      const vaultInfo = await sdk.armada.users.getVaultInfo({
-        vaultId,
-      })
-      assert(
-        vaultInfo.depositCap.isGreaterOrEqualThan(vaultInfo.totalDeposits.add(amount)),
-        `Deposit cap is not enough: ${vaultInfo.depositCap.toString()} < ${vaultInfo.totalDeposits
-          .add(amount)
-          .toString()}`,
-      )
-
-      const fleetAmountBefore = await sdk.armada.users.getFleetBalance({
-        vaultId,
-        user,
-      })
-      const stakedAmountBefore = await sdk.armada.users.getStakedBalance({
-        vaultId,
-        user,
-      })
-      console.log(
-        'before',
-        fleetAmountBefore.assets.toSolidityValue(),
-        '/',
-        stakedAmountBefore.assets.toSolidityValue(),
-      )
-      const { statuses } = await sendAndLogTransactions({
-        chainInfo,
-        transactions,
-        rpcUrl: rpcUrl,
-        privateKey: signerPrivateKey,
-      })
-      statuses.forEach((status) => {
-        expect(status).toBe('success')
-      })
-
-      await new Promise((resolve) => {
-        console.log('wait 5 seconds...')
-        return setTimeout(resolve, 5000)
-      })
-
-      const fleetAmountAfter = await sdk.armada.users.getFleetBalance({
-        vaultId,
-        user,
-      })
-      const stakedAmountAfter = await sdk.armada.users.getStakedBalance({
-        vaultId,
-        user,
-      })
-      console.log(
-        'after',
-        fleetAmountAfter.assets.toSolidityValue(),
-        '/',
-        stakedAmountAfter.assets.toSolidityValue(),
-      )
-      console.log(
-        'difference',
-        fleetAmountAfter.assets.subtract(fleetAmountBefore.assets).toString(),
-        '/',
-        stakedAmountAfter.assets.subtract(stakedAmountBefore.assets).toString(),
-      )
+    const chain = await sdk.chains.getChain({ chainInfo })
+    const vaultInfo = await sdk.armada.users.getVaultInfo({
+      vaultId,
     })
+    const token = vaultInfo.depositCap.token
+    const swapToken = swapSymbol
+      ? await chain.tokens.getTokenBySymbol({ symbol: swapSymbol })
+      : undefined
+
+    console.log(
+      `deposit ${amountValue} USDC to fleet at ${fleetAddress.value} ${stake ? 'with staking' : 'without staking'} ${swapToken ? 'and with swap to ' + swapToken.symbol : ''} `,
+    )
+
+    const amount = TokenAmount.createFrom({
+      amount: amountValue,
+      token: swapToken || token,
+    })
+    const transactions = await sdk.armada.users.getNewDepositTx({
+      vaultId,
+      user,
+      amount,
+      slippage: Percentage.createFrom({
+        value: DEFAULT_SLIPPAGE_PERCENTAGE,
+      }),
+      shouldStake: stake,
+    })
+
+    assert(
+      vaultInfo.depositCap.isGreaterOrEqualThan(vaultInfo.totalDeposits.add(amount)),
+      `Deposit cap is not enough: ${vaultInfo.depositCap.toString()} < ${vaultInfo.totalDeposits
+        .add(amount)
+        .toString()}`,
+    )
+
+    const fleetAmountBefore = await sdk.armada.users.getFleetBalance({
+      vaultId,
+      user,
+    })
+    const stakedAmountBefore = await sdk.armada.users.getStakedBalance({
+      vaultId,
+      user,
+    })
+    console.log(
+      'before',
+      fleetAmountBefore.assets.toSolidityValue(),
+      '/',
+      stakedAmountBefore.assets.toSolidityValue(),
+    )
+    const { statuses } = await sendAndLogTransactions({
+      chainInfo,
+      transactions,
+      rpcUrl: rpcUrl,
+      privateKey: signerPrivateKey,
+    })
+    statuses.forEach((status) => {
+      expect(status).toBe('success')
+    })
+
+    await waitSeconds(TX_CONFIRMATION_WAIT_TIME)
+
+    const fleetAmountAfter = await sdk.armada.users.getFleetBalance({
+      vaultId,
+      user,
+    })
+    const stakedAmountAfter = await sdk.armada.users.getStakedBalance({
+      vaultId,
+      user,
+    })
+    console.log(
+      'after',
+      fleetAmountAfter.assets.toSolidityValue(),
+      '/',
+      stakedAmountAfter.assets.toSolidityValue(),
+    )
+    console.log(
+      'difference',
+      fleetAmountAfter.assets.subtract(fleetAmountBefore.assets).toString(),
+      '/',
+      stakedAmountAfter.assets.subtract(stakedAmountBefore.assets).toString(),
+    )
   }
 })

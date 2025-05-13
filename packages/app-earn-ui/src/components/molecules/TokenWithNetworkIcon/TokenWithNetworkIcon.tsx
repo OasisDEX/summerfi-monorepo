@@ -3,7 +3,7 @@ import { SDKChainId, SDKNetwork, type TokenSymbolsList } from '@summerfi/app-typ
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 
-import classNames from './TokenWithNetworkIcon.module.scss'
+import classNames from './TokenWithNetworkIcon.module.css'
 
 const chainIdIconMap: {
   1: string

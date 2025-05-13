@@ -1,0 +1,87 @@
+.positionAndVaultsListWrapper {
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--spacing-space-large);
+  padding-bottom: var(--spacing-space-large);
+  gap: var(--spacing-space-medium);
+}
+
+.cardWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-medium);
+}
+
+.titleRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  width: max-content;
+}
+
+.dataRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: start;
+}
+.dataRow .dataRowColumn {
+  display: flex;
+  flex-direction: column;
+  width: 140px;
+}
+
+.arrowForward {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 28px;
+  height: 28px;
+  margin: 0 auto;
+  border-radius: var(--radius-circle);
+  transform: rotate(90deg);
+  background-color: var(--color-surface-subtler);
+}
+
+.nextPositionInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nextPositionIconFilterButton {
+  cursor: pointer;
+  padding: 6px 6px 0;
+  border-radius: var(--radius-circle);
+  background-color: var(--color-surface);
+  transition: 0.2s ease-in-out;
+}
+
+.activeFilter {
+  background-color: var(--color-surface-subtler);
+}
+
+.nextPositionIconsInfo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-space-medium);
+}
+
+.nextVaultCard {
+  background-color: var(--earn-protocol-neutral-90);
+  border: 1px solid transparent !important;
+}
+
+.nextVaultCardNotSelected {
+  border: 1px solid var(--color-border) !important;
+}

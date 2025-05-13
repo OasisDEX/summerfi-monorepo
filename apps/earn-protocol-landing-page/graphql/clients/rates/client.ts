@@ -1701,6 +1701,7 @@ export enum Token_OrderBy {
 export type VaultState = {
   __typename?: 'VaultState';
   id: Scalars['Bytes']['output'];
+  lastRate?: Maybe<Scalars['BigDecimal']['output']>;
   lastSharePrice: Scalars['BigDecimal']['output'];
   lastUpdateTimestamp: Scalars['BigInt']['output'];
 };
@@ -1719,6 +1720,14 @@ export type VaultState_Filter = {
   id_not?: InputMaybe<Scalars['Bytes']['input']>;
   id_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
   id_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
+  lastRate?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lastRate_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lastRate_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lastRate_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  lastRate_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lastRate_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lastRate_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lastRate_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   lastSharePrice?: InputMaybe<Scalars['BigDecimal']['input']>;
   lastSharePrice_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   lastSharePrice_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -1740,6 +1749,7 @@ export type VaultState_Filter = {
 
 export enum VaultState_OrderBy {
   id = 'id',
+  lastRate = 'lastRate',
   lastSharePrice = 'lastSharePrice',
   lastUpdateTimestamp = 'lastUpdateTimestamp'
 }

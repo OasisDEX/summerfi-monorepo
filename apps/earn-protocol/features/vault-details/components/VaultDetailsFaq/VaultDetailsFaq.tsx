@@ -1,6 +1,6 @@
 import { Card, FaqSection, vaultFaqData } from '@summerfi/app-earn-ui'
 
-import classNames from './VaultDetailsFaq.module.scss'
+import classNames from './VaultDetailsFaq.module.css'
 
 export const VaultDetailsFaq = () => {
   return (

@@ -11,7 +11,6 @@ export enum ChainFamilyName {
 
 export enum EthereumChainNames {
   Mainnet = 'Mainnet',
-  Goerli = 'Goerli',
 }
 
 export enum ArbitrumChainNames {

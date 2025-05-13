@@ -1,4 +1,4 @@
-import styles from './Spacer.module.scss'
+import styles from './Spacer.module.css'
 
 interface SpacerProps {
   className?: string

@@ -1,5 +1,12 @@
 import { type FC, useState } from 'react'
-import { getVaultPositionUrl, Icon, Text, useMobileCheck, WithArrow } from '@summerfi/app-earn-ui'
+import {
+  getVaultPositionUrl,
+  Icon,
+  networkIconByChainId,
+  Text,
+  useMobileCheck,
+  WithArrow,
+} from '@summerfi/app-earn-ui'
 import { type TokenSymbolsList } from '@summerfi/app-types'
 import {
   chainIdToSDKNetwork,
@@ -12,11 +19,10 @@ import { type RebalanceActivity } from '@summerfi/summer-protocol-db'
 import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
-import { networkIconByChainId } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { rebalanceActivityPurposeMapper } from '@/features/rebalance-activity/table/mapper'
 
-import classNames from './PortfolioRebalanceActivityList.module.scss'
+import classNames from './PortfolioRebalanceActivityList.module.css'
 
 interface PortfolioRebalanceActivityListProps {
   rebalanceActivityList: RebalanceActivity[]

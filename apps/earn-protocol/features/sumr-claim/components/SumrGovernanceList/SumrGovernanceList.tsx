@@ -1,7 +1,7 @@
 import { type FC } from 'react'
 import { type IconNamesList, IconWithBackground, Text } from '@summerfi/app-earn-ui'
 
-import classNames from './SumrGovernanceList.module.scss'
+import classNames from './SumrGovernanceList.module.css'
 
 interface SumrGovernanceListProps {
   list: { iconName: IconNamesList; title: string; description: string }[]

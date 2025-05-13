@@ -8,7 +8,7 @@ import {
 import { getAtomClassList } from '@/components/atoms/getAtomClassList'
 import { type AtomProps } from '@/components/atoms/types'
 
-import textStyles, { type ClassNames, type Styles } from '@/components/atoms/Text/Text.module.scss'
+import textStyles, { type ClassNames, type Styles } from '@/components/atoms/Text/Text.module.css'
 
 export type TextAllowedHtmlTags =
   | 'address'

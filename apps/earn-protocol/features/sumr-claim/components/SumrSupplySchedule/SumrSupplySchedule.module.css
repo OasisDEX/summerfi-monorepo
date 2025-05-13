@@ -1,0 +1,27 @@
+.sumrSupplyScheduleLegend {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  row-gap: var(--general-space-24);
+  margin-top: var(--general-space-24);
+}
+.sumrSupplyScheduleLegend .legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--general-space-8);
+}
+.sumrSupplyScheduleLegend .legendItem .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.sumrSupplyScheduleLegend .legendItem .dashedLineHorizontal {
+  width: 20px;
+  height: 2px;
+  background: repeating-linear-gradient(to right, #b5b5b5 0, #b5b5b5 5px, transparent 5px, transparent 14px);
+}
+.sumrSupplyScheduleLegend .legendItem .dashedLineVertical {
+  width: 1px;
+  height: 20px;
+  background: repeating-linear-gradient(to bottom, #777576 0, #777576 4px, transparent 4px, transparent 8px);
+}

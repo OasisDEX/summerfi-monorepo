@@ -12,7 +12,7 @@ import clsx from 'clsx'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import classNames from './ClaimDelegateCard.module.scss'
+import classNames from './ClaimDelegateCard.module.css'
 
 interface ClaimDelegateCardProps {
   isActive: boolean

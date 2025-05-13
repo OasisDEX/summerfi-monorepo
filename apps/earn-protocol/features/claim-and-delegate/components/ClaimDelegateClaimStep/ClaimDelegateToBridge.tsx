@@ -7,7 +7,7 @@ import Link from 'next/link'
 
 import { networkSDKChainIdIconMap } from '@/constants/network-id-to-icon'
 
-import classNames from './ClaimDelegateClaimStep.module.scss'
+import classNames from './ClaimDelegateClaimStep.module.css'
 
 interface ClaimDelegateToBridgeProps {
   balance: string
@@ -24,7 +24,7 @@ export const ClaimDelegateToBridge: FC<ClaimDelegateToBridgeProps> = ({
   return (
     <Card className={classNames.cardWrapper}>
       <div className={clsx(classNames.tagWrapper, classNames.bridge)}>
-        <Text as="p" variant="p4semi" className={classNames.tabLabel}>
+        <Text as="p" variant="p4semi">
           Ready to bridge
         </Text>
       </div>

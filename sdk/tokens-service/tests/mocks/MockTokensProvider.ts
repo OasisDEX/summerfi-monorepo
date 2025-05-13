@@ -26,7 +26,7 @@ export class MockTokensProvider
   }
 
   getSupportedChainIds(): ChainId[] {
-    return [1, 4, 6]
+    return [1]
   }
 
   getTokenBySymbol(params: { chainInfo: IChainInfo; symbol: string }): IToken {

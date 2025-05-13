@@ -1,0 +1,24 @@
+.orderInformationWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-12);
+  width: 100%;
+}
+.orderInformationWrapper .orderInformationList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-12);
+}
+.orderInformationWrapper .orderInformationList .listItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.orderInformationWrapper .orderInformationList .listItem .label {
+  display: flex;
+  align-items: center;
+  gap: var(--general-space-4);
+}
+.orderInformationWrapper .orderInformationListInExpander {
+  padding: var(--general-space-12);
+}

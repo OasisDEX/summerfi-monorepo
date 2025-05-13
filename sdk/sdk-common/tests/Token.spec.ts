@@ -1,4 +1,4 @@
-import { Address, AddressType, ChainInfo } from '../src'
+import { Address, AddressType, ChainIds, ChainInfo } from '../src'
 import { Token } from '../src/common/implementation/Token'
 
 describe('SDK Common | Token', () => {
@@ -104,7 +104,7 @@ describe('SDK Common | Token', () => {
           value: '0x0b2c639c533813f4aa9d7837caf62653d097ff85',
         }),
         chainInfo: ChainInfo.createFrom({
-          chainId: 2,
+          chainId: ChainIds.ArbitrumOne,
           name: 'SomeChain',
         }),
         decimals: 18,

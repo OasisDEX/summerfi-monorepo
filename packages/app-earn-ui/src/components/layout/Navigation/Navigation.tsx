@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type ReactNode, useEffect, useState } from 'react'
+import { type FC, type ReactNode, useEffect, useMemo, useState } from 'react'
 import { type NavigationMenuPanelLinkType } from '@summerfi/app-types'
 
 import { NavigationActions } from '@/components/layout/Navigation/NavigationActions'
@@ -14,7 +14,7 @@ import {
 } from '@/components/molecules/MobileDrawer/MobileDrawer'
 import { useMobileCheck } from '@/hooks/use-mobile-check'
 
-import navigationStyles from '@/components/layout/Navigation/Navigation.module.scss'
+import navigationStyles from '@/components/layout/Navigation/Navigation.module.css'
 
 export interface EarnNavigationProps {
   currentPath: string
@@ -56,15 +56,24 @@ export const Navigation: FC<EarnNavigationProps> = ({
   const [tempCurrentPath, setTempCurrentPath] = useState(currentPath)
   const [mobileMenuOpened, setMobileMenuOpened] = useState(false)
   const { isMobile, isTablet } = useMobileCheck()
+  const defaultBodyOverflow = useMemo(() => {
+    if (typeof document !== 'undefined') {
+      return document.body.style.overflow
+    }
+
+    return undefined
+  }, [])
 
   const toggleMobileMenu = () => {
     const nextValue = !mobileMenuOpened
 
     if (nextValue) {
       // mobile menu
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'auto'
+      if (typeof document !== 'undefined') {
+        document.body.style.overflow = 'hidden'
+      }
+    } else if (typeof document !== 'undefined' && defaultBodyOverflow) {
+      document.body.style.overflow = defaultBodyOverflow
     }
     setMobileMenuOpened(!mobileMenuOpened)
   }
@@ -73,9 +82,11 @@ export const Navigation: FC<EarnNavigationProps> = ({
     if (tempCurrentPath !== currentPath) {
       setTempCurrentPath(currentPath)
       setMobileMenuOpened(false)
-      document.body.style.overflow = 'auto'
+      if (defaultBodyOverflow) {
+        document.body.style.overflow = defaultBodyOverflow
+      }
     }
-  }, [currentPath, tempCurrentPath])
+  }, [currentPath, tempCurrentPath, defaultBodyOverflow])
 
   return (
     <div

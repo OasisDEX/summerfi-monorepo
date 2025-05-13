@@ -1,0 +1,21 @@
+.portfolioSummerProWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-16);
+}
+.portfolioSummerProWrapper .portfolioSummerProHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.portfolioSummerProWrapper .migrateTabWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-16);
+  text-align: center;
+}
+.portfolioSummerProWrapper .migrateTabWrapper .buttonWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}

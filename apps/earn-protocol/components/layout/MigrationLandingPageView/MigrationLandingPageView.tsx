@@ -9,6 +9,7 @@ import {
   Icon,
   MobileDrawer,
   Modal,
+  networkIconByNetworkName,
   SlideCarousel,
   SliderCarouselDotsPosition,
   SUMR_CAP,
@@ -38,7 +39,6 @@ import { useSearchParams } from 'next/navigation'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
-import { networkIconByNetworkName } from '@/constants/networkIcons'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { MigrationLandingPageIlustration } from '@/features/migration/components/MigrationLandingPageIlustration/MigrationLandingPageIlustration'
 import { MigrationLandingPagePositionCard } from '@/features/migration/components/MigrationLandingPagePositionCard/MigrationLandingPagePositionCard'
@@ -47,7 +47,7 @@ import { NavConfigContent } from '@/features/nav-config/components/NavConfigCont
 import { revalidateMigrationData } from '@/helpers/revalidation-handlers'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
-import classNames from './MigrationLandingPageView.module.scss'
+import classNames from './MigrationLandingPageView.module.css'
 
 const contentCards: {
   title: string

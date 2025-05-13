@@ -8,7 +8,7 @@ import { VaultDetailsSecurityProtocolStats } from '@/features/vault-details/comp
 import { VaultDetailsSecurityStats } from '@/features/vault-details/components/VaultDetailsSecurity/VaultDetailsSecurityStats'
 import { VaultDetailsSecuritySupportExpander } from '@/features/vault-details/components/VaultDetailsSecurity/VaultDetailsSecuritySupportExpander'
 
-import classNames from './VaultDetailsSecurity.module.scss'
+import classNames from './VaultDetailsSecurity.module.css'
 
 type VaultDetailsSecurityProps = {
   vault: SDKVaultishType

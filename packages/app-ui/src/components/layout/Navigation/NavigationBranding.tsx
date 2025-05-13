@@ -1,7 +1,7 @@
 import { type FC } from 'react'
 import clsx from 'clsx'
 
-import navigationStyles from '@/components/layout/Navigation/Navigation.module.scss'
+import navigationStyles from '@/components/layout/Navigation/Navigation.module.css'
 
 type NavigationBrandingProps = {
   logo: string

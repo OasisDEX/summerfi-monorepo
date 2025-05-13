@@ -2,7 +2,7 @@ import { FaqSection } from '@summerfi/app-earn-ui'
 
 import { sumrFaqData } from './sumr-faq-data'
 
-import classNames from './SumrFaq.module.scss'
+import classNames from './SumrFaq.module.css'
 
 export const SumrFaq = () => {
   return (

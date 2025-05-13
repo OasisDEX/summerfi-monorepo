@@ -17,7 +17,7 @@ import { TokensGroup } from '@/components/molecules/TokensGroup/TokensGroup'
 import { useMobileCheck } from '@/hooks/use-mobile-check'
 import { useOutsideElementClickHandler } from '@/hooks/use-outside-element-click-handler'
 
-import classNames from './GenericMultiselect.module.scss'
+import classNames from './GenericMultiselect.module.css'
 
 export interface GenericMultiselectOption {
   icon?: IconNamesList

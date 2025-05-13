@@ -5,7 +5,7 @@ import clsx from 'clsx'
 import { Button } from '@/components/atoms/Button/Button.tsx'
 import { Text } from '@/components/atoms/Text/Text.tsx'
 
-import classNames from './MarketingPointsList.module.scss'
+import classNames from './MarketingPointsList.module.css'
 
 export type MarketingPointsListData = { [key: string]: { title: string; content: ReactNode } }
 

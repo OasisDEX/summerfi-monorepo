@@ -1,4 +1,4 @@
-import { AddressValue } from '@summerfi/sdk-common'
+import { AddressValue, type ChainId } from '@summerfi/sdk-common'
 
 /**
  * Information of a token
@@ -13,7 +13,7 @@ export interface TokenData {
   /** Number of decimals of the token */
   decimals: number
   /** Chain ID of the token */
-  chainId: number
+  chainId: ChainId
   /** URI of the logo of the token */
   logoURI: string
 }

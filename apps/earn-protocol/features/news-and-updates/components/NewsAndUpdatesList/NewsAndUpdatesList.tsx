@@ -2,7 +2,7 @@ import { type FC } from 'react'
 import { Text } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
-import classNames from './NewsAndUpdatesList.module.scss'
+import classNames from './NewsAndUpdatesList.module.css'
 
 interface NewsAndUpdatesListProps {
   items: { title: string; timestamp: number; link: string }[]

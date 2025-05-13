@@ -1,7 +1,7 @@
 'use client'
 import { Text } from '@summerfi/app-earn-ui'
 
-import styles from './BridgeFormTitle.module.scss'
+import styles from './BridgeFormTitle.module.css'
 
 const BridgeFormTitle = () => {
   return (

@@ -33,6 +33,7 @@ export async function fetchAllRebalanceActivities(client: GraphQLClient, timesta
       skip,
     })
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const rebalances = response.rebalances || []
 
     allRebalances = [...allRebalances, ...rebalances]

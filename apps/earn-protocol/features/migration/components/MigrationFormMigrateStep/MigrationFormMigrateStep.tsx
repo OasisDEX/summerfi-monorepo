@@ -32,7 +32,7 @@ import {
 import { mapMigrationToPortfolioCard } from '@/features/migration/helpers/map-migration-to-portfolio-card'
 import { type MigrationState, MigrationSteps } from '@/features/migration/types'
 
-import classNames from './MigrationFormMigrateStep.module.scss'
+import classNames from './MigrationFormMigrateStep.module.css'
 
 interface MigrationFormMigrateStepProps {
   estimatedEarnings: string

@@ -7,7 +7,7 @@ import { Text } from '@/components/atoms/Text/Text'
 import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
 import { NavigationMenuDropdownContentListItem } from '@/components/layout/Navigation/NavigationMenuDropdownContentListItem'
 
-import navigationMenuDropdownContentListStyles from './NavigationMenuDropdownContentList.module.scss'
+import navigationMenuDropdownContentListStyles from './NavigationMenuDropdownContentList.module.css'
 
 type NavigationMenuDropdownContentListProps = NavigationMenuPanelList & {
   parentIndex?: number

@@ -1,0 +1,11 @@
+.tableCellAllocationCapWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--general-space-8);
+}
+.tableCellAllocationCapWrapper .tableCellAllocationCapPercentTooltipWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--general-space-4);
+}

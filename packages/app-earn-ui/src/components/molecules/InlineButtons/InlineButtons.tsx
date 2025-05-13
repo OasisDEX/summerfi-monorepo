@@ -3,9 +3,9 @@ import { type InlineButtonOption } from '@summerfi/app-types'
 
 import { Button } from '@/components/atoms/Button/Button'
 import { Text, type TextAllowedHtmlTags } from '@/components/atoms/Text/Text'
-import type { ClassNames as TextClassNames } from '@/components/atoms/Text/Text.module.scss'
+import type { ClassNames as TextClassNames } from '@/components/atoms/Text/Text.module.css'
 
-import classNames from './InlineButtons.module.scss'
+import classNames from './InlineButtons.module.css'
 
 interface InlineButtonsProps<O extends string> {
   options: InlineButtonOption<O>[]

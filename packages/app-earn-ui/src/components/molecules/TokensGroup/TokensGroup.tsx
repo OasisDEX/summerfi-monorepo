@@ -4,7 +4,7 @@ import { GenericTokenIcon } from '@/components/atoms/GenericTokenIcon/GenericTok
 import { Icon, type IconPropsBase } from '@/components/atoms/Icon/Icon'
 import { getToken, getTokenDisplayName, getTokenGuarded, tokensBySymbol } from '@/tokens/helpers'
 
-import tokensGroupStyles from '@/components/molecules/TokensGroup/TokensGroup.module.scss'
+import tokensGroupStyles from '@/components/molecules/TokensGroup/TokensGroup.module.css'
 
 interface TokensGroupProps {
   forceSize?: number

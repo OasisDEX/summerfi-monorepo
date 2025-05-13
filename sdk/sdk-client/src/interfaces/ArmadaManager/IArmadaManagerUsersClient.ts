@@ -15,10 +15,11 @@ import {
   type ArmadaMigratablePosition,
   type ArmadaMigratablePositionApy,
   type ArmadaMigrationType,
+  type ChainId,
   type ChainInfo,
   type ClaimTransactionInfo,
   type DelegateTransactionInfo,
-  type ExtendedTransactionInfo,
+  type DepositTransactionInfo,
   type IAddress,
   type IArmadaPosition,
   type IArmadaPositionId,
@@ -31,6 +32,7 @@ import {
   type StakeTransactionInfo,
   type UnstakeTransactionInfo,
   type VaultSwitchTransactionInfo,
+  type WithdrawTransactionInfo,
 } from '@summerfi/sdk-common'
 
 /**
@@ -116,6 +118,18 @@ export interface IArmadaManagerUsersClient {
   getVaultInfo(params: { vaultId: IArmadaVaultId }): Promise<IArmadaVaultInfo>
 
   /**
+   * @method getVaultInfoList
+   * @description Retrieves the information of all Armada vaults for a given chain
+   *
+   * @param chainInfo Chain information
+   *
+   * @returns The information of all Armada vaults for the given chain
+   */
+  getVaultInfoList(params: { chainId: ChainId }): Promise<{
+    list: IArmadaVaultInfo[]
+  }>
+
+  /**
    * @name getUserPositions
    * @description Get all of user positions in the fleet
    *
@@ -151,7 +165,7 @@ export interface IArmadaManagerUsersClient {
   getPosition(params: { positionId: IArmadaPositionId }): Promise<IArmadaPosition | undefined>
 
   /**
-   * @method getNewDepositTX
+   * @method getNewDepositTx
    * @description Returns the transactions needed to deposit tokens in the Fleet for a new position
    *
    * @param vaultId ID of the pool to deposit in
@@ -162,16 +176,16 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns The transactions needed to deposit the tokens
    */
-  getNewDepositTX(params: {
+  getNewDepositTx(params: {
     vaultId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
     slippage: IPercentage
     shouldStake?: boolean
-  }): Promise<ExtendedTransactionInfo[]>
+  }): Promise<[DepositTransactionInfo] | [ApproveTransactionInfo, DepositTransactionInfo]>
 
   /**
-   * @method getWithdrawTX
+   * @method getWithdrawTx
    * @description Returns the transactions needed to withdraw tokens from the Fleet
    *
    * @param vaultId ID of the pool to withdraw from
@@ -182,13 +196,17 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns The transactions needed to withdraw the tokens
    */
-  getWithdrawTX(params: {
+  getWithdrawTx(params: {
     vaultId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
     toToken: IToken
     slippage: IPercentage
-  }): Promise<ExtendedTransactionInfo[]>
+  }): Promise<
+    | [WithdrawTransactionInfo]
+    | [ApproveTransactionInfo, WithdrawTransactionInfo]
+    | [ApproveTransactionInfo, ApproveTransactionInfo, WithdrawTransactionInfo]
+  >
 
   /**
    * @method getStakedBalance
@@ -279,14 +297,14 @@ export interface IArmadaManagerUsersClient {
   }): Promise<BridgeTransactionInfo[]>
 
   /**
-   * @method getAggregatedClaimsForChainTX
+   * @method getAggregatedClaimsForChainTx
    * @description Returns the multicall transaction needed to claim rewards from the Fleet
    * @param chainInfo Chain information
    * @param user Address of the user to claim rewards for
    *
    * @returns The transaction needed to claim the rewards
    */
-  getAggregatedClaimsForChainTX(params: {
+  getAggregatedClaimsForChainTx(params: {
     chainInfo: ChainInfo
     user: IUser
   }): Promise<[ClaimTransactionInfo] | undefined>
@@ -431,7 +449,7 @@ export interface IArmadaManagerUsersClient {
   }>
 
   /**
-   * @method getMigrationTX
+   * @method getMigrationTx
    * @description Returns the transaction for the migration
    *
    * @param user The user
@@ -474,7 +492,5 @@ export interface IArmadaManagerUsersClient {
     | [VaultSwitchTransactionInfo]
     | [ApproveTransactionInfo, VaultSwitchTransactionInfo]
     | [ApproveTransactionInfo, ApproveTransactionInfo, VaultSwitchTransactionInfo]
-    | [VaultSwitchTransactionInfo, VaultSwitchTransactionInfo]
-    | [ApproveTransactionInfo, VaultSwitchTransactionInfo, VaultSwitchTransactionInfo]
   >
 }

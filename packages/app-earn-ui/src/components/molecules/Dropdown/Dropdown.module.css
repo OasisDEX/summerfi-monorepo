@@ -1,0 +1,98 @@
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropdownSelected {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  justify-content: space-between;
+  gap: 8px;
+  width: max-content;
+}
+.dropdownOptions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--earn-protocol-neutral-80);
+  color: #fff;
+  width: max-content;
+  border-radius: var(--general-radius-16);
+  margin-top: var(--general-space-4);
+  z-index: 10;
+  padding: var(--general-space-8);
+  font-size: var(--font-size-14);
+  max-height: 0;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.dropdownOverflowWrapper {
+  scrollbar-color: grey transparent;
+  scrollbar-width: thin;
+  overflow-y: auto;
+  max-height: 210px;
+}
+.dropdownShow {
+  max-height: 280px;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
+.dropdownOption {
+  display: flex;
+  align-items: center;
+  padding: 9px 9px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  border-radius: 12px;
+  margin-bottom: 2px;
+  gap: 8px;
+}
+.dropdownOption:hover {
+  background-color: var(--earn-protocol-neutral-60);
+}
+.dropdownOption.selected {
+  background-color: var(--earn-protocol-neutral-60);
+}
+.dropdown .mobileContentWrapper {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  max-height: 40vh;
+}
+
+.dropdownOption > span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.searchInput {
+  height: 36px;
+  padding: var(--general-space-8);
+  padding-left: 34px;
+  color: var(--earn-protocol-secondary-80);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-roundish);
+  font-size: 14px;
+  text-align: left;
+  margin-bottom: var(--general-space-8);
+}
+.searchInput:focus {
+  outline: none;
+}
+.searchInput:hover {
+  border-color: var(--color-border-hover);
+}
+.searchInput::placeholder {
+  color: var(--earn-protocol-secondary-40);
+}

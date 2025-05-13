@@ -5,7 +5,11 @@ import {
   GetGlobalRebalancesQuery,
   GetUsersActivityQuery,
 } from '@summerfi/subgraph-manager-common'
-import { IArmadaPosition } from '@summerfi/sdk-common'
+import {
+  ExtendedTransactionInfo,
+  IArmadaPosition,
+  VaultSwitchTransactionInfo,
+} from '@summerfi/sdk-common'
 import { ChainId } from '@summerfi/serverless-shared'
 import { EarnAppFleetCustomConfigType } from '../generated/earn-app-config'
 import { TimeframesType } from '../components'
@@ -183,4 +187,10 @@ export interface FleetRate {
   rate: string
   timestamp: number
   fleetAddress: string
+}
+
+// Define a new type for transactions that includes an `executed` property
+export type TransactionWithStatus = (ExtendedTransactionInfo | VaultSwitchTransactionInfo) & {
+  executed: boolean
+  txHash?: string
 }

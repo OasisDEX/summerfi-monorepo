@@ -1,6 +1,6 @@
 import { Card, Icon, type IconNamesList, Text } from '@summerfi/app-earn-ui'
 
-import cryptoUtilitiesStyles from '@/components/layout/LandingPageContent/content/CryptoUtilities.module.scss'
+import cryptoUtilitiesStyles from '@/components/layout/LandingPageContent/content/CryptoUtilities.module.css'
 
 const CryptoUtilityCard = ({ iconName, label }: { iconName: IconNamesList; label: string }) => {
   return (

@@ -1,0 +1,34 @@
+.protocolStatsWrapper {
+  display: flex;
+  flex-direction: row;
+  max-width: 960px;
+  margin-bottom: 84px;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--general-space-24);
+}
+@media (min-width: 768px) {
+  .protocolStatsWrapper {
+    justify-content: space-around;
+    padding-left: var(--general-space-64);
+    padding-right: var(--general-space-64);
+    gap: var(--general-space-24);
+  }
+}
+.protocolStatsWrapper .dataBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.protocolStatsWrapper .divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--earn-protocol-neutral-70);
+}
+@media (min-width: 768px) {
+  .protocolStatsWrapper .divider {
+    width: 1px;
+    height: unset;
+  }
+}

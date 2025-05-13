@@ -8,7 +8,7 @@ import {
   SlideCarouselButtonPosition,
 } from '@/components/molecules/SlideCarousel/SlideCarousel'
 
-import classNames from './TableCarousel.module.scss'
+import classNames from './TableCarousel.module.css'
 
 interface TableCarouselProps {
   carouselData: {

@@ -6,7 +6,7 @@ import Link from 'next/link'
 
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 
-import startEarningNowStyles from '@/components/layout/LandingPageContent/content/StartEarningNow.module.scss'
+import startEarningNowStyles from '@/components/layout/LandingPageContent/content/StartEarningNow.module.css'
 
 const StartEarningNowBlock = ({
   id,

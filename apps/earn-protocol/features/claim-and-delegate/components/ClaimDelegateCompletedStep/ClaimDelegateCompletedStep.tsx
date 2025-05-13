@@ -31,7 +31,7 @@ import {
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
 
-import classNames from './ClaimDelegateCompletedStep.module.scss'
+import classNames from './ClaimDelegateCompletedStep.module.css'
 
 interface ClaimedCardProps {
   hasClaimed: boolean

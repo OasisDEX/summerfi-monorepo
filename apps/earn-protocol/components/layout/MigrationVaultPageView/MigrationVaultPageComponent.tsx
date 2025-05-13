@@ -157,7 +157,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
     vaultChainId,
     amountDisplay: migratablePosition.underlyingTokenAmount.amount,
     amountDisplayUSD: migratablePosition.usdValue.amount,
-    transactionType: TransactionAction.DEPOSIT,
+    sidebarTransactionType: TransactionAction.DEPOSIT,
     selectedTokenOption: {
       label: migratablePosition.underlyingTokenAmount.token.symbol,
       value: migratablePosition.underlyingTokenAmount.token.symbol,

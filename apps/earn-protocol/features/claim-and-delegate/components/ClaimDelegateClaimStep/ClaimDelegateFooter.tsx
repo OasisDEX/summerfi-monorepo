@@ -1,7 +1,7 @@
 import { type FC } from 'react'
 import { Button, WithArrow } from '@summerfi/app-earn-ui'
 
-import classNames from './ClaimDelegateClaimStep.module.scss'
+import classNames from './ClaimDelegateClaimStep.module.css'
 
 interface ClaimDelegateFooterProps {
   canContinue: boolean

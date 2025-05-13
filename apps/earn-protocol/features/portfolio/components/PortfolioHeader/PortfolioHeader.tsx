@@ -28,7 +28,7 @@ import { type TransakNetworkOption } from '@/features/transak/types'
 import { revalidateUser } from '@/helpers/revalidation-handlers'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
-import classNames from './PortfolioHeader.module.scss'
+import classNames from './PortfolioHeader.module.css'
 
 const TransakTrigger = ({
   isOpen,

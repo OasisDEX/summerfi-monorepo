@@ -15,7 +15,7 @@ import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { VaultTitle } from '@/components/molecules/VaultTitle/VaultTitle'
 import { riskColors } from '@/helpers/risk-colors'
 
-import vaultOpenGridStyles from './VaultOpenGrid.module.scss'
+import vaultOpenGridStyles from './VaultOpenGrid.module.css'
 
 interface VaultOpenLoadingGridProps {
   detailsContent: ReactNode

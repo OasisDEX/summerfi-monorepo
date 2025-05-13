@@ -10,7 +10,7 @@ import type {
   ClaimDelegateState,
 } from '@/features/claim-and-delegate/types'
 
-import classNames from './ClaimDelegateForm.module.scss'
+import classNames from './ClaimDelegateForm.module.css'
 
 interface ClaimDelegateFormProps {
   state: ClaimDelegateState

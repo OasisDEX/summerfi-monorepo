@@ -92,7 +92,7 @@ export interface IArmadaManagerClaims {
   }) => Promise<[ClaimTransactionInfo]>
 
   /**
-   * @name getAggregatedClaimsForChainTX
+   * @name getAggregatedClaimsForChainTx
    * @description Returns the multicall transaction needed to claim rewards from the Fleet
    *
    * @param chainInfo Chain information
@@ -100,7 +100,7 @@ export interface IArmadaManagerClaims {
    *
    * @returns The transaction needed to claim the rewards
    */
-  getAggregatedClaimsForChainTX(params: {
+  getAggregatedClaimsForChainTx(params: {
     chainInfo: ChainInfo
     user: IUser
   }): Promise<[ClaimTransactionInfo] | undefined>

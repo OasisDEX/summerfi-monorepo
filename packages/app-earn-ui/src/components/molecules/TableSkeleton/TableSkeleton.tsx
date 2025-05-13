@@ -2,7 +2,7 @@ import { type CSSProperties, type FC } from 'react'
 
 import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 
-import styles from './TableSkeleton.module.scss'
+import styles from './TableSkeleton.module.css'
 
 interface TableSkeletonProps {
   rows: number

@@ -1,0 +1,15 @@
+.sendFormInitialStepWrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+  max-width: 450px;
+}
+.sendFormInitialStepWrapper .toWrapper {
+  margin-top: var(--general-space-24);
+}
+.sendFormInitialStepWrapper .toWrapper .pasteButton {
+  color: var(--earn-protocol-primary-100);
+}
+.sendFormInitialStepWrapper .toWrapper .pasteButton:hover {
+  opacity: 0.8;
+}
