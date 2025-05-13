@@ -182,12 +182,14 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
         a.rewardTokenEmissionsAmount,
         estimatedSumrPrice,
         aTvl,
+        a.rewardTokenEmissionsFinish,
       ).rawSumrTokenBonus
       const bRewards = getSumrTokenBonus(
         b.rewardTokens,
         b.rewardTokenEmissionsAmount,
         estimatedSumrPrice,
         bTvl,
+        b.rewardTokenEmissionsFinish,
       ).rawSumrTokenBonus
 
       if (sortingMethodId === VaultsSorting.HIGHEST_TVL) {

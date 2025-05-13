@@ -23,6 +23,7 @@ export const getSumrTokenBonus = (
   rewardTokenEmissionsAmount: SDKVaultishType['rewardTokenEmissionsAmount'],
   sumrPrice: number | undefined,
   totalValueLockedUSD: string,
+  rewardTokenEmissionsFinish: SDKVaultishType['rewardTokenEmissionsFinish'],
 ): { sumrTokenBonus: string; rawSumrTokenBonus: string } => {
   const sumrIndex = rewardTokens.findIndex(
     // BUMMER to be removed after prod deployment
@@ -34,8 +35,14 @@ export const getSumrTokenBonus = (
       Number(rewardTokenEmissionsAmount[sumrIndex]) / 10 ** 36
     : 0
 
+  const emissionsFinish = rewardTokenEmissionsFinish[sumrIndex]
+    ? Number(rewardTokenEmissionsFinish[sumrIndex]) * 1000
+    : undefined
+
+  const dateNow = new Date().getTime()
+
   const raw =
-    sumrPrice && Number(totalValueLockedUSD)
+    sumrPrice && Number(totalValueLockedUSD) && emissionsFinish && emissionsFinish > dateNow
       ? ((bonusSumrDaily * 365 * sumrPrice) / Number(totalValueLockedUSD)).toString()
       : '0'
 

@@ -148,6 +148,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
     vault.rewardTokenEmissionsAmount,
     sumrPrice,
     vault.totalValueLockedUSD,
+    vault.rewardTokenEmissionsFinish,
   )
 
   const handleUserRefresh = () => {

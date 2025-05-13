@@ -18,6 +18,7 @@ query GetVaults {
     }
     rewardTokenEmissionsAmount
     rewardTokenEmissionsUSD
+    rewardTokenEmissionsFinish
     rebalanceCount
     arks {
       id
@@ -84,6 +85,7 @@ query GetVault($id: ID!) {
     }
     rewardTokenEmissionsAmount
     rewardTokenEmissionsUSD
+    rewardTokenEmissionsFinish
     rebalanceCount
     arks {
       id
