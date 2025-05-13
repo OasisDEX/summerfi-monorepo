@@ -47,6 +47,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     onClick,
     customFields,
     rewardTokenEmissionsAmount,
+    rewardTokenEmissionsFinish,
     rewardTokens,
     withTokenBonus,
     sumrPrice,
@@ -62,6 +63,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     rewardTokenEmissionsAmount,
     sumrPrice,
     totalValueLockedUSD,
+    rewardTokenEmissionsFinish,
   )
 
   const handleVaultClick = () => {

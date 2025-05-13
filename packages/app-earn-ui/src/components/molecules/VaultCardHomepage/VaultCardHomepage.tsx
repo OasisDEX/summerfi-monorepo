@@ -109,6 +109,7 @@ export const VaultCardHomepage = ({
     customFields,
     rewardTokens,
     rewardTokenEmissionsAmount,
+    rewardTokenEmissionsFinish,
   } = vault
   const { apy } = vaultsApyByNetworkMap[`${id}-${subgraphNetworkToId(protocol.network)}`]
   const parsedApy = formatDecimalAsPercent(apy)
@@ -121,6 +122,7 @@ export const VaultCardHomepage = ({
     rewardTokenEmissionsAmount,
     sumrPrice,
     totalValueLockedUSD,
+    rewardTokenEmissionsFinish,
   )
 
   return (

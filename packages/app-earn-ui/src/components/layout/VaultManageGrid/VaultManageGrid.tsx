@@ -133,6 +133,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
     vault.rewardTokenEmissionsAmount,
     sumrPrice,
     vault.totalValueLockedUSD,
+    vault.rewardTokenEmissionsFinish,
   )
   const handleUserRefresh = () => {
     onRefresh?.(sdkNetworkToHumanNetwork(vault.protocol.network), vault.id, viewWalletAddress)

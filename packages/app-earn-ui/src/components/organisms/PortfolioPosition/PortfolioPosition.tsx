@@ -63,6 +63,7 @@ export const PortfolioPosition = ({
     id: vaultId,
     customFields,
     rewardTokenEmissionsAmount,
+    rewardTokenEmissionsFinish,
     rewardTokens,
     createdTimestamp,
   } = portfolioPosition.vault
@@ -94,6 +95,7 @@ export const PortfolioPosition = ({
     rewardTokenEmissionsAmount,
     sumrPrice,
     totalValueLockedUSD,
+    rewardTokenEmissionsFinish,
   )
 
   const linkToPosition = (
