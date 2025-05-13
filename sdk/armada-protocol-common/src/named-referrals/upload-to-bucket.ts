@@ -9,9 +9,9 @@ const __dirname = path.dirname(__filename)
 
 dotenv.config({ debug: true, path: path.join(__dirname, '../../../.env') })
 
-const files = process.env.SDK_DISTRIBUTIONS_FILES
+const files = process.env.SDK_NAMED_REFERRALS_FILE
 if (!files) {
-  throw new Error('No SDK_DISTRIBUTIONS_FILES specified')
+  throw new Error('No SDK_NAMED_REFERRALS_FILE specified')
 }
 
 const bucketUrl = process.env.SDK_DISTRIBUTIONS_BASE_URL
