@@ -19,6 +19,7 @@ export const getDepositTx = publicProcedure
       amount: z.custom<ITokenAmount>(isTokenAmount),
       slippage: z.custom<IPercentage>(isPercentage),
       shouldStake: z.boolean().optional(),
+      referralCode: z.string().optional(),
     }),
   )
   .query(async (opts) => {

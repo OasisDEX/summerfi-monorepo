@@ -173,6 +173,7 @@ export interface IArmadaManagerUsersClient {
    * @param amount Token amount to be deposited
    * @param slippage Maximum slippage allowed
    * @param shouldStake Whether the user wants to stake the deposited tokens
+   * @param referralCode Referral code to be used
    *
    * @returns The transactions needed to deposit the tokens
    */
@@ -182,6 +183,7 @@ export interface IArmadaManagerUsersClient {
     amount: ITokenAmount
     slippage: IPercentage
     shouldStake?: boolean
+    referralCode?: string
   }): Promise<[DepositTransactionInfo] | [ApproveTransactionInfo, DepositTransactionInfo]>
 
   /**

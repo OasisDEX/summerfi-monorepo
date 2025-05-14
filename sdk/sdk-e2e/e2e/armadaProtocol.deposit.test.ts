@@ -55,6 +55,7 @@ describe('Armada Protocol Deposit', () => {
     rpcUrl,
     amountValue,
     stake,
+    referralCode,
   }: {
     chainId: number
     swapToSymbol: string | undefined
@@ -62,6 +63,7 @@ describe('Armada Protocol Deposit', () => {
     rpcUrl: string | undefined
     amountValue: string
     stake?: boolean
+    referralCode?: string
   }) {
     const sdk: SDKManager = makeSDK({
       apiURL: SDKApiUrl,
@@ -99,6 +101,7 @@ describe('Armada Protocol Deposit', () => {
       amount: amountValue,
       token: swapToken || token,
     })
+
     const transactions = await sdk.armada.users.getNewDepositTx({
       vaultId,
       user,
@@ -107,6 +110,7 @@ describe('Armada Protocol Deposit', () => {
         value: DEFAULT_SLIPPAGE_PERCENTAGE,
       }),
       shouldStake: stake,
+      referralCode,
     })
 
     assert(
