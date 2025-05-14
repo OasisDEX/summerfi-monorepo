@@ -14,7 +14,7 @@ import Link from 'next/link'
 
 import { getProtocolLabel } from '@/helpers/get-protocol-label'
 
-const actionTypeMapp: {
+const actionTypeMap: {
   [key: RebalanceActivity['actionType']]: { label: string; icon: IconNamesList }
 } = {
   deposit: { label: 'Funds Deployed', icon: 'deposit' },
@@ -28,8 +28,8 @@ const actionTypeMapp: {
 
 export const rebalanceActivityPurposeMapper = (
   item: RebalanceActivity,
-): { label: string; icon?: IconNamesList } => {
-  return actionTypeMapp[item.actionType]
+): { label: string; icon: IconNamesList } => {
+  return actionTypeMap[item.actionType]
 }
 
 export const rebalancingActivityMapper = (rawData: RebalanceActivity[]) => {
@@ -58,6 +58,7 @@ export const rebalancingActivityMapper = (rawData: RebalanceActivity[]) => {
         purpose: (
           <TableCellNodes gap="medium">
             <TableCellNodes gap="medium">
+              {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
               {purpose.icon && (
                 <Icon
                   iconName={purpose.icon}
