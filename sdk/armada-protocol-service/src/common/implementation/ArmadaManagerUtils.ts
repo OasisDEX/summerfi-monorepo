@@ -24,11 +24,9 @@ import {
   type IToken,
   type ISpotPriceInfo,
   type TransactionPriceImpact,
-  type IArmadaVaultInfo,
   type IArmadaPosition,
   type IArmadaPositionId,
   type IArmadaVaultId,
-  ArmadaVaultInfo,
 } from '@summerfi/sdk-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { ITokensManager } from '@summerfi/tokens-common'
