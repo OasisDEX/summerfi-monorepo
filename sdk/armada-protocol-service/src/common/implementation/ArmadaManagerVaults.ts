@@ -1621,20 +1621,24 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       chainId: params.chainId,
     })
 
-    // fetching prices
-    const allTokens = vaultsRaw.vaults.flatMap((vault) => vault.rewardTokens)
-    const baseTokens = allTokens.map((token) =>
-      this._tokensManager.getTokenBySymbol({
-        chainInfo,
-        symbol: token.token.symbol,
-      }),
+    // get unique reward token symbols
+    const rewardTokensSymbolSet = new Set<string>()
+    vaultsRaw.vaults.forEach((v) =>
+      v.rewardTokens.forEach((rt) => rewardTokensSymbolSet.add(rt.token.symbol)),
     )
+
+    // map each symbol once to a base token
+    const rewardTokens = Array.from(rewardTokensSymbolSet).map((symbol) =>
+      this._tokensManager.getTokenBySymbol({ chainInfo, symbol }),
+    )
+    // fetch spot prices for unique base tokens
     const prices = await this._oracleManager.getSpotPrices({
       chainInfo,
-      baseTokens,
+      baseTokens: rewardTokens,
     })
-    // add SUMR price to prices as it's not available for trading
-    const sumrToken = baseTokens.find((token) => token.symbol === 'SUMR')
+
+    // TODO: override SUMR price in prices as it's not available from 1inch
+    const sumrToken = rewardTokens.find((token) => token.symbol === 'SUMR')
     if (sumrToken) {
       prices.priceByAddress[sumrToken.address.value.toLowerCase()] = Price.createFrom({
         base: sumrToken,
