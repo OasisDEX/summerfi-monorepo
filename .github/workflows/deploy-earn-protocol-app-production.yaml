@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - "aws-prod"
+      - 'aws-prod'
 
 jobs:
   build-earn-protocol:
@@ -42,7 +42,7 @@ jobs:
       NEWSLETTER_PUBLICATION_ID: ${{ secrets.NEWSLETTER_PUBLICATION_ID }}
       NEWSLETTER_ENDPOINT: ${{ secrets.NEWSLETTER_ENDPOINT }}
       NEXT_TELEMETRY_DISABLED: ${{ secrets.NEXT_TELEMETRY_DISABLED }}
-      SUMMER_DEPLOYMENT_CONFIG: ${{ vars.SUMMER_DEPLOYMENT_CONFIG_PROD }}
+      SUMMER_DEPLOYMENT_CONFIG: ${{ vars.SUMMER_DEPLOYMENT_CONFIG }}
       EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN: ${{ secrets.EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN }}
       EARN_APP_URL: ${{ secrets.EARN_APP_URL }}
     steps:

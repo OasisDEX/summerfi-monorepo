@@ -49,8 +49,14 @@ export const ArmadaPositionDataSchema = z.object({
   pool: z.custom<IArmadaVault>((val) => isArmadaVault(val)),
   amount: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
   shares: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
-  deposits: z.array(z.custom<ITokenAmount>((val) => isTokenAmount(val))),
-  withdrawals: z.array(z.custom<ITokenAmount>((val) => isTokenAmount(val))),
+  /* @deprecated do not use */
+  deposits: z.array(
+    z.object({ amount: z.custom<ITokenAmount>(isTokenAmount), timestamp: z.number() }),
+  ),
+  /* @deprecated do not use */
+  withdrawals: z.array(
+    z.object({ amount: z.custom<ITokenAmount>(isTokenAmount), timestamp: z.number() }),
+  ),
   claimedSummerToken: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
   claimableSummerToken: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
   rewards: z.array(

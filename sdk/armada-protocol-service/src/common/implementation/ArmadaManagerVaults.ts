@@ -40,7 +40,6 @@ import { encodeFunctionData } from 'viem'
 import { BigNumber } from 'bignumber.js'
 import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { calculateRewardApy } from './utils/calculate-summer-yield'
-import path from 'path'
 
 export class ArmadaManagerVaults implements IArmadaManagerVaults {
   private _supportedChains: IChainInfo[]

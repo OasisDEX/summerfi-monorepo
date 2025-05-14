@@ -26,8 +26,8 @@ export class ArmadaPosition extends Position implements IArmadaPosition {
   readonly pool: IArmadaVault
   readonly amount: ITokenAmount
   readonly shares: ITokenAmount
-  readonly deposits: ITokenAmount[]
-  readonly withdrawals: ITokenAmount[]
+  readonly deposits: { amount: ITokenAmount; timestamp: number }[]
+  readonly withdrawals: { amount: ITokenAmount; timestamp: number }[]
 
   readonly claimedSummerToken: ITokenAmount
   readonly claimableSummerToken: ITokenAmount
