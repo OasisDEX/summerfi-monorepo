@@ -34,8 +34,8 @@ export const SDKChainIdToAAChainMap: {
 }
 
 const GasSponsorshipIdMap = {
-  [SDKChainId.ARBITRUM]: '99eeab13-6d37-4f9e-adf6-d59cd8060d7f',
   [SDKChainId.BASE]: '7d552463-eba5-4eac-a940-56f0515243f2',
+  [SDKChainId.ARBITRUM]: '99eeab13-6d37-4f9e-adf6-d59cd8060d7f',
   [SDKChainId.MAINNET]: undefined,
   [SDKChainId.OPTIMISM]: undefined,
   [SDKChainId.SONIC]: undefined,
