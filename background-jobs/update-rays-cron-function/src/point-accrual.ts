@@ -344,12 +344,15 @@ export class SummerPointsService {
     const idsOfUserOpenPositions = user.positions.map((position) => position.id)
     /* @dev filter out swaps that are related to an open position -> position in `user.positions` - this is enforced by `netValue_gt: 0` in subgraph query */
     const filteredSwaps = userSwaps.filter(
-      (swap) => !swap.position || !idsOfUserOpenPositions.includes(swap.position.id),
+      (swap) => swap.position && !idsOfUserOpenPositions.includes(swap.position.id),
     )
     // Group swaps by position id
     const swapsByPositionId = filteredSwaps.reduce(
       (acc, swap) => {
-        const positionId = swap.position!.id
+        const positionId = swap.position?.id
+        if (!positionId) {
+          return acc
+        }
         if (!acc[positionId]) {
           acc[positionId] = []
         }
