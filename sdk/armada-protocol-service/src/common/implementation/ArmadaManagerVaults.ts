@@ -741,10 +741,12 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
   private async _checkInNamedReferrals(referralCode: string): Promise<bigint | undefined> {
     const url = this._namedReferralsBucketUrl
 
-    const json: { [referralCode: string]: string } = await fetch(url).then((res) => {
-      return res.json().catch((error) => {
-        throw new Error('Failed to load sdk bucket: ' + url + '\n' + error)
-      })
+    const res = await fetch(url)
+    if (!res.ok) {
+      throw new Error(`Failed to fetch named referrals: ${res.status} ${res.statusText}`)
+    }
+    const json: { [referralCode: string]: string } = await res.json().catch((error) => {
+      throw new Error('Failed to load sdk bucket: ' + url + '\n' + error)
     })
 
     const code = json[referralCode]
