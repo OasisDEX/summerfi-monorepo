@@ -49,10 +49,9 @@ jobs:
       SUMMER_HUB_CHAIN_ID: ${{ secrets.SDK_HUB_CHAIN_ID }}
       SUMMER_DEPLOYED_CHAINS_ID: ${{ vars.SUMMER_DEPLOYED_CHAINS_ID }}
       SUMMER_DEPLOYMENT_CONFIG: ${{ vars.SUMMER_DEPLOYMENT_CONFIG }}
-      SDK_DISTRIBUTIONS_BASE_URL: ${{ secrets.SDK_DISTRIBUTIONS_BASE_URL }}
-      SDK_DISTRIBUTIONS_FILES: ${{ secrets.SDK_DISTRIBUTIONS_FILES }}
-      SDK_USE_FORK: ${{ secrets.SDK_USE_FORK }}
-      SDK_FORK_CONFIG: ${{ secrets.SDK_FORK_CONFIG }}
+      SDK_DISTRIBUTIONS_BASE_URL: ${{ vars.SDK_DISTRIBUTIONS_BASE_URL }}
+      SDK_DISTRIBUTIONS_FILES: ${{ vars.SDK_DISTRIBUTIONS_FILES }}
+      SDK_NAMED_REFERRALS_FILE: ${{ vars.SDK_NAMED_REFERRALS_FILE }}
     steps:
       - name: Send start notification to Discord
         uses: Ilshidur/action-discord@0.3.2

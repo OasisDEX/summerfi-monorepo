@@ -34,6 +34,7 @@ export interface IArmadaManagerVaults {
     amount: ITokenAmount
     slippage: IPercentage
     shouldStake?: boolean
+    referralCode?: string
   }): Promise<[DepositTransactionInfo] | [ApproveTransactionInfo, DepositTransactionInfo]>
 
   /**

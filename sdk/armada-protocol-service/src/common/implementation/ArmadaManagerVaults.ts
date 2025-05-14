@@ -40,6 +40,7 @@ import { encodeFunctionData } from 'viem'
 import { BigNumber } from 'bignumber.js'
 import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { calculateRewardApy } from './utils/calculate-summer-yield'
+import path from 'path'
 
 export class ArmadaManagerVaults implements IArmadaManagerVaults {
   private _supportedChains: IChainInfo[]
@@ -53,6 +54,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
   private _utils: IArmadaManagerUtils
   private _subgraphManager: IArmadaSubgraphManager
   private _functionsUrl: string
+  private _namedReferralsBucketUrl: string
 
   constructor(params: {
     supportedChains: IChainInfo[]
@@ -79,6 +81,13 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     this._functionsUrl = this._configProvider.getConfigurationItem({
       name: 'FUNCTIONS_API_URL',
     })
+    const bucketBaseUrl = this._configProvider.getConfigurationItem({
+      name: 'SDK_DISTRIBUTIONS_BASE_URL',
+    })
+    const bucketFileName = this._configProvider.getConfigurationItem({
+      name: 'SDK_NAMED_REFERRALS_FILE',
+    })
+    this._namedReferralsBucketUrl = new URL(bucketFileName, bucketBaseUrl).toString()
   }
 
   /**
@@ -539,6 +548,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     amount: ITokenAmount
     slippage: IPercentage
     shouldStake?: boolean
+    referralCode?: string
   }): ReturnType<IArmadaManagerVaults['getNewDepositTx']> {
     const fleetCommander = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.vaultId.chainInfo,
@@ -633,10 +643,17 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       ? admiralsQuartersAddress.value
       : params.user.wallet.address.value
 
+    const validReferralCode = await this._validateReferralCode({
+      referralCode: params.referralCode,
+    })
+    const args = validReferralCode
+      ? ([params.vaultId.fleetAddress.value, 0n, fleetTokenReceiver, validReferralCode] as const)
+      : ([params.vaultId.fleetAddress.value, 0n, fleetTokenReceiver] as const)
+
     const enterFleetCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'enterFleet',
-      args: [params.vaultId.fleetAddress.value, 0n, fleetTokenReceiver],
+      args,
     })
     multicallArgs.push(enterFleetCalldata)
     multicallOperations.push('enterFleet all (0)')
@@ -688,6 +705,61 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     })
 
     return transactions
+  }
+
+  private async _validateReferralCode(params: {
+    referralCode: string | undefined
+  }): Promise<HexData | undefined> {
+    if (!params.referralCode) {
+      return undefined
+    }
+
+    let validReferral: bigint
+
+    // check if the referral code is in the namedReferrals mapping
+    const namedReferral = await this._checkInNamedReferrals(params.referralCode)
+    if (namedReferral) {
+      validReferral = namedReferral
+    }
+    // check if params.referralCode is a valid bigint
+    else if (
+      /^\d+$/.test(params.referralCode) &&
+      BigInt(params.referralCode) > 0n &&
+      BigInt(params.referralCode) < 2n ** 64n
+    ) {
+      validReferral = BigInt(params.referralCode)
+    } else {
+      throw new Error(
+        'Invalid referral code. It must be a positive integer or a valid named referral.',
+      )
+    }
+    // encode referral to hex string representation
+    const referralCodeHex = ('0x' + validReferral.toString(16).padStart(64, '0')) as HexData
+    return referralCodeHex
+  }
+
+  private async _checkInNamedReferrals(referralCode: string): Promise<bigint | undefined> {
+    const url = this._namedReferralsBucketUrl
+
+    const res = await fetch(url)
+    if (!res.ok) {
+      throw new Error(`Failed to fetch named referrals: ${res.status} ${res.statusText}`)
+    }
+    const json: { [referralCode: string]: string } = await res.json().catch((error) => {
+      throw new Error('Failed to load sdk bucket: ' + url + '\n' + error)
+    })
+
+    const code = json[referralCode]
+    if (code) {
+      const codeBigInt = BigInt(code)
+      if (codeBigInt > 0n && codeBigInt < 2n ** 64n) {
+        return codeBigInt
+      } else {
+        throw new Error('Invalid referral code in the named referrals bucket: ' + code)
+      }
+    } else {
+      return undefined
+    }
   }
 
   /**

@@ -9,9 +9,9 @@ const __dirname = path.dirname(__filename)
 
 dotenv.config({ debug: true, path: path.join(__dirname, '../../../.env') })
 
-const files = process.env.SDK_DISTRIBUTIONS_FILES
+const files = process.env.SDK_NAMED_REFERRALS_FILE
 if (!files) {
-  throw new Error('No SDK_DISTRIBUTIONS_FILES specified')
+  throw new Error('No SDK_NAMED_REFERRALS_FILE specified')
 }
 
 const bucketUrl = process.env.SDK_DISTRIBUTIONS_BASE_URL
@@ -20,9 +20,11 @@ if (!bucketUrl) {
 }
 
 async function uploadDistributions(fileNames: string[]) {
+  console.log('starting uploadDistributions')
   // Create an S3 client to get the bucket location
-  const s3Client = new S3()
+  const s3Client = new S3({})
   const bucketName = bucketUrl?.split('://')[1].split('.')[0]
+  console.log('bucketName', bucketName)
 
   // Get the bucket location
   const bucketLocation = await s3Client.send(new GetBucketLocationCommand({ Bucket: bucketName }))
@@ -30,6 +32,7 @@ async function uploadDistributions(fileNames: string[]) {
   if (!bucketRegion) {
     throw new Error('Failed to get bucket region')
   }
+  console.log('bucketRegion', bucketRegion)
 
   // Create an S3 client with the correct region
   const s3ClientWithRegion = new S3({ region: bucketRegion })
