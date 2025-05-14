@@ -38,6 +38,7 @@ describe('Armada Protocol Deposit', () => {
       rpcUrl,
       stake: false,
       amountValue: '1.2',
+      referralCode: '1',
     })
     // await runTests({
     //   swapToSymbol: undefined,
@@ -94,7 +95,7 @@ describe('Armada Protocol Deposit', () => {
       : undefined
 
     console.log(
-      `deposit ${amountValue} USDC to fleet at ${fleetAddress.value} ${stake ? 'with staking' : 'without staking'} ${swapToken ? 'and with swap to ' + swapToken.symbol : ''} `,
+      `deposit ${amountValue} USDC to fleet at ${fleetAddress.value} ${stake ? 'with staking' : 'without staking'} ${swapToken ? 'and with swap to ' + swapToken.symbol : ''} ${referralCode ? 'with referral code ' + referralCode : ''}`,
     )
 
     const amount = TokenAmount.createFrom({
