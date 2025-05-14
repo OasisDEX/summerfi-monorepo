@@ -117,7 +117,13 @@
     },
     "prebuild": {
       "dependsOn": ["^prebuild", "^prebuild:nocache"],
-      "outputs": ["src/types/graphql/generated.ts", "src/generated", "dist/**"]
+      "outputs": [
+        "src/types/graphql/generated.ts",
+        "src/generated",
+        "dist/**",
+        "graphql/clients/**",
+        "**/*.css.d.ts"
+      ]
     },
     "prebuild:nocache": {
       "dependsOn": ["^prebuild:nocache"],
