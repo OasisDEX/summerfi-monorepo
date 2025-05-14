@@ -14,19 +14,12 @@ export const getTokenDisplayName = (token: string): string => {
 }
 
 export function getToken(tokenSymbol: string): TokenConfig {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!tokensBySymbol[tokenSymbol.toLocaleUpperCase()]) {
     throw new Error(`No meta information for token: ${tokenSymbol}`)
   }
 
   return tokensBySymbol[tokenSymbol]
-}
-
-const getTokens = (tokenSymbol: string[]): typeof tokens => {
-  if (tokenSymbol instanceof Array) {
-    return tokenSymbol.map(getToken)
-  }
-
-  throw new Error(`tokenSymbol should be an array, got ${tokenSymbol}`)
 }
 
 export const getTokenGuarded = (tokenSymbol: string): ReturnType<typeof getToken> | undefined => {

@@ -14,7 +14,7 @@ import Link from 'next/link'
 
 import { getProtocolLabel } from '@/helpers/get-protocol-label'
 
-const actionTypeMapp: {
+const actionTypeMap: {
   [key: RebalanceActivity['actionType']]: { label: string; icon: IconNamesList }
 } = {
   deposit: { label: 'Funds Deployed', icon: 'deposit' },
@@ -29,7 +29,7 @@ const actionTypeMapp: {
 export const rebalanceActivityPurposeMapper = (
   item: RebalanceActivity,
 ): { label: string; icon: IconNamesList } => {
-  return actionTypeMapp[item.actionType]
+  return actionTypeMap[item.actionType]
 }
 
 export const rebalancingActivityMapper = (rawData: RebalanceActivity[]) => {
@@ -43,11 +43,13 @@ export const rebalancingActivityMapper = (rawData: RebalanceActivity[]) => {
 
     const amount = new BigNumber(item.amount.toString()).shiftedBy(-item.inputTokenDecimals)
 
-    const actionFromRawName = item.fromName.split('-') ?? ['n/a']
-    const actionToRawName = item.toName.split('-') ?? ['n/a']
+    const actionFromRawName = Array.isArray(item.fromName.split('-'))
+      ? item.fromName.split('-')
+      : ['n/a']
+    const actionToRawName = Array.isArray(item.toName.split('-')) ? item.toName.split('-') : ['n/a']
 
-    const actionFromLabel = getProtocolLabel(actionFromRawName)
-    const actionToLabel = getProtocolLabel(actionToRawName)
+    const actionFromLabel = getProtocolLabel(actionFromRawName, true)
+    const actionToLabel = getProtocolLabel(actionToRawName, true)
 
     const purpose = rebalanceActivityPurposeMapper(item)
 
@@ -56,6 +58,7 @@ export const rebalancingActivityMapper = (rawData: RebalanceActivity[]) => {
         purpose: (
           <TableCellNodes gap="medium">
             <TableCellNodes gap="medium">
+              {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
               {purpose.icon && (
                 <Icon
                   iconName={purpose.icon}
@@ -96,25 +99,25 @@ export const rebalancingActivityMapper = (rawData: RebalanceActivity[]) => {
             </TableCellNodes>
             <TableCellNodes gap="small">
               <Icon tokenName={asset} variant="s" />
-              <TableCellText style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+              <TableCellText
+                style={{ color: 'var(--earn-protocol-secondary-40)', display: 'flex' }}
+              >
                 {formatCryptoBalance(amount)} rebalanced
-              </TableCellText>{' '}
+                <Link href={scannerLink} target="_blank">
+                  <WithArrow
+                    as="p"
+                    variant="p3"
+                    style={{ color: 'var(--earn-protocol-primary-100)' }}
+                    withStatic
+                  >
+                    &nbsp;
+                  </WithArrow>
+                </Link>
+              </TableCellText>
             </TableCellNodes>
           </TableCellNodes>
         ),
         strategy: <TableCellText>{item.vaultName}</TableCellText>,
-        transaction: (
-          <Link href={scannerLink} target="_blank">
-            <WithArrow
-              as="p"
-              variant="p3"
-              style={{ color: 'var(--earn-protocol-primary-100)' }}
-              withStatic
-            >
-              View
-            </WithArrow>
-          </Link>
-        ),
       },
     }
   })
