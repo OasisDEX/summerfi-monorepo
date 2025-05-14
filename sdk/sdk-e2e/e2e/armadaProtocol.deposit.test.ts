@@ -38,6 +38,7 @@ describe('Armada Protocol Deposit', () => {
       rpcUrl,
       stake: false,
       amountValue: '1.2',
+      referralCode: '1',
     })
     // await runTests({
     //   swapToSymbol: undefined,
@@ -55,6 +56,7 @@ describe('Armada Protocol Deposit', () => {
     rpcUrl,
     amountValue,
     stake,
+    referralCode,
   }: {
     chainId: number
     swapToSymbol: string | undefined
@@ -62,6 +64,7 @@ describe('Armada Protocol Deposit', () => {
     rpcUrl: string | undefined
     amountValue: string
     stake?: boolean
+    referralCode?: string
   }) {
     const sdk: SDKManager = makeSDK({
       apiURL: SDKApiUrl,
@@ -92,13 +95,14 @@ describe('Armada Protocol Deposit', () => {
       : undefined
 
     console.log(
-      `deposit ${amountValue} USDC to fleet at ${fleetAddress.value} ${stake ? 'with staking' : 'without staking'} ${swapToken ? 'and with swap to ' + swapToken.symbol : ''} `,
+      `deposit ${amountValue} USDC to fleet at ${fleetAddress.value} ${stake ? 'with staking' : 'without staking'} ${swapToken ? 'and with swap to ' + swapToken.symbol : ''} ${referralCode ? 'with referral code ' + referralCode : ''}`,
     )
 
     const amount = TokenAmount.createFrom({
       amount: amountValue,
       token: swapToken || token,
     })
+
     const transactions = await sdk.armada.users.getNewDepositTx({
       vaultId,
       user,
@@ -107,6 +111,7 @@ describe('Armada Protocol Deposit', () => {
         value: DEFAULT_SLIPPAGE_PERCENTAGE,
       }),
       shouldStake: stake,
+      referralCode,
     })
 
     assert(
