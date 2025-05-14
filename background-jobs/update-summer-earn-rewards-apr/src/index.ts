@@ -176,6 +176,7 @@ export async function updateVaultAprs(
           .select(['productId', 'network'])
           .select((eb) => eb.fn.max('timestamp').as('maxTimestamp'))
           .where('network', '=', network.network)
+          .where('timestamp', '>=', (updateStartTimestamp - HOUR_IN_SECONDS).toString()) // Only get rates from last hour
           .where(
             'productId',
             'in',
