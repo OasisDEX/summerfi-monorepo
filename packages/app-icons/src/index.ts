@@ -277,6 +277,7 @@ export const icons = {
     () => import('./icons/mkr_circle_color.svg?react'),
   ) as IconExportType,
   moonpay: customLazy(() => import('./icons/moonpay.svg?react')) as IconExportType,
+  moonwell: customLazy(() => import('./icons/moonwell.svg?react')) as IconExportType,
   morpho_circle_color: customLazy(
     () => import('./icons/morpho_circle_color.svg?react'),
   ) as IconExportType,
@@ -354,6 +355,7 @@ export const icons = {
   send: customLazy(() => import('./icons/send.svg?react')) as IconExportType,
   share: customLazy(() => import('./icons/share_v2.svg?react')) as IconExportType,
   sign_out: customLazy(() => import('./icons/sign_out.svg?react')) as IconExportType,
+  silo: customLazy(() => import('./icons/silo.svg?react')) as IconExportType,
   sky: customLazy(() => import('./icons/sky.svg?react')) as IconExportType,
   snx: customLazy(() => import('./icons/snx.svg?react')) as IconExportType,
   social_link: customLazy(() => import('./icons/social_link.svg?react')) as IconExportType,

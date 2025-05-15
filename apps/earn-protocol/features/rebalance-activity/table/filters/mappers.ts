@@ -44,6 +44,14 @@ const getProtocolIcon = (protocolLabel: string) => {
     return 'euler'
   }
 
+  if (lowerCasedProtocolLabel.includes('moonwell')) {
+    return 'moonwell'
+  }
+
+  if (lowerCasedProtocolLabel.includes('silo')) {
+    return 'silo'
+  }
+
   return 'not_supported_icon'
 }
 
