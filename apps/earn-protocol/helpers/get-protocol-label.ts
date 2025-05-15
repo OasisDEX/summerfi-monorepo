@@ -29,13 +29,11 @@ export const getProtocolLabel = (nameParts: string[], noToken = false) => {
   } else if (baseName === 'ERC4626') {
     const [secondPart] = remainingParts
 
-    return (
-      secondPart.charAt(0).toUpperCase() + secondPart.slice(noToken ? 0 : 1).replaceAll('_', ' ')
-    )
+    return secondPart.charAt(0).toUpperCase() + secondPart.slice(1).replaceAll('_', ' ')
   } else if (baseName === 'Silo') {
     const [secondPart] = remainingParts
 
-    return `${baseName} ${secondPart.charAt(0).toUpperCase() + secondPart.slice(noToken ? 0 : 1).replaceAll('_', ' ')}`
+    return `${baseName} ${secondPart.charAt(0).toUpperCase() + secondPart.slice(1).replaceAll('_', ' ')}`
   }
 
   return arkNameMap[baseName] ?? baseName
