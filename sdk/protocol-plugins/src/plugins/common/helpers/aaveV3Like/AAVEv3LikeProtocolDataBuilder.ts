@@ -109,9 +109,22 @@ export class AaveV3LikeProtocolDataBuilder<
       this.dataProviderContractAddress,
     )
     this._validateReservesTokens(rawTokens)
+    // filter out tokens that are not in the token list
+    const supportedRawTokens = rawTokens.filter(async (rawToken) => {
+      try {
+        await this.context.tokensManager.getTokenByAddress({
+          chainInfo: ChainFamilyMap.Ethereum.Mainnet,
+          address: Address.createFromEthereum({ value: rawToken.tokenAddress }),
+        })
+      } catch (error) {
+        // Token not found in SDK token list
+        return false
+      }
+      return true
+    })
 
     const tokensUsedAsReservesWithUndefined = await Promise.all(
-      rawTokens.map(async (reservesToken) => {
+      supportedRawTokens.map(async (reservesToken) => {
         const token = await this.context.tokensManager.getTokenByAddress({
           chainInfo: ChainFamilyMap.Ethereum.Mainnet,
           address: Address.createFromEthereum({ value: reservesToken.tokenAddress }),
