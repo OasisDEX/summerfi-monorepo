@@ -4,7 +4,7 @@ import { ExternalAPI } from './stacks/partners-stack'
 import { SdkAPI } from './stacks/sdk-stack'
 import { $, chalk, echo } from 'zx'
 
-const availableStage = ['dev', 'feature', 'staging', 'production']
+const availableStage = ['dev', 'staging', 'production', 'armada-prod', 'oasis-borrow-sdk-prod']
 
 enum App {
   SummerfiStack = 'summerfi-stack',
@@ -28,7 +28,11 @@ const checkRemoteBranchExists = async (branchName: string) => {
 
 const checkForUncommittedOrUntrackedChanges = async () => {
   const { stdout: status } = await $`git status --porcelain`
-  return status.trim().split('\n').filter(Boolean).length
+  const statusList = status.trim().split('\n').filter(Boolean)
+  return {
+    list: statusList,
+    count: statusList.length,
+  }
 }
 
 const runInstallAndChecks = async () => {
@@ -69,7 +73,7 @@ const checkIfDockerComposeIsRunning = async () => {
     const { stdout } =
       await $`docker compose --file ./stacks/local-env/docker-compose.yaml  ps --services --filter "status=running"`
     const services = (stdout ?? '').trim().split('\n').filter(Boolean)
-    return services.length > 0
+    return services.length === 3 // 3 services are expected to be running - rays-db, redis-cache, oasis-borrow-db
   } catch (error) {
     return false
   }
@@ -77,7 +81,7 @@ const checkIfDockerComposeIsRunning = async () => {
 
 const runDockerCompose = async () => {
   try {
-    await $`docker compose --file ./stacks/local-env/docker-compose.yaml up -d`
+    await $`docker compose --file ./stacks/local-env/docker-compose.yaml up --build -d`
   } catch (error) {
     echo(`${chalk.bgRed('Failed to start docker-compose services' + error.message)}`)
     return false
@@ -103,16 +107,16 @@ export const sstConfig: SSTConfig = {
       )
     }
 
-    if (_input.stage === 'staging' || _input.stage === 'production') {
-      if (
-        currentBranch !== 'main' &&
-        currentBranch !== 'dev' &&
-        !currentBranch.startsWith('hotfix/')
-      ) {
-        throw new Error(
-          `You can only deploy to ${_input.stage} from the main, dev, or a hotfix, but current branch is ` +
-            currentBranch,
-        )
+    if (
+      _input.stage === 'staging' ||
+      _input.stage === 'production' ||
+      _input.stage === 'armada-prod' ||
+      _input.stage === 'oasis-borrow-sdk-prod'
+    ) {
+      if (_input.stage === 'production') {
+        if (currentBranch !== 'main' && currentBranch !== 'dev') {
+          throw new Error('You can only deploy to production from main or dev branch')
+        }
       }
 
       if (commitsToFetch === null) {
@@ -131,9 +135,9 @@ export const sstConfig: SSTConfig = {
 
       const changes = await checkForUncommittedOrUntrackedChanges()
 
-      if (changes > 0) {
+      if (changes.count > 0) {
         throw new Error(
-          `Cannot deploy with uncommitted or untracked changes. Current status: ${changes} changes`,
+          `Cannot deploy with uncommitted or untracked changes. Current changes: ${changes.list.join(', ')}`,
         )
       }
     }
@@ -151,8 +155,8 @@ export const sstConfig: SSTConfig = {
     if (stage.startsWith('dev-')) {
       const isDockerRunning = await checkIfDockerIsRunning()
       if (!isDockerRunning) {
-        echo`${chalk.bgYellow('Docker is not running. ')}`
-        echo`${chalk.bgYellow('Docker is required for some resources to work properly.')}`
+        echo`${chalk.yellow('Docker is not running. ')}`
+        echo`${chalk.yellow('Docker is required for some resources to work properly.')}`
       } else {
         echo`${chalk.green('Docker is running. ')}`
         const isDockerComposeRunning = await checkIfDockerComposeIsRunning()
