@@ -1,13 +1,10 @@
-name: Deploy Earn Protocol Landing Page New Production
+name: Deploy Static Earn Protocol Landing Page Production
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - 'main'
 
 jobs:
   build-earn-protocol-landing-page:
-    name: Build and deploy Earn Protocol App
+    name: Build and deploy Earn Protocol LP
     runs-on: ubuntu-22.04
     permissions:
       id-token: write
@@ -76,53 +73,12 @@ jobs:
       - name: Build
         run: pnpm build-earn-frontend-landing
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.BUILD_DEPLOY_OIDC_ROLE_PROD }}
-          aws-region: ${{ env.AWS_REGION }}
+      # - name: Configure AWS credentials
+      #   uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     role-to-assume: ${{ secrets.BUILD_DEPLOY_OIDC_ROLE_PROD }}
+      #     aws-region: ${{ env.AWS_REGION }}
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: Build docker image, copy build output and push to ECR
-        id: build-image
-        env:
-          LATEST_TAG: latest
-          ECR_REPO_NAME: summer-fi-earn-lp-production
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          NEXT_PUBLIC_SHA: ${{ env.NEXT_PUBLIC_SHA }}
-        run: |
-          # Build a docker container and
-          # push it to ECR so that it can
-          # be deployed to ECS.
-          docker build -f apps/earn-protocol-landing-page/docker/Dockerfile \
-                       --build-arg CONFIG_URL=${{ secrets.CONFIG_URL }} \
-                       --build-arg CONFIG_URL_EARN=${{ secrets.CONFIG_URL_EARN }} \
-                       --build-arg EARN_MIXPANEL_KEY=${{ secrets.EARN_MIXPANEL_KEY }} \
-                       --build-arg SUBGRAPH_BASE=${{ secrets.SUBGRAPH_BASE }} \
-                       --build-arg NEXT_PUBLIC_EARN_MIXPANEL_KEY=${{ secrets.NEXT_PUBLIC_EARN_MIXPANEL_KEY }} \
-                       --build-arg NEXT_TELEMETRY_DISABLED=${{ secrets.NEXT_TELEMETRY_DISABLED }} \
-                       --build-arg FORECAST_API_URL=${{ secrets.FORECAST_API_URL }} \
-                       --build-arg SDK_API_URL=${{ secrets.SDK_API_URL }} \
-                       --build-arg FUNCTIONS_API_URL=${{ secrets.FUNCTIONS_API_URL }} \
-                       --build-arg NEWSLETTER_API_KEY=${{ secrets.NEWSLETTER_API_KEY }} \
-                       --build-arg NEWSLETTER_PUBLICATION_ID=${{ secrets.NEWSLETTER_PUBLICATION_ID }} \
-                       --build-arg NEWSLETTER_ENDPOINT=${{ secrets.NEWSLETTER_ENDPOINT }} \
-                       --build-arg NEXT_PUBLIC_SHA=${{ env.NEXT_PUBLIC_SHA }} \
-                       --cache-from type=registry,ref=189194422115.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/buildkit-test:cache \
-                       -t $ECR_REGISTRY/$ECR_REPO_NAME:$NEXT_PUBLIC_SHA \
-                       -t $ECR_REGISTRY/$ECR_REPO_NAME:$LATEST_TAG \
-                       -t $ECR_REGISTRY/$ECR_REPO_NAME:$ENVIRONMENT_TAG \
-                       ./apps/earn-protocol-landing-page
-          docker push $ECR_REGISTRY/$ECR_REPO_NAME --all-tags
-
-      - name: Update ECS service with latest Docker image
-        id: service-update
-        run: |
-          aws ecs update-service --cluster $CLUSTER_NAME --service ${{ env.SERVICE_NAME }} --force-new-deployment --region $AWS_REGION
-
-      - name: Invalidate CloudFront
-        run: |
-          AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.NEW_EARN_CF_DIST_ID }} --paths "/*"
+      # - name: Login to Amazon ECR
+      #   id: login-ecr
+      #   uses: aws-actions/amazon-ecr-login@v1

@@ -15,8 +15,8 @@ import { useLocalConfig } from '@/contexts/LocalConfigContext/LocalConfigContext
 import homepageCarouselStyles from './HomepageCarousel.module.css'
 
 type HomepageCarouselProps = {
-  vaultsList: SDKVaultishType[]
-  vaultsApyByNetworkMap: {
+  vaultsList?: SDKVaultishType[]
+  vaultsApyByNetworkMap?: {
     [key: `${string}-${number}`]: VaultApyData
   }
 }
@@ -79,7 +79,7 @@ export const HomepageCarousel = ({
         </div>
         <div className={homepageCarouselStyles.emblaViewport} ref={emblaRef}>
           <div className={homepageCarouselStyles.emblaContainer}>
-            {vaultsList.map((vault, vaultIndex) => (
+            {vaultsList?.map((vault, vaultIndex) => (
               <div
                 className={clsx(homepageCarouselStyles.emblaSlide, 'embla__slide')}
                 key={`VaultCardHomepage_${vault.id}_${vault.protocol.network}`}
@@ -98,7 +98,7 @@ export const HomepageCarousel = ({
           </div>
         </div>
         <div className={homepageCarouselStyles.dotsBottom}>
-          {vaultsList.map((_, idx) => (
+          {vaultsList?.map((_, idx) => (
             <div
               key={idx}
               className={`${homepageCarouselStyles.dot} ${idx === selectedIndex ? homepageCarouselStyles.dotActive : ''}`}

@@ -1,12 +1,7 @@
 'use client'
-import { HomepageCarousel, Text, useMobileCheck, WithArrow } from '@summerfi/app-earn-ui'
-import { type SDKVaultishType } from '@summerfi/app-types'
-import { SDKContextProvider } from '@summerfi/sdk-client-react'
+import { HomepageCarousel, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { type GetVaultsApyResponse, type SDKVaultishType } from '@summerfi/app-types'
 import Link from 'next/link'
-
-import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
-import { sdkApiUrl } from '@/constants/sdk'
-import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 
 import landingPageHeroStyles from '@/components/layout/LandingPageContent/components/LandingPageHero.module.css'
 
@@ -14,12 +9,9 @@ export const LandingPageHero = ({
   vaultsList,
   vaultsApyByNetworkMap,
 }: {
-  vaultsList: SDKVaultishType[]
-  vaultsApyByNetworkMap: GetVaultsApyResponse
+  vaultsList?: SDKVaultishType[]
+  vaultsApyByNetworkMap?: GetVaultsApyResponse
 }) => {
-  const { deviceType } = useDeviceType()
-  const { isMobile, isTablet } = useMobileCheck(deviceType)
-
   const headerPartA = (
     <Text
       as="h1"
@@ -54,23 +46,14 @@ export const LandingPageHero = ({
     </Text>
   )
 
-  const isMobileOrTablet = isMobile || isTablet
-
   return (
-    <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
-      <div className={landingPageHeroStyles.landingPageHeroWrapper}>
-        <div className={landingPageHeroStyles.heroHeader}>
-          {isMobileOrTablet ? (
-            <div className={landingPageHeroStyles.heroHeaderMobile}>
-              {headerPartA}
-              {headerPartB}
-            </div>
-          ) : (
-            headerPartA
-          )}
-          {!isMobileOrTablet && headerPartB}
-        </div>
-        <HomepageCarousel vaultsList={vaultsList} vaultsApyByNetworkMap={vaultsApyByNetworkMap} />
+    <div className={landingPageHeroStyles.landingPageHeroWrapper}>
+      <div className={landingPageHeroStyles.heroHeader}>
+        <div className={landingPageHeroStyles.heroHeaderPartA}>{headerPartA}</div>
+        <div className={landingPageHeroStyles.heroHeaderPartB}>{headerPartB}</div>
+      </div>
+      <HomepageCarousel vaultsList={vaultsList} vaultsApyByNetworkMap={vaultsApyByNetworkMap} />
+      {vaultsList?.length && (
         <Link href="/earn">
           <Text className={landingPageHeroStyles.viewAllStrategies} variant="p3semi">
             <WithArrow style={{ color: 'white' }}>
@@ -78,7 +61,7 @@ export const LandingPageHero = ({
             </WithArrow>
           </Text>
         </Link>
-      </div>
-    </SDKContextProvider>
+      )}
+    </div>
   )
 }

@@ -6,10 +6,14 @@ import { formatCryptoBalance } from '@summerfi/app-utils'
 import classNames from './ProtocolStats.module.css'
 
 interface ProtocolStatsProps {
-  vaultsList: SDKVaultsListType
+  vaultsList?: SDKVaultsListType
 }
 
 export const ProtocolStats: FC<ProtocolStatsProps> = ({ vaultsList }) => {
+  if (!vaultsList) {
+    return null
+  }
+
   const supportedProtocolsCount = getVaultsProtocolsList(vaultsList).length
   const totalAssets = vaultsList.reduce((acc, vault) => acc + Number(vault.totalValueLockedUSD), 0)
 

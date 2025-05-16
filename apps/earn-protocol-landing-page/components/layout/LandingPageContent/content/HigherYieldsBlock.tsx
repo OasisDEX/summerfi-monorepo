@@ -198,7 +198,7 @@ const higherYieldsBlockSectionsKeys = Object.keys(
 ) as (keyof typeof higherYieldsBlockSections)[]
 
 interface HigherYieldsBlockProps {
-  vaultsList: SDKVaultsListType
+  vaultsList?: SDKVaultsListType
 }
 
 export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({ vaultsList }) => {
@@ -217,23 +217,28 @@ export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({ vaultsList
     [fadingOut],
   )
 
-  const totalRebalancesCount = vaultsList.reduce(
+  const totalRebalancesCount = vaultsList?.reduce(
     (acc, vault) => acc + Number(vault.rebalanceCount),
     0,
   )
 
-  const totalLiquidity = vaultsList.reduce(
+  const totalLiquidity = vaultsList?.reduce(
     (acc, vault) => acc + Number(vault.withdrawableTotalAssetsUSD),
     0,
   )
 
-  const totalVaultsCount = vaultsList.length
+  const totalVaultsCount = vaultsList?.length
 
   const savedTimeInHours = useMemo(
-    () => getRebalanceSavedTimeInHours(totalRebalancesCount),
+    () => getRebalanceSavedTimeInHours(totalRebalancesCount ?? 0),
     [totalRebalancesCount],
   )
-  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(vaultsList), [vaultsList])
+
+  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(vaultsList ?? []), [vaultsList])
+
+  if (!vaultsList || !totalRebalancesCount || !totalVaultsCount || !totalLiquidity) {
+    return null
+  }
 
   const totalAssets = vaultsList.reduce((acc, vault) => acc + Number(vault.totalValueLockedUSD), 0)
 

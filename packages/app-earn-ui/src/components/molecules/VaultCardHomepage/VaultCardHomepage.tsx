@@ -85,7 +85,7 @@ const DataBlock = ({
 
 type VaultCardHomepageProps = {
   vault: SDKVaultishType
-  vaultsApyByNetworkMap: {
+  vaultsApyByNetworkMap?: {
     [key: `${string}-${number}`]: VaultApyData
   }
   selected?: boolean
@@ -111,6 +111,10 @@ export const VaultCardHomepage = ({
     rewardTokenEmissionsAmount,
     rewardTokenEmissionsFinish,
   } = vault
+
+  if (!vaultsApyByNetworkMap) {
+    return null
+  }
   const { apy } = vaultsApyByNetworkMap[`${id}-${subgraphNetworkToId(protocol.network)}`]
   const parsedApy = formatDecimalAsPercent(apy)
   const parsedTotalValueLocked = formatCryptoBalance(

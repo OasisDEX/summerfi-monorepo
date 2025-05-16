@@ -10,7 +10,12 @@ import {
   useRef,
   useState,
 } from 'react'
-import { GradientBox, Icon, type IconNamesList, Text } from '@summerfi/app-earn-ui'
+import { GradientBox, Icon, Text } from '@summerfi/app-earn-ui'
+import {
+  type LandingPageData,
+  supportedDefillamaProtocols,
+  supportedDefillamaProtocolsConfig,
+} from '@summerfi/app-types'
 import { formatAsShorthandNumbers } from '@summerfi/app-utils'
 import Link from 'next/link'
 
@@ -32,12 +37,7 @@ type ProtocolScrollerItemProps = {
 }
 
 type ProtocolScrollerProps = {
-  protocolsList: {
-    protocol: string
-    protocolIcon: IconNamesList
-    tvl: bigint
-    url: string
-  }[]
+  protocolTvls?: LandingPageData['protocolTvls']
   animationPixelPerSecond?: number
 }
 
@@ -100,12 +100,25 @@ const ProtocolScrollerItem = ({ protocolIcon, protocol, tvl, url }: ProtocolScro
 }
 
 export const ProtocolScroller = ({
-  protocolsList,
+  protocolTvls,
   animationPixelPerSecond = 20,
 }: ProtocolScrollerProps) => {
   const { screenSize } = useScreenSize()
   const [hovered, setHovered] = useState(false)
   const trackRef = useRef<HTMLDivElement>(null)
+
+  const protocolsList = useMemo(() => {
+    return supportedDefillamaProtocols.map((protocol) => {
+      const protocolConfig = supportedDefillamaProtocolsConfig[protocol]
+
+      return {
+        protocol: protocolConfig.displayName,
+        protocolIcon: supportedDefillamaProtocolsConfig[protocol].icon,
+        tvl: BigInt(protocolTvls?.[protocol] || 0),
+        url: '',
+      }
+    })
+  }, [protocolTvls])
 
   // 280 is the width of the item, 16 is the gap
   const singleProtocolListWidth = protocolsList.length * (280 + 16)
