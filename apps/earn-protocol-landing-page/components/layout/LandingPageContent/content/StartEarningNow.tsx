@@ -4,7 +4,7 @@ import { Button, Card, Icon, Text } from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
 import Link from 'next/link'
 
-import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
+import { useLandingPageData } from '@/contexts/LandingPageContext'
 
 import startEarningNowStyles from '@/components/layout/LandingPageContent/content/StartEarningNow.module.css'
 
@@ -39,9 +39,9 @@ const StartEarningNowBlock = ({
 )
 
 export const StartEarningNow = () => {
-  const { features } = useSystemConfig()
+  const { landingPageData } = useLandingPageData()
 
-  const migrationsEnabled = !!features?.Migrations
+  const migrationsEnabled = !!landingPageData?.systemConfig.features?.Migrations
 
   return (
     <div>

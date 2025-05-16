@@ -1,30 +1,20 @@
 'use client'
 
 import { type PropsWithChildren, useEffect, useState } from 'react'
-import {
-  CookieBanner,
-  Footer,
-  NewsletterWrapper,
-  type SavedAnalyticsCookiesSettings,
-  Text,
-  useAnalyticsCookies,
-} from '@summerfi/app-earn-ui'
+import { Footer, GlobalIssueBanner, NewsletterWrapper, Text } from '@summerfi/app-earn-ui'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
-import { manageAnalyticsCookies } from '@/features/analytics-cookies/manage-analytics-cookies'
+import { useLandingPageData } from '@/contexts/LandingPageContext'
 
 import landingMasterPageStyles from '@/components/layout/LandingMasterPage/landingMasterPage.module.css'
 
-interface LandingMasterPageProps {
-  analyticsCookie: SavedAnalyticsCookiesSettings | null
-}
+interface LandingMasterPageProps {}
 
 export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProps>> = ({
   children,
-  analyticsCookie,
 }) => {
-  const [cookieSettings, setCookieSettings] = useAnalyticsCookies(analyticsCookie)
   const [scrolledAmount, setScrolledAmount] = useState(0)
+  const { landingPageData } = useLandingPageData()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,6 +30,9 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
 
   return (
     <div className={landingMasterPageStyles.mainContainer}>
+      {landingPageData?.systemConfig.bannerMessage && (
+        <GlobalIssueBanner message={landingPageData.systemConfig.bannerMessage} />
+      )}
       <div className={landingMasterPageStyles.bubbles} style={{ top: `${scrolledAmount * 0.2}px` }}>
         <div className={landingMasterPageStyles.bubblesShadow} />
         <video
@@ -90,11 +83,6 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
           }
         />
       </div>
-      <CookieBanner
-        value={cookieSettings}
-        setValue={setCookieSettings}
-        manageCookie={manageAnalyticsCookies}
-      />
     </div>
   )
 }

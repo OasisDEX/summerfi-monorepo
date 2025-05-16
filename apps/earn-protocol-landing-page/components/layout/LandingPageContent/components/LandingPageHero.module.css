@@ -4,6 +4,7 @@
   align-items: center;
   width: 100%;
 }
+
 @media (max-width: 531px) {
   .landingPageHeroWrapper {
     margin-bottom: var(--spacing-space-2x-large);
@@ -14,16 +15,40 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   margin-bottom: 74px;
+  gap: 10px;
+}
+
+.heroHeaderPartA {
+  display: block;
+}
+
+@media (max-width: 531px) {
+  .heroHeader {
+    flex-direction: column;
+    text-align: center;
+    gap: 0;
+  }
+
+  .heroHeaderPartA {
+    width: 100%;
+  }
+
+  .heroHeaderPartB {
+    width: 100%;
+  }
 }
 
 .heroHeaderMobile {
   text-align: center;
 }
-.heroHeaderMobile > h1 {
+
+.heroHeaderMobile>h1 {
   display: inline;
 }
-.heroHeaderMobile > h1:last-child {
+
+.heroHeaderMobile>h1:last-child {
   margin-left: 10px;
 }
 

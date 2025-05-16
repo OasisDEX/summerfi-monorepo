@@ -10,12 +10,11 @@ import { GenericTokenIcon } from '@/components/atoms/GenericTokenIcon/GenericTok
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { Text } from '@/components/atoms/Text/Text'
+import type TextVariants from '@/components/atoms/Text/Text.module.css'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { networkWarnings } from '@/constants/earn-protocol'
 import { getDisplayToken } from '@/helpers/get-display-token'
 import { getTokenGuarded } from '@/tokens/helpers'
-
-import { type ClassNames as TextVariants } from '@/components/atoms/Text/Text.module.css'
 
 const networkIdIconMap = {
   [NetworkIds.MAINNET]: <Icon iconName="earn_network_ethereum" size={16} />,
@@ -39,7 +38,7 @@ interface VaultTitleProps {
   networkName?: SDKNetwork
   value?: ReactNode
   selected?: boolean
-  titleVariant?: TextVariants
+  titleVariant?: keyof typeof TextVariants
   isLoading?: boolean
   isVaultCard?: boolean
   iconSize?: number

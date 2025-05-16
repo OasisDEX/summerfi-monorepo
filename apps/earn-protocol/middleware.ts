@@ -46,6 +46,12 @@ export function middleware(request: NextRequest) {
     response.cookies.set('deviceType', deviceInfo.deviceType)
   }
 
+  if (process.env.NODE_ENV === 'development') {
+    const reqOrigin = request.headers.get('origin') ?? ''
+
+    response.headers.set('Access-Control-Allow-Origin', reqOrigin)
+  }
+
   // Get `CloudFront-Viewer-Country` header if exists from request and set cookie
   const country = request.headers.get('CloudFront-Viewer-Country')
 
