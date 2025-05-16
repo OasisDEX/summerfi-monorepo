@@ -6,6 +6,10 @@ export const getDisplayToken = (tokenSymbol: string): string => {
     return 'MKR'
   }
 
+  if (tokenSymbol.toLowerCase() === 'usdce') {
+    return 'USDC.e'
+  }
+
   if (tokenSymbol.length > 15) {
     return formatAddress(tokenSymbol, { first: 3, last: 3 })
   }
