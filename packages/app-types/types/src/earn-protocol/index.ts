@@ -13,8 +13,8 @@ import {
 import { ChainId } from '@summerfi/serverless-shared'
 import { EarnAppConfigType, EarnAppFleetCustomConfigType } from '../generated/earn-app-config'
 import { TimeframesType } from '../components'
-import { DeviceType } from 'types/src/device-type'
-import { IconNamesList } from 'types/src/icons'
+import { DeviceType } from '../device-type'
+import { IconNamesList } from '../icons'
 
 export { Network as SDKNetwork }
 export { ChainId as SDKChainId }
