@@ -23,6 +23,7 @@ import {
 import {
   type DropdownOption,
   type DropdownRawOption,
+  type GetVaultsApyResponse,
   type IconNamesList,
   type SDKNetwork,
   type SDKVaultsListType,
@@ -38,7 +39,6 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
-import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { MigrationLandingPageIlustration } from '@/features/migration/components/MigrationLandingPageIlustration/MigrationLandingPageIlustration'
 import { MigrationLandingPagePositionCard } from '@/features/migration/components/MigrationLandingPagePositionCard/MigrationLandingPagePositionCard'

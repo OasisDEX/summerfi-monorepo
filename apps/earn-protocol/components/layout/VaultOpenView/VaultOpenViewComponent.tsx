@@ -22,6 +22,7 @@ import {
 import { useTermsOfService } from '@summerfi/app-tos'
 import {
   type ArksHistoricalChartData,
+  type GetVaultsApyResponse,
   sdkSupportedChains,
   type SDKVaultishType,
   type SDKVaultsListType,
@@ -39,7 +40,6 @@ import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
-import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { ControlsApproval, OrderInfoDeposit } from '@/components/molecules/SidebarElements'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'

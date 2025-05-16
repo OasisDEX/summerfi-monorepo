@@ -1,4 +1,4 @@
-import { type VaultApyData } from '@summerfi/app-types'
+import { type GetVaultsApyResponse } from '@summerfi/app-types'
 
 type GetVaultsApyParams = {
   fleets: {
@@ -25,25 +25,6 @@ type GetVaultsApyRAWResponse = {
       },
     ]
   }[]
-}
-
-export type GetVaultsApyResponse = {
-  // response {
-  //   '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17-42161': {
-  //     apy: 8.002220099969366,
-  //     sma24h: 13.54019480114041,
-  //     sma7d: 6.578848760141222,
-  //     sma30d: 2.7373712017127283,
-  //   },
-  //   '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17-8453': {
-  //     apy: 13.54019480114041,
-  //     sma24h: 13.54019480114041,
-  //     sma7d: 6.578848760141222,
-  //     sma30d: 2.7373712017127283,
-  //   },
-  // } etc
-  // apy gets divided by 100 to not confuse the frontend
-  [key: `${string}-${number}`]: VaultApyData
 }
 
 const getEmptyResponse = (fleets: GetVaultsApyParams['fleets']) => {

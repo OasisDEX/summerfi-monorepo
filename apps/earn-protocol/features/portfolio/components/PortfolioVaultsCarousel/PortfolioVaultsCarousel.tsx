@@ -10,11 +10,9 @@ import {
   useMobileCheck,
   VaultCard,
 } from '@summerfi/app-earn-ui'
-import { type SDKVaultsListType } from '@summerfi/app-types'
+import { type GetVaultsApyResponse, type SDKVaultsListType } from '@summerfi/app-types'
 import { subgraphNetworkToId } from '@summerfi/app-utils'
 import { useRouter } from 'next/navigation'
-
-import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 
 interface PortfolioVaultsCarouselProps {
   style?: CSSProperties

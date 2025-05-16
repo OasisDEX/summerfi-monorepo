@@ -2,6 +2,7 @@
 
 import {
   type ArksHistoricalChartData,
+  type GetVaultsApyResponse,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
@@ -13,7 +14,6 @@ import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
-import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { VaultOpenViewComponent } from '@/components/layout/VaultOpenView/VaultOpenViewComponent'
 import { sdkApiUrl } from '@/constants/sdk'
 

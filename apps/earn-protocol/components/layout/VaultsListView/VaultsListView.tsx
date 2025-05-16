@@ -24,6 +24,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import {
   type DropdownRawOption,
+  type GetVaultsApyResponse,
   type IconNamesList,
   type IToken,
   type SDKNetwork,
@@ -41,7 +42,6 @@ import {
 import { capitalize } from 'lodash-es'
 import { type ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation'
 
-import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { mapTokensToMultiselectOptions } from '@/features/latest-activity/table/filters/mappers'
 import { filterStablecoins } from '@/helpers/filter-stablecoins'

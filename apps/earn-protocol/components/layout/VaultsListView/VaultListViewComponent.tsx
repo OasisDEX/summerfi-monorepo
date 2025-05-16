@@ -1,10 +1,9 @@
 'use client'
 import { type FC } from 'react'
-import { type SDKVaultsListType } from '@summerfi/app-types'
+import { type GetVaultsApyResponse, type SDKVaultsListType } from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 import dynamic from 'next/dynamic'
 
-import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { VaultsListViewLoading } from '@/components/layout/VaultsListView/VaultsListViewLoading'
 import { sdkApiUrl } from '@/constants/sdk'
 

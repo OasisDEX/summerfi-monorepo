@@ -14,6 +14,7 @@ import {
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import {
+  type GetVaultsApyResponse,
   type HistoryChartData,
   type SDKVaultsListType,
   type TokenSymbolsList,
@@ -22,7 +23,6 @@ import { formatCryptoBalance, formatFiatBalance, subgraphNetworkToId } from '@su
 import Link from 'next/link'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
-import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { PositionHistoricalChart } from '@/components/organisms/Charts/PositionHistoricalChart'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'

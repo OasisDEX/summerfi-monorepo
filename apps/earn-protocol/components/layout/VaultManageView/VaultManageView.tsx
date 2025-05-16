@@ -3,6 +3,7 @@
 import {
   type ArksHistoricalChartData,
   type EarnAppConfigType,
+  type GetVaultsApyResponse,
   type IArmadaPosition,
   type PerformanceChartData,
   type SDKVaultishType,
@@ -16,7 +17,6 @@ import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
-import { type GetVaultsApyResponse } from '@/app/server-handlers/vaults-apy'
 import { VaultManageViewComponent } from '@/components/layout/VaultManageView/VaultManageViewComponent'
 import { sdkApiUrl } from '@/constants/sdk'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'

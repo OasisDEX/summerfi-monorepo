@@ -188,7 +188,12 @@ export type {
   UserActivity,
   UsersActivity,
   VaultApyData,
+  UserConfigResponse,
+  GetVaultsApyResponse,
+  LandingPageData,
+  SupportedDefillamaTvlProtocols,
 } from './src/earn-protocol'
+export { supportedDefillamaProtocols, supportedDefillamaProtocolsConfig } from './src/earn-protocol'
 export { DeviceType } from './src/device-type'
 export type { DeviceInfo } from './src/device-type'
 export { TransactionAction } from './src/transaction'

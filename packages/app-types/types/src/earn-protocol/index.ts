@@ -11,8 +11,10 @@ import {
   VaultSwitchTransactionInfo,
 } from '@summerfi/sdk-common'
 import { ChainId } from '@summerfi/serverless-shared'
-import { EarnAppFleetCustomConfigType } from '../generated/earn-app-config'
+import { EarnAppConfigType, EarnAppFleetCustomConfigType } from '../generated/earn-app-config'
 import { TimeframesType } from '../components'
+import { DeviceType } from 'types/src/device-type'
+import { IconNamesList } from 'types/src/icons'
 
 export { Network as SDKNetwork }
 export { ChainId as SDKChainId }
@@ -193,4 +195,114 @@ export interface FleetRate {
 export type TransactionWithStatus = (ExtendedTransactionInfo | VaultSwitchTransactionInfo) & {
   executed: boolean
   txHash?: string
+}
+
+export type UserConfigResponse = {
+  analyticsCookie: boolean
+  deviceType: DeviceType
+  sumrNetApyConfig: {
+    enabled: boolean
+    slippage: number
+  }
+  slippageConfig: {
+    slippage: number
+  }
+  country: string | null
+}
+
+export type GetVaultsApyResponse = {
+  // response {
+  //   '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17-42161': {
+  //     apy: 8.002220099969366,
+  //     sma24h: 13.54019480114041,
+  //     sma7d: 6.578848760141222,
+  //     sma30d: 2.7373712017127283,
+  //   },
+  //   '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17-8453': {
+  //     apy: 13.54019480114041,
+  //     sma24h: 13.54019480114041,
+  //     sma7d: 6.578848760141222,
+  //     sma30d: 2.7373712017127283,
+  //   },
+  // } etc
+  // apy gets divided by 100 to not confuse the frontend
+  [key: `${string}-${number}`]: VaultApyData
+}
+
+export const supportedDefillamaProtocolsConfig: {
+  [key in SupportedDefillamaTvlProtocols]: {
+    displayName: string
+    defillamaProtocolName: string
+    icon: IconNamesList
+  }
+} = {
+  aave: {
+    displayName: 'Aave',
+    defillamaProtocolName: 'aave',
+    icon: 'scroller_aave',
+  },
+  sky: {
+    displayName: 'Sky',
+    defillamaProtocolName: 'sky',
+    icon: 'scroller_sky',
+  },
+  spark: {
+    displayName: 'Spark',
+    defillamaProtocolName: 'spark',
+    icon: 'scroller_spark',
+  },
+  pendle: {
+    displayName: 'Pendle',
+    defillamaProtocolName: 'pendle',
+    icon: 'scroller_pendle',
+  },
+  gearbox: {
+    displayName: 'Gearbox',
+    defillamaProtocolName: 'gearbox',
+    icon: 'scroller_gearbox',
+  },
+  euler: {
+    displayName: 'Euler',
+    defillamaProtocolName: 'euler',
+    icon: 'scroller_euler',
+  },
+  compound: {
+    displayName: 'Compound',
+    defillamaProtocolName: 'compound-v3',
+    icon: 'scroller_compound',
+  },
+  ethena: {
+    displayName: 'Ethena',
+    defillamaProtocolName: 'ethena',
+    icon: 'scroller_ethena',
+  },
+  fluid: {
+    displayName: 'Fluid',
+    defillamaProtocolName: 'fluid-lending',
+    icon: 'scroller_fluid',
+  },
+}
+
+export const supportedDefillamaProtocols = Object.keys(
+  supportedDefillamaProtocolsConfig,
+) as (keyof typeof supportedDefillamaProtocolsConfig)[]
+
+export type SupportedDefillamaTvlProtocols =
+  | 'aave'
+  | 'sky'
+  | 'spark'
+  | 'pendle'
+  | 'gearbox'
+  | 'euler'
+  | 'compound'
+  | 'ethena'
+  | 'fluid'
+
+export type LandingPageData = {
+  systemConfig: EarnAppConfigType
+  vaultsWithConfig: SDKVaultishType[]
+  vaultsApyByNetworkMap: GetVaultsApyResponse
+  protocolTvls: {
+    [key in SupportedDefillamaTvlProtocols]: bigint
+  }
 }
