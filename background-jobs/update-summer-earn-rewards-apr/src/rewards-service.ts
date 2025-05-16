@@ -103,6 +103,10 @@ export class RewardsService {
     initialDelay: 2000, // 2 seconds
     backoffFactor: 2,
   }
+  private readonly REWARD_RATIO_MAP = {
+    reul: 0.7,
+    '*': 0.997,
+  }
   private readonly ONE_HOUR_IN_SECONDS = 3600
   private readonly logger: Logger
   private readonly ratesSubgraphClient: RatesSubgraphClient
@@ -180,7 +184,19 @@ export class RewardsService {
       {} as Record<string, RewardRate[]>,
     )
 
-    return combinedResults
+    // apply reward ratio to each reward rate
+    const finalResults = Object.entries(combinedResults).reduce(
+      (acc, [productId, rewards]) => {
+        acc[productId] = rewards.map((reward) => ({
+          ...reward,
+          rate: this._rewardRatio(reward.rate, reward.token.symbol).toString(),
+        }))
+        return acc
+      },
+      {} as Record<string, RewardRate[]>,
+    )
+
+    return finalResults
   }
 
   private async fetchWithRetry(
@@ -470,6 +486,7 @@ export class RewardsService {
       return Object.fromEntries(products.map((product) => [product.id, []]))
     }
   }
+
   private async getEulerRewardsBatch(
     products: Product[],
     chainId: ChainId,
@@ -519,5 +536,13 @@ export class RewardsService {
       console.error('[RewardsService] Error fetching Euler rewards:', error)
       return Object.fromEntries(products.map((product) => [product.id, []]))
     }
+  }
+
+  private _rewardRatio(_rate: string, symbol: string): number {
+    const rate = parseFloat(_rate)
+    if (symbol.toLowerCase() === 'reul') {
+      return rate * this.REWARD_RATIO_MAP['reul']
+    }
+    return rate * this.REWARD_RATIO_MAP['*']
   }
 }
