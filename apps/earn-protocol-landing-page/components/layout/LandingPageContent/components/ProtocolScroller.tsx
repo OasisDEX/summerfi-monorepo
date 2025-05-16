@@ -114,7 +114,7 @@ export const ProtocolScroller = ({
       return {
         protocol: protocolConfig.displayName,
         protocolIcon: supportedDefillamaProtocolsConfig[protocol].icon,
-        tvl: BigInt(protocolTvls?.[protocol] || 0),
+        tvl: BigInt(protocolTvls?.[protocol] ?? 0),
         url: '',
       }
     })
