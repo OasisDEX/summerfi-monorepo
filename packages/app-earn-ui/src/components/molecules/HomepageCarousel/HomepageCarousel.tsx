@@ -79,18 +79,19 @@ export const HomepageCarousel = ({
         </div>
         <div className={homepageCarouselStyles.emblaViewport} ref={emblaRef}>
           <div className={homepageCarouselStyles.emblaContainer}>
-            {vaultsList?.map((vault, vaultIndex) => (
+            {(vaultsList ? vaultsList : Array.from({ length: 10 })).map((vault, vaultIndex) => (
               <div
                 className={clsx(homepageCarouselStyles.emblaSlide, 'embla__slide')}
-                key={`VaultCardHomepage_${vault.id}_${vault.protocol.network}`}
+                key={`VaultCardHomepage_${vault ? (vault as SDKVaultishType).id : ''}_${vault ? (vault as SDKVaultishType).protocol.network : ''}_${vaultIndex}`}
               >
                 <div className={homepageCarouselStyles.emblaSlideNumber}>
                   <VaultCardHomepage
-                    vault={vault}
+                    vault={vault as SDKVaultishType | undefined}
                     onSelect={selectSlide(vaultIndex)}
                     vaultsApyByNetworkMap={vaultsApyByNetworkMap}
                     selected={selectedIndex === vaultIndex}
                     sumrPrice={estimatedSumrPrice}
+                    isLoading={!vaultsList}
                   />
                 </div>
               </div>

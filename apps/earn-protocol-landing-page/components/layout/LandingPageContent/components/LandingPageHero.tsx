@@ -1,5 +1,5 @@
 'use client'
-import { HomepageCarousel, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { HomepageCarousel, SkeletonLine, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { type GetVaultsApyResponse, type SDKVaultishType } from '@summerfi/app-types'
 import Link from 'next/link'
 
@@ -53,15 +53,17 @@ export const LandingPageHero = ({
         <div className={landingPageHeroStyles.heroHeaderPartB}>{headerPartB}</div>
       </div>
       <HomepageCarousel vaultsList={vaultsList} vaultsApyByNetworkMap={vaultsApyByNetworkMap} />
-      {vaultsList?.length && (
-        <Link href="/earn">
-          <Text className={landingPageHeroStyles.viewAllStrategies} variant="p3semi">
+      <Link href="/earn">
+        <Text className={landingPageHeroStyles.viewAllStrategies} variant="p3semi">
+          {vaultsList?.length ? (
             <WithArrow style={{ color: 'white' }}>
               View all {vaultsList.length} strategies
             </WithArrow>
-          </Text>
-        </Link>
-      )}
+          ) : (
+            <SkeletonLine height={30} width={200} />
+          )}
+        </Text>
+      </Link>
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import { type FC, Fragment } from 'react'
-import { Card, getVaultsProtocolsList, Text } from '@summerfi/app-earn-ui'
+import { Card, getVaultsProtocolsList, SkeletonLine, Text } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 
@@ -10,17 +10,13 @@ interface ProtocolStatsProps {
 }
 
 export const ProtocolStats: FC<ProtocolStatsProps> = ({ vaultsList }) => {
-  if (!vaultsList) {
-    return null
-  }
-
-  const supportedProtocolsCount = getVaultsProtocolsList(vaultsList).length
-  const totalAssets = vaultsList.reduce((acc, vault) => acc + Number(vault.totalValueLockedUSD), 0)
+  const supportedProtocolsCount = getVaultsProtocolsList(vaultsList ?? []).length
+  const totalAssets = vaultsList?.reduce((acc, vault) => acc + Number(vault.totalValueLockedUSD), 0)
 
   const data = [
     {
       title: 'Total deposits',
-      value: `$${formatCryptoBalance(totalAssets)}`,
+      value: `$${formatCryptoBalance(totalAssets ?? 0)}`,
     },
     {
       title: 'Users',
@@ -48,7 +44,11 @@ export const ProtocolStats: FC<ProtocolStatsProps> = ({ vaultsList }) => {
               {item.title}
             </Text>
             <Text as="h3" variant="h3">
-              {item.value}
+              {vaultsList ? (
+                item.value
+              ) : (
+                <SkeletonLine width={146} height={25} style={{ margin: '7px 0 10px 0' }} />
+              )}
             </Text>
           </div>
           {index !== data.length - 1 && <div className={classNames.divider} />}

@@ -1,5 +1,10 @@
 import { type ReactNode } from 'react'
-import { type IconNamesList, type SDKVaultishType, type VaultApyData } from '@summerfi/app-types'
+import {
+  type IconNamesList,
+  SDKNetwork,
+  type SDKVaultishType,
+  type VaultApyData,
+} from '@summerfi/app-types'
 import {
   formatCryptoBalance,
   formatDecimalAsPercent,
@@ -15,6 +20,7 @@ import { Button } from '@/components/atoms/Button/Button'
 import { Card } from '@/components/atoms/Card/Card'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Risk } from '@/components/atoms/Risk/Risk'
+import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { Text } from '@/components/atoms/Text/Text'
 import { VaultTitle } from '@/components/molecules/VaultTitle/VaultTitle'
 import { getDisplayToken } from '@/helpers/get-display-token'
@@ -83,14 +89,125 @@ const DataBlock = ({
   )
 }
 
+const VaultCardLoading = ({
+  selected = true,
+  onSelect,
+}: {
+  selected?: boolean
+  onSelect?: () => void
+}) => {
+  return (
+    <Card
+      className={clsx(vaultCardHomepageStyles.vaultCardHomepageWrapper, {
+        [vaultCardHomepageStyles.vaultCardHomepageWrapperSelected]: selected,
+      })}
+      style={{
+        cursor: selected ? 'auto' : 'pointer',
+      }}
+      onClick={!selected ? onSelect : undefined}
+    >
+      <div
+        className={clsx(vaultCardHomepageStyles.vaultCardHomepageContentWrapper, {
+          [vaultCardHomepageStyles.vaultCardHomepageContentWrapperSelected]: selected,
+        })}
+      >
+        <div className={vaultCardHomepageStyles.vaultCardHomepageTitleWrapper}>
+          <VaultTitle symbol="" networkName={SDKNetwork.Mainnet} isVaultCard isLoading />
+        </div>
+        <div className={vaultCardHomepageStyles.vaultCardHomepageDatablocksWrapper}>
+          <div className={vaultCardHomepageStyles.vaultCardHomepageDataRow}>
+            <DataBlock
+              title="Total assets"
+              primary
+              contentDesktop={
+                <div style={{ display: 'flex' }}>
+                  <Text variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+                    <SkeletonLine height={20} width={100} />
+                  </Text>
+                  &nbsp;
+                  <Text
+                    variant="p4semi"
+                    style={{ color: 'var(--earn-protocol-secondary-40)', marginTop: '3px' }}
+                  >
+                    <SkeletonLine height={30} width={100} />
+                  </Text>
+                </div>
+              }
+              contentMobile={
+                <div style={{ display: 'flex' }}>
+                  <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+                    <SkeletonLine height={20} width={100} />
+                  </Text>
+                  &nbsp;
+                  <Text
+                    variant="p4semi"
+                    style={{ color: 'var(--earn-protocol-secondary-40)', marginTop: '3px' }}
+                  >
+                    <SkeletonLine height={30} width={100} />
+                  </Text>
+                </div>
+              }
+            />
+            <DataBlock
+              title="APY"
+              titleIcon="stars"
+              contentDesktop={
+                <Text
+                  variant="p1semiColorful"
+                  style={{ color: 'var(--earn-protocol-secondary-100)' }}
+                >
+                  <SkeletonLine height={20} width={100} />
+                </Text>
+              }
+              contentMobile={
+                <Text variant="p2colorful" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+                  <SkeletonLine height={30} width={100} />
+                </Text>
+              }
+            />
+          </div>
+          <div className={vaultCardHomepageStyles.vaultCardHomepageDataRow}>
+            <DataBlock
+              title="Best for"
+              primary
+              contentDesktop={
+                <Text variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+                  <SkeletonLine height={20} width={100} />
+                </Text>
+              }
+              contentMobile={
+                <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+                  <SkeletonLine height={30} width={100} />
+                </Text>
+              }
+            />
+            <DataBlock
+              title="Risk"
+              titleIcon="clock"
+              contentDesktop={<SkeletonLine height={20} width={100} />}
+              contentMobile={<SkeletonLine height={30} width={100} />}
+            />
+          </div>
+        </div>
+        <Link href="#">
+          <Button variant="primaryLargeColorful" disabled style={{ width: '100%' }}>
+            Get started
+          </Button>
+        </Link>
+      </div>
+    </Card>
+  )
+}
+
 type VaultCardHomepageProps = {
-  vault: SDKVaultishType
+  vault?: SDKVaultishType
   vaultsApyByNetworkMap?: {
     [key: `${string}-${number}`]: VaultApyData
   }
   selected?: boolean
   onSelect?: () => void
   sumrPrice?: number
+  isLoading?: boolean
 }
 
 export const VaultCardHomepage = ({
@@ -99,7 +216,12 @@ export const VaultCardHomepage = ({
   selected = true,
   onSelect,
   sumrPrice,
+  isLoading = false,
 }: VaultCardHomepageProps): React.ReactNode => {
+  if (isLoading || !vault) {
+    return <VaultCardLoading selected={selected} onSelect={onSelect} />
+  }
+
   const {
     id,
     inputToken,
