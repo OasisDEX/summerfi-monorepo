@@ -1,6 +1,8 @@
 {
   "$schema": "https://turbo.build/schema.v2.json",
-  "globalDependencies": ["**/.env.*local"],
+  "globalDependencies": [
+    "**/.env.*local"
+  ],
   "globalEnv": [
     "SUBGRAPH_BASE",
     "DEBANK_API_KEY",
@@ -60,6 +62,7 @@
     "COINGECKO_API_KEY",
     "COINGECKO_API_AUTH_HEADER",
     "COINGECKO_SUPPORTED_CHAIN_IDS",
+    "SDK_VERSION",
     "SDK_RPC_GATEWAY",
     "SDK_SUBGRAPH_CONFIG",
     "SDK_LOGGING_ENABLED",
@@ -116,7 +119,10 @@
       "persistent": true
     },
     "prebuild": {
-      "dependsOn": ["^prebuild", "^prebuild:nocache"],
+      "dependsOn": [
+        "^prebuild",
+        "^prebuild:nocache"
+      ],
       "outputs": [
         "src/types/graphql/generated.ts",
         "src/generated",
@@ -126,11 +132,16 @@
       ]
     },
     "prebuild:nocache": {
-      "dependsOn": ["^prebuild:nocache"],
+      "dependsOn": [
+        "^prebuild:nocache"
+      ],
       "cache": false
     },
     "build": {
-      "dependsOn": ["prebuild", "^build"],
+      "dependsOn": [
+        "prebuild",
+        "^build"
+      ],
       "outputs": [
         ".next/**",
         ".next/server/pages/**",
@@ -141,7 +152,11 @@
       ]
     },
     "build:apps": {
-      "dependsOn": ["prebuild", "^build", "^build:apps"],
+      "dependsOn": [
+        "prebuild",
+        "^build",
+        "^build:apps"
+      ],
       "outputs": [
         ".next/**",
         ".next/server/pages/**",
@@ -152,22 +167,44 @@
       ]
     },
     "test": {
-      "dependsOn": ["prebuild", "build", "^test"]
+      "dependsOn": [
+        "prebuild",
+        "build",
+        "^test"
+      ]
     },
     "test:integration": {
-      "dependsOn": ["prebuild", "build", "^test:integration"]
+      "dependsOn": [
+        "prebuild",
+        "build",
+        "^test:integration"
+      ]
     },
     "lint": {
-      "dependsOn": ["prebuild", "build", "^lint"]
+      "dependsOn": [
+        "prebuild",
+        "build",
+        "^lint"
+      ]
     },
     "format": {
-      "dependsOn": ["prebuild", "build", "^format"]
+      "dependsOn": [
+        "prebuild",
+        "build",
+        "^format"
+      ]
     },
     "check-circular": {
-      "dependsOn": ["prebuild", "build", "^check-circular"]
+      "dependsOn": [
+        "prebuild",
+        "build",
+        "^check-circular"
+      ]
     },
     "db:migrate": {
-      "dependsOn": ["prebuild"],
+      "dependsOn": [
+        "prebuild"
+      ],
       "cache": false
     },
     "cicheck": {
@@ -182,7 +219,10 @@
       ]
     },
     "deploy:staging": {
-      "dependsOn": ["cicheck", "^deploy:staging"]
+      "dependsOn": [
+        "cicheck",
+        "^deploy:staging"
+      ]
     }
   }
 }

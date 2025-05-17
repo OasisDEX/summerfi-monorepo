@@ -1,0 +1,21 @@
+{
+  "name": "sdk-sst",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "npx sst deploy --stage production",
+    "remove": "npx sst remove --stage production",
+    "dev": "npx sst dev"
+  },
+  "keywords": [],
+  "author": "",
+  "private": true,
+  "type": "commonjs",
+  "dependencies": {
+    "sst": "3.14.27"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "8.10.149"
+  }
+}
