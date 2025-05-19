@@ -19,24 +19,29 @@ import assert from 'assert'
 
 jest.setTimeout(300000)
 
-const chainId = ChainIds.Base
-const ethFleet = Address.createFromEthereum({ value: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af' })
-const usdcFleet = Address.createFromEthereum({
+const ethFleetBase = Address.createFromEthereum({
+  value: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af',
+})
+const usdcFleetBase = Address.createFromEthereum({
   value: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
 })
-const eurcFleet = Address.createFromEthereum({
+const eurcFleetBase = Address.createFromEthereum({
   value: '0x64db8f51f1bf7064bb5a361a7265f602d348e0f0',
 })
-const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
+const usdtFleetArb = Address.createFromEthereum({
+  value: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
+})
 
 describe('Armada Protocol Deposit', () => {
   it('should make deposits to fleet', async () => {
+    const chainId = ChainIds.ArbitrumOne
+    const rpcUrl = process.env.E2E_SDK_FORK_URL_ARBITRUM
     await runTests({
       swapToSymbol: undefined,
       chainId,
-      fleetAddress: usdcFleet,
+      fleetAddress: usdtFleetArb,
       rpcUrl,
-      stake: false,
+      stake: true,
       amountValue: '1.2',
       referralCode: '1',
     })
