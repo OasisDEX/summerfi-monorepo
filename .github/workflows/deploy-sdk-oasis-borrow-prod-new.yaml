@@ -66,9 +66,6 @@ jobs:
       - name: Git clone the repository
         uses: actions/checkout@v3
 
-      - name: Set up turbo cache
-        uses: rharkor/caching-for-turbo@v1.5
-
       - uses: pnpm/action-setup@v2.0.1
         with:
           version: 8.14.1
