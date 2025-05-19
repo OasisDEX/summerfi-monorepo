@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "deploy": "npx sst deploy --stage production",
-    "remove": "npx sst remove --stage production",
+    "deploy": "npx sst deploy --stage dev-piter",
+    "remove": "npx sst remove --stage dev-piter",
     "dev": "npx sst dev"
   },
   "keywords": [],

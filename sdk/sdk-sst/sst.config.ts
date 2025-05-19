@@ -43,7 +43,7 @@ export default $config({
         retention: longTerm ? '1 month' : '1 day',
       },
       transform: {
-        stage: process.env.SDK,
+        stage: $app.stage + environmentVariables.SDK_VERSION,
       },
     })
     SdkApi.route('ANY /api/sdk/{proxy+}', SdkRouterFunction)
