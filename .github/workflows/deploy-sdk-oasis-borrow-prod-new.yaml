@@ -16,17 +16,19 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ONE_INCH_API_KEY: ${{ secrets.ONE_INCH_API_KEY }}
-      ONE_INCH_API_VERSION: ${{ secrets.ONE_INCH_API_VERSION }}
+      ONE_INCH_API_VERSION: ${{ vars.ONE_INCH_API_VERSION_BORROW }}
       ONE_INCH_API_URL: ${{ secrets.ONE_INCH_API_URL }}
       ONE_INCH_ALLOWED_SWAP_PROTOCOLS: ${{ secrets.ONE_INCH_ALLOWED_SWAP_PROTOCOLS }}
+      ONE_INCH_EXCLUDED_SWAP_PROTOCOLS_WBTC: ${{ vars.ONE_INCH_EXCLUDED_SWAP_PROTOCOLS_WBTC }}
       ONE_INCH_SWAP_CHAIN_IDS: ${{ secrets.ONE_INCH_SWAP_CHAIN_IDS }}
       ONE_INCH_API_SPOT_URL: ${{ secrets.ONE_INCH_API_SPOT_URL }}
       ONE_INCH_API_SPOT_VERSION: ${{ secrets.ONE_INCH_API_SPOT_VERSION }}
       ONE_INCH_API_SPOT_KEY: ${{ secrets.ONE_INCH_API_SPOT_KEY }}
       E2E_SDK_FORK_URL_MAINNET: ${{ secrets.MAINNET_RPC_URL }}
+      MAINNET_RPC_URL: ${{ secrets.MAINNET_RPC_URL }}
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
       SDK_SUBGRAPH_CONFIG: ${{ secrets.SDK_SUBGRAPH_CONFIG }}
-      SDK_RPC_GATEWAY: ${{ secrets.RPC_GATEWAY }}
+      RPC_GATEWAY: ${{ secrets.RPC_GATEWAY }}
       DEBANK_API_KEY: ${{ secrets.DEBANK_API_KEY }}
       DEBANK_API_URL: ${{ secrets.PROD_DEBANK_API_URL }}
       FUNCTIONS_API_URL: ${{ secrets.FUNCTIONS_API_URL }}
@@ -64,9 +66,6 @@ jobs:
 
       - name: Git clone the repository
         uses: actions/checkout@v3
-
-      - name: Set up turbo cache
-        uses: rharkor/caching-for-turbo@v1.5
 
       - uses: pnpm/action-setup@v2.0.1
         with:

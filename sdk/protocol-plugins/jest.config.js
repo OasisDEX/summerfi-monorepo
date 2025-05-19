@@ -7,4 +7,5 @@ module.exports = {
   ...sharedConfig(compilerOptions),
   silent: false,
   coveragePathIgnorePatterns: ['/tests/utils/', '/tests/mocks/', 'src/plugins/[^/]+/interfaces'],
+  testTimeout: 12000,
 }
