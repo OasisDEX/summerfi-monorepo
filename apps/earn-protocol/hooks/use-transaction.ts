@@ -537,6 +537,7 @@ export const useTransaction = ({
 
     // switch check
     if (isSwitch) {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (txStatus === 'txSuccess' && !nextTransaction && userWalletAddress) {
         return {
           label: 'Go to new position',

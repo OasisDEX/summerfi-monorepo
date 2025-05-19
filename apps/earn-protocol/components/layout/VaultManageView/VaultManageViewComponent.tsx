@@ -1,19 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useUser } from '@account-kit/react'
 import {
-  ControlsDepositWithdraw,
-  ControlsSwitch,
   getDisplayToken,
   getMigrationLandingPageUrl,
   getPositionValues,
   NonOwnerPositionBanner,
-  ProjectedEarningsCombined,
   Sidebar,
-  SidebarFootnote,
-  sidebarFootnote,
-  SidebarMobileHeader,
-  type SidebarProps,
-  SkeletonLine,
   SUMR_CAP,
   useAmount,
   useAmountWithSwap,
@@ -30,7 +22,6 @@ import {
   type EarnAppConfigType,
   type GetVaultsApyResponse,
   type IArmadaPosition,
-  type NetworkIds,
   type PerformanceChartData,
   type SDKVaultishType,
   type SDKVaultsListType,
@@ -40,7 +31,6 @@ import {
 } from '@summerfi/app-types'
 import { subgraphNetworkToId, subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
 import { TransactionType } from '@summerfi/sdk-common'
-import dynamic from 'next/dynamic'
 
 import { AccountKitAccountType } from '@/account-kit/types'
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
@@ -50,7 +40,6 @@ import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-d
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { VaultManageViewDetails } from '@/components/layout/VaultManageView/VaultManageViewDetails'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
-import { PendingTransactionsList } from '@/components/molecules/PendingTransactionsList/PendingTransactionsList'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
@@ -61,52 +50,12 @@ import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
-import { useSidebarContentComponent } from '@/hooks/use-sidebar-content-component'
 import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
 import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useTransaction } from '@/hooks/use-transaction'
 import { useUserWallet } from '@/hooks/use-user-wallet'
-
-const ControlsApproval = dynamic(
-  () =>
-    import('@/components/molecules/SidebarElements/ControlsApproval').then(
-      (mod) => mod.ControlsApproval,
-    ),
-  { ssr: false, loading: () => <SkeletonLine width="100%" height="100%" /> },
-)
-
-const ControlsSwitchTransactionView = dynamic(
-  () =>
-    import('@/components/molecules/SidebarElements/ControlsSwitchTransactionView').then(
-      (mod) => mod.ControlsSwitchTransactionView,
-    ),
-  { ssr: false, loading: () => <SkeletonLine width="100%" height="100%" /> },
-)
-
-const ControlsSwitchSuccessErrorView = dynamic(
-  () =>
-    import('@/components/molecules/SidebarElements/ControlsSwitchSuccessErrorView').then(
-      (mod) => mod.ControlsSwitchSuccessErrorView,
-    ),
-  { ssr: false, loading: () => <SkeletonLine width="100%" height="100%" /> },
-)
-
-const OrderInfoDeposit = dynamic(
-  () =>
-    import('@/components/molecules/SidebarElements/OrderInfoDeposit').then(
-      (mod) => mod.OrderInfoDeposit,
-    ),
-  { ssr: false, loading: () => <SkeletonLine width="100%" height="100%" /> },
-)
-
-const OrderInfoWithdraw = dynamic(
-  () =>
-    import('@/components/molecules/SidebarElements/OrderInfoWithdraw').then(
-      (mod) => mod.OrderInfoWithdraw,
-    ),
-  { ssr: false, loading: () => <SkeletonLine width="100%" height="100%" /> },
-)
+import { useVaultManageSidebar } from '@/hooks/use-vault-manage-sidebar'
 
 export const VaultManageViewComponent = ({
   vault,
@@ -381,240 +330,77 @@ export const VaultManageViewComponent = ({
     }
   })
 
-  const potentialVaultsToSwitchTo = useMemo(() => {
-    return vaults
-      .filter((potentialVault) => {
-        return (
-          subgraphNetworkToSDKId(potentialVault.protocol.network) === vaultChainId &&
-          potentialVault.id !== vault.id
-        )
-      })
-      .sort((a, b) => {
-        const vaultApyA = vaultsApyByNetworkMap[`${a.id}-${vaultChainId}`]
-        const vaultApyB = vaultsApyByNetworkMap[`${b.id}-${vaultChainId}`]
-
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        if (!vaultApyA || !vaultApyB) {
-          return 0
-        }
-
-        return vaultApyB.apy - vaultApyA.apy
-      })
-  }, [vault.id, vaultChainId, vaults, vaultsApyByNetworkMap])
-
-  const sidebarTabsList = useMemo(() => {
-    return [TransactionAction.DEPOSIT, TransactionAction.WITHDRAW, TransactionAction.SWITCH].filter(
-      (action) => {
-        const disabledByConfig = !systemConfig.features?.VaultSwitching
-        const noVaults = potentialVaultsToSwitchTo.length === 0
-
-        if (disabledByConfig || noVaults || netValueUSD.lt(0.1)) {
-          return action !== TransactionAction.SWITCH
-        }
-
-        return true
-      },
-    )
-  }, [netValueUSD, potentialVaultsToSwitchTo.length, systemConfig.features?.VaultSwitching])
-
-  const isSwitch = sidebarTransactionType === TransactionAction.SWITCH
-
-  const sidebarContentName = useSidebarContentComponent({
-    nextTransaction,
-    selectedSwitchVault,
+  const vaultManageSidebar = useVaultManageSidebar({
     sidebarTransactionType,
+    vaults,
+    vault,
+    vaultChainId,
+    vaultsApyByNetworkMap,
+    systemConfig,
+    netValueUSD,
+    transactions,
+    nextTransaction,
     txStatus,
-  })
-
-  const sidebarTitle = useMemo(() => {
-    if (!nextTransaction) {
-      if (isSwitch && txStatus === 'txSuccess') {
-        return sidebar.title
-      }
-
-      return sidebarTransactionType
-    }
-
-    return sidebar.title
-  }, [isSwitch, nextTransaction, sidebar.title, sidebarTransactionType, txStatus])
-
-  const sidebarTitleTabs = useMemo(() => {
-    if (!nextTransaction) {
-      if (isSwitch && txStatus === 'txSuccess') {
-        return undefined
-      }
-
-      return sidebarTabsList
-    }
-
-    return undefined
-  }, [nextTransaction, sidebarTabsList, isSwitch, txStatus])
-
-  const sidebarProps: SidebarProps = {
-    title: sidebarTitle,
-    titleTabs: sidebarTitleTabs,
-    onTitleTabChange: (action) => {
-      setSidebarTransactionType(action as TransactionAction)
-      setSidebarTransactionError(undefined)
-      if (amountParsed.gt(0)) {
-        reset()
-      }
-    },
-    content: (
-      <>
-        {sidebarContentName === 'ControlsSwitchSuccessErrorView' && selectedSwitchVault ? (
-          <ControlsSwitchSuccessErrorView
-            currentVault={vault}
-            selectedSwitchVault={selectedSwitchVault}
-            vaultsList={potentialVaultsToSwitchTo}
-            transactions={transactions}
-            chainId={vaultChainId as unknown as NetworkIds}
-          />
-        ) : null}
-        {sidebarContentName === 'ControlsSwitch' ? (
-          <ControlsSwitch
-            currentPosition={position}
-            currentVault={vault}
-            potentialVaults={potentialVaultsToSwitchTo}
-            chainId={vaultChainId as unknown as NetworkIds}
-            vaultsApyByNetworkMap={vaultsApyByNetworkMap}
-            selectVault={setSelectedSwitchVault}
-            selectedVault={selectedSwitchVault}
-          />
-        ) : null}
-        {sidebarContentName === 'ControlsDepositWithdraw' ? (
-          <ControlsDepositWithdraw
-            amountDisplay={amountDisplay}
-            amountDisplayUSD={amountDisplayUSDWithSwap}
-            handleAmountChange={handleAmountChange}
-            handleDropdownChange={handleTokenSelectionChange}
-            transactionType={sidebarTransactionType}
-            options={
-              sidebarTransactionType === TransactionAction.WITHDRAW
-                ? baseTokenOptions
-                : tokenOptions
-            }
-            dropdownValue={selectedTokenOption}
-            onFocus={onFocus}
-            onBlur={onBlur}
-            ownerView={ownerView}
-            tokenSymbol={
-              sidebarTransactionType === TransactionAction.DEPOSIT
-                ? selectedTokenOption.value
-                : getDisplayToken(vault.inputToken.symbol)
-            }
-            tokenBalance={
-              sidebarTransactionType === TransactionAction.DEPOSIT
-                ? selectedTokenBalance
-                : ownerView
-                  ? netValue
-                  : undefined
-            }
-            tokenBalanceLoading={selectedTokenBalanceLoading}
-            manualSetAmount={manualSetAmount}
-          />
-        ) : null}
-        {sidebarContentName === 'ControlsSwitchTransactionView' && selectedSwitchVault ? (
-          <ControlsSwitchTransactionView
-            currentVault={vault}
-            currentVaultNetValue={netValue}
-            vaultsList={potentialVaultsToSwitchTo}
-            selectedSwitchVault={selectedSwitchVault}
-            vaultsApyByNetworkMap={vaultsApyByNetworkMap}
-            transactions={transactions}
-            switchingAmount={switchAmountDisplay}
-            setSwitchingAmount={switchManualSetAmount}
-            isLoading={sidebar.primaryButton.loading}
-            switchingAmountOnBlur={switchOnBlur}
-            switchingAmountOnFocus={switchOnFocus}
-            transactionFee={transactionFee}
-            transactionFeeLoading={transactionFeeLoading}
-            resetToInitialAmount={switchResetToInitialAmount}
-            isEditingSwitchAmount={isEditingSwitchAmount}
-            setIsEditingSwitchAmount={setIsEditingSwitchAmount}
-          />
-        ) : null}
-        {sidebarContentName === 'ControlsApproval' ? (
-          <ControlsApproval
-            tokenSymbol={approvalTokenSymbol}
-            approvalType={approvalType}
-            setApprovalType={setApprovalType}
-            setApprovalCustomValue={approvalHandleAmountChange}
-            approvalCustomValue={approvalCustomAmount}
-            customApprovalManualSetAmount={approvalManualSetAmount}
-            customApprovalOnBlur={approvalOnBlur}
-            customApprovalOnFocus={approvalOnFocus}
-            tokenBalance={selectedTokenBalance}
-          />
-        ) : null}
-        {sidebarContentName === 'OrderInfoDeposit' && nextTransaction ? (
-          <OrderInfoDeposit
-            chainId={vaultChainId}
-            transaction={nextTransaction}
-            amountParsed={amountParsed}
-            amountDisplayUSD={amountDisplayUSDWithSwap}
-            transactionFee={transactionFee}
-            transactionFeeLoading={transactionFeeLoading}
-          />
-        ) : null}
-        {sidebarContentName === 'OrderInfoWithdraw' && nextTransaction ? (
-          <OrderInfoWithdraw
-            chainId={vaultChainId}
-            transaction={nextTransaction}
-            amountParsed={amountParsed}
-            amountDisplayUSD={amountDisplayUSDWithSwap}
-            transactionFee={transactionFee}
-            transactionFeeLoading={transactionFeeLoading}
-          />
-        ) : null}
-        <PendingTransactionsList transactions={transactions} chainId={vaultChainId} />
-      </>
-    ),
-    customHeader:
-      !isDrawerOpen && isMobile ? (
-        <SidebarMobileHeader
-          type="manage"
-          sidebarTransactionType={sidebarTransactionType}
-          setSidebarTransactionType={setSidebarTransactionType}
-        />
-      ) : undefined,
-    handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
-    goBackAction: nextTransaction?.type ? backToInit : undefined,
-    primaryButton: sidebar.primaryButton,
-    secondaryButton: sidebar.secondaryButton,
-    footnote: (
-      <>
-        {!nextTransaction?.type ? (
-          <ProjectedEarningsCombined
-            vault={vault}
-            amountDisplay={amountDisplay}
-            estimatedEarnings={estimatedEarnings}
-            forecastSummaryMap={forecastSummaryMap}
-            isLoadingForecast={isLoadingForecast}
-            ownerView={ownerView}
-          />
-        ) : null}
-        <SidebarFootnote
-          title={sidebarFootnote.title}
-          list={sidebarFootnote.list}
-          tooltip={sidebarFootnote.tooltip}
-        />
-      </>
-    ),
-    error: sidebar.error,
+    selectedSwitchVault,
+    setSidebarTransactionType,
+    setSidebarTransactionError,
+    transactionSidebarData: sidebar,
+    amountParsed,
+    amountDisplay,
+    switchAmountDisplay,
+    amountDisplayUSDWithSwap,
+    transactionReset: reset,
+    position,
+    setSelectedSwitchVault,
+    handleAmountChange,
+    handleTokenSelectionChange,
+    baseTokenOptions,
+    tokenOptions,
+    selectedTokenOption,
+    onFocus,
+    approvalOnFocus,
+    switchOnFocus,
+    onBlur,
+    approvalOnBlur,
+    switchOnBlur,
+    ownerView,
+    selectedTokenBalance,
+    netValue,
+    selectedTokenBalanceLoading,
+    manualSetAmount,
+    approvalManualSetAmount,
+    switchManualSetAmount,
+    transactionFee,
+    transactionFeeLoading,
+    switchResetToInitialAmount,
+    isEditingSwitchAmount,
+    setIsEditingSwitchAmount,
+    approvalTokenSymbol,
+    approvalType,
+    setApprovalType,
+    approvalHandleAmountChange,
+    approvalCustomAmount,
+    isDrawerOpen,
+    setIsDrawerOpen,
+    isMobile,
+    backToInit,
+    estimatedEarnings,
+    forecastSummaryMap,
+    isLoadingForecast,
     isMobileOrTablet,
-  }
+  })
 
   const nextTransactionType = nextTransaction?.type
 
-  const resovledSidebarProps =
-    tosState.status !== TOSStatus.DONE &&
-    nextTransactionType &&
-    [TransactionType.Approve, TransactionType.Deposit, TransactionType.Withdraw].includes(
-      nextTransactionType,
-    )
+  const resovledSidebarProps = useMemo(() => {
+    return tosState.status !== TOSStatus.DONE &&
+      nextTransactionType &&
+      [TransactionType.Approve, TransactionType.Deposit, TransactionType.Withdraw].includes(
+        nextTransactionType,
+      )
       ? tosSidebarProps
-      : sidebarProps
+      : vaultManageSidebar.sidebarProps
+  }, [nextTransactionType, tosSidebarProps, tosState.status, vaultManageSidebar.sidebarProps])
 
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
