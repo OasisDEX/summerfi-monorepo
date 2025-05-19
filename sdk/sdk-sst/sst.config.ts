@@ -1,56 +1,82 @@
 /// <reference path="./.sst/platform/config.d.ts" />
 
-import { format } from 'path'
-import { environmentVariables } from './environment'
-import { isLongTermStage } from './utils'
-
 export default $config({
-  app(input) {
+  async app(input) {
+    const { isPersistentStage } = await import('./utils')
+
     return {
       name: 'sdk-sst',
-      removal: isLongTermStage(input?.stage) ? 'retain' : 'remove',
-      protect: isLongTermStage(input?.stage),
+      removal: isPersistentStage(input?.stage) ? 'retain' : 'remove',
+      protect: isPersistentStage(input?.stage),
       home: 'aws',
     }
   },
   async run() {
-    // helpers
-    const longTerm = isLongTermStage($app.stage)
+    const { environmentVariables } = await import('./environment')
+    const { isProduction, isPersistentStage } = await import('./utils')
 
-    // stack
-    const SdkBucket = new sst.aws.Bucket('SdkBucket', {
-      enforceHttps: true,
-      access: 'public',
+    // helpers
+    const production = isProduction($app.stage)
+    const persistent = isPersistentStage($app.stage)
+
+    // bucket
+    const bucket = new sst.aws.Bucket('SdkBucket', {
+      access: 'cloudfront',
+    })
+    // file uploads
+    const assetList = ['distribution-1.json', 'named-referrals.json']
+    for (const asset of assetList) {
+      new aws.s3.BucketObjectv2(asset, {
+        bucket: bucket.name,
+        key: asset,
+        contentType: 'application/json',
+        source: $asset('bucket/' + asset),
+      })
+    }
+    // bucket router
+    const bucketRouter = new sst.aws.Router('MyRouter', {
+      routes: {
+        '/api/bucket/*': {
+          bucket,
+          rewrite: { regex: '^/(.*)$', to: '/$1' },
+        },
+      },
     })
 
-    const SdkRouterFunction = new sst.aws.Function('SdkRouter', {
+    // function
+    const routerFunction = new sst.aws.Function('SdkRouter', {
       handler: '../sdk-router-function/src/index.handler',
       runtime: 'nodejs20.x',
-      timeout: 30,
+      timeout: '30 seconds',
       environment: environmentVariables,
       logging: {
-        level: 'info',
-        format: 'JSON',
+        format: 'json',
+      },
+      concurrency: {
+        provisioned: production ? 10 : undefined,
       },
     })
 
-    const SdkApi = new sst.aws.ApiGatewayV2('SdkApi', {
-      link: [SdkBucket],
-      domain: {
-        path: 'v1',
-      },
+    // api
+    const httpApi = new sst.aws.ApiGatewayV2('SdkApi', {
+      link: [bucket],
+      // domain: {
+      //   path: 'v1',
+      // },
       accessLog: {
-        retention: longTerm ? '1 month' : '1 day',
+        retention: production ? '1 month' : '1 day',
       },
       transform: {
-        stage: $app.stage + environmentVariables.SDK_VERSION,
+        stage: {
+          name: $app.stage + environmentVariables.SDK_VERSION.replace(/\./g, '-'),
+        },
       },
     })
-    SdkApi.route('ANY /api/sdk/{proxy+}', SdkRouterFunction)
-    SdkApi.route('GET /api/bucket/{proxy+}', 'https://' + SdkBucket.name + SdkBucket.domain)
+    httpApi.route('ANY /api/sdk/{proxy+}', routerFunction.arn)
 
     return {
-      SdkApi: SdkApi.url,
+      SdkApi: httpApi.url,
+      SdkBucket: bucketRouter.url,
     }
   },
 })
