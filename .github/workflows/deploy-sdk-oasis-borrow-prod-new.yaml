@@ -25,6 +25,7 @@ jobs:
       ONE_INCH_API_SPOT_VERSION: ${{ secrets.ONE_INCH_API_SPOT_VERSION }}
       ONE_INCH_API_SPOT_KEY: ${{ secrets.ONE_INCH_API_SPOT_KEY }}
       E2E_SDK_FORK_URL_MAINNET: ${{ secrets.MAINNET_RPC_URL }}
+      MAINNET_RPC_URL: ${{ secrets.MAINNET_RPC_URL }}
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
       SDK_SUBGRAPH_CONFIG: ${{ secrets.SDK_SUBGRAPH_CONFIG }}
       RPC_GATEWAY: ${{ secrets.RPC_GATEWAY }}
