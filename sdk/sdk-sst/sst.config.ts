@@ -20,31 +20,35 @@ export default $config({
     const persistent = isPersistentStage($app.stage)
 
     // bucket
-    const bucket = new sst.aws.Bucket('SdkBucket', {
+    const sdkbucket = new sst.aws.Bucket('SdkBucket', {
       access: 'cloudfront',
+      enforceHttps: true,
     })
     // file uploads
     const assetList = ['distribution-1.json', 'named-referrals.json']
     for (const asset of assetList) {
       new aws.s3.BucketObjectv2(asset, {
-        bucket: bucket.name,
+        bucket: sdkbucket.name,
         key: asset,
         contentType: 'application/json',
         source: $asset('bucket/' + asset),
       })
     }
     // bucket router
-    const bucketRouter = new sst.aws.Router('MyRouter', {
+    const sdkRouter = new sst.aws.Router('SdkRouter', {
       routes: {
         '/api/bucket/*': {
-          bucket,
-          rewrite: { regex: '^/(.*)$', to: '/$1' },
+          bucket: sdkbucket,
+          rewrite: {
+            regex: '^/api/bucket/(.*)$',
+            to: '/$1',
+          },
         },
       },
     })
 
     // function
-    const routerFunction = new sst.aws.Function('SdkRouter', {
+    const sdkBackend = new sst.aws.Function('SdkBackend', {
       handler: '../sdk-router-function/src/index.handler',
       runtime: 'nodejs20.x',
       timeout: '30 seconds',
@@ -58,25 +62,24 @@ export default $config({
     })
 
     // api
-    const httpApi = new sst.aws.ApiGatewayV2('SdkApi', {
-      link: [bucket],
-      // domain: {
-      //   path: 'v1',
-      // },
+    const sdkGateway = new sst.aws.ApiGatewayV2('SdkGateway', {
+      link: [sdkbucket],
       accessLog: {
         retention: production ? '1 month' : '1 day',
       },
       transform: {
         stage: {
-          name: $app.stage + environmentVariables.SDK_VERSION.replace(/\./g, '-'),
+          name: production
+            ? $app.stage + environmentVariables.SDK_VERSION.replace(/\./g, '-')
+            : $app.stage,
         },
       },
     })
-    httpApi.route('ANY /api/sdk/{proxy+}', routerFunction.arn)
+    sdkGateway.route('ANY /api/sdk/{proxy+}', sdkBackend.arn)
 
     return {
-      SdkApi: httpApi.url,
-      SdkBucket: bucketRouter.url,
+      SdkGateway: sdkGateway.url,
+      SdkRouter: sdkRouter.url,
     }
   },
 })
