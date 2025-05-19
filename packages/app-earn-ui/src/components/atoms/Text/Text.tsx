@@ -7,7 +7,7 @@ import {
 
 import { type AtomProps, getAtomClassList } from '@/components/atoms/getAtomClassList'
 
-import textStyles, { type ClassNames, type Styles } from '@/components/atoms/Text/Text.module.css'
+import textStyles from '@/components/atoms/Text/Text.module.css'
 
 export type TextAllowedHtmlTags =
   | 'blockquote'
@@ -27,7 +27,7 @@ export type TextAllowedHtmlTags =
   | 'li'
 
 export const Text: ForwardRefExoticComponent<
-  Omit<AtomProps<TextAllowedHtmlTags, keyof Styles>, 'ref'> &
+  Omit<AtomProps<TextAllowedHtmlTags, keyof typeof textStyles>, 'ref'> &
     RefAttributes<
       | HTMLQuoteElement
       | HTMLElement
@@ -41,7 +41,7 @@ export const Text: ForwardRefExoticComponent<
     >
 > = forwardRef<
   HTMLElementTagNameMap[TextAllowedHtmlTags],
-  AtomProps<TextAllowedHtmlTags, ClassNames>
+  AtomProps<TextAllowedHtmlTags, keyof typeof textStyles>
 >(({ as = 'span', className, variant = 'p1', ...props }, ref) => {
   return createElement(as, {
     ...{

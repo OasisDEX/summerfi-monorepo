@@ -3,11 +3,15 @@ export { GlobalStyles } from './GlobalStyles'
 
 export { Box } from './components/atoms/Box/Box'
 export { Button } from './components/atoms/Button/Button'
-export { type ClassNames as ButtonClassNames } from './components/atoms/Button/Button.module.css'
+import type ButtonClassNames from './components/atoms/Button/Button.module.css'
+
+export { ButtonClassNames }
 
 export { Text } from './components/atoms/Text/Text'
 export { Card, type CardVariant } from './components/atoms/Card/Card'
-export { type ClassNames as TextClassNames } from './components/atoms/Text/Text.module.css'
+import type TextClassNames from './components/atoms/Text/Text.module.css'
+
+export { TextClassNames }
 
 export { Modal } from './components/atoms/Modal/Modal'
 export { Icon, type IconNamesList } from './components/atoms/Icon/Icon'
@@ -127,6 +131,7 @@ export {
 export { ControlsDepositWithdraw } from './components/organisms/ControlsDepositWithdraw/ControlsDepositWithdraw'
 export { ControlsSwitch } from './components/organisms/ControlsSwitch/ControlsSwitch'
 export { ProjectedEarningsCombined } from './components/organisms/ProjectedEarningsCombined/ProjectedEarningsCombined'
+export { ProtocolStats } from './components/organisms/ProtocolStats/ProtocolStats'
 
 export { useToggle } from './hooks/use-toggle'
 export { useHash } from './hooks/use-hash'

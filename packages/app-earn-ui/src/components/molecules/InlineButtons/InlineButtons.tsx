@@ -3,7 +3,7 @@ import { type InlineButtonOption } from '@summerfi/app-types'
 
 import { Button } from '@/components/atoms/Button/Button'
 import { Text, type TextAllowedHtmlTags } from '@/components/atoms/Text/Text'
-import type { ClassNames as TextClassNames } from '@/components/atoms/Text/Text.module.css'
+import type TextClassNames from '@/components/atoms/Text/Text.module.css'
 
 import classNames from './InlineButtons.module.css'
 
@@ -15,7 +15,7 @@ interface InlineButtonsProps<O extends string> {
   asButtons?: boolean
   asUnstyled?: boolean
   as?: TextAllowedHtmlTags
-  variant: TextClassNames
+  variant: keyof typeof TextClassNames
 }
 
 export function InlineButtons<O extends string>({

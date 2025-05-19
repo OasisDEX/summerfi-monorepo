@@ -3,9 +3,9 @@ import clsx from 'clsx'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text, type TextAllowedHtmlTags } from '@/components/atoms/Text/Text'
+import type TextClassNames from '@/components/atoms/Text/Text.module.css'
 import { LoadingSpinner } from '@/components/molecules/LoadingSpinner/LoadingSpinner'
 
-import { type ClassNames as TextClassNames } from '@/components/atoms/Text/Text.module.css'
 import withArrowStyles from '@/components/atoms/WithArrow/WithArrow.module.css'
 
 export function WithArrow({
@@ -25,7 +25,7 @@ export function WithArrow({
 }: PropsWithChildren<{
   gap?: string | number
   style?: CSSProperties
-  variant?: TextClassNames
+  variant?: keyof typeof TextClassNames
   as?: TextAllowedHtmlTags
   className?: string
   reserveSpace?: boolean

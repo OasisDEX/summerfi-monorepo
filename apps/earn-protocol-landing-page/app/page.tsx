@@ -1,4 +1,8 @@
-import { BigGradientBox, HighestQualityYieldsDisclaimer } from '@summerfi/app-earn-ui'
+import {
+  BigGradientBox,
+  HighestQualityYieldsDisclaimer,
+  ProtocolStats,
+} from '@summerfi/app-earn-ui'
 import { type IconNamesList } from '@summerfi/app-types'
 import { parseServerResponseToClient, subgraphNetworkToId } from '@summerfi/app-utils'
 
@@ -21,7 +25,6 @@ import { BestOfDecentralizedFinance } from '@/components/layout/LandingPageConte
 import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { CryptoUtilities } from '@/components/layout/LandingPageContent/content/CryptoUtilities'
 import { LandingFaqSection } from '@/components/layout/LandingPageContent/content/LandingFaqSection'
-import { ProtocolStats } from '@/components/layout/LandingPageContent/content/ProtocolStats'
 import { StartEarningNow } from '@/components/layout/LandingPageContent/content/StartEarningNow'
 import { SummerFiProSection } from '@/components/layout/LandingPageContent/content/SummerFiProSection'
 import { SumrToken } from '@/components/layout/LandingPageContent/content/SumrToken'

@@ -7,9 +7,7 @@ import clsx from 'clsx'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 
-import dialStyles, {
-  type ClassNames as DialClassnames,
-} from '@/components/molecules/Dial/Dial.module.css'
+import dialStyles from '@/components/molecules/Dial/Dial.module.css'
 
 interface DialProps {
   rawValue: ReactNode
@@ -47,7 +45,7 @@ export const Dial: FC<DialProps> = ({
   const progress = (normalizedValue / max) * 100
   const strokeDasharray = `${progress} ${100 - progress}`
 
-  const trackWidthClass = `trackWidth-${Math.round(trackWidth)}` as DialClassnames
+  const trackWidthClass = `trackWidth-${Math.round(trackWidth)}` as keyof typeof dialStyles
 
   return (
     <div

@@ -7,6 +7,11 @@
   flex-wrap: wrap;
   gap: var(--general-space-24);
 }
+
+.protocolStatsWrapper.noMargin {
+  margin-bottom: 0;
+}
+
 @media (min-width: 768px) {
   .protocolStatsWrapper {
     justify-content: space-around;
@@ -15,17 +20,20 @@
     gap: var(--general-space-24);
   }
 }
+
 .protocolStatsWrapper .dataBlock {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
+
 .protocolStatsWrapper .divider {
   width: 100%;
   height: 1px;
   background-color: var(--earn-protocol-neutral-70);
 }
+
 @media (min-width: 768px) {
   .protocolStatsWrapper .divider {
     width: 1px;
