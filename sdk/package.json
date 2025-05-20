@@ -1,0 +1,22 @@
+{
+  "name": "@summerfi/sdk-infra",
+  "version": "0.0.1",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "deploy:production": "npx sst deploy --stage production",
+    "deploy:staging": "npx sst deploy --stage staging",
+    "deploy:development": "npx sst deploy --stage development",
+    "remove": "npx sst remove",
+    "dev": "npx sst dev"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "sst": "3.14.27",
+    "zod": "^3.22.4",
+    "zx": "^8.3.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "8.10.149"
+  }
+}

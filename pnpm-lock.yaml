@@ -2084,6 +2084,25 @@ importers:
         specifier: ^20.1.4
         version: 20.1.4
 
+  sdk:
+    dependencies:
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.4.5
+      sst:
+        specifier: 3.14.27
+        version: 3.14.27
+      zod:
+        specifier: ^3.22.4
+        version: 3.24.2
+      zx:
+        specifier: ^8.3.0
+        version: 8.3.0
+    devDependencies:
+      '@types/aws-lambda':
+        specifier: 8.10.149
+        version: 8.10.149
+
   sdk/abi-provider-common:
     dependencies:
       '@summerfi/sdk-common':
@@ -3196,49 +3215,6 @@ importers:
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
-
-  sdk/sdk-sst:
-    dependencies:
-      '@aws-lambda-powertools/logger':
-        specifier: ^2.16.0
-        version: 2.16.0
-      '@aws-lambda-powertools/metrics':
-        specifier: ^2.16.0
-        version: 2.16.0
-      '@aws-lambda-powertools/tracer':
-        specifier: ^2.16.0
-        version: 2.16.0
-      '@summerfi/sdk-server':
-        specifier: workspace:*
-        version: link:../sdk-server
-      '@trpc/server':
-        specifier: 11.0.0-rc.844
-        version: 11.0.0-rc.844(typescript@5.7.3)
-      dotenv:
-        specifier: ^16.4.5
-        version: 16.4.5
-      sst:
-        specifier: 3.14.27
-        version: 3.14.27
-      zod:
-        specifier: ^3.22.4
-        version: 3.24.2
-      zx:
-        specifier: ^8.3.0
-        version: 8.3.0
-    devDependencies:
-      '@summerfi/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@summerfi/jest-config':
-        specifier: workspace:*
-        version: link:../../packages/jest-config
-      '@summerfi/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
-      '@types/aws-lambda':
-        specifier: 8.10.149
-        version: 8.10.149
 
   sdk/simulator-service:
     dependencies:
@@ -23474,7 +23450,6 @@ packages:
       util: 0.12.5
       uuid: 8.0.0
       xml2js: 0.6.2
-    dev: false
 
   /aws-xray-sdk-core@3.10.3:
     resolution: {integrity: sha512-bltsLAr4juMJJ2tT5/L/CtwUGIvHihtPe6SO/z3jjOD73PHhOYxcuwCMFFyTbTy5S4WThJO32oZk7r+pg3ZoCQ==}
@@ -24344,7 +24319,7 @@ packages:
       '@aws-cdk/cloud-assembly-schema': 2.132.1
       '@aws-cdk/cx-api': 2.132.1(@aws-cdk/cloud-assembly-schema@2.132.1)
       archiver: 5.3.2
-      aws-sdk: 2.1599.0
+      aws-sdk: 2.1692.0
       glob: 7.2.3
       mime: 2.6.0
       yargs: 16.2.0

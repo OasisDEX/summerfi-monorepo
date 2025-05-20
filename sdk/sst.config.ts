@@ -3,7 +3,7 @@
 
 export default $config({
   async app(input) {
-    const { isPersistentStage } = await import('./src/sst-utils')
+    const { isPersistentStage } = await import('./sst-utils')
 
     return {
       name: 'sdk-sst',
@@ -15,10 +15,10 @@ export default $config({
   async run() {
     const { $, chalk, echo } = await import('zx')
 
-    const { environmentVariables } = await import('./src/sst-dotenv')
-    const { isProductionStage: isProduction, isPersistentStage } = await import('./src/sst-utils')
-    const { createInfra } = await import('./src/create-infra')
-    const { createFunction } = await import('./src/create-function')
+    const { environmentVariables } = await import('./sst-dotenv')
+    const { isProductionStage: isProduction, isPersistentStage } = await import('./sst-utils')
+    const { createInfra } = await import('./create-infra')
+    const { createFunction } = await import('./create-function')
 
     // helpers
     const versionTag = environmentVariables.SDK_VERSION
