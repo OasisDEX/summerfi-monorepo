@@ -44,6 +44,5 @@ if (!parsedEnv.success) {
   console.error('Invalid environment variables:', parsedEnv.error.format())
   process.exit(1)
 }
-console.log('Parsed environment variables:', parsedEnv.data.SDK_VERSION)
 
 export const environmentVariables = parsedEnv.data

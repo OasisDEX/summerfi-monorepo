@@ -7,7 +7,7 @@ export const createBackend = async ({
   versionTag: string
   sdkGateway: sst.aws.ApiGatewayV2
 }) => {
-  const { environmentVariables } = await import('./sst-dotenv')
+  const { environmentVariables } = await import('./sst-environment')
 
   // create and deploy function
   const sdkBackend = new sst.aws.Function('SdkBackend', {
@@ -34,6 +34,6 @@ export const createBackend = async ({
   sdkGateway.route(`ANY ${path}/{proxy+}`, sdkBackend.arn)
 
   return {
-    url: `${sdkGateway.url}${path}`,
+    url: $interpolate`${sdkGateway.url}${path}`,
   }
 }
