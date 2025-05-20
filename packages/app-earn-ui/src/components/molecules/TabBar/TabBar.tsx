@@ -2,9 +2,9 @@
 import { type CSSProperties, type FC, type ReactNode, useRef, useState } from 'react'
 
 import { Text } from '@/components/atoms/Text/Text'
+import type TextClassNames from '@/components/atoms/Text/Text.module.css'
 
 import styles from './TabBar.module.css'
-import { type ClassNames as TextClassNames } from '@/components/atoms/Text/Text.module.css'
 
 interface Tab {
   id: string
@@ -14,7 +14,7 @@ interface Tab {
 
 interface TabBarProps {
   tabs: Tab[]
-  textVariant?: TextClassNames
+  textVariant?: keyof typeof TextClassNames
   tabHeadersStyle?: CSSProperties
   defaultIndex?: number
   /**

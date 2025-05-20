@@ -1,15 +1,20 @@
 import { type FC, Fragment } from 'react'
-import { Card, getVaultsProtocolsList, Text } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
+import clsx from 'clsx'
+
+import { Card } from '@/components/atoms/Card/Card'
+import { Text } from '@/components/atoms/Text/Text'
+import { getVaultsProtocolsList } from '@/helpers/get-vaults-protocols-list'
 
 import classNames from './ProtocolStats.module.css'
 
 interface ProtocolStatsProps {
   vaultsList: SDKVaultsListType
+  noMargin?: boolean
 }
 
-export const ProtocolStats: FC<ProtocolStatsProps> = ({ vaultsList }) => {
+export const ProtocolStats: FC<ProtocolStatsProps> = ({ vaultsList, noMargin = false }) => {
   const supportedProtocolsCount = getVaultsProtocolsList(vaultsList).length
   const totalAssets = vaultsList.reduce((acc, vault) => acc + Number(vault.totalValueLockedUSD), 0)
 
@@ -29,7 +34,12 @@ export const ProtocolStats: FC<ProtocolStatsProps> = ({ vaultsList }) => {
   ]
 
   return (
-    <Card variant="cardSecondary" className={classNames.protocolStatsWrapper}>
+    <Card
+      variant="cardSecondary"
+      className={clsx(classNames.protocolStatsWrapper, {
+        [classNames.noMargin]: noMargin,
+      })}
+    >
       {data.map((item, index) => (
         <Fragment key={item.title}>
           <div className={classNames.dataBlock}>

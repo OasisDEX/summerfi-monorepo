@@ -3,9 +3,8 @@ import { type RiskType } from '@summerfi/app-types'
 import { capitalize } from 'lodash-es'
 
 import { Text, type TextAllowedHtmlTags } from '@/components/atoms/Text/Text'
+import type TextVariants from '@/components/atoms/Text/Text.module.css'
 import { riskColors } from '@/helpers/risk-colors'
-
-import { type ClassNames as TextVariants } from '@/components/atoms/Text/Text.module.css'
 
 export const Risk = ({
   risk,
@@ -14,7 +13,7 @@ export const Risk = ({
   styles,
 }: {
   risk: RiskType
-  variant?: TextVariants
+  variant?: keyof typeof TextVariants
   as?: TextAllowedHtmlTags
   styles?: CSSProperties
 }): ReactNode => {

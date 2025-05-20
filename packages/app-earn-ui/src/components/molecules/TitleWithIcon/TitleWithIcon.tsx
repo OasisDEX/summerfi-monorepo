@@ -5,14 +5,14 @@ import { identity, pickBy } from 'lodash-es'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
+import type TextVariants from '@/components/atoms/Text/Text.module.css'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 
 import titleWithIconStyles from './TitleWithIcon.module.css'
-import { type ClassNames as TextVariants } from '@/components/atoms/Text/Text.module.css'
 
 type TitleWithIconProps = {
   title: ReactNode
-  titleVariant?: TextVariants
+  titleVariant?: keyof typeof TextVariants
   tooltip?: string
   iconName?: IconNamesList
   className?: string

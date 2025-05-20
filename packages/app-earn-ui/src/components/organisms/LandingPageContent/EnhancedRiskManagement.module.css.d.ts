@@ -3,6 +3,7 @@ declare const styles: {
   readonly "bottomBoxLeftGradient": string;
   readonly "bottomBoxRightGradient": string;
   readonly "bottomBoxes": string;
+  readonly "campaign": string;
   readonly "enhancedRiskManagementHeader": string;
   readonly "enhancedRiskManagementHeaderWrapper": string;
   readonly "enhancedRiskManagementWrapper": string;

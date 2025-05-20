@@ -9,11 +9,10 @@ import { getVaultRiskTooltipLabel } from '@summerfi/app-utils'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Risk } from '@/components/atoms/Risk/Risk'
+import type TextVariants from '@/components/atoms/Text/Text.module.css'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { VaultTitle } from '@/components/molecules/VaultTitle/VaultTitle'
 import { riskColors } from '@/helpers/risk-colors'
-
-import { type ClassNames as TextVariants } from '@/components/atoms/Text/Text.module.css'
 
 interface VaultTitleWithRiskProps {
   risk: RiskType
@@ -22,7 +21,7 @@ interface VaultTitleWithRiskProps {
   networkName?: SDKNetwork
   selected?: boolean
   isVaultCard?: boolean
-  titleVariant?: TextVariants
+  titleVariant?: keyof typeof TextVariants
 }
 
 export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({

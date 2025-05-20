@@ -10,11 +10,10 @@ import {
   useRef,
   useState,
 } from 'react'
-import { GradientBox, Icon, type IconNamesList, Text } from '@summerfi/app-earn-ui'
+import { Emphasis, GradientBox, Icon, type IconNamesList, Text } from '@summerfi/app-earn-ui'
 import { formatAsShorthandNumbers } from '@summerfi/app-utils'
 import Link from 'next/link'
 
-import { Emphasis } from '@/components/layout/LandingPageContent'
 import { useScreenSize } from '@/hooks/use-screen-size'
 
 import protocolScrollerStyles from '@/components/layout/LandingPageContent/components/ProtocolScroller.module.css'

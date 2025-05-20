@@ -2,15 +2,15 @@ import { type ChangeEvent, type CSSProperties } from 'react'
 import clsx from 'clsx'
 
 import { Text } from '@/components/atoms/Text/Text'
+import type textStyles from '@/components/atoms/Text/Text.module.css'
 
 import slideButtonStyles from './ToggleButton.module.css'
-import { type ClassNames as TextVariants } from '@/components/atoms/Text/Text.module.css'
 
 type ToggleButtonProps = {
   title: string
   checked: boolean
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void
-  titleVariant?: TextVariants
+  titleVariant?: keyof typeof textStyles
   wrapperStyle?: CSSProperties
   trackVariant?: 'light' | 'dark'
 }

@@ -5,12 +5,10 @@ import { safeBTOA } from '@summerfi/app-utils'
 
 import { LoadableAvatar } from '@/components/atoms/LoadableAvatar/LoadableAvatar'
 
-import genericTokenIconStyles, {
-  type ClassNames,
-} from '@/components/atoms/GenericTokenIcon/GenericTokenIcon.module.css'
+import genericTokenIconStyles from '@/components/atoms/GenericTokenIcon/GenericTokenIcon.module.css'
 
 interface GenericTokenIconProps {
-  variant?: ClassNames
+  variant?: keyof typeof genericTokenIconStyles
   className?: string
   symbol: string
   customSize?: number

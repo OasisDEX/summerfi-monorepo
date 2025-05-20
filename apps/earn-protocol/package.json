@@ -13,8 +13,8 @@
     "codegen": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config",
     "update-tables": "dotenv -e ../../.env -e ../../.env.local -- node --import tsx misc/scripts/update-tables.ts",
     "knip": "knip",
-    "generate-module-types": "tcm -s -p './+(components|features)/**/*.module.css'",
-    "generate-module-types-watch": "tcm -p './+(components|features)/**/*.module.css' -w -s"
+    "generate-module-types": "tcm -s -p './+(components|features|app)/**/*.module.css'",
+    "generate-module-types-watch": "tcm -p './+(components|features|app)/**/*.module.css' -w -s"
   },
   "dependencies": {
     "@account-kit/core": "^4.26.0",

@@ -16,6 +16,7 @@ import {
 import { createPortal } from 'react-dom'
 
 import { Card } from '@/components/atoms/Card/Card'
+import type CardVariants from '@/components/atoms/Card/Card.module.css'
 import {
   MobileDrawer,
   MobileDrawerDefaultWrapper,
@@ -23,7 +24,6 @@ import {
 import { isTouchDevice } from '@/helpers/is-touch-device'
 import { useMobileCheck } from '@/hooks/use-mobile-check'
 
-import { type ClassNames as CardVariants } from '@/components/atoms/Card/Card.module.css'
 import tooltipStyles from '@/components/molecules/Tooltip/Tooltip.module.css'
 
 const generateUniqueId = () => `tooltip-${Math.random().toString(36).slice(2, 9)}`
@@ -73,7 +73,7 @@ interface TooltipWrapperProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode
   isOpen: boolean
   showAbove: boolean
-  cardVariant?: CardVariants
+  cardVariant?: keyof typeof CardVariants
   generatedId: string
 }
 
@@ -117,7 +117,7 @@ interface StatefulTooltipProps {
   tooltip?: ReactNode | ChildrenCallback
   children: ReactNode | ChildrenCallback
   tooltipWrapperStyles?: HTMLAttributes<HTMLDivElement>['style']
-  tooltipCardVariant?: CardVariants
+  tooltipCardVariant?: keyof typeof CardVariants
   style?: HTMLAttributes<HTMLDivElement>['style']
   showAbove?: boolean
   triggerOnClick?: boolean
