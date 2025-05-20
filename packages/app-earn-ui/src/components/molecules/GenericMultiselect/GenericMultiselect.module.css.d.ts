@@ -2,6 +2,7 @@ declare const styles: {
   readonly "checkboxIcon": string;
   readonly "checkboxWrapper": string;
   readonly "clearButton": string;
+  readonly "labelSuffix": string;
   readonly "list": string;
   readonly "listItem": string;
   readonly "mainWrapper": string;

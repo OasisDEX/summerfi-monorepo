@@ -3,6 +3,7 @@ import {
   getDisplayToken,
   getUniqueVaultId,
   networkIconByNetworkName,
+  Risk,
 } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType, type TokenSymbolsList } from '@summerfi/app-types'
 
@@ -60,6 +61,13 @@ const mapStrategiesToMultiselectOptions = (
 ): GenericMultiselectOption[] =>
   vaultsList.map((vault) => ({
     label: getDisplayToken(vault.inputToken.symbol),
+    labelSuffix: (
+      <Risk
+        risk={vault.customFields?.risk ?? 'lower'}
+        variant="p4semi"
+        styles={{ lineHeight: 'unset' }}
+      />
+    ),
     token: getDisplayToken(vault.inputToken.symbol) as TokenSymbolsList,
     networkIcon: networkIconByNetworkName[vault.protocol.network],
     value: getUniqueVaultId(vault),

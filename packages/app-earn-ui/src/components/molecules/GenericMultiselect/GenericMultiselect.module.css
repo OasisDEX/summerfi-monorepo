@@ -115,3 +115,7 @@
   margin: auto;
   transition: opacity 100ms;
 }
+
+.labelSuffix {
+  transition: opacity 200ms;
+}
