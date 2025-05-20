@@ -18,7 +18,7 @@ export default $config({
     const { environmentVariables } = await import('./sst-dotenv')
     const { isProductionStage: isProduction, isPersistentStage } = await import('./sst-utils')
     const { createInfra } = await import('./create-infra')
-    const { createFunction } = await import('./create-function')
+    const { createBackend: createFunction } = await import('./create-backend')
 
     // helpers
     const versionTag = environmentVariables.SDK_VERSION
@@ -27,6 +27,8 @@ export default $config({
 
     // create core infrastructure
     const { sdkGateway, sdkRouter } = await createInfra({ production, persistent })
+
+    let backendUrl: string
 
     // setup persistent stage like staging & prod
     if (persistent && $app.stage !== 'development') {
@@ -50,24 +52,23 @@ export default $config({
       await $`pnpm prebuild:sdk`
       await $`pnpm build:sdk`
       // deploy checked out version of the SDK
-      createFunction({
+      backendUrl = await createFunction({
         versionTag,
         production,
         sdkGateway,
-      })
+      }).then((res) => res.url)
     } else {
       // setup stage on local machine
-      createFunction({
+      backendUrl = await createFunction({
         versionTag,
         production: false,
         sdkGateway,
-      })
+      }).then((res) => res.url)
     }
 
     return {
       Stage: $app.stage,
-      SdkGateway: sdkGateway.url,
-      SdkRouter: sdkRouter.url,
+      SdkBackendUrl: backendUrl,
     }
   },
 })

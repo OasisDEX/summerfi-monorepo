@@ -58,6 +58,7 @@ artifacts
 
 # sst
 .sst
+sdk/.sst
 .build
 
 # opennext

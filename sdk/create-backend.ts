@@ -1,4 +1,4 @@
-export const createFunction = async ({
+export const createBackend = async ({
   production,
   versionTag,
   sdkGateway,
@@ -29,5 +29,11 @@ export const createFunction = async ({
     throw new Error('Version tag is not in the format vX.Y')
   }
 
-  sdkGateway.route(`ANY /api/sdk/${apiVersion}/{proxy+}`, sdkBackend.arn)
+  const path = `/api/sdk/${apiVersion}`
+
+  sdkGateway.route(`ANY ${path}/{proxy+}`, sdkBackend.arn)
+
+  return {
+    url: `${sdkGateway.url}${path}`,
+  }
 }
