@@ -5,21 +5,21 @@
 
 declare module "sst" {
   export interface Resource {
-    "MyRouter": {
-      "type": "sst.aws.Router"
-      "url": string
-    }
-    "SdkApi": {
-      "type": "sst.aws.ApiGatewayV2"
-      "url": string
+    "SdkBackend": {
+      "name": string
+      "type": "sst.aws.Function"
     }
     "SdkBucket": {
       "name": string
       "type": "sst.aws.Bucket"
     }
+    "SdkGateway": {
+      "type": "sst.aws.ApiGatewayV2"
+      "url": string
+    }
     "SdkRouter": {
-      "name": string
-      "type": "sst.aws.Function"
+      "type": "sst.aws.Router"
+      "url": string
     }
   }
 }

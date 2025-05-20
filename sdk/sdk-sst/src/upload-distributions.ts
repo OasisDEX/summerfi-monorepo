@@ -2,7 +2,7 @@ import * as path from 'path'
 import { readFileSync } from 'fs'
 import { GetBucketLocationCommand, PutObjectCommand, S3 } from '@aws-sdk/client-s3'
 import { fileURLToPath } from 'url'
-import dotenv from 'dotenv'
+import * as dotenv from 'dotenv'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)

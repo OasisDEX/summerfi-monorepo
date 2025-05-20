@@ -1,22 +1,28 @@
 {
-  "name": "sdk-sst",
+  "name": "@summerfi/sdk-infra",
   "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
+  "private": true,
+  "type": "commonjs",
   "scripts": {
     "deploy": "npx sst deploy --stage staging",
     "remove": "npx sst remove --stage staging",
     "dev": "npx sst dev"
   },
-  "keywords": [],
-  "author": "",
-  "private": true,
-  "type": "commonjs",
   "dependencies": {
+    "@aws-lambda-powertools/logger": "^2.16.0",
+    "@aws-lambda-powertools/metrics": "^2.16.0",
+    "@aws-lambda-powertools/tracer": "^2.16.0",
+    "@summerfi/sdk-server": "workspace:*",
+    "@trpc/server": "11.0.0-rc.844",
+    "dotenv": "^16.4.5",
     "sst": "3.14.27",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "zx": "^8.3.0"
   },
   "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/jest-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
     "@types/aws-lambda": "8.10.149"
   }
 }

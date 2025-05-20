@@ -1,8 +1,9 @@
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="./.sst/platform/config.d.ts" />
 
 export default $config({
   async app(input) {
-    const { isPersistentStage } = await import('./utils')
+    const { isPersistentStage } = await import('./src/sst-utils')
 
     return {
       name: 'sdk-sst',
@@ -12,70 +13,53 @@ export default $config({
     }
   },
   async run() {
-    const { environmentVariables } = await import('./environment')
-    const { isProduction, isPersistentStage } = await import('./utils')
+    const { $, chalk, echo } = await import('zx')
+
+    const { environmentVariables } = await import('./src/sst-dotenv')
+    const { isProductionStage: isProduction, isPersistentStage } = await import('./src/sst-utils')
+    const { createInfra } = await import('./src/create-infra')
+    const { createFunction } = await import('./src/create-function')
 
     // helpers
-    const production = isProduction($app.stage)
+    const versionTag = environmentVariables.SDK_VERSION
     const persistent = isPersistentStage($app.stage)
+    const production = isProduction($app.stage)
 
-    // bucket
-    const sdkbucket = new sst.aws.Bucket('SdkBucket', {
-      access: 'cloudfront',
-      enforceHttps: true,
-    })
-    // file uploads
-    const assetList = ['distribution-1.json', 'named-referrals.json']
-    for (const asset of assetList) {
-      new aws.s3.BucketObjectv2(asset, {
-        bucket: sdkbucket.name,
-        key: asset,
-        contentType: 'application/json',
-        source: $asset('bucket/' + asset),
+    // create core infrastructure
+    const { sdkGateway, sdkRouter } = await createInfra({ production })
+
+    // setup persistent stage like staging & prod
+    if (persistent) {
+      // check if version is set in env variables
+      if (!versionTag) {
+        echo(chalk.red('SDK_VERSION is not set in env variables.'))
+        process.exit(1)
+      }
+      // checkout version tag, throw if not found
+      const versionTagExists = await $`git tag --list ${versionTag}`
+      if (versionTagExists.stdout.trim() !== versionTag) {
+        echo(chalk.red(`Version tag ${versionTag} not found.`))
+        process.exit(1)
+      }
+      // install pnpm dependencies
+      await $`pnpm install --prod`
+      // build
+      await $`pnpm prebuild:sdk`
+      await $`pnpm build:sdk`
+
+      createFunction({
+        version: versionTag,
+        production,
+        sdkGateway,
+      })
+    } else {
+      // setup stage on local machine
+      createFunction({
+        version: versionTag,
+        production: false,
+        sdkGateway,
       })
     }
-    // bucket router
-    const sdkRouter = new sst.aws.Router('SdkRouter', {
-      routes: {
-        '/api/bucket/*': {
-          bucket: sdkbucket,
-          rewrite: {
-            regex: '^/api/bucket/(.*)$',
-            to: '/$1',
-          },
-        },
-      },
-    })
-
-    // function
-    const sdkBackend = new sst.aws.Function('SdkBackend', {
-      handler: '../sdk-router-function/src/index.handler',
-      runtime: 'nodejs20.x',
-      timeout: '30 seconds',
-      environment: environmentVariables,
-      logging: {
-        format: 'json',
-      },
-      concurrency: {
-        provisioned: production ? 10 : undefined,
-      },
-    })
-
-    // api
-    const sdkGateway = new sst.aws.ApiGatewayV2('SdkGateway', {
-      link: [sdkbucket],
-      accessLog: {
-        retention: production ? '1 month' : '1 day',
-      },
-      transform: {
-        stage: {
-          name: production
-            ? $app.stage + environmentVariables.SDK_VERSION.replace(/\./g, '-')
-            : $app.stage,
-        },
-      },
-    })
-    sdkGateway.route('ANY /api/sdk/{proxy+}', sdkBackend.arn)
 
     return {
       SdkGateway: sdkGateway.url,
