@@ -1,7 +1,11 @@
 import {
+  Audits,
   BigGradientBox,
+  EffortlessAccessBlock,
+  EnhancedRiskManagement,
   HighestQualityYieldsDisclaimer,
   ProtocolStats,
+  SupportedNetworksList,
 } from '@summerfi/app-earn-ui'
 import { type IconNamesList } from '@summerfi/app-types'
 import { parseServerResponseToClient, subgraphNetworkToId } from '@summerfi/app-utils'
@@ -11,16 +15,12 @@ import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import {
-  EffortlessAccessBlock,
-  EnhancedRiskManagement,
   HigherYieldsBlock,
   LandingPageHero,
   MarketingPoints,
   ProtocolScroller,
   SummerFiProBox,
-  SupportedNetworksList,
 } from '@/components/layout/LandingPageContent'
-import { Audits } from '@/components/layout/LandingPageContent/content/Audits'
 import { BestOfDecentralizedFinance } from '@/components/layout/LandingPageContent/content/BestOfDecentralisedFinance'
 import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { CryptoUtilities } from '@/components/layout/LandingPageContent/content/CryptoUtilities'
@@ -29,6 +29,20 @@ import { StartEarningNow } from '@/components/layout/LandingPageContent/content/
 import { SummerFiProSection } from '@/components/layout/LandingPageContent/content/SummerFiProSection'
 import { SumrToken } from '@/components/layout/LandingPageContent/content/SumrToken'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
+import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
+import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
+import blockAnalyticaLogo from '@/public/img/landing-page/block-analytica.svg'
+import arbitrumLogo from '@/public/img/landing-page/networks/arbitrum.svg'
+import baseLogo from '@/public/img/landing-page/networks/base.svg'
+import ethereumLogo from '@/public/img/landing-page/networks/ethereum.svg'
+import aaveLogo from '@/public/img/landing-page/protocols/aave.svg'
+import morphoBlueLogo from '@/public/img/landing-page/protocols/morpho-blue.svg'
+import skyLogo from '@/public/img/landing-page/protocols/sky.svg'
+import sparkLogo from '@/public/img/landing-page/protocols/spark.svg'
+
+import rebalanceActivityImage from '@/public/img/landing-page/enhanced-risk-management_rebalance-activity.png'
+import strategyExposureImage from '@/public/img/landing-page/enhanced-risk-management_strategy-exposure.png'
+import summerEarnUi from '@/public/img/landing-page/summer-earn-ui.png'
 
 export const revalidate = 60
 
@@ -161,8 +175,14 @@ export default async function HomePage() {
       <ProtocolStats vaultsList={vaultsWithConfig} />
       <SummerFiProBox />
       <BigGradientBox>
-        <EffortlessAccessBlock />
-        <SupportedNetworksList />
+        <EffortlessAccessBlock uiImage={summerEarnUi} />
+        <SupportedNetworksList
+          networks={[
+            { name: 'Ethereum', logo: ethereumLogo },
+            { name: 'Base', logo: baseLogo },
+            { name: 'Arbitrum', logo: arbitrumLogo },
+          ]}
+        />
       </BigGradientBox>
       <ProtocolScroller
         protocolsList={supportedProtocols.map((protocol) => {
@@ -178,13 +198,24 @@ export default async function HomePage() {
       />
       <MarketingPoints>
         <HigherYieldsBlock vaultsList={vaultsWithConfig} />
-        <EnhancedRiskManagement protectedCapital="$10B+" />
+        <EnhancedRiskManagement
+          protectedCapital="$10B+"
+          imagesMap={{
+            rebalanceActivityImage,
+            strategyExposureImage,
+            blockAnalyticaLogo,
+            aaveLogo,
+            morphoBlueLogo,
+            skyLogo,
+            sparkLogo,
+          }}
+        />
         <BestOfDecentralizedFinance />
         <SumrToken />
         <StartEarningNow />
         <SummerFiProSection />
         <CryptoUtilities />
-        <Audits />
+        <Audits chainSecurityLogo={chainSecurityLogo} prototechLabsLogo={prototechLabsLogo} />
         <BuildBySummerFi />
         <LandingFaqSection />
         <HighestQualityYieldsDisclaimer />

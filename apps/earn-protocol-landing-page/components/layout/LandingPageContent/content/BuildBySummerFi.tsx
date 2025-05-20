@@ -1,7 +1,5 @@
-import { INTERNAL_LINKS, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { Emphasis, INTERNAL_LINKS, Text, WithArrow } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
-
-import { Emphasis } from '@/components/layout/LandingPageContent/components/Emphasis'
 
 import buildBySummerFiStyles from '@/components/layout/LandingPageContent/content/BuildBySummerFi.module.css'
 

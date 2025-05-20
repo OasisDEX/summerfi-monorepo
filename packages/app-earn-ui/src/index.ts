@@ -132,6 +132,14 @@ export { ControlsDepositWithdraw } from './components/organisms/ControlsDepositW
 export { ControlsSwitch } from './components/organisms/ControlsSwitch/ControlsSwitch'
 export { ProjectedEarningsCombined } from './components/organisms/ProjectedEarningsCombined/ProjectedEarningsCombined'
 export { ProtocolStats } from './components/organisms/ProtocolStats/ProtocolStats'
+export { SectionTabs } from './components/organisms/SectionTabs/SectionTabs'
+export { EffortlessAccessBlock } from './components/organisms/LandingPageContent/EffortlessAccessBlock'
+export { SupportedNetworksList } from './components/organisms/LandingPageContent/SupportedNetworksList'
+export {
+  EnhancedRiskManagement,
+  EnhancedRiskManagementCampaign,
+} from './components/organisms/LandingPageContent/EnhancedRiskManagement'
+export { Audits } from './components/organisms/LandingPageContent/Audits'
 
 export { useToggle } from './hooks/use-toggle'
 export { useHash } from './hooks/use-hash'

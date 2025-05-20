@@ -1,0 +1,133 @@
+.sectionTabWrapper {
+  display: grid;
+  gap: var(--general-space-32);
+  grid-template-columns: 1fr;
+  padding: var(--spacing-space-small);
+}
+
+@media (min-width: 532px) {
+  .sectionTabWrapper {
+    grid-template-columns: 1fr;
+    padding: var(--spacing-space-x-large) var(--spacing-space-x-large) 0;
+  }
+}
+
+@media (min-width: 1026px) {
+  .sectionTabWrapper {
+    grid-template-columns: auto 1.75fr;
+    padding: var(--spacing-space-2x-large) var(--spacing-space-2x-large) 0;
+  }
+}
+
+.sectionTabButtons {
+  display: flex;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.sectionTabButtons::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 532px) {
+  .sectionTabButtons {
+    flex-direction: row;
+  }
+}
+
+@media (min-width: 1026px) {
+  .sectionTabButtons {
+    flex-direction: column;
+    justify-content: right;
+    overflow-x: visible;
+  }
+}
+
+.sectionTabButton {
+  cursor: pointer;
+  border: none;
+  border-bottom: 1px solid #2b2b2b;
+  padding: 20px 20px 20px 0;
+  transition: border-right-color 0.2s ease;
+  text-align: right;
+  margin-right: 1px;
+  text-wrap: nowrap;
+  flex-shrink: 0;
+}
+
+.sectionTabButton:hover {
+  border-bottom: 1px solid #494949;
+}
+
+@media (min-width: 1026px) {
+  .sectionTabButton {
+    border-right: 1px solid #2b2b2b;
+    border-bottom: none;
+    text-wrap: initial;
+  }
+
+  .sectionTabButton:hover {
+    border-right: 1px solid #494949;
+    border-bottom: none;
+  }
+}
+
+.sectionTabButton>span {
+  color: var(--color-text-primary-disabled);
+}
+
+.sectionTabButtonActive {
+  border-bottom: 2px solid #a859fa;
+  margin-right: 0px;
+}
+
+.sectionTabButtonActive:hover {
+  border-bottom: 2px solid #a859fa;
+}
+
+@media (min-width: 1026px) {
+  .sectionTabButtonActive {
+    border-right: 2px solid #a859fa;
+    border-bottom: none;
+  }
+
+  .sectionTabButtonActive:hover {
+    border-right: 2px solid #a859fa;
+    border-bottom: none;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    top: -10px;
+    opacity: 0;
+  }
+
+  to {
+    top: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    top: 0;
+    opacity: 1;
+  }
+
+  to {
+    top: 10px;
+    opacity: 0;
+  }
+}
+
+.sectionTabContent {
+  position: relative;
+  animation: fadeIn 0.2s ease forwards;
+}
+
+.sectionTabContentFadingOut {
+  animation: fadeOut 0.2s ease forwards;
+}

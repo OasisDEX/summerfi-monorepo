@@ -20,6 +20,7 @@ interface FaqSectionProps {
   headerClassName?: string
   faqSectionClassName?: string
   headerVariant?: keyof typeof TextClassNames
+  customTitle?: string
 }
 
 export const FaqSection: FC<FaqSectionProps> = ({
@@ -28,11 +29,12 @@ export const FaqSection: FC<FaqSectionProps> = ({
   headerVariant = 'h2',
   headerClassName,
   faqSectionClassName,
+  customTitle,
 }) => {
   return (
     <div className={clsx(wrapperClassName, faqSectionStyles.faqGeneralWrapper)}>
       <div className={clsx(headerClassName)}>
-        <Text variant={headerVariant}>FAQ</Text>
+        <Text variant={headerVariant}>{customTitle ?? 'FAQ'}</Text>
       </div>
       <div className={clsx(faqSectionStyles.faqSectionBlockWrapper, faqSectionClassName)}>
         {data.map(({ title, content }) => (

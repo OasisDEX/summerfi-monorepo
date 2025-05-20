@@ -1,7 +1,7 @@
 'use client'
 
-import { useCallback, useMemo, useState } from 'react'
-import { Button, getVaultsProtocolsList, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { useMemo } from 'react'
+import { Button, getVaultsProtocolsList, SectionTabs, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
 import {
   formatFiatBalance,
@@ -9,7 +9,6 @@ import {
   getRebalanceSavedGasCost,
   getRebalanceSavedTimeInHours,
 } from '@summerfi/app-utils'
-import clsx from 'clsx'
 import Image, { type StaticImageData } from 'next/image'
 import Link from 'next/link'
 
@@ -202,30 +201,13 @@ interface HigherYieldsBlockProps {
 }
 
 export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({ vaultsList }) => {
-  const [fadingOut, setFadingOut] = useState(false)
-  const [activeSection, setActiveSection] = useState(higherYieldsBlockSectionsKeys[0])
+  const totalRebalancesCount = useMemo(() => {
+    return vaultsList.reduce((acc, vault) => acc + Number(vault.rebalanceCount), 0)
+  }, [vaultsList])
 
-  const handleSetActiveSection = useCallback(
-    (sectionKey: keyof typeof higherYieldsBlockSections) => {
-      if (fadingOut) return
-      setFadingOut(true)
-      setTimeout(() => {
-        setActiveSection(sectionKey)
-        setFadingOut(false)
-      }, 200)
-    },
-    [fadingOut],
-  )
-
-  const totalRebalancesCount = vaultsList.reduce(
-    (acc, vault) => acc + Number(vault.rebalanceCount),
-    0,
-  )
-
-  const totalLiquidity = vaultsList.reduce(
-    (acc, vault) => acc + Number(vault.withdrawableTotalAssetsUSD),
-    0,
-  )
+  const totalLiquidity = useMemo(() => {
+    return vaultsList.reduce((acc, vault) => acc + Number(vault.withdrawableTotalAssetsUSD), 0)
+  }, [vaultsList])
 
   const totalVaultsCount = vaultsList.length
 
@@ -235,9 +217,35 @@ export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({ vaultsList
   )
   const savedGasCost = useMemo(() => getRebalanceSavedGasCost(vaultsList), [vaultsList])
 
-  const totalAssets = vaultsList.reduce((acc, vault) => acc + Number(vault.totalValueLockedUSD), 0)
+  const totalAssets = useMemo(() => {
+    return vaultsList.reduce((acc, vault) => acc + Number(vault.totalValueLockedUSD), 0)
+  }, [vaultsList])
 
   const supportedProtocolsCount = getVaultsProtocolsList(vaultsList).length
+
+  const sectionTabs = useMemo(() => {
+    return higherYieldsBlockSectionsKeys.map((sectionKey) => ({
+      id: sectionKey,
+      title: higherYieldsBlockSections[sectionKey].title,
+      content: higherYieldsBlockSections[sectionKey].content({
+        savedGasCost,
+        savedTimeInHours,
+        totalRebalancesCount,
+        totalVaultsCount,
+        totalAssets,
+        totalLiquidity,
+        supportedProtocolsCount,
+      }),
+    }))
+  }, [
+    savedGasCost,
+    savedTimeInHours,
+    supportedProtocolsCount,
+    totalAssets,
+    totalLiquidity,
+    totalRebalancesCount,
+    totalVaultsCount,
+  ])
 
   return (
     <div>
@@ -248,49 +256,7 @@ export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({ vaultsList
           with AI.
         </Text>
       </div>
-      <div className={higherYieldsBlockStyles.higherYieldsDetailsWrapper}>
-        <div className={higherYieldsBlockStyles.higherYieldsDetailsButtons}>
-          {higherYieldsBlockSectionsKeys.map((sectionKey) => (
-            <Button
-              key={`higher-yields-section-${sectionKey}`}
-              onClick={() => handleSetActiveSection(sectionKey)}
-              className={clsx(higherYieldsBlockStyles.higherYieldsDetailsButton, {
-                [higherYieldsBlockStyles.higherYieldsDetailsButtonActive]:
-                  activeSection === sectionKey,
-              })}
-            >
-              <Text variant={activeSection === sectionKey ? 'p1semiColorful' : 'p1semi'}>
-                {higherYieldsBlockSections[sectionKey].title}
-              </Text>
-            </Button>
-          ))}
-        </div>
-        <div
-          className={clsx(higherYieldsBlockStyles.higherYieldsDetailsContent, {
-            [higherYieldsBlockStyles.higherYieldsDetailsContentFadingOut]: fadingOut,
-          })}
-        >
-          {higherYieldsBlockSectionsKeys.map((sectionKey) => (
-            <div
-              key={`higher-yields-section-${sectionKey}`}
-              style={{
-                // needs this to prevent flash of old image when switching sections
-                display: activeSection === sectionKey ? 'block' : 'none',
-              }}
-            >
-              {higherYieldsBlockSections[sectionKey].content({
-                savedGasCost,
-                savedTimeInHours,
-                totalRebalancesCount,
-                totalVaultsCount,
-                totalAssets,
-                totalLiquidity,
-                supportedProtocolsCount,
-              })}
-            </div>
-          ))}
-        </div>
-      </div>
+      <SectionTabs sections={sectionTabs} />
     </div>
   )
 }

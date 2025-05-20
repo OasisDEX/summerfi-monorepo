@@ -1,11 +1,11 @@
-import { Text, WithArrow } from '@summerfi/app-earn-ui'
+import { type ReactNode } from 'react'
 import Image, { type StaticImageData } from 'next/image'
 import Link from 'next/link'
 
-import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
-import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
+import { Text } from '@/components/atoms/Text/Text'
+import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
 
-import auditsStyles from '@/components/layout/LandingPageContent/content/Audits.module.css'
+import auditsStyles from './Audits.module.css'
 
 const AuditBlock = ({
   description,
@@ -32,7 +32,13 @@ const AuditBlock = ({
   )
 }
 
-export const Audits = () => {
+export const Audits = ({
+  chainSecurityLogo,
+  prototechLabsLogo,
+}: {
+  chainSecurityLogo: StaticImageData
+  prototechLabsLogo: StaticImageData
+}): ReactNode => {
   return (
     <div>
       <div className={auditsStyles.auditsHeaderWrapper}>
