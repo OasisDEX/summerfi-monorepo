@@ -2,14 +2,23 @@ name: 'Deploy SDK Infra'
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - production
+          - staging
 
 permissions:
   id-token: write # This is required for requesting the JWT
   contents: read # This is required for actions/checkout
 jobs:
   deploy:
-    name: Build & Deploy SDK to staging using SST
-    environment: staging
+    name: Deploy to ${{ github.event.inputs.environment }}
+    environment: ${{ github.event.inputs.environment }}
     runs-on: ubuntu-latest
     env:
       COINGECKO_API_URL: ${{ secrets.COINGECKO_API_URL }}
@@ -31,8 +40,6 @@ jobs:
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
       SDK_SUBGRAPH_CONFIG: ${{ secrets.SDK_SUBGRAPH_CONFIG }}
       SDK_RPC_GATEWAY: ${{ secrets.RPC_GATEWAY }}
-      DEBANK_API_KEY: ${{ secrets.DEBANK_API_KEY }}
-      DEBANK_API_URL: ${{ secrets.STAGING_DEBANK_API_URL }}
       FUNCTIONS_API_URL: ${{ secrets.FUNCTIONS_API_URL }}
       POWERTOOLS_LOG_LEVEL: ${{ vars.POWERTOOLS_LOG_LEVEL }}
       REDIS_CACHE_URL: ${{ secrets.REDIS_CACHE_URL }}
@@ -52,6 +59,7 @@ jobs:
       SDK_DISTRIBUTIONS_BASE_URL: ${{ vars.SDK_DISTRIBUTIONS_BASE_URL }}
       SDK_DISTRIBUTIONS_FILES: ${{ vars.SDK_DISTRIBUTIONS_FILES }}
       SDK_NAMED_REFERRALS_FILE: ${{ vars.SDK_NAMED_REFERRALS_FILE }}
+
     steps:
       - name: Send start notification to Discord
         uses: Ilshidur/action-discord@0.3.2
@@ -63,9 +71,10 @@ jobs:
             }}"}]'
         with:
           args:
-            'SDK deployment `${{github.run_id}}` started on staging 🚀 (from branch `${{
-            github.ref_name }}` by [${{github.triggering_actor
-            }}](https://github.com/${{github.triggering_actor }})).'
+            "${{ github.event.inputs.environment == 'production' && 'PRODUCTION' || 'STAGING' }}:
+            SDK_INFRA deployment `${{ github.run_id }}` started 🚀 (from branch `${{ github.ref_name
+            }}` by [${{ github.triggering_actor }}](https://github.com/${{ github.triggering_actor
+            }}))."
 
       - name: Git clone the repository
         uses: actions/checkout@v3
@@ -87,19 +96,22 @@ jobs:
           aws-region: ${{ secrets.AWS_LAMBDAS_REGION }}
 
       - name: Install SST
-        working-directory: sdk/sdk-sst
+        working-directory: sdk
         run: pnpm install --prod
 
       - name: Deploy SDK Core
+        working-directory: sdk
         run: |
-          pnpm run deploy-sdk-staging:core
+          pnpm run deploy-sdk-${{ github.event.inputs.environment }}:core
 
       - name: Send success notification to Discord
         uses: Ilshidur/action-discord@0.3.2
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_SDK_DEPLOY }}
         with:
-          args: 'STAGING: SDK deployment successful 🎉 - `${{github.run_id}}`'
+          args:
+            "${{ github.event.inputs.environment == 'production' && 'PRODUCTION' || 'STAGING' }}:
+            SDK_INFRA deployment successful 🎉 - `${{ github.run_id }}`"
 
       - name: Send failure notification to Discord
         if: failure()
@@ -107,7 +119,9 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_SDK_DEPLOY }}
         with:
-          args: 'STAGING: SDK deployment failed ❌ - `${{github.run_id}}`'
+          args:
+            "${{ github.event.inputs.environment == 'production' && 'PRODUCTION' || 'STAGING' }}:
+            SDK_INFRA deployment failed ❌ - `${{ github.run_id }}`"
 
       - name: Send cancellation notification to Discord
         if: cancelled()
@@ -115,9 +129,12 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_SDK_DEPLOY }}
         with:
-          args: 'STAGING: SDK deployment cancelled 🚫 - `${{github.run_id}}`'
+          args:
+            "${{ github.event.inputs.environment == 'production' && 'PRODUCTION' || 'STAGING' }}:
+            SDK_INFRA deployment cancelled 🚫 - `${{ github.run_id }}`"
 
       - name: Trigger e2e tests in e2e-tests repository
+        if: ${{ github.event.inputs.environment == 'staging' }}
         env:
           E2E_TESTS_PAT: ${{ secrets.E2E_TESTS_PAT }}
         run: |
