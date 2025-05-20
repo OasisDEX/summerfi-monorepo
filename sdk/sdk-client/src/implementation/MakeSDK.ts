@@ -2,9 +2,8 @@
 import { createMainRPCClient } from '../rpc/SDKMainClient'
 import { SDKManager } from './SDKManager'
 
-// TODO
 if (!process.env.SDK_VERSION) {
-  throw Error('')
+  throw new Error('SDK_VERSION is not set in environment variables')
 }
 
 export function makeSDK(params: { apiURL: string; logging?: boolean }) {

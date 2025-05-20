@@ -34,9 +34,7 @@
     "@summerfi/tokens-common": "workspace:*",
     "@summerfi/address-book-common": "workspace:*",
     "@summerfi/oracle-common": "workspace:*",
-    "@summerfi/testing-utils": "workspace:*",
-    "bignumber.js": "^9.1.2",
-    "zod": "^3.22.4"
+    "@summerfi/testing-utils": "workspace:*"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

@@ -1,9 +1,18 @@
-export const createInfra = async ({ production }: { production?: boolean }) => {
+export const createInfra = async ({
+  production,
+  persistent,
+}: {
+  production: boolean
+  persistent: boolean
+}) => {
   // bucket
-  const sdkBucket = new sst.aws.Bucket('SdkBucket', {
-    access: 'cloudfront',
-    enforceHttps: true,
-  })
+  const sdkBucket = persistent
+    ? new sst.aws.Bucket('SdkBucket', {
+        access: 'cloudfront',
+        enforceHttps: true,
+      })
+    : sst.aws.Bucket.get('SdkBucket', '')
+
   // file uploads
   const assetList = ['distribution-1.json', 'named-referrals.json']
   for (const asset of assetList) {

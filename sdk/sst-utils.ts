@@ -1,5 +1,5 @@
 export const isPersistentStage = (stage: string) => {
-  const persistentStage = ['production', 'staging']
+  const persistentStage = ['production', 'staging', 'development']
   return persistentStage.includes(stage)
 }
 

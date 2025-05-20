@@ -26,19 +26,19 @@ export default $config({
     const production = isProduction($app.stage)
 
     // create core infrastructure
-    const { sdkGateway, sdkRouter } = await createInfra({ production })
+    const { sdkGateway, sdkRouter } = await createInfra({ production, persistent })
 
     // setup persistent stage like staging & prod
-    if (persistent) {
+    if (persistent && $app.stage !== 'development') {
       // check if version is set in env variables
       if (!versionTag) {
-        echo(chalk.red('SDK_VERSION is not set in env variables.'))
+        echo(chalk.red('\nSDK_VERSION is not set in env variables.'))
         process.exit(1)
       }
       // checkout version tag, throw if not found
       const versionTagExists = await $`git tag --list ${versionTag}`
       if (versionTagExists.stdout.trim() !== versionTag) {
-        echo(chalk.red(`Version tag ${versionTag} not found.`))
+        echo(chalk.red(`\nVersion tag ${versionTag} not found.`))
         process.exit(1)
       }
       // install pnpm dependencies
