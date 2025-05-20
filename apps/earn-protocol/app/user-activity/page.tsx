@@ -1,13 +1,15 @@
 import { type FC } from 'react'
-import { parseQueryStringServerSide } from '@summerfi/app-utils'
+import { parseQueryStringServerSide, parseServerResponseToClient } from '@summerfi/app-utils'
 import { type Metadata } from 'next'
 import { type ReadonlyURLSearchParams } from 'next/navigation'
 
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
+import systemConfigHandler from '@/app/server-handlers/system-config'
 import { userAddresesToFilterOut } from '@/app/server-handlers/tables-data/consts'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
 import { LatestActivityView } from '@/features/latest-activity/components/LatestActivityView/LatestActivityView'
+import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 interface LatestActivityPageProps {
   searchParams: Promise<ReadonlyURLSearchParams>
@@ -25,7 +27,7 @@ const LatestActivityPage: FC<LatestActivityPageProps> = async ({ searchParams })
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const strategies = searchParamsParsed.strategies ?? []
 
-  const [{ vaults }, topDepositors, latestActivity] = await Promise.all([
+  const [{ vaults }, topDepositors, latestActivity, configRaw] = await Promise.all([
     getVaultsList(),
     getPaginatedTopDepositors({
       page: 1,
@@ -41,11 +43,19 @@ const LatestActivityPage: FC<LatestActivityPageProps> = async ({ searchParams })
       strategies,
       filterOutUsersAddresses: userAddresesToFilterOut,
     }),
+    systemConfigHandler(),
   ])
+
+  const { config: systemConfig } = parseServerResponseToClient(configRaw)
+
+  const vaultsWithConfig = decorateVaultsWithConfig({
+    systemConfig,
+    vaults,
+  })
 
   return (
     <LatestActivityView
-      vaultsList={vaults}
+      vaultsList={vaultsWithConfig}
       latestActivity={latestActivity}
       topDepositors={topDepositors}
       searchParams={searchParamsParsed}

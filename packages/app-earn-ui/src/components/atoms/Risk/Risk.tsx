@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react'
+import { type CSSProperties, type ReactNode } from 'react'
 import { type RiskType } from '@summerfi/app-types'
 import { capitalize } from 'lodash-es'
 
@@ -11,15 +11,17 @@ export const Risk = ({
   risk,
   variant = 'p3semi',
   as = 'p',
+  styles,
 }: {
   risk: RiskType
   variant?: TextVariants
   as?: TextAllowedHtmlTags
+  styles?: CSSProperties
 }): ReactNode => {
   const color = riskColors[risk]
 
   return (
-    <Text as={as} variant={variant} style={{ color }}>
+    <Text as={as} variant={variant} style={{ color, ...styles }}>
       {capitalize(risk)} Risk
     </Text>
   )
