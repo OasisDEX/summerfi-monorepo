@@ -59,19 +59,21 @@ const getProtocolIcon = (protocolLabel: string) => {
 const mapStrategiesToMultiselectOptions = (
   vaultsList: SDKVaultsListType,
 ): GenericMultiselectOption[] =>
-  vaultsList.map((vault) => ({
-    label: getDisplayToken(vault.inputToken.symbol),
-    labelSuffix: (
-      <Risk
-        risk={vault.customFields?.risk ?? 'lower'}
-        variant="p4semi"
-        styles={{ lineHeight: 'unset' }}
-      />
-    ),
-    token: getDisplayToken(vault.inputToken.symbol) as TokenSymbolsList,
-    networkIcon: networkIconByNetworkName[vault.protocol.network],
-    value: getUniqueVaultId(vault),
-  }))
+  vaultsList
+    .map((vault) => ({
+      label: getDisplayToken(vault.inputToken.symbol),
+      labelSuffix: (
+        <Risk
+          risk={vault.customFields?.risk ?? 'lower'}
+          variant="p4semi"
+          styles={{ lineHeight: 'unset' }}
+        />
+      ),
+      token: getDisplayToken(vault.inputToken.symbol) as TokenSymbolsList,
+      networkIcon: networkIconByNetworkName[vault.protocol.network],
+      value: getUniqueVaultId(vault),
+    }))
+    .sort((a, b) => a.label.trim().localeCompare(b.label.trim()))
 
 const mapTokensToMultiselectOptions = (
   vaultsList: SDKVaultsListType,
@@ -80,11 +82,13 @@ const mapTokensToMultiselectOptions = (
     ...new Set(vaultsList.map((vault) => getDisplayToken(vault.inputToken.symbol))),
   ] as TokenSymbolsList[]
 
-  return uniqueTokenSymbolList.map((symbol) => ({
-    label: symbol,
-    token: symbol,
-    value: symbol,
-  }))
+  return uniqueTokenSymbolList
+    .map((symbol) => ({
+      label: symbol,
+      token: symbol,
+      value: symbol,
+    }))
+    .sort((a, b) => a.label.trim().localeCompare(b.label.trim()))
 }
 
 const mapProtocolsToMultiselectOptions = (
@@ -106,11 +110,13 @@ const mapProtocolsToMultiselectOptions = (
     }),
   )
 
-  return Array.from(protocolsMap.values()).map(({ label, values }) => ({
-    label,
-    icon: getProtocolIcon(label),
-    value: [...new Set(values)].join(','),
-  }))
+  return Array.from(protocolsMap.values())
+    .sort((a, b) => a.label.trim().localeCompare(b.label.trim()))
+    .map(({ label, values }) => ({
+      label,
+      icon: getProtocolIcon(label),
+      value: [...new Set(values)].join(','),
+    }))
 }
 
 export const mapMultiselectOptions = (vaultsList: SDKVaultsListType) => {
