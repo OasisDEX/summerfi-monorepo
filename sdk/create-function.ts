@@ -1,10 +1,10 @@
 export const createFunction = async ({
   production,
-  version,
+  versionTag,
   sdkGateway,
 }: {
   production: boolean
-  version: string
+  versionTag: string
   sdkGateway: sst.aws.ApiGatewayV2
 }) => {
   const { environmentVariables } = await import('./sst-dotenv')
@@ -22,5 +22,12 @@ export const createFunction = async ({
       provisioned: production ? 10 : undefined,
     },
   })
-  sdkGateway.route(`ANY /api/sdk/${version}/{proxy+}`, sdkBackend.arn)
+
+  const apiVersion = versionTag.slice(0, -2)
+  // check with regexp if version is in format vX.Y
+  if (!/v\d+\.\d+/.test(apiVersion)) {
+    throw new Error('Version tag is not in the format vX.Y')
+  }
+
+  sdkGateway.route(`ANY /api/sdk/${apiVersion}/{proxy+}`, sdkBackend.arn)
 }

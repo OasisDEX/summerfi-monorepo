@@ -13,8 +13,6 @@ export default $config({
     }
   },
   async run() {
-    const { $, chalk, echo } = await import('zx')
-
     const { environmentVariables } = await import('./sst-dotenv')
     const { isProductionStage: isProduction, isPersistentStage } = await import('./sst-utils')
     const { createInfra } = await import('./create-infra')
@@ -35,33 +33,37 @@ export default $config({
         echo(chalk.red('\nSDK_VERSION is not set in env variables.'))
         process.exit(1)
       }
-      // checkout version tag, throw if not found
+      // check if version tag exists
       const versionTagExists = await $`git tag --list ${versionTag}`
       if (versionTagExists.stdout.trim() !== versionTag) {
         echo(chalk.red(`\nVersion tag ${versionTag} not found.`))
         process.exit(1)
       }
-      // install pnpm dependencies
+      // checkout version tag
+      await $`git checkout ${versionTag}`
+
+      // install pnpm dependencies after checkout
       await $`pnpm install --prod`
-      // build
+      // build after checkout
       await $`pnpm prebuild:sdk`
       await $`pnpm build:sdk`
-
+      // deploy checked out version of the SDK
       createFunction({
-        version: versionTag,
+        versionTag,
         production,
         sdkGateway,
       })
     } else {
       // setup stage on local machine
       createFunction({
-        version: versionTag,
+        versionTag,
         production: false,
         sdkGateway,
       })
     }
 
     return {
+      Stage: $app.stage,
       SdkGateway: sdkGateway.url,
       SdkRouter: sdkRouter.url,
     }
