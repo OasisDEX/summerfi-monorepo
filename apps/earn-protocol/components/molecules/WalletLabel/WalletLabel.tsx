@@ -40,7 +40,7 @@ interface WalletAvatarProps {
 
 interface AddressDisplayProps {
   address: string
-  textVariant?: TextClassNames
+  textVariant?: keyof typeof TextClassNames
   paddingLeft?: string
   maxChars?: number
 }
@@ -49,12 +49,12 @@ interface CopyAddressButtonProps {
   address: string
   onCopy: (address: string) => void
   copied: boolean
-  variant?: ButtonClassNames
+  variant?: keyof typeof ButtonClassNames
 }
 
 interface LogoutButtonProps {
   onLogout: () => void
-  variant?: ButtonClassNames
+  variant?: keyof typeof ButtonClassNames
 }
 
 interface WalletTooltipContentProps {
