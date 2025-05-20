@@ -50,7 +50,7 @@ export const VaultsListViewLoading = () => {
         <>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-              1. Choose a strategy
+              Choose a strategy
             </Text>
           </div>
           <div
@@ -75,7 +75,7 @@ export const VaultsListViewLoading = () => {
       rightContent={
         <div style={{ position: 'relative', width: '100%', padding: '2px' }}>
           <Sidebar
-            title="2. Deposit"
+            title="Deposit"
             content={
               <div
                 style={{

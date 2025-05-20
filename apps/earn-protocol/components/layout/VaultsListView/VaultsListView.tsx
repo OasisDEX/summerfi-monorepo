@@ -465,7 +465,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
         <>
           <div className={vaultsListViewStyles.leftHeaderRow}>
             <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-              1. Choose a strategy
+              Choose a strategy
             </Text>
           </div>
           <div className={vaultsListViewStyles.leftHeaderFiltersRow}>
