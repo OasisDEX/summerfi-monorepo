@@ -25,11 +25,11 @@ export const createBackend = async ({
 
   const apiVersion = versionTag.slice(0, -2)
   // check with regexp if version is in format vX.Y
-  if (!/v\d+\.\d+/.test(apiVersion)) {
+  if (!/^\d+\.\d+$/.test(apiVersion)) {
     throw new Error('Version tag is not in the format vX.Y')
   }
 
-  const path = `/api/sdk/${apiVersion}`
+  const path = `/api/sdk/v${apiVersion}`
 
   sdkGateway.route(`ANY ${path}/{proxy+}`, sdkBackend.arn)
 

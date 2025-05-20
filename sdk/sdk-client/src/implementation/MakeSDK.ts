@@ -1,13 +1,10 @@
-// import { createArmadaRPCClient } from '../rpc/SDKArmadaClient'
 import { createMainRPCClient } from '../rpc/SDKMainClient'
 import { SDKManager } from './SDKManager'
-
-if (!process.env.SDK_VERSION) {
-  throw new Error('SDK_VERSION is not set in environment variables')
-}
+import { version as SDK_VERSION } from '../../package.json'
 
 export function makeSDK(params: { apiURL: string; logging?: boolean }) {
-  const rpcClient = createMainRPCClient(params.apiURL + process.env.SDK_VERSION, params.logging)
+  const versionedURL = new URL('v' + SDK_VERSION, params.apiURL).toString()
+  const rpcClient = createMainRPCClient(versionedURL, params.logging)
 
   return new SDKManager({ rpcClient })
 }

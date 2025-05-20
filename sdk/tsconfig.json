@@ -3,8 +3,10 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "dist",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "resolveJsonModule": true,
+    "esModuleInterop": true
   },
-  "include": ["*.ts"],
+  "include": ["*.ts", "sdk-client/bundle/package.json", "sdk-common/bundle/package.json"],
   "exclude": ["node_modules", "dist"]
 }

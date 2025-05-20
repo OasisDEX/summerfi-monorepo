@@ -18,8 +18,10 @@ export default $config({
     const { createInfra } = await import('./create-infra')
     const { createBackend } = await import('./create-backend')
 
+    // get sdk version from sdk-client package.json
+    const { version: versionTag } = await import('./sdk-client/bundle/package.json')
+
     // helpers
-    const versionTag = environmentVariables.SDK_VERSION
     const persistent = isPersistentStage($app.stage)
     const production = isProduction($app.stage)
 

@@ -5,7 +5,6 @@ config({ path: '.env', debug: true, override: true })
 
 // validate required envs are defined using zod library
 const envSchema = z.object({
-  SDK_VERSION: z.string(),
   SDK_LOGGING_ENABLED: z.string().default('false'),
   SDK_DEBUG_ENABLED: z.string().default('false'),
   POWERTOOLS_LOG_LEVEL: z.string().default('INFO'),
