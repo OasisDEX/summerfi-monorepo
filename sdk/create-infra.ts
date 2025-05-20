@@ -11,7 +11,7 @@ export const createInfra = async ({
         access: 'cloudfront',
         enforceHttps: true,
       })
-    : sst.aws.Bucket.get('SdkBucket', '')
+    : sst.aws.Bucket.get('SdkBucket', 'sdk-sst-development-sdkbucketbucket-ktwwvsbo')
 
   // file uploads
   const assetList = ['distribution-1.json', 'named-referrals.json']

@@ -22,6 +22,9 @@ importers:
       zod:
         specifier: ^3.22.4
         version: 3.24.2
+      zx:
+        specifier: ^8.5.4
+        version: 8.5.4
     devDependencies:
       '@aws-sdk/client-s3':
         specifier: ^3.732.0
@@ -122,9 +125,6 @@ importers:
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
-      zx:
-        specifier: ^8.3.0
-        version: 8.3.0
 
   apps/earn-protocol:
     dependencies:
@@ -19311,15 +19311,6 @@ packages:
       '@types/node': 20.14.2
     dev: true
 
-  /@types/fs-extra@11.0.4:
-    resolution: {integrity: sha512-yTbItCNreRooED33qjunPthRcSjERP1r4MqCZc7wv0u2sUkzTFp45tgUfS5+r7FrZPdmCCNflLhVSP/o+SemsQ==}
-    requiresBuild: true
-    dependencies:
-      '@types/jsonfile': 6.1.4
-      '@types/node': 20.14.2
-    dev: true
-    optional: true
-
   /@types/glob@7.2.0:
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
     dependencies:
@@ -19374,14 +19365,6 @@ packages:
   /@types/json5@0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: true
-
-  /@types/jsonfile@6.1.4:
-    resolution: {integrity: sha512-D5qGUYwjvnNNextdU59/+fI+spnwtTFmyQP0h+PfIOSkNfpU6AOICUOkm4i0OnSk+NyjdPJrxCDro0sJsWlRpQ==}
-    requiresBuild: true
-    dependencies:
-      '@types/node': 20.14.2
-    dev: true
-    optional: true
 
   /@types/loadable__component@5.13.9:
     resolution: {integrity: sha512-QWOtIkwZqHNdQj3nixQ8oyihQiTMKZLk/DNuvNxMSbTfxf47w+kqcbnxlUeBgAxdOtW0Dh48dTAIp83iJKtnrQ==}
@@ -40518,10 +40501,8 @@ packages:
       react: 19.1.0
     dev: false
 
-  /zx@8.3.0:
-    resolution: {integrity: sha512-L8mY3yfJwo3a8ZDD6f9jZzAcRWJZYcV8GauZmBxLB/aSTwaMzMIEVpPp2Kyx+7yF0gdvuxKnMxAZRft9UCawiw==}
+  /zx@8.5.4:
+    resolution: {integrity: sha512-44oKea9Sa8ZnOkTnS6fRJpg3quzgnbB43nLrVfYnqE86J4sxgZMUDLezzKET/FdOAVkF4X+Alm9Bume+W+RW9Q==}
     engines: {node: '>= 12.17.0'}
-    optionalDependencies:
-      '@types/fs-extra': 11.0.4
-      '@types/node': 20.14.2
-    dev: true
+    hasBin: true
+    dev: false

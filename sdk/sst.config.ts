@@ -13,6 +13,8 @@ export default $config({
     }
   },
   async run() {
+    const { $, chalk, echo } = await import('zx')
+
     const { environmentVariables } = await import('./sst-dotenv')
     const { isProductionStage: isProduction, isPersistentStage } = await import('./sst-utils')
     const { createInfra } = await import('./create-infra')
