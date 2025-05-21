@@ -6,7 +6,8 @@
   "scripts": {
     "remove": "npx sst remove",
     "deploy": "npx sst deploy",
-    "dev": "npx sst dev --mode=basic"
+    "dev": "npx sst dev",
+    "dev:basic": "npx sst dev --mode=basic"
   },
   "dependencies": {
     "sst": "3.14.28"
