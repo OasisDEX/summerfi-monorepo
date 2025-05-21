@@ -8,32 +8,39 @@ export default $config({
     return {
       name: 'sdk-sst',
       removal: isPersistentStage(input?.stage) ? 'retain' : 'remove',
-      // protect: isPersistentStage(input?.stage),
+      protect: isPersistentStage(input?.stage),
       home: 'aws',
     }
   },
   async run() {
-    const { environmentVariables } = await import('./sst-environment')
+    const { z } = await import('zod')
     const { isProductionStage: isProduction, isPersistentStage } = await import('./sst-utils')
+    const { sdkDeployedApiVersionsMap } = await import('./sst-environment')
     const { createInfra } = await import('./create-infra')
     const { createBackend } = await import('./create-backend')
-
-    // get sdk version from sdk-client package.json of current git head
-    const { version: packageVersion } = await import('./sdk-client/bundle/package.json')
 
     // helpers
     const persistent = isPersistentStage($app.stage)
     const production = isProduction($app.stage)
 
+    const deployedSdkApiVersions = Object.values(sdkDeployedApiVersionsMap)
+
+    // get sdk version from sdk-client package.json of current git head
+    const { version: clientVersion } = await import('./sdk-client/bundle/package.json')
+    // check if client version is in deployedSdkApiVersions
+    if (!deployedSdkApiVersions.includes(clientVersion)) {
+      throw new Error(
+        `Client version ${clientVersion} is not in the list of deployed SDK API versions: ${deployedSdkApiVersions.join(', ')}`,
+      )
+    }
+
     // create core infrastructure
     const { sdkGateway } = await createInfra({ production, persistent })
 
     const backendUrls: $util.Output<string>[] = []
-    const deployedSdkClientVersions = ['0.4.0', '0.5.0']
-
-    for (const versionTag of deployedSdkClientVersions) {
+    for (const apiVersion of deployedSdkApiVersions) {
       const backendUrl = await createBackend({
-        versionTag,
+        clientVersion,
         production,
         sdkGateway,
       }).then((res) => res.url)

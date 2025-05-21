@@ -1,16 +1,27 @@
 export const createBackend = async ({
   production,
-  versionTag,
+  clientVersion,
   sdkGateway,
 }: {
   production: boolean
-  versionTag: string
+  clientVersion: string
   sdkGateway: sst.aws.ApiGatewayV2
 }) => {
+  // check with regexp if client version is in format vX.Y.Z
+  if (!/^\d+\.\d+\.\d+$/.test(clientVersion)) {
+    throw new Error(`Client version tag "${clientVersion}" is not in the format vX.Y.Z`)
+  }
+  // take first char of clientVersion to derive apiVersion
+  const apiVersion = `v${clientVersion.charAt(0)}`
+  // check with regexp if api version is in format vX
+  if (!/^v\d$/.test(apiVersion)) {
+    throw new Error(`API version tag "${apiVersion}" is not in the format vX`)
+  }
+
   const { environmentVariables } = await import('./sst-environment')
 
   // create and deploy function
-  const sdkBackend = new sst.aws.Function(`SdkBackend-v${versionTag}`, {
+  const sdkBackend = new sst.aws.Function(`SdkBackend-v${clientVersion}`, {
     handler: 'sdk-router-function/src/index.handler',
     runtime: 'nodejs22.x',
     timeout: '30 seconds',
@@ -23,12 +34,7 @@ export const createBackend = async ({
     },
   })
 
-  const apiVersion = versionTag.slice(0, -2)
-  // check with regexp if version is in format vX.Y
-  if (!/^\d+\.\d+$/.test(apiVersion)) {
-    throw new Error('Version tag is not in the format vX.Y')
-  }
-  const path = `/api/sdk/v${apiVersion}`
+  const path = `/api/sdk/${apiVersion}`
 
   sdkGateway.route(`ANY ${path}/{proxy+}`, sdkBackend.arn)
 
