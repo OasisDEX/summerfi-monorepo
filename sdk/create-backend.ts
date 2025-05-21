@@ -7,9 +7,9 @@ export const createBackend = async ({
   clientVersion: string
   sdkGateway: sst.aws.ApiGatewayV2
 }) => {
-  // check with regexp if client version is in format vX.Y.Z
+  // check with regexp if client version is in format X.Y.Z
   if (!/^\d+\.\d+\.\d+$/.test(clientVersion)) {
-    throw new Error(`Client version tag "${clientVersion}" is not in the format vX.Y.Z`)
+    throw new Error(`Client version tag "${clientVersion}" is not in the format X.Y.Z`)
   }
   // take first char of clientVersion to derive apiVersion
   const apiVersion = `v${clientVersion.charAt(0)}`
@@ -20,8 +20,10 @@ export const createBackend = async ({
 
   const { environmentVariables } = await import('./sst-environment')
 
+  const nameSuffix = clientVersion.replaceAll('.', '')
+
   // create and deploy function
-  const sdkBackend = new sst.aws.Function(`SdkBackend-v${clientVersion}`, {
+  const sdkBackend = new sst.aws.Function(`SdkBackend|v${nameSuffix}|`, {
     handler: 'sdk-router-function/src/index.handler',
     runtime: 'nodejs22.x',
     timeout: '30 seconds',

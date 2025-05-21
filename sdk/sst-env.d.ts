@@ -5,7 +5,7 @@
 
 declare module "sst" {
   export interface Resource {
-    "SdkBackend-v1.0.0": {
+    "SdkBackend|v100|": {
       "name": string
       "type": "sst.aws.Function"
     }
