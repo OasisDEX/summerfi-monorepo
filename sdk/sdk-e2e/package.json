@@ -6,7 +6,8 @@
     "testw": "jest --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "e2e": "jest --roots e2e"
+    "e2e": "jest --roots e2e",
+    "e2e:deposit": "jest --roots e2e -- ./e2e/armadaProtocol.deposit.test.ts"
   },
   "devDependencies": {
     "@summerfi/armada-protocol-abis": "workspace:*",

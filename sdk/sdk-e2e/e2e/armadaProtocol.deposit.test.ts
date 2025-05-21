@@ -42,7 +42,7 @@ describe('Armada Protocol Deposit', () => {
       fleetAddress: usdtFleetArb,
       rpcUrl,
       stake: true,
-      amountValue: '1.2',
+      amountValue: '1',
       referralCode: '1',
     })
     // await runTests({
