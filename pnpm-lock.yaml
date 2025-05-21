@@ -2378,9 +2378,6 @@ importers:
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
-      '@summerfi/serverless-shared':
-        specifier: workspace:^
-        version: link:../../packages/serverless-shared
       '@types/node-fetch':
         specifier: ^2.6.11
         version: 2.6.11
@@ -2804,9 +2801,6 @@ importers:
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
-      '@summerfi/serverless-shared':
-        specifier: workspace:^
-        version: link:../../packages/serverless-shared
       '@summerfi/swap-common':
         specifier: workspace:*
         version: link:../swap-common
@@ -3122,9 +3116,6 @@ importers:
       '@summerfi/sdk-server-common':
         specifier: workspace:*
         version: link:../sdk-server-common
-      '@summerfi/serverless-shared':
-        specifier: workspace:*
-        version: link:../../packages/serverless-shared
       '@summerfi/simulator-service':
         specifier: workspace:^
         version: link:../simulator-service
@@ -3446,9 +3437,6 @@ importers:
       '@summerfi/sdk-server-common':
         specifier: workspace:*
         version: link:../sdk-server-common
-      '@summerfi/serverless-shared':
-        specifier: workspace:*
-        version: link:../../packages/serverless-shared
       '@summerfi/swap-common':
         specifier: workspace:*
         version: link:../swap-common

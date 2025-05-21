@@ -65,10 +65,11 @@ jobs:
         uses: Ilshidur/action-discord@0.3.2
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_SDK_DEPLOY }}
-          DISCORD_EMBEDS:
-            '[{"title":"Link to GitHub Action:
-            ${{github.run_id}}","url":"https://github.com/${{github.repository}}/actions/runs/${{github.run_id
-            }}"}]'
+          DISCORD_EMBEDS: |
+            [{
+              "title":"Link to GitHub Action: ${{github.run_id}}",
+              "url":"https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}"
+            }]
         with:
           args:
             "${{ github.event.inputs.environment == 'production' && 'PRODUCTION' || 'STAGING' }}:
@@ -95,14 +96,13 @@ jobs:
           role-to-assume: ${{ secrets.DEPLOY_OIDC_ROLE_LAMBDA }}
           aws-region: ${{ secrets.AWS_LAMBDAS_REGION }}
 
-      - name: Install SST
-        working-directory: sdk
+      - name: Install dependencies
         run: pnpm install --prod
 
       - name: Deploy SDK Core
         working-directory: sdk
         run: |
-          pnpm run deploy-sdk-${{ github.event.inputs.environment }}:core
+          npx sst deploy --stage ${{ github.event.inputs.environment }}
 
       - name: Send success notification to Discord
         uses: Ilshidur/action-discord@0.3.2

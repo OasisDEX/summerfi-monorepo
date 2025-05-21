@@ -4,9 +4,6 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "sst:deploy:production": "npx sst deploy --stage production",
-    "sst:deploy:staging": "npx sst deploy --stage staging",
-    "sst:deploy:development": "npx sst deploy --stage development",
     "sst:remove": "npx sst remove",
     "sst:deploy": "npx sst deploy",
     "sst:dev": "npx sst dev --mode=basic"
