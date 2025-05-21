@@ -1,7 +1,7 @@
 'use client'
 
 import { type FC } from 'react'
-import { type SDKVaultishType, type VaultApyData } from '@summerfi/app-types'
+import { type DeviceType, type SDKVaultishType, type VaultApyData } from '@summerfi/app-types'
 import { formatCryptoBalance, formatDecimalAsPercent, ten } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
@@ -32,6 +32,7 @@ type VaultCardProps = SDKVaultishType & {
   vaultApyData: VaultApyData
   wrapperStyle?: React.CSSProperties
   disabled?: boolean
+  deviceType?: DeviceType
 }
 
 export const VaultCard: FC<VaultCardProps> = (props) => {
@@ -56,6 +57,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     wrapperStyle,
     disabled,
     depositCap,
+    deviceType,
   } = props
 
   const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus(
@@ -127,6 +129,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
                 withTokenBonus={Number(rawSumrTokenBonus) > 0 ? withTokenBonus : false}
                 combinedApr={combinedApr}
                 apyUpdatedAt={apyUpdatedAt}
+                deviceType={deviceType}
               />
             </Text>
             <AdditionalBonusLabel externalTokenBonus={customFields?.bonus} />

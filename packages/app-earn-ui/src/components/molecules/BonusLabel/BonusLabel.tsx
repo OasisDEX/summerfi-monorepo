@@ -1,6 +1,7 @@
 'use client'
 
-import { type ReactNode } from 'react'
+import { type FC, type ReactNode } from 'react'
+import { type DeviceType } from '@summerfi/app-types'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Pill } from '@/components/atoms/Pill/Pill'
@@ -12,17 +13,7 @@ import { useHoldAlt } from '@/hooks/use-hold-alt'
 
 import styles from './BonusLabel.module.css'
 
-export const BonusLabel = ({
-  tokenBonus,
-  apy,
-  rays,
-  raw,
-  withTokenBonus = true,
-  combinedApr,
-  isLoading,
-  apyUpdatedAt,
-  totalSumrEarned,
-}: {
+interface BonulsLabelProps {
   isLoading?: boolean
   tokenBonus?: string
   apy?: string
@@ -35,12 +26,26 @@ export const BonusLabel = ({
     apyUpdatedAtLabel: string
     apyUpdatedAtAltLabel: string
   }
+  deviceType?: DeviceType
+}
+
+export const BonusLabel: FC<BonulsLabelProps> = ({
+  tokenBonus,
+  apy,
+  rays,
+  raw,
+  withTokenBonus = true,
+  combinedApr,
+  isLoading,
+  apyUpdatedAt,
+  totalSumrEarned,
+  deviceType,
 }): React.ReactNode => {
   const isAltPressed = useHoldAlt()
 
   return (
     <Tooltip
-      hideDrawerOnMobile
+      deviceType={deviceType}
       tooltip={
         <div
           style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-space-medium)' }}

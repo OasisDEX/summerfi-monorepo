@@ -1,6 +1,12 @@
 .liveApyInfoWrapper {
   display: flex;
   flex-direction: column;
-  width: 455px;
+  width: fit-content;
   gap: var(--general-space-8);
+}
+
+@media (min-width: 745px) {
+  .liveApyInfoWrapper {
+    width: 455px;
+  }
 }

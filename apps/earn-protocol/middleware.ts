@@ -32,19 +32,12 @@ export const getDeviceType = (userAgent: string): DeviceInfo => {
 }
 
 export function middleware(request: NextRequest) {
-  // Check if this is a document request by looking at the accept header
-  const acceptHeader = request.headers.get('accept') ?? ''
-  const isDocumentRequest = acceptHeader.includes('text/html')
-
   const userAgent = request.headers.get('user-agent') ?? ''
   const deviceInfo = getDeviceType(userAgent)
 
   const response = NextResponse.next()
 
-  // Only set the device type cookie if this is a document request
-  if (isDocumentRequest) {
-    response.cookies.set('deviceType', deviceInfo.deviceType)
-  }
+  response.cookies.set('deviceType', deviceInfo.deviceType)
 
   // Get `CloudFront-Viewer-Country` header if exists from request and set cookie
   const country = request.headers.get('CloudFront-Viewer-Country')
