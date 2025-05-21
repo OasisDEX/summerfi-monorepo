@@ -8,7 +8,7 @@ export default $config({
     return {
       name: 'sdk-sst',
       removal: isPersistentStage(input?.stage) ? 'retain' : 'remove',
-      protect: isPersistentStage(input?.stage),
+      // protect: isPersistentStage(input?.stage),
       home: 'aws',
     }
   },
@@ -26,7 +26,7 @@ export default $config({
     const production = isProduction($app.stage)
 
     // create core infrastructure
-    const { sdkGateway, sdkRouter } = await createInfra({ production, persistent })
+    const { sdkGateway } = await createInfra({ production, persistent })
 
     const backendUrl = await createBackend({
       versionTag,

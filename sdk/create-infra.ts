@@ -6,14 +6,13 @@ export const createInfra = async ({
   persistent: boolean
 }) => {
   let sdkBucket: sst.aws.Bucket | undefined
-  let sdkRouter: sst.aws.Router | undefined
   let sdkGateway: sst.aws.ApiGatewayV2 | undefined
 
   // create and deploy new resources for persistent stages
   if (persistent) {
     // bucket
     sdkBucket = new sst.aws.Bucket('SdkBucket', {
-      access: 'cloudfront',
+      access: 'public',
       enforceHttps: true,
     })
     // file uploads
@@ -21,58 +20,29 @@ export const createInfra = async ({
     for (const asset of assetList) {
       new aws.s3.BucketObjectv2(asset, {
         bucket: sdkBucket.name,
+        source: $asset('bucket/' + asset),
         key: asset,
         contentType: 'application/json',
-        source: $asset('bucket/' + asset),
       })
     }
-    // bucket router
-    sdkRouter = new sst.aws.Router('SdkRouter', {
-      routes: {
-        '/api/bucket/*': {
-          bucket: sdkBucket,
-          rewrite: {
-            regex: '^/api/bucket/(.*)$',
-            to: '/$1',
-          },
-        },
-      },
-    })
     // api
-    sdkGateway = new sst.aws.ApiGatewayV2('SdkGateway', {
-      link: [sdkBucket],
-      accessLog: {
-        retention: production ? '1 month' : '1 day',
-      },
-    })
-  } else {
-    // reuse existing resources for non-persistent stages
+  }
+  // reuse existing resources for non-persistent stages
+  else {
     // bucket
     sdkBucket = sst.aws.Bucket.get('SdkBucket', 'sdk-sst-development-sdkbucketbucket-ktwwvsbo')
-    // bucket router
-    sdkRouter = sst.aws.Router.get('SdkRouter', 'EBO9QCW2ABPU4')
-    // api
-    sdkGateway = new sst.aws.ApiGatewayV2(
-      'SdkGateway',
-      {
-        link: [sdkBucket],
-        accessLog: {
-          retention: '1 day',
-        },
-        transform: {
-          stage: {
-            name: $app.stage,
-          },
-        },
-      },
-      {
-        id: 'xd5214to85',
-      },
-    )
   }
+
+  // api
+  sdkGateway = new sst.aws.ApiGatewayV2('SdkGateway', {
+    link: [sdkBucket],
+    accessLog: {
+      retention: production ? '1 month' : '1 day',
+    },
+  })
+
   return {
     sdkGateway,
-    sdkRouter,
     sdkBucket,
   }
 }

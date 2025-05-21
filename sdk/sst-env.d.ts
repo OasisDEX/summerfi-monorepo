@@ -17,10 +17,6 @@ declare module "sst" {
       "type": "sst.aws.ApiGatewayV2"
       "url": string
     }
-    "SdkRouter": {
-      "type": "sst.aws.Router"
-      "url": string
-    }
   }
 }
 /// <reference path="sst-env.d.ts" />
