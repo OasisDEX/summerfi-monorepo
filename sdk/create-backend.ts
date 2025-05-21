@@ -23,7 +23,7 @@ export const createBackend = async ({
   const nameSuffix = clientVersion.replaceAll('.', '')
 
   // create and deploy function
-  const sdkBackend = new sst.aws.Function(`SdkBackend|v${nameSuffix}|`, {
+  const sdkBackend = new sst.aws.Function(`SdkBackendV${nameSuffix}`, {
     handler: 'sdk-router-function/src/index.handler',
     runtime: 'nodejs22.x',
     timeout: '30 seconds',
