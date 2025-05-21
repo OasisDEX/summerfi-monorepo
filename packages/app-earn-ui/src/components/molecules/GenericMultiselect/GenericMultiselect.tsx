@@ -150,10 +150,13 @@ function GenericMultiselectItem({
         borderBottom: isClearing ? '1px solid var(--earn-protocol-neutral-70)' : 'none',
         ...(isHover && {
           backgroundColor:
-            isDisabled || isClearing ? 'transparent' : 'var(--earn-protocol-neutral-85)',
+            isDisabled || isClearing ? 'transparent' : 'var(--earn-protocol-neutral-80)',
           color: isDisabled
             ? 'var(--earn-protocol-neutral-60)'
             : 'var(--earn-protocol-secondary-60)',
+        }),
+        ...(isSelected && {
+          color: 'var(--earn-protocol-secondary-100)',
         }),
         ...style,
       }}

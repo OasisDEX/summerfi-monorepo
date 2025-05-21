@@ -65,7 +65,9 @@
   padding-right: var(--general-space-16);
   font-size: 14px;
   font-weight: 600;
-  transition: color 200ms, background-color 200ms;
+  transition:
+    color 200ms,
+    background-color 200ms;
   white-space: nowrap;
 }
 
@@ -91,9 +93,11 @@
   border: 1px solid;
   border-color: var(--earn-protocol-neutral-70);
   border-radius: var(--general-radius-12);
-  background-color: var(--earn-protocol-neutral-90);
+  background-color: var(--earn-protocol-neutral-85);
   z-index: 1;
-  transition: opacity 200ms, transform 200ms;
+  transition:
+    opacity 200ms,
+    transform 200ms;
 }
 
 .checkboxWrapper {
@@ -104,7 +108,9 @@
   height: 26px;
   border: 1px solid;
   border-radius: var(--general-radius-4);
-  transition: background-color 100ms, border-color 100ms;
+  transition:
+    background-color 100ms,
+    border-color 100ms;
 }
 .checkboxWrapper .checkboxIcon {
   position: absolute;
