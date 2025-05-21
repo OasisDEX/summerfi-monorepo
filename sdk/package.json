@@ -4,9 +4,9 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "sst:remove": "npx sst remove",
-    "sst:deploy": "npx sst deploy",
-    "sst:dev": "npx sst dev --mode=basic"
+    "remove": "npx sst remove",
+    "deploy": "npx sst deploy",
+    "dev": "npx sst dev --mode=basic"
   },
   "dependencies": {
     "sst": "3.14.28"
