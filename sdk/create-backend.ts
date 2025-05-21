@@ -10,7 +10,7 @@ export const createBackend = async ({
   const { environmentVariables } = await import('./sst-environment')
 
   // create and deploy function
-  const sdkBackend = new sst.aws.Function('SdkBackend', {
+  const sdkBackend = new sst.aws.Function(`SdkBackend-v${versionTag}`, {
     handler: 'sdk-router-function/src/index.handler',
     runtime: 'nodejs22.x',
     timeout: '30 seconds',
@@ -28,7 +28,6 @@ export const createBackend = async ({
   if (!/^\d+\.\d+$/.test(apiVersion)) {
     throw new Error('Version tag is not in the format vX.Y')
   }
-
   const path = `/api/sdk/v${apiVersion}`
 
   sdkGateway.route(`ANY ${path}/{proxy+}`, sdkBackend.arn)

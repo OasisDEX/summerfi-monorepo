@@ -18,8 +18,8 @@ export default $config({
     const { createInfra } = await import('./create-infra')
     const { createBackend } = await import('./create-backend')
 
-    // get sdk version from sdk-client package.json
-    const { version: versionTag } = await import('./sdk-client/bundle/package.json')
+    // get sdk version from sdk-client package.json of current git head
+    const { version: packageVersion } = await import('./sdk-client/bundle/package.json')
 
     // helpers
     const persistent = isPersistentStage($app.stage)
@@ -28,15 +28,22 @@ export default $config({
     // create core infrastructure
     const { sdkGateway } = await createInfra({ production, persistent })
 
-    const backendUrl = await createBackend({
-      versionTag,
-      production,
-      sdkGateway,
-    }).then((res) => res.url)
+    const backendUrls: $util.Output<string>[] = []
+    const deployedSdkClientVersions = ['0.4.0', '0.5.0']
+
+    for (const versionTag of deployedSdkClientVersions) {
+      const backendUrl = await createBackend({
+        versionTag,
+        production,
+        sdkGateway,
+      }).then((res) => res.url)
+
+      backendUrls.push(backendUrl)
+    }
 
     return {
       Stage: $app.stage,
-      SdkBackendUrl: backendUrl,
+      SdkBackendUrls: backendUrls,
     }
   },
 })

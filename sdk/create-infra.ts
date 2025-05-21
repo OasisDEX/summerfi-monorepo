@@ -30,7 +30,7 @@ export const createInfra = async ({
   // reuse existing resources for non-persistent stages
   else {
     // bucket
-    sdkBucket = sst.aws.Bucket.get('SdkBucket', 'sdk-sst-development-sdkbucketbucket-ktwwvsbo')
+    sdkBucket = sst.aws.Bucket.get('SdkBucket', 'sdk-sst-development-sdkbucketbucket-bhvkkbnz')
   }
 
   // api
