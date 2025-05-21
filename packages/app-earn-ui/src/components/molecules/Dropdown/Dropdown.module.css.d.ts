@@ -1,6 +1,7 @@
 declare const styles: {
   readonly "disabled": string;
   readonly "dropdown": string;
+  readonly "dropdownHide": string;
   readonly "dropdownOption": string;
   readonly "dropdownOptions": string;
   readonly "dropdownOverflowWrapper": string;
