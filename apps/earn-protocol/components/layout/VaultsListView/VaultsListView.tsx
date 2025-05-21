@@ -517,6 +517,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
                 key={getUniqueVaultId(vault)}
                 {...vault}
                 withHover
+                deviceType={deviceType}
                 selected={
                   selectedVaultId === getUniqueVaultId(vault) ||
                   (!selectedVaultId && vaultIndex === 0)
