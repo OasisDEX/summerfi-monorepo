@@ -56,7 +56,6 @@
     "aws-cdk-lib": "2.132.1",
     "constructs": "10.3.0",
     "create-ts-index": "^1.14.0",
-    "dotenv": "^16.4.5",
     "dotenv-cli": "^7.4.2",
     "esbuild": "^0.25.2",
     "eslint": "^8.57.0",
@@ -80,6 +79,7 @@
   },
   "dependencies": {
     "bignumber.js": "^9.1.2",
+    "dotenv": "^16.4.5",
     "viem": "2.23.11",
     "zod": "^3.22.4",
     "zx": "^8.5.4"

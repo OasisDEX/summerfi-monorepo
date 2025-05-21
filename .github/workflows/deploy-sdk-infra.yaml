@@ -102,6 +102,7 @@ jobs:
       - name: Deploy SDK Core
         working-directory: sdk
         run: |
+          npx sst install
           npx sst deploy --stage ${{ github.event.inputs.environment }}
 
       - name: Send success notification to Discord
