@@ -10,6 +10,7 @@ export default $config({
       removal: isPersistentStage(input?.stage) ? 'retain' : 'remove',
       protect: isPersistentStage(input?.stage),
       home: 'aws',
+      providers: { aws: '6.81.0' },
     }
   },
   async run() {
@@ -24,7 +25,6 @@ export default $config({
     const production = isProduction($app.stage)
 
     const deployedSdkApiVersions = Object.values(sdkDeployedApiVersionsMap)
-
     // get sdk version from sdk-client package.json of current git head
     const { version: clientVersion } = await import('./sdk-client/bundle/package.json')
     // check if client version is in deployedSdkApiVersions
