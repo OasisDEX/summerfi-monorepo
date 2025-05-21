@@ -1,5 +1,5 @@
 declare const styles: {
-  readonly "sectionTabDesription": string;
+  readonly "sectionTabDescription": string;
 };
 export = styles;
 
