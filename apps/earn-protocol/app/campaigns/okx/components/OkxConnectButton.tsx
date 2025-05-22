@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAuthModal, useLogout } from '@account-kit/react'
 import { Button, Text } from '@summerfi/app-earn-ui'
+import { useRouter } from 'next/navigation'
 
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
@@ -57,6 +58,7 @@ const handleConnectedWallet = ({
 }
 
 export const OkxConnectButton = () => {
+  const { push } = useRouter()
   const [isSettingUpOkxWallet, setIsSettingUpOkxWallet] = useState(false)
   const [isOkxWalletSetUp, setIsOkxWalletSetUp] = useState(false)
   const { openAuthModal, isOpen: isAuthModalOpen, closeAuthModal } = useAuthModal()
@@ -109,10 +111,10 @@ export const OkxConnectButton = () => {
       return 'Connect your OKX wallet'
     }
     if (isOkxWalletSetUp) {
-      return 'OKX wallet connected'
+      return 'Your OKX wallet is connected'
     }
 
-    return 'OKX wallet connected'
+    return 'Your OKX wallet is connected'
   }, [
     isConnected,
     isOkxWalletAvailable,
@@ -123,6 +125,19 @@ export const OkxConnectButton = () => {
   ])
 
   const buttonHasAction = !isConnected && isOkxWalletAvailable
+  const secondaryButtonHasAction =
+    (isConnected && !isSameWallet) || (isOkxWalletSetUp && isSameWallet)
+
+  const secondaryButtonAction = useCallback(() => {
+    if (isConnected && !isSameWallet) {
+      tryAgainAction()
+    }
+    if (isOkxWalletSetUp && isSameWallet) {
+      push('/?networks=BASE')
+    }
+
+    return null
+  }, [isConnected, isSameWallet, isOkxWalletSetUp, tryAgainAction, push])
 
   return (
     <>
@@ -138,11 +153,11 @@ export const OkxConnectButton = () => {
         style={{
           margin: 0,
           padding: 0,
-          cursor: isConnected && !isSameWallet ? 'pointer' : 'default',
+          cursor: secondaryButtonHasAction ? 'pointer' : 'default',
         }}
-        onClick={isConnected && !isSameWallet ? tryAgainAction : () => null}
+        onClick={secondaryButtonAction}
       >
-        {isOkxWalletSetUp && isSameWallet ? "You're good to go!" : <>&nbsp;</>}
+        {isOkxWalletSetUp && isSameWallet ? 'Earn now' : <>&nbsp;</>}
         {isConnected && !isSameWallet ? 'Click to connect your OKX Wallet' : <>&nbsp;</>}
       </Text>
     </>
