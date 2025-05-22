@@ -6,12 +6,11 @@ on:
       environment:
         description: 'Deployment environment'
         required: true
-        default: 'testing'
+        default: 'staging'
         type: choice
         options:
-          - testing
-          - production
           - staging
+          - production
 
 permissions:
   id-token: write # This is required for requesting the JWT
@@ -105,7 +104,7 @@ jobs:
       - name: Deploy SDK
         working-directory: sdk
         run: |
-          npx sst deploy --stage=${{ github.event.inputs.environment }} --print-logs --verbose
+          npx sst deploy --stage=${{ github.event.inputs.environment }}-sdk --print-logs --verbose
 
       - name: Send success notification to Discord
         uses: Ilshidur/action-discord@0.3.2
