@@ -74,9 +74,6 @@
     "typescript": "^5.7.3",
     "zx": "^8.3.0"
   },
-  "dependencies": {
-    "viem": "2.23.11"
-  },
   "name": "summerfi-monorepo",
   "packageManager": "pnpm@8.15.9+sha256.daa27a0b541bc635323ff96c2ded995467ff9fe6d69ff67021558aa9ad9dcc36",
   "engines": {
