@@ -1,7 +1,4 @@
-/*
-  Styles for the campaign page - currently only one, later it can be moved elsewhere
-  and reused.
-*/
+/* This is campaign agnostic styles */
 
 .wrapper {
   display: flex;

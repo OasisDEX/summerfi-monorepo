@@ -1,4 +1,6 @@
-.sectionTabDesription {
+/* This is campaign specific styles */
+
+.sectionTabDescription {
   display: flex;
   flex-direction: column;
   gap: var(--general-space-16);
