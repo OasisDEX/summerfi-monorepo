@@ -8,13 +8,12 @@ export default $config({
     return {
       name: 'sdk-sst',
       removal: isPersistentStage(input?.stage) ? 'retain' : 'remove',
-      protect: isPersistentStage(input?.stage),
+      // protect: isPersistentStage(input?.stage),
       home: 'aws',
       providers: { aws: '6.81.0' },
     }
   },
   async run() {
-    const { z } = await import('zod')
     const { isProductionStage: isProduction, isPersistentStage } = await import('./sst-utils')
     const { sdkDeployedApiVersionsMap } = await import('./sst-environment')
     const { createInfra } = await import('./create-infra')

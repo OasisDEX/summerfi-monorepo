@@ -16,5 +16,8 @@
     "@summerfi/hardhat-utils": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
     "hardhat": "^2.22.2"
+  },
+  "dependencies": {
+    "viem": "2.23.15"
   }
 }

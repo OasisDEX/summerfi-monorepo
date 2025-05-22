@@ -5,14 +5,6 @@
 
 declare module "sst" {
   export interface Resource {
-    "SdkBucket": {
-      "name": string
-      "type": "sst.aws.Bucket"
-    }
-    "SdkGateway": {
-      "type": "sst.aws.ApiGatewayV2"
-      "url": string
-    }
   }
 }
 /// <reference path="sst-env.d.ts" />

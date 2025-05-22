@@ -13,6 +13,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "viem": "2.23.15",
     "zod": "^3.22.4"
   },
   "devDependencies": {
