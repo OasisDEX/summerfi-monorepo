@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { useAuthModal } from '@account-kit/react'
-import { Button } from '@summerfi/app-earn-ui'
+import { useAuthModal, useLogout } from '@account-kit/react'
+import { Button, Text } from '@summerfi/app-earn-ui'
 
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
@@ -15,9 +15,52 @@ declare global {
   }
 }
 
+const handleConnectedWallet = ({
+  parsedAddress,
+  setIsOkxWalletSetUp,
+  setIsSettingUpOkxWallet,
+}: {
+  parsedAddress: string
+  setIsOkxWalletSetUp: (isOkxWalletSetUp: boolean) => void
+  setIsSettingUpOkxWallet: (isSettingUpOkxWallet: boolean) => void
+}) => {
+  setIsSettingUpOkxWallet(true)
+  setIsOkxWalletSetUp(false)
+  fetch(`/earn/api/campaigns/okx/${parsedAddress}`).then((getResponse) => {
+    if (getResponse.ok) {
+      getResponse.json().then((getData) => {
+        setIsOkxWalletSetUp(getData.okxWallet)
+        setIsSettingUpOkxWallet(false)
+        if (!getData.okxWallet) {
+          fetch(`/earn/api/campaigns/okx/${parsedAddress}`, {
+            method: 'POST',
+            body: JSON.stringify({
+              address: parsedAddress,
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then((postResponse) => {
+            if (postResponse.ok) {
+              setIsSettingUpOkxWallet(false)
+              postResponse.json().then((postData) => {
+                setIsOkxWalletSetUp(postData.okxWallet)
+              })
+            }
+          })
+        }
+      })
+    } else {
+      setIsOkxWalletSetUp(false)
+    }
+  })
+}
+
 export const OkxConnectButton = () => {
+  const [isSettingUpOkxWallet, setIsSettingUpOkxWallet] = useState(false)
   const [isOkxWalletSetUp, setIsOkxWalletSetUp] = useState(false)
-  const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
+  const { openAuthModal, isOpen: isAuthModalOpen, closeAuthModal } = useAuthModal()
+  const { logout } = useLogout()
   const { userWalletAddress } = useUserWallet()
   const isConnected = !!userWalletAddress
   const isOkxWalletAvailable = useMemo(() => {
@@ -34,36 +77,21 @@ export const OkxConnectButton = () => {
     )
   }, [userWalletAddress, okxWalletConnected])
 
+  const tryAgainAction = () => {
+    setIsOkxWalletSetUp(false)
+    setIsSettingUpOkxWallet(false)
+    closeAuthModal()
+    logout()
+    setTimeout(() => {
+      openAuthModal()
+    }, 500)
+  }
+
   useEffect(() => {
     if (isOkxWalletAvailable && isConnected && isSameWallet) {
       const parsedAddress = userWalletAddress.toLowerCase()
 
-      fetch(`/earn/api/campaigns/okx/${parsedAddress}`).then((getResponse) => {
-        if (getResponse.ok) {
-          getResponse.json().then((getData) => {
-            setIsOkxWalletSetUp(getData.okxWallet)
-            if (!getData.okxWallet) {
-              fetch(`/earn/api/campaigns/okx/${parsedAddress}`, {
-                method: 'POST',
-                body: JSON.stringify({
-                  address: parsedAddress,
-                }),
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              }).then((postResponse) => {
-                if (postResponse.ok) {
-                  postResponse.json().then((postData) => {
-                    setIsOkxWalletSetUp(postData.okxWallet)
-                  })
-                }
-              })
-            }
-          })
-        } else {
-          setIsOkxWalletSetUp(false)
-        }
-      })
+      handleConnectedWallet({ parsedAddress, setIsOkxWalletSetUp, setIsSettingUpOkxWallet })
     }
   }, [isConnected, isOkxWalletAvailable, userWalletAddress, isSameWallet])
 
@@ -72,9 +100,9 @@ export const OkxConnectButton = () => {
       return 'OKX wallet is not installed'
     }
     if (isConnected && !isSameWallet) {
-      return 'Connected to another wallet (not OKX)'
+      return 'You are currently connected with a non-OKX wallet'
     }
-    if ((isConnected && !isOkxWalletSetUp) || isAuthModalOpen) {
+    if ((isConnected && !isOkxWalletSetUp) || isAuthModalOpen || isSettingUpOkxWallet) {
       return 'Loading'
     }
     if (!isConnected) {
@@ -85,17 +113,38 @@ export const OkxConnectButton = () => {
     }
 
     return 'OKX wallet connected'
-  }, [isConnected, isOkxWalletAvailable, isOkxWalletSetUp, isAuthModalOpen, isSameWallet])
+  }, [
+    isConnected,
+    isOkxWalletAvailable,
+    isOkxWalletSetUp,
+    isAuthModalOpen,
+    isSameWallet,
+    isSettingUpOkxWallet,
+  ])
 
   const buttonHasAction = !isConnected && isOkxWalletAvailable
 
   return (
-    <Button
-      variant="primaryLargeColorful"
-      onClick={buttonHasAction ? openAuthModal : undefined}
-      disabled={!buttonHasAction}
-    >
-      {buttonLabel}
-    </Button>
+    <>
+      <Button
+        variant="primaryLargeColorful"
+        onClick={buttonHasAction ? openAuthModal : undefined}
+        disabled={!buttonHasAction}
+      >
+        {buttonLabel}
+      </Button>
+      <Text
+        variant="p2semiColorful"
+        style={{
+          margin: 0,
+          padding: 0,
+          cursor: isConnected && !isSameWallet ? 'pointer' : 'default',
+        }}
+        onClick={isConnected && !isSameWallet ? tryAgainAction : () => null}
+      >
+        {isOkxWalletSetUp && isSameWallet ? "You're good to go!" : <>&nbsp;</>}
+        {isConnected && !isSameWallet ? 'Click to connect your OKX Wallet' : <>&nbsp;</>}
+      </Text>
+    </>
   )
 }
