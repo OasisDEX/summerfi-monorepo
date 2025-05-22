@@ -130,7 +130,7 @@
       "cache": false
     },
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["prebuild", "^build"],
       "outputs": [
         ".next/**",
         ".next/server/pages/**",
