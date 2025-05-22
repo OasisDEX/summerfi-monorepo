@@ -78,31 +78,32 @@ jobs:
             }}` by [${{ github.triggering_actor }}](https://github.com/${{ github.triggering_actor
             }}))."
 
-      - name: Git clone the repository
-        uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 8.15.4
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'pnpm'
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.DEPLOY_OIDC_ROLE_LAMBDA }}
           aws-region: ${{ secrets.AWS_LAMBDAS_REGION }}
 
-      - name: Install dependencies
-        run: pnpm install --prod
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Deploy SDK Core
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Deploy SDK
         working-directory: sdk
         run: |
-          npx sst install
           npx sst deploy --stage ${{ github.event.inputs.environment }}
 
       - name: Send success notification to Discord
