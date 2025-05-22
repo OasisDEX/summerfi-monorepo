@@ -25,4 +25,5 @@ export async function up(db: Kysely<never>): Promise<void> {
 
 export async function down(db: Kysely<never>): Promise<void> {
   await db.schema.dropTable('campaigns').execute()
+  await sql`DROP TYPE campaign_type`.execute(db)
 }
