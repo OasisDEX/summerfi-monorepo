@@ -16,7 +16,6 @@ export default $config({
   async run() {
     const { isProductionStage: isProduction, isPersistentStage } = await import('./sst-utils')
     const { sdkDeployedVersionsMap } = await import('./sst-environment')
-    const { createInfra } = await import('./create-infra')
     const { createBackend } = await import('./create-backend')
 
     // helpers
@@ -32,9 +31,29 @@ export default $config({
         `Client version ${clientVersion} is not in the list of deployed versions: ${deployedVersions.join(', ')}. Please update SDK_DEPLOYED_API_VERSIONS_MAP var in GitHub environment with a new version to allow deployment.`,
       )
     }
+    let sdkBucket: sst.aws.Bucket | undefined
+    sdkBucket = new sst.aws.Bucket('SdkBucket', {
+      access: 'public',
+      enforceHttps: true,
+    })
+    // file uploads
+    const assetList = ['distribution-1.json', 'named-referrals.json']
+    for (const asset of assetList) {
+      new aws.s3.BucketObjectv2(asset, {
+        bucket: sdkBucket.name,
+        source: $asset('bucket/' + asset),
+        key: asset,
+        contentType: 'application/json',
+      })
+    }
 
-    // create core infrastructure
-    const { sdkGateway } = await createInfra({ production, persistent })
+    let sdkGateway: sst.aws.ApiGatewayV2 | undefined
+    sdkGateway = new sst.aws.ApiGatewayV2('SdkGateway', {
+      // link: [sdkBucket],
+      accessLog: {
+        retention: production ? '1 month' : '1 day',
+      },
+    })
 
     const backendUrls: $util.Output<string>[] = []
     for (const version of deployedVersions) {

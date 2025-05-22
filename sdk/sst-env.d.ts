@@ -5,18 +5,6 @@
 
 declare module "sst" {
   export interface Resource {
-    "SdkBackendV1o0o0": {
-      "name": string
-      "type": "sst.aws.Function"
-    }
-    "SdkBucket": {
-      "name": string
-      "type": "sst.aws.Bucket"
-    }
-    "SdkGateway": {
-      "type": "sst.aws.ApiGatewayV2"
-      "url": string
-    }
   }
 }
 /// <reference path="sst-env.d.ts" />
