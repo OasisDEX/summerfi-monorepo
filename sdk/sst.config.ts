@@ -57,13 +57,16 @@ export default $config({
 
     const backendUrls: $util.Output<string>[] = []
     for (const version of deployedVersions) {
-      const backendUrl = await createBackend({
-        deployedVersion: version,
-        production,
-        sdkGateway,
-      }).then((res) => res.url)
-
-      backendUrls.push(backendUrl)
+      try {
+        const backendUrl = await createBackend({
+          deployedVersion: version,
+          production,
+          sdkGateway,
+        }).then((res) => res.url)
+        backendUrls.push(backendUrl)
+      } catch (error) {
+        console.error(`Failed to create backend for version ${version}:`, error)
+      }
     }
 
     return {
