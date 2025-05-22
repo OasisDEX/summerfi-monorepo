@@ -1,7 +1,5 @@
-import { Card, Icon, INTERNAL_LINKS, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { Card, Emphasis, Icon, INTERNAL_LINKS, Text, WithArrow } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
-
-import { Emphasis } from '@/components/layout/LandingPageContent/components/Emphasis'
 
 import summerFiProSectionStyles from '@/components/layout/LandingPageContent/content/SummerFiProSection.module.css'
 

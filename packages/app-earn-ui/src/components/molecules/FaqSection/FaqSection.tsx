@@ -3,9 +3,9 @@ import clsx from 'clsx'
 
 import { Expander } from '@/components/atoms/Expander/Expander'
 import { Text } from '@/components/atoms/Text/Text'
+import type TextClassNames from '@/components/atoms/Text/Text.module.css'
 
 import faqSectionStyles from './FaqSection.module.css'
-import { type ClassNames as TextClassNames } from '@/components/atoms/Text/Text.module.css'
 
 const ExpanderContent = ({ children }: { children: ReactNode }) => {
   return <div className={faqSectionStyles.faqSectionExpanderContent}>{children}</div>
@@ -19,7 +19,8 @@ interface FaqSectionProps {
   wrapperClassName?: string
   headerClassName?: string
   faqSectionClassName?: string
-  headerVariant?: TextClassNames
+  headerVariant?: keyof typeof TextClassNames
+  customTitle?: string
 }
 
 export const FaqSection: FC<FaqSectionProps> = ({
@@ -28,11 +29,12 @@ export const FaqSection: FC<FaqSectionProps> = ({
   headerVariant = 'h2',
   headerClassName,
   faqSectionClassName,
+  customTitle,
 }) => {
   return (
     <div className={clsx(wrapperClassName, faqSectionStyles.faqGeneralWrapper)}>
       <div className={clsx(headerClassName)}>
-        <Text variant={headerVariant}>FAQ</Text>
+        <Text variant={headerVariant}>{customTitle ?? 'FAQ'}</Text>
       </div>
       <div className={clsx(faqSectionStyles.faqSectionBlockWrapper, faqSectionClassName)}>
         {data.map(({ title, content }) => (

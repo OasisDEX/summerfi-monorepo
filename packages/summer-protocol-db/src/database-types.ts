@@ -2,6 +2,8 @@ import type { ColumnType } from 'kysely'
 
 export type ActionType = 'deposit' | 'withdraw'
 
+export type CampaignType = 'okx'
+
 export type Generated<T> =
   T extends ColumnType<infer S, infer I, infer U>
     ? ColumnType<S, I | undefined, U>
@@ -14,6 +16,13 @@ export type Network = 'arbitrum' | 'base' | 'mainnet' | 'optimism' | 'sonic'
 export type Numeric = ColumnType<string, number | string, number | string>
 
 export type Timestamp = ColumnType<Date, Date | string, Date | string>
+
+export interface Campaigns {
+  campaign: CampaignType
+  id: Generated<number>
+  timestamp: Int8
+  userAddress: string
+}
 
 export interface DailyFleetInterestRate {
   averageRate: Numeric
@@ -198,6 +207,7 @@ export interface WeeklyRewardRate {
 }
 
 export interface Database {
+  campaigns: Campaigns
   dailyFleetInterestRate: DailyFleetInterestRate
   dailyRewardRate: DailyRewardRate
   fleetInterestRate: FleetInterestRate

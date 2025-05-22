@@ -12,11 +12,11 @@ import { getAtomClassList } from '@/components/atoms/getAtomClassList'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 
-import inputStyles, { type ClassNames } from '@/components/atoms/Input/Input.module.css'
+import inputStyles from '@/components/atoms/Input/Input.module.css'
 
 export const Input: FC<
   DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> & {
-    variant?: ClassNames
+    variant?: keyof typeof inputStyles
     className?: string
     icon?: {
       name: IconNamesList

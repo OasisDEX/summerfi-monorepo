@@ -14,8 +14,10 @@ import {
   useState,
 } from 'react'
 import { createPortal } from 'react-dom'
+import { type DeviceType } from '@summerfi/app-types'
 
 import { Card } from '@/components/atoms/Card/Card'
+import type CardVariants from '@/components/atoms/Card/Card.module.css'
 import {
   MobileDrawer,
   MobileDrawerDefaultWrapper,
@@ -23,7 +25,6 @@ import {
 import { isTouchDevice } from '@/helpers/is-touch-device'
 import { useMobileCheck } from '@/hooks/use-mobile-check'
 
-import { type ClassNames as CardVariants } from '@/components/atoms/Card/Card.module.css'
 import tooltipStyles from '@/components/molecules/Tooltip/Tooltip.module.css'
 
 const generateUniqueId = () => `tooltip-${Math.random().toString(36).slice(2, 9)}`
@@ -73,7 +74,7 @@ interface TooltipWrapperProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode
   isOpen: boolean
   showAbove: boolean
-  cardVariant?: CardVariants
+  cardVariant?: keyof typeof CardVariants
   generatedId: string
 }
 
@@ -117,7 +118,7 @@ interface StatefulTooltipProps {
   tooltip?: ReactNode | ChildrenCallback
   children: ReactNode | ChildrenCallback
   tooltipWrapperStyles?: HTMLAttributes<HTMLDivElement>['style']
-  tooltipCardVariant?: CardVariants
+  tooltipCardVariant?: keyof typeof CardVariants
   style?: HTMLAttributes<HTMLDivElement>['style']
   showAbove?: boolean
   triggerOnClick?: boolean
@@ -125,6 +126,7 @@ interface StatefulTooltipProps {
   withinDialog?: boolean
   tooltipId?: string
   hideDrawerOnMobile?: boolean
+  deviceType?: DeviceType
 }
 
 const childrenTypeGuard = (children: ReactNode | ChildrenCallback): children is ReactNode =>
@@ -145,6 +147,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
   withinDialog,
   tooltipId,
   hideDrawerOnMobile = false,
+  deviceType,
 }): ReactNode => {
   const generatedId = useRef(tooltipId ?? generateUniqueId()).current
 
@@ -152,7 +155,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
   const [portalElement, setPortalElement] = useState<HTMLElement | null>()
   const tooltipRef = useRef<HTMLDivElement | null>(null)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
-  const { isMobile } = useMobileCheck()
+  const { isMobile } = useMobileCheck(deviceType)
 
   const handleTooltipOpenState = (flag: boolean) => {
     closeHandler()
@@ -200,25 +203,32 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
     [setTooltipOpen, triggerOnClick],
   )
 
-  const handleClick = useCallback(() => {
-    if (triggerOnClick) {
-      setTooltipOpen((prev) => !prev)
+  const handleClick = useCallback(
+    (e) => {
+      // stop propagation to ensure that on mobile if someone click on tooltip
+      // which is on clicable card or other clicable container it wont trigger
+      // card/container action
+      e.stopPropagation()
+      if (triggerOnClick) {
+        setTooltipOpen((prev) => !prev)
 
-      if (persistWhenOpened) {
-        return
+        if (persistWhenOpened) {
+          return
+        }
+
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current)
+        }
+
+        timeoutRef.current = setTimeout(() => {
+          setTooltipOpen(false)
+        }, 1000)
+      } else {
+        setTooltipOpen(true)
       }
-
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
-      }
-
-      timeoutRef.current = setTimeout(() => {
-        setTooltipOpen(false)
-      }, 1000)
-    } else {
-      setTooltipOpen(true)
-    }
-  }, [triggerOnClick, persistWhenOpened, setTooltipOpen])
+    },
+    [triggerOnClick, persistWhenOpened, setTooltipOpen],
+  )
 
   useEffect(() => {
     return () => {

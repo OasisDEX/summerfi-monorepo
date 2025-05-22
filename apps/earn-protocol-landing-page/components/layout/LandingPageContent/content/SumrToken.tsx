@@ -1,8 +1,7 @@
-import { Button, Text } from '@summerfi/app-earn-ui'
+import { Button, Emphasis, Text } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { Emphasis } from '@/components/layout/LandingPageContent/components/Emphasis'
 import sumrTokenBubbles from '@/public/img/landing-page/sumr-token_bubbles.svg'
 
 import sumrTokenStyles from '@/components/layout/LandingPageContent/content/SumrToken.module.css'

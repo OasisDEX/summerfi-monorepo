@@ -45,8 +45,9 @@ export const Dropdown: FC<DropdownProps> = ({
   trigger,
 }) => {
   const [selectedOption, setSelectedOption] = useState<DropdownRawOption>(dropdownValue)
-  const [isOpen, setIsOpen] = useState(false) // To manage dropdown open/close state
-  const dropdownRef = useRef<HTMLDivElement | null>(null) // Reference for the dropdown
+  const [isOpen, setIsOpen] = useState(false)
+  const [isHover, setIsHover] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement | null>(null)
   const { isMobile } = useMobileCheck()
 
   const [inputValue, setInputValue] = useState('')
@@ -115,7 +116,12 @@ export const Dropdown: FC<DropdownProps> = ({
           asPill
             ? {
                 padding: '8px 16px 8px 10px',
-                backgroundColor: 'var(--earn-protocol-neutral-80)',
+                backgroundColor: 'var(--earn-protocol-neutral-85)',
+                border: '1px solid var(--earn-protocol-neutral-80)',
+                ...((isOpen || isHover) && {
+                  border: '1px solid var(--earn-protocol-neutral-60)',
+                }),
+                transition: 'border 0.2s ease-in-out',
                 borderRadius: 'var(--general-radius-24)',
                 fontWeight: '600',
                 cursor: hasMultipleOptions ? 'pointer' : 'default',
@@ -123,13 +129,17 @@ export const Dropdown: FC<DropdownProps> = ({
               }
             : {}
         }
+        onMouseEnter={() => setIsHover(true)}
+        onMouseLeave={() => setIsHover(false)}
       >
         {trigger ? trigger({ isOpen, isDisabled }) : children}
         {!trigger && hasMultipleOptions && (
           <Icon
             iconName={isOpen ? 'chevron_up' : 'chevron_down'}
-            size={11}
-            color="rgba(119, 117, 118, 1)"
+            size={12}
+            color={
+              isOpen ? 'var(--earn-protocol-secondary-100)' : 'var(--earn-protocol-secondary-40)'
+            }
             style={{ marginLeft: 'var(--spacing-space-3x-small)' }}
           />
         )}
@@ -159,7 +169,7 @@ export const Dropdown: FC<DropdownProps> = ({
         </MobileDrawer>
       ) : (
         <div
-          className={`${dropdownStyles.dropdownOptions} ${isOpen ? dropdownStyles.dropdownShow : ''}`}
+          className={`${dropdownStyles.dropdownOptions} ${isOpen ? dropdownStyles.dropdownShow : dropdownStyles.dropdownHide}`}
           aria-hidden={!isOpen} // For accessibility
           style={dropdownOptionsStyle}
         >

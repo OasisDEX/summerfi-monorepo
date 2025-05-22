@@ -2,16 +2,16 @@ import { type DetailedHTMLProps, type FC, type HTMLAttributes, type ReactNode } 
 
 import { getAtomClassList } from '@/components/atoms/getAtomClassList'
 
-import cardStyles, { type ClassNames } from '@/components/atoms/Card/Card.module.css'
+import cardStyles from '@/components/atoms/Card/Card.module.css'
+
+export type CardVariant = keyof typeof cardStyles
 
 interface CardProps {
   children: ReactNode
-  variant?: ClassNames
+  variant?: CardVariant
   onClick?: () => void
   disabled?: boolean
 }
-
-export type CardVariant = ClassNames
 
 export const Card: FC<CardProps & DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>> = ({
   children,

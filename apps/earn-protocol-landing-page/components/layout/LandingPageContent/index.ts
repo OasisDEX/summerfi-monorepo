@@ -1,10 +1,6 @@
-export { Emphasis } from '@/components/layout/LandingPageContent/components/Emphasis'
 export { LandingPageHero } from '@/components/layout/LandingPageContent/components/LandingPageHero'
 export { MarketingPoints } from '@/components/layout/LandingPageContent/components/MarketingPoints'
 export { ProtocolScroller } from '@/components/layout/LandingPageContent/components/ProtocolScroller'
 
-export { EffortlessAccessBlock } from '@/components/layout/LandingPageContent/content/EffortlessAccessBlock'
-export { EnhancedRiskManagement } from '@/components/layout/LandingPageContent/content/EnhancedRiskManagement'
 export { HigherYieldsBlock } from '@/components/layout/LandingPageContent/content/HigherYieldsBlock'
 export { SummerFiProBox } from '@/components/layout/LandingPageContent/content/SummerFiProBox'
-export { SupportedNetworksList } from '@/components/layout/LandingPageContent/content/SupportedNetworksList'

@@ -1,5 +1,5 @@
 'use client'
-import { type CSSProperties, useEffect, useMemo, useRef, useState } from 'react'
+import { type CSSProperties, type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { type TokenSymbolsList } from '@summerfi/app-types'
 import { toggleArrayItem } from '@summerfi/app-utils'
 import { isEqual } from 'lodash-es'
@@ -24,6 +24,7 @@ export interface GenericMultiselectOption {
   networkIcon?: IconNamesList
   image?: string
   label: string
+  labelSuffix?: ReactNode
   token?: TokenSymbolsList
   value: string
 }
@@ -119,6 +120,7 @@ function GenericMultiselectItem({
   isDisabled = false,
   isSelected = false,
   label,
+  labelSuffix,
   onClick,
   token,
   value,
@@ -148,10 +150,13 @@ function GenericMultiselectItem({
         borderBottom: isClearing ? '1px solid var(--earn-protocol-neutral-70)' : 'none',
         ...(isHover && {
           backgroundColor:
-            isDisabled || isClearing ? 'transparent' : 'var(--earn-protocol-neutral-85)',
+            isDisabled || isClearing ? 'transparent' : 'var(--earn-protocol-neutral-80)',
           color: isDisabled
             ? 'var(--earn-protocol-neutral-60)'
             : 'var(--earn-protocol-secondary-60)',
+        }),
+        ...(isSelected && {
+          color: 'var(--earn-protocol-secondary-100)',
         }),
         ...style,
       }}
@@ -199,7 +204,23 @@ function GenericMultiselectItem({
           networkIcon={networkIcon}
         />
       )}
-      {label}
+      {labelSuffix ? (
+        <div style={{ display: 'flex', gap: 'var(--general-space-4)' }}>
+          {label}{' '}
+          <div
+            className={classNames.labelSuffix}
+            style={{
+              display: 'flex',
+              alignItems: 'flex-end',
+              opacity: isSelected || isHover ? 1 : 0.5,
+            }}
+          >
+            {labelSuffix}
+          </div>
+        </div>
+      ) : (
+        label
+      )}
     </li>
   )
 }

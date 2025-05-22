@@ -114,7 +114,7 @@ export const VaultSimulationForm = ({
         {...{
           title: 'Deposit',
           subtitle: isEarnApp
-            ? `Deposit  ${getDisplayToken(vaultData.inputToken.symbol)} on ${capitalize(sdkNetworkToHumanNetwork(vaultData.protocol.network))}`
+            ? `${getDisplayToken(vaultData.inputToken.symbol)} on ${capitalize(sdkNetworkToHumanNetwork(vaultData.protocol.network))}`
             : undefined,
           content: (
             <ControlsDepositWithdraw

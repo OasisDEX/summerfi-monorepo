@@ -1,10 +1,10 @@
 import { type FC, type ReactNode } from 'react'
 
-import pillStyles, { type ClassNames } from '@/components/atoms/Pill/Pill.module.css'
+import pillStyles from '@/components/atoms/Pill/Pill.module.css'
 
 interface PillProps {
   children: ReactNode
-  variant?: ClassNames
+  variant?: keyof typeof pillStyles
 }
 
 export const Pill: FC<PillProps> = ({ children, variant = 'default' }) => (

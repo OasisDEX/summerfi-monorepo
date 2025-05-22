@@ -9,7 +9,7 @@ const arkNameMap: { [key: string]: string } = {
   ERC4626: '',
 }
 
-const noTouchZone = ['PRIME', 'EULER']
+const noTouchZone = ['PRIME', 'EULER', 'SKY']
 
 const filterTokensFromExternalName = (part: string) => {
   const potentialToken = part.toUpperCase()

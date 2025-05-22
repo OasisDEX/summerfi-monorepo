@@ -1,7 +1,6 @@
 'use client'
 
 import { type ReactNode, useState } from 'react'
-import { type DropdownRawOption } from '@summerfi/app-types'
 import Link from 'next/link'
 
 import { Box } from '@/components/atoms/Box/Box'

@@ -1,0 +1,58 @@
+/* This is campaign agnostic styles */
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 90px;
+}
+
+.campaignGradientBox {
+  height: 380px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.campaignHeaderImage {
+  width: 65%;
+  height: 100%;
+  margin: 0 auto;
+}
+
+.campaignHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--general-space-16);
+  width: 900px;
+  text-align: center;
+}
+
+.campaignHeader h1 {
+  text-align: center;
+}
+
+.campaignHeader p {
+  color: var(--color-text-secondary);
+}
+
+.campaignHeader button {
+  margin-top: var(--general-space-16);
+}
+
+.campaignInlineHeader {
+  /* with a H2 + toned down p1 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-space-medium);
+  width: 800px;
+  text-align: center;
+}
+
+.campaignInlineHeader p {
+  color: var(--color-text-secondary);
+}

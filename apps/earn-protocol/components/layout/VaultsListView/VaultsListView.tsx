@@ -465,7 +465,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
         <>
           <div className={vaultsListViewStyles.leftHeaderRow}>
             <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-              1. Choose a strategy
+              Choose a strategy
             </Text>
           </div>
           <div className={vaultsListViewStyles.leftHeaderFiltersRow}>
@@ -507,7 +507,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
             >
               <VaultsSortingItem
                 label={selectedSortingMethod.label}
-                style={{ padding: '0 15px' }}
+                style={{ paddingLeft: '5px' }}
               />
             </Dropdown>
           </div>
@@ -517,6 +517,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
                 key={getUniqueVaultId(vault)}
                 {...vault}
                 withHover
+                deviceType={deviceType}
                 selected={
                   selectedVaultId === getUniqueVaultId(vault) ||
                   (!selectedVaultId && vaultIndex === 0)
