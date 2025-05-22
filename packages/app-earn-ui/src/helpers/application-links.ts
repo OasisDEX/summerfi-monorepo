@@ -160,4 +160,5 @@ export const EXTERNAL_LINKS = {
     GOVERNANCE: 'https://gov.summer.fi',
     FORUM: 'https://forum.summer.fi',
   },
+  OKX: 'https://web3.okx.com/',
 }
