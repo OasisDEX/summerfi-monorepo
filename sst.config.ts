@@ -1,16 +1,14 @@
 import { SSTConfig } from 'sst'
 import { API } from './stacks/summer-stack'
 import { ExternalAPI } from './stacks/partners-stack'
-import { SdkAPI } from './stacks/sdk-stack'
 import { $, chalk, echo } from 'zx'
 
 const availableStage = ['dev', 'staging', 'production', 'armada-prod']
 
 enum App {
   SummerfiStack = 'summerfi-stack',
-  Sdk = 'sdk',
 }
-const availableApps: string[] = [App.SummerfiStack, App.Sdk]
+const availableApps: string[] = [App.SummerfiStack]
 
 const getCurrentBranch = async () => {
   const { stdout: currentBranch } = await $`git branch --show-current`
@@ -189,9 +187,6 @@ export const sstConfig: SSTConfig = {
     if (app.name === App.SummerfiStack) {
       app.stack(API)
       app.stack(ExternalAPI)
-    }
-    if (app.name === App.Sdk) {
-      app.stack(SdkAPI)
     }
   },
 }
