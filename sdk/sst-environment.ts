@@ -1,6 +1,5 @@
-import { config } from "dotenv"
-import { z } from "zod/v4"
-
+import { config } from 'dotenv'
+import { z } from 'zod/v4'
 
 config({ path: '.env', debug: false, override: true })
 
