@@ -1,7 +1,9 @@
 packages:
   - 'packages/**'
   - 'apps/*'
-  - 'sdk/**'
+  - 'sdk/*'
+  - '!sdk/.sst'
+  - '!sdk/node_modules'
   - '!sdk/sdk-client/bundle'
   - '!sdk/sdk-common/bundle'
   - 'stacks/**'
