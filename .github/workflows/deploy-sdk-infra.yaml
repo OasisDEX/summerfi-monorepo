@@ -104,7 +104,7 @@ jobs:
       - name: Deploy SDK
         working-directory: sdk
         run: |
-          npx sst deploy --stage ${{ github.event.inputs.environment }}
+          npx sst deploy --stage=${{ github.event.inputs.environment }} --print-logs
 
       - name: Send success notification to Discord
         uses: Ilshidur/action-discord@0.3.2
