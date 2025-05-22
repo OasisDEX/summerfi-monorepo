@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAuthModal, useLogout } from '@account-kit/react'
-import { Button, Text } from '@summerfi/app-earn-ui'
+import { Button, EXTERNAL_LINKS, Text } from '@summerfi/app-earn-ui'
 import { useRouter } from 'next/navigation'
 
 import { useUserWallet } from '@/hooks/use-user-wallet'
@@ -79,15 +79,17 @@ export const OkxConnectButton = () => {
     )
   }, [userWalletAddress, okxWalletConnected])
 
-  const tryAgainAction = () => {
-    setIsOkxWalletSetUp(false)
-    setIsSettingUpOkxWallet(false)
-    closeAuthModal()
-    logout()
-    setTimeout(() => {
-      openAuthModal()
-    }, 500)
-  }
+  const tryAgainAction = useMemo(() => {
+    return () => {
+      setIsOkxWalletSetUp(false)
+      setIsSettingUpOkxWallet(false)
+      closeAuthModal()
+      logout()
+      setTimeout(() => {
+        openAuthModal()
+      }, 500)
+    }
+  }, [logout, openAuthModal, closeAuthModal])
 
   useEffect(() => {
     if (isOkxWalletAvailable && isConnected && isSameWallet) {
@@ -135,9 +137,12 @@ export const OkxConnectButton = () => {
     if (isOkxWalletSetUp && isSameWallet) {
       push('/?networks=BASE')
     }
+    if (!isOkxWalletAvailable) {
+      window.open(EXTERNAL_LINKS.OKX, '_blank')
+    }
 
     return null
-  }, [isConnected, isSameWallet, isOkxWalletSetUp, tryAgainAction, push])
+  }, [isConnected, isSameWallet, isOkxWalletSetUp, tryAgainAction, push, isOkxWalletAvailable])
 
   return (
     <>
@@ -157,6 +162,7 @@ export const OkxConnectButton = () => {
         }}
         onClick={secondaryButtonAction}
       >
+        {!isOkxWalletAvailable ? 'Get OKX wallet now' : <>&nbsp;</>}
         {isOkxWalletSetUp && isSameWallet ? 'Earn now' : <>&nbsp;</>}
         {isConnected && !isSameWallet ? 'Click to connect your OKX Wallet' : <>&nbsp;</>}
       </Text>
