@@ -28,7 +28,7 @@ export default $config({
     // check if client version is in deployedSdkApiVersions
     if (!deployedVersions.includes(clientVersion)) {
       throw new Error(
-        `Client version ${clientVersion} is not in the list of deployed versions: ${deployedVersions.join(', ')}. Please update SDK_DEPLOYED_API_VERSIONS_MAP var in GitHub environment with a new version to allow deployment.`,
+        `Client version ${clientVersion} is not in the list of deployed versions: ${deployedVersions.join(', ')}. Please update SDK_DEPLOYED_VERSIONS_MAP var in GitHub environment with a newly deployed version to allow deployment.`,
       )
     }
     let sdkBucket: sst.aws.Bucket | undefined

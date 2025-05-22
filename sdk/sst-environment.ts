@@ -5,7 +5,7 @@ config({ path: '.env', debug: false, override: true })
 
 // validate required envs are defined using zod library
 const envSchema = z.object({
-  SDK_DEPLOYED_API_VERSIONS_MAP: z.string(),
+  SDK_DEPLOYED_VERSIONS_MAP: z.string(),
   SDK_LOGGING_ENABLED: z.string().default('false'),
   SDK_DEBUG_ENABLED: z.string().default('false'),
   POWERTOOLS_LOG_LEVEL: z.string().default('INFO'),
@@ -41,7 +41,7 @@ const envSchema = z.object({
 // parse envs
 const parsedEnv = envSchema.safeParse(process.env)
 if (!parsedEnv.success) {
-  console.error('Invalid environment variables:', z.treeifyError(parsedEnv.error))
+  console.error('Invalid environment variables:', z.prettifyError(parsedEnv.error))
   process.exit(1)
 }
 
@@ -55,11 +55,11 @@ export const sdkDeployedVersionsMap = z
     z.record(
       z.string().regex(/^v\d$/),
       z.string().regex(/^\d+\.\d+\.\d+$/, {
-        error: 'API value must be in the format "X.X.X"',
+        error: 'SDK_DEPLOYED_VERSIONS_MAP values must be in the format "X.X.X"',
       }),
       {
-        error: 'API key must be in the format "vX"',
+        error: 'SDK_DEPLOYED_VERSIONS_MAP keys must be in the format "vX"',
       },
     ),
   )
-  .parse(parsedEnv.data.SDK_DEPLOYED_API_VERSIONS_MAP)
+  .parse(parsedEnv.data.SDK_DEPLOYED_VERSIONS_MAP)
