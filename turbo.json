@@ -138,6 +138,7 @@
     },
     "build": {
       "dependsOn": [
+        "prebuild",
         "^build"
       ],
       "outputs": [
