@@ -26,7 +26,7 @@ export const createBackend = async ({
     throw new Error(`Failed to load environment variables: ${error.message}`)
   }
 
-  const nameSuffix = deployedVersion.replaceAll('.', 'o')
+  const nameSuffix = deployedVersion.replaceAll('.', 'x')
 
   // create and deploy function
   const sdkBackend = new sst.aws.Function(`SdkBackendV${nameSuffix}`, {
