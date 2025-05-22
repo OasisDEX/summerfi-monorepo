@@ -19,7 +19,7 @@ export default $config({
     const { createBackend } = await import('./create-backend')
 
     // helpers
-    const persistent = isPersistentStage($app.stage)
+    // const persistent = isPersistentStage($app.stage)
     const production = isProduction($app.stage)
 
     const deployedVersions = Object.values(sdkDeployedVersionsMap)

@@ -4,18 +4,19 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
+    "sst:install": "npx sst install",
     "sst:remove": "npx sst remove",
     "sst:deploy": "npx sst deploy",
     "sst:dev": "npx sst dev",
     "sst:dev:basic": "npx sst dev --mode=basic"
   },
   "dependencies": {
-    "bignumber.js": "9.1.2",
-    "dotenv": "16.4.5",
-    "viem": "2.23.11",
+    "bignumber.js": "^9.3.0",
+    "dotenv": "^16.5.0",
     "sst": "3.16.0",
-    "zod": "3.25.17",
-    "zx": "8.5.4"
+    "viem": "^2.30.0",
+    "zod": "^3.25.20",
+    "zx": "^8.5.4"
   },
   "devDependencies": {
     "@types/aws-lambda": "8.10.149"
