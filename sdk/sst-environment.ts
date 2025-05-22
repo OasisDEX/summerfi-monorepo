@@ -47,7 +47,7 @@ if (!parsedEnv.success) {
 
 export const environmentVariables = parsedEnv.data
 
-export const sdkDeployedApiVersionsMap = z
+export const sdkDeployedVersionsMap = z
   .string()
   .transform((str) => JSON.parse(str))
   .pipe(z.json())

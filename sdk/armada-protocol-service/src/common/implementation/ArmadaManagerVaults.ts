@@ -656,7 +656,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     })
     multicallArgs.push(enterFleetCalldata)
     multicallOperations.push(
-      'enterFleet all (0)' + validReferralCode ? ` with referral ${validReferralCode}` : '',
+      'enterFleet all (0)' + (validReferralCode ? ` with referral ${validReferralCode}` : ''),
     )
 
     if (shouldStake) {

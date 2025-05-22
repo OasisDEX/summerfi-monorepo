@@ -1,3 +1,5 @@
+import { Resource } from 'sst'
+
 export const createInfra = async ({
   production,
   persistent,
@@ -30,12 +32,12 @@ export const createInfra = async ({
   // reuse existing resources for non-persistent stages
   else {
     // bucket
-    sdkBucket = sst.aws.Bucket.get('SdkBucket', 'sdk-sst-development-sdkbucketbucket-duckcbdc')
+    sdkBucket = sst.aws.Bucket.get('SdkBucket', Resource.SdkBucket.name)
   }
 
   // api
   sdkGateway = new sst.aws.ApiGatewayV2('SdkGateway', {
-    link: [sdkBucket],
+    // link: [sdkBucket],
     accessLog: {
       retention: production ? '1 month' : '1 day',
     },

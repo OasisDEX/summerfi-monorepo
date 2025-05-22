@@ -1,26 +1,32 @@
 export const createBackend = async ({
   production,
-  clientVersion,
+  deployedVersion,
   sdkGateway,
 }: {
   production: boolean
-  clientVersion: string
+  deployedVersion: string
   sdkGateway: sst.aws.ApiGatewayV2
 }) => {
-  // check with regexp if client version is in format X.Y.Z
-  if (!/^\d+\.\d+\.\d+$/.test(clientVersion)) {
-    throw new Error(`Client version tag "${clientVersion}" is not in the format X.Y.Z`)
+  // check with regexp if version is in format X.Y.Z
+  if (!/^\d+\.\d+\.\d+$/.test(deployedVersion)) {
+    throw new Error(`Deployed version tag "${deployedVersion}" is not in the format X.Y.Z`)
   }
-  // take first char of clientVersion to derive apiVersion
-  const apiVersion = `v${clientVersion.charAt(0)}`
+  // take first char of deployedVersion to derive apiVersion
+  const apiVersion = `v${deployedVersion.charAt(0)}`
   // check with regexp if api version is in format vX
   if (!/^v\d$/.test(apiVersion)) {
     throw new Error(`API version tag "${apiVersion}" is not in the format vX`)
   }
 
-  const { environmentVariables } = await import('./sst-environment')
+  let environmentVariables
+  try {
+    const imported = await import('./sst-environment')
+    environmentVariables = imported.environmentVariables
+  } catch (error: any) {
+    throw new Error(`Failed to load environment variables: ${error.message}`)
+  }
 
-  const nameSuffix = clientVersion.replaceAll('.', '')
+  const nameSuffix = deployedVersion.replaceAll('.', 'o')
 
   // create and deploy function
   const sdkBackend = new sst.aws.Function(`SdkBackendV${nameSuffix}`, {

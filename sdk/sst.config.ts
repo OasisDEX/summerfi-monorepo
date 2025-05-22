@@ -15,7 +15,7 @@ export default $config({
   },
   async run() {
     const { isProductionStage: isProduction, isPersistentStage } = await import('./sst-utils')
-    const { sdkDeployedApiVersionsMap } = await import('./sst-environment')
+    const { sdkDeployedVersionsMap } = await import('./sst-environment')
     const { createInfra } = await import('./create-infra')
     const { createBackend } = await import('./create-backend')
 
@@ -23,13 +23,13 @@ export default $config({
     const persistent = isPersistentStage($app.stage)
     const production = isProduction($app.stage)
 
-    const deployedSdkApiVersions = Object.values(sdkDeployedApiVersionsMap)
+    const deployedVersions = Object.values(sdkDeployedVersionsMap)
     // get sdk version from sdk-client package.json of current git head
     const { version: clientVersion } = await import('./sdk-client/bundle/package.json')
     // check if client version is in deployedSdkApiVersions
-    if (!deployedSdkApiVersions.includes(clientVersion)) {
+    if (!deployedVersions.includes(clientVersion)) {
       throw new Error(
-        `Client version ${clientVersion} is not in the list of deployed SDK API versions: ${deployedSdkApiVersions.join(', ')}`,
+        `Client version ${clientVersion} is not in the list of deployed versions: ${deployedVersions.join(', ')}. Please update SDK_DEPLOYED_API_VERSIONS_MAP var in GitHub environment with a new version to allow deployment.`,
       )
     }
 
@@ -37,9 +37,9 @@ export default $config({
     const { sdkGateway } = await createInfra({ production, persistent })
 
     const backendUrls: $util.Output<string>[] = []
-    for (const apiVersion of deployedSdkApiVersions) {
+    for (const version of deployedVersions) {
       const backendUrl = await createBackend({
-        clientVersion,
+        deployedVersion: version,
         production,
         sdkGateway,
       }).then((res) => res.url)
