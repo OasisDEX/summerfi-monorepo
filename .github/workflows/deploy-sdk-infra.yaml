@@ -6,9 +6,10 @@ on:
       environment:
         description: 'Deployment environment'
         required: true
-        default: 'staging'
+        default: 'testing'
         type: choice
         options:
+          - testing
           - production
           - staging
 
