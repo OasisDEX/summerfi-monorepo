@@ -19,6 +19,7 @@ export type IconNamesList =
   | 'bat_circle_color'
   | 'bat_color'
   | 'bat'
+  | 'beach_club_icon'
   | 'bridge'
   | 'bsdeth_circle_color'
   | 'btc_circle_color'
@@ -311,6 +312,7 @@ export type IconNamesList =
   | 'summer_light'
   | 'wsuperoethb'
   | 'wallet'
+  | 'users_beach_club'
 
 export type TokenSymbolsList =
   | 'AAVE'

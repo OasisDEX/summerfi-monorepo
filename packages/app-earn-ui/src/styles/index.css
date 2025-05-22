@@ -1,8 +1,8 @@
 @import '../../node_modules/sanitize.css/sanitize.css';
 @import '../../node_modules/sanitize.css/assets.css';
 @import '../../node_modules/sanitize.css/forms.css';
-@import url("./base.css");
-@import url("./vendor.css");
+@import url('./base.css');
+@import url('./vendor.css');
 
 html {
   scroll-behavior: smooth;
@@ -44,6 +44,7 @@ body {
   --earn-protocol-success-100: rgba(105, 223, 49, 1);
   --earn-protocol-critical-50: rgba(141, 58, 43, 1);
   --earn-protocol-critical-10: rgba(51, 34, 31, 1);
+  --earn-protocol-neutral-95: rgba(39, 39, 39, 1);
   --earn-protocol-neutral-90: rgba(35, 35, 35, 1);
   --earn-protocol-neutral-85: rgba(43, 43, 43, 1);
   --earn-protocol-neutral-80: rgba(51, 51, 51, 1);
@@ -121,15 +122,21 @@ body {
   --radius-rounder: var(--general-radius-32);
   --radius-circle: var(--general-radius-50);
   --gradient-earn-protocol-dark: linear-gradient(90deg, #ff49a4 0%, #b049ff 100%);
-  --gradient-earn-protocol-light: linear-gradient(90deg,
-      rgba(255, 73, 164, 0.5) 0%,
-      rgba(176, 73, 255, 0.5) 100%);
-  --gradient-earn-protocol-dark-10: linear-gradient(90deg,
-      rgba(255, 73, 164, 0.1) 0%,
-      rgba(176, 73, 255, 0.1) 100%);
-  --gradient-earn-protocol-light-10: linear-gradient(90deg,
-      rgba(255, 73, 164, 0.1) 0%,
-      rgba(176, 73, 255, 0.1) 100%);
+  --gradient-earn-protocol-light: linear-gradient(
+    90deg,
+    rgba(255, 73, 164, 0.5) 0%,
+    rgba(176, 73, 255, 0.5) 100%
+  );
+  --gradient-earn-protocol-dark-10: linear-gradient(
+    90deg,
+    rgba(255, 73, 164, 0.1) 0%,
+    rgba(176, 73, 255, 0.1) 100%
+  );
+  --gradient-earn-protocol-light-10: linear-gradient(
+    90deg,
+    rgba(255, 73, 164, 0.1) 0%,
+    rgba(176, 73, 255, 0.1) 100%
+  );
   --shadow-depth-1: 0px 0px 8px 0px #0000001a;
   --shadow-depth-2: 0px 0px 8px 8px #00000026;
   --shadow-depth-3: 0px 4px 8px 0px #00000033;
@@ -143,4 +150,15 @@ body {
   --font-size-h3: 32px;
   --font-size-h4: 28px;
   --font-size-h5: 22px;
+  
+  
+  /* BEACH CLUB */
+  --beach-club-primary-100: rgba(28, 120, 250, 1);
+  --beach-club-link: rgba(254, 209, 73, 1);
+
+  --gradient-earn-protocol-beach-club-1: linear-gradient(90deg, #ffe74a 0%, #2cecf2 98.56%);
+  --gradient-earn-protocol-beach-club-2: linear-gradient(269.08deg, #136FF1 -15.48%, #14407F 91.66%);
+  --gradient-earn-protocol-beach-club-3: linear-gradient(149.97deg, #054CDB 31.92%, #13CBDF 118.76%);
+  --gradient-earn-protocol-beach-club-4: linear-gradient(156.6deg, #139ADF -29.11%, #054CDB 126.91%);
+  ;
 }

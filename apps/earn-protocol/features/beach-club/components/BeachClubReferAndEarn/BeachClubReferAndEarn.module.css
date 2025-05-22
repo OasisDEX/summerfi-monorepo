@@ -1,0 +1,39 @@
+.beachClubReferAndEarnWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--general-space-64);
+  width: 100%;
+
+  .header {
+    display: flex;
+    justify-content: flex-start;
+    gap: var(--general-space-16);
+    width: 100%;
+    margin-bottom: var(--general-space-24);
+  }
+
+  .tabsContainer {
+    display: flex;
+    justify-content: flex-start;
+    gap: var(--general-space-24);
+    margin-bottom: var(--general-space-16);
+
+    .tab {
+      cursor: pointer;
+      color: var(--earn-protocol-secondary-40);
+
+      &:hover {
+        color: var(--earn-protocol-secondary-60);
+        transition: color 0.3s ease-in-out;
+      }
+    }
+
+    .tabActive {
+      cursor: pointer;
+      color: var(--earn-protocol-secondary-100);
+      transition: color 0.3s ease-in-out;
+    }
+  }
+}

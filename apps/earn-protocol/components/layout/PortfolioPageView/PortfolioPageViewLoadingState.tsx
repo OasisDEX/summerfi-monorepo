@@ -28,32 +28,33 @@ export const PortfolioPageViewLoadingState: FC = () => {
     defaultTab: PortfolioTabs.OVERVIEW,
   })
   const tabs = [
-    ...[
-      {
-        id: PortfolioTabs.OVERVIEW,
-        label: 'Overview',
-        content: SimplePortfolioSkeleton,
-      },
-    ],
+    {
+      id: PortfolioTabs.OVERVIEW,
+      label: 'Overview',
+      content: SimplePortfolioSkeleton,
+    },
     {
       id: PortfolioTabs.WALLET,
       label: 'Wallet',
       content: SimplePortfolioSkeleton,
     },
-    ...[
-      {
-        id: PortfolioTabs.YOUR_ACTIVITY,
-        label: 'Your Activity',
-        content: SimplePortfolioSkeleton,
-      },
-      {
-        id: PortfolioTabs.REBALANCE_ACTIVITY,
-        label: 'Rebalance Activity',
-        content: SimplePortfolioSkeleton,
-      },
-    ],
+    {
+      id: PortfolioTabs.YOUR_ACTIVITY,
+      label: 'Your Activity',
+      content: SimplePortfolioSkeleton,
+    },
+    {
+      id: PortfolioTabs.REBALANCE_ACTIVITY,
+      label: 'Rebalance Activity',
+      content: SimplePortfolioSkeleton,
+    },
     {
       id: PortfolioTabs.REWARDS,
+      label: '$SUMR Rewards',
+      content: SimplePortfolioSkeleton,
+    },
+    {
+      id: PortfolioTabs.BEACH_CLUB,
       label: '$SUMR Rewards',
       content: SimplePortfolioSkeleton,
     },
