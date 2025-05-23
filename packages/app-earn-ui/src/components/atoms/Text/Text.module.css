@@ -7,7 +7,12 @@
 .h2colorful,
 .h3colorful,
 .h4colorful,
-.h5colorful {
+.h5colorful,
+.h1colorfulBeachClub,
+.h2colorfulBeachClub,
+.h3colorfulBeachClub,
+.h4colorfulBeachClub,
+.h5colorfulBeachClub {
   font-family: var(--font-inter);
 }
 
@@ -16,7 +21,10 @@
 .h3,
 .h1colorful,
 .h2colorful,
-.h3colorful {
+.h3colorful,
+.h1colorfulBeachClub,
+.h2colorfulBeachClub,
+.h3colorfulBeachClub {
   font-weight: 600;
 }
 
@@ -26,12 +34,18 @@
 .h2colorful,
 .h3colorful,
 .h4colorful,
-.h5colorful {
+.h5colorful,
+.h1colorfulBeachClub,
+.h2colorfulBeachClub,
+.h3colorfulBeachClub,
+.h4colorfulBeachClub,
+.h5colorfulBeachClub {
   font-weight: 600;
 }
 
 .h1,
 .h1colorful,
+.h1colorfulBeachClub,
 .h1semi {
   font-size: 32px;
   line-height: 44px;
@@ -39,6 +53,7 @@
 @media (min-width: 745px) {
   .h1,
   .h1colorful,
+  .h1colorfulBeachClub,
   .h1semi {
     font-size: 52px;
     line-height: 64px;
@@ -47,6 +62,7 @@
 
 .h2,
 .h2colorful,
+.h2colorfulBeachClub,
 .h2semi {
   font-size: 28px;
   line-height: 40px;
@@ -54,6 +70,7 @@
 @media (min-width: 745px) {
   .h2,
   .h2colorful,
+  .h2colorfulBeachClub,
   .h2semi {
     font-size: 40px;
     line-height: 54px;
@@ -62,6 +79,7 @@
 
 .h3,
 .h3colorful,
+.h3colorfulBeachClub,
 .h3semi {
   font-size: 24px;
   line-height: 36px;
@@ -69,6 +87,7 @@
 @media (min-width: 745px) {
   .h3,
   .h3colorful,
+  .h3colorfulBeachClub,
   .h3semi {
     font-size: 32px;
     line-height: 44px;
@@ -77,6 +96,7 @@
 
 .h4,
 .h4colorful,
+.h4colorfulBeachClub,
 .h4semi {
   font-size: 20px;
   line-height: 32px;
@@ -84,6 +104,7 @@
 @media (min-width: 531px) {
   .h4,
   .h4colorful,
+  .h1colorfulBeachClub,
   .h4semi {
     font-size: 28px;
     line-height: 40px;
@@ -91,7 +112,8 @@
 }
 
 .h5,
-.h5colorful {
+.h5colorful,
+.h5colorfulBeachClub {
   font-size: 20px;
   line-height: 32px;
 }
@@ -99,33 +121,38 @@
 .p1,
 .p1semi,
 .p1colorful,
-.p1semiColorful {
+.p1semiColorful,
+.p1semiColorfulBeachClub {
   font-size: 18px;
   line-height: 28px;
 }
 
 .p2,
-.p2colorful {
+.p2colorful,
+.p2colorfulBeachClub {
   font-weight: 400;
 }
 
 .p2,
 .p2semi,
 .p2colorful,
-.p2semiColorful {
+.p2semiColorful,
+.p2semiColorfulBeachClub {
   font-size: 16px;
   line-height: 24px;
 }
 
 .p3,
-.p3colorful {
+.p3colorful,
+.p3colorfulBeachClub {
   font-weight: 400;
 }
 
 .p3,
 .p3semi,
 .p3colorful,
-.p3semiColorful {
+.p3semiColorful,
+.p3semiColorfulBeachClub {
   font-size: 14px;
   line-height: 22px;
 }
@@ -133,7 +160,8 @@
 .p4,
 .p4semi,
 .p4colorful,
-.p4semiColorful {
+.p4semiColorful,
+.p4semiColorfulBeachClub {
   font-size: 10px;
   line-height: 18px;
 }
@@ -141,7 +169,8 @@
   .p4,
   .p4semi,
   .p4colorful,
-  .p4semiColorful {
+  .p4semiColorful,
+  .p4semiColorfulBeachClub {
     font-size: 12px;
     line-height: 20px;
   }
@@ -154,7 +183,15 @@
 .p1semiColorful,
 .p2semiColorful,
 .p3semiColorful,
-.p4semiColorful {
+.p4semiColorful,
+.p1colorfulBeachClub,
+.p2colorfulBeachClub,
+.p3colorfulBeachClub,
+.p4colorfulBeachClub,
+.p1semiColorfulBeachClub,
+.p2semiColorfulBeachClub,
+.p3semiColorfulBeachClub,
+.p4semiColorfulBeachClub {
   font-weight: 600;
 }
 
@@ -178,6 +215,26 @@
 .h4colorful,
 .h5colorful {
   background-image: var(--gradient-earn-protocol-dark);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  width: fit-content;
+}
+
+.p1colorfulBeachClub,
+.p2colorfulBeachClub,
+.p3colorfulBeachClub,
+.p4colorfulBeachClub,
+.p1semiColorfulBeachClub,
+.p2semiColorfulBeachClub,
+.p3semiColorfulBeachClub,
+.p4semiColorfulBeachClub,
+.h1colorfulBeachClub,
+.h2colorfulBeachClub,
+.h3colorfulBeachClub,
+.h4colorfulBeachClub,
+.h5colorfulBeachClub {
+  background-image: var(--gradient-earn-protocol-beach-club-1);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

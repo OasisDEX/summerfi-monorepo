@@ -1,0 +1,54 @@
+.beachClubBigBannerWrapper {
+  position: relative;
+  background: var(--gradient-earn-protocol-beach-club-3);
+  padding: var(--general-space-24);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1;
+  flex-wrap: wrap;
+}
+
+.beachClubTextualWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  max-width: 461px;
+  gap: var(--general-space-16);
+  z-index: 2;
+  margin-bottom: var(--general-space-24);
+}
+
+@media (min-width: 532px) {
+  .beachClubBigBannerWrapper {
+    padding: var(--general-space-64) 99px;
+  }
+
+  .beachClubTextualWrapper {
+    margin-bottom: unset;
+  }
+}
+
+.beachClubMiniBannerWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-earn-protocol-beach-club-4);
+  padding: 10px 20px;
+  border-radius: 10px;
+  max-width: 441px;
+  padding: var(--general-space-64);
+  gap: var(--general-space-8);
+  z-index: 2;
+}
+
+.beachClubBigBannerBackground {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+}

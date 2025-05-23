@@ -85,6 +85,7 @@ export { getArksWeightedApy } from './helpers/get-arks-weighted-apy'
 export { safeParseJson } from './helpers/safe-parse-json'
 export { getServerSideCookies } from './helpers/get-server-side-cookies'
 export { safeATOB, safeBTOA } from './helpers/safe-b64'
+export { toUriSafe } from './helpers/uri-encode'
 
 export { ADDRESS_ZERO } from './address-zero'
 

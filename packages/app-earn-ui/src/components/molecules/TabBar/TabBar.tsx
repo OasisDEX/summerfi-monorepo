@@ -9,6 +9,7 @@ import styles from './TabBar.module.css'
 interface Tab {
   id: string
   label: string
+  icon?: ReactNode
   content: ReactNode
 }
 
@@ -70,8 +71,12 @@ export const TabBar: FC<TabBarProps> = ({
               className={`${styles.tabButton} ${resolvedActiveIndex === index ? styles.active : ''}`}
               onClick={() => handleSetActive(tab, index)}
             >
-              <Text as="p" variant={textVariant}>
-                {tab.label}
+              <Text
+                as={tab.icon ? 'div' : 'p'}
+                variant={textVariant}
+                style={{ display: 'flex', gap: 'var(--general-space-8)', alignItems: 'center' }}
+              >
+                {tab.label} {tab.icon}
               </Text>
             </button>
           ))}

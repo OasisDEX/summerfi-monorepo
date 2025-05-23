@@ -57,6 +57,7 @@ export const icons = {
   ) as IconExportType,
   bat_color: customLazy(() => import('./icons/bat_color.svg?react')) as IconExportType,
   bat: customLazy(() => import('./icons/bat.svg?react')) as IconExportType,
+  beach_club_icon: customLazy(() => import('./icons/beach_club_icon.svg?react')) as IconExportType,
   bridge: customLazy(() => import('./icons/bridge.svg?react')) as IconExportType,
   bsdeth_circle_color: customLazy(
     () => import('./icons/bsdeth_circle_color.svg?react'),
@@ -476,6 +477,9 @@ export const icons = {
     () => import('./icons/usd₮0_circle_color.svg?react'),
   ) as IconExportType,
   user: customLazy(() => import('./icons/user.svg?react')) as IconExportType,
+  users_beach_club: customLazy(
+    () => import('./icons/users_beach_club.svg?react'),
+  ) as IconExportType,
   vault_network_warning: customLazy(
     () => import('./icons/vault_network_warning.svg?react'),
   ) as IconExportType,
