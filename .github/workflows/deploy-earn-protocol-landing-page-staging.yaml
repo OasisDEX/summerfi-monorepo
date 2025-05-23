@@ -36,10 +36,12 @@ jobs:
     permissions:
       id-token: write
     environment: staging
-    needs: changes
+    needs: [changes]
+    # always() is needed because the 'changes' job is skipped on manual triggers (workflow_dispatch)
+    # Without always(), this job would also be skipped when 'changes' is skipped
     if:
-      ${{ needs.changes.outputs.build-earn-protocol-landing-page == 'true' || github.event_name ==
-      'workflow_dispatch' }}
+      ${{ always() && (needs.changes.outputs.build-earn-protocol-landing-page == 'true' ||
+      github.event_name == 'workflow_dispatch') }}
     env:
       AWS_REGION: eu-central-1
       ENVIRONMENT_TAG: dev
