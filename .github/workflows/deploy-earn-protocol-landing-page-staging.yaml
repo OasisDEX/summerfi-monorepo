@@ -90,7 +90,7 @@ jobs:
           aws_access_key_id: ${{ secrets.LANDING_PAGE_AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.LANDING_PAGE_AWS_SECRET_ACCESS_KEY }}
           aws_region: ${{ env.AWS_REGION }}
-          source: 'apps/earn-protocol-landing-page/out'
+          source: './apps/earn-protocol-landing-page/out'
           dest: 's3://${{ vars.LANDING_PAGE_BUCKET_NAME }}/'
           flags: --acl public-read --recursive
 
