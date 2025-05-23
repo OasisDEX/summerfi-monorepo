@@ -32,7 +32,7 @@ export default {
     app.stack((context) => {
       const { stack } = context
       // helpers
-      // const persistent = isPersistentStage(app.stage)
+      const persistent = isPersistentStage(app.stage)
       const production = isProductionStage(app.stage)
 
       const deployedVersions = Object.values(sdkDeployedVersionsMap)
@@ -55,7 +55,7 @@ export default {
 
       const sdkGateway = new Api(stack, 'SdkGateway', {
         accessLog: {
-          retention: production ? 'one_month' : 'one_day',
+          retention: production ? 'one_month' : persistent ? 'one_week' : 'one_day',
         },
       })
 
@@ -66,6 +66,7 @@ export default {
             stack,
             deployedVersion: version,
             production,
+            persistent,
             sdkGateway,
             sdkBucket,
           })
