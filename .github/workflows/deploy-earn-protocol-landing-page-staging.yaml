@@ -34,7 +34,9 @@ jobs:
       id-token: write
     environment: staging
     needs: changes
-    if: ${{ needs.changes.outputs.build-earn-protocol-landing-page == 'true' }}
+    if:
+      ${{ needs.changes.outputs.build-earn-protocol-landing-page == 'true' || github.event_name ==
+      'workflow_dispatch' }}
     env:
       AWS_REGION: eu-central-1
       ENVIRONMENT_TAG: dev
@@ -87,8 +89,8 @@ jobs:
       - name: Copy LP static files to a bucket 🪣
         uses: prewk/s3-cp-action@v2
         with:
-          aws_access_key_id: ${{ secrets.LANDING_PAGE_AWS_ACCESS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.LANDING_PAGE_AWS_SECRET_ACCESS_KEY }}
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID_STAGING }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY_STAGING }}
           aws_region: ${{ env.AWS_REGION }}
           source: './apps/earn-protocol-landing-page/out'
           dest: 's3://${{ vars.LANDING_PAGE_BUCKET_NAME }}/'
