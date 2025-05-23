@@ -97,6 +97,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Install dependencies
+        run: pnpm prebuild:sdk
+
       - name: Deploy SDK
         working-directory: sdk
         run: |
