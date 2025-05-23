@@ -19,7 +19,11 @@ export const BeachClubSteps = () => {
     <div className={classNames.beachClubStepsWrapper}>
       {steps.map((step, idx) => (
         <Card className={classNames.card} key={step.label}>
-          <div className={classNames.stepNumber}>{idx + 1}</div>
+          <div className={classNames.stepNumber}>
+            <Text as="h5" variant="h5colorfulBeachClub">
+              {idx + 1}
+            </Text>
+          </div>
           <Text as="p" variant="p1semi" style={{ maxWidth: '200px' }}>
             {step.label}
           </Text>

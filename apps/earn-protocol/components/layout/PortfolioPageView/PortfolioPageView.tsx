@@ -13,6 +13,7 @@ import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/po
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
+import { BeachClubPalmBackground } from '@/features/beach-club/components/BeachClubPalmBackground/BeachClubPalmBackground'
 import { claimDelegateReducer, claimDelegateState } from '@/features/claim-and-delegate/state'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
@@ -186,6 +187,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
           handleTabChange={(tab) => updateTab(tab.id as PortfolioTabs)}
         />
       </div>
+      <BeachClubPalmBackground />
     </>
   )
 }
