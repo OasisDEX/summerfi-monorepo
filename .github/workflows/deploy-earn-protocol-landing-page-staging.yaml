@@ -114,7 +114,7 @@ jobs:
           aws_region: ${{ env.AWS_REGION }}
           source: './apps/earn-protocol-landing-page/out'
           dest: 's3://${{ vars.LANDING_PAGE_BUCKET_NAME }}/'
-          flags: --acl public-read --recursive
+          flags: --recursive
 
       - name: Invalidate CloudFront
         run: |
