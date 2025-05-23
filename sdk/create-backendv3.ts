@@ -1,19 +1,11 @@
-import { Function, type ApiGatewayV1Api, type Bucket, type Stack } from 'sst/constructs'
-import { environmentVariables } from './sst-environment'
-import { LoggingFormat } from 'aws-cdk-lib/aws-lambda'
-
-export const createBackend = ({
-  stack,
+export const createBackend = async ({
   production,
   deployedVersion,
   sdkGateway,
-  sdkBucket,
 }: {
-  stack: Stack
   production: boolean
   deployedVersion: string
-  sdkGateway: ApiGatewayV1Api<Record<string, never>>
-  sdkBucket: Bucket
+  sdkGateway: sst.aws.ApiGatewayV2
 }) => {
   // check with regexp if version is in format X.Y.Z
   if (!/^\d+\.\d+\.\d+$/.test(deployedVersion)) {
@@ -26,28 +18,36 @@ export const createBackend = ({
     throw new Error(`API version tag "${apiVersion}" is not in the format vX`)
   }
 
+  let environmentVariables
+  try {
+    const imported = await import('./sst-environment')
+    environmentVariables = imported.environmentVariables
+  } catch (error: any) {
+    throw new Error(`Failed to load environment variables: ${error.message}`)
+  }
+
   const nameSuffix = deployedVersion.replaceAll('.', 'x')
 
   // create and deploy function
-  const sdkBackend = new Function(stack, `SdkBackendV${nameSuffix}`, {
-    handler: 'sdk-router-function/src/index.handler',
+  const sdkBackend = new sst.aws.Function(`SdkBackendV${nameSuffix}`, {
+    handler: './sdk-router-function/src/index.handler',
     runtime: 'nodejs22.x',
     timeout: '30 seconds',
     environment: environmentVariables,
-    loggingFormat: LoggingFormat.JSON,
-    logRetention: production ? 'one_month' : 'one_day',
-    currentVersionOptions: {
-      provisionedConcurrentExecutions: production ? 10 : undefined,
+    logging: {
+      format: 'json',
+      retention: production ? '1 month' : '1 day',
+    },
+    concurrency: {
+      provisioned: production ? 10 : undefined,
     },
   })
-  sdkBackend.bind([sdkBucket])
 
   const path = `/api/sdk/${apiVersion}`
-  sdkGateway.addRoutes(stack, {
-    [`ANY ${path}/{proxy+}`]: sdkBackend,
-  })
+
+  sdkGateway.route(`ANY ${path}/{proxy+}`, sdkBackend.arn)
 
   return {
-    url: `${sdkGateway.url}${path}`,
+    url: $interpolate`${sdkGateway.url}${path}`,
   }
 }
