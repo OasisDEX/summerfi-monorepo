@@ -6,12 +6,40 @@ on:
   workflow_dispatch:
 
 jobs:
+  changes:
+    name: Check for earn protocol changes
+    runs-on: ubuntu-22.04
+    if: ${{ github.event_name == 'push' && github.event_name != 'workflow_dispatch' }}
+    permissions:
+      pull-requests: read
+    outputs:
+      build-earn-protocol-landing-page: ${{ steps.filter.outputs.build-earn-protocol-landing-page }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            build-earn-protocol-landing-page:
+              - 'apps/earn-protocol-landing-page/**'
+              - 'packages/app-db/**'
+              - 'packages/app-types/**'
+              - 'packages/app-earn-ui/**'
+              - 'packages/app-utils/**'
+              - 'packages/serverless-shared/**'
+              - 'sdk/sdk-client/**'
+              - 'sdk/sdk-client-react/**'
+              - '.github/workflows/deploy-earn-protocol-landing-page-staging.yaml'
   build-earn-protocol-landing-page:
     name: Build and deploy Earn Protocol Static Landing Page
     runs-on: ubuntu-22.04
     permissions:
       id-token: write
     environment: staging
+    needs: changes
+    if:
+      ${{ needs.changes.outputs.build-earn-protocol-landing-page == 'true' || github.event_name ==
+      'workflow_dispatch' }}
     env:
       AWS_REGION: eu-central-1
       ENVIRONMENT_TAG: dev
