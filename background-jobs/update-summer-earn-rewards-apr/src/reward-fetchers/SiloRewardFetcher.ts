@@ -17,7 +17,6 @@ interface SiloVaultReward {
   protocolKey?: string
   vaultSymbol?: string
   vaultName?: string
-  [key: string]: any // Allow other fields
 }
 
 export class SiloRewardFetcher implements IRewardFetcher {
@@ -91,7 +90,14 @@ export class SiloRewardFetcher implements IRewardFetcher {
             .filter((program) => program.rewardTokenSymbol && program.apr)
             .map((program, index) => {
               // Convert APR from 18 decimals and multiply by 100 for percentage
-              const aprValue = (parseFloat(program.apr) / 1e18) * 100
+              const parsedApr = parseFloat(program.apr)
+              if (isNaN(parsedApr)) {
+                this.logger.warn(
+                  `[SiloRewardFetcher] Invalid APR value for ${program.rewardTokenSymbol}: ${program.apr}`,
+                )
+                return null
+              }
+              const aprValue = (parsedApr / 1e18) * 100
 
               return {
                 rewardToken: '0x0000000000000000000000000000000000000000', // Zero address as we don't know token addresses
@@ -105,6 +111,7 @@ export class SiloRewardFetcher implements IRewardFetcher {
                 },
               }
             })
+            .filter((reward): reward is RewardRate => reward !== null) // Remove null values
 
           return acc
         },
