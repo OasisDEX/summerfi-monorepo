@@ -5,6 +5,7 @@ import {
 import { Protocol } from '.'
 import { ChainId, NetworkByChainID } from '@summerfi/serverless-shared'
 import { Logger } from '@aws-lambda-powertools/logger'
+import { SiloRewardFetcher } from './reward-fetchers/SiloRewardFetcher'
 
 const morphoTokenByChainId: Partial<Record<ChainId, string>> = {
   [ChainId.BASE]: '0xBAa5CC21fd487B8Fcc2F632f3F4E8D37262a0842',
@@ -110,10 +111,12 @@ export class RewardsService {
   private readonly ONE_HOUR_IN_SECONDS = 3600
   private readonly logger: Logger
   private readonly ratesSubgraphClient: RatesSubgraphClient
+  private readonly siloRewardFetcher: SiloRewardFetcher
 
   constructor(logger: Logger, ratesSubgraphClient: RatesSubgraphClient) {
     this.logger = logger
     this.ratesSubgraphClient = ratesSubgraphClient
+    this.siloRewardFetcher = new SiloRewardFetcher(logger)
   }
 
   async getRewardRates(
@@ -166,6 +169,14 @@ export class RewardsService {
         chainId,
       )
       Object.assign(results, gearboxResults)
+    }
+
+    if (protocolGroups[Protocol.Silo]?.length) {
+      const siloResults = await this.siloRewardFetcher.getRewardRates(
+        protocolGroups[Protocol.Silo],
+        chainId,
+      )
+      Object.assign(results, siloResults)
     }
 
     // we call it for all arks i ncase there are additional rewards calcualted with onchian data
