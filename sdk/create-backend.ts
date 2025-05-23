@@ -1,4 +1,4 @@
-import { Function, type ApiGatewayV1Api, type Bucket, type Stack } from 'sst/constructs'
+import { Function, type Api, type Bucket, type Stack } from 'sst/constructs'
 import { environmentVariables } from './sst-environment'
 import { LoggingFormat } from 'aws-cdk-lib/aws-lambda'
 
@@ -12,7 +12,7 @@ export const createBackend = ({
   stack: Stack
   production: boolean
   deployedVersion: string
-  sdkGateway: ApiGatewayV1Api<Record<string, never>>
+  sdkGateway: Api
   sdkBucket: Bucket
 }) => {
   // check with regexp if version is in format X.Y.Z
@@ -48,6 +48,6 @@ export const createBackend = ({
   })
 
   return {
-    url: `${sdkGateway.url}${path}`,
+    url: `${path}`,
   }
 }

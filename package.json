@@ -16,6 +16,8 @@
     "test:sdk": "turbo run test --cache-dir=.turbo --filter=./sdk/*",
     "lint:sdk": "turbo run lint --cache-dir=.turbo --filter=./sdk/*",
     "dev:sdk": "cd sdk && pnpm run dev",
+    "sst:deploy:sdk:staging": "sst deploy --stage staging --app sdk",
+    "sst:deploy:sdk:armada-prod": "sst deploy --stage armada-prod --app sdk",
     "lint": "turbo run lint --cache-dir=.turbo",
     "lint:fix": "turbo run lint:fix",
     "test": "turbo run test --cache-dir=.turbo",
