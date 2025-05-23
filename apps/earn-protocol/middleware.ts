@@ -46,6 +46,12 @@ export function middleware(request: NextRequest) {
     response.cookies.set('country', country)
   }
 
+  if (process.env.NODE_ENV === 'development') {
+    const reqOrigin = request.headers.get('origin') ?? ''
+
+    response.headers.set('Access-Control-Allow-Origin', reqOrigin)
+  }
+
   return response
 }
 

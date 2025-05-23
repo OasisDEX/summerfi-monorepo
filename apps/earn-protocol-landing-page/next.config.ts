@@ -1,16 +1,12 @@
 import type { NextConfig } from 'next'
 import { PHASE_DEVELOPMENT_SERVER } from 'next/dist/shared/lib/constants'
 
-const redirectToProSummer = (pathname: string) => ({
-  source: pathname,
-  destination: `https://pro.summer.fi/${pathname}`,
-  basePath: false as const, // somehow this can be only false
-  permanent: true,
-})
-
 const nextConfig: (phase: string) => NextConfig = (phase) => ({
   devIndicators: {
     position: 'bottom-right',
+  },
+  env: {
+    EARN_APP_URL: process.env.EARN_APP_URL,
   },
   experimental: {
     serverComponentsHmrCache: true,
@@ -29,7 +25,7 @@ const nextConfig: (phase: string) => NextConfig = (phase) => ({
       'zod',
     ],
   },
-  output: 'standalone',
+  output: phase !== PHASE_DEVELOPMENT_SERVER ? 'export' : 'standalone',
   reactStrictMode: false,
   ...(phase !== PHASE_DEVELOPMENT_SERVER
     ? {
@@ -39,23 +35,6 @@ const nextConfig: (phase: string) => NextConfig = (phase) => ({
         }),
       }
     : {}),
-  redirects: function () {
-    return Promise.resolve([
-      // portfolio redirect
-      redirectToProSummer('/portfolio/:otherPosition'),
-      // product redirects
-      redirectToProSummer('/multiply'),
-      redirectToProSummer('/borrow'),
-      // network + position (or others) redirects
-      redirectToProSummer('/ethereum/:otherPosition*'),
-      redirectToProSummer('/base/:otherPosition*'),
-      redirectToProSummer('/optimism/:otherPosition*'),
-      redirectToProSummer('/arbitrum/:otherPosition*'),
-      // maker position redirects
-      // matches to `/{number}`
-      redirectToProSummer('/:makerPosition(\\d{1,})'),
-    ])
-  },
 })
 
 export default nextConfig
