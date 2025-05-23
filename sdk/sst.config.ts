@@ -6,9 +6,7 @@ import { createBackend } from './create-backend'
 import { Api, Bucket } from 'sst/constructs'
 import { RemovalPolicy } from 'aws-cdk-lib'
 
-import { config } from 'dotenv'
-
-config({ path: ['../.env', './.env'], debug: true, override: true })
+require('@dotenvx/dotenvx').config({ path: ['../.env', '.env'], override: true })
 
 export default {
   config(input) {

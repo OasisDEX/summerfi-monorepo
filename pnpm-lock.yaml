@@ -2035,7 +2035,7 @@ importers:
         version: 9.1.2
       viem:
         specifier: 2.27.2
-        version: 2.27.2(typescript@5.7.3)(zod@3.25.20)
+        version: 2.27.2(typescript@5.7.3)(zod@3.22.4)
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -2089,15 +2089,15 @@ importers:
 
   sdk:
     dependencies:
+      '@dotenvx/dotenvx':
+        specifier: ^1.44.1
+        version: 1.44.1
       aws-cdk-lib:
         specifier: 2.132.1
         version: 2.132.1(constructs@10.3.0)
       bignumber.js:
         specifier: ^9.3.0
         version: 9.3.0
-      dotenv:
-        specifier: ^16.5.0
-        version: 16.5.0
       sst:
         specifier: 2.48.5
         version: 2.48.5(typescript@5.7.3)
@@ -3553,7 +3553,7 @@ importers:
         version: 8.11.5
       viem:
         specifier: 2.27.2
-        version: 2.27.2(typescript@5.7.3)(zod@3.25.20)
+        version: 2.27.2(typescript@5.7.3)(zod@3.22.4)
 
   summerfi-api/get-apy-function:
     dependencies:
@@ -5872,7 +5872,7 @@ packages:
       '@aws-crypto/sha256-browser': 3.0.0
       '@aws-crypto/sha256-js': 3.0.0
       '@aws-sdk/client-sso-oidc': 3.569.0(@aws-sdk/client-sts@3.569.0)
-      '@aws-sdk/client-sts': 3.569.0(@aws-sdk/client-sso-oidc@3.569.0)
+      '@aws-sdk/client-sts': 3.569.0
       '@aws-sdk/core': 3.567.0
       '@aws-sdk/credential-provider-node': 3.569.0(@aws-sdk/client-sso-oidc@3.569.0)(@aws-sdk/client-sts@3.569.0)
       '@aws-sdk/middleware-host-header': 3.567.0
@@ -6342,7 +6342,7 @@ packages:
     dependencies:
       '@aws-crypto/sha256-browser': 3.0.0
       '@aws-crypto/sha256-js': 3.0.0
-      '@aws-sdk/client-sts': 3.569.0(@aws-sdk/client-sso-oidc@3.569.0)
+      '@aws-sdk/client-sts': 3.569.0
       '@aws-sdk/core': 3.567.0
       '@aws-sdk/credential-provider-node': 3.569.0(@aws-sdk/client-sso-oidc@3.569.0)(@aws-sdk/client-sts@3.569.0)
       '@aws-sdk/middleware-host-header': 3.567.0
@@ -6613,7 +6613,7 @@ packages:
     transitivePeerDependencies:
       - aws-crt
 
-  /@aws-sdk/client-sts@3.569.0(@aws-sdk/client-sso-oidc@3.569.0):
+  /@aws-sdk/client-sts@3.569.0:
     resolution: {integrity: sha512-3AyipQ2zHszkcTr8n1Sp7CiMUi28aMf1vOhEo0KKi0DWGo1Z1qJEpWeRP363KG0n9/8U3p1IkXGz5FRbpXZxIw==}
     engines: {node: '>=16.0.0'}
     dependencies:
@@ -6658,7 +6658,6 @@ packages:
       '@smithy/util-utf8': 2.3.0
       tslib: 2.8.1
     transitivePeerDependencies:
-      - '@aws-sdk/client-sso-oidc'
       - aws-crt
 
   /@aws-sdk/client-sts@3.816.0:
@@ -6921,7 +6920,7 @@ packages:
     peerDependencies:
       '@aws-sdk/client-sts': ^3.568.0
     dependencies:
-      '@aws-sdk/client-sts': 3.569.0(@aws-sdk/client-sso-oidc@3.569.0)
+      '@aws-sdk/client-sts': 3.569.0
       '@aws-sdk/credential-provider-env': 3.568.0
       '@aws-sdk/credential-provider-process': 3.568.0
       '@aws-sdk/credential-provider-sso': 3.568.0(@aws-sdk/client-sso-oidc@3.569.0)
@@ -7179,7 +7178,7 @@ packages:
     peerDependencies:
       '@aws-sdk/client-sts': ^3.568.0
     dependencies:
-      '@aws-sdk/client-sts': 3.569.0(@aws-sdk/client-sso-oidc@3.569.0)
+      '@aws-sdk/client-sts': 3.569.0
       '@aws-sdk/types': 3.567.0
       '@smithy/property-provider': 2.2.0
       '@smithy/types': 2.12.0
@@ -10328,6 +10327,30 @@ packages:
       gonzales-pe: 4.3.0
       node-source-walk: 6.0.2
     dev: true
+
+  /@dotenvx/dotenvx@1.44.1:
+    resolution: {integrity: sha512-j1QImCqf/XJmhIjC1OPpgiZV9g370HG9MNT9s/CDwCKsoYzNCPEKK+GfsidahJx7yIlBbm+4dPLlGec+bKn7oA==}
+    hasBin: true
+    dependencies:
+      commander: 11.1.0
+      dotenv: 16.5.0
+      eciesjs: 0.4.15
+      execa: 5.1.1
+      fdir: 6.4.4(picomatch@4.0.2)
+      ignore: 5.3.1
+      object-treeify: 1.1.33
+      picomatch: 4.0.2
+      which: 4.0.0
+    dev: false
+
+  /@ecies/ciphers@0.2.3(@noble/ciphers@1.3.0):
+    resolution: {integrity: sha512-tapn6XhOueMwht3E2UzY0ZZjYokdaw9XtL9kEyjhQ/Fb9vL9xTFbOaI+fV0AWvTpYu4BNloC6getKW6NtSg4mA==}
+    engines: {bun: '>=1', deno: '>=2', node: '>=16'}
+    peerDependencies:
+      '@noble/ciphers': ^1.0.0
+    dependencies:
+      '@noble/ciphers': 1.3.0
+    dev: false
 
   /@emnapi/core@1.4.0:
     resolution: {integrity: sha512-H+N/FqT07NmLmt6OFFtDfwe8PNygprzBikrEMyQfgqSmT0vzE515Pz7R8izwB9q/zsH/MA64AKoul3sA6/CzVg==}
@@ -14956,7 +14979,7 @@ packages:
       '@ethersproject/experimental': 5.7.0
       '@ethersproject/providers': 5.7.2
       '@lifi/sdk': 2.5.2
-      '@safe-global/safe-apps-provider': 0.18.3(typescript@5.7.3)
+      '@safe-global/safe-apps-provider': 0.18.3(typescript@5.7.3)(zod@3.22.4)
       '@safe-global/safe-apps-sdk': 8.1.0(typescript@5.7.3)(zod@3.22.4)
       '@walletconnect/ethereum-provider': 2.18.0(@types/react@19.0.8)(react@18.3.1)
       '@walletconnect/modal': 2.6.2(@types/react@19.0.8)(react@18.3.1)
@@ -15892,6 +15915,11 @@ packages:
     engines: {node: ^14.21.3 || >=16}
     dev: false
 
+  /@noble/ciphers@1.3.0:
+    resolution: {integrity: sha512-2I0gnIVPtfnMw9ee9h1dJG7tp81+8Ob3OJb3Mv37rx5L40/b0i7djjCVvGOVqc9AEIQyvyu1i6ypKdFw8R8gQw==}
+    engines: {node: ^14.21.3 || >=16}
+    dev: false
+
   /@noble/curves@1.2.0:
     resolution: {integrity: sha512-oYclrNgRaM9SsBUBVbb8M6DTV7ZHRTKugureoYEncY5c65HOmRzvSiTE3y5CYaPYJA/GVkrhXEoF0M3Ya9PMnw==}
     dependencies:
@@ -15921,6 +15949,13 @@ packages:
     dependencies:
       '@noble/hashes': 1.7.1
 
+  /@noble/curves@1.9.1:
+    resolution: {integrity: sha512-k11yZxZg+t+gWvBbIswW0yoJlu8cHOC7dhunwOzoWH/mXGBiYyR4YY6hAEK/3EUs4UpB8la1RfdRpeGsFHkWsA==}
+    engines: {node: ^14.21.3 || >=16}
+    dependencies:
+      '@noble/hashes': 1.8.0
+    dev: false
+
   /@noble/hashes@1.2.0:
     resolution: {integrity: sha512-FZfhjEDbT5GRswV3C6uvLPHMiVD6lQBmpoX5+eSiPaMTXte/IKqI5dykDxzZB/WBeK/CDuQRBWarPdi3FNY2zQ==}
     dev: true
@@ -15944,6 +15979,10 @@ packages:
 
   /@noble/hashes@1.7.1:
     resolution: {integrity: sha512-B8XBPsn4vT/KJAGqDzbwztd+6Yte3P4V7iafm24bxgDe/mlRuK6xmWPuCNrKt2vDafZ8MfJLlchDG/vYafQEjQ==}
+    engines: {node: ^14.21.3 || >=16}
+
+  /@noble/hashes@1.8.0:
+    resolution: {integrity: sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A==}
     engines: {node: ^14.21.3 || >=16}
 
   /@noble/secp256k1@1.7.1:
@@ -17961,18 +18000,6 @@ packages:
       - zod
     dev: false
 
-  /@safe-global/safe-apps-provider@0.18.3(typescript@5.7.3):
-    resolution: {integrity: sha512-f/0cNv3S4v7p8rowAjj0hDCg8Q8P/wBjp5twkNWeBdvd0RDr7BuRBPPk74LCqmjQ82P+1ltLlkmVFSmxTIT7XQ==}
-    dependencies:
-      '@safe-global/safe-apps-sdk': 9.1.0(typescript@5.7.3)
-      events: 3.3.0
-    transitivePeerDependencies:
-      - bufferutil
-      - typescript
-      - utf-8-validate
-      - zod
-    dev: false
-
   /@safe-global/safe-apps-provider@0.18.3(typescript@5.7.3)(zod@3.22.4):
     resolution: {integrity: sha512-f/0cNv3S4v7p8rowAjj0hDCg8Q8P/wBjp5twkNWeBdvd0RDr7BuRBPPk74LCqmjQ82P+1ltLlkmVFSmxTIT7XQ==}
     dependencies:
@@ -17990,18 +18017,6 @@ packages:
     dependencies:
       '@safe-global/safe-gateway-typescript-sdk': 3.21.2
       viem: 1.21.4(typescript@5.7.3)(zod@3.22.4)
-    transitivePeerDependencies:
-      - bufferutil
-      - typescript
-      - utf-8-validate
-      - zod
-    dev: false
-
-  /@safe-global/safe-apps-sdk@9.1.0(typescript@5.7.3):
-    resolution: {integrity: sha512-N5p/ulfnnA2Pi2M3YeWjULeWbjo7ei22JwU/IXnhoHzKq3pYCN6ynL9mJBOlvDVv892EgLPCWCOwQk/uBT2v0Q==}
-    dependencies:
-      '@safe-global/safe-gateway-typescript-sdk': 3.21.2
-      viem: 2.27.2(typescript@5.7.3)(zod@3.25.20)
     transitivePeerDependencies:
       - bufferutil
       - typescript
@@ -22187,7 +22202,7 @@ packages:
         optional: true
     dependencies:
       '@coinbase/wallet-sdk': 3.9.3
-      '@safe-global/safe-apps-provider': 0.18.3(typescript@5.7.3)
+      '@safe-global/safe-apps-provider': 0.18.3(typescript@5.7.3)(zod@3.22.4)
       '@safe-global/safe-apps-sdk': 8.1.0(typescript@5.7.3)(zod@3.22.4)
       '@walletconnect/ethereum-provider': 2.11.0(@types/react@19.0.8)(react@18.3.1)
       '@walletconnect/legacy-provider': 2.0.0
@@ -24040,7 +24055,7 @@ packages:
       '@safe-global/safe-apps-provider': ^0.18.2
       '@safe-global/safe-apps-sdk': ^8.0.0
     dependencies:
-      '@safe-global/safe-apps-provider': 0.18.3(typescript@5.7.3)
+      '@safe-global/safe-apps-provider': 0.18.3(typescript@5.7.3)(zod@3.22.4)
       '@safe-global/safe-apps-sdk': 8.1.0(typescript@5.7.3)(zod@3.22.4)
       '@web3-onboard/common': 2.4.2(typescript@5.7.3)
     transitivePeerDependencies:
@@ -24803,7 +24818,6 @@ packages:
     dependencies:
       typescript: 5.7.3
       zod: 3.22.4
-    dev: false
 
   /abitype@1.0.8(typescript@5.7.3)(zod@3.25.20):
     resolution: {integrity: sha512-ZeiI6h3GnW06uYDLx0etQtX/p8E24UaHHBj57RSjK7YBFe7iuVn07EDpOeP451D06sF27VOz9JJPlIKJmXgkEg==}
@@ -24818,6 +24832,7 @@ packages:
     dependencies:
       typescript: 5.7.3
       zod: 3.25.20
+    dev: false
 
   /abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
@@ -26978,6 +26993,11 @@ packages:
     engines: {node: '>=14'}
     dev: true
 
+  /commander@11.1.0:
+    resolution: {integrity: sha512-yPVavfyCcRhmorC7rWlkHn15b4wDVgVmBA7kV4QVBsF7kv/9TKJAbAXVTxvTnwP8HHKjRCJDClKbciiYS7p0DQ==}
+    engines: {node: '>=16'}
+    dev: false
+
   /commander@12.1.0:
     resolution: {integrity: sha512-Vw8qHK3bZM9y/P10u3Vib8o/DdkvA2OtPtZvD871QKjy74Wj1WSKFILMPRPSdUSx5RFK1arlJzEtA4PkFgnbuA==}
     engines: {node: '>=18'}
@@ -28409,10 +28429,21 @@ packages:
 
   /eciesjs@0.3.19:
     resolution: {integrity: sha512-b+PkRDZ3ym7HEcnbxc22CMVCpgsnr8+gGgST3U5PtgeX1luvINgfXW7efOyUtmn/jFtA/lg5ywBi/Uazf4oeaA==}
+    deprecated: Please upgrade to v0.4+
     dependencies:
       '@types/secp256k1': 4.0.6
       futoin-hkdf: 1.5.3
       secp256k1: 5.0.0
+    dev: false
+
+  /eciesjs@0.4.15:
+    resolution: {integrity: sha512-r6kEJXDKecVOCj2nLMuXK/FCPeurW33+3JRpfXVbjLja3XUYFfD9I/JBreH6sUyzcm3G/YQboBjMla6poKeSdA==}
+    engines: {bun: '>=1', deno: '>=2', node: '>=16'}
+    dependencies:
+      '@ecies/ciphers': 0.2.3(@noble/ciphers@1.3.0)
+      '@noble/ciphers': 1.3.0
+      '@noble/curves': 1.9.1
+      '@noble/hashes': 1.8.0
     dev: false
 
   /ee-first@1.1.1:
@@ -29961,7 +29992,7 @@ packages:
     resolution: {integrity: sha512-J1gDRkLpuGNvWYzWslBQR9cDV4nd4kfvVTE/Wy4Kkm4yb3EYRSlyi0eB/inTsSTTVyA0+HyzHgbr95Fn/Z1fSw==}
     deprecated: do not use this package use package versions above as this can miss some topics
     dependencies:
-      '@noble/hashes': 1.7.1
+      '@noble/hashes': 1.8.0
     dev: true
 
   /ethereum-cryptography@0.1.3:
@@ -30624,6 +30655,17 @@ packages:
       ua-parser-js: 1.0.37
     transitivePeerDependencies:
       - encoding
+
+  /fdir@6.4.4(picomatch@4.0.2):
+    resolution: {integrity: sha512-1NZP+GK4GfuAv3PqKvxQRDMjdSRZjnkq7KfhlNrCNNlZ0ygQFpebfrnfnq/W7fpUnAv9aGWmY1zKx7FYL3gwhg==}
+    peerDependencies:
+      picomatch: ^3 || ^4
+    peerDependenciesMeta:
+      picomatch:
+        optional: true
+    dependencies:
+      picomatch: 4.0.2
+    dev: false
 
   /fetch-blob@3.2.0:
     resolution: {integrity: sha512-7yAQpD2UMJzLi1Dqv7qFYnPbaPx7ZfFK6PiIxQ4PfkGPyNyl2Ugx+a/umUonmKqjhM4DnfbMvdX6otXq83soQQ==}
@@ -32875,6 +32917,11 @@ packages:
 
   /isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
+
+  /isexe@3.1.1:
+    resolution: {integrity: sha512-LpB/54B+/2J5hqQ7imZHfdU31OlgQqx7ZicVlkm9kzg9/w8GKLEcFfJl/t7DCEDueOyBAD6zCCwTO6Fzs0NoEQ==}
+    engines: {node: '>=16'}
+    dev: false
 
   /isobject@3.0.1:
     resolution: {integrity: sha512-WhB9zCku7EGTj/HQQRz5aUQEUeoQZH2bWcltRErOpymJ4boYE6wL9Tbr23krRPSZ+C5zqNSrSw+Cc7sZZ4b7vg==}
@@ -36338,6 +36385,11 @@ packages:
     resolution: {integrity: sha512-NuAESUOUMrlIXOfHKzD6bpPu3tYt3xvjNdRIQ+FeT0lNb4K8WR70CaDxhuNguS2XG+GjkyMwOzsN5ZktImfhLA==}
     engines: {node: '>= 0.4'}
 
+  /object-treeify@1.1.33:
+    resolution: {integrity: sha512-EFVjAYfzWqWsBMRHPMAXLCDIJnpMhdWAqR7xG6M6a2cs6PMFpl/+Z20w9zDW4vkxOFfddegBKq9Rehd0bxWE7A==}
+    engines: {node: '>= 10'}
+    dev: false
+
   /object.assign@4.1.5:
     resolution: {integrity: sha512-byy+U7gp+FVwmyzKPYhW2h5l3crpmGsxl7X2s8y43IgxvG4g3QZ6CffDtsNQy1WsmZpQbO+ybo0AlW7TY6DcBQ==}
     engines: {node: '>= 0.4'}
@@ -36692,7 +36744,6 @@ packages:
       typescript: 5.7.3
     transitivePeerDependencies:
       - zod
-    dev: false
 
   /ox@0.6.9(typescript@5.7.3)(zod@3.25.20):
     resolution: {integrity: sha512-wi5ShvzE4eOcTwQVsIPdFr+8ycyX+5le/96iAJutaZAvCes1J0+RvpEPg5QDPDiaR0XQQAvZVl7AwqQcINuUug==}
@@ -36712,6 +36763,7 @@ packages:
       typescript: 5.7.3
     transitivePeerDependencies:
       - zod
+    dev: false
 
   /oxc-parser@0.61.2:
     resolution: {integrity: sha512-ZJnAP7VLQhqqnfku7+gssTwmbQyfbZ552Vly4O2BMHkvDwfwLlPtAIYjMq57Lcj5HLmopI0oZlk7xTSML/YsZA==}
@@ -40262,7 +40314,7 @@ packages:
       '@aws-sdk/client-rds-data': 3.569.0
       '@aws-sdk/client-s3': 3.732.0
       '@aws-sdk/client-ssm': 3.554.0
-      '@aws-sdk/client-sts': 3.569.0(@aws-sdk/client-sso-oidc@3.569.0)
+      '@aws-sdk/client-sts': 3.569.0
       '@aws-sdk/config-resolver': 3.374.0
       '@aws-sdk/credential-providers': 3.554.0
       '@aws-sdk/middleware-retry': 3.374.0
@@ -40351,7 +40403,7 @@ packages:
       '@aws-sdk/client-rds-data': 3.569.0
       '@aws-sdk/client-s3': 3.732.0
       '@aws-sdk/client-ssm': 3.554.0
-      '@aws-sdk/client-sts': 3.569.0(@aws-sdk/client-sso-oidc@3.569.0)
+      '@aws-sdk/client-sts': 3.569.0
       '@aws-sdk/config-resolver': 3.374.0
       '@aws-sdk/credential-providers': 3.554.0
       '@aws-sdk/middleware-retry': 3.374.0
@@ -42785,7 +42837,6 @@ packages:
       - bufferutil
       - utf-8-validate
       - zod
-    dev: false
 
   /viem@2.27.2(typescript@5.7.3)(zod@3.25.20):
     resolution: {integrity: sha512-VwsB+RswcflbwBNPMvzTHuafDA51iT8v4SuIFcudTP2skmxcdodbgoOLP4dYELVnCzcedxoSJDOeext4V3zdnA==}
@@ -42808,6 +42859,7 @@ packages:
       - bufferutil
       - utf-8-validate
       - zod
+    dev: false
 
   /vite-node@0.34.6(@types/node@20.14.2):
     resolution: {integrity: sha512-nlBMJ9x6n7/Amaz6F3zJ97EBwR2FkzhBRxF5e+jE6LA3yi6Wtc2lyTij1OnDMIr34v5g/tVQtsVAzhT0jc5ygA==}
@@ -43420,6 +43472,14 @@ packages:
     hasBin: true
     dependencies:
       isexe: 2.0.0
+
+  /which@4.0.0:
+    resolution: {integrity: sha512-GlaYyEb07DPxYCKhKzplCWBJtvxZcZMrL+4UkrTSJHHPyZU4mYYTv3qaOe77H7EODLSSopAUFAc6W8U4yqvscg==}
+    engines: {node: ^16.13.0 || >=18.0.0}
+    hasBin: true
+    dependencies:
+      isexe: 3.1.1
+    dev: false
 
   /why-is-node-running@2.3.0:
     resolution: {integrity: sha512-hUrmaWBdVDcxvYqnyh09zunKzROWjbZTiNy8dBEjkS7ehEDQibXJ7XvlmtbwuTclUiIyN+CyXQD4Vmko8fNm8w==}

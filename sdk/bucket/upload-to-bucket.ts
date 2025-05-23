@@ -2,12 +2,11 @@ import * as path from 'path'
 import { readFileSync } from 'fs'
 import { GetBucketLocationCommand, PutObjectCommand, S3 } from '@aws-sdk/client-s3'
 import { fileURLToPath } from 'url'
-import dotenv from 'dotenv'
+
+require('@dotenvx/dotenvx').config({ path: ['../../.env', '../.env'], override: true })
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-
-dotenv.config({ debug: true, path: path.join(__dirname, '../../../.env') })
 
 const files = process.env.SDK_DISTRIBUTIONS_FILES
 const file = process.env.SDK_NAMED_REFERRALS_FILE

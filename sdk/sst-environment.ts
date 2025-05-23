@@ -1,7 +1,4 @@
-import { config } from 'dotenv'
 import { z } from 'zod/v4'
-
-config({ path: '.env', debug: false, override: true })
 
 // validate required envs are defined using zod library
 const envSchema = z.object({

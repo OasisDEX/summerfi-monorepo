@@ -43,7 +43,7 @@ describe('Armada Protocol Deposit', () => {
       rpcUrl,
       stake: true,
       amountValue: '1',
-      referralCode: '1',
+      // referralCode: '1',
     })
     // await runTests({
     //   swapToSymbol: undefined,
