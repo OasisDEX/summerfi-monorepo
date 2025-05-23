@@ -1,0 +1,25 @@
+{
+  "name": "@summerfi/sdk-infra",
+  "version": "0.0.1",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "sst:install": "npx sst install",
+    "sst:remove": "npx sst remove",
+    "sst:deploy": "npx sst deploy",
+    "sst:dev": "npx sst dev",
+    "sst:dev:basic": "npx sst dev --mode=basic"
+  },
+  "dependencies": {
+    "@dotenvx/dotenvx": "^1.44.1",
+    "aws-cdk-lib": "2.132.1",
+    "bignumber.js": "^9.3.0",
+    "sst": "2.48.5",
+    "viem": "2.27.2",
+    "zod": "^3.25.20",
+    "zx": "^8.5.4"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "8.10.149"
+  }
+}

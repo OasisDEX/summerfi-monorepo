@@ -11,9 +11,10 @@
   "dependencies": {
     "@aws-lambda-powertools/logger": "^2.0.4",
     "@summerfi/abis": "workspace:*",
-    "@summerfi/serverless-shared": "workspace:*",
     "@summerfi/prices-subgraph": "workspace:*",
+    "@summerfi/serverless-shared": "workspace:*",
     "@summerfi/triggers-shared": "workspace:*",
+    "bignumber.js": "^9.1.2",
     "viem": "2.27.2"
   },
   "devDependencies": {

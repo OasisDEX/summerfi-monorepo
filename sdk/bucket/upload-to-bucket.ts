@@ -2,16 +2,18 @@ import * as path from 'path'
 import { readFileSync } from 'fs'
 import { GetBucketLocationCommand, PutObjectCommand, S3 } from '@aws-sdk/client-s3'
 import { fileURLToPath } from 'url'
-import dotenv from 'dotenv'
+
+require('@dotenvx/dotenvx').config({ path: ['../../.env', '../.env'], override: true })
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-dotenv.config({ debug: true, path: path.join(__dirname, '../../../.env') })
-
 const files = process.env.SDK_DISTRIBUTIONS_FILES
-if (!files) {
-  throw new Error('No SDK_DISTRIBUTIONS_FILES specified')
+const file = process.env.SDK_NAMED_REFERRALS_FILE
+if (!files || !file) {
+  throw new Error(
+    'Missing SDK_DISTRIBUTIONS_FILES or SDK_NAMED_REFERRALS_FILE environment variable',
+  )
 }
 
 const bucketUrl = process.env.SDK_DISTRIBUTIONS_BASE_URL
@@ -19,10 +21,12 @@ if (!bucketUrl) {
   throw new Error('No SDK_DISTRIBUTIONS_BASE_URL specified')
 }
 
-async function uploadDistributions(fileNames: string[]) {
+async function uploadToBucket(fileNames: string[]) {
+  console.log('starting uploadDistributions')
   // Create an S3 client to get the bucket location
-  const s3Client = new S3()
+  const s3Client = new S3({})
   const bucketName = bucketUrl?.split('://')[1].split('.')[0]
+  console.log('bucketName', bucketName)
 
   // Get the bucket location
   const bucketLocation = await s3Client.send(new GetBucketLocationCommand({ Bucket: bucketName }))
@@ -30,6 +34,7 @@ async function uploadDistributions(fileNames: string[]) {
   if (!bucketRegion) {
     throw new Error('Failed to get bucket region')
   }
+  console.log('bucketRegion', bucketRegion)
 
   // Create an S3 client with the correct region
   const s3ClientWithRegion = new S3({ region: bucketRegion })
@@ -59,5 +64,6 @@ async function uploadDistributions(fileNames: string[]) {
 }
 
 const fileNames = files.split(',').map((file) => file.trim())
+fileNames.push(file.trim())
 
-uploadDistributions(fileNames)
+uploadToBucket(fileNames)

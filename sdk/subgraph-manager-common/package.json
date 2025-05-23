@@ -20,9 +20,6 @@
   },
   "dependencies": {
     "@summerfi/sdk-common": "workspace:*",
-    "@summerfi/sdk-server-common": "workspace:*",
-    "@summerfi/serverless-shared": "workspace:^",
-    "bignumber.js": "^9.1.2",
     "graphql-request": "^6.1.0",
     "graphql-tag": "^2.12.6"
   },

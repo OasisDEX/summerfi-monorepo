@@ -13,9 +13,10 @@
     "@aws-lambda-powertools/logger": "^2.0.4",
     "@aws-lambda-powertools/metrics": "^2.0.4",
     "@aws-lambda-powertools/tracer": "^2.0.4",
-    "@summerfi/summer-earn-protocol-subgraph": "workspace:*",
     "@summerfi/serverless-shared": "workspace:*",
+    "@summerfi/summer-earn-protocol-subgraph": "workspace:*",
     "bignumber.js": "^9.1.2",
+    "viem": "2.27.2",
     "zod": "^3.22.4"
   },
   "devDependencies": {

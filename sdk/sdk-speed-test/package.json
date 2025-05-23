@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "speed-test": "dotenv -e ../../.env -e ../../.env.local -- bun run src/index.ts"
+    "speed-test": "dotenvx -e ../../.env -e ../../.env.local -- bun run src/index.ts"
   },
   "dependencies": {
     "@summerfi/sdk-client": "workspace:*",

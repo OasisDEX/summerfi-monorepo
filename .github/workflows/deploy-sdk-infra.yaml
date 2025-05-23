@@ -9,8 +9,8 @@ on:
         default: 'staging'
         type: choice
         options:
-          - production
           - staging
+          - production
 
 permissions:
   id-token: write # This is required for requesting the JWT
@@ -59,6 +59,7 @@ jobs:
       SDK_DISTRIBUTIONS_BASE_URL: ${{ vars.SDK_DISTRIBUTIONS_BASE_URL }}
       SDK_DISTRIBUTIONS_FILES: ${{ vars.SDK_DISTRIBUTIONS_FILES }}
       SDK_NAMED_REFERRALS_FILE: ${{ vars.SDK_NAMED_REFERRALS_FILE }}
+      SDK_DEPLOYED_VERSIONS_MAP: ${{ vars.SDK_DEPLOYED_VERSIONS_MAP }}
 
     steps:
       - name: Send start notification to Discord
@@ -71,67 +72,62 @@ jobs:
               "url":"https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}"
             }]
         with:
-          args:
-            "${{ github.event.inputs.environment == 'production' && 'PRODUCTION' || 'STAGING' }}:
-            SDK_INFRA deployment `${{ github.run_id }}` started 🚀 (from branch `${{ github.ref_name
-            }}` by [${{ github.triggering_actor }}](https://github.com/${{ github.triggering_actor
-            }}))."
-
-      - name: Git clone the repository
-        uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 8.15.4
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'pnpm'
+          args: |
+            ${{ github.event.inputs.environment == 'production' && 'PRODUCTION' || 'STAGING' }}: SDK_INFRA deployment `${{ github.run_id }}` started 🚀 (from branch `${{ github.ref_name }}` by [${{ github.triggering_actor }}](https://github.com/${{ github.triggering_actor }})).
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.DEPLOY_OIDC_ROLE_LAMBDA }}
           aws-region: ${{ secrets.AWS_LAMBDAS_REGION }}
 
-      - name: Install dependencies
-        run: pnpm install --prod
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Deploy SDK Core
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install dependencies
+        run: pnpm prebuild:sdk
+
+      - name: Deploy SDK
         working-directory: sdk
         run: |
-          npx sst install
-          npx sst deploy --stage ${{ github.event.inputs.environment }}
+          npx sst deploy --stage=${{ github.event.inputs.environment }}-versioned
 
       - name: Send success notification to Discord
         uses: Ilshidur/action-discord@0.3.2
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_SDK_DEPLOY }}
         with:
-          args:
-            "${{ github.event.inputs.environment == 'production' && 'PRODUCTION' || 'STAGING' }}:
-            SDK_INFRA deployment successful 🎉 - `${{ github.run_id }}`"
-
+          args: |
+            ${{ github.event.inputs.environment == 'production' && 'PRODUCTION' || 'STAGING' }}: SDK_INFRA deployment successful 🎉 - `${{ github.run_id }}`
       - name: Send failure notification to Discord
         if: failure()
         uses: Ilshidur/action-discord@0.3.2
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_SDK_DEPLOY }}
         with:
-          args:
-            "${{ github.event.inputs.environment == 'production' && 'PRODUCTION' || 'STAGING' }}:
-            SDK_INFRA deployment failed ❌ - `${{ github.run_id }}`"
-
+          args: |
+            ${{ github.event.inputs.environment == 'production' && 'PRODUCTION' || 'STAGING' }}: SDK_INFRA deployment failed ❌ - `${{ github.run_id }}`
       - name: Send cancellation notification to Discord
         if: cancelled()
         uses: Ilshidur/action-discord@0.3.2
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_SDK_DEPLOY }}
         with:
-          args:
-            "${{ github.event.inputs.environment == 'production' && 'PRODUCTION' || 'STAGING' }}:
-            SDK_INFRA deployment cancelled 🚫 - `${{ github.run_id }}`"
+          args: |
+            ${{ github.event.inputs.environment == 'production' && 'PRODUCTION' || 'STAGING' }}: SDK_INFRA deployment cancelled 🚫 - `${{ github.run_id }}`
 
       - name: Trigger e2e tests in e2e-tests repository
         if: ${{ github.event.inputs.environment == 'staging' }}
