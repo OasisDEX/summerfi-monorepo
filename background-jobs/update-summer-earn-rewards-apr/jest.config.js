@@ -12,4 +12,6 @@ module.exports = {
       },
     ],
   },
+  // Handle path mapping from tsconfig
+  modulePathIgnorePatterns: ['<rootDir>/dist/'],
 }

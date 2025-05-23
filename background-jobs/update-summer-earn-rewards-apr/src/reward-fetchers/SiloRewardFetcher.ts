@@ -1,7 +1,7 @@
 import { Product } from '@summerfi/summer-earn-rates-subgraph'
 import { ChainId } from '@summerfi/serverless-shared'
 import { Logger } from '@aws-lambda-powertools/logger'
-import { IRewardFetcher } from './IRewardFetcher'
+import { BaseRewardFetcher } from './BaseRewardFetcher'
 import { RewardRate } from '../rewards-service'
 
 interface SiloProgram {
@@ -12,23 +12,21 @@ interface SiloProgram {
 interface SiloVaultReward {
   vaultAddress: string
   programs?: SiloProgram[]
-
   chainKey?: string
   protocolKey?: string
   vaultSymbol?: string
   vaultName?: string
 }
 
-export class SiloRewardFetcher implements IRewardFetcher {
+export class SiloRewardFetcher extends BaseRewardFetcher {
   private readonly SILO_API_URL = 'https://v2.silo.finance/api/detailed-vault'
-  private readonly logger: Logger
   private readonly chainIdToSiloNetworkName: Partial<Record<ChainId, string>> = {
     [ChainId.SONIC]: 'sonic',
   }
   private readonly REQUEST_DELAY_MS = 100 // Delay between requests to be gentle on the API
 
   constructor(logger: Logger) {
-    this.logger = logger
+    super(logger)
   }
 
   async getRewardRates(
@@ -39,7 +37,7 @@ export class SiloRewardFetcher implements IRewardFetcher {
       const networkName = this.chainIdToSiloNetworkName[chainId]
       if (!networkName) {
         this.logger.warn(`[SiloRewardFetcher] No network name found for chainId: ${chainId}`)
-        return Object.fromEntries(products.map((product) => [product.id, []]))
+        return this.createEmptyResults(products)
       }
 
       const productToSiloResponse: Record<string, SiloVaultReward> = {}
@@ -52,6 +50,8 @@ export class SiloRewardFetcher implements IRewardFetcher {
           )
           const response = await this.fetchWithRetry(
             `${this.SILO_API_URL}/${networkName}-${product.pool}`,
+            undefined,
+            { nonRetryableStatuses: [500] }, // Don't retry 500 errors for Silo (invalid vault addresses)
           )
 
           const rawData = await response.json()
@@ -66,7 +66,7 @@ export class SiloRewardFetcher implements IRewardFetcher {
 
           // Add a small delay between requests to avoid overwhelming the API
           if (products.indexOf(product) < products.length - 1) {
-            await new Promise((resolve) => setTimeout(resolve, this.REQUEST_DELAY_MS))
+            await this.delay(this.REQUEST_DELAY_MS)
           }
         } catch (error) {
           this.logger.error(`[SiloRewardFetcher] Error fetching data for vault ${product.pool}:`, {
@@ -90,8 +90,8 @@ export class SiloRewardFetcher implements IRewardFetcher {
             .filter((program) => program.rewardTokenSymbol && program.apr)
             .map((program, index) => {
               // Convert APR from 18 decimals and multiply by 100 for percentage
-              const parsedApr = parseFloat(program.apr)
-              if (isNaN(parsedApr)) {
+              const parsedApr = this.validateAndParseNumber(program.apr, 'APR')
+              if (parsedApr === null) {
                 this.logger.warn(
                   `[SiloRewardFetcher] Invalid APR value for ${program.rewardTokenSymbol}: ${program.apr}`,
                 )
@@ -121,50 +121,7 @@ export class SiloRewardFetcher implements IRewardFetcher {
       this.logger.error('[SiloRewardFetcher] Error fetching Silo rewards:', {
         error: error as Error,
       })
-      return Object.fromEntries(products.map((product) => [product.id, []]))
+      return this.createEmptyResults(products)
     }
-  }
-
-  private async fetchWithRetry(url: string, options?: RequestInit): Promise<Response> {
-    const maxRetries = 5
-    const initialDelay = 2000 // 2 seconds
-    const backoffFactor = 2
-    let attempt = 0
-
-    while (attempt <= maxRetries) {
-      try {
-        const response = await fetch(url, options)
-
-        // Handle 500 errors without retry (wrong address)
-        if (response.status === 500) {
-          this.logger.warn(
-            `[SiloRewardFetcher] 500 error for ${url} - likely invalid vault address`,
-          )
-          throw new Error(`Invalid vault address: ${response.status}`)
-        }
-
-        if (response.ok) return response
-
-        // For other errors, continue with retry logic
-        const text = await response.text()
-        throw new Error(`HTTP error! status: ${response.status} ${text}`)
-      } catch (error) {
-        // If it's a 500 error, don't retry
-        if (error instanceof Error && error.message.includes('Invalid vault address')) {
-          throw error
-        }
-
-        attempt++
-        if (attempt > maxRetries) {
-          this.logger.error(`[SiloRewardFetcher] Max retries (${maxRetries}) reached for ${url}`)
-          throw error
-        }
-
-        const delay = initialDelay * Math.pow(backoffFactor, attempt - 1)
-        this.logger.warn(`[SiloRewardFetcher] Attempt ${attempt} failed. Retrying in ${delay}ms...`)
-        await new Promise((resolve) => setTimeout(resolve, delay))
-      }
-    }
-    throw new Error('Unexpected error in fetchWithRetry')
   }
 }

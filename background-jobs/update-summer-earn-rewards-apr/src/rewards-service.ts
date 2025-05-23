@@ -6,6 +6,10 @@ import { Protocol } from '.'
 import { ChainId, NetworkByChainID } from '@summerfi/serverless-shared'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { SiloRewardFetcher } from './reward-fetchers/SiloRewardFetcher'
+import { MorphoRewardFetcher } from './reward-fetchers/MorphoRewardFetcher'
+import { EulerRewardFetcher } from './reward-fetchers/EulerRewardFetcher'
+import { AaveRewardFetcher } from './reward-fetchers/AaveRewardFetcher'
+import { GearboxRewardFetcher } from './reward-fetchers/GearboxRewardFetcher'
 
 const morphoTokenByChainId: Partial<Record<ChainId, string>> = {
   [ChainId.BASE]: '0xBAa5CC21fd487B8Fcc2F632f3F4E8D37262a0842',
@@ -112,11 +116,19 @@ export class RewardsService {
   private readonly logger: Logger
   private readonly ratesSubgraphClient: RatesSubgraphClient
   private readonly siloRewardFetcher: SiloRewardFetcher
+  private readonly morphoRewardFetcher: MorphoRewardFetcher
+  private readonly eulerRewardFetcher: EulerRewardFetcher
+  private readonly aaveRewardFetcher: AaveRewardFetcher
+  private readonly gearboxRewardFetcher: GearboxRewardFetcher
 
   constructor(logger: Logger, ratesSubgraphClient: RatesSubgraphClient) {
     this.logger = logger
     this.ratesSubgraphClient = ratesSubgraphClient
     this.siloRewardFetcher = new SiloRewardFetcher(logger)
+    this.morphoRewardFetcher = new MorphoRewardFetcher(logger)
+    this.eulerRewardFetcher = new EulerRewardFetcher(logger)
+    this.aaveRewardFetcher = new AaveRewardFetcher(logger)
+    this.gearboxRewardFetcher = new GearboxRewardFetcher(logger)
   }
 
   async getRewardRates(
@@ -142,7 +154,7 @@ export class RewardsService {
 
     // Process Morpho products in batch
     if (protocolGroups[Protocol.Morpho]?.length) {
-      const morphoResults = await this.getMorphoRewardsBatch(
+      const morphoResults = await this.morphoRewardFetcher.getRewardRates(
         protocolGroups[Protocol.Morpho],
         chainId,
       )
@@ -151,12 +163,15 @@ export class RewardsService {
 
     // Process Euler products in batch
     if (protocolGroups[Protocol.Euler]?.length) {
-      const eulerResults = await this.getEulerRewardsBatch(protocolGroups[Protocol.Euler], chainId)
+      const eulerResults = await this.eulerRewardFetcher.getRewardRates(
+        protocolGroups[Protocol.Euler],
+        chainId,
+      )
       Object.assign(results, eulerResults)
     }
 
     if (protocolGroups[Protocol.Aave]?.length) {
-      const aaveResults = await this.getAaveMeritRewardsBatch(
+      const aaveResults = await this.aaveRewardFetcher.getRewardRates(
         protocolGroups[Protocol.Aave],
         chainId,
       )
@@ -164,7 +179,7 @@ export class RewardsService {
     }
 
     if (protocolGroups[Protocol.Gearbox]?.length) {
-      const gearboxResults = await this.getGearboxRewardsBatch(
+      const gearboxResults = await this.gearboxRewardFetcher.getRewardRates(
         protocolGroups[Protocol.Gearbox],
         chainId,
       )
