@@ -1,5 +1,8 @@
 name: Deploy Earn Protocol Static Landing Page Staging
 on:
+  push:
+    branches:
+      - dev
   workflow_dispatch:
 
 jobs:
