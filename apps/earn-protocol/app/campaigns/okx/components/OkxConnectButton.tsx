@@ -164,7 +164,11 @@ export const OkxConnectButton = () => {
       >
         {!isOkxWalletAvailable ? 'Get OKX wallet now' : <>&nbsp;</>}
         {isOkxWalletSetUp && isSameWallet ? 'Earn now' : <>&nbsp;</>}
-        {isConnected && !isSameWallet ? 'Click to connect your OKX Wallet' : <>&nbsp;</>}
+        {isConnected && !isSameWallet && isOkxWalletAvailable ? (
+          'Click to connect your OKX Wallet'
+        ) : (
+          <>&nbsp;</>
+        )}
       </Text>
     </>
   )
