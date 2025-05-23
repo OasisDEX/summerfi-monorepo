@@ -49,7 +49,13 @@ export const environmentVariables = parsedEnv.data
 
 export const sdkDeployedVersionsMap = z
   .string()
-  .transform((str) => JSON.parse(str))
+  .transform((str) => {
+    try {
+      return JSON.parse(str)
+    } catch (error) {
+      console.error('Error parsing SDK_DEPLOYED_VERSIONS_MAP:', str, error)
+    }
+  })
   .pipe(z.json())
   .pipe(
     z.record(
