@@ -4,24 +4,25 @@ import { formatCryptoBalance } from '@summerfi/app-utils'
 import clsx from 'clsx'
 
 import { Card } from '@/components/atoms/Card/Card'
+import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { Text } from '@/components/atoms/Text/Text'
 import { getVaultsProtocolsList } from '@/helpers/get-vaults-protocols-list'
 
 import classNames from './ProtocolStats.module.css'
 
 interface ProtocolStatsProps {
-  vaultsList: SDKVaultsListType
+  vaultsList?: SDKVaultsListType
   noMargin?: boolean
 }
 
 export const ProtocolStats: FC<ProtocolStatsProps> = ({ vaultsList, noMargin = false }) => {
-  const supportedProtocolsCount = getVaultsProtocolsList(vaultsList).length
-  const totalAssets = vaultsList.reduce((acc, vault) => acc + Number(vault.totalValueLockedUSD), 0)
+  const supportedProtocolsCount = getVaultsProtocolsList(vaultsList ?? []).length
+  const totalAssets = vaultsList?.reduce((acc, vault) => acc + Number(vault.totalValueLockedUSD), 0)
 
   const data = [
     {
       title: 'Total deposits',
-      value: `$${formatCryptoBalance(totalAssets)}`,
+      value: `$${formatCryptoBalance(totalAssets ?? 0)}`,
     },
     {
       title: 'Users',
@@ -54,7 +55,11 @@ export const ProtocolStats: FC<ProtocolStatsProps> = ({ vaultsList, noMargin = f
               {item.title}
             </Text>
             <Text as="h3" variant="h3">
-              {item.value}
+              {vaultsList ? (
+                item.value
+              ) : (
+                <SkeletonLine width={146} height={25} style={{ margin: '7px 0 10px 0' }} />
+              )}
             </Text>
           </div>
           {index !== data.length - 1 && <div className={classNames.divider} />}

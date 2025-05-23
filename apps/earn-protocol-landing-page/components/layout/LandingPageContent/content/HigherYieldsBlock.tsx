@@ -197,33 +197,43 @@ const higherYieldsBlockSectionsKeys = Object.keys(
 ) as (keyof typeof higherYieldsBlockSections)[]
 
 interface HigherYieldsBlockProps {
-  vaultsList: SDKVaultsListType
+  vaultsList?: SDKVaultsListType
 }
 
 export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({ vaultsList }) => {
   const totalRebalancesCount = useMemo(() => {
-    return vaultsList.reduce((acc, vault) => acc + Number(vault.rebalanceCount), 0)
+    return vaultsList?.reduce((acc, vault) => acc + Number(vault.rebalanceCount), 0)
   }, [vaultsList])
 
   const totalLiquidity = useMemo(() => {
-    return vaultsList.reduce((acc, vault) => acc + Number(vault.withdrawableTotalAssetsUSD), 0)
+    return vaultsList?.reduce((acc, vault) => acc + Number(vault.withdrawableTotalAssetsUSD), 0)
   }, [vaultsList])
 
-  const totalVaultsCount = vaultsList.length
+  const totalVaultsCount = vaultsList?.length
 
   const savedTimeInHours = useMemo(
-    () => getRebalanceSavedTimeInHours(totalRebalancesCount),
+    () => getRebalanceSavedTimeInHours(totalRebalancesCount ?? 0),
     [totalRebalancesCount],
   )
-  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(vaultsList), [vaultsList])
+  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(vaultsList ?? []), [vaultsList])
 
   const totalAssets = useMemo(() => {
-    return vaultsList.reduce((acc, vault) => acc + Number(vault.totalValueLockedUSD), 0)
+    return vaultsList?.reduce((acc, vault) => acc + Number(vault.totalValueLockedUSD), 0)
   }, [vaultsList])
 
-  const supportedProtocolsCount = getVaultsProtocolsList(vaultsList).length
+  const supportedProtocolsCount = getVaultsProtocolsList(vaultsList ?? []).length
 
   const sectionTabs = useMemo(() => {
+    if (
+      !vaultsList ||
+      !totalAssets ||
+      !totalRebalancesCount ||
+      !totalVaultsCount ||
+      !totalLiquidity
+    ) {
+      return false
+    }
+
     return higherYieldsBlockSectionsKeys.map((sectionKey) => ({
       id: sectionKey,
       title: higherYieldsBlockSections[sectionKey].title,
@@ -245,6 +255,7 @@ export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({ vaultsList
     totalLiquidity,
     totalRebalancesCount,
     totalVaultsCount,
+    vaultsList,
   ])
 
   return (
@@ -256,7 +267,7 @@ export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({ vaultsList
           with AI.
         </Text>
       </div>
-      <SectionTabs sections={sectionTabs} />
+      {sectionTabs ? <SectionTabs sections={sectionTabs} /> : null}
     </div>
   )
 }

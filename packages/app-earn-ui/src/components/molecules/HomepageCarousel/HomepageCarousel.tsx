@@ -15,8 +15,8 @@ import { useLocalConfig } from '@/contexts/LocalConfigContext/LocalConfigContext
 import homepageCarouselStyles from './HomepageCarousel.module.css'
 
 type HomepageCarouselProps = {
-  vaultsList: SDKVaultishType[]
-  vaultsApyByNetworkMap: {
+  vaultsList?: SDKVaultishType[]
+  vaultsApyByNetworkMap?: {
     [key: `${string}-${number}`]: VaultApyData
   }
 }
@@ -79,18 +79,22 @@ export const HomepageCarousel = ({
         </div>
         <div className={homepageCarouselStyles.emblaViewport} ref={emblaRef}>
           <div className={homepageCarouselStyles.emblaContainer}>
-            {vaultsList.map((vault, vaultIndex) => (
+            {(vaultsList
+              ? vaultsList
+              : (Array.from({ length: 10 }) as (SDKVaultishType | undefined)[])
+            ).map((vault, vaultIndex) => (
               <div
                 className={clsx(homepageCarouselStyles.emblaSlide, 'embla__slide')}
-                key={`VaultCardHomepage_${vault.id}_${vault.protocol.network}`}
+                key={`VaultCardHomepage_${vault?.id ?? vaultIndex}_${vault?.protocol.network}`}
               >
                 <div className={homepageCarouselStyles.emblaSlideNumber}>
                   <VaultCardHomepage
-                    vault={vault}
+                    vault={vault as SDKVaultishType | undefined}
                     onSelect={selectSlide(vaultIndex)}
                     vaultsApyByNetworkMap={vaultsApyByNetworkMap}
                     selected={selectedIndex === vaultIndex}
                     sumrPrice={estimatedSumrPrice}
+                    isLoading={!vaultsList}
                   />
                 </div>
               </div>
@@ -98,7 +102,7 @@ export const HomepageCarousel = ({
           </div>
         </div>
         <div className={homepageCarouselStyles.dotsBottom}>
-          {vaultsList.map((_, idx) => (
+          {vaultsList?.map((_, idx) => (
             <div
               key={idx}
               className={`${homepageCarouselStyles.dot} ${idx === selectedIndex ? homepageCarouselStyles.dotActive : ''}`}
