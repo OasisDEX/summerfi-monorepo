@@ -66,6 +66,7 @@ export default $config({
         backendUrls.push(backendUrl)
       } catch (error) {
         console.error(`Failed to create backend for version ${version}:`, error)
+        throw error
       }
     }
 
