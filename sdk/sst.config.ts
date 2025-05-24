@@ -5,8 +5,9 @@ import { version as clientPkgVersion } from './sdk-client/bundle/package.json'
 import { createBackend } from './create-backend'
 import { Api, Bucket } from 'sst/constructs'
 import { RemovalPolicy } from 'aws-cdk-lib'
+import { config } from '@dotenvx/dotenvx'
 
-require('@dotenvx/dotenvx').config({ path: ['../.env', '.env'], override: true })
+config({ path: ['../.env', '.env'], override: true, ignore: ['MISSING_ENV_FILE'] })
 
 export default {
   config(input) {
