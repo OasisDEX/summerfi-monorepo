@@ -25,7 +25,6 @@ jobs:
       EARN_MIXPANEL_KEY: ${{ secrets.EARN_MIXPANEL_KEY }}
       NEXT_PUBLIC_EARN_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_EARN_MIXPANEL_KEY }}
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
-      SDK_API_URL: ${{ secrets.SDK_API_URL }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3

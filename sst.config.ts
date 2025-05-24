@@ -4,6 +4,8 @@ import { ExternalAPI } from './stacks/partners-stack'
 import { SdkAPI } from './stacks/sdk-stack'
 import { $, chalk, echo } from 'zx'
 
+require('dotenv').config({ path: ['../.env', 'sdk/.env'], override: true })
+
 const availableStage = ['dev', 'staging', 'production', 'armada-prod']
 
 enum App {
@@ -145,7 +147,7 @@ export const sstConfig: SSTConfig = {
       throw new Error('Please specify stage or set SST_USER env variable')
     }
 
-    if (_input.stage && !availableStage.includes(_input.stage)) {
+    if (_input.stage && !availableStage.find((stage) => _input.stage?.startsWith(stage))) {
       throw new Error('Invalid stage, use one of: ' + availableStage.join(', '))
     }
 

@@ -52,7 +52,7 @@ jobs:
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
       NEXT_TELEMETRY_DISABLED: ${{ secrets.NEXT_TELEMETRY_DISABLED }}
       FORECAST_API_URL: ${{ secrets.FORECAST_API_URL }}
-      SDK_API_URL: ${{ secrets.SDK_API_URL }}
+      SDK_API_URL: ${{ vars.SDK_API_URL }}
       NEWSLETTER_API_KEY: ${{ secrets.NEWSLETTER_API_KEY }}
       NEWSLETTER_PUBLICATION_ID: ${{ secrets.NEWSLETTER_PUBLICATION_ID }}
       NEWSLETTER_ENDPOINT: ${{ secrets.NEWSLETTER_ENDPOINT }}
@@ -131,7 +131,7 @@ jobs:
                        --build-arg NEXT_PUBLIC_EARN_MIXPANEL_KEY=${{ secrets.NEXT_PUBLIC_EARN_MIXPANEL_KEY }} \
                        --build-arg NEXT_TELEMETRY_DISABLED=${{ secrets.NEXT_TELEMETRY_DISABLED }} \
                        --build-arg FORECAST_API_URL=${{ secrets.FORECAST_API_URL }} \
-                       --build-arg SDK_API_URL=${{ secrets.SDK_API_URL }} \
+                       --build-arg SDK_API_URL=${{ vars.SDK_API_URL }} \
                        --build-arg FUNCTIONS_API_URL=${{ secrets.FUNCTIONS_API_URL }} \
                        --build-arg NEWSLETTER_API_KEY=${{ secrets.NEWSLETTER_API_KEY }} \
                        --build-arg NEWSLETTER_PUBLICATION_ID=${{ secrets.NEWSLETTER_PUBLICATION_ID }} \
