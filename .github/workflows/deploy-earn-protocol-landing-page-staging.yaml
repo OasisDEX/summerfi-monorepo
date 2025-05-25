@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-22.04
     permissions:
       id-token: write
-    environment: production
+    environment: staging
     needs: [changes]
     # always() is needed because the 'changes' job is skipped on manual triggers (workflow_dispatch)
     # Without always(), this job would also be skipped when 'changes' is skipped
@@ -115,7 +115,7 @@ jobs:
           aws_region: ${{ env.AWS_REGION }}
           source: 'apps/earn-protocol-landing-page/out'
           dest: 's3://${{ vars.LANDING_PAGE_BUCKET_NAME }}/'
-          flags: --acl public-read --recursive
+          flags: --recursive
 
       - name: Invalidate CloudFront
         run: |
