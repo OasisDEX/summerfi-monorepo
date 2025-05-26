@@ -89,6 +89,10 @@ export type IconNamesList =
   | 'link_circle_color'
   | 'link_circle_mono'
   | 'link'
+  | 'lock'
+  | 'lock_open_beach_colorful'
+  | 'lock_beach_colorful'
+  | 'lock_open'
   | 'lrc_circle_color'
   | 'lrc_color'
   | 'lrc'
@@ -313,6 +317,7 @@ export type IconNamesList =
   | 'wsuperoethb'
   | 'wallet'
   | 'users_beach_club'
+  | 'beach_club_rewards'
 
 export type TokenSymbolsList =
   | 'AAVE'

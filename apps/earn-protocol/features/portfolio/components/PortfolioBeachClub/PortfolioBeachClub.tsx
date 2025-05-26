@@ -2,6 +2,7 @@ import { Text } from '@summerfi/app-earn-ui'
 
 import { BeachClubBigBanner } from '@/features/beach-club/components/BeachClubBigBannner/BeachClubBigBanner'
 import { BeachClubReferAndEarn } from '@/features/beach-club/components/BeachClubReferAndEarn/BeachClubReferAndEarn'
+import { BeachClubRewards } from '@/features/beach-club/components/BeachClubRewards/BeachClubRewards'
 
 import classNames from './PortfolioBeachClub.module.css'
 
@@ -16,6 +17,7 @@ export const PortfolioBeachClub = () => {
       </Text>
       <BeachClubBigBanner />
       <BeachClubReferAndEarn />
+      <BeachClubRewards />
     </div>
   )
 }
