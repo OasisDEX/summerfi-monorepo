@@ -1,7 +1,6 @@
 import {
   Audits,
   BigGradientBox,
-  Button,
   EffortlessAccessBlock,
   EnhancedRiskManagementCampaign,
   FaqSection,
@@ -13,6 +12,7 @@ import {
 import { parseServerResponseToClient } from '@summerfi/app-utils'
 import Image from 'next/image'
 
+import { OkxConnectButton } from '@/app/campaigns/okx/components/OkxConnectButton'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
@@ -41,7 +41,7 @@ const quests = [
     id: 'quest-1',
     title: 'Quest 1 - Deposit USDC, EURC or ETH on Base',
     content: (
-      <div className={okxCampaignStyles.sectionTabDesription}>
+      <div className={okxCampaignStyles.sectionTabDescription}>
         <Text variant="p1semi" as="p">
           Quest 1 - Deposit USDC, EURC or ETH on Base
         </Text>
@@ -59,7 +59,7 @@ const quests = [
     id: 'quest-2',
     title: 'Quest 2 - Keep earning for 7 days',
     content: (
-      <div className={okxCampaignStyles.sectionTabDesription}>
+      <div className={okxCampaignStyles.sectionTabDescription}>
         <Text variant="p1semi" as="p">
           Quest 2 - Keep earning for 7 days
         </Text>
@@ -77,7 +77,7 @@ const quests = [
     id: 'quest-3',
     title: 'Quest 3 - Claim SUMR tokens',
     content: (
-      <div className={okxCampaignStyles.sectionTabDesription}>
+      <div className={okxCampaignStyles.sectionTabDescription}>
         <Text variant="p1semi" as="p">
           Quest 3 - Claim SUMR tokens
         </Text>
@@ -95,7 +95,7 @@ const quests = [
     id: 'quest-4',
     title: 'Quest 4 - Stake and Delegate your earned SUMR',
     content: (
-      <div className={okxCampaignStyles.sectionTabDesription}>
+      <div className={okxCampaignStyles.sectionTabDescription}>
         <Text variant="p1semi" as="p">
           Quest 4 - Stake and Delegate SUMR tokens
         </Text>
@@ -139,7 +139,7 @@ export default async function OkxCampaignPage() {
           best yields from the best protocols automatically. Plus, complete the exclusive OKX quests
           and earn bonus $SUMR.
         </Text>
-        <Button variant="primaryLargeColorful">Connect your OKX Wallet</Button>
+        <OkxConnectButton />
       </div>
       <ProtocolStats vaultsList={vaultsWithConfig} noMargin />
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '64px' }}>

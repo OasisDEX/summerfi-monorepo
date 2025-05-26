@@ -11,14 +11,16 @@
     "build-rays-frontend": "turbo run build:apps --cache-dir=.turbo --filter=@summerfi/rays-dashboard",
     "build-earn-frontend": "turbo run build:apps --cache-dir=.turbo --filter=@summerfi/earn-protocol",
     "build-earn-frontend-landing": "turbo run build:apps --cache-dir=.turbo --filter=@summerfi/earn-protocol-landing-page",
-    "prebuild:sdk": "turbo run prebuild --cache-dir=.turbo --filter=./packages/* --filter=./sdk/*",
-    "dev:sdk": "turbo run dev  --concurrency=100 --cache-dir=.turbo --filter=./packages/* --filter=./sdk/*",
-    "build:sdk": "turbo run build --cache-dir=.turbo --filter=./packages/* --filter=./sdk/*",
+    "prebuild:sdk": "turbo run prebuild --cache-dir=.turbo --filter=./sdk/*",
+    "build:sdk": "turbo run build --cache-dir=.turbo --filter=./sdk/*",
+    "test:sdk": "turbo run test --cache-dir=.turbo --filter=./sdk/*",
+    "lint:sdk": "turbo run lint --cache-dir=.turbo --filter=./sdk/*",
+    "dev:sdk": "cd sdk && pnpm run dev",
+    "sst:deploy:sdk:staging": "sst deploy --stage staging --app sdk",
+    "sst:deploy:sdk:armada-prod": "sst deploy --stage armada-prod --app sdk",
     "lint": "turbo run lint --cache-dir=.turbo",
-    "lint:sdk": "turbo run lint --cache-dir=.turbo --filter=./packages/* --filter=./sdk/*",
     "lint:fix": "turbo run lint:fix",
     "test": "turbo run test --cache-dir=.turbo",
-    "test:sdk": "turbo run test --cache-dir=.turbo --filter=./packages/* --filter=./sdk/*",
     "test:integration": "turbo run test:integration --cache-dir=.turbo",
     "check-circular": "turbo run check-circular --cache-dir=.turbo",
     "db:migrate": "turbo run db:migrate --cache-dir=.turbo",
@@ -29,11 +31,6 @@
     "sst:deploy:dev": "sst deploy --app summerfi-stack",
     "sst:deploy:staging": "sst deploy --stage staging --app summerfi-stack",
     "sst:deploy:prod": "sst deploy --stage production --app summerfi-stack",
-    "sst:dev:sdk": "sst dev --app sdk",
-    "sst:build:sdk": "sst build --app sdk",
-    "sst:deploy:sdk:staging": "sst deploy --stage staging --app sdk",
-    "sst:deploy:sdk:armada-prod": "sst deploy --stage armada-prod --app sdk",
-    "sst:deploy:sdk:oasis-borrow": "sst deploy --stage production --app sdk",
     "remove": "sst remove",
     "console": "sst console",
     "format": "prettier --cache --check \"./**/*.{ts,tsx,js,jsx,json}\"",
@@ -80,14 +77,9 @@
     "zx": "^8.3.0"
   },
   "name": "summerfi-monorepo",
-  "packageManager": "pnpm@8.15.4",
+  "packageManager": "pnpm@8.15.9+sha256.daa27a0b541bc635323ff96c2ded995467ff9fe6d69ff67021558aa9ad9dcc36",
   "engines": {
     "node": ">=20"
-  },
-  "dependencies": {
-    "bignumber.js": "^9.1.2",
-    "viem": "2.23.11",
-    "zod": "^3.22.4"
   },
   "pnpm": {
     "overrides": {

@@ -1,7 +1,4 @@
 import { Api, Function, StackContext } from 'sst/constructs'
-import { config } from 'dotenv'
-
-config({ path: './sdk/.env', debug: true, override: true })
 
 const {
   SDK_LOGGING_ENABLED = 'false',

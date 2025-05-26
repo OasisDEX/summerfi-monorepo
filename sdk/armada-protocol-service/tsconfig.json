@@ -21,8 +21,7 @@
       ],
       "@summerfi/blockchain-client-provider": [
         "node_modules/@summerfi/blockchain-client-provider/src/index.ts"
-      ],
-      "@summerfi/serverless-shared/*": ["node_modules/@summerfi/serverless-shared/src/*"]
+      ]
     }
   },
   "include": ["src/**/*.ts", "tests/**/*.ts", "e2e/**/*.ts", "src/**/*.json"],

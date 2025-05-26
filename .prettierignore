@@ -18,6 +18,7 @@ artifacts
 **/.sst/**
 **/.turbo/**
 **/*.module.css.d.ts
+sst-env.d.ts
 
 packages/**/src/generated
 sdk/**/src/generated
@@ -26,6 +27,5 @@ sdk/**/src/generated
 packages/**/types/generated
 apps/**/types/generated/*
 armada-protocol/contracts/**/*
-apps/armada-protocol-dashboard/sst-env.d.ts
 apps/earn-protocol/graphql/**/*
 apps/earn-protocol-landing-page/graphql/**/*

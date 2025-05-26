@@ -3,8 +3,7 @@
   "version": "0.0.1",
   "exports": {
     ".": {
-      "import": "./src/index.ts",
-      "types": "./src/index.d.ts"
+      "import": "./src/index.ts"
     }
   },
   "scripts": {
@@ -31,7 +30,6 @@
     "@summerfi/protocol-plugins-common": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/sdk-server-common": "workspace:*",
-    "@summerfi/serverless-shared": "workspace:*",
     "@summerfi/simulator-service": "workspace:^",
     "@summerfi/swap-common": "workspace:*",
     "@summerfi/swap-service": "workspace:*",

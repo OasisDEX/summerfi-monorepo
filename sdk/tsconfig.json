@@ -1,0 +1,12 @@
+{
+  "extends": "@summerfi/typescript-config/tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "dist",
+    "baseUrl": ".",
+    "resolveJsonModule": true,
+    "esModuleInterop": true
+  },
+  "include": ["*.ts", "sdk-client/bundle/package.json", "sdk-common/bundle/package.json"],
+  "exclude": ["node_modules", "dist"]
+}

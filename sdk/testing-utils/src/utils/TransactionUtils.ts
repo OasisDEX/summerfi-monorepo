@@ -1,5 +1,5 @@
+import { getRpcGatewayEndpoint } from '@summerfi/blockchain-client-provider'
 import { IChainInfo, Maybe, Transaction } from '@summerfi/sdk-common'
-import { getRpcGatewayEndpoint } from '@summerfi/serverless-shared'
 import {
   Account,
   Chain,

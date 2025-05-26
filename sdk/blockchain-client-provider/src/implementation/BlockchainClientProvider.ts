@@ -4,9 +4,16 @@ import { arbitrum, base, mainnet, optimism, sonic } from 'viem/chains'
 import { IBlockchainClient, IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { ChainIds, type IChainInfo } from '@summerfi/sdk-common'
-import { type IRpcConfig } from '@summerfi/serverless-shared/getRpcGatewayEndpoint'
 import { assert } from 'console'
 import { getForkUrl } from './getForkUrl'
+
+interface IRpcConfig {
+  skipCache: boolean
+  skipMulticall: boolean
+  skipGraph: boolean
+  stage: string
+  source: string
+}
 
 /**
  * RPC configuration for the RPC Gateway
