@@ -116,9 +116,12 @@ jobs:
       - name: Copy LP static files to a bucket 🪣
         run: |
           aws s3 sync apps/earn-protocol-landing-page/out s3://${{ vars.LANDING_PAGE_BUCKET_NAME }}/ \
-          --delete \ # Remove files from destination that are not in the source
-          --acl public-read \ # Make uploaded files publicly readable
-          --cache-control max-age=31536000,public # Set cache control headers for long-term caching
+          # Remove files from destination that are not in the source
+          --delete \
+          # Make uploaded files publicly readable
+          --acl public-read \
+          # Set cache control headers for long-term caching
+          --cache-control max-age=31536000,public
 
       - name: Invalidate CloudFront
         run: |
