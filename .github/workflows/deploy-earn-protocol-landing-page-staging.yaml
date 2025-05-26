@@ -106,16 +106,19 @@ jobs:
       - name: Build
         run: pnpm build-earn-frontend-landing
 
-      - name: Copy LP static files to a bucket 🪣
-        uses: prewk/s3-cp-action@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4.2.1
         with:
-          # uses prod credentials for staging deployment
-          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
-          aws_region: ${{ env.AWS_REGION }}
-          source: 'apps/earn-protocol-landing-page/out'
-          dest: 's3://${{ vars.LANDING_PAGE_BUCKET_NAME }}/'
-          flags: --recursive
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY_ID_DEV }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Copy LP static files to a bucket 🪣
+        run: |
+          aws s3 sync apps/earn-protocol-landing-page/out s3://${{ vars.LANDING_PAGE_BUCKET_NAME }}/ \
+          --delete \ # Remove files from destination that are not in the source
+          --acl public-read \ # Make uploaded files publicly readable
+          --cache-control max-age=31536000,public # Set cache control headers for long-term caching
 
       - name: Invalidate CloudFront
         run: |
