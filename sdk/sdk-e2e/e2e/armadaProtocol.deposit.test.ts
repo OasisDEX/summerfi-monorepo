@@ -31,19 +31,24 @@ const eurcFleetBase = Address.createFromEthereum({
 const usdtFleetArb = Address.createFromEthereum({
   value: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
 })
+const usdcFleetSonic = Address.createFromEthereum({
+  value: '0x507a2d9e87dbd3076e65992049c41270b47964f8',
+})
 
 describe('Armada Protocol Deposit', () => {
   it('should make deposits to fleet', async () => {
-    const chainId = ChainIds.ArbitrumOne
-    const rpcUrl = process.env.E2E_SDK_FORK_URL_ARBITRUM
+    const rpcUrl = process.env.E2E_SDK_FORK_URL_SONIC
+    const chainId = ChainIds.Sonic
+    const fleetAddress = usdcFleetSonic
+
     await runTests({
       swapToSymbol: undefined,
       chainId,
-      fleetAddress: usdtFleetArb,
+      fleetAddress,
       rpcUrl,
       stake: true,
       amountValue: '1',
-      // referralCode: '1',
+      referralCode: '99',
     })
     // await runTests({
     //   swapToSymbol: undefined,
@@ -72,7 +77,7 @@ describe('Armada Protocol Deposit', () => {
     referralCode?: string
   }) {
     const sdk: SDKManager = makeSDK({
-      apiURL: SDKApiUrl,
+      apiDomainUrl: SDKApiUrl,
     })
     if (!rpcUrl) {
       throw new Error('Missing rpc url')
