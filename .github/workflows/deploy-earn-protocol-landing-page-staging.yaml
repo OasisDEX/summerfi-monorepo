@@ -109,8 +109,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4.2.1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY_ID_DEV }}
+          role-to-assume: ${{ secrets.BUILD_DEPLOY_OIDC_ROLE_STAGING }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Copy LP static files to a bucket 🪣
