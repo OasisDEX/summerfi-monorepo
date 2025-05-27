@@ -57,6 +57,10 @@ export const icons = {
   ) as IconExportType,
   bat_color: customLazy(() => import('./icons/bat_color.svg?react')) as IconExportType,
   bat: customLazy(() => import('./icons/bat.svg?react')) as IconExportType,
+  beach_club_icon: customLazy(() => import('./icons/beach_club_icon.svg?react')) as IconExportType,
+  beach_club_rewards: customLazy(
+    () => import('./icons/beach_club_rewards.svg?react'),
+  ) as IconExportType,
   bridge: customLazy(() => import('./icons/bridge.svg?react')) as IconExportType,
   bsdeth_circle_color: customLazy(
     () => import('./icons/bsdeth_circle_color.svg?react'),
@@ -243,6 +247,14 @@ export const icons = {
     () => import('./icons/link_circle_mono.svg?react'),
   ) as IconExportType,
   link: customLazy(() => import('./icons/link.svg?react')) as IconExportType,
+  lock: customLazy(() => import('./icons/lock.svg?react')) as IconExportType,
+  lock_open_beach_colorful: customLazy(
+    () => import('./icons/lock_open_beach_colorful.svg?react'),
+  ) as IconExportType,
+  lock_open: customLazy(() => import('./icons/lock_open.svg?react')) as IconExportType,
+  lock_beach_colorful: customLazy(
+    () => import('./icons/lock_beach_colorful.svg?react'),
+  ) as IconExportType,
   lrc_circle_color: customLazy(
     () => import('./icons/lrc_circle_color.svg?react'),
   ) as IconExportType,
@@ -476,6 +488,9 @@ export const icons = {
     () => import('./icons/usd₮0_circle_color.svg?react'),
   ) as IconExportType,
   user: customLazy(() => import('./icons/user.svg?react')) as IconExportType,
+  users_beach_club: customLazy(
+    () => import('./icons/users_beach_club.svg?react'),
+  ) as IconExportType,
   vault_network_warning: customLazy(
     () => import('./icons/vault_network_warning.svg?react'),
   ) as IconExportType,

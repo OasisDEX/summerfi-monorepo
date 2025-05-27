@@ -19,6 +19,7 @@ export type IconNamesList =
   | 'bat_circle_color'
   | 'bat_color'
   | 'bat'
+  | 'beach_club_icon'
   | 'bridge'
   | 'bsdeth_circle_color'
   | 'btc_circle_color'
@@ -88,6 +89,10 @@ export type IconNamesList =
   | 'link_circle_color'
   | 'link_circle_mono'
   | 'link'
+  | 'lock'
+  | 'lock_open_beach_colorful'
+  | 'lock_beach_colorful'
+  | 'lock_open'
   | 'lrc_circle_color'
   | 'lrc_color'
   | 'lrc'
@@ -311,6 +316,8 @@ export type IconNamesList =
   | 'summer_light'
   | 'wsuperoethb'
   | 'wallet'
+  | 'users_beach_club'
+  | 'beach_club_rewards'
 
 export type TokenSymbolsList =
   | 'AAVE'
