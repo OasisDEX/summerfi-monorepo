@@ -106,7 +106,6 @@
       align-items: center;
       justify-content: flex-start;
       flex-wrap: wrap;
-      gap: var(--general-space-32);
       width: 100%;
 
       .shareWrapper {

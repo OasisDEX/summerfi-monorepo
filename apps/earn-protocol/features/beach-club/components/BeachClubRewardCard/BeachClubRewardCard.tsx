@@ -8,7 +8,7 @@ import {
   Text,
   useCurrentUrl,
 } from '@summerfi/app-earn-ui'
-import { formatDecimalAsPercent } from '@summerfi/app-utils'
+import { formatAsShorthandNumbers, formatDecimalAsPercent } from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import { BeachClubProgressBar } from '@/features/beach-club/components/BeachClubProgressBar/BeachClubProgressBar'
@@ -45,6 +45,8 @@ export const BeachClubRewardCard: FC<BeachClubRewardCardProps> = ({
 
   const readyToBoost = currentGroupTvl >= rawTvlGroup && !boostClaimed
 
+  const leftToBoost = rawTvlGroup - currentGroupTvl
+
   return (
     <Card
       className={`${classNames.beachClubRewardCardWrapper} ${colorfulBorder ? classNames.colorfulBorder : ''} ${colorfulBackground ? classNames.colorfulBackground : ''}`}
@@ -58,7 +60,11 @@ export const BeachClubRewardCard: FC<BeachClubRewardCardProps> = ({
       <div className={classNames.header} onClick={() => setIsExpanded(!isExpanded)}>
         <div className={classNames.headerLeftWrapper}>
           <Text as="p" variant="p1semi">
-            {isLocked ? <>{tvlGroup} Group TVL</> : <>You reached a {tvlGroup} Group TVL</>}
+            {boostClaimed || currentGroupTvl >= rawTvlGroup ? (
+              <>You reached a {tvlGroup} Group TVL</>
+            ) : (
+              <>{tvlGroup} Group TVL</>
+            )}
           </Text>
           <div className={classNames.lockIconWrapper}>
             {isLocked ? (
@@ -108,21 +114,51 @@ export const BeachClubRewardCard: FC<BeachClubRewardCardProps> = ({
             {readyToBoost ? (
               <Button
                 variant="primaryLarge"
-                style={{ minWidth: 'unset', background: 'var(--beach-club-primary-100)' }}
+                style={{
+                  minWidth: 'unset',
+                  background: 'var(--beach-club-primary-100)',
+                  marginRight: 'var(--general-space-24)',
+                }}
               >
                 Earn bonus SUMR
               </Button>
             ) : !boostClaimed ? (
               <BeachClubProgressBar max={rawTvlGroup} current={currentGroupTvl} />
-            ) : null}
+            ) : (
+              <Button
+                variant="primaryLarge"
+                style={{
+                  minWidth: 'unset',
+                  background: 'var(--beach-club-primary-100)',
+                  marginRight: 'var(--general-space-24)',
+                  cursor: 'not-allowed',
+                }}
+              >
+                $SUMR Earned
+              </Button>
+            )}
+            {leftToBoost > 0 && (
+              <Text
+                as="p"
+                variant="p4semi"
+                style={{
+                  color: 'var(--beach-club-link)',
+                  marginRight: 'var(--general-space-32)',
+                  marginLeft: 'var(--general-space-12)',
+                }}
+              >
+                {formatAsShorthandNumbers(leftToBoost)} left!
+              </Text>
+            )}
             <Link
               href={getTwitterShareUrl({
                 url: currentUrl,
                 text: readyToBoost
                   ? `I've reached a ${tvlGroup} Group TVL! 🎉`
-                  : `I'm ${rawTvlGroup - currentGroupTvl} Group TVL away from earning a ${boost} boost! 🎉`,
+                  : `I'm ${leftToBoost} Group TVL away from earning a ${boost} boost! 🎉`,
               })}
               className={classNames.shareWrapper}
+              target="_blank"
             >
               Share on <Icon iconName="x" size={20} />
             </Link>
