@@ -12,11 +12,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     gap: var(--general-space-4);
     background: var(--gradient-earn-protocol-beach-club-3);
     position: relative;
     overflow: hidden;
+    min-height: 188px;
 
     .content {
       padding: var(--general-space-32);
