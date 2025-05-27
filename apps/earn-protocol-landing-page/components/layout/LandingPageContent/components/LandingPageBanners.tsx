@@ -8,7 +8,7 @@ import { useLandingPageData } from '@/contexts/LandingPageContext'
 export const LandingPageBanners = () => {
   const { userConfig } = useLandingPageData()
 
-  const isGB = userConfig?.country === 'GB' || {}
+  const isGB = userConfig?.country === 'GB'
 
   return (
     <>
