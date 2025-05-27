@@ -1,0 +1,34 @@
+'use client'
+
+import { EXTERNAL_LINKS, HeaderDisclaimer } from '@summerfi/app-earn-ui'
+import Link from 'next/link'
+
+import { useLandingPageData } from '@/contexts/LandingPageContext'
+
+export const LandingPageBanners = () => {
+  const { userConfig } = useLandingPageData()
+
+  const isGB = userConfig?.country === 'GB' || {}
+
+  return (
+    <>
+      {isGB && (
+        <HeaderDisclaimer>
+          UK disclaimer: This web application is provided as a tool for users to interact with third
+          party DeFi protocols on their own initiative, with no endorsement or recommendation of ...
+          <Link
+            href={`${EXTERNAL_LINKS.KB.HELP}/legal/uk-disclaimer`}
+            style={{
+              color: 'var(--earn-protocol-primary-100)',
+              fontWeight: '500',
+              paddingLeft: 'var(--general-space-4)',
+            }}
+            target="_blank"
+          >
+            Read more
+          </Link>
+        </HeaderDisclaimer>
+      )}
+    </>
+  )
+}
