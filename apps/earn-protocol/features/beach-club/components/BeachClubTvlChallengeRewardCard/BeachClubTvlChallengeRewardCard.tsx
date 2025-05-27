@@ -5,10 +5,17 @@ import {
   Card,
   getTwitterShareUrl,
   Icon,
+  SUMR_CAP,
   Text,
   useCurrentUrl,
+  useLocalConfig,
 } from '@summerfi/app-earn-ui'
-import { formatAsShorthandNumbers, formatDecimalAsPercent } from '@summerfi/app-utils'
+import {
+  formatAsShorthandNumbers,
+  formatCryptoBalance,
+  formatDecimalAsPercent,
+  formatFiatBalance,
+} from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import { BeachClubProgressBar } from '@/features/beach-club/components/BeachClubProgressBar/BeachClubProgressBar'
@@ -21,7 +28,7 @@ interface BeachClubTvlChallengeRewardCardProps {
   rawTvlGroup: number
   description: string
   boost: string
-  sumrToEarn: string
+  sumrToEarn: number
   currentGroupTvl: number
   boostClaimed: boolean
   colorfulBackground?: boolean
@@ -40,6 +47,10 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
   colorfulBackground,
   colorfulBorder,
 }) => {
+  const {
+    state: { sumrNetApyConfig },
+  } = useLocalConfig()
+  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
   const currentUrl = useCurrentUrl()
   const [isExpanded, setIsExpanded] = useState(isLocked)
 
@@ -84,7 +95,8 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
           <div className={classNames.earnPill}>
             <Icon iconName="stars" size={24} />
             <Text as="p" variant="p3semi">
-              Earn {sumrToEarn} SUMR ($250)
+              Earn {formatCryptoBalance(sumrToEarn)} SUMR ($
+              {formatFiatBalance(sumrToEarn * estimatedSumrPrice)})
             </Text>
           </div>
           <Icon
