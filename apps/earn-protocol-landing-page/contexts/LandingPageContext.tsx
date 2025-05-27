@@ -15,9 +15,7 @@ export const LandingPageDataContextProvider: FC<{
 
   useEffect(() => {
     const apiUrl =
-      process.env.NODE_ENV === 'development'
-        ? `http://localhost:3002/earn/api`
-        : `${process.env.EARN_APP_URL}/earn/api`
+      process.env.NODE_ENV === 'development' ? `http://localhost:3002/earn/api` : `/earn/api`
 
     const fetchUserConfig = async () => {
       const response = await fetch(`${apiUrl}/user-config`)
