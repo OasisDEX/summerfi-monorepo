@@ -15,11 +15,13 @@ const tabsOptions = [
     label: 'TVL Challenges',
     id: ReferAndEarnTab.TVL_CHALLENGES,
     content: <BeachClubRewardsStats />,
+    activeColor: 'var(--beach-club-tab-underline)',
   },
   {
     label: 'Beach Boat Challenge',
     id: ReferAndEarnTab.BEACH_BOAT_CHALLENGE,
     content: <BeachClubBoatChallenge />,
+    activeColor: 'var(--beach-club-tab-underline)',
   },
 ]
 

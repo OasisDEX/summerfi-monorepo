@@ -15,11 +15,13 @@ const tabsOptions = [
     label: 'How it works',
     id: ReferAndEarnTab.HOW_IT_WORKS,
     content: <BeachClubHowItWorks />,
+    activeColor: 'var(--beach-club-tab-underline)',
   },
   {
     label: 'Track referrals',
     id: ReferAndEarnTab.TRACK_REFERRALS,
     content: <BeachClubTrackReferrals />,
+    activeColor: 'var(--beach-club-tab-underline)',
   },
 ]
 

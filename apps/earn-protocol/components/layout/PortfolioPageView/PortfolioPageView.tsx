@@ -158,6 +158,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
             label: 'Beach Club',
             icon: <Icon iconName="beach_club_icon" size={24} />,
             content: <PortfolioBeachClub />,
+            activeColor: 'var(--beach-club-tab-underline)',
           },
         ]
       : []),

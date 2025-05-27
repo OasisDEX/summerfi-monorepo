@@ -11,6 +11,7 @@ interface Tab {
   label: string
   icon?: ReactNode
   content: ReactNode
+  activeColor?: string
 }
 
 interface TabBarProps {
@@ -70,6 +71,13 @@ export const TabBar: FC<TabBarProps> = ({
               }}
               className={`${styles.tabButton} ${resolvedActiveIndex === index ? styles.active : ''}`}
               onClick={() => handleSetActive(tab, index)}
+              style={
+                {
+                  '--active-tab-color': tab.activeColor ?? '#ff0080',
+                  '--active-tab-width': resolvedActiveIndex === index ? '100%' : '0',
+                  '--active-tab-opacity': resolvedActiveIndex === index ? '1' : '0',
+                } as CSSProperties
+              }
             >
               <Text
                 as={tab.icon ? 'div' : 'p'}
