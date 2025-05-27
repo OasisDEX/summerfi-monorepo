@@ -2,8 +2,8 @@ name: Deploy New Rays Dashboard Production
 on:
   workflow_dispatch:
   push:
-      branches:
-        - 'main'
+    branches:
+      - 'main'
 
 jobs:
   build:
@@ -36,7 +36,7 @@ jobs:
           fetch-depth: 2
 
       - name: Set up turbo cache
-        uses: rharkor/caching-for-turbo@v1.5
+        uses: rharkor/caching-for-turbo@v1.8
 
       - uses: pnpm/action-setup@v2.0.1
         with:
@@ -59,15 +59,15 @@ jobs:
 
       - name: Establish VPN connection
         run: |
-              sudo apt update
-              sudo apt install -y openvpn openvpn-systemd-resolved
-              echo 'Configuring the VPN...'
-              echo "${{ secrets.NEW_VPN_CONFIG }}" > vpn-config.ovpn
-              echo "${{ secrets.NEW_VPN_USERNAME }}" > vpn-credentials.txt
-              echo "${{ secrets.NEW_VPN_PASSWORD }}" >> vpn-credentials.txt
-              echo 'Connecting to the VPN...'
-              sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-credentials.txt --daemon
-              sleep 5
+          sudo apt update
+          sudo apt install -y openvpn openvpn-systemd-resolved
+          echo 'Configuring the VPN...'
+          echo "${{ secrets.NEW_VPN_CONFIG }}" > vpn-config.ovpn
+          echo "${{ secrets.NEW_VPN_USERNAME }}" > vpn-credentials.txt
+          echo "${{ secrets.NEW_VPN_PASSWORD }}" >> vpn-credentials.txt
+          echo 'Connecting to the VPN...'
+          sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-credentials.txt --daemon
+          sleep 5
 
       - name: Check VPN connection
         env:

@@ -1,3 +1,5 @@
+'use client'
+
 import {
   Audits,
   BigGradientBox,
@@ -7,13 +9,7 @@ import {
   ProtocolStats,
   SupportedNetworksList,
 } from '@summerfi/app-earn-ui'
-import { type IconNamesList } from '@summerfi/app-types'
-import { parseServerResponseToClient, subgraphNetworkToId } from '@summerfi/app-utils'
 
-import { getProtocolTvl } from '@/app/server-handlers/defillama/get-protocol-tvl'
-import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
-import systemConfigHandler from '@/app/server-handlers/system-config'
-import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import {
   HigherYieldsBlock,
   LandingPageHero,
@@ -28,7 +24,7 @@ import { LandingFaqSection } from '@/components/layout/LandingPageContent/conten
 import { StartEarningNow } from '@/components/layout/LandingPageContent/content/StartEarningNow'
 import { SummerFiProSection } from '@/components/layout/LandingPageContent/content/SummerFiProSection'
 import { SumrToken } from '@/components/layout/LandingPageContent/content/SumrToken'
-import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
+import { useLandingPageData } from '@/contexts/LandingPageContext'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
 import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
 import blockAnalyticaLogo from '@/public/img/landing-page/block-analytica.svg'
@@ -44,119 +40,8 @@ import rebalanceActivityImage from '@/public/img/landing-page/enhanced-risk-mana
 import strategyExposureImage from '@/public/img/landing-page/enhanced-risk-management_strategy-exposure.png'
 import summerEarnUi from '@/public/img/landing-page/summer-earn-ui.png'
 
-export const revalidate = 60
-
-type SupportedTvlProtocols =
-  | 'aave'
-  | 'sky'
-  | 'spark'
-  | 'pendle'
-  | 'gearbox'
-  | 'euler'
-  | 'compound'
-  | 'ethena'
-  | 'fluid'
-
-const supportedProtocolsConfig: {
-  [key in SupportedTvlProtocols]: {
-    displayName: string
-    defillamaProtocolName: string
-    icon: IconNamesList
-  }
-} = {
-  aave: {
-    displayName: 'Aave',
-    defillamaProtocolName: 'aave',
-    icon: 'scroller_aave',
-  },
-  sky: {
-    displayName: 'Sky',
-    defillamaProtocolName: 'sky',
-    icon: 'scroller_sky',
-  },
-  spark: {
-    displayName: 'Spark',
-    defillamaProtocolName: 'spark',
-    icon: 'scroller_spark',
-  },
-  pendle: {
-    displayName: 'Pendle',
-    defillamaProtocolName: 'pendle',
-    icon: 'scroller_pendle',
-  },
-  gearbox: {
-    displayName: 'Gearbox',
-    defillamaProtocolName: 'gearbox',
-    icon: 'scroller_gearbox',
-  },
-  euler: {
-    displayName: 'Euler',
-    defillamaProtocolName: 'euler',
-    icon: 'scroller_euler',
-  },
-  compound: {
-    displayName: 'Compound',
-    defillamaProtocolName: 'compound-v3',
-    icon: 'scroller_compound',
-  },
-  ethena: {
-    displayName: 'Ethena',
-    defillamaProtocolName: 'ethena',
-    icon: 'scroller_ethena',
-  },
-  fluid: {
-    displayName: 'Fluid',
-    defillamaProtocolName: 'fluid-lending',
-    icon: 'scroller_fluid',
-  },
-}
-
-const supportedProtocols = Object.keys(
-  supportedProtocolsConfig,
-) as (keyof typeof supportedProtocolsConfig)[]
-
-const emptyTvls = {
-  aave: 0n,
-  sky: 0n,
-  spark: 0n,
-  pendle: 0n,
-  euler: 0n,
-  gearbox: 0n,
-  compound: 0n,
-  ethena: 0n,
-  fluid: 0n,
-}
-
-export default async function HomePage() {
-  const [{ vaults }, systemConfig, ...protocolTvlsArray] = await Promise.all([
-    getVaultsList(),
-    systemConfigHandler(),
-    ...supportedProtocols.map((protocol) => {
-      return getProtocolTvl(
-        supportedProtocolsConfig[protocol as keyof typeof supportedProtocolsConfig]
-          .defillamaProtocolName,
-        protocol,
-      )
-    }),
-  ])
-
-  const protocolTvls = protocolTvlsArray
-    // filter zero TVL protocols (set to zero because of an error)
-    .filter((protocolTVL) => Object.values(protocolTVL).some((tvl) => tvl !== 0n))
-    .reduce<{
-      [key in SupportedTvlProtocols]: bigint
-    }>((acc, curr) => ({ ...acc, ...curr }), emptyTvls)
-
-  const { config } = parseServerResponseToClient(systemConfig)
-
-  const vaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig: config })
-
-  const vaultsApyByNetworkMap = await getVaultsApy({
-    fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
-      fleetAddress: id,
-      chainId: subgraphNetworkToId(network),
-    })),
-  })
+export default function HomePage() {
+  const { landingPageData } = useLandingPageData()
 
   return (
     <div
@@ -169,10 +54,10 @@ export default async function HomePage() {
       }}
     >
       <LandingPageHero
-        vaultsList={vaultsWithConfig}
-        vaultsApyByNetworkMap={vaultsApyByNetworkMap}
+        vaultsList={landingPageData?.vaultsWithConfig}
+        vaultsApyByNetworkMap={landingPageData?.vaultsApyByNetworkMap}
       />
-      <ProtocolStats vaultsList={vaultsWithConfig} />
+      <ProtocolStats vaultsList={landingPageData?.vaultsWithConfig} />
       <SummerFiProBox />
       <BigGradientBox>
         <EffortlessAccessBlock uiImage={summerEarnUi} />
@@ -184,20 +69,9 @@ export default async function HomePage() {
           ]}
         />
       </BigGradientBox>
-      <ProtocolScroller
-        protocolsList={supportedProtocols.map((protocol) => {
-          const protocolConfig = supportedProtocolsConfig[protocol]
-
-          return {
-            protocol: protocolConfig.displayName,
-            protocolIcon: supportedProtocolsConfig[protocol].icon,
-            tvl: protocolTvls[protocol],
-            url: '',
-          }
-        })}
-      />
+      <ProtocolScroller protocolTvls={landingPageData?.protocolTvls} />
       <MarketingPoints>
-        <HigherYieldsBlock vaultsList={vaultsWithConfig} />
+        <HigherYieldsBlock vaultsList={landingPageData?.vaultsWithConfig} />
         <EnhancedRiskManagement
           protectedCapital="$10B+"
           imagesMap={{

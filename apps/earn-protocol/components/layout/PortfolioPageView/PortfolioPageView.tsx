@@ -1,7 +1,7 @@
 'use client'
 
 import { type FC, useEffect, useReducer } from 'react'
-import { getPositionValues, NonOwnerPortfolioBanner, TabBar } from '@summerfi/app-earn-ui'
+import { getPositionValues, Icon, NonOwnerPortfolioBanner, TabBar } from '@summerfi/app-earn-ui'
 import {
   type GetVaultsApyResponse,
   type HistoryChartData,
@@ -12,9 +12,12 @@ import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
+import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
+import { BeachClubPalmBackground } from '@/features/beach-club/components/BeachClubPalmBackground/BeachClubPalmBackground'
 import { claimDelegateReducer, claimDelegateState } from '@/features/claim-and-delegate/state'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
+import { PortfolioBeachClub } from '@/features/portfolio/components/PortfolioBeachClub/PortfolioBeachClub'
 import { PortfolioHeader } from '@/features/portfolio/components/PortfolioHeader/PortfolioHeader'
 import { PortfolioOverview } from '@/features/portfolio/components/PortfolioOverview/PortfolioOverview'
 import { PortfolioRebalanceActivity } from '@/features/portfolio/components/PortfolioRebalanceActivity/PortfolioRebalanceActivity'
@@ -61,6 +64,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   migratablePositions,
   migrationBestVaultApy,
 }) => {
+  const { features } = useSystemConfig()
   const { userWalletAddress, isLoadingAccount } = useUserWallet()
   const ownerView = walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
   const [activeTab, updateTab] = useTabStateQuery({
@@ -72,6 +76,8 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     delegatee: rewardsData.sumrStakeDelegate.delegatedTo,
     walletAddress,
   })
+
+  const beachClubEnabled = !!features?.BeachClub
 
   useEffect(() => {
     trackButtonClick({
@@ -87,24 +93,22 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   const overallSumr = calculateOverallSumr(rewardsData)
 
   const tabs = [
-    ...[
-      {
-        id: PortfolioTabs.OVERVIEW,
-        label: 'Overview',
-        content: (
-          <PortfolioOverview
-            positions={positions}
-            vaultsList={vaultsList}
-            rewardsData={rewardsData}
-            positionsHistoricalChartMap={positionsHistoricalChartMap}
-            vaultsApyByNetworkMap={vaultsApyByNetworkMap}
-            migratablePositions={migratablePositions}
-            walletAddress={walletAddress}
-            migrationBestVaultApy={migrationBestVaultApy}
-          />
-        ),
-      },
-    ],
+    {
+      id: PortfolioTabs.OVERVIEW,
+      label: 'Overview',
+      content: (
+        <PortfolioOverview
+          positions={positions}
+          vaultsList={vaultsList}
+          rewardsData={rewardsData}
+          positionsHistoricalChartMap={positionsHistoricalChartMap}
+          vaultsApyByNetworkMap={vaultsApyByNetworkMap}
+          migratablePositions={migratablePositions}
+          walletAddress={walletAddress}
+          migrationBestVaultApy={migrationBestVaultApy}
+        />
+      ),
+    },
     {
       id: PortfolioTabs.WALLET,
       label: 'Wallet',
@@ -116,27 +120,25 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
         />
       ),
     },
-    ...[
-      {
-        id: PortfolioTabs.YOUR_ACTIVITY,
-        label: 'Your Activity',
-        content: (
-          <PortfolioYourActivity latestActivity={latestActivity} walletAddress={walletAddress} />
-        ),
-      },
-      {
-        id: PortfolioTabs.REBALANCE_ACTIVITY,
-        label: 'Rebalance Activity',
-        content: (
-          <PortfolioRebalanceActivity
-            rebalanceActivity={rebalanceActivity}
-            walletAddress={walletAddress}
-            vaultsList={vaultsList}
-            positions={positions}
-          />
-        ),
-      },
-    ],
+    {
+      id: PortfolioTabs.YOUR_ACTIVITY,
+      label: 'Your Activity',
+      content: (
+        <PortfolioYourActivity latestActivity={latestActivity} walletAddress={walletAddress} />
+      ),
+    },
+    {
+      id: PortfolioTabs.REBALANCE_ACTIVITY,
+      label: 'Rebalance Activity',
+      content: (
+        <PortfolioRebalanceActivity
+          rebalanceActivity={rebalanceActivity}
+          walletAddress={walletAddress}
+          vaultsList={vaultsList}
+          positions={positions}
+        />
+      ),
+    },
     {
       id: PortfolioTabs.REWARDS,
       label: '$SUMR Rewards',
@@ -149,6 +151,17 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
         />
       ),
     },
+    ...(beachClubEnabled
+      ? [
+          {
+            id: PortfolioTabs.BEACH_CLUB,
+            label: 'Beach Club',
+            icon: <Icon iconName="beach_club_icon" size={24} />,
+            content: <PortfolioBeachClub />,
+            activeColor: 'var(--beach-club-tab-underline)',
+          },
+        ]
+      : []),
   ]
 
   const totalWalletValue =
@@ -175,6 +188,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
           handleTabChange={(tab) => updateTab(tab.id as PortfolioTabs)}
         />
       </div>
+      <BeachClubPalmBackground />
     </>
   )
 }

@@ -38,10 +38,11 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 0;
+  width: var(--active-tab-width, 0);
   height: 3px;
-  background-color: #ff0080;
-  transition: width 0.3s ease;
+  background-color: var(--active-tab-color, #ff0080);
+  opacity: var(--active-tab-opacity, 0);
+  transition: width 0.3s ease, opacity 0.3s ease;
 }
 .tabButton:hover {
   color: var(--earn-protocol-secondary-100);
@@ -51,9 +52,6 @@
 }
 .tabButton.active {
   color: var(--earn-protocol-secondary-100);
-}
-.tabButton.active::after {
-  width: 100%;
 }
 
 .tabContent {

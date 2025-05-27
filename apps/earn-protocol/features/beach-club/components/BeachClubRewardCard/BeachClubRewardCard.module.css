@@ -1,0 +1,124 @@
+.beachClubRewardCardWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background-color: var(--earn-protocol-neutral-95);
+  padding-top: 36px;
+  padding-bottom: 36px;
+  position: relative;
+  border-radius: var(--general-radius-16);
+  overflow: hidden;
+
+  &.colorfulBorder {
+    background:
+      linear-gradient(var(--earn-protocol-neutral-95), var(--earn-protocol-neutral-95)) padding-box,
+      linear-gradient(90deg, rgba(255, 210, 74, 0.3) 0%, rgba(49, 223, 186, 0.3) 93%) border-box;
+    border: 1px solid transparent;
+  }
+
+  &.colorfulBackground {
+    background: var(--gradient-earn-protocol-beach-club-5);
+  }
+
+  &.colorfulBorder.colorfulBackground {
+    background: var(--gradient-earn-protocol-beach-club-5);
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      padding: 1px;
+      border-radius: var(--general-radius-16);
+      background: linear-gradient(90deg, rgba(255, 210, 74, 0.3) 0%, rgba(49, 223, 186, 0.3) 93%);
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    cursor: pointer;
+
+    .headerLeftWrapper {
+      display: flex;
+      align-items: center;
+      gap: var(--general-space-24);
+
+      .lockIconWrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: var(--radius-circle);
+        background-color: var(--earn-protocol-neutral-80);
+      }
+    }
+
+    .headerRightWrapper {
+      display: flex;
+      align-items: center;
+      gap: var(--general-space-24);
+      flex-wrap: wrap;
+
+      .boostWrapper {
+        display: flex;
+        align-items: center;
+        gap: var(--general-space-8);
+      }
+
+      .earnPill {
+        display: flex;
+        align-items: center;
+        gap: var(--general-space-4);
+        background: linear-gradient(269.08deg, #136ff1 -15.48%, #14407f 91.66%);
+        height: 40px;
+        padding: 0 var(--general-space-16);
+        border-radius: var(--radius-circle);
+      }
+    }
+  }
+
+  .expander {
+    width: 100%;
+  }
+
+  .contentWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--general-space-16);
+    width: 100%;
+    margin-top: var(--general-space-20);
+
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      width: 100%;
+
+      .shareWrapper {
+        display: flex;
+        align-items: center;
+        gap: var(--general-space-4);
+        color: var(--earn-protocol-secondary-40);
+        cursor: pointer;
+        &:hover {
+          color: var(--earn-protocol-secondary-80);
+          transition: color 0.2s ease-in-out;
+        }
+      }
+    }
+  }
+}

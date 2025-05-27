@@ -1,0 +1,61 @@
+.beachClubBoatChallengeRewardCardWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 368px;
+  border-radius: var(--general-radius-24);
+  background-color: var(--earn-protocol-neutral-95);
+  overflow: hidden;
+
+  .top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--general-space-4);
+    background: var(--gradient-earn-protocol-beach-club-3);
+    position: relative;
+    overflow: hidden;
+    min-height: 188px;
+
+    .content {
+      padding: var(--general-space-32);
+      padding-bottom: unset;
+      width: 100%;
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+      }
+    }
+  }
+
+  .bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: var(--general-space-32);
+    width: 100%;
+
+    .textual {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: var(--general-space-4);
+      margin-bottom: var(--general-space-20);
+    }
+
+    .progress {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: var(--general-space-4);
+    }
+  }
+}
