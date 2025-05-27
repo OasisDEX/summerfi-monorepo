@@ -20,9 +20,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <GlobalStyles />
       </head>
       <body className={` ${fontInter.variable}`}>
-        <LandingPageBanners />
         <GoogleTagManager />
         <LandingPageDataContextProvider>
+          <LandingPageBanners />
           <LandingMasterPage>{children}</LandingMasterPage>
         </LandingPageDataContextProvider>
         <div id="portal" style={{ position: 'absolute' }} />
