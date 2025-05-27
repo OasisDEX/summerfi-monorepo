@@ -36,8 +36,8 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: center;
     padding: var(--general-space-32);
+    justify-content: center;
     width: 100%;
 
     .textual {
