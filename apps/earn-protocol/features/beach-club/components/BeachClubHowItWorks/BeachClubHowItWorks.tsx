@@ -45,11 +45,10 @@ export const BeachClubHowItWorks = () => {
         Generate your uniques referal code
       </Text>
       <Button
-        variant="primaryLarge"
+        variant="beachClubLarge"
         style={{
           maxWidth: '148px',
           minWidth: 'unset',
-          background: 'var(--beach-club-primary-100)',
         }}
       >
         Generate <Icon iconName="stars" size={20} />

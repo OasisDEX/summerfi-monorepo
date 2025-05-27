@@ -113,10 +113,9 @@ export const BeachClubRewardCard: FC<BeachClubRewardCardProps> = ({
           <div className={classNames.footer}>
             {readyToBoost ? (
               <Button
-                variant="primaryLarge"
+                variant="beachClubLarge"
                 style={{
                   minWidth: 'unset',
-                  background: 'var(--beach-club-primary-100)',
                   marginRight: 'var(--general-space-24)',
                 }}
               >

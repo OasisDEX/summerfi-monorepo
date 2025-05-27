@@ -37,7 +37,7 @@ export const BeachClubTrackReferrals = () => {
       <div className={classNames.buttons}>
         {tabsOptions.map((item) => (
           <Button
-            variant="primaryMedium"
+            variant="beachClubMedium"
             key={item.id}
             onClick={() => setTab(item.id)}
             className={tab === item.id ? classNames.tabActive : classNames.tab}

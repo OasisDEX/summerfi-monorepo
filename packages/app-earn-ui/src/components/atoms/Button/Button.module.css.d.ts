@@ -1,4 +1,7 @@
 declare const styles: {
+  readonly "beachClubLarge": string;
+  readonly "beachClubMedium": string;
+  readonly "beachClubSmall": string;
   readonly "colorful": string;
   readonly "neutralLarge": string;
   readonly "neutralMedium": string;

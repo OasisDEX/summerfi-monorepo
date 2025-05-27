@@ -10,7 +10,10 @@
 .colorful,
 .primaryLargeColorful,
 .primaryMediumColorful,
-.primarySmallColorful {
+.primarySmallColorful,
+.beachClubLarge,
+.beachClubMedium,
+.beachClubSmall {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -18,7 +21,11 @@
   font-weight: 600;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: border-color 200ms, color 200ms, background-color 200ms, box-shadow 200ms;
+  transition:
+    border-color 200ms,
+    color 200ms,
+    background-color 200ms,
+    box-shadow 200ms;
 }
 
 .colorful {
@@ -28,7 +35,8 @@
 .primaryLarge,
 .secondaryLarge,
 .neutralLarge,
-.primaryLargeColorful {
+.primaryLargeColorful,
+.beachClubLarge {
   height: 48px;
   min-width: 100%;
   font-size: 16px;
@@ -39,7 +47,8 @@
   .primaryLarge,
   .secondaryLarge,
   .neutralLarge,
-  .primaryLargeColorful {
+  .primaryLargeColorful,
+  .beachClubLarge {
     min-width: 320px;
   }
 }
@@ -47,7 +56,8 @@
 .primaryMedium,
 .secondaryMedium,
 .neutralMedium,
-.primaryMediumColorful {
+.primaryMediumColorful,
+.beachClubMedium {
   height: 38px;
   font-size: 14px;
   border-radius: var(--radius-circle);
@@ -57,7 +67,8 @@
 .primarySmall,
 .secondarySmall,
 .neutralSmall,
-.primarySmallColorful {
+.primarySmallColorful,
+.beachClubSmall {
   height: 36px;
   font-size: 12px;
   padding: 0 var(--general-space-16);
@@ -133,11 +144,35 @@
   cursor: not-allowed;
 }
 
+.beachClubLarge,
+.beachClubMedium,
+.beachClubSmall {
+  color: var(--color-text-primary);
+  background-color: var(--beach-club-primary-100);
+}
+.beachClubLarge:enabled:hover,
+.beachClubMedium:enabled:hover,
+.beachClubSmall:enabled:hover {
+  background-color: var(--beach-club-primary-70);
+}
+.beachClubLarge:disabled,
+.beachClubMedium:disabled,
+.beachClubSmall:disabled {
+  background-color: var(--beach-club-primary-40);
+  color: var(--color-text-primary-disabled);
+  cursor: not-allowed;
+}
+
 .colorful {
   font-size: 12px;
   width: 100%;
   border-radius: var(--general-radius-8);
-  background: linear-gradient(270.13deg, rgba(0, 125, 163, 0.05) 0.02%, rgba(231, 167, 127, 0.05) 56.92%, rgba(233, 112, 71, 0.05) 98.44%);
+  background: linear-gradient(
+    270.13deg,
+    rgba(0, 125, 163, 0.05) 0.02%,
+    rgba(231, 167, 127, 0.05) 56.92%,
+    rgba(233, 112, 71, 0.05) 98.44%
+  );
 }
 .colorful > span {
   -webkit-background-clip: text;
@@ -194,7 +229,11 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  transition: border-color 200ms, color 200ms, background-color 200ms, box-shadow 200ms;
+  transition:
+    border-color 200ms,
+    color 200ms,
+    background-color 200ms,
+    box-shadow 200ms;
 }
 .textPrimaryLarge:disabled,
 .textPrimaryMedium:disabled,

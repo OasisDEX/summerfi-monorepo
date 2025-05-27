@@ -89,10 +89,7 @@ export const BeachClubBoatChallengeRewardCard = ({
           </Text>
         </div>
         {unlocked ? (
-          <Button
-            variant="primaryMedium"
-            style={{ width: '100%', background: 'var(--beach-club-primary-100)' }}
-          >
+          <Button variant="beachClubMedium" style={{ width: '100%' }}>
             Claim {rewardDescriptions[type]}
           </Button>
         ) : (

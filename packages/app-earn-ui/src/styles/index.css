@@ -153,6 +153,8 @@ body {
 
   /* BEACH CLUB */
   --beach-club-primary-100: rgba(28, 120, 250, 1);
+  --beach-club-primary-70: rgba(82, 154, 255, 1);
+  --beach-club-primary-40: rgba(47, 90, 152, 1);
   --beach-club-link: rgba(254, 209, 73, 1);
   --beach-club-tab-underline: rgba(110, 219, 152, 1);
 
