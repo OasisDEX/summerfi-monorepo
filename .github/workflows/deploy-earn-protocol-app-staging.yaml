@@ -175,7 +175,7 @@ jobs:
                        --build-arg CONFIG_URL=${{ secrets.CONFIG_URL }} \
                        --build-arg CONFIG_URL_EARN=${{ secrets.CONFIG_URL_EARN }} \
                        --build-arg CONFIG_URL_RAYS=${{ secrets.CONFIG_URL_RAYS }} \
-                       --build-arg FUNCTIONS_API_URL=${{ vars.FUNCTIONS_API_URL }} \
+                       --build-arg FUNCTIONS_API_URL=${{ env.FUNCTIONS_API_URL }} \
                        --build-arg EARN_MIXPANEL_KEY=${{ secrets.EARN_MIXPANEL_KEY }} \
                        --build-arg SUBGRAPH_BASE=${{ secrets.SUBGRAPH_BASE }} \
                        --build-arg NEXT_PUBLIC_EARN_MIXPANEL_KEY=${{ secrets.NEXT_PUBLIC_EARN_MIXPANEL_KEY }} \
