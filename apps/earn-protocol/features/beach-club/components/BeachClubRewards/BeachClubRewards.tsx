@@ -1,7 +1,7 @@
 import { Card, Icon, TabBar, Text } from '@summerfi/app-earn-ui'
 
 import { BeachClubBoatChallenge } from '@/features/beach-club/components/BeachClubBoatChallenge/BeachClubBoatChallenge'
-import { BeachClubRewardsStats } from '@/features/beach-club/components/BeachClubRewardsStats/BeachClubRewardsStats'
+import { BeachClubTvlChallenge } from '@/features/beach-club/components/BeachClubTvlChallenge/BeachClubTvlChallenge'
 
 import classNames from './BeachClubRewards.module.css'
 
@@ -14,7 +14,7 @@ const tabsOptions = [
   {
     label: 'TVL Challenges',
     id: ReferAndEarnTab.TVL_CHALLENGES,
-    content: <BeachClubRewardsStats />,
+    content: <BeachClubTvlChallenge />,
     activeColor: 'var(--beach-club-tab-underline)',
   },
   {

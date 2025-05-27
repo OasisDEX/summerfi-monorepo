@@ -13,9 +13,9 @@ import Link from 'next/link'
 
 import { BeachClubProgressBar } from '@/features/beach-club/components/BeachClubProgressBar/BeachClubProgressBar'
 
-import classNames from './BeachClubRewardCard.module.css'
+import classNames from './BeachClubTvlChallengeRewardCard.module.css'
 
-interface BeachClubRewardCardProps {
+interface BeachClubTvlChallengeRewardCardProps {
   isLocked: boolean
   tvlGroup: string
   rawTvlGroup: number
@@ -28,7 +28,7 @@ interface BeachClubRewardCardProps {
   colorfulBorder?: boolean
 }
 
-export const BeachClubRewardCard: FC<BeachClubRewardCardProps> = ({
+export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCardProps> = ({
   isLocked,
   tvlGroup,
   rawTvlGroup,
@@ -49,7 +49,7 @@ export const BeachClubRewardCard: FC<BeachClubRewardCardProps> = ({
 
   return (
     <Card
-      className={`${classNames.beachClubRewardCardWrapper} ${colorfulBorder ? classNames.colorfulBorder : ''} ${colorfulBackground ? classNames.colorfulBackground : ''}`}
+      className={`${classNames.beachClubTvlChallengeRewardCardWrapper} ${colorfulBorder ? classNames.colorfulBorder : ''} ${colorfulBackground ? classNames.colorfulBackground : ''}`}
       style={{
         opacity: isLocked ? 1 : 0.5,
         ...(colorfulBackground && {

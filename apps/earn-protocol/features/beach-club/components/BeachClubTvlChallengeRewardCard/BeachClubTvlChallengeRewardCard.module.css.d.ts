@@ -1,5 +1,5 @@
 declare const styles: {
-  readonly "beachClubRewardCardWrapper": string;
+  readonly "beachClubTvlChallengeRewardCardWrapper": string;
   readonly "boostWrapper": string;
   readonly "colorfulBackground": string;
   readonly "colorfulBorder": string;

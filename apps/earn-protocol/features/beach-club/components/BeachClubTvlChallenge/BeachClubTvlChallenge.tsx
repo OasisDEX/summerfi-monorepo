@@ -3,15 +3,15 @@ import { AnimateHeight, Icon, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
 
-import { BeachClubRewardCard } from '@/features/beach-club/components/BeachClubRewardCard/BeachClubRewardCard'
 import { BeachClubRewardSimulation } from '@/features/beach-club/components/BeachClubRewardSimulation/BeachClubRewardSimulation'
+import { BeachClubTvlChallengeRewardCard } from '@/features/beach-club/components/BeachClubTvlChallengeRewardCard/BeachClubTvlChallengeRewardCard'
 import { BeachClubVerticalDots } from '@/features/beach-club/components/BeachClubVerticalDots/BeachClubVerticalDots'
 
 import { getBeachClubTvlRewardsCards } from './cards'
 
-import classNames from './BeachClubRewardsStats.module.css'
+import classNames from './BeachClubTvlChallenge.module.css'
 
-export const BeachClubRewardsStats = () => {
+export const BeachClubTvlChallenge = () => {
   const [seeAll, setSeeAll] = useState(false)
 
   const currentGroupTvl = 200000
@@ -37,7 +37,7 @@ export const BeachClubRewardsStats = () => {
   )
 
   return (
-    <div className={classNames.beachClubRewardsStatsWrapper}>
+    <div className={classNames.beachClubTvlChallengeWrapper}>
       <div className={classNames.statsWrapper}>
         {stats.map((stat, idx) => (
           <div key={stat.description} className={classNames.textual}>
@@ -62,7 +62,7 @@ export const BeachClubRewardsStats = () => {
         style={{ marginTop: 'var(--general-space-32)' }}
       >
         {defaultCards.map((card) => (
-          <BeachClubRewardCard key={card.tvlGroup} {...card} />
+          <BeachClubTvlChallengeRewardCard key={card.tvlGroup} {...card} />
         ))}
       </div>
       <AnimateHeight
@@ -73,7 +73,7 @@ export const BeachClubRewardsStats = () => {
         className={classNames.animateHeightWrapper}
       >
         {hiddenCards.map((card) => (
-          <BeachClubRewardCard key={card.tvlGroup} {...card} />
+          <BeachClubTvlChallengeRewardCard key={card.tvlGroup} {...card} />
         ))}
       </AnimateHeight>
 
@@ -92,7 +92,7 @@ export const BeachClubRewardsStats = () => {
           <BeachClubVerticalDots />
         </div>
       )}
-      {!seeAll && <BeachClubRewardCard {...oneBillionCard} />}
+      {!seeAll && <BeachClubTvlChallengeRewardCard {...oneBillionCard} />}
       {seeAll && (
         <Text
           as="div"

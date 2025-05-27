@@ -1,6 +1,6 @@
 declare const styles: {
   readonly "animateHeightWrapper": string;
-  readonly "beachClubRewardsStatsWrapper": string;
+  readonly "beachClubTvlChallengeWrapper": string;
   readonly "leaderboardLink": string;
   readonly "rewardCardsWrapper": string;
   readonly "seeAllWrapper": string;
