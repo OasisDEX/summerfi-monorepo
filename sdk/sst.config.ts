@@ -5,8 +5,9 @@ import { version as clientPkgVersion } from './sdk-client/bundle/package.json'
 import { createBackend } from './create-backend'
 import { Api, Bucket } from 'sst/constructs'
 import { RemovalPolicy } from 'aws-cdk-lib'
+import { config } from '@dotenvx/dotenvx'
 
-require('@dotenvx/dotenvx').config({ path: ['../.env', '.env'], override: true })
+config({ path: ['../.env', '.env'], override: true, debug: true, ignore: ['MISSING_ENV_FILE'] })
 
 export default {
   config(input) {
@@ -18,8 +19,8 @@ export default {
     return {
       region: `${process.env.AWS_REGION}`,
       profile: `${process.env.AWS_PROFILE}`,
-      stage: `sst-${stage}`,
-      name: 'sdk',
+      stage: `SST-v2-${stage}`,
+      name: 'versioned-sdk',
     }
   },
   stacks(app) {
@@ -32,7 +33,7 @@ export default {
     app.stack((context) => {
       const { stack } = context
       // helpers
-      // const persistent = isPersistentStage(app.stage)
+      const persistent = isPersistentStage(app.stage)
       const production = isProductionStage(app.stage)
 
       const deployedVersions = Object.values(sdkDeployedVersionsMap)
@@ -55,7 +56,7 @@ export default {
 
       const sdkGateway = new Api(stack, 'SdkGateway', {
         accessLog: {
-          retention: production ? 'one_month' : 'one_day',
+          retention: production ? 'one_month' : persistent ? 'one_week' : 'one_day',
         },
       })
 
@@ -66,6 +67,7 @@ export default {
             stack,
             deployedVersion: version,
             production,
+            persistent,
             sdkGateway,
             sdkBucket,
           })

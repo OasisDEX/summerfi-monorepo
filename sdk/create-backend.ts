@@ -5,12 +5,14 @@ import { LoggingFormat } from 'aws-cdk-lib/aws-lambda'
 export const createBackend = ({
   stack,
   production,
+  persistent,
   deployedVersion,
   sdkGateway,
   sdkBucket,
 }: {
   stack: Stack
   production: boolean
+  persistent: boolean
   deployedVersion: string
   sdkGateway: Api
   sdkBucket: Bucket
@@ -35,7 +37,7 @@ export const createBackend = ({
     timeout: '30 seconds',
     environment: environmentVariables,
     loggingFormat: LoggingFormat.JSON,
-    logRetention: production ? 'one_month' : 'one_day',
+    logRetention: production ? 'one_month' : persistent ? 'one_week' : 'one_day',
     currentVersionOptions: {
       provisionedConcurrentExecutions: production ? 10 : undefined,
     },

@@ -293,7 +293,7 @@ export class CoingeckoOracleProvider
 
     const currency = params.quoteCurrency
       ? `&vs_currencies=${params.quoteCurrency.toLowerCase()}`
-      : ''
+      : '&vs_currencies=usd'
     const precision = `&precision=6`
 
     return `${this._apiUrl}/${this._version}/simple/token_price/${platform}?contract_addresses=${tokenAddresses.join(',')}${currency}${precision}`

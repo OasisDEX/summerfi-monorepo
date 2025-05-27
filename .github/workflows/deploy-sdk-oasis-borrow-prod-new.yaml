@@ -31,7 +31,7 @@ jobs:
       RPC_GATEWAY: ${{ secrets.RPC_GATEWAY }}
       DEBANK_API_KEY: ${{ secrets.DEBANK_API_KEY }}
       DEBANK_API_URL: ${{ secrets.PROD_DEBANK_API_URL }}
-      FUNCTIONS_API_URL: ${{ secrets.FUNCTIONS_API_URL }}
+      FUNCTIONS_API_URL: ${{ vars.FUNCTIONS_API_URL }}
       POWERTOOLS_LOG_LEVEL: ${{ vars.POWERTOOLS_LOG_LEVEL }}
       REDIS_CACHE_URL: ${{ secrets.REDIS_CACHE_URL }}
       REDIS_CACHE_USER: ${{ secrets.REDIS_CACHE_USER }}
