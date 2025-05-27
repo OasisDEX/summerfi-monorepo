@@ -2,6 +2,7 @@ import { GlobalStyles, GoogleTagManager } from '@summerfi/app-earn-ui'
 import type { Metadata } from 'next'
 
 import { LandingMasterPage } from '@/components/layout/LandingMasterPage/LandingMasterPage'
+import { LandingPageBanners } from '@/components/layout/LandingPageContent/components/LandingPageBanners'
 import { LandingPageDataContextProvider } from '@/contexts/LandingPageContext'
 import { fontInter } from '@/helpers/fonts'
 
@@ -19,6 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <GlobalStyles />
       </head>
       <body className={` ${fontInter.variable}`}>
+        <LandingPageBanners />
         <GoogleTagManager />
         <LandingPageDataContextProvider>
           <LandingMasterPage>{children}</LandingMasterPage>

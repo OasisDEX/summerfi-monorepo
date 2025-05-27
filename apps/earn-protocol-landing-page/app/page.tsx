@@ -5,13 +5,10 @@ import {
   BigGradientBox,
   EffortlessAccessBlock,
   EnhancedRiskManagement,
-  EXTERNAL_LINKS,
-  HeaderDisclaimer,
   HighestQualityYieldsDisclaimer,
   ProtocolStats,
   SupportedNetworksList,
 } from '@summerfi/app-earn-ui'
-import Link from 'next/link'
 
 import {
   HigherYieldsBlock,
@@ -44,80 +41,59 @@ import strategyExposureImage from '@/public/img/landing-page/enhanced-risk-manag
 import summerEarnUi from '@/public/img/landing-page/summer-earn-ui.png'
 
 export default function HomePage() {
-  const { userConfig, landingPageData } = useLandingPageData()
-
-  const isGB = userConfig?.country === 'GB'
+  const { landingPageData } = useLandingPageData()
 
   return (
-    <>
-      {isGB && (
-        <HeaderDisclaimer>
-          UK disclaimer: This web application is provided as a tool for users to interact with third
-          party DeFi protocols on their own initiative, with no endorsement or recommendation of ...
-          <Link
-            href={`${EXTERNAL_LINKS.KB.HELP}/legal/uk-disclaimer`}
-            style={{
-              color: 'var(--earn-protocol-primary-100)',
-              fontWeight: '500',
-              paddingLeft: 'var(--general-space-4)',
-            }}
-            target="_blank"
-          >
-            Read more
-          </Link>
-        </HeaderDisclaimer>
-      )}
-      <div
-        style={{
-          display: 'flex',
-          gap: '8px',
-          flexDirection: 'column',
-          alignItems: 'center',
-          padding: '0 24px',
-        }}
-      >
-        <LandingPageHero
-          vaultsList={landingPageData?.vaultsWithConfig}
-          vaultsApyByNetworkMap={landingPageData?.vaultsApyByNetworkMap}
+    <div
+      style={{
+        display: 'flex',
+        gap: '8px',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: '0 24px',
+      }}
+    >
+      <LandingPageHero
+        vaultsList={landingPageData?.vaultsWithConfig}
+        vaultsApyByNetworkMap={landingPageData?.vaultsApyByNetworkMap}
+      />
+      <ProtocolStats vaultsList={landingPageData?.vaultsWithConfig} />
+      <SummerFiProBox />
+      <BigGradientBox>
+        <EffortlessAccessBlock uiImage={summerEarnUi} />
+        <SupportedNetworksList
+          networks={[
+            { name: 'Ethereum', logo: ethereumLogo },
+            { name: 'Base', logo: baseLogo },
+            { name: 'Arbitrum', logo: arbitrumLogo },
+          ]}
         />
-        <ProtocolStats vaultsList={landingPageData?.vaultsWithConfig} />
-        <SummerFiProBox />
-        <BigGradientBox>
-          <EffortlessAccessBlock uiImage={summerEarnUi} />
-          <SupportedNetworksList
-            networks={[
-              { name: 'Ethereum', logo: ethereumLogo },
-              { name: 'Base', logo: baseLogo },
-              { name: 'Arbitrum', logo: arbitrumLogo },
-            ]}
-          />
-        </BigGradientBox>
-        <ProtocolScroller protocolTvls={landingPageData?.protocolTvls} />
-        <MarketingPoints>
-          <HigherYieldsBlock vaultsList={landingPageData?.vaultsWithConfig} />
-          <EnhancedRiskManagement
-            protectedCapital="$10B+"
-            imagesMap={{
-              rebalanceActivityImage,
-              strategyExposureImage,
-              blockAnalyticaLogo,
-              aaveLogo,
-              morphoBlueLogo,
-              skyLogo,
-              sparkLogo,
-            }}
-          />
-          <BestOfDecentralizedFinance />
-          <SumrToken />
-          <StartEarningNow />
-          <SummerFiProSection />
-          <CryptoUtilities />
-          <Audits chainSecurityLogo={chainSecurityLogo} prototechLabsLogo={prototechLabsLogo} />
-          <BuildBySummerFi />
-          <LandingFaqSection />
-          <HighestQualityYieldsDisclaimer />
-        </MarketingPoints>
-      </div>
-    </>
+      </BigGradientBox>
+      <ProtocolScroller protocolTvls={landingPageData?.protocolTvls} />
+      <MarketingPoints>
+        <HigherYieldsBlock vaultsList={landingPageData?.vaultsWithConfig} />
+        <EnhancedRiskManagement
+          protectedCapital="$10B+"
+          imagesMap={{
+            rebalanceActivityImage,
+            strategyExposureImage,
+            blockAnalyticaLogo,
+            aaveLogo,
+            morphoBlueLogo,
+            skyLogo,
+            sparkLogo,
+          }}
+        />
+        <BestOfDecentralizedFinance />
+        <SumrToken />
+        <StartEarningNow />
+        <SummerFiProSection />
+        <CryptoUtilities />
+        <Audits chainSecurityLogo={chainSecurityLogo} prototechLabsLogo={prototechLabsLogo} />
+        <BuildBySummerFi />
+        <LandingFaqSection />
+        <HighestQualityYieldsDisclaimer />
+      </MarketingPoints>
+    </div>
   )
 }
