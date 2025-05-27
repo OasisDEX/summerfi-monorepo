@@ -45,6 +45,7 @@ dist
 artifacts
 
 # tsbuildinfo
+.cache
 *.tsbuildinfo
 
 # geneated GraphQL types

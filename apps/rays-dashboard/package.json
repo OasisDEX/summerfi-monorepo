@@ -41,13 +41,14 @@
     "concurrently": "^9.0.1",
     "dayjs": "^1.11.12",
     "lodash-es": "^4.17.1",
-    "mixpanel": "^0.18.0",
     "mixpanel-browser": "^2.53.0",
-    "next": "15.3.2",
+    "mixpanel": "^0.18.0",
     "next-intl": "^3.21.1",
-    "react": "19.1.0",
+    "next": "15.3.2",
     "react-awesome-animated-number": "^1.0.13",
     "react-dom": "19.1.0",
+    "react": "19.1.0",
+    "viem": "2.27.2",
     "usehooks-ts": "^3.1.0"
   },
   "devDependencies": {

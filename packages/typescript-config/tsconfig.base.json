@@ -18,7 +18,8 @@
     "allowUnreachableCode": false,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["node", "jest", "jest-extended"]
+    "types": ["node", "jest", "jest-extended"],
+    "tsBuildInfoFile": "${configDir}/.cache/tsbuildinfo.json",
   },
   "references": [
     {
