@@ -122,7 +122,8 @@
         "src/generated",
         "dist/**",
         "graphql/clients/**",
-        "**/*.css.d.ts"
+        "**/*.css.d.ts",
+        ".cache/tsbuildinfo.json"
       ]
     },
     "prebuild:nocache": {
@@ -137,7 +138,8 @@
         "!.next/cache/**",
         "dist/**",
         "artifacts/**",
-        ".sst/**"
+        ".sst/**",
+        ".cache/tsbuildinfo.json"
       ]
     },
     "build:apps": {
@@ -149,7 +151,8 @@
         "apps/earn-protocol-landing-page/out/**",
         "dist/**",
         "artifacts/**",
-        ".sst/**"
+        ".sst/**",
+        ".cache/tsbuildinfo.json"
       ]
     },
     "test": {

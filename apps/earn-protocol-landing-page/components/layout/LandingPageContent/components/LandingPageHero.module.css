@@ -26,8 +26,8 @@
 
 @media (max-width: 531px) {
   .heroHeader {
-    flex-direction: column;
     text-align: center;
+    flex-direction: column;
     gap: 0;
   }
 
