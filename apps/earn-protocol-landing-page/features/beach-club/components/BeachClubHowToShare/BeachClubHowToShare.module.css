@@ -10,8 +10,8 @@
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    gap: var(--general-space-16);
     width: 100%;
+    gap: var(--general-space-16);
 
     .card {
       display: flex;
