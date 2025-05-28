@@ -44,7 +44,7 @@ export const NavigationMenu = ({ links, currentPath }: NavigationMenuType): Reac
                 className={clsx({
                   [navigationMenuStyles.active]: link.link === currentPath,
                 })}
-                prefetch={Boolean(link.disabled)}
+                prefetch={Boolean(link.disabled ?? link.prefetchDisabled)}
               >
                 {link.label}
               </Link>

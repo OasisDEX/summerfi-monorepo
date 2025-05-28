@@ -26,6 +26,7 @@ export interface EarnNavigationProps {
     dropdownContent?: ReactNode
     link?: string
     disabled?: boolean
+    prefetchDisabled?: boolean
     onClick?: () => void
   })[]
   walletConnectionComponent?: ReactNode

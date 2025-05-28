@@ -32,6 +32,7 @@ export const getNavigationItems = ({
         description: 'Claim your $SUMR tokens',
         url: `${!isEarnApp ? `/earn` : ``}/sumr`,
         icon: 'sumr',
+        prefetchDisabled: !isEarnApp,
       },
       {
         url: `${!isEarnApp ? `/earn` : ``}/user-activity`,
@@ -39,6 +40,7 @@ export const getNavigationItems = ({
         title: 'User Activity',
         description: 'Transparent view of global user activity',
         icon: 'earn_user_activities',
+        prefetchDisabled: !isEarnApp,
       },
       {
         url: `${!isEarnApp ? `/earn` : ``}/rebalance-activity`,
@@ -46,6 +48,7 @@ export const getNavigationItems = ({
         title: 'Rebalancing Activity',
         description: 'Vault optimizations performed by AI-powered keepers',
         icon: 'earn_rebalance_activities',
+        prefetchDisabled: !isEarnApp,
       },
       // {
       //   url: '/yield-trend',
