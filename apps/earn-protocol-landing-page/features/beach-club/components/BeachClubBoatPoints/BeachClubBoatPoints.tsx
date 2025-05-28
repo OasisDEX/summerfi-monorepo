@@ -13,7 +13,7 @@ export const BeachClubBoatPoints = () => {
           Beach Boat points: T-shirt, Hoodie, NFT
         </Text>
         <Text as="p" variant="p1" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-          Beach boat is our more accessible, point based refferal rewards that is not solely based
+          Beach boat is our more accessible, point based referral rewards that is not solely based
           on TVL. Earn points for reffering TVL, and the number of accounts you refer. The more
           points your earn the more prizes you unlock.
         </Text>

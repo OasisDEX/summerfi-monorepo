@@ -14,7 +14,7 @@ const paragraphs = [
     },
   },
   {
-    title: 'Get rewarded in fee’s. Earn extra income on top of $SUMR rewards.',
+    title: 'Get rewarded in fees. Earn extra income on top of $SUMR rewards.',
     description:
       'Every time someone uses your referral, you earn a share of the protocol fees—paid directly to you. This is extra income on top of the $SUMR rewards you already earn.',
     link: {
