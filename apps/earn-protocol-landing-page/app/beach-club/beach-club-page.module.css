@@ -1,0 +1,13 @@
+.beachClubPage {
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1200px;
+  padding: 0 16px;
+  margin: 0 auto;
+
+  @media (min-width: 1024px) {
+    padding: unset;
+  }
+}

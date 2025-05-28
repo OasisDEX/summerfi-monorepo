@@ -1,4 +1,7 @@
-import { Card, Text } from '@summerfi/app-earn-ui'
+import { type JSX } from 'react'
+
+import { Card } from '@/components/atoms/Card/Card'
+import { Text } from '@/components/atoms/Text/Text'
 
 import classNames from './BeachClubSteps.module.css'
 
@@ -14,7 +17,7 @@ const steps = [
   },
 ]
 
-export const BeachClubSteps = () => {
+export const BeachClubSteps = (): JSX.Element => {
   return (
     <div className={classNames.beachClubStepsWrapper}>
       {steps.map((step, idx) => (

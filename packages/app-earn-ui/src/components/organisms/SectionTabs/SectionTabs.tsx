@@ -4,6 +4,7 @@ import clsx from 'clsx'
 
 import { Button } from '@/components/atoms/Button/Button'
 import { Text } from '@/components/atoms/Text/Text'
+import type textStyles from '@/components/atoms/Text/Text.module.css'
 
 import sectionTabsStyles from './SectionTabs.module.css'
 
@@ -14,9 +15,16 @@ type SectionTabsProps = {
     content: ReactNode
   }[]
   wrapperStyle?: CSSProperties
+  activeSectionColor?: keyof typeof textStyles
+  activeTabColor?: string
 }
 
-export const SectionTabs = ({ sections, wrapperStyle }: SectionTabsProps): ReactNode => {
+export const SectionTabs = ({
+  sections,
+  wrapperStyle,
+  activeSectionColor,
+  activeTabColor,
+}: SectionTabsProps): ReactNode => {
   const [fadingOut, setFadingOut] = useState(false)
   const [activeSection, setActiveSection] = useState(sections[0].id)
 
@@ -33,7 +41,15 @@ export const SectionTabs = ({ sections, wrapperStyle }: SectionTabsProps): React
   )
 
   return (
-    <div className={sectionTabsStyles.sectionTabWrapper} style={wrapperStyle}>
+    <div
+      className={sectionTabsStyles.sectionTabWrapper}
+      style={
+        {
+          ...wrapperStyle,
+          '--active-tab-color': activeTabColor ?? '#a859fa',
+        } as CSSProperties
+      }
+    >
       <div className={sectionTabsStyles.sectionTabButtons}>
         {sections.map(({ id, title }) => (
           <Button
@@ -43,7 +59,11 @@ export const SectionTabs = ({ sections, wrapperStyle }: SectionTabsProps): React
               [sectionTabsStyles.sectionTabButtonActive]: activeSection === id,
             })}
           >
-            <Text variant={activeSection === id ? 'p1semiColorful' : 'p1semi'}>{title}</Text>
+            <Text
+              variant={activeSection === id ? activeSectionColor ?? 'p1semiColorful' : 'p1semi'}
+            >
+              {title}
+            </Text>
           </Button>
         ))}
       </div>

@@ -11,6 +11,7 @@ import {
 import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
 
+import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { NavConfig } from '@/features/nav-config/components/NavConfig/NavConfig'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
@@ -32,6 +33,7 @@ export const NavigationWrapper: FC = () => {
   const { userWalletAddress } = useUserWallet()
   const isHoldingAlt = useHoldAlt()
   const [runningGame, setRunningGame] = useState(false)
+  const { features } = useSystemConfig()
 
   return (
     <>
@@ -54,6 +56,7 @@ export const NavigationWrapper: FC = () => {
           window.location.replace('/')
         }}
         startTheGame={isHoldingAlt ? () => setRunningGame(true) : undefined}
+        featuresConfig={features}
       />
       {runningGame && <TheGame closeGame={() => setRunningGame(false)} />}
     </>

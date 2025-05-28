@@ -1,6 +1,10 @@
-import { useEffect, useRef, useState } from 'react'
-import { Card, Text } from '@summerfi/app-earn-ui'
+'use client'
+
+import { type FC, useEffect, useRef, useState } from 'react'
 import { formatShorthandNumber } from '@summerfi/app-utils'
+
+import { Card } from '@/components/atoms/Card/Card'
+import { Text } from '@/components/atoms/Text/Text'
 
 import classNames from './BeachClubRewardSimulation.module.css'
 
@@ -15,7 +19,13 @@ const getMultiplier = (value: number) => {
 
 const max = 1000000
 
-export const BeachClubRewardSimulation = () => {
+interface BeachClubRewardSimulationProps {
+  cardBackgroundColor?: string
+}
+
+export const BeachClubRewardSimulation: FC<BeachClubRewardSimulationProps> = ({
+  cardBackgroundColor,
+}) => {
   const [simulationValue, setSimulationValue] = useState(500000)
   const sliderWrapperRef = useRef<HTMLDivElement>(null)
 
@@ -38,7 +48,7 @@ export const BeachClubRewardSimulation = () => {
       </Text>
       <Card
         style={{
-          backgroundColor: 'var(--earn-protocol-neutral-95)',
+          backgroundColor: cardBackgroundColor ?? 'var(--earn-protocol-neutral-95)',
           marginBottom: 'var(--general-space-24)',
         }}
       >
@@ -58,7 +68,7 @@ export const BeachClubRewardSimulation = () => {
           >
             Base SUMR Rewards
           </Text>
-          <Text as="p" variant="p1semi" style={{ color: 'var(--beach-club-link)' }}>
+          <Text as="p" variant="p1semiColorfulBeachClub">
             +100% Lifetime boost on future SUMR rewards
           </Text>
         </div>

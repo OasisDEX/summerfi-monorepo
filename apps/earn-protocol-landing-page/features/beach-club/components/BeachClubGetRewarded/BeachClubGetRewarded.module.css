@@ -1,0 +1,12 @@
+.beachClubGetRewardedWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  .howItWorksWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 90px;
+  }
+}

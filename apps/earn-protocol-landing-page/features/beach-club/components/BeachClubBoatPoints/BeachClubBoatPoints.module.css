@@ -1,0 +1,22 @@
+.beachClubBoatPointsWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 90px;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: var(--general-space-32);
+
+  @media (min-width: 1024px) {
+    justify-content: space-between;
+  }
+
+  .textualWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    max-width: 598px;
+    gap: var(--general-space-16);
+  }
+}

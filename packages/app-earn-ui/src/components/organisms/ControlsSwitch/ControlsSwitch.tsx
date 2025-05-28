@@ -1,3 +1,4 @@
+'use client'
 import { type Dispatch, type ReactNode, type SetStateAction, useMemo, useState } from 'react'
 import {
   type IArmadaPosition,

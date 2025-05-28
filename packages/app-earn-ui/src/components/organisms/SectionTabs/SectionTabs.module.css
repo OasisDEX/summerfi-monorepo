@@ -79,22 +79,22 @@
 }
 
 .sectionTabButtonActive {
-  border-bottom: 2px solid #a859fa;
+  border-bottom: 2px solid var(--active-tab-color, #a859fa);
   margin-right: 0px;
 }
 
 .sectionTabButtonActive:hover {
-  border-bottom: 2px solid #a859fa;
+  border-bottom: 2px solid var(--active-tab-color, #a859fa);
 }
 
 @media (min-width: 1026px) {
   .sectionTabButtonActive {
-    border-right: 2px solid #a859fa;
+    border-right: 2px solid var(--active-tab-color, #a859fa);
     border-bottom: none;
   }
 
   .sectionTabButtonActive:hover {
-    border-right: 2px solid #a859fa;
+    border-right: 2px solid var(--active-tab-color, #a859fa);
     border-bottom: none;
   }
 }

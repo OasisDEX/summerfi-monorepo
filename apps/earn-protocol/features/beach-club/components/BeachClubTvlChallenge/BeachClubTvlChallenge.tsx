@@ -1,9 +1,14 @@
 import { useMemo, useState } from 'react'
-import { AnimateHeight, Icon, Text, WithArrow } from '@summerfi/app-earn-ui'
+import {
+  AnimateHeight,
+  BeachClubRewardSimulation,
+  Icon,
+  Text,
+  WithArrow,
+} from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
 
-import { BeachClubRewardSimulation } from '@/features/beach-club/components/BeachClubRewardSimulation/BeachClubRewardSimulation'
 import { BeachClubTvlChallengeRewardCard } from '@/features/beach-club/components/BeachClubTvlChallengeRewardCard/BeachClubTvlChallengeRewardCard'
 import { BeachClubVerticalDots } from '@/features/beach-club/components/BeachClubVerticalDots/BeachClubVerticalDots'
 
@@ -103,7 +108,6 @@ export const BeachClubTvlChallenge = () => {
           Hide all <Icon iconName="chevron_up" size={10} />
         </Text>
       )}
-
       <BeachClubRewardSimulation />
     </div>
   )

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import {
+  BeachClubSteps,
   Button,
   CopyToClipboard,
   getTwitterShareUrl,
@@ -9,15 +10,13 @@ import {
 } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
-import { BeachClubSteps } from '@/features/beach-club/components/BeachClubSteps/BeachClubSteps'
-
 import classNames from './BeachClubHowItWorks.module.css'
 
 export const BeachClubHowItWorks = () => {
   const [referralCode, setReferralCode] = useState('')
 
   const handleGenerateReferralCode = () => {
-    setReferralCode('2000000000')
+    setReferralCode('2000000')
   }
 
   const handleCopyReferralCode = () => {

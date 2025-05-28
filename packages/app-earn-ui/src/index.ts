@@ -231,3 +231,8 @@ export {
   type SelectedAnalyticsCookies,
   type SavedAnalyticsCookiesSettings,
 } from './components/molecules/CookieBanner/config'
+
+// beach club
+export { BeachClubSteps } from './features/beach-club//BeachClubSteps/BeachClubSteps'
+export { BeachClubRewardSimulation } from './features/beach-club/BeachClubRewardSimulation/BeachClubRewardSimulation'
+export { BeachClubRadialGradient } from './features/beach-club/BeachClubRadialGradient/BeachClubRadialGradient'

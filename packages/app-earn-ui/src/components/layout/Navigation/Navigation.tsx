@@ -1,7 +1,7 @@
 'use client'
 
 import { type FC, type ReactNode, useEffect, useMemo, useState } from 'react'
-import { type NavigationMenuPanelLinkType } from '@summerfi/app-types'
+import { type EarnAppConfigType, type NavigationMenuPanelLinkType } from '@summerfi/app-types'
 
 import { NavigationActions } from '@/components/layout/Navigation/NavigationActions'
 import { NavigationBranding } from '@/components/layout/Navigation/NavigationBranding'
@@ -39,6 +39,7 @@ export interface EarnNavigationProps {
   noNavMargin?: boolean
   onLogoClick?: () => void
   startTheGame?: () => void
+  featuresConfig?: EarnAppConfigType['features']
 }
 
 export const Navigation: FC<EarnNavigationProps> = ({
@@ -53,6 +54,7 @@ export const Navigation: FC<EarnNavigationProps> = ({
   noNavMargin = false,
   onLogoClick,
   startTheGame,
+  featuresConfig,
 }) => {
   const [tempCurrentPath, setTempCurrentPath] = useState(currentPath)
   const [mobileMenuOpened, setMobileMenuOpened] = useState(false)
@@ -102,6 +104,7 @@ export const Navigation: FC<EarnNavigationProps> = ({
           toggleMobileMenu={toggleMobileMenu}
           configComponent={configComponent}
           startTheGame={startTheGame}
+          featuresConfig={featuresConfig}
         />
       </header>
       {(isMobile || isTablet) && (
@@ -115,6 +118,7 @@ export const Navigation: FC<EarnNavigationProps> = ({
         >
           <MobileDrawerDefaultWrapper slideFrom="top">
             <NavigationMenuMobile
+              featuresConfig={featuresConfig}
               logo={logoSmall}
               links={links}
               currentPath={currentPath}

@@ -5,6 +5,8 @@ declare const styles: {
   readonly "bubblesShadow": string;
   readonly "mainContainer": string;
   readonly "newsletterDescription": string;
+  readonly "palmHidden": string;
+  readonly "palms": string;
   readonly "video": string;
 };
 export = styles;

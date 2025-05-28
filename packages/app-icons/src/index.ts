@@ -379,6 +379,12 @@ export const icons = {
   social_link_beach_club: customLazy(
     () => import('./icons/social_link_beach_club.svg?react'),
   ) as IconExportType,
+  social_question_beach_club: customLazy(
+    () => import('./icons/social_question_beach_club.svg?react'),
+  ) as IconExportType,
+  social_plant_beach_club: customLazy(
+    () => import('./icons/social_plant_beach_club.svg?react'),
+  ) as IconExportType,
   sonic_badge_mainnet: customLazy(
     () => import('./icons/sonic_badge_mainnet.svg?react'),
   ) as IconExportType,
@@ -808,6 +814,8 @@ export const iconsSync: {
   social_x: import('./icons/social_x.svg?react'),
   social_link_beach_club: import('./icons/social_link_beach_club.svg?react'),
   social_x_beach_club: import('./icons/social_x_beach_club.svg?react'),
+  social_question_beach_club: import('./icons/social_question_beach_club.svg?react'),
+  social_plant_beach_club: import('./icons/social_plant_beach_club.svg?react'),
   sonic_badge_mainnet: import('./icons/sonic_badge_mainnet.svg?react'),
   spark_circle_color: import('./icons/spark_circle_color.svg?react'),
   stars: import('./icons/stars.svg?react'),

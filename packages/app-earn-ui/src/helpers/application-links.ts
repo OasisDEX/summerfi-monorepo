@@ -3,6 +3,7 @@ export const INTERNAL_LINKS = {
   summerPro: 'https://pro.summer.fi',
   summerLazy: 'https://summer.fi',
   appUrl: 'https://summer.fi',
+  beachClub: 'https://summer.fi/beach-club',
   homepage: '/earn/',
   about: '/earn/about',
   privacy: '/earn/privacy',

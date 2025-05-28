@@ -1,5 +1,5 @@
 declare const styles: {
-  readonly "palmHidden": string;
+  readonly "beachClubPage": string;
 };
 export = styles;
 
