@@ -1,4 +1,5 @@
-import { Card, Text } from '@summerfi/app-earn-ui'
+import { Card, SUMR_CAP, Text, useLocalConfig } from '@summerfi/app-earn-ui'
+import { formatFiatBalance } from '@summerfi/app-utils'
 import Image from 'next/image'
 
 import logoBeachClub from '@/public/img/branding/logo-beach-club.svg'
@@ -7,7 +8,14 @@ import classNames from './BeachClubBigBanner.module.css'
 
 import waves from '@/public/img/beach_club/waves.png'
 
+const earnUpTo = 500000
+
 export const BeachClubBigBanner = () => {
+  const {
+    state: { sumrNetApyConfig },
+  } = useLocalConfig()
+  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
+
   return (
     <Card className={classNames.beachClubBigBannerWrapper}>
       <div className={classNames.beachClubTextualWrapper}>
@@ -29,10 +37,10 @@ export const BeachClubBigBanner = () => {
           Earn up to
         </Text>
         <Text as="h2" variant="h2colorfulBeachClub">
-          500,000 $SUMR
+          {formatFiatBalance(earnUpTo).split('.')[0]} $SUMR
         </Text>
         <Text as="h5" variant="h5" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-          $250,030.32
+          ${formatFiatBalance(estimatedSumrPrice * earnUpTo)}
         </Text>
       </Card>
       <Image
