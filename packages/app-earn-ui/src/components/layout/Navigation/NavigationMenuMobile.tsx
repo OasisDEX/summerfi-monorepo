@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react'
 import { Fragment } from 'react/jsx-runtime'
+import { type EarnAppConfigType } from '@summerfi/app-types'
 import clsx from 'clsx'
 import Link from 'next/link'
 
@@ -21,6 +22,7 @@ type NavigationMobileMenuType = {
   signUpComponent?: ReactNode
   walletConnectionComponent?: ReactNode
   secondaryWalletConnectionComponent?: ReactNode
+  featuresConfig?: EarnAppConfigType['features']
 }
 
 export const NavigationMenuMobile = ({
@@ -31,7 +33,10 @@ export const NavigationMenuMobile = ({
   signUpComponent,
   walletConnectionComponent,
   secondaryWalletConnectionComponent,
+  featuresConfig,
 }: NavigationMobileMenuType): React.ReactNode => {
+  const beachClubEnabled = !!featuresConfig?.BeachClub
+
   return (
     <>
       <div className={navigationMenuMobileStyles.topBar}>
@@ -52,6 +57,22 @@ export const NavigationMenuMobile = ({
       <div className={navigationMenuMobileStyles.spacer} />
       <div className={navigationMenuMobileStyles.linksListWrapper}>
         <div className={navigationMenuMobileStyles.linksList}>
+          {beachClubEnabled && (
+            <Link href={INTERNAL_LINKS.beachClub} target="_blank">
+              <Button
+                variant="textSecondaryLarge"
+                disabled={false}
+                style={{
+                  padding: `0.25em 0.375em 0.25em 0px`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 'var(--general-space-4)',
+                }}
+              >
+                Beach club <Icon iconName="beach_club_icon" size={24} />
+              </Button>
+            </Link>
+          )}
           <Link href={INTERNAL_LINKS.summerPro} target="_blank">
             <Button
               variant="textSecondaryLarge"

@@ -1,12 +1,23 @@
 'use client'
 
 import { type PropsWithChildren, useEffect, useState } from 'react'
-import { Footer, GlobalIssueBanner, NewsletterWrapper, Text } from '@summerfi/app-earn-ui'
+import {
+  BeachClubRadialGradient,
+  Footer,
+  GlobalIssueBanner,
+  NewsletterWrapper,
+  Text,
+} from '@summerfi/app-earn-ui'
+import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
 
 import landingMasterPageStyles from '@/components/layout/LandingMasterPage/landingMasterPage.module.css'
+
+import palmLeft from '@/public/img/beach-club/palm_1.png'
+import palmRight from '@/public/img/beach-club/palm_2.png'
 
 interface LandingMasterPageProps {}
 
@@ -15,6 +26,9 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
 }) => {
   const [scrolledAmount, setScrolledAmount] = useState(0)
   const { landingPageData } = useLandingPageData()
+  const pathname = usePathname()
+  const showBubbles = !pathname.includes('beach-club')
+  const showPalms = pathname.includes('beach-club')
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,21 +47,58 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
       {landingPageData?.systemConfig.bannerMessage && (
         <GlobalIssueBanner message={landingPageData.systemConfig.bannerMessage} />
       )}
-      <div className={landingMasterPageStyles.bubbles} style={{ top: `${scrolledAmount * 0.2}px` }}>
-        <div className={landingMasterPageStyles.bubblesShadow} />
-        <video
-          width="100%"
-          autoPlay
-          loop
-          muted
-          playsInline
-          className={landingMasterPageStyles.video}
+
+      {showBubbles && (
+        <div
+          className={landingMasterPageStyles.bubbles}
+          style={{ top: `${scrolledAmount * 0.2}px` }}
         >
-          <source src="/img/landing-page/bubbles.mp4" type="video/mp4" />
-        </video>
-      </div>
+          <div className={landingMasterPageStyles.bubblesShadow} />
+          <video
+            width="100%"
+            autoPlay
+            loop
+            muted
+            playsInline
+            className={landingMasterPageStyles.video}
+          >
+            <source src="/img/landing-page/bubbles.mp4" type="video/mp4" />
+          </video>
+        </div>
+      )}
       <div className={landingMasterPageStyles.appContainer}>
         <NavigationWrapper />
+        {showPalms && (
+          <div className={landingMasterPageStyles.palms}>
+            <Image
+              src={palmLeft}
+              alt="palm_left"
+              height="577"
+              style={{
+                position: 'absolute',
+                left: '-100px',
+                transition: 'opacity 0.3s ease-in-out',
+                zIndex: -1,
+              }}
+              className={landingMasterPageStyles.palmHidden}
+              priority
+            />
+            <BeachClubRadialGradient isBeachClub opacity={0.7} />
+            <Image
+              src={palmRight}
+              alt="palm_right"
+              height="422"
+              style={{
+                position: 'absolute',
+                right: '0',
+                top: '130px',
+                transition: 'opacity 0.3s ease-in-out',
+                zIndex: -1,
+              }}
+              priority
+            />
+          </div>
+        )}
         {children}
         <Footer
           logo="/img/branding/logo-light.svg"

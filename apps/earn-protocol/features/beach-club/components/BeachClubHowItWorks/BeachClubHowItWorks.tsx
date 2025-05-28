@@ -17,7 +17,7 @@ export const BeachClubHowItWorks = () => {
   const [referralCode, setReferralCode] = useState('')
 
   const handleGenerateReferralCode = () => {
-    setReferralCode('2000000000')
+    setReferralCode('2000000')
   }
 
   const handleCopyReferralCode = () => {

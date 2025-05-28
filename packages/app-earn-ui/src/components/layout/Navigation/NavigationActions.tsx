@@ -1,4 +1,5 @@
 import { type ReactNode } from 'react'
+import { type EarnAppConfigType } from '@summerfi/app-types'
 import clsx from 'clsx'
 import Link from 'next/link'
 
@@ -15,6 +16,7 @@ interface NavigationActionsProps {
   configComponent?: ReactNode
   toggleMobileMenu: () => void
   startTheGame?: () => void
+  featuresConfig?: EarnAppConfigType['features']
 }
 
 export const NavigationActions = ({
@@ -23,7 +25,10 @@ export const NavigationActions = ({
   toggleMobileMenu,
   configComponent,
   startTheGame,
+  featuresConfig,
 }: NavigationActionsProps): React.ReactNode => {
+  const beachClubEnabled = !!featuresConfig?.BeachClub
+
   return (
     <div>
       <div className={navigationActionsStyles.navigationActionsWrapper}>
@@ -31,6 +36,18 @@ export const NavigationActions = ({
           <div onClick={startTheGame} className={navigationActionsStyles.theGameButton}>
             <Icon iconName="gamepad" size={22} />
           </div>
+        )}
+        {beachClubEnabled && (
+          <Link href={INTERNAL_LINKS.beachClub} target="_blank">
+            <Text
+              as="div"
+              variant="p2semiColorfulBeachClub"
+              className={clsx(navigationActionsStyles.summerProButton)}
+              style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}
+            >
+              Beach club <Icon iconName="beach_club_icon" size={24} />
+            </Text>
+          </Link>
         )}
         <Link href={INTERNAL_LINKS.summerPro} target="_blank">
           <Text as="p" variant="p2semi" className={clsx(navigationActionsStyles.summerProButton)}>
