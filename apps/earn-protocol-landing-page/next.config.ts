@@ -35,6 +35,9 @@ const nextConfig: (phase: string) => NextConfig = (phase) => ({
         }),
       }
     : {}),
+  images: {
+    unoptimized: true,
+  },
 })
 
 export default nextConfig
