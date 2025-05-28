@@ -43,9 +43,9 @@ export const NewsletterWrapper: FC<NewsletterWrapperProps> = ({
       setNewsletterStatus('loading')
       setNewsletterStatusLabel('')
     }
-    // no base path, this is a call to oasis-borrow
     try {
-      const response = await fetch(`${isEarnApp ? '/earn' : ''}/api/newsletter-subscribe`, {
+      // since we moved to static LP there is just earn apps endpoint
+      const response = await fetch(`/earn/api/newsletter-subscribe`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
