@@ -1,0 +1,97 @@
+name: Deploy Earn Protocol Static Landing Page Production
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  # changes: // not used on production
+  build-earn-protocol-landing-page:
+    name: Build and deploy Earn Protocol Static Landing Page
+    runs-on: ubuntu-22.04
+    permissions:
+      id-token: write
+    environment: production
+    env:
+      AWS_REGION: eu-central-1
+      ENVIRONMENT_TAG: production
+      SERVICE_NAME: summer-fi-earn-lp-service-prod
+      CLUSTER_NAME: summer-fi-earn-lp-production
+      CONFIG_URL: ${{ secrets.CONFIG_URL }}
+      CONFIG_URL_EARN: ${{ secrets.CONFIG_URL_EARN }}
+      CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
+      EARN_MIXPANEL_KEY: ${{ secrets.EARN_MIXPANEL_KEY }}
+      FUNCTIONS_API_URL: ${{ secrets.FUNCTIONS_API_URL }}
+      NEXT_PUBLIC_EARN_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_EARN_MIXPANEL_KEY }}
+      SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
+      NEXT_TELEMETRY_DISABLED: ${{ secrets.NEXT_TELEMETRY_DISABLED }}
+      FORECAST_API_URL: ${{ secrets.FORECAST_API_URL }}
+      SDK_API_URL: ${{ secrets.SDK_API_URL }}
+      NEWSLETTER_API_KEY: ${{ secrets.NEWSLETTER_API_KEY }}
+      NEWSLETTER_PUBLICATION_ID: ${{ secrets.NEWSLETTER_PUBLICATION_ID }}
+      NEWSLETTER_ENDPOINT: ${{ secrets.NEWSLETTER_ENDPOINT }}
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Set up turbo cache
+        uses: rharkor/caching-for-turbo@v1.8
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 8.14.1
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Setup Earn Protocol LP App Next.js Cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/apps/earn-protocol-landing-page/.next/cache
+          key:
+            ${{ runner.os }}-earn-protocol-landing-page-app-${{ hashFiles('pnpm-lock.yaml') }}-${{
+            hashFiles('apps/earn-protocol-landing-page/**/*.ts',
+            'apps/earn-protocol-landing-page/**/*.tsx') }}
+          restore-keys:
+            ${{ runner.os }}-earn-protocol-landing-page-app-${{ hashFiles('pnpm-lock.yaml') }}-
+
+      - name: Extract commit hash
+        id: vars
+        run: |
+          calculatedSha=$(git rev-parse --short ${{ github.sha }})
+          echo "NEXT_PUBLIC_SHA=$calculatedSha" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Prebuild
+        run: pnpm prebuild
+
+      - name: Build
+        run: pnpm build-earn-frontend-landing
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4.2.1
+        with:
+          role-to-assume: ${{ secrets.BUILD_DEPLOY_OIDC_ROLE_PROD }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Copy LP static files to a bucket 🪣
+        run: |
+          # Remove files from destination that are not in the source
+          # Make uploaded files publicly readable
+          # Set cache control headers for long-term caching
+          aws s3 sync apps/earn-protocol-landing-page/out s3://${{ vars.LANDING_PAGE_BUCKET_NAME }}/ \
+            --delete \
+            --cache-control max-age=31536000,public
+
+      - name: Invalidate CloudFront
+        run: |
+          AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.EARN_CF_DIST_ID }} --paths "/*"
