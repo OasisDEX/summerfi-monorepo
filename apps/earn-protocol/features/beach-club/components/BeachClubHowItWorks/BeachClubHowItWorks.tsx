@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import {
+  BeachClubSteps,
   Button,
   CopyToClipboard,
   getTwitterShareUrl,
@@ -8,8 +9,6 @@ import {
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
-
-import { BeachClubSteps } from '@/features/beach-club/components/BeachClubSteps/BeachClubSteps'
 
 import classNames from './BeachClubHowItWorks.module.css'
 

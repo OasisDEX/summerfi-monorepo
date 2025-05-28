@@ -254,7 +254,7 @@ export type IconNamesList =
   | 'social_x'
   | 'social_x_beach_club'
   | 'social_question_beach_club'
-  | 'social_plan_beach_club'
+  | 'social_plant_beach_club'
   | 'stars'
   | 'stars_colorful'
   | 'sumr'
