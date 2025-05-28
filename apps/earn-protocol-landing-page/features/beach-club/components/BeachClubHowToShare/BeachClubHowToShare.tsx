@@ -1,5 +1,4 @@
-import { Card, Icon, Text } from '@summerfi/app-earn-ui'
-import type { IconNamesList } from '@summerfi/app-earn-ui/src/components/atoms/Icon/Icon'
+import { Card, Icon, type IconNamesList, Text } from '@summerfi/app-earn-ui'
 
 import classNames from './BeachClubHowToShare.module.css'
 
@@ -35,7 +34,7 @@ export const BeachClubHowToShare = () => {
         {cards.map((card) => (
           <Card className={classNames.card} key={card.title} variant="cardSecondary">
             <div className={classNames.cardIconsWrapper}>
-              {card.icons?.map((icon) => (
+              {card.icons.map((icon) => (
                 <Icon key={icon} iconName={icon as IconNamesList} size={45} />
               ))}
             </div>
