@@ -15,6 +15,7 @@ import { type SDKNetwork, type SDKVaultType, type TokenSymbolsList } from '@summ
 import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
+import { memoize } from 'lodash-es'
 import Link from 'next/link'
 
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
@@ -81,74 +82,10 @@ const calculateYearlyYieldRange = (rates: { averageRate: number; date: number }[
   }
 }
 
-export const vaultExposureMapper = (
-  vault: SDKVaultType,
-  arksInterestRates: GetInterestRatesReturnType,
-  sortConfig?: TableSortedColumn<string>,
-) => {
-  const vaultInputTokenBalance = vault.inputTokenBalance
+type MapperVaultNetwork = SDKNetwork.Mainnet | SDKNetwork.ArbitrumOne | SDKNetwork.Base
 
-  const arksLatestInterestRates = mapArkLatestInterestRates(arksInterestRates)
-
-  const extendedArks = vault.arks.map((ark) => {
-    const currentApy = arksLatestInterestRates[ark.name as string]
-    const arkRates = arksInterestRates[ark.name as string]
-
-    const apy = isNaN(Number(currentApy))
-      ? new BigNumber(0)
-      : new BigNumber(currentApy ?? 0).div(100)
-
-    const avgApy30d = calculateAverageApy(arkRates.dailyInterestRates ?? [], 30)
-    const avgApy1y = calculateAverageApy(arkRates.dailyInterestRates ?? [], 365)
-    const yearlyYieldRange = calculateYearlyYieldRange(arkRates.dailyInterestRates ?? [])
-    const maxPercentageTVL = new BigNumber(ark.maxDepositPercentageOfTVL.toString()).shiftedBy(
-      -18 - 2, // -18 because its 'in wei' and then -2 because we want to use formatDecimalAsPercent
-    )
-    const arkTokenTVL = new BigNumber(ark.inputTokenBalance.toString()).shiftedBy(
-      -vault.inputToken.decimals,
-    )
-    const allocationRatio =
-      vaultInputTokenBalance.toString() !== '0'
-        ? new BigNumber(ark.inputTokenBalance.toString()).div(vaultInputTokenBalance.toString())
-        : '0'
-    const absoluteAllocationCap =
-      ark.depositCap.toString() !== '0'
-        ? new BigNumber(ark.depositCap.toString()).shiftedBy(-ark.inputToken.decimals).toString()
-        : '0'
-
-    const vaultTvlAllocationCap = new BigNumber(
-      new BigNumber(vaultInputTokenBalance.toString()).shiftedBy(-vault.inputToken.decimals),
-    ).times(maxPercentageTVL)
-    const mainAllocationCap = BigNumber.minimum(absoluteAllocationCap, vaultTvlAllocationCap)
-
-    const capRatio = BigNumber.minimum(arkTokenTVL.div(mainAllocationCap), 1)
-
-    const extendedArk: ExtendedArk = {
-      ...ark,
-      apy,
-      avgApy30d,
-      avgApy1y,
-      yearlyYieldRange,
-      arkTokenTVL,
-      absoluteAllocationCap,
-      allocationRatio,
-      capRatio,
-      vaultTvlAllocationCap,
-      mainAllocationCap,
-      maxPercentageTVL,
-    }
-
-    return extendedArk
-  })
-
-  const sortedArks = vaultExposureSorter({ extendedArks, sortConfig })
-
-  const vaultNetwork = vault.protocol.network as
-    | SDKNetwork.Mainnet
-    | SDKNetwork.ArbitrumOne
-    | SDKNetwork.Base
-
-  return sortedArks.map((item) => {
+const sortedArksMapper = (vaultNetwork: MapperVaultNetwork) => {
+  return memoize((item: ExtendedArk) => {
     const arkTokenSymbol = item.inputToken.symbol
 
     const protocol = item.name?.split('-') ?? ['n/a']
@@ -268,9 +205,79 @@ export const vaultExposureMapper = (
         <div
           style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-space-medium)' }}
         >
-          No data available
+          No data available for this ark.
+          <small>
+            {item.id} on {vaultNetwork}
+          </small>
         </div>
       ),
     }
   })
+}
+
+export const vaultExposureMapper = (
+  vault: SDKVaultType,
+  arksInterestRates: GetInterestRatesReturnType,
+  sortConfig?: TableSortedColumn<string>,
+) => {
+  const vaultInputTokenBalance = vault.inputTokenBalance
+
+  const arksLatestInterestRates = mapArkLatestInterestRates(arksInterestRates)
+
+  const extendedArks = vault.arks.map((ark) => {
+    const currentApy = arksLatestInterestRates[ark.name as string]
+    const arkRates = arksInterestRates[ark.name as string]
+
+    const apy = isNaN(Number(currentApy))
+      ? new BigNumber(0)
+      : new BigNumber(currentApy ?? 0).div(100)
+
+    const avgApy30d = calculateAverageApy(arkRates.dailyInterestRates ?? [], 30)
+    const avgApy1y = calculateAverageApy(arkRates.dailyInterestRates ?? [], 365)
+    const yearlyYieldRange = calculateYearlyYieldRange(arkRates.dailyInterestRates ?? [])
+    const maxPercentageTVL = new BigNumber(ark.maxDepositPercentageOfTVL.toString()).shiftedBy(
+      -18 - 2, // -18 because its 'in wei' and then -2 because we want to use formatDecimalAsPercent
+    )
+    const arkTokenTVL = new BigNumber(ark.inputTokenBalance.toString()).shiftedBy(
+      -vault.inputToken.decimals,
+    )
+    const allocationRatio =
+      vaultInputTokenBalance.toString() !== '0'
+        ? new BigNumber(ark.inputTokenBalance.toString()).div(vaultInputTokenBalance.toString())
+        : '0'
+    const absoluteAllocationCap =
+      ark.depositCap.toString() !== '0'
+        ? new BigNumber(ark.depositCap.toString()).shiftedBy(-ark.inputToken.decimals).toString()
+        : '0'
+
+    const vaultTvlAllocationCap = new BigNumber(
+      new BigNumber(vaultInputTokenBalance.toString()).shiftedBy(-vault.inputToken.decimals),
+    ).times(maxPercentageTVL)
+    const mainAllocationCap = BigNumber.minimum(absoluteAllocationCap, vaultTvlAllocationCap)
+
+    const capRatio = BigNumber.minimum(arkTokenTVL.div(mainAllocationCap), 1)
+
+    const extendedArk: ExtendedArk = {
+      ...ark,
+      apy,
+      avgApy30d,
+      avgApy1y,
+      yearlyYieldRange,
+      arkTokenTVL,
+      absoluteAllocationCap,
+      allocationRatio,
+      capRatio,
+      vaultTvlAllocationCap,
+      mainAllocationCap,
+      maxPercentageTVL,
+    }
+
+    return extendedArk
+  })
+
+  const sortedArks = vaultExposureSorter({ extendedArks, sortConfig })
+
+  const vaultNetwork = vault.protocol.network as MapperVaultNetwork
+
+  return sortedArks.map(sortedArksMapper(vaultNetwork))
 }
