@@ -122,6 +122,7 @@ export type IconNamesList =
   | 'op'
   | 'open_in_new_tab'
   | 'oseth_circle_color'
+  | 'origin'
   | 'pax_circle_color'
   | 'pax_color'
   | 'pax'

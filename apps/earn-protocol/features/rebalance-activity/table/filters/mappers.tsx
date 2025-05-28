@@ -53,6 +53,10 @@ const getProtocolIcon = (protocolLabel: string) => {
     return 'silo'
   }
 
+  if (lowerCasedProtocolLabel.includes('origin')) {
+    return 'origin'
+  }
+
   return 'not_supported_icon'
 }
 

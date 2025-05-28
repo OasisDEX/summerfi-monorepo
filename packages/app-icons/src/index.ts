@@ -318,6 +318,7 @@ export const icons = {
   oseth_circle_color: customLazy(
     () => import('./icons/oseth_circle_color.svg?react'),
   ) as IconExportType,
+  origin: customLazy(() => import('./icons/origin.svg?react')) as IconExportType,
   partialTakeProfit: customLazy(() => import('./icons/takeProfit.svg?react')) as IconExportType,
   pax_circle_color: customLazy(
     () => import('./icons/pax_circle_color.svg?react'),
