@@ -109,8 +109,7 @@ export const sstConfig: SSTConfig = {
 
     if (
       _input.stage === 'staging' ||
-      _input.stage === 'production' ||
-      _input.stage === 'armada-prod'
+      _input.stage === 'production'
     ) {
       if (_input.stage === 'production') {
         if (currentBranch !== 'main' && currentBranch !== 'dev') {
