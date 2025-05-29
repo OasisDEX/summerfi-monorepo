@@ -24,6 +24,10 @@ export const configFetcher = async function (): Promise<Partial<EarnAppConfigTyp
 
 export const mainConfigFetcher = async function (): Promise<Partial<AppConfigType>> {
   try {
+    if (!process.env.CONFIG_URL) {
+      throw new Error('CONFIG_URL is not set')
+    }
+
     const response = await fetch(process.env.CONFIG_URL as string, {
       method: 'GET',
       headers: {
@@ -31,6 +35,7 @@ export const mainConfigFetcher = async function (): Promise<Partial<AppConfigTyp
       },
       next: { revalidate: REVALIDATION_TIMES.CONFIG },
     })
+
     const data = await response.json()
 
     return data as AppConfigType

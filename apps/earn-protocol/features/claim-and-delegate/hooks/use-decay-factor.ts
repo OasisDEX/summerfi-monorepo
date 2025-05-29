@@ -6,9 +6,10 @@ import { getChainInfoByChainId } from '@summerfi/sdk-common'
 import { useQuery } from '@tanstack/react-query'
 import BigNumber from 'bignumber.js'
 import { type Address } from 'viem'
+import { base } from 'viem/chains'
 
-import { getSSRPublicClient } from '@/helpers/get-ssr-public-client'
 import { useAppSDK } from '@/hooks/use-app-sdk'
+import { usePublicClient } from '@/hooks/use-public-client'
 
 type DecayFactorResponse = {
   decayFactor: number | undefined
@@ -28,15 +29,10 @@ type DecayFactorResponse = {
  */
 export const useDecayFactor = (delegatedAddress?: string): DecayFactorResponse => {
   const sdk = useAppSDK()
+  const { publicClient } = usePublicClient({ chain: base })
 
   const fetchDecayFactor = async (address: Address): Promise<number> => {
     try {
-      const publicClient = await getSSRPublicClient(SDKChainId.BASE)
-
-      if (!publicClient) {
-        throw new Error(`Public client for chain ${SDKChainId.BASE} not found`)
-      }
-
       const sumrToken = await sdk
         .getSummerToken({
           chainInfo: getChainInfoByChainId(SDKChainId.BASE),
