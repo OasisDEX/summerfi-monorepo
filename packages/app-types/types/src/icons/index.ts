@@ -104,6 +104,7 @@ export type IconNamesList =
   | 'mana_circle_mono'
   | 'mana_color'
   | 'mana'
+  | 'maple'
   | 'matic_circle_color'
   | 'matic_circle_mono'
   | 'mbasis'

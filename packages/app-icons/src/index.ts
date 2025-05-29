@@ -276,6 +276,7 @@ export const icons = {
   ) as IconExportType,
   mana_color: customLazy(() => import('./icons/mana_color.svg?react')) as IconExportType,
   mana: customLazy(() => import('./icons/mana.svg?react')) as IconExportType,
+  maple: customLazy(() => import('./icons/maple.svg?react')) as IconExportType,
   matic_circle_color: customLazy(
     () => import('./icons/matic_circle_color.svg?react'),
   ) as IconExportType,

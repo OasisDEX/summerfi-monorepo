@@ -57,6 +57,10 @@ const getProtocolIcon = (protocolLabel: string) => {
     return 'origin'
   }
 
+  if (lowerCasedProtocolLabel.includes('syrup')) {
+    return 'maple'
+  }
+
   return 'not_supported_icon'
 }
 
