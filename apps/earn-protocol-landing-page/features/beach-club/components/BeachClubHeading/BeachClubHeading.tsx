@@ -25,7 +25,7 @@ export const BeachClubHeading = () => {
         Share Lazy Summer and earn more while you relax. Soon it will be Summer. Time to chill, not
         chase yields.
       </Text>
-      <Link href="/earn/portfolio">
+      <Link href="/earn/portfolio?tab=beach-club">
         <Button variant="beachClubLarge" style={{ minWidth: 'unset', maxWidth: '180px' }}>
           Share your code
         </Button>
