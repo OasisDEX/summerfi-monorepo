@@ -107,10 +107,7 @@ export const sstConfig: SSTConfig = {
       )
     }
 
-    if (
-      _input.stage === 'staging' ||
-      _input.stage === 'production'
-    ) {
+    if (_input.stage === 'staging' || _input.stage === 'production') {
       if (_input.stage === 'production') {
         if (currentBranch !== 'main' && currentBranch !== 'dev') {
           throw new Error('You can only deploy to production from main or dev branch')
