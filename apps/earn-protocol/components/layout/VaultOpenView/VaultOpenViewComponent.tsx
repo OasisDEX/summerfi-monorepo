@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   ControlsDepositWithdraw,
   getDisplayToken,
@@ -45,6 +45,7 @@ import { ControlsApproval, OrderInfoDeposit } from '@/components/molecules/Sideb
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
+import { BeachClubReferralForm } from '@/features/beach-club/components/BeachClubReferralForm/BeachClubReferralForm'
 import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
 import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { mapMigrationResponse } from '@/features/migration/helpers/map-migration-response'
@@ -103,6 +104,7 @@ export const VaultOpenViewComponent = ({
   const { features } = useSystemConfig()
 
   const migrationsEnabled = !!features?.Migrations
+  const beachClubEnabled = !!features?.BeachClub
 
   const { userWalletAddress } = useUserWallet()
 
@@ -117,6 +119,17 @@ export const VaultOpenViewComponent = ({
   const [migratablePositions, setMigratablePositions] = useState<MigratablePosition[]>([])
   const [migrationBestVaultApy, setMigrationBestVaultApy] =
     useState<MigrationEarningsDataByChainId>()
+
+  const [referralCodeError, setReferralCodeError] = useState<string | null>(null)
+  const [referralCode, setReferralCode] = useState<string>('')
+
+  const handleReferralCodeError = useCallback((error: string | null) => {
+    setReferralCodeError(error)
+  }, [])
+
+  const handleReferralCodeChange = useCallback((value: string) => {
+    setReferralCode(value)
+  }, [])
 
   useEffect(() => {
     const fetchMigratablePositions = async (walletAddress: string) => {
@@ -256,6 +269,7 @@ export const VaultOpenViewComponent = ({
     ownerView: true,
     approvalCustomValue: approvalAmountParsed,
     sidebarTransactionType: TransactionAction.DEPOSIT,
+    referralCode,
   })
 
   const { position } = usePosition({
@@ -376,6 +390,14 @@ export const VaultOpenViewComponent = ({
       tokenBalanceLoading={selectedTokenBalanceLoading}
       manualSetAmount={manualSetAmount}
       ownerView
+      contentAfterInput={
+        beachClubEnabled ? (
+          <BeachClubReferralForm
+            onError={handleReferralCodeError}
+            onChange={handleReferralCodeChange}
+          />
+        ) : undefined
+      }
     />
   )
 
@@ -412,7 +434,7 @@ export const VaultOpenViewComponent = ({
         />
       </>
     ),
-    error: sidebar.error,
+    error: sidebar.error ?? referralCodeError,
     isMobileOrTablet,
   }
 

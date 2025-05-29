@@ -1,0 +1,29 @@
+.beachClubReferralFormWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--general-space-8);
+  width: 100%;
+
+  .inputWrapper {
+    position: relative;
+    width: 100%;
+
+    .checkmarkIcon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      right: var(--general-space-16);
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .loadingSpinner {
+      position: absolute;
+      right: var(--general-space-16);
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+}

@@ -22,6 +22,7 @@ type ControlsDepositWithdrawProps = {
   manualSetAmount: (amountParsed: string | undefined) => void
   ownerView?: boolean
   transactionType?: TransactionAction
+  contentAfterInput?: React.ReactNode
 }
 
 export const ControlsDepositWithdraw = ({
@@ -39,6 +40,7 @@ export const ControlsDepositWithdraw = ({
   onBlur,
   manualSetAmount,
   transactionType,
+  contentAfterInput,
 }: ControlsDepositWithdrawProps): React.ReactNode => {
   return (
     <div className={constrolsDepositWithdrawStyles.depositViewWrapper}>
@@ -77,6 +79,7 @@ export const ControlsDepositWithdraw = ({
             : undefined,
         }}
       />
+      {contentAfterInput}
     </div>
   )
 }

@@ -69,6 +69,7 @@ type UseTransactionParams = {
   approvalTokenSymbol?: string
   sidebarTransactionType: TransactionAction
   setSidebarTransactionType?: Dispatch<SetStateAction<TransactionAction>>
+  referralCode?: string
 }
 
 const errorsMap = {
@@ -97,6 +98,7 @@ export const useTransaction = ({
   approvalCustomValue,
   sidebarTransactionType,
   setSidebarTransactionType,
+  referralCode,
 }: UseTransactionParams) => {
   const { refresh: refreshView, push } = useRouter()
   const [slippageConfig] = useSlippageConfig()
@@ -169,6 +171,7 @@ export const useTransaction = ({
           fleetAddress: vault.id,
           chainInfo: getChainInfoByChainId(vaultChainId),
           slippage: Number(slippageConfig.slippage),
+          referralCode,
         })
 
         if (transactionsList.length <= 0) {

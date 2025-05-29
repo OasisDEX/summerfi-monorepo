@@ -49,6 +49,18 @@
   text-align: left;
   border-radius: var(--general-radius-8);
 }
+
+.dark::-webkit-outer-spin-button,
+.dark::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.dark[type='number'] {
+  -moz-appearance: textfield;
+}
+
 .dark:hover {
   border-color: var(--color-neutral-70);
 }
@@ -69,7 +81,8 @@
 }
 .withBorder:hover {
   border: double 1.5px transparent;
-  background-image: linear-gradient(rgb(43, 43, 43), rgb(43, 43, 43)), linear-gradient(90deg, rgba(255, 73, 164, 0.5), rgba(176, 73, 255, 0.5));
+  background-image: linear-gradient(rgb(43, 43, 43), rgb(43, 43, 43)),
+    linear-gradient(90deg, rgba(255, 73, 164, 0.5), rgba(176, 73, 255, 0.5));
   background-origin: border-box;
   background-clip: padding-box, border-box;
   transition: border 0.2s ease-out;

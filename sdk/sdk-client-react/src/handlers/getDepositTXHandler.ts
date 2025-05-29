@@ -19,6 +19,7 @@ export const getDepositTXHandler =
     chainInfo,
     slippage,
     shouldStake,
+    referralCode,
   }: {
     fleetAddress: string
     walletAddress: IAddress
@@ -26,6 +27,7 @@ export const getDepositTXHandler =
     chainInfo: IChainInfo
     slippage: number
     shouldStake?: boolean
+    referralCode?: string
   }) => {
     const poolId = ArmadaVaultId.createFrom({
       chainInfo,
@@ -45,5 +47,6 @@ export const getDepositTXHandler =
       amount: amount,
       slippage: Percentage.createFrom({ value: slippage }),
       shouldStake,
+      referralCode,
     })
   }
