@@ -2,6 +2,7 @@ import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { type NetworkNames, type TokenSymbolsList } from '@summerfi/app-types'
 
 export type PortfolioWalletAsset = {
+  id: string
   name: string
   network: NetworkNames
   symbol: TokenSymbolsList
@@ -9,7 +10,6 @@ export type PortfolioWalletAsset = {
   price24hChange?: number
   balance: number
   balanceUSD: number
-  id: string
 }
 
 export type PortfolioAssetsResponse = {
