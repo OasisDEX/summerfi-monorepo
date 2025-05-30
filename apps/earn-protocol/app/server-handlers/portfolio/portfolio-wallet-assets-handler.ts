@@ -21,6 +21,11 @@ export type PortfolioAssetsResponse = {
 export const portfolioWalletAssetsHandler = async (
   walletAddress: string,
 ): Promise<PortfolioAssetsResponse> => {
+  // Return empty, default values if in dev environment
+  if (process.env.ENVIRONMENT_TAG === 'dev') {
+    return { totalAssetsUsdValue: 0, totalAssetsPercentageChange: 0, assets: [] }
+  }
+
   return await fetch(
     `${process.env.FUNCTIONS_API_URL}/api/portfolio/assets?address=${walletAddress}`,
     {
