@@ -23,7 +23,7 @@ export const BeachClubTvlChallenge = () => {
 
   const stats = [
     {
-      value: `$${formatFiatBalance(100000)}`,
+      value: `$${formatFiatBalance(currentGroupTvl)}`,
       description: 'Total TVL',
     },
     {

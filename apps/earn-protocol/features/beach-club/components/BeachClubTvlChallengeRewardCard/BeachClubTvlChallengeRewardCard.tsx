@@ -24,6 +24,7 @@ import classNames from './BeachClubTvlChallengeRewardCard.module.css'
 interface BeachClubTvlChallengeRewardCardProps {
   tvlGroup: string
   rawTvlGroup: number
+  nextGroupTvl: number
   description: string
   boost: string
   sumrToEarn: number
@@ -35,6 +36,7 @@ interface BeachClubTvlChallengeRewardCardProps {
 export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCardProps> = ({
   tvlGroup,
   rawTvlGroup,
+  nextGroupTvl,
   description,
   boost,
   sumrToEarn,
@@ -56,7 +58,7 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
     <Card
       className={`${classNames.beachClubTvlChallengeRewardCardWrapper} ${colorfulBorder ? classNames.colorfulBorder : ''} ${colorfulBackground ? classNames.colorfulBackground : ''}`}
       style={{
-        opacity: groupAchieved ? 1 : 0.5,
+        opacity: !groupAchieved ? 1 : 0.5,
         ...(colorfulBackground && {
           background: 'var(--gradient-earn-protocol-beach-club-5)',
         }),
@@ -108,7 +110,7 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
           <div className={classNames.footer}>
             {!groupAchieved ? (
               <BeachClubProgressBar max={rawTvlGroup} current={currentGroupTvl} />
-            ) : (
+            ) : !(currentGroupTvl >= nextGroupTvl) ? (
               <Text
                 as="div"
                 variant="p1semiColorfulBeachClub"
@@ -121,7 +123,7 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
               >
                 <Icon iconName="star_solid_beach_club" size={24} /> You are here!
               </Text>
-            )}
+            ) : null}
             {leftToBoost > 0 && (
               <Text
                 as="p"
