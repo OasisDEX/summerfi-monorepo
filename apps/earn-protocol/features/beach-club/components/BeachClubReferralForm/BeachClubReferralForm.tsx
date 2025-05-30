@@ -12,7 +12,7 @@ interface BeachClubReferralFormProps {
 const mockCheckReferralCode = (_code: string): Promise<{ isCorrectCode: boolean }> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve({ isCorrectCode: false })
+      resolve({ isCorrectCode: true })
     }, 500)
   })
 }
@@ -27,11 +27,9 @@ export const BeachClubReferralForm: FC<BeachClubReferralFormProps> = ({ onError,
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const newValue = e.target.value
 
-      if (newValue === '' || Number(newValue) <= 9999999) {
-        setValue(newValue)
-        onChange(newValue)
-        setIsValid(false)
-      }
+      setValue(newValue)
+      onChange(newValue)
+      setIsValid(false)
     },
     [onChange],
   )
@@ -77,7 +75,6 @@ export const BeachClubReferralForm: FC<BeachClubReferralFormProps> = ({ onError,
           placeholder="Enter your referral code"
           style={{ width: '100%' }}
           variant="dark"
-          type="number"
           value={value}
           onChange={handleChange}
         />

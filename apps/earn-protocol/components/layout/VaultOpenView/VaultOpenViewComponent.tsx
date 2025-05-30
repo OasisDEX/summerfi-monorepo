@@ -270,6 +270,7 @@ export const VaultOpenViewComponent = ({
     approvalCustomValue: approvalAmountParsed,
     sidebarTransactionType: TransactionAction.DEPOSIT,
     referralCode,
+    referralCodeError,
   })
 
   const { position } = usePosition({

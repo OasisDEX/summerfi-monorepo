@@ -70,6 +70,7 @@ type UseTransactionParams = {
   sidebarTransactionType: TransactionAction
   setSidebarTransactionType?: Dispatch<SetStateAction<TransactionAction>>
   referralCode?: string
+  referralCodeError?: string | null
 }
 
 const errorsMap = {
@@ -99,6 +100,7 @@ export const useTransaction = ({
   sidebarTransactionType,
   setSidebarTransactionType,
   referralCode,
+  referralCodeError,
 }: UseTransactionParams) => {
   const { refresh: refreshView, push } = useRouter()
   const [slippageConfig] = useSlippageConfig()
@@ -242,6 +244,7 @@ export const useTransaction = ({
     slippageConfig.slippage,
     getVaultSwitchTx,
     positionAmount,
+    referralCode,
   ])
 
   // Configure User Operation (transaction) sender, passing client which can be undefined
@@ -573,6 +576,14 @@ export const useTransaction = ({
       }
     }
 
+    if (referralCodeError) {
+      return {
+        label: 'Preview',
+        action: () => null,
+        disabled: true,
+      }
+    }
+
     return {
       label: 'Preview',
       action: getTransactionsList,
@@ -606,6 +617,7 @@ export const useTransaction = ({
     push,
     vault.protocol.network,
     isEditingSwitchAmount,
+    referralCodeError,
   ])
 
   const sidebarTitle = useMemo(() => {
