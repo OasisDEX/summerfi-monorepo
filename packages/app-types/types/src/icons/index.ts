@@ -258,6 +258,7 @@ export type IconNamesList =
   | 'social_plant_beach_club'
   | 'stars'
   | 'stars_colorful'
+  | 'star_solid_beach_club'
   | 'sumr'
   | 'summer_illustration_check'
   | 'summer_illustration_email'

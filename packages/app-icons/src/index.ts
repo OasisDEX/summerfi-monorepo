@@ -394,6 +394,9 @@ export const icons = {
   ) as IconExportType,
   stars: customLazy(() => import('./icons/stars.svg?react')) as IconExportType,
   stars_colorful: customLazy(() => import('./icons/stars_colorful.svg?react')) as IconExportType,
+  star_solid_beach_club: customLazy(
+    () => import('./icons/star_solid_beach_club.svg?react'),
+  ) as IconExportType,
   steth_circle_color: customLazy(
     () => import('./icons/steth_circle_color.svg?react'),
   ) as IconExportType,

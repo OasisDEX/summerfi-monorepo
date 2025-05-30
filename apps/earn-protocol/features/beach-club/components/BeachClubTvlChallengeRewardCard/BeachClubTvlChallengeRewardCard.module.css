@@ -97,7 +97,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--general-space-16);
+    gap: var(--general-space-12);
     width: 100%;
     margin-top: var(--general-space-20);
 
@@ -112,7 +112,7 @@
         display: flex;
         align-items: center;
         gap: var(--general-space-4);
-        color: var(--earn-protocol-secondary-40);
+        color: var(--earn-protocol-secondary-60);
         cursor: pointer;
         &:hover {
           color: var(--earn-protocol-secondary-80);

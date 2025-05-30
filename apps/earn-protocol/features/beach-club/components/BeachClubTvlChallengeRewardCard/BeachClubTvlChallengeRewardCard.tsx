@@ -1,7 +1,6 @@
 import { type FC, useState } from 'react'
 import {
   AnimateHeight,
-  Button,
   Card,
   getTwitterShareUrl,
   Icon,
@@ -23,27 +22,23 @@ import { BeachClubProgressBar } from '@/features/beach-club/components/BeachClub
 import classNames from './BeachClubTvlChallengeRewardCard.module.css'
 
 interface BeachClubTvlChallengeRewardCardProps {
-  isLocked: boolean
   tvlGroup: string
   rawTvlGroup: number
   description: string
   boost: string
   sumrToEarn: number
   currentGroupTvl: number
-  boostClaimed: boolean
   colorfulBackground?: boolean
   colorfulBorder?: boolean
 }
 
 export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCardProps> = ({
-  isLocked,
   tvlGroup,
   rawTvlGroup,
   description,
   boost,
   sumrToEarn,
   currentGroupTvl,
-  boostClaimed,
   colorfulBackground,
   colorfulBorder,
 }) => {
@@ -52,9 +47,8 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
   } = useLocalConfig()
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
   const currentUrl = useCurrentUrl()
-  const [isExpanded, setIsExpanded] = useState(isLocked)
-
-  const readyToBoost = currentGroupTvl >= rawTvlGroup && !boostClaimed
+  const groupAchieved = currentGroupTvl >= rawTvlGroup
+  const [isExpanded, setIsExpanded] = useState(!groupAchieved)
 
   const leftToBoost = rawTvlGroup - currentGroupTvl
 
@@ -62,7 +56,7 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
     <Card
       className={`${classNames.beachClubTvlChallengeRewardCardWrapper} ${colorfulBorder ? classNames.colorfulBorder : ''} ${colorfulBackground ? classNames.colorfulBackground : ''}`}
       style={{
-        opacity: isLocked ? 1 : 0.5,
+        opacity: groupAchieved ? 1 : 0.5,
         ...(colorfulBackground && {
           background: 'var(--gradient-earn-protocol-beach-club-5)',
         }),
@@ -71,19 +65,8 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
       <div className={classNames.header} onClick={() => setIsExpanded(!isExpanded)}>
         <div className={classNames.headerLeftWrapper}>
           <Text as="p" variant="p1semi">
-            {boostClaimed || currentGroupTvl >= rawTvlGroup ? (
-              <>You reached a {tvlGroup} Group TVL</>
-            ) : (
-              <>{tvlGroup} Group TVL</>
-            )}
+            {groupAchieved ? <>You reached a {tvlGroup} Group TVL</> : <>{tvlGroup} Group TVL</>}
           </Text>
-          <div className={classNames.lockIconWrapper}>
-            {isLocked ? (
-              <Icon iconName="lock" color="var(--earn-protocol-secondary-40)" size={20} />
-            ) : (
-              <Icon iconName="lock_open" color="var(--earn-protocol-warning-100)" size={20} />
-            )}
-          </div>
         </div>
         <div className={classNames.headerRightWrapper}>
           <div className={classNames.boostWrapper}>
@@ -123,30 +106,21 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
             {description}
           </Text>
           <div className={classNames.footer}>
-            {readyToBoost ? (
-              <Button
-                variant="beachClubLarge"
-                style={{
-                  minWidth: 'unset',
-                  marginRight: 'var(--general-space-24)',
-                }}
-              >
-                Earn bonus SUMR
-              </Button>
-            ) : !boostClaimed ? (
+            {!groupAchieved ? (
               <BeachClubProgressBar max={rawTvlGroup} current={currentGroupTvl} />
             ) : (
-              <Button
-                variant="primaryLarge"
+              <Text
+                as="div"
+                variant="p1semiColorfulBeachClub"
                 style={{
-                  minWidth: 'unset',
-                  background: 'var(--beach-club-primary-100)',
-                  marginRight: 'var(--general-space-24)',
-                  cursor: 'not-allowed',
+                  display: 'flex',
+                  marginRight: 'var(--general-space-32)',
+                  alignItems: 'center',
+                  gap: 'var(--general-space-4)',
                 }}
               >
-                $SUMR Earned
-              </Button>
+                <Icon iconName="star_solid_beach_club" size={24} /> You are here!
+              </Text>
             )}
             {leftToBoost > 0 && (
               <Text
@@ -164,7 +138,7 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
             <Link
               href={getTwitterShareUrl({
                 url: currentUrl,
-                text: readyToBoost
+                text: groupAchieved
                   ? `I've reached a ${tvlGroup} Group TVL! 🎉`
                   : `I'm ${leftToBoost} Group TVL away from earning a ${boost} boost! 🎉`,
               })}
