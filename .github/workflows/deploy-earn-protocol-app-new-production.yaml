@@ -171,6 +171,7 @@ jobs:
                        --build-arg EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN=${{ secrets.EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN }} \
                        --build-arg EARN_APP_URL=${{ secrets.EARN_APP_URL }} \
                        --build-arg NEXT_PUBLIC_SHA=${{ env.NEXT_PUBLIC_SHA }} \
+                       --build-arg ENVIRONMENT_TAG=${{ env.ENVIRONMENT_TAG }} \
                        --cache-from type=registry,ref=189194422115.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/buildkit-test:cache \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$NEXT_PUBLIC_SHA \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$LATEST_TAG \
