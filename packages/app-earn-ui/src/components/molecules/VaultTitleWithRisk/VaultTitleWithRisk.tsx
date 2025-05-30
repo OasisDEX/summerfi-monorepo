@@ -50,7 +50,11 @@ export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
       value={
         <>
           <Risk risk={risk} variant="p3semi" />
-          <Tooltip tooltip={riskTooltipLabel} tooltipWrapperStyles={{ minWidth: '300px' }}>
+          <Tooltip
+            tooltip={riskTooltipLabel}
+            tooltipWrapperStyles={{ minWidth: '300px' }}
+            stopPropagation
+          >
             <Icon iconName="question_o" variant="s" color={color} />
           </Tooltip>
         </>

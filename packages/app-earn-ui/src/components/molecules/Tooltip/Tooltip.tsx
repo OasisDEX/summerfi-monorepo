@@ -127,6 +127,7 @@ interface StatefulTooltipProps {
   tooltipId?: string
   hideDrawerOnMobile?: boolean
   deviceType?: DeviceType
+  stopPropagation?: boolean
 }
 
 const childrenTypeGuard = (children: ReactNode | ChildrenCallback): children is ReactNode =>
@@ -148,6 +149,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
   tooltipId,
   hideDrawerOnMobile = false,
   deviceType,
+  stopPropagation = false,
 }): ReactNode => {
   const generatedId = useRef(tooltipId ?? generateUniqueId()).current
 
@@ -208,7 +210,9 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
       // stop propagation to ensure that on mobile if someone click on tooltip
       // which is on clicable card or other clicable container it wont trigger
       // card/container action
-      e.stopPropagation()
+      if (stopPropagation) {
+        e.stopPropagation()
+      }
       if (triggerOnClick) {
         setTooltipOpen((prev) => !prev)
 

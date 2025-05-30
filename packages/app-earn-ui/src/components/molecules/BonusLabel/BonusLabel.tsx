@@ -46,6 +46,7 @@ export const BonusLabel: FC<BonulsLabelProps> = ({
   return (
     <Tooltip
       deviceType={deviceType}
+      stopPropagation
       tooltip={
         <div
           style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-space-medium)' }}
