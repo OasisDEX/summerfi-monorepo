@@ -8,7 +8,7 @@ import classNames from './BeachClubBigBanner.module.css'
 
 import waves from '@/public/img/beach_club/waves.png'
 
-const earnUpTo = 500000
+const earnUpTo = 5000000
 
 export const BeachClubBigBanner = () => {
   const {
@@ -37,7 +37,7 @@ export const BeachClubBigBanner = () => {
           Earn up to
         </Text>
         <Text as="h2" variant="h2colorfulBeachClub">
-          {formatFiatBalance(earnUpTo).split('.')[0]} $SUMR
+          5,000,000 $SUMR
         </Text>
         <Text as="h5" variant="h5" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
           ${formatFiatBalance(estimatedSumrPrice * earnUpTo)}

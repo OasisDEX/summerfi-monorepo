@@ -39,9 +39,10 @@
   background: var(--gradient-earn-protocol-beach-club-4);
   padding: 10px 20px;
   border-radius: 10px;
-  max-width: 441px;
+  max-width: 470px;
   padding: var(--general-space-64);
   gap: var(--general-space-8);
+  text-align: center;
   z-index: 2;
 }
 
