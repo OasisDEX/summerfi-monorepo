@@ -18,7 +18,7 @@ export const getRebalanceActivityHeadingCards = ({
 }) => [
   {
     title: 'Rebalance actions',
-    value: formatShorthandNumber(totalItems, { precision: 0 }),
+    value: formatFiatBalance(totalItems).split('.')[0],
     description:
       'The total number of rebalance actions performed by our AI-Powered keeper network to optimize user positions across all strategies.',
   },

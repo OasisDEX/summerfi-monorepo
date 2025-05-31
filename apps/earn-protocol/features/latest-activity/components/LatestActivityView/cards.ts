@@ -1,4 +1,4 @@
-import { formatCryptoBalance, formatShorthandNumber } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 
 export const latestActivityHeading = {
   title: 'Lazy Summer Global User Activity',
@@ -17,12 +17,12 @@ export const getLatestActivityHeadingCards = ({
 }) => [
   {
     title: 'Total deposits',
-    value: formatShorthandNumber(totalItems, { precision: 0 }),
+    value: formatFiatBalance(totalItems).split('.')[0],
     description: 'The total number of deposits across all strategies and users.',
   },
   {
     title: '# of users',
-    value: `${formatShorthandNumber(totalUsers)} `,
+    value: `${formatFiatBalance(totalUsers).split('.')[0]}`,
     description: 'The total number of unique users using the Lazy Summer Protocol.',
   },
   {

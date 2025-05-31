@@ -41,7 +41,11 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({
             flexWrap: 'wrap',
           }}
         >
-          <DataBlock title="Rebalance actions" size="small" value={`${totalItems}`} />
+          <DataBlock
+            title="Rebalance actions"
+            size="small"
+            value={`${formatFiatBalance(totalItems).split('.')[0]}`}
+          />
           <DataBlock
             title={
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
