@@ -38,7 +38,9 @@
 .navigationMenuLinks li img {
   opacity: 0.5;
   transform: rotate3d(1, 0, 0, 0deg);
-  transition: opacity 0.2s, transform 0.2s;
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
 }
 .navigationMenuLinks li.disabled,
 .navigationMenuLinks li span.disabled,
@@ -103,10 +105,12 @@
   max-width: 400px;
   left: -50px;
   opacity: 0;
-  transition: top 0.2s, opacity 0.2s;
+  transition:
+    top 0.2s,
+    opacity 0.2s;
   top: 0;
   padding-top: 30px;
-  z-index: 5;
+  z-index: 51;
 }
 @media (min-width: 1450px) {
   .navigationMenuLinks li > .dropdownContentWrapper {
