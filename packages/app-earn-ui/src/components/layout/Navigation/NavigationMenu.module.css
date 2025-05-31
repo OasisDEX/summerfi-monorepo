@@ -108,8 +108,8 @@
   transition:
     top 0.2s,
     opacity 0.2s;
-  top: 0;
   padding-top: 30px;
+  top: 0;
   z-index: 51;
 }
 @media (min-width: 1450px) {
