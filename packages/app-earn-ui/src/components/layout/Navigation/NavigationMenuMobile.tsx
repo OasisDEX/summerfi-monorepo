@@ -36,6 +36,7 @@ export const NavigationMenuMobile = ({
   featuresConfig,
 }: NavigationMobileMenuType): React.ReactNode => {
   const beachClubEnabled = !!featuresConfig?.BeachClub
+  const host = typeof window !== 'undefined' ? window.location.origin : ''
 
   return (
     <>
@@ -58,7 +59,7 @@ export const NavigationMenuMobile = ({
       <div className={navigationMenuMobileStyles.linksListWrapper}>
         <div className={navigationMenuMobileStyles.linksList}>
           {beachClubEnabled && (
-            <Link href={INTERNAL_LINKS.beachClub} target="_blank">
+            <Link href={`${host}${INTERNAL_LINKS.beachClub}`}>
               <Button
                 variant="textSecondaryLarge"
                 disabled={false}
