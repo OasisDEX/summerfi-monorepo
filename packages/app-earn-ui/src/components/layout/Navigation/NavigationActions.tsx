@@ -29,6 +29,8 @@ export const NavigationActions = ({
 }: NavigationActionsProps): React.ReactNode => {
   const beachClubEnabled = !!featuresConfig?.BeachClub
 
+  const host = typeof window !== 'undefined' ? window.location.origin : ''
+
   return (
     <div>
       <div className={navigationActionsStyles.navigationActionsWrapper}>
@@ -38,7 +40,7 @@ export const NavigationActions = ({
           </div>
         )}
         {beachClubEnabled && (
-          <Link href={INTERNAL_LINKS.beachClub} target="_blank">
+          <Link href={`${host}${INTERNAL_LINKS.beachClub}`}>
             <Text
               as="div"
               variant="p2semiColorfulBeachClub"
