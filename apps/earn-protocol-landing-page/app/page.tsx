@@ -93,7 +93,7 @@ export default function HomePage() {
         <SummerFiProSection />
         <CryptoUtilities />
         <Audits chainSecurityLogo={chainSecurityLogo} prototechLabsLogo={prototechLabsLogo} />
-        <BuildBySummerFi />
+        <BuildBySummerFi proAppStats={landingPageData?.proAppStats} />
         <LandingFaqSection />
         <HighestQualityYieldsDisclaimer />
       </MarketingPoints>

@@ -192,6 +192,7 @@ export type {
   GetVaultsApyResponse,
   LandingPageData,
   SupportedDefillamaTvlProtocols,
+  ProAppStats,
 } from './src/earn-protocol'
 export { supportedDefillamaProtocols, supportedDefillamaProtocolsConfig } from './src/earn-protocol'
 export { DeviceType } from './src/device-type'
