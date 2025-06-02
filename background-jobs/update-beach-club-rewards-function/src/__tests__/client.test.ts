@@ -1,5 +1,5 @@
 import { ReferralClient } from '../client'
-import { Account } from '../types'
+import { Account, Network } from '../types'
 
 // Import the existing mock from setup.ts
 import './setup'
@@ -49,7 +49,7 @@ describe('ReferralClient', () => {
     it('should fetch referred accounts successfully with timestamp filters', async () => {
       mockRequest.mockResolvedValue(mockAccountData)
 
-      const result = await client.getReferredAccounts('Ethereum', {
+      const result = await client.getReferredAccounts(Network.MAINNET, {
         timestampGt: BigInt(1640995100),
         timestampLt: BigInt(1640995300),
       })
@@ -69,7 +69,7 @@ describe('ReferralClient', () => {
     it('should fetch referred accounts with default timestamp bounds when no options provided', async () => {
       mockRequest.mockResolvedValue(mockAccountData)
 
-      const result = await client.getReferredAccounts('Ethereum')
+      const result = await client.getReferredAccounts(Network.MAINNET)
 
       expect(mockRequest).toHaveBeenCalledWith(expect.any(String), {
         timestampGt: '0',
@@ -81,7 +81,7 @@ describe('ReferralClient', () => {
     it('should handle API errors gracefully', async () => {
       mockRequest.mockRejectedValue(new Error('GraphQL API Error'))
 
-      const result = await client.getReferredAccounts('Ethereum')
+      const result = await client.getReferredAccounts(Network.MAINNET)
 
       expect(result).toEqual([])
       expect(consoleSpy).toHaveBeenCalledWith(
@@ -95,7 +95,7 @@ describe('ReferralClient', () => {
         accounts: [mockAccountData.accounts[0], null, undefined, mockAccountData.accounts[1]],
       })
 
-      const result = await client.getReferredAccounts('Sonic')
+      const result = await client.getReferredAccounts(Network.SONIC)
 
       expect(result).toHaveLength(2)
       expect(result[0].id).toBe('0x123')
@@ -105,8 +105,8 @@ describe('ReferralClient', () => {
     it('should work with different chains', async () => {
       mockRequest.mockResolvedValue(mockAccountData)
 
-      await client.getReferredAccounts('Base')
-      await client.getReferredAccounts('Arbitrum')
+      await client.getReferredAccounts(Network.BASE)
+      await client.getReferredAccounts(Network.ARBITRUM)
 
       expect(mockRequest).toHaveBeenCalledTimes(2)
     })
@@ -149,7 +149,7 @@ describe('ReferralClient', () => {
       // Account should be invalid because:
       // wasReferredEarlierThanCurrentPeriod is true (1640995200 > 1640995100)
       // This means the account was referred before the current period
-      const result = await client.validateAccounts('Ethereum', accountWithLaterReferral)
+      const result = await client.validateAccounts(Network.MAINNET, accountWithLaterReferral)
 
       expect(result['0x123']).toBe(false)
     })
@@ -169,7 +169,7 @@ describe('ReferralClient', () => {
       // 1. No positions created before referral (no violation)
       // 2. wasReferredEarlierThanCurrentPeriod is false (1640995200 == 1640995200)
       // This means the account was referred in the current period
-      const result = await client.validateAccounts('Ethereum', mockAccounts)
+      const result = await client.validateAccounts(Network.MAINNET, mockAccounts)
 
       expect(result['0x123']).toBe(true)
     })
@@ -193,7 +193,7 @@ describe('ReferralClient', () => {
       // Account should be valid because:
       // 1. Positions were created after referral (no violation)
       // 2. wasReferredEarlierThanCurrentPeriod is true but positions are valid
-      const result = await client.validateAccounts('Ethereum', mockAccounts)
+      const result = await client.validateAccounts(Network.MAINNET, mockAccounts)
 
       // Wait, this should actually be invalid due to wasReferredEarlierThanCurrentPeriod
       expect(result['0x123']).toBe(false)
@@ -218,7 +218,7 @@ describe('ReferralClient', () => {
       // Account should be invalid because:
       // hasReferralTimestamp && positionsCreatedBeforeReferral is true
       // (1640995100 < 1640995200)
-      const result = await client.validateAccounts('Ethereum', mockAccounts)
+      const result = await client.validateAccounts(Network.MAINNET, mockAccounts)
 
       expect(result['0x123']).toBe(false)
     })
@@ -249,7 +249,7 @@ describe('ReferralClient', () => {
 
       // Account should be valid because:
       // it has earliest referral timestamp but no referral timestamp -> hence it was referred in this period
-      const result = await client.validateAccounts('Ethereum', accountsWithoutReferral)
+      const result = await client.validateAccounts(Network.MAINNET, accountsWithoutReferral)
 
       expect(result['0x789']).toBe(true)
     })
@@ -278,7 +278,7 @@ describe('ReferralClient', () => {
         },
       }
 
-      const result = await client.validateAccounts('Ethereum', crossChainAccounts)
+      const result = await client.validateAccounts(Network.MAINNET, crossChainAccounts)
 
       // Should be invalid because:
       // 1. hasReferralTimestamp && positionsCreatedBeforeReferral is true (1640995050 < 1640995100)
@@ -289,7 +289,7 @@ describe('ReferralClient', () => {
     it('should handle GraphQL errors gracefully', async () => {
       mockRequest.mockRejectedValue(new Error('GraphQL Error'))
 
-      const result = await client.validateAccounts('Ethereum', mockAccounts)
+      const result = await client.validateAccounts(Network.MAINNET, mockAccounts)
 
       expect(result).toEqual({})
       expect(consoleSpy).toHaveBeenCalledWith(
@@ -317,7 +317,7 @@ describe('ReferralClient', () => {
         ],
       })
 
-      await client.validateAccounts('Ethereum', upperCaseAccounts)
+      await client.validateAccounts(Network.MAINNET, upperCaseAccounts)
 
       expect(mockRequest).toHaveBeenCalledWith(expect.any(String), {
         accountIds: ['0xabc'], // Should be lowercase
@@ -347,7 +347,7 @@ describe('ReferralClient', () => {
       // Account should be invalid because:
       // wasReferredEarlierThanCurrentPeriod is true (1640995100 > 1640995000)
       // This means the account was referred before the current period
-      const result = await client.validateAccounts('Ethereum', accountsWithLaterReferral)
+      const result = await client.validateAccounts(Network.MAINNET, accountsWithLaterReferral)
 
       expect(result['0x123']).toBe(false)
     })
@@ -373,13 +373,13 @@ describe('ReferralClient', () => {
           id: '0x123',
           referralTimestamp: '1640995200',
           referralData: { id: '0xreferrer' },
-          referralChain: 'Ethereum',
+          referralChain: Network.MAINNET,
         },
         {
           id: '0x456',
           referralTimestamp: '1640995300',
           referralData: { id: '0xreferrer2' },
-          referralChain: 'Ethereum',
+          referralChain: Network.MAINNET,
         },
       ]
 
@@ -400,7 +400,7 @@ describe('ReferralClient', () => {
       const result = await client.getValidReferredAccounts(BigInt(0), BigInt(1640995400))
 
       // Verify behavior - timestampGt is not included when it's BigInt(0) since it's falsy
-      expect(mockGetReferredAccounts).toHaveBeenCalledWith('Ethereum', {
+      expect(mockGetReferredAccounts).toHaveBeenCalledWith(Network.MAINNET, {
         timestampLt: BigInt(1640995400),
       })
       expect(result.validAccounts).toEqual(mockAccounts)
@@ -412,7 +412,7 @@ describe('ReferralClient', () => {
           id: '0x123',
           referralTimestamp: '1640995200',
           referralData: { id: '0xreferrer' },
-          referralChain: 'Ethereum',
+          referralChain: Network.MAINNET,
         },
       ]
 
@@ -431,7 +431,7 @@ describe('ReferralClient', () => {
       const result = await client.getValidReferredAccounts(BigInt(1640995000), BigInt(1640995400))
 
       // Verify subsequent run behavior - both timestamps used
-      expect(mockGetReferredAccounts).toHaveBeenCalledWith('Ethereum', {
+      expect(mockGetReferredAccounts).toHaveBeenCalledWith(Network.MAINNET, {
         timestampGt: BigInt(1640995000),
         timestampLt: BigInt(1640995400),
       })
@@ -467,7 +467,7 @@ describe('ReferralClient', () => {
 
       // Should use earliest referral timestamp
       expect(mockValidateAccounts).toHaveBeenCalledWith(
-        'Ethereum',
+        Network.MAINNET,
         expect.objectContaining({
           '0x123': expect.objectContaining({
             referralTimestamp: '1640995200', // Earlier timestamp
@@ -567,7 +567,7 @@ describe('ReferralClient', () => {
 
       // Should consolidate to single account with earliest timestamp
       expect(mockValidateAccounts).toHaveBeenCalledWith(
-        'Ethereum',
+        Network.MAINNET,
         expect.objectContaining({
           '0x123': expect.objectContaining({
             referralTimestamp: '1640995200',

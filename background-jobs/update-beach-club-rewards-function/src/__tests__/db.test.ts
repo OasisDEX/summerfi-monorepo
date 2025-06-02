@@ -208,7 +208,7 @@ describe('DatabaseService', () => {
 
   describe('updatePosition', () => {
     it('should insert new position', async () => {
-      await db.updatePosition('pos123', 'Base' as any, 'user123', 1000.5)
+      await db.updatePosition('pos123', 'Base' as any, 'user123', 1000.5, false)
 
       expect(mockKysely.insertInto).toHaveBeenCalledWith('positions')
       expect(mockKysely.values).toHaveBeenCalledWith({
@@ -221,7 +221,7 @@ describe('DatabaseService', () => {
     })
 
     it('should handle conflicts with doUpdateSet', async () => {
-      await db.updatePosition('pos123', 'Base' as any, 'user123', 1000.5)
+      await db.updatePosition('pos123', 'Base' as any, 'user123', 1000.5, false)
 
       expect(mockKysely.onConflict).toHaveBeenCalled()
     })
@@ -405,77 +405,6 @@ describe('DatabaseService', () => {
 
       expect(result!.created_at).toBeInstanceOf(Date)
       expect(result!.updated_at).toBeInstanceOf(Date)
-    })
-  })
-
-  describe('getUsersReferredBy', () => {
-    it('should return users with converted data', async () => {
-      mockKysely.execute.mockResolvedValue([
-        {
-          id: 'user1',
-          referrer_id: 'ref123',
-          referral_chain: 'Base',
-          referral_timestamp: new Date('2024-01-01'),
-          total_deposits_usd: '1000',
-          is_active: true,
-          last_activity_at: new Date(),
-          created_at: new Date(),
-          updated_at: new Date(),
-        },
-      ])
-
-      const result = await db.getUsersReferredBy('ref123')
-
-      expect(result).toHaveLength(1)
-      expect(result[0]).toEqual(
-        expect.objectContaining({
-          id: 'user1',
-          total_deposits_usd: 1000,
-          is_active: true,
-        }),
-      )
-    })
-
-    it('should handle missing dates with defaults', async () => {
-      mockKysely.execute.mockResolvedValue([
-        {
-          id: 'user1',
-          referrer_id: 'ref123',
-          referral_chain: null,
-          referral_timestamp: null,
-          total_deposits_usd: '0',
-          is_active: false,
-          last_activity_at: null,
-          created_at: null,
-          updated_at: null,
-        },
-      ])
-
-      const result = await db.getUsersReferredBy('ref123')
-
-      expect(result[0].created_at).toBeInstanceOf(Date)
-      expect(result[0].updated_at).toBeInstanceOf(Date)
-    })
-  })
-
-  describe('getActiveUsersReferredBy', () => {
-    it('should only return active users', async () => {
-      mockKysely.execute.mockResolvedValue([
-        {
-          id: 'user1',
-          referrer_id: 'ref123',
-          total_deposits_usd: '1000',
-          is_active: true,
-          created_at: new Date(),
-          updated_at: new Date(),
-        },
-      ])
-
-      const result = await db.getActiveUsersReferredBy('ref123')
-
-      expect(mockKysely.where).toHaveBeenCalledWith('referrer_id', '=', 'ref123')
-      expect(mockKysely.where).toHaveBeenCalledWith('is_active', '=', true)
-      expect(result).toHaveLength(1)
     })
   })
 

@@ -11,42 +11,13 @@ import {
   REFERRED_ACCOUNTS_QUERY,
   VALIDATE_POSITIONS_QUERY,
 } from './graphql/operations'
-import { Account, Chain, convertAccount } from './types'
-
-// We'll define Network enum here since we can't import it directly
-enum Network {
-  MAINNET = 'mainnet',
-  ARBITRUM = 'arbitrum',
-  OPTIMISM = 'optimism',
-  BASE = 'base',
-  SEPOLIA = 'sepolia',
-  SONIC = 'sonic',
-}
-
-// Only include the chains we have subgraph URLs for
-const SUPPORTED_CHAINS = [Network.MAINNET, Network.ARBITRUM, Network.BASE, Network.SONIC] as const
-type SupportedChain = (typeof SUPPORTED_CHAINS)[number]
+import { Account, convertAccount, Network, SUPPORTED_CHAINS, SupportedChain } from './types'
 
 const SUBGRAPH_URLS: Record<SupportedChain, string> = {
   [Network.MAINNET]: 'https://subgraph.staging.oasisapp.dev/summer-protocol',
   [Network.ARBITRUM]: 'https://subgraph.staging.oasisapp.dev/summer-protocol-arbitrum',
   [Network.BASE]: 'https://subgraph.staging.oasisapp.dev/summer-protocol-base',
   [Network.SONIC]: 'https://subgraph.staging.oasisapp.dev/summer-protocol-sonic',
-}
-
-function mapNetworkToChain(network: Network): Chain {
-  switch (network) {
-    case Network.MAINNET:
-      return 'Ethereum'
-    case Network.ARBITRUM:
-      return 'Arbitrum'
-    case Network.BASE:
-      return 'Base'
-    case Network.SONIC:
-      return 'Sonic'
-    default:
-      throw new Error(`Unsupported network: ${network}`)
-  }
 }
 
 export interface ReferredAccountsOptions {
@@ -355,7 +326,7 @@ export class ReferralClient {
       const accounts = await this.getReferredAccounts(chain, options)
       const accountsWithChain = accounts.map((a) => ({
         ...a,
-        referralChain: mapNetworkToChain(chain),
+        referralChain: chain,
       }))
       allAccts.push(...accountsWithChain)
     }

@@ -1,4 +1,21 @@
-export type Chain = 'Ethereum' | 'Sonic' | 'Arbitrum' | 'Base'
+// We'll define Network enum here since we can't import it directly
+export enum Network {
+  MAINNET = 'mainnet',
+  ARBITRUM = 'arbitrum',
+  OPTIMISM = 'optimism',
+  BASE = 'base',
+  SEPOLIA = 'sepolia',
+  SONIC = 'sonic',
+}
+
+// Only include the chains we have subgraph URLs for
+export const SUPPORTED_CHAINS = [
+  Network.MAINNET,
+  Network.ARBITRUM,
+  Network.BASE,
+  Network.SONIC,
+] as const
+export type SupportedChain = (typeof SUPPORTED_CHAINS)[number]
 
 export interface ReferralData {
   id: string
@@ -55,7 +72,7 @@ export interface Account {
   referralData?: ReferralData
   referralTimestamp?: string
   positions?: Position[]
-  referralChain?: Chain
+  referralChain?: SupportedChain
 }
 
 export function convertAccount(account: any): Account {

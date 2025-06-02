@@ -1,3 +1,4 @@
+import { Network } from 'src/types'
 import { ReferralClient } from '../client'
 import { DatabaseService } from '../db'
 import { Logger, ReferralProcessor } from '../processor'
@@ -103,13 +104,13 @@ describe('ReferralProcessor', () => {
           {
             id: 'user1',
             referralData: { id: 'referrer1' },
-            referralChain: 'Base',
+            referralChain: Network.BASE,
             referralTimestamp: '1704067200',
           },
           {
             id: 'user2',
             referralData: { id: 'referrer1' },
-            referralChain: 'Base',
+            referralChain: Network.BASE,
             referralTimestamp: '1704067200',
           },
         ],
@@ -124,6 +125,12 @@ describe('ReferralProcessor', () => {
               {
                 id: 'pos1',
                 createdTimestamp: '1704067200',
+                vault: {
+                  id: 'vault1',
+                  inputToken: {
+                    symbol: 'USDC',
+                  },
+                },
                 hourlySnapshots: [
                   {
                     id: 'snapshot1',
@@ -216,7 +223,7 @@ describe('ReferralProcessor', () => {
           {
             id: 'user1',
             referralData: { id: 'referrer1' },
-            referralChain: 'Base',
+            referralChain: Network.BASE,
             referralTimestamp: '1704067200',
           },
         ],
@@ -231,6 +238,12 @@ describe('ReferralProcessor', () => {
               {
                 id: 'pos1',
                 createdTimestamp: '1704067200',
+                vault: {
+                  id: 'vault1',
+                  inputToken: {
+                    symbol: 'USDC',
+                  },
+                },
                 hourlySnapshots: [
                   {
                     id: 'snapshot1',
@@ -255,10 +268,10 @@ describe('ReferralProcessor', () => {
       expect(result.activeUsers).toBe(1)
       expect(mockDb.upsertUser).toHaveBeenCalledWith('user1', {
         referrerId: 'referrer1',
-        referralChain: 'Base',
+        referralChain: Network.BASE,
         referralTimestamp: new Date(1704067200000),
       })
-      expect(mockDb.updatePosition).toHaveBeenCalledWith('pos1', 'base', 'user1', 1000)
+      expect(mockDb.updatePosition).toHaveBeenCalledWith('pos1', 'base', 'user1', 1000, false)
       expect(mockDb.updateUserTotals).toHaveBeenCalledWith('user1')
       expect(mockDb.recalculateReferralStats).toHaveBeenCalled()
       expect(mockDb.updateDailyRatesAndPoints).toHaveBeenCalled()
@@ -281,6 +294,12 @@ describe('ReferralProcessor', () => {
               {
                 id: 'pos1',
                 createdTimestamp: '1704067200',
+                vault: {
+                  id: 'vault1',
+                  inputToken: {
+                    symbol: 'USDC',
+                  },
+                },
                 hourlySnapshots: [
                   {
                     id: 'snapshot1',
@@ -299,6 +318,12 @@ describe('ReferralProcessor', () => {
               {
                 id: 'pos2',
                 createdTimestamp: '1704067200',
+                vault: {
+                  id: 'vault1',
+                  inputToken: {
+                    symbol: 'USDC',
+                  },
+                },
                 hourlySnapshots: [
                   {
                     id: 'snapshot2',
@@ -340,6 +365,12 @@ describe('ReferralProcessor', () => {
               {
                 id: 'pos1',
                 createdTimestamp: '1704067200',
+                vault: {
+                  id: 'vault1',
+                  inputToken: {
+                    symbol: 'USDC',
+                  },
+                },
                 hourlySnapshots: [
                   {
                     id: 'snapshot1',

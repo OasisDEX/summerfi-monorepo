@@ -3,7 +3,7 @@ import { DB } from 'kysely-codegen'
 import { Pool } from 'pg'
 import { ConfigService } from './config-updated'
 import { KyselyMigrator } from './migrations/kysely-migrator'
-import { Chain } from './types'
+import { Network } from './types'
 
 export interface SimplifiedReferralCode {
   id: string
@@ -141,7 +141,7 @@ export class DatabaseService {
     userId: string,
     data: {
       referrerId?: string
-      referralChain?: Chain
+      referralChain?: Network
       referralTimestamp?: Date
     },
   ): Promise<void> {
@@ -197,7 +197,7 @@ export class DatabaseService {
    */
   async updatePosition(
     positionId: string,
-    chain: Chain,
+    chain: Network,
     userId: string,
     depositUsd: number,
     isVolatile: boolean,
@@ -490,43 +490,6 @@ export class DatabaseService {
       created_at: result.created_at || new Date(),
       updated_at: result.updated_at || new Date(),
     }
-  }
-
-  /**
-   * Get users referred by a referral code
-   */
-  async getUsersReferredBy(referrerId: string): Promise<SimplifiedUser[]> {
-    const results = await this.db
-      .selectFrom('users')
-      .selectAll()
-      .where('referrer_id', '=', referrerId)
-      .execute()
-
-    return results.map((row) => ({
-      ...row,
-      total_deposits_usd: Number(row.total_deposits_usd),
-      created_at: row.created_at || new Date(),
-      updated_at: row.updated_at || new Date(),
-    }))
-  }
-
-  /**
-   * Get active users referred by a referral code
-   */
-  async getActiveUsersReferredBy(referrerId: string): Promise<SimplifiedUser[]> {
-    const results = await this.db
-      .selectFrom('users')
-      .selectAll()
-      .where('referrer_id', '=', referrerId)
-      .where('is_active', '=', true)
-      .execute()
-
-    return results.map((row) => ({
-      ...row,
-      total_deposits_usd: Number(row.total_deposits_usd),
-      created_at: row.created_at || new Date(),
-      updated_at: row.updated_at || new Date(),
-    }))
   }
 
   /**
