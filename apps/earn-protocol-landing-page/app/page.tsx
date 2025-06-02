@@ -71,7 +71,10 @@ export default function HomePage() {
       </BigGradientBox>
       <ProtocolScroller protocolTvls={landingPageData?.protocolTvls} />
       <MarketingPoints>
-        <HigherYieldsBlock vaultsList={landingPageData?.vaultsWithConfig} />
+        <HigherYieldsBlock
+          vaultsList={landingPageData?.vaultsWithConfig}
+          totalRebalances={landingPageData?.totalRebalances}
+        />
         <EnhancedRiskManagement
           protectedCapital="$10B+"
           imagesMap={{

@@ -36,7 +36,7 @@ type HigherYieldsSectionProps = {
 type HigherYieldsSectionContentProps = {
   savedGasCost: number
   savedTimeInHours: number
-  totalRebalancesCount: number
+  totalRebalances: number
   totalVaultsCount: number
   totalAssets: number
   totalLiquidity: number
@@ -128,7 +128,7 @@ const higherYieldsBlockSections = {
     title: 'How we use AI to outperform',
     content: ({
       savedTimeInHours,
-      totalRebalancesCount,
+      totalRebalances,
       totalVaultsCount,
     }: HigherYieldsSectionContentProps) => (
       <HigherYieldsSection
@@ -141,7 +141,7 @@ const higherYieldsBlockSections = {
         imageSrc={howWeUseAi}
         statsList={[
           {
-            title: formatWithSeparators(totalRebalancesCount),
+            title: formatWithSeparators(totalRebalances),
             description: 'Rebalance Transactions',
           },
           {
@@ -198,13 +198,13 @@ const higherYieldsBlockSectionsKeys = Object.keys(
 
 interface HigherYieldsBlockProps {
   vaultsList?: SDKVaultsListType
+  totalRebalances?: number
 }
 
-export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({ vaultsList }) => {
-  const totalRebalancesCount = useMemo(() => {
-    return vaultsList?.reduce((acc, vault) => acc + Number(vault.rebalanceCount), 0)
-  }, [vaultsList])
-
+export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({
+  vaultsList,
+  totalRebalances,
+}) => {
   const totalLiquidity = useMemo(() => {
     return vaultsList?.reduce((acc, vault) => acc + Number(vault.withdrawableTotalAssetsUSD), 0)
   }, [vaultsList])
@@ -212,8 +212,8 @@ export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({ vaultsList
   const totalVaultsCount = vaultsList?.length
 
   const savedTimeInHours = useMemo(
-    () => getRebalanceSavedTimeInHours(totalRebalancesCount ?? 0),
-    [totalRebalancesCount],
+    () => getRebalanceSavedTimeInHours(totalRebalances ?? 0),
+    [totalRebalances],
   )
   const savedGasCost = useMemo(() => getRebalanceSavedGasCost(vaultsList ?? []), [vaultsList])
 
@@ -224,13 +224,7 @@ export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({ vaultsList
   const supportedProtocolsCount = getVaultsProtocolsList(vaultsList ?? []).length
 
   const sectionTabs = useMemo(() => {
-    if (
-      !vaultsList ||
-      !totalAssets ||
-      !totalRebalancesCount ||
-      !totalVaultsCount ||
-      !totalLiquidity
-    ) {
+    if (!vaultsList || !totalAssets || !totalRebalances || !totalVaultsCount || !totalLiquidity) {
       return false
     }
 
@@ -240,7 +234,7 @@ export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({ vaultsList
       content: higherYieldsBlockSections[sectionKey].content({
         savedGasCost,
         savedTimeInHours,
-        totalRebalancesCount,
+        totalRebalances,
         totalVaultsCount,
         totalAssets,
         totalLiquidity,
@@ -253,7 +247,7 @@ export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({ vaultsList
     supportedProtocolsCount,
     totalAssets,
     totalLiquidity,
-    totalRebalancesCount,
+    totalRebalances,
     totalVaultsCount,
     vaultsList,
   ])

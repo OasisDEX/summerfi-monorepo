@@ -10,6 +10,7 @@ import { NextResponse } from 'next/server'
 import { getProtocolTvl } from '@/app/server-handlers/defillama/get-protocol-tvl'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
+import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
@@ -26,9 +27,13 @@ const emptyTvls = {
 }
 
 export async function GET() {
-  const [{ vaults }, configRaw, ...protocolTvlsArray] = await Promise.all([
+  const [{ vaults }, configRaw, rebalanceActivity, ...protocolTvlsArray] = await Promise.all([
     getVaultsList(),
     systemConfigHandler(),
+    getPaginatedRebalanceActivity({
+      page: 1,
+      limit: 1,
+    }),
     ...supportedDefillamaProtocols.map((protocol) => {
       return getProtocolTvl(
         supportedDefillamaProtocolsConfig[
@@ -52,6 +57,8 @@ export async function GET() {
     })),
   })
 
+  const totalRebalances = rebalanceActivity.pagination.totalItems
+
   const protocolTvls = protocolTvlsArray
     // filter zero TVL protocols (set to zero because of an error)
     .filter((protocolTVL) => Object.values(protocolTVL).some((tvl) => tvl !== '0'))
@@ -64,5 +71,6 @@ export async function GET() {
     vaultsWithConfig,
     vaultsApyByNetworkMap,
     protocolTvls,
+    totalRebalances,
   } as LandingPageData)
 }
