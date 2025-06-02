@@ -12,6 +12,7 @@ import {
 import { type SDKVaultsListType } from '@summerfi/app-types'
 import {
   formatFiatBalance,
+  formatWithSeparators,
   getRebalanceSavedGasCost,
   getRebalanceSavedTimeInHours,
 } from '@summerfi/app-utils'
@@ -74,7 +75,7 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
   const blocks = [
     {
       title: 'Rebalance actions',
-      value: formatFiatBalance(totalItems).split('.')[0],
+      value: formatWithSeparators(totalItems),
     },
     {
       title: (
@@ -88,7 +89,7 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
           </Tooltip>
         </div>
       ),
-      value: `${savedTimeInHours} hours`,
+      value: `${formatWithSeparators(savedTimeInHours)} hours`,
     },
     {
       title: (

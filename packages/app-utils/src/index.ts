@@ -38,6 +38,7 @@ export { formatToBigNumber } from './formatters/format-to-big-number'
 export { formatDateDifference } from './formatters/format-time-difference'
 export { formatDecimalToBigInt } from './formatters/format-decimal-to-bigint'
 export { cleanAmount } from './formatters/clean-amount'
+export { formatWithSeparators } from './formatters/format-with-separators'
 
 export { getHumanReadableFleetName } from './helpers/human-readable-fleet-names'
 export { timeUntil } from './helpers/time-until'

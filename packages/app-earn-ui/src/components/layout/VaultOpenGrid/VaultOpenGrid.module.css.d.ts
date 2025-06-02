@@ -8,6 +8,7 @@ declare const styles: {
   readonly "rightExtraBlockMobileWrapper": string;
   readonly "rotate": string;
   readonly "vaultBonusWrapper": string;
+  readonly "vaultId": string;
   readonly "vaultOpenGridBreadcrumbsWrapper": string;
   readonly "vaultOpenGridPositionWrapper": string;
   readonly "vaultOpenGridTopLeftWrapper": string;

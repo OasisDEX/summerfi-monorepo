@@ -1,5 +1,5 @@
 import { Text, WithArrow } from '@summerfi/app-earn-ui'
-import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatWithSeparators } from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import {
@@ -13,7 +13,7 @@ const currentPoints = 15000
 
 const stats = [
   {
-    value: `${formatFiatBalance(currentPoints).split('.')[0]}`,
+    value: `${formatWithSeparators(currentPoints)}`,
     description: 'Speed Challenge Points',
   },
   {
@@ -21,7 +21,7 @@ const stats = [
     description: 'Earning points / Day',
   },
   {
-    value: `${formatFiatBalance(12323).split('.')[0]}`,
+    value: `${formatWithSeparators(12323)}`,
     description: 'Account Referred',
   },
 ]

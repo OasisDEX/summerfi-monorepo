@@ -170,13 +170,13 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   return (
     <>
       <div className={vaultOpenGridStyles.vaultOpenGridBreadcrumbsWrapper}>
-        <div style={{ display: 'inline-block' }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <Link href={headerLink.href}>
-            <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
+            <Text as="p" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
               {headerLink.label} / &nbsp;
             </Text>
           </Link>
-          <Text as="span" variant="p3" color="white">
+          <Text as="p" variant="p3" color="white" className={vaultOpenGridStyles.vaultId}>
             {vault.customFields?.name ?? vault.id}
           </Text>
           <div
@@ -358,6 +358,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                       display: 'flex',
                       alignItems: 'center',
                       gap: 'var(--general-space-20)',
+                      flexWrap: 'wrap',
                     }}
                   >
                     {formatDecimalAsPercent(depositCapUsed)} filled

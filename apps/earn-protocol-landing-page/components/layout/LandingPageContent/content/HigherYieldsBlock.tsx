@@ -5,7 +5,7 @@ import { Button, getVaultsProtocolsList, SectionTabs, Text, WithArrow } from '@s
 import { type SDKVaultsListType } from '@summerfi/app-types'
 import {
   formatFiatBalance,
-  formatShorthandNumber,
+  formatWithSeparators,
   getRebalanceSavedGasCost,
   getRebalanceSavedTimeInHours,
 } from '@summerfi/app-utils'
@@ -141,11 +141,11 @@ const higherYieldsBlockSections = {
         imageSrc={howWeUseAi}
         statsList={[
           {
-            title: formatShorthandNumber(totalRebalancesCount),
+            title: formatWithSeparators(totalRebalancesCount),
             description: 'Rebalance Transactions',
           },
           {
-            title: `${savedTimeInHours} hours`,
+            title: `${formatWithSeparators(savedTimeInHours)} hours`,
             colorful: true,
             description: 'User time saved',
           },
@@ -178,7 +178,7 @@ const higherYieldsBlockSections = {
             description: 'DeFi Strategies Optimized',
           },
           {
-            title: `$${savedGasCost}`,
+            title: `$${formatFiatBalance(savedGasCost)}`,
             colorful: true,
             description: 'Gas Cost Savings',
           },

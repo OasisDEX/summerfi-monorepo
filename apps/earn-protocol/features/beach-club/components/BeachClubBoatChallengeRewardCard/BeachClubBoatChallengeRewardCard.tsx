@@ -1,5 +1,5 @@
 import { Button, Icon, Text } from '@summerfi/app-earn-ui'
-import { formatFiatBalance } from '@summerfi/app-utils'
+import { formatWithSeparators } from '@summerfi/app-utils'
 import Image from 'next/image'
 
 import { BeachClubProgressBar } from '@/features/beach-club/components/BeachClubProgressBar/BeachClubProgressBar'
@@ -55,11 +55,7 @@ export const BeachClubBoatChallengeRewardCard = ({
         <div className={classNames.content}>
           <div className={classNames.header}>
             <Text as="h5" variant="h5">
-              {unlocked ? (
-                'Unlocked'
-              ) : (
-                <>{formatFiatBalance(requiredPoints).split('.')[0]} Points</>
-              )}
+              {unlocked ? 'Unlocked' : <>{formatWithSeparators(requiredPoints)} Points</>}
             </Text>
             <Icon iconName={unlocked ? 'lock_open_beach_colorful' : 'lock_beach_colorful'} />
           </div>

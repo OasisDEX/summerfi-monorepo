@@ -3,6 +3,7 @@ import { Card, DataBlock, Icon, Text, Tooltip, WithArrow } from '@summerfi/app-e
 import { type SDKVaultishType } from '@summerfi/app-types'
 import {
   formatFiatBalance,
+  formatWithSeparators,
   getRebalanceSavedGasCost,
   getRebalanceSavedTimeInHours,
 } from '@summerfi/app-utils'
@@ -44,7 +45,7 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({
           <DataBlock
             title="Rebalance actions"
             size="small"
-            value={`${formatFiatBalance(totalItems).split('.')[0]}`}
+            value={`${formatWithSeparators(totalItems)}`}
           />
           <DataBlock
             title={
