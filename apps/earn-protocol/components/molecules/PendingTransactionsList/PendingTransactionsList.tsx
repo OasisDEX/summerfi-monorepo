@@ -43,7 +43,11 @@ const getHumanReadableDescription = (tx: TransactionWithStatus) => {
         <>
           Vault switch&nbsp;
           <b>{getDisplayToken(tx.metadata.fromAmount.token.symbol)}</b>&nbsp;to&nbsp;
-          <b>{getDisplayToken(tx.metadata.toAmount?.token.symbol ?? 'n/a')}</b>
+          <b>
+            {getDisplayToken(
+              tx.metadata.toAmount?.token.symbol ?? tx.metadata.fromAmount.token.symbol,
+            )}
+          </b>
         </>
       )
     default:
