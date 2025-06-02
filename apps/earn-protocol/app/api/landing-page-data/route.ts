@@ -1,4 +1,3 @@
-import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import {
   type LandingPageData,
   supportedDefillamaProtocols,
@@ -6,7 +5,6 @@ import {
   type SupportedDefillamaTvlProtocols,
 } from '@summerfi/app-types'
 import { parseServerResponseToClient, subgraphNetworkToId } from '@summerfi/app-utils'
-import { unstable_cache as unstableCache } from 'next/cache'
 import { NextResponse } from 'next/server'
 
 import { getProtocolTvl } from '@/app/server-handlers/defillama/get-protocol-tvl'
@@ -38,10 +36,7 @@ export async function GET() {
         page: 1,
         limit: 1,
       }),
-      unstableCache(getProAppStats, [], {
-        revalidate: REVALIDATION_TIMES.PRO_APP_STATS,
-        tags: [REVALIDATION_TAGS.PRO_APP_STATS],
-      })(),
+      getProAppStats(),
       ...supportedDefillamaProtocols.map((protocol) => {
         return getProtocolTvl(
           supportedDefillamaProtocolsConfig[
