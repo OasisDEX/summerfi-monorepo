@@ -48,7 +48,7 @@
     "react-awesome-animated-number": "^1.0.13",
     "react-dom": "19.1.0",
     "react": "19.1.0",
-    "viem": "2.27.2",
+    "viem": "2.29.2",
     "usehooks-ts": "^3.1.0"
   },
   "devDependencies": {

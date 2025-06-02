@@ -15,7 +15,7 @@
     "@summerfi/serverless-shared": "workspace:*",
     "@summerfi/triggers-shared": "workspace:*",
     "bignumber.js": "^9.1.2",
-    "viem": "2.27.2"
+    "viem": "2.29.2"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
