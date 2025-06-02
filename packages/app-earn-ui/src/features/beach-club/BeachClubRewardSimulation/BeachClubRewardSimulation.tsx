@@ -62,14 +62,11 @@ export const BeachClubRewardSimulation: FC<BeachClubRewardSimulationProps> = ({
             as="h5"
             variant="h5"
             style={{
-              color: 'var(--earn-protocol-secondary-60)',
+              color: 'var(--beach-club-link)',
               marginBottom: 'var(--general-space-12)',
             }}
           >
-            Base SUMR Rewards
-          </Text>
-          <Text as="p" variant="p1semiColorfulBeachClub">
-            +100% Lifetime boost on future SUMR rewards
+            Projected Yearly SUMR Rewards
           </Text>
         </div>
       </Card>
