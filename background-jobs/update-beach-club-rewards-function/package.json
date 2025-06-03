@@ -1,5 +1,5 @@
 {
-  "name": "@summer-earn/referral-aggregator",
+  "name": "@summer-earn/beach-club-processor",
   "version": "0.1.0",
   "private": true,
   "main": "dist/index.js",
