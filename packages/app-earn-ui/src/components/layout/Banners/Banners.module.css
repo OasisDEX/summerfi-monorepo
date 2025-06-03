@@ -3,8 +3,6 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin-top: -50px;
-  margin-bottom: 20px;
   opacity: 0;
   height: 0;
   transition: opacity 0.3s ease-in-out;
@@ -15,6 +13,8 @@
   display: flex;
   opacity: 1;
   pointer-events: all;
+  margin-top: -50px;
+  margin-bottom: 20px;
 }
 .bannerWrapperWarning {
   background-color: var(--color-background-warning);
