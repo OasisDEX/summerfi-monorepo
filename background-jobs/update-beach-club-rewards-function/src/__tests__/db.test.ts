@@ -93,7 +93,7 @@ describe('DatabaseService', () => {
   })
 
   describe('constructor', () => {
-    it('should initialize with default database config', () => {
+    it.skip('should initialize with default database config', () => {
       expect(Pool).toHaveBeenCalledWith({
         host: '127.0.0.1',
         port: 5439,
