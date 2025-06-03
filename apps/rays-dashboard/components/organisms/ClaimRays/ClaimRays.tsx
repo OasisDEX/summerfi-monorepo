@@ -54,7 +54,7 @@ export default ({
 
   const mainCta = useCallback(() => {
     if (
-      userRays?.rays?.userTypes.includes('SummerFi Power User') ??
+      userRays?.rays?.userTypes.includes('SummerFi Power User') ||
       userRays?.rays?.userTypes.includes('SummerFi User')
     ) {
       trackButtonClick({
