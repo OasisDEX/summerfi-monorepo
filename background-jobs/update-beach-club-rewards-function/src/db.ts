@@ -95,13 +95,13 @@ export class DatabaseService {
     if (!BEACH_CLUB_REWARDS_DB_CONNECTION_STRING) {
       throw new Error('BEACH_CLUB_REWARDS_DB_CONNECTION_STRING is not set')
     }
-    const connectionString = BEACH_CLUB_REWARDS_DB_CONNECTION_STRING.replace('postgres://', '')
 
-    const host = connectionString.split('@')[1].split(':')[0]
-    const port = connectionString.split('@')[1].split(':')[1].split('/')[0]
-    const database = connectionString.split('@')[1].split(':')[1].split('/')[1]
-    const user = connectionString.split('@')[0].split(':')[0]
-    const password = connectionString.split('@')[0].split(':')[1]
+    const url = new URL(BEACH_CLUB_REWARDS_DB_CONNECTION_STRING)
+    const host = url.hostname
+    const port = url.port
+    const database = url.pathname.slice(1)
+    const user = url.username
+    const password = url.password
 
     this.pool = new Pool({
       host,
