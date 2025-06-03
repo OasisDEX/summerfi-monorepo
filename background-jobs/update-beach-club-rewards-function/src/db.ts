@@ -75,6 +75,7 @@ export class DatabaseService {
   protected pool: Pool
   protected db: Kysely<DB>
   public config: ConfigService
+  public migrator: KyselyMigrator | null = null
 
   // SUMR token price in USD
   private readonly SUMR_TOKEN_PRICE_USD = 0.25
@@ -118,10 +119,31 @@ export class DatabaseService {
 
     this.config = new ConfigService(this.db)
   }
+  async setMigrator(): Promise<void> {
+    if (!this.migrator) {
+      this.migrator = new KyselyMigrator(this.pool)
+    }
+  }
 
   async migrate(): Promise<void> {
-    const migrator = new KyselyMigrator(this.pool)
-    await migrator.runMigrations()
+    if (!this.migrator) {
+      await this.setMigrator()
+    }
+    await this.migrator!.runMigrations()
+  }
+
+  async resetMigrations(): Promise<void> {
+    if (!this.migrator) {
+      await this.setMigrator()
+    }
+    await this.migrator!.reset()
+  }
+
+  async rollbackMigrations(): Promise<void> {
+    if (!this.migrator) {
+      await this.setMigrator()
+    }
+    await this.migrator!.rollbackMigrations()
   }
 
   /**

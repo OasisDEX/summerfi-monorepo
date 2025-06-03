@@ -50,8 +50,8 @@ describe('ReferralClient', () => {
       mockRequest.mockResolvedValue(mockAccountData)
 
       const result = await client.getReferredAccounts(Network.MAINNET, {
-        timestampGt: BigInt(1640995100),
-        timestampLt: BigInt(1640995300),
+        timestampGt: '1640995100',
+        timestampLt: '1640995300',
       })
 
       expect(mockRequest).toHaveBeenCalledWith(
@@ -71,10 +71,7 @@ describe('ReferralClient', () => {
 
       const result = await client.getReferredAccounts(Network.MAINNET)
 
-      expect(mockRequest).toHaveBeenCalledWith(expect.any(String), {
-        timestampGt: '0',
-        timestampLt: '99999999999999999999',
-      })
+      expect(mockRequest).toHaveBeenCalledWith(expect.any(String), {})
       expect(result).toHaveLength(2)
     })
 
@@ -85,7 +82,7 @@ describe('ReferralClient', () => {
 
       expect(result).toEqual([])
       expect(consoleSpy).toHaveBeenCalledWith(
-        'Error fetching referred accounts from Ethereum:',
+        'Error fetching referred accounts from mainnet:',
         expect.any(Error),
       )
     })
@@ -293,7 +290,7 @@ describe('ReferralClient', () => {
 
       expect(result).toEqual({})
       expect(consoleSpy).toHaveBeenCalledWith(
-        'Error validating positions from Ethereum:',
+        'Error validating positions from mainnet:',
         expect.any(Error),
       )
     })
@@ -401,7 +398,8 @@ describe('ReferralClient', () => {
 
       // Verify behavior - timestampGt is not included when it's BigInt(0) since it's falsy
       expect(mockGetReferredAccounts).toHaveBeenCalledWith(Network.MAINNET, {
-        timestampLt: BigInt(1640995400),
+        timestampGt: '0',
+        timestampLt: '1640995400',
       })
       expect(result.validAccounts).toEqual(mockAccounts)
     })
@@ -432,8 +430,8 @@ describe('ReferralClient', () => {
 
       // Verify subsequent run behavior - both timestamps used
       expect(mockGetReferredAccounts).toHaveBeenCalledWith(Network.MAINNET, {
-        timestampGt: BigInt(1640995000),
-        timestampLt: BigInt(1640995400),
+        timestampGt: '1640995000',
+        timestampLt: '1640995400',
       })
       expect(result.validAccounts).toEqual(mockAccounts)
     })
