@@ -22,7 +22,8 @@
     "backfill": "ts-node src/entry-point.ts backfill",
     "stats": "ts-node src/entry-point.ts stats",
     "config": "ts-node src/scripts/manage-config.ts",
-    "resrun": "pnpm migrate-kysely reset && pnpm execute"
+    "resrun": "pnpm migrate-kysely reset && pnpm execute",
+    "run": "ts-node src/entry-point.ts"
   },
   "dependencies": {
     "@graphql-mesh/cli": "0.100.4",

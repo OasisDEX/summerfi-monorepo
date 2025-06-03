@@ -4,11 +4,11 @@ services:
   postgres:
     image: postgres:15
     environment:
-      POSTGRES_DB: referral_points
+      POSTGRES_DB: beach_club_points
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5432:5432"
+      - "5439:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:

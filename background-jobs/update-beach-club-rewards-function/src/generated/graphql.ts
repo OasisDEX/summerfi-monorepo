@@ -11338,24 +11338,7 @@ export type GetAccountsWithPositionsQuery = {
     positions: Array<{
       __typename?: 'Position'
       id: string
-      inputTokenDeposits: any
-      inputTokenDepositsNormalized: any
-      inputTokenWithdrawalsNormalized: any
-      inputTokenDepositsNormalizedInUSD: any
-      inputTokenWithdrawals: any
-      inputTokenWithdrawalsNormalizedInUSD: any
-      inputTokenBalance: any
-      outputTokenBalance: any
-      stakedInputTokenBalance: any
-      stakedOutputTokenBalance: any
-      unstakedInputTokenBalance: any
-      unstakedOutputTokenBalance: any
-      inputTokenBalanceNormalized: any
-      stakedInputTokenBalanceNormalized: any
-      unstakedInputTokenBalanceNormalized: any
       inputTokenBalanceNormalizedInUSD: any
-      stakedInputTokenBalanceNormalizedInUSD: any
-      unstakedInputTokenBalanceNormalizedInUSD: any
       createdTimestamp: any
       createdBlockNumber: any
       account: { __typename?: 'Account'; id: string }

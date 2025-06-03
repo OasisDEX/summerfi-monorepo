@@ -1,6 +1,8 @@
 import { ReferralClient } from './client'
-import { DatabaseService } from './db'
-import { HourlySnapshot } from './types'
+import { DatabaseService, PositionUpdate } from './db'
+import { Account, HourlySnapshot } from './types'
+import { Kysely, sql } from 'kysely'
+import { DB } from 'kysely-codegen'
 
 export interface ProcessingResult {
   success: boolean
@@ -25,11 +27,27 @@ export class ReferralProcessor {
   private db: DatabaseService
   private client: ReferralClient
   private logger: Logger
+  private referralStartDate: Date
+
+  // Fee configuration for vault types
+  private readonly FEE_CONFIG = {
+    volatile: {
+      feeTier: 0.003, // 0.3% - base fee tier for volatile vaults (ETH etc)
+      referrerRate: 0.00025, // 0.025% - 2.5bps for referrer per asset of TVL, annualised
+      ownerRate: 0.00015, // 0.015% - 1.5bps for receiver per asset of TVL, annualised
+    },
+    stable: {
+      feeTier: 0.01, // 1% - base fee tier for stable vaults (USDC, USDT, EURC etc)
+      referrerRate: 0.0005, // 0.05% - 5bps for referrer per asset of TVL, annualised
+      ownerRate: 0.00025, // 0.025% - 2.5bps for receiver per asset of TVL, annualised
+    },
+  } as const
 
   constructor(config?: ProcessorConfig) {
     this.db = new DatabaseService()
     this.client = new ReferralClient()
     this.logger = config?.logger || console
+    this.referralStartDate = new Date('2025-05-27')
   }
 
   /**
@@ -38,28 +56,103 @@ export class ReferralProcessor {
   async processLatest(): Promise<ProcessingResult> {
     this.logger.log('🚀 Processing latest referral points...')
 
-    try {
-      const lastProcessed = await this.db.getLastProcessedTimestamp()
-      const now = new Date()
-      now.setMinutes(0, 0, 0) // Round down to hour
+    // Safety check - ensure we're not already processing
+    const isUpdating = await this.db.config.getIsUpdating()
+    this.logger.log(`🔍 Current is_updating flag: ${isUpdating}`)
 
-      let periodStart: Date
-      if (!lastProcessed) {
-        // First run - process last 24 hours
-        periodStart = new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000)
-        this.logger.log('📍 First run - processing last 24 hours')
-      } else {
-        periodStart = lastProcessed
+    if (isUpdating) {
+      this.logger.log('⚠️ Processing already in progress - skipping this run')
+      return {
+        success: true,
+        usersProcessed: 0,
+        activeUsers: 0,
+        periodStart: new Date(),
+        periodEnd: new Date(),
       }
+    }
 
-      const periodEnd = now
+    try {
+      // Set updating flag to true
+      await this.db.config.setIsUpdating(true)
+      this.logger.log('🔒 Set processing lock to true')
 
-      this.logger.log(`📅 Processing Period:`)
-      this.logger.log(`   From: ${periodStart.toISOString()}`)
-      this.logger.log(`   To:   ${periodEnd.toISOString()}`)
+      // Verify the flag was set
+      const verifyFlag = await this.db.config.getIsUpdating()
+      this.logger.log(`✅ Verified is_updating flag: ${verifyFlag}`)
 
-      if (periodStart >= periodEnd) {
-        this.logger.log('⏰ No new data to process')
+      return await this.db.executeInTransaction(async (trx) => {
+        const lastProcessed = await this.db.getLastProcessedTimestampInTransaction(trx)
+        const now = new Date()
+        now.setMinutes(0, 0, 0) // Round down to hour
+
+        let periodStart: Date
+        if (!lastProcessed) {
+          periodStart = this.referralStartDate
+          this.logger.log('📍 First run - processing from referral start date')
+        } else {
+          periodStart = lastProcessed
+        }
+
+        const periodEnd = now
+
+        this.logger.log(`📅 Processing Period:`)
+        this.logger.log(`   From: ${periodStart.toISOString()}`)
+        this.logger.log(`   To:   ${periodEnd.toISOString()}`)
+
+        if (periodStart >= periodEnd) {
+          this.logger.log('⏰ No new data to process')
+          return {
+            success: true,
+            usersProcessed: 0,
+            activeUsers: 0,
+            periodStart,
+            periodEnd,
+          }
+        }
+
+        const newUsers = await this.processNewUsersInTransaction(trx, periodStart, periodEnd)
+        if (!newUsers.success) {
+          throw new Error(`Processing failed: ${newUsers.error?.message}`)
+        }
+
+        // if period is longer than 1 hour, we need to process it in chunks of 1 hour
+        if (periodEnd.getTime() - periodStart.getTime() > 1 * 60 * 60 * 1000) {
+          const chunks = Math.ceil(
+            (periodEnd.getTime() - periodStart.getTime()) / (1 * 60 * 60 * 1000),
+          )
+          for (let i = 0; i < chunks; i++) {
+            const chunkStart = new Date(periodStart.getTime() + i * 1 * 60 * 60 * 1000)
+            const chunkEnd = new Date(periodStart.getTime() + (i + 1) * 1 * 60 * 60 * 1000)
+            const startTimer = performance.now()
+            const result = await this.processPeriodInTransaction(trx, chunkStart, chunkEnd)
+            console.log('time after processPeriodInTransaction', performance.now() - startTimer)
+            if (!result.success) {
+              throw new Error(`Processing failed for chunk: ${result.error?.message}`)
+            } else {
+              await trx
+                .insertInto('processing_checkpoint')
+                .values({
+                  last_processed_timestamp: chunkEnd,
+                })
+                .execute()
+              this.logger.log(`✅ Checkpoint updated to: ${chunkEnd.toISOString()}`)
+            }
+          }
+        } else {
+          const result = await this.processPeriodInTransaction(trx, periodStart, periodEnd)
+          if (!result.success) {
+            throw new Error(`Processing failed: ${result.error?.message}`)
+          } else {
+            await trx
+              .insertInto('processing_checkpoint')
+              .values({
+                last_processed_timestamp: periodEnd,
+              })
+              .execute()
+            this.logger.log(`✅ Checkpoint updated to: ${periodEnd.toISOString()}`)
+          }
+        }
+
         return {
           success: true,
           usersProcessed: 0,
@@ -67,41 +160,7 @@ export class ReferralProcessor {
           periodStart,
           periodEnd,
         }
-      }
-
-      // if period is longer than 1 hour, we need to process it in chunks of 1 hour
-      if (periodEnd.getTime() - periodStart.getTime() > 1 * 60 * 60 * 1000) {
-        const chunks = Math.ceil(
-          (periodEnd.getTime() - periodStart.getTime()) / (1 * 60 * 60 * 1000),
-        )
-        for (let i = 0; i < chunks; i++) {
-          const chunkStart = new Date(periodStart.getTime() + i * 1 * 60 * 60 * 1000)
-          const chunkEnd = new Date(periodStart.getTime() + (i + 1) * 1 * 60 * 60 * 1000)
-          const result = await this.processPeriod(chunkStart, chunkEnd)
-          if (!result.success) {
-            return result
-          } else {
-            await this.db.updateProcessingCheckpoint(chunkEnd)
-            this.logger.log(`✅ Checkpoint updated to: ${chunkEnd.toISOString()}`)
-          }
-        }
-      } else {
-        const result = await this.processPeriod(periodStart, periodEnd)
-        if (!result.success) {
-          return result
-        } else {
-          await this.db.updateProcessingCheckpoint(periodEnd)
-          this.logger.log(`✅ Checkpoint updated to: ${periodEnd.toISOString()}`)
-        }
-      }
-
-      return {
-        success: true,
-        usersProcessed: 0,
-        activeUsers: 0,
-        periodStart,
-        periodEnd,
-      }
+      })
     } catch (error) {
       this.logger.error('❌ Processing failed:', error)
       return {
@@ -112,6 +171,14 @@ export class ReferralProcessor {
         periodEnd: new Date(),
         error: error as Error,
       }
+    } finally {
+      // Always clear the updating flag
+      this.logger.log('🔓 Releasing processing lock...')
+      await this.db.config.setIsUpdating(false)
+
+      // Verify the flag was cleared
+      const verifyCleared = await this.db.config.getIsUpdating()
+      this.logger.log(`✅ Verified is_updating flag after clear: ${verifyCleared}`)
     }
   }
 
@@ -119,37 +186,135 @@ export class ReferralProcessor {
    * Process a specific time period
    */
   async processPeriod(periodStart: Date, periodEnd: Date): Promise<ProcessingResult> {
+    return await this.db.executeInTransaction(async (trx) => {
+      return await this.processPeriodInTransaction(trx, periodStart, periodEnd)
+    })
+  }
+
+  async processNewUsersInTransaction(
+    trx: any,
+    periodStart: Date,
+    periodEnd: Date,
+  ): Promise<ProcessingResult> {
+    // Step 1: Fetch new referred accounts in this period
+    const timestampGt = BigInt(Math.floor(periodStart.getTime() / 1000))
+    const timestampLt = BigInt(Math.floor(periodEnd.getTime() / 1000))
+
+    this.logger.log(`📡 Fetching newly referred accounts in this period...`)
+    const { validAccounts } = await this.client.getValidReferredAccounts(timestampGt, timestampLt)
+
+    this.logger.log(`📊 Found ${validAccounts.length} new valid referred accounts`)
+
+    // Store new users - batch insert for better performance
+    if (validAccounts.length > 0) {
+      // First, validate all referral codes and prepare user data
+      const userValues = []
+
+      for (const account of validAccounts) {
+        let validatedReferrerId: string | null = null
+
+        if (account.referralData?.id) {
+          validatedReferrerId = await this.db.validateReferralCodeInTransaction(
+            trx,
+            account.referralData.id,
+          )
+          this.logger.log(
+            `Validated referral code ${account.referralData.id} -> ${validatedReferrerId}`,
+          )
+        }
+
+        userValues.push({
+          id: account.id,
+          referrer_id: validatedReferrerId,
+          referral_chain: validatedReferrerId ? account.referralChain : null,
+          referral_timestamp: validatedReferrerId
+            ? new Date(Number(account.referralTimestamp) * 1000)
+            : null,
+          is_active: false,
+        })
+      }
+
+      await trx
+        .insertInto('users')
+        .values(userValues)
+        .onConflict((oc: any) => oc.doNothing())
+        .execute()
+    }
+
+    return {
+      success: true,
+      usersProcessed: validAccounts.length,
+      activeUsers: 0,
+      periodStart,
+      periodEnd,
+    }
+  }
+
+  /**
+   * Process a specific time period within a transaction
+   */
+  async processPeriodInTransaction(
+    trx: any,
+    periodStart: Date,
+    periodEnd: Date,
+  ): Promise<ProcessingResult> {
     this.logger.log(
       `\n🔄 Processing period: ${periodStart.toISOString()} → ${periodEnd.toISOString()}`,
     )
 
     try {
-      // Step 1: Fetch new referred accounts in this period
+      // Update user totals for all affected users
+      const config = await this.db.config.getConfig()
+
+      // // Step 1: Fetch new referred accounts in this period
       const timestampGt = BigInt(Math.floor(periodStart.getTime() / 1000))
       const timestampLt = BigInt(Math.floor(periodEnd.getTime() / 1000))
 
-      this.logger.log(`📡 Fetching newly referred accounts in this period...`)
-      const { validAccounts } = await this.client.getValidReferredAccounts(timestampGt, timestampLt)
+      // this.logger.log(`📡 Fetching newly referred accounts in this period...`)
+      // const { validAccounts } = await this.client.getValidReferredAccounts(timestampGt, timestampLt)
 
-      this.logger.log(`📊 Found ${validAccounts.length} new valid referred accounts`)
+      // this.logger.log(`📊 Found ${validAccounts.length} new valid referred accounts`)
 
-      // Store new users
-      for (const account of validAccounts) {
-        await this.db.upsertUser(account.id, {
-          referrerId: account.referralData?.id,
-          referralChain: account.referralChain,
-          referralTimestamp: new Date(Number(account.referralTimestamp) * 1000),
-        })
-      }
+      // // Store new users - batch insert for better performance
+      // if (validAccounts.length > 0) {
+      //   // First, validate all referral codes and prepare user data
+      //   const userValues = []
+
+      //   for (const account of validAccounts) {
+      //     let validatedReferrerId: string | null = null
+
+      //     if (account.referralData?.id) {
+      //       validatedReferrerId = await this.db.validateReferralCodeInTransaction(trx, account.referralData.id)
+      //       this.logger.log(`Validated referral code ${account.referralData.id} -> ${validatedReferrerId}`)
+      //     }
+
+      //     userValues.push({
+      //       id: account.id,
+      //       referrer_id: validatedReferrerId,
+      //       referral_chain: validatedReferrerId ? account.referralChain : null,
+      //       referral_timestamp: validatedReferrerId
+      //         ? new Date(Number(account.referralTimestamp) * 1000)
+      //         : null,
+      //       is_active: false,
+      //     })
+      //   }
+
+      //   await trx
+      //     .insertInto('users')
+      //     .values(userValues)
+      //     .onConflict((oc: any) => oc.doNothing())
+      //     .execute()
+      // }
 
       // Step 2: Get all users that need position updates
-      const allUsers = await this.db.rawDb
+      const allUsers = await trx
         .selectFrom('users')
         .where('referrer_id', 'is not', null)
+        .where('referral_timestamp', '<=', periodEnd)
         .select('id')
         .execute()
 
-      const userIds = allUsers.map((u) => u.id)
+      const userIds = allUsers.map((u: any) => u.id)
       this.logger.log(`📊 Updating positions for ${userIds.length} users...`)
 
       // Step 3: Fetch and update positions
@@ -158,52 +323,36 @@ export class ReferralProcessor {
         timestampLt,
       })
 
-      // Update positions and user totals
-      for (const [chain, accounts] of Object.entries(positionsByChain)) {
-        for (const account of accounts) {
-          if (account.positions) {
-            for (const position of account.positions) {
-              // Find the latest snapshot in the period
-              const latestSnapshot = this.getLatestSnapshot(
-                position.hourlySnapshots,
-                periodStart,
-                periodEnd,
-              )
-              if (latestSnapshot) {
-                const depositUsd = Number(latestSnapshot.inputTokenBalanceNormalizedInUSD || 0)
-                // todo: create config / smarter way to handle this
-                const isVolatile = position.vault.inputToken.symbol === 'WETH'
-                // update position
-                await this.db.updatePosition(
-                  position.id,
-                  chain as any,
-                  account.id,
-                  depositUsd,
-                  isVolatile,
-                )
-              }
-            }
-            // Update referred user totals and is active flag after all positions are updated
-            await this.db.updateUserTotals(account.id)
-          }
-        }
+      // Prepare batch position updates
+      const positionUpdates: Array<PositionUpdate> = this.preparePositionsUpdateData(
+        positionsByChain,
+        periodStart,
+        periodEnd,
+      )
+
+      // Batch insert/update positions
+      if (positionUpdates.length > 0) {
+        await this.db.updatePositionsInTransaction(trx, positionUpdates)
       }
+
+      // Update user totals for all affected users
+      await this.db.updateUserTotalsInTransaction(trx, userIds, config)
 
       // Step 4: Recalculate all referral stats
       this.logger.log('📊 Recalculating referral stats...')
-      await this.db.recalculateReferralStats()
+      await this.db.recalculateReferralStatsInTransaction(trx)
 
       // Step 5: Update daily rates and accumulate points
       this.logger.log('💰 Updating points and daily rates...')
-      await this.db.updateDailyRatesAndPoints()
+      await this.db.updateDailyRatesAndPointsInTransaction(trx)
 
       // Step 6: Update daily stats for historical tracking
-      await this.db.updateDailyStats()
+      await this.db.updateDailyStatsInTransaction(trx)
 
       // Get final stats
-      const activeUsersResult = await this.db.rawDb
+      const activeUsersResult = await trx
         .selectFrom('users')
-        .select((eb) => eb.fn.count('id').as('count'))
+        .select((eb: any) => eb.fn.count('id').as('count'))
         .where('is_active', '=', true)
         .executeTakeFirst()
 
@@ -233,6 +382,59 @@ export class ReferralProcessor {
     }
   }
 
+  private preparePositionsUpdateData(
+    positionsByChain: { [chain: string]: Account[] },
+    periodStart: Date,
+    periodEnd: Date,
+  ) {
+    const positionUpdates: Array<PositionUpdate> = []
+
+    // Update positions and user totals
+    for (const [chain, accounts] of Object.entries(positionsByChain)) {
+      for (const account of accounts) {
+        if (account.positions) {
+          for (const position of account.positions) {
+            // Find the latest snapshot in the period
+            const latestSnapshot = this.getLatestSnapshot(
+              position.hourlySnapshots,
+              periodStart,
+              periodEnd,
+            )
+            if (latestSnapshot) {
+              const depositUsd = Number(latestSnapshot.inputTokenBalanceNormalizedInUSD || 0)
+              const isVolatile = position.vault.inputToken.symbol === 'WETH'
+
+              const feeTier = isVolatile
+                ? this.FEE_CONFIG.volatile.feeTier
+                : this.FEE_CONFIG.stable.feeTier
+              const dailyFeeGeneratedByThePosition = (depositUsd * feeTier) / 365
+              const dailyReferrerFees =
+                dailyFeeGeneratedByThePosition *
+                (isVolatile
+                  ? this.FEE_CONFIG.volatile.referrerRate
+                  : this.FEE_CONFIG.stable.referrerRate)
+              const dailyOwnerFees =
+                dailyFeeGeneratedByThePosition *
+                (isVolatile ? this.FEE_CONFIG.volatile.ownerRate : this.FEE_CONFIG.stable.ownerRate)
+
+              positionUpdates.push({
+                id: position.id,
+                chain: chain as any,
+                user_id: account.id,
+                current_deposit_usd: depositUsd.toString(),
+                fees_per_day_referrer: dailyReferrerFees.toString(),
+                fees_per_day_owner: dailyOwnerFees.toString(),
+                is_volatile: isVolatile,
+                last_synced_at: new Date(),
+              })
+            }
+          }
+        }
+      }
+    }
+    return positionUpdates
+  }
+
   /**
    * Get the latest snapshot within a time period
    */
@@ -252,118 +454,6 @@ export class ReferralProcessor {
     return relevantSnapshots.reduce((latest, current) => {
       return Number(current.timestamp) > Number(latest.timestamp) ? current : latest
     })
-  }
-
-  /**
-   * Backfill historical data
-   */
-  async backfill(fromDate?: Date): Promise<ProcessingResult> {
-    this.logger.log('🔄 Starting historical backfill...')
-
-    try {
-      // Get earliest referral date
-      const earliestResult = await this.db.rawDb
-        .selectFrom('users')
-        .select((eb) => eb.fn.min('referral_timestamp').as('earliest'))
-        .where('referral_timestamp', 'is not', null)
-        .executeTakeFirst()
-
-      const startDate = fromDate || earliestResult?.earliest || new Date()
-      const endDate = new Date()
-      endDate.setMinutes(0, 0, 0)
-
-      this.logger.log(`📅 Backfilling from ${startDate.toISOString()} to ${endDate.toISOString()}`)
-
-      // Process in chunks of 24 hours
-      let currentStart = new Date(startDate)
-      currentStart.setHours(0, 0, 0, 0)
-
-      let totalUsers = 0
-      let totalActive = 0
-
-      while (currentStart < endDate) {
-        const currentEnd = new Date(currentStart.getTime() + 24 * 60 * 60 * 1000)
-
-        const result = await this.processPeriod(currentStart, currentEnd)
-        if (result.success) {
-          totalUsers = Math.max(totalUsers, result.usersProcessed)
-          totalActive = Math.max(totalActive, result.activeUsers)
-        }
-
-        currentStart = currentEnd
-      }
-
-      // Update checkpoint
-      await this.db.updateProcessingCheckpoint(endDate)
-
-      this.logger.log('✅ Backfill completed')
-      return {
-        success: true,
-        usersProcessed: totalUsers,
-        activeUsers: totalActive,
-        periodStart: startDate,
-        periodEnd: endDate,
-      }
-    } catch (error) {
-      this.logger.error('❌ Backfill failed:', error)
-      return {
-        success: false,
-        usersProcessed: 0,
-        activeUsers: 0,
-        periodStart: new Date(),
-        periodEnd: new Date(),
-        error: error as Error,
-      }
-    }
-  }
-
-  /**
-   * Get processing statistics
-   */
-  async getStats(): Promise<{
-    lastProcessed: Date | null
-    totalReferralCodes: number
-    totalActiveUsers: number
-    topReferrers: Array<{
-      id: string
-      customCode: string | null
-      totalPoints: number
-      pointsPerDay: number
-      activeUsers: number
-      totalDeposits: number
-    }>
-  }> {
-    const lastProcessed = await this.db.getLastProcessedTimestamp()
-
-    // Get stats
-    const [referralCodesResult, activeUsersResult] = await Promise.all([
-      this.db.rawDb
-        .selectFrom('referral_codes')
-        .select((eb) => eb.fn.count('id').as('count'))
-        .executeTakeFirst(),
-      this.db.rawDb
-        .selectFrom('users')
-        .select((eb) => eb.fn.count('id').as('count'))
-        .where('is_active', '=', true)
-        .executeTakeFirst(),
-    ])
-
-    // Get top referrers
-    const topReferrers = await this.db.getTopReferralCodes(10)
-
-    return {
-      lastProcessed,
-      totalReferralCodes: Number(referralCodesResult?.count || 0),
-      totalActiveUsers: Number(activeUsersResult?.count || 0),
-      topReferrers: topReferrers.map((r) => ({
-        id: r.id,
-        customCode: r.custom_code,
-        totalPoints: r.total_points_earned,
-        pointsPerDay: r.points_per_day,
-        activeUsers: r.active_users_count,
-        totalDeposits: r.total_deposits_usd,
-      })),
-    }
   }
 
   /**

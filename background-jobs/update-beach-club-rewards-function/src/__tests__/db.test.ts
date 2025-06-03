@@ -92,7 +92,7 @@ describe('DatabaseService', () => {
       expect(Pool).toHaveBeenCalledWith({
         host: '127.0.0.1',
         port: 5432,
-        database: 'referral_points',
+        database: 'beach_club_points',
         user: 'postgres',
         password: 'postgres',
       })

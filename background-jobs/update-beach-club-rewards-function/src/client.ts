@@ -21,8 +21,8 @@ const SUBGRAPH_URLS: Record<SupportedChain, string> = {
 }
 
 export interface ReferredAccountsOptions {
-  timestampGt?: bigint
-  timestampLt?: bigint
+  timestampGt?: string
+  timestampLt?: string
 }
 
 export interface PaginationOptions {
@@ -53,14 +53,9 @@ export class ReferralClient {
     options: ReferredAccountsOptions = {},
   ): Promise<Account[]> {
     try {
-      const variables: any = {}
-      variables.timestampGt = options.timestampGt ? options.timestampGt.toString() : '0'
-      variables.timestampLt = options.timestampLt
-        ? options.timestampLt.toString()
-        : '99999999999999999999'
       const data = await this.clients[chain].request<GetReferredAccountsQuery>(
         REFERRED_ACCOUNTS_QUERY,
-        variables,
+        options,
       )
       return data.accounts.filter(Boolean).map((a) => convertAccount(a as any)) as Account[]
     } catch (error) {
@@ -318,10 +313,10 @@ export class ReferralClient {
 
     // Step 1: Get all referred accounts from all chains
     for (const chain of SUPPORTED_CHAINS) {
-      const options: ReferredAccountsOptions = {}
-
-      if (timestampGt) options.timestampGt = timestampGt
-      if (timestampLt) options.timestampLt = timestampLt
+      const options: ReferredAccountsOptions = {
+        timestampGt: timestampGt.toString(),
+        timestampLt: timestampLt.toString(),
+      }
 
       const accounts = await this.getReferredAccounts(chain, options)
       const accountsWithChain = accounts.map((a) => ({
@@ -331,7 +326,7 @@ export class ReferralClient {
       allAccts.push(...accountsWithChain)
     }
 
-    // Step 2: Get all referred accounts from all chains
+    // Step 2: Get all referred accounts from all chains - keep only the earliest referral timestamp
     const allReferredAccounts = allAccts.reduce(
       (acc, account) => {
         if (!acc[account.id]) {

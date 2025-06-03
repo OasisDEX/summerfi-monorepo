@@ -371,6 +371,16 @@ export class KyselyMigrator {
           value: '0.0005',
           description: 'Logarithmic multiplier in points formula',
         },
+        {
+          key: 'enable_backfill',
+          value: 'true',
+          description: 'Enable backfill for historical data',
+        },
+        {
+          key: 'is_updating',
+          value: 'false',
+          description: 'Whether the system is currently processing data',
+        },
       ])
       .onConflict((oc) => oc.column('key').doNothing())
       .execute()
@@ -385,12 +395,40 @@ export class KyselyMigrator {
       .column('custom_code')
       .execute()
 
+    await db.schema
+      .createIndex('idx_referral_codes_active_users_count')
+      .ifNotExists()
+      .on('referral_codes')
+      .column('active_users_count')
+      .execute()
+
     // Users indexes
     await db.schema
       .createIndex('idx_users_referrer_id')
       .ifNotExists()
       .on('users')
       .column('referrer_id')
+      .execute()
+
+    await db.schema
+      .createIndex('idx_users_referral_code')
+      .ifNotExists()
+      .on('users')
+      .column('referral_code')
+      .execute()
+
+    await db.schema
+      .createIndex('idx_users_referral_code_is_active')
+      .ifNotExists()
+      .on('users')
+      .columns(['referral_code', 'is_active'])
+      .execute()
+
+    await db.schema
+      .createIndex('idx_users_referrer_id_is_active')
+      .ifNotExists()
+      .on('users')
+      .columns(['referrer_id', 'is_active'])
       .execute()
 
     await db.schema

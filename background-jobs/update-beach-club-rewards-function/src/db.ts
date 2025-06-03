@@ -1,9 +1,20 @@
 import { Kysely, PostgresDialect, sql } from 'kysely'
 import { DB } from 'kysely-codegen'
 import { Pool } from 'pg'
-import { ConfigService } from './config'
+import { ConfigService, PointsConfig } from './config'
 import { KyselyMigrator } from './migrations/kysely-migrator'
 import { Network } from './types'
+
+export type PositionUpdate = {
+  id: string
+  chain: string
+  user_id: string
+  current_deposit_usd: string
+  fees_per_day_referrer: string
+  fees_per_day_owner: string
+  is_volatile: boolean
+  last_synced_at: Date
+}
 
 export interface SimplifiedReferralCode {
   id: string
@@ -43,6 +54,19 @@ enum ReferralCodeType {
   INVALID = 'invalid',
   TEST = 'test',
 }
+
+enum RewardType {
+  FEES = 'fees',
+  POINTS = 'points',
+  SUMR = 'summer_tokens',
+}
+
+enum RewardDescription {
+  REGULAR = 'regular_distribution',
+  BONUS = 'bonus',
+  CLAIM = 'claim',
+}
+
 export class DatabaseService {
   protected pool: Pool
   protected db: Kysely<DB>
@@ -63,8 +87,8 @@ export class DatabaseService {
   constructor() {
     this.pool = new Pool({
       host: process.env.DB_HOST || '127.0.0.1',
-      port: parseInt(process.env.DB_PORT || '5432'),
-      database: process.env.DB_NAME || 'referral_points',
+      port: parseInt(process.env.DB_PORT || '5439'),
+      database: process.env.DB_NAME || 'beach_club_points',
       user: process.env.DB_USER || 'postgres',
       password: process.env.DB_PASSWORD || 'postgres',
     })
@@ -157,6 +181,7 @@ export class DatabaseService {
     if (data.referrerId) {
       const referralCodeId = data.referrerId
       validatedReferrerId = await this.validateReferralCode(referralCodeId)
+      console.log('validatedReferrerId', validatedReferrerId)
     }
 
     await this.db
@@ -172,44 +197,19 @@ export class DatabaseService {
       .execute()
   }
 
-  /**
-   * Update position state (idempotent)
-   */
-  async updatePosition(
-    positionId: string,
-    chain: Network,
-    userId: string,
-    depositUsd: number,
-    isVolatile: boolean,
+  async updatePositionsInTransaction(
+    trx: Kysely<DB>,
+    positionUpdates: PositionUpdate[],
   ): Promise<void> {
-    // Referral rates:
-    // – Stable Vaults (USDC, USDT, EURC etc): 7.5bps (5bps for referrer & 2.5bps for the receiver) per asset of TVL, annualised.
-    // – Volatile Vaults (ETH etc): 4bps (2.5bps for referrer & 1.5bps for the receiver) per asset of TVL, annualised.
-    // – Both of these would be calculated on a per second basis over the period.
-
-    const feeTier = isVolatile ? 0.003 : 0.01
-    const dailyFeeGeneratedByThePosition = (depositUsd * feeTier) / 365
-    const dailyReferrerFees = dailyFeeGeneratedByThePosition * (isVolatile ? 0.00025 : 0.0005)
-    const dailyOwnerFees = dailyFeeGeneratedByThePosition * (isVolatile ? 0.00015 : 0.00025)
-
-    await this.db
+    await trx
       .insertInto('positions')
-      .values({
-        id: positionId,
-        chain,
-        user_id: userId,
-        current_deposit_usd: depositUsd.toString(),
-        fees_per_day_referrer: dailyReferrerFees.toString(),
-        fees_per_day_owner: dailyOwnerFees.toString(),
-        is_volatile: isVolatile,
-        last_synced_at: new Date(),
-      })
-      .onConflict((oc) =>
+      .values(positionUpdates)
+      .onConflict((oc: any) =>
         oc.columns(['id', 'chain']).doUpdateSet({
-          current_deposit_usd: depositUsd.toString(),
-          fees_per_day_referrer: dailyReferrerFees.toString(),
-          fees_per_day_owner: dailyOwnerFees.toString(),
-          last_synced_at: new Date(),
+          current_deposit_usd: (eb: any) => eb.ref('excluded.current_deposit_usd'),
+          fees_per_day_referrer: (eb: any) => eb.ref('excluded.fees_per_day_referrer'),
+          fees_per_day_owner: (eb: any) => eb.ref('excluded.fees_per_day_owner'),
+          last_synced_at: (eb: any) => eb.ref('excluded.last_synced_at'),
         }),
       )
       .execute()
@@ -218,11 +218,14 @@ export class DatabaseService {
   /**
    * Update user activity status based on deposit threshold
    */
-  async updateUserTotals(userId: string): Promise<void> {
-    const config = await this.config.getConfig()
-
-    await this.db.executeQuery(
-      sql`
+  async updateUserTotalsInTransaction(
+    trx: Kysely<DB>,
+    userIds: string[],
+    config: PointsConfig,
+  ): Promise<void> {
+    for (const userId of userIds) {
+      await trx.executeQuery(
+        sql`
       UPDATE users 
       SET 
         is_active = (
@@ -232,15 +235,16 @@ export class DatabaseService {
         ),
         last_activity_at = NOW()
       WHERE id = ${userId}
-    `.compile(this.db),
-    )
+    `.compile(trx),
+      )
+    }
   }
 
   /**
-   * Recalculate all referral stats (fast single query)
+   * Recalculate all referral stats within a transaction
    */
-  async recalculateReferralStats(): Promise<void> {
-    await this.db.executeQuery(
+  async recalculateReferralStatsInTransaction(trx: Kysely<DB>): Promise<void> {
+    await trx.executeQuery(
       sql`
       UPDATE referral_codes rc
       SET 
@@ -250,7 +254,7 @@ export class DatabaseService {
       FROM (
         SELECT 
           u.referrer_id,
-          COUNT(*) FILTER (WHERE u.is_active) as active_users,
+          COUNT(DISTINCT u.id) FILTER (WHERE u.is_active = true) as active_users,
           SUM(p.current_deposit_usd) as total_deposits
         FROM users u
         LEFT JOIN positions p ON u.id = p.user_id
@@ -258,18 +262,18 @@ export class DatabaseService {
         GROUP BY u.referrer_id
       ) stats
       WHERE rc.id = stats.referrer_id
-    `.compile(this.db),
+    `.compile(trx),
     )
   }
 
   /**
-   * Update daily rates and accumulate points + SUMR rewards
+   * Update daily rates and accumulate points within a transaction
    */
-  async updateDailyRatesAndPoints(): Promise<void> {
+  async updateDailyRatesAndPointsInTransaction(trx: Kysely<DB>): Promise<void> {
     const config = await this.config.getConfig()
 
     // update points per day - simplified without active users calculation
-    await this.db.executeQuery(
+    await trx.executeQuery(
       sql`
       UPDATE referral_codes rc
       SET 
@@ -280,19 +284,18 @@ export class DatabaseService {
         ),
         last_calculated_at = NOW()
       WHERE rc.active_users_count > 0
-      `.compile(this.db),
+      `.compile(trx),
     )
 
     // Insert new point distributions
-    await this.db.executeQuery(
+    await trx.executeQuery(
       sql`
       INSERT INTO rewards_distributions (referral_id, amount, description, type)
-      SELECT id, points_per_day / 24, 'REGULAR', 'POINTS' FROM referral_codes
+      SELECT id, points_per_day / 24, ${RewardDescription.REGULAR}, ${RewardType.POINTS} FROM referral_codes
       WHERE active_users_count > 0
-    `.compile(this.db),
+    `.compile(trx),
     )
 
-    // Generate dynamic CASE statement from config
     const sumrCaseStatement = this.SUMR_REWARD_TIERS.map((tier) => {
       if (tier.maxAmount === Infinity) {
         return `ELSE total_deposits_usd * ${tier.percentage} / ${this.SUMR_TOKEN_PRICE_USD} / 8760`
@@ -302,7 +305,7 @@ export class DatabaseService {
     }).join('\n          ')
 
     // Insert SUMR token distributions (hourly rate)
-    await this.db.executeQuery(
+    await trx.executeQuery(
       sql`
       INSERT INTO rewards_distributions (referral_id, amount, description, type)
       SELECT 
@@ -310,11 +313,11 @@ export class DatabaseService {
         CASE 
           ${sql.raw(sumrCaseStatement)}
         END as hourly_sumr_rewards,
-        'TIERED_SUMR_REWARDS', 
-        'SUMMER_TOKENS' 
+        ${RewardDescription.REGULAR}, 
+        ${RewardType.SUMR} 
       FROM referral_codes
       WHERE active_users_count > 0 AND total_deposits_usd > 0
-    `.compile(this.db),
+    `.compile(trx),
     )
 
     // update summer per day and total summer earned
@@ -326,7 +329,7 @@ export class DatabaseService {
       }
     }).join('\n        ')
 
-    await this.db.executeQuery(
+    await trx.executeQuery(
       sql`
       UPDATE referral_codes
       SET summer_per_day = CASE 
@@ -334,76 +337,88 @@ export class DatabaseService {
       END,
       total_summer_earned = total_summer_earned + CASE 
         ${sql.raw(sumrUpdateCaseStatement)}
-      END
+      END,
+      last_calculated_at = NOW()
       WHERE active_users_count > 0 AND total_deposits_usd > 0
-    `.compile(this.db),
+    `.compile(trx),
     )
-
-    // update fees per day and total fees based on referred active users fees_per_day
-    await this.db.executeQuery(
+    await trx.executeQuery(
       sql`
-      WITH referrer_fees AS (
-        SELECT 
-          u.referrer_id,
-          SUM(p.fees_per_day_referrer) as total_daily_fees
+      WITH daily_referrer_fees_by_code AS (
+        -- Calculate total daily fees earned by codes as referrers
+        SELECT
+          u.referrer_id as referral_code_id,
+          SUM(p.fees_per_day_referrer) as total_daily_referrer_fees
         FROM users u
         INNER JOIN positions p ON u.id = p.user_id
         WHERE u.referrer_id IS NOT NULL AND u.is_active = true
         GROUP BY u.referrer_id
-      )
-      UPDATE referral_codes
-      SET 
-        fees_per_day = COALESCE(rf.total_daily_fees, 0),
-        total_fees_earned = total_fees_earned + COALESCE(rf.total_daily_fees, 0) / 24
-      FROM referrer_fees rf
-      WHERE referral_codes.id = rf.referrer_id
-      AND active_users_count > 0
-    `.compile(this.db),
-    )
-    // do the same for the owner / user based on fees_per_day_owner in his positions
-    await this.db.executeQuery(
-      sql`
-      WITH owner_fees AS (
-        SELECT 
-          u.referral_code,
-          SUM(p.fees_per_day_owner) as total_daily_fees
+      ),
+      daily_owner_fees_by_code AS (
+        -- Calculate total daily fees earned by codes for their owner's positions
+        SELECT
+          u.referral_code as referral_code_id,
+          SUM(p.fees_per_day_owner) as total_daily_owner_fees
         FROM users u
         INNER JOIN positions p ON u.id = p.user_id
-        WHERE u.is_active = true AND u.referral_code IS NOT NULL
+        WHERE u.referral_code IS NOT NULL AND u.is_active = true -- User must have a code and be active
         GROUP BY u.referral_code
+      ),
+      target_referral_codes_for_update AS (
+        -- Define all referral codes that should be processed:
+        -- 1. Codes that have referred active users.
+        SELECT id FROM referral_codes WHERE active_users_count > 0
+        UNION
+        -- 2. Codes belonging to active users (for owner fees), ensuring the code exists.
+        SELECT u.referral_code FROM users u WHERE u.is_active = true AND u.referral_code IS NOT NULL
+      ),
+      all_calculated_daily_fees AS (
+        -- Combine both fee types for all targeted referral codes.
+        -- This ensures that if a code earns 0 fees today (but is in the target list), 
+        -- its fees_per_day is correctly set to 0.
+        SELECT
+          target_rc.id as referral_code_id,
+          COALESCE(drf.total_daily_referrer_fees, 0) as daily_referrer_component,
+          COALESCE(dof.total_daily_owner_fees, 0) as daily_owner_component,
+          (COALESCE(drf.total_daily_referrer_fees, 0) + COALESCE(dof.total_daily_owner_fees, 0)) as final_total_daily_fees
+        FROM
+          target_referral_codes_for_update target_rc
+        LEFT JOIN daily_referrer_fees_by_code drf ON target_rc.id = drf.referral_code_id
+        LEFT JOIN daily_owner_fees_by_code dof ON target_rc.id = dof.referral_code_id
       )
-      UPDATE referral_codes
-      SET 
-        fees_per_day = COALESCE(of.total_daily_fees, 0),
-        total_fees_earned = total_fees_earned + COALESCE(of.total_daily_fees, 0) / 24
-      FROM owner_fees of
-      WHERE referral_codes.id = of.referral_code
-    `.compile(this.db),
+      UPDATE referral_codes rc
+      SET
+        fees_per_day = acdf.final_total_daily_fees,
+        total_fees_earned = rc.total_fees_earned + (acdf.final_total_daily_fees / 24), -- Accumulate total
+        last_calculated_at = NOW()
+      FROM all_calculated_daily_fees acdf
+      WHERE rc.id = acdf.referral_code_id;
+    `.compile(trx),
     )
 
     // insert fees distributions (hourly rate)
-    await this.db.executeQuery(
+    await trx.executeQuery(
       sql`
       INSERT INTO rewards_distributions (referral_id, amount, description, type)
       SELECT 
         id, 
         COALESCE(fees_per_day, 0) / 24, 
-        'FEES_DISTRIBUTION', 
-        'FEES' 
+        ${RewardDescription.REGULAR}, 
+        ${RewardType.FEES} 
       FROM referral_codes
-      WHERE active_users_count > 0 AND COALESCE(fees_per_day, 0) > 0
-    `.compile(this.db),
+      WHERE active_users_count > 0 AND COALESCE(fees_per_day, 0) / 24 > 0
+    `.compile(trx),
     )
   }
 
   /**
-   * Update daily stats for historical tracking
+   * Update daily stats within a transaction
    */
-  async updateDailyStats(): Promise<void> {
+  async updateDailyStatsInTransaction(trx: Kysely<DB>): Promise<void> {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
 
-    await this.db.executeQuery(
+    await trx.executeQuery(
       sql`
       INSERT INTO daily_stats (referral_id, date, points_earned, active_users, total_deposits)
       SELECT 
@@ -419,15 +434,15 @@ export class DatabaseService {
         points_earned = EXCLUDED.points_earned,
         active_users = EXCLUDED.active_users,
         total_deposits = EXCLUDED.total_deposits
-    `.compile(this.db),
+    `.compile(trx),
     )
   }
 
   /**
    * Get processing checkpoint
    */
-  async getLastProcessedTimestamp(): Promise<Date | null> {
-    const result = await this.db
+  async getLastProcessedTimestampInTransaction(trx: Kysely<DB> | undefined): Promise<Date | null> {
+    const result = await (trx || this.db)
       .selectFrom('processing_checkpoint')
       .select('last_processed_timestamp')
       .orderBy('id', 'desc')
@@ -507,6 +522,13 @@ export class DatabaseService {
   }
 
   /**
+   * Execute operations within a transaction
+   */
+  async executeInTransaction<T>(callback: (trx: Kysely<DB>) => Promise<T>): Promise<T> {
+    return await this.db.transaction().execute(callback)
+  }
+
+  /**
    * Get or create referral code
    */
   async ensureReferralCode(id: string, type: ReferralCodeType, customCode?: string): Promise<void> {
@@ -523,6 +545,58 @@ export class DatabaseService {
         fees_per_day: '0',
       })
       .onConflict((oc) => oc.column('id').doNothing())
+      .execute()
+  }
+
+  /**
+   * Validate referral code within a transaction
+   */
+  async validateReferralCodeInTransaction(
+    trx: Kysely<DB>,
+    referralCodeId: string,
+  ): Promise<string | null> {
+    try {
+      const parsedReferralCodeId = parseInt(referralCodeId)
+      if (parsedReferralCodeId > 100 && parsedReferralCodeId < 2000000) {
+        await this.ensureReferralCodeInTransaction(trx, referralCodeId, ReferralCodeType.INTEGRATOR)
+        return referralCodeId
+      }
+      if (parsedReferralCodeId >= 0 && parsedReferralCodeId < 100) {
+        await this.ensureReferralCodeInTransaction(trx, referralCodeId, ReferralCodeType.TEST)
+        return referralCodeId
+      }
+      const result = await trx.executeQuery(
+        sql`SELECT 1 FROM referral_codes WHERE id = ${referralCodeId} LIMIT 1`.compile(trx),
+      )
+      return result.rows.length > 0 ? referralCodeId : null
+    } catch (error) {
+      console.error('Error validating referral code:', error)
+      return null
+    }
+  }
+
+  /**
+   * Ensure referral code exists within a transaction
+   */
+  async ensureReferralCodeInTransaction(
+    trx: Kysely<DB>,
+    id: string,
+    type: ReferralCodeType,
+    customCode?: string,
+  ): Promise<void> {
+    await trx
+      .insertInto('referral_codes')
+      .values({
+        id,
+        custom_code: customCode || null,
+        type,
+        total_points_earned: '0',
+        total_deposits_usd: '0',
+        active_users_count: 0,
+        points_per_day: '0',
+        fees_per_day: '0',
+      })
+      .onConflict((oc: any) => oc.column('id').doNothing())
       .execute()
   }
 }

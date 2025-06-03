@@ -56,24 +56,7 @@ export const POSITIONS_QUERY = `
         symbol
       }
     }
-      inputTokenDeposits
-      inputTokenDepositsNormalized
-      inputTokenWithdrawalsNormalized
-      inputTokenDepositsNormalizedInUSD
-      inputTokenWithdrawals
-      inputTokenWithdrawalsNormalizedInUSD
-      inputTokenBalance
-      outputTokenBalance
-      stakedInputTokenBalance
-      stakedOutputTokenBalance
-      unstakedInputTokenBalance
-      unstakedOutputTokenBalance
-      inputTokenBalanceNormalized
-      stakedInputTokenBalanceNormalized
-      unstakedInputTokenBalanceNormalized
       inputTokenBalanceNormalizedInUSD
-      stakedInputTokenBalanceNormalizedInUSD
-      unstakedInputTokenBalanceNormalizedInUSD
       createdTimestamp
       createdBlockNumber
       referralData {
@@ -106,24 +89,7 @@ export const ACCOUNTS_WITH_POSITIONS_QUERY = gql`
             symbol
           }
         }
-        inputTokenDeposits
-        inputTokenDepositsNormalized
-        inputTokenWithdrawalsNormalized
-        inputTokenDepositsNormalizedInUSD
-        inputTokenWithdrawals
-        inputTokenWithdrawalsNormalizedInUSD
-        inputTokenBalance
-        outputTokenBalance
-        stakedInputTokenBalance
-        stakedOutputTokenBalance
-        unstakedInputTokenBalance
-        unstakedOutputTokenBalance
-        inputTokenBalanceNormalized
-        stakedInputTokenBalanceNormalized
-        unstakedInputTokenBalanceNormalized
         inputTokenBalanceNormalizedInUSD
-        stakedInputTokenBalanceNormalizedInUSD
-        unstakedInputTokenBalanceNormalizedInUSD
         createdTimestamp
         createdBlockNumber
         referralData {

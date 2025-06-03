@@ -283,7 +283,7 @@ ORDER BY u.referral_timestamp;
 # Database Configuration
 DB_HOST=127.0.0.1
 DB_PORT=5432
-DB_NAME=referral_points
+DB_NAME=beach_club_points
 DB_USER=postgres
 DB_PASSWORD=postgres
 
