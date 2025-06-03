@@ -301,7 +301,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                   >
                     <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
                       <Text
-                        variant="p4semi"
+                        variant="p3semi"
                         style={{
                           marginRight: 'var(--general-space-4)',
                         }}

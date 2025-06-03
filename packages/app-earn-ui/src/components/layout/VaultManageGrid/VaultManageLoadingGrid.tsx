@@ -128,7 +128,7 @@ export const VaultManageLoadingGrid: FC<VaultManageLoadingGridProps> = ({
               <DataBlock
                 size="large"
                 titleSize="small"
-                title="Current APY"
+                title="30d APY"
                 value={
                   <SkeletonLine
                     radius="16px"

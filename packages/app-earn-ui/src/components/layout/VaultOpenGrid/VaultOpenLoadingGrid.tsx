@@ -106,7 +106,7 @@ export const VaultOpenLoadingGrid: FC<VaultOpenLoadingGridProps> = ({
               <DataBlock
                 size="large"
                 titleSize="small"
-                title="Current APY"
+                title="Live APY"
                 value={
                   <SkeletonLine
                     radius="16px"
