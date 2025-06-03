@@ -1,11 +1,12 @@
 'use client'
 
-import { type FC, type ReactNode } from 'react'
+import { type FC, type ReactNode, useEffect } from 'react'
 import Link from 'next/link'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { EXTERNAL_LINKS, INTERNAL_LINKS } from '@/helpers/application-links'
+import { consoleInfo } from '@/helpers/console-info'
 import { useHoldAlt } from '@/hooks/use-hold-alt'
 
 import footerStyles from '@/components/layout/Footer/Footer.module.css'
@@ -97,6 +98,10 @@ const linksList = [
 export const Footer: FC<FooterProps> = ({ logo, newsletter, languageSwitcher }) => {
   // listen to holding ALT button
   const isAltPressed = useHoldAlt()
+
+  useEffect(() => {
+    consoleInfo()
+  }, [])
 
   return (
     <div className={footerStyles.container}>

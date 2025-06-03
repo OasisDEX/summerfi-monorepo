@@ -46,12 +46,15 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
     }
   }, [])
 
-  const scrolledAmountCalculated = useMemo(() => {
+  const scrollAction = useMemo(() => {
     if (isInstitutions) {
-      return Number(scrolledAmount * 0.2) - 100
+      return {
+        offset: Number(scrolledAmount * 0.2) - 100,
+        opacity: 1 - Number(scrolledAmount * 0.0015),
+      }
     }
 
-    return scrolledAmount * 0.2
+    return { offset: scrolledAmount * 0.2, opacity: 1 - Number(scrolledAmount * 0.0015) }
   }, [scrolledAmount, isInstitutions])
 
   return (
@@ -63,7 +66,7 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
       {showBubbles && (
         <div
           className={landingMasterPageStyles.bubbles}
-          style={{ top: `${scrolledAmountCalculated}px` }}
+          style={{ top: `${scrollAction.offset}px`, opacity: scrollAction.opacity }}
         >
           <div className={landingMasterPageStyles.bubblesShadow} />
           <video
