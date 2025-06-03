@@ -12170,38 +12170,38 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    GetGlobalRebalances(variables?: GetGlobalRebalancesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetGlobalRebalancesQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetGlobalRebalancesQuery>(GetGlobalRebalancesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetGlobalRebalances', 'query', variables);
+    GetGlobalRebalances(variables?: GetGlobalRebalancesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetGlobalRebalancesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetGlobalRebalancesQuery>({ document: GetGlobalRebalancesDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetGlobalRebalances', 'query', variables);
     },
-    GetLatestActivity(variables: GetLatestActivityQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetLatestActivityQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetLatestActivityQuery>(GetLatestActivityDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetLatestActivity', 'query', variables);
+    GetLatestActivity(variables: GetLatestActivityQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetLatestActivityQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetLatestActivityQuery>({ document: GetLatestActivityDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetLatestActivity', 'query', variables);
     },
-    GetUserPositions(variables: GetUserPositionsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetUserPositionsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetUserPositionsQuery>(GetUserPositionsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetUserPositions', 'query', variables);
+    GetUserPositions(variables: GetUserPositionsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetUserPositionsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetUserPositionsQuery>({ document: GetUserPositionsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetUserPositions', 'query', variables);
     },
-    GetUserPosition(variables: GetUserPositionQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetUserPositionQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetUserPositionQuery>(GetUserPositionDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetUserPosition', 'query', variables);
+    GetUserPosition(variables: GetUserPositionQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetUserPositionQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetUserPositionQuery>({ document: GetUserPositionDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetUserPosition', 'query', variables);
     },
-    GetPosition(variables: GetPositionQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetPositionQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetPositionQuery>(GetPositionDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetPosition', 'query', variables);
+    GetPosition(variables: GetPositionQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetPositionQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetPositionQuery>({ document: GetPositionDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetPosition', 'query', variables);
     },
-    GetRebalances(variables: GetRebalancesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetRebalancesQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetRebalancesQuery>(GetRebalancesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetRebalances', 'query', variables);
+    GetRebalances(variables: GetRebalancesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetRebalancesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetRebalancesQuery>({ document: GetRebalancesDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetRebalances', 'query', variables);
     },
-    GetTopDepositors(variables: GetTopDepositorsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetTopDepositorsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetTopDepositorsQuery>(GetTopDepositorsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetTopDepositors', 'query', variables);
+    GetTopDepositors(variables: GetTopDepositorsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetTopDepositorsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetTopDepositorsQuery>({ document: GetTopDepositorsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetTopDepositors', 'query', variables);
     },
-    GetUserActivity(variables: GetUserActivityQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetUserActivityQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetUserActivityQuery>(GetUserActivityDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetUserActivity', 'query', variables);
+    GetUserActivity(variables: GetUserActivityQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetUserActivityQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetUserActivityQuery>({ document: GetUserActivityDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetUserActivity', 'query', variables);
     },
-    GetUsersActivity(variables?: GetUsersActivityQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetUsersActivityQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetUsersActivityQuery>(GetUsersActivityDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetUsersActivity', 'query', variables);
+    GetUsersActivity(variables?: GetUsersActivityQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetUsersActivityQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetUsersActivityQuery>({ document: GetUsersActivityDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetUsersActivity', 'query', variables);
     },
-    GetVaults(variables?: GetVaultsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetVaultsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetVaultsQuery>(GetVaultsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetVaults', 'query', variables);
+    GetVaults(variables?: GetVaultsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetVaultsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetVaultsQuery>({ document: GetVaultsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetVaults', 'query', variables);
     },
-    GetVault(variables: GetVaultQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetVaultQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetVaultQuery>(GetVaultDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetVault', 'query', variables);
+    GetVault(variables: GetVaultQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetVaultQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetVaultQuery>({ document: GetVaultDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetVault', 'query', variables);
     }
   };
 }

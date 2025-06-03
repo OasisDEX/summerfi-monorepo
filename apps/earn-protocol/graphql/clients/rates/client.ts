@@ -2246,8 +2246,8 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    GetInterestRates(variables: GetInterestRatesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetInterestRatesQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetInterestRatesQuery>(GetInterestRatesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetInterestRates', 'query', variables);
+    GetInterestRates(variables: GetInterestRatesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetInterestRatesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetInterestRatesQuery>({ document: GetInterestRatesDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetInterestRates', 'query', variables);
     }
   };
 }
