@@ -1,6 +1,6 @@
 'use client'
 
-import { type PropsWithChildren, useEffect, useState } from 'react'
+import { type PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import {
   BeachClubRadialGradient,
   Footer,
@@ -27,8 +27,12 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
   const [scrolledAmount, setScrolledAmount] = useState(0)
   const { landingPageData } = useLandingPageData()
   const pathname = usePathname()
-  const showBubbles = !pathname.includes('beach-club')
-  const showPalms = pathname.includes('beach-club')
+
+  const isBeachClub = pathname.includes('beach-club')
+  const isInstitutions = pathname.includes('institutions')
+
+  const showBubbles = !isBeachClub
+  const showPalms = isBeachClub
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,6 +46,17 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
     }
   }, [])
 
+  const scrollAction = useMemo(() => {
+    if (isInstitutions) {
+      return {
+        offset: Number(scrolledAmount * 0.2) - 100,
+        opacity: 1 - Number(scrolledAmount * 0.0015),
+      }
+    }
+
+    return { offset: scrolledAmount * 0.2, opacity: 1 - Number(scrolledAmount * 0.0015) }
+  }, [scrolledAmount, isInstitutions])
+
   return (
     <div className={landingMasterPageStyles.mainContainer}>
       {landingPageData?.systemConfig.bannerMessage && (
@@ -51,7 +66,7 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
       {showBubbles && (
         <div
           className={landingMasterPageStyles.bubbles}
-          style={{ top: `${scrolledAmount * 0.2}px` }}
+          style={{ top: `${scrollAction.offset}px`, opacity: scrollAction.opacity }}
         >
           <div className={landingMasterPageStyles.bubblesShadow} />
           <video

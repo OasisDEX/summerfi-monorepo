@@ -1,4 +1,4 @@
-import { type FC, type ReactNode } from 'react'
+import { type CSSProperties, type FC, type ReactNode } from 'react'
 import clsx from 'clsx'
 
 import { Expander } from '@/components/atoms/Expander/Expander'
@@ -21,6 +21,7 @@ interface FaqSectionProps {
   faqSectionClassName?: string
   headerVariant?: keyof typeof TextClassNames
   customTitle?: string
+  expanderButtonStyles?: CSSProperties
 }
 
 export const FaqSection: FC<FaqSectionProps> = ({
@@ -30,6 +31,7 @@ export const FaqSection: FC<FaqSectionProps> = ({
   headerClassName,
   faqSectionClassName,
   customTitle,
+  expanderButtonStyles,
 }) => {
   return (
     <div className={clsx(wrapperClassName, faqSectionStyles.faqGeneralWrapper)}>
@@ -38,7 +40,7 @@ export const FaqSection: FC<FaqSectionProps> = ({
       </div>
       <div className={clsx(faqSectionStyles.faqSectionBlockWrapper, faqSectionClassName)}>
         {data.map(({ title, content }) => (
-          <Expander title={title} key={title}>
+          <Expander title={title} key={title} expanderButtonStyles={expanderButtonStyles}>
             <ExpanderContent>{content}</ExpanderContent>
           </Expander>
         ))}

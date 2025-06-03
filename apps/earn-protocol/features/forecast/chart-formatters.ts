@@ -1,5 +1,5 @@
 import { chartTimestampFormat } from '@summerfi/app-earn-ui'
-import { formatAsShorthandNumbers, formatCryptoBalance } from '@summerfi/app-utils'
+import { formatAsShorthandNumbers } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
 
@@ -10,14 +10,54 @@ export const formatChartCryptoValue = (amount: number) => {
     return '0'
   }
 
-  const unformattedValue = formatCryptoBalance(amount)
+  // Handle zero
+  if (amount === 0) return '0'
 
-  if (unformattedValue.includes('.')) {
-    // remove unnecessary trailing zeros
-    return unformattedValue.replace(/\.?0+$/u, '')
+  // Handle very small values with compact notation
+  if (amount < 0.001 && amount > 0) {
+    // For extremely small values, show as "<0.001"
+    return '<0.001'
   }
 
-  return unformattedValue
+  // Handle small values with minimal decimals
+  if (amount < 0.01 && amount > 0) {
+    return amount.toFixed(3)
+  }
+
+  // Handle values < 1 with 2 decimals
+  if (amount < 1) {
+    return amount.toFixed(2)
+  }
+
+  // Handle values 1-99 with 1 decimal
+  if (amount < 100) {
+    return amount.toFixed(1)
+  }
+
+  // Handle values 100-999 with no decimals
+  if (amount < 1000) {
+    return Math.round(amount).toString()
+  }
+
+  // Handle values >= 1000 with K suffix
+  if (amount < 1000000) {
+    const kValue = amount / 1000
+
+    if (kValue < 10) {
+      return `${kValue.toFixed(1)}K`
+    }
+
+    return `${Math.round(kValue)}K`
+  }
+
+  // Handle values >= 1M with M suffix
+  const mValue = amount / 1000000
+
+  if (mValue < 10) {
+    return `${mValue.toFixed(1)}M`
+  }
+
+  return `${Math.round(mValue)}M`
 }
 
 export const formatChartPercentageValue = (amount: number, detailed: boolean = false) => {
