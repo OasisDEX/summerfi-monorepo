@@ -1,5 +1,5 @@
 import { Kysely } from 'kysely'
-import { DB } from 'kysely-codegen'
+import { DB } from './database-types'
 import { Logger } from '@aws-lambda-powertools/logger'
 
 export interface PointsConfig {

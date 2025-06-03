@@ -1,3 +1,4 @@
 {
-  "url": "env(BEACH_CLUB_REWARDS_DB_CONNECTION_STRING)"
+  "url": "env(BEACH_CLUB_REWARDS_DB_CONNECTION_STRING)",
+  "out-file": "src/database-types.ts"
 }

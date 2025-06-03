@@ -9,7 +9,7 @@
     "build": "tsc",
     "dev": "tsc -w",
     "codegen": "pnpm codegen:kysely && pnpm codegen:graphql",
-    "codegen:kysely": "kysely-codegen",
+    "codegen:kysely": "kysely-codegen --out-file src/database-types.ts",
     "codegen:graphql": "graphql-codegen && graphql-mesh generate",
     "start": "node dist/index.js",
     "test": "jest",

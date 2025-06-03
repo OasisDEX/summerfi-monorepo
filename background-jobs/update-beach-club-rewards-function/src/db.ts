@@ -1,5 +1,5 @@
 import { Kysely, PostgresDialect, sql } from 'kysely'
-import { DB } from 'kysely-codegen'
+import { DB } from './database-types'
 import { Pool } from 'pg'
 import { ConfigService, PointsConfig } from './config'
 import { KyselyMigrator } from './migrations/kysely-migrator'

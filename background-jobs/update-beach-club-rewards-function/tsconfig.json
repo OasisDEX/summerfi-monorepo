@@ -15,7 +15,8 @@
     "baseUrl": ".",
     "paths": {
       "@summerfi/*": ["../../packages/*/src"]
-    }
+    },
+    "typeRoots": ["node_modules/@types", "src/types"]
   },
   "ts-node": {
     "transpileOnly": true,
