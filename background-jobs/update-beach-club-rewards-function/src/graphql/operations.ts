@@ -31,7 +31,7 @@ export const ACCOUNTS_QUERY = gql`
 export const REFERRED_ACCOUNTS_QUERY = gql`
   query GetReferredAccounts($timestampGt: BigInt, $timestampLt: BigInt) {
     accounts(
-      where: { referralTimestamp_gt: $timestampGt, referralTimestamp_lt: $timestampLt }
+      where: { referralTimestamp_gte: $timestampGt, referralTimestamp_lt: $timestampLt }
       orderBy: id
       first: 1000
     ) {
@@ -159,7 +159,7 @@ export const ACCOUNTS_WITH_HOURLY_SNAPSHOTS_QUERY = gql`
           amountOfReferred
         }
         hourlySnapshots(
-          where: { timestamp_gt: $timestampGt, timestamp_lte: $timestampLt }
+          where: { timestamp_gte: $timestampGt, timestamp_lt: $timestampLt }
           orderBy: timestamp
           orderDirection: desc
         ) {
@@ -181,7 +181,7 @@ export const POSITION_HOURLY_SNAPSHOTS_QUERY = gql`
     $skip: Int!
   ) {
     positionHourlySnapshots(
-      where: { timestamp_gt: $timestampGt, timestamp_lt: $timestampLt }
+      where: { timestamp_gte: $timestampGt, timestamp_lt: $timestampLt }
       orderBy: timestamp
       first: $first
       skip: $skip
