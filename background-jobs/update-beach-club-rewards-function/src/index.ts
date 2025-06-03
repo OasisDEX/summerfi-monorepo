@@ -12,11 +12,10 @@ export const handler = async (
   logger.addContext(context)
   logger.debug('Handler started')
   const db = new DatabaseService()
-  const notInitialized = await db.notInitialized()
-  if (notInitialized) {
+  const requiresMigration = await db.requiresMigration()
+  if (requiresMigration) {
     await db.migrate()
     logger.info('Database migrated')
-    return
   }
 
   const processor = new ReferralProcessor({ logger })

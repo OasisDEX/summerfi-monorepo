@@ -4,6 +4,10 @@ import { Pool } from 'pg'
 import { ConfigService, PointsConfig } from './config'
 import { KyselyMigrator } from './migrations/kysely-migrator'
 import { Network } from './types'
+import * as dotenv from 'dotenv'
+import path from 'node:path'
+
+dotenv.config({ path: path.join(__dirname, '../../../.env') })
 
 export type PositionUpdate = {
   id: string
@@ -500,31 +504,17 @@ export class DatabaseService {
     }
   }
 
-  /**
-   * Get all referral codes with stats for leaderboard
-   */
-  async getTopReferralCodes(limit: number = 100): Promise<SimplifiedReferralCode[]> {
-    const results = await this.db
-      .selectFrom('referral_codes')
-      .selectAll()
-      .orderBy('total_points_earned', 'desc')
-      .limit(limit)
-      .execute()
-
-    return results.map((row) => ({
-      ...row,
-      total_points_earned: Number(row.total_points_earned),
-      total_deposits_usd: Number(row.total_deposits_usd),
-      points_per_day: Number(row.points_per_day),
-      fees_per_day: Number(row.fees_per_day),
-      created_at: row.created_at || new Date(),
-      updated_at: row.updated_at || new Date(),
-    }))
-  }
-
-  async notInitialized(): Promise<boolean> {
-    const result = await this.db.selectFrom('referral_codes').select('id').executeTakeFirst()
-    return result === null
+  async requiresMigration(): Promise<boolean> {
+    try {
+      const result = await this.db
+        .selectFrom('points_config')
+        .select('run_migrations')
+        .executeTakeFirst()
+      return result?.run_migrations === 'true'
+    } catch (error) {
+      console.error('Db not initialized:', error)
+      return true
+    }
   }
 
   async close(): Promise<void> {

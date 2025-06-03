@@ -6,7 +6,6 @@ export interface PointsConfig {
   activeUserThresholdUsd: number
   pointsFormulaBase: number
   pointsFormulaLogMultiplier: number
-  enableBackfill: boolean
   isUpdating: boolean
 }
 
@@ -38,7 +37,6 @@ export class ConfigService {
       activeUserThresholdUsd: parseFloat(config.active_user_threshold_usd || '1'),
       pointsFormulaBase: parseFloat(config.points_formula_base || '0.00005'),
       pointsFormulaLogMultiplier: parseFloat(config.points_formula_log_multiplier || '0.0005'),
-      enableBackfill: config.enable_backfill === 'true',
       isUpdating: config.is_updating === 'true',
     }
   }

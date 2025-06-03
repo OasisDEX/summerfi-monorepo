@@ -372,9 +372,9 @@ export class KyselyMigrator {
           description: 'Logarithmic multiplier in points formula',
         },
         {
-          key: 'enable_backfill',
-          value: 'true',
-          description: 'Enable backfill for historical data',
+          key: 'run_migrations',
+          value: 'false',
+          description: 'Whether to run migrations',
         },
         {
           key: 'is_updating',
@@ -497,6 +497,8 @@ export class KyselyMigrator {
     await db.executeQuery(
       sql`DROP FUNCTION IF EXISTS auto_create_referral_code() CASCADE;`.compile(db),
     )
+    // drop sequences
+    await db.executeQuery(sql`DROP SEQUENCE IF EXISTS referral_codes_seq CASCADE;`.compile(db))
   }
 
   async reset(): Promise<void> {
@@ -540,7 +542,7 @@ export class KyselyMigrator {
       )
       await client.query('DROP TRIGGER IF EXISTS update_users_updated_at ON users')
       await client.query('DROP TRIGGER IF EXISTS update_points_config_updated_at ON points_config')
-
+      await client.query('DROP SEQUENCE IF EXISTS referral_codes_seq CASCADE')
       await client.query('COMMIT')
       console.log('✅ Database reset completed')
     } catch (error) {
