@@ -5,9 +5,11 @@ import { type AtomProps, getAtomClassList } from '@/components/atoms/getAtomClas
 
 import buttonStyles from '@/components/atoms/Button/Button.module.css'
 
+export type ButtonVariant = keyof typeof buttonStyles
+
 // TODO this props handling is broken, we shouldn't need to manually type disabled prop etc.
 export const Button: FC<
-  AtomProps<'button', keyof typeof buttonStyles> & {
+  AtomProps<'button', ButtonVariant> & {
     disabled?: boolean
     active?: boolean
     type?: string
